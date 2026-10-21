@@ -802,14 +802,15 @@ await group('launch', async (use) => {
     expect(bb.length === 2, `${bb.length} billboards on ${road}`);
     const next = bb.filter((b) => b.ahead > 0).sort((a, b) => a.ahead - b.ahead)[0];
     expect(next, `none ahead: ${JSON.stringify(bb)}`);
-    // drive to about 250 m short of it, brake to a stop (the car would keep rolling while frames render), and look
-    await game(page, (d) => { const g = window.__game; while (g.phys.s < d - 250) g.fastForward(0.5, {}, 28); g.fastForward(4, { throttle: 0, brake: 1 }); }, next.s);
+    // drive to about 110 m short of it, brake to a stop (the car would keep rolling while frames render), and look
+    // (braking only while moving: held at a standstill, the automatic gearbox takes the brake as reverse)
+    await game(page, (d) => { const g = window.__game; while (g.phys.s < d - 110) g.fastForward(0.25, {}, 20); for (let i = 0; i < 40 && g.phys.vx > 0.3; i++) g.fastForward(0.1, { throttle: 0, brake: 1 }); Object.assign(g.input.c, { brake: 0 }); }, next.s);
     await game(page, () => window.__game.setCam('hood'));
     await frames(page, 3);
     await page.screenshot({ path: path.join(OUT, 'launch-billboard.png') });
     const s = await game(page, () => window.__game.phys.s);
     await game(page, () => { Object.assign(window.__game.input.c, { brake: 0 }); });
-    expect(next.s - s > 60 && next.s - s < 300, `${fmt(next.s - s)} m short of the sign`);
+    expect(next.s - s > 40 && next.s - s < 160, `${fmt(next.s - s)} m short of the sign`);
     return `${next.creative} billboard ${fmt(next.ahead)} m ahead at the start; screenshot launch-billboard.png from ${fmt(next.s - s)} m`;
   });
   await check('Clear Path with no traffic says so and keeps its charge', async () => {
