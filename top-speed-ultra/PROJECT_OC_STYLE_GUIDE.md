@@ -82,7 +82,7 @@ The library's menu is: **Drive, World Map, Garage, Lifestyle, Career, Online, Se
 | DRV_COCKPIT_FP | Yes: the driver's seat |
 | DRV_CHASE_TP | Yes: chase |
 | DRV_HOOD_FP | Yes: hood |
-| DRV_CINEMATIC (fly-by, roadside, long lens) | No: free look exists, a cinematic camera does not |
+| DRV_CINEMATIC (fly-by, roadside, long lens) | Yes (2026-10-21): "Cinematic" in the View cycle, four long-lens tracking shots cut hard (a low hero front three-quarter pushing in, the profile, a low rear three-quarter, a high drone); the menu's attract drive is filmed with it, the hero framed right of centre clear of the rail, as on the library's home screens |
 | WORLD_DRONE | Partly: the sky camera in the corner window |
 | LIFE_FOLLOW_TP, LIFE_EYE_FP, LIFE_ISO, LIFE_ORBIT | No: they belong to the on-foot and property game, roadmap |
 

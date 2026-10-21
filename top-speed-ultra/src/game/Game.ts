@@ -31,9 +31,20 @@ import { CARS, carById, applyCar } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
-export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
-const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
-const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Hood', chase: 'Chase', free: 'Free look' };
+export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
+const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free', 'cinematic'];
+const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Hood', chase: 'Chase', free: 'Free look', cinematic: 'Cinematic' };
+// The cinematic camera (the style library's DRV_CINEMATIC, PROJECT_OC_STYLE_GUIDE.md): a cycle of tracking shots cut
+// hard from one to the next, every one close to the car so it never needs to know where the walls are. In the car's
+// frame: f metres ahead, s to the side (+ the driver's left), y up; looking at the car's middle plus `at` metres ahead;
+// a long lens. The menu's attract drive runs it, and its hero shot sits the car right of centre, clear of the rail.
+interface Shot { f: [number, number]; s: number; y: number; at: number; fov: number; len: number }
+const SHOTS: Shot[] = [
+  { f: [7.2, 5.0], s: 3.1, y: 0.75, at: 0.4, fov: 30, len: 8 },     // the hero: a low front three-quarter, pushing in
+  { f: [0.4, -0.6], s: 4.6, y: 0.95, at: 0.6, fov: 28, len: 6 },    // the profile, tracking alongside
+  { f: [-6.4, -5.6], s: -2.7, y: 0.6, at: 1.8, fov: 38, len: 6 },   // a low rear three-quarter from the other side
+  { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
+];
 const DT = 1 / 120;
 const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
@@ -116,6 +127,7 @@ export class Game {
   private camFrom = { p: new THREE.Vector3(), q: new THREE.Quaternion() };
   private chasePos = new THREE.Vector3();
   private chaseFwd = new THREE.Vector3(0, 0, 1);
+  private cineT = 0; private cineShot = 0;   // the cinematic camera's clock and its current shot
   private head = new THREE.Vector3();
   private shake = 0;
   private renderScale = 1;
@@ -883,7 +895,8 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
+    const view = this.view3();
+    this.car.setOutsideView(view !== 'cockpit' && view !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
@@ -1051,8 +1064,10 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- cameras
   private tmpQ = new THREE.Quaternion(); private tmpE = new THREE.Euler(0, 0, 0, 'YXZ'); private tmpV = new THREE.Vector3(); private wantP = new THREE.Vector3(); private wantQ = new THREE.Quaternion();
+  // the camera actually in use: the menu's attract drive is filmed cinematically, a run uses the player's choice
+  private view3(): CamMode { return this.attract ? 'cinematic' : this.cam; }
   private updateCamera(dt: number) {
-    const c = this.input.c, p = this.phys, portrait = this.camera.aspect < 0.95;
+    const c = this.input.c, p = this.phys, portrait = this.camera.aspect < 0.95, view = this.view3();
     const speedK = clamp(Math.abs(p.vx) / 90, 0, 1);
     let fov = 60;
     this.car.root.updateMatrixWorld(true);
@@ -1061,7 +1076,7 @@ export class Game {
       this.car.rear.getWorldPosition(this.wantP); this.car.rear.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.08, 0, 0)); this.wantQ.multiply(this.tmpQ);
       fov = 62;
-    } else if (this.cam === 'cockpit' || this.cam === 'free') {
+    } else if (view === 'cockpit' || view === 'free') {
       this.head.x = damp(this.head.x, clamp(p.ay * 0.0032, -0.04, 0.04), 6, dt);
       this.head.z = damp(this.head.z, clamp(p.ax * 0.0028, -0.035, 0.03), 6, dt);
       this.car.eye.getWorldPosition(this.wantP);
@@ -1071,11 +1086,25 @@ export class Game {
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
-      fov = (portrait ? 96 : 58) + (this.cam === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
-    } else if (this.cam === 'hood') {
+      fov = (portrait ? 96 : 58) + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
+    } else if (view === 'hood') {
       this.car.hood.getWorldPosition(this.wantP); this.car.root.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.04 + c.lookPitch, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
       fov = (portrait ? 92 : 62) + this.settings.fov + speedK * 5;
+    } else if (view === 'cinematic') {
+      // the shot's clock; a new shot is a hard cut (no blend), as an edit would be
+      this.cineT += dt;
+      if (this.cineT >= SHOTS[this.cineShot].len) { this.cineT = 0; this.cineShot = (this.cineShot + 1) % SHOTS.length; this.camBlend = 1; }
+      const sh = SHOTS[this.cineShot], k = this.cineT / sh.len, ease = k * k * (3 - 2 * k);
+      const root = this.car.root.position, fwd = this.tmpV.set(Math.sin(p.psi), 0, Math.cos(p.psi));
+      this.chaseFwd.lerp(fwd, 1 - Math.exp(-dt * 3)).normalize();
+      const F = this.chaseFwd, side = new THREE.Vector3(F.z, 0, -F.x), ahead = lerp(sh.f[0], sh.f[1], ease);
+      this.wantP.copy(root).addScaledVector(F, ahead).addScaledVector(side, sh.s); this.wantP.y = root.y + sh.y;
+      const look = root.clone().addScaledVector(F, sh.at); look.y += 0.55;
+      this.wantQ.setFromRotationMatrix(new THREE.Matrix4().lookAt(this.wantP, look, new THREE.Vector3(0, 1, 0)));
+      // on the menu the hero sits right of centre, clear of the rail (a turn to the left moves the subject right)
+      if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(0, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
+      fov = (portrait ? sh.fov * 1.6 : sh.fov) + speedK * 3;
     } else {
       const root = this.car.root.position, psi = p.psi;
       const fwd = this.tmpV.set(Math.sin(psi), 0, Math.cos(psi));
@@ -1106,7 +1135,7 @@ export class Game {
       this.camera.quaternion.slerpQuaternions(this.camFrom.q, this.wantQ, t);
     } else { this.camera.position.copy(this.wantP); this.camera.quaternion.copy(this.wantQ); }
     if (Math.abs(this.camera.fov - fov) > 0.05) { this.camera.fov = lerp(this.camera.fov, fov, 1 - Math.exp(-dt * 6)); this.camera.updateProjectionMatrix(); }
-    this.camera.near = this.cam === 'chase' && !lookBack ? 0.15 : 0.05;
+    this.camera.near = (view === 'chase' || view === 'cinematic') && !lookBack ? 0.15 : 0.05;
   }
 
   // ----------------------------------------------------------------------------------------- the corner window
