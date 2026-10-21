@@ -134,3 +134,7 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   two styles (vector map and the live sky camera clipped into the circle, after merging the sky camera's alignment fix),
   UI4 the cockpit cluster (after the hypercar's cockpit work), UI5 a match pass. The running sky camera fix finishes its
   alignment work first.
+- **The colourway** (the owner, minutes later): "Let's go with the exact aesthetic and then implement the OC orange color
+  way we've done". The reference's look is matched exactly (layout, glass, glow, type, chrome, night mood), and everything
+  it lights in blue is lit in the OC sunset orange family already in `src/ui/styles.css` (`--sunset`, `--amber`, `--ember`,
+  `--sunset-edge`, sampled from the owner's OC sunset wordmark), with the wordmark as the logo. Real road-sign colours stay.
