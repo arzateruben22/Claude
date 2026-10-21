@@ -1327,13 +1327,16 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       for (const [ctx, col] of [[g, '#e8eef6'], [ge, '#ffffff']] as const) { ctx.strokeStyle = col; ctx.lineWidth = 8; ctx.beginPath(); ctx.ellipse(x, y, r * 1.55, r * 1.5, 0, 0, Math.PI * 2); ctx.stroke(); }
       projector(w * 0.86, h * 0.55, h * 0.13);
     } else if (style === 'blade') {
-      // blade (the OC Hypercar, M2): two bands. Rows 0-48: the lit face, an ice-white core inside an ice-blue edge
-      // (the sheet's HEADLIGHT DETAIL), a little brighter toward the outer end. Rows 50-128: the lamp socket's smoked
-      // lens over a dark reflector with faint chrome ribs, and the three-cell projector module at its outer end
+      // blade (the OC Hypercar, M2): two bands. Rows 0-48: the lit face, a narrow ice-white core inside an ice-blue
+      // body (the sheet's HEADLIGHT DETAIL), a little brighter toward the outer end. Rows 50-128: the lamp socket's smoked
+      // lens over a dark reflector with faint chrome ribs, and the three-cell projector module at its outer end.
+      // The emissive map holds the car's LED family as material colours (car-shape HYPER.led: 0x0c4fb8 glow, 0x1e6fd8
+      // body, 0x5eb8ff core): at the lamp's 2.4x (5.4x at the game's night) a pale ice would tone-map to white; these
+      // read as the reference's ice blue with a white-blue centre
       g.fillStyle = '#04060a'; g.fillRect(0, 0, w, h);
-      for (const [ctx, edge, core] of [[g, '#7cc4ff', '#eef8ff'], [ge, '#3d9cff', '#dff2ff']] as const) {
+      for (const [ctx, edge, body, core] of [[g, '#5eb8ff', '#8fd0ff', '#dff2ff'], [ge, '#0c4fb8', '#1e6fd8', '#5eb8ff']] as const) {
         const fg = ctx.createLinearGradient(0, 2, 0, 46);
-        fg.addColorStop(0, edge); fg.addColorStop(0.3, core); fg.addColorStop(0.7, core); fg.addColorStop(1, edge);
+        fg.addColorStop(0, edge); fg.addColorStop(0.2, body); fg.addColorStop(0.4, core); fg.addColorStop(0.6, core); fg.addColorStop(0.8, body); fg.addColorStop(1, edge);
         ctx.fillStyle = fg; ctx.fillRect(0, 2, w, 44);
       }
       const lift = ge.createLinearGradient(0, 0, w, 0); lift.addColorStop(0, 'rgba(0,0,0,0.25)'); lift.addColorStop(0.5, 'rgba(0,0,0,0)'); lift.addColorStop(1, 'rgba(0,0,0,0)');
@@ -1347,7 +1350,7 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
         g.fillStyle = '#5d646c'; g.fillRect(x - 12, y - 22, 24, 44);
         const cg = g.createLinearGradient(x, y - 18, x, y + 18); cg.addColorStop(0, '#9fc6ee'); cg.addColorStop(0.45, '#14202e'); cg.addColorStop(1, '#05070a');
         g.fillStyle = cg; g.fillRect(x - 9, y - 18, 18, 36);
-        ge.fillStyle = 'rgba(150,200,255,0.3)'; ge.fillRect(x - 6, y - 10, 12, 20);
+        ge.fillStyle = 'rgba(30,111,216,0.45)'; ge.fillRect(x - 6, y - 10, 12, 20);
       }
     } else {
       // slim: a light guide along the top edge, five matrix cells under it

@@ -4,6 +4,7 @@
 // (what the face looks like by day) and an emissive map (what the backlight lights up).
 import * as THREE from 'three';
 import { once, canvas } from './car-tex';
+import { drawOcMark } from './oc-mark';
 
 export const TACH = { start: (225 * Math.PI) / 180, sweep: (270 * Math.PI) / 180, max: 10000, red: 8500 };
 // the needle's angle (radians, counter-clockwise from 3 o'clock) for an rpm
@@ -144,6 +145,68 @@ export function velaScreenTex() {
     g.fillStyle = 'rgba(8,11,15,0.9)'; g.fillRect(x0, y0 + 206, 308, 50);
     g.fillStyle = '#e8ecef'; g.font = `600 22px ${FONT}`; g.textAlign = 'left'; g.fillText('71°F   AUTO', x0 + 16, y0 + 240);
     g.fillStyle = '#8f98a3'; g.textAlign = 'right'; g.fillText('6:12 PM', x0 + 296, y0 + 240);
+    g.restore();
+  }));
+}
+
+// the OC Hypercar's displays, the Vela's atlas layout (the top half the driver display, the bottom right the centre
+// screen) so the cockpit reuses the same display geometry. Static, like the Vela's: the driver display is a dark
+// screen in an angular ice-blue frame with the OC mark small at the top, a big light-weight speed, MPH under it and
+// the gear in an outlined box below; an angular pod either side (a tick ring on the left, a segment bar on the
+// right). The colours are the car's LED family as they read on screen (#5eb8ff lines, a #bfe8ff hot white-blue).
+export function hyperScreenTex() {
+  return once('scrH', () => screen(1024, 512, (g) => {
+    const ICE = '#5eb8ff', DEEP = '#1e6fd8', HOT = '#bfe8ff', TXT = '#e8f2ff', DIM = '#8fa6c0';
+    g.fillStyle = '#03050a'; g.fillRect(0, 0, 1024, 512);
+    // ---- driver display (0..1024 x 0..256)
+    const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(20,50,100,0.28)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 1024, 256);
+    const hex = (cx: number, cy: number, hw: number, hh: number, cut: number) => { g.beginPath(); g.moveTo(cx - hw + cut, cy - hh); g.lineTo(cx + hw - cut, cy - hh); g.lineTo(cx + hw, cy); g.lineTo(cx + hw - cut, cy + hh); g.lineTo(cx - hw + cut, cy + hh); g.lineTo(cx - hw, cy); g.closePath(); };
+    g.lineJoin = 'miter'; g.lineCap = 'butt';
+    // the frame: a wide hexagon in the deep blue, an inner echo in the ice
+    g.strokeStyle = DEEP; g.lineWidth = 4; hex(512, 128, 486, 116, 70); g.stroke();
+    g.strokeStyle = ICE; g.lineWidth = 1.5; hex(512, 128, 474, 106, 66); g.stroke();
+    // the side pods: an angular half-frame each, open toward the centre, with a hot corner
+    for (const sd of [-1, 1]) {
+      const cx = 512 + sd * 300;
+      g.strokeStyle = ICE; g.lineWidth = 3; g.beginPath();
+      g.moveTo(cx - sd * 40, 44); g.lineTo(cx + sd * 60, 44); g.lineTo(cx + sd * 110, 128); g.lineTo(cx + sd * 60, 212); g.lineTo(cx - sd * 40, 212); g.stroke();
+      g.strokeStyle = HOT; g.lineWidth = 5; g.beginPath(); g.moveTo(cx + sd * 84, 84); g.lineTo(cx + sd * 110, 128); g.lineTo(cx + sd * 84, 172); g.stroke();
+      g.strokeStyle = DEEP; g.lineWidth = 1.5; g.beginPath();
+      g.moveTo(cx - sd * 40, 58); g.lineTo(cx + sd * 50, 58); g.lineTo(cx + sd * 94, 128); g.lineTo(cx + sd * 50, 198); g.lineTo(cx - sd * 40, 198); g.stroke();
+      if (sd < 0) {
+        // a tick ring round a small dial (power), the lit arc in the ice
+        for (let k = 0; k <= 20; k++) { const a = Math.PI * (0.75 + 1.5 * (k / 20)), r0 = k % 5 ? 56 : 48, r1 = 64; g.strokeStyle = k <= 9 ? ICE : DEEP; g.lineWidth = k % 5 ? 1.5 : 3; g.beginPath(); g.moveTo(cx + 10 + Math.cos(a) * r0, 128 + Math.sin(a) * r0); g.lineTo(cx + 10 + Math.cos(a) * r1, 128 + Math.sin(a) * r1); g.stroke(); }
+        g.strokeStyle = ICE; g.lineWidth = 4; g.beginPath(); g.arc(cx + 10, 128, 42, Math.PI * 0.75, Math.PI * 1.42); g.stroke();
+        g.fillStyle = TXT; g.font = `600 26px ${FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('186', cx + 10, 124);
+        g.fillStyle = DIM; g.font = `500 14px ${FONT}`; g.fillText('kW', cx + 10, 146);
+      } else {
+        // a segment bar (the charge), lit to 78 %
+        for (let k = 0; k < 12; k++) { const y = 196 - k * 11.5; g.fillStyle = k < 9 ? (k > 6 ? HOT : ICE) : '#17283f'; g.fillRect(cx - 44, y - 4, 34 - k * 1.2, 7); }
+        g.fillStyle = TXT; g.font = `600 22px ${FONT}`; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText('78%', cx + 2, 100);
+        g.fillStyle = DIM; g.font = `500 14px ${FONT}`; g.fillText('241 mi', cx + 2, 122);
+      }
+    }
+    // the centre: the OC mark small at the top, the speed big and light, MPH, the gear in an outlined box
+    drawOcMark(g, 476, 22, 72, 26, TXT);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#f4f8ff'; g.font = `300 112px ${FONT}`; g.fillText('132', 512, 118);
+    g.fillStyle = DIM; g.font = `500 22px ${FONT}`; g.fillText('MPH', 512, 176);
+    g.strokeStyle = ICE; g.lineWidth = 2; g.beginPath(); g.roundRect(492, 196, 40, 40, 5); g.stroke();
+    g.fillStyle = TXT; g.font = `600 28px ${FONT}`; g.fillText('6', 512, 217);
+    // faint grid lines through the dark, as a display's substrate
+    g.strokeStyle = 'rgba(94,184,255,0.08)'; g.lineWidth = 1; for (let x = 140; x < 900; x += 40) { g.beginPath(); g.moveTo(x, 30); g.lineTo(x, 226); g.stroke(); }
+    // ---- centre screen (716..1024 x 256..512): a dark panel with an angular frame, the mode and the assists
+    const x0 = 716, y0 = 256;
+    g.save(); g.beginPath(); g.rect(x0, y0, 308, 256); g.clip();
+    g.fillStyle = '#05080f'; g.fillRect(x0, y0, 308, 256);
+    g.strokeStyle = DEEP; g.lineWidth = 3; hex(x0 + 154, y0 + 128, 140, 110, 30); g.stroke();
+    g.strokeStyle = ICE; g.lineWidth = 1.5; hex(x0 + 154, y0 + 128, 130, 100, 28); g.stroke();
+    drawOcMark(g, x0 + 124, y0 + 44, 60, 22, TXT);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = ICE; g.font = `700 30px ${FONT}`; g.fillText('SPORT', x0 + 154, y0 + 116);
+    g.fillStyle = DIM; g.font = `600 18px ${FONT}`; g.fillText('ABS   TCS', x0 + 154, y0 + 150);
+    g.fillStyle = HOT; g.fillRect(x0 + 60, y0 + 178, 188, 2);
+    g.fillStyle = DIM; g.font = `500 16px ${FONT}`; g.fillText('71°F  AUTO      6:12 PM', x0 + 154, y0 + 204);
     g.restore();
   }));
 }

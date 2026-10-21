@@ -15,11 +15,15 @@ import { carById, figures, slotsFor, garageCars } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
+import { Ico } from './Icons';
+import { ModeArt } from './ModeArt';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+// the mode cards' one-line subtitles (the menu)
+const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 
 export function App() {
@@ -42,6 +46,7 @@ export function App() {
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
   const [report, setReport] = useState('');                           // the Feedback panel's text
+  const [, rerender] = useState(0);                                   // the garage changed the car: the atmosphere follows
   const reportRef = useRef<HTMLTextAreaElement>(null);
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
@@ -118,10 +123,19 @@ export function App() {
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
+  // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
+  // at every setting (ABS and traction control), and the hypercar's tune when it is off the leash
+  const carNow = carById(game.current?.carId ?? 'rossini-gt');
+  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(carNow.race && mode === 'free' ? ['Unleashed'] : [])];
+  // the player card on the menu
+  const prof = game.current?.profile.p, level = prof ? levelOf(prof.xp) : 1, xpLo = xpFor(level), xpHi = xpFor(level + 1);
+  const av = AVATARS[prof?.avatar ?? 0];
+  // the atmosphere follows the car (owner, 2026-10-21): styles.css re-points the tokens by <html data-car>
+  useEffect(() => { document.documentElement.dataset.car = carNow.id; }, [carNow.id]);
   return (
     <div className="app">
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -131,11 +145,11 @@ export function App() {
       )}
       {playing && (
         <div className="tbar">
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}>View</button>
-          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}>Pause</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" />View</button>
+          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
+          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station"><Ico name="radio" />Radio</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}><Ico name="pause" />Pause</button>
         </div>
       )}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
@@ -151,51 +165,64 @@ export function App() {
 
       {screen === 'menu' && !panel && !busy && (
         <div className="overlay menu">
-          <div className="menu-col">
-            <Brand hero />
-            <p className="lede">Orange County's real freeways (the 5, 405, 55, 57, 22, 91, 73, 133, 241 and 261) and every interchange between them, from the driver's seat of a 711 hp coupe.</p>
-            <section className="menu-sec">
-              <p className="sect" aria-hidden="true">Mode</p>
-              <div className="modes" role="radiogroup" aria-label="Mode">
-                {(Object.keys(MODES) as Mode[]).map((m, i) => (
-                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
-                    <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
-                    <b>{MODES[m].label}</b>
-                    {(m === 'survival' || m === 'time') && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
-                    {m === 'race' && <em>{game.current?.profile.p.racesWon ?? 0} won</em>}
-                  </button>
-                ))}
-              </div>
-              <p className="mode-brief" id="mode-brief">{MODES[mode].blurb}</p>
-            </section>
-            <section className="menu-sec">
-              <p className="sect" aria-hidden="true">Loadout</p>
+          {/* the owner's 2026-10-21 reference: a glass rail on the left (brand, Drive, the loadout, the rest of the menu),
+              the player card top right, the live scene as the hero in the middle, and the four mode cards along the
+              bottom. On a phone it is one column with Drive pinned under the thumb (styles.css .menu-grid). */}
+          <div className="menu-grid">
+            <div className="m-brand">
+              <Brand hero />
+              <p className="lede">Orange County's real freeways and every interchange between them, from the driver's seat.</p>
+            </div>
+            <button type="button" className="player" aria-label="Your profile" onClick={() => setPanel('profile')}>
+              <span className="avatar" style={{ background: av.bg, color: av.fg }} aria-hidden="true">{(prof?.username || 'D').slice(0, 1).toUpperCase()}</span>
+              <span className="player-main"><b>{prof?.username || 'Driver'}</b><small>Level {level}</small>
+                <span className="xp-mini" aria-hidden="true"><i style={{ width: `${Math.min(100, (((prof?.xp ?? 0) - xpLo) / Math.max(1, xpHi - xpLo)) * 100).toFixed(1)}%` }} /></span></span>
+              <span className="player-credits"><b>{Math.floor(prof?.credits ?? 0).toLocaleString()}</b><small>credits</small></span>
+            </button>
+            <nav className="m-nav" aria-label="Main menu">
+              <button className="rail-btn primary" onClick={() => drive()}><Ico name="drive" />Drive<i className="chev" aria-hidden="true" /></button>
               <div className="picks">
-                <button className="pick" onClick={() => setPanel('driver')}>
-                  <small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
-                </button>
                 <button className="pick" onClick={() => setPanel('garage')}>
-                  <small>Car</small><b>{carById(game.current?.carId ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.carId ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
+                  <Ico name="garage" /><small>Car</small><b>{carById(game.current?.carId ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.carId ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
+                </button>
+                <button className="pick" onClick={() => setPanel('driver')}>
+                  <Ico name="driver" /><small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
                 </button>
                 {mode === 'race' && (
                   <button className="pick" onClick={() => setPanel('course')}>
-                    <small>Race</small><b>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).name}</b><span>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).road}</span><i aria-hidden="true">›</i>
+                    <Ico name="bests" /><small>Race</small><b>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).name}</b><span>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).road}</span><i aria-hidden="true">›</i>
                   </button>
                 )}
                 {mode !== 'time' && mode !== 'race' && (
                   <button className="pick" onClick={() => { setExitRoad(null); setPanel('start'); }}>
-                    <small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
+                    <Ico name="map" /><small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
                   </button>
                 )}
               </div>
-              <div className="field"><label>Traffic</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+              <div className="field traffic"><label>Traffic · simulated</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+              <button className="rail-btn" onClick={() => setPanel('profile')}><Ico name="career" />Profile</button>
+              <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
+              <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
+              <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
+            </nav>
+            <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
+            <section className="m-modes">
+              <p className="mode-brief" id="mode-brief"><b>{MODES[mode].label}</b>{MODES[mode].blurb}</p>
+              <div className="modes" role="radiogroup" aria-label="Mode">
+                {(Object.keys(MODES) as Mode[]).map((m, i) => (
+                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
+                    <ModeArt kind={m} />
+                    <span className="mode-text">
+                      <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
+                      <b>{MODES[m].label}</b>
+                      <span>{MODE_SUB[m]}</span>
+                      {(m === 'survival' || m === 'time') && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
+                      {m === 'race' && <em>{game.current?.profile.p.racesWon ?? 0} won</em>}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </section>
-            <div className="row dock">
-              <button className="btn primary go" onClick={() => drive()}>Drive</button>
-              <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
-              <button className="btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}>Bests</button>
-              <button className="btn" onClick={() => setPanel('profile')}>Profile</button>
-            </div>
             <div className="menu-aside">
               <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
                 <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
@@ -349,7 +376,7 @@ export function App() {
         </div>
       )}
 
-      {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} />}
+      {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} />}
 
       {panel === 'driver' && (
         <div className="overlay center">
@@ -486,12 +513,12 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
 }
 
 // the garage (what you own, pick one) and the showroom (what credits can buy, by level)
-function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+function GaragePanel({ game, onClose, onPick }: { game: Game; onClose: () => void; onPick: () => void }) {
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
   const p = book.p, level = levelOf(p.xp), slots = slotsFor(level), owner = game.ownerMode;
-  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); };
+  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return (
     <div className="overlay center">
       <div className="panel profile">

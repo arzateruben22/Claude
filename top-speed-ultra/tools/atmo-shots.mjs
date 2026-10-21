@@ -1,0 +1,55 @@
+// Screenshot the menu and a driving frame in every car's atmosphere (the theme follows the car, owner 2026-10-21).
+//   npm run build && node tools/atmo-shots.mjs [outDir] [--size=1280x720]
+// Opens the build in owner mode, picks each car through the garage (the real path, so the attribute switch is what
+// a player gets), shoots the menu, drives for a moment and shoots the HUD. Prints the cars shot and any page errors.
+import { chromium } from 'playwright';
+import { mkdirSync, existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const outDir = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) ?? path.join(ROOT, 'tests', 'out', 'atmo'));
+const opt = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? `=${d}`).split('=').slice(1).join('=');
+const [w, h] = opt('size', '1280x720').split('x').map(Number);
+const GAME = path.join(ROOT, 'dist', 'top-speed-ultra.html');
+if (!existsSync(GAME)) { console.error(`No build at ${GAME}. Run npm run build first.`); process.exit(2); }
+mkdirSync(outDir, { recursive: true });
+const CARS = [['rossini-gt', 'Rossini GT'], ['rossini-brio', 'Rossini Brio'], ['rossini-corsa', 'Rossini Corsa'], ['vela-e', 'Vela E'], ['oc-hyper', 'OC Hypercar']];
+
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: true })));
+const page = await ctx.newPage();
+const errors = [], shots = [];
+page.on('pageerror', (e) => errors.push(String(e)));
+await page.goto(pathToFileURL(GAME).href);
+await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+const settled = () => page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 8000 }).catch(() => {});
+for (const [id, name] of CARS) {
+  try {
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    const card = page.locator('.gcell.car', { hasText: name });
+    if (await card.getByRole('button', { name: 'Drive' }).count()) await card.getByRole('button', { name: 'Drive' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.waitForFunction((want) => document.documentElement.dataset.car === want, id, { timeout: 5000 });
+    await page.waitForTimeout(300); await settled();
+    await page.screenshot({ path: path.join(outDir, `${id}-menu.png`), timeout: 180000 });
+    await page.getByRole('button', { name: 'Drive', exact: true }).click();
+    await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 60000 });
+    await page.evaluate(() => { const g = window.__game; g.setPaused(true); g.fastForward(4, {}, 30); g.setPaused(false); });
+    await page.waitForTimeout(1500);
+    await page.screenshot({ path: path.join(outDir, `${id}-drive.png`), timeout: 180000 });
+    await page.evaluate(() => window.__game.setPaused(true));
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.waitForSelector('.overlay.menu', { timeout: 20000 });
+    shots.push(id);
+  } catch (e) {
+    errors.push(`${id}: ${String(e.message || e).split('\n')[0]}`);
+    // back to the menu whatever state the failure left (a panel open, or mid-drive)
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.evaluate(() => { const g = window.__game; if (g && !g.inAttract) g.quitToMenu(); }).catch(() => {});
+    await page.waitForSelector('.overlay.menu', { timeout: 20000 }).catch(() => {});
+  }
+}
+await browser.close();
+console.log(JSON.stringify({ outDir, shots, errors }, null, 1));

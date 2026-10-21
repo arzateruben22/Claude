@@ -5,19 +5,18 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-16, 07:55 UTC, an Opus session)
+## State at the last update (2026-10-21, a Fable session on the owner's direct request)
 
-- Branch `claude/always-on` at `81939d3`: everything above plus the lens flare at every tier (sunset preset 5.5°
-  at az 292°) and `PROJECT_OC_REVIEW_NOTES.md` (15 unverified findings from two review lenses).
-- Running (Opus workflow `oc-day-1016`): the race HUD repair and the palms in the `tsu-ref` worktree, then the
-  integrator commits R2 (overcast, judged keep) + whatever is kept on `claude/ref-pass`, runs the full suite, and
-  merges onto `claude/always-on`. In parallel, the wordmark assets are prepared in the session scratchpad
-  (`wordmark/final/`); the UI pass copies them into `src/ui/assets/`.
-- Next in this session: the UI pass (`oc-ui-pass.js`, all Opus): UID wordmark and theme, U0 luxury menu, then the
-  rest of the board.
-- Waiting for Fable: the drift physics (`tsu-drift` worktree, `Physics.ts` half-built), the review's refuters and
-  rules lens, the hand, expression and hair specs (see the Fable queue).
-- Pending from the owner: a real-phone Feedback report, the UE5 go/no-go.
+- Branch `claude/hypercar` (this session's checkout; `claude/always-on` is not on this remote): the UI re-themed to
+  the owner's ice reference ("Ice noir" tokens, the chrome OC mark, the rail menu with picture cards, the drive HUD
+  with the sign plate, the icon rail, the speed block and the round map), and the hypercar's M2 lights and cluster
+  judged on renders and re-tuned (see the 2026-10-21 entry in `PROJECT_OC_PROGRESS.md` and the 2026-10-21 section
+  of `PROJECT_OC_UI_TARGET.md`). Suite groups run: boot, phone, launch. Not run: render, race, the rest.
+- Next in the UI pass: the reference's pieces not built (Photo mode, the Phone, a showroom hero for the hypercar on
+  the menu), then U1 to U8 as listed in `PROJECT_OC_UI_TARGET.md`, all in the ice tokens.
+- Hypercar: M1b (body fidelity) and M3 to M6 as before; the seat view's rim clips the cluster's OC mark.
+- Pending from the owner: whether the lockup should read the mock's "Project OC / Orange County Freeway Simulator"
+  instead of "OC Ultra / Top Speed"; a real-phone Feedback report; the UE5 go/no-go.
 
 ## Prompt for an Opus 5.5 daytime session
 

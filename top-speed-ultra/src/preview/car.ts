@@ -45,7 +45,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const word = (w: number, h: number) => (oc ? ocMarkTex(w / 2, h * 1.5) : wordmarkTex(vela ? 'VELA' : 'ROSSINI', w, h));
   const extra: Record<string, THREE.Material> = {};
   if (P.led) {
-    extra.led = M.led(P.led.color, P.led.halo, q);
+    extra.led = M.led(P.led.color, P.led.halo, q, P.led.edge);
     // the turn signals (amber, about 1.5x the brake level of the red bar's map) and the reversing lamps (white)
     const sig = once('m.signal', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x2a1600, emissive: 0xff9326, emissiveIntensity: 3.2, roughness: 0.3 }), { name: 'signal' }));
     extra.sigL = sig; extra.sigR = sig;

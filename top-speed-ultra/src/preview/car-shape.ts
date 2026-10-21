@@ -71,7 +71,9 @@ export interface ShapeParams {
   sidewall?: number;                     // tyre sidewall height as a share of the standard one (a low profile, a bigger rim)
   seatDrop?: number;                     // how far this car's driver sits below the shared frame (spec.ts EYE): the
                                          // eye, the wheel, the hands, the seats and the dash move down by it (seatOffset)
-  led?: { color: number; halo: number };  // ice-blue LED strips: splitter edge, front corners, sills, diffuser, wing plates
+  led?: { color: number; halo: number; edge?: number };   // ice-blue LED strips: splitter edge, front corners, sills, diffuser, wing plates
+                                         // (color: the hot centre, halo: the strip's body, edge: its outer glow; material values, picked so
+                                         // the tone-mapped strip reads as the reference's ice blue, not white)
   bar?: { len: number; h: number };      // the full-width red tail bar
   fins?: { x: [number, number]; z: [number, number]; h: number };   // twin fins on the rear deck, front to back
   bonnetVents?: { x: [number, number]; z: [number, number]; n: number };   // a louvred vent each side of the bonnet's centre
@@ -288,7 +290,11 @@ const HYPER: ShapeParams = {
   sidewall: 0.75, seatDrop: 0.2, seatX: 0.27,
   // its bonnet is 0.25 m lower than the others': the hood camera comes down 0.15 m so its crests and V stay in frame
   hoodY: 0.85,
-  led: { color: 0xa6dcff, halo: 0x2f8fe8 },
+  // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps
+  // to white, so the strip's body is a deeper blue (0x1e6fd8 reads about (121,188,241) on screen), its outer glow
+  // deeper still (0x0c4fb8, about (65,140,234)) and only a narrow hot centre is the pale ice (0x5eb8ff, about
+  // (205,233,245)): the reference's strips sample about (122,152,190) with a (176,219,245) core
+  led: { color: 0x5eb8ff, halo: 0x1e6fd8, edge: 0x0c4fb8 },
   bar: { len: 1.66, h: 0.02 },
   fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
   // two long vents along the front fenders' inner walls, by the cowl

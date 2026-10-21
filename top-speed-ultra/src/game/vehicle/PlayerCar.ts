@@ -165,6 +165,11 @@ export class PlayerCar {
     // the driver's eye (the hypercar's sits lower and further in), and the headlamp beams from this car's lamps
     this.eye.position.copy(B.eye); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
+    // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
+    // throw a cool white-blue, and their pool on the road takes the same cast (the other cars' stays as it was)
+    const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
+    for (const b of this.beams) b.color.setHex(beamC);
+    (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
     this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null };
     for (const k of SWITCHED_LAMPS) { const m = ext.getObjectByName(k); if (m) m.visible = false; }
     this.armsAt.set(...seatOffset(P));
