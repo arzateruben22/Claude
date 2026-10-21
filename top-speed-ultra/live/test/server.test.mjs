@@ -218,3 +218,10 @@ test('the roster: every 2 s, where every other driver is, however far', async ()
   assert.ok(!a.all.filter((m) => m.t === 'p').some((m) => m.n.some((row) => row[0] === idB)), 'never in a snapshot at 45 km');
   a.sock.close(); b.sock.close();
 });
+
+test('/api/ladder reports this hour and a verdict', async () => {
+  const v = (await get('/api/ladder')).body;
+  assert.equal(typeof v.ready, 'boolean'); assert.equal(v.cap, 25); assert.equal(v.next, 50);
+  assert.ok(v.days.length >= 1 && v.days.at(-1).peak >= 1, JSON.stringify(v.days.at(-1)));
+  assert.ok(v.reasons.length > 0, 'a brand-new server is never ready');
+});

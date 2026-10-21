@@ -156,8 +156,10 @@ the ladder below.
 
 ## Growing the cap: the ladder
 
-Start at 25. Raise it one rung at a time, after a week at the current rung in which **all** of these held
-(`deploy/status.sh` has every number):
+Start at 25. Raise it one rung at a time, after a week at the current rung in which **all** of these held. The
+server checks them itself: it records every hour (peak, line, CPU, memory, dropped poses, bytes) in its database,
+`GET /api/ladder` gives the verdict, and `bash server/live-status.sh` (or `deploy/status.sh`) prints it, with the
+exact command when it's time:
 
 - the peak reached the cap at least a few times (people actually waited in line; `queuedEver` grew),
 - CPU stayed under 50% at the peak and memory under 60% (`status.sh`, or `top`),

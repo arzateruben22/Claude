@@ -21,6 +21,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
 import { createNow } from './now.mjs';
 import { nameProblem } from './names.mjs';
+import { verdict } from './ladder.mjs';
 
 // ------------------------------------------------------------------------------------------------ configuration
 const PORT = Number(process.env.PORT || 8791);
@@ -76,6 +77,9 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS sessions_player ON sessions(player);
 `);
+db.exec(`CREATE TABLE IF NOT EXISTS hourly (
+  hour TEXT PRIMARY KEY, peak INTEGER, cap INTEGER, queued_peak INTEGER, waited INTEGER, admitted INTEGER,
+  poses_in INTEGER, poses_dropped INTEGER, bytes_out INTEGER, cpu_ms INTEGER, rss_mb INTEGER)`);
 // added after the first release: an older database gets the column
 try { db.exec('ALTER TABLE players ADD COLUMN banned INTEGER NOT NULL DEFAULT 0'); } catch { /* already there */ }
 const q = {
@@ -139,6 +143,22 @@ setInterval(() => { const now = Date.now(); for (const [k, l] of attempts) if (!
 // ------------------------------------------------------------------------------------------------ HTTP
 const started = Date.now();
 const stats = { peak: 0, admitted: 0, queuedEver: 0, posesIn: 0, posesDropped: 0, bytesOut: 0, kicked: 0 };
+// this hour's record (the ladder): the peaks this hour, and the running totals as they stood when the hour began
+const hourly = { key: '', peak: 0, queuedPeak: 0, base: { ...stats }, cpu: process.cpuUsage(), rss: 0 };
+const hourKey = () => new Date().toISOString().slice(0, 13);
+function recordHour() {
+  const key = hourKey();
+  if (key !== hourly.key) { if (hourly.key) writeHour(); Object.assign(hourly, { key, peak: online.size, queuedPeak: queue.length, base: { ...stats }, cpu: process.cpuUsage(), rss: 0 }); }
+  hourly.peak = Math.max(hourly.peak, online.size); hourly.queuedPeak = Math.max(hourly.queuedPeak, queue.length);
+  hourly.rss = Math.max(hourly.rss, Math.round(process.memoryUsage().rss / 1048576));
+}
+function writeHour() {
+  const c = process.cpuUsage(hourly.cpu), b = hourly.base;
+  db.prepare('INSERT OR REPLACE INTO hourly VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(hourly.key, hourly.peak, MAX_PLAYERS, hourly.queuedPeak,
+    stats.queuedEver - b.queuedEver, stats.admitted - b.admitted, stats.posesIn - b.posesIn, stats.posesDropped - b.posesDropped, stats.bytesOut - b.bytesOut, Math.round((c.user + c.system) / 1000), hourly.rss);
+}
+const hoursSince = (days) => db.prepare('SELECT hour, peak, cap, queued_peak AS queuedPeak, waited, poses_in AS posesIn, poses_dropped AS posesDropped, bytes_out AS bytesOut, cpu_ms AS cpuMs, rss_mb AS rssMb FROM hourly WHERE hour >= ? ORDER BY hour')
+  .all(new Date(Date.now() - days * 86400000).toISOString().slice(0, 13));
 const PUBLIC_TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript', css: 'text/css', json: 'application/json', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml', webmanifest: 'application/manifest+json', woff2: 'font/woff2' };
 
 function send(res, code, body, extra = {}) {
@@ -184,6 +204,7 @@ async function handle(req, res) {
   try {
     if (path === '/health' || path === '/api/health') return send(res, 200, health());
     if (path === '/api/now') return send(res, 200, now.snapshot());
+    if (path === '/api/ladder') { recordHour(); writeHour(); return send(res, 200, verdict(hoursSince(8), MAX_PLAYERS)); }
     if (path === '/api/traffic') return send(res, 200, now.snapshot().traffic);
     if (path === '/api/signup' && req.method === 'POST') {
       if (!LOOPBACK.test(ipOf(req)) && limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
@@ -272,7 +293,7 @@ const roster = (c) => ({ id: c.player.id, name: c.name, car: c.car, paint: c.pai
 function admit(c) {
   c.admitted = true;
   online.set(c.player.id, c);
-  stats.admitted++; stats.peak = Math.max(stats.peak, online.size);
+  stats.admitted++; stats.peak = Math.max(stats.peak, online.size); hourly.peak = Math.max(hourly.peak, online.size);
   sendTo(c, { t: 'welcome', id: c.player.id, name: c.name, cap: MAX_PLAYERS, online: online.size, peers: [...online.values()].filter((o) => o !== c).map(roster) });
   broadcast({ t: 'join', ...roster(c), online: online.size }, c);
   log('join', { id: c.player.id, name: c.name, online: online.size });
@@ -393,8 +414,10 @@ setInterval(() => {
 }, PING_MS).unref();
 setInterval(tick, TICK_MS).unref();
 setInterval(rosterTick, ROSTER_MS).unref();
+setInterval(() => { recordHour(); writeHour(); }, 60000).unref();
+setInterval(recordHour, 5000).unref();
 
 function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
 now.start();
 server.listen(PORT, HOST, () => log('listen', { host: HOST, port: PORT, cap: MAX_PLAYERS, db: DB_PATH, players: Number(q.count.get().n) }));
-for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting', 4001); server.close(); db.close(); process.exit(0); });
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); try { recordHour(); writeHour(); } catch { /* best effort */ } for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting', 4001); server.close(); db.close(); process.exit(0); });
