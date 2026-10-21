@@ -5537,13 +5537,13 @@
  },
  "2-1": {
   "16x9": {
-   "frames": 132,
-   "fps": 6,
+   "frames": 660,
+   "fps": 30,
    "dur": 22,
    "w": 1280,
    "h": 720,
-   "bytes": 0,
-   "hash": "0df56725b046a91ae5f25302457225a557578810",
+   "bytes": 2695347,
+   "hash": "2a4453a70f9dcb74bb4886db3094453ce97452d1",
    "samples": [
     [
      0,
@@ -5551,39 +5551,537 @@
     ],
     [
      15,
-     "fe6d2e744e7f9425a63e0c3945ccd7d2b0c41f80"
+     "1b781dad7e3ad4f2c87750ef6f5e92aadf2c1b53"
     ],
     [
      30,
-     "01be09c8022b4544bea93a0490496d3084d32fe3"
+     "6757e6bd7f0ca7f39a04f9eaa1aec08b6b1c3899"
     ],
     [
      45,
-     "8267501dafed8b5bf980d98f59555f26dc8095f2"
+     "cd07ad280239e865e4ef1b5ace5ea8d68fc1fe1e"
     ],
     [
      60,
-     "90def5ab15a358f74c9390606ce9254b8d6a8034"
+     "9e00810bb6b28ddc8049679d30d9f54e68ccf018"
     ],
     [
      75,
-     "05c3eb1cbc875a598c67096d090398700feff05b"
+     "dbb8f7777c6cd3523ca4954c8061b84f96c1c588"
     ],
     [
      90,
-     "3e8b5ed26ffe46962f90066af9a92e7e580510e9"
+     "c12f13c9203bddb0f8bfb940143089bf1b4d8a62"
     ],
     [
      105,
-     "2e490e5d11e64f377213270ffb4fe5e1a7bee501"
+     "ef3ced63e570462374c7b22c5bbc55e8fe3b1c60"
     ],
     [
      120,
-     "bbd3cf8f2d49823db6dfe92da47acc1a9472137d"
+     "d32a9281f5130c74f74d0c55ffdf974a3374d2a7"
+    ],
+    [
+     135,
+     "f81763ea784d4e5b4dd9e39a06cf5127733d1016"
+    ],
+    [
+     150,
+     "ee2a76505fc94c0704be5300e0adcacc9961d12b"
+    ],
+    [
+     165,
+     "8813382cad52518a055d598f45fb747b2f93ac5b"
+    ],
+    [
+     180,
+     "df7041b0c5eaa89a0992d6b32e887c50905625f7"
+    ],
+    [
+     195,
+     "4ebbe771a330e9b9a2ed9831c74ef736ce23b072"
+    ],
+    [
+     210,
+     "fee2c8aca30c3d95f733c91f4be3b9d14d956fdf"
+    ],
+    [
+     225,
+     "6920cf800b0a1cca8071fa4431f9380a716ff793"
+    ],
+    [
+     240,
+     "b2a39272e0deff0c59d277106b11c79ec315b7ea"
+    ],
+    [
+     255,
+     "500229803a7c34623fe9d120423e6a4df4f8c4fb"
+    ],
+    [
+     270,
+     "cada89ea13dff19b6ed80add860e62a2e4355b5c"
+    ],
+    [
+     285,
+     "263a312c04f0de831ff50996d695c9082ea75fb4"
+    ],
+    [
+     300,
+     "05f75eb924f958632bd068f5854c983c71b58ba5"
+    ],
+    [
+     315,
+     "b2a0871b80826d602e0f83359482212dd0e81633"
+    ],
+    [
+     330,
+     "11d8d231806e47853740d0a2ddb07154551d6f69"
+    ],
+    [
+     345,
+     "835eacd90bc1fd22656bd0a8d227f3bc442ecc9d"
+    ],
+    [
+     360,
+     "d148513ae3a82c4abdf9311c51d1f77397c28f52"
+    ],
+    [
+     375,
+     "33c96ee01082eaab296e16ad386d19862cb1a809"
+    ],
+    [
+     390,
+     "e9b7aa3a030c4a7d1903f718a98e17ce1e3cc8d6"
+    ],
+    [
+     405,
+     "d133f5c0200433086cbc246551c3b2483d4e21f2"
+    ],
+    [
+     420,
+     "faa0f4a09b36ce6fa7cd7c7bb40eb4119894ff55"
+    ],
+    [
+     435,
+     "8ad64f274d75d61bc67d0b9c049c9af9f456f75b"
+    ],
+    [
+     450,
+     "3e6ee1d77c0b698410240e5e17dd44ae938a016b"
+    ],
+    [
+     465,
+     "43de8750cc8d53083b1b705fd65fb547b0c8d2fd"
+    ],
+    [
+     480,
+     "1b4df5c12cf7af0bdc6a489f547ae2cf10aafce5"
+    ],
+    [
+     495,
+     "2083df9c1081ee48dd4b81cded667da0d92ed39f"
+    ],
+    [
+     510,
+     "da8b40c2cc7aa31a875772252b97528e89a915b6"
+    ],
+    [
+     525,
+     "43b4f34e626ad1a3c8f0ea8a48b03c379294f2ad"
+    ],
+    [
+     540,
+     "a6c412d9cfcc115376010eac2d862b58bbeb63ba"
+    ],
+    [
+     555,
+     "00eb0519c6608f5c6a1e7e01a2da6f017e8560de"
+    ],
+    [
+     570,
+     "afad04e5b0cbff4930ef6618e2e45053c207a043"
+    ],
+    [
+     585,
+     "3389bddff562b2c440222db89e1c7517fe747a40"
+    ],
+    [
+     600,
+     "f9fce7c5265ea625b6f66861f9d418970d60a2cd"
+    ],
+    [
+     615,
+     "b9a256d352f137a77c7329ab995c65113717a913"
+    ],
+    [
+     630,
+     "6ef52adfefbf431e317d34b09402e4a1dd91c833"
+    ],
+    [
+     645,
+     "e03b0d213aa6de0d802404038ec4fb986b0a0a12"
     ]
    ],
    "warnings": [],
-   "renderSec": 121.4,
+   "renderSec": 591.9,
+   "renderedAt": "2026-10-21",
+   "quick": false
+  },
+  "9x16": {
+   "frames": 660,
+   "fps": 30,
+   "dur": 22,
+   "w": 720,
+   "h": 1280,
+   "bytes": 2640520,
+   "hash": "006b956616b4a8a2c5ed879562c3af92abd844d2",
+   "samples": [
+    [
+     0,
+     "d53b21704b3c9ede66f7da3a6f9082d32e867677"
+    ],
+    [
+     15,
+     "24e827bf9d5f209d559f302b12f22ddab0a8c287"
+    ],
+    [
+     30,
+     "c64ee80055944d8cc610833b57eb7be04cc021a9"
+    ],
+    [
+     45,
+     "25c38da44069d14bcc52064c12ed15e92aa4e476"
+    ],
+    [
+     60,
+     "42d554ead58e2c7e1881882fa5a0c91af3caa968"
+    ],
+    [
+     75,
+     "caf453066164e3919f97231d5220601a2394eadf"
+    ],
+    [
+     90,
+     "9dd035b8ad9e1ac5ea00b14442278e1f3859ec73"
+    ],
+    [
+     105,
+     "f55bb4c169e7f9342eb2479486f2a924b5712dfd"
+    ],
+    [
+     120,
+     "041a0af001c0053d3f517f936142e2647b3e489a"
+    ],
+    [
+     135,
+     "9da042f052c8830d8677bf4094db73d830d2d28b"
+    ],
+    [
+     150,
+     "bdf08a81e8077e7cf881be210b2f5259d68a61fb"
+    ],
+    [
+     165,
+     "c6ebe3f9d6219d243517157f128e8289a767c92e"
+    ],
+    [
+     180,
+     "3435d8c909ef59d010d33898a001b0be53849aba"
+    ],
+    [
+     195,
+     "d1b50712b4037484f3f1b9172b7992db81d3c38b"
+    ],
+    [
+     210,
+     "fd8345a1aedd98f30211660d30bda0ccff965dc3"
+    ],
+    [
+     225,
+     "d45a9ba77f5a28a5cbf588d8d7ca83be2dc6949c"
+    ],
+    [
+     240,
+     "e52cfb25a5d4dd5024a616fba43f8242c5e69fa5"
+    ],
+    [
+     255,
+     "f76df25d0bddbad6fe56aec0f9b73b1d9706d171"
+    ],
+    [
+     270,
+     "6415bb1731f5c97f4863abdd431c436b1ca615b7"
+    ],
+    [
+     285,
+     "3b5b3f0fbc114efce074fbcbfd4e926e2fa7277b"
+    ],
+    [
+     300,
+     "1d5fa7c0cb1f6e67cac3f2e4f2d42c9f4588dea7"
+    ],
+    [
+     315,
+     "fed808f3c875ec07abada829d23e7bf401c1d280"
+    ],
+    [
+     330,
+     "a783c2d0781114163235b5e97098d792522b00e2"
+    ],
+    [
+     345,
+     "7fbe0dab3258711fda1fb3cdb644c5ec6d726ffb"
+    ],
+    [
+     360,
+     "3eb5f93ca932ae1cce17dc07d1e231fd85dae44d"
+    ],
+    [
+     375,
+     "d5ef96f2f3ad542b4acf96993f81241ba337ccaa"
+    ],
+    [
+     390,
+     "40af41cb173b1c67bcbbb6d2ce1fd8f380a5f894"
+    ],
+    [
+     405,
+     "9a29315ad1beff91f21a7ad63a022069c2f93576"
+    ],
+    [
+     420,
+     "70ee781ac509ff244d7cd9f25b672758912c886f"
+    ],
+    [
+     435,
+     "5b4fc1ea14f0a1d841c4d636a5c5b3229fa39c79"
+    ],
+    [
+     450,
+     "fabff7781d6d2cbb9f79bb2062b2b62ae76e840a"
+    ],
+    [
+     465,
+     "0eb68b2df575046b607621746e9dd2126bca73a5"
+    ],
+    [
+     480,
+     "fdde6e1a50f4e597dd55b47a82da9a08171fdf96"
+    ],
+    [
+     495,
+     "772e2b14c634b95a8e2063e82a0c6418233a88c1"
+    ],
+    [
+     510,
+     "67067b02a263626af77abb92b1de5087013cf21f"
+    ],
+    [
+     525,
+     "544c5eba778c4b69d947143c332f1e907f2f87bf"
+    ],
+    [
+     540,
+     "959c8df8c724b48d3ab5a542d29ffaadeaaea449"
+    ],
+    [
+     555,
+     "01e0c847b93760f9ebdbe4542bba90addb424517"
+    ],
+    [
+     570,
+     "96e4347e60b3812a87037676b5ff0006ad827006"
+    ],
+    [
+     585,
+     "eb637ede1ffe279a86a0fef0b15e1578a71d77b2"
+    ],
+    [
+     600,
+     "c9ec88b7eaf66c7e3154d87b126626ea902faa0a"
+    ],
+    [
+     615,
+     "89c381db7263280878f43270095a92e3cb24e4b7"
+    ],
+    [
+     630,
+     "c16e63d82502275075a12b29ef16cb29fdc7cc9d"
+    ],
+    [
+     645,
+     "1251a084703673c4f4f9a7d8f8142785a552fda2"
+    ]
+   ],
+   "warnings": [
+    "wash @21.8s overlap: 1:00 / Tight and squeaky afterw"
+   ],
+   "renderSec": 550.5,
+   "renderedAt": "2026-10-21",
+   "quick": false
+  }
+ },
+ "4-2": {
+  "16x9": {
+   "frames": 144,
+   "fps": 6,
+   "dur": 24,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "c45de4717b7e2624fefdeedae1550f5ddca4e7b6",
+   "samples": [
+    [
+     0,
+     "c9b8474ab51d6ebb682cf7803d3127c488af21e8"
+    ],
+    [
+     15,
+     "65f01113c7f55d06876404a10b50de72fea65c80"
+    ],
+    [
+     30,
+     "01a01b231d792373b59243eabebb902822062ee4"
+    ],
+    [
+     45,
+     "119f77cbf55147421b3107a544193a4127afb431"
+    ],
+    [
+     60,
+     "4fad000781060be03f2a45d8b2fc89e01eaff0b8"
+    ],
+    [
+     75,
+     "a619026f863590c711b4b64fa019927d6b4af4f8"
+    ],
+    [
+     90,
+     "40cb9979e8e9da2397b1514ef40a0fe1d0dd5268"
+    ],
+    [
+     105,
+     "d911e6a756e9dc6ad9ea9e0df4e0157892300ce5"
+    ],
+    [
+     120,
+     "c81882f9a52ccb4167059af60492d81fbb51dfdd"
+    ],
+    [
+     135,
+     "4b00c463481ce7f0cd5ebb99908c1fd30d9bdd15"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 88,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
+ },
+ "3-1": {
+  "16x9": {
+   "frames": 126,
+   "fps": 6,
+   "dur": 21,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "7b8acd1022022ab2bc96f45f6939a282ba83c44a",
+   "samples": [
+    [
+     0,
+     "eb39eca39cf8f9b9640c2687243080732d520fef"
+    ],
+    [
+     15,
+     "72192441a5b9d006176165adf28ef3bf06fcd623"
+    ],
+    [
+     30,
+     "ae5b9a0ebabcb277aa619f91881c226fe9950e5a"
+    ],
+    [
+     45,
+     "93f19a637cd80d2074c29d626abc2bed4628b03c"
+    ],
+    [
+     60,
+     "93f19a637cd80d2074c29d626abc2bed4628b03c"
+    ],
+    [
+     75,
+     "93f19a637cd80d2074c29d626abc2bed4628b03c"
+    ],
+    [
+     90,
+     "b78caf9caa77c583306844b98dc9155d5eab1ed0"
+    ],
+    [
+     105,
+     "b78caf9caa77c583306844b98dc9155d5eab1ed0"
+    ],
+    [
+     120,
+     "b78caf9caa77c583306844b98dc9155d5eab1ed0"
+    ]
+   ],
+   "warnings": [
+    "still for 6.5s ending at 14.0s"
+   ],
+   "renderSec": 15.2,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
+ },
+ "5-1": {
+  "16x9": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "3abfc85212d00e3ead8011ed9f7602260de5be11",
+   "samples": [
+    [
+     0,
+     "9dabe5047b52b225cd9a743dba792016e75a7d3d"
+    ],
+    [
+     15,
+     "0160f99496e7191f3b248f94d9dff695ab8304fd"
+    ],
+    [
+     30,
+     "b0e0358602b56ae0c763d6ded677e66afe59e7f3"
+    ],
+    [
+     45,
+     "f2f447f3165f249539745733ff063547a4d278be"
+    ],
+    [
+     60,
+     "ad463873a4d8f44cc978e7dc21b179a8aae9f09c"
+    ],
+    [
+     75,
+     "2722ee992b8f944a15f06d216227240195227ad5"
+    ],
+    [
+     90,
+     "83bc88c01a3505389aabcfbdf7e6649e0a8cd2f4"
+    ],
+    [
+     105,
+     "e090f006515af3cfe37105e9acbdf479b5957a93"
+    ],
+    [
+     120,
+     "a85e6cf4f6d60e99117fde1b62c243e5455236c1"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 111,
    "renderedAt": "2026-10-21",
    "quick": true
   }
