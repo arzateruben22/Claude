@@ -17,10 +17,13 @@
   --night-3: #1b1329;
   --glass: rgba(14, 9, 25, 0.8);            /* HUD-side cards over the scene */
   --glass-2: rgba(9, 6, 17, 0.9);
+  --glass-lit: rgba(46, 23, 16, 0.92);      /* the quick menu's chosen wedge, lit from its rim: --sunset-text on it 5.6:1 */
+  --glass-lit-rim: rgba(104, 46, 12, 0.92); /*   or more where the label sits, even over a white sky */
   --hud: rgba(8, 5, 14, 0.76);              /* HUD plates over a bright sky */
   --scrim: rgba(5, 3, 10, 0.5);
   --scrim-2: rgba(5, 3, 10, 0.84);
   --scrim-0: rgba(5, 3, 10, 0);
+  --scrim-1: rgba(5, 3, 10, 0.26);          /* the road, dimmed slightly under the quick menu */
   --shadow: rgba(0, 0, 0, 0.55);
   /* the menus' glass: frosted (with --blur), a hairline at 12 % white, quiet white fills for rows and tracks */
   --sheet: rgba(17, 11, 28, 0.7);
@@ -620,6 +623,75 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .hud-ability:focus-visible { outline: none; }
 .hud-ability:focus-visible::before { background: var(--night-3); }
 
+/* ------------------------------------------------------------------ the radial quick menu (U3; Radial.tsx) */
+/* held from the Pause chip, Tab or the pad's Back: six wedges of HUD glass fan out around the OC mark, over the road
+   dimmed a little. The chosen wedge turns sunset-tinted with a lit outer edge, at once (it follows the finger). Everything but the ring lets taps through,
+   so the pedals and the steering rail keep working. --rr is the ring's radius; the wedges live in a -100..100 SVG. */
+.quick { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px; pointer-events: none;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); }
+/* nothing above the ring's blur may animate its opacity or be isolated, or the blur would see only the ring itself:
+   the dim and the parts of the ring animate one by one instead */
+.quick::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle closest-side at 50% 50%, var(--scrim) 0%, var(--scrim-1) 100%);
+  animation: fade-in 200ms var(--ease-out) both; }
+.quick-hit { pointer-events: auto; }
+.quick-ring { --rr: min(200px, 43vw, 33vh); position: relative; width: calc(var(--rr) * 2); height: calc(var(--rr) * 2); border-radius: 50%; }
+.quick-ring::before { content: ""; position: absolute; inset: 1.5%; border-radius: 50%; -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--deep);
+  animation: quick-in 260ms var(--ease-out) both; }
+.quick-wedges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.quick-base { fill: var(--clear); pointer-events: all; }
+.quick-wedge { transform-box: view-box; transform-origin: 0 0; animation: quick-fan 300ms var(--ease-out) both; animation-delay: calc(var(--k) * 25ms); }
+.quick-wedge path.quick-hit { fill: var(--glass-2); stroke: var(--line); stroke-width: 0.6; cursor: pointer; }
+.quick-wedge.on path.quick-hit { fill: url(#quick-lit); stroke: var(--sunset-line); }
+.quick-lit-in { stop-color: var(--glass-lit); }
+.quick-lit-out { stop-color: var(--glass-lit-rim); }
+.quick-edge { fill: none; stroke: var(--sunset); stroke-width: 2.2; stroke-linecap: round; opacity: 0; pointer-events: none; filter: drop-shadow(0 0 3px var(--sunset-glow)); }
+.quick-wedge.on .quick-edge { opacity: 1; }
+.quick-items { position: absolute; inset: 0; pointer-events: none; }
+.quick-items:focus, .quick-rows:focus { outline: none; }   /* the menu holds focus for its keys; the highlight shows the choice */
+.quick-item { position: absolute; left: 50%; top: 50%; width: calc(var(--rr) * 0.5); height: calc(var(--rr) * 0.42); display: grid; place-content: center; justify-items: center; gap: 8px;
+  padding: 0; border: 0; border-radius: 14px; background: none; cursor: pointer; color: var(--ink); font: 600 13px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase;
+  transform: translate(-50%, -50%) translate(calc(var(--x) * var(--rr)), calc(var(--y) * var(--rr)));
+  animation: quick-item 300ms var(--ease-out) both; animation-delay: calc(var(--k) * 25ms + 40ms); }
+.quick-item.on { color: var(--sunset-text); }
+.quick-item:focus-visible { outline: 2px solid var(--sunset); outline-offset: 0; }
+.quick-ico { display: block; width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.quick-item.on .quick-ico { filter: drop-shadow(0 0 6px var(--sunset-glow)); }
+/* the centre: the OC mark on dark glass; letting go on it (or tapping it) closes the menu */
+.quick-core { position: absolute; left: 50%; top: 50%; width: calc(var(--rr) * 0.66); height: calc(var(--rr) * 0.66); transform: translate(-50%, -50%); display: grid; place-content: center; justify-items: center; gap: 8px;
+  padding: 0; border: 0; border-radius: 50%; cursor: pointer; color: var(--dim); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2), 0 8px 24px var(--shadow);
+  animation: quick-core 260ms var(--ease-out) both; }
+.quick-core .oc-mark { display: block; width: calc(var(--rr) * 0.36); height: auto; }
+.quick-core small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; }
+.quick-core.on { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--sunset), 0 0 20px var(--sunset-glow); }
+.quick-core:focus-visible { outline: 2px solid var(--sunset); outline-offset: 3px; }
+.quick-hint { position: relative; max-width: min(92vw, 440px); margin: 0; padding: 7px 16px; border-radius: var(--r-pill); font: 500 13px/1.3 var(--f-text); text-align: center; color: var(--ink);
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line); animation: fade-in var(--t-fade) var(--ease-out) 120ms both; }
+@keyframes quick-in { from { opacity: 0; transform: scale(0.88); } }
+@keyframes quick-core { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } }
+@keyframes quick-fan { from { opacity: 0; transform: rotate(-32deg) scale(0.5); } }
+@keyframes quick-item { from { opacity: 0; transform: translate(-50%, -50%) translate(calc(var(--x) * var(--rr) * 0.35), calc(var(--y) * var(--rr) * 0.35)) scale(0.7); } }
+/* reduced motion: a plain list in a glass card, nothing fans out */
+.quick-card { width: min(360px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; display: grid; gap: 8px; padding: 16px 12px 14px;
+  background: var(--sheet); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border-radius: var(--r-sheet); box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--deep); }
+.quick-head { display: flex; align-items: center; gap: 14px; padding: 2px 10px 8px; }
+.quick-head .oc-mark { display: block; flex: none; width: 52px; height: auto; }
+.quick-head div { display: grid; gap: 3px; }
+.quick-head b { font: 500 12.5px/1.2 var(--f-text); letter-spacing: 0.06em; color: var(--dim); }
+.quick-head small { font: 400 12.5px/1.3 var(--f-text); color: var(--faint); }
+.quick-rows { display: grid; gap: 4px; }
+.quick-row { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; align-items: center; min-height: 56px; padding: 8px 12px; border: 0; border-radius: var(--r-ctl);
+  background: none; cursor: pointer; color: var(--ink); text-align: left; }
+.quick-row .quick-ico { grid-row: 1 / 3; width: 22px; height: 22px; color: var(--dim); }
+.quick-row b { font: 500 16px/1.2 var(--f-text); }
+.quick-row small { font: 400 12.5px/1.3 var(--f-text); color: var(--faint); }
+.quick-row.on { background: var(--sunset-wash); box-shadow: inset 0 0 0 1px var(--sunset-line); }
+.quick-row.on b, .quick-row.on .quick-ico { color: var(--sunset-text); }
+.quick-row:focus-visible { outline-offset: 0; }
+@media (hover: hover) { .quick-row:not(.on):hover { background: var(--fill); } }
+.quick-foot { display: grid; margin-top: 4px; padding: 12px 4px 0; border-top: 1px solid var(--hair); }
+.quick-close.on { box-shadow: inset 0 0 0 1.5px var(--sunset); }
+.tbtn.menu { -webkit-touch-callout: none; }   /* held for the quick menu: no callout on a long press */
+
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 .touch { position: absolute; inset: 0; pointer-events: none; }
 .touch-steer { position: absolute; left: 14px; bottom: max(14px, env(safe-area-inset-bottom)); width: min(46vw, 230px); height: 96px; display: grid; place-items: center; pointer-events: auto; touch-action: none;
@@ -752,6 +824,12 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .seg button { min-height: 44px; }
   .back { min-height: 44px; }
   .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
+  .quick-item { font-size: 12.5px; }
+}
+/* a phone held upright: the quick menu sits between the HUD's top cluster (the speed box, the corner window) and the
+   pedals, over the road */
+@media (pointer: coarse) and (orientation: portrait) {
+  .quick:not(.list) { padding-top: max(min(270px, 30vh), env(safe-area-inset-top)); padding-bottom: max(min(150px, 16vh), env(safe-area-inset-bottom)); }
 }
 /* a narrow window with a mouse: the desktop HUD, with the compass and the route chip under the corner window and the
    clock chip on two lines (as on a phone) so the stats plate keeps the left of the status row */
@@ -772,6 +850,7 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .overlay.loading-screen.leaving { animation: none !important; visibility: hidden; }
   .btn, .seg button, .mode, .pick, .gcell, .soon, .back, .toggle input, .sheet .brand .lockup { transition: none !important; }
   .tbar .tbtn, .corner, .hud-bubble, .tbtn .tico, .hud-dest { transition: none !important; animation: none !important; }   /* the Minimal HUD just shows and hides */
+  .quick, .quick *, .quick::before, .quick *::before { transition: none !important; animation: none !important; }   /* the quick menu is a list (Radial.tsx) */
   .btn:hover, .btn:active, .soon:hover { transform: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }
