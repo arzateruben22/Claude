@@ -42,6 +42,7 @@ function args(argv) {
     if (k === "--format") a.format = argv[++i];
     else if (k === "--range") a.range = argv[++i].split("-").map(Number);
     else if (k === "--times") a.times = argv[++i].split(",").map(Number);
+    else if (k === "--frames") a.frames = argv[++i].split(",").map(Number);
     else if (k === "--contact") a.contact = true;
     else if (k === "--label") a.label = argv[++i];
     else if (k === "--scale") a.scale = Number(argv[++i]);
@@ -71,6 +72,7 @@ async function openPage(browser, port, fmt, a) {
   const W = Math.round(width * a.scale), H = Math.round(height * a.scale);
   const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
+  page.setDefaultTimeout(0);                             // heavy frames can take minutes under load; never give up mid-render
   page.on("pageerror", (e) => { console.error(`[${fmt}] page error:`, e.message); process.exitCode = 1; });
   page.on("console", (m) => { if (m.type() === "error") console.error(`[${fmt}] console:`, m.text()); });
   await page.goto(`http://127.0.0.1:${port}/src/index.html?format=${fmt}&render=1&q=${a.q}&scale=${a.scale}`);
@@ -88,7 +90,7 @@ async function capture(browser, port, fmt, frames, dir, a) {
     for (const f of chunk) {
       const s = Date.now();
       const r = await page.evaluate((fr) => window.film.seek(fr), f);
-      await page.screenshot({ path: path.join(dir, String(f).padStart(4, "0") + ".png"), type: "png" });
+      await page.screenshot({ path: path.join(dir, String(f).padStart(4, "0") + ".png"), type: "png", timeout: 0 });
       log.push({ ...r, ms: Date.now() - s });
       if (++done % 30 === 0 || done === frames.length) process.stdout.write(`  [${fmt}] ${done}/${frames.length} (${((Date.now() - t0) / 1000).toFixed(0)} s)\n`);
     }
@@ -143,6 +145,7 @@ function encode(fmt, dir, audio) {
       if (a.contact) { frames = []; for (let t = 0; t < TL.duration; t += 0.5) frames.push(Math.round(t * FPS)); frames.push(FRAMES - 1); label = a.label || "prerender"; }
       if (a.range) frames = frames.filter((f) => f / FPS >= a.range[0] - 1e-9 && f / FPS < a.range[1] - 1e-9);
       if (a.times) frames = a.times.map((t) => Math.min(FRAMES - 1, Math.round(t * FPS)));
+      if (a.frames) frames = a.frames.filter((f) => f >= 0 && f < FRAMES);
       const dir = a.out ? path.resolve(a.out, fmt) : path.join(BUILD, a.contact ? `contact-${label}` : "frames", fmt);
       dirs[fmt] = dir;
       if (a.resume) {                                   // frames are pure functions of their index: keep the ones on disk
@@ -159,7 +162,7 @@ function encode(fmt, dir, audio) {
     }
   } finally { await browser.close(); server.close(); }
 
-  if (a.contact || a.times || !a.encode) return;
+  if (a.contact || a.times || (a.frames && !a.encode) || !a.encode) return;
   for (const fmt of formats) {
     const miss = Array.from({ length: FRAMES }, (_, i) => i).filter((f) => !fs.existsSync(path.join(dirs[fmt], String(f).padStart(4, "0") + ".png")));
     if (miss.length) { console.log(`[${fmt}] ${miss.length} frames missing (first f${miss[0]}); not encoding`); return; }
