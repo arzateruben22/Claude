@@ -32,6 +32,7 @@ import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestT
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
+import { Showroom } from './Showroom';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -157,6 +158,12 @@ export class Game {
   private prof = { t: 0, dist: 0, flush: 0 };
   private pace = 0;                  // your speed over the last few seconds (m/s), for the navigation card's time estimate
   // the blue chevrons on the road along the route (U2)
+  // the main menu's hero: your car in a garage at night, drawn instead of the attract drive while the menu is up
+  // (owner's reference, 2026-10-21; src/game/Showroom.ts), and the menu's four tile pictures, taken at load
+  readonly showroom = new Showroom();
+  private showroomOn = false;
+  private showroomT = 0;
+  tiles: Partial<Record<'free' | 'race' | 'events' | 'garage', string>> = {};
   readonly chevrons = new RouteChevrons({ diverge: (p, j) => this.sideOf(p, j), merge: (r, j) => this.sideOfMerge(r, j) });
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
@@ -203,6 +210,12 @@ export class Game {
     this.input.attach();
     this.startAttract();
     await this.prebuild('Building the freeway');
+    this.ev.loading(true, 'Lighting the garage');
+    await new Promise((r) => setTimeout(r, 0));
+    this.showroom.build(this.renderer);
+    this.showroom.setCar(this.car.showroomModel());
+    this.onResize();
+    this.captureTiles();
     this.ev.loading(false);
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.frame);
@@ -492,6 +505,7 @@ export class Game {
       car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
+    this.showroom?.setCar(this.car.showroomModel());          // the menu's showroom shows the same car, in the same paint
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -588,6 +602,7 @@ export class Game {
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.showroom.resize(w, h, pr);
   };
   private onVisibility = () => { if (document.hidden && !this.attract) this.setPaused(true); };
 
@@ -827,8 +842,14 @@ export class Game {
     dt = Math.min(dt, 0.1);
     this.fpsN++; this.fpsT += dt;
     if (this.fpsT >= 0.5) { this.fps = Math.round(this.fpsN / this.fpsT); this.fpsN = 0; this.fpsT = 0; }
-    this.adapt(dt);
     this.actions();
+    // the main menu: the showroom instead of the world (the attract drive waits where it is), at up to 32 frames a second
+    if (this.showroomOn && this.attract && this.showroom.built) {
+      this.showroomT += dt;
+      if (this.showroomT >= 1 / 32) { this.showroom.render(this.renderer, this.showroomT, !REDUCED_MOTION); this.showroomT = 0; }
+      return;
+    }
+    this.adapt(dt);
     if (!this.paused) {
       this.input.update(dt, Math.abs(this.phys.vx));
       if (this.attract) this.autopilot(this.input.c);
@@ -1296,8 +1317,87 @@ export class Game {
       visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
   }
 
+  // ----------------------------------------------------------------------------------------- the main menu
+  // the showroom on while the main menu is up (App.tsx), and where the car sits on screen: its centre as fractions of
+  // the window and the share of the width it may take
+  setShowroom(on: boolean) { if (on !== this.showroomOn) { this.showroomOn = on; this.showroomT = 1; } }
+  frameShowroom(cx: number, cy: number, span: number) { this.showroom.setFrame(cx, cy, span); this.showroomT = 1; }
+
+  // The menu's four tile pictures, rendered once at load by this renderer and kept as small JPEGs (never downloaded):
+  // Garage, your car in the showroom close on its front wheel; and the freeway where the attract drive waits, at night:
+  // Free Drive from high over the road, Races low over the lane with the traffic's tail lights ahead, Events from the
+  // driver's seat. The world goes to night for the shots and straight back; it all happens in one task during the
+  // loading screen, so no frame ever shows it. Only uniforms change for the night (the sky, the light levels, the lamp
+  // heads): switching the headlight beams or the car's outside-only parts on would change the scene's lights and
+  // materials and make every shader compile again, which costs seconds on a phone and minutes in software rendering.
+  private captureTiles() {
+    const r = this.renderer, W = 480, H = 270;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    if (!g) return;
+    // lift: night shots get the photographer's treatment (a longer exposure, then a little brightness and contrast), so a
+    // tile reads at a glance; the garage is lit and needs none
+    const shot = (draw: () => void, lift = false) => {
+      try {
+        const exp = r.toneMappingExposure;
+        if (lift) r.toneMappingExposure = exp * 2.4;
+        draw();
+        r.toneMappingExposure = exp;
+        g.filter = lift ? 'brightness(1.3) contrast(1.12) saturate(1.15)' : 'none';
+        g.drawImage(r.domElement, 0, 0, W, H);
+        g.filter = 'none';
+        return c.toDataURL('image/jpeg', 0.84);
+      } catch { return ''; }
+    };
+    const t0 = performance.now();
+    r.setPixelRatio(1); r.setSize(W, H, false);
+    this.tiles.garage = shot(() => this.showroom.renderThumb(r, W / H));
+    // the world at night: the sky and its reflections, the headlights, the lamps on the poles
+    this.env.set('night', 'clear', true); this.env.settle();
+    const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
+    lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = 3.2;
+    this.car.update(0, 1, this.phys, false, this.time, this.path);
+    this.car.updateCockpit(0, { delta: 0, rpm: 2400, gear: 4, auto: true, limiter: false, speed: 30, throttle: 0.3, brake: 0 });
+    this.traffic.render(1, this.time);
+    this.car.root.updateMatrixWorld(true);
+    const cam = new THREE.PerspectiveCamera(50, W / H, 0.05, this.camera.far);
+    const root = this.car.root.position, psi = this.phys.psi, f = new THREE.Vector3(Math.sin(psi), 0, Math.cos(psi));
+    const view = (p: THREE.Vector3, look: THREE.Vector3, fov: number) => {
+      cam.position.copy(p); cam.lookAt(look); cam.fov = fov; cam.updateProjectionMatrix();
+      this.env.follow(root, cam, this.time);
+      r.render(this.scene, cam);
+    };
+    this.tiles.free = shot(() => view(root.clone().addScaledVector(f, -60).setY(root.y + 26), root.clone().addScaledVector(f, 150).setY(root.y), 52), true);
+    this.tiles.race = shot(() => view(root.clone().addScaledVector(f, 4.5).setY(root.y + 1.3), root.clone().addScaledVector(f, 60).setY(root.y + 0.9), 58), true);
+    this.tiles.events = shot(() => {
+      this.car.eye.getWorldPosition(cam.position);
+      this.car.body.getWorldQuaternion(cam.quaternion);
+      cam.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.11, 0, 0, 'YXZ')));
+      cam.fov = 64; cam.updateProjectionMatrix();
+      this.env.follow(root, cam, this.time);
+      r.render(this.scene, cam);
+    }, true);
+    // and back to the chosen sky
+    this.env.set(this.settings.time, this.settings.weather, true); this.env.settle();
+    this.weatherTick(0);
+    this.onResize();
+    this.tileMs = Math.round(performance.now() - t0);
+  }
+  tileMs = 0;
+
+  // the freeways for the menu's World Map: each carriageway as points (world metres, x east and z south), thinned
+  mapLines(step = 6) {
+    return this.net.mains.map((m) => {
+      const pts: [number, number][] = [];
+      for (let i = 0; i < m.n; i += step) pts.push([m.xs[i], m.zs[i]]);
+      pts.push([m.xs[m.n - 1], m.zs[m.n - 1]]);
+      return { label: m.label, pts };
+    });
+  }
+
   dispose() {
     cancelAnimationFrame(this.raf);
+    this.showroom.dispose();
     this.offStore();
     removeEventListener('resize', this.onResize);
     document.removeEventListener('visibilitychange', this.onVisibility);

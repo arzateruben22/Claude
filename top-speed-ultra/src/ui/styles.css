@@ -1,6 +1,9 @@
-/* OC Ultra: Top Speed. "Chrome noir": Orange County after midnight. Near-black violet glass over the moving freeway and
-   the OC sunset wordmark's colours (owner, 2026-10-16) as the one accent: sunset orange for the thing to press, for
-   focus and for what's chosen in a list; tail-light ember for danger.
+/* OC Ultra: Top Speed. Orange County after midnight, after the owner's reference of 2026-10-21 ("this is a PERFECT
+   example ... let's go with the exact aesthetic and then implement the OC orange colourway"): the reference's deep navy
+   blacks and its dark glass panels with thin hairlines and small radii, thin uppercase labels with wide tracking, big
+   italic numerals, and a glow on what's chosen; but every place the reference glows blue glows in the OC sunset
+   wordmark's colours (owner, 2026-10-16) instead: sunset orange for the thing to press, for focus and for what's
+   chosen; amber for highlights; tail-light ember for the red edge and danger. Real road-sign colours stay real.
    The menus (U0, owner 2026-10-16: "more seamless, a finer luxury Apple-like feel") are cut finer: frosted glass with
    1 px hairlines and soft 16-22 px radii, spacing on an 8 pt rhythm, pill buttons, segmented controls and switches
    drawn in CSS, and the system's own text face (San Francisco on an iPhone or a Mac, Segoe on Windows, Roboto on
@@ -10,23 +13,24 @@
    Every colour lives in these tokens. One dark look on purpose: it sits over a moving 3D scene. */
 @property --mk { syntax: "<length>"; inherits: true; initial-value: 132px; }   /* the lockup's size, so it can ease */
 :root {
-  /* night: violet-black surfaces */
-  --void: #05030a;
-  --night-1: #0b0713;
-  --night-2: #120c1e;
-  --night-3: #1b1329;
-  --glass: rgba(14, 9, 25, 0.8);            /* HUD-side cards over the scene */
-  --glass-2: rgba(9, 6, 17, 0.9);
-  --hud: rgba(8, 5, 14, 0.76);              /* HUD plates over a bright sky */
-  --scrim: rgba(5, 3, 10, 0.5);
-  --scrim-2: rgba(5, 3, 10, 0.84);
-  --scrim-0: rgba(5, 3, 10, 0);
+  /* night: the reference's navy-black surfaces (sampled from it: its rail #050b13, its sky top #020911) */
+  --void: #02050b;
+  --night-1: #050b13;
+  --night-2: #0a1320;
+  --night-3: #111c2c;
+  --glass: rgba(5, 10, 18, 0.8);            /* HUD-side cards over the scene */
+  --glass-2: rgba(3, 7, 13, 0.9);
+  --hud: rgba(3, 7, 13, 0.76);              /* HUD plates over a bright sky */
+  --scrim: rgba(2, 5, 11, 0.5);
+  --scrim-2: rgba(2, 5, 11, 0.84);
+  --scrim-0: rgba(2, 5, 11, 0);
   --shadow: rgba(0, 0, 0, 0.55);
   /* the menus' glass: frosted (with --blur), a hairline at 12 % white, quiet white fills for rows and tracks */
-  --sheet: rgba(17, 11, 28, 0.7);
-  --sheet-solid: rgba(13, 9, 22, 0.96);     /* the same glass where backdrop-filter isn't supported */
-  --sheet-foot: rgba(15, 10, 25, 0.95);     /* a card's sticky last row, over content scrolling under it */
-  --blur: blur(28px) saturate(1.6);
+  --sheet: rgba(5, 10, 18, 0.74);
+  --sheet-solid: rgba(4, 8, 15, 0.96);      /* the same glass where backdrop-filter isn't supported */
+  --sheet-foot: rgba(4, 9, 16, 0.95);       /* a card's sticky last row, over content scrolling under it */
+  --glass-rail: rgba(3, 8, 15, 0.76);       /* the main menu's rail, setup bar and profile chip, as the reference's */
+  --blur: blur(24px) saturate(1.4);
   --hair: rgba(255, 255, 255, 0.12);
   --hair-2: rgba(255, 255, 255, 0.22);
   --fill: rgba(255, 255, 255, 0.055);       /* rows, tracks, cards on the glass */
@@ -35,17 +39,18 @@
   --gloss: rgba(255, 255, 255, 0.35);       /* the lit top edge of the accent button */
   --lift: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.22);
   --deep: 0 30px 80px rgba(0, 0, 0, 0.45);
-  /* ink */
-  --ink: #f5f1fb;
-  --dim: #c3bad6;
-  --faint: #a59db8;                         /* quiet text: 5:1 or more on the menu's glass and its tracks (measured) */
-  --dim-hi: #d8d1e6;                        /* secondary text on a raised segment */
-  --line: rgba(214, 204, 236, 0.16);
-  --line-2: rgba(214, 204, 236, 0.32);
-  --line-3: rgba(244, 240, 252, 0.62);
+  /* ink: cool white and greys, as the reference's labels. On the base #050b13: ink 18.1:1, dim 11.1:1, faint 8.3:1 */
+  --ink: #f2f5f9;
+  --dim: #b9c3d0;
+  --faint: #a3adbb;                         /* quiet text: 5:1 or more on the menu's glass and its tracks */
+  --dim-hi: #d3dae4;                        /* secondary text on a raised segment */
+  --line: rgba(200, 214, 236, 0.16);
+  --line-2: rgba(200, 214, 236, 0.32);
+  --line-3: rgba(240, 244, 250, 0.62);
   /* signals: the OC sunset family, sampled from the owner's wordmark (src/ui/assets/oc-theme.css). Contrast is WCAG 2.x
-     on the violet-black base #0b0812: sunset 8.75:1, amber 11.77:1, ember 4.56:1 (so ember is for fills, hairlines and
-     large type only). Over a HUD plate on a white sky --sunset falls to 4.43:1, so small text uses --sunset-text. */
+     on the navy-black base #050b13: sunset 8.70:1, sunset-text 9.73:1, amber 11.71:1, ember 4.54:1 (so ember is for
+     fills, hairlines and large type only). Over a HUD plate on a white sky --sunset falls under 4.5:1, so small text
+     uses --sunset-text. The glows are this orange where the reference's are blue. */
   --sunset: #fd9123;                        /* the sky orange: Drive, focus, the accent */
   --sunset-text: #ffa040;                   /* small sunset text: 9.79:1 on the base, 4.96:1 on a HUD plate over white */
   --sunset-hi: #ffc98c;
@@ -53,6 +58,9 @@
   --sunset-line: rgba(253, 145, 35, 0.55);
   --sunset-wash: rgba(253, 145, 35, 0.1);
   --sunset-glow: rgba(253, 145, 35, 0.3);
+  --sunset-glow-2: rgba(253, 145, 35, 0.5);  /* the chosen rail item's outer glow */
+  --sunset-glow-in: rgba(253, 145, 35, 0.2); /* and its inner one */
+  --sunset-wash-2: rgba(253, 145, 35, 0.22);
   --amber: #febc31;                         /* the sun's highlight (HUD rev lights) */
   --amber-glow: rgba(254, 188, 49, 0.35);
   --ember: #ee1e0a;                         /* the red edge and the tail lights: danger */
@@ -65,9 +73,9 @@
   --bad: #ff6a4f;                           /* danger text, tail-light red: 7.02:1 on the base */
   /* brushed chrome */
   --chrome-hi: #ffffff;
-  --chrome: #d4cfe2;
-  --chrome-lo: #6a6380;
-  --chrome-deep: #2b2538;
+  --chrome: #d0d6e0;
+  --chrome-lo: #5f6878;
+  --chrome-deep: #232a36;
   --sheen: rgba(255, 255, 255, 0.07);
   /* road signs, kept as drivers know them */
   --sign-i: #1d4f9c;
@@ -75,7 +83,7 @@
   --sign-white: #f4f4ee;
   --sign-black: #111111;
   --sign-green: #0a6a3a;
-  --nav: #4aa8ff;                           /* the route on the road (the chevrons) and the card's arrow: 3.9:1 on a HUD plate over white */
+  --nav: #ffa040;                           /* the route: the nav card's arrow and the chevrons on the road, sunset where the reference's route is blue; 9.73:1 on the base */
   /* masks are alpha only */
   --opaque: #000;
   --clear: transparent;
@@ -95,9 +103,11 @@
   --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
 
   /* geometry and motion */
-  --r-sheet: 22px;
-  --r-card: 16px;
-  --r-ctl: 12px;
+  --r-sheet: 10px;                          /* the reference's panels: small radii, nearly square */
+  --r-card: 8px;
+  --r-ctl: 6px;
+  --r-btn: 5px;
+  --r-panel: 6px;
   --r-pill: 999px;
   --skew: -14deg;                           /* the HUD's plates */
   --ease: cubic-bezier(0.2, 0.85, 0.25, 1);
@@ -151,8 +161,8 @@ button { -webkit-tap-highlight-color: var(--clear); }
 .sect, .panel h3.sect { margin: 0; color: var(--dim); font: 500 12.5px/1.2 var(--f-text); letter-spacing: 0.06em; }
 
 /* ------------------------------------------------------------------ buttons: pills, a quiet lift under the pointer */
-.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border: 0; border-radius: var(--r-pill); cursor: pointer;
-  font: 500 15px/1.1 var(--f-text); letter-spacing: -0.005em; color: var(--ink); background-color: var(--fill-2); box-shadow: inset 0 0 0 1px var(--hair);
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border: 0; border-radius: var(--r-btn); cursor: pointer;
+  font: 500 13px/1.1 var(--f-text); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background-color: var(--fill-2); box-shadow: inset 0 0 0 1px var(--hair);
   transition: transform 180ms var(--ease-out), background-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out); }
 .btn.primary { color: var(--night); font-weight: 600; background-image: linear-gradient(180deg, var(--sunset-hi) -70%, var(--sunset) 42%, var(--sunset-deep) 170%);
   box-shadow: inset 0 1px 0 var(--gloss), 0 6px 20px var(--sunset-glow); }
@@ -251,78 +261,162 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .oc-watermark .wm-lights { fill: none; stroke: var(--amber); stroke-width: 3; stroke-dasharray: 14 30; }
 .panel.paused .oc-watermark i { width: 112%; bottom: -3%; }
 
-/* ------------------------------------------------------------------ the main menu: one persistent glass sheet */
-/* The sheet floats over the live attract drive: on a phone it is the screen, inset by 8 px; on a wider screen a
-   480 px column at the left, the drive clear beside it. Inside: the wordmark and what the sheet shows scroll; the
-   Drive dock sits under them and never moves. Switching screens cross-fades the content (App.tsx: crossFade): the old
-   copy fades where it stood on .sheet-ghost while the new one rises 6 px into place. */
-.overlay.menu { overflow: hidden; padding: 0; background: linear-gradient(90deg, var(--scrim-2) 0%, var(--scrim) 34%, var(--scrim-0) 60%); }
-.sheet { position: absolute; left: 24px; top: 24px; bottom: 24px; width: min(496px, calc(100% - 48px)); display: flex; flex-direction: column; overflow: hidden;
-  border-radius: var(--r-sheet); background: var(--sheet); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+/* ------------------------------------------------------------------ the main menu (owner's reference, 2026-10-21) */
+/* One persistent sheet over the showroom (src/game/Showroom.ts: your car in a concrete garage at night, the OC sign
+   glowing on the wall, drawn by the game). A glass rail at the left holds the wordmark, the Drive dock (Drive and the
+   five screens as rows with line icons, the chosen one outlined and glowing sunset with its chevron), the Store and
+   "Orange County, California" at its foot. Beside it, the home screen: the hero space the car stands in, the mode's
+   line, the setup bar (the mode, then the loadout) and four picture tiles; or a screen's card. The profile chip sits
+   top right. Switching screens cross-fades the content (App.tsx: crossFade): the old copy fades where it stood on
+   .sheet-ghost while the new one rises into place. */
+.overlay.menu { --rail-w: clamp(236px, 21vw, 312px); --gut: 20px; --top: 84px; overflow: hidden; padding: 0;
+  background: linear-gradient(90deg, var(--scrim-2) 0, var(--scrim-0) 30%), linear-gradient(0deg, var(--scrim-2) 0, var(--scrim-0) 46%); }
+.sheet { position: absolute; inset: 0; display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); }
+
+/* the rail */
+.rail { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 22px; min-height: 0; margin: var(--gut) 0 var(--gut) var(--gut); padding: 26px 0 20px;
+  overflow-y: auto; scrollbar-width: none; border-radius: var(--r-panel); background: var(--glass-rail); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
   box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--deep); }
-.sheet-main { position: relative; flex: 1; min-height: 0; }
-.sheet-scroll, .sheet-ghost { position: absolute; inset: 0; -webkit-mask: var(--edge-fade); mask: var(--edge-fade); }
-.sheet-scroll { overflow-y: auto; overscroll-behavior: contain; padding: 28px 32px 24px; scroll-padding: 24px; scrollbar-width: thin; scrollbar-color: var(--hair-2) var(--clear); }
+.rail .brand { padding: 0 22px; }
+/* the wordmark stacked as the reference's logo: the OC mark across the rail with a thin chrome rim, then the chromed
+   ULTRA and a quiet TOP SPEED on one line under it */
+.rail .lockup { --mk: calc(var(--rail-w) - 64px); grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 14px; row-gap: calc(var(--mk) * 0.045); }
+.rail .lockup-name { display: contents; }
+.rail .lockup .oc-mark { grid-column: 1 / -1; height: calc(var(--mk) * 0.3575); max-width: none;   /* sized outright: a grid row sized from the image's own 429 px would stand far too tall */
+  filter: drop-shadow(1px 0 0 var(--chrome)) drop-shadow(-1px 0 0 var(--chrome)) drop-shadow(0 -1px 0 var(--chrome-hi)) drop-shadow(0 1px 0 var(--chrome-lo)) drop-shadow(0 10px 24px var(--sunset-glow)); }
+.rail .lockup .word { font-size: calc(var(--mk) * 0.13); letter-spacing: 0.3em; margin: 0; }
+.rail .lockup-sub { font: 400 10.5px/1 var(--f-text); letter-spacing: 0.34em; }
+.rail-nav { display: grid; align-content: start; }
+.rail .rail-item { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; justify-content: stretch; gap: 16px; width: 100%; min-height: 50px; margin: 0;
+  padding: 0 18px 0 22px; border: 0; border-radius: 0; background: none; box-shadow: none; transform: none; cursor: pointer; text-align: left;
+  font: 400 14px/1.1 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); transition: background-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out); }
+.rail .rail-item + .rail-item::before { content: ""; position: absolute; left: 22px; right: 22px; top: 0; height: 1px; background: var(--hair); }
+.rail .rail-item::after { content: none; }
+.ricon { display: block; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.rail .rail-item .ricon { color: var(--dim); }
+.rail .rail-item > .chev { color: var(--sunset); }
+.rail .rail-item:not(.go) > .chev { display: none; }
+/* the chosen item: a sunset outline that glows, a warm wash, the icon lit, and a short bright tick at its right edge */
+.rail .rail-item.on { width: auto; margin: 0 12px; padding: 0 12px 0 10px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--sunset-wash-2), var(--sunset-wash) 70%, var(--sunset-wash-2));
+  box-shadow: inset 0 0 0 1px var(--sunset), 0 0 22px var(--sunset-glow-2), inset 0 0 18px var(--sunset-glow-in); }
+.rail .rail-item.on::before, .rail .rail-item.on + .rail-item::before { display: none; }
+.rail .rail-item.on::after { content: ""; position: absolute; right: -4px; top: 50%; width: 3px; height: 20px; margin-top: -10px; border-radius: 2px; background: var(--sunset-hi); box-shadow: 0 0 10px var(--sunset), 0 0 18px var(--sunset-glow-2); }
+.rail .rail-item.on .ricon { color: var(--sunset-hi); }
+.rail .rail-item:not(.go).on > .chev { display: none; }
+.rail .rail-item:focus-visible { outline: 2px solid var(--amber); outline-offset: -4px; }
+.rail .rail-item.on:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (hover: hover) { .rail .rail-item:not(.on):hover { background: var(--fill); } .rail .rail-item:not(.on):hover .ricon { color: var(--sunset-hi); } }
+.rail .rail-item:active { transform: none; }
+/* the Store: quieter, under a hairline */
+.rail .rail-store { margin-top: -8px; min-height: 44px; font-size: 12.5px; color: var(--dim); box-shadow: 0 -1px 0 var(--hair); width: calc(100% - 44px); margin-inline: 22px; padding-inline: 0; }
+.rail .rail-store .ricon { width: 20px; height: 20px; }
+.rail-foot { margin: auto 22px 0; font: 400 10.5px/1.8 var(--f-text); letter-spacing: 0.34em; text-transform: uppercase; color: var(--faint); }
+
+/* beside the rail: the home screen or a screen's card, scrolling under the profile chip */
+.sheet-main { position: relative; min-width: 0; min-height: 0; }
+.sheet-scroll, .sheet-ghost { position: absolute; inset: 0; padding: var(--top) var(--gut) 14px 24px; }
+.sheet-scroll { overflow-y: auto; overscroll-behavior: contain; scroll-padding: 24px; scrollbar-width: thin; scrollbar-color: var(--hair-2) var(--clear); }
 .sheet-ghost { overflow: hidden; pointer-events: none; }
 .sheet-ghost > .sheet-body { animation: fade-out 160ms var(--ease-out) forwards; }
-.sheet-body { display: grid; gap: 24px; padding-top: 24px; }
 .sheet-body:focus { outline: none; }
 .sheet-body.enter { animation: fade-in var(--t-fade) var(--ease-out) backwards; }
 @keyframes fade-out { to { opacity: 0; } }
-/* the wordmark: full size on the menu's own screen, smaller (easing) once a screen opens under it */
-.sheet .brand .lockup { --mk: 236px; transition: --mk var(--t-fade) var(--ease-out); }
-.sheet.sub .brand .lockup { --mk: 184px; }
-.back { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin-bottom: -8px; padding: 0 16px 0 12px; border: 0; border-radius: var(--r-pill); cursor: pointer;
-  font: 500 14px/1 var(--f-text); color: var(--ink); background: var(--fill); box-shadow: inset 0 0 0 1px var(--hair); transition: background-color 180ms var(--ease-out); }
+.sheet-body.homebody { display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
+/* a screen: a card of the rail's glass, as wide as it reads well */
+.sheet-body.card { display: grid; gap: 20px; align-content: start; max-width: 780px; padding: 24px 32px 28px; border-radius: var(--r-panel);
+  background: var(--sheet); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--deep); }
+.back { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin-bottom: -8px; padding: 0 16px 0 12px; border: 0; border-radius: var(--r-btn); cursor: pointer;
+  font: 500 12px/1 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); background: var(--fill); box-shadow: inset 0 0 0 1px var(--hair); transition: background-color 180ms var(--ease-out); }
 @media (hover: hover) { .back:hover { background: var(--fill-2); } }
 .chev { display: grid; place-items: center; font-style: normal; color: var(--faint); }
 .back .chev { color: var(--dim); }
-
 .lede { margin: 0; max-width: 50ch; font-size: 14.5px; line-height: 1.5; color: var(--dim); }
-.menu-sec { display: grid; gap: 12px; }
 
-/* the mode: a segmented track of four (two by two), the chosen one raised; its stat in figures under the name */
-.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; border-radius: var(--r-card); background: var(--fill); box-shadow: inset 0 0 0 1px var(--hair); }
-.mode { display: grid; gap: 4px; align-content: center; min-height: 56px; padding: 10px 14px; border: 0; border-radius: 13px; text-align: left; cursor: pointer; background: none; color: var(--dim);
-  transition: background-color 220ms var(--ease-out), color 220ms var(--ease-out), box-shadow 220ms var(--ease-out); }
-.mode b { font: 500 15.5px/1.2 var(--f-text); letter-spacing: -0.01em; }
-.mode small { font: 500 11.5px/1.2 var(--f-mono); color: var(--faint); font-variant-numeric: tabular-nums; }
-.mode.on { color: var(--ink); background: var(--fill-3); box-shadow: var(--lift), inset 0 0 0 1px var(--hair); }
+/* the showcase: the space your car stands in (the showroom frames the car on it: App.tsx frameCar) */
+.showcase { flex: 1 1 auto; min-height: 150px; }
+/* the chosen mode's line, over the floor */
+.mode-brief { margin: 0; max-width: 60ch; min-height: 1.45em; font: 400 14px/1.45 var(--f-text); color: var(--ink); text-shadow: 0 0 2px var(--void), 0 1px 14px var(--void), 0 0 28px var(--void); }
+
+/* the setup bar: the mode (a radio group of four), a hairline, then the loadout (driver, car, where you start or
+   which race), all on the rail's glass */
+.setup { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; padding: 6px; border-radius: var(--r-panel);
+  background: var(--glass-rail); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--lift); }
+.modes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.mode { position: relative; display: grid; gap: 6px; align-content: center; min-height: 56px; padding: 8px 12px; border: 0; border-radius: 3px; text-align: left; cursor: pointer; background: none; color: var(--dim);
+  transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+.mode b { font: 500 12px/1.2 var(--f-text); letter-spacing: 0.14em; text-transform: uppercase; }
+.mode small { font: 500 11px/1.2 var(--f-mono); color: var(--faint); font-variant-numeric: tabular-nums; }
+.mode.on { color: var(--ink); background: var(--sunset-wash); box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 -2px 0 var(--sunset), 0 0 16px var(--sunset-glow-in); }
 .mode.on small { color: var(--dim-hi); }
 .mode:focus-visible { outline-offset: 1px; }
 @media (hover: hover) { .mode:not(.on):hover { color: var(--ink); background: var(--fill); } }
-.mode-brief { margin: 0; min-height: 2.9em; padding: 0 2px; font-size: 14px; line-height: 1.45; color: var(--dim); }
-
-/* the loadout: a grouped list, rows with a chevron, hairlines between them */
-.picks { display: grid; overflow: hidden; border-radius: var(--r-card); background: var(--fill); box-shadow: inset 0 0 0 1px var(--hair); }
-.pick { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) 12px; grid-template-areas: "k v i" "k s i"; column-gap: 12px; row-gap: 2px; align-items: center;
-  min-height: 58px; padding: 9px 16px; text-align: left; cursor: pointer; border: 0; color: var(--ink); background: none; transition: background-color 160ms var(--ease-out); }
-.pick + .pick::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; height: 1px; background: var(--hair); }
-.pick > small { grid-area: k; font: 400 13px/1.25 var(--f-text); color: var(--dim); }
-.pick > b, .pick > .shield-row { grid-area: v; justify-self: start; }
-.pick > b { font: 500 16px/1.2 var(--f-text); letter-spacing: -0.01em; }
-.pick > span:not(.shield-row) { grid-area: s; min-width: 0; color: var(--dim); font-size: 13px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picks { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; padding-left: 8px; box-shadow: inset 1px 0 0 var(--hair); }
+.pick { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 10px; grid-template-areas: "k i" "v i" "s i"; column-gap: 8px; row-gap: 3px; align-content: center;
+  min-height: 56px; padding: 6px 10px; text-align: left; cursor: pointer; border: 0; border-radius: 3px; color: var(--ink); background: none; transition: background-color 160ms var(--ease-out); }
+.pick > small { grid-area: k; font: 500 10.5px/1.2 var(--f-text); letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+.pick > b, .pick > .shield-row { grid-area: v; justify-self: start; min-width: 0; max-width: 100%; }
+.pick > b { font: 500 14.5px/1.2 var(--f-text); letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pick > .shield-row .shield { min-width: 30px; height: 22px; font-size: 12px; }
+.pick > .shield-row b { font-size: 13.5px; }
+.pick > span:not(.shield-row) { grid-area: s; min-width: 0; color: var(--dim); font-size: 12px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pick > .chev { grid-area: i; justify-self: end; }
-.pick:focus-visible { outline-offset: -3px; border-radius: var(--r-card); }
+.pick:focus-visible { outline-offset: -2px; }
 @media (hover: hover) { .pick:hover { background: var(--fill); } }
 .pick:active { background: var(--fill-2); }
 
-/* the dock: Drive under the thumb, the three other ways out beside it; it stays while the sheet's content changes */
-.dock { flex: none; display: grid; grid-template-columns: 1.45fr 1fr 1fr 1fr; gap: 8px; padding: 16px 24px 20px; box-shadow: 0 -1px 0 var(--hair); }
-.dock .btn { padding-inline: 10px; }
-.dock .btn[aria-current="page"] { background-color: var(--fill-3); box-shadow: inset 0 0 0 1px var(--hair-2); }
-.btn.go { min-height: 48px; font-size: 17px; letter-spacing: -0.01em; }
-.btn.go::after { content: ""; width: 0; height: 0; margin-left: 2px; border-block: 5px solid var(--clear); border-left: 8px solid currentColor; }
+/* the tiles: the game's own pictures (rendered at night at load), the title and a line in thin capitals over a
+   shade at their foot, a hairline frame that turns sunset and glows under the pointer or the keyboard */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.tile { position: relative; isolation: isolate; display: grid; align-content: end; justify-items: start; width: 100%; aspect-ratio: 16 / 7; min-height: 92px; padding: 0 14px 11px; overflow: hidden;
+  border: 0; border-radius: var(--r-panel); cursor: pointer; text-align: left; color: var(--ink); background: var(--night-2); box-shadow: 0 10px 30px var(--shadow);
+  transition: box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.tile img, .tile-ph { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.tile-ph { background: radial-gradient(120% 90% at 70% 20%, var(--night-3), var(--night-1)); }
+.tile::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--scrim-0) 25%, rgba(2, 5, 11, 0.62) 55%, rgba(2, 5, 11, 0.92) 100%); }
+.tile::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px var(--hair-2), inset 0 1px 0 var(--sheen); transition: box-shadow 200ms var(--ease-out); }
+.tile b { font: 500 16px/1.1 var(--f-text); letter-spacing: 0.14em; text-transform: uppercase; }
+.tile small { margin-top: 6px; font: 400 10.5px/1.25 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim-hi); }
+.tile:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.tile:focus-visible::after { box-shadow: inset 0 0 0 1px var(--sunset), inset 0 0 22px var(--sunset-glow); }
+@media (hover: hover) {
+  .tile:hover { box-shadow: 0 0 24px var(--sunset-glow), 0 10px 30px var(--shadow); transform: translateY(-1px); }
+  .tile:hover::after { box-shadow: inset 0 0 0 1px var(--sunset), inset 0 0 22px var(--sunset-glow); }
+}
 
-/* the extras at the foot of the menu: the Loop Lab teaser and the credits */
-.menu-aside { display: grid; gap: 16px; }
-.soon { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; row-gap: 4px; padding: 16px; border-radius: var(--r-card); text-decoration: none; color: var(--ink);
+/* the Store as a card: on a phone held upright, where the rail's Store isn't */
+.fine.credit { font-size: 11px; line-height: 1.45; }
+
+/* the profile chip, top right: avatar, name, level and XP to the next, Credits (earned by driving; no currency sign) */
+.pchip { position: absolute; z-index: 3; top: var(--gut); right: var(--gut); display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 8px 18px 8px 8px; border: 0;
+  border-radius: var(--r-panel); cursor: pointer; text-align: left; color: var(--ink); background: var(--glass-rail); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--lift); transition: box-shadow 180ms var(--ease-out); }
+.pchip-avatar { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 3px; font: 600 18px/1 var(--f-title); box-shadow: inset 0 0 0 1px var(--hair-2); }
+.pchip-who { display: grid; grid-template-columns: auto auto; column-gap: 14px; row-gap: 7px; align-items: baseline; }
+.pchip-name { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 13px/1 var(--f-text); letter-spacing: 0.14em; text-transform: uppercase; }
+.pchip-level { justify-self: end; font: 500 11px/1 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.pchip-xp { grid-column: 1 / -1; display: block; width: 150px; height: 3px; border-radius: 2px; overflow: hidden; background: var(--fill-3); }
+.pchip-xp i { display: block; height: 100%; min-width: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--sunset-deep), var(--sunset), var(--amber)); box-shadow: 0 0 8px var(--sunset-glow-2); }
+.pchip-credits { display: grid; gap: 5px; padding-left: 16px; box-shadow: inset 1px 0 0 var(--hair-2); }
+.pchip-credits small { font: 500 10px/1 var(--f-text); letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); }
+.pchip-credits b { font: italic 600 19px/1 var(--f-title); letter-spacing: 0.01em; font-variant-numeric: tabular-nums; }
+.pchip[aria-current="page"] { box-shadow: inset 0 0 0 1px var(--sunset), 0 0 18px var(--sunset-glow); }
+@media (hover: hover) { .pchip:hover { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 1px 0 var(--sheen), var(--lift); } }
+
+/* the World Map: the freeways as lines of light, the one you start on in sunset */
+.worldmap { --map-road: #c9d3e0; --map-glow: rgba(150, 180, 220, 0.45); --map-hot: var(--sunset); display: block; width: 100%; aspect-ratio: 16 / 10; max-height: 46vh;
+  border-radius: var(--r-card); background: radial-gradient(90% 90% at 50% 45%, var(--night-2), var(--void)); box-shadow: inset 0 0 0 1px var(--hair); }
+
+/* the extras: the Loop Lab teaser (in Events) and the Store card */
+.soon { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; row-gap: 4px; padding: 16px; border-radius: var(--r-card); text-decoration: none; color: var(--ink); border: 0; text-align: left; cursor: pointer;
   background: var(--fill); box-shadow: inset 0 0 0 1px var(--hair); transition: background-color 180ms var(--ease-out), transform 180ms var(--ease-out); }
-.soon small { grid-column: 1 / -1; font: 500 12.5px/1.2 var(--f-text); letter-spacing: 0.06em; color: var(--sunset-text); }
+.soon small { grid-column: 1 / -1; font: 500 11px/1.2 var(--f-text); letter-spacing: 0.18em; text-transform: uppercase; color: var(--sunset-text); }
 .soon b { font: 500 17px/1.25 var(--f-text); letter-spacing: -0.01em; }
 .soon span { grid-column: 1; color: var(--dim); font-size: 13.5px; line-height: 1.45; }
 .soon i { grid-column: 2; grid-row: 2 / 4; align-self: center; display: grid; font-style: normal; color: var(--dim); }
 @media (hover: hover) { .soon:hover { background: var(--fill-2); transform: translateY(-1px); } }
+.btn.go { min-height: 48px; font-size: 15px; }
+.soon.home-store { display: none; }               /* the Store as a card only on a phone held upright (styles below) */
 
 /* ------------------------------------------------------------------ loading: it fades into the menu */
 .overlay.loading-screen { isolation: isolate; background: radial-gradient(80% 60% at 30% 40%, var(--night-2) 0%, var(--void) 75%); }
@@ -574,7 +668,7 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .hud-bubble b { font: 600 13px/1 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
 /* ------------------------------------------------------------------ navigation (U2): the manoeuvre card and the destination card */
-/* top left, the next manoeuvre: its arrow in the route's blue (the chevrons on the road are its deeper twin, #2f8cff,
+/* top left, the next manoeuvre: its arrow in the route's sunset (the chevrons on the road are its deeper twin, #ff8418,
    lit up by their glow), how far, what to do, the road it leads to as a guide sign, and under a hairline the next
    exit's real sign text (or the road you're on). Fixed height, so the stats plate can sit under it. Top right, under
    the corner window (App.tsx sets --cw to its size), the destination: the road, how far along the route, the time at
@@ -662,24 +756,80 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 }
 /* a short window (a phone on its side): the sheet uses the height */
 @media (max-height: 560px) and (min-width: 561px) {
-  .sheet { top: 12px; bottom: 12px; left: max(16px, env(safe-area-inset-left)); }
-  .sheet-scroll { padding-top: 24px; }
-  .sheet .brand .lockup { --mk: 208px; }
-  .sheet.sub .brand .lockup { --mk: 156px; }
-  .dock { padding: 12px 24px 16px; }
+  /* a phone on its side: a slimmer rail with shorter rows, and the home screen scrolls under the chip */
+  .overlay.menu { --rail-w: 214px; --gut: 8px; --top: 62px; }
+  .rail { gap: 10px; padding: 12px 0 10px; }
+  .rail .brand { padding: 0 16px; }
+  .rail .lockup { --mk: 132px; }
+  .rail .rail-item { min-height: 34px; padding: 0 12px 0 16px; gap: 12px; font-size: 11.5px; }
+  .rail .rail-item + .rail-item::before { left: 16px; right: 16px; }
+  .rail .rail-item.on { margin: 0 8px; padding: 0 8px; }
+  .rail .rail-store { min-height: 34px; margin: -4px 16px 0; width: calc(100% - 32px); font-size: 11px; }
+  .rail-foot { display: none; }
+  .ricon { width: 18px; height: 18px; }
+  .sheet-scroll, .sheet-ghost { padding-left: 12px; }
+  .pchip { min-height: 44px; padding: 5px 12px 5px 5px; gap: 10px; }
+  .pchip-avatar { width: 32px; height: 32px; font-size: 15px; }
+  .pchip-xp { width: 100px; }
+  .showcase { min-height: 120px; }
+  .setup { grid-template-columns: 1fr; }
+  .picks { padding: 6px 0 0; box-shadow: inset 0 1px 0 var(--hair); }
+  .mode, .pick { min-height: 48px; }
+  .tile { aspect-ratio: 16 / 8; min-height: 70px; padding: 0 10px 8px; }
+  .tile b { font-size: 13px; }
+  .tile small { font-size: 9.5px; letter-spacing: 0.1em; }
+  .sheet-body.card { padding: 18px 20px 22px; }
 }
 
 /* ------------------------------------------------------------------ phones */
 @media (max-width: 560px) {
-  .overlay.menu { background: var(--scrim); }
-  .sheet { left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right)); width: auto; top: max(8px, env(safe-area-inset-top)); bottom: max(8px, env(safe-area-inset-bottom)); border-radius: 24px; }
-  .sheet-scroll { padding: 24px 20px 24px; }
-  .sheet .brand .lockup { --mk: min(54vw, 212px); }
-  .sheet.sub .brand .lockup { --mk: 148px; }
-  .sheet-body { padding-top: 20px; }
-  .dock { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 16px 16px; }
-  .dock .go { grid-column: 1 / -1; min-height: 52px; }
-  .pick { grid-template-columns: 64px minmax(0, 1fr) 12px; min-height: 62px; padding-inline: 16px 14px; }
+  /* the main menu on a phone held upright: the wordmark top left and the chip top right; the home screen scrolls
+     (the hero space your car stands in, the mode's line, the setup card, the tiles as a row to swipe, the Store
+     card); the rail's items become the dock along the bottom: Drive across it, the five screens as tabs under it */
+  .overlay.menu { --gut: 10px; --top: calc(max(10px, env(safe-area-inset-top)) + 62px); --dock-h: 142px;
+    background: linear-gradient(180deg, var(--scrim-2) 0, var(--scrim-0) 16%), linear-gradient(0deg, var(--scrim-2) 0, var(--scrim-0) 62%); }
+  .sheet { display: block; }
+  .rail { position: absolute; inset: 0; z-index: 2; display: block; margin: 0; padding: 0; overflow: visible; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; pointer-events: none; }
+  .rail > * { pointer-events: auto; }
+  .rail .brand { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; padding: 0; }
+  .rail .lockup { --mk: 96px; grid-template-columns: auto auto; row-gap: 2px; column-gap: 10px; }
+  .rail .lockup .oc-mark { grid-column: 1; grid-row: 1 / 3; }
+  .rail .lockup .word { font-size: 17px; letter-spacing: 0.2em; align-self: end; }
+  .rail .lockup-sub { font-size: 8.5px; letter-spacing: 0.28em; align-self: start; }
+  .rail .lockup-sub::before { display: none; }
+  .rail-nav { position: absolute; left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom));
+    grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 2px; padding: 8px; border-radius: 14px;
+    background: var(--glass-rail); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: inset 0 0 0 1px var(--hair), inset 0 1px 0 var(--sheen), var(--deep); }
+  .rail .rail-item { grid-template-columns: none; justify-items: center; align-content: center; gap: 5px; min-height: 54px; padding: 4px 0; border-radius: 8px;
+    font-size: 9.5px; letter-spacing: 0.02em; text-transform: none; text-align: center; }
+  .rail .rail-item + .rail-item::before { display: none; }
+  .rail .rail-item > span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rail .rail-item.go { grid-column: 1 / -1; grid-template-columns: 22px auto 10px; justify-content: center; gap: 12px; min-height: 52px; margin: 0; padding: 0 16px;
+    font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .rail .rail-item.on { margin: 0; padding: 4px 0; border-radius: 8px; }
+  .rail .rail-item.go.on { padding: 0 16px; }
+  .rail .rail-item.on::after { right: 50%; top: auto; bottom: -1px; width: 22px; height: 2px; margin: 0 -11px 0 0; }
+  .rail .rail-store, .rail-foot { display: none; }
+  .pchip { top: max(10px, env(safe-area-inset-top)); right: 10px; min-height: 44px; gap: 10px; padding: 5px 12px 5px 5px; }
+  .pchip-avatar { width: 32px; height: 32px; font-size: 15px; }
+  .pchip-who { column-gap: 8px; row-gap: 6px; }
+  .pchip-name { max-width: 8ch; font-size: 11.5px; letter-spacing: 0.1em; }
+  .pchip-xp { width: 72px; }
+  .pchip-credits { padding-left: 10px; }
+  .pchip-credits b { font-size: 16px; }
+  .sheet-scroll, .sheet-ghost { padding: var(--top) 12px calc(max(8px, env(safe-area-inset-bottom)) + var(--dock-h) + 12px); }
+  .sheet-body.homebody { gap: 12px; min-height: 0; }
+  .showcase { flex: none; height: 30vh; min-height: 200px; }
+  .setup { grid-template-columns: 1fr; padding: 6px; }
+  .modes { grid-template-columns: 1fr 1fr; }
+  .picks { grid-auto-flow: row; padding: 6px 0 0; box-shadow: inset 0 1px 0 var(--hair); }
+  .mode, .pick { min-height: 54px; }
+  .tiles { display: flex; gap: 10px; margin: 0 -12px; padding: 2px 12px 6px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; scroll-padding-inline: 12px; }
+  .tiles::-webkit-scrollbar { display: none; }
+  .tiles li { flex: 0 0 74%; scroll-snap-align: start; }
+  .tile { aspect-ratio: 16 / 8.5; }
+  .soon.home-store { display: grid; }
+  .sheet-body.card { max-width: none; padding: 20px 18px 22px; }
   .lede { font-size: 15px; }
   /* five-way choices get a smaller label, six-way ones two rows */
   .seg[data-n="5"] button { padding-inline: 2px; font-size: 12.5px; }
@@ -774,7 +924,8 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   .panel, .sheet-body, .sheet-ghost > *, .toast, .loadbar i, .hud-revs i, .brand.hero .word span::after { animation: none !important; }
   .overlay.loading-screen.leaving { animation: none !important; visibility: hidden; }
-  .btn, .seg button, .mode, .pick, .gcell, .soon, .back, .toggle input, .sheet .brand .lockup { transition: none !important; }
+  .btn, .seg button, .mode, .pick, .gcell, .soon, .back, .toggle input, .tile, .tile::after, .pchip, .rail .rail-item { transition: none !important; }
+  .tile:hover { transform: none !important; }
   .tbar .tbtn, .corner, .hud-bubble, .tbtn .tico, .hud-dest { transition: none !important; animation: none !important; }   /* the Minimal HUD just shows and hides */
   .btn:hover, .btn:active, .soon:hover { transform: none !important; }
   .loadbar i { left: 31%; }

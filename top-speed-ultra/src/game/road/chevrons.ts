@@ -1,10 +1,11 @@
-// The navigation chevrons (U2): a path of blue chevrons on the road along the planned route, for the next 300 m.
+// The navigation chevrons (U2): a path of sunset-orange chevrons on the road along the planned route, for the next 300 m
+// (blue until the owner's 2026-10-21 reference pass: where the reference's route glows blue, ours glows the OC sunset).
 // They lie on the lane the route needs (the exit lane as a diverge comes up, the side of a ramp that splits the way the
 // route goes, the outside lane of a road you're joining), a few centimetres over the surface, and fade out with distance.
 //
-// How they're drawn: each chevron is a crisp blue core over a soft glow. The glow is added onto the road (additive, so
-// it lights up at night and in tunnels); the core also covers what's under it a little, so the blue still reads on
-// sunlit concrete, where pure additive blue washes out to white. One blend does both (premultiplied: src + dst * (1 -
+// How they're drawn: each chevron is a crisp core over a soft glow. The glow is added onto the road (additive, so
+// it lights up at night and in tunnels); the core also covers what's under it a little, so the colour still reads on
+// sunlit concrete, where a purely additive colour washes out toward white. One blend does both (premultiplied: src + dst * (1 -
 // core)), with the fade on colour and coverage alike.
 //
 // Cheap by design: one InstancedMesh of flat quads, no shadows, no fog, no depth write. The legs of the route (which
@@ -23,7 +24,7 @@ const MAX = Math.ceil(AHEAD / SPACING) + 6;
 const LIFT = 0.07;                 // over the surface (and offset in depth past the lane paint: see the material)
 const LANE_AHEAD = 1600;           // a diverge this close: the path moves to the exit lane (the autopilot's distance too)
 const W = 2.5, L = 2.0;            // the quad: across, along
-const COLOR = new THREE.Color('#2f8cff');
+const COLOR = new THREE.Color('#ff8418');      // the deeper twin of the UI's --nav (#ffa040), the OC sunset
 
 type Side = 'L' | 'R';
 export interface Sides { diverge: (p: Path, j: Junction) => Side; merge: (ramp: Path, j: Junction) => Side }
@@ -169,7 +170,7 @@ export class RouteChevrons {
 }
 
 // the chevron, painted once on black: its crisp core in the red channel, a soft glow around it in the green (data, not
-// colour: the shader turns them into blue and coverage), pointing up the canvas (forward on the road)
+// colour: the shader turns them into the route's colour and coverage), pointing up the canvas (forward on the road)
 function chevronTexture(anisotropy: number) {
   const c = document.createElement('canvas'); c.width = c.height = 128;
   const g = c.getContext('2d')!;
