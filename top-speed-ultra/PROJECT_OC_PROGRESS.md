@@ -47,7 +47,7 @@ The owner's standing order is to keep improving until they say stop. A scheduled
     now run on OC's clock: Pacific time in Live, wherever the player is, and the preset's own hour otherwise. `phone`
     and `boot`: 14 of 14, with the Day preset's chip reading "12:30 PM".
   - With Live weather and the real feed, the chip now shows the observed temperature and "NWS KSNA" rather than the
-    simulated one. The check injects a reading; the rerun is below.
+    simulated one. In the `phone` group the injected reading showed "61° · NWS KSNA": 8 of 8.
 
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 
