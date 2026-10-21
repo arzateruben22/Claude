@@ -20,6 +20,7 @@ import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
 import { Phone, PhoneApp } from './Phone';
+import { RadialMenu, RadialPick } from './RadialMenu';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map' | 'phone';
@@ -52,7 +53,10 @@ export function App() {
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
   const [radioOpen, setRadioOpen] = useState(false);
-  const [setSec, setSetSec] = useState('graphics');                   // the Settings rail's current section              // the radio card beside the controls while driving
+  const [setSec, setSetSec] = useState('graphics');
+  // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
+  const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
+  const holdT = useRef(0), held = useRef(false);                   // the Settings rail's current section              // the radio card beside the controls while driving
   const [report, setReport] = useState('');                           // the Feedback panel's text
   const [, rerender] = useState(0);                                   // the garage changed the car: the atmosphere follows
   const reportRef = useRef<HTMLTextAreaElement>(null);
@@ -120,9 +124,16 @@ export function App() {
   };
 
   useEffect(() => {
-    const k = (e: KeyboardEvent) => { if (e.code === 'Escape' && panel) { setPanel(null); e.stopPropagation(); } if (e.code === 'Enter' && screen === 'menu' && !panel) drive(); };
+    const k = (e: KeyboardEvent) => {
+      if (e.code === 'Escape' && panel) { setPanel(null); e.stopPropagation(); }
+      if (e.code === 'Enter' && screen === 'menu' && !panel) drive();
+      // hold Tab while driving for the quick menu (released, the menu picks or cancels)
+      if (e.code === 'Tab' && screen === 'playing' && !panel && !e.repeat && !radial) { e.preventDefault(); clearTimeout(holdT.current); holdT.current = window.setTimeout(() => setRadial({ x: innerWidth / 2, y: innerHeight / 2 }), 300); }
+    };
+    const ku = (e: KeyboardEvent) => { if (e.code === 'Tab') clearTimeout(holdT.current); };
+    addEventListener('keyup', ku, true);
     addEventListener('keydown', k, true);
-    return () => removeEventListener('keydown', k, true);
+    return () => { removeEventListener('keydown', k, true); removeEventListener('keyup', ku, true); };
   });
 
   const playing = screen === 'playing';
@@ -161,8 +172,20 @@ export function App() {
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
           <button type="button" className={'tbtn' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" />Radio</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}><Ico name="pause" />Pause</button>
+          <button type="button" className="tbtn" aria-haspopup="menu" title="Tap to pause; hold for the quick menu"
+            onPointerDown={() => { held.current = false; clearTimeout(holdT.current); holdT.current = window.setTimeout(() => { held.current = true; setRadial({ x: innerWidth / 2, y: innerHeight / 2 }); }, 300); }}
+            onPointerUp={() => clearTimeout(holdT.current)} onPointerLeave={() => { if (!held.current) clearTimeout(holdT.current); }}
+            onClick={() => { if (!held.current) game.current?.setPaused(true); held.current = false; }}><Ico name="pause" />Pause</button>
         </div>
+      )}
+      {playing && radial && (
+        <RadialMenu at={radial} onCancel={() => setRadial(null)} onPick={(p: RadialPick) => {
+          setRadial(null); const g = game.current; if (!g) return;
+          if (p === 'camera') { g.cycleCam(); return; }
+          if (p === 'radio') { setRadioOpen(true); return; }
+          if (p === 'nav') { setPanel('nav'); return; }
+          g.setPaused(true); setPanel(p);
+        }} />
       )}
       {playing && radioOpen && game.current && <RadioCard game={game.current} settings={settings} update={update} onClose={() => setRadioOpen(false)} />}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>

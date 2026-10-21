@@ -961,3 +961,18 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .s-rail { position: static; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
   .s-tab { flex: none; min-height: 36px; box-shadow: inset 0 0 0 1px var(--line); }
 }
+
+/* ------------------------------------------------------------------ the radial quick menu (U3, RadialMenu.tsx) */
+.radial { position: absolute; z-index: 20; width: 0; height: 0; }
+.radial::before { content: ""; position: absolute; left: -190px; top: -190px; width: 380px; height: 380px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--scrim-2) 0 34%, var(--scrim) 60%, var(--scrim-0) 72%); }
+.radial-hub { position: absolute; left: -54px; top: -54px; width: 108px; height: 108px; display: grid; place-items: center; border-radius: 50%; text-align: center;
+  font: 600 12px/1.2 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2), 0 0 24px var(--ice-glow); }
+.radial-w { position: absolute; left: -44px; top: -44px; width: 88px; height: 88px; display: grid; place-content: center; justify-items: center; gap: 6px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2); font: 600 11px/1 var(--f-ui); letter-spacing: 0.1em; text-transform: uppercase;
+  transform: translate(var(--x), var(--y)); animation: fan 0.22s var(--ease) both; animation-delay: calc(var(--i) * 18ms); }
+.radial-w .ico { width: 22px; height: 22px; color: var(--dim); }
+.radial-w.on { background: var(--ice-deep); box-shadow: inset 0 0 0 1px var(--ice), 0 0 22px var(--ice-glow); }
+.radial-w.on .ico { color: var(--ink); }
+@keyframes fan { from { opacity: 0; transform: translate(0, 0) scale(0.6); } }
+@media (prefers-reduced-motion: reduce) { .radial-w { animation: none !important; } }
