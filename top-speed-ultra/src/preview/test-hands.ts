@@ -1,6 +1,7 @@
 // Test page for the driver's hands (hands.ts). A stand-in steering wheel (rim swept with spec.ts rimAt/rimA/rimB in
 // dark leather, three spokes and a hub) and a dark dash, the game's sky, and the hands gripping the rim.
-//   ?view=seat     from the driver's eye (spec EYE), as the game frames it, sky 'day'
+//   ?view=seat     from the driver's eye (spec EYE), sky 'day'; &frame=game uses the game's own cockpit camera
+//                  (fov 96 pitched down 0.27 rad on a portrait viewport, 58 / 0.085 rad in landscape)
 //   ?view=fingers  the right hand's grip in three panels: from the driver's eye (zoomed), from above, from the dash
 //   ?view=close    the right hand from about 25 cm: knuckles, skin, the thumbnail
 //   ?view=female   the female presentation in two panels: the left hand from outside the rim (the ring, the
@@ -129,7 +130,15 @@ if (hide) arms.group.traverse((o) => { if (o.name === hide) o.visible = false; }
 const cam = stage.camera;
 const handR = arms.grip.right.clone();   // the right hand's grip, between knuckles and fingertips
 const look = (from: THREE.Vector3, at: THREE.Vector3) => { cam.position.copy(from); cam.up.set(0, 1, 0); cam.lookAt(at); };
-if (view === 'seat') look(EYE, new THREE.Vector3(EYE.x, EYE.y - 0.06, EYE.z - 10));
+if (view === 'seat') {
+  if (q.get('frame') === 'game') {
+    // the game's own cockpit framing (Game.ts camera): fov 96 pitched down 0.27 rad on a portrait phone, 58 and
+    // 0.085 rad in landscape, from the same eye; the judge's view of the hands as the owner sees them
+    const portrait = innerWidth / innerHeight < 0.95, pitch = portrait ? -0.27 : -0.085;
+    cam.fov = portrait ? 96 : 58; cam.updateProjectionMatrix();
+    look(EYE, new THREE.Vector3(EYE.x, EYE.y + Math.sin(pitch) * 10, EYE.z - Math.cos(pitch) * 10));
+  } else look(EYE, new THREE.Vector3(EYE.x, EYE.y - 0.06, EYE.z - 10));
+}
 else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.004, 0.006, 0.01)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.25)).add(new THREE.Vector3(0.04, 0.03, 0.0)), at); }
 else if (view === 'tones') { const at = handR.clone().add(new THREE.Vector3(-0.012, -0.006, 0.014)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.36)).add(new THREE.Vector3(0.04, 0.02, 0.0)), at); }
 else if (view === 'female') look(new THREE.Vector3(-0.3, 1.12, -0.06), new THREE.Vector3(-0.3, 0.88, -0.42));   // (two panels below)
