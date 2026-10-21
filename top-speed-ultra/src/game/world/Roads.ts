@@ -14,6 +14,8 @@ import type { QualityPreset } from '../settings';
 
 export const CHUNK = 160;
 const DASH = 3.66, GAP = 10.97, PERIOD = DASH + GAP;
+// the layer only the corner's sky camera sees (Game.skyCam): its lane lines here, its "you" ring in Game
+export const SKY_LAYER = 1;
 const TOLL = new Set(['SR-73', 'SR-133', 'SR-241', 'SR-261']);
 
 interface Desc { key: number; path: Path | null; k: number; over: Overpass | null; x: number; z: number; r: number }
@@ -166,6 +168,8 @@ export class Roads {
     // -------------------------------------------------------------- paint
     const paint = this.markings(p, s0, s1, ox, oz, covered);
     if (paint) own(new THREE.Mesh(paint, this.m.paint), true);
+    const skyPaint = this.markings(p, s0, s1, ox, oz, covered, true);
+    if (skyPaint) own(new THREE.Mesh(skyPaint, this.m.paint), true).layers.set(SKY_LAYER);
 
     // -------------------------------------------------------------- barriers: Jersey, or a block sound wall in town
     const i0 = Math.round(s0 / STEP);
@@ -281,8 +285,12 @@ export class Roads {
     return g;
   }
 
-  // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps
-  private markings(p: Path, s0: number, s1: number, ox: number, oz: number, covered: (s: number, d: number, y: number) => boolean) {
+  // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps.
+  // sky: the same lines for the corner's sky camera only (SKY_LAYER, which no other camera has). From its 80-140 m a
+  // Botts' dot (11 cm) or an edge line (12-15 cm) is a small fraction of a pixel and the lanes don't read, so each
+  // chunk carries them again as that camera would resolve them: each run of four dots as one 0.3 m dash over the 2.9 m
+  // they cover, and the edge lines 0.3 m wide, in the same places.
+  private markings(p: Path, s0: number, s1: number, ox: number, oz: number, covered: (s: number, d: number, y: number) => boolean, sky = false) {
     const pos: number[] = [], col: number[] = [], idx: number[] = [];
     const white = [0.93, 0.93, 0.9], yellow = [0.95, 0.74, 0.12];
     const quad = (sa: number, sb: number, d: number, w: number, c: number[], lift = 0.015) => {
@@ -297,12 +305,17 @@ export class Roads {
     };
     for (let s = s0; s < s1 - 1e-6; s += STEP) {
       const e = Math.min(s + STEP, s1);
-      quad(s, e, p.edgeL - 0.12, 0.12, yellow);
-      quad(s, e, p.edgeR + 0.1, 0.15, white);
+      quad(s, e, p.edgeL - (sky ? 0.15 : 0.12), sky ? 0.3 : 0.12, yellow);
+      quad(s, e, p.edgeR + (sky ? 0.15 : 0.1), sky ? 0.3 : 0.15, white);
     }
     for (let L = 1; L < p.lanes; L++) {
       const d = p.edgeL + LANE_W * L;
       for (let st = Math.floor(s0 / PERIOD) * PERIOD; st < s1; st += PERIOD) {
+        if (sky) {
+          const a = Math.max(s0, st + 0.39), b = Math.min(s1, st + 3.27);
+          if (b - a > 0.2) quad(a, b, d, 0.3, white, 0.02);
+          continue;
+        }
         // California lane lines: four raised Botts' dots where other states paint a dash
         for (let k = 0; k < 4; k++) {
           const cx = st + 0.45 + k * 0.92;

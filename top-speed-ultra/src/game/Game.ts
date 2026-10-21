@@ -7,12 +7,13 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
+import { Pass } from 'three/examples/jsm/postprocessing/Pass.js';
 import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
 import { Path, Junction, ORIGIN } from './world/Path';
-import { Roads } from './world/Roads';
+import { Roads, SKY_LAYER } from './world/Roads';
 import { Terrain } from './world/Terrain';
 import { CarPhysics, SPEC } from './vehicle/Physics';
 import { PlayerCar } from './vehicle/PlayerCar';
@@ -37,6 +38,23 @@ const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Ho
 const DT = 1 / 120;
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
+// the corner's sky camera: its field of view (degrees), how much road the window spans along the heading (metres:
+// stopped, and from about 110 mph), and how far below the window's middle the car sits (a share of that span)
+const SKY_FOV = 28, SKY_SPAN: [number, number] = [40, 70], SKY_LOW = 0.13;
+// Low (the phone tier) draws the sky camera every this many frames and copies the last picture in between
+const SKY_EVERY_LOW = 2;
+// the sky camera's "you" ring (on SKY_LAYER, with the lane lines Roads draws for it): its radius as a share of the
+// window's span, the same size in the window at every span, 6.8 m across round a 4.5 m car when stopped
+const SKY_MARK = 0.085;
+
+// the sky camera inside the composer (High and Ultra): drawn into the main view's own HDR buffer after the ambient
+// occlusion and before the bloom and the output pass, so its picture gets exactly the main view's tone mapping, grade
+// and bloom, and every material keeps the one shader variant it has for that buffer (drawn straight onto the canvas
+// instead, each would switch between two variants twice a frame)
+class SkyPass extends Pass {
+  constructor(private draw: (target: THREE.WebGLRenderTarget) => void) { super(); this.needsSwap = false; }
+  render(_r: THREE.WebGLRenderer, _write: THREE.WebGLRenderTarget, read: THREE.WebGLRenderTarget) { this.draw(read); }
+}
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NO_STANDINGS: Standing[] = [];
 
@@ -132,6 +150,26 @@ export class Game {
   private hudOn = true;
   private mapCanvas: HTMLCanvasElement | null = null;
   private mapT = 0;
+  // the sky camera this frame: on or not, its box in the canvas's buffer pixels (GL's, from the bottom left), the span
+  // of road it shows and the heading it follows (both eased), and the camera's height over the car
+  private sky = { on: false, x: 0, y: 0, w: 0, h: 0, span: 0, psi: 0, lift: 0, primed: false };
+  private skyProbeScene = Object.assign(new THREE.Scene(), { background: new THREE.Color() });
+  private skySize = new THREE.Vector2();
+  // where the sky camera's traffic is gathered from (the car, world x and z, and a radius past the window's corners)
+  private skyFocus = { x: 0, z: 0, r: 0, set(x: number, z: number, r: number) { this.x = x; this.z = z; this.r = r; return this; } };
+  // the sky camera's "you" mark: a thin ring in the HUD's sunset orange flat round the car, on a layer only the sky
+  // camera sees (not the main view, the mirrors, the shadows or the flare's rays). It's drawn over everything, so it
+  // still shows where you are under an overpass and at night, and which car is yours in traffic of the same colour.
+  private skyMark = Object.assign(new THREE.Mesh(new THREE.RingGeometry(0.86, 1, 48).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xfd9123, transparent: true, opacity: 0.92, depthTest: false, depthWrite: false, fog: false, toneMapped: false })),
+  { renderOrder: 20, frustumCulled: false });
+  // testing aid: fill the sky camera's box with this colour instead of drawing the view (on every path: straight onto
+  // the canvas, the composer's buffer, Low's own buffer and its copy), so a test can find exactly where on screen it
+  // lands (tests/regression.mjs, phone group)
+  skyProbe: number | null = null;
+  // the sky camera: its last render's draw calls and triangles, this frame's CPU ms for it (the render or the copy, and
+  // the state round them), its box in buffer pixels, how many frames each picture serves, and how many it has drawn
+  readonly skyStats = { calls: 0, tris: 0, ms: 0, w: 0, h: 0, every: 1, renders: 0 };
   // run state
   private distance = 0; private score = 0; private combo = 1; private comboT = 0; private overtakes = 0;
   private timeLeft = 60; private nextCheckpoint = 2000; private countdown = 0; private top = 0; private over = false;
@@ -175,6 +213,7 @@ export class Game {
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
     this.scene.add(this.chevrons.mesh);
+    this.skyMark.layers.set(SKY_LAYER); this.skyCam.layers.enable(SKY_LAYER); this.scene.add(this.skyMark);
     this.applyDriver();
     this.applyCarChoice();
     this.input = new Input(canvas);
@@ -532,12 +571,14 @@ export class Game {
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
     this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null;
+    this.disposeSkyCache();               // Low's sky camera buffer: made again when it's next needed
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
       const c = new EffectComposer(this.renderer, rt);
       c.addPass(new RenderPass(this.scene, this.camera));
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
+      c.addPass(new SkyPass((target) => this.drawSky(target)));
       if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92); c.addPass(this.bloom); }
       // the output pass with a saturation control folded into its shader (no extra pass): the grade under cloud
       const out = new OutputPass(), sat: THREE.IUniform<number> = { value: 1 };
@@ -816,7 +857,9 @@ export class Game {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
     });
-    this.traffic.render(alpha, this.time);
+    // with the sky camera on, its cars go first in each kind's instances (Traffic.skyView draws only those for it)
+    const skyOn = !this.attract && this.settings.corner === 'sky';
+    this.traffic.render(alpha, this.time, skyOn ? this.skyFocus.set(this.phys.x, this.phys.z, (this.sky.span || SKY_SPAN[1]) * 0.9 + 12) : null);
     this.updateCamera(dt);
     this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
     this.weatherTick(dt);
@@ -824,8 +867,10 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
-    this.env.renderFlare();
+    // the corner's sky camera goes in after the main view: inside the composer (SkyPass), or straight onto the canvas
+    const sky = this.prepareSky(dt);
+    if (this.composer) this.composer.render(dt); else { this.renderer.render(this.scene, this.camera); if (sky) this.drawSky(null); }
+    this.env.renderFlare(sky ? this.sky : null);
     this.renderCorner(dt);
     if (!this.attract) {
       this.audio.update(dt, { rpm: this.phys.rpm, throttle: this.phys.throttleOut, speed: Math.abs(this.phys.vx), slip: Math.max(this.phys.slipR, this.phys.slipF) + (this.input.c.handbrake ? 0.2 : 0), limiter: this.phys.limiter, scrape: this.scrape, cockpit: this.cam === 'cockpit' || this.cam === 'free' });
@@ -1056,33 +1101,9 @@ export class Game {
     const size = CORNER_PX[this.settings.cornerSize] ?? CORNER_PX[1];
     return { x: (this.host.clientWidth || innerWidth) - size - 12, y: 64, size };
   }
+  // the road map (the sky camera draws with the main view: prepareSky, drawSky)
   private renderCorner(dt: number) {
-    const mode = this.settings.corner;
-    if (this.attract || mode === 'off') return;
-    if (mode === 'sky') {
-      // a live camera 150 m up, heading-up, looking down just ahead of the car
-      const r = this.cornerRect(), pr = this.renderer.getPixelRatio(), H = this.host.clientHeight || innerHeight;
-      if (this.cornerAway(r)) return;
-      const p = this.car.root.position;
-      const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
-      this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
-      this.skyCam.up.set(fx, 0, fz);
-      this.skyCam.lookAt(p.x + fx * 40, p.y, p.z + fz * 40);
-      this.skyCam.aspect = 1; this.skyCam.updateProjectionMatrix();
-      const x = Math.round(r.x * pr), y = Math.round((H - r.y - r.size) * pr), s = Math.round(r.size * pr);
-      this.renderer.setScissorTest(true);
-      this.renderer.setScissor(x, y, s, s); this.renderer.setViewport(x, y, s, s);
-      const fog = this.scene.fog, chev = this.chevrons.mesh.visible; this.scene.fog = null;
-      this.car.setOutsideView(true);
-      this.chevrons.mesh.visible = false;              // the chevrons are for the road ahead, not the sky camera
-      this.renderer.render(this.scene, this.skyCam);
-      this.chevrons.mesh.visible = chev;
-      this.scene.fog = fog;
-      this.renderer.setScissorTest(false);
-      const size = this.renderer.getSize(new THREE.Vector2());
-      this.renderer.setViewport(0, 0, size.x, size.y);
-      return;
-    }
+    if (this.attract || this.settings.corner !== 'map') return;
     this.mapT -= dt;
     if (this.mapT > 0 || !this.mapCanvas) return;
     this.mapT = 0.1;
@@ -1091,6 +1112,171 @@ export class Game {
   }
   // the Minimal HUD (U1) slides the window off the right edge when it tucks it away: nothing to draw while it's there
   private cornerAway(r: { x: number; size: number }) { return r.size <= 0 || r.x >= (this.host.clientWidth || innerWidth) - 1; }
+
+  // The sky camera (owner, 2026-10-20: "render the sky camera correctly ... it's right next to the car instead of in the
+  // corner"). It used to multiply its box by the pixel ratio, which three multiplies by again, so wherever the ratio
+  // wasn't 1 (the adaptive render scale, Low's 0.75 on a desktop, a phone on Medium) the picture landed scaled toward
+  // the bottom left, over the dashboard, and the frame stayed empty. Its box now comes from the frame itself.
+  //
+  // Where the HUD's frame is, in the canvas's drawing-buffer pixels (GL's: x from the left, y from the bottom), inside
+  // its 1 px border: measured from the canvas's box on screen and its buffer's size rather than from the pixel ratio,
+  // so the render scale, a preset's cap, the buffer's rounding, the HUD style, the phone layout and a resize all land it
+  // in the frame. Null when the frame isn't on screen: the Minimal HUD fades it out as it slides it off the right edge,
+  // and the picture goes when the frame is half faded (on the way out and on the way back) rather than sliding on
+  // without it.
+  private skyBox() {
+    const el = document.querySelector('.corner.sky') as HTMLElement | null;
+    if (!el || Number(getComputedStyle(el).opacity) < 0.5) return null;
+    const cv = this.renderer.domElement, c = cv.getBoundingClientRect(), f = el.getBoundingClientRect(), bw = el.clientLeft;
+    if (c.width < 1 || c.height < 1 || cv.width < 1 || f.width <= 2 * bw + 4) return null;
+    // to the nearest buffer pixel, a half rounding outward (under the border) so a render scale that puts the frame's
+    // edge on half a pixel (0.5 on a 1x screen: two css px a pixel) never leaves a strip of the window uncovered
+    const kx = cv.width / c.width, ky = cv.height / c.height, lo = (v: number) => Math.ceil(v - 0.5 - 1e-6), hi = (v: number) => Math.floor(v + 0.5 + 1e-6);
+    const l = lo((f.left + bw - c.left) * kx), r = hi((f.right - bw - c.left) * kx);
+    const t = lo((f.top + bw - c.top) * ky), b = hi((f.bottom - bw - c.top) * ky);
+    if (r - l < 4 || b - t < 4 || l >= cv.width - 1 || r <= 0 || t >= cv.height - 1 || b <= 0) return null;
+    return { x: l, y: cv.height - b, w: r - l, h: b - t };
+  }
+
+  // this frame's sky camera, when the window shows it: heading-up and looking straight down, the car a little below the
+  // middle (where the map puts its arrow) so most of the window is the road ahead. The window spans 40 m of road along
+  // the heading when you're stopped, easing out to 70 m from about 110 mph: the car stays 6.5-11.5 % of the window long
+  // (a clear shape even in the small window), a five-lane carriageway fills a quarter to a half of its width, and at
+  // speed it shows 44 m ahead and 26 m behind. A narrow lens from 80-140 m up keeps it close to a plan view
+  // (overpasses barely lean).
+  private prepareSky(dt: number) {
+    const s = this.sky;
+    s.on = false;
+    if (this.attract || this.settings.corner !== 'sky') { s.primed = false; return false; }
+    const b = this.skyBox();
+    if (!b) return false;
+    s.x = b.x; s.y = b.y; s.w = b.w; s.h = b.h;
+    const want = lerp(SKY_SPAN[0], SKY_SPAN[1], smoothstep(8, 50, Math.abs(this.phys.vx)));
+    if (!s.primed) { s.span = want; s.psi = this.phys.psi; s.primed = true; }
+    s.span = damp(s.span, want, 1.5, dt);
+    s.psi += Math.atan2(Math.sin(this.phys.psi - s.psi), Math.cos(this.phys.psi - s.psi)) * (1 - Math.exp(-12 * dt));
+    const cam = this.skyCam, p = this.car.root.position, fx = Math.sin(s.psi), fz = Math.cos(s.psi);
+    const lift = s.span / 2 / Math.tan((SKY_FOV * Math.PI) / 360), ahead = s.span * SKY_LOW;
+    s.lift = lift;
+    cam.fov = SKY_FOV; cam.aspect = b.w / b.h; cam.near = Math.max(2, lift * 0.35); cam.far = lift + 160;
+    cam.updateProjectionMatrix();
+    cam.position.set(p.x + fx * ahead, p.y + lift, p.z + fz * ahead);
+    cam.up.set(fx, 0, fz);
+    cam.lookAt(p.x + fx * ahead, p.y, p.z + fz * ahead);
+    // the ring: the same size and thickness in the window at every span (about 17 % of the window across, a 1.4 %
+    // line: 25 and 2 css px in the default 150 px window)
+    this.skyMark.position.set(p.x, p.y + 0.05, p.z);
+    this.skyMark.scale.setScalar(s.span * SKY_MARK);
+    s.on = true;
+    return true;
+  }
+
+  // draw it into its box: straight onto the canvas (Medium: target null), into the composer's buffer (High, Ultra:
+  // SkyPass), or on Low (the phone tier) every other frame into a buffer of its own, copied into the box every frame.
+  // The scene as the main view has it (its lights, tone mapping and exposure, and fog), except: the haze it would have
+  // at the distance of what's in the window rather than at the camera's height; the shadow maps already drawn this
+  // frame (not drawn again); no sky dome, clouds, ridges, stars or rain round the main camera (Environment.hideBackdrop);
+  // the car's outside without its cockpit or wheels, its paint lifted at night (PlayerCar.skyView); only the traffic
+  // cars in or near the window, without their wheels and lamps (Traffic.skyView); no route chevrons (they're for the
+  // road ahead).
+  private drawSky(target: THREE.WebGLRenderTarget | null) {
+    const s = this.sky;
+    if (!s.on) return;
+    const R = this.renderer, t0 = performance.now();
+    // the renderer's counts for the main view, put back after (so stats and the frame panel report the main view)
+    const info = R.info.render, calls0 = info.calls, tris0 = info.triangles;
+    const cache = !target && this.settings.quality === 'low' && R.capabilities.isWebGL2 ? this.skyCacheFor(s.w, s.h) : null;
+    const fresh = !cache || cache.age >= SKY_EVERY_LOW;
+    // three multiplies a scissor and a viewport on the canvas by the pixel ratio and floors them: half a buffer pixel
+    // in keeps them on whole pixels
+    const k = (n: number) => (n + 0.5) / R.getPixelRatio();
+    if (fresh) {
+      const fog = this.scene.fog as THREE.Fog, fogNear = fog.near, fogFar = fog.far, haze = s.lift - s.span * 0.45;
+      const sm = R.shadowMap, auto = sm.autoUpdate, need = sm.needsUpdate, chev = this.chevrons.mesh.visible;
+      fog.near += haze; fog.far += haze;
+      sm.autoUpdate = false; sm.needsUpdate = false;
+      this.chevrons.mesh.visible = false;
+      this.env.hideBackdrop();
+      this.car.skyView(true, false, 1 - this.env.daylight);
+      this.traffic.skyView(true);
+      if (target) {
+        // a render target's viewport and scissor are in its own pixels; the composer's buffers are the canvas's size
+        target.viewport.set(s.x, s.y, s.w, s.h); target.scissor.set(s.x, s.y, s.w, s.h); target.scissorTest = true;
+        R.setRenderTarget(target);
+      } else if (cache) R.setRenderTarget(cache.rt);
+      else {
+        R.setScissorTest(true);
+        R.setScissor(k(s.x), k(s.y), k(s.w), k(s.h)); R.setViewport(k(s.x), k(s.y), k(s.w), k(s.h));
+      }
+      if (this.skyProbe !== null) {
+        // the probe: an empty scene with the probe colour as its background (a render, not a bare clear, so a
+        // multisampled buffer is resolved as after any render)
+        (this.skyProbeScene.background as THREE.Color).set(this.skyProbe);
+        R.render(this.skyProbeScene, this.skyCam);
+      } else {
+        R.render(this.scene, this.skyCam);
+        this.skyStats.calls = R.info.render.calls; this.skyStats.tris = R.info.render.triangles;
+      }
+      this.traffic.skyView(false);
+      this.car.skyView(false, this.cam !== 'cockpit' && this.cam !== 'free');
+      this.env.showBackdrop();
+      this.chevrons.mesh.visible = chev;
+      sm.autoUpdate = auto; sm.needsUpdate = need;
+      fog.near = fogNear; fog.far = fogFar;
+      if (target) {
+        target.viewport.set(0, 0, target.width, target.height); target.scissor.set(0, 0, target.width, target.height); target.scissorTest = false;
+        R.setRenderTarget(target);              // the passes after this one draw the whole buffer again
+      } else if (cache) { R.setRenderTarget(null); cache.age = 0; }
+      this.skyStats.renders++;
+    }
+    if (cache) {
+      // the copy: one draw call, the buffer's pixels as they are (it holds the finished, tone-mapped sRGB picture)
+      const ac = R.autoClear;
+      R.autoClear = false;
+      R.setScissorTest(true);
+      R.setScissor(k(s.x), k(s.y), k(s.w), k(s.h)); R.setViewport(k(s.x), k(s.y), k(s.w), k(s.h));
+      R.render(cache.scene, cache.cam);
+      R.autoClear = ac;
+      cache.age++;
+    }
+    if (!target) { R.setScissorTest(false); R.getSize(this.skySize); R.setViewport(0, 0, this.skySize.x, this.skySize.y); }
+    info.calls = calls0; info.triangles = tris0;
+    this.skyStats.ms = performance.now() - t0; this.skyStats.w = s.w; this.skyStats.h = s.h; this.skyStats.every = cache ? SKY_EVERY_LOW : 1;
+  }
+
+  // Low's own buffer for the sky camera, the window's size in the canvas's pixels. It is flagged as an XR target, the
+  // one kind of render target three (0.160) draws exactly as it draws the canvas: the renderer's tone mapping and sRGB
+  // output in each material's shader. So every material keeps the one shader variant it has for the canvas (a plain
+  // target would give each a second, untoned linear one and a switch between them twice a frame), and the buffer
+  // holds the finished picture: stored as plain RGBA8 (no sRGB conversion in hardware) and copied out unchanged.
+  private skyCache: { rt: THREE.WebGLRenderTarget; scene: THREE.Scene; cam: THREE.OrthographicCamera; age: number } | null = null;
+  private skyCacheFor(w: number, h: number) {
+    let c = this.skyCache;
+    if (!c) {
+      const rt = new THREE.WebGLRenderTarget(w, h, { samples: 4, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, generateMipmaps: false });
+      rt.texture.colorSpace = THREE.SRGBColorSpace; rt.texture.internalFormat = 'RGBA8';
+      (rt as unknown as { isXRRenderTarget: boolean }).isXRRenderTarget = true;
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { map: { value: rt.texture } }, depthTest: false, depthWrite: false, toneMapped: false,
+        vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+        fragmentShader: 'uniform sampler2D map; varying vec2 vUv; void main() { gl_FragColor = texture2D(map, vUv); }',
+      });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
+      quad.frustumCulled = false;
+      const scene = new THREE.Scene();
+      scene.add(quad);
+      c = this.skyCache = { rt, scene, cam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), age: Infinity };
+    }
+    if (c.rt.width !== w || c.rt.height !== h) { c.rt.setSize(w, h); c.age = Infinity; }
+    return c;
+  }
+  private disposeSkyCache() {
+    const c = this.skyCache;
+    if (!c) return;
+    c.rt.dispose();
+    for (const o of c.scene.children) if (o instanceof THREE.Mesh) { o.geometry.dispose(); (o.material as THREE.Material).dispose(); }
+    this.skyCache = null;
+  }
 
   // a heading-up road map: every freeway within a few kilometres, the route, you
   private drawMap(cv: HTMLCanvasElement) {
@@ -1261,7 +1447,8 @@ export class Game {
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,
       x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches,
-      visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
+      visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay,
+      sky: { on: this.sky.on, ...this.skyStats } };
   }
 
   dispose() {
@@ -1269,6 +1456,7 @@ export class Game {
     removeEventListener('resize', this.onResize);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
+    this.disposeSkyCache();
     this.renderer.dispose();
   }
 }

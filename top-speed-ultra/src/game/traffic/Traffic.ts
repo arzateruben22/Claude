@@ -65,6 +65,28 @@ export class Traffic {
     this.group.name = 'traffic';
   }
 
+  // The corner's sky camera sees a few tens of metres round the player (owner, 2026-10-20), and each kind of car is one
+  // set of instanced meshes for the whole freeway in view (not culled): drawn as they are, it would draw every car of
+  // every kind with one in its window. render() is given the sky camera's focus (null without it) and lays each kind's
+  // instances out with the cars within that radius first; skyView(true) then cuts each kind's count to those (none
+  // drawn for a kind with none), and leaves out the wheels, lamps and indicators, which from straight above are under
+  // the body or on its upright faces. skyView(false) puts back exactly what it changed. No buffer is written for it.
+  private near: number[] = [];
+  private nearValid = false;
+  private skySaved: { im: THREE.InstancedMesh; count: number; visible: boolean }[] = [];
+  skyView(on: boolean) {
+    if (!on) {
+      for (const e of this.skySaved) { e.im.count = e.count; e.im.visible = e.visible; }
+      this.skySaved.length = 0;
+      return;
+    }
+    this.meshes.forEach((m, k) => {
+      const n = this.nearValid ? this.near[k] ?? 0 : m.body.count;
+      for (const im of [m.body, m.glass, m.trim]) if (im) { this.skySaved.push({ im, count: im.count, visible: im.visible }); if (n === 0) im.visible = false; else im.count = Math.min(im.count, n); }
+      for (const im of [m.tail, m.head, m.wheels, m.blink]) { this.skySaved.push({ im, count: im.count, visible: im.visible }); im.visible = false; }
+    });
+  }
+
   reseed(seed: number) { this.r = rng(seed); this.nextId = 1; this.cars = []; }
   clear() { this.cars = []; }
   private heavy(c: CarClass) { return c.id === 'truck' || c.id === 'semi'; }
@@ -333,12 +355,13 @@ export class Traffic {
   private m4 = new THREE.Matrix4(); private q = new THREE.Quaternion(); private e = new THREE.Euler(0, 0, 0, 'YXZ');
   private p3 = new THREE.Vector3(); private sc = new THREE.Vector3(1, 1, 1); private w4 = new THREE.Matrix4(); private wq = new THREE.Quaternion();
 
-  render(alpha: number, time: number) {
+  // focus: the corner's sky camera (world x, z and a radius): its cars go first in each kind's instances (skyView)
+  render(alpha: number, time: number, focus: { x: number; z: number; r: number } | null = null) {
     const counts = this.meshes.map(() => 0);
     const blinkOn = Math.floor(time * 2.6) % 2 === 0;
-    for (const c of this.cars) {
+    const place = (c: TrafficCar) => {
       const cl = this.classes[c.cls], m = this.meshes[c.cls];
-      if (counts[c.cls] >= m.body.instanceMatrix.count) continue;
+      if (counts[c.cls] >= m.body.instanceMatrix.count) return;
       const i = counts[c.cls]++;
       const s = c.ps + (c.s - c.ps) * alpha, d = c.pd + (c.d - c.pd) * alpha;
       const at = c.path.at(Math.min(s, c.path.len), d, AT);
@@ -364,7 +387,14 @@ export class Traffic {
         this.w4.compose(V.set(x, y, z), IDQ, on ? ONE : ZERO);
         m.blink.setMatrixAt(i * 2 + k, this.w4.premultiply(this.m4));
       }
-    }
+    };
+    if (focus) {
+      const r2 = focus.r * focus.r, near = (c: TrafficCar) => (c.x - focus.x) ** 2 + (c.z - focus.z) ** 2 < r2;
+      for (const c of this.cars) if (near(c)) place(c);
+      this.near = counts.slice();
+      for (const c of this.cars) if (!near(c)) place(c);
+    } else for (const c of this.cars) place(c);
+    this.nearValid = !!focus;
     this.meshes.forEach((m, k) => {
       const n = counts[k], cl = this.classes[k];
       m.body.count = m.glass.count = m.tail.count = m.head.count = n;
