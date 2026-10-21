@@ -45,6 +45,7 @@ export function equipPaint(car: string, id: string | null): boolean {
 // the paints you own, for the picker
 export const ownedPaints = (car: string) => COSMETICS.entitlements.filter((e) => fits(e, car) && has(e.id));
 
-// does this grant show up in the game yet? (a paint for a car still being built, like OC Founder Silver, doesn't)
+// does this grant show up in the game yet? (a paint for a car still being built, like OC Founder Silver, doesn't; the
+// Ultra graphics tier does: the Ultra preset is in the game, chosen in Settings)
 const SHOWN = new Set(['badge-founder-26', 'frame-founder-runcard']);
-export const inGame = (id: string) => { const e = entById(id); return (e?.type === 'paint' && e.status !== 'build') || SHOWN.has(id); };
+export const inGame = (id: string) => { const e = entById(id); return (e?.type === 'paint' && e.status !== 'build') || e?.type === 'graphics' || SHOWN.has(id); };

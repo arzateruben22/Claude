@@ -25,6 +25,9 @@ refuses stripe.com), so Stripe's figures come from Stripe's own pages as indexed
   ($3 each). A wheel set for each of the four cars ($3 each). Three driver style sets ($3 each). A pay-what-you-want
   "Fuel the build" tip (from $2). That's 11 items. A livery pack ($5) is in the catalog but can't be sold until the
   livery layer exists in the game.
+- **Ultra Graphics** ($5 proposed, TODO owner; added 2026-10-21 for decision 15). The maximum graphics tier, sold as
+  an entitlement flag; Low and HD are free. Test mode sells it with the 4242 card, and every test build unlocks Ultra
+  for everyone anyway. A live build never locks Ultra until the owner marks it ready to sell (§12).
 - **Prices.** Whole dollars, $2 at the least, because Stripe's fixed 30¢ takes a third of a $0.99 sale. At $3 we keep
   $2.61. At $10 we keep $9.41. **One exception, the owner's (2026-10-16):** the OC Hypercar Founder Edition is $4.99.
   Stripe takes $0.44 and we keep $4.55 ($4.47 on an international card).
@@ -101,7 +104,10 @@ The game's old rule was "no real money anywhere". The owner decided on 2026-10-1
 5. **No random paid rewards.** No loot boxes, mystery packs or gacha. You see the exact item, on your own car,
    before you pay.
 6. **No premium currency.** Prices are in dollars and cents. One price per item. No "gems".
-7. **Everything the game has today stays free** (§2).
+7. **Everything the game has today stays free** (§2). The owner named one exception on 2026-10-21 (decision 15):
+   the Ultra graphics tier is the paid tier, and Low and HD are free. Today's Ultra preset is in the game for free,
+   so `CLAUDE.md`'s line needs the owner's edit before Ultra is sold live. Until then, `graphics-ultra` stays `hook`
+   in `cosmetics.json`: live Stripe keys refuse to sell it, and a live build keeps Ultra unlocked for everyone (§12).
 8. **No ads at launch.**
 
 This rule is now in `CLAUDE.md`, except rule 3a: its "Never sell power" line doesn't name the two-tune exception
@@ -122,6 +128,9 @@ Everything that exists today, and the free customisation the UI pass is adding:
 - The three drivers, both presentations, five skin tones, their looks and watches.
 - The three abilities: Clear Path, Focus Time and Locked In.
 - The radio, the weather and time of day, Ultra Realism, run cards, the local leaderboard, the achievements.
+- Every graphics setting but Ultra: Low and HD (decision 15; on this branch, today's Low, Medium and High, which
+  the graphics-modes lane turns into Low and HD). Ultra itself stays unlocked for everyone in every test build, and
+  in a live build until the Ultra Graphics sku can be bought there.
 - Visiting the on-foot hangout (Lot 57), whenever it ships.
 
 Why so much stays free: the launch is built on local trust ("It's your freeway"), and the launch kit's drafts tell
@@ -148,6 +157,7 @@ Lean on purpose: 11 items you can buy, all small, all cosmetic, all built from p
 | **Canyon Run** driver style | $3 | $2.61 | Canyon suede gloves, the **Vela Pulse** smart watch (sunset face), olive field jacket cuffs, sandstone nails | Hook |
 | **Fuel the Build** (tip) | pay what you want, from $2 (suggested $5) | $1.64 at $2, $4.55 at $5 | A small "Fuelled the build" badge, the same at any amount. Unlocks nothing else | Badge: to build (small) |
 | *Stripes and Roundels Livery Pack* | $5 | $4.55 | Twin 405 Stripes, Coast Side Stripe, Two-Tone Roof, Door Roundel with your number | **Not sellable yet**: needs a livery layer in the paint (`available: false`) |
+| **Ultra Graphics** (decision 15) | $5 (proposed, TODO owner) | $4.55 | The maximum graphics tier, as an entitlement flag (`graphics-ultra`). Low and HD are free. Ultra draws the road and its traffic further ahead (2.4 km, against 1.8 km on High), with sharper shadows and textures, ambient occlusion and denser scenery. Physics, scoring, credits and XP are the same at every tier. Sold once, restored on sign-in like every item; every test build unlocks it, and owner mode does in test builds only | **Hook**: the Ultra preset is in the game and the settings picker reads the flag. Not sold live until the owner's go-ahead (§12) |
 | *OC Hypercar Founder Edition* | $4.99 | $4.55 | The OC Hypercar, numbered by the server (No. 0001 up); a **Founder Edition** plaque with the number on the sill and console; **OC Founder Silver** paint with Founder Ice lights, on this car only. Unleashed in Free Drive only (rule 3a). No garage slot; can't be sold for credits. Sold until **Dec 31, 2026** (whether it is ever sold again is the owner's open decision, §12). Not in the Founder Pack | **Not sellable yet**: the car is being built on another branch (`claude/hypercar`) and isn't in the game this store ships from (`available: false`) |
 
 **Ready** means it works today: it needs only the entitlement check and the picker. **Hook** means the renderer
@@ -199,6 +209,40 @@ and has been checked in renders (§9).
   "Earn the Vela E first" lock refuses them the Vela E Wheel Set, and it sells only to players who already own a
   Vela E. The catalog marks it (`caveat` on `wheels-vela-e`). Decide before that merge: retire the set, or keep it for
   Vela E owners and reword "Earn the Vela E by driving to buy it" (TODO, owner).
+- **Ultra Graphics, the one paid graphics tier** (the owner's decision 15, 2026-10-21: "the first two are free").
+  - It's a setting, not a cosmetic, and not graphics only. The store says what it is in one line: "The maximum
+    graphics tier. Low and HD are free."
+  - **What it changes besides looks, said to players.** Each graphics tier builds the road and its traffic to its own
+    distance ahead (`drawDistance` in `src/game/settings.ts`; `Game.ts` sets `camera.far` to 1.15 times it and
+    `traffic.viewAhead` to 0.95 times it): Low 0.9 km, High 1.8 km, Ultra 2.4 km. Traffic density per lane is the same
+    at every tier. So Ultra shows the road about 0.6 km further ahead than High, which is about 6 s more warning at
+    230 mph in Speed Survival. Every tier already differs this way (Low to High is 0.9 km), and the scoring doesn't
+    read the tier. The checkout and the store terms say so (ST2 repair, 2026-10-21), with the numbers taken from the
+    presets: "Ultra draws the road and its traffic further ahead (2.4 km, against 1.8 km on High), with sharper
+    shadows and textures, ambient occlusion and denser scenery. Physics, scoring, credits and XP are the same at
+    every tier. Low and HD are free." The store's lede adds, where Ultra is sold: "Ultra changes no physics or
+    scoring either, but it draws the road and its traffic further ahead."
+  - **The owner's call:** if a longer view for sale is an edge in the scored modes, cap their draw distance at the
+    best free tier's (a graphics-modes lane change in `Game.ts`). Then the copy can drop the distance line.
+  - **$5 is a proposal** (TODO, owner): whole dollars, a "bigger item" in §5's ladder, and we keep $4.55.
+  - **Who has it** (`ultraState` in `src/store/entitlements.ts`):
+    - Every test-mode build unlocks it for everyone, bought or not. Buying it there only tries the test checkout.
+    - Owner mode (`#owner`, or the saved owner setting from claude/hypercar) unlocks it on that device, in a test
+      build only. A live build ignores it (`ownerMode()` answers false there), since anyone can type `#owner`; the
+      checker refuses to mark Ultra `ready` without that gate. Decision 5 decides what owner mode becomes.
+    - In a live build, an account that bought it has it, and Restore purchases brings it to any device. A refund
+      takes it back.
+    - A live build locks it for everyone else **only while the sku can be bought there**: available, and
+      `graphics-ultra` marked `ready`, which is the same rule the server applies to live keys. A tier is never
+      locked before it can be bought.
+    - While it's locked, a saved Ultra draws as High and the picker's Ultra button ("Ultra · Store") opens the
+      Store. The saved choice stays Ultra, so a purchase or Restore purchases brings it back by itself.
+    - While a live build can't sell it, the store doesn't call it paid: the lede leaves Ultra out, the card says
+      it's unlocked for everyone, and with live keys the card and `create-checkout` both say "Not on sale yet: Ultra
+      stays unlocked for everyone until it is" (not "once it is in the game": it is in the game).
+  - **The lock is on the device.** The game draws what the device decides; the server only records who paid. Someone
+    who edits the page or their browser storage can draw Ultra without paying. That's true of any client-side
+    graphics setting and costs nobody else anything.
 - **A tip, not a "VIP"**: some people want to pay for a free local game. Pay-what-you-want lets them. One badge at
   any amount, so there's no ladder to climb.
 - **No subscription, battle pass or ads in the first 90 days.** Each of them needs a steady flow of new content, or
@@ -715,10 +759,21 @@ and exits 1 on any problem. It checks that:
   factory wheel (a `wheel:` in `car-shape.ts`, like the OC Hypercar's car-only `multi`) and no paid setup may use it;
   a style no car wears and the store doesn't list fails. No paid wheel setup repeats a factory one;
 - the tip stays above Stripe's $0.50 minimum;
+- every sku but a tip grants something;
+- the Ultra graphics tier (decision 15), checked on the ids the code uses, whatever type or kind the files give
+  them (the ST2 review planted a retyped entitlement, a renamed sku and an empty graphics sku, and each passed the
+  old rules):
+  - `ULTRA_ENTITLEMENT` (`src/store/entitlements.ts`) is in `cosmetics.json` as type `graphics`, tier `ultra`, with
+    `free_tiers` Low and HD, and no other entitlement is a graphics tier;
+  - `ULTRA_SKU` (`src/store/catalog.ts`) is in `catalog.json`. It is the only sku that grants Ultra and the only one of
+    kind `graphics`: a one-time payment with no window and no number, granting exactly `[ULTRA_ENTITLEMENT]`, with
+    copy that says "Low and HD are free";
+  - Ultra is marked `ready` only while `ownerMode()` refuses live builds (decision 5);
 - no real brand word appears.
 
 It passed on 2026-10-16 (21 skus, 11 available, 42 entitlements), and it fails as it should on a planted $0.99
-price and a missing grant. It passed again at the evening fact-check through `npm run store:check`, which also
+price and a missing grant. `node tools/store-check-planted.mjs` plants bad catalogs on scratch copies of the files
+the checker reads and checks that each is refused with the right message (19 plants on 2026-10-21, mostly Ultra's). It passed again at the evening fact-check through `npm run store:check`, which also
 checks the server's copy, and the store group of the regression suite now runs both (`tests/regression.mjs`).
 
 ### The wiring (Lumevina's shape, adapted)
@@ -860,20 +915,30 @@ findings with file and line, the fixes for severity 4–5, and the store's regre
   or the car itself (`PROJECT_OC_HYPERCAR.md` §7)? Until the owner decides, the car's copy says only "Sold until
   December 31, 2026" (the store card, the catalog, the deck), with no "never again"; the owner decides before sales
   start, and the copy then says exactly that.
-- Ultra graphics as the paid tier (decision 15, 2026-10-21; `PROJECT_OC_DECISIONS.md` in the main checkout): only
-  the flag exists, `ultraUnlocked()` and `ULTRA_ENTITLEMENT = 'graphics-ultra'` in `src/store/entitlements.ts`, with
-  no sku, no price and no entry in `catalog.json` or `cosmetics.json`. A test-mode build unlocks it for everyone and
-  owner mode unlocks it anywhere. The Ultra preset is in the game for free today, so `CLAUDE.md`'s "everything the
-  game has today stays free" needs the owner's edit before Ultra is ever sold, as rule 3a does for "never sell
-  power"; the price, and whether players who had Ultra before keep it, are the owner's.
+- Ultra graphics as the paid tier (decision 15, 2026-10-21; `PROJECT_OC_DECISIONS.md` in the main checkout). The
+  Ultra Graphics sku (`graphics-ultra`, $5) is in the catalog and sells in test mode (ST2, 2026-10-21). Before it's
+  sold live, the owner decides four things:
+  - The price: $5 is a proposal.
+  - The edit to `CLAUDE.md`'s "everything the game has today stays free", which covers today's Ultra preset, the way
+    rule 3a needs its edit for "never sell power".
+  - Whether players who used Ultra before keep it.
+  - Whether Ultra's longer draw distance in the scored modes is acceptable (§3).
+
+  Then `graphics-ultra` goes from `hook` to `ready` in `cosmetics.json` (and `npm run store:sync`). That one change
+  lets live Stripe keys sell it and lets a live build lock Ultra for accounts without it. Until then a live build
+  keeps Ultra unlocked for everyone.
 - Optional hardening before live mode (from the 2026-10-19 review, not built):
-  - In live mode, call `restore()` at boot when a player is signed in. Today a locally edited entitlement cache can
-    keep `oc-hyper`, or show a made-up number, on that device until the next Restore (the server's rows are right;
-    only that device's display is wrong).
+  - In live mode, call `restore()` at boot when a player is signed in. **Built in ST2 (2026-10-21)**:
+    `src/store/entitlements.ts` reads the account's rows once at boot when a player is signed in. So an item bought
+    on another device shows without opening the Store, and a refund takes it off at the next launch. Ultra above all
+    needs this, because it works outside the Store. A locally edited cache still shows until that read answers, and
+    while the device is offline.
   - A lost card dispute (`charge.dispute.closed` with status `lost`) should retire the number and take the car back,
     as a refund does. The webhook ignores dispute events today.
-- Owner mode (`#owner` on the hypercar branch) unlocks the car on any test build. Before any real sale it must be
-  compiled out of public builds or tied to the owner's account (`PROJECT_OC_HYPERCAR.md` §8, M0).
+- Owner mode (`#owner` on the hypercar branch) unlocks the car on any test build. It unlocks Ultra graphics on test
+  builds only: `ownerMode()` in `src/store/entitlements.ts` reads the same switch and answers false in a live build
+  (ST2 repair, 2026-10-21), because anyone can type `#owner`. Before any real sale it must be compiled out of public
+  builds or tied to the owner's account (`PROJECT_OC_HYPERCAR.md` §8, M0; decision 5).
 - The Vela E Wheel Set once the Vela E is hidden: retire it, or keep it for Vela E owners (§3).
 
 ---

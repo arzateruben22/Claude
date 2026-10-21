@@ -11,7 +11,7 @@ import founderJson from './founder.json';
 // server's copy and the checker read the same file.
 export const FOUNDER_UNTIL: string = founderJson.FOUNDER_UNTIL;
 
-export type Kind = 'pack' | 'livery' | 'kit' | 'style' | 'tip' | 'club';
+export type Kind = 'pack' | 'livery' | 'kit' | 'style' | 'graphics' | 'tip' | 'club';
 export type Status = 'ready' | 'hook' | 'build';
 export type FinishName = 'gloss' | 'metallic' | 'satin' | 'pearl';
 
@@ -36,7 +36,7 @@ export interface Sku {
 export interface Swatch { name: string; hex: string }
 export interface Entitlement {
   id: string;
-  type: string;                    // paint, livery, wheels, style, badge, frame, credits-roll, paint-series, access, body-kit, car, outfit
+  type: string;                    // paint, livery, wheels, style, badge, frame, credits-roll, paint-series, access, body-kit, car, outfit, graphics
   name: string;
   status: Status;
   hex?: string;
@@ -59,6 +59,8 @@ export interface Entitlement {
   outside_slots?: boolean;         // ...which takes no garage slot
   sell_back?: boolean;             // false: never sold back for credits
   leds?: Swatch & { accent: string };
+  tier?: string;                   // a graphics tier (graphics-ultra: 'ultra'; decision 15 keeps 'low' and 'hd' free)
+  free_tiers?: string[];
 }
 
 export interface Finish { metalness: number; roughness: number; clearcoat: number; clearcoatRoughness: number; status: Status }
@@ -78,6 +80,8 @@ export const skuById = (id: string) => SKUS.get(id) ?? null;
 export const entById = (id: string) => ENTS.get(id) ?? null;
 export const FOUNDER_SKU = 'founder-pack-2026';
 export const HYPERCAR_SKU = 'hypercar-founder';
+// the Ultra graphics tier (decision 15): the one paid graphics mode, an entitlement flag only (src/store/entitlements.ts)
+export const ULTRA_SKU = 'graphics-ultra';
 
 // the order and the headings the store shows
 export const KINDS: { kind: Kind; label: string; blurb: string }[] = [
@@ -85,15 +89,23 @@ export const KINDS: { kind: Kind; label: string; blurb: string }[] = [
   { kind: 'livery', label: 'Paints and liveries', blurb: 'For every car in your garage.' },
   { kind: 'kit', label: 'Wheels and kits', blurb: 'Same size wheels and tyres as the factory set: looks only.' },
   { kind: 'style', label: 'Driver styles', blurb: 'Gloves, watch, sleeves and nails: what you see on the wheel.' },
+  { kind: 'graphics', label: 'Graphics', blurb: '' },
   { kind: 'tip', label: 'Support', blurb: '' },
   { kind: 'club', label: 'Club', blurb: '' },
 ];
 
 export const CAR_NAMES: Record<string, string> = { 'rossini-gt': 'Rossini GT', 'rossini-brio': 'Rossini Brio', 'rossini-corsa': 'Rossini Corsa', 'vela-e': 'Vela E' };
 
+// why an item isn't on sale yet. The Ultra graphics tier is in the game already, and a tier that can't be bought stays
+// unlocked for everyone (ultraState in ./entitlements), so its reason says that; the server's sellable() says the same
+// (server/supabase/functions/_shared/store.ts). The checker keeps 'graphics' to the one Ultra sku.
+export const ULTRA_NOT_YET = 'Not on sale yet: Ultra stays unlocked for everyone until it is';
+export const notYet = (s: Pick<Sku, 'kind'>) =>
+  (s.kind === 'graphics' ? ULTRA_NOT_YET : 'Not on sale yet: it goes on sale once it is in the game') + '.';
+
 // on sale right now? (available, and inside its window if it has one)
 export function saleState(s: Sku, now = Date.now()): { ok: true } | { ok: false; why: string } {
-  if (!s.available) return { ok: false, why: s.unavailable_reason ?? 'Not on sale yet: it goes on sale once it is in the game.' };
+  if (!s.available) return { ok: false, why: s.unavailable_reason ?? notYet(s) };
   // "never sold again" is the Founder Pack's promise only: for the OC Hypercar Founder Edition, what it covers is the
   // owner's open decision (PROJECT_OC_MONETIZATION.md §12), so its copy gives the end date and no more
   if (s.window && now > Date.parse(s.window.until)) return { ok: false, why: `${s.name} was sold until ${windowDate(s)}${s.sku === FOUNDER_SKU ? ' and is never sold again' : ''}.` };
@@ -137,6 +149,7 @@ export function grantLine(e: Entitlement): string {
     case 'badge': return `${e.name} badge`;
     case 'frame': return e.name;
     case 'credits-roll': return `${e.name} (optional)`;
+    case 'graphics': return `${e.name}, on every car and every freeway`;
     default: return e.name;
   }
 }

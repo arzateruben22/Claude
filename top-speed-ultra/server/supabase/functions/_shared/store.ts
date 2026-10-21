@@ -32,12 +32,15 @@ export const stripeLive = () => /^(sk|rk)_live_/.test(stripeKey());
 
 // May this sku be sold now? Available, inside its window, and, with live Stripe keys, every grant built and in the
 // game ('ready' in cosmetics.json): CLAUDE.md's "nothing is sold before it exists in the game". With test keys
-// (sk_test_), every available item can be bought, so the whole flow can be tried end to end.
+// (sk_test_), every available item can be bought, so the whole flow can be tried end to end. The Ultra graphics tier
+// (kind 'graphics', the one sku of that kind) is in the game already, and the game keeps it unlocked for everyone until
+// it can be bought, so its reason says that (the game's notYet() in src/store/catalog.ts says the same).
+const notYet = (s: ServerSku) => (s.kind === 'graphics' ? 'Not on sale yet: Ultra stays unlocked for everyone until it is.' : 'Not on sale yet: it goes on sale once it is in the game.');
 export function sellable(s: ServerSku | null, now = Date.now()): { ok: true } | { ok: false; why: string } {
   if (!s) return { ok: false, why: 'That item is not in the store.' };
-  if (!s.available) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
+  if (!s.available) return { ok: false, why: notYet(s) };
   if (!inWindow(s, now)) return { ok: false, why: `${s.name} is no longer sold.` };
-  if (stripeLive() && !s.grants_ready) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
+  if (stripeLive() && !s.grants_ready) return { ok: false, why: notYet(s) };
   return { ok: true };
 }
 

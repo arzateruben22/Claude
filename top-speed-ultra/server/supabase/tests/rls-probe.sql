@@ -1,4 +1,5 @@
--- Row-level security probe for 0001_oc_ultra_store.sql and 0002_founder_serials.sql (run-local.sh). Each refused write below is expected.
+-- Row-level security probe for 0001_oc_ultra_store.sql and 0002_founder_serials.sql (run-local.sh), and for the Ultra
+-- graphics tier's entitlement (graphics-ultra), which rides 0001's entitlements table. Each refused write below is expected.
 \set ON_ERROR_STOP 0
 \set A '11111111-1111-1111-1111-111111111111'
 \set B '22222222-2222-2222-2222-222222222222'
@@ -85,3 +86,32 @@ select 'A serials after refund: ' || string_agg(serial || case when retired_at i
 select 'A car row after refund: ' || coalesce(serial::text, 'no number') from entitlements where entitlement = 'car-oc-hyper';
 reset role;
 select 'ledger (owner view): ' || string_agg(serial || case when retired_at is null then ' live' else ' retired' end, ', ' order by serial) || '; counter next ' || (select next from serial_counters where sku = 'hypercar-founder') from serials;
+-- ------------------------------------------------------------------------------------------- the Ultra graphics tier
+-- graphics-ultra lives in 0001's entitlements table: only the webhook (service role) grants or revokes it, a player
+-- reads their own row (that is what Restore purchases reads) and can't grant it to themselves, take another player's,
+-- or undo a refund's revoke; an anonymous visitor reads nothing
+set role service_role;
+insert into purchases (user_id, sku, stripe_session_id, stripe_payment_intent, amount_cents, currency) values (:'B', 'graphics-ultra', 'cs_test_B3', 'pi_B3', 500, 'usd');
+insert into entitlements (user_id, entitlement, sku) values (:'B', 'graphics-ultra', 'graphics-ultra');
+reset role;
+set role authenticated; set request.jwt.claims = '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
+select 'A sees graphics-ultra rows (B has one): ' || count(*) from entitlements where entitlement = 'graphics-ultra';
+insert into entitlements (user_id, entitlement, sku) values (:'A', 'graphics-ultra', 'graphics-ultra');
+update entitlements set user_id = :'A' where entitlement = 'graphics-ultra';
+insert into purchases (user_id, sku, stripe_session_id, amount_cents) values (:'A', 'graphics-ultra', 'cs_fake_ultra', 0);
+reset role;
+select 'graphics-ultra rows after A''s attempts (owner view): ' || string_agg(case when user_id = :'B' then 'B' else 'A' end, ',') from entitlements where entitlement = 'graphics-ultra';
+set role authenticated; set request.jwt.claims = '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}';
+select 'B restores: ' || string_agg(entitlement, ',') from entitlements where revoked_at is null and entitlement = 'graphics-ultra';
+reset role;
+set role service_role;
+update purchases set status = 'refunded', refunded_at = now() where stripe_session_id = 'cs_test_B3';
+update entitlements set revoked_at = now() where user_id = :'B' and entitlement = 'graphics-ultra' and revoked_at is null;
+reset role;
+set role authenticated; set request.jwt.claims = '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}';
+update entitlements set revoked_at = null where entitlement = 'graphics-ultra';
+select 'B restores after the refund: ' || count(*) || ' live graphics-ultra row(s)' from entitlements where revoked_at is null and entitlement = 'graphics-ultra';
+reset role;
+set role anon; reset request.jwt.claims;
+select 'anon reads graphics-ultra: ' || count(*) from entitlements where entitlement = 'graphics-ultra';
+reset role;

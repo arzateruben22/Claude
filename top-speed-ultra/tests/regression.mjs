@@ -11,7 +11,7 @@
 // Every group opens a fresh browser context, so each starts with an empty profile.
 
 import { chromium } from 'playwright';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -849,6 +849,10 @@ async function storeCard(sheet, number) {
   await sheet.getByLabel('CVC', { exact: true }).fill('123');
 }
 
+// what the store says Ultra changes (ULTRA_PLAYS in src/ui/Store.tsx), from the presets in src/game/settings.ts: Ultra
+// 2400 m of road, High 1800 m. If a preset moves, the store's copy follows it and this line must be checked again
+const ULTRA_PLAYS = 'Ultra draws the road and its traffic further ahead (2.4 km, against 1.8 km on High), with sharper shadows and textures, ambient occlusion and denser scenery. Physics, scoring, credits and XP are the same at every tier. Low and HD are free.';
+
 await group('store', async (use) => {
   const { page, requests } = await use({ size: [1440, 900] });
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
@@ -938,6 +942,31 @@ await group('store', async (use) => {
     return `"${r.text.slice(0, 160)}…"; grants: ${r.grants.join(' | ')}`;
   });
 
+  await check('the Ultra Graphics card: $5 with the test-mode notice, "The maximum graphics tier. Low and HD are free.", and this test build unlocks Ultra for everyone', async () => {
+    const card = page.locator('.store-panel [data-sku="graphics-ultra"]');
+    await card.waitFor();
+    const r = await card.evaluate((el) => ({
+      text: [...el.querySelectorAll('p, h4, li, em, button')].map((n) => n.textContent).join(' ').replace(/\s+/g, ' '),
+      state: el.querySelector('.store-ultra-state')?.getAttribute('data-ultra'), buy: [...el.querySelectorAll('button')].map((b) => b.textContent),
+      group: el.closest('.store-group')?.querySelector('h3')?.textContent,
+    }));
+    for (const k of ['Ultra Graphics', '$5', 'Test mode · nothing is charged', 'The maximum graphics tier. Low and HD are free.', 'This test build unlocks Ultra for everyone', 'Nothing is charged.'])
+      expect(r.text.includes(k), `the card lacks "${k}": ${r.text.slice(0, 300)}`);
+    expect(r.state === 'test' && r.buy.join() === 'Buy · $5' && r.group === 'Graphics', `state ${r.state}, buttons ${r.buy.join()}, group ${r.group}`);
+    const lede = (await page.locator('.store-panel .store-lede').textContent()).replace(/\s+/g, ' ');
+    expect(lede.includes('the Ultra graphics tier') && lede.includes('every graphics setting but Ultra') && lede.includes('Ultra changes no physics or scoring either, but it draws the road and its traffic further ahead.'), `lede: ${lede}`);
+    // what Ultra changes besides looks, said where it is sold (the terms here, the checkout below): it draws the road
+    // and its traffic further ahead (drawDistance in src/game/settings.ts), so no copy may say "graphics only"
+    const terms = await page.evaluate(() => [...document.querySelectorAll('.store-panel details')].find((d) => /Store terms/.test(d.querySelector('summary')?.textContent ?? ''))?.textContent.replace(/\s+/g, ' ') ?? '');
+    expect(terms.includes(`The Ultra graphics tier changes more than looks. ${ULTRA_PLAYS}`), `terms: ${terms.slice(0, 400)}`);
+    const panel = await page.locator('.store-panel').textContent();
+    expect(!/graphics only|not how it plays/i.test(panel), 'the store still says "graphics only" or "not how it plays"');
+    await card.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    await storeShot(page, 'store-ultra-1440x900.png');
+    await storeCrop(page, card, 'store-ultra-card-1440.png');
+    return `"${r.text.slice(0, 200)}…"; state ${r.state}`;
+  });
+
   await check('every price carries the test-mode notice right under it, at 1440 × 900 and 1280 × 720', async () => {
     const wide = await storePriceTags(page);
     expect(wide.prices >= sale.length + 1 && !wide.bad.length, `1440: ${wide.prices} prices; ${wide.bad.join(' | ')}`);
@@ -952,6 +981,10 @@ await group('store', async (use) => {
       await page.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
       await storeShot(page, 'store-items-1280x720.png');
       const items = await storePriceTags(page);
+      await page.locator('.store-panel [data-sku="graphics-ultra"]').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(page, 'store-ultra-1280x720.png');
+      const ultraTags = await storePriceTags(page);
+      expect(!ultraTags.bad.length && ultraTags.inView > 0, `1280, at the Ultra card: ${ultraTags.bad.join(' | ')}; ${ultraTags.inView} in view`);
       const sideways = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
       expect(!top.bad.length && !items.bad.length && items.inView > 0 && !sideways, `1280: ${[...top.bad, ...items.bad].join(' | ')}; ${items.inView} prices in view; sideways scroll ${sideways}`);
       return `${wide.prices} prices, each with "Test mode · nothing is charged" under it at 1440 and 1280 (${items.inView} in view on the items screen)`;
@@ -1038,6 +1071,62 @@ await group('store', async (use) => {
     expect((await ownedIds(page)).includes('badge-supporter'), 'no badge after $7');
     await sheet.getByRole('button', { name: 'Done' }).click();
     return `$1 refused ("${err}"); $7 grants the badge`;
+  });
+
+  await check('buying Ultra Graphics with 4242 grants graphics-ultra and a test receipt; Restore purchases keeps it', async () => {
+    await page.getByRole('button', { name: /^Buy Ultra Graphics/ }).click();
+    const said = (await sheet.locator('.store-q.small').textContent()).trim();
+    expect(said === ULTRA_PLAYS, `the sheet says: ${said}`);
+    const sheetTags = await storePriceTags(page, '.store-sheet');
+    expect(sheetTags.prices === 1 && !sheetTags.bad.length, `checkout price: ${sheetTags.prices} prices; ${sheetTags.bad.join(' | ')}`);
+    await sheet.getByLabel(/18 or over/).check();
+    await storeCard(sheet, '4242 4242 4242 4242');
+    await sheet.getByRole('button', { name: /^Pay \$5\.00/ }).click();
+    await sheet.locator('.store-receipt').waitFor();
+    const text = (await sheet.locator('.store-receipt').innerText()).replace(/\s+/g, ' ');
+    const next = await sheet.locator('.store-ultra-next').textContent();
+    expect(/Test mode: nothing was charged/i.test(text) && text.includes('$5.00') && text.includes('Ultra Graphics'), `receipt: ${text}`);
+    expect(/Settings → Display → Graphics/.test(next), `after the receipt: ${next}`);
+    expect((await ownedIds(page)).includes('graphics-ultra'), 'graphics-ultra not granted');
+    await sheet.getByRole('button', { name: 'Done' }).click();
+    const card = page.locator('.store-panel [data-sku="graphics-ultra"]');
+    const act = await card.locator('.store-act').textContent(), state = await card.locator('.store-ultra-state').getAttribute('data-ultra');
+    await page.locator('.store-account').getByRole('button', { name: 'Restore purchases' }).click();
+    await page.waitForFunction(() => /on this account/.test(document.querySelector('.store-panel .store-note')?.textContent ?? ''));
+    const note = await page.locator('.store-panel .store-note').textContent();
+    const still = (await ownedIds(page)).includes('graphics-ultra');
+    expect(/Owned/.test(act) && state === 'owned' && still, `after buying: "${act}", state ${state}; after Restore still owned ${still}`);
+    return `receipt: ${text.slice(0, 120)}; card "${act}" (${state}); Restore: "${note}"`;
+  });
+
+  await check('settings at 1280 × 720: the Graphics picker offers Ultra and says what it is (owned here, after the test purchase)', async () => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    try {
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      const note = page.locator('.settings .ultra-note');
+      await note.waitFor();
+      const r = await page.evaluate(() => {
+        const field = [...document.querySelectorAll('.settings .field')].find((f) => f.querySelector('label')?.textContent === 'Graphics');
+        return { labels: [...field.querySelectorAll('.seg button')].map((b) => b.textContent), state: document.querySelector('.settings .ultra-note').getAttribute('data-ultra'), text: document.querySelector('.settings .ultra-note').textContent, drawn: window.__game.settings.quality, sideways: document.documentElement.scrollWidth > innerWidth };
+      });
+      expect(r.labels.join() === 'Low,Medium,High,Ultra' && r.state === 'owned' && /maximum graphics tier/.test(r.text) && /Every other setting is free/.test(r.text) && !r.sideways, JSON.stringify(r));
+      // the picker's free tiers are the ones the store's copy names ("Low and HD are free", the Ultra sku's line). Before
+      // the graphics-modes lane's three modes land, this branch's Low, Medium and High stand for Low and HD (cosmetics.json's
+      // free list says so); once the picker has an HD, it must read exactly the named tiers
+      const named = /(\w+) and (\w+) are free/.exec(cat.find((c) => c.sku === 'graphics-ultra').description)?.slice(1) ?? [];
+      const free = r.labels.filter((l) => !/^Ultra/.test(l)), merged = free.includes('HD');
+      expect(named.join() === 'Low,HD' && (merged ? free.join() === named.join() : free.join() === 'Low,Medium,High'), `the copy names ${named.join(' and ')}; the picker's free tiers ${free.join(', ')}`);
+      await note.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(page, 'settings-ultra-1280x720.png');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      // back to the store, where the next checks pick up
+      await page.getByRole('button', { name: 'Store', exact: true }).click();
+      await page.waitForSelector('.store-panel');
+      return `picker ${r.labels.join(' / ')} (free: ${free.join(', ')}; the copy names ${named.join(' and ')}${merged ? '' : ', which this branch\'s Low, Medium and High stand for until the three modes land'}); "${r.text}" (${r.state}); the game draws ${r.drawn}`;
+    } finally {
+      await page.setViewportSize({ width: 1440, height: 900 });
+    }
   });
 
   await check('a subscription shows its price and renewal terms before an unticked checkbox (preview; the club is not on sale)', async () => {
@@ -1147,7 +1236,7 @@ await group('store', async (use) => {
     return last;
   });
 
-  await check('phone: the store and the checkout fit a 390 × 844 screen', async () => {
+  await check('phone: the store, the Ultra card, the checkout and the settings screen fit a 390 × 844 screen', async () => {
     await page.close();                      // the 1440 page's renders would starve this one's load in software rendering
     const ph = await open({ phone: true });
     try {
@@ -1171,6 +1260,13 @@ await group('store', async (use) => {
       await storeShot(p, 'store-items-390x844.png');
       const itemTags = await storePriceTags(p);
       expect(!itemTags.bad.length && itemTags.inView > 0, `phone item prices: ${itemTags.bad.join(' | ')}; ${itemTags.inView} in view`);
+      const uc = p.locator('.store-panel [data-sku="graphics-ultra"]');
+      await uc.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(p, 'store-ultra-390x844.png');
+      await storeCrop(p, uc, 'store-ultra-card-390.png');
+      const ucText = (await uc.textContent()).replace(/\s+/g, ' '), ucTags = await storePriceTags(p);
+      expect(ucText.includes('$5') && ucText.includes('Test mode · nothing is charged') && ucText.includes('The maximum graphics tier. Low and HD are free.') && ucText.includes('This test build unlocks Ultra for everyone') && !ucTags.bad.length, `phone Ultra card: ${ucText.slice(0, 220)}; ${ucTags.bad.join(' | ')}`);
+      const ua = await noSide();
       await p.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
       await p.getByRole('button', { name: /^Buy Founder Pack/ }).click();
       await storeSignIn(sh, 'phone@example.com');
@@ -1183,11 +1279,25 @@ await group('store', async (use) => {
       await sh.locator('.store-receipt').waitFor();
       await storeShot(p, 'store-receipt-390.png');
       const c = await noSide();
-      expect(a && b && c, `sideways scroll: store ${!a}, checkout ${!b}, receipt ${!c}`);
+      // the settings screen at phone size: this account bought no Ultra, and this test build unlocks it for everyone
+      await sh.getByRole('button', { name: 'Done' }).click();
+      await p.getByRole('button', { name: 'Done', exact: true }).click();
+      await p.getByRole('button', { name: 'Settings', exact: true }).click();
+      const sn = p.locator('.settings .ultra-note');
+      await sn.waitFor();
+      await sn.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(p, 'settings-ultra-390x844.png');
+      const set = await p.evaluate(() => {
+        const field = [...document.querySelectorAll('.settings .field')].find((f) => f.querySelector('label')?.textContent === 'Graphics');
+        return { labels: [...field.querySelectorAll('.seg button')].map((b) => b.textContent), state: document.querySelector('.settings .ultra-note').getAttribute('data-ultra'), text: document.querySelector('.settings .ultra-note').textContent };
+      });
+      const d = await noSide();
+      expect(set.labels.join() === 'Low,Medium,High,Ultra' && set.state === 'test' && /This test build unlocks it for everyone, and nothing is charged/.test(set.text), `phone settings: ${JSON.stringify(set)}`);
+      expect(a && ua && b && c && d, `sideways scroll: store ${!a}, Ultra card ${!ua}, checkout ${!b}, receipt ${!c}, settings ${!d}`);
       expect(ph.errors.length === 0, ph.errors.slice(0, 2).join(' | '));
       const bad = ph.requests.filter((u) => { try { return STORE_HOSTS.test(new URL(u).hostname); } catch { return false; } });
       expect(!bad.length, bad.slice(0, 3).join(' '));
-      return `store, checkout and receipt at 390 × 844 with no sideways scroll; ${phoneTags.prices} prices, each with the test-mode notice under it`;
+      return `store, Ultra card, checkout, receipt and settings at 390 × 844 with no sideways scroll; ${phoneTags.prices} prices, each with the test-mode notice under it; settings: "${set.text}"`;
     } finally { await ph.ctx.close(); }
   });
 
@@ -1211,21 +1321,43 @@ await group('store-live', async () => {
   const outDir = path.join(OUT, 'store-live-build');
   execFileSync(process.execPath, [path.join(ROOT, 'node_modules/vite/bin/vite.js'), 'build', '--outDir', outDir, '--emptyOutDir', '--logLevel', 'warn'], {
     cwd: ROOT, env: { ...process.env, VITE_SUPABASE_URL: MOCK, VITE_SUPABASE_ANON_KEY: 'eyJmock.anon.key', VITE_PAYMENTS_LIVE: 'true' }, stdio: 'pipe' });
+  // the same build with the owner's go-ahead for Ultra: graphics-ultra 'ready' in its cosmetics, patched into a copy of
+  // the bundle (as server/supabase/tests/ultra-entitlement.mjs patches its own), so a live build can lock Ultra. Served
+  // under /ready/. The repo's cosmetics.json is untouched.
+  const readyDir = outDir + '-ready';
+  rmSync(readyDir, { recursive: true, force: true });
+  cpSync(outDir, readyDir, { recursive: true });
+  const readyJs = readdirSync(path.join(readyDir, 'assets')).filter((f) => f.endsWith('.js')).map((f) => path.join(readyDir, 'assets', f));
+  let patched = 0;
+  for (const f of readyJs) {
+    const js = readFileSync(f, 'utf8'), at = js.indexOf('{"id":"graphics-ultra","type":"graphics"');
+    if (at < 0) continue;
+    const st = js.indexOf('"status":"hook"', at), end = js.indexOf('}', at);
+    if (st < 0 || st > js.indexOf('"needs"', at) || end < st) continue;
+    writeFileSync(f, js.slice(0, st) + '"status":"ready"' + js.slice(st + '"status":"hook"'.length)); patched++;
+  }
   const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
   const server = createServer((req, res) => {
-    const u = new URL(req.url, 'http://x'), f = path.join(outDir, decodeURIComponent(u.pathname === '/' ? '/index.html' : u.pathname));
-    if (!f.startsWith(outDir) || !existsSync(f)) { res.writeHead(404); res.end(); return; }
+    const u = new URL(req.url, 'http://x'), ready = u.pathname.startsWith('/ready/'), dir = ready ? readyDir : outDir;
+    const rel = ready ? u.pathname.slice('/ready'.length) : u.pathname;
+    const f = path.join(dir, decodeURIComponent(rel === '/' ? '/index.html' : rel));
+    if (!f.startsWith(dir) || !existsSync(f)) { res.writeHead(404); res.end(); return; }
     res.writeHead(200, { 'Content-Type': types[path.extname(f)] ?? 'application/octet-stream' }); res.end(readFileSync(f));
   });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
-  const SITE = `http://127.0.0.1:${server.address().port}/index.html`;
+  const SITE = `http://127.0.0.1:${server.address().port}/index.html`, SITE_READY = `http://127.0.0.1:${server.address().port}/ready/index.html`;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
   await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
   const errors = [], calls = [];
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
+  const serverCat = JSON.parse(readFileSync(path.join(ROOT, 'server/supabase/functions/_shared/catalog.json'), 'utf8')).skus;
   const founder = cat.find((s) => s.sku === 'founder-pack-2026');
   const db = { purchases: [], entitlements: [] };
+  // liveKeys: answer "what is on sale" as create-checkout does with live Stripe keys (sellable() in _shared/store.ts:
+  // available, and every grant 'ready'); otherwise as with test keys (every available item)
+  const mock = { liveKeys: false };
   const reply = (route, status, body) => route.fulfill({ status, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
+  const routes = async (ctx) => {
   await ctx.route(`${MOCK}/**`, async (route) => {
     const r = route.request(), u = new URL(r.url()), auth = r.headers()['authorization'] ?? '';
     calls.push({ method: r.method(), path: u.pathname, search: u.search, auth, body: r.postData() });
@@ -1236,7 +1368,7 @@ await group('store-live', async () => {
     if (u.pathname === '/rest/v1/profiles') return reply(route, 201, {});
     if (u.pathname === '/rest/v1/purchases') return reply(route, 200, db.purchases.filter((p) => u.search.includes(encodeURIComponent(p.stripe_session_id)) || u.search.includes(p.stripe_session_id)));
     if (u.pathname === '/rest/v1/entitlements') return reply(route, 200, db.entitlements);
-    if (u.pathname === '/functions/v1/create-checkout' && r.method() === 'GET') return reply(route, 200, { livemode: false, on_sale: cat.filter((s) => s.available).map((s) => s.sku) });
+    if (u.pathname === '/functions/v1/create-checkout' && r.method() === 'GET') return reply(route, 200, { livemode: mock.liveKeys, on_sale: (mock.liveKeys ? serverCat.filter((s) => s.available && s.grants_ready) : cat.filter((s) => s.available)).map((s) => s.sku) });
     if (u.pathname === '/functions/v1/create-checkout') {
       const b = JSON.parse(r.postData() || '{}');
       if (auth !== 'Bearer at-1') return reply(route, 401, { error: 'Sign in again to buy.' });
@@ -1257,11 +1389,16 @@ await group('store-live', async () => {
     const back = cancel ? `${SITE}?checkout=cancel` : `${SITE}?checkout=success&session_id=${id}`;
     return route.fulfill({ status: 200, contentType: 'text/html', body: `<!doctype html><title>Stripe Checkout (mock)</title><p>Paying…</p><script>location.replace(${JSON.stringify(back)})</script>` });
   });
+  };
+  await routes(ctx);
   const page = await ctx.newPage();
   page.setDefaultTimeout(120000);
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
-  const loaded = () => page.waitForFunction(() => window.__game?.net && !document.querySelector('.loadbar'), null, { timeout: BOOT_MS });
+  // each page load boots the game again; once it is up, its frame loop is held as in the store group (holdGame above):
+  // these checks are about the store's live wiring, and at a load of 45 to 50 the game drawing behind the store made
+  // a wait for the store panel run past 120 s (2026-10-21). Nothing here needs a rendered frame.
+  const loaded = async () => { await page.waitForFunction(() => window.__game?.net && !document.querySelector('.loadbar'), null, { timeout: BOOT_MS }); await holdGame(page); };
   const sheet = page.locator('.store-sheet .panel');
   try {
     await page.goto(SITE);
@@ -1353,6 +1490,123 @@ await group('store-live', async () => {
       const note = await page.locator('.store-panel .store-note').first().innerText();
       expect(/cancelled\. Nothing was charged/i.test(note), note);
       return `"${err}"; "${note.replace(/\s+/g, ' ').slice(0, 60)}"`;
+    });
+
+    await check('live: Ultra Graphics as the catalog is ("hook"): unlocked for everyone; Restore purchases puts it on the account, a refund takes it off, and settings say so', async () => {
+      const card = page.locator('.store-panel [data-sku="graphics-ultra"]');
+      const ultraOf = () => page.evaluate(() => document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-ultra-state')?.getAttribute('data-ultra'));
+      const before = await ultraOf();
+      const restoreTo = async (want) => {
+        await page.locator('.store-account').getByRole('button', { name: 'Restore purchases' }).click();
+        await page.waitForFunction((w) => document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-ultra-state')?.getAttribute('data-ultra') === w, want, { timeout: 120000 });
+      };
+      // the webhook writes the row (as the server test does for real), then the player taps Restore purchases
+      db.entitlements.push({ entitlement: 'graphics-ultra', sku: 'graphics-ultra', granted_at: new Date().toISOString(), serial: null });
+      await restoreTo('owned');
+      const act = (await card.locator('.store-act').textContent()).trim();
+      await card.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(page, 'store-live-ultra-1280.png');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      const sOwned = await page.locator('.settings .ultra-note').getAttribute('data-ultra');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.getByRole('button', { name: 'Store', exact: true }).click();
+      await page.waitForSelector('.store-panel');
+      // a refund: the webhook revokes the row, so Restore reads none
+      db.entitlements = db.entitlements.filter((e) => e.entitlement !== 'graphics-ultra');
+      await restoreTo('free');
+      const reads = calls.filter((c) => c.path === '/rest/v1/entitlements').length;
+      expect(before === 'free' && /Owned/.test(act) && sOwned === 'owned', `before ${before}; after restore "${act}"; settings ${sOwned}`);
+      // while it is 'free', the store doesn't call Ultra paid: the lede leaves it out and the card says it is unlocked
+      const lede = (await page.locator('.store-panel .store-lede').textContent()).replace(/\s+/g, ' ');
+      const line = (await card.locator('.store-ultra-state').textContent()).trim();
+      expect(!/Ultra/.test(lede) && line === 'Unlocked for everyone in this build: choose Ultra in Settings → Display → Graphics.', `lede: ${lede}; card: ${line}`);
+      // with live Stripe keys the server won't sell it while it is 'hook': the card gives Ultra's own reason, not "once
+      // it is in the game" (it is in the game already)
+      mock.liveKeys = true;
+      try {
+        await page.getByRole('button', { name: 'Done', exact: true }).click();
+        await page.getByRole('button', { name: 'Store', exact: true }).click();
+        await page.waitForFunction(() => /Not on sale yet/.test(document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-act')?.textContent ?? ''), null, { timeout: 120000 });
+      } finally { mock.liveKeys = false; }
+      const why = (await card.locator('.store-act').textContent()).trim(), otherWhy = (await page.locator('.store-panel [data-sku="style-night-shift"] .store-act').textContent()).trim();
+      expect(why === 'Not on sale yet: Ultra stays unlocked for everyone until it is' && otherWhy === 'On sale once it is in the game', `with live keys: the Ultra card "${why}"; Night Shift "${otherWhy}"`);
+      await card.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await storeShot(page, 'store-live-ultra-hook-livekeys-1280.png');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.getByRole('button', { name: 'Store', exact: true }).click();
+      await page.waitForSelector('.store-panel');
+      return `before: ${before}; restored: "${act}", settings ${sOwned}; refunded and restored: free; ${reads} entitlements reads; card "${line}"; with live keys: "${why}" (a driver style not yet in the game: "${otherWhy}")`;
+    });
+
+    await check('live, with the owner\'s go-ahead (graphics-ultra "ready", patched into a copy of this build): an account without it is locked, a saved Ultra draws as High, the picker\'s "Ultra · Store" opens the Store at Buy · $5, #owner changes nothing in a live build, and Restore with a grant unlocks it and a refund locks it again', async () => {
+      expect(patched === 1, `patched ${patched} bundle file(s) to 'ready'`);
+      const c2 = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+      // a saved Ultra, and a player already signed in (the session the magic link leaves), so the boot read runs
+      await c2.addInitScript(({ user, email }) => {
+        localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'ultra', adaptive: false, density: 'moderate', time: 'day', weather: 'clear' }));
+        localStorage.setItem('ocu.store.session', JSON.stringify({ userId: user, email, test: false, since: Date.now(), accessToken: 'at-1', refreshToken: 'rt-1', expiresAt: Date.now() + 3600e3 }));
+        localStorage.setItem('ocu.store.age', JSON.stringify({ ok13: true, at: Date.now() }));
+      }, { user: USER, email: EMAIL });
+      await routes(c2);
+      const p2 = await c2.newPage();
+      p2.setDefaultTimeout(120000);
+      const errs2 = [];
+      p2.on('pageerror', (e) => errs2.push(String(e)));
+      p2.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errs2.push('console: ' + m.text()); });
+      try {
+        db.entitlements = db.entitlements.filter((e) => e.entitlement !== 'graphics-ultra');
+        await p2.goto(SITE_READY);
+        await p2.waitForFunction(() => window.__game?.net && !document.querySelector('.loadbar'), null, { timeout: BOOT_MS });
+        await holdGame(p2);
+        const drawn = () => p2.evaluate(() => window.__game.settings.quality);
+        const saved = () => p2.evaluate(() => JSON.parse(localStorage.getItem('tsu.settings')).quality);
+        const d0 = await drawn(), s0 = await saved();
+        // the settings screen: the picker shows High chosen and "Ultra · Store"
+        await p2.getByRole('button', { name: 'Settings', exact: true }).click();
+        const note = p2.locator('.settings .ultra-note');
+        await note.waitFor();
+        const pick = () => p2.evaluate(() => {
+          const field = [...document.querySelectorAll('.settings .field')].find((f) => f.querySelector('label')?.textContent === 'Graphics');
+          const b = [...field.querySelectorAll('.seg button')];
+          return { labels: b.map((x) => x.textContent), on: b.filter((x) => x.getAttribute('aria-pressed') === 'true').map((x) => x.textContent), state: document.querySelector('.settings .ultra-note').getAttribute('data-ultra'), text: document.querySelector('.settings .ultra-note').textContent };
+        });
+        const set = await pick();
+        await p2.locator('.settings .field', { hasText: 'Graphics' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
+        await storeShot(p2, 'settings-ultra-locked-1280.png');
+        expect(d0 === 'high' && s0 === 'ultra' && set.labels.join() === 'Low,Medium,High,Ultra · Store' && set.on.join() === 'High' && set.state === 'locked' && /in the Store/.test(set.text), `drawn ${d0}, saved ${s0}; picker ${JSON.stringify(set)}`);
+        // "Ultra · Store" opens the Store at the Ultra card, for sale
+        await p2.getByRole('button', { name: 'Ultra · Store', exact: true }).click();
+        await p2.waitForSelector('.store-panel');
+        const card = p2.locator('.store-panel [data-sku="graphics-ultra"]');
+        await p2.waitForFunction(() => document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-act button'), null, { timeout: 120000 });
+        const buy = (await card.locator('.store-act').textContent()).trim(), cardState = await card.locator('.store-ultra-state').getAttribute('data-ultra');
+        const lede = (await p2.locator('.store-panel .store-lede').textContent()).replace(/\s+/g, ' ');
+        await card.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+        await storeShot(p2, 'store-ultra-locked-1280.png');
+        expect(buy === 'Buy · $5' && cardState === 'locked' && lede.includes('every graphics setting but Ultra') && (await saved()) === 'ultra', `card "${buy}" (${cardState}); lede ${lede.slice(0, 200)}`);
+        // owner mode is a test-build switch: in a live build #owner and #owner=0 change nothing (decision 5)
+        const owner = {};
+        for (const h of ['#owner', '#owner=0']) {
+          await p2.evaluate((x) => { location.hash = x; }, h);
+          await p2.waitForTimeout(500);
+          owner[h] = { state: await card.locator('.store-ultra-state').getAttribute('data-ultra'), drawn: await drawn() };
+        }
+        await p2.evaluate(() => history.replaceState(null, '', location.pathname));
+        expect(Object.values(owner).every((o) => o.state === 'locked' && o.drawn === 'high'), `owner mode in a live build: ${JSON.stringify(owner)}`);
+        // the webhook grants it, the player taps Restore purchases: Ultra unlocks and the game draws the saved Ultra
+        db.entitlements.push({ entitlement: 'graphics-ultra', sku: 'graphics-ultra', granted_at: new Date().toISOString(), serial: null });
+        await p2.locator('.store-account').getByRole('button', { name: 'Restore purchases' }).click();
+        await p2.waitForFunction(() => window.__game.settings.quality === 'ultra' && document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-ultra-state')?.getAttribute('data-ultra') === 'owned', null, { timeout: 120000 });
+        const owned = { drawn: await drawn(), act: (await card.locator('.store-act').textContent()).trim() };
+        // a refund: the webhook revokes the row, Restore reads none, and the saved Ultra draws as High again
+        db.entitlements = db.entitlements.filter((e) => e.entitlement !== 'graphics-ultra');
+        await p2.locator('.store-account').getByRole('button', { name: 'Restore purchases' }).click();
+        await p2.waitForFunction(() => window.__game.settings.quality === 'high' && document.querySelector('.store-panel [data-sku="graphics-ultra"] .store-ultra-state')?.getAttribute('data-ultra') === 'locked', null, { timeout: 120000 });
+        const s1 = await saved();
+        expect(/Owned/.test(owned.act) && owned.drawn === 'ultra' && s1 === 'ultra' && !errs2.length, `owned ${JSON.stringify(owned)}; saved after the refund ${s1}; errors ${errs2.slice(0, 2).join(' | ')}`);
+        return `drawn ${d0} (saved ${s0}); picker ${set.labels.join(' / ')} with ${set.on} on; "Ultra · Store" → "${buy}" (${cardState}); #owner and #owner=0: ${Object.values(owner).map((o) => `${o.state}, draws ${o.drawn}`).join('; ')}; Restore with the grant: "${owned.act}", draws ${owned.drawn}; after the refund: locked, draws high, saved ${s1}`;
+      } finally { await c2.close(); }
     });
 
     await check('live: only the mock project and Stripe\'s page were contacted', () => {

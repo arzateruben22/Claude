@@ -19,6 +19,14 @@
 //     src/game/vehicle/ if it moves); a style in that type the store doesn't list is valid only as a car's own factory
 //     wheel (a `wheel:` in car-shape.ts, like the OC Hypercar's 'multi'), and no paid setup uses it; no paid setup
 //     repeats a factory wheel
+//   - every sku but a tip grants something
+//   - the Ultra graphics tier (decision 15: Low and HD free, Ultra the paid tier as an entitlement flag only), checked
+//     on the ids the code uses, whatever type or kind the files give them: ULTRA_ENTITLEMENT (src/store/entitlements.ts)
+//     is in cosmetics.json as type 'graphics', tier 'ultra', with Low and HD as its free tiers, and no other entitlement
+//     is a graphics tier; ULTRA_SKU (src/store/catalog.ts) is in catalog.json, is the only sku that grants it and the
+//     only sku of kind 'graphics', and is a one-time payment with no window and no number that grants exactly
+//     [ULTRA_ENTITLEMENT], with copy that says Low and HD are free; and Ultra is marked 'ready' (sold live, locked for
+//     those who haven't bought it) only while ownerMode() in entitlements.ts refuses live builds (decision 5)
 //   - the tip's custom amount sits above Stripe's $0.50 minimum
 //   - no real brand word appears anywhere in either file
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -44,7 +52,7 @@ else {
 const ents = new Map(cosmetics.entitlements.map((e) => [e.id, e]));
 if (ents.size !== cosmetics.entitlements.length) errs.push('duplicate entitlement ids');
 
-const KINDS = new Set(['pack', 'livery', 'kit', 'style', 'tip', 'club']);
+const KINDS = new Set(['pack', 'livery', 'kit', 'style', 'graphics', 'tip', 'club']);
 const FIELDS = ['sku', 'name', 'kind', 'price_cents', 'currency', 'mode', 'grants', 'description', 'available'];
 const BADGES = new Set(['badge', 'frame', 'credits-roll']);
 const used = new Set();
@@ -78,6 +86,7 @@ for (const c of catalog) {
     const a = c.custom_amount;
     if (!a || a.minimum_cents < 50 || a.minimum_cents > a.preset_cents || a.preset_cents > a.maximum_cents) errs.push(`${s}: custom_amount`);
   }
+  if (Array.isArray(c.grants) && !c.grants.length && c.kind !== 'tip') errs.push(`${s}: grants nothing (only a tip may)`);
   for (const g of c.grants) {
     used.add(g);
     const e = ents.get(g);
@@ -139,6 +148,42 @@ for (const e of ents.values()) {
   if (e.type === 'paint' && !(e.finish in cosmetics.paint_finishes)) errs.push(`${e.id}: unknown finish ${e.finish}`);
   for (const hex of JSON.stringify(e).match(/#[0-9A-Za-z]+/g) ?? []) if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) errs.push(`${e.id}: bad hex ${hex}`);
 }
+
+// The Ultra graphics tier (decision 15, PROJECT_OC_DECISIONS.md in the main checkout): Ultra is the only paid graphics
+// tier, as an entitlement flag, and the store's copy says the free tiers wherever it is sold. The rules run on the two
+// ids the game's code uses, so retyping the entitlement, changing the sku's kind or renaming either can't skip them: a
+// sku renamed in catalog.json alone would leave ultraForSale() false for good, and a live build would give Ultra to
+// everyone while the server sold it.
+const entTs = read('src/store/entitlements.ts');
+const flag = entTs.match(/export const ULTRA_ENTITLEMENT = '([\w-]+)'/)?.[1];
+const ultraSku = read('src/store/catalog.ts').match(/export const ULTRA_SKU = '([\w-]+)'/)?.[1];
+if (!flag) errs.push('src/store/entitlements.ts: no ULTRA_ENTITLEMENT');
+if (!ultraSku) errs.push('src/store/catalog.ts: no ULTRA_SKU');
+const ue = flag ? ents.get(flag) : undefined;
+if (flag && !ue) errs.push(`${flag} (ULTRA_ENTITLEMENT in src/store/entitlements.ts) is not in cosmetics.json`);
+if (ue) {
+  if (ue.type !== 'graphics') errs.push(`${flag}: the Ultra entitlement is type 'graphics', not ${ue.type}`);
+  if (ue.tier !== 'ultra') errs.push(`${flag}: the Ultra entitlement is tier 'ultra', not ${ue.tier}: Low and HD are free`);
+  if (JSON.stringify(ue.free_tiers) !== JSON.stringify(['low', 'hd'])) errs.push(`${flag}: free_tiers must be ["low","hd"] (decision 15)`);
+}
+for (const e of ents.values()) if (e.type === 'graphics' && e.id !== flag) errs.push(`${e.id}: a second graphics entitlement; decision 15 has one paid tier, Ultra (${flag})`);
+const us = ultraSku ? catalog.find((c) => c.sku === ultraSku) : undefined;
+if (ultraSku && !us) errs.push(`${ultraSku} (ULTRA_SKU in src/store/catalog.ts) is not in catalog.json: the game could never sell Ultra or lock it`);
+if (flag) {
+  const by = catalog.filter((c) => c.grants?.includes(flag)).map((c) => c.sku);
+  if (by.length !== 1 || by[0] !== ultraSku) errs.push(`${flag}: granted by ${by.join(', ') || 'no sku'}; ${ultraSku} (ULTRA_SKU) alone grants it`);
+}
+if (us) {
+  if (us.kind !== 'graphics' || us.mode !== 'payment' || us.window || us.serial || JSON.stringify(us.grants) !== JSON.stringify([flag]))
+    errs.push(`${us.sku}: the Ultra sku is kind 'graphics', a one-time payment with no window and no number, granting exactly ["${flag}"]`);
+  if (!/\bLow and HD are free\b/.test(us.description)) errs.push(`${us.sku}: its copy must say "Low and HD are free"`);
+}
+for (const c of catalog) if (c.kind === 'graphics' && c.sku !== ultraSku) errs.push(`${c.sku}: kind 'graphics' is the Ultra sku's alone (${ultraSku})`);
+// owner mode is a switch on the device anyone can type (#owner): once Ultra is 'ready' a live build locks it for those
+// who haven't bought it, so by then ownerMode() must answer false in a live build (until decision 5 ties it to the
+// owner's account or compiles it out; then change this rule with it)
+if (ue?.status === 'ready' && !/export function ownerMode\(\): boolean \{\s*if \(CONFIG\.live\) return false;/.test(entTs))
+  errs.push(`${flag}: 'ready' (sold live, locked for those who haven't bought it) while ownerMode() in src/store/entitlements.ts doesn't refuse live builds: #owner would unlock it for anyone`);
 
 const BANNED = ['ferrari', 'porsche', 'lamborghini', 'mclaren', 'bmw', 'mercedes', 'rolex', 'omega', 'hot wheels',
   'golden road', 'crush', 'brembo', 'bbs', 'recaro', 'nike', 'supreme'];
