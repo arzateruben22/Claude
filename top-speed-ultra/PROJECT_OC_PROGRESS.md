@@ -39,6 +39,15 @@ The owner's standing order is to keep improving until they say stop. A scheduled
   passed, with no page errors.
 - **The rest of the suite on the same build** (boot, interchanges, survival, race, abilities, progression, render,
   phone, launch): **62 of 62**. With `live` (12 of 12) and `livephone` (5 of 5), every group passes.
+- **Rendering and honesty, from a night render.** A render of the 57 at night (started at the Orangewood exit;
+  `tests/out/billboard-night.png`) showed two things:
+  - The billboards were as dim as by day. They now light with the darkness, from 0.35 to 2.2 emissive (2.2 measured at
+    night). In the render, the LOT 57 panel glows beside the green guide signs, 160 m ahead.
+  - The HUD clock read 11:28 AM (this machine's UTC clock) under a night sky. The chip and the simulated temperature
+    now run on OC's clock: Pacific time in Live, wherever the player is, and the preset's own hour otherwise. `phone`
+    and `boot`: 14 of 14, with the Day preset's chip reading "12:30 PM".
+  - With Live weather and the real feed, the chip now shows the observed temperature and "NWS KSNA" rather than the
+    simulated one. The check injects a reading; the rerun is below.
 
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 
