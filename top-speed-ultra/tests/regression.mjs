@@ -1006,6 +1006,8 @@ await group('live', async (use) => {
     });
     await check('the account panel changes the password and deletes the account, and the server agrees', async () => {
       await game(A, () => window.__game.setPaused(true));
+      const line = (await A.locator('.live-line').innerText()).replace(/\s+/g, ' ');
+      expect(/Live: \d+ of 2 driving/.test(line), `the pause screen says "${line}"`);
       await A.getByRole('button', { name: 'Main menu', exact: true }).click();
       await A.locator('.pick', { hasText: 'Account' }).click();
       await A.locator('summary', { hasText: 'Change password' }).click();

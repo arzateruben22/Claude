@@ -534,12 +534,18 @@ export function App() {
             <OcWatermark />
             <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
             <h2>Paused</h2>
+            {liveInfo.status === 'online' && (() => {
+              const others = [...(live.current?.peers.values() ?? [])].map((p) => p.name).filter(Boolean).sort();
+              return <p className="fine live-line">Live: {liveInfo.online} of {liveInfo.cap} driving{others.length ? ` · ${others.slice(0, 3).join(', ')}${others.length > 3 ? ` and ${others.length - 3} more` : ''}` : ' · just you so far'}. Others can't see your car while you're paused.</p>;
+            })()}
+            {liveInfo.status === 'queued' && <p className="fine live-line">Live: you're #{liveInfo.position} in line for one of {liveInfo.cap} spots.</p>}
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
               {mode === 'free' && <button className="btn" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>}
+              {liveInfo.status === 'online' && <button className="btn" onClick={() => void invite()}>Invite a friend</button>}
               <button className="btn" onClick={openFeedback}>Feedback</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
             </div>
