@@ -1193,6 +1193,18 @@ export class Game {
       g.fillStyle = inter ? '#fff' : '#111';
       g.fillText(q.route!.replace(/^(I|SR)-/, ''), mx, my + 0.5);
     }
+    // live drivers: orange dots (their live pose when near, the roster's otherwise)
+    if (this.live) {
+      const now = performance.now();
+      g.fillStyle = '#fd9123'; g.strokeStyle = 'rgba(0,0,0,0.6)'; g.lineWidth = 1.2 * dpr;
+      for (const peer of this.live.peers.values()) {
+        const at = this.live.whereIs(peer, now);
+        if (!at || Math.abs(at.x - p.x) > R * 1.4 || Math.abs(at.z - p.z) > R * 1.4) continue;
+        const [a, b] = tx(at.x, at.z);
+        if (a < 0 || b < 0 || a > W || b > W) continue;
+        g.beginPath(); g.arc(a, b, 3.6 * dpr, 0, Math.PI * 2); g.fill(); g.stroke();
+      }
+    }
     g.fillStyle = '#d0141e'; g.strokeStyle = '#fff'; g.lineWidth = 1.5 * dpr;
     const cy = W * 0.62;
     g.beginPath(); g.moveTo(W / 2, cy - 7 * dpr); g.lineTo(W / 2 + 5 * dpr, cy + 5 * dpr); g.lineTo(W / 2, cy + 2 * dpr); g.lineTo(W / 2 - 5 * dpr, cy + 5 * dpr); g.closePath(); g.fill(); g.stroke();
@@ -1319,13 +1331,35 @@ export class Game {
       const p = this.phys;
       this.live.send({ x: p.x, y: p.y, z: p.z, h: p.psi, v: p.vx, b: this.input.c.brake > 0.05 }, now);
     }
-    this.liveCars?.render(this.live, now, dt);
+    this.liveCars?.render(this.live, now, dt, this.camera);
   }
   setLive(c: LiveClient | null) { this.live = c; }
+  // which freeway a live driver is on, for the who's-on list ('' when unknown)
+  liveRoad(id: number): string {
+    const p = this.live?.peers.get(id), at = p && this.live!.whereIs(p, performance.now());
+    if (!at) return '';
+    const hit = this.net.near(at.x, at.z, 25).find((h) => h.path.main) ?? this.net.near(at.x, at.z, 25)[0];
+    return hit ? (hit.path.main ? hit.path.label : hit.path.label ? 'To ' + hit.path.label : 'a ramp') : 'off the freeway';
+  }
+  // Free Drive only: put the car 80 m behind a live driver, on their carriageway, at their speed
+  get canJoin() { return !this.attract && !this.over && this.mode === 'free' && !this.race; }
+  joinDriver(id: number): boolean {
+    const p = this.live?.peers.get(id), at = p && this.live!.whereIs(p, performance.now());
+    if (!this.canJoin || !p || !at) return false;
+    const hit = this.net.near(at.x, at.z, 25).find((h) => h.path.main) ?? this.net.near(at.x, at.z, 25)[0];
+    if (!hit) return false;
+    const path = hit.path, s = clamp(hit.s - 80, 5, path.len - 5), lane = path.laneOf(clamp(hit.d, path.edgeL, path.edgeR));
+    const spot = path.at(s, path.laneCenter(lane));
+    this.traffic.clearAround(spot.x, spot.z, 60);
+    this.placeCar(path, s, lane, clamp(at.v, 0, 60));
+    this.route = []; this.routeTarget = null;
+    this.ev.toast(`Behind ${p.name || 'them'} on ${path.label || 'the ramp'}`, 'good');
+    return true;
+  }
 
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,
-      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches, livePeers: this.live?.peers.size ?? 0, liveDrawn: this.liveCars?.count ?? 0,
+      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches, livePeers: this.live?.peers.size ?? 0, liveDrawn: this.liveCars?.count ?? 0, livePlates: this.liveCars?.plateCount ?? 0,
       visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
   }
 

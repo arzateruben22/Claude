@@ -206,3 +206,15 @@ test('a ban kicks the driver off, ends every session, refuses log-in; an unban l
   await post('/admin/ban', { name: 'banned_one', banned: false }, 'admin-secret');
   assert.equal((await post('/api/login', { name: 'banned_one', password: 'correct horse battery' })).status, 200);
 });
+
+test('the roster: every 2 s, where every other driver is, however far', async () => {
+  const [a, b] = [connect(await signup('roster_a')), connect(await signup('roster_b'))];
+  await Promise.all([a.ready, b.ready]); await Promise.all([a.until('welcome'), b.until('welcome')]);
+  a.send({ t: 's', x: 0, y: 10, z: 0, h: 0, v: 30 });
+  b.send({ t: 's', x: 40000, y: 10, z: -20000, h: 0, v: 30 });    // 45 km away: never in a snapshot, always in the roster
+  const r = await b.until('r', 3000).then(() => new Promise((res) => { const t0 = Date.now(); const iv = setInterval(() => { const m = a.all.filter((x) => x.t === 'r').at(-1); if (m && m.n.length || Date.now() - t0 > 4500) { clearInterval(iv); res(m); } }, 50); }));
+  const idB = b.got.welcome.id;
+  assert.deepEqual(r.n.find((row) => row[0] === idB), [idB, 40000, -20000]);
+  assert.ok(!a.all.filter((m) => m.t === 'p').some((m) => m.n.some((row) => row[0] === idB)), 'never in a snapshot at 45 km');
+  a.sock.close(); b.sock.close();
+});

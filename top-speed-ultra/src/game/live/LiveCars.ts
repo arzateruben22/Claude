@@ -1,5 +1,6 @@
 // The other drivers' cars: one instanced coupe per peer, drawn from the poses the live client holds. They are
-// ghosts: no collision, no sound, no scoring. Paint comes from each driver's own car colour.
+// ghosts: no collision, no sound, no scoring. Paint comes from each driver's own car colour. Each carries its
+// driver's name on a plate above the roof, readable to about 350 m and gone by 500 m.
 
 import * as THREE from 'three';
 import { ORIGIN } from '../world/Path';
@@ -17,6 +18,8 @@ export class LiveCars {
   private color = new THREE.Color();
   private pose: Pose = { x: 0, y: 0, z: 0, h: 0, v: 0, b: false };
   private spins = new Map<number, number>();
+  private plates = new Map<number, { sprite: THREE.Sprite; name: string }>();
+  private eye = new THREE.Vector3();
   count = 0;                                  // peers drawn in the last frame (for tests)
 
   constructor(private cls: CarClass, wheel: THREE.BufferGeometry, readonly capacity = 64) {
@@ -35,8 +38,11 @@ export class LiveCars {
     this.group.name = 'live';
   }
 
-  render(client: LiveClient | null, now: number, dt: number) {
+  // camera: where the viewer is, for the plates' fade (in the scene's frame)
+  render(client: LiveClient | null, now: number, dt: number, camera?: THREE.Camera) {
     let i = 0;
+    if (camera) camera.getWorldPosition(this.eye);
+    const seen = new Set<number>();
     if (client) {
       for (const p of client.peers.values()) {
         if (i >= this.capacity) break;
@@ -55,9 +61,16 @@ export class LiveCars {
           this.w4.compose(this.wv.set(x, y, z), this.wq, this.ws.set(1, this.cls.wheelR, this.cls.wheelR));
           this.wheels.setMatrixAt(i * this.cls.wheels.length + w, this.w4.premultiply(this.m4));
         });
+        this.plate(p.id, p.name, this.p3, camera ? this.p3.distanceTo(this.eye) : 0);
+        seen.add(p.id);
         i++;
       }
       for (const id of this.spins.keys()) if (!client.peers.has(id)) this.spins.delete(id);
+    }
+    for (const [id, pl] of this.plates) {
+      if (seen.has(id)) continue;
+      if (client?.peers.has(id)) { pl.sprite.visible = false; continue; }     // out of range for now
+      this.group.remove(pl.sprite); pl.sprite.material.map?.dispose(); pl.sprite.material.dispose(); this.plates.delete(id);
     }
     this.count = i;
     this.body.count = this.glass.count = i; if (this.trim) this.trim.count = i;
@@ -65,4 +78,33 @@ export class LiveCars {
     for (const im of [this.body, this.glass, this.trim, this.wheels]) if (im) im.instanceMatrix.needsUpdate = true;
     if (this.body.instanceColor) this.body.instanceColor.needsUpdate = true;
   }
+
+  // a name plate: a sprite with the name on a dark pill, made once per driver
+  private plate(id: number, name: string, at: THREE.Vector3, dist: number) {
+    let pl = this.plates.get(id);
+    if (!pl || pl.name !== name) {
+      if (pl) { this.group.remove(pl.sprite); pl.sprite.material.map?.dispose(); pl.sprite.material.dispose(); }
+      const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64;
+      const g = cv.getContext('2d')!;
+      const label = name || 'Driver';
+      g.font = '600 34px "Chakra Petch", Arial, sans-serif';
+      const w = Math.min(244, g.measureText(label).width + 36);
+      g.fillStyle = 'rgba(10, 10, 14, 0.72)'; g.beginPath(); g.roundRect((256 - w) / 2, 8, w, 48, 24); g.fill();
+      g.fillStyle = '#fd9123'; g.beginPath(); g.arc((256 - w) / 2 + 20, 32, 6, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#f4f1ea'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(label, 128 + 8, 33, 200);
+      const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+      const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+      sprite.scale.set(3.2, 0.8, 1); sprite.renderOrder = 10;
+      this.group.add(sprite);
+      pl = { sprite, name }; this.plates.set(id, pl);
+    }
+    pl.sprite.position.set(at.x, at.y + 2.15, at.z);
+    // a plate grows a little with distance so it stays readable, and fades out from 350 to 500 m
+    const k = Math.max(1, dist / 60);
+    pl.sprite.scale.set(3.2 * Math.min(k, 3), 0.8 * Math.min(k, 3), 1);
+    const a = dist <= 350 ? 1 : Math.max(0, 1 - (dist - 350) / 150);
+    pl.sprite.material.opacity = a;
+    pl.sprite.visible = a > 0.01;
+  }
+  get plateCount() { let n = 0; for (const p of this.plates.values()) if (p.sprite.visible) n++; return n; }
 }

@@ -928,7 +928,24 @@ await group('live', async (use) => {
       await game(A, () => window.__game.setCam('chase'));
       await frames(A, 2);
       await A.screenshot({ path: path.join(OUT, 'live-ghost.png') });
-      return `A: ${sa.online}/${sa.cap} online, ${sa.peers} peer, ${sa.drawn} drawn; chip "${chip}"`;
+      const plates = await game(A, () => window.__game.stats.livePlates);
+      expect(plates === 1, `${plates} name plates`);
+      return `A: ${sa.online}/${sa.cap} online, ${sa.peers} peer, ${sa.drawn} drawn, ${plates} plate; chip "${chip}"`;
+    });
+    await check('the chip lists who is driving and where; Drive with puts A 80 m behind B on B\'s freeway', async () => {
+      // B's road reaches A through the roster (every 2 s) or the live pose
+      await A.waitForFunction(() => window.__game.liveRoad([...window.__game.live.peers.keys()][0]) !== '', null, { timeout: 30000 });
+      await A.locator('.livechip').click();
+      await A.waitForSelector('.livewho');
+      const text = (await A.locator('.livewho').innerText()).replace(/\s+/g, ' ');
+      await A.screenshot({ path: path.join(OUT, 'live-who.png') });
+      expect(/live_ui you/i.test(text) && /live_b/i.test(text) && /Drive with/i.test(text), text);
+      const bRoad = await game(B, () => window.__game.path.label);
+      expect(text.includes(bRoad), `the list doesn't say B is on ${bRoad}: ${text}`);
+      await A.getByRole('button', { name: 'Drive with', exact: true }).click();
+      const r = await game(A, () => { const g = window.__game, id = [...g.live.peers.keys()][0], p = g.live.peers.get(id), at = g.live.whereIs(p, performance.now()); return { road: g.path.label, gap: Math.hypot(at.x - g.phys.x, at.z - g.phys.z) }; });
+      expect(r.road === bRoad && r.gap > 50 && r.gap < 130, JSON.stringify(r));
+      return `list: "${text.slice(0, 90)}"; A now on ${r.road}, ${fmt(r.gap)} m behind B`;
     });
     await check('a third driver waits in line (#1) and is let in when one leaves; the counts follow', async () => {
       C = await open({ settings }); extra.push(C);

@@ -39,6 +39,7 @@ const TICK_MS = 100;                 // the relay's snapshot period (10 Hz)
 const STATE_MAX_HZ = 15;             // a client may send poses up to this often; more are dropped
 const NEAR_M = 3000;                 // a driver hears about drivers within this many metres
 const NEAR_MAX = 32;                 // and about this many at most, the nearest first (keeps each snapshot's size flat)
+const ROSTER_MS = 2000, ROSTER_MAX = 200;   // every 2 s, where everyone is on the map (coarse, nearest 200), for the map dots and the who's-on list
 const WORLD_M = 120000;              // OC fits well inside ±120 km of the map origin
 const SPEED_MAX = 200;               // m/s: nothing here does 447 mph
 const JUMP_MAX = 240;                // m/s implied by two consecutive poses: beyond this the pose is a teleport
@@ -352,6 +353,16 @@ function tick() {
     sendTo(c, { t: 'p', n: near.map((n) => n.row), online: online.size, cap: MAX_PLAYERS });
   }
 }
+// the roster: every ROSTER_MS, each driver gets where every other driver is (to the metre), wherever on the map
+function rosterTick() {
+  const now = Date.now(), fresh = [];
+  for (const o of online.values()) if (o.pose && now - o.poseAt < 10000) fresh.push(o);
+  for (const c of online.values()) {
+    let rows = fresh.filter((o) => o !== c).map((o) => ({ d: c.pose ? Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) : 0, row: [o.player.id, Math.round(o.pose.x), Math.round(o.pose.z)] }));
+    if (rows.length > ROSTER_MAX) rows = rows.sort((a, b) => a.d - b.d).slice(0, ROSTER_MAX);
+    sendTo(c, { t: 'r', n: rows.map((r) => r.row) });
+  }
+}
 const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
 
 // ------------------------------------------------------------------------------------------------ sockets
@@ -381,6 +392,7 @@ setInterval(() => {
   }
 }, PING_MS).unref();
 setInterval(tick, TICK_MS).unref();
+setInterval(rosterTick, ROSTER_MS).unref();
 
 function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
 now.start();

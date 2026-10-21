@@ -8,7 +8,7 @@ export type LiveStatus = 'off' | 'connecting' | 'queued' | 'online' | 'error';
 export interface LiveInfo { status: LiveStatus; online: number; cap: number; position: number; error: string }
 export interface Pose { x: number; y: number; z: number; h: number; v: number; b: boolean }
 interface Sample { t: number; x: number; y: number; z: number; h: number; v: number; b: number }
-export interface Peer { id: number; name: string; car: string; paint: number; a: Sample | null; b: Sample | null; seen: number }
+export interface Peer { id: number; name: string; car: string; paint: number; a: Sample | null; b: Sample | null; seen: number; far: { x: number; z: number; t: number } | null }
 export interface Player { id: number; name: string }
 
 export const TOKEN_KEY = 'tsu.live.token';
@@ -99,7 +99,11 @@ export class LiveClient {
       case 'queued': this.set({ status: 'queued', position: m.position as number, cap: m.cap as number, online: m.online as number }); break;
       case 'join': this.peer(m.id as number, m as unknown as { name: string; car: string; paint: number }); this.set({ online: m.online as number }); break;
       case 'leave': this.peers.delete(m.id as number); this.set({ online: m.online as number }); break;
-      case 'bye': this.set({ error: String(m.why || '') }); break;
+      case 'bye': if (!m.retry) this.set({ error: String(m.why || '') }); break;     // a restart's bye: the game reconnects on its own
+      case 'r': {                                 // the roster: where everyone is, every 2 s
+        for (const [id, x, z] of m.n as number[][]) { const p = this.peers.get(id); if (p) p.far = { x, z, t: now }; }
+        break;
+      }
       case 'p': {
         this.messages++;
         for (const row of m.n as number[][]) {
@@ -117,7 +121,7 @@ export class LiveClient {
   }
   private peer(id: number, who?: { name: string; car: string; paint: number }) {
     let p = this.peers.get(id);
-    if (!p) { p = { id, name: '', car: 'rossini-gt', paint: 0x8d9196, a: null, b: null, seen: 0 }; this.peers.set(id, p); }
+    if (!p) { p = { id, name: '', car: 'rossini-gt', paint: 0x8d9196, a: null, b: null, seen: 0, far: null }; this.peers.set(id, p); }
     if (who) { p.name = who.name; p.car = who.car; p.paint = who.paint; }
     return p;
   }
@@ -143,6 +147,12 @@ export class LiveClient {
     }
     out.v = b.v; out.b = b.b === 1;
     return out;
+  }
+  // where a peer is on the map now: the live pose when near, otherwise the roster's (null when unknown)
+  whereIs(p: Peer, now: number): { x: number; z: number; v: number; h: number } | null {
+    if (p.b && now - p.seen < FORGET_MS) return { x: p.b.x, z: p.b.z, v: p.b.v, h: p.b.h };
+    if (p.far && now - p.far.t < 10000) return { x: p.far.x, z: p.far.z, v: 0, h: 0 };
+    return null;
   }
   close() {
     this.stopped = true;

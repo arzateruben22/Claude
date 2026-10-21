@@ -473,7 +473,8 @@ export function App() {
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
           <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
-          <LiveChip info={liveInfo} />
+          <LiveChip info={liveInfo} me={liveName} canJoin={mode === 'free'} onJoin={(id) => { if (!game.current?.joinDriver(id)) toast('Can\'t find them right now', 'info'); }}
+            people={() => [...(live.current?.peers.values() ?? [])].map((p) => ({ id: p.id, name: p.name, road: game.current?.liveRoad(p.id) ?? '' }))} />
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
               pause button in the corner (styles.css). Its name stays "Pause" either way. */}
           <button type="button" className="tbtn menu" onClick={() => game.current?.setPaused(true)}>
