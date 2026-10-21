@@ -141,14 +141,25 @@ def check_units(now: datetime, state: dict, units: Callable[[str], Tuple[str, in
     return out
 
 
-def check_quiet(now: datetime, state: dict, mtime_of: Callable[[Path], Optional[datetime]], root: Path = ROOT) -> List[Push]:
-    """One push per service, however many of its desks have gone quiet at once (they share one price feed)."""
+def _desk_of(name: str) -> str:
+    """The book.toml section a QUIET entry belongs to: nightdesk-sniper -> memecoins_sniper, majors-4h -> majors_4h."""
+    unit, _, book = name.partition("-")
+    base = {"nightdesk": "memecoins", "majors": "majors"}.get(unit, unit)
+    return f"{base}_{book}" if book else base
+
+
+def check_quiet(now: datetime, state: dict, mtime_of: Callable[[Path], Optional[datetime]], root: Path = ROOT,
+                desks: Optional[set] = None) -> List[Push]:
+    """One push per service, however many of its desks have gone quiet at once (they share one price feed).
+    `desks` is the set of sections in book.toml: a desk that was cut from the book isn't watched any more."""
     out: List[Push] = []
     sent = state.setdefault("sent", {})
     quiet: Dict[str, List[Tuple[str, float]]] = {}
     for name, (unit, rel, minutes, label) in QUIET.items():
         if state.get("units", {}).get(unit, {}).get("active") != "active":
             continue                                        # a stopped desk is already reported as stopped
+        if desks is not None and _desk_of(name) not in desks:
+            continue                                        # cut from book.toml: no longer a desk
         m = mtime_of(root / rel)
         if m is None:
             continue
@@ -293,7 +304,8 @@ def run_once(now: datetime, state: dict, *, units=unit_state, mtime_of=mtime, bo
              backups: Tuple[Optional[datetime], bool] = None) -> List[Push]:
     cfg, limit, at, night = settings()
     names = [n for n in UNITS if n != "postdesk" or (ROOT / "post-desk" / ".secrets" / "x_tokens.json").exists()]
-    pushes = check_units(now, state, units, names) + check_quiet(now, state, mtime_of)
+    desks = {d for d, v in cfg.items() if d not in pb.NOT_DESKS and isinstance(v, dict)}
+    pushes = check_units(now, state, units, names) + check_quiet(now, state, mtime_of, desks=desks)
     try:
         book = book_of() if book_of else pb.load(cfg, False, now)
     except Exception as exc:  # a half-written file: say so once a day rather than fail silently

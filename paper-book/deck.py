@@ -117,9 +117,15 @@ def week(book: pb.Book, d: str, today: date) -> dict:
 
 
 def _as_date(day) -> Optional[date]:
+    """A checkpoint from book.toml: a TOML date, a datetime, or a quoted "2026-10-23"."""
     if isinstance(day, datetime):
         return day.date()
-    return day if isinstance(day, date) else None
+    if isinstance(day, date):
+        return day
+    try:
+        return date.fromisoformat(str(day).strip()[:10])
+    except ValueError:
+        return None
 
 
 def checkpoints(book: pb.Book) -> List[dict]:

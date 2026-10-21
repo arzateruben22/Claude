@@ -242,3 +242,18 @@ def test_the_standings_are_kept_as_a_file_on_each_read_date(tmp_path):
     kept = tmp_path / "out" / f"standings-{NOW.astimezone(LA).date().isoformat()}.txt"
     assert kept.exists() and kept.read_text().startswith("FIRST LOOK · Tue 20 Oct 2026\nSTANDINGS")
     assert not (tmp_path / "out" / "standings-2026-10-31.txt").exists()
+
+
+def test_a_checkpoint_can_be_a_quoted_date_and_a_cut_desk_is_not_watched():
+    assert deck._as_date("2026-10-23") == date(2026, 10, 23) and deck._as_date(" 2026-10-31 ") == date(2026, 10, 31)
+    assert deck._as_date("friday") is None and deck._as_date(datetime(2026, 10, 23, 9, 0)) == date(2026, 10, 23)
+    b = small_book(["memecoins"])
+    b.checkpoints = {"first look": "2026-10-23"}
+    assert deck.checkpoints(b)[0]["date"] == "2026-10-23"
+    assert wd._desk_of("nightdesk-sniper") == "memecoins_sniper" and wd._desk_of("majors-4h") == "majors_4h"
+    assert wd._desk_of("majors") == "majors" and wd._desk_of("nightdesk") == "memecoins"
+    state = {"units": {"majors": {"active": "active"}, "nightdesk": {"active": "active"}}}
+    old = lambda p: NOW - timedelta(hours=3)                             # noqa: E731
+    pushes = wd.check_quiet(NOW, state, old, Path("/nowhere"), desks={"memecoins", "majors", "majors_fast"})
+    assert [p.title for p in pushes] == ["Memecoin desk has gone quiet", "2 big-coin desks have gone quiet"]
+    assert "Big-coin desk, Big-coin fast desk" in pushes[1].body
