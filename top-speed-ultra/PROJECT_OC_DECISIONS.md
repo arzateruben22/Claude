@@ -167,3 +167,16 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
 - **How.** A graphics-modes lane on claude/modes (off the live preview): RS1 the Retro render style module, RS2 the three
   modes and the entitlement (merging claude/gfx's Ultra first when it has landed), RS3 a match pass and the style guide
   the on-foot pages follow. Lot 57's graphics milestone (P1d) now asks for the same three modes.
+
+### 16. Keep going until the owner says stop
+
+- **Decision** (the owner in chat, 2026-10-21 about 05:25 UTC): "KEEP RENDERING AND IMPROVING AND CONTINUE THE AUTO
+  USAGE WHEN THE SESSION ENDS AND AUTO CONTINUE OUR PROGRESS UNTIL I SAY STOP OR CHECK BACK AND DO NOT STOP". Earlier
+  the same night: "keep going and don't message until all three are done" (the sky camera fix live, the hypercar fully
+  rendered and functional, Lot 57 fully playable), with the links sent once, when all three hold.
+- **How it runs.** Nine lanes in parallel (the hypercar, the sky-camera and debris fixes, Lot 57, Ultra graphics, the
+  freeways, the sports bar plan, the UI to the reference, the graphics modes, the store), each judged by two reviewers
+  with repair rounds; a 15-minute lane check that relaunches dead lanes, ships kept work to the live link silently,
+  pushes backups and queues the next lane (OC streets, then the sports bar build); a one-shot resume at every
+  usage-window reset; an hourly safety net that re-arms the chain if it breaks. Everything is backed up to GitHub as
+  `claude/wip-*` snapshots every hour. It stops only when the owner says stop.
