@@ -248,3 +248,23 @@ def test_scan_grade_and_nightly_take_every_book_at_once(tmp_path, monkeypatch, c
         assert all(r["graded_at"] for r in rows), b
     assert cli.main(["scan", "--demo", "--books", "main,hold", "--at", "2026-10-07 05:45"]) == 0
     assert cli.main(["scan", "--demo", "--books", "main,nope", "--at", "2026-10-07 05:45"]) == 2
+
+
+def test_one_books_bad_journal_never_stops_the_others(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    assert cli.main(["scan", "--demo", "--books", "main,wild,hold", "--at", "2026-10-06 05:45"]) == 0
+    bad = tmp_path / "wild" / "demo" / "journal.csv"
+    bad.write_text("not,a,journal\n1,2\n")                        # the wild journal is corrupt
+    assert cli.main(["grade", "--demo", "--books", "main,wild,hold", "--at", "2026-10-07 14:00"]) == 1
+    out, err = capsys.readouterr()
+    assert "wild: couldn't grade" in err and "the other books carry on" in err
+    assert "main: Graded" in out and "hold: Graded" in out           # graded before and after the broken one
+    assert all(r["graded_at"] for r in _rows(tmp_path / "hold" / "demo" / "journal.csv"))
+    # a book whose folder can't be written loses only its own picks
+    (tmp_path / "hold" / "demo" / "watchlists").mkdir(parents=True, exist_ok=True)
+    blocker = tmp_path / "hold" / "demo" / "journal.csv"
+    blocker.unlink(); blocker.mkdir()                                 # a folder where the journal should be
+    assert cli.main(["scan", "--demo", "--books", "main,hold", "--at", "2026-10-07 05:45"]) == 1
+    out, err = capsys.readouterr()
+    assert "hold: couldn't save" in err and "== main rules ==" in out
+    assert len(_rows(tmp_path / "demo" / "journal.csv")) > 4           # main still journaled its new day

@@ -103,6 +103,7 @@ def cmd_scan(args) -> int:
         return 0
 
     results = run_scans(provider, crits, now, session)     # one market read, every book judged on it
+    failed = []
     for b in books:
         res, crit = results[b], crits[b]
         base = book_paths(b, OUTPUT)[1]
@@ -111,8 +112,15 @@ def cmd_scan(args) -> int:
             print(f"\n== {b} rules ==")
         print(report.terminal(res, crit))
         if not args.no_save:
-            paths = report.write_outputs(res, crit, out_dir)
-            added = journal.record(res, out_dir / "journal.csv", rules=gates.rules_id(crit))
+            try:
+                paths = report.write_outputs(res, crit, out_dir)
+                added = journal.record(res, out_dir / "journal.csv", rules=gates.rules_id(crit))
+            except (OSError, ValueError, KeyError) as exc:          # one book's bad file never loses the others' picks
+                if len(books) == 1:
+                    raise
+                failed.append(b)
+                print(f"{b}: couldn't save ({type(exc).__name__}: {exc}); the other books carry on.", file=sys.stderr)
+                continue
             print(f"\nSaved {_rel(paths[0])} (+ .md, .csv); open "
                   f"{_rel(paths[-1])} in a browser. {added} new pick(s) in the journal.")
             if args.open and len(books) == 1:
@@ -127,22 +135,30 @@ def cmd_scan(args) -> int:
             sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res),
                         page=html_report.page(res, crit), summary=report.one_line(res))
             print(f"Notified: {', '.join(sent) or 'nothing (set NTFY_TOPIC or DISCORD_WEBHOOK_URL)'}")
-    return 0
+    return 1 if failed else 0
 
 
 def cmd_grade(args) -> int:
     provider, now, _ = _setup(args)
     many = bool(getattr(args, "books", None))
+    failed = []
     for b in _books(args):
         crit = load_criteria(book_paths(b)[0])
         base = book_paths(b, OUTPUT)[1]
         out_dir = base / "demo" if provider.name == "demo" else base
-        graded, pending = journal.grade(provider, crit, now, out_dir / "journal.csv")
+        try:
+            graded, pending = journal.grade(provider, crit, now, out_dir / "journal.csv")
+        except (ProviderError, OSError, ValueError, KeyError) as exc:   # one book's bad day never skips the rest
+            if not many:
+                raise
+            failed.append(b)
+            print(f"{b}: couldn't grade ({type(exc).__name__}: {exc}); the other books carry on.", file=sys.stderr)
+            continue
         print(f"{b + ': ' if many else ''}Graded {graded} pick(s); {pending} waiting for their trade day to finish.")
         if graded and not many:
             print()
             print(journal.stats(crit, out_dir / "journal.csv"))
-    return 0
+    return 1 if failed else 0
 
 
 def cmd_backtest(args) -> int:
