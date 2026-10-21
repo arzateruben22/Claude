@@ -1070,10 +1070,17 @@ await group('livephone', async (use) => {
   let peer = null, ticker = null;
   try {
     const [tPhone, tPeer] = [await signup('phone_me'), await signup('Westbound_GT')];
+    void tPhone;
     const { page } = await use({ phone: true, settings: { live: true, liveUrl: base, start: 'I-405 North', density: 'none' } });
-    await page.evaluate(([t]) => { localStorage.setItem('tsu.live.token', t); localStorage.setItem('tsu.live.name', 'phone_me'); }, [tPhone]);
-    await page.reload();
-    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+    // log in through the panel (a reload would lose localStorage: Chromium's phone emulation drops a file:// page's
+    // storage on reload, which a real phone loading the game over https doesn't)
+    await page.locator('.pick', { hasText: 'Account' }).click();
+    await page.getByRole('button', { name: 'Log in', exact: true }).first().click();
+    await page.locator('#live-name').fill('phone_me');
+    await page.locator('#live-pw').fill('correct horse battery');
+    await page.locator('form').getByRole('button', { name: 'Log in', exact: true }).click();
+    await page.waitForSelector('.name-static', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
     const fits = async (sel) => page.evaluate((s) => { const els = [...document.querySelectorAll(s)]; return els.every((e) => { const r = e.getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1; }); }, sel);
     await check('phone: the Live section fits and shows the count', async () => {
       await page.locator('.live-sec').scrollIntoViewIfNeeded();
