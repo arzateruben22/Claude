@@ -151,3 +151,19 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   claude/gfx, claude/sports-bar, claude/ui-ref, local/live-preview; snapshots claude/wip-hyper, -hx, -fix-road, -foot,
   -ref, -bar, -main. The sky-camera and Ultra-tier snapshots (wip-fix-sky, wip-gfx) were refused by the session's
   permission check three times; their branches are pushed, and their edits land in the next milestone push.
+
+### 15. Exactly three graphics modes: Low (retro, still HD), HD (realistic), Ultra (the reference); the first two free
+
+- **Decision** (the owner in chat, 2026-10-21 about 01:45 UTC, re-sending the reference image): "Let's essentially make
+  each graphic mode as well too and let's just stick with 3, the first two are free. What I'm trying to say: 'low'
+  graphics would still be super hd but have a very retro like look including the sims. 'HD' graphics would be more on
+  the realistic scale of things. And then 'Ultra' would be as close as we can get to with the provided pic".
+- **What it means.** Low is not a blurry fallback: full resolution and crisp, with a deliberate early-2000s stylized look
+  (cel shading, limited palette, dithering, outlines, hard shadows, banded sky), cheap enough to be the phone default. HD
+  is today's realistic High. Ultra is the maximum tier plus everything the Ultra graphics lane lands, aimed at the
+  reference. Medium goes; saved settings migrate. Low and HD are free; Ultra is the paid tier as an entitlement flag only:
+  no real money anywhere until a payment processor is connected (the store sells it as a test-mode SKU; owner mode and the
+  test build unlock it). The same three modes apply to Lot 57 and the sports bar, through one shared Retro style module.
+- **How.** A graphics-modes lane on claude/modes (off the live preview): RS1 the Retro render style module, RS2 the three
+  modes and the entitlement (merging claude/gfx's Ultra first when it has landed), RS3 a match pass and the style guide
+  the on-foot pages follow. Lot 57's graphics milestone (P1d) now asks for the same three modes.
