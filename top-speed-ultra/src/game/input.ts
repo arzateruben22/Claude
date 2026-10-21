@@ -4,7 +4,7 @@
 import { clamp } from './util';
 
 export type Action =
-  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio';
+  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio' | 'hop';
 
 export interface Controls {
   throttle: number;   // 0..1, smoothed
@@ -15,6 +15,7 @@ export interface Controls {
   lookYaw: number;    // radians, from mouse or right stick
   lookPitch: number;
   analog: boolean;    // last input came from a stick or touch (skip key smoothing)
+  thrust: number;     // 0..1: the OC Hypercar's THRUST control (Cold Thrust), after its 120 ms hold delay
 }
 
 const KEYS: Record<string, string> = {
@@ -23,10 +24,11 @@ const KEYS: Record<string, string> = {
 };
 const ACTIONS: Record<string, Action> = {
   KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio',
+  KeyJ: 'hop',          // Thrust Hop on its own key (the OC Hypercar in Free Drive; nothing for any other car)
 };
 
 export class Input {
-  readonly c: Controls = { throttle: 0, brake: 0, steer: 0, handbrake: false, lookBack: false, lookYaw: 0, lookPitch: 0, analog: false };
+  readonly c: Controls = { throttle: 0, brake: 0, steer: 0, handbrake: false, lookBack: false, lookYaw: 0, lookPitch: 0, analog: false, thrust: 0 };
   private held = new Set<string>();
   private queue: Action[] = [];
   private drag: { id: number; x: number; y: number } | null = null;
@@ -37,6 +39,17 @@ export class Input {
   readonly touch = { steer: 0, gas: false, brake: false, active: false };
   private padPrev: boolean[] = [];
   private keyBound = false;
+  // THRUST (the OC Hypercar's Cold Thrust and Thrust Hop): held by Left Shift, D-pad up or the on-screen button. Thrust
+  // starts after 120 ms of holding, so the first tap of a double-tap is not a burst; a second press within 300 ms of
+  // the first is a Thrust Hop. `thrustLive` says whether the car has it (the game sets it); off, nothing is queued.
+  // Under `thrustInstantBelow` m/s (the game sets the hop's minimum speed) there is no hop to tell a hold from, so a
+  // press opens the valve at once: a standing launch doesn't wait the 120 ms. A hold that has started stays on.
+  thrustLive = false;
+  thrustInstantBelow = 0;
+  private thrustSrc = { key: false, pad: false, touch: false };
+  private thrustHeld = 0;
+  private thrustOn = false;
+  private thrustLastPress = -1e9;
 
   constructor(private el: HTMLElement) {}
 
@@ -70,9 +83,22 @@ export class Input {
     if (k) { this.held.add(k); this.c.analog = false; e.preventDefault(); }
     const a = ACTIONS[e.code];
     if (a && !e.repeat) { this.queue.push(a); e.preventDefault(); }
+    if (e.code === 'ShiftLeft' && !e.repeat) this.setThrust('key', true);
   };
-  private onKeyUp = (e: KeyboardEvent) => { const k = KEYS[e.code]; if (k) this.held.delete(k); };
-  clear = () => { this.held.clear(); this.drag = null; this.touch.gas = this.touch.brake = false; this.touch.steer = 0; };
+  private onKeyUp = (e: KeyboardEvent) => { const k = KEYS[e.code]; if (k) this.held.delete(k); if (e.code === 'ShiftLeft') this.setThrust('key', false); };
+  clear = () => {
+    this.held.clear(); this.drag = null; this.touch.gas = this.touch.brake = false; this.touch.steer = 0;
+    this.thrustSrc.key = this.thrustSrc.pad = this.thrustSrc.touch = false; this.thrustHeld = 0; this.thrustOn = false; this.c.thrust = 0;
+  };
+  // a THRUST source pressed or let go (keyboard, gamepad, the on-screen button). A press within 300 ms of the last
+  // one queues a Thrust Hop.
+  setThrust(src: 'key' | 'pad' | 'touch', on: boolean, now = performance.now()) {
+    const was = this.thrustSrc.key || this.thrustSrc.pad || this.thrustSrc.touch;
+    this.thrustSrc[src] = on;
+    if (!on || was || !this.thrustLive) return;
+    if (now - this.thrustLastPress < 300) { this.queue.push('hop'); this.thrustLastPress = -1e9; }
+    else this.thrustLastPress = now;
+  }
 
   // mouse look: drag anywhere on the view; let go and it eases back to centre
   private onDown = (e: PointerEvent) => {
@@ -112,6 +138,7 @@ export class Input {
       const btn = (i: number) => !!(p.buttons[i] && p.buttons[i].pressed);
       const edge = (i: number, a: Action) => { const now = btn(i); if (now && !this.padPrev[i]) this.queue.push(a); this.padPrev[i] = now; };
       edge(5, 'shiftUp'); edge(4, 'shiftDown'); edge(3, 'camera'); edge(1, 'reset'); edge(9, 'pause'); edge(8, 'hud');
+      if (btn(12) !== this.thrustSrc.pad) this.setThrust('pad', btn(12));
       if (btn(2) || btn(0)) hb = true;
       const rx = p.axes[2] || 0, ry = p.axes[3] || 0;
       if (Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2) { this.lookTarget.yaw = -rx * 1.6; this.lookTarget.pitch = -ry * 0.6; this.idleLook = 0; }
@@ -142,6 +169,11 @@ export class Input {
     }
     c.handbrake = hb;
     c.lookBack = this.held.has('back');
+    // THRUST: on after 120 ms of holding, or at once from a standstill (only for a car that has it)
+    const th = this.thrustLive && (this.thrustSrc.key || this.thrustSrc.pad || this.thrustSrc.touch);
+    this.thrustHeld = th ? this.thrustHeld + dt : 0;
+    this.thrustOn = th && (this.thrustOn || this.thrustHeld >= 0.12 || Math.abs(speed) < this.thrustInstantBelow);
+    c.thrust = this.thrustOn ? 1 : 0;
 
     // look: hold drag to look around; after you let go it eases back to centre (unless free-look)
     if (!this.drag) {

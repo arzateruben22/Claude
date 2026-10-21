@@ -16,6 +16,9 @@ export interface CarDef {
   // Unleashed numbers above. A field set to undefined falls back to the physics' default.
   race?: Partial<CarDef>;
   founder?: boolean;                 // the OC Hypercar Founder Edition: never bought or sold for credits
+  // the car's own ability, part of a tune: the hypercar's Cold Thrust, Ground Lock and Thrust Hop ('hyper') come with
+  // its Unleashed tune only, so its race tune clears it and the scored modes have no THRUST control
+  ability?: 'hyper';
 }
 
 export const CARS: CarDef[] = [
@@ -32,9 +35,9 @@ export const CARS: CarDef[] = [
   // downforce, stiffer tyres, 2 g brakes); in every scored mode it runs the race tune, at or under the Corsa.
   { id: 'oc-hyper', name: 'OC Hypercar', blurb: 'Prototype 01, Founder Edition. Unleashed in Free Drive: 2,012 hp, all-wheel drive and fan downforce. Races, Time Trial and Survival run its race tune, at the Corsa\'s level.', price: 0, level: 1, founder: true,
     mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: 0xc8d3e8, final: 3.0,
-    Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6,
+    Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6, ability: 'hyper',
     race: { mass: 1500, power: 620000, torque: 1000, final: 4.0, CdA: 0.8, ClA: 1.0, grip: 1.04,
-      Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined } },
+      Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined, ability: undefined } },
 ];
 
 const BASE = { ...SPEC };

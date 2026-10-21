@@ -4,6 +4,61 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20: the OC Hypercar's own ability: Cold Thrust, Ground Lock and Thrust Hop (hypercar M5, not committed)
+
+Branch `claude/hypercar-drive`. The car's own systems, separate from the driver's ability, on the dynamics model's
+interfaces (`ext.fx`, `ext.fz`, `hop()`, `airborne`), no new physics. Live only on the Unleashed tune in Free Drive
+(`CarDef.ability: 'hyper'`, cleared by the race tune); our own names only. Code: `src/game/vehicle/HyperAbility.ts`
+(tank, thrust, fans, the hop's planner), `src/game/vehicle/ThrustJets.ts` (the jets), `Game.ts` (rules, the hop, the
+clearance check), `input.ts` (Left Shift hold / double-tap, J, D-pad up, the touch button), `PlayerCar.ts` (nozzles, the
+dash gauge, the landing), `AudioEngine.ts`, `HUD.tsx`, `styles.css`, `App.tsx` (controls help), `contact.ts` (the level
+check measured from the road under a hopping car). Measured in the built game (owner mode, I-405 North, the
+simulation stepped at 120 Hz through `window.__game`; `tests/out/hyper-thrust/thrust.mjs`, report in
+`tests/out/hyper-thrust/report.json`):
+
+- **Cold Thrust** (2.6 g × (1 − smoothstep(0, 80, v)) + 0.05 g, see the plan §6.2 for why 2.6): 0-60 in 0.79 s with
+  THRUST and Ground Lock, 1.34 s fans only, 2.26 s tyres only; 0-100 1.47 s; peak 4.53 g. One tank from flat out:
+  335 → 341 mph. A full tank lasts 6.03 s; from 50 %: 73.9 % after 3 s driving, 66.7 % after 1 s braking, 50 % stopped;
+  at 8 % the valve stays shut.
+- **Ground Lock** (0.8 × weight to 90 mph, 0.3 × by 200 mph): 1.54 → 2.04 g at 25 m/s and 1.49 → 1.81 g at 40 m/s in
+  Arcade, 1.42 → 1.97 g at 40 m/s in Simulation; 4 s of it costs 11.7 % of the tank.
+- **Thrust Hop**: at 60, 120 and 200 mph a 1.5 m apex, 1.1 s up, the same road and lane, at most 0.06° of slip, springs
+  0.03 m, camera dip 0.087 m. Over a parked sedan (roof 1.44 m): apex 2.54-2.74 m by approach, no contact. Over a moving semi in heavy
+  traffic (roof 4.1 m, closing at 40 m/s): peak 5.2-6.35 m over the seeds tried, 0.61-0.85 m over its roof at the
+  lowest point over the trailer, no contact, the same road.
+  Refused under an overpass ("No hop: overpass ahead"), before a sign gantry and under 40 % of tank, with no gas spent.
+  **Bug found and fixed:** the hop's scan compared each vehicle's height with the road under the car, so on a grade it
+  dropped vehicles 100 m ahead and the car landed on them (2 and then 3 of 6 seeded semi hops in a debug run); it now reads the level against the
+  road's own height where the vehicle is, and plans for the traffic braking or speeding up while the car is up.
+- **Off where it should be**: no button, no force and no hop in a race, the time trial and Speed Survival (the race
+  tune, chip "Race tune"), through the countdown, and while paused.
+- **Jets**: 3 draw calls and 384 triangles while gas flows (one instanced sprite call, 48 sprites on High and 24 on the
+  phone build, plus two nozzle cones), none otherwise; no allocation per frame.
+- **Frames** (960 × 540 High, read by eye): `tests/out/hyper-thrust-day.png` and `-night.png` (the jets in chase view),
+  `-hop.png` (over a parked sedan), `-semi.png` (over a semi in heavy traffic), `-refused.png` (the toast under an
+  overpass), `-cockpit.png` and `-dash.png` (the pressure gauge on the binnacle's left display), `-phone.png` (390 × 844:
+  THRUST beside the driver's ability, the tank panel, the Unleashed chip).
+- **Suite and harness**: `npm test -- --only=abilities,survival,race,phone` on the final build: abilities 14/14 (ten
+  new hypercar checks), survival 7/7, phone 6/6 (the THRUST hold and double-tap at 390 × 844), race 6/6. The race
+  group's existing "Too far behind" check timed out at its 10 s wait in two full runs with the machine at a load of
+  about 20 and passed when the group ran alone (9.8 s). `node tests/dynamics.mjs`: 1,742 passed, 0 failed. `tsc` clean
+  on both configs; `npm run build` clean.
+- **Re-verified 2026-10-21** on an unchanged tree, after a machine restart (load 35-50 from other passes): `tsc
+  --noEmit` and `npm run build` clean; `node tests/dynamics.mjs` 1,742 passed, 0 failed; `npm test --
+  --only=abilities,survival,race,phone` **37/37 passed** in 48 min 44 s (survival 7, race 6 with "Too far behind" in
+  30.9 s on the longer wait, abilities 18 with 14 hypercar checks, phone 6 with the THRUST button check). The suite's
+  numbers: 0-60 2.225 s on the tyres, 1.333 s with Ground Lock, 0.792 s with THRUST on Left Shift, peak 4.55 g; a full
+  tank 6.03 s; top speed 334.3 → 340.6 mph; Ground Lock 1.54 → 2.04 g at 25 m/s, 1.49 → 1.81 (Arcade) and 1.42 → 1.97
+  g (Simulation) at 40 m/s; hops at 60/120/200 mph landed at 60/118/196 mph with at most 0.06° of slip; parked sedan
+  apex 2.74 m; semi (seed 18, 261 cars) peak 6 m, 0.85 m over the roof, 0 contacts; a forced arc under the roof made
+  contact at 3.09 m, one at roof + 0.5 m did not. `tests/out/hyper-thrust/thrust.mjs` re-run (51 min 53 s): the same
+  telemetry to the digit, and every frame above shot again and read by eye. Jets' cost by day 907 vs 904 draw calls,
+  1,879,950 vs 1,879,566 triangles (+3 calls, +384 triangles); at night 941 vs 938, 1,916,410 vs 1,916,026.
+- **Not done, honestly**: Arcade's 40 m/s figure is held at 1.81 g by Arcade's steering lock, not the fans (M4's
+  grip-scaled stability control). The gauge sits on the Corsa-derived binnacle and the driver's left hand covers its
+  left third until M2 gives the hypercar its own interior. The seat view still shows the canopy bar across the
+  windscreen (the M1/M3 seat drop). The hop is the scripted road-bound arc (no pitch or roll in the air).
+
 ## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
 
 The owner asked for the hypercar "ASAP". Branch `claude/hypercar-drive` = the body (`a137e50`) + the vehicle-dynamics
