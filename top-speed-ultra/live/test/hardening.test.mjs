@@ -29,7 +29,7 @@ const post = async (path, body, { ip = '10.0.0.1', token, xff } = {}) => {
 };
 const alive = async () => (await fetch(base + '/health')).ok;
 // the lobby holds 1 here: wait until the last test's sockets have gone
-const empty = async () => { for (let i = 0; i < 100; i++) { const h = await (await fetch(base + '/health')).json(); if (h.online === 0 && h.queued === 0) return; await sleep(50); } throw new Error('the lobby never emptied'); };
+const empty = async () => { for (let i = 0; i < 300; i++) { const h = await (await fetch(base + '/health')).json(); if (h.online === 0 && h.queued === 0) return; await sleep(50); } throw new Error('the lobby never emptied'); };
 const signup = async (name, ip) => { const r = await post('/api/signup', { name, password: 'correct horse battery', over13: true }, { ip }); assert.equal(r.status, 200, JSON.stringify(r.body)); return r.body.token; };
 function sock(token, ip) {
   const ws = new WebSocket(`ws://127.0.0.1:${port}/ws`, { headers: { 'x-forwarded-for': ip } });

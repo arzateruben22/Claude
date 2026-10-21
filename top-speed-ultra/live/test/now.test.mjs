@@ -67,6 +67,6 @@ test('/api/now and /api/traffic are served by the server', async () => {
     const t = await (await fetch(`http://127.0.0.1:${port}/api/traffic`)).json();
     assert.equal(Object.keys(t.roads).length, 20);
     const h = await (await fetch(`http://127.0.0.1:${port}/health`)).json();
-    assert.deepEqual(h.feeds, { weather: 'mock', traffic: 'mock', trends: n.trends.list.length });
+    assert.deepEqual(h.feeds, { weather: 'mock', traffic: 'mock', trends: n.trends.list.length, mail: false });
   } finally { proc.kill('SIGTERM'); rmSync(dir, { recursive: true, force: true }); }
 });

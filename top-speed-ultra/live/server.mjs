@@ -16,7 +16,7 @@
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, mkdirSync, statSync, realpathSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
-import { randomBytes, scryptSync, scrypt as scryptCb, timingSafeEqual, createHash } from 'node:crypto';
+import { randomBytes, randomInt, scryptSync, scrypt as scryptCb, timingSafeEqual, createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
 import { createNow } from './now.mjs';
@@ -83,6 +83,7 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS sessions_player ON sessions(player);
 `);
+db.exec(`CREATE TABLE IF NOT EXISTS resets (player INTEGER PRIMARY KEY REFERENCES players(id) ON DELETE CASCADE, code TEXT NOT NULL, expires INTEGER NOT NULL, tries INTEGER NOT NULL DEFAULT 0)`);
 db.exec(`CREATE TABLE IF NOT EXISTS hourly (
   hour TEXT PRIMARY KEY, peak INTEGER, cap INTEGER, queued_peak INTEGER, waited INTEGER, admitted INTEGER,
   poses_in INTEGER, poses_dropped INTEGER, bytes_out INTEGER, cpu_ms INTEGER, rss_mb INTEGER)`);
@@ -92,7 +93,13 @@ const q = {
   byName: db.prepare('SELECT id, name, pass, banned FROM players WHERE name_key = ?'),
   ban: db.prepare('UPDATE players SET banned = ? WHERE name_key = ?'),
   dropAll: db.prepare('DELETE FROM sessions WHERE player = ?'),
-  byId: db.prepare('SELECT id, name, pass FROM players WHERE id = ?'),
+  byId: db.prepare('SELECT id, name, pass, email FROM players WHERE id = ?'),
+  byNameFull: db.prepare('SELECT id, name, email, banned FROM players WHERE name_key = ?'),
+  setEmail: db.prepare('UPDATE players SET email = ? WHERE id = ?'),
+  resetGet: db.prepare('SELECT code, expires, tries FROM resets WHERE player = ?'),
+  resetPut: db.prepare('INSERT OR REPLACE INTO resets (player, code, expires, tries) VALUES (?, ?, ?, 0)'),
+  resetTry: db.prepare('UPDATE resets SET tries = tries + 1 WHERE player = ?'),
+  resetDrop: db.prepare('DELETE FROM resets WHERE player = ?'),
   setPass: db.prepare('UPDATE players SET pass = ? WHERE id = ?'),
   remove: db.prepare('DELETE FROM players WHERE id = ?'),
   insert: db.prepare('INSERT INTO players (name, name_key, email, pass, created) VALUES (?, ?, ?, ?, ?)'),
@@ -229,7 +236,20 @@ const isLocal = (req) => LOOPBACK.test(req.socket.remoteAddress || '') && !req.h
 const isAdmin = (req) => !!ADMIN_TOKEN && isLocal(req) && timingSafeEqual(sha(bearer(req)), sha(ADMIN_TOKEN));
 const bearer = (req) => { const m = /^Bearer (.+)$/.exec(String(req.headers.authorization || '')); return m ? m[1] : ''; };
 const now = createNow({ weather: NOW_WEATHER, traffic: NOW_TRAFFIC, tomtomKey: TOMTOM_KEY, log: (ev, d) => log(ev, d) });
-const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+// password reset by email: a 6-digit code, good for 15 minutes and 5 tries, sent through Resend (RESEND_KEY and
+// MAIL_FROM, a sender on a domain verified with Resend). Off when they aren't set, and the game says so.
+// MAIL_MODE=log writes the code to the log instead of sending it (tests only).
+const RESEND_KEY = process.env.RESEND_KEY || '', MAIL_FROM = process.env.MAIL_FROM || '', MAIL_MODE = process.env.MAIL_MODE || '';
+const mailOn = () => MAIL_MODE === 'log' || (!!RESEND_KEY && !!MAIL_FROM);
+const RESET_MS = 15 * 60 * 1000, RESET_TRIES = 5;
+const codeHash = (player, code) => createHash('sha256').update(player + ':' + code).digest('base64url');
+async function sendMail(to, subject, text) {
+  if (MAIL_MODE === 'log') { log('mail', { to, subject, text }); return true; }
+  const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { authorization: 'Bearer ' + RESEND_KEY, 'content-type': 'application/json', 'user-agent': 'OC-Ultra-live/0.1' }, body: JSON.stringify({ from: MAIL_FROM, to: [to], subject, text }) });
+  if (!r.ok) { log('mail-error', { status: r.status }); return false; }
+  return true;
+}
+const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length, mail: mailOn() }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
 
 // a static file, gzipped once per version (the game page is about 3.7 MB, 1.2 MB gzipped), with an ETag so a phone
 // that has it already gets a 304
@@ -317,10 +337,51 @@ async function handle(req, res) {
       log('deleted', { id: s.id });
       return send(res, 200, { ok: true });
     }
+    // forgot the password: the same answer whether or not the name exists or has an email, so names and emails can't
+    // be fished out; a code goes to the account's email when it has one
+    if (path === '/api/reset/request' && req.method === 'POST') {
+      if (unknownIp(req)) return send(res, 400, { error: 'Bad request.' });
+      if (!mailOn()) return send(res, 200, { ok: false, mail: false, error: 'Password reset isn\'t set up on this server yet. Ask whoever runs it.' });
+      const b = await readJson(req), key = String(b.name || '').trim().toLowerCase();
+      if (limited('reset:' + ipOf(req), 10) || limited('resetname:' + key, 3)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const p = q.byNameFull.get(key);
+      if (p && p.email && !p.banned) {
+        const code = String(randomInt(0, 1000000)).padStart(6, '0');
+        q.resetPut.run(p.id, codeHash(p.id, code), Date.now() + RESET_MS);
+        void sendMail(p.email, 'Your OC Ultra code', `Your code to set a new OC Ultra password for ${p.name} is ${code}.\n\nIt works for 15 minutes. If you didn't ask for it, ignore this email; your password hasn't changed.`).catch((e) => log('mail-error', { error: String(e) }));
+        log('reset-request', { id: Number(p.id) });
+      }
+      return send(res, 200, { ok: true, mail: true, message: 'If that driver has an email on the account, a code is on its way.' });
+    }
+    if (path === '/api/reset/confirm' && req.method === 'POST') {
+      if (unknownIp(req)) return send(res, 400, { error: 'Bad request.' });
+      const b = await readJson(req), key = String(b.name || '').trim().toLowerCase(), code = String(b.code || '').trim(), next = String(b.next || '');
+      if (limited('resetconfirm:' + ipOf(req), 20)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (next.length < 8 || next.length > 128) return send(res, 400, { error: 'A password is at least 8 characters.' });
+      const p = q.byNameFull.get(key), r = p && q.resetGet.get(p.id);
+      const bad = () => send(res, 400, { error: 'That code is wrong or has expired. Ask for a new one.' });
+      if (!p || !r || r.expires < Date.now() || r.tries >= RESET_TRIES || !/^\d{6}$/.test(code)) return bad();
+      if (!timingSafeEqual(Buffer.from(codeHash(p.id, code)), Buffer.from(r.code))) { q.resetTry.run(p.id); return bad(); }
+      q.resetDrop.run(p.id);
+      q.setPass.run(await hashPassword(next), p.id); q.dropAll.run(p.id); dropSockets(Number(p.id), 'Password changed');
+      log('reset', { id: Number(p.id) });
+      return send(res, 200, { token: issueSession(Number(p.id)), player: { id: Number(p.id), name: p.name } });
+    }
+    // the email on the account (for password reset): the password is needed to change it
+    if (path === '/api/email' && req.method === 'POST') {
+      const s = sessionFor(bearer(req));
+      if (!s) return send(res, 401, { error: 'Not logged in.' });
+      if (hits('pw:' + s.id) >= LOGIN_MAX) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const b = await readJson(req), p = q.byId.get(s.id), email = String(b.email || '').trim().toLowerCase();
+      if (email && !EMAIL_RE.test(email)) return send(res, 400, { error: 'That email address doesn\'t look right.' });
+      if (!(await checkPassword(String(b.password || ''), p.pass))) { hit('pw:' + s.id); return send(res, 401, { error: 'The password is wrong.' }); }
+      q.setEmail.run(email || null, s.id);
+      return send(res, 200, { ok: true, email: email || null });
+    }
     if (path === '/api/me') {
       const s = sessionFor(bearer(req));
       if (!s) return send(res, 401, { error: 'Not logged in.' });
-      return send(res, 200, { player: { id: s.id, name: s.name }, online: online.size, cap: MAX_PLAYERS, queued: queue.length });
+      return send(res, 200, { player: { id: s.id, name: s.name, hasEmail: !!q.byId.get(s.id).email }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, mail: mailOn() });
     }
     if (path === '/admin/ban' && req.method === 'POST') {
       if (!isAdmin(req)) return send(res, 404, 'not found');
