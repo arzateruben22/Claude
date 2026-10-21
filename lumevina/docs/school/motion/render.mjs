@@ -5,7 +5,9 @@
 //
 // For every scene in scenes.mjs it opens the scene page in Chromium at the
 // frame size, calls seek(t) for every frame, captures the frame and pipes it
-// into ffmpeg (H.264, yuv420p, faststart). It writes:
+// into ffmpeg (H.264, yuv420p, faststart). Every page is the same room: a warm
+// backdrop with a pool of light drawn on a canvas behind the scene (motion.js),
+// the header, the scene's canvas, the caption bar and a film grain. It writes:
 //   img/school/video/<id>.mp4 + <id>.webm + <id>.jpg     the lesson's explainer (16:9, 1280×720; the WebM for browsers without H.264)
 //   marketing/ads/out/video/<id>-9x16.mp4 + .jpg           the Reels/TikTok cut (9:16, 720×1280), only with --aspect 9x16
 //   docs/school/motion/review/<id>-<aspect>.jpg            a contact sheet, one frame every 1.5 s (not committed)
@@ -71,13 +73,9 @@ const page = (scene, W, H) => `<!doctype html><html><head><meta charset="utf-8">
 @font-face { font-family: "InterV"; src: url("${font}") format("woff2"); font-weight: 100 900; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; transition: none !important; animation: none !important; }
 html, body { width: ${W}px; height: ${H}px; overflow: hidden; background: #000; color: #f5f5f7; font-family: "InterV", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-.stage { position: relative; width: ${W}px; height: ${H}px; padding: 6vmin 6.5vmin 5vmin; display: flex; flex-direction: column; gap: 3.5vmin; background: radial-gradient(90vmax 60vmax at 85% -5%, #1b1316 0%, #000 60%); overflow: hidden; }
+.stage { position: relative; width: ${W}px; height: ${H}px; padding: 6vmin 6.5vmin 5vmin; display: flex; flex-direction: column; gap: 3.5vmin; background: #0b0807; overflow: hidden; }
 .grain { position: absolute; inset: 0; background: url("${grain}"); pointer-events: none; }
-.amb { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-.amb i { position: absolute; width: 120vmax; height: 120vmax; border-radius: 50%; }
-.amb i:first-child { right: -55vmax; top: -70vmax; background: radial-gradient(closest-side, rgba(234,185,200,.13), rgba(234,185,200,0)); }
-.amb i:last-child { left: -60vmax; bottom: -75vmax; background: radial-gradient(closest-side, rgba(226,176,140,.10), rgba(226,176,140,0)); }
-.dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.room { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 header { position: relative; z-index: 2; }
 .k { font-size: 2.5vmin; font-weight: 600; color: ${PALETTE.rose}; letter-spacing: .02em; }
 h1 { font-size: 6vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.04; margin-top: 1vmin; max-width: 125vmin; text-wrap: balance; }
@@ -86,9 +84,13 @@ main.canvas { position: relative; flex: 1; min-height: 0; z-index: 1; }
 .shot { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
 footer { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 4vmin; min-height: 9vmin; }
 .capwrap { flex: 1; opacity: 0; }
-.cap { display: inline-block; font-size: 3vmin; line-height: 1.35; font-weight: 500; padding: 1.4vmin 2.4vmin; border-radius: 3.2vmin; background: rgba(17,17,19,.92); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); max-width: 110vmin; }
+.cap { display: inline-block; font-size: 3vmin; line-height: 1.35; font-weight: 500; padding: 1.4vmin 2.4vmin; border-radius: 3.2vmin; background: rgba(24,17,16,.93); box-shadow: 0 1.2vmin 3vmin rgba(0,0,0,.45), inset 0 1px 0 rgba(255,225,205,.14), inset 0 0 0 1px rgba(255,255,255,.07); max-width: 110vmin; }
 .foot { font-size: 2.1vmin; color: ${PALETTE.t3}; white-space: nowrap; }
-.card { background: #111113; border: 1px solid rgba(255,255,255,.1); border-radius: 4.6vmin; padding: 2.6vmin 3vmin; }
+.card { background: #1a1416; border: 1px solid rgba(255,255,255,.1); border-radius: 4.6vmin; padding: 2.6vmin 3vmin; }
+.obj-sh { box-shadow: 0 1.6vmin 3.4vmin rgba(0,0,0,.5), 0 .3vmin .7vmin rgba(0,0,0,.35), inset 0 1px 0 rgba(255,225,205,.17); }
+.obj-sh.lit { box-shadow: 0 1.6vmin 3.4vmin rgba(0,0,0,.45), 0 .3vmin .7vmin rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.4); }
+.obj-lt { background-image: linear-gradient(165deg, rgba(255,225,205,.075), rgba(255,225,205,0) 55%); }
+.obj-lt.lit { background-image: linear-gradient(165deg, rgba(255,255,255,.16), rgba(255,255,255,0) 60%); }
 .chip { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.4vmin; border-radius: 999px; border: 1.5px solid ${PALETTE.rose2}; color: ${PALETTE.rose2}; font-size: 2.6vmin; font-weight: 600; white-space: nowrap; }
 .lbl { font-size: 2.5vmin; color: ${PALETTE.t2}; line-height: 1.4; }
 .big { font-size: 5vmin; font-weight: 700; letter-spacing: -.03em; }
@@ -96,7 +98,7 @@ svg text { font-family: "InterV", system-ui, sans-serif; }
 @media (orientation: portrait) { .stage { padding: 7vmin 6vmin 5vmin; } h1 { font-size: 6.4vmin; } .foot { display: none; } .cap { max-width: 100%; } }
 ${scene.css}
 </style></head><body><div class="stage">
-<div class="amb" aria-hidden="true"><i></i><i></i></div><canvas class="dust" width="${W}" height="${H}" aria-hidden="true"></canvas>
+<canvas class="room" width="${W}" height="${H}" aria-hidden="true"></canvas>
 <header><p class="k">${esc(scene.kicker)}</p><h1>${scene.title}</h1></header>
 <main class="canvas">${scene.html}</main>
 <footer><div class="capwrap"><span class="cap" id="cap"></span></div><p class="foot">Lumevina Skin School · Evelyn Romero</p></footer>
@@ -115,7 +117,8 @@ const sha = (b) => crypto.createHash("sha1").update(b).digest("hex");
 const AUDIT = `(() => {
   const W = window.W, H = window.H, bad = [];
   const vis = (el) => { for (let e = el; e && e !== document.body; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.visibility === "hidden" || Number(cs.opacity) < 0.6 || cs.display === "none") return false; } return true; };
-  const leaves = [...document.querySelectorAll(".canvas *, header *")].filter((el) => vis(el) && (el instanceof SVGTextElement || [...el.childNodes].every((n) => n.nodeType === 3)) && (el.textContent || "").trim());
+  // a text leaf: an SVG text, or an element whose children are text and empty marks (a colour dot in a label or chip)
+  const leaves = [...document.querySelectorAll(".canvas *, header *")].filter((el) => vis(el) && (el instanceof SVGTextElement || [...el.childNodes].every((n) => n.nodeType === 3 || !(n.textContent || "").trim())) && (el.textContent || "").trim());
   for (const el of leaves) { const r = el.getBoundingClientRect(); const t = el.textContent.trim().slice(0, 36); if (r.right > W - 4 || r.bottom > H - 4 || r.left < 4) bad.push("past the frame: " + t); }
   for (let i = 0; i < leaves.length; i++) for (let j = i + 1; j < leaves.length; j++) {
     if (leaves[i].contains(leaves[j]) || leaves[j].contains(leaves[i])) continue;
