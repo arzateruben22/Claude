@@ -15,7 +15,7 @@
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
 // caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
-import { Kit, V3, v3, gridGeo, latheGeo, capGeo } from './car-kit';
+import { Kit, V3, v3, gridGeo, latheGeo } from './car-kit';
 
 export const WHEEL = { R: 0.345, rim: 0.254, wF: 0.245, wR: 0.305 };
 export const TREAD_V: [number, number] = [0.3, 0.7];
@@ -142,40 +142,49 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     put(S, 'rimPaint', gridGeo(backRows, { flip: false }));
   }
   if (style === 'aero') {
-    // a dished cover from the hub to the rim with five curved turbine slots; behind it, the spokes' shadows
-    const outline: THREE.Vector2[] = [];
-    for (let k = 0; k < 72; k++) { const a = (k / 72) * Math.PI * 2; outline.push(new THREE.Vector2(Math.cos(a) * 0.238, Math.sin(a) * 0.238)); }
-    const holes: THREE.Vector2[][] = [];
+    // a dished cover from the hub to the rim with five curved turbine slots; behind it, the spokes' shadows.
+    // The dish: x = h(r), proud at the rim and 28 mm in at the hub. Slot k runs from t = 0 (r 0.115) to t = 1
+    // (r 0.22), its near edge at near(k, t) and its far edge a width wd(t) further round.
+    const RC = 0.238, dish = (r: number) => xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / RC), 1.6);
+    const slotR = (t: number) => 0.115 + 0.105 * t, slotW = (t: number) => 0.012 + 0.018 * Math.sin(Math.PI * Math.min(1, t * 1.1));
+    const near = (k: number, t: number) => (k / 5) * Math.PI * 2 + 0.3 + 0.55 * t * t;
+    const far = (k: number, t: number) => near(k, t) + slotW(t) / slotR(t);
+    const at = (r: number, a: number) => v3(dish(r), Math.cos(a) * r, Math.sin(a) * r);
+    // The cover is polar grids on the dish, not a triangulated cap: a cap with point holes came out as fans of
+    // slivers (aspect up to 500, edges of 430 mm on a 476 mm cover) and the per-vertex normal tilt and the baked
+    // 'ao' interpolated along them, so the clearcoat shaded the dish in vertical bands. Here every cell is about
+    // 10 x 18 mm: five gap grids between the slots, with rows at the slot walls' own t = j/10 and columns from
+    // slot k's far edge to slot k+1's near edge, and two annuli (hub ring to the slots' start, slots' end to the
+    // rim) whose columns are the gap grids' columns, so every edge meets a gap grid or a slot's end wall exactly.
+    const nT = 10, nC = high ? 10 : 5;
+    const gapCols = (k: number, t: number) => { const a0 = far(k, t), a1 = near(k + 1, t); return Array.from({ length: nC + 1 }, (_, c) => a0 + (a1 - a0) * (c / nC)); };
+    const ringCols = (t: number) => { const as: number[] = []; for (let k = 0; k < 5; k++) as.push(...gapCols(k, t)); return as; };
+    const pieces: [V3[][], boolean][] = [];
     for (let k = 0; k < 5; k++) {
-      const a0 = (k / 5) * Math.PI * 2 + 0.3, slot: THREE.Vector2[] = [], inner: THREE.Vector2[] = [];
-      for (let j = 0; j <= 10; j++) {
-        const t = j / 10, r = 0.115 + 0.105 * t, a = a0 + 0.55 * t * t, wd = 0.012 + 0.018 * Math.sin(Math.PI * Math.min(1, t * 1.1));
-        slot.push(new THREE.Vector2(Math.cos(a) * r, Math.sin(a) * r));
-        inner.push(new THREE.Vector2(Math.cos(a + wd / r * 1.0) * r, Math.sin(a + wd / r * 1.0) * r));
+      const rows: V3[][] = [];
+      for (let j = 0; j <= nT; j++) { const t = j / nT, r = slotR(t); rows.push(gapCols(k, t).map((a) => at(r, a))); }
+      pieces.push([rows, false]);
+    }
+    const annulus = (r0: number, r1: number, n: number, t: number) => { const as = ringCols(t), rows: V3[][] = []; for (let i = 0; i <= n; i++) { const r = r0 + (r1 - r0) * (i / n); rows.push(as.map((a) => at(r, a))); } return rows; };
+    pieces.push([annulus(0.05, slotR(0), high ? 4 : 3, 0), true]);
+    pieces.push([annulus(slotR(1), RC, 1, 1), true]);
+    for (const [rows, closeU] of pieces) {
+      const g = gridGeo(rows, { closeU, flip: false });
+      // the dish's normals from its formula (x = h(r)); UVs round the wheel and out along it
+      const gp = g.attributes.position, gn = g.attributes.normal as THREE.BufferAttribute, gu = g.attributes.uv as THREE.BufferAttribute;
+      for (let k = 0; k < gp.count; k++) {
+        const y = gp.getY(k), z = gp.getZ(k), r = Math.hypot(y, z), dh = 0.028 * 1.6 * Math.pow(Math.max(0, 1 - r / RC), 0.6) / RC;
+        const n = v3(1, r > 1e-6 ? -dh * y / r : 0, r > 1e-6 ? -dh * z / r : 0).normalize();
+        gn.setXYZ(k, n.x, n.y, n.z);
+        gu.setXY(k, Math.atan2(z, y) / (Math.PI * 2), r * 6);
       }
-      holes.push([...slot, ...inner.reverse()]);
+      put(S, 'aero', g);
     }
-    const ring: THREE.Vector2[] = []; for (let k = 0; k < 40; k++) { const a = -(k / 40) * Math.PI * 2; ring.push(new THREE.Vector2(Math.cos(a) * 0.05, Math.sin(a) * 0.05)); }
-    const disc = capGeo(outline, [...holes, ring], high ? 0.022 : 0.04);
-    // dish it: the face sits proud at the rim and steps in toward the hub, then turn it to face +x
-    const dp = disc.attributes.position;
-    for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), y, z); }
-    // the dish's normals from its formula (x = h(r)): the cap's triangulation has long slivers, and normals averaged
-    // over them shaded the cover in streaks
-    const dn = new Float32Array(dp.count * 3);
-    for (let k = 0; k < dp.count; k++) {
-      const y = dp.getY(k), z = dp.getZ(k), r = Math.hypot(y, z), dh = 0.028 * 1.6 * Math.pow(Math.max(0, 1 - r / 0.238), 0.6) / 0.238;
-      const n = v3(1, r > 1e-6 ? -dh * y / r : 0, r > 1e-6 ? -dh * z / r : 0).normalize();
-      dn[k * 3] = n.x; dn[k * 3 + 1] = n.y; dn[k * 3 + 2] = n.z;
-    }
-    disc.setAttribute('normal', new THREE.BufferAttribute(dn, 3));
-    const du = disc.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < du.count; k++) { const y = dp.getY(k), z = dp.getZ(k); du.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
-    // (the cap faced +z in its own plane; the cyclic swap of axes above keeps its winding, so it now faces +x)
-    put(S, 'aero', disc);
-    // the slot walls, down to a dark backing plate
-    for (const h of holes) {
-      const top = h.map((p) => { const r = Math.hypot(p.x, p.y); return v3(xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), p.x, p.y); });
-      const bot = top.map((p) => p.clone().setX(p.x - 0.03));
+    // the slot walls, down to a dark backing plate: the same points as the gap grids' edge columns
+    for (let k = 0; k < 5; k++) {
+      const slot: V3[] = [], inner: V3[] = [];
+      for (let j = 0; j <= nT; j++) { const t = j / nT, r = slotR(t); slot.push(at(r, near(k, t))); inner.push(at(r, far(k, t))); }
+      const top = [...slot, ...inner.reverse()], bot = top.map((p) => p.clone().setX(p.x - 0.03));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: true }));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: false }));
     }
