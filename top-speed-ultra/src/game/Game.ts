@@ -60,6 +60,7 @@ export interface Hud {
   // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
   heading: number; tempF: number; turn: Turn;
   clock: string;                     // OC's time (Pacific) in Live, the preset's hour otherwise: the clock agrees with the sky
+  tempNote: string;                  // where the temperature comes from: 'simulated', or the live feed ('NWS KSNA')
   // the navigation card (U2): what to do ('Keep right') and the road it leads to; the next exit along this road with its
   // real sign text, and whether it's the one the route takes (on a ramp, with no exits along it, the sign it was taken
   // from); and the destination card: the destination road, how far it
@@ -275,6 +276,13 @@ export class Game {
       return;
     }
     this.ev.toast(djLine(Math.random, this.talkNow(), call), 'info');
+  }
+  // the clock chip's temperature: the observed one at John Wayne Airport when Live weather has the real feed, the
+  // game's own simulated one otherwise, and the chip says which
+  private temperature(): { tempF: number; tempNote: string } {
+    const w = this.now.snapshot.weather;
+    if (this.settings.weather === 'live' && w.source === 'NWS' && typeof w.tempF === 'number') return { tempF: w.tempF, tempNote: 'NWS KSNA' };
+    return { tempF: this.env.tempF(), tempNote: 'simulated' };
   }
   // what the talk bank needs to know about right now (the radio's DJs; the on-foot NPCs later)
   talkNow(): TalkNow {
@@ -1313,7 +1321,7 @@ export class Game {
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
-      heading, tempF: this.env.tempF(), turn, clock: this.env.clockText(),
+      heading, ...this.temperature(), turn, clock: this.env.clockText(),
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,

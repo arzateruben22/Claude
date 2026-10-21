@@ -1,6 +1,6 @@
 // The heads-up display. It never re-renders: the game writes straight into these elements ten times a second.
 // The adaptive HUD (U1) adds a status row on both styles: a compass strip at the top centre and a chip at the top right
-// with this device's clock and a simulated temperature; and, in Minimal, the round nav bubble that stands in for the
+// with OC's clock and the temperature (observed, when Live weather has the feed; simulated otherwise, and it says so); and, in Minimal, the round nav bubble that stands in for the
 // corner window while it's tucked away (App.tsx decides when: the `bubble` prop).
 // With a route (U2) a navigation card sits top left (the manoeuvre's arrow, how far, the road it leads to in guide-sign
 // style, the next exit's real sign text) and a destination card top right (the destination road, the time it takes at
@@ -55,7 +55,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
   const timer = useRef<HTMLElement>(null), rows = useRef<HTMLOListElement>(null), revs = useRef<HTMLDivElement>(null);
   // U1: the compass tape, the clock chip, the nav bubble
-  const tape = useRef<HTMLDivElement>(null), clock = useRef<HTMLElement>(null), temp = useRef<HTMLElement>(null);
+  const tape = useRef<HTMLDivElement>(null), clock = useRef<HTMLElement>(null), temp = useRef<HTMLElement>(null), tempNote = useRef<HTMLElement>(null);
   const bub = useRef<HTMLDivElement>(null), bubDist = useRef<HTMLElement>(null);
   // U2: the navigation card and the destination card
   const nav = useRef<HTMLDivElement>(null), navDist = useRef<HTMLElement>(null), navAct = useRef<HTMLSpanElement>(null), navTo = useRef<HTMLDivElement>(null);
@@ -138,7 +138,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       // OC's clock (Pacific time in Live, the preset's hour otherwise), so the chip agrees with the sky wherever the
       // player is; the temperature is the game's own (simulated)
       put(clock.current, 'clock', h.clock);
-      put(temp.current, 'temp', `${h.tempF}°`);
+      put(temp.current, 'temp', `${h.tempF}°`); put(tempNote.current, 'tempNote', h.tempNote);
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
       if (tun.current) tun.current.style.setProperty('--t', h.tunnel.toFixed(3));
@@ -160,7 +160,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
           {TAPE.map((t) => <i key={t.a} className={t.label === 'N' ? 'c n' : t.label.length === 1 ? 'c' : t.label ? 'ic' : undefined} style={{ '--a': t.a } as CSSProperties}>{t.label && <b>{t.label}</b>}</i>)}
         </div>
       </div>
-      <div className="hud-clock"><b ref={clock as React.RefObject<HTMLElement>} /><span><em ref={temp as React.RefObject<HTMLElement>} /> · simulated</span></div>
+      <div className="hud-clock"><b ref={clock as React.RefObject<HTMLElement>} /><span><em ref={temp as React.RefObject<HTMLElement>} /> · <i ref={tempNote as React.RefObject<HTMLElement>}>simulated</i></span></div>
       <div className={'hud-bubble' + (bubble ? ' on' : '')} ref={bub} hidden>
         <TurnArrow size={30} />
         <b ref={bubDist as React.RefObject<HTMLElement>} />
