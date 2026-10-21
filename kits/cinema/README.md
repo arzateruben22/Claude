@@ -12,6 +12,7 @@ Chromium, captured through Playwright and encoded with ffmpeg. It has two tiers:
 |---|---|
 | `cinema3d.js` | The finish. One file, three.js r160+ core only, no build step |
 | `keys.js` | Keyed camera, handheld micro-motion and focus keys for `window.CINEMA_FOCUS`. A plain ES module with no imports, so it works with any three.js version |
+| `liquid2d.js` | Liquid-chrome text morph for canvas 2D: a blob pinches into one bead per glyph and each bead swells into its letter (a metaball field shaded as chrome). Deterministic; `res` for density-scaled canvases, `palette` for the environment. Used for OPUS 5.5 in `films/made-with-claude` |
 | `README.md` | This file |
 
 The studio process that uses the kit is the `cinema-kit` skill (`.claude/skills/cinema-kit/SKILL.md`).
@@ -266,4 +267,16 @@ The "Passes" section of made-with-claude's `README.md` shows the loop as it was 
 - **Quick previews must keep the final fps shutter.** A 6 fps preview with a 6 fps shutter blurs 5×
   too much and hides real problems. The pilot sets `CINEMA.fps` from `--fps` (default 30) even with
   `--quick`. In made-with-claude, `--q preview` also caps K at 6, so review stills there at
-  `--q final`.
+  `--q final`, with their own `--out` folder (otherwise `--times` frames land in
+  `build/frames/<fmt>/`, the set the encode reads).
+- **Runs of the pilot's `render.mjs` share state on disk.** Each run deletes `motion/.tmp/` on exit
+  (unless `KEEP_TMP=1`) and rewrites `build/render-log.json` from the copy it read at start, so a
+  second run started next to a long render needs `KEEP_TMP=1` and should finish first.
+
+## Determinism, measured
+
+The film renders byte-identical frames in any order. The pilot is identical in all but a handful of
+frames: 4 of 780 differ between runs by 1 colour level in about 2 pixels near the DOM caption, which
+comes from Chromium compositing the page, not from the finish. So Skin School's `--verify` can report
+51 of 52 sampled frames matching. Treat a mismatch of that size as compositor noise; anything larger is
+a real non-determinism to fix.

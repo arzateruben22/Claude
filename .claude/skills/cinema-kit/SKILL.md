@@ -19,6 +19,7 @@ The kit is `kits/cinema/` (read `kits/cinema/README.md` first):
 |---|---|
 | `kits/cinema/cinema3d.js` | One-file finish for any three.js r160+ scene that exposes `window.seek(t)`: probe → K jittered sub-frames over a 180° shutter → centre depth → bokeh DOF focused by `window.CINEMA_FOCUS(t)` → bloom → ACES, premultiplied for DOM pages. `cinemaRenderer()` replaces `new THREE.WebGLRenderer()` (r160 `render()` is an instance method, so prototype patches never run). `window.cinemaFrame(t)` renders one frame. |
 | `kits/cinema/keys.js` | Keyed camera (per-key eases, portrait scale/lens overrides) and focus keys racked over ~0.45 s. |
+| `kits/cinema/liquid2d.js` | Liquid-chrome text morph (blob → beads → letters) for canvas 2D; the film's OPUS 5.5. |
 
 ## Step 0 — Where does it live?
 
@@ -91,7 +92,9 @@ Final renders take hours in SwiftShader (about 3–8 s a frame directed; made-wi
 took 4–5 h for both formats). So render a contact sheet and stills at the key moments
 (hook, landings, whips, end card) first, and show them. **Stills keep the final shutter**:
 the pilot's `--quick` does; in made-with-claude use `--times` at the default `--q final`
-(`--q preview` caps K at 6 and hides blur problems; `--scale 0.5` is fine).
+(`--q preview` caps K at 6 and hides blur problems; `--scale 0.5` is fine). Give
+made-with-claude stills their own `--out` folder: without it `--times` writes into
+`build/frames/<fmt>/`, the frame set the encode reads (`--label` only names contact sheets).
 
 ## Step 6 — Measure, fix the worst three, re-render
 
@@ -100,7 +103,8 @@ Before anyone watches:
 - **Copy** — every text inside the safe frame, not overlapping, clean for its reading budget.
 - **Legibility with motion** — readable on the blurred frames too, not just the sharp ones.
 - **Contrast** — captions ≥ 4.5:1 over the frame behind them; add a scrim where needed.
-- **Sync** — every cue within a frame of its picture event; loudness and true peak (−1 dBTP).
+- **Sync** — every cue within −45/+60 ms of the first frame that shows its event, story beats
+  on the 16th-note grid within 5 ms; loudness within 1 LU of target, true peak ≤ −1 dBTP.
 - **Determinism** — a frame is byte-identical whatever the render order.
 
 Fix the worst three, re-render only the frames an edit touched (signatures diff →
@@ -129,7 +133,7 @@ New-film pipeline (Node 18+ with Playwright, ffmpeg, Python 3 with numpy + Pillo
 F=films/made-with-claude
 node $F/scripts/render.cjs                                  # both formats → out/
 node $F/scripts/render.cjs --contact                        # pre-render contact sheets
-node $F/scripts/render.cjs --times 2.0,4.5 --label check    # stills, final shutter
+node $F/scripts/render.cjs --times 2.0,4.5 --out $F/build/stills   # stills → build/stills/<fmt>/, final shutter
 node $F/scripts/render.cjs --range 4-5.5 --format 9x16      # re-render a section
 node $F/scripts/render.cjs --frames 60,75,90 --resume       # exact frames; keep what's on disk
 node $F/scripts/probe.cjs && python3 -I $F/scripts/qa.py pass3     # measured review
@@ -151,3 +155,6 @@ node $P/render.mjs --scenes original                        # the client's scene
 node $P/render.mjs --scenes original --plain                # the client's renderer exactly
 node $P/render.mjs --verify                                 # re-render a sample, compare hashes
 ```
+Each `render.mjs` run deletes `motion/.tmp/` when it exits and rewrites `build/render-log.json`
+from the copy it read at start (stills runs leave the log alone). While another render is
+running, start a second one only with `KEEP_TMP=1`, and let the long render finish last.
