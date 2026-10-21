@@ -643,7 +643,7 @@ window.seek = function (t) {
   });
   sparks.forEach((sk) => { const on = red > 0.35 && (i === 1 || (i === 2 && lt < 2.5)); sk.m.visible = on; if (!on) return; const ph = (t * 0.7 + sk.k * 0.055) % 1; sk.m.position.set(sk.x, 11.6 + ph * 2.4, sk.z); sk.m.rotation.set(ph * 5, sk.k, ph * 3); sk.m.material.opacity = Math.sin(ph * Math.PI) * red; sk.m.scale.setScalar(0.6 + 0.6 * ph); });
   cream.visible = i === 2 && lt > 0.3;
-  if (cream.visible) { const p = E.out(seg(lt, 0.3, 1.3)); cream.position.y = 14 - 1.75 * p; cream.material.opacity = 0.85 * Math.min(1, p * 1.5) * (1 - 0.5 * seg(lt, 6.5, 8.5)); }
+  if (cream.visible) { const p = E.out(seg(lt, 0.3, 1.3)); cream.position.y = 14 - 2.2 * p; cream.material.opacity = 0.85 * Math.min(1, p * 1.5) * (1 - 0.5 * seg(lt, 6.5, 8.5)); }
   // labels, the week chips, the day counter (DOM)
   const $ = M.$;
   if (i === 0) { enter($("#l-dead"), lt, 0.3, { y: 8 }); enter($("#l-acid"), lt, 1.0, { y: 8 }); if (lt > 3.4) $("#l-acid").style.opacity = 1 - seg(lt, 3.4, 3.9); enter($("#l-fresh"), lt, 3.6, { y: 8 }); enter($("#week3"), lt, 4.2, { y: 10 }); $("#w-tu").classList.toggle("on", lt > 4.6); $("#w-fr").classList.toggle("on", lt > 5.1); }
