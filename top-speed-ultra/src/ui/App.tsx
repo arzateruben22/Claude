@@ -20,7 +20,7 @@ import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { AccountPanel, LiveChip } from './Live';
-import { LiveClient, LiveInfo, liveBase, loadToken, loadName } from '../live/client';
+import { LiveClient, LiveInfo, liveBase, loadToken, loadName, liveApi } from '../live/client';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'account';
@@ -168,6 +168,18 @@ export function App() {
     c.connect(base, token, car.id, car.paint);
   };
   const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  // on the menu, how many are driving live right now (the public health check, every 30 s)
+  const [lobby, setLobby] = useState<{ online: number; cap: number; queued: number } | null>(null);
+  const menuNow = screen === 'menu';
+  useEffect(() => {
+    const base = liveBase(settings.liveUrl);
+    if (!menuNow || !base) { setLobby(null); return; }
+    let stop = false;
+    const look = () => void liveApi.health(base).then((r) => { if (!stop) setLobby(r.ok ? { online: Number(r.data.online), cap: Number(r.data.cap), queued: Number(r.data.queued) } : null); });
+    look();
+    const t = setInterval(look, 30000);
+    return () => { stop = true; clearInterval(t); };
+  }, [menuNow, settings.liveUrl]);
   // the live address to a friend: the phone's share sheet, or the clipboard
   const invite = async () => {
     const url = liveBase(settingsRef.current.liveUrl) + '/';
@@ -446,7 +458,7 @@ export function App() {
       <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
     </section>
     <section className="menu-sec live-sec">
-      <p className="sect" aria-hidden="true">Live · alpha</p>
+      <p className="sect" aria-hidden="true">Live · alpha{lobby ? ` · ${lobby.online} of ${lobby.cap} driving now${lobby.queued ? `, ${lobby.queued} waiting` : ''}` : ''}</p>
       <div className="picks">
         <button className="pick" onClick={() => setPanel('account')}>
           <small>Account</small><b>{liveName || 'Not signed in'}</b><span>{liveName ? 'Signed in on this device' : 'Sign up or log in to drive live'}</span><Chevron />

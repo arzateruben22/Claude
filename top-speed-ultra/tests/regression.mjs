@@ -896,6 +896,10 @@ await group('live', async (use) => {
       await A.getByRole('button', { name: 'Back', exact: true }).click();
       return 'account panel: sign up form with name, password, email, age gate';
     });
+    await check('the menu says how many are driving live right now', async () => {
+      await A.waitForFunction(() => /\d+ of 2 driving now/.test(document.querySelector('.live-sec .sect')?.textContent || ''), null, { timeout: 30000 });
+      return (await A.locator('.live-sec .sect').innerText()).replace(/\s+/g, ' ');
+    });
     await check('signing up from the page itself works and the menu shows the name', async () => {
       await A.locator('.pick', { hasText: 'Account' }).click();
       await A.locator('#live-name').fill('live_ui');
