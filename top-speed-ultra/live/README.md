@@ -190,16 +190,20 @@ exact command when it's time:
 | 1 | **25** | Nothing. This is the launch setting. |
 | 2 | **50** | `bash deploy/cap.sh 50`. Same box. |
 | 3 | **100** | Binary poses and the nearest-32 rule in the relay (a day's work, no change to accounts). Consider the 2 GB Droplet ($12). |
-| 4 | **200** | 2 vCPU Droplet ($18), or a second lobby (north and south county) on the same box. |
+| 4 | **200** | `MemoryMax=512M` in the unit; a 2 vCPU Droplet ($18) if it shares the desks' box. |
 | 5 | **500** (`CAP_MAX`) | The relay moves to per-region rooms and a dedicated box; by then it earns its keep. |
 
 Measured here (`node test/load.mjs N 20`, drivers in five clusters, CPU as a share of one core):
 
 | Drivers | Server CPU | Memory | Out, MB a minute |
 | --- | --- | --- | --- |
-| 25 | 2.3% | 91 MB | 5.4 |
-| 100 | 6.3% | 105 MB | 87.5 |
-| 250 | 20.9% | 126 MB | 550 |
+| 25 | 2.9% | 142 MB | 5.4 |
+| 100 | 6.5% | 155 MB | 71 |
+| 250 | 22.8% | 179 MB | 207 |
+
+(Measured again after the roster, crews, honks, the nearest-32 rule and the security limits went in. The first
+version measured 91 to 126 MB and 550 MB a minute at 250.) The service's memory limit is 300 MB (`MemoryMax` in the
+unit) and the ladder wants memory under 60% of it: raise `MemoryMax` to 512M before rung 4.
 
 CPU and memory are not the limit; bandwidth is. Run the same test on the real machine before each rung and log it in
 `PROJECT_OC_PROGRESS.md`.

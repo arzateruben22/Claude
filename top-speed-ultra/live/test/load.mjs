@@ -9,7 +9,7 @@ import { join } from 'node:path';
 
 const N = Number(process.argv[2] || 50), S = Number(process.argv[3] || 15);
 const dir = mkdtempSync(join(tmpdir(), 'oc-load-')), port = 23000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
-const proc = spawn(process.execPath, [new URL('../server.mjs', import.meta.url).pathname], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: String(N), IP_MAX: '100000', DB_PATH: join(dir, 'load.db') }, stdio: ['ignore', 'pipe', 'inherit'] });
+const proc = spawn(process.execPath, [new URL('../server.mjs', import.meta.url).pathname], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: String(N), IP_MAX: '100000', SOCKETS_PER_IP: '100000', DB_PATH: join(dir, 'load.db') }, stdio: ['ignore', 'pipe', 'inherit'] });
 await new Promise((r) => proc.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) r(); }));
 const cpu = () => { try { const f = require('node:fs').readFileSync(`/proc/${proc.pid}/stat`, 'utf8').split(' '); return (Number(f[13]) + Number(f[14])) / 100; } catch { return NaN; } };
 const require = (await import('node:module')).createRequire(import.meta.url);

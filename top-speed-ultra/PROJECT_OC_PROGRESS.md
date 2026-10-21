@@ -54,6 +54,10 @@ The owner's standing order is to keep improving until they say stop. A scheduled
   with 1 ghost, both lamps, brake lamp 3.2 after the sky darkened (`tests/out/livephone-night-ghost.png`; the ghost is
   60 m ahead, so small at phone size). The night road still reads bright; that is the night-lighting item in the Opus
   queue, not this change.
+- **Load, measured again** (`node live/test/load.mjs N 20`, with the roster, crews, honks and the security limits in):
+  25 drivers: 2.9% CPU, 142 MB, 5.4 MB a minute out. 100: 6.5%, 155 MB, 71. 250: 22.8%, 179 MB, 207 (550 before the
+  nearest-32 rule). 0 poses dropped at any size. Memory is the next limit: the README's ladder now raises `MemoryMax`
+  to 512M before rung 4. The load script now opens many sockets from one address (`SOCKETS_PER_IP`).
 - **The Feedback report** gains a Live line: off, or the state, lobby, crew, ghosts known and drawn, and the feed's
   source, with no names. `launch`: 6 of 6.
 
