@@ -316,7 +316,7 @@
     var v = VIDEOS[ls.id];
     if (v) {
       var src = "img/school/video/" + esc(ls.id);
-      return '<div class="ls-video has-clip"><video src="' + src + '.mp4" poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"></video>' +
+      return '<div class="ls-video has-clip"><video poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"><source src="' + src + '.mp4" type="video/mp4"><source src="' + src + '.webm" type="video/webm"></video>' +
         '<button type="button" class="ls-play" aria-label="Play the explainer">' + PLAY + '</button>' +
         '<div class="ls-vcap"><span>Explainer · ' + Math.round(v.dur) + ' s</span><span>Evelyn\u2019s video next</span></div></div>';
     }

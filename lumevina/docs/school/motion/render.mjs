@@ -6,7 +6,7 @@
 // For every scene in scenes.mjs it opens the scene page in Chromium at the
 // frame size, calls seek(t) for every frame, captures the frame and pipes it
 // into ffmpeg (H.264, yuv420p, faststart). It writes:
-//   img/school/video/<id>.mp4 + <id>.jpg (poster)        the lesson's explainer (16:9, 1280×720)
+//   img/school/video/<id>.mp4 + <id>.webm + <id>.jpg     the lesson's explainer (16:9, 1280×720; the WebM for browsers without H.264)
 //   marketing/ads/out/video/<id>-9x16.mp4 + .jpg           the Reels/TikTok cut (9:16, 720×1280), only with --aspect 9x16
 //   docs/school/motion/review/<id>-<aspect>.jpg            a contact sheet, one frame every 1.5 s (not committed)
 //   docs/school/motion/render-log.json                     frames, bytes, a hash of every frame, warnings
@@ -26,7 +26,9 @@ import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
-import { SCENES, PALETTE } from "./scenes.mjs";
+import { SCENES as FLAT, PALETTE } from "./scenes.mjs";
+import { SCENES as SOLID } from "./scenes3d.mjs";
+const SCENES = { ...FLAT, ...SOLID };
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../../..");
@@ -91,8 +93,8 @@ window.C = ${JSON.stringify(PALETTE)};
 window.SCENE = ${JSON.stringify({ id: scene.id, dur: scene.dur, poster: scene.poster, shots: scene.shots })};
 window.W = ${W}; window.H = ${H};
 ${scene.setup ? `(${scene.setup.toString()})(M, window.C);` : ""}
-window.seek = function (t) { var st = M.stage(t); (${scene.seek.toString()})(t, st, M, window.C); };
-</script></body></html>`;
+${scene.seek ? `window.seek = function (t) { var st = M.stage(t); (${scene.seek.toString()})(t, st, M, window.C); };` : ""}
+</script>${scene.module ? `<script type="module">${scene.module}</script>` : ""}</body></html>`;
 
 const sha = (b) => crypto.createHash("sha1").update(b).digest("hex");
 const AUDIT = `(() => {
@@ -111,7 +113,7 @@ const AUDIT = `(() => {
 const encode = (file, fpsOut) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(fpsOut), "-i", "pipe:0",
   "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22", "-preset", "medium", "-profile:v", "high", "-level", "4.0", "-movflags", "+faststart", file], { stdio: ["pipe", "inherit", "inherit"] });
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined, args: ["--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--ignore-gpu-blocklist", "--allow-file-access-from-files"] });
 const tmp = path.join(here, ".tmp"); fs.mkdirSync(tmp, { recursive: true });
 let videos = {};
 const sheetFrames = [];
@@ -131,6 +133,7 @@ for (const scene of Object.values(SCENES)) {
     pg.on("pageerror", (e) => errors.push(e.message));
     await pg.goto("file://" + file);
     await pg.evaluate(() => document.fonts.ready);
+    await pg.waitForFunction(() => typeof window.seek === "function", null, { timeout: 30000 }).catch(() => {});
     if (errors.length || !(await pg.evaluate(() => typeof window.seek === "function"))) { console.error(`${scene.id} ${aspect}: the scene page failed to load: ${errors.join(" | ") || "no seek()"}`); await pg.close(); continue; }
     const cdp = await pg.context().newCDPSession(pg);
     const frames = Math.round(scene.dur * fps), hashes = [], samples = [], warnings = [];
@@ -179,6 +182,7 @@ for (const scene of Object.values(SCENES)) {
       run = 1;
     }
     if (ff) { ff.stdin.end(); await new Promise((r) => ff.on("close", r)); }
+    if (ff && aspect === "16x9") await new Promise((r) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", mp4, "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-cpu-used", "4", "-an", path.join(outDir, `${base}.webm`)], { stdio: "inherit" }).on("close", r));
     // the contact sheet
     const sheet = await browser.newPage({ viewport: { width: 1600, height: 900 } });
     const cols = aspect === "16x9" ? 4 : 6, cw = Math.floor(1584 / cols);
