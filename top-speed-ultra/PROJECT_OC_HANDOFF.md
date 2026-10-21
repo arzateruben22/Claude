@@ -28,13 +28,12 @@ model: routine work to `opus`, hard reasoning to `fable`.
   `RESEND_KEY`/`MAIL_FROM`), the account email setting, the menu's "N of 25 driving now", the pause screen's live
   line, Invite a friend, and a watchdog alert if `oc-live` stops. `cd live && npm test`: 45 of 45.
 - **Next** (in order; Opus-class unless marked):
-  1. The `live` suite group on the latest build: the honk, account, pause-line, menu-count and reset checks were added
-     after its last full run. Log the results.
-  2. A phone-size pass (390 × 844) of the Live section, the account panel, the top bar with the chip and the horn, and
-     the who's-on list; fix anything that crowds.
-  3. Binary poses (12 bytes a row) before the cap passes 100 (Fable-class: the format and its proof).
-  4. Ghosts that fade in and out instead of popping at the edge of the relay's 3 km.
-  5. The talk bank in the on-foot scenes once Lot 57 is in the game.
+  1. The `live` suite group once more on the latest build (the menu count and the reset check were added after its
+     last full run, 10 of 10); `livephone` and `phone` pass.
+  2. Binary poses (F7 in the Fable queue) before the cap passes 100.
+  3. The talk bank in the on-foot scenes once Lot 57 is in the game.
+  4. Ideas worth weighing with the owner: a private lobby code for friends (a second lobby keyed by a short code),
+     spectating a friend's drive, and a daily "OC cruise" time when the lobby is busiest.
 - Everything below this line is the state from 2026-10-18 and still applies to the other lanes.
 
 ## State at the update before (2026-10-18, 22:00 UTC, an Opus session)

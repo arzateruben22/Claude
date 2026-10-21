@@ -55,6 +55,15 @@ or merges it.
   socket. Realistic mode and the 12 billboards passed. The account panel changed the password and deleted the
   account, and the server agreed. The pause screen showed its live line. No page errors. The menu count, the reset
   check and the grow-in came after this run.
+- **Phone size** (the new `livephone` group: 390 × 844, one phone browser plus a scripted peer on a plain socket, so
+  no second browser): the Live section fits and shows "0 of 25 driving now". The account panel fits, signed in, with
+  the email setting open. The who's-on list reads "Driving now · 2 of 25 phone_me you Westbound_GT I-405 North Drive
+  with". The first screenshot showed "GO TO" and "LIVE 2/25" wrapping onto two lines, which made the top bar taller
+  so it covered the top of the corner map. Fixed: labels never wrap, and on a phone the chip shows a green dot and
+  "2/25". The check now asserts one row and that the bar ends above the map (374 px of 390, 6 items). It passes, and
+  the `phone` group passes alongside it. Also found: Chromium's phone emulation drops a `file://` page's localStorage
+  on reload. A real phone loading the game over https keeps it, so the check logs in through the account panel. The
+  account avatar now gets its sunset disc.
 
 ## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
 
