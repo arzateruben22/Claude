@@ -15,7 +15,7 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { createPanels, uiState, PANELS, COMP } from "./ui.js";
+import { createPanels, uiState, PANELS, COMP, setFormat, titleMetrics } from "./ui.js";
 import { buildMascot, makePose, applyPose, LEG_H, BODY } from "./mascot.js";
 import { buildFX } from "./fx.js";
 
@@ -66,9 +66,10 @@ const backdrop = new THREE.Mesh(new THREE.SphereGeometry(150, 48, 24), new THREE
   vertexShader: "varying vec3 vDir; void main(){ vDir = normalize((modelMatrix*vec4(position,1.0)).xyz); gl_Position = projectionMatrix*viewMatrix*modelMatrix*vec4(position,1.0); }",
   fragmentShader: `varying vec3 vDir;
     vec3 backdropCol(vec3 d){
-      float g = pow(max(0.0, dot(d, normalize(vec3(0.0, 0.22, -1.0)))), 2.6);
-      float wide = pow(max(0.0, dot(d, normalize(vec3(0.0, 0.05, -1.0)))), 1.2);
-      return vec3(0.010, 0.0062, 0.0042) + vec3(0.30, 0.12, 0.035) * g + vec3(0.06, 0.026, 0.01) * wide; }
+      // a tight candle lobe: low shots keep dark corners (the screen sheen keeps the broad version below)
+      float g = pow(max(0.0, dot(d, normalize(vec3(0.0, 0.22, -1.0)))), 4.5);
+      float wide = pow(max(0.0, dot(d, normalize(vec3(0.0, 0.05, -1.0)))), 1.6);
+      return vec3(0.008, 0.005, 0.0035) + vec3(0.15, 0.06, 0.018) * g + vec3(0.03, 0.013, 0.005) * wide; }
     void main(){ gl_FragColor = vec4(backdropCol(normalize(vDir)), 1.0); }`
 }));
 backdrop.renderOrder = -10;
@@ -102,6 +103,7 @@ slab.castShadow = false; slab.receiveShadow = false;
 scene.add(slab);
 
 /* ─── UI panels on the slab ─── */
+setFormat(FORMAT);
 const ui = createPanels(J);
 const panelMeshes = {};
 for (const [id, p] of Object.entries(ui.panels)) {
@@ -173,7 +175,7 @@ R.traverse((o) => {
   if (!o.isMesh) return;
   if (!reflMats.has(o.material)) {
     const m = o.material.clone();
-    Object.assign(m, { transparent: true, opacity: 0.2, depthTest: false, depthWrite: false, clippingPlanes: slabClip, side: THREE.DoubleSide });
+    Object.assign(m, { transparent: true, opacity: 0.12, depthTest: false, depthWrite: false, clippingPlanes: slabClip, side: THREE.FrontSide });
     reflMats.set(o.material, m);
   }
   o.material = reflMats.get(o.material);
@@ -190,9 +192,9 @@ function syncReflection() {
   src.forEach((o, i) => { dst[i].position.copy(o.position); dst[i].quaternion.copy(o.quaternion); dst[i].scale.copy(o.scale); dst[i].visible = o.visible; });
   // fade with height: the reflection belongs to the surface
   const h = M.root.position.y;
-  reflMats.forEach((m) => (m.opacity = 0.2 * Math.max(0, 1 - h / 3)));
+  reflMats.forEach((m) => (m.opacity = 0.12 * Math.max(0, 1 - h / 1.5)));
 }
-const pose = makePose(J, world);
+const pose = makePose(J, world, FORMAT);
 const fx = buildFX(J, world, scene);
 const viewerPos = (() => { const w = world(COMP.x + COMP.w / 2, COMP.y + COMP.h / 2 - 18); return new THREE.Vector3(w.x, 0, w.z); })();
 
@@ -221,7 +223,7 @@ function keyAbs(k, t) {
   if (k.rel) { const g = groundTrack(t); pos.add(g); look.add(g); }
   if (k.aim) {                                   // tilt toward the mascot's body (keeps jumps in frame)
     const P = pose(t, null, null);
-    if (P.visible) look.lerp(P.pos.clone().add(new THREE.Vector3(0, 0.55, 0)), k.aim);
+    if (P.visible) { const tgt = P.pos.clone(); if (P.mode === "trot") tgt.y = 0; look.lerp(tgt.add(new THREE.Vector3(0, 0.55, 0)), k.aim); }
   }
   return { pos, look };
 }
@@ -239,8 +241,12 @@ function camAt(t) {
   };
 }
 const FOCUS_UI = { search: [1787, 450], glowrow: [1830, 566] };   // the typed word, the Glow row label (UI px)
-function focusPoint(kind, look, P) {
-  if (kind === "mascot" && P.visible) return P.pos.clone().add(new THREE.Vector3(0, (LEG_H + BODY.h / 2) * (P.sy || 1), 0));
+const COC_K = H * 0.034 * (FORMAT === "9x16" ? 0.8 : 1);
+function focusPoint(kind, look, P, camPos) {
+  if (kind === "mascot" && P.visible) {
+    const c = P.pos.clone().add(new THREE.Vector3(0, (LEG_H + BODY.h / 2) * (P.sy || 1), 0));
+    return camPos ? c.add(camPos.clone().sub(c).normalize().multiplyScalar(0.45)) : c;
+  }
   if (kind === "viewer") return viewerPos.clone();
   if (FOCUS_UI[kind]) { const w = world(...FOCUS_UI[kind]); return new THREE.Vector3(w.x, 0.01, w.z); }
   return look.clone();
@@ -249,8 +255,8 @@ function focusPoint(kind, look, P) {
 function focusFor(t) {
   const C = camAt(t);
   const Pc = pose(t, C.pos, viewerPos);
-  const fa = focusPoint(C.a.focus, C.look, Pc), fb = focusPoint(C.b.focus, C.look, Pc);
-  return { C, fd: C.pos.distanceTo(fa) * (1 - C.e) + C.pos.distanceTo(fb) * C.e, cocScale: C.fstop * H * 0.034 };
+  const fa = focusPoint(C.a.focus, C.look, Pc, C.pos), fb = focusPoint(C.b.focus, C.look, Pc, C.pos);
+  return { C, fd: C.pos.distanceTo(fa) * (1 - C.e) + C.pos.distanceTo(fb) * C.e, cocScale: C.fstop * COC_K };
 }
 
 /* ─── scene state at time ts (pure) ─── */
@@ -265,7 +271,12 @@ function apply(ts, jitter) {
   const P = pose(ts, C.pos, viewerPos);
   applyPose(M, P);
   syncReflection();
-  shadowCatcher.position.set(P.pos.x + 1.0, 0.005, P.pos.z - 1.0);    // shadows fall toward +x/−z (key light)
+  {                                                                    // shadows fall toward +x/−z (key light)
+    const hw = J.ui.width / UPW / 2, hd = J.ui.height / UPW / 2;
+    const x0 = Math.max(-hw, P.pos.x - 2), x1 = Math.min(hw, P.pos.x + 4), z0 = Math.max(-hd, P.pos.z - 4), z1 = Math.min(hd, P.pos.z + 2);
+    shadowCatcher.position.set((x0 + x1) / 2, 0.005, (z0 + z1) / 2);
+    shadowCatcher.scale.set(Math.max(1e-3, x1 - x0) / 6, Math.max(1e-3, z1 - z0) / 6, 1);
+  }
   shadowCatcher.visible = P.visible;
   fx.voxels(ts); fx.breakout(ts, P); fx.shards(ts); fx.playhead(ts); fx.beams(ts, P); fx.streak(ts); fx.shadow(P);
   lastPose = P;
@@ -284,7 +295,7 @@ class AccumPass extends Pass {
     this.quad = new FullScreenQuad(new THREE.ShaderMaterial({
       uniforms: { tex: { value: null }, w: { value: 1 } },
       vertexShader: QUAD_VS,
-      fragmentShader: "uniform sampler2D tex; uniform float w; varying vec2 vUv; void main(){ gl_FragColor = texture2D(tex, vUv) * w; }",
+      fragmentShader: "uniform sampler2D tex; uniform float w; varying vec2 vUv; void main(){ vec4 c = texture2D(tex, vUv); gl_FragColor = vec4(min(c.rgb, vec3(12.0)), c.a) * w; }",
       blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
       depthTest: false, depthWrite: false
     }));
@@ -564,15 +575,19 @@ function framing(frame) {
 }
 // QA probe: camera, mascot and copy geometry for one frame (no rendering)
 function cocAt(t, C, P, pt) {
-  const fa = focusPoint(C.a.focus, C.look, P), fb = focusPoint(C.b.focus, C.look, P);
+  const fa = focusPoint(C.a.focus, C.look, P, C.pos), fb = focusPoint(C.b.focus, C.look, P, C.pos);
   const fd = C.pos.distanceTo(fa) * (1 - C.e) + C.pos.distanceTo(fb) * C.e;
   const z = C.pos.distanceTo(pt);
-  return Math.min(C.fstop * H * 0.034 * Math.abs(1 - fd / z), Math.min(H * 0.04, 46 * SCALE));
+  return Math.min(C.fstop * COC_K * Math.abs(1 - fd / z), Math.min(H * 0.04, 46 * SCALE));
 }
 const W2 = (u, v, y = 0.01) => { const w = world(u, v); return new THREE.Vector3(w.x, y, w.z); };
+const TM = titleMetrics();
+const box = (m) => [W2(m.cx - m.w / 2, m.cy), W2(m.cx + m.w / 2, m.cy), W2(m.cx, m.cy - m.cap / 2), W2(m.cx, m.cy + m.cap / 2)];
 const COPY = {
-  title: [W2(752, 404), W2(1508, 404), W2(1130, 362), W2(1130, 446)],      // MADE WITH CLAUDE extents (UI px)
-  opus: [W2(1030, 526), W2(1230, 526), W2(1130, 512), W2(1130, 540)],
+  title: box(TM.title),                                                     // the whole title lockup (UI px)
+  titleCap: box(TM.titleCap),                                               // its smallest capitals
+  sprite: box({ cx: COMP.x + COMP.w / 2, cy: COMP.y + COMP.h / 2 - 0.5, w: 144, cap: 96 }),   // the pixel sprite (12×8 px of 12 UI px)
+  opus: box(TM.opus),
   glow: [W2(1762, 450), W2(1812, 450), W2(1787, 440), W2(1787, 460)],       // the typed search text
   glowRow: [W2(1782, 564), W2(1840, 564), W2(1810, 556), W2(1810, 572)]
 };
@@ -595,7 +610,7 @@ function probeFrame(frame) {
 function project(frame, xyz) { const t = frame / FPS; return screenOf(new THREE.Vector3(...xyz), t).toArray(); }
 
 window.film = { ready: Promise.resolve(info()), seek, info, mascotAt, project, framing, probeFrame, signature };
-window.__dbg = { renderer, sheen, shadowCatcher, slab, desk, key, rim, panelMeshes, M, scene, accum, dof, bloom, output, grade, rtAccum, rtDOF, rtOut };
+window.__dbg = { CK, renderer, sheen, shadowCatcher, slab, desk, key, rim, panelMeshes, M, scene, accum, dof, bloom, output, grade, rtAccum, rtDOF, rtOut };
 document.documentElement.dataset.ready = "1";
 
 if (!RENDER) {

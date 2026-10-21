@@ -15,7 +15,7 @@ import wave
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 FILM = Path(__file__).resolve().parent.parent
 BUILD = FILM / "build"
@@ -77,17 +77,17 @@ def picture(fmt, frames_dir):
     # how big is the character before the breakout? (sprite: 144×96 UI px on the slab)
     sprite_h = []
     for row in rows[: int(first_beat * FPS)]:
-        c = row["copy"]["title"]  # proxy scale: title glyph height ~ sprite height (84 vs 96 UI px)
-        sprite_h.append(c["h"] * 96 / 84 / H)
+        c = row["copy"]
+        sprite_h.append(c["sprite"]["h"] / H if "sprite" in c else c["title"]["h"] * 96 / 84 / H)   # old probes: title-box proxy
     r["sprite_height_frac_at_0"] = round(sprite_h[0], 3)
     r["sprite_height_frac_at_1s"] = round(sprite_h[FPS], 3)
     if sprite_h[0] < 0.04:
         D["hook"].append((-1, f"character is tiny on frame 0 ({100 * sprite_h[0]:.1f}% of frame height) — hook relies on camera motion"))
     title_first = None
     for row in rows:
-        c = row["copy"]["title"]
+        c, cap = row["copy"]["title"], row["copy"].get("titleCap", row["copy"]["title"])
         t = row["frame"] / FPS
-        if t >= J["viewer"]["typeEnd"] and c["inFrame"] and c["coc"] < 3 and c["h"] / H > 0.025:
+        if t >= J["viewer"]["typeEnd"] and c["inFrame"] and c["coc"] < 3 and cap["h"] / H > 0.025:
             title_first = t
             break
     r["brand_first_legible_s"] = title_first
@@ -96,15 +96,15 @@ def picture(fmt, frames_dir):
 
     # ── READABILITY: final card + the search beat
     last = rows[-1]["copy"]
-    ti, op = last["title"], last["opus"]
+    ti, op, tc = last["title"], last["opus"], last.get("titleCap", last["title"])
     sx0, sy0, sx1, sy1 = SAFE[fmt]
-    r["final_title"] = {"h_px": ti["h"], "coc_px": ti["coc"], "x0": ti["x0"] / W, "x1": ti["x1"] / W, "y0": ti["y0"] / H, "y1": ti["y1"] / H}
+    r["final_title"] = {"h_px": tc["h"], "coc_px": ti["coc"], "x0": ti["x0"] / W, "x1": ti["x1"] / W, "y0": ti["y0"] / H, "y1": ti["y1"] / H}
     if not ti["inFrame"] or ti["x0"] / W < sx0 or ti["x1"] / W > sx1:
         D["readability"].append((-3, "final title runs outside the safe frame"))
     if ti["y1"] / H > sy1 or ti["y0"] / H < sy0:
         D["readability"].append((-1, "final title outside vertical safe zone"))
-    if ti["h"] / H < 0.035:
-        D["readability"].append((-1, f"final title glyphs {ti['h']:.0f}px tall ({100 * ti['h'] / H:.1f}% of height)"))
+    if tc["h"] / H < 0.035:
+        D["readability"].append((-1, f"final title capitals {tc['h']:.0f}px tall ({100 * tc['h'] / H:.1f}% of height)"))
     if op["h"] / H < 0.02:
         D["readability"].append((-1, f"'OPUS 5.5' only {op['h']:.0f}px tall"))
     if ti["coc"] > 2.0:
@@ -113,13 +113,28 @@ def picture(fmt, frames_dir):
     img = np.asarray(Image.open(frames_dir / f"{FRAMES - 1:04d}.png").convert("RGB")).astype(np.float32)
     x0, x1 = int(max(0, ti["x0"])), int(min(W, ti["x1"]))
     y0, y1 = int(max(0, ti["y0"])), int(min(H, ti["y1"]))
-    patch = lum(img[y0:y1, x0:x1]).ravel() if x1 > x0 and y1 > y0 else np.array([0.0, 1.0])
-    hi, lo = np.percentile(patch, 97), np.percentile(patch, 30)
-    r["final_title_contrast"] = round(float((hi + 0.05) / (lo + 0.05)), 2)
+    # glyph core (L > 0.6 inside the title box) against the background outside a 20-px dilation of the glyphs,
+    # and against the letter gaps (non-glyph pixels inside the box: what a heavy halo floods)
+    pad = 24
+    X0, X1, Y0, Y1 = max(0, x0 - 4 * pad), min(W, x1 + 4 * pad), max(0, y0 - 4 * pad), min(H, y1 + 4 * pad)
+    L = lum(img[Y0:Y1, X0:X1])
+    inbox = np.zeros(L.shape, bool); inbox[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = True
+    core = (L > 0.6) & inbox
+    if core.sum() > 20:
+        dil = np.asarray(Image.fromarray((core * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(41))) > 0
+        glyph, bg = float(np.median(L[core])), float(np.median(L[~dil])) if (~dil).sum() else 0.0
+        near = np.asarray(Image.fromarray((core * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5))) > 0
+        gap = float(np.median(L[inbox & ~near])) if (inbox & ~near).sum() else bg
+    else:
+        glyph, bg, gap = 0.0, 0.0, 0.0
+    r["final_title_contrast"] = round((glyph + 0.05) / (bg + 0.05), 2)
+    r["final_title_glyph_to_gap"] = round((glyph + 0.05) / (gap + 0.05), 2)
+    if r["final_title_glyph_to_gap"] < 2.0:
+        D["readability"].append((-1, f"title halo floods the letter gaps (glyph:gap {r['final_title_glyph_to_gap']}:1)"))
     if r["final_title_contrast"] < 4.5:
         D["readability"].append((-1, f"final title contrast {r['final_title_contrast']}:1"))
     # hold: frames where the title is sharp, in frame and big enough
-    hold = [row["frame"] for row in rows if row["copy"]["title"]["inFrame"] and row["copy"]["title"]["coc"] < 2.5 and row["copy"]["title"]["h"] / H > 0.03]
+    hold = [row["frame"] for row in rows if row["copy"]["title"]["inFrame"] and row["copy"]["title"]["coc"] < 2.5 and row["copy"].get("titleCap", row["copy"]["title"])["h"] / H > 0.03]
     tail = 0
     for f in range(FRAMES - 1, -1, -1):
         if f in hold: tail += 1
@@ -127,9 +142,16 @@ def picture(fmt, frames_dir):
     r["final_hold_s"] = round(tail / FPS, 2)
     if tail / FPS < 1.5:
         D["readability"].append((-2, f"final card readable for only {tail / FPS:.2f}s"))
-    # the search word: legible while it is typed/applied (4.375–4.9)?
-    gl = [row["copy"]["glow"] for row in rows[int(4.38 * FPS): int(4.9 * FPS)]]
-    ok = [g for g in gl if g["inFrame"] and g["h"] >= 14 and g["coc"] < 3]
+    # the search word: legible while it is typed and applied (4.0–4.6)? sharp, big enough, and not smeared:
+    # its own screen motion (half a frame of travel at a 180° shutter) and its CoC must stay under a quarter of its height
+    seg = rows[int(4.0 * FPS) - 1: int(4.6 * FPS)]
+    gl, ok = [], []
+    for a, b in zip(seg, seg[1:]):
+        g, h0 = b["copy"]["glow"], a["copy"]["glow"]
+        mv = np.hypot((g["x0"] + g["x1"] - h0["x0"] - h0["x1"]) / 2, (g["y0"] + g["y1"] - h0["y0"] - h0["y1"]) / 2)
+        gl.append(g)
+        if g["inFrame"] and g["h"] >= 14 and g["coc"] < 0.25 * g["h"] and 0.5 * mv < 0.25 * g["h"]:
+            ok.append(g)
     r["glow_word_legible_frac"] = round(len(ok) / max(1, len(gl)), 2)
     r["glow_word_px"] = round(float(np.median([g["h"] for g in gl])), 1)
     r["glow_word_coc"] = round(float(np.median([g["coc"] for g in gl])), 2)
@@ -326,7 +348,7 @@ def main():
         for k, ded in r["deductions"].items():
             for d, why in ded:
                 print(f"- {k}: {d:+d} {why}")
-        keys = ["frame0_luma", "motion_first_half_second", "sprite_height_frac_at_0", "brand_first_legible_s", "final_title", "final_title_contrast", "final_hold_s",
+        keys = ["frame0_luma", "motion_first_half_second", "sprite_height_frac_at_0", "brand_first_legible_s", "final_title", "final_title_contrast", "final_title_glyph_to_gap", "final_hold_s",
                 "glow_word_px", "glow_word_coc", "glow_word_legible_frac", "max_luma_step", "camera_peak_speed", "strobe_frames", "max_motion_px"]
         print("  " + " · ".join(f"{k}={r.get(k)}" for k in keys if k in r))
         print("  sync:", {k: v for k, v in r["sync"].items() if k != "cues"})

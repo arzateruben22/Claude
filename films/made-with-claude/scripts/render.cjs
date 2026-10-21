@@ -123,7 +123,7 @@ function encode(fmt, dir, audio) {
     "-vf", "scale=in_range=full:out_range=tv:out_color_matrix=bt709",
     "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv",
     "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-shortest", "-movflags", "+faststart", file]);
-  for (const [name, f] of [["hook", Math.round(2.6 * FPS)], ["final", FRAMES - 1]]) {
+  for (const [name, f] of [["hook", 68], ["final", FRAMES - 1]]) {
     run("ffmpeg", ["-v", "error", "-y", "-i", path.join(dir, String(f).padStart(4, "0") + ".png"), "-q:v", "2", path.join(OUT, `poster-${fmt}-${name}.jpg`)]);
   }
   return file;

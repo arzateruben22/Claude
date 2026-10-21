@@ -75,7 +75,7 @@ function angleLerp(a, b, p) {
 }
 const smooth = (p) => p * p * (3 - 2 * p);
 
-export function makePose(J, world) {
+export function makePose(J, world, fmt) {
   const pu = (t) => J.ui.playhead.u0 + t * J.ui.playhead.pxPerSecond;
   const toWorld = (u, v) => world(u, v);
   const segs = [];
@@ -88,8 +88,9 @@ export function makePose(J, world) {
       pos = new THREE.Vector3(sp.x, 0, sp.z + 0.48 + 0.3);
       s.p0 = pos.clone(); s.p1 = pos.clone();
     } else if (m.type === "jump" || m.type === "hop") {
-      const u = m.to[0] === "playhead" ? pu(m.t1) : m.to[0];
-      const w = toWorld(u, m.to[1]);
+      const to = (fmt && m["to" + fmt]) || m.to;               // per-format landing spots (end-card layouts differ)
+      const u = to[0] === "playhead" ? pu(m.t1) : to[0];
+      const w = toWorld(u, to[1]);
       s.p0 = pos.clone(); s.p1 = new THREE.Vector3(w.x, 0, w.z);
       s.yaw0 = yaw; s.yaw1 = Math.atan2(s.p1.x - s.p0.x, s.p1.z - s.p0.z);
       if (m.face === "camera") s.yaw1 = m.endYaw ?? 0;      // lands facing the lens side (south)
@@ -102,10 +103,13 @@ export function makePose(J, world) {
     } else {
       s.p0 = pos.clone(); s.p1 = pos.clone(); s.yaw0 = yaw;
     }
+    s.prev = segs[segs.length - 1] || null;
     segs.push(s);
   }
+  const firstJump = segs.find((x) => x.type === "jump");
+  const bounces = segs.flatMap((x) => x.bounce || []);
   const takeoffs = segs.filter((s) => s.type === "jump" || s.type === "hop").map((s) => s.t0);
-  const landings = segs.filter((s) => s.type === "jump" || s.type === "hop").map((s) => ({ t: s.t1, big: s.type === "jump" }));
+  const landings = segs.filter((s) => s.type === "jump" || s.type === "hop").map((s) => ({ t: s.t1, big: s.type === "jump" || !!s.stomp }));
 
   const T_END = J.duration;
   return function pose(t, camPos, viewerPos) {
@@ -127,25 +131,35 @@ export function makePose(J, world) {
       out.yaw = 0;
       return out;
     }
-    let yawTarget = seg.yaw1 ?? seg.yaw0;
+    // start every move from the yaw the previous move actually ended on (no snaps at segment boundaries)
+    const y0 = seg.prev && seg.prev.type !== "sprite" && seg.prev.type !== "extrude" ? pose(seg.t0 - 1e-4, camPos, viewerPos).yaw : seg.yaw0;
     if (seg.type === "jump" || seg.type === "hop") {
       const p = (t - seg.t0) / (seg.t1 - seg.t0);
       out.pos.lerpVectors(seg.p0, seg.p1, p);
-      out.pos.y = 4 * seg.apex * p * (1 - p);
-      out.vy = (4 * seg.apex * (1 - 2 * p)) / (seg.t1 - seg.t0);
+      if (seg.stomp) {
+        // a stomp hangs at the top, then slams down (vertical timing warped, travel stays linear)
+        const pw = p < 0.6 ? 0.5 * Math.sin((Math.PI / 2) * (p / 0.6)) : 0.5 + 0.5 * ((p - 0.6) / 0.4) ** 2;
+        const dpw = p < 0.6 ? 0.5 * Math.cos((Math.PI / 2) * (p / 0.6)) * (Math.PI / 2) / 0.6 : (p - 0.6) / 0.16;
+        out.pos.y = 4 * seg.apex * pw * (1 - pw);
+        out.vy = (4 * seg.apex * (1 - 2 * pw) * dpw) / (seg.t1 - seg.t0);
+      } else {
+        out.pos.y = 4 * seg.apex * p * (1 - p);
+        out.vy = (4 * seg.apex * (1 - 2 * p)) / (seg.t1 - seg.t0);
+      }
       // stretch with speed, but relax to 1 at lift-off and contact so the shutter never straddles a shape snap
       const st = Math.min(1, Math.abs(out.vy) / 14) * smooth(clamp01(p / 0.12)) * smooth(clamp01((1 - p) / 0.12));
       out.sy = 1 + 0.16 * st; out.sxz = 1 / Math.sqrt(out.sy);
-      out.yaw = angleLerp(seg.yaw0, seg.yaw1, smooth(clamp01(p / 0.3)));
+      if (seg === firstJump && p < 0.1) out.sy = 0.82 + (out.sy - 0.82) * smooth(p / 0.1);   // spring out of the extrude squash
+      out.yaw = angleLerp(y0, seg.yaw1, smooth(clamp01(p / 0.3)));
       if (seg.face === "camera" && camPos) {
         const toCam = Math.atan2(camPos.x - out.pos.x, camPos.z - out.pos.z);
-        out.yaw = angleLerp(angleLerp(seg.yaw0, toCam, smooth(clamp01(p / 0.3))), seg.yaw1, smooth(clamp01((p - 0.7) / 0.3)));
+        out.yaw = angleLerp(angleLerp(y0, toCam, smooth(clamp01(p / 0.3))), seg.yaw1, smooth(clamp01((p - 0.7) / 0.3)));
       }
       out.pitch = (seg.type === "jump" ? 0.32 : 0.12) * Math.sin(Math.PI * p) * (seg.face === "camera" ? -0.6 : 1);   // lean into the arc
       out.legs = Math.sin(Math.PI * p);
       if (seg.type === "hop" && camPos && !seg.stomp) {    // keep the face readable while hopping sideways
         const toCam = Math.atan2(camPos.x - out.pos.x, camPos.z - out.pos.z);
-        out.yaw = angleLerp(out.yaw, toCam, 0.55);
+        out.yaw = angleLerp(out.yaw, toCam, 0.55 * smooth(clamp01(p / 0.3)));
       }
       if (seg.type === "jump" && seg.apex > 2.5) out.roll = 0.18 * Math.sin(2 * Math.PI * p);
     } else if (seg.type === "trot") {
@@ -155,7 +169,7 @@ export function makePose(J, world) {
       out.pos.set(w.x, 0, w.z);
       const ph = (tt / step) % 1;
       out.pos.y = seg.apex * Math.sin(Math.PI * ph);
-      out.yaw = angleLerp(seg.yaw0, seg.yaw1, smooth(clamp01(tt / 0.2)));
+      out.yaw = angleLerp(y0, seg.yaw1, smooth(clamp01(tt / 0.2)));
       out.legs = Math.sin(Math.PI * 2 * (tt / (step * 2)));
       out.pitch = 0.05;
       const contact = Math.min(ph, 1 - ph);
@@ -163,7 +177,7 @@ export function makePose(J, world) {
       // face the camera a little while trotting so the eyes read
       if (camPos) {
         const toCam = Math.atan2(camPos.x - out.pos.x, camPos.z - out.pos.z);
-        out.yaw = angleLerp(out.yaw, toCam, 0.45);
+        out.yaw = angleLerp(out.yaw, toCam, 0.45 * smooth(clamp01(tt / 0.2)));
       }
     } else {
       out.pos.copy(seg.p0);
@@ -171,22 +185,26 @@ export function makePose(J, world) {
       if (seg.face === "camera" && camPos) target = Math.atan2(camPos.x - out.pos.x, camPos.z - out.pos.z);
       if (seg.face === "viewer" && viewerPos) target = Math.atan2(viewerPos.x - out.pos.x, viewerPos.z - out.pos.z);
       if (seg.face === "panel") target = Math.PI * 0.85;
-      out.yaw = angleLerp(seg.yaw0, target, smooth(clamp01((t - seg.t0) / 0.3)));
-      if (seg.bounce) {
-        for (const b of seg.bounce) if (t >= b && t < b + 0.12) { const q = (t - b) / 0.12; out.sy *= 1 - 0.08 * Math.sin(Math.PI * q); out.arms = Math.sin(Math.PI * q); }
+      out.yaw = angleLerp(y0, target, smooth(clamp01((t - seg.t0) / 0.3)));
+      if (seg.face === "camera" && camPos) {
+        // a high lens (the 9:16 end card): lean back and look up so the face and the happy eyes read
+        const elev = Math.atan2(camPos.y - out.pos.y, Math.hypot(camPos.x - out.pos.x, camPos.z - out.pos.z));
+        out.pitch = -0.6 * clamp01((elev - 0.75) / 0.45) * smooth(clamp01((t - seg.t0) / 0.3));
       }
       if (seg.breathe) { const br = Math.sin((t - seg.t0) * Math.PI * 1.0); out.sy *= 1 + 0.018 * br; }
       if (seg.happy && t >= seg.happy) { const q = smooth(clamp01((t - seg.happy) / 0.18)); out.happy = q; out.eye = 1 - q; }
     }
+    // keystrokes: a small squash and an arm flick on every key, whatever move it falls in
+    for (const b of bounces) if (t >= b && t < b + 0.12) { const q = (t - b) / 0.12; out.sy *= 1 - 0.08 * Math.sin(Math.PI * q); out.arms = Math.max(out.arms, Math.sin(Math.PI * q)); }
     // the breakout pop: overshoot as the mascot leaves the screen
-    if (seg.type === "jump" && seg === segs.find((x) => x.type === "jump")) {
+    if (seg === firstJump) {
       const q = (t - seg.t0) / 0.16;
       if (q < 1) out.scale = 1 + 0.16 * Math.sin(Math.PI * q) * (1 - q);
     }
     // anticipation crouch before take-offs: dips and returns to 1 at t0 (no snap into the stretch);
     // skipped when the take-off is also a landing (chained hops) — the landing squash carries it
     for (const t0 of takeoffs) {
-      if (landings.some((L) => Math.abs(L.t - t0) < 1e-6)) continue;
+      if (t0 === firstJump.t0 || landings.some((L) => Math.abs(L.t - t0) < 1e-6)) continue;   // the extrude squash is the breakout's crouch
       if (t >= t0 - 0.1 && t < t0) { const q = (t - (t0 - 0.1)) / 0.1; out.sy *= 1 - 0.2 * Math.sin(Math.PI * q); }
     }
     // landing squash: a 40 ms attack after contact, then a damped spring (no instant stretch→squash flip)

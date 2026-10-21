@@ -435,7 +435,7 @@ def main(path):
     sfx.add(whoosh(ST["t1"] - ST["t0"] + 0.15, (ST["t1"] - ST["t0"]) * 0.85, 600, 6000, "streak", 0.5), ST["t0"], -9, 0.4)
     sfx.add(shimmer(1.3, "glowshim"), J["viewer"]["glow"], -9, -0.1); cues.append({"t": J["viewer"]["glow"], "kind": "glow"})
     for kf in J["keyframes"]:
-        sfx.add(zap(), kf["t"] - 0.03, -10, 0.0)
+        sfx.add(zap(), kf["t"] - 0.075, -10, 0.0)   # the beam fires at kf.t − 0.08 (fx.beams)
         music.add(bell(hz(kf["note"]), 1.1, 1.8), kf["t"] + 0.02, -9, 0.15)
         cues.append({"t": kf["t"], "kind": "zap", "note": kf["note"]})
     V = J["viewer"]

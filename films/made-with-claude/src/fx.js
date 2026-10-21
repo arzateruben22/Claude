@@ -34,8 +34,8 @@ export function buildFX(J, world, scene) {
   const s = SPRITE_PX / J.ui.unitsPerWorld;               // 0.12 world
   const spriteW = world(J.mascot[0].at[0], J.mascot[0].at[1]);
   const pivotZ = spriteW.z + (SPRITE.length / 2) * s;      // southern (feet) edge
-  const voxGeo = new RoundedBoxGeometry(1, 1, 1, 2, 0.12);
-  const voxMat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#d2603a"), roughness: 0.5, emissive: new THREE.Color("#ff8a5c"), emissiveIntensity: 0 });
+  const voxGeo = new RoundedBoxGeometry(1, 1, 1, 2, 0.06);
+  const voxMat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#d97757"), roughness: 0.5, emissive: new THREE.Color("#e3805f"), emissiveIntensity: 0 });
   const voxInk = new THREE.MeshStandardMaterial({ color: new THREE.Color("#140b08"), roughness: 0.3 });
   const vBody = new THREE.InstancedMesh(voxGeo, voxMat, vox.length);
   const vEye = new THREE.InstancedMesh(voxGeo, voxInk, vox.length);
@@ -49,13 +49,13 @@ export function buildFX(J, world, scene) {
     const pA = (t - ex.t0) / 0.3;                            // extrude 1.50–1.80
     const pB = easeInOut((t - (ex.t0 + 0.28)) / 0.15);       // stand up 1.78–1.93
     const flash = clamp01((t - (ex.t1 - 0.08)) / 0.05);      // glow hot, then collapse into the mascot
-    voxMat.emissiveIntensity = 0.25 * clamp01(pA) + 3.0 * flash;
+    voxMat.emissiveIntensity = 0.35 * (1 - clamp01(pA)) + 0.25 * clamp01(pA) + 3.0 * flash;
     const theta = (-Math.PI / 2) * (1 - pB);                 // lying → standing about the feet line
     let nb = 0, ne = 0;
     vox.forEach((v, k) => {
       const dist = Math.hypot(v.i - W / 2 + 0.5, v.j - H / 2 + 0.5) / 7;
       const grow = easeOut((pA - dist * 0.45) / 0.55);
-      const depth = 0.02 + (v.eye ? 0.35 : 0.62) * grow;      // thickness (local z when standing)
+      const depth = 0.02 + (v.eye ? 0.66 : 0.62) * grow;      // thickness (local z when standing)
       const lx = (v.i - W / 2 + 0.5) * s;
       const ly = (H - 1 - v.j + 0.5) * s;                    // bottom row at the feet line
       const lz = depth / 2;
@@ -145,12 +145,12 @@ export function buildFX(J, world, scene) {
   scene.add(pop, wave);
   fx.breakout = (t, P) => {
     const ex = J.mascot.find((m) => m.type === "extrude");
-    const d = t - (ex.t1 - 0.04);
-    pop.visible = d >= 0 && d < 0.12;
+    const d = t - (ex.t1 - 0.07);
+    pop.visible = d >= 0 && d < 0.09;
     if (pop.visible) {
       pop.position.set(spriteW.x, 0.55, pivotZ + 0.3);
-      pop.scale.setScalar(1.6 + 2.6 * easeOut(d / 0.12));
-      popMat.opacity = 0.9 * Math.pow(1 - d / 0.12, 1.5);
+      pop.scale.setScalar(1.6 + 2.6 * easeOut(d / 0.09));
+      popMat.opacity = 0.6 * Math.pow(1 - d / 0.09, 1.5);
     }
     const w = t - ex.t1;
     wave.visible = w >= 0 && w < 0.5;
@@ -176,8 +176,8 @@ export function buildFX(J, world, scene) {
 
   /* ── beams + keyframes + rings ── */
   const beamCore = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 1, 10, 1, true), emissive("#f2f8ff", 4.0));
-  const beamGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1, 14, 1, true),
-    new THREE.MeshBasicMaterial({ color: new THREE.Color("#9fd0ff").multiplyScalar(1.2), transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const beamGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1, 14, 1, true),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color("#9fd0ff").multiplyScalar(1.2), transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false }));
   scene.add(beamCore, beamGlow);
   const keyGeo = new RoundedBoxGeometry(0.2, 0.11, 0.2, 3, 0.035);
   const keyMat = emissive("#f4faff", 2.6);
@@ -228,30 +228,33 @@ export function buildFX(J, world, scene) {
   const p0 = new THREE.Vector3(a0.x, 0.25, a0.z), p2 = new THREE.Vector3(a1.x, 0.1, a1.z);
   const p1 = p0.clone().lerp(p2, 0.5); p1.y = ST.arc;
   const curve = new THREE.QuadraticBezierCurve3(p0, p1, p2);
-  const TRAIL = 36;
+  const TRAIL = 96, LAG = 0.0045;
   const orbs = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 16, 12),
     new THREE.MeshBasicMaterial({ color: new THREE.Color("#ffd2b8").multiplyScalar(3.2), transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }), TRAIL);
   orbs.frustumCulled = false; scene.add(orbs);
-  const impact = new THREE.Mesh(new THREE.RingGeometry(0.85, 1, 64),
+  const impact = new THREE.Mesh(new THREE.RingGeometry(0.94, 1, 96),
     new THREE.MeshBasicMaterial({ color: new THREE.Color("#ff9d6e").multiplyScalar(1.6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
   impact.rotation.x = -Math.PI / 2; impact.position.copy(p2).setY(0.03); scene.add(impact);
   fx.streak = (t) => {
     const p = (t - ST.t0) / (ST.t1 - ST.t0);
-    orbs.visible = p > 0 && p < 1.25;
+    orbs.visible = p > 0 && p < 1 + TRAIL * LAG;
     if (orbs.visible) {
       for (let i = 0; i < TRAIL; i++) {
-        const q = easeInOut(p) - i * 0.012;
-        const on = q > 0 && q <= 1 && p <= 1.0 + i * 0.012;
-        dummy.position.copy(curve.getPoint(clamp01(q)));
+        const pi = p - i * LAG;                              // where the head was i·LAG ago
+        const q = easeInOut(clamp01(pi));
+        const on = pi > 0 && pi < 1;
+        dummy.position.copy(curve.getPoint(q));
         dummy.rotation.set(0, 0, 0);
-        dummy.scale.setScalar(on ? 0.11 * (1 - i / TRAIL) + 0.01 : 0.0001);
+        // orbs shrink as they reach the title, so the tail doesn't pile up into one hot blob at the eased end
+        const land = 0.25 + 0.75 * clamp01((1 - pi) / 0.12) ** 2;
+        dummy.scale.setScalar(on ? (0.085 * (1 - i / TRAIL) + 0.03) * land : 0.0001);
         dummy.updateMatrix(); orbs.setMatrixAt(i, dummy.matrix);
       }
       orbs.instanceMatrix.needsUpdate = true;
     }
     const d = t - ST.t1;
-    impact.material.opacity = d >= 0 && d < 0.4 ? 0.55 * Math.pow(1 - d / 0.4, 2) : 0;
-    impact.scale.setScalar(0.3 + 2.6 * easeOut(d / 0.4));
+    impact.material.opacity = d >= 0 && d < 0.3 ? 0.16 * Math.pow(1 - d / 0.3, 2) : 0;
+    impact.scale.setScalar(0.3 + 2.6 * easeOut(d / 0.3));
   };
 
   /* ── contact shadow ── */

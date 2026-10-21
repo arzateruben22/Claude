@@ -51,6 +51,35 @@ export const SPRITE = [
   "..X.X..X.X.."
 ];
 export const SPRITE_PX = 12;     // UI px per sprite pixel
+// title lockup per format: one line in 16:9; stacked MADE WITH / CLAUDE in 9:16, so the portrait end card
+// can frame it from ~1.5× closer (bigger type, bigger mascot). y values are offsets from the title anchor.
+const FULL_TITLE = "MADE WITH CLAUDE";
+const LAYOUTS = {
+  wide: { lines: [{ from: 0, to: 16, size: 78, y: 0 }], sparkY: -128, swooshY: 64, opusY: 126, opusSize: 44 },
+  tall: { lines: [{ from: 0, to: 9, size: 88, y: -50 }, { from: 10, to: 16, size: 128, y: 62 }], sparkY: -182, swooshY: 144, opusY: 206, opusSize: 54 }
+};
+let LAYOUT = LAYOUTS.wide;
+export function setFormat(fmt) { LAYOUT = fmt === "9x16" ? LAYOUTS.tall : LAYOUTS.wide; }
+function lineWidth(ctx, L) {
+  font(ctx, L.size, 800, "Montserrat"); ctx.letterSpacing = "2px";
+  return ctx.measureText(FULL_TITLE.slice(L.from, L.to)).width;
+}
+// title + OPUS extents in UI px, measured with the drawing fonts (QA probes use the real glyph boxes):
+// title = the whole lockup, titleCap = the line with the smallest capitals (the readability floor)
+export function titleMetrics() {
+  const ctx = document.createElement("canvas").getContext("2d");
+  const cx = COMP.x + COMP.w / 2, cy = COMP.y + COMP.h / 2 - 18;
+  const ws = LAYOUT.lines.map((L) => lineWidth(ctx, L) - 2);
+  const top = Math.min(...LAYOUT.lines.map((L) => L.y - L.size * 0.35)), bot = Math.max(...LAYOUT.lines.map((L) => L.y + L.size * 0.35));
+  const small = LAYOUT.lines.reduce((a, L, i) => (L.size < LAYOUT.lines[a].size ? i : a), 0);
+  font(ctx, LAYOUT.opusSize, 600, "Montserrat"); ctx.letterSpacing = "16px";
+  const ow = ctx.measureText("OPUS 5.5").width - 16;
+  return {
+    title: { cx, cy: cy + (top + bot) / 2, w: Math.max(...ws), cap: bot - top },
+    titleCap: { cx, cy: cy + LAYOUT.lines[small].y, w: ws[small], cap: LAYOUT.lines[small].size * 0.7 },
+    opus: { cx: cx + 8, cy: cy + LAYOUT.opusY, w: ow, cap: LAYOUT.opusSize * 0.7 }
+  };
+}
 
 /* ─── drawing helpers ─── */
 
@@ -216,7 +245,7 @@ export function drawSprite(ctx, cx, cy, px, alpha, squash = 0) {
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(cx, cy + (h * px) / 2);
-  ctx.scale(1 + squash * 0.12, 1 - squash * 0.12);
+  ctx.scale(1 + squash * 0.28, 1 - squash * 0.28);
   ctx.translate(0, -(h * px) / 2);
   for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
     const ch = SPRITE[j][i];
@@ -261,7 +290,9 @@ function drawViewer(ctx, P, s) {
   const mx = cx0 + cw / 2, my = cy0 + ch / 2;
 
   if (v.sprite > 0) {
+    ctx.save(); ctx.shadowColor = "rgba(240,140,100,0.85)"; ctx.shadowBlur = 16;
     drawSprite(ctx, COMP.x + COMP.w / 2 - o.x, COMP.y + COMP.h / 2 - 0.5 - o.y, SPRITE_PX, v.sprite, v.wiggle);
+    ctx.restore();
     // selection box + handles
     const bw = SPRITE[0].length * SPRITE_PX + 8, bh = SPRITE.length * SPRITE_PX + 8;
     ctx.globalAlpha = v.sprite;
@@ -289,32 +320,34 @@ function drawViewer(ctx, P, s) {
     ctx.save();
     ctx.translate(mx, my - 18 + lift);
     ctx.scale(scale, scale);
-    const full = "MADE WITH CLAUDE";
-    const shown = full.slice(0, T.chars);
-    font(ctx, 78, 800, "Montserrat");
-    ctx.letterSpacing = "2px";
-    const fw = ctx.measureText(full).width;
     ctx.textAlign = "left"; ctx.textBaseline = "middle";
     const glowA = T.glow;
-    if (glowA > 0) {
-      ctx.shadowColor = `rgba(255,214,190,${0.95 * glowA})`;
-      ctx.shadowBlur = 26 + 18 * glowA + 6 * T.breathe;
-      ctx.fillStyle = C.white;
-      ctx.fillText(shown, -fw / 2, 0);
-      ctx.shadowBlur = 8; ctx.fillText(shown, -fw / 2, 0);
+    let fw = 0, caret = null;
+    for (const L of LAYOUT.lines) {
+      const lw = lineWidth(ctx, L);                          // also sets the line's font
+      fw = Math.max(fw, lw);
+      const shown = FULL_TITLE.slice(L.from, Math.min(L.to, T.chars));
+      if (T.chars >= L.from && T.chars <= L.to) caret = { x: -lw / 2 + ctx.measureText(shown).width + 4, L };
+      if (!shown) continue;
+      if (glowA > 0) {
+        ctx.shadowColor = `rgba(255,214,190,${0.72 * glowA})`;
+        ctx.shadowBlur = (18 + 12 * glowA + 4 * T.breathe) * (L.size / 78);
+        ctx.fillStyle = C.white;
+        ctx.fillText(shown, -lw / 2, L.y);
+      }
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = glowA > 0 ? "#fbf6f1" : "#d8d3cf";
+      ctx.fillText(shown, -lw / 2, L.y);
     }
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = glowA > 0 ? "#fbf6f1" : "#d8d3cf";
-    ctx.fillText(shown, -fw / 2, 0);
-    if (T.chars < full.length && T.caret) {
-      const sw = ctx.measureText(shown).width;
-      rect(ctx, -fw / 2 + sw + 4, -34, 4, 68, C.blueText);
+    if (T.chars < FULL_TITLE.length && T.caret && caret) {
+      const ch = caret.L.size * 0.87;
+      rect(ctx, caret.x, caret.L.y - ch / 2, 4, ch, C.blueText);
     }
     ctx.letterSpacing = "0px";
     // spark
     if (T.spark > 0) {
       const k = T.spark;
-      starburst(ctx, 0, -128, 46 * k, (1 - k) * 1.2 + 0.02 * T.breathe, C.coral, 18 + 14 * glowA);
+      starburst(ctx, 0, LAYOUT.sparkY, 46 * k, (1 - k) * 1.2 + 0.02 * T.breathe, C.coral, 18 + 14 * glowA);
     }
     // swoosh
     if (T.swoosh > 0) {
@@ -325,7 +358,7 @@ function drawViewer(ctx, P, s) {
       const x0 = -fw * 0.27, x1 = fw * 0.27, steps = 40, n = Math.max(1, Math.round(steps * T.swoosh));
       for (let i = 0; i <= n; i++) {
         const p = i / steps, x = x0 + (x1 - x0) * p;
-        const y = 64 + 16 * Math.sin(p * Math.PI) - 10 * p;
+        const y = LAYOUT.swooshY + 16 * Math.sin(p * Math.PI) - 10 * p;
         i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       }
       ctx.stroke(); ctx.restore();
@@ -334,12 +367,12 @@ function drawViewer(ctx, P, s) {
     if (T.opus > 0) {
       ctx.save();
       ctx.globalAlpha = T.opus;
-      font(ctx, 44, 600, "Montserrat");
+      font(ctx, LAYOUT.opusSize, 600, "Montserrat");
       ctx.letterSpacing = `${16 + 14 * (1 - T.opus)}px`;
       ctx.textAlign = "center";
-      ctx.shadowColor = `rgba(255,214,190,${0.8 * glowA})`; ctx.shadowBlur = 18;
+      ctx.shadowColor = `rgba(255,214,190,${0.6 * glowA})`; ctx.shadowBlur = 12;
       ctx.fillStyle = "#f6f1ec";
-      ctx.fillText("OPUS 5.5", 8, 126);
+      ctx.fillText("OPUS 5.5", 8, LAYOUT.opusY);
       ctx.restore();
     }
     ctx.restore();
@@ -414,7 +447,7 @@ function drawRight(ctx, P, s) {
     const y = 408 + i * 34;
     if (glowRow) {
       const h = S.highlight;
-      rrect(ctx, 12, y - 15, P.w - 24, 30, 3, `rgb(${Math.round(29 + 60 * h)},${Math.round(95 + 70 * h)},${Math.round(168 + 70 * h)})`);
+      rrect(ctx, 12, y - 15, P.w - 24, 30, 3, `rgb(${Math.round(29 + 20 * h)},${Math.round(95 + 25 * h)},${Math.round(168 + 30 * h)})`);
       if (h > 0) { ctx.save(); ctx.shadowColor = "rgba(120,190,255,0.9)"; ctx.shadowBlur = 24 * h; rrect(ctx, 12, y - 15, P.w - 24, 30, 3, null, "#9fd0ff", 2); ctx.restore(); }
       icon(ctx, "fx", 56 + indent * 20, y, "#ffffff", 1.0);
       text(ctx, label, 82 + indent * 20, y, { size: 16, w: 600, c: "#ffffff" });
@@ -534,7 +567,7 @@ export function uiState(t, J) {
   s.search.highlight = t >= hl ? Math.max(0.0, 1 - (t - hl) / 0.6) : 0;
   // viewer
   const sp = V.spriteUntil;
-  s.viewer.sprite = t < sp ? 1 : 0;
+  s.viewer.sprite = t < sp ? 1 : Math.max(0, 1 - (t - sp) / 0.1);
   const wig = (J.mascot.find((m) => m.type === "sprite") || {}).wiggle || [];
   s.viewer.wiggle = wig.reduce((m, w) => (t >= w && t < w + 0.3 ? Math.max(m, Math.sin(((t - w) / 0.3) * Math.PI) * (1 - (t - w) / 0.3)) : m), 0);
   s.viewer.crack = t >= V.crack ? Math.max(0, 1 - (t - V.crack) / 0.35) : 0;
