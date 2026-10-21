@@ -11,6 +11,7 @@ import { buildClasses, wheelGeometry, CarClass, PAINTS } from './carModels';
 import * as M from '../../preview/car-mats';
 import { clamp, rng, smoothstep } from '../util';
 import { sweptContact } from './contact';
+import { IDM } from './limits';
 
 export interface TrafficCar {
   cls: number; path: Path; s: number; d: number; v: number; v0: number;
@@ -31,7 +32,7 @@ export interface Contact { car: TrafficCar; speed: number; nx: number; nz: numbe
 export interface PassEvent { car: TrafficCar; clean: boolean; close: boolean; gap: number; rel: number }
 export interface TrafficLevel { perKmLane: number; bold: number }
 
-const A = 1.6, B = 3.2;
+const A = IDM.accel, B = IDM.comfort;
 
 export class Traffic {
   readonly group = new THREE.Group();
@@ -181,7 +182,7 @@ export class Traffic {
         if (c.stopT > 0) c.stopT -= dt;
         let v0 = c.stopT > 0 ? 0 : c.v0 * this.pace;
         const rc = c.racer;
-        let aMax = A * (c.bold ? 1.4 : 1);
+        let aMax = A * (c.bold ? IDM.boldAccel : 1);
         if (rc) {
           // racers: flat out, but no faster than the curves ahead allow
           let k = 0;
@@ -192,8 +193,8 @@ export class Traffic {
         const s0 = c.bold || rc ? 2 : 3, th = rc ? 0.6 : c.bold ? 0.85 : 1.25;
         const sStar = s0 + c.v * th + (c.v * (c.v - vl)) / (2 * Math.sqrt(aMax * B));
         let acc = aMax * (1 - Math.pow(c.v / Math.max(1, v0), 4)) - (gap < 1e8 ? aMax * Math.pow(Math.max(sStar, 0) / Math.max(gap, 0.5), 2) : 0);
-        acc = clamp(acc, -10, aMax);
-        if (c.stopT > 0) acc = Math.min(acc, -4);
+        acc = clamp(acc, -IDM.maxBrake, aMax);
+        if (c.stopT > 0) acc = Math.min(acc, -IDM.stopBrake);
         c.acc = acc;
         c.v = rc && rc.hold ? 0 : Math.max(0, c.v + acc * dt);       // on the grid: held until GO
         c.s += c.v * dt;
@@ -269,7 +270,9 @@ export class Traffic {
     for (let i = 0; i < cars.length && n < 8; i++) {
       const c = cars[i];
       const dx = c.x - player.x, dz = c.z - player.z;
-      if (Math.abs(dx) > reach || Math.abs(dz) > reach || Math.abs(c.y - player.y) > 2.5) continue;
+      // another level of road (a deck above, a road below) is 2.5 m away from the road under you: a hop's altitude is
+      // not another level (a semi's trailer stands 4.1 m tall), so whether a hop clears a roof is contact.ts's to say
+      if (Math.abs(dx) > reach || Math.abs(dz) > reach || Math.abs(c.y - (player.y - player.altitude)) > 2.5) continue;
       const cl = this.classes[c.cls];
       if (n >= this.contacts.length) this.contacts.push({ car: c, speed: 0, nx: 0, nz: 0, depth: 0 });
       const out = this.contacts[n];

@@ -16,6 +16,11 @@ interface RawNet {
 }
 
 export interface Sign { path: Path; s: number; side: 'L' | 'R'; ramp: Path; text: string[] }
+// the guide-sign gantries over a carriageway: this many metres before each exit (the "1/2 MILE" sign, then the "EXIT
+// ONLY" or "LEFT EXIT" one), none closer than GANTRY_MIN_S to the road's start. Roads.ts draws them where these say;
+// the OC Hypercar's Thrust Hop (Game.structureOver) refuses under them from the same numbers
+export const GANTRY_AHEAD = [800, 260] as const;
+export const GANTRY_MIN_S = 30;
 export interface Overpass { name: string; cls: string; ax: number; az: number; bx: number; bz: number; y: number; w: number; id: number }
 export interface Hit { path: Path; s: number; d: number; dist: number }
 export interface Wall { ax: number; az: number; bx: number; bz: number; nx: number; nz: number; y: number; capA: boolean; capB: boolean }
