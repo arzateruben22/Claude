@@ -159,8 +159,34 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   at azimuth 292° (was 3° at 258°, behind a 6.9° crest, so it never showed): 292° is where the ring's crest is
   lowest in the west (5.1°), and 5.5° keeps daylight at 0.91 (`smoothstep(-0.1, 0.14, alt)`), so the preset stays
   dimmer and warmer than day, which the regression suite's sunset check requires.
-- **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
-  a camera 150 m above the car.
+- **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or the sky camera: a second render
+  of the scene from straight above the car, heading-up, the car 13 % below the middle (where the map puts its arrow),
+  a 28° lens 80-140 m up so the window spans 40 m of road stopped and 70 m from about 110 mph (`Game.prepareSky`).
+  - **Where it draws** (`Game.skyBox`): the frame's own box from the DOM (inside its 1 px border), mapped to the
+    canvas's drawing-buffer pixels by the canvas's box on screen and its buffer size, never from the pixel ratio. So
+    the render scale (adaptive or forced), a preset's pixel-ratio cap, the HUD style, the phone layout and a resize all
+    land it in the frame; when the Minimal HUD slides the frame off the screen nothing is drawn. Scissor and viewport
+    on the canvas are passed as `(n + 0.5) / pixelRatio`, which three's multiply-and-floor turns back into exactly n.
+    (The old code multiplied by the pixel ratio itself, so three applied it twice and the picture landed scaled about
+    the screen's bottom left corner by the ratio wherever it wasn't 1: toward the middle of the screen, over the
+    dashboard, below 1, and off the top right above 1, leaving the frame empty either way.)
+  - **How it draws** (`Game.drawSky`): Medium straight onto the canvas after the main view; High and Ultra inside the
+    composer (`SkyPass`, after the ambient occlusion, before the bloom and the output pass), so it gets the same tone
+    mapping and grade; Low (the phone tier) every other frame into a window-sized buffer of its own flagged as an XR
+    render target (three 0.160 then gives every material the canvas's shader variant: tone mapping and sRGB in the
+    shader; stored as plain RGBA8), copied into the window each frame with one draw call. The fog is pushed out by the
+    camera's height so the ground has the haze it has near the car in the main view; the shadow maps are reused; the
+    sky dome, clouds, ridges, stars and rain, the cockpit, arms and wheels, the route chevrons and every kind of
+    traffic car with none near the window (and all traffic wheels) are hidden for it. The sun's flare goes round the
+    window. Cost on Low: about 32 extra draw calls and 83k triangles a frame on average (see the progress log).
+  - **The "you" ring** (`Game.skyMark`): a thin ring in the HUD's sunset orange flat round the car, on layer 1, which
+    only the sky camera has enabled (the main view, the mirrors, the shadow maps, the ambient occlusion and the flare's
+    rays all use layer 0). It's drawn last without a depth test, so it shows where you are under an overpass, at night
+    and among traffic of your colour, and it's scaled with the span so it's the same size in the window at every speed
+    (17 % of the window across, a line of about 2 css px in the default window).
+  - **Counts:** `drawSky` puts the renderer's draw-call and triangle counts back to the main view's after it draws, so
+    `stats.calls` and the frame panel report the main view; the sky camera's own are in `stats.sky`.
+  - **Testing aid:** `skyProbe` (a colour) fills the window's box instead of the view on every path.
 
 ## UI
 

@@ -453,12 +453,39 @@ export class Environment {
     this.flareStats.hit = hit; this.flareStats.rayMs = performance.now() - t0;
   }
 
-  // draw the flare over the finished frame (after the composer or the plain render; before the corner window)
-  renderFlare() {
+  // the corner's sky camera looks straight down from a couple of hundred metres: the sky dome, the cloud deck, the ridge
+  // ring and the stars are all behind it, and the rain is a box of streaks round the main camera that would read as a
+  // grey square from up there. hideBackdrop() hides whichever of them are showing (no draw calls, and none of the sky
+  // shader's cost); showBackdrop() puts exactly those back.
+  private backdropHidden: THREE.Object3D[] = [];
+  hideBackdrop() {
+    for (const o of [this.sky, this.clouds, this.mountains, this.stars, this.rain]) if (o && o.visible) { o.visible = false; this.backdropHidden.push(o); }
+  }
+  showBackdrop() {
+    for (const o of this.backdropHidden) o.visible = true;
+    this.backdropHidden.length = 0;
+  }
+
+  // draw the flare over the finished frame (after the composer or the plain render). `hole` is the corner's sky camera
+  // (the canvas's buffer pixels, GL's origin at the bottom left): the flare is the main camera's lens, so it goes round
+  // that window, in up to four scissored bands, rather than over it
+  renderFlare(hole: { x: number; y: number; w: number; h: number } | null = null) {
     if (!this.flare.visible) return;
     const r = this.renderer, ac = r.autoClear;
     r.autoClear = false;
-    r.render(this.flareScene, this.flareCam);
+    if (!hole) r.render(this.flareScene, this.flareCam);
+    else {
+      const W = r.domElement.width, H = r.domElement.height, { x, y, w, h } = hole;
+      // three multiplies a scissor by the pixel ratio and floors it: half a pixel in keeps it on these whole pixels
+      const k = (n: number) => (n + 0.5) / r.getPixelRatio();
+      r.setScissorTest(true);
+      for (const [bx, by, bw, bh] of [[0, 0, x, H], [x + w, 0, W - x - w, H], [x, 0, w, y], [x, y + h, w, H - y - h]]) {
+        if (bw <= 0 || bh <= 0) continue;
+        r.setScissor(k(bx), k(by), k(bw), k(bh));
+        r.render(this.flareScene, this.flareCam);
+      }
+      r.setScissorTest(false);
+    }
     r.autoClear = ac;
   }
 

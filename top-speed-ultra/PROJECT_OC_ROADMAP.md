@@ -40,7 +40,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | --- | --- | --- |
 | Five traffic levels | Done | None, Light, Moderate, Heavy and Expert. Expert has 45% aggressive drivers: shorter gaps, quicker lane changes. |
 | Deterministic traffic | Done | Seeded. Time Trial always uses the same seed and start. |
-| Mini camera | Done | The corner window is either a road map or a live sky camera 150 m up. Tap it to switch. Three sizes. |
+| Mini camera | Done | The corner window is either a road map or a live sky camera straight above the car (heading-up, 40-70 m of road). Tap it to switch. Three sizes. |
 | Speed Survival scoring | Done | The streak counts time over 100 mph. Clean passes and near misses build a combo. A real crash ends the run. |
 | Exploit resistance | Done | Each car scores once. Stopped cars don't count. No score while wrong-way. Walls and contact reset the streak. The clock pauses with the game. |
 | Local leaderboard | Done | Top ten per mode, labelled "Local leaderboard · this device only". |

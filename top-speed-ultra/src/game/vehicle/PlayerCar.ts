@@ -185,6 +185,21 @@ export class PlayerCar {
     for (const o of this.outsideParts) o.visible = v;
     if (this.interior) for (const m of this.interior.mirrors) m.active = !v;
   }
+  // the corner's sky camera sees the car from straight above: its outside (the glass and the cabin silhouette under
+  // it, as from any outside view), not the cockpit, the driver's arms or the wheels, which sit under the roof and the
+  // body and would only cost draw calls. skyView(true) before that render; skyView(false, outside) after it puts back
+  // what the main camera had.
+  private skyHidden: THREE.Object3D[] = [];
+  skyView(on: boolean, outside = false) {
+    if (on) {
+      this.setOutsideView(true);
+      for (const o of [this.interior?.group, this.arms?.group, ...this.wheels.map((w) => w.steer)]) if (o && o.visible) { o.visible = false; this.skyHidden.push(o); }
+      return;
+    }
+    for (const o of this.skyHidden) o.visible = true;
+    this.skyHidden.length = 0;
+    this.setOutsideView(outside);
+  }
 
   // The cabin as the sun's lens flare sees it: a box with the glass as openings (the windscreen under its header
   // lip, the side windows, the rear screen, the Vela's glass roof) and the rear-view mirror hanging in it. The real
