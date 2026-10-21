@@ -26,14 +26,16 @@ What it does today:
   **Drive with** (Free Drive only) puts you 80 m behind that driver on their carriageway.
 - **The horn.** G or the horn button: you hear yours, and drivers within 500 m hear it panned to where you are, with
   "Name honked". One honk every 1.5 s at most.
-- **Accounts you control.** Change your password, or delete your account (name, email and password hash) from the
-  Account panel. Names with slurs, profanity or staff-like names are refused; the owner can suspend a driver.
+- **Accounts you control.** Change your password, set or remove the email used for resets, or delete your account
+  (name, email and password hash) from the Account panel. **Forgot password?** emails a 6-digit code (15 minutes, 5
+  tries) through Resend when `RESEND_KEY` and `MAIL_FROM` are set (a sender on a domain verified with Resend); the
+  server gives the same answer whether or not a name exists or has an email. Names with slurs, profanity or staff-like names are refused; the owner can suspend a driver.
 - **The ladder, measured.** The server records every hour (peak, line, CPU, memory, dropped poses, bytes) and says
   when the cap can go up a rung (`/api/ladder`, `server/live-status.sh`).
 - **Restarts are painless.** A restart (an update, a reboot) closes sockets with a code the game reconnects on.
 
-What it doesn't do yet (honest list): email verification and password reset (needs an email sender; Resend's
-free tier covers it), chat, races against real people, an online leaderboard (that needs anti-cheat, and the relay
+What it doesn't do yet (honest list): email verification (an email is optional and only used for password reset),
+chat, races against real people, an online leaderboard (that needs anti-cheat, and the relay
 has none worth the name), and more than one lobby.
 
 ## The realistic mode's feeds (`now.mjs`)
