@@ -855,25 +855,25 @@ export const SCENES = {
     ],
     css: `
 .aft { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
-.d1 { display: flex; align-items: stretch; gap: 3vmin; }
-.d1 .big1 { flex: none; width: 26vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
-.d1 .big1 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .d1 .big1 span { font-size: 2.4vmin; font-weight: 600; margin-top: 1vmin; }
-.d1 .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
-.d1 .lab { font-size: 2.3vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
-.d1 .chips { display: flex; flex-wrap: wrap; gap: 1.4vmin; }
-.d1 .ch { position: relative; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.7vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.d1 { display: flex; align-items: stretch; gap: 4vmin; }
+.d1 .big1 { flex: none; width: 34vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
+.d1 .big1 b { font-size: 9.5vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .d1 .big1 span { font-size: 2.7vmin; font-weight: 600; margin-top: 1.2vmin; }
+.d1 .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.d1 .lab { font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
+.d1 .chips { display: flex; flex-wrap: wrap; gap: 1.6vmin; }
+.d1 .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
 .d1 .ch.no { border-color: rgba(255,122,107,.6); } .d1 .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
 .d1 .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
 .days2 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1vmin; }
-.day2 { position: relative; border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin 1vmin 1.4vmin; text-align: center; opacity: 0; min-height: 17vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
-.day2 .d { font-size: 2.1vmin; color: #8e8e93; font-weight: 600; } .day2 .n { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.day2 { position: relative; border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.8vmin 1vmin 1.6vmin; text-align: center; opacity: 0; min-height: 21vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
+.day2 .d { font-size: 2.5vmin; color: #8e8e93; font-weight: 600; } .day2 .n { font-size: 4.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
 .day2.visit { background: #f4c9d6; border-color: #f4c9d6; } .day2.visit .d, .day2.visit .n { color: #1a1210; }
-.day2 .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
+.day2 .mark { width: 2.8vmin; height: 2.8vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
 .legend2 { display: flex; flex-wrap: wrap; gap: 1vmin 1.6vmin; }
-.legend2 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
-.legend2 i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; }
+.legend2 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.2vmin 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.8vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.legend2 i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; }
 .legend2 span.warn { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
-@media (orientation: portrait) { .aft { gap: 2.4vmin; } .d1 { flex-direction: column; gap: 2.4vmin; } .d1 .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2vmin; } .d1 .big1 b { font-size: 6vmin; } .d1 .big1 span { margin-top: 0; text-align: left; } .d1 .ch { font-size: 2.5vmin; } .days2 { grid-template-columns: repeat(4, 1fr); } .day2 { min-height: 11vmin; padding: 1vmin .6vmin .8vmin; gap: .4vmin; } .day2 .n { font-size: 3vmin; } .day2 .mark { width: 1.6vmin; height: 1.6vmin; margin-top: .2vmin; } .legend2 span { font-size: 2.1vmin; padding: .7vmin 1.3vmin; } }`,
+@media (orientation: portrait) { .aft { gap: 2.4vmin; } .d1 { flex-direction: column; gap: 2.4vmin; } .d1 .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2.2vmin; } .d1 .big1 b { font-size: 7vmin; } .d1 .big1 span { margin-top: 0; text-align: left; } .d1 .ch { font-size: 2.9vmin; } .days2 { grid-template-columns: repeat(4, 1fr); } .day2 { min-height: 14vmin; padding: 1.2vmin .6vmin 1vmin; gap: .5vmin; } .day2 .d { font-size: 2.2vmin; } .day2 .n { font-size: 3.6vmin; } .day2 .mark { width: 2vmin; height: 2vmin; margin-top: .2vmin; } .legend2 span { font-size: 2.5vmin; padding: .9vmin 1.6vmin; } }`,
     html: `
 <div class="aft">
   <div class="d1" id="d1">
@@ -927,37 +927,37 @@ export const SCENES = {
       { at: 13, name: "pressure", cap: "Light pressure. It should feel good, never hurt, and never leave marks. Skip over active breakouts, broken skin, or right after a peel." }
     ],
     css: `
-.ms { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6vmin; }
-.ms svg { width: 46vmin; height: 56vmin; flex: none; overflow: visible; }
-.ms .side { display: flex; flex-direction: column; gap: 1.8vmin; width: 60vmin; }
-.ms .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 1.2vmin; padding: 1.4vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; color: #f5f5f7; opacity: 0; }
+.ms { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8vmin; }
+.ms svg { width: 50vmin; height: 62vmin; flex: none; overflow: visible; }
+.ms .side { display: flex; flex-direction: column; gap: 2.2vmin; width: 66vmin; }
+.ms .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 1.2vmin; padding: 1.8vmin 3vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.4vmin; font-weight: 600; color: #f5f5f7; opacity: 0; }
 .ms .pill.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; } .ms .pill.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; } .ms .pill.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; }
-.ms .meter { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: 0; }
-.ms .meter b { display: block; font-size: 2.4vmin; color: #8e8e93; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.2vmin; }
-.ms .bar { position: relative; height: 2.4vmin; border-radius: 999px; background: linear-gradient(90deg, #32d74b 0%, #32d74b 38%, #ffd27a 60%, #ff7a6b 100%); opacity: .9; }
-.ms .bar i { position: absolute; top: -1vmin; width: 4.4vmin; height: 4.4vmin; margin-left: -2.2vmin; border-radius: 50%; background: #fff; border: .5vmin solid #111113; box-shadow: 0 .4vmin 1.2vmin rgba(0,0,0,.5); }
-.ms .bar em { position: absolute; top: 3.6vmin; font-style: normal; font-size: 2.2vmin; color: #a1a1a6; white-space: nowrap; } .ms .bar em.r { right: 0; } .ms .bar em.l { left: 0; }
-.ms .meter .sp { height: 5.5vmin; }
-@media (orientation: portrait) { .ms { flex-direction: column; gap: 3vmin; } .ms svg { width: 50vmin; height: 61vmin; } .ms .side { width: 100%; align-items: center; } .ms .pill { align-self: center; font-size: 2.6vmin; } .ms .meter { width: 100%; } }`,
+.ms .meter { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3.2vmin; opacity: 0; }
+.ms .meter b { display: block; font-size: 2.7vmin; color: #8e8e93; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.2vmin; }
+.ms .bar { position: relative; height: 3vmin; border-radius: 999px; background: linear-gradient(90deg, #32d74b 0%, #32d74b 38%, #ffd27a 60%, #ff7a6b 100%); opacity: .9; }
+.ms .bar i { position: absolute; top: -1.2vmin; width: 5.4vmin; height: 5.4vmin; margin-left: -2.7vmin; border-radius: 50%; background: #fff; border: .5vmin solid #111113; box-shadow: 0 .4vmin 1.2vmin rgba(0,0,0,.5); }
+.ms .bar em { position: absolute; top: 4.4vmin; font-style: normal; font-size: 2.6vmin; color: #a1a1a6; white-space: nowrap; } .ms .bar em.r { right: 0; } .ms .bar em.l { left: 0; }
+.ms .meter .sp { height: 6.5vmin; }
+@media (orientation: portrait) { .ms { flex-direction: column; gap: 4vmin; } .ms svg { width: 60vmin; height: 74vmin; } .ms .side { width: 100%; align-items: center; gap: 2vmin; } .ms .pill { align-self: center; font-size: 3vmin; padding: 1.5vmin 2.6vmin; } .ms .meter { width: 100%; } }`,
     html: `
 <div class="ms">
   <svg viewBox="0 0 100 124" fill="none">
-    <defs><radialGradient id="sheen" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff" stop-opacity=".55"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+    <defs><radialGradient id="sheen" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff" stop-opacity=".7"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f4c9d6"/></marker></defs>
     <path d="M38 86 L36 104 Q50 110 64 104 L62 86 Z" fill="#cfa58f"/>
     <path d="M20 112 Q50 100 80 112" stroke="#8e8e93" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
     <ellipse cx="50" cy="48" rx="31" ry="40" fill="#d9b5a0" stroke="rgba(255,255,255,.14)" stroke-width=".6"/>
     <rect x="47" y="38" width="6" height="18" rx="3" fill="rgba(0,0,0,.08)"/>
     <rect x="42" y="68" width="16" height="3" rx="1.5" fill="#b9786b"/>
     <ellipse id="sheen" cx="50" cy="48" rx="31" ry="40" fill="url(#sheen)" opacity="0"/>
-    <g id="drop" opacity="0"><path d="M63 20 q-4 6 -4 9 a4 4 0 0 0 8 0 q0 -3 -4 -9z" fill="#e2b08c"/></g>
-    <g id="arrows" stroke="#f4c9d6" stroke-width="1.6" stroke-linecap="round" fill="none">
+    <g id="drop" opacity="0"><path d="M63 14 q-7 10 -7 15 a7 7 0 0 0 14 0 q0 -5 -7 -15z" fill="#e2b08c"/><ellipse cx="60.5" cy="27" rx="1.6" ry="2.4" fill="#fff" opacity=".6"/></g>
+    <g id="arrows" stroke="#f4c9d6" stroke-width="2.4" stroke-linecap="round" fill="none" marker-end="url(#ah)">
       <path class="ar" d="M50 18 Q62 16 74 26"/><path class="ar" d="M50 18 Q38 16 26 26"/>
       <path class="ar" d="M50 50 Q64 46 76 54"/><path class="ar" d="M50 50 Q36 46 24 54"/>
       <path class="ar" d="M50 76 Q66 74 76 64"/><path class="ar" d="M50 76 Q34 74 24 64"/>
       <path class="ar dn" d="M70 86 Q68 98 72 110"/><path class="ar dn" d="M30 86 Q32 98 28 110"/>
     </g>
-    <g id="nodes" fill="#8fd3ff" opacity="0"><circle cx="72" cy="111" r="2.2"/><circle cx="28" cy="111" r="2.2"/><circle cx="50" cy="109" r="1.6"/></g>
-    <g id="skip" opacity="0"><circle cx="36" cy="60" r="3" fill="#d7585a"/><circle cx="62" cy="38" r="2.4" fill="#d7585a"/><circle cx="44" cy="30" r="2" fill="#d7585a"/><circle cx="36" cy="60" r="6" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/><circle cx="62" cy="38" r="5.2" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/><circle cx="44" cy="30" r="4.6" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/></g>
+    <g id="nodes" fill="#8fd3ff" opacity="0"><circle cx="72" cy="111" r="3"/><circle cx="28" cy="111" r="3"/><circle cx="50" cy="109" r="2.2"/></g>
+    <g id="skip" opacity="0"><circle cx="36" cy="60" r="3.6" fill="#d7585a"/><circle cx="62" cy="38" r="3" fill="#d7585a"/><circle cx="44" cy="30" r="2.6" fill="#d7585a"/><circle cx="36" cy="60" r="7.5" stroke="#ff7a6b" stroke-width="1.4" stroke-dasharray="2.5 2"/><circle cx="62" cy="38" r="6.5" stroke="#ff7a6b" stroke-width="1.4" stroke-dasharray="2.5 2"/><circle cx="44" cy="30" r="5.8" stroke="#ff7a6b" stroke-width="1.4" stroke-dasharray="2.5 2"/></g>
   </svg>
   <div class="side">
     <span class="pill rose" id="p-slip">a face oil or a rich serum</span>
@@ -976,13 +976,13 @@ export const SCENES = {
       // shot 0: a drop falls onto the cheek and spreads into a sheen
       const drop = $("#drop"), sheen = $("#sheen");
       if (i === 0) {
-        const fall = E.in(seg(lt, 0.8, 1.6)); drop.setAttribute("opacity", lt >= 0.8 && lt < 1.65 ? 1 : 0); drop.setAttribute("transform", "translate(0 " + (-14 + 14 * fall) + ")");
-        const spread = E.out(seg(lt, 1.6, 3.2)); sheen.setAttribute("opacity", spread); sheen.setAttribute("transform", "translate(" + (63 - 63 * spread) + " " + (30 - 30 * spread) + ") scale(" + (0.15 + 0.85 * spread) + ")"); sheen.setAttribute("transform-origin", "0 0");
+        const fall = E.in(seg(lt, 0.6, 1.7)); drop.setAttribute("opacity", lt >= 0.6 && lt < 1.75 ? 1 : 0); drop.setAttribute("transform", "translate(0 " + (-22 + 22 * fall) + ")");
+        const spread = E.out(seg(lt, 1.7, 3.6)); sheen.setAttribute("opacity", spread); sheen.setAttribute("transform", "translate(" + (63 - 63 * spread) + " " + (30 - 30 * spread) + ") scale(" + (0.15 + 0.85 * spread) + ")"); sheen.setAttribute("transform-origin", "0 0");
       } else { drop.setAttribute("opacity", 0); sheen.setAttribute("opacity", 1); sheen.removeAttribute("transform"); }
       const pill = (id, from, at) => { const el = $("#" + id); el.style.display = (i === from) ? "" : "none"; if (i === from) enter(el, lt, at, { y: 8 }); };
       pill("p-slip", 0, 1.8); pill("p-dry", 0, 3.6);
       // shot 1: the strokes draw from the center outward, then down the neck
-      $$(".ar").forEach((p, k) => { const L = +p.dataset.l; const dn = p.classList.contains("dn"); const at = dn ? 3.2 + (k - 6) * 0.3 : 0.6 + Math.floor(k / 2) * 0.7; const q = i > 1 ? 1 : i === 1 ? E.out(seg(lt, at, at + 0.9)) : 0; p.style.strokeDashoffset = L * (1 - q); p.style.opacity = i === 2 ? 0.45 : 1; });
+      $$(".ar").forEach((p, k) => { const L = +p.dataset.l; const dn = p.classList.contains("dn"); const at = dn ? 3.2 + (k - 6) * 0.3 : 0.6 + Math.floor(k / 2) * 0.7; const q = i > 1 ? 1 : i === 1 ? E.out(seg(lt, at, at + 0.9)) : 0; p.style.strokeDashoffset = L * (1 - q); p.style.opacity = q <= 0 ? 0 : i === 2 ? 0.45 : 1; });
       $("#nodes").setAttribute("opacity", i > 1 ? 0.8 : i === 1 ? E.out(seg(lt, 4.2, 4.8)) : 0);
       pill("p-out", 1, 1.4); pill("p-down", 1, 3.6);
       // shot 2: the pressure knob settles at light; the skip zones light red
@@ -1001,35 +1001,35 @@ export const SCENES = {
     ],
     css: `
 .aw { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
-.aw .d1 { display: flex; align-items: stretch; gap: 3vmin; }
-.aw .big1 { flex: none; width: 26vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
-.aw .big1 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .aw .big1 span { font-size: 2.4vmin; font-weight: 600; margin-top: 1vmin; }
-.aw .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
-.aw .lab { font-size: 2.3vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
-.aw .chips { display: flex; flex-wrap: wrap; gap: 1.4vmin; }
-.aw .ch { position: relative; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.7vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.aw .d1 { display: flex; align-items: stretch; gap: 4vmin; }
+.aw .big1 { flex: none; width: 34vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
+.aw .big1 b { font-size: 9.5vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .aw .big1 span { font-size: 2.7vmin; font-weight: 600; margin-top: 1.2vmin; }
+.aw .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.aw .lab { font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
+.aw .chips { display: flex; flex-wrap: wrap; gap: 1.6vmin; }
+.aw .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
 .aw .ch.no { border-color: rgba(255,122,107,.6); } .aw .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
 .aw .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vmin; }
-.vs { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.6vmin; display: flex; gap: 2.4vmin; align-items: center; opacity: 0; }
-.vs .patch { position: relative; flex: none; width: 16vmin; height: 16vmin; border-radius: 2vmin; background: #d9b5a0; overflow: hidden; }
-.vs .patch i { position: absolute; border-radius: 50%; background: #d7585a; width: 2vmin; height: 2vmin; margin: -1vmin 0 0 -1vmin; }
+.vs { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; display: flex; gap: 3vmin; align-items: center; opacity: 0; }
+.vs .patch { position: relative; flex: none; width: 20vmin; height: 20vmin; border-radius: 2vmin; background: #d9b5a0; overflow: hidden; }
+.vs .patch i { position: absolute; border-radius: 50%; background: #d7585a; width: 2.6vmin; height: 2.6vmin; margin: -1.3vmin 0 0 -1.3vmin; }
 .vs .patch i.pus { background: #f3e2a8; box-shadow: 0 0 0 .6vmin #d7585a; }
 .vs .patch .lift { position: absolute; left: 20%; top: 55%; width: 60%; height: 20%; border-radius: 1vmin; background: #c48a7a; opacity: 0; }
-.vs b { display: block; font-size: 3vmin; font-weight: 700; line-height: 1.12; } .vs span { display: block; font-size: 2.3vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
+.vs b { display: block; font-size: 3.6vmin; font-weight: 700; line-height: 1.12; } .vs span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
 .vs.ok b { color: #32d74b; } .vs.bad b { color: #ff7a6b; }
 .rh { display: flex; align-items: center; gap: 3vmin; }
 .wk7 { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 1vmin; }
-.wd { border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.4vmin .8vmin 1.2vmin; text-align: center; opacity: 0; display: flex; flex-direction: column; align-items: center; gap: .7vmin; min-height: 14vmin; }
-.wd .d { font-size: 2vmin; color: #8e8e93; font-weight: 600; } .wd .n { font-size: 3.2vmin; font-weight: 700; line-height: 1; }
-.wd .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; opacity: 0; }
-.dial { flex: none; width: 24vmin; height: 24vmin; border-radius: 50%; position: relative; background: conic-gradient(#f4c9d6 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); opacity: 0; }
+.wd { border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin .8vmin 1.4vmin; text-align: center; opacity: 0; display: flex; flex-direction: column; align-items: center; gap: .8vmin; min-height: 18vmin; }
+.wd .d { font-size: 2.4vmin; color: #8e8e93; font-weight: 600; } .wd .n { font-size: 4.2vmin; font-weight: 700; line-height: 1; }
+.wd .mark { width: 2.8vmin; height: 2.8vmin; border-radius: 50%; opacity: 0; }
+.dial { flex: none; width: 28vmin; height: 28vmin; border-radius: 50%; position: relative; background: conic-gradient(#f4c9d6 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); opacity: 0; }
 .dial::after { content: ""; position: absolute; inset: 3vmin; border-radius: 50%; background: #0d0d0f; }
-.dial b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 3.2vmin; font-weight: 700; line-height: 1.05; z-index: 1; } .dial b small { display: block; font-size: 2vmin; color: #a1a1a6; font-weight: 600; margin-top: .6vmin; }
+.dial b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 3.8vmin; font-weight: 700; line-height: 1.05; z-index: 1; } .dial b small { display: block; font-size: 2.3vmin; color: #a1a1a6; font-weight: 600; margin-top: .6vmin; max-width: 18vmin; }
 .lg13 { display: flex; flex-wrap: wrap; gap: 1vmin 1.6vmin; }
-.lg13 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
-.lg13 i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; } .lg13 span.warn { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
-@media (orientation: portrait) { .aw { gap: 2.4vmin; } .aw .d1 { flex-direction: column; gap: 2.4vmin; } .aw .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2vmin; } .aw .big1 b { font-size: 6vmin; } .aw .big1 span { margin-top: 0; text-align: left; } .aw .ch { font-size: 2.5vmin; } .two { grid-template-columns: 1fr; } .vs .patch { width: 13vmin; height: 13vmin; } .rh { flex-direction: column; } .wk7 { width: 100%; } .wd { min-height: 11vmin; padding: 1vmin .4vmin .8vmin; } .wd .n { font-size: 2.8vmin; } .lg13 span { font-size: 2.1vmin; padding: .7vmin 1.3vmin; } }`,
+.lg13 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.2vmin 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.8vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.lg13 i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; } .lg13 span.warn { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
+@media (orientation: portrait) { .aw { gap: 2.4vmin; } .aw .d1 { flex-direction: column; gap: 2.4vmin; } .aw .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2.2vmin; } .aw .big1 b { font-size: 7vmin; } .aw .big1 span { margin-top: 0; text-align: left; } .aw .ch { font-size: 2.9vmin; } .two { grid-template-columns: 1fr; } .vs { padding: 2.4vmin; gap: 2.4vmin; } .vs .patch { width: 16vmin; height: 16vmin; } .vs b { font-size: 3.2vmin; } .vs span { font-size: 2.5vmin; } .rh { flex-direction: column; gap: 2.4vmin; } .wk7 { width: 100%; } .wd { min-height: 13vmin; padding: 1.2vmin .4vmin 1vmin; gap: .5vmin; } .wd .d { font-size: 2vmin; } .wd .n { font-size: 3.4vmin; } .wd .mark { width: 2.2vmin; height: 2.2vmin; } .dial { width: 24vmin; height: 24vmin; } .lg13 span { font-size: 2.5vmin; padding: .9vmin 1.6vmin; } }`,
     html: `
 <div class="aw">
   <div class="d1" id="w-d1">
