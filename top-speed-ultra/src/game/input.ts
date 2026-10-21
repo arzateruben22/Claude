@@ -4,7 +4,8 @@
 import { clamp } from './util';
 
 export type Action =
-  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio';
+  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio'
+  | 'quick' | 'quickUp';   // the pad's Back held for the radial quick menu (U3), and let go
 
 export interface Controls {
   throttle: number;   // 0..1, smoothed
@@ -23,6 +24,8 @@ const KEYS: Record<string, string> = {
 };
 // the pad's driving buttons (standard mapping): handbrake (A, X), shifts (bumpers), brake and throttle (triggers)
 const DRIVING_PAD = new Set([0, 2, 4, 5, 6, 7]);
+// how long the pause/menu control is held before the quick menu opens (a shorter press does what it always did)
+export const QUICK_HOLD_MS = 300;
 const ACTIONS: Record<string, Action> = {
   KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio',
 };
@@ -42,6 +45,12 @@ export class Input {
   // when the pad last asked for something other than driving (a menu, camera or d-pad button, or a look with the right
   // stick): the adaptive HUD (U1) comes back on it. The triggers, the stick's steering, handbrake and shifts don't count.
   padAt = 0;
+  // the radial quick menu (U3): hold Back to open it, aim with the right stick or the d-pad, let go to pick. While it's
+  // open (`menuOpen`, set by the UI) the right stick aims instead of looking around.
+  readonly padAim = { x: 0, y: 0 };
+  menuOpen = false;
+  private backAt = 0;
+  private backLong = false;
   private keyBound = false;
 
   constructor(private el: HTMLElement) {}
@@ -117,10 +126,19 @@ export class Input {
       if (Math.abs(sx) > 0 || rt > 0.02 || lt > 0.02) { analogSteer = sx * Math.abs(sx); analogThr = rt; analogBrk = lt; c.analog = true; }
       const btn = (i: number) => !!(p.buttons[i] && p.buttons[i].pressed);
       const edge = (i: number, a: Action) => { const now = btn(i); if (now && !this.padPrev[i]) this.queue.push(a); this.padPrev[i] = now; };
-      edge(5, 'shiftUp'); edge(4, 'shiftDown'); edge(3, 'camera'); edge(1, 'reset'); edge(9, 'pause'); edge(8, 'hud');
+      edge(5, 'shiftUp'); edge(4, 'shiftDown'); edge(3, 'camera'); edge(1, 'reset'); edge(9, 'pause');
+      // Back: a short press toggles the HUD (on release, now that a hold means something); held 300 ms it opens the quick menu
+      const back = btn(8), t = performance.now();
+      if (back && !this.padPrev[8]) { this.backAt = t; this.backLong = false; }
+      if (back && !this.backLong && t - this.backAt >= QUICK_HOLD_MS) { this.backLong = true; this.queue.push('quick'); }
+      if (!back && this.padPrev[8]) this.queue.push(this.backLong ? 'quickUp' : 'hud');
+      this.padPrev[8] = back;
       if (btn(2) || btn(0)) hb = true;
       const rx = p.axes[2] || 0, ry = p.axes[3] || 0;
-      if (Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2) { this.lookTarget.yaw = -rx * 1.6; this.lookTarget.pitch = -ry * 0.6; this.idleLook = 0; }
+      const dx = (btn(15) ? 1 : 0) - (btn(14) ? 1 : 0), dy = (btn(13) ? 1 : 0) - (btn(12) ? 1 : 0);
+      this.padAim.x = dx || dy ? dx : rx; this.padAim.y = dx || dy ? dy : ry;
+      // while the quick menu is open the right stick aims it instead of looking around
+      if (!this.menuOpen && (Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2)) { this.lookTarget.yaw = -rx * 1.6; this.lookTarget.pitch = -ry * 0.6; this.idleLook = 0; }
       else if (!this.drag && Math.abs(this.lookTarget.yaw) > 0 && !this.freeLook && c.analog) { this.lookTarget.yaw = 0; this.lookTarget.pitch = 0; }
       if (btn(10) || btn(11)) this.recenter();
       const wake = p.buttons.some((b, i) => b.pressed && !DRIVING_PAD.has(i)) || Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2;

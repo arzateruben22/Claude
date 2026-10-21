@@ -32,15 +32,19 @@ The road data is rebuilt by `tools/oc-network/` (Python), which has its own READ
 
 - **Phone controls.** Drag the pad at the bottom left to steer. Hold GAS and BRAKE on the right.
 - **Top bar.** **View** changes the camera: driver's seat, hood, chase, free look. **Go to** picks a freeway to
-  navigate to. **Radio** changes station. **Pause**.
+  navigate to. **Radio** changes station. **Pause**: tap to pause; hold it for the quick menu.
+- **Quick menu.** Hold Pause (or Tab, or the pad's Back) while driving: Map, Go to, Garage, Radio, Camera and
+  Settings fan out around the centre. Slide onto one and let go to pick it, or let go on the centre to cancel. With
+  reduced motion it's a plain list.
 - **Corner window.** Tap it to switch between a road map with your route in yellow, a live sky camera, or off.
 - **On the road.** A prompt at the top tells you the next move, such as "Keep right: CA-55 North · 0.4 mi". Green
   signs over the road name the exits.
 - **Keyboard:**
   - W/S or the arrows: drive. A/D: steer. Space: handbrake.
   - Q/E: shift. M: automatic or manual.
-  - C: view. N: map. F: ability. B: radio. V: look back. R: reset. P: pause.
-- **Gamepad** (standard mapping): triggers for gas and brake, left stick to steer.
+  - C: view. N: map. F: ability. B: radio. V: look back. R: reset. P: pause. Hold Tab: quick menu (arrows, Enter, Esc).
+- **Gamepad** (standard mapping): triggers for gas and brake, left stick to steer. Back: HUD on or off; hold it for
+  the quick menu, aim with the right stick or the d-pad, let go to pick.
 - **End of the road.** If a freeway ends (as the 261 does at Walnut Ave), you're turned around. If you take an exit
   to a street, you're moved to a nearby on-ramp.
 
