@@ -93,7 +93,7 @@ the snapshot is a mid-edit state that never reached a judge, so merge only if ts
 pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
 small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
 
-**In flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
+**Paused 23:02 UTC by the owner (see the progress log's 23:02 entry for each branch's state); was in flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
 the physics (`src/game/vehicle/Physics.ts`, against `PROJECT_OC_DYNAMICS.md`). Branches `fable/<area>`, merged here only
@@ -182,6 +182,14 @@ PROJECT_OC_HANDOFF.md at the end.
   auto-renewal terms in place? Fix what is wrong, prove it with `npm test -- --only=store` and a webhook signature
   test, log it in PROJECT_OC_PROGRESS.md, and list anything the owner must decide.
   ```
+
+- **Freeway guide signs (for the realism-2 lane when it resumes; written 22:40 UTC by this session's Fable audit).**
+  Spec: `docs/specs/SIGNS_SPEC.md` (seven ranked items: a Highway Gothic look-alike laid out in metres; Caltrans panel
+  content with the yellow EXIT ONLY band, shields, two destinations, control cities, LEFT plaques; night
+  retroreflection; a galvanised box-truss structure; a refcounted texture cache and phone resolution; one structure for
+  closely spaced exits; exit numbers from OSM junction:ref). Ready-to-paste prompt: `docs/specs/SIGNS_PROMPT.md`.
+  Census: `tools/signs-census.ts` (416 signs, 122 dropping a destination, 73 of 396 exit pairs under 800 m; reproduced).
+  It needs one Game.ts hook (`roads.setNight(dark)`) from whoever owns Game.ts.
 
 ## Opus queue (routine items waiting for a daytime session)
 
