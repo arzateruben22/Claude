@@ -48,12 +48,14 @@ const verify = opt("verify", false) === true;
 const plain = opt("plain", false) === true;     // cinema: off = her renderer exactly
 const cuesOnly = opt("cues", false) === true;   // cinema: write the scene's event table for the sound, render nothing
 // cinema: the directed 8-2 (scenes3d.mjs) or her scene as it is on the Lumevina branch (scenes3d-original.mjs)
-const { SCENES } = await import(opt("scenes", "directed") === "original" ? "./scenes3d-original.mjs" : "./scenes3d.mjs");
+const scenesOpt = String(opt("scenes", "directed"));   // cinema: "directed", "original", or a path to any scene module (e.g. the TikTok film's)
+const { SCENES } = await import(scenesOpt === "original" ? "./scenes3d-original.mjs" : scenesOpt.endsWith(".mjs") ? path.resolve(process.cwd(), scenesOpt) : "./scenes3d.mjs");
 const from = Number(opt("from", 0)), to = opt("to", null);
 const times = opt("times", null) ? String(opt("times")).split(",").map(Number) : null;   // cinema: stills only
 const fps = quick ? 6 : Number(opt("fps", 30));
 const SIZES = { "16x9": [1280, 720], "9x16": [720, 1280] };
-const OUT = { "16x9": path.join(root, "out"), "9x16": path.join(root, "out") };
+const outOpt = opt("out", null);   // cinema: write the clip somewhere else (previews of other films)
+const OUT = { "16x9": outOpt ? path.resolve(outOpt) : path.join(root, "out"), "9x16": outOpt ? path.resolve(outOpt) : path.join(root, "out") };
 const review = path.join(root, "build", "review"), logFile = path.join(root, "build", "render-log.json");
 fs.mkdirSync(review, { recursive: true });
 const log = fs.existsSync(logFile) ? JSON.parse(fs.readFileSync(logFile, "utf8")) : {};

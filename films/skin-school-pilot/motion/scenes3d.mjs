@@ -203,6 +203,7 @@ const place = (t) => {
   P.x += Math.sin(t * 0.9) * 0.05 + Math.sin(t * 2.3 + 1) * 0.02; P.y += Math.sin(t * 1.1 + 2) * 0.04;
   camera.position.copy(P); camera.fov = (a.fov + (b.fov - a.fov) * e) + (portrait ? 12 : 0); camera.updateProjectionMatrix();
   camera.lookAt(L.x + Math.sin(t * 0.7) * 0.03, L.y + Math.sin(t * 0.8 + 1) * 0.03, L.z);
+  camera.updateMatrixWorld();   // directed: labels project through this frame's camera, not the last one rendered (so they're a pure function of t)
 };
 // directed: focus pulls to whatever the caption and labels name, racked over 0.45 s
 const DROP = { mand: new THREE.Vector3(0, 22, PZ), bp: new THREE.Vector3(0.6, 22, PZ + 0.4) };

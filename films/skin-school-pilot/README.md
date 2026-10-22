@@ -117,9 +117,14 @@ roughly an hour per aspect on a 4-core container.
   The result is `out/8-2-9x16-studio.mp4` and `out/8-2-studio.mp4`. Lumevina's "calm and clean"
   preset: D lydian at 90 BPM, soft pads and felt piano, −14 LUFS on the AAC. All 13 kinds of
   sound land within a frame of their event (measured in the mastered stem). Moving the times into
-  the table changed no frame. Comparing frame hashes shows the pilot renderer already varies a
-  few frames between runs (2–5 of 52 samples, different ones each run), with or without the
-  change. That gets measured with the chunked renderer.
+  the table changed no frame. Comparing frame hashes shows the pilot renderer already varied a
+  few frames between runs (2–5 of 52 samples), with or without the change. The cause: labels were
+  projected through the camera's matrix before it was refreshed for the new time, so each label
+  used the camera of whatever was rendered last. In order that is a one-sub-frame lag; out of
+  order (stills, `--verify`) it is a different position. `place()` now refreshes the matrix, so
+  label positions are a pure function of t. The delivered clips predate the fix; their labels
+  sit a sub-frame behind, which isn't visible, but `--verify` will report differences until
+  they are re-rendered.
 - **Portrait.** The pilot frames the same moves from 1.32× further back, with a lens 12° wider. Each
   shot still needs a pass for the 9:16 safe zones.
 - **The flat scenes** (DOM/SVG) need a different treatment: camera moves on the stage and sub-frame

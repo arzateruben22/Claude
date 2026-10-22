@@ -30,7 +30,7 @@ header { position: absolute; left: 8.3vw; right: 16.7vw; top: 13.5vh; z-index: 3
 main.canvas { position: absolute !important; inset: 0; }
 footer { display: none !important; }
 .stage::before { height: 30%; }
-.lab3 { font-size: 3.1vmin; padding: 1.1vmin 2vmin; }
+.lab3 { font-size: 3.8vmin; padding: 1.2vmin 2.2vmin; }
 .tcap { position: absolute; left: 50%; top: 61vh; transform: translateX(-50%); width: max-content; max-width: 72vw; z-index: 4; text-align: center; font-size: 5.6vmin; font-weight: 700; line-height: 1.22; letter-spacing: -.012em; padding: 1.6vmin 3vmin; border-radius: 3.4vmin; background: rgba(12,10,11,.66); opacity: 0; }
 .tcap .r { display: block; white-space: nowrap; }
 .tcap i { font-style: normal; color: rgba(245,245,247,.80); }
@@ -203,6 +203,7 @@ const place = (t) => {
   P.x += Math.sin(t * 0.9) * 0.05 + Math.sin(t * 2.3 + 1) * 0.02; P.y += Math.sin(t * 1.1 + 2) * 0.04;
   camera.position.copy(P); camera.fov = (a.fov + (b.fov - a.fov) * e) + (portrait ? 12 : 0); camera.updateProjectionMatrix();
   camera.lookAt(L.x + Math.sin(t * 0.7) * 0.03, L.y + Math.sin(t * 0.8 + 1) * 0.03, L.z);
+  camera.updateMatrixWorld();   // tiktok: labels project through this frame's camera, not the last one rendered (so they're a pure function of t)
 };
 // directed: focus pulls to whatever the caption and labels name, racked over 0.45 s
 const DROP = { mand: new THREE.Vector3(0, 22, PZ), bp: new THREE.Vector3(0.6, 22, PZ + 0.4) };
@@ -221,7 +222,22 @@ const OFF = { "l-white": [1, -1], "l-hair": [1, -1], "l-gland": [1, 0], "l-oil":
 const v3 = new THREE.Vector3();
 // tiktok: labels stay inside the apps' safe box and above the captions
 const SAFE = { l: 90 / 1080 * W, r: 900 / 1080 * W, t: 250 / 1920 * H, b: 1140 / 1920 * H };
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; const pw = Math.min(el.offsetParent ? el.offsetParent.clientWidth : W, SAFE.r); el.style.left = Math.min(pw - w - 6, Math.max(SAFE.l, x + (ox > 0 ? 14 : -w - 14))) + "px"; el.style.top = Math.min(SAFE.b - h, Math.max(SAFE.t, y + (oy < 0 ? -h - 10 : -h / 2))) + "px"; } };   // directed: labels stay inside the frame
+const pin = () => {   // tiktok: labels next to what they name, inside the safe box, and never on top of each other
+  const placed = [];
+  for (const id in ANCHOR) {
+    const el = document.getElementById(id); if (!el) continue;
+    const sec = el.closest(".shot"); if (sec && getComputedStyle(sec).visibility === "hidden") continue;
+    v3.set(...ANCHOR[id]).project(camera);
+    const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight;
+    let L = Math.min(SAFE.r - w, Math.max(SAFE.l, x + (ox > 0 ? 14 : -w - 14)));
+    let T = Math.min(SAFE.b - h, Math.max(SAFE.t, y + (oy < 0 ? -h - 10 : -h / 2)));
+    if (+getComputedStyle(el).opacity > 0.01) {
+      for (let pass = 0; pass < 4; pass++) for (const r of placed) if (L < r.r + 8 && r.l < L + w + 8 && T < r.b + 8 && r.t < T + h + 8) T = Math.min(SAFE.b - h, r.b + 10);
+      placed.push({ l: L, r: L + w, t: T, b: T + h });
+    }
+    el.style.left = L + "px"; el.style.top = T + "px";
+  }
+};
 // tiktok: captions. One page per sentence (≤ 2 lines), the word being spoken lit rose, the words
 // already said white, the rest a little dimmer. Built from the voice's word times in film.json.
 const capEl = document.getElementById("tcap"), CAPS = FILM.captions;
@@ -243,11 +259,12 @@ const headerEl = document.querySelector("header"), endEl = document.getElementBy
 const endCard = (t) => {
   const e = E.out(seg(t, FILM.endCard, FILM.endCard + 0.6));
   endEl.style.opacity = e; endEl.style.transform = "translateY(" + (2.4 * (1 - e)) + "vmin)"; scrimEl.style.opacity = e;
+  const dc = document.getElementById("dayc"); if (dc && e > 0) dc.style.opacity = Math.min(+dc.style.opacity || 1, 1 - e);   // the counter gives way to the card
   headerEl.style.opacity = 1 - seg(t, FILM.beats[1].t0 - 0.3, FILM.beats[1].t0 + 0.4);
 };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
-  place(t); pin();
+  place(t);
   // healthy oil, until the clog
   const oilOn = i === 0 ? 1 : i === 1 ? 1 - seg(lt, CUE.oilOff[0], CUE.oilOff[1]) : 0;
   // directed: each drop grows in at the gland and shrinks away at the top, so the loop's wrap is never seen (or blurred)
@@ -309,6 +326,7 @@ window.seek = function (t) {
   // labels and the day counter (DOM)
   const $ = M.$;
   (CUE.labels[i] || []).forEach(([id, at]) => enter($("#" + id), lt, at, { y: id === "dayc" ? 10 : 8 }));
+  pin();   // tiktok: after this frame's entrances, so stacking reads this frame's opacities
   if (i === 3) {   // tiktok: weeks, 0 → 8 → 12 on the spoken words, 8 to 12 lit
     const W_ = CUE.weeks; let wk = 0;
     for (let j = 1; j < W_.length; j++) if (lt >= W_[j - 1][0]) wk = W_[j - 1][1] + (W_[j][1] - W_[j - 1][1]) * E.inout(seg(lt, W_[j - 1][0], W_[j][0]));
