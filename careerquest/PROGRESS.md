@@ -18,13 +18,20 @@ what is blocked on external dependencies, and the exact next step.
 ## Phase status
 | Phase | Status | Notes |
 |-------|--------|-------|
-| 1 Foundation | **complete** (2026-10-21) | schema, auth, shell, UI primitives, tracker, dashboard, goals, analytics, settings; acceptance e2e green |
-| 2 Email intelligence | pending | |
-| 3 Chrome extension | pending | |
-| 4 Game systems | pending | hooks in `src/lib/game/{missions,achievements}.ts` are no-op stubs until Phase 4 |
-| 5 Academy | pending | research facts in scratchpad → to be seeded in `prisma/seed.ts`; lesson JSON drafts in `data/academy/lessons/` |
-| 6 AI + analytics | pending | |
-| 7 Mobile/polish | pending | |
+| 1 Foundation | **complete** (2026-10-21) | schema, auth, shell, UI primitives, tracker, dashboard, goals, analytics, settings; acceptance e2e green. Review-finding fixes F1/F3/F5–F10 in progress (builder `phase1-fixes`). |
+| 2 Email intelligence | **building** (2026-10-22) | builders `email-core` → `ingest-engine` + `integrations-imports` |
+| 3 Chrome extension | extension built (61 tests); review fixes in progress (`extension-fixes`); backend API builder `extension-api-discovery` |
+| 4 Game systems | **building** | `game-engine` → `career-map-skills` |
+| 5 Academy | **building** | 31 lessons + 9 workshops + 120-question bank authored; `academy-content` validates facts; `academy-learning` → `academy-records` (seed, hours, documents, certification) |
+| 6 AI + analytics | **building** | `forecast-salary` + `coach-reports` |
+| 7 Mobile/polish | partly done | PWA service worker (static-only cache), icons, manifest shortcuts/share target, notifications + reminders + optional web push (done, tested). Share page by `extension-api-discovery`. a11y/axe + full acceptance in the integration stage. |
+
+### How the remaining work is organised (2026-10-22)
+Parallel builders own disjoint paths and follow `docs/BUILDER_BRIEF.md`; each writes `docs/notes/<key>.md`.
+After all builders finish, one serialized integration workflow runs: wire shared changes + green build + route
+smoke (desktop and iPhone) → Phase 2–3 browser tests with a local mock OAuth/Gmail/Outlook provider and the
+extension in the loop → Phase 4–7 browser tests incl. axe accessibility scans → the 20-step acceptance scenario
+and the full suite. Then an adversarial review/verify/fix pass.
 
 ## Phase 1 — what works
 **Routes (all authenticated, all dynamic):**
@@ -82,28 +89,30 @@ read-only and userId-scoped.
   `src/lib/applications/status.ts` and never downgrade or override user-confirmed data.
 - Every query is scoped by `userId` from `requireUser()`/`authenticateBearer()`.
 
-## Known shared-code issues (not blocking, fix before Phase 2 writers rely on them)
-- `record-event.ts` / `xp.ts` dedupe by catching P2002, which aborts a Postgres interactive transaction (25P02).
-  `src/lib/applications/events.ts` (`recordEventOnce` / `awardXpOnce`) pre-checks dedupe keys instead; Phase 2/3
-  writers (email re-sync, extension retries, CSV import) must use those wrappers or the shared helpers must switch
-  to a `findUnique` pre-check.
-- `record-event.ts` keys XP as `xp:${applicationId}:${reason}`, so repeatable actions (follow-ups, interviews)
-  never re-award; the applications service tops up with per-day / per-interview keys. Prefer fixing the shared key
-  scheme in Phase 4 and deleting the top-up code.
-- `src/lib/dates.ts` `dateKey/addUtcDays/daysBetween` use local-time date-fns math; dashboard/goals use exact UTC
-  helpers in `src/lib/goals/days.ts`. Switch the shared helpers to UTC math and re-point callers.
-- `server-only` throws under vitest; DB-backed suites `vi.mock("server-only", () => ({}))`.
-- In-memory rate limiter is per-process (documented in `@/lib/rate-limit`).
-- Salary filters in analytics compare raw amounts regardless of HOURLY vs ANNUAL (stated on the page).
+## Shared-code issues resolved on 2026-10-22
+- `recordApplicationEvent` and `awardXp` now insert with `ON CONFLICT DO NOTHING` (createMany + skipDuplicates),
+  so a duplicate never aborts the caller's Postgres transaction; `recordEventOnce` / `awardXpOnce` are thin aliases.
+- Submission XP is keyed by a normalized position fingerprint (company + title + location), so the same job
+  recorded twice earns 25 XP once. Repeatable actions pass `xpDedupeKey` (one follow-up award per application per
+  day; one per interview). Application XP carries `sourceType: "Application"`; `deleteApplication` calls
+  `revokeXpForSource` (compensating negative rows; the action can be re-earned once if re-recorded).
+- `src/lib/dates.ts` is exact-UTC math; `src/lib/goals/days.ts` re-exports it.
+- `server-only` is aliased to a stub in `vitest.config.ts`.
+- Rate limiting ignores `X-Forwarded-For` unless `TRUST_PROXY=true`; login also has a per-account limit; the
+  post-login `next` parameter is validated by `src/lib/auth/safe-next.ts`; unknown-email logins compare against a
+  real bcrypt hash.
+- Remaining known limitation: the in-memory rate limiter is per-process (use Redis for multi-instance hosting).
 
 ## External dependencies (not live, honest fallbacks provided)
 - Gmail/Outlook OAuth: need `GOOGLE_CLIENT_ID/SECRET`, `MICROSOFT_CLIENT_ID/SECRET` → otherwise EML/MBOX/CSV/paste import.
 - Anthropic API key for the LLM coach → otherwise rules-based coach (always available).
-- Web push VAPID keys → otherwise in-app notifications only.
+- Web push VAPID keys (`npm run push:keys`) → otherwise in-app notifications only.
+- A scheduler (cron) calling `POST /api/notifications/dispatch` and `POST /api/integrations/sync` with
+  `Authorization: Bearer $CRON_SECRET` for reminders/push and background email sync.
 
 ## Next exact step
-Phase 2 — Email intelligence: build the classification engine against the labeled fixture corpus
-(`tests/fixtures/emails/`), the EML/MBOX/CSV/paste importers with dedup (`src/lib/applications/normalize.ts`
-similarity + requisition ids), and the `/integrations` page with honest OAuth-not-configured fallbacks. All
-inferred status changes must go through `canApplyInferredStatus` and the applications service `changeStatus`
-(`{ applied, reason }` result, optional `evidenceId`), using `recordEventOnce` for idempotent re-syncs.
+Wait for the three builder workflows (Phase 2/3, Phase 4/5, fixes + Phase 6) to finish, commit their output, then
+run the integration workflow (script kept in the session scratchpad as `wf_int.js`; its prompts are the four
+integration stages described above) and the review/verify/fix pass. If a session is interrupted, re-run
+`npx tsc --noEmit && npx eslint src tests && npx vitest run && npm run build` to see the current state, then
+continue with the first stage that is not green.
