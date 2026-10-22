@@ -31,3 +31,10 @@ opens into one folder: the v4 site as `site.html`, Skin School, the dashboard, t
 sample, the Growth Blueprint, the first 90 days, the shipping kit and the privacy page. It is
 published to the same artifact as v4: the hub is the page, the rest are files beside it, and
 Skin School's videos come from that artifact's asset store (`v4-school.json`).
+
+Every card carries a picture of the page it opens (`docs/hub/img`). After a page changes, build
+the hub, then refresh the pictures from it and build again:
+
+    PLAYWRIGHT_DIR=<dir with playwright> CHROMIUM=<browser> node scripts/preview/hub-shots.mjs <out>
+
+The Going Live deck's picture (`deck.jpg`) is its cover slide, rendered once from the deck.

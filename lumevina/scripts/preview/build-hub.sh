@@ -7,7 +7,7 @@
 #   dashboard.html  Evelyn's dashboard      app.html       the iPhone app sample
 #   blueprint.html  the Growth Blueprint    plan.html      the first 90 days
 #   shipping.html   the shipping kit        privacy.html   the privacy policy
-#   img/            the hub's two phone screenshots (docs/hub/img)
+#   img/            each card's picture of the page it opens (docs/hub/img, from hub-shots.mjs)
 # Run from anywhere:  scripts/preview/build-hub.sh <out dir>
 set -e
 OUT=${1:?usage: build-hub.sh <out dir>}
@@ -35,6 +35,6 @@ open(sys.argv[2], "w", encoding="utf-8").write(s)
 PY
 done
 cp docs/hub/index.html "$OUT/index.html"
-# the phone pictures on the hub cards: the current site, captured at phone size (docs/hub/img)
-cp docs/hub/img/home.jpg docs/hub/img/rewards.jpg "$OUT/img/"
+# each card's picture of the page it opens (docs/hub/img; refresh with scripts/preview/hub-shots.mjs "$OUT")
+cp docs/hub/img/*.jpg "$OUT/img/"
 echo "built $OUT: $(ls "$OUT" | tr '\n' ' ')"
