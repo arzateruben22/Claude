@@ -4,6 +4,22 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (05:27 UTC): a container restart; the work kept and resumed
+
+- **05:20 UTC:** the session's container restarted and every running agent stopped. The disk survived.
+- **Kept, and now pushed:**
+  - `fable/hands`: 5 more commits, including a node check for the thumbs and the first web space
+    (`tools/preview-hands-web.mjs`) and a merge of `claude/hypercar`;
+  - `fable/wheels`: brought up to `claude/hypercar`;
+  - `retro/port`: brought up to `claude/hypercar`.
+- **The live integration** (`integrate/live`) was mid-merge: every path outside `top-speed-ultra/` already restored, and
+  all eight conflicts resolved in the working tree but unstaged. The rerun reviews those resolutions against both sides
+  before committing, then runs every core group plus the live ones (the live-server session's core run on db324db had
+  been cut off).
+- **Relaunched at 05:27,** at most three agents at once: the integration and the overdrive (its implementers continue
+  their existing branches). The Retro finish waits for the first free slot. No log says whether memory caused the
+  restart; the cap is a precaution.
+
 ## 2026-10-21 (23:02 UTC): paused by the owner
 
 The owner said "Pause". Both workflows were stopped and the hourly task switched off. The 00:20 stop-and-ask check-in was
