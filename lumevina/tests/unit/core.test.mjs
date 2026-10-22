@@ -124,6 +124,7 @@ test("change: the verdicts follow the rules", () => {
   assert.equal(cls(5, 4.5), "no_meaningful_change");     // within 0.8
   assert.equal(cls(5, 3, null), "uncertain");             // no validated threshold
   assert.equal(cls(5, 3, { status: "experimental", repeatability_coefficient: 0.8 }), "uncertain");
+  assert.equal(cls(5, 3, { status: "validated", repeatability_coefficient: 0 }), "uncertain", "a zero threshold is never trusted");
   assert.equal(cls(5, 3, v, { quality: "marginal" }), "uncertain");
   assert.equal(cls(5, 3, v, { quality: "poor" }), "invalid_comparison");
   assert.equal(cls(5, 3, v, { region: "chin" }), "invalid_comparison");

@@ -1,0 +1,11 @@
+# The Lumevina Skin Intelligence worker. Versions as tested (October 2026).
+numpy==2.5.4
+scipy==1.18.1
+opencv-python-headless==5.0.0.93
+scikit-image==0.26.0
+pillow==13.0.0
+pillow-heif==1.8.1
+requests==2.34.2
+# Face landmarks for region outlines and scale (optional: without it, close-up
+# captures are measured whole and front views are skipped for regions).
+mediapipe==1.1.1

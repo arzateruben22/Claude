@@ -127,6 +127,7 @@ create table analysis_jobs (
   capture_id uuid not null references captures (id) on delete cascade,
   kind text not null check (kind in ('ingest', 'quality', 'measure', 'register')),
   reference_capture_id uuid references captures (id) on delete cascade,
+  params jsonb,                         -- e.g. { scar_roi: [[x, y], ...] } in original-image pixels
   status text not null default 'queued' check (status in ('queued', 'running', 'done', 'failed')),
   attempts int not null default 0,
   claimed_by text,

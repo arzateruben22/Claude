@@ -63,8 +63,8 @@ export async function loadRecord(deps: Deps, profileId: string) {
   return { sessions, captures, quality: [...latestQ.values()], measurements, derived, treatments, devices, changes, validation };
 }
 
-export async function enqueue(deps: Deps, captureId: string, kind: string, referenceId: string | null = null) {
-  const { error } = await deps.db.from("analysis_jobs").insert({ capture_id: captureId, kind, reference_capture_id: referenceId });
+export async function enqueue(deps: Deps, captureId: string, kind: string, referenceId: string | null = null, params: Record<string, unknown> | null = null) {
+  const { error } = await deps.db.from("analysis_jobs").insert({ capture_id: captureId, kind, reference_capture_id: referenceId, params });
   if (error && !/duplicate|unique/i.test(String(error.message ?? error.code))) { console.error("enqueue", error); throw new HttpError(500, "failed"); }
 }
 

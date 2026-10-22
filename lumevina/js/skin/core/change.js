@@ -43,7 +43,8 @@ export function classifyChange(a, b, validation) {
   if (reasons.length) return out("invalid_comparison", reasons);
 
   const delta = b.value - a.value;
-  const threshold = validation && validation.status === "validated" && Number.isFinite(validation.repeatability_coefficient)
+  // a threshold of zero would make any difference "meaningful": only a positive, validated one counts
+  const threshold = validation && validation.status === "validated" && Number.isFinite(validation.repeatability_coefficient) && validation.repeatability_coefficient > 0
     ? validation.repeatability_coefficient : null;
   if (threshold == null) return out("uncertain", ["not_validated"], delta, null);
   if (a.quality === "poor" || b.quality === "poor") return out("invalid_comparison", ["poor_quality"], delta, threshold);

@@ -240,7 +240,9 @@ export function handle(req: Request, deps: Deps) {
         const { state } = await consentsFor(deps, p.email);
         if (!may.analyze(state)) throw new HttpError(403, "consent_required", { kind: "clinical_photography" });
         if (c.status === "pending_upload") throw new HttpError(409, "not_uploaded");
-        await enqueue(deps, c.id, "measure");
+        // a scar outline, in original-image pixels: up to 200 points
+        const roi = Array.isArray(b.scar_roi) ? b.scar_roi.slice(0, 200).map((pt: any) => [Number(pt?.[0]), Number(pt?.[1])]).filter((pt: number[]) => pt.every((v) => Number.isFinite(v) && v >= 0 && v < 100000)) : [];
+        await enqueue(deps, c.id, "measure", null, roi.length >= 3 ? { scar_roi: roi } : null);
         await log("analyze", { profile_id: p.id, record_table: "captures", record_id: c.id });
         return { queued: true };
       }

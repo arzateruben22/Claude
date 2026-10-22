@@ -63,6 +63,13 @@ test("blur drops sharpness well below the limit, and is flagged", () => {
   assert.ok(assessFrame(boxBlur(skinFrame(), 2)).flags.includes("blur"));
 });
 
+test("very smooth but sharp skin is not called blurred; a frame half as sharp as the recent best is", () => {
+  assert.ok(!assessFrame(skinFrame(512, 384, { noise: 2 })).flags.includes("blur"));
+  const best = sharpness(skinFrame());
+  assert.ok(assessFrame(boxBlur(skinFrame(), 1), LIMITS, { referenceSharpness: best }).flags.includes("blur"));
+  assert.ok(!assessFrame(skinFrame(512, 384, { seed: 9 }), LIMITS, { referenceSharpness: best }).flags.includes("blur"));
+});
+
 test("dark and blown-out frames are flagged", () => {
   assert.ok(assessFrame(scale(skinFrame(), 0.04)).flags.includes("underexposed"));
   assert.ok(assessFrame(scale(skinFrame(), 1.6, [40, 40, 40])).flags.includes("overexposed"));

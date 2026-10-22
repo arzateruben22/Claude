@@ -11,14 +11,18 @@
 
 export const QUALITY_VERSION = "device-1";
 
-/* Thresholds for a ~512 px wide frame. Tuned on synthetic sharp/blurred
- * pairs and on all ten Monk Skin Tone scale colours in
+/* Thresholds for a ~512 px wide frame. Sharpness is a low floor only: how
+ * sharp skin looks depends mostly on how much texture it has (very smooth,
+ * perfectly sharp skin scores ~25, a slightly blurred frame ~1), so the
+ * capture screen also compares each frame with the sharpest it has seen in
+ * the last moments (referenceSharpness) — the way autofocus assist works.
+ * Tuned on synthetic sharp/blurred pairs and on all ten Monk Skin Tone scale colours in
  * tests/unit/quality.test.mjs: no skin tone, from the lightest to the
  * deepest, is flagged as badly exposed or tinted. Exposure is judged by
  * clipping, not by how light the skin is; colour by excess beyond the
  * natural range of skin, not by distance from one "typical" skin colour.
  * The worker re-checks every image. */
-export const LIMITS = { sharpness: 60, clipDark: 0.08, clipBright: 0.06, meanLow: 0.05, meanHigh: 0.97, cast: 0.05 };
+export const LIMITS = { sharpness: 5, relative: 0.5, clipDark: 0.08, clipBright: 0.06, meanLow: 0.05, meanHigh: 0.97, cast: 0.05 };
 
 function luminance(img) {
   const { data, width, height } = img;
@@ -68,13 +72,14 @@ export function colorCast(img) {
 }
 
 /** All checks, with flags and a short message for each problem. */
-export function assessFrame(img, limits = LIMITS) {
+export function assessFrame(img, limits = LIMITS, { referenceSharpness = null } = {}) {
   const L = luminance(img);
   const s = sharpness(img, L);
   const e = exposure(img, L);
   const cast = colorCast(img);
   const flags = [], tips = [];
-  if (s < limits.sharpness) { flags.push("blur"); tips.push("Hold still and tap to focus"); }
+  const floor = referenceSharpness ? Math.max(limits.sharpness, limits.relative * referenceSharpness) : limits.sharpness;
+  if (s < floor) { flags.push("blur"); tips.push("Hold still and tap to focus"); }
   if (e.clip_dark > limits.clipDark || e.mean_l < limits.meanLow) { flags.push("underexposed"); tips.push("More light, please: face the light"); }
   if (e.clip_bright > limits.clipBright || e.mean_l > limits.meanHigh) { flags.push("overexposed"); tips.push("Too bright: step back from the light or turn off the flash"); }
   if (cast > limits.cast) { flags.push("color_cast"); tips.push("The light is tinted: use the studio light or daylight"); }
