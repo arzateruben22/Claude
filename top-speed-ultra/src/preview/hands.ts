@@ -199,7 +199,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   const curlK = new THREE.Quaternion(), curlL = new THREE.Quaternion(), curlV = new THREE.Vector3();
   const pose = (angle: number, bind: boolean, dtIn?: number) => {
     const now = performance.now();
-    const dt = bind ? 0 : dtIn !== undefined ? Math.min(0.1, Math.max(0, dtIn)) : Math.min(0.1, (now - lastT) / 1000);
+    const dt = bind ? 0 : dtIn !== undefined ? (Number.isFinite(dtIn) ? Math.min(0.1, Math.max(0, dtIn)) : 0) : Math.min(0.1, (now - lastT) / 1000);
     lastT = now;
     wavePhase += dt * 13.8;
     wq.setFromAxisAngle(Z, angle).premultiply(qTilt);
