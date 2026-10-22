@@ -32,7 +32,9 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
 ## Running state (update when it changes)
-- Final render (Skin School): detached `run.sh`, log `films/skin-school-tiktok/build/final/9x16/render.log`
+- Final render (Skin School): detached `run.sh`, log `films/skin-school-tiktok/build/final/9x16/render.log`.
+  A worker restart kills it (seen 07:22 UTC): check with `ps -eo args | grep [r]ender.mjs` (never
+  `pgrep -f`, which matches its own command line) and restart with a bare `run.sh` (it resumes).
 - Voice toolchain: scratch venv `…/scratchpad/longform/venv`, models `…/scratchpad/models`
   (rebuild with `kits/cinema/voice/setup.sh` if the container was replaced)
 - Check-ins: one-off at 07:56 UTC (`trig_01XVdp7UPzjkvHAYaYe3GoGa`), and every 2 h at :04
