@@ -62,6 +62,8 @@ CUE = {
         [["l-bact", loc(2, A("vo04:Bacteria"))], ["l-red", loc(2, A("vo04:red"))]],
         [["l-mand", loc(3, A("vo05:Mandelic"))], ["l-bp", loc(3, A("vo05:Benzoyl"))], ["dayc", loc(3, A("vo06:Then"))]],
     ],
+    # labels leave when their part of the story is over: [id, shot, local time]
+    "labelsOut": [["l-mand", 3, loc(3, A("beat:time", -0.4))], ["l-bp", 3, loc(3, A("beat:time", -0.4))]],
 }
 
 # camera keys: her pilot's framings, re-timed to the words (portrait: the scene widens them itself)
@@ -107,7 +109,7 @@ FOC = [
 
 film = {"id": "skin-school-pore", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": A("vo02:gland", 0.6),
         "shots": SHOTS, "beats": BEATS, "cue": CUE, "cam": CAM, "foc": FOC,
-        "captions": f.captions(), "endCard": f.end_card,
+        "captions": f.captions(max_chars=24), "endCard": f.end_card,
         "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 
 # ── the studio's cue sheet: the same moments as sound events ─────────────

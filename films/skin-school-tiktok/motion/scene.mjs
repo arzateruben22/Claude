@@ -30,8 +30,10 @@ header { position: absolute; left: 8.3vw; right: 16.7vw; top: 13.5vh; z-index: 3
 main.canvas { position: absolute !important; inset: 0; }
 footer { display: none !important; }
 .stage::before { height: 30%; }
-.lab3 { font-size: 3.8vmin; padding: 1.2vmin 2.2vmin; }
-.tcap { position: absolute; left: 50%; top: 61vh; transform: translateX(-50%); width: max-content; max-width: 72vw; z-index: 4; text-align: center; font-size: 5.6vmin; font-weight: 700; line-height: 1.22; letter-spacing: -.012em; padding: 1.6vmin 3vmin; border-radius: 3.4vmin; background: rgba(12,10,11,.66); opacity: 0; }
+.lab3 { font-size: 4vmin; font-weight: 700; color: #fff; padding: 1.3vmin 2.4vmin; background: rgba(14,10,12,.9); border: .45vmin solid var(--c, #fff); box-shadow: 0 .6vmin 2.2vmin rgba(0,0,0,.6); z-index: 3; }
+.lab3 i { width: 1.9vmin; height: 1.9vmin; box-shadow: 0 0 0 .35vmin rgba(255,255,255,.85); }
+#leads { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: visible; }
+.tcap { position: absolute; left: 50%; top: 61vh; transform: translateX(-50%); width: max-content; z-index: 4; text-align: center; font-size: 5.6vmin; font-weight: 700; line-height: 1.22; letter-spacing: -.012em; padding: 1.6vmin 3vmin; border-radius: 3.4vmin; background: rgba(12,10,11,.66); opacity: 0; }
 .tcap .r { display: block; white-space: nowrap; }
 .tcap i { font-style: normal; color: rgba(245,245,247,.80); }
 .tcap i.on { color: #f4c9d6; } .tcap i.said { color: #f5f5f7; }
@@ -47,7 +49,7 @@ footer { display: none !important; }
 <section class="shot"><span class="lab3" id="l-plug" style="left:58%;top:26%"><i style="background:#8e8e93"></i>dead skin cells + oil</span><span class="lab3" id="l-black" style="left:24%;top:10%"><i style="background:#1a1210"></i>oxidized: a blackhead</span><span class="lab3" id="l-white"><i style="background:#efe3d3"></i>closed over: a whitehead</span></section>
 <section class="shot"><span class="lab3" id="l-bact" style="left:60%;top:30%"><i style="background:#ff5a4a"></i>bacteria</span><span class="lab3" id="l-red" style="left:22%;top:16%"><i style="background:#e0574a"></i>inflammation</span></section>
 <section class="shot"><span class="lab3" id="l-mand" style="left:22%;top:8%"><i style="background:#f4c9d6"></i>mandelic acid</span><span class="lab3" id="l-bp" style="left:58%;top:8%"><i style="background:#ffffff"></i>benzoyl peroxide</span><div class="dayc" id="dayc"><b id="dayn">0</b><span>weeks</span></div></section>
-<div class="tcap" id="tcap"></div><div class="endscrim" id="endscrim"></div>
+<svg id="leads" aria-hidden="true"></svg><div class="tcap" id="tcap"></div><div class="endscrim" id="endscrim"></div>
 <div class="endc" id="endc"><p class="t">Inside a pore, <span class="grad">and how it clears.</span></p><p class="p2">Part 2: what to put on it.</p><span class="chip">Follow Skin School</span></div>`,
     module: `
 import * as THREE from "../vendor/three.module.min.js";
@@ -222,21 +224,45 @@ const OFF = { "l-white": [1, -1], "l-hair": [1, -1], "l-gland": [1, 0], "l-oil":
 const v3 = new THREE.Vector3();
 // tiktok: labels stay inside the apps' safe box and above the captions
 const SAFE = { l: 90 / 1080 * W, r: 900 / 1080 * W, t: 250 / 1920 * H, b: 1140 / 1920 * H };
+const leadsEl = document.getElementById("leads");
 const pin = () => {   // tiktok: labels next to what they name, inside the safe box, and never on top of each other
-  const placed = [];
+  const placed = [], leads = [];
+  leadsEl.setAttribute("viewBox", "0 0 " + W + " " + H);
   for (const id in ANCHOR) {
     const el = document.getElementById(id); if (!el) continue;
     const sec = el.closest(".shot"); if (sec && getComputedStyle(sec).visibility === "hidden") continue;
-    v3.set(...ANCHOR[id]).project(camera);
+    // the drop labels follow the drops themselves (falling, then where they landed)
+    if (id === "l-mand" || id === "l-bp") v3.copy(DROP[id === "l-mand" ? "mand" : "bp"]); else v3.set(...ANCHOR[id]);
+    v3.project(camera);
     const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight;
-    let L = Math.min(SAFE.r - w, Math.max(SAFE.l, x + (ox > 0 ? 14 : -w - 14)));
-    let T = Math.min(SAFE.b - h, Math.max(SAFE.t, y + (oy < 0 ? -h - 10 : -h / 2)));
-    if (+getComputedStyle(el).opacity > 0.01) {
-      for (let pass = 0; pass < 4; pass++) for (const r of placed) if (L < r.r + 8 && r.l < L + w + 8 && T < r.b + 8 && r.t < T + h + 8) T = Math.min(SAFE.b - h, r.b + 10);
+    // try: the preferred side, the other side, above, below; take the first that stays in the safe box
+    // without covering the spot it names or another label
+    const side = (sx) => sx > 0 ? x + 16 : x - w - 16, rise = oy < 0 ? y - h - 12 : y - h / 2;
+    const cands = [[side(ox), rise], [side(-ox), rise], [x - w / 2, y - h - 22], [x - w / 2, y + 22]];
+    const fit = ([cl, ct]) => [Math.min(SAFE.r - w, Math.max(SAFE.l, cl)), Math.min(SAFE.b - h, Math.max(SAFE.t, ct))];
+    const visible = +getComputedStyle(el).opacity > 0.01;
+    const clear = ([cl, ct]) => !(x > cl - 8 && x < cl + w + 8 && y > ct - 8 && y < ct + h + 8) && !placed.some((r) => cl < r.r + 8 && r.l < cl + w + 8 && ct < r.b + 8 && r.t < ct + h + 8);
+    let [L, T] = fit(cands[0]);
+    if (visible) {
+      const ok = cands.map(fit).find(clear);
+      if (ok) [L, T] = ok;
+      else for (let pass = 0; pass < 4; pass++) for (const r of placed) if (L < r.r + 8 && r.l < L + w + 8 && T < r.b + 8 && r.t < T + h + 8) T = Math.min(SAFE.b - h, r.b + 10);
       placed.push({ l: L, r: L + w, t: T, b: T + h });
     }
     el.style.left = L + "px"; el.style.top = T + "px";
+    // tiktok: a leader line from the label to the exact spot it names, in the label's colour
+    const op = +getComputedStyle(el).opacity, onScreen = v3.z < 1 && x > 0 && x < W && y > 0 && y < H;
+    if (op > 0.01 && onScreen) {
+      const nx = Math.min(L + w, Math.max(L, x)), ny = Math.min(T + h, Math.max(T, y)), d = Math.hypot(nx - x, ny - y);
+      const raw = el.querySelector("i") ? getComputedStyle(el.querySelector("i")).backgroundColor : "rgb(255,255,255)";
+      const [cr, cg, cb] = (raw.match(/\d+/g) || [255, 255, 255]).map(Number);
+      const c = (0.2126 * cr + 0.7152 * cg + 0.0722 * cb) / 255 < 0.4 ? "#f5f5f7" : raw;   // dark swatches (hair, blackhead) get a light line
+      el.style.setProperty("--c", c);
+      if (d > 10) leads.push('<line x1="' + x.toFixed(1) + '" y1="' + y.toFixed(1) + '" x2="' + nx.toFixed(1) + '" y2="' + ny.toFixed(1) + '" stroke="' + c + '" stroke-width="' + (0.004 * W).toFixed(2) + '" stroke-linecap="round" opacity="' + op.toFixed(3) + '"/>');
+      leads.push('<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (0.009 * W).toFixed(2) + '" fill="' + c + '" stroke="#fff" stroke-width="' + (0.0035 * W).toFixed(2) + '" opacity="' + op.toFixed(3) + '"/>');
+    }
   }
+  leadsEl.innerHTML = leads.join("");
 };
 // tiktok: captions. One page per sentence (≤ 2 lines), the word being spoken lit rose, the words
 // already said white, the rest a little dimmer. Built from the voice's word times in film.json.
@@ -247,6 +273,9 @@ const captions = (t) => {
   if (k !== capShown) {
     capEl.innerHTML = k < 0 ? "" : CAPS[k].lines.map((r) => '<span class="r">' + r.map(([w]) => "<i>" + w.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</i>").join(" ") + "</span>").join("");
     capShown = k;
+    capEl.style.fontSize = "";
+    const maxW = 0.72 * W, wNow = capEl.offsetWidth;
+    if (wNow > maxW) capEl.style.fontSize = (parseFloat(getComputedStyle(capEl).fontSize) * (maxW - 4) / wNow).toFixed(2) + "px";   // tiktok: the words always fit their box
   }
   if (k < 0) { capEl.style.opacity = 0; return; }
   const c = CAPS[k], words = c.lines.flat(), el = capEl.querySelectorAll("i");
@@ -326,6 +355,7 @@ window.seek = function (t) {
   // labels and the day counter (DOM)
   const $ = M.$;
   (CUE.labels[i] || []).forEach(([id, at]) => enter($("#" + id), lt, at, { y: id === "dayc" ? 10 : 8 }));
+  (CUE.labelsOut || []).forEach(([id, k, at]) => { if (i === k && lt >= at) M.leave($("#" + id), lt, at, { y: -6 }); });
   pin();   // tiktok: after this frame's entrances, so stacking reads this frame's opacities
   if (i === 3) {   // tiktok: weeks, 0 → 8 → 12 on the spoken words, 8 to 12 lit
     const W_ = CUE.weeks; let wk = 0;
