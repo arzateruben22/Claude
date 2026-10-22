@@ -238,6 +238,9 @@ test("reports: wording is checked, approval freezes it, the client reads it with
   const good = await ok("studio", T.evelyn2, { action: "report_draft", profile_id: U.beaProfile, image_capture_ids: [c1, c2], summary: "Your first ProCell session went smoothly." });
   assert.deepEqual(good.problems, []);
   assert.equal((await ok("skin", T.bea, { action: "reports" })).reports.length, 0);
+  const preview = await ok("studio", T.evelyn2, { action: "report", id: good.report.id });
+  assert.equal(preview.report.status, "draft");
+  assert.equal(Object.values(preview.urls).filter(Boolean).length, 2);
   await ok("studio", T.evelyn2, { action: "report_approve", id: good.report.id });
   const list = await ok("skin", T.bea, { action: "reports" });
   assert.equal(list.reports.length, 1);

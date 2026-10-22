@@ -12,7 +12,7 @@
 //     session_open · session_update · capture_begin · capture_commit · quality_review · image_urls
 //     analyze · compare · measurement_review · change_review · site_save
 //     treatment_save · treatment_sign · treatment_amend · routine_propose
-//     report_draft · report_approve · report_withdraw · needs
+//     report_draft · report · report_approve · report_withdraw · needs
 //   Admin: staff_list · staff_set · assign · unassign · settings_set · devices · device_set
 //     validation_set · audit · data_requests · data_request_complete · analytics
 
@@ -375,6 +375,20 @@ export function handle(req: Request, deps: Deps) {
           session_ids: sessionIds, content: built.content, status: "draft", created_by: me.id }).select("*").single());
         await log("report.draft", { profile_id: p.id, record_table: "progress_reports", record_id: row.id });
         return { report: row, problems: built.ok ? [] : built.problems };
+      }
+
+      case "report": {
+        if (!isUuid(b.id)) throw new HttpError(400, "invalid");
+        const rep = must(await db.from("progress_reports").select("*").eq("id", b.id).maybeSingle());
+        if (!rep) throw new HttpError(404, "no_report");
+        const p = await open(rep.profile_id, "report.preview");
+        const r = await loadRecord(deps, p.id);
+        const ids = (rep.content?.images ?? []).map((i: any) => i.capture_id).filter(isUuid);
+        const paths = pathsFor(r, ids, "view", true);
+        const seconds = await urlSeconds(deps);
+        const signed = await signedUrls(deps, Object.values(paths).filter(Boolean) as string[], seconds);
+        await log("report.preview", { profile_id: p.id, record_table: "progress_reports", record_id: rep.id });
+        return { report: rep, urls: Object.fromEntries(Object.entries(paths).map(([id, path]) => [id, path ? signed.get(path as string) ?? null : null])), expires_in: seconds };
       }
 
       case "report_approve": {
