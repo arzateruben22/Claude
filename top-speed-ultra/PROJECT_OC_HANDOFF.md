@@ -146,6 +146,23 @@ itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's inte
 
 ### Decisions waiting (the owner's)
 
+- **Sim mode's low-speed slides (physics plan item 1, 2026-10-22).** Below about 6 m/s of forward speed a "parking cart"
+  rescue catches a sideways slide and swings the yaw hard, at 2,651 deg/s², 4.7 times what the tyres allow (558). An
+  implicit lateral/yaw step removes that snap (166 deg/s²). But without the rescue, Sim slides past about 60 deg can
+  spin, so 82 of the harness's Sim catch checks fail. Choose:
+  - (a) big Sim slides may spin, and the Sim catch checks become "a finite spin that stops rotating", like the Sim
+    power-over check already is; or
+  - (b) keep the rescue.
+
+  If (a), apply `scratchpad/fable/physics/after/item1-not-committed/item1-refined-on-d885737.patch` (it applies
+  cleanly; the evidence is in the same folder). Fix the harness's backwards-travel drift reading first.
+- **The pause (13:38 UTC): what waits for the owner.**
+  - Hair and body: plans from their audits, branched from the face head.
+  - The Retro finish (`retro/port`, judge pending).
+  - The walk-in interiors (needs the always-on session's S1 engine).
+  - Smaller follow-ups:
+    - hands: smooth the thumb-bone weights, the knee pose's thumb, the nail tint;
+    - wheels: the twin5 seam, the crown at the spoke root, the recess disc, a high-tier tyre pass.
 - **The weekly usage budget: answered (06:50 UTC).** The owner: "Continue all 3 even if my current session runs out - continue once it resets". Every area continues (hands, wheels and the live integration, then Retro, then physics, face/eyes, hair and body); when a limit stops work, the hourly task resumes it after the reset, and a one-off check-in is set for the weekly reset (Sunday 2026-10-25 22:05 UTC).
 - The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
 - Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.

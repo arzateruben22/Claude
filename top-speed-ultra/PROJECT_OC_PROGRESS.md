@@ -4,6 +4,50 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
+
+- **The owner (13:38 UTC): "Take a pause once tasks are complete."** The work in flight finishes and lands if judged
+  keep: the live integration, the face/eyes judge, and this physics landing. Nothing new starts: hair, body and the
+  Retro finish wait. A watcher stops overdrive round 2 if it reaches hair or body. When the in-flight work is done, the
+  hourly task and the Sunday check-in are switched off.
+- **Landed `fable/physics` on `claude/hypercar`** as e1c2270 (2 commits, `src/game/vehicle/Physics.ts` only). The judge (Opus)
+  returned keep and reproduced every claim byte for byte.
+  - **What changed:**
+    - A step longer than 1/120 s now runs as equal 1/120 s steps with the controls held, so a 60 Hz caller gets the
+      120 Hz car. Measured 60 against 120 Hz: 0-60 within 0.37 % (was 2.94 %), 0-100 0.22 % (1.08 %), quarter mile
+      0.10 % (0.55 %), top speed 0.00 %, 100-0 0.11 %, lateral g 0.000 g, catch time within 9.8 % (the scripted driver
+      decides at 60 Hz).
+    - A barrier grind costs per second, not per step. 240 against 120 Hz, the barrier's share of the speed lost is
+      within 0.4-3.0 % in the judge's harder press (base: up to +99 %).
+  - **In the game nothing changes for a player:** the game always steps at exactly 1/120 s, a path the judge proved
+    bit-identical. The value is that the model now meets the dynamics design's dt-independence requirement and protects
+    any future caller at another rate.
+  - **The judge's guards** (f00ae9f, by the coordinator):
+    - a non-finite step is ignored, and a long one is capped at 12 steps (`step(Infinity)` used to loop forever);
+    - a landing counts as a fresh barrier touch.
+
+    Both are bit-identical at 120 Hz.
+  - **Verified on the merged build:**
+
+    | Check | Result |
+    | --- | --- |
+    | `node tests/dynamics.mjs` | 1742 passed, 0 failed; the JSON byte-identical to the judge's and to before (sha256 e28f83e5) |
+    | `--hz=60 --only=perf,drift` | 1163 passed, 13 failed, byte-identical to the judge's (base: 31 failed). The 13 are harness artefacts |
+    | survival | 7/7 |
+    | race | 6/6 |
+
+    The 13 harness artefacts: the 60 Hz kTop sampling aliases on the rev limiter (8 top-speed rows with tops equal to
+    120 Hz's), plus driver-rate checks.
+  - **Not done:**
+    - **Plan item 1** (an implicit lateral/yaw step, which takes the low-speed yaw snap from 2,651 to 166 deg/s², under
+      the tyres' 558 ceiling) is built but not committed: it fails 82 Sim catch checks. That's the owner's call (see the
+      handoff's "Decisions waiting").
+    - **Harness fixes for the tests lane:**
+      - the advisory rows print `[object Object]`;
+      - kTop should be sampled per 1/120 s;
+      - a car travelling backwards reads a drift angle of 0.
+    - The audit's step-cost label was out by 1,000: the model costs about 0.018 % of one core, not 21 %.
+
 ## 2026-10-22 (12:45 UTC): the overdrive's round 1 landed: the thumbs and the wheels
 
 - **Landed on `claude/hypercar`** after independent adversarial judges, each running on Opus (the session's model since
