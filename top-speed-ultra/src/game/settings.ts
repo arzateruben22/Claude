@@ -1,5 +1,7 @@
 // Player settings and the graphics quality presets. Saved to localStorage when it's available.
 
+import { CONFIG } from '../store/config';
+
 export const VERSION = '0.1.0';   // keep in step with package.json; shown in feedback reports
 
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
@@ -130,9 +132,20 @@ export function ownerFromHash(): boolean | null {
   return null;
 }
 
+// The owner's test build (owner, 2026-10-21: "make sure the hypercar is playable on my end"): owner mode starts on, with
+// no setting to find and no #owner needed, even where this device saved it off. scripts/single-file.mjs marks the
+// artifact page it writes (<div id="root" data-build="owner-test">) unless VITE_OWNER_TEST_BUILD=false or anything
+// says live payments; and a build whose store is live (src/store/config.ts) ignores the mark. #owner=0, or the Settings
+// toggle, turns it off for that visit.
+export function ownerTestBuild(): boolean {
+  if (CONFIG.live) return false;
+  try { return document.getElementById('root')?.dataset.build === 'owner-test'; } catch { return false; }
+}
+
 export function loadSettings(): Settings {
   const s = readSettings(), hash = ownerFromHash();
   if (hash !== null && hash !== s.owner) { s.owner = hash; saveSettings(s); }
+  else if (hash === null && ownerTestBuild()) s.owner = true;   // for this visit; what the device saved is left as it was
   return s;
 }
 

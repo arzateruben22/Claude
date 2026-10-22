@@ -5,6 +5,7 @@
 // no other file; the fonts stay a Google Fonts link.
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { loadEnv } from 'vite';
 
 const dist = new URL('../dist/', import.meta.url).pathname;
 const assets = join(dist, 'assets');
@@ -32,10 +33,16 @@ const head = `<title>OC Ultra: Top Speed</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Saira+Semi+Condensed:wght@400;700;800&display=swap">
 <style>${css}</style>`;
-const body = `<div id="root"></div>
+const body = (root) => `${root}
 <noscript>OC Ultra: Top Speed is a 3D driving game and needs JavaScript and WebGL.</noscript>
 <script type="module">${safe}</script>`;
-writeFileSync(join(dist, 'artifact.html'), `${head}\n${body}\n`);
+// The owner's test build: the artifact page (the owner's private test link) opens with owner mode on, every car to
+// drive, the OC Hypercar included (src/game/settings.ts ownerTestBuild). Only the artifact page is marked, and never
+// when VITE_OWNER_TEST_BUILD is "false" or VITE_PAYMENTS_LIVE is "true" (the store's live switch, .env.example); the
+// game also ignores the mark in a live-mode build. The page that opens from disk (and the regression suite) is unmarked.
+const env = loadEnv('production', new URL('..', import.meta.url).pathname, 'VITE_');
+const ownerTest = String(env.VITE_PAYMENTS_LIVE ?? '').trim() !== 'true' && String(env.VITE_OWNER_TEST_BUILD ?? '').trim() !== 'false';
+writeFileSync(join(dist, 'artifact.html'), `${head}\n${body(ownerTest ? '<div id="root" data-build="owner-test"></div>' : '<div id="root"></div>')}\n`);
 writeFileSync(join(dist, 'top-speed-ultra.html'),
-  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n${head}\n</head>\n<body>\n${body}\n</body>\n</html>\n`);
-console.log(`single-file: ${(js.length / 1024).toFixed(0)} KB js, ${(css.length / 1024).toFixed(1)} KB css, ${(inlined / 1024).toFixed(1)} KB of images inlined`);
+  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n${head}\n</head>\n<body>\n${body('<div id="root"></div>')}\n</body>\n</html>\n`);
+console.log(`single-file: ${(js.length / 1024).toFixed(0)} KB js, ${(css.length / 1024).toFixed(1)} KB css, ${(inlined / 1024).toFixed(1)} KB of images inlined; artifact page ${ownerTest ? 'marked as the owner test build (owner mode on)' : 'unmarked'}`);

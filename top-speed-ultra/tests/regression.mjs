@@ -645,6 +645,38 @@ await group('progression', async (use) => {
       + `${Math.round(s0.credits).toLocaleString()} credits, ${s0.vehicles.length} slots used: top ${Math.round(s0.top * MPH)} → ${Math.round(s1.top * MPH)} mph, run in ${run.built}; `
       + `profile unchanged (${s1.vehicles.join(', ')}, driving ${s1.chosen}); off: back to ${s2.car}; #owner on/off: ${hash.a.on}/${hash.b.on}`;
   });
+  // the owner's test build (owner, 2026-10-21: "make sure the hypercar is playable on my end"): the artifact page that
+  // npm run build writes opens in owner mode even where the device saved it off, the OC Hypercar ready to drive; the
+  // page above (top-speed-ultra.html) is unmarked; #owner=0 still turns it off
+  await check("owner test build: the artifact page opens in owner mode over a saved owner:false; the hypercar drivable; #owner=0 off", async () => {
+    const ART = path.join(path.dirname(GAME), 'artifact.html');
+    expect(existsSync(ART), `no ${ART}`);
+    const marked = /<div id="root" data-build="owner-test">/.test(readFileSync(ART, 'utf8')), plain = !/data-build=/.test(readFileSync(GAME, 'utf8'));
+    expect(marked && plain, `artifact marked ${marked}, top-speed-ultra.html unmarked ${plain}`);
+    const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
+    await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: false })));
+    const pg = await ctx.newPage(); pg.setDefaultTimeout(120000);
+    const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
+    const boot = async (hash) => {
+      await pg.goto(pathToFileURL(ART).href + hash);
+      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+      await pg.locator('.pick', { hasText: 'Car' }).first().click();
+      await pg.waitForSelector('.panel.profile .gcell.car');
+      return pg.evaluate(() => {
+        const g = window.__game, card = [...document.querySelectorAll('.panel.profile .gcell.car')].find((c) => c.querySelector('.carhead b').textContent === 'OC Hypercar');
+        return { owner: g.settings.owner, chip: document.querySelector('.panel.profile h2 .chip')?.textContent ?? '', car: g.carId, drive: !!card?.querySelector('button[aria-label="Drive the OC Hypercar"]') };
+      });
+    };
+    const a = await boot('');
+    await pg.getByRole('button', { name: 'Drive the OC Hypercar' }).click();
+    const picked = await pg.evaluate(() => window.__game.carId);
+    const b = await boot('#owner=0');
+    await ctx.close();
+    expect(a.owner && a.chip === 'Owner mode · test build' && a.car === 'rossini-gt' && a.drive && picked === 'oc-hyper', `test build: ${JSON.stringify(a)}, picked ${picked}`);
+    expect(!b.owner && !b.chip && !b.drive, `#owner=0: ${JSON.stringify(b)}`);
+    expect(errs.length === 0, errs.slice(0, 3).join(' | '));
+    return `artifact page marked, top-speed-ultra.html not; saved owner:false → owner mode on, chip "${a.chip}", starter ${a.car}, hypercar picked (${picked}); #owner=0 → off, no Drive for it`;
+  });
 });
 
 // SwiftShader here manages under 2 fps on Low and well under 1 fps on High and Ultra (a frame there can take over a

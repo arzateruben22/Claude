@@ -10,7 +10,7 @@ import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } fr
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -37,6 +37,8 @@ type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// the owner's test build turns owner mode on at every load (settings.ts ownerTestBuild); the Settings row and the garage say so
+const TEST_BUILD = ownerTestBuild();
 // the Settings rail (U8): the sections in the library's order; every control keeps its label, so all stay on one page
 const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD and map'], ['world', 'World'], ['driving', 'Driving'], ['sound', 'Sound'], ['testing', 'Testing']];
 // the mode cards' one-line subtitles (the menu)
@@ -409,6 +411,7 @@ export function App() {
                 <section className="sgroup" id="set-testing">
                   <h3 className="sect">Testing</h3>
                   <Toggle label="Owner mode (all cars unlocked, test builds only)" value={settings.owner} onChange={(v) => update({ owner: v })} />
+                  {TEST_BUILD && <p className="fine" id="owner-test-note"><b>This test build turns owner mode on</b> every time it opens, so the OC Hypercar and every other car are ready to drive. Turn it off here for this visit, or open the game with #owner=0 in the address.</p>}
                   <p className="fine">Every car in the garage to drive, without credits, a level or a slot. Your saved garage, credits and level stay as you earned them. A switch on this device, not a sign-in; opening the game with #owner turns it on.</p>
                 </section>
               </div>
@@ -799,9 +802,9 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
   const p = book.p, level = levelOf(p.xp), slots = garageSlots(level, p.homes), owner = game.ownerMode;
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return <>
-    <h2>Garage{owner && <span className="chip">Owner mode</span>}</h2>
+    <h2>Garage{owner && <span className="chip">{TEST_BUILD ? 'Owner mode · test build' : 'Owner mode'}</span>}</h2>
     <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {book.slotsUsed} of {slots} slots (more open every 4 levels, and with each home). Credits come from driving; nothing here costs real money.</p>
-    {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
+    {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     <Seg label="Garage" value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
     {tab === 'paint' && (() => {
