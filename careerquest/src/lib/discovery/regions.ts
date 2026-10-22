@@ -62,7 +62,7 @@ const COUNTY_CITIES: Record<string, readonly string[]> = {
 const METRO_ALIASES: ReadonlyArray<[RegExp, string]> = [
   [/\b(?:greater\s+los\s+angeles|los\s+angeles\s+metropolitan|los\s+angeles\s+metro|la\s+metro)\b/i, "los angeles"],
   [/\bl\.?a\.?\s+county\b/i, "los angeles"],
-  [/\b(?:oc|o\.c\.)\b/, "orange"],
+  [/(?:^|[\s,(])O\.?C\.?(?=$|[\s,)])/, "orange"],
   [/\binland\s+empire\b/i, "riverside"],
 ];
 
