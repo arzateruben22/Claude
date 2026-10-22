@@ -136,6 +136,7 @@ itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's inte
 
 ### Decisions waiting (the owner's)
 
+- **The weekly usage budget (06:37 UTC 2026-10-22).** The seven-day limit reads "allowed_warning" (resets Sunday 3 PM PT). Held until the owner answers: the overdrive's physics, face/eyes, hair and body implementations (their Fable audits are done) and the Retro finish. Still running: the live integration and the hands and wheels. Spent so far by this session: about $469 (session meter).
 - The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
 - Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.
 - Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
