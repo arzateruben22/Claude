@@ -649,7 +649,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
 
 /* where you are and what's next: the road as a green guide sign (the shield, then the direction), the manoeuvre under it */
-.hud-road { position: absolute; top: calc(max(14px, env(safe-area-inset-top)) + 34px); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; max-width: min(46vw, 520px); }
+/* width: max-content, or a box at left: 50% shrinks to half the screen and a phone wraps an errand's line under the
+   road chip onto two lines, under the navigation card that sits one line below it */
+.hud-road { position: absolute; top: calc(max(14px, env(safe-area-inset-top)) + 34px); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; width: max-content; max-width: min(46vw, 520px); }
 .hud-roadname { display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 5px 14px 5px 8px; font: 600 14px/1.2 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 6px; box-shadow: 0 6px 18px var(--shadow); }
 .hud-roadname:has(> span:last-child:empty) { display: none; }
@@ -1196,7 +1198,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .rail-btn small.alpha.on { color: var(--good); box-shadow: inset 0 0 0 1px var(--good); }
 /* the Live panel: its section reads like the rail (rows with hairlines in a cell), the status line in plain case */
 .live-sec { display: grid; gap: 14px; }
-.live-sec .sect { color: var(--ice-text); font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.06em; text-transform: none; }
+.live-sec .sect { display: block; color: var(--ice-text); font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.06em; text-transform: none; }   /* one sentence that wraps as text */
+.live-sec .sect::after { content: none; }
 .live-sec .picks { background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
 .live-sec .pick { padding-left: 14px; }
 .live-sec .pick:last-child { box-shadow: none; }
