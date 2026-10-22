@@ -2,8 +2,9 @@
 // a wheel-speed state per axle driving one combined-slip (friction ellipse) tyre law, ABS and traction control as
 // slip-ratio controllers on those states, aero drag and downforce, a 7-speed dual-clutch drivetrain with its inertia
 // reflected to the driven axle, and the hypercar's interfaces: an external body force and axle load (`ext`), a front
-// drive share, torque vectoring on the rear axle, and a scripted hop bound to the road. Runs at a fixed 120 Hz; nothing
-// in it depends on the step size (exact exponentials, an implicit wheel update in two substeps).
+// drive share, torque vectoring on the rear axle, and a scripted hop bound to the road. Runs at a fixed 120 Hz (a longer
+// step is taken as 120 Hz steps); nothing in it depends on the step size (exact exponentials, an implicit wheel update
+// in two substeps).
 // Car frame: x forward, y to the left, yaw rate r counter-clockwise (left) positive. SI units throughout.
 
 import { clamp, lerp, smoothstep } from '../util';
@@ -188,7 +189,21 @@ export class CarPhysics {
     return true;
   }
 
+  // A step longer than 1/120 s (a 60 Hz caller) is taken as equal steps of at most 1/120 s with the controls held, so
+  // a 60 Hz caller gets the 120 Hz car. The parts that run once per step (the engine's revs and the shift timing, the
+  // filtered ax/ay that move the load, the body held while the wheels substep, the walls) each make a coarser step a
+  // slightly different car: run whole at 60 Hz, a spinning launch's 0-60 moved 2.9 % and sharing out only the wheels'
+  // substeps still left 2 %. At 120 Hz and above this is the one step, exactly as before. `px/pz/ppsi` stay the pose
+  // at the start of the caller's step (the traffic's swept contact reads them).
   step(dt: number, c: Controls, road: Path, net: Network) {
+    const k = Math.ceil(dt * 120 - 1e-6);
+    if (k <= 1) { this.advance(dt, c, road, net); return; }
+    const px = this.x, pz = this.z, ppsi = this.psi, h = dt / k;
+    for (let i = 0; i < k; i++) this.advance(h, c, road, net);
+    this.px = px; this.pz = pz; this.ppsi = ppsi;
+  }
+
+  private advance(dt: number, c: Controls, road: Path, net: Network) {
     this.px = this.x; this.pz = this.z; this.ppsi = this.psi;
     if (this.airborne) { this.airStep(dt, c, road); return; }
     const assist = 1 - this.handling;
