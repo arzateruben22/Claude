@@ -264,8 +264,9 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   // integer repeat, so the pattern meets itself at the seam
   for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, 4 * j / dsegs, i / 3);
   put(S, 'disc', ring);
-  // the edge stays 'dark': a heat-tinted edge (the exhaust tips' iridescent steel) was tried and showed from no
-  // wheel view (edge-on from the side, behind the lip at 3/4), and in the game a key of its own is a mesh per wheel
+  // the edge stays 'dark': a heat-tinted edge in the exhaust tips' iridescent steel was tried. Edge-on from the side,
+  // and at 3/4 only a thin light sliver past the lip that reads as chrome, not heat; and in the game a key of its own
+  // is a mesh per wheel (four draw calls a car)
   put(S, 'dark', lathe([[Rd, xi], [Rd, xo]], [0, 1], dsegs, false));
   const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [hb + 0.002, xo + 0.026], [hb, xh - 0.034]];
   put(S, 'rimPaint', lathe(bell, bell.map((p) => p[0] * 6), high ? 48 : 24, false));
