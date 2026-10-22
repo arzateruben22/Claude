@@ -180,7 +180,11 @@ float stub = 0.0;
   vec2 sc = cells(hp * 2.2);
   float dots = smoothstep(0.32, 0.1, sc.x);
   stub = beard * uBeard * (0.45 + 0.55 * dots * mid);
-  c = mix(c, mix(c * 0.62, uBeardCol * 0.6, 0.55), clamp(stub, 0.0, 1.0) * 0.8);
+  // under a beard, goatee or moustache (strand cards over it) the base is full and nearer the hair's own colour, so the
+  // hair reads as one dense mass between the cards instead of as dark tufts on skin
+  float fullB = smoothstep(0.85, 0.95, uBeard);
+  float amt = mix(stub * 0.8, beard * (0.8 + 0.2 * dots), fullB);
+  c = mix(c, mix(c * 0.62, uBeardCol * 0.6, mix(0.55, 0.9, fullB)), clamp(amt, 0.0, 1.0));
 }
 #endif
 // scalp under the hair: the hair's colour, with strands

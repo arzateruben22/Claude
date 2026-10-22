@@ -11,6 +11,7 @@ import { meshField } from './mesher';
 import { Quality, Look } from './params';
 import { NOISE } from './skin';
 import { cardMaterial, lashTexture, browTexture } from './cards';
+import { faceMasks } from './masks';
 
 export const MORPHS = ['jawOpen', 'mouthClose', 'smileL', 'smileR', 'wide', 'pucker', 'press', 'tuck', 'browUp', 'browDownL', 'browDownR', 'blinkL', 'blinkR', 'squintL', 'squintR'] as const;
 export type MorphName = typeof MORPHS[number];
@@ -259,7 +260,8 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
   return { pos, uvs, idx, deltas, mat: cardMaterial(0x0c0a09, lashTexture(), quality, { kk: false, alphaTest: 0.35 }) };
 }
 
-/** brows on the skin: points projected onto the head's surface */
+/** brows on the skin: points projected onto the head's surface; facial hair (a beard, a goatee, a moustache) rides in
+ *  the same mesh, so it shares the brows' material, draw call and morph deltas */
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
   const thick = m ? 1.12 : 0.86, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
@@ -287,19 +289,154 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
         rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0)));
       }
     }
-    const s = stripGeometry(rows, (i, j) => [i / (n - 1), j / 2]);
+    const s = stripGeometry(rows, (i, j) => [i / (n - 1), j / 4]);   // the atlas' brow half (v 0..0.5)
     const off = pos.length / 3;
     pos.push(...s.pos); uvs.push(...s.uvs); idx.push(...s.idx.map((v) => v + off));
   }
+  const fh = look.facialHair;
+  if (m && (fh === 'beard' || fh === 'goatee' || fh === 'moustache')) growBeard(hf, field, look, quality, pos, uvs, idx);
   const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.55).getHex();
-  const mat = cardMaterial(brow, browTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
+  const mat = cardMaterial(brow, browBeardTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
   mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
   return { pos, uvs, idx, mat };
 }
 
+// ------------------------------------------------------------------------------------------------ facial hair
+// A beard as strand cards grown where masks.ts puts it (a full beard, a goatee, a moustache): roots on a jittered grid
+// round the lower face, found on the skin by marching in from outside, never within 2.5 mm of the lips or in the
+// mouth; each card leaves the skin a little and lies down along it (outward 0.35, down 0.65, a little jitter), bending
+// back toward the skin at its tip; 7-10 mm for a beard, 5-6 mm for a goatee or moustache, a moustache's tips kept above
+// the upper lip's vermilion. The skin under it is tinted dark (skin.ts), so the cards add the hair's texture, its soft
+// edge and its volume over a full base.
+
+/** the brow texture (v 0..0.5, unchanged) with four tiles of beard strands above it (v 0.5..1, roots at each tile's left) */
+let browBeardTex: THREE.Texture | null = null;
+function browBeardTexture() {
+  if (browBeardTex) return browBeardTex;
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const g = c.getContext('2d')!;
+  g.clearRect(0, 0, 512, 128);
+  g.drawImage(browTexture().image as CanvasImageSource, 0, 64);   // flipY: the canvas' lower half is v 0..0.5
+  const r = rng(9091);
+  for (let k = 0; k < 4; k++) {
+    const x0 = k * 128;
+    // a soft density under the strands, strongest toward the root (a beard reads as a tone before single hairs do)
+    for (let i = 0; i < 9; i++) {
+      const cx = x0 + 10 + i * 11, rr = 22 - i * 1.2;
+      const gr = g.createRadialGradient(cx, 32, 0, cx, 32, rr);
+      gr.addColorStop(0, `rgba(255,255,255,${0.12 - i * 0.009})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = gr; g.fillRect(cx - rr, 32 - rr, rr * 2, rr * 2);
+    }
+    // strands from the root end, clumping a little toward the card's middle, tapering out before the tile's edge
+    for (let i = 0; i < 52; i++) {
+      const ys = 9 + 46 * r.next(), xs = x0 + 1 + 22 * r.next();
+      const L = Math.min(52 + 68 * r.next(), x0 + 124 - xs);
+      const ang = (r.next() - 0.5) * 0.18 + ((32 - ys) / 32) * 0.1, bend = (r.next() - 0.5) * 9;
+      const ex = xs + Math.cos(ang) * L, ey = ys + Math.sin(ang) * L;
+      const v = Math.round(150 + 105 * r.next()), a0 = 0.35 + 0.3 * r.next();
+      const grad = g.createLinearGradient(xs, ys, ex, ey);
+      grad.addColorStop(0, `rgba(${v},${v},${v},${a0})`); grad.addColorStop(0.65, `rgba(${v},${v},${v},${a0 * 0.7})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
+      g.strokeStyle = grad; g.lineWidth = 0.8 + 0.9 * r.next();
+      g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + ex) / 2 - Math.sin(ang) * bend, (ys + ey) / 2 + Math.cos(ang) * bend, ex, ey); g.stroke();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.NoColorSpace;   // channels are data: r = strand shade, a = coverage
+  t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
+  t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.anisotropy = 4;
+  browBeardTex = t;
+  return t;
+}
+
+function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, pos: number[], uvs: number[], idx: number[]) {
+  const fh = look.facialHair, high = quality === 'high', full = fh === 'beard';
+  const F = hf.face, mY = hf.mouth.y, mw = 0.026 * F.mouthW;
+  // only the primitives that reach the lower face (and every carve): a tenth of the cost of the whole body per eval
+  const lo = hf.toBody([-0.1, -0.2, -0.12]), hi = hf.toBody([0.1, 0.03, 0.08]);
+  const keep = new Set<number>();
+  for (const b of field.bounds()) {
+    let inside = true;
+    for (let k = 0; k < 3; k++) if (b.c[k] + b.r < lo[k] - 0.03 || b.c[k] - b.r > hi[k] + 0.03) inside = false;
+    if (inside) keep.add(b.i);
+  }
+  const lf = field.subset((i) => field.carve[i] === 1 || keep.has(i));
+  const D = (l: V3) => { const b = hf.toBody(l); return lf.eval(b[0], b[1], b[2], null, 0); };
+  const grad = (l: V3): V3 => {
+    const b = hf.toBody(l), e = 0.0004, f0 = lf.eval(b[0], b[1], b[2], null, 0);
+    const gx = (lf.eval(b[0] + e, b[1], b[2], null, 0) - f0) / e, gy = (lf.eval(b[0], b[1] + e, b[2], null, 0) - f0) / e, gz = (lf.eval(b[0], b[1], b[2] + e, null, 0) - f0) / e;
+    return norm([gx * hf.sx, gy * hf.sy, gz * hf.sz]);
+  };
+  const r = rng(Math.round(F.jaw * 7717 + F.chin * 3331 + F.width * 1777) + 41);
+  const g = full ? (high ? 0.003 : 0.0046) : (high ? 0.0026 : 0.004);   // grid step (m): cards overlap two or three deep
+  const cap = full ? (high ? 1100 : 460) : (high ? 360 : 160);
+  const W = (high ? 0.0027 : 0.0037) * (full ? 1 : 0.9);
+  const zA = -0.035, R = 0.066;
+  // where each kind can grow (head-local y, angle round the head from the front): rays outside it are never cast
+  const [yTop, yBot, phMax] = full ? [0.006, -0.128, 2.1] : fh === 'goatee' ? [-0.04, -0.125, 0.75] : [-0.04, mY, 0.75];
+  const roots: { p: V3; n: V3; beard: number }[] = [];
+  for (let y = yTop; y > yBot; y -= g) for (let ph = -phMax; ph <= phMax; ph += g / R) {
+    const yy = y + (r.next() - 0.5) * g * 0.8, a = ph + (r.next() - 0.5) * (g / R) * 0.8;
+    const dir: V3 = [Math.sin(a), 0, Math.cos(a)];
+    // a ray that cannot reach the beard is never marched (the mask before, at and behind the skin's usual depth)
+    let pre = 0;
+    for (const rr of [0.045, 0.06, 0.075]) pre = Math.max(pre, faceMasks([dir[0] * rr, yy, zA + dir[2] * rr], hf, look).beard);
+    if (pre < 0.05) continue;
+    // march in from outside to the skin
+    let t = 0.105, p: V3 = [0, 0, 0], hit = false;
+    for (let it = 0; it < 80 && t > 0.005; it++) {
+      p = [dir[0] * t, yy, zA + dir[2] * t];
+      const d = D(p);
+      if (d < 0.00025) { hit = true; break; }
+      t -= Math.max(d * 0.85, 0.0003);
+    }
+    if (!hit) continue;
+    const mk = faceMasks(p, hf, look);
+    if (mk.beard < 0.35 || mk.mouth > 0.01 || mk.lip > 0.02) continue;
+    // never within 2.5 mm of the lips
+    let nearLip = false;
+    if (Math.abs(p[0]) < mw + 0.008 && Math.abs(p[1] - mY) < 0.016) for (const o of [[0, 0.0025, 0], [0, -0.0025, 0], [0.0025, 0, 0], [-0.0025, 0, 0]] as V3[]) if (faceMasks(add(p, o), hf, look).lip > 0.1) nearLip = true;
+    if (nearLip) continue;
+    // thinner toward the mask's edge (a soft hairline, not a cut-out), and a neckline under the jaw
+    if (r.next() > smooth(0.3, 0.75, mk.beard) * smooth(-0.127, -0.108, p[1])) continue;
+    const nrm = grad(p);
+    roots.push({ p: add(p, mul(nrm, 0.0006)), n: nrm, beard: mk.beard });
+  }
+  // thin to the cap, evenly (a stable shuffle)
+  while (roots.length > cap) roots.splice(Math.floor(r.next() * roots.length), 1);
+  const hU = (x: number) => 0.0072 * F.lipUpper * Math.pow(clamp(1 - (x / mw) ** 2), 0.55);
+  for (const rt of roots) {
+    const { p, n } = rt;
+    // the hair lies down along the skin (down the face, back along the underside of the jaw), lifting off it a little
+    let along = sub([0, -1, 0], mul(n, -n[1]));
+    if (Math.hypot(along[0], along[1], along[2]) < 0.35) along = add(along, sub([0, 0, -0.6], mul(n, -0.6 * n[2])));
+    const d = norm(add(add(mul(norm(along), 0.88), mul(n, 0.3)), [(r.next() - 0.5) * 0.35, (r.next() - 0.5) * 0.15, (r.next() - 0.5) * 0.35]));
+    let L = (full ? 0.006 + 0.003 * r.next() : 0.005 + 0.0012 * r.next()) * (0.7 + 0.3 * smooth(0.35, 0.8, rt.beard));
+    // a moustache's (and a beard's upper lip) tips stay above the vermilion
+    if (p[1] > mY && Math.abs(p[0]) < mw + 0.004 && d[1] < 0) {
+      const lim = mY + hU(p[0]) + 0.0006;
+      L = Math.min(L, (p[1] - lim) / -d[1]);
+      if (L < 0.002) continue;
+    }
+    const w = norm(cross(d, n));
+    const tipD = norm(add(d, mul(n, -0.3)));   // bending back toward the skin
+    const mid = add(p, mul(d, L * 0.5)), tip = add(mid, mul(tipD, L * 0.5));
+    const hw = W * (0.8 + 0.4 * r.next()) * 0.5;
+    const rows: V3[][] = [
+      [add(p, mul(w, -hw)), add(mid, mul(w, -hw * 1.05)), add(tip, mul(w, -hw * 0.8))],
+      [add(p, mul(w, hw)), add(mid, mul(w, hw * 1.05)), add(tip, mul(w, hw * 0.8))],
+    ];
+    const u0 = Math.floor(r.next() * 4) * 0.25;
+    const sg = stripGeometry(rows, (i, j) => [u0 + 0.004 + 0.242 * (i / 2), 0.52 + 0.46 * j]);
+    const off = pos.length / 3;
+    pos.push(...sg.pos); uvs.push(...sg.uvs); idx.push(...sg.idx.map((v) => v + off));
+  }
+}
+
 // ------------------------------------------------------------------------------------------------ teeth and tongue
-// Every crown is its own blend group (a rounded box with a convex labial bulge; the canines and premolars cut to a
-// cusp): neighbouring crowns meet in a crisp crease instead of fusing into one bar (a 4 mm blend made the row a
+// Neighbouring crowns are in different blend groups (each a rounded box with a convex labial bulge; the canines and
+// premolars cut to a cusp): they meet in a crisp crease instead of fusing into one bar (a 4 mm blend made the row a
 // corrugated band that read as chrome), and each crown blends into the gum with a small fillet. The crowns are laid
 // along the arch by arc length with their own widths, a smile line (the laterals shorter, the canines longest and
 // pointed) and a slight yaw each. The upper and lower rows are meshed apart, so no triangle can bridge them when the
@@ -337,9 +474,9 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
   const mY = hf.mouth.y, F = hf.face, high = quality === 'high';
   const zL = 0.0161;                 // the upper central incisors' labial face (head-local)
   const r = rng(Math.round(F.mouthW * 7919 + F.lipUpper * 3011 + F.jaw * 1009 + F.chin * 499 + F.noseLen * 211) + 77);
-  // fine enough to keep the crowns' flat edges and the clefts between them; phone keeps only the front of the mouth
-  // (what a talking mouth shows): the back of the tongue is cut off
-  const h = high ? 0.0008 : 0.0015, zBack = high ? 0.048 : 0.026;
+  // fine enough to keep the crowns' flat edges and the clefts between them. The boxes end just behind the last crowns;
+  // the tongue is cut off behind what an open mouth shows (on phone, nearer still)
+  const h = high ? 0.0008 : 0.0015;
   const parts: { pos: Float32Array; nrm: Float32Array; idx: Uint32Array; col: Float32Array; lower: boolean }[] = [];
   for (const lower of [false, true]) {
     const f = new Field(), bone = lower ? 1 : 0;
@@ -350,6 +487,10 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
     // their edges when closed); overbite: the lower edges sit 1.4 mm up behind them
     const yEdge = lower ? mY - 0.0007 : mY - 0.0021;
     const crowns: { prims: number[]; i: number; n: V3; jit: number }[] = [], gums: number[] = [];
+    // two sibling groups, alternating along the arch: neighbours are always in different groups (a hard min, so a crisp
+    // crease between them) and crowns that share a group are a whole tooth apart (they never blend); each group blends
+    // into the gum with a small fillet. (One group per crown did the same at three times the cost per evaluation)
+    const grp = [f.addGroup(0, 0.0013), f.addGroup(0, 0.0013)];
     for (const side of [1, -1]) {
       let s = 0;
       specs.forEach((T, i) => {
@@ -362,7 +503,7 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
         const out: V3 = norm([side * (a.n[0] * cy - a.n[2] * sy), 0, a.n[2] * cy + a.n[0] * sy]);
         const edge = yEdge + sg * (T.dy + (r.next() - 0.5) * 0.00025);
         const cx = side * a.x - out[0] * T.t * 0.5, cz = a.z - out[2] * T.t * 0.5;
-        const g = f.addGroup(0, 0.0013);   // its own group: a crisp crease against its neighbours, a fillet into the gum
+        const g = grp[(side > 0 ? i : i + 1) % 2];
         const prim = f.box([cx, edge + sg * T.h * 0.5, cz], tng, [0, 1, 0], T.w, T.h * 0.5, T.t * 0.5, T.r, g, 0.0006, bone);
         // the labial face bulges (convex across and down): each crown shades as its own rounded form, its highlight a
         // soft band, instead of a flat tile. It ends just short of the incisal edge, so the edge stays crisp
@@ -392,7 +533,7 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
     }
     const tongue = lower ? f.ea([0, mY - 0.0088, zL - 0.0205], 0.0155, 0.0048, 0.017, 0, 0.003, 1) : -1;
     f.finalize();
-    const y0 = lower ? mY - 0.0185 : mY - 0.006, y1 = lower ? mY + 0.003 : mY + 0.012;
+    const y0 = lower ? mY - 0.0185 : mY - 0.006, y1 = lower ? mY + 0.003 : mY + 0.012, zBack = !lower ? 0.03 : high ? 0.04 : 0.026;
     const box = { o: [-0.034, y0, zL - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.068 / h), ny: Math.ceil((y1 - y0) / h), nz: Math.ceil((zBack + 0.0045) / h) };
     const mesh = meshField(f, box, h);
     const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3);

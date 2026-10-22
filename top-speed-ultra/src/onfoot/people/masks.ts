@@ -63,7 +63,8 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
     const neck = y < -0.1 ? smooth(-0.155, -0.12, y) * (z > -0.065 ? 1 : 0) : 1;
     const side = ax > 0.052 && y > -0.045 && y < 0.002 && z > -0.075 && z < -0.042 ? smooth(0.002, -0.006, y) : 0;
     const full = clamp(Math.max(lower * neck, must, side)) * (1 - lip) * (1 - mouth);
-    beard = fh === 'goatee' ? clamp(Math.max(must, lower * smooth(0.028, 0.018, ax) * (y < -0.085 ? 1 : smooth(mY - 0.002, mY - 0.006, y)))) * (1 - lip)
+    // (a goatee covers the chin and stops just under it: it used to run on down the throat)
+    beard = fh === 'goatee' ? clamp(Math.max(must, lower * smooth(0.028, 0.018, ax) * (y < -0.085 ? smooth(-0.124, -0.11, y) : smooth(mY - 0.002, mY - 0.006, y)))) * (1 - lip)
       : fh === 'moustache' ? must * (1 - lip) + full * 0.25
       : full;
   }
