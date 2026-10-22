@@ -93,6 +93,14 @@ the snapshot is a mid-edit state that never reached a judge, so merge only if ts
 pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
 small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
 
+**Resumed 04:27 UTC (2026-10-22, the owner: "keep going ... connect it to this branch and integrate both systems
+seamlessly"; they chose: the live server + this game, landing only after a judge).** Three workflows: the Fable overdrive
+(resumed), the Retro finish (resumed), and the live integration: `integrate/live` cut from `claude/hypercar`, bringing
+ONLY `top-speed-ultra/` from `origin/claude/live-server` db324db (no `server/`, `paper-book/`, desks or `START-HERE.md`),
+as a regular commit (a merge commit dropping those paths would revert them in a later merge back). The Live UI moves onto
+this branch's theme and navigation (the rail's Online row, Settings, the phone). The live-server session was told
+(04:35); `claude/live-server` itself is untouched.
+
 **Paused 23:02 UTC by the owner (see the progress log's 23:02 entry for each branch's state); was in flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
