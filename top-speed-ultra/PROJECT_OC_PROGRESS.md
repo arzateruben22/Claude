@@ -63,6 +63,14 @@ available, so frame rates on real hardware are **not** measured.
     - The recess disc floats 0.7-4.9 mm over the sloped boss.
     - On the phone chase camera the wheels look the same; the gain shows in the garage and close views.
   - No real-phone frame rates (SwiftShader only).
+- **Republished** the test build (version 9, from fbb60a7).
+- **Not yet merged into `claude/always-on`, on purpose.** A trial merge conflicted in `Game.ts`, `settings.ts`, `App.tsx`,
+  `HUD.tsx`, `styles.css` and three docs. The two branches split at 9cdcf07. Since then, always-on's 18 game commits are
+  all in the live server's code by patch, except decision 16 (`PROJECT_OC_DECISIONS.md`). That code reaches this branch
+  only through `integrate/live`, a plain commit, so git can't see the overlap. Resolving now would either undo
+  always-on's live work or repeat the integration's work by hand. The merge was aborted. It happens right after
+  `integrate/live` lands: game files resolve to this branch's versions, decision 16's lines are kept, and the diff outside
+  `top-speed-ultra/` stays empty.
 - **A lesson from the run.** At 11:40 the overdrive was stopped and resumed with the hands and wheels judges moved ahead
   of the other implementers. A Workflow resume replays saved results only until its first new agent call; after that
   everything runs live. So the face, physics, hair and body audits ran live on Fable and failed at once (no Fable usage
