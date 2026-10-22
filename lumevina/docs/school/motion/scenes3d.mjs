@@ -365,6 +365,8 @@ window.seek = function (t) {
   // the camera follows the wavefront with a little lead, drifts all the time, and rises for the finish
   const fi = Math.min(N - 1, wave(t));
   look.copy(pathAt(fi)); look.y = 0.6;
+  // the key light travels with the wave, so the dominoes at either end of the line keep their shadows
+  key.position.set(look.x + 6, 14, look.z + 8); key.target.position.set(look.x, 0, look.z); key.target.updateMatrixWorld();
   const rise = i === 2 ? E.inout(seg(lt, 2.2, 5.6)) : 0, drift = Math.sin(t * 0.35) * 0.5;
   const back = portrait ? 11 : 9;
   camera.position.set(look.x - 5 - rise * 3 + drift, 4.2 + rise * 3.5 + Math.cos(t * 0.3) * 0.25, look.z + back + rise * 3);

@@ -60,7 +60,8 @@ const OPT = Object.assign({ shadow: "vsm", samples: 4, dof: 1, glow: 0.35, vigne
   const _lookAt = THREE.Object3D.prototype.lookAt;
   const ax = new THREE.Vector3(), ay = new THREE.Vector3(), az = new THREE.Vector3();
   THREE.Object3D.prototype.lookAt = function (x, y, z) {
-    if (!this.isCamera) return _lookAt.call(this, x, y, z);
+    // only the camera the frame is shot with: a light's shadow camera (orthographic) aims at its own target every draw
+    if (!this.isPerspectiveCamera) return _lookAt.call(this, x, y, z);
     if (x && x.isVector3) STUDIO.focus.copy(x); else STUDIO.focus.set(x, y, z);
     STUDIO.hasFocus = true;
     _lookAt.call(this, STUDIO.focus);
