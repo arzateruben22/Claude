@@ -1,0 +1,251 @@
+<title>Everything Lumevina</title>
+<meta name="color-scheme" content="dark">
+<style>html, body { background: #000; color-scheme: dark; }
+body { transition: opacity .3s ease; }
+html.lv-enter body { opacity: 0; }</style>
+<script>document.documentElement.className += " lv-enter";</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Lumevina noir: the same black, porcelain cards and rose-to-sand light as the site */
+:root {
+  color-scheme: dark;
+  --ground: #000;
+  --card: #111113;
+  --card-hi: #19171a;
+  --hair: rgba(255, 255, 255, 0.09);
+  --ink: #f5f5f7;
+  --ink-2: #a8a4a7;
+  --ink-3: #6f6b6e;
+  --rose: #f4c9d6;
+  --grad: linear-gradient(95deg, #f7d3de 0%, #eab9c8 45%, #e2b08c 100%);
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--ground); color: var(--ink); }
+body { font-family: var(--font); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.wrap { width: min(1080px, 100%); margin: 0 auto; padding-inline: 20px; padding-block: 44px 56px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.brand { font-weight: 700; letter-spacing: -0.02em; font-size: 1.05rem; }
+.brand span { display: block; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-top: 2px; }
+.for { font-size: .82rem; font-weight: 600; color: var(--rose); }
+h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; margin: 56px 0 0; max-width: 13ch; text-wrap: balance; }
+.grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { color: var(--ink-2); font-size: clamp(1.05rem, 2vw, 1.25rem); max-width: 38rem; margin: 20px 0 0; letter-spacing: -0.01em; }
+.grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-top: 44px; }
+.card { grid-column: span 2; position: relative; display: flex; flex-direction: column; text-decoration: none; background: var(--card);
+  border-radius: 24px; padding: 22px 22px 20px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--hair);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, background-color .35s; }
+.card:hover { transform: translateY(-3px); background: var(--card-hi); box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .3), 0 24px 60px -30px rgba(244, 201, 214, .45); }
+.card:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.card.big { grid-column: span 3; display: grid; grid-template-columns: 1fr 132px; gap: 18px; align-items: end; min-height: 250px; }
+.tag { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--rose); }
+.card h2 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: 10px 0 8px; }
+.card p { color: var(--ink-2); font-size: .95rem; margin: 0; }
+.go { margin-top: auto; padding-top: 18px; font-weight: 600; font-size: .92rem; }
+.go span { display: inline-block; transition: transform .3s; }
+.card:hover .go span { transform: translateX(4px); }
+.copy { display: flex; flex-direction: column; height: 100%; }
+.phone { width: 132px; aspect-ratio: 9 / 19; border-radius: 22px; padding: 5px; background: #1d1d1f; align-self: end;
+  box-shadow: 0 0 0 1px #3a3a3c inset, 0 24px 50px rgba(0, 0, 0, .6); transform: translateY(26px) rotate(-3deg); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.card:hover .phone { transform: translateY(18px) rotate(0); }
+.phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 17px; }
+.grid .card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+  background: radial-gradient(90% 140% at 100% 50%, rgba(244, 201, 214, .12), transparent 60%), var(--card); }
+.lvls { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lvls li { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; border-radius: 999px; background: #19171a;
+  box-shadow: inset 0 0 0 1px var(--hair); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.lvls li:nth-child(2) { margin-left: 18px; } .lvls li:nth-child(3) { margin-left: 36px; }
+.card:hover .lvls li { transform: translateX(-6px); }
+.card:hover .lvls li:nth-child(2) { transition-delay: .05s; } .card:hover .lvls li:nth-child(3) { transition-delay: .1s; }
+.lvls b { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #000; font-size: .85rem; }
+.lvls span { font-weight: 600; font-size: .92rem; white-space: nowrap; }
+.pk { display: flex; align-items: flex-end; gap: 12px; padding-right: 6px; }
+.pk i { display: block; border: 1.5px dashed rgba(244, 201, 214, .55); border-radius: 6px; background: rgba(244, 201, 214, .06);
+  transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.pk i:first-child { border-radius: 12px; }
+.card:hover .pk i { transform: translateY(-5px); }
+.card:hover .pk i:nth-child(2) { transition-delay: .05s; } .card:hover .pk i:nth-child(3) { transition-delay: .1s; }
+.film { display: flex; gap: 6px; align-items: flex-end; }
+.film i { display: block; width: 34px; aspect-ratio: 9 / 16; border-radius: 7px; background: linear-gradient(170deg, #3a2a2c, #1a1214);
+  box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .3); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.film i:nth-child(2) { height: 72px; } .film i:nth-child(3) { background: var(--grad); }
+.card:hover .film i { transform: translateY(-5px); }
+.card:hover .film i:nth-child(2) { transition-delay: .05s; } .card:hover .film i:nth-child(3) { transition-delay: .1s; }
+.sub { margin: 44px 0 0; font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.sub + .grid { margin-top: 14px; }
+.ext { font-size: .78rem; color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+.try { margin-top: 44px; display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: start; }
+.try h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+.try h3 + p { color: var(--ink-3); font-size: .9rem; margin: 6px 0 0; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: s; }
+.steps li { counter-increment: s; border-top: 1px solid var(--hair); padding-top: 14px; color: var(--ink-2); font-size: .95rem; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; margin-bottom: 10px;
+  background: var(--grad); color: #000; font-size: .8rem; font-weight: 700; }
+.steps b { color: var(--ink); font-weight: 600; }
+.card-no { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em; color: var(--ink); white-space: nowrap; }
+.fine { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--hair); color: var(--ink-3); font-size: .82rem; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+@media (max-width: 860px) {
+  .card, .card.big { grid-column: 1 / -1; }
+  .card.big { grid-template-columns: 1fr 104px; min-height: 0; }
+  .phone { width: 104px; }
+  .grid .card.wide { grid-template-columns: 1fr; }
+  .lvls li:nth-child(n) { margin-left: 0; }
+  .try { grid-template-columns: 1fr; gap: 14px; }
+  .steps { grid-template-columns: 1fr; }
+  .pk, .film { display: none; }
+}
+@media (min-width: 861px) and (max-width: 1000px) { .card:not(.big) { grid-column: span 3; } .card.last { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { .card, .phone, .go span, .pk i, .film i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Lumevina<span>Aesthetics Spa</span></div>
+    <p class="for">For Evelyn</p>
+  </header>
+
+  <h1>Everything Lumevina, <span class="grad">in one place.</span></h1>
+  <p class="lead">Ruben built all of this for you, and it's all up to date. Open anything below and try it. It all works, and nothing is ever charged,
+  so book, join and tap around as much as you like.</p>
+
+  <nav class="grid" aria-label="Everything for Lumevina">
+    <a class="card big" href="site.html">
+      <div class="copy">
+        <span class="tag">The website</span>
+        <h2>Your spa, open every hour.</h2>
+        <p>Book with a deposit, join a Glow Membership, earn Glow Points, shop the shelf, send a gift certificate, ask Lumevina a question and take Skin School.</p>
+        <span class="go">Open the website <span aria-hidden="true">→</span></span>
+      </div>
+      <div class="phone" aria-hidden="true"><img src="img/home.jpg" alt=""></div>
+    </a>
+    <a class="card big" href="app.html">
+      <div class="copy">
+        <span class="tag">The iPhone app</span>
+        <h2>Your spa on every client&rsquo;s phone.</h2>
+        <p>Flash openings as alerts, one-tap booking with a banked facial, Glow Rewards and the magic mirror.</p>
+        <span class="go">Open the app <span aria-hidden="true">→</span></span>
+      </div>
+      <div class="phone" aria-hidden="true"><img src="img/rewards.jpg" alt=""></div>
+    </a>
+    <a class="card" href="dashboard.html">
+      <span class="tag">Your dashboard</span>
+      <h2>Every booking, member and dollar.</h2>
+      <p>Today&rsquo;s priorities in order, client questions, bookings, members, the books, your real shelf and its stock, orders and shipping.</p>
+      <span class="go">Open the dashboard <span aria-hidden="true">→</span></span>
+    </a>
+    <a class="card" href="blueprint.html">
+      <span class="tag">Growth Blueprint</span>
+      <h2>One chair. Then a house.</h2>
+      <p>The three-step plan: your chair, a pilot with two artists, then the Lumevina Collective.</p>
+      <span class="go">Open the blueprint <span aria-hidden="true">→</span></span>
+    </a>
+    <a class="card last" href="plan.html">
+      <span class="tag">The first 90 days</span>
+      <h2>A spa that pays you first.</h2>
+      <p>The road, the milestones and the first thirteen weeks, with a calculator for every number.</p>
+      <span class="go">Open the plan <span aria-hidden="true">→</span></span>
+    </a>
+    <a class="card wide" href="school.html">
+      <div class="copy">
+        <span class="tag">Skin School</span>
+        <h2>Your course, every lesson on film.</h2>
+        <p>Three levels and 40 lessons, each with its own explainer video, plus the skin quiz, the course player, and tiers with a kit or a 1-on-1 call with you. The new film-style videos arrive lesson by lesson as they finish.</p>
+        <span class="go">Open Skin School <span aria-hidden="true">&rarr;</span></span>
+      </div>
+      <ol class="lvls" aria-hidden="true">
+        <li><b>1</b><span>Skin Basics</span></li>
+        <li><b>2</b><span>Actives &amp; Routines</span></li>
+        <li><b>3</b><span>Treat Your Concern</span></li>
+      </ol>
+    </a>
+    <a class="card wide" href="shipping.html">
+      <div class="copy">
+        <span class="tag">Shipping kit</span>
+        <h2>Ship the shelf from home.</h2>
+        <p>What to buy, one evening of setup, and a ten-minute routine for each order. Orders land on your dashboard with the
+        box to use, a packing slip, and the file Pirate Ship turns into labels.</p>
+        <span class="go">Open the shipping kit <span aria-hidden="true">&rarr;</span></span>
+      </div>
+      <div class="pk" aria-hidden="true"><i style="width:100px;height:60px"></i><i style="width:60px;height:60px"></i><i style="width:100px;height:80px"></i></div>
+    </a>
+  </nav>
+
+  <p class="sub">Also for you</p>
+  <nav class="grid" aria-label="More for Lumevina">
+    <a class="card" href="https://claude.ai/artifact/Sd7rsRjVEQhd6VxzHUMzEK" target="_blank" rel="noopener">
+      <span class="tag">Video library</span>
+      <h2>Every clip, ready to post.</h2>
+      <p>The Skin School clips cut for TikTok and Reels, the ad images, and each new video beside its first version.</p>
+      <span class="go">Open the library <span aria-hidden="true">↗</span></span>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/R1pRrnH79BwaUoBZexefVQ" target="_blank" rel="noopener">
+      <span class="tag">Your Skin Playbook</span>
+      <h2>Teach the chat your way.</h2>
+      <p>The questions only you can answer. Every answer goes into what Lumevina tells your clients.</p>
+      <span class="go">Open the playbook <span aria-hidden="true">↗</span></span>
+    </a>
+    <a class="card last" href="https://claude.ai/artifact/BSEz8um2kxmaXrtXUov9vn" target="_blank" rel="noopener">
+      <span class="tag">Going live</span>
+      <h2>From preview to open.</h2>
+      <p>The step-by-step deck: Stripe, calendar sync, the web address, testing and launch.</p>
+      <span class="go">Open the deck <span aria-hidden="true">↗</span></span>
+    </a>
+  </nav>
+
+  <section class="try" aria-labelledby="try-h">
+    <div>
+      <h3 id="try-h">Try this first</h3>
+      <p>Three minutes, start to finish.</p>
+    </div>
+    <ol class="steps">
+      <li><b>Book a facial on the website.</b> Pay the deposit with the test card <span class="card-no">4242 4242 4242 4242</span>,
+      any future date and any three digits.</li>
+      <li><b>Open your dashboard.</b> The booking is waiting under your clients, with the deposit already in the books.</li>
+      <li><b>Open Skin School.</b> Lesson 8-2, Inside a pore, is the first one in the new film style.</li>
+    </ol>
+  </section>
+
+  <footer class="fine">
+    <span>A private preview for Evelyn, updated October 22. Real payments, text reminders and the App Store come next.</span>
+    <span>Built by Ruben for Lumevina Aesthetics Spa, Woodland Hills.</span>
+  </footer>
+</div>
+
+<style id="lv-leave-css">
+html.lv-leaving body { opacity: 0 !important; transition: opacity .18s ease !important; }
+</style>
+<script id="lv-go-top">
+(function () {
+  /* The viewer can scroll outside this page, and it keeps that position when
+     the page changes. Bring everything back to the top, then open the card. */
+  var toTop = function () {
+    try { window.scrollTo(0, 0); } catch (e) {}
+    try { document.documentElement.scrollIntoView({ block: "start" }); } catch (e) {}
+  };
+  /* fade out first, so the jump to the top happens unseen, then open the page */
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var leave = function (href) {
+    if (calm) { toTop(); location.href = href; return; }
+    document.documentElement.classList.add("lv-leaving");
+    setTimeout(function () { toTop(); location.href = href; }, 190);
+  };
+  document.querySelectorAll("a.card").forEach(function (a) {
+    if (a.target === "_blank") return;   /* the other previews open on their own */
+    a.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      leave(a.getAttribute("href"));
+    });
+  });
+  /* arriving: fade in once the first frame is ready */
+  requestAnimationFrame(function () { requestAnimationFrame(function () { document.documentElement.classList.remove("lv-enter"); }); });
+  /* coming back with the browser's Back button: show the page again */
+  window.addEventListener("pageshow", function (e) {
+    document.documentElement.classList.remove("lv-leaving");
+    if (e.persisted) toTop();
+  });
+})();
+</script>

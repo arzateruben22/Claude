@@ -23,3 +23,11 @@ from the preview's asset store: `v4-school.json` maps lesson id to asset id, and
 is the same for the Skin science strip on the home page. A lesson whose clip isn't uploaded yet
 shows Evelyn's video placeholder instead of a broken player. When a clip is re-rendered, upload
 the new mp4, update both maps and fold again.
+
+## Everything Lumevina (the hub)
+
+`scripts/preview/build-hub.sh <out>` builds the hub (`docs/hub/index.html`) and every page it
+opens into one folder: the v4 site as `site.html`, Skin School, the dashboard, the iPhone app
+sample, the Growth Blueprint, the first 90 days, the shipping kit and the privacy page. It is
+published to the same artifact as v4: the hub is the page, the rest are files beside it, and
+Skin School's videos come from that artifact's asset store (`v4-school.json`).
