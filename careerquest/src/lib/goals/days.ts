@@ -1,18 +1,8 @@
-/**
- * Exact UTC day arithmetic for UTC-midnight dates (what `@db.Date` columns and `todayInTz` give us).
- * Pure millisecond math: unaffected by the server's local timezone or DST, unlike local-calendar helpers.
- */
-export const DAY_MS = 86_400_000;
+/** Re-exports of the shared exact-UTC calendar helpers (kept for existing imports). */
+import { DAY_MS, addUtcDays, daysBetween, dateKey } from "@/lib/dates";
 
-export function utcDateKey(d: Date): string {
-  return d.toISOString().slice(0, 10);
-}
-
-export function addDaysUtc(d: Date, n: number): Date {
-  return new Date(d.getTime() + n * DAY_MS);
-}
-
+export { DAY_MS };
+export const utcDateKey = dateKey;
+export const addDaysUtc = addUtcDays;
 /** Whole days from `a` to `b` (positive when b is later). */
-export function diffDaysUtc(a: Date, b: Date): number {
-  return Math.round((b.getTime() - a.getTime()) / DAY_MS);
-}
+export const diffDaysUtc = daysBetween;

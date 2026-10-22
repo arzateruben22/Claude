@@ -27,6 +27,7 @@ import {
   statusRank,
 } from "./status";
 import { awardXpOnce, recordEventOnce } from "./events";
+import { revokeXpForSource } from "@/lib/game/xp";
 import { dayRange, type ListFilters } from "./query";
 import { INTERVIEW_OUTCOME_LABELS, INTERVIEW_TYPE_LABELS } from "./labels";
 import { formatInTz } from "./time";
@@ -569,20 +570,11 @@ export async function recordFollowUp(
       occurredAt,
       activityDate,
       dedupeKey: `${id}:FOLLOW_UP_SENT:${occurredAt.toISOString()}`,
-      payload: { note: input.note ?? null, activityDate: dayKey },
+      // At most one follow-up award per application per calendar day.
+      xpDedupeKey: `xp:${id}:FOLLOW_UP_COMPLETED:${dayKey}`,
+      payload: { note: input.note ?? null, activityDate: dayKey, sameDayIndex: sameDayCount },
     });
-    let xpAwarded = res.xpAwarded;
-    if (res.created && res.xpAwarded === 0 && sameDayCount === 0) {
-      const top = await awardXpOnce(tx, {
-        userId,
-        reason: "FOLLOW_UP_COMPLETED",
-        dedupeKey: `xp:${id}:FOLLOW_UP_COMPLETED:${dayKey}`,
-        sourceType: "ApplicationEvent",
-        sourceId: res.eventId ?? undefined,
-        activityDate,
-      });
-      if (top.awarded) xpAwarded += top.amount;
-    }
+    const xpAwarded = res.xpAwarded;
     const application = await tx.application.update({
       where: { id, userId },
       data: { followUpAt: input.nextFollowUpAt ?? null },
@@ -766,31 +758,21 @@ export async function markInterviewOutcome(
         occurredAt,
         activityDate,
         dedupeKey: `${existing.applicationId}:INTERVIEW_COMPLETED:${interviewId}`,
+        xpDedupeKey: `xp:interview:${interviewId}:attended`,
         payload: {
           interviewId,
           outcomeLabel: INTERVIEW_OUTCOME_LABELS[input.outcome],
         },
       });
       xpAwarded += res.xpAwarded;
-      if (res.created && res.xpAwarded === 0) {
-        const top = await awardXpOnce(tx, {
-          userId,
-          reason: "INTERVIEW_ATTENDED",
-          dedupeKey: `xp:interview:${interviewId}:attended`,
-          sourceType: "Interview",
-          sourceId: interviewId,
-          activityDate,
-        });
-        if (top.awarded) xpAwarded += top.amount;
-      }
     }
     if (input.prepCompleted) {
       const prep = await awardXpOnce(tx, {
         userId,
         reason: "INTERVIEW_PREP",
         dedupeKey: `xp:interview:${interviewId}:prep`,
-        sourceType: "Interview",
-        sourceId: interviewId,
+        sourceType: "Application",
+        sourceId: existing.applicationId,
         activityDate: todayInTz(ctx.timezone, now),
       });
       if (prep.awarded) xpAwarded += prep.amount;
@@ -830,8 +812,12 @@ export async function deleteApplication(
   userId: string,
   id: string,
 ): Promise<void> {
-  const r = await prisma.application.deleteMany({ where: { id, userId } });
-  if (r.count === 0) throw new ApplicationNotFoundError();
+  await prisma.$transaction(async (tx) => {
+    // XP earned from a deleted record is revoked so delete → re-create cannot farm XP.
+    await revokeXpForSource(tx, userId, "Application", id);
+    const r = await tx.application.deleteMany({ where: { id, userId } });
+    if (r.count === 0) throw new ApplicationNotFoundError();
+  });
 }
 
 // ---------------------------------------------------------------------------

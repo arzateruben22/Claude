@@ -43,7 +43,7 @@ const ledgerRows = (reason: string, like?: string) =>
     where: {
       userId,
       reason,
-      ...(like ? { dedupeKey: { contains: like } } : {}),
+      ...(like ? { OR: [{ dedupeKey: { contains: like } }, { sourceId: like }] } : {}),
     },
     orderBy: { createdAt: "asc" },
   });
@@ -581,5 +581,49 @@ describe("update, list, archive, delete", () => {
         where: { applicationId: application.id },
       }),
     ).toBe(0);
+  });
+});
+
+describe("XP anti-farming guarantees", () => {
+  it("a second record for the same position earns no extra submission XP", async () => {
+    const position = { companyName: "Duplicate Check Electric LLC", positionTitle: "Electrician Trainee", location: "Irvine, CA" };
+    const first = await createApplication(userId, input({ ...position, status: "SUBMITTED", postingUrl: "https://www.indeed.com/viewjob?jk=dup0001" }));
+    const second = await createApplication(userId, input({ ...position, status: "SUBMITTED", postingUrl: "https://acme.wd1.myworkdayjobs.com/en-US/careers/job/Irvine/Electrician-Trainee_R-77001" }));
+    expect(first.xpAwarded).toBe(XP.APPLICATION_SUBMITTED);
+    expect(second.xpAwarded).toBe(0);
+  });
+
+  it("deleting a record revokes its XP, and re-creating it earns the submission XP exactly once more", async () => {
+    const position = { companyName: "Revoke Test Mechanical", positionTitle: "HVAC Technician", location: "Long Beach, CA" };
+    const before = (await prisma.playerStats.findUniqueOrThrow({ where: { userId } })).totalXp;
+    const created = await createApplication(userId, input({ ...position, status: "SUBMITTED" }));
+    expect(created.xpAwarded).toBe(XP.APPLICATION_SUBMITTED);
+    await deleteApplication(userId, created.application.id);
+    const afterDelete = (await prisma.playerStats.findUniqueOrThrow({ where: { userId } })).totalXp;
+    expect(afterDelete).toBe(before);
+
+    const again = await createApplication(userId, input({ ...position, status: "SUBMITTED" }));
+    expect(again.xpAwarded).toBe(XP.APPLICATION_SUBMITTED);
+    await deleteApplication(userId, again.application.id);
+    const third = await createApplication(userId, input({ ...position, status: "SUBMITTED" }));
+    expect(third.xpAwarded).toBe(XP.APPLICATION_SUBMITTED);
+    const final = (await prisma.playerStats.findUniqueOrThrow({ where: { userId } })).totalXp;
+    expect(final).toBe(before + XP.APPLICATION_SUBMITTED);
+  });
+
+  it("recording the same event twice inside one transaction neither throws nor double-counts", async () => {
+    const { application } = await createApplication(userId, input({ companyName: "Tx Safety Builders", status: "SAVED" }));
+    const { recordApplicationEvent } = await import("@/lib/events/record-event");
+    const results = await prisma.$transaction(async (tx) => {
+      const a = await recordApplicationEvent(tx, { userId, applicationId: application.id, type: "NOTE_ADDED", source: "USER", activityDate: todayInTz(TZ), dedupeKey: "tx-dup-key" });
+      const b = await recordApplicationEvent(tx, { userId, applicationId: application.id, type: "NOTE_ADDED", source: "USER", activityDate: todayInTz(TZ), dedupeKey: "tx-dup-key" });
+      // The transaction must still be usable after the duplicate.
+      const count = await tx.applicationEvent.count({ where: { userId, dedupeKey: "tx-dup-key" } });
+      return { a, b, count };
+    });
+    expect(results.a.created).toBe(true);
+    expect(results.b.created).toBe(false);
+    expect(results.b.eventId).toBe(results.a.eventId);
+    expect(results.count).toBe(1);
   });
 });

@@ -2,6 +2,7 @@ import "server-only";
 import { cookies, headers } from "next/headers";
 import { prisma } from "@/lib/db";
 import { randomToken, sha256 } from "@/lib/crypto";
+import { clientIpFromHeaders } from "@/lib/rate-limit";
 
 export const SESSION_COOKIE = "cq_session";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days, sliding
@@ -29,7 +30,7 @@ async function requestMeta() {
     const h = await headers();
     return {
       userAgent: h.get("user-agent")?.slice(0, 255) ?? null,
-      ipAddress: (h.get("x-forwarded-for") ?? h.get("x-real-ip"))?.split(",")[0]?.trim().slice(0, 64) ?? null,
+      ipAddress: clientIpFromHeaders(h),
     };
   } catch {
     return { userAgent: null, ipAddress: null };
