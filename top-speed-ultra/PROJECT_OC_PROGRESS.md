@@ -4,6 +4,72 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (12:45 UTC): the overdrive's round 1 landed: the thumbs and the wheels
+
+- **Landed on `claude/hypercar`** after independent adversarial judges, each running on Opus (the session's model since
+  the Fable limit at 05:28), returned **keep**:
+  - `fable/wheels` as 7ab71b5 (8 commits, `src/preview/car-wheel.ts` only);
+  - `fable/hands` as fb35439 (13 commits: `hands.ts`, `hands-sdf.ts`, `hands-geo.ts`, `hands-skin.ts`, `test-hands.ts`
+    and new `tools/preview-hands-*` tools).
+- **The thumbs (the owner's "Fix the thumbs still").**
+  - Each thumb lies along the rim's front face toward twelve, with the nail square to the driver's eye (cosine 0.98 m /
+    0.97 f) and the tip's pad on the leather.
+  - The first web space is a saddle instead of a mound, so the rim shows in a notch between the index knuckle and the
+    thumb (no eye ray through the web meets the rim, 0/105).
+  - There's an IP knuckle and crease that also reads on the shaded thumb in the game (luminance 50 at the IP against
+    61-66 beside it, where before there was no dip), and a wider nail.
+  - Off the wheel (the Closer's watch check, the Ace's wave) a thumb bone curls the thumb into the fist, so those poses
+    no longer read as a thumbs-up. On the wheel the render is pixel-identical to the pass before it.
+  - **Cost:** 664 triangles (+0.9 %, 75,744 to 76,408 in the seat view), no new draw calls, 2 more skeleton bones, still
+    no per-frame allocation.
+  - **The judge** re-rendered the seat view at the game's framing (`?frame=game`, 1170x2532 High): pixel-identical to the
+    implementer's shot. It then built the game and shot it in game at the owner's capture size (393x852 at 3x).
+- **The wheels.**
+  - The Aero Disc's banding is gone: the cover is re-meshed as polar grids (max triangle aspect 3.6, was 499).
+  - Every spoke style has crowned faces that catch a highlight; twin5, cl10 and blade are forged-wide.
+  - The five-bolt hub boss is smaller (34 % of the rim, was 41 %), with chamfered nuts and a valve stem on every open
+    style.
+  - Round 7 x 8 mm drill holes on the discs instead of ovals.
+  - The caliper wordmarks sit on a strip of their own aspect (stretch 1.00, was 0.38).
+  - Phone tyres drop their groove geometry: about 13 % fewer triangles per car on phone (GT 141,920 to 122,384 for all
+    five cars' wheels), with the sidewall pixel-identical.
+  - **Cost:** High +388 to +1,228 triangles a wheel, no new material keys, so no new draw calls.
+  - **The judge** re-rendered the headline shot (GT twin5 wheel-side, High): byte-identical.
+- **The judges' one-line hooks** (fbb60a7, outside the two branches' files):
+  - the hands' off-wheel blend and wave hold while the game is paused (`CockpitState.paused`, so `setWheelAngle` gets
+    0 then);
+  - the calipers pick their wordmark strip by the car's brand (`brand: P.brand` in `car.ts` and `PlayerCar.buildWheels`);
+  - a NaN step can no longer leave the arms at NaN.
+- **Verified on the merged build** (fbb60a7; tsc clean, `npm run build` clean), one group at a time:
+
+  | Group | Result |
+  | --- | --- |
+  | boot | 6/6 |
+  | abilities | 4/4 (fires the abilities' off-wheel hand poses) |
+  | launch | 11/11 (the Wheels tab check included) |
+  | render | 14/14 |
+
+  Both branches had also passed these groups at their own heads. The render group's "reset" check failed once on each
+  branch (29.21 against a 30 m/s pre-reset speed) and passed on the re-run: a load flake, not these changes.
+- **Not done or not proven, honestly:**
+  - **Hands:**
+    - The thumb's IP and MCP stand 2.5 and 5-7 mm off the leather; only the tip touches. It's hidden from the seat.
+    - The thumb-bone weights change sharply across the web in the off-wheel poses; smoothing them is queued.
+    - The Wrench's knee pose curls the thumb more than it should.
+    - The nail reads near-white under the test page's light.
+  - **Wheels:**
+    - A 1 px dashed seam on the twin5's Y stem at close range.
+    - The crown stands up to 2 mm proud of the boss at the spoke root.
+    - The recess disc floats 0.7-4.9 mm over the sloped boss.
+    - On the phone chase camera the wheels look the same; the gain shows in the garage and close views.
+  - No real-phone frame rates (SwiftShader only).
+- **A lesson from the run.** At 11:40 the overdrive was stopped and resumed with the hands and wheels judges moved ahead
+  of the other implementers. A Workflow resume replays saved results only until its first new agent call; after that
+  everything runs live. So the face, physics, hair and body audits ran live on Fable and failed at once (no Fable usage
+  spent). Round 2 (`overdrive-round2.js`, from 12:15) carries those four audits inline and makes no Fable calls:
+  - physics and face/eyes first;
+  - then hair and body, branched from the face head if face is kept.
+
 ## 2026-10-22 (08:40 UTC): the five-hour limit again; the integration is committed, resumed for its proofs
 
 - **About 07:05 UTC:** the session's five-hour limit stopped all three agents; it reset at 07:50.
