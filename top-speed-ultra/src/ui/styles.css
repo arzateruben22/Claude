@@ -1246,6 +1246,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .livewho li small { color: var(--dim); font-size: 12px; }
 .livewho .btn.join { min-height: 34px; padding: 0 12px; font-size: 11px; }
 .livewho .fine { margin-top: 8px; }
+.livewho .eyebrow { white-space: nowrap; letter-spacing: 0.14em; }   /* "Driving now · 2 of 25" on one line, the list as wide as it needs */
 .tbtn.honk .ico { color: var(--ice-text); }
 /* with a mouse the sky camera sits top right; the rail, two buttons taller while live (the chip and the horn), hangs
    under it instead of centring up into it (App.tsx sets --cw to the window's size plus a gap) */
