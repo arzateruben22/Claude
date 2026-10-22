@@ -1,4 +1,5 @@
 // Test page for the people builder. Views (?view=): bodies, lineup, faces, talk, walk.
+//   faces: &only=reference,casual &expr=neutral,smile &dist=0.55 &dy=0.045 (aim below the eyes) &cy=0 (camera height)
 //   node tools/preview-shoot.mjs src/onfoot/test-people.ts tests/out/onfoot/people-<view>.png --size=960x540 --query="view=<view>"
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -214,7 +215,7 @@ async function main() {
         cam.aspect = w / h; cam.updateProjectionMatrix();
         exprs.forEach((e, c) => {
           const yw = view === 'head' ? (yaws[c] ?? 0) * Math.PI / 180 : side;
-          cam.position.set(e0.x + Math.sin(yw) * d, e0.y + 0.0, e0.z + Math.cos(yw) * d);
+          cam.position.set(e0.x + Math.sin(yw) * d, e0.y + Number(q.get('cy') ?? 0), e0.z + Math.cos(yw) * d);   // cy: camera height off the eye line (a mouth close-up)
           cam.lookAt(e0.x + Number(q.get('dx') ?? 0), e0.y - Number(q.get('dy') ?? 0.045), e0.z);
           settle(e, p);
           renderer.setViewport(c * w, H - (r + 1) * h, w, h); renderer.setScissor(c * w, H - (r + 1) * h, w, h);
@@ -348,6 +349,15 @@ async function main() {
     camera.position.set(0.55 * fd, 1.25 + 0.7 * fd, z + 2.7 * fd); camera.lookAt(0, 1.25, z - 2.5);
   }
   if (q.get('dbg') === 'normal' || q.get('dbg') === 'flat') for (const p of people) p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh && m.name.startsWith('cloth')) (m as THREE.Mesh).material = q.get('dbg') === 'normal' ? new THREE.MeshNormalMaterial() : new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6 }); });
+  // the teeth: flat with their vertex colours (dbg=teeth), their normals (dbg=teethN), or alone, lit (dbg=teethOnly)
+  const dbg = q.get('dbg') ?? '';
+  if (dbg.startsWith('teeth')) for (const p of people) p.group.traverse((m) => {
+    const mm = m as THREE.Mesh, mat = mm.material as THREE.MeshPhysicalMaterial;
+    if (!mm.isMesh) return;
+    const isTeeth = mat?.vertexColors && (mat as THREE.Material).type === 'MeshPhysicalMaterial';
+    if (isTeeth && dbg !== 'teethOnly') mm.material = dbg === 'teeth' ? new THREE.MeshBasicMaterial({ vertexColors: true }) : new THREE.MeshNormalMaterial();
+    if (!isTeeth && dbg === 'teethOnly') mm.visible = false;
+  });
   if (view !== 'crowd') extra.people = people.map((p) => p.stats());
   if (people[0]) { const ms: THREE.Mesh[] = []; people[0].group.traverse((m) => { if ((m as THREE.Mesh).isMesh) ms.push(m as THREE.Mesh); }); const e = ms[0]; e.updateWorldMatrix(true, false); const z = new THREE.Vector3(0, 0, 1).transformDirection(e.matrixWorld); extra.eyeZ = z.toArray().map((v) => +v.toFixed(3)); const pp = new THREE.Vector3(); e.getWorldPosition(pp); extra.eyeP = pp.toArray().map((v) => +v.toFixed(3)); extra.eyeParent = e.parent?.parent?.name; }
   extra.parts = people.slice(0, 1).map((p) => { const out: string[] = []; p.group.traverse((m) => { const g = (m as THREE.Mesh).geometry; if (g && m.visible) out.push(`${m.type}:${(g.index ? g.index.count : g.attributes.position.count) / 3}:${Object.keys(g.morphAttributes).length ? g.morphAttributes.position?.length : 0}`); }); return out.join(' '); });

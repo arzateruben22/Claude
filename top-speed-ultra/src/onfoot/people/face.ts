@@ -298,75 +298,153 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
 }
 
 // ------------------------------------------------------------------------------------------------ teeth and tongue
+// Every crown is its own blend group (a rounded box with a convex labial bulge; the canines and premolars cut to a
+// cusp): neighbouring crowns meet in a crisp crease instead of fusing into one bar (a 4 mm blend made the row a
+// corrugated band that read as chrome), and each crown blends into the gum with a small fillet. The crowns are laid
+// along the arch by arc length with their own widths, a smile line (the laterals shorter, the canines longest and
+// pointed) and a slight yaw each. The upper and lower rows are meshed apart, so no triangle can bridge them when the
+// jaw opens. Vertex colours: ivory enamel (no olive: the old depth term took the back of every crown to dark khaki),
+// darker in the clefts between crowns, toward the back of the arch, on the tongue side and toward the gum; the lower
+// row a shade darker; gums and tongue. Wet enamel: a tighter, stronger highlight.
+interface ToothSpec { w: number; h: number; t: number; r: number; dy: number; rise: number }
+// half width (along the arch), crown height, thickness, edge radius, incisal edge raised by, and for a cusped crown
+// how far its corners rise above the cusp tip (0: a flat incisal edge)
+const UPPER_TEETH: ToothSpec[] = [
+  { w: 0.0042, h: 0.0104, t: 0.0034, r: 0.0012, dy: 0, rise: 0 },               // central incisor
+  { w: 0.0032, h: 0.0094, t: 0.0031, r: 0.0013, dy: 0.0007, rise: 0 },          // lateral incisor: shorter, rounder
+  { w: 0.0037, h: 0.0108, t: 0.0042, r: 0.0013, dy: -0.0003, rise: 0.0017 },    // canine: the longest, pointed
+  { w: 0.0034, h: 0.0092, t: 0.005, r: 0.0015, dy: 0.0006, rise: 0.0011 },      // premolars: blunter buccal cusps
+  { w: 0.0032, h: 0.0086, t: 0.005, r: 0.0015, dy: 0.001, rise: 0.001 },
+];
+const LOWER_TEETH: ToothSpec[] = [
+  { w: 0.0026, h: 0.0092, t: 0.0029, r: 0.001, dy: 0, rise: 0 },
+  { w: 0.0029, h: 0.0094, t: 0.003, r: 0.0011, dy: 0.0002, rise: 0 },
+  { w: 0.0034, h: 0.0102, t: 0.004, r: 0.0013, dy: -0.0003, rise: 0.0015 },
+  { w: 0.0035, h: 0.0088, t: 0.0048, r: 0.0015, dy: 0.0007, rise: 0.001 },
+  { w: 0.0035, h: 0.0084, t: 0.0048, r: 0.0015, dy: 0.0011, rise: 0.0009 },
+];
+
+/** a point on the arch z = z0 - k x^2 (x >= 0) at arc length s from the midline: position, tangent, outward normal */
+function archAt(z0: number, k: number, s: number) {
+  const S = (x: number) => { const u = 2 * k * x; return (u * Math.sqrt(1 + u * u) + Math.asinh(u)) / (4 * k); };
+  let x = s;
+  for (let it = 0; it < 8; it++) x -= (S(x) - s) / Math.sqrt(1 + (2 * k * x) ** 2);
+  const t = norm([1, 0, -2 * k * x]);
+  return { x, z: z0 - k * x * x, t, n: [-t[2], 0, t[0]] as V3 };
+}
+
 export function buildTeeth(hf: HeadFrame, quality: Quality) {
-  const f = new Field();
-  const mY = hf.mouth.y;
-  const zF = 0.0168, s = 0.95;
-  // upper (group 0 bone 0) and lower (group 0, bone 1: follows the jaw)
-  const T = [[0.0043, 0.0098, 0.0034], [0.0034, 0.0088, 0.0031], [0.0039, 0.0098, 0.0039], [0.0036, 0.0082, 0.0042], [0.0034, 0.0076, 0.0043]];
-  const arch = (x: number) => zF - 27 * x * x;
+  const mY = hf.mouth.y, F = hf.face, high = quality === 'high';
+  const zL = 0.0161;                 // the upper central incisors' labial face (head-local)
+  const r = rng(Math.round(F.mouthW * 7919 + F.lipUpper * 3011 + F.jaw * 1009 + F.chin * 499 + F.noseLen * 211) + 77);
+  // fine enough to keep the crowns' flat edges and the clefts between them; phone keeps only the front of the mouth
+  // (what a talking mouth shows): the back of the tongue is cut off
+  const h = high ? 0.0008 : 0.0015, zBack = high ? 0.048 : 0.026;
+  const parts: { pos: Float32Array; nrm: Float32Array; idx: Uint32Array; col: Float32Array; lower: boolean }[] = [];
   for (const lower of [false, true]) {
-    let x = 0;
+    const f = new Field(), bone = lower ? 1 : 0;
+    const specs = lower ? LOWER_TEETH : UPPER_TEETH;
+    const sg = lower ? -1 : 1;                       // +1: the crown grows up from its incisal edge (upper row)
+    const z0 = lower ? zL - 0.0039 : zL, k = lower ? 30 : 27;   // overjet: the lower labial faces behind the upper lingual ones
+    // the upper edges 2 mm below the lips' contact line: parted lips show the upper incisors first (the lower lip covers
+    // their edges when closed); overbite: the lower edges sit 1.4 mm up behind them
+    const yEdge = lower ? mY - 0.0007 : mY - 0.0021;
+    const crowns: { prims: number[]; i: number; n: V3; jit: number }[] = [], gums: number[] = [];
     for (const side of [1, -1]) {
-      x = 0;
-      T.forEach(([hw, hh, ht], i) => {
-        const w = (lower ? [0.0028, 0.0031, 0.0034, 0.0035, 0.0035][i] : hw) * s;
-        const cx = x + w;
-        x = cx + w * 0.85;
-        const zc = arch(cx) - (lower ? 0.0036 : 0) - ht;   // overjet: the lower row sits behind the upper
-        const yEdge = lower ? mY - 0.0011 : mY - 0.0007;   // overbite: the lower lip covers the lower edges
-        const cy = lower ? yEdge - hh * 0.5 : yEdge + hh * 0.5;
-        const dx = 27 * 2 * cx;
-        const ax = norm([1, 0, -dx]);
-        // rounded boxes: flat incisal edges and a continuous row with shallow grooves between the crowns
-        f.box([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.99, hh * 0.5 * s, ht * s * 0.8, 0.0006, 0, 0.0042, lower ? 1 : 0);
+      let s = 0;
+      specs.forEach((T, i) => {
+        const sc = s + (i === 0 ? 0.00012 : 0.00018) + T.w;   // a hair's gap: the crowns meet in a crease, never fuse
+        s = sc + T.w;
+        const a = archAt(z0, k, sc);
+        // a slight yaw per crown (2-4 degrees): each catches the light a little differently
+        const yaw = (0.035 + 0.035 * r.next()) * (r.next() < 0.5 ? -1 : 1), cy = Math.cos(yaw), sy = Math.sin(yaw);
+        const tng: V3 = norm([side * (a.t[0] * cy - a.t[2] * sy), 0, a.t[2] * cy + a.t[0] * sy]);
+        const out: V3 = norm([side * (a.n[0] * cy - a.n[2] * sy), 0, a.n[2] * cy + a.n[0] * sy]);
+        const edge = yEdge + sg * (T.dy + (r.next() - 0.5) * 0.00025);
+        const cx = side * a.x - out[0] * T.t * 0.5, cz = a.z - out[2] * T.t * 0.5;
+        const g = f.addGroup(0, 0.0013);   // its own group: a crisp crease against its neighbours, a fillet into the gum
+        const prim = f.box([cx, edge + sg * T.h * 0.5, cz], tng, [0, 1, 0], T.w, T.h * 0.5, T.t * 0.5, T.r, g, 0.0006, bone);
+        // the labial face bulges (convex across and down): each crown shades as its own rounded form, its highlight a
+        // soft band, instead of a flat tile. It ends just short of the incisal edge, so the edge stays crisp
+        const bulge = f.ell([cx, edge + sg * T.h * 0.55, cz], tng, [0, 1, 0], T.w * 0.9, T.h * 0.5, T.t * 0.5 + 0.0004, g, 0.0006, bone);
+        if (T.rise > 0) {
+          // the cusp: the incisal corners cut away along two slopes from the tip. Each cut is a box under its slope that
+          // stops short of the corner, so it can never reach the neighbouring crown
+          const th = Math.atan2(T.rise, T.w), L = Math.hypot(T.w, T.rise) - 0.00035, hy = 0.001;
+          for (const m of [1, -1]) {
+            const dir: V3 = [tng[0] * m * Math.cos(th), sg * Math.sin(th), tng[2] * m * Math.cos(th)];
+            const below: V3 = [tng[0] * m * Math.sin(th), -sg * Math.cos(th), tng[2] * m * Math.sin(th)];
+            f.box([cx + dir[0] * L * 0.5 + below[0] * hy, edge + dir[1] * L * 0.5 + below[1] * hy, cz + dir[2] * L * 0.5 + below[2] * hy], dir, below, L * 0.5, hy, T.t, 0, 0, 0.0004, bone, 1);
+          }
+        }
+        crowns.push({ prims: [prim, bulge], i, n: out, jit: 0.96 + 0.06 * r.next() });
       });
     }
-    // the gum line
+    // the gum: a rope along the arch above (below) the crowns, clear of their visible part
+    const yG = yEdge + sg * 0.0098;
     for (const side of [1, -1]) {
-      const yG = lower ? mY - 0.0085 : mY + 0.0085;
-      f.cone([0, yG, arch(0) - 0.0028], [side * 0.019, yG, arch(0.019) - 0.0035], 0.003, 0.003, [0, 1, 0], 1, 1, 0, 0.002, lower ? 1 : 0);
+      let prev: V3 | null = null;
+      for (const s of [0, 0.011, 0.022, 0.034]) {
+        const a = archAt(z0, k, s), p: V3 = [side * (a.x - a.n[0] * 0.0026), yG, a.z - a.n[2] * 0.0026];
+        if (prev) gums.push(f.cone(prev, p, 0.003, 0.003, [0, 1, 0], 1, 1, 0, 0.002, bone));
+        prev = p;
+      }
     }
+    const tongue = lower ? f.ea([0, mY - 0.0088, zL - 0.0205], 0.0155, 0.0048, 0.017, 0, 0.003, 1) : -1;
+    f.finalize();
+    const y0 = lower ? mY - 0.0185 : mY - 0.006, y1 = lower ? mY + 0.003 : mY + 0.012;
+    const box = { o: [-0.034, y0, zL - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.068 / h), ny: Math.ceil((y1 - y0) / h), nz: Math.ceil((zBack + 0.0045) / h) };
+    const mesh = meshField(f, box, h);
+    const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3);
+    for (let v = 0; v < nv; v++) {
+      const x = mesh.pos[v * 3], y = mesh.pos[v * 3 + 1], z = mesh.pos[v * 3 + 2];
+      let d1 = 1e9, d2 = 1e9, best = crowns[0];
+      for (const cr of crowns) {
+        const d = Math.min(f.prim(cr.prims[0], x, y, z), f.prim(cr.prims[1], x, y, z));
+        if (d < d1) { d2 = d1; d1 = d; best = cr; } else if (d < d2) d2 = d;
+      }
+      let dGum = 1e9;
+      for (const i of gums) dGum = Math.min(dGum, f.prim(i, x, y, z));
+      const dTongue = tongue >= 0 ? f.prim(tongue, x, y, z) : 1e9;
+      // enamel: ivory (the canines a touch yellower; with age yellower and darker, the dentin showing through), darker
+      // in the clefts between crowns (what separates them at 1-3 px/mm), toward the back of the arch, toward the gum
+      // (thinner enamel, and the lip's shade) and on the tongue side; the lower row a shade darker
+      const i = best.i;
+      let c: V3 = i === 2 ? [0.78, 0.71, 0.56] : [0.8, 0.75, 0.62];
+      c = [lerp(c[0], 0.7, 0.55 * hf.old), lerp(c[1], 0.61, 0.55 * hf.old), lerp(c[2], 0.44, 0.55 * hf.old)];
+      const cleft = lerp(high ? 0.5 : 0.7, 1, smooth(0.00005, 0.0008, d2 - Math.max(d1, 0)));
+      const arch = [1, 0.97, 0.9, 0.8, 0.72][i];
+      const cerv = lerp(1, 0.86, smooth(0.0015, 0.0065, sg * (y - yEdge)));
+      const ling = smooth(0.25, -0.35, mesh.nrm[v * 3] * best.n[0] + mesh.nrm[v * 3 + 2] * best.n[2]);
+      const sh = best.jit * cleft * arch * cerv * (1 - 0.3 * ling) * (lower ? 0.85 : 1);
+      c = [c[0] * sh, c[1] * sh, c[2] * sh];
+      // gums (over a fillet's width) and the tongue
+      const gum = smooth(0.0006, -0.0006, dGum - d1), occ = arch * (lower ? 0.85 : 1);
+      c = [lerp(c[0], 0.5 * occ, gum), lerp(c[1], 0.17 * occ, gum), lerp(c[2], 0.18 * occ, gum)];
+      if (dTongue < Math.min(d1, dGum) + 0.0002) c = [0.5, 0.22, 0.22];
+      col[v * 3] = c[0]; col[v * 3 + 1] = c[1]; col[v * 3 + 2] = c[2];
+    }
+    parts.push({ pos: mesh.pos, nrm: mesh.nrm, idx: mesh.idx, col, lower });
   }
-  // tongue
-  f.ea([0, mY - 0.0078, zF - 0.02], 0.0155, 0.0048, 0.017, 0, 0.003, 1);
-  f.finalize();
-  // mesh in head-local, then place
-  // fine enough to keep the crowns' flat edges and the grooves between them (a coarse grid made them into pegs)
-  const h = quality === 'high' ? 0.0008 : 0.0015;
-  // phone: only the front of the mouth (what a talking mouth shows); the back of the tongue and the molars are cut off
-  const zBack = quality === 'high' ? 0.048 : 0.026;
-  const box = { o: [-0.03, mY - 0.02, zF - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil((zBack + 0.008) / h) };
-  const mesh = meshField(f, box, h);
-  const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3), lowerW = new Float32Array(nv);
-  const bd = new Float64Array(2);
-  for (let v = 0; v < nv; v++) {
-    const x = mesh.pos[v * 3], y = mesh.pos[v * 3 + 1], z = mesh.pos[v * 3 + 2];
-    // which jaw: nearest bone
-    let du = 1e9, dl = 1e9;
-    for (let i = 0; i < f.n; i++) { const d = f.prim(i, x, y, z); if (f.bone[i] === 1) dl = Math.min(dl, d); else du = Math.min(du, d); }
-    void bd;
-    lowerW[v] = dl < du ? 1 : 0;
-    const gum = lowerW[v] ? clamp((mY - 0.0063 - y) / 0.0016) : clamp((y - mY - 0.0063) / 0.0016);
-    const tongue = Math.abs(z - (zF - 0.022)) < 0.024 && y < mY - 0.002 && z < zF - 0.004 && x * x / 0.019 ** 2 + ((y - mY + 0.0075) / 0.0062) ** 2 + ((z - zF + 0.022) / 0.022) ** 2 < 1.25 ? 1 : 0;
-    const depth = smooth(zF - 0.03, zF - 0.002, z);
-    let c: V3 = [0.86, 0.77, 0.6];   // teeth are ivory, never paper white
-    c = [lerp(c[0], 0.72, gum), lerp(c[1], 0.36, gum), lerp(c[2], 0.38, gum)];
-    if (tongue) c = [0.62, 0.3, 0.3];
-    const sh = (0.3 + 0.72 * depth) * (lowerW[v] ? 0.7 : 1);   // the lower row sits in the lip's shadow
-    col[v * 3] = c[0] * sh; col[v * 3 + 1] = c[1] * sh; col[v * 3 + 2] = c[2] * sh;
-  }
-  // body frame
-  const P = new Float32Array(nv * 3), N = new Float32Array(nv * 3);
-  for (let v = 0; v < nv; v++) {
-    const b = hf.toBody([mesh.pos[v * 3], mesh.pos[v * 3 + 1], mesh.pos[v * 3 + 2]]);
-    P[v * 3] = b[0]; P[v * 3 + 1] = b[1]; P[v * 3 + 2] = b[2];
-    const n = norm([mesh.nrm[v * 3] / hf.sx, mesh.nrm[v * 3 + 1] / hf.sy, mesh.nrm[v * 3 + 2] / hf.sz]);
-    N[v * 3] = n[0]; N[v * 3 + 1] = n[1]; N[v * 3 + 2] = n[2];
+  // one buffer, body frame
+  let nvT = 0, niT = 0;
+  for (const p of parts) { nvT += p.pos.length / 3; niT += p.idx.length; }
+  const P = new Float32Array(nvT * 3), N = new Float32Array(nvT * 3), col = new Float32Array(nvT * 3), lowerW = new Float32Array(nvT), idx = new Uint32Array(niT);
+  let ov = 0, oi = 0;
+  for (const p of parts) {
+    const nv = p.pos.length / 3;
+    for (let v = 0; v < nv; v++) {
+      P.set(hf.toBody([p.pos[v * 3], p.pos[v * 3 + 1], p.pos[v * 3 + 2]]), (ov + v) * 3);
+      N.set(norm([p.nrm[v * 3] / hf.sx, p.nrm[v * 3 + 1] / hf.sy, p.nrm[v * 3 + 2] / hf.sz]), (ov + v) * 3);
+      lowerW[ov + v] = p.lower ? 1 : 0;
+    }
+    col.set(p.col, ov * 3);
+    for (let i = 0; i < p.idx.length; i++) idx[oi + i] = p.idx[i] + ov;
+    ov += nv; oi += p.idx.length;
   }
   const deltas = morphDeltas(P, hf, { jawW: (v) => lowerW[v], only: [MI.jawOpen] });
-  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.55, specularIntensity: 0.4, envMapIntensity: 0.1 });   // no grey-metal band
-  return { pos: P, nrm: N, idx: mesh.idx, col, deltas, mat };
+  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.32, specularIntensity: 0.7, envMapIntensity: 0.25 });   // wet enamel
+  return { pos: P, nrm: N, idx, col, deltas, mat };
 }
 
 // ------------------------------------------------------------------------------------------------ eyeballs
