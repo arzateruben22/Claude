@@ -61,3 +61,37 @@ create index data_requests_open on data_requests (requested_at) where status = '
 alter table data_requests enable row level security;
 create policy "clients read their own data requests" on data_requests
   for select using (email = lower(auth.jwt() ->> 'email'));
+
+-- Completing a deletion request: removes the client's images and everything
+-- derived from them, their routine, check-ins and reports, and clears the
+-- profile's free text. Signed treatment records are kept when the clinic's
+-- retention rule requires it (p_keep_treatments); consents and the audit log
+-- are kept as the record of what was agreed and done. Returns the storage
+-- paths the caller must then remove from the skin-images bucket.
+create or replace function public.purge_skin_profile(p_profile uuid, p_keep_treatments boolean default true)
+returns table (path text) language plpgsql security definer set search_path = public as $$
+begin
+  perform set_config('lumevina.purge', 'on', true);
+  return query
+    select c.original_path from captures c where c.profile_id = p_profile
+    union all
+    select d.path from derived_images d join captures c on c.id = d.capture_id where c.profile_id = p_profile;
+  delete from change_detections where profile_id = p_profile;
+  delete from measurements where profile_id = p_profile;
+  delete from analyses where profile_id = p_profile;
+  delete from captures where profile_id = p_profile;
+  delete from imaging_sites where profile_id = p_profile;
+  delete from imaging_sessions where profile_id = p_profile;
+  delete from recovery_checkins where profile_id = p_profile;
+  delete from routine_checkins where profile_id = p_profile;
+  delete from routine_entries where profile_id = p_profile;
+  delete from progress_reports where profile_id = p_profile;
+  if not p_keep_treatments then
+    delete from treatment_records where profile_id = p_profile;
+  end if;
+  update skin_profiles
+     set status = 'deleted', name = null, goals = null, concerns = '{}', skin_history = null, sensitivities = null,
+         current_products = null, prior_procedures = null, contraindications = '[]'::jsonb, privacy = '{}'::jsonb, updated_at = now()
+   where id = p_profile;
+end $$;
+revoke all on function public.purge_skin_profile(uuid, boolean) from public, anon, authenticated;

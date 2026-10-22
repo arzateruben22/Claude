@@ -1,0 +1,278 @@
+{
+  "generated_by": "scripts/build-skin-core.mjs from js/skin/core",
+  "algorithm_family": "lumevina-skin",
+  "regions": [
+    {
+      "id": "front",
+      "label": "Front of face",
+      "kind": "view"
+    },
+    {
+      "id": "left_profile",
+      "label": "Left profile",
+      "kind": "view"
+    },
+    {
+      "id": "right_profile",
+      "label": "Right profile",
+      "kind": "view"
+    },
+    {
+      "id": "forehead",
+      "label": "Forehead",
+      "kind": "area"
+    },
+    {
+      "id": "left_cheek",
+      "label": "Left cheek",
+      "kind": "area"
+    },
+    {
+      "id": "right_cheek",
+      "label": "Right cheek",
+      "kind": "area"
+    },
+    {
+      "id": "nose",
+      "label": "Nose",
+      "kind": "area"
+    },
+    {
+      "id": "chin",
+      "label": "Chin",
+      "kind": "area"
+    },
+    {
+      "id": "custom",
+      "label": "A chosen spot",
+      "kind": "site"
+    }
+  ],
+  "landmarks": {
+    "forehead": [
+      54,
+      103,
+      67,
+      109,
+      10,
+      338,
+      297,
+      332,
+      284,
+      300,
+      293,
+      334,
+      296,
+      336,
+      107,
+      66,
+      105,
+      63,
+      70
+    ],
+    "nose": [
+      168,
+      6,
+      197,
+      195,
+      5,
+      4,
+      1,
+      19,
+      94,
+      2,
+      98,
+      97,
+      326,
+      327,
+      64,
+      294,
+      48,
+      278,
+      115,
+      344,
+      220,
+      440,
+      45,
+      275
+    ],
+    "chin": [
+      152,
+      148,
+      176,
+      377,
+      400,
+      175,
+      199,
+      200,
+      18,
+      83,
+      313,
+      201,
+      421
+    ],
+    "right_cheek": [
+      116,
+      117,
+      118,
+      100,
+      126,
+      142,
+      203,
+      206,
+      216,
+      207,
+      187,
+      123,
+      50,
+      101,
+      36,
+      205,
+      147,
+      213
+    ],
+    "left_cheek": [
+      345,
+      346,
+      347,
+      329,
+      355,
+      371,
+      423,
+      426,
+      436,
+      427,
+      411,
+      352,
+      280,
+      330,
+      266,
+      425,
+      376,
+      433
+    ]
+  },
+  "keypoints": {
+    "rightEyeOuter": 33,
+    "leftEyeOuter": 263,
+    "noseTip": 1,
+    "top": 10,
+    "chin": 152,
+    "rightEdge": 234,
+    "leftEdge": 454
+  },
+  "measurements": {
+    "pore_density": {
+      "unit": {
+        "calibrated": "per cm²",
+        "uncalibrated": "per 10k px"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "pore_size_median": {
+      "unit": {
+        "calibrated": "µm",
+        "uncalibrated": "px"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "pore_visibility": {
+      "unit": {
+        "calibrated": "ΔL*",
+        "uncalibrated": "ΔL*"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "texture_roughness": {
+      "unit": {
+        "calibrated": "L* SD",
+        "uncalibrated": "L* SD"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "texture_uniformity": {
+      "unit": {
+        "calibrated": "0–1",
+        "uncalibrated": "0–1"
+      },
+      "better": "higher",
+      "needs_calibration": false
+    },
+    "tone_evenness": {
+      "unit": {
+        "calibrated": "L* IQR",
+        "uncalibrated": "L* IQR"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "pigment_spot_area": {
+      "unit": {
+        "calibrated": "% of region",
+        "uncalibrated": "% of region"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "pigment_contrast": {
+      "unit": {
+        "calibrated": "ΔE",
+        "uncalibrated": "ΔE"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "redness_a_star": {
+      "unit": {
+        "calibrated": "a*",
+        "uncalibrated": "a*"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "redness_area": {
+      "unit": {
+        "calibrated": "% of region",
+        "uncalibrated": "% of region"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "fine_line_density": {
+      "unit": {
+        "calibrated": "mm per cm²",
+        "uncalibrated": "px per 10k px"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "scar_contrast": {
+      "unit": {
+        "calibrated": "ΔE",
+        "uncalibrated": "ΔE"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "scar_texture_ratio": {
+      "unit": {
+        "calibrated": "ratio",
+        "uncalibrated": "ratio"
+      },
+      "better": "lower",
+      "needs_calibration": false
+    },
+    "scar_area": {
+      "unit": {
+        "calibrated": "mm²",
+        "uncalibrated": "px"
+      },
+      "better": "lower",
+      "needs_calibration": true
+    }
+  }
+}

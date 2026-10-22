@@ -85,3 +85,10 @@ begin
   return true;
 end $$;
 revoke all on function public.take_token(text, int, double precision) from public, anon, authenticated;
+
+-- Adding a staff member needs their auth user id; only the functions may look one up.
+create or replace function public.user_id_for_email(p_email text) returns uuid
+language sql stable security definer set search_path = public, auth as $$
+  select id from auth.users where lower(email) = lower(p_email) limit 1
+$$;
+revoke all on function public.user_id_for_email(text) from public, anon, authenticated;

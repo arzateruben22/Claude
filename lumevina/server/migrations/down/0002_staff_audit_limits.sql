@@ -1,4 +1,5 @@
 -- Reverses 0002.
+drop function if exists public.user_id_for_email(text);
 drop function if exists public.take_token(text, int, double precision);
 drop table if exists rate_limits;
 drop trigger if exists audit_log_append_only on audit_log;
