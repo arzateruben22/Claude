@@ -293,8 +293,9 @@ export const POSE = {
   // knuckle may stand (mm off the leather); how far (mm, as the eye sees it) it keeps off the middle, ring and little
   // fingertips; pad squeeze; weights [tip place, nail]; the open first web space: the MCP's least distance from the
   // index metacarpal (mm) and its weight; the coarse search's grid, and the pinned result per presentation (q: null
-  // searches again, ~1-2 s; tools/preview-hands-thumb.mjs prints the q to pin)
-  thumb: { cmc: [14, -14, 17], tipPhi: [100, 125], tipDx: 12, ipGap: 0, ipPhi: [85, 130], mcpFlex: [10, 55, 45], ipFlex: [12, 60, 20], ipW: 0.3,
+  // searches again, ~1-2 s; tools/preview-hands-thumb.mjs prints the q to pin); off the wheel (hands.ts, the
+  // abilities' poses) the thumb turns about its MCP this share of the way toward the index finger's middle phalanx
+  thumb: { offCurl: 0.7, cmc: [14, -14, 17], tipPhi: [100, 125], tipDx: 12, ipGap: 0, ipPhi: [85, 130], mcpFlex: [10, 55, 45], ipFlex: [12, 60, 20], ipW: 0.3,
     roll: 15, twistW: 1.0, twistMax: 45, across: 0.6, acrossW: 0, mxGap: -4, cmcW: 0.15, cmcBox: [[-12, 24], [-10, 12], [-16, 0], [0, 15]], nail: 0.35, mcpHigh: 16, sep: 10, squeeze: 3.5, w: [0.5, 8], web: 22, webW: 1.0,
     grid: { dx: [-6, 12, 6], pt: 5, psi: [40, 90, 10], incl: [0, 40, 8] },
     q: { m: [24.75, 102, 69, 11, -1.5, -10, -14.5, 15], f: [19.5, 103, 70, 16, 6, -10, -16, 15] } as Record<Pres, number[] | null> },

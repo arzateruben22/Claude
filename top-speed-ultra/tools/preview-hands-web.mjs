@@ -73,6 +73,19 @@ const fmt = (v) => v.map((x) => x.toFixed(0)).join(',');
 console.log('thumb joints (G mm)', t.joints.map(fmt).join(' | '), ' section', t.joints.map((p) => M.sectionAngle(p).toFixed(0)).join('/'), ' off the leather', t.joints.map((p) => M.rimSdfG(...p).toFixed(1)).join('/'));
 const T = M.thumbTerms;
 console.log('terms', JSON.stringify(T, (k, v) => typeof v === 'number' ? +v.toFixed(2) : v));
+// off the wheel (the abilities' poses) the thumb bone turns the thumb about its MCP POSE.thumb.offCurl of the way
+// toward the index finger's middle phalanx (hands.ts): the curled thumb must point at the curled fingers (not stand up
+// from them as a thumbs-up) and clear them (axis to axis, less 0.8 of both half widths)
+const segD = (p, a, b) => { const ab = M.sub(b, a), s = Math.max(0, Math.min(1, M.dot(M.sub(p, a), ab) / M.dot(ab, ab))); return M.len(M.sub(p, M.madd(a, ab, s))); };
+const segSeg = (a, b, c, e) => { let m = 1e9; for (let i = 0; i <= 10; i++) { const s = i / 10; m = Math.min(m, segD(M.lerp3(a, b, s), c, e), segD(M.lerp3(c, e, s), a, b)); } return m; };
+const Mj = t.joints[1], goal = M.lerp3(A.digits[0].joints[1], A.digits[0].joints[2], 0.5);
+const ca = M.norm(M.sub(t.joints[3], Mj)), cb = M.norm(M.sub(goal, Mj)), cAxis = M.norm(M.cross(ca, cb));
+const cFull = Math.acos(Math.max(-1, Math.min(1, M.dot(ca, cb)))), cAng = cFull * M.POSE.thumb.offCurl;
+const CJ = t.joints.map((p, i) => (i < 2 ? p : M.add(Mj, M.rot(M.sub(p, Mj), cAxis, cAng))));
+let curlGap = 1e9;
+A.digits.slice(0, 4).forEach((g) => { for (let k = 0; k < 3; k++) for (let j = 1; j < 3; j++) curlGap = Math.min(curlGap, segSeg(CJ[j], CJ[j + 1], g.joints[k], g.joints[k + 1]) - 0.8 * (t.halfW[j] + g.halfW[k])); });
+const curlLeft = ((cFull - cAng) * 180) / Math.PI;
+console.log(`off the wheel: the thumb turns ${((cAng * 180) / Math.PI).toFixed(1)} deg about its MCP (of ${((cFull * 180) / Math.PI).toFixed(1)} to the index's middle phalanx), ${curlLeft.toFixed(1)} deg short of it; ${curlGap.toFixed(1)} mm clear of the fingers`);
 // acceptance: no slit, hinges within 30 deg, the nail to the eye, nothing sunk into the rim or the index, the
 // fingertips in view, the MCP off the index metacarpal (the open web)
 const checks = [
@@ -85,6 +98,7 @@ const checks = [
   ['web >= 20 mm', T.webD >= 20],
   ['IP flexion 12..60 deg (the thumb reads in two segments)', T.fI >= 12 && T.fI <= 60],
   ['the first phalanx >= 5 mm proud of the web beside it at 25, 50 and 75%', vals.every((v) => v >= 5)],
+  ['off the wheel the thumb rests on the curled fingers: within 20 deg of the index middle phalanx, 2-8 mm clear', curlLeft <= 20 && curlGap >= 2 && curlGap <= 8],
 ];
 for (const [name, ok] of checks) console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}`);
 if (checks.some(([, ok]) => !ok)) process.exitCode = 1;
