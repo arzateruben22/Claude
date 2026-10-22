@@ -12,8 +12,8 @@
 (function () {
   "use strict";
   var NS = "http://www.w3.org/2000/svg";
-  var ROSE = "#eab9c8", ROSE_HI = "#f7d3de", GOLD = "#e3b48f", GREEN = "#32d74b", RED = "#ff7a6b";
-  var GRAY = "#3a3a3c", DIM = "#86868b";
+  var ROSE = "#4A342A", ROSE_HI = "#7D5A44", GOLD = "#B2967D", GREEN = "#4E6A45", RED = "#A4432F";
+  var GRAY = "#D7C9B8", DIM = "#7D5A44";
 
   var el = function (tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);
@@ -61,16 +61,16 @@
     hours.forEach(function (h, j) { text(svg, X0 - 10, rowY(j) + H / 2 + 4, h, "s-lbl", "end"); });
     /* the lunch break, drawn as a quiet band across the week */
     var ly = rowY(3) + H + (G + LUNCH) / 2;
-    el("line", { x1: X0, x2: colX(6) + W, y1: ly, y2: ly, stroke: "rgba(255,255,255,.12)", "stroke-dasharray": "3 4" }, svg);
+    el("line", { x1: X0, x2: colX(6) + W, y1: ly, y2: ly, stroke: "rgba(74, 52, 42, 0.168)", "stroke-dasharray": "3 4" }, svg);
     text(svg, X0 - 10, ly + 4, "lunch", "s-sub", "end");
     /* days off: hatched, never booked */
     var pat = el("pattern", { id: "s1-hatch", width: 7, height: 7, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" },
       el("defs", {}, svg));
     el("rect", { width: 7, height: 7, fill: "#101012" }, pat);
-    el("line", { x1: 0, y1: 0, x2: 0, y2: 7, stroke: "rgba(255,255,255,.07)", "stroke-width": 3 }, pat);
+    el("line", { x1: 0, y1: 0, x2: 0, y2: 7, stroke: "rgba(74, 52, 42, 0.098)", "stroke-width": 3 }, pat);
     days.forEach(function (d, i) {
       if (!off[d]) return;
-      el("rect", { x: colX(i), y: Y0, width: W, height: bottom - Y0, rx: 8, fill: "url(#s1-hatch)", stroke: "rgba(255,255,255,.06)" }, svg);
+      el("rect", { x: colX(i), y: Y0, width: W, height: bottom - Y0, rx: 8, fill: "url(#s1-hatch)", stroke: "rgba(74, 52, 42, 0.084)" }, svg);
       text(svg, colX(i) + W / 2, (Y0 + bottom) / 2 + 4, off[d], "s-sub", "middle");
     });
     var r = rng(11), cells = [], empties = [], n = 0;
@@ -78,7 +78,7 @@
       for (var i = 0; i < days.length; i++) {
         if (off[days[i]]) continue;
         var x = colX(i), y = rowY(j);
-        el("rect", { x: x, y: y, width: W, height: H, rx: 7, fill: "none", stroke: "rgba(255,255,255,.07)" }, svg);
+        el("rect", { x: x, y: y, width: W, height: H, rx: 7, fill: "none", stroke: "rgba(74, 52, 42, 0.098)" }, svg);
         var base = r() < 0.6;
         var c = { x: x, y: y, base: base };
         c.g = el("g", {}, svg);
@@ -139,7 +139,7 @@
     ];
     var ev = { x: 282, y: 16, w: 222, h: 268 };
     panels.concat([ev]).forEach(function (p) {
-      el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 16, fill: "#161618", stroke: "rgba(255,255,255,.08)" }, svg);
+      el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 16, fill: "#FFFFFF", stroke: "rgba(74, 52, 42, 0.112)" }, svg);
     });
     var r = rng(29), dots = [], crossers = [];
     panels.forEach(function (p, pi) {
@@ -168,7 +168,7 @@
       d.tc = 3.2 + k * 0.38;
       d.tx = ev.x + 40 + (k % 4) * 48;
       d.ty = ev.y + 70 + Math.floor(k / 4) * 48;
-      el("rect", { x: d.tx - 18, y: d.ty - 18, width: 36, height: 36, rx: 10, fill: "none", stroke: "rgba(255,255,255,.06)" }, svg);
+      el("rect", { x: d.tx - 18, y: d.ty - 18, width: 36, height: 36, rx: 10, fill: "none", stroke: "rgba(74, 52, 42, 0.084)" }, svg);
       d.m = el("circle", { r: 5, fill: ROSE }, svg);
       d.halo = el("circle", { r: 14, fill: ROSE, opacity: 0 }, svg);
     });
@@ -176,10 +176,10 @@
     var MX = 16, MW = 488, MY = 318;
     text(svg, MX, MY - 12, "Artist clients who also book Evelyn", "s-lbl");
     var pctT = text(svg, MX + MW, MY - 12, "", "s-h", "end");
-    el("rect", { x: MX, y: MY, width: MW, height: 12, rx: 6, fill: "#1d1d20" }, svg);
+    el("rect", { x: MX, y: MY, width: MW, height: 12, rx: 6, fill: "#F9F6F1" }, svg);
     var fill = el("rect", { x: MX, y: MY, width: 0, height: 12, rx: 6, fill: ROSE }, svg);
     var gx = MX + MW * 0.5;
-    el("line", { x1: gx, x2: gx, y1: MY - 4, y2: MY + 16, stroke: "#f5f5f7", "stroke-width": 1.5, "stroke-dasharray": "3 3" }, svg);
+    el("line", { x1: gx, x2: gx, y1: MY - 4, y2: MY + 16, stroke: "#161412", "stroke-width": 1.5, "stroke-dasharray": "3 3" }, svg);
     text(svg, gx, MY + 30, "Go line · 15%", "s-lbl", "middle");
     var badge = el("g", { opacity: 0 }, svg);
     el("rect", { x: MX + MW - 212, y: MY + 44, width: 212, height: 30, rx: 15, fill: "rgba(50,215,75,.14)" }, badge);
@@ -192,7 +192,7 @@
         if (!d.cross) return;
         var u = ease(seg(t, d.tc, d.tc + 1.1));
         var on = t >= d.tc;
-        d.c.setAttribute("fill", on ? "rgba(234,185,200,.45)" : "#636366");
+        d.c.setAttribute("fill", on ? "rgba(74, 52, 42, 0.45)" : "#636366");
         var mx = (d.cx + d.tx) / 2, my = Math.min(d.cy, d.ty) - 60;
         var x = (1 - u) * (1 - u) * d.cx + 2 * (1 - u) * u * mx + u * u * d.tx;
         var y = (1 - u) * (1 - u) * d.cy + 2 * (1 - u) * u * my + u * u * d.ty;
@@ -220,7 +220,7 @@
 
   /* ───────────── Step 3 · the Lumevina house ───────────── */
   var step3 = function (svg) {
-    el("rect", { x: 16, y: 16, width: 488, height: 262, rx: 20, fill: "#0d0d0f", stroke: "rgba(255,255,255,.14)" }, svg);
+    el("rect", { x: 16, y: 16, width: 488, height: 262, rx: 20, fill: "#0d0d0f", stroke: "rgba(74, 52, 42, 0.196)" }, svg);
     var labels = ["Lash", "Brow", "Nails", "Lash", "Brow", "Nails", "Lash", "Spare"];
     var suites = [];
     for (var i = 0; i < 8; i++) {
@@ -228,17 +228,17 @@
       var s = { x: 28 + col * 118, y: top ? 28 : 196, w: 108, h: 70, label: labels[i], t: 1.6 + i * 0.95 };
       /* the eighth suite stays open: room to grow in the high case */
       if (labels[i] === "Spare") s.t = 1e9;
-      s.box = el("rect", { x: s.x, y: s.y, width: s.w, height: s.h, rx: 12, fill: "rgba(255,255,255,.02)", stroke: "rgba(255,255,255,.14)", "stroke-dasharray": "4 4" }, svg);
+      s.box = el("rect", { x: s.x, y: s.y, width: s.w, height: s.h, rx: 12, fill: "rgba(74, 52, 42, 0.028)", stroke: "rgba(74, 52, 42, 0.196)", "stroke-dasharray": "4 4" }, svg);
       s.name = text(svg, s.x + 14, s.y + 28, "Open suite", "s-lbl");
       s.sub = text(svg, s.x + 14, s.y + 48, "", "s-sub");
       s.ping = el("circle", { cx: s.x + s.w - 20, cy: s.y + 22, r: 4, fill: ROSE, opacity: 0 }, svg);
       s.ring = el("circle", { cx: s.x + s.w - 20, cy: s.y + 22, r: 4, fill: "none", stroke: ROSE, opacity: 0 }, svg);
       suites.push(s);
     }
-    el("rect", { x: 28, y: 110, width: 226, height: 74, rx: 12, fill: "rgba(255,255,255,.03)" }, svg);
+    el("rect", { x: 28, y: 110, width: 226, height: 74, rx: 12, fill: "rgba(74, 52, 42, 0.042)" }, svg);
     text(svg, 42, 138, "Lobby · front desk", "s-h");
     text(svg, 42, 158, "One brand, one welcome", "s-sub");
-    var studio = el("rect", { x: 266, y: 110, width: 226, height: 74, rx: 12, fill: "rgba(234,185,200,.12)", stroke: ROSE }, svg);
+    var studio = el("rect", { x: 266, y: 110, width: 226, height: 74, rx: 12, fill: "rgba(74, 52, 42, 0.12)", stroke: ROSE }, svg);
     text(svg, 280, 138, "Evelyn’s studio", "s-h");
     var studioSub = text(svg, 280, 158, "", "s-sub");
     var comets = [];
@@ -255,8 +255,8 @@
         var a = ease(seg(t, s.t, s.t + 0.5));
         var on = a > 0;
         if (on && s.label !== "Spare") filled += a;
-        s.box.setAttribute("fill", on ? "rgba(234,185,200," + (0.1 * a) + ")" : "rgba(255,255,255,.02)");
-        s.box.setAttribute("stroke", on ? "rgba(234,185,200," + (0.25 + 0.5 * a) + ")" : "rgba(255,255,255,.14)");
+        s.box.setAttribute("fill", on ? "rgba(234,185,200," + (0.1 * a) + ")" : "rgba(74, 52, 42, 0.028)");
+        s.box.setAttribute("stroke", on ? "rgba(234,185,200," + (0.25 + 0.5 * a) + ")" : "rgba(74, 52, 42, 0.196)");
         s.box.setAttribute("stroke-dasharray", on ? "0" : "4 4");
         s.name.textContent = on ? s.label : "Open suite";
         s.name.setAttribute("class", on ? "s-h" : "s-lbl");
