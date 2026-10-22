@@ -262,7 +262,7 @@ export function htmlToTextWithLinks(html: string): { text: string; links: EmailL
   h = h.replace(/<\/?([a-zA-Z][a-zA-Z0-9:-]*)\b[^>]*>/g, (tag: string, name: string) => {
     const closing = tag.startsWith("</");
     const lower = name.toLowerCase();
-    if (lower === "li") return closing ? "\n" : "\n- ";
+    if (lower === "li") return closing ? "" : "\n- ";
     if (lower === "td" || lower === "th") return " ";
     if (BLOCK_TAGS.test(lower)) return "\n";
     return "";
