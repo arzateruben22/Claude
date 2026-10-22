@@ -35,8 +35,9 @@ Use AskUserQuestion. Cover all five:
 1. **Purpose** — launch reel, explainer, lesson, ad? The one thing the viewer must remember.
 2. **Audience & venue** — social feed (muted autoplay), site hero, lesson player, broadcast.
 3. **Duration & formats** — seconds, fps (30 default), 16:9 / 9:16 / both.
-4. **Sound** — silent (captions carry it), score + foley, or VO later. Target −14 LUFS for
-   social, −18 LUFS under a voice.
+4. **Sound** — silent (captions carry it), score + foley, or a voice (recorded, or synthetic and
+   labelled as AI). Social: −14 LUFS and ≤ −1 dBTP measured on the delivered AAC. Build it with
+   `kits/cinema/studio` (see its README) and a preset of the client's own sound.
 5. **Brand identity** — the client's palette, type, mark or mascot, references. **Never reuse
    another client's palette or type** (not Los Güeros espresso/amber, not Claude coral, not
    Lumevina rose). Reuse the machinery and the quality bar, never the identity.
@@ -104,7 +105,7 @@ Before anyone watches:
 - **Copy** — every text inside the safe frame, not overlapping, clean for its reading budget.
 - **Legibility with motion** — readable on the blurred frames too, not just the sharp ones.
 - **Contrast** — captions ≥ 4.5:1 over the frame behind them; add a scrim where needed.
-- **Sync** — every cue within −45/+60 ms of the first frame that shows its event, story beats
+- **Sync** — every transient within one frame of the first frame that shows its event (median ≤ 10 ms; `studio/qa.py` measures it in the mastered stem), slow swells within three; story beats
   on the 16th-note grid within 5 ms; loudness within 1 LU of target, true peak ≤ −1 dBTP.
 - **Determinism** — a frame is byte-identical whatever the render order.
 

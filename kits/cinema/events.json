@@ -1,0 +1,19 @@
+{
+  "_doc": "One row per event kind, read by the picture (motion-blur floors), the studio (sound placement) and QA (sync). An event's time is the first moment it shows on screen; the studio snaps it to the first frame at or after that time. lead: seconds the sound starts BEFORE that frame (most sounds: 0). span: the event has an end time t1 and its sound lasts that long. prio: 1 always plays, 3 may drop out under the voice. kFloor: minimum motion-blur sub-frames while it happens (null: no floor). after: the event grows from nothing (a fade or pop-in starts at zero), so it first shows on the frame AFTER its time, not on it.",
+  "label":         {"lead": 0.0, "prio": 2, "span": false, "after": true, "kFloor": null},
+  "counter.show":  {"lead": 0.0, "prio": 3, "span": false, "after": true, "kFloor": null},
+  "counter.tick":  {"lead": 0.0, "prio": 3, "span": false, "kFloor": null},
+  "counter.end":   {"lead": 0.0, "prio": 1, "span": false, "kFloor": null},
+  "cell.land":     {"lead": 0.0, "prio": 3, "span": false, "kFloor": null},
+  "bacteria.pop":  {"lead": 0.0, "prio": 3, "span": false, "after": true, "kFloor": null},
+  "bacteria.fade": {"lead": 0.0, "prio": 3, "span": true,  "kFloor": null},
+  "oxidize":       {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null},
+  "swell":         {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null},
+  "drop.fall":     {"lead": 0.0, "prio": 2, "span": true,  "kFloor": 8},
+  "drop.land":     {"lead": 0.0, "prio": 1, "span": false, "kFloor": 8},
+  "dissolve":      {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null},
+  "section":       {"lead": 0.0, "prio": 1, "span": true,  "kFloor": null},
+  "whoosh":        {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null},
+  "impact":        {"lead": 0.0, "prio": 1, "span": false, "kFloor": 16},
+  "zap":           {"lead": 0.08, "prio": 1, "span": false, "kFloor": null}
+}

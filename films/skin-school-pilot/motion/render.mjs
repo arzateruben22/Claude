@@ -23,6 +23,8 @@
 // --verify re-renders a sample of frames and compares their hashes with the
 // log: "deterministic: true" is the evidence that the clip is a pure function
 // of time.
+// --cues writes the scene's event table (window.SCENE_CUES) to build/cues-<id>-<aspect>.json
+// for the studio's sound (kits/cinema/studio), and renders nothing.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -44,6 +46,7 @@ const aspects = String(opt("aspect", "16x9")).split(",");
 const quick = opt("quick", false) === true;
 const verify = opt("verify", false) === true;
 const plain = opt("plain", false) === true;     // cinema: off = her renderer exactly
+const cuesOnly = opt("cues", false) === true;   // cinema: write the scene's event table for the sound, render nothing
 // cinema: the directed 8-2 (scenes3d.mjs) or her scene as it is on the Lumevina branch (scenes3d-original.mjs)
 const { SCENES } = await import(opt("scenes", "directed") === "original" ? "./scenes3d-original.mjs" : "./scenes3d.mjs");
 const from = Number(opt("from", 0)), to = opt("to", null);
@@ -162,6 +165,25 @@ for (const scene of Object.values(SCENES)) {
     await pg.evaluate(() => document.fonts.ready);
     await pg.waitForFunction(() => typeof window.seek === "function", null, { timeout: 30000 }).catch(() => {});
     if (errors.length || !(await pg.evaluate(() => typeof window.seek === "function"))) { console.error(`${scene.id} ${aspect}: the scene page failed to load: ${errors.join(" | ") || "no seek()"}`); await pg.close(); continue; }
+    if (cuesOnly) {
+      // cinema: the scene's own event table, in film time, for the studio (kits/cinema/studio). Labels get
+      // their on-screen position from the page itself, once they have settled, so the sound pans with them.
+      const cues = await pg.evaluate(() => window.SCENE_CUES ? window.SCENE_CUES() : null);
+      if (!cues) { console.error(`${scene.id}: the scene has no SCENE_CUES()`); await pg.close(); continue; }
+      cues.shown = {};
+      for (const e of cues.events.filter((e) => e.el)) {
+        e.pos = await pg.evaluate(([t, id]) => { window.seek(t); const r = document.getElementById(id).getBoundingClientRect(); return [+((r.left + r.width / 2) / innerWidth).toFixed(3), +((r.top + r.height / 2) / innerHeight).toFixed(3)]; }, [e.t + 0.7, e.el]);
+        // and, independently of the table, the first frame on which the element is actually visible
+        for (let f = Math.floor((e.t - 0.2) * fps); f <= Math.ceil((e.t + 0.5) * fps); f++) {
+          const op = await pg.evaluate(([t, id]) => { window.seek(t); return +getComputedStyle(document.getElementById(id)).opacity; }, [f / fps, e.el]);
+          if (op > 0.02) { cues.shown[e.tag] = +(f / fps).toFixed(4); break; }
+        }
+      }
+      const cueFile = path.join(root, "build", `cues-${scene.id}-${aspect}.json`);
+      fs.writeFileSync(cueFile, JSON.stringify({ scene: scene.id, aspect, fps, ...cues }, null, 1));
+      console.log(`${scene.id} ${aspect}: ${cues.events.length} cues → ${path.relative(process.cwd(), cueFile)}`);
+      await pg.close(); continue;
+    }
     const cdp = await pg.context().newCDPSession(pg);
     const frames = Math.round(scene.dur * fps), hashes = [], samples = [], warnings = [];
     const outDir = OUT[aspect]; fs.mkdirSync(outDir, { recursive: true });
@@ -170,14 +192,14 @@ for (const scene of Object.values(SCENES)) {
     let ff = null;
     if (verify) {
       const logged = (log[scene.id] || {})[aspect] || {}, prev = logged.samples || [];
-      let same = 0, diff = 0;
+      let same = 0, diff = 0; const diffs = [];
       for (const [i, h] of prev) {
         // cinema: the same call as the frame loop (a plain seek draws the scene unfinished, so it can never match)
         await pg.evaluate(([t, fps]) => { if (window.cinemaFrame) { window.CINEMA.fps = fps; return window.cinemaFrame(t); } window.seek(t); return null; }, [i / (logged.fps || fps), Number(opt("fps", 30))]);
         const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
-        if (sha(Buffer.from(data, "base64")) === h) same++; else diff++;
+        if (sha(Buffer.from(data, "base64")) === h) same++; else { diff++; diffs.push(i); }
       }
-      console.log(`${scene.id} ${aspect}: deterministic: ${diff === 0 && same > 0} (${same} of ${same + diff} sampled frames match the log)`);
+      console.log(`${scene.id} ${aspect}: deterministic: ${diff === 0 && same > 0} (${same} of ${same + diff} sampled frames match the log)${diffs.length ? "; differing frames: " + diffs.join(",") : ""}`);
       (log[scene.id] ||= {})[aspect] = { ...((log[scene.id] || {})[aspect] || {}), verified: diff === 0 && same > 0, verifiedAt: new Date().toISOString().slice(0, 10) };
       await pg.close(); continue;
     }

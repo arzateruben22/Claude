@@ -36,6 +36,16 @@ import { liquid } from "../../../../kits/cinema/metaballs.js";   // directed: li
 const tmpV = new THREE.Vector3();
 const W = window.W, H = window.H, M = window.M;
 const { seg, tw, E, enter } = M;
+// directed: every timed event in one table (shot-local seconds). The picture reads it below, and
+// window.SCENE_CUES() hands the same numbers to the sound (kits/cinema/studio), so they can't drift.
+const CUE = {
+  oilOff: [0, 1.5], fill: [0.3, 4.8], oxidize: [4.2, 5.8],     // shot 1 (a cell lands at fill0 + (k/n + 0.25)·(fill1 − fill0))
+  bact: [0.6, 4.4], red: [1.6, 5.4],                            // shot 2
+  bactOut: [4.4, 6.2], redOut: [3.2, 6.4], clear: [1.4, 4.6],  // shot 3
+  mand: [0.1, 1.0, 3.8, 5], bp: [3.6, 4.4, 6.2, 7.2],           // shot 3 drops: fall, land, fade out
+  days: [6.6, 7.9, 90],
+  labels: [[["l-hair", 0.8], ["l-gland", 1.8], ["l-oil", 3.0]], [["l-plug", 1.2], ["l-black", 4.4]], [["l-bact", 1.0], ["l-red", 2.6]], [["l-mand", 0.6], ["l-bp", 4.0], ["dayc", 6.4]]]
+};
 const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
 const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
 document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
@@ -225,32 +235,32 @@ window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
   // healthy oil, until the clog
-  const oilOn = i === 0 ? 1 : i === 1 ? 1 - seg(lt, 0, 1.5) : 0;
+  const oilOn = i === 0 ? 1 : i === 1 ? 1 - seg(lt, CUE.oilOff[0], CUE.oilOff[1]) : 0;
   // directed: each drop grows in at the gland and shrinks away at the top, so the loop's wrap is never seen (or blurred)
   oils.forEach((o, k) => { const ph = (t * 0.32 + k * 0.2) % 1, life = Math.min(1, ph / 0.08, (1 - ph) / 0.1); const sc = (0.7 + 0.5 * ph) * oilOn * life * life * (3 - 2 * life); o.visible = sc > 0.02; o.position.set(0 + Math.sin(ph * 9 + k) * 0.25, 7 + ph * 8.5, PZ + Math.cos(ph * 7 + k) * 0.2); o.scale.setScalar(Math.max(0.001, sc)); });
   // the plug fills from shot 1, dissolves in shot 3
-  const fillP = i === 0 ? 0 : i >= 2 ? 1 : seg(lt, 0.3, 4.8);
-  const clearP = i === 3 ? seg(lt, 1.4, 4.6) : 0;
+  const fillP = i === 0 ? 0 : i >= 2 ? 1 : seg(lt, CUE.fill[0], CUE.fill[1]);
+  const clearP = i === 3 ? seg(lt, CUE.clear[0], CUE.clear[1]) : 0;
   plug.forEach((m, k) => {
     const t0 = k / plug.length, p = seg(fillP, t0, t0 + 0.25);
     const gone = seg(clearP, 1 - (k + 1) / plug.length, 1 - k / plug.length);
     m.visible = p > 0 && gone < 1;
     // directed: a real fall (accelerating), a little bounce and squash where it lands
-    const land = 0.3 + (t0 + 0.25) * 4.5, q = lt - land;
+    const land = CUE.fill[0] + (t0 + 0.25) * (CUE.fill[1] - CUE.fill[0]), q = lt - land;
     const settled = i >= 2 || (i === 1 && q >= 0);
     const bounce = settled && i === 1 && q < 0.8 ? 0.32 * Math.exp(-q * 7) * Math.abs(Math.sin(q * 13)) : 0;
     const sq = settled && i === 1 && q < 0.6 ? 0.22 * Math.exp(-q * 9) * Math.cos(q * 26) : 0;
     m.position.y = m.userData.y + (p < 1 ? (1 - p * p) * 7 : 0) + bounce;
     const sz = Math.max(0.001, (0.8 + 0.4 * p) * (1 - gone));
     m.scale.set(sz * (1 + sq * 0.5), sz * (1 - sq), sz * (1 + sq * 0.5));
-    if (m.userData.top) { tmp.set(hash(k + 500) < 0.6 ? 0x8e8e93 : 0xd9b85c).lerp(BLACK, i === 1 ? seg(lt, 4.2, 5.8) : i >= 2 ? 1 - clearP : 0); m.material.color.copy(tmp); }
+    if (m.userData.top) { tmp.set(hash(k + 500) < 0.6 ? 0x8e8e93 : 0xd9b85c).lerp(BLACK, i === 1 ? seg(lt, CUE.oxidize[0], CUE.oxidize[1]) : i >= 2 ? 1 - clearP : 0); m.material.color.copy(tmp); }
   });
   // bacteria and the red wall
-  const bactP = i === 2 ? seg(lt, 0.6, 4.4) : i === 3 ? 1 - seg(lt, 4.4, 6.2) : 0;
+  const bactP = i === 2 ? seg(lt, CUE.bact[0], CUE.bact[1]) : i === 3 ? 1 - seg(lt, CUE.bactOut[0], CUE.bactOut[1]) : 0;
   bact.forEach((b, k) => { const p = seg(bactP, k / bact.length, k / bact.length + 0.3); b.visible = p > 0; const h = b.userData.home;
     b.position.set(h.x + 0.06 * Math.sin(t * 6.1 + k * 1.7), h.y + 0.07 * Math.sin(t * 5.3 + k * 2.3), h.z + 0.05 * Math.sin(t * 4.7 + k));
     const pop = E.back(Math.min(1, p * 1.2)); b.scale.set(Math.max(0.001, pop) * (1 + 0.15 * Math.sin(t * 5 + k)), Math.max(0.001, pop) * (1 - 0.12 * Math.sin(t * 5 + k)), Math.max(0.001, pop) * (1 + 0.15 * Math.sin(t * 5 + k))); });
-  const redP = i === 2 ? E.out(seg(lt, 1.6, 5.4)) : i === 3 ? 1 - E.inout(seg(lt, 3.2, 6.4)) : 0;
+  const redP = i === 2 ? E.out(seg(lt, CUE.red[0], CUE.red[1])) : i === 3 ? 1 - E.inout(seg(lt, CUE.redOut[0], CUE.redOut[1])) : 0;
   paint(redP);
   // the drops in shot 3
   // directed: each drop stretches as it falls, lands with a sprung squash and a splash ring
@@ -276,15 +286,32 @@ window.seek = function (t) {
     m.material.opacity = (m === dropMand ? 0.85 : 0.9) * (1 - seg(lt, fadeA, fadeB));
     return m.position;
   };
-  const pm = drop(dropMand, 0, PZ, 0.9, 0.1, 1.0, 3.8, 5, 0.65, splashMand, "mand", mandBalls); if (pm) DROP.mand.copy(pm); else if (i === 3 && lt <= 0.1) DROP.mand.set(0, 22, PZ);
-  const pb = drop(dropBP, 0.6, PZ + 0.4, 0.8, 3.6, 4.4, 6.2, 7.2, 0.6, splashBP, "bp", bpBalls); if (pb) DROP.bp.copy(pb); else if (i === 3 && lt <= 3.6) DROP.bp.set(0.6, 22, PZ + 0.4);
+  const pm = drop(dropMand, 0, PZ, 0.9, CUE.mand[0], CUE.mand[1], CUE.mand[2], CUE.mand[3], 0.65, splashMand, "mand", mandBalls); if (pm) DROP.mand.copy(pm); else if (i === 3 && lt <= CUE.mand[0]) DROP.mand.set(0, 22, PZ);
+  const pb = drop(dropBP, 0.6, PZ + 0.4, 0.8, CUE.bp[0], CUE.bp[1], CUE.bp[2], CUE.bp[3], 0.6, splashBP, "bp", bpBalls); if (pb) DROP.bp.copy(pb); else if (i === 3 && lt <= CUE.bp[0]) DROP.bp.set(0.6, 22, PZ + 0.4);
   // labels and the day counter (DOM)
   const $ = M.$;
-  if (i === 0) { enter($("#l-hair"), lt, 0.8, { y: 8 }); enter($("#l-gland"), lt, 1.8, { y: 8 }); enter($("#l-oil"), lt, 3.0, { y: 8 }); }
-  if (i === 1) { enter($("#l-plug"), lt, 1.2, { y: 8 }); enter($("#l-black"), lt, 4.4, { y: 8 }); }
-  if (i === 2) { enter($("#l-bact"), lt, 1.0, { y: 8 }); enter($("#l-red"), lt, 2.6, { y: 8 }); }
-  if (i === 3) { enter($("#l-mand"), lt, 0.6, { y: 8 }); enter($("#l-bp"), lt, 4.0, { y: 8 }); enter($("#dayc"), lt, 6.4, { y: 10 }); $("#dayn").textContent = Math.round(90 * E.out(seg(lt, 6.6, 7.9))); }
+  (CUE.labels[i] || []).forEach(([id, at]) => enter($("#" + id), lt, at, { y: id === "dayc" ? 10 : 8 }));
+  if (i === 3) $("#dayn").textContent = Math.round(CUE.days[2] * E.out(seg(lt, CUE.days[0], CUE.days[1])));
   renderer.render(scene, camera);
+};
+// directed: the same table as film-time events for the sound. "first" is the first moment the event
+// shows; the studio snaps it to the frame grid. Labels carry their element id, so the cue runner can
+// read their screen position for the pan.
+window.SCENE_CUES = function () {
+  const at = window.SCENE.shots.map((s) => s.at), dur = window.SCENE.dur, ev = [];
+  window.SCENE.shots.forEach((s, k) => ev.push({ t: s.at, kind: "section", id: s.name, t1: k + 1 < at.length ? at[k + 1] : dur }));
+  CUE.labels.forEach((row, k) => row.forEach(([id, t]) => ev.push({ t: at[k] + t, kind: id === "dayc" ? "counter.show" : "label", tag: id, el: id })));
+  const n = plug.length, f0 = CUE.fill[0], fd = CUE.fill[1] - CUE.fill[0];
+  for (let k = 0; k < n; k++) ev.push({ t: at[1] + f0 + (k / n + 0.25) * fd, kind: "cell.land", tag: "cell" + k });
+  ev.push({ t: at[1] + CUE.oxidize[0], kind: "oxidize", t1: at[1] + CUE.oxidize[1] });
+  for (let k = 0; k < bact.length; k++) ev.push({ t: at[2] + CUE.bact[0] + (CUE.bact[1] - CUE.bact[0]) * k / bact.length, kind: "bacteria.pop", tag: "b" + k });
+  ev.push({ t: at[2] + CUE.red[0], kind: "swell", t1: at[2] + CUE.red[1] });
+  [["mand", CUE.mand], ["bp", CUE.bp]].forEach(([tag, d]) => { ev.push({ t: at[3] + d[0], kind: "drop.fall", tag, t1: at[3] + d[1] }); ev.push({ t: at[3] + d[1], kind: "drop.land", tag }); });
+  ev.push({ t: at[3] + CUE.clear[0], kind: "dissolve", t1: at[3] + CUE.clear[1] });
+  ev.push({ t: at[3] + CUE.bactOut[0], kind: "bacteria.fade", t1: at[3] + CUE.bactOut[1] });
+  // the counter shows Math.round(90·out(p)); each tenth day first shows where 90·out(p) ≥ d − 0.5
+  for (let d = 10; d <= CUE.days[2]; d += 10) { const p = 1 - Math.cbrt(1 - (d - 0.5) / CUE.days[2]); ev.push({ t: at[3] + CUE.days[0] + p * (CUE.days[1] - CUE.days[0]), kind: d === CUE.days[2] ? "counter.end" : "counter.tick", tag: "d" + d }); }
+  return { dur, events: ev.sort((a, b) => a.t - b.t) };
 };
 `
   }

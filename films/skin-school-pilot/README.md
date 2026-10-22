@@ -102,6 +102,24 @@ roughly an hour per aspect on a 4-core container.
 
   It is mixed to −18 LUFS, so it stays under any voice. It's seeded, so the same file comes out
   every run.
+
+  **Now replaced by the studio** (`kits/cinema/studio`). `score.py` copied every time from the
+  scene by hand. The scene now keeps its event times in one table (`CUE` in `scenes3d.mjs`), the
+  picture reads it, and `render.mjs --cues` hands the same table to the studio, with each label's
+  screen position for the pan and the first frame it is actually visible:
+
+  ```
+  node films/skin-school-pilot/motion/render.mjs --cues --aspect 16x9,9x16
+  python3 -I kits/cinema/studio/render.py --from-scene films/skin-school-pilot/build/cues-8-2-9x16.json \
+      --preset lumevina-dew --energy 0.45,0.5,0.55,0.6 films/skin-school-pilot/build/studio-9x16
+  ```
+
+  The result is `out/8-2-9x16-studio.mp4` and `out/8-2-studio.mp4`. Lumevina's "calm and clean"
+  preset: D lydian at 90 BPM, soft pads and felt piano, −14 LUFS on the AAC. All 13 kinds of
+  sound land within a frame of their event (measured in the mastered stem). Moving the times into
+  the table changed no frame. Comparing frame hashes shows the pilot renderer already varies a
+  few frames between runs (2–5 of 52 samples, different ones each run), with or without the
+  change. That gets measured with the chunked renderer.
 - **Portrait.** The pilot frames the same moves from 1.32× further back, with a lens 12° wider. Each
   shot still needs a pass for the 9:16 safe zones.
 - **The flat scenes** (DOM/SVG) need a different treatment: camera moves on the stage and sub-frame

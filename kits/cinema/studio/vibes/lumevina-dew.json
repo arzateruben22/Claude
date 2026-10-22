@@ -1,0 +1,194 @@
+{
+  "_doc": "Lumevina Skin School, 'calm and clean': warm, open, nothing minor. D lydian at 90 BPM (a 16th is exactly 5 frames at 30 fps). Felt piano and soft pads; small glass bells for labels; close, gentle foley in a small room.",
+  "name": "lumevina-dew",
+  "bpm": 90,
+  "key": "D",
+  "mode": "lydian",
+  "scale": [
+    "D",
+    "E",
+    "F#",
+    "G#",
+    "A",
+    "B",
+    "C#"
+  ],
+  "progression": [
+    {
+      "pad": [
+        "D3",
+        "A3",
+        "E4",
+        "F#4"
+      ],
+      "root": "D2"
+    },
+    {
+      "pad": [
+        "B2",
+        "F#3",
+        "A3",
+        "D4"
+      ],
+      "root": "B1"
+    },
+    {
+      "pad": [
+        "G2",
+        "D3",
+        "F#3",
+        "B3"
+      ],
+      "root": "G1"
+    },
+    {
+      "pad": [
+        "D3",
+        "A3",
+        "E4",
+        "G#4"
+      ],
+      "root": "D2"
+    }
+  ],
+  "layers": {
+    "pad": {
+      "gain": -15,
+      "bright": 2600,
+      "attack": 1.4,
+      "release": 2.0
+    },
+    "felt": {
+      "gain": -18,
+      "bright": 4500,
+      "octave": 1,
+      "eighths_above": 0.5
+    },
+    "sub": {
+      "gain": -25,
+      "above": 0.58
+    },
+    "air": {
+      "gain": -34
+    }
+  },
+  "space": {
+    "music": [
+      1.6,
+      0.3
+    ],
+    "foley": [
+      0.8,
+      0.2
+    ],
+    "dialog": [
+      0.5,
+      0.06
+    ]
+  },
+  "drive": {
+    "music": 1.1,
+    "effects": 1.05,
+    "dialog": 0.0
+  },
+  "foley": {
+    "label": {
+      "voice": "bell",
+      "gain": -16,
+      "notes": [
+        "A5",
+        "B5",
+        "C#6",
+        "D6",
+        "E6",
+        "F#6",
+        "G#6",
+        "A6",
+        "B6",
+        "C#7"
+      ]
+    },
+    "counter.show": {
+      "voice": "bell",
+      "gain": -19,
+      "notes": [
+        "D6"
+      ]
+    },
+    "counter.tick": {
+      "voice": "tick",
+      "gain": -21
+    },
+    "counter.end": {
+      "voice": "chime",
+      "gain": -12,
+      "notes": [
+        "D5",
+        "F#5",
+        "A5",
+        "D6"
+      ]
+    },
+    "cell.land": {
+      "voice": "tap",
+      "gain": -16,
+      "bounce": [
+        0.24,
+        -24
+      ]
+    },
+    "bacteria.pop": {
+      "voice": "fizz",
+      "gain": -17,
+      "dur": 0.35
+    },
+    "bacteria.fade": {
+      "voice": "fizz",
+      "gain": -24
+    },
+    "oxidize": {
+      "voice": "dim",
+      "gain": -16,
+      "note": "B1"
+    },
+    "swell": {
+      "voice": "swell",
+      "gain": -14,
+      "note": "D2"
+    },
+    "drop.fall": {
+      "voice": "whistle",
+      "gain": -15
+    },
+    "drop.land": {
+      "voice": "plop",
+      "gain": -8,
+      "f0": {
+        "mand": 300,
+        "bp": 360
+      },
+      "splash": -15
+    },
+    "dissolve": {
+      "voice": "sparkle",
+      "gain": -24,
+      "notes": [
+        "D7",
+        "F#7",
+        "A7",
+        "E7"
+      ]
+    },
+    "section": {
+      "voice": "whoosh",
+      "gain": -27,
+      "dur": 0.8,
+      "lo": 200,
+      "hi": 1800
+    }
+  },
+  "master": {
+    "lufs": -14.0,
+    "tilt": 0.0
+  }
+}
