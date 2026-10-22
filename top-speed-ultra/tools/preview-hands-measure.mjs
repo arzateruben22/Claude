@@ -1,9 +1,12 @@
 // The hands' proportions as built (hands-sdf.ts measureHand) and the build cost per presentation and quality.
 //   node tools/preview-hands-measure.mjs
 import { build } from 'esbuild';
-import { pathToFileURL } from 'node:url';
-const out = '/home/user/Claude/top-speed-ultra/tests/out/preview/build/hands-prof/measure.mjs';
-await build({ stdin: { contents: `export * from './src/preview/hands-geo.ts'; export * from './src/preview/hands-sdf.ts';`, resolveDir: '/home/user/Claude/top-speed-ultra', loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
+import path from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+// this checkout's top-speed-ultra (was the main checkout's, so a worktree measured the main checkout's code)
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const out = path.join(ROOT, 'tests/out/preview/build/hands-prof/measure.mjs');
+await build({ stdin: { contents: `export * from './src/preview/hands-geo.ts'; export * from './src/preview/hands-sdf.ts';`, resolveDir: ROOT, loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
 const M = await import(pathToFileURL(out).href + '?t=' + Date.now());
 const f1 = (x) => x.toFixed(1), f2 = (x) => x.toFixed(2);
 for (const pres of ['m', 'f']) {
