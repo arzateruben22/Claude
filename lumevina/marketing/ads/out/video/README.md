@@ -43,6 +43,6 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 37 | `10-3-9x16.mp4` | Professional treatments, explained | Who does what in skin treatments, and what actually makes them work. | 23 s |
 | 38 | `11-3-9x16.mp4` | Your skin plan for life | A base, one or two actives, and a look every season. Nothing more. | 22 s |
 | 39 | `14-1-9x16.mp4` | Your first visit: which one to book | Two questions decide which appointment to book. | 24 s |
-| 40 | *rendering* | Her shelf: how the products fit together | How a routine is built from one shelf, in order. |  |
+| 40 | `14-2-9x16.mp4` | Her shelf: how the products fit together | How a routine is built from one shelf, in order. | 24 s |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
