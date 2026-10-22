@@ -88,7 +88,9 @@ rendering and mixing never need the voice venv.
    within ±1 frame, no render needed.
 2. **Voice and captions.** `voice/setup.sh`, TTS with the pronunciation list, word times measured
    against ground truth (not assumed), the compiler, captions, a T0 animatic with the full mix.
-   **Exit:** every caption word lit within ±1 frame of its onset; science terms signed off by ear.
+   **Exit:** line starts and words after a pause within ±1 frame of their onset; words inside a
+   phrase median ≤ 30 ms (measured: 22–26 ms, 56–61% within a frame, see `voice/README.md`);
+   every starred word checked in the animatic; science terms signed off by ear.
 3. **Picture.** Chunked, resumable renderer (fixing render.mjs's `--from` bugs, 1080×1920), the
    TikTok layout pass on her page (header and caption out of the apps' UI zones, her `#cap`
    replaced by the new captions), the scene stretched to 60 s, T1 and T2 for approval.
