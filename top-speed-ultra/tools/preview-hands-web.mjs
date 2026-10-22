@@ -1,0 +1,71 @@
+// The first web space as the driver's eye sees it (no meshing): rays from the eye through a band across the web
+// (the index MCP -> thumb MCP line, +-8 mm either side) must meet skin before the rim's leather (no slit of rim
+// through the web), and the thumb's MCP must keep its abduction off the index's metacarpal (the web a saddle between
+// two digits, not the thumb lying flat on the side of the palm). Prints the skin's height toward the eye along the
+// line, the thumb solver's terms (flexions, hinge twist, nail cosine, sink, clash, cover, web) and PASS/FAIL against
+// the acceptance used for the owner's "fix the thumbs" (2026-10-21).
+//   node tools/preview-hands-web.mjs [m|f]
+import { build } from 'esbuild';
+import path from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const out = path.join(ROOT, 'tests/out/preview/build/hands-pose/sdf-web.mjs');
+await build({ stdin: { contents: `export * from './src/preview/hands-sdf.ts'; export * from './src/preview/spec.ts';`, resolveDir: ROOT, loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
+const M = await import(pathToFileURL(out).href + '?t=' + Date.now());
+const pres = process.argv[2] ?? 'm';
+const t0 = performance.now();
+const A = M.buildAnatomy(pres), f = A.field, t = A.digits[4];
+const anatomyMs = performance.now() - t0;
+const E = M.EYE, eyeG = M.wToG(M.carToW([E.x, E.y, E.z]));
+const a = A.mcp[0], b = t.joints[1], ab = M.sub(b, a);
+const toEye0 = M.norm(M.sub(eyeG, M.lerp3(a, b, 0.5)));
+const side = M.norm(M.cross(toEye0, M.norm(ab)));
+// march from the eye toward each sample until skin or rim
+const first = (p) => {
+  const dir = M.norm(M.sub(p, eyeG)), L = M.len(M.sub(p, eyeG));
+  let tt = Math.max(0, L - 120);
+  for (let i = 0; i < 4000 && tt < L + 60; i++) {
+    const q = M.madd(eyeG, dir, tt);
+    const ds = f.eval(q[0], q[1], q[2], null, 0), dr = M.rimSdfG(q[0], q[1], q[2]);
+    const d = Math.min(ds, dr);
+    if (d < 0.05) return { what: ds <= dr ? 'skin' : 'rim', t: tt, depth: tt - L };
+    tt += Math.max(0.1, d * 0.8);
+  }
+  return { what: 'none', t: Infinity, depth: Infinity };
+};
+let rimHits = 0, n = 0;
+const profile = [];
+for (let i = 0; i <= 20; i++) {
+  const s = i / 20;
+  let rowRim = 0, nearest = Infinity;
+  for (const off of [-8, -4, 0, 4, 8]) {
+    const p = M.madd(M.lerp3(a, b, s), side, off), r = first(p);
+    n++; if (r.what === 'rim') { rimHits++; rowRim++; }
+    nearest = Math.min(nearest, r.depth);
+  }
+  profile.push({ s: +s.toFixed(2), rimHits: rowRim, skinTowardEye: +(-nearest).toFixed(1) });
+}
+const h = profile.map((r) => r.skinTowardEye);
+console.log(`[${pres}] anatomy ${anatomyMs.toFixed(0)} ms (pinned q: ${M.POSE.thumb.q[pres] ? 'yes' : 'no, searched'})`);
+console.log(`eye rays across the web (21 stations x 5): ${rimHits} of ${n} meet the rim's leather before skin`);
+console.log(`skin height toward the eye along the index MCP -> thumb MCP line (mm from the line): index end ${h[0]}, between ${Math.min(...h.slice(4, 17))}..${Math.max(...h.slice(4, 17))}, thumb end ${h[20]}`);
+console.log(profile.map((r) => `${r.s}:${r.skinTowardEye}${r.rimHits ? 'R' + r.rimHits : ''}`).join(' '));
+// the thumb as solved: joints, section angles, distance off the leather, and the solver's terms
+const fmt = (v) => v.map((x) => x.toFixed(0)).join(',');
+console.log('thumb joints (G mm)', t.joints.map(fmt).join(' | '), ' section', t.joints.map((p) => M.sectionAngle(p).toFixed(0)).join('/'), ' off the leather', t.joints.map((p) => M.rimSdfG(...p).toFixed(1)).join('/'));
+const T = M.thumbTerms;
+console.log('terms', JSON.stringify(T, (k, v) => typeof v === 'number' ? +v.toFixed(2) : v));
+// acceptance: no slit, hinges within 30 deg, the nail to the eye, nothing sunk into the rim or the index, the
+// fingertips in view, the MCP off the index metacarpal (the open web)
+const checks = [
+  ['no rim through the web', rimHits === 0],
+  ['hinge twist <= 30 deg', T.twist <= 30],
+  ['nail cosine >= 0.9', T.nail >= 0.9],
+  ['no sink', T.sink < 0.01],
+  ['no clash with the index', T.clash < 0.01],
+  ['fingertips in view (cover 0)', T.cover < 0.01],
+  ['web >= 20 mm', T.webD >= 20],
+  ['IP flexion 5..60 deg', T.fI >= 5 && T.fI <= 60],
+];
+for (const [name, ok] of checks) console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}`);
+if (checks.some(([, ok]) => !ok)) process.exitCode = 1;
