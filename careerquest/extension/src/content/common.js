@@ -58,7 +58,26 @@
   const SALARY_RE =
     /(?:(?:USD|US\$|\$|CA\$|€|£)\s?\d{1,3}(?:[,.]\d{3})*(?:\.\d+)?\s?[kK]?(?:\s?(?:-|–|—|to)\s?(?:USD|US\$|\$|€|£)?\s?\d{1,3}(?:[,.]\d{3})*(?:\.\d+)?\s?[kK]?)?)(?:\s?(?:\/|per|an?|each)\s?(?:hour|hr|year|yr|annum|month|mo|week|wk|day)|\s?(?:hourly|annually|yearly|monthly))?/;
 
-  const SENTENCE_BOUNDARY = /[.!?\n\r•|]/;
+  /** Characters that always end a sentence (block edges are emitted as "\n"). */
+  const HARD_BOUNDARY = /[\n\r•|]/;
+
+  /** Page chrome that never holds a confirmation: its text is not searched for phrases. */
+  const EXCLUDED_REGIONS = 'nav, footer, [role="navigation"], [role="contentinfo"]';
+  /** Overlays / live alerts: where single-page apps render "Application sent" style confirmations. */
+  const OVERLAY_REGIONS = 'dialog, [role="dialog"], [role="alertdialog"], [aria-modal="true"], [role="alert"]';
+  const HEADING_REGIONS = 'h1, h2, h3, h4, h5, h6, [role="heading"]';
+  /** Region ranks for a phrase hit (higher = stronger evidence). */
+  const REGION = Object.freeze(["body", "heading", "overlay", "element"]);
+
+  /** Inline formatting boxes: text inside them belongs to the surrounding block. */
+  const INLINE_DISPLAYS = new Set(["inline", "contents"]);
+
+  /** A selector that is only a tag name ("h1") identifies nothing platform-specific. */
+  const BARE_TAG_SELECTOR = /^[a-z][a-z0-9]*$/i;
+
+  /** Applicant contact details are masked out of any confirmation sentence. */
+  const EMAIL_RE = /[^\s@<>()[\]"',;:]+@[^\s<>()[\]"',;:]*/g;
+  const PHONE_CANDIDATE_RE = /(?<![\w-])\+?[\d(][\d\s().-]{7,}\d(?![\w-])/g;
 
   /* ------------------------------------------------------------------ */
   /* Text helpers                                                         */
@@ -130,6 +149,10 @@
   function isElementVisible(el) {
     if (SKIP_TAGS.has(el.tagName)) return false;
     if (el.hidden || el.getAttribute("aria-hidden") === "true") return false;
+    // Content of a closed <details> (FAQ accordions) is not rendered, but its
+    // computed style still says display:block.
+    const parent = el.parentElement;
+    if (parent && parent.tagName === "DETAILS" && !parent.open && el.tagName !== "SUMMARY") return false;
     const view = el.ownerDocument.defaultView;
     if (!view) return true;
     const cs = view.getComputedStyle(el);
@@ -138,46 +161,140 @@
   }
 
   /**
-   * Visible, non-form text of the document (or a subtree), whitespace-collapsed.
-   * Hidden subtrees (display:none, visibility:hidden, hidden/aria-hidden) are skipped.
+   * Visible, non-form text of the document (or a subtree), in document order.
+   * Text of different block-level boxes (paragraphs, headings, list items,
+   * table cells, inline-block chips, …) is joined with "\n" so a sentence can
+   * never run from one element into the next; text inside one block is joined
+   * with a space. Hidden subtrees (display:none, visibility:hidden,
+   * hidden/aria-hidden, closed <details>) and form controls are skipped.
+   * @param {Document | Element} root
+   * @param {{ maxChars?: number, exclude?: string }} [opts] exclude: selector of subtrees to skip
+   * @returns {{ text: string, starts: number[], nodes: Text[] }}
+   */
+  function collectText(root, opts = {}) {
+    const maxChars = opts.maxChars ?? LIMITS.visibleText;
+    const doc = root.nodeType === 9 ? /** @type {Document} */ (root) : root.ownerDocument;
+    const start = root.nodeType === 9 ? doc.body : root;
+    /** @type {{ text: string, starts: number[], nodes: Text[] }} */
+    const out = { text: "", starts: [], nodes: [] };
+    if (!start) return out;
+    const excluded = new Set();
+    if (opts.exclude) {
+      try {
+        for (const el of start.querySelectorAll(opts.exclude)) excluded.add(el);
+      } catch {
+        /* invalid selector: exclude nothing */
+      }
+    }
+    const view = doc.defaultView;
+    /** @type {Map<Element, boolean>} */
+    const visCache = new Map();
+    const visible = (el) => {
+      if (visCache.has(el)) return visCache.get(el);
+      let v = !excluded.has(el) && isElementVisible(el);
+      if (v && el.parentElement && el !== start) v = visible(el.parentElement);
+      visCache.set(el, v);
+      return v;
+    };
+    /** @type {Map<Element, Element>} */
+    const blockCache = new Map();
+    const blockOf = (el) => {
+      const chain = [];
+      let cur = el;
+      let block = start;
+      while (cur && cur !== start) {
+        if (blockCache.has(cur)) {
+          block = blockCache.get(cur);
+          break;
+        }
+        chain.push(cur);
+        const display = view ? view.getComputedStyle(cur).display : "block";
+        if (!INLINE_DISPLAYS.has(display)) {
+          block = cur;
+          break;
+        }
+        cur = cur.parentElement;
+      }
+      for (const c of chain) blockCache.set(c, block);
+      return block;
+    };
+    const walker = doc.createTreeWalker(start, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
+      acceptNode(node) {
+        if (node.nodeType === 1) {
+          if (!visible(/** @type {Element} */ (node))) return NodeFilter.FILTER_REJECT;
+          return /** @type {Element} */ (node).tagName === "BR" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+        }
+        const parent = node.parentElement;
+        if (!parent || !visible(parent)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    let lastBlock = null;
+    let lineBreak = false;
+    // Inside one block, adjacent text nodes are joined with a space only where
+    // the markup has whitespace ("been <b>submitted</b>." → "been submitted.").
+    let space = false;
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeType === 1) {
+        lineBreak = true; // <br>
+        continue;
+      }
+      const raw = node.nodeValue || "";
+      const t = raw.replace(/\s+/g, " ").trim();
+      if (!t) {
+        space = true;
+        continue;
+      }
+      const block = blockOf(node.parentElement);
+      if (out.text) out.text += lineBreak || block !== lastBlock ? "\n" : space || /^\s/.test(raw) ? " " : "";
+      lineBreak = false;
+      space = /\s$/.test(raw);
+      lastBlock = block;
+      out.starts.push(out.text.length);
+      out.nodes.push(/** @type {Text} */ (node));
+      out.text += t;
+      if (out.text.length > maxChars) break;
+    }
+    return out;
+  }
+
+  /**
+   * Visible, non-form text (see collectText); block edges are "\n".
    * @param {Document | Element} root
    * @param {number} [maxChars]
    */
   function visibleText(root, maxChars = LIMITS.visibleText) {
-    const doc = root.nodeType === 9 ? /** @type {Document} */ (root) : root.ownerDocument;
-    const start = root.nodeType === 9 ? doc.body : root;
-    if (!start) return "";
-    /** @type {Map<Element, boolean>} */
-    const cache = new Map();
-    const visible = (el) => {
-      if (cache.has(el)) return cache.get(el);
-      let v = isElementVisible(el);
-      if (v && el.parentElement && el !== start) v = visible(el.parentElement);
-      cache.set(el, v);
-      return v;
-    };
-    const walker = doc.createTreeWalker(start, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        const parent = node.parentElement;
-        if (!parent || !visible(parent)) return NodeFilter.FILTER_REJECT;
-        return /\S/.test(node.nodeValue || "") ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-      },
-    });
-    const parts = [];
-    let total = 0;
-    let node;
-    while ((node = walker.nextNode())) {
-      const t = node.nodeValue.replace(/\s+/g, " ");
-      parts.push(t);
-      total += t.length;
-      if (total > maxChars) break;
-    }
-    return parts.join(" ").replace(/\s+/g, " ").trim();
+    return collectText(root, { maxChars }).text;
+  }
+
+  /** @param {string} text @param {number} i */
+  function isSentenceEnd(text, i) {
+    const c = text[i];
+    if (HARD_BOUNDARY.test(c)) return true;
+    // "." inside "x.com", "$28.50" or "R-1.2" is not a sentence end.
+    return /[.!?]/.test(c) && (i + 1 >= text.length || /\s/.test(text[i + 1]));
+  }
+
+  /**
+   * Masks e-mail addresses (also partial ones cut at a sentence end) and phone
+   * numbers (10–15 digits) so applicant contact details never leave the page.
+   * @param {string} text
+   */
+  function maskPii(text) {
+    if (!text) return "";
+    return String(text)
+      .replace(EMAIL_RE, "[email]")
+      .replace(PHONE_CANDIDATE_RE, (m) => {
+        const digits = m.replace(/\D/g, "").length;
+        return digits >= 10 && digits <= 15 ? "[phone]" : m;
+      });
   }
 
   /**
    * Extracts the sentence around a match, capped at `max` characters and
-   * centred on the match when the sentence is longer than the cap.
+   * centred on the match when the sentence is longer than the cap. The sentence
+   * never extends past the block (element) that contains the match.
    * @param {string} text
    * @param {number} index
    * @param {number} length
@@ -185,11 +302,11 @@
    */
   function extractSentence(text, index, length, max = LIMITS.confirmationText) {
     let start = index;
-    while (start > 0 && !SENTENCE_BOUNDARY.test(text[start - 1]) && index - start < 160) start--;
+    while (start > 0 && !isSentenceEnd(text, start - 1) && index - start < 160) start--;
     let end = index + length;
-    while (end < text.length && !SENTENCE_BOUNDARY.test(text[end]) && end - index < 240) end++;
+    while (end < text.length && !isSentenceEnd(text, end) && end - index < 240) end++;
     if (end < text.length && /[.!?]/.test(text[end])) end++;
-    let sentence = text.slice(start, end).trim();
+    let sentence = text.slice(start, end).replace(/\s+/g, " ").trim();
     if (sentence.length > max) {
       const matchStart = index - start;
       const from = Math.max(0, Math.min(matchStart - Math.floor((max - length) / 2), sentence.length - max));
@@ -198,22 +315,134 @@
     return sentence;
   }
 
+  const WORD_CHAR = /[\p{L}\p{N}]/u;
+
+  /** Is text[index, index+length) a whole-word occurrence? */
+  function wordBounded(text, index, length) {
+    const before = index > 0 ? text[index - 1] : "";
+    const after = text[index + length] || "";
+    return !(before && WORD_CHAR.test(before)) && !(after && WORD_CHAR.test(after));
+  }
+
+  /** Text node that contains offset `index` of a collectText() result. */
+  function nodeAt(collected, index) {
+    let lo = 0;
+    let hi = collected.starts.length - 1;
+    let found = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (collected.starts[mid] <= index) {
+        found = mid;
+        lo = mid + 1;
+      } else hi = mid - 1;
+    }
+    return found === -1 ? null : collected.nodes[found];
+  }
+
   /**
-   * Looks for any of the phrases in the visible text (case-insensitive).
+   * Where on the page a text node sits: 3 inside a platform confirmation
+   * element, 2 inside a dialog/alert, 1 inside a heading, 0 anywhere else.
+   * @param {Node | null} node
+   * @param {string[]} confirmationSelectors
+   */
+  function regionRank(node, confirmationSelectors = []) {
+    const el = node && node.parentElement;
+    if (!el) return 0;
+    for (const selector of confirmationSelectors) {
+      try {
+        if (el.closest(selector)) return 3;
+      } catch {
+        /* invalid selector */
+      }
+    }
+    if (el.closest(OVERLAY_REGIONS)) return 2;
+    if (el.closest(HEADING_REGIONS)) return 1;
+    return 0;
+  }
+
+  /**
+   * Finds the best whole-word occurrence of any phrase (case-insensitive):
+   * occurrences inside a confirmation element beat dialogs, which beat
+   * headings, which beat body text; ties go to the earlier phrase.
+   * @param {{ text: string, starts: number[], nodes: Text[] }} collected
+   * @param {string[]} phrases
+   * @param {string[]} [confirmationSelectors]
+   * @returns {{ phrase: string, sentence: string, region: string } | null}
+   */
+  function locatePhrase(collected, phrases, confirmationSelectors = []) {
+    const text = collected.text;
+    if (!text) return null;
+    const lower = text.toLowerCase();
+    let best = null;
+    for (const phrase of phrases) {
+      const p = String(phrase || "").toLowerCase();
+      if (!p) continue;
+      let from = 0;
+      for (let n = 0; n < 25; n++) {
+        const i = lower.indexOf(p, from);
+        if (i === -1) break;
+        from = i + 1;
+        if (!wordBounded(lower, i, p.length)) continue;
+        const rank = regionRank(nodeAt(collected, i), confirmationSelectors);
+        if (!best || rank > best.rank) best = { phrase, index: i, length: p.length, rank };
+        if (rank === 3) break;
+      }
+      if (best && best.rank === 3) break;
+    }
+    if (!best) return null;
+    return { phrase: best.phrase, sentence: maskPii(extractSentence(text, best.index, best.length)), region: REGION[best.rank] };
+  }
+
+  /**
+   * Ambiguous one-word phrases ("Applied") count only as a standalone badge or
+   * button: the whole text of an element must be the phrase (ignoring
+   * punctuation/symbols such as "✓"), so "Applied Materials" or "applied
+   * behavior analysis" never match. A phrase that appears on more than one
+   * element is a list of badges, not a confirmation, and is ignored.
+   * @param {{ text: string, starts: number[], nodes: Text[] }} collected
+   * @param {string[]} phrases
+   * @param {string[]} [confirmationSelectors]
+   */
+  function findStandalonePhrase(collected, phrases, confirmationSelectors = []) {
+    for (const phrase of phrases) {
+      const escaped = String(phrase || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (!escaped) continue;
+      const re = new RegExp(`^[^\\p{L}\\p{N}]*${escaped}[^\\p{L}\\p{N}]*$`, "iu");
+      const hits = [];
+      for (const node of collected.nodes) {
+        if (!re.test(sanitize(node.nodeValue, 200))) continue;
+        const el = node.parentElement;
+        if (!el || !re.test(sanitize(el.textContent, 200))) continue;
+        hits.push(node);
+        if (hits.length > 1) break;
+      }
+      if (hits.length === 1) {
+        return { phrase, sentence: sanitize(hits[0].nodeValue, LIMITS.confirmationText), region: REGION[regionRank(hits[0], confirmationSelectors)] };
+      }
+      if (hits.length > 1) return null;
+    }
+    return null;
+  }
+
+  /**
+   * Looks for any of the phrases in the visible text (whole words,
+   * case-insensitive). Navigation and footer text is ignored.
    * @param {Document | Element} root
    * @param {string[]} phrases
    * @returns {{ phrase: string, sentence: string } | null}
    */
   function findConfirmation(root, phrases) {
-    const text = visibleText(root);
-    if (!text) return null;
-    const lower = text.toLowerCase();
-    for (const phrase of phrases) {
-      const p = phrase.toLowerCase();
-      const i = lower.indexOf(p);
-      if (i !== -1) return { phrase, sentence: extractSentence(text, i, p.length) };
+    const hit = locatePhrase(collectText(root, { exclude: EXCLUDED_REGIONS }), phrases);
+    return hit ? { phrase: hit.phrase, sentence: hit.sentence } : null;
+  }
+
+  /** decodeURIComponent that never throws (URLs may contain a stray "%"). @param {string} value */
+  function safeDecode(value) {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return String(value ?? "");
     }
-    return null;
   }
 
   /**
@@ -415,16 +644,24 @@
   /* ------------------------------------------------------------------ */
 
   /**
-   * Confidence for a confirmation signal (product rules):
-   * platform element/URL + phrase → ≥ 0.9, phrase only → 0.8, route only → 0.7.
-   * @param {{ phrase: boolean, route: boolean, element: boolean }} signals
+   * Confidence for a confirmation signal (product rules). Only a phrase that is
+   * corroborated by a platform confirmation route or element reaches the
+   * auto-record threshold (0.8); everything else is a prompt for the user.
+   *   strong phrase + route + element → 0.95
+   *   strong phrase + route or element → 0.9
+   *   strong phrase only → 0.7 (prompt)
+   *   weak phrase ("Applied") + route/element → 0.7, alone → 0.6 (prompt)
+   *   route or element only → 0.7 (prompt)
+   * @param {{ phrase: boolean, route: boolean, element: boolean, weak?: boolean }} signals
    */
   function scoreConfirmation(signals) {
-    if (signals.phrase && signals.route && signals.element) return 0.95;
-    if (signals.phrase && (signals.route || signals.element)) return 0.9;
-    if (signals.phrase) return 0.8;
-    if (signals.route || signals.element) return 0.7;
-    return 0;
+    const corroborated = !!(signals.route || signals.element);
+    if (signals.phrase && !signals.weak) {
+      if (signals.route && signals.element) return 0.95;
+      return corroborated ? 0.9 : 0.7;
+    }
+    if (signals.phrase) return corroborated ? 0.7 : 0.6;
+    return corroborated ? 0.7 : 0;
   }
 
   /**
@@ -445,7 +682,7 @@
       confidence: Math.min(1, Math.max(0, Number(partial.confidence) || 0)),
       detectedBy: Array.isArray(partial.detectedBy) ? partial.detectedBy.slice(0, 20) : [],
     };
-    if (partial.confirmationText) r.confirmationText = sanitize(partial.confirmationText, LIMITS.confirmationText);
+    if (partial.confirmationText) r.confirmationText = sanitize(maskPii(partial.confirmationText), LIMITS.confirmationText);
     return r;
   }
 
@@ -568,7 +805,7 @@
   }
 
   /**
-   * Phrase search over an already-computed visible text string.
+   * Phrase search over an already-computed visible text string (whole words).
    * @param {string} text
    * @param {string[]} phrases
    */
@@ -577,8 +814,27 @@
     const lower = text.toLowerCase();
     for (const phrase of phrases) {
       const p = phrase.toLowerCase();
-      const i = lower.indexOf(p);
-      if (i !== -1) return { phrase, sentence: extractSentence(text, i, p.length) };
+      let from = 0;
+      for (let n = 0; n < 25; n++) {
+        const i = lower.indexOf(p, from);
+        if (i === -1) break;
+        from = i + 1;
+        if (wordBounded(lower, i, p.length)) return { phrase, sentence: maskPii(extractSentence(text, i, p.length)) };
+      }
+    }
+    return null;
+  }
+
+  /** First visible element matching any selector (or null). */
+  function firstVisibleElement(root, selectors) {
+    for (const selector of selectors || []) {
+      let els;
+      try {
+        els = root.querySelectorAll(selector);
+      } catch {
+        continue;
+      }
+      for (const el of els) if (isVisibleDeep(el)) return el;
     }
     return null;
   }
@@ -586,31 +842,41 @@
   /**
    * @typedef {object} DetectorConfig
    * @property {string} platform
-   * @property {string[]} confirmationPhrases      strong phrases: phrase alone → 0.8
-   * @property {string[]} [weakPhrases]            ambiguous phrases: alone → 0.6 (prompt), with route/element → ≥ 0.9
+   * @property {string[]} confirmationPhrases      strong phrases (whole words)
+   * @property {string[]} [weakPhrases]            ambiguous one-word phrases: only as a standalone badge, never above 0.7
    * @property {string[]} [confirmationRoutes]     URL fragments of confirmation routes
    * @property {string[]} [confirmationSelectors]  platform-specific confirmation elements
    * @property {string[]} [applyRoutes]            URL fragments of the apply flow
    * @property {string[]} [applySelectors]         apply-form elements
+   * @property {string[]} [jobContainers]          posting/description containers: free-text scans are limited to these when present
    * @property {{ title?: string[], company?: string[], location?: string[], salaryText?: string[], requisitionId?: string[] }} [selectors]
    * @property {Array<[string, string]>} [companyAttrs]   [selector, attribute] fallbacks for company (e.g. logo alt)
    * @property {(doc: Document, url: string, fields: Record<string, string>, detectedBy: string[]) => void} [custom]
-   * @property {boolean} [scanTextForRequisition]  default true
-   * @property {boolean} [scanTextForSalary]       default true
+   * @property {(doc: Document, url: string, fields: Record<string, string>, detectedBy: string[]) => void} [fallback]
+   * @property {boolean} [scanTextForRequisition]  default true (job postings only)
+   * @property {boolean} [scanTextForSalary]       default true (job postings only)
+   * @property {boolean} [lenientJobEvidence]      user-initiated capture: any title counts as a job page
    */
 
   /**
    * Builds a detect(doc, url) function from declarative config.
+   *
    * Field precedence: JSON-LD → platform selectors → custom hook → og:site_name →
-   * URL/text scans → fallback hook → (job pages only) <title>/og:title split.
+   * URL → (job postings only) text scans of the posting → fallback hook →
+   * (job postings only) <title>/og:title split.
+   *
+   * Privacy: the free-text salary / requisition scans run only when the page
+   * was identified as a job posting (JSON-LD JobPosting or a platform-specific
+   * title/company element) and is neither an apply form nor a confirmation, so
+   * an applicant's own answers on review/confirmation pages are never read.
    * @param {DetectorConfig} config
    */
   function createDetector(config) {
     const sel = config.selectors || {};
+    const confirmationSelectors = config.confirmationSelectors || [];
     return function detect(doc, url) {
       const pageTitle = doc.title;
       const detectedBy = [];
-      const text = visibleText(doc);
       const fields = { company: "", title: "", location: "", salaryText: "", requisitionId: "" };
 
       // 1. JSON-LD JobPosting.
@@ -621,8 +887,10 @@
         detectedBy.push("jsonld");
       }
 
-      // 2. Platform selectors fill the gaps.
+      // 2. Platform selectors fill the gaps. A title/company hit from a
+      //    platform-specific selector (not a bare "h1") is evidence of a posting.
       let selectorHits = 0;
+      let jobElementHits = 0;
       for (const key of ["title", "company", "location", "salaryText", "requisitionId"]) {
         if (fields[key] || !sel[key]) continue;
         const hit = firstText(doc, sel[key]);
@@ -635,6 +903,7 @@
         }
         detectedBy.push(`selector:${key}`);
         selectorHits++;
+        if ((key === "title" || key === "company") && !BARE_TAG_SELECTOR.test(hit.selector)) jobElementHits++;
       }
       if (!fields.company && config.companyAttrs) {
         const hit = firstAttr(doc, config.companyAttrs);
@@ -642,6 +911,7 @@
           fields.company = hit.text;
           detectedBy.push("attr:company");
           selectorHits++;
+          jobElementHits++;
         }
       }
 
@@ -655,77 +925,113 @@
         }
       }
       if (!fields.requisitionId) {
-        const fromUrl = extractRequisitionId(decodeURIComponent(url));
+        const fromUrl = extractRequisitionId(safeDecode(url));
         if (fromUrl) {
           fields.requisitionId = fromUrl;
           detectedBy.push("url:requisition");
         }
       }
-      if (!fields.requisitionId && config.scanTextForRequisition !== false) {
-        const id = extractRequisitionId(text.slice(0, 20000));
-        if (id) {
-          fields.requisitionId = id;
-          detectedBy.push("text:requisition");
-        }
+      const jobEvidence = hasJsonLd || jobElementHits > 0 || !!config.lenientJobEvidence;
+
+      // 4. Confirmation signals. Phrases are searched in visible text outside
+      //    nav/footer; strong phrases on whole words, weak ones only as a badge.
+      //    (No <title> fallback here: on apply/confirmation pages the title is
+      //    usually the site name; the background pre-fills missing job details
+      //    from the job page seen earlier in the tab.)
+      const collected = collectText(doc, { exclude: EXCLUDED_REGIONS });
+      const route = urlHasAny(url, config.confirmationRoutes || []);
+      const element = firstVisible(doc, confirmationSelectors);
+      let found = locatePhrase(collected, config.confirmationPhrases || [], confirmationSelectors);
+      let weak = false;
+      if (!found) {
+        found = findStandalonePhrase(collected, config.weakPhrases || [], confirmationSelectors);
+        weak = !!found;
       }
-      if (!fields.salaryText && config.scanTextForSalary !== false) {
-        const s = extractSalaryText(text.slice(0, 20000));
-        if (s) {
-          fields.salaryText = s;
-          detectedBy.push("text:salary");
+      // JSON-LD JobPosting says "this is a posting": a phrase in its description
+      // or a status line proves nothing. It still counts inside the platform's
+      // confirmation element or a dialog/alert, or as a heading on a page that
+      // also has a confirmation route/element.
+      let phraseCounts = !!found;
+      if (found && hasJsonLd && found.region !== "element" && found.region !== "overlay" && !(found.region === "heading" && (route || element))) {
+        phraseCounts = false;
+      }
+      const confirmationScore = scoreConfirmation({ phrase: phraseCounts, weak, route, element: !!element });
+
+      // 5. Apply flow (never recorded as submitted).
+      const applyRoute = urlHasAny(url, config.applyRoutes || []);
+      const applyEl = firstVisible(doc, config.applySelectors || []);
+
+      const kind = confirmationScore >= 0.5 ? "CONFIRMATION_PAGE" : applyRoute || applyEl ? "APPLY_STARTED" : jobEvidence ? "JOB_PAGE" : null;
+
+      // 6. Free-text scans: job postings only, limited to the posting container when known.
+      if (kind === "JOB_PAGE" && (!fields.requisitionId || !fields.salaryText)) {
+        const scope = firstVisibleElement(doc, config.jobContainers) || doc;
+        const text = visibleText(scope, 20000);
+        if (!fields.requisitionId && config.scanTextForRequisition !== false) {
+          const id = extractRequisitionId(text);
+          if (id) {
+            fields.requisitionId = id;
+            detectedBy.push("text:requisition");
+          }
+        }
+        if (!fields.salaryText && config.scanTextForSalary !== false) {
+          const s = extractSalaryText(text);
+          if (s) {
+            fields.salaryText = s;
+            detectedBy.push("text:salary");
+          }
         }
       }
       if (config.fallback) config.fallback(doc, url, fields, detectedBy);
       if (fields.requisitionId) fields.requisitionId = fields.requisitionId.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
       if (fields.title && /\s[|·]\s/.test(fields.title)) fields.title = splitTitle(fields.title).title;
 
-      const base = { platform: config.platform, url: canonicalUrl(doc, url), pageTitle, ...fields };
+      const base = { platform: config.platform, url: canonicalUrl(doc, url), pageTitle };
 
-      // 4. Confirmation signals. (No <title> fallback here: on apply/confirmation
-      //    pages the title is usually the site name; the background pre-fills
-      //    missing job details from the job page seen earlier in the tab.)
-      const strong = findPhrase(text, config.confirmationPhrases || []);
-      const weak = strong ? null : findPhrase(text, config.weakPhrases || []);
-      const found = strong || weak;
-      const route = urlHasAny(url, config.confirmationRoutes || []);
-      const element = firstVisible(doc, config.confirmationSelectors || []);
-      if (found || route || element) {
-        let confidence = scoreConfirmation({ phrase: !!found, route, element: !!element });
-        if (weak && !route && !element) confidence = 0.6;
-        if (confidence >= 0.5) {
-          const by = [...detectedBy];
-          if (found) by.push(`phrase:${found.phrase}`);
-          if (route) by.push("confirmation-route");
-          if (element) by.push(`confirmation-element:${element}`);
-          return makeResult({ ...base, kind: "CONFIRMATION_PAGE", confidence, detectedBy: by, confirmationText: found ? found.sentence : undefined });
+      if (kind === "CONFIRMATION_PAGE") {
+        const by = [...detectedBy];
+        if (phraseCounts) by.push(`${weak ? "weak-phrase" : "phrase"}:${found.phrase}`);
+        if (route) by.push("confirmation-route");
+        if (element) by.push(`confirmation-element:${element}`);
+        // A heading such as "Thank you for applying!" picked up by a generic
+        // title selector is not the job title.
+        const confirmationFields = { ...fields };
+        const phrases = [...(config.confirmationPhrases || []), ...(config.weakPhrases || [])];
+        if (confirmationFields.title && findPhrase(confirmationFields.title, phrases)) {
+          confirmationFields.title = "";
+          const i = by.indexOf("selector:title");
+          if (i !== -1) by.splice(i, 1);
         }
+        return makeResult({ ...base, ...confirmationFields, kind, confidence: confirmationScore, detectedBy: by, confirmationText: phraseCounts ? found.sentence : undefined });
       }
 
-      // 5. Apply flow (never recorded as submitted).
-      const applyRoute = urlHasAny(url, config.applyRoutes || []);
-      const applyEl = firstVisible(doc, config.applySelectors || []);
-      if (applyRoute || applyEl) {
+      if (kind === "APPLY_STARTED") {
         const by = [...detectedBy];
         if (applyRoute) by.push("apply-route");
         if (applyEl) by.push(`apply-element:${applyEl}`);
-        return makeResult({ ...base, kind: "APPLY_STARTED", confidence: 0.5, detectedBy: by });
+        return makeResult({ ...base, ...fields, kind, confidence: 0.5, detectedBy: by });
       }
 
-      // 6. Job page: last resort is the page title / Open Graph title.
-      if (!fields.title) {
-        const m = metaFallbacks(doc);
-        if (m.title) {
-          const split = splitTitle(m.title);
-          fields.title = split.title;
-          if (!fields.company && split.company) fields.company = split.company;
-          if (!fields.location && split.location) fields.location = split.location;
-          detectedBy.push("meta");
+      // 7. Job page: last resort for the title is the page title / Open Graph
+      //    title, but only on a page already identified as a posting.
+      if (kind === "JOB_PAGE") {
+        if (!fields.title) {
+          const m = metaFallbacks(doc);
+          if (m.title) {
+            const split = splitTitle(m.title);
+            fields.title = split.title;
+            if (!fields.company && split.company) fields.company = split.company;
+            if (!fields.location && split.location) fields.location = split.location;
+            detectedBy.push("meta");
+          }
+        }
+        if (fields.title) {
+          const confidence = hasJsonLd ? 0.9 : jobElementHits > 0 ? 0.7 : 0.5;
+          return makeResult({ ...base, ...fields, kind: "JOB_PAGE", confidence, detectedBy });
         }
       }
-      if (fields.title && (fields.company || selectorHits > 0 || hasJsonLd)) {
-        const confidence = hasJsonLd ? 0.9 : selectorHits > 0 ? 0.7 : 0.5;
-        return makeResult({ ...base, ...fields, kind: "JOB_PAGE", confidence, detectedBy });
-      }
+      // Not recognisably a posting (account pages, candidate home, …): report the
+      // fields as hints only; the background never prompts or looks these up.
       return makeResult({ ...base, ...fields, kind: null, confidence: 0, detectedBy });
     };
   }
@@ -743,8 +1049,13 @@
     firstAttr,
     meta,
     visibleText,
+    collectText,
     extractSentence,
+    maskPii,
+    locatePhrase,
+    findStandalonePhrase,
     findConfirmation,
+    safeDecode,
     extractRequisitionId,
     extractSalaryText,
     urlHasAny,
@@ -762,6 +1073,8 @@
     isVisibleDeep,
     firstVisible,
     findPhrase,
+    firstVisibleElement,
     titleCase,
+    EXCLUDED_REGIONS,
   });
 })();

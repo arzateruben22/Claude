@@ -2,12 +2,17 @@ import { describe, expect, it } from "vitest";
 import type { ApplicationEventType, ApplicationStatus } from "@/generated/prisma/enums";
 import { averageDaysToResponse, classifyApplication, computeFunnel, conversionBy, dailySeries, weeklySeries } from "@/lib/analytics/funnel";
 import type { FunnelApplication } from "@/lib/analytics/types";
+import { impliesSubmission } from "@/lib/applications/status";
 
 const d = (iso: string) => new Date(iso);
 
+/**
+ * Records written by the applications service always carry an application date once their status
+ * implies a submission, so the fixture does the same unless a test overrides `appliedAt`.
+ */
 function app(overrides: Partial<FunnelApplication> & { status: ApplicationStatus }): FunnelApplication {
   return {
-    appliedAt: null,
+    appliedAt: impliesSubmission(overrides.status) ? d("2026-09-30T19:00:00Z") : null,
     statusHistory: [],
     events: [],
     source: "INDEED",
@@ -26,11 +31,19 @@ describe("classifyApplication", () => {
     expect(classifyApplication(app({ status: "PREPARING" })).applied).toBe(false);
   });
 
-  it("counts submitted-or-later statuses and APPLIED events as applied", () => {
+  it("counts records with an application date or an APPLIED event as applied", () => {
     expect(classifyApplication(app({ status: "SUBMITTED" })).applied).toBe(true);
     expect(classifyApplication(app({ status: "CONFIRMED" })).applied).toBe(true);
     expect(classifyApplication(app({ status: "NO_RESPONSE" })).applied).toBe(true);
     expect(classifyApplication(app({ status: "SAVED", events: [ev("APPLIED", "2026-10-01T10:00:00Z")] })).applied).toBe(true);
+  });
+
+  it("never counts a status alone: closing or withdrawing a lead that was never applied is not applied", () => {
+    expect(classifyApplication(app({ status: "SUBMITTED", appliedAt: null })).applied).toBe(false);
+    expect(classifyApplication(app({ status: "CLOSED" })).applied).toBe(false);
+    expect(classifyApplication(app({ status: "WITHDRAWN", statusHistory: [hist("SAVED", "2026-10-01T00:00:00Z"), hist("WITHDRAWN", "2026-10-02T00:00:00Z")] })).applied).toBe(false);
+    expect(classifyApplication(app({ status: "WITHDRAWN", appliedAt: d("2026-10-01T19:00:00Z") })).applied).toBe(true);
+    expect(classifyApplication(app({ status: "CLOSED", events: [ev("APPLIED", "2026-10-01T10:00:00Z")] })).applied).toBe(true);
   });
 
   it("derives nested stages from the current status", () => {
@@ -82,8 +95,10 @@ describe("classifyApplication", () => {
 
   it("resolves the application date from appliedAt, then events, then history", () => {
     expect(classifyApplication(app({ status: "SUBMITTED", appliedAt: d("2026-10-01T00:00:00Z") })).appliedAt?.toISOString()).toBe("2026-10-01T00:00:00.000Z");
-    expect(classifyApplication(app({ status: "SUBMITTED", events: [ev("APPLIED", "2026-10-02T12:00:00Z")] })).appliedAt?.toISOString()).toBe("2026-10-02T12:00:00.000Z");
-    expect(classifyApplication(app({ status: "SUBMITTED", statusHistory: [hist("SUBMITTED", "2026-10-03T12:00:00Z")] })).appliedAt?.toISOString()).toBe(
+    expect(classifyApplication(app({ status: "SUBMITTED", appliedAt: null, events: [ev("APPLIED", "2026-10-02T12:00:00Z")] })).appliedAt?.toISOString()).toBe(
+      "2026-10-02T12:00:00.000Z",
+    );
+    expect(classifyApplication(app({ status: "SUBMITTED", appliedAt: null, statusHistory: [hist("SUBMITTED", "2026-10-03T12:00:00Z")] })).appliedAt?.toISOString()).toBe(
       "2026-10-03T12:00:00.000Z",
     );
   });
@@ -241,5 +256,22 @@ describe("dailySeries / weeklySeries", () => {
     expect(weeks.map((w) => w.key)).toEqual(["2026-10-05", "2026-10-12"]);
     expect(weeks[0]).toMatchObject({ label: "Oct 5", rangeLabel: "Oct 5 – Oct 11", applied: 2, followUps: 0, days: 3 });
     expect(weeks[1]).toMatchObject({ applied: 1, followUps: 2, logged: 1, days: 2 });
+  });
+});
+
+describe("FUNNEL_EVENT_TYPES / day keys", () => {
+  it("lists every event type the funnel reads, including APPLIED", async () => {
+    const { FUNNEL_EVENT_TYPES, applicationDayKey, appliedDayKey } = await import("@/lib/analytics/funnel");
+    expect(FUNNEL_EVENT_TYPES).toContain("APPLIED");
+    expect(FUNNEL_EVENT_TYPES).toContain("RECRUITER_RESPONSE");
+    expect(FUNNEL_EVENT_TYPES).not.toContain("NOTE_ADDED");
+    expect(FUNNEL_EVENT_TYPES).not.toContain("STATUS_CHANGED");
+    // 8 PM Pacific on Oct 20 is Oct 21 in UTC; the record belongs to Oct 20 for a Pacific user.
+    const evening = { appliedAt: d("2025-10-21T03:00:00Z"), events: [], createdAt: d("2025-10-19T10:00:00Z") };
+    expect(appliedDayKey(evening, "America/Los_Angeles")).toBe("2025-10-20");
+    expect(applicationDayKey(evening, "America/Los_Angeles")).toBe("2025-10-20");
+    const saved = { appliedAt: null, events: [], createdAt: d("2025-10-19T10:00:00Z") };
+    expect(appliedDayKey(saved, "America/Los_Angeles")).toBeNull();
+    expect(applicationDayKey(saved, "America/Los_Angeles")).toBe("2025-10-19");
   });
 });

@@ -259,3 +259,14 @@ describe("timeline", () => {
     expect(entries.some((e) => e.eventType === "STATUS_CHANGED")).toBe(false);
   });
 });
+
+describe("timeline confirmation rows", () => {
+  it("labels a same-stage history row as a confirmation", () => {
+    const at = new Date("2026-10-05T19:00:00Z");
+    const [entry] = buildTimeline(
+      [{ id: "h9", fromStatus: "OFFER", toStatus: "OFFER", occurredAt: at, source: "USER", verified: true, note: "Stage confirmed" }],
+      [],
+    );
+    expect(entry).toMatchObject({ title: "Confirmed Offer", detail: "Stage confirmed", verified: true });
+  });
+});

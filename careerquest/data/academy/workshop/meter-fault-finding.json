@@ -79,7 +79,8 @@
       "id": "meter-fault-finding-t5",
       "question": "What current flows through R2?",
       "quantity": "I_R2",
-      "tolerance": 0.001
+      "tolerance": 0.001,
+      "toleranceType": "absolute"
     },
     {
       "id": "meter-fault-finding-t6",

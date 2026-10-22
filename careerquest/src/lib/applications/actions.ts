@@ -20,7 +20,7 @@ import {
 } from "@/lib/validation/application-detail";
 import * as svc from "./service";
 import { parseDateInput } from "./time";
-import { STATUS_LABELS } from "./status";
+import { STATUS_LABELS, countsAsSubmission } from "./status";
 
 /**
  * Server actions for the tracker UI. Every action authenticates, validates with zod, delegates to
@@ -130,13 +130,18 @@ export async function createApplicationAction(
   );
   if (!parsed.success) return fromZodError(parsed.error);
   const timezone = await svc.userTimezone(user.id);
+  const input = withZonedDates(parsed.data, formData, timezone);
+  if (
+    input.appliedAt &&
+    !countsAsSubmission({ from: null, to: input.status, appliedAt: input.appliedAt })
+  ) {
+    const msg = `A ${STATUS_LABELS[input.status].toLowerCase()} application has not been sent yet. Clear the date, or pick the stage it is actually at.`;
+    return fail("Some fields need attention.", { appliedAt: [msg] });
+  }
   let id: string;
   let xp = 0;
   try {
-    const r = await svc.createApplication(
-      user.id,
-      withZonedDates(parsed.data, formData, timezone),
-    );
+    const r = await svc.createApplication(user.id, input);
     id = r.application.id;
     xp = r.xpAwarded;
   } catch (err) {
@@ -222,7 +227,9 @@ export async function changeStatusAction(
   return ok({
     status: result.toStatus,
     xpAwarded: result.xpAwarded,
-    message: `Marked as ${STATUS_LABELS[result.toStatus]}.${xpSuffix(result.xpAwarded)}`,
+    message: result.confirmed
+      ? `Confirmed: ${STATUS_LABELS[result.toStatus]}.${xpSuffix(result.xpAwarded)}`
+      : `Marked as ${STATUS_LABELS[result.toStatus]}.${xpSuffix(result.xpAwarded)}`,
   });
 }
 

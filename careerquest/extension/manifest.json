@@ -65,12 +65,23 @@
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://*.ziprecruiter.com/*"],
+      "matches": [
+        "https://*.ziprecruiter.com/c/*/Job/*",
+        "https://*.ziprecruiter.com/jobs/*",
+        "https://*.ziprecruiter.com/jobs-search*",
+        "https://*.ziprecruiter.com/ojob/*",
+        "https://*.ziprecruiter.com/apply/*"
+      ],
       "js": ["src/content/common.js", "src/content/ziprecruiter.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://*.myworkdayjobs.com/*"],
+      "matches": [
+        "https://*.myworkdayjobs.com/job/*",
+        "https://*.myworkdayjobs.com/*/job/*",
+        "https://*.myworkdayjobs.com/details/*",
+        "https://*.myworkdayjobs.com/*/details/*"
+      ],
       "js": ["src/content/common.js", "src/content/workday.js"],
       "run_at": "document_idle"
     },
@@ -90,27 +101,32 @@
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://*.icims.com/*"],
+      "matches": ["https://*.icims.com/jobs/*"],
       "js": ["src/content/common.js", "src/content/icims.js"],
       "run_at": "document_idle"
     },
     {
       "matches": [
-        "https://workforcenow.adp.com/*",
-        "https://recruiting.adp.com/*",
-        "https://*.adp.com/*recruitment*",
-        "https://*.adp.com/*careers*"
+        "https://workforcenow.adp.com/mascsr/default/mdf/recruitment/*",
+        "https://workforcenow.adp.com/jobs/apply/*",
+        "https://recruiting.adp.com/srccar/*"
       ],
       "js": ["src/content/common.js", "src/content/adp.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://*.governmentjobs.com/*"],
+      "matches": ["https://*.governmentjobs.com/careers/*", "https://*.governmentjobs.com/jobs/*"],
       "js": ["src/content/common.js", "src/content/governmentjobs.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://*.usajobs.gov/*"],
+      "matches": [
+        "https://*.usajobs.gov/job/*",
+        "https://*.usajobs.gov/Job/*",
+        "https://*.usajobs.gov/GetJob/*",
+        "https://*.usajobs.gov/Applicant/Application/complete/*",
+        "https://*.usajobs.gov/applicant/application/complete/*"
+      ],
       "js": ["src/content/common.js", "src/content/usajobs.js"],
       "run_at": "document_idle"
     }

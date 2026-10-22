@@ -2,10 +2,11 @@
  * Minimal CareerQuest extension API client (pure: fetch is injected).
  *
  * Every method throws an {@link ApiError} with a stable `code`:
- *   not_configured | unauthorized | rate_limited | server | network | timeout | bad_response | http
+ *   not_configured | insecure | unauthorized | rate_limited | server | network | timeout | bad_response | http
  */
 
 import { API_TIMEOUT_MS } from "./constants.js";
+import { isLoopbackHost } from "./url.js";
 
 export class ApiError extends Error {
   /**
@@ -51,6 +52,11 @@ export function createApiClient({ fetchImpl, getSettings, timeoutMs = API_TIMEOU
       throw new ApiError("not_configured", "Connect the extension to CareerQuest in the options page.");
     }
     const url = new URL(settings.apiBaseUrl.replace(/\/+$/, "") + path);
+    // Defence in depth (settings are validated when saved): the token never
+    // travels over plain http except to this machine.
+    if (url.protocol !== "https:" && !(url.protocol === "http:" && isLoopbackHost(url.hostname))) {
+      throw new ApiError("insecure", "CareerQuest must be reached over https:// (plain http is allowed only for localhost).");
+    }
     for (const [k, v] of Object.entries(opts.query ?? {})) {
       if (v != null && v !== "") url.searchParams.set(k, String(v));
     }

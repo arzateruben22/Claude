@@ -33,7 +33,8 @@ import {
 import {
   ALL_STATUSES,
   STATUS_LABELS,
-  isSubmittedStatus,
+  countsAsSubmission,
+  impliesSubmission,
 } from "@/lib/applications/status";
 
 export type ApplicationFormValues = {
@@ -133,6 +134,7 @@ export function ApplicationForm({
   documents,
   cancelHref,
   today,
+  appliedEditable = true,
 }: {
   mode: "create" | "edit";
   action: FormAction;
@@ -142,6 +144,8 @@ export function ApplicationForm({
   cancelHref: string;
   /** Today's date key in the user's timezone, used as the max for date inputs. */
   today: string;
+  /** Edit mode: false for a record that was never applied (its date is set by moving it to Submitted). */
+  appliedEditable?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   const [values, setValues] = useState<ApplicationFormValues>({
@@ -168,7 +172,21 @@ export function ApplicationForm({
       ),
   });
 
-  const submitted = isSubmittedStatus(values.status);
+  const submitted = countsAsSubmission({
+    from: null,
+    to: values.status,
+    appliedAt: values.appliedAt ? new Date(values.appliedAt) : null,
+  });
+  const closedStage = values.status === "WITHDRAWN" || values.status === "CLOSED";
+  const showAppliedDate =
+    mode === "create"
+      ? impliesSubmission(values.status) || closedStage
+      : appliedEditable;
+  const statusHint = submitted
+    ? "Counts as a submitted application."
+    : closedStage
+      ? "Counts as an application only if you enter the date you applied."
+      : "Not yet submitted, so it does not count toward your targets.";
   const hasDocs =
     documents.resumes.length > 0 || documents.coverLetters.length > 0;
 
@@ -393,11 +411,7 @@ export function ApplicationForm({
               label="Status"
               htmlFor="status"
               errors={fe?.status}
-              hint={
-                submitted
-                  ? "Counts as a submitted application."
-                  : "Not yet submitted."
-              }
+              hint={statusHint}
             >
               <Select {...bind("status")}>
                 {ALL_STATUSES.map((s) => (
@@ -408,16 +422,34 @@ export function ApplicationForm({
               </Select>
             </Field>
           )}
-          <Field
-            label="Applied on"
-            htmlFor="appliedAt"
-            errors={fe?.appliedAt}
-            hint={
-              mode === "create" && submitted ? "Blank uses today." : undefined
-            }
-          >
-            <Input {...bind("appliedAt")} type="date" max={today} />
-          </Field>
+          {showAppliedDate ? (
+            <Field
+              label="Applied on"
+              htmlFor="appliedAt"
+              errors={fe?.appliedAt}
+              hint={
+                mode === "create"
+                  ? closedStage
+                    ? "Leave blank if you never applied."
+                    : "Blank uses today."
+                  : "Blank keeps the current date."
+              }
+            >
+              <Input {...bind("appliedAt")} type="date" max={today} />
+            </Field>
+          ) : (
+            <div className="text-sm">
+              <p className="font-medium text-fg">Applied on</p>
+              <p className="mt-1 text-xs text-fg-muted" data-testid="applied-not-yet">
+                {mode === "create"
+                  ? "Not applied yet. Pick a submitted stage above to record when you applied."
+                  : "Not applied yet. Moving it to Submitted on the application page records the date."}
+              </p>
+              {fe?.appliedAt && (
+                <p className="mt-1 text-xs text-danger">{fe.appliedAt[0]}</p>
+              )}
+            </div>
+          )}
           <Field
             label="Next follow-up"
             htmlFor="followUpAt"

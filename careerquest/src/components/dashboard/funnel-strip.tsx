@@ -11,15 +11,20 @@ const STAGES: { key: keyof FunnelCounts; label: string }[] = [
   { key: "hires", label: "Hired" },
 ];
 
-export function FunnelStrip({ funnel }: { funnel: FunnelCounts }) {
+export function FunnelStrip({ funnel, lowSample = false }: { funnel: FunnelCounts; lowSample?: boolean }) {
   return (
     <section aria-labelledby="funnel-title" className="glass rounded-card p-5">
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="funnel-title" className="text-sm font-medium tracking-tight">
           Pipeline funnel
         </h2>
-        <p className="text-xs text-fg-subtle">Derived from status history and logged events</p>
+        <p className="text-xs text-fg-subtle">Same definitions as Analytics · excludes archived</p>
       </div>
+      {funnel.submitted > 0 && lowSample && (
+        <p className="mt-2 text-xs text-warning" data-testid="funnel-low-sample">
+          Low sample: with fewer than 10 submitted applications these percentages can swing a lot. Treat them as early signals, not rates.
+        </p>
+      )}
       {funnel.submitted === 0 ? (
         <p className="mt-3 text-sm text-fg-muted">No submitted applications yet, so there is no funnel to show. Conversion rates appear once you submit.</p>
       ) : (

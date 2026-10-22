@@ -10,6 +10,7 @@ import {
   userTimezone,
 } from "@/lib/applications/service";
 import { dateInputValue } from "@/lib/applications/time";
+import { impliesSubmission } from "@/lib/applications/status";
 import { PageHeader } from "@/components/ui";
 import {
   ApplicationForm,
@@ -82,6 +83,7 @@ export default async function EditApplicationPage({
         documents={documents}
         cancelHref={`/applications/${id}`}
         today={dateInputValue(new Date(), timezone)}
+        appliedEditable={app.appliedAt !== null || impliesSubmission(app.status)}
       />
     </div>
   );

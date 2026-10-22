@@ -20,7 +20,12 @@ export function MissionsCard({ missions }: { missions: MissionItem[] }) {
         )}
       </div>
       {missions.length === 0 ? (
-        <p className="mt-3 text-sm text-fg-muted">Daily missions arrive in a later phase (game systems). Until then, your daily target above is the mission.</p>
+        <p className="mt-3 text-sm text-fg-muted">
+          No active missions loaded yet. Your daily target above counts either way.{" "}
+          <Link href="/missions" className="text-accent hover:underline">
+            Missions
+          </Link>
+        </p>
       ) : (
         <ul className="mt-3 space-y-3">
           {missions.map((m) => (

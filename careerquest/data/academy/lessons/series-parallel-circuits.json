@@ -146,7 +146,7 @@
     {
       "type": "callout",
       "tone": "tip",
-      "text": "Field tip: if a parallel group behaves strangely, isolate branches one at a time. Lift one branch and remeasure; the group voltage should rise slightly (less current, less series drop) and the remaining branch currents should be unchanged. A branch whose removal changes the others more than expected is the one with the problem, often a bad connection adding unwanted series resistance."
+      "text": "Field tip: if a parallel group behaves strangely, isolate branches one at a time. Lift one branch and remeasure; the group voltage should rise slightly (less current, less series drop) and the remaining branch currents should rise only slightly along with it. A branch whose removal changes the others more than expected is the one with the problem, often a bad connection adding unwanted series resistance."
     },
     {
       "type": "callout",

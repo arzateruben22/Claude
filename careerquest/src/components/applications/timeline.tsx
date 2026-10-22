@@ -101,7 +101,7 @@ export function ApplicationTimeline({
               )}
             </div>
             {e.detail && (
-              <p className="mt-1 text-sm text-fg-muted whitespace-pre-wrap">
+              <p className="mt-1 text-sm text-fg-muted whitespace-pre-wrap break-words">
                 {e.detail}
               </p>
             )}

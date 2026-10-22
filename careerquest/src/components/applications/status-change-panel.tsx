@@ -1,5 +1,6 @@
 "use client";
 
+import { ShieldCheck } from "lucide-react";
 import type { ApplicationStatus } from "@/generated/prisma/enums";
 import { changeStatusAction } from "@/lib/applications/actions";
 import { PIPELINE, STATUS_LABELS, TERMINAL } from "@/lib/applications/status";
@@ -15,18 +16,28 @@ import {
   Select,
   Textarea,
 } from "@/components/ui";
-import { useToastAction } from "./use-toast-action";
+import { useToastForm } from "./use-toast-action";
 
 export function StatusChangePanel({
   applicationId,
   status,
   today,
+  verified = true,
+  sourceLabel,
+  applied = true,
 }: {
   applicationId: string;
   status: ApplicationStatus;
   today: string;
+  /** False when the current stage was inferred (email, extension, import) and not confirmed. */
+  verified?: boolean;
+  /** Who set the current stage, e.g. "Email". */
+  sourceLabel?: string;
+  /** Whether the record was ever applied (closing a never-applied lead does not count). */
+  applied?: boolean;
 }) {
-  const [state, formAction, pending] = useToastAction(changeStatusAction);
+  const { state, pending, formProps } = useToastForm(changeStatusAction);
+  const confirm = useToastForm(changeStatusAction);
   const fe = state && !state.ok ? state.fieldErrors : undefined;
   return (
     <Card>
@@ -34,14 +45,40 @@ export function StatusChangePanel({
         <div>
           <CardTitle>Update stage</CardTitle>
           <CardDescription>
-            Currently {STATUS_LABELS[status]}. Changes are logged to the
-            timeline with the date you pick.
+            Currently {STATUS_LABELS[status]}
+            {verified ? "" : ` (unverified${sourceLabel ? `, from ${sourceLabel}` : ""})`}.
+            Changes are logged to the timeline with the date you pick.
+            {!applied &&
+              " Closing or withdrawing a lead you never applied to does not count as an application."}
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        {!verified && (
+          <form
+            {...confirm.formProps}
+            className="flex flex-col gap-2 rounded-ctl border border-warning/30 bg-warning-soft px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <input type="hidden" name="applicationId" value={applicationId} />
+            <input type="hidden" name="status" value={status} />
+            <p className="text-sm text-fg-muted">
+              This stage was inferred, not confirmed by you. If it is right,
+              confirm it; otherwise pick the correct stage below.
+            </p>
+            <Button
+              type="submit"
+              size="sm"
+              variant="secondary"
+              loading={confirm.pending}
+              className="shrink-0"
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden />
+              Confirm {STATUS_LABELS[status]}
+            </Button>
+          </form>
+        )}
         <form
-          action={formAction}
+          {...formProps}
           noValidate
           className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end"
         >

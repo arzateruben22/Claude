@@ -33,7 +33,7 @@ import {
   Textarea,
 } from "@/components/ui";
 import type { Tone } from "@/components/ui/badge";
-import { useToastAction } from "./use-toast-action";
+import { useToastForm } from "./use-toast-action";
 
 export type InterviewView = {
   id: string;
@@ -140,13 +140,12 @@ function ScheduleForm({
   applicationId: string;
   onDone: () => void;
 }) {
-  const [state, formAction, pending] = useToastAction(
-    scheduleInterviewAction,
-    onDone,
-  );
+  const { state, pending, formProps } = useToastForm(scheduleInterviewAction, {
+    onSuccess: onDone,
+  });
   const fe = state && !state.ok ? state.fieldErrors : undefined;
   return (
-    <form action={formAction} noValidate className="grid gap-3 sm:grid-cols-2">
+    <form {...formProps} noValidate className="grid gap-3 sm:grid-cols-2">
       <input type="hidden" name="applicationId" value={applicationId} />
       <Field label="Interview type" htmlFor="iv-type" errors={fe?.type}>
         <Select id="iv-type" name="type" defaultValue="PHONE_SCREEN">
@@ -265,7 +264,7 @@ function InterviewRow({
             {!interview.isPast && <Badge tone="info">Upcoming</Badge>}
           </div>
           {interview.notes && (
-            <p className="mt-1.5 text-xs text-fg-muted whitespace-pre-wrap">
+            <p className="mt-1.5 text-xs text-fg-muted whitespace-pre-wrap break-words">
               {interview.notes}
             </p>
           )}
@@ -305,13 +304,16 @@ function OutcomeForm({
   interview: InterviewView;
   applicationId: string;
 }) {
-  const [state, formAction, pending] = useToastAction(interviewOutcomeAction);
+  // Saved values re-key the form (fresh defaults); a failed save keeps what was chosen.
+  const { state, pending, formProps } = useToastForm(interviewOutcomeAction, {
+    resetOnSuccess: false,
+  });
   const fe = state && !state.ok ? state.fieldErrors : undefined;
   const key = `${interview.outcome}:${interview.attended}:${interview.prepCompleted}`;
   return (
     <form
       key={key}
-      action={formAction}
+      {...formProps}
       noValidate
       className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end"
     >

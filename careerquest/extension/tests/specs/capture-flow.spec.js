@@ -11,13 +11,15 @@ const { test, expect } = require("../fixtures");
 
 const SENSITIVE = /123-45-6789|hunter2-secret|4111 1111 1111 1111|SECRET-COVER-LETTER|REFERRAL-SECRET|Jane Q\. Applicant|secret-search-term/;
 const ALLOWED_TOP_LEVEL = ["kind", "url", "platform", "company", "title", "location", "salaryText", "requisitionId", "confidence", "evidence", "applicationId"];
-const ALLOWED_EVIDENCE = ["pageTitle", "detectedBy", "confirmationText", "capturedAt"];
+const ALLOWED_EVIDENCE = ["pageTitle", "detectedBy", "confirmationText", "capturedAt", "captureId"];
 
 const INDEED_JOB = "https://www.indeed.com/viewjob?jk=abc123def456";
 const INDEED_CONFIRMATION = "https://smartapply.indeed.com/beta/indeedapply/form/post-apply";
 const WORKDAY_JOB = "https://acme.wd5.myworkdayjobs.com/en-US/Acme_Careers/job/Irvine-CA/Apprentice-Electrician_R-20417";
 const WORKDAY_ROUTE_ONLY = `${WORKDAY_JOB}/apply/applied?silent=1`;
 const WORKDAY_APPLY = `${WORKDAY_JOB}/apply/applyManually`;
+const WORKDAY_JOB_B = "https://acme.wd5.myworkdayjobs.com/en-US/Acme_Careers/job/Tustin-CA/Journeyman-Electrician_R-30999";
+const WORKDAY_HOME = "https://acme.wd5.myworkdayjobs.com/en-US/Acme_Careers/userHome";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -109,7 +111,7 @@ test.describe("low-confidence signals never auto-post", () => {
     expect((await ext.local("pending"))[tabId]).toBeUndefined();
     await expect.poll(() => ext.badge(tabId)).toBe("");
 
-    // Visit again → pending again → Yes.
+    // Another page (different URL) → a new prompt → Yes.
     await page.goto(WORKDAY_ROUTE_ONLY + "&again=1");
     await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
     await popup.reload();
@@ -117,6 +119,7 @@ test.describe("low-confidence signals never auto-post", () => {
     await popup.locator("#pending-yes").click();
     const [capture] = await mockApi.waitForCaptures();
     expect(capture.body.kind).toBe("MANUAL_CONFIRMATION");
+    expect(capture.body.url).toBe(WORKDAY_ROUTE_ONLY + "&again=1");
     expect(capture.body.confidence).toBe(1);
     expect(capture.body.platform).toBe("WORKDAY");
     expect(capture.body.evidence.detectedBy).toContain("user-asserted");
@@ -148,6 +151,154 @@ test.describe("low-confidence signals never auto-post", () => {
     await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
     await sleep(500);
     expect(mockApi.state.captureAttempts).toHaveLength(0);
+  });
+});
+
+test.describe("prompt lifecycle (EXT-07, EXT-08, EXT-09, SP-04)", () => {
+  test("EXT-09: a dismissed prompt stays dismissed when the page re-renders or reloads", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto(WORKDAY_ROUTE_ONLY);
+    const tabId = await ext.tabIdOf(page);
+    await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
+    const popup = await ext.openPopup(tabId);
+    await popup.locator("#pending-no").click();
+    await expect(popup.locator("#pending-section")).toBeHidden();
+
+    // SPA re-render that changes the reported detection (title counter) …
+    await page.evaluate(() => {
+      document.title = "(1) Acme Careers";
+      document.querySelector("p").textContent = "Your applications are ready.";
+    });
+    await ext.waitForDetection(tabId, { predicate: (d) => d.pageTitle === "(1) Acme Careers" });
+    await sleep(500);
+    expect((await ext.local("pending"))?.[tabId]).toBeUndefined();
+    expect(await ext.badge(tabId)).toBe("");
+    // … and a full reload.
+    await page.reload();
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "CONFIRMATION_PAGE" });
+    await sleep(500);
+    expect((await ext.local("pending"))?.[tabId]).toBeUndefined();
+    expect(await ext.badge(tabId)).toBe("");
+    expect(mockApi.state.captureAttempts).toHaveLength(0);
+  });
+
+  test("EXT-07/EXT-08: the prompt survives the SPA move to candidate home, and 'Yes' records the job the prompt was raised for", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto(WORKDAY_JOB);
+    const tabId = await ext.tabIdOf(page);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "JOB_PAGE" });
+    await page.goto(WORKDAY_ROUTE_ONLY);
+    await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.detection?.title).toBe("Apprentice Electrician");
+    const pendingUrl = (await ext.local("pending"))[tabId].url;
+    expect(pendingUrl).toBe(WORKDAY_ROUTE_ONLY);
+
+    // Workday's SPA navigates on to the candidate home (same document).
+    await page.evaluate((home) => {
+      history.pushState({}, "", home);
+      document.querySelector("h2").textContent = "Candidate Home";
+      document.querySelector("p").textContent = "Your applications";
+    }, WORKDAY_HOME);
+    const home = await ext.waitForDetection(tabId, { predicate: (d) => d.url === WORKDAY_HOME });
+    expect(home.kind).toBeNull(); // not a JOB_PAGE from the <title> fallback
+    await sleep(400);
+    expect((await ext.local("pending"))[tabId]?.url).toBe(pendingUrl);
+    await expect.poll(() => ext.badge(tabId)).toBe("!");
+
+    const popup = await ext.openPopup(tabId);
+    await expect(popup.locator("#pending-text")).toContainText("Apprentice Electrician at Acme");
+    await expect(popup.locator("#pending-text")).toContainText("posting you viewed earlier");
+    await popup.locator("#pending-yes").click();
+    const [capture] = await mockApi.waitForCaptures();
+    expect(capture.body).toMatchObject({ kind: "MANUAL_CONFIRMATION", url: pendingUrl, title: "Apprentice Electrician", requisitionId: "R-20417", confidence: 1 });
+    expect(capture.body.url).not.toBe(WORKDAY_HOME);
+    // answered: the same detection does not prompt again
+    await page.evaluate(() => (document.title = "(2) Acme Careers"));
+    await ext.waitForDetection(tabId, { predicate: (d) => d.pageTitle === "(2) Acme Careers" });
+    await sleep(400);
+    expect((await ext.local("pending"))?.[tabId]).toBeUndefined();
+  });
+
+  test("SP-04: opening a different job in the tab drops the unanswered prompt, so nothing can be recorded for the wrong job", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto(WORKDAY_JOB);
+    const tabId = await ext.tabIdOf(page);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "JOB_PAGE" });
+    await page.goto(WORKDAY_ROUTE_ONLY);
+    await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
+
+    // Same job's posting again: the prompt stays.
+    await page.goto(WORKDAY_JOB);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "JOB_PAGE" && d.requisitionId === "R-20417" });
+    await sleep(300);
+    expect((await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
+
+    // Job B: the prompt for job A is dropped.
+    await page.goto(WORKDAY_JOB_B);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "JOB_PAGE" && d.requisitionId === "R-30999" });
+    await expect.poll(async () => (await ext.local("pending"))?.[tabId]).toBeUndefined();
+    const popup = await ext.openPopup(tabId);
+    await expect(popup.locator("#pending-section")).toBeHidden();
+    await expect(popup.locator("#f-title")).toHaveText("Journeyman Electrician");
+    expect(mockApi.state.captureAttempts).toHaveLength(0);
+  });
+});
+
+test.describe("false positives and privacy (EXT-01, SP-02, SP-03, SP-05, SP-07)", () => {
+  test("EXT-01: a posting whose text says 'Thank you for applying' is not recorded and raises no prompt", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto("https://boards.greenhouse.io/acmeelectric/jobs/4012399");
+    const tabId = await ext.tabIdOf(page);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === "JOB_PAGE" });
+    await sleep(700);
+    expect(mockApi.state.captureAttempts).toHaveLength(0);
+    expect((await ext.local("pending"))?.[tabId]).toBeUndefined();
+    expect(mockApi.state.requests.some((r) => r.path === "/api/extension/lookup")).toBe(true); // treated as the job page it is
+  });
+
+  test("SP-02: the applied-jobs list (/applied path, 'Applied' badges) posts nothing and prompts nothing", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto("https://www.ziprecruiter.com/jobs/applied?page=1");
+    const tabId = await ext.tabIdOf(page);
+    await ext.waitForDetection(tabId, { predicate: (d) => d.kind === null });
+    await sleep(700);
+    expect(mockApi.state.requests).toHaveLength(0);
+    expect((await ext.local("pending"))?.[tabId]).toBeUndefined();
+    expect(await ext.badge(tabId)).toBe("");
+  });
+
+  test("SP-07: a 'You applied to this job' status line only prompts; nothing is posted automatically", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto("https://www.ziprecruiter.com/c/Acme-Electric/Job/Apprentice-Electrician/-in-Irvine,CA?jid=9a7f2c1d&status=1");
+    const tabId = await ext.tabIdOf(page);
+    await expect.poll(async () => (await ext.local("pending"))?.[tabId]?.reason).toBe("needs_confirmation");
+    await sleep(700);
+    expect(mockApi.state.captureAttempts).toHaveLength(0);
+  });
+
+  test("SP-03/EXT-06: an auto-recorded confirmation never carries the applicant's name, e-mail or phone shown next to it", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto("https://jobs.lever.co/acme-electric/8f1c2a3b-4d5e-6f70-8192-a3b4c5d6e7f8/thanks?pii=1");
+    const [capture] = await mockApi.waitForCaptures();
+    expect(capture.body.kind).toBe("CONFIRMATION_PAGE");
+    expect(capture.body.evidence.confirmationText).toBe("Application submitted");
+    expect(capture.rawBody).not.toMatch(/Jane|jane\.doe|example\.com|555-0134/);
+  });
+
+  test("SP-05: 'I submitted this application' on the review step sends no salary/ids/contact answers from the form summary", async ({ page, ext, mockApi }) => {
+    await ext.configure();
+    await page.goto(`${WORKDAY_JOB}/apply/review`);
+    const tabId = await ext.tabIdOf(page);
+    const d = await ext.waitForDetection(tabId, { predicate: (x) => x.kind === "APPLY_STARTED" });
+    expect(JSON.stringify(d)).not.toMatch(/85,000|EMP-445566|555-0134|jane\.doe/);
+    const pending = (await ext.local("pending"))[tabId];
+    expect(JSON.stringify(pending)).not.toMatch(/85,000|EMP-445566|555-0134|jane\.doe/);
+    const popup = await ext.openPopup(tabId);
+    await expect(popup.locator("#f-salary")).toHaveText("—");
+    await popup.locator("#confirm-submitted").click();
+    const [capture] = await mockApi.waitForCaptures();
+    expect(capture.body.kind).toBe("MANUAL_CONFIRMATION");
+    expect(capture.body.salaryText).toBeUndefined();
+    expect(capture.rawBody).not.toMatch(/85,000|EMP-445566|555-0134|jane\.doe/);
   });
 });
 

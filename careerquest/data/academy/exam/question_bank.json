@@ -372,7 +372,7 @@
       "id": "bank-023",
       "area": "wiring_methods_materials",
       "difficulty": 2,
-      "prompt": "Where flexibility is needed after installation, flexible metal conduit may be unsupported at terminals for a length not exceeding:",
+      "prompt": "Where flexibility is needed after installation, flexible metal conduit in trade sizes ½ through 1¼ in. may be unsupported at terminals for a length not exceeding:",
       "choices": [
         "18 in.",
         "3 ft",
@@ -380,7 +380,7 @@
         "6 ft"
       ],
       "correctIndex": 1,
-      "explanation": "348.30(A) Exception 2: up to 3 ft at terminals where flexibility is necessary (the general rule is securing within 12 in. of boxes and every 4½ ft).",
+      "explanation": "348.30(A) Exception 2: up to 3 ft at terminals where flexibility is necessary for trade sizes ½ through 1¼ in. (4 ft for 1½ to 2 in., 5 ft for 2½ in. and larger) (the general rule is securing within 12 in. of boxes and every 4½ ft).",
       "necReference": "348.30"
     },
     {
@@ -1602,7 +1602,7 @@
       "id": "bank-105",
       "area": "motors_transformers_special_equipment",
       "difficulty": 2,
-      "prompt": "A dry-type transformer rated 112½ kVA or less installed indoors must be separated from combustible material by at least what distance, unless separated by a fire-resistant barrier or rated for 80°C rise?",
+      "prompt": "A dry-type transformer rated 112½ kVA or less installed indoors must be separated from combustible material by at least what distance, unless separated from it by a fire-resistant, heat-insulating barrier?",
       "choices": [
         "6 in.",
         "12 in.",
@@ -1610,7 +1610,7 @@
         "36 in."
       ],
       "correctIndex": 1,
-      "explanation": "450.21(A): 12 in. horizontal separation from combustible material.",
+      "explanation": "450.21(A): at least 12 in. of separation from combustible material unless a fire-resistant, heat-insulating barrier is used; units of 1,000 V or less that are completely enclosed except for ventilation openings are exempt.",
       "necReference": "450.21(A)"
     },
     {

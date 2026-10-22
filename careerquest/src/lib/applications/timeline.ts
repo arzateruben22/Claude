@@ -85,9 +85,11 @@ export function buildTimeline(
       id: `h:${h.id}`,
       kind: "status",
       at: h.occurredAt,
-      title: h.fromStatus
-        ? `${STATUS_LABELS[h.fromStatus]} → ${STATUS_LABELS[h.toStatus]}`
-        : `Created as ${STATUS_LABELS[h.toStatus]}`,
+      title: !h.fromStatus
+        ? `Created as ${STATUS_LABELS[h.toStatus]}`
+        : h.fromStatus === h.toStatus
+          ? `Confirmed ${STATUS_LABELS[h.toStatus]}`
+          : `${STATUS_LABELS[h.fromStatus]} → ${STATUS_LABELS[h.toStatus]}`,
       detail: h.note,
       source: h.source,
       verified: h.verified,

@@ -63,7 +63,12 @@ export function statusRank(status: ApplicationStatus): number {
   return i === -1 ? -1 : i;
 }
 
-/** "Submitted or later" — counts as a real application for metrics. */
+/**
+ * Status-only heuristic: "submitted or later, or any closed status". Kept for display hints and
+ * backward compatibility. It is NOT the definition used for metrics or XP: a saved lead that the
+ * user closes or withdraws was never applied to. Use `impliesSubmission` / `countsAsSubmission`
+ * for writes and `hasApplied` for reads.
+ */
 export function isSubmittedStatus(status: ApplicationStatus): boolean {
   return (
     statusRank(status) >= statusRank("SUBMITTED") ||
@@ -72,6 +77,68 @@ export function isSubmittedStatus(status: ApplicationStatus): boolean {
     status === "WITHDRAWN" ||
     status === "CLOSED"
   );
+}
+
+/**
+ * Statuses that by themselves prove an application was sent: anything at/after SUBMITTED in the
+ * pipeline, plus REJECTED and NO_RESPONSE (an employer can only reject or ignore something you
+ * sent). WITHDRAWN and CLOSED are excluded: a saved lead can be withdrawn or closed without ever
+ * applying.
+ */
+export function impliesSubmission(status: ApplicationStatus): boolean {
+  return (
+    statusRank(status) >= statusRank("SUBMITTED") ||
+    status === "REJECTED" ||
+    status === "NO_RESPONSE"
+  );
+}
+
+/**
+ * Does reaching `to` record a submission (APPLIED event, application date, XP, daily count)?
+ * True when the status itself implies one, or for WITHDRAWN / CLOSED only when there is evidence
+ * the application was actually sent: an application date, or a previous submitted status.
+ */
+export function countsAsSubmission(opts: {
+  from: ApplicationStatus | null;
+  to: ApplicationStatus;
+  appliedAt: Date | null;
+}): boolean {
+  if (impliesSubmission(opts.to)) return true;
+  if (opts.to === "WITHDRAWN" || opts.to === "CLOSED") {
+    return (
+      opts.appliedAt !== null ||
+      (opts.from !== null && impliesSubmission(opts.from))
+    );
+  }
+  return false;
+}
+
+/**
+ * The single metrics definition of "applied" used by the dashboard, the Numbers game and
+ * Analytics: the record has an application date, or an APPLIED event was recorded for it.
+ */
+export function hasApplied(app: {
+  appliedAt: Date | null;
+  events: ReadonlyArray<{ type: string }>;
+}): boolean {
+  return app.appliedAt !== null || app.events.some((e) => e.type === "APPLIED");
+}
+
+/**
+ * When the application was sent: the application date, else the earliest APPLIED event.
+ * Null when the record was never applied (see `hasApplied`).
+ */
+export function appliedInstant(app: {
+  appliedAt: Date | null;
+  events: ReadonlyArray<{ type: string; occurredAt: Date }>;
+}): Date | null {
+  if (app.appliedAt) return app.appliedAt;
+  let best: Date | null = null;
+  for (const e of app.events) {
+    if (e.type !== "APPLIED" || Number.isNaN(e.occurredAt.getTime())) continue;
+    if (!best || e.occurredAt.getTime() < best.getTime()) best = e.occurredAt;
+  }
+  return best;
 }
 
 export function isActiveStatus(status: ApplicationStatus): boolean {

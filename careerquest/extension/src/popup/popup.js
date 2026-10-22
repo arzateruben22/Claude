@@ -170,10 +170,11 @@ function renderPending(state) {
   if (!p) return;
   const d = p.detection || {};
   const what = [d.title, d.company].filter(Boolean).join(" at ");
+  const prefilled = Array.isArray(d.detectedBy) && d.detectedBy.includes("prefilled-from-job-page") ? " (job details taken from the posting you viewed earlier in this tab)" : "";
   $("pending-text").textContent =
     p.reason === "apply_started"
-      ? `It looks like you started an application${what ? ` for ${what}` : ""}. Tell us when it's submitted.`
-      : `This looks like a confirmation page${what ? ` for ${what}` : ""}, but we're not certain. Nothing is recorded until you say so.`;
+      ? `It looks like you started an application${what ? ` for ${what}` : ""}${prefilled}. Tell us when it's submitted.`
+      : `This looks like a confirmation page${what ? ` for ${what}` : ""}${prefilled}, but we're not certain. Nothing is recorded until you say so.`;
 }
 
 function renderQueue(state) {
@@ -291,7 +292,9 @@ async function main() {
   if (!state) return;
   const c = state.connection;
   const stale = !c?.checkedAt || Date.now() - c.checkedAt > 5 * 60 * 1000;
-  if (state.settings.hasToken && (c?.status === "unknown" || (c?.status === "connected" && stale))) {
+  // A rejected token is re-checked (at most every 5 minutes) so a stale
+  // "Token rejected" clears itself once the saved token works again.
+  if (state.settings.hasToken && (c?.status === "unknown" || ((c?.status === "connected" || c?.status === "unauthorized") && stale))) {
     await send({ type: MSG.TEST_CONNECTION });
     await refresh();
   }

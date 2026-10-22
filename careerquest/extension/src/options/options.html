@@ -20,7 +20,7 @@
         <div class="field">
           <label for="apiBaseUrl">CareerQuest URL</label>
           <input id="apiBaseUrl" name="apiBaseUrl" type="url" inputmode="url" placeholder="http://localhost:3000" autocomplete="off" spellcheck="false" />
-          <p class="hint">Where CareerQuest runs. The extension asks for permission to talk to this site only.</p>
+          <p class="hint">Where CareerQuest runs (https://, or http:// only for localhost). The extension asks for permission to talk to this site only.</p>
         </div>
         <div class="field">
           <label for="token">Developer token</label>
@@ -39,6 +39,10 @@
         <h2 id="perm-title">Site permission</h2>
         <p class="muted">Chrome asks you once to let the extension contact your CareerQuest URL. Job-board pages are read by the extension's built-in content scripts; no other site is accessed.</p>
         <p id="perm-state" class="state">Not requested yet.</p>
+        <p id="perm-others" class="state" hidden></p>
+        <div class="row">
+          <button id="revoke" class="btn btn--ghost" type="button" hidden>Revoke site permission</button>
+        </div>
       </section>
 
       <section class="card" aria-labelledby="queue-title">

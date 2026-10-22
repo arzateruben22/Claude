@@ -18,7 +18,9 @@
       "successfully submitted your application",
       "successfully applied",
     ],
-    confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation", "/applied", "/application-submitted", "/submitted"],
+    confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation", "/application-submitted"],
+    // Runs only after the user clicked "Capture this page": any title is enough.
+    lenientJobEvidence: true,
     applyRoutes: ["/apply"],
     applySelectors: ['form[id*="application" i]', 'form[class*="application" i]', 'form[id*="apply" i]', 'form[class*="apply" i]'],
     selectors: {

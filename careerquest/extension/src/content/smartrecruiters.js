@@ -7,8 +7,8 @@
     detect: C.createDetector({
       platform: "SMARTRECRUITERS",
       confirmationPhrases: ["Thank you for your application", "Application submitted"],
-      confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation", "/applied"],
-      confirmationSelectors: ['[class*="thank-you"]', ".application-confirmation", '[data-test*="thank"]', '[class*="confirmation"]'],
+      confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation"],
+      confirmationSelectors: ['[class*="thank-you"]', ".application-confirmation", '[data-test*="thank"]'],
       applyRoutes: ["/oneclick-ui/", "/apply", "/application"],
       applySelectors: ['form[class*="apply"]', '[data-test="application-form"]', 'form[id*="application"]', '[class*="application-form"]'],
       selectors: {

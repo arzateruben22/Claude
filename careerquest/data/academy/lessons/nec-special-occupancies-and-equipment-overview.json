@@ -31,7 +31,7 @@
       "type": "table",
       "caption": "Classes and Divisions at a glance",
       "columns": [
-        "",
+        "Class (material)",
         "Division 1 (hazard present normally)",
         "Division 2 (hazard present only abnormally)"
       ],

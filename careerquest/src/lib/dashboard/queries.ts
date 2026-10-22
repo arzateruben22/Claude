@@ -4,22 +4,14 @@ import type { Prisma } from "@/generated/prisma/client";
 import { startOfWeekUtc, todayInTz } from "@/lib/dates";
 import { levelFromXp } from "@/lib/game/xp-config";
 import { campaignTimeline, type CampaignTimeline } from "@/lib/dashboard/campaign";
-import {
-  ACTIVE_STATUSES,
-  EVENT_LABELS,
-  FUNNEL_STAGES,
-  STAGE_EVENTS,
-  STAGE_STATUSES,
-  SUBMITTED_STATUSES,
-  rate,
-  type FunnelCounts,
-  type FunnelStage,
-} from "@/lib/dashboard/funnel";
+import { ACTIVE_STATUSES, EVENT_LABELS, dashboardFunnelCounts, rate } from "@/lib/dashboard/funnel";
 import { recommendNextAction } from "@/lib/dashboard/next-action";
 import { buildDailySeries, followUpDateKey, followUpDueBound } from "@/lib/dashboard/time";
 import type { DashboardData, DashboardProfile, FollowUpItem, GoalsData, InterviewItem, MissionItem, RecentEvent } from "@/lib/dashboard/types";
+import { FUNNEL_EVENT_TYPES, appliedDayKey, classifyApplication, computeFunnel } from "@/lib/analytics/funnel";
+import type { FunnelApplication, FunnelResult } from "@/lib/analytics/types";
 import { adjustmentDataRequirements, computePace, recommendAdjustments, weekProgress, weekTargets } from "@/lib/goals/calculator";
-import { addDaysUtc, utcDateKey } from "@/lib/goals/days";
+import { utcDateKey } from "@/lib/goals/days";
 
 const SERIES_DAYS = 14;
 const FOLLOW_UP_CAP = 50;
@@ -35,22 +27,78 @@ const PROFILE_DEFAULTS: DashboardProfile = {
   longTermSalaryTarget: 150000,
 };
 
-/** Applications that count: owned by the user, not archived, not merged into another record. */
+/** Applications that count on lists and the funnel: owned by the user, not archived, not merged into another record. */
 function baseWhere(userId: string): Prisma.ApplicationWhereInput {
   return { userId, archivedAt: null, mergedIntoId: null };
 }
 
-/** "Reached stage" = current status, any historical status, or any event at/after that stage. */
-function reachedStageWhere(userId: string, stage: FunnelStage): Prisma.ApplicationWhereInput {
-  const statuses = STAGE_STATUSES[stage];
-  const or: Prisma.ApplicationWhereInput[] = [
-    { status: { in: statuses } },
-    { statusHistory: { some: { toStatus: { in: statuses } } } },
-  ];
-  if (STAGE_EVENTS[stage].length) or.push({ events: { some: { type: { in: STAGE_EVENTS[stage] } } } });
-  if (stage === "interviews") or.push({ interviews: { some: {} } });
-  if (stage === "offers") or.push({ offers: { some: {} } });
-  return { ...baseWhere(userId), OR: or };
+const metricsSelect = {
+  id: true,
+  status: true,
+  appliedAt: true,
+  statusUpdatedAt: true,
+  createdAt: true,
+  archivedAt: true,
+  source: true,
+  jobCategory: true,
+  resumeVersionId: true,
+  statusHistory: { select: { toStatus: true, occurredAt: true } },
+  events: { where: { type: { in: FUNNEL_EVENT_TYPES } }, select: { type: true, occurredAt: true } },
+  _count: { select: { interviews: true, offers: true } },
+} satisfies Prisma.ApplicationSelect;
+
+type MetricsRow = Prisma.ApplicationGetPayload<{ select: typeof metricsSelect }>;
+
+function toFunnelApplication(r: MetricsRow): FunnelApplication {
+  return {
+    id: r.id,
+    status: r.status,
+    appliedAt: r.appliedAt,
+    statusUpdatedAt: r.statusUpdatedAt,
+    createdAt: r.createdAt,
+    statusHistory: r.statusHistory,
+    events: r.events,
+    source: r.source,
+    jobCategory: r.jobCategory,
+    resumeVersionId: r.resumeVersionId,
+    hasInterviews: r._count.interviews > 0,
+    hasOffers: r._count.offers > 0,
+  };
+}
+
+type Metrics = {
+  /** Shared Analytics funnel over non-archived records (Analytics' default slice). */
+  funnel: FunnelResult;
+  /** Applied applications per day of application, archived included (effort counts). */
+  appliedByDay: Record<string, number>;
+  /** Every non-merged record that was ever applied, with its application day. */
+  applied: Array<{ key: string; app: FunnelApplication }>;
+};
+
+/**
+ * One read of the user's non-merged applications feeds every count on the Command Center and the
+ * Numbers game, using the shared definitions from `src/lib/analytics/funnel.ts`:
+ * - "applied" = application date or APPLIED event (closing a never-applied lead never counts);
+ * - effort counts (today, this week, the 14-day chart, campaign progress) count applications by the
+ *   day they were applied, including archived ones — archiving hides a record, it does not undo
+ *   the application; merged duplicates and deleted records never count;
+ * - the funnel and rates use the non-archived slice, matching Analytics' default filters.
+ */
+async function loadMetrics(userId: string, timezone: string): Promise<Metrics> {
+  const rows = await prisma.application.findMany({ where: { userId, mergedIntoId: null }, select: metricsSelect });
+  const funnelApps: FunnelApplication[] = [];
+  const appliedByDay: Record<string, number> = {};
+  const applied: Metrics["applied"] = [];
+  for (const r of rows) {
+    const app = toFunnelApplication(r);
+    if (!r.archivedAt) funnelApps.push(app);
+    const key = appliedDayKey(app, timezone);
+    if (key) {
+      appliedByDay[key] = (appliedByDay[key] ?? 0) + 1;
+      applied.push({ key, app });
+    }
+  }
+  return { funnel: computeFunnel(funnelApps), appliedByDay, applied };
 }
 
 type Context = {
@@ -102,48 +150,17 @@ async function loadContext(userId: string, now: Date): Promise<Context> {
   return { userName: user.name, profile, today, todayKey: utcDateKey(today), campaignStart, campaign };
 }
 
-async function loadActivity(userId: string, from: Date, to: Date): Promise<Record<string, number>> {
-  const rows = await prisma.dailyActivity.findMany({
-    where: { userId, date: { gte: from, lte: to } },
-    select: { date: true, applicationsSubmitted: true },
-  });
-  const map: Record<string, number> = {};
-  for (const r of rows) map[utcDateKey(r.date)] = r.applicationsSubmitted;
-  return map;
-}
-
-async function loadFunnel(userId: string): Promise<{ funnel: FunnelCounts; totalApplications: number }> {
-  const [groups, ...stageCounts] = await Promise.all([
-    prisma.application.groupBy({ by: ["status"], where: baseWhere(userId), _count: { _all: true } }),
-    ...FUNNEL_STAGES.map((stage) => prisma.application.count({ where: reachedStageWhere(userId, stage) })),
-  ]);
-  let totalApplications = 0;
-  let submitted = 0;
-  for (const g of groups) {
-    totalApplications += g._count._all;
-    if (SUBMITTED_STATUSES.includes(g.status)) submitted += g._count._all;
-  }
-  const [responses, screenings, interviews, offers, hires] = stageCounts as number[];
-  return {
-    funnel: { submitted, responses: responses!, screenings: screenings!, interviews: interviews!, offers: offers!, hires: hires! },
-    totalApplications,
-  };
-}
-
 /**
- * Everything the Command Center shows, assembled from a fixed, small set of aggregate queries
- * (no per-row follow-up queries). All reads are scoped by userId.
+ * Everything the Command Center shows, assembled from a fixed, small set of queries (no per-row
+ * follow-up queries). All reads are scoped by userId; merged duplicates never appear.
  */
 export async function getDashboardData(userId: string, now = new Date()): Promise<DashboardData> {
   const ctx = await loadContext(userId, now);
   const { profile, today, todayKey } = ctx;
   const weekStart = startOfWeekUtc(today);
-  const seriesStart = addDaysUtc(today, -(SERIES_DAYS - 1));
-  const activityFrom = new Date(Math.min(weekStart.getTime(), seriesStart.getTime()));
 
-  const [activityByDate, funnelResult, stats, followUpRows, interviewRows, recentRows, missionRows] = await Promise.all([
-    loadActivity(userId, activityFrom, today),
-    loadFunnel(userId),
+  const [metrics, stats, followUpRows, interviewRows, recentRows, missionRows] = await Promise.all([
+    loadMetrics(userId, profile.timezone),
     prisma.playerStats.findUnique({
       where: { userId },
       select: { totalXp: true, currentStreak: true, longestStreak: true, lastActiveDate: true },
@@ -155,7 +172,12 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
       select: { id: true, companyName: true, positionTitle: true, status: true, followUpAt: true },
     }),
     prisma.interview.findMany({
-      where: { userId, outcome: "PENDING", scheduledAt: { gte: now, lte: new Date(now.getTime() + 7 * 86_400_000) } },
+      where: {
+        userId,
+        outcome: "PENDING",
+        scheduledAt: { gte: now, lte: new Date(now.getTime() + 7 * 86_400_000) },
+        application: { mergedIntoId: null },
+      },
       orderBy: { scheduledAt: "asc" },
       take: 10,
       select: {
@@ -168,7 +190,7 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
       },
     }),
     prisma.applicationEvent.findMany({
-      where: { userId },
+      where: { userId, application: { mergedIntoId: null } },
       orderBy: { occurredAt: "desc" },
       take: 8,
       select: {
@@ -189,6 +211,7 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
     }),
   ]);
 
+  const activityByDate = metrics.appliedByDay;
   const targets = weekTargets(profile);
   const week = weekProgress(activityByDate, weekStart);
   const todaySubmitted = activityByDate[todayKey] ?? 0;
@@ -227,7 +250,9 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
   }));
 
   const missions: MissionItem[] = missionRows;
-  const { funnel, totalApplications } = funnelResult;
+  const funnel = dashboardFunnelCounts(metrics.funnel.counts);
+  const totalApplications = metrics.funnel.counts.total;
+  const { interviewRate, responseRate } = metrics.funnel.rates;
   const lvl = levelFromXp(stats?.totalXp ?? 0);
   const nextInterview = interviews[0] ?? null;
 
@@ -255,7 +280,13 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
     week: { submitted: week.submitted, target: targets.weeklyTarget, activeDays: week.activeDays, weekStartKey: utcDateKey(weekStart) },
     series,
     funnel,
-    rates: { interview: rate(funnel.interviews, funnel.submitted), response: rate(funnel.responses, funnel.submitted), n: funnel.submitted },
+    rates: {
+      interview: interviewRate.value,
+      response: responseRate.value,
+      n: interviewRate.n,
+      lowSample: metrics.funnel.lowSample,
+      interviewInterval: interviewRate.interval,
+    },
     totals: { applications: totalApplications, submitted: funnel.submitted },
     followUps: { overdue, dueToday, capped: followUpRows.length >= FOLLOW_UP_CAP },
     interviews,
@@ -271,16 +302,23 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
   };
 }
 
-/** Data for the Numbers game page: profile targets, observed totals and the pace projection. */
+/**
+ * Data for the Numbers game page: profile targets, observed totals and the pace projection.
+ * Pace, progress, milestones, consistency and the response rate all measure the campaign window
+ * [campaign start, today] by application day, so a restarted campaign (or an application dated
+ * before the campaign) never inflates the observed pace. The all-time total is reported apart.
+ */
 export async function getGoalsData(userId: string, now = new Date()): Promise<GoalsData> {
   const ctx = await loadContext(userId, now);
   const { profile, today, todayKey, campaignStart, campaign } = ctx;
-  const [activityByDate, funnelResult] = await Promise.all([
-    loadActivity(userId, new Date(Math.min(campaignStart.getTime(), today.getTime())), today),
-    loadFunnel(userId),
-  ]);
-  const { funnel } = funnelResult;
-  const responseRate = rate(funnel.responses, funnel.submitted);
+  const metrics = await loadMetrics(userId, profile.timezone);
+  const startKey = utcDateKey(campaignStart);
+  const inCampaign = metrics.applied.filter((a) => a.key >= startKey && a.key <= todayKey);
+  const completed = inCampaign.length;
+  const responses = inCampaign.filter((a) => classifyApplication(a.app).responded).length;
+  const responseRate = rate(responses, completed);
+  const activityByDate: Record<string, number> = {};
+  for (const a of inCampaign) activityByDate[a.key] = (activityByDate[a.key] ?? 0) + 1;
 
   const pace = computePace({
     dailyTarget: profile.dailyApplicationTarget,
@@ -288,7 +326,7 @@ export async function getGoalsData(userId: string, now = new Date()): Promise<Go
     campaignLengthDays: profile.campaignLengthDays,
     campaignStartDate: campaignStart,
     today,
-    completedApplications: funnel.submitted,
+    completedApplications: completed,
     historicalResponseRate: responseRate,
     activityByDate,
   });
@@ -297,8 +335,8 @@ export async function getGoalsData(userId: string, now = new Date()): Promise<Go
     dailyTarget: profile.dailyApplicationTarget,
     workdaysPerWeek: profile.workdaysPerWeek,
     campaignDay: pace.campaignDay,
-    completedApplications: funnel.submitted,
-    responses: funnel.responses,
+    completedApplications: completed,
+    responses,
     observedDailyPace: pace.observedDailyPace,
     requiredDailyPace: pace.requiredDailyPace,
     consistency: pace.consistency,
@@ -307,11 +345,12 @@ export async function getGoalsData(userId: string, now = new Date()): Promise<Go
   return {
     timezone: profile.timezone,
     todayKey,
-    campaignStartKey: utcDateKey(campaignStart),
+    campaignStartKey: startKey,
     campaign,
     profile,
-    completed: funnel.submitted,
-    responses: funnel.responses,
+    completed,
+    completedAllTime: metrics.applied.length,
+    responses,
     responseRate,
     activityByDate,
     pace,

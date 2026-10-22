@@ -92,7 +92,7 @@
         ],
         [
           "Dwelling unit",
-          "Permanent provisions for living, sleeping, cooking and sanitation",
+          "A self-contained home for one or more people with permanent facilities to live, sleep, cook and wash",
           "Hundreds of rules apply only to dwellings; a hotel room without cooking is not one"
         ]
       ]
@@ -100,7 +100,7 @@
     {
       "type": "text",
       "heading": "Approval, listing and following the instructions (110.2, 110.3)",
-      "markdown": "**110.2** requires conductors and equipment to be **approved**, and 110.3(A) tells the AHJ what to consider when deciding: suitability for the use (usually demonstrated by listing or labeling), mechanical strength, wire-bending space, insulation, heating effects, arcing effects, classification by type and voltage, and other factors affecting safety.\n\n**110.3(B)** is the rule that connects the whole code book to the manufacturer's paperwork: listed or labeled equipment must be installed and used in accordance with any instructions included in the listing or labeling. The torque value on a breaker, the \"use copper only\" marking on a lug, the wet-location rating of a luminaire, the maximum fuse size on an HVAC nameplate, the \"not for use with dimmers\" note on an LED lamp: all become enforceable through 110.3(B). It is also why the instruction sheet in the box is worth reading before you throw the box away.\n\n**110.3(C)** (2017 and later) requires that product testing, evaluation and listing be done by recognized qualified electrical testing laboratories, which in the US means laboratories recognized by OSHA as Nationally Recognized Testing Laboratories (UL, ETL/Intertek, CSA and others).\n\nRelated rules that inspectors look for: **110.11** (equipment must be identified for the environment: wet, corrosive, high temperature); **110.12** (neat and workmanlike installation, unused openings closed, no damaged parts); **110.13** (mounted securely, with ventilation not blocked); and **110.7** (wiring must be free from short circuits, ground faults and connections to ground other than those required)."
+      "markdown": "**110.2** requires conductors and equipment to be **approved**, and 110.3(A) tells the AHJ what to consider when deciding: suitability for the use (usually demonstrated by listing or labeling), mechanical strength, wire-bending space, insulation, heating effects, arcing effects, classification by type and voltage, and other factors affecting safety.\n\n**110.3(B)** is the rule that connects the whole code book to the manufacturer's paperwork: listed or labeled equipment has to be installed and used the way the instructions that come with its listing or labeling say. The torque value on a breaker, the \"use copper only\" marking on a lug, the wet-location rating of a luminaire, the maximum fuse size on an HVAC nameplate, the \"not for use with dimmers\" note on an LED lamp: all become enforceable through 110.3(B). It is also why the instruction sheet in the box is worth reading before you throw the box away.\n\n**110.3(C)** (2020 and later) requires that product testing, evaluation and listing be done by recognized qualified electrical testing laboratories, which in the US means laboratories recognized by OSHA as Nationally Recognized Testing Laboratories (UL, ETL/Intertek, CSA and others).\n\nRelated rules that inspectors look for: **110.11** (equipment must be identified for the environment: wet, corrosive, high temperature); **110.12** (neat and workmanlike installation, unused openings closed, no damaged parts); **110.13** (mounted securely, with ventilation not blocked); and **110.7** (wiring must be free from short circuits, ground faults and connections to ground other than those required)."
     },
     {
       "type": "text",
@@ -245,7 +245,7 @@
         "110.22"
       ],
       "correctIndex": 1,
-      "explanation": "110.3(B): listed or labeled equipment shall be installed and used in accordance with any instructions included in the listing or labeling."
+      "explanation": "110.3(B) requires listed or labeled equipment to be installed and used the way its listing or labeling instructions say."
     },
     {
       "id": "nec-general-requirements-overview-p6",

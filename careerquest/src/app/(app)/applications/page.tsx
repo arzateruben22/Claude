@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Briefcase, Plus } from "lucide-react";
+import { Briefcase, Inbox, Plus, Upload } from "lucide-react";
 import { requireUser } from "@/lib/auth/current-user";
 import {
   listApplications,
@@ -8,7 +8,8 @@ import {
   userTimezone,
 } from "@/lib/applications/service";
 import { hasActiveFilters, parseListFilters } from "@/lib/applications/query";
-import { Alert, EmptyState, PageHeader, buttonClasses } from "@/components/ui";
+import { getReviewQueueCount } from "@/lib/applications/review-count";
+import { Alert, Badge, EmptyState, PageHeader, buttonClasses } from "@/components/ui";
 import { ApplicationFilters } from "@/components/applications/application-filters";
 import { ApplicationList } from "@/components/applications/application-list";
 import { Pagination } from "@/components/applications/pagination";
@@ -23,10 +24,11 @@ export default async function ApplicationsPage({
   const user = await requireUser();
   const sp = await searchParams;
   const filters = parseListFilters(sp);
-  const [result, categories, timezone] = await Promise.all([
+  const [result, categories, timezone, reviewCount] = await Promise.all([
     listApplications(user.id, filters),
     listCategories(user.id),
     userTimezone(user.id),
+    getReviewQueueCount(user.id),
   ]);
   const filtered = hasActiveFilters(filters);
 
@@ -35,6 +37,36 @@ export default async function ApplicationsPage({
       <Plus className="h-4 w-4" aria-hidden />
       New application
     </Link>
+  );
+
+  const headerActions = (
+    <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href="/applications/import"
+        className={buttonClasses("secondary", "md")}
+      >
+        <Upload className="h-4 w-4" aria-hidden />
+        Import
+      </Link>
+      <Link
+        href="/applications/review"
+        className={buttonClasses("secondary", "md")}
+        aria-label={
+          reviewCount > 0
+            ? `Review queue, ${reviewCount} item${reviewCount === 1 ? "" : "s"} waiting`
+            : "Review queue"
+        }
+      >
+        <Inbox className="h-4 w-4" aria-hidden />
+        Review queue
+        {reviewCount > 0 && (
+          <Badge tone="accent" data-testid="review-count" aria-hidden>
+            {reviewCount > 99 ? "99+" : reviewCount}
+          </Badge>
+        )}
+      </Link>
+      {newButton}
+    </div>
   );
 
   return (
@@ -49,7 +81,7 @@ export default async function ApplicationsPage({
               : `${result.total} application${result.total === 1 ? "" : "s"} tracked.`
             : "Every application you log lives here, with its stage, history and follow-ups."
         }
-        actions={newButton}
+        actions={headerActions}
       />
 
       {sp.deleted === "1" && (
@@ -62,7 +94,7 @@ export default async function ApplicationsPage({
         <EmptyState
           icon={<Briefcase className="h-8 w-8" aria-hidden />}
           title="No applications yet"
-          description="Add the first job you applied to (or plan to). Submitted applications earn XP and count toward your daily target."
+          description="Add the first job you applied to (or plan to), or import past applications from a file or your email. Submitted applications earn XP and count toward your daily target; saved leads do not until you apply."
           action={newButton}
         />
       ) : (

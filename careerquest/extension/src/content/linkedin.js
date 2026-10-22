@@ -7,10 +7,11 @@
     detect: C.createDetector({
       platform: "LINKEDIN",
       confirmationPhrases: ["Your application was sent to", "Application sent"],
-      confirmationRoutes: ["/post-apply", "/applied", "/application-sent"],
+      confirmationRoutes: ["/post-apply", "/application-sent"],
       confirmationSelectors: ['[data-test-modal-id="post-apply-modal"]', ".post-apply-modal", ".jpac-modal", '[class*="post-apply"]', ".artdeco-modal .jobs-post-apply"],
       applyRoutes: ["/job-apply/"],
       applySelectors: [".jobs-easy-apply-modal", ".jobs-easy-apply-content", "form.jobs-easy-apply-form", '[data-test-modal-id="easy-apply-modal"]'],
+      jobContainers: [".jobs-details", ".jobs-search__job-details", ".job-view-layout", ".jobs-description"],
       selectors: {
         title: [".job-details-jobs-unified-top-card__job-title h1", ".job-details-jobs-unified-top-card__job-title", "h1.t-24", ".jobs-unified-top-card__job-title", ".top-card-layout__title", "h1.topcard__title", ".jobs-details-top-card__job-title"],
         company: [".job-details-jobs-unified-top-card__company-name a", ".job-details-jobs-unified-top-card__company-name", ".jobs-unified-top-card__company-name", ".topcard__org-name-link", ".topcard__flavor:first-child", ".jobs-details-top-card__company-url"],

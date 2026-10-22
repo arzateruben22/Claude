@@ -1,5 +1,6 @@
 import { ApplicationSource, ApplicationStatus } from "@/generated/prisma/enums";
 import { dateFromKey } from "@/lib/dates";
+import { endOfDayInTz, startOfDayInTz } from "@/lib/analytics/time";
 
 /** Pure parsing/serialising of the tracker list's URL state (searchParams ⇄ filters). */
 
@@ -121,7 +122,26 @@ export function listHref(
   return qs ? `/applications?${qs}` : "/applications";
 }
 
-/** Date range (UTC instants) for a from/to day-key pair: [start of from, start of day after to). */
+/**
+ * Date range for a from/to day-key pair in the user's timezone: [local midnight of `from`, local
+ * midnight after `to`). This is how the tracker displays dates (formatInTz), so a record filed
+ * under a day in the list is found by filtering on that day.
+ */
+export function dayRangeInTz(
+  from: string | undefined,
+  to: string | undefined,
+  timeZone: string,
+): { gte?: Date; lt?: Date } {
+  const out: { gte?: Date; lt?: Date } = {};
+  if (from) out.gte = startOfDayInTz(from, timeZone);
+  if (to) out.lt = endOfDayInTz(to, timeZone);
+  return out;
+}
+
+/**
+ * Date range (UTC instants) for a from/to day-key pair: [start of from, start of day after to).
+ * @deprecated UTC calendar days; the tracker list uses `dayRangeInTz` with the profile timezone.
+ */
 export function dayRange(
   from?: string,
   to?: string,

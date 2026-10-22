@@ -46,7 +46,7 @@ export function AnalyticsStatTiles({ funnel, timing }: { funnel: FunnelResult; t
         <StatTile
           label="Applied · Observed"
           value={formatNumber(counts.applied)}
-          hint={counts.total > counts.applied ? `${formatNumber(counts.total - counts.applied)} saved, not yet applied` : `${formatNumber(counts.total)} in this slice`}
+          hint={counts.total > counts.applied ? `${formatNumber(counts.total - counts.applied)} never applied (saved or closed)` : `${formatNumber(counts.total)} in this slice`}
           icon={<Send className="h-4 w-4" aria-hidden />}
         />
       </div>

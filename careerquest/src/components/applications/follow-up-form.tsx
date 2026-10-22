@@ -13,7 +13,7 @@ import {
   Input,
   Textarea,
 } from "@/components/ui";
-import { useToastAction } from "./use-toast-action";
+import { useToastForm } from "./use-toast-action";
 
 export function FollowUpForm({
   applicationId,
@@ -24,7 +24,7 @@ export function FollowUpForm({
   today: string;
   nextFollowUpLabel: string | null;
 }) {
-  const [state, formAction, pending] = useToastAction(followUpAction);
+  const { state, pending, formProps } = useToastForm(followUpAction);
   const fe = state && !state.ok ? state.fieldErrors : undefined;
   return (
     <Card>
@@ -41,11 +41,7 @@ export function FollowUpForm({
         </div>
       </CardHeader>
       <CardContent>
-        <form
-          action={formAction}
-          noValidate
-          className="grid gap-3 sm:grid-cols-2"
-        >
+        <form {...formProps} noValidate className="grid gap-3 sm:grid-cols-2">
           <input type="hidden" name="applicationId" value={applicationId} />
           <Field
             label="Followed up on"

@@ -83,7 +83,7 @@
   "hints": [
     "Unloaded, the divider rule gives V_R2 = 24 × (2000 ÷ 3000) = 16 V. The load changes that.",
     "RL is in parallel with R2: 2 kΩ ∥ 2 kΩ = 1 kΩ. Now the circuit is 1 kΩ in series with 1 kΩ, a 50/50 split.",
-    "Half of 24 V is the loaded output. The drop across R1 doubled compared with the unloaded case because the current doubled.",
+    "Half of 24 V is the loaded output. The drop across R1 rose from 8 V (unloaded) to 12 V because the source current rose from 8 mA to 12 mA.",
     "A divider only holds its voltage if the load resistance is much larger than R2 (ten times or more is a common rule of thumb). This is the same loading effect that makes conductor voltage drop worse as loads are added."
   ],
   "learningGoals": [

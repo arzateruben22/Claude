@@ -53,13 +53,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <h2 id="activity-title" className="text-sm font-medium tracking-tight">
                 Applications · last 14 days
               </h2>
-              <p className="text-xs text-fg-subtle">From your daily activity log</p>
+              <p className="text-xs text-fg-subtle">By the day each application was sent</p>
             </div>
             <div className="mt-3">
               <ActivityChart series={data.series} dailyTarget={data.today.target} />
             </div>
           </section>
-          <FunnelStrip funnel={data.funnel} />
+          <FunnelStrip funnel={data.funnel} lowSample={data.rates.lowSample} />
         </div>
         <div className="space-y-4 min-w-0">
           <XpStreakCard xp={data.xp} streak={data.streak} />

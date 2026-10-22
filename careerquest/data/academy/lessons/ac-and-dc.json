@@ -3,7 +3,7 @@
   "track": "FUNDAMENTALS",
   "order": 7,
   "title": "AC and DC",
-  "summary": "Direct current flows one way; alternating current reverses 60 times a second. Learn waveform terms, RMS versus peak, frequency and period, the 120/240 V system, three-phase basics, and why the grid runs on AC.",
+  "summary": "Direct current flows one way; alternating current reverses direction, completing 60 cycles every second (60 Hz) in North America. Learn waveform terms, RMS versus peak, frequency and period, the 120/240 V system, three-phase basics, and why the grid runs on AC.",
   "estimatedMinutes": 35,
   "prerequisites": [
     "electrical-power-and-energy"
@@ -18,7 +18,7 @@
     {
       "type": "text",
       "heading": "Two kinds of current",
-      "markdown": "**Direct current (DC)** flows in one direction with a steady polarity: one terminal is always positive, the other always negative. Batteries, photovoltaic modules, fuel cells and the output of rectifiers (chargers, power supplies) are DC sources.\n\n**Alternating current (AC)** reverses direction periodically. The voltage rises from zero to a positive peak, falls through zero to a negative peak and returns, over and over. Generators naturally produce AC, and the utility grid is AC. In North America the reversal happens **60 times per second (60 Hz)**; most of the rest of the world uses 50 Hz.\n\nEverything you learned about Ohm's law, series and parallel circuits and power applies to AC with resistive loads, provided you use the right kind of voltage number (RMS, explained below). Inductive and capacitive loads add the ideas of reactance and power factor, which the SYSTEMS track covers."
+      "markdown": "**Direct current (DC)** flows in one direction with a steady polarity: one terminal is always positive, the other always negative. Batteries, photovoltaic modules, fuel cells and the output of rectifiers (chargers, power supplies) are DC sources.\n\n**Alternating current (AC)** reverses direction periodically. The voltage rises from zero to a positive peak, falls through zero to a negative peak and returns, over and over. Generators naturally produce AC, and the utility grid is AC. In North America the waveform completes **60 cycles per second (60 Hz)**, so the current reverses direction 120 times each second; most of the rest of the world uses 50 Hz.\n\nEverything you learned about Ohm's law, series and parallel circuits and power applies to AC with resistive loads, provided you use the right kind of voltage number (RMS, explained below). Inductive and capacitive loads add the ideas of reactance and power factor, which the SYSTEMS track covers."
     },
     {
       "type": "diagram",

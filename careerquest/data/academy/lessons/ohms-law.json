@@ -18,7 +18,7 @@
     {
       "type": "text",
       "heading": "What Ohm discovered",
-      "markdown": "In 1827 Georg Ohm measured how much current flowed through wires of different lengths and thicknesses when connected to a source. He found a simple, fixed relationship: for a given conductor, **current is directly proportional to voltage and inversely proportional to resistance**. Double the voltage and the current doubles; double the resistance and the current halves.\n\nThat relationship, **V = I × R**, is Ohm's law. You will use it to:\n\n- predict how much current a load will draw (so you can size breakers, conductors and overload devices);\n- find the resistance of a load from its nameplate ratings;\n- calculate voltage drop on long runs;\n- make sense of meter readings while troubleshooting (\"I have 120 V here but only 2 A: the load must be about 60 Ω, so this heater element is probably open\").\n\nOhm's law holds exactly for **resistive** loads (heaters, incandescent lamps once warm, long conductors) on DC and on AC. Motors, transformers and electronic drives add another kind of opposition called reactance; for those, a later lesson introduces impedance (Z), which slides into the same formula as V = I × Z."
+      "markdown": "In 1827 Georg Ohm measured how much current flowed through wires of different lengths and thicknesses when connected to a source. He found a simple, fixed relationship: for a given conductor, **current is directly proportional to voltage and inversely proportional to resistance**. Double the voltage and the current doubles; double the resistance and the current halves.\n\nThat relationship, **V = I × R**, is Ohm's law. You will use it to:\n\n- predict how much current a load will draw (so you can size breakers, conductors and overload devices);\n- find the resistance of a load from its nameplate ratings;\n- calculate voltage drop on long runs;\n- make sense of meter readings while troubleshooting (\"I have 120 V here but only 2 A: the load is acting like 60 Ω instead of the 12 Ω this heater should measure, so one of its parallel elements has probably burned open\").\n\nOhm's law holds exactly for **resistive** loads (heaters, incandescent lamps once warm, long conductors) on DC and on AC. Motors, transformers and electronic drives add another kind of opposition called reactance; for those, a later lesson introduces impedance (Z), which slides into the same formula as V = I × Z."
     },
     {
       "type": "formula",
@@ -114,7 +114,7 @@
           "1,500 W portable heater",
           "9.6 Ω",
           "12.5 A",
-          "A continuous load this size uses most of a 15 A circuit"
+          "More than 80% of a 15 A circuit (12 A), the limit for a continuous or cord-connected load on it"
         ],
         [
           "1,200 W hair dryer",

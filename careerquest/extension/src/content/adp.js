@@ -1,4 +1,8 @@
-/** ADP Workforce Now / ADP recruiting career pages. */
+/**
+ * ADP Workforce Now career center and ADP Recruiting career sites. The manifest
+ * injects this only on the career-center/recruitment paths, never the employee
+ * HR/payroll portal on the same hosts.
+ */
 (() => {
   const C = window.__cqCommon;
   if (!C) return;
@@ -7,10 +11,13 @@
     detect: C.createDetector({
       platform: "ADP",
       confirmationPhrases: ["Thank you for applying", "Your application has been submitted"],
-      confirmationRoutes: ["/confirmation", "/thank-you", "applicationconfirmation", "/applied", "/complete"],
-      confirmationSelectors: ['[class*="confirmation"]', '[id*="confirmation"]', '[data-automation-id*="confirmation"]'],
+      confirmationRoutes: ["/confirmation", "/thank-you", "applicationconfirmation"],
+      // Only "application confirmation" elements: a bare *confirmation* class/id also
+      // matches HR/payroll widgets (direct-deposit confirmations, pay statements).
+      confirmationSelectors: ['[id*="applicationConfirmation"]', '[class*="application-confirmation"]', '[class*="applicationConfirmation"]', '[data-automation-id*="applicationConfirmation"]'],
       applyRoutes: ["/apply", "applynow", "/application"],
       applySelectors: ['form[class*="apply"]', 'form[id*="apply"]', '[data-automation-id*="applicationForm"]', 'form[class*="application"]'],
+      jobContainers: [".job-details", '[class*="job-description"]', '[class*="jobDescription"]'],
       selectors: {
         title: ['h1[class*="job-title"]', ".job-details-title", '[data-automation-id="jobTitle"]', '[class*="jobTitle"]', "h1"],
         company: [".company-name", '[class*="company-name"]', '[class*="companyName"]', '[data-automation-id="companyName"]'],

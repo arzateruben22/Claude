@@ -1,57 +1,14 @@
 /**
- * How funnel stages are derived from application state. Pure constants + helpers so the query
- * module and tests agree on definitions.
- *
- * An application "reached" a stage when its current status is at/after that stage, or its status
- * history shows it was ever at/after that stage, or an event of that stage type was recorded.
+ * Dashboard funnel shape and labels. The stage definitions themselves live in one place —
+ * `computeFunnel` / `classifyApplication` in `src/lib/analytics/funnel.ts` — so the Command Center
+ * and Analytics always agree (applied = application date or APPLIED event; later stages from
+ * status, history, events, interview and offer rows; ACCEPTED counts as hired).
  */
 import type { ApplicationEventType, ApplicationStatus } from "@/generated/prisma/enums";
-
-export type FunnelStage = "responses" | "screenings" | "interviews" | "offers" | "hires";
-
-export const SUBMITTED_STATUSES: ApplicationStatus[] = [
-  "SUBMITTED",
-  "CONFIRMED",
-  "SCREENING",
-  "INTERVIEWING",
-  "OFFER",
-  "ACCEPTED",
-  "HIRED",
-  "REJECTED",
-  "WITHDRAWN",
-  "NO_RESPONSE",
-  "CLOSED",
-];
+import type { FunnelCounts as AnalyticsFunnelCounts } from "@/lib/analytics/types";
 
 /** Statuses that keep an application "in play" for follow-ups. */
 export const ACTIVE_STATUSES: ApplicationStatus[] = ["SUBMITTED", "CONFIRMED", "SCREENING", "INTERVIEWING", "OFFER"];
-
-export const STAGE_STATUSES: Record<FunnelStage, ApplicationStatus[]> = {
-  responses: ["SCREENING", "INTERVIEWING", "OFFER", "ACCEPTED", "HIRED", "REJECTED"],
-  screenings: ["SCREENING", "INTERVIEWING", "OFFER", "ACCEPTED", "HIRED"],
-  interviews: ["INTERVIEWING", "OFFER", "ACCEPTED", "HIRED"],
-  offers: ["OFFER", "ACCEPTED", "HIRED"],
-  hires: ["HIRED"],
-};
-
-export const STAGE_EVENTS: Record<FunnelStage, ApplicationEventType[]> = {
-  responses: [
-    "RECRUITER_RESPONSE",
-    "SCREENING_SCHEDULED",
-    "ASSESSMENT_INVITED",
-    "INTERVIEW_SCHEDULED",
-    "INTERVIEW_COMPLETED",
-    "OFFER_RECEIVED",
-    "OFFER_ACCEPTED",
-    "REJECTED",
-  ],
-  screenings: ["SCREENING_SCHEDULED", "ASSESSMENT_INVITED", "INTERVIEW_SCHEDULED", "INTERVIEW_COMPLETED", "OFFER_RECEIVED", "OFFER_ACCEPTED"],
-  interviews: ["INTERVIEW_SCHEDULED", "INTERVIEW_COMPLETED", "OFFER_RECEIVED", "OFFER_ACCEPTED"],
-  offers: ["OFFER_RECEIVED", "OFFER_ACCEPTED"],
-  hires: [],
-};
-
-export const FUNNEL_STAGES: FunnelStage[] = ["responses", "screenings", "interviews", "offers", "hires"];
 
 export type FunnelCounts = {
   submitted: number;
@@ -61,6 +18,18 @@ export type FunnelCounts = {
   offers: number;
   hires: number;
 };
+
+/** Map the shared Analytics counts onto the dashboard strip's stage names. */
+export function dashboardFunnelCounts(c: AnalyticsFunnelCounts): FunnelCounts {
+  return {
+    submitted: c.applied,
+    responses: c.responded,
+    screenings: c.screened,
+    interviews: c.interviewed,
+    offers: c.offers,
+    hires: c.hired,
+  };
+}
 
 export function rate(numerator: number, denominator: number): number | null {
   return denominator > 0 ? numerator / denominator : null;

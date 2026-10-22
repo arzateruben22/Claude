@@ -7,10 +7,11 @@
     detect: C.createDetector({
       platform: "INDEED",
       confirmationPhrases: ["Your application has been submitted", "Your application has been sent to", "Application submitted"],
-      confirmationRoutes: ["/post-apply", "/postapply", "/applied", "/confirmation"],
+      confirmationRoutes: ["/post-apply", "/postapply", "/confirmation"],
       confirmationSelectors: ['[data-testid="post-apply-confirmation"]', '[data-testid="ia-PostApply"]', ".ia-PostApply", '[data-testid*="PostApply"]', '[class*="post-apply"]'],
       applyRoutes: ["smartapply.indeed.com", "/applystart", "/indeedapply/form", "apply.indeed.com"],
       applySelectors: ["#ia-container", 'form[data-testid="ia-form"]', ".ia-BasePage", '[data-testid="ia-form"]'],
+      jobContainers: [".jobsearch-ViewJobLayout", ".jobsearch-JobComponent", "#jobDescriptionText"],
       selectors: {
         title: ['h1[data-testid="jobsearch-JobInfoHeader-title"]', ".jobsearch-JobInfoHeader-title", '[data-testid="simpler-jobTitle"]', 'h2[data-testid="jobTitle"]', "h1.icl-u-xs-mb--xs", ".jobsearch-JobInfoHeader h1"],
         company: ['[data-testid="inlineHeader-companyName"]', '[data-company-name="true"]', '[data-testid="jobsearch-CompanyInfoContainer"] a', ".jobsearch-InlineCompanyRating > div:first-child", ".jobsearch-CompanyInfoWithoutHeaderImage a", '[data-testid="company-name"]'],

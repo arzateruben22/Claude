@@ -141,7 +141,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           </div>
 
           <p className="text-[11px] text-fg-subtle max-w-3xl">
-            Definitions: <strong className="font-medium text-fg-muted">Applied</strong> = status Submitted or later, or an application-submitted event.{" "}
+            Definitions: <strong className="font-medium text-fg-muted">Applied</strong> = the record has an application date or an application-submitted
+            event; a saved lead you closed or withdrew without applying is not counted. Date ranges use the day you applied (or added a saved lead) in
+            your timezone. The Command Center uses the same definitions.{" "}
             <strong className="font-medium text-fg-muted">Responded</strong> = the employer reacted (screening, interview, offer or rejection, or a logged
             response). Later stages imply earlier ones. &ldquo;Observed&rdquo; values are counts from your records; the only estimates on this page are the
             95% intervals around each rate.

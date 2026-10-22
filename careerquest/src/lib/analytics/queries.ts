@@ -6,7 +6,16 @@ import { todayInTz } from "@/lib/dates";
 import { ALL_STATUSES } from "@/lib/applications/status";
 import { toExportRow, type ExportRow } from "@/lib/analytics/csv";
 import { resolveRange, type AnalyticsFilters, type ResolvedRange } from "@/lib/analytics/filters";
-import { averageDaysToResponse, computeFunnel, conversionBy, dailySeries, weeklySeries } from "@/lib/analytics/funnel";
+import {
+  FUNNEL_EVENT_TYPES,
+  applicationDayKey,
+  appliedDayKey,
+  averageDaysToResponse,
+  computeFunnel,
+  conversionBy,
+  dailySeries,
+  weeklySeries,
+} from "@/lib/analytics/funnel";
 import { addDaysKey, endOfDayInTz, instantDateKey, rangeBounds, utcDateKey, weekStartKey, DAY_MS } from "@/lib/analytics/time";
 import type { ActivityRow, ConversionRow, DailyPoint, FunnelApplication, FunnelResult, ResponseTiming, WeeklyPoint } from "@/lib/analytics/types";
 import { dateFromKey } from "@/lib/dates";
@@ -84,6 +93,10 @@ function baseWhere(userId: string, includeArchived: boolean): Prisma.Application
  * Translate filters into a Prisma where clause. The date range applies to `appliedAt`, falling
  * back to `createdAt` for records that were never applied (saved/preparing), so saved leads
  * still appear in the status distribution for the period they were added.
+ *
+ * The SQL date bounds are deliberately wide (they cover both the UTC-date and the user-timezone
+ * reading of a timestamp); `inRange` then keeps exactly the records whose calendar day — the same
+ * day the daily chart files them under — falls inside the range.
  */
 export function buildApplicationWhere(userId: string, filters: AnalyticsFilters, range: ResolvedRange, timezone: string): Prisma.ApplicationWhereInput {
   const where: Prisma.ApplicationWhereInput = baseWhere(userId, filters.includeArchived);
@@ -118,9 +131,14 @@ const analyticsSelect = {
   jobCategory: true,
   resumeVersionId: true,
   statusHistory: { select: { toStatus: true, occurredAt: true } },
-  events: { select: { type: true, occurredAt: true } },
+  events: { where: { type: { in: FUNNEL_EVENT_TYPES } }, select: { type: true, occurredAt: true } },
   _count: { select: { interviews: true, offers: true } },
 } satisfies Prisma.ApplicationSelect;
+
+/** Exact range check on the record's calendar day (see `applicationDayKey`). */
+export function inRange(dayKey: string, range: Pick<ResolvedRange, "fromKey" | "toKey">): boolean {
+  return (!range.fromKey || dayKey >= range.fromKey) && (!range.toKey || dayKey <= range.toKey);
+}
 
 /** Upper bound for "due by end of day" covering both date-only (UTC) and timezone interpretations. */
 function dueBound(dayKey: string, timezone: string): Date {
@@ -151,7 +169,7 @@ export async function getAnalytics(userId: string, filters: AnalyticsFilters, no
 
   const [rows, anyCount, activityRows, sourceGroups, categoryRows, employerRows, resumeRows, followUpRows] = await Promise.all([
     prisma.application.findMany({ where, orderBy: { createdAt: "asc" }, take: MAX_ANALYTICS_APPLICATIONS + 1, select: analyticsSelect }),
-    prisma.application.count({ where: { userId } }),
+    prisma.application.count({ where: { userId, mergedIntoId: null } }),
     prisma.dailyActivity.findMany({
       where: { userId, date: { gte: dateFromKey(weeklyFrom), lte: dateFromKey(seriesTo) } },
       select: { date: true, applicationsSubmitted: true, followUps: true },
@@ -174,12 +192,13 @@ export async function getAnalytics(userId: string, filters: AnalyticsFilters, no
     prisma.resumeVersion.findMany({ where: { userId }, select: { id: true, name: true } }),
     prisma.application.findMany({
       where: { AND: [where, { status: { in: ACTIVE_STATUSES } }, { followUpAt: { lte: dueBound(weekEndKey, timezone) } }] },
-      select: { followUpAt: true },
+      select: { id: true, followUpAt: true },
     }),
   ]);
 
   const capped = rows.length > MAX_ANALYTICS_APPLICATIONS;
-  const apps = capped ? rows.slice(0, MAX_ANALYTICS_APPLICATIONS) : rows;
+  const apps = (capped ? rows.slice(0, MAX_ANALYTICS_APPLICATIONS) : rows).filter((a) => inRange(applicationDayKey(a, timezone), range));
+  const appIds = new Set(apps.map((a) => a.id));
 
   const funnelApps: FunnelApplication[] = apps.map((a) => ({
     id: a.id,
@@ -199,8 +218,12 @@ export async function getAnalytics(userId: string, filters: AnalyticsFilters, no
   const funnel = computeFunnel(funnelApps);
   const timing = averageDaysToResponse(funnelApps);
 
+  // One key per applied application (its application day), so the chart sums to the funnel's "applied".
   const appliedKeys: string[] = [];
-  for (const a of apps) for (const e of a.events) if (e.type === "APPLIED") appliedKeys.push(instantDateKey(e.occurredAt, timezone));
+  for (const a of apps) {
+    const key = appliedDayKey(a, timezone);
+    if (key) appliedKeys.push(key);
+  }
   const activity: ActivityRow[] = activityRows.map((r) => ({ key: utcDateKey(r.date), applicationsSubmitted: r.applicationsSubmitted, followUps: r.followUps }));
   const daily = dailySeries({ fromKey: dailyFrom, toKey: seriesTo, appliedKeys, activity });
   const weekly = weeklySeries(dailySeries({ fromKey: weeklyFrom, toKey: seriesTo, appliedKeys, activity }));
@@ -218,7 +241,7 @@ export async function getAnalytics(userId: string, filters: AnalyticsFilters, no
   let dueToday = 0;
   let laterThisWeek = 0;
   for (const r of followUpRows) {
-    if (!r.followUpAt) continue;
+    if (!r.followUpAt || (!capped && !appIds.has(r.id))) continue;
     const key = instantDateKey(r.followUpAt, timezone);
     if (key < todayKey) overdue++;
     else if (key === todayKey) dueToday++;
@@ -277,6 +300,7 @@ const exportSelect = {
   recruiterContact: { select: { name: true } },
   createdVia: true,
   createdAt: true,
+  events: { where: { type: "APPLIED" }, select: { type: true, occurredAt: true }, orderBy: { occurredAt: "asc" }, take: 1 },
 } satisfies Prisma.ApplicationSelect;
 
 /**
@@ -297,7 +321,8 @@ export async function* iterateExportRows(userId: string, filters: AnalyticsFilte
       select: exportSelect,
     });
     if (batch.length === 0) return;
-    yield batch.map(toExportRow);
+    const inSlice = batch.filter((a) => inRange(applicationDayKey(a, ctx.timezone), range));
+    if (inSlice.length) yield inSlice.map(toExportRow);
     if (batch.length < EXPORT_BATCH) return;
     cursor = batch[batch.length - 1]!.id;
   }

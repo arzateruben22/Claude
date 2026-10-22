@@ -39,3 +39,10 @@ test("a valid token shows the user and a missing token shows Connect", async ({ 
   await expect(popup.locator("#connect-button")).toHaveText("Connect");
   await expect(popup.locator("#save-job")).toBeHidden();
 });
+
+test("EXT-05: a stale 'Token rejected' state is re-checked when the popup opens and clears once the saved token works", async ({ ext }) => {
+  await ext.configure({ connection: { status: "unauthorized", user: null, error: "Invalid token", checkedAt: Date.now() - 10 * 60 * 1000 } });
+  const popup = await ext.openPopup(0);
+  await expect(popup.locator("#status-pill")).toHaveText("Connected · Test User");
+  expect((await ext.local("connection")).status).toBe("connected");
+});

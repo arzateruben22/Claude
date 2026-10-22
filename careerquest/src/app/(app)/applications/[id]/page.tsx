@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Pencil, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ExternalLink, GitMerge, Pencil, ShieldCheck } from "lucide-react";
 import { requireUser } from "@/lib/auth/current-user";
 import { getApplication, userTimezone } from "@/lib/applications/service";
 import { buildTimeline } from "@/lib/applications/timeline";
+import { hasApplied } from "@/lib/applications/status";
 import { dateInputValue, formatInTz } from "@/lib/applications/time";
 import {
   EMPLOYMENT_TYPE_LABELS,
   EVENT_SOURCE_LABELS,
-  OFFER_STATUS_LABELS,
   RECORD_ORIGIN_LABELS,
   SALARY_PERIOD_LABELS,
   SOURCE_LABELS,
@@ -37,6 +37,8 @@ import {
 } from "@/components/applications/interviews-panel";
 import { ApplicationTimeline } from "@/components/applications/timeline";
 import { DangerZone } from "@/components/applications/danger-zone";
+import { OffersCard } from "@/components/applications/offers-card";
+import { EvidenceCard } from "@/components/applications/evidence-card";
 
 export const metadata: Metadata = { title: "Application" };
 
@@ -58,7 +60,20 @@ export default async function ApplicationDetailPage({
   const now = new Date();
   const today = dateInputValue(now, timezone);
   const xpParam = typeof sp.xp === "string" ? Number(sp.xp) : 0;
-  const latestStatusSource = app.statusHistory[0]?.source ?? "USER";
+  const latestStatus = app.statusHistory[0] ?? null;
+  const latestStatusSource = latestStatus?.source ?? "USER";
+  const applied = hasApplied(app);
+  const merged = app.mergedInto;
+  // One entry per platform, keeping the first URL seen for it.
+  const seenOn: { platform: string; url: string | null }[] = [];
+  for (const l of app.sourceLinks) {
+    const label = SOURCE_LABELS[l.platform];
+    // Links come from captures; only plain web URLs are rendered as links.
+    const url = l.url && /^https?:\/\//i.test(l.url) ? l.url : null;
+    const existing = seenOn.find((s) => s.platform === label);
+    if (!existing) seenOn.push({ platform: label, url });
+    else if (!existing.url && url) existing.url = url;
+  }
   const timeline = buildTimeline(app.statusHistory, app.events);
   const interviews: InterviewView[] = app.interviews.map((i) => ({
     id: i.id,
@@ -101,7 +116,11 @@ export default async function ApplicationDetailPage({
               ) : null}
               {app.statusVerified ? "Verified" : "Unverified"} ·{" "}
               {EVENT_SOURCE_LABELS[latestStatusSource]}
+              {!app.statusVerified && latestStatus
+                ? ` · ${formatInTz(latestStatus.occurredAt, timezone, "short")}`
+                : ""}
             </Badge>
+            {merged && <Badge tone="neutral">Merged</Badge>}
             <SourceBadge source={app.source} />
             {app.employmentType !== "UNKNOWN" && (
               <Badge tone="neutral">
@@ -117,7 +136,7 @@ export default async function ApplicationDetailPage({
         }
         actions={
           <>
-            {app.postingUrl && (
+            {app.postingUrl && /^https?:\/\//i.test(app.postingUrl) && (
               <a
                 href={app.postingUrl}
                 target="_blank"
@@ -137,27 +156,52 @@ export default async function ApplicationDetailPage({
         }
       />
 
-      {xpParam > 0 && (
+      {xpParam > 0 && !merged && (
         <Alert tone="success" className="mb-4" title={`+${xpParam} XP`}>
-          Application saved and counted toward today&apos;s target.
+          Application saved. It counts toward your daily target on the day you
+          applied.
+        </Alert>
+      )}
+
+      {merged && (
+        <Alert tone="info" className="mb-4" title="Merged into another record">
+          <span className="inline-flex flex-wrap items-center gap-1">
+            <GitMerge className="h-4 w-4" aria-hidden />
+            This was a duplicate of{" "}
+            <Link
+              href={`/applications/${merged.id}`}
+              className="text-accent hover:underline break-words"
+            >
+              {merged.companyName} – {merged.positionTitle}
+            </Link>
+            . It is kept for its history but left out of your lists, stats and
+            exports; make changes on that record.
+          </span>
         </Alert>
       )}
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <StatusChangePanel
-            applicationId={app.id}
-            status={app.status}
-            today={today}
-          />
-          <FollowUpForm
-            applicationId={app.id}
-            today={today}
-            nextFollowUpLabel={
-              app.followUpAt ? formatInTz(app.followUpAt, timezone) : null
-            }
-          />
-          <InterviewsPanel applicationId={app.id} interviews={interviews} />
+        <div className="space-y-4 lg:col-span-2 min-w-0">
+          {!merged && (
+            <>
+              <StatusChangePanel
+                applicationId={app.id}
+                status={app.status}
+                today={today}
+                verified={app.statusVerified}
+                sourceLabel={EVENT_SOURCE_LABELS[latestStatusSource]}
+                applied={applied}
+              />
+              <FollowUpForm
+                applicationId={app.id}
+                today={today}
+                nextFollowUpLabel={
+                  app.followUpAt ? formatInTz(app.followUpAt, timezone) : null
+                }
+              />
+              <InterviewsPanel applicationId={app.id} interviews={interviews} />
+            </>
+          )}
 
           <Card>
             <CardHeader>
@@ -170,11 +214,11 @@ export default async function ApplicationDetailPage({
             </CardHeader>
             <CardContent className="space-y-4">
               {app.notes ? (
-                <p className="text-sm whitespace-pre-wrap">{app.notes}</p>
+                <p className="text-sm whitespace-pre-wrap break-words">{app.notes}</p>
               ) : (
                 <p className="text-sm text-fg-muted">No notes yet.</p>
               )}
-              <NoteForm applicationId={app.id} />
+              {!merged && <NoteForm applicationId={app.id} />}
             </CardContent>
           </Card>
 
@@ -193,7 +237,7 @@ export default async function ApplicationDetailPage({
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           <Card>
             <CardHeader>
               <div>
@@ -203,7 +247,11 @@ export default async function ApplicationDetailPage({
             <CardContent>
               <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
                 <Detail label="Applied">
-                  {formatInTz(app.appliedAt, timezone)}
+                  {app.appliedAt
+                    ? formatInTz(app.appliedAt, timezone)
+                    : applied
+                      ? "Date not recorded"
+                      : "Not applied"}
                 </Detail>
                 <Detail label="Stage since">
                   {formatInTz(app.statusUpdatedAt, timezone)}
@@ -218,6 +266,29 @@ export default async function ApplicationDetailPage({
                 <Detail label="Category">{app.jobCategory ?? "—"}</Detail>
                 <Detail label="Req #">{app.requisitionNumber ?? "—"}</Detail>
                 <Detail label="Found on">{SOURCE_LABELS[app.source]}</Detail>
+                {seenOn.length > 0 && (
+                  <Detail label="Seen on">
+                    <span data-testid="seen-on">
+                      {seenOn.map((s, i) => (
+                        <span key={s.platform}>
+                          {i > 0 && " · "}
+                          {s.url ? (
+                            <a
+                              href={s.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-accent hover:underline"
+                            >
+                              {s.platform}
+                            </a>
+                          ) : (
+                            s.platform
+                          )}
+                        </span>
+                      ))}
+                    </span>
+                  </Detail>
+                )}
                 {app.submissionDestination && (
                   <Detail label="Submitted via">
                     {SOURCE_LABELS[app.submissionDestination]}
@@ -269,87 +340,14 @@ export default async function ApplicationDetailPage({
             </CardContent>
           </Card>
 
-          {app.offers.length > 0 && (
-            <Card>
-              <CardHeader>
-                <div>
-                  <CardTitle>Offer{app.offers.length > 1 ? "s" : ""}</CardTitle>
-                  <CardDescription>
-                    As recorded on this application.
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {app.offers.map((o) => (
-                  <div
-                    key={o.id}
-                    className="rounded-ctl border border-line bg-surface p-3 text-sm"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-medium tnum">
-                        {formatCurrency(o.baseAmount)}{" "}
-                        {SALARY_PERIOD_LABELS[o.period]}
-                      </p>
-                      <Badge
-                        tone={
-                          o.status === "ACCEPTED"
-                            ? "success"
-                            : o.status === "DECLINED" ||
-                                o.status === "RESCINDED" ||
-                                o.status === "EXPIRED"
-                              ? "danger"
-                              : "gold"
-                        }
-                      >
-                        {OFFER_STATUS_LABELS[o.status]}
-                      </Badge>
-                    </div>
-                    <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-fg-muted">
-                      <dt>Hours / week</dt>
-                      <dd className="tnum">{o.hoursPerWeek}</dd>
-                      {o.signingBonus !== null && (
-                        <>
-                          <dt>Signing bonus</dt>
-                          <dd className="tnum">
-                            {formatCurrency(o.signingBonus)}
-                          </dd>
-                        </>
-                      )}
-                      {o.annualBonus !== null && (
-                        <>
-                          <dt>Annual bonus</dt>
-                          <dd className="tnum">
-                            {formatCurrency(o.annualBonus)}
-                          </dd>
-                        </>
-                      )}
-                      {o.startDate && (
-                        <>
-                          <dt>Start date</dt>
-                          <dd className="tnum">
-                            {formatInTz(o.startDate, timezone)}
-                          </dd>
-                        </>
-                      )}
-                      {o.decisionDue && (
-                        <>
-                          <dt>Decide by</dt>
-                          <dd className="tnum">
-                            {formatInTz(o.decisionDue, timezone)}
-                          </dd>
-                        </>
-                      )}
-                    </dl>
-                    {o.notes && (
-                      <p className="mt-2 text-xs text-fg-muted whitespace-pre-wrap">
-                        {o.notes}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
+          <OffersCard
+            applicationId={app.id}
+            status={app.status}
+            offers={app.offers}
+            timezone={timezone}
+          />
+
+          <EvidenceCard evidence={app.evidence} timezone={timezone} />
 
           {app.jobDescription && (
             <Card>
@@ -366,7 +364,7 @@ export default async function ApplicationDetailPage({
                   <summary className="text-sm text-accent cursor-pointer">
                     Show description
                   </summary>
-                  <p className="mt-2 text-sm text-fg-muted whitespace-pre-wrap max-h-96 overflow-y-auto">
+                  <p className="mt-2 text-sm text-fg-muted whitespace-pre-wrap break-words max-h-96 overflow-y-auto">
                     {app.jobDescription}
                   </p>
                 </details>

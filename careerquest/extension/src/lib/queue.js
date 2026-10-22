@@ -28,14 +28,24 @@ export function computeBackoffMs(attempt, opts = {}) {
   return Math.round(Math.min(max, Math.max(base, exp + jitter)));
 }
 
+/** @param {any} payload */
+function captureIdOf(payload) {
+  const id = payload && payload.evidence && payload.evidence.captureId;
+  return typeof id === "string" && id ? id : null;
+}
+
 /**
- * Appends an item, dropping the oldest when the queue is full.
+ * Appends an item, dropping the oldest when the queue is full. Idempotent: a
+ * payload whose evidence.captureId is already queued is not added again.
  * @param {QueueItem[]} queue
  * @param {object} payload
  * @param {{ now?: number, id?: string, max?: number }} [opts]
- * @returns {{ queue: QueueItem[], item: QueueItem }}
+ * @returns {{ queue: QueueItem[], item: QueueItem, duplicate?: boolean }}
  */
 export function enqueue(queue, payload, opts = {}) {
+  const captureId = captureIdOf(payload);
+  const existing = captureId ? queue.find((i) => captureIdOf(i.payload) === captureId) : null;
+  if (existing) return { queue, item: existing, duplicate: true };
   const now = opts.now ?? Date.now();
   const item = {
     id: opts.id ?? `${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,

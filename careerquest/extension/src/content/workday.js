@@ -7,10 +7,12 @@
     detect: C.createDetector({
       platform: "WORKDAY",
       confirmationPhrases: ["You have successfully applied", "Thank you for applying", "Your application has been submitted"],
-      confirmationRoutes: ["/applied", "/thank-you", "/confirmation", "/applyflowcompleted", "/complete"],
+      // Only routes inside the apply flow: candidate home / "My Applications" are not confirmations.
+      confirmationRoutes: ["/apply/applied", "/apply/complete", "/apply/thank-you", "/apply/confirmation", "/applyflowcompleted"],
       confirmationSelectors: ['[data-automation-id="applyFlowCompletedPage"]', '[data-automation-id="applicationSubmitted"]', '[data-automation-id="thankYouPage"]', '[data-automation-id*="Completed"]', '[data-automation-id*="completed"]'],
       applyRoutes: ["/apply/", "/apply?", "/applymanually", "/applyflow"],
       applySelectors: ['[data-automation-id="applyFlowPage"]', '[data-automation-id="jobApplicationForm"]', 'form[data-automation-id*="apply"]', '[data-automation-id="applyFlowMyExperiencePage"]'],
+      jobContainers: ['[data-automation-id="jobPostingPage"]', '[data-automation-id="jobPostingDescription"]'],
       selectors: {
         title: ['h2[data-automation-id="jobPostingHeader"]', '[data-automation-id="jobPostingHeader"]', '[data-automation-id="jobTitle"]', "h1"],
         location: ['[data-automation-id="locations"] dd', '[data-automation-id="locations"]', '[data-automation-id="location"]'],

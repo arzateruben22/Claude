@@ -65,14 +65,29 @@ export const STORAGE = Object.freeze({
   QUEUE: "queue",
   PENDING: "pending",
   HOST_PERMISSION: "hostPermission",
+  /** dedupe keys of confirmations recorded automatically → timestamp */
+  SENT: "sentCaptures",
+  /** prompts the user already answered (Yes/No) → { at, answer } */
+  RESOLVED: "resolvedPrompts",
 });
 
 /** chrome.storage.session keys (cleared when the browser closes). */
 export const SESSION = Object.freeze({
   DETECTIONS: "detections",
   MATCHES: "matches",
-  SENT: "sentCaptures",
   LAST_JOB: "lastJob",
+});
+
+/** How long remembered keys / page context stay valid. */
+export const MEMORY = Object.freeze({
+  /** an auto-recorded confirmation is not re-sent for this long */
+  SENT_TTL_MS: 30 * 24 * 60 * 60 * 1000,
+  /** an answered prompt is not shown again for the same page for this long */
+  RESOLVED_TTL_MS: 30 * 24 * 60 * 60 * 1000,
+  /** at most this many remembered keys per store (oldest dropped) */
+  MAX_KEYS: 500,
+  /** the last job page seen in a tab pre-fills a confirmation only this long */
+  LAST_JOB_TTL_MS: 2 * 60 * 60 * 1000,
 });
 
 export const DEFAULT_SETTINGS = Object.freeze({

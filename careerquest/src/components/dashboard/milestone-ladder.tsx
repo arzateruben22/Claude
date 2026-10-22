@@ -17,7 +17,7 @@ export function MilestoneLadder({ projections, completed, nextMilestone }: { pro
             Milestone ladder
           </h2>
           <p className="text-xs text-fg-muted mt-0.5">
-            {nextMilestone ? `${formatNumber(completed)} submitted · ${formatNumber(nextMilestone - completed)} to the next rung` : "Every milestone reached"}
+            {nextMilestone ? `${formatNumber(completed)} applied this campaign · ${formatNumber(nextMilestone - completed)} to the next rung` : "Every milestone reached this campaign"}
           </p>
         </div>
         <Flag className="h-4 w-4 text-fg-subtle shrink-0" aria-hidden />

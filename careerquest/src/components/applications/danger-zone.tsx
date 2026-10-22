@@ -42,8 +42,9 @@ export function DangerZone({
         <div>
           <CardTitle>Archive or delete</CardTitle>
           <CardDescription>
-            Archiving hides it from the list but keeps the history. Deleting
-            removes it for good.
+            Archiving hides it from your list and from funnel rates but keeps
+            its history; if you applied, it still counts as an application
+            you sent. Deleting removes it for good.
           </CardDescription>
         </div>
       </CardHeader>
@@ -94,8 +95,9 @@ export function DangerZone({
           size="sm"
         >
           <p className="text-sm text-fg-muted">
-            Its status history, notes, interviews and timeline will be removed.
-            XP you already earned from it stays on your record.
+            Its status history, notes, interviews and timeline will be removed,
+            the XP it earned is taken back, and it stops counting toward your
+            targets and stats.
           </p>
           {deleteState && !deleteState.ok && (
             <Alert tone="danger" className="mt-3">

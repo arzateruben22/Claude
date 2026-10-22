@@ -3,8 +3,12 @@ import {
   ALL_STATUSES,
   PIPELINE,
   TERMINAL,
+  appliedInstant,
   canApplyInferredStatus,
+  countsAsSubmission,
+  hasApplied,
   impliesEmployerResponse,
+  impliesSubmission,
   isActiveStatus,
   isSubmittedStatus,
   statusRank,
@@ -206,4 +210,49 @@ describe("canApplyInferredStatus truth table", () => {
       ).toBe(c.expected);
     });
   }
+});
+
+describe("submission semantics (F1)", () => {
+  it("impliesSubmission: pipeline >= SUBMITTED plus REJECTED / NO_RESPONSE, never WITHDRAWN / CLOSED", () => {
+    const yes = ALL_STATUSES.filter(impliesSubmission);
+    expect(yes.sort()).toEqual(
+      ["SUBMITTED", "CONFIRMED", "SCREENING", "INTERVIEWING", "OFFER", "ACCEPTED", "HIRED", "REJECTED", "NO_RESPONSE"].sort(),
+    );
+  });
+
+  it("countsAsSubmission: closing a never-applied lead is not a submission", () => {
+    for (const to of ["WITHDRAWN", "CLOSED"] as const) {
+      expect(countsAsSubmission({ from: "SAVED", to, appliedAt: null })).toBe(false);
+      expect(countsAsSubmission({ from: "PREPARING", to, appliedAt: null })).toBe(false);
+      expect(countsAsSubmission({ from: null, to, appliedAt: null })).toBe(false);
+      // Evidence of a real submission: an application date or a previous submitted status.
+      expect(countsAsSubmission({ from: null, to, appliedAt: new Date() })).toBe(true);
+      expect(countsAsSubmission({ from: "SUBMITTED", to, appliedAt: null })).toBe(true);
+    }
+    expect(countsAsSubmission({ from: "SAVED", to: "REJECTED", appliedAt: null })).toBe(true);
+    expect(countsAsSubmission({ from: "SAVED", to: "SUBMITTED", appliedAt: null })).toBe(true);
+    expect(countsAsSubmission({ from: "SAVED", to: "PREPARING", appliedAt: new Date() })).toBe(false);
+  });
+
+  it("hasApplied / appliedInstant: application date first, else the earliest APPLIED event", () => {
+    const at = (iso: string) => new Date(iso);
+    expect(hasApplied({ appliedAt: null, events: [] })).toBe(false);
+    expect(hasApplied({ appliedAt: null, events: [{ type: "SAVED" }] })).toBe(false);
+    expect(hasApplied({ appliedAt: at("2026-10-01T00:00:00Z"), events: [] })).toBe(true);
+    expect(hasApplied({ appliedAt: null, events: [{ type: "APPLIED" }] })).toBe(true);
+    expect(appliedInstant({ appliedAt: null, events: [] })).toBeNull();
+    expect(
+      appliedInstant({
+        appliedAt: null,
+        events: [
+          { type: "APPLIED", occurredAt: at("2026-10-03T00:00:00Z") },
+          { type: "APPLIED", occurredAt: at("2026-10-02T00:00:00Z") },
+          { type: "SAVED", occurredAt: at("2026-09-01T00:00:00Z") },
+        ],
+      })?.toISOString(),
+    ).toBe("2026-10-02T00:00:00.000Z");
+    expect(
+      appliedInstant({ appliedAt: at("2026-10-05T00:00:00Z"), events: [{ type: "APPLIED", occurredAt: at("2026-10-02T00:00:00Z") }] })?.toISOString(),
+    ).toBe("2026-10-05T00:00:00.000Z");
+  });
 });

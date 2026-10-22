@@ -7,10 +7,11 @@
     detect: C.createDetector({
       platform: "GOVERNMENTJOBS",
       confirmationPhrases: ["Your application has been received", "Application submitted"],
-      confirmationRoutes: ["/applications/confirmation", "/confirmation", "/submitted", "/thank-you", "/applied"],
-      confirmationSelectors: [".application-confirmation", '[class*="application-confirmation"]', '[class*="confirmation"]', '[id*="confirmation"]'],
+      confirmationRoutes: ["/applications/confirmation", "/confirmation", "/thank-you"],
+      confirmationSelectors: [".application-confirmation", '[class*="application-confirmation"]'],
       applyRoutes: ["/apply", "/applications/", "/application/"],
       applySelectors: ['form[class*="application"]', 'form[id*="application"]', '[class*="application-form"]'],
+      jobContainers: [".job-details", "#details-info", ".job-details-container"],
       selectors: {
         title: ["h1.job-title", 'h1[class*="title"]', ".job-details h1", '[class*="job-title"]', "h1"],
         company: [".job-header .agency", '[class*="agency"]', '[class*="employer"]', '[class*="company"]'],

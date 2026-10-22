@@ -3,6 +3,7 @@ import type {
   ApplicationSource,
   EmploymentType,
   EventSource,
+  EvidenceKind,
   InterviewOutcome,
   InterviewType,
   OfferStatus,
@@ -115,6 +116,52 @@ export const EVENT_TYPE_LABELS: Record<ApplicationEventType, string> = {
   MERGED: "Merged with another record",
   ONBOARDING_RECEIVED: "Onboarding received",
 };
+
+export const EVIDENCE_KIND_LABELS: Record<EvidenceKind, string> = {
+  EMAIL: "Email",
+  EXTENSION_CAPTURE: "Page capture",
+  SCREENSHOT: "Screenshot",
+  CSV_ROW: "CSV row",
+  URL: "Link",
+  MANUAL_NOTE: "Note",
+  DOCUMENT: "Document",
+};
+
+/** Where a piece of evidence came from, when the producer did not record anything more specific. */
+export const EVIDENCE_DEFAULT_SOURCE_LABELS: Record<EvidenceKind, string> = {
+  EMAIL: "Email",
+  EXTENSION_CAPTURE: "Browser extension",
+  SCREENSHOT: "Uploaded screenshot",
+  CSV_ROW: "CSV import",
+  URL: "URL import",
+  MANUAL_NOTE: "Added by you",
+  DOCUMENT: "Uploaded document",
+};
+
+const EMAIL_PROVIDER_LABELS: Record<string, string> = {
+  GMAIL: "Gmail",
+  OUTLOOK: "Outlook",
+  EML: "Uploaded .eml file",
+  MBOX: "Mailbox (.mbox) import",
+  PASTE: "Pasted email",
+};
+
+/**
+ * Human source label for an evidence row: the email provider or job platform the producer stored
+ * in `data` (`provider` / `platform`) when it is one we know, otherwise a label for the kind.
+ * Unknown strings are never echoed, so arbitrary captured data cannot masquerade as a source.
+ */
+export function evidenceSourceLabel(kind: EvidenceKind, data: unknown): string {
+  const d = data && typeof data === "object" && !Array.isArray(data) ? (data as Record<string, unknown>) : {};
+  const provider = typeof d.provider === "string" ? d.provider.toUpperCase() : null;
+  if (provider && EMAIL_PROVIDER_LABELS[provider]) return EMAIL_PROVIDER_LABELS[provider]!;
+  const platform = typeof d.platform === "string" ? d.platform.toUpperCase() : null;
+  if (platform && Object.prototype.hasOwnProperty.call(SOURCE_LABELS, platform)) {
+    const label = SOURCE_LABELS[platform as ApplicationSource];
+    return kind === "EXTENSION_CAPTURE" ? `Browser extension · ${label}` : label;
+  }
+  return EVIDENCE_DEFAULT_SOURCE_LABELS[kind];
+}
 
 /** Suggestions for the free-text job category field (a datalist, not a constraint). */
 export const JOB_CATEGORY_SUGGESTIONS = [

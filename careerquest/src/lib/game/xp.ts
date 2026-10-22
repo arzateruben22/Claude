@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
 import { XP, XP_TRACK, type XpReason, type XpTrack } from "@/lib/game/xp-config";
+import { touchStreak } from "@/lib/game/streak-store";
 
 export type Tx = Prisma.TransactionClient;
 
@@ -54,6 +55,8 @@ export async function awardXp(tx: Tx, input: AwardInput): Promise<AwardResult> {
       create: { userId: input.userId, date: input.activityDate, xpEarned: amount },
       update: { xpEarned: { increment: amount } },
     });
+    // Streak fields are derived from DailyActivity (rest days / non-workdays never break them).
+    await touchStreak(tx, input.userId, input.activityDate);
   }
   return { awarded: true, amount, reason: input.reason };
 }

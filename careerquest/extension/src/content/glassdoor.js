@@ -7,8 +7,8 @@
     detect: C.createDetector({
       platform: "GLASSDOOR",
       confirmationPhrases: ["Your application has been submitted", "Application submitted", "Thank you for applying"],
-      confirmationRoutes: ["/apply/confirmation", "/confirmation", "/thank-you", "/applied"],
-      confirmationSelectors: ['[data-test="apply-confirmation"]', '[class*="ApplyConfirmation"]', '[class*="confirmation"]'],
+      confirmationRoutes: ["/apply/confirmation", "/confirmation", "/thank-you"],
+      confirmationSelectors: ['[data-test="apply-confirmation"]', '[class*="ApplyConfirmation"]'],
       applyRoutes: ["/apply/"],
       applySelectors: ['[data-test="easy-apply-form"]', 'form[class*="EasyApply"]', 'form[class*="apply"]'],
       selectors: {

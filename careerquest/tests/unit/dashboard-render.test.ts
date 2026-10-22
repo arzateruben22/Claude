@@ -42,7 +42,7 @@ const empty: DashboardData = {
   week: { submitted: 0, target: 25, activeDays: 0, weekStartKey: "2026-10-12" },
   series: buildDailySeries({}, "2026-10-12", 14),
   funnel: { submitted: 0, responses: 0, screenings: 0, interviews: 0, offers: 0, hires: 0 },
-  rates: { interview: null, response: null, n: 0 },
+  rates: { interview: null, response: null, n: 0, lowSample: true, interviewInterval: null },
   totals: { applications: 0, submitted: 0 },
   followUps: { overdue: [], dueToday: [], capped: false },
   interviews: [],
@@ -59,7 +59,7 @@ const populated: DashboardData = {
   week: { submitted: 12, target: 25, activeDays: 3, weekStartKey: "2026-10-12" },
   series: buildDailySeries({ "2026-10-10": 4, "2026-10-12": 3 }, "2026-10-12", 14),
   funnel: { submitted: 40, responses: 8, screenings: 5, interviews: 3, offers: 1, hires: 0 },
-  rates: { interview: 3 / 40, response: 8 / 40, n: 40 },
+  rates: { interview: 3 / 40, response: 8 / 40, n: 40, lowSample: false, interviewInterval: { low: 0.026, high: 0.199 } },
   totals: { applications: 45, submitted: 40 },
   followUps: {
     overdue: [{ id: "a1", companyName: "Acme", positionTitle: "Apprentice", status: "SUBMITTED", followUpAt: d("2026-10-10"), dueKey: "2026-10-10", overdue: true }],
@@ -86,7 +86,7 @@ describe("dashboard components render", () => {
     expect(render(createElement(FollowUpsCard, { overdue: [], dueToday: [], capped: false }))).toContain("No follow-ups are due today");
     expect(render(createElement(InterviewsCard, { interviews: [], timezone: "America/Los_Angeles" }))).toContain("No interviews scheduled");
     expect(render(createElement(XpStreakCard, { xp: empty.xp, streak: empty.streak }))).toContain("No active streak");
-    expect(render(createElement(MissionsCard, { missions: [] }))).toContain("Daily missions arrive in a later phase");
+    expect(render(createElement(MissionsCard, { missions: [] }))).toContain("No active missions loaded yet");
     expect(render(createElement(RecentActivity, { events: [] }))).toContain("No activity recorded yet");
     expect(render(createElement(WelcomeCard, { name: "Ada Lovelace", onboardingComplete: false }))).toContain("Welcome to CareerQuest, Ada");
   });
@@ -144,5 +144,23 @@ describe("goals components render", () => {
     expect(html).toContain('name="weeklyApplicationTarget" value="25"');
     expect(html).toMatch(/Campaign goal[\s\S]*321/);
     expect(html).toContain("Expected responses (estimate)");
+  });
+});
+
+describe("low-sample signalling (F5)", () => {
+  it("flags the interview-rate tile and the funnel strip below 10 submitted", () => {
+    const small: DashboardData = {
+      ...populated,
+      funnel: { submitted: 2, responses: 1, screenings: 1, interviews: 1, offers: 0, hires: 0 },
+      rates: { interview: 0.5, response: 0.5, n: 2, lowSample: true, interviewInterval: { low: 0.09, high: 0.91 } },
+      totals: { applications: 3, submitted: 2 },
+    };
+    const tiles = render(createElement(StatTiles, { data: small }));
+    expect(tiles).toContain("Low sample");
+    expect(tiles).toContain("n = 2 submitted");
+    expect(render(createElement(FunnelStrip, { funnel: small.funnel, lowSample: true }))).toContain("Low sample");
+    const big = render(createElement(StatTiles, { data: populated }));
+    expect(big).not.toContain("Low sample");
+    expect(big).toContain("95% interval 3%–20%");
   });
 });

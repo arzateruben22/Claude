@@ -7,10 +7,11 @@
     detect: C.createDetector({
       platform: "ICIMS",
       confirmationPhrases: ["Thank you for applying", "Your application has been received"],
-      confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation", "/complete", "/applied"],
-      confirmationSelectors: [".iCIMS_Confirmation", '[class*="iCIMS_ThankYou"]', '[class*="thankyou"]', '[class*="confirmation"]'],
-      applyRoutes: ["/apply", "/candidate/", "/profile"],
+      confirmationRoutes: ["/thank-you", "/thankyou", "/confirmation"],
+      confirmationSelectors: [".iCIMS_Confirmation", '[class*="iCIMS_ThankYou"]'],
+      applyRoutes: ["/apply", "/candidate/"],
       applySelectors: [".iCIMS_ApplyForm", "#iCIMS_Apply", 'form[name*="apply" i]', 'form[id*="apply" i]'],
+      jobContainers: [".iCIMS_JobPage", ".iCIMS_JobContent", ".iCIMS_MainWrapper"],
       selectors: {
         title: ["h1.iCIMS_Header", ".iCIMS_JobHeader h1", ".iCIMS_JobHeaderTitle", 'h1[class*="iCIMS"]', "h1"],
         company: ['[class*="iCIMS_Company"]', '[class*="company-name"]'],

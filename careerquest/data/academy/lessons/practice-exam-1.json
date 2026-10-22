@@ -20,7 +20,7 @@
     {
       "type": "text",
       "heading": "Instructions",
-      "markdown": "This exam has **50 original multiple-choice and numeric questions** covering the same content areas as the California General Electrician certification exam, in roughly the same proportions. Treat it like the real thing:\n\n- **Open-book.** Use your NEC (the edition the current bulletin names), tabbed the way you intend to tab it on exam day. No other references, no internet.\n- **Timed.** Give yourself **135 minutes** (2.7 minutes per question, the same pace as 100 questions in 4½ hours). Start a visible timer.\n- **One sitting.** Do not pause to study. Flag anything that takes more than 3 minutes and come back to it.\n- **Answer everything.** There is no penalty for guessing.\n- **Passing is 70 percent**, matching the exam's scaled passing score of 70. The real exam's scaling means 70 percent raw is not a guarantee, so treat **80 percent or better, under time,** as the readiness signal.\n\nNumeric questions accept a small tolerance; carry decimals through and round only at the end. Where a question gives you a table value (for example a motor full-load current), use it as given."
+      "markdown": "This exam has **50 original multiple-choice and numeric questions** covering the same content areas as the California General Electrician certification exam, in roughly the same proportions. Treat it like the real thing:\n\n- **Open-book.** Use your NEC (the edition the current bulletin names), tabbed the way you intend to tab it on exam day. No other references, no internet.\n- **Timed.** Give yourself **135 minutes** (2.7 minutes per question, the pace of 100 questions in 4½ hours, the limit shown on DIR's test-information page; the DIR FAQ says 4 hours, which would be 2.4 minutes per question, so confirm the limit in your scheduling materials; checked 2026-10-21). Start a visible timer.\n- **One sitting.** Do not pause to study. Flag anything that takes more than 3 minutes and come back to it.\n- **Answer everything.** There is no penalty for guessing.\n- **Passing here is 70 percent.** The real exam reports a scaled score with 70 as the minimum passing score (per the PSI-era bulletin; confirm under the CPS HR / Pearson VUE process used since June 1, 2026), and a scaled 70 is not the same as 70 percent correct, so treat **80 percent or better, under time,** as the readiness signal.\n\nNumeric questions accept a small tolerance; carry decimals through and round only at the end. Where a question gives you a table value (for example a motor full-load current), use it as given."
     },
     {
       "type": "table",
@@ -98,7 +98,7 @@
       "answer": 135,
       "unit": "min",
       "tolerance": 0.5,
-      "explanation": "50 × 2.7 = 135 minutes, the same pace as the real 100-question, 4½-hour exam."
+      "explanation": "50 × 2.7 = 135 minutes, the pace of a 100-question exam in 4½ hours (DIR's test-information page; the DIR FAQ says 4 hours, so confirm the current limit)."
     },
     {
       "id": "practice-exam-1-p2",

@@ -85,7 +85,7 @@ export function GoalsCalculator({ defaults, todayKey, campaignStartKey }: Props)
           <Field label="Campaign length (days)" htmlFor={`${id}-length`} errors={fe?.campaignLengthDays}>
             <Input id={`${id}-length`} name="campaignLengthDays" type="number" inputMode="numeric" min={7} max={365} step={1} value={length} onChange={(e) => setLength(e.target.value)} required />
           </Field>
-          <Field label="Already completed" htmlFor={`${id}-completed`} hint="Defaults to your submitted total">
+          <Field label="Already completed" htmlFor={`${id}-completed`} hint="Defaults to applications this campaign">
             <Input id={`${id}-completed`} name="completedApplications" type="number" inputMode="numeric" min={0} step={1} value={completed} onChange={(e) => setCompleted(e.target.value)} />
           </Field>
           <Field label="Available opportunities" htmlFor={`${id}-available`} hint="Optional: qualifying postings you can see">

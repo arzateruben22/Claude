@@ -29,7 +29,12 @@ export default async function GoalsPage() {
       <DashboardTabs />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 mb-4">
-        <StatTile label="Submitted so far" value={formatNumber(g.completed)} hint={`since ${fmtDay(g.campaignStartKey, true)}`} icon={<Trophy className="h-4 w-4" aria-hidden />} />
+        <StatTile
+          label="Applied this campaign"
+          value={formatNumber(g.completed)}
+          hint={`since ${fmtDay(g.campaignStartKey, true)} · ${formatNumber(g.completedAllTime)} all-time`}
+          icon={<Trophy className="h-4 w-4" aria-hidden />}
+        />
         <StatTile
           label="Campaign goal"
           value={formatNumber(pace.campaignGoalApplications)}
@@ -72,7 +77,8 @@ export default async function GoalsPage() {
             : pace.remainingToGoal === 0
               ? " Goal reached."
               : " No observed pace yet, so no projection."}
-          {g.responseRate !== null && ` Observed response rate: ${formatPercent(g.responseRate, 1)} over ${formatNumber(g.completed)} applications.`}
+          {g.responseRate !== null &&
+            ` Observed response rate: ${formatPercent(g.responseRate, 1)} over ${formatNumber(g.completed)} application${g.completed === 1 ? "" : "s"} this campaign${g.completed < 10 ? " (low sample, not reliable yet)" : ""}.`}
         </p>
       </section>
 

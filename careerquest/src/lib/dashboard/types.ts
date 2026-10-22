@@ -1,6 +1,7 @@
 import type { ApplicationEventType, ApplicationStatus, EventSource, InterviewType, MissionType } from "@/generated/prisma/enums";
 import type { CampaignTimeline } from "@/lib/dashboard/campaign";
 import type { FunnelCounts } from "@/lib/dashboard/funnel";
+import type { Interval } from "@/lib/analytics/stats";
 import type { NextAction } from "@/lib/dashboard/next-action";
 import type { SeriesPoint } from "@/lib/dashboard/time";
 import type { PaceResult, Suggestion } from "@/lib/goals/calculator";
@@ -70,7 +71,11 @@ export type DashboardData = {
   /** Last 14 days of applications submitted, oldest first. */
   series: SeriesPoint[];
   funnel: FunnelCounts;
-  rates: { interview: number | null; response: number | null; n: number };
+  /**
+   * Observed rates from the shared Analytics funnel (non-archived slice). `n` is the number of
+   * applied applications; `lowSample` is true below LOW_SAMPLE_N, when the rate is not reliable.
+   */
+  rates: { interview: number | null; response: number | null; n: number; lowSample: boolean; interviewInterval: Interval | null };
   totals: { applications: number; submitted: number };
   followUps: { overdue: FollowUpItem[]; dueToday: FollowUpItem[]; capped: boolean };
   interviews: InterviewItem[];
@@ -87,9 +92,14 @@ export type GoalsData = {
   campaignStartKey: string;
   campaign: CampaignTimeline;
   profile: DashboardProfile;
+  /** Applications applied within the campaign window (archived included, merged excluded). */
   completed: number;
+  /** Every application ever applied (archived included, merged excluded). */
+  completedAllTime: number;
+  /** Of `completed`, how many got an employer response. */
   responses: number;
   responseRate: number | null;
+  /** Applications per application day within the campaign window. */
   activityByDate: Record<string, number>;
   pace: PaceResult;
   suggestions: Suggestion[];

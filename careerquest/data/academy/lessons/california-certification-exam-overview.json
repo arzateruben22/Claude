@@ -17,11 +17,11 @@
     {
       "type": "text",
       "heading": "Who has to be certified in California",
-      "markdown": "California is one of the states that certifies the **electricians**, not only the contractors. Under Labor Code section 3099 and the regulations that implement it (California Code of Regulations, Title 8, sections 290 to 296.4), anyone who performs work as an electrician for a **C-10 licensed electrical contractor** must either hold a state certification or be registered as an **Electrician Trainee (ET)** working under the supervision of a certified electrician. The program is run by the Labor Commissioner's Office (Division of Labor Standards Enforcement, DLSE) through its **Electrician Certification Unit (ECU)**.\n\nThere are five certification categories. Each has its own exam and its own minimum experience:\n\n- **General Electrician** – the broad certification; this is the exam this track prepares you for.\n- **Residential Electrician** – one- and two-family dwellings and multifamily residential work.\n- **Fire/Life Safety Technician** – fire alarm and life-safety systems.\n- **Voice Data Video Technician** – communications and low-voltage data cabling.\n- **Non-Residential Lighting Technician** – lighting retrofits and maintenance in commercial occupancies.\n\n**Electrician Trainee** is not a certification. It is an annual registration that lets you work for a C-10 contractor while you are enrolled in a state-approved trainee school and accumulate hours under the direct supervision of a certified electrician on the jobsite. Trainee registration, the state-approved school list and the renewal form are all on the DIR site.\n\nA C-10 contractor license (issued by the Contractors State License Board) is a different thing again: it lets a business contract for electrical work. Many certified electricians never hold one, and holding one does not substitute for the certification when you are on the tools for someone else."
+      "markdown": "California is one of the states that certifies the **electricians**, not only the contractors. Under California Labor Code sections 108 to 108.5 (Division 1, Chapter 4.5; first enacted as sections 3099 to 3099.5 and renumbered by AB 1087 in 2002) and the regulations that implement them (California Code of Regulations, Title 8, sections 290.0 to 296.3), anyone who performs work as an electrician for a **C-10 licensed electrical contractor** must hold a state certification, be a registered apprentice in a state-approved apprenticeship program, or be registered as an **Electrician Trainee (ET)** working under the direct, on-site supervision of a certified electrician (Labor Code 108.2 and 108.4). Work within the scope of a C-7 low-voltage systems or C-45 sign contractor's license is not covered. The program is run by the Labor Commissioner's Office (Division of Labor Standards Enforcement, DLSE) through its **Electrician Certification Unit (ECU)**.\n\nThere are five certification categories. Each has its own exam and its own minimum experience:\n\n- **General Electrician** – the broad certification; this is the exam this track prepares you for.\n- **Residential Electrician** – residential electrical systems covered by the NEC.\n- **Fire/Life Safety Technician** – fire alarm and life-safety systems.\n- **Voice Data Video Technician** – communications and low-voltage data cabling.\n- **Non-Residential Lighting Technician** – lighting retrofits and maintenance in commercial occupancies.\n\n**Electrician Trainee** is not a certification. It is an annual registration that lets you work for a C-10 contractor while you are enrolled in (or have completed) an Approved Curriculum at a DIR-listed school and accumulate hours under the direct, on-site supervision of a certified electrician who supervises no more than one trainee (8 CCR 296.3). You must complete at least 150 hours of classroom instruction each year (8 CCR 296.2). The initial registration fee is $25 and there is no fee for the annual renewal, which requires current proof of enrollment and a transcript. Trainee registration, the state-approved school list and the renewal form are all on the DIR site.\n\nA C-10 contractor license (issued by the Contractors State License Board) is a different thing again: it lets a business contract for electrical work. Many certified electricians never hold one, and holding one does not substitute for the certification when you are on the tools for someone else.\n\n**Pending change.** AB 1707 (2025-26 session) would move the certification program from DIR to the Contractors State License Board. The official bill text shows it was enrolled on September 4, 2026, but its final status had not been confirmed from an official source when this lesson was checked (2026-10-21). Verify on leginfo.legislature.ca.gov before assuming the program has moved."
     },
     {
       "type": "table",
-      "caption": "Experience the ECU requires before you can sit for each exam (hours of on-the-job work in the category, or completion of a state-approved apprenticeship). Verify the current numbers on the DIR Electrical Trade page before you apply.",
+      "caption": "Experience the ECU requires before you can sit for each exam (hours of on-the-job work in the category, or completion of a state-approved apprenticeship). Hours must be work for a C-10 contractor spread across the work areas DIR lists, each with a cap (8 CCR 291.1; DIR pages 1a to 1e). Figures checked 2026-10-21; verify them on the DIR Electrical Trade page before you apply.",
       "columns": [
         "Certification",
         "Qualifying experience",
@@ -30,40 +30,40 @@
       "rows": [
         [
           "General Electrician",
-          "8,000 hours (or approved apprenticeship)",
+          "8,000 hours (or completion of an approved apprenticeship, or, as a registered trainee, completion of an Approved Curriculum: 8,000 OJT hours plus 720 hours of instruction)",
           "All electrical work: residential, commercial, industrial"
         ],
         [
           "Residential Electrician",
-          "4,800 hours",
+          "4,800 hours (or approved apprenticeship)",
           "Dwellings only"
         ],
         [
           "Fire/Life Safety Technician",
-          "4,000 hours",
+          "4,000 hours (or approved apprenticeship)",
           "Fire alarm and life-safety systems"
         ],
         [
           "Voice Data Video Technician",
-          "4,000 hours",
+          "4,000 hours (or approved apprenticeship)",
           "Communications, data, video cabling"
         ],
         [
           "Non-Residential Lighting Technician",
-          "2,000 hours",
+          "2,000 hours (or approved apprenticeship)",
           "Lighting retrofit and maintenance, non-residential"
         ],
         [
           "Electrician Trainee (registration, no exam)",
-          "Enrolled in an approved school",
-          "Works only under a certified electrician for a C-10 contractor"
+          "Enrolled in (or completed) an Approved Curriculum at a DIR-listed school; $25 initial fee, no annual renewal fee",
+          "Works for a C-10 contractor only under the direct, on-site supervision of a certified electrician (one trainee per certified electrician)"
         ]
       ]
     },
     {
       "type": "text",
       "heading": "What the General Electrician exam looks like",
-      "markdown": "At a high level, the General Electrician certification exam is:\n\n- **100 multiple-choice questions**, each with one best answer.\n- **Open-book**, with the **National Electrical Code (NEC)** as the reference. The Candidate Information Bulletin states which NEC edition the exam is written to and the exact rules for the code book (whether you bring your own copy or use one supplied at the test center, and what tabs or highlighting are allowed). Those rules have changed over the years, so read the **current** bulletin, not a forum post.\n- Scored on a **scaled score; 70 is passing**. A scaled score is not a raw percentage: the state converts your raw count into a scale so that different versions of the exam are equally hard to pass. In practice, plan to answer well above 70 percent of the questions correctly.\n- **Timed.** The bulletin sets the limit; recent bulletins have listed about four and a half hours for the General exam, which works out to roughly **2.7 minutes per question**.\n- **Administered by a test vendor** under contract to the DLSE. For many years that was PSI. The DLSE announced that PSI stopped administering these exams for test dates on or after **June 1, 2026** and that new scheduling procedures apply (the DIR page named CPS HR Consulting as the administrator at the time this lesson was written). The DIR Electrical Trade page and the bulletin linked from it are the only authoritative source for scheduling, test centers, fees and ID rules.\n\nThe exam is written around the work a journey-level electrician actually does. The bulletin's content outline is organized by job task: working safely, determining what a system requires (loads, conductors, protection), installing wiring methods and equipment, and maintaining and repairing systems. Inside those tasks the questions draw on familiar code territory: general theory and definitions, wiring methods and materials, grounding and bonding, services, feeders and branch circuits, overcurrent protection, motors, transformers and special equipment, and safety practices. The next section shows how this academy weights those areas."
+      "markdown": "At a high level, the General Electrician certification exam is:\n\n- **100 multiple-choice questions**, each with one best answer.\n- **Open-book**, with the **National Electrical Code (NEC)** as the reference. The Candidate Information Bulletin states which NEC edition the exam is written to and the exact rules for the code book (whether you bring your own copy or use one supplied at the test center, and what tabs or highlighting are allowed). Those rules have changed over the years, so read the **current** bulletin, not a forum post.\n- Scored on a **scaled score; 70 is the minimum passing score** (per the PSI-era Candidate Information Bulletin hosted on dir.ca.gov; confirm it under the CPS HR / Pearson VUE process). Passing candidates receive a PASS notice and failing candidates receive section scores. A scaled score is not a raw percentage: the state converts your raw count into a scale so that different versions of the exam are equally hard to pass. In practice, plan to answer well above 70 percent of the questions correctly.\n- **Timed.** DIR's test-information page lists 4 hours 30 minutes for the General exam, but the DIR FAQ says 4 hours; the two official pages conflicted when this lesson was checked (2026-10-21). At 4½ hours that is about **2.7 minutes per question**; at 4 hours it is 2.4. Confirm the limit in your scheduling materials.\n- **Administered by a test vendor** under contract to the Labor Commissioner's Office. For many years that was PSI. DIR's test-information page says that for exams taken on or after **June 1, 2026**, scheduling is administered by **CPS HR Consulting** and the exams are delivered through **Pearson VUE** (checked 2026-10-21); some DIR pages still mention PSI and appear out of date. The DIR Electrical Trade page and the materials it links to are the authoritative source for scheduling, test centers, fees and ID rules.\n\nThe exam is written around the work a journey-level electrician actually does. Content outlines published with past bulletins have been organized by job task: working safely, determining what a system requires (loads, conductors, protection), installing wiring methods and equipment, and maintaining and repairing systems. Inside those tasks the questions draw on familiar code territory: general theory and definitions, wiring methods and materials, grounding and bonding, services, feeders and branch circuits, overcurrent protection, motors, transformers and special equipment, and safety practices. The next section shows how this academy weights those areas."
     },
     {
       "type": "diagram",
@@ -74,7 +74,7 @@
     {
       "type": "text",
       "heading": "How to register through the Electrician Certification Unit",
-      "markdown": "**1. Confirm you qualify.** Add up your documented hours in the category you are applying for. For General Electrician that means 8,000 hours of work as an electrician, or completion of a state-approved apprenticeship. Time as a registered trainee counts; undocumented side work does not.\n\n**2. Gather proof.** The ECU accepts documentation such as employer verification letters on company letterhead (with license number, dates and a description of the work), payroll records or W-2s that show the employer, and apprenticeship completion certificates. Union members can usually get a hours letter from the local or the JATC. Keep copies of everything.\n\n**3. Complete the Application for Electrician Examination and Certification.** The form and its instructions are on the DIR site. Fill in the category, your trainee or apprenticeship information, and the experience section exactly as the instructions describe. Missing signatures and unverifiable hours are the usual reasons applications bounce.\n\n**4. Pay the fee.** At the time of writing the DIR listed the General Electrician application and examination fee at $175, trainee registration at $25 per year, and certification renewal at $100. Fees change; use the amount printed on the current form.\n\n**5. Wait for the eligibility notice.** The ECU reviews the application and mails or emails a notice that you are eligible to test. Processing takes weeks, not days, so apply well before you want to test.\n\n**6. Schedule the exam** with the current test administrator by following the instructions in the eligibility notice and the Candidate Information Bulletin. Bring the identification the bulletin requires (typically a current government-issued photo ID whose name matches your application exactly).\n\n**7. Test day.** Arrive early. Expect a security check, a locker for your phone and bag, and either your own code book inspected for loose papers or a test-center copy. You will get a basic calculator or be told what kind you may bring. Scratch paper is provided.\n\n**8. Results.** You receive a pass or fail with a scaled score. If you do not pass, the state requires you to **wait 60 days** from the test date before sending a new application and fee for a retest. Use that time on the diagnostic breakdown you receive.\n\nIf anything above conflicts with the current DIR page or bulletin, the DIR wins. The ECU can be reached at ECUInfo@dir.ca.gov and (510) 286-3900."
+      "markdown": "**1. Confirm you qualify.** Add up your documented hours in the category you are applying for. For General Electrician that means 8,000 hours of work for a C-10 electrical contractor, spread across at least two of the work areas DIR lists, each with a cap (residential wiring, for example, counts for at most 3,000 hours); or completion of a state-approved apprenticeship in the classification; or, as a registered trainee, completion of an Approved Curriculum (8 CCR 291.1 and 291.2(g)). Time as a registered trainee counts; undocumented side work does not.\n\n**2. Gather proof.** The application instructions on the DIR site list the documentation the ECU accepts; typical proof includes employer verification letters on company letterhead (with license number, dates and a description of the work), payroll records or W-2s that show the employer, and apprenticeship completion certificates. Union members can usually get an hours letter from the local or the JATC. Keep copies of everything.\n\n**3. Complete the Application for Electrician Examination and Certification.** The form and its instructions are on the DIR site. Fill in the category, your trainee or apprenticeship information, and the experience section exactly as the instructions describe. Missing signatures and unverifiable hours are the usual reasons applications bounce.\n\n**4. Pay the fees.** 8 CCR 292.0 sets a **$75 application fee plus a $100 examination fee**, and a retest costs another $100. Trainee registration is $25 initially with **no fee for the annual renewal**, and certification renewal is $100 every three years. These amounts were checked against the regulation and DIR's fee page on 2026-10-21; verify them on the DIR site and use the amounts on the current form.\n\n**5. Wait for the eligibility notice.** The ECU reviews the application and mails or emails a notice that you are eligible to test. Processing takes weeks, not days, so apply well before you want to test. You must take the exam within one year of the eligibility notice; after that a new application and fees are required.\n\n**6. Schedule the exam** with the current test administrator (for exams on or after June 1, 2026, CPS HR Consulting handles scheduling and Pearson VUE delivers the exam) by following the instructions in the eligibility notice and the Candidate Information Bulletin. Bring the identification the bulletin requires (typically a current government-issued photo ID whose name matches your application exactly).\n\n**7. Test day.** Arrive early. Expect the test-center rules your scheduling materials describe; typically that means a security check, a locker for your phone and bag, and either your own code book inspected for loose papers or a test-center copy. You will get a basic calculator or be told what kind you may bring. Scratch paper is provided.\n\n**8. Results.** Passing candidates receive a PASS notice; candidates who do not pass receive section scores that show where they were weak. If you do not pass, you must **wait 60 days** from the exam date before submitting a retest application with the **$100 re-examination fee**. Use that time on the section breakdown you receive.\n\nIf anything above conflicts with the current DIR page or bulletin, the DIR wins. The ECU can be reached at ECUInfo@dir.ca.gov and (510) 286-3900."
     },
     {
       "type": "table",
@@ -131,7 +131,7 @@
       "type": "diagram",
       "title": "A three-pass time budget",
       "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 720 212\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><text x=\"20\" y=\"24\" fill=\"currentColor\" stroke=\"none\" font-weight=\"600\" font-size=\"13\">One exam, three passes (100 questions, about 270 minutes)</text><rect x=\"20\" y=\"40\" width=\"680\" height=\"26\" rx=\"6\" stroke=\"#9aa6b8\"/><rect x=\"20\" y=\"40\" width=\"176\" height=\"26\" rx=\"6\" fill=\"#3ddc97\" fill-opacity=\"0.35\" stroke=\"#3ddc97\"/><rect x=\"196\" y=\"40\" width=\"378\" height=\"26\" fill=\"#4cc9ff\" fill-opacity=\"0.3\" stroke=\"#4cc9ff\"/><rect x=\"574\" y=\"40\" width=\"126\" height=\"26\" rx=\"6\" fill=\"#f3c75b\" fill-opacity=\"0.35\" stroke=\"#f3c75b\"/><text x=\"108\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 1: ~70 min</text><text x=\"385\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 2: ~150 min</text><text x=\"637\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 3: ~50 min</text><text x=\"20\" y=\"96\" fill=\"#3ddc97\" stroke=\"none\" font-weight=\"600\">Pass 1 – answer what you know</text><text x=\"20\" y=\"113\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Theory, math, safety and code facts you know cold. Under 60 seconds each. Flag anything that needs the book.</text><text x=\"20\" y=\"140\" fill=\"#4cc9ff\" stroke=\"none\" font-weight=\"600\">Pass 2 – open the book for flagged items</text><text x=\"20\" y=\"157\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Index or tab to the article, read the section and its exceptions, answer, move on. Budget 3 minutes each.</text><text x=\"20\" y=\"184\" fill=\"#f3c75b\" stroke=\"none\" font-weight=\"600\">Pass 3 – parked items and a sanity check</text><text x=\"20\" y=\"201\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Finish the hardest lookups, then confirm nothing is blank. There is no penalty for guessing.</text></svg>",
-      "caption": "Budget the exam in passes rather than question by question. Pass 1 banks the fast points, Pass 2 spends the book time where it matters, and Pass 3 guarantees nothing is left blank."
+      "caption": "Budget the exam in passes rather than question by question. The diagram uses the 4½-hour limit on DIR's test-information page; if your scheduling materials say 4 hours, shrink each pass by about 10 percent. Pass 1 banks the fast points, Pass 2 spends the book time where it matters, and Pass 3 guarantees nothing is left blank."
     },
     {
       "type": "callout",
@@ -151,7 +151,7 @@
     {
       "type": "text",
       "heading": "After you pass, and if you do not",
-      "markdown": "**Certification card.** The ECU issues a certification valid for **three years**. Carry it: a C-10 contractor can be cited for employing uncertified electricians, and inspectors and prevailing-wage compliance officers do ask.\n\n**Renewal.** To renew without retesting you must complete **32 hours of continuing education** from a DIR-approved provider and document **2,000 hours of work** in the trade during the three-year period, then file the renewal with the fee before the card expires. If you cannot show the education and hours, the path back is re-examination.\n\n**Trainee hours while you wait.** If you tested as a trainee and did not pass, you stay a registered trainee, keep working under supervision, and keep your school enrollment current. Your hours keep counting.\n\n**Retesting.** Wait the required 60 days, study the diagnostic you were given, and reapply. The retest is the same format. The candidates who pass the second time are almost always the ones who changed how they practice (timed, open-book, with drills) rather than simply reading more.\n\n**Keep learning.** Certification is the floor. The NEC changes every three years, California adopts each edition into the California Electrical Code (Title 24, Part 3) with state amendments, and the DIR exam follows the edition named in the bulletin. Your continuing education hours are the mechanism that keeps you current.\n\n**One last thing.** The exam measures whether you can find and apply the rules. The jobsite measures whether you follow them when nobody is watching. Treat every lockout, every voltage test and every ladder setup during your trainee years as practice for the habits that will keep you alive for a forty-year career."
+      "markdown": "**Certification card.** The ECU issues a certification valid for **three years**. Carry it: a C-10 contractor can be cited for employing uncertified electricians, and inspectors and prevailing-wage compliance officers do ask.\n\n**Renewal.** Certification is renewed every **three years** (8 CCR 291.5) with **32 hours of continuing education** from a DIR-approved provider, a statement under penalty of perjury that you worked about **2,000 hours** in the industry during the three years, and the **$100** renewal fee. DIR's guidance on timing conflicts (the FAQ says the renewal must be postmarked by the card's expiration date and is accepted up to a year early; the regulation says 30 days before the period ends), so file at least 30 days early. Guidance on lapsed cards also conflicts (DIR's fee page lists a $200 lapsed-card renewal; 8 CCR 291.5 says a lapsed certification requires retaking the exam), so confirm with the ECU before a card lapses. Checked 2026-10-21.\n\n**Trainee hours while you wait.** If you tested as a trainee and did not pass, you stay a registered trainee, keep working under supervision, and keep your school enrollment current. Your hours keep counting.\n\n**Retesting.** Wait the required 60 days, study the diagnostic you were given, and reapply. The retest is the same format. The candidates who pass the second time are almost always the ones who changed how they practice (timed, open-book, with drills) rather than simply reading more.\n\n**Keep learning.** Certification is the floor. The NEC changes every three years, California adopts each edition into the California Electrical Code (Title 24, Part 3) with state amendments, and the DIR exam follows the edition named in the bulletin. Your continuing education hours are the mechanism that keeps you current.\n\n**One last thing.** The exam measures whether you can find and apply the rules. The jobsite measures whether you follow them when nobody is watching. Treat every lockout, every voltage test and every ladder setup during your trainee years as practice for the habits that will keep you alive for a forty-year career."
     }
   ],
   "practice": [
@@ -166,7 +166,7 @@
         "The National Fire Protection Association"
       ],
       "correctIndex": 1,
-      "explanation": "Certification of electricians is run by the Division of Labor Standards Enforcement (Labor Commissioner's Office) within the Department of Industrial Relations, through its Electrician Certification Unit. The CSLB licenses contractors, not individual electricians."
+      "explanation": "Certification of electricians is run by the Division of Labor Standards Enforcement (Labor Commissioner's Office) within the Department of Industrial Relations, through its Electrician Certification Unit. The CSLB licenses contractors, not individual electricians. (AB 1707, enrolled September 4, 2026, would move the program to the CSLB; its final status was unverified as of 2026-10-21.)"
     },
     {
       "id": "california-certification-exam-overview-p2",
@@ -201,7 +201,7 @@
         "Only after completing 32 hours of continuing education"
       ],
       "correctIndex": 1,
-      "explanation": "The DLSE requires a 60-day wait from the exam date before a retest application is sent. Continuing education is a renewal requirement, not a retest requirement."
+      "explanation": "The DLSE requires a 60-day wait from the exam date before a retest application (with the $100 re-examination fee) is sent. Continuing education is a renewal requirement, not a retest requirement."
     },
     {
       "id": "california-certification-exam-overview-p5",
@@ -271,7 +271,7 @@
           "Every three years; 8 hours of continuing education"
         ],
         "correctIndex": 1,
-        "explanation": "Certifications are valid for three years. Renewal without re-examination requires 32 hours of continuing education from a DIR-approved provider plus 2,000 documented work hours in the period, and the renewal fee."
+        "explanation": "Certifications are valid for three years. Renewal (8 CCR 291.5) requires 32 hours of continuing education from a DIR-approved provider, about 2,000 hours of industry work in the period, and the $100 renewal fee."
       },
       {
         "id": "california-certification-exam-overview-q5",
@@ -337,16 +337,32 @@
       "url": "https://www.dir.ca.gov/dlse/ECU/CandidateInfoBulletin.htm"
     },
     {
-      "title": "California DIR: Directions for completing the application for electrician examination and certification",
-      "url": "https://www.dir.ca.gov/dlse/ECU/ElectricianApplicationInstructions.html"
+      "title": "California DIR: Application for Electrician Examination and Certification (form)",
+      "url": "https://www.dir.ca.gov/DAS/ElectricalCertificationForm.pdf"
     },
     {
-      "title": "California Labor Code section 3099 (electrician certification) via California Legislative Information",
-      "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=3099."
+      "title": "California Labor Code sections 108-108.5 (Division 1, Chapter 4.5, Electrician Certification; formerly sections 3099-3099.5)",
+      "url": "https://law.justia.com/codes/california/2022/code-lab/division-1/chapter-4-5/section-108/"
     },
     {
-      "title": "California Code of Regulations, Title 8, sections 290 to 296.4 (Electrician Certification)",
-      "url": "https://www.dir.ca.gov/t8/290.html"
+      "title": "8 CCR 292.0 - Fees ($75 application, $100 exam, $100 renewal, $25 trainee registration)",
+      "url": "https://www.dir.ca.gov/t8/292_0.html"
+    },
+    {
+      "title": "8 CCR 291.5 - Renewal of certification (3 years, 32 hours continuing education)",
+      "url": "https://www.dir.ca.gov/t8/291_5.html"
+    },
+    {
+      "title": "California DIR: Electrician certification test information (CPS HR Consulting / Pearson VUE for exams on or after June 1, 2026)",
+      "url": "https://www.dir.ca.gov/dlse/ecu/ecu_testinfo.htm"
+    },
+    {
+      "title": "California DIR: What is an electrician trainee?",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrainee.htm"
+    },
+    {
+      "title": "California Code of Regulations, Title 8, sections 290.0-296.3 (Electrician Certification), e.g. 291.1 eligibility",
+      "url": "https://www.dir.ca.gov/t8/291_1.html"
     },
     {
       "title": "California Building Standards Commission: California Electrical Code (Title 24, Part 3)",

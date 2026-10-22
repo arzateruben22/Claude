@@ -79,25 +79,41 @@ const test = base.extend({
       let [worker] = extContext.serviceWorkers();
       if (!worker) worker = await extContext.waitForEvent("serviceworker", { timeout: 20_000 });
       const id = new URL(worker.url()).host;
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      /** A worker handle is usable once its chrome.* bindings exist. */
+      const isReady = (w) => w.evaluate(() => !!(globalThis.chrome && chrome.storage && chrome.storage.local && chrome.alarms)).catch(() => false);
 
       /** @type {ExtensionHelper} */
       const helper = {
         id,
         context: extContext,
         async sw() {
-          const [w] = extContext.serviceWorkers();
-          if (w) return w;
-          // The worker was idle-terminated; opening an extension page wakes it.
-          const waiter = extContext.waitForEvent("serviceworker", { timeout: 20_000 });
-          const p = await extContext.newPage();
-          await p.goto(`chrome-extension://${id}/src/options/options.html`);
-          const revived = extContext.serviceWorkers()[0] || (await waiter);
-          await p.close();
-          return revived;
+          for (let attempt = 0; attempt < 50; attempt++) {
+            let [w] = extContext.serviceWorkers();
+            if (!w) {
+              // The worker was idle-terminated; opening an extension page wakes it.
+              const waiter = extContext.waitForEvent("serviceworker", { timeout: 20_000 }).catch(() => null);
+              const p = await extContext.newPage();
+              await p.goto(`chrome-extension://${id}/src/options/options.html`);
+              w = extContext.serviceWorkers()[0] || (await waiter);
+              await p.close();
+            }
+            // A freshly (re)started worker can be handed out before chrome.* is bound.
+            if (w && (await isReady(w))) return w;
+            await sleep(100);
+          }
+          throw new Error("extension service worker did not become ready");
         },
         async evaluate(fn, arg) {
-          const w = await helper.sw();
-          return w.evaluate(fn, arg);
+          for (let attempt = 0; ; attempt++) {
+            const w = await helper.sw();
+            try {
+              return await w.evaluate(fn, arg);
+            } catch (err) {
+              // The worker may be terminated between sw() and evaluate(): retry once.
+              if (attempt >= 1 || !/Target closed|has been closed|Execution context was destroyed/i.test(String(err && err.message))) throw err;
+            }
+          }
         },
         local: (key) => helper.evaluate(async (k) => (await chrome.storage.local.get(k))[k], key),
         session: (key) => helper.evaluate(async (k) => (await chrome.storage.session.get(k))[k], key),
@@ -148,6 +164,9 @@ const test = base.extend({
           return p;
         },
       };
+      // Wait for the install handler (it writes default settings) so it cannot
+      // race a test's configure() on a freshly launched browser.
+      for (let i = 0; i < 100 && !(await helper.local("settings")); i++) await sleep(100);
       await provide(helper);
     },
     { scope: "worker" },

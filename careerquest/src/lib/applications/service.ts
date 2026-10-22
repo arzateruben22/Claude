@@ -1,17 +1,24 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import type { Application, Interview, Prisma } from "@/generated/prisma/client";
+import type {
+  Application,
+  ApplicationSourceLink,
+  Interview,
+  Prisma,
+} from "@/generated/prisma/client";
 import {
   ApplicationStatus,
   type ApplicationSource,
+  type EmploymentType,
   type EventSource,
   type InterviewOutcome,
   type InterviewType,
   type RecordOrigin,
+  type SalaryPeriod,
 } from "@/generated/prisma/enums";
-import type { Tx } from "@/lib/game/xp";
 import { dateKey, todayInTz } from "@/lib/dates";
 import type { ApplicationInput } from "@/lib/validation/application";
+import { evaluateAchievements } from "@/lib/game/achievements";
 import {
   detectPlatform,
   extractRequisitionId,
@@ -22,20 +29,36 @@ import {
 import {
   STATUS_LABELS,
   canApplyInferredStatus,
+  countsAsSubmission,
   impliesEmployerResponse,
-  isSubmittedStatus,
+  impliesSubmission,
   statusRank,
 } from "./status";
 import { awardXpOnce, recordEventOnce } from "./events";
 import { revokeXpForSource } from "@/lib/game/xp";
-import { dayRange, type ListFilters } from "./query";
+import { dayRangeInTz, type ListFilters } from "./query";
 import { INTERVIEW_OUTCOME_LABELS, INTERVIEW_TYPE_LABELS } from "./labels";
 import { formatInTz } from "./time";
+import {
+  attributionForOrigin,
+  type CreateAttributionOptions,
+} from "./origin";
+
+export {
+  ORIGIN_EVENT_SOURCE,
+  attributionForOrigin,
+  type CreateAttributionOptions,
+} from "./origin";
 
 /**
  * Application tracker service. Every function is scoped by `userId`; status changes only happen
- * through `changeStatus` so that history, events, XP and daily activity stay consistent.
- * Dates passed in are instants (the action layer converts form input using the profile timezone).
+ * through `changeStatus` / `changeStatusInTx` so that history, events, XP and daily activity stay
+ * consistent. Dates passed in are instants (the action layer converts form input using the
+ * profile timezone).
+ *
+ * The `*InTx` functions take the caller's interactive transaction (`prisma.$transaction(async (tx)
+ * => …)`) so the ingestion engine can compose matching, record creation, status changes, evidence
+ * and source links atomically. The non-tx functions open their own transaction and delegate.
  */
 
 export class ApplicationNotFoundError extends Error {
@@ -47,18 +70,34 @@ export class ApplicationNotFoundError extends Error {
 
 export const DEFAULT_TIMEZONE = "America/Los_Angeles";
 
+/** The interactive-transaction client every `*InTx` function accepts. */
+export type ServiceTx = Prisma.TransactionClient;
+type Tx = ServiceTx;
+
 type Ctx = { userId: string; timezone: string };
 
 export async function userTimezone(userId: string): Promise<string> {
-  const profile = await prisma.userProfile.findUnique({
+  return timezoneVia(prisma, userId);
+}
+
+async function timezoneVia(
+  db: Pick<Tx, "userProfile">,
+  userId: string,
+): Promise<string> {
+  const profile = await db.userProfile.findUnique({
     where: { userId },
     select: { timezone: true },
   });
   return profile?.timezone || DEFAULT_TIMEZONE;
 }
 
+/** Context read through the given client, so it sees the caller's uncommitted writes. */
+async function ctxVia(db: Pick<Tx, "userProfile">, userId: string): Promise<Ctx> {
+  return { userId, timezone: await timezoneVia(db, userId) };
+}
+
 async function ctxFor(userId: string): Promise<Ctx> {
-  return { userId, timezone: await userTimezone(userId) };
+  return ctxVia(prisma, userId);
 }
 
 // ---------------------------------------------------------------------------
@@ -105,7 +144,7 @@ async function syncRecruiter(
   tx: Tx,
   userId: string,
   existingId: string | null,
-  input: ApplicationInput,
+  input: Pick<ApplicationInput, "recruiterName" | "recruiterEmail" | "companyName">,
 ): Promise<string | null> {
   const name = input.recruiterName;
   const email = input.recruiterEmail;
@@ -204,19 +243,28 @@ type MilestoneArgs = {
   applicationId: string;
   fromStatus: ApplicationStatus | null;
   status: ApplicationStatus;
+  /** The status-history row this transition wrote (keys the STATUS_CHANGED event). */
+  historyId: string;
   occurredAt: Date;
   activityDate: Date;
+  /** Record the APPLIED milestone (see `countsAsSubmission`). */
+  submission: boolean;
+  /** When the application was sent; the APPLIED event is dated by it. */
+  appliedAt: Date | null;
   source: EventSource;
   verified: boolean;
   note: string | null;
   evidenceId?: string | null;
   /** When an Interview row triggers the change, its own event replaces the generic milestone. */
   skipInterviewMilestone?: boolean;
+  /** Extra STATUS_CHANGED payload fields. */
+  payload?: Record<string, unknown>;
 };
 
 /**
- * Record the events implied by reaching `status`. Every key is stable per application so moving
- * back and forth through the pipeline never records (or awards) a milestone twice.
+ * Record the events implied by reaching `status`. Milestone keys are stable per application so
+ * moving back and forth through the pipeline never records (or awards) a milestone twice; the
+ * STATUS_CHANGED event is keyed by its history row, so every transition keeps its own event.
  */
 async function recordStatusMilestones(
   tx: Tx,
@@ -228,7 +276,7 @@ async function recordStatusMilestones(
   const rec = async (
     type: Parameters<typeof recordEventOnce>[1]["type"],
     dedupeKey: string,
-    payload?: Record<string, unknown>,
+    opts: { payload?: Record<string, unknown>; occurredAt?: Date; activityDate?: Date } = {},
   ) => {
     const r = await recordEventOnce(tx, {
       userId: ctx.userId,
@@ -236,34 +284,78 @@ async function recordStatusMilestones(
       type,
       source: a.source,
       verified: a.verified,
-      occurredAt: a.occurredAt,
-      activityDate: a.activityDate,
+      occurredAt: opts.occurredAt ?? a.occurredAt,
+      activityDate: opts.activityDate ?? a.activityDate,
       dedupeKey,
-      payload,
+      payload: opts.payload,
       evidenceId: a.evidenceId ?? null,
     });
     xp += r.xpAwarded;
+    return r;
   };
   const s = a.status;
-  if (isSubmittedStatus(s)) await rec("APPLIED", `${id}:APPLIED`);
+  if (a.submission) {
+    const appliedOn = a.appliedAt ?? a.occurredAt;
+    await rec("APPLIED", `${id}:APPLIED`, {
+      occurredAt: appliedOn,
+      activityDate: todayInTz(ctx.timezone, appliedOn),
+    });
+  }
   if (s === "CONFIRMED")
     await rec("CONFIRMATION_RECEIVED", `${id}:CONFIRMATION_RECEIVED`);
   if (impliesEmployerResponse(s))
     await rec("RECRUITER_RESPONSE", `${id}:RECRUITER_RESPONSE`);
   if (s === "INTERVIEWING" && !a.skipInterviewMilestone)
     await rec("INTERVIEW_SCHEDULED", `${id}:INTERVIEW_SCHEDULED`);
-  if (s === "OFFER" || s === "ACCEPTED" || s === "HIRED")
-    await rec("OFFER_RECEIVED", `${id}:OFFER_RECEIVED`);
+  if (s === "OFFER" || s === "ACCEPTED" || s === "HIRED") {
+    const key = `${id}:OFFER_RECEIVED`;
+    const r = await rec("OFFER_RECEIVED", key);
+    if (!r.created && a.verified) xp += await upgradeOfferMilestone(tx, ctx, a, key);
+  }
   if (s === "ACCEPTED" || s === "HIRED")
     await rec("OFFER_ACCEPTED", `${id}:OFFER_ACCEPTED`);
   if (s === "REJECTED") await rec("REJECTED", `${id}:REJECTED`);
   if (s === "WITHDRAWN") await rec("WITHDRAWN", `${id}:WITHDRAWN`);
-  await rec(
-    "STATUS_CHANGED",
-    `${id}:status:${s}:${a.occurredAt.toISOString()}`,
-    { from: a.fromStatus, to: s, note: a.note },
-  );
+  await rec("STATUS_CHANGED", `${id}:status:${a.historyId}`, {
+    payload: { from: a.fromStatus, to: s, note: a.note, ...a.payload },
+  });
   return xp;
+}
+
+/**
+ * An offer first seen unverified (inferred from an email/capture) is upgraded when a verified
+ * source (the user, or evidence-backed data) confirms it: the existing milestone is marked
+ * verified and the verified-offer XP is paid once (same key the event contract uses).
+ */
+async function upgradeOfferMilestone(
+  tx: Tx,
+  ctx: Ctx,
+  a: MilestoneArgs,
+  dedupeKey: string,
+): Promise<number> {
+  const existing = await tx.applicationEvent.findUnique({
+    where: { userId_dedupeKey: { userId: ctx.userId, dedupeKey } },
+    select: { id: true, verified: true, evidenceId: true },
+  });
+  if (!existing || existing.verified) return 0;
+  await tx.applicationEvent.update({
+    where: { id: existing.id },
+    data: {
+      verified: true,
+      evidenceId: existing.evidenceId ?? a.evidenceId ?? null,
+    },
+  });
+  const award = await awardXpOnce(tx, {
+    userId: ctx.userId,
+    reason: "JOB_OFFER_VERIFIED",
+    dedupeKey: `xp:${a.applicationId}:JOB_OFFER_VERIFIED`,
+    sourceType: "Application",
+    sourceId: a.applicationId,
+    activityDate: a.activityDate,
+  });
+  if (!award.awarded) return 0;
+  await evaluateAchievements(tx, ctx.userId);
+  return award.amount;
 }
 
 // ---------------------------------------------------------------------------
@@ -275,80 +367,122 @@ export type CreateApplicationResult = {
   xpAwarded: number;
 };
 
+/** Attribution options for `createApplication(InTx)`; see `attributionForOrigin`. */
+export type CreateApplicationOptions = CreateAttributionOptions;
+
+/**
+ * Create a record inside the caller's transaction.
+ *
+ * - Attribution comes from `origin` (EMAIL → EMAIL, EXTENSION → EXTENSION, CSV/URL import →
+ *   IMPORT, PLATFORM_API → PLATFORM_API, MANUAL/MOBILE → USER, SYSTEM → SYSTEM) unless
+ *   `opts.source` overrides it; `verified` defaults to `source === "USER"`. Machine-created
+ *   records are therefore never stamped as user-confirmed.
+ * - A submission (application date, APPLIED event, XP, daily count) is recorded only when the
+ *   status implies one, or for WITHDRAWN/CLOSED when an application date is given. Records that
+ *   were never applied keep `appliedAt = null`.
+ */
+export async function createApplicationInTx(
+  tx: ServiceTx,
+  userId: string,
+  input: ApplicationInput,
+  origin: RecordOrigin,
+  opts: CreateApplicationOptions = {},
+): Promise<CreateApplicationResult> {
+  const ctx = await ctxVia(tx, userId);
+  const { source, verified, evidenceId } = attributionForOrigin(origin, opts);
+  const derived = deriveFields(input);
+  const now = new Date();
+  const submission = countsAsSubmission({
+    from: null,
+    to: input.status,
+    appliedAt: input.appliedAt ?? null,
+  });
+  const appliedAt = submission ? (input.appliedAt ?? now) : null;
+  const occurredAt = appliedAt ?? now;
+  const activityDate = todayInTz(ctx.timezone, occurredAt);
+
+  const employerId = await upsertEmployer(
+    tx,
+    userId,
+    input.companyName,
+    derived.normalizedCompany,
+  );
+  const recruiterContactId = await syncRecruiter(tx, userId, null, input);
+  const docs = await ownedDocumentIds(tx, userId, input);
+  const application = await tx.application.create({
+    data: {
+      userId,
+      employerId,
+      recruiterContactId,
+      ...docs,
+      ...editableData(input, derived),
+      appliedAt,
+      status: input.status,
+      statusUpdatedAt: occurredAt,
+      statusVerified: verified,
+      createdVia: origin,
+    },
+  });
+  const history = await tx.applicationStatusHistory.create({
+    data: {
+      applicationId: application.id,
+      fromStatus: null,
+      toStatus: application.status,
+      occurredAt,
+      source,
+      verified,
+      evidenceId,
+    },
+    select: { id: true },
+  });
+  const saved = await recordEventOnce(tx, {
+    userId,
+    applicationId: application.id,
+    type: "SAVED",
+    source,
+    verified,
+    occurredAt,
+    activityDate,
+    dedupeKey: `${application.id}:SAVED`,
+    evidenceId,
+    payload: { origin },
+  });
+  const xpAwarded =
+    saved.xpAwarded +
+    (await recordStatusMilestones(tx, ctx, {
+      applicationId: application.id,
+      fromStatus: null,
+      status: application.status,
+      historyId: history.id,
+      occurredAt,
+      activityDate,
+      submission,
+      appliedAt,
+      source,
+      verified,
+      note: null,
+      evidenceId,
+    }));
+  return { application, xpAwarded };
+}
+
 export async function createApplication(
   userId: string,
   input: ApplicationInput,
   origin: RecordOrigin = "MANUAL",
+  opts: CreateApplicationOptions = {},
 ): Promise<CreateApplicationResult> {
-  const ctx = await ctxFor(userId);
-  const derived = deriveFields(input);
-  const now = new Date();
-  const submitted = isSubmittedStatus(input.status);
-  const occurredAt = submitted && input.appliedAt ? input.appliedAt : now;
-  const activityDate = todayInTz(ctx.timezone, occurredAt);
-
-  return prisma.$transaction(async (tx) => {
-    const employerId = await upsertEmployer(
-      tx,
-      userId,
-      input.companyName,
-      derived.normalizedCompany,
-    );
-    const recruiterContactId = await syncRecruiter(tx, userId, null, input);
-    const docs = await ownedDocumentIds(tx, userId, input);
-    const application = await tx.application.create({
-      data: {
-        userId,
-        employerId,
-        recruiterContactId,
-        ...docs,
-        ...editableData(input, derived),
-        appliedAt: submitted
-          ? (input.appliedAt ?? now)
-          : (input.appliedAt ?? null),
-        status: input.status,
-        statusUpdatedAt: occurredAt,
-        statusVerified: true,
-        createdVia: origin,
-      },
-    });
-    await tx.applicationStatusHistory.create({
-      data: {
-        applicationId: application.id,
-        fromStatus: null,
-        toStatus: application.status,
-        occurredAt,
-        source: "USER",
-        verified: true,
-      },
-    });
-    const saved = await recordEventOnce(tx, {
-      userId,
-      applicationId: application.id,
-      type: "SAVED",
-      source: "USER",
-      verified: true,
-      occurredAt,
-      activityDate,
-      dedupeKey: `${application.id}:SAVED`,
-    });
-    const xpAwarded =
-      saved.xpAwarded +
-      (await recordStatusMilestones(tx, ctx, {
-        applicationId: application.id,
-        fromStatus: null,
-        status: application.status,
-        occurredAt,
-        activityDate,
-        source: "USER",
-        verified: true,
-        note: null,
-      }));
-    return { application, xpAwarded };
-  });
+  return prisma.$transaction((tx) =>
+    createApplicationInTx(tx, userId, input, origin, opts),
+  );
 }
 
-/** Update editable fields (re-normalising). Never touches status: use `changeStatus`. */
+/**
+ * Update editable fields (re-normalising). Never touches status: use `changeStatus`.
+ * The application date is only editable on a record that was applied; a blank date keeps the
+ * existing one (clearing it would silently un-count a real application), and a date typed onto
+ * a never-applied record is ignored (moving it to Submitted is what records the application).
+ */
 export async function updateApplication(
   userId: string,
   id: string,
@@ -358,9 +492,19 @@ export async function updateApplication(
   return prisma.$transaction(async (tx) => {
     const existing = await tx.application.findFirst({
       where: { id, userId },
-      select: { id: true, recruiterContactId: true },
+      select: {
+        id: true,
+        recruiterContactId: true,
+        status: true,
+        appliedAt: true,
+        events: { where: { type: "APPLIED" }, select: { id: true }, take: 1 },
+      },
     });
     if (!existing) throw new ApplicationNotFoundError();
+    const applied =
+      existing.appliedAt !== null ||
+      existing.events.length > 0 ||
+      impliesSubmission(existing.status);
     const employerId = await upsertEmployer(
       tx,
       userId,
@@ -381,10 +525,224 @@ export async function updateApplication(
         recruiterContactId,
         ...docs,
         ...editableData(input, derived),
-        appliedAt: input.appliedAt ?? null,
+        appliedAt: applied ? (input.appliedAt ?? existing.appliedAt) : null,
       },
     });
   });
+}
+
+// ---------------------------------------------------------------------------
+// Ingestion helpers (source links, filling empty fields)
+// ---------------------------------------------------------------------------
+
+export type SourceLinkInput = {
+  platform: ApplicationSource;
+  url?: string | null;
+  externalId?: string | null;
+  origin: RecordOrigin;
+};
+
+export type AddSourceLinkResult = {
+  /** False when the same platform + normalized URL (or external id) was already linked. */
+  created: boolean;
+  link: ApplicationSourceLink;
+};
+
+/**
+ * Remember that a record was seen on a platform/URL. Idempotent: an existing link for the same
+ * platform with the same normalized URL (or the same external id) is reused, and only its empty
+ * url / externalId are filled in. A link with neither URL nor id is a no-op when the platform is
+ * already linked.
+ */
+export async function addSourceLinkInTx(
+  tx: ServiceTx,
+  userId: string,
+  applicationId: string,
+  input: SourceLinkInput,
+): Promise<AddSourceLinkResult> {
+  const app = await tx.application.findFirst({
+    where: { id: applicationId, userId },
+    select: { id: true },
+  });
+  if (!app) throw new ApplicationNotFoundError();
+  const url = cleanText(input.url, 2048);
+  const httpUrl = url && /^https?:\/\//i.test(url) ? url : null;
+  const normalized = normalizeUrl(httpUrl);
+  const externalId = cleanText(input.externalId, 200);
+
+  const existing = await tx.applicationSourceLink.findMany({
+    where: { applicationId, platform: input.platform },
+    orderBy: { createdAt: "asc" },
+  });
+  const match = existing.find((l) => {
+    if (normalized && normalizeUrl(l.url) === normalized) return true;
+    if (externalId && l.externalId === externalId) return true;
+    return !normalized && !externalId;
+  });
+  if (match) {
+    const fill: Prisma.ApplicationSourceLinkUpdateInput = {};
+    if (!match.url && httpUrl) fill.url = httpUrl;
+    if (!match.externalId && externalId) fill.externalId = externalId;
+    const link = Object.keys(fill).length
+      ? await tx.applicationSourceLink.update({ where: { id: match.id }, data: fill })
+      : match;
+    return { created: false, link };
+  }
+  const link = await tx.applicationSourceLink.create({
+    data: {
+      applicationId,
+      platform: input.platform,
+      url: httpUrl,
+      externalId,
+      origin: input.origin,
+    },
+  });
+  return { created: true, link };
+}
+
+export type FillableFields = Partial<{
+  location: string | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  salaryPeriod: SalaryPeriod | null;
+  requisitionNumber: string | null;
+  postingUrl: string | null;
+  jobDescription: string | null;
+  employmentType: EmploymentType | null;
+  jobCategory: string | null;
+  recruiterName: string | null;
+  recruiterEmail: string | null;
+}>;
+
+export type FillEmptyFieldsResult = {
+  application: Application;
+  /** Field names that were empty and are now set (includes derived `source`/`requisitionNumber`). */
+  filled: string[];
+};
+
+function cleanText(v: string | null | undefined, max: number): string | null {
+  if (typeof v !== "string") return null;
+  const t = v.trim();
+  return t ? t.slice(0, max) : null;
+}
+
+function cleanMoney(v: number | null | undefined): number | null {
+  return typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 10_000_000
+    ? v
+    : null;
+}
+
+const isEmpty = (v: string | null | undefined) => v === null || v === undefined || v.trim() === "";
+
+/**
+ * Fill fields that are currently empty from inferred data, never overwriting anything the user
+ * (or an earlier capture) already set. Salary is filled only as a whole when the record has no
+ * pay at all, so bounds from different sources/periods are never mixed. A new posting URL
+ * re-derives the normalized URL, the platform (when it is still "Other") and the requisition id
+ * fallback. Recruiter details go through the contact record: an unlinked record gets a contact,
+ * a linked contact only gains a missing email (its name is never replaced).
+ */
+export async function fillEmptyFieldsInTx(
+  tx: ServiceTx,
+  userId: string,
+  id: string,
+  patch: FillableFields,
+): Promise<FillEmptyFieldsResult> {
+  const app = await tx.application.findFirst({ where: { id, userId } });
+  if (!app) throw new ApplicationNotFoundError();
+  const data: Prisma.ApplicationUpdateInput = {};
+  const filled: string[] = [];
+  const set = <K extends keyof Prisma.ApplicationUpdateInput>(
+    key: K,
+    value: Prisma.ApplicationUpdateInput[K],
+  ) => {
+    data[key] = value;
+    filled.push(key);
+  };
+
+  const location = cleanText(patch.location, 160);
+  if (location && isEmpty(app.location)) set("location", location);
+  const jobCategory = cleanText(patch.jobCategory, 80);
+  if (jobCategory && isEmpty(app.jobCategory)) set("jobCategory", jobCategory);
+  const jobDescription = cleanText(patch.jobDescription, 20000);
+  if (jobDescription && isEmpty(app.jobDescription))
+    set("jobDescription", jobDescription);
+  if (
+    patch.employmentType &&
+    patch.employmentType !== "UNKNOWN" &&
+    app.employmentType === "UNKNOWN"
+  )
+    set("employmentType", patch.employmentType);
+
+  const postingUrl = cleanText(patch.postingUrl, 2048);
+  let effectiveUrl = app.postingUrl;
+  if (postingUrl && /^https?:\/\//i.test(postingUrl) && isEmpty(app.postingUrl)) {
+    set("postingUrl", postingUrl);
+    data.normalizedUrl = normalizeUrl(postingUrl);
+    effectiveUrl = postingUrl;
+    if (app.source === "OTHER") {
+      const platform = detectPlatform(postingUrl);
+      if (platform !== "OTHER") set("source", platform);
+    }
+  }
+  if (isEmpty(app.requisitionNumber)) {
+    const req =
+      cleanText(patch.requisitionNumber, 80) ??
+      extractRequisitionId(effectiveUrl) ??
+      extractRequisitionId(jobDescription ?? app.jobDescription);
+    if (req) set("requisitionNumber", req);
+  }
+
+  if (app.salaryMin === null && app.salaryMax === null) {
+    let min = cleanMoney(patch.salaryMin);
+    let max = cleanMoney(patch.salaryMax);
+    if (min !== null && max !== null && min > max) [min, max] = [max, min];
+    if (min !== null) set("salaryMin", min);
+    if (max !== null) set("salaryMax", max);
+    if ((min !== null || max !== null) && patch.salaryPeriod && app.salaryPeriod === null)
+      set("salaryPeriod", patch.salaryPeriod);
+  }
+
+  const recruiterName = cleanText(patch.recruiterName, 120);
+  const recruiterEmail = cleanText(patch.recruiterEmail, 254);
+  if (recruiterName || recruiterEmail) {
+    const contact = app.recruiterContactId
+      ? await tx.contact.findFirst({
+          where: { id: app.recruiterContactId, userId },
+          select: { id: true, name: true, email: true },
+        })
+      : null;
+    if (contact) {
+      const contactData: Prisma.ContactUpdateInput = {};
+      if (recruiterEmail && isEmpty(contact.email)) {
+        contactData.email = recruiterEmail;
+        filled.push("recruiterEmail");
+      }
+      // A contact created from an email address alone uses it as a placeholder name.
+      if (recruiterName && contact.email && contact.name === contact.email) {
+        contactData.name = recruiterName;
+        filled.push("recruiterName");
+      }
+      if (Object.keys(contactData).length)
+        await tx.contact.update({ where: { id: contact.id }, data: contactData });
+    } else {
+      const contactId = await syncRecruiter(tx, userId, null, {
+        recruiterName: recruiterName ?? undefined,
+        recruiterEmail: recruiterEmail ?? undefined,
+        companyName: app.companyName,
+      });
+      if (contactId) {
+        data.recruiterContact = { connect: { id: contactId } };
+        if (recruiterName) filled.push("recruiterName");
+        if (recruiterEmail) filled.push("recruiterEmail");
+      }
+    }
+  }
+
+  const application = Object.keys(data).length
+    ? await tx.application.update({ where: { id, userId }, data })
+    : app;
+  return { application, filled };
 }
 
 // ---------------------------------------------------------------------------
@@ -407,6 +765,8 @@ export type ChangeStatusResult =
       fromStatus: ApplicationStatus;
       toStatus: ApplicationStatus;
       xpAwarded: number;
+      /** True when the stage did not change but an unverified stage was confirmed. */
+      confirmed?: boolean;
     }
   | {
       applied: false;
@@ -417,7 +777,8 @@ export type ChangeStatusResult =
 /**
  * The only way an application's status changes. For inferred sources (anything but USER) the
  * change is checked with `canApplyInferredStatus` and refused (not thrown) when it would downgrade
- * or override user-confirmed data. Safe to call from Phase 2/3 ingestion code.
+ * or override user-confirmed data. Re-submitting the current stage from a verified source when the
+ * stage is unverified confirms it (history row + upgraded milestones) instead of being a no-op.
  */
 export async function changeStatus(
   userId: string,
@@ -426,13 +787,24 @@ export async function changeStatus(
   source: EventSource = "USER",
   verified = true,
 ): Promise<ChangeStatusResult> {
-  const ctx = await ctxFor(userId);
   return prisma.$transaction((tx) =>
-    changeStatusInTx(tx, ctx, id, input, source, verified),
+    changeStatusInTx(tx, userId, id, input, source, verified),
   );
 }
 
-async function changeStatusInTx(
+/** `changeStatus` inside the caller's transaction (reads the profile timezone through `tx`). */
+export async function changeStatusInTx(
+  tx: ServiceTx,
+  userId: string,
+  id: string,
+  input: StatusChangeInput,
+  source: EventSource,
+  verified: boolean,
+): Promise<ChangeStatusResult> {
+  return changeStatusWithCtx(tx, await ctxVia(tx, userId), id, input, source, verified);
+}
+
+async function changeStatusWithCtx(
   tx: Tx,
   ctx: Ctx,
   id: string,
@@ -451,31 +823,35 @@ async function changeStatusInTx(
       message: "Application not found.",
     };
   const next = input.status;
-  if (source !== "USER") {
-    const allowed = canApplyInferredStatus({
-      current: app.status,
-      currentVerified: app.statusVerified,
-      next,
-      nextVerified: verified,
-    });
-    if (!allowed) {
+  const confirmation = app.status === next && !app.statusVerified && verified;
+  if (!confirmation) {
+    if (source !== "USER") {
+      const allowed = canApplyInferredStatus({
+        current: app.status,
+        currentVerified: app.statusVerified,
+        next,
+        nextVerified: verified,
+      });
+      if (!allowed) {
+        return {
+          applied: false,
+          reason: "inferred_not_allowed",
+          message: `Inferred change ${STATUS_LABELS[app.status]} → ${STATUS_LABELS[next]} not applied: inferred updates only move forward and never override confirmed data.`,
+        };
+      }
+    } else if (app.status === next) {
       return {
         applied: false,
-        reason: "inferred_not_allowed",
-        message: `Inferred change ${STATUS_LABELS[app.status]} → ${STATUS_LABELS[next]} not applied: inferred updates only move forward and never override confirmed data.`,
+        reason: "same_status",
+        message: `Already marked as ${STATUS_LABELS[next]}.`,
       };
     }
-  } else if (app.status === next) {
-    return {
-      applied: false,
-      reason: "same_status",
-      message: `Already marked as ${STATUS_LABELS[next]}.`,
-    };
   }
 
   const occurredAt = input.occurredAt ?? new Date();
   const activityDate = todayInTz(ctx.timezone, occurredAt);
-  await tx.applicationStatusHistory.create({
+  const note = input.note ?? (confirmation ? "Stage confirmed" : null);
+  const history = await tx.applicationStatusHistory.create({
     data: {
       applicationId: id,
       fromStatus: app.status,
@@ -483,32 +859,43 @@ async function changeStatusInTx(
       occurredAt,
       source,
       verified,
-      note: input.note ?? null,
+      note,
       evidenceId: input.evidenceId ?? null,
     },
+    select: { id: true },
   });
+  // Only statuses that prove an application was sent back-fill the application date; closing or
+  // withdrawing a lead that was never applied leaves it empty (and records no submission).
+  const backfill = !app.appliedAt && impliesSubmission(next);
+  const appliedAt = backfill ? occurredAt : app.appliedAt;
   const application = await tx.application.update({
     where: { id, userId: ctx.userId },
     data: {
       status: next,
-      statusUpdatedAt: occurredAt,
+      ...(confirmation ? {} : { statusUpdatedAt: occurredAt }),
       statusVerified: verified,
-      ...(!app.appliedAt && isSubmittedStatus(next)
-        ? { appliedAt: occurredAt }
-        : {}),
+      ...(backfill ? { appliedAt } : {}),
     },
   });
   const xpAwarded = await recordStatusMilestones(tx, ctx, {
     applicationId: id,
     fromStatus: app.status,
     status: next,
+    historyId: history.id,
     occurredAt,
     activityDate,
+    submission: countsAsSubmission({
+      from: app.status,
+      to: next,
+      appliedAt: app.appliedAt,
+    }),
+    appliedAt,
     source,
     verified,
-    note: input.note ?? null,
+    note,
     evidenceId: input.evidenceId ?? null,
     skipInterviewMilestone: input.skipInterviewMilestone,
+    payload: confirmation ? { confirmation: true } : undefined,
   });
   return {
     applied: true,
@@ -516,6 +903,7 @@ async function changeStatusInTx(
     fromStatus: app.status,
     toStatus: next,
     xpAwarded,
+    ...(confirmation ? { confirmed: true } : {}),
   };
 }
 
@@ -536,8 +924,8 @@ export type FollowUpResult = {
 
 /**
  * Log a follow-up. Events dedupe on the exact timestamp (two follow-ups on different days are two
- * real actions). XP: `recordApplicationEvent` grants FOLLOW_UP_COMPLETED once per application; a
- * follow-up on a later calendar day is topped up with a per-day key so each day counts once.
+ * real actions). XP: FOLLOW_UP_COMPLETED is keyed per application per calendar day
+ * (`xpDedupeKey`), so each day's follow-up on a record counts once.
  */
 export async function recordFollowUp(
   userId: string,
@@ -681,7 +1069,7 @@ export async function scheduleInterview(
     });
     let statusChange: ChangeStatusResult | null = null;
     if (statusRank(app.status) < statusRank("INTERVIEWING")) {
-      statusChange = await changeStatusInTx(
+      statusChange = await changeStatusWithCtx(
         tx,
         ctx,
         id,
@@ -712,9 +1100,9 @@ export type InterviewOutcomeResult = {
 };
 
 /**
- * Record how an interview went. Attendance records INTERVIEW_COMPLETED once per interview (the
- * first attended interview per application is paid by the shared event contract; later ones are
- * topped up with a per-interview key). Prep completion pays INTERVIEW_PREP once per interview.
+ * Record how an interview went. Attendance records INTERVIEW_COMPLETED once per interview and pays
+ * INTERVIEW_ATTENDED once per interview (`xpDedupeKey`). Prep completion pays INTERVIEW_PREP once
+ * per interview.
  */
 export async function markInterviewOutcome(
   userId: string,
@@ -807,7 +1195,10 @@ export async function restoreApplication(
   if (r.count === 0) throw new ApplicationNotFoundError();
 }
 
-/** Hard delete (cascades history, events, interviews, offers). XP already earned stays in the ledger. */
+/**
+ * Hard delete (cascades history, events, interviews, offers). XP earned from the record is
+ * revoked (compensating ledger rows) so delete → re-create cannot farm XP.
+ */
 export async function deleteApplication(
   userId: string,
   id: string,
@@ -942,7 +1333,11 @@ export async function listApplications(
   if (filters.category)
     base.jobCategory = { equals: filters.category, mode: "insensitive" };
   if (filters.from || filters.to) {
-    const range = dayRange(filters.from, filters.to);
+    const range = dayRangeInTz(
+      filters.from,
+      filters.to,
+      await userTimezone(userId),
+    );
     base.AND = [
       { OR: [{ appliedAt: range }, { appliedAt: null, createdAt: range }] },
     ];
@@ -966,7 +1361,10 @@ export async function listApplications(
       where: base,
       _count: { _all: true },
     }),
-    prisma.application.findFirst({ where: { userId }, select: { id: true } }),
+    prisma.application.findFirst({
+      where: { userId, mergedIntoId: null },
+      select: { id: true },
+    }),
   ]);
 
   const counts = Object.fromEntries(
@@ -992,7 +1390,7 @@ export async function listApplications(
 /** Distinct job categories the user has used (for the filter select). */
 export async function listCategories(userId: string): Promise<string[]> {
   const rows = await prisma.application.findMany({
-    where: { userId, jobCategory: { not: null } },
+    where: { userId, mergedIntoId: null, jobCategory: { not: null } },
     distinct: ["jobCategory"],
     select: { jobCategory: true },
     orderBy: { jobCategory: "asc" },
@@ -1037,8 +1435,11 @@ const detailInclude = {
       title: true,
       snippet: true,
       capturedAt: true,
+      data: true,
     },
   },
+  sourceLinks: { orderBy: { createdAt: "asc" } },
+  mergedInto: { select: { id: true, companyName: true, positionTitle: true } },
 } satisfies Prisma.ApplicationInclude;
 
 type DetailRow = Prisma.ApplicationGetPayload<{

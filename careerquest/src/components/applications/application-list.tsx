@@ -129,7 +129,7 @@ export function ApplicationList({
                   <td className="px-3 py-3 align-top">
                     <div className="flex items-center gap-1.5">
                       <SourceBadge source={item.source} />
-                      {item.postingUrl && (
+                      {item.postingUrl && /^https?:\/\//i.test(item.postingUrl) && (
                         <a
                           href={item.postingUrl}
                           target="_blank"
@@ -184,7 +184,8 @@ export function ApplicationList({
               </div>
               <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-fg-subtle">
                 <SourceBadge source={item.source} />
-                {item.location && <span>{item.location}</span>}
+                {item.location && <span className="min-w-0 truncate">{item.location}</span>}
+                {!item.statusVerified && <Badge tone="warning">Unverified</Badge>}
                 {item.archivedAt && <Badge tone="neutral">Archived</Badge>}
               </div>
               <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">

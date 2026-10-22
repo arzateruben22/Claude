@@ -15,7 +15,9 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+// --root <dir> validates another checkout (used for fixture tests); defaults to this repo.
+const rootArg = process.argv.indexOf("--root");
+const ROOT = rootArg > -1 && process.argv[rootArg + 1] ? resolve(process.argv[rootArg + 1]) : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
 const LESSON_DIR = join(DATA, "academy", "lessons");
 const WORKSHOP_DIR = join(DATA, "academy", "workshop");
@@ -42,6 +44,8 @@ const CHOICES_MAX = 5;
 const SVG_MAX_BYTES = 8 * 1024;
 const EXAM_MIN_QUESTIONS = 100;
 const RECRUITMENT_STATUSES = ["OPEN", "CLOSED", "UNVERIFIED"];
+// Documented in data/seed/apprenticeship_notes.md (field-mapping decisions).
+const PROGRAM_REGIONS = ["Los Angeles County", "Orange County", "Southern California", "Riverside / Inland Empire"];
 const CERT_CODES = ["GENERAL", "RESIDENTIAL", "FIRE_LIFE_SAFETY", "VOICE_DATA_VIDEO", "NON_RESIDENTIAL_LIGHTING"];
 // Research file uses shorter codes for two classifications.
 const RESEARCH_CODE_ALIASES = { VOICE_DATA_VIDEO: "VDV", NON_RESIDENTIAL_LIGHTING: "NON_RES_LIGHTING" };
@@ -242,6 +246,7 @@ function checkItem(file, item, path, lessonKey) {
   reqStr(file, item, "prompt", path);
   reqStr(file, item, "explanation", path);
   if (item.area !== undefined && !isStr(item.area)) err(file, `${path}.area`, "must be a non-empty string when present");
+  else if (item.area !== undefined) itemAreas.push({ file, path: `${path}.area`, area: item.area });
   if (item.type === "numeric") {
     unknownKeys(file, item, ["id", "type", "prompt", "answer", "unit", "tolerance", "toleranceType", "explanation"], path, ITEM_OPTIONAL_EXTRAS);
     if (!isNum(item.answer)) err(file, `${path}.answer`, "must be a finite number");
@@ -609,6 +614,8 @@ function checkWorkshopLinks() {
 // Exam bank
 // ---------------------------------------------------------------------------
 const examStats = { total: 0, byArea: {}, byDifficulty: {} };
+let examAreaKeys = null; // area keys declared by the exam bank
+const itemAreas = []; // optional `area` tags on lesson items (practice exams)
 function checkExam(file, E) {
   const p = "$";
   if (!isObj(E)) return err(file, p, "question bank must be a JSON object");
@@ -634,6 +641,7 @@ function checkExam(file, E) {
         }
       });
       if (Math.abs(weight - 1) > 0.001) err(file, `${p}.areas`, `area weights must sum to 1 (sum is ${weight.toFixed(3)})`);
+      examAreaKeys = areaKeys;
     }
   }
   if (!Array.isArray(E.questions)) return err(file, `${p}.questions`, "must be an array");
@@ -682,6 +690,7 @@ function checkPrograms(file, P) {
     else if (slugs.has(a.slug)) err(file, `${p}.slug`, `duplicate slug "${a.slug}"`);
     else slugs.add(a.slug);
     for (const k of ["name", "sponsor", "region", "recruitmentNote"]) reqStr(file, a, k, p);
+    if (isStr(a.region) && !PROGRAM_REGIONS.includes(a.region)) err(file, `${p}.region`, `must be one of: ${PROGRAM_REGIONS.join(" | ")}`);
     if (typeof a.isUnion !== "boolean") err(file, `${p}.isUnion`, "must be a boolean");
     checkUrl(file, a.website, `${p}.website`, { nullable: true });
     checkUrl(file, a.applyUrl, `${p}.applyUrl`, { nullable: true });
@@ -804,6 +813,20 @@ const FACT_RULES = [
     msg: "the DIR exam cut score is a scaled score of 70, not 70% correct",
   },
   {
+    id: "trainee-fee-annual",
+    test: (s) => /\$\s?25(?:\.00)?\s*(?:per|a|each|every)\s*year/i.test(s) || /\$\s?25(?:\.00)?\s*annual/i.test(s),
+    msg: "trainee registration is $25 initially with NO fee for the annual renewal (8 CCR 292.0(d), Labor Code 108.4)",
+  },
+  {
+    id: "renewal-period",
+    test: (s) =>
+      /certification/i.test(s) &&
+      /renew/i.test(s) &&
+      /every\s+(?:one|two|four|five|1|2|4|5)\s+years?|annual(?:ly)?\s+renew/i.test(s) &&
+      !/trainee|registration|CSLB|C-10|contractor/i.test(s),
+    msg: "electrician certification is renewed every 3 years (8 CCR 291.5)",
+  },
+  {
     id: "ce-hours",
     test: (s) => /(\d+)\s*(?:hours?|hrs?)\s+of\s+(?:continuing|further electrical)\s+education/i.test(s) && !/\b32\s*(?:hours?|hrs?)/i.test(s),
     msg: "certification renewal requires 32 hours of continuing education (8 CCR 291.5)",
@@ -861,6 +884,10 @@ const exam = existsSync(EXAM_FILE) ? loadJson(EXAM_FILE) : (err(EXAM_FILE, "$", 
 if (exam !== undefined) {
   checkExam(EXAM_FILE, exam);
   lintStrings(EXAM_FILE, exam, "$");
+}
+// Lesson items tagged with an exam area (practice exams) must use a bank area key.
+for (const { file, path, area } of itemAreas) {
+  if (examAreaKeys && !examAreaKeys.has(area)) err(file, path, `unknown exam area "${area}" (not in question_bank.json areas)`);
 }
 
 const seedChecks = [

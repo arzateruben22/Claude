@@ -13,6 +13,7 @@
       // visible form is not evidence that the user started applying: only the
       // dedicated apply route counts.
       applyRoutes: ["/apply", "#app"],
+      jobContainers: ["#content", ".job__description", "#app_body"],
       selectors: {
         title: [".app-title", "h1.section-header", ".job__title h1", ".job__header h1", "h1"],
         company: [".company-name", '[class*="company-name"]', ".job__company", '[class*="job__company"]'],

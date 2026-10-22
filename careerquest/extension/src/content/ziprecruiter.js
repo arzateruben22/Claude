@@ -7,12 +7,15 @@
     detect: C.createDetector({
       platform: "ZIPRECRUITER",
       confirmationPhrases: ["Application sent", "You applied to"],
-      // "Applied" alone also appears as a badge in job lists → prompt instead of auto-record.
+      // "Applied" alone is ambiguous (a badge or a disabled 1-Click Apply button):
+      // it counts only as a standalone badge and never above 0.7 → prompt.
       weakPhrases: ["Applied"],
-      confirmationRoutes: ["/apply/confirmation", "/applied", "/application-sent", "/thank-you", "/confirmation"],
+      // No bare "/applied": that path also serves the applied-jobs list.
+      confirmationRoutes: ["/apply/confirmation", "/application-sent", "/thank-you", "/confirmation"],
       confirmationSelectors: ['[data-testid*="apply-confirmation"]', '[class*="application_sent"]', '[class*="ApplyConfirmation"]', '[class*="apply-confirmation"]', '[class*="applied_confirmation"]'],
       applyRoutes: ["/apply/", "/ojob/apply", "/candidate/apply"],
       applySelectors: ['form[class*="apply"]', ".apply_modal", '[data-testid="apply-form"]', 'form[id*="apply"]'],
+      jobContainers: [".job_description", '[class*="job_description"]', '[data-testid="job-description"]'],
       selectors: {
         title: ["h1.job_title", 'h1[class*="job_title"]', 'h1[class*="JobTitle"]', ".job_header h1", '[data-testid="job-title"]', "h1"],
         company: [".hiring_company_text", 'a[class*="hiring_company"]', '[class*="company_name"]', '[data-testid="job-card-company"]', ".job_header .company", '[class*="companyName"]'],

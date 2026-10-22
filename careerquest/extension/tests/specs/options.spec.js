@@ -67,3 +67,90 @@ test("'Clear local queue' empties the queue and 'Forget token' disconnects", asy
   expect((await ext.local("settings")).token).toBe("");
   expect((await ext.local("connection")).status).toBe("disconnected");
 });
+
+/** Replaces chrome.permissions in the options page with an in-memory fake (the native prompt cannot be answered headless). */
+async function fakePermissions(options, granted) {
+  await options.evaluate((initial) => {
+    const state = { granted: new Set(initial), removed: [], requested: [] };
+    window.__perm = state;
+    chrome.permissions.getAll = async () => ({ origins: [...state.granted], permissions: [] });
+    chrome.permissions.contains = async ({ origins }) => origins.every((o) => state.granted.has(o));
+    chrome.permissions.request = async ({ origins }) => {
+      state.requested.push(...origins);
+      origins.forEach((o) => state.granted.add(o));
+      return true;
+    };
+    chrome.permissions.remove = async ({ origins }) => {
+      if (origins.some((o) => o.includes("indeed") || o.includes("lever"))) throw new Error("You cannot remove required permissions.");
+      state.removed.push(...origins);
+      origins.forEach((o) => state.granted.delete(o));
+      return true;
+    };
+  }, granted);
+}
+
+test("EXT-05: 'Test connection' with an unsaved token never changes the saved connection state", async ({ ext, mockApi }) => {
+  await ext.configure(); // saved: valid token, connected
+  const before = await ext.local("connection");
+  const options = await ext.openOptions();
+  await options.locator("#token").fill("cqt_typo");
+  await options.locator("#test").click();
+  await expect(options.locator("#form-message")).toHaveText(/Token rejected \(401\)/);
+  const after = await ext.local("connection");
+  expect(after).toEqual(before);
+  expect((await ext.local("settings")).token).toBe(mockApi.token);
+});
+
+test("SP-09: a plain-http remote CareerQuest URL is refused; nothing is saved and no token is sent", async ({ ext, mockApi }) => {
+  await ext.configure();
+  const options = await ext.openOptions();
+  await options.locator("#apiBaseUrl").fill("http://cq.example.com:3000");
+  await options.locator("#token").fill("cqt_secret_should_not_travel");
+  await options.locator("#save").click();
+  await expect(options.locator("#form-message")).toHaveText(/Use https:\/\//);
+  await options.locator("#test").click();
+  await expect(options.locator("#form-message")).toHaveText(/Use https:\/\//);
+  expect(await ext.local("settings")).toEqual({ apiBaseUrl: mockApi.baseUrl, token: mockApi.token });
+  // The background refuses it too, even if a page bypasses the form check.
+  const res = await options.evaluate(() => new Promise((r) => chrome.runtime.sendMessage({ type: "cq:save-settings", apiBaseUrl: "http://cq.example.com", token: "x" }, r)));
+  expect(res).toMatchObject({ ok: false, code: "invalid_url" });
+  expect(await ext.local("settings")).toEqual({ apiBaseUrl: mockApi.baseUrl, token: mockApi.token });
+  expect(mockApi.state.requests).toHaveLength(0);
+  // Without a scheme a remote host defaults to https.
+  await options.locator("#apiBaseUrl").fill("cq.example.com");
+  await options.locator("#apiBaseUrl").dispatchEvent("change");
+  await expect(options.locator("#perm-state")).toHaveText(/https:\/\/cq\.example\.com\/\*/);
+});
+
+test("SP-10: saving a new CareerQuest URL revokes the previous origin's host permission; access is re-tested after the grant", async ({ ext, mockApi }) => {
+  await ext.configure();
+  const options = await ext.openOptions();
+  await fakePermissions(options, ["https://staging.cq.example/*", "https://jobs.lever.co/*", "https://*.indeed.com/viewjob*"]);
+  await options.locator("#apiBaseUrl").fill(mockApi.baseUrl);
+  await options.locator("#token").fill(mockApi.token);
+  await options.locator("#save").click();
+  await expect(options.locator("#form-message")).toHaveText("Connected as Test User.");
+  await expect.poll(() => options.evaluate(() => window.__perm.removed)).toEqual(["https://staging.cq.example/*"]);
+  expect(await options.evaluate(() => window.__perm.requested)).toEqual(["http://127.0.0.1/*"]);
+  await expect(options.locator("#perm-state")).toHaveText("Granted for http://127.0.0.1/*");
+  // EXT-12: the connection is tested again once the permission is granted
+  await expect.poll(() => mockApi.state.requests.filter((r) => r.path === "/api/extension/me").length).toBe(2);
+  expect(await options.evaluate(() => [...window.__perm.granted].sort())).toEqual(["http://127.0.0.1/*", "https://*.indeed.com/viewjob*", "https://jobs.lever.co/*"]);
+
+  await options.locator("#revoke").click();
+  await expect(options.locator("#perm-state")).toHaveText("Revoked for http://127.0.0.1/*. Save again to allow it.");
+  expect(await options.evaluate(() => window.__perm.removed)).toContain("http://127.0.0.1/*");
+});
+
+test("EXT-12: an origin Chrome cannot grant is reported as such, never requested, and the message is not overwritten", async ({ ext, mockApi }) => {
+  const options = await ext.openOptions();
+  await fakePermissions(options, []);
+  await options.locator("#apiBaseUrl").fill("http://[::1]:4320");
+  await options.locator("#token").fill(mockApi.token);
+  await options.locator("#save").click();
+  await expect(options.locator("#form-message")).not.toHaveText(/Testing connection/);
+  await expect(options.locator("#perm-state")).toHaveText(/Chrome cannot grant access to http:\/\/\[::1\]\/\*/);
+  expect(await options.evaluate(() => window.__perm.requested)).toEqual([]);
+  expect((await ext.local("settings")).apiBaseUrl).toBe("http://[::1]:4320");
+  expect((await ext.local("hostPermission")).grantable).toBe(false);
+});

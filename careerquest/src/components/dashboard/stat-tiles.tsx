@@ -1,4 +1,5 @@
 import { CalendarDays, Mic, Send, Target } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { StatTile } from "@/components/ui/stat-tile";
 import { formatNumber, formatPercent } from "@/lib/format";
 import type { DashboardData } from "@/lib/dashboard/types";
@@ -41,7 +42,11 @@ export function StatTiles({ data }: { data: DashboardData }) {
         <StatTile
           label="Total submitted"
           value={formatNumber(totals.submitted)}
-          hint={totals.applications > totals.submitted ? `${totals.applications - totals.submitted} saved, not yet submitted` : "All-time, excluding archived"}
+          hint={
+            totals.applications > totals.submitted
+              ? `${formatNumber(totals.applications - totals.submitted)} not applied yet (saved or closed) · excludes archived`
+              : "All-time, excluding archived"
+          }
           icon={<Send className="h-4 w-4" aria-hidden />}
         />
       </div>
@@ -49,9 +54,26 @@ export function StatTiles({ data }: { data: DashboardData }) {
         <StatTile
           label="Interview rate"
           value={rates.interview === null ? "—" : formatPercent(rates.interview, 0)}
-          hint={rates.n === 0 ? "No submitted applications yet" : `n = ${formatNumber(rates.n)} submitted`}
+          hint={
+            rates.n === 0 ? (
+              "No submitted applications yet"
+            ) : rates.lowSample ? (
+              <span className="flex flex-wrap items-center gap-1">
+                <span className="tnum">Observed · n = {formatNumber(rates.n)} submitted</span>
+                <Badge tone="warning">Low sample</Badge>
+                <span>not reliable yet</span>
+              </span>
+            ) : (
+              <span className="tnum">
+                Observed · n = {formatNumber(rates.n)} submitted
+                {rates.interviewInterval
+                  ? ` · 95% interval ${formatPercent(rates.interviewInterval.low, 0)}–${formatPercent(rates.interviewInterval.high, 0)}`
+                  : ""}
+              </span>
+            )
+          }
           icon={<Mic className="h-4 w-4" aria-hidden />}
-          tone={rates.interview !== null && rates.interview > 0 ? "accent" : undefined}
+          tone={rates.interview !== null && rates.interview > 0 && !rates.lowSample ? "accent" : undefined}
         />
       </div>
     </div>

@@ -1,7 +1,8 @@
 import { getSessionUser } from "@/lib/auth/session";
+import { audit } from "@/lib/audit";
 import { dateKeyInTz } from "@/lib/dates";
 import { csvChunk, csvHeader, exportFileName } from "@/lib/analytics/csv";
-import { parseAnalyticsFilters, searchParamsToRecord } from "@/lib/analytics/filters";
+import { analyticsQueryString, parseAnalyticsFilters, searchParamsToRecord } from "@/lib/analytics/filters";
 import { getUserTimezone, iterateExportRows } from "@/lib/analytics/queries";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +10,8 @@ export const dynamic = "force-dynamic";
 /**
  * GET /api/export/applications?<analytics filters>
  * Streams the signed-in user's applications as CSV, honoring exactly the filters the Analytics
- * page uses. Rows are fetched in batches so large trackers never sit fully in memory.
+ * page uses (merged duplicates are never exported). Rows are fetched in batches so large trackers
+ * never sit fully in memory. Each export is written to the audit log.
  */
 export async function GET(request: Request): Promise<Response> {
   const user = await getSessionUser();
@@ -20,6 +22,11 @@ export async function GET(request: Request): Promise<Response> {
   const now = new Date();
   const timezone = await getUserTimezone(user.id);
   const fileName = exportFileName(dateKeyInTz(now, timezone));
+  await audit("export.applications", {
+    userId: user.id,
+    entityType: "Application",
+    metadata: { filters: analyticsQueryString(filters) },
+  });
 
   const encoder = new TextEncoder();
   const rows = iterateExportRows(user.id, filters, now);

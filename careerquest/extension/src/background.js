@@ -8,16 +8,18 @@
  *  - API client with timeouts, 401 (→ "unauthorized" connection state) and 429 handling
  *  - action badge per tab ("✓" tracked/sent, "!" confirmation pending, "…" applying)
  *  - offline queue of unsent captures with exponential backoff via chrome.alarms
+ *    (serialised read-modify-write, one flush at a time, parked while the token
+ *    is rejected or missing)
  *
  * All decision logic lives in ./lib/*.js (pure, unit-testable); this file only
  * adapts it to chrome.* APIs.
  */
 
-import { ALARM_QUEUE_RETRY, CAPTURE_KIND, CONFIDENCE, DEFAULT_SETTINGS, MSG, SESSION, STORAGE } from "./lib/constants.js";
+import { ALARM_QUEUE_RETRY, CAPTURE_KIND, CONFIDENCE, DEFAULT_SETTINGS, MEMORY, MSG, SESSION, STORAGE } from "./lib/constants.js";
 import { createApiClient, isRetryable } from "./lib/api-client.js";
 import { dueItems, enqueue, isExhausted, markFailed, nextAttemptAt, removeItem, replaceItem } from "./lib/queue.js";
-import { buildCapturePayload, captureDedupeKey, decideAction, mergeWithLastJob } from "./lib/capture.js";
-import { normalizeBaseUrl } from "./lib/url.js";
+import { buildCapturePayload, captureDedupeKey, decideAction, isSameJob, mergeWithLastJob, promptKey, pruneKeys } from "./lib/capture.js";
+import { baseUrlError, normalizeBaseUrl } from "./lib/url.js";
 
 /* ----------------------------- storage ---------------------------------- */
 
@@ -78,19 +80,25 @@ async function noteApiError(err) {
 }
 
 /**
- * Calls /me and updates the connection state.
+ * Calls /me. Only a test of the SAVED settings updates the stored connection
+ * state; testing unsaved form values ("Test connection" before Save) reports
+ * the result without touching what the saved token is known to be.
  * @param {{ apiBaseUrl?: string, token?: string }} [override] test unsaved values
  */
 async function testConnection(override) {
-  const settings = override?.token ? { ...(await getSettings()), ...override } : undefined;
+  const saved = await getSettings();
+  const settings = override?.token ? { ...saved, ...override } : saved;
+  const persist = settings.apiBaseUrl === saved.apiBaseUrl && settings.token === saved.token;
   try {
     const me = await api.me(settings);
     const user = { userId: me.userId, name: me.name, email: me.email, scopes: Array.isArray(me.scopes) ? me.scopes : [] };
+    if (!persist) return { ok: true, user, persisted: false, connection: (await local.get(STORAGE.CONNECTION)) || null };
     const connection = await setConnection({ status: "connected", user, error: null });
-    return { ok: true, user, connection };
+    await scheduleRetry(); // a parked queue may resume now
+    return { ok: true, user, persisted: true, connection };
   } catch (err) {
-    const connection = await noteApiError(err);
-    return { ok: false, error: err.message, code: err.code, connection };
+    const connection = persist ? await noteApiError(err) : (await local.get(STORAGE.CONNECTION)) || null;
+    return { ok: false, error: err.message, code: err.code, persisted: persist, connection };
   }
 }
 
@@ -159,69 +167,125 @@ async function getQueue() {
   return (await local.get(STORAGE.QUEUE)) || [];
 }
 
+/** Serialises every read-modify-write of the stored queue (no lost updates). */
+let queueLock = Promise.resolve();
+/**
+ * @param {(queue: import("./lib/queue.js").QueueItem[]) => import("./lib/queue.js").QueueItem[]} mutate
+ * @returns {Promise<import("./lib/queue.js").QueueItem[]>}
+ */
+function updateQueue(mutate) {
+  const run = queueLock.then(async () => {
+    const queue = await getQueue();
+    const next = mutate(queue);
+    if (next !== queue) await local.set(STORAGE.QUEUE, next);
+    return next;
+  });
+  queueLock = run.catch(() => {});
+  return run;
+}
+
+/** Whether queued captures may be retried automatically (token present and not rejected). */
+async function queueMaySend() {
+  const settings = await getSettings();
+  if (!settings.token) return false;
+  const connection = (await local.get(STORAGE.CONNECTION)) || {};
+  return connection.status !== "unauthorized";
+}
+
+const isAuthError = (err) => err?.code === "unauthorized" || err?.code === "not_configured";
+
 /**
  * @param {object} payload
  * @param {{ code?: string, message?: string, retryAfterSeconds?: number }} err why the direct send failed
  */
 async function enqueueCapture(payload, err) {
-  const { queue, item } = enqueue(await getQueue(), payload);
   const retryAfterMs = err?.retryAfterSeconds ? err.retryAfterSeconds * 1000 : undefined;
-  const scheduled = replaceItem(queue, markFailed(item, { retryAfterMs, error: err?.message || err?.code }));
-  await local.set(STORAGE.QUEUE, scheduled);
+  const scheduled = await updateQueue((queue) => {
+    const added = enqueue(queue, payload);
+    if (added.duplicate) return queue;
+    // A rejected/missing token is not the capture's fault: park it (no attempt
+    // counted, no backoff) until the user reconnects.
+    if (isAuthError(err)) return added.queue;
+    return replaceItem(added.queue, markFailed(added.item, { retryAfterMs, error: err?.message || err?.code }));
+  });
   await scheduleRetry(scheduled);
   log("queued capture", { kind: payload.kind, reason: err?.code, size: scheduled.length });
   return scheduled;
 }
 
-/** (Re)arms the retry alarm for the earliest due item, or clears it. */
+/**
+ * (Re)arms the retry alarm for the earliest scheduled item, or clears it when
+ * the queue is empty or parked (no token / token rejected): a 401 must not turn
+ * into a retry loop. Re-armed by SAVE_SETTINGS and a successful connection test.
+ * @param {import("./lib/queue.js").QueueItem[]} [queue]
+ */
 async function scheduleRetry(queue) {
-  const at = nextAttemptAt(queue);
-  if (at == null) {
+  const items = queue ?? (await getQueue());
+  const at = nextAttemptAt(items);
+  if (at == null || !(await queueMaySend())) {
     await chrome.alarms.clear(ALARM_QUEUE_RETRY);
     return;
   }
   await chrome.alarms.create(ALARM_QUEUE_RETRY, { when: Math.max(at, Date.now() + 1000) });
 }
 
+/** One flush at a time: a second request waits and then sees the updated queue. */
+let flushChain = Promise.resolve();
 /**
- * Attempts queued captures. `force` ignores per-item schedules (used by the alarm
- * and the popup's "Retry now").
+ * Attempts queued captures. Only items whose backoff / Retry-After has elapsed
+ * are sent, except for the user's explicit "Retry now" (`force`).
  * @param {{ force?: boolean }} [opts]
  */
-async function flushQueue(opts = {}) {
-  let queue = await getQueue();
+function flushQueue(opts = {}) {
+  const run = flushChain.then(
+    () => flushOnce(opts),
+    () => flushOnce(opts),
+  );
+  flushChain = run.catch(() => {});
+  return run;
+}
+
+/** @param {{ force?: boolean }} opts */
+async function flushOnce(opts) {
+  const queue = await getQueue();
   if (!queue.length) {
     await chrome.alarms.clear(ALARM_QUEUE_RETRY);
     return { sent: 0, remaining: 0 };
   }
-  const now = Date.now();
-  const items = opts.force ? queue : dueItems(queue, now);
+  if (!opts.force && !(await queueMaySend())) {
+    await scheduleRetry(queue);
+    return { sent: 0, remaining: queue.length, parked: true };
+  }
+  const items = opts.force ? queue : dueItems(queue, Date.now());
   let sent = 0;
-  for (const item of items) {
+  for (const candidate of items) {
+    // Re-read: the item may have been cleared or updated meanwhile.
+    const item = (await getQueue()).find((i) => i.id === candidate.id);
+    if (!item) continue;
     try {
       const res = await api.createCapture(item.payload);
-      queue = removeItem(queue, item.id);
+      await updateQueue((q) => removeItem(q, item.id));
       sent++;
       log("queued capture sent", { action: res?.action });
     } catch (err) {
-      if (err.code === "unauthorized" || err.code === "not_configured") {
-        await noteApiError(err);
+      if (isAuthError(err)) {
+        await noteApiError(err); // parks the queue (scheduleRetry below clears the alarm)
         break;
       }
       if (isRetryable(err)) {
         const retryAfterMs = err.retryAfterSeconds ? err.retryAfterSeconds * 1000 : undefined;
         const updated = markFailed(item, { retryAfterMs, error: err.message });
-        queue = isExhausted(updated) ? removeItem(queue, item.id) : replaceItem(queue, updated);
+        await updateQueue((q) => (isExhausted(updated) ? removeItem(q, item.id) : replaceItem(q, updated)));
         if (isExhausted(updated)) log("dropping capture after max attempts", { kind: item.payload.kind });
       } else {
         log("dropping capture rejected by server", { kind: item.payload.kind, error: err.message });
-        queue = removeItem(queue, item.id);
+        await updateQueue((q) => removeItem(q, item.id));
       }
     }
   }
-  await local.set(STORAGE.QUEUE, queue);
-  await scheduleRetry(queue);
-  return { sent, remaining: queue.length };
+  const remaining = await getQueue();
+  await scheduleRetry(remaining);
+  return { sent, remaining: remaining.length };
 }
 
 /**
@@ -235,7 +299,7 @@ async function sendCapture(payload) {
     return { ok: true, response };
   } catch (err) {
     await noteApiError(err);
-    if (isRetryable(err) || err.code === "unauthorized" || err.code === "not_configured") {
+    if (isRetryable(err) || isAuthError(err)) {
       const queue = await enqueueCapture(payload, err);
       return { ok: false, queued: true, error: err.message, code: err.code, queueLength: queue.length };
     }
@@ -263,6 +327,33 @@ async function refreshMatches(tabId, detection) {
   }
 }
 
+/* ----------------------------- remembered keys -------------------------- */
+
+/**
+ * Atomically remembers `key` in a local key → timestamp/{at} store (pruned by
+ * TTL and size). Resolves true when the key was new.
+ * @param {string} storeKey
+ * @param {string} key
+ * @param {number} ttlMs
+ * @param {unknown} [value]
+ */
+function claimKey(storeKey, key, ttlMs, value) {
+  return serialized(async () => {
+    const now = Date.now();
+    const map = pruneKeys((await local.get(storeKey)) || {}, now, ttlMs);
+    const fresh = !(key in map);
+    if (fresh || value !== undefined) map[key] = value ?? now;
+    await local.set(storeKey, map);
+    return fresh;
+  });
+}
+
+/** @param {string} storeKey @param {string} key @param {number} ttlMs */
+async function recallKey(storeKey, key, ttlMs) {
+  const map = pruneKeys((await local.get(storeKey)) || {}, Date.now(), ttlMs);
+  return map[key] ?? null;
+}
+
 /* ----------------------------- detections ------------------------------- */
 
 /**
@@ -272,11 +363,18 @@ async function refreshMatches(tabId, detection) {
  * @param {{ passive?: boolean }} [opts] passive: store + lookup only, never auto-post or prompt
  */
 async function onDetection(tabId, detection, opts = {}) {
+  const now = Date.now();
   const lastJob = await tabState.getLastJob(tabId);
-  if (detection.kind === "JOB_PAGE") await tabState.setLastJob(tabId, detection);
-  const merged = detection.kind === "JOB_PAGE" ? detection : mergeWithLastJob(detection, lastJob);
+  if (detection.kind === "JOB_PAGE") await tabState.setLastJob(tabId, { ...detection, seenAt: now });
+  const merged = detection.kind === "JOB_PAGE" ? detection : mergeWithLastJob(detection, lastJob, { now });
   await tabState.setDetection(tabId, merged);
-  const action = opts.passive ? (merged.kind ? "job_page" : "none") : decideAction(merged);
+  let action = opts.passive ? (merged.kind ? "job_page" : "none") : decideAction(merged);
+  // A prompt the user already answered for this page/phrase is not raised again.
+  let answered = null;
+  if (action === "prompt" || action === "apply_started") {
+    answered = await recallKey(STORAGE.RESOLVED, promptKey(merged), MEMORY.RESOLVED_TTL_MS);
+    if (answered) action = "none";
+  }
   log("detection", { tabId, kind: merged.kind, platform: merged.platform, confidence: merged.confidence, action });
 
   switch (action) {
@@ -284,22 +382,30 @@ async function onDetection(tabId, detection, opts = {}) {
       await autoConfirm(tabId, merged);
       break;
     case "prompt":
-      await tabState.setPending(tabId, { tabId, url: merged.url, reason: "needs_confirmation", detection: merged, createdAt: Date.now() });
+      await tabState.setPending(tabId, { tabId, url: merged.url, reason: "needs_confirmation", detection: merged, createdAt: now });
       await setBadge(tabId, "pending");
       break;
     case "apply_started":
-      await tabState.setPending(tabId, { tabId, url: merged.url, reason: "apply_started", detection: merged, createdAt: Date.now() });
+      await tabState.setPending(tabId, { tabId, url: merged.url, reason: "apply_started", detection: merged, createdAt: now });
       await setBadge(tabId, "applying");
       break;
     case "job_page": {
-      await tabState.setPending(tabId, undefined);
+      // An unanswered "did you submit?" prompt survives until the user answers
+      // or a DIFFERENT job's page is shown in the tab; an apply-in-progress
+      // hint ends on any job page.
+      let pending = await tabState.getPending(tabId);
+      if (pending && (pending.reason === "apply_started" || isSameJob(pending.detection, merged) === false)) {
+        await tabState.setPending(tabId, undefined);
+        pending = null;
+      }
       const matches = await refreshMatches(tabId, merged);
-      await setBadge(tabId, matches && matches.length ? "tracked" : "none");
+      await setBadge(tabId, pending ? "pending" : matches && matches.length ? "tracked" : "none");
       break;
     }
     default: {
       const pending = await tabState.getPending(tabId);
-      await setBadge(tabId, pending ? (pending.reason === "apply_started" ? "applying" : "pending") : "none");
+      if (pending) await setBadge(tabId, pending.reason === "apply_started" ? "applying" : "pending");
+      else await setBadge(tabId, answered?.answer === "yes" ? "sent" : "none");
     }
   }
   return merged;
@@ -308,14 +414,11 @@ async function onDetection(tabId, detection, opts = {}) {
 /** Records a high-confidence confirmation page exactly once per page/sentence. */
 async function autoConfirm(tabId, detection) {
   const payload = buildCapturePayload(detection, { kind: CAPTURE_KIND.CONFIRMATION_PAGE });
-  const key = captureDedupeKey(payload);
-  const sent = await getMap(session, SESSION.SENT);
-  if (sent[key]) {
+  const fresh = await claimKey(STORAGE.SENT, captureDedupeKey(payload), MEMORY.SENT_TTL_MS);
+  if (!fresh) {
     await setBadge(tabId, "sent");
     return { ok: true, deduped: true };
   }
-  sent[key] = Date.now();
-  await session.set(SESSION.SENT, sent);
   await tabState.setPending(tabId, undefined);
   const result = await sendCapture(payload);
   await setBadge(tabId, result.ok ? "sent" : result.queued ? "queued" : "none");
@@ -323,13 +426,16 @@ async function autoConfirm(tabId, detection) {
 }
 
 /**
- * Saves a capture for the tab's current detection (popup actions).
- * @param {{ tabId: number, kind: string, applicationId?: string, confidence?: number }} req
+ * Saves a capture from a popup action. "Yes" on a prompt (`fromPending`)
+ * records the detection the prompt was raised for — not whatever page the tab
+ * shows now; other actions use the tab's current detection.
+ * @param {{ tabId: number, kind: string, applicationId?: string, confidence?: number, fromPending?: boolean }} req
  */
 async function saveCapture(req) {
   const tabId = Number(req.tabId);
   const pending = await tabState.getPending(tabId);
-  const detection = (await tabState.getDetection(tabId)) || pending?.detection;
+  const live = await tabState.getDetection(tabId);
+  const detection = req.fromPending ? pending?.detection || live : live || pending?.detection;
   if (!detection) throw new Error("No job detected on this tab yet.");
   const isUserConfirmation = req.kind === CAPTURE_KIND.MANUAL_CONFIRMATION;
   const payload = buildCapturePayload(detection, {
@@ -341,6 +447,9 @@ async function saveCapture(req) {
     payload.evidence.detectedBy = [...payload.evidence.detectedBy, "user-asserted"];
   }
   const result = await sendCapture(payload);
+  if (req.fromPending && pending?.detection && (result.ok || result.queued)) {
+    await claimKey(STORAGE.RESOLVED, promptKey(pending.detection), MEMORY.RESOLVED_TTL_MS, { at: Date.now(), answer: "yes" });
+  }
   if (isUserConfirmation || req.kind === CAPTURE_KIND.CONFIRMATION_PAGE) await tabState.setPending(tabId, undefined);
   if (result.ok) {
     await refreshMatches(tabId, detection);
@@ -406,16 +515,22 @@ async function handleMessage(msg, sender) {
     case MSG.GET_STATE:
       return getState(msg.tabId == null ? null : Number(msg.tabId));
     case MSG.SAVE_SETTINGS: {
-      const apiBaseUrl = normalizeBaseUrl(msg.apiBaseUrl) || DEFAULT_SETTINGS.apiBaseUrl;
+      const typed = String(msg.apiBaseUrl ?? "").trim();
+      const apiBaseUrl = typed ? normalizeBaseUrl(typed) : DEFAULT_SETTINGS.apiBaseUrl;
+      if (!apiBaseUrl) throw Object.assign(new Error(baseUrlError(typed) || "Invalid CareerQuest URL."), { code: "invalid_url" });
       const token = String(msg.token ?? "").trim();
       await local.set(STORAGE.SETTINGS, { apiBaseUrl, token });
       await setConnection({ status: token ? "unknown" : "disconnected", user: null, error: null });
       log("settings saved", { apiBaseUrl });
-      if (token) await scheduleRetry(await getQueue());
+      await scheduleRetry(); // resumes a parked queue (or clears the alarm without a token)
       return { settings: { apiBaseUrl, hasToken: !!token } };
     }
-    case MSG.TEST_CONNECTION:
-      return testConnection(msg.apiBaseUrl || msg.token ? { apiBaseUrl: normalizeBaseUrl(msg.apiBaseUrl) || undefined, token: msg.token } : undefined);
+    case MSG.TEST_CONNECTION: {
+      if (!msg.apiBaseUrl && !msg.token) return testConnection();
+      const apiBaseUrl = msg.apiBaseUrl ? normalizeBaseUrl(msg.apiBaseUrl) : undefined;
+      if (msg.apiBaseUrl && !apiBaseUrl) return { ok: false, code: "invalid_url", error: baseUrlError(msg.apiBaseUrl) };
+      return testConnection({ apiBaseUrl, token: msg.token });
+    }
     case MSG.LOOKUP: {
       const tabId = Number(msg.tabId);
       const detection = await tabState.getDetection(tabId);
@@ -425,7 +540,10 @@ async function handleMessage(msg, sender) {
       return saveCapture(msg);
     case MSG.RESOLVE_PENDING: {
       const tabId = Number(msg.tabId);
-      if (msg.confirmed) return saveCapture({ tabId, kind: CAPTURE_KIND.MANUAL_CONFIRMATION, applicationId: msg.applicationId });
+      if (msg.confirmed) return saveCapture({ tabId, kind: CAPTURE_KIND.MANUAL_CONFIRMATION, applicationId: msg.applicationId, fromPending: true });
+      const pending = await tabState.getPending(tabId);
+      // "No" sticks for this page: re-renders and reloads do not ask again.
+      if (pending?.detection) await claimKey(STORAGE.RESOLVED, promptKey(pending.detection), MEMORY.RESOLVED_TTL_MS, { at: Date.now(), answer: "no" });
       await tabState.setPending(tabId, undefined);
       await setBadge(tabId, "none");
       return { dismissed: true };
@@ -435,13 +553,14 @@ async function handleMessage(msg, sender) {
     case MSG.FLUSH_QUEUE:
       return flushQueue({ force: true });
     case MSG.CLEAR_QUEUE:
-      await local.set(STORAGE.QUEUE, []);
+      await updateQueue(() => []);
       await chrome.alarms.clear(ALARM_QUEUE_RETRY);
       return { cleared: true };
     case MSG.DISCONNECT: {
       const settings = await getSettings();
       await local.set(STORAGE.SETTINGS, { apiBaseUrl: settings.apiBaseUrl, token: "" });
       await setConnection({ status: "disconnected", user: null, error: null });
+      await chrome.alarms.clear(ALARM_QUEUE_RETRY); // queue stays parked until reconnected
       return {};
     }
     default:
@@ -463,19 +582,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 /* ----------------------------- lifecycle -------------------------------- */
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === ALARM_QUEUE_RETRY) flushQueue({ force: true }).catch((err) => log("flush failed", err?.message));
+  // Not forced: an item rate-limited with Retry-After waits for its own time
+  // even when another item's backoff fires the alarm.
+  if (alarm.name === ALARM_QUEUE_RETRY) flushQueue().catch((err) => log("flush failed", err?.message));
 });
 
 chrome.runtime.onInstalled.addListener(async () => {
   const settings = await local.get(STORAGE.SETTINGS);
   if (!settings) await local.set(STORAGE.SETTINGS, { ...DEFAULT_SETTINGS });
-  await scheduleRetry(await getQueue());
+  await scheduleRetry();
 });
 
 chrome.runtime.onStartup.addListener(async () => {
   // Tab ids are not stable across browser restarts: drop per-tab prompts.
   await local.set(STORAGE.PENDING, {});
-  await scheduleRetry(await getQueue());
+  await scheduleRetry();
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {

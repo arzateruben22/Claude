@@ -143,3 +143,91 @@ describe("tracker server components render", () => {
     ).toContain("No activity recorded yet");
   });
 });
+
+describe("phase-1 fixes: detail page pieces and honest form states", () => {
+  it("offers card: entry point at offer stages, list otherwise, nothing when irrelevant", async () => {
+    const { OffersCard, offerDetailsHref } = await import("@/components/applications/offers-card");
+    const id = item.id;
+    const empty = renderToStaticMarkup(createElement(OffersCard, { applicationId: id, status: "OFFER", offers: [], timezone: TZ }));
+    expect(empty).toContain("Add offer details");
+    expect(empty).toContain(`href="${offerDetailsHref(id).replace(/&/g, "&amp;")}"`);
+    expect(offerDetailsHref(id)).toBe(`/salary/offers/new?applicationId=${id}`);
+    expect(empty).toContain("No offer details recorded yet");
+    expect(renderToStaticMarkup(createElement(OffersCard, { applicationId: id, status: "SUBMITTED", offers: [], timezone: TZ }))).toBe("");
+    const offer = {
+      id: "o1",
+      baseAmount: 38.5,
+      period: "HOURLY" as const,
+      hoursPerWeek: 40,
+      signingBonus: null,
+      annualBonus: 2000,
+      benefitsValue: null,
+      startDate: new Date("2026-11-02T20:00:00Z"),
+      decisionDue: null,
+      status: "RECEIVED" as const,
+      notes: "Union scale",
+      createdAt: now,
+    };
+    const listed = renderToStaticMarkup(createElement(OffersCard, { applicationId: id, status: "REJECTED", offers: [offer], timezone: TZ }));
+    expect(listed).toContain("$38.50");
+    expect(listed).toContain("Received");
+    expect(listed).toContain("Nov 2, 2026");
+    expect(listed).not.toContain("Add offer details");
+  });
+
+  it("evidence card shows kind, a known source label, snippet and capture time; unknown sources are not echoed", async () => {
+    const { EvidenceCard } = await import("@/components/applications/evidence-card");
+    const html = renderToStaticMarkup(
+      createElement(EvidenceCard, {
+        timezone: TZ,
+        evidence: [
+          { id: "e1", kind: "EMAIL", title: "Thanks for applying", snippet: "We received your application", capturedAt: new Date("2026-10-20T17:05:00Z"), data: { provider: "gmail" } },
+          { id: "e2", kind: "EXTENSION_CAPTURE", title: null, snippet: null, capturedAt: now, data: { platform: "WORKDAY" } },
+          { id: "e3", kind: "EMAIL", title: "Other", snippet: null, capturedAt: now, data: { provider: "<script>x</script>" } },
+        ],
+      }),
+    );
+    expect(html).toContain("Gmail");
+    expect(html).toContain("Browser extension · Workday");
+    expect(html).toContain("We received your application");
+    expect(html).toContain("Oct 20, 2026");
+    expect(html).toContain("Untitled");
+    expect(html).not.toContain("&lt;script&gt;");
+    expect(renderToStaticMarkup(createElement(EvidenceCard, { timezone: TZ, evidence: [] }))).toBe("");
+  });
+
+  it("status panel offers a confirm action only for an unverified stage", async () => {
+    const { StatusChangePanel } = await import("@/components/applications/status-change-panel");
+    const unverified = renderToStaticMarkup(
+      createElement(StatusChangePanel, { applicationId: item.id, status: "OFFER", today: "2026-10-21", verified: false, sourceLabel: "Email" }),
+    );
+    expect(unverified).toContain("Confirm Offer");
+    expect(unverified).toContain("unverified, from Email");
+    const verified = renderToStaticMarkup(createElement(StatusChangePanel, { applicationId: item.id, status: "OFFER", today: "2026-10-21" }));
+    expect(verified).not.toContain("Confirm Offer");
+    const lead = renderToStaticMarkup(createElement(StatusChangePanel, { applicationId: item.id, status: "SAVED", today: "2026-10-21", applied: false }));
+    expect(lead).toContain("does not count as an application");
+  });
+
+  it("the form never asks for an application date on a record that was not applied", async () => {
+    const { ApplicationForm } = await import("@/components/applications/application-form");
+    const action = async () => ({ ok: true as const, data: undefined });
+    const base = { action, documents: { resumes: [], coverLetters: [] }, cancelHref: "/applications", today: "2026-10-21" };
+    const saved = renderToStaticMarkup(createElement(ApplicationForm, { ...base, mode: "create" }));
+    expect(saved).toContain('data-testid="applied-not-yet"');
+    expect(saved).not.toContain('id="appliedAt"');
+    const withdrawn = renderToStaticMarkup(createElement(ApplicationForm, { ...base, mode: "create", initialValues: { status: "WITHDRAWN" } }));
+    expect(withdrawn).toContain('id="appliedAt"');
+    expect(withdrawn).toContain("Leave blank if you never applied.");
+    expect(withdrawn).toContain("Counts as an application only if you enter the date you applied.");
+    const editLead = renderToStaticMarkup(createElement(ApplicationForm, { ...base, mode: "edit", appliedEditable: false }));
+    expect(editLead).toContain("Moving it to Submitted on the application page records the date.");
+    const editApplied = renderToStaticMarkup(createElement(ApplicationForm, { ...base, mode: "edit", initialValues: { status: "SUBMITTED", appliedAt: "2026-10-20" } }));
+    expect(editApplied).toContain("Blank keeps the current date.");
+  });
+
+  it("mobile cards show when a stage is unverified", () => {
+    const html = renderToStaticMarkup(createElement(ApplicationList, { items: [{ ...item, statusVerified: false }], timezone: TZ, now }));
+    expect(html).toContain("Unverified");
+  });
+});

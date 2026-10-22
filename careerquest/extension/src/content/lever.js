@@ -11,6 +11,7 @@
       confirmationSelectors: [".thanks-page", '[data-qa="thanks"]', ".posting-apply-success", '[class*="thanks"]'],
       applyRoutes: ["/apply"],
       applySelectors: ["#application-form", 'form[data-qa="application-form"]', ".application-form", 'form[action*="/apply"]'],
+      jobContainers: [".posting-page", ".content"],
       selectors: {
         title: [".posting-headline h2", ".posting-header h2", '[data-qa="posting-name"]', "h2"],
         location: [".posting-categories .location", ".posting-category.location", ".posting-categories .sort-by-time", '[class*="location"]'],

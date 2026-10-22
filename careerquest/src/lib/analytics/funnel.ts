@@ -1,16 +1,20 @@
 /**
  * Funnel + conversion math for analytics. Pure functions; no database access.
  *
- * An application "reached" a stage when its current status is at/after that stage, its status
+ * "Applied" has one definition shared by Analytics, the dashboard and the Numbers game: the
+ * record has an application date or an APPLIED event (`hasApplied`). A saved lead that is closed
+ * or withdrawn without applying is therefore never counted, whatever its status.
+ *
+ * Every later stage is "reached" when its current status is at/after that stage, its status
  * history shows it was ever at/after that stage, or an event of that stage's type was recorded.
  * Later stages imply earlier ones, so counts are nested (hired ⊆ offers ⊆ interviewed ⊆ ...).
  * Every stage after "applied" is counted among applied applications only, so each rate is a true
  * proportion of the applications you actually submitted.
  */
 import type { ApplicationEventType, ApplicationStatus } from "@/generated/prisma/enums";
-import { isSubmittedStatus } from "@/lib/applications/status";
+import { appliedInstant, hasApplied } from "@/lib/applications/status";
 import { LOW_SAMPLE_N, mean, median, rateEstimate, wilsonInterval } from "@/lib/analytics/stats";
-import { DAY_MS, addDaysKey, dayLabel, diffDaysKey, weekStartKey } from "@/lib/analytics/time";
+import { DAY_MS, addDaysKey, dayLabel, diffDaysKey, instantDateKey, weekStartKey } from "@/lib/analytics/time";
 import type {
   ActivityRow,
   ConversionDimension,
@@ -65,6 +69,28 @@ const OFFER_EVENTS = new Set<ApplicationEventType>(["OFFER_RECEIVED", "OFFER_ACC
 const HIRED_EVENTS = new Set<ApplicationEventType>(["OFFER_ACCEPTED", "ONBOARDING_RECEIVED"]);
 const APPLIED_HISTORY = new Set<ApplicationStatus>(["SUBMITTED", "CONFIRMED"]);
 
+/** Every event type the funnel reads; queries can load just these instead of the whole log. */
+export const FUNNEL_EVENT_TYPES: ApplicationEventType[] = Array.from(
+  new Set<ApplicationEventType>(["APPLIED", ...RESPONSE_EVENTS, ...SCREEN_EVENTS, ...INTERVIEW_EVENTS, ...OFFER_EVENTS, ...HIRED_EVENTS]),
+);
+
+/**
+ * The calendar day (user's timezone) a record belongs to for date ranges and daily series: the day
+ * it was applied, else the day it was added (saved leads). Uses the same day logic as the charts.
+ */
+export function applicationDayKey(
+  app: Pick<FunnelApplication, "appliedAt" | "events"> & { createdAt: Date },
+  timeZone: string,
+): string {
+  return instantDateKey(appliedInstant(app) ?? app.createdAt, timeZone);
+}
+
+/** The day an application was applied (user's timezone), or null when it never was. */
+export function appliedDayKey(app: Pick<FunnelApplication, "appliedAt" | "events">, timeZone: string): string | null {
+  const at = appliedInstant(app);
+  return at ? instantDateKey(at, timeZone) : null;
+}
+
 function earliest(dates: Date[]): Date | null {
   let best: Date | null = null;
   for (const d of dates) if (!Number.isNaN(d.getTime()) && (!best || d.getTime() < best.getTime())) best = d;
@@ -77,7 +103,7 @@ export function classifyApplication(app: FunnelApplication): StageFlags {
   const everStatus = (set: Set<ApplicationStatus>) => statuses.some((s) => set.has(s));
   const everEvent = (set: Set<ApplicationEventType>) => app.events.some((e) => set.has(e.type));
 
-  const applied = statuses.some(isSubmittedStatus) || app.events.some((e) => e.type === "APPLIED");
+  const applied = hasApplied(app);
   const hired = everStatus(HIRED_STATUSES) || everEvent(HIRED_EVENTS);
   const offers = hired || everStatus(OFFER_STATUSES) || everEvent(OFFER_EVENTS) || app.hasOffers === true;
   const interviewed = offers || everStatus(INTERVIEW_STATUSES) || everEvent(INTERVIEW_EVENTS) || app.hasInterviews === true;

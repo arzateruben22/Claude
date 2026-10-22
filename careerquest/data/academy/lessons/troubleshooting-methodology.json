@@ -129,7 +129,7 @@
         "The circuit is daisy-chained through four receptacles. With the heater still running, measure across each connection: breaker lug 0.02 V, first receptacle terminals 0.03 V, second receptacle 13.0 V across the back-stab connections, third receptacle 0.02 V.",
         "Pinpointed: a back-stabbed (push-in) connection at the second receptacle. At 12 A it is dissipating about 12 × 13.0 = 156 W, which explains the warm, discolored device face.",
         "Correct: de-energize, lock out and verify dead, replace the receptacle and the heat-damaged conductor ends, terminate under the screws or with pigtails, and check the other devices on the circuit for the same wiring method.",
-        "Verify: under the 12 A load the receptacle now reads 118.5 V (1.5 V drop). Document the readings before and after and note that back-stabbed devices remain elsewhere in the house."
+        "Verify: under the same 12 A load the last receptacle now reads about 117.1 V, a 2.9 V drop that matches the conductor resistance alone. Document the readings before and after and note that back-stabbed devices remain elsewhere in the house."
       ],
       "answer": "A high-resistance back-stab connection at the second receptacle, found by measuring voltage drop across each connection under load."
     },

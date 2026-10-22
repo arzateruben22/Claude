@@ -22,6 +22,8 @@ function createState() {
     matches: [],
     /** scripted responses for upcoming capture POSTs: { status, body? } consumed in order */
     captureFailures: [],
+    /** scripted delays (ms) for upcoming capture POSTs, consumed in order on arrival */
+    captureDelays: [],
     /** scripted responses for upcoming /me calls */
     meFailures: [],
     /** recorded capture bodies (successful ones) */
@@ -88,8 +90,12 @@ async function startMockApi(opts = {}) {
       return json(res, 200, { matches: state.matches });
     }
     if (url.pathname === "/api/extension/captures" && req.method === "POST") {
-      state.captureAttempts.push({ auth, body, rawBody });
+      state.captureAttempts.push({ auth, body, rawBody, at: Date.now() });
+      // Both scripts are consumed when the request ARRIVES, so a delayed request
+      // never takes the scripted answer meant for a later one.
       const scripted = state.captureFailures.shift();
+      const delay = state.captureDelays.shift();
+      if (delay) await new Promise((r) => setTimeout(r, delay));
       if (scripted) return json(res, scripted.status, scripted.body || { error: `scripted ${scripted.status}` });
       if (!authorized) return json(res, 401, { error: "Invalid token" });
       if (!body || typeof body !== "object" || !body.kind || !body.url) return json(res, 400, { error: "kind and url are required" });
