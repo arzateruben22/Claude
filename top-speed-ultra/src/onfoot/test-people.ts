@@ -377,10 +377,16 @@ async function main() {
     });
     if (atlas) {
       const a = atlas as HTMLCanvasElement;
-      // the beard half's coverage (mean alpha over the cards' v 0.52..0.98), by thirds from the root
+      // the beard half's coverage (mean alpha over the cards' canvas rows 3..55, v 0.57..0.98) by thirds from the root,
+      // and over the eight rows next to the brow half, which must stay empty
       const px = a.getContext('2d')!.getImageData(0, 0, 512, 64).data, cov = [0, 0, 0];
-      for (let y = 3; y < 61; y++) for (let x = 0; x < 512; x++) cov[Math.min(2, Math.floor((61 - y) / 19.4))] += px[(y * 512 + x) * 4 + 3] / 255;
-      extra.beardCoverage = cov.map((s) => +(s / (512 * 58 / 3)).toFixed(3));   // [root third, middle, tip third]
+      let guard = 0;
+      for (let y = 0; y < 64; y++) for (let x = 0; x < 512; x++) {
+        const al = px[(y * 512 + x) * 4 + 3] / 255;
+        if (y >= 56) guard += al; else if (y >= 3) cov[Math.min(2, Math.floor((55.5 - y) / 17.6))] += al;
+      }
+      extra.beardCoverage = cov.map((s) => +(s / (512 * 53 / 3)).toFixed(3));   // [root third, middle, tip third]
+      extra.beardGuardCoverage = +(guard / (512 * 8)).toFixed(4);
       a.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:25vw;image-rendering:pixelated;background:#25303c;z-index:9';
       document.body.appendChild(a);
     }

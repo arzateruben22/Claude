@@ -363,12 +363,14 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
 // edge and its volume over a full base.
 
 /** the brow texture (v 0..0.5, unchanged) with sixteen 32 px tiles of beard strands above it (v 0.5..1), side by side
- *  along u. Each strand runs along v, root at v 0.52, tip toward v 0.98, so across a card u runs across its strands:
+ *  along u. Each strand runs along v, root at v 0.57, tip toward v 0.98, so across a card u runs across its strands:
  *  cards.ts' per-strand grey hash, floor(u * 220), then picks one colour per strand, constant along it, and each strand
  *  is drawn on the centre of its hash column. (The strands ran along u: the hash flipped about 53 times along every
  *  strand, and a grey beard or moustache read as salt-and-pepper static that mipmapping could not filter.) A tile is
- *  as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-1.8 texel strand is a 0.1-0.2 mm hair */
+ *  about as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-1.8 texel strand is a 0.1-0.2 mm hair.
+ *  The eight rows next to the brow half stay empty: the brow strip's edge samples v 0.5, and roots there bled into it */
 const BEARD_TILES = 16, HASH_COL = 512 / 220;   // (cards.ts: the grey hash's column, in texels)
+const BEARD_Y0 = 55.5, BEARD_Y1 = 2.5;   // the canvas rows of a card's root and tip (v 0.566 and 0.98)
 let browBeardTex: THREE.Texture | null = null;
 function browBeardTexture() {
   if (browBeardTex) return browBeardTex;
@@ -378,7 +380,7 @@ function browBeardTexture() {
   g.clearRect(0, 0, 512, 128);
   g.drawImage(browTexture().image as CanvasImageSource, 0, 64);   // flipY: the canvas' lower half is v 0..0.5
   const r = rng(9091);
-  const tw = 512 / BEARD_TILES, yRoot = 61.5, yTip = 2.5;   // the canvas rows of v 0.52 and v 0.98
+  const tw = 512 / BEARD_TILES, yRoot = BEARD_Y0, yTip = BEARD_Y1;
   for (let k = 0; k < BEARD_TILES; k++) {
     const x0 = k * tw, cx = x0 + tw / 2;
     // a soft density under the strands, strongest at the root and down the card's middle (a beard reads as a tone
@@ -493,7 +495,8 @@ function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, po
     ];
     // one of the atlas' beard tiles: u across the card (2 texels in from each side of the tile), v along it from the root
     const u0 = Math.floor(r.next() * BEARD_TILES) / BEARD_TILES, du = 2 / 512, wu = 1 / BEARD_TILES - 2 * du;
-    const sg = stripGeometry(rows, (i, j) => [u0 + du + wu * j, 0.52 + 0.46 * (i / 2)]);
+    const v0 = 1 - BEARD_Y0 / 128, v1 = 1 - BEARD_Y1 / 128;
+    const sg = stripGeometry(rows, (i, j) => [u0 + du + wu * j, v0 + (v1 - v0) * (i / 2)]);
     const off = pos.length / 3;
     pos.push(...sg.pos); uvs.push(...sg.uvs); idx.push(...sg.idx.map((v) => v + off));
   }
