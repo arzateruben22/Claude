@@ -1,14 +1,16 @@
 // The radial quick menu (U3 in PROJECT_OC_UI_TARGET.md): hold the Pause button (or hold Tab) for 300 ms while driving
-// and six wedges open round the middle of the screen; slide to one and let go to pick it, let go in the middle to
+// and seven wedges open round the middle of the screen; slide to one and let go to pick it, let go in the middle to
 // cancel. A quick tap on Pause still pauses. Keyboard: while it is open, the arrow keys move between wedges and Enter
-// picks. Reduced motion: it opens without the fan-out.
+// picks. Reduced motion: it opens without the fan-out. The Online wedge opens the live panel (an alpha: who's driving
+// on the server, the board, an invite) over the paused drive.
 import { useEffect, useRef, useState } from 'react';
 import { Ico } from './Icons';
 
-export type RadialPick = 'map' | 'nav' | 'garage' | 'radio' | 'camera' | 'settings';
+export type RadialPick = 'map' | 'nav' | 'garage' | 'radio' | 'camera' | 'settings' | 'live';
 const WEDGES: { id: RadialPick; name: string; icon: Parameters<typeof Ico>[0]['name'] }[] = [
   { id: 'map', name: 'Map', icon: 'map' }, { id: 'nav', name: 'Go to', icon: 'nav' }, { id: 'garage', name: 'Garage', icon: 'garage' },
-  { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'camera', name: 'Camera', icon: 'camera' }, { id: 'radio', name: 'Radio', icon: 'radio' },
+  { id: 'live', name: 'Online', icon: 'online' }, { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'camera', name: 'Camera', icon: 'camera' },
+  { id: 'radio', name: 'Radio', icon: 'radio' },
 ];
 const R = 132;   // the wedges' radius, CSS px
 

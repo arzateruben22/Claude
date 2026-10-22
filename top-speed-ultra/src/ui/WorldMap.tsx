@@ -40,7 +40,7 @@ interface Props {
 function tokens() {
   const css = getComputedStyle(document.documentElement), v = (n: string, d: string) => css.getPropertyValue(n).trim() || d;
   return { void: v('--void', '#030915'), night: v('--night-2', '#0c1320'), ink: v('--ink', '#f6fbff'), dim: v('--dim', '#b9c6d8'), faint: v('--faint', '#8c9bb2'),
-    ice: v('--ice', '#408cff'), cyan: v('--cyan', '#8bd6ff'), hi: v('--ice-hi', '#bfe4ff'), deep: v('--ice-deep', '#1f6fd6'), ember: v('--ember', '#ee1e0a') };
+    ice: v('--ice', '#408cff'), cyan: v('--cyan', '#8bd6ff'), hi: v('--ice-hi', '#bfe4ff'), deep: v('--ice-deep', '#1f6fd6'), ember: v('--ember', '#ee1e0a'), good: v('--good', '#6ff7de') };
 }
 const hexA = (hex: string, a: number) => (/^#[0-9a-f]{6}$/i.test(hex) ? `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})` : hex);
 const routeNo = (label: string) => /^(?:I|CA)-(\d+)/.exec(label)?.[1] ?? label;
@@ -234,7 +234,20 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       g.fillStyle = T.ink; g.strokeStyle = T.deep; g.lineWidth = 2; g.beginPath(); g.moveTo(10, 0); g.lineTo(-7, 7); g.lineTo(-3, 0); g.lineTo(-7, -7); g.closePath(); g.fill(); g.stroke();
       g.restore();
     }
+    // the other live drivers (an alpha): where the server last saw each, as dots in the live chip's green, named up close
+    if (driving && game.live) {
+      const now = performance.now();
+      g.strokeStyle = T.deep; g.lineWidth = 1.5; g.font = '500 11px var(--f-ui, sans-serif)';
+      for (const peer of game.live.peers.values()) {
+        const at = game.live.whereIs(peer, now); if (!at) continue;
+        const X = sx(at.x), Y = sy(at.z); if (X < -8 || Y < -8 || X > w + 8 || Y > h + 8) continue;
+        g.fillStyle = T.good; g.beginPath(); g.arc(X, Y, 4.5, 0, Math.PI * 2); g.fill(); g.stroke();
+        if (view.mpp < 24 && peer.name) { g.fillStyle = T.dim; g.textAlign = 'left'; g.fillText(peer.name, X + 8, Y); g.textAlign = 'center'; }
+      }
+    }
   }, [view, sel, course, exits, driving, game, mains]);
+  // the live drivers move: while a live drive is on, redraw every two seconds (the roster's own rate)
+  useEffect(() => { if (!driving || !game.live) return; const t = setInterval(() => setView((v) => (v ? { ...v } : v)), 2000); return () => clearInterval(t); }, [driving, game]);
   // redraw on resize
   useEffect(() => { const r = () => setView((v) => (v ? { ...v } : v)); addEventListener('resize', r); return () => removeEventListener('resize', r); }, []);
 

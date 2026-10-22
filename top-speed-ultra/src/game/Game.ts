@@ -1414,10 +1414,12 @@ export class Game {
       g.fillStyle = inter ? '#fff' : '#111';
       g.fillText(q.route!.replace(/^(I|SR)-/, ''), mx, my + 0.5);
     }
-    // live drivers: orange dots (their live pose when near, the roster's otherwise)
+    // live drivers: dots in the live colour (the theme's --good, as on the World Map and the live chip), at their live
+    // pose when near, the roster's otherwise
     if (this.live) {
       const now = performance.now();
-      g.fillStyle = '#fd9123'; g.strokeStyle = 'rgba(0,0,0,0.6)'; g.lineWidth = 1.2 * dpr;
+      g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--good').trim() || '#6ff7de';
+      g.strokeStyle = 'rgba(0,0,0,0.6)'; g.lineWidth = 1.2 * dpr;
       for (const peer of this.live.peers.values()) {
         const at = this.live.whereIs(peer, now);
         if (!at || Math.abs(at.x - p.x) > R * 1.4 || Math.abs(at.z - p.z) > R * 1.4) continue;

@@ -1,20 +1,22 @@
 // The in-game phone (U6 in PROJECT_OC_UI_TARGET.md; the style library's 09_PHONE_UI): a phone-shaped overlay that
 // slides in from the right of the pause screen. Its apps open only what exists (the map, the garage, the races, the
-// radio, your bests, your profile, settings, feedback, your homes, your credits, and since 2026-10-21 the story's
-// Messages and Contacts, story.ts). The clock is this device's. Credits are earned by driving; nothing on the phone
-// costs real money, and no message is sent or received over a network: the characters are the game's own.
+// radio, your bests, your profile, settings, feedback, your homes, your credits, since 2026-10-21 the story's
+// Messages and Contacts (story.ts), and Online: the live server's panel, an alpha). The clock is this device's.
+// Credits are earned by driving; nothing on the phone costs real money. The Messages are the game's own characters,
+// never sent or received over a network; only Online talks to a server, and only where one is running.
 import { useEffect, useState } from 'react';
 import { Ico } from './Icons';
 import type { ProfileBook } from '../game/profile';
 import { inbox, unread, contacts, characterById, jobText, type Message, type Job } from '../game/story';
 
-export type PhoneApp = 'map' | 'garage' | 'course' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback' | 'homes';
+export type PhoneApp = 'map' | 'garage' | 'course' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback' | 'homes' | 'live';
 interface App { id: PhoneApp | 'credits' | 'messages' | 'contacts'; name: string; icon: Parameters<typeof Ico>[0]['name']; off?: boolean }
 const APPS: App[] = [
   { id: 'map', name: 'Map', icon: 'map' }, { id: 'garage', name: 'Garage', icon: 'garage' }, { id: 'course', name: 'Races', icon: 'drive' },
   { id: 'radio', name: 'Radio', icon: 'radio' }, { id: 'credits', name: 'Credits', icon: 'career' }, { id: 'board', name: 'Bests', icon: 'bests' },
   { id: 'profile', name: 'Profile', icon: 'driver' }, { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'feedback', name: 'Feedback', icon: 'nav' },
   { id: 'homes', name: 'Homes', icon: 'home' }, { id: 'messages', name: 'Messages', icon: 'chat' }, { id: 'contacts', name: 'Contacts', icon: 'driver' },
+  { id: 'live', name: 'Online', icon: 'online' },
 ];
 
 interface PhoneProps { name: string; credits: number; level: number; book: ProfileBook; onOpen: (a: PhoneApp) => void; onJob: (j: Job) => void; onClose: () => void }
