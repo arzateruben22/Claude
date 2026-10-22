@@ -25,8 +25,8 @@ are in `review/scorecard.md`.
 
 ## Taste calls, worth a look on a real screen
 
-5. **Listen to it.** The score and foley were judged only by measurement: loudness −14 LUFS
-   integrated and −1 dBTP true peak after normalization, the spectral balance per shot, and the
+5. **Listen to it.** The score and foley were judged only by measurement: loudness −13.7 LUFS
+   integrated and −4.7 dBTP true peak, the spectral balance per shot, and the
    cue sync. Nobody has heard it. Check it on phone speakers and on headphones, especially the
    impact at 2.0 s, the glass, and the end bells.
 6. **The 9:16 end card** now stacks MADE WITH / CLAUDE so it can be framed closer. The 16:9 cut

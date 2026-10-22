@@ -17,7 +17,7 @@ every sound cue are read from it.
 
 | Card | Words | Clean on screen | Notes |
 |------|-------|-----------------|-------|
-| "glow" search | 1 | 4.375–5.25 | Typed live; UI scale is large in that shot |
+| "glow" search | 1 | 4.375–4.63 fully sharp; legible in 72% / 61% of 4.0–5.25 | Typed live; UI scale is large in that shot |
 | Title card | 3 + 2 | 10.0–12.0 (2.0 s), and partially from 9.0 | The final hold must be ≥ 1.5 s |
 
 ## Continuity rules
@@ -50,7 +50,8 @@ every sound cue are read from it.
 - **S4**: focus pulls to the typed word, then the Glow row. A hold on the stomp, then a longer
   move to the viewer. The stomp hangs, then slams, and every keystroke bounces the mascot.
 - **S5**: the camera pulls back and up (16:9 rel [-1.0, 5.2, 6.2] → [-2.2, 5.6, 7.2], fov 40–42).
-  The title builds in the background: spark at 7.0, swoosh at 8.0, OPUS at 9.0, all in frame.
+  The title builds in the background: spark at 7.0, swoosh at 8.0, OPUS at 9.0. It is cropped at the
+  edges (16:9 "ADE WITH CLAUDE", 9:16 OPUS off frame), as the references crop theirs.
   9:16 sits ahead of the mascot, looking back. The look target ignores the trot bounce (no 4 Hz
   shake).
 - **S6**: a mid-jump key (9.62) keeps the mascot in frame on the final leap. **9:16 stacks the

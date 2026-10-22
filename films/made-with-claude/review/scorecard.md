@@ -6,9 +6,10 @@ re-render, and score again. Two kinds of score sit side by side below:
 - **Measured** (`scripts/qa.py`): deductions from frame and geometry probes, the same script for both
   passes. Pass 1 was re-scored with the corrected QA (`pass1-newqa`), which measures real glyph boxes,
   the word's own motion and glyph-core contrast. The old pass-1 report is `review/qa-pass1.md`.
-- **Panel** (pass 1 only): five independent reviewers looked at the frames. They were much stricter than
-  the measured QA, and their defect list drove passes 2 and 3. The pass-3 panel hasn't run yet,
-  because subagent usage is limited this week.
+- **Panel**: five independent reviewers (hook, readability, continuity, motion, sound) looked at the
+  frames and measured the audio, then a sixth ranked their findings and spot-checked the top three.
+  They are much stricter than the measured QA. Their pass-1 list drove passes 2 and 3; their pass-3
+  list is below and would drive a pass 4.
 
 ## Measured, 16:9 / 9:16
 
@@ -45,15 +46,46 @@ Remaining deductions:
   with the beam's first light (`fx.beams` fires at `kf.t − 0.08`). The QA reports it as a 45 ms
   placement offset. It's still a 10.
 
-## Panel, pass 1 (16:9 / 9:16)
+## Panel (16:9 / 9:16)
 
-Hook 7 / 5 · readability 7 / 4 · continuity 6 / 5 · motion 5 / 4 · sound didn't run.
+| Dimension | Pass 1 (first panel) | Pass 1 (second panel's view) | Pass 3 | Measured QA, pass 3 |
+|---|---|---|---|---|
+| Hook | 7 / 5 | 6 / 5 | **8 / 7** | 9 / 10 |
+| Readability | 7 / 4 | 6 / 4 | **8 / 7** | 10 / 10 |
+| Continuity | 6 / 5 | 5 / 4.5 | **7 / 6.5** | 10 / 10 |
+| Motion | 5 / 4 | 5 / 4 | **7 / 7** | 8 / 9 |
+| Sound | didn't run | 6 / 6 | **6 / 6** | 10 / 10 (sync only) |
+| Mean | | 5.6 / 4.7 | **7.2 / 6.7** | 9.4 / 9.8 |
+
+Every dimension improved except sound. The panel sits 2–3 points under the measured QA, and it
+names what the QA can't see: rotation ghosting (the sample probe only tracks the mascot's root, not
+its spin), thin UI text strobing on whip landings, edge crops on oblique views (the probe's title
+box is wrong there), motion inside the brand-legibility test, and whether a sound can actually be
+heard. So the 10s above for readability and continuity are the QA's, not the panel's.
+
+### What the pass-3 panel still finds, ranked by viewer impact
+
+| # | Defect | Fix (re-render) |
+|---|---|---|
+| 1 | **The chrome OPUS forms during the 9.25 whip**, small and out of focus, so nobody sees it form. Confirmed at 16:9 f280/f288 and 9:16 f290. | Hold the beads through the leap and swell the letters on the settled card, 9.95–10.45, still by 10.9 (16:9 f277–330, 9:16 f277–359) |
+| 2 | **9:16 end-card halo** greys the gap between the stacked lines (glyph:gap 2.0). | Cap the halo scale at the tall size, alpha 0.72 → 0.5 (inside batch 1) |
+| 3 | **Trot-start pirouette ghosts** the mascot into three copies (f180–184), the same blind spot as the head striping at 16:9 f72–75. | Probe the body corners, not the root; slower turn (f158–192) |
+| 4 | **The end card sits in an audio hole**: 10.4–11.0 is −24.6 dBFS against a −15 groove. | Remove the outro dip, add a bass hit at the outro (audio only) |
+| 5 | **The 2.0 s drop lands soft**: f60 is a defocused blob, and 1.6–2.0 s is 8.7 dB under the groove. | Pop scale-in before f60's shutter, shards from f60; a hotter snare roll and riser (f58–61) |
+| 6 | **16:9 title at 5.0 clips the E** of CLAUDE at the bottom edge. | fov 36 → 40, faster glow (f140–168) |
+| 7 | **The first 2 s don't hit**, especially 9:16 (small sprite, quiet blips). | Tighter 9:16 frame 0, blips −14 → −5 dB (light frames f0–44) |
+| 8 | 9:16 end-card lean-back reads as tipping over. | Lean −0.6 → −0.35 (inside batch 1) |
+| 9–15 | A shard through the head (f78–81), a one-frame flare (f52), the glow beat acted from behind, a backdrop snap (f164–174), thin-UI strobing on whip landings, and a masked mid-film mix (stomp, whooshes, zaps, the high shelf that moved the air band 3–5 dB under the references). | Exact values in `review/panel-pass3.md` |
+
+Cheapest first: one audio pass (items 4, 5, 7 and 15, no frames), then four re-render batches: the
+ending (1, 2, 8), the S5 entry (3, 12, 9), the hook (5, 7, 10) and the title at 5.0 (6). The
+reviewers agree to leave the 2.53 s camera brake and the S5 title crop.
 
 The panel's three worst picks were the double-exposed landings, the "glow" beat, and the S5 keyframe
 run (with the stepped motion blur close behind). The verifiers argued S5 and the 9:16 brand payoff
 mattered more than the landing ghosts. All of these are fixed, as follows.
 
-## The three worst, and what happened to them
+## Pass 1's three worst, and what happened to them
 
 1. **Double-exposed mascot on landings** (pass 2). The stretch now relaxes at contact, the landing squash
    has a 40 ms attack, and there's no crouch in mid-air. Proof in rendered frames:
