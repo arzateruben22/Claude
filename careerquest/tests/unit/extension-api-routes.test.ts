@@ -64,9 +64,17 @@ function capture(over: Record<string, unknown> = {}, evidence: Record<string, un
   };
 }
 
+/** Response body of POST /captures (or an error body; tests check whichever applies). */
+type CaptureJson = {
+  capture: { id: string; status: string };
+  application: { id: string; status: string; detailUrl: string };
+  action: string;
+  error: string;
+};
+
 async function post(body: unknown, t = token) {
   const res = await capturesPOST(req("/api/extension/captures", { token: t, body }));
-  return { res, json: (await res.json()) as Record<string, any> };
+  return { res, json: (await res.json()) as CaptureJson };
 }
 
 beforeAll(async () => {
