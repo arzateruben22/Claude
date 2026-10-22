@@ -39,7 +39,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 33 | `11-2-9x16.mp4` | Pregnancy and breastfeeding | Pregnant? Here's what to pause, what's commonly fine, and the one rule. | 21 s |
 | 34 | `7-1-9x16.mp4` | The Sunday ritual | A 20-minute facial at home, step by step, minute by minute. | 22 s |
 | 35 | `7-3-9x16.mp4` | Skin through the seasons | The Valley has more weather than people think. Your routine should too. | 22 s |
-| 36 | *rendering* | Scrubs, brushes and dermaplaning | Physical exfoliation can be kind or harsh. It's the tool and the pressure. |  |
+| 36 | `4-3-9x16.mp4` | Scrubs, brushes and dermaplaning | Physical exfoliation can be kind or harsh. It's the tool and the pressure. | 22 s |
 | 37 | *rendering* | Professional treatments, explained | Who does what in skin treatments, and what actually makes them work. |  |
 | 38 | *rendering* | Your skin plan for life | A base, one or two actives, and a look every season. Nothing more. |  |
 | 39 | *rendering* | Your first visit: which one to book | Two questions decide which appointment to book. |  |
