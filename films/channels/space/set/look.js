@@ -25,7 +25,9 @@ const rrt = (v) => (v * (v + 0.0245786) - 0.000090537) / (v * (0.983729 * v + 0.
 export const aces = (c, exposure = 1) => mul(OUT, mul(IN, c.map((x) => x * exposure / 0.6)).map(rrt)).map((x) => Math.min(1, Math.max(0, x)));
 const finish = (c) => aces(c).map(l2s);
 
-// Newton on the 3×3 system finish(x) = target (sRGB), with a numeric Jacobian
+// Newton on the 3×3 system finish(x) = target (sRGB), with a numeric Jacobian. Saturated tokens (teal,
+// ice) sit outside what ACES returns for positive light, so the solve may go below zero in one channel
+// (down to −1): the float accumulation keeps it, and the finish lands on the token exactly.
 const invert = (target) => {
   let x = target.map(s2l).map((v) => Math.max(v, 0.004));
   for (let it = 0; it < 40; it++) {
@@ -44,8 +46,14 @@ const invert = (target) => {
       [(J[1][2] * J[2][0] - J[1][0] * J[2][2]) / det, (J[0][0] * J[2][2] - J[0][2] * J[2][0]) / det, (J[0][2] * J[1][0] - J[0][0] * J[1][2]) / det],
       [(J[1][0] * J[2][1] - J[1][1] * J[2][0]) / det, (J[0][1] * J[2][0] - J[0][0] * J[2][1]) / det, (J[0][0] * J[1][1] - J[0][1] * J[1][0]) / det],
     ];
-    const d = mul(inv, r);
-    x = x.map((v, i) => Math.max(1e-5, v - d[i]));
+    const d = mul(inv, r), err = Math.max(...r.map(Math.abs));
+    // damped: halve the step until the error drops (the fit's corners make a full step overshoot)
+    let k = 1, nx = x;
+    for (let h = 0; h < 12; h++, k *= 0.5) {
+      nx = x.map((v, i) => Math.max(-1, v - d[i] * k));
+      if (Math.max(...finish(nx).map((v, i) => Math.abs(v - target[i]))) < err) break;
+    }
+    x = nx;
   }
   return x;
 };
@@ -57,4 +65,13 @@ export const tok = (name) => {
   return cache.get(hex).slice();
 };
 export const hdr = (name, k = 1) => tok(name).map((v) => v * k);
+// A line or ring drawn additively over the void at a visual strength a: the light it must add so the
+// finish shows mix(void, token, a) in sRGB (scaling the light instead would shift the hue through ACES:
+// lilac at 40% comes out blue). k > 1 then pushes it into the bloom.
+const hexOf = (rgb) => "#" + rgb.map((v) => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, "0")).join("");
+export const line = (name, a = 1, k = 1, over = "void") => {
+  const c = hexRGB(name.startsWith("#") ? name : T[name]), g = hexRGB(T[over] || over);
+  const want = tok(hexOf(c.map((v, i) => g[i] + (v - g[i]) * a))), base = tok(T[over] || over);
+  return want.map((v, i) => (v - base[i]) * k);
+};
 export const THEME = window.THEME || {};

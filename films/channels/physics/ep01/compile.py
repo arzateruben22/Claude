@@ -138,8 +138,9 @@ RAMP = 0.3                                               # ×1 → ×1/20 tape-s
 TAU_RAMP = RAMP * (SLOW - 1) / math.log(SLOW)            # scene time that passes during that ramp: 0.0951 s
 FREEZE = 0.4                                             # ×1/20 → frozen (linear): 0.01 s of scene time passes
 
-HOOK_TAU0 = 0.21                                         # frame 0: 0.21 s into the hook's fall (ghosts 0–4 already stamped)
-F_h = A("vo01:dropped") - FREEZE                         # the hook freezes just before landing, on "dropped"
+F_h = A("vo01:One", -0.1) - FREEZE                       # the hook freezes on its question, mid-fall ("…lands first?")
+HOOK_END = 0.305                                         # … 0.305 s into its fall (its centre 58 cm up), above the captions
+HOOK_TAU0 = HOOK_END - FREEZE * SLOW / 2 - SLOW * F_h    # so frame 0 is 0.23 s in: ghosts 0–4 already stamped, level in pairs
 L_n = A("vo02:down")                                     # the drop lands on "down"
 R_n = L_n - (RAMP + (T_LAND - TAU_RAMP) / SLOW)          # … released (at ×1, ramping to ×1/20) on "slowed"
 L_c = A("vo03:same#3")                                   # both land on "same frame"
@@ -180,7 +181,8 @@ for name, tk in TAKES.items():
     tk["stamps"] = [round(clk.tOf(tk["tauR"] + k * DT), 6) for k in range(NG)]          # a stamp after the take's cut is never shown
     if name in LAND:
         assert abs(clk.tOf(tk["tauR"] + T_LAND) - LAND[name]) < 1e-6, (name, clk.tOf(tk["tauR"] + T_LAND), LAND[name])
-assert TAKES["hook"]["stamps"][4] + 0.18 < 0, "ghost 4 must be fully stamped on frame 0"
+assert TAKES["hook"]["stamps"][4] + 0.2 < 0 < TAKES["hook"]["stamps"][5], "ghosts 0–4 are fully stamped on frame 0"
+assert TAKES["hook"]["stamps"][6] < F_h + FREEZE < TAKES["hook"]["stamps"][7], "ghost 6 is stamped just before the freeze"
 assert TAKES["hook"]["stamps"][8] > TAKES["hook"]["t1"], "the hook freezes before ghost 8"
 for name in ("normal", "change", "why", "whoa"):           # every ghost is stamped inside its take
     s = [x for x in TAKES[name]["stamps"] if math.isfinite(x)]
@@ -210,7 +212,7 @@ CUE = {
     "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "two": A("vo04:two"), "glide": A("vo04:glide"),
             "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same#2")]},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
-    "measure": {"gaps": GAPS, "counter": [m0 - 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
+    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.05, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
     "tease": {"out": A("vo08:Next")},
     "cuts": CUTS,
 }
@@ -228,18 +230,17 @@ LABELS = [
     {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": C_w, "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
     {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": C_w, "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same#2"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
-    {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure"), "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
+    {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
     {"id": "ms-1m", "text": "1 m", "color": "ghost", "t0": A("vo06:one-meter"), "t1": None, "anchor": {"point": [STICK_X, 100.0, 0.0]}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "tk-when", "text": "all 0.45 s", "color": "ghost", "t0": A("vo07:when"), "t1": None, "anchor": {"rung": ["whoa", 9], "u": 0.0}, "side": -1, "fixed": True, "v": "above"},
 ]
 BADGES = [
-    {"id": "galileo", "text": "Galileo, Two New Sciences (1638)", "t0": A("vo04:Galileo"), "t1": A("vo04:So"), "slot": "tl"},
-    {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": None, "slot": "tr"},
-    {"id": "air", "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms", "t0": B["takeaway"]["t0"], "t1": None, "slot": "tl"},
+    {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": cut("takeaway") - 0.3, "slot": "tr"},
+    {"id": "air", "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
 ]
 READOUTS = [
     {"id": "ch-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},
-    {"id": "wo-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo05:Throw"), "t1": cut("measure")},
+    {"id": "wo-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo05:forty", -0.2), "t1": cut("measure")},   # once the pull-back shows the floor
     {"id": "wo-40", "text": "40 cm", "at": [40.0, 0.0, 0.0], "t0": A("vo05:forty"), "t1": cut("measure")},
     {"id": "wo-60", "text": "60 cm", "at": [60.0, 0.0, 0.0], "t0": A("vo05:sixty"), "t1": cut("measure")},
     {"id": "tk-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo07:where"), "t1": None},
@@ -262,21 +263,24 @@ def key(t, v, ease="p2", **over):
     return {"t": round(t, 4), **v, **over, "ease": ease}
 
 
-hook_v = view(13.0, top_px=550.0, floor_px=550.0 + 7.8 * (DROP + 2 * RB))
+hook_v = view(9.0, top_px=600.0, floor_px=600.0 + 11.0 * (DROP + 2 * RB))   # the title card owns y 250–590; the floor sits under the captions
 full = lambda cx: view(cx)                                 # noqa: E731
 CAM = {
-    "hook": [key(0.0, hook_v), key(cut("normal"), {**hook_v, "look": [15.0, hook_v["look"][1], 0.0]}, "sine")],
-    "normal": [key(cut("normal"), full(5.0)), key(cut("change"), full(-1.0), "sine")],
-    "change": [key(cut("change"), full(10.0)), key(cut("why"), full(6.0), "sine")],
-    "why": [key(cut("why"), full(7.0)), key(A("vo04:So", -0.2), full(5.0), "sine"),
-            key(A("vo04:same#2"), {**view(2.0), "yaw": 68.0, "dist": view(2.0)["dist"] + 12}, "p3"),
-            key(cut("whoa"), {**view(2.0), "yaw": 71.0, "dist": view(2.0)["dist"] + 18}, "sine")],
+    "hook": [key(0.0, hook_v), key(cut("normal"), {**hook_v, "look": [11.0, hook_v["look"][1], 0.0]}, "sine")],
+    "normal": [key(cut("normal"), full(8.0)), key(cut("change"), full(3.0), "sine")],
+    # labels sit to the right of what they name, so the action keeps to the left half (room above the rail for the badge)
+    "change": [key(cut("change"), view(19.0, top_px=345.0)), key(cut("why"), view(16.0, top_px=345.0), "sine")],
+    "why": [key(cut("why"), full(26.0)), key(A("vo04:So", -0.2), full(23.0), "sine"),
+            key(A("vo04:same#2"), {**view(2.0), "yaw": 52.0, "pitch": 7.0, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 10}, "p3"),
+            key(cut("whoa"), {**view(2.0), "yaw": 55.0, "pitch": 7.5, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 16}, "sine")],
     "whoa": [key(cut("whoa"), {"look": [-2.0, 97.0, 0.0], "dist": 232.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}),
              key(R_o + 0.35, {"look": [-2.0, 96.0, 0.0], "dist": 238.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}, "sine"),
              key(A("vo05:forty"), full(26.0), "p3"), key(cut("measure"), full(27.0), "sine")],
     "measure": [key(cut("measure"), full(30.0)), key(cut("takeaway"), {**full(30.0), "dist": full(30.0)["dist"] - 6}, "sine")],
-    "takeaway": [key(cut("takeaway"), {**full(30.0), "dist": full(30.0)["dist"] - 6}), key(cut("tease"), full(30.0), "sine")],
-    "tease": [key(cut("tease"), full(30.0)), key(DUR, {**full(30.0), "dist": full(30.0)["dist"] + 48, "look": [30.0, 30.0, 0.0]}, "sine")],
+    # the takeaway pulls back a little, so the honesty badge has the top of the frame to itself
+    "takeaway": [key(cut("takeaway"), {**full(30.0), "dist": full(30.0)["dist"] - 6}), key(cut("takeaway") + 1.15, view(30.0, top_px=440.0), "p3"),
+                 key(cut("tease"), view(30.0, top_px=446.0), "sine")],
+    "tease": [key(cut("tease"), view(30.0, top_px=446.0)), key(DUR, view(30.0, top_px=520.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
@@ -346,8 +350,8 @@ if cues_file.exists():
         c = by_tag.get(e.get("tag"))
         if c and e["kind"] in ("label", "counter.show") and c.get("pos"):
             e["pos"] = c["pos"]
-        if c and e["kind"] in ("label",) and c.get("shown") is not None:
-            shown[e["tag"]] = c["shown"]
+        if c and e["kind"] in ("label", "counter.show") and cues.get("shown", {}).get(e["tag"]) is not None:
+            shown[e["tag"]] = cues["shown"][e["tag"]]
 
 sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9.0,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],

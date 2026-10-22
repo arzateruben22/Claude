@@ -31,9 +31,12 @@
 //   L.toLocal(id, p, view)   the reverse
 //   L.alpha(id, s)           a rung's opacity at log10 scale s
 // logDolly(keys, { ease = "inout3" }) → (t) => { scale, focus, s, u }
-//   keys: [{ t, scale, focus: [x,y,z], ease? }]. log10(scale) is eased between keys; the focus moves in
-//   step with the zoom (by the same eased fraction, u), so a subject that leaves the centre does so at the
-//   pace the eye reads the zoom. Before the first key the first holds; after the last, the last.
+//   keys: [{ t, scale, focus: [x,y,z], ease? }]. log10(scale) is eased between keys (u: the eased time
+//   fraction). The focus slides in screen space: zooming out, the old focus glides from the centre of the
+//   frame to its place in the new view at an even pace in u; zooming in, the new focus glides to the centre
+//   from where the old view showed it. (Moving the focus by u in world units would fling the subject across
+//   the frame in the first frames of a zoom-out, while the scale is still small.)
+//   Before the first key the first holds; after the last, the last.
 // setOpacity(object, a)     multiplies every material's opacity under object by a (each material's own
 //                           opacity is remembered the first time, in userData.baseOpacity) and hides
 //                           what reaches 0. ShaderMaterials with a uOpacity uniform are scaled the same way.
@@ -63,8 +66,15 @@ export const logDolly = (keys, opts = {}) => {
       const a = ks[i - 1], b = ks[i];
       if (t < b.t) {
         const u = ease(b.ease, opts.ease || "inout3")(clamp01((t - a.t) / (b.t - a.t)));
-        const s = a.s + (b.s - a.s) * u;
-        return { scale: Math.pow(10, s), s, u, focus: [0, 1, 2].map((j) => a.focus[j] + (b.focus[j] - a.focus[j]) * u) };
+        const s = a.s + (b.s - a.s) * u, scale = Math.pow(10, s);
+        // the focus slides in screen space: zooming out, the old focus moves from the centre to where the
+        // new view puts it, linearly in u (its screen offset is (a − b)/b.scale · u); zooming in, the new
+        // focus slides in from where the old view showed it. Either way nothing is flung across the frame,
+        // however many decades pass (moving the focus by u in world space would do exactly that).
+        const out = b.scale >= a.scale;
+        const focus = [0, 1, 2].map((j) => (out ? a.focus[j] + (b.focus[j] - a.focus[j]) * (scale / b.scale) * u
+          : b.focus[j] + (a.focus[j] - b.focus[j]) * (scale / a.scale) * (1 - u)));
+        return { scale, s, u, focus };
       }
     }
     const z = ks[ks.length - 1];

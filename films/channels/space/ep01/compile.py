@@ -80,7 +80,9 @@ CLK = {
     # the whoa (Earth scale, then the diagram): one clock, 8:20 exactly on "arrives"
     "whoa": {"keys": [{"t": B["whoa"]["t0"], "rate": RATE_W}], "anchor": [t_arr, T_ARR]},
     # the restored system: the Sun on (τ < 0 throughout)
-    "restore": {"keys": [{"t": B["takeaway"]["t0"], "rate": RATE_D}], "anchor": [B["takeaway"]["t0"], -6000.0]},
+    # (it stops for the readout: a still diagram needs no time badge, and the readout is read, not watched)
+    "restore": {"keys": [{"t": B["takeaway"]["t0"], "rate": RATE_D}, {"t": B["readout"]["t0"], "rate": 0.0, "ramp": 0.6, "badge": None}],
+                "anchor": [B["takeaway"]["t0"], -6000.0]},
 }
 
 
@@ -112,39 +114,40 @@ earth_at = lambda tau_: (R_D * math.cos(E0 + 2 * math.pi * N_ORBIT * tau_ / YEAR
 eh = earth_at(CLK["diagram"]["hook"])
 CAM = {
     "diagram": [
-        {"t": 0.0, "target": [7.6, 0, 1.0], "dist": 74, "el": 62, "az": -8, "fov": 24, "fy": 0.56},
-        {"t": t_rw0, "target": [7.0, 0, 0.8], "dist": 70, "el": 62, "az": -7, "fov": 24, "fy": 0.56, "ease": "sine"},
-        {"t": t_rw1 + 0.5, "target": [0.6, 0, 0.0], "dist": 132, "el": 63, "az": -6, "fov": 24, "fy": 0.47, "ease": "inout3"},
-        {"t": B["change"]["t0"], "target": [0.4, 0, 0.0], "dist": 126, "el": 63, "az": 8, "fov": 24, "fy": 0.47, "ease": "sine"},
-        {"t": B["why"]["t0"], "target": [3.0, 0, -0.5], "dist": 112, "el": 64, "az": 18, "fov": 24, "fy": 0.47, "ease": "sine"},
+        {"t": 0.0, "target": [7.35, 0, 1.5], "dist": 111, "el": 60, "az": 31, "fov": 24, "fy": 0.43},
+        {"t": t_rw0, "target": [7.1, 0, 1.4], "dist": 106, "el": 60, "az": 32, "fov": 24, "fy": 0.43, "ease": "sine"},
+        {"t": t_rw1 + 0.5, "target": [0.4, 0, 0.0], "dist": 168, "el": 61, "az": 33, "fov": 24, "fy": 0.38, "ease": "inout3"},
+        {"t": B["change"]["t0"], "target": [0.4, 0, 0.0], "dist": 160, "el": 62, "az": 47, "fov": 24, "fy": 0.38, "ease": "sine"},
+        {"t": B["why"]["t0"], "target": [3.0, 0, -0.5], "dist": 146, "el": 63, "az": 58, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "grid": [
-        {"t": B["why"]["t0"], "target": [0, -2.6, 0], "dist": 74, "el": 27, "az": 14, "fov": 30, "fy": 0.47},
-        {"t": t_race, "target": [0, -2.0, 0], "dist": 70, "el": 29, "az": 20.5, "fov": 30, "fy": 0.47, "ease": "sine"},
+        {"t": B["why"]["t0"], "target": [0, -3.2, 0], "dist": 78, "el": 27, "az": 14, "fov": 30, "fy": 0.4},
+        {"t": t_race, "target": [0, -2.4, 0], "dist": 74, "el": 29, "az": 20.5, "fov": 30, "fy": 0.4, "ease": "sine"},
     ],
     "race": [
-        {"t": t_race, "target": [0, 0, -38], "dist": 44, "el": 52, "az": 0, "fov": 30, "fy": 0.42},
-        {"t": A("vo04:crossed"), "target": [0, 0, -4], "dist": 150, "el": 54, "az": 3, "fov": 30, "fy": 0.46, "ease": "inout3"},
-        {"t": B["whoa"]["t0"], "target": [0, 0, 6], "dist": 132, "el": 54, "az": 6, "fov": 30, "fy": 0.46, "ease": "sine"},
+        {"t": t_race, "target": [0, 0, -40], "dist": 30, "el": 40, "az": 0, "fov": 30, "fy": 0.42},
+        {"t": A("vo04:colliding", 0.9), "target": [0, 0, -39], "dist": 34, "el": 40, "az": 1, "fov": 30, "fy": 0.42, "ease": "sine"},
+        {"t": A("vo04:light-years"), "target": [0, 0, 1], "dist": 258, "el": 41, "az": 3, "fov": 30, "fy": 0.352, "ease": "inout3"},
+        {"t": B["whoa"]["t0"], "target": [0, 0, 3], "dist": 246, "el": 42, "az": 5, "fov": 30, "fy": 0.352, "ease": "sine"},
     ],
     "earth": [
-        {"t": B["whoa"]["t0"], "target": [0, -1.2, 0], "dist": 118, "el": 6, "az": -24, "fov": 19, "fy": 0.43},
-        {"t": t_w2, "target": [0.6, -1.2, 0], "dist": 112, "el": 6, "az": -21, "fov": 19, "fy": 0.43, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "target": [0, -1.6, 0], "dist": 194, "el": 6, "az": -24, "fov": 19, "fy": 0.42, "fx": 0.46},
+        {"t": t_w2, "target": [0.3, -1.6, 0], "dist": 190, "el": 6, "az": -21, "fov": 19, "fy": 0.42, "fx": 0.46, "ease": "sine"},
     ],
     "news": [
-        {"t": t_w2, "target": [8.4, 0, -2.0], "dist": 100, "el": 66, "az": 0, "fov": 24, "fy": 0.5},
-        {"t": B["takeaway"]["t0"], "target": [9.4, 0, -4.4], "dist": 104, "el": 66, "az": 2, "fov": 24, "fy": 0.5, "ease": "sine"},
+        {"t": t_w2, "target": [7.6, 0, -1.6], "dist": 122, "el": 64, "az": 12, "fov": 24, "fy": 0.4},
+        {"t": B["takeaway"]["t0"], "target": [8.6, 0, -3.6], "dist": 126, "el": 64, "az": 14, "fov": 24, "fy": 0.4, "ease": "sine"},
     ],
     "restore": [
-        {"t": B["takeaway"]["t0"], "target": [11.0, 0, 3.0], "dist": 40, "el": 58, "az": -10, "fov": 24, "fy": 0.5},
-        {"t": A("vo06:Everything"), "target": [3.0, 0, 0.8], "dist": 120, "el": 62, "az": -6, "fov": 24, "fy": 0.47, "ease": "inout3"},
-        {"t": t_j0, "target": [0, 0, 0], "dist": 140, "el": 63, "az": 0, "fov": 24, "fy": 0.47, "ease": "sine"},
-        {"t": t_j1, "target": [0, 0, 0], "dist": 140, "el": 61, "az": 2.4, "fov": 24, "fy": 0.47, "ease": "inout3"},
-        {"t": t_end + 0.4, "target": [0, 0, 0], "dist": 140, "el": 59.6, "az": 4.5, "fov": 24, "fy": 0.47, "ease": "sine"},
+        {"t": B["takeaway"]["t0"], "target": [14.2, 0, 2.6], "dist": 40, "el": 58, "az": -6, "fov": 24, "fy": 0.42},
+        {"t": A("vo06:Everything"), "target": [2.0, 0, 0.6], "dist": 186, "el": 62, "az": -3, "fov": 24, "fy": 0.38, "fx": 0.458, "ease": "inout3"},
+        {"t": t_j0, "target": [0, 0, 0], "dist": 186, "el": 63, "az": 0, "fov": 24, "fy": 0.38, "fx": 0.458, "ease": "sine"},
+        {"t": t_j1, "target": [0, 0, 0], "dist": 186, "el": 61, "az": 2.4, "fov": 24, "fy": 0.38, "fx": 0.458, "ease": "inout3"},
+        {"t": t_end + 0.4, "target": [0, 0, 0], "dist": 186, "el": 59.6, "az": 4.5, "fov": 24, "fy": 0.38, "fx": 0.458, "ease": "sine"},
     ],
     "end": [
-        {"t": t_end, "target": [0, 0, 0], "dist": 140, "el": 59.6, "az": 4.5, "fov": 24, "fy": 0.47},
-        {"t": B["tease"]["t1"], "target": [0, 0, 0], "dist": 150, "el": 58, "az": 7.5, "fov": 24, "fy": 0.47, "ease": "sine"},
+        {"t": t_end, "target": [0, 0, 0], "dist": 186, "el": 59.6, "az": 4.5, "fov": 24, "fy": 0.38, "fx": 0.458},
+        {"t": B["tease"]["t1"], "target": [0, 0, 0], "dist": 198, "el": 58, "az": 7.5, "fov": 24, "fy": 0.38, "fx": 0.458, "ease": "sine"},
     ],
 }
 for shot, keys in CAM.items():           # the bible's arc limit: ≤ 1.5° a second, in azimuth and in elevation
@@ -172,7 +175,7 @@ LABELS = [
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": t_off, "shot": "diagram", "side": -1},
     {"id": "l-v", "text": "nearly 30 km/s", "kind": "gravity", "anchor": "earth-v", "t0": A("vo02:thirty"), "t1": A("vo02:Sunlight"), "shot": "diagram", "side": 1},
     {"id": "l-ring", "text": "8 min 20 s", "kind": "light", "anchor": "ring-au", "t0": A("vo02:eight"), "t1": B["why"]["t0"], "shot": "diagram", "side": 1},
-    {"id": "l-last", "text": "last light", "kind": "light", "anchor": "front", "t0": A("vo03:last"), "t1": B["why"]["t0"], "shot": "diagram", "side": -1},
+    {"id": "l-last", "text": "last light", "kind": "light", "anchor": "front", "t0": A("vo03:last"), "t1": B["why"]["t0"], "shot": "diagram", "side": 1},
     # why: the grid, then the race
     {"id": "l-gravity", "text": "gravity", "kind": "gravity", "anchor": "well", "t0": A("vo04:Gravity"), "t1": t_race, "shot": "grid", "side": 1},
     {"id": "l-light-g", "text": "light", "kind": "light", "anchor": "grid-front", "t0": A("vo04:speed"), "t1": t_race, "shot": "grid", "side": -1},
@@ -199,29 +202,30 @@ BADGES = [
     {"id": "b-thought-c", "text": "thought experiment", "t0": t_off, "t1": B["why"]["t0"], "slot": "tr"},
     {"id": "b-analogy", "text": "analogy", "t0": B["why"]["t0"], "t1": t_race, "slot": "tr"},
     {"id": "b-time-g", "clock": "grid", "t0": B["why"]["t0"], "t1": t_race, "slot": "tl"},
+    {"id": "b-thought-g", "text": "thought experiment", "t0": A("vo04:changes", -0.6), "t1": t_race, "slot": "tr"},
     {"id": "b-time-r", "clock": "race", "t0": t_race, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-nts-r", "text": "not to scale", "t0": t_race, "t1": B["whoa"]["t0"], "slot": "tr"},
+    {"id": "b-orbit-n", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-time-w", "clock": "whoa", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-true", "text": "true scale", "t0": B["whoa"]["t0"], "t1": t_w2, "slot": "tr"},
-    {"id": "b-orbit-n", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-nts-n", "text": "not to scale", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-thought-w", "text": "thought experiment", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-time-t", "clock": "restore", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tl"},
-    {"id": "b-orbit-t", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tl"},
+    {"id": "b-time-t", "clock": "restore", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
+    {"id": "b-orbit-t", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
     {"id": "b-nts-t", "text": "not to scale", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tr"},
 ]
 COUNTERS = [
     # the light clock: true time since the Sun vanished (the time badge says how fast it plays)
-    {"id": "c-clock", "label": "since the Sun vanished", "clock": "diagram", "fmt": "clock", "t0": t_off, "t1": B["why"]["t0"], "at": [0.5, 0.215]},
-    {"id": "c-clock-w", "label": "since the Sun vanished", "clock": "whoa", "fmt": "clock", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "at": [0.5, 0.215], "lit": T_ARR},
-    {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:less"), "t1": B["whoa"]["t0"], "at": [0.5, 0.215]},
+    {"id": "c-clock", "label": "since the Sun vanished", "clock": "diagram", "fmt": "clock", "t0": t_off, "t1": B["why"]["t0"], "at": [0.5, 0.245]},
+    {"id": "c-clock-w", "label": "since the Sun vanished", "clock": "whoa", "fmt": "clock", "t0": B["whoa"]["t0"], "t1": t_arr + 1.6, "at": [0.5, 0.245], "lit": T_ARR, "stop": T_ARR},
+    {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:less"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
     # the readout (the channel's segment): light time for this episode's distance, then the galaxy's
     {"id": "c-read-au", "label": "light time · Sun to Earth", "fmt": "text", "text": "8 min 20 s", "t0": A("vo07:Light"), "t1": t_j0 + 0.2, "at": [0.5, 0.2]},
     {"id": "c-read-gc", "label": "light time · galactic center to Sun", "fmt": "text", "text": "27,000 years", "t0": A("vo07:twenty-seven"), "t1": end_out, "at": [0.5, 0.2]},
 ]
 PILLS = [
-    {"id": "p-au", "text": "150 million km", "bar": "sun-earth", "t0": A("vo02:million"), "t1": A("vo02:Sunlight", 0.5), "shot": "diagram"},
-    {"id": "p-race", "text": "130 million light-years", "bar": "lane", "t0": A("vo04:hundred"), "t1": B["whoa"]["t0"], "shot": "race"},
+    {"id": "p-au", "text": "150 million km", "bar": "sun-earth", "t0": A("vo02:million"), "t1": A("vo02:Sunlight", 0.5), "shot": "diagram", "at": [90 / 1080, 0.205]},
+    {"id": "p-race", "text": "130 million light-years", "bar": None, "t0": A("vo04:hundred"), "t1": B["whoa"]["t0"], "shot": "race", "at": [90 / 1080, 0.205]},
 ]
 
 # ── the title card and the end card ───────────────────────────────────────

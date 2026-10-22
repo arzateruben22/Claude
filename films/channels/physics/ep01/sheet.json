@@ -67,34 +67,37 @@
    "gain": -4.0
   },
   {
-   "t": 0.8,
+   "t": 0.3667,
    "kind": "strobe",
    "tag": "hook:g5"
   },
   {
-   "t": 1.8,
+   "t": 1.3838,
    "kind": "strobe",
    "tag": "hook:g6"
   },
   {
+   "t": 1.6667,
+   "kind": "time.slow",
+   "tag": "slow@1.67"
+  },
+  {
    "t": 2.0333,
    "kind": "label",
-   "tag": "hk-thrown"
-  },
-  {
-   "t": 2.8,
-   "kind": "strobe",
-   "tag": "hook:g7"
+   "tag": "hk-thrown",
+   "pos": [
+    0.737,
+    0.566
+   ]
   },
   {
    "t": 3.4667,
    "kind": "label",
-   "tag": "hk-dropped"
-  },
-  {
-   "t": 3.4667,
-   "kind": "time.slow",
-   "tag": "slow@3.47"
+   "tag": "hk-dropped",
+   "pos": [
+    0.191,
+    0.566
+   ]
   },
   {
    "t": 4.5333,
@@ -107,7 +110,7 @@
    "kind": "contact",
    "tag": "normal:release",
    "pos": [
-    0.464,
+    0.442,
     0.2
    ]
   },
@@ -139,7 +142,11 @@
   {
    "t": 7.4667,
    "kind": "label",
-   "tag": "nm-apart"
+   "tag": "nm-apart",
+   "pos": [
+    0.584,
+    0.176
+   ]
   },
   {
    "t": 8.2029,
@@ -159,7 +166,11 @@
   {
    "t": 11.2,
    "kind": "label",
-   "tag": "nm-gravity"
+   "tag": "nm-gravity",
+   "pos": [
+    0.523,
+    0.55
+   ]
   },
   {
    "t": 11.2029,
@@ -181,7 +192,7 @@
    "kind": "bounce",
    "tag": "normal:drop:land",
    "pos": [
-    0.405,
+    0.383,
     0.6
    ]
   },
@@ -194,19 +205,27 @@
   {
    "t": 14.4667,
    "kind": "label",
-   "tag": "ch-dropped"
+   "tag": "ch-dropped",
+   "pos": [
+    0.192,
+    0.184
+   ]
   },
   {
    "t": 14.6,
    "kind": "label",
-   "tag": "ch-thrown"
+   "tag": "ch-thrown",
+   "pos": [
+    0.609,
+    0.187
+   ]
   },
   {
    "t": 14.8056,
    "kind": "contact",
    "tag": "change:release",
    "pos": [
-    0.427,
+    0.369,
     0.2
    ]
   },
@@ -253,7 +272,11 @@
   {
    "t": 19.3333,
    "kind": "label",
-   "tag": "ch-20"
+   "tag": "ch-20",
+   "pos": [
+    0.521,
+    0.612
+   ]
   },
   {
    "t": 20.2029,
@@ -275,7 +298,7 @@
    "kind": "bounce",
    "tag": "change:drop:land",
    "pos": [
-    0.369,
+    0.314,
     0.6
    ]
   },
@@ -284,7 +307,7 @@
    "kind": "bounce",
    "tag": "change:t44:land",
    "pos": [
-    0.572,
+    0.506,
     0.6
    ]
   },
@@ -297,14 +320,18 @@
   {
    "t": 23.7667,
    "kind": "label",
-   "tag": "wy-gravity"
+   "tag": "wy-gravity",
+   "pos": [
+    0.176,
+    0.252
+   ]
   },
   {
    "t": 24.3,
    "kind": "contact",
    "tag": "why:release",
    "pos": [
-    0.449,
+    0.31,
     0.2
    ]
   },
@@ -334,12 +361,6 @@
    "tag": "why:g4"
   },
   {
-   "t": 28.5667,
-   "kind": "badge",
-   "tag": "galileo",
-   "text": "Galileo, Two New Sciences (1638)"
-  },
-  {
    "t": 29.3,
    "kind": "strobe",
    "tag": "why:g5"
@@ -357,7 +378,11 @@
   {
    "t": 31.8667,
    "kind": "label",
-   "tag": "wy-glide"
+   "tag": "wy-glide",
+   "pos": [
+    0.693,
+    0.514
+   ]
   },
   {
    "t": 32.3,
@@ -374,7 +399,7 @@
    "kind": "bounce",
    "tag": "why:drop:land",
    "pos": [
-    0.391,
+    0.252,
     0.6
    ]
   },
@@ -383,7 +408,7 @@
    "kind": "bounce",
    "tag": "why:t44:land",
    "pos": [
-    0.594,
+    0.455,
     0.6
    ]
   },
@@ -395,7 +420,11 @@
   {
    "t": 36.6,
    "kind": "label",
-   "tag": "wy-same"
+   "tag": "wy-same",
+   "pos": [
+    0.666,
+    0.342
+   ]
   },
   {
    "t": 36.6,
@@ -429,11 +458,6 @@
    "tag": "whoa:g0"
   },
   {
-   "t": 39.5333,
-   "kind": "label",
-   "tag": "wo-20"
-  },
-  {
    "t": 40.4362,
    "kind": "strobe",
    "tag": "whoa:g1"
@@ -444,9 +468,22 @@
    "tag": "whoa:g2"
   },
   {
+   "t": 42.1333,
+   "kind": "label",
+   "tag": "wo-20",
+   "pos": [
+    0.456,
+    0.612
+   ]
+  },
+  {
    "t": 42.3333,
    "kind": "label",
-   "tag": "wo-40"
+   "tag": "wo-40",
+   "pos": [
+    0.602,
+    0.612
+   ]
   },
   {
    "t": 42.4362,
@@ -461,7 +498,11 @@
   {
    "t": 43.9,
    "kind": "label",
-   "tag": "wo-60"
+   "tag": "wo-60",
+   "pos": [
+    0.747,
+    0.612
+   ]
   },
   {
    "t": 44.4362,
@@ -476,7 +517,11 @@
   {
    "t": 46.4333,
    "kind": "label",
-   "tag": "wo-level"
+   "tag": "wo-level",
+   "pos": [
+    0.59,
+    0.225
+   ]
   },
   {
    "t": 46.4362,
@@ -530,15 +575,19 @@
    ]
   },
   {
-   "t": 52.15,
-   "kind": "counter.show",
-   "tag": "clock"
-  },
-  {
    "t": 52.2667,
    "kind": "section",
    "id": "measure",
    "t1": 61.0667
+  },
+  {
+   "t": 52.3,
+   "kind": "counter.show",
+   "tag": "clock",
+   "pos": [
+    0.69,
+    0.215
+   ]
   },
   {
    "t": 52.5,
@@ -588,13 +637,11 @@
   {
    "t": 55.9333,
    "kind": "label",
-   "tag": "ms-1m"
-  },
-  {
-   "t": 61.0667,
-   "kind": "badge",
-   "tag": "air",
-   "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms"
+   "tag": "ms-1m",
+   "pos": [
+    0.183,
+    0.182
+   ]
   },
   {
    "t": 61.0667,
@@ -603,14 +650,28 @@
    "t1": 68.8
   },
   {
+   "t": 62.05,
+   "kind": "badge",
+   "tag": "air",
+   "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms"
+  },
+  {
    "t": 63.0,
    "kind": "label",
-   "tag": "tk-20"
+   "tag": "tk-20",
+   "pos": [
+    0.439,
+    0.612
+   ]
   },
   {
    "t": 64.6667,
    "kind": "label",
-   "tag": "tk-when"
+   "tag": "tk-when",
+   "pos": [
+    0.197,
+    0.553
+   ]
   },
   {
    "t": 68.8,
@@ -665,5 +726,25 @@
    "t": 69.1,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "hk-thrown": 2.0667,
+  "hk-dropped": 3.5,
+  "nm-apart": 7.5,
+  "nm-gravity": 11.2333,
+  "ch-dropped": 14.5,
+  "ch-thrown": 14.6333,
+  "wy-gravity": 23.8,
+  "wy-glide": 31.9,
+  "wy-same": 36.6333,
+  "wo-level": 46.4667,
+  "ms-1m": 55.9667,
+  "tk-when": 64.7,
+  "ch-20": 19.3667,
+  "wo-20": 42.1667,
+  "wo-40": 42.3667,
+  "wo-60": 43.9333,
+  "tk-20": 63.0333,
+  "clock": 52.3333
+ }
 }

@@ -19,8 +19,9 @@
 //       · the light pool (cyc-hi) behind the subject, a soft 3D falloff around (26, 50, −60);
 //       · a gentle cove shading where floor meets wall;
 //       · soft blob shadows on the floor under up to 8 casters [x, y, z, r] (balls, the post, the stick);
-//       · the `shade` falloff in screen space under the apps' own UI: the bottom 480 px and the right
-//         140 px of a 1080 × 1920 frame (bible §2), so the apps' white icons stay readable (3.7:1);
+//       · the `shade` falloff in screen space under the apps' own UI (bible §2: the bottom 480 px and the
+//         right 140 px of 1080 × 1920): a soft vignette that starts at the caption line (y 1325) and at
+//         x 864 and reaches `shade` at the frame's edge, so the apps' white icons stay readable (3.7:1 on shade);
 //       · rulings anti-aliased by their own screen footprint, fading out where they would alias.
 //   - `grid` (0–1) fades the ruling (the bible's grid(t)).
 // Mesh origins sit at the world origin and never move, so the finish's motion probe reads the camera,
@@ -90,8 +91,8 @@ void main() {
   col = mix(col, uRule, uGrid * max(0.10 * minor, 0.19 * major));
   // the apps' UI zones: bottom 480 px and right 140 px of 1080 x 1920 fall off to shade
   vec2 f = gl_FragCoord.xy / uRes;                            // y from the bottom
-  float zone = max(1.0 - smoothstep(0.216, 0.296, f.y), smoothstep(0.835, 0.893, f.x));
-  col = mix(col, uShade, zone);
+  float zone = max(1.0 - smoothstep(0.0, 0.31, f.y), smoothstep(0.80, 1.0, f.x));   // a soft vignette: full shade only at the very edge
+  col = mix(col, uShade, zone * zone * (3.0 - 2.0 * zone));
   gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

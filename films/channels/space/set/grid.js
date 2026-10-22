@@ -3,7 +3,7 @@
 // spacetime). Each mass is felt late: a point of the sheet at distance r from a mass sinks by the mass it
 // had at τ − r/c (front.js's retarded time, in GLSL), so a change in a mass ripples out at light speed.
 //
-//   const grid = createGrid({ size: 64, segments: 160, spacing: 2.5, color: "lilac", depth: 9, soft: 2.2, c });
+//   const grid = createGrid({ size: 64, segments: 160, spacing: 2.5, color: "lilac" (a token, or linear [r,g,b]), depth: 9, soft: 2.2, c });
 //   group.add(grid.mesh);
 //   grid.set({ tau, masses: [{ at: [0, 0], m: 1, off: 0 /* τ when it vanished, or null */ }], opacity });
 //   grid.depthAt(x, z, tau)   the sheet's height there (JS, the same formula; for placing a body in its well)
@@ -58,7 +58,7 @@ export const createGrid = (o = {}) => {
   const mat = new THREE.ShaderMaterial({
     uniforms: {
       uTau: { value: 0 }, uC: { value: o.c ?? 1 }, uDepth: { value: o.depth ?? 8 }, uSoft: { value: o.soft ?? 2 }, uFront: { value: o.front ?? 0 },
-      uMass: { value: mass }, uCol: { value: new THREE.Vector3(...tok(o.color || "lilac")) }, uOpacity: { value: o.opacity ?? 1 },
+      uMass: { value: mass }, uCol: { value: new THREE.Vector3(...(Array.isArray(o.color) ? o.color : tok(o.color || "lilac"))) }, uOpacity: { value: o.opacity ?? 1 },
       uSpacing: { value: o.spacing ?? 2 }, uHalf: { value: size / 2 }, uLineW: { value: o.lineWidth ?? 1.4 },
     },
     vertexShader: VS, fragmentShader: FS, transparent: true, depthWrite: false, side: THREE.DoubleSide,

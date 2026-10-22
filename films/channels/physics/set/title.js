@@ -71,7 +71,7 @@ export const dropTitle = (el, o = {}) => {
     copies.forEach((c, k) => {
       const tk = copyT[k], hk = height(tk), on = t >= tk ? E.out3(seg(t, tk, tk + 0.08)) : 0;
       c.style.transform = `translateY(${(-hk).toFixed(2)}px)`;
-      c.style.opacity = (on * (0.10 + 0.07 * k) * (1 - 0.6 * seg(t, t2 + 0.6, t2 + 2.2))).toFixed(4);
+      c.style.opacity = (on * (0.07 + 0.05 * k) * (1 - E.in2(seg(t, t1, t2 + 0.25)))).toFixed(4);
     });
   };
   update(0);

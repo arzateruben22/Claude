@@ -53,7 +53,7 @@ export const createPlanet = (o = {}) => {
     uniforms: {
       uMap: { value: tex }, uSunDir: { value: new THREE.Vector3(1, 0, 0) }, uSun: { value: 1 }, uFill: { value: o.fill ?? 0.035 },
       uRimDay: { value: o.rimDay ?? 0.55 }, uRimNight: { value: o.rimNight ?? 0.1 },
-      uRimCol: { value: new THREE.Vector3(...tok("ice")).multiplyScalar(0.9) }, uNightRim: { value: new THREE.Vector3(...tok("text-2")) },
+      uRimCol: { value: new THREE.Vector3(...tok("ice")).multiplyScalar(o.rimScale ?? 0.4) }, uNightRim: { value: new THREE.Vector3(...tok("text-2")) },
       uFillCol: { value: new THREE.Vector3(0.05, 0.06, 0.12) }, uPin: { value: o.pin ?? 0 }, uPinCol: { value: new THREE.Vector3(...tok("teal")) }, uPinLon: { value: 0 },
     },
     vertexShader: VS, fragmentShader: FS,
