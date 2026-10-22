@@ -6578,6 +6578,7 @@ a.book-btn { text-align: center; }
   background: var(--porcelain); border: 1px solid var(--panel-edge-soft); border-radius: 16px;
   box-shadow: 0 24px 60px -28px rgba(var(--shadow-rgb), 0.55);
 }
+.sh-suggest[hidden] { display: none; }
 .sh-sg-head { margin: 0; padding: 0.5rem 0.75rem 0.4rem; font-size: 0.78rem; color: var(--ink-60); }
 .sh-sg-item {
   display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 0.75rem; width: 100%;
