@@ -28,6 +28,11 @@ and regular weights, one persistent glass sheet whose content cross-fades betwee
 re-mounting, a Drive dock that persists, a loading screen that fades into the menu, iOS-style switches and segmented
 controls drawn in CSS, reduced motion respected. Phone first.
 
+Since the live server's integration onto `claude/hypercar` (2026-10-22) the menu is the ice reference's cinematic
+menu (below): the glass sheet, its cross-fade and its dock are gone from the code. What carried over: the mode cards
+as one radio group with arrow keys, switches announced as switches, segmented controls, reduced motion respected; the
+sheet's Live section is the Live panel behind the rail's Online row.
+
 ## Identity: the OC sunset wordmark (owner, 2026-10-16): Done
 
 **The name (owner, later the same day):** the game is now **OC Ultra**, with **Top Speed** beneath. The R badge is
