@@ -17,9 +17,9 @@ episode is one script away. Plus the daily routine: one episode per channel per 
 - [x] Script, style guide, shot list approved; narrator af_heart; calm-and-clean score
 - [x] Voice + word timings, compiler, scene, soundtrack (−14.1 LUFS / −1.9 dBTP, sync PASS)
 - [x] Previews 1 and 2 reviewed (labels, captions fixed; sound confirmed playing)
-- [ ] Final render: `films/skin-school-tiktok/motion/run.sh status` (started 06:47 UTC, ~3 h)
-- [ ] Assemble with `build/audio/mix.wav`, QA (safe box, contrast, flashing, sync), out/ delivery
-- [ ] assets.md, HUMAN-REVIEW.md, scorecard; commit; send to the user
+- [x] Final render (done 10:17 UTC; resumed once after a worker restart)
+- [x] Assembled: `out/skin-school-pore-9x16.mp4` (−14.1 LUFS / −1.9 dBTP on the file, audit 0 warnings, flashing pass)
+- [x] assets.md, review/HUMAN-REVIEW.md, review/scorecard.md; committed; sent to the user
 - [ ] (needs the user's OK) tell Evelyn's session about the plug fix and the liquid drops
 
 ## 2–4. Three channels: human body, space, physics (separate channels)
