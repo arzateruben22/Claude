@@ -81,32 +81,84 @@ def record(res: ScanResult, path: Path = JOURNAL, rules: str = "") -> int:
     return added
 
 
+NO_ENTRY = "no entry"     # a pick whose entry rule never triggered: no trade, no cost, no result
+
+
+def find_entry(rth: List[Bar], side: str = "long", entry: str = "open", entry_at: str = "10:00",
+               range_minutes: int = 15) -> Optional[Tuple[int, float, Optional[float]]]:
+    """Where a trade starts: (index of the first bar it holds through, fill price, a stop the entry itself sets)
+    or None when the entry never triggers. Only bars that have already happened decide it:
+      open     the 9:30 open, as before
+      confirm  the open of the entry_at bar, and only if the price there is still above the 9:30 open
+               (below it, for a short): the gap held through the opening swings
+      orb      the first bar after the opening range (the first range_minutes) that trades above the range's high
+               (below its low, for a short), by entry_at. A buy-stop fills at the range high, or at the bar's open
+               when the bar opens beyond it. The far side of the range is the entry's own stop."""
+    if not rth:
+        return None
+    if entry == "open":
+        return 0, rth[0].open, None
+    cutoff = time.fromisoformat(entry_at)
+    if entry == "confirm":
+        for i, b in enumerate(rth):
+            if b.start.astimezone(ET).time() >= cutoff:
+                held = b.open > rth[0].open if side == "long" else b.open < rth[0].open
+                return (i, b.open, None) if held else None
+        return None
+    if entry == "orb":
+        ends = rth[0].start + timedelta(minutes=range_minutes)
+        rng = [b for b in rth if b.start < ends]
+        hi, lo = max(b.high for b in rng), min(b.low for b in rng)
+        for i in range(len(rng), len(rth)):
+            b = rth[i]
+            if b.start.astimezone(ET).time() > cutoff:
+                return None
+            if side == "long" and b.high > hi:
+                return i, max(hi, b.open), lo
+            if side == "short" and b.low < lo:
+                return i, min(lo, b.open), hi
+        return None
+    raise ValueError(f"unknown entry {entry!r}")
+
+
 def simulate(rth: List[Bar], target_pct: float, stop_pct: float, side: str = "long",
-             exit_by: str = "") -> Tuple[str, float]:
-    entry = rth[0].open
+             exit_by: str = "", entry: str = "open", entry_at: str = "10:00",
+             range_minutes: int = 15) -> Tuple[str, Optional[float]]:
+    """(exit, % result before costs) for one pick on its trade day, or (NO_ENTRY, None) when it never triggers.
+    Whichever of target and stop is touched first wins; a bar that touches both counts as the stop; a bar
+    that opens beyond the stop (a gap, a halt) fills at its open, which can be far worse than the stop."""
     done = "close"
     if exit_by:
-        cutoff = time.fromisoformat(exit_by)
-        early = [b for b in rth if b.start.astimezone(ET).time() < cutoff]
+        cut = time.fromisoformat(exit_by)
+        early = [b for b in rth if b.start.astimezone(ET).time() < cut]
         if len(early) < len(rth):
             rth, done = early or rth[:1], "timed"      # whatever is still open goes at the last bar before exit_by
+    found = find_entry(rth, side, entry, entry_at, range_minutes)
+    if found is None:
+        return NO_ENTRY, None
+    i, price, own_stop = found
+    held = rth[i:]
     if side == "short":
-        # Sold short at the open: it makes money as the price falls. A stock that jumps the stop
-        # (a gap or a halt) is bought back where it reopened, which can be far worse than the stop.
-        target, stop = entry * (1 - target_pct / 100), entry * (1 + stop_pct / 100)
-        for b in rth:
-            if b.high >= stop:
-                return "stop", -(max(stop, b.open) / entry - 1) * 100
+        # Sold short: it makes money as the price falls.
+        target, stop = price * (1 - target_pct / 100), price * (1 + stop_pct / 100)
+        if own_stop is not None:
+            stop = min(stop, own_stop)                  # whichever stop is closer to the entry
+        for k, b in enumerate(held):
+            if b.high >= stop:                          # the entry bar's open came before the entry: no gap there
+                return "stop", -((max(stop, b.open) if k else stop) / price - 1) * 100
             if b.low <= target:
                 return "target", target_pct
-        return done, (1 - rth[-1].close / entry) * 100
-    target, stop = entry * (1 + target_pct / 100), entry * (1 - stop_pct / 100)
-    for b in rth:
+        return done, (1 - held[-1].close / price) * 100
+    target, stop = price * (1 + target_pct / 100), price * (1 - stop_pct / 100)
+    if own_stop is not None:
+        stop = max(stop, own_stop)
+    for k, b in enumerate(held):
         if b.low <= stop:
-            return "stop", -stop_pct
+            fill = min(stop, b.open) if k else stop     # the entry bar's open came before the entry: no gap there
+            return "stop", (-stop_pct if fill == price * (1 - stop_pct / 100) else (fill / price - 1) * 100)
         if b.high >= target:
             return "target", target_pct
-    return done, (rth[-1].close / entry - 1) * 100
+    return done, (held[-1].close / price - 1) * 100
 
 
 def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Optional[dict]:
@@ -114,14 +166,20 @@ def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Op
     if not rth:
         return None
     o, hi, lo, cl = rth[0].open, max(b.high for b in rth), min(b.low for b in rth), rth[-1].close
-    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct, crit.side, crit.exit_by)
+    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct, crit.side, crit.exit_by,
+                          crit.entry, crit.entry_at, crit.range_minutes)
     r = lambda x: round(x, 2)  # noqa: E731
     return {
         "open": round(o, 4), "high": round(hi, 4), "low": round(lo, 4), "close": round(cl, 4),
         "open_vs_scan_pct": r((o / scan_price - 1) * 100), "max_up_pct": r((hi / o - 1) * 100),
         "max_down_pct": r((lo / o - 1) * 100), "close_vs_open_pct": r((cl / o - 1) * 100),
-        "sim_exit": exit_, "sim_pnl_pct": r(pnl - crit.cost_pct),
+        "sim_exit": exit_, "sim_pnl_pct": "" if pnl is None else r(pnl - crit.cost_pct),
     }
+
+
+def traded(r: dict) -> bool:
+    """A graded pick that became a trade (its entry rule triggered)."""
+    return bool(r.get("graded_at")) and r.get("sim_pnl_pct") not in (None, "")
 
 
 def grade(provider: Provider, crit: Criteria, now: datetime, path: Path = JOURNAL) -> Tuple[int, int]:
@@ -204,8 +262,12 @@ def fade_lines(rows: List[dict]) -> List[str]:
 
 
 def stats(crit: Criteria, path: Path = JOURNAL) -> str:
-    rows = sorted((r for r in _read(path) if r.get("graded_at")), key=lambda r: (r["trade_date"], r["scan_time_pt"]))
+    graded = [r for r in _read(path) if r.get("graded_at")]
+    rows = sorted((r for r in graded if traded(r)), key=lambda r: (r["trade_date"], r["scan_time_pt"]))
+    untriggered = len(graded) - len(rows)
     if not rows:
+        if untriggered:
+            return f"{untriggered} graded pick(s), none of which triggered an entry yet ({crit.entry_words()})."
         return "No graded picks yet. Run scans for a few days, then `python -m scanner grade`."
 
     def block(label: str, rs: List[dict]) -> str:
@@ -235,16 +297,17 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
 
     days = sorted({r["trade_date"] for r in rows})
     pnl = [float(r["sim_pnl_pct"]) for r in rows]
-    out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})",
-           (f"Sim: short the 9:30 ET open, cover at -{crit.target_pct:g}% (target) / +{crit.stop_pct:g}% (stop), "
-            f"else at the close; {crit.cost_pct:g}% cost per trade" if crit.side == "short" else
-            f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at "
-            f"{'the ' + crit.exit_by + ' ET exit' if crit.exit_by else 'close'}; {crit.cost_pct:g}% cost per trade"),
+    out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})"
+           + (f"; {untriggered} more never triggered an entry" if untriggered else ""),
+           (f"Sim: short at the {crit.entry_words()}, cover at -{crit.target_pct:g}% (target) / +{crit.stop_pct:g}% "
+            f"(stop), else at the close; {crit.cost_pct:g}% cost per trade" if crit.side == "short" else
+            f"Sim: buy at the {crit.entry_words()}, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell "
+            f"at {'the ' + crit.exit_by + ' ET exit' if crit.exit_by else 'close'}; {crit.cost_pct:g}% cost per trade"),
            "", block("All", rows)]
     out += [block(sess, rs) for sess in ("premarket", "afterhours", "regular")
             if (rs := [r for r in rows if r["session"] == sess]) and len(rs) != len(rows)]
     out += [""] + _risk_lines(pnl)
-    out += fade_lines(rows)
+    out += fade_lines(graded)
     out += grouped("By catalyst:", lambda r: (r["tags"] or "untagged").split(";"))
     for name, (col, edges) in BUCKETS.items():
         g = grouped(f"By {name}:", bucket(col, edges))
@@ -270,7 +333,7 @@ def _paper_dollars(results: List[Tuple[dict, float]], bank: float = 100.0) -> fl
 def lookback(provider: Provider, crit: Criteria, path: Path, book: str, against: str) -> str:
     """`crit` applied to another book's picks that were already graded: what those same picks would have
     done under these rules. In-sample by construction, so it explains, it never proves."""
-    rows = [r for r in _read(path) if r.get("graded_at") and r.get("sim_pnl_pct") not in (None, "")]
+    rows = [r for r in _read(path) if traded(r)]
     if not rows:
         return f"No graded picks in {path} yet, so there's nothing to look back on."
     mine: List[Tuple[dict, dict]] = []
@@ -283,6 +346,8 @@ def lookback(provider: Provider, crit: Criteria, path: Path, book: str, against:
         for r in day_rows:
             res = outcome(bars.get(r["symbol"], []), day, float(r["scan_price"]), crit)
             if res:
+                if res["sim_pnl_pct"] == "":
+                    res["sim_pnl_pct"] = 0.0                # never entered: nothing won, nothing lost
                 mine.append((r, res))
     if not mine:
         return "No price bars came back for those days, so there's nothing to compare yet."
@@ -318,6 +383,7 @@ def recent(path: Path = JOURNAL, limit: int = 15) -> str:
         return "Journal is empty."
     lines = []
     for r in rows:
-        result = f"{r['sim_exit']:<6} {float(r['sim_pnl_pct']):+6.2f}%" if r.get("graded_at") else "pending"
+        result = (f"{r['sim_exit']:<6} {float(r['sim_pnl_pct']):+6.2f}%" if traded(r) else
+                  NO_ENTRY if r.get("graded_at") else "pending")
         lines.append(f"{r['trade_date']}  {r['symbol']:<6} {fmt.pct(float(r['gap_pct'])):>7}  {result}")
     return "\n".join(lines)

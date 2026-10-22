@@ -24,8 +24,9 @@ def cfg(**changes):
     return c
 
 
-def series(prices, start=T0, spread=0.002):
-    return [Candle(start + i * HOUR, p, p * (1 + spread), p * (1 - spread), p) for i, p in enumerate(prices)]
+def series(prices, start=T0, spread=0.002, hours=1):
+    return [Candle(start + i * hours * HOUR, p, p * (1 + spread), p * (1 - spread), p, 0.0, hours)
+            for i, p in enumerate(prices)]
 
 
 # -- settings ----------------------------------------------------------------------------------
@@ -247,7 +248,7 @@ def test_four_hour_settings(tmp_path):
     p.write_text("[rules]\ncandle_hours = 4\n")
     with pytest.raises(ValueError, match="belongs under"):
         config.load(p)
-    assert config.book_paths("4h") == (config.ROOT / "majors-4h.toml", config.OUTPUT / "4h")
+    assert config.book_paths("4h") == (config.ROOT / "retired" / "majors-4h.toml", config.OUTPUT / "4h")   # retired
     for bad in ("nope", "4H", "../x"):
         with pytest.raises(ValueError):
             config.book_paths(bad)
@@ -277,9 +278,9 @@ def test_run_checks_every_rulebook_it_is_given_before_starting(tmp_path, monkeyp
     monkeypatch.setattr(cli, "OUTPUT", tmp_path)
     assert cli.main(["run", "--with", "4h", "--with", "nope"]) == 2
     assert "majors-nope.toml" in capsys.readouterr().err
-    for b in ("daily", "fast", "tight", "loose", "btc", "alts", "single", "slow", "4h"):
+    for b in ("daily", "fast", "tight", "loose", "btc", "alts", "single", "slow", "4h", "trend"):
         path, base = cli.book_paths(b, tmp_path)
-        assert path.exists() and base == tmp_path / b, b
+        assert path.exists() and base == tmp_path / b, b           # retired ones are found in retired/
     hours = {b: config.load(cli.book_paths(b)[0]).desk.candle_hours for b in ("daily", "slow", "4h", "loose", "btc", "fast")}
     assert hours == {"daily": 24, "slow": 24, "4h": 4, "loose": 4, "btc": 4, "fast": 1}
     assert config.load(cli.book_paths("btc")[0]).desk.coins == ["BTC"]
@@ -317,3 +318,70 @@ def test_one_rulebooks_failed_step_never_stops_the_others(capsys):
     assert desks[1][3] == datetime(2026, 10, 21, 8, 1, 30, tzinfo=timezone.utc)            # the next 4-hour close + 90 s
     cli.step_due(desks, now + timedelta(minutes=5))
     assert "trying again" in capsys.readouterr().out and fine.stepped == 1
+
+
+# -- the trend filter: hold above the long average, cash below it ---------------------------------------
+
+TREND = config.load(config.book_paths("trend")[0])
+
+
+def test_trend_rulebook_holds_above_its_average_and_steps_out_below_it():
+    r = TREND.rules
+    assert (r.breakout, r.exit, r.exit_below_trend, TREND.desk.candle_hours, TREND.desk.coins) == (0, 0, True, 24, ["BTC", "ETH"])
+    assert r.candles_needed() == 300                              # 150 daily candles, twice over
+    daily = lambda prices: series(prices, spread=0.05, hours=24)  # noqa: E731 - a coin that moves ~10% a day
+    up = [100 + i * 0.1 for i in range(300)]
+    ok, why = rules.entry(daily(up), r)
+    assert ok and why == "closed above its 3600h average"         # no breakout needed
+    down = [130 - i * 0.1 for i in range(300)]
+    assert rules.entry(daily(down), r) == (False, "below its 3600h average")
+    slipping = daily(up[:-1] + [120.0])                            # a close just under the average (about 122)
+    assert rules.exit_reason(slipping, peak_close=max(up), r=r) == "trend over (below its 3600h average)"
+    assert rules.exit_reason(daily(up), peak_close=up[-1], r=r) is None
+    crash = daily(up[:-1] + [up[-2] * 0.3])                       # a 70% crash in one day: the stop goes first
+    assert rules.exit_reason(crash, peak_close=up[-2], r=r) == "trailing stop"
+
+
+def test_zero_means_not_used_and_negative_is_refused(tmp_path):
+    text = config.book_paths("trend")[0].read_text()
+    for bad in ("breakout_hours = -24", "exit_hours = -24", "exit_below_trend = 1"):
+        path = tmp_path / "bad.toml"
+        path.write_text(_swap(text, bad))
+        with pytest.raises(ValueError):
+            config.load(path)
+
+
+def _swap(text: str, line: str) -> str:
+    key = line.split(" = ")[0]
+    out = [line if ln.startswith(key + " ") else ln for ln in text.splitlines()]
+    assert out != text.splitlines()
+    return "\n".join(out) + "\n"
+
+
+def test_backtests_report_each_period_against_holding():
+    from majors.desk import period_lines, periods
+    cfg = config.load(config.book_paths("trend")[0])
+    t0 = datetime(2025, 1, 1, tzinfo=timezone.utc)
+    data = {"BTC": [Candle(t0 + timedelta(days=i), 100 + i, 101 + i, 99 + i, 100 + i, 1, 24) for i in range(730)]}
+    curve = [(t0 + timedelta(days=i + 1), 100.0 + (i if i < 365 else 365 - (i - 365) / 2)) for i in range(729)]
+    rows = periods(cfg, curve, data, t0, t0 + timedelta(days=730))
+    assert [p["period"] for p in rows] == [f"{y} Q{q}" for y in (2025, 2026) for q in (1, 2, 3, 4)]
+    assert rows[0]["desk_pct"] > 0 and rows[0]["hold_pct"] > 0
+    assert rows[5]["desk_pct"] < 0 < rows[5]["hold_pct"]           # the desk gave back while the coin kept rising
+    text = "\n".join(period_lines(rows))
+    assert text.startswith("  By quarter (desk vs holding the same coins):") and "Made money in 4 of 8" in text
+    long = periods(cfg, curve, data, t0 - timedelta(days=400), t0 + timedelta(days=730))
+    assert all(" Q" not in p["period"] for p in long)               # more than two years: by calendar year
+    assert periods(cfg, [], data, t0, t0) == []
+
+
+def test_backtest_writes_its_periods_for_the_proving_ground(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    assert cli.main(["backtest", "--demo", "--days", "120", "--book", "loose"]) == 0
+    out = capsys.readouterr().out
+    assert "By quarter (desk vs holding the same coins):" in out and "ahead of holding in" in out
+    found = list((tmp_path / "loose" / "backtests").glob("*/periods.json"))
+    assert len(found) == 1
+    saved = json.loads(found[0].read_text())
+    assert saved["book"] == "loose" and saved["demo"] is True and saved["periods"] and "hold_pct" in saved
+    assert saved["quarters"] and saved["years"] and saved["coins"] and saved["first"] < saved["last"]

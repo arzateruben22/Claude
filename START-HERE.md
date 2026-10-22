@@ -33,42 +33,51 @@ sudo bash server/setup.sh
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
 starts with $100 of paper money.
 
-**Thirty desks, one month, one scoreboard.** Ten rulebooks per market, each on its own $100 of paper money, all
-running through the same weeks on the same markets, so you can line them up, keep what made money and cut the rest:
+**Twenty desks, and a proving ground.** On 22 October the clear losers were retired on the evidence, and four
+new stock ideas and one new big-coin idea took their place. Each desk still runs on its own $100 of paper money.
 
-| Market | Ten rulebooks |
-|---|---|
-| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits); **sniper** (3–10 minutes old, out in 30); **momentum** (only coins still being bought); **patient** (an hour old, big pools, up to 6 hours); **scalper** (+12 / −8, out in 20 minutes); **whale** (big pools only, 15% bets); **runner** (lets a winner run, trailing stop); **tiny** (2% bets, eight at once) |
-| Big coins | **hourly**; **4h**; **daily**; **fast** (short windows); **tight** (1.5 ATR stop); **loose** (4h, 5 ATR stop); **btc** (Bitcoin only, 80% in); **alts** (SOL, XRP, ADA, DOGE); **single** (one coin at a time, 80% in); **slow** (daily, the longest windows) |
-| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time); **bigcap** ($5–100 stocks); **tight** (3% stop); **hold** (+25% / −10%); **cheap** ($1–5 stocks, 15% gaps); **highvol** (8× volume) |
+| Market | Running | Retired on 22 Oct, and why |
+|---|---|---|
+| Memecoins | **strict**, **sniper**, **momentum**, **patient**, **scalper**, **whale**, **runner**, **tiny**, all on trial to the month end | **main** (−35% over 164 live trades) and **wild** (−76% in two days) |
+| Big coins | **daily**, **slow**, **loose** (the three that lost least in a year when holding lost 46%) and the new **trend** filter: Bitcoin and Ethereum only while they're above their 150-day average, cash otherwise | **hourly**, **4h**, **fast**, **tight**, **btc**, **alts**, **single**: each lost 24–60% over the past year |
+| Stocks | **main** (on notice: first live, but it lost every month of the summer replay), **fade**, **hold**, **cheap**, and four new ones that wait out the opening swings: **confirm** (buy at 10:00 only if still above the open), **orb** and **orb5** (buy a break of the first 15 or 5 minutes' high), **failed** (short at 10:00 only gaps already below their open) | **wild**, **quick**, **early**, **bigcap**, **tight**, **highvol**: each lost money in every month from June to September |
 
-The plan: a **first look on Friday 23 October**, the **assessment at the end of October**, and after that the
-survivors keep running until one desk shows a **green week**: traded on three or more of the last seven days, net
-up over the seven, and no single day's loss bigger than the week's gain. The Trading Deck marks both dates on its
-time axis, its **standings** button ranks every desk with its last seven days, and the evening push names the
-week's best, worst and any green weeks. With thirty variations, a few will look good by Friday from luck alone;
-the month-end read and the green week are what count.
+The retired rulebooks are kept, word for word, in each market's `retired/` folder, with the reason. Their paper
+records stay on the server. The server never runs them, but a history test can still replay one by name.
 
-None of this adds to a Claude bill: only the main memecoin and stock desks use Claude for their nightly review,
-and only if you gave them a key. The other twenty-eight desks judge and review by rules alone.
+**The rule for keeping a desk** is written on the Proving Ground page, and the page applies it for you. A rulebook
+is a **candidate** when it made money over a long history test, made money in at least two thirds of its periods
+(quarters for big coins, months for stocks), had enough trades, and, for big coins, never fell more than 25% from a
+high. It's on **watch** when it made money overall or in at least half its periods, and it's a **cut** when it did
+neither. Passing is necessary, not sufficient: a candidate still has to repeat it live, on paper. Memecoins can't
+be replayed, because nobody keeps a history of brand-new coins, so they're judged on their live results only.
 
-Already set up? One update adds them all and keeps every paper trade so far:
-`cd ~/desks && git pull && sudo bash server/setup.sh`. The new desks start on the day you update, so they're
-behind the originals on the calendar: read them by their own day count and by their last seven days, not by
-the total alone. The rules of every desk were set before it started and stay
-fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool
-themselves. A winner has to pass its scorecard, then do it again on other months, before anyone trusts it.
+**To run every history test,** one at a time in the background so the live desks aren't disturbed:
 
-**To read the standings at any time:** `bash server/status.sh` ranks all thirty with their last seven days, and the
-same table is at `http://127.0.0.1:8790/standings` next to the deck. Your phone gets a push the moment any desk has a
-green week, and again if it keeps the streak (×2, ×3...).
+```bash
+bash server/prove.sh            # big coins over four years, stocks since 2 January; about an hour the first time
+bash server/prove.sh status     # how far it has got
+```
 
-**To cut a desk after the month-end read:** take its name out of the server's lists and restart. A memecoin
-desk is one `--with <name>` in `server/systemd/nightdesk.service` (and one `ExecStart` line in
-`nightdesk-review.service`); a big-coin desk is one `--with <name>` in `majors.service`; a stock desk comes out of
-`--books all` by renaming its `premarket-scanner/criteria-<name>.toml` (say, to `criteria-<name>.toml.off`). Then
-delete its section from `paper-book/book.toml` and run `sudo bash server/setup.sh`. Its paper records stay on disk;
-nothing is deleted. Don't cut before the read: a desk that looks dead on day 10 can be the one standing on day 28.
+You can close Termius while it runs. The results appear on the **Proving Ground** page (`/proving`, linked from the
+deck) and in `bash server/status.sh`. Four years of big-coin prices cover the 2022 crash, the 2023–24 run-up and
+this year's fall, so a rule that only works in one kind of market shows up.
+
+The plan stays the same: a **first look on Friday 23 October**, the **assessment at the end of October**, and after
+that the survivors keep running until one desk shows a **green week**: traded on three or more of the last seven
+days, net up over the seven, and no single day's loss bigger than the week's gain. With twenty variations, a few
+will look good by Friday from luck alone. The month-end read, the proving ground and the green week are what count.
+
+None of this adds to a Claude bill: the twenty running desks judge and review by rules alone.
+
+**To read the standings at any time:** `bash server/status.sh` ranks every desk with its last seven days, then
+prints each rulebook's history grade. The same table is at `http://127.0.0.1:8790/standings` next to the deck. Your
+phone gets a push the moment any desk has a green week, and again if it keeps the streak (×2, ×3...).
+
+**To retire another desk later:** move its rulebook into its market's `retired/` folder with a line saying why,
+take its `--with <name>` out of `server/systemd/nightdesk.service` (and its line in `nightdesk-review.service`) or
+`majors.service`, delete its section from `paper-book/book.toml`, and run `sudo bash server/setup.sh`. A stock desk
+only needs the move: the scanner runs every `criteria-*.toml` left in its folder. Nothing is deleted.
 
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.

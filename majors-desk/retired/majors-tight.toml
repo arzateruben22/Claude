@@ -1,9 +1,10 @@
-# Majors Desk, FAST rulebook: quick hourly breakouts.
+# RETIRED 22 Oct 2026: lost 55.2% over the past year (419 trades, profit factor 0.47). Kept for the record; the server no longer runs it.
+# Majors Desk, TIGHT rulebook: the main rules with a tight stop.
 #
-# A two-day trend, a twelve-hour breakout, a six-hour exit and a tighter stop: it trades much more often
-# than the main desk and pays for it in fees. Here to find out whether speed earns its keep.
+# Identical entries and exits, but the trailing stop sits 1.5 average moves below the best close instead of 3.
+# Smaller losses, and more of them: does cutting fast beat giving the trade room?
 # Fees and slippage are the main desk's. Every window is in hours, whatever the candle.
-# Run it with the main desk: python -m majors run --with fast. Results live in output/fast/.
+# Run it with the main desk: python -m majors run --with tight. Results live in output/tight/.
 # Paper money only. Nothing here can place a real order.
 
 [desk]
@@ -16,15 +17,15 @@ candle_hours = 1                                     # decide on finished hourly
 # trailing stop. Most trades lose a little; the few long trends pay for them. Decisions are made
 # on each hour's closing price.
 [rules]
-trend_hours = 48             # two days (main: 100)
-breakout_hours = 12          # half a day (main: 48)
-exit_hours = 6               # (main: 24)
+trend_hours = 100          # only buy when the price is above its 100-hour average
+breakout_hours = 48        # ...and the hour closes above the highest price of the previous 48 hours
+exit_hours = 24            # sell when an hour closes below the lowest price of the previous 24 hours
 atr_hours = 14             # how far a coin normally moves in an hour, averaged over 14 hours
-stop_atr = 2.0               # tighter (main: 3.0)
+stop_atr = 1.5               # tight (main: 3.0)
 risk_pct = 1.0             # each trade risks 1% of the bank between the buy and the stop
 max_position_pct = 25.0    # never more than 25% of the bank in one coin
 max_positions = 4
-cooldown_hours = 2           # (main: 6)
+cooldown_hours = 6         # after selling a coin, wait this long before buying it again
 
 [costs]                    # charged on every paper buy and sell
 fee_pct = 0.40             # per side: a typical exchange fee for a small account (check yours)

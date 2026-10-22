@@ -39,6 +39,10 @@ class Criteria:
 
     side: str = "long"           # long buys at the open; short sells at the open and buys back later
     exit_by: str = ""            # "10:30" closes whatever is still open at that New York time; "" = the 4pm close
+    entry: str = "open"          # "open": at 9:30 · "confirm": at entry_at, only if it's still above its open
+                                 # · "orb": when it breaks above its first range_minutes' high, by entry_at
+    entry_at: str = "10:00"      # confirm: the time to decide · orb: the last time a breakout counts (New York)
+    range_minutes: int = 15      # orb: the opening range, from 9:30
     target_pct: float = 10.0
     stop_pct: float = 5.0
     cost_pct: float = 0.5
@@ -59,11 +63,26 @@ class Criteria:
             parts.append("not halted")
         if self.require_catalyst:
             parts.append("news catalyst")
-        if self.side == "short":
+        verb, edge, way = ("SOLD SHORT", "low", "below") if self.side == "short" else ("bought", "high", "above")
+        if self.entry == "confirm":
+            parts.append(f"{verb} at {self.entry_at} ET only if still {way} its open")
+        elif self.entry == "orb":
+            parts.append(f"{verb} on a break of its first {self.range_minutes} minutes' {edge}, by {self.entry_at} ET")
+        elif self.side == "short":
             parts.append("SOLD SHORT at the open")
         if self.exit_by:
             parts.append(f"out by {self.exit_by} ET")
         return " · ".join(parts)
+
+    def entry_words(self) -> str:
+        """How a pick is entered, for reports: '9:30 ET open', 'at 10:00 ET if above the open'..."""
+        if self.entry == "confirm":
+            return f"{self.entry_at} ET, only if still {'above' if self.side == 'long' else 'below'} the 9:30 open"
+        if self.entry == "orb":
+            edge = "high" if self.side == "long" else "low"
+            return (f"break of the first {self.range_minutes} minutes' {edge} (by {self.entry_at} ET; "
+                    f"stop at the range's other side or the stop %, whichever is closer)")
+        return "9:30 ET open"
 
 
 def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Path]:
@@ -75,6 +94,8 @@ def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Pa
     if not book.replace("-", "").isalnum() or not book.islower():
         raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
     path = ROOT / f"criteria-{book}.toml"
+    if not path.exists() and (ROOT / "retired" / path.name).exists():
+        path = ROOT / "retired" / path.name            # retired: never run by the server, still replayable by name
     if not path.exists():
         raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
     return path, output / book
@@ -94,7 +115,11 @@ def load_criteria(path: Path | None = None) -> Criteria:
     unknown = sorted(set(flat) - known)
     if unknown:
         raise ValueError(f"Unknown setting(s) in {path.name}: {', '.join(unknown)}")
-    c = Criteria(**flat)
+    return check(Criteria(**flat))
+
+
+def check(c: Criteria) -> Criteria:
+    """Every setting that has a fixed set of values or a time window, said plainly when it's wrong."""
     if c.sort_by not in ("gap", "rvol", "volume"):
         raise ValueError("sort_by must be gap, rvol or volume")
     if c.side not in ("long", "short"):
@@ -108,6 +133,22 @@ def load_criteria(path: Path | None = None) -> Criteria:
             raise ValueError('exit_by must look like "10:30" (New York time) or be empty') from None
         if not _time(9, 35) <= t <= _time(16, 0) or t.minute % 5:
             raise ValueError("exit_by must be on a 5-minute mark between 09:35 and 16:00")
+    if c.entry not in ("open", "confirm", "orb"):
+        raise ValueError("entry must be open, confirm or orb")
+    from datetime import time as _t
+
+    try:
+        at = _t.fromisoformat(c.entry_at)
+    except ValueError:
+        raise ValueError('entry_at must look like "10:00" (New York time)') from None
+    if not _t(9, 35) <= at <= _t(15, 30) or at.minute % 5:
+        raise ValueError("entry_at must be on a 5-minute mark between 09:35 and 15:30")
+    if not 5 <= c.range_minutes <= 60 or c.range_minutes % 5:
+        raise ValueError("range_minutes must be 5 to 60, in steps of 5")
+    if c.entry == "orb" and at <= (_t(9, 30 + c.range_minutes) if c.range_minutes < 30 else _t(10, c.range_minutes - 30)):
+        raise ValueError("entry_at must come after the opening range ends")
+    if c.exit_by and c.entry != "open" and _t.fromisoformat(c.exit_by) <= at:
+        raise ValueError("exit_by must come after entry_at")
     return c
 
 

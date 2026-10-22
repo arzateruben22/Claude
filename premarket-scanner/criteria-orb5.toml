@@ -1,11 +1,9 @@
-# Scanner rules, EARLY book: the main book's picks, out of the market by 10:30 New York time.
+# Scanner rules, ORB5 book: the same breakout on the first 5 minutes' range.
 #
-# Gap-up stocks tend to make their move in the first hour and slide through the afternoon. This book
-# keeps the main book's picks, target and stop, but sells whatever is still open at 10:30 ET instead
-# of holding to the 4pm close. Same picks, same costs.
-# Run any command with --book early: python -m scanner scan --book early
-# Its picks and grades live in output/early/. The paper book shows them as "Early-out stocks".
-# Paper money only. Nothing here can place a real order.
+# The faster version: the 9:30 candle alone sets the range, and the breakout must come by 10:30.
+# Filters, catalysts and the scorecard ([gates]) are the main book's, word for word. Run any command
+# with --book orb5; picks and grades live in output/orb5/. Paper money only. Nothing here can place
+# a real order.
 
 [filters]
 min_price = 2.0
@@ -30,12 +28,14 @@ exclude_warrants_units = true # drops 5-letter W/U/R symbols and names with Warr
 show_near_misses = true       # also list stocks that fail exactly one rule
 
 # Paper-trade simulator used by `python -m scanner grade`.
-# Pretend entry at the 9:30 ET open, then whichever hits first wins: the target, the stop, or 10:30.
+# Pretend entry at the 9:30 ET open, then whichever hits first wins.
 [paper]
-exit_by = "10:30"             # New York time; main: hold to the 4pm close
+entry = "orb"                 # main: open (buy at 9:30)
+range_minutes = 5             # the 9:30 candle
+entry_at = "10:30"
 target_pct = 10.0
-stop_pct = 5.0
-cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
+stop_pct = 8.0                # the most it may lose; the range low is used when it is closer
+cost_pct = 0.5
 
 # Before real money: the scorecard (python -m scanner scorecard).
 # It needs a backtest AND paper picks made with the current rules above.
@@ -55,7 +55,7 @@ paper_vs_backtest = 0.5       # paper's average pick must reach half the backtes
 # The risk officer and the nightly review (python -m scanner nightly).
 # They only write reports and proposals. Nothing they say changes the rules.
 [review]
-use_ai = false               # rules only: the main book's nightly review is the one that uses Claude
+use_ai = true                 # needs ANTHROPIC_API_KEY in .env; otherwise rule-based
 model = "claude-opus-5-5"
 effort = "high"               # runs once a day, so let it think
 lookback_days = 7             # the review compares this window with everything before it

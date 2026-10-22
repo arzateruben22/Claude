@@ -34,6 +34,7 @@ class RulesCfg:
     max_position_pct: float = 25.0
     max_positions: int = 4
     cooldown_hours: float = 6
+    exit_below_trend: bool = False   # also sell when a candle closes below the trend average (a trend filter)
     candle_hours: int = 1        # copied from [desk] by load(); every window above is in hours, whatever the candle
 
     # The windows as candle counts: on 4-hour candles, trend_hours = 200 means 50 candles.
@@ -83,6 +84,8 @@ def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Pa
     if not book.replace("-", "").isalnum() or not book.islower():
         raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
     path = ROOT / f"majors-{book}.toml"
+    if not path.exists() and (ROOT / "retired" / path.name).exists():
+        path = ROOT / "retired" / path.name            # retired: never run by the server, still replayable by name
     if not path.exists():
         raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
     return path, output / book
@@ -126,9 +129,14 @@ def validate(cfg: Config) -> None:
     if r.candles_needed() > MAX_CANDLES:
         raise ValueError(f"[rules] needs {r.candles_needed()} {r.candle_word()}s of history; the most it reads is "
                          f"{MAX_CANDLES}. Keep trend_hours at {MAX_CANDLES // 2 * h} or less.")
-    for name in ("trend_hours", "breakout_hours", "exit_hours", "atr_hours", "max_positions"):
+    for name in ("trend_hours", "atr_hours", "max_positions"):
         if getattr(r, name) < 1:
             raise ValueError(f"[rules] {name} must be at least 1")
+    for name in ("breakout_hours", "exit_hours"):      # 0 = not used: no breakout needed, no window-low exit
+        if getattr(r, name) < 0:
+            raise ValueError(f"[rules] {name} must be 0 (not used) or more")
+    if not isinstance(r.exit_below_trend, bool):
+        raise ValueError("[rules] exit_below_trend must be true or false")
     if not 0 < r.risk_pct <= 5:
         raise ValueError("[rules] risk_pct must be between 0 and 5")
     if not 0 < r.max_position_pct <= 100:

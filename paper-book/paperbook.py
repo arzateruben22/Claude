@@ -17,6 +17,7 @@ A desk is in the book when book.toml has a section for it.
   python paperbook.py --watch 15    ...every 15 minutes, while the desks run
   python paperbook.py --demo        the same, from the desks' demo markets
   python paperbook.py --standings   every desk ranked, with its last seven days; nothing written
+  python paperbook.py --proving     each running rulebook's history-test grade (proving.py); nothing written
 
 Writes output/ledger.csv (one row per closed paper trade), output/standings.txt (every desk ranked, with its
 last seven days; also served at /standings) and output/paper-book.html, plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
@@ -180,7 +181,9 @@ def load_stocks(journal: Path, ticket: float, share: Optional[float] = None,
         per_day[day] += 1
     for day, symbol, r in rows:
         if share is not None:
-            ticket = share / per_day[day]
+            ticket = share / per_day[day]       # split in the morning across every pick, triggered or not
+        if r.get("graded_at") and (r.get("sim_pnl_pct") or "") == "":
+            continue                            # its entry rule never triggered: no trade, the money sat in cash
         opened = datetime.combine(day, time(9, 30), tzinfo=ET)
         if (r.get("sim_pnl_pct") or "") != "":
             pct = float(r["sim_pnl_pct"])
@@ -253,6 +256,8 @@ class Book:
     # target %, stop %, cost % from each stock desk's own rules, and the time it's out by ("" = the close)
     stock_rules: Dict[str, Tuple[float, float, float]] = field(default_factory=lambda: {"stocks": (10.0, 5.0, 0.5)})
     stock_exit: Dict[str, str] = field(default_factory=dict)
+    stock_entry: Dict[str, dict] = field(default_factory=dict)      # side, entry, entry_at, range_minutes per stock desk
+    results: Dict[str, Path] = field(default_factory=dict)         # each desk's results folder (its backtests live there)
     meta: Dict[str, dict] = field(default_factory=dict)             # per desk: label, kind, market, of, color, abbr
     order: Tuple[str, ...] = ()                                     # the desks in book.toml order
     checkpoints: Optional[dict] = None                              # [report] checkpoints: label -> date the book is read
@@ -315,6 +320,8 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
     sources: Dict[str, str] = {}
     rules: Dict[str, Tuple[float, float, float]] = {}
     exits: Dict[str, str] = {}
+    entries: Dict[str, dict] = {}
+    results: Dict[str, Path] = {}
     meta: Dict[str, dict] = {}
     order = [d for d in cfg if d not in NOT_DESKS and isinstance(cfg[d], dict)]
     for d in order:
@@ -324,22 +331,27 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
         c = cfg[d]
         banks[d] = float(c["start_bank"])
         if meta[d]["kind"] == "coins":
+            results[d] = (HERE / c["folder"]).resolve().parent
             folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
             trades[d], held[d] = load_coins(folder, d, meta[d]["prefix"])
             sources[d] = str(folder)
             continue
         live = (HERE / c["journal"]).resolve()
+        results[d] = live.parent
         journal = ((HERE / c["demo_journal"]) if c.get("demo_journal") else newest_demo_journal(live.parent)) if demo else live
         journal = journal.resolve()
         share = bool(c.get("share_bank", False))
         trades[d], held[d] = load_stocks(journal, float(c["ticket_usd"]), banks[d] if share else None, desk=d)
         sources[d] = str(journal)
         rules_path = HERE / c.get("rules", STOCK_RULES.get(d, "../premarket-scanner/criteria.toml"))
+        if not rules_path.exists() and (rules_path.parent / "retired" / rules_path.name).exists():
+            rules_path = rules_path.parent / "retired" / rules_path.name     # a retired rulebook, read for the record
         rules[d] = stock_rules(rules_path)
         exits[d] = stock_exit_by(rules_path)
+        entries[d] = stock_entry(rules_path)
     return Book(trades, held, banks, sources, demo, now or datetime.now(timezone.utc),
                 ZoneInfo(cfg["report"]["timezone"]), float(first_stocks.get("ticket_usd", 100.0)),
-                bool(first_stocks.get("share_bank", False)), stock_rules=rules, stock_exit=exits,
+                bool(first_stocks.get("share_bank", False)), stock_rules=rules, stock_exit=exits, stock_entry=entries, results=results,
                 meta=meta, order=tuple(order), checkpoints=cfg["report"].get("checkpoints"))
 
 
@@ -358,6 +370,30 @@ def stock_exit_by(path: Path) -> str:
         return ""
     with open(path, "rb") as fh:
         return str(tomllib.load(fh).get("paper", {}).get("exit_by", "") or "")
+
+
+ENTRY_DEFAULTS = {"side": "long", "entry": "open", "entry_at": "10:00", "range_minutes": 15}
+
+
+def stock_entry(path: Path) -> dict:
+    """How a stock desk gets in: long or short, at the open, at a confirm time, or on an opening-range break."""
+    if not path.exists():
+        return dict(ENTRY_DEFAULTS)
+    with open(path, "rb") as fh:
+        p = tomllib.load(fh).get("paper", {})
+    return {k: type(v)(p.get(k, v)) for k, v in ENTRY_DEFAULTS.items()}
+
+
+def entry_words(e: dict) -> str:
+    """'sold short at the 9:30 open', 'bought at 10:00 ET if still above the open'... for the notes."""
+    short = e.get("side") == "short"
+    verb = "sold short" if short else "bought"
+    if e.get("entry") == "confirm":
+        return f"{verb} at {e['entry_at']} ET, only if it's still {'below' if short else 'above'} its 9:30 open"
+    if e.get("entry") == "orb":
+        return (f"{verb} when it breaks {'below the low' if short else 'above the high'} of its first "
+                f"{e['range_minutes']} minutes, by {e['entry_at']} ET, with the far side of that range as its stop")
+    return f"{verb} at the 9:30 ET open"
 
 
 # -- outputs ----------------------------------------------------------------------------------------
@@ -643,7 +679,7 @@ def render_html(book: Book) -> str:
         since = datetime.fromisoformat(bench["since"]).astimezone(book.tz)
         bench_tile = (f'<div class="tile"><span>BTC bought and held</span><b class="{_cls(bench["pct"])}">'
                       f'{bench["pct"]:+.1f}%</b><small>since {since:%d %b %H:%M} · big coins desk '
-                      f'{benchmark.desk_return(book, "majors"):+.1f}%</small></div>')
+                      f'{benchmark.big_coin_words(book)}</small></div>')
     else:
         bench_tile = ""
     coins_held = sum(len(book.held[d]) for d in book.of_kind("coins"))
@@ -815,9 +851,17 @@ def _note(book: Book, d: str) -> str:
                             "market early)"}.get(d) or (f"<b>{html.escape(book.label(d))}</b> (premarket scanner, "
                                                        f"premarket-scanner/criteria-{d.split('_', 1)[-1]}.toml)")
     end = f"by {book.stock_exit[d]} ET" if book.stock_exit.get(d) else "the\n      close"
-    return (f"<p>{name}: {stake}.\n      Each pick is bought at the 9:30 ET open and sold at +{target:g}%, −{stop:g}% "
-            f"or {end}, whichever comes first, minus {cost:g}% for spread and slippage. When one five-minute bar\n"
-            "      touches both, it counts as the stop.</p>")
+    e = book.stock_entry.get(d, ENTRY_DEFAULTS)
+    if e.get("side") == "short":
+        how = (f"Each pick is {entry_words(e)} and bought back at −{target:g}% (the target), +{stop:g}% (the stop, or "
+               f"wherever it reopens if it jumps the stop) or {end}, minus {cost:g}% for spread, slippage and borrowing.")
+    else:
+        how = (f"Each pick is {entry_words(e)} and sold at +{target:g}%, −{stop:g}% or {end}, whichever comes first, "
+               f"minus {cost:g}% for spread and slippage.")
+    untriggered = (" A pick whose entry never triggers isn't traded: its share of the day's money sits in cash."
+                   if e.get("entry", "open") != "open" else "")
+    return (f"<p>{name}: {stake}.\n      {how}{untriggered} When one five-minute bar touches both target and stop, it "
+            "counts as the stop.</p>")
 
 
 def page(fragment: str) -> str:
@@ -850,9 +894,12 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     import deck                                    # ...as lanes of light on one time axis (the home page)
     import galaxy                                  # ...and drawn as a universe
 
+    import proving                                 # ...and every running rulebook's history test, graded
+
     crawler.write(book, out)
     galaxy.write(book, out)
     deck.write(book, out)
+    proving.write(book, out)
     return book
 
 
@@ -860,7 +907,8 @@ SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/d
           "/crawler": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
           "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv",
-          "/standings": "standings.txt", "/standings.txt": "standings.txt"}
+          "/standings": "standings.txt", "/standings.txt": "standings.txt",
+          "/proving": "proving.html", "/proving.html": "proving.html", "/proving.json": "proving.json"}
 TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8",
          ".txt": "text/plain; charset=utf-8"}
 
@@ -904,12 +952,18 @@ def main(argv=None) -> int:
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
     ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
     ap.add_argument("--standings", action="store_true", help="just print every desk ranked, with its last 7 days")
+    ap.add_argument("--proving", action="store_true", help="just print each rulebook's history-test grade")
     ap.add_argument("--serve", type=int, metavar="PORT", help="also show the deck, crawler, galaxy and book at http://HOST:PORT")
     ap.add_argument("--host", default="127.0.0.1", help="with --serve: the address to answer on (default this machine only)")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
+    if args.proving:
+        import proving
+
+        print(proving.render_text(proving.data(load(cfg, args.demo))))
+        return 0
     if args.print_only or args.standings:
         import benchmark
 
@@ -937,7 +991,8 @@ def main(argv=None) -> int:
                 print("  skipped " + ", ".join(f"{n} row{'s' if n != 1 else ''} of {Path(f).parent.name}/{Path(f).name}"
                                               for f, n in SKIPPED.items()) + " (still being written)")
             print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\n"
-                  f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
+                  f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}\n"
+                  f"Proving ground: {out / 'proving.html'}")
         if args.serve and server is None:
             server = serve(out, args.host, args.serve)
             print(f"Showing the deck at http://{args.host}:{args.serve}/  (crawler: /crawler, galaxy: /galaxy, book: /book)")

@@ -13,7 +13,8 @@ WILD = config.load_criteria(config.book_paths("wild")[0])
 
 def test_book_paths():
     assert config.book_paths("main") == (config.ROOT / "criteria.toml", config.OUTPUT)
-    assert config.book_paths("wild") == (config.ROOT / "criteria-wild.toml", config.OUTPUT / "wild")
+    assert config.book_paths("wild") == (config.ROOT / "retired" / "criteria-wild.toml", config.OUTPUT / "wild")
+    assert config.book_paths("hold") == (config.ROOT / "criteria-hold.toml", config.OUTPUT / "hold")
     for bad in ("nope", "../criteria", "Wild", ""):
         with pytest.raises(ValueError):
             config.book_paths(bad)
@@ -212,8 +213,9 @@ def _picks(result):
 
 def test_all_books_lists_every_criteria_file_main_first():
     books = cli.all_books()
-    assert books[0] == "main" and set(books) >= {"wild", "fade", "quick", "early", "bigcap", "tight", "hold", "cheap", "highvol"}
-    assert len(books) == 10 and len({gates.rules_id(config.load_criteria(config.book_paths(b)[0])) for b in books}) == 10
+    assert books == ["main", "cheap", "confirm", "fade", "failed", "hold", "orb", "orb5"]   # the retired ones aren't run
+    assert len({gates.rules_id(config.load_criteria(config.book_paths(b)[0])) for b in books}) == 8
+    assert "wild" not in books and config.load_criteria(config.book_paths("wild")[0]).min_gap_pct == 5   # still replayable
 
 
 def test_run_scans_gives_each_book_exactly_what_it_gets_on_its_own():
@@ -227,8 +229,9 @@ def test_run_scans_gives_each_book_exactly_what_it_gets_on_its_own():
         assert _picks(together[b]) == _picks(alone), b
         assert [c.symbol for c in together[b].near_misses] == [c.symbol for c in alone.near_misses], b
         assert together[b].checked == alone.checked and together[b].universe == alone.universe
-    assert len(together["wild"].passed) > len(together["main"].passed)          # each book kept its own rules
+    assert len(together["cheap"].passed) != len(together["main"].passed) or _picks(together["cheap"]) != _picks(together["main"])
     assert _picks(together["fade"]) == _picks(together["main"])                  # the same picks, the other side
+    assert _picks(together["orb"]) == _picks(together["main"])                   # same picks, a later entry
     # a candidate object is never shared between books: one book's verdict can't leak into another's
     ids = [id(c) for r in together.values() for c in r.passed + r.near_misses]
     assert len(ids) == len(set(ids))
@@ -238,12 +241,12 @@ def test_scan_grade_and_nightly_take_every_book_at_once(tmp_path, monkeypatch, c
     monkeypatch.setattr(cli, "OUTPUT", tmp_path)
     assert cli.main(["scan", "--demo", "--books", "all", "--at", "2026-10-06 05:45"]) == 0
     out = capsys.readouterr().out
-    assert "== wild rules ==" in out and "== highvol rules ==" in out
+    assert "== fade rules ==" in out and "== orb5 rules ==" in out and "== wild rules ==" not in out
     for b in cli.all_books():
         rows = _rows(tmp_path / ("demo" if b == "main" else f"{b}/demo") / "journal.csv")
         assert rows and {r["rules"] for r in rows} == {gates.rules_id(config.load_criteria(config.book_paths(b)[0]))}, b
     assert cli.main(["grade", "--demo", "--books", "all", "--at", "2026-10-07 14:00"]) == 0
-    for b in ("main", "cheap"):
+    for b in ("main", "cheap", "confirm"):
         rows = _rows(tmp_path / ("demo" if b == "main" else f"{b}/demo") / "journal.csv")
         assert all(r["graded_at"] for r in rows), b
     assert cli.main(["scan", "--demo", "--books", "main,hold", "--at", "2026-10-07 05:45"]) == 0

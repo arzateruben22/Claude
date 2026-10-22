@@ -1,3 +1,5 @@
+# NOT RUN since 22 Oct 2026: lost 35% over 164 live paper trades (13 days). It stays here as the reference every other rulebook is written
+# against; the server runs only the rulebooks listed in server/systemd.
 # Night Desk rulebook. Every number the desk believes lives here.
 #
 # Three kinds of rule:

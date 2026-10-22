@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import signal
 import sys
 import time
@@ -159,9 +160,16 @@ def cmd_backtest(args) -> int:
     except MarketError as exc:
         print(f"Couldn't get prices: {exc}")
         return 1
-    text = summary(result["desk"], result["hold"], args.days, "Backtest (INVENTED demo prices)" if args.demo else "Backtest")
+    text = summary(result["desk"], result["hold"], args.days, "Backtest (INVENTED demo prices)" if args.demo else "Backtest",
+                   result["periods"])
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "summary.md").write_text(text + "\n")
+    (folder / "periods.json").write_text(json.dumps({"book": args.book, "days": args.days, "demo": bool(args.demo),
+                                                     "hold_pct": result["hold"]["return_pct"],
+                                                     "first": start.isoformat(), "last": end.isoformat(),
+                                                     "coins": cfg.desk.coins, "periods": result["periods"],
+                                                     "quarters": result["quarters"], "years": result["years"]},
+                                                    indent=1))
     print(text)
     print(f"\nTrades: {folder / 'trades.csv'}")
     print("Past prices don't predict future ones. A backtest that loses is a reason to stop; one that wins is "

@@ -1,3 +1,5 @@
+# NOT RUN since 22 Oct 2026: lost 48.6% over the past year (310 trades, profit factor 0.52), worse than holding. It stays here as the reference every other rulebook is written
+# against; the server runs only the rulebooks listed in server/systemd.
 # Majors Desk: the big coins, paper money, public exchange prices (no account, no keys).
 # Every number the desk believes lives here.
 

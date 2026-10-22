@@ -13,7 +13,7 @@ from collections import deque
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from . import rules
 from .config import Config
@@ -209,7 +209,7 @@ def replay(cfg: Config, market, start: datetime, end: datetime, folder: Optional
     data = {c: market.history(c, cfg.desk.quote, start - need * step, end) for c in cfg.desk.coins}
     desk = Desk(cfg, market, folder)
     index = {c: {x.t: i for i, x in enumerate(cs)} for c, cs in data.items()}
-    t = start
+    t, curve = start, []
     while t + step <= end:
         history = {}
         for coin, cs in data.items():
@@ -217,12 +217,43 @@ def replay(cfg: Config, market, start: datetime, end: datetime, folder: Optional
             if i is not None and i + 1 >= need:
                 history[coin] = cs[i + 1 - need:i + 1]
         desk.decide(history)
+        curve.append((t + step, desk.value()))         # the bank after this candle, open positions at its close
         t += step
     if close_at_end:                                   # close what's left at the last price, so the totals are real
         for coin in list(desk.positions):
             cs = data[coin]
             desk._sell(coin, cs[-1].c, cs[-1].closed_at, "end of test")
-    return {"desk": desk, "hold": buy_and_hold(cfg, data, start, end)}
+        if curve:
+            curve[-1] = (curve[-1][0], desk.value())
+    return {"desk": desk, "hold": buy_and_hold(cfg, data, start, end),
+            "periods": periods(cfg, curve, data, start, end),
+            "quarters": periods(cfg, curve, data, start, end, by="quarter"),
+            "years": periods(cfg, curve, data, start, end, by="year")}
+
+
+def periods(cfg: Config, curve: List[Tuple[datetime, float]], data: Dict[str, List[Candle]],
+            start: datetime, end: datetime, by: Optional[str] = None) -> List[dict]:
+    """The test cut into calendar years or quarters (by default: years past two years, else quarters): the
+    desk's % change in each, next to the same coins bought in equal parts and held through it. A rule that only
+    works in one kind of market shows up here: ahead in the crash, behind in the run-up, or the other way round."""
+    if not curve:
+        return []
+    yearly = by == "year" or (by is None and (end - start).days > 730)
+    key = (lambda t: f"{t:%Y}") if yearly else (lambda t: f"{t:%Y} Q{(t.month - 1) // 3 + 1}")
+    out: List[dict] = []
+    prev_value, prev_t = cfg.desk.start_bank, start
+    for i, (t, v) in enumerate(curve):
+        last = i == len(curve) - 1
+        if last or key(curve[i + 1][0]) != key(t):
+            hold = []
+            for cs in data.values():
+                inside = [x for x in cs if prev_t <= x.t and x.closed_at <= t]
+                if inside:
+                    hold.append(inside[-1].c / inside[0].o - 1)
+            out.append({"period": key(t), "desk_pct": round((v / prev_value - 1) * 100, 1),
+                        "hold_pct": round(sum(hold) / len(hold) * 100, 1) if hold else 0.0})
+            prev_value, prev_t = v, t
+    return out
 
 
 def buy_and_hold(cfg: Config, data: Dict[str, List[Candle]], start: datetime, end: datetime) -> dict:
@@ -242,7 +273,20 @@ def buy_and_hold(cfg: Config, data: Dict[str, List[Candle]], start: datetime, en
     return {"value": round(total, 2), "return_pct": round((total / cfg.desk.start_bank - 1) * 100, 2), "per_coin": per}
 
 
-def summary(desk: Desk, hold: dict, days: float, label: str) -> str:
+def period_lines(rows: List[dict]) -> List[str]:
+    if not rows:
+        return []
+    out = ["  " + ("By year" if " Q" not in rows[0]["period"] else "By quarter") + " (desk vs holding the same coins):"]
+    for p in rows:
+        mark = "ahead" if p["desk_pct"] > p["hold_pct"] else "behind"
+        out.append(f"    {p['period']:<8} desk {p['desk_pct']:+6.1f}%   holding {p['hold_pct']:+6.1f}%   {mark}")
+    up = sum(p["desk_pct"] > 0 for p in rows)
+    ahead = sum(p["desk_pct"] > p["hold_pct"] for p in rows)
+    out.append(f"  Made money in {up} of {len(rows)} · ahead of holding in {ahead} of {len(rows)}")
+    return out
+
+
+def summary(desk: Desk, hold: dict, days: float, label: str, by_period: Optional[List[dict]] = None) -> str:
     tr = desk.trades
     wins = [t.pnl for t in tr if t.pnl > 0]
     losses = [-t.pnl for t in tr if t.pnl < 0]
@@ -267,4 +311,5 @@ def summary(desk: Desk, hold: dict, days: float, label: str) -> str:
     lines.append(f"  The rules {verdict} simply holding over this stretch, after fees.")
     if len(tr) < 50:
         lines.append(f"  Only {len(tr)} trades: too few to trust either way.")
+    lines += period_lines(by_period or [])
     return "\n".join(lines)

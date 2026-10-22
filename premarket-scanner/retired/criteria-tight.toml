@@ -1,10 +1,10 @@
-# Scanner rules, QUICK book: the main book's picks, with the profit taken fast.
+# RETIRED 22 Oct 2026: lost money every month June to September (220 picks, -1.34% a pick). Kept for the record; the server no longer runs it.
+# Scanner rules, TIGHT book: the main picks with a tight stop.
 #
-# The main book waits for +10% and risks -5%. Its winners often jump right after the open and fade
-# later, so this book grabs a smaller, quicker gain: +5% target, -3% stop. Same picks, same costs.
-# Run any command with --book quick: python -m scanner scan --book quick
-# Its picks and grades live in output/quick/. The paper book shows them as "Quick stocks".
-# Paper money only. Nothing here can place a real order.
+# Identical picks and target, but the stop is 3% instead of 5%. Smaller losses and more of them: does cutting
+# fast beat giving a gap-up room to wobble?
+# The scorecard ([gates]) is the main book's. Run any command with --book tight; picks and grades live
+# in output/tight/. Paper money only. Nothing here can place a real order.
 
 [filters]
 min_price = 2.0
@@ -31,8 +31,8 @@ show_near_misses = true       # also list stocks that fail exactly one rule
 # Paper-trade simulator used by `python -m scanner grade`.
 # Pretend entry at the 9:30 ET open, then whichever hits first wins.
 [paper]
-target_pct = 5.0              # main: 10
-stop_pct = 3.0                # main: 5
+target_pct = 10.0
+stop_pct = 3.0               # tight (main: 5.0)
 cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
 
 # Before real money: the scorecard (python -m scanner scorecard).

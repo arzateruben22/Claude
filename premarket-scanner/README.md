@@ -135,20 +135,34 @@ python -m scanner scan --book quick     # journal in output/quick/
 python -m scanner scan --book early     # journal in output/early/
 ```
 
-### Five more rulebooks, and all ten in one scan
+### Later entries: wait out the opening swings
 
-**bigcap** ($5–100 stocks, 5% gaps, 2× volume, floats to 200M, +6% / −3%), **tight** (the main rules with a 3%
-stop), **hold** (the main rules, +25% / −10%), **cheap** ($1–5 stocks, 15% gaps, 5× volume, +15% / −7%, 1% a
-trade) and **highvol** (8× volume, 500k shares). `--books all` runs every `criteria-*.toml` over **one** market
-read: each book picks its own candidates exactly as it would alone, and the bars, halts, news and floats those
-picks need are fetched once and shared, so ten books cost the data provider about what one does. Each book keeps
-its own journal in `output/<name>/` and its own $100 in the paper book.
+The summer replay (June to September 2026) found the main picks rise about 30% above their open at some point in the
+day, yet most were stopped out in the first minutes. Four rulebooks keep the main filters and only change when they
+get in, set under `[paper]`:
+
+- `entry = "confirm"` with `entry_at = "10:00"`: at 10:00, buy only if the price is still above the 9:30 open
+  (below it, for a short). **confirm** (`criteria-confirm.toml`) buys; **failed** (`criteria-failed.toml`) sells short
+  the gaps already failing.
+- `entry = "orb"` with `range_minutes` and `entry_at`: the first `range_minutes` set a range; buy when a later bar
+  trades above its high, by `entry_at`, with the stop at the range's low or `stop_pct`, whichever is closer.
+  **orb** (`criteria-orb.toml`) uses 15 minutes and 11:00; **orb5** (`criteria-orb5.toml`) the 9:30 candle and 10:30.
+
+Only bars that have already happened decide an entry. A pick that never triggers is graded `no entry`: no trade, no
+cost, and in the paper book its share of the day's money sits in cash. A stop that a bar opens beyond (a gap or a
+halt) now fills at that bar's open, for longs as well as shorts, which is the honest price.
+
+### Retired on 22 October 2026, and all books in one scan
+
+wild, quick, early, bigcap, tight and highvol lost money in every month of the summer replay; their files are in
+`retired/` with the reason, and `--book <name>` still finds them for a history test. `--books all` runs every
+`criteria*.toml` left in this folder over **one** market read: each book picks exactly what it would alone, and the
+bars, halts, news and floats are fetched once and shared.
 
 ```bash
 python -m scanner scan --books all --notify      # what the server runs before the open
 python -m scanner grade --books all              # ...and after the close
-python -m scanner nightly --books all
-python -m scanner scan --books main,hold         # or just some
+python -m scanner backtest --from 2026-01-02 --book orb    # one rulebook against history
 ```
 
 ## 4. Daily routine (Pacific time)
@@ -329,7 +343,7 @@ python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premar
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
-# every command also takes --book <name> (criteria-<name>.toml, results in output/<name>/);
+# every command also takes --book <name> (criteria-<name>.toml, or retired/criteria-<name>.toml; results in output/<name>/);
 # scan, grade and nightly take --books all | a,b to run several rulebooks over one market read
 python -m scanner lookback --book fade [--against main] [--demo]   # one book's rules on another's graded picks
 ```

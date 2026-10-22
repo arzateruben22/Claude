@@ -32,32 +32,51 @@ def desks_of(c):
     return [k for k, v in c.items() if k not in pb.NOT_DESKS and isinstance(v, dict)]
 
 
-def test_book_toml_has_ten_desks_per_market_each_with_its_own_rulebook_and_colour():
+def test_book_toml_lists_the_twenty_desks_still_running_each_with_its_own_rulebook_and_colour():
     c = cfg()
     desks = desks_of(c)
-    assert len(desks) == 30
+    assert len(desks) == 20
     meta = {d: pb.desk_meta(d, c[d]) for d in desks}
     assert {m: sum(1 for d in desks if meta[d]["market"] == m) for m in pb.MARKETS} == {
-        "memecoins": 10, "big coins": 10, "stocks": 10}
+        "memecoins": 8, "big coins": 4, "stocks": 8}
     colours = [meta[d]["color"] for d in desks]
-    assert len(set(colours)) == 30 and all(len(x) == 7 and x.startswith("#") for x in colours)
-    assert len({meta[d]["label"] for d in desks}) == 30 and len({meta[d]["abbr"] for d in desks}) == 30
+    assert len(set(colours)) == 20 and all(len(x) == 7 and x.startswith("#") for x in colours)
+    assert len({meta[d]["label"] for d in desks}) == 20 and len({meta[d]["abbr"] for d in desks}) == 20
     for d in desks:
         assert c[d]["start_bank"] == 100.0, d
         base, _, book = d.partition("_")
         if base == "memecoins":
-            rules = ROOT / "night-desk" / (f"desk-{book}.toml" if book else "desk.toml")
-            assert c[d]["folder"] == f"../night-desk/output/{book + '/' if book else ''}live", d
+            rules = ROOT / "night-desk" / f"desk-{book}.toml"
+            assert c[d]["folder"] == f"../night-desk/output/{book}/live", d
         elif base == "majors":
-            rules = ROOT / "majors-desk" / (f"majors-{book}.toml" if book else "majors.toml")
-            assert c[d]["folder"] == f"../majors-desk/output/{book + '/' if book else ''}live", d
+            rules = ROOT / "majors-desk" / f"majors-{book}.toml"
+            assert c[d]["folder"] == f"../majors-desk/output/{book}/live", d
         else:
             rules = ROOT / "premarket-scanner" / (f"criteria-{book}.toml" if book else "criteria.toml")
             assert c[d]["journal"] == f"../premarket-scanner/output/{book + '/' if book else ''}journal.csv", d
             assert (HERE / c[d].get("rules", "../premarket-scanner/criteria.toml")).resolve() == rules
-        assert rules.exists(), f"{d}: {rules.name} is missing"
+        assert rules.exists(), f"{d}: {rules.name} is missing (a running desk's rulebook can't be retired)"
         assert meta[d]["of"] == (base if book else None), d
     assert c["report"]["checkpoints"] == {"first look": date(2026, 10, 23), "month end": date(2026, 10, 31)}
+
+
+def test_the_services_run_exactly_the_desks_in_the_book():
+    c = cfg()
+    units = ROOT / "server" / "systemd"
+    run = lambda name: next(ln for ln in (units / name).read_text().splitlines() if ln.startswith("ExecStart"))  # noqa: E731
+    books = lambda line: ([line.split("--book ")[1].split()[0]] if "--book " in line else ["main"]) + \
+        [w for i, w in enumerate(line.split()) if i and line.split()[i - 1] == "--with"]  # noqa: E731
+    memes = books(run("nightdesk.service"))
+    bigs = books(run("majors.service"))
+    assert sorted(f"memecoins_{b}" for b in memes) == sorted(d for d in desks_of(c) if d.startswith("memecoins"))
+    assert sorted(f"majors_{b}" for b in bigs) == sorted(d for d in desks_of(c) if d.startswith("majors"))
+    reviews = [ln.split("--book ")[1].strip() for ln in (units / "nightdesk-review.service").read_text().splitlines()
+               if ln.startswith("ExecStart")]
+    assert sorted(reviews) == sorted(memes)
+    stocks = ["main"] + sorted(p.stem[len("criteria-"):] for p in (ROOT / "premarket-scanner").glob("criteria-*.toml"))
+    assert "--books all" in run("scanner-scan.service")             # every criteria file still in the folder...
+    assert sorted("stocks" if b == "main" else f"stocks_{b}" for b in stocks) == sorted(
+        d for d in desks_of(c) if d.startswith("stocks"))           # ...is exactly the stock desks in the book
 
 
 def test_a_desk_the_code_does_not_know_is_described_by_its_section():
@@ -151,16 +170,19 @@ def test_the_evening_summary_with_a_crowd_names_the_best_the_worst_and_the_green
     assert quiet[0] == "Today: none of the 7 desks closed a trade" and quiet[1] == "Green week: none yet"
 
 
-def test_the_paper_book_page_seats_thirty_desks():
+def test_the_paper_book_page_seats_every_desk():
     c = cfg()
     b = pb.load(c, demo=True, now=NOW)
-    assert len(b.desks) == 30 and b.bank_total == 3000.0
+    assert len(b.desks) == 20 and b.bank_total == 2000.0
     page = pb.render_html(b)
     assert '<div class="tiles many crowd" style="--cols:8">' in page
     for d in b.desks:
         assert b.label(d) in page, d
     assert "Sniper memecoins" in page and "night-desk/desk-sniper.toml" in page
     assert "Hold stocks" in page and "premarket-scanner/criteria-hold.toml" in page
+    assert "sold short at 10:00 ET, only if it's still below its 9:30 open" in page          # the failed-gap shorts
+    assert "bought when it breaks above the high of its first 15 minutes, by 11:00 ET" in page
+    assert "its share of the day's money sits in cash" in page
 
 
 def test_the_standings_printout_ranks_every_desk_and_names_the_green_weeks():
@@ -230,9 +252,9 @@ def test_every_build_writes_the_standings_and_serves_them(tmp_path):
     c = cfg()
     b = pb.build(c, True, tmp_path / "out", NOW)
     text = (tmp_path / "out" / "standings.txt").read_text()
-    assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 30
+    assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 20
     assert pb.SERVED["/standings"] == "standings.txt" and pb.TYPES[".txt"].startswith("text/plain")
-    assert len(b.desks) == 30
+    assert len(b.desks) == 20
 
 
 def test_the_standings_are_kept_as_a_file_on_each_read_date(tmp_path):

@@ -25,7 +25,8 @@ STRICT = config.load(config.book_paths("strict")[0])
 
 def test_book_paths():
     assert config.book_paths("main") == (config.ROOT / "desk.toml", config.OUTPUT)
-    assert config.book_paths("wild") == (config.ROOT / "desk-wild.toml", config.OUTPUT / "wild")
+    assert config.book_paths("wild") == (config.ROOT / "retired" / "desk-wild.toml", config.OUTPUT / "wild")   # retired
+    assert config.book_paths("strict") == (config.ROOT / "desk-strict.toml", config.OUTPUT / "strict")
     for bad in ("nope", "../desk", "Wild", "wild/x", ""):
         with pytest.raises(ValueError):
             config.book_paths(bad)

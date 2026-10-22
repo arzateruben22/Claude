@@ -119,18 +119,17 @@ def test_crawler_and_galaxy_get_a_cluster_each(cfg):
     assert "WMEM" in blob or "WSTK" in blob
 
 
-def test_book_toml_lists_the_wild_desks_with_their_own_banks():
+def test_retired_desks_are_out_of_the_book_but_their_rulebooks_are_kept():
     with open(HERE / "book.toml", "rb") as fh:
         cfg = tomllib.load(fh)
-    with open(HERE.parent / "night-desk" / "desk-wild.toml", "rb") as fh:
-        assert cfg["memecoins_wild"]["start_bank"] == tomllib.load(fh)["desk"]["start_bank"]
-    assert cfg["memecoins_wild"]["folder"].endswith("night-desk/output/wild/live")
-    assert cfg["stocks_wild"]["journal"].endswith("premarket-scanner/output/wild/journal.csv")
-    assert (HERE / cfg["stocks_wild"]["rules"]).resolve() == (HERE.parent / "premarket-scanner" / "criteria-wild.toml")
-    assert cfg["stocks_fade"]["journal"].endswith("premarket-scanner/output/fade/journal.csv")
+    retired = {"memecoins": "night-desk/desk.toml", "memecoins_wild": "night-desk/retired/desk-wild.toml",
+               "majors": "majors-desk/majors.toml", "majors_4h": "majors-desk/retired/majors-4h.toml",
+               "stocks_wild": "premarket-scanner/retired/criteria-wild.toml",
+               "stocks_quick": "premarket-scanner/retired/criteria-quick.toml",
+               "stocks_early": "premarket-scanner/retired/criteria-early.toml"}
+    for d, rulebook in retired.items():
+        assert d not in cfg, d                                          # the server doesn't run it, the book doesn't show it
+        assert (HERE.parent / rulebook).exists(), rulebook              # but what it was is kept, word for word
+    for kept in ("memecoins_strict", "stocks", "stocks_fade"):
+        assert kept in cfg and cfg[kept]["start_bank"] == 100.0
     assert (HERE / cfg["stocks_fade"]["rules"]).resolve() == (HERE.parent / "premarket-scanner" / "criteria-fade.toml")
-    for d in pb.DESKS:
-        assert d in cfg and cfg[d]["start_bank"] == 100.0, d
-    assert cfg["memecoins_strict"]["folder"].endswith("night-desk/output/strict/live")
-    assert cfg["majors_4h"]["folder"].endswith("majors-desk/output/4h/live")
-    assert cfg["stocks_early"]["journal"].endswith("premarket-scanner/output/early/journal.csv")

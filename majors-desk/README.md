@@ -42,21 +42,29 @@ python -m majors backtest --days 365 --book 4h # the 4-hour rules over the past 
 python -m majors why --book 4h                 # every command takes --book 4h
 ```
 
-## Eight more rulebooks, one process
+## The rulebooks still running, one process
 
-Each `majors-<name>.toml` is the main rulebook with a few numbers changed, on its own $100 of paper money and its
-own `output/<name>/`: **daily** (daily candles, long windows), **fast** (short windows, 2 ATR stop), **tight**
-(hourly, 1.5 ATR stop), **loose** (4-hour candles, 5 ATR stop, 96-candle exit), **btc** (Bitcoin only, 4-hour
-candles, 80% of the bank in one position), **alts** (SOL, XRP, ADA, DOGE only), **single** (one position, 80% of
-the bank, 2% risk) and **slow** (daily candles, the longest windows). The server runs all ten in one process:
+On 22 October 2026 the rulebooks that lost 24–60% over the past year were retired: hourly (`majors.toml`, kept in
+place as the reference), 4h, fast, tight, btc, alts and single. Their files are in `retired/` with the reason, and
+every command still finds them by name for a history test. Still running, each on its own $100:
+
+- **daily** (`majors-daily.toml`): daily candles. Made +3.3% in a year when holding lost 46%, on few trades.
+- **slow** (`majors-slow.toml`): daily candles, the longest windows. Flat in that year.
+- **loose** (`majors-loose.toml`): 4-hour candles, wide stops. Lost 9% in that year.
+- **trend** (`majors-trend.toml`), new: Bitcoin and Ethereum only while each closes above its 150-day average, cash
+  otherwise, with a trailing stop four daily moves below the best close for a crash between decisions. It uses
+  `breakout_hours = 0` (no breakout needed), `exit_hours = 0` (no window-low exit) and `exit_below_trend = true`.
 
 ```bash
-python -m majors run --with 4h --with daily --with fast --with tight --with loose --with btc --with alts --with single --with slow
-python -m majors sim --days 30 --book slow     # every command takes --book <name>
+python -m majors run --book daily --with slow --with loose --with trend     # what the server runs
+python -m majors backtest --days 1460 --book trend                         # four years against just holding
 ```
 
-Every rulebook shares the hourly price cache in `output/cache/`; one process reads Coinbase once an hour for all
-of them, and each desk decides when its own candle closes (hourly, 4-hour or daily, aligned to midnight UTC).
+Every backtest now ends with a period table, by year past two years and by quarter otherwise: the desk's change in
+each period next to the same coins bought in equal parts and held. `periods.json` in the backtest's folder keeps
+both the quarters and the years for the paper book's Proving Ground. One thing worth knowing about the daily
+rulebook: its 1% risk per trade against a stop three daily moves away often asks for less than the $10 minimum
+ticket on a $100 bank, so it only buys the calmer coins in calm weeks. That's part of why it trades so rarely.
 
 ## Read the backtest honestly
 

@@ -1,0 +1,31 @@
+# Majors Desk, TREND rulebook: hold Bitcoin and Ethereum only while they're above their 150-day average.
+#
+# The oldest and most tested idea in crypto trading: own the coin while its price is above its long average,
+# step aside into cash when it falls below. No breakout needed, no quick exits. It can't catch the bottom
+# and gives back some of every top, but it is built to sit out the long falls that hurt holders most.
+# A trailing stop four daily moves below the best close guards against a crash between two decisions.
+# Fees and slippage are the main desk's. Every window is in hours, whatever the candle.
+# Run it with the others: python -m majors run --book daily --with trend. Results live in output/trend/.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0                                   # paper dollars
+coins = ["BTC", "ETH"]       # the two deepest markets (main: all six)
+quote = "USD"
+candle_hours = 24            # one decision a day, on the daily close at midnight UTC (main: 1)
+
+[rules]
+trend_hours = 3600           # 150 days (main: 100 hours)
+breakout_hours = 0           # no breakout needed: a close above the average is the signal (main: 48)
+exit_hours = 0               # no window-low exit (main: 24)
+exit_below_trend = true      # sell on a daily close below the 150-day average (main: false)
+atr_hours = 336              # 14 days
+stop_atr = 4.0               # ...or four daily moves below its best close since buying (main: 3)
+risk_pct = 5.0               # sized so a stop-out costs 5% of the bank (main: 1)
+max_position_pct = 50.0      # never more than half the bank in one coin
+max_positions = 2
+cooldown_hours = 72          # three days before buying the same coin again, so a wobble around the line isn't traded
+
+[costs]                      # charged on every paper buy and sell
+fee_pct = 0.40               # per side: a typical exchange fee for a small account (check yours)
+slippage_pct = 0.05          # per side: the price moves a little against you when you fill

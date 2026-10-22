@@ -37,12 +37,14 @@ IDEA = {
     "majors": "hourly breakouts", "majors_4h": "4-hour breakouts", "majors_daily": "daily breakouts",
     "majors_fast": "short windows, 2 ATR stop", "majors_tight": "hourly, 1.5 ATR stop", "majors_loose": "4-hour, 5 ATR stop",
     "majors_btc": "BTC only, 4-hour, 80% in", "majors_alts": "SOL XRP ADA DOGE, hourly", "majors_single": "one coin at a time, 80% in",
-    "majors_slow": "daily, long windows",
+    "majors_slow": "daily, long windows", "majors_trend": "BTC + ETH above the 150-day average, else cash",
 }
 STOCK_BASE = {"stocks": "gap-ups", "stocks_wild": "5% gaps, no news", "stocks_fade": "gap-ups sold short",
               "stocks_quick": "gap-ups", "stocks_early": "gap-ups", "stocks_bigcap": "$5–100 gap-ups",
               "stocks_tight": "gap-ups", "stocks_hold": "gap-ups", "stocks_cheap": "$1–5 gap-ups, 15%+",
-              "stocks_highvol": "gap-ups, 8× volume"}
+              "stocks_highvol": "gap-ups, 8× volume", "stocks_confirm": "gap-ups, bought at 10:00 if holding",
+              "stocks_orb": "gap-ups, 15-min range breakout", "stocks_orb5": "gap-ups, 5-min range breakout",
+              "stocks_failed": "failed gaps sold short at 10:00"}
 
 
 def _dt(s: str) -> datetime:
@@ -69,7 +71,8 @@ def idea(book: pb.Book, d: str) -> str:
         return IDEA[d]
     target, stop, _ = book.stock_rules.get(d, (10.0, 5.0, 0.5))
     base = STOCK_BASE.get(d, "stocks")
-    exits = f"−{target:g} / +{stop:g}" if d == "stocks_fade" else f"+{target:g} / −{stop:g}"
+    short = book.stock_entry.get(d, {}).get("side") == "short" or d == "stocks_fade"
+    exits = f"−{target:g} / +{stop:g}" if short else f"+{target:g} / −{stop:g}"
     out = f"{base} · {exits}"
     if book.stock_exit.get(d):
         out += f" · out by {book.stock_exit[d]} ET"

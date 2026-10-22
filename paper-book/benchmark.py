@@ -104,10 +104,20 @@ def desk_return(book: pb.Book, desk: str) -> float:
     return round((net + open_) / bank * 100, 2) if bank else 0.0
 
 
+def big_coin_words(book: pb.Book) -> str:
+    """The big-coin desk to set beside BTC held: the hourly desk when it runs, else the best of the others."""
+    if "majors" in book.desks:
+        return f"big coins desk {desk_return(book, 'majors'):+.1f}%"
+    bigs = [d for d in book.desks if book.market(d) == "big coins"]
+    if not bigs:
+        return "no big-coin desk running"
+    best = max(bigs, key=lambda d: desk_return(book, d))
+    return f"best big-coin desk ({book.label(best).lower()}) {desk_return(book, best):+.1f}%"
+
+
 def line(book: pb.Book) -> str:
     b = book.benchmark
     if not b:
         return ""
     since = datetime.fromisoformat(b["since"]).astimezone(book.tz)
-    return (f"BTC bought {since:%a %d %b %H:%M} and held: {b['pct']:+.1f}% · "
-            f"big coins desk: {desk_return(book, 'majors'):+.1f}%")
+    return f"BTC bought {since:%a %d %b %H:%M} and held: {b['pct']:+.1f}% · " + big_coin_words(book).replace(" desk ", " desk: ", 1)

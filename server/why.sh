@@ -51,14 +51,17 @@ stocks() {   # $1: the journal
 import csv, os, sys
 path = sys.argv[1]
 rows = list(csv.DictReader(open(path, newline=""))) if os.path.exists(path) else []
-waiting = [r for r in rows if not r.get("sim_pnl_pct")]
+waiting = [r for r in rows if not r.get("graded_at")]
 graded = [r for r in rows if r.get("sim_pnl_pct")]
+untriggered = [r for r in rows if r.get("graded_at") and not r.get("sim_pnl_pct")]
 if not rows:
     print("  No picks yet. A stock has to pass every rule (gap, volume, price, spread...); some days none do.")
 else:
     print(f"  {len(graded)} picks graded so far")
     if waiting:
-        print("  bought at the open on their trade day: " + ", ".join(f"{r['symbol']} ({r['trade_date']})" for r in waiting[:8]))
+        print("  waiting for their trade day: " + ", ".join(f"{r['symbol']} ({r['trade_date']})" for r in waiting[:8]))
+    if untriggered:
+        print(f"  {len(untriggered)} picks never triggered this rulebook's entry, so they were never bought or sold")
     pnl = [float(r["sim_pnl_pct"]) for r in graded]
     if pnl:
         print(f"  won {sum(p > 0 for p in pnl)} of {len(pnl)} · average {sum(pnl) / len(pnl):+.1f}% a pick after costs")
@@ -69,17 +72,16 @@ else:
 PYEOF
 }
 
-echo "MEMECOINS (main)"
-memecoins "$DIR/night-desk/output/live/state.json"
+# The rulebooks the server runs: every desk-*.toml, majors-*.toml and criteria-*.toml still in its folder.
+# The main memecoin and big-coin rulebooks and everything in a retired/ folder were cut on 22 Oct 2026.
+first=1
 for f in "$DIR"/night-desk/desk-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#desk-}"
-  echo; echo "MEMECOINS: $b rules (own \$100)"
+  [ "$first" = 1 ] || echo; first=0
+  echo "MEMECOINS: $b rules (own \$100)"
   memecoins "$DIR/night-desk/output/$b/live/state.json"
 done
 
-echo
-echo "BIG COINS (main)"
-(cd "$DIR/majors-desk" && "$PY" -m majors why | sed 's/^/  /')
 for f in "$DIR"/majors-desk/majors-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#majors-}"
   echo; echo "BIG COINS: $b rules (own \$100)"

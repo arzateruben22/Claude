@@ -1,14 +1,15 @@
-# Majors Desk, TIGHT rulebook: the main rules with a tight stop.
+# RETIRED 22 Oct 2026: lost 40.0% over the past year (246 trades, profit factor 0.57). Kept for the record; the server no longer runs it.
+# Majors Desk, ALTS rulebook: the smaller coins only, no BTC or ETH.
 #
-# Identical entries and exits, but the trailing stop sits 1.5 average moves below the best close instead of 3.
-# Smaller losses, and more of them: does cutting fast beat giving the trade room?
+# SOL, XRP, ADA and DOGE move further and faster than the two big ones. The main desk's hourly rules on just
+# those four, to see whether the extra swing is worth the extra risk.
 # Fees and slippage are the main desk's. Every window is in hours, whatever the candle.
-# Run it with the main desk: python -m majors run --with tight. Results live in output/tight/.
+# Run it with the main desk: python -m majors run --with alts. Results live in output/alts/.
 # Paper money only. Nothing here can place a real order.
 
 [desk]
 start_bank = 100.0                                   # paper dollars
-coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
+coins = ["SOL", "XRP", "ADA", "DOGE"]# the smaller coins (main: ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"])
 quote = "USD"
 candle_hours = 1                                     # decide on finished hourly candles (4 = 4-hour candles, 24 = daily)
 
@@ -20,7 +21,7 @@ trend_hours = 100          # only buy when the price is above its 100-hour avera
 breakout_hours = 48        # ...and the hour closes above the highest price of the previous 48 hours
 exit_hours = 24            # sell when an hour closes below the lowest price of the previous 24 hours
 atr_hours = 14             # how far a coin normally moves in an hour, averaged over 14 hours
-stop_atr = 1.5               # tight (main: 3.0)
+stop_atr = 3.0             # ...or sell when it falls 3 of those moves below its best close since buying
 risk_pct = 1.0             # each trade risks 1% of the bank between the buy and the stop
 max_position_pct = 25.0    # never more than 25% of the bank in one coin
 max_positions = 4

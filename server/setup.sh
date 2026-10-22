@@ -43,8 +43,10 @@ echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
-Running now (paper money): thirty desks, ten ideas per market, each on its own \$100 of paper money, and the
-paper book. The Trading Deck lines them all up: bash server/status.sh shows where to open it.
+Running now (paper money): twenty desks, each on its own \$100 of paper money, and the paper book. The clear
+losers were retired on 22 Oct 2026 (their rulebooks are kept in each market's retired/ folder). The Trading Deck
+lines them all up: bash server/status.sh shows where to open it. To test every rulebook against history, one at
+a time and safely in the background: bash server/prove.sh
 Next:
   bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
   bash server/connect-x.sh   connect your X account, then posting starts

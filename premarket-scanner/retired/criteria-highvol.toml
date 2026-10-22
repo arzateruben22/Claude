@@ -1,18 +1,19 @@
-# Scanner rules, TIGHT book: the main picks with a tight stop.
+# RETIRED 22 Oct 2026: lost money every month June to September (174 picks, -1.58% a pick). Kept for the record; the server no longer runs it.
+# Scanner rules, HIGHVOL book: only the most unusual volume.
 #
-# Identical picks and target, but the stop is 3% instead of 5%. Smaller losses and more of them: does cutting
-# fast beat giving a gap-up room to wobble?
-# The scorecard ([gates]) is the main book's. Run any command with --book tight; picks and grades live
-# in output/tight/. Paper money only. Nothing here can place a real order.
+# The main book's picks, but relative volume must be 8x normal with half a million shares already traded:
+# the handful of names the whole market is watching that morning.
+# The scorecard ([gates]) is the main book's. Run any command with --book highvol; picks and grades live
+# in output/highvol/. Paper money only. Nothing here can place a real order.
 
 [filters]
 min_price = 2.0
 max_price = 20.0
 min_gap_pct = 10.0            # % above the last regular close
-min_rvol = 3.0                # session volume vs normal volume by this time of day
+min_rvol = 8.0               # eight times the usual (main: 3.0)
 max_float_shares = 20_000_000
 require_catalyst = true       # needs a news headline inside news_lookback_hours
-min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
+min_session_volume = 500_000 # (main: 50_000)
 allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
 max_spread_pct = 1.5          # bid/ask spread at scan time, % of price. Pre-market spreads run
                               # wider than after the open; tighten to 1.0 for regular-hours scans
@@ -31,7 +32,7 @@ show_near_misses = true       # also list stocks that fail exactly one rule
 # Pretend entry at the 9:30 ET open, then whichever hits first wins.
 [paper]
 target_pct = 10.0
-stop_pct = 3.0               # tight (main: 5.0)
+stop_pct = 5.0
 cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
 
 # Before real money: the scorecard (python -m scanner scorecard).

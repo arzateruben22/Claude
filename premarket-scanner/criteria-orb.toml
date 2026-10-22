@@ -1,20 +1,22 @@
-# Scanner rules, BIGCAP book: bigger, more liquid stocks.
+# Scanner rules, ORB book: the main picks, bought on a break of their first 15 minutes' high.
 #
-# Up to $100 a share and floats up to 200 million: stocks a real order can get in and out of. A 5% gap is
-# enough, and the cost per trade is lower because the spreads are. Smaller moves, steadier fills.
-# The scorecard ([gates]) is the main book's. Run any command with --book bigcap; picks and grades live
-# in output/bigcap/. Paper money only. Nothing here can place a real order.
+# An opening-range breakout: the first 15 minutes set a range; a pick is bought only when it trades above
+# that range's high, by 11:00, with the stop at the range's low (or 8%, whichever is closer). A stock that
+# never breaks out is never bought.
+# Filters, catalysts and the scorecard ([gates]) are the main book's, word for word. Run any command
+# with --book orb; picks and grades live in output/orb/. Paper money only. Nothing here can place
+# a real order.
 
 [filters]
-min_price = 5.0              # (main: 2.0)
-max_price = 100.0            # (main: 20.0)
-min_gap_pct = 5.0            # (main: 10.0)
-min_rvol = 2.0               # (main: 3.0)
-max_float_shares = 200_000_000# (main: 20_000_000)
+min_price = 2.0
+max_price = 20.0
+min_gap_pct = 10.0            # % above the last regular close
+min_rvol = 3.0                # session volume vs normal volume by this time of day
+max_float_shares = 20_000_000
 require_catalyst = true       # needs a news headline inside news_lookback_hours
-min_session_volume = 200_000 # (main: 50_000)
+min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
 allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
-max_spread_pct = 0.8         # tight spreads (main: 1.5)
+max_spread_pct = 1.5          # bid/ask spread at scan time, % of price. Pre-market spreads run
                               # wider than after the open; tighten to 1.0 for regular-hours scans
 allow_unknown_spread = true   # no quote -> keep it, but flag "spread ?"
 exclude_halted = true         # drop stocks halted right now (news pending, SEC, etc.)
@@ -30,9 +32,12 @@ show_near_misses = true       # also list stocks that fail exactly one rule
 # Paper-trade simulator used by `python -m scanner grade`.
 # Pretend entry at the 9:30 ET open, then whichever hits first wins.
 [paper]
-target_pct = 6.0             # (main: 10.0)
-stop_pct = 3.0               # (main: 5.0)
-cost_pct = 0.3               # liquid names cost less to trade (main: 0.5)
+entry = "orb"                 # main: open (buy at 9:30)
+range_minutes = 15            # 9:30 to 9:45
+entry_at = "11:00"            # a breakout after 11:00 doesn't count
+target_pct = 10.0
+stop_pct = 8.0                # the most it may lose; the range low is used when it is closer
+cost_pct = 0.5
 
 # Before real money: the scorecard (python -m scanner scorecard).
 # It needs a backtest AND paper picks made with the current rules above.
@@ -52,7 +57,7 @@ paper_vs_backtest = 0.5       # paper's average pick must reach half the backtes
 # The risk officer and the nightly review (python -m scanner nightly).
 # They only write reports and proposals. Nothing they say changes the rules.
 [review]
-use_ai = false               # rules only: the main book's nightly review is the one that uses Claude
+use_ai = true                 # needs ANTHROPIC_API_KEY in .env; otherwise rule-based
 model = "claude-opus-5-5"
 effort = "high"               # runs once a day, so let it think
 lookback_days = 7             # the review compares this window with everything before it

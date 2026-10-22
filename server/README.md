@@ -7,13 +7,17 @@ Everything on one small Linux machine that never sleeps:
 | Service | What it does | Starts |
 |---|---|---|
 | `postdesk` | your X account: drafts, your approvals, scheduled posts | once you've connected X (step 5) |
-| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: all ten memecoin rulebooks in one process on one price feed, each on its own $100 (dashboards at `/wild/`, `/strict/`, `/sniper/`...) | right away |
-| `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices: all ten big-coin rulebooks in one process, each deciding at its own candle close (hourly, 4-hour or daily), each on its own $100 | right away |
-| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for all ten stock rulebooks at once (`--books all`: one market read, ten journals, ten $100 banks) | once your Alpaca paper keys are in (step 6) |
-| `paperbook` | one ledger of every paper trade from all thirty desks, refreshed every 15 minutes, plus the Trading Deck (the home page), Trade Crawler and Paper Galaxy on port 8790 | right away |
-| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for all ten memecoin rulebooks | right away |
+| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: the eight memecoin rulebooks still running, in one process on one price feed, each on its own $100 (dashboards at `/`, `/sniper/`, `/momentum/`...) | right away |
+| `majors` | big coins on Coinbase prices, paper money: the daily, slow, loose and trend rulebooks in one process, each deciding at its own candle close, each on its own $100 | right away |
+| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for every `criteria*.toml` left in the scanner's folder (`--books all`: one market read, one journal and one $100 bank each) | once your Alpaca paper keys are in (step 6) |
+| `paperbook` | one ledger of every paper trade from every running desk, refreshed every 15 minutes, plus the Trading Deck (the home page), the Proving Ground (`/proving`), Trade Crawler and Paper Galaxy on port 8790 | right away |
+| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for every memecoin rulebook still running | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
+
+`bash server/prove.sh` replays every running rulebook against history (big coins over four years, stocks since
+2 January), one at a time, at low priority, in the background. The Proving Ground page grades the results. The
+rulebooks retired on 22 October 2026 are kept in each market's `retired/` folder; the services never run them.
 
 ## 1. Get a machine
 

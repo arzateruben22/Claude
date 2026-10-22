@@ -125,6 +125,8 @@ def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Pa
     if not book.replace("-", "").isalnum() or not book.islower():
         raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
     path = ROOT / f"desk-{book}.toml"
+    if not path.exists() and (ROOT / "retired" / path.name).exists():
+        path = ROOT / "retired" / path.name            # retired: never run by the server, still replayable by name
     if not path.exists():
         raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
     return path, output / book

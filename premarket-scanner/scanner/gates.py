@@ -29,7 +29,8 @@ except ModuleNotFoundError:  # Python < 3.11
 from .config import ROOT, Criteria
 
 DISPLAY_ONLY = ("sort_by", "show_near_misses")   # settings that change the report, not the picks
-NEUTRAL = {"side": "long", "exit_by": ""}        # newer settings, at the value that means "as before"
+NEUTRAL = {"side": "long", "exit_by": "", "entry": "open", "entry_at": "10:00",   # newer settings, at the
+           "range_minutes": 15}                                                    # value that means "as before"
 
 
 @dataclass

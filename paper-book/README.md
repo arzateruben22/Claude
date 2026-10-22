@@ -19,19 +19,23 @@ nothing in this repo can place a real order.
 | **Eight more big-coin desks**: daily, fast, tight stop, loose, Bitcoin only, alt coins only, one bet, slow (`majors-desk/majors-<name>.toml`) | the same coins and prices under eight more rulebooks, on hourly, 4-hour or daily candles | $100 each | at each one's own candle close |
 | **Five more stock desks**: big-cap, tight-stop, hold, cheap, high-volume (`premarket-scanner/criteria-bigcap.toml`...) | the scanner's picks under five more rulebooks | $100 each | with the stock scans |
 
-Thirty desks, one scoreboard: ten rulebooks per market, each a different idea on the same markets over the same
-weeks, so the book shows which ideas make paper money and which don't. None of them changes the original desks or
-their four-week test. A desk is in the book when `book.toml` has a section for it: the first ten are known by
-name; any other section says its `label`, `kind` (coins or stocks), `market` (memecoins, big coins or stocks),
-`of` (the desk it varies), `color` and where its results are.
+On 22 October 2026 the clear losers were retired on the evidence and their sections removed from `book.toml`;
+their rulebooks are kept in each market's `retired/` folder and their paper records stay on disk. Fifteen of the
+thirty remain, joined by five new ones: the big-coin trend filter and four stock rulebooks that wait out the opening
+swings. In the table above, Memecoins, Big coins, Wild memecoins, Wild stocks, Big coins 4h, Quick stocks and
+Early-out stocks are among the retired. A desk is in the book when `book.toml` has a section for it.
+
+**The Proving Ground** (`proving.py`, written with every refresh as `output/proving.html`, served at `/proving` and
+linked from the deck) reads each running rulebook's newest history test and grades it by one stated rule: a
+**candidate** made money over the test, made money in at least two thirds of its periods (quarters for big coins,
+months for stocks), had enough trades and, for big coins, never fell more than 25% from a high; **watch** made money
+overall or in half its periods; **cut** did neither. It draws a heatmap of every period, with holding the same coins
+beside each big-coin quarter. `bash server/prove.sh` runs the tests; `python paper-book/paperbook.py --proving`
+prints the grades. Memecoins can't be replayed and are judged live only.
 
 **The plan**, as `[report] checkpoints` in `book.toml`: a first look on **Fri 23 Oct**, the assessment at **month
 end, Sat 31 Oct**, and after that the survivors run until one shows a **green week** (`deck.week`): traded on three
-or more of the last seven days, net up over the seven, no single day's loss bigger than the week's gain. The Trading
-Deck marks the dates on its time axis, filters the lanes by market, and its **standings** button ranks every desk
-with its last seven days and a green-week badge. The evening push names the week's best and worst and any green
-weeks. Thirty variations means a few will look good by Friday from luck alone; the month-end read and the green
-week are what count.
+or more of the last seven days, net up over the seven, no single day's loss bigger than the week's gain.
 
 ```bash
 python paper-book/paperbook.py             # the ledger and the report, now

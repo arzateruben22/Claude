@@ -1,18 +1,20 @@
-# Scanner rules, HIGHVOL book: only the most unusual volume.
+# RETIRED 22 Oct 2026: lost money every month June to September (220 picks, -1.75% a pick). Kept for the record; the server no longer runs it.
+# Scanner rules, QUICK book: the main book's picks, with the profit taken fast.
 #
-# The main book's picks, but relative volume must be 8x normal with half a million shares already traded:
-# the handful of names the whole market is watching that morning.
-# The scorecard ([gates]) is the main book's. Run any command with --book highvol; picks and grades live
-# in output/highvol/. Paper money only. Nothing here can place a real order.
+# The main book waits for +10% and risks -5%. Its winners often jump right after the open and fade
+# later, so this book grabs a smaller, quicker gain: +5% target, -3% stop. Same picks, same costs.
+# Run any command with --book quick: python -m scanner scan --book quick
+# Its picks and grades live in output/quick/. The paper book shows them as "Quick stocks".
+# Paper money only. Nothing here can place a real order.
 
 [filters]
 min_price = 2.0
 max_price = 20.0
 min_gap_pct = 10.0            # % above the last regular close
-min_rvol = 8.0               # eight times the usual (main: 3.0)
+min_rvol = 3.0                # session volume vs normal volume by this time of day
 max_float_shares = 20_000_000
 require_catalyst = true       # needs a news headline inside news_lookback_hours
-min_session_volume = 500_000 # (main: 50_000)
+min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
 allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
 max_spread_pct = 1.5          # bid/ask spread at scan time, % of price. Pre-market spreads run
                               # wider than after the open; tighten to 1.0 for regular-hours scans
@@ -30,8 +32,8 @@ show_near_misses = true       # also list stocks that fail exactly one rule
 # Paper-trade simulator used by `python -m scanner grade`.
 # Pretend entry at the 9:30 ET open, then whichever hits first wins.
 [paper]
-target_pct = 10.0
-stop_pct = 5.0
+target_pct = 5.0              # main: 10
+stop_pct = 3.0                # main: 5
 cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
 
 # Before real money: the scorecard (python -m scanner scorecard).

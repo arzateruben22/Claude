@@ -132,10 +132,13 @@ def test_your_settings_start_every_desk_at_100():
     with open(Path(__file__).resolve().parent.parent / "book.toml", "rb") as fh:
         cfg = tomllib.load(fh)
     root = Path(__file__).resolve().parents[2]
-    with open(root / "night-desk" / "desk.toml", "rb") as fh:
-        night = tomllib.load(fh)["desk"]["start_bank"]
-    with open(root / "majors-desk" / "majors.toml", "rb") as fh:
-        majors = tomllib.load(fh)["desk"]["start_bank"]
-    assert cfg["memecoins"]["start_bank"] == night == 100.0           # the book and the desks agree
-    assert cfg["majors"]["start_bank"] == majors == 100.0
-    assert cfg["stocks"]["start_bank"] == 100.0 and cfg["stocks"]["share_bank"] is True
+    desks = [d for d, v in cfg.items() if d not in pb.NOT_DESKS and isinstance(v, dict)]
+    for d in desks:
+        assert cfg[d]["start_bank"] == 100.0, d
+        base, _, book = d.partition("_")
+        rulebook = {"memecoins": root / "night-desk" / f"desk-{book}.toml",
+                    "majors": root / "majors-desk" / f"majors-{book}.toml"}.get(base)
+        if rulebook:                                                   # the book and the desk agree on the bank
+            with open(rulebook, "rb") as fh:
+                assert tomllib.load(fh)["desk"]["start_bank"] == 100.0, d
+    assert cfg["stocks"]["share_bank"] is True

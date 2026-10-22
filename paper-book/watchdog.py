@@ -47,7 +47,7 @@ QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Me
 for _b in ("wild", "strict", "sniper", "momentum", "patient", "scalper", "whale", "runner", "tiny"):
     QUIET[f"nightdesk-{_b}"] = ("nightdesk", f"night-desk/output/{_b}/live/state.json", 20, f"{_b.title()} memecoin desk")
 for _b, _h in (("4h", 4), ("daily", 24), ("fast", 1), ("tight", 1), ("loose", 4), ("btc", 4), ("alts", 1),
-               ("single", 1), ("slow", 24)):
+               ("single", 1), ("slow", 24), ("trend", 24)):
     QUIET[f"majors-{_b}"] = ("majors", f"majors-desk/output/{_b}/live/state.json", 90 * _h + 60, f"Big-coin {_b} desk")
 
 

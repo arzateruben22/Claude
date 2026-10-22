@@ -166,6 +166,13 @@ The opposite of wild, on its own $100: only coins past their first 30 minutes wi
 once, profit taken at +25%, losses cut at −12%, and nothing held past an hour. Rug checks, fees and the
 scorecard are identical to the main desk's.
 
+## What's running since 22 October 2026
+
+The main rulebook (`desk.toml`) lost 35% over its first 164 live paper trades and the wild one lost 76% in two days,
+so both were retired: `desk.toml` stays in place as the reference the others are written against, and
+`retired/desk-wild.toml` keeps the wild rules with the reason. The server now runs **strict** first, with the
+seven below alongside it: `python -m nightdesk run --book strict --with sniper ... --with tiny`.
+
 ## Seven more rulebooks
 
 Each `desk-<name>.toml` is the main rulebook with a few numbers changed, on its own $100 of paper money and its own

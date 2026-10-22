@@ -9,4 +9,6 @@ DIR="$(cd "$(dirname "$0")/.." && pwd)"
 echo
 "$DIR/.venv/bin/python" "$DIR/paper-book/paperbook.py" --standings
 echo
-echo "Trading Deck: http://127.0.0.1:8790 (crawler: /crawler, galaxy: /galaxy, book: /book) through ssh -L 8790:127.0.0.1:8790 (or your Tailscale address after phone.sh)"
+"$DIR/.venv/bin/python" "$DIR/paper-book/paperbook.py" --proving
+echo
+echo "Trading Deck: http://127.0.0.1:8790 (proving ground: /proving, crawler: /crawler, galaxy: /galaxy, book: /book) through ssh -L 8790:127.0.0.1:8790 (or your Tailscale address after phone.sh)"
