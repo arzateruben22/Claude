@@ -9,11 +9,13 @@ voice = "deadpan and confident, a little unhinged. Short, choppy sentences. Hype
 language = "en"
 premium = false                # TODO: X Premium is needed for creator payouts (and helps reach); set true once you have it
 timezone = "America/Los_Angeles"
-notes = ["goes to the gym", "goes to raves", "loves comedy"]   # true things the writer may joke about
+notes = ["goes to the gym", "goes to raves", "loves comedy",
+         "runs two dozen paper-trading bots on fake money, as an experiment, and checks them far too often"]
+                               # true things the writer may joke about
 
 [topics]
 include = ["gym life", "raves and festivals", "everyday life", "dating and texting", "food opinions", "work life",
-           "internet culture"]
+           "internet culture", "running trading bots on fake money"]
 avoid = ["politics", "political", "election", "democrat", "republican", "liberal", "conservative", "maga", "trump",
          "biden", "immigration", "abortion", "gun control", "israel", "gaza", "palestine", "ukraine", "russia",
          "racist", "racism", "racial", "ethnicity", "religion", "religious", "tragedy", "shooting", "suicide",
@@ -47,7 +49,9 @@ style = "comedy"               # comedy | informative
 model = "claude-opus-5-5"      # the strongest writer: jokes need it
 effort = "medium"
 drafts_per_batch = 8
-formats = ["storytime", "hot_take", "fake_quote", "pov", "observation", "list", "fake_headline", "this_or_that"]
+formats = ["storytime", "hot_take", "fake_quote", "pov", "observation", "list", "fake_headline", "this_or_that",
+           "bot_diary"]           # bot_diary: jokes about your paper-trading bots, from the paper book's real
+                                  # numbers (only when it's fresh); always says it's fake money, always waits for you
 max_chars = 200                # jokes land shorter
 hashtags_max = 0               # hashtags read as try-hard on a comedy account
 links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)

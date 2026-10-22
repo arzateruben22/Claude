@@ -110,6 +110,17 @@ that matter most:
 
 Unknown settings are rejected with a clear message, so a typo can't silently do nothing.
 
+**The bot diary** (`bot_diary` in `[writer] formats`): deadpan posts about your paper-trading bots, built from
+the paper book's real numbers ("24 bots, $1,000 of fake money each, the one called Patient hasn't traded in six
+days"). `postdesk/paperfacts.py` reads `../paper-book/output/deck.json` and hands the writer a few true facts: how
+many bots, how long they've run, the fake money they're up or down, the best and worst, a green week if any, and
+whether Bitcoin is above its 150-day line. Only a live file updated in the last 36 hours counts; with no fresh paper
+book the format simply isn't offered that day. At most one diary post per batch. The guard adds three rules for
+it: the post must say the money is fake or paper, it may not name a ticker (`$ABC`), and it may not read like a
+tip or hype (buy the dip, 100x, signals, DM me, presale...). It also always flags a diary post for you to check
+the numbers, so it never posts on its own even in `auto_originals`. The joke is you and the bots, never the
+market.
+
 ## 4. Day to day
 
 ```bash

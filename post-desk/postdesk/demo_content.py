@@ -204,6 +204,11 @@ COMEDY_ORIGINALS["storytime"] = [
     "Guy at my gym has done the same 3 exercises since 2019. Same shirt. Same playlist. Same PR. Man is a historic landmark at this point.",
     "Friend said she'd leave the rave 'right after this song.' That was 2 hours, 4 waters and a brand new best friend named Tyler ago.",
 ]
+COMEDY_ORIGINALS["bot_diary"] = [   # demo only: the numbers are invented
+    "Day 6 of running 24 trading bots on fake money. The one called 'Patient' has made zero trades. It's not patient. It's scared.",
+    "My paper-trading bots are down $41 of fake money today and I still checked them 30 times. Not one dollar is real. My stress is.",
+    "Gave 24 bots $1,000 of pretend money each. The best one is up 4%. The worst one shorted something and now owes me emotionally.",
+]
 COMEDY_ORIGINALS["fake_quote"] = [
     "Hydrate or die\n\nHydrate or die\n\n- the guy selling $8 water at the festival",
     "We're leaving after this set\n\nWe're leaving after this set\n\n- famous last words",

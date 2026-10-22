@@ -21,6 +21,13 @@ BAIT = [r"\blike if\b", r"\brt if\b", r"\bretweet if\b", r"\brepost if\b", r"\bf
         r"\bcomment below\b", r"\bdrop an? .{0,20}\bbelow\b", r"\btag (a|someone|a friend|\d+)\b",
         r"\bfollow back\b", r"\bf4f\b", r"\bgiveaway\b", r"\bsmash (that|the) like\b"]
 NUMBERS = re.compile(r"\b\d+(\.\d+)?\s?(%|x\b|percent\b|million\b|billion\b|k\b|times\b)", re.I)
+# bot_diary posts joke about the owner's paper-trading bots. They must say the money is fake, and never read as a tip.
+FAKE_MONEY = re.compile(r"\b(paper|fake|pretend|monopoly|imaginary)\b", re.I)
+CASHTAG = re.compile(r"(?<![\w$])\$[A-Za-z][A-Za-z0-9]{0,9}\b")
+HYPE = [r"\bbuy (it |this |now|the dip)", r"\bsell (it |this |now)", r"\byou should (buy|sell|get in)",
+        r"\bto the moon\b", r"\b\d{2,}x\b", r"\bguarantee", r"\bfinancial advice\b", r"\bsignals?\b",
+        r"\bjoin my\b", r"\bdm me\b", r"\bcopy my (trades|bot)", r"\bget rich\b", r"\bpassive income\b",
+        r"\bnext (big|100x)\b", r"\bpump\b", r"\bpresale\b", r"\bairdrop\b"]
 SHORT_URL = 23          # X counts every link as 23 characters
 MIN_COMMENTARY = 40     # a quote post earns only when it adds real commentary
 BORROWED = 0.5          # this close to someone else's post (a scouted post or headline) is copying
@@ -103,6 +110,14 @@ def check(d: Draft, cfg: Config, recent: Iterable[str] = (), borrowed: Iterable[
         add("not shouting", caps < 0.6, "mostly capitals", "warn")
     if NUMBERS.search(text) and not d.source_url:
         add("numbers have a source", False, "it states a number with no source: check it", "warn")
+    if d.format == "bot_diary":
+        add("says it's paper money", bool(FAKE_MONEY.search(text)),
+            "a post about the trading bots must say the money is fake or paper")
+        tags = CASHTAG.findall(text)
+        add("no tickers", not tags, "names a ticker: " + " ".join(tags) if tags else "")
+        hype = [p for p in HYPE if re.search(p, low)]
+        add("not a tip", not hype, "reads like trading advice or hype" if hype else "")
+        add("bot numbers", False, "real numbers from your paper book: check them before it posts", "warn")
     if d.kind == "quote":
         add("real commentary", len(text) >= MIN_COMMENTARY,
             f"a quote needs {MIN_COMMENTARY}+ characters of your own take to count as original")
