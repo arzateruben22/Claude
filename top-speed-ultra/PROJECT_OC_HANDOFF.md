@@ -125,6 +125,15 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
+**Connecting to `claude/always-on` (the owner, 04:40 UTC).** After the live integration lands on `claude/hypercar`,
+this session merges `claude/hypercar` into `claude/always-on` (only `top-speed-ultra/` differs; the diff outside it must be
+empty), and keeps doing so after every judged landing. The live server's deploy pieces outside the game folder
+(`server/live*.sh`, `server/systemd/oc-live.service`, the setup/status/backup hooks, `paper-book/watchdog.py`'s oc-live
+alert, START-HERE.md Part 4) stay on `claude/live-server`. The owner chose (04:48) that the live-server session merges
+`claude/live-server` into `claude/always-on` when it is resumed, after this session's merge, resolving the desks' files
+itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's integrated side. Before landing,
+`integrate/live` must pass every core group (the live-server session's last core run on db324db was cut off).
+
 ### Decisions waiting (the owner's)
 
 - The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
