@@ -30,115 +30,106 @@ window.SCHOOL = {
         {
           name: "How skin works", art: "layers",
           lessons: [
-            { id: "1-1", t: "Your skin in ten minutes", min: 9,
-              sum: "Skin is an organ with a job: keep water in and the world out. Once you see how it's built, every product decision gets easier.",
+            { id: "1-1", t: "Your skin in ten minutes", min: 2,
+              sum: "Skin keeps water in and the world out. Here's how.",
               learn: [
-                "The epidermis is the thin outer layer you treat at home. Under it, the dermis holds collagen, elastin, oil glands and blood supply.",
-                "New cells form at the bottom of the epidermis and rise to the surface. In your twenties the trip takes about four weeks, and it slows with age.",
-                "The surface is slightly acidic, around pH 5. That acid mantle keeps the good bacteria happy and the bad ones out.",
-                "Most home skincare works on the top layers. Anything that reaches living tissue is a medical treatment, not a facial."
+                "The epidermis on top is where home care works; the dermis below holds collagen, oil and blood.",
+                "New cells reach the surface in about four weeks, slower with age.",
+                "The surface is slightly acidic, about pH 5. Anything deeper is medical, not a facial."
               ],
-              try: "Tonight, wash with lukewarm water and look at your bare skin in daylight tomorrow morning, before any product. That's your starting point.",
+              try: "Tomorrow morning, look at your bare skin in daylight.",
               q: { ask: "Roughly how long does it take a new skin cell to reach the surface in your twenties?", opts: ["About 4 days", "About 4 weeks", "About 4 months"], a: 1,
-                why: "About four weeks, which is why you judge a new routine after a month, not a morning." } },
-            { id: "1-2", t: "Find your real skin type", min: 8,
-              sum: "Skin type is how much oil you make. Skin condition is what's happening right now. Mixing them up is why so many routines fail.",
+                why: "About four weeks, so judge a routine after a month." } },
+            { id: "1-2", t: "Find your real skin type", min: 2,
+              sum: "Type is how much oil you make; condition is what's happening now.",
               learn: [
-                "The four types: dry (little oil), oily (a lot), combination (oily T-zone, drier cheeks) and normal (balanced).",
-                "Conditions come and go: dehydrated, sensitive, acne-prone, sun-damaged. Oily skin can still be dehydrated.",
-                "The bare-face test: cleanse, apply nothing, wait an hour, then look. Shine everywhere is oily, shine only in the T-zone is combination, tight and flaky is dry.",
-                "Your type can shift with seasons, hormones and age, so check again every few months."
+                "Four types: dry, oily, combination (an oily T-zone) and normal.",
+                "Conditions come and go: dehydrated, sensitive, acne-prone. Oily skin can be dehydrated.",
+                "The test: cleanse, apply nothing, look at one hour. Check again every few months."
               ],
-              try: "Do the bare-face test this week and write down what you see at one hour. Keep it: Lesson 3-2 builds your routine from it.",
+              try: "Do the bare-face test and note what you see.",
               q: { ask: "Your forehead and nose shine by noon but your cheeks feel tight. Your skin type is most likely:", opts: ["Oily", "Combination", "Dry"], a: 1,
-                why: "Oil in the T-zone with drier cheeks is combination skin." } },
-            { id: "1-3", t: "The barrier: why less is more", min: 9,
-              sum: "Your barrier is brick and mortar: skin cells held together by fats. When it's damaged, everything stings, flakes and breaks out.",
+                why: "An oily T-zone with drier cheeks is combination." } },
+            { id: "1-3", t: "The barrier: why less is more", min: 2,
+              sum: "Your barrier is bricks and mortar. Damage it and everything stings.",
               learn: [
-                "The bricks are flattened skin cells. The mortar is ceramides, cholesterol and fatty acids.",
-                "Signs of a damaged barrier: stinging from products that never stung, tightness after washing, redness, flaking, sudden breakouts.",
-                "The usual causes: too much exfoliating, harsh cleansers, hot water, too many actives at once, and dry weather.",
-                "To repair it, cut back to a gentle cleanser, a moisturizer with ceramides and sunscreen for two weeks, with no acids or retinoids."
+                "Bricks are skin cells; mortar is ceramides, cholesterol and fatty acids.",
+                "Damage shows as new stinging, tightness, redness, flaking or sudden breakouts.",
+                "Repair: gentle cleanser, ceramide moisturizer and SPF, no actives, for two weeks."
               ],
-              try: "Count the products with acids, retinoids or scrubs you use in a week. If it's more than three, you'll learn how to cut back in Level 2.",
+              try: "Count your weekly acids, retinoids and scrubs. Over three? Cut back.",
               q: { ask: "Which of these is a sign of a damaged barrier?", opts: ["Your moisturizer suddenly stings", "Your skin looks dewy after SPF", "You have a few freckles"], a: 0,
-                why: "When a gentle product suddenly stings, the barrier is letting things through it shouldn't." } }
+                why: "Sudden stinging means the barrier is letting things through." } }
           ]
         },
         {
           name: "The core routine", art: "routine",
           lessons: [
-            { id: "2-1", t: "Cleansing, done right", min: 7, free: true,
-              sum: "A good cleanser removes the day without stripping the skin. The way you wash matters as much as what you wash with.",
+            { id: "2-1", t: "Cleansing, done right", min: 2, free: true,
+              sum: "Take off the day without stripping the skin.",
               learn: [
-                "Choose by type: a gel or foam for oily skin, a cream or milk for dry and sensitive skin.",
-                "Use lukewarm water, not hot, and massage for a full 60 seconds so the cleanser has time to work.",
-                "At night, cleanse twice if you wore sunscreen or makeup: an oil or balm first, then your regular cleanser.",
-                "Tight and squeaky afterward means the cleanser is too strong."
+                "Gel or foam for oily skin; cream or milk for dry and sensitive.",
+                "Lukewarm water and a full 60-second massage.",
+                "Wore SPF or makeup? Oil or balm first, then your cleanser. Squeaky means too strong."
               ],
-              try: "Time your cleanse tonight. Most people stop at 15 seconds.",
+              try: "Time tonight's cleanse. Aim for 60 seconds.",
               q: { ask: "When does a double cleanse make the most sense?", opts: ["Every morning", "At night after sunscreen or makeup", "Only when you have a breakout"], a: 1,
-                why: "The first cleanse melts sunscreen and makeup, and the second one cleans the skin." } },
-            { id: "2-2", t: "Moisturizer, decoded", min: 8,
-              sum: "Every moisturizer is a mix of three kinds of ingredients. Once you know them, you can pick one for any skin in seconds.",
+                why: "The first cleanse melts sunscreen and makeup; the second cleans the skin." } },
+            { id: "2-2", t: "Moisturizer, decoded", min: 2,
+              sum: "Every moisturizer mixes three kinds of ingredients.",
               learn: [
                 "Humectants pull water in: glycerin, hyaluronic acid, urea.",
-                "Emollients smooth and soften: squalane, ceramides, plant oils.",
-                "Occlusives seal it all in: petrolatum, dimethicone, shea butter.",
-                "Oily skin wants light humectants in a gel. Dry skin wants more emollients and occlusives in a cream. Everyone needs a moisturizer."
+                "Emollients soften (squalane, ceramides); occlusives seal (petrolatum, shea butter).",
+                "Oily skin: a light gel. Dry skin: a richer cream. Everyone needs one."
               ],
-              try: "Read the first five ingredients on your moisturizer and label each one humectant, emollient or occlusive.",
+              try: "Label your moisturizer's first five ingredients by type.",
               q: { ask: "Hyaluronic acid is a:", opts: ["Humectant", "Occlusive", "Exfoliant"], a: 0,
-                why: "It's a humectant: it draws water into the skin. It's not an acid that exfoliates." } },
-            { id: "2-3", t: "Sunscreen, the anti-aging step", min: 10,
-              sum: "No serum does as much for your skin as daily sunscreen. It prevents dark spots, fine lines, and skin cancer.",
+                why: "A humectant: it draws water in. It doesn't exfoliate." } },
+            { id: "2-3", t: "Sunscreen, the anti-aging step", min: 2,
+              sum: "Daily sunscreen does more for your skin than any serum.",
               learn: [
-                "Use broad spectrum SPF 30 or higher every day, rain or shine. UVA passes through clouds and windows.",
-                "Use enough: about a quarter teaspoon for the face, or two finger-lengths for face and neck.",
-                "Reapply every two hours outdoors, and after swimming or sweating.",
-                "Mineral filters (zinc oxide, titanium dioxide) suit sensitive skin. Tinted formulas with iron oxides also block the visible light that darkens melasma."
+                "Broad spectrum SPF 30 or higher, every day. UVA passes through clouds and windows.",
+                "A quarter teaspoon for the face; reapply every two hours outdoors.",
+                "Mineral filters suit sensitive skin; tinted ones with iron oxides also help melasma."
               ],
-              try: "Squeeze out two finger-lengths of your sunscreen tomorrow morning. For most people it's twice what they usually use.",
+              try: "Measure two finger-lengths tomorrow. It's likely double your usual.",
               q: { ask: "How often should you reapply sunscreen when you're outdoors?", opts: ["Once a day is enough", "About every two hours", "Only if you burn"], a: 1,
-                why: "Sunscreen wears off with sweat, touching and time, so reapply about every two hours outdoors." } }
+                why: "Sweat, touch and time wear it off: reapply every two hours outdoors." } }
           ]
         },
         {
           name: "Shopping smart", art: "label",
           lessons: [
-            { id: "3-1", t: "How to read a label", min: 9,
-              sum: "The front of the bottle is marketing. The ingredient list on the back tells you what's actually in it.",
+            { id: "3-1", t: "How to read a label", min: 2,
+              sum: "Skip the front of the bottle. Read the back.",
               learn: [
-                "Ingredients are listed from most to least, down to 1%. After that they can go in any order.",
-                "The first five ingredients make up most of the formula. If the star ingredient comes after the fragrance, there's very little of it.",
-                "Words like \"clean\", \"natural\", \"hypoallergenic\" and \"dermatologist tested\" have no legal definition for cosmetics.",
-                "\"Fragrance\" or \"parfum\" can hide dozens of ingredients. Sensitive skin often does better without them."
+                "Ingredients run from most to least, down to 1%.",
+                "The first five are most of the formula; anything after fragrance is a trace.",
+                "\"Clean\", \"natural\" and \"hypoallergenic\" have no legal definition. Fragrance can hide dozens."
               ],
-              try: "Pick your favorite product and find where its star ingredient falls in the list.",
+              try: "Find where your favorite product's star ingredient falls.",
               q: { ask: "The \"hero\" ingredient is listed after fragrance. That usually means:", opts: ["There's very little of it", "It's the main ingredient", "It's been tested more"], a: 0,
-                why: "Fragrance is usually under 1%, so anything listed after it is in very small amounts." } },
-            { id: "3-2", t: "Build your first routine", min: 11,
-              sum: "Three steps in the morning and three at night cover most skin. You add actives later, one at a time.",
+                why: "Fragrance is usually under 1%, so what follows it is tiny." } },
+            { id: "3-2", t: "Build your first routine", min: 2,
+              sum: "Three steps morning and night. Actives later, one at a time.",
               learn: [
-                "Morning: cleanse (or just rinse, if you're dry), moisturize, sunscreen.",
-                "Night: cleanse, treat (only once your skin is calm), moisturize.",
-                "Add one new product at a time and wait two weeks before adding another, so you know what's working and what isn't.",
-                "Patch test anything new: twice a day on a small spot along the jaw or inner arm for 7 to 10 days."
+                "Morning: cleanse (or just rinse), moisturize, sunscreen.",
+                "Night: cleanse, treat once your skin is calm, moisturize.",
+                "One new product every two weeks, patch tested on the jaw for 7 to 10 days."
               ],
-              try: "Write your three-step morning and night routine from what you already own. Circle anything you don't need.",
+              try: "Write your routine from what you own. Circle the extras.",
               q: { ask: "How long should you wait before adding a second new product?", opts: ["A day", "About two weeks", "Six months"], a: 1,
-                why: "Two weeks is long enough to see a reaction and short enough to keep making progress." } },
-            { id: "3-3", t: "Habits that matter more than products", min: 7,
-              sum: "The small things you do every day add up to more than any one product.",
+                why: "Long enough to see a reaction, short enough to keep going." } },
+            { id: "3-3", t: "Habits that matter more than products", min: 2,
+              sum: "Daily habits beat any single product.",
               learn: [
-                "Change pillowcases twice a week, and wipe your phone screen often. Both touch your face for hours.",
-                "Take hot showers short, and wash your face at the sink afterward, not under the hot stream.",
-                "Hands off: picking turns a two-day pimple into a two-month mark.",
-                "Sleep, water and stress all show on skin. None of them fix it alone, and none of them can be skipped."
+                "Change pillowcases twice a week and wipe your phone often.",
+                "Keep hot showers short; wash your face at the sink.",
+                "Hands off: picking turns a two-day pimple into a two-month mark."
               ],
-              try: "Pick one habit from this lesson and do it for seven days in a row.",
+              try: "Pick one habit and keep it seven days straight.",
               q: { ask: "Why does picking a pimple usually make things worse?", opts: ["It pushes bacteria deeper and can leave a dark mark", "It makes the pimple smaller", "It has no effect"], a: 0,
-                why: "Squeezing pushes infection deeper and inflames the skin, which leaves marks that last for weeks." } }
+                why: "Squeezing pushes infection deeper and leaves marks for weeks." } }
           ]
         }
       ]
@@ -152,153 +143,141 @@ window.SCHOOL = {
         {
           name: "Exfoliation", art: "acid",
           lessons: [
-            { id: "4-1", t: "AHAs, BHAs and PHAs", min: 10,
-              sum: "Chemical exfoliants loosen dead cells so fresh skin shows. Each family works a little differently.",
+            { id: "4-1", t: "AHAs, BHAs and PHAs", min: 2,
+              sum: "Chemical exfoliants loosen dead cells. Each family works differently.",
               learn: [
-                "AHAs (glycolic, lactic, mandelic) work on the surface for glow and even tone. Glycolic is the strongest, and mandelic and lactic are gentler.",
-                "BHA (salicylic acid) dissolves in oil, so it gets inside pores. It's the one for blackheads and oily skin.",
-                "PHAs (gluconolactone) are the gentlest and suit sensitive skin.",
-                "Acids make skin more sensitive to the sun, so use sunscreen every morning."
+                "AHAs (glycolic, lactic, mandelic) work on the surface; glycolic is the strongest.",
+                "BHA (salicylic acid) gets into oily pores: the one for blackheads.",
+                "PHAs are the gentlest. Any acid means sunscreen every morning."
               ],
-              try: "Check your products for glycolic, lactic, mandelic, salicylic or gluconolactone. Now you know which ones exfoliate.",
+              try: "Spot the acids in your products: glycolic, lactic, mandelic, salicylic.",
               q: { ask: "Which exfoliant gets inside oily pores best?", opts: ["Glycolic acid", "Salicylic acid", "Hyaluronic acid"], a: 1,
-                why: "Salicylic acid (BHA) is oil-soluble, so it can work inside the pore." } },
-            { id: "4-2", t: "How often, and how much", min: 8,
-              sum: "More exfoliation isn't better. Too much is the most common way people damage their barrier.",
+                why: "Salicylic acid dissolves in oil, so it works inside the pore." } },
+            { id: "4-2", t: "How often, and how much", min: 2,
+              sum: "More exfoliation isn't better. It's the top way barriers break.",
               learn: [
-                "Start with two nights a week. Most skin tops out at two or three.",
-                "Stop and rest if you see shine that looks like plastic, stinging, redness or flaking.",
-                "Don't use an acid on the same night as a retinoid until your skin has fully adjusted to both.",
-                "In the week before and after a professional peel, stop home acids."
+                "Start with two nights a week; most skin tops out at three.",
+                "Plastic-looking shine, stinging, redness or flaking: stop and rest.",
+                "No acid with a retinoid until adjusted, and none the week around a peel."
               ],
-              try: "Put your exfoliating nights on your calendar: two a week, not back to back.",
+              try: "Put two exfoliating nights on your calendar, not back to back.",
               q: { ask: "Your skin looks tight and shiny like plastic after a week of daily acids. What should you do?", opts: ["Add a stronger acid", "Stop acids and focus on repair for a week or two", "Scrub harder"], a: 1,
-                why: "Plastic-looking shine means you've over-exfoliated. Rest with a gentle cleanser, moisturizer and SPF." } },
-            { id: "4-3", t: "Scrubs, brushes and dermaplaning", min: 8,
-              sum: "Physical exfoliation can be kind or harsh. It depends on the tool and the pressure.",
+                why: "Plastic shine means over-exfoliated. Rest with the basics." } },
+            { id: "4-3", t: "Scrubs, brushes and dermaplaning", min: 2,
+              sum: "Physical exfoliation is kind or harsh: it's the tool and the pressure.",
               learn: [
-                "Skip scrubs with jagged bits like crushed shells or pits. They can leave tiny tears in the skin.",
-                "A soft washcloth or a gentle enzyme mask gives a physical polish without the damage.",
-                "Dermaplaning removes dead skin and peach fuzz. Done professionally, it's smooth and safe, and makeup goes on flawlessly afterward.",
-                "At home, use clean, dry skin, a fresh blade and light strokes, once a month at most, and never over active breakouts."
+                "Skip jagged scrubs. A soft washcloth or enzyme mask polishes safely.",
+                "Professional dermaplaning removes dead skin and peach fuzz.",
+                "At home: clean dry skin, a fresh blade, light strokes, monthly at most, never on breakouts."
               ],
-              try: "Check your scrub. If it feels like sand with sharp edges, swap it for an enzyme mask.",
+              try: "Sandy, sharp scrub? Swap it for an enzyme mask.",
               q: { ask: "When should you never dermaplane?", opts: ["Over active breakouts", "On clean, dry skin", "Once a month"], a: 0,
-                why: "A blade over an active breakout spreads bacteria and irritates the skin." } }
+                why: "A blade over a breakout spreads bacteria and irritates it." } }
           ]
         },
         {
           name: "The power ingredients", art: "drops",
           lessons: [
-            { id: "5-1", t: "Vitamin C", min: 9,
-              sum: "Vitamin C in the morning brightens, evens tone and helps your sunscreen protect you.",
+            { id: "5-1", t: "Vitamin C", min: 2,
+              sum: "Morning vitamin C brightens and backs up your sunscreen.",
               learn: [
-                "L-ascorbic acid at 10 to 20% is the most studied form. Derivatives are gentler but usually weaker.",
-                "Use it in the morning, before moisturizer and sunscreen.",
-                "It oxidizes: if the serum turns dark orange or brown, it's past its best. Keep it cool, dark and closed.",
-                "A slight tingle is normal. Burning is not, so switch to a gentler form."
+                "L-ascorbic acid at 10 to 20% is the best studied.",
+                "Apply it in the morning, before moisturizer and SPF.",
+                "Brown means it has oxidized. A tingle is normal; burning is not."
               ],
-              try: "Look at your vitamin C serum's color. Pale straw is good, and brown means replace it.",
+              try: "Check the color: pale straw is good, brown means replace.",
               q: { ask: "When is vitamin C usually used?", opts: ["In the morning, under sunscreen", "Only at night", "Mixed into your cleanser"], a: 0,
-                why: "In the morning it works with your sunscreen against the day's damage." } },
-            { id: "5-2", t: "Retinoids, without the drama", min: 12,
-              sum: "Retinoids are the best-studied ingredient for aging and acne. The trick is starting slowly.",
+                why: "In the morning it works with your sunscreen against the day." } },
+            { id: "5-2", t: "Retinoids, without the drama", min: 2,
+              sum: "The best-studied ingredient for aging and acne. Start slowly.",
               learn: [
-                "The family: retinol and retinal (over the counter), adapalene 0.1% (over the counter for acne), and tretinoin (prescription only, from a doctor).",
-                "Start two or three nights a week with a pea-size amount for the whole face. Add a night every two weeks as your skin allows.",
-                "The sandwich method: moisturizer, then the retinoid, then moisturizer. It softens irritation without stopping the results.",
-                "Stop retinoids if you're pregnant, trying to get pregnant or breastfeeding, and ask your doctor."
+                "Retinol and retinal over the counter, adapalene for acne, tretinoin by prescription.",
+                "Pea-size, two or three nights a week; add a night every two weeks.",
+                "Sandwich it between moisturizer. Pause if pregnant or breastfeeding."
               ],
-              try: "If you use a retinoid, measure one pea-size amount tonight. Most people use three.",
+              try: "Measure one pea-size amount tonight.",
               q: { ask: "What's the best way to start a retinoid?", opts: ["Every night from day one", "Two or three nights a week, a pea-size amount", "Twice a day for faster results"], a: 1,
-                why: "Starting slowly lets your skin adjust, which is how you avoid peeling and redness." } },
-            { id: "5-3", t: "The supporting cast", min: 10,
-              sum: "The quieter ingredients that make everything else work better.",
+                why: "A slow start lets skin adjust without peeling and redness." } },
+            { id: "5-3", t: "The supporting cast", min: 2,
+              sum: "The quiet ingredients that help everything else work.",
               learn: [
-                "Niacinamide (2 to 5%) calms redness, balances oil and strengthens the barrier. It works well with almost everything.",
-                "Hyaluronic acid holds water. Apply it to damp skin and seal it with moisturizer.",
-                "Azelaic acid calms redness and fades marks, and it's gentle enough for sensitive skin.",
-                "Benzoyl peroxide kills acne bacteria. It bleaches towels and pillowcases, so use white ones."
+                "Niacinamide (2 to 5%) calms redness, balances oil and pairs with almost anything.",
+                "Hyaluronic acid on damp skin, sealed in; azelaic acid fades marks gently.",
+                "Benzoyl peroxide kills acne bacteria and bleaches fabric: use white towels."
               ],
-              try: "Find one supporting ingredient already in your routine. Chances are you have niacinamide or hyaluronic acid.",
+              try: "Find one of these already in your routine.",
               q: { ask: "Where should hyaluronic acid go?", opts: ["On damp skin, sealed with moisturizer", "On bone-dry skin with nothing over it", "Mixed into sunscreen"], a: 0,
-                why: "It needs water to hold on to. Moisturizer keeps that water in." } }
+                why: "It needs water to hold, and moisturizer keeps that water in." } }
           ]
         },
         {
           name: "Layering and scheduling", art: "stack",
           lessons: [
-            { id: "6-1", t: "The order of things", min: 8,
-              sum: "Thinnest to thickest, water before oil, sunscreen last in the morning.",
+            { id: "6-1", t: "The order of things", min: 2,
+              sum: "Thinnest to thickest, water before oil, sunscreen last.",
               learn: [
-                "Morning: cleanser, toner or essence, vitamin C, serum, eye cream, moisturizer, sunscreen.",
-                "Night: cleanser, toner, treatment (acid or retinoid), serum, eye cream, moisturizer, oil if you use one.",
-                "Give actives a minute to settle before the next layer.",
-                "Face oils go last at night, since nothing gets through an oil."
+                "Morning: cleanser, toner, vitamin C, serum, eye cream, moisturizer, SPF.",
+                "Night: cleanser, toner, treatment, serum, eye cream, moisturizer, oil.",
+                "Give actives a minute. Oils go last: nothing gets through them."
               ],
-              try: "Line up your products in order on the counter tonight, and put away anything that doesn't have a place in line.",
+              try: "Line your products up in order tonight.",
               q: { ask: "In the morning, what goes last?", opts: ["Vitamin C", "Moisturizer", "Sunscreen"], a: 2,
-                why: "Sunscreen goes last in the morning so it can form an even layer on top." } },
-            { id: "6-2", t: "What not to mix", min: 9,
-              sum: "Most ingredient \"rules\" online are myths. A few are real.",
+                why: "Last in the morning, it forms an even layer on top." } },
+            { id: "6-2", t: "What not to mix", min: 2,
+              sum: "Most mixing rules are myths. A few are real.",
               learn: [
-                "Real: retinoids and strong acids on the same night. They're usually too much together, so alternate nights.",
-                "Real: benzoyl peroxide can break down some tretinoin formulas. Use them at different times of day. Adapalene is stable with it.",
-                "Myth: vitamin C and niacinamide cancel each other out. Modern formulas work fine together.",
-                "When in doubt, split them between morning and night."
+                "Real: a retinoid and a strong acid together is too much. Alternate nights.",
+                "Real: benzoyl peroxide breaks down some tretinoin; adapalene is fine with it.",
+                "Myth: vitamin C and niacinamide cancel out. Unsure? Split morning and night."
               ],
-              try: "Check your night routine for a retinoid and an acid on the same night. If you find one, split them.",
+              try: "Find any acid-and-retinoid nights and split them.",
               q: { ask: "Vitamin C and niacinamide together:", opts: ["Cancel each other out", "Work fine together in modern formulas", "Always cause a rash"], a: 1,
-                why: "That warning came from old lab tests with pure ingredients. Modern formulas pair them without trouble." } },
-            { id: "6-3", t: "Your weekly plan, and purging", min: 11,
-              sum: "A simple weekly rhythm: exfoliate, retinoid, recover, repeat. Plus how to tell purging from a bad reaction.",
+                why: "An old pure-ingredient lab result; modern formulas pair fine." } },
+            { id: "6-3", t: "Your weekly plan, and purging", min: 2,
+              sum: "A four-night rhythm, and purging versus a bad reaction.",
               learn: [
-                "A four-night cycle: an exfoliation night, a retinoid night, then two recovery nights with only moisturizer.",
-                "Purging happens with ingredients that speed up cell turnover (retinoids, acids). It shows up where you usually break out and clears within four to six weeks.",
-                "Breakouts in new places, or from a product with no actives, are a reaction or clogging, not purging. Stop that product.",
-                "Give any routine eight to twelve weeks before you judge it."
+                "The cycle: exfoliate, retinoid, then two recovery nights.",
+                "Purging comes from actives, in your usual spots, and clears in four to six weeks.",
+                "New spots, or no actives? A reaction. Judge any routine at 8 to 12 weeks."
               ],
-              try: "Write this week's four-night cycle on a sticky note on your mirror.",
+              try: "Put this week's four-night cycle on your mirror.",
               q: { ask: "You started a new moisturizer with no actives and broke out on your cheeks, where you never break out. This is most likely:", opts: ["Purging, so keep going", "A reaction or clogging, so stop it", "Normal aging"], a: 1,
-                why: "Purging only comes from actives, in your usual spots. This is the product disagreeing with you." } }
+                why: "Purging only comes from actives, in your usual spots. This isn't it." } }
           ]
         },
         {
           name: "The at-home facial", art: "massage",
           lessons: [
-            { id: "7-1", t: "The Sunday ritual", min: 12,
-              sum: "A 20-minute facial at home that keeps your skin in shape between visits.",
+            { id: "7-1", t: "The Sunday ritual", min: 2,
+              sum: "A 20-minute facial at home, between visits.",
               learn: [
-                "Double cleanse, then steam gently with a warm towel for one minute. Skip the steam if you have redness or rosacea.",
-                "Exfoliate (only if it isn't already an acid night), then a mask for your skin: clay for oily, cream or gel for dry.",
-                "Massage while the serum goes on (Lesson 7-2), then moisturize.",
-                "No extractions at home. That's what the treatment room is for."
+                "Double cleanse, then a minute of warm-towel steam (skip it with redness).",
+                "Exfoliate unless it's an acid night, then a mask: clay for oily, cream for dry.",
+                "Massage in your serum and moisturize. No extractions at home."
               ],
-              try: "Block 20 minutes this Sunday and do the full ritual.",
+              try: "Block 20 minutes this Sunday.",
               q: { ask: "Which step should stay in the treatment room?", opts: ["Extractions", "Moisturizing", "A clay mask"], a: 0,
-                why: "Extractions need training, clean tools and prepared skin, or they leave marks and scars." } },
-            { id: "7-2", t: "Facial massage and gua sha", min: 10,
-              sum: "Gentle massage moves fluid, eases tension and makes skin look instantly awake.",
+                why: "Extractions need training and clean tools, or they scar." } },
+            { id: "7-2", t: "Facial massage and gua sha", min: 2,
+              sum: "Gentle massage moves fluid and wakes the skin up.",
               learn: [
-                "Always use slip: a face oil or a rich serum. Never drag dry skin.",
-                "Go from the center outward and downward along the neck, toward the lymph nodes.",
-                "Use light pressure. It should feel good, never hurt, and never leave marks.",
-                "Skip over active breakouts, broken skin or right after a peel."
+                "Always use slip, an oil or rich serum. Never drag dry skin.",
+                "Work from the center outward, then down the neck to the lymph nodes.",
+                "Light pressure, never marks. Skip breakouts, broken skin and fresh peels."
               ],
-              try: "Two minutes of massage with your serum tonight: forehead, cheeks, jaw, then down the neck.",
+              try: "Two minutes tonight: forehead, cheeks, jaw, down the neck.",
               q: { ask: "Which direction do you usually move for lymphatic massage?", opts: ["Inward toward the nose", "Outward and down toward the neck", "In small hard circles"], a: 1,
-                why: "Lymph drains toward the nodes along the jaw and neck, so you work outward and down." } },
-            { id: "7-3", t: "Skin through the seasons", min: 9,
-              sum: "Your routine should change with the weather. The Valley has more weather than people think.",
+                why: "Lymph drains to the nodes at the jaw and neck." } },
+            { id: "7-3", t: "Skin through the seasons", min: 2,
+              sum: "Your routine should change with the weather. The Valley has plenty.",
               learn: [
-                "Hot summers: lighter gel moisturizer, sunscreen reapplied more often, and blotting papers instead of more powder.",
-                "Santa Ana winds and dry winters: richer moisturizer, fewer acid nights, and a humidifier by the bed.",
-                "Travel and flights: skip new actives, and pack your barrier basics.",
-                "Plan a skin check with Evelyn at every change of season."
+                "Summer: a gel moisturizer, sunscreen reapplied more, blotting papers.",
+                "Santa Anas and winter: a richer cream, fewer acid nights, a humidifier.",
+                "Travel: no new actives, pack the basics. A skin check every season."
               ],
-              try: "Write down one change you'll make for the season we're in now.",
+              try: "Write one change you'll make this season.",
               q: { ask: "During dry Santa Ana winds, you'd usually:", opts: ["Add more acid nights", "Use a richer moisturizer and fewer acids", "Stop moisturizing"], a: 1,
-                why: "Dry wind pulls water from the skin, so you protect the barrier and ease up on exfoliation." } }
+                why: "Dry wind pulls water out: protect the barrier, ease off acids." } }
           ]
         }
       ]
@@ -312,245 +291,226 @@ window.SCHOOL = {
         {
           name: "Acne", art: "acne",
           lessons: [
-            { id: "8-1", t: "How acne really forms", min: 10,
-              sum: "Acne is four things going wrong at once. Treat all four and it calms down.",
+            { id: "8-1", t: "How acne really forms", min: 2,
+              sum: "Acne is four things going wrong at once.",
               learn: [
-                "The four causes: too much oil, dead cells clogging the pore, acne bacteria, and inflammation.",
-                "Blackheads and whiteheads are clogged pores. Red bumps and pus-filled pimples are inflamed ones.",
-                "Deep, painful cysts and nodules can scar. Those need a dermatologist, not just a facial.",
-                "Acne starts forming weeks before you see it, which is why results take two to three months."
+                "Oil, dead cells clogging the pore, acne bacteria and inflammation.",
+                "Blackheads and whiteheads are clogged; red and pus-filled bumps are inflamed.",
+                "Cysts can scar: see a dermatologist. Results take two to three months."
               ],
-              try: "Map your breakouts for a week: where they are, and what kind.",
+              try: "Map a week of breakouts: where, and what kind.",
               q: { ask: "Deep, painful cysts along the jaw that keep coming back should be seen by:", opts: ["A dermatologist", "Nobody, they go away", "Just a stronger scrub"], a: 0,
-                why: "Cystic acne can scar and often needs prescription treatment. A dermatologist and an esthetician can work together." } },
-            { id: "8-2", t: "The acne-safe routine", min: 12, free: true,
-              sum: "The routine Evelyn builds on the Face Reality program: clear the pores and stop re-clogging them.",
+                why: "Cysts can scar and often need prescription care." } },
+            { id: "8-2", t: "The acne-safe routine", min: 2, free: true,
+              sum: "Evelyn's Face Reality routine: clear the pores, stop re-clogging.",
               learn: [
-                "Check every product against a pore-clogging list: coconut oil, isopropyl myristate, algae extracts, some red dyes and lanolins are common offenders.",
-                "Use benzoyl peroxide or a mandelic or salicylic wash, raised slowly as your skin allows.",
-                "Choose an oil-free, non-clogging moisturizer and sunscreen. Skipping moisturizer makes acne worse.",
-                "Get a treatment every two weeks at first, then monthly. Home care and treatments work as a team."
+                "Check every product for pore-cloggers like coconut oil and isopropyl myristate.",
+                "Benzoyl peroxide or a mandelic or salicylic wash, raised slowly.",
+                "Never skip a non-clogging moisturizer. Treatments every two weeks, then monthly."
               ],
-              try: "Check your moisturizer, sunscreen and makeup against the pore-clogging list. Ask Evelyn for the full Face Reality list.",
+              try: "Check your moisturizer, SPF and makeup against the list.",
               q: { ask: "Your skin is oily and breaking out. Should you skip moisturizer?", opts: ["Yes, it adds oil", "No, dry skin makes more oil and irritation", "Only on weekends"], a: 1,
-                why: "Stripped skin overproduces oil and gets irritated. Use a light, non-clogging moisturizer." } },
-            { id: "8-3", t: "Food, hormones and habits", min: 9,
-              sum: "What's proven, what isn't, and what to try.",
+                why: "Stripped skin makes more oil. Use a light, non-clogging one." } },
+            { id: "8-3", t: "Food, hormones and habits", min: 2,
+              sum: "Food, hormones and habits: what's actually proven.",
               learn: [
-                "Some studies link high-sugar diets and dairy, especially skim milk, to more breakouts in some people.",
-                "Hormonal acne usually shows up along the jaw and chin, around your cycle. A doctor can talk through options.",
-                "Sweat is fine. Sitting in it isn't. Rinse after the gym.",
-                "Helmets, masks, phones and hair products can all cause breakouts where they touch your skin."
+                "Sugar and dairy, especially skim milk, link to breakouts in some people.",
+                "Hormonal acne flares along the jaw and chin with your cycle.",
+                "Rinse after the gym. Helmets, phones and hair products can clog where they touch."
               ],
-              try: "Keep a two-week note of food, cycle and breakouts. Look for a pattern, not a single cause.",
+              try: "Track food, cycle and breakouts for two weeks.",
               q: { ask: "Breakouts mostly along the jaw that come and go with your cycle suggest:", opts: ["Hormonal acne", "A sunscreen allergy", "Dehydration only"], a: 0,
-                why: "Jaw and chin flares that follow your cycle are the classic hormonal pattern." } }
+                why: "Jaw and chin flares with your cycle are classic hormonal acne." } }
           ]
         },
         {
           name: "Dark spots and even tone", art: "pigment",
           lessons: [
-            { id: "9-1", t: "Three kinds of dark spots", min: 10,
-              sum: "Sun spots, post-breakout marks and melasma look alike but need different plans.",
+            { id: "9-1", t: "Three kinds of dark spots", min: 2,
+              sum: "Three kinds of dark spots, three different plans.",
               learn: [
-                "Sun spots come from years of UV. They show up on the cheeks, forehead and hands.",
-                "Post-inflammatory marks are the dark marks left behind after a pimple or irritation. They're more common and last longer in deeper skin tones.",
-                "Melasma is patchy and symmetrical, often on the cheeks and upper lip, and triggered by sun, heat, visible light and hormones.",
-                "Red marks after acne are different: they're blood vessels, not pigment, and fade on their own."
+                "Sun spots come from years of UV, on the cheeks, forehead and hands.",
+                "Post-breakout marks last longer in deeper skin tones; red marks are vessels and fade.",
+                "Melasma: matching patches, set off by sun, heat, light and hormones."
               ],
-              try: "Look at your spots in daylight. Are they brown or red? Scattered or in matching patches?",
+              try: "In daylight: brown or red? Scattered or matching?",
               q: { ask: "Matching brown patches on both cheeks that get darker in summer are most likely:", opts: ["Melasma", "Blackheads", "A sunburn"], a: 0,
-                why: "Symmetrical patches that react to sun and heat are the melasma pattern." } },
-            { id: "9-2", t: "Brighteners that work", min: 11,
-              sum: "The ingredients with real evidence behind them, and how to combine them.",
+                why: "Matching patches that react to sun and heat are melasma." } },
+            { id: "9-2", t: "Brighteners that work", min: 2,
+              sum: "The brighteners with real evidence, and how to pair them.",
               learn: [
-                "Vitamin C, niacinamide, azelaic acid and tranexamic acid all fade spots in different ways. Two together often work better than one.",
-                "Retinoids speed up turnover so pigment leaves faster.",
-                "Hydroquinone is prescription-only in the US since 2020, so it's a conversation for your doctor.",
-                "Nothing works without sunscreen. One unprotected afternoon can undo a month of fading."
+                "Vitamin C, niacinamide, azelaic and tranexamic acid: two work better than one.",
+                "Retinoids speed turnover. Hydroquinone is prescription-only in the US since 2020.",
+                "Without sunscreen, one afternoon undoes a month of fading."
               ],
-              try: "Choose one brightener for the morning (vitamin C) and one for the night (azelaic acid or a retinoid).",
+              try: "Pick one brightener for morning and one for night.",
               q: { ask: "What undoes a month of fading fastest?", opts: ["Skipping sunscreen", "Drinking water", "A gentle cleanser"], a: 0,
-                why: "UV restarts pigment production right away. Sunscreen protects the progress." } },
-            { id: "9-3", t: "Heat, light and patience", min: 8, free: true,
-              sum: "Why pigment is slow, and how to keep it from coming back.",
+                why: "UV restarts pigment right away. Sunscreen protects the progress." } },
+            { id: "9-3", t: "Heat, light and patience", min: 2, free: true,
+              sum: "Pigment is slow. Here's how to keep it from coming back.",
               learn: [
-                "Pigment fades in months, not weeks. Take a photo in the same light every four weeks to see real progress.",
-                "Heat can darken melasma too: hot yoga, saunas and cooking over a hot stove.",
-                "Tinted mineral sunscreen with iron oxides blocks the visible light that plain sunscreen lets through.",
-                "Professional peels can help, but only in expert hands, especially for deeper skin tones."
+                "It fades in months: compare photos in the same light every four weeks.",
+                "Heat darkens melasma too: hot yoga, saunas, the stove.",
+                "Tinted mineral SPF blocks visible light. Peels only in expert hands."
               ],
-              try: "Take a progress photo today: same spot, same light, no makeup. Set a reminder for four weeks.",
+              try: "Take a progress photo today. Check again in four weeks.",
               q: { ask: "Which sunscreen is best for melasma?", opts: ["A tinted mineral one with iron oxides", "Any SPF 15", "No sunscreen indoors"], a: 0,
-                why: "Iron oxides block visible light, which also darkens melasma." } }
+                why: "Iron oxides block the visible light that darkens melasma." } }
           ]
         },
         {
           name: "Aging well", art: "age",
           lessons: [
-            { id: "10-1", t: "What actually ages skin", min: 9, free: true,
-              sum: "Time plays a part, but daily habits make the biggest difference.",
+            { id: "10-1", t: "What actually ages skin", min: 2, free: true,
+              sum: "Time plays a part. Daily habits matter more.",
               learn: [
-                "Most visible aging on the face comes from the sun: lines, spots, sagging and texture.",
-                "Collagen production slows every year from your mid-twenties, and it drops faster after menopause.",
-                "Smoking, poor sleep and a high-sugar diet speed it up.",
-                "The good news: most of it is preventable, and some of it is reversible."
+                "The sun causes most visible aging: lines, spots, sagging, texture.",
+                "Collagen slows from the mid-twenties, faster after menopause.",
+                "Smoking, poor sleep and sugar speed it up. Most of it is preventable."
               ],
-              try: "Compare the skin on your inner arm with the back of your hand. The difference is mostly sun.",
+              try: "Compare your inner arm with the back of your hand.",
               q: { ask: "What's the biggest outside cause of visible facial aging?", opts: ["The sun", "Drinking coffee", "Smiling"], a: 0,
-                why: "UV breaks down collagen and causes spots. Daily sunscreen is the best anti-aging step." } },
-            { id: "10-2", t: "An anti-aging routine that works", min: 12,
-              sum: "The short list with real evidence behind it, used every day.",
+                why: "UV breaks down collagen. Daily SPF is the best anti-aging step." } },
+            { id: "10-2", t: "An anti-aging routine that works", min: 2,
+              sum: "The short list with real evidence, used every day.",
               learn: [
                 "Morning: vitamin C, moisturizer, sunscreen.",
-                "Night: a retinoid (built up slowly), peptides, a rich moisturizer.",
-                "Don't forget your neck, chest and hands. They show age early too.",
-                "Consistency beats strength: a gentle retinoid every night beats a strong one once a week."
+                "Night: a retinoid built up slowly, peptides, a rich moisturizer.",
+                "Include your neck, chest and hands. Consistency beats strength."
               ],
-              try: "Take your skincare down to your neck and chest tonight.",
+              try: "Take your skincare down to your neck tonight.",
               q: { ask: "Which is better for results?", opts: ["A gentle retinoid used consistently", "A strong retinoid once a month", "Switching products every week"], a: 0,
-                why: "Retinoids work over months of steady use. Irritation that makes you stop is the real enemy." } },
-            { id: "10-3", t: "Professional treatments, explained", min: 11,
-              sum: "What each treatment does, who does it, and what to expect.",
+                why: "Retinoids work over months; irritation that makes you stop is the enemy." } },
+            { id: "10-3", t: "Professional treatments, explained", min: 2,
+              sum: "Who does which treatment, and what makes it work.",
               learn: [
-                "With an esthetician: facials, light peels, dermaplaning, LED and extractions. That's the surface of the skin, and it's Evelyn's room.",
-                "With a nurse or doctor: microneedling, lasers, Botox and fillers. In California these are medical treatments.",
-                "Ask anyone offering injectables who their supervising physician is, and look for a licensed nurse, PA or doctor.",
-                "Most of what makes a treatment work comes before and after: prep, aftercare and sunscreen."
+                "An esthetician: facials, light peels, dermaplaning, LED, extractions.",
+                "A nurse or doctor: microneedling, lasers, Botox, fillers. Ask who supervises.",
+                "Most of the result comes from prep, aftercare and sunscreen."
               ],
-              try: "Write down one treatment you're curious about, and bring the question to your next visit.",
+              try: "Bring one treatment question to your next visit.",
               q: { ask: "In California, who performs Botox and fillers?", opts: ["Licensed medical providers such as nurses, PAs or doctors", "Any esthetician", "Anyone with a course certificate"], a: 0,
-                why: "Injectables are medical treatments, done by licensed medical providers under a physician." } }
+                why: "Injectables are medical, done by licensed providers." } }
           ]
         },
         {
           name: "Sensitive skin and special cases", art: "calm",
           lessons: [
-            { id: "11-1", t: "Sensitive and rosacea-prone skin", min: 10, free: true,
-              sum: "When skin reacts to everything, the answer is almost always fewer products, not better ones.",
+            { id: "11-1", t: "Sensitive and rosacea-prone skin", min: 2, free: true,
+              sum: "Reactive skin needs fewer products, not better ones.",
               learn: [
-                "Rosacea: flushing, redness and sometimes bumps, set off by heat, sun, alcohol, spicy food and stress.",
-                "Use fragrance-free products with short ingredient lists. Patch test everything.",
-                "Azelaic acid and niacinamide can calm redness. Strong acids and scrubs make it worse.",
-                "Persistent redness, stinging or eye irritation is worth a dermatologist visit."
+                "Rosacea flares with heat, sun, alcohol, spicy food and stress.",
+                "Fragrance-free, short ingredient lists, and patch test everything.",
+                "Azelaic acid and niacinamide calm it. Lasting redness: see a dermatologist."
               ],
-              try: "Cut your routine to cleanser, moisturizer and sunscreen for two weeks and see how your skin feels.",
+              try: "Two weeks of cleanser, moisturizer and sunscreen only.",
               q: { ask: "Which is most likely to set off rosacea?", opts: ["A hot sauna", "A cool compress", "Fragrance-free moisturizer"], a: 0,
-                why: "Heat is one of the most common rosacea triggers." } },
-            { id: "11-2", t: "Pregnancy and breastfeeding", min: 9,
-              sum: "What to pause, what's commonly considered fine, and the one rule: ask your doctor.",
+                why: "Heat is one of the most common triggers." } },
+            { id: "11-2", t: "Pregnancy and breastfeeding", min: 2,
+              sum: "What to pause in pregnancy, and the one rule: ask your doctor.",
               learn: [
-                "Pause retinoids of every kind, including retinol, and skip high-strength salicylic peels.",
-                "Commonly considered fine: azelaic acid, vitamin C, niacinamide, gentle lactic acid and mineral sunscreen.",
-                "Melasma often shows up in pregnancy. Tinted mineral sunscreen is your best friend.",
-                "Tell your esthetician every time. Some treatments change when you're pregnant."
+                "Pause every retinoid and high-strength salicylic peels.",
+                "Commonly fine: azelaic acid, vitamin C, niacinamide, gentle lactic, mineral SPF.",
+                "Melasma is common, so wear tinted mineral SPF. Tell your esthetician."
               ],
-              try: "If this applies to you, bring your product list to your doctor and ask about each one.",
+              try: "Take your product list to your doctor.",
               q: { ask: "During pregnancy, which should you pause?", opts: ["Retinoids", "Mineral sunscreen", "A gentle cleanser"], a: 0,
-                why: "Retinoids are avoided during pregnancy. Always check the rest with your doctor." } },
-            { id: "11-3", t: "Your skin plan for life", min: 12,
-              sum: "Put it all together: your type, your concern, and a routine you'll keep.",
+                why: "Retinoids are avoided. Check the rest with your doctor." } },
+            { id: "11-3", t: "Your skin plan for life", min: 4,
+              sum: "Your type, your concern, and a routine you'll keep.",
               learn: [
-                "Your routine is a base plus one or two actives for your concern. Nothing more.",
-                "Look again every season, after big life changes, or when something stops working.",
-                "See a dermatologist for changing moles, cysts, sudden rashes, or anything that bleeds or won't heal.",
-                "Book a skin check with Evelyn so she can fine-tune the plan with your skin in front of her."
+                "A base plus one or two actives for your concern. Nothing more.",
+                "Revisit every season, after life changes, or when it stops working.",
+                "Changing moles or sores that won't heal: a dermatologist."
               ],
-              try: "Use the routine builder below to write your plan, then save it or bring it to your next visit.",
+              try: "Build your plan below and bring it to your visit.",
               builder: true,
               q: { ask: "A mole that's changing shape or color needs:", opts: ["A dermatologist, soon", "A stronger serum", "Nothing"], a: 0,
-                why: "Changing moles need a doctor to look at them. That's outside any facial or course." } }
+                why: "Changing moles need a doctor, not a facial." } }
           ]        },
         {
           name: "Before and after a treatment", art: "calm",
           lessons: [
-            { id: "12-1", t: "Before your facial, peel or wax", min: 8,
-              sum: "A few days of preparation make the difference between a treatment that works and one that stings.",
+            { id: "12-1", t: "Before your facial, peel or wax", min: 2,
+              sum: "A few days of prep make the treatment work.",
               learn: [
-                "Pause retinol and acids for three to five days before a facial, peel, dermaplaning or wax; a prescription retinoid, about a week, and tell Evelyn.",
-                "No treatment on sunburned or freshly tanned skin, and plan a trip for at least two or three days after.",
-                "Breaking out is a reason to come in, not to cancel; open, raw or infected skin is the one thing that waits.",
-                "Tell her every time about medications, pregnancy, a recent procedure or a named condition. The pre-visit form is where it goes."
+                "Pause retinol and acids 3 to 5 days before; a prescription retinoid about a week.",
+                "No sunburned or freshly tanned skin, and no trip for two or three days after.",
+                "Breakouts are fine; raw or infected skin waits. Tell Evelyn about meds or pregnancy."
               ],
-              try: "Open your bathroom cabinet and list every product with an acid or a retinoid. That's your pause list for the week before a visit.",
+              try: "List your acids and retinoids: that's your pause list.",
               q: { ask: "How long before a peel should you pause over-the-counter retinol?", opts: ["The morning of", "Three to five days", "A month"], a: 1,
-                why: "Three to five days for retinol and acids; about a week for a prescription retinoid, with Evelyn told." } },
-            { id: "12-2", t: "The first 24 hours, and the first week", min: 9,
-              sum: "Treated skin has a thinner barrier and open follicles for a day or two. What you keep off it then decides the result.",
+                why: "3 to 5 days for retinol and acids, about a week for a prescription." } },
+            { id: "12-2", t: "The first 24 hours, and the first week", min: 2,
+              sum: "What you keep off treated skin decides the result.",
               learn: [
-                "The first day: no makeup, no touching, no heat or sweat (gym, sauna, hot yoga, pools), no sun. A gentle cleanse that night or the next morning, moisturizer, SPF.",
-                "No actives for two or three days after a facial; five to seven after a peel, dermaplaning or microchanneling, or until the skin feels normal.",
-                "Let flaking fall by itself. Pulled skin leaves marks.",
-                "Change the pillowcase, clean the phone, skip waxing, threading and new products for a week."
+                "Day one: no makeup, touching, heat, sweat or sun. Gentle cleanse, moisturizer, SPF.",
+                "No actives for 2 to 3 days after a facial, 5 to 7 after a peel.",
+                "Let flakes fall. A clean pillowcase, and no waxing or new products for a week."
               ],
-              try: "Before your next visit, book nothing sweaty for the day after, and put a clean pillowcase on that night.",
+              try: "Book nothing sweaty for the day after your visit.",
               q: { ask: "Your skin is flaking on day three after a peel. You should:", opts: ["Exfoliate it off", "Moisturize and let it fall", "Skip sunscreen so it can breathe"], a: 1,
-                why: "Peeling skin comes off on its own; pulling it leaves dark marks, and SPF matters more than ever." } },
-            { id: "12-3", t: "What's normal, what isn't", min: 8,
-              sum: "Pink, tight and a little flaky is the treatment working. Spreading, swelling and heat are not.",
+                why: "Pulling flakes leaves dark marks. Let them fall on their own." } },
+            { id: "12-3", t: "What's normal, what isn't", min: 2,
+              sum: "Pink, tight and flaky is normal. Spreading and heat are not.",
               learn: [
-                "Normal: pink for a few hours, tightness for a day or two, light flaking on days two to five, a few small bumps after extractions.",
-                "Message Evelyn: redness that spreads or worsens after the first day, burning that doesn't settle, bumps turning into pus-filled spots. Send a photo in daylight.",
-                "A doctor, today: swelling around the eyes or lips, hives, blistering, pus with heat or fever, a cold sore starting.",
-                "Trouble breathing or a swelling throat is 911, not a text."
+                "Normal: pink for hours, tight for a day or two, light flaking days two to five.",
+                "Message Evelyn with a daylight photo: spreading redness, burning, pus.",
+                "Swelling, hives or blisters: a doctor today. Trouble breathing: 911."
               ],
-              try: "Save Evelyn's contact and the Lumevina chat where you can find them in a hurry; the chat hands a reaction to her straight away.",
+              try: "Save Evelyn's contact and the chat where you'll find them.",
               q: { ask: "Which of these means a doctor today, not a message?", opts: ["Pink skin an hour after a facial", "Swelling around the eyes and hives", "A few whiteheads after extractions"], a: 1,
-                why: "Swelling and hives are a reaction that needs a doctor the same day." } }
+                why: "Swelling and hives need a doctor the same day." } }
           ]
         },
         {
           name: "Waxing, done well", art: "routine",
           lessons: [
-            { id: "13-1", t: "Before a wax: length, shaving, timing", min: 7,
-              sum: "A quarter inch of hair, no shaving in between, and the right week: most of a good wax happens before you arrive.",
+            { id: "13-1", t: "Before a wax: length, shaving, timing", min: 2,
+              sum: "Most of a good wax happens before you arrive.",
               learn: [
-                "About a quarter inch, the length of a grain of rice: two to three weeks after shaving, four to six after a wax.",
-                "No shaving between waxes. It resets the growth cycle and makes the next wax patchier and more uncomfortable.",
-                "Exfoliate gently two or three days before, not the day of; arrive with clean, dry skin, no lotion or deodorant, in loose cotton.",
-                "Not waxed: sunburned, broken or irritated skin, a prescription retinoid on the area, and during or for months after Accutane. Tell Evelyn first."
+                "A quarter inch, a grain of rice: two to three weeks after shaving.",
+                "No shaving between waxes; exfoliate gently a few days before.",
+                "Not on sunburned or broken skin, retinoid areas, or during or after Accutane."
               ],
-              try: "Measure a grain of rice against your hair before you book. If it's shorter, give it another week.",
+              try: "Measure a grain of rice against your hair before booking.",
               q: { ask: "You shaved a week ago. Your wax should be:", opts: ["Tomorrow", "In one to two more weeks", "Never"], a: 1,
-                why: "The wax needs about a quarter inch to grip: two to three weeks after shaving." } },
-            { id: "13-2", t: "After a wax: bumps, ingrowns, how often", min: 8,
-              sum: "The first two days are about keeping heat and friction off; after that, exfoliation keeps ingrowns away.",
+                why: "The wax needs a quarter inch to grip." } },
+            { id: "13-2", t: "After a wax: bumps, ingrowns, how often", min: 2,
+              sum: "Two calm days, then exfoliate to keep ingrowns away.",
               learn: [
-                "For 24 to 48 hours: no heat or sweat, no sun, no tight clothes, nothing scented; for a Brazilian, loose cotton and no sex for a day.",
-                "Small red bumps for a few hours to a day are normal; pus-filled bumps that spread, lifted skin or a burn are not.",
-                "From day two or three, exfoliate the area gently two or three times a week and keep it moisturized. Don't dig at an ingrown.",
-                "Every four to six weeks (brows, lip and underarms three to four). Regular waxing thins the hair; shaving in between undoes it."
+                "For 24 to 48 hours: no heat, sweat, sun, tight clothes or scent.",
+                "Small red bumps for a day are normal; spreading pus or a burn is not.",
+                "Exfoliate from day three. Rebook every 4 to 6 weeks, no shaving between."
               ],
-              try: "Put a gentle exfoliating pad or mitt where you'll see it on day three after your wax.",
+              try: "Leave an exfoliating mitt out for day three.",
               q: { ask: "The best way to prevent ingrown hairs after a wax is:", opts: ["Tweezing anything you see", "Gentle exfoliation from day two or three, and moisture", "Tight leggings to keep the area smooth"], a: 1,
-                why: "Dead skin traps new hair; exfoliation and no friction are the fix." } }
+                why: "Dead skin traps hair: exfoliate and avoid friction." } }
           ]
         },
         {
           name: "Your first visit at Lumevina", art: "layers",
           lessons: [
-            { id: "14-1", t: "What happens, and which treatment to book", min: 9,
-              sum: "A first visit is a conversation, a close look, and a fully customized facial. Knowing which one to book saves a message.",
+            { id: "14-1", t: "What happens, and which treatment to book", min: 2,
+              sum: "Two questions decide which appointment to book.",
               learn: [
-                "New clients without acne concerns book New Clients Start Here: a consultation, a review of your current routine, and a customized facial (double cleanse, enzyme exfoliation, extractions, mask, massage, LED, cryo globes).",
-                "New clients with acne concerns book the Acne Bootcamp consultation and treatment, then monthly treatments, or every two weeks for severe acne.",
-                "Returning clients book the Lumevina Custom Facial, or the Monthly Acne Treatment when acne is the work.",
-                "Come with a clean face if you can, hair you don't mind getting damp, and your product list or photos of it. The address comes with the confirmation; parking is free."
+                "New, no acne concerns: New Clients Start Here, with a customized facial.",
+                "New, with acne: the Acne Bootcamp, then monthly, or every two weeks if severe.",
+                "Returning: the Custom Facial or the Monthly Acne Treatment. Parking is free."
               ],
-              try: "Photograph the front of every product you use and keep the album; it's the first thing Evelyn asks to see.",
+              try: "Photograph every product you use, for Evelyn.",
               q: { ask: "You're new, with breakouts. You book:", opts: ["New Clients Start Here", "The Acne Bootcamp consultation + treatment", "A peel"], a: 1,
-                why: "New clients with acne concerns start with the Acne Bootcamp consultation and treatment." } },
-            { id: "14-2", t: "Her shelf: how the products fit together", min: 10,
-              sum: "Every product on the website is one Evelyn stocks for her clients. Here's how a routine is built from it, in general, and where her own picks come in.",
+                why: "New clients with acne start with the Acne Bootcamp." } },
+            { id: "14-2", t: "Her shelf: how the products fit together", min: 2,
+              sum: "How a routine is built from Evelyn's shelf.",
               learn: [
-                "The base is a cleanser, a moisturizer and SPF; one treatment product for the main concern is the first addition.",
-                "Mandelic serums come in strengths; the lowest first, a few nights a week, and moving up is her call after a few weeks without stinging.",
-                "Gel textures for oily and combination skin, creams for dry; a hydrating toner adds water under either.",
-                "Her own morning and night picks for your skin come after a visit, and the chat on the website can tell you what's in stock and put it in your bag for pickup."
+                "The base: cleanser, moisturizer, SPF, plus one treatment for your main concern.",
+                "Mandelic serums: the lowest strength first, a few nights a week.",
+                "Gel for oily, cream for dry. Evelyn picks yours after a visit."
               ],
-              try: "Open the shop, filter by your skin's category, and read the label line on three products. That's the vocabulary for your next visit.",
+              try: "Read the label line on three products in the shop.",
               q: { ask: "The first product to add to a base routine is:", opts: ["Three serums at once", "One treatment product for your main concern", "A scrub"], a: 1,
-                why: "One active at a time, so a reaction has a clear cause and progress can be judged." } }
+                why: "One active at a time makes reactions and progress clear." } }
           ]
         }
       ]

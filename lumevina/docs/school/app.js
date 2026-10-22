@@ -323,8 +323,7 @@
     if (v) {
       var src = "img/school/video/" + esc(ls.id);
       return '<div class="ls-video has-clip" data-ls="' + esc(ls.id) + '"><video poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"><source src="' + src + '.mp4" type="video/mp4"><source src="' + src + '.webm" type="video/webm"></video>' +
-        '<button type="button" class="ls-play" aria-label="Play the explainer">' + PLAY + '</button>' +
-        '<div class="ls-vcap"><span>Explainer · ' + Math.round(v.dur) + ' s</span><span>Evelyn\u2019s video next</span></div></div>';
+        '<button type="button" class="ls-play" aria-label="Play the explainer, ' + Math.round(v.dur) + ' seconds">' + PLAY + '</button></div>';
     }
     return '<div class="ls-video"><button type="button" class="ls-play" aria-label="Play the video">' + PLAY + '</button>' +
       '<div class="ls-vcap"><span>Video · Evelyn</span><span>' + ls.min + ' min</span></div></div>';
@@ -344,7 +343,7 @@
     return '<ul class="ls-learn' + (stagger ? " stagger" : "") + '">' + ls.learn.map(function (x, i) { return '<li style="--i:' + i + '">' + esc(x) + '</li>'; }).join("") + '</ul>';
   };
   var SPARK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg>';
-  var tryHtml = function (ls) { return '<div class="ls-try"><b>' + SPARK + 'Try this at home</b><p>' + esc(ls.try) + '</p></div>'; };
+  var tryHtml = function (ls) { return '<p class="ls-try">' + SPARK + '<span><b>Try this</b> ' + esc(ls.try) + '</span></p>'; };
   /* under the lesson: a diagram (visuals.js), Evelyn's own words, the general layer and her shelf (notes.js) */
   var NOTES = window.SCHOOL_NOTES || {}, VISUALS = window.SCHOOL_VISUALS || [];
   var figHtml = function (ls) {
@@ -352,22 +351,25 @@
     var src = "img/school/" + esc(ls.id) + ".jpg";
     return '<figure class="ls-fig"><a href="' + src + '" target="_blank" rel="noopener" aria-label="Open the diagram full size"><img src="' + src + '" alt="" loading="lazy" decoding="async"></a><figcaption>Tap to open full size</figcaption></figure>';
   };
-  var evelynHtml = function (ls) {
-    var n = NOTES[ls.id];
-    if (!n || !n.evelyn || !n.evelyn.length) return "";
-    return '<div class="ls-ev"><b>Evelyn says</b><ul>' + n.evelyn.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">In her own words, from her Skin Playbook.</p></div>';
-  };
-  var moreHtml = function (ls) {
-    var n = NOTES[ls.id];
-    if (!n || !n.general || !n.general.length) return "";
-    return '<details class="ls-more"><summary>The general picture</summary><ul>' + n.general.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">Standard esthetics practice, in general terms. Your own skin is a question for Evelyn.</p></details>';
-  };
-  var shelfHtml = function (ls) {
-    var n = NOTES[ls.id];
-    if (!n || !n.shelf || !n.shelf.length) return "";
-    return '<div class="ls-shelf"><b>On Evelyn&rsquo;s shelf</b><ul>' + n.shelf.map(function (p) {
-      return '<li><span>' + esc(p.name) + ' <small>' + esc(p.brand) + ' · $' + p.price + '</small></span>' + (p.about ? '<em>' + esc(p.about) + '</em>' : "") + '</li>';
-    }).join("") + '</ul><a class="ls-shop" href="index.html#shop">See the shop</a></div>';
+  var deeperHtml = function (ls) {
+    var n = NOTES[ls.id] || {}, fig = figHtml(ls), parts = [], body = "";
+    if (fig) { parts.push("Diagram"); body += fig; }
+    if (n.evelyn && n.evelyn.length) {
+      parts.push("Evelyn\u2019s notes");
+      body += '<div class="ls-dp"><b>Evelyn says</b><ul>' + n.evelyn.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">In her own words, from her Skin Playbook.</p></div>';
+    }
+    if (n.general && n.general.length) {
+      parts.push("Background");
+      body += '<div class="ls-dp"><b>The general picture</b><ul>' + n.general.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">Standard esthetics practice. Your own skin is a question for Evelyn.</p></div>';
+    }
+    if (n.shelf && n.shelf.length) {
+      parts.push("Her shelf");
+      body += '<div class="ls-dp"><b>On Evelyn&rsquo;s shelf</b><p class="ls-chips">' + n.shelf.map(function (p) {
+        return '<span title="' + esc(p.about || "") + '">' + esc(p.name) + ' <small>$' + p.price + '</small></span>';
+      }).join("") + '</p><a class="ls-shop" href="index.html#shop">See the shop</a></div>';
+    }
+    if (!parts.length) return "";
+    return '<details class="ls-more"><summary>Go deeper <small>' + parts.join(" · ") + '</small></summary>' + body + '</details>';
   };
   var checkHtml = function (ls) {
     return '<div class="ls-check" data-check="' + ls.id + '"><span class="lbl">Quick check</span><p class="qq">' + esc(ls.q.ask) + '</p><div class="ck-opts">' +
@@ -907,11 +909,11 @@
       var prev = ALL[row.i - 1], next = ALL[row.i + 1], done = !!st.done[ls.id];
       var fk = !st.tier && ls.free ? FREE.indexOf(ls.id) : -1, fNext = fk > -1 ? freeNext(ls.id) : null;
       main.innerHTML = '<article class="lesson' + (first ? "" : " enter") + '">' +
-        '<div><p class="kicker">' + (fk > -1 ? 'Free lesson ' + (fk + 1) + ' of ' + FREE.length + ' · ' : '') + 'Level ' + lv.n + ' · ' + esc(md.name) + ' · Lesson ' + (row.i + 1) + ' of ' + ALL.length + '</p>' +
+        '<div><p class="kicker">' + (fk > -1 ? 'Free lesson ' + (fk + 1) + ' of ' + FREE.length : 'Lesson ' + (row.i + 1) + ' of ' + ALL.length) + ' · ' + esc(md.name) + '</p>' +
         '<h2 class="ls-h">' + esc(ls.t) + '</h2><p class="ls-sum">' + esc(ls.sum) + '</p></div>' +
-        (has ? videoHtml(ls) + figHtml(ls) +
-          '<div><p class="ls-sec">What you&rsquo;ll learn</p>' + learnHtml(ls, true) + '</div>' + evelynHtml(ls) + tryHtml(ls) + moreHtml(ls) + shelfHtml(ls) +
-          (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) +
+        (has ? videoHtml(ls) +
+          '<div class="ls-core"><p class="ls-sec">Key points</p>' + learnHtml(ls, true) + tryHtml(ls) + '</div>' +
+          (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) + deeperHtml(ls) +
           '<div class="ls-nav">' + (prev ? '<button type="button" class="btn btn-ghost" data-go="' + prev.ls.id + '">&larr; Back</button>' : "<span></span>") +
           '<button type="button" class="btn btn-dark ls-done' + (done ? " is-done" : "") + '" id="ls-done">' + (done ? "&#10003; Completed" : "Mark complete") + '</button>' +
           (fNext ? '<button type="button" class="btn btn-grad" data-go="' + fNext + '">Next free lesson &rarr;</button>' : fk > -1 ? '<button type="button" class="btn btn-grad" data-see-tiers>The other ' + (ALL.length - FREE.length) + ' lessons &rarr;</button>' : next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>' +
