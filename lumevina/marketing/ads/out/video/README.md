@@ -16,7 +16,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 10 | `8-3-9x16.mp4` | Acne clears on a calendar | I tell everyone: give it 90 days. | 22 s |
 | 11 | `10-1-9x16.mp4` | The sun, and the shield | What actually ages skin, in 22 seconds. | 27 s |
 | 12 | `11-1-9x16.mp4` | A tired barrier | "My skin suddenly hates everything" has a cause. | 29 s |
-| 13 | `9-3-9x16.mp4` | Why a dark spot is slow | Why your dark spot takes months, not weeks. | 24 s |
+| 13 | `9-3-9x16.mp4` | Why a dark spot is slow | Why your dark spot takes months, not weeks. | 29 s |
 | 14 | `2-2-9x16.mp4` | Moisturizer, decoded | Every moisturizer is three kinds of ingredients. | 22 s |
 | 15 | `2-1-9x16.mp4` | Cleansing, done right | Take the day off without stripping your skin. | 22 s |
 | 16 | `4-2-9x16.mp4` | More exfoliation isn't better | Acids: two nights a week, not seven. | 24 s |
