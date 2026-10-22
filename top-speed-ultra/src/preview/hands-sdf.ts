@@ -307,11 +307,13 @@ export const POSE = {
   kWeb: 3.0,               // the fingers' blend onto the palm (mm): the webs and the knuckle valleys
   dipCap: 30,              // the DIP flexes at most this much more than the PIP (deg)
   fingerSearch: false,     // search the knuckle's flexion for the deepest wrap (else: each phalanx closes onto the rim)
-  // the first web space and the palm beside the thumb (tags 30, 36, 35, 38, 39, 37 in buildAnatomy; mm unless noted):
-  // the palm's core and the back of the hand's dome (each shifted away from the thumb along R, and its half width), the
-  // first dorsal interosseous (where on the index metacarpal it starts, how far toward the thumb's MCP its centre
-  // sits, its lift along N, its length as a share of that span, its depth and width, its blend), the dorsal web, the
-  // groove fill along the thumb's metacarpal, the adductor; and the thumb's blend onto the palm (kThumb). Kept low
+  // the first web space and the palm beside the thumb (tags 30, 36, 31, 35, 38, 39, 37 in buildAnatomy; mm unless
+  // noted): the palm's core, the back of the hand's dome and the pads under the knuckles (each shifted away from the
+  // thumb along R, and its half width), the first dorsal interosseous (where on the index metacarpal it starts, how
+  // far toward the thumb's MCP its centre sits, its lift along N, its length as a share of that span, its depth and
+  // width, its blend), the dorsal web, the groove fill along the thumb's metacarpal, the adductor (how far along the
+  // thumb's first phalanx it reaches: short of the bent IP, the rim showed through a hole at the web's apex from
+  // above); and the thumb's blend onto the palm (kThumb). Kept low
   // beside the thumb: as the eye sees it, the thumb's first phalanx stands 8-10 mm proud of the web beside it, so
   // the thumb reads as a digit of its own along its length, not only past the IP (tools/preview-hands-web.mjs)
   web: { core: { shiftR: 6, rz: 24 }, dome: { shiftR: 5, rz: 30 }, pads: { shiftR: 0, rx: 36 }, fdi: { at: 0.55, toward: 0.3, n: 0, rx: 0.5, ry: 6, rz: 10, k: 10 },
