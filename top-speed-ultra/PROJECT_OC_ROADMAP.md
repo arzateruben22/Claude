@@ -68,7 +68,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | --- | --- | --- |
 | Ultra Realism Mode | Done | Opens at level 5. Tunnel vision, camera shake and muffling, each switched on its own. Shake follows reduced-motion. |
 | Radio | Done (framework) | Three fictional stations (KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio) play music composed live in code. Nothing is recorded, licensed or streamed. More stations or licensed audio can plug into the same `Radio` class. |
-| City expansion | Roadmap | The pipeline already pulls arterial streets. Driving them needs intersections and signals. |
+| OC streets (every street in Orange County) | Next after the hypercar (owner, 2026-10-20) | All of Anaheim's streets are pulled (about 10,000 named segments and their intersections). Driving them needs a tiled street model, intersections, signals and stop signs, roundabouts, surface traffic and pedestrians; malls and parking structures from Overture buildings. First slice: the drive from the 57 into the Lot 57 spot. Design first (PROJECT_OC_HANDOFF.md, Fable prompt "OC streets"). |
 | Golden Road vertical slice on foot | Roadmap | Simulated crowds. It must never claim live occupancy. |
 | On foot: Lot 57, our own hangout on Orangewood Ave, Anaheim | Planned (prototype in progress) | Plan in `PROJECT_OC_ON_FOOT.md`. A fictional taproom and yard (no real business's name or look) at the real spot, on the real streets from OpenStreetMap via Overture. Get out of the car, walk, sit, order, talk to NPCs. Crowds are simulated by time and day and labelled so. No live occupancy, events or multiplayer. |
 
@@ -76,10 +76,13 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 
 | Item | Status | Notes |
 | --- | --- | --- |
-| Multiplayer | Roadmap only | It doesn't exist and isn't claimed. It needs a server, accounts and anti-cheat. |
+| Realistic mode: live weather and live traffic | Built; needs the server's feeds on (an NWS feed needs nothing; TomTom needs a free key) | Weather "Live" follows the National Weather Service's latest KSNA observation; Traffic "Live" follows TomTom's flow on the freeway you're on (one point per carriageway, every 15 minutes), through the live server's `/api/now`. With no server in reach both follow a simulated typical day, and the HUD note says which. A "Realistic" button in Settings sets live time, weather and traffic; everything else is the custom mode. Venue busyness stays simulated (decision 17). |
+| The talk bank and the Coastal League | Built (text only; the radio's DJs use it now, the on-foot NPCs next) | `src/talk/`: 12 moods × 3 energies × 10 topics with the day's weather, freeway flow, the made-up league's results and a hand-edited trends list: 173,601 distinct openers, 68.7 million two-line conversations for one day (`node tests/talk.mjs`). No news feed; a blocklist; nothing political. |
+| Billboards near the venues | Built (our own creatives) | Twelve panels on the 5, 57, 91 and 22 near Lot 57 and our sports bar, from `src/data/ads.json`. Real businesses only with a signed deal. |
+| Live server (the first rung of multiplayer) | Alpha, built; not yet deployed | `live/`: accounts (scrypt passwords, 30-day sessions, rate limits), a lobby capped at 25 drivers at a time with a waiting line that moves up in order, and a relay that shows each driver the others within 3 km as ghost cars (no collisions, nothing scored, no chat). The cap is raised one rung at a time (25, 50, 100, 200, 500) on measured numbers; `live/README.md` has the ladder, the costs (about $7 a month on its own $6 server plus a domain, about $1 sharing the desks' box) and the deploy steps. Needs a domain and a server to go public. Since built: name plates over ghosts, crews, honks, cruise nights, password reset by email, the realistic mode's feeds, computer traffic kept light while live (decision 18) and the online board (what the server saw: distance, speed held 3 s, longest drive). Not built: races against people, chat, email verification, more than one lobby. |
 | Arcade track | Coming soon (shown) | A "Coming soon" card in the menu links to the Loop Lab preview: loop-the-loop, banking, boost pads. |
 | Housing, commercial features | Roadmap | Not started. Payments stay out entirely. |
-| LA County and beyond | Roadmap | Same pipeline with a bigger bounding box. The data budget is the constraint: about 1.2 MB per county. |
+| LA County and beyond | Stopped (owner, 2026-10-20) | The map is Orange County only, done deeply (decision 11 in PROJECT_OC_DECISIONS.md). The OC freeway gaps to add: I-605 at Seal Beach and Los Alamitos, and the SR-90 Imperial Highway expressway. |
 
 ## How realistic can it get?
 

@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, lightForLive, Mode, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -23,6 +23,7 @@ import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
 import * as P from './road/props';
 import { Radio } from './audio/Radio';
+import { RouteChevrons } from './road/chevrons';
 import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
@@ -33,6 +34,15 @@ type ErrandJob = Extract<Job, { kind: 'errand' }>;
 const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
+import { LiveCars } from './live/LiveCars';
+import { wheelGeometry } from './traffic/carModels';
+import type { LiveClient } from '../live/client';
+import { liveBase } from '../live/client';
+import { NowFeed, densityForRatio } from '../live/now';
+import { djLine, TalkNow } from '../talk/bank';
+import { leagueDay } from '../talk/league';
+import { buildBillboards, lightBillboards, Ads } from './road/billboards';
+import ADS from '../data/ads.json';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free', 'cinematic'];
@@ -63,7 +73,20 @@ export interface Hud {
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
   errand: { exit: string; left: number; dist: number } | null;   // a story errand: its exit, seconds left, metres to its sign (-1 off its road)
+  // the adaptive HUD (U1): the compass bearing the car points along (degrees from north, clockwise), the simulated air
+  // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
+  heading: number; tempF: number; turn: Turn;
+  clock: string;                     // OC's time (Pacific) in Live, the preset's hour otherwise: the clock agrees with the sky
+  tempNote: string;                  // where the temperature comes from: 'simulated', or the live feed ('NWS KSNA')
+  // the navigation card (U2): what to do ('Keep right') and the road it leads to; the next exit along this road with its
+  // real sign text, and whether it's the one the route takes (on a ramp, with no exits along it, the sign it was taken
+  // from); and the destination card: the destination road, how far it
+  // is along the route, the time that takes at your pace (s; -1 when you aren't moving enough to say) and the traffic
+  // setting (simulated, and labelled so). All '' with no route.
+  navAct: string; navTo: string; exitText: string; exitMine: boolean; onSign: string; dest: string; destDist: number; eta: number; traffic: string;
+  trafficNote: string;               // where the traffic setting comes from: 'simulated', or the live feed's source and age
 }
+export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
 const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
@@ -74,6 +97,7 @@ export interface Report {
   quality: string; adaptive: boolean; pixelRatio: number; buffer: string; fps: number; calls: number; tris: number; textures: number;
   mode: Mode; attract: boolean; road: string; mph: number; density: string; cars: number; runSeconds: number;
   time: string; weather: string; ultra: boolean;
+  live: string;                      // the live server: off, or its state, the lobby, the crew and the ghosts in view (no names)
 }
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
@@ -108,6 +132,11 @@ export class Game {
   private roads!: Roads;
   private terrain!: Terrain;
   private traffic!: Traffic;
+  private liveCars!: LiveCars;        // the other drivers on the live server, drawn as ghosts
+  live: LiveClient | null = null;     // set by the UI while a live drive is on
+  readonly now = new NowFeed();       // the realistic mode's feed: weather, freeway flow, trends (live server or simulated)
+  private nowT = 0;
+  billboards: THREE.Group | null = null;   // the ad panels beside the freeway (src/data/ads.json)
   private car: PlayerCar;
   readonly phys = new CarPhysics();
   path!: Path;                       // the road you're on
@@ -167,6 +196,9 @@ export class Game {
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
+  private pace = 0;                  // your speed over the last few seconds (m/s), for the navigation card's time estimate
+  // the blue chevrons on the road along the route (U2)
+  readonly chevrons = new RouteChevrons({ diverge: (p, j) => this.sideOf(p, j), merge: (r, j) => this.sideOfMerge(r, j) });
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
   visited = new Set<string>();       // freeways driven this session (for tests and the profile)
@@ -189,6 +221,7 @@ export class Game {
     this.env.set(settings.time, settings.weather, true);
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
+    this.scene.add(this.chevrons.mesh);
     this.driving = this.carId;
     this.applyDriver();
     this.applyCarChoice();
@@ -205,6 +238,8 @@ export class Game {
     this.ev.loading(true, 'Loading Orange County');
     try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch { /* fonts are optional */ }
     this.net = await Network.load();
+    this.now.setLabels(this.net.mains.map((m) => m.label));
+    this.now.onChange = () => { if (this.traffic) this.applyNow(); };   // a fresh feed applies at once
     this.buildWorld();
     this.applyQuality();
     this.onResize();
@@ -223,13 +258,70 @@ export class Game {
     this.roads = new Roads(this.net, q); this.scene.add(this.roads.group);
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
+    if (!this.billboards) { this.billboards = buildBillboards(this.net, ADS as unknown as Ads); this.scene.add(this.billboards); }
+    if (!this.liveCars) { this.liveCars = new LiveCars(this.traffic.classes.find((c) => c.id === 'sports') ?? this.traffic.classes[0], wheelGeometry()); this.scene.add(this.liveCars.group); }
     this.traffic.viewAhead = q.drawDistance * 0.95;
     this.env.setFlareOccluders([this.roads.group, this.traffic.group], [this.terrain.group], (o, d) => this.car.sunBlocked(o, d));
     this.applyDensity();
   }
   private applyDensity() {
     const d = DENSITY[this.settings.density];
-    this.traffic.level = { perKmLane: d.perKmLane, bold: d.bold };
+    if (this.settings.density === 'live') {
+      // the freeway you're on (or came from), at its measured share of free-flow speed
+      const road = this.path?.main ? this.path.label : this.lastMain?.label ?? this.settings.start;
+      const l = densityForRatio(this.now.ratioFor(road));
+      this.traffic.level = this.live ? lightForLive(l, true) : l;
+      return;
+    }
+    const l = { perKmLane: d.perKmLane, bold: d.bold };
+    this.traffic.level = this.live ? lightForLive(l, false) : l;
+  }
+  // the realistic mode: keep the feed running while a Live setting is on, and apply it every couple of seconds
+  private applyNow() {
+    const s = this.settings, on = s.density === 'live' || s.weather === 'live';
+    this.now.want(on, liveBase(s.liveUrl));
+    if (!on) return;
+    if (s.density === 'live') this.applyDensity();
+    if (s.weather === 'live') this.env.setLiveWeather(this.now.snapshot.weather.kind);
+  }
+  private djT = 180;                  // seconds to the DJ's next line while a station is on
+  private nowTick(dt: number) {
+    if (this.radio.current && !this.attract && !this.paused) {
+      this.djT -= dt;
+      if (this.djT <= 0) { this.djT = 160 + Math.random() * 60; this.djSay(); }
+    }
+    this.nowT -= dt;
+    if (this.nowT > 0) return;
+    this.nowT = 2;
+    this.applyNow();
+  }
+  // the DJ's line: now and then, with real drivers out, the live lobby itself (the count and the busiest freeway, both
+  // from the server); otherwise the talk bank's line about the weather, the freeways, the league or the week
+  private djSay() {
+    const call = this.radio.current?.call;
+    if (!call) return;
+    const peers = this.live?.info.status === 'online' ? [...this.live.peers.keys()] : [];
+    if (peers.length && Math.random() < 0.35) {
+      const roads = new Map<string, number>();
+      for (const id of peers) { const r = this.liveRoad(id); if (r && r !== 'off the freeway' && r !== 'a ramp') roads.set(r, (roads.get(r) ?? 0) + 1); }
+      const busiest = [...roads.entries()].sort((a, b) => b[1] - a[1])[0];
+      const n = peers.length + 1;
+      this.ev.toast(`${call}: ${n} drivers out live right now${busiest ? `, ${busiest[1]} on the ${busiest[0]}` : ''}. Give 'em a honk.`, 'info');
+      return;
+    }
+    this.ev.toast(djLine(Math.random, this.talkNow(), call), 'info');
+  }
+  // the clock chip's temperature: the observed one at John Wayne Airport when Live weather has the real feed, the
+  // game's own simulated one otherwise, and the chip says which
+  private temperature(): { tempF: number; tempNote: string } {
+    const w = this.now.snapshot.weather;
+    if (this.settings.weather === 'live' && w.source === 'NWS' && typeof w.tempF === 'number') return { tempF: w.tempF, tempNote: 'NWS KSNA' };
+    return { tempF: this.env.tempF(), tempNote: 'simulated' };
+  }
+  // what the talk bank needs to know about right now (the radio's DJs; the on-foot NPCs later)
+  talkNow(): TalkNow {
+    const n = this.now.snapshot;
+    return { weather: { kind: n.weather.kind, tempF: n.weather.tempF, source: n.weather.source }, traffic: { roads: n.traffic.roads, source: n.traffic.source }, trends: n.trends.list, league: leagueDay(), road: this.path?.main ? this.path.label : this.lastMain?.label ?? '', venue: 'Lot 57' };
   }
 
   // build everything in view before showing it (yielding now and then so the page stays alive)
@@ -296,6 +388,7 @@ export class Game {
     ORIGIN.x += dx; ORIGIN.z += dz;
     this.roads?.rebase(); this.terrain?.rebase(this.phys.x, this.phys.z);
     if (this.race) for (const g of this.race.gates.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
+    if (this.billboards) for (const g of this.billboards.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
     this.camera.position.x -= dx; this.camera.position.z -= dz;
     this.chasePos.x -= dx; this.chasePos.z -= dz;
     this.camFrom.p.x -= dx; this.camFrom.p.z -= dz;
@@ -336,7 +429,7 @@ export class Game {
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
-    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
+    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
     this.endAbility(); this.ability.reset();
     this.timeLeft = 60; this.nextCheckpoint = 2000; this.countdown = mode === 'time' ? 3 : 0;
@@ -350,9 +443,21 @@ export class Game {
   }
 
   quitToMenu() { this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
-  cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
-  // tune a station directly (the radio card), -1 for off
-  tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
+  cycleRadio() {
+    if (this.attract) return;
+    this.audio.start(); this.audio.setMusicVolume(this.settings.music);
+    this.ev.toast(this.radio.cycle(), 'info');
+    // the DJ says something about right now (the weather, the freeways, the Coastal League, the week's talk)
+    if (this.radio.current) { this.djT = 180; this.djSay(); }
+  }
+  // tune a station directly (the radio card), -1 for off; the DJ greets you the same way
+  tuneRadio(i: number) {
+    if (this.attract) return;
+    this.audio.start(); this.audio.setMusicVolume(this.settings.music);
+    const was = this.radio.current;
+    this.radio.tune(i);
+    if (this.radio.current && this.radio.current !== was) { this.djT = 180; this.djSay(); }
+  }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
@@ -488,6 +593,7 @@ export class Game {
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
+    if (this.traffic) this.applyNow();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
     this.onResize();
   }
@@ -680,6 +786,7 @@ export class Game {
       if (a === 'corner') this.cycleCorner();
       if (a === 'ability') this.useAbility();
       if (a === 'radio') this.cycleRadio();
+      if (a === 'horn') this.honk();
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
@@ -924,8 +1031,11 @@ export class Game {
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
     });
     this.traffic.render(alpha, this.time);
+    this.liveTick(dt);
     this.updateCamera(dt);
+    this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
     this.weatherTick(dt);
+    this.nowTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     const view = this.view3();
@@ -960,6 +1070,7 @@ export class Game {
     const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
     // a ramp, not a switch: the beams stay off through sunset, come up faintly through dusk and reach full at night
     this.car.setHeadlights(smoothstep(0.35, 0.8, gloom), dark);
+    lightBillboards(smoothstep(0.3, 0.85, dark));
     const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
     lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = dark > 0.4 ? 3.2 * dark : 0.05;
     if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);
@@ -1049,6 +1160,7 @@ export class Game {
     // distance, the streak and the clocks
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
+    if (!this.attract) this.pace = damp(this.pace, Math.max(0, view.v), 1 / 12, dt);
     if (playing) {
       this.prof.t += dt; if (!this.wrongWay) this.prof.dist += fwd;
       this.prof.flush -= dt;
@@ -1223,6 +1335,7 @@ export class Game {
     if (mode === 'sky') {
       // a live camera 150 m up, heading-up, looking down just ahead of the car
       const r = this.cornerRect(), pr = this.renderer.getPixelRatio(), H = this.host.clientHeight || innerHeight;
+      if (this.cornerAway(r)) return;
       const p = this.car.root.position;
       const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
       this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
@@ -1232,9 +1345,11 @@ export class Game {
       const x = Math.round(r.x * pr), y = Math.round((H - r.y - r.size) * pr), s = Math.round(r.size * pr);
       this.renderer.setScissorTest(true);
       this.renderer.setScissor(x, y, s, s); this.renderer.setViewport(x, y, s, s);
-      const fog = this.scene.fog; this.scene.fog = null;
+      const fog = this.scene.fog, chev = this.chevrons.mesh.visible; this.scene.fog = null;
       this.car.setOutsideView(true);
+      this.chevrons.mesh.visible = false;              // the chevrons are for the road ahead, not the sky camera
       this.renderer.render(this.scene, this.skyCam);
+      this.chevrons.mesh.visible = chev;
       this.scene.fog = fog;
       this.renderer.setScissorTest(false);
       const size = this.renderer.getSize(new THREE.Vector2());
@@ -1244,8 +1359,12 @@ export class Game {
     this.mapT -= dt;
     if (this.mapT > 0 || !this.mapCanvas) return;
     this.mapT = 0.1;
+    if (this.cornerAway(this.cornerRect())) return;
     this.drawMap(this.mapCanvas);
   }
+  // the Minimal HUD (U1) slides the window off the screen's edge when it tucks it away (right for the sky camera and a
+  // phone's map, left for the round map with a mouse): nothing to draw while it's there
+  private cornerAway(r: { x: number; size: number }) { return r.size <= 0 || r.x >= (this.host.clientWidth || innerWidth) - 1 || r.x + r.size <= 1; }
 
   // a heading-up road map: every freeway within a few kilometres, the route, you
   private drawMap(cv: HTMLCanvasElement) {
@@ -1295,6 +1414,18 @@ export class Game {
       g.fillStyle = inter ? '#fff' : '#111';
       g.fillText(q.route!.replace(/^(I|SR)-/, ''), mx, my + 0.5);
     }
+    // live drivers: orange dots (their live pose when near, the roster's otherwise)
+    if (this.live) {
+      const now = performance.now();
+      g.fillStyle = '#fd9123'; g.strokeStyle = 'rgba(0,0,0,0.6)'; g.lineWidth = 1.2 * dpr;
+      for (const peer of this.live.peers.values()) {
+        const at = this.live.whereIs(peer, now);
+        if (!at || Math.abs(at.x - p.x) > R * 1.4 || Math.abs(at.z - p.z) > R * 1.4) continue;
+        const [a, b] = tx(at.x, at.z);
+        if (a < 0 || b < 0 || a > W || b > W) continue;
+        g.beginPath(); g.arc(a, b, 3.6 * dpr, 0, Math.PI * 2); g.fill(); g.stroke();
+      }
+    }
     g.fillStyle = '#d0141e'; g.strokeStyle = '#fff'; g.lineWidth = 1.5 * dpr;
     const cy = W * 0.62;
     g.beginPath(); g.moveTo(W / 2, cy - 7 * dpr); g.lineTo(W / 2 + 5 * dpr, cy + 5 * dpr); g.lineTo(W / 2, cy + 2 * dpr); g.lineTo(W / 2 - 5 * dpr, cy + 5 * dpr); g.closePath(); g.fill(); g.stroke();
@@ -1314,18 +1445,59 @@ export class Game {
     if (Math.abs(next - this.renderScale) > 0.001) { this.renderScale = next; this.onResize(); }
   }
 
-  // what's next on the route, and how far
-  private nextManoeuvre(): [string, number] {
+  // what's next on the route, how far, which way it goes, and the road it leads to: the first freeway along the route
+  // from there (a ramp that splits for both directions of a freeway leads to the one the route takes), or where the
+  // ramp goes
+  private nextManoeuvre(): [string, number, Turn, string, string] {
     const j = this.route[0];
-    if (!j) return ['', 0];
-    const side = j.kind === 'diverge' ? (this.sideOf(this.path, j) === 'R' ? 'Keep right' : 'Keep left') : 'Continue';
-    const to = j.to.main ? j.to.label : this.net.leadsTo(j.to) || 'the ramp';
-    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s)];
+    if (!j) return ['', 0, '', '', ''];
+    // a diverge, or the end of a ramp that forks (for both directions of a freeway): keep to one side
+    const fork = j.kind === 'diverge' || (j.kind === 'continue' && this.path.out.filter((o) => o.s >= this.path.len - 1).length > 1);
+    const turn: Turn = fork ? (this.sideOf(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
+    const side = turn === 'right' ? 'Keep right' : turn === 'left' ? 'Keep left' : 'Continue';
+    const main = this.route.find((r) => r.to.main);
+    const to = main ? main.to.label : this.net.leadsTo(j.to) || 'the ramp';
+    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s), turn, side, to];
+  }
+  // the exits along a road, from the guide signs in the map data: where each ramp leaves (or where its sign stands) and
+  // what the sign says, one per ramp, in order along the road. Worked out once per road.
+  private exitIndex = new Map<Path, { s: number; ramp: Path; text: string }[]>();
+  private exitsAlong(p: Path) {
+    let a = this.exitIndex.get(p);
+    if (!a) {
+      const byRamp = new Map<Path, { s: number; ramp: Path; text: string }>();
+      for (const g of this.net.signs) {
+        if (g.path !== p) continue;
+        const j = p.out.find((o) => o.to === g.ramp), text = g.text.join(' / '), had = byRamp.get(g.ramp);
+        if (!had || text.length > had.text.length) byRamp.set(g.ramp, { s: j ? j.s : g.s, ramp: g.ramp, text });
+      }
+      a = [...byRamp.values()].sort((u, v) => u.s - v.s);
+      this.exitIndex.set(p, a);
+    }
+    return a;
+  }
+  // the sign a ramp was taken from (the longest, where a ramp has more than one), '' for a ramp with none
+  private rampSigns: Map<Path, string> | null = null;
+  private rampSign(p: Path) {
+    if (!this.rampSigns) {
+      this.rampSigns = new Map();
+      for (const g of this.net.signs) { const t = g.text.join(' / '), had = this.rampSigns.get(g.ramp); if (!had || t.length > had.length) this.rampSigns.set(g.ramp, t); }
+    }
+    return this.rampSigns.get(p) ?? '';
   }
 
   private sendHud() {
     const p = this.phys;
-    const [next, nextDist] = this.nextManoeuvre();
+    const [next, nextDist, turn, navAct, navTo] = this.nextManoeuvre();
+    // the navigation card (U2): the next exit along this road, the destination, how far it is along the route and how
+    // long that takes at your pace
+    const routed = this.route.length > 0 && !!this.routeTarget;
+    const exit = routed ? this.exitsAlong(this.path).find((e) => e.s > p.s) : undefined;
+    let destDist = 0;
+    if (routed) { let s = p.s; for (const j of this.route) { destDist += Math.max(0, j.s - s); s = j.toS; } }
+    // world x runs east and z south (tools/oc-network/common.py), and the car points along (sin psi, cos psi): its
+    // bearing from north is pi - psi
+    const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
     this.ev.hud({
       speed: Math.round(Math.abs(p.vx) * MPH), gear: p.gear < 0 ? 'R' : String(p.gear), rpm: Math.round(p.rpm), rpmFrac: clamp(p.rpm / SPEC.redline, 0, 1),
       distance: this.distance, score: Math.round(this.score), combo: this.combo, timeLeft: this.timeLeft, fps: this.fps, mode: this.mode,
@@ -1338,6 +1510,12 @@ export class Game {
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
+      heading, ...this.temperature(), turn, clock: this.env.clockText(),
+      navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
+      dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
+      // while driving live the computer cars are kept light (lightForLive), and the HUD says so
+      traffic: this.live && ['moderate', 'heavy', 'expert'].includes(this.settings.density) ? 'Light' : DENSITY[this.settings.density].label,
+      trafficNote: (this.settings.density === 'live' ? this.now.note('traffic') : 'simulated') + (this.live && this.settings.density !== 'none' ? ' · light while live' : ''),
     });
   }
 
@@ -1358,6 +1536,7 @@ export class Game {
       mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
+      live: !this.live ? 'off' : `${this.live.info.status}${this.live.info.cap ? ` ${this.live.info.online}/${this.live.info.cap}` : ''}${this.live.crew ? ` · crew ${this.live.crew}` : ''} · ${this.live.peers.size} known, ${this.liveCars?.count ?? 0} drawn${this.live.info.error ? ` · ${this.live.info.error}` : ''} · feeds ${this.now.source}`,
     };
   }
   // testing aids: run the simulation ahead with fixed controls (or the autopilot), without waiting for frames
@@ -1369,9 +1548,65 @@ export class Game {
       if (this.steps % 24 === 0) this.stream(1);
     }
   }
+  // the live server: send where we are (ten times a second, inside the client) and draw the others where they are
+  private liveTick(dt: number) {
+    const now = performance.now();
+    if (this.live && !this.attract && !this.paused) {
+      const p = this.phys;
+      this.live.send({ x: p.x, y: p.y, z: p.z, h: p.psi, v: p.vx, b: this.input.c.brake > 0.05 }, now);
+    }
+    this.liveCars?.render(this.live, now, dt, this.camera);
+  }
+  setLive(c: LiveClient | null) {
+    this.live = c;
+    if (this.traffic) this.applyDensity();
+    if (c) c.onHonk = (peer) => this.heardHonk(peer);
+  }
+  honks = 0;                          // honks heard (for tests)
+  // your horn: you hear it, and so does every live driver within 500 m
+  honk() {
+    if (this.attract) return;
+    this.audio.start();
+    this.audio.horn(0.55);
+    this.live?.honk(performance.now());
+  }
+  private heardHonk(peer: { name: string; id: number }) {
+    const p = this.live?.peers.get(peer.id), at = p && this.live!.whereIs(p, performance.now());
+    if (!at || this.attract) return;
+    const dx = at.x - this.phys.x, dz = at.z - this.phys.z, d = Math.hypot(dx, dz);
+    if (d > 500) return;
+    // left or right of where you're facing: the car points along (sin psi, cos psi), its right is (-cos psi, sin psi)
+    const right = (dx * -Math.cos(this.phys.psi) + dz * Math.sin(this.phys.psi)) / Math.max(1, d);
+    this.audio.horn(0.6 * (1 - d / 500) + 0.05, right);
+    this.honks++;
+    this.ev.toast(`${peer.name || 'Someone'} honked`, 'info');
+  }
+  // which freeway a live driver is on, for the who's-on list ('' when unknown)
+  liveRoad(id: number): string {
+    const p = this.live?.peers.get(id), at = p && this.live!.whereIs(p, performance.now());
+    if (!at) return '';
+    const hit = this.net.near(at.x, at.z, 25).find((h) => h.path.main) ?? this.net.near(at.x, at.z, 25)[0];
+    return hit ? (hit.path.main ? hit.path.label : hit.path.label ? 'To ' + hit.path.label : 'a ramp') : 'off the freeway';
+  }
+  // Free Drive only: put the car 80 m behind a live driver, on their carriageway, at their speed
+  get canJoin() { return !this.attract && !this.over && this.mode === 'free' && !this.race; }
+  joinDriver(id: number): boolean {
+    const p = this.live?.peers.get(id), at = p && this.live!.whereIs(p, performance.now());
+    if (!this.canJoin || !p || !at) return false;
+    const hit = this.net.near(at.x, at.z, 25).find((h) => h.path.main) ?? this.net.near(at.x, at.z, 25)[0];
+    if (!hit) return false;
+    const path = hit.path, s = clamp(hit.s - 80, 5, path.len - 5), lane = path.laneOf(clamp(hit.d, path.edgeL, path.edgeR));
+    const spot = path.at(s, path.laneCenter(lane));
+    this.traffic.clearAround(spot.x, spot.z, 60);
+    this.placeCar(path, s, lane, clamp(at.v, 0, 60));
+    this.route = []; this.routeTarget = null;
+    this.ev.toast(`Behind ${p.name || 'them'} on ${path.label || 'the ramp'}`, 'good');
+    return true;
+  }
+
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,
-      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches,
+      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches, livePeers: this.live?.peers.size ?? 0, liveDrawn: this.liveCars?.count ?? 0, livePlates: this.liveCars?.plateCount ?? 0,
       visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
   }
 

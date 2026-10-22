@@ -17,6 +17,7 @@ export function formatReport(r: Report): string {
     `Frame rate: ${r.fps} fps · ${r.calls} draw calls · ${Math.round(r.tris / 1000)}k triangles · ${r.textures} textures`,
     `Drive: ${drive}`,
     `Sky: ${r.time}, ${r.weather} · Ultra Realism ${r.ultra ? 'on' : 'off'}`,
+    `Live: ${r.live}`,
     'What happened: ',
   ].join('\n');
 }

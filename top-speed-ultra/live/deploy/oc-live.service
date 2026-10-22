@@ -1,0 +1,36 @@
+# The live server as a service. Installed by deploy/setup.sh; settings live in /etc/oc-live.env.
+[Unit]
+Description=OC Ultra live server (accounts, lobby, relay)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=oclive
+Group=oclive
+WorkingDirectory=/opt/oc-live
+EnvironmentFile=/etc/oc-live.env
+ExecStart=/usr/bin/node /opt/oc-live/server.mjs
+Restart=always
+RestartSec=3
+# the process can only write its own data folder
+ProtectSystem=strict
+ReadWritePaths=/opt/oc-live/data
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectHome=true
+LimitNOFILE=65536
+UMask=0077
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+MemoryMax=300M
+
+[Install]
+WantedBy=multi-user.target

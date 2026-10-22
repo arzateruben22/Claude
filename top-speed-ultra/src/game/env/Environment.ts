@@ -9,8 +9,8 @@ import * as T from '../textures';
 import { fbm2, clamp, lerp, smoothstep } from '../util';
 
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
-export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
-type Sky5 = Exclude<Weather, 'changing'>;
+export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing' | 'live';
+type Sky5 = Exclude<Weather, 'changing' | 'live'>;
 
 export const HAZE = new THREE.Color(0xa9bfd6);
 const LAT = 33.72, LON = -117.83;
@@ -36,7 +36,10 @@ const dirFrom = (alt: number, az: number, out = new THREE.Vector3()) => out.set(
 const PRESETS: Record<Exclude<TimeOfDay, 'live'>, { alt: number; az: number }> = {
   sunrise: { alt: 4, az: 100 }, day: { alt: 55, az: 195 }, sunset: { alt: 5.5, az: 292 }, night: { alt: -28, az: 330 },
 };
-const WX: Record<Sky5, { turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: number; wet: number; grip: number }> = {
+// the simulated temperature (tempF): the hour each preset stands for, and what each weather takes off
+const TEMP_HOUR: Record<Exclude<TimeOfDay, 'live'>, number> = { sunrise: 6.5, day: 12.5, sunset: 19.5, night: 23 };
+const TEMP_WX: Record<Sky5, number> = { clear: 0, cloudy: -3, rain: -8, fog: -6, mist: -4 };
+const WX: Record<Sky5,{ turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: number; wet: number; grip: number }> = {
   clear:  { turb: 1.3, sun: 1,    sky: 1,    cloud: 0.55, cloudDark: 0,    fogNear: 220, fogFar: 1,    haze: 0xa9bfd6, wet: 0, grip: 1 },
   cloudy: { turb: 5,   sun: 0.42, sky: 0.72, cloud: 1,    cloudDark: 0.5,  fogNear: 180, fogFar: 0.9,  haze: 0x9ea6b0, wet: 0, grip: 1 },
   rain:   { turb: 9,   sun: 0.2,  sky: 0.5,  cloud: 1,    cloudDark: 0.65, fogNear: 50,  fogFar: 0.55, haze: 0x7f8891, wet: 1, grip: 0.8 },
@@ -205,10 +208,34 @@ export class Environment {
   }
 
   // the weather that's in force now ("Changing" moves through a cycle on the clock, about 4 minutes a step)
+  private liveKind: Sky5 = 'clear';   // 'live': the sky the now feed reports (src/live/now.ts), set by the game
+  setLiveWeather(k: Sky5) { if (k !== this.liveKind) { this.liveKind = k; this.tgt = this.targetFor(new Date()); this.envDirty = true; } }
   private currentWeather(now: Date): Sky5 {
+    if (this.weather === 'live') return this.liveKind;
     if (this.weather !== 'changing') return this.weather;
     const cycle: Sky5[] = ['clear', 'cloudy', 'rain', 'cloudy', 'clear', 'mist', 'clear', 'fog', 'mist'];
     return cycle[Math.floor(now.getTime() / 240000) % cycle.length];
+  }
+
+  // the air temperature on the HUD's clock chip, °F (U1). Simulated, and the chip says so: Orange County's mild coast
+  // by the hour (58° at 3 am up to 74° at 3 pm; "Live" uses this device's clock, the presets their own hour) less a few
+  // degrees for the weather in force. A clear day reads 72°. Nothing live is fed in.
+  // the hour on Orange County's clock: Pacific time for "Live" wherever the player is, the preset's own hour otherwise
+  hourOC(now = new Date()): number {
+    if (this.time !== 'live') return TEMP_HOUR[this.time];
+    try {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(now).map((x) => [x.type, x.value]));
+      return (Number(p.hour) % 24) + Number(p.minute) / 60;
+    } catch { return now.getHours() + now.getMinutes() / 60; }
+  }
+  // the clock chip's text: OC's time ("Live") or the preset's hour, so the clock always agrees with the sky
+  clockText(now = new Date()): string {
+    const h = this.hourOC(now), hh = Math.floor(h), mm = Math.round((h - hh) * 60) % 60;
+    return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${hh < 12 ? 'AM' : 'PM'}`;
+  }
+  tempF(now = new Date()): number {
+    const hour = this.hourOC(now);
+    return Math.round(66 + 8 * Math.cos(((hour - 15) / 24) * Math.PI * 2) + TEMP_WX[this.currentWeather(now)]);
   }
 
   private targetFor(now: Date): State {

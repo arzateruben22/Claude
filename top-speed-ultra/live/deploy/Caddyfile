@@ -1,0 +1,12 @@
+# Caddy in front of the live server: HTTPS from Let's Encrypt, automatically, for the domain in /etc/oc-live.env.
+# It serves the game page too (the server serves /opt/oc-live/public when PUBLIC_DIR is set), so the game and the
+# socket share one origin and the player never has to type a server address.
+{$LIVE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8791
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+	}
+}

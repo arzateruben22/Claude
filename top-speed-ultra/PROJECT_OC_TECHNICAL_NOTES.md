@@ -67,6 +67,18 @@ traffic code.
   - `Game.followRoute()` keeps the navigator on track whenever the road under you changes: it ticks off a hand-off,
     plans again if you've left the route, or arrives. If there's no way from the road you're on, it keeps the
     destination and tries again at the next road, and after a turnaround or rejoin.
+  - **What the driver sees (U2).** `Game.nextManoeuvre()` turns `route[0]` into the card's arrow and words (a diverge,
+    or a ramp that forks at its end, is "Keep left/right"; the road named is the first freeway along the route), and
+    `sendHud()` adds the next exit along this road from `net.signs` (`exitsAlong`, one entry per ramp, built once per
+    road), the destination, its distance along the route, and a time at your pace (`pace`: your speed damped over about
+    12 s; no estimate under 4.5 m/s). `road/chevrons.ts` lays the blue chevrons: one `InstancedMesh` (about 80 flat
+    quads, no shadows, no fog, no depth write) whose legs (road, start, end, the lane needed) are rebuilt only when the
+    route or your road changes; each frame places the chevrons every 4 m for 300 m from the car. Lanes: the exit lane
+    within 1600 m of a diverge (the autopilot's distance), the side a forking ramp goes, the outside lane where a ramp
+    merges; the move over is a smoothstep from your lane. Because OSM ramps leave from the middle of the carriageway
+    (below), a leg ends where the ramp line is further out than the exit lane, not at the junction. The blend is
+    premultiplied (`src + dst * (1 - core)`): the glow adds light, the core also covers the road a little so the blue
+    reads on sunlit concrete. Hidden in the attract drive, in races and in the corner's sky camera.
 
 **OSM quirk to know about.** Ramp lines leave from the middle of the carriageway; that's where OSM puts the node.
 For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavement. Two things depend on this:
@@ -257,7 +269,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`. Run some with
+- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `live` (starts the live server on a free port and drives three signed-in browsers against a cap of two). Run some with
   `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
@@ -308,6 +320,47 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **`audio/Radio.ts`.** A sixteenth-note scheduler on the audio clock, looking 250 ms ahead. Each station has a key,
   chords, tempo, swing and style (pads, synthwave or lo-fi). It plays into `AudioEngine.musicBus`, which bypasses the
   Ultra Realism muffle.
+
+## The live server, the realistic mode, the talk bank and the billboards (2026-10-21)
+
+- **The live server** (`live/`, its own README): one Node 22 process, `ws` its only dependency, SQLite through
+  `node:sqlite`. HTTP for accounts (`/api/signup`, `/api/login`, `/api/logout`, `/api/me`), `/health`, the feeds
+  (`/api/now`, `/api/traffic`), an admin cap endpoint, and the built game served at `/` when `PUBLIC_DIR` is set. One
+  WebSocket at `/ws`: `hello` with the session token, then poses `{t:'s', x, y, z, h, v, b}` in the game's world frame
+  (absolute metres, `h` = `psi`), and snapshots `{t:'p', n:[[id, x, y, z, h, v, b], …]}` ten times a second with the
+  drivers within 3 km. The cap (`MAX_PLAYERS`) and a FIFO waiting line (`queued` with a position; `welcome` on
+  admission). Poses are plausibility-checked (map bounds, 200 m/s, a 240 m/s jump) and the relay never scores.
+- **The client** (`src/live/client.ts`): `LiveClient` connects when a drive starts with Drive live on, sends at
+  10 Hz from `Game.liveTick`, keeps each peer's last two poses and blends 150 ms in the past (`poseOf`), extrapolating
+  up to 0.3 s on a late packet. `LiveCars` (`src/game/live/LiveCars.ts`) draws peers as instanced coupes from the
+  traffic's `sports` class, in each driver's paint, at `(x - ORIGIN.x, y, z - ORIGIN.z)` with `rotation.y = h + π`.
+  Ghosts: no collision, no sound. `stats.livePeers` / `stats.liveDrawn` for tests.
+- **The now feed** (`live/now.mjs` on the server, `src/live/now.ts` in the game): weather (NWS KSNA → the five skies),
+  freeway flow (TomTom flow segment at one point per carriageway, `live/traffic-points.json`, every 15 minutes;
+  `ratio` = current / free-flow speed) and trends (`live/trends.json`, blocklisted). The game polls `/api/now` every
+  5 minutes while a Live setting is on and otherwise simulates a typical day with the same curves as the server's
+  mocks. `densityForRatio` maps the ratio to cars per km per lane (≥0.95 → 2.2 … ≤0.45 → 9.5, bold above 0.6 slow).
+  `Environment.setLiveWeather` feeds the sky; `Hud.trafficNote` names the source and age.
+- **The talk bank** (`src/talk/bank.ts`) and the Coastal League (`src/talk/league.ts`): templates per topic with
+  slots filled from the feed, a mood lead-in (12 moods) and an energy's delivery (3). `enumerateAll` walks every
+  combination with a mixed-radix counter for an exact count (`tests/talk.mjs`, which runs on Node's type stripping).
+  The league: eight clubs, four games a day Apr 1 to Sep 30, playoffs to Oct 15, every result a hash of the date and
+  the clubs, so all devices agree without a server. The radio's DJ one-liner (`djLine`) uses it on each tune.
+- **Billboards** (`src/game/road/billboards.ts`, `src/data/ads.json`): a slot names a carriageway, a point in game
+  metres, a side and a distance back; the panel is found by sampling the path every 40 m then every 4 m, built in
+  the race gates' frame, and rebased with the floating origin in `Game.recentre`. One canvas texture per creative.
+
+- **Light traffic while live** (decision 18): `lightForLive` in `src/game/settings.ts`, applied in
+  `Game.applyDensity` whenever a `LiveClient` is set (`setLive` re-applies it). Presets cap at Light's 2.2 cars per km
+  per lane with `bold` 0; the live feed's 2.2 to 9.5 maps linearly onto 1.2 to 3.5.
+- **The online board** (`live/board.mjs`, `GET /api/board?period=today|week&limit=`): `server.mjs` calls
+  `board.record(id, pose, now, name)` for every pose the relay accepts, `flush` on leave, `forget` on account delete,
+  `close` on shutdown. Per player per Pacific day it keeps distance (displacement through a token bucket capped at
+  min(110 m/s, reported speed), 2 s of carry, nothing across a gap over 3 s), the speed held 3 s (the window's lowest
+  reported speed, capped by ground speed × 1.05 + 0.5) and the longest drive (no 3 s silence, 3 m per 3 s). One
+  `board_days` row per player per day, written at most every 5 s; the snapshot is memoised 2 s; rows kept 35 days;
+  banned players hidden by joining `players`. The game's side: `src/live/board.ts` (fetch and validate) and
+  `src/ui/OnlineBoard.tsx` (the panel); the pause screen's standing line asks with the player's token.
 
 ## Known issues
 

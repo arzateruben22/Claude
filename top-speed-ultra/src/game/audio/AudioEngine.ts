@@ -164,5 +164,15 @@ export class AudioEngine {
     this.tone(55, 0.35, 0.8 * k);
     for (const fq of [420, 690, 1130, 1790]) this.tone(fq * (0.9 + Math.random() * 0.2), 0.9, 0.06 * k, 'triangle');
   }
+  // a car horn: two detuned reeds through a lowpass, panned (-1 left .. 1 right)
+  horn(level: number, pan = 0) {
+    const ctx = this.ctx; if (!ctx || level < 0.01) return;
+    const t = ctx.currentTime, out = ctx.createGain(), lp = ctx.createBiquadFilter(), sp = ctx.createStereoPanner();
+    lp.type = 'lowpass'; lp.frequency.value = 2200; sp.pan.value = clamp(pan, -1, 1);
+    out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(level * 0.22, t + 0.02);
+    out.gain.setValueAtTime(level * 0.22, t + 0.38); out.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    for (const f of [415, 523]) { const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.connect(lp); o.start(t); o.stop(t + 0.52); }
+    lp.connect(out); out.connect(sp); sp.connect(this.ambientBus);
+  }
   thump(intensity: number) { this.tone(80, 0.15, clamp(intensity / 10, 0.05, 0.4)); this.burst(0.25, 'bandpass', 2600, clamp(intensity / 12, 0.05, 0.4), 1.5); }
 }

@@ -44,6 +44,43 @@ scraps; both workflows resume from their journals):
     phone groups pass), then an adversarial judge decides.
   - Nothing from either is merged yet.
 
+## 2026-10-21 (afternoon): light traffic while live, the welcome card's real bug, and the online board
+
+The owner resumed the loop ("keep going til everything is finished") with a 75% usage checkpoint (pause, assess, ask).
+
+- **Computer traffic stays light while driving live** (decision 18). Presets are capped at Light with no aggressive
+  drivers; Live traffic keeps its rush hour scaled into 1.2 to 3.5 cars per km per lane; the HUD says "light while
+  live". Browser (`live` group, realistic-mode check): I-405 North at a flow ratio of 0.89 gave 1.5 cars/km/lane,
+  bold 0, HUD "Live traffic · simulated · typical day · light while live"; Heavy while live 2.2, live off 9, back on
+  2.2.
+- **The welcome card was under the menu.** The invite-link greeting rendered before the menu, so the menu's buttons
+  took the taps: a new player saw the card but couldn't use it. Found by the `livephone` check (Playwright: "Settings
+  from the menu intercepts pointer events"); the card now renders after the menu, and the check asserts the Sign up
+  button is the topmost element where a tap lands. The check's earlier timeouts were the test's own in-page waits
+  stalling on a second loaded phone; it now polls from the test side. `livephone` 7 of 7.
+- **The online board** (built by the hypercar lane's Fable agent on `claude/live-board`, reviewed, merged and wired
+  here): `live/board.mjs` ranks distance, the speed held for 3 s and the longest unbroken drive per Pacific day from
+  relay-accepted poses only; `GET /api/board`; the menu's Online board panel. Server test: a 4.5 s drive at 30 m/s
+  read ~135 m and ~30 m/s held; a ban hid it; a delete removed it. `cd live && npm test`: 58 of 58 (board module 9,
+  the wiring 1). The hardening file failed 3 of its timing tests once while a browser group loaded the machine, and
+  passed 9 of 9 alone and in the full run after.
+- `live` group: 12 of 12 before the board (this afternoon's run).
+- **Evening, after a worker restart:**
+  - The board panel flashed "Nobody on the board yet" on its first frame, before it had asked the server; it now shows
+    its loading bar until the first answer. Found by the new `live` check, which then passed: "distance today:
+    live_b 209 m".
+  - The pause screen of a live drive says where you stand on today's board ("#n for distance (x mi) · y mph held"),
+    from the server, with your token.
+  - `/health` and `server/live-status.sh` show the board's counters (drivers tracked, rows written, poses ignored).
+  - The hardening tests 5, 11 and 12 failed now and then while a browser suite loaded the machine: fixed sleeps of
+    300 and 400 ms, and a failed test 5 left sockets that broke 11 and 12. They now wait for conditions and always
+    close their sockets: `npm test` 58 of 58 twice with the browser suite running, the hardening file 9 of 9 three
+    times.
+  - A Fable prompt is queued in the handoff for an adversarial review of the board's rules before it goes public.
+  - **Measured on the final build:** `live` 13 of 13 (the pause screen read "Today on the online board: #2 for
+    distance (0.1 mi)."; the board panel listed "live_b 194 m" as the server did, without the deleted account),
+    `livephone` 7 of 7, `cd live && npm test` 58 of 58.
+
 ## 2026-10-21 (17:45 UTC): the online board (live server), from server-observed poses only
 
 Agreed with the live-server session (session_014twwPd83rJxBkHT9T8yEiQ, which owns `claude/live-server`): this session
@@ -194,6 +231,63 @@ should reuse its on-foot engine.
   1.6 s, because no frame was produced while the 3D scene rendered; the element was never remounted. The shot tool now
   waits for the animation to finish.
 
+## 2026-10-21 (morning, the scheduled continuation): crews, cruise nights, password reset, and two realistic-mode fixes
+
+The owner's standing order is to keep improving until they say stop. A scheduled task wakes the session every 2 hours.
+
+- **Crews.** A code of 4 to 8 letters or numbers puts friends in a room of their own. The server keeps snapshots, the
+  roster, honks, join and leave, and the welcome list inside the crew; the cap and the line stay shared. The Live
+  section has a crew field and New code. Invite carries `?crew=CODE`, and opening that link sets it. Server test (B
+  sees A, not an outsider 50 m away; the honk stays in the crew; everyone counts toward one cap). Browser, in the
+  `livephone` group: with crew OC405 and the scripted peer outside it, 0 peers were seen, and the list read "Crew OC405 ·
+  1 here · 2 of 25 live".
+- **Cruise nights.** `CRUISE="Fri 20:00, Sun 18:00"` in Pacific time; the menu shows the next one, or that one is on
+  now (2 hours). The desks' machine starts with Friday 8 pm. Tests cover parsing, Pacific time across daylight saving,
+  "on now", and the sooner of two. `live-env.sh` now quotes values with spaces so a shell reading the file sees one word.
+- **Password reset by email** (Resend; off until `RESEND_KEY` and `MAIL_FROM` are set). A 6-digit code, 15 minutes, 5
+  tries. The answer is the same whether or not a name exists or has an email. The account email can be set or cleared
+  with the password. Five server tests. In the browser, the panel's forgot-password flow took the code from the test
+  server's mail log, set a new password and signed in.
+- **The radio** sometimes gives the real live count and the busiest freeway when other drivers are out. **The menu**
+  shows "N of 25 driving now" from the public health check, which screen readers can hear. **Ghosts** grow in over
+  0.6 s. **The watchdog** sends a phone alert if `oc-live` stops, once it's installed (paper-book's watchdog tests:
+  9 of 9).
+- **Two realistic-mode bugs found by the live group, fixed:**
+  - The simulated typical day read the device's own clock, so on a UTC device 06:44 counted as OC's morning rush. It
+    now runs on Pacific time wherever the player is.
+  - A fresh feed waited up to 2 s to be applied. It now applies at once, and the check requires the density to match
+    the road's ratio exactly.
+- **Server tests:** 48 of 48. **Browser** (live + livephone, run 13): 16 of 17. Crews, the reset, the third driver
+  (with the longer load allowance), the who's-on list, Drive with and the honk passed. The realistic-mode check timed out
+  waiting for the feed under the load of three browsers; in isolation the feed arrives within a second. The wait is now
+  90 s and reports the feed's state; the rerun is below.
+- **Rerun** (the `live` group): **12 of 12**. Realistic mode on I-405 North: ratio 1 gave 2.2 cars per km per lane,
+  bold 0, matching the mapping exactly. C waited at #1 and got in (831 poses, 0 dropped). The reset and account checks
+  passed, with no page errors.
+- **The rest of the suite on the same build** (boot, interchanges, survival, race, abilities, progression, render,
+  phone, launch): **62 of 62**. With `live` (12 of 12) and `livephone` (5 of 5), every group passes.
+- **Rendering and honesty, from a night render.** A render of the 57 at night (started at the Orangewood exit;
+  `tests/out/billboard-night.png`) showed two things:
+  - The billboards were as dim as by day. They now light with the darkness, from 0.35 to 2.2 emissive (2.2 measured at
+    night). In the render, the LOT 57 panel glows beside the green guide signs, 160 m ahead.
+  - The HUD clock read 11:28 AM (this machine's UTC clock) under a night sky. The chip and the simulated temperature
+    now run on OC's clock: Pacific time in Live, wherever the player is, and the preset's own hour otherwise. `phone`
+    and `boot`: 14 of 14, with the Day preset's chip reading "12:30 PM".
+  - With Live weather and the real feed, the chip now shows the observed temperature and "NWS KSNA" rather than the
+    simulated one. In the `phone` group the injected reading showed "61° · NWS KSNA": 8 of 8.
+- **Ghost cars' lamps.** Ghosts now carry head and tail lamps like the traffic's, and the tail lamps brighten when
+  that driver brakes. The new night check found a real bug: a ghost standing still ignored repeated poses, which also
+  dropped a change in its brake light. It now updates the brake and speed on a repeated pose. `livephone`: 6 of 6,
+  with 1 ghost, both lamps, brake lamp 3.2 after the sky darkened (`tests/out/livephone-night-ghost.png`; the ghost is
+  60 m ahead, so small at phone size). The night road still reads bright; that is the night-lighting item in the Opus
+  queue, not this change.
+- **Load, measured again** (`node live/test/load.mjs N 20`, with the roster, crews, honks and the security limits in):
+  25 drivers: 2.9% CPU, 142 MB, 5.4 MB a minute out. 100: 6.5%, 155 MB, 71. 250: 22.8%, 179 MB, 207 (550 before the
+  nearest-32 rule). 0 poses dropped at any size. Memory is the next limit: the README's ladder now raises `MemoryMax`
+  to 512M before rung 4. The load script now opens many sockets from one address (`SOCKETS_PER_IP`).
+- **The Feedback report** gains a Live line: off, or the state, lobby, crew, ghosts known and drawn, and the feed's
+  source, with no names. `launch`: 6 of 6.
+
 ## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
 
 - **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the
@@ -300,6 +394,67 @@ rendered on the preview (`tests/out/preview/fashion2/` in its worktree, every fr
   (`tests/out/phone/`, no errors): the device clock, the driver's colour on the level line, nine working apps and
   Messages and Contacts greyed "Roadmap"; Credits shows the balance and how credits are earned; the Map app opens the
   World Map (checked by the script). Races had the same trophy icon as Bests; it takes the wheel.
+
+## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
+
+The owner: "share it with the desks server and do anything you can at maximum capacity", then "keep rendering and
+improving ... until I say stop". Branch `claude/live-server` (pushed). The push onto `claude/always-on` was refused by
+the session's permission check (a production deploy), so the desks' machine doesn't have it until the owner allows
+or merges it.
+
+- **On the desks' machine.** `server/setup.sh` now runs `server/live-install.sh` (never fatal to the desks).
+  `server/live.sh` makes it public through Tailscale Funnel (free) or a domain with Caddy, and checks the API, the
+  page and the socket through the public address. Run here end to end with a systemd stand-in. The installer built the
+  game, created `oclive`, copied the server and the page to /opt/oc-live (root-owned, data/ 0700 oclive), and wrote
+  /etc/oc-live.env (0600). The service ran as oclive with its database 0600. `live-cap.sh` (30, then 25; refuses
+  `5/e` and 9999), `live-ban.sh` (refuses a name with quotes), `live-env.sh` (stores `a#b&c\d` exactly) and
+  `live-status.sh` (with the ladder's verdict) all behaved. The build peaks near 530 MB (vite 528 MB, tsc 491 MB, the
+  single-file step 21 MB), so the installer adds a 1 GB swap file under 2 GB of memory. The page is served at 3.7 MB, or
+  1.9 MB gzipped.
+- **New for players.** Name plates over ghost cars, the 2 s roster (map dots, the who's-on list with each driver's
+  freeway), Drive with, the horn, change password and delete account, the pause screen's live line, Invite a friend,
+  the DJ every three minutes, and toasts long enough to read.
+- **New for the owner.** The nearest-32 rule cut outbound at 250 drivers from 550 to 190 MB a minute. Restarts now
+  reconnect (code 4001). The name filter (slurs, profanity with number-for-letter spellings, staff names; "Scunthorpe"
+  is the known miss) and bans. The measured ladder: hourly records, `/api/ladder`, and the verdict in `live-status.sh`.
+- **The security review** (an independent agent, read-only, probes in the scratchpad) found 15 issues, 8 of them
+  reproduced. All are fixed, with 9 tests in `live/test/hardening.test.mjs` that run behind a simulated proxy:
+  - 4 malformed request targets each crashed the process; now each gets a 400 and the server stays up.
+  - `/health` took 868 ms during 20 parallel log-ins; now under 150 ms, with scrypt on the thread pool, at most 4 at once.
+  - Ten wrong passwords from elsewhere locked a driver out; now failures count per name and address.
+  - The first X-Forwarded-For entry was used, and a missing header exempted the client; now the last entry is used,
+    a missing header is refused, and IPv6 counts by /64.
+  - Idle sockets could hold the lobby; now a driver idle 60 s gives the spot to someone waiting (4002), with at most
+    3 sockets per address and 200 sockets still saying hello.
+  - Admin access came through the proxy; now it is local-only, with a constant-time token check.
+  - The line had no limit; now it holds 500.
+  - Log-out left the socket open; now log-out and a password change end the account's sockets.
+  - A symlink could reach outside the page folder; now it isn't served.
+  - On the machine: a dedicated user, a hardened unit, the database 0600, the token off the command line, and
+    script arguments checked.
+  Found on the way: the standalone `deploy/setup.sh` didn't parse (an apostrophe inside `${VAR:?…}`) and would have
+  copied the server without the modules it imports. Both are fixed.
+- **Tests.** `cd live && npm test`: 40 of 40, four runs in a row. The game typecheck is clean.
+- **Browser** (the `live` group, before the security fixes): 8 of 9. Plates, the who's-on list ("Driving now · 2 of 2
+  live_ui you live_b I-405 North Drive with"), Drive with (A 79.96 m behind B on I-405 North), realistic mode and the
+  billboards passed. The waiting-line check timed out loading C's page while a review agent and the server tests were
+  using the CPU; the rerun is below.
+- **Browser, after the security fixes** (the `live` group, every check in it at the time): **10 of 10**. Two drivers
+  online, one ghost drawn, one name plate, chip LIVE 2/2. The who's-on list read "Driving now · 2 of 2 live_ui you
+  live_b I-405 North Drive with". Drive with put A 79.96 m behind B on I-405 North, and A heard B honk. C waited at #1
+  and got in when B left (peak 2, admitted 3, 824 poses in, 0 dropped). Two bad poses were dropped through a real
+  socket. Realistic mode and the 12 billboards passed. The account panel changed the password and deleted the
+  account, and the server agreed. The pause screen showed its live line. No page errors. The menu count, the reset
+  check and the grow-in came after this run.
+- **Phone size** (the new `livephone` group: 390 × 844, one phone browser plus a scripted peer on a plain socket, so
+  no second browser): the Live section fits and shows "0 of 25 driving now". The account panel fits, signed in, with
+  the email setting open. The who's-on list reads "Driving now · 2 of 25 phone_me you Westbound_GT I-405 North Drive
+  with". The first screenshot showed "GO TO" and "LIVE 2/25" wrapping onto two lines, which made the top bar taller
+  so it covered the top of the corner map. Fixed: labels never wrap, and on a phone the chip shows a green dot and
+  "2/25". The check now asserts one row and that the bar ends above the map (374 px of 390, 6 items). It passes, and
+  the `phone` group passes alongside it. Also found: Chromium's phone emulation drops a `file://` page's localStorage
+  on reload. A real phone loading the game over https keeps it, so the check logs in through the account panel. The
+  account avatar now gets its sunset disc.
 
 ## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
 
@@ -414,6 +569,60 @@ once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judge
 - **Not done:** the `render` and `race` suite groups were not run in this session (the HUD's race plate was
   re-themed, not restructured); a real-phone look; the owner's wording "Project OC / Orange County Freeway Simulator"
   in the lockup is the owner's call (one line in `Mark.tsx`).
+
+## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
+
+Decisions 16 and 17. Branch `claude/live-server`. Everything below was run in this sandbox; nothing is deployed, so no
+real phone, real network or real player has touched it.
+
+- **Server tests** (`cd live && npm test`, Node 22.22): 11 of 11 pass. Accounts: the name, password and age rules,
+  case-insensitive uniqueness, a wrong password and an unknown name both 401, log-out kills the token, the per-name
+  log-in limit returns 429. The lobby: 30 drivers against a cap of 25 gives 25 online and 5 in line at #1 to #5; one
+  leaving lets #1 in and moves the rest up; raising the cap to 35 at run time lets the line in (a wrong admin token
+  gets a 404). The relay: a driver 100 m away is seen with the exact pose and brake light, one 30 km away isn't; a
+  teleport, 500 m/s and a non-number are each dropped and the last good pose stands; a second log-in on the same
+  account replaces the first. The feeds (`now.mjs`): the NWS text to the five skies, the mock day's shape (weekday
+  rush slower than night, Saturday easier), a political trend dropped by the blocklist, the real providers called
+  only when switched on (one NWS call, 20 TomTom calls), a dead network logged not fatal, a good answer kept, and
+  `/api/now` served with 20 roads.
+- **Load** (`node live/test/load.mjs N 20`: N pretend drivers in five clusters sending poses at 10 Hz for 20 s,
+  on this sandbox's CPU; percentages are of one core):
+
+| Drivers | Online | Server CPU | Memory | Peers seen (avg) | Out, MB a minute | Poses dropped |
+| --- | --- | --- | --- | --- | --- | --- |
+| 25 | 25 | 2.3% | 91 MB | 8.6 | 5.4 | 0 of 4,975 |
+| 100 | 100 | 6.3% | 105 MB | 35.6 | 87.5 | 0 of 19,900 |
+| 250 | 250 | 20.9% | 126 MB | 80.7 | 550 | 0 of 49,750 |
+
+  CPU and memory are far from limits even at 250; outbound bandwidth is what grows (with the square of a cluster's
+  size). At 25 a full lobby around the clock is about 230 GB a month, inside a $6 Droplet's 1 TB; 100 bunched
+  together would need binary poses and the nearest-32 rule first, as the ladder in `live/README.md` says.
+- **The talk bank** (`node tests/talk.mjs`): 173,601 distinct openers and 3,960 replies; 68,745,996 distinct two-line
+  conversations for one day's feed; 0 lines trip the no-politics blocklist; 0 lines with an unfilled slot. The
+  Coastal League: four games a day with every club playing once, the same result on every run, mid-July standings
+  that balance (ANA 59-46 … NB 44-61), January off-season and early October playoffs.
+- **Suite** (`npm run build && npm test -- --only=…`, headless Chromium with SwiftShader):
+  - `boot` and `phone`: 14 of 14 pass with the live code in (the menu fits 390 × 844 with the new Live section).
+  - `live` (three signed-in browsers against a cap of two): the Live section and the account form; a sign-up from the
+    panel; two drivers online and each sees the other (A drew B's car; the chip read LIVE 2/2; screenshot
+    `tests/out/live-ghost.png`, B's red coupe ahead on I-405 North); a third driver waits at #1 and is let in when one
+    goes back to the menu (server peak 2, admitted 3, 800 poses in, 0 dropped); a 500 m/s pose and a non-number
+    dropped through a real socket; no page errors. The first two runs failed only on the chip's case (CSS upper-cases
+    it) and are fixed.
+  - Final runs on the last build: `live` **14 of 14** with `launch` in the same run, then `launch` alone **6 of 6**
+    after the billboard check's braking fix. Realistic mode: on I-405 North the mock feed's ratio 1 gave 2.2 cars per km
+    per lane, the sky followed the feed (clear, 64°F) and the HUD read "Live traffic · simulated · typical day" (the
+    test server runs the mocks, so "simulated" is the honest label). Billboards: all 12 placed (I-5 both ways at 27 to
+    28 km south and 64 to 65 km north, CA-57 at 0 to 0.5 km and 19 to 20 km, CA-91 East 26.5 km, CA-91 West 47.4 km,
+    CA-22 East 18.0 km, CA-22 West 3.7 km). The Lot 57 panel on the 57 is drawn ahead of the Orangewood exit
+    (screenshot `tests/out/launch-billboard.png`, taken 87 m short with the car stopped).
+  - Found and fixed on the way: the four 91 and 22 billboard slots had their points mirrored north to south (5 to 7
+    km off those roads), so 8 of 12 placed; moved to where each road passes closest to the venues. The realistic-mode
+    check read the HUD's traffic line without a route set; that line lives on the destination card, which shows only
+    with a route, so the check now sets one. The billboard check braked a car that was already stopped, and the
+    automatic gearbox took that as reverse; it now brakes only while moving.
+- **Not verified:** the real NWS and TomTom feeds (this sandbox can't reach either host; the providers are tested
+  with recorded answers), any real phone, a real deployment behind Caddy, and more than three browsers at once.
 
 ## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
 
@@ -621,6 +830,51 @@ both are described below.
     `hyper-scoop-3x-r2`).
   - The diff names no real car maker or product.
 
+## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
+
+Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set
+(Go to, or `navigateTo`), reuses the route planner and `Game.nextManoeuvre()`, and is hidden in races.
+
+- **Navigation card** (top left on a wide screen): the manoeuvre's arrow in the route's blue (a fork for keep
+  left/right, mirrored for left; straight on otherwise), the distance, "Keep right" and the road it leads to as a green
+  guide sign ("CA-55 NORTH": the first freeway along the route, so a ramp signed for both directions reads the one you
+  want), and under a hairline the next exit along this road with its real sign text from the map data ("Your exit" when
+  it's the one the route takes, "Next exit" otherwise; on a ramp, "Now on" and the sign the ramp was taken from). A ramp
+  that forks at its end now reads "Keep left/right" too, not "Continue". The stats plate moves under the card.
+- **Destination card** (top right, under the corner window): the destination road and its distance along the route,
+  the time at your pace (your speed damped over about 12 s; "–" when you're barely moving) labelled "at your pace", and
+  the traffic setting labelled "simulated". The Minimal HUD tucks it away with the corner window.
+- **Phone**: each folds into one line. The manoeuvre (arrow, distance, sign) sits under the road chip where the green
+  prompt was; the destination line (time at your pace · traffic · simulated, plus the road when the sign doesn't
+  already name it) sits above the chip, under the speed box and the corner window, so neither covers more road than
+  the prompt did.
+- **Chevrons** (`src/game/road/chevrons.ts`): one InstancedMesh of up to 81 flat quads every 4 m for 300 m, 7 cm over
+  the road, fading in over the first 14 m and out over the last 150 m; on the lane the route needs (the exit lane within
+  1600 m of a diverge, moving over from your lane with a smoothstep; the side a forking ramp goes; the outside lane where
+  a ramp joins). Legs are worked out only when the route or your road changes (`chevrons.rebuilds`). A crisp core over
+  an additive glow, blended premultiplied so the blue holds on sunlit concrete (pure additive washed out to near white
+  there: the first capture). Seen from every camera; hidden with no route, in the attract drive, in races and in the
+  corner's sky camera.
+- **Open**: on a phone in the default driver's-seat view the HUD covers most of the chevrons; a layout fix to
+  follow. Screenshots: `tests/out/ui-after/nav-phone.png`, `nav-desktop.png`, `nav-chevrons-chase.png`,
+  `nav-chevrons-ramp.png`, `nav-sky-corner.png`, `tests/out/phone-nav.png` (local, not committed).
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "19/19 passed", including the new
+  phone check "Go to: navigation line, destination line and road chevrons; Clear route hides them" (picks CA-55 North in
+  Go to on a 390 × 844 phone: both lines one line tall, clear of each other and the road chip, nothing cut short, 72
+  chevrons; Clear route hides both lines and all chevrons). `tests/out/u2-nav-shots.mjs` (Free Drive on I-405 North,
+  route to CA-55 North, the car in lane 2 of 5 about 230 m before the 55's ramp): the chevrons read d = 0 m at 6 m ahead,
+  2.2 m at 46 m, 6.7 m at 86 m and 7.3 m (the centre of lane 4, the exit lane) from 106 m on, then follow the ramp; on
+  the two-lane ramp before it forks they keep to its right lane (d = 1.8 m), the side for the 55 North; the card says
+  "730 ft · Keep right · CA-55 NORTH · Your exit: CA 55 North / CA 55 South / Freeway"; no clipped text, no sideways
+  scroll; Clear route: no cards, 0 chevrons; no page errors at either size.
+- **Screenshots** (tests/out/ui-after/): nav-phone.png, nav-desktop.png, nav-chevrons-chase.png, nav-chevrons-ramp.png,
+  nav-sky-corner.png; tests/out/phone-nav.png from the suite.
+- **Found, not fixed** (outside U2): the corner's sky camera draws in the wrong place when the render scale isn't 1
+  (the Low preset's 0.75 on a desktop): `renderCorner` multiplies the scissor and viewport by the pixel ratio, and three.js
+  multiplies them again, so the picture lands at 0.75 of its place and size on screen and the window stays blank
+  (nav-sky-corner.png). Wherever the renderer's pixel ratio isn't 1 (a phone on Medium or up: 1.5 to 2) it lands
+  scaled by that ratio instead. Passing CSS pixels (no `* pr`) should fix it.
+
 ## 2026-10-17: the OC Hypercar's body, paint, LEDs, wheels and badge (hypercar M1, branch `claude/hypercar`)
 
 The OC Hypercar Prototype 01 from the owner's reference sheet, as a **procedural model built in code**: one
@@ -696,6 +950,34 @@ offer it yet.
   - `npx tsc --noEmit` (both configs) is clean, and `npm run build` succeeds.
   - `npm test -- --only=boot,render,phone`: 24/24.
 
+## 2026-10-16: the adaptive HUD: a HUD style setting, a compass, a clock chip, auto-hide (UI pass, U1)
+
+Panels 1 and 9 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U1).
+
+- **Status row, both styles**: a thin compass strip at the top centre (a tape of ticks with N E S W and the four
+  between, under a sunset index; the bearing is the car's own, from its yaw) and a chip at the top right with this
+  device's clock and the temperature the game simulates, labelled "simulated" (`Environment.tempF`: OC's coast by the
+  hour, less a few degrees for the weather in force; a clear day reads 72°). The top bar and the corner window now sit
+  one row lower, under it.
+- **HUD style** (Settings, Display): Modern (the default: every control stays) or Minimal. In Minimal, after 4 s of
+  just driving the top bar slides up and away and the corner window off the right edge (the game stops drawing it
+  there); speed, gear, the stats, the route prompt and the ability ring stay. Pause stays too, as a round chip in the
+  corner, so pausing is always one tap. With a route set, a round nav bubble takes the corner's place: the next
+  manoeuvre's arrow (keep left, keep right, ahead) and the distance. A tap, a mouse move, a key or a pad button brings
+  everything back; driving input (the pedals, the steering rail, W A S D and the arrows, Space, Q, E, V, the pad's
+  triggers and handbrake and shift buttons) doesn't, or the road would never clear. Keyboard focus on a control of the
+  bar keeps it up. Reduced motion: it just shows and hides, no slide.
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "18/18 passed", including the new
+  phone check "HUD: compass and clock chip; Minimal tucks the bar away after 4 s, Pause stays, a tap brings it back"
+  (it switches to Minimal through Pause, Settings, HUD style; reads 304° on I-405 North through Irvine, which runs
+  northwest; then pauses from the round chip). `tests/out/u1-hud-shots.mjs` at 390x844 and 1440x900: Modern still up
+  after 5.5 s; Minimal tucked away 3.5-4.2 s after the last input; a real tap (phone) or mouse move (desktop) brought it
+  back; holding W did not; Tab did, and focus on "View" held the bar up past 6 s; with reduced motion the transitions
+  are 0 s; no page errors.
+- **Screenshots** (tests/out/ui-after/): hud-modern-phone.png, hud-modern-desktop.png, hud-minimal-shown-phone.png,
+  hud-minimal-shown-desktop.png, hud-minimal-hidden-phone.png, hud-minimal-hidden-desktop.png, hud-settings-phone.png,
+  hud-settings-desktop.png.
+
 ## 2026-10-16: owner mode, every car unlocked for the owner (hypercar M0, branch `claude/hypercar`)
 
 The owner wants to "use all the cars I want" right now. Owner mode is a test-build switch, **not security**: anyone
@@ -736,6 +1018,28 @@ signed-in account (`PROJECT_OC_HYPERCAR.md` §8, M0, and decision 5).
   - No sideways scroll. No page errors.
   - Frame at the menu (`renderer.info`, Low): phone 313 calls / 537,547 triangles; desktop 343 / 567,153. With the
     Vela E built: 313 / 529,621 and 333 / 543,559.
+
+
+## 2026-10-16: the main menu is one glass sheet with a Drive dock (UI pass, U0)
+
+The owner asked for a main menu that feels "more seamless" with "a finer luxury Apple-like aesthetic feel". Built from
+`PROJECT_OC_UI_TARGET.md`, section "Owner's direction, 2026-10-16" (U0).
+
+- **One sheet**: the menu is a single frosted-glass sheet over the live attract drive. Opening Settings, Bests,
+  Profile, Driver, Garage, Start or Course changes what the sheet shows with a cross-fade; the sheet itself stays put
+  instead of a new panel mounting.
+- **The dock**: a Drive dock stays at the bottom while screens change, marks the screen you are on, and there is only
+  one Drive button. Tapping the current screen's dock button returns to the menu.
+- **The finish**: hairline borders, large soft radii, spacing on an 8 pt rhythm, the system font stack for text,
+  CSS-drawn switches and segmented controls, visible focus rings, reduced motion respected. Chrome noir's base and
+  yellow accent stay; the angled chips and magenta corners are gone.
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "17/17 passed, exit 0", including
+  the new phone check "menu: one sheet; the Drive dock stays while its screens change" (result "same sheet, dock marks
+  Settings, one Drive button"). A separate review script at 390x844 passed 14/14.
+- **Screenshots** (tests/out/ui-after/): menu-before-phone.png, menu-before-desktop.png, menu-after-phone.png,
+  menu-after-desktop.png, u0-crossfade-mid-phone.png, u0-crossfade-mid-desktop.png, u0-focus-phone.png,
+  u0-focus-desktop.png, and the full set phone-*.png / desktop-*.png (menu, settings, bests, profile, driver, garage,
+  start, course, loading, driving, goto, paused, results).
 
 ## 2026-10-16: the game is "OC Ultra", and the OC sunset wordmark replaces the R badge (UI pass, identity)
 

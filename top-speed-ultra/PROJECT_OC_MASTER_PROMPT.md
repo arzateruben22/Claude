@@ -21,7 +21,7 @@ Then tell me what's left before you change anything.
 
 ## The vision
 
-- **The core idea.** A freeway driving game that starts with Orange County and grows: LA County next, then beyond.
+- **The core idea.** A driving game set in Orange County, the whole county done deeply: every freeway, every street, roundabouts, malls. (The owner stopped LA County and beyond on 2026-10-20.)
   - You see how fast different cars can really go.
   - Survive in traffic at top speed.
   - Climb a scoreboard for how long you stay at max speed without crashing.
@@ -38,7 +38,7 @@ Built items are marked ✅. Everything else is still to do.
 
 - ✅ Real, connected OC freeways: I-5, I-405, CA-22, 55, 57, 73, 91, 133, 241, 261. You can take any interchange.
   Chunk streaming, navigation with route picking, signs and destinations.
-  - Next: LA County, more of SoCal.
+  - Next: every OC street, roundabout and mall; the freeway gaps (I-605 at Seal Beach, the SR-90 expressway). LA County is stopped (2026-10-20).
 - ✅ Traffic levels: None, Light, Moderate, Heavy, Expert. Deterministic traffic.
 - ✅ Speed Survival: max speed, longest clean streak over 100 mph, distance, near misses, clean passes, collisions,
   score, personal best. Exploit-resistant. Local leaderboard, clearly labelled local.
@@ -70,7 +70,9 @@ Built items are marked ✅. Everything else is still to do.
   - Still to do: the "4K hyper-realistic" visual tier, meaning licensed or scanned models, photo textures, HDRI skies
     and real building footprints.
 - ✅ Races against AI bots: sprint, checkpoint, endurance, time trial, with a countdown, standings and rewards.
-  - Racing real people is roadmap only. It needs a server and anti-cheat; never claim it exists.
+  - Racing real people is roadmap only. It needs anti-cheat; never claim it exists. Since 2026-10-21 there is a
+    live server (`live/`, alpha): accounts, a lobby capped at 25 drivers at a time that grows rung by rung, and
+    other drivers' cars shown as ghosts. That is all it does, and the game says so.
 - ✅ Fake money only (credits earned by driving) to buy cars. More cars and garage slots open with level. One car
   to start.
 - ⬜ Buy houses and park your car there. Fake money, roadmap.
@@ -83,6 +85,15 @@ Built items are marked ✅. Everything else is still to do.
   - simulated crowds
   - never claiming real "live" occupancy or traffic from any website
 - ⬜ City streets beyond the freeways (surface roads, intersections).
+- ✅ (2026-10-21, alpha) The live server: log-ins, 25 drivers at a time to start, the cap raised rung by rung, other
+  drivers on the freeway with you as ghosts. See decision 16.
+- ✅ (2026-10-21) Being there virtually: a Realistic mode (live time, live weather from the NWS, live freeway traffic
+  from TomTom's flow) and a custom mode; venue busyness stays simulated because Google's live data is not available
+  to anyone (decision 17).
+- ✅ (2026-10-21) The talk bank: over 100,000 conversations (173,601 openers, 68.7 million two-line exchanges for a
+  day) from moods and energies, matched to the weather, the freeways, the made-up Coastal League and a hand-written
+  trends list; nothing political. The radio DJs use it now; the on-foot NPCs next.
+- ✅ (2026-10-21) Billboards on the 5, 57, 91 and 22 near the two venues, our own places only until a deal is signed.
 
 ## Rules that always apply
 
@@ -91,7 +102,9 @@ Built items are marked ✅. Everything else is still to do.
 - **Our own brands only.** No Ferrari, Honda, Rolex or Hot Wheels branding, logos or copied designs.
 - **Map data.** Use only OpenStreetMap or Overture data (credit them). Never copy Google Maps.
 - **Honest claims.**
-  - Never claim live data, live weather, multiplayer or live occupancy that doesn't exist.
+  - Never claim live data, live weather, multiplayer or live occupancy that doesn't exist. The live server is an
+    alpha with a cap: say "alpha", say the cap, and say what it doesn't do (no races against people, no chat; the
+    online board ranks only what the server saw while you drove live).
   - Be honest about limits, including what a browser on a phone can do.
 - **Other projects.** Don't modify Trade Crawler, the Los Güeros website at the repo root, or other projects.
 - **Verify everything.**
@@ -107,13 +120,14 @@ Built items are marked ✅. Everything else is still to do.
 - **P2:** difficulty, mini camera, survival scoring, profiles, saves.
 - **P3:** weather, characters, abilities, races, progression, garage.
 - **P4:** Ultra mode, radio, city slice, on foot.
-- **P5:** multiplayer, housing, arcade track, commercial features.
+- **P5:** multiplayer (the live server's first rung is built: accounts, the capped lobby, ghosts), housing,
+  arcade track, commercial features.
 
 P0–P4 core systems are built (see the progress log). Good next steps:
 - performance on real phones
 - painted nails and finer hands
 - tuning ability lengths toward about 5 s
-- LA County
+- every street in Orange County (LA County is stopped)
 - the playable arcade track
 - houses and parking
 - the Golden Road walkable slice
@@ -175,3 +189,10 @@ What that becomes (the plan, the dimension sheet, the numbers and the milestones
   - "Never sold again" is a promise only the owner can keep.
   - Real money stays in test mode. The store (SKU, entitlement, server-assigned serial) belongs to the
     `claude/store` branch; the hypercar branch builds no purchase flow.
+
+## Added 2026-10-20
+
+- **The map is Orange County only.** "put a full stop into the la count and solely focus on the OC map including all
+  freewats, neighborhood streets, roundabouts, etc." Every freeway and expressway in the county, every public street
+  with intersections and signals, roundabouts, malls and their parking structures. LA County and beyond are stopped.
+  Decision 11 in PROJECT_OC_DECISIONS.md.

@@ -3,7 +3,7 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone, launch)
+//                                         progression, render, phone, launch, live, livephone)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -46,7 +46,7 @@ const browser = await chromium.launch({
 });
 
 // a fresh context (empty storage) with these settings saved, loaded to the main menu
-async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
+async function open({ settings = {}, phone = false, size = [1280, 720], loadTimeout = 120000 } = {}) {
   const ctx = await browser.newContext(phone
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }
     : { viewport: { width: size[0], height: size[1] } });
@@ -61,7 +61,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   const t0 = Date.now();
   await page.goto(pathToFileURL(GAME).href);
-  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: loadTimeout });
   const loadS = (Date.now() - t0) / 1000;
   // keep every result the game reports, so checks can read it
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -74,10 +74,10 @@ async function frames(page, n, timeout = 60000) {
   await page.waitForFunction((t) => window.__game.frames >= t, f0 + n, { timeout });
 }
 // start a mode the way a player does: pick it on the menu, tap Drive, wait for the loading screen to go
-async function drive(page, label) {
+async function drive(page, label, timeout = 60000) {
   await page.getByRole('radio', { name: new RegExp(label) }).click();
   await page.getByRole('button', { name: 'Drive', exact: true }).click();
-  await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 60000 });
+  await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout });
 }
 async function group(name, fn) {
   if (only.length && !only.includes(name)) return;
@@ -778,6 +778,22 @@ await group('phone', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'phone-menu.png') });
     expect(await noSideScroll(), 'the page scrolls sideways');
   });
+  // the main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless"): opening a screen changes what the
+  // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are
+  await check('menu: one sheet; the Drive dock stays while its screens change', async () => {
+    await game(page, () => { document.querySelector('.sheet').dataset.k = 'first'; });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.waitForTimeout(400);
+    const r = await game(page, () => ({ same: document.querySelector('.sheet')?.dataset.k === 'first', title: document.querySelector('.sheet-body .panel h2')?.textContent,
+      go: !!document.querySelector('.dock .btn.go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
+    const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
+    expect(r.same && r.title === 'Settings' && r.go && r.here === 'Settings', JSON.stringify(r));
+    expect(drives === 1, `${drives} Drive buttons`);
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();   // the dock's button toggles back
+    await page.waitForTimeout(400);
+    expect(await page.locator('.sheet.home .modes').count() === 1, 'not back on the menu');
+    return `same sheet, dock marks ${r.here}, one Drive button`;
+  });
   await check('profile screen renders', async () => {
     await page.getByRole('button', { name: 'Profile', exact: true }).click();
     await page.waitForTimeout(400);
@@ -806,6 +822,76 @@ await group('phone', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'phone-goto.png') });
     expect(n === 20, `${n} listed`);
     return `${n} listed`;
+  });
+  // the navigation card and the chevrons (U2): picking a freeway in Go to sets a route; on a phone the manoeuvre and the
+  // destination fold into a line each, clear of each other and of the road chip, the destination's time is "at your
+  // pace" and its traffic "simulated", and the chevrons lie on the road. Clear route takes it all away again.
+  await check('Go to: navigation line, destination line and road chevrons; Clear route hides them', async () => {
+    await page.locator('.grid.nav .gcell').filter({ has: page.locator('.shield', { hasText: /^55$/ }) }).filter({ hasText: 'North' }).click();
+    await frames(page, 3);
+    const look = () => game(page, () => {
+      const q = (s) => document.querySelector(s), box = (e) => { if (!e || e.hidden) return null; const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, h: b.height }; };
+      const nav = q('.hud-nav'), dest = q('.hud-dest'), m = window.__game.chevrons.mesh;
+      return { nav: box(nav), dest: box(dest), chip: box(q('.hud-roadname')), navText: nav.hidden ? '' : nav.innerText.replace(/\s+/g, ' '), destText: dest.hidden ? '' : dest.innerText.replace(/\s+/g, ' '),
+        count: m.count, shown: m.visible, w: innerWidth, side: document.documentElement.scrollWidth > innerWidth,
+        clipped: [nav, dest].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };
+    });
+    const r = await look();
+    await page.screenshot({ path: path.join(OUT, 'phone-nav.png') });
+    expect(r.nav && r.dest, `the cards: ${JSON.stringify({ nav: !!r.nav, dest: !!r.dest })}`);
+    expect(/CA-55 North/i.test(r.navText), `the navigation line says "${r.navText}"`);
+    expect(/at your pace/.test(r.destText) && /simulated/.test(r.destText), `the destination line says "${r.destText}"`);
+    expect(r.nav.h <= 44 && r.dest.h <= 40, `not one line each: ${fmt(r.nav.h)} and ${fmt(r.dest.h)} px tall`);
+    const apart = (a, b) => a.r <= b.l || b.r <= a.l || a.b <= b.t || b.b <= a.t;
+    expect(apart(r.nav, r.dest) && apart(r.nav, r.chip) && apart(r.dest, r.chip), `overlap: ${JSON.stringify({ nav: r.nav, dest: r.dest, chip: r.chip })}`);
+    expect(r.nav.l >= 0 && r.nav.r <= r.w && r.dest.l >= 0 && r.dest.r <= r.w && !r.side && !r.clipped, 'a line runs off the screen or is cut short');
+    expect(r.shown && r.count > 20, `${r.count} chevrons, ${r.shown ? 'shown' : 'hidden'}`);
+    await page.getByRole('button', { name: 'Go to' }).click();
+    await page.getByRole('button', { name: 'Clear route', exact: true }).click();
+    await frames(page, 2);
+    const c = await look();
+    expect(!c.nav && !c.dest && !c.shown && c.count === 0, `after Clear route: ${JSON.stringify({ nav: !!c.nav, dest: !!c.dest, chevrons: c.count })}`);
+    await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it
+    return `"${r.navText}" / "${r.destText}"; ${r.count} chevrons; cleared`;
+  });
+  // the adaptive HUD (U1): every style has a status row, a compass and a clock chip whose temperature says it's
+  // simulated. Minimal tucks the top bar and the corner window away after 4 s of just driving, keeps Pause in reach as
+  // a round chip, and a tap on the road brings the rest back.
+  await check('HUD: compass and clock chip; Minimal tucks the bar away after 4 s, Pause stays, a tap brings it back', async () => {
+    await page.keyboard.press('Escape');                                         // close Go to
+    const row = await game(page, () => ({ h: Number(document.querySelector('.hud-tape')?.style.getPropertyValue('--h')), clock: document.querySelector('.hud-clock')?.textContent ?? '' }));
+    // the drive starts on I-405 North through Irvine, which runs northwest
+    expect(row.h > 270 && row.h < 340, `the compass reads ${row.h}° on I-405 North in Irvine`);
+    expect(/\d+° · simulated/.test(row.clock), `the clock chip says "${row.clock}"`);
+    // the Day preset is 12:30 on OC's clock: the chip agrees with the sky, not with this device
+    expect(/12:30 PM/.test(row.clock), `the Day preset's clock chip says "${row.clock}"`);
+    // Live weather with the real feed: the chip shows the observed temperature and names its source
+    // (the setting first: with no server, turning it on loads the simulated day, which the reading then replaces)
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, weather: 'live' }); g.now.snapshot = { ...g.now.snapshot, weather: { source: 'NWS', updated: Date.now(), kind: 'cloudy', text: 'Cloudy', tempF: 61 } }; });
+    await page.waitForFunction(() => /61° · NWS KSNA/.test(document.querySelector('.hud-clock')?.textContent || ''), null, { timeout: 30000 })
+      .catch(async () => { throw new Error('the chip says ' + await page.locator('.hud-clock').innerText()); });
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, weather: 'clear' }); });
+    await game(page, () => window.__game.setPaused(true));
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByRole('group', { name: 'HUD style' }).getByRole('button', { name: 'Minimal' }).click();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    const view = page.getByRole('button', { name: 'View', exact: true }), pause = page.getByRole('button', { name: 'Pause', exact: true });
+    const tucked = () => page.waitForFunction(() => document.querySelector('.app.hud-idle') && [...document.querySelectorAll('.tbar .tbtn')].find((b) => b.textContent === 'View')
+      && getComputedStyle([...document.querySelectorAll('.tbar .tbtn')].find((b) => b.textContent === 'View')).visibility === 'hidden', null, { timeout: 60000, polling: 250 });
+    expect(await view.isVisible(), 'the top bar is not up after Resume');
+    const t0 = Date.now();
+    await tucked();
+    const s = (Date.now() - t0) / 1000;
+    expect(s >= 3, `tucked away after ${fmt(s)} s`);
+    expect(await pause.isVisible(), 'Pause went with the bar');
+    expect(!(await page.locator('.corner').isVisible()), 'the corner window stayed');
+    await page.touchscreen.tap(195, 470);
+    await view.waitFor({ state: 'visible', timeout: 30000 });
+    await tucked();
+    await pause.tap();                                                             // the round chip pauses
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
   });
 });
 
@@ -911,6 +997,22 @@ await group('launch', async (use) => {
     expect(ahead > 430 && ahead < 470, `${fmt(ahead)} m before the sign`);
     return `${exits.length} exits on ${road}; started ${fmt(ahead)} m before "${want.text}"`;
   });
+  await check('a Lot 57 billboard stands on the 57 before the Orangewood exit, and is drawn', async () => {
+    const bb = await game(page, (r) => { const g = window.__game; return g.billboards.children.filter((b) => b.userData.road === r).map((b) => ({ s: b.userData.s, creative: b.userData.creative, ahead: b.userData.s - g.phys.s })); }, road);
+    expect(bb.length === 2, `${bb.length} billboards on ${road}`);
+    const next = bb.filter((b) => b.ahead > 0).sort((a, b) => a.ahead - b.ahead)[0];
+    expect(next, `none ahead: ${JSON.stringify(bb)}`);
+    // drive to about 110 m short of it, brake to a stop (the car would keep rolling while frames render), and look
+    // (braking only while moving: held at a standstill, the automatic gearbox takes the brake as reverse)
+    await game(page, (d) => { const g = window.__game; while (g.phys.s < d - 110) g.fastForward(0.25, {}, 20); for (let i = 0; i < 40 && g.phys.vx > 0.3; i++) g.fastForward(0.1, { throttle: 0, brake: 1 }); Object.assign(g.input.c, { brake: 0 }); }, next.s);
+    await game(page, () => window.__game.setCam('hood'));
+    await frames(page, 3);
+    await page.screenshot({ path: path.join(OUT, 'launch-billboard.png') });
+    const s = await game(page, () => window.__game.phys.s);
+    await game(page, () => { Object.assign(window.__game.input.c, { brake: 0 }); });
+    expect(next.s - s > 40 && next.s - s < 160, `${fmt(next.s - s)} m short of the sign`);
+    return `${next.creative} billboard ${fmt(next.ahead)} m ahead at the start; screenshot launch-billboard.png from ${fmt(next.s - s)} m`;
+  });
   await check('Clear Path with no traffic says so and keeps its charge', async () => {
     const r = await game(page, () => {
       const g = window.__game;
@@ -929,7 +1031,7 @@ await group('launch', async (use) => {
     await page.getByRole('button', { name: 'Feedback', exact: true }).click();
     const text = await page.locator('textarea.report').inputValue();
     await page.screenshot({ path: path.join(OUT, 'launch-feedback.png') });
-    for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road]) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
+    for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road, 'Live: off']) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
     // the game is "OC Ultra" (owner, 2026-10-16): the report's first line names it
     expect(/^OC Ultra \S+ · feedback report/.test(text), `the report starts "${text.split('\n')[0]}"`);
     await page.getByRole('button', { name: 'Copy', exact: true }).click();
@@ -1023,6 +1125,370 @@ await group('launch', async (use) => {
     await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
     return `"${job}"; sign ${e.text} ${(e.ahead / 1609.344).toFixed(1)} mi ahead; HUD "${hudNext}"; time-out calls it off; the ramp delivered it, +${Math.round(after.credits - c0)} credits`;
   });
+});
+
+// the live server (live/server.mjs): three signed-in browsers against a cap of two. The third waits in line and is
+// let in when one leaves; the first sees the second's car on the road.
+await group('live', async (use) => {
+  const { spawn } = await import('node:child_process');
+  const { rmSync } = await import('node:fs');
+  const port = 21000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
+  const db = path.join(OUT, 'live-test.db');
+  for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock', MAIL_MODE: 'log' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  let serverLog = '';
+  server.stdout.on('data', (d) => { serverLog += d; });
+  await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
+  const signup = async (name) => { const r = await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) }); expect(r.ok, `sign-up ${r.status}`); return (await r.json()).token; };
+  const extra = [];
+  try {
+    const tokens = { a: await signup('live_a'), b: await signup('live_b'), c: await signup('live_c') };
+    const settings = { live: true, liveUrl: base, start: 'I-405 North', density: 'none' };
+    const { page: A } = await use({ settings });
+    const step = (m) => process.stderr.write(`    · ${m} (${((Date.now() - t0) / 1000).toFixed(0)} s)\n`), t0 = Date.now();
+    // the second and third browsers open only when their checks need them: three software-rendered pages at once
+    // starve each other here
+    let B, C;
+    const signIn = (page, t, name) => page.evaluate(([t, n]) => { localStorage.setItem('tsu.live.token', t); localStorage.setItem('tsu.live.name', n); }, [t, name]);
+    const status = (page) => game(page, () => ({ ...window.__game.live?.info, peers: window.__game.stats.livePeers, drawn: window.__game.stats.liveDrawn }));
+    const until = async (page, fn, what, timeout = 30000) => { await page.waitForFunction(fn, null, { timeout }).catch(() => { throw new Error(`timed out waiting for ${what}`); }); };
+    await check('the menu shows the Live section with the account and the toggle; the account panel has the form', async () => {
+      const sec = await A.locator('.live-sec').innerText();
+      expect(/Not signed in/.test(sec) && /Drive live/.test(sec), sec.replace(/\s+/g, ' ').slice(0, 120));
+      step('menu read');
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.waitForSelector('#live-name');
+      step('account panel open');
+      await A.screenshot({ path: path.join(OUT, 'live-account.png') });
+      step('screenshot taken');
+      const names = await A.locator('input').evaluateAll((els) => els.map((e) => e.id));
+      expect(names.includes('live-name') && names.includes('live-pw') && names.includes('live-email'), names.join(','));
+      await A.getByRole('button', { name: 'Back', exact: true }).click();
+      return 'account panel: sign up form with name, password, email, age gate';
+    });
+    await check('the menu says how many are driving live right now', async () => {
+      await A.waitForFunction(() => /\d+ of 2 driving now/.test(document.querySelector('.live-sec .sect')?.textContent || ''), null, { timeout: 30000 });
+      return (await A.locator('.live-sec .sect').innerText()).replace(/\s+/g, ' ');
+    });
+    await check('signing up from the page itself works and the menu shows the name', async () => {
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.locator('#live-name').fill('live_ui');
+      await A.locator('#live-pw').fill('a long enough password');
+      await A.locator('label.check input').check();
+      await A.getByRole('button', { name: 'Create account', exact: true }).click();
+      await A.waitForSelector('.name-static', { timeout: 15000 });
+      await A.getByRole('button', { name: 'Done', exact: true }).click();
+      const sec = await A.locator('.live-sec').innerText();
+      expect(/live_ui/.test(sec), sec.replace(/\s+/g, ' ').slice(0, 120));
+      return 'signed up as live_ui from the panel';
+    });
+    await check('two drivers are online under the cap of 2, and each sees the other', async () => {
+      await drive(A, 'Free Drive');
+      await until(A, () => window.__game.live?.info.status === 'online', 'A online');
+      step('A is driving live');
+      B = await open({ settings }); extra.push(B);
+      await signIn(B.page, tokens.b, 'live_b'); B = B.page;
+      await drive(B, 'Free Drive');
+      await until(B, () => window.__game.live?.info.status === 'online', 'B online');
+      step('B is driving live');
+      await until(A, () => window.__game.live?.info.online === 2 && window.__game.stats.livePeers === 1, 'A to see 2 online and 1 peer');
+      // B's poses go out from its frame loop at 10 Hz; A draws B once a pose arrived
+      await game(B, () => window.__game.fastForward(2, { throttle: 1 }));
+      await frames(B, 3);
+      await until(A, () => window.__game.stats.liveDrawn === 1, 'A to draw B\'s car', 60000);
+      step('A draws B');
+      const sa = await status(A), sb = await status(B);
+      expect(sa.cap === 2 && sb.cap === 2 && sb.peers === 1, JSON.stringify({ sa, sb }));
+      const chip = await A.locator('.livechip').innerText();
+      expect(chip.toLowerCase() === 'live 2/2', `the chip says "${chip}"`);
+      await game(A, () => window.__game.setCam('chase'));
+      await frames(A, 2);
+      await A.screenshot({ path: path.join(OUT, 'live-ghost.png') });
+      const plates = await game(A, () => window.__game.stats.livePlates);
+      expect(plates === 1, `${plates} name plates`);
+      return `A: ${sa.online}/${sa.cap} online, ${sa.peers} peer, ${sa.drawn} drawn, ${plates} plate; chip "${chip}"`;
+    });
+    await check('the chip lists who is driving and where; Drive with puts A 80 m behind B on B\'s freeway', async () => {
+      // B's road reaches A through the roster (every 2 s) or the live pose
+      await A.waitForFunction(() => window.__game.liveRoad([...window.__game.live.peers.keys()][0]) !== '', null, { timeout: 30000 });
+      await A.locator('.livechip').click();
+      await A.waitForSelector('.livewho');
+      const text = (await A.locator('.livewho').innerText()).replace(/\s+/g, ' ');
+      await A.screenshot({ path: path.join(OUT, 'live-who.png') });
+      expect(/live_ui you/i.test(text) && /live_b/i.test(text) && /Drive with/i.test(text), text);
+      const bRoad = await game(B, () => window.__game.path.label);
+      expect(text.includes(bRoad), `the list doesn't say B is on ${bRoad}: ${text}`);
+      await A.getByRole('button', { name: 'Drive with', exact: true }).click();
+      const r = await game(A, () => { const g = window.__game, id = [...g.live.peers.keys()][0], p = g.live.peers.get(id), at = g.live.whereIs(p, performance.now()); return { road: g.path.label, gap: Math.hypot(at.x - g.phys.x, at.z - g.phys.z) }; });
+      expect(r.road === bRoad && r.gap > 50 && r.gap < 130, JSON.stringify(r));
+      // B honks: A, 80 m behind, hears it
+      const h0 = await game(A, () => window.__game.honks);
+      await B.getByRole('button', { name: 'Honk (G)' }).click();
+      await A.waitForFunction((n) => window.__game.honks > n, h0, { timeout: 20000 }).catch(() => { throw new Error('A never heard B honk'); });
+      return `list: "${text.slice(0, 90)}"; A now on ${r.road}, ${fmt(r.gap)} m behind B; A heard B honk`;
+    });
+    await check('a third driver waits in line (#1) and is let in when one leaves; the counts follow', async () => {
+      C = await open({ settings, loadTimeout: 400000 }); extra.push(C);
+      await signIn(C.page, tokens.c, 'live_c'); C = C.page;
+      await drive(C, 'Free Drive', 240000);
+      step('C asked to drive');
+      await until(C, () => window.__game.live?.info.status === 'queued' && window.__game.live.info.position === 1, 'C queued at #1');
+      const chip = await C.locator('.livechip').innerText();
+      expect(chip.toLowerCase() === 'in line #1', `the chip says "${chip}"`);
+      const h1 = await (await fetch(base + '/health')).json();
+      expect(h1.online === 2 && h1.queued === 1, JSON.stringify(h1));
+      // B goes back to the main menu: its slot frees and C is let in
+      await B.getByRole('button', { name: 'Pause', exact: true }).click();
+      await B.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await until(C, () => window.__game.live?.info.status === 'online', 'C online after B left');
+      await until(A, () => window.__game.live?.info.online === 2, 'A to still count 2 online');
+      const h2 = await (await fetch(base + '/health')).json();
+      expect(h2.online === 2 && h2.queued === 0 && h2.peak === 2, JSON.stringify(h2));
+      const sb = await game(B, () => window.__game.live);
+      expect(sb === null, 'B still holds a live client at the menu');
+      return `C was #${1} in line, then online; server peak ${h2.peak}, admitted ${h2.admitted}, poses in ${h2.posesIn}, dropped ${h2.posesDropped}`;
+    });
+    await check('the server refuses a pose faster than any car and keeps the last good one', async () => {
+      const h0 = await (await fetch(base + '/health')).json();
+      // straight at the socket, past the client's own rounding: 1,118 mph and a NaN
+      await game(A, () => { const ws = window.__game.live['ws']; ws.send(JSON.stringify({ t: 's', x: 0, y: 0, z: 0, h: 0, v: 500 })); ws.send(JSON.stringify({ t: 's', x: 'no', y: 0, z: 0, h: 0, v: 1 })); });
+      await new Promise((r) => setTimeout(r, 300));
+      const h1 = await (await fetch(base + '/health')).json();
+      expect(h1.posesDropped - h0.posesDropped === 2, `${h1.posesDropped - h0.posesDropped} dropped`);
+      return `2 bad poses dropped (${h1.posesDropped} in all)`;
+    });
+    await check('realistic mode: Live traffic and Live weather follow the server\'s feed, and the HUD says where it comes from', async () => {
+      await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'live', weather: 'live' }); });
+      await until(A, () => window.__game.now.source === 'server' && window.__game.now.snapshot.traffic.source === 'mock', 'the feed from the server', 90000)
+        .catch(async (e) => { const st = await game(A, () => { const n = window.__game.now; return { source: n.source, running: n.running, base: n.base, traffic: n.snapshot.traffic.source }; }); throw new Error(`${e.message}: ${JSON.stringify(st)}`); });
+      // the traffic line lives on the destination card, which shows only with a route
+      await game(A, () => { window.__game.navigateTo('CA-55 North'); window.__game.fastForward(3); });
+      await frames(A, 3);
+      const r = await game(A, () => { const g = window.__game; const road = g.path.main ? g.path.label : g.settings.start; return { road, ratio: g.now.ratioFor(road), level: g.traffic.level, weather: g.now.snapshot.weather, note: document.querySelector('.dest-traffic em')?.textContent, label: document.querySelector('.dest-traffic b')?.textContent, roads: Object.keys(g.now.snapshot.traffic.roads).length }; });
+      expect(r.roads === 20, `${r.roads} roads in the feed`);
+      expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 1.2 && r.level.perKmLane <= 3.5 && r.level.bold === 0, JSON.stringify(r));
+      // the density follows this road's ratio exactly (the mapping in src/live/now.ts), kept light while driving live
+      // (lightForLive in src/game/settings.ts: 2.2 to 9.5 cars/km/lane becomes 1.2 to 3.5)
+      const full = Math.round((r.ratio >= 0.95 ? 2.2 : r.ratio >= 0.8 ? 2.2 + ((0.95 - r.ratio) / 0.15) * 2.8 : r.ratio >= 0.6 ? 5 + ((0.8 - r.ratio) / 0.2) * 4 : r.ratio >= 0.45 ? 9 + ((0.6 - r.ratio) / 0.15) * 0.5 : 9.5) * 10) / 10;
+      const want = 1.2 + Math.max(0, Math.min(1, (full - 2.2) / 7.3)) * 2.3;
+      expect(Math.abs(r.level.perKmLane - Math.round(want * 10) / 10) < 0.11, `ratio ${r.ratio} should give ${want.toFixed(1)} cars/km/lane, got ${r.level.perKmLane}`);
+      // the mock feed stands in for a real one on the server; the player is told it is simulated, and that it's kept light
+      expect(/simulated/.test(r.note || '') && /light while live/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
+      // a preset is capped at Light while live, and comes back when live is off
+      const heavy = await game(A, () => { const g = window.__game, c = g.live; g.updateSettings({ ...g.settings, density: 'heavy' }); const on = { ...g.traffic.level }; g.setLive(null); const off = { ...g.traffic.level }; g.setLive(c); return { on, off, back: { ...g.traffic.level } }; });
+      expect(heavy.on.perKmLane === 2.2 && heavy.on.bold === 0 && heavy.off.perKmLane === 9 && heavy.back.perKmLane === 2.2, JSON.stringify(heavy));
+      expect(['clear', 'cloudy', 'rain', 'fog', 'mist'].includes(r.weather.kind), JSON.stringify(r.weather));
+      await game(A, () => { const g = window.__game; g.navigateTo(null); g.updateSettings({ ...g.settings, density: 'moderate', weather: 'clear' }); });
+      return `${r.road}: ratio ${r.ratio} → ${r.level.perKmLane} cars/km/lane, bold ${r.level.bold}; weather ${r.weather.kind} ${r.weather.tempF}°F (${r.weather.source}); HUD "${r.label} · ${r.note}"; Heavy while live ${heavy.on.perKmLane}, off ${heavy.off.perKmLane}`;
+    });
+    await check('the billboards stand on their freeways near the two venues (our own places only)', async () => {
+      const b = await game(A, () => window.__game.billboards.children.map((g) => ({ road: g.userData.road, s: Math.round(g.userData.s), creative: g.userData.creative })));
+      expect(b.length === 12, `${b.length} billboards placed of 12 slots`);
+      const roads = new Set(b.map((x) => x.road));
+      expect(roads.has('CA-57 North') && roads.has('I-5 South') && roads.has('CA-91 East') && roads.has('CA-22 West'), [...roads].join(', '));
+      expect(b.every((x) => x.creative === 'lot57' || x.creative === 'dugout'), 'only our own creatives');
+      return b.map((x) => `${x.road} @ ${(x.s / 1000).toFixed(1)} km ${x.creative}`).join('; ');
+    });
+    await check('the account panel changes the password and deletes the account, and the server agrees', async () => {
+      await game(A, () => window.__game.setPaused(true));
+      const line = (await A.locator('.live-line').innerText()).replace(/\s+/g, ' ');
+      expect(/Live: \d+ of 2 driving/.test(line), `the pause screen says "${line}"`);
+      // and where you stand on today's online board, from the server
+      await A.waitForSelector('.board-line', { timeout: 20000 });
+      const standing = (await A.locator('.board-line').innerText()).replace(/\s+/g, ' ');
+      expect(/online board: #\d+ for distance \(\d/.test(standing), standing);
+      await A.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.locator('summary', { hasText: 'Change password' }).click();
+      await A.locator('#live-cur').fill('a long enough password');
+      await A.locator('#live-new').fill('an even longer password');
+      await A.getByRole('button', { name: 'Change password', exact: true }).click();
+      await A.waitForFunction(() => !document.querySelector('.acct-more form button[disabled]'), null, { timeout: 15000 });
+      const login = async (pw) => (await fetch(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_ui', password: pw }) })).status;
+      expect(await login('an even longer password') === 200 && await login('a long enough password') === 401, 'the new password works and the old one doesn\'t');
+      await A.locator('summary', { hasText: 'Delete account' }).click();
+      await A.locator('#live-del').fill('an even longer password');
+      await A.screenshot({ path: path.join(OUT, 'live-account-signed-in.png') });
+      await A.getByRole('button', { name: 'Delete my account', exact: true }).click();
+      await A.waitForSelector('#live-name', { timeout: 15000 });          // back to the sign-up form
+      expect(await login('an even longer password') === 401, 'the account still logs in');
+      return `pause: "${standing}"; password changed, then the account deleted; the panel is back to sign-up`;
+    });
+    await check('the online board: the menu opens it, and it lists what the server saw (the deleted account is gone)', async () => {
+      await A.getByRole('button', { name: 'Back', exact: true }).first().click();          // the signed-out account panel
+      const api = await (await fetch(base + '/api/board')).json();
+      expect(api.distance.length >= 1, `nobody on the server's board: ${JSON.stringify(api)}`);
+      expect(!api.distance.some((r) => r.name === 'live_ui'), 'the deleted account is still listed');
+      await A.locator('.pick', { hasText: 'Online board' }).click();
+      try {
+        // the panel shows its loading bar until the first answer, never a false "nobody yet"
+        await A.waitForSelector('.board ol li, .board .muted, .board .bad', { timeout: 30000 });
+        const shown = await A.evaluate(() => [...document.querySelectorAll('.board ol li span')].map((e) => e.textContent));
+        await A.screenshot({ path: path.join(OUT, 'live-online-board.png') });
+        expect(api.distance.every((r) => shown.includes(r.name)) && shown.length >= 1, `panel ${JSON.stringify(shown)} vs server ${JSON.stringify(api.distance)}`);
+      } finally {
+        await A.getByRole('button', { name: 'Done', exact: true }).first().click();
+        await A.locator('.pick', { hasText: 'Account' }).click();            // the next check starts on the account panel
+      }
+      return `distance today: ${api.distance.map((r) => `${r.name} ${r.value} m`).join(', ')}; top speed: ${api.speed.map((r) => `${r.name} ${r.value} m/s`).join(', ') || 'none held 3 s'}`;
+    });
+    await check('forgot password: the panel asks for a code, the emailed code sets a new password and signs in', async () => {
+      await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_reset', password: 'the first password', email: 'reset@example.com', over13: true }) });
+      await A.getByRole('button', { name: 'Log in', exact: true }).first().click();
+      await A.getByRole('button', { name: 'Forgot password?', exact: true }).click();
+      await A.locator('#live-rname').fill('live_reset');
+      await A.getByRole('button', { name: 'Email me a code', exact: true }).click();
+      await A.waitForSelector('#live-code', { timeout: 15000 });
+      const code = [...serverLog.matchAll(/"ev":"mail".*?is (\d{6})\./g)].at(-1)?.[1];
+      expect(/^\d{6}$/.test(code || ''), 'no code in the server log');
+      await A.locator('#live-code').fill(code);
+      await A.locator('#live-npw').fill('the second password');
+      await A.screenshot({ path: path.join(OUT, 'live-reset.png') });
+      await A.getByRole('button', { name: 'Set new password', exact: true }).click();
+      await A.waitForSelector('.name-static', { timeout: 15000 });
+      const who = await A.locator('.name-static').innerText();
+      const login = (await fetch(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_reset', password: 'the second password' }) })).status;
+      expect(who === 'live_reset' && login === 200, `${who}, log-in ${login}`);
+      return `code ${code.replace(/\d/g, '•')} from the mail log; signed in as ${who}; the new password logs in`;
+    });
+  } finally {
+    for (const h of extra) await h.ctx.close();
+    server.kill('SIGTERM');
+  }
+});
+
+// the live UI at phone size (390 × 844): the menu's Live section, the account panel, the top bar with the chip and the
+// horn, and the who's-on list, with a scripted peer (a plain socket, no second browser) driving nearby
+await group('livephone', async (use) => {
+  const { spawn } = await import('node:child_process');
+  const { rmSync } = await import('node:fs');
+  const port = 31000 + Math.floor(Math.random() * 5000), base = `http://127.0.0.1:${port}`;
+  const db = path.join(OUT, 'livephone-test.db');
+  for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '25', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db }, stdio: ['ignore', 'pipe', 'inherit'] });
+  await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
+  const signup = async (name) => (await (await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) })).json()).token;
+  let peer = null, ticker = null, me = null;
+  try {
+    const [tPhone, tPeer] = [await signup('phone_me'), await signup('Westbound_GT')];
+    void tPhone;
+    const { page } = await use({ phone: true, settings: { live: true, liveUrl: base, start: 'I-405 North', density: 'none' } });
+    // log in through the panel (a reload would lose localStorage: Chromium's phone emulation drops a file:// page's
+    // storage on reload, which a real phone loading the game over https doesn't)
+    await page.locator('.pick', { hasText: 'Account' }).click();
+    await page.getByRole('button', { name: 'Log in', exact: true }).first().click();
+    await page.locator('#live-name').fill('phone_me');
+    await page.locator('#live-pw').fill('correct horse battery');
+    await page.locator('form button[type="submit"]').click();
+    await page.waitForSelector('.name-static', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    const fits = async (sel) => page.evaluate((s) => { const els = [...document.querySelectorAll(s)]; return els.every((e) => { const r = e.getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1; }); }, sel);
+    await check('phone: the Live section fits and shows the count', async () => {
+      await page.locator('.live-sec').scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => /driving now/.test(document.querySelector('.live-sec .sect')?.textContent || ''), null, { timeout: 40000 });
+      await page.screenshot({ path: path.join(OUT, 'livephone-menu.png') });
+      expect(await fits('.live-sec, .live-sec *'), 'something in the Live section runs off the screen');
+      return (await page.locator('.live-sec .sect').innerText()).replace(/\s+/g, ' ');
+    });
+    await check('phone: the account panel fits', async () => {
+      await page.locator('.pick', { hasText: 'Account' }).click();
+      await page.waitForSelector('.name-static');
+      await page.locator('summary', { hasText: 'Email for password reset' }).click();
+      await page.screenshot({ path: path.join(OUT, 'livephone-account.png'), fullPage: false });
+      expect(await fits('.panel input, .panel .btn, .acct-more'), 'the account panel runs off the screen');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      return 'signed in, the email setting open, nothing off screen';
+    });
+    await check('phone: the top bar holds the chip and the horn without crowding; the who\'s-on list fits', async () => {
+      await drive(page, 'Free Drive');
+      await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
+      // the scripted peer: online, 60 m ahead on the same road, sending poses at 10 Hz
+      me = await game(page, () => { const g = window.__game, p = g.path.at(g.phys.s + 60, g.path.laneCenter(1)); return { x: p.x, y: p.y, z: p.z, h: p.h }; });
+      peer = new WebSocket(base.replace('http', 'ws') + '/ws');
+      await new Promise((r) => peer.addEventListener('open', r));
+      peer.send(JSON.stringify({ t: 'hello', token: tPeer, car: 'rossini-gt', paint: 0x1d4f9c }));
+      ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0 })), 100);
+      await page.waitForFunction(() => window.__game.stats.liveDrawn === 1, null, { timeout: 60000 });
+      await frames(page, 3);
+      const bar = await page.evaluate(() => { const b = document.querySelector('.tbar').getBoundingClientRect(), kids = [...document.querySelectorAll('.tbar > *')].map((e) => e.getBoundingClientRect()), map = document.querySelector('.corner')?.getBoundingClientRect(); return { left: b.left, right: b.right, bottom: b.bottom, mapTop: map ? map.top : 9999, w: innerWidth, tall: kids.some((k) => k.height > 46), overlap: kids.some((a, i) => kids.some((c, j) => j > i && a.right > c.left + 1 && a.left < c.right - 1 && a.bottom > c.top && a.top < c.bottom)), n: kids.length }; });
+      await page.screenshot({ path: path.join(OUT, 'livephone-drive.png') });
+      expect(bar.left >= 0 && bar.right <= bar.w + 1 && !bar.overlap && !bar.tall && bar.bottom <= bar.mapTop + 1, JSON.stringify(bar));
+      await page.locator('.livechip').click();
+      await page.waitForSelector('.livewho');
+      await page.screenshot({ path: path.join(OUT, 'livephone-who.png') });
+      expect(await fits('.livewho, .livewho *'), 'the who\'s-on list runs off the screen');
+      const text = (await page.locator('.livewho').innerText()).replace(/\s+/g, ' ');
+      expect(/Westbound_GT/.test(text), text);
+      return `top bar ${Math.round(bar.right - bar.left)} px of ${bar.w}, ${bar.n} items, no overlap; list "${text.slice(0, 80)}"`;
+    });
+    await check('phone: at night a ghost car shows its lamps, and its tail lamps brighten when that driver brakes', async () => {
+      await page.locator('.livechip').click().catch(() => {});                       // close the who's-on list
+      await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, time: 'night' }); g.setCam('chase'); });
+      clearInterval(ticker);
+      ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0, b: 1 })), 100);
+      await page.waitForFunction(() => window.__game.liveCars.tail.instanceColor.getX(0) > 3, null, { timeout: 30000 });
+      // the sky eases into night: wait for the dark before the picture
+      await page.waitForFunction(() => window.__game.env.daylight < 0.15, null, { timeout: 120000 });
+      await frames(page, 3);
+      await page.screenshot({ path: path.join(OUT, 'livephone-night-ghost.png') });
+      const r = await game(page, () => { const lc = window.__game.liveCars; return { head: lc.head.count, tail: lc.tail.count, brake: lc.tail.instanceColor.getX(0) }; });
+      expect(r.head === 1 && r.tail === 1 && r.brake > 3, JSON.stringify(r));
+      await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, time: 'day' }); g.setCam('cockpit'); });
+      return `1 ghost with head and tail lamps; brake lamp ${r.brake}`;
+    });
+    await check('phone: a crew code hides drivers outside the crew, and the invite carries it', async () => {
+      await game(page, () => window.__game.setPaused(true));
+      await page.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await page.locator('#crew').fill('oc405');
+      expect(await game(page, () => window.__game.settings?.crew ?? JSON.parse(localStorage.getItem('tsu.settings')).crew) === 'OC405', 'the crew setting');
+      await drive(page, 'Free Drive');
+      await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
+      await page.waitForTimeout(2500);
+      const seen = await game(page, () => ({ peers: window.__game.stats.livePeers, drawn: window.__game.stats.liveDrawn }));
+      expect(seen.peers === 0 && seen.drawn === 0, `the peer outside the crew is still seen: ${JSON.stringify(seen)}`);
+      await page.locator('.livechip').click();
+      const head = (await page.locator('.livewho .eyebrow').innerText()).replace(/\s+/g, ' ');
+      expect(/Crew OC405 · 1 here · 2 of 25 live/i.test(head), head);
+      return `"${head}"; the outside peer is hidden`;
+    });
+    await check('phone: an invite link greets a first-time player once, and Sign up opens the account panel', async () => {
+      // the first phone is still driving: pause it so this one gets the CPU
+      await game(page, () => window.__game.setPaused(true));
+      const { ctx: c2, page: p2 } = await open({ phone: true, settings: { liveUrl: base } });
+      try {
+        await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
+        await p2.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+        // the first phone is still driving; bring this one forward so its frames (and Playwright's checks) run
+        await p2.bringToFront();
+        // poll from here: on this loaded machine the second phone's in-page waits (rAF or timers) stall even while
+        // its page answers evaluate() at once
+        const shown = async () => p2.evaluate(() => { const r = document.querySelector('.welcome')?.getBoundingClientRect(); return !!r && r.width > 0 && r.height > 0; });
+        for (let t = Date.now(); !(await shown()); await new Promise((r) => setTimeout(r, 500))) {
+          if (Date.now() - t > 30000) {
+            const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className) }));
+            throw new Error(`no welcome card: ${JSON.stringify(st)}`);
+          }
+        }
+        const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
+        await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
+        expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
+        // the card sits on top of the menu: a tap on its button lands on the button, not on the menu under it
+        const onTop = await p2.evaluate(() => { const b = [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)), r = b.getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === b; });
+        expect(onTop, 'the menu covers the welcome card');
+        // tap it in the page (the check above proves a real tap lands on it)
+        await p2.evaluate(() => [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)).click());
+        for (let t = Date.now(); !(await p2.evaluate(() => !!document.querySelector('#live-name'))); await new Promise((r) => setTimeout(r, 500))) {
+          if (Date.now() - t > 15000) throw new Error('Sign up did not open the account panel');
+        }
+        const crew = await p2.evaluate(() => JSON.parse(localStorage.getItem('tsu.settings')).crew);
+        expect(crew === 'WXYZ' && !(await p2.locator('.welcome').count()), `crew ${crew}; the card still shows`);
+        return `"${text.slice(0, 70)}…"; Sign up opened the panel; crew set to ${crew}`;
+      } finally { await c2.close(); }
+    });
+  } finally {
+    clearInterval(ticker); try { peer?.close(); } catch { /* gone */ }
+    server.kill('SIGTERM');
+  }
 });
 
 await browser.close();

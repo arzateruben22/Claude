@@ -4,11 +4,12 @@ export const VERSION = '0.1.0';   // keep in step with package.json; shown in fe
 
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
 export type Mode = 'free' | 'survival' | 'race' | 'time';
-export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
+export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert' | 'live';
 export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
-export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
+export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing' | 'live';
 export type Transmission = 'auto' | 'manual';
+export type HudStyle = 'modern' | 'minimal';
 
 export type Look = 'ultra' | 'hd';
 export interface Settings {
@@ -45,6 +46,10 @@ export interface Settings {
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
+  hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
+  live: boolean;            // drive on the live server (other drivers' cars appear; the server caps how many at once)
+  liveUrl: string;          // the live server's address; '' means the page's own host when the server serves the page
+  crew: string;             // a crew code (4 to 8 letters or numbers): drive live with friends in a room of your own; '' is everyone
 }
 
 export interface QualityPreset {
@@ -76,7 +81,17 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
   moderate: { label: 'Moderate', perKmLane: 5,   bold: 0.04 },
   heavy:    { label: 'Heavy',    perKmLane: 9,   bold: 0.08 },
   expert:   { label: 'Expert',   perKmLane: 9.5, bold: 0.45 },
+  live:     { label: 'Live',     perKmLane: 5,   bold: 0.04 },   // follows the freeway's real flow from the live server's feed (simulated when there is none); src/live/now.ts
 };
+
+// while you drive live the computer cars stay light: the other people are the traffic, they're easier to pick out,
+// and a phone keeps its frames for them. A preset is capped at Light; the live feed keeps its rush hour, scaled into
+// 1.2 to 3.5 cars per km per lane. No aggressive drivers either way.
+export function lightForLive(l: { perKmLane: number; bold: number }, feed: boolean): { perKmLane: number; bold: number } {
+  if (!feed) return { perKmLane: Math.min(l.perKmLane, DENSITY.light.perKmLane), bold: 0 };
+  const t = Math.max(0, Math.min(1, (l.perKmLane - 2.2) / 7.3));
+  return { perKmLane: Math.round((1.2 + t * 2.3) * 10) / 10, bold: 0 };
+}
 
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
   free:     { label: 'Free Drive',     blurb: 'All of Orange County\'s freeways, no clock. Take any interchange.' },
@@ -114,6 +129,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
+    hudStyle: 'modern', live: false, liveUrl: '', crew: '',
   };
 }
 
@@ -147,7 +163,7 @@ function readSettings(): Settings {
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
       exit: typeof v.exit === 'string' ? v.exit : '',
       time: (['live', 'sunrise', 'day', 'sunset', 'night'] as const).includes(v.time as TimeOfDay) ? v.time! : d.time,
-      weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
+      weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing', 'live'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
@@ -158,6 +174,10 @@ function readSettings(): Settings {
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
+      hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
+      live: v.live === true,
+      liveUrl: typeof v.liveUrl === 'string' ? v.liveUrl.slice(0, 200) : '',
+      crew: typeof v.crew === 'string' && /^[A-Za-z0-9]{4,8}$/.test(v.crew) ? v.crew.toUpperCase() : '',
     };
   } catch { return d; }
 }

@@ -1,0 +1,125 @@
+{
+ "note": "One sample point per carriageway (its midpoint), lat/lon, for the traffic flow feed. Made from src/data/oc-network.json by the one-liner in live/README.md.",
+ "points": [
+  {
+   "label": "I-5 North",
+   "name": "Santa Ana Freeway",
+   "lat": 33.64987,
+   "lon": -117.73905
+  },
+  {
+   "label": "I-5 South",
+   "name": "Santa Ana Freeway",
+   "lat": 33.65697,
+   "lon": -117.74513
+  },
+  {
+   "label": "I-405 North",
+   "name": "San Diego Freeway",
+   "lat": 33.72366,
+   "lon": -117.97617
+  },
+  {
+   "label": "I-405 South",
+   "name": "San Diego Freeway",
+   "lat": 33.72252,
+   "lon": -117.97524
+  },
+  {
+   "label": "CA-91 East",
+   "name": "Riverside Freeway",
+   "lat": 33.87081,
+   "lon": -117.73964
+  },
+  {
+   "label": "CA-91 West",
+   "name": "Riverside Freeway",
+   "lat": 33.87125,
+   "lon": -117.7417
+  },
+  {
+   "label": "CA-55 North",
+   "name": "Costa Mesa Freeway",
+   "lat": 33.74493,
+   "lon": -117.83325
+  },
+  {
+   "label": "CA-55 South",
+   "name": "Costa Mesa Freeway",
+   "lat": 33.74439,
+   "lon": -117.83367
+  },
+  {
+   "label": "CA-57 North",
+   "name": "Orange Freeway",
+   "lat": 33.89717,
+   "lon": -117.88086
+  },
+  {
+   "label": "CA-57 South",
+   "name": "Orange Freeway",
+   "lat": 33.89882,
+   "lon": -117.88124
+  },
+  {
+   "label": "CA-22 East",
+   "name": "Garden Grove Freeway",
+   "lat": 33.76589,
+   "lon": -117.94314
+  },
+  {
+   "label": "CA-22 West",
+   "name": "Garden Grove Freeway",
+   "lat": 33.7661,
+   "lon": -117.94304
+  },
+  {
+   "label": "CA-73 North",
+   "name": "San Joaquin Hills Toll Road",
+   "lat": 33.60214,
+   "lon": -117.78263
+  },
+  {
+   "label": "CA-73 South",
+   "name": "San Joaquin Hills Toll Road",
+   "lat": 33.60431,
+   "lon": -117.79393
+  },
+  {
+   "label": "CA-133 North",
+   "name": "Laguna Freeway",
+   "lat": 33.67179,
+   "lon": -117.75331
+  },
+  {
+   "label": "CA-133 South",
+   "name": "Laguna Freeway",
+   "lat": 33.67014,
+   "lon": -117.75363
+  },
+  {
+   "label": "CA-241 North",
+   "name": "Foothill Toll Road",
+   "lat": 33.73267,
+   "lon": -117.71813
+  },
+  {
+   "label": "CA-241 South",
+   "name": "Foothill Toll Road",
+   "lat": 33.71222,
+   "lon": -117.7206
+  },
+  {
+   "label": "CA-261 North",
+   "name": "Eastern Toll Road",
+   "lat": 33.75755,
+   "lon": -117.76208
+  },
+  {
+   "label": "CA-261 South",
+   "name": "Eastern Toll Road",
+   "lat": 33.75481,
+   "lon": -117.76381
+  }
+ ]
+}

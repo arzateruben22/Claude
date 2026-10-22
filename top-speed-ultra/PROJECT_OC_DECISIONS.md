@@ -1,0 +1,252 @@
+# Project OC: decisions
+
+The owner's answers to the open decisions, each with the facts it was made on, so a later session never re-opens
+a settled question without a reason. Newest decisions at the end of each section. Dates are Pacific.
+
+## 2026-10-18: the hypercar, the store, the names, the engine, the pushes
+
+Walked through one at a time in the Fable 5.1 session of 2026-10-18 (the F6 prompt in PROJECT_OC_HANDOFF.md).
+
+### 1. The hypercar's roof
+
+- Pending.
+
+### 2. What "never sold again" covers after December 31, 2026
+
+- Pending.
+
+### 3. Ground Lock on launch until all-wheel drive exists
+
+- Pending.
+
+### 4. Free Drive's credit earnings for the hypercar
+
+- Pending.
+
+### 5. Owner mode in public builds
+
+- Pending.
+
+### 6. The founder windows if the launch calendar moves
+
+- Pending.
+
+### 7. The names: Rossini, Vela and the in-game watches
+
+- Pending.
+
+### 8. The Unreal Engine 5 go/no-go
+
+- Pending.
+
+### 9. Pushes: when to resume, and the merge order
+
+- Pending.
+
+## 2026-10-19: the build order from here
+
+Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were paused on the usage rule.
+
+### 10. Priority: the hypercar fully drivable first, then on foot at the Golden Road's spot
+
+- **Decision.** First, the OC Hypercar Prototype 01 fully drivable: its physics (the F1 dynamics model and the
+  hypercar's interfaces on it), its two tunes, its driving profiles and its ability, verified in the game. Then the
+  Sims-like on-foot slice at the Golden Road's spot (built as Lot 57, our own taproom on the real Orangewood Ave
+  site, per `PROJECT_OC_ON_FOOT.md`, because a real business's name and look can't be used).
+- **What moves behind them.** The UI pass (U4 onward), the realism-2 world pass (W3 onward), and the F3 review.
+  The store SKU and the F2 review follow the hypercar's drivable milestone, since the Founder Edition sells a car
+  that must drive first.
+- **Facts it was made on.** Progress estimate at the time: about 60% of the whole vision, about 85% of a launchable
+  freeway game. F1 had finished its repair round (uncommitted in tsu-drift, second verification pending); the
+  hypercar had owner mode committed and M1 (the body) in repair; the store SKU was in repair; on foot had the plan
+  and the people builder, no playable page.
+- **Order of work.** 1) F1 dynamics: verify, repair, commit on claude/drift. 2) Hypercar M1 to M6 on
+  claude/hypercar. 3) F4 streaming budgets at Unleashed speed (the car must stay on a loaded road at its top
+  speed). 4) Merge drift, hypercar and stream into the live preview, run the suite groups (race, abilities,
+  progression, phone, boot) and the dynamics harness, republish: the "fully drivable" milestone. 5) The store SKU,
+  then F2-A and F2-B. 6) On foot: F5 people specs, then Lot 57 Phase 1 (the standalone page), Phase 2 (the
+  streets), Phase 3 (into the game). 7) UI pass, realism-2, F3.
+
+### 11. The map: Orange County only, all of it (LA County stopped)
+
+- **Decision** (the owner in chat, 2026-10-20 about 07:00 UTC): "lets put a full stop into the la count and solely focus
+  on the OC map including all freewats, neighborhood streets, roundabouts, etc." LA County and anything beyond Orange
+  County are stopped, not deferred. The map's scope is Orange County, done deeply:
+  - **Every freeway and expressway in the county**, the ten built plus the gaps: I-605's short stretch at Seal Beach and
+    Los Alamitos, and the SR-90 Imperial Highway expressway in Yorba Linda and Brea. Exit numbers if a source has them.
+  - **Every public street**: arterials, collectors and neighbourhood streets in all of OC's cities, drivable, with
+    intersections, signals and stop signs, turn lanes, and traffic that uses them.
+  - **Roundabouts** (OpenStreetMap junction=roundabout), **malls and their parking structures and lots**, and the other
+    built places along the streets (from Overture buildings and land use).
+- **Facts it was made on.** The OC freeway network is built (20 carriageways, 1,247 ramp pieces, 1,256 junctions); all of
+  Anaheim's streets are already pulled (about 10,000 named segments with their intersections, no lane counts in the
+  source); the game has no surface-street driving yet; the weekly usage limit (86% on 2026-10-20) means little new work
+  starts before it resets on 2026-10-25 22:00 UTC.
+- **Order.** The hypercar (in progress) and the owner's sky-camera and debris fixes (in progress) finish first. OC streets
+  come next, ahead of the walkable Lot 57 page: their first slice is the drive from the 57 into the Golden Road spot (the
+  on-foot plan's Phase 3b, 804 m of real streets with signals), so the Golden Road work continues inside it. The owner can
+  move the walkable page back ahead of the streets with one message.
+- **What it costs.** It is the largest remaining system: a street pipeline for every OC city (Overture/OSM, credited), a
+  tiled street-and-intersection model that stays inside the single-file build's size limit, intersection and signal logic,
+  surface traffic and pedestrians, and phone budgets. A design pass comes first (the Fable prompt "OC streets" in
+  PROJECT_OC_HANDOFF.md).
+
+## 2026-10-21: maximum overdrive
+
+### 12. Maximum graphics for the hypercar and Lot 57, then a Sims-like world at Lopez and Lefty's, and every OC freeway at full throttle
+
+- **Decision** (the owner in chat, 2026-10-21 about 00:00 UTC): "FULL FUCKEN MAXIMUM OVERDRIVE FOR MAMXIMUM GRAPHICS AND
+  RENDERING OF THE HYPERCAR AND GOLDEN ROAD AND IMMEDIATELY AFTER MAKE A PLAYABLE SIMS INTERACTION WORLD FOR LOPEZ AND
+  LEFTYS IN ANAHEIM!!!! FULL MAXIMUM OVERDRIVE AND DONT STOP!!!! RENDER ALL OC FREEWAY GRAPHICS FULL THROTTLE".
+- **What runs, all at once.** The hypercar's lights, cockpit, seat, body fidelity and abilities (claude/hypercar,
+  claude/hypercar-drive); the sky camera and debris fixes (claude/fix-sky, claude/fix-road); Lot 57 on foot at maximum
+  graphics, the standalone page, Phase 1 plus a graphics milestone (claude/onfoot); an Ultra render tier, a hypercar
+  showroom and photo mode, and the hypercar's materials at Ultra (claude/gfx, off the live preview); every OC freeway's
+  graphics: surfaces, furniture and signs, interchanges and landscaping, night and horizon, I-605 and SR-90, and a sweep
+  of every carriageway (claude/realism-2). Lot 57 moves back ahead of the OC streets (decision 11 allowed that with one
+  message); OC streets follow.
+- **Lopez and Lefty's.** Next after Lot 57: a playable Sims-like world there, built on the on-foot machinery. A web search
+  found no business of that name; asked the owner whether it is a real Anaheim place (and where) or their own concept. A
+  real business's name and look can't be used unless it is the owner's or they have permission; otherwise it is built as
+  our own venue at the real site, like Lot 57.
+- **The owner's answer** (2026-10-21 about 00:00 UTC, with a map of it): "Yes it's real". It is a sports bar; Overture
+  places has it at 1759 S Claudina Way, Anaheim 92805 (33.80449 N, 117.90152 W, just east of I-5 between Cerritos and
+  Katella, about 2.6 km from Lot 57). The owner did not say it is theirs or that they have its permission, so it is built
+  as our own sports bar at that site, with our own name in one constant that can be swapped if they get permission.
+  Phase 0 (the site data and PROJECT_OC_SPORTS_BAR.md) runs now on claude/sports-bar; the build (S1 to S4) starts once
+  Lot 57's first milestone gives it the shared on-foot engine.
+- **Facts it was made on.** The weekly limit read 0 at 23:43 UTC on Oct 20 after hitting 1.0 at about 15:30; the machine
+  has 4 cores shared by all the workflows' Playwright renders; the five-hour and weekly limits, not the number of lanes,
+  set the total amount of work per day, so more lanes trade depth for breadth.
+
+### 13. The UI target: the owner's reference image (home screen, HUD, sky camera, cockpit)
+
+- **Decision** (the owner in chat, 2026-10-21 just after 00:00 UTC, with a concept image): "Okay this is a PERFECT example
+  of how I want the sky camera, HUD main screen, cockpit, etc". The image (kept outside the repo, in the session scratchpad
+  as `ref/ui-reference-2026-10-21.png`) becomes the UI target and replaces the yellow "Chrome noir" accent: navy-black
+  glass, an electric blue accent with glow, a left rail home screen with the car in a night garage, a profile chip, four
+  mode tiles; a driving HUD with the objective top left, a circular minimap bottom left (the owner's "sky camera"),
+  overhead guide-sign callouts, the mirror top right, a quick menu on the right edge and a big italic speed block; a
+  hexagonal digital cluster and blue ambient strips in the cockpit.
+- **What we don't take.** "Online" (no multiplayer), a dollar balance (Credits only), "PROJECT OC" (our OC Ultra
+  wordmark), a real person's photo as the portrait, race types the game doesn't have, invented skylines or sign text.
+- **How.** A UI workflow on claude/ui-ref (off the live preview): UI1 home screen, UI2 HUD, UI3 the circular minimap in
+  two styles (vector map and the live sky camera clipped into the circle, after merging the sky camera's alignment fix),
+  UI4 the cockpit cluster (after the hypercar's cockpit work), UI5 a match pass. The running sky camera fix finishes its
+  alignment work first.
+- **The colourway** (the owner, minutes later): "Let's go with the exact aesthetic and then implement the OC orange color
+  way we've done". The reference's look is matched exactly (layout, glass, glow, type, chrome, night mood), and everything
+  it lights in blue is lit in the OC sunset orange family already in `src/ui/styles.css` (`--sunset`, `--amber`, `--ember`,
+  `--sunset-edge`, sampled from the owner's OC sunset wordmark), with the wordmark as the logo. Real road-sign colours stay.
+
+### 14. Backups to GitHub
+
+- **Decision** (the owner, 2026-10-21 about 00:05 UTC, asked whether to back up the local work: "Yes if you recommend
+  that then yes"). The hold on pushes is lifted for backups: every lane branch is pushed to GitHub as it stands and again
+  whenever a reviewed milestone commits, and the builders' uncommitted edits are snapshotted to `claude/wip-<worktree>`
+  branches (a commit made from a temporary index, so the builders' working trees are never touched). Still no pull
+  requests, nothing into `main`, the Los Güeros site untouched.
+- **First backup.** Pushed: claude/always-on (merged with the remote's Trade Crawler commit first), claude/drift,
+  claude/hypercar, claude/hypercar-drive, claude/fix-sky, claude/fix-road, claude/onfoot, claude/people-2, claude/stream,
+  claude/gfx, claude/sports-bar, claude/ui-ref, local/live-preview; snapshots claude/wip-hyper, -hx, -fix-road, -foot,
+  -ref, -bar, -main. The sky-camera and Ultra-tier snapshots (wip-fix-sky, wip-gfx) were refused by the session's
+  permission check three times; their branches are pushed, and their edits land in the next milestone push.
+
+### 15. Exactly three graphics modes: Low (retro, still HD), HD (realistic), Ultra (the reference); the first two free
+
+- **Decision** (the owner in chat, 2026-10-21 about 01:45 UTC, re-sending the reference image): "Let's essentially make
+  each graphic mode as well too and let's just stick with 3, the first two are free. What I'm trying to say: 'low'
+  graphics would still be super hd but have a very retro like look including the sims. 'HD' graphics would be more on
+  the realistic scale of things. And then 'Ultra' would be as close as we can get to with the provided pic".
+- **What it means.** Low is not a blurry fallback: full resolution and crisp, with a deliberate early-2000s stylized look
+  (cel shading, limited palette, dithering, outlines, hard shadows, banded sky), cheap enough to be the phone default. HD
+  is today's realistic High. Ultra is the maximum tier plus everything the Ultra graphics lane lands, aimed at the
+  reference. Medium goes; saved settings migrate. Low and HD are free; Ultra is the paid tier as an entitlement flag only:
+  no real money anywhere until a payment processor is connected (the store sells it as a test-mode SKU; owner mode and the
+  test build unlock it). The same three modes apply to Lot 57 and the sports bar, through one shared Retro style module.
+- **How.** A graphics-modes lane on claude/modes (off the live preview): RS1 the Retro render style module, RS2 the three
+  modes and the entitlement (merging claude/gfx's Ultra first when it has landed), RS3 a match pass and the style guide
+  the on-foot pages follow. Lot 57's graphics milestone (P1d) now asks for the same three modes.
+
+## 2026-10-21: the live server
+
+### 16. A live server now, with log-ins, 25 drivers at a time, the cap raised slowly
+
+- **Decision** (the owner in chat, 2026-10-21 about 01:50 UTC): "Let's start building a live server and tell me all
+  the costs into running a live server if any and let's make it where people can be logged and let's start off
+  with a limit at first of 25 at a time and slowly build the lobby capacity's up."
+- **What was built** (this session, a Fable one; security and the server's design are Fable-class under the
+  triage rule): `top-speed-ultra/live/`, one Node 22 process with one dependency: accounts (sign up, log in, log
+  out; scrypt, hashed session tokens, rate limits, a 13+ gate), a lobby capped by `MAX_PLAYERS` (25) with a
+  waiting line that moves up in order and a cap that can be raised while it runs, and a 10 Hz relay of car poses
+  with plausibility checks. In the game: a Live · alpha section on the menu, an account panel, a "Drive live"
+  switch, a chip in the top bar (Live 3/25, In line #2), and other drivers drawn as ghost coupes in their paint.
+- **The ladder** (`live/README.md`): 25 → 50 → 100 → 200 → 500, one rung at a time after a week in which the peak
+  reached the cap, CPU stayed under 50%, dropped poses under 1%, and bandwidth inside the allowance. Rung 3 needs
+  binary poses first; rung 4 a bigger box or two lobbies.
+- **The costs** (prices found 2026-10-21): about $7 to $8 a month on its own $6 DigitalOcean Droplet with backups
+  and a domain (about $10 a year, needed because browsers only open sockets to HTTPS), or about $1 a month if it
+  shares the trading desks' existing box. Nothing else is required; email for password reset is free at the
+  volumes involved.
+- **Honest claims.** It is an alpha and is labelled so; the rules in CLAUDE.md and the master prompt now say what
+  it does and doesn't do. Races against people and an online leaderboard stay roadmap (they need anti-cheat).
+- **Open for the owner.** The domain name; own box or shared; whether email verification should be required
+  before the first public rung; a name-moderation list; when the artifact link should point at the server-served
+  page (the artifact page itself can't reach a server, so live play is from the served page or the downloaded
+  file with the address typed in).
+
+### 17. Being there virtually: live traffic and weather, a realistic mode, ads near the venues, and 100,000 conversations
+
+- **The owner's ask** (in chat, 2026-10-21 about 02:40 UTC, after the live server went up): make it "super compatible
+  to essentially wanting to be there virtually if you can't do it in person"; go off a live traffic feed of how busy
+  it is and simulate that, including Google's live busyness for restaurants and stores; a realistic mode with current
+  live traffic simulating everything, and a custom mode; push heavy ads in the Anaheim / OC traffic areas first,
+  around Golden Road and Lopez and Lefty's, for marketing; and simulate 100,000 conversations of every mood and energy,
+  matched to live news where it applies, nothing political, with weather, sports (made-up baseball teams) and live
+  trends.
+- **What is legitimate and what isn't** (checked 2026-10-21):
+  - **Freeway traffic, live: yes.** TomTom's Traffic Flow Segment Data API is licensed for this, commercial use
+    included, with a free tier (2,500 requests a day, no card; TomTom's pricing moved to monthly free tiers in July
+    2026, check the figure). One sample point per carriageway every 15 minutes is 1,920 requests a day. HERE's
+    freemium would also work. Caltrans' CWWP2 feeds carry incidents, lane closures and message signs, not flow, and
+    PeMS needs an account; both are open and can be added later.
+  - **Weather, live: yes.** The National Weather Service API is free, open data; the latest observation at John
+    Wayne Airport (KSNA) maps onto the game's five skies.
+  - **A venue's live busyness: no.** Google's popular times and live busyness have no public API; Google's terms forbid
+    scraping them, and the one commercial estimator in the market (BestTime) is an estimate with no live data for most
+    venues. So a venue's crowd stays **simulated** by time and day as planned in PROJECT_OC_ON_FOOT.md, nudged by the
+    live freeway flow nearby (a jammed 57 on a Friday evening reads as a busier Lot 57), and labelled simulated.
+  - **Live news and trends: by hand, not by feed.** There is no free, licensed trends feed (X's API is pay-per-use,
+    Google Trends has no official API), and no automatic feed can be trusted to keep politics out. So the week's
+    talk is a short list the owner edits (`live/trends.json`), with a blocklist behind it; weather and the freeways
+    are live, and the sport is the **Coastal League**, eight made-up clubs whose season plays itself from the
+    calendar, the same on every device.
+  - **Ads: our own places first.** Real business names stay out of the game without a signed deal (PROJECT_OC_BUSINESS.md).
+    The billboards carry Lot 57 and our own sports bar (named "The Dugout" in one constant in `src/data/ads.json`,
+    swappable if Lopez and Lefty's signs). Golden Road and Lopez and Lefty's themselves are not named anywhere.
+- **What was built** (this session): the server's `/api/now` feed (`live/now.mjs`: NWS, TomTom, trends, with mocks and
+  tests), the game's now feed with a simulated typical day as the fallback (`src/live/now.ts`), **Live** as a weather
+  choice and a traffic choice, a **Realistic** preset button (live time, weather and traffic) with the normal
+  settings as the custom mode, the HUD naming the traffic's source and age, the talk bank (`src/talk/bank.ts`: 12 moods
+  × 3 energies × 10 topics; 173,601 distinct openers and 68.7 million two-line conversations for one day's feed,
+  counted by `tests/talk.mjs`), the Coastal League (`src/talk/league.ts`), the radio DJs' one-liners from it, and
+  twelve billboards on the 5, the 57, the 91 and the 22 near the two venues (`src/game/road/billboards.ts`).
+- **Open for the owner.** A TomTom key (free sign-up) for the live feed; whether the HUD should name TomTom and the
+  NWS on screen (it does, in Settings and the HUD note); the sports bar's working name; whether any ad slot is ever
+  sold, and at what price (the business plan's "no real business names without a deal" stands); the first trends
+  list each week.
+
+### 18. Computer traffic stays light while you drive live
+
+- **The owner's ask** (in chat, 2026-10-21 about 15:40 UTC): "for any live freeway traffic online and in the server
+  keep it light all the time, or what do you think?"
+- **Decided:** yes for the computer cars. While Drive live is on, a traffic preset is capped at Light (2.2 cars per km
+  per lane) with no aggressive drivers, and Live traffic keeps its rush hour but scaled into 1.2 to 3.5 cars per km per
+  lane (`lightForLive` in `src/game/settings.ts`). Off live, every setting is as before. The HUD says "light while
+  live", and the Live section says so in its small print.
+- **Why:** the other people are the traffic that matters online; they stand out among fewer computer cars; a phone
+  keeps its frames for the ghosts and their name plates; and the computer cars are drawn on each phone, never on the
+  server, so this doesn't change the server's load.
+- **The server is already light:** it relays only real drivers (the nearest 32 within 3 km, 10 times a second), and
+  at 25 drivers it measured 2.9% of one core and 142 MB (decision 16's load table). Nothing to cut there before the
+  binary poses (F7) at 100+.

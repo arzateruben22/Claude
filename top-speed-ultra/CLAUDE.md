@@ -30,9 +30,18 @@ here, then read:
 - **No real money.** Credits are earned by driving only. A paid weather pass or anything like it is design only.
 - **Our own brands.** Rossini, Vela and the "R" badge are ours. No real car brands, logos, Hot Wheels or Rolex.
 - **Honest claims.**
-  - No live weather is fed in; it's simulated.
-  - No live occupancy for the future Golden Road area.
-  - Multiplayer is roadmap only. Don't claim it exists.
+  - Weather and freeway traffic are simulated unless the player picks **Live** and a live server with the feeds is
+    in reach (the National Weather Service at KSNA; TomTom flow, one point per carriageway every 15 minutes); the
+    HUD and Settings name the source and its age, and say "simulated" otherwise. Never claim live without the feed.
+  - No live occupancy for Lot 57, the sports bar or the Golden Road area: Google's busyness has no public API and
+    its terms forbid scraping. Crowds are simulated by time and day and labelled so.
+  - The Coastal League is made up. Trends come from `live/trends.json`, by hand, never from a news feed; nothing
+    political. Billboards carry only our own venues until a business signs a deal.
+  - Live driving is an **alpha** (2026-10-21): `live/` is a real server with accounts and a capped lobby (25 to
+    start) that relays where each car is, and the game draws other drivers as ghosts. Its online board ranks only
+    what the server saw (distance, speed held 3 s, longest drive), never phone-kept scores. Say exactly that: no
+    races against people, no chat, and it only works where a server is running. Never call it "multiplayer"
+    without "alpha" and the cap.
 - **Radio.** Original or licensed audio only. Never scrape streams.
 - **Map data.** Never copy Google Maps data.
 - **Other projects.** Don't modify Trade Crawler or other projects in this repo.
@@ -40,7 +49,7 @@ here, then read:
   - Run the regression suite before and after a change: `npm run build && npm test` (about 10 minutes here; `--only=`
     for some groups). Add a check for anything new you build. The technical notes explain the suite.
   - Test in Playwright (headless Chromium with `--use-angle=swiftshader`), using the `window.__game` hooks
-    (`fastForward`, `navigateTo`, `stats`).
+    (`fastForward`, `navigateTo`, `stats`). The live server has its own tests: `cd live && npm test`.
   - Log results in `PROJECT_OC_PROGRESS.md`. Never invent results.
 - **Commits** go on branch `claude/always-on`.
 

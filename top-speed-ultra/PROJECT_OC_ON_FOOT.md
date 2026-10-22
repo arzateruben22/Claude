@@ -355,6 +355,11 @@ isn't connected to the real venue, real stadium events, real hours, or any websi
 
 - **Weather (simulated by the game):** rain cuts the crowd by about 25% and moves people inside and under cover;
   fog by about 10%.
+- **The live feeds (decision 17, 2026-10-21):** with the realistic mode on, the weather above is the real one (the
+  NWS at KSNA) and the nearby freeway's live flow nudges the target (a jammed 57 on a Friday evening reads as a
+  busier venue, ±10%). The crowd is still simulated and still says so: nobody can get a venue's live busyness
+  (Google offers no API and forbids scraping). The talk bank (`src/talk/`) gives the groups their lines, matched to the
+  weather, the freeways, the Coastal League and the week's trends.
 - **Event nights are ours:** a fictional Tuesday trivia night (+15%, 19:00 to 21:00) and a fictional first-Friday
   truck row (a third truck). Nothing is tied to a real game, concert or calendar.
 - **How many you see** is capped by the graphics preset (see the budgets). The rest are inside or out of view.

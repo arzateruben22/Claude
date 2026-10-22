@@ -17,6 +17,7 @@ const P: Record<string, JSX.Element> = {
   go: <><path d="M5 12h14M13 6l6 6-6 6" /></>,
   chat: <><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9.5h8M8 12.5h5" /></>,
   home: <><path d="M3 11 12 4l9 7" /><path d="M5.5 9.3V20h13V9.3M10 20v-5.2h4V20" /></>,
+  horn: <><path d="M3 9.5h3.6L13.5 5v14l-6.9-4.5H3z" /><path d="M16.4 8.6a4.6 4.6 0 0 1 0 6.8M18.8 6.2a7.8 7.8 0 0 1 0 11.6" /></>,
 };
 export function Ico({ name }: { name: keyof typeof P }) {
   return <svg className="ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{P[name]}</svg>;
