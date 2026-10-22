@@ -15,6 +15,8 @@ const CSS = `
 .hud-end { text-align: center; }
 .hud-end .fo { margin-top: 5vmin; }
 .lm-ering { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.lm-band { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, rgba(8, 10, 28, 0) 0%, rgba(8, 10, 28, .74) 26%, rgba(8, 10, 28, .74) 74%, rgba(8, 10, 28, 0) 100%); }
 .hud-counter.lm-read .lb { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 2.3vmin; color: var(--teal); }
 .hud-counter.lm-read .v { font-size: 7.2vmin; }
 .hud-counter.lm-clock .lb { font-size: 2.6vmin; }
@@ -42,9 +44,14 @@ const svgRing = (cls, r, w) => {
   return { svg, c };
 };
 
-// the title card's ring: drawn round from the top, closing exactly on the signature (sig)
+// the title card's ring: drawn round from the top, closing exactly on the signature (sig). The card also gets
+// its band (the bible's "band at y 250–470 over the payoff image"): a soft void scrim the full width of the
+// frame behind the title, so whatever the payoff image puts there (a bright light front) never fights the type
 export const titleRing = (el, { t0 = 0, sig, from = 0.14 } = {}) => {
   injectCss();
+  const band = document.createElement("div");
+  band.className = "lm-band";
+  el.parentNode.insertBefore(band, el);
   const series = el.querySelector(".hud-series");
   const { svg, c } = svgRing("lm-tring", 18, 4.2);
   svg.setAttribute("viewBox", "-22 -22 44 44");
@@ -56,6 +63,10 @@ export const titleRing = (el, { t0 = 0, sig, from = 0.14 } = {}) => {
     update(t) {
       const p = from + (1 - from) * E.inout2(seg(t, t0, sig));
       c.setAttribute("stroke-dashoffset", (L * (1 - p)).toFixed(3));
+      const pad = 0.035 * Math.min(window.W, window.H);
+      band.style.top = (el.offsetTop - pad).toFixed(2) + "px";
+      band.style.height = (el.offsetHeight + 2 * pad).toFixed(2) + "px";
+      band.style.opacity = el.style.opacity || "0";      // the band comes and goes with the card (hud.js sets its opacity)
     },
   };
 };

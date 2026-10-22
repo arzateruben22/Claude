@@ -20,7 +20,9 @@
 // Instances and the finish's motion probe (cinema3d.js samples instance positions, never scale):
 //   - every ghost slot of a ladder sits at its ghost's own position for the whole window [t0, t1), scale
 //     0 until it pops, so popping in reads as no motion (K stays low);
-//   - a slot outside every window is parked at one fixed spot, so it never moves either;
+//   - a slot outside every window is parked (scale 0) at one fixed spot, `park`. The probe reads parked
+//     instances too, so park inside the set (the default is the world origin): a far-off point such as
+//     y = −10⁴ swings across the screen with every camera move and pins K at kMax;
 //   - ladders in different takes can share slots (`slot`: the first instance index; default: the next
 //     free range, in creation order). Two ladders that are on screen at once must not overlap. Put a
 //     take's window edges on cuts (half a frame before a frame) and slots only change between frames.
@@ -30,7 +32,7 @@
 // strobe(o) → S
 //   o: { geometry (default unit sphere 24×16), material (default MeshLambertMaterial, white: instance colours
 //        tint it), radius: 1 (the ghost's uniform scale; a ladder's `scale` multiplies it), max: 48, pop: 0.18,
-//        park: [0, -1e4, 0], rim: null | { color: [r, g, b] linear, width: 0.35, strength: 0.75 } (darkens
+//        park: [0, 0, 0] (a point inside the set), rim: null | { color: [r, g, b] linear, width: 0.35, strength: 0.75 } (darkens
 //        the ghost's silhouette so a pale stamp still reads on a pale ground),
 //        rungs: null | { max: 24, radius: 0.25, material, segments: 10 } }
 //   S.ladder(id, { at, tau0 = 0, dt, n, when = (τ) => τ, t0 = -Infinity, t1 = Infinity, color, scale = 1 |
@@ -50,7 +52,7 @@ import { seg, E } from "../film/runtime.js";
 const v3 = (p) => (Array.isArray(p) ? p : [p.x, p.y, p.z]);
 
 export const strobe = (o = {}) => {
-  const max = o.max ?? 48, R = o.radius ?? 1, POP = o.pop ?? 0.18, PARK = o.park ?? [0, -1e4, 0];
+  const max = o.max ?? 48, R = o.radius ?? 1, POP = o.pop ?? 0.18, PARK = o.park ?? [0, 0, 0];
   const geometry = o.geometry || new THREE.SphereGeometry(1, 24, 16);
   const material = o.material || new THREE.MeshLambertMaterial({ color: 0xffffff });
   if (o.rim) {

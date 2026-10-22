@@ -40,7 +40,9 @@ const feltTexture = () => {
   for (let i = 0; i <= 512; i += 2) { const u = (i / 512) * Math.PI * 2, lat = 0.7 * Math.sin(2 * u); const y = 128 - (lat / (Math.PI / 2)) * 128; i ? g.lineTo(i, y) : g.moveTo(i, y); }
   g.stroke();
   const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  // no anisotropic filtering: in SwiftShader it carries state between draws, so a frame's last bit would depend on
+  // which frames were sought before it (measured: 1-level differences on the felt after another take was drawn first)
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 1;
   return t;
 };
 
@@ -88,7 +90,7 @@ export const createProps = (o = {}) => {
   // ── the meter stick ──
   const stickW = 4.6, stickT = 0.7, stickX = o.stickX ?? -24;
   const sc = document.createElement("canvas"); sc.width = 160; sc.height = 3200;   // 32 px per cm along its 100 cm
-  const stickTex = new THREE.CanvasTexture(sc); stickTex.colorSpace = THREE.SRGBColorSpace; stickTex.anisotropy = 8;
+  const stickTex = new THREE.CanvasTexture(sc); stickTex.colorSpace = THREE.SRGBColorSpace; stickTex.anisotropy = 1;   // see feltTexture
   const drawStick = () => {
     const g = sc.getContext("2d"), pc = 32;
     g.fillStyle = "#D7C29A"; g.fillRect(0, 0, 160, 3200);

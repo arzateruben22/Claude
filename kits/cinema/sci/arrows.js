@@ -18,16 +18,20 @@
 //
 // Every instance's origin is the arrow's tail (the head's is the head's base), so the finish's motion
 // probe (cinema3d.js samples instance positions) sees an arrow move when its tail moves, not when it
-// grows. A hidden arrow keeps its slot at its tail with scale 0 for its whole window [t0 − grow, t1 +
-// shrink]; outside every window a slot is parked at one fixed spot.
+// grows. An arrow holds its slot, at its tail with scale 0 while it is not drawn, for its `hold` window
+// (default [t0, t1 + shrink]); give it the take's window (cut to cut) so the slot never jumps between
+// the two probe samples of a frame. A slot nobody holds is parked at `park`, which should be a point
+// inside the set: the probe reads parked instances too, and a far-off point (y = −10⁴) swings across the
+// screen with every camera move and pins K at kMax.
 //
 // arrows(o) → A
 //   o: { max: 32 (≤ 64), shaft: 0.5 (radius), head: [len, radius] = [3, 1.2], outline: 0.25 (0 = none),
 //        ink: [r, g, b] linear (default near-black), material: "basic" (unlit, exact colours) | "standard"
-//        | a THREE.Material (instance colours tint it), segments: 18, park: [0, -1e4, 0] }
+//        | a THREE.Material (instance colours tint it), segments: 18, park: [0, 0, 0] }
 //   A.add(id, { tail: (t) => [x, y, z], vec: (t) => [dx, dy, dz] | tip: (t) => [x, y, z], color, t0, t1,
 //        grow: 0.3 (film s, the arrow draws out from its tail), shrink: 0.2 (it retracts into its tail after
-//        t1), slot, width: 1 (multiplies shaft and head radius) })
+//        t1), slot, width: 1 (multiplies shaft and head radius), hold: [h0, h1] (film s the slot
+//        stays at this tail, scale 0 when not drawn; default [t0, t1 + shrink]) })
 //   A.update(t)            write every instance for film time t
 //   A.tail(id, t) / A.tip(id, t) / A.mid(id, t)   [x, y, z] as drawn at t (tip and mid follow the growth)
 //   A.len(id, t)           the drawn length at t
@@ -40,7 +44,7 @@ const v3 = (p) => (Array.isArray(p) ? p : [p.x, p.y, p.z]);
 
 export const arrows = (o = {}) => {
   const max = Math.min(64, o.max ?? 32), SH = o.shaft ?? 0.5, [HL, HR] = o.head || [3, 1.2], OUT = o.outline ?? 0.25;
-  const seg_ = o.segments ?? 18, PARK = o.park ?? [0, -1e4, 0];
+  const seg_ = o.segments ?? 18, PARK = o.park ?? [0, 0, 0];
   const shaftG = new THREE.CylinderGeometry(1, 1, 1, seg_, 1, false); shaftG.translate(0, 0.5, 0);   // y ∈ [0, 1]
   const headG = new THREE.ConeGeometry(1, 1, seg_, 1, false); headG.translate(0, 0.5, 0);            // base at 0, tip at 1
   const mat = o.material && o.material.isMaterial ? o.material
@@ -66,7 +70,7 @@ export const arrows = (o = {}) => {
     if (slot >= max) throw new Error(`arrows: "${id}" needs slot ${slot}, but max is ${max}`);
     next = Math.max(next, slot + 1);
     A.set(id, { id, slot, tail: d.tail, vec: d.vec, tipF: d.tip, color: colorOf(d.color), t0: d.t0 ?? -Infinity, t1: d.t1 ?? Infinity,
-      grow: d.grow ?? 0.3, shrink: d.shrink ?? 0.2, w: d.width ?? 1 });
+      grow: d.grow ?? 0.3, shrink: d.shrink ?? 0.2, w: d.width ?? 1, hold: d.hold || null });
   };
   const get = (id) => { const a = A.get(id); if (!a) throw new Error(`arrows: no arrow "${id}"`); return a; };
   const on = (id, t) => {
@@ -93,8 +97,9 @@ export const arrows = (o = {}) => {
   const update = (t) => {
     const owned = new Uint8Array(max);
     for (const a of A.values()) {
-      if (!(t >= a.t0 - 1e-9 && t < a.t1 + a.shrink)) continue;
-      const i = a.slot, { tl, v } = full(a, t), g = on(a.id, t);
+      const drawn = t >= a.t0 - 1e-9 && t < a.t1 + a.shrink, held = a.hold ? t >= a.hold[0] && t < a.hold[1] : drawn;
+      if (!(drawn || held) || (owned[a.slot] && !drawn)) continue;   // a drawn arrow wins its slot over one only holding it
+      const i = a.slot, { tl, v } = full(a, t), g = drawn ? on(a.id, t) : 0;
       const L = Math.hypot(v[0], v[1], v[2]) * g;
       if (L > 1e-9) q.setFromUnitVectors(yAxis, dir.set(v[0], v[1], v[2]).normalize()); else q.identity();
       const hl = Math.min(HL, L / 1.6) || 0, hr = HR * a.w * (HL > 0 ? hl / HL : 0), sr = SH * a.w * Math.min(1, hl > 0 ? 0.35 + 0.65 * hl / HL : 0);

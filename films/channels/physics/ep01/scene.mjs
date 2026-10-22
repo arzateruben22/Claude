@@ -26,6 +26,9 @@ const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+// draw in scene-graph order: three sorts opaque objects by program id, which depends on which material compiled first,
+// so the draw order (and the last bit of a few pixels) would depend on the frames sought before this one
+renderer.sortObjects = false;
 // the finish (absent on the plain path): bloom only above 2.5 (the cyc's brightest token needs 1.88), deep focus,
 // and real-time bursts capped at K 12 (bible §5). The draft tier lowers kMax to 6 after load.
 if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 2.6, bloom: 0.35, fstop: 0, kMax: 12 });
@@ -57,7 +60,7 @@ const S = strobe({
   geometry: new THREE.SphereGeometry(1, 28, 18), radius: R_BALL * 0.985, max: 48, pop: 0.2,
   material: new THREE.MeshLambertMaterial({ color: 0xffffff }),
   rim: { color: [0.045, 0.048, 0.055], width: 0.42, strength: 0.62 },
-  rungs: { max: 24, radius: 0.3 },
+  rungs: { max: 24, radius: 0.3 }, park: [10, 50, 0],
 });
 scene.add(S.group);
 for (const name of TAKE_NAMES) {
@@ -78,7 +81,7 @@ const rungPt = (take, k, u) => {
 
 // "a steady glide across": small pegs on the floor under each ghost of the throw, equally spaced
 const pegGeo = new THREE.CylinderGeometry(1, 1, 1, 12); pegGeo.translate(0, 0.5, 0);
-const PEG = strobe({ geometry: pegGeo, material: new THREE.MeshBasicMaterial({ color: 0xffffff }), max: 12, pop: 0.16 });
+const PEG = strobe({ geometry: pegGeo, material: new THREE.MeshBasicMaterial({ color: 0xffffff }), max: 12, pop: 0.16, park: [10, 50, 0] });
 scene.add(PEG.group);
 {
   const tk = TAKES.why, b = ballSpec("why", "t44");
@@ -88,19 +91,20 @@ scene.add(PEG.group);
 
 // the vectors: gravity (force), sideways speed and the gaps (motion); ink outlines
 const FORCE = unlit(TK.force || "#1F3BD1"), MOTION = unlit(TK.motion || "#08805A");
-const AR = arrows({ max: 24, shaft: 0.62, head: [3.6, 1.6], outline: 0.34, ink: acesInv(TK.ink || "#15171C") });
+const AR = arrows({ max: 24, shaft: 0.62, head: [3.6, 1.6], outline: 0.34, ink: acesInv(TK.ink || "#15171C"), park: [10, 50, 0] });
+const HOLD = (take) => [TAKES[take] ? TAKES[take].t0 : CUE.cuts[take], TAKES[take] ? TAKES[take].t1 : Infinity];   // a slot stays put from cut to cut
 scene.add(AR.group);
 const gyk = (k) => BENCH.drop + BENCH.r - 0.5 * BENCH.g * (k * BENCH.dt) ** 2;           // ghost k's centre height
-AR.add("nm-g", { tail: (t) => ballPos("normal", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.normal.gravity, t1: CUE.normal.L, slot: 9 });
+AR.add("nm-g", { tail: (t) => ballPos("normal", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.normal.gravity, t1: CUE.normal.L, slot: 9, hold: HOLD("normal") });
 for (let k = 0; k < 9; k++) {
   AR.add(`nm-gap${k}`, { tail: [BENCH.gapX, gyk(k), 0], tip: [BENCH.gapX, gyk(k + 1), 0], color: MOTION, slot: k, grow: 0.25,
-    t0: Math.max(CUE.normal.gaps + 0.09 * k, S.stampAt("normal:drop", k + 1) + 0.12), t1: CUE.cuts.change - 0.2, shrink: 0.15 });
-  AR.add(`ms-gap${k}`, { tail: [BENCH.gapX, gyk(k), 0], tip: [BENCH.gapX, gyk(k + 1), 0], color: MOTION, slot: k, grow: 0.22, t0: CUE.measure.gaps[k] });
+    t0: Math.max(CUE.normal.gaps + 0.09 * k, S.stampAt("normal:drop", k + 1) + 0.12), t1: CUE.cuts.change - 0.2, shrink: 0.15, hold: HOLD("normal") });
+  AR.add(`ms-gap${k}`, { tail: [BENCH.gapX, gyk(k), 0], tip: [BENCH.gapX, gyk(k + 1), 0], color: MOTION, slot: k, grow: 0.22, t0: CUE.measure.gaps[k], hold: HOLD("measure") });
 }
-AR.add("wy-g-drop", { tail: (t) => ballPos("why", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity, t1: CUE.why.contact, slot: 10 });
-AR.add("wy-g-t44", { tail: (t) => ballPos("why", "t44", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity + 0.1, t1: CUE.why.contact, slot: 11 });
+AR.add("wy-g-drop", { tail: (t) => ballPos("why", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity, t1: CUE.why.contact, slot: 10, hold: HOLD("why") });
+AR.add("wy-g-t44", { tail: (t) => ballPos("why", "t44", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity + 0.1, t1: CUE.why.contact, slot: 11, hold: HOLD("why") });
 AR.add("wy-v", { tail: (t) => { const p = ballPos("why", "t44", t); return [p[0] + R_BALL * 0.4, p[1], p[2]]; }, vec: [ballSpec("why", "t44").vx * 0.3, 0, 0],
-  color: MOTION, t0: CUE.why.two, t1: CUE.why.contact, slot: 12 });
+  color: MOTION, t0: CUE.why.two, t1: CUE.why.contact, slot: 12, hold: HOLD("why") });
 
 // ── camera: orbit keys per shot (film.json "cam"), level by default, the turn as a true arc ──
 const lerp = (a, b, u) => a + (b - a) * u;
@@ -167,7 +171,10 @@ window.seek = function (t) {
   S.update(t); PEG.update(t); AR.update(t);
   cyc.update({ grid: 1, casters });
   if (window.CINEMA && window.CINEMA.mode === "probe") {
-    PROBE_PTS.forEach((p, i) => { pv.copy(p).project(camera); window.CINEMA.probe.set("bench" + i, [(pv.x + 1) * 0.5 * W, (1 - pv.y) * 0.5 * H]); });
+    PROBE_PTS.forEach((p, i) => {                     // on-screen points only: what leaves the frame can't smear
+      pv.copy(p).project(camera);
+      if (Math.abs(pv.x) <= 1.15 && Math.abs(pv.y) <= 1.15 && pv.z < 1) window.CINEMA.probe.set("bench" + i, [(pv.x + 1) * 0.5 * W, (1 - pv.y) * 0.5 * H]);
+    });
   }
   const n = nGaps(t);                                   // everything that changes a HUD part's size, before the HUD measures it
   counterLb.textContent = `${n} gap${n === 1 ? "" : "s"} × 1/20 s`;

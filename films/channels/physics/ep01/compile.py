@@ -200,7 +200,7 @@ def ghost_xy(take, ball, k):
 
 
 # ── the measure segment: nine gaps counted down the dropped ball's trail ───────────────────────
-m0, m1 = A("vo06:Measure"), A("vo06:second")
+m0, m1 = A("vo06:it"), A("vo06:second")                    # counted from "Measure it:" to "…of a second."
 GAPS = [round(m0 + (m1 - m0) * i / 8, 4) for i in range(9)]   # gap i+1 is counted at GAPS[i]
 
 # ── the cue table the scene reads (film seconds) ────────────────────────────────────────────────
@@ -212,7 +212,7 @@ CUE = {
     "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "two": A("vo04:two"), "glide": A("vo04:glide"),
             "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same#2")]},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
-    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.05, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
+    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
     "tease": {"out": A("vo08:Next")},
     "cuts": CUTS,
 }
@@ -275,7 +275,9 @@ CAM = {
             key(cut("whoa"), {**view(2.0), "yaw": 55.0, "pitch": 7.5, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 16}, "sine")],
     "whoa": [key(cut("whoa"), {"look": [-2.0, 97.0, 0.0], "dist": 232.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}),
              key(R_o + 0.35, {"look": [-2.0, 96.0, 0.0], "dist": 238.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}, "sine"),
-             key(A("vo05:forty"), full(26.0), "p3"), key(cut("measure"), full(27.0), "sine")],
+             key(A("vo05:forty"), full(26.0), "p3"), key(L_o + 0.6, full(27.0), "sine"),
+             # the hold: a slow pull-back, so the fastest ball, sliding on after its bounce, stays clear of the apps' right-hand UI
+             key(cut("measure"), view(36.0, top_px=430.0), "sine")],
     "measure": [key(cut("measure"), full(30.0)), key(cut("takeaway"), {**full(30.0), "dist": full(30.0)["dist"] - 6}, "sine")],
     # the takeaway pulls back a little, so the honesty badge has the top of the frame to itself
     "takeaway": [key(cut("takeaway"), {**full(30.0), "dist": full(30.0)["dist"] - 6}), key(cut("takeaway") + 1.15, view(30.0, top_px=440.0), "p3"),

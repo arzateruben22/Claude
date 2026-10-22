@@ -59,7 +59,8 @@ t_j0 = A("vo07:seconds:end", 0.12)        # the scale jump: after "...twenty sec
 t_j1 = A("vo07:twenty-seven", -0.12)      # ... and lands before "twenty-seven thousand years" (≤ 3 s)
 assert 1.2 < t_j1 - t_j0 <= 3.0, (t_j0, t_j1)
 SHOTS = [
-    {"at": 0.0, "name": "diagram"},                   # hook, normal, change: one continuous diagram
+    {"at": 0.0, "name": "diagram"},                   # the hook (the payoff image) and the rewind
+    {"at": t_rw1, "name": "normal"},                  # a cut as the rewind ends: the whole orbit, Earth on its right (normal, change)
     {"at": B["why"]["t0"], "name": "grid"},          # the gravity grid (analogy)
     {"at": t_race, "name": "race"},                   # GW170817: the two fronts across 130 million light-years
     {"at": B["whoa"]["t0"], "name": "earth"},        # Earth at Earth scale: its true 14,900 km
@@ -78,7 +79,9 @@ CLK = {
     # the race: the merger at τ = 0, the fronts reach Earth on "arrived"
     "race": {"keys": [{"t": t_race, "rate": RATE_R}], "anchor": [A("vo04:arrived"), RACE_S]},
     # the whoa (Earth scale, then the diagram): one clock, 8:20 exactly on "arrives"
-    "whoa": {"keys": [{"t": B["whoa"]["t0"], "rate": RATE_W}], "anchor": [t_arr, T_ARR]},
+    # (after the news it speeds up, so in the 3 s of picture Earth gets far enough along its tangent for the
+    #  straight line and the abandoned curve to separate clearly; the badge follows the clock)
+    "whoa": {"keys": [{"t": B["whoa"]["t0"], "rate": RATE_W}, {"t": A("vo05:sails"), "rate": 300.0, "ramp": 1.4}], "anchor": [t_arr, T_ARR]},
     # the restored system: the Sun on (τ < 0 throughout)
     # (it stops for the readout: a still diagram needs no time badge, and the readout is read, not watched)
     "restore": {"keys": [{"t": B["takeaway"]["t0"], "rate": RATE_D}, {"t": B["readout"]["t0"], "rate": 0.0, "ramp": 0.6, "badge": None}],
@@ -115,10 +118,12 @@ eh = earth_at(CLK["diagram"]["hook"])
 CAM = {
     "diagram": [
         {"t": 0.0, "target": [7.35, 0, 1.5], "dist": 111, "el": 60, "az": 31, "fov": 24, "fy": 0.43},
-        {"t": t_rw0, "target": [7.1, 0, 1.4], "dist": 106, "el": 60, "az": 32, "fov": 24, "fy": 0.43, "ease": "sine"},
-        {"t": t_rw1 + 0.5, "target": [0.4, 0, 0.0], "dist": 168, "el": 61, "az": 33, "fov": 24, "fy": 0.38, "ease": "inout3"},
-        {"t": B["change"]["t0"], "target": [0.4, 0, 0.0], "dist": 160, "el": 62, "az": 47, "fov": 24, "fy": 0.38, "ease": "sine"},
-        {"t": B["why"]["t0"], "target": [3.0, 0, -0.5], "dist": 146, "el": 63, "az": 58, "fov": 24, "fy": 0.38, "ease": "sine"},
+        {"t": t_rw1, "target": [7.1, 0, 1.4], "dist": 104, "el": 60, "az": 32, "fov": 24, "fy": 0.43, "ease": "sine"},
+    ],
+    "normal": [
+        {"t": t_rw1, "target": [0.4, 0, 0.0], "dist": 212, "el": 61, "az": -36, "fov": 24, "fy": 0.4, "fx": 0.45},
+        {"t": B["change"]["t0"], "target": [0.4, 0, 0.0], "dist": 204, "el": 62, "az": -24, "fov": 24, "fy": 0.4, "fx": 0.45, "ease": "sine"},
+        {"t": B["why"]["t0"], "target": [1.5, 0, -0.5], "dist": 192, "el": 63, "az": -13, "fov": 24, "fy": 0.4, "fx": 0.45, "ease": "sine"},
     ],
     "grid": [
         {"t": B["why"]["t0"], "target": [0, -3.2, 0], "dist": 78, "el": 27, "az": 14, "fov": 30, "fy": 0.4},
@@ -127,8 +132,8 @@ CAM = {
     "race": [
         {"t": t_race, "target": [0, 0, -40], "dist": 30, "el": 40, "az": 0, "fov": 30, "fy": 0.42},
         {"t": A("vo04:colliding", 0.9), "target": [0, 0, -39], "dist": 34, "el": 40, "az": 1, "fov": 30, "fy": 0.42, "ease": "sine"},
-        {"t": A("vo04:light-years"), "target": [0, 0, 1], "dist": 258, "el": 41, "az": 3, "fov": 30, "fy": 0.352, "ease": "inout3"},
-        {"t": B["whoa"]["t0"], "target": [0, 0, 3], "dist": 246, "el": 42, "az": 5, "fov": 30, "fy": 0.352, "ease": "sine"},
+        {"t": A("vo04:light-years"), "target": [0, 0, 1], "dist": 258, "el": 41, "az": 3, "fov": 30, "fy": 0.37, "ease": "inout3"},
+        {"t": B["whoa"]["t0"], "target": [0, 0, 3], "dist": 246, "el": 42, "az": 5, "fov": 30, "fy": 0.37, "ease": "sine"},
     ],
     "earth": [
         {"t": B["whoa"]["t0"], "target": [0, -1.6, 0], "dist": 194, "el": 6, "az": -24, "fov": 19, "fy": 0.42, "fx": 0.46},
@@ -136,7 +141,8 @@ CAM = {
     ],
     "news": [
         {"t": t_w2, "target": [7.6, 0, -1.6], "dist": 122, "el": 64, "az": 12, "fov": 24, "fy": 0.4},
-        {"t": B["takeaway"]["t0"], "target": [8.6, 0, -3.6], "dist": 126, "el": 64, "az": 14, "fov": 24, "fy": 0.4, "ease": "sine"},
+        {"t": A("vo05:sails"), "target": [7.8, 0, -2.2], "dist": 124, "el": 64, "az": 13, "fov": 24, "fy": 0.4, "ease": "sine"},
+        {"t": B["takeaway"]["t0"], "target": [8.0, 0, -9.0], "dist": 150, "el": 65, "az": 15, "fov": 24, "fy": 0.4, "ease": "inout2"},
     ],
     "restore": [
         {"t": B["takeaway"]["t0"], "target": [14.2, 0, 2.6], "dist": 40, "el": 58, "az": -6, "fov": 24, "fy": 0.42},
@@ -168,21 +174,22 @@ LADDER = {
 }
 
 # ── the overlay: labels, badges, counters, pills (one table: the scene draws it, the studio hears it) ──
+t_merge = t_of("race", 0.0)
 end_out = t_end                           # everything gives way to the end card
 LABELS = [
     # hook: none (the title and the question carry it)
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Earth"), "t1": B["why"]["t0"], "shot": "diagram", "side": 1},
-    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": t_off, "shot": "diagram", "side": -1},
-    {"id": "l-v", "text": "nearly 30 km/s", "kind": "gravity", "anchor": "earth-v", "t0": A("vo02:thirty"), "t1": A("vo02:Sunlight"), "shot": "diagram", "side": 1},
-    {"id": "l-ring", "text": "8 min 20 s", "kind": "light", "anchor": "ring-au", "t0": A("vo02:eight"), "t1": B["why"]["t0"], "shot": "diagram", "side": 1},
-    {"id": "l-last", "text": "last light", "kind": "light", "anchor": "front", "t0": A("vo03:last"), "t1": B["why"]["t0"], "shot": "diagram", "side": 1},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Earth"), "t1": B["why"]["t0"], "shot": "normal", "side": -1},
+    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": t_off, "shot": "normal", "side": -1},
+    {"id": "l-v", "text": "nearly 30 km/s", "kind": "gravity", "anchor": "earth-v", "t0": A("vo02:thirty"), "t1": A("vo02:Sunlight"), "shot": "normal", "side": 1},
+    {"id": "l-ring", "text": "8 min 20 s", "kind": "light", "anchor": "ring-au", "t0": A("vo02:eight"), "t1": B["why"]["t0"], "shot": "normal", "side": 1},
+    {"id": "l-last", "text": "last light", "kind": "light", "anchor": "front", "t0": A("vo03:last"), "t1": A("vo03:same:end", 0.1), "shot": "normal", "side": 1},
     # why: the grid, then the race
     {"id": "l-gravity", "text": "gravity", "kind": "gravity", "anchor": "well", "t0": A("vo04:Gravity"), "t1": t_race, "shot": "grid", "side": 1},
     {"id": "l-light-g", "text": "light", "kind": "light", "anchor": "grid-front", "t0": A("vo04:speed"), "t1": t_race, "shot": "grid", "side": -1},
-    {"id": "l-ns", "text": "neutron stars", "kind": "star", "anchor": "merger", "t0": A("vo04:colliding"), "t1": A("vo04:hundred"), "shot": "race", "side": 1},
-    {"id": "l-gw", "text": "gravitational waves", "kind": "gravity", "anchor": "race-gw", "t0": A("vo04:colliding", 1.2), "t1": A("vo04:arrived", 0.4), "shot": "race", "side": -1},
-    {"id": "l-light-r", "text": "light", "kind": "light", "anchor": "race-light", "t0": A("vo04:colliding", 1.6), "t1": A("vo04:arrived", 0.4), "shot": "race", "side": 1},
-    {"id": "l-earth-r", "text": "Earth", "kind": "body", "anchor": "race-earth", "t0": A("vo04:crossed"), "t1": B["whoa"]["t0"], "shot": "race", "side": 1},
+    {"id": "l-ns", "text": "neutron stars", "kind": "star", "anchor": "merger", "t0": A("vo04:colliding"), "t1": A("vo04:crossed"), "shot": "race", "side": 1},
+    {"id": "l-gw", "text": "gravitational waves", "kind": "gravity", "anchor": "race-gw", "t0": round(t_merge + 1.45, 4), "t1": A("vo04:arrived", 0.4), "shot": "race", "side": -1},
+    {"id": "l-light-r", "text": "light", "kind": "light", "anchor": "race-light", "t0": round(t_merge + 1.05, 4), "t1": A("vo04:arrived", 0.4), "shot": "race", "side": 1},
+    {"id": "l-earth-r", "text": "Earth", "kind": "body", "anchor": "race-earth", "t0": A("vo04:light-years"), "t1": B["whoa"]["t0"], "shot": "race", "side": 1},
     # whoa: Earth's true move, then the news
     {"id": "l-move", "text": "14,900 km in 8 min 20 s", "kind": "body", "anchor": "ruler", "t0": A("vo05:Earth"), "t1": t_w2, "shot": "earth", "side": 1, "v": "middle"},
     {"id": "l-earth-n", "text": "Earth", "kind": "body", "anchor": "earth", "t0": t_w2 + 0.15, "t1": B["takeaway"]["t0"], "shot": "news", "side": 1},
@@ -214,18 +221,27 @@ BADGES = [
     {"id": "b-orbit-t", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
     {"id": "b-nts-t", "text": "not to scale", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tr"},
 ]
+CUTS = [sh["at"] for sh in SHOTS[1:]]
+
+
+def before_cut(t1, lead=0.3):
+    return round(t1 - lead, 4) if any(abs(t1 - c) < 1e-6 for c in CUTS) else t1
+
+
 COUNTERS = [
     # the light clock: true time since the Sun vanished (the time badge says how fast it plays)
     {"id": "c-clock", "label": "since the Sun vanished", "clock": "diagram", "fmt": "clock", "t0": t_off, "t1": B["why"]["t0"], "at": [0.5, 0.245]},
     {"id": "c-clock-w", "label": "since the Sun vanished", "clock": "whoa", "fmt": "clock", "t0": B["whoa"]["t0"], "t1": t_arr + 1.6, "at": [0.5, 0.245], "lit": T_ARR, "stop": T_ARR},
-    {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:less"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
+    {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:two"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
     # the readout (the channel's segment): light time for this episode's distance, then the galaxy's
     {"id": "c-read-au", "label": "light time · Sun to Earth", "fmt": "text", "text": "8 min 20 s", "t0": A("vo07:Light"), "t1": t_j0 + 0.2, "at": [0.5, 0.2]},
     {"id": "c-read-gc", "label": "light time · galactic center to Sun", "fmt": "text", "text": "27,000 years", "t0": A("vo07:twenty-seven"), "t1": end_out, "at": [0.5, 0.2]},
 ]
+for row in BADGES + COUNTERS:
+    row["t1"] = before_cut(row["t1"])
 PILLS = [
-    {"id": "p-au", "text": "150 million km", "bar": "sun-earth", "t0": A("vo02:million"), "t1": A("vo02:Sunlight", 0.5), "shot": "diagram", "at": [90 / 1080, 0.205]},
-    {"id": "p-race", "text": "130 million light-years", "bar": None, "t0": A("vo04:hundred"), "t1": B["whoa"]["t0"], "shot": "race", "at": [90 / 1080, 0.205]},
+    {"id": "p-au", "text": "150 million km", "bar": "sun-earth", "t0": A("vo02:million"), "t1": A("vo02:Sunlight", 0.5), "shot": "normal", "at": [90 / 1080, 0.205]},
+    {"id": "p-race", "text": "130 million light-years", "bar": None, "t0": A("vo04:hundred"), "t1": A("vo04:less", -0.5), "shot": "race", "at": [90 / 1080, 0.205]},
 ]
 
 # ── the title card and the end card ───────────────────────────────────────
@@ -240,7 +256,7 @@ CUE = {
 }
 
 film = {
-    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:straight", 0.3),
+    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:Sun", 0.6),   # Earth at Earth scale, its true move labelled
     "shots": SHOTS, "beats": BEATS,
     "phys": {"c_km": C_KM, "d_km": D_KM, "t_arr": T_ARR, "v_km": V_KM, "year": YEAR, "earth_r": EARTH_R, "move_km": MOVE_KM,
              "n_orbit": N_ORBIT, "arc_deg": ARC, "true_arc_deg": TRUE_ARC, "ly_km": LY_KM, "gc_ly": GC_LY, "race_ly": RACE_LY, "race_s": RACE_S,
@@ -277,7 +293,8 @@ ev += [
     {"t": A("vo04:changes"), "kind": "body.vanish", "tag": "sun-grid", "t1": A("vo04:changes", 1.2)},
     {"t": A("vo04:changes"), "kind": "light.front", "tag": "grid-front", "t1": t_race},
     {"t": CUE["race"]["merge"], "kind": "merge", "tag": "kilonova", "t1": CUE["race"]["merge"] + 0.6},
-    {"t": CUE["race"]["merge"], "kind": "light.front", "tag": "race-fronts", "t1": CUE["race"]["arrive"]},
+    # the race's fronts: a short shower as they leave (a 4 s shower of ping grains would mask the label pings)
+    {"t": CUE["race"]["merge"], "kind": "light.front", "tag": "race-fronts", "t1": CUE["race"]["merge"] + 0.6},
     {"t": CUE["race"]["arrive"], "kind": "arrive", "tag": "race-earth"},
     {"t": t_arr, "kind": "arrive", "tag": "news"},
     {"t": t_j0, "kind": "scale.jump", "tag": "sun-to-galaxy", "t1": t_j1},

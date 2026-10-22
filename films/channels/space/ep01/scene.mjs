@@ -78,20 +78,21 @@ const surface = earthSurface({ width: W >= 1000 ? 1024 : 512 });
 const G = { diagram: new THREE.Group(), grid: new THREE.Group(), race: new THREE.Group(), earth: new THREE.Group(), local: new THREE.Group(), galaxy: new THREE.Group() };
 Object.values(G).forEach((g) => scene.add(g));
 const sun = createStar({ radius: SUN_R, intensity: 2.6, corona: 2.7 });
-const earth = createPlanet({ radius: EARTH_R, surface, tilt: 23.44, rimDay: 0.5, rimNight: 0.22, segments: 48 });
+const earth = createPlanet({ radius: EARTH_R, surface, tilt: 23.44, rimDay: 0.5, rimNight: 0.55, segments: 48 });   // a strong night rim: Earth stays legible once the news has darkened it
 G.diagram.add(sun.group, earth.group);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };                              // angles run counterclockwise seen from +y (north up)
 const orbitRing = ring({ color: C.orbit, width: 2.2, opacity: 1 }).arc({ r: R, ...XZ });
-const trail = ring({ color: C.lilac, width: 3.6, opacity: 0.95, fade: [0.08, 1] });
-const freePath = segment({ color: C.lilac, width: 3.6, opacity: 0.95, fade: [0.25, 1] });
+const trail = ring({ color: C.lilac, width: 4.6, opacity: 1, fade: [0.12, 1] });
+const freePath = segment({ color: C.lilac, width: 4.6, opacity: 1, fade: [0.35, 1] });
 const R_AU = R + 0.32;                                                     // drawn just outside the orbit, so both read
 const ringAU = ring({ color: C.teal, width: 2.6, opacity: 0 }).arc({ r: R_AU, ...XZ });
 const ghost = ring({ color: C.ghost, width: 2.2, opacity: 0, dash: 16, duty: 0.5 }).arc({ r: SUN_R, ...XZ });
+const oldOrbit = ring({ color: line("lilac", 0.72), width: 3, opacity: 0, dash: 90, duty: 0.5 });   // the curve Earth no longer follows
 const gravFront = ring({ color: C.lilac, width: 3.2, opacity: 0, dash: 72, duty: 0.55 });
 const radiusLine = segment({ color: C.ghost, width: 2, opacity: 0, dash: 1.1, duty: 0.5 });
 const vArrow = [segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 })];
 const ripples = Array.from({ length: 16 }, () => ring({ color: C.ripple, width: 1.8, opacity: 0 }));
-[orbitRing, trail, freePath, ringAU, ghost, gravFront, radiusLine, ...vArrow, ...ripples].forEach((r) => G.diagram.add(r.mesh));
+[orbitRing, oldOrbit, trail, freePath, ringAU, ghost, gravFront, radiusLine, ...vArrow, ...ripples].forEach((r) => G.diagram.add(r.mesh));
 const frontProbe = probes(G.diagram, 2);
 
 // grid (the gravity well, an analogy; same units as the diagram)
@@ -124,7 +125,7 @@ const raceProbe = probes(G.race, 2);
 
 // earth (Earth at Earth scale: 1 unit = 1,000 km, true size and true move)
 const bigEarth = createPlanet({ radius: PH.earth_r / 1000, surface, tilt: 23.44, rimDay: 0.6, rimNight: 0.12, segments: 128 });
-const X0 = -PH.move_km / 2000, X1 = PH.move_km / 2000, VX = PH.v_km / 1000, RY = -PH.earth_r / 1000 - 2.1;
+const X0 = -PH.move_km / 2000, X1 = PH.move_km / 2000, VX = PH.v_km / 1000, RY = -PH.earth_r / 1000 - 3.3;   // the ruler: far enough below Earth for its label to sit between them
 const ghostA = ring({ color: C.iceDim, width: 2.4, opacity: 0, dash: 44, duty: 0.5 }), ghostB = ring({ color: C.iceDim, width: 2.2, opacity: 0, dash: 44, duty: 0.5 });
 const ruler = segment({ color: C.ice, width: 3, opacity: 0 }).seg([X0, RY, 0], [X1, RY, 0]);
 const rulerDone = segment({ color: C.tealHi, width: 5, opacity: 0 });
@@ -189,11 +190,12 @@ const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d * 0.8)));
 const LBL = Object.fromEntries(FILM.labels.map((l) => [l.id, l]));
+const SHOT_AT = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
 const PIL = Object.fromEntries(FILM.pills.map((p) => [p.id, p]));
 
 // the diagram at scene time tau. story: the Sun vanishes at τ = 0 and the news reaches Earth at T_ARR;
 // real: the Sun stays on (the restored system).
-const diagram = (t, tau, mode) => {
+const diagram = (t, tau, mode, shot) => {
   const story = mode === "story", sunOn = !story || tau < 0;
   sun.set({ tau, on: sunOn, camera, center: [0, 0, 0] });
   ghost.set({ opacity: sunOn ? 0 : 0.7 });
@@ -208,9 +210,12 @@ const diagram = (t, tau, mode) => {
   // the arc it travelled since the vanish (sped up ×N, badged), then the straight line
   if (story && tau > 0) {
     const a1 = PH.e0 + (2 * Math.PI * PH.n_orbit * Math.min(tau, T_ARR)) / PH.year;
-    trail.arc({ r: R, a0: PH.e0, a1, ...XZ }).set({ opacity: 0.95 });
+    trail.arc({ r: R, a0: PH.e0, a1, ...XZ }).set({ opacity: 1 });
   } else trail.set({ opacity: 0 });
-  if (released) freePath.seg(orb.at(T_ARR), p).set({ opacity: 0.95 }); else freePath.set({ opacity: 0 });
+  if (released) freePath.seg(orb.at(T_ARR), p).set({ opacity: 1 }); else freePath.set({ opacity: 0 });
+  // once released, the stretch of orbit ahead of the release point is drawn dashed and brighter: the curve it left
+  const aRel = PH.e0 + (2 * Math.PI * PH.n_orbit * T_ARR) / PH.year;
+  oldOrbit.arc({ r: R, a0: aRel, a1: aRel + 1.7, ...XZ }).set({ opacity: released ? clamp01((tau - T_ARR) / 60) : 0, fade: [1, 0.15] });
   // light: one front every PERIOD while the Sun shines; after the vanish nothing follows the last one
   const fr = train(tau, { c: cD, period: FILM.ripple.period, to: story ? 0 : Infinity, rMax: RMAX + 2 });
   let lastR = null;
@@ -224,12 +229,14 @@ const diagram = (t, tau, mode) => {
   });
   // the news: light (teal) and gravity (lilac, dashed, drawn just outside it), together
   const rNews = story && tau > 0 ? cD * tau : null;
-  gravFront.arc({ r: (rNews || 0) + 0.24, ...XZ }).set({ opacity: rNews && mode === "story" && t >= FILM.shots[4].at ? (1 - clamp01((rNews - (RMAX - 10)) / 10)) : 0 });
-  const ae = Math.atan2(-p[2], p[0]) + 0.32;                                    // the front's anchor: a little ahead of Earth
+  gravFront.arc({ r: (rNews || 0) + 0.24, ...XZ }).set({ opacity: rNews && shot === "news" ? (1 - clamp01((rNews - (RMAX - 10)) / 10)) : 0 });
+  // the front's label anchor: well ahead of Earth while the front is on its way (so its label and Earth's never
+  // compete), close to Earth in the news shot, where the two meet
+  const ae = Math.atan2(-p[2], p[0]) + (shot === "news" ? 0.55 : 1.15);
   S.front = rNews ? [rNews * Math.cos(ae), 0, -rNews * Math.sin(ae)] : [0, 0, 0];
   frontProbe(rNews && rNews < RMAX ? [S.front, [rNews * Math.cos(ae - 0.6), 0, -rNews * Math.sin(ae - 0.6)]] : [null, null]);
   // the light-time ring "8 min 20 s" and its label's spot (on the far side of the ring, up the frame)
-  const ar = 0.5;                                                                // the ring label sits up and to the right of the Sun
+  const ar = Math.PI + 0.35;                                                     // the ring label sits on the far side from Earth
   S.ringAU = [R_AU * Math.cos(ar), 0, -R_AU * Math.sin(ar)];
   S.sunPos = [0, SUN_R * 0.7, 0];
   return { p, released, lastR };
@@ -242,18 +249,18 @@ window.seek = function (t) {
   const show = { diagram: false, grid: false, race: false, earth: false, local: false, galaxy: false };
   let starGain = 1, bandGain = 1;
 
-  if (shot === "diagram" || shot === "news") {
+  if (shot === "diagram" || shot === "normal" || shot === "news") {
     show.diagram = true;
     G.diagram.position.set(0, 0, 0); G.diagram.scale.setScalar(1);
-    const tau = shot === "diagram" ? tauDiagram(t) : CLK.whoa.tau(t);
+    const tau = shot === "news" ? CLK.whoa.tau(t) : tauDiagram(t);
     rig.place(camera, camShot, t);
-    const d = diagram(t, tau, "story");
-    ringAU.set({ opacity: shot === "diagram" ? fadeIn(t, CUE.ring, 0.5) : 0.45 });
+    const d = diagram(t, tau, "story", shot);
+    ringAU.set({ opacity: shot === "news" ? 0 : fadeIn(t, CUE.ring, 0.5) });   // in the news shot the orbit alone: Earth leaves it
     // normal beat: the radius (150 million km) and the speed arrow (nearly 30 km/s)
     const pa = PIL["p-au"], lv = LBL["l-v"];
-    radiusLine.seg([0, 0, 0], d.p).set({ opacity: shot === "diagram" ? winOp(t, pa.t0, pa.t1) : 0 });
-    const v = norm(orb.vel(tau)), tip = [d.p[0] + v[0] * 3.4, 0, d.p[2] + v[2] * 3.4], back = [tip[0] - v[0] * 0.9, 0, tip[2] - v[2] * 0.9];
-    const side = [-v[2] * 0.55, 0, v[0] * 0.55], ov = shot === "diagram" ? winOp(t, lv.t0, lv.t1) : 0;
+    radiusLine.seg([0, 0, 0], d.p).set({ opacity: shot === "normal" ? winOp(t, pa.t0, pa.t1) : 0 });
+    const v = norm(orb.vel(tau)), tip = [d.p[0] + v[0] * 4.6, 0, d.p[2] + v[2] * 4.6], back = [tip[0] - v[0] * 0.9, 0, tip[2] - v[2] * 0.9];
+    const side = [-v[2] * 0.55, 0, v[0] * 0.55], ov = shot === "normal" ? winOp(t, lv.t0, lv.t1) : 0;
     vArrow[0].seg([d.p[0] + v[0] * (EARTH_R + 0.2), 0, d.p[2] + v[2] * (EARTH_R + 0.2)], tip).set({ opacity: ov });
     vArrow[1].seg(tip, [back[0] + side[0], 0, back[2] + side[2]]).set({ opacity: ov });
     vArrow[2].seg(tip, [back[0] - side[0], 0, back[2] - side[2]]).set({ opacity: ov });
@@ -264,7 +271,7 @@ window.seek = function (t) {
     const tg = CLK.grid.tau(t);
     grid.set({ tau: tg, masses: [{ at: [0, 0], m: 1, off: 0 }] });
     gridSun.set({ tau: tg, on: tg < 0, camera, center: [0, -7 + SUN_R * 0.9, 0] });
-    const r = tg > 0 ? cD * tg : 0, ag = 2.55;
+    const r = tg > 0 ? cD * tg : 0, ag = -0.35;                                     // the label's spot: the front's near right side
     gridFront.arc({ center: [0, 0.06, 0], r, ...XZ }).set({ opacity: r > 0.3 ? 1 - clamp01((r - 26) / 6) : 0 });
     S.gridFront = [r * Math.cos(ag), 0.06, -r * Math.sin(ag)];
     gridProbe(r > 0.3 ? [S.gridFront, [r * Math.cos(ag + 1), 0.06, -r * Math.sin(ag + 1)]] : [null, null]);
@@ -287,6 +294,10 @@ window.seek = function (t) {
     S.raceLight = pt(r, -0.55); S.raceGW = pt(r + 0.45, 0.62); S.merger = [M_AT[0], 0.5, M_AT[2]]; S.raceEarth = [E_AT[0], 1.6, E_AT[2]];
     raceProbe(r > 0.2 && fadeR > 0 ? [pt(r, 0), pt(r, 0.5)] : [null, null]);
     raceEarth.set({ sunDir: norm([-0.55, 0.45, 0.7]), sun: 1, spin: 2.2 });
+    // nothing behind the lens may stay visible: the motion-blur probe would read its origin as a huge jump
+    camera.updateMatrixWorld();
+    const ev = v3(E_AT).applyMatrix4(camera.matrixWorldInverse);
+    raceEarth.group.visible = ev.z < -camera.near * 4;
   } else if (shot === "earth") {
     show.earth = true;
     rig.place(camera, camShot, t);
@@ -294,9 +305,9 @@ window.seek = function (t) {
     bigEarth.set({ center: [x, 0, 0], sunDir: norm([0, 0.08, 1]), sun: 1, spin: SPIN(tw) - 0.35 });
     const cr = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0), cu = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
     const basis = { e1: cr.toArray(), e2: cu.toArray() }, rr = PH.earth_r / 1000 + 0.25;
-    ghostA.arc({ center: [X0, 0, 0], r: rr, ...basis }).set({ opacity: fadeIn(t, FILM.shots[3].at + 0.3, 0.6) });
+    ghostA.arc({ center: [X0, 0, 0], r: rr, ...basis }).set({ opacity: fadeIn(t, SHOT_AT.earth + 0.3, 0.6) });
     ghostB.arc({ center: [X1, 0, 0], r: rr, ...basis }).set({ opacity: 0.75 * fadeIn(t, LBL["l-move"].t0 - 0.4, 0.6) });
-    const ro = fadeIn(t, FILM.shots[3].at + 0.2, 0.6);
+    const ro = fadeIn(t, SHOT_AT.earth + 0.2, 0.6);
     ruler.set({ opacity: ro }); ticks.forEach((k) => k.set({ opacity: ro }));
     rulerDone.seg([X0, RY, 0], [Math.min(x, X1), RY, 0]).set({ opacity: ro * (x > X0 + 0.05 ? 0.95 : 0) });
     S.ruler = [0, RY, 0];
@@ -305,7 +316,7 @@ window.seek = function (t) {
     rig.place(camera, camShot, t);
     const tau = CLK.restore.tau(t), view = ladder.apply(dolly(t));
     show.diagram = view.alpha.solar > 1e-4; show.local = view.alpha.local > 1e-4; show.galaxy = view.alpha.galaxy > 1e-4;
-    diagram(t, tau, "real");
+    diagram(t, tau, "real", shot);
     const lr = LBL["l-ring-au"];
     ringAU.set({ opacity: 0.55 + 0.45 * fadeIn(t, lr.t0, 0.4) });
     radiusLine.set({ opacity: 0 }); vArrow.forEach((a) => a.set({ opacity: 0 }));
@@ -317,7 +328,7 @@ window.seek = function (t) {
     S.ringGC = ladder.toScene("galaxy", [rg * Math.cos(ag), 0, -rg * Math.sin(ag)], view);
     S.ringAU = ladder.toScene("solar", S.ringAU, view);
     S.earth = ladder.toScene("solar", S.earth, view);
-    galaxy.set({ angle: 0, gain: 1 });
+    galaxy.set({ angle: 0, gain: 1.6 });
   }
   for (const [k, g] of Object.entries(G)) g.visible = show[k];
   if (!show.diagram) { G.diagram.position.set(0, 0, 0); G.diagram.scale.setScalar(1); }

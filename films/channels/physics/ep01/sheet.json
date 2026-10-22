@@ -500,7 +500,7 @@
    "kind": "label",
    "tag": "wo-60",
    "pos": [
-    0.747,
+    0.746,
     0.612
    ]
   },
@@ -519,7 +519,7 @@
    "kind": "label",
    "tag": "wo-level",
    "pos": [
-    0.59,
+    0.588,
     0.225
    ]
   },
@@ -581,7 +581,7 @@
    "t1": 61.0667
   },
   {
-   "t": 52.3,
+   "t": 52.6,
    "kind": "counter.show",
    "tag": "clock",
    "pos": [
@@ -590,42 +590,42 @@
    ]
   },
   {
-   "t": 52.5,
+   "t": 53.0,
    "kind": "counter.tick",
    "tag": "gap1"
   },
   {
-   "t": 52.8167,
+   "t": 53.2542,
    "kind": "counter.tick",
    "tag": "gap2"
   },
   {
-   "t": 53.1333,
+   "t": 53.5083,
    "kind": "counter.tick",
    "tag": "gap3"
   },
   {
-   "t": 53.45,
+   "t": 53.7625,
    "kind": "counter.tick",
    "tag": "gap4"
   },
   {
-   "t": 53.7667,
+   "t": 54.0167,
    "kind": "counter.tick",
    "tag": "gap5"
   },
   {
-   "t": 54.0833,
+   "t": 54.2708,
    "kind": "counter.tick",
    "tag": "gap6"
   },
   {
-   "t": 54.4,
+   "t": 54.525,
    "kind": "counter.tick",
    "tag": "gap7"
   },
   {
-   "t": 54.7167,
+   "t": 54.7792,
    "kind": "counter.tick",
    "tag": "gap8"
   },
@@ -745,6 +745,6 @@
   "wo-40": 42.3667,
   "wo-60": 43.9333,
   "tk-20": 63.0333,
-  "clock": 52.3333
+  "clock": 52.6333
  }
 }

@@ -7,10 +7,11 @@
 //   cyc.update({ grid: 1, casters: [[x, y, z, r], ...] });    // in seek, before rendering
 //
 // What it is:
-//   - a floor (a 12 m disc, ruled in world x and z every 5 cm, a stronger line every 10 cm) and a wall that
-//     wraps around the back and the left of the stage as a cylinder (radius 260 cm about (40, 200), from
-//     200° round to 315°, open on the right so a camera turned 70° from the front still sees in), joined
-//     to the floor by a 45 cm cove, so the camera can turn 90° and still see paper behind the subject. The
+//   - a floor (a 12 m square, ruled in world x and z every 5 cm, a stronger line every 10 cm) and a wall that
+//     wraps around the back and the left of the stage as a cylinder (radius 260 cm about (x 40, z 200),
+//     swept from −200° to −45°: round the back and the left, open at the front-right, so a camera that
+//     turns up to ~90° to the right still sees paper behind the subject), joined to the floor by a 45 cm
+//     cove. The
 //     back wall stands 60 cm behind the plane the props fall in (z = 0); the wall is ruled along its own
 //     arc length, with no numbers: it is not in the subject's plane, so its lines don't measure heights
 //     (the meter stick and the floor lines at z = 0 do).

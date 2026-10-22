@@ -144,16 +144,18 @@ export const ribbon = (o = {}) => {
   if (!additive) { mat.blending = THREE.CustomBlending; mat.blendEquation = THREE.AddEquation; mat.blendSrc = THREE.OneFactor; mat.blendDst = THREE.OneMinusSrcAlphaFactor; mat.blendSrcAlpha = THREE.OneFactor; mat.blendDstAlpha = THREE.OneMinusSrcAlphaFactor; }
   const mesh = new THREE.Mesh(g, mat);
   mesh.frustumCulled = false;
-  mesh.userData.noProbe = true;                                     // its origin never moves; see probes()
-  mesh.position.set(0, 0, 0);
+  mesh.userData.noProbe = true;                                     // its outline moves in the shader, unseen by the probe: see probes()
   const R = {
     mesh, uniforms: U,
+    // the mesh's origin is parked on the shape (an arc's centre, a segment's start) and the shape is drawn
+    // relative to it: the motion-blur probe reads mesh origins, and an origin left at the group's (0,0,0)
+    // can sit behind the lens and read as a huge jump (see the header)
     arc({ center = [0, 0, 0], r = 1, a0 = 0, a1 = Math.PI * 2, e1, e2 } = {}) {
-      U.uKind.value = 0; U.uC.value.fromArray(center); U.uR.value = r; U.uArc.value.set(a0, a1);
+      U.uKind.value = 0; mesh.position.fromArray(center); U.uC.value.set(0, 0, 0); U.uR.value = r; U.uArc.value.set(a0, a1);
       if (e1) U.uE1.value.fromArray(e1); if (e2) U.uE2.value.fromArray(e2);
       return R;
     },
-    seg(a, b) { U.uKind.value = 1; U.uA.value.fromArray(a); U.uB.value.fromArray(b); return R; },
+    seg(a, b) { U.uKind.value = 1; mesh.position.fromArray(a); U.uA.value.set(0, 0, 0); U.uB.value.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); return R; },
     set(p = {}) {
       if (p.opacity != null) U.uOpacity.value = p.opacity;
       if (p.color != null) U.uColor.value.copy(toLinear(p.color));
@@ -165,8 +167,9 @@ export const ribbon = (o = {}) => {
       return R;
     },
     point(x) {
-      if (U.uKind.value > 0.5) return [0, 1, 2].map((i) => U.uA.value.getComponent(i) + (U.uB.value.getComponent(i) - U.uA.value.getComponent(i)) * x);
-      const c = U.uC.value, e1 = U.uE1.value, e2 = U.uE2.value, r = U.uR.value;
+      const o = mesh.position;
+      if (U.uKind.value > 0.5) return [0, 1, 2].map((i) => o.getComponent(i) + U.uB.value.getComponent(i) * x);
+      const c = o, e1 = U.uE1.value, e2 = U.uE2.value, r = U.uR.value;
       return [c.x + r * (Math.cos(x) * e1.x + Math.sin(x) * e2.x), c.y + r * (Math.cos(x) * e1.y + Math.sin(x) * e2.y), c.z + r * (Math.cos(x) * e1.z + Math.sin(x) * e2.z)];
     },
   };
