@@ -24,9 +24,10 @@ episode is one script away. Plus the daily routine: one episode per channel per 
 
 ## 2–4. Three channels: human body, space, physics (separate channels)
 User choices: separate channels, curious adults / wonder, 60–75 s, a different narrator each.
-- [ ] Series bibles (workflow `wf_73fbfacf-23e`; resume it if it stalled) → `films/channels/<name>/bible.md`
-- [ ] Decisions (provisional unless the user picks): name, palette/type, sound preset, narrator (auditions)
-- [ ] Generic pipeline: renderer + page template not tied to Lumevina; shared caption/label overlay; `kits/cinema/sci/` blocks
+- [x] Series bibles + cross-check → `films/channels/<name>/bible.md`, `films/channels/crosscheck.json`
+- [x] Decisions (provisional): `films/channels/DECISIONS.md`; narrator auditions sent to the user
+- [ ] Generic pipeline (workflow `wf_f4691102-1b1`, resume it if it stalled): film runtime + renderer, studio voices + presets,
+  fonts + themes, script linter + claims + episode-1 scripts, then review. After the Skin School render: cinema3d probe2.
 - [ ] Per channel: set (3D stage + blocks), episode 1 script → voice → compile → scene → soundtrack → preview
 - [ ] Per channel: final render (sequential, one render at a time, ~3 h each), assemble, QA, deliver
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
