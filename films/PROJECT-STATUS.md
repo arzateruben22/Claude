@@ -33,6 +33,13 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
 - [ ] Per channel: final render (sequential, one render at a time, ~3 h each), assemble, QA, deliver
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
+## Usage pacing (12:07 UTC, 22 Oct)
+The **weekly (7-day) limit is at "warning"**; it resets **Sat 25 Oct, about 22:00 UTC**. Hitting it
+blocks all of the user's Claude use until then, not just this project. Until the user says
+otherwise: finish the in-flight episode builds and their review, run the three final renders
+(machine time, little usage), assemble, QA and deliver. Do **not** start new multi-agent
+workflows or episode 2+ batches; keep check-ins short.
+
 ## Running state (update when it changes)
 - Final render (Skin School): detached `run.sh`, log `films/skin-school-tiktok/build/final/9x16/render.log`.
   A worker restart kills it (seen 07:22 UTC): check with `ps -eo args | grep [r]ender.mjs` (never
