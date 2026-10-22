@@ -129,6 +129,7 @@ export class CarPhysics {
   private rp: RoadPoint = { x: 0, y: 0, z: 0, h: 0, k: 0, slope: 0 };
   private at = { x: 0, y: 0, z: 0, h: 0 };
   private wallBuf: Wall[] = [];
+  private grinding = false;   // in contact with a barrier last step
 
   get speed() { return Math.sqrt(this.vx * this.vx + this.vy * this.vy); }
   get altitude() { return this.air.alt; }
@@ -156,7 +157,7 @@ export class CarPhysics {
     this.absP.f = this.absP.r = 1; this.tcM = 1;
     this.airborne = false; this.air.alt = 0; this.air.t = 0;
     this.ax = 0; this.ay = 0;
-    this.drift.angle = 0; this.drift.active = false; this.drift.time = 0; this.driftLapse = 0; this.hbMz = 0; this.hbT = 1; this.hbWas = false; this.clutch = 1;
+    this.drift.angle = 0; this.drift.active = false; this.drift.time = 0; this.driftLapse = 0; this.hbMz = 0; this.hbT = 1; this.hbWas = false; this.clutch = 1; this.grinding = false;
     this.rpm = Math.max(SPEC.idle, this.wheelRpm() * this.ratio * SPEC.final);
   }
 
@@ -439,6 +440,9 @@ export class CarPhysics {
     net.wallsNear(this.x, this.z, this.y, 4, this.wallBuf);
     const fx = sf, fz = cf, rx = -cf, rz = sf;
     const walls = this.wallBuf;
+    // a touch is an event and costs what it always did; a grind (in contact last step too) costs per second from then on
+    const span = this.grinding ? dt : 1 / 120;
+    this.grinding = false;
     for (let i = 0; i < walls.length; i++) {
       const w = walls[i];
       const ex = w.bx - w.ax, ez = w.bz - w.az, L2 = ex * ex + ez * ez || 1;
@@ -454,7 +458,7 @@ export class CarPhysics {
       }
       if (dist < -0.3) continue;                                     // the far side of someone else's barrier
       const reach = SPEC.halfL * Math.abs(fx * nx + fz * nz) + SPEC.halfW * Math.abs(rx * nx + rz * nz);
-      if (dist < reach) this.hitWall(nx, nz, reach - dist);
+      if (dist < reach) { this.hitWall(nx, nz, reach - dist, span); this.grinding = true; }
     }
   }
 
@@ -496,8 +500,12 @@ export class CarPhysics {
 
   private headingAt(road: Path) { return road.heading(Math.min(Math.max(this.s, 0), road.len)); }
 
-  // a barrier with normal n (pointing back at you) that you're `depth` into
-  private hitWall(nx: number, nz: number, depth: number) {
+  // a barrier with normal n (pointing back at you) that you're `depth` into. The hit (the terms in vn, which scale with
+  // the contact's impulse) is an event. Under it, a little grinding friction and a glance of the nose back along the
+  // wall, and the yaw rate damped: for a fresh touch the amounts a touch always cost (0.04 m/s, 5 % of the angle, 0.4
+  // of the yaw rate), and while the car stays in contact the same amounts per 1/120 s (4.8 m/s^2, 1 - 0.95^(t*120),
+  // 0.4^(t*120)), so a grind along a barrier is the same at any step rate. `span` is the contact's time this step
+  private hitWall(nx: number, nz: number, depth: number, span: number) {
     this.x += nx * depth; this.z += nz * depth;
     const sf = Math.sin(this.psi), cf = Math.cos(this.psi);
     const wx = sf * this.vx + cf * this.vy, wz = cf * this.vx - sf * this.vy;
@@ -507,7 +515,7 @@ export class CarPhysics {
     let tx = -nz, tz = nx;
     if (tx * sf + tz * cf < 0) { tx = -tx; tz = -tz; }
     let vt = wx * tx + wz * tz;
-    const scrub = Math.min(Math.abs(vt), vn * 0.5 + 0.04);         // the hit, plus a little grinding friction each step
+    const scrub = Math.min(Math.abs(vt), vn * 0.5 + 4.8 * span);   // the hit, plus a little grinding friction
     vt -= Math.sign(vt) * scrub;
     const out = vn * 0.25;
     const nwx = tx * vt + nx * out, nwz = tz * vt + nz * out;
@@ -516,8 +524,8 @@ export class CarPhysics {
     // glance the nose back along the wall
     const h = Math.atan2(tx, tz);
     let rel = this.psi - h; rel = Math.atan2(Math.sin(rel), Math.cos(rel));
-    this.psi -= rel * clamp(vn * 0.04, 0.05, 0.6);
-    this.r *= 0.4;
+    this.psi -= rel * clamp(vn * 0.04, -Math.expm1(span * 120 * Math.log1p(-0.05)), 0.6);   // 0.05 to the bit at 1/120 s
+    this.r *= Math.pow(0.4, span * 120);
     this.impacts.push({ kind: 'wall', speed: vn, side: 0 });
   }
 
