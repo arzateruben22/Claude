@@ -16,7 +16,10 @@ available, so frame rates on real hardware are **not** measured.
   all eight conflicts resolved in the working tree but unstaged. The rerun reviews those resolutions against both sides
   before committing, then runs every core group plus the live ones (the live-server session's core run on db324db had
   been cut off).
-- **Relaunched at 05:27,** at most three agents at once: the integration and the overdrive (its implementers continue
+- **05:28: the Fable model's usage limit was reached.** Every relaunched agent failed at once, before doing any work. The
+  remaining agents (the implementers, judges, the critic and the integrator) now run on Opus, the session's model. The
+  seven audits stay Fable's, replayed from the journal. Which model judged each landing will be named in its entry.
+- **Relaunched at 05:27, then on Opus at 05:31,** at most three agents at once: the integration and the overdrive (its implementers continue
   their existing branches). The Retro finish waits for the first free slot. No log says whether memory caused the
   restart; the cap is a precaution.
 
