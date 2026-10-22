@@ -14,7 +14,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 8 | `6-1-9x16.mp4` | The order of things | Thin to thick, SPF last. The whole order in 22 seconds. | 22 s |
 | 9 | `6-3-9x16.mp4` | Purging vs. a breakout | Purging or a reaction? Here's how you tell. | 20 s |
 | 10 | `8-3-9x16.mp4` | Acne clears on a calendar | I tell everyone: give it 90 days. | 22 s |
-| 11 | `10-1-9x16.mp4` | The sun, and the shield | What actually ages skin, in 22 seconds. | 22 s |
+| 11 | `10-1-9x16.mp4` | The sun, and the shield | What actually ages skin, in 22 seconds. | 27 s |
 | 12 | `11-1-9x16.mp4` | A tired barrier | "My skin suddenly hates everything" has a cause. | 24 s |
 | 13 | `9-3-9x16.mp4` | Why a dark spot is slow | Why your dark spot takes months, not weeks. | 24 s |
 | 14 | `2-2-9x16.mp4` | Moisturizer, decoded | Every moisturizer is three kinds of ingredients. | 22 s |
