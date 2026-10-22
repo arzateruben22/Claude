@@ -49,7 +49,7 @@ How to post: upload the mp4, keep the sound off or add TikTok's library music lo
 
 **Before the first post:** the Skin School links only show when the course is switched on (`js/site-config.js` → `features: ["school"]`); the clips themselves are fine either way.
 
-**The link in bio:** `school.html#learn-1-1` opens the free lesson straight away (any lesson: `#learn-<id>`); the shop is `/#shop`, a product is `/?product=<id>#shop`.
+**The link in bio:** `school.html#learn-8-2` opens the first of the five free lessons straight away (they run 8-2, 2-1, 11-1, 10-1, 9-3, each ending on the next) (any lesson: `#learn-<id>`); the shop is `/#shop`, a product is `/?product=<id>#shop`.
 
 ## Between the clips (her face, 20 to 40 seconds, phone in hand)
 

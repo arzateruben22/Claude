@@ -17,6 +17,9 @@
  * or doctor.
  */
 window.SCHOOL = {
+  /* the five free lessons, in the order a new visitor takes them: each has a film-style explainer
+     that ends on the next one, and the fifth on the rest of the course */
+  free: ["8-2", "2-1", "11-1", "10-1", "9-3"],
   levels: [
     {
       n: 1, id: "basics", name: "Skin Basics", tag: "Beginner", art: "barrier",
@@ -27,7 +30,7 @@ window.SCHOOL = {
         {
           name: "How skin works", art: "layers",
           lessons: [
-            { id: "1-1", t: "Your skin in ten minutes", min: 9, free: true,
+            { id: "1-1", t: "Your skin in ten minutes", min: 9,
               sum: "Skin is an organ with a job: keep water in and the world out. Once you see how it's built, every product decision gets easier.",
               learn: [
                 "The epidermis is the thin outer layer you treat at home. Under it, the dermis holds collagen, elastin, oil glands and blood supply.",
@@ -38,7 +41,7 @@ window.SCHOOL = {
               try: "Tonight, wash with lukewarm water and look at your bare skin in daylight tomorrow morning, before any product. That's your starting point.",
               q: { ask: "Roughly how long does it take a new skin cell to reach the surface in your twenties?", opts: ["About 4 days", "About 4 weeks", "About 4 months"], a: 1,
                 why: "About four weeks, which is why you judge a new routine after a month, not a morning." } },
-            { id: "1-2", t: "Find your real skin type", min: 8, free: true,
+            { id: "1-2", t: "Find your real skin type", min: 8,
               sum: "Skin type is how much oil you make. Skin condition is what's happening right now. Mixing them up is why so many routines fail.",
               learn: [
                 "The four types: dry (little oil), oily (a lot), combination (oily T-zone, drier cheeks) and normal (balanced).",
@@ -65,7 +68,7 @@ window.SCHOOL = {
         {
           name: "The core routine", art: "routine",
           lessons: [
-            { id: "2-1", t: "Cleansing, done right", min: 7,
+            { id: "2-1", t: "Cleansing, done right", min: 7, free: true,
               sum: "A good cleanser removes the day without stripping the skin. The way you wash matters as much as what you wash with.",
               learn: [
                 "Choose by type: a gel or foam for oily skin, a cream or milk for dry and sensitive skin.",
@@ -320,7 +323,7 @@ window.SCHOOL = {
               try: "Map your breakouts for a week: where they are, and what kind.",
               q: { ask: "Deep, painful cysts along the jaw that keep coming back should be seen by:", opts: ["A dermatologist", "Nobody, they go away", "Just a stronger scrub"], a: 0,
                 why: "Cystic acne can scar and often needs prescription treatment. A dermatologist and an esthetician can work together." } },
-            { id: "8-2", t: "The acne-safe routine", min: 12,
+            { id: "8-2", t: "The acne-safe routine", min: 12, free: true,
               sum: "The routine Evelyn builds on the Face Reality program: clear the pores and stop re-clogging them.",
               learn: [
                 "Check every product against a pore-clogging list: coconut oil, isopropyl myristate, algae extracts, some red dyes and lanolins are common offenders.",
@@ -369,7 +372,7 @@ window.SCHOOL = {
               try: "Choose one brightener for the morning (vitamin C) and one for the night (azelaic acid or a retinoid).",
               q: { ask: "What undoes a month of fading fastest?", opts: ["Skipping sunscreen", "Drinking water", "A gentle cleanser"], a: 0,
                 why: "UV restarts pigment production right away. Sunscreen protects the progress." } },
-            { id: "9-3", t: "Heat, light and patience", min: 8,
+            { id: "9-3", t: "Heat, light and patience", min: 8, free: true,
               sum: "Why pigment is slow, and how to keep it from coming back.",
               learn: [
                 "Pigment fades in months, not weeks. Take a photo in the same light every four weeks to see real progress.",
@@ -385,7 +388,7 @@ window.SCHOOL = {
         {
           name: "Aging well", art: "age",
           lessons: [
-            { id: "10-1", t: "What actually ages skin", min: 9,
+            { id: "10-1", t: "What actually ages skin", min: 9, free: true,
               sum: "Time plays a part, but daily habits make the biggest difference.",
               learn: [
                 "Most visible aging on the face comes from the sun: lines, spots, sagging and texture.",
@@ -423,7 +426,7 @@ window.SCHOOL = {
         {
           name: "Sensitive skin and special cases", art: "calm",
           lessons: [
-            { id: "11-1", t: "Sensitive and rosacea-prone skin", min: 10,
+            { id: "11-1", t: "Sensitive and rosacea-prone skin", min: 10, free: true,
               sum: "When skin reacts to everything, the answer is almost always fewer products, not better ones.",
               learn: [
                 "Rosacea: flushing, redness and sometimes bumps, set off by heat, sun, alcohol, spicy food and stress.",
