@@ -229,7 +229,9 @@ H += 0.035 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red
 // veins raised a little (only while a vein is a few pixels wide)
 H += 0.24 * vein * smoothstep(1.2, 0.45, pix);
 c *= 1.0 - 0.18 * crease * mid;
-c *= mix(vec3(1.0), vec3(0.86, 0.83, 0.84), far3 * win * (1.0 - sharpC) * (1.0 - 0.4 * uFem));
+// (the thumb's IP band: narrower than the crease's window and deeper, so the joint reads as a crease across the thumb
+// at a phone's scale whatever the light; in shade the knuckle's own shading is gone and a fainter band vanished)
+c *= mix(vec3(1.0), vec3(0.74, 0.69, 0.70), far3 * exp(-(ax * ax) / 9.0) * st * (1.0 - sharpC) * (1.0 - 0.35 * uFem));
 diffuseColor.rgb = c;
 float rough = mix(0.54, 0.43, clamp(red * dorsal, 0.0, 1.0)) + 0.08 * palmar + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.08 * crease + 0.06 * uDark;
 float leather = 0.0;
