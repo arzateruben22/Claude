@@ -5,7 +5,7 @@
  *   • fonts and images  — cache first (they never change in place)
  * Bump VERSION when an offline-page or caching rule changes. */
 
-var VERSION = "lumevina-v3";
+var VERSION = "lumevina-v4";
 var SHELL = [
   "./",
   "index.html",
@@ -69,6 +69,9 @@ self.addEventListener("fetch", function (e) {
   var url = new URL(req.url);
   /* only same-origin GETs — payments, Supabase and Stripe go straight out */
   if (req.method !== "GET" || url.origin !== self.location.origin) return;
+  /* skin images and the functions are never cached, even if the site is ever
+     served with a same-origin proxy in front of Supabase */
+  if (/\/(storage|functions)\/v1\//.test(url.pathname)) return;
 
   if (isStatic(url)) {
     e.respondWith(
@@ -87,7 +90,7 @@ self.addEventListener("fetch", function (e) {
 
   e.respondWith(
     fetch(req).then(function (res) {
-      if (res.ok) {
+      if (res.ok && !/no-store|private/.test(res.headers.get("Cache-Control") || "")) {
         var copy = res.clone();
         caches.open(VERSION).then(function (c) { c.put(req, copy); });
       }

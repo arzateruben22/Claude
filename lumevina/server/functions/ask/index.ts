@@ -65,6 +65,7 @@ import { fixTypos } from "../_shared/typos.ts";
 import { notifyOwner } from "../_shared/notify.ts";
 import { EMAIL, giftBalance, lookUpOrder } from "../_shared/lookups.ts";
 import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
+import { hasConsent } from "../_shared/consents.ts";
 
 const MODEL = "claude-fable-5-1";
 const MEMBER_HOURS = 24;
@@ -350,7 +351,10 @@ Deno.serve(async (req) => {
     const why = String(body.why ?? "").trim().slice(0, 200);
     const photos = readPhotos(body.photos);
     const paths = await savePhotos(db, id, photos);
-    const { draft, note } = await writeDraft(site, who, kind, why, q, file?.text ?? null, photos);
+    // the photos go to the assistant only with the client's recorded yes (consents: ai_processing);
+    // without it Evelyn still sees them in the dashboard, and the draft is written from the words alone
+    const aiPhotos = photos.length && await hasConsent(db, who.email, "ai_processing") ? photos : [];
+    const { draft, note } = await writeDraft(site, who, kind, why, q, file?.text ?? null, aiPhotos);
     const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();
     const { error } = await db.from("questions").insert({
       id, client_id: who.id, name: who.name, email: who.email, member, kind, text: q, why: why || null,

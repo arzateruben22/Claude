@@ -45,7 +45,13 @@ async function route() {
     $("#sk-who [data-signout]").onclick = async () => { await session.signOut(); location.reload(); };
     document.querySelector('.sk-nav a[href="#admin"]').hidden = me.staff.role !== "admin";
     main.setAttribute("aria-busy", "true");
-    if (page === "client" && id) await client(id, tab || "overview");
+    if (page === "find" && id) {
+      const q = decodeURIComponent(id);
+      const r = await api.call("clients", { q });
+      const exact = r.clients.filter((c) => c.email === q.toLowerCase());
+      if (exact.length === 1) { location.replace(`#client/${exact[0].id}`); return; }
+      await clients(q);
+    } else if (page === "client" && id) await client(id, tab || "overview");
     else if (page === "clients") await clients();
     else if (page === "admin") await admin(id || "analytics");
     else await needs();

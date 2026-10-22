@@ -55,6 +55,16 @@
       supabase: "",   /* e.g. https://<project>.supabase.co */
       key: ""         /* the Supabase anon key (public) */
     },
+    /* Skin Intelligence (my-skin.html, studio-skin.html): the client's skin
+       record and the studio's imaging. Off until "skin" is in features (on in
+       the v4 preview). It uses shop.supabase/key above; empty = the demo.
+       The capture screens load MediaPipe's runtime and face model from pinned
+       public URLs; to self-host them, run node scripts/fetch-skin-vendor.mjs and
+       set mediapipeWasm: "vendor/mediapipe", faceModel: "vendor/mediapipe/face_landmarker.task". */
+    skin: {
+      mediapipeWasm: "",
+      faceModel: ""
+    },
     booking: {
       /* new clients book here; clients who already book with Evelyn on
          GlossGenius can still use it for now, with a note that everything
@@ -78,7 +88,7 @@
     v2: { features: [], booking: null },
     v3: { features: ["membership", "rewards"], booking: "site" },
     /* everything at once: v3 plus Skin School, the preview that connects the site and the course */
-    v4: { features: ["membership", "rewards", "school"], booking: "site" }
+    v4: { features: ["membership", "rewards", "school", "skin"], booking: "site" }
   };
   /* ?preview=v3 (or v2, v4): this browser only, until the tab closes */
   var preview = null;

@@ -174,6 +174,7 @@
     else if (feeDue && r.card) acts.push('<button type="button" class="settle-btn" data-ap="fee">Charge the ' + money(feeCents(r)) + " fee</button>");
     if (r.status === "held" && !r.card) acts.push('<button type="button" class="settle-btn" data-ap="cardlink">Ask for a card</button>');
     if (r.status === "held") acts.push('<button type="button" class="settle-btn" data-ap="cancel">Cancel</button>');
+    if (r.email) acts.push('<a class="settle-btn" href="studio-skin.html#find/' + encodeURIComponent(String(r.email).toLowerCase()) + '">Skin record</a>');
     return '<li class="ap-row is-' + esc(r.status) + '" data-id="' + esc(r.id) + '">' +
       '<div class="ap-time">' + fmtTime(r.start_min) + '<small>' + r.dur_min + " min</small></div>" +
       '<div class="ap-main"><div class="ap-who"><strong>' + esc(r.name || r.email) + "</strong>" + badges.join("") + "</div>" +

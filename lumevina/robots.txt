@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard.html
+Disallow: /studio-skin.html
+Disallow: /my-skin.html
+Disallow: /report.html
 Disallow: /dist/
 Disallow: /server/
 Disallow: /knowledge/

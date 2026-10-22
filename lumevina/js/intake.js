@@ -175,17 +175,37 @@
       answers: answers, signature: sig,
       signedAt: new Date().toISOString()
     };
-    save(record);
 
-    /* LIVE: upsert { email, name, answers, signature, signed_at } into
-       Supabase intake_forms here (see server/README.md). */
-
-    formView.hidden = true;
-    successView.hidden = false;
-    modal.querySelector(".intake-done").focus();
-    document.dispatchEvent(new CustomEvent("lumevina:intake-saved",
-      { detail: { email: email } }));
+    var done = function () {
+      save(record);
+      formView.hidden = true;
+      successView.hidden = false;
+      modal.querySelector(".intake-done").focus();
+      document.dispatchEvent(new CustomEvent("lumevina:intake-saved",
+        { detail: { email: email } }));
+    };
+    /* LIVE: functions/intake keeps it for Evelyn. Signed in, it updates their
+       form; not signed in, a first form saves and an existing one needs sign-in. */
+    var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+    if (!/^https:\/\//.test(SHOP.supabase || "") || !SHOP.key) { done(); return; }
+    var token = window.LumevinaAccount && window.LumevinaAccount.token && window.LumevinaAccount.token();
+    statusEl.textContent = "Saving…";
+    fetch(SHOP.supabase.replace(/\/$/, "") + "/functions/v1/intake", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + (token || SHOP.key) },
+      body: JSON.stringify({ name: name, email: email, answers: answers, signature: sig, form_version: "2026-10" })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.ok) { statusEl.textContent = ""; done(); return; }
+        statusEl.textContent = j.reason === "sign_in_to_update"
+          ? "There's already a form on file for this email. Sign in under My Lumevina to update it."
+          : "That didn't save. Check your connection and try again.";
+      });
+    }, function () { statusEl.textContent = "That didn't save. Check your connection and try again."; });
   });
+
+  /* the confirmation email's "fill in your pre-visit form" link: /?intake=1 */
+  if (/[?&]intake=1\b/.test(location.search)) setTimeout(function () { openModal(); }, 400);
 
   window.LumevinaIntake = {
     open: openModal,

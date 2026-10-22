@@ -97,3 +97,8 @@ Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep
 4. **Ads, when she's ready:** a Meta ad account and a Google Ads account in her name, her card; the Meta pixel and Google conversion tags on the site (Ruben); then the campaigns in `marketing/campaigns.md`, starting at $10/day each, 20 miles around Woodland Hills. Creatives: `node marketing/ads/build-ads.mjs` → `marketing/ads/out/`.
 5. **Every Monday** Claude drafts the week's posts and ad variants into `marketing/weekly/`; she posts what she likes.
 6. **Search and shares, already on the page:** `robots.txt` keeps the dashboard and the working folders out of search; `js/seo.js` writes the studio (hours, Woodland Hills, Instagram) and the whole shelf (price, stock, photo, the product's own link) as structured data for Google; the share tags in `index.html` give iMessage, Instagram DMs and the TikTok bio a title and the pore clip's poster. Once the domain exists: make the `og:image` address absolute (`https://<her domain>/img/school/video/8-2.jpg`), add `Sitemap: https://<her domain>/sitemap.xml` to `robots.txt` with a three-line sitemap (the home page, `docs/school/school.html`, `privacy.html`), and submit it in Google Search Console.
+
+## 7. Skin Intelligence (when Evelyn wants it)
+
+Not part of the first launch. It stays off (the `skin` switch in `js/site-config.js`; on in the `?preview=v4` preview) until the steps in `skin-intelligence/PRIVACY-SECURITY.md` → "Before the pilot" are done: counsel's review of the consents and retention, MFA on, the security pass, and the repeatability protocol. Deployment steps: `skin-intelligence/README.md`. Status and open questions: `skin-intelligence/STATUS.md`.
+

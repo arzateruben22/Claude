@@ -92,7 +92,7 @@ export function createCompare(el, o) {
   const centerOf = (e) => { const r = stage.getBoundingClientRect(); return [e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2]; };
 
   el.querySelector(".sk-cmp-bar").addEventListener("click", (e) => {
-    const m = e.target.closest("[data-mode]"); if (m) { st.mode = m.dataset.mode; paint(); return; }
+    const m = e.target.closest("button[data-mode]"); if (m) { st.mode = m.dataset.mode; paint(); return; }   // the root carries data-mode too
     const z = e.target.closest("[data-z]"); if (z) { const v = Number(z.dataset.z); if (v === 0) { st.zoom = 1; st.x = 0; st.y = 0; paint(); } else zoomBy(v > 0 ? 1.5 : 1 / 1.5); }
   });
   el.querySelector("[data-aligned]")?.addEventListener("change", (e) => { st.aligned = e.target.checked; paint(); });

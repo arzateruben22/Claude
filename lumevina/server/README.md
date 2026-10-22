@@ -641,3 +641,18 @@ create or replace view shelf as select id, stock, price_cents, hidden, kind, con
 ```
 
 **Buy again** (`js/buy-again.js`, My Lumevina): a signed-in client's past shelf purchases, one tap back into the bag. Live, the website reads `orders` straight through PostgREST with the client's own token (`select=items,paid_at&status=eq.paid`); the policy `clients read their own orders` in schema.sql limits it to rows whose email matches the signed-in email, so no function is involved. Gated actives go through the consult gate as usual. The order receipt and the "running low?" email carry the same one-tap link (`?reorder=<ids>#shop`).
+
+## Skin Intelligence (my-skin.html, studio-skin.html)
+
+The client's private skin record and the studio's imaging, treatment
+records and reports. Everything about it, including deployment, is in
+`skin-intelligence/README.md`; in short:
+
+| Piece | What to do |
+| --- | --- |
+| `migrations/0001…0012` | Apply in order after `schema.sql` (each has a `down/` twin). 0001 also fixes signed-in bookings (the `clients` rows), 0010 closes `reward_balances`, `flash_slots` and `notifications` to the anon key, 0012 fixes consult alerts. |
+| `functions/skin/`, `functions/studio-skin/` | `supabase functions deploy skin studio-skin --no-verify-jwt`; secrets `AUDIT_SALT`, `SITE_URL`. Staff sign in with their own account and an authenticator app (turn on TOTP in Supabase Auth); the studio key is not accepted. |
+| `functions/intake/` | `supabase functions deploy intake --no-verify-jwt`: the pre-visit form, saved on the server at last. |
+| `functions/ask/` | Redeploy: chat photos now reach the assistant only with the client's AI-processing consent. |
+| `skin-intelligence/worker/` | The analysis worker (Python, a small container with no inbound port): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. |
+

@@ -6057,7 +6057,8 @@ html:not(.has-membership) [data-feature~="membership"],
 html:not(.has-rewards) [data-feature~="rewards"],
 html:not(.has-routine) [data-feature~="routine"],
 html:not(.has-school) [data-feature~="school"],
-html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
+html:not(.has-partners) [data-feature~="partners"],
+html:not(.has-skin) [data-feature~="skin"] { display: none !important; }
 
 /* old links (#spa, #journal) still land on the section that replaced them */
 .anchor-alias { position: absolute; top: 0; left: 0; width: 1px; height: 1px; }

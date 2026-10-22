@@ -9,7 +9,7 @@ const path = require("path");
 const SRC = path.join(__dirname, "..");
 const OUT = path.join(__dirname, "www");
 
-const INCLUDE = ["index.html", "privacy.html", "css", "js", "fonts", "img"];
+const INCLUDE = ["index.html", "privacy.html", "my-skin.html", "report.html", "css", "js", "fonts", "img", "vendor"];
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
