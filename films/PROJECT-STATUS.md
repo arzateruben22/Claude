@@ -26,9 +26,10 @@ episode is one script away. Plus the daily routine: one episode per channel per 
 User choices: separate channels, curious adults / wonder, 60–75 s, a different narrator each.
 - [x] Series bibles + cross-check → `films/channels/<name>/bible.md`, `films/channels/crosscheck.json`
 - [x] Decisions (provisional): `films/channels/DECISIONS.md`; narrator auditions sent to the user
-- [ ] Generic pipeline (workflow `wf_f4691102-1b1`, resume it if it stalled): film runtime + renderer, studio voices + presets,
-  fonts + themes, script linter + claims + episode-1 scripts, then review. After the Skin School render: cinema3d probe2.
-- [ ] Per channel: set (3D stage + blocks), episode 1 script → voice → compile → scene → soundtrack → preview
+- [x] Generic pipeline (commit 3e15da9): kits/cinema/film, sci/hud.js + clock.js, studio voices + presets, fonts + themes,
+  script linter + claims + episode-1 scripts. Still to do after the Skin School render: cinema3d probe2 (opt-in).
+- [ ] Per channel: set (3D stage + blocks), episode 1 voice → compile → scene → soundtrack → preview + stills
+  (workflow `wf_eb76d87d-36b`; resume it if it stalled; then commit, send previews to the user)
 - [ ] Per channel: final render (sequential, one render at a time, ~3 h each), assemble, QA, deliver
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
