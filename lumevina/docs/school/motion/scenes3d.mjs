@@ -411,11 +411,7 @@ const foamGeo = new THREE.SphereGeometry(0.42, 14, 12);
 const foamMat = new THREE.MeshStandardMaterial({ color: 0xdff3ff, roughness: 0.65, transparent: true, opacity: 0.0 });
 const foam = Array.from({ length: 70 }, (_, k) => { const m = new THREE.Mesh(foamGeo, foamMat); m.userData = { x: -7.2 + hash(k + 100) * 14.4, z: -3.6 + hash(k + 101) * 7.2, s: 0.6 + hash(k + 102) * 0.7, ph: hash(k + 103) * 6.28 }; m.visible = false; m.castShadow = true; scene.add(m); return m; });
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = 0.42 - t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, 0.42, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-spf": [7.5, 12.6, 1.5], "l-oil": [-4, 12.6, 3.5], "l-city": [2, 12.6, -3], "l-balm": [-1, 16, 0], "l-melt": [7.5, 12.8, 1.5], "l-warm": [-5, 13, 4], "l-gel": [7.5, 13.2, 1.5], "l-clean": [-4.5, 12.4, 4] };
 const OFF = { "l-spf": [-1, -1], "l-oil": [-1, -1], "l-city": portrait ? [-1, -1] : [1, -1], "l-balm": [1, -1], "l-melt": [-1, -1], "l-warm": [-1, -1], "l-gel": [-1, -1], "l-clean": [-1, -1] };   // on a phone the block fills the width: "what the air left" goes to the left of its point, clear of "sunscreen, makeup"
 const v3 = new THREE.Vector3();
@@ -556,11 +552,7 @@ const laySeams = (f) => {
 const film = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.26, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf3e6da, roughness: 0.12, clearcoat: 1, transmission: 0.45, opacity: 0.85, transparent: true }));
 film.position.set(0, 12.4, 0); film.castShadow = true; film.visible = false; scene.add(film);
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = -0.45 + t * 0.013, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, -0.45, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-dry": [-5, 12.6, 4.5], "l-hum": [8, 12.6, 1.5], "l-water": [-2.5, 7.5, 4.6], "l-emo": [8, 12.8, 1.5], "l-gap": [-4, 12.3, 3], "l-occ": [8, 13.3, 1.5], "l-stay": [-3.5, 10.4, 4.6] };
 const OFF = { "l-dry": [-1, -1], "l-hum": [-1, -1], "l-water": [-1, 0], "l-emo": [-1, -1], "l-gap": [-1, -1], "l-occ": [-1, -1], "l-stay": [-1, 0] };
 const v3 = new THREE.Vector3();
@@ -683,11 +675,7 @@ cream.position.set(0, 14, 0); cream.visible = false; cream.castShadow = true; sc
 const sparkGeo = new THREE.OctahedronGeometry(0.22), sparkMat = new THREE.MeshBasicMaterial({ color: 0xff6a5a, transparent: true, opacity: 1 });
 const sparks = Array.from({ length: 18 }, (_, k) => { const m = new THREE.Mesh(sparkGeo, sparkMat.clone()); m.visible = false; scene.add(m); return { m, k, x: -7 + hash(k + 600) * 14, z: -3.5 + hash(k + 601) * 7 }; });
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-dead": [-7.5, 12.4, 3.5], "l-acid": [2.5, 14.5, 1], "l-fresh": [-3.5, 11.6, 4.2], "l-shine": [-6.5, 12.6, 3.5], "l-sting": [3, 12.8, 4], "l-cream": [7.5, 13.6, 1.5], "l-grow": [-5, 12.4, 4] };
 const OFF = { "l-dead": [1, -1], "l-acid": [1, -1], "l-fresh": [-1, -1], "l-shine": [1, -1], "l-sting": [1, -1], "l-cream": [-1, -1], "l-grow": [-1, -1] };
 const v3 = new THREE.Vector3();
@@ -824,11 +812,7 @@ glow.position.set(0, 11.75, 0); scene.add(glow);
 const fizzGeo = new THREE.SphereGeometry(0.12, 8, 6), fizzMat = new THREE.MeshBasicMaterial({ color: 0xfff0c0, transparent: true, opacity: 1 });
 const fizz = Array.from({ length: 24 }, (_, k) => { const m = new THREE.Mesh(fizzGeo, fizzMat.clone()); m.visible = false; scene.add(m); return { m, k, r: rads[k % rads.length], a: hash(k + 50) * 6.28 }; });
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-rad": [-7, 15.5, 3], "l-col": [-2, 5.5, 4.6], "l-spf": [7.5, 12.8, 1.5], "l-c": [7.5, 13.2, 1.5], "l-catch": [-3, 13.4, 4.2], "l-fresh": [7.5, 12.8, 1.5], "l-old": [7.5, 12.8, 1.5] };
 const OFF = { "l-rad": [1, -1], "l-col": [1, 0], "l-spf": [-1, -1], "l-c": [-1, -1], "l-catch": [-1, -1], "l-fresh": [-1, -1], "l-old": [-1, -1] };
 const v3 = new THREE.Vector3();
@@ -986,11 +970,7 @@ const paint = (amt, rise, ph, shedK) => {
   block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
 };
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-mel": [-1.2, 9, 4.6], "l-gran": [0.6, 10.6, 4.6], "l-spot": [-1.5, 12.3, 2.4], "l-shed": [5, 13.2, 0], "l-less": [-2.5, 12.4, 4.2], "l-spf": [6.5, 12.7, 4.5], "l-heat": [-7, 14.8, 3], "l-bright": [0.5, 15.6, 1.5] };
 const OFF = { "l-uv": [1, -1], "l-mel": [1, 0], "l-gran": [1, -1], "l-spot": [-1, -1], "l-shed": [1, -1], "l-less": [-1, 0], "l-spf": [1, 0], "l-heat": [1, -1], "l-bright": [1, -1] };
 const v3 = new THREE.Vector3();
@@ -1125,13 +1105,9 @@ const paint = () => {
   block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
 };
 const look = new THREE.Vector3(0, 8, 0);
-const place = (t) => {
-  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-col": [5.5, 6, 4.5], "l-spot": [-4.5, 12.4, 3], "l-spf": [6.5, 12.6, 4.5], "l-bounce": [-3, 15.5, 4], "l-thin": [6.5, 12.6, 4.5], "l-re": [-5, 13.2, 4.5] };
-const OFF = { "l-uv": [1, -1], "l-col": [1, 0], "l-spot": [1, -1], "l-spf": [1, 0], "l-bounce": [1, -1], "l-thin": [1, 0], "l-re": [1, -1] };
+const OFF = { "l-uv": [1, -1], "l-col": [-1, 0], "l-spot": [1, -1], "l-spf": [-1, 0], "l-bounce": [1, -1], "l-thin": [-1, 0], "l-re": [1, -1] };   // directed: the right-hand labels sit left of their points, clear of the edge and the clock
 const v3 = new THREE.Vector3();
 const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
 window.seek = function (t) {
@@ -1267,13 +1243,9 @@ const paint = (wear) => {
   block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
 };
 const look = new THREE.Vector3(0, 8.5, 0);
-const place = (t) => {
-  const a = -0.45 + t * 0.012, r = portrait ? 44 : 34;
-  camera.position.set(Math.sin(a) * r, 17.5 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
-  camera.lookAt(look);
-};
+const place = (t) => (place.d || (place.d = direct(camera, look, -0.45, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-brick": [-6, 12.4, 4.5], "l-mortar": [3, 10.6, 4.6], "l-water": [-3, 9.2, 4.5], "l-scrub": [-5, 13.6, 4], "l-hot": [2, 16, 2], "l-acid": [-1, 15.5, 4], "l-leak": [5.5, 14.5, 3], "l-red": [-4, 12.3, 4.5], "l-cream": [6.5, 12.6, 4.5], "l-pause": [-6, 13.4, 4] };
-const OFF = { "l-brick": [1, -1], "l-mortar": [1, 0], "l-water": [1, 0], "l-scrub": [-1, -1], "l-hot": [1, -1], "l-acid": [1, -1], "l-leak": [1, -1], "l-red": [-1, -1], "l-cream": [1, 0], "l-pause": [-1, -1] };
+const OFF = { "l-brick": [1, -1], "l-mortar": [1, 0], "l-water": [1, 0], "l-scrub": [-1, -1], "l-hot": [1, -1], "l-acid": [-1, -1], "l-leak": [1, -1], "l-red": [-1, -1], "l-cream": [-1, 0], "l-pause": [-1, -1] };   // directed: "one active too many" left of its point, clear of "water leaking out"; the lipids label clear of the day counter
 const v3 = new THREE.Vector3();
 const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
 window.seek = function (t) {

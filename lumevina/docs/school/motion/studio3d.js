@@ -300,7 +300,7 @@ const keepLabelsIn = (W, H) => {
       const P = STUDIO.post || (STUDIO.post = makePost(renderer));
       keepLabelsIn(renderer.domElement.width, renderer.domElement.height);
       const fd = camera.position.distanceTo(focus);
-      P.u.uNear.value = camera.near; P.u.uFar.value = camera.far; P.u.uFocus.value = fd; P.u.uRange.value = fd * 0.16 * (cf ? cf.fstop / 0.45 : 1); P.u.uBack.value = fd * 0.6; P.u.uFront.value = fd * 0.3;
+      P.u.uNear.value = camera.near; P.u.uFar.value = camera.far; P.u.uFocus.value = fd; P.u.uRange.value = fd * 0.16 * (cf ? 0.45 / cf.fstop : 1);   // a wider aperture (higher number here) is a shallower focus P.u.uBack.value = fd * 0.6; P.u.uFront.value = fd * 0.3;
       P.u.uProj.value.set(1 / camera.projectionMatrix.elements[0], 1 / camera.projectionMatrix.elements[5]);
       P.ao.uniforms.uRadius.value = Math.max(0.5, Math.min(1.2, STUDIO.radius * 0.09));
       renderer.setRenderTarget(P.rtScene);
@@ -315,6 +315,53 @@ const keepLabelsIn = (W, H) => {
   Object.defineProperty(THREE.WebGLRenderer.prototype, "render", {
     configurable: true,
     set(fn) { Object.defineProperty(this, "__render", { value: fn, configurable: true, writable: true }); },
-    get() { const self = this, orig = this.__render; if (!orig) return undefined; return this.__studioRender || (this.__studioRender = function (scene, camera) { return studioRender(self, orig, scene, camera); }); }
+    get() { const self = this, orig = this.__render; if (!orig) return undefined; if (window.CINEMA) {   // the film finish (cinema3d.js) does the lens and the print itself; the studio only keeps the labels in the frame
+      if (this.__cineOrig !== orig) { this.__cineOrig = orig; this.__cineRender = function (scene, camera) { if (scene && scene.isScene && camera && camera.isPerspectiveCamera) keepLabelsIn(self.domElement.width, self.domElement.height); return orig.call(self, scene, camera); }; }
+      return this.__cineRender;
+    }
+    return this.__studioRender || (this.__studioRender = function (scene, camera) { return studioRender(self, orig, scene, camera); }); }
   });
 }
+
+// a director for the solid scenes: each shot opens close on the first thing it names, cranes back
+// to show the block, then pushes in slowly; focus racks to each label in turn; the last shot ends
+// on the hero wide. A scene calls direct(camera, look, angle, ANCHOR, portrait) once and uses the
+// returned function as its place(t). Labels are read from the shot sections, so the keys follow
+// the scene's own shot list. Portrait frames the same moves from further back with a wider lens.
+const direct = (camera, look, a0, anchors, portrait) => {
+  const shots = (window.SCENE && window.SCENE.shots) || [{ at: 0 }], dur = (window.SCENE && window.SCENE.dur) || 20;
+  const secs = [...document.querySelectorAll(".shot")];
+  const EZ = { sine: (x) => -(Math.cos(Math.PI * x) - 1) / 2, p3: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2) };
+  const side = [0.14, -0.42, 0.38, -0.3, 0.3], K = [], F = [];
+  const key = (t, L, a, el, d, fov, ease) => K.push({ t, L: L.clone(), a, el, d, fov, ease });
+  shots.forEach((s, k) => {
+    const e = k + 1 < shots.length ? shots[k + 1].at : dur;
+    const ids = secs[k] ? [...secs[k].querySelectorAll("[id^='l-']")].map((x) => x.id).filter((id) => anchors[id]) : [];
+    const P = ids.length ? ids.map((id) => new THREE.Vector3(...anchors[id])) : [look.clone()];
+    const C = P.reduce((m, p) => m.add(p), new THREE.Vector3()).multiplyScalar(1 / P.length).lerp(look, 0.35);
+    const a = a0 + side[k % side.length], t0 = k === 0 ? 0 : s.at + 1.3, tm = Math.max(t0 + 1.4, Math.min(e - 1.2, t0 + 2.6));
+    key(t0, P[0], a + 0.18, 0.52, 12.5, 30, "p3");                  // close on what the shot names first
+    key(tm, C, a, 0.4, 24, 32, "p3");                               // crane back to the block
+    if (k + 1 < shots.length) key(e, C, a - 0.07, 0.37, 21, 32, "sine");   // a slow push while it plays
+    else { key(dur - 2.6, C, a - 0.07, 0.37, 21.5, 32, "sine"); key(dur, look, a0, 0.27, 33, 34, "p3"); }   // and out to the hero wide
+    P.forEach((p, n) => F.push({ t: (k === 0 ? 0 : s.at + 0.5) + n * 1.7, at: p, f: n === 0 ? 0.55 : 0.42 }));
+  });
+  F.push({ t: dur - 2.2, at: look.clone(), f: 0.24 });
+  F.sort((x, y) => x.t - y.t);
+  const L = new THREE.Vector3(), fA = new THREE.Vector3(), fB = new THREE.Vector3();
+  window.CINEMA_FOCUS = (t) => {
+    let i = 0; for (let k = 0; k < F.length; k++) if (t >= F[k].t) i = k;
+    const cur = F[i], prev = F[Math.max(0, i - 1)], r = i === 0 ? 1 : EZ.p3(Math.min(1, (t - cur.t) / 0.45));
+    return { point: fA.copy(prev.at).lerp(fB.copy(cur.at), r), fstop: (prev.f + (cur.f - prev.f) * r) * (portrait ? 0.8 : 1) };
+  };
+  return (t) => {
+    let i = K.findIndex((k) => k.t > t); if (i < 0) i = K.length - 1; if (i < 1) i = 1;
+    const A = K[i - 1], B = K[i], e = EZ[B.ease](Math.min(1, Math.max(0, (t - A.t) / Math.max(0.001, B.t - A.t))));
+    const lin = (x, y) => x + (y - x) * e, a = lin(A.a, B.a), el = lin(A.el, B.el), d = lin(A.d, B.d) * (portrait ? 1.32 : 1);
+    L.copy(A.L).lerp(B.L, e);
+    camera.position.set(L.x + Math.sin(a) * Math.cos(el) * d, L.y + Math.sin(el) * d, L.z + Math.cos(a) * Math.cos(el) * d);
+    camera.position.x += Math.sin(t * 0.9) * 0.05 + Math.sin(t * 2.3 + 1) * 0.02; camera.position.y += Math.sin(t * 1.1 + 2) * 0.04;   // a hand on the camera
+    camera.fov = lin(A.fov, B.fov) + (portrait ? 12 : 0); camera.updateProjectionMatrix();
+    camera.lookAt(L.x + Math.sin(t * 0.7) * 0.03, L.y + Math.sin(t * 0.8 + 1) * 0.03, L.z);
+  };
+};

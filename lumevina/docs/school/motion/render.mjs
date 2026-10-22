@@ -53,11 +53,17 @@ const runtime = fs.readFileSync(path.join(here, "motion.js"), "utf8");
 // the solid scenes share one studio set (studio3d.js): rounded blocks, a warm floor, a drifting camera.
 // Every box a scene makes becomes a SoftBox, then the set goes in right after the three.js import.
 const studio3d = fs.readFileSync(path.join(here, "studio3d.js"), "utf8");
+// the film finish (cinema3d.js, from the cinema kit on the made-with-claude-film branch): each frame a
+// short exposure with real motion blur, focus where the scene says, bloom and a filmic tone curve.
+// It goes in before the studio set; --plain renders without it.
+const plain = opt("plain", false) === true;
+const cinema3d = plain ? "" : fs.readFileSync(path.join(here, "cinema3d.js"), "utf8");
 const studioModule = (src) => {
   const imp = 'import * as THREE from "../vendor/three.module.min.js";';
-  const body = src.split("new THREE.BoxGeometry(").join("new SoftBox(");
+  let body = src.split("new THREE.BoxGeometry(").join("new SoftBox(");
+  if (cinema3d) body = body.split("new THREE.WebGLRenderer(").join("cinemaRenderer(");
   const at = body.indexOf(imp);
-  return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + studio3d + "\n" + body.slice(at + imp.length);
+  return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + cinema3d + "\n" + studio3d + "\n" + body.slice(at + imp.length);
 };
 
 if (opt("list", false) === true) {
@@ -77,6 +83,7 @@ html, body { width: ${W}px; height: ${H}px; overflow: hidden; background: #000; 
 .grain { position: absolute; inset: 0; background: url("${grain}"); pointer-events: none; }
 .room { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 header { position: relative; z-index: 2; }
+.stage:has(#gl) header::before { content: ""; position: absolute; z-index: -1; left: -10vmin; right: -10vmin; top: -12vmin; bottom: -7vmin; background: linear-gradient(180deg, rgba(9,6,6,.86), rgba(9,6,6,.6) 58%, rgba(9,6,6,0)); pointer-events: none; }   /* a directed solid scene can fill the frame: a soft scrim keeps the title legible */
 .k { font-size: 2.5vmin; font-weight: 600; color: ${PALETTE.rose}; letter-spacing: .02em; }
 h1 { font-size: 6vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.04; margin-top: 1vmin; max-width: 125vmin; text-wrap: balance; }
 .grad { background: linear-gradient(95deg, #f7d3de 0%, #eab9c8 45%, #e2b08c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -166,7 +173,7 @@ for (const scene of Object.values(SCENES)) {
       const prev = ((log[scene.id] || {})[aspect] || {}).samples || [];
       let same = 0, diff = 0;
       for (const [i, h] of prev) {
-        await pg.evaluate((t) => window.seek(t), i / fps);
+        await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [i / fps, Number(opt("fps", 30))]);
         const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
         if (sha(Buffer.from(data, "base64")) === h) same++; else diff++;
       }
@@ -178,7 +185,7 @@ for (const scene of Object.values(SCENES)) {
     const sheetEvery = Math.max(1, Math.round(1.5 * fps));
     for (let i = 0; i < frames; i++) {
       const t = i / fps;
-      await pg.evaluate((t) => window.seek(t), t);
+      await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [t, Number(opt("fps", 30))]);   // the shutter is the final frame rate's, even in --quick
       const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
       const buf = Buffer.from(data, "base64");
       hashes.push(sha(buf));
