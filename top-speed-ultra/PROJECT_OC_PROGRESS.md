@@ -4,6 +4,31 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22: the owner test build: the OC Hypercar drivable out of the box (`local/live-preview`)
+
+The owner (2026-10-21, 9:40 PM PT): "make sure the hypercar is playable on my end." `npm run build` now marks only
+`dist/artifact.html` (the private test link) as the owner test build (`<div id="root" data-build="owner-test">`,
+`scripts/single-file.mjs`); `loadSettings` then turns owner mode on for the visit even where the device saved it off,
+so the OC Hypercar has a Drive button in the garage with no setting to find and no `#owner`. Never marked when
+`VITE_OWNER_TEST_BUILD` is "false" or `VITE_PAYMENTS_LIVE` is "true" (checked: both print "unmarked"); the game also
+ignores the mark when the store is live (`CONFIG.live`). `#owner=0`, or the Settings toggle, turns it off for that
+visit; the Settings row says "This test build turns owner mode on", the garage chip "Owner mode · test build". The
+starter stays the Rossini GT; `dist/top-speed-ultra.html` (and so the suite) is unmarked.
+
+- Suite, `--only=boot,race,survival,progression,phone` on the merged build: 34/35; the one failure was the new check's
+  own harness (a second load on the same URL was only a fragment change); fixed, progression rerun 7/7, the new check
+  included (saved owner:false → on, hypercar picked; `#owner=0` → off). The merge itself broke nothing in these groups.
+- Browser proof on `dist/artifact.html` from disk, 390 x 844 and 1440 x 900 (`tests/out/live-merge-3/`), no page or
+  console errors, no failed requests:
+  - fresh profile, no hash: owner mode on, five cars listed, the hypercar's Drive button selects it (`oc-hyper`);
+    Free Drive: car `oc-hyper`, the Unleashed chip, computed top 341 mph; 15 s of game time on full throttle with the
+    autopilot steering through moderate traffic: 0 to 154 mph in 8 s, top 154 (phone) and 171 mph (desktop);
+    Time Trial: still `oc-hyper`, no Unleashed chip, computed top 234 mph (the race tune);
+  - saved settings `owner:false`: owner mode on for the visit (the saved value stays false), Drive on the hypercar;
+  - `#owner=0`: off, the hypercar listed as "Founder Edition · not on sale yet (test build)", no chip.
+  - Note: `artifact.html` has no viewport meta (the host adds the document shell), so opened from disk at phone size
+    it lays out at 980 px and scales down; the phone frames show that, not the published page's phone layout.
+
 ## 2026-10-22 (merge): `claude/hypercar` up to 388cfa2 into the live build (`local/live-preview`)
 
 Brings the homes (Lifestyle: nine fictional homes in real OC neighbourhoods, credits only, extra garage slots, start

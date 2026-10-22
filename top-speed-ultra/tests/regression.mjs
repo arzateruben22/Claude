@@ -654,14 +654,16 @@ await group('progression', async (use) => {
     const marked = /<div id="root" data-build="owner-test">/.test(readFileSync(ART, 'utf8')), plain = !/data-build=/.test(readFileSync(GAME, 'utf8'));
     expect(marked && plain, `artifact marked ${marked}, top-speed-ultra.html unmarked ${plain}`);
     const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
-    await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: false })));
-    const pg = await ctx.newPage(); pg.setDefaultTimeout(120000);
+    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
+    const pg = await ctx.newPage(); pg.setDefaultTimeout(240000);
+    await game(page, () => window.__game.setPaused(true));   // the group's own page stays still while this one boots
     const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
     const boot = async (hash) => {
+      await pg.goto('about:blank');   // a load, not a fragment change on the open page
       await pg.goto(pathToFileURL(ART).href + hash);
-      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
-      await pg.locator('.pick', { hasText: 'Car' }).first().click();
-      await pg.waitForSelector('.panel.profile .gcell.car');
+      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu .pick'), null, { timeout: BOOT_MS });
+      await pg.locator('.pick', { hasText: 'Car' }).first().click({ timeout: BOOT_MS });
+      await pg.waitForSelector('.panel.profile .gcell.car', { timeout: BOOT_MS });
       return pg.evaluate(() => {
         const g = window.__game, card = [...document.querySelectorAll('.panel.profile .gcell.car')].find((c) => c.querySelector('.carhead b').textContent === 'OC Hypercar');
         return { owner: g.settings.owner, chip: document.querySelector('.panel.profile h2 .chip')?.textContent ?? '', car: g.carId, drive: !!card?.querySelector('button[aria-label="Drive the OC Hypercar"]') };
