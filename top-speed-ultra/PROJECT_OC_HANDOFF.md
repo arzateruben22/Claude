@@ -128,7 +128,11 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
 **The always-on session is active again (07:03 UTC message).** At the owner's request (two phone screenshots) it is
 condensing the in-race HUD for phone first (`HUD.tsx`, the HUD styles, the HUD bits of `App.tsx`) and fixing the seat
 POV. It asked this session to hold the HUD files. This session starts no HUD work; the live integration touches them only
-to resolve the merge (both sides' readouts kept, no redesign). Whichever lands second builds on the other. The always-on
+to resolve the merge (both sides' readouts kept, no redesign). Whichever lands second builds on the other. Agreed at 07:10: the always-on session's condensed HUD lands first on
+`local/live-preview` (pushed), with `docs/specs/HUD_CONDENSED.md` giving a slot to every live and story readout; this
+session then CHERRY-PICKS only those HUD commits (never a merge of `local/live-preview`, which carries the store) onto
+`integrate/live` or `claude/hypercar` and fits the readouts into the slots. If `integrate/live` lands first, message
+that session its commit. The always-on
 session is also merging `claude/hypercar` (388cfa2) into its `local/live-preview` for the owner's main link.
 
 **Connecting to `claude/always-on` (the owner, 04:40 UTC).** After the live integration lands on `claude/hypercar`,
