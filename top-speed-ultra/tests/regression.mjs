@@ -157,6 +157,20 @@ await group('boot', async (use) => {
     expect(/OpenStreetMap contributors via Overture Maps \(ODbL\)/.test(text), 'no OSM/Overture credit');
     expect(!(await page.getByRole('button', { name: /^Controls$/ }).count()), 'a Controls button is back');
   });
+  // the mode cards are one radio group (the live side's menu had this; the cinematic menu keeps it): only the chosen
+  // card is a tab stop, and the arrow keys move the choice and the focus
+  await check('the mode cards are one radio group: one tab stop, the arrow keys move the choice', async () => {
+    const stops = await game(page, () => [...document.querySelectorAll('.modes [role="radio"]')].filter((b) => b.tabIndex === 0).length);
+    await page.getByRole('radio', { name: /Free Drive/ }).focus();
+    await page.keyboard.press('ArrowRight');
+    const r = await game(page, () => ({ checked: document.querySelector('.modes [aria-checked="true"] b')?.textContent, focus: document.activeElement?.querySelector('b')?.textContent }));
+    await page.keyboard.press('ArrowLeft');
+    const back = await game(page, () => document.querySelector('.modes [aria-checked="true"] b')?.textContent);
+    expect(stops === 1, `${stops} tab stops among the mode cards`);
+    expect(r.checked === 'Speed Survival' && r.focus === 'Speed Survival', JSON.stringify(r));
+    expect(back === 'Free Drive', `ArrowLeft went to ${back}`);
+    return `one tab stop; ArrowRight chose and focused ${r.checked}, ArrowLeft came back to ${back}`;
+  });
 });
 
 await group('interchanges', async (use) => {
@@ -1445,6 +1459,29 @@ await group('livephone', async (use) => {
       expect(r.head === 1 && r.tail === 1 && r.brake > 3, JSON.stringify(r));
       await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, time: 'day' }); g.setCam('cockpit'); });
       return `1 ghost with head and tail lamps; brake lamp ${r.brake}`;
+    });
+    // mid-drive the Live panel is one tap from the phone (its Online app): it shows this drive's live status, and its
+    // Drive live switch leaves the server and joins it again at once, without leaving the drive
+    await check('phone: mid-drive the phone\'s Online app opens the Live panel; its switch leaves the server and rejoins at once', async () => {
+      await game(page, () => window.__game.setPaused(true));
+      await page.locator('.panel.paused').getByRole('button', { name: 'Phone', exact: true }).click();
+      await page.waitForSelector('.phone .ph-grid');
+      await page.getByRole('button', { name: 'Online', exact: true }).click();
+      await page.waitForSelector('.live-sec');
+      const head = (await page.locator('.live-sec .sect').innerText()).replace(/\s+/g, ' ');
+      expect(/2 of 25 driving now, you among them/.test(head), `the panel says "${head}"`);
+      const sw = page.getByRole('switch', { name: /Drive live/ });
+      await sw.uncheck();
+      await page.waitForFunction(() => window.__game.live === null, null, { timeout: 30000 })
+        .catch(() => { throw new Error('the switch did not leave the server'); });
+      await sw.check();
+      await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 })
+        .catch(() => { throw new Error('the switch did not join the server again'); });
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.waitForSelector('.panel.paused');
+      const mode = await game(page, () => ({ attract: window.__game.inAttract, mode: window.__game.mode }));
+      expect(!mode.attract && mode.mode === 'free', JSON.stringify(mode));
+      return `"${head.trim()}"; left and joined again, still in the drive`;
     });
     await check('phone: a crew code hides drivers outside the crew, and the invite carries it', async () => {
       await game(page, () => window.__game.setPaused(true));
