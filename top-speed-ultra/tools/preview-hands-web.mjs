@@ -1,9 +1,12 @@
 // The first web space as the driver's eye sees it (no meshing): rays from the eye through a band across the web
 // (the index MCP -> thumb MCP line, +-8 mm either side) must meet skin before the rim's leather (no slit of rim
 // through the web), and the thumb's MCP must keep its abduction off the index's metacarpal (the web a saddle between
-// two digits, not the thumb lying flat on the side of the palm). Prints the skin's height toward the eye along the
-// line, the thumb solver's terms (flexions, hinge twist, nail cosine, sink, clash, cover, web) and PASS/FAIL against
-// the acceptance used for the owner's "fix the thumbs" (2026-10-21).
+// two digits, not the thumb lying flat on the side of the palm). Across the thumb's first phalanx (at 25, 50 and 75%
+// from the MCP to the IP), rays from the eye measure how far the thumb's crest stands proud of the skin beside it
+// toward the index (the valley that makes it read as a digit of its own along its length, not only past the IP).
+// Prints the skin's height toward the eye along the line, the valleys, the thumb solver's terms (flexions, hinge
+// twist, nail cosine, sink, clash, cover, web) and PASS/FAIL against the acceptance used for the owner's "fix the
+// thumbs" (2026-10-21).
 //   node tools/preview-hands-web.mjs [m|f]
 import { build } from 'esbuild';
 import path from 'node:path';
@@ -50,6 +53,21 @@ console.log(`[${pres}] anatomy ${anatomyMs.toFixed(0)} ms (pinned q: ${M.POSE.th
 console.log(`eye rays across the web (21 stations x 5): ${rimHits} of ${n} meet the rim's leather before skin`);
 console.log(`skin height toward the eye along the index MCP -> thumb MCP line (mm from the line): index end ${h[0]}, between ${Math.min(...h.slice(4, 17))}..${Math.max(...h.slice(4, 17))}, thumb end ${h[20]}`);
 console.log(profile.map((r) => `${r.s}:${r.skinTowardEye}${r.rimHits ? 'R' + r.rimHits : ''}`).join(' '));
+// the valley beside the thumb's first phalanx: rays across it (perpendicular to it as the eye sees it), the crest's
+// height toward the eye (offsets -4..6 mm) less the lowest skin beside it toward the index (offsets 8..20 mm)
+const valley = (u) => {
+  const Q = M.lerp3(t.joints[1], t.joints[2], u), ax = M.norm(M.sub(t.joints[2], t.joints[1]));
+  const s0 = M.norm(M.cross(M.norm(M.sub(Q, eyeG)), ax)), sd = M.dot(M.sub(A.mcp[0], Q), s0) > 0 ? s0 : M.mul(s0, -1);
+  let crest = -Infinity, low = Infinity;
+  for (let o = -4; o <= 20; o += 2) {
+    const r = first(M.madd(Q, sd, o));
+    if (r.what !== 'skin') continue;
+    if (o <= 6) crest = Math.max(crest, -r.depth); else low = Math.min(low, -r.depth);
+  }
+  return crest - low;
+};
+const vals = [0.25, 0.5, 0.75].map(valley);
+console.log(`the thumb's first phalanx stands proud of the skin beside it (mm, at 25/50/75% from the MCP): ${vals.map((v) => v.toFixed(1)).join(' / ')}`);
 // the thumb as solved: joints, section angles, distance off the leather, and the solver's terms
 const fmt = (v) => v.map((x) => x.toFixed(0)).join(',');
 console.log('thumb joints (G mm)', t.joints.map(fmt).join(' | '), ' section', t.joints.map((p) => M.sectionAngle(p).toFixed(0)).join('/'), ' off the leather', t.joints.map((p) => M.rimSdfG(...p).toFixed(1)).join('/'));
@@ -65,7 +83,8 @@ const checks = [
   ['no clash with the index', T.clash < 0.01],
   ['fingertips in view (cover 0)', T.cover < 0.01],
   ['web >= 20 mm', T.webD >= 20],
-  ['IP flexion 5..60 deg', T.fI >= 5 && T.fI <= 60],
+  ['IP flexion 12..60 deg (the thumb reads in two segments)', T.fI >= 12 && T.fI <= 60],
+  ['the first phalanx >= 5 mm proud of the web beside it at 25, 50 and 75%', vals.every((v) => v >= 5)],
 ];
 for (const [name, ok] of checks) console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}`);
 if (checks.some(([, ok]) => !ok)) process.exitCode = 1;

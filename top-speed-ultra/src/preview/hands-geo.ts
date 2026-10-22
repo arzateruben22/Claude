@@ -56,8 +56,10 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     for (let k = thumb ? 1 : 0; k < 3; k++) {
       const prev = k === 0 ? g.dirs[0] : g.dirs[k - 1], next = g.dirs[k];
       const up = norm(add(k === 0 ? A.palm.N : g.dorsal[k - 1], g.dorsal[k]));
-      // the thumb's MCP is a knuckle (its folds), its IP a finger-like crease
-      const s = thumb ? (k === 2 ? 0.95 : 0.8) : k === 1 ? 1 : k === 2 ? 0.72 : 0.5;
+      // the thumb's MCP is a knuckle (its folds), its IP a finger-like crease that also reads from the seat: its
+      // strength is stored negative, and where a pixel is too coarse for its lines the shader shades the wrinkled skin
+      // over the joint as a soft, warmer band (a sign, not a kind of its own: kinds are interpolated across triangles)
+      const s = thumb ? (k === 2 ? -0.95 : 0.8) : k === 1 ? 1 : k === 2 ? 0.72 : 0.5;
       joints.push({ p: g.joints[k], ax: norm(add(prev, next)), up, r: g.halfW[k] + 4, s, kind: k === 0 || (thumb && k === 1) ? 1 : 0 });
     }
   });
@@ -66,6 +68,7 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
   const knuckles = A.mcp.map((m, i) => madd(m, dN, 6 + i * 0));
   const pips = A.digits.slice(0, 4).map((g) => g.joints[1]);
   const dips = A.digits.slice(0, 4).map((g) => g.joints[2]);
+  const thumbIp = A.digits[4].joints[2];
   // which bone is nearest, for the palmar side and thinness
   const bones: { a: V3; b: V3; up: V3; thin: number }[] = [];
   A.digits.forEach((g, gi) => { for (let k = gi === 4 ? 1 : 0; k < 3; k++) bones.push({ a: g.joints[k], b: g.joints[k + 1], up: g.dorsal[k], thin: gi === 4 ? 0.8 : 1 - (2 - k) * 0.12 }); });
@@ -102,6 +105,8 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
       red = Math.max(red, g3(len(sub(p, knuckles[i])), 9) * 0.45, g3(len(sub(p, pips[i])), 7.5) * 0.35 * Math.max(0, dot(n, A.digits[i].dorsal[0]) + 0.3), g3(len(sub(p, dips[i])), 6) * 0.35);
     }
     for (const t of tips) red = Math.max(red, g3(len(sub(p, t)), 9) * 0.6);
+    // the back of the thumb's IP, a shade redder like the fingers' joints
+    red = Math.max(red, g3(len(sub(p, thumbIp)), 6.5) * 0.4 * Math.max(0, dot(n, A.digits[4].dorsal[1]) + 0.2));
     red = Math.max(red, palmar * onFinger * 0.3);
     const thin = onFinger * (bi >= 0 ? bones[bi].thin : 0);
     skin.set([red, palmar, ao, thin], v * 4);
