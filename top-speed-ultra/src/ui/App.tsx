@@ -99,6 +99,7 @@ export function App() {
 
   const update = (patch: Partial<Settings>) => {
     const next = { ...settingsRef.current, ...patch };
+    settingsRef.current = next;          // at once, so a handler that reads it next (startLive) sees the change
     setSettings(next); saveSettings(next); game.current?.updateSettings(next);
   };
 
@@ -278,8 +279,14 @@ export function App() {
   };
   const liveOn = liveInfo.status !== 'off';
   const serverKnown = !!liveBase(settings.liveUrl);
-  // the Drive live switch: it needs an account first
-  const setLiveOn = (v: boolean) => { if (v && !liveName) { setPanel('account'); return; } update({ live: v }); };
+  // the Drive live switch: it needs an account first. On the menu it applies to the next drive; during one (the Live
+  // panel also opens from the pause screen, the phone and the quick menu) it joins or leaves the server at once
+  const driving = screen === 'playing' || screen === 'paused';
+  const setLiveOn = (v: boolean) => {
+    if (v && !liveName) { setPanel('account'); return; }
+    update({ live: v });
+    if (driving) { if (v) startLive(); else stopLive(); }
+  };
 
   // the Live panel (an alpha, and it says so): the lobby, the account, the board, Drive live, a crew, an invite. The
   // rail's Online row, the phone's Online app, the radial menu and the pause screen all open this one panel.
@@ -288,7 +295,9 @@ export function App() {
       <div className="panel narrow live-panel">
         <h2>Online<span className="chip">alpha</span></h2>
         <section className="live-sec">
-          <p className="sect"><span aria-hidden="true">Live · alpha</span>{lobby && <span aria-live="polite">{` · ${lobby.online} of ${lobby.cap} driving now${lobby.queued ? `, ${lobby.queued} waiting` : ''}`}</span>}</p>
+          <p className="sect"><span aria-hidden="true">Live · alpha</span>{lobby ? <span aria-live="polite">{` · ${lobby.online} of ${lobby.cap} driving now${lobby.queued ? `, ${lobby.queued} waiting` : ''}`}</span>
+            : liveInfo.status === 'online' ? <span>{` · ${liveInfo.online} of ${liveInfo.cap} driving now, you among them`}</span>
+            : liveInfo.status === 'queued' ? <span>{` · you're #${liveInfo.position} in line`}</span> : null}</p>
           <div className="picks">
             <button className="pick" onClick={() => setPanel('account')}>
               <Ico name="driver" /><small>Account</small><b>{liveName || 'Not signed in'}</b><span>{liveName ? 'Signed in on this device' : 'Sign up or log in to drive live'}</span><i aria-hidden="true">›</i>
@@ -304,7 +313,7 @@ export function App() {
                 onChange={(e) => { const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); setCrewDraft(v); if (!v || /^[A-Z0-9]{4,8}$/.test(v)) update({ crew: v }); }} />
               <button type="button" className="btn" onClick={() => { const v = newCrew(); setCrewDraft(v); update({ crew: v }); }}>New code</button>
             </div>
-            <p className="fine">{settings.crew ? `In crew ${settings.crew}: you'll only see, hear and list drivers with the same code.` : 'Leave it empty to drive with everyone. Friends who share a code see only each other.'}</p>
+            <p className="fine">{settings.crew ? `In crew ${settings.crew}: you'll only see, hear and list drivers with the same code.` : 'Leave it empty to drive with everyone. Friends who share a code see only each other.'}{driving && liveOn ? ' A new code applies from your next drive.' : ''}</p>
           </div>
           {serverKnown && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>{settings.crew ? 'Invite to your crew' : 'Invite a friend'}</button></div>}
           {lobby?.cruise && <p className="cruise">{lobby.cruise.live ? 'OC cruise night is on now. Jump in.' : `Next OC cruise night: ${new Date(lobby.cruise.at).toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit' })}`}</p>}
