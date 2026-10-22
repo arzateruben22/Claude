@@ -1,5 +1,7 @@
 // Test page for the people builder. Views (?view=): bodies, lineup, faces, talk, walk.
 //   faces: &only=reference,casual &expr=neutral,smile &dist=0.55 &dy=0.045 (aim below the eyes) &cy=0 (camera height)
+//          &grey=1,0 (each row's share of grey strands) &eyehook=1 (skin.ts' eye shape from the face, as person.ts will)
+//   &dbg=atlas: the brow and beard strand atlas over the page, with the beard half's coverage in the JSON
 //   node tools/preview-shoot.mjs src/onfoot/test-people.ts tests/out/onfoot/people-<view>.png --size=960x540 --query="view=<view>"
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -186,10 +188,17 @@ async function main() {
     const yaws = (q.get('yaws') ?? '0').split(',').map(Number);
     const exprs = (q.get('expr')?.split(',') ?? (view === 'head' ? yaws.map(() => 'neutral') : ['neutral', 'smile', 'playful', 'talking']));
     const t0 = performance.now();
+    const greys = q.get('grey')?.split(',');   // per row: the share of grey strands (look.grey), e.g. &only=elder,elder&grey=1,0
     names.forEach((n, i) => {
       const o = preset(n); o.quality = quality; o.lod = 0;
       if (q.get('bald')) { o.look.hair = 'bald'; o.look.glasses = false; o.acc.hoops = null; }
+      if (greys?.[i]) o.look.grey = Number(greys[i]);
       const p = buildPerson(o);
+      // &eyehook=1: what person.ts' pending one-line hook will do, to check it: skin.ts' eye shape (uEyeP) from the face
+      if (q.get('eyehook')) p.group.traverse((m) => {
+        const u = ((m as THREE.Mesh).material as { uniformsRef?: Record<string, THREE.IUniform> } | undefined)?.uniformsRef?.uEyeP;
+        if (u) (u.value as THREE.Vector4).set(o.face.eyeSize, 1.2 * o.face.eyeTilt, o.face.hooded, 0);
+      });
       p.group.position.set(i * 3, 0, 0);
       scene.add(p.group); people.push(p);
     });
@@ -358,6 +367,24 @@ async function main() {
     if (isTeeth && dbg !== 'teethOnly') mm.material = dbg === 'teeth' ? new THREE.MeshBasicMaterial({ vertexColors: true }) : new THREE.MeshNormalMaterial();
     if (!isTeeth && dbg === 'teethOnly') mm.visible = false;
   });
+  // the brow and beard strand atlas (face.ts, 512 x 128: beard tiles above, brows below), over the page, texel for texel
+  // scaled to the page's width: coverage shows as white on blue-grey
+  if (dbg === 'atlas') {
+    let atlas: HTMLCanvasElement | null = null;
+    people[0]?.group.traverse((m) => {
+      const im = ((m as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined)?.map?.image as HTMLCanvasElement | undefined;
+      if (im && im.width === 512 && im.height === 128) atlas = im;
+    });
+    if (atlas) {
+      const a = atlas as HTMLCanvasElement;
+      // the beard half's coverage (mean alpha over the cards' v 0.52..0.98), by thirds from the root
+      const px = a.getContext('2d')!.getImageData(0, 0, 512, 64).data, cov = [0, 0, 0];
+      for (let y = 3; y < 61; y++) for (let x = 0; x < 512; x++) cov[Math.min(2, Math.floor((61 - y) / 19.4))] += px[(y * 512 + x) * 4 + 3] / 255;
+      extra.beardCoverage = cov.map((s) => +(s / (512 * 58 / 3)).toFixed(3));   // [root third, middle, tip third]
+      a.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:25vw;image-rendering:pixelated;background:#25303c;z-index:9';
+      document.body.appendChild(a);
+    }
+  }
   if (view !== 'crowd') extra.people = people.map((p) => p.stats());
   if (people[0]) { const ms: THREE.Mesh[] = []; people[0].group.traverse((m) => { if ((m as THREE.Mesh).isMesh) ms.push(m as THREE.Mesh); }); const e = ms[0]; e.updateWorldMatrix(true, false); const z = new THREE.Vector3(0, 0, 1).transformDirection(e.matrixWorld); extra.eyeZ = z.toArray().map((v) => +v.toFixed(3)); const pp = new THREE.Vector3(); e.getWorldPosition(pp); extra.eyeP = pp.toArray().map((v) => +v.toFixed(3)); extra.eyeParent = e.parent?.parent?.name; }
   extra.parts = people.slice(0, 1).map((p) => { const out: string[] = []; p.group.traverse((m) => { const g = (m as THREE.Mesh).geometry; if (g && m.visible) out.push(`${m.type}:${(g.index ? g.index.count : g.attributes.position.count) / 3}:${Object.keys(g.morphAttributes).length ? g.morphAttributes.position?.length : 0}`); }); return out.join(' '); });

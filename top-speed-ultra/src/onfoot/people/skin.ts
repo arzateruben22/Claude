@@ -88,6 +88,9 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
     uInk: { value: new THREE.Color(o.tattooInk ?? 0x1a2230) },
     uHeadO: { value: new THREE.Vector3(0, 0, 0) }, uHeadS: { value: new THREE.Vector3(1, 1, 1) }, uLipP: { value: new THREE.Vector4(-1, 0.026, 1, 1) },
     uFaceP: { value: new THREE.Vector4(0.0315, -0.036, 0, 0) },   // the eye's x, the nose tip's y (head-local), the head's old
+    // the eye's shape, as face.ts lays its lids: its size, the lid line's tilt at the outer corner (mm, 1.2 x eyeTilt)
+    // and the upper lid's hood (person.ts sets it from the face; until it does, an eye of size 1, level and unhooded)
+    uEyeP: { value: new THREE.Vector4(1, 0, 0, 0) },
   };
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
@@ -113,7 +116,7 @@ vExpr = vec4(morphTargetInfluences[2], morphTargetInfluences[3], morphTargetInfl
 varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;
 uniform vec3 uTone; uniform float uDark; uniform vec3 uLip; uniform float uLipAmt; uniform float uBlush; uniform float uBeard; uniform vec3 uBeardCol;
 uniform float uLiner; uniform vec3 uHair; uniform float uFreckles; uniform float uAge; uniform float uMale; uniform vec3 uInk;
-uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP;
+uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP;
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
@@ -185,21 +188,24 @@ c *= 1.0 - eyeA * (0.17 + 0.12 * uAge + 0.22 * uLiner * (1.0 - uMale));   // lid
 c = mix(c, c * vec3(0.97, 0.92, 0.93), eyeA * 0.6);
 c = mix(c, vec3(0.035, 0.026, 0.024), lashL);   // the lash line along each lid margin: what makes an eye read at a distance
 // the corners of the fissure, where it opens past the eyeball onto the socket: the caruncle in the inner corner (a
-// pink-red, wet mound) and the conjunctiva in shadow at the outer. Eye-local mm, inside face.ts' lid margins (the eye's
-// size taken as 1); the lids' outer skin lies outside them and is left alone
+// pink-red, wet mound) and the conjunctiva in shadow at the outer. Eye-local mm (head-local over the eye's size, as
+// face.ts lays the lids), inside face.ts' rest lid margins with their tilt and hood (margins()); the lids' outer skin
+// lies outside them and is left alone. Both end at the canthi: past a canthus the margins meet (u clamps, yU = yL), and
+// the band left there painted a wet line toward the nose and a dark one toward the temple. So the band closes with the
+// fissure (its height) and each term stops at its canthus (inner -15.2 mm, outer 13.5)
 float carM = 0.0;
 #ifdef SKIN_FACE
 if (eyeA > 0.15) {
-  float xe = (abs(hl.x) - uFaceP.x) * 1000.0, ye = hl.y * 1000.0;
+  float xe = (abs(hl.x) - uFaceP.x) * 1000.0 / uEyeP.x, ye = hl.y * 1000.0 / uEyeP.x;
   float u = clamp((xe + 15.2) / 28.7, 0.0, 1.0);
   float wU = u < 0.47 ? 0.5 * u / 0.47 : 0.5 + 0.5 * (u - 0.47) / 0.53, wL = u < 0.6 ? 0.5 * u / 0.6 : 0.5 + 0.5 * (u - 0.6) / 0.4;
-  float yc = mix(-0.9, 0.4, u);
-  float yU = yc + 5.0 * pow(max(1e-5, sin(3.14159 * wU)), 0.75), yL = yc - 4.3 * pow(max(1e-5, sin(3.14159 * wL)), 0.85);
-  float inF = smoothstep(yL - 0.5, yL + 0.3, ye) * smoothstep(yU + 0.5, yU - 0.3, ye);
-  carM = inF * smoothstep(-9.0, -11.0, xe);
+  float yc = mix(-0.9, 0.4 + uEyeP.y, u);
+  float yU = yc + (5.0 - 0.8 * uEyeP.z) * pow(max(1e-5, sin(3.14159 * wU)), 0.75), yL = yc - 4.3 * pow(max(1e-5, sin(3.14159 * wL)), 0.85);
+  float inF = smoothstep(yL - 0.5, yL + 0.3, ye) * smoothstep(yU + 0.5, yU - 0.3, ye) * smoothstep(0.2, 1.2, yU - yL);
+  carM = inF * smoothstep(-9.0, -11.0, xe) * smoothstep(-16.6, -15.0, xe);
   vec3 carC = mix(vec3(0.6, 0.3, 0.28), c * vec3(0.95, 0.62, 0.6), 0.3 + 0.4 * uDark);
   c = mix(c, carC, carM * 0.85);
-  c = mix(c, c * vec3(0.6, 0.5, 0.5), inF * smoothstep(9.0, 11.0, xe) * 0.7);
+  c = mix(c, c * vec3(0.6, 0.5, 0.5), inF * smoothstep(9.0, 11.0, xe) * smoothstep(14.8, 13.3, xe) * 0.7);
 }
 #endif
 // stubble and beard shadow
@@ -292,7 +298,7 @@ float crease = 0.0;
 if (mid > 0.001 && (uAge > 0.02 || sqS > 0.01)) {
   float crow = 0.0, lines = 0.0;
   #ifdef SKIN_FACE
-  vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135, hl.y + 0.001);   // from the outer canthus, outward
+  vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135 * uEyeP.x, hl.y + 0.001);   // from the outer canthus, outward
   float cr = length(cq);
   if (cq.x > 0.0 && cr < 0.017) {
     float ca = atan(cq.y, max(cq.x, 0.0005));

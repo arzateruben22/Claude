@@ -353,7 +353,13 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
 // the upper lip's vermilion. The skin under it is tinted dark (skin.ts), so the cards add the hair's texture, its soft
 // edge and its volume over a full base.
 
-/** the brow texture (v 0..0.5, unchanged) with four tiles of beard strands above it (v 0.5..1, roots at each tile's left) */
+/** the brow texture (v 0..0.5, unchanged) with sixteen 32 px tiles of beard strands above it (v 0.5..1), side by side
+ *  along u. Each strand runs along v, root at v 0.52, tip toward v 0.98, so across a card u runs across its strands:
+ *  cards.ts' per-strand grey hash, floor(u * 220), then picks one colour per strand, constant along it, and each strand
+ *  is drawn on the centre of its hash column. (The strands ran along u: the hash flipped about 53 times along every
+ *  strand, and a grey beard or moustache read as salt-and-pepper static that mipmapping could not filter.) A tile is
+ *  as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-1.8 texel strand is a 0.1-0.2 mm hair */
+const BEARD_TILES = 16, HASH_COL = 512 / 220;   // (cards.ts: the grey hash's column, in texels)
 let browBeardTex: THREE.Texture | null = null;
 function browBeardTexture() {
   if (browBeardTex) return browBeardTex;
@@ -363,26 +369,27 @@ function browBeardTexture() {
   g.clearRect(0, 0, 512, 128);
   g.drawImage(browTexture().image as CanvasImageSource, 0, 64);   // flipY: the canvas' lower half is v 0..0.5
   const r = rng(9091);
-  for (let k = 0; k < 4; k++) {
-    const x0 = k * 128;
-    // a soft density under the strands, strongest toward the root (a beard reads as a tone before single hairs do)
-    for (let i = 0; i < 9; i++) {
-      const cx = x0 + 10 + i * 11, rr = 22 - i * 1.2;
-      const gr = g.createRadialGradient(cx, 32, 0, cx, 32, rr);
-      gr.addColorStop(0, `rgba(255,255,255,${0.12 - i * 0.009})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
-      g.fillStyle = gr; g.fillRect(cx - rr, 32 - rr, rr * 2, rr * 2);
-    }
-    // strands from the root end, clumping a little toward the card's middle, tapering out before the tile's edge
-    for (let i = 0; i < 52; i++) {
-      const ys = 9 + 46 * r.next(), xs = x0 + 1 + 22 * r.next();
-      const L = Math.min(52 + 68 * r.next(), x0 + 124 - xs);
-      const ang = (r.next() - 0.5) * 0.18 + ((32 - ys) / 32) * 0.1, bend = (r.next() - 0.5) * 9;
-      const ex = xs + Math.cos(ang) * L, ey = ys + Math.sin(ang) * L;
-      const v = Math.round(150 + 105 * r.next()), a0 = 0.35 + 0.3 * r.next();
+  const tw = 512 / BEARD_TILES, yRoot = 61.5, yTip = 2.5;   // the canvas rows of v 0.52 and v 0.98
+  for (let k = 0; k < BEARD_TILES; k++) {
+    const x0 = k * tw, cx = x0 + tw / 2;
+    // a soft density under the strands, strongest at the root and down the card's middle (a beard reads as a tone
+    // before single hairs do): half an ellipse standing on the root row, so nothing spills into the brow half
+    g.save(); g.translate(cx, yRoot); g.scale(1, 2.2);
+    const gr = g.createRadialGradient(0, 0, 0, 0, 0, tw / 2);
+    gr.addColorStop(0, 'rgba(255,255,255,0.14)'); gr.addColorStop(0.55, 'rgba(255,255,255,0.06)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(-tw / 2, -tw / 2, tw, tw / 2);
+    g.restore();
+    // a strand on every hash column whose centre lies 2 texels or more inside the tile: from near the root end, nearly
+    // straight up the card (it keeps to its column), tapering out before the tip
+    for (let s = Math.ceil((x0 + 2) / HASH_COL - 0.5); (s + 0.5) * HASH_COL <= x0 + tw - 2; s++) {
+      const xs = (s + 0.5) * HASH_COL + (r.next() - 0.5) * 0.3, ys = yRoot - 10 * r.next();
+      const L = Math.min((0.42 + 0.55 * r.next()) * (yRoot - yTip), ys - yTip);
+      const ex = xs + (r.next() - 0.5) * 0.7, ey = ys - L, bend = (r.next() - 0.5) * 0.5;
+      const v = Math.round(150 + 105 * r.next()), a0 = 0.55 + 0.3 * r.next();
       const grad = g.createLinearGradient(xs, ys, ex, ey);
       grad.addColorStop(0, `rgba(${v},${v},${v},${a0})`); grad.addColorStop(0.65, `rgba(${v},${v},${v},${a0 * 0.7})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
-      g.strokeStyle = grad; g.lineWidth = 0.8 + 0.9 * r.next();
-      g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + ex) / 2 - Math.sin(ang) * bend, (ys + ey) / 2 + Math.cos(ang) * bend, ex, ey); g.stroke();
+      g.strokeStyle = grad; g.lineWidth = 1 + 0.8 * r.next();
+      g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + ex) / 2 + bend, (ys + ey) / 2, ex, ey); g.stroke();
     }
   }
   const t = new THREE.CanvasTexture(c);
@@ -471,8 +478,9 @@ function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, po
       [add(p, mul(w, -hw)), add(mid, mul(w, -hw * 1.05)), add(tip, mul(w, -hw * 0.8))],
       [add(p, mul(w, hw)), add(mid, mul(w, hw * 1.05)), add(tip, mul(w, hw * 0.8))],
     ];
-    const u0 = Math.floor(r.next() * 4) * 0.25;
-    const sg = stripGeometry(rows, (i, j) => [u0 + 0.004 + 0.242 * (i / 2), 0.52 + 0.46 * j]);
+    // one of the atlas' beard tiles: u across the card (2 texels in from each side of the tile), v along it from the root
+    const u0 = Math.floor(r.next() * BEARD_TILES) / BEARD_TILES, du = 2 / 512, wu = 1 / BEARD_TILES - 2 * du;
+    const sg = stripGeometry(rows, (i, j) => [u0 + du + wu * j, 0.52 + 0.46 * (i / 2)]);
     const off = pos.length / 3;
     pos.push(...sg.pos); uvs.push(...sg.uvs); idx.push(...sg.idx.map((v) => v + off));
   }
