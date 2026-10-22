@@ -237,7 +237,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
     // the other live drivers (an alpha): where the server last saw each, as dots in the live chip's green, named up close
     if (driving && game.live) {
       const now = performance.now();
-      g.strokeStyle = T.deep; g.lineWidth = 1.5; g.font = '500 11px var(--f-ui, sans-serif)';
+      g.strokeStyle = T.deep; g.lineWidth = 1.5; g.font = '600 11px system-ui, sans-serif';   // a canvas font can't read a CSS variable
       for (const peer of game.live.peers.values()) {
         const at = game.live.whereIs(peer, now); if (!at) continue;
         const X = sx(at.x), Y = sy(at.z); if (X < -8 || Y < -8 || X > w + 8 || Y > h + 8) continue;
