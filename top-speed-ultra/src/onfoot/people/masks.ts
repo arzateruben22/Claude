@@ -41,7 +41,8 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
   const inL = y < mY ? smooth(hL + 0.0008, hL - 0.0008, mY - y) : 0;
   const lip = clamp((inU + inL) * front * smooth(mw + 0.001, mw - 0.002, ax));
   const inMouth = (x / 0.0225) ** 2 + ((y - mY + 0.001) / 0.0125) ** 2 + (z / 0.0185) ** 2 < 1.15;
-  const mouth = inMouth ? smooth(0.0175, 0.0115, z) : 0;
+  // (fading out over the last few mm before each corner: the interior's dark red no longer pools in the corners)
+  const mouth = inMouth ? smooth(0.0175, 0.0115, z) * smooth(0.0235 * F.mouthW, 0.019 * F.mouthW, ax) : 0;
   // warmth: cheeks, nose, ears, chin, lids
   const cheeks = g3(ax, y, z, [0.04, -0.03, 0.012], 0.018);
   const nose = g3(x, y, z, hf.nose.tip, 0.009) + 0.5 * g3(ax, y, z, [0.012, hf.nose.tip[1] - 0.006, 0.022], 0.007);
