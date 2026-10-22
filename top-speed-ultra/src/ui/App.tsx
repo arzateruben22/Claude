@@ -8,7 +8,7 @@
 // the car's atmosphere (styles.css), not a second colour scheme.
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
@@ -45,6 +45,7 @@ const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced
 const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD and map'], ['world', 'World'], ['live', 'Live'], ['driving', 'Driving'], ['sound', 'Sound'], ['testing', 'Testing']];
 // the mode cards' one-line subtitles (the menu)
 const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
+const MODE_LIST = Object.keys(MODES) as Mode[];
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const IDLE_MS = 4000;      // the Minimal HUD tucks the control rail and the corner window away after this long without input
 // keys that only drive (throttle, brake, steering, handbrake, look back, shifts): pressing them isn't asking for the HUD
@@ -266,6 +267,15 @@ export function App() {
   useEffect(() => { document.documentElement.dataset.driver = settings.driver; }, [settings.driver]);
   // and the look: the interface's art direction from the owner's style library (styles.css :root[data-look])
   useEffect(() => { document.documentElement.dataset.look = settings.look; }, [settings.look]);
+  // the mode cards are one radio group: the arrow keys move the choice (and the focus), Tab leaves the group
+  const modeKeys = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const i = (MODE_LIST.indexOf(mode) + step + MODE_LIST.length) % MODE_LIST.length;
+    setMode(MODE_LIST[i]);
+    e.currentTarget.querySelectorAll<HTMLElement>('[role="radio"]')[i]?.focus();
+  };
   const liveOn = liveInfo.status !== 'off';
   const serverKnown = !!liveBase(settings.liveUrl);
   // the Drive live switch: it needs an account first
@@ -411,9 +421,9 @@ export function App() {
             <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
             <section className="m-modes">
               <p className="mode-brief" id="mode-brief"><b>{MODES[mode].label}</b>{MODES[mode].blurb}</p>
-              <div className="modes" role="radiogroup" aria-label="Mode">
-                {(Object.keys(MODES) as Mode[]).map((m, i) => (
-                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
+              <div className="modes" role="radiogroup" aria-label="Mode" onKeyDown={modeKeys}>
+                {MODE_LIST.map((m, i) => (
+                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} tabIndex={mode === m ? 0 : -1} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
                     <ModeArt kind={m} />
                     <span className="mode-text">
                       <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
@@ -1023,7 +1033,8 @@ function Seg<T extends string>({ value, options, labels, onChange, label }: { va
   return <div className="seg" role="group" aria-label={label}>{options.map((o) => <button key={o} type="button" aria-pressed={o === value} onClick={() => onChange(o)}>{labels(o)}</button>)}</div>;
 }
 function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
-  return <label className="toggle"><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /><span>{label}</span></label>;
+  // a real checkbox drawn as a switch (styles.css .toggle), so assistive tech hears a switch
+  return <label className="toggle"><input type="checkbox" role="switch" checked={value} onChange={(e) => onChange(e.target.checked)} /><span>{label}</span></label>;
 }
 function Range({ label, min, max, step, value, fmt, onChange }: { label: string; min: number; max: number; step: number; value: number; fmt: (v: number) => string; onChange: (v: number) => void }) {
   const id = 'r-' + label.replace(/\W+/g, '');
