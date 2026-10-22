@@ -778,21 +778,20 @@ await group('phone', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'phone-menu.png') });
     expect(await noSideScroll(), 'the page scrolls sideways');
   });
-  // the main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless"): opening a screen changes what the
-  // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are
-  await check('menu: one sheet; the Drive dock stays while its screens change', async () => {
-    await game(page, () => { document.querySelector('.sheet').dataset.k = 'first'; });
+  // the main menu (this branch's cinematic menu, which replaced the glass sheet and its Drive dock in the live-server
+  // merge): Settings opens from the rail as a panel of its own, Done comes back to the menu and its mode cards, and the
+  // menu has one plain "Drive" button (the garage's are named for their car)
+  await check('menu: Settings opens from the rail and Done comes back; one Drive button', async () => {
+    const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await page.waitForTimeout(400);
-    const r = await game(page, () => ({ same: document.querySelector('.sheet')?.dataset.k === 'first', title: document.querySelector('.sheet-body .panel h2')?.textContent,
-      go: !!document.querySelector('.dock .btn.go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
-    const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
-    expect(r.same && r.title === 'Settings' && r.go && r.here === 'Settings', JSON.stringify(r));
+    const title = await game(page, () => document.querySelector('.overlay .panel h2')?.textContent);
+    expect(title === 'Settings', `the panel says "${title}"`);
     expect(drives === 1, `${drives} Drive buttons`);
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();   // the dock's button toggles back
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
     await page.waitForTimeout(400);
-    expect(await page.locator('.sheet.home .modes').count() === 1, 'not back on the menu');
-    return `same sheet, dock marks ${r.here}, one Drive button`;
+    expect(await page.locator('.overlay.menu .modes').count() === 1, 'not back on the menu');
+    return `Settings and back to the menu, one Drive button`;
   });
   await check('profile screen renders', async () => {
     await page.getByRole('button', { name: 'Profile', exact: true }).click();
@@ -1152,7 +1151,11 @@ await group('live', async (use) => {
     const signIn = (page, t, name) => page.evaluate(([t, n]) => { localStorage.setItem('tsu.live.token', t); localStorage.setItem('tsu.live.name', n); }, [t, name]);
     const status = (page) => game(page, () => ({ ...window.__game.live?.info, peers: window.__game.stats.livePeers, drawn: window.__game.stats.liveDrawn }));
     const until = async (page, fn, what, timeout = 30000) => { await page.waitForFunction(fn, null, { timeout }).catch(() => { throw new Error(`timed out waiting for ${what}`); }); };
+    // on this menu the Live section is a panel of its own: the rail's Online row opens it, Done leaves it for the menu
+    const online = (page) => page.getByRole('button', { name: /^Online/ }).click();
+    const leaveLive = (page) => page.getByRole('button', { name: 'Done', exact: true }).click();
     await check('the menu shows the Live section with the account and the toggle; the account panel has the form', async () => {
+      await online(A);
       const sec = await A.locator('.live-sec').innerText();
       expect(/Not signed in/.test(sec) && /Drive live/.test(sec), sec.replace(/\s+/g, ' ').slice(0, 120));
       step('menu read');
@@ -1183,6 +1186,7 @@ await group('live', async (use) => {
       return 'signed up as live_ui from the panel';
     });
     await check('two drivers are online under the cap of 2, and each sees the other', async () => {
+      await leaveLive(A);
       await drive(A, 'Free Drive');
       await until(A, () => window.__game.live?.info.status === 'online', 'A online');
       step('A is driving live');
@@ -1298,6 +1302,7 @@ await group('live', async (use) => {
       const standing = (await A.locator('.board-line').innerText()).replace(/\s+/g, ' ');
       expect(/online board: #\d+ for distance \(\d/.test(standing), standing);
       await A.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await online(A);
       await A.locator('.pick', { hasText: 'Account' }).click();
       await A.locator('summary', { hasText: 'Change password' }).click();
       await A.locator('#live-cur').fill('a long enough password');
@@ -1373,8 +1378,12 @@ await group('livephone', async (use) => {
     const [tPhone, tPeer] = [await signup('phone_me'), await signup('Westbound_GT')];
     void tPhone;
     const { page } = await use({ phone: true, settings: { live: true, liveUrl: base, start: 'I-405 North', density: 'none' } });
+    // on this menu the Live section is a panel of its own: the rail's Online row opens it, Done leaves it for the menu
+    const online = (p) => p.getByRole('button', { name: /^Online/ }).click();
+    const leaveLive = (p) => p.getByRole('button', { name: 'Done', exact: true }).click();
     // log in through the panel (a reload would lose localStorage: Chromium's phone emulation drops a file:// page's
     // storage on reload, which a real phone loading the game over https doesn't)
+    await online(page);
     await page.locator('.pick', { hasText: 'Account' }).click();
     await page.getByRole('button', { name: 'Log in', exact: true }).first().click();
     await page.locator('#live-name').fill('phone_me');
@@ -1400,6 +1409,7 @@ await group('livephone', async (use) => {
       return 'signed in, the email setting open, nothing off screen';
     });
     await check('phone: the top bar holds the chip and the horn without crowding; the who\'s-on list fits', async () => {
+      await leaveLive(page);
       await drive(page, 'Free Drive');
       await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
       // the scripted peer: online, 60 m ahead on the same road, sending poses at 10 Hz
@@ -1439,8 +1449,10 @@ await group('livephone', async (use) => {
     await check('phone: a crew code hides drivers outside the crew, and the invite carries it', async () => {
       await game(page, () => window.__game.setPaused(true));
       await page.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await online(page);
       await page.locator('#crew').fill('oc405');
       expect(await game(page, () => window.__game.settings?.crew ?? JSON.parse(localStorage.getItem('tsu.settings')).crew) === 'OC405', 'the crew setting');
+      await leaveLive(page);
       await drive(page, 'Free Drive');
       await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
       await page.waitForTimeout(2500);
