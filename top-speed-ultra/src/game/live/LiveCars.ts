@@ -105,7 +105,9 @@ export class LiveCars {
       g.font = '600 34px "Chakra Petch", Arial, sans-serif';
       const w = Math.min(244, g.measureText(label).width + 36);
       g.fillStyle = 'rgba(10, 10, 14, 0.72)'; g.beginPath(); g.roundRect((256 - w) / 2, 8, w, 48, 24); g.fill();
-      g.fillStyle = '#fd9123'; g.beginPath(); g.arc((256 - w) / 2 + 20, 32, 6, 0, Math.PI * 2); g.fill();
+      // the dot in the live colour (the theme's --good: the live chip, the corner map and the World Map use it too)
+      g.fillStyle = (typeof document !== 'undefined' && getComputedStyle(document.documentElement).getPropertyValue('--good').trim()) || '#6ff7de';
+      g.beginPath(); g.arc((256 - w) / 2 + 20, 32, 6, 0, Math.PI * 2); g.fill();
       g.fillStyle = '#f4f1ea'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(label, 128 + 8, 33, 200);
       const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
       const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
