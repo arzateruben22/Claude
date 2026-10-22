@@ -1231,6 +1231,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .livewho .btn.join { min-height: 34px; padding: 0 12px; font-size: 11px; }
 .livewho .fine { margin-top: 8px; }
 .tbtn.honk .ico { color: var(--ice-text); }
+/* with a mouse the sky camera sits top right; the rail, two buttons taller while live (the chip and the horn), hangs
+   under it instead of centring up into it (App.tsx sets --cw to the window's size plus a gap) */
+@media (pointer: fine) { .app:has(.corner.sky) .tbar { top: calc(max(12px, env(safe-area-inset-top)) + 56px + var(--cw)); transform: none; } }
 @media (pointer: coarse) {
   .livewho { top: calc(100% + 8px); right: 0; left: auto; }
   .livechip .lc-word { display: none; }
