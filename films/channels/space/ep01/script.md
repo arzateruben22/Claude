@@ -21,10 +21,10 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/space/ep01 --segment readout`.
 
-## hook {shot: diagram view; frame 0: the Sun gone, the teal front mid-flight, Earth still curving · badge: thought experiment · title: "If the Sun vanished" · pre: 0.1 · energy: 0.7} (0–4 s)
+## hook {shot: diagram view; frame 0: the Sun gone, the teal front mid-flight, Earth still curving · badge: thought experiment · title: "If the Sun vanished" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–4 s)
 vo: What if the Sun *vanished*? How soon would you *know*?
 
-## normal {shot: rewind, a slow arc of at most 1.5° a second · labels: Sun, Earth · ring "8 min 20 s" · energy: 0.45} (4–15 s)
+## normal {shot: rewind, a slow arc of at most 1.5° a second · labels: Sun, Earth · ring "8 min 20 s" · picture-only 0.2 s · energy: 0.45} (4–15 s)
 vo: Rewind. Earth circles the *Sun* about a hundred and fifty million kilometers out, at nearly
 thirty kilometers a second. {c1,c2} Sunlight crosses that gap in *eight minutes and twenty
 seconds*. {c3}
@@ -42,7 +42,7 @@ million light-years, and arrived less than *two seconds* apart. {c6}
 vo: So for eight minutes, Earth keeps *circling* a Sun that isn't there. {c7} Then the news
 *arrives*, and Earth sails off in a *straight line*. {c8}
 
-## takeaway {shot: pull back to the light-time ring · energy: 0.5} (52–58.5 s)
+## takeaway {shot: pull back to the light-time ring · picture-only 0.2 s · energy: 0.5} (52–58.5 s)
 vo: Light and gravity share one speed limit. {c9} Everything you see in the sky is *old news*. {c10}
 
 ## readout {segment: readout · the closing light-time readout: ring "8 min 20 s", then a wider ring "27,000 years" around the galaxy's center (the episode's one scale jump, at most 3 s) · a ping per ring · energy: 0.45} (58.5–65.5 s)

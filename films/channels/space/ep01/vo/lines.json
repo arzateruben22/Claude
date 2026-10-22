@@ -1,0 +1,123 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.16",
+ "made_by": "films/channels/space/ep01/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What if the Sun vanished? How soon would you know?",
+   "stars": [
+    "vanished",
+    "know"
+   ],
+   "phonemes": "wˌʌt ɪf ðə sˈʌn vˈænɪʃt? hˌaʊ sˈuːn wʊd juː nˈoʊ?",
+   "speed": 0.82,
+   "file": "01.wav",
+   "dur": 3.392,
+   "sha256": "a5b98bb12c7b4b148eabfce0a1e4e4cc6a11535dfe51a7913d7ad3a5aac0b2b3"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Rewind. Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second. Sunlight crosses that gap in eight minutes and twenty seconds.",
+   "stars": [
+    "Sun",
+    "eight minutes and twenty seconds"
+   ],
+   "phonemes": "ɹᵻwˈaɪnd. ˈɜːθ sˈɜːkəlz ðə sˈʌn ɐbˌaʊt ɐ hˈʌndɹɪd ænd fˈɪfti mˈɪliən kˈɪləmˌiːɾɚz ˈaʊt, æt nˌɪɹli θˈɜːɾi kˈɪləmˌiːɾɚz ɐ sˈɛkənd. sˈʌnlaɪt kɹˈɔsᵻz ðæt ɡˈæp ɪn ˈeɪt mˈɪnɪts ænd twˈɛnti sˈɛkəndz.",
+   "speed": 1.06,
+   "file": "02.wav",
+   "dur": 11.698,
+   "sha256": "a972db95c6f829c8b53f6ab88659fda651d3b8ab4ef754c720f135ef88f3856a"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now switch the Sun off. Its last light is still on the way, so for over eight minutes, your sky looks exactly the same.",
+   "stars": [
+    "off",
+    "exactly the same"
+   ],
+   "phonemes": "nˈaʊ swˈɪtʃ ðə sˈʌn ˈɔf. ɪts lˈæst lˈaɪt ɪz stˈɪl ɔnðə wˈeɪ, sˌoʊ fɔːɹ ˌoʊvɚɹ ˈeɪt mˈɪnɪts, jʊɹ skˈaɪ lˈʊks ɛɡzˈæktli ðə sˈeɪm.",
+   "speed": 0.93,
+   "file": "03.wav",
+   "dur": 8.137,
+   "sha256": "0fb1329407ec83b43638380ab180aa51fd410d688fd16a8a6d89bd71a28d5b06"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, gravitational waves and light from colliding neutron stars crossed a hundred and thirty million light-years, and arrived less than two seconds apart.",
+   "stars": [
+    "speed of light",
+    "two seconds"
+   ],
+   "phonemes": "ɡɹˈævᵻɾi ɪz nˈoʊ fˈæstɚ: tʃˈeɪndʒᵻz ɪn ɪt tɹˈævəl æt ðə spˈiːd ʌv lˈaɪt. ɪn twˈɛnti sˈɛvəntˌiːn, ɡɹˌævɪtˈeɪʃənəl wˈeɪvz ænd lˈaɪt fɹʌm kəlˈaɪdɪŋ nˈuːtɹɑːn stˈɑːɹz kɹˈɔst ɐ hˈʌndɹɪd ænd θˈɜːɾi mˈɪliən lˈaɪtjˈɪɹz, ænd ɚɹˈaɪvd lˈɛs ðɐn tˈuː sˈɛkəndz ɐpˈɑːɹt.",
+   "speed": 1.06,
+   "file": "04.wav",
+   "dur": 15.203,
+   "sha256": "4bc38bda73a88226c26ac99d4fe93d0f165981eb6fbd9b7a8024cb7e11070d52"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off in a straight line.",
+   "stars": [
+    "circling",
+    "arrives",
+    "straight line"
+   ],
+   "phonemes": "sˌoʊ fɔːɹ ˈeɪt mˈɪnɪts, ˈɜːθ kˈiːps sˈɜːklɪŋ ɐ sˈʌn ðæt ˌɪzənt ðˈɛɹ. ðˈɛn ðə nˈuːz ɚɹˈaɪvz, ænd ˈɜːθ sˈeɪlz ˈɔf ɪn ɐ stɹˈeɪt lˈaɪn.",
+   "speed": 0.93,
+   "file": "05.wav",
+   "dur": 8.139,
+   "sha256": "c7e6cc396125917a737454d0a61727de69ba1f6f0d481ec00182345ae45a40e9"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "Light and gravity share one speed limit. Everything you see in the sky is old news.",
+   "stars": [
+    "old news"
+   ],
+   "phonemes": "lˈaɪt ænd ɡɹˈævᵻɾi ʃˈɛɹ wˈʌn spˈiːd lˈɪmɪt. ˈɛvɹɪθˌɪŋ juː sˈiː ɪnðə skˈaɪ ɪz ˈoʊld nˈuːz.",
+   "speed": 1.0,
+   "file": "06.wav",
+   "dur": 5.366,
+   "sha256": "872f69dcd30d6d60de7d87a1f869069e34fff68ad56c0cbf1ff98b437cf84c89"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. From the center of our galaxy: twenty-seven thousand years.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, sˈʌn tʊ ˈɜːθ: ˈeɪt mˈɪnɪts, twˈɛnti sˈɛkəndz. fɹʌmðə sˈɛntɚɹ ʌv ˌaʊɚ ɡˈælɐksi: twˈɛntisˈɛvən θˈaʊzənd jˈɪɹz.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 7.288,
+   "sha256": "7a658186fa1ddaf7f98fff409b38c0a1477227ea6d18a5acfd38298c108acec5"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: how long would it take us to reach the nearest star?",
+   "stars": [
+    "us"
+   ],
+   "phonemes": "nˈɛkst: hˌaʊ lˈɔŋ wʊd ɪt tˈeɪk ˈʌs tə ɹˈiːtʃ ðə nˌɪɹɪst stˈɑːɹ?",
+   "speed": 0.79,
+   "file": "08.wav",
+   "dur": 4.29,
+   "sha256": "626d4e71575904942520c3ff6a80d1032216cb80badefe0a03ba73faab99efff"
+  }
+ ]
+}

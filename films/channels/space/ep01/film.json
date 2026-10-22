@@ -1,0 +1,1977 @@
+{
+ "id": "lightminute-001",
+ "fps": 30,
+ "bpm": 56.25,
+ "dur": 74.6667,
+ "poster": 50.7,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "diagram"
+  },
+  {
+   "at": 25.0667,
+   "name": "grid"
+  },
+  {
+   "at": 29.966666666666665,
+   "name": "race"
+  },
+  {
+   "at": 42.6667,
+   "name": "earth"
+  },
+  {
+   "at": 47.166666666666664,
+   "name": "news"
+  },
+  {
+   "at": 54.4,
+   "name": "restore"
+  },
+  {
+   "at": 68.33333333333333,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.7333,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.7333,
+   "t1": 16.0,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.0,
+   "t1": 25.0667,
+   "line": "vo03",
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 25.0667,
+   "t1": 42.6667,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 42.6667,
+   "t1": 54.4,
+   "line": "vo05",
+   "energy": 0.7
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.4,
+   "t1": 60.2667,
+   "line": "vo06",
+   "energy": 0.5
+  },
+  {
+   "id": "readout",
+   "t0": 60.2667,
+   "t1": 68.2667,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 68.2667,
+   "t1": 74.6667,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "phys": {
+  "c_km": 299792.458,
+  "d_km": 150000000.0,
+  "t_arr": 500.3461427972281,
+  "v_km": 29.78,
+  "year": 31557600.0,
+  "earth_r": 6371.0,
+  "move_km": 14900.308132501454,
+  "n_orbit": 5000.0,
+  "arc_deg": 28.53902251866462,
+  "true_arc_deg": 0.005707804503732924,
+  "ly_km": 9460700000000.0,
+  "gc_ly": 27000,
+  "race_ly": 130000000.0,
+  "race_s": 4102488000000000.0,
+  "r_d": 15.0,
+  "e0": -0.49809990825150247
+ },
+ "clk": {
+  "diagram": {
+   "keys": [
+    {
+     "t": 4.7667,
+     "rate": 64.0
+    }
+   ],
+   "anchor": [
+    17.733333333333334,
+    0.0
+   ],
+   "hook": 300.0,
+   "rewind": [
+    4.066666666666666,
+    4.7667
+   ]
+  },
+  "grid": {
+   "keys": [
+    {
+     "t": 25.0667,
+     "rate": 300.0
+    }
+   ],
+   "anchor": [
+    27.233333333333334,
+    0.0
+   ]
+  },
+  "race": {
+   "keys": [
+    {
+     "t": 29.966666666666665,
+     "rate": 1000000000000000.0
+    }
+   ],
+   "anchor": [
+    38.333333333333336,
+    4102488000000000.0
+   ]
+  },
+  "whoa": {
+   "keys": [
+    {
+     "t": 42.6667,
+     "rate": 90.0
+    }
+   ],
+   "anchor": [
+    48.2,
+    500.3461427972281
+   ]
+  },
+  "restore": {
+   "keys": [
+    {
+     "t": 54.4,
+     "rate": 64.0
+    }
+   ],
+   "anchor": [
+    54.4,
+    -6000.0
+   ]
+  }
+ },
+ "ripple": {
+  "period": 104.3923,
+  "hi": -730.7461,
+  "rMax": 34.0
+ },
+ "cam": {
+  "diagram": [
+   {
+    "t": 0.0,
+    "target": [
+     7.6,
+     0,
+     1.0
+    ],
+    "dist": 74,
+    "el": 62,
+    "az": -8,
+    "fov": 24,
+    "fy": 0.56
+   },
+   {
+    "t": 4.066666666666666,
+    "target": [
+     7.0,
+     0,
+     0.8
+    ],
+    "dist": 70,
+    "el": 62,
+    "az": -7,
+    "fov": 24,
+    "fy": 0.56,
+    "ease": "sine"
+   },
+   {
+    "t": 5.2667,
+    "target": [
+     0.6,
+     0,
+     0.0
+    ],
+    "dist": 132,
+    "el": 63,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "inout3"
+   },
+   {
+    "t": 16.0,
+    "target": [
+     0.4,
+     0,
+     0.0
+    ],
+    "dist": 126,
+    "el": 63,
+    "az": 8,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "sine"
+   },
+   {
+    "t": 25.0667,
+    "target": [
+     3.0,
+     0,
+     -0.5
+    ],
+    "dist": 112,
+    "el": 64,
+    "az": 18,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "sine"
+   }
+  ],
+  "grid": [
+   {
+    "t": 25.0667,
+    "target": [
+     0,
+     -2.6,
+     0
+    ],
+    "dist": 74,
+    "el": 27,
+    "az": 14,
+    "fov": 30,
+    "fy": 0.47
+   },
+   {
+    "t": 29.966666666666665,
+    "target": [
+     0,
+     -2.0,
+     0
+    ],
+    "dist": 70,
+    "el": 29,
+    "az": 20.5,
+    "fov": 30,
+    "fy": 0.47,
+    "ease": "sine"
+   }
+  ],
+  "race": [
+   {
+    "t": 29.966666666666665,
+    "target": [
+     0,
+     0,
+     -38
+    ],
+    "dist": 44,
+    "el": 52,
+    "az": 0,
+    "fov": 30,
+    "fy": 0.42
+   },
+   {
+    "t": 35.333333333333336,
+    "target": [
+     0,
+     0,
+     -4
+    ],
+    "dist": 150,
+    "el": 54,
+    "az": 3,
+    "fov": 30,
+    "fy": 0.46,
+    "ease": "inout3"
+   },
+   {
+    "t": 42.6667,
+    "target": [
+     0,
+     0,
+     6
+    ],
+    "dist": 132,
+    "el": 54,
+    "az": 6,
+    "fov": 30,
+    "fy": 0.46,
+    "ease": "sine"
+   }
+  ],
+  "earth": [
+   {
+    "t": 42.6667,
+    "target": [
+     0,
+     -1.2,
+     0
+    ],
+    "dist": 118,
+    "el": 6,
+    "az": -24,
+    "fov": 19,
+    "fy": 0.43
+   },
+   {
+    "t": 47.166666666666664,
+    "target": [
+     0.6,
+     -1.2,
+     0
+    ],
+    "dist": 112,
+    "el": 6,
+    "az": -21,
+    "fov": 19,
+    "fy": 0.43,
+    "ease": "sine"
+   }
+  ],
+  "news": [
+   {
+    "t": 47.166666666666664,
+    "target": [
+     8.4,
+     0,
+     -2.0
+    ],
+    "dist": 100,
+    "el": 66,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.5
+   },
+   {
+    "t": 54.4,
+    "target": [
+     9.4,
+     0,
+     -4.4
+    ],
+    "dist": 104,
+    "el": 66,
+    "az": 2,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "sine"
+   }
+  ],
+  "restore": [
+   {
+    "t": 54.4,
+    "target": [
+     11.0,
+     0,
+     3.0
+    ],
+    "dist": 40,
+    "el": 58,
+    "az": -10,
+    "fov": 24,
+    "fy": 0.5
+   },
+   {
+    "t": 57.4,
+    "target": [
+     3.0,
+     0,
+     0.8
+    ],
+    "dist": 120,
+    "el": 62,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "inout3"
+   },
+   {
+    "t": 64.13333333333334,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 140,
+    "el": 63,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "sine"
+   },
+   {
+    "t": 66.06666666666666,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 140,
+    "el": 61,
+    "az": 2.4,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "inout3"
+   },
+   {
+    "t": 68.73333333333333,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 140,
+    "el": 59.6,
+    "az": 4.5,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "sine"
+   }
+  ],
+  "end": [
+   {
+    "t": 68.33333333333333,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 140,
+    "el": 59.6,
+    "az": 4.5,
+    "fov": 24,
+    "fy": 0.47
+   },
+   {
+    "t": 74.6667,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 150,
+    "el": 58,
+    "az": 7.5,
+    "fov": 24,
+    "fy": 0.47,
+    "ease": "sine"
+   }
+  ]
+ },
+ "ladder": {
+  "units": {
+   "solar": 10000000.0,
+   "local": 9460700000000.0,
+   "galaxy": 9460700000000000.0
+  },
+  "keys": [
+   {
+    "t": 64.13333333333334,
+    "scale": 10000000.0,
+    "focus": "sun"
+   },
+   {
+    "t": 66.06666666666666,
+    "scale": 1.702926e+16,
+    "focus": "center",
+    "ease": "inout3"
+   }
+  ],
+  "show": {
+   "solar": [
+    0,
+    8.1
+   ],
+   "local": [
+    11.9,
+    13.5
+   ],
+   "galaxy": [
+    14.9,
+    30
+   ]
+  },
+  "fade": {
+   "solar": 0.55,
+   "local": 0.7,
+   "galaxy": 0.8
+  }
+ },
+ "cue": {
+  "off": 17.733333333333334,
+  "rewind": [
+   4.066666666666666,
+   4.7667
+  ],
+  "arrive": 48.2,
+  "race": {
+   "arrive": 38.333333333333336,
+   "merge": 34.230845333333335
+  },
+  "grid": {
+   "off": 27.233333333333334
+  },
+  "jump": [
+   64.13333333333334,
+   66.06666666666666
+  ],
+  "ring": 14.133333333333333,
+  "frontOn": 18.466666666666665
+ },
+ "labels": [
+  {
+   "id": "l-earth",
+   "text": "Earth",
+   "kind": "body",
+   "anchor": "earth",
+   "t0": 5.166666666666667,
+   "t1": 25.0667,
+   "shot": "diagram",
+   "side": 1
+  },
+  {
+   "id": "l-sun",
+   "text": "Sun",
+   "kind": "star",
+   "anchor": "sun",
+   "t0": 6.133333333333334,
+   "t1": 17.733333333333334,
+   "shot": "diagram",
+   "side": -1
+  },
+  {
+   "id": "l-v",
+   "text": "nearly 30 km/s",
+   "kind": "gravity",
+   "anchor": "earth-v",
+   "t0": 10.066666666666666,
+   "t1": 12.233333333333333,
+   "shot": "diagram",
+   "side": 1
+  },
+  {
+   "id": "l-ring",
+   "text": "8 min 20 s",
+   "kind": "light",
+   "anchor": "ring-au",
+   "t0": 14.133333333333333,
+   "t1": 25.0667,
+   "shot": "diagram",
+   "side": 1
+  },
+  {
+   "id": "l-last",
+   "text": "last light",
+   "kind": "light",
+   "anchor": "front",
+   "t0": 18.466666666666665,
+   "t1": 25.0667,
+   "shot": "diagram",
+   "side": -1
+  },
+  {
+   "id": "l-gravity",
+   "text": "gravity",
+   "kind": "gravity",
+   "anchor": "well",
+   "t0": 25.4,
+   "t1": 29.966666666666665,
+   "shot": "grid",
+   "side": 1
+  },
+  {
+   "id": "l-light-g",
+   "text": "light",
+   "kind": "light",
+   "anchor": "grid-front",
+   "t0": 28.866666666666667,
+   "t1": 29.966666666666665,
+   "shot": "grid",
+   "side": -1
+  },
+  {
+   "id": "l-ns",
+   "text": "neutron stars",
+   "kind": "star",
+   "anchor": "merger",
+   "t0": 33.6,
+   "t1": 35.766666666666666,
+   "shot": "race",
+   "side": 1
+  },
+  {
+   "id": "l-gw",
+   "text": "gravitational waves",
+   "kind": "gravity",
+   "anchor": "race-gw",
+   "t0": 34.8,
+   "t1": 38.733333333333334,
+   "shot": "race",
+   "side": -1
+  },
+  {
+   "id": "l-light-r",
+   "text": "light",
+   "kind": "light",
+   "anchor": "race-light",
+   "t0": 35.2,
+   "t1": 38.733333333333334,
+   "shot": "race",
+   "side": 1
+  },
+  {
+   "id": "l-earth-r",
+   "text": "Earth",
+   "kind": "body",
+   "anchor": "race-earth",
+   "t0": 35.333333333333336,
+   "t1": 42.6667,
+   "shot": "race",
+   "side": 1
+  },
+  {
+   "id": "l-move",
+   "text": "14,900 km in 8 min 20 s",
+   "kind": "body",
+   "anchor": "ruler",
+   "t0": 44.4,
+   "t1": 47.166666666666664,
+   "shot": "earth",
+   "side": 1,
+   "v": "middle"
+  },
+  {
+   "id": "l-earth-n",
+   "text": "Earth",
+   "kind": "body",
+   "anchor": "earth",
+   "t0": 47.31666666666666,
+   "t1": 54.4,
+   "shot": "news",
+   "side": 1
+  },
+  {
+   "id": "l-news",
+   "text": "light + gravity",
+   "kind": "light",
+   "anchor": "front",
+   "t0": 47.46666666666666,
+   "t1": 49.1,
+   "shot": "news",
+   "side": -1
+  },
+  {
+   "id": "l-ring-au",
+   "text": "8 min 20 s",
+   "kind": "light",
+   "anchor": "ring-au",
+   "t0": 62.46666666666667,
+   "t1": 64.43333333333334,
+   "shot": "restore",
+   "side": 1
+  },
+  {
+   "id": "l-here",
+   "text": "You are here",
+   "kind": "body",
+   "anchor": "here",
+   "t0": 64.43333333333334,
+   "t1": 68.33333333333333,
+   "shot": "restore",
+   "side": 1
+  },
+  {
+   "id": "l-gc",
+   "text": "galactic center",
+   "kind": "star",
+   "anchor": "gc",
+   "t0": 66.16666666666666,
+   "t1": 68.33333333333333,
+   "shot": "restore",
+   "side": -1
+  },
+  {
+   "id": "l-ring-gc",
+   "text": "27,000 years",
+   "kind": "light",
+   "anchor": "ring-gc",
+   "t0": 67.36666666666666,
+   "t1": 68.33333333333333,
+   "shot": "restore",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "thought experiment",
+   "t0": 0.0,
+   "t1": 4.066666666666666,
+   "slot": "bl"
+  },
+  {
+   "id": "b-nts",
+   "text": "not to scale",
+   "t0": 0.0,
+   "t1": 4.066666666666666,
+   "slot": "bl"
+  },
+  {
+   "id": "b-orbit",
+   "text": "orbit sped up ×5,000",
+   "t0": 4.7667,
+   "t1": 25.0667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-time-d",
+   "clock": "diagram",
+   "t0": 4.7667,
+   "t1": 25.0667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-nts-d",
+   "text": "not to scale",
+   "t0": 4.7667,
+   "t1": 25.0667,
+   "slot": "tr"
+  },
+  {
+   "id": "b-thought-c",
+   "text": "thought experiment",
+   "t0": 17.733333333333334,
+   "t1": 25.0667,
+   "slot": "tr"
+  },
+  {
+   "id": "b-analogy",
+   "text": "analogy",
+   "t0": 25.0667,
+   "t1": 29.966666666666665,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time-g",
+   "clock": "grid",
+   "t0": 25.0667,
+   "t1": 29.966666666666665,
+   "slot": "tl"
+  },
+  {
+   "id": "b-time-r",
+   "clock": "race",
+   "t0": 29.966666666666665,
+   "t1": 42.6667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-nts-r",
+   "text": "not to scale",
+   "t0": 29.966666666666665,
+   "t1": 42.6667,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time-w",
+   "clock": "whoa",
+   "t0": 42.6667,
+   "t1": 54.4,
+   "slot": "tl"
+  },
+  {
+   "id": "b-true",
+   "text": "true scale",
+   "t0": 42.6667,
+   "t1": 47.166666666666664,
+   "slot": "tr"
+  },
+  {
+   "id": "b-orbit-n",
+   "text": "orbit sped up ×5,000",
+   "t0": 47.166666666666664,
+   "t1": 54.4,
+   "slot": "tl"
+  },
+  {
+   "id": "b-nts-n",
+   "text": "not to scale",
+   "t0": 47.166666666666664,
+   "t1": 54.4,
+   "slot": "tr"
+  },
+  {
+   "id": "b-thought-w",
+   "text": "thought experiment",
+   "t0": 42.6667,
+   "t1": 54.4,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time-t",
+   "clock": "restore",
+   "t0": 54.4,
+   "t1": 64.13333333333334,
+   "slot": "tl"
+  },
+  {
+   "id": "b-orbit-t",
+   "text": "orbit sped up ×5,000",
+   "t0": 54.4,
+   "t1": 64.13333333333334,
+   "slot": "tl"
+  },
+  {
+   "id": "b-nts-t",
+   "text": "not to scale",
+   "t0": 54.4,
+   "t1": 64.13333333333334,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-clock",
+   "label": "since the Sun vanished",
+   "clock": "diagram",
+   "fmt": "clock",
+   "t0": 17.733333333333334,
+   "t1": 25.0667,
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-clock-w",
+   "label": "since the Sun vanished",
+   "clock": "whoa",
+   "fmt": "clock",
+   "t0": 42.6667,
+   "t1": 54.4,
+   "at": [
+    0.5,
+    0.215
+   ],
+   "lit": 500.3461427972281
+  },
+  {
+   "id": "c-gap",
+   "label": "arrived apart by",
+   "fmt": "lt2",
+   "unit": "s",
+   "t0": 38.93333333333333,
+   "t1": 42.6667,
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-read-au",
+   "label": "light time · Sun to Earth",
+   "fmt": "text",
+   "text": "8 min 20 s",
+   "t0": 60.6,
+   "t1": 64.33333333333334,
+   "at": [
+    0.5,
+    0.2
+   ]
+  },
+  {
+   "id": "c-read-gc",
+   "label": "light time · galactic center to Sun",
+   "fmt": "text",
+   "text": "27,000 years",
+   "t0": 66.2,
+   "t1": 68.33333333333333,
+   "at": [
+    0.5,
+    0.2
+   ]
+  }
+ ],
+ "pills": [
+  {
+   "id": "p-au",
+   "text": "150 million km",
+   "bar": "sun-earth",
+   "t0": 7.7,
+   "t1": 12.733333333333333,
+   "shot": "diagram"
+  },
+  {
+   "id": "p-race",
+   "text": "130 million light-years",
+   "bar": "lane",
+   "t0": 35.766666666666666,
+   "t1": 42.6667,
+   "shot": "race"
+  }
+ ],
+ "title": {
+  "series": "Light Minute · No. 001",
+  "title": "If the Sun *vanished*",
+  "t1": 3.4833,
+  "sig": 3.466666666666667
+ },
+ "endCard": 68.33333333333333,
+ "end": {
+  "title": "Next: the *nearest star*",
+  "follow": "Light Minute · No. 002"
+ },
+ "captions": [
+  {
+   "t0": 0.128,
+   "t1": 1.753,
+   "lines": [
+    [
+     [
+      "What",
+      0.128
+     ],
+     [
+      "if",
+      0.408
+     ],
+     [
+      "the",
+      0.498
+     ]
+    ],
+    [
+     [
+      "Sun",
+      0.738
+     ],
+     [
+      "vanished?",
+      1.003
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.953,
+   "t1": 3.543,
+   "lines": [
+    [
+     [
+      "How",
+      1.953
+     ],
+     [
+      "soon",
+      2.173
+     ],
+     [
+      "would",
+      2.688
+     ],
+     [
+      "you",
+      2.743
+     ],
+     [
+      "know?",
+      2.793
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.053,
+   "t1": 4.803,
+   "lines": [
+    [
+     [
+      "Rewind.",
+      4.053
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.173,
+   "t1": 6.828,
+   "lines": [
+    [
+     [
+      "Earth",
+      5.173
+     ],
+     [
+      "circles",
+      5.353
+     ],
+     [
+      "the",
+      5.903
+     ],
+     [
+      "Sun",
+      6.138
+     ]
+    ],
+    [
+     [
+      "about",
+      6.448
+     ],
+     [
+      "a",
+      6.738
+     ],
+     [
+      "hundred",
+      6.768
+     ],
+     [
+      "and",
+      6.798
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.828,
+   "t1": 9.568,
+   "lines": [
+    [
+     [
+      "fifty",
+      6.828
+     ],
+     [
+      "million",
+      7.703
+     ]
+    ],
+    [
+     [
+      "kilometers",
+      8.328
+     ],
+     [
+      "out,",
+      9.148
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.568,
+   "t1": 12.188,
+   "lines": [
+    [
+     [
+      "at",
+      9.568
+     ],
+     [
+      "nearly",
+      9.663
+     ],
+     [
+      "thirty",
+      10.068
+     ]
+    ],
+    [
+     [
+      "kilometers",
+      10.578
+     ],
+     [
+      "a",
+      11.283
+     ],
+     [
+      "second.",
+      11.438
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.228,
+   "t1": 14.833,
+   "lines": [
+    [
+     [
+      "Sunlight",
+      12.228
+     ],
+     [
+      "crosses",
+      12.763
+     ],
+     [
+      "that",
+      13.138
+     ]
+    ],
+    [
+     [
+      "gap",
+      13.473
+     ],
+     [
+      "in",
+      13.878
+     ],
+     [
+      "eight",
+      14.128
+     ],
+     [
+      "minutes",
+      14.298
+     ],
+     [
+      "and",
+      14.603
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.833,
+   "t1": 15.968,
+   "lines": [
+    [
+     [
+      "twenty",
+      14.833
+     ],
+     [
+      "seconds.",
+      15.218
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.32,
+   "t1": 18.375,
+   "lines": [
+    [
+     [
+      "Now",
+      16.32
+     ],
+     [
+      "switch",
+      16.605
+     ],
+     [
+      "the",
+      17.055
+     ],
+     [
+      "Sun",
+      17.085
+     ],
+     [
+      "off.",
+      17.75
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.375,
+   "t1": 20.605,
+   "lines": [
+    [
+     [
+      "Its",
+      18.375
+     ],
+     [
+      "last",
+      18.45
+     ],
+     [
+      "light",
+      18.925
+     ],
+     [
+      "is",
+      19.26
+     ]
+    ],
+    [
+     [
+      "still",
+      19.515
+     ],
+     [
+      "on",
+      19.81
+     ],
+     [
+      "the",
+      19.89
+     ],
+     [
+      "way,",
+      20.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.605,
+   "t1": 22.145,
+   "lines": [
+    [
+     [
+      "so",
+      20.605
+     ],
+     [
+      "for",
+      20.84
+     ],
+     [
+      "over",
+      20.87
+     ]
+    ],
+    [
+     [
+      "eight",
+      21.255
+     ],
+     [
+      "minutes,",
+      21.425
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.145,
+   "t1": 24.725,
+   "lines": [
+    [
+     [
+      "your",
+      22.145
+     ],
+     [
+      "sky",
+      22.395
+     ],
+     [
+      "looks",
+      22.825
+     ]
+    ],
+    [
+     [
+      "exactly",
+      23.085
+     ],
+     [
+      "the",
+      23.74
+     ],
+     [
+      "same.",
+      23.975
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.387,
+   "t1": 28.652,
+   "lines": [
+    [
+     [
+      "Gravity",
+      25.387
+     ],
+     [
+      "is",
+      25.867
+     ],
+     [
+      "no",
+      26.027
+     ],
+     [
+      "faster:",
+      26.352
+     ]
+    ],
+    [
+     [
+      "changes",
+      27.242
+     ],
+     [
+      "in",
+      27.732
+     ],
+     [
+      "it",
+      28.027
+     ],
+     [
+      "travel",
+      28.152
+     ],
+     [
+      "at",
+      28.622
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.652,
+   "t1": 30.112,
+   "lines": [
+    [
+     [
+      "the",
+      28.652
+     ],
+     [
+      "speed",
+      28.862
+     ],
+     [
+      "of",
+      29.122
+     ],
+     [
+      "light.",
+      29.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.112,
+   "t1": 33.132,
+   "lines": [
+    [
+     [
+      "In",
+      30.112
+     ],
+     [
+      "twenty",
+      30.227
+     ],
+     [
+      "seventeen,",
+      30.257
+     ]
+    ],
+    [
+     [
+      "gravitational",
+      31.587
+     ],
+     [
+      "waves",
+      32.417
+     ],
+     [
+      "and",
+      32.872
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.132,
+   "t1": 35.762,
+   "lines": [
+    [
+     [
+      "light",
+      33.132
+     ],
+     [
+      "from",
+      33.342
+     ],
+     [
+      "colliding",
+      33.612
+     ]
+    ],
+    [
+     [
+      "neutron",
+      34.057
+     ],
+     [
+      "stars",
+      34.847
+     ],
+     [
+      "crossed",
+      35.322
+     ],
+     [
+      "a",
+      35.607
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.762,
+   "t1": 37.842,
+   "lines": [
+    [
+     [
+      "hundred",
+      35.762
+     ],
+     [
+      "and",
+      35.792
+     ],
+     [
+      "thirty",
+      35.822
+     ]
+    ],
+    [
+     [
+      "million",
+      36.687
+     ],
+     [
+      "light-years,",
+      37.092
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.282,
+   "t1": 40.772,
+   "lines": [
+    [
+     [
+      "and",
+      38.282
+     ],
+     [
+      "arrived",
+      38.347
+     ],
+     [
+      "less",
+      38.917
+     ],
+     [
+      "than",
+      39.342
+     ]
+    ],
+    [
+     [
+      "two",
+      39.537
+     ],
+     [
+      "seconds",
+      39.767
+     ],
+     [
+      "apart.",
+      40.022
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.992,
+   "t1": 45.712,
+   "lines": [
+    [
+     [
+      "So",
+      42.992
+     ],
+     [
+      "for",
+      43.302
+     ],
+     [
+      "eight",
+      43.352
+     ],
+     [
+      "minutes,",
+      43.517
+     ]
+    ],
+    [
+     [
+      "Earth",
+      44.392
+     ],
+     [
+      "keeps",
+      44.727
+     ],
+     [
+      "circling",
+      44.927
+     ],
+     [
+      "a",
+      45.557
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.712,
+   "t1": 47.327,
+   "lines": [
+    [
+     [
+      "Sun",
+      45.712
+     ],
+     [
+      "that",
+      45.937
+     ],
+     [
+      "isn't",
+      46.047
+     ],
+     [
+      "there.",
+      46.657
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.327,
+   "t1": 50.397,
+   "lines": [
+    [
+     [
+      "Then",
+      47.327
+     ],
+     [
+      "the",
+      47.622
+     ],
+     [
+      "news",
+      47.677
+     ],
+     [
+      "arrives,",
+      48.192
+     ]
+    ],
+    [
+     [
+      "and",
+      48.877
+     ],
+     [
+      "Earth",
+      49.097
+     ],
+     [
+      "sails",
+      49.487
+     ],
+     [
+      "off",
+      49.822
+     ],
+     [
+      "in",
+      50.132
+     ],
+     [
+      "a",
+      50.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.397,
+   "t1": 51.372,
+   "lines": [
+    [
+     [
+      "straight",
+      50.397
+     ],
+     [
+      "line.",
+      50.622
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.72,
+   "t1": 57.34,
+   "lines": [
+    [
+     [
+      "Light",
+      54.72
+     ],
+     [
+      "and",
+      54.98
+     ],
+     [
+      "gravity",
+      55.16
+     ]
+    ],
+    [
+     [
+      "share",
+      55.64
+     ],
+     [
+      "one",
+      55.97
+     ],
+     [
+      "speed",
+      56.365
+     ],
+     [
+      "limit.",
+      56.59
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.4,
+   "t1": 60.175,
+   "lines": [
+    [
+     [
+      "Everything",
+      57.4
+     ],
+     [
+      "you",
+      57.715
+     ],
+     [
+      "see",
+      57.965
+     ],
+     [
+      "in",
+      58.13
+     ]
+    ],
+    [
+     [
+      "the",
+      58.4
+     ],
+     [
+      "sky",
+      58.57
+     ],
+     [
+      "is",
+      58.97
+     ],
+     [
+      "old",
+      59.18
+     ],
+     [
+      "news.",
+      59.425
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.587,
+   "t1": 63.122,
+   "lines": [
+    [
+     [
+      "Light",
+      60.587
+     ],
+     [
+      "time,",
+      60.887
+     ],
+     [
+      "Sun",
+      61.372
+     ],
+     [
+      "to",
+      61.727
+     ]
+    ],
+    [
+     [
+      "Earth:",
+      61.757
+     ],
+     [
+      "eight",
+      62.457
+     ],
+     [
+      "minutes,",
+      62.627
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.122,
+   "t1": 64.272,
+   "lines": [
+    [
+     [
+      "twenty",
+      63.122
+     ],
+     [
+      "seconds.",
+      63.522
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.422,
+   "t1": 66.082,
+   "lines": [
+    [
+     [
+      "From",
+      64.422
+     ],
+     [
+      "the",
+      64.462
+     ],
+     [
+      "center",
+      64.587
+     ]
+    ],
+    [
+     [
+      "of",
+      64.957
+     ],
+     [
+      "our",
+      65.142
+     ],
+     [
+      "galaxy:",
+      65.332
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 66.202,
+   "t1": 68.107,
+   "lines": [
+    [
+     [
+      "twenty-seven",
+      66.202
+     ]
+    ],
+    [
+     [
+      "thousand",
+      66.232
+     ],
+     [
+      "years.",
+      67.357
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.587,
+   "t1": 71.632,
+   "lines": [
+    [
+     [
+      "Next:",
+      68.587
+     ],
+     [
+      "how",
+      69.487
+     ],
+     [
+      "long",
+      69.822
+     ],
+     [
+      "would",
+      70.142
+     ]
+    ],
+    [
+     [
+      "it",
+      70.462
+     ],
+     [
+      "take",
+      70.512
+     ],
+     [
+      "us",
+      70.732
+     ],
+     [
+      "to",
+      71.077
+     ],
+     [
+      "reach",
+      71.122
+     ],
+     [
+      "the",
+      71.602
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 71.632,
+   "t1": 73.112,
+   "lines": [
+    [
+     [
+      "nearest",
+      71.632
+     ],
+     [
+      "star?",
+      72.362
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "dur": 3.392,
+   "file": "vo/01.wav",
+   "text": "What if the Sun vanished? How soon would you know?"
+  },
+  {
+   "id": "vo02",
+   "t": 4.033333333333333,
+   "dur": 11.698,
+   "file": "vo/02.wav",
+   "text": "Rewind. Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second. Sunlight crosses that gap in eight minutes and twenty seconds."
+  },
+  {
+   "id": "vo03",
+   "t": 16.3,
+   "dur": 8.137,
+   "file": "vo/03.wav",
+   "text": "Now switch the Sun off. Its last light is still on the way, so for over eight minutes, your sky looks exactly the same."
+  },
+  {
+   "id": "vo04",
+   "t": 25.366666666666667,
+   "dur": 15.203,
+   "file": "vo/04.wav",
+   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, gravitational waves and light from colliding neutron stars crossed a hundred and thirty million light-years, and arrived less than two seconds apart."
+  },
+  {
+   "id": "vo05",
+   "t": 42.96666666666667,
+   "dur": 8.139,
+   "file": "vo/05.wav",
+   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off in a straight line."
+  },
+  {
+   "id": "vo06",
+   "t": 54.7,
+   "dur": 5.366,
+   "file": "vo/06.wav",
+   "text": "Light and gravity share one speed limit. Everything you see in the sky is old news."
+  },
+  {
+   "id": "vo07",
+   "t": 60.56666666666667,
+   "dur": 7.288,
+   "file": "vo/07.wav",
+   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. From the center of our galaxy: twenty-seven thousand years."
+  },
+  {
+   "id": "vo08",
+   "t": 68.56666666666666,
+   "dur": 4.29,
+   "file": "vo/08.wav",
+   "text": "Next: how long would it take us to reach the nearest star?"
+  }
+ ]
+}
