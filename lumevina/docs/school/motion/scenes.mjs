@@ -184,7 +184,7 @@ export const SCENES = {
 .ftxt { display: flex; flex-direction: column; gap: 1.2vmin; max-width: 60vmin; }
 .ftxt .big, .ftxt .lbl { opacity: 0; } .ftxt .lbl { font-size: 2.8vmin; }
 .clockwrap { display: flex; align-items: center; gap: 7vmin; height: 100%; }
-.clock { position: relative; width: 36vmin; height: 36vmin; border-radius: 50%; background: #111113; border: 2px solid rgba(255,255,255,.12); flex: 0 0 auto; }
+.clock { position: relative; width: 36vmin; height: 36vmin; border-radius: 50%; background: #1a1416; border: 2px solid rgba(255,255,255,.12); flex: 0 0 auto; }
 .hh { position: absolute; left: 50%; top: 50%; width: 1.2vmin; height: 14vmin; margin-left: -.6vmin; margin-top: -14vmin; border-radius: 999px; background: #f4c9d6; transform-origin: 50% 100%; }
 .dot { position: absolute; left: 50%; top: 50%; width: 2.4vmin; height: 2.4vmin; margin: -1.2vmin 0 0 -1.2vmin; border-radius: 50%; background: #f4c9d6; }
 .mark { position: absolute; left: 50%; top: 1.8vmin; width: .6vmin; height: 2.4vmin; margin-left: -.3vmin; background: #4a4a4e; transform-origin: 50% 16.2vmin; border-radius: 999px; }
@@ -193,7 +193,7 @@ export const SCENES = {
 .sunnote .lbl { opacity: 0; font-size: 2.8vmin; }
 .week { display: flex; flex-direction: column; justify-content: center; gap: 3vmin; height: 100%; }
 .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1.6vmin; max-width: 110vmin; }
-.day { position: relative; aspect-ratio: 1; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.1); display: grid; place-items: end start; padding: 1.4vmin; opacity: 0; font-size: 2.2vmin; color: #a1a1a6; }
+.day { position: relative; aspect-ratio: 1; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.1); display: grid; place-items: end start; padding: 1.4vmin; opacity: 0; font-size: 2.2vmin; color: #a1a1a6; }
 .day .ok { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; } .day .ok svg { width: 50%; height: 50%; }
 .day .cloud { position: absolute; top: 1vmin; right: 1.2vmin; width: 3.4vmin; height: 3.4vmin; }
 .week .lbl { opacity: 0; font-size: 2.8vmin; }
@@ -283,7 +283,7 @@ export const SCENES = {
     ],
     css: `
 .row6 { position: relative; display: flex; align-items: flex-end; gap: 2vmin; height: 100%; padding-bottom: 5vmin; }
-.tile { position: relative; flex: 1; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.8vmin; opacity: 0; min-width: 0; }
+.tile { position: relative; flex: 1; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.8vmin; opacity: 0; min-width: 0; }
 .tile b { font-size: 2.7vmin; font-weight: 650; line-height: 1.15; } .tile span { font-size: 2.1vmin; color: #8e8e93; margin-top: .6vmin; }
 .tile .n { position: absolute; top: 1.4vmin; left: 1.8vmin; font-size: 2vmin; color: #f4c9d6; font-weight: 700; }
 .badge { position: absolute; top: -2.2vmin; right: -1vmin; padding: .8vmin 1.6vmin; border-radius: 999px; background: #e2b08c; color: #111; font-size: 2vmin; font-weight: 700; opacity: 0; white-space: nowrap; }
@@ -357,7 +357,7 @@ export const SCENES = {
 .slot svg { width: 3.6vmin; height: 3.6vmin; }
 .pick { position: absolute; left: 50%; top: 100%; margin: -1vmin 0 0 -16vmin; width: 32vmin; justify-content: center; opacity: 0; }
 .wait { display: flex; justify-content: center; gap: 1.4vmin; }
-.wd { width: 10vmin; height: 10vmin; border-radius: 2.9vmin; background: #111113; border: 1px solid rgba(255,255,255,.1); display: grid; place-items: center; font-size: 2.2vmin; color: #6e6e73; opacity: 0; }
+.wd { width: 10vmin; height: 10vmin; border-radius: 2.9vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.1); display: grid; place-items: center; font-size: 2.2vmin; color: #6e6e73; opacity: 0; }
 @media (orientation: portrait) { .pa, .pb { min-width: 26vmin; font-size: 2.7vmin; padding: 2.6vmin 2vmin; } .slot { width: 26vmin; } .wd { width: 8.6vmin; height: 8.6vmin; } }`,
     html: `
 <section class="shot" data-mode="alt"><div class="pairwrap"><div class="pairrow"><div class="pa card">Retinoid</div><div class="mark">${CROSS}</div><div class="pb card">Acid (AHA / BHA)</div></div><div class="slots"><div class="slot">Monday night</div><div class="slot">Tuesday night</div></div></div></section>
@@ -520,7 +520,7 @@ export const SCENES = {
 .oneline { position: relative; margin: .6vmin 0; height: .3vmin; background: repeating-linear-gradient(90deg, #a1a1a6 0 1.4vmin, transparent 1.4vmin 2.6vmin); opacity: 0; }
 .oneline b { position: absolute; right: 0; top: -2.6vmin; font-size: 1.9vmin; color: #a1a1a6; font-weight: 600; }
 .side { width: 46vmin; display: grid; gap: 2vmin; align-content: center; }
-.pill { padding: 1.8vmin 2.4vmin; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); font-size: 2.9vmin; line-height: 1.3; opacity: 0; }
+.pill { padding: 1.8vmin 2.4vmin; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); font-size: 2.9vmin; line-height: 1.3; opacity: 0; }
 .pill b { color: #f4c9d6; } .pill.warn b { color: #ff7a6b; } .pill.good b { color: #e2b08c; }
 @media (orientation: portrait) { .lab { flex-direction: column; gap: 2.5vmin; } .bottle { width: 64vmin; height: 72vmin; } .side { width: 64vmin; } }`,
     html: `
@@ -651,7 +651,7 @@ export const SCENES = {
     css: `
 .r10 { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.4vmin; }
 .row10 { display: flex; gap: 1.6vmin; align-items: stretch; }
-.tile10 { flex: 1; min-height: 23vmin; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 2.8vmin; opacity: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.tile10 { flex: 1; min-height: 23vmin; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 2.8vmin; opacity: 0; display: flex; flex-direction: column; justify-content: flex-end; }
 .tile10 .n { font-size: 2.2vmin; color: #f4c9d6; font-weight: 700; } .tile10 b { display: block; font-size: 3.8vmin; font-weight: 650; margin-top: .4vmin; line-height: 1.1; letter-spacing: -.01em; } .tile10 span { display: block; font-size: 2.4vmin; color: #8e8e93; margin-top: .8vmin; }
 .pm .tile10 .n { color: #e2b08c; }
 .badge10 { position: absolute; top: -1.6vmin; right: 1.4vmin; padding: .7vmin 1.4vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 1.9vmin; font-weight: 700; white-space: nowrap; opacity: 0; }
@@ -711,7 +711,7 @@ export const SCENES = {
     css: `
 .cal { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .days { display: grid; grid-template-columns: repeat(9, 1fr); gap: 1vmin; }
-.day { position: relative; border-radius: 2.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin 1vmin 1.4vmin; text-align: center; opacity: 0; min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
+.day { position: relative; border-radius: 2.6vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin 1vmin 1.4vmin; text-align: center; opacity: 0; min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
 .day .d { font-size: 2.1vmin; color: #8e8e93; font-weight: 600; } .day .n { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
 .day.visit { background: #f4c9d6; border-color: #f4c9d6; } .day.visit .d, .day.visit .n { color: #1a1210; }
 .day .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
@@ -719,7 +719,7 @@ export const SCENES = {
 .legend span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
 .legend i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; }
 .note12 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vmin; }
-.card12 { border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
+.card12 { border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
 .card12 b { display: block; font-size: 2.9vmin; font-weight: 650; line-height: 1.15; } .card12 span { display: block; font-size: 2.2vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
 .card12.go b { color: #32d74b; } .card12.wait b { color: #ff7a6b; }
 @media (orientation: portrait) { .cal { gap: 2vmin; } .days { grid-template-columns: repeat(3, 1fr); } .day { min-height: 9.5vmin; padding: 1vmin .6vmin .8vmin; gap: .4vmin; } .day .n { font-size: 3vmin; } .day .mark { width: 1.6vmin; height: 1.6vmin; margin-top: .2vmin; } .legend span { font-size: 2vmin; padding: .7vmin 1.3vmin; } .note12 { grid-template-columns: 1fr; } .card12 { padding: 1.6vmin 2vmin; } .card12 b { font-size: 2.6vmin; } .card12 span { font-size: 2vmin; } }`,
@@ -781,7 +781,7 @@ export const SCENES = {
 .steps { display: flex; gap: 1.6vmin; align-items: center; }
 .step { padding: 1.3vmin 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.5vmin; font-weight: 600; color: #d9d9de; white-space: nowrap; opacity: 0; }
 .step.on { background: rgba(234,185,200,.16); border-color: rgba(234,185,200,.6); color: #f4c9d6; }
-.clock { position: relative; width: 14vmin; height: 14vmin; border-radius: 50%; border: .5vmin solid rgba(255,255,255,.18); background: #111113; opacity: 0; flex: none; }
+.clock { position: relative; width: 14vmin; height: 14vmin; border-radius: 50%; border: .5vmin solid rgba(255,255,255,.18); background: #1a1416; opacity: 0; flex: none; }
 .clock i { position: absolute; left: 50%; top: 50%; width: .6vmin; height: 5.4vmin; margin-left: -.3vmin; margin-top: -5.4vmin; border-radius: 1vmin; background: #f4c9d6; transform-origin: 50% 100%; }
 .clock b { position: absolute; left: 50%; top: 50%; width: 1.4vmin; height: 1.4vmin; margin: -.7vmin 0 0 -.7vmin; border-radius: 50%; background: #e2b08c; }
 .clock em { position: absolute; left: 50%; bottom: -3.4vmin; transform: translateX(-50%); font-style: normal; font-size: 2.1vmin; color: #a1a1a6; white-space: nowrap; }
@@ -861,11 +861,11 @@ export const SCENES = {
 .d1 .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .d1 .lab { font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
 .d1 .chips { display: flex; flex-wrap: wrap; gap: 1.6vmin; }
-.d1 .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.d1 .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
 .d1 .ch.no { border-color: rgba(255,122,107,.6); } .d1 .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
 .d1 .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
 .days2 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1vmin; }
-.day2 { position: relative; border-radius: 2.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.8vmin 1vmin 1.6vmin; text-align: center; opacity: 0; min-height: 21vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
+.day2 { position: relative; border-radius: 2.6vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 1.8vmin 1vmin 1.6vmin; text-align: center; opacity: 0; min-height: 21vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
 .day2 .d { font-size: 2.5vmin; color: #8e8e93; font-weight: 600; } .day2 .n { font-size: 4.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
 .day2.visit { background: #f4c9d6; border-color: #f4c9d6; } .day2.visit .d, .day2.visit .n { color: #1a1210; }
 .day2 .mark { width: 2.8vmin; height: 2.8vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
@@ -930,9 +930,9 @@ export const SCENES = {
 .ms { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8vmin; }
 .ms svg { width: 50vmin; height: 62vmin; flex: none; overflow: visible; }
 .ms .side { display: flex; flex-direction: column; gap: 2.2vmin; width: 66vmin; }
-.ms .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 1.2vmin; padding: 1.8vmin 3vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.4vmin; font-weight: 600; color: #f5f5f7; opacity: 0; }
+.ms .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 1.2vmin; padding: 1.8vmin 3vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.4vmin; font-weight: 600; color: #f5f5f7; opacity: 0; }
 .ms .pill.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; } .ms .pill.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; } .ms .pill.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; }
-.ms .meter { border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3.2vmin; opacity: 0; }
+.ms .meter { border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3.2vmin; opacity: 0; }
 .ms .meter b { display: block; font-size: 2.7vmin; color: #8e8e93; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.2vmin; }
 .ms .bar { position: relative; height: 3vmin; border-radius: 999px; background: linear-gradient(90deg, #32d74b 0%, #32d74b 38%, #ffd27a 60%, #ff7a6b 100%); opacity: .9; }
 .ms .bar i { position: absolute; top: -1.2vmin; width: 5.4vmin; height: 5.4vmin; margin-left: -2.7vmin; border-radius: 50%; background: #fff; border: .5vmin solid #111113; box-shadow: 0 .4vmin 1.2vmin rgba(0,0,0,.5); }
@@ -1007,11 +1007,11 @@ export const SCENES = {
 .aw .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .aw .lab { font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
 .aw .chips { display: flex; flex-wrap: wrap; gap: 1.6vmin; }
-.aw .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.aw .ch { position: relative; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
 .aw .ch.no { border-color: rgba(255,122,107,.6); } .aw .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
 .aw .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vmin; }
-.vs { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; display: flex; gap: 3vmin; align-items: center; opacity: 0; }
+.vs { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; display: flex; gap: 3vmin; align-items: center; opacity: 0; }
 .vs .patch { position: relative; flex: none; width: 20vmin; height: 20vmin; border-radius: 3.2vmin; background: #d9b5a0; overflow: hidden; }
 .vs .patch i { position: absolute; border-radius: 50%; background: #d7585a; width: 2.6vmin; height: 2.6vmin; margin: -1.3vmin 0 0 -1.3vmin; }
 .vs .patch i.pus { background: #f3e2a8; box-shadow: 0 0 0 .6vmin #d7585a; }
@@ -1020,7 +1020,7 @@ export const SCENES = {
 .vs.ok b { color: #32d74b; } .vs.bad b { color: #ff7a6b; }
 .rh { display: flex; align-items: center; gap: 3vmin; }
 .wk7 { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 1vmin; }
-.wd { border-radius: 2.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin .8vmin 1.4vmin; text-align: center; opacity: 0; display: flex; flex-direction: column; align-items: center; gap: .8vmin; min-height: 18vmin; }
+.wd { border-radius: 2.6vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin .8vmin 1.4vmin; text-align: center; opacity: 0; display: flex; flex-direction: column; align-items: center; gap: .8vmin; min-height: 18vmin; }
 .wd .d { font-size: 2.4vmin; color: #8e8e93; font-weight: 600; } .wd .n { font-size: 4.2vmin; font-weight: 700; line-height: 1; }
 .wd .mark { width: 2.8vmin; height: 2.8vmin; border-radius: 50%; opacity: 0; }
 .dial { flex: none; width: 28vmin; height: 28vmin; border-radius: 50%; position: relative; background: conic-gradient(#f4c9d6 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); opacity: 0; }
@@ -1104,12 +1104,12 @@ export const SCENES = {
 .skin .soft { position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 20%, rgba(244,201,214,.55), rgba(244,201,214,0) 70%); opacity: 0; }
 .skin .lbl { position: absolute; left: 2.4vmin; bottom: 1.8vmin; font-size: 2.6vmin; color: rgba(26,18,16,.75); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
 .fam { display: flex; flex-direction: column; gap: 2vmin; width: 74vmin; }
-.fcard { border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: .35; }
+.fcard { border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: .35; }
 .fcard.on { opacity: 1; border-color: var(--c, #f4c9d6); }
 .fcard b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.8vmin; font-weight: 700; letter-spacing: -.02em; } .fcard b i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
 .fcard span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: .6vmin; line-height: 1.35; }
 .fcard.on span { color: #f5f5f7; }
-.sunrow { display: flex; align-items: center; gap: 2.4vmin; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,210,122,.5); padding: 2vmin 2.6vmin; opacity: 0; }
+.sunrow { display: flex; align-items: center; gap: 2.4vmin; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,210,122,.5); padding: 2vmin 2.6vmin; opacity: 0; }
 .sunrow .sun { flex: none; width: 7vmin; height: 7vmin; border-radius: 50%; background: radial-gradient(circle, #ffe9a8, #ffd27a 60%, rgba(255,210,122,0) 62%); box-shadow: 0 0 3vmin rgba(255,210,122,.5); }
 .sunrow b { display: block; font-size: 3.4vmin; font-weight: 700; } .sunrow span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: .4vmin; }
 @media (orientation: portrait) { .ac { flex-direction: column; gap: 3vmin; } .skin { width: 100%; height: 42vmin; } .fam { width: 100%; } .fcard { padding: 2vmin 2.4vmin; } .fcard b { font-size: 3.2vmin; } .fcard span { font-size: 2.4vmin; } }`,
@@ -1162,7 +1162,7 @@ export const SCENES = {
     ],
     css: `
 .lad { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.2vmin; }
-.rung { position: relative; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 3vmin 2.2vmin 4.2vmin; opacity: 0; overflow: hidden; }
+.rung { position: relative; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 3vmin 2.2vmin 4.2vmin; opacity: 0; overflow: hidden; }
 .rung::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.4vmin; background: var(--c); }
 .rung .h { display: flex; align-items: center; gap: 1.8vmin; font-size: 4vmin; font-weight: 700; letter-spacing: -.02em; color: var(--c); }
 .rung .h small { font-size: 2.6vmin; font-weight: 600; color: #8e8e93; letter-spacing: 0; }
@@ -1205,7 +1205,7 @@ export const SCENES = {
     css: `
 .fr { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .ampm { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; }
-.half { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.half { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
 .half .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.9vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.6vmin; }
 .half .t i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; } .half.am .t i { background: #ffd27a; box-shadow: 0 0 1.6vmin rgba(255,210,122,.6); } .half.pm .t i { background: #c9b6ff; box-shadow: 0 0 1.6vmin rgba(201,182,255,.5); }
 .steps3 { display: flex; flex-direction: column; gap: 1.4vmin; }
@@ -1214,7 +1214,7 @@ export const SCENES = {
 .s3 span { font-size: 3.8vmin; font-weight: 650; } .s3 small { font-size: 2.6vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
 .s3.later { border-style: dashed; } .s3.later b { background: rgba(255,255,255,.14); color: #d9d9de; }
 .wk2 { display: grid; grid-template-columns: repeat(14, 1fr); gap: .8vmin; }
-.dd { position: relative; border-radius: 2.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1vmin .4vmin .8vmin; gap: .6vmin; opacity: 0; }
+.dd { position: relative; border-radius: 2.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1vmin .4vmin .8vmin; gap: .6vmin; opacity: 0; }
 .dd .n { font-size: 3.4vmin; font-weight: 700; } .dd .m { width: 3vmin; height: 3vmin; border-radius: 50%; opacity: 0; }
 .dd.add { background: #f4c9d6; border-color: #f4c9d6; } .dd.add .n { color: #1a1210; }
 .lg32 { display: flex; flex-wrap: wrap; gap: 1.2vmin 1.8vmin; }
@@ -1227,7 +1227,7 @@ export const SCENES = {
 .jaw .nose { position: absolute; left: 50%; top: 13vmin; width: 4.6vmin; height: 12vmin; margin-left: -2.3vmin; border-radius: 2.9vmin; background: rgba(0,0,0,.08); }
 .pt { flex: 1; display: flex; flex-direction: column; gap: 1.6vmin; }
 .pt .cnt { font-size: 12vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .pt .cnt small { font-size: 3.4vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-left: 1.2vmin; }
-.pt .rule { display: inline-flex; align-self: flex-start; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; opacity: 0; }
+.pt .rule { display: inline-flex; align-self: flex-start; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; opacity: 0; }
 .pt .rule.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; } .pt .rule.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
 @media (orientation: portrait) { .ampm { grid-template-columns: 1fr; gap: 2.4vmin; } .s3 span { font-size: 3.2vmin; } .s3 small { font-size: 2.3vmin; } .wk2 { grid-template-columns: repeat(7, 1fr); } .dd { min-height: 12vmin; } .lg32 span { font-size: 2.7vmin; } .patch { flex-direction: column; gap: 3vmin; } .jaw { width: 40vmin; height: 40vmin; } .pt { align-items: center; } .pt .cnt { font-size: 10vmin; } .pt .rule { align-self: center; font-size: 2.8vmin; } }`,
     html: `
@@ -1278,21 +1278,21 @@ export const SCENES = {
     css: `
 .ac8 { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vmin; }
-.cause { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: 0; }
+.cause { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: 0; }
 .cause .ring { position: relative; width: 16vmin; height: 16vmin; margin: 0 auto 1.6vmin; border-radius: 50%; background: conic-gradient(var(--c) 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); }
-.cause .ring::after { content: ""; position: absolute; inset: 2.2vmin; border-radius: 50%; background: #111113; }
+.cause .ring::after { content: ""; position: absolute; inset: 2.2vmin; border-radius: 50%; background: #1a1416; }
 .cause .ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4.4vmin; font-weight: 700; z-index: 1; }
 .cause .nm { display: block; text-align: center; font-size: 3vmin; font-weight: 700; } .cause .sub { display: block; text-align: center; font-size: 2.3vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.3; }
 .calm { display: inline-flex; align-self: center; padding: 1.4vmin 2.8vmin; border-radius: 999px; border: 1.5px solid rgba(50,215,75,.6); color: #7fe39a; font-size: 3vmin; font-weight: 650; opacity: 0; }
 .kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4vmin; }
-.kind { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.6vmin; opacity: 0; }
+.kind { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.6vmin; opacity: 0; }
 .kind .sk { position: relative; height: 14vmin; border-radius: 2.6vmin; background: #d9b5a0; overflow: hidden; margin-bottom: 1.6vmin; }
 .kind .sk i { position: absolute; border-radius: 50%; }
 .kind b { display: block; font-size: 3vmin; font-weight: 700; } .kind span { display: block; font-size: 2.3vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.3; }
 .kind.derm { border-color: rgba(255,122,107,.6); } .kind.derm b { color: #ff9a8b; }
 .wk8 { display: flex; align-items: center; gap: 4vmin; }
 .res8 { flex: none; font-size: 11vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .res8 small { display: block; font-size: 2.8vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-top: 1vmin; }
-.tl8 { flex: 1; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 3vmin 2.2vmin; display: flex; flex-direction: column; gap: 2.4vmin; opacity: 0; }
+.tl8 { flex: 1; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 3vmin 2.2vmin; display: flex; flex-direction: column; gap: 2.4vmin; opacity: 0; }
 .tags8 { display: flex; flex-wrap: wrap; gap: 1.2vmin; }
 .tl8 .tag8 { padding: 1vmin 2vmin; border-radius: 999px; background: #1a1a1d; border: 1.5px solid #f4c9d6; color: #f4c9d6; font-size: 2.6vmin; font-weight: 650; white-space: nowrap; opacity: 0; }
 .tl8 .tag8.amber { border-color: #e2b08c; color: #e2b08c; }
@@ -1370,7 +1370,7 @@ export const SCENES = {
 .sc .towel::after { content: ""; position: absolute; inset: 2vmin; border-radius: 2.2vmin; border: .4vmin dashed rgba(255,255,255,.5); }
 .sc .towel b { position: absolute; left: 50%; bottom: -5vmin; transform: translateX(-50%); font-size: 2.6vmin; font-weight: 650; color: #1a1210; white-space: nowrap; }
 .sc .side5 { display: flex; flex-direction: column; gap: 1.8vmin; width: 70vmin; }
-.sc .ing { border-radius: 3.5vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.6vmin; opacity: .3; }
+.sc .ing { border-radius: 3.5vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.6vmin; opacity: .3; }
 .sc .ing.on { opacity: 1; border-color: var(--c); }
 .sc .ing b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.4vmin; font-weight: 700; } .sc .ing b i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); }
 .sc .ing span { display: block; font-size: 2.5vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.35; } .sc .ing.on span { color: #f5f5f7; }
@@ -1433,25 +1433,25 @@ export const SCENES = {
     css: `
 .br { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .four9 { display: flex; flex-wrap: wrap; gap: 1.6vmin; justify-content: center; }
-.b9 { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #111113; border: 1.5px solid var(--c); color: #f5f5f7; font-size: 3vmin; font-weight: 650; white-space: nowrap; opacity: 0; } .b9 i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); }
+.b9 { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid var(--c); color: #f5f5f7; font-size: 3vmin; font-weight: 650; white-space: nowrap; opacity: 0; } .b9 i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); }
 .race { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vmin; }
-.lane { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; display: flex; align-items: center; gap: 2.6vmin; opacity: 0; }
+.lane { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; display: flex; align-items: center; gap: 2.6vmin; opacity: 0; }
 .lane .pt9 { position: relative; flex: none; width: 18vmin; height: 18vmin; border-radius: 3.2vmin; background: #d9b5a0; overflow: hidden; }
 .lane .pt9 i { position: absolute; left: 50%; top: 50%; width: 9vmin; height: 9vmin; margin: -4.5vmin 0 0 -4.5vmin; border-radius: 50%; background: #6b3f2e; filter: blur(.4vmin); }
 .lane b { display: block; font-size: 3.2vmin; font-weight: 700; } .lane span { display: block; font-size: 2.5vmin; color: #a1a1a6; margin-top: .6vmin; }
 .lane .bar9 { position: relative; height: 1.6vmin; border-radius: 999px; background: rgba(255,255,255,.08); margin-top: 1.4vmin; overflow: hidden; } .lane .bar9 i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
 .lane.two { border-color: rgba(244,201,214,.6); }
-.belt { position: relative; height: 24vmin; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
+.belt { position: relative; height: 24vmin; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
 .belt .skin9 { position: absolute; left: 0; right: 0; bottom: 0; height: 14vmin; background: linear-gradient(#d9b5a0, #c98f7a); }
 .belt .cell { position: absolute; bottom: 6vmin; width: 7vmin; height: 5vmin; border-radius: 1vmin; background: #f3dccd; border: 1px solid rgba(0,0,0,.15); }
 .belt .cell.pig { background: #8a5a46; }
 .belt .lbl9 { position: absolute; left: 2.4vmin; top: 2vmin; font-size: 2.6vmin; font-weight: 650; color: #f4c9d6; letter-spacing: .04em; text-transform: uppercase; }
 .belt .spd { position: absolute; right: 2.4vmin; top: 2vmin; font-size: 2.6vmin; font-weight: 650; color: #a1a1a6; }
-.rx { display: flex; align-items: center; gap: 3vmin; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.rx { display: flex; align-items: center; gap: 3vmin; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
 .rx .pad { flex: none; width: 16vmin; height: 20vmin; border-radius: 2.6vmin; background: #f5f0ec; color: #1a1210; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1vmin; }
 .rx .pad b { font-size: 6vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .rx .pad span { font-size: 2vmin; font-weight: 650; text-align: center; line-height: 1.2; }
 .rx h3 { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; } .rx p { font-size: 2.6vmin; color: #a1a1a6; margin-top: 1vmin; line-height: 1.35; }
-.month { position: relative; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin 3.4vmin; opacity: 0; }
+.month { position: relative; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin 3.4vmin; opacity: 0; }
 .month .row { display: flex; align-items: center; gap: 2.6vmin; }
 .month .pt9 { position: relative; flex: none; width: 16vmin; height: 16vmin; border-radius: 3.2vmin; background: #d9b5a0; overflow: hidden; } .month .pt9 i { position: absolute; left: 50%; top: 50%; width: 8vmin; height: 8vmin; margin: -4vmin 0 0 -4vmin; border-radius: 50%; background: #6b3f2e; filter: blur(.4vmin); }
 .month .track { flex: 1; } .month .track b { display: block; font-size: 3vmin; font-weight: 700; margin-bottom: 1.2vmin; }
@@ -1517,7 +1517,7 @@ export const SCENES = {
     css: `
 .pg { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; }
-.col { border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
+.col { border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
 .col .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.2vmin; font-weight: 700; margin-bottom: 1.8vmin; } .col.no .t { color: #ff9a8b; } .col.ok .t { color: #7fe39a; }
 .col .t i { width: 3.2vmin; height: 3.2vmin; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2vmin; font-weight: 800; color: #1a1210; } .col.no .t i { background: #ff7a6b; } .col.ok .t i { background: #32d74b; }
 .col .list { display: flex; flex-wrap: wrap; gap: 1.2vmin; }
@@ -1532,10 +1532,10 @@ export const SCENES = {
 .mel .face11 .tint { position: absolute; inset: 0; background: linear-gradient(rgba(226,176,140,.0), rgba(226,176,140,.0)); opacity: 0; }
 .mel .face11 .tint.on { background: linear-gradient(rgba(240,200,170,.55), rgba(240,200,170,.55)); }
 .mel .side11 { display: flex; flex-direction: column; gap: 1.8vmin; }
-.mel .pill11 { display: inline-flex; align-self: flex-start; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3vmin; font-weight: 650; opacity: 0; }
+.mel .pill11 { display: inline-flex; align-self: flex-start; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #1a1416; border: 1.5px solid rgba(255,255,255,.14); font-size: 3vmin; font-weight: 650; opacity: 0; }
 .mel .pill11.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; } .mel .pill11.amber { border-color: rgba(255,210,122,.6); color: #ffd27a; }
 .rule11 { display: flex; align-items: center; gap: 3vmin; }
-.rule11 .card11 { flex: 1; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.rule11 .card11 { flex: 1; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
 .rule11 .card11 b { display: block; font-size: 3.6vmin; font-weight: 700; letter-spacing: -.02em; } .rule11 .card11 span { display: block; font-size: 2.6vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
 .rule11 .card11.doc { border-color: #f4c9d6; background: #f4c9d6; } .rule11 .card11.doc b, .rule11 .card11.doc span { color: #1a1210; }
 @media (orientation: portrait) { .cols { grid-template-columns: 1fr; } .col .li { font-size: 2.6vmin; } .mel { flex-direction: column; gap: 3vmin; } .mel .face11 { width: 36vmin; height: 44vmin; } .mel .side11 { align-items: center; } .mel .pill11 { align-self: center; font-size: 2.7vmin; } .rule11 { flex-direction: column; } .rule11 .card11 { width: 100%; } }`,
@@ -1589,7 +1589,7 @@ export const SCENES = {
 .clock20::after { content: ""; position: absolute; inset: 3.2vmin; border-radius: 50%; background: #0d0d0f; }
 .clock20 b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; font-size: 9vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .clock20 b small { font-size: 2.6vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-top: .8vmin; }
 .steps7 { display: flex; flex-direction: column; gap: 1.4vmin; width: 84vmin; }
-.st7 { display: flex; align-items: center; gap: 2vmin; padding: 1.6vmin 2.4vmin; border-radius: 2.9vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.st7 { display: flex; align-items: center; gap: 2vmin; padding: 1.6vmin 2.4vmin; border-radius: 2.9vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
 .st7 .min { flex: none; width: 9vmin; font-size: 2.4vmin; font-weight: 700; color: #f4c9d6; letter-spacing: .02em; }
 .st7 .nm { font-size: 3.2vmin; font-weight: 650; } .st7 .nt { font-size: 2.3vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
 .st7.on { border-color: #f4c9d6; } .st7.done { opacity: .55 !important; }
@@ -1641,7 +1641,7 @@ export const SCENES = {
     css: `
 .se { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .ring { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vmin; }
-.season { position: relative; border-radius: 3.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: .35; overflow: hidden; }
+.season { position: relative; border-radius: 3.8vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: .35; overflow: hidden; }
 .season.on { opacity: 1; border-color: var(--c); }
 .season .ico { position: relative; width: 12vmin; height: 12vmin; margin: 0 auto 1.6vmin; border-radius: 50%; }
 .season.sum .ico { background: radial-gradient(circle, #ffe9a8, #ffd27a 55%, rgba(255,210,122,0) 58%); box-shadow: 0 0 3vmin rgba(255,210,122,.5); }
@@ -1681,6 +1681,444 @@ export const SCENES = {
       set($("#q3 .ico"), { s: i === 3 ? 1 + 0.08 * b : 1, r: i === 3 ? 10 * b : 0 });
     }
   },
+  "4-3": {
+    id: "4-3", kicker: "Scrubs, brushes and dermaplaning", title: `Kind or harsh: <span class="grad">it's the tool and the pressure.</span>`, dur: 22, poster: 14.5,
+    shots: [
+      { at: 0, name: "scrub", cap: "Skip scrubs with jagged bits like crushed shells or pits. They can leave tiny tears in the skin." },
+      { at: 6, name: "gentle", cap: "A soft washcloth or a gentle enzyme mask gives a physical polish without the damage." },
+      { at: 12, name: "plane", cap: "Dermaplaning removes dead skin and peach fuzz. Done professionally, makeup goes on flawlessly afterward." },
+      { at: 17, name: "home", cap: "At home: clean, dry skin, a fresh blade and light strokes, once a month at most, and never over active breakouts." }
+    ],
+    css: `
+.surf, .tool { position: absolute; left: 50%; top: 58%; }
+.surf { width: 100vmin; height: 16vmin; margin: -8vmin 0 0 -50vmin; transform-origin: 50% 50%; }
+.surf .base { position: absolute; inset: 0; border-radius: 4.4vmin 4.4vmin 3.4vmin 3.4vmin; overflow: hidden; background: linear-gradient(180deg, #ecc8b1 0%, #d6a68c 38%, #b57f68 100%); }
+.surf .base::before { content: ""; position: absolute; left: 4vmin; right: 4vmin; top: 4.4vmin; height: .35vmin; border-radius: 1vmin; background: rgba(255,240,230,.28); }
+.surf .base::after { content: ""; position: absolute; left: 7vmin; right: 7vmin; top: 9.4vmin; height: .3vmin; border-radius: 1vmin; background: rgba(120,60,40,.22); }
+.sheen { position: absolute; top: -2vmin; bottom: -2vmin; left: 0; width: 14vmin; background: linear-gradient(90deg, rgba(255,250,244,0), rgba(255,250,244,.55), rgba(255,250,244,0)); opacity: 0; }
+.fl { position: absolute; top: -1.3vmin; width: 4.8vmin; height: 1.8vmin; margin-left: -2.4vmin; border-radius: .9vmin; background: #f8ebe1; box-shadow: 0 .3vmin .6vmin rgba(60,30,20,.35); z-index: 1; }
+.fl.b { width: 3.8vmin; height: 1.4vmin; margin-left: -1.9vmin; top: -1.1vmin; background: #efdccf; }
+.fz { position: absolute; top: -3.8vmin; width: .45vmin; height: 3.8vmin; margin-left: -.22vmin; border-radius: .3vmin; background: rgba(252,238,228,.8); transform-origin: 50% 100%; }
+.tr { position: absolute; top: -.3vmin; width: 4vmin; height: 4vmin; margin-left: -2vmin; filter: drop-shadow(0 0 .8vmin rgba(255,122,107,.55)); transform-origin: 50% 0; opacity: 0; z-index: 1; }
+.tr svg, .shards svg, .blade svg { display: block; width: 100%; height: 100%; }
+.mask { position: absolute; left: 1vmin; right: 1vmin; top: -2.6vmin; height: 5.4vmin; border-radius: 2.2vmin; background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.35) 0 .5vmin, transparent .6vmin) 0 0 / 5vmin 4.4vmin, rgba(244,201,214,.62); opacity: 0; z-index: 2; }
+.tool { width: 0; height: 0; z-index: 3; }
+.tool > div { position: absolute; opacity: 0; }
+.shards { left: -14vmin; top: -21.6vmin; width: 28vmin; height: 14vmin; }
+.cloth { left: -15vmin; top: -20.4vmin; width: 30vmin; height: 12vmin; border-radius: 4.4vmin 4.4vmin 2.6vmin 2.6vmin; background: repeating-linear-gradient(90deg, #f6efe8 0 .9vmin, #e9ded4 .9vmin 1.8vmin); }
+.blade { left: -3.4vmin; top: -28.4vmin; width: 24vmin; height: 20vmin; transform-origin: 3.4vmin 19.6vmin; }
+.tgs { position: absolute; left: 0; right: 0; top: 2%; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.6vmin; }
+.tgs.lo { top: auto; bottom: 4%; }
+.tg { padding: 1vmin 2.2vmin; border-radius: 2.6vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.16); font-size: 2.7vmin; font-weight: 600; opacity: 0; }
+.tg.bad { border-color: rgba(255,122,107,.7); color: #ffc2b8; }
+.tg.good { border-color: rgba(50,215,75,.6); }
+.rules { position: absolute; left: 4vmin; right: 4vmin; top: 54%; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.6vmin; }
+.ru { display: flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.4vmin 1.3vmin 1.8vmin; border-radius: 3vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.ru svg { width: 3.2vmin; height: 3.2vmin; flex: none; }
+.ru.no { border-color: rgba(255,122,107,.6); }
+@media (orientation: portrait) { .surf, .tool { top: 50%; } .surf { width: 84vmin; margin-left: -42vmin; } .tgs { top: 24%; } .tgs.lo { bottom: 26%; } .rules { top: 44%; left: 6vmin; right: 6vmin; flex-direction: column; align-items: stretch; } .ru { font-size: 3vmin; } }`,
+    html: `
+<div class="surf" id="surf"><div class="base"><i class="sheen" id="sheen"></i></div><i class="mask" id="mask"></i></div>
+<div class="tool" id="tool">
+  <div class="shards" id="shards"><svg viewBox="0 0 180 90" aria-hidden="true"><g stroke="rgba(30,15,10,.35)" stroke-width="1.5" stroke-linejoin="round"><path d="M18 88 L30 58 L44 74 L40 88 Z" fill="#e8dacd"/><path d="M50 88 L62 50 L80 62 L76 88 Z" fill="#9b6a4a"/><path d="M84 88 L94 54 L112 66 L108 88 Z" fill="#e8dacd"/><path d="M116 88 L132 52 L148 70 L142 88 Z" fill="#9b6a4a"/><path d="M148 88 L158 64 L170 76 L166 88 Z" fill="#e8dacd"/></g></svg></div>
+  <div class="cloth" id="cloth"></div>
+  <div class="blade" id="blade"><svg viewBox="0 0 120 100" aria-hidden="true"><path d="M24 80 L108 10" stroke="#f4c9d6" stroke-width="13" stroke-linecap="round"/><path d="M14 88 L28 76" stroke="#c9c9ce" stroke-width="6" stroke-linecap="round"/><path d="M2 98 L30 98 L30 86 L8 84 Z" fill="#dfe4ea" stroke="#9aa3ad" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 98 L30 98" stroke="#ffffff" stroke-width="1.6"/></svg></div>
+</div>
+<section class="shot"><div class="tgs"><span class="tg bad" id="a0">jagged bits: crushed shells, pits</span></div><div class="tgs lo"><span class="tg bad" id="a1">tiny tears</span></div></section>
+<section class="shot"><div class="tgs"><span class="tg good" id="b0">a soft washcloth</span><span class="tg good" id="b1">a gentle enzyme mask</span></div></section>
+<section class="shot"><div class="tgs"><span class="tg" id="c0">dead skin and peach fuzz</span></div><div class="tgs lo"><span class="tg good" id="c1">makeup goes on flawlessly</span></div></section>
+<section class="shot"><div class="rules"><span class="ru">${CHECK}clean, dry skin</span><span class="ru">${CHECK}a fresh blade</span><span class="ru">${CHECK}light strokes</span><span class="ru">${CHECK}once a month at most</span><span class="ru no">${CROSS}never over active breakouts</span></div></section>`,
+    setup: (M) => {
+      const s = M.$("#surf"), mask = M.$("#mask");
+      const fl = Array.from({ length: 12 }, (_, k) => { const x = 5 + k * 8 + ((k * 37) % 5) - 2; return `<i class="fl${k % 3 === 1 ? " b" : ""}" data-x="${x}" data-g="${k % 3 === 1 ? "b" : (k % 2 ? "e" : "c")}" data-r="${((k * 53) % 13) - 6}" style="left:${x}%"></i>`; }).join("");
+      const fz = Array.from({ length: 17 }, (_, k) => { const x = 3 + k * 5.7 + ((k * 29) % 3); return `<i class="fz" data-x="${x}" data-r="${((k * 41) % 17) - 8}" style="left:${x}%"></i>`; }).join("");
+      const tr = [12, 29, 47, 63, 81].map((x) => `<i class="tr" data-x="${x}" style="left:${x}%"><svg viewBox="0 0 20 20"><path d="M2 1 L10 17 L18 1" fill="#6e2a24" stroke="#ff7a6b" stroke-width="1.8" stroke-linejoin="round"/></svg></i>`).join("");
+      mask.insertAdjacentHTML("beforebegin", fz + tr + fl);
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, clamp } = M;
+      const surf = $("#surf"), W = surf.offsetWidth, port = innerHeight > innerWidth, vm = Math.min(innerWidth, innerHeight) / 100;
+      // the strip of skin arrives once, then lifts out of the way for the rules
+      const sIn = E.out(seg(t, 0.1, 0.8)), lift = i === 3 ? E.inout(seg(lt, 0, 0.8)) : 0;
+      surf.style.transform = `translateY(${(1 - sIn) * 3 - lift * (port ? 22 : 17)}vmin) scale(${1 - lift * 0.32})`;
+      surf.style.opacity = Math.min(1, sIn * 1.5) * (1 - lift * 0.3);
+      // the tool on the skin: the scrub grinds back and forth, the cloth and the blade glide
+      const ends = [5, 3, 3.6][i] || 0, starts = [0.7, 0.4, 0.5][i] || 0;
+      const base = (-0.68 + 1.36 * E.inout(seg(lt, starts, ends))) * W;
+      const wob = i === 0 && lt > starts && lt < ends ? Math.sin((lt - starts) * 11) * 3.2 * vm : 0;
+      const x = i < 3 ? base + wob : 0;
+      $("#tool").style.transform = `translate(${x}px, ${i === 0 ? -Math.abs(Math.sin(lt * 22)) * 0.5 * vm : 0}px) rotate(${i === 0 ? Math.sin(lt * 11) * 4 : 0}deg)`;
+      ["#shards", "#cloth", "#blade"].forEach((s, k) => { $(s).style.opacity = k === i ? Math.min(seg(lt, starts - 0.4, starts), 1 - seg(lt, ends, ends + 0.4)) : 0; });
+      $("#blade").style.transform = `rotate(${i === 2 ? -4 + 2 * Math.sin(lt * 3) : 0}deg)`;
+      const past = (el, reach, w) => clamp((reach - (el.dataset.x / 100 - 0.5) * W) / (w * W));
+      // tiny tears open where the grit has been
+      $$(".tr").forEach((el) => { const p = i === 0 ? past(el, base + 3.2 * vm, 0.03) : i === 1 ? 1 - seg(lt, 0, 0.5) : 0; const q = i === 0 ? E.back(p) : 1; el.style.opacity = p; el.style.transform = `scaleY(${i === 1 ? 1 : q})`; });
+      // dead skin: the cloth lifts some, the enzyme melts the rest, the blade takes the last
+      $$(".fl").forEach((el, n) => {
+        const g = el.dataset.g, rot = +el.dataset.r;
+        let o = 1, dx = 0, dy = 0, s = 1, r = rot;
+        if (i === 1 && g === "c") { const p = past(el, x, 0.05); o = 1 - p; dx = 2.4 * p; dy = -3.2 * p; r = rot + 40 * p; }
+        if (i === 1 && g === "e") { const d = seg(lt, 3.5 + n * 0.08, 4.3 + n * 0.08); o = 1 - d; s = 1 - 0.7 * d; }
+        if (i === 2) { if (g === "b") { const p = past(el, x + 2 * vm, 0.03); o = 1 - p; dx = 4 * p; dy = -1.4 * p; r = rot - 20 * p; } else o = 0; }
+        if (i === 3) o = 0;
+        el.style.transform = `translate(${dx}vmin, ${dy}vmin) rotate(${r}deg) scale(${s})`;
+        el.style.opacity = o;
+      });
+      $("#mask").style.opacity = i === 1 ? 0.95 * Math.min(seg(lt, 3.0, 3.5), 1 - seg(lt, 4.9, 5.5)) : 0;
+      // peach fuzz sways, then falls ahead of the blade
+      $$(".fz").forEach((el, k) => {
+        const r = +el.dataset.r + Math.sin(t * 1.3 + k) * 4;
+        if (i < 2) { el.style.opacity = 1; el.style.transform = `rotate(${r}deg)`; return; }
+        const p = i === 2 ? past(el, x + 1.6 * vm, 0.03) : 1;
+        el.style.opacity = 1 - p; el.style.transform = `translate(${2.2 * p}vmin, ${0.6 * p}vmin) rotate(${r + 74 * p}deg)`;
+      });
+      // smooth after: a light passes over the skin
+      const sh = i === 2 ? seg(lt, 3.8, 4.9) : 0;
+      $("#sheen").style.opacity = Math.sin(Math.PI * sh); $("#sheen").style.transform = `translateX(${-16 * vm + sh * (W + 22 * vm)}px) skewX(-18deg)`;
+      enter($("#a0"), lt, 0.4); enter($("#a1"), lt, 2.4, { y: -12 });
+      enter($("#b0"), lt, 0.4); enter($("#b1"), lt, 3.1);
+      enter($("#c0"), lt, 0.5); enter($("#c1"), lt, 3.9, { y: -12 });
+      $$(".ru").forEach((el, n) => { enter(el, lt, 0.7 + n * 0.45, { y: 14 }); if (n === 4 && lt > 2.5) { const k = seg(lt, 2.6, 3.4); el.style.transform += ` translateX(${Math.sin(lt * 34) * 5 * (1 - k)}px)`; } });
+    }
+  },
+  "10-3": {
+    id: "10-3", kicker: "Professional treatments, explained", title: `Who does what, <span class="grad">and what makes it work.</span>`, dur: 23, poster: 8.5,
+    shots: [
+      { at: 0, name: "esthetician", cap: "With an esthetician: facials, light peels, dermaplaning, LED and extractions. That's the surface of the skin, and it's Evelyn's room." },
+      { at: 6, name: "medical", cap: "With a nurse or doctor: microneedling, lasers, Botox and fillers. In California these are medical treatments." },
+      { at: 12, name: "ask", cap: "Ask anyone offering injectables who their supervising physician is, and look for a licensed nurse, PA or doctor." },
+      { at: 17.5, name: "work", cap: "Most of what makes a treatment work comes before and after: prep, aftercare and sunscreen." }
+    ],
+    css: `
+.skn { position: absolute; left: 14vmin; top: 50%; width: 44vmin; height: 36vmin; margin-top: -15vmin; }
+.lay { position: absolute; left: 0; right: 0; overflow: hidden; }
+.lay b { position: absolute; left: 2.4vmin; top: 50%; margin-top: -1.5vmin; font-size: 2.3vmin; line-height: 3vmin; font-weight: 700; color: rgba(40,18,12,.75); opacity: 0; }
+.L0 { top: 0; height: 7vmin; border-radius: 4.4vmin 4.4vmin 0 0; background: #f1cfba; }
+.L1 { top: 7vmin; height: 14vmin; background: #d9a189; }
+.L2 { top: 21vmin; height: 15vmin; border-radius: 0 0 4.4vmin 4.4vmin; background: #b9775f; }
+.lay svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.glw { position: absolute; left: -1vmin; right: -1vmin; border-radius: 5vmin; opacity: 0; pointer-events: none; }
+.glw.g0 { top: -1vmin; height: 9vmin; box-shadow: 0 0 4vmin 1vmin rgba(244,201,214,.75), inset 0 0 0 .4vmin rgba(244,201,214,.95); }
+.glw.g1 { top: 7vmin; height: 30vmin; box-shadow: 0 0 4vmin 1vmin rgba(143,211,255,.5), inset 0 0 0 .4vmin rgba(143,211,255,.9); }
+.led { position: absolute; left: 6vmin; right: 6vmin; top: -14vmin; height: 4vmin; border-radius: 2vmin; background: #2a2224; display: flex; justify-content: space-around; align-items: center; opacity: 0; }
+.led i { width: 2vmin; height: 2vmin; border-radius: 50%; background: #ff8e86; box-shadow: 0 0 1.6vmin #ff6b60; }
+.rays { position: absolute; left: 7vmin; right: 7vmin; top: -10vmin; height: 17vmin; background: linear-gradient(180deg, rgba(255,120,110,.5), rgba(255,120,110,.18)); clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%); opacity: 0; }
+.pins { position: absolute; left: 6vmin; width: 14vmin; top: -12vmin; height: 10vmin; display: flex; justify-content: space-between; opacity: 0; }
+.pins i { width: .5vmin; height: 100%; border-radius: .3vmin; background: linear-gradient(180deg, #c9c9ce, #ffffff); }
+.pins::before { content: ""; position: absolute; left: -1vmin; right: -1vmin; top: -3vmin; height: 3.4vmin; border-radius: 1.6vmin; background: #3a3436; }
+.beam { position: absolute; left: 31vmin; width: .8vmin; margin-left: -.4vmin; top: -14vmin; height: 43vmin; border-radius: .4vmin; background: linear-gradient(180deg, rgba(143,211,255,.2), #bfe8ff 30%, #8fd3ff); box-shadow: 0 0 2vmin #8fd3ff; transform-origin: 50% 0; opacity: 0; }
+.beam::after { content: ""; position: absolute; left: 50%; bottom: -1.8vmin; width: 4vmin; height: 4vmin; margin-left: -2vmin; border-radius: 50%; background: radial-gradient(circle, #e8f6ff, rgba(143,211,255,0) 70%); }
+.spf { position: absolute; left: -1vmin; top: -2.4vmin; height: 3.4vmin; width: 46vmin; border-radius: 1.8vmin; background: linear-gradient(90deg, rgba(255,236,190,.92), rgba(255,214,150,.85)); box-shadow: 0 0 2.4vmin rgba(255,210,122,.6); transform-origin: 0 50%; opacity: 0; display: flex; align-items: center; padding-left: 2vmin; font-size: 2.2vmin; font-weight: 800; color: #4a2e10; letter-spacing: .08em; }
+.pn { position: absolute; left: 68vmin; right: 8vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.2vmin; }
+.hd { display: flex; align-items: center; gap: 1.4vmin; font-size: 4.4vmin; font-weight: 700; opacity: 0; }
+.hd i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); box-shadow: 0 0 1.6vmin var(--c); flex: none; }
+.chs { display: flex; flex-wrap: wrap; gap: 1.3vmin; }
+.ch { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.2vmin 2.3vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.15); font-size: 3.3vmin; font-weight: 600; opacity: 0; }
+.ch svg { width: 3vmin; height: 3vmin; }
+.ft { font-size: 3.1vmin; font-weight: 500; color: #d9c6bd; opacity: 0; }
+.ft b { color: var(--c); font-weight: 700; }
+.bd { align-self: flex-start; padding: 1.2vmin 2.4vmin; border-radius: 2.8vmin; border: .3vmin dashed rgba(143,211,255,.75); font-size: 3.1vmin; font-weight: 700; color: #cdebff; opacity: 0; }
+.bb { position: relative; align-self: flex-start; padding: 2.2vmin 3.2vmin; border-radius: 4vmin 4vmin 4vmin 1.2vmin; background: #f4eae4; color: #1a1210; font-size: 4vmin; font-weight: 700; line-height: 1.25; opacity: 0; }
+.tl { display: flex; gap: 1.2vmin; height: 17vmin; }
+.tb { position: relative; border-radius: 3.4vmin; display: flex; flex-direction: column; justify-content: center; padding: 0 2.2vmin; font-size: 3.1vmin; font-weight: 700; line-height: 1.25; opacity: 0; }
+.tb small { display: block; font-size: 2.5vmin; font-weight: 500; opacity: .8; }
+.tb.pre { flex: 3.4; background: #2c2124; border: 1px solid rgba(244,201,214,.5); }
+.tb.mid { flex: 2.2; background: #1c1517; border: 1px solid rgba(255,255,255,.14); color: #b9aaa3; }
+.tb.post { flex: 4.4; background: #2c2124; border: 1px solid rgba(255,210,122,.55); }
+.brk { font-size: 3.6vmin; font-weight: 700; opacity: 0; }
+.brk em { font-style: normal; color: #f4c9d6; }
+@media (orientation: portrait) { .skn { left: 50%; top: 9%; margin: 0 0 0 -22vmin; } .pn { left: 4vmin; right: 4vmin; top: 52%; bottom: 2%; justify-content: flex-start; } .tl { height: 21vmin; } }`,
+    html: `
+<div class="skn" id="skn">
+  <div class="rays" id="rays"></div><div class="led" id="led"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="lay L0"><b id="lb0">the surface</b></div>
+  <div class="lay L1"><svg viewBox="0 0 440 140" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C60 10 120 70 180 40 S300 10 360 40 S420 60 440 40 M0 100 C70 70 140 130 210 100 S330 70 440 100" fill="none" stroke="rgba(255,240,230,.3)" stroke-width="4"/></svg></div>
+  <div class="lay L2"><svg viewBox="0 0 440 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50 C80 20 150 90 230 50 S360 20 440 55 M0 115 C60 90 150 140 240 112 S380 92 440 118" fill="none" stroke="rgba(255,230,220,.25)" stroke-width="4"/></svg><b id="lb1" style="color:rgba(255,240,232,.85)">deeper</b></div>
+  <i class="glw g0" id="g0"></i><i class="glw g1" id="g1"></i>
+  <div class="pins" id="pins"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="beam" id="beam"></div>
+  <div class="spf" id="spf">SPF</div>
+</div>
+<section class="shot"><div class="pn" style="--c:#f4c9d6"><div class="hd" id="h0"><i></i>With an esthetician</div><div class="chs"><span class="ch">facials</span><span class="ch">light peels</span><span class="ch">dermaplaning</span><span class="ch">LED</span><span class="ch">extractions</span></div><p class="ft" id="f0">The surface of the skin: <b>Evelyn's room.</b></p></div></section>
+<section class="shot"><div class="pn" style="--c:#8fd3ff"><div class="hd" id="h1"><i></i>With a nurse or doctor</div><div class="chs"><span class="ch">microneedling</span><span class="ch">lasers</span><span class="ch">Botox</span><span class="ch">fillers</span></div><span class="bd" id="f1">In California: medical treatments</span></div></section>
+<section class="shot"><div class="pn" style="--c:#8fd3ff"><div class="hd" id="h2"><i></i>Offered injectables? Ask:</div><div class="bb" id="bb">“Who is your supervising physician?”</div><div class="chs"><span class="ch">${CHECK}licensed nurse</span><span class="ch">${CHECK}PA</span><span class="ch">${CHECK}doctor</span></div></div></section>
+<section class="shot"><div class="pn" style="--c:#ffd27a"><div class="brk" id="brk">Most of what makes it work: <em>before and after.</em></div><div class="tl"><div class="tb pre">before<small>prep</small></div><div class="tb mid">the treatment</div><div class="tb post">after<small>aftercare and sunscreen</small></div></div></div></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      const b = 0.5 + 0.5 * Math.sin(lt * 3);
+      // the skin arrives once and stays; each shot lights the part of it the treatments reach
+      enter($("#skn"), t, 0.1, { y: 20 });
+      $("#skn").style.opacity = (i === 2 ? 1 - 0.55 * seg(lt, 0, 0.6) : i === 3 ? 0.45 + 0.55 * seg(lt, 0, 0.6) : 1) * Math.min(1, seg(t, 0.1, 0.6) * 2.5);
+      const on0 = i === 0 ? seg(lt, 0.4, 1.0) : i === 1 ? 1 - seg(lt, 0, 0.4) : 0, on1 = i === 1 ? seg(lt, 0.6, 1.2) : i === 2 ? 1 - seg(lt, 0, 0.4) : 0;
+      $("#g0").style.opacity = on0 * (0.7 + 0.3 * b); $("#g1").style.opacity = on1 * (0.7 + 0.3 * b);
+      $("#lb0").style.opacity = on0; $("#lb1").style.opacity = on1;
+      $("#led").style.opacity = on0; $("#rays").style.opacity = on0 * (0.55 + 0.45 * b);
+      // microneedling pins stamp into the dermis; a laser reaches deeper
+      const stamp = i === 1 ? Math.max(0, Math.sin((lt - 0.8) * 4.2)) * seg(lt, 0.8, 1.2) : 0;
+      $("#pins").style.opacity = i === 1 ? seg(lt, 0.5, 0.9) * (1 - seg(lt, 5.4, 5.9)) : 0;
+      $("#pins").style.transform = `translateY(${stamp * 15}vmin)`;
+      const bm = i === 1 ? seg(lt, 2.2, 2.8) * (1 - seg(lt, 5.4, 5.9)) : 0;
+      $("#beam").style.opacity = bm * (0.75 + 0.25 * Math.sin(lt * 23)); $("#beam").style.transform = `scaleY(${E.out(seg(lt, 2.2, 2.8))})`;
+      // sunscreen seals the surface after
+      const sp = i === 3 ? E.out(seg(lt, 2.4, 3.2)) : 0;
+      $("#spf").style.opacity = sp > 0 ? Math.min(1, sp * 2) : 0; $("#spf").style.transform = `scaleX(${sp})`;
+      // the panel for this shot, line by line
+      if (!sec) return;
+      const parts = [...sec.querySelectorAll(".hd, .ch, .ft, .bd, .bb, .brk, .tb")];
+      const at = [[0.3, 0.9, 1.2, 1.5, 1.8, 2.1, 3.2], [0.3, 0.9, 1.3, 1.7, 2.1, 3.2], [0.3, 0.9, 2.2, 2.6, 3.0], [1.6, 0.3, 0.7, 1.1]][i];
+      parts.forEach((el, n) => {
+        if (i === 3) { const k = el.classList.contains("brk") ? 0 : el.classList.contains("pre") ? 1 : el.classList.contains("mid") ? 2 : 3; enter(el, lt, at[k], { y: 14 }); if (k === 2) el.style.opacity = Math.min(+el.style.opacity, 1 - 0.5 * seg(lt, 2.0, 2.8)); else if (k !== 0 && lt > 2.0) el.style.boxShadow = `0 0 ${2.4 * seg(lt, 2.0, 2.8)}vmin ${k === 1 ? "rgba(244,201,214,.45)" : k === 3 ? "rgba(255,210,122,.45)" : "transparent"}`; return; }
+        enter(el, lt, at[n] == null ? 2.4 : at[n], { y: 14, s: el.classList.contains("bb") ? 0.85 : 0 });
+      });
+    }
+  },
+  "11-3": {
+    id: "11-3", kicker: "Your skin plan for life", title: `A base, one or two actives, <span class="grad">and a look every season.</span>`, dur: 22, poster: 4.5,
+    shots: [
+      { at: 0, name: "plan", cap: "Your routine is a base plus one or two actives for your concern. Nothing more." },
+      { at: 6, name: "again", cap: "Look again every season, after big life changes, or when something stops working." },
+      { at: 11.5, name: "derm", cap: "See a dermatologist for changing moles, cysts, sudden rashes, or anything that bleeds or won't heal." },
+      { at: 17, name: "check", cap: "Book a skin check with Evelyn so she can fine-tune the plan with your skin in front of her." }
+    ],
+    css: `
+.plan { position: absolute; left: 10vmin; top: 50%; width: 82vmin; margin-top: -19vmin; display: grid; grid-template-columns: 1fr 1fr; column-gap: 2.4vmin; align-items: start; padding: 2.6vmin 2.8vmin 2.8vmin; border-radius: 4.6vmin; background: #1d1618; border: 1px solid rgba(255,255,255,.14); }
+.plan h3 { grid-column: 1 / -1; margin: 0 0 1.8vmin; font-size: 3.6vmin; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+.plan h3 svg { width: 4.4vmin; height: 4.4vmin; opacity: 0; }
+.grp { position: relative; display: flex; flex-direction: column; gap: 1vmin; }
+.grp + .grp { margin-top: 0; }
+.grp > em { font-style: normal; font-size: 2.2vmin; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #a89a94; opacity: 0; }
+.row { display: flex; align-items: center; gap: 1.4vmin; padding: 1.2vmin 1.8vmin; border-radius: 2.6vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); font-size: 3vmin; font-weight: 600; opacity: 0; }
+.row i { width: 2vmin; height: 2vmin; border-radius: 50%; background: var(--c); flex: none; }
+.row.opt { border-style: dashed; color: #cbbab3; }
+.row.no { position: absolute; left: 0; right: 0; top: 100%; margin-top: 1vmin; border-color: rgba(255,122,107,.6); color: #ffb3a8; }
+.row.no::after { content: ""; position: absolute; left: 1.4vmin; right: 1.4vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(var(--k, 0)); }
+.sweep { position: absolute; inset: 0; border-radius: 4.6vmin; overflow: hidden; pointer-events: none; }
+.sweep i { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(90deg, rgba(244,201,214,0), rgba(244,201,214,.18), rgba(244,201,214,0)); opacity: 0; }
+.stamp { position: absolute; right: 2vmin; bottom: -7.6vmin; padding: 1.2vmin 2.4vmin; border-radius: 3vmin; background: #f4c9d6; color: #1a1210; font-size: 2.7vmin; font-weight: 800; transform: rotate(-6deg); opacity: 0; }
+.pn { position: absolute; left: 98vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
+.hd { font-size: 4.2vmin; font-weight: 700; opacity: 0; }
+.tr3 { display: flex; align-items: center; gap: 1.6vmin; padding: 1.5vmin 2.4vmin; border-radius: 3vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; opacity: 0; }
+.tr3 b { width: 4.4vmin; height: 4.4vmin; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(244,201,214,.16); color: #f4c9d6; font-size: 2.6vmin; flex: none; }
+.tr3.red { border-color: rgba(255,122,107,.55); } .tr3.red b { background: rgba(255,122,107,.16); color: #ff9a8e; }
+.go { align-self: flex-start; display: flex; align-items: center; gap: 1.4vmin; padding: 1.5vmin 2.8vmin; border-radius: 3vmin; background: #8fd3ff; color: #0f1a22; font-size: 3.3vmin; font-weight: 800; opacity: 0; }
+.bk { padding: 3vmin 3.4vmin; border-radius: 4.4vmin; background: linear-gradient(160deg, #f6dbe3, #eab9c8); color: #1a1210; opacity: 0; display: flex; gap: 2.4vmin; align-items: center; }
+.bk .cal { width: 10vmin; height: 10vmin; border-radius: 2.4vmin; background: #fff8f4; flex: none; overflow: hidden; display: flex; flex-direction: column; }
+.bk .cal i { height: 2.8vmin; background: #1a1210; display: block; }
+.bk .cal b { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 4.6vmin; color: #1a1210; }
+.bk strong { display: block; font-size: 3.8vmin; line-height: 1.15; }
+.bk span { display: block; margin-top: .8vmin; font-size: 2.7vmin; font-weight: 500; line-height: 1.3; }
+@media (orientation: portrait) { .plan { display: block; width: 48vmin; left: 50%; top: 3%; margin: 0 0 0 -24vmin; } .grp + .grp { margin-top: 1.8vmin; } .pn { left: 5vmin; right: 5vmin; top: 58%; bottom: 2%; justify-content: flex-start; } }`,
+    html: `
+<div class="plan" id="plan">
+  <h3>My skin plan<svg id="ref" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="#f4c9d6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></h3>
+  <div class="grp" id="gb"><em>the base</em><span class="row" style="--c:#e3b48f"><i></i>cleanser</span><span class="row" style="--c:#e3b48f"><i></i>moisturizer</span><span class="row" style="--c:#ffd27a"><i></i>SPF</span></div>
+  <div class="grp" id="ga"><em>for your concern</em><span class="row" style="--c:#f4c9d6"><i></i>one active</span><span class="row opt" style="--c:rgba(244,201,214,.45)"><i></i>a second, if needed</span><span class="row no" id="more" style="--c:#ff7a6b"><i></i>three more serums</span></div>
+  <div class="sweep"><i id="sw"></i></div>
+  <span class="stamp" id="stamp">fine-tuned with Evelyn</span>
+</div>
+<section class="shot"></section>
+<section class="shot"><div class="pn"><div class="hd">Look again:</div><span class="tr3"><b>❋</b>every season</span><span class="tr3"><b>↻</b>after big life changes</span><span class="tr3"><b>!</b>when something stops working</span></div></section>
+<section class="shot"><div class="pn"><div class="hd">See a dermatologist for:</div><span class="tr3 red"><b>●</b>changing moles</span><span class="tr3 red"><b>●</b>cysts</span><span class="tr3 red"><b>●</b>sudden rashes</span><span class="tr3 red"><b>●</b>anything that bleeds or won't heal</span><span class="go">→ a dermatologist, soon</span></div></section>
+<section class="shot"><div class="pn"><div class="bk" id="bk"><div class="cal"><i></i><b>✦</b></div><div><strong>A skin check with Evelyn</strong><span>She fine-tunes the plan with your skin in front of her.</span></div></div></div></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      // the plan writes itself: the base, then one active, a second if needed, and nothing more
+      const plan = $("#plan");
+      enter(plan, t, 0.1, { y: 20 });
+      plan.style.opacity = (i === 2 ? 1 - 0.55 * seg(lt, 0, 0.6) : i === 3 ? 0.45 + 0.55 * seg(lt, 0, 0.6) : 1) * Math.min(1, seg(t, 0.1, 0.6) * 2.5);
+      $$("#gb em, #gb .row").forEach((el, n) => enter(el, t, 0.5 + n * 0.4, { x: -14, y: 0 }));
+      $$("#ga em, #ga .row:not(.no)").forEach((el, n) => enter(el, t, 2.3 + n * 0.5, { x: -14, y: 0 }));
+      const more = $("#more"), mIn = seg(t, 3.9, 4.3), mX = seg(t, 4.5, 5.0), mOut = seg(t, 5.2, 5.7);
+      more.style.opacity = i === 0 ? Math.min(mIn * 2, 1 - mOut) : 0; more.style.transform = `translateY(${(1 - E.out(mIn)) * 10 + mOut * 6}px)`; more.style.setProperty("--k", E.out(mX));
+      // looking again: the plan turns over once, a light passes along it
+      const rf = $("#ref"); rf.style.opacity = i === 1 ? seg(lt, 0.3, 0.7) : 0; rf.style.transform = `rotate(${i === 1 ? 360 * E.inout(seg(lt, 0.6, 2.2)) + 360 * E.inout(seg(lt, 3.0, 4.6)) : 0}deg)`;
+      const sw = $("#sw"), sp = i === 1 ? (lt * 0.42) % 1 : 0; sw.style.opacity = i === 1 ? Math.sin(Math.PI * sp) : 0; sw.style.transform = `translateX(${-100 + 440 * sp}%)`;
+      // a stamp when Evelyn has seen it
+      const sm = $("#stamp"), sk = i === 3 ? seg(lt, 2.0, 2.5) : 0; sm.style.opacity = sk; sm.style.transform = `rotate(-6deg) scale(${sk ? 1.5 - 0.5 * E.back(sk) : 1})`;
+      if (!sec) return;
+      [...sec.querySelectorAll(".hd, .tr3, .go, .bk")].forEach((el, n) => enter(el, lt, (i === 3 ? 0.4 : 0.3) + n * (i === 2 ? 0.55 : 0.6) + (el.classList.contains("go") ? 0.4 : 0), { y: 14 }));
+    }
+  },
+  "14-1": {
+    id: "14-1", kicker: "Your first visit at Lumevina", title: `Which one to book: <span class="grad">two questions.</span>`, dur: 24, poster: 4,
+    shots: [
+      { at: 0, name: "new", cap: "New, without acne concerns: New Clients Start Here. A consultation, a review of your routine, and a customized facial." },
+      { at: 6.5, name: "acne", cap: "New, with acne concerns: the Acne Bootcamp consultation and treatment, then monthly, or every two weeks for severe acne." },
+      { at: 12.5, name: "back", cap: "Returning: the Lumevina Custom Facial, or the Monthly Acne Treatment when acne is the work." },
+      { at: 18, name: "bring", cap: "Bring a clean face if you can, hair you don't mind getting damp, and your product list or photos of it. Parking is free." }
+    ],
+    css: `
+.mx { position: absolute; left: 6vmin; top: 50%; width: 94vmin; margin-top: -17vmin; display: grid; grid-template-columns: 19vmin 1fr 1fr; grid-template-rows: 5vmin 13vmin 13vmin; gap: 1.4vmin; }
+.mx .h { display: flex; align-items: center; justify-content: center; text-align: center; font-size: 2.6vmin; font-weight: 700; color: #a89a94; letter-spacing: .02em; border-radius: 2.4vmin; opacity: 0; }
+.mx .h.r { justify-content: flex-start; padding-left: 1.6vmin; font-size: 3vmin; }
+.mx .h.on { color: #fff; background: rgba(244,201,214,.14); }
+.cell { position: relative; display: flex; align-items: center; padding: 0 2.4vmin; border-radius: 3.4vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.13); font-size: 3vmin; font-weight: 700; line-height: 1.2; opacity: 0; }
+.cell small { display: block; font-size: 2.2vmin; font-weight: 500; color: #b9aaa3; margin-top: .5vmin; }
+.cell.on { border-color: #f4c9d6; background: #2c2124; box-shadow: 0 0 3vmin rgba(244,201,214,.35); }
+.cell.acn.on { border-color: #ffb38a; box-shadow: 0 0 3vmin rgba(255,179,138,.35); }
+.pn { position: absolute; left: 108vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.6vmin; }
+.hd { font-size: 3.4vmin; font-weight: 700; opacity: 0; }
+.hd em { font-style: normal; color: #f4c9d6; }
+.chs { display: flex; flex-wrap: wrap; gap: 1vmin; }
+.ch { padding: 1vmin 1.9vmin; border-radius: 2.4vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.ch.lit { border-color: #f4c9d6; background: #2c2124; }
+.dots { display: flex; flex-direction: column; gap: 1.2vmin; opacity: 0; }
+.dl { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.4vmin; line-height: 1.2; font-weight: 600; color: #cdbdb6; }
+.dl span { width: 20vmin; flex: none; }
+.dl i { flex: 1; height: 3vmin; position: relative; border-radius: 1.5vmin; background: rgba(255,255,255,.05); }
+.dl i b { position: absolute; top: 50%; width: 1.5vmin; height: 1.5vmin; margin: -.75vmin 0 0 -.75vmin; border-radius: 50%; background: #ffb38a; opacity: 0; }
+.br { display: flex; align-items: center; gap: 1.4vmin; padding: 1.3vmin 2.2vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.9vmin; font-weight: 600; opacity: 0; }
+.br svg { width: 3vmin; height: 3vmin; flex: none; }
+.br.info { border-style: dashed; color: #d9c6bd; }
+@media (orientation: portrait) { .mx { left: 50%; top: 2%; width: 88vmin; margin: 0 0 0 -44vmin; grid-template-columns: 17vmin 1fr 1fr; grid-template-rows: 5vmin 15vmin 15vmin; } .cell { font-size: 2.8vmin; padding: 0 1.8vmin; } .pn { left: 5vmin; right: 5vmin; top: 44%; bottom: 2%; justify-content: flex-start; } .ch { font-size: 2.8vmin; } }`,
+    html: `
+<div class="mx" id="mx">
+  <span></span><span class="h" id="c0">no acne concerns</span><span class="h" id="c1">acne concerns</span>
+  <span class="h r" id="r0">New client</span>
+  <div class="cell" id="x00">New Clients Start Here</div>
+  <div class="cell acn" id="x01"><span>Acne Bootcamp<small>consultation + treatment</small></span></div>
+  <span class="h r" id="r1">Returning</span>
+  <div class="cell" id="x10">Lumevina Custom Facial</div>
+  <div class="cell acn" id="x11">Monthly Acne Treatment</div>
+</div>
+<section class="shot"><div class="pn"><div class="hd">New Clients Start Here:</div><div class="chs" id="steps"><span class="ch">a consultation</span><span class="ch">a review of your routine</span><span class="ch">double cleanse</span><span class="ch">enzyme exfoliation</span><span class="ch">extractions</span><span class="ch">mask</span><span class="ch">massage</span><span class="ch">LED</span><span class="ch">cryo globes</span></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Acne Bootcamp, <em>then:</em></div><div class="dots" id="dots"><div class="dl"><span>monthly</span><i id="m1"></i></div><div class="dl"><span>severe acne: every two weeks</span><i id="m2"></i></div></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Returning clients:</div><div class="chs"><span class="ch lit">the Lumevina Custom Facial</span><span class="ch">or the Monthly Acne Treatment, when acne is the work</span></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Bring:</div><span class="br">${CHECK}a clean face, if you can</span><span class="br">${CHECK}hair you don't mind getting damp</span><span class="br">${CHECK}your product list, or photos of it</span><span class="br info">the address comes with the confirmation</span><span class="br info">parking is free</span></div></section>`,
+    setup: (M) => {
+      M.$("#m1").innerHTML = Array.from({ length: 6 }, (_, k) => `<b style="left:${6 + k * 17.6}%"></b>`).join("");
+      M.$("#m2").innerHTML = Array.from({ length: 12 }, (_, k) => `<b style="left:${6 + k * 8}%;background:#ff8e6b"></b>`).join("");
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      // the matrix: two questions, four answers. Each shot finds its row and column, then its cell
+      $$(".mx .h, .mx .cell").forEach((el, n) => enter(el, t, 0.1 + n * 0.12, { y: 10 }));
+      const pick = [["r0", "c0", "x00"], ["r0", "c1", "x01"], ["r1", null, "x10", "x11"], []][i];
+      const k = seg(lt, 0.5, 1.0);
+      ["r0", "r1", "c0", "c1"].forEach((id) => $("#" + id).classList.toggle("on", pick.includes(id) && k > 0.5));
+      ["x00", "x01", "x10", "x11"].forEach((id) => {
+        const el = $("#" + id), on = pick.includes(id) && lt > 1.0;
+        el.classList.toggle("on", on);
+        if (t > 1.4) el.style.opacity = i === 3 ? 0.5 + 0.5 * (1 - seg(lt, 0, 0.6)) : on ? 1 : 1 - 0.45 * seg(lt, 0.6, 1.0);
+      });
+      $("#mx").style.opacity = i === 3 ? 1 - 0.4 * seg(lt, 0, 0.6) : 1;
+      if (!sec) return;
+      const items = [...sec.querySelectorAll(".hd, .ch, .br, .dots")];
+      items.forEach((el, n) => enter(el, lt, 1.2 + n * (i === 0 ? 0.32 : 0.45), { y: 12 }));
+      // the facial, step by step: a light walks the list
+      if (i === 0) $$("#steps .ch").forEach((el, n) => el.classList.toggle("lit", lt > 4.3 + n * 0.12 && lt < 4.3 + n * 0.12 + 0.9));
+      // then monthly, or every two weeks: the dots land along a year
+      if (i === 1) { $$("#m1 b").forEach((d, n) => { const p = seg(lt, 2.2 + n * 0.28, 2.5 + n * 0.28); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); $$("#m2 b").forEach((d, n) => { const p = seg(lt, 3.4 + n * 0.14, 3.7 + n * 0.14); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); }
+    }
+  },
+  "14-2": {
+    id: "14-2", kicker: "Her shelf", title: `How the products <span class="grad">fit together.</span>`, dur: 24, poster: 4.5,
+    shots: [
+      { at: 0, name: "base", cap: "The base is a cleanser, a moisturizer and SPF. One treatment product for the main concern is the first addition." },
+      { at: 6, name: "mandelic", cap: "Mandelic serums come in strengths: the lowest first, a few nights a week. Moving up is Evelyn's call, after a few weeks without stinging." },
+      { at: 12.5, name: "texture", cap: "Gel textures for oily and combination skin, creams for dry. A hydrating toner adds water under either." },
+      { at: 18, name: "picks", cap: "Her morning and night picks for your skin come after a visit, and the website chat can check stock and put it in your bag for pickup." }
+    ],
+    css: `
+.plank { position: absolute; left: 8vmin; width: 94vmin; top: 64%; height: 2.6vmin; border-radius: 1.3vmin; background: linear-gradient(180deg, #6b4a3a, #4a3127); box-shadow: 0 1.6vmin 3vmin rgba(0,0,0,.45); }
+.sh { position: absolute; left: 8vmin; width: 94vmin; bottom: 36%; display: flex; justify-content: space-evenly; align-items: flex-end; }
+.it { position: relative; display: flex; flex-direction: column; align-items: center; opacity: 0; }
+.it > em { position: absolute; top: calc(100% + 4vmin); left: 50%; transform: translateX(-50%); white-space: nowrap; font-style: normal; font-size: 2.6vmin; font-weight: 600; color: #e6d5cd; text-align: center; line-height: 1.2; }
+.it > em small { display: block; font-size: 2.1vmin; font-weight: 500; color: #a89a94; }
+.it.hi::before { content: ""; position: absolute; left: 50%; bottom: 0; width: 18vmin; height: 18vmin; margin-left: -9vmin; border-radius: 50%; background: radial-gradient(circle, rgba(244,201,214,.4), rgba(244,201,214,0) 70%); opacity: var(--g, 0); }
+.pump { width: 3vmin; height: 2.6vmin; background: #d9cfc8; border-radius: .6vmin .6vmin 0 0; position: relative; }
+.pump::before { content: ""; position: absolute; left: -1.6vmin; top: -1.6vmin; width: 6.2vmin; height: 1.6vmin; border-radius: .8vmin; background: #d9cfc8; }
+.body { border-radius: 2.6vmin; position: relative; overflow: hidden; }
+.body::after { content: ""; position: absolute; left: 18%; top: 10%; width: 14%; height: 60%; border-radius: 1vmin; background: rgba(255,255,255,.35); }
+.lid { border-radius: 1.2vmin 1.2vmin .4vmin .4vmin; }
+.drop { width: 3.6vmin; height: 3.6vmin; border-radius: 50% 50% 1vmin 1vmin; background: #3a3134; }
+.neck { width: 2.2vmin; height: 2.4vmin; background: #3a3134; }
+.ccap { width: 5vmin; height: 3vmin; border-radius: .6vmin .6vmin 1.2vmin 1.2vmin; background: #3a3134; }
+.pn { position: absolute; left: 110vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.8vmin; }
+.hd { font-size: 3.6vmin; font-weight: 700; opacity: 0; line-height: 1.2; }
+.hd em { font-style: normal; color: #f4c9d6; }
+.wk { display: flex; gap: .9vmin; opacity: 0; }
+.wk b { flex: 1; height: 7vmin; border-radius: 1.8vmin; display: flex; align-items: center; justify-content: center; font-size: 2.4vmin; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: #8f817b; }
+.wk b.on { background: rgba(232,192,143,.25); border-color: #e8c08f; color: #fff; }
+.nt { display: flex; align-items: center; gap: 1.4vmin; padding: 1.3vmin 2.2vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; line-height: 1.25; opacity: 0; }
+.nt svg { width: 3.4vmin; height: 3.4vmin; flex: none; }
+.nt.up { border-color: rgba(232,192,143,.6); }
+.ampm { display: flex; gap: 1.4vmin; }
+.ampm .nt { flex: 1; flex-direction: column; align-items: flex-start; gap: .8vmin; }
+.bub { align-self: flex-start; padding: 1.6vmin 2.4vmin; border-radius: 3vmin 3vmin 3vmin 1vmin; background: #f4eae4; color: #1a1210; font-size: 2.9vmin; font-weight: 600; opacity: 0; }
+.bub.me { align-self: flex-end; border-radius: 3vmin 3vmin 1vmin 3vmin; background: #2c2124; color: #fff; border: 1px solid rgba(244,201,214,.4); }
+.bag { width: 12vmin; height: 11vmin; border-radius: 1.6vmin 1.6vmin 2.6vmin 2.6vmin; background: #e8d6c9; position: relative; }
+.bag::before { content: ""; position: absolute; left: 3vmin; right: 3vmin; top: -3.2vmin; height: 4.4vmin; border: .6vmin solid #c9b2a3; border-bottom: 0; border-radius: 3vmin 3vmin 0 0; }
+.bag b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.2vmin; font-weight: 800; color: #6b4a3a; letter-spacing: .06em; }
+.fly { position: absolute; z-index: 2; }
+.dr { position: absolute; width: 1.8vmin; height: 2.4vmin; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #9fd8ff; box-shadow: 0 0 1.2vmin rgba(143,211,255,.8); opacity: 0; }
+@media (orientation: portrait) { .plank { left: 6vmin; width: 88vmin; top: 40%; } .sh { left: 6vmin; width: 88vmin; bottom: 60%; } .pn { left: 6vmin; right: 6vmin; top: 52%; bottom: 2%; justify-content: flex-start; } .it > em { font-size: 2.4vmin; } }`,
+    html: `
+<div class="plank" id="plank"></div>
+<section class="shot"><div class="sh">
+  <div class="it"><div class="pump"></div><div class="body" style="width:9vmin;height:15vmin;background:#efe3d9"></div><em>cleanser</em></div>
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#cdb7a8"></div><div class="body" style="width:12vmin;height:8vmin;background:#f6eee8;border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>moisturizer</em></div>
+  <div class="it"><div class="body" style="width:7vmin;height:14vmin;background:#ffd27a;border-radius:3vmin 3vmin 1vmin 1vmin"></div><div class="ccap"></div><em>SPF</em></div>
+  <div class="it hi" id="add"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f4c9d6;border-radius:2vmin"></div><em>one treatment<small>for the main concern</small></em></div>
+</div></section>
+<section class="shot"><div class="sh">
+  <div class="it hi" id="lo"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f6e2c8;border-radius:2vmin"></div><em>mandelic<small>lowest first</small></em></div>
+  <div class="it"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#e8c08f;border-radius:2vmin"></div><em>next<small>strength</small></em></div>
+  <div class="it"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#d9984f;border-radius:2vmin"></div><em>stronger<small>strength</small></em></div>
+</div></section>
+<section class="shot"><div class="sh" id="tex">
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#7fb6d9"></div><div class="body" style="width:12vmin;height:8vmin;background:rgba(159,216,255,.45);border:1px solid rgba(159,216,255,.7);border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>gel<small>oily and combination</small></em></div>
+  <div class="it" id="toner"><div class="ccap" style="width:4vmin;height:3.4vmin"></div><div class="body" style="width:8vmin;height:17vmin;background:linear-gradient(180deg, rgba(255,255,255,.18) 30%, rgba(143,211,255,.55) 30%);border:1px solid rgba(255,255,255,.3);border-radius:2.4vmin"></div><em>hydrating toner<small>water under either</small></em></div>
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#cdb7a8"></div><div class="body" style="width:12vmin;height:8vmin;background:#fbf6f1;border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>cream<small>dry</small></em></div>
+  <i class="dr" id="d0"></i><i class="dr" id="d1"></i>
+</div></section>
+<section class="shot"><div class="sh">
+  <div class="it"><div class="pump"></div><div class="body" style="width:9vmin;height:15vmin;background:#efe3d9"></div><em>&nbsp;</em></div>
+  <div class="it" id="bagit"><div class="bag"><b>PICKUP</b></div><em>your bag</em></div>
+  <div class="it"><div class="body" style="width:7vmin;height:14vmin;background:#ffd27a;border-radius:3vmin 3vmin 1vmin 1vmin"></div><div class="ccap"></div><em>&nbsp;</em></div>
+  <div class="fly" id="fly"><div class="drop" style="margin:0 auto"></div><div class="neck" style="margin:0 auto"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f4c9d6;border-radius:2vmin"></div></div>
+</div></section>
+<div class="pn" id="p0"><div class="hd">The base, <em>then one addition.</em></div><span class="nt">${CHECK}cleanser · moisturizer · SPF</span><span class="nt up">+ one treatment product for the main concern</span></div>
+<div class="pn" id="p1"><div class="hd">The lowest strength first, <em>a few nights a week.</em></div><div class="wk"><b class="on">M</b><b>T</b><b class="on">W</b><b>T</b><b class="on">F</b><b>S</b><b>S</b></div><span class="nt up">↑ moving up: Evelyn's call, after a few weeks without stinging</span></div>
+<div class="pn" id="p2"><div class="hd">Texture by skin type, <em>water under either.</em></div><span class="nt">gel: oily and combination skin</span><span class="nt">cream: dry skin</span><span class="nt up">hydrating toner: under either</span></div>
+<div class="pn" id="p3"><div class="ampm"><span class="nt">${SUN}<span>Morning picks<br><small style="font-size:2.2vmin;color:#b9aaa3">after a visit</small></span></span><span class="nt">${MOON}<span>Night picks<br><small style="font-size:2.2vmin;color:#b9aaa3">after a visit</small></span></span></div><span class="bub me">Is it in stock?</span><span class="bub">Yes. It's in your bag for pickup.</span></div>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      enter($("#plank"), t, 0.1, { y: 0, s: 0.9 });
+      // this shot's shelf: things land one at a time, with a small settle
+      if (sec) [...sec.querySelectorAll(".it")].forEach((el, n) => enter(el, lt, 0.3 + n * 0.45 + (el.id === "add" ? 1.0 : 0), { y: -30, d: 0.7 }));
+      [["#add", 0, 2.4], ["#lo", 1, 1.6]].forEach(([s, k, a]) => { const el = $(s); if (el) el.style.setProperty("--g", i === k ? seg(lt, a, a + 0.6) * (0.75 + 0.25 * Math.sin(lt * 3)) : 0); });
+      // the panel for this shot (outside the shot sections, so it can share the right side)
+      [0, 1, 2, 3].forEach((k) => {
+        const p = $("#p" + k), on = k === i;
+        p.style.visibility = on ? "visible" : "hidden";
+        if (!on) return;
+        [...p.querySelectorAll(".hd, .nt, .wk, .bub")].forEach((el, n) => enter(el, lt, 0.9 + n * 0.55 + (el.classList.contains("bub") ? 0.8 : 0), { y: 12 }));
+      });
+      // the week strip: the nights light in turn
+      $$("#p1 .wk b.on").forEach((b, n) => { b.style.opacity = i === 1 ? 0.35 + 0.65 * seg(lt, 2.0 + n * 0.35, 2.3 + n * 0.35) : 1; });
+      // the toner's water falls into the gel and the cream
+      if (i === 2) {
+        const tx = $("#tex"), tn = $("#toner"), W = tx.offsetWidth, cx = tn.offsetLeft + tn.offsetWidth / 2;
+        [["#d0", -1, 2.6], ["#d1", 1, 3.4]].forEach(([s, dir, a]) => {
+          const d = $(s), p = seg(lt, a, a + 0.9), vm = Math.min(innerWidth, innerHeight) / 100;
+          d.style.opacity = p > 0 && p < 1 ? 1 : 0;
+          d.style.left = (cx + dir * p * W * 0.3) + "px"; d.style.bottom = (19 * vm - 16 * vm * p * p + 6 * vm * Math.sin(Math.PI * p)) + "px";
+        });
+      }
+      // a pick hops into the bag
+      if (i === 3) {
+        const f = $("#fly"), bg = $("#bagit"), vm = Math.min(innerWidth, innerHeight) / 100, p = E.inout(seg(lt, 2.0, 3.0));
+        const x1 = bg.offsetLeft + bg.offsetWidth / 2 - 3.7 * vm, x0 = x1 + 22 * vm;
+        f.style.left = (x0 + (x1 - x0) * p) + "px"; f.style.bottom = (Math.sin(Math.PI * p) * 14 * vm + p * 2 * vm) + "px";
+        f.style.opacity = seg(lt, 0.8, 1.2) * (1 - seg(lt, 2.8, 3.0)); f.style.transform = `rotate(${-20 * Math.sin(Math.PI * p)}deg) scale(${1 - 0.3 * p})`;
+        set0(bg, lt);
+      }
+      function set0(el, lt) { if (lt > 2.9) el.style.transform = `translateY(${-1.2 * Math.sin(Math.min(1, (lt - 2.9) / 0.4) * Math.PI)}vmin)`; }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
@@ -1690,7 +2128,7 @@ export const SCENES = {
     ],
     css: `
 .wx { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 4vmin; }
-.ruler { position: relative; height: 24vmin; border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
+.ruler { position: relative; height: 24vmin; border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
 .ruler .line { position: absolute; left: 6vmin; right: 6vmin; top: 12.8vmin; height: .6vmin; background: #2a2a2d; border-radius: 1vmin; }
 .ruler .tk { position: absolute; top: 9.6vmin; width: .4vmin; height: 3.8vmin; background: #6e6e73; }
 .ruler .tl { position: absolute; top: 14.6vmin; font-size: 2.7vmin; color: #8e8e93; transform: translateX(-50%); }
@@ -1700,11 +2138,11 @@ export const SCENES = {
 .ruler .zl { position: absolute; top: 18.8vmin; left: calc(6vmin + 1.32 * 22%); font-size: 2.7vmin; font-weight: 650; color: #f4c9d6; white-space: nowrap; opacity: 0; }
 .ruler .hint { position: absolute; font-size: 2.3vmin; color: #8e8e93; white-space: nowrap; opacity: 0; } .ruler .hint.lo { left: 6vmin; top: 18.9vmin; } .ruler .hint.hi { right: 6vmin; top: 18.9vmin; }
 .tl3 { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; }
-.wk { border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3vmin; opacity: 0; }
+.wk { border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3vmin; opacity: 0; }
 .wk b { display: block; font-size: 4.6vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; } .wk span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: 1vmin; line-height: 1.35; }
 .wk .bar { position: relative; height: 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.07); margin-top: 1.4vmin; overflow: hidden; } .wk .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
 .rules { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2vmin; }
-.rule { border-radius: 3.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
+.rule { border-radius: 3.2vmin; background: #1a1416; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
 .rule b { display: block; font-size: 3.4vmin; font-weight: 650; line-height: 1.15; } .rule span { display: block; font-size: 2.6vmin; color: #a1a1a6; margin-top: .7vmin; line-height: 1.35; }
 .rule.no b { color: #ff7a6b; } .rule.yes b { color: #32d74b; }
 @media (orientation: portrait) { .rules { grid-template-columns: 1fr; } .tl3 { grid-template-columns: 1fr; } .ruler .hint { display: none; } .ruler .zl { font-size: 2.3vmin; left: calc(6vmin + 1.05 * 22%); transform: translateX(-50%); } }`,

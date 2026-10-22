@@ -60,23 +60,57 @@ window.M = (function () {
   var count = function (el, lt, a, b, from, to, fmt) { if (el) el.textContent = (fmt || Math.round)(tw(lt, a, b, from, to, E.out)); };
   var lerpColor = function (a, b, p) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * p) + "," + Math.round(a[1] + (b[1] - a[1]) * p) + "," + Math.round(a[2] + (b[2] - a[2]) * p) + ")"; };
 
-  var SHOTS = [], shotEls = [], capWrap = null, capEl = null, amb = [], dust = null;
-  var init = function () { SHOTS = (window.SCENE && window.SCENE.shots) || []; shotEls = $$(".shot"); capEl = $("#cap"); capWrap = capEl && capEl.parentElement; amb = $$(".amb i"); dust = $(".dust"); };
+  var SHOTS = [], shotEls = [], capWrap = null, capEl = null, room = null, solid = false;
+  var init = function () { SHOTS = (window.SCENE && window.SCENE.shots) || []; shotEls = $$(".shot"); capEl = $("#cap"); capWrap = capEl && capEl.parentElement; room = $(".room"); solid = !!$("#gl"); dress(); };
   var hash = function (i) { var x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
-  // the room the lesson sits in: two soft pools of warm light drifting very slowly, and fine dust
-  // rising through them, like the light behind the dominoes and the particles in the line art
+  // the flat scenes' cards and tiles as things on the table: once, every solid rounded element in
+  // the canvas gets a soft contact shadow (unless it has a shadow of its own) and a touch of
+  // light falling across its top (unless it paints its own gradient). Light-coloured ones get a
+  // white edge instead of a warm one.
+  var dress = function () {
+    if (solid) return;
+    $$(".canvas *").forEach(function (el) {
+      if (!(el instanceof HTMLElement) || el.classList.contains("shot")) return;
+      var cs = getComputedStyle(el), m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(cs.backgroundColor);
+      if (!m || (m[4] != null && parseFloat(m[4]) < 0.9)) return;
+      if ((parseFloat(cs.borderTopLeftRadius) || 0) < 3 || el.offsetWidth < 20 || el.offsetHeight < 20) return;
+      if (cs.boxShadow === "none") el.classList.add("obj-sh");
+      if (cs.backgroundImage === "none") el.classList.add("obj-lt");
+      if ((0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]) / 255 > 0.5) el.classList.add("lit");
+    });
+  };
+  // the room the lesson sits in, drawn behind everything: a warm darkness, a pool of light on
+  // the table (behind the set, in a solid scene: its floor carries its own pool), a few soft
+  // bokeh discs far back, and fine dust rising through the light, like the particles in the
+  // line art. All of it moves very slowly, all of it from t alone.
   var ambient = function (t) {
-    if (amb[0]) amb[0].style.transform = "translate(" + (Math.sin(t * 0.11) * 7).toFixed(2) + "vmin," + (Math.cos(t * 0.09) * 5).toFixed(2) + "vmin)";
-    if (amb[1]) amb[1].style.transform = "translate(" + (Math.cos(t * 0.08 + 1) * 8).toFixed(2) + "vmin," + (Math.sin(t * 0.12 + 2) * 6).toFixed(2) + "vmin)";
-    if (!dust || !dust.getContext) return;
-    var c = dust.getContext("2d"), W = dust.width, H = dust.height, u = Math.min(W, H) / 720;
-    c.clearRect(0, 0, W, H);
-    for (var k = 0; k < 70; k++) {
+    if (!room || !room.getContext) return;
+    var c = room.getContext("2d"), W = room.width, H = room.height, u = Math.min(W, H) / 720, k, g;
+    g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#090606"); g.addColorStop(0.5, "#110b0a"); g.addColorStop(1, "#1a110e");
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    var px = W * (0.5 + 0.025 * Math.sin(t * 0.09)), py = H * (solid ? 0.5 : 0.74), sx = 1.45, sy = solid ? 0.5 : 0.78, R = Math.max(W, H) * 0.62;
+    c.save(); c.translate(px, py); c.scale(sx, sy);
+    g = c.createRadialGradient(0, 0, 0, 0, 0, R);
+    g.addColorStop(0, "rgba(158,104,74," + (solid ? 0.5 : 0.46) + ")"); g.addColorStop(0.3, "rgba(126,80,58,0.24)"); g.addColorStop(1, "rgba(90,56,40,0)");
+    c.fillStyle = g; c.fillRect(-R, -R, 2 * R, 2 * R); c.restore();
+    for (k = 0; k < 7; k++) {   // the bokeh: large, faint, warm, drifting
+      var bx = (hash(k + 11) * 1.1 - 0.05) * W + Math.sin(t * 0.045 + k * 1.7) * u * 18, by = (0.24 + hash(k + 23) * 0.5) * H + Math.cos(t * 0.04 + k) * u * 12, br = (26 + hash(k + 37) * 46) * u, ba = (0.016 + hash(k + 41) * 0.026) * (solid ? 0.8 : 1);
+      g = c.createRadialGradient(bx, by, 0, bx, by, br);
+      g.addColorStop(0, "rgba(246,220,198," + (ba * 0.6).toFixed(3) + ")"); g.addColorStop(0.78, "rgba(246,220,198," + ba.toFixed(3) + ")"); g.addColorStop(1, "rgba(246,220,198,0)");
+      c.fillStyle = g; c.beginPath(); c.arc(bx, by, br, 0, 6.2832); c.fill();
+    }
+    for (k = 0; k < 64; k++) {   // the dust
       var sp = 0.006 + hash(k + 31) * 0.014, y = (((hash(k + 97) - t * sp) % 1) + 1) % 1;
-      var x = hash(k) * W + Math.sin(t * 0.35 + k) * W * 0.012;
-      var a = (0.08 + 0.22 * (0.5 + 0.5 * Math.sin(t * 1.3 + k * 2.1))) * Math.min(1, y * 4, (1 - y) * 4);
+      var x = hash(k) * W + Math.sin(t * 0.35 + k) * W * 0.012, big = k % 9 === 0;
+      var a = (0.07 + 0.2 * (0.5 + 0.5 * Math.sin(t * 1.3 + k * 2.1))) * Math.min(1, y * 4, (1 - y) * 4) * (big ? 0.45 : 1);
       c.fillStyle = "rgba(246,218,196," + a.toFixed(3) + ")";
-      c.beginPath(); c.arc(x, y * H, (0.6 + hash(k + 53) * 1.5) * u, 0, 6.2832); c.fill();
+      c.beginPath(); c.arc(x, y * H, (big ? 2.6 + hash(k + 53) * 2.4 : 0.6 + hash(k + 53) * 1.5) * u, 0, 6.2832); c.fill();
+    }
+    if (!solid) {   // a vignette; a solid scene's lens does its own
+      g = c.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.45, W / 2, H / 2, Math.max(W, H) * 0.78);
+      g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.5)");
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
     }
   };
   var stage = function (t) {
