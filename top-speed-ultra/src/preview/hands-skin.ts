@@ -230,8 +230,12 @@ H += 0.035 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red
 H += 0.24 * vein * smoothstep(1.2, 0.45, pix);
 c *= 1.0 - 0.18 * crease * mid;
 // (the thumb's IP band: narrower than the crease's window and deeper, so the joint reads as a crease across the thumb
-// at a phone's scale whatever the light; in shade the knuckle's own shading is gone and a fainter band vanished)
-c *= mix(vec3(1.0), vec3(0.74, 0.69, 0.70), far3 * exp(-(ax * ax) / 9.0) * st * (1.0 - sharpC) * (1.0 - 0.35 * uFem));
+// at a phone's scale whatever the light. A darker colour alone barely showed: the skin's sheen and specular, and the
+// tone curve's shoulder, are the same over it. The wrinkles' own shadowing also takes some of the light, so the band
+// is an occlusion too: in shade, where the knuckle's own shading is gone, it carries the joint)
+float ipBand = far3 * exp(-(ax * ax) / 9.0) * st * (1.0 - sharpC) * (1.0 - 0.35 * uFem);
+c *= mix(vec3(1.0), vec3(0.80, 0.76, 0.77), ipBand);
+ao *= 1.0 - 0.22 * ipBand;
 diffuseColor.rgb = c;
 float rough = mix(0.54, 0.43, clamp(red * dorsal, 0.0, 1.0)) + 0.08 * palmar + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.08 * crease + 0.06 * uDark;
 float leather = 0.0;
