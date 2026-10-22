@@ -197,7 +197,8 @@ export class CarPhysics {
   // substeps still left 2 %. At 120 Hz and above this is the one step, exactly as before. `px/pz/ppsi` stay the pose
   // at the start of the caller's step (the traffic's swept contact reads them).
   step(dt: number, c: Controls, road: Path, net: Network) {
-    const k = Math.ceil(dt * 120 - 1e-6);
+    if (!Number.isFinite(dt)) return;                                // an infinite step would never finish
+    const k = Math.min(Math.ceil(dt * 120 - 1e-6), 12);              // at most 12, the game's own cap per frame
     if (k <= 1) { this.advance(dt, c, road, net); return; }
     const px = this.x, pz = this.z, ppsi = this.psi, h = dt / k;
     for (let i = 0; i < k; i++) this.advance(h, c, road, net);
@@ -464,6 +465,7 @@ export class CarPhysics {
 
   // in the air: drag and thrust only, the wheels free-rolling, the pose bound to the road it left
   private airStep(dt: number, c: Controls, road: Path) {
+    this.grinding = false;                                           // a landing is a fresh touch
     const A = this.air;
     A.t += dt;
     const drag = 0.5 * RHO * SPEC.CdA * this.vx * Math.abs(this.vx);
