@@ -31,9 +31,23 @@ import { createRequire } from "node:module";
 import { SCENES as FLAT, PALETTE } from "./scenes.mjs";
 import { SCENES as SOLID } from "./scenes3d.mjs";
 const SCENES = { ...FLAT, ...SOLID };
-
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../../..");
+// the five free lessons (docs/school/curriculum.js: free) get the studio cut: "Free lesson n of 5"
+// in the kicker and a closing card after the last shot, teasing the next free lesson, or the rest
+// of the course after the fifth. The card adds END seconds; the scene's own timing is untouched.
+const END = 4.5;
+const FREE = (() => { const w = {}; new Function("window", fs.readFileSync(path.join(here, "..", "curriculum.js"), "utf8"))(w); return (w.SCHOOL && w.SCHOOL.free) || []; })();
+const LESSONS = (() => { const w = {}; new Function("window", fs.readFileSync(path.join(here, "..", "curriculum.js"), "utf8"))(w); let n = 0; (w.SCHOOL.levels || []).forEach((l) => l.modules.forEach((m) => { n += m.lessons.length; })); return n; })();
+FREE.forEach((id, k) => {
+  const sc = SCENES[id]; if (!sc || sc.endAt) return;
+  const nx = SCENES[FREE[k + 1]];
+  sc.endAt = sc.dur; sc.dur = Math.round((sc.dur + END) * 10) / 10;
+  sc.kicker = `Free lesson ${k + 1} of ${FREE.length} · ${sc.kicker}`;
+  sc.endcard = nx
+    ? `<span class="ec-pill" data-i>Free lesson ${k + 1} of ${FREE.length}</span><p class="ec-sm" data-i>Next free lesson</p><p class="ec-big" data-i>${nx.title}</p>`
+    : `<span class="ec-pill" data-i>Free lesson ${k + 1} of ${FREE.length}</span><p class="ec-big" data-i>${LESSONS - FREE.length} more lessons <span class="grad">inside Skin School.</span></p><p class="ec-sm" data-i>Three levels, one course, made with Evelyn</p>`;
+});
 const { chromium } = createRequire(path.join(process.env.PLAYWRIGHT_DIR || root, "x.js"))("playwright");
 
 const args = process.argv.slice(2);
@@ -102,6 +116,17 @@ footer { position: relative; z-index: 2; display: flex; align-items: flex-end; j
 .lbl { font-size: 2.5vmin; color: ${PALETTE.t2}; line-height: 1.4; }
 .big { font-size: 5vmin; font-weight: 700; letter-spacing: -.03em; }
 svg text { font-family: "InterV", system-ui, sans-serif; }
+/* the free lessons' closing card: the frame softens and darkens behind it, the next lesson rises in */
+.endc { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; visibility: hidden; opacity: 0;
+  background: radial-gradient(110% 90% at 50% 45%, rgba(26,16,14,.55), rgba(6,4,4,.92)); -webkit-backdrop-filter: blur(1.6vmin) saturate(1.1); backdrop-filter: blur(1.6vmin) saturate(1.1); }
+.ec-in { display: flex; flex-direction: column; align-items: center; gap: 2.4vmin; text-align: center; padding: 0 8vmin; max-width: 150vmin; }
+.ec-mark { margin: 0; font-size: 3vmin; font-weight: 700; letter-spacing: .02em; }
+.ec-mark span { font-weight: 500; color: ${PALETTE.t2}; margin-left: .6vmin; }
+.ec-line { display: block; width: 18vmin; height: .4vmin; border-radius: .2vmin; background: linear-gradient(90deg, #f7d3de, #eab9c8 45%, #e2b08c); transform-origin: 50% 50%; }
+.ec-pill { display: inline-block; padding: 1.1vmin 2.6vmin; border-radius: 999px; border: 1.5px solid rgba(244,201,214,.6); color: #f4c9d6; font-size: 2.4vmin; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.ec-sm { margin: 0; font-size: 2.8vmin; color: ${PALETTE.t2}; font-weight: 500; }
+.ec-big { margin: 0; font-size: 7vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; text-wrap: balance; }
+@media (orientation: portrait) { .ec-big { font-size: 8.4vmin; } .ec-in { padding: 0 7vmin; } }
 @media (orientation: portrait) { .stage { padding: 7vmin 6vmin 5vmin; } h1 { font-size: 6.4vmin; } .foot { display: none; } .cap { max-width: 100%; } }
 ${scene.css}
 </style></head><body><div class="stage">
@@ -109,12 +134,13 @@ ${scene.css}
 <header><p class="k">${esc(scene.kicker)}</p><h1>${scene.title}</h1></header>
 <main class="canvas">${scene.html}</main>
 <footer><div class="capwrap"><span class="cap" id="cap"></span></div><p class="foot">Lumevina Skin School · Evelyn Romero</p></footer>
+${scene.endcard ? `<div class="endc" id="endc"><div class="ec-in"><p class="ec-mark" data-i>Lumevina <span>Skin School</span></p><i class="ec-line" data-i></i>${scene.endcard}</div></div>` : ""}
 <div class="grain"></div>
 </div>
 <script>${runtime}</script>
 <script>
 window.C = ${JSON.stringify(PALETTE)};
-window.SCENE = ${JSON.stringify({ id: scene.id, dur: scene.dur, poster: scene.poster, shots: scene.shots })};
+window.SCENE = ${JSON.stringify({ id: scene.id, dur: scene.dur, poster: scene.poster, shots: scene.shots, endAt: scene.endAt || null })};
 window.W = ${W}; window.H = ${H};
 ${scene.setup ? `(${scene.setup.toString()})(M, window.C);` : ""}
 ${scene.seek ? `window.seek = function (t) { var st = M.stage(t); (${scene.seek.toString()})(t, st, M, window.C); };` : ""}

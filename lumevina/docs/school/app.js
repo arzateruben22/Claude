@@ -40,6 +40,12 @@
       });
     });
   });
+  /* the five free lessons, in the order a new visitor takes them (curriculum.js): each video ends on
+     the next one, the fifth on the rest of the course */
+  var FREE = (S.free || []).filter(function (id) { return BY[id] && BY[id].ls.free; });
+  if (!FREE.length) FREE = ALL.filter(function (r) { return r.ls.free; }).map(function (r) { return r.ls.id; });
+  var freeNext = function (id) { var k = FREE.indexOf(id); return k > -1 && k + 1 < FREE.length ? FREE[k + 1] : null; };
+  var freeStart = function () { return FREE.filter(function (id) { return !(st.done || {})[id]; })[0] || FREE[0]; };
   var levelLessons = function (lv) { return ALL.filter(function (r) { return r.lv === lv; }); };
   var minsOf = function (rows) { return rows.reduce(function (s, r) { return s + r.ls.min; }, 0); };
   var hrs = function (m) { var h = Math.floor(m / 60), r = m % 60; return h ? h + " hr" + (r ? " " + r + " min" : "") : r + " min"; };
@@ -283,7 +289,7 @@
           '<p class="qz-desc">' + T[1] + '</p>' +
           '<div class="qz-plan"><div><b>Your first step</b><span>' + T[2] + '</span></div><div><b>Start here</b><span>' + START[r.c][0] + ' (' + START[r.c][1] + ')</span></div>' +
           '<div><b>Watch out for</b><span>' + WATCH[r.c] + '</span></div></div>' +
-          '<div class="qz-acts"><button type="button" class="btn btn-grad" data-open-lesson="1-2">Take the free lesson on skin types</button>' +
+          '<div class="qz-acts"><button type="button" class="btn btn-grad" data-open-lesson="' + freeStart() + '">Start the five free lessons</button>' +
           '<button type="button" class="btn btn-ghost" id="qz-again">Take it again</button></div></div>';
         petals($(".qz-type", box), 20);
         $("#qz-again").addEventListener("click", function () { k = 0; picks = []; paint(); });
@@ -316,12 +322,23 @@
     var v = VIDEOS[ls.id];
     if (v) {
       var src = "img/school/video/" + esc(ls.id);
-      return '<div class="ls-video has-clip"><video poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"><source src="' + src + '.mp4" type="video/mp4"><source src="' + src + '.webm" type="video/webm"></video>' +
+      return '<div class="ls-video has-clip" data-ls="' + esc(ls.id) + '"><video poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"><source src="' + src + '.mp4" type="video/mp4"><source src="' + src + '.webm" type="video/webm"></video>' +
         '<button type="button" class="ls-play" aria-label="Play the explainer">' + PLAY + '</button>' +
         '<div class="ls-vcap"><span>Explainer · ' + Math.round(v.dur) + ' s</span><span>Evelyn\u2019s video next</span></div></div>';
     }
     return '<div class="ls-video"><button type="button" class="ls-play" aria-label="Play the video">' + PLAY + '</button>' +
       '<div class="ls-vcap"><span>Video · Evelyn</span><span>' + ls.min + ' min</span></div></div>';
+  };
+  /* a free lesson's explainer ends on the next free one; the fifth on the rest of the course */
+  var endNext = function (box) {
+    var id = box.getAttribute("data-ls");
+    if (!id || st.tier || FREE.indexOf(id) < 0 || $(".ls-endnext", box)) return;
+    var nx = freeNext(id), k = FREE.indexOf(id) + 1, d = document.createElement("div");
+    d.className = "ls-endnext";
+    d.innerHTML = nx
+      ? '<span>Free lesson ' + k + ' of ' + FREE.length + '</span><b>Next: ' + esc(BY[nx].ls.t) + '</b><button type="button" class="btn btn-grad" data-go="' + nx + '" data-open-lesson="' + nx + '">Watch the next free lesson &rarr;</button>'
+      : '<span>That was free lesson ' + k + ' of ' + FREE.length + '</span><b>' + (ALL.length - FREE.length) + ' more lessons are waiting.</b><a class="btn btn-grad" href="#tiers" data-see-tiers>See the courses &rarr;</a>';
+    box.appendChild(d);
   };
   var learnHtml = function (ls, stagger) {
     return '<ul class="ls-learn' + (stagger ? " stagger" : "") + '">' + ls.learn.map(function (x, i) { return '<li style="--i:' + i + '">' + esc(x) + '</li>'; }).join("") + '</ul>';
@@ -385,7 +402,7 @@
       };
       if (!box.dataset.wired) {
         box.dataset.wired = "1";
-        vid.addEventListener("ended", function () { box.classList.remove("playing"); vid.controls = false; });
+        vid.addEventListener("ended", function () { box.classList.remove("playing"); vid.controls = false; endNext(box); });
         vid.addEventListener("error", fail);
       }
       box.classList.add("playing"); vid.controls = true;
@@ -860,6 +877,7 @@
 
   /* ── the course player ── */
   var firstOpen = function () {
+    if (!st.tier) return freeStart();
     var next = ALL.filter(function (r) { return owns(r) && !st.done[r.ls.id]; })[0];
     return (next || ALL[0]).ls.id;
   };
@@ -887,15 +905,16 @@
       var row = BY[id] || ALL[0], ls = row.ls, lv = row.lv, md = row.md, has = owns(row);
       cur = ls.id; st.last = ls.id; save();
       var prev = ALL[row.i - 1], next = ALL[row.i + 1], done = !!st.done[ls.id];
+      var fk = !st.tier && ls.free ? FREE.indexOf(ls.id) : -1, fNext = fk > -1 ? freeNext(ls.id) : null;
       main.innerHTML = '<article class="lesson' + (first ? "" : " enter") + '">' +
-        '<div><p class="kicker">Level ' + lv.n + ' · ' + esc(md.name) + ' · Lesson ' + (row.i + 1) + ' of ' + ALL.length + '</p>' +
+        '<div><p class="kicker">' + (fk > -1 ? 'Free lesson ' + (fk + 1) + ' of ' + FREE.length + ' · ' : '') + 'Level ' + lv.n + ' · ' + esc(md.name) + ' · Lesson ' + (row.i + 1) + ' of ' + ALL.length + '</p>' +
         '<h2 class="ls-h">' + esc(ls.t) + '</h2><p class="ls-sum">' + esc(ls.sum) + '</p></div>' +
         (has ? videoHtml(ls) + figHtml(ls) +
           '<div><p class="ls-sec">What you&rsquo;ll learn</p>' + learnHtml(ls, true) + '</div>' + evelynHtml(ls) + tryHtml(ls) + moreHtml(ls) + shelfHtml(ls) +
           (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) +
           '<div class="ls-nav">' + (prev ? '<button type="button" class="btn btn-ghost" data-go="' + prev.ls.id + '">&larr; Back</button>' : "<span></span>") +
           '<button type="button" class="btn btn-dark ls-done' + (done ? " is-done" : "") + '" id="ls-done">' + (done ? "&#10003; Completed" : "Mark complete") + '</button>' +
-          (next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>' +
+          (fNext ? '<button type="button" class="btn btn-grad" data-go="' + fNext + '">Next free lesson &rarr;</button>' : fk > -1 ? '<button type="button" class="btn btn-grad" data-see-tiers>The other ' + (ALL.length - FREE.length) + ' lessons &rarr;</button>' : next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>' +
           '<button type="button" class="ls-exit" data-exit>' + BACK + 'Back to the Skin School page</button>'
         : '<div class="locked-card"><h3>This lesson is part of ' + (lv.n === 1 ? "Skin Basics" : "The Course") + '.</h3>' +
           '<p>' + (lv.n === 1 ? "Level 1 is $49 on its own, or included in every course." : "Unlock all three levels, the routine builder and lifetime access.") + '</p>' +
@@ -1004,12 +1023,12 @@
     var b = e.target.closest("[data-open-lesson]");
     if (b && !b.closest(".pl-ov")) player.open(b.getAttribute("data-open-lesson"));
   });
-  $("#tb-me").addEventListener("click", function () { player.open(st.tier ? (st.last || firstOpen()) : "1-1"); });
+  $("#tb-me").addEventListener("click", function () { player.open(st.tier ? (st.last || firstOpen()) : freeStart()); });
 
   /* ── everything that shows progress ── */
   var paintAll = function () {
     var n = doneCount();
-    $("#tb-me-l").textContent = st.tier ? "My course · " + Math.round(pct() * 100) + "%" : n ? "Keep learning" : "Free lesson";
+    $("#tb-me-l").textContent = st.tier ? "My course · " + Math.round(pct() * 100) + "%" : n ? "Keep learning" : "Free lessons";
     $(".topbar .mini-ring .fg").setAttribute("stroke-dashoffset", String(56.55 * (1 - pct())));
     paintCur();
   };

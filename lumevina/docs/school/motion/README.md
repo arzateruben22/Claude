@@ -91,3 +91,13 @@ part's 3D point to the screen each frame, so they follow the camera.
 The look the solid scenes chase is the one in the reference Ruben sent: a toy
 set under studio light, blocks and dominoes with real shadows, a camera that
 moves slowly and with intent, the explanation carried by what the objects do.
+
+## From the film branch (claude/made-with-claude-film)
+
+- `cinema3d.js` and `metaballs.js` are the cinema kit's (`kits/cinema/` on that branch): the film
+  finish (motion blur, focus, bloom, ACES) and 3D liquid that beads, rolls and merges (three.js's
+  marching cubes, built from the scene's own THREE). `render.mjs` injects `cinema3d.js`; a scene
+  imports `../metaballs.js` itself.
+- 8-2 is the film session's directed pilot (keyed camera, focus pulls, falling plug cells, the
+  serum drops that land and turn to liquid). Its scored cut, for posting with sound, is
+  `marketing/ads/out/video/8-2-sound.mp4` (the silent cut stays the default).

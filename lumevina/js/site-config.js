@@ -76,12 +76,14 @@
   /* each version's sections and booking */
   var VERSIONS = {
     v2: { features: [], booking: null },
-    v3: { features: ["membership", "rewards"], booking: "site" }
+    v3: { features: ["membership", "rewards"], booking: "site" },
+    /* everything at once: v3 plus Skin School, the preview that connects the site and the course */
+    v4: { features: ["membership", "rewards", "school"], booking: "site" }
   };
-  /* ?preview=v3 (or v2): this browser only, until the tab closes */
+  /* ?preview=v3 (or v2, v4): this browser only, until the tab closes */
   var preview = null;
   try {
-    var asked = /[?&]preview=(v2|v3|off)\b/.exec(location.search);
+    var asked = /[?&]preview=(v2|v3|v4|off)\b/.exec(location.search);
     if (asked) {
       if (asked[1] === "off") sessionStorage.removeItem("lumevina_preview");
       else sessionStorage.setItem("lumevina_preview", asked[1]);

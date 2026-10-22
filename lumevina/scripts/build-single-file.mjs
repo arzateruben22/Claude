@@ -3,6 +3,7 @@
 //
 //   node scripts/build-single-file.mjs        (from lumevina/)
 //   → dist/lumevina.html
+//   node scripts/build-single-file.mjs dashboard.html dist/dashboard.html   (any other page the same way)
 //
 // This is how v1 was shared, and why it opened instantly anywhere (the
 // Claude preview, a text, an email): one file instead of a hundred
@@ -36,7 +37,8 @@ const inlineAssets = (text) => text.replace(ASSET, (m) => dataUri(m) || m);
 // a script's text can't contain "</script" inside an inline <script>
 const safeScript = (js) => js.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
 
-let html = read("index.html");
+const page = process.argv[2] || "index.html", outRel = process.argv[3] || "dist/lumevina.html";
+let html = read(page);
 // things a single file doesn't need: font preloads (the fonts are inside) and the app manifest
 html = html.replace(/\s*<link rel="preload"[^>]*>/g, "").replace(/\s*<link rel="manifest"[^>]*>/g, "");
 // images in the page itself (the logo, service photos, favicons…)
@@ -62,8 +64,9 @@ html = html.replace(/<script src="((?:js)\/[^"]+)"><\/script>/g, (_, src) => {
 });
 
 fs.mkdirSync(path.join(root, "dist"), { recursive: true });
-fs.writeFileSync(path.join(root, "dist/lumevina.html"), html);
+fs.mkdirSync(path.dirname(path.join(root, outRel)), { recursive: true });
+fs.writeFileSync(path.join(root, outRel), html);
 const left = (html.match(/(?:src|href)="(?:css|js|img|fonts)\//g) || []).length;
-console.log(`dist/lumevina.html: ${(Buffer.byteLength(html) / 1048576).toFixed(2)} MB, ${scripts} scripts and ${cache.size} images/fonts inside` +
+console.log(`${outRel}: ${(Buffer.byteLength(html) / 1048576).toFixed(2)} MB, ${scripts} scripts and ${cache.size} images/fonts inside` +
   (bundle ? ", the chat's knowledge" : "; no knowledge/eval/bundle.json, so the preview chat uses keywords only (run knowledge/scripts/build-bundle.mjs)") +
   (missing.size ? `; not found: ${[...missing].join(", ")}` : "") + (left ? `; ${left} file links left` : "; nothing left to fetch"));

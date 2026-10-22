@@ -208,7 +208,7 @@
       acts: [["Book", "book"]] },
     { id: "school", k: /\bcourses?\b|\bclass(es)?\b|skin school|teach me|\blessons?\b|tutorial|masterclass/, a: function () {
       return "Evelyn’s Skin School is her online course: 40 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off. Prefer in person? Skin School Live is a two-hour class at the studio for $129."; },
-      acts: [["Take the free lesson", "go:school.html#learn-1-1"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
+      acts: [["Start the free lessons", "go:school.html#learn-8-2"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates come in $50, $100, $200, $400 or any amount you choose, work toward any treatment and never expire. At the visit Evelyn takes it off the bill: anything left stays on it, and if the visit costs more you pay only the difference."; },
       acts: [["Send a gift", "#gift"]] },
