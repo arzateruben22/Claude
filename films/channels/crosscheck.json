@@ -1,0 +1,411 @@
+{
+ "distinct": [
+  {
+   "issue": "Narrator clash: the body and space bibles both pick bf_emma, and each says no two channels may share a voice. Physics already avoids her.",
+   "fix": "Body keeps bf_emma (British female, B-). Space takes am_michael (US male, C+; sample already at scratchpad/audition/am_michael.m4a), with bm_george (C) as backup. Physics keeps af_bella (US female, A-). That spreads the three across UK female, US male and US female. Then run a blind A/B of af_bella against Skin School's af_heart: both are top-graded US female voices. If listeners confuse them, move physics to am_fenrir or am_puck (both C+)."
+  },
+  {
+   "issue": "Tempo and key clash: body is E-flat major and space is E dorian, both at 75 BPM (16th = 6 frames), both slow pads in a long reverb with felt piano. The keys are a semitone apart, so the two beds will sound like one composer's cue.",
+   "fix": "Body keeps 75 BPM; the resting heart rate is its idea. Move space to 56.25 BPM: a 16th is exactly 8 frames (450/56.25) and a beat is 32 frames. Mute the felt layer in space (gain -60) and let the pads, a sub and a new slow drone of fifths carry it."
+  },
+  {
+   "issue": "The score engine makes every preset sound alike. compose.score always plays pad + felt piano with the hard-coded pattern [0,2,1,3,2,1,3,0] + sub + air. Lumevina, body, space and physics would differ only in key, tempo and reverb.",
+   "fix": "Make the melodic layer's voice and pattern preset fields, e.g. layers.felt -> {voice, pattern, step}. Body: a mallet ostinato locked to the lub-dub. Space: no piano, slow drone or glide fifths. Physics: staccato blip or felt in 16ths. Keep lumevina-dew byte-identical with a regression render of the 8-2 cue sheet."
+  },
+  {
+   "issue": "The space preset puts its labels on the glass 'bell' voice (B5-D7). That is Lumevina's signature: its 'small glass bells for labels', A5-C#7, the same register. Body also uses bell for 'bind' and in its sonic signature.",
+   "fix": "Leave bells to Lumevina. Space labels and counter.show use the new 'ping' voice, made pitchable by notes (a telemetry blip with a hall echo). Body 'bind' moves to a mallet harmonic, and body's signature becomes thump, thump, mallet with no bell."
+  },
+  {
+   "issue": "counter.end uses the same rolled 'chime' voice (60 ms spread) in all four presets: Lumevina D, body E-flat, space E, physics G. Every channel would end its counters with the same ding.",
+   "fix": "Each channel's counter.end plays its own sonic signature, through one generic 'seq' voice {voice, notes, offsets}. Body: thump E-flat 2, thump B-flat 2 at +0.4 s, mallet G5 at +1.2 s. Space: pings E5, B5, F#6, 6 frames apart (chime cannot do 6-frame spacing). Physics: knock D6, B5, G5 at 0, +12 and +20 frames."
+  },
+  {
+   "issue": "Same caption face: body and space both set captions in Atkinson Hyperlegible Next 700. Captions are the type viewers see on every frame.",
+   "fix": "Body keeps Atkinson. Space switches to the fallback its own bible names: Lexend (OFL 1.1) 600/700 for captions. Its counters move from Atkinson Hyperlegible Mono to Martian Mono (OFL 1.1, github.com/evilmartians/mono; monospaced, so the figures don't jitter). Its display face stays Unbounded."
+  },
+  {
+   "issue": "Same signature shape: body's title card and avatar are a 760 px circle with a glowing chartreuse rim, and every scale change uses a circular iris. Space's title card, end card and avatar are a glowing teal ring around the payoff image. Two glowing rings on dark grounds will read as one template.",
+   "fix": "Space keeps the ring; it is the light-time motif. Body drops the circle from its title card, end card and avatar. Instead it uses its pulse line: an ECG-like chartreuse trace that blips lub-dub under the Fraunces title, plus a non-circular iris (a soft membrane-blob mask or a vertical slide wipe). Scale readouts also stay distinct: body uses the iris plus a pill, physics ruler ticks on its grid, space the light-time readout."
+  },
+  {
+   "issue": "Label colours collide between body and space. Body O2 #8ED8FF vs space ice #8FD0FF: dE76 5.9. Body CO2 #B4A6FF vs space lilac #B9A6FF: dE 1.6, effectively the same colour. Body lining #7FE6C5 vs space teal #4FE3C6: dE 9.4. Space owns the cold hues.",
+   "fix": "Body O2 becomes #FFFFFF with an 'O2' glyph and ring (13.5:1 on surface, dE 36 from ice). It sits dE 7.9 from body's own immune cream #F3EEE4, so O2 keeps the ring and immune gets a dashed ring. Body CO2 becomes slate #A7B4C2 (6.4:1, dE 43 from lilac). Lining becomes sage #A8D89A (8.3:1, dE 30 from teal, 41 from signal). Computed in crosscheck/colors.py."
+  },
+  {
+   "issue": "Body is close to Lumevina's look. Pink pulse #FF6688 (hue 347; Lumevina rose is 342) is also the accent word in body's title. Add a pink rim light #FF8FA0 and pastel tissue/vessel materials (#F0C9B8 and #E9B3A8, dE about 15 from Lumevina's rose and gold), all in a dark macro of tissue: that is Skin School's recipe of black + rose, inside the body.",
+   "fix": "Keep pulse for blood only. Put body's title accent word in chartreuse (signal). Change the rim light to mint #CFF5E6. Light tissue under the green hemisphere so it always reads warm against green and never sits on near-black. Optionally move pulse to #FF6B6B (6.2:1 on bg, 4.85 on surface, 6.7 on plate, dE 53 from rose), but it is dE 22 from Claude coral, so keep it on blood only."
+  },
+  {
+   "issue": "All three channels share the same skeleton: one 7-beat template (hook, normal, change, why, whoa, takeaway, tease) at nearly the same timings, a 'Next: ...' end card, honesty badges, and Skin School's caption system. From one owner on one schedule, that looks like a content farm. YouTube's 'inauthentic content' rule (July 2025) targets exactly that.",
+   "fix": "Give each channel one recurring segment of its own. Body: a 'Meanwhile' real-time tally ('while you watched: about 85 heartbeats'). Space: the closing light-time ring readout. Physics: a 'measure it' beat on the strobe ladder with Plex Mono readouts. Vary the tease wording ('Next, inside:', 'Next light:', 'Next drop:') and stagger posting times."
+  }
+ ],
+ "facts": [
+  {
+   "channel": "body",
+   "claim": "Ep1 normal: 'You have about twenty-five trillion of them, most of the cells in your body.'",
+   "verdict": "needs-wording",
+   "note": "Sender, Fuchs & Milo 2016 (BioNumbers 113005/112985 excerpts) give about 30 trillion human cells, 84% of them red cells, so about 25 trillion is right. But they also count about 38 trillion bacteria in the body, so 'most of the cells in your body' is false if microbes count. Say 'most of your own cells'."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep1 whoa: 'Some capillaries are only about half its width' [S3, PMC8215585]",
+   "verdict": "unsupported",
+   "note": "PMC is unreachable through the proxy, and search could not confirm S3's wording. Rochester BME (bme.rochester.edu/research/red-blood-cells.html) says red cells traverse microvessels about 3 µm wide, about 40% of a 7.5 µm cell, which supports the line. Re-cite it to that source or a physiology text, or say 'less than half its width'."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep1 change/why: the narrowest capillaries are slimmer than the cell, which deforms without changing volume or surface area",
+   "verdict": "ok",
+   "note": "A J Fluid Mech 1989 excerpt (Secomb et al., via experts.arizona.edu) says volume and membrane area stay nearly constant during the squeeze, and that a minimum tube diameter exists. 'Spare surface for its volume' is the standard explanation."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep1 tease / Ep2: about 270 million hemoglobins per cell, 4 O2 each, about a billion passengers",
+   "verdict": "ok",
+   "note": "Sources range from 250 to 300 million (one gives 280 million), so the product is 1.0–1.2 billion and 'about a billion' holds. I could not confirm that BioNumbers id 102740 says 270 million; check that link."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep3: myelinated axons up to about 150 m/s ('540 km/h') against 0.5–10 m/s unmyelinated",
+   "verdict": "ok",
+   "note": "NCBI NBK10921 excerpt gives exactly 0.5–10 vs about 150 m/s; 150 m/s = 540 km/h. Many texts say 'over 100' or about 120 m/s, so present 150 as the top speed ('up to')."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep5: about 480 million alveoli (274–790 million)",
+   "verdict": "needs-wording",
+   "note": "Ochs et al. 2004 confirmed. The figure covers both lungs (BioNumbers gives 240 million per lung). Say 'in your lungs', never 'in a lung'."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep9: most of the skeleton is replaced about every 10 years",
+   "verdict": "ok",
+   "note": "Remodelling replaces 5–10% a year, so about 10 years. It is an average and the bible already flags it. I could not confirm NBK45504's own wording."
+  },
+  {
+   "channel": "body",
+   "claim": "Ep10: gut lining about 32 m², not the textbook 260–300 m²",
+   "verdict": "ok",
+   "note": "Helander & Fändriks 2014, Scand J Gastroenterol 49:681 (BioNumbers 111126): about 32 m², of which the small intestine is about 30."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep1: sunlight takes about 8 min 20 s across about 150 million km; Earth moves at nearly 30 km/s",
+   "verdict": "ok",
+   "note": "499 s at 1 AU; 29.78 km/s (NSSDC)."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep1 why: in 2017, gravitational waves and light from a neutron-star collision crossed about 130 million light-years and arrived less than two seconds apart",
+   "verdict": "ok",
+   "note": "LIGO science summary and arXiv 1710.06394: GRB 170817A came about 1.7 s after the merger, at about 40 Mpc (about 130 million ly); the speed difference is between -3e-15 and +7e-16. The bound assumes both were emitted together, so keep the wording 'arrived', as written."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep1 whoa: 'for eight minutes, Earth keeps circling a Sun that isn't there', shown as a visible arc",
+   "verdict": "needs-wording",
+   "note": "Fine as a Newtonian thought experiment with its badge. But in 499 s Earth moves only about 14,900 km, about 0.006° of its orbit (computed). An on-screen arc implies the wrong scale. Badge 'orbit sped up ×N' separately from the light clock, or show the true move at Earth scale: about 1.2 Earth widths, which is a whoa in itself."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep6: Voyager 1 reaches one light-day (25.9 billion km) on 18 Nov 2026, after 49 years",
+   "verdict": "ok",
+   "note": "EarthSky reports NASA's 17 Jun 2026 announcement: 12:16:07 a.m. CST, 18 Nov 2026. Earlier outlets said 13 or 15 Nov, so use NASA's page. Proxima at 4.24 ly = 1,548.7 light-days; at 17 km/s that is about 74,800 years ('more than 73,000' is ok)."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep5 / Ep10: Sun about 26,000 ly from the galactic centre (B9) vs Sgr A* 27,000 ly away (ep 10)",
+   "verdict": "needs-wording",
+   "note": "The channel contradicts itself. NASA StarChild (2000) says 28,000 ly, 828,000 km/h and about 230 Myr; Live Science 26,100; Astronomy 27,000; GRAVITY 2019 about 26,700. Pick one figure for the whole channel ('about 26,000' or 'about 27,000') and cite a current source; the StarChild page is dated."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep7: about 3.04 trillion trees vs 100–400 billion stars, so trees win 8 to 30 times",
+   "verdict": "ok",
+   "note": "3.04e12/4e11 = 7.6 and 3.04e12/1e11 = 30.4, so '8 to 30' is right. Keep 'estimate' on the star count."
+  },
+  {
+   "channel": "space",
+   "claim": "Ep3: the Moon 'falls 1.36 mm a second'",
+   "verdict": "needs-wording",
+   "note": "The arithmetic is right: ½·v²/r·(1 s)² = 1.359 mm from 1.022 km/s and 384,400 km. But it is the drop below a straight line during one second, not a falling speed. Say 'each second it drops about 1.4 mm below a straight path'."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep1 why: 'Galileo showed in 1638 that a throw is two motions: a steady glide across, plus a fall'",
+   "verdict": "ok",
+   "note": "Two New Sciences (1638), Fourth Day: a projectile is compounded of uniform and naturally accelerated motion (UVA text). Museo Galileo dates the idea to about 1609; 1638 is the publication."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep1 whoa + takeaway badge: throws at 1×, 2×, 3× 'always land on the same frame'; badge 'air ignored (under 1 ms here)'",
+   "verdict": "wrong",
+   "note": "Using the bible's own drag.py model (tennis ball, 1 m drop), the 3× throw at 3.99 m/s lands 1.66 ms late: a full frame at ×1/20, where a frame is 1.67 ms of physics time. 2× is 0.91 ms. So the badge is false for the whoa. Fix: throws at 0.44, 0.89 and 1.33 m/s (worst case 0.30 ms), or heavy balls (a billiard ball at 1.33 m/s: 0.06 ms)."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep4: in 1971 David Scott dropped a 1.32 kg hammer and a falcon feather on the Moon; they landed together",
+   "verdict": "ok",
+   "note": "NSSDC confirms (released from about 1.6 m). NSSDC also flags the report's '0.03 kg' feather mass as a likely typo (real feathers weigh 0.3–3 g). Never put a feather mass on screen."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep7: freezing makes an open lattice 'about 9% less dense' than liquid water",
+   "verdict": "needs-wording",
+   "note": "USGS does say density drops about 9%. But 0.917 vs 0.9998 g/cm³ is 8.3% less dense, or 9.1% more volume (computed). Say 'expands by about 9%' or 'about 8% less dense'. '89% submerged in seawater' is right (0.917/1.025)."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep5: pulling in 2 kg weights from 80 to 20 cm spins you '2.8× faster'",
+   "verdict": "needs-wording",
+   "note": "The answer depends on the assumed body-plus-chair inertia: 3.5× at 0.8 kg·m², 2.76× at 1.2, 2.1× at 2.0 (computed). State the assumption on screen or say 'two to three times faster'."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep8: the largest raindrops fall at about 10 m/s",
+   "verdict": "ok",
+   "note": "NASA GPM FAQ: terminal speed peaks at about 10 m/s (20 knots) for the largest drops; Wisconsin WxGuys agrees."
+  },
+  {
+   "channel": "physics",
+   "claim": "Ep2 / Ep3 / Ep6 computed figures: 1.7% longer at 30°; tennis on basketball about 7×; 10.3 m water column",
+   "verdict": "ok",
+   "note": "Exact elliptic period ratio 1.0174. Elastic tennis ball (0.057 kg) on basketball (0.6 kg): rebound factor (3M−m)/(M+m) = 2.653, squared 7.04×, measured from the collision point. 101,325/(1000·9.81) = 10.33 m."
+  },
+  {
+   "channel": "all",
+   "claim": "Kokoro grades: af_bella A-, bf_emma B-, af_nicole B-, am_michael C+, am_fenrir C+, am_puck C+, bm_george C, bm_fable C",
+   "verdict": "ok",
+   "note": "All match third-party mirrors of VOICES.md (Replicate jaaari/kokoro-82m readme). The grades estimate training-data quality, not listening quality. I did not see the official file."
+  },
+  {
+   "channel": "all",
+   "claim": "Render budget premise: 'Skin School at 1080×1920 would take about 6.8 s a frame' (scaled from 3 s at 720×1280)",
+   "verdict": "wrong",
+   "note": "Measured from films/skin-school-tiktok/build/final/9x16/frames/*/frames.jsonl (424 frames at 1080×1920): 3.96 s median at K 2, 4.86 at K 4, 7.85 at K 6, 10.4 at K 8, 18.5 at K 16 (about 1.5 s + 1.15 s × K); mean 5.5 s. A 3.5 h / 2,100-frame budget is 6 s a frame, so the real constraint is mean K ≤ about 4, not '15% cheaper'. kFloor 12 costs about 15 s a frame."
+  },
+  {
+   "channel": "all",
+   "claim": "YouTube's 'inauthentic content' rule (July 2025) demonetises mass-produced, repetitive AI-voiced videos",
+   "verdict": "ok",
+   "note": "YPP update took effect 15 Jul 2025, renaming 'repetitious' to 'inauthentic' content. AI narration stays eligible when the video adds original value. Enforcement details are unpublished."
+  },
+  {
+   "channel": "all",
+   "claim": "Fonts: Unbounded (NaN, OFL, github.com/googlefonts/unbounded); Atkinson Hyperlegible Next OFL 1.1 with reserved names",
+   "verdict": "ok",
+   "note": "Unbounded's OFL licence and repo are confirmed via Google Fonts/Fontsource. Atkinson Hyperlegible Next is OFL 1.1 per Debian. The reserved names 'Atkinson' and 'Hyperlegible' are confirmed for the original font only, so keep shipping Next unmodified."
+  }
+ ],
+ "feasibility": [
+  {
+   "channel": "all",
+   "issue": "Probe bug: cinema3d.js's 'five camera points at mid-depth' always measure 0 px. Each probe unprojects and reprojects with the same camera (verified with three r160 in crosscheck/probe/t.mjs). Camera-only motion is therefore seen only through mesh origins.",
+   "fix": "Add an opt-in CINEMA.probe2 (Skin School's in-flight render must stay byte-identical). It unprojects the five points with the shutter-open camera and projects them with the shutter-close camera. Build it before any of the three sets."
+  },
+  {
+   "channel": "all",
+   "issue": "Probe spikes: mesh origins near or behind the lens project to huge values. A point 0.05 units in front of the camera and 0.5 off-axis gave x = 36,368 px, so K jumps to kMax. Instances scaled to 0 at a loop wrap still count as teleports, because the probe never checks scale. Points, Lines and vertex-shader motion are invisible to it.",
+   "fix": "In probe2, drop samples with w ≤ near or |ndc| > 1.5, skip instances with scale < 1e-3 at either end, and honour userData.noProbe. Add a window.CINEMA_PX(t0, t1) hook so a scene can report analytic travel for Points, galaxy rotation, the gravity grid, wave fields and the sheet."
+  },
+  {
+   "channel": "body",
+   "issue": "kFloor 6 on cell.pass rests on a wrong premise: the probe does sample about 48 instance positions per InstancedMesh. Cells stream in nearly every shot, so the floor would run about 8.4 s a frame, roughly 4.9 h for 2,100 frames. Separately, cells wrapping at about 6 per second among the sampled instances would push about 10% of frames to kMax 12 (about +38 min per episode) unless wrapped instances are skipped.",
+   "fix": "Compute B2 positions in JS with setMatrixAt, so the probe sees them. Remove the floor. Raise kMin only for the disc-to-parachute morph window, through CINEMA_PX. Use probe2's zero-scale skip for wraps."
+  },
+  {
+   "channel": "body",
+   "issue": "The ride-along streams the world past a camera parked beside the hero cell. Real capillary flow (about 0.3–1 mm/s, at 1 unit = 1 µm) is tens of px per frame at macro framing, so K would sit at 8–12. Motes near the lens also trigger the near-plane spike.",
+   "fix": "Show the ride-along slowed (×1/10, with a 'slowed' badge) or cap it at about 3 s. Keep a clear zone of 2 cell widths around the lens with no motes. Make motes THREE.Points with analytic px, which also keeps the set within its own '2 moving InstancedMeshes' cap (cells + swarm + motes would be 3)."
+  },
+  {
+   "channel": "body",
+   "issue": "B9 needs a 'matte mannequin (about 3k triangles)'. The kit has none, and a downloaded model needs a licence (CC0) and a source.",
+   "fix": "Use a 2D SVG body silhouette in the HUD, with the chartreuse ring pulsing on the beat. It costs nothing to render and avoids a model licence. If the silhouette doesn't read, build a primitive-based figure procedurally later."
+  },
+  {
+   "channel": "body",
+   "issue": "The sound needs a 'pulse' layer in compose.score, 4 new voices (mallet, thump, squish, zap) and 6 event kinds. events.json is global: body's 'zap' would inherit the existing lead of 0.08 s, and kinds such as 'title' vs physics's 'signature' would sit side by side.",
+   "fix": "Make the compose changes behind preset fields, with a lumevina-dew regression test. Add one shared 'signature' kind that every preset maps to its own voice, instead of a 'title' and a 'signature' kind. Check that a 0.08 s lead suits a nerve spike, or add a 'spike' kind."
+  },
+  {
+   "channel": "space",
+   "issue": "Stars and the galaxy are THREE.Points, which the probe never sees. During orbit arcs (up to 6°/s at an 18° FOV, about 21 px per frame of star travel) K stays at 2, so every star double-images as two dots.",
+   "fix": "Report the camera's angular speed × focal length in px via CINEMA_PX. Alternatively, keep arcs at or below 1.5°/s and draw stars as soft sprites of at least 2 px."
+  },
+  {
+   "channel": "space",
+   "issue": "Ep10's lensing as a screen-space pass breaks the finish's contract: one renderer.render per seek, and DOF read from scene depth. A post pass outside the finish would also skip motion blur.",
+   "fix": "Bend the light inside the sky-sphere fragment shader instead: analytic α ≈ 4GM/(c²b), or a 1D lookup by impact parameter. It stays a single render call, and the finish's blur, DOF and bloom still apply."
+  },
+  {
+   "channel": "space",
+   "issue": "The kFloor 12 on scale.jump is justified as 'scaling the world moves no object origins'. That is wrong: scaling a group moves every child that isn't at the centre. The real blind spots are Points and shaders. At kFloor 12, each second of jump costs about 7.5 min (about 15 s a frame).",
+   "fix": "Keep the 3 s cap. Rely on probe2 plus CINEMA_PX for the Points rungs, and set the floor only where the measured px says so. Confirm at T2."
+  },
+  {
+   "channel": "space",
+   "issue": "Ep6 must post on 18 Nov 2026, 27 days from today. At one episode a day in list order it would land around launch day 6.",
+   "fix": "Make 'Nearest star' the second space episode, right after the pilot, and render it by about 14 Nov to leave time for review."
+  },
+  {
+   "channel": "physics",
+   "issue": "Ep1's whoa breaks the set's '60 cm sideways' rule: 2× and 3× of the 1.33 m/s change-beat throw land 1.19 m and 1.78 m away from a 1 m drop. Fitting 1.8 m into 9:16 shrinks a 6.7 cm ball to about 40 px.",
+   "fix": "Throw at 0.44, 0.89 and 1.33 m/s (20, 40 and 60 cm); the change beat uses the 0.44 m/s throw. This also fixes the drag badge."
+  },
+  {
+   "channel": "physics",
+   "issue": "The light cyc passes through the finish's ACES. #E6E2D8 needs scene luminance of about 1.0, cyc-hi #F1EEE7 about 1.6, and #FFFDF7 about 8 (inverted in crosscheck/aces.py). The planned bloom threshold of 1.6 has its soft knee starting at 1.35, so the light pool would bloom. Bright props also compress toward white.",
+   "fix": "Have the cyc's unlit shader output ACES-inverse values, so it lands exactly on its tokens. Set the bloom threshold to 2.5 or more, keep prop albedo at 0.7 or below, and approve on T2 stills before anything else."
+  },
+  {
+   "channel": "all",
+   "issue": "Daily cadence: about 3 × 3.3 h of final renders, plus drafts, stills, voice and audio, is about 11–12 h a day of exclusive CPU on one 4-core box. It runs in chunks of 2 h or less that need a live session to restart, one job at a time. Three expert sign-offs and fact-checks a day are a bigger bottleneck. Skin School's final is also rendering right now.",
+   "fix": "Bank 5–7 finished episodes per channel before launch. Launch at 3–4 posts a week per channel, rising to daily only once the buffer holds, or add a second render box. Start no T2/T3 work until the Skin School render finishes."
+  },
+  {
+   "channel": "all",
+   "issue": "compose.foley only knows the existing voices. It anchors only whoosh (at its peak) and whistle (at its end), and the chime's fixed 60 ms spread cannot play the signatures (6-frame, 12/20-frame and 0.4/1.2 s offsets). Glide and ramp also need to land at their end.",
+   "fix": "Add a generic 'seq' voice {voice, notes, offsets} and an 'anchor' field per preset entry (onset, peak or end). Add the 12 new voices once, in instruments.py, shared by all three channels."
+  }
+ ],
+ "shared_blocks": [
+  {
+   "name": "cinema3d probe2 + CINEMA_PX hook (kits/cinema/cinema3d.js, opt-in)",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Opt-in, so Skin School's render stays byte-identical. Fixes the camera points (unproject at shutter open, project at shutter close), drops samples behind or near the lens and far off-screen, skips zero-scale instances and userData.noProbe meshes, and lets a scene report analytic travel for Points or shader motion. Each set's K budget depends on it."
+  },
+  {
+   "name": "sci/hud.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Skin School's word-lit captions (read from words.json and film.json) plus pin() labels with leader lines. Anchors can be any pure function of t, including instance i or a particle. Also a safe-box and collision solver, tabular counters, honesty badges, scale pill or ruler, and title/end card shells. Themed only by CSS tokens and @font-face per channel."
+  },
+  {
+   "name": "sci/clock.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Time warp: playback-rate keys integrated in closed form into physics time τ(t), with a speed badge and a stopwatch. Covers physics's ×1/20, space's 'time ×N' with separate warps for light and orbit, and body's slowed flow."
+  },
+  {
+   "name": "sci/path.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "A curve (CatmullRom, Kepler ellipse or parabola) with an arc-length table. Gives flow along the path by inverting τ = ∫ds/v, wrap-safe instance scaling, a tube or ribbon mesh and trails. Covers body's vessel and cell stream, space's orbits and trails, and physics's trajectories and light rays."
+  },
+  {
+   "name": "sci/swarm.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Seeded instanced particles: home + Σ A·sin(ωt+φ), an eased lerp to a target, and a triangle-wave box fold for gas. A hero-particle anchor feeds the HUD, and analytic px goes to CINEMA_PX. Covers body's O2, CO2 and vesicles, physics's lattice, liquid and gas, and space's ejecta and tally sprites."
+  },
+  {
+   "name": "sci/arrows.js",
+   "used_by": [
+    "physics",
+    "space",
+    "body"
+   ],
+   "what": "Up to 64 instanced vectors with an ink outline, length proportional to magnitude, and tail/tip anchors."
+  },
+  {
+   "name": "sci/front.js",
+   "used_by": [
+    "space",
+    "physics",
+    "body"
+   ],
+   "what": "Expanding rings, shells and wave fields, r = c·(t − t_emit), with a retarded-time helper. Covers space's light and gravity fronts, physics's wave field, and body's nerve front and pulse wave."
+  },
+  {
+   "name": "sci/strobe.js",
+   "used_by": [
+    "physics",
+    "space",
+    "body"
+   ],
+   "what": "Ghost stamps at τk = τ0 + kΔ on one opaque InstancedMesh, with rungs joining ghosts of the same k. Physics's motif; space can show Kepler's equal areas with it, and body cell positions."
+  },
+  {
+   "name": "sci/ladder.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Scale rungs (one Group each), a log dolly s(t), crossfade and iris transitions, and float-safe re-centring so the subject sits at the origin. Feeds the HUD's scale readout."
+  },
+  {
+   "name": "sci/cutaway.js",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "A noise-deformed shell cut by a clipping plane, with a flat or stencil cap. Covers body's capsules, alveolus and heart, space's planet interiors, and physics's ice lattice."
+  },
+  {
+   "name": "studio: preset-driven arrangement + seq voice + new voice library",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "compose.score takes the melodic layer's voice and pattern from the preset. A 'seq' voice plays the signatures, and each foley entry gets an 'anchor' (onset, peak or end). Adds mallet, thump, squish, zap, glide, ping, blip, knock, boing, shutter, ramp and hum once, plus one shared 'signature' event kind. lumevina-dew stays locked by a regression test."
+  },
+  {
+   "name": "script compiler + claims ledger + beat linter (kits/cinema/script)",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "Generalises films/skin-school-tiktok/compile.py. It checks the 7-beat template: word counts per beat, the question spoken by 2.0 s, picture-only gaps and an end hold of 1.5–2 s. Every vo line must map to claim ids with a URL, an excerpt and who checked it. It lists open TODOs and emits the post text (sources, 'voice: synthetic')."
+  },
+  {
+   "name": "sci/contrast.py",
+   "used_by": [
+    "body",
+    "space",
+    "physics"
+   ],
+   "what": "One WCAG and ΔE checker that reads each channel's tokens.json, replacing three ad-hoc copies. It also checks every new palette against Lumevina, Los Güeros, Claude coral and the sibling channels."
+  }
+ ],
+ "build_order": [
+  "0. Settle the distinctness decisions on paper before any assets: space to am_michael at 56.25 BPM with Lexend and Martian Mono, body drops the circle, new body label colours, no bells outside Lumevina, counter.end = each channel's signature.",
+  "1. cinema3d probe2 + CINEMA_PX, opt-in, verified on a few existing scenes. Every set's K budget depends on it. Keep Skin School's in-flight render untouched.",
+  "2. Studio: preset-driven arrangement, the seq voice, anchors, 12 new voices, the shared event rows and the three presets. Run the lumevina-dew regression. Takes seconds to render, so it can run between chunks of the Skin School final.",
+  "3. Generalised compiler + claims ledger + beat linter; fix the flagged script lines (body 'most of your own cells', the physics throw speeds, the space orbit badge, one galactic-centre distance).",
+  "4. Voice and T0 for all three episode-1 scripts (pron.json, tts, align), then HUD-only animatics using sci/hud.js and sci/clock.js. This locks timing and pronunciation before any 3D, and gives reviewers something to sign off.",
+  "5. Physics pilot set (cyc with ACES-inverse shader, props, strobe.js, arrows.js). It has the fewest new parts and the riskiest look, so render T2 stills first.",
+  "6. Space pilot set (sky Points with CINEMA_PX, bodies, orbit via path.js, front.js, gravity grid), then T2. Make 'Nearest star' (18 Nov) the next space episode.",
+  "7. Body pilot set (path.js vessel + JS-driven cell stream, swarm.js, ladder.js iris, SVG locator), then T2. It needs the most new code.",
+  "8. T3 finals one at a time (physics, space, body), each about 3.3 h in chunks, writing the next set meanwhile. Then fill a 5–7 episode buffer per channel before a daily cadence."
+ ],
+ "names_conflicts": [
+  "Meanwhile, Inside: no channel, series, podcast or handle found on the open web (2026-10-22). Nearest titles are the BBC's 'Inside the Human Body' (2011) and PBS's 'Human: The World Within' (2021), which don't conflict.",
+  "Light Minute: no channel, brand, app or @lightminute handle found; search returns only the distance unit. It enters a crowded 'Minute' naming space (MinutePhysics, the Astronomy Minute podcast, ESO/ECSO's 'The Universe in One Minute'), so viewers may read it as a MinutePhysics spin-off. A generic unit name is also a weak trademark and hard to own in search.",
+  "Rest Frame: no channel, podcast or @restframe handle found. Nearest is Goalhanger's 'The Rest Is Science' (Hannah Fry and Michael Stevens), a large science YouTube show, which may collide in search. Handle searches return 'Restream'. 'Rest frame' is a standard physics term, so it is a weak trademark.",
+  "Lub Dub (body alternate): the body bible found 'LubDub', an Australian music duo; I did not re-check it.",
+  "Every name was checked by open-web search only. USPTO/EUIPO and in-app handle checks on TikTok, YouTube and Instagram are still TODO for all three."
+ ]
+}
