@@ -80,7 +80,9 @@ ffmpeg -i $E/build/assembled/preview-ep01-48k.mp4 -i $E/build/audio/mix.wav -map
 
 **Picture:**
 - Animatic, the whole film: audit clean. Draft, the whole film: audit clean.
-- A dense audit also ran: the renderer's rules plus box overlaps, every 1/6 s, all 449 moments, clean. The script is `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/space/audit.cjs`.
+- A dense audit also ran: the renderer's rules plus box overlaps, every 1/6 s, all 449 moments, clean (that script lived in a session scratchpad and is not kept).
+- Review cross-check: the body channel's generic dense audit (`films/channels/body/ep01/qa/audit.mjs`, the renderer's rules plus the apps' UI zones), run on this film every 0.1 s (747 moments): no text problems. Its only flags are the top-right badges touching x = 900 at 540 px (≤ 1 px of rounding at the UI-zone edge).
+- Purity (review): `films/channels/physics/ep01/qa/purity.mjs` on this film, 40 frames sought in order and shuffled: canvas identical 40/40. Hidden badges keep a stale `left`/`top` (invisible, as in the other channels). `set/planet.js` now uses `anisotropy = 1` (it was 4): SwiftShader's anisotropic filtering carries state between draws (found on Rest Frame). The ten stills and the draft were made with 4; a still at 46.3 s with 1 looks the same.
 - All text sits inside x 90–900 and y 250–1420.
 
 **Render budget, measured on this box while it was shared with another agent's draft:**

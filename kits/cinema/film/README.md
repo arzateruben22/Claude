@@ -227,11 +227,10 @@ CSS gradient:
 
 ## Not done yet
 
-- A render with a channel theme: the three `films/channels/<channel>/theme.json` files and their
-  fonts exist (checked by `kits/cinema/sci/contrast.py` and in Chromium by the themes package), but
-  no episode has gone through this renderer with one yet.
+- A final-tier render with a channel theme: episode 1 of each channel (`films/channels/<channel>/ep01`)
+  has gone through this renderer to an animatic, ten final-tier stills and a draft preview, but no
+  final yet.
 - Sounds for the HUD's `badge` and `scale` kinds: their rows are in `kits/cinema/events.json`, but no
   preset maps them yet. The clock's own moments (`time.slow`, `time.normal`) are left to the
   compiler: `clk.keys` and `clk.tOf(τ)` give their times.
-- `sci/path.js`, `swarm.js`, `front.js`, `strobe.js` and the other shared blocks (separate packages).
 - A 16x9 pass: the code handles it (safe box, caption line), but it has not been rendered.

@@ -48,7 +48,9 @@ export const createPlanet = (o = {}) => {
   const group = new THREE.Group(), spin = new THREE.Group();
   group.add(spin);
   const tex = o.surface ? new THREE.CanvasTexture(o.surface) : null;
-  if (tex) { tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4; tex.needsUpdate = true; }
+  // anisotropy 1: SwiftShader's anisotropic filtering carries state between draws, so a frame's last bit can
+  // depend on which frames were sought before it (measured on Rest Frame's felt; see physics/set/props.js)
+  if (tex) { tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 1; tex.needsUpdate = true; }
   const mat = new THREE.ShaderMaterial({
     uniforms: {
       uMap: { value: tex }, uSunDir: { value: new THREE.Vector3(1, 0, 0) }, uSun: { value: 1 }, uFill: { value: o.fill ?? 0.035 },

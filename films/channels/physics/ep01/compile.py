@@ -325,19 +325,22 @@ for take, tk in TAKES.items():
         if math.isfinite(t) and t > 0.05 and t < tk["t1"]:
             ev.append({"t": round(t, 4), "kind": "strobe", "tag": f"{take}:g{k}"})
 # the HUD: labels, readouts, badges, the counter, the title and end-card signatures, the reveal
+# HUD parts fade in from t0, so the studio puts their sound on the first frame after t0 ("after" in
+# events.json). Their times stay unrounded: rounded to 4 decimals, a t0 that falls on a frame (61/30 =
+# 2.03333…) became 2.0333, just before that frame, and the blip led the label by one frame (33 ms)
 for lb in LABELS:
-    ev.append({"t": round(lb["t0"], 4), "kind": "label", "tag": lb["id"]})
+    ev.append({"t": lb["t0"], "kind": "label", "tag": lb["id"]})
 seen = set()
 for rd in READOUTS:                                      # the takeaway's three readouts share one blip
     if rd["id"].startswith("tk-") and "tk" in seen:
         continue
     seen.add(rd["id"][:2])
-    ev.append({"t": round(rd["t0"], 4), "kind": "label", "tag": rd["id"]})
+    ev.append({"t": rd["t0"], "kind": "label", "tag": rd["id"]})
 for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd["text"]})
 for i, t in enumerate(GAPS):
     ev.append({"t": t, "kind": "counter.end" if i == 8 else "counter.tick", "tag": f"gap{i + 1}"})
-ev.append({"t": round(CUE["measure"]["counter"][0], 4), "kind": "counter.show", "tag": "clock"})
+ev.append({"t": CUE["measure"]["counter"][0], "kind": "counter.show", "tag": "clock"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
 ev.append({"t": A("vo04:same#2"), "kind": "reveal", "tag": "same-height"})
