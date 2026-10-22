@@ -314,8 +314,8 @@ export const POSE = {
   // groove fill along the thumb's metacarpal, the adductor; and the thumb's blend onto the palm (kThumb). Kept low
   // beside the thumb: as the eye sees it, the thumb's first phalanx stands 8-10 mm proud of the web beside it, so
   // the thumb reads as a digit of its own along its length, not only past the IP (tools/preview-hands-web.mjs)
-  web: { core: { shiftR: 6, rz: 24 }, dome: { shiftR: 5, rz: 30 }, fdi: { at: 0.55, toward: 0.3, n: 0, rx: 0.5, ry: 6, rz: 10, k: 10 },
-    dweb: { n: -4, ry: 5, rz: 7, k: 10 }, groove: { ix: 0.42, n: -2, ry: 4, rz: 7, k: 8 }, add: { n: -8, ry: 7, rz: 9, k: 9 }, kThumb: 3 },
+  web: { core: { shiftR: 6, rz: 24 }, dome: { shiftR: 5, rz: 30 }, pads: { shiftR: 0, rx: 36 }, fdi: { at: 0.55, toward: 0.3, n: 0, rx: 0.5, ry: 6, rz: 10, k: 10 },
+    dweb: { n: -4, ry: 5, rz: 7, k: 10 }, groove: { ix: 0.42, n: -2, ry: 4, rz: 7, k: 8 }, add: { at: 0.7, n: -8, ry: 7, rz: 9, k: 9 }, kThumb: 3 },
 };
 
 // a point on the rim's section in the plane gx, at angle phi from straight out toward the driver, lifted off its
@@ -637,7 +637,7 @@ export function buildAnatomy(pres: Pres): Anatomy {
   // the palm's core, the pads under the knuckles, the heel of the hand
   const W = POSE.web;
   f.ell(madd(madd(lerp3(O, baseMid, 0.45), N, -10 * fem), R, -W.core.shiftR * fem), P, N, 34 * fem, 10 * fem, W.core.rz * fem, G_PALM, 12, 30);
-  f.ell(madd(madd(O, P, 9), N, -12.5 * fem), R, N, 36 * fem, 7 * fem, 8.5 * fem, G_PALM, 8, 31);
+  f.ell(madd(madd(madd(O, P, 9), N, -12.5 * fem), R, -W.pads.shiftR * fem), R, N, W.pads.rx * fem, 7 * fem, 8.5 * fem, G_PALM, 8, 31);
   f.ell(madd(madd(baseMid, P, 6), N, -8 * fem), R, N, 25 * fem, 14 * fem, 17 * fem, G_PALM, 12, 32);
   // the back of the hand: arched across (a low dome over the metacarpals, lower toward the little finger)
   // (its thumb-side edge, and the palm's core's, stop short of the thumb, so the thumb's own crest stands clear of
@@ -668,7 +668,7 @@ export function buildAnatomy(pres: Pres): Anatomy {
     f.ell(c0, sub(a1, a0), N, len(sub(a1, a0)) * 0.55, W.groove.ry * fem, W.groove.rz * fem, G_PALM, W.groove.k, 39);
   }
   // the web of the thumb, and the adductor under it
-  f.ell(madd(lerp3(lerp3(mcp[0], base[0], 0.3), lerp3(tj[1], tj[2], 0.2), 0.5), N, W.add.n * fem), sub(tj[1], mcp[0]), N, len(sub(tj[1], mcp[0])) * 0.5, W.add.ry * fem, W.add.rz * fem, G_PALM, W.add.k, 37);
+  f.ell(madd(lerp3(lerp3(mcp[0], base[0], 0.3), lerp3(tj[1], tj[2], W.add.at), 0.5), N, W.add.n * fem), sub(tj[1], mcp[0]), N, len(sub(tj[1], mcp[0])) * 0.5, W.add.ry * fem, W.add.rz * fem, G_PALM, W.add.k, 37);
   // the wrist and the forearm, a flattened section that rounds out toward the elbow, with its muscle bellies
   const segs = d.forearm, Lf = d.foreLen;
   // one tube from the wrist to the elbow whose section rounds out as it goes (a chain of tubes made rings where they
