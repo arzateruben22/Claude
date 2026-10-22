@@ -4,6 +4,26 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (08:40 UTC): the five-hour limit again; the integration is committed, resumed for its proofs
+
+- **About 07:05 UTC:** the session's five-hour limit stopped all three agents; it reset at 07:50.
+- **What the agents had committed (all pushed):**
+  - **`integrate/live`:**
+    - 1b0bc0c, the integration itself: `top-speed-ultra/` only from `claude/live-server` db324db, a regular commit
+      with nothing outside the game folder;
+    - Live in this branch's navigation: the phone's Online app, the radial menu's Online wedge, the live drive;
+    - the live side's menu details on the cinematic menu, the account avatar in the car's accent;
+    - the Live panel usable mid-drive; live drivers' names on the World Map; the control rail placed under the sky
+      camera;
+    - the tests moved to the unified menu (the live groups open Live from the rail's Online row; the mode cards' arrow
+      keys; the mid-drive Live panel from the phone).
+  - **`fable/hands`:** the thumb now separates from the hand (a web valley beside the proximal phalanx) and its joint
+    reads (two segments, a crease, a spatulate tip), plus measuring tools.
+  - **`fable/wheels`:** the OC mark unstretched on the hypercar's calipers and Aero Disc.
+- **Not yet done:** none of this is proven by a full test run or judged. Those runs' results were lost with the
+  agents, so the resumed integrator re-runs every core group and the live groups before its judge. Hands and wheels
+  continue to their proofs and judges.
+
 ## 2026-10-22 (05:27 UTC): a container restart; the work kept and resumed
 
 - **05:20 UTC:** the session's container restarted and every running agent stopped. The disk survived.
