@@ -41,7 +41,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 35 | `7-3-9x16.mp4` | Skin through the seasons | The Valley has more weather than people think. Your routine should too. | 22 s |
 | 36 | `4-3-9x16.mp4` | Scrubs, brushes and dermaplaning | Physical exfoliation can be kind or harsh. It's the tool and the pressure. | 22 s |
 | 37 | `10-3-9x16.mp4` | Professional treatments, explained | Who does what in skin treatments, and what actually makes them work. | 23 s |
-| 38 | *rendering* | Your skin plan for life | A base, one or two actives, and a look every season. Nothing more. |  |
+| 38 | `11-3-9x16.mp4` | Your skin plan for life | A base, one or two actives, and a look every season. Nothing more. | 22 s |
 | 39 | *rendering* | Your first visit: which one to book | Two questions decide which appointment to book. |  |
 | 40 | *rendering* | Her shelf: how the products fit together | How a routine is built from one shelf, in order. |  |
 
