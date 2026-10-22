@@ -236,7 +236,7 @@ def line(w: Optional[dict]) -> str:
 
 
 CSS = """
-.weather { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 12px 0 6px; }
+.weather { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 12px 0 6px; }
 .weather .w { border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px; min-width: 0; }
 .weather .w span { display: block; font: 600 10.5px/1.4 var(--display); letter-spacing: .08em; text-transform: uppercase;
   color: var(--muted); }
@@ -257,7 +257,7 @@ def render_html(w: Optional[dict]) -> str:
     e = html.escape
     cards = []
     for t in w["trends"]:
-        cls = "pos" if t["above"] else "neg"
+        cls = "up" if t["above"] else "down"
         cards.append(f'<div class="w"><span>{e(t["name"])} vs 150-day</span><b class="{cls}">{t["pct"]:+.1f}%</b>'
                      f'<small>{"above" if t["above"] else "below"} since {date.fromisoformat(t["since"]):%d %b}</small></div>')
     for b in w["breadth"]:
