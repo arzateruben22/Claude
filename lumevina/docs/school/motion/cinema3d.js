@@ -148,7 +148,9 @@ const CINEMA = (window.CINEMA = {
       _render.call(r, scene, camera);
       scene.overrideMaterial = null;
       const F = (window.CINEMA_FOCUS && window.CINEMA_FOCUS(window.M ? window.M.t : 0)) || {};
-      const fp = F.point ? (F.point.isVector3 ? F.point : v.set(F.point[0], F.point[1], F.point[2])) : (typeof STUDIO !== "undefined" ? STUDIO.center : v.set(0, 0, 0));
+      // no focus from the scene: where the camera looks (a camera that travels keeps its subject sharp), else the set's middle
+      const fp = F.point ? (F.point.isVector3 ? F.point : v.set(F.point[0], F.point[1], F.point[2]))
+        : typeof STUDIO === "undefined" ? v.set(0, 0, 0) : STUDIO.hasFocus ? STUDIO.focus : STUDIO.center;
       const focusDist = Math.max(0.5, camera.position.distanceTo(fp));
       const fstop = F.fstop == null ? CINEMA.fstop : F.fstop;
       const U = { focusDist, cocScale: fstop * T.H * 0.034, maxCoc: T.H * CINEMA.maxCoc, nearClip: camera.near, farClip: camera.far };
