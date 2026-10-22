@@ -1267,13 +1267,17 @@ model Notification {
   title        String
   body         String?
   link         String?
+  /// Stable key for the real-world trigger (e.g. `followup:<applicationId>:<date>`) so reminders are created once.
+  dedupeKey    String?
   scheduledFor DateTime?
   sentAt       DateTime?
+  pushedAt     DateTime?
   readAt       DateTime?
   createdAt    DateTime  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, dedupeKey])
   @@index([userId, readAt])
   @@index([userId, scheduledFor])
 }

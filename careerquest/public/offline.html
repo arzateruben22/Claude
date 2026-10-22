@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
+<title>Offline · CareerQuest</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+         background: #0b0e14; color: #e8eef7; font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 420px; text-align: center; }
+  img { width: 64px; height: 64px; border-radius: 16px; }
+  h1 { font-size: 22px; margin: 16px 0 8px; }
+  p { color: #9aa6b8; margin: 0 0 16px; }
+  button { background: #4cc9ff; color: #06121c; border: 0; border-radius: 10px; padding: 12px 20px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  button:focus-visible { outline: 2px solid #f3c75b; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/icons/icon-192.png" alt="">
+  <h1>You're offline</h1>
+  <p>CareerQuest needs a connection to load your private data. Nothing is cached on this device, so your applications stay private on shared phones.</p>
+  <button type="button" onclick="location.reload()">Try again</button>
+</main>
+</body>
+</html>

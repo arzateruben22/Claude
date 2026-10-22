@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, LogOut, Zap, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "./nav-config";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 export function TopBar({
   userName,
@@ -46,6 +47,7 @@ export function TopBar({
           <span className="rounded-full bg-gold-soft text-gold px-2 py-0.5 font-medium" title="Career level">Lv {level}</span>
         </div>
         <span className="text-xs text-fg-muted hidden md:inline truncate max-w-40">{userName}</span>
+        <NotificationBell />
         <form action={logoutAction}>
           <button type="submit" className="rounded-ctl p-2 text-fg-muted hover:text-fg hover:bg-surface-hover" aria-label="Sign out" title="Sign out">
             <LogOut className="h-4 w-4" aria-hidden />
