@@ -836,6 +836,16 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .menu-aside .fine { text-align: left; }
 }
 @media (max-height: 760px) and (min-width: 561px) { .lede { display: none; } }   /* the rail needs the room for its rows */
+/* a laptop's window (720 to 820 px tall) with a mouse: the rail tightens so every row shows, Phone and Online (the live
+   alpha's entry) included, instead of leaving its last rows below the fold. Touch screens keep the taller targets. */
+@media (max-height: 820px) and (min-width: 561px) and (pointer: fine) {
+  .lede { display: none; }
+  .rail-btn { min-height: 34px; }
+  .rail-btn.primary { min-height: 46px; margin: 0 0 6px; }
+  .pick { min-height: 44px; padding-block: 4px; }
+  .field.traffic { padding: 6px 12px 8px; }
+  .field.traffic .seg button { min-height: 30px; }
+}
 @media (max-height: 640px) and (min-width: 561px) {
   .mode { min-height: 104px; }
   .mode-text { padding-top: 22px; }
