@@ -1367,6 +1367,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .s-rail { position: static; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
   .s-tab { flex: none; min-height: 36px; box-shadow: inset 0 0 0 1px var(--line); }
 }
+/* in the menu's sheet (560 px at most) the rail runs across the top, as on a phone, so the sections keep the sheet's
+   width instead of a 300 px column beside a 170 px rail; over the pause screen the wide card keeps the side rail */
+.panel.in-sheet .s-layout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.panel.in-sheet .s-rail { position: static; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 0; }
+.panel.in-sheet .s-tab { flex: none; min-height: 36px; box-shadow: inset 0 0 0 1px var(--line); }
+.panel.in-sheet .s-tab.on { box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--ice); }
 
 /* ------------------------------------------------------------------ the radial quick menu (U3, RadialMenu.tsx) */
 .radial { position: absolute; z-index: 20; width: 0; height: 0; }
