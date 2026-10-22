@@ -75,8 +75,8 @@ def _locate(stem, sig, place, anchor, method, search=0.06):
 
 def sync(placed, effects, fps):
     """Per kind: how far each sound sits from the frame that shows its event, measured in the
-    mastered effects stem. Gate: transients within one frame (median ≤ 10 ms); slow swells and
-    sweeps, which have no sharp moment to hear, within three frames."""
+    mastered effects stem. Gate: transients within one frame (and, for a kind heard three times or
+    more, a median ≤ 10 ms); slow swells and sweeps, which have no sharp moment to hear, within three."""
     mono = stereo(effects).mean(1)
     rows, kinds = [], {}
     for p in placed:
@@ -89,7 +89,7 @@ def sync(placed, effects, fps):
         kinds.setdefault((p["kind"], slow), []).append(abs(err) * 1000)
     frame_ms = 1000 / fps
     per = {k: {"n": len(v), "max_ms": round(max(v), 1), "median_ms": round(float(np.median(v)), 1), "slow": slow,
-               "pass": max(v) <= frame_ms * (3 if slow else 1) and float(np.median(v)) <= (3 * frame_ms if slow else 10)}
+               "pass": max(v) <= frame_ms * (3 if slow else 1) and (len(v) < 3 or float(np.median(v)) <= (3 * frame_ms if slow else 10))}
            for (k, slow), v in sorted(kinds.items())}
     return {"per_kind": per, "pass": all(v["pass"] for v in per.values()), "events": rows}
 

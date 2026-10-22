@@ -1,4 +1,4 @@
-# Skin School on TikTok: "Why does a pore clog?" (draft 1)
+# Skin School on TikTok: "Why does a pore clog?" (approved for build; Evelyn reviews before posting)
 
 About 60 s, 9:16, narrated (synthetic voice, labelled as AI), with an original score. Built from
 lesson 8-2, "Inside a pore", and its scene. Every claim below is one the lesson already makes
@@ -27,16 +27,16 @@ a *pustule*.
 vo: So how does it clear? *Mandelic acid* keeps the pore clear. *Benzoyl peroxide* clears
 the bacteria.
 
-## time {shot: pull back to the hero wide · events: the day counter runs to 90} (55–62 s)
+## time {shot: pull back to the hero wide · events: the counter runs 0 → 12 weeks, 8–12 lit} (53–60 s)
 vo: Then give it time. Judge it at *eight to twelve weeks*.
-end card: TODO call to action (for example "Part 2: what to put on it", or a follow line)
+end card: "Part 2: what to put on it." · "Follow Skin School"
 
 ## Notes
 - Pronunciation list (the voice reads these wrong by default): sebum → SEE-bum,
   comedone → KOM-ih-dohn. Neither is in this draft. Benzoyl reads as BEN-zoyl, which is
   an accepted pronunciation.
 - Captions: burned in, in her type (Inter), with the spoken word highlighted, inside the
-  safe box x 120–900, y 240–1260 at 1080×1920. Her lesson captions become the voice; her
+  safe box x 90–900, y 250–1420 at 1080×1920 (style guide). Her lesson captions become the voice; her
   labels stay as labels.
-- TODO: the call to action, a disclaimer line if Lumevina wants one ("not medical advice"),
-  the TikTok handle, and the expert review of the claims.
+- TODO: a disclaimer line if Lumevina wants one ("not medical advice"), the TikTok handle, and
+  Evelyn's review of the claims, the AI voice label and the posting account.

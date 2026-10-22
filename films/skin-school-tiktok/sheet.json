@@ -1,0 +1,441 @@
+{
+ "duration": 60.0,
+ "fps": 30,
+ "preset": "lumevina-dew",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.3333,
+   "energy": 0.5
+  },
+  {
+   "id": "healthy",
+   "t0": 5.3333,
+   "t1": 16.3333,
+   "energy": 0.45
+  },
+  {
+   "id": "clog",
+   "t0": 16.3333,
+   "t1": 31.0,
+   "energy": 0.5
+  },
+  {
+   "id": "inflame",
+   "t0": 31.0,
+   "t1": 41.3333,
+   "energy": 0.55
+  },
+  {
+   "id": "clear",
+   "t0": 41.3333,
+   "t1": 52.3333,
+   "energy": 0.6
+  },
+  {
+   "id": "time",
+   "t0": 52.3333,
+   "t1": 60.0,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.3333
+  },
+  {
+   "t": 5.3333,
+   "kind": "section",
+   "id": "healthy",
+   "t1": 16.3333
+  },
+  {
+   "t": 7.3667,
+   "kind": "label",
+   "tag": "l-hair"
+  },
+  {
+   "t": 8.5333,
+   "kind": "label",
+   "tag": "l-gland"
+  },
+  {
+   "t": 9.9,
+   "kind": "label",
+   "tag": "l-oil"
+  },
+  {
+   "t": 16.3333,
+   "kind": "section",
+   "id": "clog",
+   "t1": 31.0
+  },
+  {
+   "t": 17.933333333333334,
+   "kind": "label",
+   "tag": "l-plug"
+  },
+  {
+   "t": 18.179993333333332,
+   "kind": "cell.land",
+   "tag": "cell0"
+  },
+  {
+   "t": 18.349325333333333,
+   "kind": "cell.land",
+   "tag": "cell1"
+  },
+  {
+   "t": 18.518657333333334,
+   "kind": "cell.land",
+   "tag": "cell2"
+  },
+  {
+   "t": 18.687989333333334,
+   "kind": "cell.land",
+   "tag": "cell3"
+  },
+  {
+   "t": 18.85732133333333,
+   "kind": "cell.land",
+   "tag": "cell4"
+  },
+  {
+   "t": 19.026653333333332,
+   "kind": "cell.land",
+   "tag": "cell5"
+  },
+  {
+   "t": 19.195985333333333,
+   "kind": "cell.land",
+   "tag": "cell6"
+  },
+  {
+   "t": 19.365317333333333,
+   "kind": "cell.land",
+   "tag": "cell7"
+  },
+  {
+   "t": 19.53464933333333,
+   "kind": "cell.land",
+   "tag": "cell8"
+  },
+  {
+   "t": 19.70398133333333,
+   "kind": "cell.land",
+   "tag": "cell9"
+  },
+  {
+   "t": 19.873313333333332,
+   "kind": "cell.land",
+   "tag": "cell10"
+  },
+  {
+   "t": 20.042645333333333,
+   "kind": "cell.land",
+   "tag": "cell11"
+  },
+  {
+   "t": 20.211977333333333,
+   "kind": "cell.land",
+   "tag": "cell12"
+  },
+  {
+   "t": 20.38130933333333,
+   "kind": "cell.land",
+   "tag": "cell13"
+  },
+  {
+   "t": 20.55064133333333,
+   "kind": "cell.land",
+   "tag": "cell14"
+  },
+  {
+   "t": 20.719973333333332,
+   "kind": "cell.land",
+   "tag": "cell15"
+  },
+  {
+   "t": 20.889305333333333,
+   "kind": "cell.land",
+   "tag": "cell16"
+  },
+  {
+   "t": 21.058637333333333,
+   "kind": "cell.land",
+   "tag": "cell17"
+  },
+  {
+   "t": 21.22796933333333,
+   "kind": "cell.land",
+   "tag": "cell18"
+  },
+  {
+   "t": 21.39730133333333,
+   "kind": "cell.land",
+   "tag": "cell19"
+  },
+  {
+   "t": 22.70003333333333,
+   "kind": "oxidize",
+   "t1": 24.43333333333333
+  },
+  {
+   "t": 24.03333333333333,
+   "kind": "label",
+   "tag": "l-black"
+  },
+  {
+   "t": 27.566633333333332,
+   "kind": "label",
+   "tag": "l-white"
+  },
+  {
+   "t": 31.0,
+   "kind": "section",
+   "id": "inflame",
+   "t1": 41.3333
+  },
+  {
+   "t": 32.8,
+   "kind": "label",
+   "tag": "l-bact"
+  },
+  {
+   "t": 32.8,
+   "kind": "bacteria.pop",
+   "tag": "b0"
+  },
+  {
+   "t": 32.92380714285714,
+   "kind": "bacteria.pop",
+   "tag": "b1"
+  },
+  {
+   "t": 33.04761428571428,
+   "kind": "bacteria.pop",
+   "tag": "b2"
+  },
+  {
+   "t": 33.17142142857143,
+   "kind": "bacteria.pop",
+   "tag": "b3"
+  },
+  {
+   "t": 33.29522857142857,
+   "kind": "bacteria.pop",
+   "tag": "b4"
+  },
+  {
+   "t": 33.41903571428571,
+   "kind": "bacteria.pop",
+   "tag": "b5"
+  },
+  {
+   "t": 33.54284285714285,
+   "kind": "bacteria.pop",
+   "tag": "b6"
+  },
+  {
+   "t": 33.66665,
+   "kind": "bacteria.pop",
+   "tag": "b7"
+  },
+  {
+   "t": 33.79045714285714,
+   "kind": "bacteria.pop",
+   "tag": "b8"
+  },
+  {
+   "t": 33.91426428571428,
+   "kind": "bacteria.pop",
+   "tag": "b9"
+  },
+  {
+   "t": 34.03807142857143,
+   "kind": "bacteria.pop",
+   "tag": "b10"
+  },
+  {
+   "t": 34.1,
+   "kind": "swell",
+   "t1": 38.8333
+  },
+  {
+   "t": 34.161878571428566,
+   "kind": "bacteria.pop",
+   "tag": "b11"
+  },
+  {
+   "t": 34.28568571428571,
+   "kind": "bacteria.pop",
+   "tag": "b12"
+  },
+  {
+   "t": 34.40949285714285,
+   "kind": "bacteria.pop",
+   "tag": "b13"
+  },
+  {
+   "t": 34.7667,
+   "kind": "label",
+   "tag": "l-red"
+  },
+  {
+   "t": 41.3333,
+   "kind": "section",
+   "id": "clear",
+   "t1": 52.3333
+  },
+  {
+   "t": 41.833333333333336,
+   "kind": "drop.fall",
+   "tag": "mand",
+   "t1": 42.733333333333334
+  },
+  {
+   "t": 42.733333333333334,
+   "kind": "drop.land",
+   "tag": "mand"
+  },
+  {
+   "t": 42.86663333333333,
+   "kind": "label",
+   "tag": "l-mand"
+  },
+  {
+   "t": 43.86663333333333,
+   "kind": "dissolve",
+   "t1": 44.93333333333334
+  },
+  {
+   "t": 44.40003333333333,
+   "kind": "drop.fall",
+   "tag": "bp",
+   "t1": 45.20003333333334
+  },
+  {
+   "t": 45.20003333333334,
+   "kind": "drop.land",
+   "tag": "bp"
+  },
+  {
+   "t": 45.333333333333336,
+   "kind": "label",
+   "tag": "l-bp"
+  },
+  {
+   "t": 46.63333333333333,
+   "kind": "bacteria.fade",
+   "t1": 48.43333333333334
+  },
+  {
+   "t": 52.3333,
+   "kind": "section",
+   "id": "time",
+   "t1": 60.0
+  },
+  {
+   "t": 52.66663333333334,
+   "kind": "counter.show",
+   "tag": "dayc"
+  },
+  {
+   "t": 53.12291458333333,
+   "kind": "counter.tick",
+   "tag": "w1"
+  },
+  {
+   "t": 53.30207708333334,
+   "kind": "counter.tick",
+   "tag": "w2"
+  },
+  {
+   "t": 53.481239583333334,
+   "kind": "counter.tick",
+   "tag": "w3"
+  },
+  {
+   "t": 53.66040208333334,
+   "kind": "counter.tick",
+   "tag": "w4"
+  },
+  {
+   "t": 53.839564583333335,
+   "kind": "counter.tick",
+   "tag": "w5"
+  },
+  {
+   "t": 54.01872708333333,
+   "kind": "counter.tick",
+   "tag": "w6"
+  },
+  {
+   "t": 54.197889583333335,
+   "kind": "counter.tick",
+   "tag": "w7"
+  },
+  {
+   "t": 54.37705208333334,
+   "kind": "counter.tick",
+   "tag": "w8"
+  },
+  {
+   "t": 54.504133333333336,
+   "kind": "counter.tick",
+   "tag": "w9"
+  },
+  {
+   "t": 54.57913333333333,
+   "kind": "counter.tick",
+   "tag": "w10"
+  },
+  {
+   "t": 54.654133333333334,
+   "kind": "counter.tick",
+   "tag": "w11"
+  },
+  {
+   "t": 54.72913333333334,
+   "kind": "counter.end",
+   "tag": "w12"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3333333333333333,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.633333333333334,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 16.633333333333333,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 31.3,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 41.63333333333333,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 52.63333333333333,
+   "file": "vo/06.wav"
+  }
+ ]
+}

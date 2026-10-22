@@ -22,19 +22,8 @@ import soundfile as sf
 from kokoro_onnx import Kokoro
 from kokoro_onnx.tokenizer import Tokenizer
 
-
-def script_lines(path):
-    """[(beat id, spoken text, starred words)] from a script.md."""
-    out, beat = [], None
-    text = Path(path).read_text()
-    for m in re.finditer(r"^## (\S+)|^vo: (.*?)(?=\n\s*\n|\nend card|\n## |\Z)", text, re.S | re.M):
-        if m.group(1):
-            beat = m.group(1)
-            continue
-        raw = re.sub(r"\s+", " ", m.group(2)).strip()
-        stars = re.findall(r"\*([^*]+)\*", raw)
-        out.append((beat, re.sub(r"\{[^}]*\}", "", raw).replace("*", "").strip(), stars))
-    return out
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from scriptfile import script_lines   # noqa: E402
 
 
 def phonemes(tok, text, lexicon, lang):

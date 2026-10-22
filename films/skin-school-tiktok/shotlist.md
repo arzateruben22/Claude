@@ -12,7 +12,7 @@ spoken words.
 | S3 | 16.0–31.0 (480–929) | **Clog** | The healthy wide | Push into the slot. "Now add *dead skin cells*": the plug cells fall, bounce and pack (her clog action over 9 s). Tilt up: the top of the plug oxidizes dark on "*blackhead*"; on "*whitehead*" a thin skin cap slides over the mouth and the dark top fades pale, then slides back off (see open questions). **Picture-only, 28.2–31.0:** the plug settles; the music comes forward | The packed, dark-topped plug | The core idea: a clog is skin cells + oil | A woody tap as each cell lands, a low dimming note as it oxidizes |
 | S4 | 31.0–41.5 (930–1244) | **Inflame** | Close on the plug | Pull back, then a slow push. "*Bacteria*" pop in, jiggle and glow; "the wall swells red: a *papule*. Then, a *pustule*". Focus racks to the inflamed wall. **Picture-only, 37.5–41.5:** the swelling peaks | The red, swollen pore | Why it turns into a pimple | Faint fizz under the bacteria, a warm low swell under the wall |
 | S5 | 41.5–53.0 (1245–1589) | **Clear** | The swollen pore | Crane over the drops. "*Mandelic acid*": the rose drop falls, stretches, lands with a splash ring and the plug starts to loosen. "*Benzoyl peroxide*": the white drop lands and the bacteria fade. **Picture-only, 48.3–53.0:** the liquid spreads, the plug dissolves, the redness drains | A clear pore again | The two answers from her lesson | Whistle, plop and splash per drop, a soft sparkle as the plug dissolves |
-| S6 | 53.0–60.0 (1590–1799) | **Give it time** | The clear pore | Pull back to the hero wide. "Then give it time. Judge it at *eight to twelve weeks*." The counter runs 0 → 12 weeks (53.8–56.6) and lights 8–12. **End card 57.0–60.0:** her Skin School title, "Inside a pore, *and how it clears*." and the call to action (TODO) | The end card, held 3.0 s | The takeaway, and the poster frame | Soft ticks per week, a closing chime on 12, pad resolves by 59.5 |
+| S6 | 53.0–60.0 (1590–1799) | **Give it time** | The clear pore | Pull back to the hero wide. "Then give it time. Judge it at *eight to twelve weeks*." The counter runs 0 → 12 weeks (53.8–56.6) and lights 8–12. **End card 57.0–60.0:** her Skin School title, "Inside a pore, *and how it clears*.", then "Part 2: what to put on it." and "Follow Skin School" | The end card, held 3.0 s | The takeaway, and the poster frame | Soft ticks per week, a closing chime on 12, pad resolves by 59.5 |
 
 ## Reading budget
 
@@ -34,7 +34,8 @@ spoken words.
 
 ## Open questions
 
-- **Whitehead.** Her scene has one pore. Showing a whitehead means either the skin cap sliding over
-  and back (proposed, no new geometry), or a second, smaller pore beside it (clearer, more work).
-- **Call to action and disclaimer** (TODO): the end-card line, and whether Lumevina wants a "not
-  medical advice" line.
+- **Whitehead: decided.** A thin skin cap slides over the same pore and the dark top fades pale,
+  then slides back off (no new geometry).
+- **Call to action: decided.** "Part 2: what to put on it." and "Follow Skin School".
+- **Disclaimer** (TODO): whether Lumevina wants a "not medical advice" line. Evelyn reviews the
+  claims, the AI voice label and the posting account before anything posts.

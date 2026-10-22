@@ -1,0 +1,90 @@
+{
+ "voice": "af_heart",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.16",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Every breakout starts in one place: a single pore. Let's go inside.",
+   "stars": [
+    "single pore"
+   ],
+   "phonemes": "ˈɛvɹi bɹˈeɪkaʊt stˈɑːɹts ɪn wˈʌn plˈeɪs: ɐ sˈɪŋɡəl pˈɔːɹ. lˈɛts ɡˌoʊ ɪnsˈaɪd.",
+   "file": "01.wav",
+   "dur": 4.155,
+   "sha256": "b5914fab2559fcb0c95f8eaff26884de6adfa6d06af89b765a40fb632330c59e"
+  },
+  {
+   "id": "vo02",
+   "beat": "healthy",
+   "text": "This is a healthy pore. A hair, an oil gland at its base, and oil flowing up and out onto your skin. As long as the oil keeps moving, the pore stays clear.",
+   "stars": [
+    "hair",
+    "oil gland"
+   ],
+   "phonemes": "ðɪs ɪz ɐ hˈɛlθi pˈɔːɹ. ɐ hˈɛɹ, ɐn ˈɔɪl ɡlˈænd æɾ ɪts bˈeɪs, ænd ˈɔɪl flˈoʊɪŋ ˌʌp ænd ˈaʊt ˌɑːntʊ jʊɹ skˈɪn. æz lˈɔŋ æz ðɪ ˈɔɪl kˈiːps mˈuːvɪŋ, ðə pˈɔːɹ stˈeɪz klˈɪɹ.",
+   "file": "02.wav",
+   "dur": 9.496,
+   "sha256": "bc2f8cb627d3b02d4613bbc3fb61250f9040fc75093efdc5cc3554c4ffb85fcf"
+  },
+  {
+   "id": "vo03",
+   "beat": "clog",
+   "text": "Now add dead skin cells. They mix with the oil and pack the pore shut. Open to the air, the plug oxidizes dark: a blackhead. Closed over by skin, it stays pale: a whitehead.",
+   "stars": [
+    "dead skin cells",
+    "blackhead",
+    "whitehead"
+   ],
+   "phonemes": "nˈaʊ ˈæd dˈɛd skˈɪn sˈɛlz. ðeɪ mˈɪks wɪððɪ ˈɔɪl ænd pˈæk ðə pˈɔːɹ ʃˈʌt. ˈoʊpən tə ðɪ ˈɛɹ, ðə plˈʌɡ ˈɑːksɪdˌaɪzᵻz dˈɑːɹk: ɐ blˈækhɛd. klˈoʊzd ˌoʊvɚ baɪ skˈɪn, ɪt stˈeɪz pˈeɪl: ɐ wˈaɪthɛd.",
+   "file": "03.wav",
+   "dur": 11.551,
+   "sha256": "f31d7fadef0ee9d8102cfbb8079fcde07d60ac10cc0c22b44818b5ae8f32ba2c"
+  },
+  {
+   "id": "vo04",
+   "beat": "inflame",
+   "text": "Trapped oil is food. Bacteria feed on it, and the wall swells red: a papule. Then, a pustule.",
+   "stars": [
+    "Bacteria",
+    "papule",
+    "pustule"
+   ],
+   "phonemes": "tɹˈæpt ˈɔɪl ɪz fˈuːd. bæktˈɪɹiə fˈiːd ˈɔn ɪt, ænd ðə wˈɔːl swˈɛlz ɹˈɛd: ɐ pˈæpjuːl. ðˈɛn, ɐ pˈʌstʃəl.",
+   "file": "04.wav",
+   "dur": 5.934,
+   "sha256": "5aedc4569c9a99184d63deb077f1a7634e3f29d5499f84201085823b83285ae5"
+  },
+  {
+   "id": "vo05",
+   "beat": "clear",
+   "text": "So how does it clear? Mandelic acid keeps the pore clear. Benzoyl peroxide clears the bacteria.",
+   "stars": [
+    "Mandelic acid",
+    "Benzoyl peroxide"
+   ],
+   "phonemes": "sˌoʊ hˌaʊ dˈʌz ɪt klˈɪɹ? mændˈɛlɪk ˈæsɪd kˈiːps ðə pˈɔːɹ klˈɪɹ. bˈɛnzɔɪl pəɹˈɑːksaɪd klˈɪɹz ðə bæktˈɪɹiə.",
+   "file": "05.wav",
+   "dur": 6.093,
+   "sha256": "53b201ccd2d1b67c80b58a2559338d4de63c7071f41760e1318fb72cd21a8fcc"
+  },
+  {
+   "id": "vo06",
+   "beat": "time",
+   "text": "Then give it time. Judge it at eight to twelve weeks.",
+   "stars": [
+    "eight to twelve weeks"
+   ],
+   "phonemes": "ðˈɛn ɡˈɪv ɪt tˈaɪm. dʒˈʌdʒ ɪɾ æɾ ˈeɪt tə twˈɛlv wˈiːks.",
+   "file": "06.wav",
+   "dur": 2.884,
+   "sha256": "0648c3849be6ab39d1d8955a61065594e44b897578d0a6e3fc296bdaac626466"
+  }
+ ]
+}

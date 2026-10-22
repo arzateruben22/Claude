@@ -116,17 +116,35 @@ def _voice(spec, e, idx, fps):
     raise ValueError(f"unknown voice {v} for {kind}")
 
 
+def _masked(events, P, fps, window=0.2):
+    """Two sounds within `window` of each other blur into one. Keep the more important (lower prio
+    in events.json); the other drops out. Equal priorities both play (a run of cells, ticks)."""
+    times = []
+    for n, e in enumerate(events):
+        if e["kind"] in P["foley"] and not (e["kind"] == "section" and e["t"] <= 0):
+            row = EVENTS.get(e["kind"], {})
+            if not row.get("span"):
+                times.append((first_frame(e["t"], fps, row.get("after", False)), row.get("prio", 2), n))
+    out = set()
+    for ta, pa, na in times:
+        for tb, pb, nb in times:
+            if na != nb and abs(ta - tb) < window and pa > pb:
+                out.add(na)
+    return out
+
+
 def foley(sheet, P):
     """Returns (effects stem, placed cues). Each sound's own onset lands on its event's frame;
     sweeps that build up to a moment (whoosh into a cut, a whistle into a landing) end on it."""
     fps, bus, placed, count = sheet["fps"], Bus(sheet["duration"], "effects"), [], {}
-    for e in sheet["events"]:
+    masked = _masked(sheet["events"], P, fps)
+    for n, e in enumerate(sheet["events"]):
         spec = P["foley"].get(e["kind"])
         if not spec:
             continue
         idx = count.get(e["kind"], 0)
         count[e["kind"]] = idx + 1
-        if e["kind"] == "section" and e["t"] <= 0:
+        if (e["kind"] == "section" and e["t"] <= 0) or n in masked:
             continue
         sig = _voice(spec, e, idx, fps)
         row = EVENTS.get(e["kind"], {})

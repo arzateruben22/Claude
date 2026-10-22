@@ -1,0 +1,791 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Every breakout starts in one place: a single pore. Let's go inside.",
+   "heard": "Every breakout starts in one place, a single poor, let's go inside.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "breakout",
+     "start": 0.305,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 0.775,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.065,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.28,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "place:",
+     "start": 1.45,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.06,
+     "end": 2.11,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 2.09,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "pore.",
+     "start": 2.51,
+     "end": 3.04,
+     "heard": false
+    },
+    {
+     "w": "Let's",
+     "start": 3.085,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "go",
+     "start": 3.39,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "inside.",
+     "start": 3.685,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "This is a healthy pore. A hair, an oil gland at its base, and oil flowing up and out onto your skin. As long as the oil keeps moving, the pore stays clear.",
+   "heard": "This is a healthy pore. A hair, an oil gland at its base, and oil flowing up and out onto your skin. As long as the oil keeps moving, the pore stays clear.",
+   "words": [
+    {
+     "w": "This",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.22,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.25,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "healthy",
+     "start": 0.485,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "pore.",
+     "start": 0.855,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.61,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "hair,",
+     "start": 1.74,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 2.35,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 2.54,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "gland",
+     "start": 2.905,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.375,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 3.515,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "base,",
+     "start": 3.545,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.08,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 4.275,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "flowing",
+     "start": 4.65,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 4.965,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.11,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 5.23,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "onto",
+     "start": 5.39,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 5.595,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 5.855,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "As",
+     "start": 6.71,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 6.74,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.84,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.2,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 7.335,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 7.64,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "moving,",
+     "start": 7.89,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.435,
+     "end": 8.485,
+     "heard": true
+    },
+    {
+     "w": "pore",
+     "start": 8.535,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 8.865,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "clear.",
+     "start": 9.13,
+     "end": 9.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Now add dead skin cells. They mix with the oil and pack the pore shut. Open to the air, the plug oxidizes dark: a blackhead. Closed over by skin, it stays pale: a whitehead.",
+   "heard": "Now add dead skin cells. They mix with the oil and pack the pore shut. Open to the air, the plug oxidizes dark, a blackhead. Closed over by skin, it stays pale, a whitehead.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "add",
+     "start": 0.38,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 0.685,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 1.04,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "cells.",
+     "start": 1.315,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 2.025,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "mix",
+     "start": 2.055,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.51,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.54,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 2.655,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.015,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "pack",
+     "start": 3.14,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.37,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "pore",
+     "start": 3.54,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "shut.",
+     "start": 4.015,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "Open",
+     "start": 4.74,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.92,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.075,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "air,",
+     "start": 5.27,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.685,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "plug",
+     "start": 5.785,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "oxidizes",
+     "start": 6.06,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "dark:",
+     "start": 6.795,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.295,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "blackhead.",
+     "start": 7.395,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "Closed",
+     "start": 8.375,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 8.695,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 8.93,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "skin,",
+     "start": 9.25,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 9.635,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 9.87,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "pale:",
+     "start": 10.195,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.915,
+     "end": 10.965,
+     "heard": true
+    },
+    {
+     "w": "whitehead.",
+     "start": 10.945,
+     "end": 11.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Trapped oil is food. Bacteria feed on it, and the wall swells red: a papule. Then, a pustule.",
+   "heard": "Trapped oil is food. Bacteria feed on it, and the wall swells red. A papule. Then a pustule.",
+   "words": [
+    {
+     "w": "Trapped",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 0.375,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "food.",
+     "start": 0.845,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Bacteria",
+     "start": 1.505,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "feed",
+     "start": 2.085,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.28,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 2.31,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.585,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.615,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 2.785,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "swells",
+     "start": 3.22,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "red:",
+     "start": 3.465,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.02,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "papule.",
+     "start": 4.1,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "Then,",
+     "start": 4.955,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.295,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "pustule.",
+     "start": 5.455,
+     "end": 5.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "So how does it clear? Mandelic acid keeps the pore clear. Benzoyl peroxide clears the bacteria.",
+   "heard": "So how does it clear? Mandelic acid keeps the pore clear. Benzoyl peroxide clears the bacteria.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.185,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.34,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.57,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "clear?",
+     "start": 0.635,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Mandelic",
+     "start": 1.245,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "acid",
+     "start": 1.825,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 2.245,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.54,
+     "end": 2.59,
+     "heard": true
+    },
+    {
+     "w": "pore",
+     "start": 2.635,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "clear.",
+     "start": 2.99,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "Benzoyl",
+     "start": 3.715,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "peroxide",
+     "start": 4.275,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "clears",
+     "start": 5.005,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.365,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "bacteria.",
+     "start": 5.445,
+     "end": 6.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Then give it time. Judge it at eight to twelve weeks.",
+   "heard": "Then give it time, judge it at 8 to 12 weeks.",
+   "words": [
+    {
+     "w": "Then",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "give",
+     "start": 0.415,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.455,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 0.735,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Judge",
+     "start": 1.16,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.575,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.775,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 1.83,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.025,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 2.14,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "weeks.",
+     "start": 2.44,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

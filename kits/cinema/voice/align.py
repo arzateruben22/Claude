@@ -18,6 +18,9 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from scriptfile import norm   # noqa: E402
+
 HOP = 0.005          # 5 ms envelope
 
 
@@ -86,10 +89,6 @@ def snap(start, env, prev_end=None, floor=-38.0, back=0.12, fwd=0.2):
     return start
 
 
-def norm(w):
-    return re.sub(r"[^a-z0-9']", "", w.lower())
-
-
 def match(script_words, heard):
     """Give each script word the time of the recognizer word it matches; interpolate the rest."""
     a, b = [norm(w) for w in script_words], [norm(w) for w, _, _ in heard]
@@ -116,6 +115,8 @@ def line_words(rec, audio, sr, text, snap_on=True):
     out, prev_end = [], None
     for w, (s, e, ok) in zip(script_words, times):
         s2 = snap(s, env, prev_end) if snap_on else s
+        if out and s2 < out[-1]["start"] + 0.03:      # never two words on one moment
+            s2 = out[-1]["start"] + 0.03
         out.append({"w": w, "start": round(s2, 3), "end": round(max(e, s2 + 0.05), 3), "heard": ok})
         prev_end = s2
     return out, " ".join(w for w, _, _ in heard)
