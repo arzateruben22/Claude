@@ -184,6 +184,24 @@ c = mix(c, c * vec3(1.08, 0.86, 0.84), blush * uBlush * (1.0 - uDark * 0.5));
 c *= 1.0 - eyeA * (0.17 + 0.12 * uAge + 0.22 * uLiner * (1.0 - uMale));   // lids are more pigmented than the cheek
 c = mix(c, c * vec3(0.97, 0.92, 0.93), eyeA * 0.6);
 c = mix(c, vec3(0.035, 0.026, 0.024), lashL);   // the lash line along each lid margin: what makes an eye read at a distance
+// the corners of the fissure, where it opens past the eyeball onto the socket: the caruncle in the inner corner (a
+// pink-red, wet mound) and the conjunctiva in shadow at the outer. Eye-local mm, inside face.ts' lid margins (the eye's
+// size taken as 1); the lids' outer skin lies outside them and is left alone
+float carM = 0.0;
+#ifdef SKIN_FACE
+if (eyeA > 0.15) {
+  float xe = (abs(hl.x) - uFaceP.x) * 1000.0, ye = hl.y * 1000.0;
+  float u = clamp((xe + 15.2) / 28.7, 0.0, 1.0);
+  float wU = u < 0.47 ? 0.5 * u / 0.47 : 0.5 + 0.5 * (u - 0.47) / 0.53, wL = u < 0.6 ? 0.5 * u / 0.6 : 0.5 + 0.5 * (u - 0.6) / 0.4;
+  float yc = mix(-0.9, 0.4, u);
+  float yU = yc + 5.0 * pow(max(1e-5, sin(3.14159 * wU)), 0.75), yL = yc - 4.3 * pow(max(1e-5, sin(3.14159 * wL)), 0.85);
+  float inF = smoothstep(yL - 0.5, yL + 0.3, ye) * smoothstep(yU + 0.5, yU - 0.3, ye);
+  carM = inF * smoothstep(-9.0, -11.0, xe);
+  vec3 carC = mix(vec3(0.6, 0.3, 0.28), c * vec3(0.95, 0.62, 0.6), 0.3 + 0.4 * uDark);
+  c = mix(c, carC, carM * 0.85);
+  c = mix(c, c * vec3(0.6, 0.5, 0.5), inF * smoothstep(9.0, 11.0, xe) * 0.7);
+}
+#endif
 // stubble and beard shadow
 float stub = 0.0;
 #ifdef SKIN_FACE
@@ -321,6 +339,7 @@ rough -= 0.07 * (crease + fold) + 0.04 * apple;   // sebum sits in the folds; a 
 rough = mix(rough, mix(0.42, 0.3, uLipAmt), lipM);
 rough = mix(rough, 0.22, smoothstep(0.2, 0.8, mouth));
 rough += 0.12 * eyeA;   // a matte lid: no env sheen turning a closed lid into a pale disc
+rough = mix(rough, 0.24, carM);   // (the caruncle is wet)
 rough = mix(rough, 0.62, clamp(stub, 0.0, 1.0) * 0.6);
 rough = mix(rough, 0.85, smoothstep(0.1, 0.8, scalp));   // a buzz cut is matte, never a polished dome
 gThin = thin * (1.0 - uDark * 0.5);

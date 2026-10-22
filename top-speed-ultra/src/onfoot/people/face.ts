@@ -10,7 +10,7 @@ import { Field } from './field';
 import { meshField } from './mesher';
 import { Quality, Look } from './params';
 import { NOISE } from './skin';
-import { cardMaterial, lashTexture, browTexture } from './cards';
+import { cardMaterial, browTexture } from './cards';
 import { faceMasks } from './masks';
 
 export const MORPHS = ['jawOpen', 'mouthClose', 'smileL', 'smileR', 'wide', 'pucker', 'press', 'tuck', 'browUp', 'browDownL', 'browDownR', 'blinkL', 'blinkR', 'squintL', 'squintR'] as const;
@@ -218,7 +218,7 @@ function stripGeometry(rows: V3[][], uv: (i: number, j: number) => [number, numb
 function lashRows(hf: HeadFrame, side: number, upper: boolean, st: LidState, layer: number): V3[][] {
   const es = hf.face.eyeSize, n = 20, rows: V3[][] = [[], [], []];
   const u0 = upper ? 0.06 : 0.25, u1 = upper ? 0.98 : 0.95;
-  const lenMax = (upper ? 0.0062 : 0.0027) * (1 + 0.18 * (hf.male ? 0 : 1)) * (1 - 0.15 * layer);
+  const lenMax = (upper ? 0.0062 : 0.0018) * (1 + 0.18 * (hf.male ? 0 : 1)) * (1 - 0.15 * layer);   // the lower ones a short fringe
   for (let i = 0; i < n; i++) {
     const u = lerp(u0, u1, i / (n - 1));
     const m = margins(u, hf, st);
@@ -244,6 +244,41 @@ function lashRows(hf: HeadFrame, side: number, upper: boolean, st: LidState, lay
   return rows;
 }
 
+/** lashes, root at v = 0: dense, thick hairs at the lid margin that taper and thin out toward their tips, over a soft
+ *  band of density along the roots (cards.ts' lash texture is drawn from the canvas' top, which flipY puts at v = 1:
+ *  on the cards that was the tips, so the lashes were opaque at their ends and faded out at the lid; under the old
+ *  alpha test only the ends survived, as specks floating off the lid) */
+let lashTex: THREE.Texture | null = null;
+function lashCardTexture() {
+  if (lashTex) return lashTex;
+  const w = 256, h = 64, c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const g = c.getContext('2d')!;
+  g.clearRect(0, 0, w, h);
+  const band = g.createLinearGradient(0, h, 0, h * 0.6);
+  band.addColorStop(0, 'rgba(255,255,255,0.5)'); band.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = band; g.fillRect(0, 0, w, h);
+  const r = rng(4243);
+  for (let i = 0; i < 54; i++) {
+    const x0 = (i + 0.5) / 54 * w + (r.next() - 0.5) * 4, len = h * (0.5 + 0.5 * r.next()), lean = (r.next() - 0.5) * 12;
+    const wd = 1.1 + 0.7 * r.next();
+    // each hair twice: whole and thin, then its root third thicker (a taper a single stroke can't draw)
+    for (const [f, lw] of [[1, wd], [0.35, wd * 1.7]] as const) {
+      const L = len * f, grad = g.createLinearGradient(0, h, 0, h - L);
+      grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.6, `rgba(255,255,255,${f < 1 ? 0.6 : 0.8})`); grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.strokeStyle = grad; g.lineWidth = lw;
+      g.beginPath(); g.moveTo(x0, h); g.quadraticCurveTo(x0 + lean * 0.3 * f, h - L * 0.5, x0 + lean * f * f, h - L); g.stroke();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.NoColorSpace;   // channels are data: r = strand shade, a = coverage
+  t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
+  t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.anisotropy = 4;
+  lashTex = t;
+  return t;
+}
+
 export function buildLashes(hf: HeadFrame, quality: Quality) {
   const layers = quality === 'high' ? 2 : 1;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
@@ -262,7 +297,11 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
       } else for (let k = 0; k < s.pos.length; k++) deltas[e].push(0);
     }
   }
-  return { pos, uvs, idx, deltas, mat: cardMaterial(0x0c0a09, lashTexture(), quality, { kk: false, alphaTest: 0.35 }) };
+  // soft alpha like the brows: the sub-pixel strokes blend into a dark fringe instead of breaking into specks and dots
+  const mat = cardMaterial(0x0c0a09, lashCardTexture(), quality, { kk: false, alphaTest: 0.03 });
+  mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
+  mat.forceSinglePass = true;   // (a transparent double-sided material otherwise draws twice, back faces then front: one more call)
+  return { pos, uvs, idx, deltas, mat };
 }
 
 /** brows on the skin: points projected onto the head's surface; facial hair (a beard, a goatee, a moustache) rides in
@@ -602,7 +641,9 @@ function eyeGeometry() {
   const r = 0.012, lim = 31 * Math.PI / 180, pts: THREE.Vector2[] = [];
   // the profile from the pupil out over the iris, then the sclera to the back (lathe axis = y, turned to +z below)
   const zi = r * Math.cos(lim) - 0.0006;
-  for (let i = 0; i <= 8; i++) { const t = i / 8; pts.push(new THREE.Vector2(Math.max(1e-5, t * r * Math.sin(lim)), zi + 0.0002 * (1 - t) - 0.0001 * t * t)); }
+  // the iris a shallow bowl, 0.7 mm deeper at the pupil than at its rim: the scene's lights shade it across (brighter on
+  // the side away from the light, as the cornea's focusing makes it), and seen at an angle its rim hides a sliver of it
+  for (let i = 0; i <= 8; i++) { const t = i / 8; pts.push(new THREE.Vector2(Math.max(1e-5, t * r * Math.sin(lim)), zi - 0.0008 * Math.pow(1 - t, 1.5) - 0.0001 * t * t)); }
   for (let i = 1; i <= 16; i++) { const a = lim + (Math.PI - lim) * (i / 16); pts.push(new THREE.Vector2(Math.max(1e-5, r * Math.sin(a)), r * Math.cos(a))); }
   const ball = new THREE.LatheGeometry(pts.reverse(), 30);   // bottom to top, so the faces point out
   ball.rotateX(Math.PI / 2);
@@ -612,22 +653,42 @@ function eyeGeometry() {
   return eyeGeoCache;
 }
 
-export function eyeMaterial(iris: number, quality: Quality) {
-  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.35, clearcoat: 0, envMapIntensity: 0.5 });
-  const u = { uIris: { value: new THREE.Color(iris) }, uPupil: { value: 2.1 } };
-  m.customProgramCacheKey = () => 'eye-' + quality;
+export interface EyeMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: { uGaze: { value: THREE.Vector2 } } }
+
+/** one eye's material: `side` +1 the person's left eye, -1 the right; `tilt` (mm) and `hooded` shape its lid margins */
+export function eyeMaterial(iris: number, quality: Quality, o: { side?: number; tilt?: number; hooded?: number } = {}) {
+  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.22, clearcoat: 0, envMapIntensity: 0.5 }) as EyeMaterial;
+  const u = {
+    uIris: { value: new THREE.Color(iris) }, uPupil: { value: 2.3 },   // a 4.6 mm pupil: an evening patio, not daylight
+    uGaze: { value: new THREE.Vector2() }, uSide: { value: o.side ?? 1 }, uLid: { value: new THREE.Vector2(o.tilt ?? 0, o.hooded ?? 0) },
+  };
+  m.uniformsRef = u;
+  m.customProgramCacheKey = () => 'eye2-' + quality;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vObj;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', `#include <common>\nvarying vec3 vObj; uniform vec3 uIris; uniform float uPupil;\n${NOISE}`)
+      .replace('#include <common>', `#include <common>
+varying vec3 vObj; uniform vec3 uIris; uniform float uPupil; uniform vec2 uGaze; uniform float uSide; uniform vec2 uLid;
+${NOISE}
+float lidBump(float u, float peak, float pw) {   // face.ts bump(): the lid margins' arch
+  float w = u < peak ? 0.5 * u / peak : 0.5 + 0.5 * (u - peak) / (1.0 - peak);
+  return pow(max(1e-5, sin(3.14159265 * clamp(w, 0.0, 1.0))), pw);
+}`)
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
 vec3 o = vObj * 1000.0;           // mm, +z out of the pupil
 float rho = length(o.xy), ang = atan(o.y, o.x);
 float irisR = 5.9;
 vec3 c;
-float rough = 0.3;
-if (o.z > 9.3 && rho < irisR + 0.25) {
+float rough = 0.22, specK = 1.0;
+// the point in the socket's frame: the lids stay put while the ball turns (pitch about x, then yaw about y: Euler YXZ)
+float gcp = cos(uGaze.x), gsp = sin(uGaze.x), gcy = cos(uGaze.y), gsy = sin(uGaze.y);
+vec3 s1 = vec3(o.x, gcp * o.y - gsp * o.z, gsp * o.y + gcp * o.z);
+vec3 sk = vec3(gcy * s1.x + gsy * s1.z, s1.y, -gsy * s1.x + gcy * s1.z);
+// the lid margins at this point across the fissure (face.ts margins(), mm): - toward the nose, + toward the temple
+float xm = sk.x * uSide, lu = clamp((xm + 15.2) / 28.7, 0.0, 1.0), yc = mix(-0.9, 0.4 + uLid.x, lu);
+float yU = yc + (5.0 - 0.8 * uLid.y) * lidBump(lu, 0.47, 0.75), yL = yc - 4.3 * lidBump(lu, 0.6, 0.85);
+if (o.z > 8.6 && rho < irisR + 0.25) {
   // iris: radial fibres, a collarette, crypts, a dark limbal ring, the pupil
   float fib = vnoise(vec3(ang * 38.0, rho * 1.3, 1.0)) * 0.6 + vnoise(vec3(ang * 90.0, rho * 3.0, 5.0)) * 0.4;
   vec3 base = pow(uIris, vec3(1.05));
@@ -641,27 +702,48 @@ if (o.z > 9.3 && rho < irisR + 0.25) {
   c *= mix(1.0, 0.25, smoothstep(irisR - 0.9, irisR, rho));
   c = mix(c, vec3(0.012), smoothstep(uPupil + 0.12, uPupil - 0.08, rho));
   rough = 0.5;
+  specK = 0.12;   // the cornea carries the eye's reflections: the iris under it is matte (its bowl otherwise caught a milky sheen)
 } else {
-  // sclera: off-white, warmer and veined toward the corners, shaded where the lids hang over it
+  // sclera: a wet off-white, warmer and veined toward the corners, a little blue-grey at the limbus (thinner there)
   float side = smoothstep(4.0, 11.0, abs(o.x));
-  c = vec3(0.6, 0.575, 0.555) * (0.94 + 0.06 * vnoise(o * 0.8));
+  c = vec3(0.65, 0.625, 0.6) * (0.94 + 0.06 * vnoise(o * 0.8));
   float vein = smoothstep(0.92, 1.0, 1.0 - abs(vnoise(o * vec3(0.6, 1.4, 0.6)) - 0.5) * 2.0) * side;
   c = mix(c, vec3(0.75, 0.32, 0.3), vein * 0.5 + side * 0.12);
+  c *= mix(vec3(1.0), vec3(0.88, 0.92, 1.0), 0.6 * smoothstep(8.8, 6.6, rho) * smoothstep(6.0, 8.5, o.z));
   c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));
-  c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, o.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, o.y));
+  c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, sk.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, sk.y));
+  // the caruncle and the fold beside it: pink and wet in the inner corner
+  // (the ball's own silhouette ends about 11 mm out: beyond it the fissure shows the socket, where skin.ts paints the
+  // caruncle itself; on the ball the pink fold beside it, the plica, on the last few mm of white)
+  float car = smoothstep(7.5, 10.5, -xm);
+  c = mix(c, vec3(0.55, 0.3, 0.28), car * 0.65);
+  rough = mix(rough, 0.15, car);
 }
-// the upper lid and lashes shade the top of the eye (iris too), so the eye sits in the head instead of on it
-c *= mix(1.0, 0.42, smoothstep(0.0, 5.5, o.y)) * mix(1.0, 0.85, smoothstep(-2.5, -5.5, o.y));
+// the lids, where they are (not where the ball has turned to): the upper lid and its lashes shade the eye (iris too)
+// below their arch, so the eye sits in the head instead of on it; the lower lid a little
+// (strongest along the margin, fading out over about 3 mm; the lid's rest margin, so a raised lid widens the dark band
+// and a lowered one hides its darkest part: never a lit strip under the lid. Its reflections are shaded too)
+float shU = smoothstep(yU - 3.5, yU + 0.5, sk.y);
+// (and the whole eye a little: it sits in a hollow the sky and the room light reach only partly, like the skin round it)
+c *= 0.9 * (1.0 - 0.72 * shU * sqrt(shU)) * mix(1.0, 0.82, smoothstep(yL + 1.4, yL - 0.6, sk.y));
+specK *= 1.0 - 0.75 * shU;
+// the tear meniscus: a thin wet line along the lower lid's margin, a glint more than a colour
+float wet = exp(-pow((sk.y - yL - 0.35) / 0.28, 2.0)) * smoothstep(13.5, 9.0, abs(xm + 0.8));
+c *= 1.0 + 0.06 * wet;
+rough = mix(rough, 0.06, wet);
 diffuseColor.rgb = c;
 `)
-      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = rough;');
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = rough;')
+      // (the chunk is spliced in here: a replace on its text before three resolves the #include would find nothing)
+      .replace('#include <lights_physical_fragment>', THREE.ShaderChunk.lights_physical_fragment.replace('float specularIntensityFactor = specularIntensity;', 'float specularIntensityFactor = specularIntensity * specK;'));
   };
   return m;
 }
 
 export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint: V3): EyeParts {
   const g = eyeGeometry();
-  const mat = eyeMaterial(look.iris, quality);
+  // one material per eye (same program): each carries its own side and, set just before it draws, its ball's gaze
+  const mats: THREE.Material[] = [];
   const cornea = new THREE.MeshPhysicalMaterial({ color: 0x000000, roughness: 0.03, metalness: 0, specularIntensity: 0.9, ior: 1.376, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, envMapIntensity: 0.3 });
   const sockets: THREE.Object3D[] = [], balls: THREE.Object3D[] = [], meshes: THREE.Mesh[] = [];
   const es = hf.face.eyeSize;
@@ -672,12 +754,17 @@ export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint
     sock.scale.set(hf.sx * es, hf.sy * es, hf.sz * es);
     const ball = new THREE.Object3D();
     sock.add(ball);
+    const mat = eyeMaterial(look.iris, quality, { side, tilt: 1.2 * hf.face.eyeTilt, hooded: hf.face.hooded });
+    mats.push(mat);
     const m1 = new THREE.Mesh(g.ball, mat), m2 = new THREE.Mesh(g.cornea, cornea);
-    m2.renderOrder = 2;
+    m1.onBeforeRender = () => mat.uniformsRef.uGaze.value.set(ball.rotation.x, ball.rotation.y);
+    // the cornea's reflections go down first among the transparent parts: the lashes (soft alpha, no depth write) are
+    // then laid over its catchlights instead of the catchlights showing through them
+    m2.renderOrder = -1;
     ball.add(m1, m2);
     sockets.push(sock); balls.push(ball); meshes.push(m1, m2);
   }
-  return { sockets, balls, meshes, mats: [mat, cornea] };
+  return { sockets, balls, meshes, mats: [...mats, cornea] };
 }
 
 // ------------------------------------------------------------------------------------------------ the controller
