@@ -28,9 +28,11 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
 - [x] Decisions (provisional): `films/channels/DECISIONS.md`; narrator auditions sent to the user
 - [x] Generic pipeline (commit 3e15da9): kits/cinema/film, sci/hud.js + clock.js, studio voices + presets, fonts + themes,
   script linter + claims + episode-1 scripts. Still to do after the Skin School render: cinema3d probe2 (opt-in).
-- [ ] Per channel: set (3D stage + blocks), episode 1 voice → compile → scene → soundtrack → preview + stills
-  (workflow `wf_eb76d87d-36b`; resume it if it stalled; then commit, send previews to the user)
-- [ ] Per channel: final render (sequential, one render at a time, ~3 h each), assemble, QA, deliver
+- [x] Per channel: set + episode 1 built, reviewed (go), fixes applied (29d4e70); previews sent to the user
+- [ ] Per channel: final render + assemble: `films/channels/render-finals.sh` (detached, sequential physics → space → body,
+  idempotent; log `films/channels/finals.log`). If no `kits/cinema/film/render.mjs` process is alive and the log
+  doesn't end in 'all three finals delivered', restart it: `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`.
+  Then per episode: QA on the delivered file (loudness, audit, flashing), scorecard, assets.md, HUMAN-REVIEW.md, commit, send.
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
 ## Usage pacing (12:07 UTC, 22 Oct)
