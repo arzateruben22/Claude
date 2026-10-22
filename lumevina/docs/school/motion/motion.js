@@ -125,10 +125,20 @@ window.M = (function () {
       else if (k === i - 1 && lt < 0.35) { var q = E.in(seg(lt, 0, 0.35)); el.style.visibility = "visible"; set(el, { y: -16 * q, o: 1 - q }); }
       else { el.style.visibility = "hidden"; set(el, { o: 0 }); }
     });
+    var endAt = window.SCENE && window.SCENE.endAt, ec = endAt ? $("#endc") : null, eq = ec ? seg(t, endAt, endAt + 0.7) : 0;
     if (capEl) {
       capEl.textContent = (SHOTS[i] && SHOTS[i].cap) || "";
-      var c = E.out(seg(lt, 0.1, 0.5));
+      var c = E.out(seg(lt, 0.1, 0.5)) * (1 - eq);
       set(capWrap, { y: 12 * (1 - c), o: c });
+    }
+    // a free lesson's closing card: the frame softens behind it, then the lines rise in one by one
+    if (ec) {
+      ec.style.visibility = eq > 0 ? "visible" : "hidden"; ec.style.opacity = E.out(eq);
+      $$("#endc [data-i]").forEach(function (el, n) {
+        var p = E.out(seg(t, endAt + 0.3 + n * 0.16, endAt + 0.95 + n * 0.16));
+        if (el.classList.contains("ec-line")) { el.style.opacity = p; el.style.transform = "scaleX(" + p + ")"; return; }
+        set(el, { y: 20 * (1 - p), o: p }); soft(el, (1 - p) * 0.8);
+      });
     }
     return { i: i, lt: lt, at: at };
   };
