@@ -11,7 +11,13 @@
  *
  * This file is types + pure constants only, so it can be imported from client components and tests.
  */
-import type { ApplicationSource, EventSource, RecordOrigin } from "@/generated/prisma/enums";
+import type {
+  ApplicationSource,
+  ApplicationStatus,
+  EventSource,
+  InterviewType,
+  RecordOrigin,
+} from "@/generated/prisma/enums";
 
 /** What the evidence says happened. Mirrors EmailClassification but is producer-neutral. */
 export type ObservationKind =
@@ -62,6 +68,8 @@ export type ApplicationObservation = {
   recruiterName?: string | null;
   recruiterEmail?: string | null;
   interviewAt?: Date | null;
+  /** Interview format when the producer (or the user in the review queue) knows it. */
+  interviewType?: InterviewType | null;
   /** 0..1 confidence of the producer's classification + extraction. */
   confidence: number;
   /**
@@ -103,6 +111,16 @@ export type IngestOptions = {
   autoApplyThreshold?: number;
   /** Allow creating a new record when no match exists (default true for SUBMITTED-class kinds). */
   allowCreate?: boolean;
+  /**
+   * The user explicitly asked for a NEW record (review queue "Create new application"): matching
+   * and confidence thresholds are skipped. Company and title are still required.
+   */
+  forceCreate?: boolean;
+  /**
+   * Target status chosen by the user in the review queue. Replaces the kind → status mapping; the
+   * applications service still refuses downgrades and overrides of confirmed data.
+   */
+  statusOverride?: ApplicationStatus | null;
 };
 
 /** Default thresholds. Below REVIEW_FLOOR an observation is ignored rather than queued. */

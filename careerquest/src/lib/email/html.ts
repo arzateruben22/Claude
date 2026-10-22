@@ -240,13 +240,14 @@ export function htmlToTextWithLinks(html: string): { text: string; links: EmailL
     .replace(/<(head|script|style|noscript|title|template|svg|xml|object|iframe)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ")
     // Hidden preheaders / spacer blocks: `<span style="display:none">…</span>` (non-nested only).
     .replace(
-      /<(span|div|p|td)\b[^>]*style\s*=\s*["'][^"']*(?:display\s*:\s*none|mso-hide\s*:\s*all|visibility\s*:\s*hidden)[^"']*["'][^>]*>((?:(?!<\1[\s>])[\s\S])*?)<\/\1\s*>/gi,
+      /<(span|div|p|td)\b[^>]*style\s*=\s*["'][^"']*(?:display\s*:\s*none|mso-hide\s*:\s*all|visibility\s*:\s*hidden)[^"']*["'][^>]*>((?:(?!<\1[\s>])[\s\S]){0,5000}?)<\/\1\s*>/gi,
       " ",
     );
 
   const links: EmailLink[] = [];
-  // Anchors: keep their visible text, remember the href.
-  h = h.replace(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi, (_whole, attrs: string, inner: string) => {
+  // Anchors: keep their visible text, remember the href. (Bounded so malformed markup stays linear;
+  // an unmatched <a> is stripped like any other tag below and its text is kept.)
+  h = h.replace(/<a\b([^>]*)>([\s\S]{0,8000}?)<\/a\s*>/gi, (_whole, attrs: string, inner: string) => {
     const href = attr(` ${attrs}`, "href");
     const visible = normalizeWhitespace(decodeEntities(inner.replace(/<[^>]+>/g, " "))).replace(/\n+/g, " ");
     if (href && /^https?:\/\//i.test(href) && !isTrackingUrl(href) && links.length < MAX_LINKS) {

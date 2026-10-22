@@ -328,7 +328,7 @@ const ORG_FORWARD_ANCHORS: Array<[RegExp, number, string]> = [
 const TITLE_NOUN_NEXT = /^(position|positions|role|roles|opening|openings|job|jobs|program|programs|apprenticeship|vacancy|vacancies|posting|team)$/;
 
 const ORG_BEFORE_VERB =
-  /((?:[A-Z][\w&'’.-]*\s+(?:(?:of|and|&|the)\s+)?){0,6}[A-Z][\w&'’-]*)\s+(?:has received|have received|has invited|invited you|will review|will be reviewing|is looking for|are looking for|would like to|wants to|is hiring|has reviewed|is reviewing|has decided|has selected)\b/g;
+  /((?:\p{Lu}[\p{L}\p{N}_&'’.-]*\s+(?:(?:of|and|&|the)\s+)?){0,6}\p{Lu}[\p{L}\p{N}_&'’-]*)\s+(?:has received|have received|has invited|invited you|will review|will be reviewing|is looking for|are looking for|would like to|wants to|is hiring|has reviewed|is reviewing|has decided|has selected)\b/gu;
 
 const DEPT_LINE =
   /^(?:the\s+)?(.+?)\s+(?:talent acquisition|talent team|talent|recruiting team|recruiting|recruitment team|recruitment|hiring team|human resources(?: department| team)?|hr(?: team| department)?|people operations|people team|careers? team|careers)\s*$/i;
@@ -451,7 +451,7 @@ export function cleanTitle(raw: string | null | undefined): string | null {
   if (t.length < 2 || t.length > 80) return null;
   const words = t.split(" ");
   if (words.length > 8) return null;
-  if (!/^[A-Z0-9]/.test(t)) return null;
+  if (!/^[\p{Lu}0-9]/u.test(t)) return null;
   if (/^(application|applications|job|jobs|position|positions|role|opportunity|interview|status|update|your|our|new)$/i.test(t)) return null;
   return t;
 }
@@ -680,10 +680,10 @@ export function extractRecruiter(
   const recipient = recipientTokens(input.toAddress);
   const ok = (n: string | null | undefined, loose = false): n is string =>
     !!n && isPersonName(n, loose) && !isRecipient(n, recipient);
-  const senderEmail =
-    input.fromAddress && !opts.senderIsPlatform && !/(^|[-_.])(no-?reply|do-?not-?reply|donotreply|notifications?|alerts?)([-_.@]|$)/i.test(input.fromAddress)
-      ? input.fromAddress
-      : null;
+  const personal = (addr: string | null) =>
+    addr && !/(^|[-_.])(no-?reply|do-?not-?reply|donotreply|notifications?|alerts?)([-_.@]|$)/i.test(addr) ? addr : null;
+  const senderEmail = opts.senderIsPlatform ? null : personal(input.fromAddress);
+  const replyToEmail = personal(input.replyTo);
 
   // 1. The sender is a person.
   const fromPerson = personFromDisplayName(input.fromName);
@@ -704,19 +704,19 @@ export function extractRecruiter(
   // 2. "Dana Whitfield (Talent Acquisition Partner)"
   for (let i = 0; i < lines.length; i++) {
     for (const m of lines[i]!.matchAll(/([A-Z][\w'’.-]+(?:\s+[A-Z][\w'’.-]+){1,3})\s*\(([^)]{3,60})\)/g)) {
-      if (ok(m[1], true) && RECRUITER_ROLE.test(m[2]!)) return { name: m[1]!, email: emailNear(i) };
+      if (ok(m[1], true) && RECRUITER_ROLE.test(m[2]!)) return { name: m[1]!, email: emailNear(i) ?? replyToEmail };
     }
   }
   // 3. Signature: a name line followed by a recruiting/HR title line.
   for (let i = 0; i + 1 < lines.length; i++) {
     if (ok(lines[i], true) && lines[i + 1]!.length <= 80 && RECRUITER_ROLE.test(lines[i + 1]!)) {
-      return { name: lines[i]!, email: emailNear(i + 1) };
+      return { name: lines[i]!, email: emailNear(i + 1) ?? replyToEmail };
     }
   }
   // 4. "My name is …" / "This is … from/with"
   const flat = collapse(input.body);
   const intro = /\b(?:my name is|this is)\s+([A-Z][\w'’-]+(?:\s+[A-Z][\w'’-]+){1,2})/.exec(flat);
-  if (intro && ok(intro[1])) return { name: intro[1]!, email: senderEmail };
+  if (intro && ok(intro[1])) return { name: intro[1]!, email: senderEmail ?? replyToEmail };
   return { name: null, email: null };
 }
 

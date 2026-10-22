@@ -28,6 +28,8 @@ export type ParsedEmailHeaders = {
   autoSubmitted: string | null;
   /** First `Reply-To` address, lower-cased. */
   replyTo: string | null;
+  /** Raw `Authentication-Results` value added by the receiving server (DKIM/SPF/DMARC), if present. */
+  authenticationResults: string | null;
 };
 
 export type ParsedEmail = {
@@ -183,6 +185,7 @@ export async function parseEmail(raw: string | Buffer, meta: ParseMeta = {}): Pr
     headers: {
       listUnsubscribe: headerValue("list-unsubscribe"),
       autoSubmitted: headerValue("auto-submitted"),
+      authenticationResults: headerValue("authentication-results"),
       replyTo: replyTo.address,
     },
     links: body.links,
@@ -288,6 +291,7 @@ export function fromGraphMessage(graph: GraphMessage): ParsedEmail {
     headers: {
       listUnsubscribe: header("list-unsubscribe"),
       autoSubmitted: header("auto-submitted"),
+      authenticationResults: header("authentication-results"),
       replyTo: reply?.address ? reply.address.trim().toLowerCase() : null,
     },
     links: body.links,

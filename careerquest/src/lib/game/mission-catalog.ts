@@ -70,7 +70,9 @@ export const GAME_LINKS = {
   offers: { href: "/applications?status=OFFER,ACCEPTED,HIRED", label: "Open offers" },
   applications: { href: "/applications", label: "Open the tracker" },
   academy: { href: "/academy", label: "Open the Academy" },
-  hours: { href: "/career-map", label: "Log work hours" },
+  hours: { href: "/academy/hours", label: "Log work hours" },
+  programs: { href: "/academy/apprenticeships", label: "Open apprenticeships" },
+  certification: { href: "/academy/certification", label: "Open the certification tracker" },
   careerMap: { href: "/career-map", label: "Open the Career Map" },
   onboarding: { href: "/settings/onboarding", label: "Finish setup" },
   resume: { href: "/coach", label: "Work on your résumé" },
@@ -430,7 +432,7 @@ function phaseDefs(phase: 1 | 2 | 3, i: PlanInput): CampaignDef[] {
       { key: "gh.p1.tracking", title: "Connect tracking or run an import", description: "Connect an email account or the browser extension, or import a CSV / email export, so applications are captured automatically.", metric: "TRACKING_CONNECTED", target: 1, xp: 75, link: GAME_LINKS.integrations },
       { key: "gh.p1.targets", title: "Build a target-company list of 10", description: "Ten employers you would be glad to work for give your search a direction.", metric: "TARGET_COMPANIES", target: 10, xp: 75, link: GAME_LINKS.targets },
       { key: "gh.p1.apps25", title: "Reach 25 applications", description: "Distinct positions you have applied to (merged duplicates count once).", metric: "APPLICATIONS_TOTAL", target: 25, xp: 150, link: GAME_LINKS.newApplication },
-      { key: "gh.p1.programs", title: "Research 3 apprenticeship programs", description: "Save three programs from the apprenticeship directory to compare requirements and recruitment windows.", metric: "PROGRAMS_RESEARCHED", target: 3, xp: 100, link: GAME_LINKS.careerMap, extra: { jobHunt: false } },
+      { key: "gh.p1.programs", title: "Research 3 apprenticeship programs", description: "Save three programs from the apprenticeship directory to compare requirements and recruitment windows.", metric: "PROGRAMS_RESEARCHED", target: 3, xp: 100, link: GAME_LINKS.programs, extra: { jobHunt: false } },
     ];
     if (i.fundamentalsTotal > 0) {
       defs.push({ key: "gh.p1.fundamentals", title: "Finish the Electrical Fundamentals track", description: "Complete every lesson in the Fundamentals track of the Academy.", metric: "FUNDAMENTALS_LESSONS", target: i.fundamentalsTotal, xp: 200, link: GAME_LINKS.academy, extra: { jobHunt: false, syncTarget: true } });
@@ -490,10 +492,10 @@ function electricianMissions(i: PlanInput): MissionSpec[] {
   const start = i.electricianStartedAt;
   const base = { type: "CAMPAIGN" as const, campaign: "ELECTRICIAN_150K" as const, periodStart: start, periodEnd: addUtcDays(start, ELECTRICIAN_HORIZON_DAYS) };
   const defs: CampaignDef[] = [
-    { key: "e150.apply-program", title: "Apply to an apprenticeship program", description: "Mark a program as applied in the apprenticeship directory once you have submitted its application.", metric: "PROGRAM_APPLICATIONS", target: 1, xp: 200, link: GAME_LINKS.careerMap },
-    { key: "e150.apply-3", title: "Apply to 3 apprenticeship programs", description: "Programs open and close recruitment on their own schedules; applying to several improves your odds.", metric: "PROGRAM_APPLICATIONS", target: 3, xp: 200, link: GAME_LINKS.careerMap },
-    { key: "e150.school", title: "Enroll in a state-approved electrician school", description: "Self-reported on your certification tracker. California trainee registration requires enrollment in an approved program.", metric: "SCHOOL_ENROLLED", target: 1, xp: 150, link: GAME_LINKS.careerMap },
-    { key: "e150.trainee", title: "Register as an Electrician Trainee", description: "Self-reported registration date on your certification tracker (California DIR). This is a game milestone, not a license.", metric: "TRAINEE_REGISTERED", target: 1, xp: 250, link: GAME_LINKS.careerMap },
+    { key: "e150.apply-program", title: "Apply to an apprenticeship program", description: "Mark a program as applied in the apprenticeship directory once you have submitted its application.", metric: "PROGRAM_APPLICATIONS", target: 1, xp: 200, link: GAME_LINKS.programs },
+    { key: "e150.apply-3", title: "Apply to 3 apprenticeship programs", description: "Programs open and close recruitment on their own schedules; applying to several improves your odds.", metric: "PROGRAM_APPLICATIONS", target: 3, xp: 200, link: GAME_LINKS.programs },
+    { key: "e150.school", title: "Enroll in a state-approved electrician school", description: "Self-reported on your certification tracker. California trainee registration requires enrollment in an approved program.", metric: "SCHOOL_ENROLLED", target: 1, xp: 150, link: GAME_LINKS.certification },
+    { key: "e150.trainee", title: "Register as an Electrician Trainee", description: "Self-reported registration date on your certification tracker (California DIR). This is a game milestone, not a license.", metric: "TRAINEE_REGISTERED", target: 1, xp: 250, link: GAME_LINKS.certification },
     { key: "e150.hours-log", title: "Start your work-hours log", description: "Log your first work-hour entry. Keep pay stubs or employer letters so hours can be verified later.", metric: "HOURS_ENTRIES", target: 1, xp: 50, link: GAME_LINKS.hours },
   ];
   for (const m of HOURS_MILESTONES) {
@@ -512,8 +514,8 @@ function electricianMissions(i: PlanInput): MissionSpec[] {
   }
   if (i.examStageUnlocked) {
     defs.push(
-      { key: "e150.exam-apply", title: "Apply for the certification exam", description: "Self-reported exam application date on your certification tracker.", metric: "EXAM_APPLIED", target: 1, xp: 300, link: GAME_LINKS.careerMap },
-      { key: "e150.exam-pass", title: "Pass the certification exam", description: "Self-reported exam pass date. Certification itself is shown only with a certificate document.", metric: "EXAM_PASSED", target: 1, xp: 500, link: GAME_LINKS.careerMap },
+      { key: "e150.exam-apply", title: "Apply for the certification exam", description: "Self-reported exam application date on your certification tracker.", metric: "EXAM_APPLIED", target: 1, xp: 300, link: GAME_LINKS.certification },
+      { key: "e150.exam-pass", title: "Pass the certification exam", description: "Self-reported exam pass date. Certification itself is shown only with a certificate document.", metric: "EXAM_PASSED", target: 1, xp: 500, link: GAME_LINKS.certification },
     );
   }
   return defs.map((d) => ({

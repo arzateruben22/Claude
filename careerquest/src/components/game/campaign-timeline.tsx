@@ -81,7 +81,14 @@ export function CampaignTimelineView({
           <span className="absolute inset-y-0 left-1/3 w-0.5 bg-bg" aria-hidden />
           <span className="absolute inset-y-0 left-2/3 w-0.5 bg-bg" aria-hidden />
         </div>
-        <div className="absolute -top-7 -translate-x-1/2 flex flex-col items-center" style={{ left: `${Math.min(96, Math.max(4, pct))}%` }} aria-hidden>
+        <div
+          className={cn(
+            "absolute -top-7 flex flex-col",
+            pct < 20 ? "items-start -translate-x-1.5" : pct > 80 ? "items-end -translate-x-full" : "items-center -translate-x-1/2",
+          )}
+          style={{ left: `${pct}%` }}
+          aria-hidden
+        >
           <span className="whitespace-nowrap rounded-full bg-bg-elevated border border-line px-2 py-0.5 text-[10px] font-medium text-fg tnum">{markerLabel}</span>
           <MapPin className="h-3.5 w-3.5 text-accent -mt-0.5" />
         </div>

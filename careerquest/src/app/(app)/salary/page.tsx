@@ -1,11 +1,18 @@
-import { PageHeader } from "@/components/ui/page-header";
-import { Alert } from "@/components/ui/alert";
+import { requireUser } from "@/lib/auth/current-user";
+import { userTimezone } from "@/lib/applications/service";
+import { formatInTz } from "@/lib/applications/time";
+import { listScenarios } from "@/lib/salary/scenarios";
+import { SalaryCalculator } from "@/components/salary/calculator";
 
-export default function SalaryPage() {
+export const metadata = { title: "Salary calculator · CareerQuest" };
+
+export default async function SalaryCalculatorPage() {
+  const user = await requireUser("/salary");
+  const [scenarios, timezone] = await Promise.all([listScenarios(user.id, "calculator"), userTimezone(user.id)]);
   return (
     <>
-      <PageHeader title="Salary" description="This module is scheduled for a later build phase." />
-      <Alert tone="info" title="Module under construction">Nothing here is final yet; no demo data is shown.</Alert>
+      <h2 className="sr-only">Calculator</h2>
+      <SalaryCalculator scenarios={scenarios.map((s) => ({ id: s.id, name: s.name, updatedLabel: formatInTz(s.updatedAt, timezone), values: s.values }))} />
     </>
   );
 }

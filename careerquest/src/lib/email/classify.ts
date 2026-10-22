@@ -32,7 +32,7 @@ import {
   softUnwrap,
   type ExtractionInput,
 } from "./extract";
-import { extractAppointment } from "./datetime";
+import { extractAppointment, findDateTimes } from "./datetime";
 
 export type ExtractedFields = {
   employer: string | null;
@@ -59,6 +59,8 @@ export type ClassificationSender = {
   forwarded: boolean;
   /** When the (original) message was sent: the Date header, or the forwarded block's date. */
   sentAt: Date | null;
+  /** The receiving server recorded a DMARC/DKIM/SPF failure for this message (never verified then). */
+  authFailed: boolean;
 };
 
 export type EmailClassificationResult = {
@@ -119,10 +121,18 @@ function parseAddress(value: string): { address: string | null; name: string | n
   return { address: addr ? addr.toLowerCase() : null, name: name || null };
 }
 
+/**
+ * Date line of a forwarded block. With an explicit offset/zone it is parsed as-is; client-formatted
+ * dates without a zone ("Tue, Mar 3, 2026 at 10:15 AM") are read as Pacific wall-clock time, like
+ * every other zone-less time in this module (never the server's own timezone).
+ */
 function parseDateLoose(value: string): Date | null {
   const cleaned = value.replace(/\([^)]*\)/g, " ").replace(/\s+at\s+/i, " ").trim();
-  const d = new Date(cleaned);
-  return Number.isNaN(d.getTime()) ? null : d;
+  if (/[+-]\d{2}:?\d{2}\b|\b(GMT|UTC)\b|\dZ\b/.test(cleaned)) {
+    const d = new Date(cleaned);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
+  return findDateTimes(value, null)[0]?.at ?? null;
 }
 
 /** Unwrap "---------- Forwarded message ---------" blocks: original sender, subject, date and body. */
@@ -260,7 +270,7 @@ const RULES: Record<Bucket, Rule[]> = {
     { id: "subj-application-received", where: "subject", w: 0.6, re: /\b(application|candidacy)\b[^.!?]{0,60}\b(submitted|sent|received|complete|completed|confirmed|confirmation|acknowledg(e)?ment|acknowledged)\b/i },
     { id: "subj-received-your-application", where: "subject", w: 0.6, re: /\b(received|submitted|sent|confirm(ing|ed)?)\b[^.!?]{0,20}\b(your )?application\b/i },
     { id: "subj-thanks-for-applying", where: "subject", w: 0.6, re: /\bthank(s| you)\b[^.!?]{0,20}\b(applying|your application)\b/i },
-    { id: "application-was-received", w: 0.7, re: /\byour (job )?application\b[^.!?]{0,80}?\b(has been|was|have been|is)( now)?( successfully)? (submitted|sent|received|delivered|completed)\b/i },
+    { id: "application-was-received", w: 0.7, re: /\byour (job )?(application|resume|résumé|cv|submission)\b[^.!?]{0,80}?\b(has been|was|have been|is)( now)?( successfully)? (submitted|sent|received|delivered|completed)\b/i },
     { id: "we-received-your-application", w: 0.7, re: /\b(we('ve| have)?|has|have|i('ve| have)?)( successfully| just| already)? (received|got|gotten) your (job )?(application|resume|résumé|cv|submission)\b|\b(acknowledge|confirm|confirming|acknowledging) (the )?receipt of your (job )?(application|resume|résumé|cv|submission)\b/i },
     { id: "confirms-your-application", w: 0.6, re: /\b(this|the) (e-?mail|message|note|letter) (is to )?(confirms?|confirming|acknowledges?|let(s)? you know)\b[^.!?]{0,40}\byour (application|submission)\b/i },
     { id: "application-reached-team", w: 0.5, re: /\byour (application|resume|résumé)\b[^.!?]{0,80}\b(made it to|reached|is with|has been (forwarded|passed|sent) to|was (forwarded|passed) to)\b[^.!?]{0,30}\b(hiring|recruiting|talent|hr|selection) (team|manager|department)/i },
@@ -324,6 +334,7 @@ const RULES: Record<Bucket, Rule[]> = {
     { id: "meeting-you", w: 0.2, re: /\blooking forward to (meeting|speaking with|talking (with|to)|seeing) you\b|\bsee you (on )?(monday|tuesday|wednesday|thursday|friday|saturday|sunday|then|soon)\b/i },
     { id: "interviewers", w: 0.25, re: /\binterview(ers| panel)\b/i },
     { id: "phone-screen", w: 0.3, re: /\bphone (screen|interview)\b|\bscreening call\b/i },
+    { id: "come-in-for-interview", w: 0.6, re: /\b(come in|stop by|join us) for (an?|your) (\w+ )?interview\b|\bavailable for (an?|your) (\w+ )?interview (on|at)\b/i },
     { id: "booking", w: 0.3, re: /\b(once|after) you (book|schedule|pick|select)\b/i },
     { id: "reschedule", w: 0.2, re: /\b(need|have) to reschedule\b|\bcannot attend\b|\bonly one reschedule\b/i },
     { id: "confirm-attendance", w: 0.2, re: /\b(reply|respond)\b[^.!?]{0,15}\bconfirm\b[^.!?]{0,30}\b(make (this|that|the) time|attendance|this time)\b/i },
@@ -337,6 +348,7 @@ const RULES: Record<Bucket, Rule[]> = {
     { id: "test-date-label", w: 0.5, re: /\b(test|testing|assessment|exam) (date|appointment|session|time|location)\s*:/i },
     { id: "subj-assessment", where: "subject", w: 0.55, re: /\b(assessment|aptitude test|skills test|test appointment|testing appointment|coding challenge|online test|exam appointment|questionnaire)\b/i },
     { id: "deadline", w: 0.2, re: /\bdeadline\s*:|\bcomplete (it )?(by|within)\b|\bexpires? (on|in)\b/i },
+    { id: "next-step-assessment", w: 0.5, re: /\bnext step (is|will be|in (the|our) process is) (a|an|the|to complete)\b[^.!?]{0,40}\b(assessment|test|challenge|questionnaire|evaluation)\b/i },
     { id: "aptitude-mention", w: 0.15, re: /\b(aptitude|skills?|technical|cognitive|personality|mechanical reasoning|pre-employment) (test|assessment|evaluation)s?\b/i },
   ],
   REJECTION: [
@@ -348,17 +360,17 @@ const RULES: Record<Bucket, Rule[]> = {
     { id: "position-filled", w: 0.8, re: /\b(position|role|job|opening|requisition|vacancy) (has been|was|is now|has now been|is) (filled|closed|cancel(l)?ed|put on hold)\b/i },
     { id: "closed-requisition", w: 0.5, re: /\b(we have|we've) (closed|cancel(l)?ed|filled) (the|this) (requisition|position|role|posting)\b/i },
     { id: "no-longer-considered", w: 0.8, re: /\b(no longer|not) (under|being) consider(ed|ation)\b/i },
-    { id: "not-moving-forward", w: 0.75, re: /\b(won'?t|will not|are not|aren'?t|not|unable to|cannot|can'?t) (be )?(moving|move|proceed(ing)?) (your application |you |your candidacy |with your (application|candidacy) )?forward\b|\bnot (be )?(moving|proceeding) (forward )?with your (application|candidacy)\b/i },
+    { id: "not-moving-forward", w: 0.75, re: /\b(won'?t|will not|are not|aren'?t|not|unable to|cannot|can'?t)( to)? (be )?(moving|move|proceed(ing)?) (your application |you |your candidacy |with your (application|candidacy) )?forward\b|\bnot (be )?(moving|proceeding) (forward )?with your (application|candidacy)\b/i },
     { id: "not-selected", w: 0.6, re: /\b(were|was|have|has|been) not (been )?selected\b|\bnot to (move|proceed) forward\b|\bdecided not to (proceed|move forward|pursue|continue|offer)\b/i },
     { id: "unsuccessful", w: 0.8, re: /\byour (application|candidacy) (was|has been|is) (unsuccessful|declined|rejected|not successful)\b/i },
-    { id: "status-rejected", w: 0.85, re: /\bstatus\s*:\s*(rejected|declined|not selected|disqualified|no longer under consideration|not moving forward|closed)\b/i },
+    { id: "status-rejected", w: 0.85, re: /\bstatus\b[^.!?\n]{0,60}?(:|\bto\b:?)\s*(rejected|declined|not selected|disqualified|no longer under consideration|not moving forward|closed|position filled|unsuccessful)\b/i },
     { id: "careful-consideration", w: 0.3, re: /\bafter (careful|thoughtful) (consideration|review)\b/i },
     { id: "on-file", w: 0.2, re: /\bkeep your (resume|résumé|application|information|details|profile) on file\b/i },
     { id: "best-wishes", w: 0.15, re: /\bwish you (the best|(continued )?success|luck|all the best)\b|\bbest of luck\b|\bpaths cross again\b/i },
     { id: "future-openings", w: 0.2, re: /\b(encourage|invite) you to (apply|review)\b[^.!?]{0,40}\b(future|other|open) (openings|positions|roles|opportunities)\b/i },
   ],
   OFFER: [
-    { id: "pleased-to-offer", w: 0.85, re: /\b(pleased|happy|delighted|excited|thrilled) to (formally )?(offer|extend) you\b/i },
+    { id: "pleased-to-offer", w: 0.85, re: /\b(pleased|happy|delighted|excited|thrilled|glad) to (formally )?(offer|extend) you\b|\b(would|'d) like to (formally )?offer you (the|a|this|our)\b|\b(are|am) (pleased to be )?offering you (the|a|this) (position|role|job)\b/i },
     { id: "offer-of-employment", w: 0.7, re: /\b(offer of employment|employment offer|job offer)\b/i },
     { id: "extend-offer", w: 0.75, re: /\b(extend|make|making|extending) (you )?(an? |our )?(formal |conditional |verbal |written |contingent )?(job )?offer\b/i },
     { id: "conditional-offer", w: 0.6, re: /\b(conditional|contingent) offer\b/i },
@@ -476,7 +488,8 @@ function scoreBucket(bucket: Bucket, v: Views, extra: Hit[] = []): BucketScore {
 }
 
 const JOB_VOCAB = /\b(application|applied|apply|position|role|job|interview|recruit(er|ing)|hiring|resume|résumé|candidate|offer|employment|career|requisition)\b/i;
-const APPLY_CTA = /\b(apply now|easily apply|easy apply|quick apply|1-click apply|apply)\b\s*:?/gi;
+/** Call-to-action buttons of job cards ("Apply now", "Easy Apply", a bare "Apply:" label). Prose "apply" is not counted. */
+const APPLY_CTA = /\b(apply now|easily apply|easy apply|quick apply|1-click apply)\b|^\s*apply\s*:?\s*$|\bapply\s*:/gim;
 
 // ---------------------------------------------------------------------------------------------
 // Classification
@@ -511,7 +524,7 @@ export function classifyEmail(parsed: ParsedEmail): EmailClassificationResult {
 
   // Computed (non-phrase) evidence.
   const alertExtra: Hit[] = [];
-  const ctaCount = [...v.flat.matchAll(APPLY_CTA)].length;
+  const ctaCount = [...v.body.matchAll(APPLY_CTA)].length;
   if (ctaCount >= 5) alertExtra.push({ id: `listing:${ctaCount}-apply-links`, w: 0.4, text: "", inSubject: false, inLead: false });
   else if (ctaCount >= 3) alertExtra.push({ id: `listing:${ctaCount}-apply-links`, w: 0.25, text: "", inSubject: false, inLead: false });
   if (sender.localPart && /(^|[-_.])(job)?alerts?([-_.]|$)|jobalert|digest/.test(sender.localPart)) {
@@ -525,7 +538,8 @@ export function classifyEmail(parsed: ParsedEmail): EmailClassificationResult {
     recruiterExtra.push({ id: "sender:person-via-platform", w: 0.15, text: "", inSubject: false, inLead: true });
   }
   const interviewExtra: Hit[] = [];
-  const appointment = extractAppointment([v.body, v.subject], v.receivedAt);
+  // Appointments are stated in the message itself, not deep in appended text.
+  const appointment = extractAppointment([v.body.slice(0, 20_000), v.subject], v.receivedAt);
   if (appointment) interviewExtra.push({ id: "schedule:concrete-date-time", w: 0.2, text: "", inSubject: false, inLead: true });
 
   const buckets = Object.keys(RULES) as Bucket[];
@@ -616,6 +630,9 @@ export function classifyEmail(parsed: ParsedEmail): EmailClassificationResult {
   }
 
   const extracted = extractFields(classification, v, parsed, sender, appointment);
+  const auth = parsed.headers.authenticationResults ?? "";
+  const authFailed = /\bdmarc=fail\b/i.test(auth) || (/\b(dkim|spf)=(fail|softfail)\b/i.test(auth) && !/\bdkim=pass\b/i.test(auth));
+  if (authFailed) signals.push("auth:failed");
   const employerDomain = domainMatchesEmployer(sender.domain, extracted.employer);
 
   return {
@@ -632,6 +649,7 @@ export function classifyEmail(parsed: ParsedEmail): EmailClassificationResult {
       employerDomain,
       forwarded: v.forwarded,
       sentAt: v.receivedAt,
+      authFailed,
     },
   };
 }

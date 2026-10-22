@@ -87,7 +87,11 @@ export function toObservation(
   const sender = classification.sender;
   const trustedSender = sender.recognizedPlatform || sender.employerDomain;
   const verified =
-    VERIFIABLE_KINDS.has(kind) && classification.confidence >= VERIFY_MIN_CONFIDENCE && trustedSender && !sender.forwarded;
+    VERIFIABLE_KINDS.has(kind) &&
+    classification.confidence >= VERIFY_MIN_CONFIDENCE &&
+    trustedSender &&
+    !sender.forwarded &&
+    !sender.authFailed;
 
   return {
     kind,

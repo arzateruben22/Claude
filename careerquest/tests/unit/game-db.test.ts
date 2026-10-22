@@ -4,7 +4,7 @@ vi.mock("server-only", () => ({}));
 
 import { prisma } from "@/lib/db";
 import { applicationInputSchema } from "@/lib/validation/application";
-import { createApplication, deleteApplication, recordFollowUp } from "@/lib/applications/service";
+import { createApplication, deleteApplication, markInterviewOutcome, recordFollowUp, scheduleInterview } from "@/lib/applications/service";
 import { applyEventToMissions, ensureMissions } from "@/lib/game/missions";
 import { evaluateAchievements } from "@/lib/game/achievements";
 import { syncGameState } from "@/lib/game/sync";
@@ -345,5 +345,59 @@ describe("rest days, employment, paychecks and campaign missions", () => {
     const page = await getCampaignPageData(userId);
     expect(page.nextPhasePlan?.text).toContain("union apprenticeship");
     expect(page.phases.map((p) => p.state)).toEqual(["done", "done", "current"]);
+  });
+});
+
+describe("campaign restarts cannot farm mission XP", () => {
+  let userId = "";
+  beforeAll(async () => {
+    userId = await makeUser("restart");
+  });
+
+  it("state-based missions are earned once; a superseded run's open missions expire", async () => {
+    const run1 = addUtcDays(today(), -5);
+    await prisma.campaignState.create({ data: { userId, campaign: "GET_HIRED", startedAt: run1, targetEndAt: addUtcDays(run1, 90) } });
+    await syncGameState(userId);
+    expect((await mission(userId, "gh.p1.onboarding", run1))?.status).toBe("ACTIVE");
+
+    await prisma.userProfile.update({ where: { userId }, data: { onboardingCompletedAt: new Date() } });
+    await syncGameState(userId);
+    const done = await mission(userId, "gh.p1.onboarding", run1);
+    expect(done?.status).toBe("COMPLETED");
+
+    // Restart from today (what Settings → Campaign → Restart does to the campaign row).
+    await prisma.campaignState.update({ where: { userId_campaign: { userId, campaign: "GET_HIRED" } }, data: { startedAt: today() } });
+    await syncGameState(userId);
+    await syncGameState(userId);
+    expect(await prisma.mission.count({ where: { userId, key: "gh.p1.onboarding" } })).toBe(1);
+    expect(await prisma.xpLedger.count({ where: { userId, dedupeKey: `xp:mission:${done!.id}` } })).toBe(1);
+    expect(await prisma.xpLedger.count({ where: { userId, reason: "MISSION_WEEKLY", sourceType: "Mission", amount: 50 } })).toBe(1);
+
+    expect((await mission(userId, "gh.p1.resume", run1))?.status).toBe("EXPIRED");
+    expect((await mission(userId, "gh.p1.resume", today()))?.status).toBe("ACTIVE");
+
+    const page = await getCampaignPageData(userId);
+    const phase1 = page.phases[0]!.missions;
+    expect(phase1.find((m) => m.key === "gh.p1.onboarding")?.status).toBe("COMPLETED");
+    expect(phase1.filter((m) => m.key === "gh.p1.resume")).toHaveLength(1);
+  });
+});
+
+describe("interview prep mission", () => {
+  it("appears when an interview is within 14 days and completes when prep is marked", async () => {
+    const userId = await makeUser("interview");
+    const app = await createApplication(userId, input({ companyName: "Grid Partners" }));
+    const { interview } = await scheduleInterview(userId, app.application.id, { type: "PHONE_SCREEN", scheduledAt: new Date(Date.now() + 3 * 86_400_000) });
+    await syncGameState(userId);
+    const prep = await prisma.mission.findFirstOrThrow({ where: { userId, key: "weekly.interview-prep" } });
+    expect(prep).toMatchObject({ status: "ACTIVE", target: 1, progress: 0 });
+
+    await markInterviewOutcome(userId, interview.id, { outcome: "PENDING", attended: false, prepCompleted: true });
+    await prisma.$transaction((tx) =>
+      applyEventToMissions(tx, { userId, type: "INTERVIEW_PREPARED", occurredAt: new Date(), activityDate: today(), sourceId: interview.id }),
+    );
+    expect(await prisma.mission.findUniqueOrThrow({ where: { id: prep.id } })).toMatchObject({ status: "COMPLETED", progress: 1 });
+    const stats = await prisma.playerStats.findUniqueOrThrow({ where: { userId } });
+    expect(stats.interviewSkill).toBe(10);
   });
 });

@@ -281,6 +281,104 @@ describe("synthetic emails (generalization)", () => {
   });
 });
 
+describe("more phrasings", () => {
+  const cases: Array<{ name: string; msg: Msg; want: string; interviewAt?: string }> = [
+    {
+      name: "offer: 'we'd like to offer you the role'",
+      msg: {
+        from: "Ana Ortiz <aortiz@brightwater.example>",
+        subject: "Good news",
+        text: "Hi Jordan, after meeting with the team we'd like to offer you the Maintenance Mechanic role at $34/hour, starting July 6. Let me know if you have questions. Ana Ortiz, HR Manager",
+      },
+      want: "OFFER",
+    },
+    {
+      name: "rejection: status updated to Not Selected",
+      msg: {
+        from: "Careers <donotreply@icims.com>",
+        subject: "Application update",
+        text: "Your application status for Warehouse Lead (REQ-20391) has been updated to: Not Selected. Thank you for your interest.",
+      },
+      want: "REJECTION",
+    },
+    {
+      name: "rejection: decided not to move forward with your candidacy",
+      msg: {
+        from: "Lena Brooks <lbrooks@pinecrestmedical.example>",
+        subject: "Biomedical Technician",
+        text: "Hi Jordan, thank you for interviewing with us. The hiring team has decided not to move forward with your candidacy at this time. Lena",
+      },
+      want: "REJECTION",
+    },
+    {
+      name: "interview: 'come in for an interview' with a time",
+      msg: {
+        from: "Rick Chan <rick@chanautobody.example>",
+        subject: "Body Shop Technician",
+        date: "Mon, 08 Jun 2026 11:00:00 -0700",
+        text: "Hi Jordan, thanks for applying for the Body Shop Technician job. Can you come in for an interview on Friday, June 12 at 2pm? Rick",
+      },
+      want: "INTERVIEW_INVITATION",
+      interviewAt: "2026-06-12T21:00:00.000Z",
+    },
+    {
+      name: "interview: booking link, no fixed time",
+      msg: {
+        from: "Talent Team <talent@nimbusair.example>",
+        subject: "Next steps for Aircraft Mechanic",
+        text: "Hi Jordan, we're excited to move forward with your application and would like to schedule an interview. Please use the link below to book a time for your interview.",
+      },
+      want: "INTERVIEW_INVITATION",
+    },
+    {
+      name: "assessment: next step is a coding challenge",
+      msg: {
+        from: "HackerRank <support@hackerrank.com>",
+        subject: "Invitation from Orbit Robotics",
+        text: "Hi Jordan, your next step is a coding challenge for the PLC Programmer role at Orbit Robotics. You have 7 days to finish it.",
+      },
+      want: "ASSESSMENT_INVITATION",
+    },
+    {
+      name: "acknowledgment: 'your resume has been received'",
+      msg: {
+        from: "Granite Builders <careers@granitebuilders.example>",
+        subject: "Thanks from Granite Builders",
+        text: "Hello Jordan, your resume has been received and is with our hiring team for the Concrete Finisher opening. Granite Builders Recruiting",
+      },
+      want: "EMPLOYER_ACKNOWLEDGMENT",
+    },
+    {
+      name: "recruiter: technical recruiter outreach",
+      msg: {
+        from: "Chris Young <chris@apextalent.example>",
+        subject: "Instrumentation Tech role",
+        text: "Hi Jordan, I'm a technical recruiter with Apex Talent Partners. I have an Instrumentation Technician role in Carson that might interest you. Would you be open to a quick call tomorrow?",
+      },
+      want: "RECRUITER_MESSAGE",
+    },
+    {
+      name: "unrelated: profile-views notification from a job board",
+      msg: {
+        from: "LinkedIn <notifications-noreply@linkedin.com>",
+        subject: "You appeared in 12 searches this week",
+        text: "See who's looking. You appeared in 12 searches this week. Keep your profile up to date.",
+      },
+      want: "UNRELATED",
+    },
+  ];
+
+  it.each(cases)("$name", async ({ msg, want, interviewAt }) => {
+    const { result, observation } = await classify(msg);
+    expect(result.classification, result.signals.join(", ")).toBe(want);
+    if (interviewAt) expect(result.extracted.interviewAt?.toISOString()).toBe(interviewAt);
+    if (want === "UNRELATED") {
+      expect(result.extracted.platform).toBeNull();
+      expect(observation).toBeNull();
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------------------------
 // Adversarial cases
 // ---------------------------------------------------------------------------------------------
@@ -368,9 +466,8 @@ describe("adversarial emails", () => {
     expect(result.extracted.positionTitle).toBe("Line Cook");
     expect(result.sender.forwarded).toBe(true);
     expect(observation?.verified).toBe(false);
-    expect(observation?.observedAt.getUTCFullYear()).toBe(2026);
-    expect(observation?.observedAt.getUTCMonth()).toBe(2); // March
-    expect(observation?.observedAt.getUTCDate()).toBe(3);
+    // The forwarded block's zone-less date is read as Pacific time: 10:15 AM PST.
+    expect(observation?.observedAt.toISOString()).toBe("2026-03-03T18:15:00.000Z");
   });
 
   it("non-ASCII subject (RFC 2047) and quoted-printable UTF-8 body", async () => {
@@ -446,6 +543,21 @@ describe("adversarial emails", () => {
     expect(parsed.text.length).toBeGreaterThan(100_000);
     expect(result.classification).toBe("APPLICATION_SUBMITTED");
     expect(result.extracted.employer).toBe("Inland Grid Services");
+  });
+
+  it("a platform-looking confirmation that failed DMARC is never verified", async () => {
+    const msg: Msg = {
+      from: "Workday <no-reply@myworkday.com>",
+      subject: "Thank you for applying to Orion Elevator",
+      headers: { "Authentication-Results": "mx.example.com; dkim=none; spf=softfail smtp.mailfrom=myworkday.com; dmarc=fail header.from=myworkday.com" },
+      text: "Dear Jordan,\n\nThank you for applying to Orion Elevator. Your application for the Elevator Apprentice position has been submitted.\n\nOrion Elevator Talent Acquisition",
+    };
+    const spoofed = await classify(msg);
+    expect(spoofed.result.classification).toBe("APPLICATION_SUBMITTED");
+    expect(spoofed.result.sender.authFailed).toBe(true);
+    expect(spoofed.observation?.verified).toBe(false);
+    const genuine = await classify({ ...msg, headers: { "Authentication-Results": "mx.example.com; dkim=pass header.d=myworkday.com; spf=pass; dmarc=pass" } });
+    expect(genuine.observation?.verified).toBe(true);
   });
 
   it("hypothetical interview mention in a confirmation does not make it an interview", async () => {
@@ -526,7 +638,12 @@ describe("parsing helpers", () => {
     expect(parsed.threadId).toBe("AAQkAG-conv");
     expect(parsed.fromAddress).toBe("no-reply@myworkday.com");
     expect(parsed.receivedAt?.toISOString()).toBe("2026-02-03T18:04:05.000Z");
-    expect(parsed.headers).toEqual({ listUnsubscribe: null, autoSubmitted: "auto-generated", replyTo: "talent@orion.example" });
+    expect(parsed.headers).toEqual({
+      listUnsubscribe: null,
+      autoSubmitted: "auto-generated",
+      replyTo: "talent@orion.example",
+      authenticationResults: null,
+    });
     expect(parsed.text).toContain("Your application for the Elevator Apprentice position has been submitted.");
     const result = classifyEmail(parsed);
     expect(result.classification).toBe("APPLICATION_SUBMITTED");

@@ -25,7 +25,15 @@ import { refreshPlayerStats } from "@/lib/game/player-stats";
 
 export type MissionEventContext = {
   userId: string;
-  type: ApplicationEventType | "LESSON_COMPLETED" | "QUIZ_PASSED" | "WORK_HOURS_LOGGED" | "PROFILE_UPDATED" | "RESUME_UPDATED";
+  type:
+    | ApplicationEventType
+    | "LESSON_COMPLETED"
+    | "QUIZ_PASSED"
+    | "WORK_HOURS_LOGGED"
+    | "PROFILE_UPDATED"
+    | "RESUME_UPDATED"
+    /** Interview prep marked complete (Interview.prepCompletedAt). */
+    | "INTERVIEW_PREPARED";
   occurredAt: Date;
   /** Calendar date (UTC midnight) in the user's timezone. */
   activityDate: Date;
@@ -247,26 +255,81 @@ async function reconcileSkips(tx: Tx, ctx: GameContext, input: PlanInput): Promi
   }
 }
 
+/**
+ * Campaign missions measured by cumulative state (or a one-off self-report) are earned once ever:
+ * restarting Operation Get Hired must not recreate them and pay their XP again.
+ */
+const ONCE_EVER_METRICS: ReadonlySet<MissionMetric> = new Set<MissionMetric>([
+  "ONBOARDING",
+  "RESUME_VERSIONS",
+  "TRACKING_CONNECTED",
+  "TARGET_COMPANIES",
+  "APPLICATIONS_TOTAL",
+  "PROGRAMS_RESEARCHED",
+  "FUNDAMENTALS_LESSONS",
+  "OFFERS_RECORDED",
+  "SALARY_PREP",
+  "SELF_CHECK",
+]);
+
+const specId = (s: { key: string; periodStart: Date }) => `${s.key}|${s.periodStart.getTime()}`;
+
 export async function ensureWithContext(tx: Tx, ctx: GameContext): Promise<MissionSpec[]> {
+  const { userId } = ctx;
   const campaigns = await ensureCampaignRows(tx, ctx);
   const input = await loadPlanInput(tx, ctx, campaigns);
-  const plan = buildMissionPlan(input);
+  let plan = buildMissionPlan(input);
+
+  const onceKeys = plan.filter((s) => s.type === "CAMPAIGN" && ONCE_EVER_METRICS.has(s.meta.metric)).map((s) => s.key);
+  if (onceKeys.length) {
+    const earned = await tx.mission.findMany({ where: { userId, status: "COMPLETED", key: { in: onceKeys } }, select: { key: true, periodStart: true } });
+    const earnedElsewhere = new Set(earned.filter((e) => !plan.some((s) => specId(s) === specId(e))).map((e) => e.key));
+    plan = plan.filter((s) => !(s.type === "CAMPAIGN" && earnedElsewhere.has(s.key)));
+  }
+
   if (plan.length) {
-    await tx.mission.createMany({ data: plan.map((s) => toRow(ctx.userId, s)), skipDuplicates: true });
-    const synced = plan.filter((s) => s.meta.syncTarget);
-    if (synced.length) {
+    await tx.mission.createMany({ data: plan.map((s) => toRow(userId, s)), skipDuplicates: true });
+    const live = plan.filter((s) => s.meta.syncTarget || s.meta.metric === "FOLLOW_UPS_DUE_CLEARED");
+    if (live.length) {
       const rows = await tx.mission.findMany({
-        where: { userId: ctx.userId, status: "ACTIVE", OR: synced.map((s) => ({ key: s.key, periodStart: s.periodStart })) },
-        select: { id: true, key: true, periodStart: true, target: true, title: true, description: true },
+        where: { userId, status: { in: ["ACTIVE", "SKIPPED"] }, OR: live.map((s) => ({ key: s.key, periodStart: s.periodStart })) },
+        select: { id: true, key: true, periodStart: true, status: true, target: true, title: true, description: true, metadata: true },
       });
-      for (const s of synced) {
-        const row = rows.find((r) => r.key === s.key && r.periodStart.getTime() === s.periodStart.getTime());
-        if (row && (row.target !== s.target || row.title !== s.title || row.description !== s.description)) {
-          await tx.mission.updateMany({ where: { id: row.id, userId: ctx.userId, status: "ACTIVE" }, data: { target: s.target, title: s.title, description: s.description } });
+      for (const s of live) {
+        const row = rows.find((r) => specId(r) === specId(s));
+        if (!row) continue;
+        if (s.meta.syncTarget && row.status === "ACTIVE" && (row.target !== s.target || row.title !== s.title || row.description !== s.description)) {
+          await tx.mission.updateMany({ where: { id: row.id, userId, status: "ACTIVE" }, data: { target: s.target, title: s.title, description: s.description } });
+        }
+        if (s.meta.metric === "FOLLOW_UPS_DUE_CLEARED") {
+          // Follow-ups that became due later today join today's list (a mission skipped because
+          // nothing was left comes back when something new is due).
+          const meta = readMissionMeta(row.metadata);
+          const known = new Set(meta.applicationIds ?? []);
+          const added = (s.meta.applicationIds ?? []).filter((id) => !known.has(id));
+          const revive = row.status === "SKIPPED" && meta.skipReason === "NOTHING_DUE" && added.length > 0;
+          if (added.length && (row.status === "ACTIVE" || revive)) {
+            const raw = row.metadata && typeof row.metadata === "object" && !Array.isArray(row.metadata) ? { ...(row.metadata as Record<string, unknown>) } : {};
+            raw.applicationIds = [...known, ...added].slice(0, 200);
+            if (revive) delete raw.skipReason;
+            await tx.mission.updateMany({ where: { id: row.id, userId }, data: { metadata: raw as object, ...(revive ? { status: "ACTIVE" as const } : {}) } });
+          }
         }
       }
     }
   }
+
+  // Missions of a superseded Get Hired window (e.g. after a campaign restart) stop counting.
+  if (!input.getHired.completed) {
+    const current = new Set(plan.filter((s) => s.campaign === "GET_HIRED" && s.type === "CAMPAIGN").map(specId));
+    const open = await tx.mission.findMany({
+      where: { userId, campaign: "GET_HIRED", type: "CAMPAIGN", status: "ACTIVE" },
+      select: { id: true, key: true, periodStart: true },
+    });
+    const stale = open.filter((m) => !current.has(specId(m))).map((m) => m.id);
+    if (stale.length) await tx.mission.updateMany({ where: { userId, id: { in: stale }, status: "ACTIVE" }, data: { status: "EXPIRED" } });
+  }
+
   await reconcileSkips(tx, ctx, input);
   return plan;
 }
@@ -411,6 +474,7 @@ export const EVENT_METRICS: Record<MissionEventContext["type"], MissionMetric[]>
   OFFER_DECLINED: ["FOLLOW_UPS_DUE_CLEARED", "OFFERS_RECORDED"],
   INTERVIEW_SCHEDULED: INTERVIEW,
   INTERVIEW_COMPLETED: INTERVIEW,
+  INTERVIEW_PREPARED: ["INTERVIEW_PREP", "INTERVIEW_PREPS_PERIOD"],
   SAVED: [],
   CONFIRMATION_RECEIVED: [],
   RECRUITER_RESPONSE: [],
@@ -455,6 +519,7 @@ const STAT_EVENTS: ReadonlySet<MissionEventContext["type"]> = new Set<MissionEve
   "FOLLOW_UP_SENT",
   "INTERVIEW_SCHEDULED",
   "INTERVIEW_COMPLETED",
+  "INTERVIEW_PREPARED",
   "MERGED",
   "LESSON_COMPLETED",
   "QUIZ_PASSED",

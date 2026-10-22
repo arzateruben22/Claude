@@ -246,7 +246,8 @@ export async function getCampaignPageData(userId: string, now = new Date()): Pro
 
   const [ghMissions, elMissions, verifiedHours, allHours] = await Promise.all([
     prisma.mission.findMany({
-      where: { userId, campaign: "GET_HIRED", type: "CAMPAIGN", periodStart: { gte: startedAt } },
+      // This run's missions, plus missions completed in an earlier run (earned once, not recreated).
+      where: { userId, campaign: "GET_HIRED", type: "CAMPAIGN", OR: [{ periodStart: { gte: startedAt } }, { status: "COMPLETED" }] },
       select: missionSelect,
       orderBy: [{ periodStart: "asc" }, { createdAt: "asc" }],
     }),
@@ -258,7 +259,22 @@ export async function getCampaignPageData(userId: string, now = new Date()): Pro
     verifiedHoursTotal(prisma, userId),
     prisma.workHourEntry.aggregate({ where: { userId }, _sum: { hours: true } }),
   ]);
-  const ghViews = ghMissions.map(toMissionView);
+  const ghAll = ghMissions.map(toMissionView);
+  const startKeyOfRun = dateKey(startedAt);
+  const ghViews = ghAll.filter((m) => m.periodStartKey >= startKeyOfRun);
+  const earlierRuns = ghAll.filter((m) => m.periodStartKey < startKeyOfRun);
+
+  const phaseMissions = (index: 1 | 2 | 3, startKey: string): MissionView[] => {
+    const current = ghViews.filter((m) => m.phase === index && m.periodStartKey === startKey);
+    const keys = new Set(current.map((m) => m.key));
+    const seen = new Set<string>();
+    const earlier = earlierRuns.filter((m) => {
+      if (m.phase !== index || keys.has(m.key) || seen.has(m.key)) return false;
+      seen.add(m.key);
+      return true;
+    });
+    return sortMissions([...current, ...earlier]);
+  };
 
   const phases: PhaseView[] = timeline.phases.map((p) => {
     const startKey = dateKey(addUtcDays(startedAt, p.startDay - 1));
@@ -275,7 +291,7 @@ export async function getCampaignPageData(userId: string, now = new Date()): Pro
       endKey,
       state,
       focus: PHASE_FOCUS[p.index].focus,
-      missions: sortMissions(ghViews.filter((m) => m.phase === p.index && m.periodStartKey === startKey)),
+      missions: phaseMissions(p.index, startKey),
     };
   });
 
