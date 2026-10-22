@@ -60,11 +60,11 @@ export async function readSpreadsheet(fileName: string, bytes: Buffer, presetId:
     if (!read.ok) return read;
     rows = read.rows;
   } else {
-    if (bytes.subarray(0, 65536).includes(0)) {
-      return { ok: false, error: "This does not look like a text spreadsheet (it contains binary data)." };
-    }
     if (bytes.subarray(0, 4).toString("binary") === "PK\u0003\u0004") {
       return { ok: false, error: "This looks like an .xlsx workbook saved with a .csv name. Rename it to .xlsx or export it as CSV." };
+    }
+    if (bytes.subarray(0, 65536).includes(0)) {
+      return { ok: false, error: "This does not look like a text spreadsheet (it contains binary data)." };
     }
     const decoded = decodeText(bytes);
     if (decoded.warning) warnings.push(decoded.warning);

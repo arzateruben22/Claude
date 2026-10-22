@@ -7,8 +7,19 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 vi.mock("server-only", () => ({}));
-vi.mock("next/navigation", () => ({ usePathname: () => "/applications/review/duplicates", redirect: vi.fn(), notFound: vi.fn() }));
-vi.mock("@/lib/auth/current-user", () => ({ requireUser: vi.fn(async () => ({ id: "u1", email: "u@example.com", name: "Ada", role: "USER" })) }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/applications/review/duplicates",
+  redirect: vi.fn(),
+  notFound: vi.fn(),
+}));
+vi.mock("@/lib/auth/current-user", () => ({
+  requireUser: vi.fn(async () => ({
+    id: "u1",
+    email: "u@example.com",
+    name: "Ada",
+    role: "USER",
+  })),
+}));
 vi.mock("@/lib/ingest/review-actions", () => ({
   resolveEmailReviewAction: vi.fn(),
   resolveCaptureReviewAction: vi.fn(),
@@ -17,11 +28,17 @@ vi.mock("@/lib/ingest/review-actions", () => ({
   scanDuplicatesAction: vi.fn(),
 }));
 vi.mock("@/lib/ingest/review", () => ({
-  getReviewCounts: vi.fn(async () => ({ emails: 3, captures: 0, duplicates: 120 })),
+  getReviewCounts: vi.fn(async () => ({
+    emails: 3,
+    captures: 0,
+    duplicates: 120,
+  })),
   loadEmailReview: vi.fn(),
   loadCaptureReview: vi.fn(),
   loadDuplicateReview: vi.fn(),
-  loadAttachOptions: vi.fn(async () => [{ id: "app-9", label: "Golden State Builders – Estimator (Saved)" }]),
+  loadAttachOptions: vi.fn(async () => [
+    { id: "app-9", label: "Golden State Builders – Estimator (Saved)" },
+  ]),
 }));
 
 import { EmailReviewCard } from "@/components/review/email-review-card";
@@ -33,7 +50,11 @@ import ReviewLayout from "@/app/(app)/applications/review/layout";
 import ReviewEmailsPage from "@/app/(app)/applications/review/page";
 import ReviewCapturesPage from "@/app/(app)/applications/review/captures/page";
 import ReviewDuplicatesPage from "@/app/(app)/applications/review/duplicates/page";
-import { loadCaptureReview, loadDuplicateReview, loadEmailReview } from "@/lib/ingest/review";
+import {
+  loadCaptureReview,
+  loadDuplicateReview,
+  loadEmailReview,
+} from "@/lib/ingest/review";
 import type {
   CaptureReviewItemView,
   DuplicateReviewItemView,
@@ -67,7 +88,8 @@ const email: EmailReviewItemView = {
   classificationLabel: "Interview invitation",
   confidence: 0.75,
   verifiedSender: false,
-  reason: "Classification confidence 75% is below the 80% needed to apply it automatically.",
+  reason:
+    "Classification confidence 75% is below the 80% needed to apply it automatically.",
   snippet: "We would like to invite you to an interview.",
   body: "Hi Ruben,\nWe would like to invite you to an interview.",
   isInterview: true,
@@ -82,11 +104,19 @@ const email: EmailReviewItemView = {
   candidates: [candidate],
 };
 
-const render = (el: Parameters<typeof renderToStaticMarkup>[0]) => renderToStaticMarkup(el);
+const render = (el: Parameters<typeof renderToStaticMarkup>[0]) =>
+  renderToStaticMarkup(el);
 
 describe("review cards", () => {
   it("renders an email with evidence, editable fields, candidates and every decision", () => {
-    const html = render(createElement(EmailReviewCard, { item: email, attachOptions: [{ id: "app-9", label: "Golden State Builders – Estimator (Saved)" }] }));
+    const html = render(
+      createElement(EmailReviewCard, {
+        item: email,
+        attachOptions: [
+          { id: "app-9", label: "Golden State Builders – Estimator (Saved)" },
+        ],
+      }),
+    );
     expect(html).toContain("Your application status");
     expect(html).toContain("Interview invitation");
     expect(html).toContain("Confidence 75%");
@@ -95,8 +125,17 @@ describe("review cards", () => {
     expect(html).toContain("We would like to invite you to an interview.");
     expect(html).toContain("Show the email text kept for review");
     // Implicit submission (Enter) is disabled by a hidden disabled first submit button.
-    expect(html).toMatch(/<form[^>]*>(<input[^>]*>)*<button type="submit" disabled="" hidden="" aria-hidden="true" tabindex="-1">/);
-    for (const label of ["Company", "Job title", "Location", "Stage", "Interview time", "Interview type"]) {
+    expect(html).toMatch(
+      /<form[^>]*>(<input[^>]*>)*<button type="submit" disabled="" hidden="" aria-hidden="true" tabindex="-1">/,
+    );
+    for (const label of [
+      "Company",
+      "Job title",
+      "Location",
+      "Stage",
+      "Interview time",
+      "Interview type",
+    ]) {
       expect(html).toContain(`>${label}</label>`);
     }
     expect(html).toContain('for="email-email-1-company"');
@@ -107,7 +146,9 @@ describe("review cards", () => {
     expect(html).toContain("Same requisition R-2026-01844");
     expect(html).toContain("Different location (Anaheim vs Long Beach)");
     expect(html).toContain('value="attach:app-1"');
-    expect(html).toContain('aria-label="Attach to this record: Harbor Line Elevator Co. – Elevator Mechanic Helper"');
+    expect(html).toContain(
+      'aria-label="Attach to this record: Harbor Line Elevator Co. – Elevator Mechanic Helper"',
+    );
     expect(html).toContain('href="/applications/app-1"');
     expect(html).toContain("Or attach to another application");
     expect(html).toContain('value="attach-other"');
@@ -120,7 +161,14 @@ describe("review cards", () => {
   it("explains when nothing matches and hides the interview fields for other emails", () => {
     const html = render(
       createElement(EmailReviewCard, {
-        item: { ...email, isInterview: false, candidates: [], body: null, reason: null, verifiedSender: true },
+        item: {
+          ...email,
+          isInterview: false,
+          candidates: [],
+          body: null,
+          reason: null,
+          verifiedSender: true,
+        },
         attachOptions: [],
       }),
     );
@@ -143,10 +191,19 @@ describe("review cards", () => {
       confirmationText: null,
       salaryText: "$30–$38/hr",
       applyStartedOnly: true,
-      fields: { company: "Sunbelt HVAC Services", title: "HVAC Technician", location: "", status: "PREPARING", interviewAt: "", interviewType: "OTHER" },
+      fields: {
+        company: "Sunbelt HVAC Services",
+        title: "HVAC Technician",
+        location: "",
+        status: "PREPARING",
+        interviewAt: "",
+        interviewType: "OTHER",
+      },
       candidates: [],
     };
-    const html = render(createElement(CaptureReviewCard, { item: capture, attachOptions: [] }));
+    const html = render(
+      createElement(CaptureReviewCard, { item: capture, attachOptions: [] }),
+    );
     expect(html).toContain("Sunbelt HVAC Services – HVAC Technician");
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain("(opens in a new tab)");
@@ -172,14 +229,28 @@ describe("review cards", () => {
       id: "dup-1",
       score: 0.82,
       signals: [{ label: "Same company", effect: "positive" }],
-      a: { ...side, id: "a1", status: "SAVED", sourceLabel: "Indeed", appliedLabel: null },
-      b: { ...side, id: "b1", status: "SUBMITTED", sourceLabel: "Workday", appliedLabel: "Jan 20, 2026", interviewCount: 1 },
+      a: {
+        ...side,
+        id: "a1",
+        status: "SAVED",
+        sourceLabel: "Indeed",
+        appliedLabel: null,
+      },
+      b: {
+        ...side,
+        id: "b1",
+        status: "SUBMITTED",
+        sourceLabel: "Workday",
+        appliedLabel: "Jan 20, 2026",
+        interviewCount: 1,
+      },
       suggestedKeepId: "b1",
     };
     const html = render(createElement(DuplicateReviewCard, { item: dup }));
     expect(html).toContain("Possible match · 82%");
     expect(html).toContain("Which record should stay?");
-    const radio = (id: string) => html.match(new RegExp(`<input id="dup-dup-1-${id}"[^>]*>`))?.[0] ?? "";
+    const radio = (id: string) =>
+      html.match(new RegExp(`<input id="dup-dup-1-${id}"[^>]*>`))?.[0] ?? "";
     expect(radio("b1")).toContain('type="radio"');
     expect(radio("b1")).toContain('name="keepId"');
     expect(radio("b1")).toContain('checked=""');
@@ -204,17 +275,23 @@ describe("review cards", () => {
       interviewType: "ONSITE",
     };
     const html = render(createElement(InterviewInviteCard, { invite }));
-    expect(html).toContain("time read from the email: Mar 10, 2026, 10:00 AM (not confirmed)");
+    expect(html).toContain(
+      "time read from the email: Mar 10, 2026, 10:00 AM (not confirmed)",
+    );
     expect(html).toContain('value="2026-03-10T10:00"');
     expect(html).toContain("Add interview");
     expect(html).toContain("Not needed");
-    expect(render(createElement(ScanDuplicatesButton))).toContain("Scan for duplicates");
+    expect(render(createElement(ScanDuplicatesButton))).toContain(
+      "Scan for duplicates",
+    );
   });
 });
 
 describe("review pages", () => {
   it("shows tab counts in the layout", async () => {
-    const html = render(await ReviewLayout({ children: createElement("p", null, "child") }));
+    const html = render(
+      await ReviewLayout({ children: createElement("p", null, "child") }),
+    );
     expect(html).toContain("Review queue");
     expect(html).toContain("Emails (3)");
     expect(html).toContain(">Captures<");
@@ -224,22 +301,35 @@ describe("review pages", () => {
   });
 
   it("shows honest empty states", async () => {
-    vi.mocked(loadEmailReview).mockResolvedValueOnce({ items: [], total: 0, invites: [] });
+    vi.mocked(loadEmailReview).mockResolvedValueOnce({
+      items: [],
+      total: 0,
+      invites: [],
+    });
     const emails = render(await ReviewEmailsPage());
     expect(emails).toContain("No emails waiting for review");
     expect(emails).toContain('href="/integrations"');
 
     vi.mocked(loadCaptureReview).mockResolvedValueOnce({ items: [], total: 0 });
-    expect(render(await ReviewCapturesPage())).toContain("No captures waiting for confirmation");
+    expect(render(await ReviewCapturesPage())).toContain(
+      "No captures waiting for confirmation",
+    );
 
-    vi.mocked(loadDuplicateReview).mockResolvedValueOnce({ items: [], total: 0 });
+    vi.mocked(loadDuplicateReview).mockResolvedValueOnce({
+      items: [],
+      total: 0,
+    });
     const dups = render(await ReviewDuplicatesPage());
     expect(dups).toContain("No possible duplicates waiting");
     expect(dups).toContain("Scan for duplicates");
   });
 
   it("lists items with a paging note", async () => {
-    vi.mocked(loadEmailReview).mockResolvedValueOnce({ items: [email], total: 30, invites: [] });
+    vi.mocked(loadEmailReview).mockResolvedValueOnce({
+      items: [email],
+      total: 30,
+      invites: [],
+    });
     const html = render(await ReviewEmailsPage());
     expect(html).toContain("Showing the 1 newest of 30 emails");
     expect(html).toContain("Your application status");

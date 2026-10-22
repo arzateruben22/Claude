@@ -191,7 +191,7 @@ type Ctx = {
   now: Date;
   date: (d: Date) => string;
   byKey: Map<string, CareerNodeDef>;
-  tracks: Map<TrackKey, { completed: number; total: number; avgBest: number | null }>;
+  tracks: Map<TrackKey, { completed: number; total: number }>;
   /** The certification row the user is pursuing (General first, else most recently updated). */
   cert: CertificationRow | null;
   validCerts: CertificationRow[];
@@ -228,9 +228,9 @@ function buildCtx(graph: CareerGraph, data: CareerUserData): Ctx {
 
   // Lesson progress per track.
   const progress = new Map(data.lessons.progress.map((p) => [p.lessonKey, p]));
-  const tracks = new Map<TrackKey, { completed: number; total: number; avgBest: number | null }>();
+  const tracks = new Map<TrackKey, { completed: number; total: number }>();
   for (const l of data.lessons.catalog) {
-    const t = tracks.get(l.track) ?? { completed: 0, total: 0, avgBest: null };
+    const t = tracks.get(l.track) ?? { completed: 0, total: 0 };
     t.total += 1;
     if (progress.get(l.key)?.status === "COMPLETED") t.completed += 1;
     tracks.set(l.track, t);
@@ -305,14 +305,15 @@ function programList(programs: CareerUserData["programs"]): string {
   return names.join("; ") + (programs.length > 3 ? ` and ${programs.length - 3} more` : "");
 }
 
+/** The certification tracker shows exam eligibility or a later step. */
+function pastEligibility(c: Ctx): boolean {
+  return c.data.certifications.some((r) => r.examEligibleAt || r.examScheduledAt || r.examPassedAt || r.certifiedAt);
+}
+
 /** The user entered the electrician trade (registration, acceptance, hire or later credentials). */
 function enteredTrade(c: Ctx): boolean {
   return Boolean(
-    c.traineeValid ||
-      c.accepted.length ||
-      hiredEvidence(c.appsFor("trainee-or-apprentice")).length ||
-      c.data.hours.verifiedOjt > 0 ||
-      c.data.certifications.some((r) => r.examEligibleAt || r.examPassedAt || r.certifiedAt),
+    c.traineeValid || c.accepted.length || hiredEvidence(c.appsFor("trainee-or-apprentice")).length || c.data.hours.verifiedOjt > 0 || pastEligibility(c),
   );
 }
 
@@ -394,6 +395,7 @@ const RULES: Record<string, (c: Ctx, n: CareerNodeDef) => Signals> = {
     }
     for (const p of c.accepted) s.completed.push({ label: "Self-reported", text: `Accepted into ${p.name} (apprenticeship directory)` });
     s.completed.push(...hiredEvidence(c.appsFor("trainee-or-apprentice")));
+    if (pastEligibility(c)) s.completed.push({ label: "Self-reported", text: "Your certification tracker shows exam eligibility or a later step" });
     if (!s.completed.length && c.traineeExpired) {
       s.inProgress.push({ label: "Self-reported", text: `Your Electrician Trainee registration expired on ${c.date(c.traineeExpired.traineeExpiresAt!)} — renew it to keep working as a trainee` });
     }
@@ -435,6 +437,9 @@ const RULES: Record<string, (c: Ctx, n: CareerNodeDef) => Signals> = {
         label: "Estimate",
         text: `About ${plural(remainingWeeks, "week")} (${(remainingWeeks / 52).toFixed(1)} years) to reach ${fmt(req.hours)} at your recent verified pace of ${perWeek.toFixed(1)} hours a week over the last ${fmt(weeks)} weeks. Your pace will change; this is not a schedule.`,
       };
+    }
+    if (pastEligibility(c) && (!req || h.verifiedOjt < req.hours)) {
+      s.notes.push("Your certification tracker shows exam eligibility or later. CareerQuest cannot tell which route you qualified through, so this stop only reflects hours logged here.");
     }
     s.notes.push("Academy lessons and workshop simulations are study, not qualifying field experience.");
     return s;
@@ -650,7 +655,7 @@ function training(c: Ctx, n: CareerNodeDef): TrainingProgress[] {
   return n.trainingTracks.flatMap((t) => {
     const p = c.tracks.get(t);
     if (!p || p.total === 0) return [];
-    return [{ key: t, label: TRACK_META[t]?.label ?? t, completed: p.completed, total: p.total, href: "/academy" }];
+    return [{ key: t, label: TRACK_META[t]?.label ?? t, completed: p.completed, total: p.total, href: `/academy#track-${t.toLowerCase()}` }];
   });
 }
 

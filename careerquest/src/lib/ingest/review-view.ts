@@ -11,21 +11,22 @@ import type {
 import type { Tone } from "@/components/ui/badge";
 import type { MatchSignalEffect } from "./match-score";
 
-export const EMAIL_CLASSIFICATION_LABELS: Record<EmailClassification, string> = {
-  APPLICATION_SUBMITTED: "Application submitted",
-  EMPLOYER_ACKNOWLEDGMENT: "Employer acknowledgment",
-  RECRUITER_MESSAGE: "Recruiter message",
-  INTERVIEW_INVITATION: "Interview invitation",
-  ASSESSMENT_INVITATION: "Assessment invitation",
-  REJECTION: "Rejection",
-  OFFER: "Offer",
-  ONBOARDING: "Onboarding",
-  JOB_ALERT: "Job alert",
-  INCOMPLETE_APPLICATION: "Unfinished application",
-  APPLICATION_INVITATION: "Invitation to apply",
-  UNRELATED: "Not job related",
-  UNKNOWN: "Unclassified",
-};
+export const EMAIL_CLASSIFICATION_LABELS: Record<EmailClassification, string> =
+  {
+    APPLICATION_SUBMITTED: "Application submitted",
+    EMPLOYER_ACKNOWLEDGMENT: "Employer acknowledgment",
+    RECRUITER_MESSAGE: "Recruiter message",
+    INTERVIEW_INVITATION: "Interview invitation",
+    ASSESSMENT_INVITATION: "Assessment invitation",
+    REJECTION: "Rejection",
+    OFFER: "Offer",
+    ONBOARDING: "Onboarding",
+    JOB_ALERT: "Job alert",
+    INCOMPLETE_APPLICATION: "Unfinished application",
+    APPLICATION_INVITATION: "Invitation to apply",
+    UNRELATED: "Not job related",
+    UNKNOWN: "Unclassified",
+  };
 
 export const CAPTURE_KIND_LABELS: Record<CaptureKind, string> = {
   JOB_PAGE: "Job posting",
@@ -138,7 +139,11 @@ export type DuplicateReviewItemView = {
 
 export type AttachOption = { id: string; label: string };
 
-export type ReviewCounts = { emails: number; captures: number; duplicates: number };
+export type ReviewCounts = {
+  emails: number;
+  captures: number;
+  duplicates: number;
+};
 
 export function percent(n: number): string {
   return `${Math.round(Math.min(1, Math.max(0, n)) * 100)}%`;

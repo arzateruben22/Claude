@@ -9,14 +9,25 @@ import "server-only";
  * producer's (EMAIL / EXTENSION), and update the queue row in the same transaction.
  */
 import { prisma } from "@/lib/db";
-import type { EmailMessage, ExtensionCapture, Prisma } from "@/generated/prisma/client";
-import { ApplicationSource, type ApplicationStatus, type InterviewType } from "@/generated/prisma/enums";
+import type {
+  EmailMessage,
+  ExtensionCapture,
+  Prisma,
+} from "@/generated/prisma/client";
+import {
+  ApplicationSource,
+  type ApplicationStatus,
+  type InterviewType,
+} from "@/generated/prisma/enums";
 import { RECORD_ORIGIN_LABELS, SOURCE_LABELS } from "@/lib/applications/labels";
 import { STATUS_LABELS } from "@/lib/applications/status";
 import { dateTimeInputValue, formatInTz } from "@/lib/applications/time";
 import { scheduleInterview, userTimezone } from "@/lib/applications/service";
 import { observationKindFor } from "@/lib/email/observation";
-import { purgeReviewedBodies, type StoredEmailExtract } from "@/lib/email/store";
+import {
+  purgeReviewedBodies,
+  type StoredEmailExtract,
+} from "@/lib/email/store";
 import { suggestKeep } from "@/lib/dedup/pairs";
 import {
   ingestObservationInTx,
@@ -27,7 +38,11 @@ import {
 import { findCandidateMatches, type CandidateMatch } from "./match";
 import type { MatchSignal } from "./match-score";
 import { guessInterviewType, kindForStatus, targetStatusFor } from "./rules";
-import { serializeObservation, type ApplicationObservation, type IngestResult } from "./types";
+import {
+  serializeObservation,
+  type ApplicationObservation,
+  type IngestResult,
+} from "./types";
 import {
   CAPTURE_KIND_LABELS,
   EMAIL_CLASSIFICATION_LABELS,
@@ -60,10 +75,13 @@ export class ReviewError extends Error {
 }
 
 function asRecord(v: unknown): Record<string, unknown> {
-  return v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
+  return v && typeof v === "object" && !Array.isArray(v)
+    ? (v as Record<string, unknown>)
+    : {};
 }
 
-const str = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v.trim() : null);
+const str = (v: unknown): string | null =>
+  typeof v === "string" && v.trim() ? v.trim() : null;
 
 function readExtract(v: Prisma.JsonValue): Partial<StoredEmailExtract> {
   return asRecord(v) as Partial<StoredEmailExtract>;
@@ -89,7 +107,9 @@ function candidateView(c: CandidateMatch, tz: string): ReviewCandidateView {
     status: a.status,
     statusVerified: a.statusVerified,
     sourceLabel: SOURCE_LABELS[a.source],
-    dateLabel: a.appliedAt ? `Applied ${formatInTz(a.appliedAt, tz)}` : `Added ${formatInTz(a.createdAt, tz)}`,
+    dateLabel: a.appliedAt
+      ? `Applied ${formatInTz(a.appliedAt, tz)}`
+      : `Added ${formatInTz(a.createdAt, tz)}`,
     archived: a.archivedAt !== null,
     score: c.score,
     signals: signalViews(c.signals),
@@ -102,34 +122,52 @@ function candidateView(c: CandidateMatch, tz: string): ReviewCandidateView {
 
 export async function getReviewCounts(userId: string): Promise<ReviewCounts> {
   const [emails, captures, duplicates] = await Promise.all([
-    prisma.emailMessage.count({ where: { userId, reviewStatus: "NEEDS_REVIEW" } }),
-    prisma.extensionCapture.count({ where: { userId, status: "PENDING_CONFIRMATION" } }),
+    prisma.emailMessage.count({
+      where: { userId, reviewStatus: "NEEDS_REVIEW" },
+    }),
+    prisma.extensionCapture.count({
+      where: { userId, status: "PENDING_CONFIRMATION" },
+    }),
     prisma.duplicateCandidate.count({
-      where: { userId, status: "PENDING", applicationA: { mergedIntoId: null }, applicationB: { mergedIntoId: null } },
+      where: {
+        userId,
+        status: "PENDING",
+        applicationA: { mergedIntoId: null },
+        applicationB: { mergedIntoId: null },
+      },
     }),
   ]);
   return { emails, captures, duplicates };
 }
 
 /** Recently updated records for the "Attach to another application" picker. */
-export async function loadAttachOptions(userId: string): Promise<AttachOption[]> {
+export async function loadAttachOptions(
+  userId: string,
+): Promise<AttachOption[]> {
   const rows = await prisma.application.findMany({
     where: { userId, mergedIntoId: null },
     orderBy: { updatedAt: "desc" },
     take: 100,
     select: { id: true, companyName: true, positionTitle: true, status: true },
   });
-  return rows.map((r) => ({ id: r.id, label: `${r.companyName} – ${r.positionTitle} (${STATUS_LABELS[r.status]})` }));
+  return rows.map((r) => ({
+    id: r.id,
+    label: `${r.companyName} – ${r.positionTitle} (${STATUS_LABELS[r.status]})`,
+  }));
 }
 
 /** The observation a review decision starts from (stored one, or one rebuilt from the row). */
-function emailObservation(row: EmailMessage, fallbackStatus: ApplicationStatus): ApplicationObservation {
+function emailObservation(
+  row: EmailMessage,
+  fallbackStatus: ApplicationStatus,
+): ApplicationObservation {
   const stored = observationFromEmailRow(row);
   if (stored) return stored;
   const x = readExtract(row.extracted);
   const platform = str(x.platform);
   return {
-    kind: observationKindFor(row.classification) ?? kindForStatus(fallbackStatus),
+    kind:
+      observationKindFor(row.classification) ?? kindForStatus(fallbackStatus),
     source: "EMAIL",
     origin: "EMAIL",
     observedAt: row.receivedAt ?? row.createdAt,
@@ -138,7 +176,11 @@ function emailObservation(row: EmailMessage, fallbackStatus: ApplicationStatus):
     location: str(x.location),
     requisitionId: str(x.requisitionNumber),
     postingUrl: null,
-    platform: platform && Object.prototype.hasOwnProperty.call(ApplicationSource, platform) ? (platform as ApplicationSource) : null,
+    platform:
+      platform &&
+      Object.prototype.hasOwnProperty.call(ApplicationSource, platform)
+        ? (platform as ApplicationSource)
+        : null,
     salaryText: str(x.salaryText),
     recruiterName: str(x.recruiterName),
     recruiterEmail: str(x.recruiterEmail),
@@ -160,13 +202,22 @@ function defaultStatus(obs: ApplicationObservation): ApplicationStatus {
   return targetStatusFor({ ...obs, verified: true }) ?? "SAVED";
 }
 
-function queueReason(row: EmailMessage, obs: ApplicationObservation): string | null {
+function queueReason(
+  row: EmailMessage,
+  obs: ApplicationObservation,
+): string | null {
   const ingest = readExtract(row.extracted).ingest;
-  if (ingest?.reason && (ingest.action === "needs_review" || ingest.action === "error")) {
-    return ingest.action === "error" ? `Could not be applied automatically: ${ingest.reason}` : ingest.reason;
+  if (
+    ingest?.reason &&
+    (ingest.action === "needs_review" || ingest.action === "error")
+  ) {
+    return ingest.action === "error"
+      ? `Could not be applied automatically: ${ingest.reason}`
+      : ingest.reason;
   }
   if (!obs.company) return "The employer could not be identified.";
-  if (row.confidence < 0.8) return `Classification confidence ${Math.round(row.confidence * 100)}% is below the 80% needed to apply it automatically.`;
+  if (row.confidence < 0.8)
+    return `Classification confidence ${Math.round(row.confidence * 100)}% is below the 80% needed to apply it automatically.`;
   return null;
 }
 
@@ -182,49 +233,76 @@ export async function loadEmailReview(
   const [rows, total] = await Promise.all([
     prisma.emailMessage.findMany({
       where: { userId, reviewStatus: "NEEDS_REVIEW" },
-      orderBy: [{ receivedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
+      orderBy: [
+        { receivedAt: { sort: "desc", nulls: "last" } },
+        { createdAt: "desc" },
+      ],
       take: REVIEW_PAGE_SIZE,
     }),
-    prisma.emailMessage.count({ where: { userId, reviewStatus: "NEEDS_REVIEW" } }),
+    prisma.emailMessage.count({
+      where: { userId, reviewStatus: "NEEDS_REVIEW" },
+    }),
   ]);
-  const items: EmailReviewItemView[] = [];
-  for (const row of rows) {
-    const obs = emailObservation(row, "SAVED");
-    const candidates = await findCandidateMatches(prisma, userId, partialFromObservation(obs, row.threadId), {
-      limit: CANDIDATE_LIMIT,
-    });
-    const isInterview = obs.kind === "INTERVIEW_INVITED" || row.classification === "INTERVIEW_INVITATION";
-    items.push({
-      id: row.id,
-      subject: row.subject ?? "(no subject)",
-      from: row.fromName ? `${row.fromName}${row.fromAddress ? ` <${row.fromAddress}>` : ""}` : (row.fromAddress ?? "Unknown sender"),
-      receivedLabel: row.receivedAt ? formatInTz(row.receivedAt, tz, "datetime") : "Date unknown",
-      classificationLabel: EMAIL_CLASSIFICATION_LABELS[row.classification],
-      confidence: row.confidence,
-      verifiedSender: obs.verified,
-      reason: queueReason(row, obs),
-      snippet: row.snippet,
-      body: row.bodyText,
-      isInterview,
-      fields: {
-        company: obs.company ?? "",
-        title: obs.title ?? "",
-        location: obs.location ?? "",
-        status: defaultStatus(obs),
-        interviewAt: dateTimeInputValue(obs.interviewAt ?? null, tz),
-        interviewType: obs.interviewType ?? guessInterviewType(`${row.subject ?? ""} ${row.snippet ?? ""}`),
-      },
-      candidates: candidates.map((c) => candidateView(c, tz)),
-    });
-  }
-  return { items, total, invites: await loadInterviewInvites(userId, tz, opts.now) };
+  const items = await Promise.all(
+    rows.map(async (row): Promise<EmailReviewItemView> => {
+      const obs = emailObservation(row, "SAVED");
+      const candidates = await findCandidateMatches(
+        prisma,
+        userId,
+        partialFromObservation(obs, row.threadId),
+        {
+          limit: CANDIDATE_LIMIT,
+        },
+      );
+      const isInterview =
+        obs.kind === "INTERVIEW_INVITED" ||
+        row.classification === "INTERVIEW_INVITATION";
+      return {
+        id: row.id,
+        subject: row.subject ?? "(no subject)",
+        from: row.fromName
+          ? `${row.fromName}${row.fromAddress ? ` <${row.fromAddress}>` : ""}`
+          : (row.fromAddress ?? "Unknown sender"),
+        receivedLabel: row.receivedAt
+          ? formatInTz(row.receivedAt, tz, "datetime")
+          : "Date unknown",
+        classificationLabel: EMAIL_CLASSIFICATION_LABELS[row.classification],
+        confidence: row.confidence,
+        verifiedSender: obs.verified,
+        reason: queueReason(row, obs),
+        snippet: row.snippet,
+        body: row.bodyText,
+        isInterview,
+        fields: {
+          company: obs.company ?? "",
+          title: obs.title ?? "",
+          location: obs.location ?? "",
+          status: defaultStatus(obs),
+          interviewAt: dateTimeInputValue(obs.interviewAt ?? null, tz),
+          interviewType:
+            obs.interviewType ??
+            guessInterviewType(`${row.subject ?? ""} ${row.snippet ?? ""}`),
+        },
+        candidates: candidates.map((c) => candidateView(c, tz)),
+      };
+    }),
+  );
+  return {
+    items,
+    total,
+    invites: await loadInterviewInvites(userId, tz, opts.now),
+  };
 }
 
 /**
  * Interview invitations that were filed automatically (unverified, so no Interview row was created)
  * and whose time has no interview on the record yet.
  */
-async function loadInterviewInvites(userId: string, tz: string, now = new Date()): Promise<InterviewInviteView[]> {
+async function loadInterviewInvites(
+  userId: string,
+  tz: string,
+  now = new Date(),
+): Promise<InterviewInviteView[]> {
   const rows = await prisma.emailMessage.findMany({
     where: {
       userId,
@@ -232,7 +310,10 @@ async function loadInterviewInvites(userId: string, tz: string, now = new Date()
       classification: "INTERVIEW_INVITATION",
       applicationId: { not: null },
     },
-    orderBy: [{ receivedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
+    orderBy: [
+      { receivedAt: { sort: "desc", nulls: "last" } },
+      { createdAt: "desc" },
+    ],
     take: 50,
     select: {
       id: true,
@@ -243,7 +324,12 @@ async function loadInterviewInvites(userId: string, tz: string, now = new Date()
       extracted: true,
       applicationId: true,
       application: {
-        select: { companyName: true, positionTitle: true, mergedIntoId: true, interviews: { select: { scheduledAt: true }, take: 50 } },
+        select: {
+          companyName: true,
+          positionTitle: true,
+          mergedIntoId: true,
+          interviews: { select: { scheduledAt: true }, take: 50 },
+        },
       },
     },
   });
@@ -253,7 +339,12 @@ async function loadInterviewInvites(userId: string, tz: string, now = new Date()
     const app = r.application;
     if (!at || !app || !r.applicationId || app.mergedIntoId) continue;
     if (at.getTime() < now.getTime() - INVITE_LOOKBACK_MS) continue;
-    if (app.interviews.some((i) => Math.abs(i.scheduledAt.getTime() - at.getTime()) < 30 * 60_000)) continue;
+    if (
+      app.interviews.some(
+        (i) => Math.abs(i.scheduledAt.getTime() - at.getTime()) < 30 * 60_000,
+      )
+    )
+      continue;
     out.push({
       emailId: r.id,
       applicationId: r.applicationId,
@@ -263,7 +354,9 @@ async function loadInterviewInvites(userId: string, tz: string, now = new Date()
       receivedLabel: formatInTz(r.receivedAt ?? r.createdAt, tz, "date"),
       interviewAtLabel: formatInTz(at, tz, "datetime"),
       interviewAt: dateTimeInputValue(at, tz),
-      interviewType: guessInterviewType(`${r.subject ?? ""} ${r.snippet ?? ""}`),
+      interviewType: guessInterviewType(
+        `${r.subject ?? ""} ${r.snippet ?? ""}`,
+      ),
     });
   }
   return out;
@@ -272,14 +365,17 @@ async function loadInterviewInvites(userId: string, tz: string, now = new Date()
 function urlLabel(url: string): string {
   try {
     const u = new URL(url);
-    const path = u.pathname.length > 40 ? `${u.pathname.slice(0, 39)}…` : u.pathname;
+    const path =
+      u.pathname.length > 40 ? `${u.pathname.slice(0, 39)}…` : u.pathname;
     return `${u.hostname.replace(/^www\./, "")}${path === "/" ? "" : path}`;
   } catch {
     return url.slice(0, 60);
   }
 }
 
-export async function loadCaptureReview(userId: string): Promise<{ items: CaptureReviewItemView[]; total: number }> {
+export async function loadCaptureReview(
+  userId: string,
+): Promise<{ items: CaptureReviewItemView[]; total: number }> {
   const tz = await userTimezone(userId);
   const [rows, total] = await Promise.all([
     prisma.extensionCapture.findMany({
@@ -287,36 +383,45 @@ export async function loadCaptureReview(userId: string): Promise<{ items: Captur
       orderBy: { createdAt: "desc" },
       take: REVIEW_PAGE_SIZE,
     }),
-    prisma.extensionCapture.count({ where: { userId, status: "PENDING_CONFIRMATION" } }),
+    prisma.extensionCapture.count({
+      where: { userId, status: "PENDING_CONFIRMATION" },
+    }),
   ]);
-  const items: CaptureReviewItemView[] = [];
-  for (const row of rows) {
-    const obs = observationFromCapture(row);
-    const candidates = await findCandidateMatches(prisma, userId, partialFromObservation(obs), { limit: CANDIDATE_LIMIT });
-    const httpUrl = /^https?:\/\//i.test(row.url) ? row.url : null;
-    items.push({
-      id: row.id,
-      kindLabel: CAPTURE_KIND_LABELS[row.kind],
-      url: httpUrl,
-      urlLabel: httpUrl ? urlLabel(httpUrl) : "Link not available",
-      platformLabel: SOURCE_LABELS[obs.platform ?? "OTHER"],
-      capturedLabel: formatInTz(obs.observedAt, tz, "datetime"),
-      confidence: row.confidence,
-      pageTitle: obs.evidence.title ?? null,
-      confirmationText: obs.evidence.snippet ?? null,
-      salaryText: row.salaryText,
-      applyStartedOnly: row.kind === "APPLY_STARTED",
-      fields: {
-        company: obs.company ?? "",
-        title: obs.title ?? "",
-        location: obs.location ?? "",
-        status: row.kind === "APPLY_STARTED" ? "PREPARING" : defaultStatus(obs),
-        interviewAt: "",
-        interviewType: "OTHER",
-      },
-      candidates: candidates.map((c) => candidateView(c, tz)),
-    });
-  }
+  const items = await Promise.all(
+    rows.map(async (row): Promise<CaptureReviewItemView> => {
+      const obs = observationFromCapture(row);
+      const candidates = await findCandidateMatches(
+        prisma,
+        userId,
+        partialFromObservation(obs),
+        { limit: CANDIDATE_LIMIT },
+      );
+      const httpUrl = /^https?:\/\//i.test(row.url) ? row.url : null;
+      return {
+        id: row.id,
+        kindLabel: CAPTURE_KIND_LABELS[row.kind],
+        url: httpUrl,
+        urlLabel: httpUrl ? urlLabel(httpUrl) : "Link not available",
+        platformLabel: SOURCE_LABELS[obs.platform ?? "OTHER"],
+        capturedLabel: formatInTz(obs.observedAt, tz, "datetime"),
+        confidence: row.confidence,
+        pageTitle: obs.evidence.title ?? null,
+        confirmationText: obs.evidence.snippet ?? null,
+        salaryText: row.salaryText,
+        applyStartedOnly: row.kind === "APPLY_STARTED",
+        fields: {
+          company: obs.company ?? "",
+          title: obs.title ?? "",
+          location: obs.location ?? "",
+          status:
+            row.kind === "APPLY_STARTED" ? "PREPARING" : defaultStatus(obs),
+          interviewAt: "",
+          interviewType: "OTHER",
+        },
+        candidates: candidates.map((c) => candidateView(c, tz)),
+      };
+    }),
+  );
   return { items, total };
 }
 
@@ -363,14 +468,22 @@ function storedSignals(v: Prisma.JsonValue): SignalView[] {
   for (const s of list.slice(0, 12)) {
     const r = asRecord(s);
     const effect = r.effect;
-    if (typeof r.label === "string" && (effect === "strong" || effect === "positive" || effect === "neutral" || effect === "negative")) {
+    if (
+      typeof r.label === "string" &&
+      (effect === "strong" ||
+        effect === "positive" ||
+        effect === "neutral" ||
+        effect === "negative")
+    ) {
       out.push({ label: r.label, effect });
     }
   }
   return out;
 }
 
-export async function loadDuplicateReview(userId: string): Promise<{ items: DuplicateReviewItemView[]; total: number }> {
+export async function loadDuplicateReview(
+  userId: string,
+): Promise<{ items: DuplicateReviewItemView[]; total: number }> {
   const tz = await userTimezone(userId);
   const where = {
     userId,
@@ -383,7 +496,10 @@ export async function loadDuplicateReview(userId: string): Promise<{ items: Dupl
       where,
       orderBy: [{ score: "desc" }, { createdAt: "desc" }],
       take: REVIEW_PAGE_SIZE,
-      include: { applicationA: { select: sideSelect }, applicationB: { select: sideSelect } },
+      include: {
+        applicationA: { select: sideSelect },
+        applicationB: { select: sideSelect },
+      },
     }),
     prisma.duplicateCandidate.count({ where }),
   ]);
@@ -414,16 +530,28 @@ export type ReviewEdits = {
   interviewType?: InterviewType;
 };
 
-export type ReviewOutcome = { message: string; applicationId: string | null; xpAwarded: number };
+export type ReviewOutcome = {
+  message: string;
+  applicationId: string | null;
+  xpAwarded: number;
+};
 
-function applyEdits(base: ApplicationObservation, edits: ReviewEdits, decision: ParsedDecision): ApplicationObservation {
+function applyEdits(
+  base: ApplicationObservation,
+  edits: ReviewEdits,
+  decision: ParsedDecision,
+): ApplicationObservation {
   return {
     ...base,
-    kind: base.kind === "APPLY_STARTED" ? kindForStatus(edits.status) : base.kind,
+    kind:
+      base.kind === "APPLY_STARTED" ? kindForStatus(edits.status) : base.kind,
     company: edits.company ?? base.company ?? null,
     title: edits.title ?? base.title ?? null,
     location: edits.location ?? base.location ?? null,
-    interviewAt: edits.interviewAt === undefined ? (base.interviewAt ?? null) : edits.interviewAt,
+    interviewAt:
+      edits.interviewAt === undefined
+        ? (base.interviewAt ?? null)
+        : edits.interviewAt,
     interviewType: edits.interviewType ?? base.interviewType ?? null,
     verified: true,
     applicationId: decision.kind === "attach" ? decision.applicationId : null,
@@ -444,20 +572,34 @@ function outcomeMessage(r: IngestResult, label: string | null): string {
   }
 }
 
-async function applicationLabel(userId: string, id: string | null): Promise<string | null> {
+async function applicationLabel(
+  userId: string,
+  id: string | null,
+): Promise<string | null> {
   if (!id) return null;
-  const a = await prisma.application.findFirst({ where: { id, userId }, select: { companyName: true, positionTitle: true } });
+  const a = await prisma.application.findFirst({
+    where: { id, userId },
+    select: { companyName: true, positionTitle: true },
+  });
   return a ? `${a.companyName} – ${a.positionTitle}` : null;
 }
 
-async function assertAttachTarget(userId: string, decision: ParsedDecision): Promise<void> {
+async function assertAttachTarget(
+  userId: string,
+  decision: ParsedDecision,
+): Promise<void> {
   if (decision.kind !== "attach") return;
-  const a = await prisma.application.findFirst({ where: { id: decision.applicationId, userId }, select: { id: true } });
-  if (!a) throw new ReviewError("NOT_FOUND", "That application no longer exists.");
+  const a = await prisma.application.findFirst({
+    where: { id: decision.applicationId, userId },
+    select: { id: true },
+  });
+  if (!a)
+    throw new ReviewError("NOT_FOUND", "That application no longer exists.");
 }
 
 function ensureApplied(r: IngestResult): void {
-  if (r.action === "needs_review" || r.action === "ignored") throw new ReviewError("INVALID", r.reason);
+  if (r.action === "needs_review" || r.action === "ignored")
+    throw new ReviewError("INVALID", r.reason);
 }
 
 /** Resolve a NEEDS_REVIEW email: create, attach, or "not an application". */
@@ -467,9 +609,16 @@ export async function resolveEmailReview(
   decision: ParsedDecision,
   edits: ReviewEdits,
 ): Promise<ReviewOutcome> {
-  const row = await prisma.emailMessage.findFirst({ where: { id: emailId, userId } });
-  if (!row) throw new ReviewError("NOT_FOUND", "That email is no longer in your review queue.");
-  if (row.reviewStatus !== "NEEDS_REVIEW") throw new ReviewError("INVALID", "That email was already reviewed.");
+  const row = await prisma.emailMessage.findFirst({
+    where: { id: emailId, userId },
+  });
+  if (!row)
+    throw new ReviewError(
+      "NOT_FOUND",
+      "That email is no longer in your review queue.",
+    );
+  if (row.reviewStatus !== "NEEDS_REVIEW")
+    throw new ReviewError("INVALID", "That email was already reviewed.");
   const sourceRef = `${row.provider}:${row.externalId}`;
 
   if (decision.kind === "dismiss") {
@@ -478,12 +627,19 @@ export async function resolveEmailReview(
         where: { id: row.id, userId, reviewStatus: "NEEDS_REVIEW" },
         data: { reviewStatus: "DISMISSED" },
       });
-      if (upd.count === 0) throw new ReviewError("INVALID", "That email was already reviewed.");
+      if (upd.count === 0)
+        throw new ReviewError("INVALID", "That email was already reviewed.");
       // Evidence an earlier pass kept for this email (never attached) goes with it.
-      await tx.evidence.deleteMany({ where: { userId, kind: "EMAIL", sourceRef, applicationId: null } });
+      await tx.evidence.deleteMany({
+        where: { userId, kind: "EMAIL", sourceRef, applicationId: null },
+      });
     });
     await purgeReviewedBodies(userId);
-    return { message: "Marked as not an application. Nothing was changed.", applicationId: null, xpAwarded: 0 };
+    return {
+      message: "Marked as not an application. Nothing was changed.",
+      applicationId: null,
+      xpAwarded: 0,
+    };
   }
 
   await assertAttachTarget(userId, decision);
@@ -511,14 +667,21 @@ export async function resolveEmailReview(
       data: {
         reviewStatus: "CONFIRMED",
         applicationId: res.applicationId,
-        extracted: JSON.parse(JSON.stringify(nextExtract)) as Prisma.InputJsonValue,
+        extracted: JSON.parse(
+          JSON.stringify(nextExtract),
+        ) as Prisma.InputJsonValue,
       },
     });
-    if (upd.count === 0) throw new ReviewError("INVALID", "That email was already reviewed.");
+    if (upd.count === 0)
+      throw new ReviewError("INVALID", "That email was already reviewed.");
     return res;
   }, TX_OPTIONS);
   await purgeReviewedBodies(userId);
-  return { message: outcomeMessage(r, await applicationLabel(userId, r.applicationId)), applicationId: r.applicationId, xpAwarded: r.xpAwarded };
+  return {
+    message: outcomeMessage(r, await applicationLabel(userId, r.applicationId)),
+    applicationId: r.applicationId,
+    xpAwarded: r.xpAwarded,
+  };
 }
 
 /** Resolve a PENDING_CONFIRMATION extension capture. */
@@ -528,9 +691,17 @@ export async function resolveCaptureReview(
   decision: ParsedDecision,
   edits: ReviewEdits,
 ): Promise<ReviewOutcome> {
-  const capture: ExtensionCapture | null = await prisma.extensionCapture.findFirst({ where: { id: captureId, userId } });
-  if (!capture) throw new ReviewError("NOT_FOUND", "That capture is no longer in your review queue.");
-  if (capture.status !== "PENDING_CONFIRMATION") throw new ReviewError("INVALID", "That capture was already reviewed.");
+  const capture: ExtensionCapture | null =
+    await prisma.extensionCapture.findFirst({
+      where: { id: captureId, userId },
+    });
+  if (!capture)
+    throw new ReviewError(
+      "NOT_FOUND",
+      "That capture is no longer in your review queue.",
+    );
+  if (capture.status !== "PENDING_CONFIRMATION")
+    throw new ReviewError("INVALID", "That capture was already reviewed.");
   const now = new Date();
 
   if (decision.kind === "dismiss") {
@@ -539,12 +710,22 @@ export async function resolveCaptureReview(
         where: { id: capture.id, userId, status: "PENDING_CONFIRMATION" },
         data: { status: "DISMISSED", resolvedAt: now },
       });
-      if (upd.count === 0) throw new ReviewError("INVALID", "That capture was already reviewed.");
+      if (upd.count === 0)
+        throw new ReviewError("INVALID", "That capture was already reviewed.");
       await tx.evidence.deleteMany({
-        where: { userId, kind: "EXTENSION_CAPTURE", sourceRef: `capture:${capture.id}`, applicationId: null },
+        where: {
+          userId,
+          kind: "EXTENSION_CAPTURE",
+          sourceRef: `capture:${capture.id}`,
+          applicationId: null,
+        },
       });
     });
-    return { message: "Capture dismissed. Nothing was changed.", applicationId: null, xpAwarded: 0 };
+    return {
+      message: "Capture dismissed. Nothing was changed.",
+      applicationId: null,
+      xpAwarded: 0,
+    };
   }
 
   await assertAttachTarget(userId, decision);
@@ -557,12 +738,21 @@ export async function resolveCaptureReview(
     ensureApplied(res);
     const upd = await tx.extensionCapture.updateMany({
       where: { id: capture.id, userId, status: "PENDING_CONFIRMATION" },
-      data: { status: res.action === "duplicate" ? "DUPLICATE" : "ACCEPTED", applicationId: res.applicationId, resolvedAt: now },
+      data: {
+        status: res.action === "duplicate" ? "DUPLICATE" : "ACCEPTED",
+        applicationId: res.applicationId,
+        resolvedAt: now,
+      },
     });
-    if (upd.count === 0) throw new ReviewError("INVALID", "That capture was already reviewed.");
+    if (upd.count === 0)
+      throw new ReviewError("INVALID", "That capture was already reviewed.");
     return res;
   }, TX_OPTIONS);
-  return { message: outcomeMessage(r, await applicationLabel(userId, r.applicationId)), applicationId: r.applicationId, xpAwarded: r.xpAwarded };
+  return {
+    message: outcomeMessage(r, await applicationLabel(userId, r.applicationId)),
+    applicationId: r.applicationId,
+    xpAwarded: r.xpAwarded,
+  };
 }
 
 /**
@@ -582,10 +772,15 @@ export async function resolveInterviewInvite(
   if (row.reviewStatus === "CONFIRMED" || row.reviewStatus === "DISMISSED") {
     throw new ReviewError("INVALID", "That invitation was already handled.");
   }
-  if (!row.applicationId) throw new ReviewError("INVALID", "Attach this email to an application first.");
+  if (!row.applicationId)
+    throw new ReviewError(
+      "INVALID",
+      "Attach this email to an application first.",
+    );
   let xpAwarded = 0;
   if (input.decision === "add") {
-    if (!input.scheduledAt) throw new ReviewError("INVALID", "Pick the interview date and time.");
+    if (!input.scheduledAt)
+      throw new ReviewError("INVALID", "Pick the interview date and time.");
     const res = await scheduleInterview(userId, row.applicationId, {
       type: input.type,
       scheduledAt: input.scheduledAt,
@@ -594,13 +789,20 @@ export async function resolveInterviewInvite(
     xpAwarded = res.xpAwarded;
   }
   await prisma.emailMessage.updateMany({
-    where: { id: row.id, userId, reviewStatus: { in: ["AUTO_ACCEPTED", "NEEDS_REVIEW"] } },
+    where: {
+      id: row.id,
+      userId,
+      reviewStatus: { in: ["AUTO_ACCEPTED", "NEEDS_REVIEW"] },
+    },
     data: { reviewStatus: "CONFIRMED" },
   });
   await purgeReviewedBodies(userId);
   const label = await applicationLabel(userId, row.applicationId);
   return {
-    message: input.decision === "add" ? `Interview added to ${label ?? "the application"}.` : "Invitation marked as handled.",
+    message:
+      input.decision === "add"
+        ? `Interview added to ${label ?? "the application"}.`
+        : "Invitation marked as handled.",
     applicationId: row.applicationId,
     xpAwarded,
   };

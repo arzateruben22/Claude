@@ -14,9 +14,14 @@ import {
   targetStatusFor,
 } from "@/lib/ingest/rules";
 import { ALL_STATUSES } from "@/lib/applications/status";
-import type { ApplicationObservation, ObservationKind } from "@/lib/ingest/types";
+import type {
+  ApplicationObservation,
+  ObservationKind,
+} from "@/lib/ingest/types";
 
-function obs(over: Partial<ApplicationObservation> = {}): ApplicationObservation {
+function obs(
+  over: Partial<ApplicationObservation> = {},
+): ApplicationObservation {
   return {
     kind: "SUBMITTED",
     source: "EMAIL",
@@ -26,7 +31,11 @@ function obs(over: Partial<ApplicationObservation> = {}): ApplicationObservation
     title: "Apprentice Electrician",
     confidence: 0.95,
     verified: true,
-    evidence: { kind: "EMAIL", sourceRef: "EML:abc@indeed.com", data: { senderKind: "job_board" } },
+    evidence: {
+      kind: "EMAIL",
+      sourceRef: "EML:abc@indeed.com",
+      data: { senderKind: "job_board" },
+    },
     ...over,
   };
 }
@@ -51,13 +60,44 @@ describe("targetStatusFor", () => {
   it("confirms only verified platform confirmations", () => {
     expect(targetStatusFor(obs())).toBe("CONFIRMED");
     expect(targetStatusFor(obs({ verified: false }))).toBe("SUBMITTED");
-    expect(targetStatusFor(obs({ evidence: { kind: "EMAIL", sourceRef: "x", data: { senderKind: "employer" } } }))).toBe("SUBMITTED");
-    expect(targetStatusFor(obs({ source: "EXTENSION", origin: "EXTENSION", evidence: { kind: "EXTENSION_CAPTURE", sourceRef: "capture:1" } }))).toBe(
-      "CONFIRMED",
-    );
-    expect(targetStatusFor(obs({ kind: "USER_CONFIRMED_SUBMISSION", verified: true }))).toBe("SUBMITTED");
-    expect(isPlatformConfirmation(obs({ source: "PLATFORM_API", evidence: { kind: "CSV_ROW", sourceRef: "r" } }))).toBe(true);
-    expect(isPlatformConfirmation(obs({ evidence: { kind: "CSV_ROW", sourceRef: "r" } }))).toBe(false);
+    expect(
+      targetStatusFor(
+        obs({
+          evidence: {
+            kind: "EMAIL",
+            sourceRef: "x",
+            data: { senderKind: "employer" },
+          },
+        }),
+      ),
+    ).toBe("SUBMITTED");
+    expect(
+      targetStatusFor(
+        obs({
+          source: "EXTENSION",
+          origin: "EXTENSION",
+          evidence: { kind: "EXTENSION_CAPTURE", sourceRef: "capture:1" },
+        }),
+      ),
+    ).toBe("CONFIRMED");
+    expect(
+      targetStatusFor(
+        obs({ kind: "USER_CONFIRMED_SUBMISSION", verified: true }),
+      ),
+    ).toBe("SUBMITTED");
+    expect(
+      isPlatformConfirmation(
+        obs({
+          source: "PLATFORM_API",
+          evidence: { kind: "CSV_ROW", sourceRef: "r" },
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isPlatformConfirmation(
+        obs({ evidence: { kind: "CSV_ROW", sourceRef: "r" } }),
+      ),
+    ).toBe(false);
   });
 
   it("maps every status to a kind whose own status is compatible", () => {
@@ -73,11 +113,31 @@ describe("targetStatusFor", () => {
 
 describe("parseSalaryText", () => {
   it("parses hourly and annual ranges", () => {
-    expect(parseSalaryText("$32–$38/hr")).toEqual({ min: 32, max: 38, period: "HOURLY" });
-    expect(parseSalaryText("Pay: $28.50 - $34.00 per hour")).toEqual({ min: 28.5, max: 34, period: "HOURLY" });
-    expect(parseSalaryText("$85,000 - $95,000 a year")).toEqual({ min: 85000, max: 95000, period: "ANNUAL" });
-    expect(parseSalaryText("$70K–85K")).toEqual({ min: 70000, max: 85000, period: "ANNUAL" });
-    expect(parseSalaryText("Up to $40 an hour")).toEqual({ min: 40, max: null, period: "HOURLY" });
+    expect(parseSalaryText("$32–$38/hr")).toEqual({
+      min: 32,
+      max: 38,
+      period: "HOURLY",
+    });
+    expect(parseSalaryText("Pay: $28.50 - $34.00 per hour")).toEqual({
+      min: 28.5,
+      max: 34,
+      period: "HOURLY",
+    });
+    expect(parseSalaryText("$85,000 - $95,000 a year")).toEqual({
+      min: 85000,
+      max: 95000,
+      period: "ANNUAL",
+    });
+    expect(parseSalaryText("$70K–85K")).toEqual({
+      min: 70000,
+      max: 85000,
+      period: "ANNUAL",
+    });
+    expect(parseSalaryText("Up to $40 an hour")).toEqual({
+      min: 40,
+      max: null,
+      period: "HOURLY",
+    });
   });
 
   it("refuses to guess", () => {
@@ -91,10 +151,18 @@ describe("parseSalaryText", () => {
 describe("guessInterviewType", () => {
   it("reads the format from invitation text", () => {
     expect(guessInterviewType("Join the Zoom video interview")).toBe("VIDEO");
-    expect(guessInterviewType("We will call you for a phone screen")).toBe("PHONE_SCREEN");
-    expect(guessInterviewType("Please come on-site to our shop")).toBe("ONSITE");
-    expect(guessInterviewType("JATC panel interview appointment")).toBe("PANEL");
-    expect(guessInterviewType("Interview with the hiring manager")).toBe("OTHER");
+    expect(guessInterviewType("We will call you for a phone screen")).toBe(
+      "PHONE_SCREEN",
+    );
+    expect(guessInterviewType("Please come on-site to our shop")).toBe(
+      "ONSITE",
+    );
+    expect(guessInterviewType("JATC panel interview appointment")).toBe(
+      "PANEL",
+    );
+    expect(guessInterviewType("Interview with the hiring manager")).toBe(
+      "OTHER",
+    );
     expect(guessInterviewType(null)).toBe("OTHER");
   });
 });
@@ -112,7 +180,11 @@ describe("sanitizeObservation", () => {
         observedAt: new Date("2027-01-01T00:00:00Z"),
         platform: "NOT_A_PLATFORM" as never,
         interviewType: "VIDEO",
-        evidence: { kind: "EMAIL", sourceRef: " EML:1 ", snippet: "x".repeat(500) },
+        evidence: {
+          kind: "EMAIL",
+          sourceRef: " EML:1 ",
+          snippet: "x".repeat(500),
+        },
       }),
       now,
     );
@@ -129,10 +201,23 @@ describe("sanitizeObservation", () => {
   });
 
   it("rejects unusable observations", () => {
-    expect(() => sanitizeObservation(obs({ kind: "NOPE" as never }), now)).toThrow(IngestValidationError);
-    expect(() => sanitizeObservation(obs({ source: "USER" as never }), now)).toThrow(IngestValidationError);
-    expect(() => sanitizeObservation(obs({ observedAt: new Date("nope") }), now)).toThrow(IngestValidationError);
-    expect(() => sanitizeObservation(obs({ confidence: Number.NaN }), now)).toThrow(IngestValidationError);
-    expect(() => sanitizeObservation(obs({ evidence: { kind: "EMAIL", sourceRef: "  " } }), now)).toThrow(IngestValidationError);
+    expect(() =>
+      sanitizeObservation(obs({ kind: "NOPE" as never }), now),
+    ).toThrow(IngestValidationError);
+    expect(() =>
+      sanitizeObservation(obs({ source: "USER" as never }), now),
+    ).toThrow(IngestValidationError);
+    expect(() =>
+      sanitizeObservation(obs({ observedAt: new Date("nope") }), now),
+    ).toThrow(IngestValidationError);
+    expect(() =>
+      sanitizeObservation(obs({ confidence: Number.NaN }), now),
+    ).toThrow(IngestValidationError);
+    expect(() =>
+      sanitizeObservation(
+        obs({ evidence: { kind: "EMAIL", sourceRef: "  " } }),
+        now,
+      ),
+    ).toThrow(IngestValidationError);
   });
 });

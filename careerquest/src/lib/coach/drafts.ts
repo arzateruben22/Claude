@@ -77,6 +77,8 @@ export function followUpEmail(app: DraftApplication, opts: { userName: string; t
     const days = daysSince(app.appliedAt, opts.now);
     if (days !== null && days < 7) notes.push(`You applied ${days === 0 ? "today" : `${days} day${days === 1 ? "" : "s"} ago`}. Many recruiters suggest waiting about a week before following up.`);
   }
+  const closed: Record<string, string> = { REJECTED: "rejected", WITHDRAWN: "withdrawn", CLOSED: "closed", HIRED: "hired", ACCEPTED: "accepted" };
+  if (closed[app.status]) notes.unshift(`This application is marked ${closed[app.status]} in your tracker, so a follow-up may not be appropriate. Double-check before sending.`);
   if (!app.recruiterName) notes.push("No recruiter contact is recorded on this application, so the greeting is a placeholder. Add a contact on the application if you have one.");
   notes.push("Fill in or delete every [bracketed] part before sending.");
   return { draft: { title: `Follow-up email: ${app.companyName}`, subject, body }, notes };

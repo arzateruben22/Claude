@@ -169,7 +169,7 @@ function programMetric(p: ProgramFact): Metric {
     ]
       .filter(Boolean)
       .join("; "),
-    href: "/academy/apprenticeships",
+    href: `/academy/apprenticeships/${encodeURIComponent(p.slug)}`,
   };
 }
 

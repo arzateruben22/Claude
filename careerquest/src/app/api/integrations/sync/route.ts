@@ -21,7 +21,8 @@ export async function POST(req: Request) {
   const env = readIntegrationEnv();
   const authorization = req.headers.get("authorization");
 
-  if (authorization && /^bearer\s+/i.test(authorization)) {
+  // Any Bearer credential is a scheduler call (browsers use the session cookie, never a bearer token).
+  if (authorization && /^bearer(\s|$)/i.test(authorization.trim())) {
     const presented = authorization.replace(/^bearer\s+/i, "").trim();
     const secret = env.CRON_SECRET ?? "";
     if (secret.length < MIN_CRON_SECRET || !safeEqual(presented, secret)) {

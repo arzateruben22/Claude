@@ -1,14 +1,39 @@
 "use client";
 
-import { Alert, Badge, Button, Card, CardContent, CardFooter, CardHeader } from "@/components/ui";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui";
 import { resolveEmailReviewAction } from "@/lib/ingest/review-actions";
-import type { AttachOption, EmailReviewItemView } from "@/lib/ingest/review-view";
-import { AttachOther, CandidateMatches, ConfidenceBadge, NoImplicitSubmit, ReviewFields } from "./review-parts";
+import type {
+  AttachOption,
+  EmailReviewItemView,
+} from "@/lib/ingest/review-view";
+import {
+  AttachOther,
+  CandidateMatches,
+  ConfidenceBadge,
+  NoImplicitSubmit,
+  ReviewFields,
+} from "./review-parts";
 import { useReviewForm } from "./use-review-form";
 
 /** One email the classifier could not file with confidence. */
-export function EmailReviewCard({ item, attachOptions }: { item: EmailReviewItemView; attachOptions: AttachOption[] }) {
-  const { pending, submitted, errors, formProps } = useReviewForm(resolveEmailReviewAction);
+export function EmailReviewCard({
+  item,
+  attachOptions,
+}: {
+  item: EmailReviewItemView;
+  attachOptions: AttachOption[];
+}) {
+  const { pending, submitted, errors, formProps } = useReviewForm(
+    resolveEmailReviewAction,
+  );
   const idPrefix = `email-${item.id}`;
   return (
     <Card>
@@ -27,7 +52,11 @@ export function EmailReviewCard({ item, attachOptions }: { item: EmailReviewItem
           <div className="flex flex-wrap gap-1 sm:justify-end">
             <Badge tone="info">{item.classificationLabel}</Badge>
             <ConfidenceBadge value={item.confidence} />
-            {item.verifiedSender ? <Badge tone="success">Verified sender</Badge> : <Badge tone="warning">Unverified sender</Badge>}
+            {item.verifiedSender ? (
+              <Badge tone="success">Verified sender</Badge>
+            ) : (
+              <Badge tone="warning">Unverified sender</Badge>
+            )}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -40,27 +69,65 @@ export function EmailReviewCard({ item, attachOptions }: { item: EmailReviewItem
           )}
           {item.body && (
             <details className="text-sm">
-              <summary className="cursor-pointer text-fg-muted hover:text-fg">Show the email text kept for review</summary>
+              <summary className="cursor-pointer text-fg-muted hover:text-fg">
+                Show the email text kept for review
+              </summary>
               <pre className="mt-2 max-h-64 overflow-y-auto whitespace-pre-wrap break-words rounded-ctl bg-bg-elevated p-3 text-xs text-fg-muted">
                 {item.body}
               </pre>
-              <p className="mt-1 text-xs text-fg-subtle">This text is deleted once you confirm or dismiss the email.</p>
+              <p className="mt-1 text-xs text-fg-subtle">
+                This text is deleted once you confirm or dismiss the email.
+              </p>
             </details>
           )}
-          <ReviewFields idPrefix={idPrefix} fields={item.fields} errors={errors} showInterview={item.isInterview} />
-          <section aria-labelledby={`${idPrefix}-matches`} className="space-y-2">
-            <h4 id={`${idPrefix}-matches`} className="text-xs font-medium text-fg-muted">
+          <ReviewFields
+            idPrefix={idPrefix}
+            fields={item.fields}
+            errors={errors}
+            showInterview={item.isInterview}
+          />
+          <section
+            aria-labelledby={`${idPrefix}-matches`}
+            className="space-y-2"
+          >
+            <h4
+              id={`${idPrefix}-matches`}
+              className="text-xs font-medium text-fg-muted"
+            >
               Tracked applications this could belong to
             </h4>
-            <CandidateMatches candidates={item.candidates} pending={pending} submitted={submitted} />
+            <CandidateMatches
+              candidates={item.candidates}
+              pending={pending}
+              submitted={submitted}
+            />
           </section>
-          <AttachOther idPrefix={idPrefix} options={attachOptions} pending={pending} submitted={submitted} errors={errors} />
+          <AttachOther
+            idPrefix={idPrefix}
+            options={attachOptions}
+            pending={pending}
+            submitted={submitted}
+            errors={errors}
+          />
         </CardContent>
         <CardFooter className="flex-wrap">
-          <Button type="submit" name="decision" value="create" loading={pending && submitted === "create"} disabled={pending}>
+          <Button
+            type="submit"
+            name="decision"
+            value="create"
+            loading={pending && submitted === "create"}
+            disabled={pending}
+          >
             Create new application
           </Button>
-          <Button type="submit" name="decision" value="dismiss" variant="ghost" loading={pending && submitted === "dismiss"} disabled={pending}>
+          <Button
+            type="submit"
+            name="decision"
+            value="dismiss"
+            variant="ghost"
+            loading={pending && submitted === "dismiss"}
+            disabled={pending}
+          >
             Not an application
           </Button>
         </CardFooter>

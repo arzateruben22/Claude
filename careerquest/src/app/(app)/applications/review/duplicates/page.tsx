@@ -16,8 +16,9 @@ export default async function ReviewDuplicatesPage() {
             Possible duplicates
           </h2>
           <p className="text-sm text-fg-muted">
-            The same job saved twice — for example from Indeed and again from the employer&apos;s Workday site. A scan compares
-            your applications; it never merges anything by itself.
+            The same job saved twice — for example from Indeed and again from
+            the employer&apos;s Workday site. A scan compares your applications;
+            it never merges anything by itself.
           </p>
         </div>
         {items.length > 0 && <ScanDuplicatesButton />}
@@ -33,7 +34,8 @@ export default async function ReviewDuplicatesPage() {
         <>
           {total > items.length && (
             <p className="text-sm text-fg-muted">
-              Showing the {items.length} strongest of {total} pairs. Resolve these to see the rest.
+              Showing the {items.length} strongest of {total} pairs. Resolve
+              these to see the rest.
             </p>
           )}
           {items.map((item) => (

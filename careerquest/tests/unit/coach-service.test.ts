@@ -228,6 +228,8 @@ describe("coach chat (DB)", () => {
     expect(res.reply.citations.map((c) => c.id)).toContain("fit.score");
     expect(res.reply.content).toContain('"Followed lockout/tagout (LOTO) procedures on conveyor maintenance with the site electrician"');
     expect(res.reply.content).toMatch(/multimeter/);
+    expect(res.reply.drafts?.[0]?.title).toBe("Tailored résumé draft: Acme Electric");
+    expect(res.reply.drafts?.[0]?.body).toContain("Followed lockout/tagout (LOTO) procedures");
   });
 
   it("runs an interactive mock interview across messages", async () => {

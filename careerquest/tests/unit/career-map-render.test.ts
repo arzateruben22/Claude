@@ -107,7 +107,7 @@ describe("career map renders", () => {
     expect(sup).toContain("Estimate");
     expect(sup).toContain("On file");
     expect(sup).toContain("last checked Oct 21, 2026");
-    expect(sup).toContain("8,000 hours of on-the-job work (General Electrician)");
+    expect(sup).toContain("8,000 hours of on-the-job work");
 
     const hvac = renderToStaticMarkup(createElement(NodePanel, { node: byKey.get("commercial-hvac")!, nodesByKey: byKey, isCurrent: false, onSelect: () => undefined }));
     expect(hvac).toContain("no researched figures");

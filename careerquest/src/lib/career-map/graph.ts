@@ -155,6 +155,8 @@ const URL_LABELS: [RegExp, string][] = [
   [/library\/fees/i, "CSLB: fees"],
   [/Before_Applying_For_License/i, "CSLB: before applying for a license"],
   [/Issuing_My_License/i, "CSLB: issuing your license"],
+  [/industrybulletins/i, "CSLB: industry bulletin (PDF)"],
+  [/electricaltrainee\.htm/i, "DIR: Electrician Trainee program"],
 ];
 
 function labelForUrl(url: string): string {
@@ -432,7 +434,7 @@ export function buildCareerGraph(seed: CareerSeed): CareerGraph {
       summary:
         "Build on-the-job hours under supervision — as a registered trainee working beside a certified electrician, or inside your apprenticeship — and keep proof so every hour can be verified.",
       requirements: [
-        ...(general ? [classificationHours(general, "of on-the-job work (General Electrician)")] : []),
+        ...(general ? [classificationHours(general, "of on-the-job work")] : []),
         ...specialties.map((c) => classificationHours(c, "of on-the-job work")),
         sourced("Trainee route to the exam", t.pathToCertification),
         general?.notes ? { ...sourced("How General Electrician hours are counted", general.notes)!, flag: null } : null,
@@ -456,7 +458,7 @@ export function buildCareerGraph(seed: CareerSeed): CareerGraph {
       resources: [
         internal("CareerQuest work-hours log", "/academy/hours"),
         ...(general ? linksFrom(general.hours?.sources ?? []).map((l) => ({ ...l, label: "DIR: General Electrician hour requirements" })) : []),
-        ...linksFrom(t.sources, [/dlse\/ecu\/electricaltrainee/i]),
+        ...linksFrom(t.sources, [/electricaltrainee\.htm/i]),
       ],
       prerequisites: [req("trainee-or-apprentice")],
     }),

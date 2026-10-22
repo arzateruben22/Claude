@@ -88,7 +88,7 @@ export function SkillBranchTree({
               data-skill-key={s.key}
               onClick={() => onSelect(s.key)}
               className={cn(
-                "flex h-full w-full flex-col rounded-ctl border px-3 py-2.5 text-left transition-colors hover:border-accent/70",
+                "flex h-full w-full cursor-pointer flex-col rounded-ctl border px-3 py-2.5 text-left transition-colors hover:border-accent/70",
                 s.level >= s.maxLevel ? "border-gold/50 bg-gold-soft" : s.level > 0 ? "border-accent/40 bg-accent-soft" : "border-line bg-bg-elevated",
                 selected && "ring-2 ring-accent",
               )}
@@ -98,7 +98,7 @@ export function SkillBranchTree({
                 {s.locked && <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fg-subtle" aria-hidden />}
               </span>
               <span className="mt-auto">
-                <span className="flex items-baseline justify-between gap-2 text-xs">
+                <span className="flex flex-wrap items-baseline justify-between gap-x-2 text-xs">
                   <span className="font-semibold text-fg tnum">
                     Level {s.level} <span className="font-normal text-fg-subtle">of {s.maxLevel}</span>
                   </span>

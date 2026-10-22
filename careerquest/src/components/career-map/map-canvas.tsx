@@ -243,7 +243,7 @@ export function MapCanvas({
                 onFocus={() => setFocusKey(n.key)}
                 onKeyDown={(e) => onNodeKeyDown(e, n.key)}
                 className={cn(
-                  "absolute flex flex-col rounded-ctl border px-2.5 py-2 text-left transition-colors hover:border-accent/70",
+                  "absolute flex cursor-pointer flex-col rounded-ctl border px-2.5 py-2 text-left transition-colors hover:border-accent/70",
                   STATUS_CARD[s.status],
                   selected && "ring-2 ring-accent",
                   current && !selected && "ring-2 ring-gold animate-pulse-glow",

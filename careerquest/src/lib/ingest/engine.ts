@@ -16,8 +16,16 @@ import "server-only";
  * XP is only ever awarded by the service's event recording; the amounts are reported back.
  */
 import { prisma } from "@/lib/db";
-import type { EmailMessage, ExtensionCapture, Prisma } from "@/generated/prisma/client";
-import type { ApplicationSource, ApplicationStatus, CaptureKind } from "@/generated/prisma/enums";
+import type {
+  EmailMessage,
+  ExtensionCapture,
+  Prisma,
+} from "@/generated/prisma/client";
+import type {
+  ApplicationSource,
+  ApplicationStatus,
+  CaptureKind,
+} from "@/generated/prisma/enums";
 import { applicationInputSchema } from "@/lib/validation/application";
 import {
   addSourceLinkInTx,
@@ -83,7 +91,10 @@ export async function ingestObservation(
   opts: IngestOptions = {},
 ): Promise<IngestResult> {
   const obs = sanitizeObservation(observation);
-  return prisma.$transaction((tx) => ingestSanitized(tx, userId, obs, opts), TX_OPTIONS);
+  return prisma.$transaction(
+    (tx) => ingestSanitized(tx, userId, obs, opts),
+    TX_OPTIONS,
+  );
 }
 
 /** `ingestObservation` inside the caller's transaction (e.g. the review queue also updates its row). */
@@ -100,7 +111,13 @@ export async function ingestObservationInTx(
 export function partialFromObservation(
   obs: Pick<
     ApplicationObservation,
-    "company" | "title" | "location" | "requisitionId" | "postingUrl" | "platform" | "observedAt"
+    | "company"
+    | "title"
+    | "location"
+    | "requisitionId"
+    | "postingUrl"
+    | "platform"
+    | "observedAt"
   >,
   emailThreadId?: string | null,
 ): CandidatePartial {
@@ -132,27 +149,39 @@ const CAPTURE_KIND_TO_OBSERVATION: Record<CaptureKind, ObservationKind> = {
 export const CAPTURE_VERIFY_MIN_CONFIDENCE = 0.9;
 
 function asRecord(v: unknown): Record<string, unknown> {
-  return v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
+  return v && typeof v === "object" && !Array.isArray(v)
+    ? (v as Record<string, unknown>)
+    : {};
 }
 
-const str = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v.trim() : null);
+const str = (v: unknown): string | null =>
+  typeof v === "string" && v.trim() ? v.trim() : null;
 
 /** Observation for an extension capture row (`ExtensionCapture`). */
-export function observationFromCapture(capture: ExtensionCapture, now: Date = new Date()): ApplicationObservation {
+export function observationFromCapture(
+  capture: ExtensionCapture,
+  now: Date = new Date(),
+): ApplicationObservation {
   const ev = asRecord(capture.evidence);
   const kind = CAPTURE_KIND_TO_OBSERVATION[capture.kind];
   const capturedAt = str(ev.capturedAt) ? new Date(str(ev.capturedAt)!) : null;
   const observedAt =
-    capturedAt && !Number.isNaN(capturedAt.getTime()) && capturedAt.getTime() <= now.getTime()
+    capturedAt &&
+    !Number.isNaN(capturedAt.getTime()) &&
+    capturedAt.getTime() <= now.getTime()
       ? capturedAt
       : capture.createdAt;
   const url = /^https?:\/\//i.test(capture.url) ? capture.url : null;
-  const platform: ApplicationSource = capture.platform !== "OTHER" ? capture.platform : detectPlatform(url);
+  const platform: ApplicationSource =
+    capture.platform !== "OTHER" ? capture.platform : detectPlatform(url);
   const verified =
     capture.kind === "MANUAL_CONFIRMATION" ||
-    (capture.kind === "CONFIRMATION_PAGE" && capture.confidence >= CAPTURE_VERIFY_MIN_CONFIDENCE);
+    (capture.kind === "CONFIRMATION_PAGE" &&
+      capture.confidence >= CAPTURE_VERIFY_MIN_CONFIDENCE);
   const detectedBy = Array.isArray(ev.detectedBy)
-    ? ev.detectedBy.filter((s): s is string => typeof s === "string").slice(0, 20)
+    ? ev.detectedBy
+        .filter((s): s is string => typeof s === "string")
+        .slice(0, 20)
     : [];
   return {
     kind,
@@ -173,20 +202,33 @@ export function observationFromCapture(capture: ExtensionCapture, now: Date = ne
       sourceRef: `capture:${capture.id}`,
       title: str(ev.pageTitle),
       snippet: str(ev.confirmationText),
-      data: { captureKind: capture.kind, platform, detectedBy, url: normalizeUrl(url) },
+      data: {
+        captureKind: capture.kind,
+        platform,
+        detectedBy,
+        url: normalizeUrl(url),
+      },
     },
     applicationId: capture.applicationId,
   };
 }
 
 /** The pending observation stored on an EmailMessage row by email-core, or null. */
-export function observationFromEmailRow(row: Pick<EmailMessage, "extracted">): ApplicationObservation | null {
+export function observationFromEmailRow(
+  row: Pick<EmailMessage, "extracted">,
+): ApplicationObservation | null {
   const stored = asRecord(row.extracted).observation;
   const s = asRecord(stored);
-  if (typeof s.kind !== "string" || typeof s.observedAt !== "string" || !s.evidence) return null;
+  if (
+    typeof s.kind !== "string" ||
+    typeof s.observedAt !== "string" ||
+    !s.evidence
+  )
+    return null;
   const obs = deserializeObservation(s as unknown as SerializedObservation);
   if (Number.isNaN(obs.observedAt.getTime())) return null;
-  if (obs.interviewAt && Number.isNaN(obs.interviewAt.getTime())) obs.interviewAt = null;
+  if (obs.interviewAt && Number.isNaN(obs.interviewAt.getTime()))
+    obs.interviewAt = null;
   return obs;
 }
 
@@ -194,7 +236,11 @@ export function observationFromEmailRow(row: Pick<EmailMessage, "extracted">): A
 // Engine
 // ---------------------------------------------------------------------------
 
-type EvidenceRef = { id: string; applicationId: string | null; created: boolean };
+type EvidenceRef = {
+  id: string;
+  applicationId: string | null;
+  created: boolean;
+};
 
 type Run = {
   tx: Tx;
@@ -212,7 +258,9 @@ function result(
   action: IngestResult["action"],
   applicationId: string | null,
   reason: string,
-  extra: Partial<Pick<IngestResult, "candidateIds" | "statusApplied" | "xpAwarded">> = {},
+  extra: Partial<
+    Pick<IngestResult, "candidateIds" | "statusApplied" | "xpAwarded">
+  > = {},
 ): IngestResult {
   return {
     action,
@@ -233,33 +281,54 @@ export async function lockUserIngestion(tx: Tx, userId: string): Promise<void> {
 }
 
 async function timezoneOf(tx: Tx, userId: string): Promise<string> {
-  const p = await tx.userProfile.findUnique({ where: { userId }, select: { timezone: true } });
+  const p = await tx.userProfile.findUnique({
+    where: { userId },
+    select: { timezone: true },
+  });
   return p?.timezone || DEFAULT_TIMEZONE;
 }
 
 /** Follow merges so evidence for a merged-away record lands on the record that absorbed it. */
-async function resolveOwnedApplication(tx: Tx, userId: string, id: string): Promise<string> {
+async function resolveOwnedApplication(
+  tx: Tx,
+  userId: string,
+  id: string,
+): Promise<string> {
   let current = id;
   for (let hop = 0; hop <= MAX_MERGE_HOPS; hop++) {
-    const app = await tx.application.findFirst({ where: { id: current, userId }, select: { id: true, mergedIntoId: true } });
+    const app = await tx.application.findFirst({
+      where: { id: current, userId },
+      select: { id: true, mergedIntoId: true },
+    });
     if (!app) throw new IngestNotFoundError();
     if (!app.mergedIntoId) return app.id;
     current = app.mergedIntoId;
   }
-  throw new IngestNotFoundError("Application not found (merge chain too long).");
+  throw new IngestNotFoundError(
+    "Application not found (merge chain too long).",
+  );
 }
 
 function evidenceData(obs: ApplicationObservation): Prisma.InputJsonValue {
   const data: Record<string, unknown> = {
     ...asRecord(obs.evidence.data),
-    observation: { kind: obs.kind, source: obs.source, confidence: obs.confidence, verified: obs.verified },
+    observation: {
+      kind: obs.kind,
+      source: obs.source,
+      confidence: obs.confidence,
+      verified: obs.verified,
+    },
   };
   if (obs.platform && data.platform === undefined) data.platform = obs.platform;
   if (obs.interviewAt) data.interviewAt = obs.interviewAt.toISOString();
   return JSON.parse(JSON.stringify(data)) as Prisma.InputJsonValue;
 }
 
-async function upsertEvidence(tx: Tx, userId: string, obs: ApplicationObservation): Promise<EvidenceRef> {
+async function upsertEvidence(
+  tx: Tx,
+  userId: string,
+  obs: ApplicationObservation,
+): Promise<EvidenceRef> {
   const { kind, sourceRef } = obs.evidence;
   const inserted = await tx.evidence.createMany({
     data: [
@@ -284,7 +353,11 @@ async function upsertEvidence(tx: Tx, userId: string, obs: ApplicationObservatio
 }
 
 /** Email thread id for email evidence ("<PROVIDER>:<externalId>"), or one the producer supplied. */
-async function emailThreadIdFor(tx: Tx, userId: string, obs: ApplicationObservation): Promise<string | null> {
+async function emailThreadIdFor(
+  tx: Tx,
+  userId: string,
+  obs: ApplicationObservation,
+): Promise<string | null> {
   const supplied = str(asRecord(obs.evidence.data).threadId);
   if (supplied) return supplied;
   if (obs.evidence.kind !== "EMAIL") return null;
@@ -292,7 +365,13 @@ async function emailThreadIdFor(tx: Tx, userId: string, obs: ApplicationObservat
   const sep = ref.indexOf(":");
   if (sep <= 0) return null;
   const row = await tx.emailMessage.findUnique({
-    where: { userId_provider_externalId: { userId, provider: ref.slice(0, sep), externalId: ref.slice(sep + 1) } },
+    where: {
+      userId_provider_externalId: {
+        userId,
+        provider: ref.slice(0, sep),
+        externalId: ref.slice(sep + 1),
+      },
+    },
     select: { threadId: true },
   });
   return row?.threadId ?? null;
@@ -305,23 +384,40 @@ async function ingestSanitized(
   opts: IngestOptions,
 ): Promise<IngestResult> {
   const T = INGEST_THRESHOLDS;
-  const autoApply = Math.min(1, Math.max(0, opts.autoApplyThreshold ?? T.AUTO_APPLY));
+  const autoApply = Math.min(
+    1,
+    Math.max(0, opts.autoApplyThreshold ?? T.AUTO_APPLY),
+  );
   await lockUserIngestion(tx, userId);
-  const explicitId = obs.applicationId ? await resolveOwnedApplication(tx, userId, obs.applicationId) : null;
+  const explicitId = obs.applicationId
+    ? await resolveOwnedApplication(tx, userId, obs.applicationId)
+    : null;
 
   // Starting an application is never a submission: report what it matches, change nothing.
   if (obs.kind === "APPLY_STARTED") {
     let matchId = explicitId;
     if (!matchId) {
-      const d = decideMatch(await findCandidateMatches(tx, userId, partialFromObservation(obs), { limit: 3 }));
+      const d = decideMatch(
+        await findCandidateMatches(tx, userId, partialFromObservation(obs), {
+          limit: 3,
+        }),
+      );
       if (d.outcome === "match") matchId = d.applicationId;
     }
-    return result("ignored", matchId, "Starting an application is not a submission; nothing was recorded.");
+    return result(
+      "ignored",
+      matchId,
+      "Starting an application is not a submission; nothing was recorded.",
+    );
   }
 
   const ev = await upsertEvidence(tx, userId, obs);
   if (!ev.created && ev.applicationId) {
-    return result("duplicate", ev.applicationId, "This evidence was already recorded on the application.");
+    return result(
+      "duplicate",
+      ev.applicationId,
+      "This evidence was already recorded on the application.",
+    );
   }
   const run: Run = {
     tx,
@@ -337,10 +433,18 @@ async function ingestSanitized(
   let targetId = explicitId;
   if (!targetId && !opts.forceCreate) {
     if (obs.confidence < T.REVIEW_FLOOR) {
-      return discardAndIgnore(run, `Confidence ${fmt(obs.confidence)} is below the review floor (${T.REVIEW_FLOOR}).`);
+      return discardAndIgnore(
+        run,
+        `Confidence ${fmt(obs.confidence)} is below the review floor (${T.REVIEW_FLOOR}).`,
+      );
     }
     const threadId = await emailThreadIdFor(tx, userId, obs);
-    const candidates = await findCandidateMatches(tx, userId, partialFromObservation(obs, threadId), { limit: 5 });
+    const candidates = await findCandidateMatches(
+      tx,
+      userId,
+      partialFromObservation(obs, threadId),
+      { limit: 5 },
+    );
     const decision = decideMatch(candidates);
     if (decision.outcome === "review") {
       const n = decision.candidateIds.length;
@@ -368,15 +472,23 @@ async function ingestSanitized(
   return createFromObservation(run, autoApply);
 }
 
-async function discardAndIgnore(run: Run, reason: string): Promise<IngestResult> {
-  if (run.ev.created) await run.tx.evidence.delete({ where: { id: run.ev.id } });
+async function discardAndIgnore(
+  run: Run,
+  reason: string,
+): Promise<IngestResult> {
+  if (run.ev.created)
+    await run.tx.evidence.delete({ where: { id: run.ev.id } });
   return result("ignored", null, reason);
 }
 
-function appliedAtFor(status: ApplicationStatus, obs: ApplicationObservation): string | undefined {
+function appliedAtFor(
+  status: ApplicationStatus,
+  obs: ApplicationObservation,
+): string | undefined {
   const sent =
     impliesSubmission(status) ||
-    ((status === "WITHDRAWN" || status === "CLOSED") && !NON_SUBMISSION_KINDS.has(obs.kind));
+    ((status === "WITHDRAWN" || status === "CLOSED") &&
+      !NON_SUBMISSION_KINDS.has(obs.kind));
   return sent ? obs.observedAt.toISOString() : undefined;
 }
 
@@ -385,21 +497,41 @@ function platformOf(obs: ApplicationObservation): ApplicationSource {
   return obs.postingUrl ? detectPlatform(obs.postingUrl) : "OTHER";
 }
 
-async function createFromObservation(run: Run, autoApply: number): Promise<IngestResult> {
+async function createFromObservation(
+  run: Run,
+  autoApply: number,
+): Promise<IngestResult> {
   const { tx, userId, obs, opts, ev } = run;
   const T = INGEST_THRESHOLDS;
   if (!CREATING_KINDS.has(obs.kind)) {
-    return discardAndIgnore(run, "Nothing matched, and this kind of evidence never creates an application.");
+    return discardAndIgnore(
+      run,
+      "Nothing matched, and this kind of evidence never creates an application.",
+    );
   }
   const status = opts.statusOverride ?? targetStatusFor(obs);
-  if (!status) return discardAndIgnore(run, "This evidence does not imply an application stage.");
+  if (!status)
+    return discardAndIgnore(
+      run,
+      "This evidence does not imply an application stage.",
+    );
 
   if (!obs.company || !obs.title) {
-    if (opts.forceCreate) throw new IngestValidationError("Company and job title are required to create an application.");
+    if (opts.forceCreate)
+      throw new IngestValidationError(
+        "Company and job title are required to create an application.",
+      );
     if (obs.confidence >= T.REVIEW_FLOOR) {
-      return result("needs_review", null, "Company or job title is missing; add them in the review queue.");
+      return result(
+        "needs_review",
+        null,
+        "Company or job title is missing; add them in the review queue.",
+      );
     }
-    return discardAndIgnore(run, "Company or job title is missing and confidence is low.");
+    return discardAndIgnore(
+      run,
+      "Company or job title is missing and confidence is low.",
+    );
   }
   if (!opts.forceCreate) {
     if (obs.confidence < autoApply) {
@@ -410,7 +542,11 @@ async function createFromObservation(run: Run, autoApply: number): Promise<Inges
       );
     }
     if (opts.allowCreate === false) {
-      return result("needs_review", null, "No tracked application matches; confirm to create one.");
+      return result(
+        "needs_review",
+        null,
+        "No tracked application matches; confirm to create one.",
+      );
     }
   }
 
@@ -432,22 +568,37 @@ async function createFromObservation(run: Run, autoApply: number): Promise<Inges
     recruiterEmail: obs.recruiterEmail ?? undefined,
   });
   if (!parsed.success) {
-    throw new IngestValidationError(parsed.error.issues[0]?.message ?? "Observation fields are invalid.");
+    throw new IngestValidationError(
+      parsed.error.issues[0]?.message ?? "Observation fields are invalid.",
+    );
   }
-  const created = await createApplicationInTx(tx, userId, parsed.data, obs.origin, {
-    source: obs.source,
-    verified: obs.verified,
-    evidenceId: ev.id,
-  });
+  const created = await createApplicationInTx(
+    tx,
+    userId,
+    parsed.data,
+    obs.origin,
+    {
+      source: obs.source,
+      verified: obs.verified,
+      evidenceId: ev.id,
+    },
+  );
   const appId = created.application.id;
   await tx.application.update({
     where: { id: appId },
     data: { detectionConfidence: obs.confidence, lastSyncedAt: run.now },
   });
   if (platform !== "OTHER" || obs.postingUrl) {
-    await addSourceLinkInTx(tx, userId, appId, { platform, url: obs.postingUrl, origin: obs.origin });
+    await addSourceLinkInTx(tx, userId, appId, {
+      platform,
+      url: obs.postingUrl,
+      origin: obs.origin,
+    });
   }
-  await tx.evidence.update({ where: { id: ev.id }, data: { applicationId: appId } });
+  await tx.evidence.update({
+    where: { id: ev.id },
+    data: { applicationId: appId },
+  });
   const interview = await recordInterviewInvite(run, appId, false);
   const label = `${created.application.companyName} – ${created.application.positionTitle}`;
   return result(
@@ -463,7 +614,10 @@ async function createFromObservation(run: Run, autoApply: number): Promise<Inges
  * refuses an inferred change)? Same or earlier stages are stale news; a closing status after an
  * open stage, or later-stage evidence after a closed one, is progress.
  */
-export function isStatusProgress(current: ApplicationStatus, next: ApplicationStatus): boolean {
+export function isStatusProgress(
+  current: ApplicationStatus,
+  next: ApplicationStatus,
+): boolean {
   if (current === next) return false;
   const ct = isTerminalStatus(current);
   const nt = isTerminalStatus(next);
@@ -473,16 +627,33 @@ export function isStatusProgress(current: ApplicationStatus, next: ApplicationSt
   return statusRank(next) >= statusRank("SCREENING");
 }
 
-async function eventExists(tx: Tx, userId: string, dedupeKey: string): Promise<boolean> {
-  const e = await tx.applicationEvent.findUnique({ where: { userId_dedupeKey: { userId, dedupeKey } }, select: { id: true } });
+async function eventExists(
+  tx: Tx,
+  userId: string,
+  dedupeKey: string,
+): Promise<boolean> {
+  const e = await tx.applicationEvent.findUnique({
+    where: { userId_dedupeKey: { userId, dedupeKey } },
+    select: { id: true },
+  });
   return e !== null;
 }
 
-async function applyToExisting(run: Run, applicationId: string): Promise<IngestResult> {
+async function applyToExisting(
+  run: Run,
+  applicationId: string,
+): Promise<IngestResult> {
   const { tx, userId, obs, opts, ev } = run;
   const app = await tx.application.findFirst({
     where: { id: applicationId, userId },
-    select: { id: true, companyName: true, positionTitle: true, status: true, statusVerified: true, statusUpdatedAt: true },
+    select: {
+      id: true,
+      companyName: true,
+      positionTitle: true,
+      status: true,
+      statusVerified: true,
+      statusUpdatedAt: true,
+    },
   });
   if (!app) throw new IngestNotFoundError();
   const label = `${app.companyName} – ${app.positionTitle}`;
@@ -510,7 +681,9 @@ async function applyToExisting(run: Run, applicationId: string): Promise<IngestR
         status,
         occurredAt: obs.observedAt,
         evidenceId: ev.id,
-        note: obs.interviewAt ? `Interview invitation for ${formatInTz(obs.interviewAt, run.timezone, "datetime")}` : null,
+        note: obs.interviewAt
+          ? `Interview invitation for ${formatInTz(obs.interviewAt, run.timezone, "datetime")}`
+          : null,
       },
       obs.source,
       obs.verified,
@@ -518,8 +691,14 @@ async function applyToExisting(run: Run, applicationId: string): Promise<IngestR
     if (change.applied) {
       statusApplied = change.toStatus;
       xp += change.xpAwarded;
-      statusNote = change.confirmed ? `confirmed ${STATUS_LABELS[change.toStatus]}` : `moved to ${STATUS_LABELS[change.toStatus]}`;
-    } else if (change.reason === "inferred_not_allowed" && !run.explicit && isStatusProgress(app.status, status)) {
+      statusNote = change.confirmed
+        ? `confirmed ${STATUS_LABELS[change.toStatus]}`
+        : `moved to ${STATUS_LABELS[change.toStatus]}`;
+    } else if (
+      change.reason === "inferred_not_allowed" &&
+      !run.explicit &&
+      isStatusProgress(app.status, status)
+    ) {
       // Unverified progress over a verified stage: nothing is applied or attached; the user decides.
       return result(
         "needs_review",
@@ -528,7 +707,10 @@ async function applyToExisting(run: Run, applicationId: string): Promise<IngestR
         { candidateIds: [applicationId] },
       );
     } else {
-      statusNote = change.reason === "same_status" ? change.message : `stage unchanged: ${change.message}`;
+      statusNote =
+        change.reason === "same_status"
+          ? change.message
+          : `stage unchanged: ${change.message}`;
     }
   }
 
@@ -546,11 +728,24 @@ async function applyToExisting(run: Run, applicationId: string): Promise<IngestR
   const platform = platformOf(obs);
   let linked = false;
   if (platform !== "OTHER" || obs.postingUrl) {
-    linked = (await addSourceLinkInTx(tx, userId, applicationId, { platform, url: obs.postingUrl, origin: obs.origin })).created;
+    linked = (
+      await addSourceLinkInTx(tx, userId, applicationId, {
+        platform,
+        url: obs.postingUrl,
+        origin: obs.origin,
+      })
+    ).created;
   }
   await tx.evidence.update({ where: { id: ev.id }, data: { applicationId } });
-  await tx.application.update({ where: { id: applicationId }, data: { lastSyncedAt: run.now } });
-  const interview = await recordInterviewInvite(run, applicationId, hadInterviewMilestone);
+  await tx.application.update({
+    where: { id: applicationId },
+    data: { lastSyncedAt: run.now },
+  });
+  const interview = await recordInterviewInvite(
+    run,
+    applicationId,
+    hadInterviewMilestone,
+  );
   xp += interview.xp;
 
   const parts = [
@@ -560,10 +755,15 @@ async function applyToExisting(run: Run, applicationId: string): Promise<IngestR
     linked ? "source link added" : null,
     interview.interviewId ? "interview added" : null,
   ].filter(Boolean);
-  return result("updated", applicationId, `Matched ${label}: ${parts.join("; ")}.`, {
-    statusApplied,
-    xpAwarded: xp,
-  });
+  return result(
+    "updated",
+    applicationId,
+    `Matched ${label}: ${parts.join("; ")}.`,
+    {
+      statusApplied,
+      xpAwarded: xp,
+    },
+  );
 }
 
 /**
@@ -580,7 +780,11 @@ async function recordInterviewInvite(
   const { tx, userId, obs, ev, timezone } = run;
   const at = obs.interviewAt;
   if (!at) return { xp: 0, interviewId: null };
-  const type = obs.interviewType ?? guessInterviewType([obs.evidence.title, obs.evidence.snippet].filter(Boolean).join(" "));
+  const type =
+    obs.interviewType ??
+    guessInterviewType(
+      [obs.evidence.title, obs.evidence.snippet].filter(Boolean).join(" "),
+    );
   const when = formatInTz(at, timezone, "datetime");
   let xp = 0;
   let interviewId: string | null = null;
@@ -594,7 +798,13 @@ async function recordInterviewInvite(
       interviewId = existing.id;
     } else {
       const interview = await tx.interview.create({
-        data: { userId, applicationId, type, scheduledAt: at, notes: "Added from a reviewed interview invitation." },
+        data: {
+          userId,
+          applicationId,
+          type,
+          scheduledAt: at,
+          notes: "Added from a reviewed interview invitation.",
+        },
       });
       interviewId = interview.id;
       if (hadMilestone) {
@@ -608,7 +818,12 @@ async function recordInterviewInvite(
           activityDate: todayInTz(timezone, obs.observedAt),
           dedupeKey: `${applicationId}:INTERVIEW_SCHEDULED:${interview.id}`,
           evidenceId: ev.id,
-          payload: { interviewId: interview.id, scheduledAt: at.toISOString(), typeLabel: INTERVIEW_TYPE_LABELS[type], scheduledFor: when },
+          payload: {
+            interviewId: interview.id,
+            scheduledAt: at.toISOString(),
+            typeLabel: INTERVIEW_TYPE_LABELS[type],
+            scheduledFor: when,
+          },
         });
         xp += r.xpAwarded;
       }
@@ -617,7 +832,12 @@ async function recordInterviewInvite(
 
   if (!hadMilestone) {
     const milestone = await tx.applicationEvent.findUnique({
-      where: { userId_dedupeKey: { userId, dedupeKey: `${applicationId}:INTERVIEW_SCHEDULED` } },
+      where: {
+        userId_dedupeKey: {
+          userId,
+          dedupeKey: `${applicationId}:INTERVIEW_SCHEDULED`,
+        },
+      },
       select: { id: true, payload: true },
     });
     if (milestone) {
@@ -625,9 +845,14 @@ async function recordInterviewInvite(
         where: { id: milestone.id },
         data: {
           payload: {
-            ...(asRecord(milestone.payload) as Record<string, Prisma.InputJsonValue>),
+            ...(asRecord(milestone.payload) as Record<
+              string,
+              Prisma.InputJsonValue
+            >),
             scheduledAt: at.toISOString(),
-            scheduledFor: obs.verified ? when : `${when} (read from the invitation, not confirmed)`,
+            scheduledFor: obs.verified
+              ? when
+              : `${when} (read from the invitation, not confirmed)`,
             ...(obs.verified ? { typeLabel: INTERVIEW_TYPE_LABELS[type] } : {}),
             ...(interviewId ? { interviewId } : {}),
             invitationEvidenceId: ev.id,

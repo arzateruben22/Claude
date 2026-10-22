@@ -54,7 +54,10 @@ function compactCompany(nc: string): string {
  * name starting with the same four characters, or a linked email thread — so the work stays close
  * to linear for a personal tracker.
  */
-export function findDuplicatePairs(apps: readonly DedupApp[], opts: FindPairsOptions = {}): DedupPair[] {
+export function findDuplicatePairs(
+  apps: readonly DedupApp[],
+  opts: FindPairsOptions = {},
+): DedupPair[] {
   const minScore = opts.minScore ?? INGEST_THRESHOLDS.MATCH_POSSIBLE;
   const maxBlock = opts.maxBlockSize ?? 250;
   const window = opts.window ?? 60;
@@ -86,7 +89,11 @@ export function findDuplicatePairs(apps: readonly DedupApp[], opts: FindPairsOpt
   for (const members of blocks.values()) {
     if (members.length < 2) continue;
     const sorted =
-      members.length > maxBlock ? [...members].sort((p, q) => p.createdAt.getTime() - q.createdAt.getTime()) : members;
+      members.length > maxBlock
+        ? [...members].sort(
+            (p, q) => p.createdAt.getTime() - q.createdAt.getTime(),
+          )
+        : members;
     const span = members.length > maxBlock ? window : sorted.length;
     for (let i = 0; i < sorted.length; i++) {
       for (let j = i + 1; j < Math.min(sorted.length, i + 1 + span); j++) {
@@ -108,13 +115,28 @@ export function findDuplicatePairs(apps: readonly DedupApp[], opts: FindPairsOpt
       threadLinked: thread.has(key),
       sourceLinkMatch,
     });
-    if (s.score >= minScore) out.push({ aId, bId, score: s.score, signals: s.signals, deterministic: s.deterministic });
+    if (s.score >= minScore)
+      out.push({
+        aId,
+        bId,
+        score: s.score,
+        signals: s.signals,
+        deterministic: s.deterministic,
+      });
   }
-  out.sort((p, q) => q.score - p.score || pairKey(p.aId, p.bId).localeCompare(pairKey(q.aId, q.bId)));
+  out.sort(
+    (p, q) =>
+      q.score - p.score ||
+      pairKey(p.aId, p.bId).localeCompare(pairKey(q.aId, q.bId)),
+  );
   return out;
 }
 
-export type StageLike = { status: ApplicationStatus; statusVerified: boolean; statusUpdatedAt: Date };
+export type StageLike = {
+  status: ApplicationStatus;
+  statusVerified: boolean;
+  statusUpdatedAt: Date;
+};
 
 /**
  * Does the merged record's stage replace the kept record's? Only when it is further along: later
@@ -122,18 +144,26 @@ export type StageLike = { status: ApplicationStatus; statusVerified: boolean; st
  * or the same stage backed by verification the kept record lacks. The applications service still
  * refuses changes that would override verified data with unverified data.
  */
-export function shouldAdoptMergedStatus(keep: StageLike, merged: StageLike): boolean {
-  if (merged.status === keep.status) return merged.statusVerified && !keep.statusVerified;
+export function shouldAdoptMergedStatus(
+  keep: StageLike,
+  merged: StageLike,
+): boolean {
+  if (merged.status === keep.status)
+    return merged.statusVerified && !keep.statusVerified;
   const kt = isTerminalStatus(keep.status);
   const mt = isTerminalStatus(merged.status);
   if (!kt && !mt) return statusRank(merged.status) > statusRank(keep.status);
-  if (mt && !kt) return merged.statusUpdatedAt.getTime() >= keep.statusUpdatedAt.getTime();
-  if (!mt && kt) return merged.statusUpdatedAt.getTime() > keep.statusUpdatedAt.getTime();
+  if (mt && !kt)
+    return merged.statusUpdatedAt.getTime() >= keep.statusUpdatedAt.getTime();
+  if (!mt && kt)
+    return merged.statusUpdatedAt.getTime() > keep.statusUpdatedAt.getTime();
   return false;
 }
 
 /** Which record to keep by default: the one further along, then the older one. */
-export function suggestKeep<T extends StageLike & { id: string; createdAt: Date }>(a: T, b: T): T {
+export function suggestKeep<
+  T extends StageLike & { id: string; createdAt: Date },
+>(a: T, b: T): T {
   if (shouldAdoptMergedStatus(a, b)) return b;
   if (shouldAdoptMergedStatus(b, a)) return a;
   return a.createdAt.getTime() <= b.createdAt.getTime() ? a : b;

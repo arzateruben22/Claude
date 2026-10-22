@@ -19,7 +19,7 @@ import {
   type InterviewRole,
 } from "./intents";
 import { continueInterview, questionPrompt, startInterviewState, type InterviewState } from "./mock-interview";
-import { aggregateGaps, analyzeFit } from "./resume-tailor";
+import { aggregateGaps, analyzeFit, tailoredResumeDraft } from "./resume-tailor";
 import { evaluateRules } from "./rules";
 import {
   DIMENSION_LABELS,
@@ -257,9 +257,19 @@ export function replySalary(s: CoachSnapshot): CoachReply {
     );
   }
   parts.push(
-    "For a year-by-year view, the Salary Simulator lets you set the wage steps, hours and overtime assumptions yourself. Its numbers are estimates from your inputs, not promises of raises, overtime or placement dates.",
+    "For a year-by-year view, the Salary Simulator's \"Compare paths\" tab puts a job now next to a paid apprenticeship over 5–10 years, with the wage steps, hours and overtime assumptions you choose. Its numbers are estimates from your inputs, not promises of raises, overtime or placement dates.",
   );
-  return finalizeReply({ kind: "salary", content: parts.join("\n\n"), actions: [{ label: "Open the Salary Simulator", href: "/salary" }] }, s);
+  return finalizeReply(
+    {
+      kind: "salary",
+      content: parts.join("\n\n"),
+      actions: [
+        { label: "Compare paths", href: "/salary/compare" },
+        { label: "Open the Salary Simulator", href: "/salary" },
+      ],
+    },
+    s,
+  );
 }
 
 export function replyHelp(s: CoachSnapshot, intro?: string): CoachReply {
@@ -294,8 +304,8 @@ export function replyHelp(s: CoachSnapshot, intro?: string): CoachReply {
 export function replyFallback(s: CoachSnapshot): CoachReply {
   const top = evaluateRules(s)[0];
   const intro = top
-    ? `I answer with fixed tools rather than free conversation when no AI provider is configured, so I didn't recognise that request. Your current top priority is **${top.title}.** ${top.body}`
-    : "I answer with fixed tools rather than free conversation when no AI provider is configured, so I didn't recognise that request.";
+    ? `The built-in rules engine answers with fixed tools rather than free conversation, and it didn't recognise that request. Your current top priority is **${top.title}.** ${top.body}`
+    : "The built-in rules engine answers with fixed tools rather than free conversation, and it didn't recognise that request.";
   return { ...replyHelp(s, intro), kind: "unknown" };
 }
 
@@ -426,11 +436,14 @@ export function replyTailor(s: CoachSnapshot, app: ApplicationDoc, resume: Resum
   } else {
     parts.push("I didn't find a safe rewrite: none of your résumé lines use the posting's key terms yet. The gaps above are the place to start.");
   }
+  const draft = tailoredResumeDraft(resume.content, fit);
+  if (draft) parts.push("Below is a tailored copy with those edits applied. It only reorders and rewords lines already in your résumé; read every line before you use it, and save it as a new version under Résumés if you want to keep it.");
   if (s.byId["funnel.response_rate"] && s.facts.funnel.applied >= LOW_SAMPLE_N) parts.push(`For context, your overall response rate is ${s.byId["funnel.response_rate"]!.display} [funnel.response_rate].`);
   return finalizeReply(
     {
       kind: "tailor",
       content: parts.join("\n\n"),
+      drafts: draft ? [{ title: `Tailored résumé draft: ${app.companyName}`, body: draft }] : undefined,
       extraMetrics: [metric],
       actions: [
         { label: "Edit résumé", href: `/coach/resumes?edit=${resume.id}` },

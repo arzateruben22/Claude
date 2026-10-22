@@ -40,6 +40,8 @@ export type FitAnalysis = {
   /** Weighted share of the posting's keywords found in the résumé, or null without keywords. */
   score: number | null;
   suggestions: Suggestion[];
+  /** Posting wordings that suggestions may use because the résumé states an equivalent term. */
+  allowedTerms: string[];
 };
 
 /** Groups of *equivalent* terms. Only terms in the same group may replace each other. */
@@ -343,7 +345,48 @@ export function analyzeFit(jobDescription: string, resume: string, opts: { limit
   }
 
   const safe = suggestions.filter((s) => usesOnlyResumeFacts(s.suggested, resume, allowed));
-  return { keywords, matched, missing, score, suggestions: safe };
+  return { keywords, matched, missing, score, suggestions: safe, allowedTerms: allowed };
+}
+
+const BULLET = /^\s*(?:[-*•▪◦·‣]|\d+[.)])\s+/;
+
+/**
+ * A tailored copy of the résumé built only from its own lines: equivalent-wording swaps applied,
+ * bullets within each list reordered so the ones matching the posting come first, and a skills line
+ * (of skills the résumé already lists) under the header. Returns null when there is nothing to change
+ * or when the result would fail the fact check.
+ */
+export function tailoredResumeDraft(resume: string, fit: FitAnalysis): string | null {
+  const lines = resume.replace(/\r\n/g, "\n").split("\n");
+  const swaps = new Map(fit.suggestions.filter((sg) => sg.kind === "wording" && sg.original).map((sg) => [sg.original!, sg.suggested]));
+  const swapped = lines.map((raw) => {
+    const content = raw.replace(BULLET, "").trim();
+    const next = swaps.get(content);
+    return next ? raw.replace(content, next) : raw;
+  });
+  const weight = (line: string) => {
+    const t = stems(line);
+    return fit.keywords.filter((k) => keywordIn(t, k)).reduce((sum, k) => sum + k.weight, 0);
+  };
+  const out: string[] = [];
+  for (let i = 0; i < swapped.length; ) {
+    if (!BULLET.test(swapped[i]!)) {
+      out.push(swapped[i]!);
+      i++;
+      continue;
+    }
+    const block: string[] = [];
+    while (i < swapped.length && BULLET.test(swapped[i]!)) block.push(swapped[i++]!);
+    out.push(...block.map((line, idx) => ({ line, idx, w: weight(line) })).sort((a, b) => b.w - a.w || a.idx - b.idx).map((x) => x.line));
+  }
+  const skills = fit.suggestions.find((sg) => sg.kind === "skills_line");
+  if (skills) {
+    const header = out.findIndex((l) => l.trim() !== "");
+    out.splice(header + 1, 0, skills.suggested);
+  }
+  const draft = out.join("\n").trim();
+  if (draft === resume.replace(/\r\n/g, "\n").trim()) return null;
+  return usesOnlyResumeFacts(draft, resume, fit.allowedTerms) ? draft : null;
 }
 
 function surfaceFromText(text: string, variant: string[]): string | null {

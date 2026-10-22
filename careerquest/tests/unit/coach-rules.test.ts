@@ -246,7 +246,7 @@ describe("rules engine", () => {
   it("offer present → negotiation with the salary simulator", () => {
     const offer = { applicationId: "o", company: "Volt Co", title: "Apprentice", status: "RECEIVED", baseAmount: 24, period: "HOURLY" as const, annualized: 49920, decisionDue: null, daysToDecision: null };
     const r = evaluateRules(snap({ offers: { open: [offer] } })).find((x) => x.id === "offer-negotiation")!;
-    expect(r.action.href).toBe("/salary");
+    expect(r.action.href).toBe("/salary/offers");
     expect(r.citations).toContain("offers.open");
     expect(r.body).toMatch(/never guaranteed/);
     expect(ids(snap({ offers: { open: [{ ...offer, decisionDue: "2026-10-23", daysToDecision: 1 }] } }))).toContain("offer-decision-due");
@@ -325,7 +325,7 @@ describe("rules-provider replies", () => {
 
   it("salary explanation links the simulator and makes no promises", () => {
     const r = replySalary(snap({ programs: [program()] }));
-    expect(r.actions?.[0]?.href).toBe("/salary");
+    expect(r.actions?.map((a) => a.href)).toEqual(["/salary/compare", "/salary"]);
     expect(r.content).toMatch(/not promises/);
     expect(r.citations).toEqual(expect.arrayContaining(["goals.salary_immediate", "goals.salary_long_term", "program.test-jatc"]));
   });

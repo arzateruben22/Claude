@@ -1,17 +1,45 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
-import { Alert, Badge, Button, Card, CardContent, CardFooter, CardHeader } from "@/components/ui";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui";
 import { resolveCaptureReviewAction } from "@/lib/ingest/review-actions";
-import type { AttachOption, CaptureReviewItemView } from "@/lib/ingest/review-view";
-import { AttachOther, CandidateMatches, ConfidenceBadge, NoImplicitSubmit, ReviewFields } from "./review-parts";
+import type {
+  AttachOption,
+  CaptureReviewItemView,
+} from "@/lib/ingest/review-view";
+import {
+  AttachOther,
+  CandidateMatches,
+  ConfidenceBadge,
+  NoImplicitSubmit,
+  ReviewFields,
+} from "./review-parts";
 import { useReviewForm } from "./use-review-form";
 
 /** One browser-extension capture waiting for the user's confirmation. */
-export function CaptureReviewCard({ item, attachOptions }: { item: CaptureReviewItemView; attachOptions: AttachOption[] }) {
-  const { pending, submitted, errors, formProps } = useReviewForm(resolveCaptureReviewAction);
+export function CaptureReviewCard({
+  item,
+  attachOptions,
+}: {
+  item: CaptureReviewItemView;
+  attachOptions: AttachOption[];
+}) {
+  const { pending, submitted, errors, formProps } = useReviewForm(
+    resolveCaptureReviewAction,
+  );
   const idPrefix = `capture-${item.id}`;
-  const heading = item.fields.company || item.fields.title ? [item.fields.company, item.fields.title].filter(Boolean).join(" – ") : item.urlLabel;
+  const heading =
+    item.fields.company || item.fields.title
+      ? [item.fields.company, item.fields.title].filter(Boolean).join(" – ")
+      : item.urlLabel;
   return (
     <Card>
       <form {...formProps} aria-labelledby={`${idPrefix}-title`}>
@@ -48,7 +76,8 @@ export function CaptureReviewCard({ item, attachOptions }: { item: CaptureReview
         <CardContent className="space-y-4">
           {item.applyStartedOnly && (
             <Alert tone="warning" title="Started, not confirmed as sent">
-              The extension only saw you open the application form. Set the stage to Submitted only if you actually sent it.
+              The extension only saw you open the application form. Set the
+              stage to Submitted only if you actually sent it.
             </Alert>
           )}
           {(item.pageTitle || item.confirmationText || item.salaryText) && (
@@ -61,32 +90,70 @@ export function CaptureReviewCard({ item, attachOptions }: { item: CaptureReview
               )}
               {item.confirmationText && (
                 <>
-                  <dt className="text-xs text-fg-muted">Confirmation text seen</dt>
+                  <dt className="text-xs text-fg-muted">
+                    Confirmation text seen
+                  </dt>
                   <dd className="break-words">{item.confirmationText}</dd>
                 </>
               )}
               {item.salaryText && (
                 <>
-                  <dt className="text-xs text-fg-muted">Pay shown on the page</dt>
+                  <dt className="text-xs text-fg-muted">
+                    Pay shown on the page
+                  </dt>
                   <dd className="break-words">{item.salaryText}</dd>
                 </>
               )}
             </dl>
           )}
-          <ReviewFields idPrefix={idPrefix} fields={item.fields} errors={errors} showInterview={false} />
-          <section aria-labelledby={`${idPrefix}-matches`} className="space-y-2">
-            <h4 id={`${idPrefix}-matches`} className="text-xs font-medium text-fg-muted">
+          <ReviewFields
+            idPrefix={idPrefix}
+            fields={item.fields}
+            errors={errors}
+            showInterview={false}
+          />
+          <section
+            aria-labelledby={`${idPrefix}-matches`}
+            className="space-y-2"
+          >
+            <h4
+              id={`${idPrefix}-matches`}
+              className="text-xs font-medium text-fg-muted"
+            >
               Tracked applications this could belong to
             </h4>
-            <CandidateMatches candidates={item.candidates} pending={pending} submitted={submitted} />
+            <CandidateMatches
+              candidates={item.candidates}
+              pending={pending}
+              submitted={submitted}
+            />
           </section>
-          <AttachOther idPrefix={idPrefix} options={attachOptions} pending={pending} submitted={submitted} errors={errors} />
+          <AttachOther
+            idPrefix={idPrefix}
+            options={attachOptions}
+            pending={pending}
+            submitted={submitted}
+            errors={errors}
+          />
         </CardContent>
         <CardFooter className="flex-wrap">
-          <Button type="submit" name="decision" value="create" loading={pending && submitted === "create"} disabled={pending}>
+          <Button
+            type="submit"
+            name="decision"
+            value="create"
+            loading={pending && submitted === "create"}
+            disabled={pending}
+          >
             Create new application
           </Button>
-          <Button type="submit" name="decision" value="dismiss" variant="ghost" loading={pending && submitted === "dismiss"} disabled={pending}>
+          <Button
+            type="submit"
+            name="decision"
+            value="dismiss"
+            variant="ghost"
+            loading={pending && submitted === "dismiss"}
+            disabled={pending}
+          >
             Not an application
           </Button>
         </CardFooter>

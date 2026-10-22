@@ -90,5 +90,6 @@ describe("weekly report components render", () => {
     const tabs = renderToStaticMarkup(createElement(ReportsTabs));
     expect(tabs).toContain('href="/analytics"');
     expect(tabs).toContain('href="/analytics/reports"');
+    expect(tabs).toContain('href="/analytics/forecast"');
   });
 });

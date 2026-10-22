@@ -6,7 +6,11 @@ import { scanDuplicatesAction } from "@/lib/ingest/review-actions";
 import { useReviewForm } from "./use-review-form";
 
 /** Runs the duplicate scan over the user's applications. */
-export function ScanDuplicatesButton({ variant = "secondary" }: { variant?: "primary" | "secondary" }) {
+export function ScanDuplicatesButton({
+  variant = "secondary",
+}: {
+  variant?: "primary" | "secondary";
+}) {
   const { pending, formProps } = useReviewForm(scanDuplicatesAction);
   return (
     <form {...formProps}>

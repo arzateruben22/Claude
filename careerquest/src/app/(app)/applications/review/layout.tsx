@@ -8,9 +8,14 @@ import { LinkTabs, PageHeader, buttonClasses } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Review queue" };
 
-const withCount = (label: string, n: number) => (n > 0 ? `${label} (${n > 99 ? "99+" : n})` : label);
+const withCount = (label: string, n: number) =>
+  n > 0 ? `${label} (${n > 99 ? "99+" : n})` : label;
 
-export default async function ReviewLayout({ children }: { children: ReactNode }) {
+export default async function ReviewLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const user = await requireUser();
   const counts = await getReviewCounts(user.id);
   return (
@@ -20,7 +25,10 @@ export default async function ReviewLayout({ children }: { children: ReactNode }
         title="Review queue"
         description="Emails and browser captures CareerQuest could not file with confidence, and records that may be the same job. Nothing here changes your applications until you decide."
         actions={
-          <Link href="/applications" className={buttonClasses("secondary", "md")}>
+          <Link
+            href="/applications"
+            className={buttonClasses("secondary", "md")}
+          >
             <ArrowLeft className="h-4 w-4" aria-hidden />
             Applications
           </Link>
@@ -28,9 +36,19 @@ export default async function ReviewLayout({ children }: { children: ReactNode }
       />
       <LinkTabs
         tabs={[
-          { href: "/applications/review", label: withCount("Emails", counts.emails), exact: true },
-          { href: "/applications/review/captures", label: withCount("Captures", counts.captures) },
-          { href: "/applications/review/duplicates", label: withCount("Possible duplicates", counts.duplicates) },
+          {
+            href: "/applications/review",
+            label: withCount("Emails", counts.emails),
+            exact: true,
+          },
+          {
+            href: "/applications/review/captures",
+            label: withCount("Captures", counts.captures),
+          },
+          {
+            href: "/applications/review/duplicates",
+            label: withCount("Possible duplicates", counts.duplicates),
+          },
         ]}
       />
       {children}

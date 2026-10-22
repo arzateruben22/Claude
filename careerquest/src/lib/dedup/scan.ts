@@ -47,7 +47,13 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
   });
   const apps: DedupApp[] = rows.map(({ sourceLinks, ...a }) => ({
     ...a,
-    linkUrls: [...new Set(sourceLinks.map((l) => normalizeUrl(l.url)).filter((u): u is string => Boolean(u)))],
+    linkUrls: [
+      ...new Set(
+        sourceLinks
+          .map((l) => normalizeUrl(l.url))
+          .filter((u): u is string => Boolean(u)),
+      ),
+    ],
   }));
   const ids = new Set(apps.map((a) => a.id));
 
@@ -67,7 +73,9 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
   const threadLinkedPairs: Array<[string, string]> = [];
   for (const set of byThread.values()) {
     const list = [...set];
-    for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) threadLinkedPairs.push([list[i]!, list[j]!]);
+    for (let i = 0; i < list.length; i++)
+      for (let j = i + 1; j < list.length; j++)
+        threadLinkedPairs.push([list[i]!, list[j]!]);
   }
 
   const pairs = findDuplicatePairs(apps, { threadLinkedPairs });
@@ -78,9 +86,16 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
       await lockUserIngestion(tx, userId);
       const existing = await tx.duplicateCandidate.findMany({
         where: { userId },
-        select: { id: true, applicationAId: true, applicationBId: true, status: true },
+        select: {
+          id: true,
+          applicationAId: true,
+          applicationBId: true,
+          status: true,
+        },
       });
-      const byKey = new Map(existing.map((c) => [pairKey(c.applicationAId, c.applicationBId), c]));
+      const byKey = new Map(
+        existing.map((c) => [pairKey(c.applicationAId, c.applicationBId), c]),
+      );
       const found = new Set<string>();
       let created = 0;
       let updated = 0;
@@ -89,19 +104,39 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
       for (const p of pairs) {
         const key = pairKey(p.aId, p.bId);
         found.add(key);
-        const signals = JSON.parse(JSON.stringify({ signals: p.signals, deterministic: p.deterministic, scannedAt })) as Prisma.InputJsonValue;
+        const signals = JSON.parse(
+          JSON.stringify({
+            signals: p.signals,
+            deterministic: p.deterministic,
+            scannedAt,
+          }),
+        ) as Prisma.InputJsonValue;
         const row = byKey.get(key);
         if (!row) {
-          toCreate.push({ userId, applicationAId: p.aId, applicationBId: p.bId, score: p.score, signals });
+          toCreate.push({
+            userId,
+            applicationAId: p.aId,
+            applicationBId: p.bId,
+            score: p.score,
+            signals,
+          });
         } else if (row.status === "PENDING") {
-          await tx.duplicateCandidate.update({ where: { id: row.id }, data: { score: p.score, signals } });
+          await tx.duplicateCandidate.update({
+            where: { id: row.id },
+            data: { score: p.score, signals },
+          });
           updated += 1;
         } else {
           skipped += 1;
         }
       }
       if (toCreate.length) {
-        created = (await tx.duplicateCandidate.createMany({ data: toCreate, skipDuplicates: true })).count;
+        created = (
+          await tx.duplicateCandidate.createMany({
+            data: toCreate,
+            skipDuplicates: true,
+          })
+        ).count;
       }
       const stale = existing.filter(
         (c) =>
@@ -112,7 +147,11 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
       );
       let removed = 0;
       if (stale.length) {
-        removed += (await tx.duplicateCandidate.deleteMany({ where: { userId, id: { in: stale.map((c) => c.id) } } })).count;
+        removed += (
+          await tx.duplicateCandidate.deleteMany({
+            where: { userId, id: { in: stale.map((c) => c.id) } },
+          })
+        ).count;
       }
       // Pending pairs that involve a record merged since they were proposed are moot.
       removed += (
@@ -120,11 +159,21 @@ export async function scanDuplicates(userId: string): Promise<ScanResult> {
           where: {
             userId,
             status: "PENDING",
-            OR: [{ applicationA: { mergedIntoId: { not: null } } }, { applicationB: { mergedIntoId: { not: null } } }],
+            OR: [
+              { applicationA: { mergedIntoId: { not: null } } },
+              { applicationB: { mergedIntoId: { not: null } } },
+            ],
           },
         })
       ).count;
-      return { scanned: apps.length, found: pairs.length, created, updated, removed, skipped };
+      return {
+        scanned: apps.length,
+        found: pairs.length,
+        created,
+        updated,
+        removed,
+        skipped,
+      };
     },
     { maxWait: 10_000, timeout: 30_000 },
   );

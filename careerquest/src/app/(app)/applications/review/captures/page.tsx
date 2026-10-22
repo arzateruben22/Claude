@@ -6,7 +6,10 @@ import { CaptureReviewCard } from "@/components/review/capture-review-card";
 
 export default async function ReviewCapturesPage() {
   const user = await requireUser();
-  const [{ items, total }, attachOptions] = await Promise.all([loadCaptureReview(user.id), loadAttachOptions(user.id)]);
+  const [{ items, total }, attachOptions] = await Promise.all([
+    loadCaptureReview(user.id),
+    loadAttachOptions(user.id),
+  ]);
   return (
     <section aria-labelledby="captures-heading" className="space-y-3">
       <h2 id="captures-heading" className="sr-only">
@@ -22,11 +25,16 @@ export default async function ReviewCapturesPage() {
         <>
           {total > items.length && (
             <p className="text-sm text-fg-muted">
-              Showing the {items.length} newest of {total} captures. Resolve these to see the rest.
+              Showing the {items.length} newest of {total} captures. Resolve
+              these to see the rest.
             </p>
           )}
           {items.map((item) => (
-            <CaptureReviewCard key={item.id} item={item} attachOptions={attachOptions} />
+            <CaptureReviewCard
+              key={item.id}
+              item={item}
+              attachOptions={attachOptions}
+            />
           ))}
         </>
       )}

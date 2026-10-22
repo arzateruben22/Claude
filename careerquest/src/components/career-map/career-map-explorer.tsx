@@ -30,7 +30,7 @@ export function CareerMapExplorer({ view, initialKey }: { view: CareerMapView; i
     try {
       const url = new URL(window.location.href);
       url.searchParams.set("node", key);
-      window.history.replaceState(window.history.state, "", url);
+      window.history.replaceState(null, "", url);
     } catch {
       // URL sync is a convenience only.
     }

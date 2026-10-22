@@ -142,7 +142,7 @@ function MessageItem({ m, timeZone, isLast, formAction, pending }: { m: CoachMes
           )}
         </div>
         {isLast && !mine && m.quickReplies && m.quickReplies.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Suggested replies">
+          <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Suggested replies">
             {m.quickReplies.map((q) => (
               <QuickReplyButton key={q.label + (q.applicationId ?? "")} reply={q} formAction={formAction} pending={pending} />
             ))}

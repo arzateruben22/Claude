@@ -5,7 +5,10 @@ import type { ActionResult } from "@/lib/action-result";
 import { useToast } from "@/components/ui/toast";
 
 type Data = { message: string };
-export type ReviewAction = (prev: ActionResult<Data> | null, formData: FormData) => Promise<ActionResult<Data>>;
+export type ReviewAction = (
+  prev: ActionResult<Data> | null,
+  formData: FormData,
+) => Promise<ActionResult<Data>>;
 
 /**
  * Form state for a review item whose buttons carry the decision (`name="decision"`). Submitting
@@ -19,8 +22,10 @@ export function useReviewForm(action: ReviewAction) {
   const wrapped = useCallback<ReviewAction>(
     async (prev, formData) => {
       const result = await action(prev, formData);
-      if (result.ok) toast.push({ tone: "success", title: result.data.message });
-      else if (!result.fieldErrors) toast.push({ tone: "danger", title: result.error });
+      if (result.ok)
+        toast.push({ tone: "success", title: result.data.message });
+      else if (!result.fieldErrors)
+        toast.push({ tone: "danger", title: result.error });
       return result;
     },
     [action, toast],

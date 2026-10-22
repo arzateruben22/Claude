@@ -3,7 +3,7 @@ import { detectIntent, detectInterviewRole, interviewCommand } from "@/lib/coach
 import { citationIds, extractCitations, splitCitations } from "@/lib/coach/citations";
 import { parseRichText, plainText } from "@/lib/coach/format";
 import { QUESTION_BANK, continueInterview, evaluateAnswer, startInterviewState } from "@/lib/coach/mock-interview";
-import { aggregateGaps, analyzeFit, extractKeywords, stem, usesOnlyResumeFacts } from "@/lib/coach/resume-tailor";
+import { aggregateGaps, analyzeFit, extractKeywords, stem, tailoredResumeDraft, usesOnlyResumeFacts } from "@/lib/coach/resume-tailor";
 import { coverLetter, followUpEmail } from "@/lib/coach/drafts";
 import { parseMeta, toMessageView } from "@/lib/coach/messages";
 
@@ -150,6 +150,26 @@ Skills: hand tools, forklift`;
       for (const m of fit.missing) expect(s.suggested.toLowerCase()).not.toContain(m.display.toLowerCase());
     }
     expect(fit.suggestions.some((s) => s.kind === "skills_line")).toBe(true);
+  });
+
+  it("builds a tailored copy that only reorders and rewords the résumé's own lines", () => {
+    const fit = analyzeFit(jd, resume);
+    const draft = tailoredResumeDraft(resume, fit)!;
+    expect(draft).not.toBeNull();
+    const lines = draft.split("\n");
+    expect(lines[0]).toBe("ADA LOPEZ");
+    expect(lines[1]!.startsWith("Skills: ")).toBe(true);
+    expect(draft).toContain("- Followed lockout/tagout (LOTO) procedures on conveyor maintenance");
+    expect(draft).toContain("- Tracked inventory for 3 warehouses in Microsoft Excel (Excel) and cut count errors by 20%");
+    // Every original line is still there (or its equivalent-wording version), and nothing else is added.
+    const swaps = new Map(fit.suggestions.filter((x) => x.kind === "wording").map((x) => [x.original!, x.suggested]));
+    for (const line of resume.split("\n")) {
+      const body = line.replace(/^- /, "");
+      expect(draft).toContain(swaps.has(body) ? `- ${swaps.get(body)}` : line);
+    }
+    expect(lines.length).toBe(resume.split("\n").length + 1);
+    expect(usesOnlyResumeFacts(draft, resume, fit.allowedTerms)).toBe(true);
+    expect(tailoredResumeDraft("Plain résumé line one here\nAnother plain line", analyzeFit("Nothing relevant at all here.", "x"))).toBeNull();
   });
 
   it("the fact check rejects invented skills and numbers", () => {

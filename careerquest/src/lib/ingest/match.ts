@@ -10,7 +10,10 @@ import "server-only";
  * Scoring itself is pure (`match-score.ts`).
  */
 import type { Prisma } from "@/generated/prisma/client";
-import type { ApplicationSource, ApplicationStatus } from "@/generated/prisma/enums";
+import type {
+  ApplicationSource,
+  ApplicationStatus,
+} from "@/generated/prisma/enums";
 import { normalizeUrl } from "@/lib/applications/normalize";
 import {
   scoreMatch,
@@ -22,7 +25,10 @@ import {
 } from "./match-score";
 
 /** Anything with the delegates we read: the Prisma client or an interactive transaction. */
-export type MatchDb = Pick<Prisma.TransactionClient, "application" | "emailMessage" | "applicationSourceLink">;
+export type MatchDb = Pick<
+  Prisma.TransactionClient,
+  "application" | "emailMessage" | "applicationSourceLink"
+>;
 
 export type CandidatePartial = PartialFields & {
   /** An application the caller already knows (explicit choice): scores 1.0 when owned. */
@@ -80,9 +86,11 @@ const candidateSelect = {
   sourceLinks: { select: { url: true }, take: 25 },
 } satisfies Prisma.ApplicationSelect;
 
-type CandidateRow = Prisma.ApplicationGetPayload<{ select: typeof candidateSelect }>;
+type CandidateRow = Prisma.ApplicationGetPayload<{
+  select: typeof candidateSelect;
+}>;
 
-const unique = <T,>(xs: T[]) => [...new Set(xs)];
+const unique = <T>(xs: T[]) => [...new Set(xs)];
 
 /**
  * Score the user's non-merged applications against partial evidence and return the best
@@ -98,7 +106,10 @@ export async function findCandidateMatches(
   const minScore = opts.minScore ?? 0.5;
   const exclude = new Set(opts.excludeIds ?? []);
   const subject = subjectFromPartial(partial);
-  const base = { userId, mergedIntoId: null } satisfies Prisma.ApplicationWhereInput;
+  const base = {
+    userId,
+    mergedIntoId: null,
+  } satisfies Prisma.ApplicationWhereInput;
 
   const rows = new Map<string, CandidateRow>();
   const ctx = new Map<string, MatchContext>();
@@ -111,7 +122,10 @@ export async function findCandidateMatches(
   };
 
   if (partial.applicationId) {
-    const r = await db.application.findFirst({ where: { ...base, id: partial.applicationId }, select: candidateSelect });
+    const r = await db.application.findFirst({
+      where: { ...base, id: partial.applicationId },
+      select: candidateSelect,
+    });
     if (r) {
       add([r]);
       flag(r.id, "explicit");
@@ -122,7 +136,10 @@ export async function findCandidateMatches(
   if (req && subject.requisition) {
     add(
       await db.application.findMany({
-        where: { ...base, requisitionNumber: { in: unique([req, req.toUpperCase()]) } },
+        where: {
+          ...base,
+          requisitionNumber: { in: unique([req, req.toUpperCase()]) },
+        },
         select: candidateSelect,
         take: 20,
       }),
@@ -141,17 +158,25 @@ export async function findCandidateMatches(
 
   if (partial.emailThreadId) {
     const linked = await db.emailMessage.findMany({
-      where: { userId, threadId: partial.emailThreadId, applicationId: { not: null } },
+      where: {
+        userId,
+        threadId: partial.emailThreadId,
+        applicationId: { not: null },
+      },
       select: { applicationId: true },
       take: 20,
     });
-    for (const m of linked) if (m.applicationId) flag(m.applicationId, "threadLinked");
+    for (const m of linked)
+      if (m.applicationId) flag(m.applicationId, "threadLinked");
   }
 
   const rawUrl = partial.postingUrl?.trim();
   if (rawUrl && subject.normalizedUrl) {
     const links = await db.applicationSourceLink.findMany({
-      where: { url: { in: unique([rawUrl, subject.normalizedUrl]) }, application: base },
+      where: {
+        url: { in: unique([rawUrl, subject.normalizedUrl]) },
+        application: base,
+      },
       select: { applicationId: true },
       take: 20,
     });
@@ -162,7 +187,8 @@ export async function findCandidateMatches(
     const nc = subject.normalizedCompany;
     const first = nc.split(" ")[0] ?? "";
     const or: Prisma.ApplicationWhereInput[] = [{ normalizedCompany: nc }];
-    if (first.length >= 3 && first !== nc) or.push({ normalizedCompany: { startsWith: first } });
+    if (first.length >= 3 && first !== nc)
+      or.push({ normalizedCompany: { startsWith: first } });
     add(
       await db.application.findMany({
         where: { ...base, OR: or },
@@ -173,17 +199,32 @@ export async function findCandidateMatches(
     );
   }
 
-  add(await db.application.findMany({ where: base, select: candidateSelect, orderBy: { createdAt: "desc" }, take: 30 }));
+  add(
+    await db.application.findMany({
+      where: base,
+      select: candidateSelect,
+      orderBy: { createdAt: "desc" },
+      take: 30,
+    }),
+  );
 
   const missing = [...ctx.keys()].filter((id) => !rows.has(id));
   if (missing.length) {
-    add(await db.application.findMany({ where: { ...base, id: { in: missing } }, select: candidateSelect }));
+    add(
+      await db.application.findMany({
+        where: { ...base, id: { in: missing } },
+        select: candidateSelect,
+      }),
+    );
   }
 
   const scored: CandidateMatch[] = [];
   for (const row of rows.values()) {
     const c: MatchContext = { ...ctx.get(row.id) };
-    if (subject.normalizedUrl && row.sourceLinks.some((l) => normalizeUrl(l.url) === subject.normalizedUrl)) {
+    if (
+      subject.normalizedUrl &&
+      row.sourceLinks.some((l) => normalizeUrl(l.url) === subject.normalizedUrl)
+    ) {
       c.sourceLinkMatch = true;
     }
     const s = scoreMatch(subject, subjectFromApplication(row), c);
@@ -208,7 +249,9 @@ export async function findCandidateMatches(
     });
   }
   scored.sort(
-    (x, y) => y.score - x.score || y.application.createdAt.getTime() - x.application.createdAt.getTime(),
+    (x, y) =>
+      y.score - x.score ||
+      y.application.createdAt.getTime() - x.application.createdAt.getTime(),
   );
   return scored.slice(0, limit);
 }

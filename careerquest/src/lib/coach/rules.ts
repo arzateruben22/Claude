@@ -152,9 +152,9 @@ export const RULES: Rule[] = [
         priority: 92,
         group: "offer",
         title: open.length === 1 ? `Evaluate the ${open[0]!.company} offer before you answer` : `Compare your ${open.length} open offers`,
-        body: `You have ${plural(open.length, "open offer")} [offers.open]${best}. Compare base pay, hours, overtime rules and benefits against your target [goals.salary_immediate] in the Salary Simulator, then decide what to ask for. Asking for a review of the base rate is common; the outcome is never guaranteed.`,
+        body: `You have ${plural(open.length, "open offer")} [offers.open]${best}. Compare base pay, hours, overtime rules and benefits against your target [goals.salary_immediate] in the Salary Simulator's offer view, then decide what to ask for. Asking for a review of the base rate is common; the outcome is never guaranteed.`,
         citations: ["offers.open", "offers.best_annualized", "goals.salary_immediate"],
-        action: { label: "Open the Salary Simulator", href: "/salary" },
+        action: { label: "Compare offers in the Salary Simulator", href: "/salary/offers" },
       });
     },
   },
@@ -388,7 +388,7 @@ export const RULES: Rule[] = [
           .map((p) => `${p.name}: ${programStatusText(p)} [${programMetricId(p)}]`)
           .join("; ")}. Confirm the deadline and requirements on the official site before you apply; recruitment windows can close early.`,
         citations: ["programs.open_verified", ...ids],
-        action: { label: "Open apprenticeships", href: "/academy/apprenticeships" },
+        action: open.length === 1 ? { label: "Open the program", href: `/academy/apprenticeships/${encodeURIComponent(first.slug)}` } : { label: "Open apprenticeships", href: "/academy/apprenticeships" },
       });
     },
   },

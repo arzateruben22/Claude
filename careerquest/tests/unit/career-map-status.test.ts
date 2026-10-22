@@ -208,22 +208,30 @@ describe("career map status derivation", () => {
   });
 
   it("expired registrations and certificates are flagged for renewal, not counted as done", () => {
-    const v = deriveCareerMap(
-      graph,
-      data({
-        certifications: [
-          cert({ traineeRegisteredAt: new Date("2024-01-01T00:00:00Z"), traineeExpiresAt: new Date("2025-01-01T00:00:00Z"), certifiedAt: new Date("2021-01-01T00:00:00Z"), certificateExpiresAt: new Date("2024-01-01T00:00:00Z") }),
-        ],
-      }),
-    );
-    const t = node(v, "trainee-or-apprentice");
+    const trainee = deriveCareerMap(graph, data({ certifications: [cert({ traineeRegisteredAt: new Date("2024-01-01T00:00:00Z"), traineeExpiresAt: new Date("2025-01-01T00:00:00Z") })] }));
+    const t = node(trainee, "trainee-or-apprentice");
     expect(t.status).toBe("IN_PROGRESS");
     expect(t.reason).toMatch(/expired on Dec 31, 2024 — renew it/);
     expect(t.actions[0]?.external).toBe(true);
     expect(t.actions[0]?.href).toMatch(/Renew/i);
-    const ca = node(v, "ca-certification");
+
+    const certified = deriveCareerMap(
+      graph,
+      data({
+        certifications: [
+          cert({ traineeRegisteredAt: new Date("2018-01-01T00:00:00Z"), traineeExpiresAt: new Date("2019-01-01T00:00:00Z"), certifiedAt: new Date("2021-01-01T00:00:00Z"), certificateExpiresAt: new Date("2024-01-01T00:00:00Z") }),
+        ],
+      }),
+    );
+    // Once certified, an old trainee card is history, not a renewal task.
+    expect(node(certified, "trainee-or-apprentice").status).toBe("COMPLETED");
+    expect(node(certified, "trainee-or-apprentice").reason).toBe("Completed because: Your certification tracker shows exam eligibility or a later step");
+    const ca = node(certified, "ca-certification");
     expect(ca.status).toBe("IN_PROGRESS");
     expect(ca.reason).toMatch(/General Electrician certification expired on Dec 31, 2023 — renewal needed/);
+    expect(ca.actions[0]?.label).toBe("Review renewal requirements");
+    expect(node(certified, "experienced-electrician").status).toBe("LOCKED");
+    expect(node(certified, "supervised-experience").notes.join(" ")).toMatch(/cannot tell which route you qualified through/);
   });
 
   it("exam application and eligibility notice move eligibility and certification forward", () => {
@@ -273,8 +281,8 @@ describe("career map status derivation", () => {
     expect(e.status).toBe("IN_PROGRESS");
     expect(e.reason).toBe("In progress because: 2 of 3 Fundamentals and Safety lessons completed");
     expect(e.training).toEqual([
-      { key: "FUNDAMENTALS", label: "Electrical fundamentals", completed: 1, total: 2, href: "/academy" },
-      { key: "SAFETY", label: "Safety", completed: 1, total: 1, href: "/academy" },
+      { key: "FUNDAMENTALS", label: "Electrical fundamentals", completed: 1, total: 2, href: "/academy#track-fundamentals" },
+      { key: "SAFETY", label: "Safety", completed: 1, total: 1, href: "/academy#track-safety" },
     ]);
     expect(node(v, "beginner").status).toBe("IN_PROGRESS");
   });
