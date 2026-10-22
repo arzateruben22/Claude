@@ -48,6 +48,7 @@ const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const IDLE_MS = 4000;      // the Minimal HUD tucks the control rail and the corner window away after this long without input
+const LEAVE_MS = 380;      // the loading screen's fade into the menu and into the drive (styles.css: .loading-screen.leaving)
 // keys that only drive (throttle, brake, steering, handbrake, look back, shifts): pressing them isn't asking for the HUD
 const DRIVING_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyV', 'KeyQ', 'KeyE']);
 
@@ -60,6 +61,7 @@ export function App() {
   const [panel, setPanel] = useState<Panel>(null);
   const [mapHome, setMapHome] = useState<string | undefined>(undefined);   // the World Map opened from Lifestyle, on a home
   const [busy, setBusy] = useState(true);
+  const [loadShown, setLoadShown] = useState(true);                    // the loading screen, kept up while it fades out
   const [loadingText, setLoadingText] = useState('Starting the engine');
   const [settings, setSettings] = useState<Settings>(loadSettings);
   const [mode, setMode] = useState<Mode>('free');
@@ -129,6 +131,14 @@ export function App() {
   }, []);
 
   useEffect(() => { game.current?.setMapCanvas(mapRef.current); });
+  // the loading screen fades into the menu (and into the drive): it stays up, fading and letting taps through, a moment
+  // after loading ends
+  const loadingOn = (screen === 'loading' || busy) && !error;
+  useEffect(() => {
+    if (loadingOn) { setLoadShown(true); return; }
+    const t = setTimeout(() => setLoadShown(false), REDUCED ? 0 : LEAVE_MS);
+    return () => clearTimeout(t);
+  }, [loadingOn]);
   // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
   useEffect(() => {
     const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };
@@ -373,9 +383,6 @@ export function App() {
         <Touch input={game.current.input} manual={settings.transmission === 'manual'} onShift={(d) => game.current?.pushAction(d > 0 ? 'shiftUp' : 'shiftDown')} />
       )}
 
-      {(screen === 'loading' || busy) && !error && (
-        <div className="overlay center loading-screen"><OcWatermark /><div className="loading"><Brand /><p>{loadingText}…</p><div className="loadbar"><i /></div></div></div>
-      )}
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
       {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>The browser dropped the 3D context for a moment. It's coming back on its own; press Resume when it does.</p><button className="btn primary" onClick={resume}>Resume</button></div></div>}
 
@@ -424,8 +431,8 @@ export function App() {
               <button className="rail-btn" onClick={() => setPanel('homes')}><Ico name="home" />Lifestyle</button>
               {(() => { const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
                 return <button className="rail-btn" onClick={() => setPanel('phone')}><Ico name="phone" />Phone{n > 0 && <small className="new">{n} new</small>}</button>; })()}
-              {/* the live alpha: the row says how many are driving on the server right now, when one is in reach */}
-              <button className="rail-btn" onClick={() => setPanel('live')}><Ico name="online" />Online<small className={'alpha' + (lobby && lobby.online > 0 ? ' on' : '')}>{lobby ? `${lobby.online} driving` : 'Alpha'}</small></button>
+              {/* the live alpha: the row always says alpha, and how many are driving on the server right now when one is in reach */}
+              <button className="rail-btn" onClick={() => setPanel('live')}><Ico name="online" />Online<small className={'alpha' + (lobby && lobby.online > 0 ? ' on' : '')}>{lobby ? `Alpha · ${lobby.online} driving` : 'Alpha'}</small></button>
             </nav>
             <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
             <section className="m-modes">
@@ -806,6 +813,13 @@ export function App() {
           </div>
         </div>
       )}
+
+      {/* last, so it lies over the menu while it fades into it; it lets taps through as it goes */}
+      {(loadingOn || loadShown) && !error && (
+        <div className={'overlay center loading-screen' + (loadingOn ? '' : ' leaving')} aria-hidden={loadingOn ? undefined : true}>
+          <OcWatermark /><div className="loading"><Brand /><p>{loadingText}…</p><div className="loadbar"><i /></div></div>
+        </div>
+      )}
     </div>
   );
 }
@@ -960,9 +974,11 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
                 <div className="carhead"><span className="paint" style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
                 <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
                 <span>{c.blurb}</span>
+                {/* each card's Drive is named for its car, so a list of buttons says which; the menu's own Drive stays the
+                    only plain "Drive" */}
                 <div className="row">
-                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`)}>Drive</button>)
-                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
+                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`)}>Drive</button>)
+                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
                     : c.founder ? <em>Founder Edition · not on sale yet (test build)</em>
                     : locked ? <em>Opens at level {c.level}</em>
                     : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
