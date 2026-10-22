@@ -14,6 +14,9 @@
 //  - a cheap subsurface look: wrapped, red-tinted diffuse and light through thin parts (ears, nose), baked AO
 import * as THREE from 'three';
 import { Quality } from './params';
+// (face.ts imports NOISE from here: both modules only read the other's exports when a material is made, so the cycle
+// is harmless)
+import { MORPHS, MI } from './face';
 
 export const NOISE = /* glsl */ `
 float hh13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
@@ -94,20 +97,24 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
   };
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
+  // the face's expression for the per-pixel folds: smileL, smileR, squintL, squintR, read from the morph weights of a
+  // mesh that carries every one of face.ts' MORPHS (the head), at their indices there; every other skin mesh (the
+  // coarse head, body, hands) gets zero. A face mesh that carries some but not all of them (setMorphs drops a morph
+  // that is zero everywhere) would lose its folds: its program says so when it is built, instead of going flat in silence
+  const NM = MORPHS.length;
   m.onBeforeCompile = (sh) => {
+    if (detail === 'face' && sh.morphTargetsCount > 0 && sh.morphTargetsCount !== NM) console.warn(`people/skin: a face mesh with ${sh.morphTargetsCount} of the ${NM} morph targets; its smile and squint folds are off`);
     Object.assign(sh.uniforms, u);
     sh.defines = { ...(sh.defines ?? {}), SKIN_SSS: 1, ...(high ? { SKIN_HIGH: 1 } : {}), ...(detail === 'face' ? { SKIN_FACE: 1 } : {}) };
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nattribute vec3 aRest; attribute vec4 aSkin; attribute vec4 aFace; attribute vec4 aMisc;\nvarying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;')
-      // the face's expression for the per-pixel folds: smileL, smileR, squintL, squintR, read from the morph weights of
-      // the head mesh (its 15 morphs in MORPHS order); every other skin mesh (the coarse head, body, hands) gets zero
       .replace('#include <begin_vertex>', `#include <begin_vertex>
 vRest = aRest; vSkin = aSkin; vFace = aFace; vMisc = aMisc;
 vExpr = vec4(0.0);
 #ifdef USE_MORPHTARGETS
 #ifdef MORPHTARGETS_TEXTURE
-#if MORPHTARGETS_COUNT == 15
-vExpr = vec4(morphTargetInfluences[2], morphTargetInfluences[3], morphTargetInfluences[13], morphTargetInfluences[14]);
+#if MORPHTARGETS_COUNT == ${NM}
+vExpr = vec4(morphTargetInfluences[${MI.smileL}], morphTargetInfluences[${MI.smileR}], morphTargetInfluences[${MI.squintL}], morphTargetInfluences[${MI.squintR}]);
 #endif
 #endif
 #endif`);

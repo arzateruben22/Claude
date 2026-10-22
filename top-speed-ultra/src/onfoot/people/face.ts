@@ -11,7 +11,7 @@ import { meshField } from './mesher';
 import { Quality, Look } from './params';
 import { NOISE } from './skin';
 import { cardMaterial, browTexture } from './cards';
-import { faceMasks } from './masks';
+import { beardMask, lipMask } from './masks';
 
 export const MORPHS = ['jawOpen', 'mouthClose', 'smileL', 'smileR', 'wide', 'pucker', 'press', 'tuck', 'browUp', 'browDownL', 'browDownR', 'blinkL', 'blinkR', 'squintL', 'squintR'] as const;
 export type MorphName = typeof MORPHS[number];
@@ -339,6 +339,15 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
   }
   const fh = look.facialHair;
   if (m && (fh === 'beard' || fh === 'goatee' || fh === 'moustache')) growBeard(hf, field, look, quality, pos, uvs, idx);
+  // every brow mesh carries all of MORPHS, beard or none: MORPHTARGETS_COUNT is part of a program's key, and a bearded
+  // brow mesh (13 morphs) next to a bare one (7) compiled a second card program, mid-play, the first time a bearded face
+  // came near. Vertices that no triangle uses, two on the lower lip and one under each eye, give the mouth's morphs and
+  // the squints (which barely reach the brows) clearly non-zero deltas, and person.ts' setMorphs keeps exactly the
+  // non-zero ones: so every brow mesh has all fifteen
+  for (const sx of [1, -1]) {
+    pos.push(sx * 0.008, hf.mouth.y - 0.004, 0.024, sx * hf.eye.x, -0.012, 0.012);
+    uvs.push(0, 0, 0, 0);
+  }
   const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.55).getHex();
   const mat = cardMaterial(brow, browBeardTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
   mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
@@ -414,8 +423,9 @@ function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, po
   }
   const lf = field.subset((i) => field.carve[i] === 1 || keep.has(i));
   const D = (l: V3) => { const b = hf.toBody(l); return lf.eval(b[0], b[1], b[2], null, 0); };
-  const grad = (l: V3): V3 => {
-    const b = hf.toBody(l), e = 0.0004, f0 = lf.eval(b[0], b[1], b[2], null, 0);
+  /** the skin's normal at a root, f0 the field there (the march's last sample: the same point, so the same number) */
+  const grad = (l: V3, f0: number): V3 => {
+    const b = hf.toBody(l), e = 0.0004;
     const gx = (lf.eval(b[0] + e, b[1], b[2], null, 0) - f0) / e, gy = (lf.eval(b[0], b[1] + e, b[2], null, 0) - f0) / e, gz = (lf.eval(b[0], b[1], b[2] + e, null, 0) - f0) / e;
     return norm([gx * hf.sx, gy * hf.sy, gz * hf.sz]);
   };
@@ -426,36 +436,39 @@ function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, po
   const zA = -0.035, R = 0.066;
   // where each kind can grow (head-local y, angle round the head from the front): rays outside it are never cast
   const [yTop, yBot, phMax] = full ? [0.006, -0.128, 2.1] : fh === 'goatee' ? [-0.04, -0.125, 0.75] : [-0.04, mY, 0.75];
-  const roots: { p: V3; n: V3; beard: number }[] = [];
+  // (the masks are masks.ts' beardMask and lipMask: faceMasks' numbers without its other masks. Every test below decides
+  // as it did with faceMasks and all its probes, so the beard is the same; the work is a fraction)
+  const hits: { p: V3; f0: number; beard: number }[] = [];
   for (let y = yTop; y > yBot; y -= g) for (let ph = -phMax; ph <= phMax; ph += g / R) {
     const yy = y + (r.next() - 0.5) * g * 0.8, a = ph + (r.next() - 0.5) * (g / R) * 0.8;
     const dir: V3 = [Math.sin(a), 0, Math.cos(a)];
-    // a ray that cannot reach the beard is never marched (the mask before, at and behind the skin's usual depth)
+    // a ray that cannot reach the beard is never marched (the mask before, at and behind the skin's usual depth; the
+    // first depth that shows enough beard settles it)
     let pre = 0;
-    for (const rr of [0.045, 0.06, 0.075]) pre = Math.max(pre, faceMasks([dir[0] * rr, yy, zA + dir[2] * rr], hf, look).beard);
+    for (const rr of [0.045, 0.06, 0.075]) { pre = Math.max(pre, beardMask([dir[0] * rr, yy, zA + dir[2] * rr], hf, look).beard); if (pre >= 0.05) break; }
     if (pre < 0.05) continue;
     // march in from outside to the skin
-    let t = 0.105, p: V3 = [0, 0, 0], hit = false;
+    let t = 0.105, p: V3 = [0, 0, 0], hit = false, f0 = 0;
     for (let it = 0; it < 80 && t > 0.005; it++) {
       p = [dir[0] * t, yy, zA + dir[2] * t];
       const d = D(p);
-      if (d < 0.00025) { hit = true; break; }
+      if (d < 0.00025) { hit = true; f0 = d; break; }
       t -= Math.max(d * 0.85, 0.0003);
     }
     if (!hit) continue;
-    const mk = faceMasks(p, hf, look);
+    const mk = beardMask(p, hf, look);
     if (mk.beard < 0.35 || mk.mouth > 0.01 || mk.lip > 0.02) continue;
-    // never within 2.5 mm of the lips
+    // never within 2.5 mm of the lips (probed only beside the mouth)
     let nearLip = false;
-    if (Math.abs(p[0]) < mw + 0.008 && Math.abs(p[1] - mY) < 0.016) for (const o of [[0, 0.0025, 0], [0, -0.0025, 0], [0.0025, 0, 0], [-0.0025, 0, 0]] as V3[]) if (faceMasks(add(p, o), hf, look).lip > 0.1) nearLip = true;
+    if (Math.abs(p[0]) < mw + 0.008 && Math.abs(p[1] - mY) < 0.016) for (const o of [[0, 0.0025, 0], [0, -0.0025, 0], [0.0025, 0, 0], [-0.0025, 0, 0]] as V3[]) if (lipMask(add(p, o), hf) > 0.1) { nearLip = true; break; }
     if (nearLip) continue;
     // thinner toward the mask's edge (a soft hairline, not a cut-out), and a neckline under the jaw
     if (r.next() > smooth(0.3, 0.75, mk.beard) * smooth(-0.127, -0.108, p[1])) continue;
-    const nrm = grad(p);
-    roots.push({ p: add(p, mul(nrm, 0.0006)), n: nrm, beard: mk.beard });
+    hits.push({ p, f0, beard: mk.beard });
   }
-  // thin to the cap, evenly (a stable shuffle)
-  while (roots.length > cap) roots.splice(Math.floor(r.next() * roots.length), 1);
+  // thin to the cap, evenly (a stable shuffle); then the skin's normal, only at the roots that stay
+  while (hits.length > cap) hits.splice(Math.floor(r.next() * hits.length), 1);
+  const roots = hits.map((h) => { const n = grad(h.p, h.f0); return { p: add(h.p, mul(n, 0.0006)), n, beard: h.beard }; });
   const hU = (x: number) => 0.0072 * F.lipUpper * Math.pow(clamp(1 - (x / mw) ** 2), 0.55);
   for (const rt of roots) {
     const { p, n } = rt;
