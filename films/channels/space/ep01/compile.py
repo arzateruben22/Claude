@@ -177,7 +177,8 @@ LADDER = {
 t_merge = t_of("race", 0.0)
 end_out = t_end                           # everything gives way to the end card
 LABELS = [
-    # hook: none (the title and the question carry it)
+    # hook: Earth named on frame 0, so the poster reads as the solar system, not abstract rings
+    {"id": "l-earth-h", "text": "Earth", "kind": "body", "anchor": "earth", "t0": 0.0, "t1": t_rw0, "shot": "diagram", "side": 1},
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Earth"), "t1": B["why"]["t0"], "shot": "normal", "side": -1},
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": t_off, "shot": "normal", "side": -1},
     {"id": "l-v", "text": "nearly 30 km/s", "kind": "gravity", "anchor": "earth-v", "t0": A("vo02:thirty"), "t1": A("vo02:Sunlight"), "shot": "normal", "side": 1},
@@ -220,6 +221,7 @@ BADGES = [
     {"id": "b-time-t", "clock": "restore", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
     {"id": "b-orbit-t", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
     {"id": "b-nts-t", "text": "not to scale", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tr"},
+    {"id": "b-illus", "text": "illustration", "t0": t_j1, "t1": t_end, "slot": "tr"},   # the galaxy is drawn, not imaged
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
@@ -247,7 +249,7 @@ PILLS = [
 # ── the title card and the end card ───────────────────────────────────────
 TITLE = {"series": "Light Minute · No. 001", "title": "If the Sun *vanished*", "t1": B["normal"]["t0"] - 0.25,
          "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next: the *nearest star*", "follow": "Light Minute · No. 002"}
+END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002"}   # the channel's own tease form (theme.json)
 
 CUE = {
     "off": t_off, "rewind": [t_rw0, t_rw1], "arrive": t_arr, "race": {"arrive": A("vo04:arrived"), "merge": t_of("race", 0.0)},

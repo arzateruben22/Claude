@@ -102,12 +102,15 @@ export const look = (THREE, o) => {
   const hemi = new THREE.HemisphereLight(lin(sc["light-hemi-sky"] || "#DDF3EC"), lin(sc["light-hemi-ground"] || "#0A1F1C"), 0.5);
   const key = new THREE.DirectionalLight(lin(sc["light-key"] || "#FFF1E6"), 2.2);
   const rim = new THREE.DirectionalLight(lin(sc["light-rim"] || "#CFF5E6"), 1.4);
-  lights.add(hemi, key, key.target, rim, rim.target);
+  // a soft fill from below the lens: the cells' undersides (the parachute's inside) otherwise went near-black
+  const fill = new THREE.DirectionalLight(lin(sc["light-fill"] || "#F3DDD3"), 0.9);
+  lights.add(hemi, key, key.target, rim, rim.target, fill, fill.target);
   const vA = new THREE.Vector3(), vB = new THREE.Vector3();
   const place = (camera, focus) => {
     camera.updateMatrixWorld();
     const f = focus ? vA.set(focus[0], focus[1], focus[2]) : camera.localToWorld(vA.set(0, 0, -30));
-    key.target.position.copy(f); rim.target.position.copy(f);
+    key.target.position.copy(f); rim.target.position.copy(f); fill.target.position.copy(f);
+    fill.position.copy(f).add(vB.set(-0.2, -0.85, 0.75).applyQuaternion(camera.quaternion).multiplyScalar(50));   // below, in front
     key.position.copy(f).add(vB.set(1.0, 1.25, 0.9).applyQuaternion(camera.quaternion).multiplyScalar(50));    // top right, in front
     rim.position.copy(f).add(vB.set(-0.35, 0.55, -1.0).applyQuaternion(camera.quaternion).multiplyScalar(50)); // behind the subject
     hemi.position.set(0, 1, 0);

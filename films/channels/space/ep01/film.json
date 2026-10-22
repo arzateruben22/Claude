@@ -602,6 +602,16 @@
  },
  "labels": [
   {
+   "id": "l-earth-h",
+   "text": "Earth",
+   "kind": "body",
+   "anchor": "earth",
+   "t0": 0.0,
+   "t1": 4.066666666666666,
+   "shot": "diagram",
+   "side": 1
+  },
+  {
    "id": "l-earth",
    "text": "Earth",
    "kind": "body",
@@ -916,6 +926,13 @@
    "t0": 54.4,
    "t1": 64.13333333333334,
    "slot": "tr"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 66.06666666666666,
+   "t1": 68.0333,
+   "slot": "tr"
   }
  ],
  "counters": [
@@ -1016,7 +1033,7 @@
  },
  "endCard": 68.33333333333333,
  "end": {
-  "title": "Next: the *nearest star*",
+  "title": "Next light: the *nearest star*",
   "follow": "Light Minute · No. 002"
  },
  "captions": [

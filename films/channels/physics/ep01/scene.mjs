@@ -95,14 +95,14 @@ const AR = arrows({ max: 24, shaft: 0.62, head: [3.6, 1.6], outline: 0.34, ink: 
 const HOLD = (take) => [TAKES[take] ? TAKES[take].t0 : CUE.cuts[take], TAKES[take] ? TAKES[take].t1 : Infinity];   // a slot stays put from cut to cut
 scene.add(AR.group);
 const gyk = (k) => BENCH.drop + BENCH.r - 0.5 * BENCH.g * (k * BENCH.dt) ** 2;           // ghost k's centre height
-AR.add("nm-g", { tail: (t) => ballPos("normal", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.normal.gravity, t1: CUE.normal.L, slot: 9, hold: HOLD("normal") });
+AR.add("nm-g", { tail: (t) => ballPos("normal", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.normal.gravity, t1: CUE.normal.gTip, slot: 9, hold: HOLD("normal") });
 for (let k = 0; k < 9; k++) {
   AR.add(`nm-gap${k}`, { tail: [BENCH.gapX, gyk(k), 0], tip: [BENCH.gapX, gyk(k + 1), 0], color: MOTION, slot: k, grow: 0.25,
     t0: Math.max(CUE.normal.gaps + 0.09 * k, S.stampAt("normal:drop", k + 1) + 0.12), t1: CUE.cuts.change - 0.2, shrink: 0.15, hold: HOLD("normal") });
   AR.add(`ms-gap${k}`, { tail: [BENCH.gapX, gyk(k), 0], tip: [BENCH.gapX, gyk(k + 1), 0], color: MOTION, slot: k, grow: 0.22, t0: CUE.measure.gaps[k], hold: HOLD("measure") });
 }
-AR.add("wy-g-drop", { tail: (t) => ballPos("why", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity, t1: CUE.why.contact, slot: 10, hold: HOLD("why") });
-AR.add("wy-g-t44", { tail: (t) => ballPos("why", "t44", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity + 0.1, t1: CUE.why.contact, slot: 11, hold: HOLD("why") });
+AR.add("wy-g-drop", { tail: (t) => ballPos("why", "drop", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity, t1: CUE.why.gTip, slot: 10, hold: HOLD("why") });
+AR.add("wy-g-t44", { tail: (t) => ballPos("why", "t44", t), vec: [0, -20, 0], color: FORCE, t0: CUE.why.gravity + 0.1, t1: CUE.why.gTip, slot: 11, hold: HOLD("why") });
 AR.add("wy-v", { tail: (t) => { const p = ballPos("why", "t44", t); return [p[0] + R_BALL * 0.4, p[1], p[2]]; }, vec: [ballSpec("why", "t44").vx * 0.3, 0, 0],
   color: MOTION, t0: CUE.why.two, t1: CUE.why.contact, slot: 12, hold: HOLD("why") });
 

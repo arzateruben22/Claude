@@ -203,13 +203,17 @@ def ghost_xy(take, ball, k):
 m0, m1 = A("vo06:it"), A("vo06:second")                    # counted from "Measure it:" to "…of a second."
 GAPS = [round(m0 + (m1 - m0) * i / 8, 4) for i in range(9)]   # gap i+1 is counted at GAPS[i]
 
+# the gravity arrows (20 cm, hung below the ball's centre) end when their tip reaches the floor, so they never
+# shrink into it and read as gravity weakening: centre at 20 cm, 0.412 s into the fall
+TAU_TIP = math.sqrt(2 * (DROP + RB - 20.0) / G)
+
 # ── the cue table the scene reads (film seconds) ────────────────────────────────────────────────
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 CUE = {
     "hook": {"tau0": HOOK_TAU0, "freeze": [F_h, F_h + FREEZE]},
-    "normal": {"R": R_n, "L": L_n, "gaps": A("vo02:gaps"), "gravity": A("vo02:falling")},
+    "normal": {"R": R_n, "L": L_n, "gaps": A("vo02:gaps"), "gravity": A("vo02:falling"), "gTip": clk.tOf(TAKES["normal"]["tauR"] + TAU_TIP)},
     "change": {"R": R_c, "L": L_c},
-    "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "two": A("vo04:two"), "glide": A("vo04:glide"),
+    "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "gTip": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "two": A("vo04:two"), "glide": A("vo04:glide"),
             "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same#2")]},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
     "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
@@ -224,10 +228,10 @@ LABELS = [
     {"id": "hk-thrown", "text": "thrown", "color": "ghost", "t0": A("vo01:thrown"), "t1": cut("normal") - 0.45, "anchor": {"ball": ["hook", "t89"]}, "side": 1, "fixed": True},
     {"id": "hk-dropped", "text": "dropped", "color": "ghost", "t0": A("vo01:dropped"), "t1": cut("normal") - 0.45, "anchor": {"ball": ["hook", "drop"]}, "side": -1, "fixed": True},
     {"id": "nm-apart", "text": "1/20 s apart", "color": "ghost", "t0": A("vo02:Ghosts"), "t1": cut("change"), "anchor": {"gap": ["normal", 2], "dx": 4.4}, "side": 1, "fixed": True},
-    {"id": "nm-gravity", "text": "gravity", "color": "force", "t0": A("vo02:falling"), "t1": L_n, "anchor": {"arrow": "nm-g"}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "nm-gravity", "text": "gravity", "color": "force", "t0": A("vo02:falling"), "t1": clk.tOf(TAKES["normal"]["tauR"] + TAU_TIP), "anchor": {"arrow": "nm-g"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "ch-dropped", "text": "dropped", "color": "ghost", "t0": A("vo03:Now"), "t1": cut("why"), "anchor": {"ball": ["change", "drop"]}, "side": -1, "fixed": True},
     {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:throw"), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},
-    {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": C_w, "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
+    {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
     {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": C_w, "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same#2"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
     {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
@@ -239,10 +243,13 @@ BADGES = [
     {"id": "air", "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
 ]
 READOUTS = [
+    {"id": "ch-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},     # the throw point: distances are measured from here
     {"id": "ch-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},
+    {"id": "wo-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo05:forty", -0.2), "t1": cut("measure")},
     {"id": "wo-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo05:forty", -0.2), "t1": cut("measure")},   # once the pull-back shows the floor
     {"id": "wo-40", "text": "40 cm", "at": [40.0, 0.0, 0.0], "t0": A("vo05:forty"), "t1": cut("measure")},
     {"id": "wo-60", "text": "60 cm", "at": [60.0, 0.0, 0.0], "t0": A("vo05:sixty"), "t1": cut("measure")},
+    {"id": "tk-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo07:where"), "t1": None},
     {"id": "tk-20", "text": "20 cm", "at": [20.0, 0.0, 0.0], "t0": A("vo07:where"), "t1": None},
     {"id": "tk-40", "text": "40 cm", "at": [40.0, 0.0, 0.0], "t0": A("vo07:where", 0.12), "t1": None},
     {"id": "tk-60", "text": "60 cm", "at": [60.0, 0.0, 0.0], "t0": A("vo07:where", 0.24), "t1": None},
