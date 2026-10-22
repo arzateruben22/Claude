@@ -3137,13 +3137,13 @@
  },
  "8-2": {
   "16x9": {
-   "frames": 780,
+   "frames": 915,
    "fps": 30,
-   "dur": 26,
+   "dur": 30.5,
    "w": 1280,
    "h": 720,
-   "bytes": 2847461,
-   "hash": "14599bf4a3d5aaeea0bbf97cc2f5b1f9b619ffdc",
+   "bytes": 5550557,
+   "hash": null,
    "samples": [
     [
      0,
@@ -3354,9 +3354,11 @@
      "d29fd587b90779f402d749f7c5fb498bd88ccd02"
     ]
    ],
-   "warnings": [],
-   "renderSec": 407.9,
-   "renderedAt": "2026-10-21",
+   "warnings": [
+    "16:9 finished before a container restart; its frame hashes were not kept"
+   ],
+   "renderSec": null,
+   "renderedAt": "2026-10-22",
    "quick": false
   },
   "9x16": {

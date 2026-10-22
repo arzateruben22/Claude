@@ -4,7 +4,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 
 | Week | File | Title | Hook | Length |
 |---|---|---|---|---|
-| 1 | `8-2-9x16.mp4` | Inside a pore | What acne actually is, in 26 seconds. | 26 s |
+| 1 | `8-2-9x16.mp4` | Inside a pore | What acne actually is, in 26 seconds. | 31 s |
 | 2 | `3-3-9x16.mp4` | Ninety nights | Why "consistency" isn't a cliché. | 20 s |
 | 3 | `6-2-9x16.mp4` | Not on the same night | Six pairs I'd never put on the same night. | 24 s |
 | 4 | `1-1-9x16.mp4` | Your skin in three layers | Your skin, in three layers, and why results take weeks. | 22 s |
