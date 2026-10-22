@@ -159,6 +159,21 @@ itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's inte
 - **The pause (13:38 UTC): what waits for the owner.**
   - Hair and body: plans from their audits, branched from the face head.
   - The Retro finish (`retro/port`, judge pending).
+  - **Face/eyes (`fable/face`, b5ac6a2, pushed; not landed).** Round 2 built teeth, beard/goatee/moustache strand
+    cards, smile coupling, eyes set in their sockets, a cheaper phone skin shader and mouth corners, then one repair
+    round. The re-judge (Opus) still said revise. Next round:
+    - **(sev 3)** full-beard men at yaw 45 deg or more show the beard as a hard-edged dark box over the front of the
+      ear. Build masks.ts `side` from smooth ramps that stop before the ear.
+    - **(sev 2)** greying facial hair over a dark hair colour still speckles at game distance. Keep the card base at
+      hairColor*0.55 unless the hair is itself grey/white.
+    - **(sev 1, small):**
+      - a person.ts one-liner to feed uEyeP (eyeSize, tilt, hooded) from getFaceMat;
+      - move MORPHS/MI/NM to a leaf module (an import cycle);
+      - taper the beard tufts at macro;
+      - re-aim the talk-mouth crop;
+      - correct the brow-difference numbers.
+
+    Evidence: `scratchpad/fable/face/judge1`, `judge2` and `after/`.
   - The walk-in interiors (needs the always-on session's S1 engine).
   - Smaller follow-ups:
     - hands: smooth the thumb-bone weights, the knee pose's thumb, the nail tint;
