@@ -39,6 +39,7 @@ footer { display: none !important; }
 .tcap i.on { color: #f4c9d6; } .tcap i.said { color: #f5f5f7; }
 .dayc { right: auto !important; left: 50%; bottom: auto !important; top: 47vh; transform: translateX(-50%); }
 .dayc b.lit { color: #f4c9d6; }
+.dayc b { font-size: 11vmin !important; } .dayc span { font-size: 4.4vmin !important; font-weight: 700; color: #f5f5f7 !important; text-shadow: 0 .4vmin 1.6vmin rgba(0,0,0,.8); }
 .endscrim { position: absolute; inset: 0; z-index: 4; background: rgba(0,0,0,.62); opacity: 0; pointer-events: none; }
 .endc { position: absolute; left: 8.3vw; right: 16.7vw; top: 33vh; z-index: 5; opacity: 0; }
 .endc .t { font-size: 8.2vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.04; }
