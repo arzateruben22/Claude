@@ -1,7 +1,8 @@
 -- Lumevina — Supabase (Postgres) schema
 -- One shared source of truth for what the site currently keeps in each
 -- visitor's browser: clients, bookings, and the Glow Rewards ledger.
--- Apply with:  supabase db push   (see server/README.md)
+-- Apply with:  supabase db push   (see server/README.md), then the migrations
+-- in server/migrations in order (each has a down/ twin that reverses it).
 
 create extension if not exists btree_gist;
 

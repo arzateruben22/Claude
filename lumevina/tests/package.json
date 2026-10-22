@@ -1,0 +1,16 @@
+{
+  "name": "lumevina-tests",
+  "private": true,
+  "type": "module",
+  "description": "Lumevina's automated checks: the database (schema, migrations, row-level security) on a local Postgres, the shared Skin Intelligence logic, the edge functions' handlers, and browser smoke tests.",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 \"unit/*.test.mjs\" \"db/*.test.mjs\" \"functions/*.test.mjs\"",
+    "test:db": "node --test \"db/*.test.mjs\"",
+    "test:unit": "node --test \"unit/*.test.mjs\"",
+    "test:functions": "node --test --test-concurrency=1 \"functions/*.test.mjs\"",
+    "test:e2e": "node --test --test-concurrency=1 \"e2e/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.11"
+  }
+}

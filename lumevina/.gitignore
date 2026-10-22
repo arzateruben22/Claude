@@ -2,3 +2,10 @@ dist/
 docs/school/motion/review/
 docs/school/motion/.tmp/
 docs/school/visuals/.tmp/
+tests/node_modules/
+tests/.tmp/
+skin-intelligence/worker/.venv/
+skin-intelligence/worker/**/__pycache__/
+skin-intelligence/worker/.pytest_cache/
+vendor/mediapipe/*.wasm
+vendor/mediapipe/*.task
