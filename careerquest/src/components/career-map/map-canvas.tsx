@@ -46,7 +46,7 @@ export function MapCanvas({
   currentKey: string | null;
   onSelect: (key: string, via: "pointer" | "keyboard") => void;
 }) {
-  const uid = useId().replace(/:/g, "");
+  const uid = `cm${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const scroller = useRef<HTMLDivElement | null>(null);
   const centered = useRef(false);
   const buttons = useRef(new Map<string, HTMLButtonElement>());

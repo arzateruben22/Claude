@@ -26,7 +26,7 @@ export type ImportSummaryData = {
   issuesTruncated: boolean;
   /** One-line summary for toasts. */
   message: string;
-  /** Items were placed in /applications/review (email imports only). */
+  /** Items from this import can land in /applications/review (email imports only). */
   reviewQueue: boolean;
   /** What the row/line numbers in `issues` refer to. */
   unit: "row" | "line" | "message";

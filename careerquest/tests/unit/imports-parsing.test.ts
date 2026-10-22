@@ -24,6 +24,7 @@ import { MAX_URL_LINES, hintsFromUrl, parseUrlLines } from "@/lib/imports/urls";
 import { urlObservation } from "@/lib/imports/url-import";
 import { emailFileKind, looksLikeEmail, prepareEmailInputs } from "@/lib/imports/email-files";
 import { xlsxCellToString } from "@/lib/imports/xlsx";
+import { UPLOAD_FAILED, isNavigationError, withUploadErrors } from "@/components/imports/safe-action";
 
 const TODAY = "2026-10-22";
 
@@ -601,5 +602,22 @@ describe("outcome helpers", () => {
     expect(describeTotals(emptyTotals())).toBe("nothing new");
     expect(totalsFromJson({ created: 3, bogus: 1, updated: "x" })).toEqual({ ...emptyTotals(), created: 3 });
     expect(totalsFromJson(null)).toEqual(emptyTotals());
+  });
+});
+
+describe("upload action wrapper", () => {
+  it("turns transport failures into form errors but lets redirects through", async () => {
+    const tooBig = withUploadErrors<{ message: string }>(async () => {
+      throw new Error("Body exceeded 1 MB limit");
+    });
+    expect(await tooBig(null, new FormData())).toEqual({ ok: false, error: UPLOAD_FAILED });
+    const redirect = Object.assign(new Error("NEXT_REDIRECT"), { digest: "NEXT_REDIRECT;replace;/login;307;" });
+    expect(isNavigationError(redirect)).toBe(true);
+    const redirecting = withUploadErrors<{ message: string }>(async () => {
+      throw redirect;
+    });
+    await expect(redirecting(null, new FormData())).rejects.toBe(redirect);
+    const passthrough = withUploadErrors<{ message: string }>(async () => ({ ok: true, data: { message: "ok" } }));
+    expect(await passthrough(null, new FormData())).toEqual({ ok: true, data: { message: "ok" } });
   });
 });

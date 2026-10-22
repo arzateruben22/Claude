@@ -8,6 +8,9 @@ import { useToastForm } from "@/components/applications/use-toast-action";
 import { importUrlsAction } from "@/lib/imports/actions";
 import { MAX_URL_LINES } from "@/lib/imports/urls";
 import { ImportSummary } from "./import-summary";
+import { withUploadErrors } from "./safe-action";
+
+const safeImportUrls = withUploadErrors(importUrlsAction);
 
 function countLines(text: string): number {
   return text.split(/\r\n?|\n/).filter((l) => l.trim() && !l.trim().startsWith("#")).length;
@@ -17,7 +20,7 @@ function countLines(text: string): number {
 export function UrlImportForm() {
   const [lines, setLines] = useState(0);
   const clearLines = useCallback(() => setLines(0), []);
-  const { state, pending, formProps } = useToastForm(importUrlsAction, { onSuccess: clearLines });
+  const { state, pending, formProps } = useToastForm(safeImportUrls, { onSuccess: clearLines });
   const [formKey, setFormKey] = useState(0);
   const tooMany = lines > MAX_URL_LINES;
   const fieldErrors = state && !state.ok ? state.fieldErrors?.urls : undefined;

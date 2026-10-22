@@ -45,7 +45,7 @@ export async function finishBatch(
     issues: issues.slice(0, MAX_LISTED_ISSUES),
     issuesTruncated: issues.length > MAX_LISTED_ISSUES,
     message: `Import finished: ${describeTotals(totals)}.`,
-    reviewQueue: Boolean(opts.reviewQueue) && totals.needsReview > 0,
+    reviewQueue: Boolean(opts.reviewQueue),
     unit: opts.unit,
   };
 }

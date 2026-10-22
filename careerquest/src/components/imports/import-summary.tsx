@@ -76,8 +76,8 @@ export function ImportSummary({ data, onReset }: { data: ImportSummaryData; onRe
           View applications
         </Link>
         {data.reviewQueue && (
-          <Link href="/applications/review" className={buttonClasses("primary", "sm")}>
-            Open review queue ({data.totals.needsReview})
+          <Link href="/applications/review" className={buttonClasses(data.totals.needsReview > 0 ? "primary" : "outline", "sm")}>
+            {data.totals.needsReview > 0 ? `Open review queue (${data.totals.needsReview})` : "Review queue"}
           </Link>
         )}
         {onReset && (

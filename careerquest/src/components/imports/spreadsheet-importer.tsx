@@ -22,6 +22,7 @@ import {
 import { PRESETS, type PresetId } from "@/lib/imports/presets";
 import type { AnalyzeData, ImportSummaryData } from "@/lib/imports/types";
 import { ImportSummary } from "./import-summary";
+import { UPLOAD_FAILED, isNavigationError } from "./safe-action";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -80,8 +81,9 @@ export function SpreadsheetImporter({ preset: initialPreset, presetChoices }: Pr
         } else {
           setError(res.error);
         }
-      } catch {
-        setError("The file could not be uploaded. Check its size and try again.");
+      } catch (err) {
+        if (isNavigationError(err)) throw err;
+        setError(UPLOAD_FAILED);
       }
     });
   }
@@ -102,8 +104,9 @@ export function SpreadsheetImporter({ preset: initialPreset, presetChoices }: Pr
           setError(res.error);
           toast.push({ tone: "danger", title: res.error });
         }
-      } catch {
-        setError("The import could not be sent. Check the file size and try again.");
+      } catch (err) {
+        if (isNavigationError(err)) throw err;
+        setError(UPLOAD_FAILED);
       }
     });
   }

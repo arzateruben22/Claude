@@ -7,6 +7,9 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { useToastForm } from "@/components/applications/use-toast-action";
 import { importEmailAction } from "@/lib/imports/actions";
 import { ImportSummary } from "./import-summary";
+import { withUploadErrors } from "./safe-action";
+
+const safeImportEmail = withUploadErrors(importEmailAction);
 
 const MAX_BYTES = 25 * 1024 * 1024;
 
@@ -26,7 +29,7 @@ export function EmailImportForm() {
     setSize(0);
   }, []);
   // Submitting through a transition keeps typed/pasted input when the server rejects the import.
-  const { state, pending, formProps } = useToastForm(importEmailAction, { onSuccess: clearCounts });
+  const { state, pending, formProps } = useToastForm(safeImportEmail, { onSuccess: clearCounts });
   const tooLarge = size > MAX_BYTES;
 
   return (
