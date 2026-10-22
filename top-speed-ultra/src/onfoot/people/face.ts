@@ -53,10 +53,15 @@ export function fieldDelta(e: number, p: V3, hf: HeadFrame, jawW?: number): V3 {
       const wc = Math.exp(-((x - corner[0]) ** 2 + (y - corner[1]) ** 2) / 0.0135 ** 2 - ((z - corner[2]) / 0.02) ** 2);
       const st = Math.exp(-(((y - mY) / 0.008) ** 2)) * lipZone * clamp((sg * x) / mw, 0, 1.1);
       const ch = g3(p, [sg * 0.036, -0.031, 0.012], 0.017), nl = g3(p, [sg * 0.031, -0.056, 0.016], 0.01), ue = g3(p, [sg * hf.eye.x, -0.013, 0.011], 0.007);
+      // the nasolabial line (skin.ts draws the same fold) stays back while the cheek beside it rises: the fold deepens
+      const fw = 0.026 * hf.face.mouthW, ax0 = 0.016, ay0 = hf.nose.tip[1] - 0.003, bx = fw + 0.004 - ax0, by = mY + 0.013 - ay0;
+      const tt = clamp(((sg * x - ax0) * bx + (y - ay0) * by) / (bx * bx + by * by));
+      const fd2 = (sg * x - ax0 - bx * tt) ** 2 + (y - ay0 - by * tt) ** 2;
+      const fl = Math.exp(-fd2 / 0.003 ** 2) * smooth(-0.01, 0.005, z);
       return [
         (sg * 0.0042 * wc + sg * 0.003 * st + sg * 0.0008 * ch + sg * 0.0008 * nl) * sideW,
-        (0.0042 * wc + 0.0014 * st + 0.0032 * ch + 0.0012 * nl + 0.0012 * ue) * sideW,
-        (-0.0025 * wc + 0.0022 * ch + 0.0025 * nl + 0.0005 * ue) * sideW,
+        (0.0042 * wc + 0.0014 * st + 0.0046 * ch + 0.0012 * nl + 0.0018 * ue) * sideW,
+        (-0.0025 * wc + 0.0022 * ch + 0.0025 * nl + 0.0005 * ue - 0.0012 * fl) * sideW,
       ];
     }
     case 'wide': {
