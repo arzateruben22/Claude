@@ -66,7 +66,9 @@ function tyre(w: number, segs: number, grooves: boolean) {
 export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero' | 'multi' | 'mesh' | 'blade';
 // sidewall: the tyre's sidewall height as a share of the standard one; below 1 the rim, spokes, hub and brake grow
 // to meet it (a low-profile tyre on a bigger rim, the same outside diameter)
-export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number }
+// brand: whose mark the caliper carries (car-shape's P.brand), which sets the wordmark strip's aspect; absent, the OC
+// Hypercar is known by its low sidewall (no other car has one) or its own rim (multi, offered to no other car)
+export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number; brand?: 'rossini' | 'vela' | 'oc' }
 // add one wheel (built for the right side) to a kit; m places it, out = -1 mirrors it for the left
 export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -1, spin?: Kit) {
   const high = o.q === 'high', segs = high ? 120 : 56, style = o.style ?? 'twin5';
@@ -286,9 +288,10 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   // the wordmark along the caliper's outer face, on a strip as long for its height as its map (car.ts calText), so
   // it reads unsquashed. ROSSINI and VELA are 8:1 maps: a 16 mm strip over 0.75 rad (128 mm at r 0.17; the old 36 mm
   // x 109 mm strip stood them up 2.7 times too tall). The OC mark is a 2.67:1 map (512 x 192), and the mark is never
-  // stretched: on the hypercar's own rim (multi, which no other car is offered; its other rim, the aero cover, hides
-  // the caliper) it gets a 28 mm strip over 0.44 rad (75 mm at r 0.17)
-  const ocMark = style === 'multi', r0 = ocMark ? 0.156 : 0.162, hT = ocMark ? 0.028 : 0.016, aT = ocMark ? 0.44 : 0.75;
+  // stretched: on the hypercar (either of its rims; the aero cover lets it show through the slots) it gets a 28 mm
+  // strip over 0.44 rad (75 mm at r 0.17)
+  const ocMark = o.brand ? o.brand === 'oc' : style === 'multi' || sw < 1;
+  const r0 = ocMark ? 0.156 : 0.162, hT = ocMark ? 0.028 : 0.016, aT = ocMark ? 0.44 : 0.75;
   const tRows: V3[][] = [];
   for (let i = 0; i <= 1; i++) { const r = r0 + hT * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + aT / 2 - aT * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
   const tg = gridGeo(tRows, { flip: true });
