@@ -1,0 +1,167 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Because the road ahead is narrower than the cell.",
+  "claim": "A red cell is about 7.5 µm across, yet it passes microvessels only about 3 µm wide, so the vessels ahead of it can be narrower than the cell.",
+  "source_url": "https://www.bme.rochester.edu/research/red-blood-cells.html",
+  "source_title": "Red blood cells are highly deformable (University of Rochester, Biomedical Engineering)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: highly deformable, 'which enables them to traverse microvessels whose diameter is only about 3µm'."
+ },
+ {
+  "id": "c2",
+  "sentence": "Meet a red blood cell: a disc about seven micrometers across, dimpled on both sides, with no nucleus.",
+  "claim": "Red blood cells are 7–8 µm across and have no nucleus.",
+  "source_url": "https://www.elsevier.com/resources/anatomy/blood/blood-cells/erythrocyte/16056",
+  "source_title": "Erythrocyte (Elsevier, Complete Anatomy)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt gives 7–8 µm and 'they lack a nucleus, organelles, and cannot divide'. Other texts give 7.5–8 µm; 'about seven' sits at the low end of the range. A scale pill, if one shows the size, reads 7.5 µm."
+ },
+ {
+  "id": "c3",
+  "sentence": "Meet a red blood cell: a disc about seven micrometers across, dimpled on both sides, with no nucleus.",
+  "claim": "Red blood cells are biconcave discs: plump at the rim, very thin in the centre.",
+  "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_1e_(OpenStax)/Unit_4%3A_Fluids_and_Transport/18%3A_The_Cardiovascular_System_-_Blood/18.03%3A_Erythrocytes",
+  "source_title": "OpenStax Anatomy and Physiology, 18.3 Erythrocytes (LibreTexts copy)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'Erythrocytes are biconcave disks; that is, they are plump at their periphery and very thin in the center.'"
+ },
+ {
+  "id": "c4",
+  "sentence": "You have about twenty-five trillion of them: most of your own cells.",
+  "claim": "A reference adult has about 30 trillion human cells, about 84% of them red blood cells (about 25 trillion). The body also holds about 38 trillion bacteria, hence 'your own cells'.",
+  "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=113005",
+  "source_title": "BioNumbers 113005: distribution of cell number and mass by cell type (Sender, Fuchs & Milo 2016, PLOS Biology)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Cross-check fix applied: 'most of the cells in your body' was false once bacteria count. The 84% share is from BioNumbers' excerpt of the paper's figure and Medical News Today; 0.84 × 30 trillion = 25.2 trillion (computed)."
+ },
+ {
+  "id": "c5",
+  "sentence": "Now follow it as the vessel branches, and branches again, into a capillary.",
+  "claim": "Arteries branch into smaller vessels, the arterioles, which feed capillary beds.",
+  "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04%3A_Fluids_and_Transport/20%3A_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.09%3A_Chapter_Review",
+  "source_title": "OpenStax Anatomy and Physiology 2e, chapter 20 review (LibreTexts copy)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'Arteries transport blood away from the heart and branch into smaller vessels, forming arterioles. Arterioles distribute blood to capillary beds, the sites of exchange with the body tissues.'"
+ },
+ {
+  "id": "c6",
+  "sentence": "The narrowest are slimmer than the cell, so cells go through in single file.",
+  "claim": "The narrowest microvessels (about 3 µm) are smaller than a red cell, and in capillaries red cells travel in single file.",
+  "source_url": "https://www.bme.rochester.edu/research/red-blood-cells.html",
+  "source_title": "Red blood cells are highly deformable (University of Rochester, Biomedical Engineering)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'in capillaries, red blood cells travel in single file separated by plasma gaps'."
+ },
+ {
+  "id": "c7",
+  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "claim": "Squeezing through narrow capillaries, a red cell deforms at constant volume and nearly constant surface area: its membrane strongly resists stretching.",
+  "source_url": "https://resolve.cambridge.org/core/journals/journal-of-fluid-mechanics/article/squeezing-of-red-blood-cells-through-capillaries-with-nearminimal-diameters/2B2B5F3222CFED12071E045D2C824D2E",
+  "source_title": "Halpern & Secomb 1989, The squeezing of red blood cells through capillaries with near-minimal diameters, J. Fluid Mech. 203:381",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'They must deform at constant volume ... and also at nearly constant surface area, because the red cell membrane strongly resists dilation.'"
+ },
+ {
+  "id": "c8",
+  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "claim": "A red cell's surface-area-to-volume ratio, more than its stiffness, decides how narrow a passage it can get through.",
+  "source_url": "https://www.biorxiv.org/content/10.1101/2020.07.11.191494.full.pdf",
+  "source_title": "Namvar et al. 2020, Surface area-to-volume ratio, not cellular rigidity, determines red blood cell traversal through small capillaries (bioRxiv)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "'Spare surface for its volume' is the standard reading of that ratio (a sphere of the same volume has less surface). Preprint; the cross-check also accepts it as the standard explanation."
+ },
+ {
+  "id": "c9",
+  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "claim": "In capillary flow, a red cell changes from a disc to a parachute shape as the flow speeds up.",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.0504243102",
+  "source_title": "Noguchi & Gompper 2005, Shape transitions of fluid vesicles and red blood cells in capillary flows, PNAS 102:14159",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (PMC1242298 abstract): 'a model RBC is found to transit from a nonaxisymmetric discocyte to an axisymmetric parachute shape'. A simulation that the authors report agrees with experiments."
+ },
+ {
+  "id": "c10",
+  "sentence": "The tightest are about three micrometers: less than half its width.",
+  "claim": "Red cells traverse microvessels only about 3 µm across, about 40% of a 7.5 µm cell.",
+  "source_url": "https://www.bme.rochester.edu/research/red-blood-cells.html",
+  "source_title": "Red blood cells are highly deformable (University of Rochester, Biomedical Engineering)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Cross-check fix: replaces the unsupported 'only about half its width' [S3, PMC8215585]. 3 / 7.5 = 0.40 (computed)."
+ },
+ {
+  "id": "c11",
+  "sentence": "And it squeezes through them for its whole life: about a hundred and twenty days.",
+  "claim": "A red blood cell lives about 120 days on average.",
+  "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D004905",
+  "source_title": "Erythrocyte Aging, MeSH (US National Library of Medicine)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'This limits the average life span of an erythrocyte to 120 days.'"
+ },
+ {
+  "id": "c12",
+  "sentence": "It gets your blood through your smallest vessels, where oxygen is handed out.",
+  "claim": "Capillary beds are extremely narrow, which slows red cells and gives gas exchange time to happen.",
+  "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_1e_(OpenStax)/Unit_4%3A_Fluids_and_Transport/18%3A_The_Cardiovascular_System_-_Blood/18.03%3A_Erythrocytes",
+  "source_title": "OpenStax Anatomy and Physiology, 18.3 Erythrocytes (LibreTexts copy)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'Capillary beds are extremely narrow, slowing the passage of the erythrocytes and providing an extended opportunity for gas exchange to occur.'"
+ },
+ {
+  "id": "c13",
+  "sentence": "Meanwhile, as you watched, your bone marrow made over a hundred million new red cells.",
+  "claim": "The body makes about two million red blood cells every second.",
+  "source_url": "https://medlineplus.gov/ency/anatomyvideos/000104.htm",
+  "source_title": "Blood cells (MedlinePlus, US National Library of Medicine)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'The body makes about two million red blood cells every second!' The tally is 2,000,000 × t from frame 0; the line starts at about 59 s (about 118 million), and 'over a hundred million' holds for any start after 50 s (computed). Consistent with 25 trillion cells / 120 days = 2.4 million a second (computed)."
+ },
+ {
+  "id": "c14",
+  "sentence": "About a billion passengers.",
+  "claim": "A red blood cell holds about 270 million hemoglobin molecules.",
+  "source_url": "https://www.merckmillipore.com/BD/en/technical-documents/technical-article/clinical-testing-and-diagnostics-manufacturing/hematology/hemoglobin-heme-products",
+  "source_title": "Hemoglobin and heme products (Merck technical article)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: '~270 million hemoglobin molecules' per cell; Wikipedia's red blood cell article gives the same. The cross-check found 250–300 million across sources, so the product is 1.0–1.2 billion: 'about a billion' holds. 270 million × 4 = 1.08 billion (computed)."
+ },
+ {
+  "id": "c15",
+  "sentence": "About a billion passengers.",
+  "claim": "Each hemoglobin has four heme groups, each binding one oxygen molecule: four O₂ per hemoglobin.",
+  "source_url": "https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids",
+  "source_title": "OpenStax Biology 2e, 39.4 Transport of Gases in Human Bodily Fluids",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: hemoglobin is 'made of four subunits'; 'each heme group that contains iron binds one oxygen molecule'."
+ }
+]

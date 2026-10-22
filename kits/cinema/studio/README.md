@@ -26,8 +26,10 @@ cue drawn on the mix). Rendering 26 s takes about 8 s.
 ```
 
 - **Times** are when the event first shows on screen. The studio snaps each to the first frame at
-  or after it, then places the sound so its attack lands there. A build-up (a whoosh into a cut, a
-  whistle into a landing) lands its peak or its end there instead.
+  or after it, then places the sound so its **anchor** lands there. The anchor is set per foley
+  entry: `"anchor": "onset"` (the default: its attack), `"peak"` (its designed loudest moment: a
+  whoosh builds into the cut) or `"end"` (its last sample: a whistle, glide or tape ramp arrives).
+  `"at": "t1"` lands it on the frame that shows the event's end (`t1`) instead of its start.
 - **Kinds** come from `kits/cinema/events.json` (lead, priority, span, motion-blur floor), so the
   picture, the sound and QA share one table.
 - **pos** (screen x, y from 0 to 1) pans the sound with what makes it.
@@ -42,8 +44,8 @@ cue drawn on the mix). Rendering 26 s takes about 8 s.
 |---|---|
 | `core.py` | 48 kHz float32 stereo, `Bus.add(sig, t, gain_db, pan)`, notes, seeded noise by name, WAV in and out (24-bit, TPDF dither) |
 | `dsp.py` | Zero-padded FFT filters and shelves, envelopes, a seeded stereo room (`reverb`), soft saturation, resampling, onsets |
-| `instruments.py` | Pads, felt piano, glass bells, sub, chimes; taps, fizz, plops, splashes, swells, ticks, whistles, whooshes, sparkles, room tone |
-| `compose.py` | Score from sections (chords, felt-piano patterns, sub by energy), foley from events, voice lines, the duck |
+| `instruments.py` | Pads, felt piano, glass bells, sub, chimes; taps, fizz, plops, splashes, swells, ticks, whistles, whooshes, sparkles, room tone. For the science channels: mallet, thump, ping, glide, drone, blip, boing, hum; squish, zap, knock, shutter, ramp |
+| `compose.py` | Score from sections (chords; the melodic layer, drone and heartbeat pulse the preset asks for; sub by energy), foley from events (anchors, `seq` phrases), voice lines, the duck |
 | `duck.py` | The music steps back under the voice: from the line spans, with pre-roll, so it dips before the first word and never pumps on breaths |
 | `meter.py` | BS.1770 integrated loudness, short-term, LRA, 4× true peak, stereo correlation, mono loss |
 | `master.py` | True-peak limiter (5 ms look-ahead), gain to target, one gain curve for every stem, AAC encode, and the closed loop: the ceiling drops 0.5 dB at a time until the decoded AAC reads ≤ −1.5 dBTP |
@@ -64,11 +66,43 @@ up as error. Each kind of sound is located the way it can be located:
 - **Sweeps and showers** by the waveform around their loudest moment.
 - **Smooth swells** by the shape of the envelope.
 
+The table is `qa.METHOD`. Mallets, pings, blips, boings and thumps ring, so they rise; knocks,
+shutters, zaps and squishes match their own waveform; glides go by their peak; ramps, hums and
+drones by shape. A `seq` phrase is found the way its first note is.
+
 **The gate:** every transient within one frame of the frame that shows its event, with a median
 ≤ 10 ms. Swells and sweeps have no sharp moment to hear, so they pass within three frames.
 
 ## Presets
 
 A preset is a client's sound, the way the style guide is their look. Never reuse one for another
-client. `lumevina-dew` is "calm and clean": D lydian at 90 BPM (a 16th note is exactly 5 frames at
-30 fps), soft pads, felt piano, small glass bells for labels, close foley in a small room.
+client.
+
+| Preset | Sound |
+|---|---|
+| `lumevina-dew` | Lumevina Skin School, "calm and clean": D lydian at 90 BPM (a 16th is exactly 5 frames at 30 fps), soft pads, felt piano, small glass bells for labels, close foley in a small room |
+| `meanwhile-pulse` | Meanwhile, Inside (body), "warm wonder": E♭ major at 75 BPM, a resting heart rate. A wooden-mallet ostinato locked to the lub-dub over a quiet heartbeat pulse; mallets for labels, a mallet harmonic for binding. Signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s |
+| `lightminute-vacuum` | Light Minute (space), "vast and calm": E dorian at 56.25 BPM (a 16th is 8 frames). No piano: pads in a long hall over a drone of fifths, slow gliding open fifths; telemetry pings for labels; nothing booms. Signature: pings E5, B5, F♯6, 6 frames apart |
+| `restframe-bench` | Rest Frame (physics), "precise and playful": G mixolydian at 112.5 BPM (a 16th is 4 frames). Staccato blips in eighths, 16ths once the energy rises; hard, close foley (knocks, ticks, shutters). Signature: knocks D6, B5, G5 at 0, +12, +20 frames |
+
+Glass bells (bell, chime, a bell sparkle) are Lumevina's; the three channels never use them.
+
+**The melodic layer** is `layers.melody`: `{voice, pattern, step, double_above, octave, gain, dur, bright}`.
+`voice` is felt, mallet, blip or glide (a glide slides from the pattern's previous tone); `step` is
+in beats (1 = quarters, 0.25 = 16ths) and halves once a section's energy reaches `double_above`; a
+`null` in the pattern is a rest; tones are the chord's upper notes moved up `octave`. Without
+`layers.melody` it is the felt piano of `layers.felt` (Lumevina's arrangement, unchanged); `null`
+turns it off. Two optional layers: `layers.drone` `{notes, gain}` holds a drone under the whole film,
+and `layers.pulse` `{notes, beats, gains, gain, above}` puts a thump on every beat (and a second one a
+fraction of a beat later) in sections at or above `above`.
+
+**Phrases** use the `seq` voice: `{"voice": "seq", "seq": {"voice", "notes", "offsets"}}`, where the
+inner `voice` is one name or one per note, `offsets` are seconds from the first note (or `frames`
+instead), `gains` dB per note, and any other field goes to each note's voice. A preset keeps its
+signature at the top (`"signature": {...}`) and its `signature` and `counter.end` entries name it
+(`"seq": "signature"`), so the title card and every counter's end play the same phrase.
+`events.json` has one shared `signature` kind; each preset maps it to its own phrase.
+
+**Regression:** a change to the engine must leave `lumevina-dew` byte-identical. Render
+`films/skin-school-tiktok/sheet.json` (with `--root films/skin-school-tiktok`) before and after and
+compare the `mix.wav` sha256.

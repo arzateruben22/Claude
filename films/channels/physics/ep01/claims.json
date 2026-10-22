@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Ghosts every twentieth of a second, and the gaps keep growing: a falling ball speeds up the whole way down.",
+  "claim": "Without air resistance, a falling object accelerates steadily at g ≈ 9.81 m/s², so it covers more distance in each equal interval.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: free fall is motion with negligible air resistance and friction; g = 9.81 m/s² (9.78–9.83 by place). The ghost spacing grows by g·Δt² = 2.45 cm per 1/20 s step (computed)."
+ },
+ {
+  "id": "c2",
+  "sentence": "It sails twenty centimeters across… and lands on the same frame.",
+  "claim": "A level throw at 0.44 m/s from 1 m lands 19.9 cm out, after the same 0.4515 s as the drop, because horizontal and vertical motion are independent when air is negligible.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OER mirror of 4.3): 'Motions along perpendicular axes are independent and thus can be analyzed separately'; the section neglects air resistance. Computed: t = √(2 × 1 m / 9.81) = 0.4515 s; 0.44 × 0.4515 = 0.199 m. Cross-check fix: the change beat uses the 0.44 m/s throw."
+ },
+ {
+  "id": "c3",
+  "sentence": "Gravity pulls both balls down the same way.",
+  "claim": "Without air resistance, heavy and light objects fall with the same acceleration.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: without air resistance, heavier and lighter objects dropped from the same height reach the ground together (the section's hammer-and-feather example)."
+ },
+ {
+  "id": "c4",
+  "sentence": "In sixteen thirty-eight, Galileo described a throw as two motions: a steady glide across, plus a fall.",
+  "claim": "In Two New Sciences (1638), Fourth Day, Galileo treats a projectile's motion as compounded of a uniform horizontal motion and a naturally accelerated vertical one.",
+  "source_url": "https://galileoandeinstein.phys.virginia.edu/tns244.htm",
+  "source_title": "Galileo on Projectiles: Two New Sciences, Fourth Day (University of Virginia, Crew & de Salvio translation)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'a body whose motion is compounded of two other motions, namely, one uniform and one naturally accelerated'. 1638 is the publication (Leiden); Museo Galileo dates the idea to about 1609, so the line says 'described', not 'showed'."
+ },
+ {
+  "id": "c5",
+  "sentence": "So at every tick, both sit at the same height.",
+  "claim": "With air negligible, the vertical motion does not depend on the horizontal speed, so a thrown and a dropped ball released together stay level.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same section as c2: perpendicular motions are independent; no horizontal acceleration when air resistance is negligible."
+ },
+ {
+  "id": "c6",
+  "sentence": "Throw twice as hard, then three times: forty centimeters out, then sixty.",
+  "claim": "Level throws at 0.89 and 1.33 m/s from 1 m land 40.2 and 60.1 cm out, in the same 0.4515 s.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: range = v × √(2h/g); 0.89 × 0.4515 = 0.402 m, 1.33 × 0.4515 = 0.601 m. Cross-check fix: replaces the 1×/2×/3× of 1.33 m/s (1.19 m and 1.78 m out), which broke the 60 cm rule and the drag badge."
+ },
+ {
+  "id": "c7",
+  "sentence": "Every row of ghosts stays level, and all four land on the same frame.",
+  "claim": "Without air, all four balls fall in the same 0.4515 s; with air, the fastest (1.33 m/s) tennis ball would land 0.30 ms late, under the 1.67 ms of physics time in one frame at ×1/20.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed with the bible's drag.py model (tennis ball 57 g, 6.7 cm, Cd 0.55, air 1.2 kg/m³, 1 m drop): delays 0.04 / 0.15 / 0.30 ms at 0.44 / 0.89 / 1.33 m/s. A frame at 30 fps and ×1/20 is 1/600 s = 1.67 ms. The scene is drawn without air, and the takeaway's badge says so; 'always' is gone (at 3.99 m/s the delay is 1.66 ms, a full frame)."
+ },
+ {
+  "id": "c8",
+  "sentence": "Measure it: nine gaps of a twentieth of a second.",
+  "claim": "A 1 m fall takes 0.4515 s, so the strobe at 1/20 s fits nine whole gaps before the ball lands.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 0.4515 / 0.05 = 9.03; the ninth ghost (0.45 s) sits 6.7 mm above the floor and the knock comes 1.5 ms later. The drop is 1 m measured to the landing point (the rail is 100 cm up)."
+ },
+ {
+  "id": "c9",
+  "sentence": "A one-meter fall takes about point four five seconds, thrown or dropped.",
+  "claim": "From y = ½gt², a 1 m fall takes t = √(2 × 1 / 9.81) = 0.4515 s, whatever the sideways speed.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed. The section's g is 9.81 m/s²; 9.78–9.83 changes the time by under 0.2%."
+ },
+ {
+  "id": "c10",
+  "sentence": "Sideways speed changes where a ball lands, not when.",
+  "claim": "With air negligible, horizontal speed sets the range but not the time of flight.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Shown with the badge 'air ignored: the fastest throw would land 0.3 ms late; a frame here is 1.7 ms' (c7's numbers)."
+ },
+ {
+  "id": "c11",
+  "sentence": "For a level throw, only the height sets the clock.",
+  "claim": "For a horizontal launch with air negligible, the time of flight is √(2h/g): it depends only on the height (and g).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
+  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "'Level throw' matters: a throw with an upward or downward component changes the time of flight. g is the same everywhere on the bench."
+ },
+ {
+  "id": "c12",
+  "sentence": "Next: why big swings and small swings take almost the same time.",
+  "claim": "A pendulum's period is nearly independent of its amplitude, especially below about 15°; at 30° it is about 1.7% longer.",
+  "source_url": "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums",
+  "source_title": "OpenStax University Physics Volume 1, 15.5 Pendulums (LibreTexts copy)",
+  "accessed": "2026-10-22",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: T = 2π√(L/g); 'the period is nearly independent of amplitude, especially if θ is less than about 15°'. The 1.7% at 30° is the cross-check's exact elliptic ratio (1.0174)."
+ }
+]

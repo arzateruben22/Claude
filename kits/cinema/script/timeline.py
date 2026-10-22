@@ -19,11 +19,12 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "voice"))
-from scriptfile import norm, script_lines   # noqa: E402  (the same parsing and word matching as the voice tools)
+from scriptfile import direction_plan, norm, script_beats, script_lines   # noqa: E402  (the same parsing and word matching as the voice tools)
 
 
 class Film:
     def __init__(self, script, vodir, fps=30, bpm=90, grid=0.5):
+        self.script = Path(script)
         self.fps, self.bpm = fps, bpm
         self.step = 60.0 / bpm * grid                     # the grid a beat start snaps to (seconds)
         vodir = Path(vodir)
@@ -35,6 +36,26 @@ class Film:
             self.lines.append({"id": ln["id"], "beat": beat, "text": text, "stars": stars, "file": f"{vodir.name}/{ln['file']}",
                                "dur": ln["dur"], "words": words[ln["id"]]})
         self.beats = []
+
+    def script_plan(self, **over):
+        """The layout plan the script's own directions ask for, as (plan, end_hold): 'pre: 0.1',
+        'picture-only 2.5 s' (the beat's hold) and 'energy: 0.7' per beat, and the last beat's
+        'end card held ≥ 2 s' as end_hold (its hold is then 0, so the card follows the line).
+        lint.py reads the same directions. Override a beat with f.script_plan(hook={"pre": 0.2}).
+
+            plan, end_hold = f.script_plan()
+            f.layout(plan, end_hold=end_hold, total=DUR)
+        """
+        beats = [b for b in script_beats(self.script) if b["vo"] is not None]
+        plan, end_hold = {}, 3.0
+        for k, b in enumerate(beats):
+            d = direction_plan(b["direction"])
+            p = {key: d[key] for key in ("pre", "hold", "energy") if key in d}
+            if k == len(beats) - 1 and "end_card" in d:
+                end_hold = d["end_card"]
+                p.setdefault("hold", 0.0)
+            plan[b["id"]] = {**p, **over.get(b["id"], {})}
+        return plan, end_hold
 
     def snap(self, t):
         return math.ceil(t / self.step - 1e-9) * self.step

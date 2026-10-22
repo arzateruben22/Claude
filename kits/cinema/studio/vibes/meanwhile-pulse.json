@@ -1,0 +1,277 @@
+{
+  "_doc": "Meanwhile, Inside (the human body), 'warm wonder': Eb major at 75 BPM, a resting heart rate (a beat is 0.8 s = 24 frames, a 16th exactly 6 frames at 30 fps). Dark, round pads; a wooden-mallet ostinato locked to the lub-dub (a note on every lub, and on every dub once the energy rises) over a quiet heartbeat pulse; soft mallets for labels and a mallet harmonic for binding, never glass bells (they are Lumevina's); close, wet foley in a small body-sized room. Signature: thump Eb2, thump Bb2 at +0.4 s, mallet G5 at +1.2 s (root, fifth, then the major third two octaves up). It plays on the title and end cards (signature) and at the end of every counter.",
+  "name": "meanwhile-pulse",
+  "bpm": 75,
+  "key": "Eb",
+  "mode": "ionian",
+  "scale": [
+    "Eb",
+    "F",
+    "G",
+    "Ab",
+    "Bb",
+    "C",
+    "D"
+  ],
+  "progression": [
+    {
+      "pad": [
+        "Eb3",
+        "Bb3",
+        "F4",
+        "G4"
+      ],
+      "root": "Eb2"
+    },
+    {
+      "pad": [
+        "C3",
+        "G3",
+        "Bb3",
+        "Eb4"
+      ],
+      "root": "C2"
+    },
+    {
+      "pad": [
+        "Ab2",
+        "Eb3",
+        "G3",
+        "C4"
+      ],
+      "root": "Ab1"
+    },
+    {
+      "pad": [
+        "Bb2",
+        "F3",
+        "Ab3",
+        "Eb4"
+      ],
+      "root": "Bb1"
+    }
+  ],
+  "signature": {
+    "voice": [
+      "thump",
+      "thump",
+      "mallet"
+    ],
+    "notes": [
+      "Eb2",
+      "Bb2",
+      "G5"
+    ],
+    "offsets": [
+      0,
+      0.4,
+      1.2
+    ],
+    "gains": [
+      0,
+      -4,
+      -2
+    ]
+  },
+  "layers": {
+    "pad": {
+      "gain": -16,
+      "bright": 2200,
+      "attack": 1.8,
+      "release": 2.4
+    },
+    "melody": {
+      "voice": "mallet",
+      "pattern": [
+        0,
+        2,
+        1,
+        3,
+        0,
+        2,
+        3,
+        1
+      ],
+      "step": 1,
+      "double_above": 0.55,
+      "octave": 1,
+      "gain": -14,
+      "bright": 4200,
+      "dur": 0.9
+    },
+    "pulse": {
+      "gain": -21,
+      "notes": [
+        "Eb1",
+        "Eb1"
+      ],
+      "beats": [
+        0,
+        0.5
+      ],
+      "gains": [
+        0,
+        -5
+      ],
+      "above": 0.5
+    },
+    "sub": {
+      "gain": -22,
+      "above": 0.5
+    },
+    "air": {
+      "gain": -36
+    }
+  },
+  "space": {
+    "music": [
+      2.2,
+      0.32
+    ],
+    "foley": [
+      0.6,
+      0.22
+    ],
+    "dialog": [
+      0.4,
+      0.05
+    ]
+  },
+  "drive": {
+    "music": 1.15,
+    "effects": 1.1,
+    "dialog": 0.0
+  },
+  "foley": {
+    "label": {
+      "voice": "mallet",
+      "gain": -17,
+      "notes": [
+        "Bb4",
+        "C5",
+        "Eb5",
+        "F5",
+        "G5",
+        "Bb5",
+        "C6",
+        "Eb6",
+        "F6",
+        "G6"
+      ]
+    },
+    "counter.show": {
+      "voice": "mallet",
+      "gain": -19,
+      "notes": [
+        "Eb5"
+      ]
+    },
+    "counter.tick": {
+      "voice": "tick",
+      "gain": -22
+    },
+    "counter.end": {
+      "voice": "seq",
+      "gain": -12,
+      "seq": "signature"
+    },
+    "signature": {
+      "voice": "seq",
+      "gain": -10,
+      "seq": "signature"
+    },
+    "beat": {
+      "voice": "seq",
+      "gain": -13,
+      "seq": {
+        "voice": "thump",
+        "notes": [
+          "Eb2",
+          "Bb2"
+        ],
+        "frames": [
+          0,
+          10
+        ],
+        "gains": [
+          0,
+          -4
+        ]
+      }
+    },
+    "impact": {
+      "voice": "thump",
+      "gain": -11,
+      "notes": [
+        "Bb1"
+      ]
+    },
+    "cell.pass": {
+      "voice": "squish",
+      "gain": -20
+    },
+    "bind": {
+      "voice": "mallet",
+      "gain": -21,
+      "notes": [
+        "G6",
+        "Bb6",
+        "C7",
+        "Eb7"
+      ],
+      "harmonic": true,
+      "dur": 1.2
+    },
+    "diffuse": {
+      "voice": "sparkle",
+      "gain": -25,
+      "notes": [
+        "Eb7",
+        "G7",
+        "Bb6",
+        "F7"
+      ],
+      "grain": "mallet"
+    },
+    "spike": {
+      "voice": "zap",
+      "gain": -19
+    },
+    "swell": {
+      "voice": "swell",
+      "gain": -15,
+      "note": "Eb2"
+    },
+    "breath": {
+      "voice": "whoosh",
+      "gain": -26,
+      "dur": 1.6,
+      "lo": 180,
+      "hi": 1600,
+      "anchor": "onset"
+    },
+    "dissolve": {
+      "voice": "sparkle",
+      "gain": -24,
+      "notes": [
+        "Bb6",
+        "Eb7",
+        "G7",
+        "C7"
+      ],
+      "grain": "mallet"
+    },
+    "section": {
+      "voice": "whoosh",
+      "gain": -28,
+      "dur": 0.9,
+      "lo": 150,
+      "hi": 1400,
+      "anchor": "peak"
+    }
+  },
+  "master": {
+    "lufs": -14.0,
+    "tilt": 0.0
+  }
+}

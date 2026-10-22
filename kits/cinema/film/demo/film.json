@@ -1,0 +1,29 @@
+{
+ "_doc": "The film kit's demo episode: 6 s, hand-made (no voice, no compiler), to exercise every part of the runtime once: the shot stage, a clock with a slowed segment and its badge, captions with word times, two labels on moving anchors, a counter, a scale pill, a title card and an end card. Times are film seconds.",
+ "id": "kit-demo",
+ "fps": 30,
+ "dur": 6.0,
+ "poster": 2.6,
+ "theme": "theme.json",
+ "shots": [
+  { "at": 0.0, "name": "orbit" },
+  { "at": 3.0, "name": "slow" }
+ ],
+ "clock": [
+  { "t": 0.0, "rate": 1 },
+  { "t": 2.2, "rate": 0.25, "ramp": 0.5 },
+  { "t": 4.3, "rate": 1, "ramp": 0.3 }
+ ],
+ "title": { "series": "Film kit · demo No. 00", "title": "One orbit, *slowed down*", "t1": 1.6 },
+ "cue": { "planet": 0.9, "moon": 2.6, "nts": 2.1, "tau": 2.15, "scale": 3.0 },
+ "captions": [
+  { "t0": 0.25, "t1": 2.3, "lines": [[["A", 0.25], ["planet", 0.42], ["circles", 0.86]], [["its", 1.32], ["star.", 1.52]]] },
+  { "t0": 2.35, "t1": 4.4, "lines": [[["Slow", 2.35], ["it", 2.72], ["down", 2.86]], [["to", 3.3], ["see", 3.46], ["the", 3.76], ["moon.", 3.9]]] }
+ ],
+ "endCard": 4.6,
+ "end": { "title": "That was the *film kit*.", "next": "Next: a real episode", "follow": "kits/cinema/film" },
+ "cam": [
+  { "t": 0.0, "pos": [0.0, 6.2, 12.4], "look": [0.0, -0.55, 0.0], "fov": 34 },
+  { "t": 6.0, "pos": [1.4, 5.1, 10.9], "look": [0.0, -0.45, 0.0], "fov": 33, "ease": "sine" }
+ ]
+}

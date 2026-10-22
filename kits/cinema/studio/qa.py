@@ -24,11 +24,17 @@ def _env(x):
     return np.sqrt((e + np.concatenate([[e[0]], e[:-1]])) / 2)
 
 
-# how each voice is located in the stem (see _locate)
+# how each voice is located in the stem (see _locate); a seq is found the way its first note is
 METHOD = {"bell": "rise", "chime": "rise", "tick": "rise",
           "tap": "wave", "fizz": "wave", "plop": "wave",
           "sparkle": "peak", "whoosh": "peak", "whistle": "peak",
-          "swell": "shape", "dim": "shape"}
+          "swell": "shape", "dim": "shape",
+          # the science channels: struck and pinged tones ring, so they rise; clicks, knocks and
+          # noise match their own waveform; sweeps by their loudest moment; slow beds by shape
+          "mallet": "rise", "ping": "rise", "blip": "rise", "boing": "rise", "thump": "rise",
+          "knock": "wave", "shutter": "wave", "zap": "wave", "squish": "wave",
+          "glide": "peak",
+          "ramp": "shape", "hum": "shape", "drone": "shape"}
 SLOW = {"peak", "shape"}
 
 
@@ -80,7 +86,7 @@ def sync(placed, effects, fps):
     mono = stereo(effects).mean(1)
     rows, kinds = [], {}
     for p in placed:
-        method = METHOD.get(p["voice"], "wave")
+        method = METHOD.get(p.get("of", p["voice"]), "wave")
         err = _locate(mono, p["sig"], p["place"], p["anchor"], method)
         if err is None:
             continue

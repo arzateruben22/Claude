@@ -17,6 +17,9 @@ Chromium, captured through Playwright and encoded with ffmpeg. It has two tiers:
 | `events.json` | One row per event kind (sound lead, priority, span, motion-blur floor), read by the picture, the studio and QA |
 | `studio/` | The master studio: score, foley and voice composed from one cue sheet, mixed and mastered to −14 LUFS on the delivered AAC, with sync measured per event kind. numpy only. See `studio/README.md` |
 | `STUDIO-PLAN.md` | The plan for longer films (60 s–3 min) with sound built in, and `research/` behind it |
+| `film/` | The brand-neutral film runtime: `page.mjs` (the page a frame is drawn on, themed by a channel's `theme.json`), `runtime.js`, and the chunked, resumable `render.mjs` + `run.sh` for any episode folder (`--film <dir>`). Has a 6 s `demo/`. See `film/README.md` |
+| `sci/` | Shared blocks for the science channels: `hud.js` (captions, labels with leaders, badges, counters, scale pill, title and end cards, all themed by CSS variables) and `clock.js` (time warp τ(t) with badges) |
+| `vendor/` | three.js r160 (`three.module.min.js`, MIT), the build the pilot uses; `film/page.mjs` maps `"three"` to it |
 | `README.md` | This file |
 
 The studio process that uses the kit is the `cinema-kit` skill (`.claude/skills/cinema-kit/SKILL.md`).

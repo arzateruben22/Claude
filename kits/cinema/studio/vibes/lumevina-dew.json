@@ -158,7 +158,8 @@
     },
     "drop.fall": {
       "voice": "whistle",
-      "gain": -15
+      "gain": -15,
+      "anchor": "end"
     },
     "drop.land": {
       "voice": "plop",
@@ -184,7 +185,8 @@
       "gain": -27,
       "dur": 0.8,
       "lo": 200,
-      "hi": 1800
+      "hi": 1800,
+      "anchor": "peak"
     }
   },
   "master": {

@@ -1,0 +1,144 @@
+{
+ "_doc": "Rest Frame (the everyday-physics channel): 'daylight lab', the only light-background channel. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/physics/bible.md §2); 'bg' and 'text' are aliases of 'cyc' and 'ink' for the page. Every hud.js default is dark-on-light inverted here: light plates, ink text, the spoken word on a marker band. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral: contrast.py checks the distances.",
+ "id": "rest-frame",
+ "name": "Rest Frame",
+ "channel": "physics",
+ "promise": "Everyday things, slowed down until the physics shows.",
+
+ "tokens": {
+  "bg": "#E6E2D8",
+  "cyc": "#E6E2D8",
+  "cyc-hi": "#F1EEE7",
+  "shade": "#8A857B",
+  "surface": "#FFFDF7",
+  "text": "#15171C",
+  "ink": "#15171C",
+  "ink-2": "#4B505B",
+  "cobalt": "#1F3BD1",
+  "marker": "#FFD43B",
+  "force": "#1F3BD1",
+  "motion": "#08805A",
+  "energy": "#B8321A",
+  "wave": "#6D3FC8",
+  "pressure": "#0B6F86",
+  "ghost": "#6E6A62"
+ },
+
+ "scene": {
+  "_doc": "3D only. The cyc's unlit shader outputs ACES-inverse values so it lands exactly on cyc / cyc-hi (cross-check: about 1.0 and 1.6 scene luminance); bloom threshold 2.5 or more; prop albedo 0.7 or below. Soft key from above-front-left, hemisphere fill, a cool rim from behind; no shadow maps. Ghosts are opaque, tinted toward the cyc. Approve on T2 stills first.",
+  "cyc": "#E6E2D8",
+  "cyc-hi": "#F1EEE7",
+  "shade": "#8A857B",
+  "ghost-tint": "#E6E2D8",
+  "rule-lines": "#6E6A62"
+ },
+
+ "plate": { "color": "surface", "opacity": 0.92, "radius_px": 13 },
+ "highlight": { "style": "band", "color": "marker", "text": "ink", "_doc": "A marker (highlighter) band behind the word being spoken; the word stays ink. Words still to come are ink-2." },
+
+ "roles": {
+  "text": "ink",
+  "text-2": "ink-2",
+  "accent": "cobalt",
+  "plate": "rgba(255, 253, 247, .92)",
+  "cap-next": "ink-2",
+  "cap-said": "ink",
+  "cap-lit": "ink",
+  "cap-lit-bg": "marker",
+  "label-bg": "rgba(255, 253, 247, .96)",
+  "label-text": "ink",
+  "ring": "surface",
+  "badge-bg": "rgba(255, 253, 247, .90)",
+  "badge-text": "ink-2",
+  "badge-border": "ink-2",
+  "scrim": "rgba(230, 226, 216, .90)",
+  "scale-line": "ink",
+  "shadow": "0 .35vmin 1.2vmin rgba(21, 23, 28, .16)",
+  "text-shadow": "none",
+  "cap-size": "5.093vmin",
+  "cap-weight": "700",
+  "cap-tracking": "-.005em",
+  "cap-radius": "1.2vmin",
+  "label-size": "3.889vmin",
+  "label-weight": "600",
+  "label-radius": ".8vmin",
+  "badge-size": "2.963vmin",
+  "badge-weight": "600",
+  "badge-radius": ".5vmin",
+  "counter-size": "10vmin",
+  "series-size": "2.963vmin",
+  "title-size": "7.407vmin",
+  "title-weight": "800",
+  "title-tracking": "-.01em",
+  "end-size": "7.407vmin"
+ },
+
+ "fonts": [
+  { "family": "Archivo", "file": "fonts/Archivo-VF.ttf", "weight": "100 900", "style": "normal" },
+  { "family": "IBM Plex Sans", "file": "fonts/IBMPlexSans-VF.woff2", "weight": "100 700", "style": "normal" },
+  { "family": "IBM Plex Mono", "file": "fonts/IBMPlexMono-VF.woff2", "weight": "100 700", "style": "normal" }
+ ],
+ "type": {
+  "display": "Archivo",
+  "text": "IBM Plex Sans",
+  "mono": "IBM Plex Mono",
+  "glyph": "IBM Plex Sans",
+  "_doc": "Display: Archivo ExtraBold Expanded (wght 800, wdth 125; set in cssText). The title card squashes the width axis on each contact. Text: IBM Plex Sans 700 captions, 600 labels (the variable file, wght 100–700, wdth 85–100). Counters, stopwatch and 'measure it' readouts: IBM Plex Mono (variable, wght 100–700). Plex figures are tabular by default. 'Plex' is a Reserved Font Name: the files ship unmodified."
+ },
+
+ "sizes": {
+  "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters (kits/cinema/script pages them with max_chars = 24); the size is the largest whole px at which the widest of the 142 rows of all three episode-1 scripts (paged at 24 characters) fits the plate's maximum width, 0.72 × W = 778 px, without hud.js shrinking it. Measured in Chromium with this face on 2026-10-22: it fits up to 55.5 px; at 55 px the widest row ('balls down the same way.') makes a 769 px plate. The bible's 60–64 px was set before the 24-character rule. Labels: the pill is at least 0.035 × H = 67 px tall.",
+  "caption": { "px": 55, "weight": 700, "lineHeight": 1.24, "maxLines": 2, "maxChars": 24, "plateMaxWidth": 778 },
+  "label": { "px": 42, "weight": 600, "minPillHeight": 67 },
+  "badge": { "px": 32, "weight": 600, "face": "mono" },
+  "counter": { "px": 108, "weight": 700, "face": "mono" },
+  "series": { "px": 32, "weight": 600 },
+  "title": { "px": 80, "weight": 800, "face": "display, wdth 125" },
+  "end": { "px": 80, "weight": 800, "next_px": 50, "follow_px": 37 }
+ },
+
+ "safe": { "9x16": { "x": [90, 900], "y": [250, 1420], "frame": [1080, 1920] } },
+ "captionY": { "9x16": 0.61 },
+
+ "labels": {
+  "_doc": "The pill always names the quantity, so colour is never the only cue. Physics labels use the bar mark (a thick coloured left edge) on light tags; the colour is also the leader line and the arrows.",
+  "force": { "color": "force", "mark": "bar", "use": "forces, arrows" },
+  "motion": { "color": "motion", "mark": "bar", "use": "velocity, displacement" },
+  "energy": { "color": "energy", "mark": "bar", "use": "energy, heat" },
+  "wave": { "color": "wave", "mark": "bar", "use": "waves" },
+  "pressure": { "color": "pressure", "mark": "bar", "use": "pressure" },
+  "ghost": { "color": "ghost", "mark": "bar", "use": "strobe ghosts, reference marks" }
+ },
+
+ "contrast": {
+  "_doc": "What contrast.py checks besides the automatic pairs. grounds: the flat colours text can sit on. behind: what the plate, pills and badges can sit over (worst case first: black, then the darkest token).",
+  "grounds": ["cyc", "cyc-hi", "surface"],
+  "behind": ["#000000", "ink", "shade"],
+  "pairs": [
+   { "fg": "ink", "bg": "marker", "kind": "text", "note": "the spoken word on its marker band" },
+   { "fg": "cobalt", "bg": "cyc", "kind": "text", "note": "the title's accent word on the cyc" },
+   { "fg": "cobalt", "bg": "surface", "kind": "text" },
+   { "fg": "force", "bg": "surface", "kind": "text", "note": "label colours as text on a tag (bible: 4.9–7.9)" },
+   { "fg": "motion", "bg": "surface", "kind": "text" },
+   { "fg": "energy", "bg": "surface", "kind": "text" },
+   { "fg": "wave", "bg": "surface", "kind": "text" },
+   { "fg": "pressure", "bg": "surface", "kind": "text" },
+   { "fg": "ghost", "bg": "surface", "kind": "text" },
+   { "fg": "#FFFFFF", "bg": "shade", "kind": "line", "note": "the apps' own white UI over the shade falloff (bottom 480 px, right 140 px)" }
+  ]
+ },
+
+ "motif": {
+  "signature_shape": "The strobe ladder: each key motion is stamped as opaque ghost copies at equal time steps (τk = τ0 + kΔ) on the ruled backdrop; rungs join ghosts of the same k. Speeding up shows as widening gaps you can measure.",
+  "honesty_badges": "Plex Mono badges for every simplification: 'slowed ×20', 'air ignored (under 1 ms here)', 'illustration'.",
+  "title_card": "'The drop': the title falls onto a ruler line over the payoff image (y 250–470) and bounces twice on the sonic signature; Archivo's width axis squashes the letters on each contact, and three faint copies trail above it.",
+  "end_card": "'Next drop: …' on the ruler line, then 'Follow Rest Frame'. Held ≥ 1.5 s.",
+  "recurring_segment": "A 'measure it' beat on the strobe ladder, with Plex Mono readouts (gaps, times, speeds).",
+  "tease": "Next drop: …",
+  "scale_readout": "Ruler ticks on the grid (body uses the iris and a pill, space the light-time readout).",
+  "colour_rules": "Cobalt is force and the title's accent word; marker is only the band behind the spoken word. The strobe never flashes: fewer than 3 bright events a second.",
+  "sound": "G mixolydian at 112.5 BPM (a 16th is 4 frames); staccato blips instead of the felt piano; hard, close foley; signature knocks D6, B5, G5 at 0, +12, +20 frames (a ball bouncing to rest)."
+ },
+
+ "cssText": ".stage { background: radial-gradient(70vmax 52vmax at 50% 34%, var(--cyc-hi) 0%, var(--cyc) 66%); }\n.hud-h, .hud-end .t { font-weight: 800; font-variation-settings: \"wdth\" 125; }\n.hud-series { letter-spacing: .06em; text-transform: uppercase; }\n.hud-cap { box-shadow: var(--hud-shadow); }"
+}

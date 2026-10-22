@@ -1,0 +1,143 @@
+{
+ "_doc": "Meanwhile, Inside (the human-body channel): 'surgical green'. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py (tokens, scene, labels, contrast). Hexes are the bible's (films/channels/body/bible.md §2) with the cross-check's fixes: O₂ is white with an 'O₂' glyph and a ring, CO₂ is slate, immune gets a dashed ring, lining is sage, the title's accent word is chartreuse (pulse stays on blood only), and the rim light is mint. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8), so a 540×960 draft is the final at half size. Not Lumevina (no rose or gold on black, no Inter, no glass bells), not Los Güeros, not Claude coral: contrast.py checks the distances.",
+ "id": "meanwhile-inside",
+ "name": "Meanwhile, Inside",
+ "channel": "body",
+ "promise": "What your body is doing right now, while you watch.",
+
+ "tokens": {
+  "bg": "#0A1F1C",
+  "bg-hi": "#123A33",
+  "surface": "#14342E",
+  "plate": "#071513",
+  "text": "#EFF6F2",
+  "text-2": "#A9C7BE",
+  "signal": "#D6F25F",
+  "pulse": "#FF6688",
+  "oxy": "#FF6688",
+  "deoxy": "#CC5470",
+  "nerve": "#D6F25F",
+  "immune": "#F3EEE4",
+  "o2": "#FFFFFF",
+  "co2": "#A7B4C2",
+  "bone": "#E8D7B0",
+  "muscle": "#E58FD8",
+  "lining": "#A8D89A"
+ },
+
+ "scene": {
+  "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
+  "rbc": "#E5334F",
+  "rbc-deep": "#8E2A3F",
+  "tissue": "#F0C9B8",
+  "vessel": "#E9B3A8",
+  "light-hemi-sky": "#DDF3EC",
+  "light-hemi-ground": "#0A1F1C",
+  "light-key": "#FFF1E6",
+  "light-rim": "#CFF5E6",
+  "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+ },
+
+ "plate": { "color": "plate", "opacity": 0.82, "radius_px": 37 },
+ "highlight": { "style": "text", "color": "signal", "_doc": "The word being spoken turns chartreuse on the plate; words still to come are text-2, words said are text." },
+
+ "roles": {
+  "accent": "signal",
+  "plate": "rgba(7, 21, 19, .82)",
+  "cap-next": "text-2",
+  "cap-said": "text",
+  "cap-lit": "signal",
+  "cap-lit-bg": "transparent",
+  "label-bg": "surface",
+  "label-text": "text",
+  "ring": "text",
+  "badge-bg": "rgba(7, 21, 19, .78)",
+  "badge-text": "text-2",
+  "badge-border": "text-2",
+  "scrim": "rgba(7, 21, 19, .80)",
+  "scale-line": "signal",
+  "cap-size": "5.093vmin",
+  "cap-weight": "700",
+  "cap-tracking": "0em",
+  "cap-radius": "3.4vmin",
+  "label-size": "3.889vmin",
+  "label-weight": "600",
+  "label-radius": "999px",
+  "badge-size": "2.963vmin",
+  "badge-weight": "600",
+  "badge-radius": "999px",
+  "counter-size": "10vmin",
+  "series-size": "2.963vmin",
+  "title-size": "8.148vmin",
+  "title-weight": "600",
+  "title-tracking": "-.012em",
+  "end-size": "8.148vmin"
+ },
+
+ "fonts": [
+  { "family": "Fraunces", "file": "fonts/Fraunces-VF.woff2", "weight": "100 900", "style": "normal" },
+  { "family": "Atkinson Hyperlegible Next", "file": "fonts/AtkinsonHyperlegibleNext-VF.woff2", "weight": "200 800", "style": "normal" }
+ ],
+ "type": {
+  "display": "Fraunces",
+  "text": "Atkinson Hyperlegible Next",
+  "mono": "Atkinson Hyperlegible Next",
+  "glyph": "Atkinson Hyperlegible Next",
+  "_doc": "Display: Fraunces 144pt SuperSoft SemiBold (wght 600, opsz 144, SOFT 100; set in cssText), for titles and static numbers. Text: Atkinson Hyperlegible Next, 700 captions, 600 labels, 400–500 secondary. Counters and badges use Atkinson with tabular figures (tnum), because Fraunces has proportional figures only (no tnum: a running counter would jitter). Atkinson has no subscript figures, so the '₂' in the O₂/CO₂ glyphs falls back to DejaVu Sans (the page's system-safe stack), never to Inter. Both files ship unmodified (Atkinson reserves its names)."
+ },
+
+ "sizes": {
+  "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters (kits/cinema/script pages them with max_chars = 24); the size is the largest whole px at which the widest of the 142 rows of all three episode-1 scripts (paged at 24 characters) fits the plate's maximum width, 0.72 × W = 778 px, without hud.js shrinking it. Measured in Chromium with this face on 2026-10-22: it fits up to 55.3 px; at 55 px the widest row ('balls down the same way.') makes a 772 px plate. The studio plan's 56–72 px was set for 32-character lines. Labels: the pill is at least 0.035 × H = 67 px tall.",
+  "caption": { "px": 55, "weight": 700, "lineHeight": 1.24, "maxLines": 2, "maxChars": 24, "plateMaxWidth": 778 },
+  "label": { "px": 42, "weight": 600, "minPillHeight": 67 },
+  "badge": { "px": 32, "weight": 600 },
+  "counter": { "px": 108, "weight": 700, "face": "text (tnum)" },
+  "series": { "px": 32, "weight": 600 },
+  "title": { "px": 88, "weight": 600, "face": "display" },
+  "end": { "px": 88, "weight": 600, "next_px": 50, "follow_px": 37 }
+ },
+
+ "safe": { "9x16": { "x": [90, 900], "y": [250, 1420], "frame": [1080, 1920] } },
+ "captionY": { "9x16": 0.61 },
+
+ "labels": {
+  "_doc": "Every label names its part in words; the colour goes on the dot (or ring) and the pill border, so colour is never the only cue. The pill is opaque surface (label-bg), so deoxy keeps its 3.25:1 over any frame (at 94% it fell to 2.71:1 over a white bloom; contrast.py). O₂ (white) and immune (cream) sit ΔE 7.9 apart, so O₂ has a solid ring and immune a dashed one.",
+  "oxy": { "color": "oxy", "mark": "dot", "use": "oxygen-rich blood" },
+  "deoxy": { "color": "deoxy", "mark": "dot", "use": "oxygen-poor blood; the dot gets a white ring (3.25:1 on surface on its own)" },
+  "nerve": { "color": "nerve", "mark": "dot", "use": "nerve signals" },
+  "immune": { "color": "immune", "mark": "dashed", "use": "immune cells" },
+  "o2": { "color": "o2", "mark": "ring", "glyph": "O₂", "use": "oxygen molecules" },
+  "co2": { "color": "co2", "mark": "dot", "glyph": "CO₂", "use": "carbon dioxide" },
+  "bone": { "color": "bone", "mark": "dot", "use": "bone" },
+  "muscle": { "color": "muscle", "mark": "dot", "use": "muscle" },
+  "lining": { "color": "lining", "mark": "dot", "use": "linings and membranes" }
+ },
+
+ "contrast": {
+  "_doc": "What contrast.py checks besides the automatic pairs (text, captions, labels, badges, scrim). grounds: the flat colours text can sit on. behind: what the caption plate, label pills and badges can sit over (worst case first).",
+  "grounds": ["bg", "bg-hi", "surface"],
+  "behind": ["#FFFFFF", "#E5334F", "bg"],
+  "pairs": [
+   { "fg": "bg", "bg": "signal", "kind": "text", "note": "dark text on a chartreuse button or chip" },
+   { "fg": "pulse", "bg": "bg", "kind": "text", "note": "the whoa number, on the plain ground" },
+   { "fg": "pulse", "bg": "surface", "kind": "text", "note": "the whoa number on a card" },
+   { "fg": "pulse", "bg": "bg-hi", "kind": "line", "note": "pulse is never text on the glow (about 4.5:1 there); lines only" },
+   { "fg": "signal", "bg": "bg", "kind": "line", "note": "the pulse line on the ground" },
+   { "fg": "signal", "bg": "bg-hi", "kind": "line", "note": "the pulse line over the glow" }
+  ]
+ },
+
+ "motif": {
+  "signature_shape": "The pulse line: one chartreuse (signal) ECG-like trace that blips lub-dub under the Fraunces title on the sonic signature. The same line draws the label leaders, the scale bar and the iris edge.",
+  "no_circle": "No circle anywhere: no circular title frame, end card, avatar or iris (the space channel owns the ring). The locator is a 2D SVG body silhouette with the region marked by a pulse-line blip on the beat.",
+  "iris": "Scale changes go through a non-circular iris: a soft membrane-blob mask or a vertical slide wipe, plus a scale pill ('×2,000 · 10 µm').",
+  "title_card": "Fraunces title (accent word in signal), the pulse line under it, 'Meanwhile, Inside · No. 01' below; the payoff image behind. It is also the poster and the loop point.",
+  "end_card": "The pulse line flat-lines into 'Next, inside: …', then 'Follow Meanwhile, Inside'. Held ≥ 2 s.",
+  "recurring_segment": "The 'Meanwhile' tally: a real-time counter of what your body did while you watched ('while you watched: about 85 heartbeats'), set in Atkinson with tabular figures.",
+  "tease": "Next, inside: …",
+  "colour_rules": "Pulse (#FF6688) is for blood only. Signal (chartreuse) is nerve signals, the spoken word, the pulse line and the title's accent word. Only signal and pulse bloom; text never does.",
+  "sound": "E♭ major at 75 BPM (resting heart rate); mallet ostinato on the lub-dub; signature thump E♭2, thump B♭2 at +0.4 s, mallet G5 at +1.2 s (no bell)."
+ },
+
+ "cssText": ".stage { background: radial-gradient(120vmax 80vmax at 50% 30%, var(--bg-hi) 0%, var(--bg) 62%); }\n.hud-h, .hud-end .t { font-weight: 600; font-variation-settings: \"opsz\" 144, \"SOFT\" 100; }\n.hud-counter .v, .hud-scale, .hud-badge { font-feature-settings: \"tnum\" 1; }\n.hud-label.mk-dot .mk { box-shadow: 0 0 0 .32vmin var(--hud-ring); }"
+}

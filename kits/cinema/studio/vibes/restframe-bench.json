@@ -1,0 +1,277 @@
+{
+  "_doc": "Rest Frame (everyday physics), 'precise and playful': G mixolydian at 112.5 BPM (a beat is 16 frames, a 16th exactly 4 frames at 30 fps). Bright, dry and a little driven: a short studio room, low pads, and staccato instrument blips ticking in eighths that turn to 16ths once the energy rises (no felt piano: that arrangement is Lumevina's); a sub only once the energy rises past 0.6. Foley is hard and close: knocks, ticks and shutters, never bells. Signature, 'coming to rest': knocks D6, B5, G5 at 0, +12 and +20 frames, each gap 2/3 of the last like a ball with a restitution of 0.67 settling, landing home on G. It plays on the end card (signature) and at the end of every counter.",
+  "name": "restframe-bench",
+  "bpm": 112.5,
+  "key": "G",
+  "mode": "mixolydian",
+  "scale": [
+    "G",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+  ],
+  "progression": [
+    {
+      "pad": [
+        "G3",
+        "D4",
+        "A4",
+        "B4"
+      ],
+      "root": "G2"
+    },
+    {
+      "pad": [
+        "F3",
+        "C4",
+        "G4",
+        "A4"
+      ],
+      "root": "F2"
+    },
+    {
+      "pad": [
+        "C3",
+        "G3",
+        "D4",
+        "E4"
+      ],
+      "root": "C2"
+    },
+    {
+      "pad": [
+        "E3",
+        "B3",
+        "D4",
+        "G4"
+      ],
+      "root": "E2"
+    }
+  ],
+  "signature": {
+    "voice": "knock",
+    "notes": [
+      "D6",
+      "B5",
+      "G5"
+    ],
+    "frames": [
+      0,
+      12,
+      20
+    ],
+    "gains": [
+      0,
+      -3,
+      -6
+    ],
+    "f0": 220
+  },
+  "layers": {
+    "pad": {
+      "gain": -19,
+      "bright": 3400,
+      "attack": 0.6,
+      "release": 1.0
+    },
+    "melody": {
+      "voice": "blip",
+      "pattern": [
+        0,
+        null,
+        2,
+        1,
+        null,
+        3,
+        2,
+        null,
+        0,
+        2,
+        null,
+        3,
+        1,
+        null,
+        3,
+        null
+      ],
+      "step": 0.5,
+      "double_above": 0.55,
+      "octave": 1,
+      "gain": -10,
+      "dur": 0.1
+    },
+    "sub": {
+      "gain": -27,
+      "above": 0.6
+    },
+    "air": {
+      "gain": -38
+    }
+  },
+  "space": {
+    "music": [
+      0.9,
+      0.2
+    ],
+    "foley": [
+      0.45,
+      0.12
+    ],
+    "dialog": [
+      0.3,
+      0.04
+    ]
+  },
+  "drive": {
+    "music": 1.25,
+    "effects": 1.2,
+    "dialog": 0.0
+  },
+  "foley": {
+    "label": {
+      "voice": "blip",
+      "gain": -17,
+      "notes": [
+        "G5",
+        "A5",
+        "B5",
+        "C6",
+        "D6",
+        "E6",
+        "F6",
+        "G6",
+        "A6",
+        "B6"
+      ]
+    },
+    "counter.show": {
+      "voice": "blip",
+      "gain": -19,
+      "notes": [
+        "G6"
+      ]
+    },
+    "counter.tick": {
+      "voice": "tick",
+      "gain": -22
+    },
+    "counter.end": {
+      "voice": "seq",
+      "gain": -12,
+      "seq": "signature"
+    },
+    "signature": {
+      "voice": "seq",
+      "gain": -11,
+      "seq": "signature"
+    },
+    "section": {
+      "voice": "whoosh",
+      "gain": -29,
+      "dur": 0.6,
+      "lo": 400,
+      "hi": 3200,
+      "anchor": "peak"
+    },
+    "strobe": {
+      "voice": "shutter",
+      "gain": -24
+    },
+    "time.slow": {
+      "voice": "ramp",
+      "gain": -20,
+      "dir": "down",
+      "note": "G3",
+      "anchor": "end"
+    },
+    "time.normal": {
+      "voice": "ramp",
+      "gain": -22,
+      "dir": "up",
+      "note": "G3",
+      "anchor": "end"
+    },
+    "impact": {
+      "voice": "knock",
+      "gain": -10,
+      "f0": 170
+    },
+    "bounce": {
+      "voice": "knock",
+      "gain": -14,
+      "f0": 260
+    },
+    "contact": {
+      "voice": "tap",
+      "gain": -17,
+      "bounce": [
+        0.12,
+        -26
+      ]
+    },
+    "drop.fall": {
+      "voice": "whistle",
+      "gain": -18,
+      "anchor": "end",
+      "at": "t1"
+    },
+    "drop.land": {
+      "voice": "plop",
+      "gain": -9,
+      "f0": {
+        "rain": 420,
+        "big": 300
+      },
+      "splash": -16
+    },
+    "spring": {
+      "voice": "boing",
+      "gain": -18,
+      "note": "G3"
+    },
+    "wave.on": {
+      "voice": "hum",
+      "gain": -21,
+      "note": "D4"
+    },
+    "heat": {
+      "voice": "fizz",
+      "gain": -22,
+      "dur": 0.6
+    },
+    "zap": {
+      "voice": "fizz",
+      "gain": -16,
+      "dur": 0.12
+    },
+    "energy.loss": {
+      "voice": "dim",
+      "gain": -17,
+      "note": "G2"
+    },
+    "swell": {
+      "voice": "swell",
+      "gain": -15,
+      "note": "G2"
+    },
+    "reveal": {
+      "voice": "sparkle",
+      "gain": -21,
+      "notes": [
+        "G6",
+        "D7",
+        "A6",
+        "B6"
+      ],
+      "grain": "blip",
+      "dur": 0.8
+    }
+  },
+  "master": {
+    "lufs": -14.0,
+    "tilt": 0.0
+  }
+}

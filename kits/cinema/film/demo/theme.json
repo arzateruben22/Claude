@@ -1,0 +1,30 @@
+{
+ "_doc": "The film kit's demo theme: a neutral proof look (greys only) for testing the runtime. It is no channel's or client's identity. No channel fonts exist yet, so it names system-safe faces that ship with the container (DejaVu); a channel's theme lists its own WOFF2 files under fonts/ instead. Contrast (computed): text on bg 16.6, text-2 on bg 8.3, text on the caption plate over pure white 9.5, the lit word (ink on text) 16.6.",
+ "id": "kit-demo",
+ "name": "Film kit demo (neutral proof)",
+ "tokens": {
+  "bg": "#121417",
+  "surface": "#1C1F24",
+  "text": "#F3F3F0",
+  "text-2": "#A9AEB6",
+  "mid": "#C8CCD2",
+  "ink": "#121417"
+ },
+ "roles": {
+  "accent": "text",
+  "plate": "rgba(14, 15, 18, .80)",
+  "cap-next": "text-2",
+  "cap-said": "text",
+  "cap-lit": "ink",
+  "cap-lit-bg": "text",
+  "label-bg": "rgba(20, 22, 26, .90)",
+  "badge-bg": "rgba(14, 15, 18, .70)",
+  "badge-text": "text-2",
+  "badge-border": "text-2",
+  "ring": "bg",
+  "scrim": "rgba(10, 11, 13, .78)"
+ },
+ "fonts": [],
+ "type": { "display": "DejaVu Serif", "text": "DejaVu Sans", "mono": "DejaVu Sans Mono" },
+ "cssText": ".stage { background: radial-gradient(120vmax 80vmax at 50% 26%, #1E2228 0%, #121417 62%); } .hud-h { font-weight: 700; }"
+}

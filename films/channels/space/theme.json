@@ -1,0 +1,128 @@
+{
+ "_doc": "Light Minute (the space channel): indigo night, teal for light, lilac for gravity. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/space/bible.md §2). The cross-check's fixes: captions in Lexend (Atkinson is the body channel's caption face), counters in Martian Mono, Unbounded stays the display face; labels and counters chime on pings, never glass bells. 'bg' is an alias of 'void' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and no red, amber, gold or rose: contrast.py checks the distances.",
+ "id": "light-minute",
+ "name": "Light Minute",
+ "channel": "space",
+ "promise": "One minute, one 'whoa' about the universe, every number sourced.",
+
+ "tokens": {
+  "bg": "#080A1C",
+  "void": "#080A1C",
+  "void-top": "#11163A",
+  "surface": "#151A3D",
+  "text": "#EEF0FF",
+  "text-2": "#A9B0D9",
+  "teal": "#4FE3C6",
+  "lilac": "#B9A6FF",
+  "ice": "#8FD0FF",
+  "lemon": "#F2EDA6"
+ },
+
+ "scene": {
+  "_doc": "3D only. One key light, the star (a DirectionalLight aimed at the subject), plus a 4% void hemisphere fill so night sides keep their shape. The Sun renders white. Light fronts and rings are teal, the gravity grid and orbits lilac. Only stars, light fronts and the kilonova bloom (threshold 0.9); text never does.",
+  "sun": "#FFFFFF",
+  "light-front": "#4FE3C6",
+  "gravity-grid": "#B9A6FF",
+  "light-hemi": "#080A1C"
+ },
+
+ "plate": { "color": "surface", "opacity": 0.85, "radius_px": 24 },
+ "highlight": { "style": "text", "color": "teal", "_doc": "The word being spoken turns teal (the colour of light) on the plate; words still to come are text-2, words said are text." },
+
+ "roles": {
+  "accent": "teal",
+  "plate": "rgba(21, 26, 61, .85)",
+  "cap-next": "text-2",
+  "cap-said": "text",
+  "cap-lit": "teal",
+  "cap-lit-bg": "transparent",
+  "label-bg": "rgba(21, 26, 61, .92)",
+  "label-text": "text",
+  "ring": "void",
+  "badge-bg": "rgba(8, 10, 28, .78)",
+  "badge-text": "text-2",
+  "badge-border": "text-2",
+  "scrim": "rgba(8, 10, 28, .80)",
+  "scale-line": "teal",
+  "cap-size": "4.815vmin",
+  "cap-weight": "600",
+  "cap-tracking": "-.01em",
+  "cap-radius": "2.222vmin",
+  "label-size": "3.704vmin",
+  "label-weight": "600",
+  "label-radius": "999px",
+  "badge-size": "2.778vmin",
+  "badge-weight": "500",
+  "badge-radius": ".9vmin",
+  "counter-size": "9.259vmin",
+  "series-size": "2.778vmin",
+  "title-size": "6.667vmin",
+  "title-weight": "600",
+  "title-tracking": "-.02em",
+  "end-size": "6.667vmin"
+ },
+
+ "fonts": [
+  { "family": "Unbounded", "file": "fonts/Unbounded-VF.ttf", "weight": "200 900", "style": "normal" },
+  { "family": "Lexend", "file": "fonts/Lexend-VF.ttf", "weight": "100 900", "style": "normal" },
+  { "family": "Martian Mono", "file": "fonts/MartianMono-VF.woff2", "weight": "100 800", "style": "normal" }
+ ],
+ "type": {
+  "display": "Unbounded",
+  "text": "Lexend",
+  "mono": "Martian Mono",
+  "glyph": "Lexend",
+  "_doc": "Display: Unbounded 600 for titles (wide, round letters echo orbits; it has no µ, so units stay in Lexend). Text: Lexend 600 for captions and labels (HEXP axis left at 0, standard Lexend). Counters, badges and the light-time readout: Martian Mono, monospaced so figures never jitter, set at its standard width (wdth 100; the file's default is 112.5) with code ligatures off. The label glyphs ● ✦ ◯ are not in Lexend and come from DejaVu Sans (the page's system-safe stack), never from Inter."
+ },
+
+ "sizes": {
+  "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters (kits/cinema/script pages them with max_chars = 24); the size is the largest whole px at which the widest of the 142 rows of all three episode-1 scripts (paged at 24 characters) fits the plate's maximum width, 0.72 × W = 778 px, without hud.js shrinking it. Measured in Chromium with this face on 2026-10-22: it fits up to 52.9 px; at 52 px the widest row ('hundred and twenty days.') makes a 764 px plate. Lexend is wide, so its caption is smaller than the other channels', but its large x-height reads as big. Labels: the pill is at least 0.035 × H = 67 px tall.",
+  "caption": { "px": 52, "weight": 600, "lineHeight": 1.24, "maxLines": 2, "maxChars": 24, "plateMaxWidth": 778 },
+  "label": { "px": 40, "weight": 600, "minPillHeight": 67 },
+  "badge": { "px": 30, "weight": 500, "face": "mono" },
+  "counter": { "px": 100, "weight": 700, "face": "mono" },
+  "series": { "px": 30, "weight": 600, "face": "display, caps" },
+  "title": { "px": 72, "weight": 600, "face": "display" },
+  "end": { "px": 72, "weight": 600, "next_px": 50, "follow_px": 37 }
+ },
+
+ "safe": { "9x16": { "x": [90, 900], "y": [250, 1420], "frame": [1080, 1920] } },
+ "captionY": { "9x16": 0.61 },
+
+ "labels": {
+  "_doc": "Each pill carries a glyph as well as its name (● body, ✦ star, ◯ light), so colour is never the only cue.",
+  "body": { "color": "ice", "mark": "none", "glyph": "●", "use": "planets, moons, probes" },
+  "star": { "color": "lemon", "mark": "none", "glyph": "✦", "use": "stars (the Sun itself renders white)" },
+  "light": { "color": "teal", "mark": "none", "glyph": "◯", "use": "light fronts, rings, the light-time readout" },
+  "gravity": { "color": "lilac", "mark": "dashed", "use": "orbits, the gravity grid, forces (no glyph in the bible; a dashed ring for now)" }
+ },
+
+ "contrast": {
+  "_doc": "What contrast.py checks besides the automatic pairs. grounds: the flat colours text can sit on. behind: what the plate, pills and badges can sit over (worst case first: white bloom, then the bible's 'plate over bloom' sample #1B2045).",
+  "grounds": ["void", "void-top", "surface"],
+  "behind": ["#FFFFFF", "#1B2045", "void"],
+  "pairs": [
+   { "fg": "void", "bg": "teal", "kind": "text", "note": "dark text on a teal chip" },
+   { "fg": "teal", "bg": "surface", "kind": "text", "note": "the light-time readout on a card" },
+   { "fg": "lilac", "bg": "surface", "kind": "text" },
+   { "fg": "ice", "bg": "surface", "kind": "text" },
+   { "fg": "lemon", "bg": "surface", "kind": "text" },
+   { "fg": "teal", "bg": "void", "kind": "line", "note": "the light-time ring" },
+   { "fg": "lilac", "bg": "void", "kind": "line", "note": "orbits and the gravity grid" }
+  ]
+ },
+
+ "motif": {
+  "signature_shape": "The light-time ring: a thin teal ring printed with its light-travel time ('1.3 s' Earth–Moon, '8 min 20 s' Sun–Earth). One per episode; it is also the avatar. Space owns the ring: the other channels never use one.",
+  "honesty_badges": "Martian Mono badges for every cheat: 'not to scale', 'time ×N', 'orbit sped up ×N' (separate from the light clock), 'analogy', 'estimate', 'thought experiment'.",
+  "title_card": "A band at y 250–470 over the payoff image: a teal ring closes on the sonic signature beside LIGHT MINUTE (Unbounded caps), the question below.",
+  "end_card": "The same ring, large, around 'Next light: …'. Held ≥ 1.5 s.",
+  "recurring_segment": "The closing light-time readout: the ring and how long light takes to cross the episode's distance.",
+  "tease": "Next light: …",
+  "colour_rules": "Teal is light (fronts, rings, the spoken word); lilac is gravity (orbits, grid, forces). No red, amber, gold or rose.",
+  "facts": "One galactic-centre distance for the whole channel: about 27,000 ly (8,275 pc, GRAVITY; ep01 claims.json c12). The galaxy model's 'You are here' label and episodes 5 and 10 use the same figure (the bible's 26,000 is superseded; provisional until the user confirms).",
+  "sound": "E dorian at 56.25 BPM (a 16th is 8 frames); no piano: a drone and glide fifths; pings for labels (no glass bells); signature pings E5, B5, F♯6, 6 frames apart."
+ },
+
+ "cssText": ".stage { background: linear-gradient(180deg, var(--void-top) 0%, var(--void) 58%); }\n.hud-series { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .14em; }\n.hud-counter .v, .hud-scale, .hud-badge { font-variation-settings: \"wdth\" 100; font-variant-ligatures: no-contextual no-common-ligatures; }\n.hud-badge { letter-spacing: .01em; }"
+}

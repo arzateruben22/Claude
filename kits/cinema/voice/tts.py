@@ -2,8 +2,8 @@
 
   $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/tts.py SCRIPT.md OUTDIR --voice af_heart [--speed 1.0] [--lexicon pron.json]
 
-SCRIPT.md has one `vo:` line per beat (see films/skin-school-tiktok/script.md); `*stars*` and
-`{direction}` are stripped before speaking. The lexicon maps a word to the phonemes Kokoro should
+SCRIPT.md has one `vo:` line per beat (see films/skin-school-tiktok/script.md); `*stars*`,
+`{direction}` and `{c1,c2}` claim tags are stripped before speaking (scriptfile.spoken). The lexicon maps a word to the phonemes Kokoro should
 say ({"sebum": "sˈibəm"}); every other word goes through Kokoro's own phonemizer. Writes
 OUTDIR/NN.wav (24 kHz, mono, trimmed to the voice) and OUTDIR/lines.json, which records the text,
 the exact phonemes spoken, the voice, the model's SHA256 and the toolchain versions, so a line can

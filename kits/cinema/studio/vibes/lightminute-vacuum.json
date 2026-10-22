@@ -1,0 +1,271 @@
+{
+  "_doc": "Light Minute (space), 'vast and calm': E dorian at 56.25 BPM (a beat is 32 frames, a 16th exactly 8 frames at 30 fps). No piano: open pads in a long hall over a held drone of fifths (E and B), with slow gliding open fifths as the only melody. Labels are telemetry pings, never glass bells (they are Lumevina's). Nothing booms in a vacuum: every effect is tonal (pings, glides, swells), never an impact. Signature: pings E5, B5, F#6, 6 frames apart (root, fifth and ninth with no third: a question opening). It plays on the title ring (signature) and at the end of every counter. The voice stays dry and close; the music ducks 10 dB under it.",
+  "name": "lightminute-vacuum",
+  "bpm": 56.25,
+  "key": "E",
+  "mode": "dorian",
+  "scale": [
+    "E",
+    "F#",
+    "G",
+    "A",
+    "B",
+    "C#",
+    "D"
+  ],
+  "progression": [
+    {
+      "pad": [
+        "E3",
+        "B3",
+        "D4",
+        "F#4"
+      ],
+      "root": "E2"
+    },
+    {
+      "pad": [
+        "A2",
+        "E3",
+        "B3",
+        "C#4"
+      ],
+      "root": "A1"
+    },
+    {
+      "pad": [
+        "D3",
+        "F#3",
+        "A3",
+        "E4"
+      ],
+      "root": "D2"
+    },
+    {
+      "pad": [
+        "B2",
+        "F#3",
+        "A3",
+        "E4"
+      ],
+      "root": "B1"
+    }
+  ],
+  "duck_db": -10.0,
+  "signature": {
+    "voice": "ping",
+    "notes": [
+      "E5",
+      "B5",
+      "F#6"
+    ],
+    "frames": [
+      0,
+      6,
+      12
+    ],
+    "gains": [
+      0,
+      -1,
+      -2
+    ],
+    "echo": [
+      0.4,
+      -10
+    ]
+  },
+  "layers": {
+    "pad": {
+      "gain": -14,
+      "bright": 2000,
+      "attack": 2.4,
+      "release": 3.0
+    },
+    "melody": {
+      "voice": "glide",
+      "pattern": [
+        0,
+        2,
+        1,
+        3
+      ],
+      "step": 4,
+      "double_above": 0.75,
+      "octave": 1,
+      "gain": -14,
+      "bright": 2200,
+      "dur": 6.4,
+      "slide": 0.35,
+      "fifth": 0.6,
+      "pan": 0.35
+    },
+    "drone": {
+      "gain": -21,
+      "notes": [
+        "E2",
+        "B2",
+        "E3"
+      ],
+      "bright": 800,
+      "attack": 4.0,
+      "release": 4.0
+    },
+    "sub": {
+      "gain": -24,
+      "above": 0.55
+    },
+    "air": {
+      "gain": -36
+    }
+  },
+  "space": {
+    "music": [
+      3.6,
+      0.38
+    ],
+    "foley": [
+      2.2,
+      0.3
+    ],
+    "dialog": [
+      0.4,
+      0.05
+    ]
+  },
+  "drive": {
+    "music": 0.8,
+    "effects": 0.9,
+    "dialog": 0.0
+  },
+  "foley": {
+    "label": {
+      "voice": "ping",
+      "gain": -18,
+      "notes": [
+        "E5",
+        "F#5",
+        "A5",
+        "B5",
+        "D6",
+        "E6",
+        "F#6",
+        "A6",
+        "B6",
+        "D7"
+      ],
+      "echo": [
+        0.25,
+        -10
+      ]
+    },
+    "counter.show": {
+      "voice": "ping",
+      "gain": -19,
+      "notes": [
+        "E6"
+      ],
+      "echo": [
+        0.25,
+        -10
+      ]
+    },
+    "counter.tick": {
+      "voice": "tick",
+      "gain": -23
+    },
+    "counter.end": {
+      "voice": "seq",
+      "gain": -13,
+      "seq": "signature"
+    },
+    "signature": {
+      "voice": "seq",
+      "gain": -11,
+      "seq": "signature"
+    },
+    "section": {
+      "voice": "whoosh",
+      "gain": -31,
+      "dur": 1.2,
+      "lo": 90,
+      "hi": 700,
+      "anchor": "peak"
+    },
+    "swell": {
+      "voice": "swell",
+      "gain": -15,
+      "note": "E3"
+    },
+    "light.front": {
+      "voice": "sparkle",
+      "gain": -24,
+      "notes": [
+        "E7",
+        "B6",
+        "F#7",
+        "C#7"
+      ],
+      "grain": "ping"
+    },
+    "body.vanish": {
+      "voice": "dim",
+      "gain": -14,
+      "note": "E3"
+    },
+    "arrive": {
+      "voice": "seq",
+      "gain": -14,
+      "seq": {
+        "voice": "ping",
+        "notes": [
+          "E4",
+          "B4",
+          "E5"
+        ],
+        "frames": [
+          0,
+          2,
+          4
+        ],
+        "echo": [
+          0.3,
+          -8
+        ]
+      }
+    },
+    "orbit.pass": {
+      "voice": "ping",
+      "gain": -22,
+      "notes": [
+        "B4"
+      ],
+      "repeats": 1
+    },
+    "scale.jump": {
+      "voice": "glide",
+      "gain": -18,
+      "note": "E3",
+      "interval": 19,
+      "anchor": "end",
+      "at": "t1"
+    },
+    "probe.ping": {
+      "voice": "ping",
+      "gain": -20,
+      "f": 1100,
+      "echo": [
+        0.25,
+        -9
+      ]
+    },
+    "merge": {
+      "voice": "swell",
+      "gain": -13,
+      "note": "B2"
+    }
+  },
+  "master": {
+    "lufs": -14.0,
+    "tilt": 0.0
+  }
+}

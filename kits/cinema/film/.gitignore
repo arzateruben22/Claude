@@ -1,0 +1,3 @@
+# what the renderer writes inside a film folder (render.mjs): frames, chunks, logs, the page, deliveries
+*/build/
+*/out/
