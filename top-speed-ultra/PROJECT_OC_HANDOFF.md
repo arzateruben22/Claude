@@ -125,6 +125,12 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
+**The always-on session is active again (07:03 UTC message).** At the owner's request (two phone screenshots) it is
+condensing the in-race HUD for phone first (`HUD.tsx`, the HUD styles, the HUD bits of `App.tsx`) and fixing the seat
+POV. It asked this session to hold the HUD files. This session starts no HUD work; the live integration touches them only
+to resolve the merge (both sides' readouts kept, no redesign). Whichever lands second builds on the other. The always-on
+session is also merging `claude/hypercar` (388cfa2) into its `local/live-preview` for the owner's main link.
+
 **Connecting to `claude/always-on` (the owner, 04:40 UTC).** After the live integration lands on `claude/hypercar`,
 this session merges `claude/hypercar` into `claude/always-on` (only `top-speed-ultra/` differs; the diff outside it must be
 empty), and keeps doing so after every judged landing. The live server's deploy pieces outside the game folder
