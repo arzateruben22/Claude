@@ -126,7 +126,7 @@ def test_each_days_stock_picks_can_share_the_bank(tmp_path):
     assert [t.pnl for t in fixed] == [10.0, -5.0, 4.0]
 
 
-def test_your_settings_start_every_desk_at_100():
+def test_your_settings_start_every_desk_at_1000():
     import tomllib
 
     with open(Path(__file__).resolve().parent.parent / "book.toml", "rb") as fh:
@@ -134,11 +134,11 @@ def test_your_settings_start_every_desk_at_100():
     root = Path(__file__).resolve().parents[2]
     desks = [d for d, v in cfg.items() if d not in pb.NOT_DESKS and isinstance(v, dict)]
     for d in desks:
-        assert cfg[d]["start_bank"] == 100.0, d
+        assert cfg[d]["start_bank"] == 1000.0, d
         base, _, book = d.partition("_")
         rulebook = {"memecoins": root / "night-desk" / f"desk-{book}.toml",
                     "majors": root / "majors-desk" / f"majors-{book}.toml"}.get(base)
         if rulebook:                                                   # the book and the desk agree on the bank
             with open(rulebook, "rb") as fh:
-                assert tomllib.load(fh)["desk"]["start_bank"] == 100.0, d
+                assert tomllib.load(fh)["desk"]["start_bank"] == 1000.0, d
     assert cfg["stocks"]["share_bank"] is True

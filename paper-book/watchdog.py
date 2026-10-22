@@ -30,6 +30,7 @@ except ModuleNotFoundError:  # Python 3.10
     import tomli as tomllib  # type: ignore[no-redef]
 
 import benchmark
+import weather
 import paperbook as pb
 
 HERE = Path(__file__).resolve().parent
@@ -47,8 +48,10 @@ QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Me
 for _b in ("wild", "strict", "sniper", "momentum", "patient", "scalper", "whale", "runner", "tiny"):
     QUIET[f"nightdesk-{_b}"] = ("nightdesk", f"night-desk/output/{_b}/live/state.json", 20, f"{_b.title()} memecoin desk")
 for _b, _h in (("4h", 4), ("daily", 24), ("fast", 1), ("tight", 1), ("loose", 4), ("btc", 4), ("alts", 1),
-               ("single", 1), ("slow", 24), ("trend", 24)):
+               ("single", 1), ("slow", 24), ("trend", 24), ("rush", 24)):
     QUIET[f"majors-{_b}"] = ("majors", f"majors-desk/output/{_b}/live/state.json", 90 * _h + 60, f"Big-coin {_b} desk")
+for _b in ("index", "sectors", "leaders"):        # stocks on the same engine: one save a day, weekends included
+    QUIET[f"majors-{_b}"] = ("majors", f"majors-desk/output/{_b}/live/state.json", 90 * 24 + 60, f"Stock {_b} desk")
 
 
 @dataclass
@@ -262,6 +265,8 @@ def summary(book: pb.Book, day: date) -> Push:
                  + (f" · {len(held)} open, {_usd(book.unrealized)} not banked" if held else ""))
     if book.benchmark:
         lines.append(benchmark.line(book))
+    if weather.line(book.weather):
+        lines.append(weather.line(book.weather)[0].upper() + weather.line(book.weather)[1:])
     # on a date the book is read (first look, month end): the ranking, top and bottom, in the same push
     reads = {deck._as_date(when): label for label, when in (book.checkpoints or {}).items() if deck._as_date(when)}
     title = f"Paper book · {day:%a %d %b}: {_usd(today_total)} today"
@@ -320,6 +325,7 @@ def run_once(now: datetime, state: dict, *, units=unit_state, mtime_of=mtime, bo
     pushes += check_backup(now, state, *backups)
     if now.astimezone(book.tz).time() >= at and state.get("sent", {}).get("summary") != now.astimezone(book.tz).date().isoformat():
         book.benchmark = benchmark.load(HERE / "output", book)
+        book.weather = weather.load(HERE / "output", now)
         pushes += check_summary(now, state, book, at)
     return pushes
 
@@ -342,6 +348,7 @@ def main(argv=None) -> int:
         cfg = settings()[0]
         book = pb.load(cfg, False, now)
         book.benchmark = benchmark.load(HERE / "output", book)
+        book.weather = weather.load(HERE / "output", now)
         pushes = [summary(book, now.astimezone(book.tz).date())]
     else:
         try:

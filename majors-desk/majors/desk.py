@@ -206,7 +206,15 @@ def replay(cfg: Config, market, start: datetime, end: datetime, folder: Optional
     need = cfg.rules.candles_needed()
     step = cfg.desk.candle_hours * HOUR
     start = floor_to(start, cfg.desk.candle_hours)
-    data = {c: market.history(c, cfg.desk.quote, start - need * step, end) for c in cfg.desk.coins}
+    warm = need * step * getattr(market, "warmup", 1)    # stocks: 300 trading days is about 450 calendar days
+    data, skipped = {}, {}
+    for coin in cfg.desk.coins:                        # one coin the market doesn't list mustn't sink the whole test
+        try:
+            data[coin] = market.history(coin, cfg.desk.quote, start - warm, end)
+        except MarketError as exc:
+            skipped[coin] = str(exc)
+    if not data:
+        raise MarketError("; ".join(f"{k}: {v}" for k, v in skipped.items()) or "no prices")
     desk = Desk(cfg, market, folder)
     index = {c: {x.t: i for i, x in enumerate(cs)} for c, cs in data.items()}
     t, curve = start, []
@@ -225,7 +233,7 @@ def replay(cfg: Config, market, start: datetime, end: datetime, folder: Optional
             desk._sell(coin, cs[-1].c, cs[-1].closed_at, "end of test")
         if curve:
             curve[-1] = (curve[-1][0], desk.value())
-    return {"desk": desk, "hold": buy_and_hold(cfg, data, start, end),
+    return {"desk": desk, "hold": buy_and_hold(cfg, data, start, end), "skipped": skipped,
             "periods": periods(cfg, curve, data, start, end),
             "quarters": periods(cfg, curve, data, start, end, by="quarter"),
             "years": periods(cfg, curve, data, start, end, by="year")}
@@ -286,7 +294,8 @@ def period_lines(rows: List[dict]) -> List[str]:
     return out
 
 
-def summary(desk: Desk, hold: dict, days: float, label: str, by_period: Optional[List[dict]] = None) -> str:
+def summary(desk: Desk, hold: dict, days: float, label: str, by_period: Optional[List[dict]] = None,
+            skipped: Optional[Dict[str, str]] = None) -> str:
     tr = desk.trades
     wins = [t.pnl for t in tr if t.pnl > 0]
     losses = [-t.pnl for t in tr if t.pnl < 0]
@@ -298,11 +307,13 @@ def summary(desk: Desk, hold: dict, days: float, label: str, by_period: Optional
         peak = max(peak, eq)
         dd = max(dd, (peak - eq) / peak * 100)
     pf = f"{sum(wins) / sum(losses):.2f}" if losses else ("∞" if wins else "—")
+    word = desk.cfg.desk.asset_word()
+    used = [c for c in desk.cfg.desk.coins if c not in (skipped or {})]
     lines = [
-        f"{label}: {days:g} days, {len(desk.cfg.desk.coins)} coins ({', '.join(desk.cfg.desk.coins)})",
-        f"  {len(tr)} trades · won {len(wins)}/{len(tr) or 1} ({len(wins) / max(1, len(tr)):.0%}) · profit factor {pf}",
+        f"{label}: {days:g} days, {len(used)} {word} ({', '.join(used)})",
+        f"  {len(tr)} trades · won {len(wins)}/{len(tr)} ({len(wins) / max(1, len(tr)):.0%}) · profit factor {pf}",
         f"  net {'+' if net >= 0 else '−'}${abs(net):,.2f} ({net / start * 100:+.1f}% of ${start:,.0f}) · worst drop {dd:.1f}%",
-        f"  just holding all {len(hold['per_coin'])} coins instead: {hold['return_pct']:+.1f}%  "
+        f"  just holding all {len(hold['per_coin'])} {word} instead: {hold['return_pct']:+.1f}%  "
         f"({', '.join(f'{k} {v:+.0f}%' for k, v in hold['per_coin'].items())})",
     ]
     if wins and losses:
@@ -312,4 +323,6 @@ def summary(desk: Desk, hold: dict, days: float, label: str, by_period: Optional
     if len(tr) < 50:
         lines.append(f"  Only {len(tr)} trades: too few to trust either way.")
     lines += period_lines(by_period or [])
+    for coin, why in (skipped or {}).items():
+        lines.append(f"  Left out {coin}: {why}")
     return "\n".join(lines)

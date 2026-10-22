@@ -9,7 +9,7 @@
 # Paper money only. Nothing here can place a real order.
 
 [desk]
-start_bank = 100.0                                   # paper dollars
+start_bank = 1000.0                                   # paper dollars
 coins = ["BTC", "ETH"]       # the two deepest markets (main: all six)
 quote = "USD"
 candle_hours = 24            # one decision a day, on the daily close at midnight UTC (main: 1)

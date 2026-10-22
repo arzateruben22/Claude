@@ -253,6 +253,7 @@ class Book:
     ticket: float = 100.0
     share_bank: bool = False                                        # each day's stock picks split the stock bank
     benchmark: Optional[dict] = None                                # BTC bought at the start and held (benchmark.py)
+    weather: Optional[dict] = None                                  # where the big trends stand now (weather.py)
     # target %, stop %, cost % from each stock desk's own rules, and the time it's out by ("" = the close)
     stock_rules: Dict[str, Tuple[float, float, float]] = field(default_factory=lambda: {"stocks": (10.0, 5.0, 0.5)})
     stock_exit: Dict[str, str] = field(default_factory=dict)
@@ -485,6 +486,10 @@ def render_standings(book: Book) -> str:
                  "  (traded 3+ of the last 7 days, net up, no day's loss bigger than the week's gain)")
     if book.benchmark:
         lines.append("  " + benchmark.line(book))
+    import weather
+
+    if weather.line(book.weather):
+        lines.append("  " + weather.line(book.weather))
     return "\n".join(lines)
 
 
@@ -764,9 +769,13 @@ def render_html(book: Book) -> str:
                           if d in book.desks)
     key = "".join(f'<span class="k-{d}" style="--c:{book.color(d)}"><i></i>{e(book.label(d).lower())}</span>' for d in book.desks)
     swatches = "".join(f".chart .l-{d} {{ stroke: {book.color(d)}; }}\n" for d in book.desks if d not in COLORS)
+    import weather
+
+    weather_html = (f'<section aria-labelledby="h-w"><h2 id="h-w">Market weather now</h2>{weather.render_html(book.weather)}'
+                    '</section>' if book.weather else "")
     return f"""<title>Paper Book</title>
 {FONTS}
-<style>{CSS}
+<style>{CSS}{weather.CSS}
 .chart .l-any {{ stroke-width: 1.4; fill: none; }}
 .key span[style] {{ color: var(--c); }}
 .gw {{ display: inline-block; padding: 0 5px; border: 1px solid var(--up); color: var(--up); border-radius: 3px;
@@ -779,6 +788,7 @@ p.small {{ color: var(--muted); font-size: 13px; }}
     <p class="stamp">{demo}paper money only · {e(stamp)}</p>
   </header>
   {tiles}
+  {weather_html}
   <section aria-labelledby="h-eq">
     <h2 id="h-eq">Profit and loss since the start</h2>
     <p class="key"><span class="k-total"><i></i>all desks</span>{key}</p>
@@ -829,11 +839,15 @@ def _note(book: Book, d: str) -> str:
         return (f"<p><b>Wild memecoins</b> (Night Desk, wild rules): its own {bank} of paper money on the same coins, "
                 "prices, fees and\n      rug checks as Memecoins, with looser entry rules and bigger, longer bets "
                 "(night-desk/desk-wild.toml).\n      It's there to find out faster whether taking more risk pays.</p>")
-    if d not in NOTE_ORDER and book.market(d) != "stocks":       # a desk described only by book.toml
+    if d not in NOTE_ORDER and book.kind(d) == "coins":          # a desk described only by book.toml
+        name = d.split('_', 1)[-1]
         what = {"memecoins": "the same coins, prices, fees and rug checks as Memecoins, under its own rules "
-                             f"(night-desk/desk-{d.split('_', 1)[-1]}.toml)",
-                "big coins": "the same coins, prices and fees as Big coins, under its own rules "
-                             f"(majors-desk/majors-{d.split('_', 1)[-1]}.toml)"}[book.market(d)]
+                             f"(night-desk/desk-{name}.toml)",
+                "big coins": "Coinbase's prices, with fees and slippage, under its own rules "
+                             f"(majors-desk/majors-{name}.toml)",
+                "stocks": "US stocks and funds on Alpaca's daily prices, held for days or weeks under its own rules "
+                          f"(majors-desk/majors-{name}.toml). Bought and sold at a trading day's close, no "
+                          "commission"}[book.market(d)]
         return f"<p><b>{html.escape(book.label(d))}</b>: its own {bank} of paper money on {what}.</p>"
     stake = (f"each weekday's picks split {bank} of paper money equally" if book.share_bank else
              f"${book.ticket:,.0f} of paper money per pick, out of {bank}")
@@ -876,9 +890,13 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     import benchmark                               # BTC bought at the start and held: the bar to clear
     import deck
 
+    import weather                                 # where the big trends stand: context for every desk
+
     book = load(cfg, demo, now)
     out.mkdir(parents=True, exist_ok=True)
     book.benchmark = benchmark.load(out, book)
+    book.weather = weather.load(out, book.now, demo)
+    (out / "weather.json").write_text(json.dumps(book.weather, indent=1), encoding="utf-8")
     write_ledger(book, out / "ledger.csv")
     standings = render_standings(book) + "\n"
     (out / "standings.txt").write_text(standings, encoding="utf-8")
@@ -908,7 +926,8 @@ SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/d
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
           "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv",
           "/standings": "standings.txt", "/standings.txt": "standings.txt",
-          "/proving": "proving.html", "/proving.html": "proving.html", "/proving.json": "proving.json"}
+          "/proving": "proving.html", "/proving.html": "proving.html", "/proving.json": "proving.json",
+          "/weather.json": "weather.json"}
 TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8",
          ".txt": "text/plain; charset=utf-8"}
 
@@ -959,16 +978,22 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
+    import weather
+
+    here = HERE / "output" / ("demo" if args.demo else "")
     if args.proving:
         import proving
 
-        print(proving.render_text(proving.data(load(cfg, args.demo))))
+        book = load(cfg, args.demo)
+        book.weather = weather.load(here, book.now, args.demo)
+        print(proving.render_text(proving.data(book)))
         return 0
     if args.print_only or args.standings:
         import benchmark
 
         book = load(cfg, args.demo)
-        book.benchmark = benchmark.load(HERE / "output" / ("demo" if args.demo else ""), book)
+        book.benchmark = benchmark.load(here, book)
+        book.weather = weather.load(here, book.now, args.demo)
         print(render_standings(book) if args.standings else render_text(book))
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")

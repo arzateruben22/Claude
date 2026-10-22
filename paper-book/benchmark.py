@@ -1,5 +1,5 @@
-"""The bar every desk has to clear: what $100 of BTC, bought when the paper book started and simply held,
-is worth now. Prices come from Coinbase's public API; no key needed.
+"""The bar every desk has to clear: how BTC, bought when the paper book started and simply held, has done
+since. Prices come from Coinbase's public API; no key needed.
 
 The start is the moment the desks first started trading on this machine (the first point of their equity
 records, or the first trade), saved in output/benchmark.json so it never moves. fresh-start.sh archives that

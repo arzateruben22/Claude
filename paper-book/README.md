@@ -25,6 +25,20 @@ thirty remain, joined by five new ones: the big-coin trend filter and four stock
 swings. In the table above, Memecoins, Big coins, Wild memecoins, Wild stocks, Big coins 4h, Quick stocks and
 Early-out stocks are among the retired. A desk is in the book when `book.toml` has a section for it.
 
+Later that day four more joined, for twenty-four, and every bank went from $100 to $1,000 (the table above shows
+the old amounts): **Rush coins** (twenty Coinbase coins, a 7-day breakout in an uptrend) and three stock desks
+that hold for days or weeks on the Majors Desk engine with Alpaca's daily bars: **Index trend filter** (SPY and
+QQQ above their 150-day average), **Sector breakouts** and **Leader breakouts**. They sit in `book.toml` with
+`kind = "coins"` (their records have the coin desks' shape) and `market = "stocks"`, so the deck shows them with
+the stocks and the Proving Ground grades them quarter by quarter in their own section, like the big coins.
+
+**Market weather** (`weather.py`): the deck's top line, the paper book, the standings, the Proving Ground and the
+evening push say where the big trends stand. Bitcoin, SPY and QQQ against their 150-day averages (the trend desks'
+line) with the date each last crossed, how many of the rush coins, leaders and sector funds are above their own
+rulebook's average (shown only with prices for at least half of each list), and the crypto Fear & Greed index from
+alternative.me, fetched at most every six hours, only its number kept. The prices are the ones the desks already
+cache; in demo mode every number is invented and labelled so. `/weather.json` serves it.
+
 **The Proving Ground** (`proving.py`, written with every refresh as `output/proving.html`, served at `/proving` and
 linked from the deck) reads each running rulebook's newest history test and grades it by one stated rule: a
 **candidate** made money over the test, made money in at least two thirds of its periods (quarters for big coins,
@@ -53,7 +67,7 @@ latest trades.
 
 ## The bar to clear: BTC bought and held
 
-Every refresh also prices $100 of BTC bought the moment the desks started and simply held (Coinbase's
+Every refresh also prices BTC bought the moment the desks started and simply held (Coinbase's
 public prices, no key). The paper book, `server/status.sh`, the crawler's results and the evening summary
 all show it beside the big-coin desk. If a desk can't beat just holding, it isn't earning its keep. The
 start is saved in `output/benchmark.json`; `server/fresh-start.sh` resets it with everything else.

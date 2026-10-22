@@ -14,7 +14,7 @@
 # Paper money only. Nothing here can place a real order.
 
 [desk]
-start_bank = 100.0           # paper dollars
+start_bank = 1000.0           # paper dollars
 discover_seconds = 60
 poll_seconds = 15
 watch_minutes = 120          # main: 90. It waits longer, so coins get longer to qualify

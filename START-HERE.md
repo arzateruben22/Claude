@@ -2,7 +2,7 @@
 
 Three things run on one small always-on computer:
 
-- **Paper trading.** Memecoins, big coins (BTC, ETH, SOL, XRP, ADA, DOGE) and stocks, all with
+- **Paper trading.** Memecoins, big coins (BTC, ETH, XRP, QNT and more) and stocks, all with
   fake money and real prices. Nothing can place a real order.
 - **Your X account.** Claude writes the posts, you approve them, and the desk posts them on schedule.
 - **The paper book.** One page with every paper profit and loss.
@@ -31,44 +31,49 @@ sudo bash server/setup.sh
 ```
 
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
-starts with $100 of paper money.
+starts with $1,000 of paper money.
 
-**Twenty desks, and a proving ground.** On 22 October the clear losers were retired on the evidence, and four
-new stock ideas and one new big-coin idea took their place. Each desk still runs on its own $100 of paper money.
+**Twenty-four desks, and a proving ground.** On 22 October the clear losers were retired on the evidence, and new
+ideas took their place: four stock day-trade rulebooks, three stock desks that hold for days or weeks, a trend
+filter for Bitcoin and Ethereum, and a "rush" desk that rides a coin's run. Each desk runs on its own $1,000 of
+paper money (it was $100; $1,000 lets every rulebook size its bets the way it was written, and the dollar
+figures read like a real small account).
 
 | Market | Running | Retired on 22 Oct, and why |
 |---|---|---|
 | Memecoins | **strict**, **sniper**, **momentum**, **patient**, **scalper**, **whale**, **runner**, **tiny**, all on trial to the month end | **main** (−35% over 164 live trades) and **wild** (−76% in two days) |
-| Big coins | **daily**, **slow**, **loose** (the three that lost least in a year when holding lost 46%) and the new **trend** filter: Bitcoin and Ethereum only while they're above their 150-day average, cash otherwise | **hourly**, **4h**, **fast**, **tight**, **btc**, **alts**, **single**: each lost 24–60% over the past year |
-| Stocks | **main** (on notice: first live, but it lost every month of the summer replay), **fade**, **hold**, **cheap**, and four new ones that wait out the opening swings: **confirm** (buy at 10:00 only if still above the open), **orb** and **orb5** (buy a break of the first 15 or 5 minutes' high), **failed** (short at 10:00 only gaps already below their open) | **wild**, **quick**, **early**, **bigcap**, **tight**, **highvol**: each lost money in every month from June to September |
+| Big coins | **daily**, **slow**, **loose** (the three that lost least in a year when holding lost 46%), the **trend** filter (Bitcoin and Ethereum only while they're above their 150-day average, cash otherwise) and **rush**: twenty coins (XRP, QNT, HBAR, SOL...), bought when one breaks above its last week's high while above its 50-day average, sold when the run stalls | **hourly**, **4h**, **fast**, **tight**, **btc**, **alts**, **single**: each lost 24–60% over the past year |
+| Stocks, same day | **main** (on notice: first live, but it lost every month of the summer replay), **fade**, **hold**, **cheap**, and four that wait out the opening swings: **confirm** (buy at 10:00 only if still above the open), **orb** and **orb5** (buy a break of the first 15 or 5 minutes' high), **failed** (short at 10:00 only gaps already below their open) | **wild**, **quick**, **early**, **bigcap**, **tight**, **highvol**: each lost money in every month from June to September |
+| Stocks, held for days | **index** (the S&P 500 and Nasdaq-100 funds, SPY and QQQ, only while above their 150-day average), **sectors** (the twelve sector funds, bought on a 55-day breakout in an uptrend), **leaders** (the twenty biggest companies, bought on a 20-day breakout in an uptrend). One decision per trading day, on the close. They start once the Alpaca keys are in | new on 22 Oct |
 
 The retired rulebooks are kept, word for word, in each market's `retired/` folder, with the reason. Their paper
 records stay on the server. The server never runs them, but a history test can still replay one by name.
 
 **The rule for keeping a desk** is written on the Proving Ground page, and the page applies it for you. A rulebook
 is a **candidate** when it made money over a long history test, made money in at least two thirds of its periods
-(quarters for big coins, months for stocks), had enough trades, and, for big coins, never fell more than 25% from a
-high. It's on **watch** when it made money overall or in at least half its periods, and it's a **cut** when it did
+(quarters for big coins and the stocks held for days, months for same-day stocks), had enough trades, and, unless it
+trades within the day, never fell more than 25% from a high. It's on **watch** when it made money overall or in at least half its periods, and it's a **cut** when it did
 neither. Passing is necessary, not sufficient: a candidate still has to repeat it live, on paper. Memecoins can't
 be replayed, because nobody keeps a history of brand-new coins, so they're judged on their live results only.
 
 **To run every history test,** one at a time in the background so the live desks aren't disturbed:
 
 ```bash
-bash server/prove.sh            # big coins over four years, stocks since 2 January; about an hour the first time
+bash server/prove.sh            # coins and stocks-for-days over four years, same-day stocks since 2 January;
+                                # about an hour the first time
 bash server/prove.sh status     # how far it has got
 ```
 
 You can close Termius while it runs. The results appear on the **Proving Ground** page (`/proving`, linked from the
-deck) and in `bash server/status.sh`. Four years of big-coin prices cover the 2022 crash, the 2023–24 run-up and
-this year's fall, so a rule that only works in one kind of market shows up.
+deck) and in `bash server/status.sh`. Four years of prices cover the 2022 crash, the 2023–24 run-up and this year's
+fall, so a rule that only works in one kind of market shows up.
 
 The plan stays the same: a **first look on Friday 23 October**, the **assessment at the end of October**, and after
 that the survivors keep running until one desk shows a **green week**: traded on three or more of the last seven
-days, net up over the seven, and no single day's loss bigger than the week's gain. With twenty variations, a few
+days, net up over the seven, and no single day's loss bigger than the week's gain. With twenty-four variations, a few
 will look good by Friday from luck alone. The month-end read, the proving ground and the green week are what count.
 
-None of this adds to a Claude bill: the twenty running desks judge and review by rules alone.
+None of this adds to a Claude bill: the twenty-four running desks judge and review by rules alone.
 
 **To read the standings at any time:** `bash server/status.sh` ranks every desk with its last seven days, then
 prints each rulebook's history grade. The same table is at `http://127.0.0.1:8790/standings` next to the deck. Your
@@ -80,15 +85,28 @@ take its `--with <name>` out of `server/systemd/nightdesk.service` (and its line
 only needs the move: the scanner runs every `criteria-*.toml` left in its folder. Nothing is deleted.
 
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
-everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
+everything so far into an archive folder (nothing is deleted) and restarts every desk at $1,000.
+
+**Market weather.** Every page (the deck's top line, the standings, the Proving Ground and the evening push) now
+says where the big trends stand: Bitcoin and the S&P 500 fund against their 150-day averages (the line the trend
+desks use), how many of the rush coins, leader companies and sector funds are trending up, and the crypto Fear &
+Greed index. It reads the prices the desks already keep, plus one free lookup at alternative.me every six hours.
+It's context, not a signal: when Bitcoin is below its line, the trend desks are supposed to be sitting in cash,
+and a quiet week from them is the rules working.
+
+**About the leaders desk:** its twenty companies are today's biggest, which they are because they went up. Any
+history test of that list looks better than it would have at the time. Trust its live paper record over its
+history test.
 
 **For stocks** (free, 5 more minutes):
 1. Sign up at **alpaca.markets** and switch to the **Paper** account.
 2. Create API keys.
 3. On the server, run `bash server/keys.sh` and paste the two Alpaca keys when asked. Press Enter
    to skip the other questions for now.
+4. Start the three stock desks that hold for days: `sudo systemctl restart majors`
 
-Stocks start at the next weekday morning scan (5:35am Pacific).
+The same-day stock desks start at the next weekday morning scan (5:35am Pacific). The desks that hold for days
+decide once per trading day, just after 5pm Pacific, on that day's closing prices.
 
 **Alerts on your phone (2 minutes, free):** run `bash server/alerts.sh`, install the **ntfy** app and
 subscribe to the topic it prints. You get a push if a desk stops, keeps crashing, goes quiet or loses

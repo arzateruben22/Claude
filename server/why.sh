@@ -78,13 +78,14 @@ first=1
 for f in "$DIR"/night-desk/desk-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#desk-}"
   [ "$first" = 1 ] || echo; first=0
-  echo "MEMECOINS: $b rules (own \$100)"
+  echo "MEMECOINS: $b rules (own \$1,000)"
   memecoins "$DIR/night-desk/output/$b/live/state.json"
 done
 
 for f in "$DIR"/majors-desk/majors-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#majors-}"
-  echo; echo "BIG COINS: $b rules (own \$100)"
+  what="BIG COINS"; grep -q '^source = "alpaca"' "$f" && what="STOCKS HELD FOR DAYS"
+  echo; echo "$what: $b rules (own \$1,000)"
   (cd "$DIR/majors-desk" && "$PY" -m majors why --book "$b" | sed 's/^/  /')
 done
 
@@ -93,7 +94,7 @@ echo "STOCKS (main)"
 stocks "$DIR/premarket-scanner/output/journal.csv"
 for f in "$DIR"/premarket-scanner/criteria-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#criteria-}"
-  echo; echo "STOCKS: $b rules (own \$100)"
+  echo; echo "STOCKS: $b rules (own \$1,000)"
   stocks "$DIR/premarket-scanner/output/$b/journal.csv"
 done
 last="$(pacific "$(systemctl show scanner-scan.service -p ExecMainExitTimestamp --value 2>/dev/null)")"

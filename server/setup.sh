@@ -43,8 +43,10 @@ echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
-Running now (paper money): twenty desks, each on its own \$100 of paper money, and the paper book. The clear
-losers were retired on 22 Oct 2026 (their rulebooks are kept in each market's retired/ folder). The Trading Deck
+Running now (paper money): twenty-four desks, each on its own \$1,000 of paper money, and the paper book. The
+clear losers were retired on 22 Oct 2026 (their rulebooks are kept in each market's retired/ folder). The three
+stock desks that hold for days start once the Alpaca keys are in. If the desks were running on \$100 before,
+start them over on \$1,000 with: sudo bash server/fresh-start.sh The Trading Deck
 lines them all up: bash server/status.sh shows where to open it. To test every rulebook against history, one at
 a time and safely in the background: bash server/prove.sh
 Next:

@@ -1,0 +1,33 @@
+# Majors Desk, LEADERS rulebook: the twenty biggest US companies, bought on a 20-day breakout in an uptrend.
+#
+# A company is bought when its daily close is above its 100-day average AND above its highest price of the
+# previous 20 trading days. It's sold on a close below its 10-day low, or on a trailing stop three daily moves
+# under its best close. Up to five at a time, each sized so a stop-out costs about 1% of the bank.
+# HONEST WARNING: this list is today's biggest companies. They're the biggest because they went up, so any
+# history test of this list looks better than it would have at the time (survivorship). Trust its live
+# paper record over its history test.
+# Daily bars from Alpaca (bash server/keys.sh), split- and dividend-adjusted.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 1000.0                                  # paper dollars
+coins = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AVGO", "JPM", "LLY",
+         "V", "MA", "XOM", "COST", "WMT", "NFLX", "AMD", "ORCL", "CRM", "HD"]
+quote = "USD"
+candle_hours = 24            # one decision per trading day
+source = "alpaca"
+
+[rules]
+trend_hours = 2400           # 100 trading days
+breakout_hours = 480         # 20 trading days
+exit_hours = 240             # 10 trading days
+atr_hours = 336              # 14 trading days
+stop_atr = 3.0
+risk_pct = 1.0
+max_position_pct = 20.0      # never more than a fifth of the bank in one company
+max_positions = 5
+cooldown_hours = 72
+
+[costs]
+fee_pct = 0.0                # no commission
+slippage_pct = 0.05

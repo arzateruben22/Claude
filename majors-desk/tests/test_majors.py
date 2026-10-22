@@ -332,11 +332,11 @@ def test_trend_rulebook_holds_above_its_average_and_steps_out_below_it():
     daily = lambda prices: series(prices, spread=0.05, hours=24)  # noqa: E731 - a coin that moves ~10% a day
     up = [100 + i * 0.1 for i in range(300)]
     ok, why = rules.entry(daily(up), r)
-    assert ok and why == "closed above its 3600h average"         # no breakout needed
+    assert ok and why == "closed above its 150-day average"         # no breakout needed
     down = [130 - i * 0.1 for i in range(300)]
-    assert rules.entry(daily(down), r) == (False, "below its 3600h average")
+    assert rules.entry(daily(down), r) == (False, "below its 150-day average")
     slipping = daily(up[:-1] + [120.0])                            # a close just under the average (about 122)
-    assert rules.exit_reason(slipping, peak_close=max(up), r=r) == "trend over (below its 3600h average)"
+    assert rules.exit_reason(slipping, peak_close=max(up), r=r) == "trend over (below its 150-day average)"
     assert rules.exit_reason(daily(up), peak_close=up[-1], r=r) is None
     crash = daily(up[:-1] + [up[-2] * 0.3])                       # a 70% crash in one day: the stop goes first
     assert rules.exit_reason(crash, peak_close=up[-2], r=r) == "trailing stop"
@@ -361,6 +361,7 @@ def _swap(text: str, line: str) -> str:
 def test_backtests_report_each_period_against_holding():
     from majors.desk import period_lines, periods
     cfg = config.load(config.book_paths("trend")[0])
+    cfg.desk.start_bank = 100.0                                     # the made-up bank curve below starts at $100
     t0 = datetime(2025, 1, 1, tzinfo=timezone.utc)
     data = {"BTC": [Candle(t0 + timedelta(days=i), 100 + i, 101 + i, 99 + i, 100 + i, 1, 24) for i in range(730)]}
     curve = [(t0 + timedelta(days=i + 1), 100.0 + (i if i < 365 else 365 - (i - 365) / 2)) for i in range(729)]
@@ -385,3 +386,145 @@ def test_backtest_writes_its_periods_for_the_proving_ground(tmp_path, monkeypatc
     saved = json.loads(found[0].read_text())
     assert saved["book"] == "loose" and saved["demo"] is True and saved["periods"] and "hold_pct" in saved
     assert saved["quarters"] and saved["years"] and saved["coins"] and saved["first"] < saved["last"]
+
+
+# -- stocks held for days: Alpaca's daily bars on the same engine ---------------------------------------------
+
+from majors.market import AlpacaDaily, alpaca_keys  # noqa: E402
+
+
+def _alpaca(url, p):
+    """Weekday bars between start and end, stamped 4am UTC (midnight in New York), two pages."""
+    start = datetime.fromisoformat(p["start"].replace("Z", "+00:00"))
+    end = datetime.fromisoformat(p["end"].replace("Z", "+00:00"))
+    day, bars = start.replace(hour=4, minute=0, second=0), []
+    while day <= end:
+        if day.weekday() < 5:
+            n = (day - T0).days
+            bars.append({"t": day.strftime("%Y-%m-%dT%H:%M:%SZ"), "o": 100.0 + n, "h": 102.0 + n, "l": 99.0 + n,
+                         "c": 101.0 + n, "v": 1e6})
+        day += timedelta(days=1)
+    half = len(bars) // 2
+    if not p.get("page_token"):
+        return 200, {"bars": {p["symbols"]: bars[:half]}, "next_page_token": "page2"}
+    return 200, {"bars": {p["symbols"]: bars[half:]}, "next_page_token": None}
+
+
+def test_alpaca_daily_bars_are_trading_days_dated_by_their_new_york_date(tmp_path):
+    http = FakeHTTP(_alpaca)
+    m = AlpacaDaily("key", "secret", http, cache_dir=tmp_path)
+    got = m.history("SPY", "USD", T0, T0 + timedelta(days=14))
+    assert http.calls[0][0].endswith("/v2/stocks/bars")
+    p = http.calls[0][1]
+    assert (p["timeframe"], p["feed"], p["adjustment"], p["symbols"]) == ("1Day", "sip", "all", "SPY")
+    assert len(http.calls) == 2 and http.calls[1][1]["page_token"] == "page2"          # every page read
+    weekdays = [d.weekday() for d in (T0 + timedelta(days=i) for i in range(14)) if d.weekday() < 5]
+    assert [c.t.weekday() for c in got] == weekdays and len(got) == 10                  # no weekends
+    assert got[0].t == T0 and got[0].hours == 24 and got[0].closed_at == T0 + timedelta(days=1)
+    assert (got[0].o, got[0].h, got[0].l, got[0].c) == (100.0, 102.0, 99.0, 101.0)
+    down = FakeHTTP(lambda u, p: (500, {}))
+    assert AlpacaDaily("key", "secret", down, cache_dir=tmp_path).history("SPY", "USD", T0, T0 + timedelta(days=14)) == got
+    assert len(down.calls) == 1                                    # the newest days are asked for again; a hiccup
+    with pytest.raises(MarketError, match="500"):                  # falls back to what's on disk, but nothing on
+        AlpacaDaily("key", "secret", down, cache_dir=tmp_path / "empty").history("SPY", "USD", T0, T0 + timedelta(days=3))
+    with pytest.raises(MarketError, match="refused"):              # disk, or refused keys, is said plainly
+        AlpacaDaily("key", "secret", FakeHTTP(lambda u, p: (401, {})), cache_dir=tmp_path).history(
+            "SPY", "USD", T0, T0 + timedelta(days=14))
+    old = AlpacaDaily("key", "secret", FakeHTTP(_alpaca), cache_dir=tmp_path)
+    old.history("SPY", "USD", T0, T0 + timedelta(days=14))
+    assert old.http.calls[0][1]["start"] >= (T0 + timedelta(days=7)).strftime("%Y-%m-%d")  # ...but only the newest
+
+
+def test_alpaca_problems_and_keys(tmp_path, monkeypatch):
+    with pytest.raises(MarketError, match="refused the keys"):
+        AlpacaDaily("k", "s", FakeHTTP(lambda u, p: (403, {}))).history("SPY", "USD", T0, T0 + timedelta(days=3))
+    monkeypatch.delenv("ALPACA_API_KEY", raising=False)
+    monkeypatch.delenv("ALPACA_SECRET_KEY", raising=False)
+    env = tmp_path / ".env"
+    env.write_text("# the scanner's keys\nALPACA_API_KEY=PKTEST\nALPACA_SECRET_KEY='abc123'\n")
+    assert alpaca_keys(env) == ("PKTEST", "abc123")
+    assert alpaca_keys(tmp_path / "missing.env") == ("", "")
+    monkeypatch.setattr("majors.market.alpaca_keys", lambda env_file=None: ("", ""))
+    with pytest.raises(MarketError, match="bash server/keys.sh"):
+        AlpacaDaily()
+
+
+def test_stock_rulebooks_trade_daily_bars_from_alpaca():
+    for book in ("index", "sectors", "leaders"):
+        c = config.load(config.book_paths(book)[0])
+        assert (c.desk.source, c.desk.candle_hours, c.costs.fee_pct, c.desk.start_bank) == ("alpaca", 24, 0.0, 1000.0)
+        assert c.desk.asset_word() == "stocks" and c.rules.candles_needed() <= config.MAX_CANDLES
+    assert config.load(config.book_paths("index")[0]).desk.coins == ["SPY", "QQQ"]
+    assert len(config.load(config.book_paths("leaders")[0]).desk.coins) == 20
+    with pytest.raises(ValueError, match="candle_hours = 24"):
+        cfg(desk__source="alpaca", desk__candle_hours=4, rules__trend_hours=100, rules__breakout_hours=48,
+            rules__exit_hours=24, rules__atr_hours=16)
+    with pytest.raises(ValueError, match="coinbase or alpaca"):
+        cfg(desk__source="nyse")
+
+
+def test_rush_rulebook_rides_twenty_coins_and_a_missing_one_is_skipped_not_fatal(tmp_path, monkeypatch, capsys):
+    rush = config.load(config.book_paths("rush")[0])
+    assert len(rush.desk.coins) == 20 and {"XRP", "QNT", "HBAR"} <= set(rush.desk.coins)
+    assert (rush.desk.source, rush.desk.candle_hours, rush.rules.max_positions) == ("coinbase", 24, 4)
+
+    class Gappy(DemoMarket):
+        def history(self, coin, quote, start, end):
+            if coin == "QNT":
+                raise MarketError("Coinbase doesn't list QNT-USD")
+            return super().history(coin, quote, start, end)
+
+    from majors.market import Bucketed
+    c = copy.deepcopy(rush)
+    c.desk.coins = ["BTC", "ETH", "QNT"]
+    end = datetime(2026, 10, 1, tzinfo=timezone.utc)
+    result = replay(c, Bucketed(Gappy(), 24), end - timedelta(days=120), end)
+    assert result["skipped"] == {"QNT": "Coinbase doesn't list QNT-USD"}
+    assert set(result["hold"]["per_coin"]) == {"BTC", "ETH"}
+    with pytest.raises(MarketError, match="QNT"):
+        c.desk.coins = ["QNT"]
+        replay(c, Bucketed(Gappy(), 24), end - timedelta(days=120), end)
+
+
+def test_run_starts_the_coin_books_and_waits_on_a_stock_book_without_keys(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    monkeypatch.setattr("majors.market.alpaca_keys", lambda env_file=None: ("", ""))
+
+    def stop(*_):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(cli, "step_due", stop)
+    monkeypatch.setattr(cli.signal, "signal", lambda *a: None)
+    assert cli.main(["run", "--book", "trend", "--with", "index"]) == 0
+    out = capsys.readouterr().out
+    assert "Not starting [index]: no Alpaca keys" in out and "New paper bank [trend]: $1,000.00" in out
+    monkeypatch.setattr(cli, "step_due", stop)
+    assert cli.main(["run", "--book", "index"]) == 1                 # nothing could start: say so, and stop
+    assert cli.main(["doctor", "--book", "leaders"]) == 1 and "keys.sh" in capsys.readouterr().out
+
+
+def test_why_reads_a_trend_filter_without_a_breakout(capsys):
+    assert cli.main(["why", "--demo", "--book", "trend"]) == 0
+    out = capsys.readouterr().out
+    assert "150-day average" in out and "plain trend filter" in out
+
+
+def test_the_hour_still_trading_is_never_kept_in_the_cache(tmp_path, monkeypatch):
+    now = datetime.now(timezone.utc).replace(minute=20, second=0, microsecond=0)
+    this_hour = now.replace(minute=0)
+
+    def answer(url, p):                       # an exchange that also sends the hour still trading, half-made
+        rows = _rows(p["start"], p["end"])
+        if p["end"].startswith(this_hour.strftime("%Y-%m-%dT%H")):
+            rows.insert(0, [int(this_hour.timestamp()), 1.0, 1.0, 1.0, 1.0, 0.0])
+        return 200, rows
+
+    cb = Coinbase(FakeHTTP(answer), cache_dir=tmp_path)
+    cb.history("BTC", "USD", this_hour - 5 * HOUR, now)
+    kept = {c.t for c in cb._load_cache("BTC", "USD")}
+    assert this_hour not in kept and this_hour - HOUR in kept
+    old = [[int((this_hour - i * HOUR).timestamp()), 1, 1, 1, 1, 0] for i in range(1, 24 * 60)]
+    import gzip
+    (tmp_path / "ETH-USD.json.gz").write_bytes(gzip.compress(json.dumps(old).encode()))   # the old format
+    healed = cb._load_cache("ETH", "USD")
+    assert healed and max(c.t for c in healed) < this_hour - timedelta(days=Coinbase.HEAL_DAYS - 1)

@@ -1,0 +1,32 @@
+# Majors Desk, INDEX rulebook: own the S&P 500 and Nasdaq-100 funds only while they're above their 150-day average.
+#
+# The stock market's version of the trend filter: SPY and QQQ are held while their daily close is above the
+# average of the last 150 trading days, and swapped for cash when it closes below. It gives up the first and
+# last few percent of every move in exchange for sitting out most of a long fall. A trailing stop six daily
+# moves under the best close is a crash guard only; the average is the real exit.
+# Daily bars from Alpaca (the free paper account's keys, set with bash server/keys.sh). Decisions are made on
+# each trading day's close, just after midnight UTC, and filled at that close.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 1000.0                                  # paper dollars
+coins = ["SPY", "QQQ"]       # the S&P 500 and Nasdaq-100 funds
+quote = "USD"
+candle_hours = 24            # one decision per trading day
+source = "alpaca"            # US stocks and funds, daily bars
+
+[rules]
+trend_hours = 3600           # 150 trading days
+breakout_hours = 0           # no breakout needed: a close above the average is the signal
+exit_hours = 0               # no window-low exit
+exit_below_trend = true      # sell on a daily close below the 150-day average
+atr_hours = 336              # 14 trading days
+stop_atr = 6.0               # a crash guard: six daily moves below its best close since buying
+risk_pct = 5.0               # sized so the crash guard costs about 5% of the bank...
+max_position_pct = 50.0      # ...but never more than half the bank in one fund
+max_positions = 2
+cooldown_hours = 72          # three days before buying the same fund again, so a wobble around the line isn't traded
+
+[costs]
+fee_pct = 0.0                # Alpaca charges no commission on US stocks and funds
+slippage_pct = 0.05          # per side: the price moves a little against you when you fill

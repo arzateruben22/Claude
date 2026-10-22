@@ -1,5 +1,5 @@
 [Unit]
-Description=Majors Desk: paper trading on BTC, ETH and other big coins (four rulebooks, one Coinbase feed)
+Description=Majors Desk: paper trading on big coins (Coinbase) and stocks held for days (Alpaca daily bars), eight rulebooks
 After=network-online.target
 Wants=network-online.target
 
@@ -7,7 +7,7 @@ Wants=network-online.target
 Environment=PYTHONUNBUFFERED=1
 User=@USER@
 WorkingDirectory=@DIR@/majors-desk
-ExecStart=@DIR@/.venv/bin/python -m majors run --book daily --with slow --with loose --with trend
+ExecStart=@DIR@/.venv/bin/python -m majors run --book daily --with slow --with loose --with trend --with rush --with index --with sectors --with leaders
 Restart=always
 RestartSec=60
 

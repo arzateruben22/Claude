@@ -100,6 +100,7 @@ body {
 .checks span b { color: var(--gold); font-weight: 500; }
 .checks span.past { color: var(--dim); } .checks span.past b { color: var(--ink-2); }
 .checks span.past::before { content: "✓ "; color: var(--win); }
+.checks span.wx b { color: var(--ink-2); }
 
 /* -- lanes -------------------------------------------------------------------------------------------- */
 .lanes {

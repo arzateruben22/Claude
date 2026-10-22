@@ -2,9 +2,9 @@
 # The proving ground: replay every running rulebook against history, one at a time, in the background.
 #   bash server/prove.sh           start it (returns at once; you can close Termius)
 #   bash server/prove.sh status    what it has done so far
-# Big coins: the past four years of Coinbase prices (2022's crash, the 2023-24 run-up, this year's fall), quarter
-# by quarter against just holding. Stocks: every trading day since 2 January, month by month (needs the Alpaca
-# keys). One test at a time, at low priority, because a stock replay needs about 600 MB: the live desks come first.
+# Big coins and stocks held for days: the past four years of daily prices (2022's crash, the 2023-24 run-up, this
+# year's fall), quarter by quarter against just holding. Same-day stocks: every trading day since 2 January, month
+# by month. Anything on stocks needs the Alpaca keys. One test at a time, at low priority, because a stock replay needs about 600 MB: the live desks come first.
 # The first run downloads history (about an hour); later runs reuse it. The paper book's Proving Ground page
 # (/proving, next to the deck) grades the results. Memecoins can't be replayed: nobody keeps that history.
 # Paper money only. It reads prices and writes test results; it never changes a desk or places an order.
@@ -37,7 +37,8 @@ esac
 echo "Proving ground started $(date -u '+%Y-%m-%d %H:%M') UTC"
 for f in "$DIR"/majors-desk/majors-*.toml; do
   b="$(basename "$f" .toml)"; b="${b#majors-}"
-  echo "== big coins: $b ($COIN_DAYS days)"
+  what="big coins"; grep -q '^source = "alpaca"' "$f" && what="stocks held for days (needs the Alpaca keys)"
+  echo "== $what: $b ($COIN_DAYS days)"
   (cd "$DIR/majors-desk" && "$PY" -m majors backtest $DEMO --days "$COIN_DAYS" --book "$b" | sed 's/^/  /') \
     || echo "  Couldn't finish $b; the others carry on."
 done

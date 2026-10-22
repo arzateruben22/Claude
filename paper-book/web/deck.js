@@ -352,6 +352,23 @@
       s.append(b, ' ' + c.local + (c.at <= m.now ? '' : days < 1 ? ' · today' : days === 1 ? ' · tomorrow' : ` · in ${days} days`));
       checks.appendChild(s);
     }
+    const w = m.weather;                                           // where the big trends stand (weather.py)
+    if (w) {
+      for (const t of w.trends || []) {
+        const s = document.createElement('span');
+        s.className = 'wx';
+        const b = document.createElement('b'); b.textContent = t.symbol;
+        s.append(b, ` ${t.above ? 'above' : 'below'} its 150-day line ${pct(t.pct)}`);
+        checks.appendChild(s);
+      }
+      if (w.mood) {
+        const s = document.createElement('span');
+        s.className = 'wx';
+        const b = document.createElement('b'); b.textContent = 'fear & greed';
+        s.append(b, ` ${w.mood.value} · ${w.mood.label.toLowerCase()}`);
+        checks.appendChild(s);
+      }
+    }
   }
   function renderChips() {
     const box = $('chips');

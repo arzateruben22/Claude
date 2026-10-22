@@ -32,18 +32,18 @@ def desks_of(c):
     return [k for k, v in c.items() if k not in pb.NOT_DESKS and isinstance(v, dict)]
 
 
-def test_book_toml_lists_the_twenty_desks_still_running_each_with_its_own_rulebook_and_colour():
+def test_book_toml_lists_the_twenty_four_desks_still_running_each_with_its_own_rulebook_and_colour():
     c = cfg()
     desks = desks_of(c)
-    assert len(desks) == 20
+    assert len(desks) == 24
     meta = {d: pb.desk_meta(d, c[d]) for d in desks}
     assert {m: sum(1 for d in desks if meta[d]["market"] == m) for m in pb.MARKETS} == {
-        "memecoins": 8, "big coins": 4, "stocks": 8}
+        "memecoins": 8, "big coins": 5, "stocks": 11}                     # 8 same-day stock desks, 3 held for days
     colours = [meta[d]["color"] for d in desks]
-    assert len(set(colours)) == 20 and all(len(x) == 7 and x.startswith("#") for x in colours)
-    assert len({meta[d]["label"] for d in desks}) == 20 and len({meta[d]["abbr"] for d in desks}) == 20
+    assert len(set(colours)) == 24 and all(len(x) == 7 and x.startswith("#") for x in colours)
+    assert len({meta[d]["label"] for d in desks}) == 24 and len({meta[d]["abbr"] for d in desks}) == 24
     for d in desks:
-        assert c[d]["start_bank"] == 100.0, d
+        assert c[d]["start_bank"] == 1000.0, d
         base, _, book = d.partition("_")
         if base == "memecoins":
             rules = ROOT / "night-desk" / f"desk-{book}.toml"
@@ -56,7 +56,11 @@ def test_book_toml_lists_the_twenty_desks_still_running_each_with_its_own_rulebo
             assert c[d]["journal"] == f"../premarket-scanner/output/{book + '/' if book else ''}journal.csv", d
             assert (HERE / c[d].get("rules", "../premarket-scanner/criteria.toml")).resolve() == rules
         assert rules.exists(), f"{d}: {rules.name} is missing (a running desk's rulebook can't be retired)"
-        assert meta[d]["of"] == (base if book else None), d
+        swing = base == "majors" and meta[d]["market"] == "stocks"     # stocks on the coin engine: nobody's variant
+        assert meta[d]["of"] == ("" if swing else base if book else None), d
+        if swing:
+            with open(rules, "rb") as fh:
+                assert tomllib.load(fh)["desk"]["source"] == "alpaca", d
     assert c["report"]["checkpoints"] == {"first look": date(2026, 10, 23), "month end": date(2026, 10, 31)}
 
 
@@ -173,7 +177,7 @@ def test_the_evening_summary_with_a_crowd_names_the_best_the_worst_and_the_green
 def test_the_paper_book_page_seats_every_desk():
     c = cfg()
     b = pb.load(c, demo=True, now=NOW)
-    assert len(b.desks) == 20 and b.bank_total == 2000.0
+    assert len(b.desks) == 24 and b.bank_total == 24000.0
     page = pb.render_html(b)
     assert '<div class="tiles many crowd" style="--cols:8">' in page
     for d in b.desks:
@@ -183,6 +187,7 @@ def test_the_paper_book_page_seats_every_desk():
     assert "sold short at 10:00 ET, only if it's still below its 9:30 open" in page          # the failed-gap shorts
     assert "bought when it breaks above the high of its first 15 minutes, by 11:00 ET" in page
     assert "its share of the day's money sits in cash" in page
+    assert "US stocks and funds on Alpaca's daily prices" in page and "majors-desk/majors-leaders.toml" in page
 
 
 def test_the_standings_printout_ranks_every_desk_and_names_the_green_weeks():
@@ -252,9 +257,9 @@ def test_every_build_writes_the_standings_and_serves_them(tmp_path):
     c = cfg()
     b = pb.build(c, True, tmp_path / "out", NOW)
     text = (tmp_path / "out" / "standings.txt").read_text()
-    assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 20
+    assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 24
     assert pb.SERVED["/standings"] == "standings.txt" and pb.TYPES[".txt"].startswith("text/plain")
-    assert len(b.desks) == 20
+    assert len(b.desks) == 24
 
 
 def test_the_standings_are_kept_as_a_file_on_each_read_date(tmp_path):

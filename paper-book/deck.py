@@ -38,6 +38,9 @@ IDEA = {
     "majors_fast": "short windows, 2 ATR stop", "majors_tight": "hourly, 1.5 ATR stop", "majors_loose": "4-hour, 5 ATR stop",
     "majors_btc": "BTC only, 4-hour, 80% in", "majors_alts": "SOL XRP ADA DOGE, hourly", "majors_single": "one coin at a time, 80% in",
     "majors_slow": "daily, long windows", "majors_trend": "BTC + ETH above the 150-day average, else cash",
+    "majors_rush": "20 coins, 7-day breakouts in an uptrend",
+    "majors_index": "SPY + QQQ above the 150-day average, else cash",
+    "majors_sectors": "sector funds, 55-day breakouts", "majors_leaders": "20 biggest companies, 20-day breakouts",
 }
 STOCK_BASE = {"stocks": "gap-ups", "stocks_wild": "5% gaps, no news", "stocks_fade": "gap-ups sold short",
               "stocks_quick": "gap-ups", "stocks_early": "gap-ups", "stocks_bigcap": "$5–100 gap-ups",
@@ -166,6 +169,8 @@ def btc_series(book: pb.Book, cache: Path = BTC_CACHE, points: int = 1500) -> Op
         rows = json.loads(gzip.decompress(cache.read_bytes()))
     except (OSError, ValueError):
         return None
+    if isinstance(rows, dict):                              # the cache's newer shape: {"v": 2, "rows": [...]}
+        rows = rows.get("rows") or []
     since, p0 = _dt(b["since"]).timestamp(), float(b["btc_start"])
     if not p0:
         return None
@@ -220,9 +225,18 @@ def data(book: pb.Book) -> dict:
                  "open": round(book.unrealized, 2), "trades": total,
                  "btc": {"pct": b["pct"], "since": int(_dt(b["since"]).timestamp())} if b else None,
                  "week_days": WEEK_DAYS, "checkpoints": checkpoints(book),
-                 "markets": [m for m in pb.MARKETS if any(book.market(d) == m for d in book.desks)]},
+                 "markets": [m for m in pb.MARKETS if any(book.market(d) == m for d in book.desks)],
+                 "weather": _weather(book.weather)},
         "desks": desks, "btc_series": btc_series(book), "tape": tape,
     }
+
+
+def _weather(w: Optional[dict]) -> Optional[dict]:
+    """Just what the deck's header line shows: each trend's side of its 150-day line, and the mood."""
+    if not w:
+        return None
+    return {"demo": w["demo"], "trends": [{"symbol": t["symbol"], "pct": t["pct"], "above": t["above"]} for t in w["trends"]],
+            "mood": w.get("mood")}
 
 
 def _parts(payload: dict) -> tuple:

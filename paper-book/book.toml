@@ -1,6 +1,7 @@
 # Paper Book settings. Paper money only: nothing here can place a real order.
 #
-# One section per desk that is still running. On 22 Oct 2026 the clear losers were retired on the evidence
+# One section per desk that is still running, each with $1,000 of paper money (raised from $100 on 22 Oct 2026,
+# when every desk started over). On 22 Oct 2026 the clear losers were retired on the evidence
 # (history tests for big coins and stocks, live results for memecoins); their rulebooks are kept in each
 # market's retired/ folder and their paper records stay on the server. A desk the code doesn't know by name
 # says its label, kind, market, of (the desk it varies) and colour here.
@@ -9,7 +10,7 @@
 [memecoins_strict]                        # older coins, small bets, quick exits (desk-strict.toml)
 folder = "../night-desk/output/strict/live"
 demo_folder = "../night-desk/output/strict/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_sniper]                        # coins 3-10 minutes old, 5% bets, +60% / -30%, out in 30 minutes
 label = "Sniper memecoins"
@@ -19,7 +20,7 @@ of = "memecoins"
 color = "#9df1e3"
 folder = "../night-desk/output/sniper/live"
 demo_folder = "../night-desk/output/sniper/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_momentum]                      # only coins still being bought, +80% with a trailing stop
 label = "Momentum memecoins"
@@ -29,7 +30,7 @@ of = "memecoins"
 color = "#29ff94"
 folder = "../night-desk/output/momentum/live"
 demo_folder = "../night-desk/output/momentum/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_patient]                       # coins over an hour old with big pools, +30% / -15%, up to 6 hours
 label = "Patient memecoins"
@@ -39,7 +40,7 @@ of = "memecoins"
 color = "#52ffff"
 folder = "../night-desk/output/patient/live"
 demo_folder = "../night-desk/output/patient/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_scalper]                       # +12% / -8%, out in 20 minutes, four at once
 label = "Scalper memecoins"
@@ -49,7 +50,7 @@ of = "memecoins"
 color = "#7ac1ff"
 folder = "../night-desk/output/scalper/live"
 demo_folder = "../night-desk/output/scalper/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_whale]                         # big pools and market caps only, 15% bets, +20% / -10%
 label = "Whale memecoins"
@@ -59,7 +60,7 @@ of = "memecoins"
 color = "#6ef7b3"
 folder = "../night-desk/output/whale/live"
 demo_folder = "../night-desk/output/whale/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_runner]                        # lets a winner run: +1000% cap, trailing 15% / 10%, 4 hours
 label = "Runner memecoins"
@@ -69,7 +70,7 @@ of = "memecoins"
 color = "#29ffdb"
 folder = "../night-desk/output/runner/live"
 demo_folder = "../night-desk/output/runner/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [memecoins_tiny]                          # 2% bets, eight open at once
 label = "Tiny-bet memecoins"
@@ -79,7 +80,7 @@ of = "memecoins"
 color = "#299bff"
 folder = "../night-desk/output/tiny/live"
 demo_folder = "../night-desk/output/tiny/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 # -- Big coins (Majors Desk): Coinbase prices. Kept: the three that lost least over a falling year, plus the
 # trend filter. --------------------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ of = "majors"
 color = "#ff5e29"
 folder = "../majors-desk/output/daily/live"
 demo_folder = "../majors-desk/output/daily/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [majors_slow]                             # daily candles, the longest windows (flat in that year)
 label = "Big coins slow"
@@ -101,7 +102,7 @@ of = "majors"
 color = "#ff8929"
 folder = "../majors-desk/output/slow/live"
 demo_folder = "../majors-desk/output/slow/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [majors_loose]                            # 4-hour candles, wide stops (lost 9% in that year, holding lost 46%)
 label = "Big coins loose"
@@ -111,7 +112,7 @@ of = "majors"
 color = "#f1b79d"
 folder = "../majors-desk/output/loose/live"
 demo_folder = "../majors-desk/output/loose/demo"
-start_bank = 100.0
+start_bank = 1000.0
 
 [majors_trend]                            # BTC and ETH only while above their 150-day average, else cash (majors-trend.toml)
 label = "Big coins trend filter"
@@ -121,24 +122,35 @@ of = "majors"
 color = "#e4ff33"
 folder = "../majors-desk/output/trend/live"
 demo_folder = "../majors-desk/output/trend/demo"
-start_bank = 100.0
+start_bank = 1000.0
+
+[majors_rush]                             # twenty coins, bought on a 7-day breakout in an uptrend (majors-rush.toml)
+label = "Rush coins"
+abbr = "RUSH"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#ffd23f"
+folder = "../majors-desk/output/rush/live"
+demo_folder = "../majors-desk/output/rush/demo"
+start_bank = 1000.0
 
 # -- Stocks (premarket scanner): gap-up picks, graded after the close. The main desk is on notice: first live,
 # but it lost money every month of the summer replay. The four later-entry desks test why. ----------------
 [stocks]                                  # the main rules: bought at the 9:30 open, +10% / -5% (criteria.toml)
 journal = "../premarket-scanner/output/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_fade]                             # the main picks sold short at the open (criteria-fade.toml)
 journal = "../premarket-scanner/output/fade/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-fade.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_hold]                             # the main picks, +25% / -10%: up in August and September
 label = "Hold stocks"
@@ -149,9 +161,9 @@ color = "#f65abd"
 journal = "../premarket-scanner/output/hold/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-hold.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_cheap]                            # $1-5 stocks, 15% gaps: up in July and August
 label = "Cheap stocks"
@@ -162,9 +174,9 @@ color = "#d166ff"
 journal = "../premarket-scanner/output/cheap/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-cheap.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_confirm]                          # bought at 10:00 only if still above the open (criteria-confirm.toml)
 label = "Confirm-at-10 stocks"
@@ -175,9 +187,9 @@ color = "#f19de0"
 journal = "../premarket-scanner/output/confirm/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-confirm.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_orb]                              # bought on a break of the first 15 minutes' high (criteria-orb.toml)
 label = "Opening-range stocks"
@@ -188,9 +200,9 @@ color = "#ff33f8"
 journal = "../premarket-scanner/output/orb/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-orb.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_orb5]                             # bought on a break of the 9:30 candle's high (criteria-orb5.toml)
 label = "Five-minute range stocks"
@@ -202,9 +214,9 @@ color = "#ff5286"
 journal = "../premarket-scanner/output/orb5/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-orb5.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
 
 [stocks_failed]                           # sold short at 10:00 only if already below the open (criteria-failed.toml)
 label = "Failed-gap shorts"
@@ -215,9 +227,47 @@ color = "#33cfff"
 journal = "../premarket-scanner/output/failed/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
 rules = "../premarket-scanner/criteria-failed.toml"
-start_bank = 100.0
+start_bank = 1000.0
 share_bank = true                         # each weekday's picks split the bank equally
-ticket_usd = 100.0
+ticket_usd = 1000.0
+
+# -- Stocks held for days or weeks (Majors Desk engine on Alpaca's daily bars; they start once the Alpaca keys
+# are in). Graded quarter by quarter on the Proving Ground, like the big coins. -----------------------------
+[majors_index]                            # SPY and QQQ only while above their 150-day average, else cash
+label = "Index trend filter"
+abbr = "INDX"
+kind = "coins"
+market = "stocks"
+of = ""
+prefix = ""
+color = "#f2ece0"
+folder = "../majors-desk/output/index/live"
+demo_folder = "../majors-desk/output/index/demo"
+start_bank = 1000.0
+
+[majors_sectors]                          # the sector funds, bought on a 55-day breakout in an uptrend
+label = "Sector breakouts"
+abbr = "SECT"
+kind = "coins"
+market = "stocks"
+of = ""
+prefix = ""
+color = "#b18cff"
+folder = "../majors-desk/output/sectors/live"
+demo_folder = "../majors-desk/output/sectors/demo"
+start_bank = 1000.0
+
+[majors_leaders]                          # the twenty biggest companies, bought on a 20-day breakout in an uptrend
+label = "Leader breakouts"
+abbr = "LEAD"
+kind = "coins"
+market = "stocks"
+of = ""
+prefix = ""
+color = "#7fd4ff"
+folder = "../majors-desk/output/leaders/live"
+demo_folder = "../majors-desk/output/leaders/demo"
+start_bank = 1000.0
 
 [report]
 timezone = "America/Los_Angeles"

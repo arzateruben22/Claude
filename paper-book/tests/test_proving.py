@@ -111,3 +111,20 @@ def test_untested_desks_get_a_plain_instruction_not_an_empty_page(tmp_path):
     b = book(tmp_path, {"majors_a": "big coins", "stocks_a": "stocks"})
     page = proving.render_html(proving.data(b))
     assert page.count("No history tests yet") == 2 and "not tested" in page
+
+
+def test_stocks_held_for_days_are_graded_like_big_coins_in_their_own_section(tmp_path):
+    q = [f"{y} Q{n}" for y in (2024, 2025) for n in (1, 2, 3, 4)]
+    coin_test(tmp_path / "majors_index" / "backtests" / "x", zip(q, [4, 3, -1, 5, 2, 2, -2, 3]), [6, -2, 4] * 4, hold=30.0)
+    stock_test(tmp_path / "stocks" / "backtests" / "y", [("2026-01", [1.0] * 120, 0)])
+    meta = {"majors_index": pb.desk_meta("majors_index", {"label": "Index trend filter", "kind": "coins", "market": "stocks",
+                                                          "of": "", "prefix": ""}),
+            "stocks": pb.desk_meta("stocks", {})}
+    b = pb.Book({d: [] for d in meta}, {d: [] for d in meta}, {d: 1000.0 for d in meta}, {}, False, NOW, LA, meta=meta,
+                order=tuple(meta), results={d: tmp_path / d for d in meta})
+    rows = {x["key"]: x for x in proving.data(b)["desks"]}
+    assert rows["majors_index"]["group"] == "swings" and rows["stocks"]["group"] == "stocks"
+    assert rows["majors_index"]["status"] == "candidate" and "quarters" in rows["majors_index"]["why"]
+    page = proving.render_html(proving.data(b))
+    assert "Stocks held for days or weeks, quarter by quarter" in page and "Stocks bought and sold the same day" in page
+    assert "the same stocks held" in page

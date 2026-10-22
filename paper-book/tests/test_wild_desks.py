@@ -131,5 +131,5 @@ def test_retired_desks_are_out_of_the_book_but_their_rulebooks_are_kept():
         assert d not in cfg, d                                          # the server doesn't run it, the book doesn't show it
         assert (HERE.parent / rulebook).exists(), rulebook              # but what it was is kept, word for word
     for kept in ("memecoins_strict", "stocks", "stocks_fade"):
-        assert kept in cfg and cfg[kept]["start_bank"] == 100.0
+        assert kept in cfg and cfg[kept]["start_bank"] == 1000.0
     assert (HERE / cfg["stocks_fade"]["rules"]).resolve() == (HERE.parent / "premarket-scanner" / "criteria-fade.toml")

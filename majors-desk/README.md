@@ -46,7 +46,8 @@ python -m majors why --book 4h                 # every command takes --book 4h
 
 On 22 October 2026 the rulebooks that lost 24–60% over the past year were retired: hourly (`majors.toml`, kept in
 place as the reference), 4h, fast, tight, btc, alts and single. Their files are in `retired/` with the reason, and
-every command still finds them by name for a history test. Still running, each on its own $100:
+every command still finds them by name for a history test. Still running, each on its own $1,000 (raised from
+$100 the same day, so every rulebook can size its bets the way it's written):
 
 - **daily** (`majors-daily.toml`): daily candles. Made +3.3% in a year when holding lost 46%, on few trades.
 - **slow** (`majors-slow.toml`): daily candles, the longest windows. Flat in that year.
@@ -54,17 +55,50 @@ every command still finds them by name for a history test. Still running, each o
 - **trend** (`majors-trend.toml`), new: Bitcoin and Ethereum only while each closes above its 150-day average, cash
   otherwise, with a trailing stop four daily moves below the best close for a crash between decisions. It uses
   `breakout_hours = 0` (no breakout needed), `exit_hours = 0` (no window-low exit) and `exit_below_trend = true`.
+- **rush** (`majors-rush.toml`), new: twenty coins (BTC, ETH, SOL, XRP, ADA, DOGE, LINK, AVAX, LTC, DOT, XLM, HBAR,
+  BCH, AAVE, UNI, QNT, NEAR, ATOM, ETC, FIL) on daily candles. A coin is bought when it closes above its 50-day
+  average and above its high of the previous 7 days, and sold on a close below its 5-day low or a trailing stop
+  three daily moves under its best close. Up to four at once, a quarter of the bank at most each. It's the "QNT had
+  a good week" desk: it rides a run and gets out when it stalls. Slippage is set at 0.15% a side for the thinner
+  coins. A coin Coinbase doesn't list is left out of a replay (and said so), not fatal.
+
+## Stocks held for days: the same engine on Alpaca's daily bars
+
+`source = "alpaca"` in `[desk]` swaps Coinbase for Alpaca's daily stock bars (split- and dividend-adjusted, the
+consolidated feed the free paper account may read up to 15 minutes back). The keys are the stock scanner's, read
+from the environment or `../premarket-scanner/.env` (`bash server/keys.sh` puts them there). Each trading day is one
+24-hour candle dated by its New York date, so a 150-candle average is 150 trading days, and a day only counts once
+it's finished: the desk decides just after midnight UTC (5pm Pacific), on that day's close. No commission.
+
+- **index** (`majors-index.toml`): SPY and QQQ only while each closes above its 150-day average, cash otherwise.
+- **sectors** (`majors-sectors.toml`): the eleven sector funds and the chip-makers' fund (XLK XLF XLE XLV XLI XLY
+  XLP XLU XLB XLRE XLC SMH), bought on a close above the 100-day average and the previous 55 days' high, sold on a
+  close below the 20-day low. Up to four at once.
+- **leaders** (`majors-leaders.toml`): the twenty biggest US companies, bought on a close above the 100-day average
+  and the previous 20 days' high, sold on a close below the 10-day low. Up to five at once, 1% of the bank at risk
+  each. **Its list was picked today, with hindsight**: these are the biggest companies because they went up, so any
+  history test of it flatters. Its live paper record is the one to trust.
+
+Without the keys, `run` says "Not starting [index]: no Alpaca keys" and runs the coin rulebooks as usual; after
+adding them, restart (`sudo systemctl restart majors`). If Alpaca has a hiccup, a stock desk decides on the prices
+already on disk and asks again the next day; refused keys are said plainly instead.
 
 ```bash
-python -m majors run --book daily --with slow --with loose --with trend     # what the server runs
+python -m majors run --book daily --with slow --with loose --with trend --with rush \
+    --with index --with sectors --with leaders                               # what the server runs
 python -m majors backtest --days 1460 --book trend                         # four years against just holding
+python -m majors backtest --days 1460 --book leaders                       # needs the Alpaca keys
+python -m majors why --book index                                          # each fund against its line, now
 ```
 
 Every backtest now ends with a period table, by year past two years and by quarter otherwise: the desk's change in
 each period next to the same coins bought in equal parts and held. `periods.json` in the backtest's folder keeps
 both the quarters and the years for the paper book's Proving Ground. One thing worth knowing about the daily
-rulebook: its 1% risk per trade against a stop three daily moves away often asks for less than the $10 minimum
-ticket on a $100 bank, so it only buys the calmer coins in calm weeks. That's part of why it trades so rarely.
+rulebook: its 1% risk per trade against a stop three daily moves away often asked for less than the $10 minimum
+ticket on the old $100 bank, so it only bought the calmer coins in calm weeks. On $1,000 that limit no longer bites.
+
+The price cache keeps only finished hours. Before 22 Oct 2026 it could keep the hour still trading, half made, which
+then stuck; a cache saved before then has its last 40 days fetched again the first time it's read.
 
 ## Read the backtest honestly
 
@@ -83,5 +117,5 @@ Those prices are made up and say nothing about real coins.
 majors.toml            every rule and cost
 output/live/           trades.csv and state.json from `run` (the paper book reads these)
 output/backtests/      one folder per backtest: trades.csv and summary.md
-output/cache/          downloaded hourly prices
+output/cache/          downloaded prices: hourly coins (BTC-USD.json.gz), daily stocks (stock-SPY-1d.json.gz)
 ```

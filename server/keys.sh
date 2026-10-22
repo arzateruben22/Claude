@@ -66,4 +66,7 @@ fi
 
 echo
 echo "Done. Stocks start with the next weekday scan: 5:02pm Pacific (for the next morning), then 5:35 and 6:02am."
+if [ -n "$akey$asecret" ]; then
+  echo "The three stock desks that hold for days (index, sectors, leaders) start after: sudo systemctl restart majors"
+fi
 echo "To start posting: bash server/connect-x.sh"

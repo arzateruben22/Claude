@@ -2,6 +2,8 @@
 
   big coins   the newest backtest in majors-desk/output/<book>/backtests/ (periods.json: quarter by quarter,
               next to holding the same coins), made with `python -m majors backtest --days 1460 --book <book>`
+  swings      stocks and funds held for days or weeks by the same engine on Alpaca's daily bars (index,
+              sectors, leaders): the same periods.json, graded the same way as big coins
   stocks      the newest backtest in premarket-scanner/output/<book>/backtests/ (journal.csv: every pick,
               graded month by month), made with `python -m scanner backtest --from 2026-01-02 --book <book>`
   memecoins   can't be replayed: nobody keeps a history of brand-new coins. They're judged live only.
@@ -10,7 +12,8 @@
 
 The rule (RULE below, the same words on the page):
   candidate  made money over the whole test, made money in at least two thirds of its periods (quarters for
-             coins, months for stocks), with enough trades, and (coins) a worst drop under 25%
+             coins and swings, months for day-trade stocks), with enough trades, and (coins and swings) a worst
+             drop under 25%
   watch      made money over the whole test, or made money in at least half its periods
   cut        lost money over the whole test and made money in fewer than half its periods
 Passing is necessary, not sufficient: a candidate still has to repeat it live, on paper, before anyone trusts it.
@@ -27,14 +30,29 @@ from statistics import mean
 from typing import Dict, List, Optional
 
 import paperbook as pb
+import weather
 
-MIN_TRADES = {"stocks": 100, "big coins": 10}
-MAX_DROP = 25.0                 # coins: a candidate's worst fall from a high, in % of its bank
-SCALE = {"stocks": 3.0, "big coins": 20.0}   # the % that colours a heatmap cell fully
+# Each rulebook is graded with the others of its group: a desk's market, and for stocks how long it holds.
+GROUPS = ("memecoins", "big coins", "swings", "stocks")
+TITLES = {"big coins": "Big coins, quarter by quarter",
+          "swings": "Stocks held for days or weeks, quarter by quarter",
+          "stocks": "Stocks bought and sold the same day, month by month"}
+MIN_TRADES = {"stocks": 100, "big coins": 10, "swings": 10}
+MAX_DROP = 25.0                 # coins and swings: a candidate's worst fall from a high, in % of its bank
+SCALE = {"stocks": 3.0, "big coins": 20.0, "swings": 10.0}   # the % that colours a heatmap cell fully
 RULE = ("A rulebook is a <b>candidate</b> when it made money over the whole history test, made money in at least "
-        "two thirds of its periods (quarters for big coins, months for stocks), had enough trades (100 for stocks, 10 "
-        f"for big coins), and, for big coins, never fell more than {MAX_DROP:g}% from a high. It's on <b>watch</b> when it "
-        "made money overall or in at least half its periods, and it's a <b>cut</b> when it did neither.")
+        "two thirds of its periods (quarters for big coins and stock swings, months for same-day stocks), had enough "
+        f"trades (100 for same-day stocks, 10 for the others), and, unless it's a same-day stock desk, never fell more "
+        f"than {MAX_DROP:g}% from a high. It's on <b>watch</b> when it made money overall or in at least half its "
+        "periods, and it's a <b>cut</b> when it did neither.")
+
+
+def group(book: pb.Book, d: str) -> str:
+    """memecoins, big coins, swings (stocks on the coin engine's daily bars) or stocks (the same-day scanner)."""
+    market = book.market(d)
+    if market == "stocks" and book.kind(d) == "coins":
+        return "swings"
+    return market
 
 
 def _read_csv(path: Path) -> List[dict]:
@@ -103,7 +121,8 @@ FLAT = 0.05                     # a period that moved less than this (in %) was 
 
 
 def grade(market: str, r: Optional[dict]) -> tuple:
-    """(status, why) by RULE. Periods spent flat in cash count as neither up nor down."""
+    """(status, why) by RULE, for a group (memecoins, big coins, swings, stocks). Periods spent flat in cash count
+    as neither up nor down."""
     if market == "memecoins":
         return "live only", "brand-new coins can't be replayed; judged on live paper results"
     if not r:
@@ -116,7 +135,7 @@ def grade(market: str, r: Optional[dict]) -> tuple:
     share = up / (up + down) if up + down else 0.0
     made = r["net_pct"] > 0
     enough = r["trades"] >= MIN_TRADES[market]
-    calm = market != "big coins" or (r["drop"] or 0) < MAX_DROP
+    calm = market == "stocks" or (r["drop"] or 0) < MAX_DROP
     unit = "months" if market == "stocks" else "quarters"
     what = "average a pick" if market == "stocks" else "over the test"
     why = f"{r['net_pct']:+g}% {what}, up in {up} and down in {down} of {len(ps)} {unit}"
@@ -132,22 +151,23 @@ def grade(market: str, r: Optional[dict]) -> tuple:
 def data(book: pb.Book) -> dict:
     out = []
     for d in book.desks:
-        market = book.market(d)
+        g = group(book, d)
         r = None
         base = book.results.get(d)
-        if base and market == "big coins":
+        if base and g in ("big coins", "swings"):
             folder = newest(base / "backtests", book.demo, "periods.json")
             r = coin_result(folder, book.banks[d]) if folder else None
-        elif base and market == "stocks":
+        elif base and g == "stocks":
             folder = newest(base / ("demo" if book.demo else "") / "backtests", False, "journal.csv")
             r = stock_result(folder) if folder else None
-        status, why = grade(market, r)
-        out.append({"key": d, "label": book.label(d), "market": market, "color": book.color(d), "status": status,
-                    "why": why, "result": r})
+        status, why = grade(g, r)
+        out.append({"key": d, "label": book.label(d), "market": book.market(d), "group": g, "color": book.color(d),
+                    "status": status, "why": why, "result": r})
     order = {"candidate": 0, "watch": 1, "cut": 2, "no trades": 3, "not tested": 4, "live only": 5}
-    out.sort(key=lambda x: (pb.MARKETS.index(x["market"]), order[x["status"]],
+    out.sort(key=lambda x: (GROUPS.index(x["group"]), order[x["status"]],
                             -(x["result"] or {}).get("net_pct", -1e9)))
-    return {"demo": book.demo, "updated": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M %Z"), "desks": out}
+    return {"demo": book.demo, "updated": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M %Z"), "desks": out,
+            "weather": book.weather}
 
 
 # -- the page ----------------------------------------------------------------------------------------------
@@ -179,7 +199,7 @@ def _cell(p: Optional[dict], market: str) -> str:
     v = p["value"]
     strength = min(1.0, abs(v) / SCALE[market])
     cls = "pos" if v > 0 else "neg" if v < 0 else ""
-    sub = (f'<small>held {p["hold"]:+.0f}%</small>' if market == "big coins" else f'<small>{p["n"]} picks</small>')
+    sub = (f'<small>{p["n"]} picks</small>' if market == "stocks" else f'<small>held {p["hold"]:+.0f}%</small>')
     return f'<td class="c {cls}" style="--v:{strength:.2f}">{v:+.1f}%{sub}</td>'
 
 
@@ -197,7 +217,8 @@ def _heatmap(rows: List[dict], market: str) -> str:
         body.append(f'<tr><td class="desk"><i style="--c:{x["color"]}"></i>{e(x["label"])}</td>'
                     + "".join(_cell(cells.get(p), market) for p in periods) + "</tr>")
     unit = "average result a pick, after costs" if market == "stocks" else "the desk's change in each quarter"
-    return (f'<p class="key">Each cell: {unit}{"; below it, the same coins held" if market == "big coins" else ""}.</p>'
+    held = {"big coins": "; below it, the same coins held", "swings": "; below it, the same stocks held"}.get(market, "")
+    return (f'<p class="key">Each cell: {unit}{held}.</p>'
             f'<div class="scroll"><table class="heat"><thead><tr><th class="desk">Rulebook</th>{head}</tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div>')
 
@@ -229,7 +250,7 @@ def render_html(payload: dict) -> str:
     e = html.escape
     by = defaultdict(list)
     for x in payload["desks"]:
-        by[x["market"]].append(x)
+        by[x.get("group", x["market"])].append(x)
     counts = defaultdict(int)
     for x in payload["desks"]:
         counts[x["status"]] += 1
@@ -237,7 +258,7 @@ def render_html(payload: dict) -> str:
                     for s in ("candidate", "watch", "cut", "no trades", "not tested", "live only") if counts[s] or s != "no trades")
     demo = '<b>DEMO MARKETS · invented prices</b> · ' if payload["demo"] else ""
     sections = []
-    for market, title in (("big coins", "Big coins, quarter by quarter"), ("stocks", "Stocks, month by month")):
+    for market, title in TITLES.items():
         if by[market]:
             sections.append(f'<section><h2>{title}</h2>{_table(by[market], market)}'
                             f'<div style="height:14px"></div>{_heatmap(by[market], market)}</section>')
@@ -246,9 +267,13 @@ def render_html(payload: dict) -> str:
         sections.append(f'<section><h2>Memecoins</h2><p class="notes">{names}: brand-new coins can\'t be replayed, '
                         'because nobody keeps their history, so these are judged on their live paper results only. '
                         'See the deck\'s standings.</p></section>')
+    w = payload.get("weather")
+    weather_html = (f'<section><h2>Market weather now</h2>{weather.render_html(w)}<p class="notes">History tests say how a '
+                    'rulebook did in each kind of market; the weather says which kind of market it is in today.</p>'
+                    '</section>' if w else "")
     return f"""<title>Proving Ground</title>
 {pb.FONTS}
-<style>{pb.CSS}{CSS}</style>
+<style>{pb.CSS}{CSS}{weather.CSS}</style>
 <main class="sheet">
   <header class="top">
     <h1>Proving Ground</h1>
@@ -257,6 +282,7 @@ def render_html(payload: dict) -> str:
   <p class="rule">{RULE} Passing is necessary, not sufficient: a candidate still has to repeat it live, on paper,
   before anyone trusts it.</p>
   <div class="tiles{' even' if tiles.count('class="tile"') % 2 == 0 else ''}" style="--cols:{tiles.count('class="tile"')}">{tiles}</div>
+  {weather_html}
   {"".join(sections)}
   <section class="notes">
     <h2>Read this before trusting any of it</h2>
@@ -275,7 +301,9 @@ def render_text(payload: dict) -> str:
         if x["market"] == "memecoins":
             continue
         lines.append(f"  {x['status']:<10} {x['label'].lower():<26} {x['why']}")
-    lines.append("  rule: made money overall, in 2/3 of its periods, with enough trades (and coins: never fell 25%)")
+    if weather.line(payload.get("weather")):
+        lines.append("  " + weather.line(payload["weather"]))
+    lines.append("  rule: made money overall, in 2/3 of its periods, with enough trades (and unless same-day: never fell 25%)")
     return "\n".join(lines)
 
 

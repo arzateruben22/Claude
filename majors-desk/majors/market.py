@@ -11,6 +11,7 @@ import gzip
 import json
 import math
 import random
+import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -21,6 +22,10 @@ HOUR = timedelta(hours=1)
 
 class MarketError(RuntimeError):
     pass
+
+
+class KeysRefused(MarketError):
+    """The data service turned the keys down: worth saying loudly, never papered over with old prices."""
 
 
 @dataclass(frozen=True)
@@ -90,6 +95,7 @@ class Coinbase:
     name = "coinbase"
     BASE = "https://api.exchange.coinbase.com"
     PER_CALL = 300
+    BACKOFF = (1, 3, 10, None)
 
     def __init__(self, http=None, cache_dir: Optional[Path] = None):
         if http is None:
@@ -100,12 +106,17 @@ class Coinbase:
 
     def _get(self, coin: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
         url = f"{self.BASE}/products/{coin}-{quote}/candles"
-        try:
-            resp = self.http.request("GET", url, params={"granularity": 3600, "start": _iso(start), "end": _iso(end)},
-                                     headers={"User-Agent": "majors-desk/1.0", "Accept": "application/json"},
-                                     timeout=20)
-        except OSError as exc:
-            raise MarketError(f"can't reach Coinbase ({type(exc).__name__})") from exc
+        for wait in self.BACKOFF:                      # a long history test asks a lot: slow down when told to
+            try:
+                resp = self.http.request("GET", url, params={"granularity": 3600, "start": _iso(start),
+                                                             "end": _iso(end)},
+                                         headers={"User-Agent": "majors-desk/1.0", "Accept": "application/json"},
+                                         timeout=20)
+            except OSError as exc:
+                raise MarketError(f"can't reach Coinbase ({type(exc).__name__})") from exc
+            if resp.status_code != 429 or wait is None:
+                break
+            time.sleep(wait)
         if resp.status_code == 404:
             raise MarketError(f"Coinbase doesn't list {coin}-{quote}")
         if resp.status_code != 200:
@@ -127,31 +138,37 @@ class Coinbase:
     def history(self, coin: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
         """Every finished hour from start to end, fetched 300 at a time (and kept on disk for next time)."""
         start, end = floor_hour(start), floor_hour(end)
-        cached = self._load_cache(coin, quote)
-        have = {c.t for c in cached}
+        cached = {c.t: c for c in self._load_cache(coin, quote)}
+        finished = datetime.now(timezone.utc)
         t = start
         while t < end:
             chunk_end = min(end, t + self.PER_CALL * HOUR)
             want = {t + i * HOUR for i in range(int((chunk_end - t) / HOUR))}
-            if not want <= have:
+            if not want <= cached.keys():
                 for c in self._get(coin, quote, t, chunk_end):
-                    if c.t not in have:
-                        cached.append(c)
-                        have.add(c.t)
+                    if c.closed_at <= finished:          # never keep the hour that's still trading: it would stick
+                        cached[c.t] = c
             t = chunk_end
-        cached.sort(key=lambda c: c.t)
+        cached = sorted(cached.values(), key=lambda c: c.t)
         self._save_cache(coin, quote, cached)
         return [c for c in cached if start <= c.t and c.closed_at <= end]
 
     def _cache_path(self, coin: str, quote: str) -> Optional[Path]:
         return self.cache_dir / f"{coin}-{quote}.json.gz" if self.cache_dir else None
 
+    HEAL_DAYS = 40
+
     def _load_cache(self, coin: str, quote: str) -> List[Candle]:
         p = self._cache_path(coin, quote)
         if not p or not p.exists():
             return []
-        rows = json.loads(gzip.decompress(p.read_bytes()))
-        return [Candle(datetime.fromtimestamp(r[0], timezone.utc), *r[1:]) for r in rows]
+        raw = json.loads(gzip.decompress(p.read_bytes()))
+        rows = raw["rows"] if isinstance(raw, dict) else raw
+        out = [Candle(datetime.fromtimestamp(r[0], timezone.utc), *r[1:]) for r in rows]
+        if not isinstance(raw, dict):    # saved before 22 Oct 2026, when a half-made hour could stick: get the
+            cut = datetime.now(timezone.utc) - timedelta(days=self.HEAL_DAYS)   # weeks the desks ran again
+            out = [c for c in out if c.t < cut]
+        return out
 
     def _save_cache(self, coin: str, quote: str, candles: List[Candle]) -> None:
         p = self._cache_path(coin, quote)
@@ -160,7 +177,7 @@ class Coinbase:
         p.parent.mkdir(parents=True, exist_ok=True)
         rows = [[int(c.t.timestamp()), c.o, c.h, c.l, c.c, c.v] for c in candles]
         tmp = p.with_suffix(p.suffix + ".tmp")          # two desks may share this cache: never leave it half-written
-        tmp.write_bytes(gzip.compress(json.dumps(rows).encode()))
+        tmp.write_bytes(gzip.compress(json.dumps({"v": 2, "rows": rows}).encode()))
         tmp.replace(p)
 
 
@@ -213,3 +230,137 @@ class DemoMarket:
 
     def history(self, coin: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
         return [c for c in self._extend(coin, end) if start <= c.t and c.closed_at <= end]
+
+
+DAY = timedelta(days=1)
+
+
+def alpaca_keys(env_file: Optional[Path] = None) -> tuple:
+    """(key id, secret) from the environment, else from the stock scanner's .env, where server/keys.sh puts them."""
+    import os
+
+    key, secret = os.getenv("ALPACA_API_KEY", ""), os.getenv("ALPACA_SECRET_KEY", "")
+    env_file = env_file or Path(__file__).resolve().parent.parent.parent / "premarket-scanner" / ".env"
+    if not (key and secret) and env_file.exists():
+        vals = {}
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            k, sep, v = line.strip().partition("=")
+            if sep and not k.startswith("#"):
+                vals[k.strip()] = v.strip().strip('"').strip("'")
+        key, secret = key or vals.get("ALPACA_API_KEY", ""), secret or vals.get("ALPACA_SECRET_KEY", "")
+    return key, secret
+
+
+class AlpacaDaily:
+    """Daily stock and fund bars from Alpaca's market data (the free paper account's keys are enough).
+
+    One candle per trading day, split- and dividend-adjusted, dated midnight UTC of its New York date, so it
+    counts as finished at the following midnight UTC: hours after the 4pm close, never while it's trading.
+    Weekends and holidays simply have no candle, so a 150-candle average is 150 trading days. The free plan
+    may read the consolidated (SIP) feed up to 15 minutes ago, which is all a daily decision needs.
+    """
+
+    name = "alpaca"
+    BASE = "https://data.alpaca.markets"
+    hours = 24
+    warmup = 1.5                 # calendar days per trading day, with room for holidays
+
+    def __init__(self, key: str = "", secret: str = "", http=None, cache_dir: Optional[Path] = None):
+        if not key or not secret:
+            key, secret = alpaca_keys()
+        if not key or not secret:
+            raise MarketError("no Alpaca keys: run bash server/keys.sh (the free paper account's keys)")
+        if http is None:
+            import requests
+
+            http = requests.Session()
+        self.http, self.cache_dir = http, cache_dir
+        self.headers = {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret, "Accept": "application/json",
+                        "User-Agent": "majors-desk/1.0"}
+
+    def _get(self, symbol: str, start: datetime, end: datetime) -> List[Candle]:
+        end = min(end, datetime.now(timezone.utc) - timedelta(minutes=16))
+        out, token = [], None
+        while True:
+            params = {"symbols": symbol, "timeframe": "1Day", "start": _iso(start), "end": _iso(end),
+                      "feed": "sip", "adjustment": "all", "limit": 10000}
+            if token:
+                params["page_token"] = token
+            try:
+                resp = self.http.request("GET", f"{self.BASE}/v2/stocks/bars", params=params, headers=self.headers,
+                                         timeout=20)
+            except OSError as exc:
+                raise MarketError(f"can't reach Alpaca ({type(exc).__name__})") from exc
+            if resp.status_code in (401, 403):
+                raise KeysRefused(f"Alpaca refused the keys ({resp.status_code}): run bash server/keys.sh again")
+            if resp.status_code != 200:
+                raise MarketError(f"Alpaca answered {resp.status_code} for {symbol}")
+            data = resp.json()
+            for r in (data.get("bars") or {}).get(symbol, []):
+                day = datetime.fromisoformat(r["t"].replace("Z", "+00:00")).astimezone(_NEW_YORK).date()
+                out.append(Candle(datetime(day.year, day.month, day.day, tzinfo=timezone.utc), float(r["o"]),
+                                  float(r["h"]), float(r["l"]), float(r["c"]), float(r.get("v", 0)), 24))
+            token = data.get("next_page_token")
+            if not token:
+                return sorted(out, key=lambda c: c.t)
+
+    def recent(self, symbol: str, quote: str, now: datetime, n: int) -> List[Candle]:
+        """The last n finished trading days before `now`."""
+        got = self.history(symbol, quote, now - timedelta(days=int(n * self.warmup) + 10), now)
+        return got[-n:]
+
+    def history(self, symbol: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
+        """Every finished trading day from start to end (kept on disk; only the newest days are fetched again)."""
+        start = start.astimezone(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        cached, since = self._load_cache(symbol)
+        if not cached or start < cached[0].t - 4 * DAY:
+            fetch_from = start                                  # nothing usable on disk: the whole stretch
+        else:
+            fetch_from = max(cached[0].t, (since or cached[-1].t) - 4 * DAY)   # a few days back, for late fixes
+        now = datetime.now(timezone.utc)
+        if fetch_from < min(end, now) - timedelta(hours=1):
+            try:
+                fresh = {c.t: c for c in self._get(symbol, fetch_from, end)}
+            except KeysRefused:
+                raise
+            except MarketError:
+                if not cached or fetch_from == start:
+                    raise
+                fresh = {}                                      # a hiccup: decide on what's on disk, ask again tomorrow
+            if not fresh and not cached:
+                raise MarketError(f"Alpaca has no daily bars for {symbol}")
+            merged = {c.t: c for c in cached}
+            merged.update(fresh)
+            cached = sorted(merged.values(), key=lambda c: c.t)
+            if fresh:
+                self._save_cache(symbol, cached, min(end, now))
+        return [c for c in cached if start <= c.t and c.closed_at <= end]
+
+    def _cache_path(self, symbol: str) -> Optional[Path]:
+        return self.cache_dir / f"stock-{symbol}-1d.json.gz" if self.cache_dir else None
+
+    def _load_cache(self, symbol: str) -> tuple:
+        p = self._cache_path(symbol)
+        if not p or not p.exists():
+            return [], None
+        raw = json.loads(gzip.decompress(p.read_bytes()))
+        since = datetime.fromtimestamp(raw["through"], timezone.utc) if raw.get("through") else None
+        return [Candle(datetime.fromtimestamp(r[0], timezone.utc), *r[1:], 24) for r in raw["bars"]], since
+
+    def _save_cache(self, symbol: str, candles: List[Candle], through: datetime) -> None:
+        p = self._cache_path(symbol)
+        if not p:
+            return
+        p.parent.mkdir(parents=True, exist_ok=True)
+        rows = [[int(c.t.timestamp()), c.o, c.h, c.l, c.c, c.v] for c in candles]
+        tmp = p.with_suffix(p.suffix + ".tmp")
+        tmp.write_bytes(gzip.compress(json.dumps({"through": int(through.timestamp()), "bars": rows}).encode()))
+        tmp.replace(p)
+
+
+try:
+    from zoneinfo import ZoneInfo
+
+    _NEW_YORK = ZoneInfo("America/New_York")
+except Exception:  # noqa: BLE001 - no time zone database: New York is UTC-4 or -5, and -4 never moves a bar's date
+    _NEW_YORK = timezone(timedelta(hours=-4))

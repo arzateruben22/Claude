@@ -7,16 +7,16 @@ Everything on one small Linux machine that never sleeps:
 | Service | What it does | Starts |
 |---|---|---|
 | `postdesk` | your X account: drafts, your approvals, scheduled posts | once you've connected X (step 5) |
-| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: the eight memecoin rulebooks still running, in one process on one price feed, each on its own $100 (dashboards at `/`, `/sniper/`, `/momentum/`...) | right away |
-| `majors` | big coins on Coinbase prices, paper money: the daily, slow, loose and trend rulebooks in one process, each deciding at its own candle close, each on its own $100 | right away |
-| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for every `criteria*.toml` left in the scanner's folder (`--books all`: one market read, one journal and one $100 bank each) | once your Alpaca paper keys are in (step 6) |
+| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: the eight memecoin rulebooks still running, in one process on one price feed, each on its own $1,000 (dashboards at `/`, `/sniper/`, `/momentum/`...) | right away |
+| `majors` | big coins on Coinbase prices and stocks held for days on Alpaca's daily bars, paper money: the daily, slow, loose, trend and rush coin rulebooks plus the index, sectors and leaders stock rulebooks, in one process, each deciding at its own candle close, each on its own $1,000 | coins right away; the stock ones once the Alpaca keys are in (then `sudo systemctl restart majors`) |
+| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for every `criteria*.toml` left in the scanner's folder (`--books all`: one market read, one journal and one $1,000 bank each) | once your Alpaca paper keys are in (step 6) |
 | `paperbook` | one ledger of every paper trade from every running desk, refreshed every 15 minutes, plus the Trading Deck (the home page), the Proving Ground (`/proving`), Trade Crawler and Paper Galaxy on port 8790 | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for every memecoin rulebook still running | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
 
-`bash server/prove.sh` replays every running rulebook against history (big coins over four years, stocks since
-2 January), one at a time, at low priority, in the background. The Proving Ground page grades the results. The
+`bash server/prove.sh` replays every running rulebook against history (big coins and stocks held for days over four
+years, same-day stocks since 2 January), one at a time, at low priority, in the background. The Proving Ground page grades the results. The
 rulebooks retired on 22 October 2026 are kept in each market's `retired/` folder; the services never run them.
 
 ## 1. Get a machine
@@ -133,9 +133,14 @@ Both settings live in `[alerts]` in `paper-book/book.toml`. `python watchdog.py 
 `/var/backups/desks`, newest 30 kept. The restore steps are at the top of the script. They live on the
 same machine, so also turn on your provider's backups (DigitalOcean: the Droplet's **Backups** tab).
 
-Each desk starts with $100 of paper money (`start_bank` in `night-desk/desk.toml`,
-`majors-desk/majors.toml` and `paper-book/book.toml`). After changing it, run `fresh-start.sh` so the
-desks don't carry on from their old bank.
+Each desk starts with $1,000 of paper money (`start_bank` in each `night-desk/desk-<name>.toml`,
+`majors-desk/majors-<name>.toml` and in `paper-book/book.toml`; the book and the rulebook must agree). After
+changing it, run `fresh-start.sh` so the desks don't carry on from their old bank.
+
+**Market weather** (`paper-book/weather.py`, on every page refresh): Bitcoin, SPY and QQQ against their 150-day
+averages and how many of the rush coins, leaders and sector funds are trending up, all from the price files the
+desks already keep in `majors-desk/output/cache`; plus the crypto Fear & Greed index from `api.alternative.me`,
+fetched at most every six hours (only the number is kept). Served as `/weather.json` next to the deck.
 
 ## What it costs per month (roughly)
 

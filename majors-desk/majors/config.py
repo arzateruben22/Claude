@@ -21,6 +21,10 @@ class DeskCfg:
     coins: List[str] = field(default_factory=lambda: ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"])
     quote: str = "USD"
     candle_hours: int = 1        # decide on 1-hour candles, or on 4-hour (6, 12, 24...) candles built from them
+    source: str = "coinbase"     # coinbase (coins, no key) or alpaca (US stocks and funds, daily, the free paper keys)
+
+    def asset_word(self) -> str:
+        return "stocks" if self.source == "alpaca" else "coins"
 
 
 @dataclass
@@ -57,6 +61,10 @@ class RulesCfg:
     def candles_needed(self) -> int:
         """History each decision looks at: twice the trend average (so it has settled), or a full breakout window."""
         return max(2 * self.trend, self.breakout + 1, self.exit + 1, self.atr + 1)
+
+    def span(self, hours: int) -> str:
+        """A window in words: '150-day' on daily candles (trading days, for stocks), '48h' otherwise."""
+        return f"{hours // 24}-day" if self.candle_hours == 24 else f"{hours}h"
 
     def candle_word(self) -> str:
         return "hour" if self.candle_hours == 1 else f"{self.candle_hours}-hour candle"
@@ -122,6 +130,10 @@ def validate(cfg: Config) -> None:
     h = cfg.desk.candle_hours
     if not isinstance(h, int) or h < 1 or 24 % h:
         raise ValueError("[desk] candle_hours must be 1, 2, 3, 4, 6, 8, 12 or 24")
+    if cfg.desk.source not in ("coinbase", "alpaca"):
+        raise ValueError("[desk] source must be coinbase or alpaca")
+    if cfg.desk.source == "alpaca" and h != 24:
+        raise ValueError("[desk] source = alpaca trades on daily bars: set candle_hours = 24")
     r.candle_hours = h
     for name in ("trend_hours", "breakout_hours", "exit_hours", "atr_hours"):
         if getattr(r, name) % h:

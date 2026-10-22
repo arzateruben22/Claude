@@ -26,7 +26,7 @@ from . import config
 from .config import OUTPUT, book_paths
 from . import rules
 from .desk import Desk, replay, summary
-from .market import HOUR, Bucketed, Coinbase, DemoMarket, MarketError, floor_hour, floor_to
+from .market import HOUR, AlpacaDaily, Bucketed, Coinbase, DemoMarket, MarketError, floor_hour, floor_to
 
 
 def _now() -> datetime:
@@ -39,11 +39,17 @@ def _book(args):
     return config.load(path), base
 
 
-def _market(cfg, demo: bool = False, seed: int = 7):
+def _market(cfg, demo: bool = False, seed: int = 7, coinbase=None):
     """Hourly candles from Coinbase (cached on disk, shared by every rulebook) or the demo, bucketed if the
-    rulebook decides on longer candles."""
-    m = DemoMarket(seed) if demo else Coinbase(cache_dir=OUTPUT / "cache")
+    rulebook decides on longer candles; or Alpaca's daily stock bars (raises MarketError without the keys)."""
+    if cfg.desk.source == "alpaca" and not demo:
+        return AlpacaDaily(cache_dir=OUTPUT / "cache")
+    m = DemoMarket(seed) if demo else (coinbase or Coinbase(cache_dir=OUTPUT / "cache"))
     return Bucketed(m, cfg.desk.candle_hours) if cfg.desk.candle_hours > 1 else m
+
+
+def _source(cfg) -> str:
+    return "Alpaca's daily stock bars" if cfg.desk.source == "alpaca" else "Coinbase prices"
 
 
 RETRY = timedelta(minutes=5)
@@ -80,16 +86,23 @@ def cmd_run(args) -> int:
     for book in books:
         path, base = book_paths(book, OUTPUT)
         cfg = config.load(path)
-        market = Bucketed(coinbase, cfg.desk.candle_hours) if cfg.desk.candle_hours > 1 else coinbase
-        desk = Desk(cfg, market, base / "live")
         tag = "" if book == "main" else f" [{book}]"
+        try:
+            market = _market(cfg, coinbase=coinbase)
+        except MarketError as exc:                            # a stock book without keys waits; the coins carry on
+            print(f"Not starting{tag}: {exc}")
+            continue
+        desk = Desk(cfg, market, base / "live")
         if desk.resume():
             print(f"Resumed the paper bank{tag}: ${desk.value():,.2f}, {len(desk.positions)} open.")
         else:
             print(f"New paper bank{tag}: ${cfg.desk.start_bank:,.2f}.")
-        print(f"  watching {', '.join(cfg.desk.coins)} on Coinbase prices, one decision per coin per finished "
-              f"{cfg.rules.candle_word()}")
+        print(f"  watching {', '.join(cfg.desk.coins)} on {_source(cfg)}, one decision per "
+              f"{cfg.desk.asset_word()[:-1]} per finished {cfg.rules.candle_word()}")
         desks.append([book, cfg, desk, _now()])
+    if not desks:
+        print("No rulebook could start.")
+        return 1
     print("Ctrl+C to stop.")
 
     def stop(*_):
@@ -149,25 +162,27 @@ def cmd_backtest(args) -> int:
         cfg.desk.coins = [c.strip().upper() for c in args.coins.split(",")]
     end = floor_to(_now(), cfg.desk.candle_hours)
     start = end - timedelta(days=args.days)
-    market = _market(cfg, args.demo, args.seed)
     label = f"{'demo-' if args.demo else ''}{start:%Y-%m-%d}_{end:%Y-%m-%d}"
     folder = base / "backtests" / label
     (folder / "trades.csv").unlink(missing_ok=True)
     if not args.demo:
-        print(f"Fetching {args.days:g} days of hourly prices from Coinbase (kept in {OUTPUT / 'cache'} for next time)...")
+        kind = "daily stock bars from Alpaca" if cfg.desk.source == "alpaca" else "hourly prices from Coinbase"
+        print(f"Fetching {args.days:g} days of {kind} (kept in {OUTPUT / 'cache'} for next time)...")
     try:
-        result = replay(cfg, market, start, end, folder)
+        result = replay(cfg, _market(cfg, args.demo, args.seed), start, end, folder)
     except MarketError as exc:
         print(f"Couldn't get prices: {exc}")
         return 1
     text = summary(result["desk"], result["hold"], args.days, "Backtest (INVENTED demo prices)" if args.demo else "Backtest",
-                   result["periods"])
+                   result["periods"], result["skipped"])
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "summary.md").write_text(text + "\n")
     (folder / "periods.json").write_text(json.dumps({"book": args.book, "days": args.days, "demo": bool(args.demo),
                                                      "hold_pct": result["hold"]["return_pct"],
                                                      "first": start.isoformat(), "last": end.isoformat(),
-                                                     "coins": cfg.desk.coins, "periods": result["periods"],
+                                                     "coins": [c for c in cfg.desk.coins if c not in result["skipped"]],
+                                                     "source": cfg.desk.source, "skipped": result["skipped"],
+                                                     "periods": result["periods"],
                                                      "quarters": result["quarters"], "years": result["years"]},
                                                     indent=1))
     print(text)
@@ -194,7 +209,11 @@ def cmd_sim(args) -> int:
 
 def cmd_doctor(args) -> int:
     cfg = _book(args)[0]
-    cb = Coinbase()
+    try:
+        cb = AlpacaDaily() if cfg.desk.source == "alpaca" else Coinbase()
+    except MarketError as exc:
+        print(f"  FIX  {exc}")
+        return 1
     bad = 0
     for coin in cfg.desk.coins:
         try:
@@ -203,7 +222,8 @@ def cmd_doctor(args) -> int:
         except (MarketError, IndexError) as exc:
             bad += 1
             print(f"  FIX  {coin}-{cfg.desk.quote}: {exc or 'no candles'}")
-    print("All good." if not bad else "Some coins have no prices: check the names in majors.toml and the internet.")
+    print("All good." if not bad else f"Some {cfg.desk.asset_word()} have no prices: check the names in the rulebook "
+          "and the internet.")
     return 1 if bad else 0
 
 
@@ -211,7 +231,11 @@ def cmd_why(args) -> int:
     """Each coin against the buy rule, in plain words: how far it is from a buy, and whether it's held."""
     cfg, base = _book(args)
     r = cfg.rules
-    market = _market(cfg, args.demo, args.seed)
+    try:
+        market = _market(cfg, args.demo, args.seed)
+    except MarketError as exc:
+        print(f"Can't get prices: {exc}")
+        return 1
     now = _now()
     held = set()
     state = base / ("demo" if args.demo else "live") / "state.json"
@@ -219,8 +243,10 @@ def cmd_why(args) -> int:
         import json
 
         held = {p["symbol"] for p in json.loads(state.read_text()).get("positions", [])}
-    print(f"A buy needs the last {r.candle_word()} to close above its {r.trend_hours}h average (an uptrend) AND "
-          f"above the highest price of the {r.breakout_hours} hours before it (a breakout).")
+    rule = (f"above the highest price of the {r.span(r.breakout_hours)} window before it (a breakout)"
+            if r.breakout else "nothing more: a plain trend filter")
+    print(f"A buy needs the last {r.candle_word()} to close above its {r.span(r.trend_hours)} average (an uptrend) "
+          f"AND {rule}.")
     for coin in cfg.desk.coins:
         try:
             cs = market.recent(coin, cfg.desk.quote, now, r.candles_needed() + 2)
@@ -236,11 +262,14 @@ def cmd_why(args) -> int:
             continue
         last = cs[-1].c
         trend = rules.ema([c.c for c in cs], r.trend)
-        high = max(c.h for c in cs[-1 - r.breakout:-1])
-        trend_txt = f"{'above' if last > trend else 'below'} its {r.trend_hours}h average ({(last / trend - 1) * 100:+.1f}%)"
-        need = (f"{(high / last - 1) * 100:+.1f}% short of its {r.breakout_hours}h high (${high:,.6g})" if last <= high
-                else f"broke above its {r.breakout_hours}h high (${high:,.6g})")
-        print(f"  {coin:<5} ${last:,.6g} · {trend_txt} · {need}"
+        trend_txt = (f"{'above' if last > trend else 'below'} its {r.span(r.trend_hours)} average "
+                     f"({(last / trend - 1) * 100:+.1f}%)")
+        need = ""
+        if r.breakout:
+            high = max(c.h for c in cs[-1 - r.breakout:-1])
+            need = (f" · {(high / last - 1) * 100:+.1f}% short of its {r.span(r.breakout_hours)} high (${high:,.6g})"
+                    if last <= high else f" · broke above its {r.span(r.breakout_hours)} high (${high:,.6g})")
+        print(f"  {coin:<5} ${last:,.6g} · {trend_txt}{need}"
               + (" · BUY SIGNAL (taken on the desk's next check)" if ok else ""))
     return 0
 

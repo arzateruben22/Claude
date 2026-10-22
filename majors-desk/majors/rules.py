@@ -30,13 +30,13 @@ def entry(cs: List[Candle], r: RulesCfg) -> Tuple[bool, str]:
     last = cs[-1]
     trend = ema([c.c for c in cs], r.trend)
     if last.c <= trend:
-        return False, f"below its {r.trend_hours}h average"
+        return False, f"below its {r.span(r.trend_hours)} average"
     if not r.breakout:
-        return True, f"closed above its {r.trend_hours}h average"
+        return True, f"closed above its {r.span(r.trend_hours)} average"
     high = max(c.h for c in cs[-1 - r.breakout:-1])
     if last.c <= high:
-        return False, f"no breakout above the {r.breakout_hours}h high"
-    return True, f"broke out above the {r.breakout_hours}h high (${high:,.4g}) in an uptrend"
+        return False, f"no breakout above the {r.span(r.breakout_hours)} high"
+    return True, f"broke out above the {r.span(r.breakout_hours)} high (${high:,.4g}) in an uptrend"
 
 
 def exit_reason(cs: List[Candle], peak_close: float, r: RulesCfg) -> Optional[str]:
@@ -49,7 +49,7 @@ def exit_reason(cs: List[Candle], peak_close: float, r: RulesCfg) -> Optional[st
     if r.exit:
         low = min(c.l for c in cs[-1 - r.exit:-1])
         if last.c < low:
-            return f"trend over ({r.exit_hours}h low)"
+            return f"trend over ({r.span(r.exit_hours)} low)"
     if r.exit_below_trend and last.c < ema([c.c for c in cs], r.trend):
-        return f"trend over (below its {r.trend_hours}h average)"
+        return f"trend over (below its {r.span(r.trend_hours)} average)"
     return None
