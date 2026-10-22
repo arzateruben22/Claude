@@ -205,7 +205,7 @@ if (eyeA > 0.15) {
 // stubble and beard shadow
 float stub = 0.0;
 #ifdef SKIN_FACE
-{
+if (beard * uBeard > 0.001) {   // (women and the skin outside the beard's mask skip the cell search)
   vec2 sc = cells(hp * 2.2);
   float dots = smoothstep(0.32, 0.1, sc.x);
   stub = beard * uBeard * (0.45 + 0.55 * dots * mid);
@@ -216,8 +216,8 @@ float stub = 0.0;
   c = mix(c, mix(c * 0.62, uBeardCol * 0.6, mix(0.55, 0.9, fullB)), clamp(amt, 0.0, 1.0));
 }
 #endif
-// scalp under the hair: the hair's colour, with strands
-{
+// scalp under the hair: the hair's colour, with strands (the edge noise lifts scE by 0.25 at most: no scalp, no work)
+if (scalp > 0.05) {
   float strand = 0.65 + 0.35 * vnoise(hp * vec3(1.6, 0.25, 1.6));
   // a broken, soft hairline: noise along the edge, fine hairs thinning out onto the skin
   float scE = scalp + 0.32 * (vnoise(hp * vec3(0.9, 0.35, 0.9)) - 0.5) + 0.18 * (vnoise(hp * vec3(3.0, 0.6, 3.0)) - 0.5);
@@ -225,8 +225,10 @@ float stub = 0.0;
 }
 // freckles; age spots (a few flat brown marks 2-3 mm across on lighter skin)
 #ifdef SKIN_FACE
-{
+if (uFreckles * fz > 0.002) {
   vec2 fr = cells(hp * 0.55); c *= 1.0 - uFreckles * fz * 0.28 * smoothstep(0.24, 0.08, fr.x) * step(0.55, hh13(floor(hp * 0.55) + 2.0));
+}
+if (uAge > 0.02 && mid3 > 0.001) {
   vec2 sp = cells(hp * 0.11 + 4.0);
   float spot = uAge * (1.0 - uDark * 0.7) * smoothstep(0.34, 0.16, sp.x) * step(0.87, hh13(floor(hp * 0.11 + 4.0) + 9.0)) * mid3;
   c = mix(c, c * vec3(0.84, 0.74, 0.66), spot * 0.6);
@@ -284,25 +286,36 @@ float fold = 0.0, foldC = 0.0, bag = 0.0, trough = 0.0, bulge = 0.0, apple = 0.0
 // break into segments of varying depth with fainter lines between, and on the forehead arch up with the brows. The
 // crow's feet fan out and back from the outer corner of each eye. All deeper and darker with age; never on the lips
 // or the lids. The phase runs on the body's y on every mesh so the neck's rings meet across the head/body seam.
-float cy = hp.y, crow = 0.0;
-#ifdef SKIN_FACE
-{
-  float hx = hl.x / 0.045;
-  cy += 3.5 * hx * hx * smoothstep(-0.12, -0.02, hl.y);   // mm: the forehead's lines are higher in the middle than at the temples
+// All of it scales with age (the crow's feet also with a squint) and with mid, so the noise runs only where it can show:
+// a young face at rest skips it all (a uniform branch), and the furrows and the fan only inside their own masks.
+float crease = 0.0;
+if (mid > 0.001 && (uAge > 0.02 || sqS > 0.01)) {
+  float crow = 0.0, lines = 0.0;
+  #ifdef SKIN_FACE
   vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135, hl.y + 0.001);   // from the outer canthus, outward
-  float cr = length(cq), ca = atan(cq.y, max(cq.x, 0.0005));
-  float fan = pow(0.5 + 0.5 * sin(ca * 11.0 + 1.5 * vnoise(hp * 0.09)), 3.0);
-  crow = fan * smoothstep(0.002, 0.005, cr) * smoothstep(0.017, 0.009, cr) * smoothstep(0.85, 0.45, abs(ca)) * step(0.0, cq.x)
-       * smoothstep(0.066, 0.058, abs(hl.x)) * smoothstep(-0.03, -0.01, hl.z) * (0.6 + 0.4 * vnoise(hp * 0.2));
+  float cr = length(cq);
+  if (cq.x > 0.0 && cr < 0.017) {
+    float ca = atan(cq.y, max(cq.x, 0.0005));
+    float fan = pow(0.5 + 0.5 * sin(ca * 11.0 + 1.5 * vnoise(hp * 0.09)), 3.0);
+    crow = fan * smoothstep(0.002, 0.005, cr) * smoothstep(0.017, 0.009, cr) * smoothstep(0.85, 0.45, abs(ca))
+         * smoothstep(0.066, 0.058, abs(hl.x)) * smoothstep(-0.03, -0.01, hl.z) * (0.6 + 0.4 * vnoise(hp * 0.2));
+  }
+  #endif
+  if (uAge > 0.02 && wrink > 0.001) {
+    float cy = hp.y;
+    #ifdef SKIN_FACE
+    float hx = hl.x / 0.045;
+    cy += 3.5 * hx * hx * smoothstep(-0.12, -0.02, hl.y);   // mm: the forehead's lines are higher in the middle than at the temples
+    #endif
+    float drift = cy * 0.8 + 2.5 * vnoise(hp * vec3(0.045, 0.03, 0.045) + 3.0);
+    float li = floor((drift - 1.5708) / 6.2832 + 0.5);    // which furrow: each gets its own gaps and depth
+    float seg = smoothstep(0.3, 0.58, vnoise(vec3(hp.x * 0.07, li * 1.7, hp.z * 0.07) + 2.0)) * (0.6 + 0.6 * vnoise(vec3(hp.x * 0.03, li * 2.3, hp.z * 0.03) + 5.0));
+    lines = pow(0.5 + 0.5 * sin(drift), 4.0) * seg
+          + 0.3 * pow(0.5 + 0.5 * sin(drift * 2.0 + 1.0), 4.0) * smoothstep(0.4, 0.62, vnoise(hp * vec3(0.12, 0.3, 0.12) + 7.0));
+  }
+  // (a squint deepens the crow's feet; a young face shows them only then, and fainter)
+  crease = (clamp(wrink * lines + crow, 0.0, 1.0) * uAge + crow * sqS * (0.4 * uAge + 0.5 * (1.0 - uAge))) * mid * (1.0 - lipM) * (1.0 - eyeA);
 }
-#endif
-float drift = cy * 0.8 + 2.5 * vnoise(hp * vec3(0.045, 0.03, 0.045) + 3.0);
-float li = floor((drift - 1.5708) / 6.2832 + 0.5);    // which furrow: each gets its own gaps and depth
-float seg = smoothstep(0.3, 0.58, vnoise(vec3(hp.x * 0.07, li * 1.7, hp.z * 0.07) + 2.0)) * (0.6 + 0.6 * vnoise(vec3(hp.x * 0.03, li * 2.3, hp.z * 0.03) + 5.0));
-float lines = pow(0.5 + 0.5 * sin(drift), 4.0) * seg
-            + 0.3 * pow(0.5 + 0.5 * sin(drift * 2.0 + 1.0), 4.0) * smoothstep(0.4, 0.62, vnoise(hp * vec3(0.12, 0.3, 0.12) + 7.0));
-// (a squint deepens the crow's feet; a young face shows them only then, and fainter)
-float crease = (clamp(wrink * lines + crow, 0.0, 1.0) * uAge + crow * sqS * (0.4 * uAge + 0.5 * (1.0 - uAge))) * mid * (1.0 - lipM) * (1.0 - eyeA);
 float crepe = 0.0;   // the fine polygonal network of older skin (cheeks, neck, the backs of the hands), 2 mm cells; skipped where it would not resolve
 if (uAge > 0.03 && mid3 > 0.001) {
   vec2 cp = cells(hp * 0.5 + 9.0);
@@ -329,7 +342,7 @@ H += 0.015 * (vnoise(hp * 2.7) - 0.5) * fine;
 H += 0.035 * (vnoise(hp * 1.5) - 0.5) * fine;   // gated fine: at 2 px/mm this was per-pixel speckle
 #endif
 // vertical lip lines
-H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0) * mid;
+if (lipM > 0.001) H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0) * mid;
 // age: the furrows, folds, troughs and bags, plus a finer creasing across the cheeks
 H -= 0.7 * crease + 0.65 * fold + 0.35 * trough - 0.55 * bag - 0.35 * bulge + 0.05 * crepe;
 H += stub * 0.03 * fine;
