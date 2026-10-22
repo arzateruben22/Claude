@@ -1017,6 +1017,31 @@ await group('launch', async (use) => {
     await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
     return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
   });
+  // Lifestyle (homes): bought with earned credits, adds garage slots, starts a drive at the nearest real exit, sells for 60 %
+  await check('Lifestyle: a home is bought with credits, adds a garage slot, sets the start to its exit, and sells back', async () => {
+    const before = await game(page, () => { const p = window.__game.profile.p; const keep = { credits: p.credits, homes: [...p.homes], home: p.home }; p.credits = 10000; p.homes = []; p.home = ''; return keep; });
+    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    const cards = await page.locator('.home-card').count();
+    const slots0 = await game(page, () => window.__game.profile.slots);
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Buy/ }).click();
+    const a = await game(page, () => { const g = window.__game; return { credits: g.profile.p.credits, homes: g.profile.p.homes, home: g.profile.p.home, slots: g.profile.slots }; });
+    const locked = await page.locator('.home-card', { hasText: 'Clifftop House' }).getByRole('button', { name: /^Buy/ }).isDisabled();
+    await page.screenshot({ path: path.join(OUT, 'launch-homes.png') });
+    expect(cards === 9, `${cards} homes listed`);
+    expect(a.credits === 2000 && a.homes.join() === 'orangewood' && a.home === 'orangewood', `after buying: ${JSON.stringify(a)}`);
+    expect(a.slots === slots0 + 1, `garage slots ${slots0} → ${a.slots}`);
+    expect(locked, 'the level-15 home can be bought at level 1');
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: 'Start here' }).click();
+    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    expect(/Orangewood Avenue/.test(pick), `the Start pick says "${pick}"`);
+    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Sell/ }).click();
+    const b = await game(page, () => { const p = window.__game.profile.p; return { credits: p.credits, homes: p.homes.length }; });
+    expect(b.credits === 2000 + 4800 && b.homes === 0, `after selling: ${JSON.stringify(b)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.credits = k.credits; p.homes = k.homes; p.home = k.home; g.profile.save(); }, before);
+    return `9 homes; bought Orangewood for 8,000 (slots ${slots0} → ${a.slots}); Start pick "${pick.slice(0, 60)}"; sold for 4,800`;
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);
@@ -1077,6 +1102,76 @@ await group('launch', async (use) => {
     // named for the game, OC Ultra (owner, 2026-10-16): oc-ultra-<mode>-<score>.png
     expect(/^oc-ultra-free-\d+\.png$/.test(dl.suggestedFilename()), `the card is called ${dl.suggestedFilename()}`);
     return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
+  });
+  // characters and story (the phone's Messages): a message with a job arrives, Set it up picks the mode, a run that
+  // meets it is paid and the results say so, and the thread's next message opens
+  await check("story: Mara's job is set up from the phone, a run meets it, it's paid and her next message opens", async () => {
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const keep = await game(page, () => { const p = window.__game.profile.p; const k = { story: JSON.parse(JSON.stringify(p.story)), credits: p.credits, xp: p.xp }; p.story = { done: [], read: [] }; return k; });
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    const badge = await page.locator('.ph-app', { hasText: 'Messages' }).locator('.ph-badge').innerText();
+    await page.getByRole('button', { name: /^Messages/ }).click();
+    await page.locator('.ph-row', { hasText: 'Mara Ortiz' }).click();
+    const job = await page.locator('.ph-job').first().innerText();
+    await page.screenshot({ path: path.join(OUT, 'launch-story-thread.png') });
+    expect(badge === '1', `the Messages badge reads ${badge}`);
+    expect(/Reach 120 mph/.test(job) && /600 credits/.test(job), `the job reads "${job.replace(/\s+/g, ' ')}"`);
+    await page.locator('.ph-job').first().getByRole('button', { name: 'Set it up' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const picked = await page.getByRole('radio', { name: /Free Drive/ }).getAttribute('aria-checked');
+    expect(picked === 'true', `Free Drive chosen: ${picked}`);
+    await drive(page, 'Free Drive');
+    const c0 = await game(page, () => window.__game.profile.p.credits);
+    await game(page, () => { const g = window.__game; g.fastForward(5, {}, 30); g.top = 60; g.endFreeDrive(); });
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const text = (await page.locator('.result').innerText()).replace(/\s+/g, ' ');
+    const after = await game(page, () => { const p = window.__game.profile.p; return { done: p.story.done, credits: p.credits }; });
+    await page.screenshot({ path: path.join(OUT, 'launch-story-done.png') });
+    expect(/Job done for Mara Ortiz/i.test(text), `the results say: ${text.slice(0, 200)}`);
+    expect(after.done.includes('mara-1') && after.credits - c0 >= 600, `done ${after.done}, credits +${Math.round(after.credits - c0)}`);
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    const next = await page.locator('.ph-app', { hasText: 'Messages' }).locator('.ph-badge').innerText().catch(() => '0');
+    expect(next === '1', `after the job, ${next} unread (Mara's next)`);
+    await page.locator('.ph-home').click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
+    return `badge 1; "${job.split('\n')[0]}"; Set it up chose Free Drive; paid +${Math.round(after.credits - c0)} credits (with the drive's own); next message unread`;
+  });
+  // activities (errands): a real exit within a time limit; taking its ramp delivers, running out of time calls it off
+  await check("errand: Sal's parcel sets up 57 North, the HUD shows the exit and clock, time-out calls it off, the exit ramp delivers it", async () => {
+    const keep = await game(page, () => { const p = window.__game.profile.p; const k = { story: JSON.parse(JSON.stringify(p.story)), credits: p.credits, xp: p.xp }; p.story = { done: ['sal-1'], read: [] }; p.xp = Math.max(p.xp, 400); return k; });
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    await page.getByRole('button', { name: /^Messages/ }).click();
+    await page.locator('.ph-row', { hasText: 'Sal Reyes' }).click();
+    const card = page.locator('.ph-job', { hasText: 'Imperial Highway' });
+    const job = (await card.innerText()).replace(/\s+/g, ' ');
+    await card.getByRole('button', { name: 'Set it up' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    expect(/Errand: the Imperial Highway exit off the CA-57 North, within 6:00/.test(job), `the job reads "${job}"`);
+    expect(/57/.test(pick) && /North/.test(pick), `the Start pick says "${pick}"`);
+    await drive(page, 'Free Drive');
+    await frames(page, 3);
+    const e = await game(page, () => { const g = window.__game, x = g.errand; return x && { text: x.sign.text.join(' / '), ahead: Math.round(x.sign.s - g.phys.s), t: x.t, road: g.path.label }; });
+    const hudNext = await page.locator('.hud-next').innerText();
+    await page.screenshot({ path: path.join(OUT, 'launch-errand-hud.png') });
+    expect(e && /Imperial Highway/.test(e.text) && e.ahead > 7000 && e.road === 'CA-57 North', `errand ${JSON.stringify(e)}`);
+    expect(/Errand: Imperial Highway exit/.test(hudNext), `the HUD's guidance reads "${hudNext}"`);
+    // time-out, on a copy of the live errand: ticking past its clock calls it off
+    const off = await game(page, () => { const g = window.__game, live = g.errand; g.errand = { ...live, t: 0.05 }; g.errandTick(0.1); const gone = g.errand === null; g.errand = live; return gone; });
+    expect(off, 'an errand past its clock is still live');
+    // delivered: onto the exit's own ramp
+    const c0 = await game(page, () => window.__game.profile.p.credits);
+    await game(page, () => { const g = window.__game, r = g.errand.sign.ramp; g.enterPath(r, 20, r.laneCenter(0)); g.fastForward(0.5, {}, 30); });
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const text = (await page.locator('.result').innerText()).replace(/\s+/g, ' ');
+    const after = await game(page, () => { const p = window.__game.profile.p; return { done: p.story.done, credits: p.credits, errand: window.__game.errand }; });
+    expect(/Delivered/i.test(text) && /Job done for Sal Reyes/i.test(text), `the results say: ${text.slice(0, 160)}`);
+    expect(after.done.includes('sal-e1') && after.credits - c0 >= 1400 && after.errand === null, `done ${after.done}, +${Math.round(after.credits - c0)}, errand ${JSON.stringify(after.errand)}`);
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
+    return `"${job}"; sign ${e.text} ${(e.ahead / 1609.344).toFixed(1)} mi ahead; HUD "${hudNext}"; time-out calls it off; the ramp delivered it, +${Math.round(after.credits - c0)} credits`;
   });
 });
 

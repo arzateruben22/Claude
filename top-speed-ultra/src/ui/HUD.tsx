@@ -109,7 +109,9 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       } else {
         put(k1.current, 'k1', 'Distance'); put(v1.current, 'v1', miles(h.distance));
         put(k2.current, 'k2', 'Top'); put(v2.current, 'v2', h.top + ' mph');
-        put(k3.current, 'k3', ''); put(v3.current, 'v3', '');
+        // a story errand (story.ts): its clock in the free slot
+        if (h.errand) { const t = Math.ceil(h.errand.left); put(k3.current, 'k3', 'Errand'); put(v3.current, 'v3', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`); }
+        else { put(k3.current, 'k3', ''); put(v3.current, 'v3', ''); }
       }
       if (big.current) big.current.classList.toggle('warn', h.mode === 'time' && h.timeLeft < 10);
       put(modeEl.current, 'modeLabel', MODE_LABEL[h.mode] ?? h.mode);
@@ -120,8 +122,11 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       // with a route the navigation card says what's next; the green prompt under the road chip stands in for it in a
       // race, where the race box has the top left
       const navOn = !!h.next && !racing;
-      put(next.current, 'next', h.next ? `${h.next} · ${toGo(h.nextDist)}` : '');
-      if (next.current) next.current.hidden = !h.next || navOn;
+      // the route's next manoeuvre; with none, a story errand's exit and how far its sign is (the errand line shows
+      // even when there is no navigation card)
+      const nx = h.next ? `${h.next} · ${toGo(h.nextDist)}` : h.errand ? `Errand: ${h.errand.exit} exit${h.errand.dist >= 0 ? ' · ' + toGo(h.errand.dist) : ''}` : '';
+      put(next.current, 'next', nx);
+      if (next.current) next.current.hidden = !nx || navOn;
       if (nav.current) { nav.current.hidden = !navOn; if (nav.current.dataset.turn !== h.turn) nav.current.dataset.turn = h.turn; }
       if (navOn) {
         put(navDist.current, 'navDist', toGo(h.nextDist)); put(navAct.current, 'navAct', h.navAct); put(navTo.current, 'navTo', h.navTo);

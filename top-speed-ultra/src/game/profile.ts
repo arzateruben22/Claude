@@ -2,6 +2,8 @@
 // stats, the freeways you've driven, achievements. Saved on this device (localStorage) with a version number, so
 // later versions can migrate it. Nothing leaves the device.
 
+import { homeById, garageSlots } from './homes';
+
 export const PROFILE_VERSION = 1;
 const KEY = 'tsu.profile';
 
@@ -24,6 +26,9 @@ export interface Profile {
   freeways: string[];                // carriageways driven, e.g. 'CA-55 North'
   vehicles: string[];
   car: string;                       // the one you drive
+  homes: string[];                   // homes owned (homes.ts), bought with credits
+  home: string;                      // the one you live in ('' for none yet)
+  story: { done: string[]; read: string[] };   // story.ts: jobs done and messages read
   achievements: string[];
   created: number;
 }
@@ -53,7 +58,7 @@ export function levelOf(xp: number) { let l = 1; while (xpFor(l + 1) <= xp) l++;
 
 function fresh(): Profile {
   return { v: PROFILE_VERSION, username: 'Driver', avatar: 0, xp: 0, credits: 0, timeDriven: 0, distance: 0, topSpeed: 0, bestStreak: 0,
-    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', achievements: [], created: Date.now() };
+    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', homes: [], home: '', story: { done: [], read: [] }, achievements: [], created: Date.now() };
 }
 
 // older saves come in through here, one version at a time
@@ -69,6 +74,11 @@ function migrate(raw: Record<string, unknown>): Profile {
   if (!Array.isArray(p.vehicles) || !p.vehicles.length) p.vehicles = ['rossini-gt'];
   if (typeof p.car !== 'string' || !p.vehicles.includes(p.car)) p.car = p.vehicles[0];
   if (!Array.isArray(p.achievements)) p.achievements = [];
+  // homes arrived after v1 shipped: a save without them simply owns none (no version bump needed, the field defaults)
+  p.homes = Array.isArray(p.homes) ? p.homes.filter((h): h is string => typeof h === 'string' && !!homeById(h)) : [];
+  if (typeof p.home !== 'string' || !p.homes.includes(p.home)) p.home = p.homes[0] ?? '';
+  const st = (p.story ?? {}) as { done?: unknown; read?: unknown }, strs = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+  p.story = { done: strs(st.done), read: strs(st.read) };
   p.username = String(p.username || 'Driver').slice(0, 20);
   p.avatar = Math.max(0, Math.min(AVATARS.length - 1, Number(p.avatar) || 0));
   return p;
@@ -167,6 +177,28 @@ export class ProfileBook {
     if (p.car === id) p.car = 'rossini-gt';
     this.save(); return null;
   }
+  // homes (the Lifestyle menu): credits only, at the home's level; the first one bought becomes where you live
+  buyHome(id: string): string | null {
+    const h = homeById(id), p = this.p;
+    if (!h) return 'No such home';
+    if (p.homes.includes(id)) return 'Already yours';
+    if (this.level < h.level) return `Opens at level ${h.level}`;
+    if (p.credits < h.price) return `${Math.ceil(h.price - p.credits).toLocaleString()} more credits needed`;
+    p.credits -= h.price; p.homes.push(id); if (!p.home) p.home = id; this.save();
+    return null;
+  }
+  // sold for 60 %, like a car; never if your cars would no longer fit in the garage slots left
+  sellHome(id: string): string | null {
+    const h = homeById(id), p = this.p;
+    if (!h || !p.homes.includes(id)) return 'Not yours';
+    const left = p.homes.filter((x) => x !== id);
+    if (this.slotsUsed > garageSlots(this.level, left)) return `Sell a car first: your ${this.slotsUsed} cars need its garage`;
+    p.homes = left; p.credits += Math.round(h.price * 0.6);
+    if (p.home === id) p.home = left[0] ?? '';
+    this.save(); return null;
+  }
+  setHome(id: string) { if (this.p.homes.includes(id)) { this.p.home = id; this.save(); } }
+  get slots() { return garageSlots(this.level, this.p.homes); }
   choose(id: string) { if (this.p.vehicles.includes(id)) { this.p.car = id; this.save(); } }
   reward(xp: number, credits: number) { const before = this.level; this.p.xp += xp; this.p.credits += credits; this.save(); return this.level > before ? this.level : null; }
 

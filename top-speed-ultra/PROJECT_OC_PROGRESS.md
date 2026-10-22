@@ -4,6 +4,239 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (merge): `claude/hypercar` up to 388cfa2 into the live build (`local/live-preview`)
+
+Brings the homes (Lifestyle: nine fictional homes in real OC neighbourhoods, credits only, extra garage slots, start
+from home), the five story characters on the phone (Messages, Contacts, jobs paid at run end), the six timed errands
+to real exits, the weekly simulated meets in Messages, the freeway signs spec (`docs/specs/`) and the panels' Done bar
+fix. The Retro render (RS1) is on `retro/port` and the online board on `claude/live-server`; neither is on
+`claude/hypercar` yet, so neither is in this build. Five files conflicted (rerere had no resolution for them); every
+side was kept:
+
+- `App.tsx`: the menu stays the glass sheet with the Drive dock (ours); the hypercar side's rail rows were carried into
+  it: Lifestyle (was "Roadmap") opens the homes, and a Phone row with the unread count. Lifestyle's homes are a screen
+  of their own over the menu, like the store, the World Map and the phone (`inSheet` leaves them out). The garage
+  keeps the store's slot count (`slotsUsed`) with the hypercar side's slots from homes and its wording. The Homes
+  screen sits before the loading screen, which stays last.
+- `HUD.tsx`: our navigation and destination cards stay; the hypercar side's errand line uses the same guidance chip
+  when no route is set (with a route the nav card has it); the errand clock in Free Drive's third slot came in clean.
+- `Game.ts`: the HUD state carries both: ours' compass, clock, nav and destination fields and theirs' `errand`.
+- `package.json`: the store's `store:sync` and `store:check` and theirs' `test:story`.
+- `PROJECT_OC_HANDOFF.md`: both Fable queue items (the vehicle dynamics prompt and the freeway signs spec).
+- `profile.ts` (merged clean, one fix): selling a home checks `slotsUsed`, so a store-only car (the Founder Edition)
+  takes no slot there either, as in `buy`.
+- Checked: `npx tsc --noEmit` clean; built; the menu, Lifestyle and the phone looked at at 1440 x 900 and 390 x 844,
+  no page errors.
+
+## 2026-10-22 (05:27 UTC): a container restart; the work kept and resumed
+
+- **05:20 UTC:** the session's container restarted and every running agent stopped. The disk survived.
+- **Kept, and now pushed:**
+  - `fable/hands`: 5 more commits, including a node check for the thumbs and the first web space
+    (`tools/preview-hands-web.mjs`) and a merge of `claude/hypercar`;
+  - `fable/wheels`: brought up to `claude/hypercar`;
+  - `retro/port`: brought up to `claude/hypercar`.
+- **The live integration** (`integrate/live`) was mid-merge: every path outside `top-speed-ultra/` already restored, and
+  all eight conflicts resolved in the working tree but unstaged. The rerun reviews those resolutions against both sides
+  before committing, then runs every core group plus the live ones (the live-server session's core run on db324db had
+  been cut off).
+- **05:28: the Fable model's usage limit was reached.** Every relaunched agent failed at once, before doing any work. The
+  remaining agents (the implementers, judges, the critic and the integrator) now run on Opus, the session's model. The
+  seven audits stay Fable's, replayed from the journal. Which model judged each landing will be named in its entry.
+- **Relaunched at 05:27, then on Opus at 05:31,** at most three agents at once: the integration and the overdrive (its implementers continue
+  their existing branches). The Retro finish waits for the first free slot. No log says whether memory caused the
+  restart; the cap is a precaution.
+
+## 2026-10-21 (23:02 UTC): paused by the owner
+
+The owner said "Pause". Both workflows were stopped and the hourly task switched off. The 00:20 stop-and-ask check-in was
+deleted. Nothing was merged: no branch had reached a judge. Where each piece stands (all committed, no uncommitted
+scraps; both workflows resume from their journals):
+
+- **Hands, `fable/hands`** (worktree `.claude/worktrees/wf_ba9f2603-ef8-8`), unjudged:
+  - c285d6e: the thumbs lie along the rim, nails to the driver, the web open (the owner's "fix the thumbs");
+  - cfeee35: the pose allocates nothing per frame; blend and wave run on the game's dt, so they stop while paused;
+  - 2a52270: the test page frames the seat view like the game (`?frame=game`).
+  - Its proof renders, suite groups and judge had not run.
+- **Wheels, `fable/wheels`** (worktree `-10`), unjudged:
+  - c2350ef: the Aero Disc cover re-meshed as polar grids (no banding);
+  - e5ea194: crowned, forged-width spoke faces;
+  - 8ff6257: round drill holes, the caliper wordmark, chamfered nuts, a valve stem;
+  - 7599805: a plain tread band on the phone tier.
+- **Retro, `retro/port`**: the three port commits plus a merge of `claude/hypercar` (960dc12). Its verification against
+  the merge bar had not finished.
+- **Audits done** for hands, signs, wheels, face, physics, hair and body; the signs spec delivered (bdc9b47).
+- **Not started:** the face, physics, hair and body implementations; the critic.
+
+## 2026-10-21 (21:55 UTC): both workflows cut off by the usage limit; resumed
+
+- **What the limit cut off.** At about 18:30 UTC the session's five-hour usage limit stopped every running agent; it
+  reset at 21:50 UTC.
+  - **The Fable overdrive:** six audits had finished (hands, signs, wheels, face, physics, hair, under
+    `scratchpad/fable/<area>/before/`). The body audit, the signs spec, every implementer and the critic were cut off.
+  - **The hands implementer** had begun only plan item 1, the thumb re-solve parameters, uncommitted and unproven. It
+    was saved as `scratchpad/fable/hands/partial-thumb-params.patch` and the worktree removed so the rerun starts clean.
+  - **The Retro port** had made its three commits on `retro/port` (9e29640 the render style and its settings pieces,
+    619ae83 Game's hooks and the switch under Low, c6d03c4 the two suite checks and `tests/modes-retro.mjs`) but proved
+    nothing.
+- **The 75 % checkpoint** (20:35) fired during the outage. The owner then said "continue and don't stop", so it is
+  replaced by a usage guard: no new agents while the limit is hit.
+- **Resumed at 21:55.**
+  - The overdrive resumes from its journal: the six audits replay, and the rest runs live.
+  - A new workflow verifies the Retro port on its own branch against the agreed merge bar (tsc clean; boot, render and
+    phone groups pass), then an adversarial judge decides.
+  - Nothing from either is merged yet.
+
+## 2026-10-21 (17:45 UTC): the online board (live server), from server-observed poses only
+
+Agreed with the live-server session (session_014twwPd83rJxBkHT9T8yEiQ, which owns `claude/live-server`): this session
+builds the board as new files; that session wires it into `server.mjs` and the menu. A Fable agent designed and built it
+(anti-cheat is Fable-class) on **`claude/live-board`** (cut from `claude/live-server` 6d16421; commits 9c76011, 99c5fd4).
+
+- **Files.** Four new files only: `live/board.mjs`, `live/test/board.test.mjs`, `src/live/board.ts` (the GET
+  /api/board client) and `src/ui/OnlineBoard.tsx` (the panel, reusing the existing panel and board styles).
+- **Rules** (documented at the top of `board.mjs`):
+  - Only poses the relay accepted count, on the server's clock; no score from a phone is trusted.
+  - Distance comes from displacement, metered by a token bucket capped at the reported speed and 110 m/s, so a
+    teleport, a reconnect or a parked car reporting speed earns nothing. The daily ceiling is 3,000 km.
+  - Top speed is the speed held for 3 s, cross-checked against ground speed.
+  - The longest unbroken drive breaks on more than 3 s without a pose (the relay's own freshness window) or less than
+    3 m per 3 s.
+  - The day is Pacific, DST-correct; today and the rolling week.
+  - Banned and deleted players are hidden through the server's `players` table; the output is names and numbers only.
+  - At most one write per driver per 5 s; rows kept 35 days.
+  - Speed Survival streaks and near misses are off the board: computer traffic exists only on the phone.
+- **Checked.**
+  - `node --test test/board.test.mjs` **9/9**, reproduced by this session. It covers teleport, reconnect and parked
+    cases; a spike, a 2.9 s burst and a 3 s hold; drive splits; both 2026 DST dates; ordering, limits, names only, bans
+    and deletions; `forget()`; a bot at 199 m/s for an hour capped at 110 m/s; and 24 writes for 1,200 poses.
+  - The agent's run of the live server's `npm test` was **57/57**, and `tsc` was clean.
+  - The agent also proved the wiring snippet end to end on a scratch copy of `server.mjs`.
+- **Wired (17:49, that session's report):** reviewed and merged onto `claude/live-server` (merge af33cc8).
+  - `/api/board` has its own rate limit, and `board.close()` runs on shutdown.
+  - A new server test shows a 4.5 s drive at 30 m/s giving about 135 m and 30 m/s held; "you" appears only with a token;
+    rows carry names and numbers only; a ban hides the driver and a delete removes them. The live `npm test` was
+    **58/58** on a quiet machine.
+  - The menu has an "Online board" pick in the Live section when a server is set; that session's browser check was
+    running.
+  - These are that session's results, not re-run here.
+- **Still open:** an independent adversarial review of the rules before the board goes public (the owner's decision,
+  queued).
+- **Honest gap:** a modified client driving a perfect straight line at the ceiling can't be told apart by poses alone.
+  It is bounded by the ceiling, shows under its name in a lobby slot, and a ban removes it.
+
+## 2026-10-21 (17:50 UTC): weekly events (activities); the story's logic tested without a browser
+
+- **Weekly events** (`story.ts` `EVENTS`): three simulated meets, each at set hours of the device's local week:
+  - Dee's Cars & Coffee, Saturday 7:00 to 11:00, Glenwood Drive off the 73 South;
+  - the Friday Night Meet, Friday 19:00 to 23:00, Weir Canyon Road off the 91 East;
+  - Jun's Sunday Canyon Run, Sunday 8:00 to 12:00, 10 miles on the 241 South.
+  While one is on, its invitation is a message in the phone (id `event@week`) with the job to get there. Each pays
+  once a week. They are not real events and not gatherings of real players.
+- **`tests/story.mjs`** (new, `npm run test:story`, about a second, no browser), **14/14**:
+  - the unlock chains (fresh: only Mara; after her first at level 2: her second and Sal's; a home opens Dee's);
+  - every job pays; every chain points at a real message; errand keys are unique;
+  - events by day and hour (Saturday 9:00 Cars & Coffee, 12:00 none, Friday 20:30 the meet, Sunday 9:00 the run,
+    none below their level);
+  - Cars & Coffee pays once this week, not again, and again next week;
+  - a race job needs both its course and its place.
+- **In the browser** (17:50, the build after ec321ad; Playwright with the page's clock set to Saturday 24 October 2026,
+  9:15 PDT, `timezoneId: America/Los_Angeles`, a level-3 profile):
+  - the menu rail read "Phone · 3 new";
+  - Messages listed Dee's "Cars & Coffee" first, then Sal and Mara;
+  - her thread's job read "Errand: the Glenwood Drive exit off the CA-73 South, within 15:00 · 2,000 credits, 500 XP";
+  - no page errors.
+  - Not yet in the regression suite: the launch group isn't re-run while the Fable workflow renders.
+- **Full suite on the build before the events** (25eb3f2: homes, the story, errands, the panels' Done bar): `npm test`,
+  all groups, **66/66** (run 16:40 to 17:15 UTC, slow beside other renders).
+
+## 2026-10-21 (17:30 UTC): activities: timed errands to real exits
+
+- **Errands** (story job kind `errand`): six errands from five of the characters.
+  - Each starts a Free Drive at the start of a real carriageway. Take the named real exit within a time limit set for
+    about 50 mph on average.
+  - The six: a parcel to Imperial Highway off the 57 North (5.0 mi, 6:00); a tyre to Dyer Road off the 55 South
+    (4:30); a sensor kit to Jamboree Road off the 405 South (5:30); wedding flowers to Jamboree Road off the 5 North
+    (7:00); coffee for the meet to Glenwood Drive off the 73 South (8:00); a charger to Gypsum Canyon Road off the 91
+    East (8:00). Exits and distances were read from the data first.
+  - **Delivered** is exact: the car's path becomes that sign's own exit ramp (`Game.errandTick`). The clock is game
+    time, so it stops while paused. At zero the errand is called off and the drive goes on.
+  - The HUD shows the clock in Free Drive's empty third slot, and "Errand: <exit> exit · <distance>" on the guidance
+    line when no route manoeuvre is due.
+  - Set it up from the phone chooses Free Drive and the errand's freeway.
+- **Checked** (new launch check; `npm test -- --only=launch` **11/11**):
+  - Sal's errand read "the Imperial Highway exit off the CA-57 North, within 6:00", and the Start pick became the 57
+    North.
+  - In the drive, the errand's sign was "CA 90 / Imperial Highway", 5.0 mi ahead. The HUD read "Errand: Imperial
+    Highway exit · 5.0 mi" (`tests/out/launch-errand-hud.png`).
+  - A copy past its clock was called off.
+  - Putting the car on that sign's ramp ended the drive "Delivered" and paid 1,400 credits with "Job done for Sal Reyes".
+  - Not proven: a driven approach to the ramp; the test places the car on it.
+
+## 2026-10-21 (17:00 UTC): characters and story on the phone (Messages, Contacts)
+
+- **Story** (`src/game/story.ts`): five fictional OC characters, ours, written for 13+ (no romance, no real people
+  or businesses):
+  - Mara Ortiz, who runs the tyre shop under the Orangewood studio;
+  - Jun Park, an Irvine aero engineer;
+  - Sal Reyes, a courier who knows every exit;
+  - Dee Okafor, who organises a Saturday car meet ("no street racing, just cars and coffee");
+  - Nina Hale, a Vela test driver.
+- **Messages and jobs.** Twelve messages in threads, opened by level, homes owned, races won and the message before.
+  Eleven carry a job built only from what the game has: a Survival score, Time Trial miles, a race placing on a named
+  course, miles of Free Drive on a named freeway, or a top speed. Each pays 600 to 10,000 credits and XP, paid when a
+  run meets it (`Game.settleJobs` at the end of every run and race; not on a "Too far behind" race).
+- **On the phone.** Messages (threads, unread badges, the job's goal and pay, Set it up) and Contacts (the people
+  you've heard from, labelled fictional) replace the two Roadmap icons.
+  - Set it up goes back to the menu with the job's mode chosen, plus its course or freeway.
+  - The menu rail has a Phone row with "N new".
+  - The results screen lists "Job done for …" with the pay.
+  - Nothing is sent or received over a network. Profile: `story { done, read }`, defaulted for older saves.
+- **Checked** (new launch check, `npm test -- --only=launch` **10/10**):
+  - a fresh story shows 1 unread; Mara's thread reads "Reach 120 mph · 600 credits";
+  - Set it up chose Free Drive;
+  - a drive ending at 134 mph paid the job (+600 credits on top of the drive's own), and the results said "Job done
+    for Mara Ortiz";
+  - her next message then showed as unread.
+  - Screenshot: `tests/out/launch-story-thread.png`.
+
+## 2026-10-21 (16:30 UTC): Lifestyle: homes (the life half's first piece); every panel's Done bar fixed
+
+The owner asked for the life half and the online side toward 95 %, with homes and walk-in interiors first, online
+on a free-tier backend, and the map OC-only. The online side is already the always-on session's `claude/live-server`
+lane (accounts, lobby, relay, ghosts, crews, $0 on the owner's machine), so this session does not build it; it asked
+that session which of its open gaps (online board, races against people) it wants handed over, and how interiors
+should reuse its on-foot engine.
+
+- **Homes** (`src/game/homes.ts`, `src/ui/Homes.tsx`): nine fictional homes in real OC neighbourhoods (Anaheim, Orange,
+  Tustin, Huntington Beach, Irvine, Anaheim Hills, Laguna Canyon, Newport Beach, Dana Point), our own names, no real
+  address or listing.
+  - Each costs 8,000 to 240,000 credits (earned only) and opens from level 1 to 15.
+  - Each owned home adds 1 to 3 garage slots (`garageSlots`, at most 12).
+  - The first one bought is where you live. Homes sell back for 60 %, never if your cars would no longer fit.
+  - The menu's Lifestyle row (greyed until now) and a Homes app on the phone open the panel.
+  - **Start here** sets the start to the real exit nearest the home (`Game.nearestExit`; weigh stations, rest areas
+    and vista points are skipped).
+  - The World Map draws every home as a small house (yours filled, the one you live in ringed), lists them under
+    Places, and opens on a home from the panel's "On the map", with "Start from" for one you own.
+  - Profile: `homes`, `home`, defaulted for older saves without a version bump.
+- **Checked.**
+  - Each home's nearest exit, read from the built page: Orangewood Avenue on the 57 (0.1 mi), Glassell/Grand on the
+    22, Edinger on the 55, Brookhurst on the 405 (3.9 mi: Huntington Beach is far from a freeway), Jeffrey/University on
+    the 405, Imperial Highway on the 91, Glenwood on the 73, Bison on the 73, Camino Las Ramblas on the 5.
+  - Found and fixed on the way: Orangewood first resolved to the 5 (its point was 1 km west), and the Hills Ranch to
+    a weigh station.
+  - New launch check: 9 homes; buy Orangewood for 8,000; slots 1 → 2; the level-15 home locked; Start here makes the
+    Start pick read "Orangewood Avenue exit"; selling returns 4,800.
+  - `npm test -- --only=launch,boot` **15/15**.
+- **Every panel's Done bar** stopped 20 px above the screen's edge (the overlay's padding), and content scrolled
+  visibly beneath it (seen on Profile). It now sticks to the real bottom edge with the safe area inside it.
+  `tools/panel-shots.mjs` (new): Profile and Lifestyle at 1280 × 720 and 390 × 844, top and bottom, no errors, no
+  sideways scroll.
+- **Not a bug: panels shot at opacity 0.** In software rendering the panel's 0.3 s fade-in clock stayed at 0 for about
+  1.6 s, because no frame was produced while the 3D scene rendered; the element was never remounted. The shot tool now
+  waits for the animation to finish.
+
 ## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
 
 - **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the

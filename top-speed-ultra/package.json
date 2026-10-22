@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node tests/regression.mjs",
     "store:sync": "node tools/store-sync-catalog.mjs",
-    "store:check": "node tools/store-check-catalog.mjs && node tools/store-sync-catalog.mjs --check"
+    "store:check": "node tools/store-check-catalog.mjs && node tools/store-sync-catalog.mjs --check",
+    "test:story": "node --experimental-strip-types --no-warnings tests/story.mjs"
   },
   "dependencies": {
     "react": "18.3.1",

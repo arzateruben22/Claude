@@ -80,17 +80,64 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
 - 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 - 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
+- 17:30 HUD.tsx, Game.ts, App.tsx: errands: `Hud.errand` (Free Drive's third slot and the guidance line), `Game.setErrand/errand/errandTick`, the phone's Set it up passes an errand.
+- 17:00 App.tsx, styles.css, Phone.tsx, Game.ts: the story (`story.ts`): the phone's Messages and Contacts, a Phone row on the menu rail, jobs paid at run end (`Result.jobs`), listed on the results screen.
+- 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
-Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
-tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
-run card's save in the viewer, the glove stripe from the driver's accent. Phone-size checks of the new panels done (12:10).
-The queue here is empty of unowned items: traffic, trees and the world are touched by six lanes' branches
-(`wip-ref`, `wip-gfx`, `wip-modes`, `wip-ui`, `wip-hx`, `wip-fix-sky`), so this session leaves them. Next: what the
-owner asks, or what the lanes hand over.
+**Also in flight here (from 18:00 UTC):** the Retro render (the modes lane's RS1, from its snapshot `wip-modes` 94b0d52)
+ported onto `retro/port` behind that lane's own switch (Settings: "Style: Retro", Low only, default off), the owner
+asked to see it now. Only the retro pieces come over (`src/game/render/style.ts`, settings' Style/RETRO/presetFor,
+Game's hooks, the toggle, the two RS1 checks, `tests/modes-retro.mjs`). The always-on session (18:07): no objection;
+the snapshot is a mid-edit state that never reached a judge, so merge only if tsc and the boot, render and phone groups
+pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
+small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
+
+**Resumed 04:27 UTC (2026-10-22, the owner: "keep going ... connect it to this branch and integrate both systems
+seamlessly"; they chose: the live server + this game, landing only after a judge).** Three workflows: the Fable overdrive
+(resumed), the Retro finish (resumed), and the live integration: `integrate/live` cut from `claude/hypercar`, bringing
+ONLY `top-speed-ultra/` from `origin/claude/live-server` db324db (no `server/`, `paper-book/`, desks or `START-HERE.md`),
+as a regular commit (a merge commit dropping those paths would revert them in a later merge back). The Live UI moves onto
+this branch's theme and navigation (the rail's Online row, Settings, the phone). The live-server session was told
+(04:35); `claude/live-server` itself is untouched.
+
+**Paused 23:02 UTC by the owner (see the progress log's 23:02 entry for each branch's state); was in flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
+(audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
+the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
+the physics (`src/game/vehicle/Physics.ts`, against `PROJECT_OC_DYNAMICS.md`). Branches `fable/<area>`, merged here only
+once judged. The freeway signs stay the realism-2 lane's: the workflow writes them a spec instead of code. Lanes: please
+leave these files to it until its results are logged.
+
+Next here (updated 16:30 UTC; the owner, about 15:45: the life half and online toward 95 %; homes and walk-in
+interiors first; online on a free-tier backend; the map OC-only; no real-phone test for now):
+- done: homes (Lifestyle), the panels' Done bar, characters and story (phone Messages, Contacts, jobs), errands;
+- next: walk-in interiors for owned homes, waiting on the always-on session's answer on how to reuse its on-foot engine
+  (`src/onfoot/lot57`). The always-on session (16:00): no stable API yet; home interiors will be venue defs on
+  `src/onfoot/engine/` (the sports-bar plan's S1, `PROJECT_OC_SPORTS_BAR.md` on `claude/sports-bar`); it will message
+  this session with the commit when S1 is kept;
+- online: `claude/live-server` belongs to session_014twwPd83rJxBkHT9T8yEiQ (not the always-on session). Agreed with it
+  (16:35): this session builds the online board as NEW files only (live/board.mjs, live/test/board.test.mjs,
+  src/live/board.ts, src/ui/OnlineBoard.tsx) on `claude/live-board` cut from `claude/live-server`, from server-observed
+  poses only (distance, 3 s sustained top speed, longest unbroken drive per Pacific day; no client-submitted scores, no
+  Survival streaks or near misses); that session wires server.mjs and the menu. Built and pushed (17:45): `claude/live-board`
+  9c76011, 99c5fd4, board tests 9/9; reviewed, merged and wired by that session (17:49, merge af33cc8 on
+  `claude/live-server`, live tests 58/58, an "Online board" pick in the menu's Live section). Chat stays out (13+); races against people are an owner decision for later;
+- online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
+  (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
+
+**Connecting to `claude/always-on` (the owner, 04:40 UTC).** After the live integration lands on `claude/hypercar`,
+this session merges `claude/hypercar` into `claude/always-on` (only `top-speed-ultra/` differs; the diff outside it must be
+empty), and keeps doing so after every judged landing. The live server's deploy pieces outside the game folder
+(`server/live*.sh`, `server/systemd/oc-live.service`, the setup/status/backup hooks, `paper-book/watchdog.py`'s oc-live
+alert, START-HERE.md Part 4) stay on `claude/live-server`. The owner chose (04:48) that the live-server session merges
+`claude/live-server` into `claude/always-on` when it is resumed, after this session's merge, resolving the desks' files
+itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's integrated side. Before landing,
+`integrate/live` must pass every core group (the live-server session's last core run on db324db was cut off).
 
 ### Decisions waiting (the owner's)
 
+- The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
+- Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.
 - Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
   replaced on the `style-references` branch (see the style guide's "Decisions for the owner").
 
@@ -214,6 +261,14 @@ all passing. Log in PROJECT_OC_PROGRESS.md.
   'npm test -- --only=survival,race,progression,phone' green. Log it in PROJECT_OC_PROGRESS.md with the numbers;
   commit on claude/drift. Agents: reviewers and the dynamics design on 'fable', test runs on 'opus'.
   ```
+
+- **Freeway guide signs (for the realism-2 lane when it resumes; written 22:40 UTC by this session's Fable audit).**
+  Spec: `docs/specs/SIGNS_SPEC.md` (seven ranked items: a Highway Gothic look-alike laid out in metres; Caltrans panel
+  content with the yellow EXIT ONLY band, shields, two destinations, control cities, LEFT plaques; night
+  retroreflection; a galvanised box-truss structure; a refcounted texture cache and phone resolution; one structure for
+  closely spaced exits; exit numbers from OSM junction:ref). Ready-to-paste prompt: `docs/specs/SIGNS_PROMPT.md`.
+  Census: `tools/signs-census.ts` (416 signs, 122 dropping a destination, 73 of 396 exit pairs under 800 m; reproduced).
+  It needs one Game.ts hook (`roads.setNight(dark)`) from whoever owns Game.ts.
 
 ## Opus queue (routine items waiting for a daytime session)
 

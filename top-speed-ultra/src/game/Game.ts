@@ -29,6 +29,9 @@ import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
+import { settle, characterById, jobText, type RunFacts, type Job } from './story';
+type ErrandJob = Extract<Job, { kind: 'errand' }>;
+const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
@@ -72,8 +75,11 @@ export interface Hud {
   // is along the route, the time that takes at your pace (s; -1 when you aren't moving enough to say) and the traffic
   // setting (simulated, and labelled so). All '' with no route.
   navAct: string; navTo: string; exitText: string; exitMine: boolean; onSign: string; dest: string; destDist: number; eta: number; traffic: string;
+  errand: { exit: string; left: number; dist: number } | null;   // a story errand: its exit, seconds left, metres to its sign (-1 off its road)
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
+// signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
+const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 // what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
@@ -87,6 +93,7 @@ export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
+  jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
 }
 interface RaceState {
   course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
@@ -169,6 +176,9 @@ export class Game {
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   race: RaceState | null = null;
+  // a story errand (story.ts): set from the phone before a Free Drive, live during it (the sign, the time left)
+  private pendingErrand: ErrandJob | null = null;
+  errand: { job: ErrandJob; sign: Sign; t: number; done: boolean } | null = null;
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
@@ -269,6 +279,21 @@ export class Game {
     }
     return out.sort((a, b) => a.s - b.s);
   }
+  // the real exit nearest a place (a home, homes.ts): its carriageway, its Settings.exit key, and how far its sign is
+  // from the place in metres. Every direction is considered; the nearest sign wins.
+  nearestExit(x: number, z: number): { label: string; exit: Exit; dist: number } | null {
+    let best: { label: string; exit: Exit; dist: number } | null = null;
+    const p = { x: 0, y: 0, z: 0, h: 0 };
+    for (const g of this.net.signs) {
+      if (!g.path.main || NOT_AN_EXIT.test(g.text.join(' '))) continue;
+      g.path.at(g.s, 0, p);
+      const d = Math.hypot(p.x - x, p.z - z);
+      if (best && d >= best.dist) continue;
+      const label = g.path.label;
+      best = { label, dist: d, exit: { key: `${label} @ ${Math.round(g.s)}`, text: g.text.join(' / '), s: g.s, mi: g.s / 1609.344, side: g.side } };
+    }
+    return best;
+  }
   // the sign a Settings.exit key names, if the data still has it
   private resolveExit(key: string): Sign | null {
     const m = /^(.+) @ (\d+)$/.exec(key);
@@ -329,6 +354,7 @@ export class Game {
     const m = exit ? exit.path : this.findMain(st.label);
     const s0 = exit ? clamp(exit.s - 450, 40, Math.max(40, m.len - 200)) : m.len * st.at;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
+    if (mode === 'free') this.startErrand(m, s0); else { this.errand = null; this.pendingErrand = null; }
     this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
@@ -346,7 +372,7 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -447,8 +473,9 @@ export class Game {
     const best = bestTime(r.course.id);
     const ordinal = ['1st', '2nd', '3rd', '4th'][Math.min(position, 4) - 1];
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    const jobs = why ? undefined : this.settleJobs({ mode: 'race', score: credits, distance: r.progress, top: this.top, road: r.course.road, courseId: r.course.id, position });
     setTimeout(() => this.ev.over({
-      mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
+      mode: 'race', jobs, score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
       road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
       board: { mode: 'race', runs: [], rank: 0 },
       race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
@@ -1065,12 +1092,44 @@ export class Game {
         const band = p.vx > FAST ? 1 + (p.vx - FAST) / 22 : 0.2;
         this.score += fwd * 0.1 * band * (1 + Math.min(this.streak, 60) / 30);
       }
+      if (this.mode === 'free') this.errandTick(dt);
       if (this.mode === 'time') {
         this.timeLeft -= dt;
         if (this.distance >= this.nextCheckpoint) { this.nextCheckpoint += 2000; this.timeLeft += 25; this.ev.toast('Checkpoint +25 s', 'good'); }
         if (this.timeLeft <= 0) { this.timeLeft = 0; this.endRun('Out of time'); }
       }
     }
+  }
+
+  // the phone's "Set it up" on an errand: the next Free Drive on its freeway carries it
+  setErrand(job: ErrandJob | null) { this.pendingErrand = job; }
+  // at a Free Drive's start: the errand's sign is the first ahead on this carriageway whose text names its exit
+  private startErrand(m: Path, s0: number) {
+    const j = this.pendingErrand; this.pendingErrand = null; this.errand = null;
+    if (!j || j.road !== m.label) return;
+    const want = j.exit.toLowerCase();
+    const sign = this.net.signs.filter((g) => g.path === m && g.s > s0 + 200 && g.text.join(' / ').toLowerCase().includes(want)).sort((a, b) => a.s - b.s)[0];
+    if (!sign) { this.ev.toast(`No ${j.exit} exit ahead on ${m.label}`, 'bad'); return; }
+    this.errand = { job: j, sign, t: j.seconds, done: false };
+    this.ev.toast(`Errand: ${j.what}. Take the ${j.exit} exit · ${fmtClock(j.seconds)}`, 'info');
+  }
+  private errandTick(dt: number) {
+    const e = this.errand; if (!e || e.done) return;
+    e.t -= dt;
+    if (this.path === e.sign.ramp) { e.done = true; this.ev.toast(`Delivered with ${fmtClock(e.t)} to spare`, 'good'); this.endRun('Delivered'); return; }
+    if (e.t <= 0) { this.errand = null; this.ev.toast('Too late: the errand is off. Keep driving, or try it again from the phone.', 'bad'); }
+  }
+
+  // story jobs (the phone's Messages): what this run met is paid now, and the results screen lists it
+  private settleJobs(r: RunFacts): Result['jobs'] {
+    if (this.attract) return undefined;
+    const paid = settle(this.profile.p, this.profile.level, r);
+    if (!paid.length) return undefined;
+    let lvl: number | null = null;
+    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} credits`, 'good'); }
+    this.profile.save();
+    if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    return paid.map((m) => ({ from: characterById(m.from)?.name ?? m.from, job: m.job ? jobText(m.job) : '', credits: m.credits ?? 0 }));
   }
 
   // level-ups and achievements, as they happen
@@ -1088,7 +1147,9 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
+    const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
+    this.errand = null;
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
@@ -1353,6 +1414,7 @@ export class Game {
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
+      errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
 

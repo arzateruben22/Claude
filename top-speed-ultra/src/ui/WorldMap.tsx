@@ -5,6 +5,7 @@
 // does only what exists: navigate to a freeway while driving; on the menu, start at a real exit or pick a race.
 // Houses and characters are roadmap and say so. It opens from the menu's rail and the pause screen, so the game is on
 // the menu or paused while it is up.
+import { HOMES, homeById, homeXZ } from '../game/homes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Game } from '../game/Game';
 import type { Path } from '../game/world/Path';
@@ -32,6 +33,7 @@ interface Props {
   game: Game; driving: boolean; navTarget: string | null;
   onClose: () => void; onNavigate: (label: string | null) => void;
   onStartFreeway: (label: string) => void; onStartExit: (key: string) => void; onRace: (id: string) => void;
+  focusHome?: string;   // open on the Places tab, centred on this home (the Lifestyle panel's "On the map")
 }
 
 // the page's tokens, so the map takes the atmosphere and the look on screen
@@ -61,12 +63,14 @@ function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h
   return { cx: (b.x0 + b.x1) / 2 - (r.x + r.w / 2 - w / 2) * mpp, cz: (b.z0 + b.z1) / 2 - (r.y + r.h / 2 - h / 2) * mpp, mpp };
 }
 
-export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, onRace }: Props) {
+export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, onRace, focusHome }: Props) {
   const cv = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null);
-  const [tab, setTab] = useState<Tab>('freeways');
+  const fh = focusHome ? homeById(focusHome) : undefined, fxz = fh ? homeXZ(fh) : null;
+  const [tab, setTab] = useState<Tab>(fh ? 'places' : 'freeways');
   const [sel, setSel] = useState<string | null>(navTarget ?? (driving ? game.path.label || null : null));
   const [course, setCourse] = useState<string | null>(null);
-  const [view, setView] = useState<View | null>(null);
+  const [view, setView] = useState<View | null>(fxz ? { cx: fxz.x, cz: fxz.z, mpp: 14 } : null);
+  const owned = game.profile.p.homes, home = game.profile.p.home;
   const mains = game.net.mains, all = useMemo(() => bounds(mains), [mains]);
   const exits = useMemo(() => (sel ? game.exitsFor(sel) : []), [game, sel]);
 
@@ -183,6 +187,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       g.textAlign = 'center';
     }
     for (const pl of PLACES) { const X = sx(pl.x), Y = sy(pl.z); free(X - 9, Y - 9, X + 9, Y + 9); }
+    for (const hm of HOMES) { const q = homeXZ(hm), X = sx(q.x), Y = sy(q.z); free(X - 7, Y - 8, X + 7, Y + 6); }
     // route shields: one per route, at the point of it nearest the middle of the view
     const done = new Set<string>();
     for (const p of mains) {
@@ -200,6 +205,18 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       g.strokeStyle = T.cyan; g.lineWidth = 2; g.beginPath(); g.arc(X, Y, 7, 0, Math.PI * 2); g.stroke();
       g.font = '600 12px system-ui, sans-serif'; const tw = g.measureText(pl.name).width;
       if (free(X + 9, Y - 8, X + 13 + tw, Y + 8)) { g.fillStyle = T.ink; g.textAlign = 'left'; g.fillText(pl.name, X + 11, Y); g.textAlign = 'center'; }
+    }
+    // homes (Lifestyle): a small house, filled in the accent if it's yours (the one you live in ringed), outlined if not;
+    // the names of yours, or of any when zoomed in, where they fit
+    for (const hm of HOMES) {
+      const q = homeXZ(hm), X = sx(q.x), Y = sy(q.z); if (X < 0 || Y < 0 || X > w || Y > h) continue;
+      const mine = owned.includes(hm.id);
+      g.beginPath(); g.moveTo(X - 6, Y - 1); g.lineTo(X, Y - 7); g.lineTo(X + 6, Y - 1); g.lineTo(X + 4.5, Y - 1); g.lineTo(X + 4.5, Y + 5); g.lineTo(X - 4.5, Y + 5); g.lineTo(X - 4.5, Y - 1); g.closePath();
+      if (mine) { g.fillStyle = T.cyan; g.fill(); } else { g.strokeStyle = hexA(T.dim, 0.9); g.lineWidth = 1.5; g.stroke(); }
+      if (hm.id === home) { g.strokeStyle = T.cyan; g.lineWidth = 1.5; g.beginPath(); g.arc(X, Y - 1, 10, 0, Math.PI * 2); g.stroke(); }
+      if (!mine && view.mpp > 20 && hm.id !== focusHome) continue;
+      g.font = '600 11px system-ui, sans-serif'; const tw = g.measureText(hm.name).width;
+      if (free(X + 9, Y - 8, X + 13 + tw, Y + 6)) { g.fillStyle = mine ? T.ink : hexA(T.dim, 0.95); g.textAlign = 'left'; g.fillText(hm.name, X + 11, Y - 1); g.textAlign = 'center'; }
     }
     // cities, quiet: the eight largest at any zoom, the rest when zoomed in, none over another label
     g.font = `500 ${view.mpp > 60 ? 10 : 12}px var(--f-mono, monospace)`;
@@ -255,7 +272,12 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
           ))}
           {tab === 'places' && <>
             {PLACES.map((p) => <button key={p.id} type="button" className="wm-item race" onClick={() => { const el = wrap.current; if (el) setView({ cx: p.x, cz: p.z, mpp: 6 }); }}><b>{p.name}</b><small>{p.blurb}</small></button>)}
-            <div className="wm-item race off" aria-disabled="true"><b>Houses</b><small>Roadmap</small></div>
+            {[...HOMES].sort((a, b) => Number(owned.includes(b.id)) - Number(owned.includes(a.id))).map((hm) => {
+              const q = homeXZ(hm), mine = owned.includes(hm.id);
+              return <button key={hm.id} type="button" className={'wm-item race' + (focusHome === hm.id ? ' on' : '')} onClick={() => setView({ cx: q.x, cz: q.z, mpp: 8 })}>
+                <b>{hm.name}{hm.id === home ? ' · home' : ''}</b><small>{hm.area} · {mine ? 'yours' : `${hm.price.toLocaleString()} credits, Lifestyle`}</small>
+              </button>;
+            })}
             <div className="wm-item race off" aria-disabled="true"><b>Characters</b><small>Roadmap</small></div>
           </>}
         </div>
@@ -270,6 +292,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
             </details>
           )}
           {tab === 'races' && course && !driving && <button type="button" className="btn primary" onClick={() => onRace(course)}>Race here</button>}
+          {tab === 'places' && fh && fxz && owned.includes(fh.id) && !driving && (() => { const ex = game.nearestExit(fxz.x, fxz.z); return ex && <button type="button" className="btn primary" onClick={() => onStartExit(ex.exit.key)}>Start from {fh.name}</button>; })()}
           <button type="button" className="btn" onClick={onClose}>Back</button>
         </div>
       </aside>
