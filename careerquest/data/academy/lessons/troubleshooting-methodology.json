@@ -1,0 +1,376 @@
+{
+  "key": "troubleshooting-methodology",
+  "track": "SYSTEMS",
+  "order": 5,
+  "title": "Troubleshooting Methodology",
+  "summary": "A repeatable six-step method for finding electrical faults, the half-splitting technique that finds an open in a long chain with a handful of measurements, why you measure under load, and how to document what you found so the fix sticks.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "working-safely-with-tools-and-meters",
+    "series-parallel-circuits"
+  ],
+  "objectives": [
+    "Students will be able to list the six troubleshooting steps and explain what each one produces.",
+    "Students will be able to apply half-splitting to a series chain and predict the maximum number of measurements needed.",
+    "Students will be able to choose the right measurement (voltage under load, voltage drop across a device, resistance de-energized, current with a clamp meter) for a given symptom and explain what each reading means.",
+    "Students will be able to explain why a connection that reads fine unloaded can fail under load, and how to find it.",
+    "Students will be able to describe the safety boundaries of energized diagnostic work and write a service record that another electrician could act on."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Troubleshooting is a process, not a guess",
+      "markdown": "A machine is down, the customer is standing behind you, and the easiest thing in the world is to start swapping parts. \"Shotgun\" troubleshooting sometimes works and always costs: parts you did not need, hours you cannot bill, and faults that come back because the real cause was never found.\n\nGood troubleshooters are not the people who have memorized every machine. They are the people who follow a method that converts a vague complaint (\"it keeps tripping\") into a specific, tested fact (\"the B-phase conductor has 1.8 V of drop across the lug at 40 A; the lug was under-torqued\"). The method in this lesson is used, with slightly different wording, by manufacturers, the military and most apprenticeship programs. Learn it until it is a habit, because the pressure to skip steps is highest exactly when skipping them is most expensive.\n\nUnderlying everything is a simple truth about circuits: electricity does only what Ohm's law and Kirchhoff's laws allow. A meter reading is a fact; an opinion about what is wrong is a hypothesis. Troubleshooting is the discipline of collecting facts until only one hypothesis survives."
+    },
+    {
+      "type": "table",
+      "caption": "The six-step troubleshooting method",
+      "columns": [
+        "Step",
+        "What you do",
+        "What you have when it is done"
+      ],
+      "rows": [
+        [
+          "1. Gather information",
+          "Talk to the operator. When did it start? What changed? Intermittent or constant? Get drawings, panel schedules, the sequence of operation, alarm history.",
+          "A clear statement of the symptom and what \"normal\" looks like"
+        ],
+        [
+          "2. Observe and verify",
+          "Look, listen, smell. Confirm the complaint yourself. Note pilot lights, tripped devices, discoloration, heat, noise, error codes.",
+          "A verified symptom and a list of clues"
+        ],
+        [
+          "3. Analyze and isolate",
+          "Decide which parts of the system could produce this symptom and which cannot. Divide the circuit (half-splitting, input/output) to narrow the search.",
+          "A short list of suspect sections"
+        ],
+        [
+          "4. Test and pinpoint",
+          "Make measurements that distinguish between the remaining suspects: voltage under load, voltage drop, resistance de-energized, current, temperature.",
+          "The failed component or connection, proven by a reading"
+        ],
+        [
+          "5. Correct the cause",
+          "Lock out, repair or replace, and fix what caused the failure (loose lug, wrong overload, water intrusion), not just the part that died.",
+          "A repair and a root cause"
+        ],
+        [
+          "6. Verify and document",
+          "Restore, test under normal load through a full cycle, confirm with the operator, record symptoms, readings, actions and parts.",
+          "A working system and a record the next person can use"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Choosing the measurement",
+      "markdown": "Each meter function answers a different question, and using the wrong one is the most common technical mistake in the field.\n\n**Voltage, energized.** Answers \"is power getting here?\" Measure from the point of interest to a known reference (neutral or ground for line-to-neutral circuits, another phase for line-to-line). In a series control chain, voltage to neutral is present up to the open device and absent after it.\n\n**Voltage across a device, energized and under load.** Answers \"is this device passing current properly?\" A closed contact, a fuse or a splice should show nearly 0 V across it. Reading source voltage across a single device means it is open. Reading a few volts means resistance: a corroded contact, a loose terminal, a failing fuse. This is the single most useful troubleshooting measurement and it only works with the load connected.\n\n**Resistance or continuity, de-energized only.** Answers \"is this path complete, and how much resistance does it have?\" The circuit must be off, locked out, verified dead, and the component isolated, because parallel paths (a motor winding, a transformer, a pilot light) will make an open device read as if it were fine, and because applying an ohmmeter to a live circuit damages the meter.\n\n**Current with a clamp meter.** Answers \"how hard is this circuit working?\" Compare to nameplate FLA. One phase of a three-phase motor reading much higher than the others, or zero, points at a bad connection or single-phasing. A load that draws rated current but produces nothing points at a mechanical problem.\n\n**Temperature.** An infrared thermometer or thermal camera finds the hot lug in a panel in seconds. Compare like to like: three phases of the same breaker should run at nearly the same temperature.\n\n**Meter details that bite.** A high-impedance digital meter will read **ghost voltage** (30–90 V) on a de-energized conductor that runs beside an energized one; use the meter's LoZ (low-impedance) function or a solenoid tester to confirm. Verify the meter on a known live source before and after testing for absence of voltage (live-dead-live). Use leads and a meter rated CAT III for panels and feeders and CAT IV at the service, and keep the fingers behind the guards."
+    },
+    {
+      "type": "formula",
+      "name": "Half-splitting and voltage drop",
+      "expression": "Tests needed ≤ log₂(N), rounded up        V_drop = I_load × R_connection",
+      "variables": [
+        {
+          "symbol": "N",
+          "meaning": "number of devices or sections in the series chain being searched",
+          "unit": "count"
+        },
+        {
+          "symbol": "V_drop",
+          "meaning": "voltage measured across a connection, contact or conductor under load",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I_load",
+          "meaning": "current flowing through it at the time of measurement",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "R_connection",
+          "meaning": "resistance of the connection (should be a few milliohms)",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "Each half-split test eliminates half of what remains, so 8 devices need at most 3 tests, 16 need 4 and 32 need 5. The voltage-drop formula explains why a poor connection hides at no load: with I = 0 there is no drop to see. At 30 A, a 0.05 Ω connection drops 1.5 V and dissipates 45 W, enough to char insulation."
+    },
+    {
+      "type": "diagram",
+      "title": "Half-splitting a series control circuit",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 235\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><g fill=\"currentColor\" stroke=\"none\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"40\" y=\"98\">L1</text><text x=\"40\" y=\"132\">120 V</text><text x=\"548\" y=\"98\">N</text></g><path d=\"M40 110 H60\"/><rect x=\"60\" y=\"104\" width=\"24\" height=\"12\"/><path d=\"M84 110 H112\"/><circle cx=\"115\" cy=\"110\" r=\"3\"/><circle cx=\"145\" cy=\"110\" r=\"3\"/><path d=\"M110 104 H150 M130 104 V94 M122 94 H138\"/><path d=\"M148 110 H182\"/><path d=\"M182 110 H196 L214 103 M214 110 H222\" /><path d=\"M202 112 L196 118\" stroke=\"#9aa6b8\"/><path d=\"M222 110 H252\"/><path d=\"M252 110 H266 L284 103 M284 110 H292\"/><path d=\"M275 98 a6 6 0 0 1 0 -8\" stroke=\"#9aa6b8\"/><path d=\"M292 110 H322\"/><path d=\"M322 110 H336 L352 98\" stroke=\"#ff6b6b\"/><path d=\"M354 110 H362\"/><path d=\"M362 110 H392\"/><path d=\"M392 110 h6 v-10 h24 v10 h6\"/><path d=\"M428 110 H466\"/><circle cx=\"480\" cy=\"110\" r=\"14\"/><text x=\"480\" y=\"115\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"bold\">M</text><path d=\"M494 110 H540\"/><g fill=\"#4cc9ff\" stroke=\"#4cc9ff\"><circle cx=\"97\" cy=\"110\" r=\"4\"/><circle cx=\"167\" cy=\"110\" r=\"4\"/><circle cx=\"237\" cy=\"110\" r=\"4\"/><circle cx=\"307\" cy=\"110\" r=\"4\"/><circle cx=\"377\" cy=\"110\" r=\"4\"/><circle cx=\"447\" cy=\"110\" r=\"4\"/></g><g fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\"><text x=\"97\" y=\"80\">TP1</text><text x=\"167\" y=\"80\">TP2</text><text x=\"237\" y=\"80\">TP3</text><text x=\"307\" y=\"80\">TP4</text><text x=\"377\" y=\"80\">TP5</text><text x=\"447\" y=\"80\">TP6</text></g><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\"><text x=\"72\" y=\"135\">F1</text><text x=\"130\" y=\"135\">STOP</text><text x=\"202\" y=\"135\">LS1</text><text x=\"272\" y=\"135\">PS1</text><text x=\"340\" y=\"135\" fill=\"#ff6b6b\">TS1 (open)</text><text x=\"410\" y=\"135\">OL</text><text x=\"480\" y=\"140\">coil</text></g><g fill=\"currentColor\" stroke=\"none\" font-size=\"12\"><text x=\"30\" y=\"170\">Test 1 — TP3 to N (midpoint): <tspan fill=\"#3ddc97\">120 V</tspan>  → fault is downstream of TP3</text><text x=\"30\" y=\"192\">Test 2 — TP5 to N: <tspan fill=\"#ff6b6b\">0 V</tspan>  → fault is between TP3 and TP5</text><text x=\"30\" y=\"214\">Test 3 — TP4 to N: <tspan fill=\"#3ddc97\">120 V</tspan>  → the open is TS1, between TP4 and TP5</text></g></svg>",
+      "caption": "Six devices between L1 and the coil. Measuring from the midpoint (TP3) to neutral splits the chain in half; each further test halves what remains. Three measurements find the open temperature switch. The alternative, testing every point in order, could take six."
+    },
+    {
+      "type": "example",
+      "problem": "A conveyor motor will not start. The starter has a 120 V control circuit: fuse F1, STOP button, limit switch LS1, pressure switch PS1, temperature switch TS1, overload contact OL and coil M, all in series. Pressing START does nothing. Apply the method.",
+      "solutionSteps": [
+        "Gather and observe: the operator says it stopped mid-shift with no alarm. The OL reset button is not popped. Control transformer pilot light is on, so control power exists.",
+        "Verify: measure X1 to X2 at the transformer: 120 V. Measure coil terminals while pressing START: 0 V. The coil is not being fed; the open is somewhere in the chain.",
+        "Isolate by half-splitting: measure TP3 (after LS1) to neutral: 120 V. Everything upstream of TP3 is intact.",
+        "Measure TP5 (after TS1) to neutral: 0 V. The open is between TP3 and TP5, so it is PS1 or TS1.",
+        "Measure TP4 (after PS1) to neutral: 120 V. PS1 is closed; TS1 is open. Confirm by measuring across TS1: 120 V (full source voltage across one device proves it is the open).",
+        "Correct the cause: TS1 is a high-temperature switch on the gearbox. It opened because the gearbox is hot; the oil is low. Fill the gearbox and let it cool rather than jumping out the switch.",
+        "Verify and document: TS1 closes when the gearbox cools, the conveyor starts and runs a full cycle at 11.2 A against a 12.4 A nameplate. Record the readings, the root cause and the recommendation to inspect for the oil leak."
+      ],
+      "answer": "The open device is TS1, found in three half-split measurements; the root cause is an overheated gearbox, not a bad switch."
+    },
+    {
+      "type": "text",
+      "heading": "Measuring under load: the fault that hides when the circuit is off",
+      "markdown": "Resistance in a connection does nothing until current flows through it. That is why so many faults only appear \"when the dryer is running\" or \"in the afternoon when everyone is here.\" A corroded splice may read 0.3 Ω on an ohmmeter, which looks fine, yet drop 6 V at 20 A, dim the lights and heat the box.\n\nThe technique is **voltage drop under load**:\n\n1. Energize the circuit and put its normal load on it (or a known load such as a heater).\n2. Measure voltage at the source end and at the load end. The difference is the total drop in the conductors and every connection between them. Compare with the expected drop from conductor resistance (about 2 Ω per 1,000 ft for 12 AWG copper, both ways) and with the Code's recommended 3 % for a branch circuit (210.19 Informational Note).\n3. If the total drop is excessive, measure across each connection in turn: breaker terminal, each splice, each device terminal, the neutral bar. A good connection shows millivolts; the bad one shows volts.\n\nThe same idea applies to contactors (measure across the closed power contacts under load; more than a few tenths of a volt means pitted contacts), to fuses (a fuse that reads 1–2 V across it under load is failing) and to the neutral (a loose service neutral shows up as line-to-neutral voltages that swing above and below 120 V as loads change: one leg rises while the other falls).\n\n**Hopscotching** is half-splitting's sequential cousin: with one lead on neutral, walk the other lead along the chain from the source until the voltage disappears. It takes more measurements but needs less thought, which is sometimes what the situation calls for.\n\n**Input/output** testing treats each device as a box: if the input is correct and the output is wrong, the device is at fault. It is how you troubleshoot drives, power supplies, PLC modules and sensors, where you cannot see inside."
+    },
+    {
+      "type": "example",
+      "problem": "Lights on a 120 V, 20 A kitchen circuit dim when the microwave runs. At the last receptacle you measure 121 V with no load and 104 V with a 12 A heater plugged in. At the panel, the breaker terminal reads 120 V under the same load. Find the problem.",
+      "solutionSteps": [
+        "Total drop under load: 120 − 104 = 16 V, or 13 %. Expected drop for 60 ft of 12 AWG at 12 A is roughly 12 A × 0.24 Ω (120 ft round trip × 2 Ω per 1,000 ft) = 2.9 V. Something is adding about 13 V of drop.",
+        "The circuit is daisy-chained through four receptacles. With the heater still running, measure across each connection: breaker lug 0.02 V, first receptacle terminals 0.03 V, second receptacle 13.0 V across the back-stab connections, third receptacle 0.02 V.",
+        "Pinpointed: a back-stabbed (push-in) connection at the second receptacle. At 12 A it is dissipating about 12 × 13.0 = 156 W, which explains the warm, discolored device face.",
+        "Correct: de-energize, lock out and verify dead, replace the receptacle and the heat-damaged conductor ends, terminate under the screws or with pigtails, and check the other devices on the circuit for the same wiring method.",
+        "Verify: under the 12 A load the receptacle now reads 118.5 V (1.5 V drop). Document the readings before and after and note that back-stabbed devices remain elsewhere in the house."
+      ],
+      "answer": "A high-resistance back-stab connection at the second receptacle, found by measuring voltage drop across each connection under load."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Diagnostic measurements on energized equipment are energized work. NFPA 70E permits it only for testing and troubleshooting that cannot be done de-energized, by qualified persons, with the shock and arc-flash PPE for that equipment, and preferably with a second qualified person present. Everything after the diagnosis, including the repair, happens with the equipment locked out and tested dead (Cal/OSHA Title 8 §3314, OSHA 1910.333). Keep covers on where you can, use the meter's probes rather than fingers, and do not reach past energized parts to get a reading."
+    },
+    {
+      "type": "text",
+      "heading": "Common mistakes",
+      "markdown": "- **Replacing the symptom.** A tripped breaker, a blown fuse or a tripped overload is a message, not a fault. Find out why before you reset, and never upsize the device to \"stop the nuisance.\"\n- **Measuring resistance on a live or parallel-connected component.** An ohmmeter across a contactor coil that is still wired in will read the parallel paths; across a live circuit it will read nonsense and may be damaged.\n- **Trusting a no-load reading.** Full voltage at an outlet with nothing plugged in proves only that there is a path; it says nothing about the path's resistance.\n- **Skipping the drawings.** The sequence of operation tells you what is supposed to happen; without it you cannot tell a fault from a feature (a motor that will not start because a door interlock is open is working correctly).\n- **Testing in the wrong order.** Measure the easy, high-probability things first: control power, fuses, resets, interlocks, then split the circuit.\n- **Not confirming the fix.** Run a full cycle under real load. Intermittent faults need the longest verification; heat, vibration and time are what caused them.\n- **Leaving it different from how you found it.** Jumpers, lifted wires and bypassed safeties must come out before you leave, and the drawings must match what is installed."
+    },
+    {
+      "type": "text",
+      "heading": "Documenting and handing off",
+      "markdown": "A service record is part of the repair. It protects you, helps the next electrician and reveals patterns (the third failure of the same contactor in a year is not a contactor problem). A useful record fits on one page and contains:\n\n1. **Equipment and location**: name, panel and circuit, date and time, who reported it.\n2. **Symptom as reported and as verified**: the complaint in the operator's words, then what you observed.\n3. **Measurements**: each reading with where, how (across or to neutral, loaded or unloaded) and the meter used. \"120 V at TP3, 0 V at TP5, loaded\" is worth a paragraph of description.\n4. **Cause**: the component or connection that failed and why it failed.\n5. **Action**: what was replaced, repaired, adjusted or cleaned, with part numbers and settings (overload dial, timer, sensor delay).\n6. **Verification**: load current, voltages and operating cycle after repair.\n7. **Recommendations**: related conditions you noticed but did not fix, with the risk stated plainly.\n\nUpdate the panel schedule and control drawings if anything changed, tag the equipment if a temporary condition remains, and tell the operator what to watch for. A clear handoff is the difference between a repair and a callback."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "Practice the method on the virtual bench: open the \"Fault Finding: An Open Branch\" workshop exercise, predict which readings an open resistor would change before you take any measurement, then measure and compare. Treat each measurement as a half-split: what does it rule out?"
+    }
+  ],
+  "practice": [
+    {
+      "id": "troubleshooting-methodology-p1",
+      "type": "numeric",
+      "prompt": "A series control circuit has 32 devices between the source and the coil. Using half-splitting, what is the maximum number of voltage measurements needed to find a single open device?",
+      "answer": 5,
+      "unit": "measurements",
+      "tolerance": 0.1,
+      "explanation": "log₂(32) = 5. Each measurement halves the suspect group: 32 → 16 → 8 → 4 → 2 → 1."
+    },
+    {
+      "id": "troubleshooting-methodology-p2",
+      "type": "numeric",
+      "prompt": "A connection has a resistance of 0.08 Ω and carries 25 A. How many volts are dropped across it?",
+      "answer": 2,
+      "unit": "V",
+      "tolerance": 0.02,
+      "explanation": "V = I × R = 25 × 0.08 = 2.0 V. It is also dissipating 50 W, enough to discolor the terminal."
+    },
+    {
+      "id": "troubleshooting-methodology-p3",
+      "type": "numeric",
+      "prompt": "A 120 V circuit reads 120.5 V at the panel and 112.3 V at the load under a 15 A load. What is the voltage drop as a percentage of 120 V?",
+      "answer": 6.8,
+      "unit": "%",
+      "tolerance": 0.15,
+      "explanation": "(120.5 − 112.3) ÷ 120 × 100 = 8.2 ÷ 120 × 100 = 6.8 %, more than double the 3 % recommended in the 210.19 Informational Note; look for a bad connection."
+    },
+    {
+      "id": "troubleshooting-methodology-p4",
+      "type": "multiple_choice",
+      "prompt": "With the circuit energized and the load running, you measure 120 V across a single closed pushbutton in a 120 V control circuit. This proves that:",
+      "choices": [
+        "the pushbutton is open (not passing current)",
+        "the pushbutton is good",
+        "the coil is shorted",
+        "the fuse is blown"
+      ],
+      "correctIndex": 0,
+      "explanation": "Full source voltage across one device in a series chain means all the other devices are passing voltage and this one is the open."
+    },
+    {
+      "id": "troubleshooting-methodology-p5",
+      "type": "multiple_choice",
+      "prompt": "Why must resistance measurements be made with the circuit de-energized and the component isolated?",
+      "choices": [
+        "Because live voltage damages the meter and parallel paths through other components give false readings",
+        "Because resistance changes with frequency",
+        "Because ohmmeters only work on DC circuits",
+        "Because the reading is more precise at night"
+      ],
+      "correctIndex": 0,
+      "explanation": "The ohmmeter uses its own small source; external voltage ruins the reading or the meter, and any parallel path (coil, lamp, winding) makes an open component look continuous."
+    },
+    {
+      "id": "troubleshooting-methodology-p6",
+      "type": "multiple_choice",
+      "prompt": "A digital meter reads 48 V on a conductor you expected to be dead. The most likely explanation and next step is:",
+      "choices": [
+        "ghost voltage induced from adjacent conductors; confirm with the LoZ function or a solenoid tester",
+        "the conductor is definitely energized at 48 V; find the 48 V source",
+        "the meter battery is low",
+        "the conductor is grounded"
+      ],
+      "correctIndex": 0,
+      "explanation": "High-impedance meters read capacitively coupled voltage on floating conductors. A low-impedance test collapses a ghost voltage but not a real one. Treat it as live until proven otherwise."
+    },
+    {
+      "id": "troubleshooting-methodology-p7",
+      "type": "multiple_choice",
+      "prompt": "A motor overload trips every few hours. The correct next step is:",
+      "choices": [
+        "install the next larger overload heaters",
+        "measure the three line currents and voltages under load and inspect the mechanical load before changing anything",
+        "bypass the overload contact to keep production running",
+        "replace the motor"
+      ],
+      "correctIndex": 1,
+      "explanation": "The overload is reporting a condition. Current unbalance, voltage unbalance, a binding load or high ambient are the usual causes; larger heaters just move the failure into the motor."
+    }
+  ],
+  "quiz": {
+    "key": "troubleshooting-methodology-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "troubleshooting-methodology-q1",
+        "type": "numeric",
+        "prompt": "How many half-split measurements, at most, are needed to find one open among 16 series devices?",
+        "answer": 4,
+        "unit": "measurements",
+        "tolerance": 0.1,
+        "explanation": "log₂(16) = 4."
+      },
+      {
+        "id": "troubleshooting-methodology-q2",
+        "type": "numeric",
+        "prompt": "A contactor's closed power contact drops 0.9 V while carrying 30 A. How much power is being dissipated in that contact, in watts?",
+        "answer": 27,
+        "unit": "W",
+        "tolerance": 0.3,
+        "explanation": "P = V × I = 0.9 × 30 = 27 W, far more than a healthy contact (a few milliohms would drop millivolts). The contacts are pitted or the spring is weak."
+      },
+      {
+        "id": "troubleshooting-methodology-q3",
+        "type": "numeric",
+        "prompt": "A receptacle reads 122 V unloaded and 110 V with a 10 A load. What is the effective resistance of the circuit path (both conductors plus all connections)?",
+        "answer": 1.2,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "R = ΔV ÷ I = (122 − 110) ÷ 10 = 1.2 Ω, about five times what 60 ft of 12 AWG (0.24 Ω round trip) should show; expect a bad connection."
+      },
+      {
+        "id": "troubleshooting-methodology-q4",
+        "type": "multiple_choice",
+        "prompt": "Which is the correct order of the six steps?",
+        "choices": [
+          "Correct, verify, gather information, analyze, test, document",
+          "Gather information, observe and verify, analyze and isolate, test and pinpoint, correct the cause, verify and document",
+          "Test, correct, observe, gather information, document, analyze",
+          "Analyze, correct, test, observe, document, gather information"
+        ],
+        "correctIndex": 1,
+        "explanation": "Information and observation come first, isolation and testing narrow the fault, and the repair is followed by verification and a record."
+      },
+      {
+        "id": "troubleshooting-methodology-q5",
+        "type": "multiple_choice",
+        "prompt": "A splice reads 0.2 Ω on an ohmmeter but the lights downstream dim badly under load. The explanation is:",
+        "choices": [
+          "the ohmmeter is wrong; 0.2 Ω cannot cause dimming",
+          "resistance only produces voltage drop when current flows, so the problem appears under load (V = I × R)",
+          "the lamps are defective",
+          "the meter was on the wrong range"
+        ],
+        "correctIndex": 1,
+        "explanation": "At 15 A, 0.2 Ω drops 3 V and dissipates 45 W. A connection like this heats, oxidizes and gets worse. Always evaluate connections under load."
+      },
+      {
+        "id": "troubleshooting-methodology-q6",
+        "type": "multiple_choice",
+        "prompt": "In half-splitting, where do you make the first measurement?",
+        "choices": [
+          "At the device nearest the source",
+          "At the device nearest the load",
+          "At the midpoint of the chain, so the result eliminates half of the devices",
+          "Across the coil"
+        ],
+        "correctIndex": 2,
+        "explanation": "A midpoint reading tells you which half contains the fault; repeating on the suspect half converges fastest."
+      },
+      {
+        "id": "troubleshooting-methodology-q7",
+        "type": "multiple_choice",
+        "prompt": "Before doing the repair on a circuit you just diagnosed live, you must:",
+        "choices": [
+          "press the STOP button and begin",
+          "open the disconnect, apply your lock and tag, and verify the absence of voltage with a tester checked live-dead-live",
+          "have a coworker watch the panel",
+          "turn the breaker off and start immediately"
+        ],
+        "correctIndex": 1,
+        "explanation": "Diagnosis may be energized; repair is not. Lockout/tagout and verification of a de-energized state are required by Cal/OSHA Title 8 §3314 and OSHA 1910.333."
+      },
+      {
+        "id": "troubleshooting-methodology-q8",
+        "type": "multiple_choice",
+        "prompt": "Which item does NOT belong in a service record?",
+        "choices": [
+          "The readings taken, with where and how they were measured",
+          "The root cause and the parts replaced",
+          "Conditions noticed but not repaired, with the risk stated",
+          "A guess about what might have been wrong, with no measurements"
+        ],
+        "correctIndex": 3,
+        "explanation": "Records hold facts: readings, causes, actions, verification and recommendations. Unsupported guesses mislead the next person."
+      },
+      {
+        "id": "troubleshooting-methodology-q9",
+        "type": "multiple_choice",
+        "prompt": "On a three-phase motor, a clamp meter shows 18 A, 18 A and 0 A on the three lines while it runs noisily. This indicates:",
+        "choices": [
+          "normal operation for a lightly loaded motor",
+          "single-phasing: one line is open at a fuse, contact or connection, and the motor will overheat",
+          "the clamp meter needs a new battery",
+          "the motor is wired for the wrong voltage"
+        ],
+        "correctIndex": 1,
+        "explanation": "A three-phase motor can keep running on two phases while drawing excess current on them. Find the open line (blown fuse, bad contact) before the windings fail."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70E — Standard for Electrical Safety in the Workplace (energized diagnostic work)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70e-standard-development/70e"
+    },
+    {
+      "title": "Cal/OSHA Title 8 §3314 — The Control of Hazardous Energy",
+      "url": "https://www.dir.ca.gov/title8/3314.html"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.333 — Selection and use of work practices",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.333"
+    },
+    {
+      "title": "NFPA 70, National Electrical Code — 210.19 Informational Note (voltage drop), Article 430 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "Fluke — Troubleshooting application notes and meter safety categories",
+      "url": "https://www.fluke.com/en-us/learn"
+    },
+    {
+      "title": "Mazur & Rockis, Electrical Troubleshooting (ATP)",
+      "url": "https://www.atplearning.com/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

@@ -1,0 +1,424 @@
+{
+  "key": "nec-general-requirements-overview",
+  "track": "CODE",
+  "order": 2,
+  "title": "NEC General Requirements (Articles 100 and 110)",
+  "summary": "The definitions and general requirements that apply to every installation: approval and listing, following the instructions, termination temperature ratings, working space, dedicated equipment space, markings and arc-flash labels.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "nec-structure-and-navigation"
+  ],
+  "objectives": [
+    "Students will be able to explain the Article 100 definitions that decide the most common code questions, including approved, listed, labeled, readily accessible, qualified person and the branch-circuit/feeder/service distinction.",
+    "Students will be able to state what 110.2 and 110.3(B) require and why \"installed per the listing instructions\" is the most-cited rule in the book.",
+    "Students will be able to apply the termination temperature rules in 110.14(C) to choose the correct ampacity column, and explain the torque requirement in 110.14(D).",
+    "Students will be able to determine the required working space depth, width and height for electrical equipment using 110.26(A), and describe dedicated equipment space.",
+    "Students will be able to describe the marking, interrupting-rating, fault-current and arc-flash labeling requirements in Article 110."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Why Chapter 1 comes first",
+      "markdown": "Chapter 1 is short, and inspectors cite it more than any other chapter. Article 100 defines the words every other rule uses, and Article 110 sets requirements that apply to all equipment everywhere: it must be approved, installed per its listing, terminated correctly, kept accessible with room to work on it, and marked so the next person knows what they are looking at.\n\nAs with every CODE lesson here, remember that **the current California Electrical Code adopts the NEC with California amendments**, and that **the DIR Candidate Information Bulletin names the NEC edition you must study for the certification exam**. Section numbers below follow the 2017–2023 editions; verify them in your edition. The 2023 edition moved all definitions into Article 100, so older books have some of these definitions inside other articles."
+    },
+    {
+      "type": "table",
+      "caption": "Article 100 definitions that decide real questions (paraphrased)",
+      "columns": [
+        "Term",
+        "Plain meaning",
+        "Why it matters on the job"
+      ],
+      "rows": [
+        [
+          "Accessible (wiring methods)",
+          "Can be removed or exposed without damaging the building finish, or is not permanently closed in",
+          "Splices must be in accessible boxes; a box behind drywall is not accessible"
+        ],
+        [
+          "Accessible, readily",
+          "Reachable quickly without climbing over obstacles, removing them, or using ladders or tools",
+          "Service disconnects, panelboard overcurrent devices and many GFCI devices must be readily accessible"
+        ],
+        [
+          "Approved",
+          "Acceptable to the authority having jurisdiction",
+          "The inspector, not the manufacturer, decides what is approved; listing is the usual evidence"
+        ],
+        [
+          "Listed / Labeled",
+          "Evaluated by a recognized testing laboratory to a standard and included in its list / bearing the laboratory's mark",
+          "110.3(B) ties you to the listing instructions; unlisted equipment usually needs a field evaluation"
+        ],
+        [
+          "Authority Having Jurisdiction (AHJ)",
+          "The organization or individual responsible for enforcing the code",
+          "In California, usually the local building department; also fire marshals, state agencies, the utility for its own equipment"
+        ],
+        [
+          "Qualified person",
+          "Has the skills and knowledge of the equipment and has received safety training to recognize and avoid its hazards",
+          "Many rules (working on energized parts, access to certain spaces) apply only to qualified persons; a trainee is not automatically qualified"
+        ],
+        [
+          "Branch circuit / Feeder / Service",
+          "Branch: final overcurrent device to outlets. Feeder: source or service equipment to final overcurrent device. Service: utility conductors and equipment to the premises",
+          "Determines whether Article 210, 215 or 230 applies, and where GFCI, AFCI and grounding rules attach"
+        ],
+        [
+          "Continuous load",
+          "Maximum current expected for 3 hours or more",
+          "Triggers the 125 % sizing rule for conductors and overcurrent devices"
+        ],
+        [
+          "Outlet / Receptacle / Device",
+          "Outlet: a point where current is taken for utilization equipment. Receptacle: a contact device for a plug. Device: carries or controls current but does not use it (switch, receptacle)",
+          "A lighting outlet and a receptacle outlet are both outlets; a receptacle is one kind of outlet"
+        ],
+        [
+          "Grounded conductor / Grounding conductor, equipment",
+          "Grounded: intentionally grounded circuit conductor (neutral). EGC: the path that connects metal enclosures to the system grounded conductor and electrode",
+          "White or gray is the grounded conductor; green or bare is the EGC; they are never the same thing"
+        ],
+        [
+          "Voltage to ground",
+          "For grounded systems, from a conductor to the grounded point; for ungrounded, the highest voltage between conductors",
+          "Sets working-space depth (0–150 V vs 151–600 V) and many clearance rules"
+        ],
+        [
+          "In sight from (within sight)",
+          "Visible and not more than 50 ft distant",
+          "Motor and HVAC disconnect location rules"
+        ],
+        [
+          "Dwelling unit",
+          "Permanent provisions for living, sleeping, cooking and sanitation",
+          "Hundreds of rules apply only to dwellings; a hotel room without cooking is not one"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Approval, listing and following the instructions (110.2, 110.3)",
+      "markdown": "**110.2** requires conductors and equipment to be **approved**, and 110.3(A) tells the AHJ what to consider when deciding: suitability for the use (usually demonstrated by listing or labeling), mechanical strength, wire-bending space, insulation, heating effects, arcing effects, classification by type and voltage, and other factors affecting safety.\n\n**110.3(B)** is the rule that connects the whole code book to the manufacturer's paperwork: listed or labeled equipment must be installed and used in accordance with any instructions included in the listing or labeling. The torque value on a breaker, the \"use copper only\" marking on a lug, the wet-location rating of a luminaire, the maximum fuse size on an HVAC nameplate, the \"not for use with dimmers\" note on an LED lamp: all become enforceable through 110.3(B). It is also why the instruction sheet in the box is worth reading before you throw the box away.\n\n**110.3(C)** (2017 and later) requires that product testing, evaluation and listing be done by recognized qualified electrical testing laboratories, which in the US means laboratories recognized by OSHA as Nationally Recognized Testing Laboratories (UL, ETL/Intertek, CSA and others).\n\nRelated rules that inspectors look for: **110.11** (equipment must be identified for the environment: wet, corrosive, high temperature); **110.12** (neat and workmanlike installation, unused openings closed, no damaged parts); **110.13** (mounted securely, with ventilation not blocked); and **110.7** (wiring must be free from short circuits, ground faults and connections to ground other than those required)."
+    },
+    {
+      "type": "text",
+      "heading": "Conductors and terminations (110.5, 110.14)",
+      "markdown": "**110.5**: where the Code does not say otherwise, conductor sizes and ampacities refer to **copper**. Aluminum conductors are permitted and common for large feeders and services, but every termination must be identified for aluminum (AL/CU or AL9CU markings) and the conductor must be sized from its own column of the ampacity tables.\n\n**110.14(A), terminals** must be identified for the conductor material and the number and size of conductors they accept. One conductor per terminal unless the terminal is listed for more. **110.14(B), splices** must use listed devices, or be brazed, welded or soldered after being mechanically secure, and must be insulated equivalent to the conductor.\n\n**110.14(C), temperature limitations.** A conductor's ampacity is limited by the weakest-rated point in the circuit, which is almost always the termination. The rule:\n\n- Circuits rated **100 A or less**, or conductors **14 through 1 AWG**: use the **60 °C column** unless the equipment and terminals are listed and marked for 75 °C (most modern breakers and panels are marked 60/75 °C, which allows the 75 °C column).\n- Circuits rated **over 100 A**, or conductors **larger than 1 AWG**: use the **75 °C column** (or 90 °C only when everything, including the equipment, is rated 90 °C, which is rare).\n\nThe 90 °C column for THHN is still useful: it is the starting point for ampacity adjustment and correction factors (conduit fill, ambient temperature), as long as the final ampacity does not exceed the termination's column.\n\n**110.14(D), torque.** Where a tightening torque is indicated on the equipment or in its instructions, a **calibrated torque tool** must be used, or an alternative method approved by the manufacturer. Loose terminations are the leading cause of connection failures and fires; over-torqued lugs crush strands. Torque screwdrivers and wrenches belong in the service truck, and inspectors in California increasingly ask to see them."
+    },
+    {
+      "type": "example",
+      "problem": "A 90 A feeder breaker has terminals marked 60/75 °C and feeds a panel with 75 °C-rated lugs. The conductors are 3 AWG THHN copper (Table 310.16: 85 A at 60 °C, 100 A at 75 °C, 115 A at 90 °C). Is 3 AWG acceptable? What if the breaker terminals were rated 60 °C only?",
+      "solutionSteps": [
+        "The circuit is 100 A or less, so 110.14(C)(1)(a) applies: 60 °C column unless the terminations are marked 75 °C.",
+        "Both ends are rated 75 °C, so the 75 °C column may be used: 3 AWG THHN = 100 A, which is ≥ 90 A. Acceptable.",
+        "If the breaker terminals were rated 60 °C only, the 60 °C column governs: 3 AWG = 85 A, which is less than the 90 A breaker. Not acceptable; 2 AWG (95 A at 60 °C) would be needed.",
+        "The 115 A value in the 90 °C column is never used for the termination check, only as the starting point for derating."
+      ],
+      "answer": "With 75 °C terminations, 3 AWG THHN (100 A) is acceptable for the 90 A feeder. With 60 °C terminations it is not; 2 AWG would be required."
+    },
+    {
+      "type": "diagram",
+      "title": "Working space and dedicated equipment space (110.26)",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 320\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><g fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"bold\"><text x=\"160\" y=\"22\" text-anchor=\"middle\">Front view</text><text x=\"430\" y=\"22\" text-anchor=\"middle\">Plan view (from above)</text></g><path d=\"M30 280 H280\" stroke=\"#9aa6b8\" stroke-width=\"3\"/><rect x=\"130\" y=\"120\" width=\"80\" height=\"120\" stroke=\"#4cc9ff\"/><rect x=\"130\" y=\"120\" width=\"80\" height=\"120\" fill=\"#4cc9ff\" fill-opacity=\"0.12\" stroke=\"none\"/><text x=\"170\" y=\"185\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\">panel</text><rect x=\"130\" y=\"40\" width=\"80\" height=\"80\" stroke=\"#f3c75b\" stroke-dasharray=\"5 4\"/><text x=\"170\" y=\"64\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">dedicated</text><text x=\"170\" y=\"76\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">equipment</text><text x=\"170\" y=\"88\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">space: to 6 ft</text><text x=\"170\" y=\"100\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">above, or ceiling</text><path d=\"M95 120 V280 M90 120 H100 M90 280 H100\" stroke=\"#3ddc97\"/><path d=\"M95 120 l-4 8 M95 120 l4 8 M95 280 l-4 -8 M95 280 l4 -8\" stroke=\"#3ddc97\"/><text x=\"86\" y=\"195\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"end\" font-size=\"10\">6½ ft min</text><text x=\"86\" y=\"207\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"end\" font-size=\"10\">(or equipment</text><text x=\"86\" y=\"219\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"end\" font-size=\"10\">height)</text><path d=\"M115 300 H225 M115 295 V305 M225 295 V305\" stroke=\"#3ddc97\"/><text x=\"170\" y=\"316\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">30 in min width, or equipment width; doors open 90°</text><path d=\"M340 40 V290\" stroke=\"#9aa6b8\" stroke-width=\"4\"/><text x=\"332\" y=\"165\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"end\" font-size=\"10\">wall</text><rect x=\"342\" y=\"120\" width=\"14\" height=\"90\" stroke=\"#4cc9ff\"/><rect x=\"356\" y=\"100\" width=\"130\" height=\"130\" stroke=\"#3ddc97\" stroke-dasharray=\"5 4\"/><rect x=\"356\" y=\"100\" width=\"130\" height=\"130\" fill=\"#3ddc97\" fill-opacity=\"0.08\" stroke=\"none\"/><text x=\"421\" y=\"160\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">clear working space</text><text x=\"421\" y=\"173\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">no storage, kept clear</text><path d=\"M356 255 H486 M356 250 V260 M486 250 V260\" stroke=\"#ff6b6b\"/><path d=\"M356 255 l8 -4 M356 255 l8 4 M486 255 l-8 -4 M486 255 l-8 4\" stroke=\"#ff6b6b\"/><text x=\"421\" y=\"275\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">depth: 3 ft (0–150 V to ground)</text><text x=\"421\" y=\"288\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">3, 3½ or 4 ft at 151–600 V, by condition</text><text x=\"356\" y=\"62\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">depth is measured from the enclosure</text><text x=\"356\" y=\"75\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">front, or from exposed live parts</text></svg>",
+      "caption": "Working space is the clear volume in front of equipment likely to need examination, adjustment, servicing or maintenance while energized: depth from Table 110.26(A)(1), width 30 in or the equipment width, height 6½ ft or the equipment height. Dedicated equipment space extends above the panel for electrical use only."
+    },
+    {
+      "type": "text",
+      "heading": "Working space in detail (110.26)",
+      "markdown": "**110.26(A) applies** to equipment likely to require examination, adjustment, servicing or maintenance while energized: panelboards, switchboards, motor control centers, disconnects, transformers, VFDs. It is a safety rule written for the person who will one day stand in front of that panel with a meter.\n\n- **Depth, 110.26(A)(1) and Table 110.26(A)(1)**: measured from the exposed live parts, or from the enclosure front if the parts are enclosed. For **0–150 V to ground** (120/240 V, 208Y/120 V): **3 ft** in all conditions. For **151–600 V to ground** (480Y/277 V, 480 V delta): **3 ft** in Condition 1, **3½ ft** in Condition 2, **4 ft** in Condition 3. Condition 1: exposed live parts on one side, nothing live or grounded on the other (or insulated on both). Condition 2: exposed live parts on one side and **grounded parts** on the other; concrete, brick and tile walls count as grounded. Condition 3: exposed live parts on both sides. A 480 V panel facing a concrete wall is Condition 2.\n- **Width, 110.26(A)(2)**: 30 in or the width of the equipment, whichever is greater, and the space must allow equipment doors or hinged panels to open at least 90°. The 30 in need not be centered on the equipment.\n- **Height, 110.26(A)(3)**: 6½ ft or the equipment height, whichever is greater, from the floor or platform. Equipment above or below other equipment may extend up to 6 in into the working space.\n- **Clear and unobstructed, 110.26(B)**: the working space is not for storage. Nothing goes in it, and if equipment is in a passageway or open space, it must be guarded.\n- **Entrance and egress, 110.26(C)**: at least one entrance of sufficient size. For equipment rated 1,200 A or more and over 6 ft wide, one entrance at each end at least 24 in wide and 6½ ft high, unless there is a continuous unobstructed exit or the working space is doubled. Personnel doors within 25 ft of equipment rated 800 A or more must open in the direction of egress and have panic hardware.\n- **Illumination, 110.26(D)**: required for indoor working spaces around service equipment, switchboards, panelboards and motor control centers; the lights cannot be controlled only by automatic means.\n- **Dedicated equipment space, 110.26(E)**: indoors, the footprint of the equipment extended from the floor to 6 ft above the equipment or to the structural ceiling, whichever is lower, is reserved for electrical equipment. No ducts, pipes or foreign systems in that zone, and the area above it must be protected from leaks or condensation. Sprinkler protection is permitted. Outdoors, the dedicated space is the footprint of the equipment extended to 6 ft above.\n\n**110.26(F)** allows the required space to be in a locked room or enclosure as long as qualified persons can get to it."
+    },
+    {
+      "type": "example",
+      "problem": "A 480Y/277 V panelboard, 42 in wide and 6 ft tall, is installed in a mechanical room facing a concrete block wall. The ceiling is 10 ft high. State the minimum working space depth, width and height and the dedicated equipment space.",
+      "solutionSteps": [
+        "Voltage to ground is 277 V, so the 151–600 V row of Table 110.26(A)(1) applies.",
+        "Exposed live parts (when the cover is off) on one side and a grounded concrete wall on the other is Condition 2: minimum depth 3½ ft.",
+        "Width: the greater of 30 in or the equipment width (42 in): 42 in.",
+        "Height: the greater of 6½ ft or the equipment height (6 ft): 6½ ft.",
+        "Dedicated equipment space: the 42 in width and the panel depth, from the floor to 6 ft above the top of the panel or to the structural ceiling, whichever is lower. The panel top is at perhaps 6½ ft; 6 ft above that is 12½ ft, so the ceiling at 10 ft is the limit. No ducts or piping may pass through that zone."
+      ],
+      "answer": "Depth 3½ ft, width 42 in, height 6½ ft; dedicated space from floor to the 10 ft ceiling over the panel footprint."
+    },
+    {
+      "type": "table",
+      "caption": "Table 110.26(A)(1) working space depth, summarized (1,000 V and below)",
+      "columns": [
+        "Nominal voltage to ground",
+        "Condition 1",
+        "Condition 2",
+        "Condition 3"
+      ],
+      "rows": [
+        [
+          "0–150 V",
+          "3 ft (900 mm)",
+          "3 ft (900 mm)",
+          "3 ft (900 mm)"
+        ],
+        [
+          "151–600 V",
+          "3 ft (900 mm)",
+          "3½ ft (1.0 m)",
+          "4 ft (1.2 m)"
+        ],
+        [
+          "601–1,000 V",
+          "3 ft (900 mm)",
+          "4 ft (1.2 m)",
+          "5 ft (1.5 m)"
+        ],
+        [
+          "Condition meaning",
+          "Live parts one side; other side insulated or no live/grounded parts",
+          "Live parts one side; grounded parts (concrete, brick, tile, steel) other side",
+          "Live parts on both sides of the working space"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Ratings, markings and labels (110.9, 110.10, 110.16, 110.21–110.24, 110.28)",
+      "markdown": "**Interrupting rating, 110.9.** Any device intended to interrupt current at fault levels (breakers, fuses) must have an interrupting rating at least equal to the available fault current at its line terminals. A standard residential breaker is rated 10,000 A (10 kAIC); commercial equipment is commonly 22, 42 or 65 kAIC. Installing a 10 kAIC breaker where 18,000 A is available is a violation and a bomb.\n\n**Circuit impedance and short-circuit current rating, 110.10.** Equipment such as panelboards, motor controllers and HVAC units carries an **SCCR**; it must be at least the available fault current so the equipment survives a fault long enough for the protective device to clear it. Series-rated combinations (240.86) are one way to meet it.\n\n**Available fault current marking, 110.24.** Service equipment in other than dwelling units must be field-marked with the maximum available fault current and the date of the calculation, and the marking updated when the installation changes. The number comes from the utility and a calculation (the transformer %Z method you learned in the transformer lesson).\n\n**Arc-flash hazard warning, 110.16.** Switchboards, panelboards, industrial control panels, meter socket enclosures and motor control centers in other than dwelling units that are likely to require examination, adjustment, servicing or maintenance while energized must be field-marked to warn of arc-flash hazards. 110.16(B) adds specific content for larger service equipment (nominal voltage, available fault current, clearing time, date). The detailed incident-energy labels come from NFPA 70E; the NEC requires the warning.\n\n**Markings and identification.** 110.21 requires the manufacturer's identification and ratings on equipment, and field-applied hazard markings that are durable and conform to ANSI Z535 (signal words such as DANGER, WARNING, CAUTION). 110.22 requires every disconnecting means to be legibly marked to show its purpose unless the purpose is obvious. A panel directory (408.4) is the same idea at circuit level: \"lights\" is not a legal description; \"kitchen counter receptacles, east\" is.\n\n**Guarding and enclosures.** 110.27 requires live parts above 50 V to be guarded against accidental contact, by enclosure, location in a room accessible only to qualified persons, or elevation (8 ft or more). 110.28 and its table assign **NEMA enclosure types** to environments: Type 1 indoor general; 3R outdoor rain-tight; 4 and 4X watertight and corrosion-resistant; 12 indoor dust-tight and drip-tight. A Type 1 panel outdoors is a 110.28 violation and a future shock hazard."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Working space and arc-flash labels are not paperwork; they are the two things that protect the electrician who opens the panel after you. A panel with a shelf unit in front of it forces the next person to lean over stored material with a meter in hand. A panel without a fault-current or arc-flash marking leaves them guessing what PPE to wear. Install so that you would be comfortable standing there yourself."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Exam strategy for Chapter 1 questions: read the question for the trigger words. \"Readily accessible,\" \"within sight,\" \"continuous,\" \"qualified,\" \"listed\" and \"voltage to ground\" each point to a definition and usually to the one detail the question turns on. Then confirm in Table 110.26(A)(1) or 110.14(C) rather than from memory; the open-book exam rewards the candidate who checks."
+    }
+  ],
+  "practice": [
+    {
+      "id": "nec-general-requirements-overview-p1",
+      "type": "numeric",
+      "prompt": "What is the minimum working space depth, in feet, in front of a 208Y/120 V panelboard facing a concrete wall?",
+      "answer": 3,
+      "unit": "ft",
+      "tolerance": 0.01,
+      "explanation": "Voltage to ground is 120 V, so the 0–150 V row applies: 3 ft in every condition."
+    },
+    {
+      "id": "nec-general-requirements-overview-p2",
+      "type": "numeric",
+      "prompt": "What is the minimum working space depth, in feet, for a 480Y/277 V switchboard with exposed live parts on both sides of the working space (Condition 3)?",
+      "answer": 4,
+      "unit": "ft",
+      "tolerance": 0.01,
+      "explanation": "151–600 V to ground, Condition 3: 4 ft per Table 110.26(A)(1)."
+    },
+    {
+      "id": "nec-general-requirements-overview-p3",
+      "type": "numeric",
+      "prompt": "A 36 in wide motor control center requires how many inches of working space width, minimum?",
+      "answer": 36,
+      "unit": "in",
+      "tolerance": 0.1,
+      "explanation": "110.26(A)(2): 30 in or the equipment width, whichever is greater. 36 in governs."
+    },
+    {
+      "id": "nec-general-requirements-overview-p4",
+      "type": "multiple_choice",
+      "prompt": "A 60 A circuit uses 6 AWG THHN copper (55 A at 60 °C, 65 A at 75 °C, 75 A at 90 °C). The breaker and the load terminals are marked 75 °C. Which ampacity applies?",
+      "choices": [
+        "55 A",
+        "65 A",
+        "75 A",
+        "60 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "The circuit is 100 A or less, so the 60 °C column applies unless terminations are rated 75 °C. They are, so 65 A applies and the 60 A breaker is fine. The 90 °C column is only for derating calculations."
+    },
+    {
+      "id": "nec-general-requirements-overview-p5",
+      "type": "multiple_choice",
+      "prompt": "The rule that makes a manufacturer's listing instructions enforceable is:",
+      "choices": [
+        "110.26(A)",
+        "110.3(B)",
+        "110.14(D)",
+        "110.22"
+      ],
+      "correctIndex": 1,
+      "explanation": "110.3(B): listed or labeled equipment shall be installed and used in accordance with any instructions included in the listing or labeling."
+    },
+    {
+      "id": "nec-general-requirements-overview-p6",
+      "type": "multiple_choice",
+      "prompt": "Which is an example of equipment that is NOT readily accessible?",
+      "choices": [
+        "A panelboard in a hallway at 5 ft to the handle",
+        "A disconnect switch that can be reached only by climbing a ladder",
+        "A GFCI receptacle in a bathroom",
+        "A service disconnect inside an unlocked exterior enclosure"
+      ],
+      "correctIndex": 1,
+      "explanation": "Readily accessible means reachable quickly without climbing, removing obstacles, or using ladders or tools."
+    },
+    {
+      "id": "nec-general-requirements-overview-p7",
+      "type": "multiple_choice",
+      "prompt": "Where a torque value is marked on equipment or in its instructions, 110.14(D) requires:",
+      "choices": [
+        "tightening by feel by a qualified person",
+        "use of a calibrated torque tool or a manufacturer-approved alternative method",
+        "tightening until the conductor cannot be pulled out",
+        "nothing; torque values are informational"
+      ],
+      "correctIndex": 1,
+      "explanation": "Loose and over-tight terminations both fail. A calibrated torque tool is required where torque is specified."
+    }
+  ],
+  "quiz": {
+    "key": "nec-general-requirements-overview-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "nec-general-requirements-overview-q1",
+        "type": "numeric",
+        "prompt": "Minimum working space height, in feet, in front of a panelboard that is 5 ft tall?",
+        "answer": 6.5,
+        "unit": "ft",
+        "tolerance": 0.01,
+        "explanation": "110.26(A)(3): 6½ ft or the equipment height, whichever is greater."
+      },
+      {
+        "id": "nec-general-requirements-overview-q2",
+        "type": "numeric",
+        "prompt": "A 480 V, 3-wire delta panel (voltage to ground 480 V) is installed with exposed live parts on one side and an insulated wall on the other. Minimum working space depth in feet?",
+        "answer": 3,
+        "unit": "ft",
+        "tolerance": 0.01,
+        "explanation": "151–600 V to ground, Condition 1: 3 ft."
+      },
+      {
+        "id": "nec-general-requirements-overview-q3",
+        "type": "numeric",
+        "prompt": "Dedicated equipment space above an indoor panelboard extends how many feet above the equipment (unless the structural ceiling is lower)?",
+        "answer": 6,
+        "unit": "ft",
+        "tolerance": 0.01,
+        "explanation": "110.26(E)(1)(a): from the floor to 6 ft above the equipment or to the structural ceiling, whichever is lower."
+      },
+      {
+        "id": "nec-general-requirements-overview-q4",
+        "type": "multiple_choice",
+        "prompt": "\"Approved\" in the NEC means:",
+        "choices": [
+          "listed by UL",
+          "acceptable to the authority having jurisdiction",
+          "labeled by the manufacturer",
+          "rated for the voltage"
+        ],
+        "correctIndex": 1,
+        "explanation": "Approval is the AHJ's decision; listing and labeling are the usual evidence used to grant it."
+      },
+      {
+        "id": "nec-general-requirements-overview-q5",
+        "type": "multiple_choice",
+        "prompt": "A 200 A feeder uses 3/0 AWG copper. Which temperature column applies to the termination check?",
+        "choices": [
+          "60 °C, because the conductors are copper",
+          "75 °C, because the circuit is over 100 A and the conductors are larger than 1 AWG",
+          "90 °C, because THHN is 90 °C insulation",
+          "No column applies to feeders"
+        ],
+        "correctIndex": 1,
+        "explanation": "110.14(C)(1)(b): circuits over 100 A or conductors larger than 1 AWG use the 75 °C column unless everything is rated 90 °C."
+      },
+      {
+        "id": "nec-general-requirements-overview-q6",
+        "type": "multiple_choice",
+        "prompt": "The available fault current at a commercial service is 22,000 A. Which main breaker is acceptable under 110.9?",
+        "choices": [
+          "10 kAIC",
+          "14 kAIC",
+          "22 kAIC or higher",
+          "Any rating, since the utility fuse protects it"
+        ],
+        "correctIndex": 2,
+        "explanation": "The interrupting rating must be at least the available fault current at the device's line terminals."
+      },
+      {
+        "id": "nec-general-requirements-overview-q7",
+        "type": "multiple_choice",
+        "prompt": "A mechanical contractor wants to run a condensate drain line across the wall directly above a panelboard, 2 ft above its top. This:",
+        "choices": [
+          "is permitted if the pipe is insulated",
+          "violates 110.26(E), which reserves the space above the panel for electrical equipment and prohibits foreign systems",
+          "is permitted because the working space is only in front of the panel",
+          "is permitted if the panel is Type 3R"
+        ],
+        "correctIndex": 1,
+        "explanation": "Dedicated equipment space extends 6 ft above the panel; piping, ducts and other foreign systems are not allowed there, and the zone must be protected from leaks."
+      },
+      {
+        "id": "nec-general-requirements-overview-q8",
+        "type": "multiple_choice",
+        "prompt": "A disconnect switch feeding a rooftop unit must, per 110.22, be:",
+        "choices": [
+          "painted red",
+          "legibly marked to indicate its purpose unless that purpose is evident",
+          "locked at all times",
+          "installed inside the unit"
+        ],
+        "correctIndex": 1,
+        "explanation": "Identification of disconnecting means protects the next worker. Location rules for the HVAC disconnect itself come from 440.14."
+      },
+      {
+        "id": "nec-general-requirements-overview-q9",
+        "type": "multiple_choice",
+        "prompt": "An arc-flash warning label per 110.16 is required on:",
+        "choices": [
+          "every receptacle",
+          "panelboards and similar equipment in non-dwelling occupancies likely to be worked on while energized",
+          "residential load centers only",
+          "extension cords"
+        ],
+        "correctIndex": 1,
+        "explanation": "110.16 covers switchboards, panelboards, industrial control panels, meter socket enclosures and MCCs in other than dwelling units."
+      },
+      {
+        "id": "nec-general-requirements-overview-q10",
+        "type": "multiple_choice",
+        "prompt": "A Type 1 (general-purpose indoor) enclosure installed outdoors in the rain violates:",
+        "choices": [
+          "110.28 enclosure types for the environment",
+          "110.26 working space",
+          "110.14 terminations",
+          "110.22 identification"
+        ],
+        "correctIndex": 0,
+        "explanation": "Table 110.28 assigns enclosure types to conditions; outdoor exposure to rain requires at least Type 3R."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 100, Article 110 (110.2, 110.3, 110.9, 110.10, 110.14, 110.16, 110.21–110.28) (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Building Standards Commission — Title 24, Part 3 California Electrical Code",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "OSHA — Nationally Recognized Testing Laboratory (NRTL) Program",
+      "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program"
+    },
+    {
+      "title": "NFPA 70E — Standard for Electrical Safety in the Workplace (arc-flash labeling detail)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70e-standard-development/70e"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

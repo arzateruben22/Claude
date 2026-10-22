@@ -36,14 +36,14 @@ export function TopBar({
           {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
         </button>
         <p className="text-sm font-medium truncate flex-1">{current?.label ?? "CareerQuest"}</p>
-        <div className="hidden sm:flex items-center gap-3 text-xs text-fg-muted">
-          <span className="inline-flex items-center gap-1 tnum" title="Current streak (active days)">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs text-fg-muted shrink-0">
+          <span className="hidden sm:inline-flex items-center gap-1 tnum" title="Current streak (active days)">
             <Flame className="h-3.5 w-3.5 text-warning" aria-hidden /> {streak}d
           </span>
-          <span className="inline-flex items-center gap-1 tnum" title="Total XP">
+          <span className="inline-flex items-center gap-1 tnum" title="Total XP" data-testid="topbar-xp">
             <Zap className="h-3.5 w-3.5 text-gold" aria-hidden /> {totalXp.toLocaleString()} XP
           </span>
-          <span className="rounded-full bg-gold-soft text-gold px-2 py-0.5 font-medium">Lv {level}</span>
+          <span className="rounded-full bg-gold-soft text-gold px-2 py-0.5 font-medium" title="Career level">Lv {level}</span>
         </div>
         <span className="text-xs text-fg-muted hidden md:inline truncate max-w-40">{userName}</span>
         <form action={logoutAction}>

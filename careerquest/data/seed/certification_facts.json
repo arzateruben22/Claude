@@ -1,0 +1,284 @@
+{
+  "verifiedOn": "2026-10-21",
+  "verificationMethod": "IMPORTANT: In this sandbox, direct page fetches (WebFetch and curl) to dir.ca.gov, cslb.ca.gov, bls.gov, laett.com, ocett.org, goweca.com, abcsocal.org and all other external hosts were blocked by the environment's network policy. Every fact below was verified through web-search extracts (quoted snippets) of the cited official pages, not by reading the full page. Figures that only appeared on third-party pages are marked unverified. Re-confirm fee amounts, dates and wages against the live official URLs before publishing.",
+  "programName": "California Electrician Certification Program",
+  "administeredBy": "California Department of Industrial Relations (DIR), Division of Labor Standards Enforcement (DLSE), Electrician Certification Unit (ECU). Phone (510) 286-3900, email ECUInfo@dir.ca.gov (per DIR pages).",
+  "mainUrl": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html",
+  "trainee": {
+    "name": "Electrician Trainee (ET) registration",
+    "whoMustRegister": "Anyone who performs work as an electrician for a C-10 contractor and is neither state-certified nor a registered apprentice in an approved program must be registered as an Electrician Trainee. Trainee status is for people who do not yet qualify to take the certification exam because of lack of work experience or related instruction.",
+    "schoolRequirement": "Must be enrolled in (or have completed) an Approved Curriculum at a state-approved school listed on DIR's List of Approved Schools (https://www.dir.ca.gov/dlse/ECU/ListOfApprovedSchools.html). Application must include proof of enrollment and the school number. DAS/DLSE cancels the registration if the trainee stops being enrolled without finishing the curriculum.",
+    "supervisionRule": "Must work under the direct, on-site supervision of a Certified Electrician who supervises no more than one trainee (8 CCR 296.3). The supervisor may additionally supervise registered apprentices.",
+    "classroomHoursPerYear": "At least 150 hours of classroom instruction from an approved provider each year (8 CCR 296.2).",
+    "initialFee": "$25.00 (8 CCR 292.0(d); Labor Code caps the initial registration fee at $25). Check or money order payable to 'DIR - Electrician Certification Fund'.",
+    "renewal": "Annual - the DIR renewal form states the registration 'must be renewed annually until you become certified or leave the trade'. No fee for annual renewal (DIR renewal form and Labor Code: 'There shall be no fee for annual renewal of registration'). Renewal requires current proof of enrollment and an unofficial transcript or verification of courses completed in the prior year.",
+    "pathToCertification": "Per DIR page 2a (General Electrician): accumulate 8,000 hours of on-the-job experience and complete 720 hours of related and supplemental instruction, then apply for the certification exam (8 CCR 291.2(g)).",
+    "forms": {
+      "newRegistration": "https://www.dir.ca.gov/DAS/ElectricianTraineeNEWRegistration.pdf",
+      "renewal": "https://www.dir.ca.gov/dlse/ECU/ElectricalTraineeRenewRegistration.pdf",
+      "definitionPage": "https://www.dir.ca.gov/dlse/ecu/electricaltrainee.htm",
+      "traineeDefinitionPage": "https://dir.ca.gov/DLSE/ECU/ECTraineeDef.html"
+    },
+    "sourceUrls": [
+      "https://www.dir.ca.gov/dlse/ecu/electricaltrainee.htm",
+      "https://www.dir.ca.gov/t8/296_1.html",
+      "https://www.dir.ca.gov/t8/296_2.html",
+      "https://www.dir.ca.gov/t8/296_3.html",
+      "https://www.dir.ca.gov/t8/292_0.html",
+      "https://www.dir.ca.gov/dlse/ECU/ElectricalTraineeRenewRegistration.pdf",
+      "https://www.dir.ca.gov/DAS/ElectricianTraineeNEWRegistration.pdf"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "fees": {
+    "currency": "USD",
+    "applicationFee": 75,
+    "examFee": 100,
+    "reExamFee": 100,
+    "renewalFee": 100,
+    "lapsedExpiredRenewalFee": 200,
+    "replacementCardFee": 30,
+    "traineeRegistrationFee": 25,
+    "traineeRenewalFee": 0,
+    "combinedInitialCost": 175,
+    "notes": "Application $75, exam/retake $100, renewal $100 and trainee registration $25 are set in 8 CCR 292.0. The $200 lapsed/expired renewal fee and $30 replacement card fee appear on DIR's fee page (revised Jan 24, 2019) but not in the 292.0 text that was retrieved. A combined initial cost of $175 ($75 + $100) is commonly cited.",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/t8/292_0.html",
+      "https://www.dir.ca.gov/dlse/ecu/ElectricalTrade_Fees.html",
+      "https://dir.ca.gov/dlse/ECU/ECUCertforms.htm"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "exam": {
+    "provider": "Historically PSI Services LLC (Candidate Information Bulletin). DIR's test-information page states that for exams taken on or after June 1, 2026 the Labor Commissioner's Office implemented new scheduling procedures administered by CPS HR Consulting (ecuexams@cpshr.us, 855-298-4917), with exams delivered through Pearson VUE. Some DIR pages (Candidate Information Bulletin page) still reference PSI and appear stale.",
+    "providerChangeEffective": "2026-06-01",
+    "questions": 100,
+    "format": "Computer-based, all multiple choice. General Electrician exam: 100 questions. The NEC is provided as reference material (per DIR's 2007 guide; confirm currency).",
+    "passingScore": "Minimum scaled score of 70 (per the PSI Candidate Information Bulletin hosted on dir.ca.gov). Passing candidates receive only a PASS indication; failing candidates receive section scores. Confirm the cut score under the CPS HR / Pearson VUE process.",
+    "passingScoreVerified": "partial (from PSI-era bulletin)",
+    "timeLimit": "CONFLICTING official guidance: DIR FAQ says 4 hours; DIR test-information page says 4 hours 30 minutes. Confirm under the CPS HR / Pearson VUE process in effect since June 1, 2026.",
+    "eligibilityWindow": "Exam must be taken within one year of the eligibility notice; otherwise a new application and fees are required.",
+    "retest": "Must wait 60 days from the failed exam date before submitting a retest application with the $100 re-examination fee.",
+    "firstTimePassRate2023": 51.22,
+    "repeatPassRate2023": 39.75,
+    "passRateNote": "DIR/PSI statistical overview 2023: General Electrician exam 100 items, first-time pass rate 51.22%, repeat pass rate 39.75%. (2021: 54.23% first-time across 3,754 attempts.)",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/dlse/ecu/ecu_testinfo.htm",
+      "https://www.dir.ca.gov/dlse/ecu/cib.pdf",
+      "https://www.dir.ca.gov/dlse/ecu/CandidateInfoBulletin.htm",
+      "https://www.dir.ca.gov/dlse/ecu/ECU_FAQ.htm",
+      "https://www.dir.ca.gov/dlse/ECU/ElectricianExamOverview2023.pdf",
+      "https://www.pearsonvue.com/us/en/ecu.html"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "renewal": {
+    "period": "Every 3 years (8 CCR 291.5).",
+    "continuingEducation": "32 hours of further electrical education from a DIR-approved education provider (or approved apprenticeship program). The FAQ states that CE from a provider not on DIR's approved list cannot be processed.",
+    "workRequirement": "Certification under penalty of perjury of approximately 2,000 hours of work in the industry during the prior three years (8 CCR 291.5).",
+    "fee": 100,
+    "timing": "CONFLICTING official guidance: FAQ says renewal applications are accepted up to one year before expiration and must be postmarked by the card's expiration date; 8 CCR 291.5 says to postmark/receive 30 days before the end of the certification period to avoid a lapse.",
+    "lapsed": "CONFLICTING official guidance: DIR's fee/forms page lists a $200 fee for renewing a lapsed/expired card and says the 32-hour CE requirement does not apply when renewing after expiration; 8 CCR 291.5 says a person whose certification lapses must retake the certification exam. Confirm with the ECU.",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/t8/291_5.html",
+      "https://www.dir.ca.gov/dlse/ecu/ECU_FAQ.htm",
+      "https://www.dir.ca.gov/dlse/ecu/ECUCertforms.htm",
+      "https://www.dir.ca.gov/dlse/ecu/ElectricalTrade_Fees.html"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "law": {
+    "statute": "California Labor Code, Division 1, Chapter 4.5 'Electrician Certification', Sections 108-108.5.",
+    "history": "Originally enacted as Labor Code Sections 3099-3099.5 (AB 931, 1999); renumbered to Sections 108-108.4/108.5 by AB 1087 (approved May 29, 2002). Official cross-references: former 3099 -> 108; 3099.2 -> 108.2; 3099.3 -> 108.3; 3099.4 -> 108.4; 3099.5 -> 108.5. Many DIR pages and industry materials still cite '3099'.",
+    "summary": "Labor Code 108 requires DLSE to establish and validate minimum standards for the competency and training of electricians through testing and certification, maintain an advisory committee, and set and collect fees. Section 108.2 requires persons who perform work as electricians for C-10 electrical contractors to become certified and bars uncertified persons from performing electrical work for which certification is required; employers employing uncertified electricians can be found in violation. Section 108.3 requires certification information in non-English languages spoken by a substantial number of people (per retrieved snippet; full text not retrieved). Section 108.4 creates Electrician Trainee registration (approved curriculum, direct supervision by a certified electrician, $25 initial fee cap, no annual renewal fee). Regulations: California Code of Regulations, Title 8, Sections 290.0-296.3 (definitions 290.1; eligibility 291.1; application/exam 291.2; renewal 291.5; fees 292.0; trainee 296.0-296.3), hosted at dir.ca.gov/t8/ with a disclaimer that the text may not be current. Enforcement: CSLB has a zero-tolerance policy against C-10 contractors who willfully employ uncertified electricians and must open an investigation within 60 days of a DAS/DLSE referral.",
+    "whoMustBeCertified": "Certification is required for persons who perform work as electricians for contractors licensed as class C-10 electrical contractors (Labor Code 108.2, formerly 3099.2). An 'electrician' is a person who engages in the connection of electrical devices for a C-10 electrical contractor (the definition references devices of 100 volt-amperes or more). The C-10 licensee himself/herself is not required to be certified merely for holding the license; the requirement applies to the employees performing electrician work.",
+    "exemptions": [
+      "Registered apprentices performing electrical work as part of a DAS-approved apprenticeship program.",
+      "Registered Electrician Trainees working under the direct, on-site supervision of a certified electrician (Labor Code 108.4 / 8 CCR 296.3).",
+      "Work performed within the scope of a C-7 Low Voltage Systems or C-45 Electrical Sign license (including incidental/supplemental work) is not covered.",
+      "Non-electrical tasks (trenching, concrete, framing, etc.) that do not involve connecting electrical devices."
+    ],
+    "pendingLegislation": {
+      "bill": "AB 1707 (2025-2026 session)",
+      "title": "Electricians: certification application, examination, and renewal",
+      "summary": "Would transfer the electrician certification program from DIR/DLSE to the Contractors State License Board (new Business and Professions Code Section 7192 et seq., repealing Labor Code Chapter 4.5), contingent on an appropriation (CSLB discussed a July 1, 2028 target).",
+      "status": "UNVERIFIED",
+      "statusNote": "Official bill text shows it Enrolled on September 4, 2026 after passing both houses; one secondary source reports it was signed September 27, 2026 but no official chaptering record was retrieved. Check leginfo.legislature.ca.gov before stating that the program is moving to CSLB.",
+      "sourceUrl": "https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB1707"
+    },
+    "sourceUrls": [
+      "https://law.justia.com/codes/california/2022/code-lab/division-1/chapter-4-5/section-108/",
+      "https://law.justia.com/codes/california/code-lab/division-1/chapter-4-5/section-108-2",
+      "https://www.dir.ca.gov/dlse/ecu/Curriculum_Guide_for_Electrician_Trainee_as_mandated_by_AB1087.pdf",
+      "https://www.dir.ca.gov/dlse/ecu/ECU_FAQ.htm",
+      "https://www.dir.ca.gov/dlse/ecu/elecat.html",
+      "https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB1707",
+      "https://dir.ca.gov/t8/290_1.html"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "contractorLicense": {
+    "name": "CSLB C-10 Electrical Contractor",
+    "issuedBy": "California Contractors State License Board (CSLB), 9821 Business Park Drive, Sacramento, CA 95827",
+    "definition": "An electrical contractor places, installs, erects or connects any electrical wires, fixtures, appliances, apparatus, raceways, conduits, solar photovoltaic cells or any part thereof.",
+    "requirements": [
+      "At least four years of experience within the last 10 years at journey level or higher (journeyman, foreman, supervising employee, contractor, or owner-builder) in the classification. CSLB may grant up to three years of credit toward the four years for completed training in an accredited school and/or apprenticeship program.",
+      "Pass the Law and Business examination plus the C-10 Electrical trade examination, administered by CSLB's testing vendor (exam fees are paid to the vendor; scheduling information is mailed after the application is accepted).",
+      "Fingerprinting / background check.",
+      "Workers' compensation insurance or exemption.",
+      "File a $25,000 contractor's bond (or $25,000 cashier's check alternative) with the Registrar before the license is issued.",
+      "A C-10 contractor must ensure all employees who perform work as electricians are DIR-certified, registered apprentices, or registered trainees under supervision."
+    ],
+    "fees": {
+      "originalApplicationFee": "$450 (one classification)",
+      "initialLicenseFee": "$200 sole owner / $350 non-sole owner, paid after passing the exams; covers two years",
+      "renewal": "Active timely renewal (sole owner) $450; C-10 contractors are charged $470",
+      "fingerprinting": "DOJ $32 + FBI $17 plus the Live Scan operator's rolling fee",
+      "examFees": "Paid to CSLB's testing vendor; amount not retrieved"
+    },
+    "bond": "$25,000 contractor's bond (or $25,000 cashier's check alternative) filed with the Registrar before the license is issued; a separate $25,000 Bond of Qualifying Individual may be required for an RME/RMO unless exempt (e.g., RMO owns 10% or more of the entity).",
+    "distinction": {
+      "apprenticeshipCompletion": "An APPRENTICESHIP is a DAS-registered training program (e.g., IBEW/NECA JATC, WECA, ABC SoCal). Completing one is a credential of the training program itself and is one of the two routes to sit for the DIR certification exam (8 CCR 291.1); registered apprentices are exempt from certification while in the program. Completion alone does not make someone a certified electrician or a licensed contractor.",
+      "dirCertification": "DIR/DLSE electrician CERTIFICATION is a worker credential required of employees who perform electrician work for C-10 contractors (Labor Code 108.2). It is earned by passing the state exam after qualifying via OJT hours, apprenticeship completion or the trainee route, and must be renewed every 3 years with 32 CE hours. It does not allow a person to contract for electrical work on their own.",
+      "c10License": "The CSLB C-10 LICENSE is a business/contractor license that allows a person or firm to contract for electrical work. It requires 4 years of journey-level-or-higher experience in the last 10 years, the Law & Business and C-10 trade exams, a $25,000 bond, fingerprinting and fees, and is not the same as electrician certification. A C-10 licensee is not required to be personally certified merely for holding the license, but must employ only certified electricians, registered apprentices or supervised registered trainees.",
+      "summary": "Three different things: (1) apprenticeship completion = finished a DAS-registered training program (a route to the exam); (2) DIR certification = the state worker credential required to work as an electrician for a C-10 contractor; (3) CSLB C-10 license = the contractor/business license needed to bid and contract for electrical work. A typical career path is apprentice (exempt) -> certified electrician (journey-level) -> after 4 years at journey level, C-10 licensed contractor."
+    },
+    "sourceUrls": [
+      "https://www.cslb.ca.gov/about_us/library/licensing_classifications/Licensing_Classifications_Detail.aspx?Class=C10",
+      "https://www.cslb.ca.gov/contractors/applicants/contractors_license/exam_application/experience_for_exam.aspx",
+      "https://www.cslb.ca.gov/Contractors/Applicants/Contractors_License/Exam_Application/Before_Applying_For_License.aspx",
+      "https://www.cslb.ca.gov/about_us/library/fees.aspx",
+      "https://www.cslb.ca.gov/contractors/applicants/contractors_license/exam_application/Issuing_My_License.aspx",
+      "https://www.cslb.ca.gov/resources/industrybulletins/online_marketplace_fast_facts.pdf"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "wages": {
+    "national2025": {
+      "source": "U.S. BLS Occupational Outlook Handbook / OEWS May 2025 (SOC 47-2111)",
+      "medianAnnual": 63190,
+      "medianHourly": 30.38,
+      "employment2025": 821000,
+      "verified": true,
+      "sourceUrls": [
+        "https://www.bls.gov/ooh/construction-and-extraction/electricians.htm",
+        "https://www.bls.gov/oes/current/oes472111.htm"
+      ]
+    },
+    "losAngeles2025": {
+      "area": "Los Angeles-Long Beach-Anaheim, CA MSA (OEWS area 31080)",
+      "source": "O*NET OnLine local wages (DOL-sponsored, cites BLS 2025 wage data) and third-party sites citing OEWS May 2025; the bls.gov May 2025 metro table itself could not be retrieved in this sandbox",
+      "medianHourly": 35.49,
+      "medianAnnual": 73810,
+      "pct10Annual": 46140,
+      "pct25Annual": 58830,
+      "pct25Hourly": 28.29,
+      "pct75Annual": 101930,
+      "pct75Hourly": 49.01,
+      "pct90Annual": 131680,
+      "pct90Hourly": 63.31,
+      "meanAnnual": 82300,
+      "employment": 20610,
+      "verified": false,
+      "verificationNote": "UNVERIFIED on bls.gov. Figures are consistent across O*NET (onetonline.org) and two third-party sites that cite OEWS May 2025, but the official BLS page https://www.bls.gov/oes/current/oes_31080.htm (or data.bls.gov/oes/#/area/0031080) was not readable here. Confirm before publishing.",
+      "sourceUrls": [
+        "https://www.onetonline.org/link/localwages/47-2111.00?zip=95747",
+        "https://wagedex.com/jobs/electricians/metro/los-angeles-long-beach-anaheim-ca",
+        "https://www.bls.gov/oes/current/oes_31080.htm"
+      ]
+    },
+    "losAngeles2023Official": {
+      "area": "Los Angeles-Long Beach-Anaheim, CA MSA",
+      "source": "BLS OEWS May 2023 occupation page for 47-2111",
+      "employment": 19520,
+      "meanHourly": 39.95,
+      "meanAnnual": 83090,
+      "verified": true,
+      "sourceUrls": ["https://www.bls.gov/oes/2023/may/oes472111.htm"]
+    },
+    "californiaStatewide": {
+      "may2025": "UNVERIFIED - the May 2025 California row was not retrievable (available via https://www.bls.gov/oes/current/oessrcst.htm -> California / oes_ca.htm).",
+      "may2023Official": {
+        "employment": 72880,
+        "meanHourly": 40.54,
+        "meanAnnual": 84330,
+        "verified": true,
+        "sourceUrl": "https://www.bls.gov/oes/2023/may/oes472111.htm"
+      }
+    },
+    "ibewLocal11Journeyman": {
+      "classification": "IBEW Local 11 Inside Wireman journeyman (Los Angeles County)",
+      "baseHourly_Jan26_to_Jun30_2026": 65.00,
+      "baseHourly_Jul28_2025_to_Jan25_2026": 64.50,
+      "healthAndWelfareHourly": 16.64,
+      "source": "IBEW Local 11 / LA NECA Labor Relations Bulletins (Inside Wiremen's Agreement wage rates) and DIR prevailing wage determination for Los Angeles County (2026-1), which lists the $65.00 journeyman rate until superseded",
+      "successorAgreement": "IBEW Local 11 reports the 2026-2031 Inside Wiremen Agreement (July 1, 2026 - June 30, 2031) was ratified October 14, 2026 (71% yes). It adds a $22.50/hr total package over ten increases; the first increase is $2.20/hr effective 7/27/2026 ($2.00 to wages, $0.10 health, $0.10 training), implying roughly $67.00/hr base from 7/27/2026. The post-ratification wage schedule itself was not retrieved - UNVERIFIED.",
+      "verified": "partial (the $65.00 rate is verified via the official LA NECA/IBEW 11 bulletin and DIR determination; the post-July 2026 rate is unverified)",
+      "sourceUrls": [
+        "https://laneca.org/wp-content/uploads/2025/06/2025-07-11-Inside-wage-rates.pdf",
+        "https://cdn.prod.website-files.com/6904bac2453c5b0f64a72cdb/696f8a01f5622e0fd9277b06_Inisde-Wiremen-Agreement-01.26.2026-06.30.2026.pdf",
+        "https://www.ibew11.org/latest-news/your-vote-your-contract-whats-inside-the-2026-2031-inside-wiremen-agreement",
+        "https://www.ibew11.org/latest-news/message-from-the-business-manager-inside-wireman-contract-ratified",
+        "https://www.ibew11.org/contracts-wages",
+        "https://www.dir.ca.gov/oprl/pwappwage/wage/26119220.html?VarWageId=26119220"
+      ]
+    },
+    "apprenticeStart": {
+      "ibew11InsideWireman": "40% of journeyman rate at 0 hours ($26.00/hr effective 01/26/2026), stepping up with OJT hours (45% at 1,000 hrs = $29.25; 60% at 3,500 hrs = $39.00; schedule continues to higher periods). Official ETI notice. VERIFIED.",
+      "dirPrevailingWageApprenticeLA2026_1": "DIR General Prevailing Wage Apprentice Rates, Los Angeles, Electrician Inside Wireman 2026-1: Period 1 basic hourly $26.00 (total hourly $43.88 incl. $15.64 H&W, $0.78 pension, $0.91 training, $0.55 other); a footnoted second table shows Period 1 at $30.50 basic / $48.52 total (effective dates not resolved).",
+      "ibew11SoundCommunication": "45% of journey scale = $21.54/hr start (ETI notice 12/31/2024), rising to 65% = $31.12. A third-party page reports 50% = $25.31/hr for Jun 28 - Dec 26, 2026 (journeyman sound installer $50.62) - UNVERIFIED.",
+      "abcSoCal": "'Generally starts at about 50 percent of the experienced craftsperson' (official ABC SoCal applicant page; no dollar figure).",
+      "weca": "UNVERIFIED (not stated on retrieved official pages).",
+      "ibew441Ocett": "UNVERIFIED (DAS listing: 'Contact Program').",
+      "ibew40": "UNVERIFIED (DAS listing: 'Contact Program').",
+      "verified": "partial",
+      "sourceUrls": [
+        "https://www.laett.com/Apprenticeship%20handouts/AW%20Official%20Notice%20-%2001-26-26.pdf",
+        "https://www.dir.ca.gov/oprl/pwappwage/wage/26119220.html?VarWageId=26119220",
+        "https://www.laett.com/Apprenticeship%20handouts/SAP%20Official%20Notice%20-%2012-31-24.pdf",
+        "https://abcsocal.org/education-training/apprenticeship-program/applicants/"
+      ]
+    },
+    "sourceUrls": [
+      "https://www.bls.gov/ooh/construction-and-extraction/electricians.htm",
+      "https://www.bls.gov/oes/current/oes472111.htm",
+      "https://www.bls.gov/oes/2023/may/oes472111.htm",
+      "https://www.bls.gov/oes/current/oes_31080.htm",
+      "https://www.onetonline.org/link/localwages/47-2111.00?zip=95747",
+      "https://laneca.org/wp-content/uploads/2025/06/2025-07-11-Inside-wage-rates.pdf",
+      "https://cdn.prod.website-files.com/6904bac2453c5b0f64a72cdb/696f8a01f5622e0fd9277b06_Inisde-Wiremen-Agreement-01.26.2026-06.30.2026.pdf",
+      "https://www.ibew11.org/latest-news/your-vote-your-contract-whats-inside-the-2026-2031-inside-wiremen-agreement",
+      "https://www.ibew11.org/latest-news/message-from-the-business-manager-inside-wireman-contract-ratified",
+      "https://www.dir.ca.gov/oprl/pwappwage/wage/26119220.html?VarWageId=26119220",
+      "https://www.laett.com/Apprenticeship%20handouts/AW%20Official%20Notice%20-%2001-26-26.pdf"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  "unverifiedItems": [
+    "GLOBAL: every fact was confirmed only through web-search extracts of the cited pages; no official page was read directly (network policy). Re-check fees, dates and wages on the live URLs before publishing.",
+    "AB 1707 (2025-2026) final status: enrolled Sept 4, 2026; one secondary source says signed Sept 27, 2026; no official chaptering record retrieved. Do not state the program has moved to CSLB.",
+    "Exam time limit: DIR FAQ says 4 hours vs DIR test-information page says 4 hours 30 minutes (conflict).",
+    "Exam passing score (scaled 70) comes from the PSI-era Candidate Information Bulletin; cut score under the CPS HR / Pearson VUE process (effective June 1, 2026) not confirmed.",
+    "NEC provided as exam reference material: from DIR's 2007 guide; currency not confirmed.",
+    "$200 lapsed/expired renewal fee and $30 replacement card fee appear only on DIR's fee page (rev. Jan 24, 2019), not in the retrieved 8 CCR 292.0 text.",
+    "Lapsed certification: fee/forms page ($200, no CE) conflicts with 8 CCR 291.5 (must retake exam).",
+    "Renewal timing: FAQ (postmark by expiration date, up to 1 year early) conflicts with 8 CCR 291.5 (30 days before period end).",
+    "'Education credit' substituting classroom education for OJT hours: no official DIR source found. Do not advertise.",
+    "Labor Code 108.3 full text not retrieved (only a snippet).",
+    "Residential Electrician hours: DIR table says 4,800; some third-party guides say 4,500 (4,800 used).",
+    "CSLB C-10 trade/Law & Business exam fee amounts not retrieved.",
+    "LA-Long Beach-Anaheim May 2025 OEWS wages (median $35.49/hr, $73,810/yr, percentiles): O*NET and third-party only; bls.gov metro table not readable.",
+    "California statewide May 2025 OEWS wages: not retrievable.",
+    "IBEW Local 11 journeyman rate after 7/27/2026 (~$67.00/hr implied by the ratified 2026-2031 agreement): post-ratification schedule not retrieved; the ETI apprentice schedule may have been updated accordingly.",
+    "IBEW 11 Sound & Communication 2026 apprentice rate ($25.31/hr at 50%, journeyman $50.62): third-party only; the 06/28/2026 ETI notice exists but its table was not retrieved.",
+    "DIR LA 2026-1 apprentice table: footnoted second schedule (Period 1 $30.50 basic / $48.52 total) effective dates unresolved.",
+    "IBEW 11 / ETI: driver's license and drug-test requirements, fees, oral interview step, and next application window (all 2026 windows have passed) unverified.",
+    "IBEW 441 / OCETT: starting wage ('Contact Program'), classroom hours, fees, email/fax (third-party directory only), and address (1261 E. Dyer Rd per DAS vs 717 S. Lyon St in older directories) unverified; 2027 call-in dates TBD.",
+    "WECA: starting wage, Low Voltage program length, Commercial 5-year term (older materials only), dated application window, current Riverside address, driver's license and drug-test requirements unverified.",
+    "ABC SoCal: program length (4 yrs/7,200 OJT hrs vs 4.5 yrs/8,000 hrs), classroom hours (160 vs 180/yr), drug test, minimum age, apprentice fees ($50 enrollment / $125 make-up day may apply only to self-pay craft trainees), dated application window unverified.",
+    "IBEW Local 40 / NECA: starting wage ('Contact Program'), classroom hours, fees unverified; applications reportedly reopen Spring 2028 (news item).",
+    "LA County ITS Electrical JATC: eligibility, process, length, classroom hours, wage figures, fees and application window all unverified; only DAS listing and DIR wage-table existence confirmed.",
+    "IEC (Independent Electrical Contractors) Los Angeles / Orange County apprenticeship: NOT FOUND in DAS LA or OC electrician program lists; omitted from seed data.",
+    "'calapprenticeship.org' could not be verified as an official state resource; DAS (dir.ca.gov/das) is the official California apprenticeship site."
+  ]
+}

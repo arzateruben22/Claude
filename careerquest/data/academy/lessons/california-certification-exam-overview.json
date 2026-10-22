@@ -1,0 +1,361 @@
+{
+  "key": "california-certification-exam-overview",
+  "track": "EXAM_PREP",
+  "order": 1,
+  "title": "California Certification Exam Overview",
+  "summary": "What the California General Electrician certification exam is, who has to take it, how to register with the DIR Electrician Certification Unit, what the open-book test looks like, and how to build a study and test-day strategy that fits the format.",
+  "estimatedMinutes": 30,
+  "prerequisites": [],
+  "objectives": [
+    "Students will be able to explain who must hold a California electrician certification and the difference between an Electrician Trainee registration and a General Electrician certification.",
+    "Students will be able to describe the application and scheduling process through the DIR Electrician Certification Unit, including the documentation of work hours.",
+    "Students will be able to state the exam format at a high level (100 multiple-choice questions, open-book NEC, scaled passing score of 70) and where to find the current rules.",
+    "Students will be able to map the exam content areas to the lessons in this academy and build a realistic multi-week study plan.",
+    "Students will be able to apply a three-pass time strategy and explain why open-book does not mean easy."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Who has to be certified in California",
+      "markdown": "California is one of the states that certifies the **electricians**, not only the contractors. Under Labor Code section 3099 and the regulations that implement it (California Code of Regulations, Title 8, sections 290 to 296.4), anyone who performs work as an electrician for a **C-10 licensed electrical contractor** must either hold a state certification or be registered as an **Electrician Trainee (ET)** working under the supervision of a certified electrician. The program is run by the Labor Commissioner's Office (Division of Labor Standards Enforcement, DLSE) through its **Electrician Certification Unit (ECU)**.\n\nThere are five certification categories. Each has its own exam and its own minimum experience:\n\n- **General Electrician** – the broad certification; this is the exam this track prepares you for.\n- **Residential Electrician** – one- and two-family dwellings and multifamily residential work.\n- **Fire/Life Safety Technician** – fire alarm and life-safety systems.\n- **Voice Data Video Technician** – communications and low-voltage data cabling.\n- **Non-Residential Lighting Technician** – lighting retrofits and maintenance in commercial occupancies.\n\n**Electrician Trainee** is not a certification. It is an annual registration that lets you work for a C-10 contractor while you are enrolled in a state-approved trainee school and accumulate hours under the direct supervision of a certified electrician on the jobsite. Trainee registration, the state-approved school list and the renewal form are all on the DIR site.\n\nA C-10 contractor license (issued by the Contractors State License Board) is a different thing again: it lets a business contract for electrical work. Many certified electricians never hold one, and holding one does not substitute for the certification when you are on the tools for someone else."
+    },
+    {
+      "type": "table",
+      "caption": "Experience the ECU requires before you can sit for each exam (hours of on-the-job work in the category, or completion of a state-approved apprenticeship). Verify the current numbers on the DIR Electrical Trade page before you apply.",
+      "columns": [
+        "Certification",
+        "Qualifying experience",
+        "Typical scope"
+      ],
+      "rows": [
+        [
+          "General Electrician",
+          "8,000 hours (or approved apprenticeship)",
+          "All electrical work: residential, commercial, industrial"
+        ],
+        [
+          "Residential Electrician",
+          "4,800 hours",
+          "Dwellings only"
+        ],
+        [
+          "Fire/Life Safety Technician",
+          "4,000 hours",
+          "Fire alarm and life-safety systems"
+        ],
+        [
+          "Voice Data Video Technician",
+          "4,000 hours",
+          "Communications, data, video cabling"
+        ],
+        [
+          "Non-Residential Lighting Technician",
+          "2,000 hours",
+          "Lighting retrofit and maintenance, non-residential"
+        ],
+        [
+          "Electrician Trainee (registration, no exam)",
+          "Enrolled in an approved school",
+          "Works only under a certified electrician for a C-10 contractor"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "What the General Electrician exam looks like",
+      "markdown": "At a high level, the General Electrician certification exam is:\n\n- **100 multiple-choice questions**, each with one best answer.\n- **Open-book**, with the **National Electrical Code (NEC)** as the reference. The Candidate Information Bulletin states which NEC edition the exam is written to and the exact rules for the code book (whether you bring your own copy or use one supplied at the test center, and what tabs or highlighting are allowed). Those rules have changed over the years, so read the **current** bulletin, not a forum post.\n- Scored on a **scaled score; 70 is passing**. A scaled score is not a raw percentage: the state converts your raw count into a scale so that different versions of the exam are equally hard to pass. In practice, plan to answer well above 70 percent of the questions correctly.\n- **Timed.** The bulletin sets the limit; recent bulletins have listed about four and a half hours for the General exam, which works out to roughly **2.7 minutes per question**.\n- **Administered by a test vendor** under contract to the DLSE. For many years that was PSI. The DLSE announced that PSI stopped administering these exams for test dates on or after **June 1, 2026** and that new scheduling procedures apply (the DIR page named CPS HR Consulting as the administrator at the time this lesson was written). The DIR Electrical Trade page and the bulletin linked from it are the only authoritative source for scheduling, test centers, fees and ID rules.\n\nThe exam is written around the work a journey-level electrician actually does. The bulletin's content outline is organized by job task: working safely, determining what a system requires (loads, conductors, protection), installing wiring methods and equipment, and maintaining and repairing systems. Inside those tasks the questions draw on familiar code territory: general theory and definitions, wiring methods and materials, grounding and bonding, services, feeders and branch circuits, overcurrent protection, motors, transformers and special equipment, and safety practices. The next section shows how this academy weights those areas."
+    },
+    {
+      "type": "diagram",
+      "title": "From trainee to certified electrician",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 720 232\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#4cc9ff\" stroke=\"none\"/></marker></defs><rect x=\"10\" y=\"30\" width=\"140\" height=\"56\" rx=\"8\" stroke=\"#9aa6b8\"/><text x=\"80\" y=\"53\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Trainee (ET)</text><text x=\"80\" y=\"71\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">school + supervised hrs</text><rect x=\"180\" y=\"30\" width=\"140\" height=\"56\" rx=\"8\" stroke=\"#9aa6b8\"/><text x=\"250\" y=\"53\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Apply to ECU</text><text x=\"250\" y=\"71\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">form, fee, hours proof</text><rect x=\"350\" y=\"30\" width=\"140\" height=\"56\" rx=\"8\" stroke=\"#9aa6b8\"/><text x=\"420\" y=\"53\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Eligibility notice</text><text x=\"420\" y=\"71\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">schedule the exam</text><rect x=\"520\" y=\"30\" width=\"190\" height=\"56\" rx=\"8\" stroke=\"#4cc9ff\" stroke-width=\"2\"/><text x=\"615\" y=\"53\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Exam day</text><text x=\"615\" y=\"71\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">100 questions, open-book NEC</text><line x1=\"150\" y1=\"58\" x2=\"178\" y2=\"58\" stroke=\"#4cc9ff\" marker-end=\"url(#ah)\"/><line x1=\"320\" y1=\"58\" x2=\"348\" y2=\"58\" stroke=\"#4cc9ff\" marker-end=\"url(#ah)\"/><line x1=\"490\" y1=\"58\" x2=\"518\" y2=\"58\" stroke=\"#4cc9ff\" marker-end=\"url(#ah)\"/><rect x=\"520\" y=\"142\" width=\"190\" height=\"56\" rx=\"8\" stroke=\"#3ddc97\" stroke-width=\"2\"/><text x=\"615\" y=\"165\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Certified (3 years)</text><text x=\"615\" y=\"183\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">renew: 32 h CE + 2,000 h work</text><rect x=\"280\" y=\"142\" width=\"200\" height=\"56\" rx=\"8\" stroke=\"#ff6b6b\" stroke-width=\"2\"/><text x=\"380\" y=\"165\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">Did not pass</text><text x=\"380\" y=\"183\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">wait 60 days, reapply, retest</text><line x1=\"640\" y1=\"86\" x2=\"640\" y2=\"140\" stroke=\"#3ddc97\" marker-end=\"url(#ah)\"/><text x=\"648\" y=\"118\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"10\">score 70+</text><line x1=\"560\" y1=\"86\" x2=\"440\" y2=\"140\" stroke=\"#ff6b6b\" marker-end=\"url(#ah)\"/><text x=\"470\" y=\"108\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"10\">below 70</text><path d=\"M280,172 C190,172 190,110 200,88\" stroke=\"#9aa6b8\" stroke-dasharray=\"4 3\" marker-end=\"url(#ah)\"/><text x=\"20\" y=\"150\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"10\">a retest loops back</text><text x=\"20\" y=\"164\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"10\">to a new application</text><text x=\"360\" y=\"224\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Path from Electrician Trainee to certified General Electrician (DIR / DLSE Electrician Certification Unit)</text></svg>",
+      "caption": "The certification path. Hours are documented while you are a registered trainee (or an apprentice), the ECU confirms eligibility, you schedule and take the exam, and a passing scaled score of 70 earns a certification that must be renewed every three years."
+    },
+    {
+      "type": "text",
+      "heading": "How to register through the Electrician Certification Unit",
+      "markdown": "**1. Confirm you qualify.** Add up your documented hours in the category you are applying for. For General Electrician that means 8,000 hours of work as an electrician, or completion of a state-approved apprenticeship. Time as a registered trainee counts; undocumented side work does not.\n\n**2. Gather proof.** The ECU accepts documentation such as employer verification letters on company letterhead (with license number, dates and a description of the work), payroll records or W-2s that show the employer, and apprenticeship completion certificates. Union members can usually get a hours letter from the local or the JATC. Keep copies of everything.\n\n**3. Complete the Application for Electrician Examination and Certification.** The form and its instructions are on the DIR site. Fill in the category, your trainee or apprenticeship information, and the experience section exactly as the instructions describe. Missing signatures and unverifiable hours are the usual reasons applications bounce.\n\n**4. Pay the fee.** At the time of writing the DIR listed the General Electrician application and examination fee at $175, trainee registration at $25 per year, and certification renewal at $100. Fees change; use the amount printed on the current form.\n\n**5. Wait for the eligibility notice.** The ECU reviews the application and mails or emails a notice that you are eligible to test. Processing takes weeks, not days, so apply well before you want to test.\n\n**6. Schedule the exam** with the current test administrator by following the instructions in the eligibility notice and the Candidate Information Bulletin. Bring the identification the bulletin requires (typically a current government-issued photo ID whose name matches your application exactly).\n\n**7. Test day.** Arrive early. Expect a security check, a locker for your phone and bag, and either your own code book inspected for loose papers or a test-center copy. You will get a basic calculator or be told what kind you may bring. Scratch paper is provided.\n\n**8. Results.** You receive a pass or fail with a scaled score. If you do not pass, the state requires you to **wait 60 days** from the test date before sending a new application and fee for a retest. Use that time on the diagnostic breakdown you receive.\n\nIf anything above conflicts with the current DIR page or bulletin, the DIR wins. The ECU can be reached at ECUInfo@dir.ca.gov and (510) 286-3900."
+    },
+    {
+      "type": "table",
+      "caption": "How this academy weights the content areas. These are study weights chosen to match the kind of questions the DIR exam asks; the official content outline in the Candidate Information Bulletin is authoritative and should be checked for the current edition.",
+      "columns": [
+        "Content area",
+        "Approximate share",
+        "Where to study it here"
+      ],
+      "rows": [
+        [
+          "General knowledge and theory",
+          "14%",
+          "FUNDAMENTALS track; exam-math-and-calculations"
+        ],
+        [
+          "Wiring methods and materials (Chapter 3, Articles 400 to 410)",
+          "24%",
+          "wiring-methods-and-boxes, conduit-fundamentals, conductors-and-ampacity"
+        ],
+        [
+          "Grounding and bonding (Article 250)",
+          "14%",
+          "grounding-and-bonding"
+        ],
+        [
+          "Services, feeders and branch circuits (Articles 210 to 230)",
+          "20%",
+          "residential-circuit-layout, exam-math-and-calculations"
+        ],
+        [
+          "Overcurrent protection (Article 240)",
+          "10%",
+          "conductors-and-ampacity, exam-math-and-calculations"
+        ],
+        [
+          "Motors, transformers and special equipment (Articles 430 to 450, Chapters 5 to 7)",
+          "12%",
+          "transformers-basics, exam-math-and-calculations"
+        ],
+        [
+          "Safety (NFPA 70E, OSHA, Cal/OSHA, Article 590)",
+          "6%",
+          "SAFETY track"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Open-book is not easy-book",
+      "markdown": "People fail open-book code exams for three predictable reasons.\n\n**They try to look everything up.** At 2.7 minutes per question, you cannot open the book 100 times. A realistic exam has 30 to 40 questions you should answer from memory in under a minute (theory, arithmetic, safety practice, definitions you have seen a hundred times) and 60 to 70 that need the book for a number, a distance, a percentage or an exception. The time you save on the first group is what pays for the second.\n\n**They cannot find things fast.** Knowing that NM cable support is in Article 334 and that box fill is in 314.16 is the difference between a 45-second lookup and a 5-minute hunt through the index. The lesson **code-lookup-speed-drills** exists for exactly this.\n\n**They stop reading too early.** Many questions are written on the exception, the informational note, or the second sentence of a subsection. Read the whole section, then answer. If a choice quotes the general rule but the question stem says \"dwelling unit\", \"other than dwelling\", \"continuous\" or \"existing\", the exception is probably the point.\n\nWhat the exam does not do: it does not ask you to recite article numbers for their own sake, it does not use trick wording about things outside the NEC, and it does not require memorizing tables. It does expect you to multiply by 1.25, convert between amps, watts and volt-amperes, and read a table correctly."
+    },
+    {
+      "type": "diagram",
+      "title": "A three-pass time budget",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 720 212\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><text x=\"20\" y=\"24\" fill=\"currentColor\" stroke=\"none\" font-weight=\"600\" font-size=\"13\">One exam, three passes (100 questions, about 270 minutes)</text><rect x=\"20\" y=\"40\" width=\"680\" height=\"26\" rx=\"6\" stroke=\"#9aa6b8\"/><rect x=\"20\" y=\"40\" width=\"176\" height=\"26\" rx=\"6\" fill=\"#3ddc97\" fill-opacity=\"0.35\" stroke=\"#3ddc97\"/><rect x=\"196\" y=\"40\" width=\"378\" height=\"26\" fill=\"#4cc9ff\" fill-opacity=\"0.3\" stroke=\"#4cc9ff\"/><rect x=\"574\" y=\"40\" width=\"126\" height=\"26\" rx=\"6\" fill=\"#f3c75b\" fill-opacity=\"0.35\" stroke=\"#f3c75b\"/><text x=\"108\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 1: ~70 min</text><text x=\"385\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 2: ~150 min</text><text x=\"637\" y=\"57\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">Pass 3: ~50 min</text><text x=\"20\" y=\"96\" fill=\"#3ddc97\" stroke=\"none\" font-weight=\"600\">Pass 1 – answer what you know</text><text x=\"20\" y=\"113\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Theory, math, safety and code facts you know cold. Under 60 seconds each. Flag anything that needs the book.</text><text x=\"20\" y=\"140\" fill=\"#4cc9ff\" stroke=\"none\" font-weight=\"600\">Pass 2 – open the book for flagged items</text><text x=\"20\" y=\"157\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Index or tab to the article, read the section and its exceptions, answer, move on. Budget 3 minutes each.</text><text x=\"20\" y=\"184\" fill=\"#f3c75b\" stroke=\"none\" font-weight=\"600\">Pass 3 – parked items and a sanity check</text><text x=\"20\" y=\"201\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">Finish the hardest lookups, then confirm nothing is blank. There is no penalty for guessing.</text></svg>",
+      "caption": "Budget the exam in passes rather than question by question. Pass 1 banks the fast points, Pass 2 spends the book time where it matters, and Pass 3 guarantees nothing is left blank."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Mark-and-move is a skill. During practice exams in this app, set a timer and force yourself to flag any item that passes 3 minutes. Candidates who sink 12 minutes into one tap-rule question routinely run out of time on the last ten, which are no harder than the first ten."
+    },
+    {
+      "type": "text",
+      "heading": "A twelve-week study plan",
+      "markdown": "This plan assumes you are working full time and can study five to six hours a week. Compress it if you have more time; do not skip the practice exams.\n\n- **Weeks 1 to 2 – Foundations and code layout.** Review the FUNDAMENTALS track (Ohm's law, power, series and parallel, AC). Read Article 90 and the table of contents of every chapter. Place your first 20 tabs.\n- **Weeks 3 to 4 – Chapter 2.** Branch circuits (210), feeders (215), load calculations (220), outside circuits (225), services (230), overcurrent protection (240). Work the examples in **exam-math-and-calculations**.\n- **Weeks 5 to 6 – Grounding and bonding.** Article 250 front to back, with the sizing tables (250.66, 250.102(C)(1), 250.122) until you can find and apply them in under a minute.\n- **Weeks 7 to 8 – Chapter 3 and Chapter 4.** Conductors (310), boxes (314), the raceway and cable articles, cords (400), switches (404), receptacles (406), luminaires (410), appliances (422), heating (424), motors (430), HVAC (440), transformers (450).\n- **Week 9 – Chapters 5 to 7 and safety.** Hazardous locations, health care, pools, PV, emergency systems, temporary installations (590), NFPA 70E work practices, Cal/OSHA electrical safety orders.\n- **Week 10 – Speed.** Run the **code-lookup-speed-drills** daily. Target 45 seconds to the right section for any keyword.\n- **Week 11 – Practice exam 1** under timed conditions, then review every miss by cause: did not know, could not find, or misread.\n- **Week 12 – Randomized practice exams** from the question bank, light review, rest the day before.\n\nTrack your results in the app. A steady 80 percent or better on timed practice exams is the signal you are ready to schedule."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Every question in this academy, including practice-exam-1 and the randomized question bank, is an ORIGINAL study question written for CareerQuest. None of it is taken from the actual DIR examination, which is confidential. Anyone selling \"actual exam questions\" is selling something either fake or stolen, and using stolen content can cost you the certification you are studying for. Our questions are built to exercise the same skills: finding and applying the code, doing the math, and reasoning about safe practice."
+    },
+    {
+      "type": "text",
+      "heading": "After you pass, and if you do not",
+      "markdown": "**Certification card.** The ECU issues a certification valid for **three years**. Carry it: a C-10 contractor can be cited for employing uncertified electricians, and inspectors and prevailing-wage compliance officers do ask.\n\n**Renewal.** To renew without retesting you must complete **32 hours of continuing education** from a DIR-approved provider and document **2,000 hours of work** in the trade during the three-year period, then file the renewal with the fee before the card expires. If you cannot show the education and hours, the path back is re-examination.\n\n**Trainee hours while you wait.** If you tested as a trainee and did not pass, you stay a registered trainee, keep working under supervision, and keep your school enrollment current. Your hours keep counting.\n\n**Retesting.** Wait the required 60 days, study the diagnostic you were given, and reapply. The retest is the same format. The candidates who pass the second time are almost always the ones who changed how they practice (timed, open-book, with drills) rather than simply reading more.\n\n**Keep learning.** Certification is the floor. The NEC changes every three years, California adopts each edition into the California Electrical Code (Title 24, Part 3) with state amendments, and the DIR exam follows the edition named in the bulletin. Your continuing education hours are the mechanism that keeps you current.\n\n**One last thing.** The exam measures whether you can find and apply the rules. The jobsite measures whether you follow them when nobody is watching. Treat every lockout, every voltage test and every ladder setup during your trainee years as practice for the habits that will keep you alive for a forty-year career."
+    }
+  ],
+  "practice": [
+    {
+      "id": "california-certification-exam-overview-p1",
+      "type": "multiple_choice",
+      "prompt": "Which agency administers California's electrician certification program and reviews exam applications?",
+      "choices": [
+        "The Contractors State License Board (CSLB)",
+        "The DIR Labor Commissioner's Office, Electrician Certification Unit",
+        "The California Energy Commission",
+        "The National Fire Protection Association"
+      ],
+      "correctIndex": 1,
+      "explanation": "Certification of electricians is run by the Division of Labor Standards Enforcement (Labor Commissioner's Office) within the Department of Industrial Relations, through its Electrician Certification Unit. The CSLB licenses contractors, not individual electricians."
+    },
+    {
+      "id": "california-certification-exam-overview-p2",
+      "type": "numeric",
+      "prompt": "If the General Electrician exam gives you 4 hours 30 minutes for 100 questions, how many minutes do you have per question on average?",
+      "answer": 2.7,
+      "unit": "min",
+      "tolerance": 0.05,
+      "explanation": "4.5 hours is 270 minutes; 270 ÷ 100 = 2.7 minutes per question. That is why you cannot look up every answer."
+    },
+    {
+      "id": "california-certification-exam-overview-p3",
+      "type": "multiple_choice",
+      "prompt": "How many hours of qualifying work experience does the ECU require for the General Electrician certification exam (absent completion of an approved apprenticeship)?",
+      "choices": [
+        "2,000 hours",
+        "4,800 hours",
+        "8,000 hours",
+        "10,000 hours"
+      ],
+      "correctIndex": 2,
+      "explanation": "General Electrician requires 8,000 hours; Residential requires 4,800; Fire/Life Safety and Voice Data Video require 4,000; Non-Residential Lighting requires 2,000."
+    },
+    {
+      "id": "california-certification-exam-overview-p4",
+      "type": "multiple_choice",
+      "prompt": "A candidate fails the exam on March 1. What is the earliest they may submit a new application to retest?",
+      "choices": [
+        "The next day",
+        "After waiting 60 days from the exam date",
+        "After waiting one year",
+        "Only after completing 32 hours of continuing education"
+      ],
+      "correctIndex": 1,
+      "explanation": "The DLSE requires a 60-day wait from the exam date before a retest application is sent. Continuing education is a renewal requirement, not a retest requirement."
+    },
+    {
+      "id": "california-certification-exam-overview-p5",
+      "type": "multiple_choice",
+      "prompt": "Which statement about the exam's scoring is correct?",
+      "choices": [
+        "You must answer exactly 70 of 100 questions correctly",
+        "Passing is a scaled score of 70, so the raw number needed can differ between exam versions",
+        "Wrong answers subtract points, so blanks are safer than guesses",
+        "Each content area must be passed separately"
+      ],
+      "correctIndex": 1,
+      "explanation": "The result is reported as a scaled score with 70 as passing. Scaling equalizes versions of different difficulty. There is no penalty for guessing and the pass decision is on the total, not per area (the area breakdown is diagnostic)."
+    }
+  ],
+  "quiz": {
+    "key": "california-certification-exam-overview-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "california-certification-exam-overview-q1",
+        "type": "multiple_choice",
+        "prompt": "An Electrician Trainee registration in California allows a person to:",
+        "choices": [
+          "Perform electrical work independently for any contractor",
+          "Work for a C-10 contractor under the supervision of a certified electrician while enrolled in an approved school",
+          "Pull permits as an electrical contractor",
+          "Skip the certification exam after three years"
+        ],
+        "correctIndex": 1,
+        "explanation": "Trainee registration is an annual registration that requires enrollment in a state-approved school and supervision by a certified electrician on the jobsite. It is not a certification and does not waive the exam."
+      },
+      {
+        "id": "california-certification-exam-overview-q2",
+        "type": "multiple_choice",
+        "prompt": "What is the primary reference allowed during the General Electrician exam?",
+        "choices": [
+          "NFPA 70E only",
+          "The National Electrical Code edition named in the Candidate Information Bulletin",
+          "Any electrical textbook",
+          "OSHA 29 CFR 1926"
+        ],
+        "correctIndex": 1,
+        "explanation": "The exam is open-book with the NEC as the reference. The bulletin names the edition and the rules for the book; other publications are not permitted."
+      },
+      {
+        "id": "california-certification-exam-overview-q3",
+        "type": "multiple_choice",
+        "prompt": "Which of the following is NOT an acceptable way to document qualifying hours for the ECU?",
+        "choices": [
+          "An employer verification letter on company letterhead with license number and dates",
+          "Payroll records or W-2s identifying the employer",
+          "An apprenticeship completion certificate",
+          "A personal statement of unpaid side jobs with no employer verification"
+        ],
+        "correctIndex": 3,
+        "explanation": "Hours must be verifiable: employer letters, payroll records, union or JATC letters, or apprenticeship completion. Undocumented side work cannot be verified and is not accepted."
+      },
+      {
+        "id": "california-certification-exam-overview-q4",
+        "type": "multiple_choice",
+        "prompt": "How often must a California electrician certification be renewed, and what is required to renew without retesting?",
+        "choices": [
+          "Every year; pay the fee only",
+          "Every three years; 32 hours of approved continuing education and 2,000 hours of work in the trade",
+          "Every five years; retake the exam",
+          "Every three years; 8 hours of continuing education"
+        ],
+        "correctIndex": 1,
+        "explanation": "Certifications are valid for three years. Renewal without re-examination requires 32 hours of continuing education from a DIR-approved provider plus 2,000 documented work hours in the period, and the renewal fee."
+      },
+      {
+        "id": "california-certification-exam-overview-q5",
+        "type": "multiple_choice",
+        "prompt": "A question stem says \"In a dwelling unit, …\". Why does that phrase matter when you open the code book?",
+        "choices": [
+          "It does not matter; the NEC has one rule for everything",
+          "Many articles have different rules or exceptions for dwelling units, so the answer is often in a dwelling-specific subsection",
+          "It means the question is about the California Residential exam and should be skipped",
+          "It means you should use NFPA 70E instead"
+        ],
+        "correctIndex": 1,
+        "explanation": "Qualifiers such as \"dwelling unit\", \"other than dwelling\", \"continuous\" or \"existing\" point you at the specific subsection or exception the question is testing. Reading past the general rule is a top cause of wrong answers."
+      },
+      {
+        "id": "california-certification-exam-overview-q6",
+        "type": "multiple_choice",
+        "prompt": "During the exam you have spent 4 minutes on a feeder-tap question and are not close to an answer. The best move is to:",
+        "choices": [
+          "Keep going until it is solved, since partial credit is not available",
+          "Flag it, pick a provisional answer, and move on to protect time for the rest of the exam",
+          "Leave it blank so it does not count against you",
+          "Skip the remaining calculation questions entirely"
+        ],
+        "correctIndex": 1,
+        "explanation": "With about 2.7 minutes per question, time spent beyond 3 minutes on one item comes out of later questions that are no harder. Flag, guess, move on, and return in Pass 3. Blanks are never better than guesses because there is no penalty for wrong answers."
+      },
+      {
+        "id": "california-certification-exam-overview-q7",
+        "type": "multiple_choice",
+        "prompt": "Which statement about the practice questions in this academy is true?",
+        "choices": [
+          "They are copied from the DIR exam",
+          "They are original study questions written to exercise the same skills as the exam",
+          "They are the only questions that can appear on the exam",
+          "They are not based on the NEC"
+        ],
+        "correctIndex": 1,
+        "explanation": "The actual DIR examination is confidential. CareerQuest questions are original and built around the NEC, theory and safety practice so that the skills transfer, not the questions."
+      },
+      {
+        "id": "california-certification-exam-overview-q8",
+        "type": "multiple_choice",
+        "prompt": "Which document is the authoritative source for the current exam time limit, code-book rules and test-center procedures?",
+        "choices": [
+          "A contractor forum thread from several years ago",
+          "The Candidate Information Bulletin linked from the DIR Electrical Trade page",
+          "The NEC handbook commentary",
+          "This lesson"
+        ],
+        "correctIndex": 1,
+        "explanation": "Rules change (for example the change of test administrator in 2026). This lesson summarizes the format at a high level; the bulletin and the DIR page carry the binding details, so read them before test day."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "California DIR, Labor Commissioner's Office: Electrician Certification Program (Electrical Trade)",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "California DIR: Electrician Certification Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ECU/CandidateInfoBulletin.htm"
+    },
+    {
+      "title": "California DIR: Directions for completing the application for electrician examination and certification",
+      "url": "https://www.dir.ca.gov/dlse/ECU/ElectricianApplicationInstructions.html"
+    },
+    {
+      "title": "California Labor Code section 3099 (electrician certification) via California Legislative Information",
+      "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=3099."
+    },
+    {
+      "title": "California Code of Regulations, Title 8, sections 290 to 296.4 (Electrician Certification)",
+      "url": "https://www.dir.ca.gov/t8/290.html"
+    },
+    {
+      "title": "California Building Standards Commission: California Electrical Code (Title 24, Part 3)",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "NFPA 70, National Electrical Code (cited by article and section number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

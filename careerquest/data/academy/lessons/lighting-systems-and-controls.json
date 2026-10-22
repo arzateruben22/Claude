@@ -1,0 +1,375 @@
+{
+  "key": "lighting-systems-and-controls",
+  "track": "SYSTEMS",
+  "order": 4,
+  "title": "Lighting Systems and Controls",
+  "summary": "Light sources from fluorescent to LED, what ballasts and drivers do, how the common dimming methods work (including 0–10 V), and how occupancy sensors, photocontrols and California Title 24 shape the lighting work an electrician installs.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "electrical-power-and-energy",
+    "ac-and-dc"
+  ],
+  "objectives": [
+    "Students will be able to define lumens, efficacy, color temperature, CRI and rated life, and compare the common light sources on those terms.",
+    "Students will be able to explain what a fluorescent ballast and an LED driver do, distinguish constant-current from constant-voltage drivers, and describe the three LED retrofit types.",
+    "Students will be able to describe forward-phase, reverse-phase, 0–10 V and DALI dimming, wire a 0–10 V driver correctly and explain why dimmer and load must be compatible.",
+    "Students will be able to explain how occupancy, vacancy and daylight controls work and summarize what the California Energy Code (Title 24, Part 6) requires of lighting controls.",
+    "Students will be able to calculate how many luminaires a branch circuit can carry under the continuous-load rule and estimate energy savings from a retrofit."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "The vocabulary of light",
+      "markdown": "Lighting is specified in its own units, and the electrician who knows them can read a fixture schedule and spot a bad substitution.\n\n- **Lumen (lm)**: the total amount of visible light a source emits. A 60 W incandescent lamp gives about 800 lm.\n- **Footcandle (fc)** and **lux**: light landing on a surface. 1 fc = 1 lm per square foot = 10.76 lux. Offices are designed for 30–50 fc, parking lots for 1–5 fc.\n- **Efficacy (lm/W)**: lumens out per watt in, the efficiency of a source. Incandescent is about 15 lm/W; good LED luminaires exceed 150 lm/W.\n- **Correlated color temperature (CCT)** in kelvin describes how warm or cool white light looks: 2700 K is warm like incandescent, 3500–4000 K is neutral office white, 5000 K is cool daylight.\n- **Color rendering index (CRI)**: how accurately colors appear compared with a reference, 0–100. 80 is standard commercial; 90+ for retail, art and healthcare.\n- **Rated life**: for lamps, the hours at which half of a batch has failed. For LEDs, which dim rather than die, life is quoted as **L70**, the hours until output falls to 70 % of initial, commonly 50,000 hours or more.\n- **Ballast factor** (fluorescent) and **driver current** (LED) set how hard the lamp or module is driven; the same luminaire can produce different lumens with different ballast or driver settings.\n\nThe NEC calls a complete fixture a **luminaire** (Article 410). Lamps are the replaceable light sources; luminaires are the housing, optics, sockets and ballast or driver together."
+    },
+    {
+      "type": "table",
+      "caption": "Light sources compared",
+      "columns": [
+        "Source",
+        "Efficacy (lm/W)",
+        "Typical life (h)",
+        "Dimming",
+        "Where you still find it"
+      ],
+      "rows": [
+        [
+          "Incandescent / halogen",
+          "10–20",
+          "1,000–3,000",
+          "Easy, any forward-phase dimmer",
+          "Ovens, some decorative lamps; largely banned for general service in the US since 2023"
+        ],
+        [
+          "Linear fluorescent (T8, T5)",
+          "80–100",
+          "20,000–40,000",
+          "Only with dimming ballasts",
+          "Existing offices, schools, shops; being retrofitted to LED"
+        ],
+        [
+          "Compact fluorescent",
+          "50–70",
+          "8,000–10,000",
+          "Usually not",
+          "Legacy fixtures"
+        ],
+        [
+          "Metal halide / HPS (HID)",
+          "80–140",
+          "15,000–24,000",
+          "Poor; long restrike after power loss",
+          "Older high-bay, parking, roadway"
+        ],
+        [
+          "LED",
+          "100–200+",
+          "50,000+ (L70)",
+          "Yes, with a dimmable driver and compatible control",
+          "Nearly all new work; retrofits of everything above"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Ballasts and drivers",
+      "markdown": "A **fluorescent or HID lamp** is an arc discharge, and an arc has negative resistance: once struck, its current would rise without limit. The **ballast** limits current and provides the starting voltage. **Magnetic** ballasts are an iron-core inductor (hum, 120 Hz flicker, heavy). **Electronic** ballasts rectify the line and drive the lamp at 20–60 kHz, which eliminates visible flicker, improves efficacy and lets the ballast be dimmable. Starting methods matter for control design: **instant-start** ballasts are efficient but shorten lamp life with frequent switching; **programmed-start** ballasts preheat the cathodes and are the right choice where occupancy sensors cycle the lights. A ballast is matched to the lamp type (a T8 ballast will not run a T12 lamp correctly) and carries a **ballast factor** (0.78 low, 0.88 normal, 1.18 high) that scales light output and wattage.\n\nAn **LED driver** is a power supply that converts line voltage to the DC the LEDs need. Two kinds:\n\n- **Constant-current (CC)** drivers deliver a fixed current (350, 700, 1,050 mA are common) and let the voltage float within a range. Most luminaires use these; the output must be matched to the module's rated current or the LEDs are over- or under-driven.\n- **Constant-voltage (CV)** drivers deliver 12 V or 24 V DC for tape light and modules that have their own current limiting. Run length is limited by voltage drop along the tape.\n\nMost drivers have a **Class 2** output (limited to 60 V DC and 100 VA), which is why the secondary wiring is often small-gauge cable run without raceway under the Class 2 rules in Article 725. The line side of the driver is ordinary branch-circuit wiring and must be treated as such.\n\n**LED retrofit lamps for fluorescent fixtures** come in three listed types, and the electrician must know which one is in hand:\n\n- **Type A** (plug-and-play) runs on the existing ballast. Easiest, but the ballast remains a failure point and must be compatible.\n- **Type B** (ballast bypass) is wired directly to line voltage; the ballast is removed and the sockets rewired, often requiring **non-shunted** tombstones. The fixture must be relabeled to warn that fluorescent lamps can no longer be installed. Double-ended Type B lamps expose line voltage on the pins while one end is inserted; single-ended wiring is safer.\n- **Type C** uses an external LED driver that replaces the ballast; the lamps are low voltage. Best performance and dimming, more labor."
+    },
+    {
+      "type": "diagram",
+      "title": "Wiring a 0–10 V dimmable LED driver",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 285\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><g fill=\"currentColor\" stroke=\"none\"><text x=\"20\" y=\"42\" font-size=\"12\" font-weight=\"bold\">277 V branch circuit</text><text x=\"24\" y=\"84\">L (black)</text><text x=\"24\" y=\"164\">N (white)</text><text x=\"24\" y=\"194\">EGC (green)</text></g><path d=\"M20 90 H110\"/><path d=\"M20 170 H300\" stroke=\"#9aa6b8\"/><path d=\"M20 200 H300\" stroke=\"#3ddc97\"/><circle cx=\"150\" cy=\"170\" r=\"3\" fill=\"#9aa6b8\" stroke=\"none\"/><path d=\"M150 170 V140\" stroke=\"#9aa6b8\" stroke-dasharray=\"4 3\"/><rect x=\"110\" y=\"60\" width=\"90\" height=\"80\" rx=\"4\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"155\" y=\"78\" text-anchor=\"middle\" font-weight=\"bold\">0–10 V dimmer</text><text x=\"155\" y=\"92\" text-anchor=\"middle\" fill=\"#9aa6b8\">(wall control)</text><text x=\"114\" y=\"104\">LINE</text><text x=\"196\" y=\"104\" text-anchor=\"end\">LOAD</text><text x=\"196\" y=\"124\" text-anchor=\"end\">V+</text><text x=\"196\" y=\"138\" text-anchor=\"end\">V−</text><text x=\"158\" y=\"158\" fill=\"#9aa6b8\" font-size=\"10\">neutral, if the dimmer needs one</text></g><path d=\"M200 90 H300\" stroke=\"#ff6b6b\"/><path d=\"M200 120 H300\" stroke=\"#4cc9ff\"/><path d=\"M200 135 H300\" stroke=\"#9aa6b8\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"250\" y=\"86\" text-anchor=\"middle\" fill=\"#ff6b6b\">switched hot (red)</text><text x=\"250\" y=\"117\" text-anchor=\"middle\" fill=\"#4cc9ff\">violet (+)</text><text x=\"250\" y=\"148\" text-anchor=\"middle\" fill=\"#9aa6b8\">gray (−)</text></g><rect x=\"300\" y=\"60\" width=\"115\" height=\"160\" rx=\"4\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"357\" y=\"78\" text-anchor=\"middle\" font-weight=\"bold\">LED driver</text><text x=\"357\" y=\"92\" text-anchor=\"middle\" fill=\"#9aa6b8\">constant current</text><text x=\"305\" y=\"107\">L</text><text x=\"305\" y=\"124\">DIM+</text><text x=\"305\" y=\"139\">DIM−</text><text x=\"305\" y=\"174\">N</text><text x=\"305\" y=\"204\">G</text><text x=\"410\" y=\"104\" text-anchor=\"end\">LED+</text><text x=\"410\" y=\"164\" text-anchor=\"end\">LED−</text></g><path d=\"M415 100 H450\" stroke=\"#f3c75b\"/><path d=\"M415 160 H450\" stroke=\"#f3c75b\"/><rect x=\"450\" y=\"80\" width=\"90\" height=\"95\" rx=\"4\" stroke=\"#f3c75b\"/><g stroke=\"#f3c75b\"><path d=\"M495 95 V105 L483 120 H507 Z M483 120 H507 M495 120 V130\"/><path d=\"M495 130 L483 145 H507 Z M483 145 H507 M495 145 V160\"/></g><g fill=\"currentColor\" stroke=\"none\"><text x=\"495\" y=\"192\" text-anchor=\"middle\" font-size=\"10\">LED module, 700 mA</text><text x=\"280\" y=\"246\" text-anchor=\"middle\" font-size=\"12\">Control pair: 10 V = full output, 1 V ≈ 10 %. Driver sources the voltage, dimmer sinks current.</text><text x=\"280\" y=\"266\" text-anchor=\"middle\" font-size=\"12\">Polarity matters. Keep Class 2 control wiring separate from power wiring unless listed otherwise.</text></g></svg>",
+      "caption": "The dimmer switches the hot conductor (or a relay does) and provides a two-wire control pair. The driver generates roughly 10 V DC on the violet and gray leads; the dimmer sinks current to pull that voltage down, lowering output. Line, neutral and ground reach the driver as on any branch circuit."
+    },
+    {
+      "type": "text",
+      "heading": "Dimming methods and compatibility",
+      "markdown": "Dimming is where lighting callbacks come from. Flicker, popcorning (lamps turning on at different levels), dead travel at the bottom of the slider and buzzing are almost always a mismatch between control method, dimmer and driver.\n\n**Forward-phase (leading-edge, TRIAC) dimming** chops the front of each half cycle. It was designed for incandescent and magnetic low-voltage (MLV) transformers. Many LED drivers accept it, but a TRIAC needs a minimum holding current; a 6 W LED lamp on a dimmer rated for 40 W minimum will flicker. Use dimmers listed for LED loads and check the manufacturer's compatibility list.\n\n**Reverse-phase (trailing-edge, ELV) dimming** chops the back of the half cycle with transistors, which is gentler on capacitive loads such as electronic low-voltage transformers and many LED drivers. ELV dimmers usually require a neutral at the switch box.\n\n**0–10 V analog dimming** (IEC 60929 Annex E) is the commercial standard: a low-voltage DC control pair separate from the power wiring. Many drivers can be daisy-chained on one controller as long as the total sink current is within the controller rating (each driver sources 0.1–2 mA). Advantages: long runs, reliable, works with any relay or occupancy sensor for on/off. Limits: polarity-sensitive, no feedback, and the power still has to be switched separately for off unless the driver is **dim-to-off**.\n\n**DALI** (digital addressable lighting interface) replaces the analog pair with a two-wire polarity-free digital bus; each driver has an address, so zones are set in software rather than by wiring. **PWM** and **DMX** are used for color-changing and theatrical fixtures. **Wireless** controls (Bluetooth mesh, Zigbee) are increasingly common in retrofits because they need no control wiring at all.\n\n**Rules that apply to every method**: dimmers and switches generally require a grounded (neutral) conductor at the box (404.2(C)) so that electronic controls have a return path, and no control may put current on the equipment grounding conductor (404.22). A dimmer is rated in watts or VA for a specific load type; derate it when ganging several in one box per the manufacturer."
+    },
+    {
+      "type": "diagram",
+      "title": "Typical 0–10 V dimming curve",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 230\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 40 V180 H440\" stroke=\"#9aa6b8\"/><g stroke=\"#9aa6b8\" stroke-width=\"1\" stroke-dasharray=\"3 4\"><path d=\"M136 180 V40 M212 180 V40 M288 180 V40 M364 180 V40 M440 180 V40 M60 110 H440 M60 40 H440\"/></g><path d=\"M98 166 L440 40\" stroke=\"#4cc9ff\" stroke-width=\"3\"/><path d=\"M60 166 H98\" stroke=\"#f3c75b\" stroke-width=\"3\"/><path d=\"M72 166 V180\" stroke=\"#ff6b6b\" stroke-dasharray=\"4 3\"/><circle cx=\"98\" cy=\"166\" r=\"4\" fill=\"#4cc9ff\" stroke=\"none\"/><circle cx=\"440\" cy=\"40\" r=\"4\" fill=\"#4cc9ff\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"60\" y=\"196\" text-anchor=\"middle\">0 V</text><text x=\"136\" y=\"196\" text-anchor=\"middle\">2 V</text><text x=\"212\" y=\"196\" text-anchor=\"middle\">4 V</text><text x=\"288\" y=\"196\" text-anchor=\"middle\">6 V</text><text x=\"364\" y=\"196\" text-anchor=\"middle\">8 V</text><text x=\"440\" y=\"196\" text-anchor=\"middle\">10 V</text><text x=\"52\" y=\"184\" text-anchor=\"end\">0 %</text><text x=\"52\" y=\"114\" text-anchor=\"end\">50 %</text><text x=\"52\" y=\"44\" text-anchor=\"end\">100 %</text><text x=\"250\" y=\"216\" text-anchor=\"middle\" font-size=\"12\">control voltage between violet (+) and gray (−)</text><text x=\"300\" y=\"150\" fill=\"#4cc9ff\">linear region (1–10 V)</text><text x=\"104\" y=\"160\" fill=\"#f3c75b\">minimum (≈10 %) below 1 V</text><text x=\"70\" y=\"66\" fill=\"#ff6b6b\" font-size=\"10\">dim-to-off drivers</text><text x=\"70\" y=\"78\" fill=\"#ff6b6b\" font-size=\"10\">switch off near 0 V</text><path d=\"M72 160 V84\" stroke=\"#ff6b6b\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/></g></svg>",
+      "caption": "Output tracks the control voltage linearly from 1 V (about 10 %) to 10 V (100 %). Below 1 V most drivers hold at minimum; dim-to-off drivers switch off near 0 V. Some drivers use a logarithmic curve that looks smoother to the eye."
+    },
+    {
+      "type": "formula",
+      "name": "Continuous lighting load on a branch circuit",
+      "expression": "Maximum connected VA = 0.80 × V × I_breaker        Luminaires per circuit = Maximum VA ÷ VA per luminaire",
+      "variables": [
+        {
+          "symbol": "V",
+          "meaning": "circuit voltage (120 V or 277 V)",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I_breaker",
+          "meaning": "branch-circuit overcurrent device rating",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "0.80",
+          "meaning": "the continuous-load limit: lighting that runs 3 hours or more counts at 125 %, which is the same as limiting the device to 80 % (210.19(A), 210.20(A))",
+          "unit": "unitless"
+        },
+        {
+          "symbol": "VA per luminaire",
+          "meaning": "input volt-amperes from the driver or ballast label (not lamp watts)",
+          "unit": "volt-amperes (VA)"
+        }
+      ],
+      "explanation": "Use the ballast or driver input rating, which includes its losses and power factor, not the lamp wattage. Round the luminaire count down. Voltage drop on long 277 V lighting runs is usually a bigger constraint than ampacity."
+    },
+    {
+      "type": "example",
+      "problem": "A warehouse has 277 V, 20 A lighting circuits. The new LED high-bays draw 150 W with a 0.95 power factor (driver input 158 VA). How many can go on one circuit? Each replaces a 400 W metal halide fixture that drew 458 W including ballast. For 60 fixtures running 4,000 hours per year at $0.28 per kWh, what is the annual savings?",
+      "solutionSteps": [
+        "Circuit capacity: 0.80 × 277 V × 20 A = 4,432 VA.",
+        "Luminaires: 4,432 ÷ 158 = 28.05, so 28 luminaires per circuit (voltage drop on long runs may dictate fewer).",
+        "Savings per fixture: 458 W − 150 W = 308 W.",
+        "Annual energy saved: 60 × 308 W × 4,000 h = 73,920,000 Wh = 73,920 kWh.",
+        "Dollars: 73,920 kWh × $0.28 = $20,698 per year, before counting reduced maintenance and any utility rebate."
+      ],
+      "answer": "28 luminaires per circuit; about $20,700 per year saved for the 60-fixture retrofit."
+    },
+    {
+      "type": "text",
+      "heading": "Sensors, photocontrols and the California Energy Code",
+      "markdown": "**Occupancy sensors** turn lights on when they detect a person and off after a time delay once motion stops. **Vacancy sensors** require a manual on but turn off automatically; California favors them because they eliminate lights that turn on for a pet or a passer-by. **Partial-on** sensors turn on at a reduced level. Technologies:\n\n- **Passive infrared (PIR)** sees moving body heat. Needs line of sight; blocked by partitions and cubicle walls; fine for small enclosed rooms and wall-switch sensors.\n- **Ultrasonic** fills the space with inaudible sound and detects Doppler shift. Senses small motions around corners, but air movement from HVAC or a swinging door can keep lights on. Not for high ceilings.\n- **Dual-technology** requires both to turn on and either to hold on, which is the most reliable choice for restrooms, classrooms and open offices.\n- **Microwave** sensors see through thin walls, which is a feature in warehouses and a false-trigger problem in offices.\n\nMounting and coverage are everything: read the pattern on the data sheet, keep PIR sensors away from HVAC diffusers and windows, and set time delays within the code limit (20 minutes maximum in Title 24 nonresidential spaces).\n\n**Photocontrols** turn exterior lighting off in daylight; **daylight harvesting** dims interior fixtures near windows and skylights in proportion to available daylight using a ceiling or fixture-mounted photosensor and dimmable drivers.\n\n**California Title 24, Part 6 (Building Energy Efficiency Standards)** is what makes lighting controls in California different from the rest of the country, and the Nonresidential Lighting certification that DIR administers exists partly because of it. In broad terms it requires: manual area controls in every space, multi-level or continuous dimming in most spaces, automatic shutoff by occupancy sensor or schedule, daylighting controls in daylit zones, demand-responsive controls in larger buildings, and high-efficacy (JA8-listed) sources with vacancy sensors or dimmers in dwellings. Nonresidential lighting control systems must pass **acceptance testing** by a certified Lighting Controls Acceptance Test Technician (CALCTP) before the permit is finaled. Check the current Title 24 Part 6 and its Reference Appendices for exact triggers and thresholds, which change every three years."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Commercial lighting is often 277 V, and a 277 V shock delivers more than twice the current of 120 V. Fluorescent luminaires with ballasts installed indoors in non-dwelling occupancies must have a disconnecting means in or on the luminaire (410.130(G)) so the ballast can be changed safely; use it, and still test. Ballast and driver capacitors can hold a charge after the circuit is off. When installing Type B LED tubes, remove the ballast completely, rewire the sockets per the lamp instructions and apply the warning label; never leave a fixture that can energize a tube pin while someone is holding the other end."
+    },
+    {
+      "type": "text",
+      "heading": "Article 410 and emergency lighting basics",
+      "markdown": "Article 410 covers luminaires, lampholders and lamps. Concepts an apprentice should recognize:\n\n- Luminaires must be listed, and installed and used in accordance with the listing (110.3(B)); a damp- or wet-location luminaire is marked for it (410.10).\n- In bathtub and shower areas, no cord-connected, pendant or track luminaires within 3 ft horizontally and 8 ft vertically of the tub rim or shower threshold (410.10(D)).\n- Clothes closets have minimum clearances between luminaires and the storage space, and bare incandescent lamps are prohibited there (410.16).\n- Recessed luminaires in insulated ceilings must be IC-rated or kept clear of insulation (410.116), and thermal protection is required for most recessed incandescent and LED housings.\n- Luminaire supports: boxes rated for the weight; luminaires over 50 lb need independent support (314.27); ceiling-grid luminaires must be secured to the grid or supported independently (410.36(B)).\n\n**Emergency and egress lighting** (NEC Article 700, with the triggers in the California Building Code and Fire Code) keeps exit paths lit when normal power fails. The electrician typically installs **unit equipment** (battery packs with integral or remote heads), **exit signs** with batteries, or luminaires with **emergency LED drivers** and battery packs, all wired ahead of any local switch so the battery senses loss of normal power. Transfer must happen within 10 seconds and the battery must run for 90 minutes; emergency circuits must be kept separate from normal wiring in most cases (700.10). Monthly and annual testing is required, and the test switch on a battery pack is the first thing an inspector presses."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Commission lighting controls before you leave: walk every zone, verify each sensor covers its room and nothing else, set time delays, program daylight setpoints at the right time of day, and label the dimmer-to-driver pairs. Write the final settings on the panel schedule or control drawings. A controls job that \"works\" but was never adjusted is the one you get called back to."
+    }
+  ],
+  "practice": [
+    {
+      "id": "lighting-systems-and-controls-p1",
+      "type": "numeric",
+      "prompt": "An LED luminaire produces 9,600 lumens and draws 64 W. What is its efficacy in lm/W?",
+      "answer": 150,
+      "unit": "lm/W",
+      "tolerance": 1,
+      "explanation": "9,600 ÷ 64 = 150 lm/W."
+    },
+    {
+      "id": "lighting-systems-and-controls-p2",
+      "type": "numeric",
+      "prompt": "How many 85 VA luminaires can be placed on a 120 V, 20 A branch circuit under the continuous-load rule? (Give the whole number of luminaires.)",
+      "answer": 22,
+      "unit": "luminaires",
+      "tolerance": 0.4,
+      "explanation": "0.80 × 120 × 20 = 1,920 VA; 1,920 ÷ 85 = 22.6, rounded down to 22."
+    },
+    {
+      "id": "lighting-systems-and-controls-p3",
+      "type": "numeric",
+      "prompt": "A 0–10 V driver follows a linear curve from 1 V (10 %) to 10 V (100 %). What control voltage gives 60 % output?",
+      "answer": 6,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "On a linear 1–10 V curve, output in percent equals ten times the control voltage: 6 V gives 60 %."
+    },
+    {
+      "id": "lighting-systems-and-controls-p4",
+      "type": "multiple_choice",
+      "prompt": "What does a fluorescent ballast do?",
+      "choices": [
+        "Converts AC to DC for the lamp",
+        "Limits the arc current and provides the starting voltage",
+        "Stores energy so the lamp stays lit during a power failure",
+        "Changes the color temperature of the lamp"
+      ],
+      "correctIndex": 1,
+      "explanation": "An arc discharge has negative resistance, so without a ballast its current would rise without limit. The ballast also supplies the voltage needed to strike the arc."
+    },
+    {
+      "id": "lighting-systems-and-controls-p5",
+      "type": "multiple_choice",
+      "prompt": "A Type B LED tube is one that:",
+      "choices": [
+        "operates on the existing fluorescent ballast",
+        "is wired directly to line voltage with the ballast removed, and requires the fixture to be relabeled",
+        "requires an external low-voltage driver",
+        "can only be used outdoors"
+      ],
+      "correctIndex": 1,
+      "explanation": "Type B (ballast bypass) lamps run on line voltage at the sockets. The ballast is removed, sockets are often changed to non-shunted, and a warning label is required."
+    },
+    {
+      "id": "lighting-systems-and-controls-p6",
+      "type": "multiple_choice",
+      "prompt": "Lights in a conference room stay on long after everyone leaves. The ceiling sensor is ultrasonic and mounted next to an HVAC diffuser. The most likely cause is:",
+      "choices": [
+        "the sensor is detecting air movement from the diffuser as occupancy",
+        "the time delay is set too short",
+        "ultrasonic sensors cannot detect people",
+        "the room is too small for a ceiling sensor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ultrasonic sensors detect Doppler shift from any movement, including moving air and swaying blinds. Relocate the sensor or use a dual-technology unit."
+    },
+    {
+      "id": "lighting-systems-and-controls-p7",
+      "type": "multiple_choice",
+      "prompt": "Which statement about 0–10 V dimming is correct?",
+      "choices": [
+        "The dimmer supplies 10 V to the driver to turn it on",
+        "The driver sources the control voltage and the dimmer sinks current to lower it; polarity matters",
+        "The control pair carries the LED power",
+        "It cannot be used with occupancy sensors"
+      ],
+      "correctIndex": 1,
+      "explanation": "The driver is the voltage source on the violet/gray pair; the controller pulls it down. Reversed polarity typically leaves the fixture at full or minimum output."
+    }
+  ],
+  "quiz": {
+    "key": "lighting-systems-and-controls-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "lighting-systems-and-controls-q1",
+        "type": "numeric",
+        "prompt": "A 277 V, 20 A lighting circuit: what is the maximum continuous load in VA?",
+        "answer": 4432,
+        "unit": "VA",
+        "tolerance": 10,
+        "explanation": "0.80 × 277 × 20 = 4,432 VA."
+      },
+      {
+        "id": "lighting-systems-and-controls-q2",
+        "type": "numeric",
+        "prompt": "Replacing a 112 W fluorescent fixture with a 40 W LED fixture saves how many kWh per year at 3,000 operating hours?",
+        "answer": 216,
+        "unit": "kWh",
+        "tolerance": 1,
+        "explanation": "(112 − 40) W × 3,000 h = 216,000 Wh = 216 kWh."
+      },
+      {
+        "id": "lighting-systems-and-controls-q3",
+        "type": "numeric",
+        "prompt": "An office needs 40 footcandles over a 1,000 ft² area. Ignoring losses, how many lumens must reach the work plane?",
+        "answer": 40000,
+        "unit": "lm",
+        "tolerance": 100,
+        "explanation": "1 fc = 1 lm/ft², so 40 fc × 1,000 ft² = 40,000 lm delivered (a real design adds for fixture, room and depreciation losses)."
+      },
+      {
+        "id": "lighting-systems-and-controls-q4",
+        "type": "multiple_choice",
+        "prompt": "A color temperature of 2700 K appears:",
+        "choices": [
+          "warm, like an incandescent lamp",
+          "cool, like daylight",
+          "green",
+          "ultraviolet"
+        ],
+        "correctIndex": 0,
+        "explanation": "Lower kelvin values are warmer (more orange); 5000 K and above look cool or bluish."
+      },
+      {
+        "id": "lighting-systems-and-controls-q5",
+        "type": "multiple_choice",
+        "prompt": "A constant-current LED driver rated 700 mA is connected to a module designed for 350 mA. What happens?",
+        "choices": [
+          "The module runs at half brightness",
+          "The module is overdriven, runs hot and fails early",
+          "Nothing, because drivers adjust automatically",
+          "The driver trips its breaker"
+        ],
+        "correctIndex": 1,
+        "explanation": "A CC driver forces its rated current through whatever is connected within its voltage window. Twice the design current overheats the LEDs."
+      },
+      {
+        "id": "lighting-systems-and-controls-q6",
+        "type": "multiple_choice",
+        "prompt": "A customer complains that new LED lamps flicker and buzz on an existing dimmer. The first thing to check is:",
+        "choices": [
+          "whether the dimmer is listed for LED loads and the lamps are on its compatibility list, and whether the load is below the dimmer's minimum",
+          "whether the neutral is oversized",
+          "whether the lamps are 2700 K",
+          "whether the breaker is AFCI"
+        ],
+        "correctIndex": 0,
+        "explanation": "Legacy incandescent (TRIAC) dimmers need a minimum holding current and are not designed for driver electronics. Replace with an LED-rated dimmer matched to the lamp."
+      },
+      {
+        "id": "lighting-systems-and-controls-q7",
+        "type": "multiple_choice",
+        "prompt": "Why does the California Energy Code favor vacancy sensors over occupancy sensors in many spaces?",
+        "choices": [
+          "They cost less",
+          "They require a manual on, so lights are not switched on needlessly by brief or incidental motion",
+          "They work without a neutral",
+          "They have longer time delays"
+        ],
+        "correctIndex": 1,
+        "explanation": "Manual-on, auto-off saves the energy that auto-on sensors waste when someone just passes through."
+      },
+      {
+        "id": "lighting-systems-and-controls-q8",
+        "type": "multiple_choice",
+        "prompt": "Emergency egress lighting battery units must be wired:",
+        "choices": [
+          "through the local wall switch so they can be turned off",
+          "ahead of any local switch, on the normal lighting circuit of the area, so they sense loss of normal power",
+          "on a separate 277 V circuit only",
+          "to the fire alarm panel"
+        ],
+        "correctIndex": 1,
+        "explanation": "Unit equipment must transfer when the area's normal lighting circuit loses power; a switch ahead of it would let the battery think power failed, or prevent charging (700.12 concept)."
+      },
+      {
+        "id": "lighting-systems-and-controls-q9",
+        "type": "multiple_choice",
+        "prompt": "Who must verify nonresidential lighting controls in California before the permit is finaled?",
+        "choices": [
+          "The utility",
+          "A certified Lighting Controls Acceptance Test Technician performing acceptance tests under Title 24, Part 6",
+          "The building owner",
+          "No one; controls are self-certifying"
+        ],
+        "correctIndex": 1,
+        "explanation": "Title 24 Part 6 requires acceptance testing of lighting controls by certified technicians (CALCTP program)."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 410, 404.2(C), 404.22, 210.19/210.20, Article 700, Article 725 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Energy Commission — Building Energy Efficiency Standards (Title 24, Part 6)",
+      "url": "https://www.energy.ca.gov/programs-and-topics/programs/building-energy-efficiency-standards"
+    },
+    {
+      "title": "California Advanced Lighting Controls Training Program (CALCTP)",
+      "url": "https://www.calctp.org/"
+    },
+    {
+      "title": "U.S. Department of Energy — Solid-State Lighting program",
+      "url": "https://www.energy.gov/eere/ssl/solid-state-lighting"
+    },
+    {
+      "title": "DIR Electrician Certification — Nonresidential Lighting Technician category",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "IES Lighting Handbook (Illuminating Engineering Society)",
+      "url": "https://www.ies.org/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

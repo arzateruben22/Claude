@@ -8,6 +8,12 @@ import { loginSchema, registerSchema } from "@/lib/validation/auth";
 import { fail, fromZodError, type ActionResult } from "@/lib/action-result";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { audit } from "@/lib/audit";
+import { todayInTz } from "@/lib/dates";
+import { addDaysUtc } from "@/lib/goals/days";
+
+/** Matches the UserProfile.timezone default; campaigns are dated in the user's calendar, not the server's. */
+const DEFAULT_TIMEZONE = "America/Los_Angeles";
+const DEFAULT_CAMPAIGN_LENGTH_DAYS = 90;
 
 function safeNext(next: unknown): string {
   if (typeof next !== "string" || !next.startsWith("/") || next.startsWith("//")) return "/dashboard";
@@ -30,6 +36,8 @@ export async function registerAction(_prev: ActionResult | null, formData: FormD
   if (existing) return fail("An account with that email already exists.", { email: ["Try signing in instead."] });
 
   const passwordHash = await hashPassword(password);
+  // @db.Date columns hold UTC-midnight dates: derive "today" in the profile timezone so day 1 is today for the user.
+  const campaignStart = todayInTz(DEFAULT_TIMEZONE);
   const user = await prisma.user.create({
     data: {
       email,
@@ -39,8 +47,8 @@ export async function registerAction(_prev: ActionResult | null, formData: FormD
       stats: { create: {} },
       campaigns: {
         create: [
-          { campaign: "GET_HIRED", startedAt: new Date(), targetEndAt: new Date(Date.now() + 90 * 86400000) },
-          { campaign: "ELECTRICIAN_150K", startedAt: new Date() },
+          { campaign: "GET_HIRED", startedAt: campaignStart, targetEndAt: addDaysUtc(campaignStart, DEFAULT_CAMPAIGN_LENGTH_DAYS) },
+          { campaign: "ELECTRICIAN_150K", startedAt: campaignStart },
         ],
       },
     },

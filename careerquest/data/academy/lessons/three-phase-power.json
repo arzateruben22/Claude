@@ -220,10 +220,10 @@
       "id": "three-phase-power-p4",
       "type": "numeric",
       "prompt": "A 480 V three-phase motor draws 52 A at a power factor of 0.88. How much real power does it consume, in kW?",
-      "answer": 38.1,
+      "answer": 38,
       "unit": "kW",
       "tolerance": 0.4,
-      "explanation": "P = 1.732 × 480 × 52 × 0.88 = 38,044 W = 38.0 kW (38.1 with unrounded intermediate values)."
+      "explanation": "P = 1.732 × 480 × 52 × 0.88 = 38,043 W = 38.0 kW."
     },
     {
       "id": "three-phase-power-p5",

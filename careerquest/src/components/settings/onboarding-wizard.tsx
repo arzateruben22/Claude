@@ -186,13 +186,15 @@ export function OnboardingWizard({ defaults, alreadyCompleted }: { defaults: Pro
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Back
         </Button>
+        {/* Distinct keys: if React reused one <button> and flipped type="button" → "submit" inside the
+            Next click handler, Chrome's activation behaviour would submit the form and skip step 3. */}
         {last ? (
-          <Button type="submit" loading={pending}>
+          <Button key="finish" type="submit" loading={pending}>
             <Sparkles className="h-4 w-4" aria-hidden />
             {alreadyCompleted ? "Save changes" : `Finish setup (+${XP.PROFILE_COMPLETED} XP)`}
           </Button>
         ) : (
-          <Button type="button" onClick={next}>
+          <Button key="next" type="button" onClick={next}>
             Next
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Button>

@@ -1,0 +1,42 @@
+[
+  {
+    "code": "GENERAL",
+    "name": "General Electrician",
+    "hoursRequired": 8000,
+    "notes": "8,000 hours of work for a C-10 electrical contractor installing, constructing or maintaining electrical systems covered by the National Electrical Code. Hours must span two or more listed work areas, with per-area caps (8 CCR 291.1 / DIR page 1a): residential wiring max 3,000; commercial wiring max 6,000; industrial wiring max 6,000; voice/data/video installation max 1,500; troubleshooting & maintenance max 1,500; underground conduit installation max 750; finish work & fixtures max 600; fire/life safety max 600; stock room & material handling max 300. ALTERNATIVE ROUTES to exam eligibility: (1) successful completion of an apprenticeship program approved by the California Apprenticeship Council, the federal Office of Apprenticeship (formerly Bureau of Apprenticeship and Training) or an authorized state apprenticeship council, in this classification (8 CCR 291.1) - registered apprentices are exempt from certification while in the program, but passing the exam is typically required to graduate and is usually taken in the final year (DIR page 3a); or (2) a registered Electrician Trainee who completes an Approved Curriculum at a DIR-listed school (8 CCR 291.2(g)) - DIR page 2a describes this route as 8,000 hours of on-the-job experience plus 720 hours of related and supplemental instruction. No official DIR source was found describing 'education credit' substituting for OJT hours (unverified - do not advertise). Regulation text: https://www.dir.ca.gov/t8/291_1.html. Verified via search extracts of the cited DIR pages, not direct page reads.",
+    "sourceUrl": "https://dir.ca.gov/DLSE/ECU/1a.html",
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "code": "RESIDENTIAL",
+    "name": "Residential Electrician",
+    "hoursRequired": 4800,
+    "notes": "4,800 hours of work for a C-10 electrical contractor on residential systems covered by the NEC; hours must consist of work in two or more listed areas, with residential wiring countable up to 4,800 (8 CCR 291.1 / DIR page 1b). Some third-party guides say 4,500; DIR's own table says 4,800. ALTERNATIVE ROUTES: (1) completion of a CAC/federal/state-approved apprenticeship in the Residential classification (8 CCR 291.1); or (2) registered Electrician Trainee who completes an Approved Curriculum for this classification (8 CCR 291.2(g)). 'Education credit' toward hours: not found in any official source (unverified). Regulation text: https://www.dir.ca.gov/t8/291_1.html. Verified via search extracts, not direct page reads.",
+    "sourceUrl": "https://dir.ca.gov/DLSE/ECU/1b.html",
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "code": "FIRE_LIFE_SAFETY",
+    "name": "Fire/Life Safety Technician",
+    "hoursRequired": 4000,
+    "notes": "4,000 hours of work for a C-10 electrical contractor involving installation, construction or maintenance of systems covered by NEC Article 760. The DLSE page lists installation (max 4,000) and troubleshooting/maintenance (max 750) as the two areas; the regulation caps stock room/material handling at 300 hours. ALTERNATIVE ROUTES: (1) completion of a CAC/federal/state-approved apprenticeship in the Fire/Life Safety classification (8 CCR 291.1); or (2) registered Electrician Trainee who completes an Approved Curriculum for this classification (8 CCR 291.2(g)). 'Education credit' toward hours: not found in any official source (unverified). Regulation text: https://www.dir.ca.gov/t8/291_1.html. Verified via search extracts, not direct page reads.",
+    "sourceUrl": "https://dir.ca.gov/DLSE/ECU/1c.html",
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "code": "VOICE_DATA_VIDEO",
+    "name": "Voice Data Video Technician",
+    "hoursRequired": 4000,
+    "notes": "4,000 hours of work for a C-10 electrical contractor installing, constructing or maintaining systems within NEC Articles 725, 770 (non-composite cables only), 800 (non-hybrid cables only), 810 and 820. Trade-specific VDV training countable up to 300 hours. ALTERNATIVE ROUTES: (1) completion of a CAC/federal/state-approved apprenticeship in the Voice Data Video classification (8 CCR 291.1); or (2) registered Electrician Trainee who completes an Approved Curriculum for this classification (8 CCR 291.2(g)). 'Education credit' toward hours: not found in any official source (unverified). Regulation text: https://www.dir.ca.gov/t8/291_1.html. Verified via search extracts, not direct page reads.",
+    "sourceUrl": "https://dir.ca.gov/DLSE/ECU/1d.html",
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "code": "NON_RESIDENTIAL_LIGHTING",
+    "name": "Non-Residential Lighting Technician",
+    "hoursRequired": 2000,
+    "notes": "2,000 hours of work for an electrical contractor. Per-area caps: maintenance of lighting fixtures countable up to 1,750 hours; installation of retrofit fixtures up to 1,500; stock room up to 150. ALTERNATIVE ROUTES: (1) completion of a CAC/federal/state-approved apprenticeship in the Non-Residential Lighting classification (8 CCR 291.1); or (2) registered Electrician Trainee who completes an Approved Curriculum for this classification (8 CCR 291.2(g)). 'Education credit' toward hours: not found in any official source (unverified). Regulation text: https://www.dir.ca.gov/t8/291_1.html. Verified via search extracts, not direct page reads.",
+    "sourceUrl": "https://dir.ca.gov/DLSE/ECU/1e.html",
+    "verifiedOn": "2026-10-21"
+  }
+]

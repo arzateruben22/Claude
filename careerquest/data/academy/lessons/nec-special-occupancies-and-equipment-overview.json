@@ -1,0 +1,354 @@
+{
+  "key": "nec-special-occupancies-and-equipment-overview",
+  "track": "CODE",
+  "order": 5,
+  "title": "NEC Special Occupancies and Equipment (Chapters 5, 6 and 7)",
+  "summary": "Where the general rules change: hazardous (classified) locations, health care and other special occupancies, swimming pools and spas, the Article 430 motor rules, HVAC, EV charging, solar and standby systems. Concept-level coverage with the section numbers you will need to look up the details.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "nec-grounding-overcurrent-overview",
+    "motors-and-controls"
+  ],
+  "objectives": [
+    "Students will be able to explain the Class, Division and Group system for hazardous (classified) locations and name the wiring concepts that apply (explosionproof equipment, seals, listed methods).",
+    "Students will be able to describe the concept-level requirements for swimming pools and spas, including equipotential bonding, GFCI protection and receptacle and luminaire clearances.",
+    "Students will be able to summarize the structure of Article 430 and apply its sizing concepts, and explain how Article 440 nameplate values (MCA, MOCP) override the general rules.",
+    "Students will be able to recognize the special-occupancy articles for health care, assembly, temporary installations, marinas and agricultural buildings and state the main concern of each.",
+    "Students will be able to distinguish emergency, legally required standby and optional standby systems, and identify the key concepts of Article 690 solar PV and Article 705 interconnection."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "When the general rules are not enough",
+      "markdown": "Chapters 1 through 4 assume an ordinary building. Chapters 5, 6 and 7 cover places and equipment where the ordinary rules would leave a hazard: gasoline vapor, a patient wired to monitors, a body in water, a motor that must keep running during a fire. Under 90.3, these chapters **modify or supplement** the general rules; everything in Chapters 1–4 still applies unless a special article says otherwise.\n\nThis lesson is a map, not the territory. Each article below has dozens of specific requirements; the goal is for you to know that the article exists, what problem it solves, and which section to open. **The current California Electrical Code (Title 24, Part 3) adopts the NEC with California amendments, some of which touch these chapters (for example, state agencies regulate hospitals, schools and public pools), and candidates must study the NEC edition named in the DIR Candidate Information Bulletin.**"
+    },
+    {
+      "type": "text",
+      "heading": "Hazardous (classified) locations (Articles 500–516)",
+      "markdown": "A **hazardous (classified) location** is one where fire or explosion hazards may exist because of flammable gases or vapors, flammable liquids, combustible dusts, or ignitable fibers and flyings. Electrical equipment is a potential ignition source (arcs at contacts, hot surfaces, sparks from a broken lamp), so these articles control both what is installed and how.\n\n**Classification** is an engineering decision made by the owner's engineer, the fire marshal and the AHJ, documented on the drawings (500.4). The electrician installs to the classification; the electrician does not decide it. The traditional US system:\n\n- **Class I**: flammable gases, vapors or liquids (gasoline, propane, hydrogen, solvents). **Class II**: combustible dust (grain, flour, coal, metal, plastics). **Class III**: easily ignitable fibers and flyings (textiles, woodworking).\n- **Division 1**: the hazard exists under normal operating conditions, or frequently because of maintenance or leaks. **Division 2**: the hazard exists only under abnormal conditions (a container ruptures, ventilation fails) or is confined within closed systems.\n- **Groups** sort materials by how easily they ignite and how much pressure an explosion produces: Class I Groups A (acetylene), B (hydrogen), C (ethylene), D (propane, gasoline, natural gas); Class II Groups E (metal dust), F (carbonaceous dust), G (grain, flour, plastics). Equipment is marked for the groups it is suitable for and with a **temperature code** (T1–T6) giving its maximum surface temperature, which must be below the ignition temperature of the material present.\n\nThe **Zone** system (Articles 505 and 506), used internationally and permitted in the US, divides gas locations into Zones 0, 1 and 2 and dust locations into Zones 20, 21 and 22 by how continuously the hazard is present.\n\n**Installation concepts (501–503):** in Class I, Division 1, wiring is threaded rigid metal conduit or IMC with at least five threads engaged, Type MI cable, or other specifically listed methods; enclosures are **explosionproof** (built to contain an internal explosion and cool the escaping gases below ignition temperature, not to keep gas out); **conduit seals** are installed within 18 in of each enclosure that contains arcing devices and where conduit leaves the classified area, so that an explosion inside one enclosure cannot propagate and gases cannot travel through the raceway; and flexible connections use listed explosionproof fittings. In Division 2, non-arcing equipment in general-purpose enclosures is often permitted, with sealed or hermetic contacts for anything that arcs. Class II requires **dust-ignitionproof** enclosures and attention to dust layers that insulate equipment and raise its temperature. **Intrinsically safe** systems (Article 504) limit energy so a circuit cannot ignite the atmosphere, allowing ordinary wiring methods for instrumentation.\n\n**Specific occupancies** with their own articles and classification tables: **511** commercial repair garages (often unclassified with proper ventilation, otherwise Division 2 to 18 in above the floor); **513** aircraft hangars; **514** motor fuel dispensing facilities; **515** bulk storage plants; **516** spray application, dipping and coating (paint booths)."
+    },
+    {
+      "type": "table",
+      "caption": "Classes and Divisions at a glance",
+      "columns": [
+        "",
+        "Division 1 (hazard present normally)",
+        "Division 2 (hazard present only abnormally)"
+      ],
+      "rows": [
+        [
+          "Class I: flammable gases, vapors, liquids",
+          "Inside gasoline dispenser enclosures; spray booth interiors; areas near open vessels of solvent; repair pits without ventilation. Explosionproof equipment, threaded RMC/IMC or MI cable, seals.",
+          "Within 20 ft horizontally and 18 in above grade around a dispenser; areas near closed piping systems; storage rooms with ventilation. Non-arcing equipment in general-purpose enclosures permitted; sealed contacts for arcing devices."
+        ],
+        [
+          "Class II: combustible dust",
+          "Grain elevators, flour mills, coal pulverizing, metal powder processing. Dust-ignitionproof enclosures; threaded RMC/IMC or MI cable; dust-tight seals.",
+          "Areas where dust accumulations are only occasionally present; dust-tight enclosures; temperature limits for dust layers."
+        ],
+        [
+          "Class III: ignitable fibers and flyings",
+          "Textile mills, cotton gins, woodworking plants where fibers are handled. Dust-tight enclosures, no exposed arcing parts.",
+          "Storage areas for fibers; similar enclosures with relaxed requirements."
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "A gas station is adding a canopy light and a receptacle for a vacuum cleaner. The receptacle box will be mounted on a bollard 10 ft from the nearest dispenser and 24 in above grade. Classify the location of the box and the raceway, at the concept level.",
+      "solutionSteps": [
+        "Article 514 and its Table 514.3(B)(1) classify dispensing areas: the space inside the dispenser enclosure and the sump below it is Class I, Division 1.",
+        "The space extending 20 ft horizontally from the dispenser enclosure and up to 18 in above grade (or above the base of the dispenser) is Class I, Division 2, because gasoline vapor is heavier than air and pools near the ground.",
+        "The receptacle box at 24 in above grade and 10 ft away is above the 18 in Division 2 layer, so the box itself is in an unclassified location; but the raceway feeding it passes through the Division 2 zone below 18 in, so that portion must use a wiring method permitted in Class I, Division 2 (threaded RMC or IMC, or other listed methods), with a seal where the raceway leaves the classified area (501.15(B)).",
+        "The dispensers must have the emergency shutoff controls required by 514.11, located as the section specifies (between 20 ft and 100 ft from the dispensers), and all conduits entering the dispenser get sealed.",
+        "Confirm the classification drawing with the engineer and the fire marshal before ordering material; classification is their call, not yours."
+      ],
+      "answer": "Inside the dispenser: Class I, Div 1. Within 20 ft horizontally and 18 in above grade: Class I, Div 2. The box at 24 in is unclassified, but the raceway through the 18 in layer must follow Division 2 methods with a boundary seal."
+    },
+    {
+      "type": "text",
+      "heading": "Other special occupancies you will meet in California",
+      "markdown": "- **Health care facilities (517)**: patient care spaces are classified by risk (Category 1 critical care through Category 4 support, in 2017 and later). In patient care spaces the branch circuits need **redundant grounding**: a metal raceway or cable armor that qualifies as an EGC plus an insulated copper EGC inside it (517.13). Receptacles are **hospital grade** (green dot) and are tested for ground impedance. Hospitals have an **essential electrical system** with life safety, critical and equipment branches on a generator with transfer within 10 seconds, and wiring of the life safety and critical branches kept independent of other wiring. Wet procedure locations use isolated power systems or GFCI. California's Office of Statewide Health Planning (now HCAI) is the AHJ for hospitals, with its own amendments.\n- **Assembly occupancies (518)**: buildings or portions designed for 100 or more persons (theaters, restaurants, churches, gyms). Wiring in finished areas must be metal raceway, MI, MC or AC cable or other fire-resistant methods; NM cable is limited to certain fire-rated construction. Theaters and performance areas (520) have their own stage, dimmer and portable equipment rules.\n- **Temporary installations (590)**: construction power. All 125 V, 15, 20 and 30 A receptacles used by personnel need GFCI protection (590.6), cords must be listed for hard usage, lamps need guards, and temporary wiring is removed when the work ends (and holiday lighting within 90 days).\n- **Agricultural buildings (547)**: corrosive atmosphere and livestock require corrosion-resistant equipment, special care with GFCI and an **equipotential plane** bonded to the grounding system in animal confinement areas so that stray voltage does not shock livestock.\n- **Marinas, boatyards and docks (555)**: water plus electricity; ground-fault protection at 30 mA on feeders and branch circuits to docks, GFCI for receptacles, signage about electric shock drowning, and listed marina power outlets.\n- **Mobile and manufactured homes (550), RV parks (551)**: four-wire feeders with no neutral-ground bond at the unit, specific receptacle configurations, and site electrical equipment.\n- **Carnivals, circuses and fairs (525)**, **floating buildings (553)** and **relocatable structures** each have an article; look them up when the job comes."
+    },
+    {
+      "type": "diagram",
+      "title": "Swimming pool equipotential bonding (680.26), plan view",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 300\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"96\" y=\"46\" width=\"288\" height=\"198\" rx=\"36\" stroke=\"#f3c75b\" stroke-dasharray=\"6 4\"/><rect x=\"120\" y=\"70\" width=\"240\" height=\"150\" rx=\"30\" stroke=\"#4cc9ff\"/><rect x=\"120\" y=\"70\" width=\"240\" height=\"150\" rx=\"30\" fill=\"#4cc9ff\" fill-opacity=\"0.1\" stroke=\"none\"/><text x=\"240\" y=\"36\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">perimeter bonding conductor, 18–24 in from the inside wall (680.26(B)(2))</text><text x=\"240\" y=\"140\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">pool shell: reinforcing steel bonded</text><text x=\"240\" y=\"153\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">(680.26(B)(1))</text><rect x=\"322\" y=\"58\" width=\"16\" height=\"24\" stroke=\"currentColor\"/><path d=\"M322 66 H338 M322 74 H338\" stroke-width=\"1.5\"/><path d=\"M338 70 H384\" stroke=\"#f3c75b\"/><text x=\"352\" y=\"100\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">ladder</text><circle cx=\"126\" cy=\"150\" r=\"7\" stroke=\"currentColor\"/><path d=\"M126 143 V128 H96\" stroke=\"#f3c75b\"/><text x=\"112\" y=\"178\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">wet-niche light</text><text x=\"112\" y=\"190\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">lens ≥18 in below water</text><rect x=\"236\" y=\"214\" width=\"8\" height=\"8\" fill=\"#f3c75b\" stroke=\"none\"/><path d=\"M240 222 V244\" stroke=\"#f3c75b\"/><text x=\"240\" y=\"262\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">water bond, ≥9 in² (680.26(C))</text><rect x=\"440\" y=\"88\" width=\"90\" height=\"42\" rx=\"4\"/><text x=\"485\" y=\"106\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">pump motor</text><text x=\"485\" y=\"120\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">GFCI (680.21(C))</text><path d=\"M440 110 H384\" stroke=\"#f3c75b\"/><text x=\"412\" y=\"80\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">8 AWG solid Cu</text><circle cx=\"490\" cy=\"200\" r=\"9\"/><path d=\"M481 196 H499 M481 204 H499\" stroke-width=\"1.5\"/><text x=\"490\" y=\"224\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">GFCI receptacle</text><path d=\"M362 190 H478\" stroke=\"#9aa6b8\" stroke-dasharray=\"3 3\"/><path d=\"M362 185 V195 M478 185 V195\" stroke=\"#9aa6b8\"/><text x=\"420\" y=\"180\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">≥ 6 ft from inside wall (680.22(A))</text><text x=\"280\" y=\"284\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">Everything conductive near the water is tied together: no voltage between touchable parts.</text></svg>",
+      "caption": "The reinforcing steel of the shell, the perimeter surface, metal ladders and fittings, underwater luminaire niches, the pump motor and the water itself are all connected with a solid 8 AWG copper bonding grid. The grid is not required to be connected to a grounding electrode; its job is to keep every touchable surface at the same potential."
+    },
+    {
+      "type": "text",
+      "heading": "Swimming pools, spas and hot tubs (Article 680)",
+      "markdown": "A person in water is the perfect shock victim: wet, barefoot, in contact with metal, and able to feel current far below the level that trips a breaker. Article 680 responds with three strategies: **keep electricity away** from the water (distance rules), **make everything near the water equipotential** (bonding), and **protect every circuit** with GFCI.\n\n**Distance rules (680.22, 680.23, 680.9)**, at the concept level:\n\n- Receptacles for the pump may be 6 to 10 ft from the inside wall if GFCI-protected and of the locking or single type; all other receptacles must be at least 6 ft from the inside wall; a dwelling needs at least one receptacle between 6 and 20 ft from the pool; every 15 and 20 A, 125 V receptacle within 20 ft is GFCI-protected.\n- Luminaires and ceiling fans: new installations not over the pool or within 5 ft horizontally unless at least 12 ft above the maximum water level; existing luminaires closer need GFCI and height limits. Switches at least 5 ft horizontally from the inside wall unless separated by a permanent barrier.\n- Overhead utility conductors need 22½ ft of clearance above the water and diving platforms; communications cables 10 ft.\n- Underwater luminaires are listed wet-niche, dry-niche or no-niche types; line-voltage units are GFCI-protected; the top of the lens is at least 18 in below the normal water level unless the luminaire is listed for shallower use; the forming shell is bonded and grounded with an insulated copper conductor.\n\n**Equipotential bonding (680.26)**: a solid 8 AWG copper conductor (or the rebar itself) connects the pool shell steel, the perimeter surface (an 8 AWG loop 18 to 24 in from the inside wall for paved decks that lack structural steel, extending 3 ft out), metal fittings, ladders, rails, diving boards, underwater luminaire forming shells, metal parts of pump motors and other equipment, and fixed metal parts within 5 ft horizontally and 12 ft vertically. The **water** is bonded by at least 9 in² of corrosion-resistant conductive surface in contact with it (680.26(C)). Connections are listed pressure connectors or exothermic welds; the grid does not need its own electrode.\n\n**Equipment**: pump motors are GFCI-protected (680.21(C), expanded across editions); a maintenance disconnect is required within sight and at least 5 ft from the water (680.13); wiring methods for pool equipment are specified (680.21(A)); and listed packaged spas and hot tubs (680.42–680.44) carry built-in protection with specific outlet, bonding and emergency-shutoff rules (a spa in a non-dwelling needs an emergency shutoff within sight and at least 5 ft away). California public pools are additionally regulated by the state Health and Safety Code, which inspectors enforce alongside Article 680."
+    },
+    {
+      "type": "text",
+      "heading": "Chapter 6 equipment: motors, HVAC, EV charging, solar, fire pumps",
+      "markdown": "**Article 430, Motors** is a Chapter 4 article, but it is worth reviewing here because so much of Chapter 6 refers back to it. Its structure follows the circuit: Part I general and the FLC tables rule (430.6); Part II conductor sizing (430.22 at 125 % of table FLC, 430.24 for several motors); Part III overload protection (430.32, 115 % or 125 % of nameplate FLA); Part IV branch-circuit short-circuit and ground-fault protection (430.52 and its table); Part V feeder protection; Part VI control circuits; Part VII controllers; Part IX disconnecting means (430.102 in sight of the controller and the motor, 430.110 rated at least 115 % of FLC); Part X adjustable-speed drives; Part XIV the FLC tables 430.247–430.250. The motors lesson in the SYSTEMS track works the numbers.\n\n**Article 440, Air-Conditioning and Refrigerating Equipment** applies to equipment with a hermetic refrigerant motor-compressor. It replaces the Article 430 calculations with the manufacturer's nameplate: **minimum circuit ampacity (MCA)** sizes the conductors and **maximum overcurrent protection (MOCP)** sets the breaker or fuse, which may be much larger than the conductor ampacity because 440 and 240.4(G) allow it. A disconnect must be within sight of and readily accessible from the equipment, and may not be mounted where it blocks access panels (440.14). Remember the 210.63 service receptacle within 25 ft.\n\n**Article 625, Electric Vehicle Power Transfer**: EV charging is a **continuous load** (sized at 125 %); equipment is listed; cord-and-plug connected EVSE is limited in rating and cord length; the 2020 and later editions require GFCI for receptacles used for EV charging in certain cases and add load-management provisions that let a panel support chargers whose combined rating exceeds its capacity. California building codes also require EV-ready infrastructure in new construction (CALGreen), which is why EV conduit and panel capacity show up on every residential plan.\n\n**Article 690, Solar Photovoltaic Systems** and **705, Interconnected Electric Power Production Sources**: DC source circuits with their own voltage and current calculations (690.7, 690.8), **rapid shutdown** so firefighters can reduce array conductors to a safe voltage within 30 seconds (690.12), extensive labeling, and the **120 % rule** for connecting an inverter to a panel busbar (705.12), where the sum of the main and the backfed PV breaker may not exceed 120 % of the bus rating and the PV breaker goes at the opposite end from the main. Article 706 covers energy storage (batteries).\n\n**Article 695, Fire Pumps**: the one place the Code tells you to size overcurrent protection to carry **locked-rotor current indefinitely**, because a fire pump must keep running even if it is destroying itself. Conductors are sized at 125 % of the pump and jockey pump FLC, the supply must be reliable and independent, and the fire pump controller is listed for the purpose.\n\n**Article 600, Signs** (dedicated 20 A circuit, disconnect within sight), **620 Elevators** (dedicated machine room circuits, disconnects, lighting), **630 Welders** (duty-cycle-based sizing) and **645 Information Technology Equipment** rooms round out the chapter."
+    },
+    {
+      "type": "example",
+      "problem": "A rooftop package unit nameplate reads: 208/230 V, 3-phase, compressor RLA 28 A, fan FLA 3.4 A, MCA 38.4 A, MOCP 60 A. Size the branch-circuit conductors (75 °C copper) and the breaker, and state the disconnect requirements.",
+      "solutionSteps": [
+        "Article 440 says to use the nameplate MCA and MOCP (440.4(B), 440.33, 440.22), not to recompute from the compressor RLA; the manufacturer already applied the 125 % factor to the largest motor and added the rest.",
+        "Conductors: ampacity at least 38.4 A. Table 310.16, 75 °C: 8 AWG copper = 50 A. (10 AWG at 35 A is not enough.)",
+        "Overcurrent protection: the MOCP is 60 A, which is the maximum permitted; a 60 A breaker on 8 AWG (50 A) conductors is allowed because 240.4(G) sends HVAC circuits to Article 440, where the compressor overload protection guards the conductors against overload. A smaller breaker that will hold through starting is also acceptable, down to the MCA.",
+        "Disconnect: within sight of and readily accessible from the unit, rated for the load (at least 115 % of the nameplate rated-load current for a motor-compressor and never less than the circuit), not blocking service panels (440.14). Rooftop units get a disconnect at the unit even if the breaker is in sight.",
+        "Add the 210.63 service receptacle within 25 ft on the roof, GFCI-protected under 210.8(B), and note 210.8(F) for dwelling HVAC outlets in 2020 and later editions."
+      ],
+      "answer": "8 AWG copper conductors (50 A), a 60 A maximum breaker, and a readily accessible disconnect within sight of the unit plus a service receptacle within 25 ft."
+    },
+    {
+      "type": "text",
+      "heading": "Chapter 7 special conditions: standby power, limited-energy and fire alarm",
+      "markdown": "Three articles cover power that must be there when normal power fails, and the difference between them is **who requires it and how fast**:\n\n- **Article 700, Emergency Systems**: required by law for life safety (egress lighting, exit signs, fire alarm, elevators in some buildings, hospital life safety branch). Transfer within **10 seconds**. Emergency circuits are kept entirely separate from other wiring (700.10), are fed through listed automatic transfer equipment, and the sources (generator, battery, UPS, unit equipment) are tested periodically with records kept. Emergency equipment is identified, and generators need a remote emergency stop.\n- **Article 701, Legally Required Standby Systems**: required by law but for things that are not immediately life-threatening (smoke removal, communications, some industrial processes). Transfer within **60 seconds**; wiring may share raceways with other circuits.\n- **Article 702, Optional Standby Systems**: the owner's choice (a home generator, a data center, a store that wants to stay open). Any transfer time, including manual; the main rule is that the system cannot be connected in a way that backfeeds the utility, so a **transfer switch** or listed **interlock kit** is required (702.5), and the system must be sized for the load the owner chooses to connect.\n\n**Article 705** governs any source operating in parallel with the utility (solar, batteries, generators in parallel), with the interconnection and busbar rules above and the requirement for a disconnecting means for each source.\n\n**Limited-energy circuits (Articles 722, 724, 725 in 2023; 725 in earlier editions)**: **Class 1** circuits are ordinary power-limited or remote-control circuits wired like power circuits; **Class 2** circuits are limited by a listed source to levels that will not start a fire or deliver a dangerous shock (100 VA at 30 V or less, with higher limits for DC), which is why thermostat, doorbell, LED driver output, security and data cabling can use small cables without raceways; **Class 3** circuits are fire-limited but can shock. Class 2 and 3 conductors are kept **separate from power conductors** in boxes and raceways (barriers, separate enclosures) unless specific conditions are met, and cable types are chosen for plenum, riser or general use.\n\n**Article 760, Fire Alarm Systems**: the fire alarm has its own power source rules (a dedicated branch circuit, identified, with no GFCI or AFCI protection on it and the breaker secured), its own cable types (FPL, FPLR, FPLP), identification of circuits at every junction and termination (red boxes are the convention), and survivability requirements for circuits that must operate during a fire. In California, fire alarm installation is one of the DIR certification categories (Fire/Life Safety Technician)."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "In a classified location there is no such thing as a small shortcut. A missing conduit seal, a substituted fitting, an unlisted LED retrofit in an explosionproof fixture, or a cover with one bolt loose can turn an ordinary arc into an explosion. If the drawings do not show the classification boundaries, stop and get them. If a listed part is not available, wait for it."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "For the exam, learn the article numbers for these topics cold: 500–516 hazardous, 517 health care, 518 assembly, 590 temporary, 600 signs, 620 elevators, 625 EV, 680 pools, 690 solar, 695 fire pumps, 700/701/702 standby, 705 interconnection, 725 limited energy, 760 fire alarm. Most special-occupancy questions are solved by opening the right article and reading the one table or section that answers it (Table 514.3(B)(1), 680.22, 680.26, 695.6, 700.12, 705.12)."
+    }
+  ],
+  "practice": [
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p1",
+      "type": "numeric",
+      "prompt": "Around a motor fuel dispenser, the Class I, Division 2 area extends how many feet horizontally from the dispenser enclosure (at or below 18 in above grade)?",
+      "answer": 20,
+      "unit": "ft",
+      "tolerance": 0,
+      "explanation": "Table 514.3(B)(1): 20 ft horizontally, up to 18 in above grade, because gasoline vapor is heavier than air."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p2",
+      "type": "numeric",
+      "prompt": "What is the minimum distance, in feet, from the inside wall of a pool to a general-use receptacle (other than the GFCI-protected pump receptacle)?",
+      "answer": 6,
+      "unit": "ft",
+      "tolerance": 0,
+      "explanation": "680.22(A)(3): receptacles not less than 6 ft from the inside walls of the pool; the dwelling's required receptacle sits between 6 and 20 ft."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p3",
+      "type": "numeric",
+      "prompt": "An emergency system (Article 700) must transfer to the alternate source within how many seconds?",
+      "answer": 10,
+      "unit": "s",
+      "tolerance": 0,
+      "explanation": "700.12: 10 seconds. Legally required standby (701) allows 60 seconds; optional standby (702) has no time requirement."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p4",
+      "type": "numeric",
+      "prompt": "An HVAC unit nameplate shows MCA 24 A and MOCP 40 A. What is the largest permitted breaker, in amperes?",
+      "answer": 40,
+      "unit": "A",
+      "tolerance": 0,
+      "explanation": "The MOCP is the manufacturer's maximum per Article 440. Conductors need at least 24 A ampacity (10 AWG copper at 75 °C, 35 A)."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p5",
+      "type": "multiple_choice",
+      "prompt": "An explosionproof enclosure in a Class I, Division 1 location is designed to:",
+      "choices": [
+        "keep flammable gas from ever entering the enclosure",
+        "contain an internal explosion and cool the escaping gases so they cannot ignite the surrounding atmosphere",
+        "vent explosions upward through a relief valve",
+        "operate at low voltage so no arc can occur"
+      ],
+      "correctIndex": 1,
+      "explanation": "Gas will get in. The enclosure is built to withstand the internal explosion and its flame paths cool the gases below ignition temperature as they escape."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p6",
+      "type": "multiple_choice",
+      "prompt": "The purpose of pool equipotential bonding is to:",
+      "choices": [
+        "provide a path to trip the breaker during a ground fault",
+        "keep all conductive surfaces a person can touch at the same voltage so no current flows through the body",
+        "ground the pool water to a ground rod",
+        "reduce chlorine corrosion"
+      ],
+      "correctIndex": 1,
+      "explanation": "680.26 bonds the shell, deck, fittings, equipment and water together. It is not the ground-fault path (that is the EGC) and does not need its own electrode."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p7",
+      "type": "multiple_choice",
+      "prompt": "Which rule allows the HVAC breaker to be larger than the conductor ampacity?",
+      "choices": [
+        "240.4(D)",
+        "240.4(G), which refers air-conditioning circuits to Article 440 and its nameplate MOCP",
+        "210.52",
+        "250.122"
+      ],
+      "correctIndex": 1,
+      "explanation": "The compressor overload protection guards the conductors against overload, so the branch-circuit device only needs to clear short circuits and ground faults, as with motors in Article 430."
+    },
+    {
+      "id": "nec-special-occupancies-and-equipment-overview-p8",
+      "type": "multiple_choice",
+      "prompt": "A homeowner wants to connect a portable generator to the house panel. Article 702 requires:",
+      "choices": [
+        "a double-male \"suicide cord\" plugged into a dryer receptacle",
+        "a transfer switch or listed interlock that prevents the generator from being connected to the utility at the same time",
+        "nothing; optional systems are unregulated",
+        "a 10-second automatic transfer"
+      ],
+      "correctIndex": 1,
+      "explanation": "702.5: transfer equipment must prevent inadvertent interconnection of the normal and alternate sources, protecting line workers and the generator."
+    }
+  ],
+  "quiz": {
+    "key": "nec-special-occupancies-and-equipment-overview-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q1",
+        "type": "numeric",
+        "prompt": "In Class I, Division 1 locations, a conduit seal is required within how many inches of an enclosure containing arcing devices?",
+        "answer": 18,
+        "unit": "in",
+        "tolerance": 0,
+        "explanation": "501.15(A)(1): within 18 in of the enclosure, with no unions, couplings, boxes or fittings except explosionproof ones between the seal and the enclosure."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q2",
+        "type": "numeric",
+        "prompt": "The perimeter bonding conductor around a pool is installed how many inches, minimum, from the inside wall (the range is 18 to 24 in)?",
+        "answer": 18,
+        "unit": "in",
+        "tolerance": 0,
+        "explanation": "680.26(B)(2)(b): an 8 AWG solid copper conductor 18 to 24 in from the inside walls, 4 to 6 in below the surface."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q3",
+        "type": "numeric",
+        "prompt": "The sum of the main breaker and a backfed solar breaker may not exceed what percentage of the panel busbar rating under the 705.12 rule?",
+        "answer": 120,
+        "unit": "%",
+        "tolerance": 0,
+        "explanation": "The 120 % rule: for a 200 A bus with a 200 A main, up to 40 A of PV breaker is allowed at the opposite end of the bus."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q4",
+        "type": "numeric",
+        "prompt": "An HVAC service receptacle must be located within how many feet of the equipment per 210.63?",
+        "answer": 25,
+        "unit": "ft",
+        "tolerance": 0,
+        "explanation": "210.63: a 125 V, 15 or 20 A receptacle within 25 ft and on the same level as the equipment."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q5",
+        "type": "multiple_choice",
+        "prompt": "A grain elevator with combustible dust present during normal operation is classified as:",
+        "choices": [
+          "Class I, Division 1",
+          "Class II, Division 1",
+          "Class III, Division 2",
+          "Unclassified"
+        ],
+        "correctIndex": 1,
+        "explanation": "Class II is combustible dust; Division 1 means the hazard is present under normal conditions."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q6",
+        "type": "multiple_choice",
+        "prompt": "In a hospital patient care space, branch-circuit wiring must provide:",
+        "choices": [
+          "a single bare EGC",
+          "redundant grounding: a metal raceway or cable armor qualifying as an EGC plus an insulated copper EGC",
+          "no EGC, because isolated power is used everywhere",
+          "aluminum conductors only"
+        ],
+        "correctIndex": 1,
+        "explanation": "517.13 requires both paths so that a single failure cannot leave the equipment ungrounded."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q7",
+        "type": "multiple_choice",
+        "prompt": "A new luminaire is planned 3 ft horizontally from the edge of an outdoor pool. It is permitted only if:",
+        "choices": [
+          "it is at least 12 ft above the maximum water level",
+          "it is on a dimmer",
+          "it is at least 5 ft above the water",
+          "it is 120 V and switched inside"
+        ],
+        "correctIndex": 0,
+        "explanation": "680.22(B)(1): new luminaires within 5 ft horizontally of the pool must be at least 12 ft above the maximum water level (lower heights apply only to existing installations with GFCI)."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q8",
+        "type": "multiple_choice",
+        "prompt": "Fire pump overcurrent protection is sized to:",
+        "choices": [
+          "125 % of the motor FLC like any motor",
+          "carry the locked-rotor current of the pump motor indefinitely",
+          "trip at 110 % of FLC",
+          "the nameplate MOCP"
+        ],
+        "correctIndex": 1,
+        "explanation": "695.4(B)(2): the pump must keep running during a fire even in an overload; the device is sized to carry locked-rotor current indefinitely."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q9",
+        "type": "multiple_choice",
+        "prompt": "A thermostat circuit supplied by a listed Class 2 transformer may be run with small cable outside a raceway because:",
+        "choices": [
+          "low-voltage circuits are not covered by the NEC",
+          "a Class 2 source limits energy to levels that will not start a fire or cause a dangerous shock",
+          "thermostat wire is fire-rated",
+          "HVAC contractors are exempt"
+        ],
+        "correctIndex": 1,
+        "explanation": "Article 725 (722/724/725 in 2023) permits Class 2 wiring methods because the listed power source limits the energy; the circuits still must be separated from power conductors."
+      },
+      {
+        "id": "nec-special-occupancies-and-equipment-overview-q10",
+        "type": "multiple_choice",
+        "prompt": "A legally required standby system (Article 701) differs from an emergency system (Article 700) mainly in that:",
+        "choices": [
+          "it has no transfer time limit",
+          "it must transfer within 60 seconds rather than 10 and may share raceways with other wiring",
+          "it is installed only in dwellings",
+          "it requires a battery instead of a generator"
+        ],
+        "correctIndex": 1,
+        "explanation": "701 systems serve functions that are important but not immediately life-threatening; the requirements are relaxed accordingly."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Articles 500–516, 517, 518, 547, 555, 590, 600, 625, 680, 690, 695, 700, 701, 702, 705, 725, 760; Articles 430 and 440 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Building Standards Commission — Title 24, Part 3 California Electrical Code (state amendments)",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — certification categories and Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "NFPA 497 — Recommended Practice for the Classification of Flammable Liquids, Gases, or Vapors and of Hazardous (Classified) Locations",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-497-standard-development/497"
+    },
+    {
+      "title": "NFPA 110 — Standard for Emergency and Standby Power Systems",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-110-standard-development/110"
+    },
+    {
+      "title": "CPSC — Electric shock drowning and pool electrical safety",
+      "url": "https://www.cpsc.gov/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

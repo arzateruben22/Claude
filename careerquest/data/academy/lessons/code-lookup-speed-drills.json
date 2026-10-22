@@ -1,0 +1,558 @@
+{
+  "key": "code-lookup-speed-drills",
+  "track": "EXAM_PREP",
+  "order": 3,
+  "title": "Code Lookup Speed Drills",
+  "summary": "Train the single most valuable open-book skill: getting from a question stem to the right NEC section in under a minute. Covers the code's structure, a keyword-to-article map, index and table-of-contents technique, a tabbing strategy and ten timed drills.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "california-certification-exam-overview"
+  ],
+  "objectives": [
+    "Students will be able to describe the arrangement of the NEC in 90.3 and predict which chapter a topic lives in from its subject.",
+    "Students will be able to decode an NEC reference such as 210.52(C)(1) into article, section and subdivision.",
+    "Students will be able to translate common question keywords into the article or table that answers them without opening the index.",
+    "Students will be able to use the index, the article tables of contents and the definitions in Article 100 in a fixed three-step lookup routine.",
+    "Students will be able to tab a code book for exam use and run timed drills with a measured target."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "How the NEC is arranged",
+      "markdown": "Section 90.3 is the map of the whole book, and it is the first thing to read in any edition.\n\n- **Chapters 1 through 4 apply generally** to every installation: general rules and definitions (Chapter 1), wiring and protection (Chapter 2: branch circuits, feeders, services, overcurrent protection, grounding and bonding), wiring methods and materials (Chapter 3: conductors, boxes, every raceway and cable type) and equipment for general use (Chapter 4: cords, switches, receptacles, luminaires, appliances, motors, air conditioning, transformers).\n- **Chapters 5, 6 and 7 are special**: occupancies (hazardous locations, health care, places of assembly, temporary installations), equipment (signs, elevators, pools, PV, EV charging) and conditions (emergency and standby systems, limited-energy circuits, fire alarm). They **supplement or modify** Chapters 1 to 4. When a Chapter 6 rule conflicts with a Chapter 3 rule, the Chapter 6 rule wins for that equipment.\n- **Chapter 8 (communications)** stands alone; the first seven chapters apply to it only where Chapter 8 specifically says so.\n- **Chapter 9 tables** are mandatory where referenced (fill percentages, raceway and conductor areas, conductor properties).\n- **Informative annexes** are not enforceable. Annex C (how many conductors fit in a raceway) and Annex D (calculation examples) are the two you will open on the exam.\n\n**Reading a reference.** In **210.52(C)(1)(a)**: 210 is the article (first digit 2 means Chapter 2); .52 is the section; (C) is a subdivision, (1) a sub-subdivision, (a) a list item. Article numbers are also topic numbers: everything in the 300s is a wiring method, everything in the 400s is equipment, 250 is always grounding. Many articles are split into **Parts** (Roman numerals) with a consistent pattern: Part I General, Part II Installation, Part III Construction. If you know the pattern, you know that \"how to support it\" is almost always in Part II, section .30, and \"where it is not permitted\" is section .12. For example: 334.12, 358.12 and 352.12 are the \"uses not permitted\" sections for NM cable, EMT and PVC conduit, and 334.30, 358.30 and 352.30 are their securing and supporting sections."
+    },
+    {
+      "type": "diagram",
+      "title": "The 90.3 arrangement at a glance",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 760 316\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"><defs><marker id=\"am\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#9aa6b8\" stroke=\"none\"/></marker></defs><rect x=\"20\" y=\"20\" width=\"720\" height=\"100\" rx=\"8\" stroke=\"#4cc9ff\" stroke-width=\"2\"/><text x=\"380\" y=\"42\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"700\" font-size=\"13\">Chapters 1 to 4 – apply generally to ALL installations</text><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\"><text x=\"110\" y=\"66\">Ch 1 General</text><text x=\"290\" y=\"66\">Ch 2 Wiring &amp; Protection</text><text x=\"470\" y=\"66\">Ch 3 Wiring Methods</text><text x=\"650\" y=\"66\">Ch 4 Equipment</text></g><g fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\"><text x=\"110\" y=\"84\">100 definitions</text><text x=\"110\" y=\"98\">110 general requirements</text><text x=\"290\" y=\"84\">210–230 circuits, services</text><text x=\"290\" y=\"98\">240 OCP, 250 grounding</text><text x=\"470\" y=\"84\">300–314 general, boxes</text><text x=\"470\" y=\"98\">320–399 cables, raceways</text><text x=\"650\" y=\"84\">400–410 cords, devices, lights</text><text x=\"650\" y=\"98\">430 motors, 450 transformers</text></g><line x1=\"240\" y1=\"120\" x2=\"240\" y2=\"138\" stroke=\"#9aa6b8\" marker-end=\"url(#am)\"/><rect x=\"20\" y=\"140\" width=\"440\" height=\"84\" rx=\"8\" stroke=\"#f3c75b\" stroke-width=\"2\"/><text x=\"240\" y=\"162\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"700\" font-size=\"12\">Chapters 5, 6, 7 – special: they supplement or modify 1 to 4</text><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\"><text x=\"240\" y=\"180\">Ch 5 occupancies: 500 hazardous, 517 health care, 590 temporary</text><text x=\"240\" y=\"194\">Ch 6 equipment: 600 signs, 680 pools, 690 PV</text><text x=\"240\" y=\"208\">Ch 7 conditions: 700 emergency, 725 limited-energy, 760 fire alarm</text></g><rect x=\"480\" y=\"140\" width=\"260\" height=\"84\" rx=\"8\" stroke=\"#9aa6b8\" stroke-width=\"2\"/><text x=\"610\" y=\"162\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"700\" font-size=\"12\">Chapter 8 – Communications</text><g fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\"><text x=\"610\" y=\"184\">stands alone: Chapters 1 to 7 apply</text><text x=\"610\" y=\"198\">only where Chapter 8 references them</text></g><rect x=\"20\" y=\"248\" width=\"350\" height=\"56\" rx=\"8\" stroke=\"#3ddc97\" stroke-width=\"2\"/><text x=\"195\" y=\"268\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"700\" font-size=\"12\">Chapter 9 – Tables (mandatory)</text><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\"><text x=\"195\" y=\"284\">T1 fill %, T4 raceway area, T5 conductor area</text><text x=\"195\" y=\"297\">T8 conductor properties, T9 impedance</text></g><rect x=\"390\" y=\"248\" width=\"350\" height=\"56\" rx=\"8\" stroke=\"#9aa6b8\" stroke-dasharray=\"5 3\"/><text x=\"565\" y=\"268\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"700\" font-size=\"12\">Informative Annexes A to J</text><g fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\"><text x=\"565\" y=\"284\">NOT enforceable: C conduit fill counts,</text><text x=\"565\" y=\"297\">D calculation examples, J ADA reach ranges</text></g></svg>",
+      "caption": "Chapters 1 to 4 are the base. Chapters 5 to 7 modify them for special cases. Chapter 8 stands alone, Chapter 9 is tables, and the annexes are reference only."
+    },
+    {
+      "type": "table",
+      "caption": "Keyword to location map. Memorize the article numbers; the exact section can be found in seconds once you are in the right article. Section numbers reflect recent NEC editions; confirm the edition the exam uses.",
+      "columns": [
+        "Question keyword",
+        "Go to",
+        "What you will find"
+      ],
+      "rows": [
+        [
+          "Definitions (accessible, readily accessible, in sight, continuous load, dwelling unit)",
+          "Article 100",
+          "Defined terms used throughout the book"
+        ],
+        [
+          "Working space, headroom, dedicated space at panels",
+          "110.26",
+          "Depth, width, height, entrance requirements"
+        ],
+        [
+          "Terminal temperature ratings (60°C vs 75°C column)",
+          "110.14(C)",
+          "Which ampacity column terminations allow"
+        ],
+        [
+          "Grounded (neutral) conductor identification",
+          "200.6",
+          "White, gray, three white stripes; re-identification of 4 AWG and larger"
+        ],
+        [
+          "GFCI protection locations",
+          "210.8",
+          "Dwelling (A) and other than dwelling (B) lists"
+        ],
+        [
+          "AFCI protection",
+          "210.12",
+          "Which dwelling rooms and circuits"
+        ],
+        [
+          "Required dwelling circuits (small appliance, laundry, bathroom, garage)",
+          "210.11(C)",
+          "Number and rating of required 20 A circuits"
+        ],
+        [
+          "Receptacle placement in dwellings (6 ft, countertops, bathrooms, outdoors, garages)",
+          "210.52",
+          "Spacing and required locations"
+        ],
+        [
+          "Receptacle rating vs circuit rating",
+          "210.21(B), Table 210.21(B)(3)",
+          "Allowed receptacle ratings on 15 to 50 A circuits"
+        ],
+        [
+          "Lighting outlets required",
+          "210.70",
+          "Habitable rooms, stairways, attics, outdoor entrances"
+        ],
+        [
+          "Continuous load conductor and OCPD sizing",
+          "210.19(A), 210.20(A), 215.2, 215.3",
+          "The 125 percent rule"
+        ],
+        [
+          "Load calculations (VA per ft², demand factors, ranges, dryers, optional method)",
+          "Article 220",
+          "Tables 220.12, 220.42, 220.54, 220.55; 220.82"
+        ],
+        [
+          "Service clearances over roofs, ground, windows",
+          "230.24, 230.9",
+          "Vertical clearances and clearance from openings"
+        ],
+        [
+          "Service disconnect location, number, rating",
+          "230.70, 230.71, 230.79",
+          "Nearest point of entrance; six maximum; 100 A dwelling minimum"
+        ],
+        [
+          "Standard overcurrent device ratings",
+          "240.6(A)",
+          "The standard ampere list"
+        ],
+        [
+          "Small conductor overcurrent limits",
+          "240.4(D)",
+          "15, 20, 30 A for 14, 12, 10 AWG copper"
+        ],
+        [
+          "Next size up rule",
+          "240.4(B)",
+          "When a nonstandard ampacity may be protected at the next standard size"
+        ],
+        [
+          "Tap conductors (10 ft, 25 ft, outside, transformer secondary)",
+          "240.21(B), 240.21(C)",
+          "Feeder tap and secondary conductor rules"
+        ],
+        [
+          "Location of overcurrent devices (height, bathrooms, closets)",
+          "240.24",
+          "Readily accessible, 6 ft 7 in., prohibited locations"
+        ],
+        [
+          "Grounding electrode system and electrodes",
+          "250.50 to 250.53",
+          "What counts as an electrode and how to install it"
+        ],
+        [
+          "Grounding electrode conductor size",
+          "250.66, Table 250.66",
+          "Based on largest service conductor"
+        ],
+        [
+          "Main and system bonding jumpers; supply-side bonding",
+          "250.28, 250.30, 250.102(C)",
+          "Table 250.102(C)(1)"
+        ],
+        [
+          "Equipment grounding conductor size",
+          "250.122, Table 250.122",
+          "Based on overcurrent device rating"
+        ],
+        [
+          "Types of equipment grounding conductors (EMT, FMC limits)",
+          "250.118",
+          "Which raceways and cables qualify"
+        ],
+        [
+          "Bonding water and gas piping, structural steel",
+          "250.104",
+          "What must be bonded and sized how"
+        ],
+        [
+          "Burial depths",
+          "300.5, Table 300.5",
+          "Minimum cover by wiring method and location"
+        ],
+        [
+          "Cables through framing, nail plates",
+          "300.4",
+          "1¼ in. setback and steel plate protection"
+        ],
+        [
+          "Free conductor length at boxes",
+          "300.14",
+          "6 in., 3 in. outside the opening"
+        ],
+        [
+          "Ampacity tables and correction/adjustment",
+          "Table 310.16, 310.15(B), 310.15(C)",
+          "Base ampacity, temperature and conductor-count factors"
+        ],
+        [
+          "Box fill; pull box sizing",
+          "314.16; 314.28",
+          "Allowances and volumes; 8× and 6× rules"
+        ],
+        [
+          "Cable and raceway articles (AC 320, MC 330, NM 334, SE 338, UF 340, RMC 344, FMC 348, LFMC 350, PVC 352, EMT 358)",
+          "Article number, sections .10, .12, .30",
+          "Uses permitted, uses not permitted, securing and supporting"
+        ],
+        [
+          "Conduit fill",
+          "Chapter 9 Tables 1, 4, 5; Annex C",
+          "Percent fill, raceway area, conductor area, same-size counts"
+        ],
+        [
+          "Flexible cords; switches; receptacles; luminaires",
+          "400; 404; 406; 410",
+          "Uses, grounding, wet locations, closet clearances"
+        ],
+        [
+          "Appliances; space heating; motors; HVAC; transformers",
+          "422; 424; 430; 440; 450",
+          "Disconnects, cord lengths, FLC tables, overloads, OCPD"
+        ],
+        [
+          "Hazardous locations; health care; pools; PV; emergency; temporary",
+          "500 to 516; 517; 680; 690; 700 to 702; 590",
+          "Chapter 5 to 7 special rules"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "A three-step lookup routine",
+      "markdown": "Use the same routine every time so that it becomes automatic under pressure.\n\n**Step 1 – Classify the question before you open the book.** Ask: is this a *wiring method* (Chapter 3), a *circuit or protection* question (Chapter 2), *equipment* (Chapter 4), or a *special* occupancy, equipment or system (Chapters 5 to 7)? Then ask whether a **qualifier** narrows it: dwelling unit, other than dwelling, outdoors, wet location, existing installation, continuous, hazardous. Half the time this step takes you straight to the article number from memory.\n\n**Step 2 – Choose the fastest entry point.**\n\n- **Memory or tab** when you know the article: flip to it and scan the section headings (every section has a bold title). Fastest, 20 to 40 seconds.\n- **Article table of contents** when you know the article but not the section: the first page of each article lists its parts and sections.\n- **Index** when you do not know the article. The index is alphabetical by subject with indented subentries. Look up the **noun** (receptacles, boxes, conductors, motors), not the verb, and then scan subentries for your qualifier (\"Receptacles: dwelling units, countertop spaces\"). If the noun fails, try the **wiring method or equipment name** (nonmetallic-sheathed cable, electric vehicle). Index entries give section numbers, so you land on the page in one flip.\n- **Definitions (Article 100)** when a question turns on what a word means (\"Which of the following is readily accessible?\"). Definitions are also where \"in sight from\" (visible and within 50 ft) and \"continuous load\" (3 hours or more) live.\n\n**Step 3 – Read the whole section, then answer.** Read the general rule, the numbered list, and the **exceptions** that follow it. Check whether the question's qualifier triggers an exception. If the question gives numbers, find the table referenced in the section and read the table's notes; table notes often change the answer (for example Note 1 to Table 450.3(B) on rounding up, or the Table 310.15(C)(1) note on which conductors count). Only then look at the answer choices. Reading the choices first makes every wrong choice look plausible."
+    },
+    {
+      "type": "text",
+      "heading": "Tabbing strategy",
+      "markdown": "If the bulletin lets you bring your own code book with tabs, tabs are worth about ten minutes over the course of the exam. Commercial tab sets exist, but a set you place yourself is one you remember.\n\n**Rules for a useful tab set:**\n\n- **Fewer, better.** Twenty-five to forty tabs. Past that you cannot read them and they overlap.\n- **Tab the table, not the article**, when the question is a number lookup: Table 310.16, Table 250.66, Table 250.122, Table 310.15(C)(1), Table 300.5, Table 314.16(A) and (B), Table 430.52, Table 430.250, Table 450.3(B), Chapter 9 Table 1, Table 4 (EMT page), Table 5, Table 8, Annex C (EMT page).\n- **Tab the sections you cannot afford to hunt for:** 90.3, 100 (definitions), 110.14(C), 110.26, 210.8, 210.12, 210.52, 240.4, 240.6, 240.21, 250.30, 250.50, 250.104, 300.4, 300.5, 314.28, 334, 358, 404, 406, 410.16, 422, 430 (Part II start), 440, 450, 680.26, 690, 700, 590, Index.\n- **Color by chapter**: one color for Chapter 2, another for 3, another for 4, another for 5 to 7, a fifth for tables and annexes. The color tells your hand where to go before your eyes read the tab.\n- **Write the number, not the topic**, on the tab (\"250.122\", not \"EGC\"), because questions quote numbers and you will be matching numbers.\n- **Highlight** the first sentence of the sections you tab and every \"Exception\" word; that is the part you read under time pressure.\n\n**Rules the bulletin may impose.** Historically the state allowed tabs that are permanently affixed and highlighting, and prohibited loose papers, sticky notes and handwritten notes inside the book. If the current bulletin says the test center provides the book, assume no tabs at all and train your index technique instead; the three-step routine works either way."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Listen for the signal word in the stem. \"Dwelling unit\" sends you to a dwelling subsection (210.52, 210.8(A), 210.12). \"Other than dwelling\" sends you to the (B) list or to a commercial article. \"Readily accessible\", \"in sight\", \"continuous\" and \"listed\" are defined terms. \"Minimum\" means round up; \"maximum\" means round down. \"Exception\" in a choice means the question is testing whether you read past the general rule."
+    },
+    {
+      "type": "text",
+      "heading": "How to run a timed drill",
+      "markdown": "A drill is not a quiz. The goal is speed to the **right page**, measured, repeated and logged.\n\n1. **Set a timer for 60 seconds** per item. Start the clock when you read the first word.\n2. **Say the article out loud** before you touch the book (\"that is 334, Part II\"). This trains Step 1.\n3. **Open to the section** and put your finger on the sentence that answers the question. Stop the clock.\n4. **Log three things**: the item, your time, and your entry point (memory, tab, table of contents or index). Also log a miss code: **K** (did not know the article), **F** (knew the article, could not find the section) or **R** (found it, misread it).\n5. **Review misses only.** K misses go on a flash card. F misses mean you need a tab or need to learn that article's section pattern. R misses mean slow down in Step 3.\n6. **Repeat the set two days later.** Items under 30 seconds twice in a row come off the list.\n\n**Targets.** Beginners average about 2 minutes to find a section by index. After two weeks of daily drills most candidates are under 60 seconds for the mapped keywords and under 90 seconds for unfamiliar ones. On the exam that difference, over 60 book questions, is the hour you need for the calculation questions.\n\nThe eight practice items below and the ten quiz items form the drill set for this lesson. Every item is phrased the way exam stems are phrased: it describes an installation condition and asks where the rule lives. Run them with the timer, log them, then come back to the keyword map for anything you missed."
+    },
+    {
+      "type": "table",
+      "caption": "Code language that changes the answer. Learn these before the drills; they are tested constantly.",
+      "columns": [
+        "Wording",
+        "What it means on the exam"
+      ],
+      "rows": [
+        [
+          "shall / shall not",
+          "Mandatory requirement or prohibition"
+        ],
+        [
+          "shall be permitted",
+          "Allowed, never required; a choice that says \"must\" is wrong"
+        ],
+        [
+          "Exception",
+          "Overrides the general rule when its conditions are met; check the qualifier in the stem"
+        ],
+        [
+          "Informational Note",
+          "Explanatory only; not enforceable (90.5(C)); the 3 and 5 percent voltage-drop figures are informational notes"
+        ],
+        [
+          "Accessible (as applied to wiring methods) vs readily accessible",
+          "Can be reached by removing covers vs reachable quickly without tools, ladders or obstacles (Article 100)"
+        ],
+        [
+          "In sight from / within sight",
+          "Visible and not more than 50 ft away (Article 100)"
+        ],
+        [
+          "Listed vs approved",
+          "Listed: evaluated by a qualified testing laboratory; approved: acceptable to the authority having jurisdiction"
+        ],
+        [
+          "Dwelling unit / one-family dwelling / other than dwelling",
+          "Different lists in 210.8, 210.12, 210.52 and elsewhere; pick the right one"
+        ],
+        [
+          "Qualified person",
+          "Has skills, knowledge and safety training for the hazards involved (Article 100); many 70E and 110 rules hinge on it"
+        ],
+        [
+          "Nominal voltage (120, 240, 208, 480)",
+          "The system class, not the measured value; tables and 110.26 conditions use voltage to ground"
+        ]
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Informational notes and annexes are not requirements. A question that asks what the code \"requires\" is never answered by an informational note, and Annex C is not a rule, it is a convenience table built from the Chapter 9 rules. If a choice says \"required by Annex D\", it is wrong."
+    },
+    {
+      "type": "text",
+      "heading": "Beyond this lesson",
+      "markdown": "Drill with the keyword map until the article numbers are reflexive, then widen the set: open the index to a random page, pick an entry you do not recognize, and find it in under 90 seconds. Do the same with the table of contents of Chapters 5 to 7, because special-occupancy questions are where most candidates have no tab and no memory. Finally, run **practice-exam-1** with the code book open and your drill timer visible. Note which of the 50 questions you looked up and how long each took; that log is your study plan for the last two weeks before the exam."
+    }
+  ],
+  "practice": [
+    {
+      "id": "code-lookup-speed-drills-p1",
+      "type": "multiple_choice",
+      "prompt": "Drill 1 (target 45 s). Which article covers how often Type NM cable must be secured and supported?",
+      "choices": [
+        "Article 334",
+        "Article 330",
+        "Article 320",
+        "Article 338"
+      ],
+      "correctIndex": 0,
+      "explanation": "NM cable is Article 334; securing and supporting is 334.30 (within 12 in. of boxes and at intervals not exceeding 4½ ft). 330 is MC cable, 320 is AC cable, 338 is SE cable."
+    },
+    {
+      "id": "code-lookup-speed-drills-p2",
+      "type": "multiple_choice",
+      "prompt": "Drill 2 (target 45 s). Which section covers the required spacing of receptacle outlets along kitchen countertops in a dwelling unit?",
+      "choices": [
+        "406.12",
+        "210.8",
+        "210.52(C)",
+        "220.52"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dwelling receptacle placement is 210.52; countertop and work surfaces are subsection (C). 210.8 is GFCI, 406.12 is tamper resistance, 220.52 is the small-appliance load calculation."
+    },
+    {
+      "id": "code-lookup-speed-drills-p3",
+      "type": "multiple_choice",
+      "prompt": "Drill 3 (target 30 s). Which section and table size the grounding electrode conductor for a service?",
+      "choices": [
+        "250.122",
+        "250.66",
+        "250.102(C)",
+        "250.52"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.66 and Table 250.66 size the GEC from the largest ungrounded service conductor. 250.122 is the equipment grounding conductor, 250.102(C) is the supply-side bonding jumper, 250.52 lists electrodes."
+    },
+    {
+      "id": "code-lookup-speed-drills-p4",
+      "type": "multiple_choice",
+      "prompt": "Drill 4 (target 30 s). Which section covers the depth and width of working space in front of a panelboard?",
+      "choices": [
+        "110.14",
+        "408.36",
+        "240.24",
+        "110.26"
+      ],
+      "correctIndex": 3,
+      "explanation": "110.26 covers working space (Table 110.26(A)(1) for depth, 30 in. width, 6½ ft headroom). 110.14 is terminations, 408.36 is panelboard protection, 240.24 is OCPD location."
+    },
+    {
+      "id": "code-lookup-speed-drills-p5",
+      "type": "multiple_choice",
+      "prompt": "Drill 5 (target 45 s). Where are the maximum percentage fills for conductors in a raceway found?",
+      "choices": [
+        "Table 314.16(A)",
+        "Chapter 9, Table 1",
+        "Table 310.16",
+        "Annex D"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chapter 9, Table 1 sets 53, 31 and 40 percent. Table 314.16(A) is box volumes, Table 310.16 is ampacity, Annex D is calculation examples."
+    },
+    {
+      "id": "code-lookup-speed-drills-p6",
+      "type": "multiple_choice",
+      "prompt": "Drill 6 (target 45 s). Which table gives the maximum rating of a motor branch-circuit short-circuit and ground-fault protective device as a percentage of full-load current?",
+      "choices": [
+        "Table 430.52",
+        "Table 430.32",
+        "Table 430.22",
+        "Table 440.22"
+      ],
+      "correctIndex": 0,
+      "explanation": "Table 430.52 lists 300, 175, 800 and 250 percent for the four device types. 430.32 is overloads, 430.22 is conductors, 440.22 is hermetic compressor protection."
+    },
+    {
+      "id": "code-lookup-speed-drills-p7",
+      "type": "multiple_choice",
+      "prompt": "Drill 7 (target 30 s). Which section and table give the minimum burial depth for a raceway or cable under a residential driveway?",
+      "choices": [
+        "300.4",
+        "352.10",
+        "300.5",
+        "250.53"
+      ],
+      "correctIndex": 2,
+      "explanation": "300.5 and Table 300.5 cover underground installations and minimum cover by wiring method and location. 300.4 is protection against physical damage in framing, 352.10 is PVC uses permitted, 250.53 is electrode installation."
+    },
+    {
+      "id": "code-lookup-speed-drills-p8",
+      "type": "multiple_choice",
+      "prompt": "Drill 8 (target 45 s). Which section covers the equipotential bonding grid around a permanently installed swimming pool?",
+      "choices": [
+        "250.104",
+        "680.22",
+        "680.26",
+        "250.50"
+      ],
+      "correctIndex": 2,
+      "explanation": "680.26 covers pool equipotential bonding (8 AWG solid copper, perimeter surfaces, pool shell, metal parts). 680.22 is receptacles and luminaires near pools; 250.104 is piping and steel bonding; 250.50 is the grounding electrode system."
+    }
+  ],
+  "quiz": {
+    "key": "code-lookup-speed-drills-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "code-lookup-speed-drills-q1",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 1 of 10 (60 s). Which section requires the service disconnecting means to be installed at a readily accessible location either outside the building or inside nearest the point of entrance of the service conductors?",
+        "choices": [
+          "230.24",
+          "230.70",
+          "225.32",
+          "240.24"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.70(A)(1). 230.24 is clearances, 225.32 is the disconnect for a building supplied by a feeder, 240.24 is overcurrent device location."
+      },
+      {
+        "id": "code-lookup-speed-drills-q2",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 2 of 10 (60 s). Which section covers the number of conductors permitted in an outlet or device box (box fill)?",
+        "choices": [
+          "314.28",
+          "300.14",
+          "312.6",
+          "314.16"
+        ],
+        "correctIndex": 3,
+        "explanation": "314.16 with Tables 314.16(A) and (B). 314.28 is pull and junction box sizing for 4 AWG and larger, 300.14 is free conductor length, 312.6 is wire bending space in cabinets."
+      },
+      {
+        "id": "code-lookup-speed-drills-q3",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 3 of 10 (60 s). Which table gives the allowable ampacity of insulated copper conductors, 0 to 2,000 V, with not more than three current-carrying conductors in a raceway at 30°C?",
+        "choices": [
+          "Table 310.15(C)(1)",
+          "Table 310.16",
+          "Table 250.122",
+          "Chapter 9, Table 8"
+        ],
+        "correctIndex": 1,
+        "explanation": "Table 310.16 (numbered Table 310.15(B)(16) in the 2017 edition). 310.15(C)(1) is the adjustment factors, 250.122 is EGC sizing, Chapter 9 Table 8 is conductor properties."
+      },
+      {
+        "id": "code-lookup-speed-drills-q4",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 4 of 10 (60 s). Which section lists the rooms and areas of a dwelling unit where arc-fault circuit-interrupter protection is required?",
+        "choices": [
+          "210.8",
+          "406.4(D)",
+          "210.12",
+          "210.52"
+        ],
+        "correctIndex": 2,
+        "explanation": "210.12. 210.8 is GFCI, 406.4(D) is receptacle replacements (which references both), 210.52 is receptacle placement."
+      },
+      {
+        "id": "code-lookup-speed-drills-q5",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 5 of 10 (60 s). Which section limits the overcurrent protection of 14, 12 and 10 AWG copper conductors to 15, 20 and 30 A?",
+        "choices": [
+          "240.6(A)",
+          "240.4(D)",
+          "310.15(B)",
+          "110.14(C)"
+        ],
+        "correctIndex": 1,
+        "explanation": "240.4(D), the small conductor rule. 240.6(A) is the list of standard ratings, 310.15(B) is temperature correction, 110.14(C) is termination temperature."
+      },
+      {
+        "id": "code-lookup-speed-drills-q6",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 6 of 10 (60 s). Which table sizes the equipment grounding conductor from the rating of the overcurrent device ahead of the circuit?",
+        "choices": [
+          "Table 250.66",
+          "Table 250.102(C)(1)",
+          "Table 250.122",
+          "250.118"
+        ],
+        "correctIndex": 2,
+        "explanation": "Table 250.122. Table 250.66 is the GEC, Table 250.102(C)(1) is supply-side bonding jumpers and the grounded service conductor, 250.118 lists the types of EGC."
+      },
+      {
+        "id": "code-lookup-speed-drills-q7",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 7 of 10 (60 s). Which section and table give the maximum overcurrent protection for a 480 V to 208Y/120 V dry-type transformer?",
+        "choices": [
+          "430.52",
+          "240.21(C)",
+          "450.21",
+          "450.3"
+        ],
+        "correctIndex": 3,
+        "explanation": "450.3 and Table 450.3(B) for transformers 1,000 V and less. 240.21(C) covers the secondary conductors, 450.21 covers dry-type transformer location, 430.52 is motors."
+      },
+      {
+        "id": "code-lookup-speed-drills-q8",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 8 of 10 (60 s). Which article covers GFCI protection for receptacles used by workers on a construction site?",
+        "choices": [
+          "Article 525",
+          "Article 590",
+          "110.26",
+          "406.9"
+        ],
+        "correctIndex": 1,
+        "explanation": "Article 590, Temporary Installations; 590.6 requires GFCI protection for 125 V, 15, 20 and 30 A receptacles used by personnel. 525 is carnivals and fairs, 406.9 is receptacles in damp and wet locations."
+      },
+      {
+        "id": "code-lookup-speed-drills-q9",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 9 of 10 (60 s). Which section lists the wiring methods permitted in a Class I, Division 1 hazardous location?",
+        "choices": [
+          "500.5",
+          "511.7",
+          "501.10",
+          "514.8"
+        ],
+        "correctIndex": 2,
+        "explanation": "501.10(A) (threaded rigid metal conduit, threaded steel IMC, Type MI cable and others). 500.5 is classification of locations, 511.7 is commercial garage wiring above Class I areas, 514.8 is underground wiring at fuel dispensing facilities."
+      },
+      {
+        "id": "code-lookup-speed-drills-q10",
+        "type": "multiple_choice",
+        "prompt": "Timed drill 10 of 10 (60 s). Which section gives the vertical clearance of overhead service conductors above a residential driveway and above public streets?",
+        "choices": [
+          "230.24",
+          "225.18",
+          "230.9",
+          "230.28"
+        ],
+        "correctIndex": 0,
+        "explanation": "230.24(B) (10, 12, 15 and 18 ft tiers). 225.18 has the same tiers for outside branch circuits and feeders, 230.9 is clearance from windows and doors, 230.28 is service masts."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 90.3 (arrangement), 90.5 (mandatory and permissive rules, informational notes), Article 100 (definitions), and the sections listed in the keyword map (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California DIR, Electrician Certification Candidate Information Bulletin (reference material rules)",
+      "url": "https://www.dir.ca.gov/dlse/ECU/CandidateInfoBulletin.htm"
+    },
+    {
+      "title": "Holt, Mike, Understanding the National Electrical Code, Volume 1 (code arrangement and navigation)",
+      "url": "https://www.mikeholt.com/"
+    },
+    {
+      "title": "Mullin, Ray C. and Simmons, Phil, Electrical Wiring Commercial (Chapter 5 to 7 applications)",
+      "url": "https://www.cengage.com/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

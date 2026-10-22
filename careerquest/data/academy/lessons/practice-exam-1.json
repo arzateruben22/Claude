@@ -1,0 +1,816 @@
+{
+  "key": "practice-exam-1",
+  "track": "EXAM_PREP",
+  "order": 4,
+  "title": "Practice Exam 1",
+  "summary": "A full-length, original 50-question practice exam that mirrors the open-book format and content balance of the California General Electrician certification exam, with an explanation for every question and a method for reviewing your misses.",
+  "estimatedMinutes": 150,
+  "prerequisites": [
+    "california-certification-exam-overview",
+    "exam-math-and-calculations",
+    "code-lookup-speed-drills"
+  ],
+  "objectives": [
+    "Students will be able to complete a 50-question open-book exam within a time budget of about 2.7 minutes per question.",
+    "Students will be able to apply the three-pass strategy: answer from knowledge, look up flagged items, review parked items.",
+    "Students will be able to classify each miss as knowledge, lookup or reading error and route it back to the right lesson.",
+    "Students will be able to judge readiness for the real exam from a timed scaled result."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Instructions",
+      "markdown": "This exam has **50 original multiple-choice and numeric questions** covering the same content areas as the California General Electrician certification exam, in roughly the same proportions. Treat it like the real thing:\n\n- **Open-book.** Use your NEC (the edition the current bulletin names), tabbed the way you intend to tab it on exam day. No other references, no internet.\n- **Timed.** Give yourself **135 minutes** (2.7 minutes per question, the same pace as 100 questions in 4½ hours). Start a visible timer.\n- **One sitting.** Do not pause to study. Flag anything that takes more than 3 minutes and come back to it.\n- **Answer everything.** There is no penalty for guessing.\n- **Passing is 70 percent**, matching the exam's scaled passing score of 70. The real exam's scaling means 70 percent raw is not a guarantee, so treat **80 percent or better, under time,** as the readiness signal.\n\nNumeric questions accept a small tolerance; carry decimals through and round only at the end. Where a question gives you a table value (for example a motor full-load current), use it as given."
+    },
+    {
+      "type": "table",
+      "caption": "Content blueprint for this exam. The areas and weights match the study blueprint in the exam overview lesson; the official outline in the Candidate Information Bulletin governs the real exam.",
+      "columns": [
+        "Content area",
+        "Questions",
+        "Lessons to review"
+      ],
+      "rows": [
+        [
+          "General knowledge and theory",
+          "7",
+          "ohms-law, series/parallel, ac-and-dc, electrical-power-and-energy"
+        ],
+        [
+          "Wiring methods and materials",
+          "12",
+          "wiring-methods-and-boxes, conduit-fundamentals, conductors-and-ampacity"
+        ],
+        [
+          "Grounding and bonding",
+          "7",
+          "grounding-and-bonding"
+        ],
+        [
+          "Services, feeders and branch circuits",
+          "10",
+          "residential-circuit-layout, exam-math-and-calculations"
+        ],
+        [
+          "Overcurrent protection",
+          "5",
+          "conductors-and-ampacity, exam-math-and-calculations"
+        ],
+        [
+          "Motors, transformers and special equipment",
+          "6",
+          "transformers-basics, exam-math-and-calculations"
+        ],
+        [
+          "Safety",
+          "3",
+          "electrical-safety-fundamentals, working-safely-with-tools-and-meters"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "Where the 50 questions come from",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 230\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\"><text x=\"20\" y=\"22\" fill=\"currentColor\" stroke=\"none\" font-weight=\"600\" font-size=\"13\">Practice Exam 1 blueprint: 50 questions by content area</text><g stroke=\"none\"><rect x=\"230\" y=\"36\" width=\"168\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"60\" width=\"140\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"84\" width=\"98\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"108\" width=\"98\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"132\" width=\"84\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"156\" width=\"70\" height=\"16\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"230\" y=\"180\" width=\"42\" height=\"16\" rx=\"3\" fill=\"#f3c75b\"/></g><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\"><text x=\"220\" y=\"48\">Wiring methods and materials</text><text x=\"220\" y=\"72\">Services, feeders, branch circuits</text><text x=\"220\" y=\"96\">General knowledge and theory</text><text x=\"220\" y=\"120\">Grounding and bonding</text><text x=\"220\" y=\"144\">Motors, transformers, special equip.</text><text x=\"220\" y=\"168\">Overcurrent protection</text><text x=\"220\" y=\"192\">Safety</text></g><g fill=\"#9aa6b8\" stroke=\"none\"><text x=\"404\" y=\"48\">12 (24%)</text><text x=\"376\" y=\"72\">10 (20%)</text><text x=\"334\" y=\"96\">7 (14%)</text><text x=\"334\" y=\"120\">7 (14%)</text><text x=\"320\" y=\"144\">6 (12%)</text><text x=\"306\" y=\"168\">5 (10%)</text><text x=\"278\" y=\"192\">3 (6%)</text></g><text x=\"20\" y=\"220\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">Weights follow the academy study blueprint; the official outline is in the DIR bulletin.</text></svg>",
+      "caption": "Wiring methods and the Chapter 2 circuit articles carry nearly half of the exam, which is also where the lookup time goes. Theory, math and safety questions should be answered mostly from memory."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Pass 1 (about 40 minutes): answer the theory, calculation and safety items and any code item you know cold. Pass 2 (about 75 minutes): open the book for flagged items, 3 minutes each. Pass 3 (the rest): parked items, then confirm nothing is blank. Write the question number and the section you opened on scratch paper for every lookup; that list is your review plan."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "These 50 questions are original CareerQuest study questions. They are not taken from, and do not predict, the actual DIR examination, which is confidential. They are built to exercise the same skills: finding and applying the code, doing the arithmetic, and reasoning about safe practice."
+    },
+    {
+      "type": "text",
+      "heading": "How to review your result",
+      "markdown": "Score the exam, then review **every** question, including the ones you got right by guessing. For each miss write one letter:\n\n- **K – knowledge.** You did not know the fact or the article and could not have found it. Fix: the lesson listed in the blueprint table, plus a flash card with the section number.\n- **F – find.** You knew where it was but could not find it in time, or found the wrong subsection. Fix: a tab, and ten minutes of **code-lookup-speed-drills** on that article.\n- **R – reading.** You found the right section and still missed: skipped an exception, misread minimum as maximum, used the wrong voltage in a three-phase formula, forgot to multiply by 1.25. Fix: slow down in Step 3 of the lookup routine and re-work the item by hand.\n\nThen look at the pattern. Three or more K misses in one area means that area needs a full lesson pass, not more practice questions. Mostly F misses means your tab set and drills are the problem, not your knowledge. Mostly R misses means you are rushing: on the next exam, force a full read of the section before you look at the choices.\n\nWhen you are ready for more, the **randomized practice exams** draw from a bank of 120 original questions in the same areas and weights, so each run is different. Alternate a randomized exam with a review day, and schedule the real exam when two consecutive timed runs come in at 80 percent or better."
+    }
+  ],
+  "practice": [
+    {
+      "id": "practice-exam-1-p1",
+      "type": "numeric",
+      "prompt": "Warm-up. At 2.7 minutes per question, how many minutes should you budget for this 50-question exam?",
+      "answer": 135,
+      "unit": "min",
+      "tolerance": 0.5,
+      "explanation": "50 × 2.7 = 135 minutes, the same pace as the real 100-question, 4½-hour exam."
+    },
+    {
+      "id": "practice-exam-1-p2",
+      "type": "multiple_choice",
+      "prompt": "Warm-up. Which entry point should be fastest for \"What is the minimum cover for RMC under a parking lot?\"",
+      "choices": [
+        "The index under \"parking\"",
+        "A tab or memory for Table 300.5",
+        "Reading Article 344 from the start",
+        "Annex C"
+      ],
+      "correctIndex": 1,
+      "explanation": "Burial depth for every wiring method is Table 300.5. The keyword map in code-lookup-speed-drills exists so this is a tab flip, not an index search."
+    },
+    {
+      "id": "practice-exam-1-p3",
+      "type": "multiple_choice",
+      "prompt": "Warm-up. You are at minute 4 on a feeder-tap question. What do you do?",
+      "choices": [
+        "Keep working; tap questions are worth more",
+        "Flag it, choose a provisional answer, move on",
+        "Leave it blank",
+        "Skip all remaining Article 240 questions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Every question is worth the same. Flag, guess, move on, and return in Pass 3."
+    },
+    {
+      "id": "practice-exam-1-p4",
+      "type": "numeric",
+      "prompt": "Warm-up. A 240 V, 24 A load: what is the power in watts?",
+      "answer": 5760,
+      "unit": "W",
+      "tolerance": 1,
+      "explanation": "P = V × I = 240 × 24 = 5,760 W. Quick power-wheel items like this belong in Pass 1."
+    }
+  ],
+  "quiz": {
+    "key": "practice-exam-1-quiz",
+    "passingScore": 70,
+    "questions": [
+      {
+        "id": "practice-exam-1-q1",
+        "type": "numeric",
+        "area": "general_knowledge_theory",
+        "prompt": "A 4,800 W resistance heater is connected to 240 V. What current does it draw?",
+        "answer": 20,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "I = P ÷ V = 4,800 ÷ 240 = 20 A."
+      },
+      {
+        "id": "practice-exam-1-q2",
+        "type": "numeric",
+        "area": "general_knowledge_theory",
+        "prompt": "Three 12 Ω resistors are connected in parallel. What is the total resistance?",
+        "answer": 4,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "Equal resistors in parallel: R ÷ n = 12 ÷ 3 = 4 Ω."
+      },
+      {
+        "id": "practice-exam-1-q3",
+        "type": "numeric",
+        "area": "general_knowledge_theory",
+        "prompt": "What is the peak voltage of a 120 V RMS sine wave?",
+        "answer": 169.7,
+        "unit": "V",
+        "tolerance": 1,
+        "explanation": "Peak = RMS × 1.414 = 120 × 1.414 = 169.7 V."
+      },
+      {
+        "id": "practice-exam-1-q4",
+        "type": "multiple_choice",
+        "area": "general_knowledge_theory",
+        "prompt": "Which change decreases the resistance of a copper conductor?",
+        "choices": [
+          "Increasing its length",
+          "Increasing its cross-sectional area",
+          "Raising its temperature",
+          "Replacing it with aluminum of the same size"
+        ],
+        "correctIndex": 1,
+        "explanation": "Resistance is proportional to length and inversely proportional to area. Heat raises copper's resistance, and aluminum has higher resistivity than copper."
+      },
+      {
+        "id": "practice-exam-1-q5",
+        "type": "multiple_choice",
+        "area": "general_knowledge_theory",
+        "prompt": "Power factor is best described as the ratio of:",
+        "choices": [
+          "Volts to amperes",
+          "True power in watts to apparent power in volt-amperes",
+          "Reactive power to true power",
+          "Line voltage to phase voltage"
+        ],
+        "correctIndex": 1,
+        "explanation": "PF = W ÷ VA. A PF below 1.0 means the circuit carries more current than the real power alone would require."
+      },
+      {
+        "id": "practice-exam-1-q6",
+        "type": "multiple_choice",
+        "area": "general_knowledge_theory",
+        "prompt": "In a 208Y/120 V three-phase, four-wire system, the line-to-line voltage equals the line-to-neutral voltage multiplied by:",
+        "choices": [
+          "1.414",
+          "1.732",
+          "2.0",
+          "3.0"
+        ],
+        "correctIndex": 1,
+        "explanation": "In a wye system V_line = V_phase × √3: 120 × 1.732 = 208 V."
+      },
+      {
+        "id": "practice-exam-1-q7",
+        "type": "numeric",
+        "area": "general_knowledge_theory",
+        "prompt": "A 100 W lamp runs 10 hours per day for 30 days. At $0.30 per kWh, what is the energy cost in dollars?",
+        "answer": 9,
+        "unit": "$",
+        "tolerance": 0.05,
+        "explanation": "Energy = 0.1 kW × 10 h × 30 d = 30 kWh; 30 × $0.30 = $9.00."
+      },
+      {
+        "id": "practice-exam-1-q8",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "Type NM cable must be secured within what distance of every box and at what maximum interval?",
+        "choices": [
+          "6 in.; 3 ft",
+          "12 in.; 4½ ft",
+          "18 in.; 6 ft",
+          "3 ft; 10 ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "334.30 requires securing within 12 in. of each box and at intervals not exceeding 4½ ft."
+      },
+      {
+        "id": "practice-exam-1-q9",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "A 120 V, 20 A GFCI-protected residential branch circuit is run underground in Type UF cable. What is the minimum cover?",
+        "choices": [
+          "6 in.",
+          "12 in.",
+          "18 in.",
+          "24 in."
+        ],
+        "correctIndex": 1,
+        "explanation": "Table 300.5 allows 12 in. for residential 120 V, 20 A or less GFCI-protected branch circuits; plain direct-burial cable needs 24 in."
+      },
+      {
+        "id": "practice-exam-1-q10",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "A cable passes through a bored hole in a wood stud. The edge of the hole must be at least how far from the nearest edge of the stud, or else be protected by a steel plate of what thickness?",
+        "choices": [
+          "1 in.; 1/32 in.",
+          "1¼ in.; 1/16 in.",
+          "1½ in.; 1/8 in.",
+          "2 in.; 1/16 in."
+        ],
+        "correctIndex": 1,
+        "explanation": "300.4(A)(1): 1¼ in. from the edge, or a steel plate at least 1/16 in. thick (or a listed equivalent)."
+      },
+      {
+        "id": "practice-exam-1-q11",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "At each outlet, junction and switch point, at least how much free conductor must be left for splices or terminations?",
+        "choices": [
+          "3 in.",
+          "6 in.",
+          "8 in.",
+          "12 in."
+        ],
+        "correctIndex": 1,
+        "explanation": "300.14 requires at least 6 in. of free conductor measured from the point in the box where it emerges, with 3 in. outside the opening for small boxes."
+      },
+      {
+        "id": "practice-exam-1-q12",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "EMT must be securely fastened within what distance of each box and supported at what maximum interval?",
+        "choices": [
+          "12 in.; 4½ ft",
+          "3 ft; 10 ft",
+          "5 ft; 10 ft",
+          "3 ft; 20 ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "358.30(A): within 3 ft of each termination and at intervals not exceeding 10 ft."
+      },
+      {
+        "id": "practice-exam-1-q13",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "What is the maximum total of bends permitted in a run of EMT between pull points?",
+        "choices": [
+          "180 degrees",
+          "270 degrees",
+          "360 degrees",
+          "450 degrees"
+        ],
+        "correctIndex": 2,
+        "explanation": "358.26 limits bends between pull points to 360 degrees (four quarter bends). The same limit appears in the other raceway articles."
+      },
+      {
+        "id": "practice-exam-1-q14",
+        "type": "numeric",
+        "area": "wiring_methods_materials",
+        "prompt": "A box contains four 12 AWG conductors that enter and terminate, two equipment grounding conductors and one duplex receptacle. There are no clamps. What is the minimum box volume in cubic inches?",
+        "answer": 15.75,
+        "unit": "in³",
+        "tolerance": 0.05,
+        "explanation": "4 conductors + 1 (all EGCs) + 2 (device) = 7 allowances × 2.25 in³ (12 AWG) = 15.75 in³ per 314.16."
+      },
+      {
+        "id": "practice-exam-1-q15",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "What is the temperature rating of Type THWN-2 insulation in a wet location?",
+        "choices": [
+          "60°C",
+          "75°C",
+          "90°C",
+          "105°C"
+        ],
+        "correctIndex": 2,
+        "explanation": "The -2 suffix means 90°C in both wet and dry locations (conductor application table in Article 310). Plain THWN is 75°C wet."
+      },
+      {
+        "id": "practice-exam-1-q16",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "Using the 75°C column of Table 310.16, what is the ampacity of 8 AWG THHN copper?",
+        "choices": [
+          "40 A",
+          "50 A",
+          "55 A",
+          "65 A"
+        ],
+        "correctIndex": 1,
+        "explanation": "8 AWG copper: 40 A at 60°C, 50 A at 75°C, 55 A at 90°C. Terminations rated 75°C allow the 50 A value."
+      },
+      {
+        "id": "practice-exam-1-q17",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "A 480Y/277 V panelboard has grounded building steel on the wall opposite its live parts (Condition 2). What minimum working-space depth does Table 110.26(A)(1) require?",
+        "choices": [
+          "3 ft",
+          "3½ ft",
+          "4 ft",
+          "6½ ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "For 151 to 600 V to ground: Condition 1 is 3 ft, Condition 2 is 3½ ft, Condition 3 is 4 ft."
+      },
+      {
+        "id": "practice-exam-1-q18",
+        "type": "multiple_choice",
+        "area": "wiring_methods_materials",
+        "prompt": "Which installation of Type NM cable is NOT permitted?",
+        "choices": [
+          "Concealed in the walls of a two-family dwelling",
+          "Run exposed above a suspended ceiling in a commercial office",
+          "Run through bored holes in joists of a one-family dwelling",
+          "Concealed in a multifamily dwelling of Type V construction"
+        ],
+        "correctIndex": 1,
+        "explanation": "334.12(A)(2) prohibits NM cable exposed in dropped or suspended ceilings in other than one- and two-family and multifamily dwellings."
+      },
+      {
+        "id": "practice-exam-1-q19",
+        "type": "numeric",
+        "area": "wiring_methods_materials",
+        "prompt": "A pull box is used for a straight pull of conductors 4 AWG and larger entering through a 2 in. raceway. What is the minimum length of the box in inches?",
+        "answer": 16,
+        "unit": "in",
+        "tolerance": 0.1,
+        "explanation": "314.28(A)(1): straight pulls require a length of at least 8 times the trade size of the largest raceway: 8 × 2 = 16 in."
+      },
+      {
+        "id": "practice-exam-1-q20",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "A service is supplied by 3/0 AWG copper conductors. What is the minimum copper grounding electrode conductor to a concrete-encased electrode?",
+        "choices": [
+          "8 AWG",
+          "6 AWG",
+          "4 AWG",
+          "2 AWG"
+        ],
+        "correctIndex": 2,
+        "explanation": "Table 250.66: 2/0 or 3/0 copper service conductors require a 4 AWG copper GEC. 250.66(B) caps the GEC to a concrete-encased electrode at 4 AWG, so 4 AWG is the answer either way."
+      },
+      {
+        "id": "practice-exam-1-q21",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "What minimum copper equipment grounding conductor is required for a circuit protected by a 60 A overcurrent device?",
+        "choices": [
+          "12 AWG",
+          "10 AWG",
+          "8 AWG",
+          "6 AWG"
+        ],
+        "correctIndex": 1,
+        "explanation": "Table 250.122: 10 AWG copper for 30, 40 and 60 A devices; 8 AWG for 100 A."
+      },
+      {
+        "id": "practice-exam-1-q22",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "A single ground rod is driven for a dwelling service. When must it be supplemented by a second electrode?",
+        "choices": [
+          "Always, regardless of resistance",
+          "Only when the rod is shorter than 8 ft",
+          "Unless the single rod has a resistance to earth of 25 ohms or less",
+          "Only when the service exceeds 200 A"
+        ],
+        "correctIndex": 2,
+        "explanation": "250.53(A)(2): a single rod, pipe or plate electrode must be supplemented by an additional electrode unless it measures 25 ohms or less; the two must be at least 6 ft apart."
+      },
+      {
+        "id": "practice-exam-1-q23",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "In a dwelling fed by a service panel and a downstream subpanel, where is the grounded (neutral) conductor permitted to be bonded to the equipment grounding system?",
+        "choices": [
+          "At the service disconnect only",
+          "At both the service panel and the subpanel",
+          "At the subpanel only",
+          "At every panel and every metal box"
+        ],
+        "correctIndex": 0,
+        "explanation": "250.24(A)(5) and 250.142(B): the neutral is bonded at the service (and at a separately derived system per 250.30). Downstream, neutrals are isolated so fault current returns on the EGC, not on the neutral and metal parts."
+      },
+      {
+        "id": "practice-exam-1-q24",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "A concrete-encased electrode must consist of at least how much ½ in. or larger reinforcing steel encased by at least 2 in. of concrete in the footing?",
+        "choices": [
+          "10 ft",
+          "20 ft",
+          "30 ft",
+          "50 ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "250.52(A)(3): at least 20 ft of bare or zinc-galvanized ½ in. rebar, or 20 ft of 4 AWG bare copper, in contact with earth through the concrete."
+      },
+      {
+        "id": "practice-exam-1-q25",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "Where the grounding electrode conductor connects only to a rod, pipe or plate electrode, the copper GEC is not required to be larger than:",
+        "choices": [
+          "8 AWG",
+          "6 AWG",
+          "4 AWG",
+          "2 AWG"
+        ],
+        "correctIndex": 1,
+        "explanation": "250.66(A): the portion of the GEC that is the sole connection to a rod, pipe or plate electrode need not be larger than 6 AWG copper (4 AWG aluminum)."
+      },
+      {
+        "id": "practice-exam-1-q26",
+        "type": "multiple_choice",
+        "area": "grounding_bonding",
+        "prompt": "A metal underground water piping system that is not used as an electrode still must be bonded. Per 250.104(A), it is bonded to any of the following EXCEPT:",
+        "choices": [
+          "The service equipment enclosure",
+          "The grounded conductor at the service",
+          "The grounding electrode conductor",
+          "A metal gas pipe"
+        ],
+        "correctIndex": 3,
+        "explanation": "250.104(A)(1) lists the service enclosure, the grounded service conductor, the GEC and the electrode(s) as acceptable bonding points. Gas piping is itself bonded through the EGC of the circuit likely to energize it (250.104(B)) and is not a bonding point for water piping."
+      },
+      {
+        "id": "practice-exam-1-q27",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "What is the minimum rating of the service disconnecting means for a one-family dwelling?",
+        "choices": [
+          "60 A",
+          "100 A",
+          "125 A",
+          "200 A"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.79(C): 100 A, 3-wire minimum for a one-family dwelling."
+      },
+      {
+        "id": "practice-exam-1-q28",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "Overhead service conductors (not over 300 V to ground) cross a residential driveway. What minimum vertical clearance is required?",
+        "choices": [
+          "10 ft",
+          "12 ft",
+          "15 ft",
+          "18 ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.24(B)(2): 12 ft over residential property and driveways; 10 ft applies only at the service entrance above pedestrian areas for 150 V to ground or less; 18 ft over public streets."
+      },
+      {
+        "id": "practice-exam-1-q29",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "How many 20 A small-appliance branch circuits are required to serve the receptacles in a dwelling kitchen, pantry, breakfast room and dining room?",
+        "choices": [
+          "One",
+          "Two or more",
+          "Three or more",
+          "One per room"
+        ],
+        "correctIndex": 1,
+        "explanation": "210.11(C)(1) requires two or more 20 A small-appliance branch circuits; 210.52(B) sets what they may serve."
+      },
+      {
+        "id": "practice-exam-1-q30",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "Along a dwelling kitchen countertop wall, receptacles must be placed so that no point along the wall line is more than what distance from a receptacle?",
+        "choices": [
+          "12 in.",
+          "24 in.",
+          "4 ft",
+          "6 ft"
+        ],
+        "correctIndex": 1,
+        "explanation": "210.52(C)(1): no point more than 24 in., giving a maximum of 4 ft between receptacles; the 6 ft rule applies to general wall space."
+      },
+      {
+        "id": "practice-exam-1-q31",
+        "type": "numeric",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "Using 3 VA per square foot, what is the general lighting load for a 2,400 ft² dwelling?",
+        "answer": 7200,
+        "unit": "VA",
+        "tolerance": 1,
+        "explanation": "220.12 (Table 220.12 for dwellings): 2,400 × 3 = 7,200 VA, before demand factors in Table 220.42 are applied."
+      },
+      {
+        "id": "practice-exam-1-q32",
+        "type": "numeric",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "A dwelling has one 12 kW electric range. Using Table 220.55, Column C, what demand load in kW is used in the service calculation?",
+        "answer": 8,
+        "unit": "kW",
+        "tolerance": 0.05,
+        "explanation": "Column C allows 8 kW for one range rated not over 12 kW. Ranges over 12 kW add 5 percent per kW above 12."
+      },
+      {
+        "id": "practice-exam-1-q33",
+        "type": "numeric",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "A branch circuit supplies a 32 A continuous load only. What is the minimum standard overcurrent device rating in amperes?",
+        "answer": 40,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "210.20(A): 32 × 1.25 = 40 A. Conductors must also be rated at least 40 A (210.19(A)(1))."
+      },
+      {
+        "id": "practice-exam-1-q34",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "A dwelling bathroom receptacle outlet must be located within what distance of the outside edge of the basin?",
+        "choices": [
+          "12 in.",
+          "24 in.",
+          "3 ft",
+          "6 ft"
+        ],
+        "correctIndex": 2,
+        "explanation": "210.52(D): within 3 ft of the outside edge of each basin, on a wall or partition adjacent to the basin or on the side or face of the basin cabinet."
+      },
+      {
+        "id": "practice-exam-1-q35",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "The service disconnecting means must be installed:",
+        "choices": [
+          "Inside the building at any accessible location",
+          "At a readily accessible location outside, or inside nearest the point of entrance of the service conductors",
+          "Within 6 ft of the meter in all cases",
+          "Only in a dedicated electrical room"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.70(A)(1). The intent is to limit the length of unprotected service conductors inside a building."
+      },
+      {
+        "id": "practice-exam-1-q36",
+        "type": "multiple_choice",
+        "area": "services_feeders_branch_circuits",
+        "prompt": "Which receptacle ratings are permitted on a 20 A branch circuit that supplies two or more receptacles?",
+        "choices": [
+          "15 A only",
+          "20 A only",
+          "15 or 20 A",
+          "15, 20 or 30 A"
+        ],
+        "correctIndex": 2,
+        "explanation": "Table 210.21(B)(3): a 20 A circuit may have 15 or 20 A receptacles; a 15 A circuit may have only 15 A receptacles."
+      },
+      {
+        "id": "practice-exam-1-q37",
+        "type": "multiple_choice",
+        "area": "overcurrent_protection",
+        "prompt": "Unless another section specifically permits otherwise, what is the maximum overcurrent protection for 10 AWG copper conductors?",
+        "choices": [
+          "20 A",
+          "25 A",
+          "30 A",
+          "35 A"
+        ],
+        "correctIndex": 2,
+        "explanation": "240.4(D)(7): 30 A for 10 AWG copper (25 A for 10 AWG aluminum), regardless of the higher table ampacity."
+      },
+      {
+        "id": "practice-exam-1-q38",
+        "type": "multiple_choice",
+        "area": "overcurrent_protection",
+        "prompt": "After correction and adjustment, a feeder conductor has an ampacity of 52 A. It does not supply a multi-outlet receptacle circuit. What is the maximum standard overcurrent device permitted by 240.4(B)?",
+        "choices": [
+          "45 A",
+          "50 A",
+          "60 A",
+          "70 A"
+        ],
+        "correctIndex": 2,
+        "explanation": "240.4(B) permits the next higher standard size when the ampacity does not match a standard rating, the device is 800 A or less and the circuit is not a multi-outlet receptacle circuit: 52 A rounds up to 60 A."
+      },
+      {
+        "id": "practice-exam-1-q39",
+        "type": "multiple_choice",
+        "area": "overcurrent_protection",
+        "prompt": "The center of the grip of the operating handle of a circuit breaker, in its highest position, may be no more than how far above the floor or working platform?",
+        "choices": [
+          "5 ft 6 in.",
+          "6 ft",
+          "6 ft 7 in.",
+          "7 ft"
+        ],
+        "correctIndex": 2,
+        "explanation": "240.24(A): 6 ft 7 in. (2.0 m). Exceptions exist for busways and for equipment not readily accessible by design."
+      },
+      {
+        "id": "practice-exam-1-q40",
+        "type": "multiple_choice",
+        "area": "overcurrent_protection",
+        "prompt": "A circuit breaker marked \"SWD\" is listed for:",
+        "choices": [
+          "Use as the service disconnect",
+          "Switching duty on 120 V and 277 V fluorescent lighting circuits",
+          "Protecting motors without overloads",
+          "Use on corner-grounded delta systems"
+        ],
+        "correctIndex": 1,
+        "explanation": "240.83(D): breakers used as switches for 120 V or 277 V fluorescent lighting must be marked SWD or HID; HID marking is required for high-intensity discharge lighting."
+      },
+      {
+        "id": "practice-exam-1-q41",
+        "type": "multiple_choice",
+        "area": "overcurrent_protection",
+        "prompt": "Under the 25-ft feeder tap rule of 240.21(B)(2), the tap conductors must have an ampacity of at least what fraction of the rating of the overcurrent device protecting the feeder?",
+        "choices": [
+          "1/10",
+          "1/4",
+          "1/3",
+          "1/2"
+        ],
+        "correctIndex": 2,
+        "explanation": "240.21(B)(2): at least one-third of the feeder OCPD rating, terminate in a single OCPD that limits the load to the tap ampacity, and be protected from physical damage."
+      },
+      {
+        "id": "practice-exam-1-q42",
+        "type": "numeric",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "A 10 hp, 230 V three-phase motor has a Table 430.250 full-load current of 28 A. What minimum ampacity do the branch-circuit conductors require?",
+        "answer": 35,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "430.22: 125 percent of table FLC: 28 × 1.25 = 35 A (10 AWG copper at 75°C)."
+      },
+      {
+        "id": "practice-exam-1-q43",
+        "type": "numeric",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "For the same 28 A motor, what is the maximum rating of an inverse-time circuit breaker used for branch-circuit short-circuit and ground-fault protection, per Table 430.52?",
+        "answer": 70,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "250 percent of 28 A = 70 A, which is a standard size, so 70 A is the maximum (unless the exception for starting current is invoked)."
+      },
+      {
+        "id": "practice-exam-1-q44",
+        "type": "multiple_choice",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "A continuous-duty motor has a nameplate service factor of 1.15. Its separate overload device must trip at no more than what percentage of nameplate full-load current?",
+        "choices": [
+          "115 percent",
+          "125 percent",
+          "140 percent",
+          "250 percent"
+        ],
+        "correctIndex": 1,
+        "explanation": "430.32(A)(1): 125 percent for service factor 1.15 or more, or temperature rise 40°C or less; 115 percent for all other motors."
+      },
+      {
+        "id": "practice-exam-1-q45",
+        "type": "numeric",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "What is the full-load secondary current of a 45 kVA three-phase transformer with a 208Y/120 V secondary?",
+        "answer": 125,
+        "unit": "A",
+        "tolerance": 2,
+        "explanation": "I = 45,000 ÷ (1.732 × 208) = 45,000 ÷ 360.3 = 124.9 A."
+      },
+      {
+        "id": "practice-exam-1-q46",
+        "type": "multiple_choice",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "The disconnecting means for an air-conditioning condensing unit must be:",
+        "choices": [
+          "Within sight of and readily accessible from the unit",
+          "Located at the service panel only",
+          "Within 10 ft of the thermostat",
+          "Inside the unit's control compartment"
+        ],
+        "correctIndex": 0,
+        "explanation": "440.14: within sight from and readily accessible from the equipment; it may be mounted on or within the equipment but not over access panels."
+      },
+      {
+        "id": "practice-exam-1-q47",
+        "type": "multiple_choice",
+        "area": "motors_transformers_special_equipment",
+        "prompt": "The equipotential bonding conductor for a permanently installed swimming pool must be at least:",
+        "choices": [
+          "10 AWG stranded copper",
+          "8 AWG solid copper",
+          "6 AWG solid copper",
+          "4 AWG stranded copper"
+        ],
+        "correctIndex": 1,
+        "explanation": "680.26(B): solid copper not smaller than 8 AWG, bonding the pool shell, perimeter surfaces, metal components and equipment."
+      },
+      {
+        "id": "practice-exam-1-q48",
+        "type": "multiple_choice",
+        "area": "safety",
+        "prompt": "Before working on a circuit that has been locked out, a qualified person verifies absence of voltage by:",
+        "choices": [
+          "Checking that the breaker handle is in the off position",
+          "Testing the meter on a known live source, testing the circuit, then re-testing the meter on the known source",
+          "Asking the foreman whether the circuit is dead",
+          "Using a non-contact tester only"
+        ],
+        "correctIndex": 1,
+        "explanation": "NFPA 70E 120.5 (establishing an electrically safe work condition) and Cal/OSHA practice: verify the tester before and after on a known source (live-dead-live) with a properly rated meter."
+      },
+      {
+        "id": "practice-exam-1-q49",
+        "type": "multiple_choice",
+        "area": "safety",
+        "prompt": "A Class A GFCI is designed to trip when the ground-fault current reaches approximately:",
+        "choices": [
+          "0.5 mA",
+          "5 mA",
+          "30 mA",
+          "100 mA"
+        ],
+        "correctIndex": 1,
+        "explanation": "Class A GFCIs trip between 4 and 6 mA (nominally 5 mA), well below the let-go threshold for most adults. 30 mA devices are equipment-protection GFPE, not personnel protection."
+      },
+      {
+        "id": "practice-exam-1-q50",
+        "type": "multiple_choice",
+        "area": "safety",
+        "prompt": "On a construction site, 125 V, 15, 20 and 30 A receptacles that are part of temporary wiring and used by personnel must have:",
+        "choices": [
+          "AFCI protection",
+          "GFCI protection",
+          "Tamper-resistant covers",
+          "A dedicated neutral"
+        ],
+        "correctIndex": 1,
+        "explanation": "590.6(A) and OSHA 29 CFR 1926.404(b)(1) require GFCI protection for personnel (OSHA alternatively allows an assured equipment grounding conductor program)."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: Articles 100, 110, 210, 215, 220, 230, 240, 250, 300, 310, 314, 334, 358, 430, 440, 450, 590, 680 (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "NFPA 70E, Standard for Electrical Safety in the Workplace, Article 120 (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70e-standard-development/70e"
+    },
+    {
+      "title": "OSHA 29 CFR 1926.404(b)(1), ground-fault protection on construction sites",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.404"
+    },
+    {
+      "title": "California DIR, Electrician Certification Program and Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

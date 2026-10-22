@@ -1,0 +1,457 @@
+{
+  "key": "nec-structure-and-navigation",
+  "track": "CODE",
+  "order": 1,
+  "title": "NEC Structure and Navigation",
+  "summary": "How the National Electrical Code is organized, how California adopts it as the California Electrical Code, what the numbering means, which words are mandatory, and a lookup method that lets you find any rule in under a minute.",
+  "estimatedMinutes": 30,
+  "prerequisites": [],
+  "objectives": [
+    "Students will be able to explain the relationship between NFPA 70 (the NEC), the California Electrical Code (Title 24, Part 3) and local amendments, and identify which edition to study for the DIR certification exam.",
+    "Students will be able to describe the purpose of each of the nine chapters and the Annexes, and apply the 90.3 rule that Chapters 5–7 modify Chapters 1–4.",
+    "Students will be able to decode a section reference such as 110.26(A)(1) and locate it in the book.",
+    "Students will be able to distinguish mandatory, prohibitive and permissive language, and explain how Exceptions and Informational Notes are used.",
+    "Students will be able to carry out a five-step lookup for a code question using the table of contents, index and definitions."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What the NEC is, and what California does with it",
+      "markdown": "The **National Electrical Code (NEC)** is **NFPA 70**, a consensus standard published by the National Fire Protection Association and revised on a three-year cycle (2017, 2020, 2023, 2026 editions). By itself it is a book, not a law. It becomes law when a state or city adopts it.\n\n**In California, the current California Electrical Code (CEC) adopts the NEC with California amendments.** The CEC is **Title 24, Part 3** of the California Code of Regulations, published by the California Building Standards Commission. California adopts each NEC edition on its own cycle, typically one to two years after NFPA publishes it, and adds state amendments (printed with the adopting agency's symbol in the margin) that cover things like state-regulated occupancies and California-specific administrative rules. For example, the 2022 CEC was based on the 2020 NEC, and the 2025 CEC is based on the 2023 NEC. Cities and counties (Los Angeles, San Francisco and others) may adopt further local amendments by ordinance, so the enforceable code on a given job is NEC + California amendments + local amendments, as interpreted by the **Authority Having Jurisdiction (AHJ)**, usually the local building department's electrical inspector.\n\n**For the state certification exam, candidates must study the NEC edition named in the DIR Candidate Information Bulletin (CIB).** The Division of Labor Standards Enforcement's Electrician Certification Unit publishes the CIB, which states which NEC edition the exam questions reference, what reference materials you may bring, and how the exam is scored. The exam edition is not always the edition currently enforced in the field. Check the CIB before you buy a code book, and keep it in mind through every CODE lesson in this academy: section numbers quoted here follow the 2017–2023 editions and are given for orientation, and your edition governs.\n\nThe electrician certification exam is **open book**, which is why navigation is a skill worth drilling: the exam tests whether you can find and apply the rule in the time allowed, not whether you have memorized it."
+    },
+    {
+      "type": "diagram",
+      "title": "How the Code is arranged (NEC 90.3)",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 540 330\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"><rect x=\"30\" y=\"14\" width=\"480\" height=\"40\" rx=\"6\" stroke=\"#9aa6b8\"/><rect x=\"30\" y=\"70\" width=\"480\" height=\"52\" rx=\"6\" stroke=\"#4cc9ff\"/><rect x=\"30\" y=\"138\" width=\"480\" height=\"52\" rx=\"6\" stroke=\"#f3c75b\"/><rect x=\"30\" y=\"206\" width=\"480\" height=\"52\" rx=\"6\" stroke=\"#3ddc97\"/><rect x=\"30\" y=\"274\" width=\"480\" height=\"50\" rx=\"6\" stroke=\"#9aa6b8\"/><path d=\"M110 138 V126\" stroke=\"#f3c75b\"/><path d=\"M105 130 L110 122 L115 130\" stroke=\"#f3c75b\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"270\" y=\"39\" text-anchor=\"middle\"><tspan font-weight=\"bold\">Article 90, Introduction:</tspan> purpose, scope, enforcement, 90.3 arrangement</text><text x=\"270\" y=\"91\" text-anchor=\"middle\" font-weight=\"bold\" fill=\"#4cc9ff\">Chapters 1–4 — GENERAL: apply to all installations</text><text x=\"270\" y=\"110\" text-anchor=\"middle\" font-size=\"10\">1 General · 2 Wiring and Protection · 3 Wiring Methods and Materials · 4 Equipment for General Use</text><text x=\"270\" y=\"159\" text-anchor=\"middle\" font-weight=\"bold\" fill=\"#f3c75b\">Chapters 5–7 — SPECIAL: supplement or modify Chapters 1–4</text><text x=\"270\" y=\"178\" text-anchor=\"middle\" font-size=\"10\">5 Special Occupancies · 6 Special Equipment · 7 Special Conditions (e.g., 517, 680, 700)</text><text x=\"124\" y=\"133\" font-size=\"10\" fill=\"#f3c75b\">modifies</text><text x=\"270\" y=\"227\" text-anchor=\"middle\" font-weight=\"bold\" fill=\"#3ddc97\">Chapter 8 — Communications Systems: stands alone</text><text x=\"270\" y=\"246\" text-anchor=\"middle\" font-size=\"10\">Chapters 1–7 apply only where a Chapter 8 section specifically references them</text><text x=\"270\" y=\"294\" text-anchor=\"middle\" font-weight=\"bold\" fill=\"#9aa6b8\">Chapter 9 — Tables: apply where referenced</text><text x=\"270\" y=\"313\" text-anchor=\"middle\" font-size=\"10\">Informative Annexes A–J: explanatory, not enforceable (C conduit fill, D calculation examples)</text></g></svg>",
+      "caption": "Chapters 1 through 4 apply everywhere. Chapters 5, 6 and 7 add to or change those rules for particular occupancies, equipment and conditions. Chapter 8 is self-contained. Chapter 9 tables and the Annexes support the rest."
+    },
+    {
+      "type": "table",
+      "caption": "The nine chapters and where the everyday articles live",
+      "columns": [
+        "Chapter",
+        "Title",
+        "Articles you will use constantly"
+      ],
+      "rows": [
+        [
+          "1",
+          "General",
+          "100 Definitions; 110 Requirements for Electrical Installations (working space, terminations, markings)"
+        ],
+        [
+          "2",
+          "Wiring and Protection",
+          "200 Grounded conductors; 210 Branch Circuits; 215 Feeders; 220 Load Calculations; 225 Outside Branch Circuits and Feeders; 230 Services; 240 Overcurrent Protection; 242 Surge Protection (2020+); 250 Grounding and Bonding"
+        ],
+        [
+          "3",
+          "Wiring Methods and Materials",
+          "300 General; 310 Conductors (ampacity Table 310.16); 312 Cabinets; 314 Boxes (box fill 314.16); 320–340 cables (334 NM, 330 MC); 342–362 raceways (344 RMC, 352 PVC, 358 EMT); 392 Cable Tray"
+        ],
+        [
+          "4",
+          "Equipment for General Use",
+          "400 Flexible Cords; 404 Switches; 406 Receptacles; 408 Panelboards; 410 Luminaires; 422 Appliances; 424 Fixed Electric Space Heating; 430 Motors; 440 Air-Conditioning; 445 Generators; 450 Transformers; 480 Storage Batteries"
+        ],
+        [
+          "5",
+          "Special Occupancies",
+          "500–516 Hazardous (Classified) Locations; 517 Health Care; 518 Assembly; 520 Theaters; 547 Agricultural; 550 Mobile Homes; 551 RVs; 555 Marinas; 590 Temporary Installations"
+        ],
+        [
+          "6",
+          "Special Equipment",
+          "600 Signs; 620 Elevators; 625 Electric Vehicle Power Transfer; 630 Welders; 645 IT Equipment; 680 Swimming Pools and Spas; 690 Solar PV; 695 Fire Pumps"
+        ],
+        [
+          "7",
+          "Special Conditions",
+          "700 Emergency Systems; 701 Legally Required Standby; 702 Optional Standby; 705 Interconnected Power Sources; 706 Energy Storage; 725 Class 1, 2 and 3 circuits (restructured in 2023); 760 Fire Alarm; 770 Optical Fiber"
+        ],
+        [
+          "8",
+          "Communications Systems",
+          "800 General; 805 Communications Circuits; 810 Antennas; 820 CATV; 840 Premises-Powered Broadband"
+        ],
+        [
+          "9",
+          "Tables",
+          "Table 1 raceway fill percentage; Table 4 raceway dimensions; Table 5 conductor dimensions; Table 8 conductor properties (resistance); Table 9 AC impedance"
+        ],
+        [
+          "Annexes",
+          "Informative (not enforceable)",
+          "A Product standards; B Ampacity engineering; C Conduit fill tables for same-size conductors; D Calculation examples; others on administration, EV, energy storage"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Articles, parts, sections and the numbering system",
+      "markdown": "Every rule has an address, and the address tells you where it lives.\n\n- **Article** numbers are three digits; the first digit is the chapter. Article 250 is in Chapter 2; Article 680 is in Chapter 6.\n- Long articles are divided into **Parts** (roman numerals) with their own titles: Article 210 Part I General, Part II Branch-Circuit Ratings, Part III Required Outlets. Parts help you narrow a search but do not appear in the section number.\n- **Sections** are the article number, a period, and a section number: 210.52. Section numbers are assigned by NFPA and gaps are common; they are not consecutive.\n- Subdivisions nest as capital letters, then arabic numerals, then lowercase letters: 210.52(C)(1)(a). Each level has its own title in the book, and reading the titles up the chain tells you the context: 210.52 Dwelling Unit Receptacle Outlets, (C) Countertops and Work Surfaces, (1) Wall Countertop and Work Surface Spaces.\n- **Tables and Figures** are numbered by the section that governs them: Table 310.16, Table 250.122, Table 110.26(A)(1). When an edition moves a section, its tables move too, which is why the ampacity table was Table 310.15(B)(16) in 2017 and Table 310.16 in 2020 and later.\n- **Exceptions** follow the rule they modify and are numbered when there are several. They are enforceable; an exception is a rule written as a carve-out.\n- **Informational Notes** (called Fine Print Notes before 2011) explain or refer to other standards; they are **not** enforceable (90.5(C)). The 3 % voltage drop figure in 210.19 is an Informational Note, which is why it is a recommendation and not a requirement in the NEC itself (though Title 24 Part 6 does regulate voltage drop in California).\n\n**Edition changes to know about.** The 2023 edition moved every definition into Article 100 (earlier editions had article-specific definitions in .2 sections such as 250.2), rewrote Article 725 into several articles, and renumbered some sections. The 2020 edition created Article 242 for surge protection and added the outdoor emergency disconnect for dwellings (230.85). When a colleague quotes a section number, ask which edition."
+    },
+    {
+      "type": "diagram",
+      "title": "Reading a section reference",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 540 230\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><text x=\"270\" y=\"56\" text-anchor=\"middle\" font-family=\"ui-monospace, Menlo, monospace\" font-size=\"38\" font-weight=\"bold\" fill=\"currentColor\" stroke=\"none\"><tspan fill=\"#4cc9ff\">110</tspan><tspan>.</tspan><tspan fill=\"#f3c75b\">26</tspan><tspan fill=\"#3ddc97\">(A)</tspan><tspan fill=\"#ff6b6b\">(1)</tspan></text><g stroke=\"none\"><rect x=\"40\" y=\"86\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#4cc9ff\"/><rect x=\"40\" y=\"116\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#f3c75b\"/><rect x=\"40\" y=\"146\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#3ddc97\"/><rect x=\"40\" y=\"176\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#ff6b6b\"/></g><g fill=\"currentColor\" stroke=\"none\"><text x=\"64\" y=\"98\"><tspan font-weight=\"bold\" fill=\"#4cc9ff\">110</tspan>  Article 110, Requirements for Electrical Installations (Chapter 1)</text><text x=\"64\" y=\"128\"><tspan font-weight=\"bold\" fill=\"#f3c75b\">.26</tspan>  Section 110.26, Spaces About Electrical Equipment</text><text x=\"64\" y=\"158\"><tspan font-weight=\"bold\" fill=\"#3ddc97\">(A)</tspan>  First-level subdivision, Working Space</text><text x=\"64\" y=\"188\"><tspan font-weight=\"bold\" fill=\"#ff6b6b\">(1)</tspan>  Second-level subdivision, Depth of Working Space</text><text x=\"270\" y=\"216\" text-anchor=\"middle\" font-size=\"11\" fill=\"#9aa6b8\">Lower levels continue with (a), (b). Tables take their section number: Table 110.26(A)(1).</text></g></svg>",
+      "caption": "The same pattern works for every rule in the book. Read the titles at each level and you know what the rule is about before you read the rule."
+    },
+    {
+      "type": "text",
+      "heading": "Mandatory words, permissive words and the definitions that decide cases",
+      "markdown": "The Code is written in a controlled vocabulary (90.5):\n\n- **\"Shall\"** means required. **\"Shall not\"** means prohibited. These are the enforceable rules.\n- **\"Shall be permitted\"** means allowed but not required: a permissive rule gives you an option. \"Shall not be required\" lifts a requirement.\n- **\"Approved\"** means acceptable to the AHJ. **\"Listed\"** means a recognized testing laboratory has evaluated the product to a standard and it appears in their list. **\"Labeled\"** means it carries the laboratory's mark. **\"Identified (as applicable to equipment)\"** means recognizable as suitable for the specific purpose, usually by listing and marking. These four words are the difference between \"I think this is fine\" and \"this is permitted.\"\n\n**Article 100** holds the definitions, and most code arguments are definition arguments. Is a receptacle in a laundry room \"readily accessible\"? Is the laundry room itself a \"bathroom\" because it has a sink? Is an outlet in a detached garage \"outdoors\"? Is a conductor a \"feeder\" or a \"branch circuit\" (the answer changes which article applies and which GFCI rules bite)? Before you apply a rule, read the definitions of its key words. The exam writers know this and build questions on definitions:\n\n- **Accessible (as applied to wiring methods)** vs **Accessible (as applied to equipment)** vs **Accessible, Readily**: three different standards.\n- **Branch circuit**: conductors between the final overcurrent device and the outlets. **Feeder**: conductors between the service equipment (or other source) and the final branch-circuit overcurrent device. **Service**: conductors and equipment delivering utility power to the premises.\n- **Continuous load**: a load whose maximum current is expected to run for 3 hours or more.\n- **Dwelling unit**: has permanent provisions for living, sleeping, cooking and sanitation. A hotel room without a kitchen is not a dwelling unit.\n- **In sight from / within sight**: visible and not more than 50 ft away.\n- **Qualified person**: has skills and knowledge of the construction and operation of the equipment and has received safety training to recognize and avoid the hazards."
+    },
+    {
+      "type": "text",
+      "heading": "A five-step lookup method",
+      "markdown": "Looking something up in the NEC is a skill with a procedure, and timing yourself is how you get fast enough for the exam.\n\n1. **Name the subject and the situation.** \"GFCI protection for a receptacle in a detached residential garage.\" The subject is GFCI protection (a wiring-and-protection topic, Chapter 2, Article 210); the situation is a dwelling garage.\n2. **Pick the general rule from Chapters 1–4.** The table of contents gets you to Article 210; the Part titles get you to Part I General, where 210.8 covers GFCI protection; its subdivision (A) lists dwelling unit locations.\n3. **Check Chapters 5–7 for anything that modifies the general rule.** Does any special occupancy, equipment or condition apply? A detached garage used only for parking does not trigger Article 511 (commercial garages); if the garage held a hot tub, Article 680 would add rules.\n4. **Read the whole section, including Exceptions and Informational Notes, and the definitions of its key terms.** Does \"garage\" mean attached or detached? Article 100 defines Garage, and 210.8(A) applies to all dwelling garages.\n5. **Check the California amendments and the AHJ.** The CEC marks state changes; the local building department may have an ordinance; when in doubt, ask the inspector before you rough in, not after.\n\nThe **index** at the back of the book is often faster than the table of contents when you know a keyword (\"Countertops, receptacles\") and slower when you do not know the Code's word for something (\"outlets\" vs \"receptacles\" vs \"devices\"). Learn both. Chapter 9 tables and Annex C are reached from the references inside the articles (for example, 352.22 sends you to Chapter 9 Table 1 for PVC conduit fill)."
+    },
+    {
+      "type": "table",
+      "caption": "Lookups every apprentice should be able to make in under a minute",
+      "columns": [
+        "Question",
+        "Where to look"
+      ],
+      "rows": [
+        [
+          "What size breaker can protect 12 AWG copper?",
+          "240.4(D), small-conductor rule"
+        ],
+        [
+          "How many receptacles along a living-room wall?",
+          "210.52(A), general provisions for dwelling receptacles"
+        ],
+        [
+          "Which dwelling receptacles need GFCI? AFCI?",
+          "210.8(A); 210.12"
+        ],
+        [
+          "Ampacity of 6 AWG THHN copper at 75 °C?",
+          "Table 310.16, plus adjustment factors in 310.15"
+        ],
+        [
+          "How many conductors fit in a 4 × 1½ in square box?",
+          "314.16 and Table 314.16(A) and (B)"
+        ],
+        [
+          "How many 12 AWG THHN in ¾ in EMT?",
+          "Annex C, Table C.1 (same-size conductors); otherwise Chapter 9 Tables 1, 4 and 5"
+        ],
+        [
+          "Size of the equipment grounding conductor for a 60 A circuit?",
+          "Table 250.122"
+        ],
+        [
+          "Size of the grounding electrode conductor for a 200 A service?",
+          "Table 250.66"
+        ],
+        [
+          "Full-load current of a 5 HP, 230 V three-phase motor?",
+          "Table 430.250; single-phase in 430.248"
+        ],
+        [
+          "Working space in front of a panel?",
+          "110.26(A) and Table 110.26(A)(1)"
+        ],
+        [
+          "Maximum height of a panel handle?",
+          "240.24(A) (6 ft 7 in) and 404.8(A) for switches"
+        ],
+        [
+          "Service disconnect minimum rating for a house?",
+          "230.79(C) (100 A)"
+        ],
+        [
+          "Receptacle requirements for HVAC service?",
+          "210.63"
+        ],
+        [
+          "Support spacing for EMT? For NM cable?",
+          "358.30; 334.30"
+        ],
+        [
+          "Burial depth for PVC conduit under a driveway?",
+          "Table 300.5"
+        ],
+        [
+          "Pool equipotential bonding?",
+          "680.26"
+        ],
+        [
+          "Emergency disconnect outside a dwelling?",
+          "230.85 (2020 edition and later)"
+        ],
+        [
+          "Standard breaker and fuse ratings?",
+          "240.6(A)"
+        ],
+        [
+          "Temperature rating of terminations?",
+          "110.14(C)"
+        ],
+        [
+          "Definitions of any term?",
+          "Article 100"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "Walk through the five-step method for this exam-style question: \"A single-family dwelling has a detached workshop with a 120 V, 20 A receptacle. Is GFCI protection required, and which section says so?\"",
+      "solutionSteps": [
+        "Step 1, subject and situation: GFCI protection (Article 210, Part I) for a receptacle in an accessory building at a dwelling.",
+        "Step 2, general rule: 210.8(A) lists dwelling unit locations requiring GFCI for 125 V through 250 V receptacles, including garages and accessory buildings (the list includes \"accessory buildings that have a floor located at or below grade level not intended as habitable rooms\"), as well as outdoors, bathrooms, kitchens, basements, laundry areas and areas within 6 ft of sinks.",
+        "Step 3, Chapters 5–7: nothing modifies this for a residential workshop (Article 511 covers commercial repair garages; Article 590 covers temporary power).",
+        "Step 4, read the section and definitions: check whether the workshop floor is at grade and whether it is a habitable room; read the Exceptions (editions differ on receptacles that are not readily accessible or serve specific equipment). Confirm \"readily accessible\" in Article 100 if an exception depends on it.",
+        "Step 5, California and local: the CEC adopts 210.8 as written; a local amendment is unlikely but is checked in the city's municipal code before the inspection."
+      ],
+      "answer": "Yes. GFCI protection is required by 210.8(A) for the receptacle in the accessory building (and the item for outdoors would cover any exterior receptacle). The exact list item and exceptions depend on the edition named in your CIB, so cite the item from that edition."
+    },
+    {
+      "type": "example",
+      "problem": "A plan calls for nine 12 AWG THHN conductors in one EMT raceway. Where in the Code do you find the minimum trade size, and what is it?",
+      "solutionSteps": [
+        "Subject: raceway fill for EMT (Chapter 3, Article 358). Section 358.22 says the number of conductors shall not exceed the percentage fill in Chapter 9 Table 1.",
+        "Chapter 9 Table 1 allows 40 % fill for more than two conductors. Chapter 9 Table 5 gives the area of 12 AWG THHN (0.0133 in²); nine conductors need 0.1197 in². Table 4 gives the 40 % area of each EMT size.",
+        "Shortcut when all conductors are the same size and type: Informative Annex C, Table C.1 for EMT lists the maximum number of 12 AWG THHN per trade size: ½ in holds 9, ¾ in holds 16.",
+        "Nine conductors therefore fit in ½ in EMT at exactly the limit, though ¾ in is the practical choice for an easy pull. Separately, 310.15(C)(1) requires the ampacity of nine current-carrying conductors to be adjusted to 70 %."
+      ],
+      "answer": "Chapter 9 Table 1 (via 358.22), with Annex C Table C.1 as the shortcut: ½ in EMT is the minimum for nine 12 AWG THHN; note the 70 % ampacity adjustment for nine current-carrying conductors."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Tab your code book before you need it: one tab per article you use weekly (100, 110, 210, 220, 230, 240, 250, 300, 310, 314, 334, 358, 404, 406, 408, 410, 430, 440, 450, 680, 690, 700, Chapter 9 Table 1, Annex C). Then practice: pick twenty random questions from this lesson's table and time yourself finding each section. The DIR Candidate Information Bulletin states what you may bring into the exam and whether tabs, highlighting or handwritten notes are allowed. Follow it exactly; an improperly marked book can be refused at the door."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Section numbers in this academy are given for orientation and follow recent editions. Numbers move: ampacity tables, surge protection, Class 2 wiring and the location of definitions have all changed between the 2017, 2020 and 2023 editions. Always confirm in the edition named in your CIB (for the exam) and the edition adopted by the CEC and your local jurisdiction (for the job)."
+    }
+  ],
+  "practice": [
+    {
+      "id": "nec-structure-and-navigation-p1",
+      "type": "numeric",
+      "prompt": "Which chapter of the NEC contains Article 680, Swimming Pools, Fountains and Similar Installations?",
+      "answer": 6,
+      "unit": "chapter",
+      "tolerance": 0,
+      "explanation": "The first digit of the article number is the chapter: Article 680 is in Chapter 6, Special Equipment."
+    },
+    {
+      "id": "nec-structure-and-navigation-p2",
+      "type": "numeric",
+      "prompt": "What is the article number for Grounding and Bonding?",
+      "answer": 250,
+      "unit": "article",
+      "tolerance": 0,
+      "explanation": "Article 250, in Chapter 2 (Wiring and Protection)."
+    },
+    {
+      "id": "nec-structure-and-navigation-p3",
+      "type": "multiple_choice",
+      "prompt": "Per 90.3, how do the rules in Chapters 5, 6 and 7 relate to Chapters 1 through 4?",
+      "choices": [
+        "They replace Chapters 1–4 entirely for special occupancies",
+        "They supplement or modify the general rules of Chapters 1–4",
+        "They apply only when referenced by Chapter 8",
+        "They are informational and not enforceable"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chapters 1–4 apply generally; Chapters 5–7 add to or change those rules for particular conditions. Chapter 8 stands alone; the Annexes are informational."
+    },
+    {
+      "id": "nec-structure-and-navigation-p4",
+      "type": "multiple_choice",
+      "prompt": "In the reference 250.52(A)(3), what does \"52\" identify?",
+      "choices": [
+        "The chapter",
+        "The article",
+        "The section within Article 250",
+        "The table number"
+      ],
+      "correctIndex": 2,
+      "explanation": "Article 250, Section 52 (Grounding Electrodes), subdivision (A) Electrodes Permitted, item (3) Concrete-Encased Electrode."
+    },
+    {
+      "id": "nec-structure-and-navigation-p5",
+      "type": "multiple_choice",
+      "prompt": "Which statement about Informational Notes is correct?",
+      "choices": [
+        "They are enforceable requirements",
+        "They are explanatory material and are not enforceable",
+        "They override exceptions",
+        "They apply only in California"
+      ],
+      "correctIndex": 1,
+      "explanation": "90.5(C): Informational Notes are explanatory. Exceptions, by contrast, are enforceable parts of the rule."
+    },
+    {
+      "id": "nec-structure-and-navigation-p6",
+      "type": "multiple_choice",
+      "prompt": "Which NEC edition should a California electrician certification candidate study for the state exam?",
+      "choices": [
+        "Always the newest NFPA edition",
+        "The edition named in the DIR Candidate Information Bulletin",
+        "Whatever edition the candidate owns",
+        "The 2008 edition, which the exam has always used"
+      ],
+      "correctIndex": 1,
+      "explanation": "The DIR Electrician Certification Unit's CIB states the edition the exam references, which may differ from the edition currently enforced in the field."
+    },
+    {
+      "id": "nec-structure-and-navigation-p7",
+      "type": "multiple_choice",
+      "prompt": "The phrase \"shall be permitted\" in a Code rule means:",
+      "choices": [
+        "the action is required",
+        "the action is prohibited",
+        "the action is allowed as an option",
+        "the action needs AHJ approval"
+      ],
+      "correctIndex": 2,
+      "explanation": "Permissive language allows a method without requiring it. \"Shall\" requires; \"shall not\" prohibits."
+    }
+  ],
+  "quiz": {
+    "key": "nec-structure-and-navigation-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "nec-structure-and-navigation-q1",
+        "type": "numeric",
+        "prompt": "Which chapter contains the general rules for Branch Circuits (Article 210) and Services (Article 230)?",
+        "answer": 2,
+        "unit": "chapter",
+        "tolerance": 0,
+        "explanation": "Chapter 2, Wiring and Protection, holds Articles 200 through 250."
+      },
+      {
+        "id": "nec-structure-and-navigation-q2",
+        "type": "numeric",
+        "prompt": "What is the article number for Motors, Motor Circuits and Controllers?",
+        "answer": 430,
+        "unit": "article",
+        "tolerance": 0,
+        "explanation": "Article 430, Chapter 4, Equipment for General Use."
+      },
+      {
+        "id": "nec-structure-and-navigation-q3",
+        "type": "multiple_choice",
+        "prompt": "The California Electrical Code is:",
+        "choices": [
+          "a completely separate code written by the state",
+          "Title 24, Part 3 of the California Code of Regulations, which adopts the NEC with California amendments",
+          "the NEC with no changes",
+          "a local ordinance adopted by each city"
+        ],
+        "correctIndex": 1,
+        "explanation": "California adopts each NEC edition into Title 24 Part 3 with state amendments; cities and counties may add local amendments on top."
+      },
+      {
+        "id": "nec-structure-and-navigation-q4",
+        "type": "multiple_choice",
+        "prompt": "Chapter 8 (Communications Systems) is subject to the rules of Chapters 1–7:",
+        "choices": [
+          "always",
+          "never",
+          "only where a Chapter 8 section specifically references them",
+          "only in dwelling units"
+        ],
+        "correctIndex": 2,
+        "explanation": "90.3 makes Chapter 8 independent except where it points to other chapters."
+      },
+      {
+        "id": "nec-structure-and-navigation-q5",
+        "type": "multiple_choice",
+        "prompt": "Where are the tables for conduit fill with conductors all of the same size found?",
+        "choices": [
+          "Article 310",
+          "Informative Annex C",
+          "Article 110",
+          "Annex D"
+        ],
+        "correctIndex": 1,
+        "explanation": "Annex C gives the maximum number of same-size conductors per raceway type and trade size; Chapter 9 Tables 1, 4 and 5 are used for mixed sizes."
+      },
+      {
+        "id": "nec-structure-and-navigation-q6",
+        "type": "multiple_choice",
+        "prompt": "A conductor run from the service equipment to a subpanel's main breaker is, by Article 100 definition, a:",
+        "choices": [
+          "branch circuit",
+          "feeder",
+          "service lateral",
+          "tap"
+        ],
+        "correctIndex": 1,
+        "explanation": "Feeders are the conductors between the service equipment (or other power source) and the final branch-circuit overcurrent device. Branch circuits start after that device."
+      },
+      {
+        "id": "nec-structure-and-navigation-q7",
+        "type": "multiple_choice",
+        "prompt": "Which of the following is enforceable?",
+        "choices": [
+          "An Informational Note",
+          "An Exception",
+          "Informative Annex D",
+          "The NEC Handbook commentary"
+        ],
+        "correctIndex": 1,
+        "explanation": "Exceptions are part of the rule. Informational Notes, Annexes and handbook commentary explain but do not require."
+      },
+      {
+        "id": "nec-structure-and-navigation-q8",
+        "type": "multiple_choice",
+        "prompt": "A product that has been evaluated by a recognized testing laboratory and carries that laboratory's mark is said to be:",
+        "choices": [
+          "approved",
+          "identified",
+          "listed and labeled",
+          "bonded"
+        ],
+        "correctIndex": 2,
+        "explanation": "\"Listed\" means the laboratory evaluated it and lists it; \"labeled\" means it bears the mark. \"Approved\" means acceptable to the AHJ, which is a different thing."
+      },
+      {
+        "id": "nec-structure-and-navigation-q9",
+        "type": "multiple_choice",
+        "prompt": "The first step of a reliable code lookup is to:",
+        "choices": [
+          "open the index to a random page",
+          "name the subject and the specific situation so you can pick the right article and check for modifying chapters",
+          "ask the customer",
+          "start reading Chapter 1 from the beginning"
+        ],
+        "correctIndex": 1,
+        "explanation": "Defining subject and situation points you to the general article in Chapters 1–4 and tells you which Chapter 5–7 articles might modify it."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 90, Article 100, 90.3, 90.5 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Building Standards Commission — California Code of Regulations Title 24 (Part 3, California Electrical Code)",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — Candidate Information Bulletin and exam information",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "Mike Holt, Illustrated Guide to Understanding the National Electrical Code",
+      "url": "https://www.mikeholt.com/"
+    },
+    {
+      "title": "NFPA — Free online access to NFPA 70 (read-only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

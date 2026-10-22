@@ -1,0 +1,414 @@
+{
+  "key": "exam-math-and-calculations",
+  "track": "EXAM_PREP",
+  "order": 2,
+  "title": "Exam Math and Calculations",
+  "summary": "Every calculation type the California General Electrician exam leans on, worked with real numbers: the power wheel, voltage drop, box fill, conduit fill, three-phase power, transformer ratios, motor full-load current lookups and ampacity correction.",
+  "estimatedMinutes": 60,
+  "prerequisites": [
+    "ohms-law",
+    "electrical-power-and-energy",
+    "conductors-and-ampacity",
+    "transformers-basics"
+  ],
+  "objectives": [
+    "Students will be able to solve power, current, voltage and resistance problems with the twelve power-wheel formulas, including three-phase systems.",
+    "Students will be able to calculate voltage drop with the K-factor method and select a conductor size that meets a stated percentage.",
+    "Students will be able to compute box fill using the allowance rules of 314.16 and pick a listed box size.",
+    "Students will be able to check conduit fill using Chapter 9 Tables 1, 4 and 5 and Annex C.",
+    "Students will be able to find transformer primary and secondary currents from kVA and voltage and size primary overcurrent protection using the 450.3(B) percentages.",
+    "Students will be able to walk a motor problem from the Article 430 full-load current tables through conductor, branch-circuit protection, overload and disconnect sizing.",
+    "Students will be able to apply ambient temperature correction and conductor-count adjustment to a table ampacity."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "How calculation questions are written",
+      "markdown": "Roughly a quarter of a code exam is arithmetic wrapped in code language. The arithmetic is never harder than multiplying, dividing, squaring and taking a square root on a basic calculator. What trips candidates is **units, percentages and rounding direction**. Build these habits:\n\n- **Convert before you compute.** kW to W (× 1,000), kVA to VA, kcmil to circular mils (× 1,000), inches to feet (÷ 12). Write the unit next to every number.\n- **Know the 125 percent rule cold.** A **continuous load** is one expected to run for three hours or more (Article 100). Branch-circuit conductors and their overcurrent device must have a rating of at least 100 percent of the noncontinuous load plus **125 percent of the continuous load** (210.19(A)(1) and 210.20(A)); feeders follow the same idea in 215.2(A)(1) and 215.3, and services in 230.42(A). The same multiplier appears, for different reasons, in motor conductors (430.22), transformer protection (450.3) and water heaters (422.13 and 422.10).\n- **Round the way the code says.** For load calculations, 220.5(B) lets you drop fractions of an ampere below 0.5 and round 0.5 and above up. For overcurrent devices, 240.4(B) lets you go to the **next standard size** from 240.6(A) when the conductor ampacity does not match a standard rating, as long as the device is 800 A or less and the circuit is not a multi-outlet receptacle circuit. For conductors, you always round **up** to a size that carries the load.\n- **Read \"minimum\" and \"maximum.\"** A question that asks for the minimum conductor rounds up; a question that asks for the maximum overcurrent device for a conductor rounds down (unless 240.4(B) applies and the question says so).\n- **Standard overcurrent device ratings (240.6(A)):** 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 225, 250, 300, 350, 400, 450, 500, 600, 700, 800, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000 and 6000 A. Notice there is no 55, 65, 75 or 85.\n\nCheck the Candidate Information Bulletin for the calculator rule in force (test centers normally supply a basic calculator or allow a simple non-programmable one)."
+    },
+    {
+      "type": "diagram",
+      "title": "The power wheel",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-20 0 500 300\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"230\" cy=\"150\" r=\"138\" stroke=\"#9aa6b8\"/><circle cx=\"230\" cy=\"150\" r=\"46\" stroke=\"#4cc9ff\" stroke-width=\"2\"/><line x1=\"230\" y1=\"12\" x2=\"230\" y2=\"288\" stroke=\"#9aa6b8\"/><line x1=\"92\" y1=\"150\" x2=\"368\" y2=\"150\" stroke=\"#9aa6b8\"/><text x=\"212\" y=\"138\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\">P</text><text x=\"248\" y=\"138\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\">I</text><text x=\"212\" y=\"178\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\">V</text><text x=\"248\" y=\"178\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\">R</text><text x=\"150\" y=\"60\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">P = V × I</text><text x=\"130\" y=\"86\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">P = I² × R</text><text x=\"128\" y=\"112\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">P = V² ÷ R</text><text x=\"310\" y=\"60\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">I = P ÷ V</text><text x=\"330\" y=\"86\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">I = V ÷ R</text><text x=\"332\" y=\"112\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">I = √(P ÷ R)</text><text x=\"128\" y=\"196\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">V = I × R</text><text x=\"130\" y=\"222\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">V = P ÷ I</text><text x=\"150\" y=\"248\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">V = √(P × R)</text><text x=\"332\" y=\"196\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">R = V ÷ I</text><text x=\"330\" y=\"222\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">R = P ÷ I²</text><text x=\"310\" y=\"248\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"600\">R = V² ÷ P</text><text x=\"230\" y=\"297\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Each quadrant lists three ways to find that quantity (resistive loads, PF = 1)</text></svg>",
+      "caption": "Twelve formulas built from Ohm's law (V = I × R) and the power law (P = V × I). Example: a 1,500 W heater on 240 V draws I = P ÷ V = 6.25 A, and its element resistance is R = V² ÷ P = 57,600 ÷ 1,500 = 38.4 Ω. Check: 6.25 × 38.4 = 240 V."
+    },
+    {
+      "type": "formula",
+      "name": "Single-phase and three-phase power",
+      "expression": "P = V × I × PF (single-phase);  P = 1.732 × V_L × I_L × PF (three-phase)",
+      "variables": [
+        {
+          "symbol": "P",
+          "meaning": "real power",
+          "unit": "watts (W)"
+        },
+        {
+          "symbol": "V_L",
+          "meaning": "line-to-line voltage",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I_L",
+          "meaning": "line current",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "PF",
+          "meaning": "power factor (1.0 for resistive loads; use VA instead of W when PF is unknown)",
+          "unit": "unitless"
+        },
+        {
+          "symbol": "1.732",
+          "meaning": "the square root of 3, which relates line and phase quantities in a balanced three-phase system",
+          "unit": "unitless"
+        }
+      ],
+      "explanation": "To find current from a kVA rating, rearrange: I = VA ÷ V for single-phase and I = VA ÷ (1.732 × V) for three-phase. Worked: a 50 kVA three-phase load at 208 V draws 50,000 ÷ (1.732 × 208) = 50,000 ÷ 360.3 = 138.8 A; the same 50 kVA at 480 V draws 50,000 ÷ 831.4 = 60.1 A. Doubling the voltage roughly halves the current, which is why large loads are served at 480 V. On a wye system the line-to-neutral voltage is the line voltage divided by 1.732: 480 ÷ 1.732 = 277 V and 208 ÷ 1.732 = 120 V. Watts and volt-amperes are only equal when the power factor is 1.0; the NEC load calculations in Article 220 are done in volt-amperes."
+    },
+    {
+      "type": "formula",
+      "name": "Voltage drop (K-factor method)",
+      "expression": "VD = 2 × K × I × L ÷ CM (single-phase);  VD = 1.732 × K × I × L ÷ CM (three-phase)",
+      "variables": [
+        {
+          "symbol": "VD",
+          "meaning": "voltage drop along the circuit",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "K",
+          "meaning": "resistance of a 1 ft, 1 circular-mil conductor: about 12.9 for copper and 21.2 for aluminum at 75°C",
+          "unit": "ohm-circular-mils per foot"
+        },
+        {
+          "symbol": "I",
+          "meaning": "load current",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "L",
+          "meaning": "one-way length of the circuit from source to load",
+          "unit": "feet (ft)"
+        },
+        {
+          "symbol": "CM",
+          "meaning": "conductor cross-section from Chapter 9, Table 8",
+          "unit": "circular mils"
+        }
+      ],
+      "explanation": "The factor 2 accounts for the out-and-back length of a single-phase circuit; 1.732 does the same job for a balanced three-phase circuit. Rearranged to size a conductor: CM = 2 × K × I × L ÷ VD. Circular mil areas you will use constantly: 14 AWG 4,110; 12 AWG 6,530; 10 AWG 10,380; 8 AWG 16,510; 6 AWG 26,240; 4 AWG 41,740; 2 AWG 66,360; 1/0 105,600; 2/0 133,100; 3/0 167,800; 4/0 211,600; 250 kcmil 250,000. The NEC itself recommends (informational notes to 210.19(A) and 215.2(A)) no more than 3 percent drop on a branch circuit or feeder and 5 percent total; those notes are advisory in the NEC, but California's Title 24, Part 6 energy code makes voltage-drop limits mandatory on many nonresidential installations, so expect the exam to treat 3 and 5 percent as the targets. A second method uses the ohms-per-1,000-ft values in Chapter 9, Table 9; the K method is faster for the exam and agrees within rounding."
+    },
+    {
+      "type": "example",
+      "problem": "A 120 V, 16 A load is 100 ft (one-way) from the panel on 12 AWG copper. (a) What is the voltage drop and percentage? (b) What is the smallest copper conductor that keeps the drop at or below 3 percent? (c) What happens to the equipment grounding conductor if you upsize?",
+      "solutionSteps": [
+        "(a) VD = 2 × K × I × L ÷ CM = 2 × 12.9 × 16 × 100 ÷ 6,530 = 41,280 ÷ 6,530 = 6.32 V.",
+        "Percent drop = 6.32 ÷ 120 = 0.0527, or 5.3 percent. That is above the 3 percent branch-circuit target.",
+        "(b) Allowed drop at 3 percent = 0.03 × 120 = 3.6 V. Required area CM = 2 × 12.9 × 16 × 100 ÷ 3.6 = 41,280 ÷ 3.6 = 11,467 circular mils.",
+        "Choose the first size with at least 11,467 CM: 10 AWG has 10,380 (too small); 8 AWG has 16,510. Use 8 AWG copper.",
+        "Check: VD = 41,280 ÷ 16,510 = 2.50 V, which is 2.1 percent. Good.",
+        "(c) 250.122(B): when ungrounded conductors are increased in size for voltage drop, the equipment grounding conductor is increased in proportion to the circular-mil area. Ratio = 16,510 ÷ 6,530 = 2.53. The normal EGC for a 20 A circuit is 12 AWG (6,530 CM); 6,530 × 2.53 = 16,510 CM, so the EGC also becomes 8 AWG."
+      ],
+      "answer": "(a) 6.32 V, about 5.3 percent; (b) 8 AWG copper (2.1 percent); (c) the EGC is upsized to 8 AWG as well."
+    },
+    {
+      "type": "table",
+      "caption": "Box fill allowances from 314.16(B), paraphrased. Multiply the total number of allowances by the volume per conductor from Table 314.16(B): 14 AWG 2.00 in³, 12 AWG 2.25 in³, 10 AWG 2.50 in³, 8 AWG 3.00 in³, 6 AWG 5.00 in³. Common box volumes from Table 314.16(A): 4 × 1½ in. square 21.0 in³; 4 × 2⅛ in. square 30.3 in³; 4 11/16 × 2⅛ in. square 42.0 in³; 4 × 1½ in. octagon 15.5 in³; 3 × 2 × 2½ in. device box 12.5 in³; 3 × 2 × 3½ in. device box 18.0 in³.",
+      "columns": [
+        "Item in the box",
+        "Allowances",
+        "Volume based on"
+      ],
+      "rows": [
+        [
+          "Each insulated conductor that enters and is spliced or terminated in the box",
+          "1 each",
+          "That conductor's size"
+        ],
+        [
+          "Each conductor that passes through the box unbroken",
+          "1 each (2 if it is looped at least twice the 300.14 free length)",
+          "That conductor's size"
+        ],
+        [
+          "Conductor that starts and ends inside the box (pigtail, jumper)",
+          "0",
+          "Not counted"
+        ],
+        [
+          "All equipment grounding conductors together",
+          "1 total (recent editions add 1 for each additional group of four)",
+          "Largest EGC in the box"
+        ],
+        [
+          "One or more internal cable clamps",
+          "1 total",
+          "Largest conductor in the box"
+        ],
+        [
+          "Each luminaire stud or hickey",
+          "1 each",
+          "Largest conductor in the box"
+        ],
+        [
+          "Each device or utilization equipment on a yoke (switch, receptacle)",
+          "2 per yoke (2 per gang for wide devices)",
+          "Largest conductor connected to that device"
+        ],
+        [
+          "Fixture wires 18 AWG and smaller from a luminaire canopy",
+          "0 (with up to four fixture wires and one EGC)",
+          "Not counted"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "A metal box has internal cable clamps. Two 12-2 NM cables with ground and one 12-3 NM cable with ground enter it. The box holds a duplex receptacle and a single-pole switch. What minimum box volume is required, and which standard box works?",
+      "solutionSteps": [
+        "Count insulated circuit conductors: 12-2 has 2 each (2 cables × 2 = 4); 12-3 has 3. Total 7 conductors, each 1 allowance = 7.",
+        "Equipment grounding conductors: three bare grounds enter, but all of them together count as 1 allowance.",
+        "Internal clamps: 1 allowance (all clamps together).",
+        "Devices: two yokes × 2 allowances each = 4.",
+        "Total allowances = 7 + 1 + 1 + 4 = 13. Every conductor is 12 AWG, so each allowance is 2.25 in³: 13 × 2.25 = 29.25 in³.",
+        "Pick a box: a 4 × 1½ in. square box (21.0 in³) is too small; a 4 × 2⅛ in. square box (30.3 in³) works. Two-gang device boxes must be checked against the volume marked on the box."
+      ],
+      "answer": "Minimum 29.25 in³; a 4 × 2⅛ in. square box (30.3 in³) with a two-gang plaster ring is the common choice."
+    },
+    {
+      "type": "text",
+      "heading": "Conduit fill: the concept and a worked check",
+      "markdown": "Raceway fill limits exist so conductors can be pulled without damage and so heat can escape. **Chapter 9, Table 1** sets the percentage of the raceway's interior area that conductors may occupy: **53 percent for one conductor, 31 percent for two, 40 percent for three or more**. Note 4 to the tables allows **60 percent** in a nipple no longer than 24 in., and no adjustment factors for conductor count apply there.\n\nYou need two more tables. **Chapter 9, Table 4** lists every raceway type and trade size with its total interior area and the area allowed at each fill percentage (the 40 percent column is the one you use most). **Chapter 9, Table 5** lists the cross-sectional area of each insulated conductor type and size. When all conductors are the same size and insulation, **Annex C** skips the arithmetic and tells you how many fit in each raceway. Note 7 says that when your division gives a decimal of 0.8 or more, you may round up to the next whole conductor.\n\n**Mixed conductors, 40 percent rule.** Three 6 AWG THHN and one 10 AWG THHN equipment grounding conductor in EMT: 3 × 0.0507 + 0.0211 = 0.1732 in². The 40 percent column for EMT reads 0.122 in² for ½ in. (too small) and 0.213 in² for ¾ in. (fits). Answer: ¾ in. EMT.\n\n**Same-size conductors.** How many 12 AWG THHN fit in 1 in. EMT? 40 percent of 1 in. EMT is 0.346 in²; each 12 AWG THHN is 0.0133 in²; 0.346 ÷ 0.0133 = 26.0, so 26 conductors. Annex C gives the same answer. Remember that 26 current-carrying conductors would be adjusted to 45 percent of table ampacity by 310.15(C)(1), so a legal fill is not always a practical one.\n\n**Useful areas (in²).** THHN/THWN: 14 AWG 0.0097; 12 AWG 0.0133; 10 AWG 0.0211; 8 AWG 0.0366; 6 AWG 0.0507; 4 AWG 0.0824; 2 AWG 0.1158; 1/0 0.1855; 2/0 0.2223; 3/0 0.2679; 4/0 0.3237. EMT at 40 percent: ½ in. 0.122; ¾ in. 0.213; 1 in. 0.346; 1¼ in. 0.598; 1½ in. 0.814; 2 in. 1.342. Other raceways have different interior areas, so always confirm the raceway type in the question before reading Table 4."
+    },
+    {
+      "type": "diagram",
+      "title": "Conduit fill cross-section",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 260\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"130\" cy=\"130\" r=\"105\" stroke=\"#9aa6b8\" stroke-width=\"10\"/><circle cx=\"130\" cy=\"130\" r=\"100\" stroke=\"#9aa6b8\" stroke-dasharray=\"3 3\" stroke-width=\"1\"/><path d=\"M130,130 L130,30 A100,100 0 0 1 225.1,99.1 Z\" fill=\"#4cc9ff\" fill-opacity=\"0.18\" stroke=\"none\"/><path d=\"M130,130 L225.1,99.1 A100,100 0 0 1 188.8,210.9 Z\" fill=\"#4cc9ff\" fill-opacity=\"0.18\" stroke=\"none\"/><circle cx=\"118\" cy=\"112\" r=\"22\" fill=\"#f3c75b\" fill-opacity=\"0.25\" stroke=\"#f3c75b\"/><circle cx=\"150\" cy=\"142\" r=\"22\" fill=\"#f3c75b\" fill-opacity=\"0.25\" stroke=\"#f3c75b\"/><circle cx=\"110\" cy=\"158\" r=\"22\" fill=\"#f3c75b\" fill-opacity=\"0.25\" stroke=\"#f3c75b\"/><circle cx=\"154\" cy=\"104\" r=\"11\" fill=\"#3ddc97\" fill-opacity=\"0.3\" stroke=\"#3ddc97\"/><text x=\"118\" y=\"116\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">6</text><text x=\"150\" y=\"146\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">6</text><text x=\"110\" y=\"162\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"600\">6</text><text x=\"154\" y=\"108\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"600\">10</text><text x=\"130\" y=\"252\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">¾ in. EMT: interior 0.533 in², 40% = 0.213 in²</text><text x=\"270\" y=\"40\" fill=\"currentColor\" stroke=\"none\" font-weight=\"600\" font-size=\"13\">Chapter 9, Table 1 fill limits</text><text x=\"270\" y=\"66\" fill=\"#4cc9ff\" stroke=\"none\">1 conductor</text><text x=\"470\" y=\"66\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-weight=\"600\">53%</text><text x=\"270\" y=\"90\" fill=\"#4cc9ff\" stroke=\"none\">2 conductors</text><text x=\"470\" y=\"90\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-weight=\"600\">31%</text><text x=\"270\" y=\"114\" fill=\"#4cc9ff\" stroke=\"none\">3 or more conductors</text><text x=\"470\" y=\"114\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-weight=\"600\">40%</text><text x=\"270\" y=\"138\" fill=\"#4cc9ff\" stroke=\"none\">Nipple ≤ 24 in. (Note 4)</text><text x=\"470\" y=\"138\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-weight=\"600\">60%</text><line x1=\"270\" y1=\"150\" x2=\"470\" y2=\"150\" stroke=\"#9aa6b8\"/><text x=\"270\" y=\"172\" fill=\"#f3c75b\" stroke=\"none\">3 × 6 AWG THHN = 3 × 0.0507</text><text x=\"270\" y=\"190\" fill=\"#3ddc97\" stroke=\"none\">1 × 10 AWG THHN = 0.0211</text><text x=\"270\" y=\"212\" fill=\"currentColor\" stroke=\"none\" font-weight=\"600\">Total 0.1732 in² ≤ 0.213 in² → fits</text><text x=\"270\" y=\"234\" fill=\"#ff6b6b\" stroke=\"none\">½ in. EMT allows only 0.122 in² → too small</text></svg>",
+      "caption": "Three 6 AWG THHN plus a 10 AWG THHN equipment grounding conductor occupy 0.1732 in². The shaded 40 percent sector of a ¾ in. EMT represents 0.213 in², so the pull is legal; ½ in. EMT is not."
+    },
+    {
+      "type": "text",
+      "heading": "Transformer ratios and currents",
+      "markdown": "A transformer's nameplate gives you **kVA, primary voltage and secondary voltage**. Three relationships solve nearly every exam question:\n\n- **Turns ratio equals voltage ratio:** V_primary ÷ V_secondary = N_primary ÷ N_secondary. A 480 V to 240 V transformer is 2:1.\n- **Current is inverse to voltage:** I_secondary = I_primary × (V_primary ÷ V_secondary). Step the voltage down by 2 and the current steps up by 2.\n- **kVA is the same on both sides** (ignoring losses): I = VA ÷ V for single-phase, I = VA ÷ (1.732 × V) for three-phase.\n\n**Single-phase example.** 25 kVA, 480 V primary, 120/240 V secondary. Primary full-load current = 25,000 ÷ 480 = 52.1 A. Secondary full-load current at 240 V = 25,000 ÷ 240 = 104.2 A. Check with the ratio: 52.1 × 2 = 104.2 A.\n\n**Three-phase example.** 75 kVA, 480 V delta primary, 208Y/120 V secondary. Secondary current = 75,000 ÷ (1.732 × 208) = 75,000 ÷ 360.3 = 208.2 A. Primary current = 75,000 ÷ (1.732 × 480) = 75,000 ÷ 831.4 = 90.2 A.\n\n**Primary overcurrent protection (450.3(B)).** For transformers 1,000 V and below with protection on the primary only, Table 450.3(B) allows the device at **125 percent** of primary current when that current is 9 A or more (167 percent from 2 A to under 9 A; 300 percent under 2 A). Note 1 to the table permits the **next higher standard rating** when 125 percent does not land on a standard size. For the 75 kVA unit: 90.2 × 1.25 = 112.8 A, which is not standard, so a 125 A device is permitted. With protection on both primary and secondary, the primary may go to 250 percent and the secondary is limited to 125 percent. Secondary conductors are governed by the transformer secondary conductor rules in 240.21(C), which the exam likes to pair with this table.\n\nA common trap: the question gives line-to-neutral voltage (120 V) for a three-phase secondary. The three-phase formula uses the **line-to-line** voltage (208 V)."
+    },
+    {
+      "type": "text",
+      "heading": "Motor calculations: tables first, nameplate second",
+      "markdown": "Article 430 has a fixed order of operations, and the exam follows it.\n\n**Step 1 – Full-load current from the tables.** 430.6(A)(1) says to use the values in Tables 430.247 (DC), 430.248 (single-phase), 430.249 (two-phase) and **430.250 (three-phase)** for sizing conductors, disconnects and branch-circuit protection, **not** the nameplate. The nameplate current is used only for the overload device (430.6(A)(2) and 430.32). Common values: 1 hp at 115 V single-phase = 16 A; 5 hp at 230 V single-phase = 28 A; 10 hp at 230 V three-phase = 28 A; 10 hp at 460 V = 14 A; 25 hp at 460 V = 34 A.\n\n**Step 2 – Branch-circuit conductors (430.22).** At least 125 percent of the table FLC for a single continuous-duty motor. Several motors on a feeder (430.24): 125 percent of the largest plus the sum of the rest.\n\n**Step 3 – Branch-circuit short-circuit and ground-fault protection (430.52, Table 430.52).** The maximum as a percentage of table FLC: non-time-delay fuse 300 percent; dual-element time-delay fuse 175 percent; **inverse-time circuit breaker 250 percent**; instantaneous-trip breaker 800 percent (1,100 percent for Design B motors). Exception 1 to 430.52(C)(1) lets you go to the next standard size when the percentage does not land on one.\n\n**Step 4 – Overloads (430.32).** 125 percent of **nameplate** current for motors with a service factor of 1.15 or more or a temperature rise of 40°C or less; 115 percent for all others. 430.32(C) allows up to 140 and 130 percent if the lower setting will not let the motor start.\n\n**Step 5 – Disconnect (430.110).** Rated at least 115 percent of the table FLC, and located in sight of the controller (430.102(A)) and in sight of the motor (430.102(B)), where \"in sight\" means visible and not more than 50 ft away.\n\n**Worked example.** 10 hp, 230 V, three-phase, continuous duty, service factor 1.15, nameplate 26 A, protected by an inverse-time breaker, 75°C terminations.\n\n- Table 430.250: FLC = **28 A**.\n- Conductors: 28 × 1.25 = 35 A minimum. Table 310.16, 75°C column: 10 AWG copper = 35 A. **10 AWG THHN/THWN** works exactly.\n- Breaker: 28 × 2.5 = 70 A. 70 A is a standard size, so the maximum is a **70 A** inverse-time breaker. Yes, a 70 A breaker legally protects 10 AWG here; the overloads protect the conductors from overload, and the breaker handles short circuits and ground faults (this is why 240.4(G) sends motor circuits to Article 430).\n- Overloads: 26 × 1.25 = **32.5 A** trip setting.\n- Disconnect: 28 × 1.15 = 32.2 A minimum; a 60 A, 3-pole disconnect rated for the motor horsepower is typical."
+    },
+    {
+      "type": "text",
+      "heading": "Ampacity correction and adjustment",
+      "markdown": "Table 310.16 ampacities assume **30°C ambient** and **no more than three current-carrying conductors** in a raceway or cable. Change either condition and you multiply the table value by two factors:\n\n- **Ambient temperature correction, Table 310.15(B)(1).** For 90°C conductors: 31 to 35°C 0.96; 36 to 40°C 0.91; 41 to 45°C 0.87; 46 to 50°C 0.82; 51 to 55°C 0.76. For 75°C conductors: 0.94, 0.88, 0.82, 0.75, 0.67 over the same bands. Raceways on rooftops exposed to sunlight get an added temperature in 310.15(B)(2) when installed very close to the roof surface (check the current edition for the exact distance).\n- **Adjustment for more than three current-carrying conductors, Table 310.15(C)(1):** 4 to 6 conductors 80 percent; 7 to 9 70 percent; 10 to 20 50 percent; 21 to 30 45 percent; 31 to 40 40 percent; 41 and more 35 percent. Equipment grounding conductors are never counted. A neutral that carries only the unbalanced current of a 3-wire single-phase or 4-wire wye circuit is not counted, but a wye neutral serving mostly nonlinear loads (electronic ballasts, drives, computer loads) is counted (310.15(E)).\n\n**Start from the conductor's own column**, usually 90°C for THHN, THWN-2 and XHHW-2. Then cap the result at the **termination temperature** of the equipment (110.14(C): 60°C for most circuits of 100 A or less and 14 to 1 AWG unless the equipment is marked for 75°C; 75°C above that) and at the **small-conductor limits** of 240.4(D) (14 AWG copper 15 A, 12 AWG copper 20 A, 10 AWG copper 30 A).\n\n**Worked example.** Nine 12 AWG THHN current-carrying conductors in one EMT through a 40°C mechanical room. Table value, 90°C column: 30 A. Adjusted and corrected: 30 × 0.70 × 0.91 = 19.1 A. That is the conductor's ampacity. The termination limit (20 A at 60°C) and the 240.4(D) limit (20 A) are both above 19.1 A, so they do not control. A 20 A breaker is permitted by the next-size-up rule of 240.4(B), but the circuit may only be loaded to 19.1 A (15.3 A if the load is continuous).\n\n**Exam-day checklist for any calculation:** write the formula; write every value with its unit; convert; compute; round in the direction the question requires; then ask whether a code limit (240.4(D), 110.14(C), a table maximum) overrides your arithmetic."
+    }
+  ],
+  "practice": [
+    {
+      "id": "exam-math-and-calculations-p1",
+      "type": "numeric",
+      "prompt": "A 3,600 W resistance heater operates on 240 V. What current does it draw?",
+      "answer": 15,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "I = P ÷ V = 3,600 ÷ 240 = 15 A."
+    },
+    {
+      "id": "exam-math-and-calculations-p2",
+      "type": "numeric",
+      "prompt": "A 240 V single-phase, 24 A load is fed by 10 AWG copper (10,380 CM) over 180 ft one-way. Using K = 12.9, what is the voltage drop in volts?",
+      "answer": 10.74,
+      "unit": "V",
+      "tolerance": 0.2,
+      "explanation": "VD = 2 × 12.9 × 24 × 180 ÷ 10,380 = 111,456 ÷ 10,380 = 10.74 V, which is 4.5 percent of 240 V, above the 3 percent target."
+    },
+    {
+      "id": "exam-math-and-calculations-p3",
+      "type": "numeric",
+      "prompt": "Three 12-2 NM cables with ground enter a box that has internal clamps and one duplex receptacle. What minimum box volume in cubic inches is required?",
+      "answer": 22.5,
+      "unit": "in³",
+      "tolerance": 0.1,
+      "explanation": "Conductors 3 × 2 = 6; EGCs together = 1; clamps = 1; device = 2. Total 10 allowances × 2.25 in³ (12 AWG) = 22.5 in³."
+    },
+    {
+      "id": "exam-math-and-calculations-p4",
+      "type": "numeric",
+      "prompt": "What is the full-load current of a 30 kVA three-phase load at 208 V?",
+      "answer": 83.3,
+      "unit": "A",
+      "tolerance": 1,
+      "explanation": "I = 30,000 ÷ (1.732 × 208) = 30,000 ÷ 360.3 = 83.3 A."
+    },
+    {
+      "id": "exam-math-and-calculations-p5",
+      "type": "numeric",
+      "prompt": "A 15 kVA single-phase transformer has a 480 V primary and a 240 V secondary. What is the secondary full-load current?",
+      "answer": 62.5,
+      "unit": "A",
+      "tolerance": 0.5,
+      "explanation": "I_secondary = 15,000 ÷ 240 = 62.5 A. (Primary: 15,000 ÷ 480 = 31.25 A; the 2:1 ratio doubles the current on the low side.)"
+    },
+    {
+      "id": "exam-math-and-calculations-p6",
+      "type": "multiple_choice",
+      "prompt": "When sizing the branch-circuit conductors for a three-phase motor, the full-load current must come from:",
+      "choices": [
+        "The motor nameplate",
+        "Table 430.250",
+        "The controller nameplate",
+        "The overload relay heater chart"
+      ],
+      "correctIndex": 1,
+      "explanation": "430.6(A)(1) requires the table values (Table 430.250 for three-phase) for conductors, disconnects and branch-circuit protection. The nameplate current is used for the overload device only."
+    },
+    {
+      "id": "exam-math-and-calculations-p7",
+      "type": "numeric",
+      "prompt": "A 5 hp, 230 V single-phase motor has a table full-load current of 28 A. What minimum conductor ampacity does 430.22 require?",
+      "answer": 35,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "28 A × 1.25 = 35 A. From Table 310.16 at 75°C, 10 AWG copper (35 A) satisfies it."
+    },
+    {
+      "id": "exam-math-and-calculations-p8",
+      "type": "numeric",
+      "prompt": "Twelve 12 AWG THHN current-carrying conductors share one raceway at 30°C ambient. What is the adjusted ampacity of each conductor?",
+      "answer": 15,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "90°C table value 30 A × 0.50 (10 to 20 conductors) = 15 A. No temperature correction is needed at 30°C."
+    }
+  ],
+  "quiz": {
+    "key": "exam-math-and-calculations-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "exam-math-and-calculations-q1",
+        "type": "numeric",
+        "prompt": "A 1,800 W load operates at 120 V. What current does it draw?",
+        "answer": 15,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "I = P ÷ V = 1,800 ÷ 120 = 15 A."
+      },
+      {
+        "id": "exam-math-and-calculations-q2",
+        "type": "numeric",
+        "prompt": "What is the resistance of a 5,760 W heating element rated 240 V?",
+        "answer": 10,
+        "unit": "Ω",
+        "tolerance": 0.1,
+        "explanation": "R = V² ÷ P = 57,600 ÷ 5,760 = 10 Ω."
+      },
+      {
+        "id": "exam-math-and-calculations-q3",
+        "type": "numeric",
+        "prompt": "A 120 V, 12 A load is 75 ft from the panel on 12 AWG copper (6,530 CM). What is the voltage drop as a percentage of 120 V? (K = 12.9)",
+        "answer": 2.96,
+        "unit": "%",
+        "tolerance": 0.1,
+        "explanation": "VD = 2 × 12.9 × 12 × 75 ÷ 6,530 = 23,220 ÷ 6,530 = 3.56 V; 3.56 ÷ 120 = 2.96 percent, just inside the 3 percent target."
+      },
+      {
+        "id": "exam-math-and-calculations-q4",
+        "type": "multiple_choice",
+        "prompt": "A 277 V lighting circuit carries 10 A over 250 ft one-way. Using K = 12.9, what is the smallest copper conductor that limits the drop to 2 percent?",
+        "choices": [
+          "12 AWG",
+          "10 AWG",
+          "8 AWG",
+          "6 AWG"
+        ],
+        "correctIndex": 2,
+        "explanation": "Allowed drop = 0.02 × 277 = 5.54 V. CM = 2 × 12.9 × 10 × 250 ÷ 5.54 = 64,500 ÷ 5.54 = 11,643 CM. 10 AWG (10,380) is too small; 8 AWG (16,510) is the first size that works."
+      },
+      {
+        "id": "exam-math-and-calculations-q5",
+        "type": "numeric",
+        "prompt": "A box contains four 14 AWG and two 12 AWG insulated conductors, each entering and terminating; the equipment grounding conductors (largest 12 AWG); and one single-pole switch connected only to 14 AWG conductors. There are no clamps. What is the minimum box volume in cubic inches?",
+        "answer": 18.75,
+        "unit": "in³",
+        "tolerance": 0.1,
+        "explanation": "4 × 2.00 (14 AWG) = 8.00; 2 × 2.25 (12 AWG) = 4.50; EGC allowance based on the largest EGC, 12 AWG = 2.25; switch = 2 allowances at the largest conductor connected to it, 14 AWG: 2 × 2.00 = 4.00. Total 18.75 in³."
+      },
+      {
+        "id": "exam-math-and-calculations-q6",
+        "type": "multiple_choice",
+        "prompt": "Four 8 AWG THHN conductors (0.0366 in² each) are to be installed in EMT. Using the 40 percent fill column (½ in. 0.122 in², ¾ in. 0.213 in², 1 in. 0.346 in²), what is the minimum trade size?",
+        "choices": [
+          "½ in.",
+          "¾ in.",
+          "1 in.",
+          "1¼ in."
+        ],
+        "correctIndex": 1,
+        "explanation": "4 × 0.0366 = 0.1464 in². ½ in. EMT allows only 0.122 in²; ¾ in. allows 0.213 in², so ¾ in. is the minimum."
+      },
+      {
+        "id": "exam-math-and-calculations-q7",
+        "type": "numeric",
+        "prompt": "What is the secondary full-load current of a 75 kVA three-phase transformer with a 208Y/120 V secondary?",
+        "answer": 208,
+        "unit": "A",
+        "tolerance": 3,
+        "explanation": "I = 75,000 ÷ (1.732 × 208) = 75,000 ÷ 360.3 = 208.2 A. Use the line-to-line voltage (208 V), not 120 V."
+      },
+      {
+        "id": "exam-math-and-calculations-q8",
+        "type": "numeric",
+        "prompt": "A 10 hp, 460 V three-phase motor has a table full-load current of 14 A. What is the maximum standard inverse-time circuit breaker rating permitted by Table 430.52 and its exception for the next standard size?",
+        "answer": 35,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "14 A × 250 percent = 35 A, which is a standard rating in 240.6(A), so the maximum is 35 A without needing the next-size-up exception."
+      },
+      {
+        "id": "exam-math-and-calculations-q9",
+        "type": "numeric",
+        "prompt": "A branch circuit supplies a 40 A continuous lighting load and nothing else. What is the minimum standard overcurrent device rating?",
+        "answer": 50,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "210.20(A): 40 × 1.25 = 50 A. The conductors must also be rated for 50 A (8 AWG copper at 75°C)."
+      },
+      {
+        "id": "exam-math-and-calculations-q10",
+        "type": "multiple_choice",
+        "prompt": "A 480 V three-phase transformer has a primary current of 90.2 A and protection on the primary side only. Per Table 450.3(B), what is the maximum primary overcurrent device?",
+        "choices": [
+          "100 A, because you must round down",
+          "110 A",
+          "125 A, the next standard size above 125 percent of 90.2 A",
+          "225 A, using 250 percent"
+        ],
+        "correctIndex": 2,
+        "explanation": "90.2 × 1.25 = 112.8 A, not a standard size. Note 1 to Table 450.3(B) permits the next higher standard rating, 125 A. The 250 percent value applies only when the secondary is also protected."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 210.19, 210.20, 215.2, 220.5, 240.4, 240.6, 250.122(B), 310.15, Table 310.16, 314.16, 430.6, 430.22, 430.32, 430.52, 430.110, 450.3, Chapter 9 Tables 1, 4, 5, 8 and 9, Annex C (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Energy Commission, Building Energy Efficiency Standards (Title 24, Part 6), voltage drop provisions",
+      "url": "https://www.energy.ca.gov/programs-and-topics/programs/building-energy-efficiency-standards"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity (power formulas, three-phase, transformers)",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "Mullin, Ray C. and Simmons, Phil, Electrical Wiring Residential (box fill and conductor sizing examples)",
+      "url": "https://www.cengage.com/c/electrical-wiring-residential-20e-simmons/"
+    },
+    {
+      "title": "California DIR, Electrician Certification Program: examination information",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

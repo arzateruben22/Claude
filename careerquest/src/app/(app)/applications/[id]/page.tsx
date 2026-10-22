@@ -92,7 +92,9 @@ export default async function ApplicationDetailPage({
         title={app.positionTitle}
         description={
           <span className="flex flex-wrap items-center gap-1.5">
-            <StatusBadge status={app.status} />
+            <span data-testid="application-status">
+              <StatusBadge status={app.status} />
+            </span>
             <Badge tone={app.statusVerified ? "success" : "warning"}>
               {app.statusVerified ? (
                 <ShieldCheck className="h-3 w-3" aria-hidden />

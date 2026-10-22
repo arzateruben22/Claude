@@ -1,0 +1,1842 @@
+{
+  "disclaimer": "Educational simulation. These 120 questions are original CareerQuest study questions written for randomized practice exams. They are not taken from, and do not predict, the confidential California DIR electrician certification examination. NEC references are to article and section numbers only; always confirm against the code edition named in the current Candidate Information Bulletin. Completing a practice exam is not qualifying work experience, a certification or a license.",
+  "areas": [
+    {
+      "key": "general_knowledge_theory",
+      "label": "General knowledge and theory",
+      "weight": 0.14
+    },
+    {
+      "key": "wiring_methods_materials",
+      "label": "Wiring methods and materials",
+      "weight": 0.24
+    },
+    {
+      "key": "grounding_bonding",
+      "label": "Grounding and bonding",
+      "weight": 0.14
+    },
+    {
+      "key": "services_feeders_branch_circuits",
+      "label": "Services, feeders and branch circuits",
+      "weight": 0.2
+    },
+    {
+      "key": "overcurrent_protection",
+      "label": "Overcurrent protection",
+      "weight": 0.1
+    },
+    {
+      "key": "motors_transformers_special_equipment",
+      "label": "Motors, transformers and special equipment",
+      "weight": 0.12
+    },
+    {
+      "key": "safety",
+      "label": "Safety",
+      "weight": 0.06
+    }
+  ],
+  "questions": [
+    {
+      "id": "bank-001",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "A 16 Ω load is connected across a 48 V source. What current flows?",
+      "choices": [
+        "0.33 A",
+        "3 A",
+        "32 A",
+        "768 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "I = V ÷ R = 48 ÷ 16 = 3 A.",
+      "necReference": null
+    },
+    {
+      "id": "bank-002",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "A circuit draws 20 A at 240 V. What is the power consumed by a purely resistive load?",
+      "choices": [
+        "12 W",
+        "260 W",
+        "2,400 W",
+        "4,800 W"
+      ],
+      "correctIndex": 3,
+      "explanation": "P = V × I = 240 × 20 = 4,800 W.",
+      "necReference": null
+    },
+    {
+      "id": "bank-003",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "Resistors of 10 Ω, 20 Ω and 30 Ω are connected in series across 120 V. What is the circuit current?",
+      "choices": [
+        "0.5 A",
+        "2 A",
+        "6 A",
+        "12 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "Series resistance adds: 60 Ω. I = 120 ÷ 60 = 2 A.",
+      "necReference": null
+    },
+    {
+      "id": "bank-004",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "Two 20 Ω resistors are connected in parallel. What is the equivalent resistance?",
+      "choices": [
+        "5 Ω",
+        "10 Ω",
+        "20 Ω",
+        "40 Ω"
+      ],
+      "correctIndex": 1,
+      "explanation": "Two equal resistors in parallel: 20 ÷ 2 = 10 Ω.",
+      "necReference": null
+    },
+    {
+      "id": "bank-005",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "If the length of a conductor is doubled and its cross-sectional area stays the same, its resistance:",
+      "choices": [
+        "Is cut in half",
+        "Stays the same",
+        "Doubles",
+        "Quadruples"
+      ],
+      "correctIndex": 2,
+      "explanation": "Resistance is directly proportional to length (R = ρL ÷ A).",
+      "necReference": null
+    },
+    {
+      "id": "bank-006",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "A 1,500 W heater runs for 4 hours. How much energy does it use?",
+      "choices": [
+        "0.375 kWh",
+        "6 kWh",
+        "60 kWh",
+        "6,000 kWh"
+      ],
+      "correctIndex": 1,
+      "explanation": "Energy = power × time = 1.5 kW × 4 h = 6 kWh.",
+      "necReference": null
+    },
+    {
+      "id": "bank-007",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "What is the peak value of a 480 V RMS sine wave?",
+      "choices": [
+        "339 V",
+        "480 V",
+        "679 V",
+        "831 V"
+      ],
+      "correctIndex": 2,
+      "explanation": "Peak = RMS × 1.414 = 480 × 1.414 = 679 V.",
+      "necReference": null
+    },
+    {
+      "id": "bank-008",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "A balanced three-phase load draws 50 A per line at 480 V with a power factor of 0.85. What is the real power?",
+      "choices": [
+        "20.4 kW",
+        "35.3 kW",
+        "41.6 kW",
+        "61.2 kW"
+      ],
+      "correctIndex": 1,
+      "explanation": "P = 1.732 × 480 × 50 × 0.85 = 35,333 W. Without the power factor the result (41.6 kVA) is apparent power.",
+      "necReference": null
+    },
+    {
+      "id": "bank-009",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "As frequency increases, the inductive reactance of a coil:",
+      "choices": [
+        "Decreases",
+        "Increases",
+        "Stays the same",
+        "Drops to zero"
+      ],
+      "correctIndex": 1,
+      "explanation": "X_L = 2πfL, so reactance rises in direct proportion to frequency.",
+      "necReference": null
+    },
+    {
+      "id": "bank-010",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "In a purely capacitive AC circuit, the current:",
+      "choices": [
+        "Lags the voltage by 90 degrees",
+        "Leads the voltage by 90 degrees",
+        "Is in phase with the voltage",
+        "Is 180 degrees out of phase"
+      ],
+      "correctIndex": 1,
+      "explanation": "Capacitors charge before voltage builds across them, so current leads voltage by 90 degrees (ICE); in an inductor current lags (ELI).",
+      "necReference": null
+    },
+    {
+      "id": "bank-011",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "A step-down transformer has a 10:1 turns ratio. With 480 V applied to the primary, the secondary voltage is:",
+      "choices": [
+        "4.8 V",
+        "48 V",
+        "480 V",
+        "4,800 V"
+      ],
+      "correctIndex": 1,
+      "explanation": "Voltage ratio equals turns ratio: 480 ÷ 10 = 48 V.",
+      "necReference": null
+    },
+    {
+      "id": "bank-012",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "Compared with a unity power factor load of the same wattage, a load with a low power factor:",
+      "choices": [
+        "Draws less current",
+        "Draws more current",
+        "Draws the same current",
+        "Operates at a lower voltage"
+      ],
+      "correctIndex": 1,
+      "explanation": "I = P ÷ (V × PF). A lower power factor means higher current for the same real power, which is why utilities penalize it.",
+      "necReference": null
+    },
+    {
+      "id": "bank-013",
+      "area": "general_knowledge_theory",
+      "difficulty": 3,
+      "prompt": "A 120 V single-phase, 20 A load is 150 ft from the panel on 10 AWG copper (10,380 circular mils). Using K = 12.9, the voltage drop is approximately:",
+      "choices": [
+        "2.1 V",
+        "3.7 V",
+        "7.5 V",
+        "14.9 V"
+      ],
+      "correctIndex": 2,
+      "explanation": "VD = 2 × 12.9 × 20 × 150 ÷ 10,380 = 77,400 ÷ 10,380 = 7.46 V, about 6.2 percent of 120 V.",
+      "necReference": "Chapter 9, Table 8"
+    },
+    {
+      "id": "bank-014",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "Which metal has the lowest resistivity (best conductivity)?",
+      "choices": [
+        "Aluminum",
+        "Copper",
+        "Silver",
+        "Gold"
+      ],
+      "correctIndex": 2,
+      "explanation": "Silver is slightly more conductive than copper; copper is used because it is far cheaper. Aluminum has about 61 percent of copper's conductivity.",
+      "necReference": null
+    },
+    {
+      "id": "bank-015",
+      "area": "general_knowledge_theory",
+      "difficulty": 1,
+      "prompt": "On a 480Y/277 V system, the voltage from any line to neutral is:",
+      "choices": [
+        "240 V",
+        "277 V",
+        "416 V",
+        "480 V"
+      ],
+      "correctIndex": 1,
+      "explanation": "Line-to-neutral = line-to-line ÷ 1.732 = 480 ÷ 1.732 = 277 V.",
+      "necReference": null
+    },
+    {
+      "id": "bank-016",
+      "area": "general_knowledge_theory",
+      "difficulty": 2,
+      "prompt": "A 10 hp motor (746 W per hp) draws 8,500 W from the line at full load. What is its efficiency?",
+      "choices": [
+        "78.8 percent",
+        "85.0 percent",
+        "87.8 percent",
+        "114 percent"
+      ],
+      "correctIndex": 2,
+      "explanation": "Output = 10 × 746 = 7,460 W. Efficiency = 7,460 ÷ 8,500 = 0.878, or 87.8 percent.",
+      "necReference": null
+    },
+    {
+      "id": "bank-017",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "Type NM cable must be secured within what distance of each box and at what maximum interval along its run?",
+      "choices": [
+        "8 in. and 3 ft",
+        "12 in. and 4½ ft",
+        "3 ft and 10 ft",
+        "18 in. and 6 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "334.30: within 12 in. of every box, cabinet or fitting and at intervals not exceeding 4½ ft.",
+      "necReference": "334.30"
+    },
+    {
+      "id": "bank-018",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Type MC cable containing four or fewer conductors of 10 AWG or smaller must be supported at intervals not exceeding what, and secured within what distance of terminations?",
+      "choices": [
+        "4½ ft; 12 in.",
+        "6 ft; 12 in.",
+        "10 ft; 3 ft",
+        "No support required"
+      ],
+      "correctIndex": 1,
+      "explanation": "330.30(B) and (C): supported at intervals not exceeding 6 ft and secured within 12 in. of every termination for the smaller cables.",
+      "necReference": "330.30"
+    },
+    {
+      "id": "bank-019",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "At terminations of Type AC cable, what fitting is required to protect the conductors from the cut edge of the armor?",
+      "choices": [
+        "A grounding bushing",
+        "An insulating bushing (anti-short bushing)",
+        "A bonding locknut",
+        "No fitting is required"
+      ],
+      "correctIndex": 1,
+      "explanation": "320.40 requires an insulating bushing or equivalent between the conductors and the armor at terminations.",
+      "necReference": "320.40"
+    },
+    {
+      "id": "bank-020",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "EMT must be securely fastened within what distance of each outlet box or termination?",
+      "choices": [
+        "12 in.",
+        "18 in.",
+        "3 ft",
+        "5 ft"
+      ],
+      "correctIndex": 2,
+      "explanation": "358.30(A): within 3 ft of each box, cabinet or termination, and at intervals not exceeding 10 ft.",
+      "necReference": "358.30"
+    },
+    {
+      "id": "bank-021",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Where raceway conductors of what minimum size enter a cabinet or box, an insulating fitting or bushing is required to protect them from abrasion?",
+      "choices": [
+        "8 AWG and larger",
+        "6 AWG and larger",
+        "4 AWG and larger",
+        "1/0 AWG and larger"
+      ],
+      "correctIndex": 2,
+      "explanation": "300.4(G): 4 AWG and larger conductors require a listed insulated fitting or an insulating bushing where they enter an enclosure from a raceway.",
+      "necReference": "300.4(G)"
+    },
+    {
+      "id": "bank-022",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "An expansion fitting is required in a run of rigid PVC conduit when the expected change in length due to temperature is at least:",
+      "choices": [
+        "1/8 in.",
+        "1/4 in.",
+        "1/2 in.",
+        "1 in."
+      ],
+      "correctIndex": 1,
+      "explanation": "352.44 requires expansion fittings to compensate for thermal expansion and contraction where the length change is expected to be ¼ in. or greater.",
+      "necReference": "352.44"
+    },
+    {
+      "id": "bank-023",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Where flexibility is needed after installation, flexible metal conduit may be unsupported at terminals for a length not exceeding:",
+      "choices": [
+        "18 in.",
+        "3 ft",
+        "4½ ft",
+        "6 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "348.30(A) Exception 2: up to 3 ft at terminals where flexibility is necessary (the general rule is securing within 12 in. of boxes and every 4½ ft).",
+      "necReference": "348.30"
+    },
+    {
+      "id": "bank-024",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Which wiring method is NOT permitted in an \"other space used for environmental air\" (a plenum ceiling space)?",
+      "choices": [
+        "EMT",
+        "Type MC cable",
+        "Type NM cable",
+        "Type AC cable"
+      ],
+      "correctIndex": 2,
+      "explanation": "300.22(C) lists permitted methods such as EMT, RMC, IMC, FMC and Types MC and AC cable; NM cable is not among them.",
+      "necReference": "300.22(C)"
+    },
+    {
+      "id": "bank-025",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "What is the minimum cover for rigid metal conduit installed underground under ordinary soil (not under a street or driveway)?",
+      "choices": [
+        "6 in.",
+        "12 in.",
+        "18 in.",
+        "24 in."
+      ],
+      "correctIndex": 0,
+      "explanation": "Table 300.5, Column 2: RMC and IMC require 6 in. of cover.",
+      "necReference": "300.5"
+    },
+    {
+      "id": "bank-026",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "What is the general minimum cover for a nonmetallic raceway listed for direct burial (such as PVC) with 120 V branch-circuit conductors not GFCI-protected?",
+      "choices": [
+        "6 in.",
+        "12 in.",
+        "18 in.",
+        "24 in."
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 300.5, Column 3: 18 in. for nonmetallic raceways listed for direct burial without concrete encasement.",
+      "necReference": "300.5"
+    },
+    {
+      "id": "bank-027",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "What is the general minimum cover for direct-buried cables such as Type UF (not a GFCI-protected 120 V residential circuit)?",
+      "choices": [
+        "6 in.",
+        "12 in.",
+        "18 in.",
+        "24 in."
+      ],
+      "correctIndex": 3,
+      "explanation": "Table 300.5, Column 1: direct-burial cables and conductors require 24 in.",
+      "necReference": "300.5"
+    },
+    {
+      "id": "bank-028",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "A cable run parallel to a framing member must be installed so that the nearest outside surface of the cable is at least how far from the nearest edge of the member?",
+      "choices": [
+        "1 in.",
+        "1¼ in.",
+        "1½ in.",
+        "2 in."
+      ],
+      "correctIndex": 1,
+      "explanation": "300.4(D): 1¼ in., or the cable must be protected by a steel plate at least 1/16 in. thick.",
+      "necReference": "300.4(D)"
+    },
+    {
+      "id": "bank-029",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "Where a box opening is less than 8 in. in any dimension, the free conductors must extend at least how far outside the opening?",
+      "choices": [
+        "3 in.",
+        "6 in.",
+        "8 in.",
+        "12 in."
+      ],
+      "correctIndex": 0,
+      "explanation": "300.14: at least 6 in. of free conductor measured from where it emerges from the cable or raceway, and at least 3 in. outside the opening.",
+      "necReference": "300.14"
+    },
+    {
+      "id": "bank-030",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Two 14-2 NM cables with ground enter a box with no internal clamps that contains one single-pole switch. What is the minimum box volume?",
+      "choices": [
+        "12 in³",
+        "14 in³",
+        "16 in³",
+        "18 in³"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 conductors + 1 (all EGCs) + 2 (device yoke) = 7 allowances × 2.00 in³ for 14 AWG = 14 in³.",
+      "necReference": "314.16"
+    },
+    {
+      "id": "bank-031",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "For box fill purposes, each yoke or strap containing a device such as a switch or receptacle counts as:",
+      "choices": [
+        "One allowance",
+        "Two allowances",
+        "Three allowances",
+        "Zero; devices are not counted"
+      ],
+      "correctIndex": 1,
+      "explanation": "314.16(B)(4): a double volume allowance for each yoke, based on the largest conductor connected to the device.",
+      "necReference": "314.16(B)(4)"
+    },
+    {
+      "id": "bank-032",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "An outlet box used as the sole support of a ceiling-suspended (paddle) fan must be:",
+      "choices": [
+        "Any 4 in. octagon box",
+        "Listed and marked as suitable for fan support",
+        "A nonmetallic old-work box",
+        "Supported only by the cable"
+      ],
+      "correctIndex": 1,
+      "explanation": "314.27(C): boxes used as the sole support of ceiling fans must be listed and identified for the purpose (fans over 35 lb need the weight marked; over 70 lb need independent support).",
+      "necReference": "314.27(C)"
+    },
+    {
+      "id": "bank-033",
+      "area": "wiring_methods_materials",
+      "difficulty": 3,
+      "prompt": "A pull box has an angle pull with a 3 in. raceway and a 2 in. raceway entering the same wall, conductors 4 AWG and larger. What is the minimum distance from that wall to the opposite wall?",
+      "choices": [
+        "18 in.",
+        "20 in.",
+        "24 in.",
+        "30 in."
+      ],
+      "correctIndex": 1,
+      "explanation": "314.28(A)(2): six times the largest raceway plus the sum of the other raceways on the same wall: 6 × 3 + 2 = 20 in.",
+      "necReference": "314.28(A)(2)"
+    },
+    {
+      "id": "bank-034",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "Junction boxes must be installed so that the wiring inside can be accessed without:",
+      "choices": [
+        "Using a ladder",
+        "Removing part of the building or structure",
+        "A key or tool",
+        "A permit"
+      ],
+      "correctIndex": 1,
+      "explanation": "314.29: boxes must be accessible without removing any part of the building, structure or finish (removable ceiling panels are acceptable).",
+      "necReference": "314.29"
+    },
+    {
+      "id": "bank-035",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "For circuits rated over 100 A, or conductors larger than 1 AWG, equipment terminations are generally assumed to be rated for which temperature column?",
+      "choices": [
+        "60°C",
+        "75°C",
+        "90°C",
+        "105°C"
+      ],
+      "correctIndex": 1,
+      "explanation": "110.14(C)(1)(b): 75°C unless the equipment is listed and marked otherwise; 60°C applies to 100 A and below and 14 to 1 AWG.",
+      "necReference": "110.14(C)"
+    },
+    {
+      "id": "bank-036",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "Using the 75°C column of Table 310.16, the ampacity of 6 AWG copper THHN/THWN is:",
+      "choices": [
+        "55 A",
+        "65 A",
+        "75 A",
+        "85 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 AWG copper: 55 A at 60°C, 65 A at 75°C, 75 A at 90°C.",
+      "necReference": "Table 310.16"
+    },
+    {
+      "id": "bank-037",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Eight current-carrying conductors share a raceway. By what factor must the table ampacity be adjusted?",
+      "choices": [
+        "80 percent",
+        "70 percent",
+        "50 percent",
+        "45 percent"
+      ],
+      "correctIndex": 1,
+      "explanation": "Table 310.15(C)(1): 7 to 9 current-carrying conductors are adjusted to 70 percent.",
+      "necReference": "310.15(C)(1)"
+    },
+    {
+      "id": "bank-038",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "A 90°C-rated conductor is installed where the ambient temperature is 45°C. What correction factor applies to its table ampacity?",
+      "choices": [
+        "0.96",
+        "0.91",
+        "0.87",
+        "0.82"
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 310.15(B)(1): for 90°C conductors, 41 to 45°C ambient gives 0.87.",
+      "necReference": "310.15(B)(1)"
+    },
+    {
+      "id": "bank-039",
+      "area": "wiring_methods_materials",
+      "difficulty": 3,
+      "prompt": "The neutral conductor of a 4-wire, three-phase wye circuit must be counted as a current-carrying conductor when:",
+      "choices": [
+        "Never; neutrals are not counted",
+        "The major portion of the load consists of nonlinear loads",
+        "The circuit exceeds 100 A",
+        "The system is a delta"
+      ],
+      "correctIndex": 1,
+      "explanation": "310.15(E): a wye neutral carrying only unbalanced current is not counted, but where the major portion of the load is nonlinear (harmonic currents add in the neutral) it is counted.",
+      "necReference": "310.15(E)"
+    },
+    {
+      "id": "bank-040",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "What is the maximum percentage of a raceway's cross-sectional area that may be filled when it contains three or more conductors?",
+      "choices": [
+        "31 percent",
+        "40 percent",
+        "53 percent",
+        "60 percent"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chapter 9, Table 1: 53 percent for one conductor, 31 percent for two, 40 percent for over two.",
+      "necReference": "Chapter 9, Table 1"
+    },
+    {
+      "id": "bank-041",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "A conduit nipple 24 in. or shorter between two enclosures may be filled to:",
+      "choices": [
+        "40 percent",
+        "53 percent",
+        "60 percent",
+        "100 percent"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chapter 9, Note 4 to the tables: nipples not exceeding 24 in. may be filled to 60 percent, and adjustment factors need not apply.",
+      "necReference": "Chapter 9, Note 4"
+    },
+    {
+      "id": "bank-042",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "A grounded conductor of what minimum size may be identified by white or gray marking at its terminations rather than by continuous insulation color?",
+      "choices": [
+        "6 AWG and larger",
+        "4 AWG and larger",
+        "1/0 AWG and larger",
+        "Any size"
+      ],
+      "correctIndex": 1,
+      "explanation": "200.6(B): 4 AWG and larger conductors may be re-identified with white or gray marking at terminations; smaller conductors must have white or gray insulation (or three white stripes).",
+      "necReference": "200.6(B)"
+    },
+    {
+      "id": "bank-043",
+      "area": "wiring_methods_materials",
+      "difficulty": 2,
+      "prompt": "Where switches control lighting loads supplied by a grounded general-purpose branch circuit, which conductor must generally be provided at the switch location?",
+      "choices": [
+        "The equipment grounding conductor only",
+        "The grounded (neutral) conductor",
+        "A third traveler",
+        "None beyond the switched conductors"
+      ],
+      "correctIndex": 1,
+      "explanation": "404.2(C) requires the grounded conductor at switch locations so that electronic switches and occupancy sensors have a neutral; exceptions exist where the box is accessible for future conductors or for certain switch loops.",
+      "necReference": "404.2(C)"
+    },
+    {
+      "id": "bank-044",
+      "area": "wiring_methods_materials",
+      "difficulty": 1,
+      "prompt": "A 15 or 20 A, 125 V receptacle installed outdoors in a wet location must have an enclosure that is weatherproof:",
+      "choices": [
+        "Only when the cover is closed",
+        "Whether or not an attachment plug is inserted (an in-use cover)",
+        "Only if it is GFCI protected",
+        "Only above 6 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "406.9(B)(1): the enclosure must be weatherproof with a plug inserted, which requires an in-use (\"bubble\") cover.",
+      "necReference": "406.9(B)"
+    },
+    {
+      "id": "bank-045",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "What is the minimum copper grounding electrode conductor for a service with 2 AWG copper ungrounded conductors?",
+      "choices": [
+        "8 AWG",
+        "6 AWG",
+        "4 AWG",
+        "2 AWG"
+      ],
+      "correctIndex": 0,
+      "explanation": "Table 250.66: 2 AWG or smaller copper service conductors require an 8 AWG copper GEC.",
+      "necReference": "Table 250.66"
+    },
+    {
+      "id": "bank-046",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "A service has 350 kcmil copper ungrounded conductors. What minimum copper grounding electrode conductor is required to a water pipe electrode?",
+      "choices": [
+        "6 AWG",
+        "4 AWG",
+        "2 AWG",
+        "1/0 AWG"
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 250.66: over 3/0 through 350 kcmil copper requires 2 AWG copper.",
+      "necReference": "Table 250.66"
+    },
+    {
+      "id": "bank-047",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "What minimum copper equipment grounding conductor is required for a feeder protected by a 200 A overcurrent device?",
+      "choices": [
+        "8 AWG",
+        "6 AWG",
+        "4 AWG",
+        "3 AWG"
+      ],
+      "correctIndex": 1,
+      "explanation": "Table 250.122: 200 A requires 6 AWG copper (4 AWG aluminum).",
+      "necReference": "Table 250.122"
+    },
+    {
+      "id": "bank-048",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "What minimum copper equipment grounding conductor is required for a circuit protected by a 100 A overcurrent device?",
+      "choices": [
+        "10 AWG",
+        "8 AWG",
+        "6 AWG",
+        "4 AWG"
+      ],
+      "correctIndex": 1,
+      "explanation": "Table 250.122: 100 A requires 8 AWG copper.",
+      "necReference": "Table 250.122"
+    },
+    {
+      "id": "bank-049",
+      "area": "grounding_bonding",
+      "difficulty": 3,
+      "prompt": "A 30 A circuit normally wired with 10 AWG copper is upsized to 6 AWG copper for voltage drop. The equipment grounding conductor, normally 10 AWG, must become:",
+      "choices": [
+        "10 AWG; no change",
+        "8 AWG",
+        "6 AWG",
+        "4 AWG"
+      ],
+      "correctIndex": 2,
+      "explanation": "250.122(B): increase the EGC in proportion to circular-mil area. 26,240 ÷ 10,380 = 2.53; 10,380 × 2.53 = 26,240 CM, which is 6 AWG.",
+      "necReference": "250.122(B)"
+    },
+    {
+      "id": "bank-050",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "A rod electrode must be at least how long?",
+      "choices": [
+        "6 ft",
+        "8 ft",
+        "10 ft",
+        "12 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.52(A)(5): rod and pipe electrodes must be at least 8 ft long (pipe ¾ in. trade size; rods ⅝ in., or ½ in. if listed).",
+      "necReference": "250.52(A)(5)"
+    },
+    {
+      "id": "bank-051",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "Where two rod electrodes are used, they must be separated by at least:",
+      "choices": [
+        "3 ft",
+        "6 ft",
+        "8 ft",
+        "10 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.53(A)(3): at least 6 ft apart so their spheres of influence do not overlap.",
+      "necReference": "250.53(A)(3)"
+    },
+    {
+      "id": "bank-052",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "Which of the following is NOT permitted to be used as a grounding electrode?",
+      "choices": [
+        "Metal underground water pipe",
+        "Metal in-ground support structure (building steel)",
+        "Metal underground gas piping",
+        "A ground ring"
+      ],
+      "correctIndex": 2,
+      "explanation": "250.52(B) prohibits metal underground gas piping systems and aluminum as electrodes.",
+      "necReference": "250.52(B)"
+    },
+    {
+      "id": "bank-053",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "A grounding electrode conductor must be installed without splices except where joined by:",
+      "choices": [
+        "A twist-on wire connector",
+        "A split-bolt connector",
+        "An irreversible compression connector or exothermic welding",
+        "Solder"
+      ],
+      "correctIndex": 2,
+      "explanation": "250.64(C): the GEC is continuous unless spliced by irreversible compression connectors listed as grounding equipment, exothermic welding, or busbar connections.",
+      "necReference": "250.64(C)"
+    },
+    {
+      "id": "bank-054",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "Where a grounding electrode conductor is run in a ferrous metal raceway, the raceway must be:",
+      "choices": [
+        "Left unbonded",
+        "Bonded at one end only",
+        "Electrically continuous and bonded to the GEC at both ends",
+        "Insulated from the GEC"
+      ],
+      "correctIndex": 2,
+      "explanation": "250.64(E): bonding at both ends prevents the ferrous raceway from acting as a choke that raises the impedance of the GEC.",
+      "necReference": "250.64(E)"
+    },
+    {
+      "id": "bank-055",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "Which method is NOT acceptable for bonding at service equipment?",
+      "choices": [
+        "Bonding jumpers",
+        "Threaded hubs or couplings made up wrenchtight",
+        "Bonding-type locknuts or bushings",
+        "Standard locknuts or bushings alone"
+      ],
+      "correctIndex": 3,
+      "explanation": "250.92(B): standard locknuts and bushings are not sufficient at services; bonding must use jumpers, threaded connections, bonding locknuts, bushings or wedges.",
+      "necReference": "250.92(B)"
+    },
+    {
+      "id": "bank-056",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "An intersystem bonding termination at the service must:",
+      "choices": [
+        "Be installed inside the service panel",
+        "Be accessible, external, and provide at least three terminals for communications systems",
+        "Be connected only to a ground rod",
+        "Be omitted on dwellings"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.94: an accessible external means with at least three terminals, connected to the service enclosure, grounded conductor, GEC or electrode, for bonding communications, CATV and similar systems.",
+      "necReference": "250.94"
+    },
+    {
+      "id": "bank-057",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "Flexible metal conduit may serve as the equipment grounding conductor when, among other conditions, the total length in any ground return path does not exceed what, and the circuit is protected at not more than what?",
+      "choices": [
+        "Any length; 20 A",
+        "6 ft; 20 A",
+        "10 ft; 30 A",
+        "FMC is never permitted as an EGC"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.118: listed FMC with listed fittings, total length not over 6 ft, protected at 20 A or less (and not installed for flexibility after installation).",
+      "necReference": "250.118"
+    },
+    {
+      "id": "bank-058",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "A detached garage is supplied by a feeder from the house. At the garage panel:",
+      "choices": [
+        "The neutral is bonded to the enclosure as at a service",
+        "An equipment grounding conductor is run with the feeder and the neutral is kept isolated from the enclosure",
+        "No grounding electrode is required",
+        "No equipment grounding conductor is required if the neutral is bonded"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.32(B)(1): the feeder includes an EGC; the grounded conductor is not connected to the EGC or enclosure at the separate building, and 250.32(A) requires a grounding electrode there.",
+      "necReference": "250.32(B)"
+    },
+    {
+      "id": "bank-059",
+      "area": "grounding_bonding",
+      "difficulty": 2,
+      "prompt": "For a separately derived system such as a transformer, the system bonding jumper is installed:",
+      "choices": [
+        "At every downstream panel",
+        "At the source or at the first disconnecting means, but not both",
+        "Nowhere; the grounded conductor is never bonded",
+        "At the utility transformer only"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.30(A)(1): a single system bonding jumper at the source or the first disconnect, with a grounding electrode conductor at the same point.",
+      "necReference": "250.30(A)(1)"
+    },
+    {
+      "id": "bank-060",
+      "area": "grounding_bonding",
+      "difficulty": 1,
+      "prompt": "Which connection method is NOT permitted for grounding and bonding conductors to enclosures?",
+      "choices": [
+        "Listed pressure connectors",
+        "Exothermic welding",
+        "Machine screws engaging at least two threads",
+        "Sheet metal screws"
+      ],
+      "correctIndex": 3,
+      "explanation": "250.8 lists acceptable methods; sheet metal screws are specifically not permitted.",
+      "necReference": "250.8"
+    },
+    {
+      "id": "bank-061",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "The service disconnecting means for a one-family dwelling must have a rating of not less than:",
+      "choices": [
+        "60 A",
+        "100 A",
+        "125 A",
+        "150 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "230.79(C): 100 A, 3-wire.",
+      "necReference": "230.79(C)"
+    },
+    {
+      "id": "bank-062",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "Overhead service conductors not exceeding 150 V to ground must have a vertical clearance of at least how much above finished grade and sidewalks accessible only to pedestrians?",
+      "choices": [
+        "8 ft",
+        "10 ft",
+        "12 ft",
+        "15 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "230.24(B)(1): 10 ft at the electrical service entrance and above areas accessible only to pedestrians, where the voltage does not exceed 150 V to ground.",
+      "necReference": "230.24(B)"
+    },
+    {
+      "id": "bank-063",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "Overhead service conductors crossing a public street must have a vertical clearance of at least:",
+      "choices": [
+        "12 ft",
+        "15 ft",
+        "18 ft",
+        "22 ft"
+      ],
+      "correctIndex": 2,
+      "explanation": "230.24(B)(4): 18 ft over public streets, alleys, roads, parking areas subject to truck traffic and non-residential driveways.",
+      "necReference": "230.24(B)"
+    },
+    {
+      "id": "bank-064",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "Open service conductors must be at least how far from windows that are designed to be opened?",
+      "choices": [
+        "18 in.",
+        "3 ft",
+        "6 ft",
+        "10 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "230.9(A): 3 ft from windows designed to open, doors, porches, balconies, ladders, stairs and fire escapes (conductors above the top of a window are exempt).",
+      "necReference": "230.9(A)"
+    },
+    {
+      "id": "bank-065",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "The service disconnecting means must be installed at a readily accessible location:",
+      "choices": [
+        "Anywhere inside the building",
+        "Outside the building, or inside nearest the point of entrance of the service conductors",
+        "Within 10 ft of the meter",
+        "In the attic"
+      ],
+      "correctIndex": 1,
+      "explanation": "230.70(A)(1).",
+      "necReference": "230.70(A)(1)"
+    },
+    {
+      "id": "bank-066",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "What is the maximum number of disconnecting means permitted for a single service?",
+      "choices": [
+        "Two",
+        "Four",
+        "Six",
+        "Eight"
+      ],
+      "correctIndex": 2,
+      "explanation": "230.71: not more than six disconnects (recent editions require each in a separate enclosure or compartment).",
+      "necReference": "230.71"
+    },
+    {
+      "id": "bank-067",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "For services to one- and two-family dwellings, recent NEC editions require an emergency disconnect that is:",
+      "choices": [
+        "Not required",
+        "Installed outdoors in a readily accessible location and marked",
+        "Installed in the garage only",
+        "Installed at the meter socket inside the house"
+      ],
+      "correctIndex": 1,
+      "explanation": "230.85: an outdoor emergency disconnect, readily accessible, marked for first responders.",
+      "necReference": "230.85"
+    },
+    {
+      "id": "bank-068",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 3,
+      "prompt": "Ground-fault protection of equipment is required for a solidly grounded wye service over 150 V to ground (not over 1,000 V) where the service disconnect is rated at least:",
+      "choices": [
+        "600 A",
+        "800 A",
+        "1,000 A",
+        "2,000 A"
+      ],
+      "correctIndex": 2,
+      "explanation": "230.95: 1,000 A or more; the maximum setting is 1,200 A and the maximum time delay is 1 second for currents of 3,000 A or more.",
+      "necReference": "230.95"
+    },
+    {
+      "id": "bank-069",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "The branch circuit required for dwelling bathroom receptacle outlets must be rated:",
+      "choices": [
+        "15 A",
+        "20 A",
+        "30 A",
+        "No specific rating"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.11(C)(3): at least one 20 A branch circuit for bathroom receptacle outlets.",
+      "necReference": "210.11(C)(3)"
+    },
+    {
+      "id": "bank-070",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "The laundry receptacle outlet(s) in a dwelling must be supplied by:",
+      "choices": [
+        "A 15 A circuit shared with the bathroom",
+        "At least one 20 A branch circuit with no other outlets",
+        "A 30 A circuit",
+        "Two 20 A circuits"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.11(C)(2): at least one 20 A branch circuit for laundry receptacles, with no other outlets.",
+      "necReference": "210.11(C)(2)"
+    },
+    {
+      "id": "bank-071",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "In dwelling habitable rooms, receptacles must be placed so that no point along the floor line of any wall space is more than how far from a receptacle?",
+      "choices": [
+        "4 ft",
+        "6 ft",
+        "8 ft",
+        "12 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.52(A)(1): 6 ft, so receptacles are a maximum of 12 ft apart; wall spaces 2 ft or wider count.",
+      "necReference": "210.52(A)(1)"
+    },
+    {
+      "id": "bank-072",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "Outdoor receptacle outlets for a one-family dwelling must be installed:",
+      "choices": [
+        "At the front of the dwelling only",
+        "At the front and back, not more than 6½ ft above grade",
+        "One on each side, not more than 8 ft above grade",
+        "Not required"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.52(E)(1): at least one at the front and one at the back, readily accessible from grade and not more than 6½ ft (2.0 m) above grade.",
+      "necReference": "210.52(E)(1)"
+    },
+    {
+      "id": "bank-073",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "A dwelling hallway requires at least one receptacle outlet when it is at least how long?",
+      "choices": [
+        "6 ft",
+        "8 ft",
+        "10 ft",
+        "12 ft"
+      ],
+      "correctIndex": 2,
+      "explanation": "210.52(H): hallways 10 ft or more in length require at least one receptacle.",
+      "necReference": "210.52(H)"
+    },
+    {
+      "id": "bank-074",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "In a dwelling, 125 V receptacles installed within what distance of the top inside edge of a sink bowl require GFCI protection?",
+      "choices": [
+        "3 ft",
+        "6 ft",
+        "8 ft",
+        "10 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.8(A): receptacles within 6 ft of the top inside edge of the bowl of a sink (and within 6 ft of bathtubs and showers).",
+      "necReference": "210.8(A)"
+    },
+    {
+      "id": "bank-075",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "In which dwelling location is AFCI protection NOT required by 210.12 for 120 V, 15 and 20 A branch circuits?",
+      "choices": [
+        "Bedroom",
+        "Hallway",
+        "Bathroom",
+        "Living room"
+      ],
+      "correctIndex": 2,
+      "explanation": "210.12(A) lists kitchens, family rooms, dining rooms, living rooms, bedrooms, closets, hallways, laundry areas and similar rooms; bathrooms, garages and outdoors are not in the list.",
+      "necReference": "210.12(A)"
+    },
+    {
+      "id": "bank-076",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "A multiwire branch circuit must be provided with:",
+      "choices": [
+        "Separate single-pole breakers with no ties",
+        "A means to simultaneously disconnect all ungrounded conductors at the point where it originates",
+        "GFCI protection only",
+        "No special requirement"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.4(B): a multipole breaker or identified handle ties, so that the shared neutral is never left energized by one leg; 210.4(D) also requires the conductors to be grouped.",
+      "necReference": "210.4(B)"
+    },
+    {
+      "id": "bank-077",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "A branch circuit supplies a 24 A continuous load and nothing else. What is the minimum conductor ampacity before adjustment and correction?",
+      "choices": [
+        "24 A",
+        "25 A",
+        "30 A",
+        "35 A"
+      ],
+      "correctIndex": 2,
+      "explanation": "210.19(A)(1): 125 percent of the continuous load: 24 × 1.25 = 30 A.",
+      "necReference": "210.19(A)(1)"
+    },
+    {
+      "id": "bank-078",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "A single receptacle on an individual branch circuit must have an ampere rating:",
+      "choices": [
+        "Not less than the rating of the branch circuit",
+        "Of any value",
+        "Not more than 80 percent of the circuit rating",
+        "Of 15 A regardless of the circuit"
+      ],
+      "correctIndex": 0,
+      "explanation": "210.21(B)(1): a single receptacle on an individual branch circuit must be rated at least the circuit rating (for example a 30 A receptacle on a 30 A circuit).",
+      "necReference": "210.21(B)(1)"
+    },
+    {
+      "id": "bank-079",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 3,
+      "prompt": "On a 15 or 20 A branch circuit that also supplies lighting or cord-and-plug loads, utilization equipment fastened in place (other than luminaires) must not exceed what portion of the circuit rating?",
+      "choices": [
+        "50 percent",
+        "80 percent",
+        "100 percent",
+        "125 percent"
+      ],
+      "correctIndex": 0,
+      "explanation": "210.23(A)(2): 50 percent where the circuit also supplies lighting units or cord-and-plug-connected equipment not fastened in place.",
+      "necReference": "210.23(A)(2)"
+    },
+    {
+      "id": "bank-080",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "In a dwelling load calculation, each 2-wire small-appliance branch circuit is computed at:",
+      "choices": [
+        "1,200 VA",
+        "1,500 VA",
+        "1,800 VA",
+        "2,000 VA"
+      ],
+      "correctIndex": 1,
+      "explanation": "220.52(A): 1,500 VA for each small-appliance circuit (minimum two), and 220.52(B) adds 1,500 VA for the laundry circuit.",
+      "necReference": "220.52"
+    },
+    {
+      "id": "bank-081",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 3,
+      "prompt": "A dwelling has a combined general lighting, small-appliance and laundry load of 10,200 VA. Applying the demand factors of Table 220.42 (first 3,000 VA at 100 percent, the next 117,000 VA at 35 percent), the demand load is:",
+      "choices": [
+        "3,570 VA",
+        "5,520 VA",
+        "7,140 VA",
+        "10,200 VA"
+      ],
+      "correctIndex": 1,
+      "explanation": "3,000 × 1.00 = 3,000; (10,200 − 3,000) × 0.35 = 2,520; total 5,520 VA.",
+      "necReference": "Table 220.42"
+    },
+    {
+      "id": "bank-082",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "For a household electric clothes dryer, the load used in a service calculation is at least:",
+      "choices": [
+        "1,500 W",
+        "4,000 W",
+        "5,000 W or the nameplate rating, whichever is larger",
+        "8,000 W"
+      ],
+      "correctIndex": 2,
+      "explanation": "220.54: 5,000 W or the nameplate rating, whichever is larger, then the demand factors of Table 220.54 for multiple dryers.",
+      "necReference": "220.54"
+    },
+    {
+      "id": "bank-083",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 1,
+      "prompt": "Feeder conductors supplying continuous loads must have an allowable ampacity of at least what percentage of the continuous load (before adjustment and correction)?",
+      "choices": [
+        "100 percent",
+        "115 percent",
+        "125 percent",
+        "150 percent"
+      ],
+      "correctIndex": 2,
+      "explanation": "215.2(A)(1): 100 percent of the noncontinuous load plus 125 percent of the continuous load.",
+      "necReference": "215.2(A)(1)"
+    },
+    {
+      "id": "bank-084",
+      "area": "services_feeders_branch_circuits",
+      "difficulty": 2,
+      "prompt": "A building on the same property is supplied by a feeder from the main building. The disconnecting means for that feeder must be located:",
+      "choices": [
+        "Nowhere; it is not required",
+        "At the main building only",
+        "At the building supplied, at a readily accessible location nearest the point of entrance of the conductors (inside or outside)",
+        "Anywhere on the premises"
+      ],
+      "correctIndex": 2,
+      "explanation": "225.31 and 225.32: a disconnect at the building or structure served, nearest the point of entrance, with limited exceptions for monitored installations.",
+      "necReference": "225.32"
+    },
+    {
+      "id": "bank-085",
+      "area": "overcurrent_protection",
+      "difficulty": 1,
+      "prompt": "Unless specifically permitted elsewhere, 14 AWG copper conductors must be protected at not more than:",
+      "choices": [
+        "10 A",
+        "15 A",
+        "20 A",
+        "25 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.4(D)(3): 15 A for 14 AWG copper.",
+      "necReference": "240.4(D)"
+    },
+    {
+      "id": "bank-086",
+      "area": "overcurrent_protection",
+      "difficulty": 1,
+      "prompt": "Which of the following is NOT a standard ampere rating for fuses and inverse-time circuit breakers?",
+      "choices": [
+        "45 A",
+        "55 A",
+        "70 A",
+        "110 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.6(A): the list runs 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125 and so on; 55 A is not standard.",
+      "necReference": "240.6(A)"
+    },
+    {
+      "id": "bank-087",
+      "area": "overcurrent_protection",
+      "difficulty": 2,
+      "prompt": "A feeder conductor has an ampacity of 92 A after correction. It does not serve a multi-outlet receptacle circuit. What is the maximum standard overcurrent device permitted by 240.4(B)?",
+      "choices": [
+        "90 A",
+        "100 A",
+        "110 A",
+        "125 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.4(B) allows the next higher standard rating when the ampacity does not match a standard size and the device is 800 A or less: 100 A.",
+      "necReference": "240.4(B)"
+    },
+    {
+      "id": "bank-088",
+      "area": "overcurrent_protection",
+      "difficulty": 2,
+      "prompt": "For circuits protected by overcurrent devices rated over 800 A, the conductor ampacity must be:",
+      "choices": [
+        "Rounded up to the next standard size",
+        "Equal to or greater than the rating of the overcurrent device",
+        "At least 125 percent of the device rating",
+        "Any value if the load is less than the ampacity"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.4(C): above 800 A the next-size-up allowance does not apply; the conductor ampacity must be at least the device rating.",
+      "necReference": "240.4(C)"
+    },
+    {
+      "id": "bank-089",
+      "area": "overcurrent_protection",
+      "difficulty": 1,
+      "prompt": "In a dwelling unit, branch-circuit overcurrent devices are NOT permitted to be located in:",
+      "choices": [
+        "The kitchen",
+        "A bathroom",
+        "An attached garage",
+        "A hallway"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.24(E) prohibits overcurrent devices (other than supplementary) in dwelling bathrooms; 240.24(D) also keeps them away from easily ignitable material such as in clothes closets.",
+      "necReference": "240.24(E)"
+    },
+    {
+      "id": "bank-090",
+      "area": "overcurrent_protection",
+      "difficulty": 1,
+      "prompt": "Overcurrent devices must be readily accessible and installed so that the center of the grip of the operating handle, in its highest position, is not more than how high above the floor?",
+      "choices": [
+        "5 ft 6 in.",
+        "6 ft",
+        "6 ft 7 in.",
+        "7 ft"
+      ],
+      "correctIndex": 2,
+      "explanation": "240.24(A): 6 ft 7 in. (2.0 m), with exceptions for busways, supplementary devices and equipment not readily accessible by design.",
+      "necReference": "240.24(A)"
+    },
+    {
+      "id": "bank-091",
+      "area": "overcurrent_protection",
+      "difficulty": 3,
+      "prompt": "Under the 10-ft feeder tap rule, for field installations where the tap conductors leave the enclosure, the tap conductor ampacity must be not less than what fraction of the rating of the overcurrent device protecting the feeder?",
+      "choices": [
+        "1/10",
+        "1/3",
+        "1/2",
+        "Equal to it"
+      ],
+      "correctIndex": 0,
+      "explanation": "240.21(B)(1): among other conditions, not less than one-tenth of the feeder OCPD rating for field installations; the 25-ft rule uses one-third.",
+      "necReference": "240.21(B)(1)"
+    },
+    {
+      "id": "bank-092",
+      "area": "overcurrent_protection",
+      "difficulty": 2,
+      "prompt": "For a new installation of plug fuses, the fuseholders must be of which type?",
+      "choices": [
+        "Edison-base",
+        "Type S",
+        "Class H",
+        "Class J"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.53 and 240.54: new plug-fuse installations require Type S fuses and fuseholders (or adapters), which are size-limiting; Edison-base fuses are permitted only as replacements in existing installations (240.51(B)).",
+      "necReference": "240.53"
+    },
+    {
+      "id": "bank-093",
+      "area": "overcurrent_protection",
+      "difficulty": 3,
+      "prompt": "A circuit breaker with a slash voltage rating such as 120/240 V may be used only on:",
+      "choices": [
+        "Any 240 V system",
+        "A solidly grounded system where the voltage to ground does not exceed the lower rating and the voltage between conductors does not exceed the higher rating",
+        "A corner-grounded delta system",
+        "An ungrounded system"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.85: slash-rated breakers depend on a grounded neutral; a straight-rated (240 V) breaker is required for corner-grounded delta or ungrounded 240 V systems.",
+      "necReference": "240.85"
+    },
+    {
+      "id": "bank-094",
+      "area": "overcurrent_protection",
+      "difficulty": 2,
+      "prompt": "A circuit breaker used as the switch for a 277 V high-intensity discharge lighting circuit must be marked:",
+      "choices": [
+        "SWD",
+        "HID",
+        "GFCI",
+        "ON and OFF only"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.83(D): breakers switching HID lighting must be marked HID; SWD alone is acceptable only for fluorescent lighting at 120 or 277 V.",
+      "necReference": "240.83(D)"
+    },
+    {
+      "id": "bank-095",
+      "area": "overcurrent_protection",
+      "difficulty": 2,
+      "prompt": "The interrupting rating of an overcurrent device must be sufficient for:",
+      "choices": [
+        "The full-load current of the circuit",
+        "The available fault current at its line terminals",
+        "125 percent of the load",
+        "The nameplate current of the largest motor"
+      ],
+      "correctIndex": 1,
+      "explanation": "110.9: equipment intended to interrupt current at fault levels must have an interrupting rating at nominal voltage not less than the available fault current.",
+      "necReference": "110.9"
+    },
+    {
+      "id": "bank-096",
+      "area": "overcurrent_protection",
+      "difficulty": 3,
+      "prompt": "Arc energy reduction (such as zone-selective interlocking, maintenance switch or energy-reducing active arc flash mitigation) is required where a circuit breaker is rated or can be adjusted to at least:",
+      "choices": [
+        "600 A",
+        "800 A",
+        "1,000 A",
+        "1,200 A"
+      ],
+      "correctIndex": 3,
+      "explanation": "240.87: applies where the highest continuous current trip setting of the breaker is 1,200 A or higher (240.67 has a parallel rule for fuses).",
+      "necReference": "240.87"
+    },
+    {
+      "id": "bank-097",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 1,
+      "prompt": "When sizing branch-circuit conductors, disconnects and short-circuit protection for a motor, the full-load current value must be taken from:",
+      "choices": [
+        "The motor nameplate",
+        "The Article 430 full-load current tables",
+        "The controller nameplate",
+        "The overload relay chart"
+      ],
+      "correctIndex": 1,
+      "explanation": "430.6(A)(1): use Tables 430.247 through 430.250; the nameplate current is used only for the overload device.",
+      "necReference": "430.6(A)(1)"
+    },
+    {
+      "id": "bank-098",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "A 1 hp, 115 V single-phase motor has a table full-load current of 16 A. What minimum ampacity is required for its branch-circuit conductors?",
+      "choices": [
+        "16 A",
+        "20 A",
+        "25 A",
+        "30 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "430.22: 125 percent of 16 A = 20 A.",
+      "necReference": "430.22"
+    },
+    {
+      "id": "bank-099",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 3,
+      "prompt": "A 25 hp, 460 V three-phase motor has a table full-load current of 34 A. With 75°C terminations, the minimum copper conductor size for the branch circuit is:",
+      "choices": [
+        "10 AWG",
+        "8 AWG",
+        "6 AWG",
+        "4 AWG"
+      ],
+      "correctIndex": 1,
+      "explanation": "34 × 1.25 = 42.5 A. Table 310.16 at 75°C: 10 AWG is 35 A (too small); 8 AWG is 50 A.",
+      "necReference": "430.22"
+    },
+    {
+      "id": "bank-100",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "Per Table 430.52, a dual-element (time-delay) fuse used for motor branch-circuit short-circuit and ground-fault protection may be sized at a maximum of what percentage of full-load current?",
+      "choices": [
+        "150 percent",
+        "175 percent",
+        "250 percent",
+        "300 percent"
+      ],
+      "correctIndex": 1,
+      "explanation": "Table 430.52: non-time-delay fuse 300 percent, dual-element time-delay fuse 175 percent, instantaneous-trip breaker 800 percent, inverse-time breaker 250 percent.",
+      "necReference": "Table 430.52"
+    },
+    {
+      "id": "bank-101",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "A continuous-duty motor with a service factor of 1.0 and a 50°C temperature rise requires a separate overload device set at no more than what percentage of nameplate current?",
+      "choices": [
+        "115 percent",
+        "125 percent",
+        "130 percent",
+        "140 percent"
+      ],
+      "correctIndex": 0,
+      "explanation": "430.32(A)(1): 125 percent applies to motors with service factor 1.15 or more or rise 40°C or less; all other motors are limited to 115 percent.",
+      "necReference": "430.32(A)(1)"
+    },
+    {
+      "id": "bank-102",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "For a motor disconnect to be \"in sight from\" the motor, it must be visible and not more than how far from it?",
+      "choices": [
+        "25 ft",
+        "50 ft",
+        "75 ft",
+        "100 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article 100 definition of \"in sight from (within sight from, within sight)\": visible and not more than 50 ft distant; 430.102(B) requires the disconnect in sight from the motor.",
+      "necReference": "430.102(B)"
+    },
+    {
+      "id": "bank-103",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "A motor disconnecting means must have an ampere rating of at least what percentage of the motor full-load current?",
+      "choices": [
+        "100 percent",
+        "115 percent",
+        "125 percent",
+        "250 percent"
+      ],
+      "correctIndex": 1,
+      "explanation": "430.110(A): at least 115 percent of the table full-load current (or horsepower rated per 430.109).",
+      "necReference": "430.110(A)"
+    },
+    {
+      "id": "bank-104",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 3,
+      "prompt": "A 25 kVA single-phase transformer with a 480 V primary (52.1 A) is protected on the primary side only. What is the maximum standard primary overcurrent device?",
+      "choices": [
+        "60 A",
+        "65 A",
+        "70 A",
+        "80 A"
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 450.3(B): 125 percent of 52.1 A = 65.1 A, not a standard size; Note 1 permits the next higher standard rating, 70 A.",
+      "necReference": "450.3(B)"
+    },
+    {
+      "id": "bank-105",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "A dry-type transformer rated 112½ kVA or less installed indoors must be separated from combustible material by at least what distance, unless separated by a fire-resistant barrier or rated for 80°C rise?",
+      "choices": [
+        "6 in.",
+        "12 in.",
+        "18 in.",
+        "36 in."
+      ],
+      "correctIndex": 1,
+      "explanation": "450.21(A): 12 in. horizontal separation from combustible material.",
+      "necReference": "450.21(A)"
+    },
+    {
+      "id": "bank-106",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "Dry-type transformers may be installed in the hollow spaces of a building (such as above a suspended ceiling) if ventilation is adequate and they are accessible, provided they are rated not more than:",
+      "choices": [
+        "25 kVA",
+        "50 kVA",
+        "75 kVA",
+        "112½ kVA"
+      ],
+      "correctIndex": 1,
+      "explanation": "450.13(B): dry-type transformers 1,000 V or less and not over 50 kVA may be installed in hollow spaces that are not permanently closed in.",
+      "necReference": "450.13(B)"
+    },
+    {
+      "id": "bank-107",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 1,
+      "prompt": "The disconnecting means for an air-conditioning or refrigerating condensing unit must be located:",
+      "choices": [
+        "At the service equipment",
+        "Within sight from and readily accessible from the equipment",
+        "Within 10 ft of the thermostat",
+        "Inside the unit, behind the access panel"
+      ],
+      "correctIndex": 1,
+      "explanation": "440.14: within sight and readily accessible; it may be on or within the equipment but not where it blocks access to nameplates or panels.",
+      "necReference": "440.14"
+    },
+    {
+      "id": "bank-108",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 3,
+      "prompt": "For a hermetic refrigerant motor-compressor, the branch-circuit short-circuit and ground-fault protective device is normally sized at not more than what percentage of the rated-load current, with an allowance up to what percentage if needed for starting?",
+      "choices": [
+        "125 and 175 percent",
+        "175 and 225 percent",
+        "250 and 400 percent",
+        "150 and 200 percent"
+      ],
+      "correctIndex": 1,
+      "explanation": "440.22(A): 175 percent, and up to 225 percent where the 175 percent device cannot carry the starting current.",
+      "necReference": "440.22(A)"
+    },
+    {
+      "id": "bank-109",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "A cord-and-plug-connected kitchen waste disposer must have a cord length of:",
+      "choices": [
+        "12 to 24 in.",
+        "18 to 36 in.",
+        "36 to 48 in.",
+        "48 to 72 in."
+      ],
+      "correctIndex": 1,
+      "explanation": "422.16(B)(1): 18 to 36 in. for disposers; dishwashers and trash compactors have their own longer ranges in 422.16(B)(2).",
+      "necReference": "422.16(B)(1)"
+    },
+    {
+      "id": "bank-110",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "The equipotential bonding of a permanently installed swimming pool must use a conductor not smaller than:",
+      "choices": [
+        "12 AWG solid copper",
+        "10 AWG stranded copper",
+        "8 AWG solid copper",
+        "6 AWG solid copper"
+      ],
+      "correctIndex": 2,
+      "explanation": "680.26(B): solid copper not smaller than 8 AWG, connecting the pool shell steel, perimeter surfaces, metal fittings, equipment and fixed metal parts.",
+      "necReference": "680.26(B)"
+    },
+    {
+      "id": "bank-111",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "In patient care spaces of a health care facility, branch circuits serving patient care areas must provide an effective ground-fault current path consisting of:",
+      "choices": [
+        "A single insulated copper equipment grounding conductor",
+        "A metal raceway only",
+        "Both a metal raceway or cable armor qualifying as an EGC and an insulated copper equipment grounding conductor",
+        "An isolated-ground receptacle only"
+      ],
+      "correctIndex": 2,
+      "explanation": "517.13(A) and (B): the \"redundant grounding\" requirement for reliability in patient care spaces.",
+      "necReference": "517.13"
+    },
+    {
+      "id": "bank-112",
+      "area": "motors_transformers_special_equipment",
+      "difficulty": 2,
+      "prompt": "Which wiring method is permitted in a Class I, Division 1 hazardous location?",
+      "choices": [
+        "EMT with compression fittings",
+        "Type NM cable",
+        "Threaded rigid metal conduit",
+        "Schedule 40 PVC"
+      ],
+      "correctIndex": 2,
+      "explanation": "501.10(A): threaded RMC, threaded steel IMC, Type MI cable and a few other listed methods; EMT, NM and PVC are not permitted in Division 1.",
+      "necReference": "501.10(A)"
+    },
+    {
+      "id": "bank-113",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "After locking out a circuit, the correct way to verify absence of voltage is to:",
+      "choices": [
+        "Confirm the breaker handle reads OFF",
+        "Test the meter on a known live source, test every conductor of the circuit, then re-test the meter on the known source",
+        "Use only a non-contact voltage tester",
+        "Ask a co-worker to confirm the panel schedule"
+      ],
+      "correctIndex": 1,
+      "explanation": "NFPA 70E 120.5 requires an adequately rated test instrument, verified before and after on a known source (live-dead-live). Breaker handles and panel schedules can be wrong.",
+      "necReference": null
+    },
+    {
+      "id": "bank-114",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "A Class A GFCI protecting personnel trips at a ground-fault current of approximately:",
+      "choices": [
+        "0.5 mA",
+        "5 mA",
+        "30 mA",
+        "100 mA"
+      ],
+      "correctIndex": 1,
+      "explanation": "Class A devices trip between 4 and 6 mA, below the let-go threshold. 30 mA devices are equipment protection (GFPE), not personnel protection.",
+      "necReference": null
+    },
+    {
+      "id": "bank-115",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "On a construction site, which temporary-wiring receptacles must be GFCI protected for personnel?",
+      "choices": [
+        "Only 240 V receptacles",
+        "All 125 V, 15, 20 and 30 A receptacles",
+        "Only receptacles outdoors",
+        "None; GFCI is required only in dwellings"
+      ],
+      "correctIndex": 1,
+      "explanation": "590.6(A): all 125 V, single-phase, 15, 20 and 30 A receptacles that are not part of the permanent wiring, including those on generators.",
+      "necReference": "590.6(A)"
+    },
+    {
+      "id": "bank-116",
+      "area": "safety",
+      "difficulty": 2,
+      "prompt": "Under OSHA 29 CFR 1926.404(b)(1), the alternative to GFCI protection for temporary receptacles on a construction site is:",
+      "choices": [
+        "AFCI protection",
+        "An assured equipment grounding conductor program",
+        "Using only double-insulated tools",
+        "A daily visual inspection of cords only"
+      ],
+      "correctIndex": 1,
+      "explanation": "OSHA permits an assured equipment grounding conductor program with written procedures, designated competent persons and documented tests of cords and tools at set intervals.",
+      "necReference": null
+    },
+    {
+      "id": "bank-117",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "During a group lockout, how is each worker protected against re-energization?",
+      "choices": [
+        "The foreman holds one lock for the crew",
+        "Each worker applies their own lock and tag and removes only their own",
+        "A tag without a lock is sufficient",
+        "Only the first worker needs a lock"
+      ],
+      "correctIndex": 1,
+      "explanation": "OSHA 1910.147, 1926.417 and Cal/OSHA Title 8 section 3314: each authorized employee applies a personal lock; the device is removed only by the person who applied it.",
+      "necReference": null
+    },
+    {
+      "id": "bank-118",
+      "area": "safety",
+      "difficulty": 2,
+      "prompt": "Under NFPA 70E, arc-rated PPE for category 2 tasks must have a minimum arc rating of:",
+      "choices": [
+        "4 cal/cm²",
+        "8 cal/cm²",
+        "25 cal/cm²",
+        "40 cal/cm²"
+      ],
+      "correctIndex": 1,
+      "explanation": "NFPA 70E Table 130.7(C)(15)(c): category 1 is 4 cal/cm², category 2 is 8, category 3 is 25, category 4 is 40.",
+      "necReference": null
+    },
+    {
+      "id": "bank-119",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "When working near energized electrical equipment, a portable ladder should be made of:",
+      "choices": [
+        "Aluminum",
+        "Fiberglass (nonconductive side rails)",
+        "Steel",
+        "Any material if it is tied off"
+      ],
+      "correctIndex": 1,
+      "explanation": "OSHA 1926.1053(b)(12) prohibits ladders with conductive side rails where they could contact energized parts; fiberglass is the standard choice.",
+      "necReference": null
+    },
+    {
+      "id": "bank-120",
+      "area": "safety",
+      "difficulty": 1,
+      "prompt": "In California, before excavating for an underground service, the excavator must contact the regional 811 notification center (DigAlert or USA North 811) at least:",
+      "choices": [
+        "24 hours before digging",
+        "Two working days before digging",
+        "One week before digging",
+        "It is not required for hand digging"
+      ],
+      "correctIndex": 1,
+      "explanation": "California Government Code section 4216.2 requires a ticket at least two working days (not more than 14 calendar days) before excavation, including hand digging.",
+      "necReference": null
+    }
+  ]
+}

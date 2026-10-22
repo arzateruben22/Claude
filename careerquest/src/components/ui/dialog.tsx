@@ -26,6 +26,8 @@ export function Dialog({
 }) {
   const ref = React.useRef<HTMLDialogElement>(null);
   const mounted = useIsMounted();
+  // Unique per instance so two mounted dialogs never share an aria-labelledby target.
+  const titleId = React.useId();
 
   React.useEffect(() => {
     const el = ref.current;
@@ -47,12 +49,12 @@ export function Dialog({
         "backdrop:bg-black/60 backdrop:backdrop-blur-sm bg-transparent p-0 m-auto w-[calc(100%-2rem)] open:flex",
         width,
       )}
-      aria-labelledby="cq-dialog-title"
+      aria-labelledby={titleId}
     >
       <div className={cn("glass-strong rounded-card w-full text-fg shadow-card bg-bg-elevated", className)} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between gap-3 px-5 pt-5">
           <div>
-            <h2 id="cq-dialog-title" className="text-base font-semibold">
+            <h2 id={titleId} className="text-base font-semibold">
               {title}
             </h2>
             {description && <p className="text-xs text-fg-muted mt-0.5">{description}</p>}

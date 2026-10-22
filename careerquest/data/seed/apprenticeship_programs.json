@@ -1,0 +1,251 @@
+[
+  {
+    "slug": "ibew-11-eti",
+    "name": "Electrical Training Institute (ETI) - Los Angeles Electrical Training Trust (LAETT)",
+    "sponsor": "IBEW Local 11 / Los Angeles County Chapter NECA Joint Apprenticeship & Training Committee (DAS: 'Los Angeles Electrical JATC')",
+    "region": "Los Angeles County",
+    "isUnion": true,
+    "website": "https://www.laett.com/",
+    "applyUrl": "https://www.laett.com/index.cfm?zone=%2Funionactive%2Fview_page.cfm&page=Inside20Wireman",
+    "eligibility": [
+      "Minimum 18 years of age at time of application",
+      "Valid government-issued photo ID",
+      "Original high school diploma, GED or college degree (foreign documents must be translated and notarized by a California notary)",
+      "Proof of completing an algebra course (excluding geometry) with a 'C' or better: one year of high school algebra (two semesters) or one semester of college algebra; the Electrical Training Alliance online Tech Math course certificate is accepted; certain veterans/reservists may have the algebra requirement waived",
+      "Valid Social Security number (required to register as an apprentice with the State of California)",
+      "Driver's license requirement: not stated in retrieved excerpts (unverified)",
+      "Drug test: not stated in retrieved excerpts (unverified)"
+    ],
+    "processSteps": [
+      "Create a TradeSchool online account in advance (creating an account is not an application)",
+      "Register online only during an announced application window at laett.com and upload all required documents with the application",
+      "Qualifying applicants are scheduled for the written aptitude test at the ETI facility in the City of Commerce",
+      "Interview/ranking: standard IBEW-NECA process, but an oral interview step was not explicitly confirmed in the retrieved excerpts (unverified)",
+      "Apprentices attend a combination of day and night classes, minimum 240 hours per year (Inside Wireman)"
+    ],
+    "durationYears": 5,
+    "classroomHours": "Inside Wireman: minimum 240 hours per year (official ETI notice). Sound & Communication: minimum 6 hours per week plus one or more Saturday classes per month (3-year program).",
+    "startingWage": "$26.00/hr (40% of journeyman, per 01/26/2026 ETI notice). Inside Wireman wage schedule from that notice: 0 hours = 40% = $26.00/hr; 1,000 hours = 45% = $29.25/hr; 3,500 hours = 60% = $39.00/hr (implies a $65.00/hr journeyman base); employer contributions fund benefits. Apprentices are not paid during class weeks but may qualify for unemployment benefits. A successor IBEW 11 agreement ratified Oct 14, 2026 adds $2.00/hr to wages effective 7/27/2026, so this schedule may have been updated (post-ratification schedule unverified).",
+    "startingWageVerified": true,
+    "fees": null,
+    "contact": {
+      "phone": "(323) 221-5881",
+      "address": "6023 S. Garfield Ave, Commerce, CA 90040",
+      "email": "applications@laett.com"
+    },
+    "recruitmentStatus": "CLOSED",
+    "recruitmentNote": "CLOSED as of 2026-10-21. The official Inside Wireman page on laett.com (read via search extract, not a direct page fetch) lists four 2026 application windows: January 5, April 6, July 6, and October 5-9, 2026, each open until 2,000 applications are received. All four have passed; the January/April/July windows are marked closed and no 2027 dates were announced in the retrieved content. Fees, driver's license and drug-test requirements, and the oral interview step were not stated in retrieved excerpts (unverified; fees stored as null). Check laett.com or email applications@laett.com for the next window.",
+    "sourceUrls": [
+      "https://www.laett.com/index.cfm?zone=%2Funionactive%2Fview_page.cfm&page=Inside20Wireman",
+      "https://www.laett.com/Apprenticeship%20handouts/AW%20Official%20Notice%20-%2001-26-26.pdf",
+      "https://www.laett.com/index.cfm?zone=%2Funionactive%2Fview_page.cfm&page=Sound202620Communications",
+      "https://www.laett.com/Apprenticeship%20handouts/SAP%20Official%20Notice%20-%2012-31-24.pdf",
+      "https://laett.com/Apprenticeship%20handouts/SAP%20Official%20Notice%20-%2006-28-26.pdf",
+      "https://www.laett.com/Apprenticeship%20handouts/Official%20Notice%20(RW)%2012-20-2023.pdf",
+      "https://laett.com/index.cfm?zone=%2Funionactive%2Fcontact.cfm",
+      "https://www.dir.ca.gov/databases/das/results_aiglist.asp?varCounty=LOS+ANGELES&varType=22"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "slug": "ibew-441-ocett",
+    "name": "Orange County Electrical Training Institute (OCETI) / Orange County Electrical Training Trust (OCETT)",
+    "sponsor": "IBEW Local 441 / Orange County Chapter NECA Joint Apprenticeship Committee (DAS: 'Orange County Electrical JAC')",
+    "region": "Orange County",
+    "isUnion": true,
+    "website": "https://www.ocett.org/",
+    "applyUrl": "https://www.ocett.org/?zone=%2Funionactive%2Fview_page.cfm&page=How20to20Apply",
+    "eligibility": [
+      "Minimum age 18 at time of application (DAS listing and OCETT application procedures)",
+      "High school diploma, GED or equivalent (official sealed high school transcripts required)",
+      "Two years of high school math, one of which must be Algebra, with a minimum grade of 'C' in both years (DAS listing)",
+      "Must be able to distinguish colors (DAS listing)",
+      "Must be fluent in English (OCETT application procedures PDF)",
+      "Valid driver's license and Social Security card to be presented with application (OCETT application procedures PDF)",
+      "Physical and drug test (DAS listing)"
+    ],
+    "processSteps": [
+      "Per the OCETT application procedures PDF (undated): applications are taken in person on the first and third Wednesday of the month, 8-11 am and 1-3 pm (walk-ins welcome; closed in July and December; closed weekends/holidays)",
+      "Per the current ocett.org site: admission runs through call-in appointments starting 8:00 AM on posted dates, then in-person document turn-in by appointment, then mandatory testing",
+      "Written aptitude test (DAS listing: written test = yes)",
+      "Oral interview/exam (DAS listing: oral exam = yes)",
+      "Physical and drug test (DAS listing)"
+    ],
+    "durationYears": 5,
+    "classroomHours": null,
+    "startingWage": null,
+    "startingWageVerified": false,
+    "fees": null,
+    "contact": {
+      "phone": "(714) 245-9988",
+      "address": "1261 E. Dyer Road, Santa Ana, CA 92705 (per DAS listing and current directories; older directories still show 717 S. Lyon St, Santa Ana, CA 92705 - confirm before visiting)"
+    },
+    "recruitmentStatus": "CLOSED",
+    "recruitmentNote": "CLOSED as of 2026-10-21. The ocett.org site (per search extract) listed the next Inside Wireman call-in date as August 4, 2026, which has passed, and shows 2027 call-in dates as TBD. The undated OCETT application procedures PDF describes a recurring first/third-Wednesday in-person schedule, which may be superseded by the call-in process. Program length is 60 months per the DAS listing. Starting wage (DAS listing: 'Contact Program'), classroom hours and fees were not retrieved and are stored as null. Email and fax appeared only in third-party directories (unverified) and are omitted. Call (714) 245-9988 to confirm.",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/databases/das/results_aigdetail.asp?varOccId=448",
+      "https://dir.ca.gov/databases/das/results_aiglist.asp?varCounty=ORANGE&varType=22",
+      "https://ocett.unionactive.com/OCETI%20Application%20Procedures%20Master.pdf",
+      "https://www.ocett.org/",
+      "https://www.ocett.org/?zone=%2Funionactive%2Fview_page.cfm&page=How20to20Apply"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "slug": "weca",
+    "name": "WECA Electrical Apprenticeship (Western Electrical Contractors Association)",
+    "sponsor": "Western Electrical Contractors Association, Inc. Apprenticeship and Training Committee (non-union / merit shop; state and federally registered)",
+    "region": "Southern California",
+    "isUnion": false,
+    "website": "https://www.goweca.com/",
+    "applyUrl": "https://www.goweca.com/Apprenticeship/ApplyforApprenticeship.aspx",
+    "eligibility": [
+      "Minimum 18 years of age (proof required with application)",
+      "High school diploma or GED (proof required with application)",
+      "Must be employed by a WECA member contractor to enter the program (the employing contractor pays tuition)",
+      "Driver's license: not stated on the official apply page (a WECA-affiliated employer job posting lists a valid CA driver's license - unverified as a program requirement)",
+      "Drug test: not stated in retrieved official content (unverified)"
+    ],
+    "processSteps": [
+      "Submit the online apprenticeship application with proof of age and education",
+      "Color identification test",
+      "Basic skills test (measurement, reading and arithmetic)",
+      "Multi-craft aptitude test",
+      "Oral interview for applicants who pass the three tests; basic skills, aptitude and interview scores are combined for ranking",
+      "Orientation session after passing testing and interview",
+      "Placement with a WECA member contractor"
+    ],
+    "durationYears": 5,
+    "classroomHours": "Accelerated block format: full-time classroom training and hands-on labs for two consecutive weeks every five to seven months; each two-week session counts as one semester. Total hours not retrieved (unverified).",
+    "startingWage": null,
+    "startingWageVerified": false,
+    "fees": "Apprentice tuition is paid by the WECA member contractor that employs the apprentice (official WECA statement). Other fees not stated in retrieved sources.",
+    "contact": {
+      "phone": "(877) 444-9322",
+      "address": "Riverside Training Center: 21550 Van Buren Blvd., Riverside, CA 92518 (WECA notes the center moved to a new, expanded location - confirm current address)",
+      "email": "info@goweca.com"
+    },
+    "recruitmentStatus": "UNVERIFIED",
+    "recruitmentNote": "UNVERIFIED as of 2026-10-21. WECA publishes an online apprenticeship application page (goweca.com) but no dated open/close window was found in retrieved official content; entry requires being hired by a WECA member contractor. Starting wage is not stated on retrieved official pages (stored as null). The 5-year Commercial Inside Wireman term comes from older WECA brochures/graduate materials (2016-2021) and was not restated on the current page; Residential Wireman is 3 years (current page); Low Voltage program length not retrieved. DAS lists WECA programs in both Los Angeles and Orange counties, but no LA- or OC-based WECA classroom facility was verified (training center is in Riverside), so region is stored as 'Southern California'.",
+    "sourceUrls": [
+      "https://www.goweca.com/Apprenticeship/ApplyforApprenticeship.aspx",
+      "https://www.goweca.com/Apprenticeship/ThreeCaliforniaApprenticeshipPrograms.aspx",
+      "https://www.goweca.com/Apprenticeship/ApplyforApprenticeship/OnlineApprenticeshipApplication.aspx",
+      "https://www.goweca.com/Apprenticeship/ApprenticeFAQs.aspx",
+      "https://www.goweca.com/Portals/0/2021%20WECA%20Apprenticeship%20Scrollable%20Brochure.pdf",
+      "https://www.dir.ca.gov/databases/das/results_aiglist.asp?varCounty=LOS+ANGELES&varType=22",
+      "https://dir.ca.gov/databases/das/results_aiglist.asp?varCounty=ORANGE&varType=22"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "slug": "abc-socal",
+    "name": "ABC Southern California Electrical Apprenticeship",
+    "sponsor": "Southern California Chapter of the Associated Builders and Contractors, Inc., Electrical Unilateral Apprenticeship Committee (non-union / merit shop; approved by the State of California and U.S. DOL)",
+    "region": "Southern California",
+    "isUnion": false,
+    "website": "https://abcsocal.org/education-training/apprenticeship-program/",
+    "applyUrl": "https://abcsocal.org/wp-content/uploads/2025/10/Apprenticeship-Application_2024_Rev_2025-06-05-FINAL.pdf",
+    "eligibility": [
+      "High school diploma or GED (photocopy required)",
+      "Social Security card and driver's license (photocopies) plus a K4 DMV printout",
+      "Transcripts showing one year of high school algebra or one semester of college algebra",
+      "Minimum age: not explicitly stated in retrieved excerpts (unverified)",
+      "Drug test: not found in retrieved content (unverified)"
+    ],
+    "processSteps": [
+      "Submit the apprenticeship application (choose one trade; each trade has its own waitlist, and electrical is reported to have a waitlist)",
+      "Aptitude test - minimum passing score 70%",
+      "Oral interview - passing score 80%",
+      "Orientation",
+      "Two attempts to pass the test; failing twice requires waiting one year to re-apply"
+    ],
+    "durationYears": 4.5,
+    "classroomHours": "Approximately 160-180 hours per year (one night per week, four hours, 20-week semesters, two semesters per year); the program page gives both 160 and 180 hours/year for LA/Ventura (conflicting). Overall roughly 800 hours of related classroom instruction over the program.",
+    "startingWage": "About 50% of the experienced craftsperson's rate, increasing throughout the apprenticeship (official ABC SoCal applicant page). No dollar figure stated - unverified as a dollar amount.",
+    "startingWageVerified": false,
+    "fees": null,
+    "contact": {
+      "phone": "Anaheim (714) 779-3199 (First Impression Manager) / Anaheim Training Department (714) 779-3187; San Fernando (818) 898-2099",
+      "address": "Anaheim (HQ/training): 1400 N. Kellogg Drive, Suite A, Anaheim, CA 92807. LA/Ventura training center: 12979 Arroyo Avenue, San Fernando, CA 91340.",
+      "email": "studentintake@abcsocal.net"
+    },
+    "recruitmentStatus": "UNVERIFIED",
+    "recruitmentNote": "UNVERIFIED as of 2026-10-21. Applications appear to be accepted on a rolling/waitlist basis via the 2025 application PDF (electrical is reported to have a waitlist); no dated open window was stated on retrieved official pages. Program length conflicts between the program page ('four and a half years - 8,000 on-the-job training hours') and the 2025 application PDF ('4 years with 7,200 OJT hours'); 4.5 years is stored - confirm with ABC SoCal. Starting wage is stated only as 'about 50 percent' with no dollar figure. A $50 enrollment fee and a $125 make-up day fee appear in ABC SoCal's Fall 2025 craft-training enrollment packet for 'electrical self-pay' students, but it is unclear whether these apply to registered apprentices vs. craft trainees, so fees are stored as null. Minimum age and drug-test requirements were not found in retrieved content. Campuses in Anaheim, San Fernando and Riverside cover Los Angeles, Orange, Riverside, San Bernardino and Ventura counties, so region is stored as 'Southern California'.",
+    "sourceUrls": [
+      "https://abcsocal.org/education-training/apprenticeship-program/",
+      "https://abcsocal.org/education-training/apprenticeship-program/applicants/",
+      "https://abcsocal.org/wp-content/uploads/2025/10/Apprenticeship-Application_2024_Rev_2025-06-05-FINAL.pdf",
+      "https://abcsocal.org/contact/",
+      "https://abcsocal.org/labor-compliance/apprentice-wage-rates/",
+      "https://abcsocal.org/wp-content/uploads/2025/04/Fall-2025-Enrollment-Packet_Rev-v2-1.pdf",
+      "https://www.dir.ca.gov/databases/das/results_aiglist.asp?varCounty=LOS+ANGELES&varType=22"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "slug": "ibew-40-neca",
+    "name": "IBEW Local 40 / LA County NECA Joint Apprenticeship Committee (Inside Wireman - motion picture/studio electrical)",
+    "sponsor": "IBEW Local 40 and Los Angeles County Chapter NECA JAC",
+    "region": "Los Angeles County",
+    "isUnion": true,
+    "website": "https://ibew40.org/",
+    "applyUrl": "https://www.dir.ca.gov/databases/das/results_aigdetail.asp?varOccId=2726",
+    "eligibility": [
+      "Minimum age 18",
+      "High school diploma/GED/equivalent",
+      "One year of high school algebra or one semester of college algebra with a 'C' or better"
+    ],
+    "processSteps": [
+      "Written test (DAS listing: yes)",
+      "Oral exam/interview (DAS listing: yes)"
+    ],
+    "durationYears": 5,
+    "classroomHours": null,
+    "startingWage": null,
+    "startingWageVerified": false,
+    "fees": null,
+    "contact": {
+      "phone": "(818) 762-4239",
+      "address": "5643 Vineland Avenue, North Hollywood, CA 91601"
+    },
+    "recruitmentStatus": "CLOSED",
+    "recruitmentNote": "CLOSED as of 2026-10-21. An IBEW Local 40 news item (open-house article on ibew40.org) states new Inside Wireman apprenticeship applications are slated to reopen in Spring 2028. Program length is 60 months per the DAS listing. Starting wage (DAS listing: 'Contact Program'), classroom hours and fees were not retrieved and are stored as null. The DAS listing names Jesse Barron as training director. The apply URL points to the DAS program detail page because no program-run application page was retrieved.",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/databases/das/results_aigdetail.asp?varOccId=2726",
+      "https://ibew40.org/open-house-draws-enthusiastic-crowd/",
+      "https://ibew40.org/agreements-wages/",
+      "https://www.dir.ca.gov/databases/das/results_aiglist.asp?varCounty=LOS+ANGELES&varType=22"
+    ],
+    "verifiedOn": "2026-10-21"
+  },
+  {
+    "slug": "la-county-its-electrical-jatc",
+    "name": "LA County ITS Electrical Joint Apprenticeship and Training Committee (Transportation Systems Electrician)",
+    "sponsor": "IBEW Local 11 / NECA (training delivered through the Electrical Training Institute)",
+    "region": "Los Angeles County",
+    "isUnion": true,
+    "website": "https://laett.com/index.cfm?page=Transportation&zone=%2Funionactive%2Fview_page.cfm",
+    "applyUrl": "https://www.laett.com/Apprenticeship%20handouts/TSA%20Official%20Notice%20-%2001-29-24.pdf",
+    "eligibility": [],
+    "processSteps": [],
+    "durationYears": null,
+    "classroomHours": null,
+    "startingWage": null,
+    "startingWageVerified": false,
+    "fees": null,
+    "contact": {
+      "phone": "(323) 221-5881",
+      "address": "6023 S. Garfield Ave, Commerce, CA 90040 (ETI)"
+    },
+    "recruitmentStatus": "UNVERIFIED",
+    "recruitmentNote": "UNVERIFIED as of 2026-10-21. The program appears in the DAS Los Angeles County electrician program list, and a DIR prevailing-wage apprentice rate table exists for 'Transportation Systems Electrician' (Los Angeles 2026-1), but no dated application window, eligibility details, process steps, program length, classroom hours, wage figures or fees were retrieved; those fields are stored as empty/null rather than guessed. The apply URL is ETI's TSA Official Notice dated 01-29-24 and may be outdated. Contact ETI at (323) 221-5881 to confirm.",
+    "sourceUrls": [
+      "https://www.dir.ca.gov/databases/das/results_aiglist.asp?varCounty=LOS+ANGELES&varType=22",
+      "https://www.dir.ca.gov/oprl/pwappwage/wage/26119227.html?VarWageId=26119227",
+      "https://laett.com/index.cfm?page=Transportation&zone=%2Funionactive%2Fview_page.cfm",
+      "https://www.laett.com/Apprenticeship%20handouts/TSA%20Official%20Notice%20-%2001-29-24.pdf"
+    ],
+    "verifiedOn": "2026-10-21"
+  }
+]

@@ -30,9 +30,15 @@ export function FunnelStrip({ funnel }: { funnel: FunnelCounts }) {
             const conv = prev === null ? null : prev > 0 ? count / prev : null;
             const ofSubmitted = i === 0 ? null : funnel.submitted > 0 ? count / funnel.submitted : null;
             return (
-              <li key={s.key} className={cn("rounded-ctl bg-surface-strong px-3 py-2.5 min-w-0", count > 0 && i > 0 && "border border-accent/20")}>
+              <li
+                key={s.key}
+                data-testid={`funnel-stage-${s.key}`}
+                className={cn("rounded-ctl bg-surface-strong px-3 py-2.5 min-w-0", count > 0 && i > 0 && "border border-accent/20")}
+              >
                 <p className="text-[11px] text-fg-muted truncate">{s.label}</p>
-                <p className={cn("text-xl font-semibold tnum", count > 0 ? "text-fg" : "text-fg-subtle")}>{formatNumber(count)}</p>
+                <p data-testid="funnel-stage-count" className={cn("text-xl font-semibold tnum", count > 0 ? "text-fg" : "text-fg-subtle")}>
+                  {formatNumber(count)}
+                </p>
                 <p className="text-[11px] text-fg-subtle tnum">
                   {i === 0 ? "100%" : ofSubmitted === null ? "—" : `${formatPercent(ofSubmitted, 0)} of submitted`}
                   {conv !== null && i > 1 && prev! > 0 ? ` · ${formatPercent(conv, 0)} step` : ""}

@@ -345,7 +345,7 @@
           "In series with another coil to share the voltage"
         ],
         "correctIndex": 1,
-        "explanation": "Loads sit on the grounded side of the rung so that a ground fault in the control wiring cannot energize the coil and start the motor unexpectedly (430.73 concept)."
+        "explanation": "Loads sit on the grounded side of the rung so that a ground fault in the control wiring cannot energize the coil and start the motor unexpectedly (430.74 concept)."
       },
       {
         "id": "motors-and-controls-q7",

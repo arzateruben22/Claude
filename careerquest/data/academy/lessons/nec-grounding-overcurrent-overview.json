@@ -1,0 +1,439 @@
+{
+  "key": "nec-grounding-overcurrent-overview",
+  "track": "CODE",
+  "order": 4,
+  "title": "NEC Grounding, Bonding and Overcurrent Protection (Articles 250 and 240)",
+  "summary": "What overcurrent devices protect against and how they are sized to the conductor, and how grounding and bonding create the low-impedance fault path that lets them operate: electrodes, grounding electrode conductors, the main bonding jumper, equipment grounding conductors and the one-bond rule.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "nec-branch-circuits-feeders-services-overview",
+    "grounding-and-bonding"
+  ],
+  "objectives": [
+    "Students will be able to explain the purpose of overcurrent protection and distinguish overload, short-circuit and ground-fault conditions.",
+    "Students will be able to size an overcurrent device to a conductor using 240.4, including the small-conductor rule and the next-size-up allowance, and list the standard ratings in 240.6.",
+    "Students will be able to explain the difference between system grounding, equipment grounding and bonding, and why the earth is not an effective ground-fault current path.",
+    "Students will be able to describe the grounding electrode system, size a grounding electrode conductor from Table 250.66 and an equipment grounding conductor from Table 250.122.",
+    "Students will be able to state where the neutral-to-ground bond belongs and explain the hazards of a second bond or an open neutral."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Two articles, two halves of one safety system",
+      "markdown": "Article 240 says how to protect conductors and equipment from too much current. Article 250 says how to build the path that turns a ground fault into enough current to make Article 240's devices operate. Neither works alone: a breaker cannot clear a fault that has no path back to the source, and a perfect ground path with no breaker just carries fault current until something burns.\n\nThis lesson follows the Code concepts; the earlier SAFETY lesson on grounding and bonding covers the physics and the shock-protection reasoning in more depth. As always: **the current California Electrical Code (Title 24, Part 3) adopts the NEC with California amendments, and the DIR Candidate Information Bulletin names the NEC edition to study for the certification exam.** Table numbers below (250.66, 250.122, 240.6) have been stable across recent editions; a few section numbers have moved."
+    },
+    {
+      "type": "text",
+      "heading": "Overcurrent protection: what it does and how it is sized (Article 240)",
+      "markdown": "An **overcurrent** is any current above the rating of the equipment or the ampacity of the conductor. It comes in three kinds, and the protective device must handle all of them:\n\n- **Overload**: current above rating but confined to the normal path, such as too many loads on a circuit or a motor driving a jammed machine. Builds heat slowly; the device should trip in seconds to minutes depending on magnitude (the **inverse-time** characteristic).\n- **Short circuit**: current between ungrounded conductors, or ungrounded to neutral, outside the normal load path. Thousands of amperes; the device must open in a cycle or two.\n- **Ground fault**: current from an ungrounded conductor to the equipment grounding system or earth. Also thousands of amperes when the fault path is good, which is the whole point of Article 250.\n\n**Fuses** are one-time devices: a link melts. Time-delay (dual-element) fuses carry motor inrush; Class RK1, J, T and L fuses have high interrupting ratings and current-limiting ability. Plug fuses must be Type S (non-interchangeable) in new work (240.53). **Circuit breakers** are resettable: a thermal element (bimetal) handles overloads with inverse time, and a magnetic element trips instantly on short circuits. Breakers must be trip-free (cannot be held closed on a fault), indicate open/closed, and be marked with ampere and interrupting ratings (240.80–240.83). **Slash-rated** breakers (120/240 V, 480Y/277 V) are only for systems where voltage to ground does not exceed the lower number; a 480 V corner-grounded delta requires straight-rated 480 V breakers (240.85).\n\n**Sizing to the conductor, 240.4.** The basic rule is that conductors must be protected at their ampacity after adjustment and correction factors. The two refinements you will use daily:\n\n- **Small conductors, 240.4(D)**: regardless of the ampacity table, 14 AWG copper is limited to 15 A, 12 AWG copper to 20 A and 10 AWG copper to 30 A (12 AWG aluminum 15 A; 10 AWG aluminum 25 A), unless another part of the Code specifically permits otherwise (motors, HVAC, welders and a few other applications listed in 240.4(G)).\n- **Next size up, 240.4(B)**: where the conductor ampacity does not correspond to a standard device rating, the next higher standard rating may be used, provided the circuit is not a multi-outlet branch circuit supplying cord-and-plug receptacles and the next size does not exceed 800 A. Above 800 A, the device must not exceed the conductor ampacity (240.4(C)).\n\n**Standard ratings, 240.6(A)**: 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 225, 250, 300, 350, 400, 450, 500, 600, 700, 800, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000 and 6000 A; fuses add 1, 3, 6, 10 and 601 A. Adjustable-trip breakers are rated at their maximum setting unless access to the adjustment is restricted.\n\n**Location, 240.21 and 240.24.** The device goes where the conductor receives its supply, except under the tap rules and transformer secondary rules. Devices must be **readily accessible** with the handle no higher than 6 ft 7 in, not exposed to physical damage, not near easily ignitable material (clothes closets), not in bathrooms of dwellings or guest rooms, and not over the steps of a stairway.\n\n**GFCI and AFCI** are special-purpose devices in Article 240's family: a Class A GFCI trips at 4–6 mA of imbalance to protect people; ground-fault protection of equipment (GFPE, 215.10/230.95) trips at up to 1,200 A on large services to protect equipment; an AFCI recognizes the current signature of arcing."
+    },
+    {
+      "type": "table",
+      "caption": "Small-conductor limits (240.4(D)) and the ampacity they would otherwise have",
+      "columns": [
+        "Conductor",
+        "Maximum OCPD per 240.4(D)",
+        "60 °C ampacity",
+        "75 °C ampacity",
+        "90 °C ampacity"
+      ],
+      "rows": [
+        [
+          "14 AWG copper",
+          "15 A",
+          "15 A",
+          "20 A",
+          "25 A"
+        ],
+        [
+          "12 AWG copper",
+          "20 A",
+          "20 A",
+          "25 A",
+          "30 A"
+        ],
+        [
+          "10 AWG copper",
+          "30 A",
+          "30 A",
+          "35 A",
+          "40 A"
+        ],
+        [
+          "12 AWG aluminum",
+          "15 A",
+          "15 A",
+          "20 A",
+          "25 A"
+        ],
+        [
+          "10 AWG aluminum",
+          "25 A",
+          "25 A",
+          "30 A",
+          "35 A"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "Three conductor-protection questions. (a) 10 AWG THHN copper (75 °C ampacity 35 A) feeds a 240 V water heater drawing 22 A. What is the largest breaker permitted? (b) A 4 AWG copper feeder (85 A at 75 °C) supplies a subpanel. What breaker may protect it? (c) Six 12 AWG THHN current-carrying conductors share a conduit (adjustment factor 80 %) on a 90 °C-rated conductor; what breaker protects them?",
+      "solutionSteps": [
+        "(a) 10 AWG copper is capped by 240.4(D) at 30 A regardless of the 35 A ampacity. The continuous-load check: 22 A × 1.25 = 27.5 A, so a 30 A breaker is both the maximum and sufficient. Answer: 30 A.",
+        "(b) 85 A is not a standard rating. 240.4(B) permits the next higher standard rating, 90 A, because a feeder to a panel is not a multi-outlet receptacle circuit and 90 A is under 800 A. Answer: 90 A (assuming the load calculation allows it).",
+        "(c) Start from the 90 °C ampacity of 12 AWG, 30 A, and apply the 80 % adjustment: 24 A. The termination column (60 °C or 75 °C) gives 20 or 25 A, so 24 A is the adjusted ampacity if terminations are 75 °C. But 240.4(D) still limits 12 AWG copper to a 20 A device. Answer: 20 A.",
+        "Pattern: compute the ampacity, then check 240.4(D) for small conductors, then apply 240.4(B) for odd sizes, then confirm the device carries 125 % of continuous load."
+      ],
+      "answer": "(a) 30 A; (b) 90 A; (c) 20 A."
+    },
+    {
+      "type": "text",
+      "heading": "Grounding vs bonding, and the fault-current path (250.4)",
+      "markdown": "Section 250.4(A) states the performance goals, and reading it once makes the rest of Article 250 sensible:\n\n- **System grounding**: the electrical system (its neutral) is connected to earth to limit the voltage imposed by lightning, utility surges and accidental contact with higher-voltage lines, and to stabilize the voltage to earth during normal operation. This is what the grounding electrode system does.\n- **Equipment grounding**: normally non-current-carrying metal parts (enclosures, raceways, motor frames) are connected to earth so they cannot sit at a dangerous voltage.\n- **Bonding**: those same metal parts are connected to each other and to the supply source so that a fault to any of them creates an **effective ground-fault current path**: intentionally built, electrically continuous, low impedance, and able to carry the maximum fault current until the overcurrent device opens.\n- **The earth is not an effective ground-fault current path.** Soil has tens of ohms of resistance to a rod; a fault that returns only through the earth draws a few amperes, trips nothing, and leaves the enclosure energized at line voltage. The ground rod is for lightning and voltage stabilization, not for clearing faults.\n\nSo the system has two distinct parts that meet at one point: the **grounding electrode conductor (GEC)** connects the system to earth; the **equipment grounding conductors (EGCs)** and raceways connect every enclosure back to the service; and the **main bonding jumper (MBJ)** connects the neutral to the enclosure at the service so that fault current on an EGC can return to the transformer through the neutral."
+    },
+    {
+      "type": "formula",
+      "name": "Why the fault path must be low impedance",
+      "expression": "I_fault = V_to_ground ÷ Z_fault_path",
+      "variables": [
+        {
+          "symbol": "I_fault",
+          "meaning": "current that flows during a ground fault",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "V_to_ground",
+          "meaning": "system voltage from the faulted conductor to ground (120 V or 277 V typical)",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "Z_fault_path",
+          "meaning": "total impedance of the loop: ungrounded conductor, fault, EGC or raceway, main bonding jumper, neutral back to the transformer",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "With a proper EGC the loop might be 0.4 Ω: 120 ÷ 0.4 = 300 A, which trips a 20 A breaker magnetically within a cycle. Through a 25 Ω ground rod alone: 120 ÷ 25 = 4.8 A, which never trips the breaker and leaves 120 V on the enclosure indefinitely. The Code sizes EGCs (Table 250.122) so that Z stays low enough for the device to open."
+    },
+    {
+      "type": "diagram",
+      "title": "Service grounding and bonding, and a correctly wired subpanel",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 580 330\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"30\" y=\"30\" width=\"215\" height=\"205\" rx=\"4\"/><text x=\"137\" y=\"20\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\">Service equipment</text><rect x=\"60\" y=\"45\" width=\"44\" height=\"22\" stroke=\"#ff6b6b\"/><text x=\"82\" y=\"60\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">MAIN</text><rect x=\"55\" y=\"105\" width=\"90\" height=\"10\" fill=\"#9aa6b8\" stroke=\"none\"/><text x=\"100\" y=\"99\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">neutral bar (grounded conductor)</text><rect x=\"55\" y=\"180\" width=\"90\" height=\"10\" fill=\"#3ddc97\" stroke=\"none\"/><text x=\"100\" y=\"205\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">EGC bar, bonded to enclosure</text><path d=\"M145 110 H200 V185 H145\" stroke=\"#f3c75b\" stroke-width=\"4\"/><path d=\"M200 148 H245\" stroke=\"#f3c75b\" stroke-width=\"4\"/><text x=\"172\" y=\"138\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">main</text><text x=\"172\" y=\"149\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">bonding</text><text x=\"172\" y=\"160\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">jumper</text><path d=\"M100 190 V275\" stroke=\"#3ddc97\"/><text x=\"108\" y=\"245\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"10\">GEC, Table 250.66</text><path d=\"M100 275 H40 M100 275 H190 M100 275 V320\" stroke=\"#3ddc97\"/><path d=\"M40 275 V295\" stroke=\"#3ddc97\"/><rect x=\"20\" y=\"295\" width=\"40\" height=\"12\" stroke=\"#9aa6b8\"/><text x=\"40\" y=\"322\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">metal water pipe</text><path d=\"M96 320 l4 6 4 -6\" stroke=\"#3ddc97\"/><text x=\"115\" y=\"312\" fill=\"currentColor\" stroke=\"none\" font-size=\"9\">8 ft rod</text><rect x=\"165\" y=\"285\" width=\"60\" height=\"26\" stroke=\"#9aa6b8\"/><path d=\"M172 298 H218\" stroke=\"#9aa6b8\" stroke-dasharray=\"4 3\"/><text x=\"195\" y=\"324\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">rebar in footing (CEE)</text><path d=\"M245 80 H330\"/><path d=\"M245 110 H330\" stroke=\"#9aa6b8\"/><path d=\"M245 185 H330\" stroke=\"#3ddc97\"/><text x=\"287\" y=\"74\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">ungrounded (hot)</text><text x=\"287\" y=\"104\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">grounded (neutral)</text><text x=\"287\" y=\"200\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">EGC (green/bare)</text><rect x=\"330\" y=\"60\" width=\"62\" height=\"140\" rx=\"4\"/><circle cx=\"361\" cy=\"130\" r=\"16\"/><path d=\"M349 124 H373 M349 136 H373\" stroke-width=\"1.5\"/><text x=\"361\" y=\"215\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">receptacle outlet</text><rect x=\"425\" y=\"60\" width=\"140\" height=\"150\" rx=\"4\"/><text x=\"495\" y=\"50\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\">Subpanel (fed by feeder)</text><rect x=\"450\" y=\"95\" width=\"90\" height=\"10\" fill=\"#9aa6b8\" stroke=\"none\"/><text x=\"495\" y=\"89\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">neutral bar, ISOLATED</text><rect x=\"450\" y=\"165\" width=\"90\" height=\"10\" fill=\"#3ddc97\" stroke=\"none\"/><text x=\"495\" y=\"190\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">EGC bar, bonded to can</text><text x=\"495\" y=\"137\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\">NO neutral-ground bond</text><text x=\"495\" y=\"150\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">(250.24(A)(5), 250.32(B))</text><text x=\"495\" y=\"228\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"9\">4-wire feeder: two hots, neutral, EGC</text></svg>",
+      "caption": "At the service: the neutral bar is bonded to the enclosure and EGC bar by the main bonding jumper, and the grounding electrode conductor runs from that point to the electrode system. Downstream, neutrals and EGCs stay separate; the subpanel neutral bar is isolated from its can."
+    },
+    {
+      "type": "text",
+      "heading": "The grounding electrode system and its conductor (250.50–250.66)",
+      "markdown": "**Electrodes (250.52(A))**: a metal underground water pipe with at least 10 ft in contact with earth; the metal in-ground support structure of the building; a **concrete-encased electrode** (at least 20 ft of ½ in rebar or 4 AWG bare copper in a footing in contact with earth, the \"Ufer\" ground); a ground ring (20 ft of 2 AWG bare copper buried 30 in); rod and pipe electrodes (8 ft long, driven); listed electrodes; and plate electrodes. Metal underground gas piping and aluminum are not permitted as electrodes.\n\n**All present electrodes are bonded together (250.50)** to form one grounding electrode system. Since 2005, if a concrete-encased electrode is present in new construction, it must be used; a water pipe electrode must always be supplemented by another electrode (250.53(D)(2)); and a single rod must be supplemented by a second rod at least 6 ft away unless it tests at 25 Ω or less (250.53(A)(2)). In practice, California residential work uses the Ufer plus a water pipe bond, with rods for existing buildings.\n\n**The grounding electrode conductor (250.64, 250.66)** runs from the service neutral or EGC bar (or the system bonding jumper of a separately derived system) to the electrode system. It must be continuous (no splices except irreversible compression or exothermic welds), protected from damage (6 AWG and larger may run exposed along the structure; smaller sizes go in raceway or armor), and where it runs in a ferrous metal raceway, the raceway must be bonded to the conductor at both ends to avoid choking the current (250.64(E)).\n\n**Sizing (Table 250.66)** is based on the largest ungrounded service conductor, with three caps: the conductor to a rod or pipe electrode never needs to be larger than **6 AWG copper**; to a concrete-encased electrode, **4 AWG copper**; to a ground ring, the size of the ring conductor.\n\n**Bonding other systems (250.104)**: interior metal water piping and structural metal are bonded to the service with jumpers sized from Table 250.66; other metal piping that could become energized, such as gas piping, is bonded per 250.104(B) with a conductor sized from Table 250.122 for the circuit likely to energize it, which is commonly the appliance circuit's EGC. Metal pool parts are the subject of Article 680."
+    },
+    {
+      "type": "table",
+      "caption": "Table 250.66, summarized: grounding electrode conductor size (copper)",
+      "columns": [
+        "Largest ungrounded service conductor (copper)",
+        "Largest ungrounded service conductor (aluminum)",
+        "GEC size, copper"
+      ],
+      "rows": [
+        [
+          "2 AWG or smaller",
+          "1/0 AWG or smaller",
+          "8 AWG"
+        ],
+        [
+          "1 or 1/0 AWG",
+          "2/0 or 3/0 AWG",
+          "6 AWG"
+        ],
+        [
+          "2/0 or 3/0 AWG",
+          "4/0 or 250 kcmil",
+          "4 AWG"
+        ],
+        [
+          "over 3/0 through 350 kcmil",
+          "over 250 through 500 kcmil",
+          "2 AWG"
+        ],
+        [
+          "over 350 through 600 kcmil",
+          "over 500 through 900 kcmil",
+          "1/0 AWG"
+        ],
+        [
+          "over 600 through 1100 kcmil",
+          "over 900 through 1750 kcmil",
+          "2/0 AWG"
+        ],
+        [
+          "over 1100 kcmil",
+          "over 1750 kcmil",
+          "3/0 AWG"
+        ],
+        [
+          "Caps: to a rod, 6 AWG max",
+          "to a concrete-encased electrode, 4 AWG max",
+          "to a ground ring, not larger than the ring"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Equipment grounding conductors and the one-bond rule (250.118–250.148, 250.24, 250.32)",
+      "markdown": "**What counts as an EGC (250.118)**: a copper or aluminum conductor (insulated green, green with yellow stripe, or bare); rigid metal conduit, intermediate metal conduit and EMT; listed flexible metal conduit and liquidtight flexible metal conduit under length and ampere limits (6 ft, 20 A for FMC; fittings listed for grounding); Type AC cable armor; Type MC cable where listed for it; and cable trays and busways under conditions. In California most commercial work installs a wire EGC in every raceway anyway, because couplings loosen and set screws corrode.\n\n**Sizing (Table 250.122)** is based on the rating of the overcurrent device ahead of the circuit: 15 A: 14 AWG; 20 A: 12 AWG; 30–60 A: 10 AWG; 100 A: 8 AWG; 200 A: 6 AWG; 300 A: 4 AWG; 400 A: 3 AWG; 500 A: 2 AWG; 600 A: 1 AWG; 800 A: 1/0; 1000 A: 2/0; 1200 A: 3/0 (copper). When the ungrounded conductors are upsized for voltage drop, the EGC must be upsized proportionally (250.122(B)), and the EGC never needs to be larger than the circuit conductors. One EGC in a raceway serves all the circuits in it, sized for the largest device (250.122(C)).\n\n**Terminations**: EGCs are connected to boxes with listed screws or clips (250.148), receptacles are bonded to their boxes unless the yoke is self-grounding or the box is surface-mounted with direct metal contact (250.146), and EGCs are spliced so that removing a device does not interrupt the path (250.148(B)).\n\n**The one-bond rule.** The grounded (neutral) conductor is connected to the EGC system and the enclosure at exactly one point: the **main bonding jumper** at the service disconnect (250.24, 250.28), or the **system bonding jumper** at a separately derived system such as a transformer secondary (250.30). **Nowhere else**: not in a subpanel (250.24(A)(5)), not at a separate building fed by a four-wire feeder (250.32(B)), not at a range or dryer (250.140, except certain existing 3-wire circuits). A second bond puts normal neutral current on the EGCs, raceways, water pipes and building steel (**objectionable current**, 250.6), creating shock and fire hazards and corroding the pipes. The green bonding screw that comes with a panel is installed at the service and thrown away everywhere else."
+    },
+    {
+      "type": "example",
+      "problem": "A 200 A residential service uses 2/0 AWG copper service-entrance conductors. Electrodes: a concrete-encased electrode, the metal water pipe and one ground rod. Size the grounding electrode conductors. Then size the EGC for a 60 A copper feeder to a detached workshop and state what the workshop panel must not have.",
+      "solutionSteps": [
+        "Table 250.66: 2/0 AWG copper service conductors require a 4 AWG copper GEC.",
+        "To the concrete-encased electrode: 4 AWG (the table size, which also equals the 4 AWG cap). To the water pipe: 4 AWG, since the water pipe bond carries no size cap. To the rod: 6 AWG is sufficient because the rod cap is 6 AWG, even though the table says 4 AWG.",
+        "A single 4 AWG GEC may run to the Ufer with bonding jumpers from there to the water pipe and rod, or separate conductors may run from the service; both are common.",
+        "Workshop feeder: Table 250.122 for a 60 A device = 10 AWG copper EGC, run with the two ungrounded conductors and the neutral (four-wire feeder).",
+        "At the workshop: install a grounding electrode (rod or Ufer) connected to the panel's EGC bar, keep the neutral bar isolated from the can, and do not install the bonding screw. Provide a disconnecting means at the building (225.31)."
+      ],
+      "answer": "GEC 4 AWG copper (6 AWG suffices for the rod leg). Workshop EGC 10 AWG copper; the workshop panel gets its own electrode and no neutral-ground bond."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "An open service neutral is the most dangerous common fault in a dwelling: the two 120 V legs go in series across 240 V and the voltages divide by load, so lights blink bright on one leg and dim on the other, electronics fail, and the water pipes carry current back to the utility. The grounding electrode system is what keeps the voltage to earth from running away in that condition. If you see those symptoms, do not touch the panel neutral; call the utility to check their neutral first, and test the service neutral connection under load."
+    }
+  ],
+  "practice": [
+    {
+      "id": "nec-grounding-overcurrent-overview-p1",
+      "type": "numeric",
+      "prompt": "What is the maximum overcurrent device rating permitted for 12 AWG copper conductors on a general-purpose receptacle circuit?",
+      "answer": 20,
+      "unit": "A",
+      "tolerance": 0,
+      "explanation": "240.4(D)(5): 12 AWG copper is limited to 20 A unless specifically permitted elsewhere (motors, HVAC)."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p2",
+      "type": "numeric",
+      "prompt": "A feeder conductor has an ampacity of 115 A after derating and serves a panel. What is the largest standard overcurrent device permitted under 240.4(B)?",
+      "answer": 125,
+      "unit": "A",
+      "tolerance": 0,
+      "explanation": "115 A is not a standard rating; the next higher standard rating in 240.6(A) is 125 A, and the circuit is not a multi-outlet receptacle circuit, so 125 A is allowed."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p3",
+      "type": "numeric",
+      "prompt": "Table 250.122: what size copper equipment grounding conductor is required for a circuit protected by a 100 A breaker? (Enter the AWG number.)",
+      "answer": 8,
+      "unit": "AWG",
+      "tolerance": 0,
+      "explanation": "A 100 A overcurrent device requires an 8 AWG copper (6 AWG aluminum) EGC."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p4",
+      "type": "numeric",
+      "prompt": "A ground fault occurs on a 277 V lighting circuit. The total loop impedance through the EMT raceway and bonding jumpers is 0.5 Ω. What fault current flows?",
+      "answer": 554,
+      "unit": "A",
+      "tolerance": 2,
+      "explanation": "I = 277 ÷ 0.5 = 554 A, enough to trip a 20 A breaker instantly. Through a 25 Ω rod alone it would be only 11 A."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p5",
+      "type": "multiple_choice",
+      "prompt": "Why is the earth not considered an effective ground-fault current path?",
+      "choices": [
+        "Because soil is a good conductor and would carry too much current",
+        "Because its resistance is too high to allow enough current to open the overcurrent device",
+        "Because the NEC prohibits ground rods",
+        "Because fault current only flows on AC"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.4(A)(5). A rod at 25 Ω passes only a few amperes at 120 V, far below the trip level of any breaker, leaving the enclosure energized."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p6",
+      "type": "multiple_choice",
+      "prompt": "The grounding electrode conductor to a single ground rod never needs to be larger than:",
+      "choices": [
+        "8 AWG copper",
+        "6 AWG copper",
+        "4 AWG copper",
+        "2 AWG copper"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.66(A): the portion of the GEC that is the sole connection to a rod, pipe or plate electrode need not be larger than 6 AWG copper."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p7",
+      "type": "multiple_choice",
+      "prompt": "In a subpanel fed by a four-wire feeder from the service, the neutral bar must be:",
+      "choices": [
+        "bonded to the enclosure with the green screw",
+        "isolated from the enclosure, with the EGCs on a separate bar bonded to the can",
+        "connected to a ground rod only",
+        "omitted"
+      ],
+      "correctIndex": 1,
+      "explanation": "250.24(A)(5): no neutral-to-ground connection on the load side of the service disconnect. A second bond puts neutral current on the grounding system."
+    },
+    {
+      "id": "nec-grounding-overcurrent-overview-p8",
+      "type": "multiple_choice",
+      "prompt": "A single driven rod measures 60 Ω to earth. Per 250.53(A)(2) you must:",
+      "choices": [
+        "drive a second rod at least 6 ft from the first and bond them together",
+        "replace it with a 10 ft rod",
+        "pour water around it",
+        "nothing; any rod is acceptable"
+      ],
+      "correctIndex": 0,
+      "explanation": "A single rod must be supplemented by an additional electrode unless it reads 25 Ω or less. Most installers simply drive two rods without testing."
+    }
+  ],
+  "quiz": {
+    "key": "nec-grounding-overcurrent-overview-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "nec-grounding-overcurrent-overview-q1",
+        "type": "numeric",
+        "prompt": "What is the maximum overcurrent device for 14 AWG copper conductors on a lighting circuit?",
+        "answer": 15,
+        "unit": "A",
+        "tolerance": 0,
+        "explanation": "240.4(D)(3): 14 AWG copper is limited to 15 A."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q2",
+        "type": "numeric",
+        "prompt": "A service has 3/0 AWG copper service-entrance conductors. What size copper GEC does Table 250.66 require to a concrete-encased electrode? (Enter the AWG number.)",
+        "answer": 4,
+        "unit": "AWG",
+        "tolerance": 0,
+        "explanation": "2/0 or 3/0 copper requires a 4 AWG copper GEC, which is also the maximum needed for a concrete-encased electrode."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q3",
+        "type": "numeric",
+        "prompt": "What size copper EGC does Table 250.122 require for a 200 A feeder? (Enter the AWG number.)",
+        "answer": 6,
+        "unit": "AWG",
+        "tolerance": 0,
+        "explanation": "A 200 A device requires a 6 AWG copper EGC."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q4",
+        "type": "numeric",
+        "prompt": "A circuit breaker with a 10,000 A interrupting rating is installed where the available fault current is 14,000 A. By how many amperes is the available fault current above the rating (a violation of 110.9)?",
+        "answer": 4000,
+        "unit": "A",
+        "tolerance": 1,
+        "explanation": "14,000 − 10,000 = 4,000 A over. The breaker could fail to interrupt and explode; a 22 kAIC device or a listed series combination is required."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q5",
+        "type": "multiple_choice",
+        "prompt": "Which condition is an overload rather than a short circuit?",
+        "choices": [
+          "A hot conductor contacts the grounded metal box",
+          "Two hot conductors touch inside a junction box",
+          "Three space heaters on one 15 A circuit draw 22 A through the normal load path",
+          "A nail penetrates a cable and bridges hot to neutral"
+        ],
+        "correctIndex": 2,
+        "explanation": "Overload is excess current in the normal path. The other three are short circuits or ground faults, with current outside the intended path."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q6",
+        "type": "multiple_choice",
+        "prompt": "A 240.4(B) next-size-up selection is NOT permitted when:",
+        "choices": [
+          "the conductor ampacity is 115 A",
+          "the circuit is a multi-outlet branch circuit supplying receptacles for cord-and-plug loads",
+          "the circuit is a feeder to a panelboard",
+          "the next size is 125 A"
+        ],
+        "correctIndex": 1,
+        "explanation": "Receptacle circuits can be loaded by whatever is plugged in, so their conductors must be protected at or below their ampacity."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q7",
+        "type": "multiple_choice",
+        "prompt": "The main bonding jumper:",
+        "choices": [
+          "connects the ground rod to the water pipe",
+          "connects the grounded (neutral) conductor to the service enclosure and equipment grounding system at the service disconnect",
+          "is installed in every panel",
+          "replaces the equipment grounding conductor"
+        ],
+        "correctIndex": 1,
+        "explanation": "250.24(B) and 250.28. It completes the fault path from EGCs back to the neutral and the transformer; it exists only at the service (and as a system bonding jumper at separately derived systems)."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q8",
+        "type": "multiple_choice",
+        "prompt": "Which is NOT a permitted grounding electrode under 250.52?",
+        "choices": [
+          "A concrete-encased electrode of 20 ft of ½ in rebar",
+          "An 8 ft driven ground rod",
+          "Metal underground gas piping",
+          "A metal underground water pipe with 10 ft in contact with earth"
+        ],
+        "correctIndex": 2,
+        "explanation": "250.52(B) prohibits metal underground gas piping and aluminum as electrodes. Gas piping is bonded (250.104(B)) but never used as an electrode."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q9",
+        "type": "multiple_choice",
+        "prompt": "Which raceway may serve as the equipment grounding conductor without a separate wire, under 250.118?",
+        "choices": [
+          "PVC conduit",
+          "Electrical metallic tubing (EMT) with listed fittings",
+          "Nonmetallic flexible tubing",
+          "Aluminum cable tray in all cases"
+        ],
+        "correctIndex": 1,
+        "explanation": "EMT, IMC and RMC are recognized EGCs. Nonmetallic raceways cannot be; FMC and LFMC qualify only under length and ampere limits; cable trays under specific conditions."
+      },
+      {
+        "id": "nec-grounding-overcurrent-overview-q10",
+        "type": "multiple_choice",
+        "prompt": "A homeowner reports lights that get brighter in one room when the dryer runs, and dimmer in another. The likely cause is:",
+        "choices": [
+          "an undersized breaker",
+          "an open or high-resistance service neutral",
+          "too many ground rods",
+          "a tripped GFCI"
+        ],
+        "correctIndex": 1,
+        "explanation": "With the neutral open, the two 120 V legs divide 240 V according to their loads. Treat it as an emergency and involve the utility; the grounding electrode system is carrying return current."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 240 (240.4, 240.6, 240.21, 240.24, 240.85), Article 250 (250.4, 250.24, 250.28, 250.30, 250.32, 250.50–250.66, 250.104, 250.118–250.148), Tables 250.66 and 250.122 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Building Standards Commission — Title 24, Part 3 California Electrical Code",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "IAEI Soares Book on Grounding and Bonding",
+      "url": "https://www.iaei.org/"
+    },
+    {
+      "title": "Mike Holt, Grounding versus Bonding (Article 250 study guide)",
+      "url": "https://www.mikeholt.com/"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.304 — Wiring design and protection (grounding)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.304"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

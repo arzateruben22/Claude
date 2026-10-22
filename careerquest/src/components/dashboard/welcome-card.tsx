@@ -17,11 +17,11 @@ export function WelcomeCard({ name, onboardingComplete }: { name: string; onboar
           <p className="mt-1 text-sm text-fg-muted">
             {onboardingComplete
               ? "Your command center fills in as you log real applications. Nothing here is simulated."
-              : "Two things make the rest of this page useful: your targets and regions in Settings, and your first logged application. Every number here is computed from what you record."}
+              : "Two things make the rest of this page useful: your campaign targets (a three-step setup), and your first logged application. Every number here is computed from what you record."}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {!onboardingComplete && (
-              <Link href="/settings" className={buttonClasses("primary", "sm")}>
+              <Link href="/settings/onboarding" className={buttonClasses("primary", "sm")}>
                 Finish setup
               </Link>
             )}

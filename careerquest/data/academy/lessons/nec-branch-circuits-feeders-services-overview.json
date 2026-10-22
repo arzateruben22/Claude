@@ -1,0 +1,388 @@
+{
+  "key": "nec-branch-circuits-feeders-services-overview",
+  "track": "CODE",
+  "order": 3,
+  "title": "NEC Branch Circuits, Feeders and Services (Articles 210, 215, 230)",
+  "summary": "The path from the utility to the outlet in three Code articles: how branch circuits are rated and loaded, which outlets a dwelling must have and where GFCI and AFCI protection apply, how feeders are sized, and the basics of services and the service disconnect.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "nec-general-requirements-overview"
+  ],
+  "objectives": [
+    "Students will be able to distinguish service, feeder and branch-circuit conductors and name the article that governs each.",
+    "Students will be able to size branch-circuit and feeder conductors and overcurrent devices for continuous and noncontinuous loads using the 125 % rule.",
+    "Students will be able to apply the branch-circuit rating rules in 210.21 and 210.24 to match receptacles and loads to circuits.",
+    "Students will be able to describe the dwelling-unit required outlets, required circuits, and GFCI and AFCI locations in 210.52, 210.11(C), 210.8 and 210.12 at the concept level.",
+    "Students will be able to explain service basics: service point, service equipment, disconnect location and number, minimum ratings and the outdoor emergency disconnect."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Three kinds of conductors, three articles",
+      "markdown": "Every premises wiring system has the same backbone. The utility delivers power to the **service point**; from there, **service conductors** run to the **service equipment**, which contains the **service disconnect** and the first overcurrent protection. Conductors leaving the service equipment to a panelboard are **feeders**. Conductors leaving the final overcurrent device to the outlets are **branch circuits**.\n\nThat chain decides which article you open:\n\n- **Article 230, Services**: everything from the service point through the service disconnect. Unusual because the conductors have no overcurrent protection ahead of them except the utility transformer.\n- **Article 215, Feeders**: short, because feeders borrow most of their rules from Articles 210, 240 and 310.\n- **Article 210, Branch Circuits**: long, because it covers ratings, required outlets and the GFCI/AFCI rules that make up most residential inspection corrections.\n- **Article 220, Load Calculations** supports all three with the methods for deciding how big the service, feeders and circuits must be. **Article 225** handles outside branch circuits and feeders (to detached buildings, for example).\n\nAs in every CODE lesson: **the current California Electrical Code (Title 24, Part 3) adopts the NEC with California amendments, and you must study the NEC edition named in the DIR Candidate Information Bulletin for the certification exam.** Several rules in this lesson changed between the 2017, 2020 and 2023 editions (GFCI locations, the outdoor emergency disconnect, service disconnect enclosures, island receptacles), so verify each in your edition."
+    },
+    {
+      "type": "diagram",
+      "title": "From the utility to the outlet",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 215\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"45\" cy=\"80\" r=\"15\"/><circle cx=\"45\" cy=\"104\" r=\"15\"/><path d=\"M45 119 V140\"/><text x=\"45\" y=\"155\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">utility</text><text x=\"45\" y=\"167\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">transformer</text><path d=\"M60 92 H115\" stroke=\"#9aa6b8\"/><circle cx=\"115\" cy=\"92\" r=\"5\" fill=\"#f3c75b\" stroke=\"none\"/><text x=\"115\" y=\"56\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">utility ends, NEC begins</text><text x=\"115\" y=\"70\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">service point</text><path d=\"M120 92 H160\"/><circle cx=\"175\" cy=\"92\" r=\"15\"/><text x=\"175\" y=\"96\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">kWh</text><text x=\"175\" y=\"120\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">meter</text><path d=\"M190 92 H220\"/><rect x=\"220\" y=\"68\" width=\"50\" height=\"48\" stroke=\"#ff6b6b\"/><path d=\"M232 104 L258 80\" stroke=\"#ff6b6b\"/><text x=\"245\" y=\"131\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">service disconnect</text><text x=\"245\" y=\"143\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">and OCPD; N–G bond</text><path d=\"M270 92 H350\" stroke=\"#4cc9ff\"/><text x=\"310\" y=\"84\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">feeder</text><rect x=\"350\" y=\"60\" width=\"70\" height=\"64\" stroke=\"#3ddc97\"/><path d=\"M362 76 H380 M362 92 H380 M362 108 H380 M388 76 H408 M388 92 H408 M388 108 H408\" stroke=\"#3ddc97\"/><text x=\"385\" y=\"140\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">panelboard, final OCPD</text><path d=\"M420 78 H480 M420 106 H480\"/><circle cx=\"492\" cy=\"78\" r=\"10\"/><path d=\"M482 74 H502 M482 82 H502\" stroke-width=\"1.5\"/><circle cx=\"492\" cy=\"106\" r=\"10\"/><path d=\"M485 99 L499 113 M499 99 L485 113\" stroke-width=\"1.5\"/><text x=\"512\" y=\"82\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">receptacle</text><text x=\"512\" y=\"110\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">lighting outlet</text><text x=\"450\" y=\"58\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">branch circuits</text><path d=\"M60 185 v6 H270 v-6\" stroke=\"#f3c75b\"/><path d=\"M270 185 v6 H350 v-6\" stroke=\"#4cc9ff\"/><path d=\"M420 185 v6 H560 v-6\" stroke=\"#3ddc97\"/><g fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\"><text x=\"165\" y=\"206\" fill=\"#f3c75b\">230: service conductors and equipment</text><text x=\"310\" y=\"206\" fill=\"#4cc9ff\">215: feeders</text><text x=\"490\" y=\"206\" fill=\"#3ddc97\">210: branch circuits</text></g></svg>",
+      "caption": "The service point is the boundary between the utility and the NEC. Service conductors feed the service disconnect; feeders run from there to panelboards; branch circuits leave the final overcurrent device and end at outlets."
+    },
+    {
+      "type": "text",
+      "heading": "Branch-circuit ratings and what may be connected (210.3, 210.18–210.24)",
+      "markdown": "A branch circuit is **rated by its overcurrent device**, not by its conductors (210.3). Circuits serving two or more outlets must be rated 15, 20, 30, 40 or 50 A (210.18); larger ratings are allowed only for individual branch circuits serving a single piece of equipment.\n\n**Conductors** must have an ampacity at least equal to the load, and at least the circuit rating when the circuit serves more than one receptacle outlet (210.19(A)). Taps and fixture wires have their own minimums (Table 210.24 and 240.5).\n\n**Receptacle ratings must match the circuit** (210.21(B) and Table 210.21(B)(3)): a 15 A circuit may serve only 15 A receptacles; a 20 A circuit may serve 15 A or 20 A receptacles; a 30 A circuit requires 30 A receptacles; a 40 A circuit allows 40 or 50 A; a 50 A circuit requires 50 A receptacles. A single receptacle on an individual branch circuit must be rated at least the circuit rating. Cord-and-plug loads on a receptacle may not exceed 80 % of the receptacle rating.\n\n**Permissible loads (210.23)**: on 15 and 20 A circuits serving lighting and receptacles, any single cord-and-plug-connected appliance is limited to 80 % of the circuit rating, and equipment fastened in place (other than luminaires) to 50 % if the circuit also serves lighting or portable loads. 30 A circuits serve fixed equipment or heavy-duty lampholders; 40 and 50 A circuits serve cooking appliances, fixed heating and, in non-dwellings, heavy-duty lighting.\n\n**Multiwire branch circuits (210.4)** share a neutral between two or three ungrounded conductors on different phases. All ungrounded conductors must be disconnected together at the panel (a two-pole breaker or identified handle tie) and the conductors grouped at the panel so the shared neutral is obvious. The hazard: with the neutral open, the loads on the two legs go in series across 240 V, and a 120 V appliance on the lightly loaded leg sees far more than 120 V.\n\n**Identification (210.5)**: grounded conductors white or gray, equipment grounding conductors green or bare, and where more than one voltage system exists in a building each ungrounded conductor is identified by phase and system at every termination with the scheme posted at the panel."
+    },
+    {
+      "type": "table",
+      "caption": "Summary of branch-circuit requirements (after Table 210.24)",
+      "columns": [
+        "Circuit rating",
+        "Minimum conductor (copper)",
+        "Overcurrent device",
+        "Receptacle rating permitted",
+        "Maximum load"
+      ],
+      "rows": [
+        [
+          "15 A",
+          "14 AWG",
+          "15 A",
+          "15 A",
+          "15 A"
+        ],
+        [
+          "20 A",
+          "12 AWG",
+          "20 A",
+          "15 or 20 A",
+          "20 A"
+        ],
+        [
+          "30 A",
+          "10 AWG",
+          "30 A",
+          "30 A",
+          "30 A"
+        ],
+        [
+          "40 A",
+          "8 AWG",
+          "40 A",
+          "40 or 50 A",
+          "40 A"
+        ],
+        [
+          "50 A",
+          "6 AWG",
+          "50 A",
+          "50 A",
+          "50 A"
+        ]
+      ]
+    },
+    {
+      "type": "formula",
+      "name": "Sizing for continuous and noncontinuous loads (210.19(A), 210.20(A), 215.2, 215.3, 230.42)",
+      "expression": "Minimum conductor ampacity = Minimum OCPD rating = 1.25 × continuous load + 1.00 × noncontinuous load",
+      "variables": [
+        {
+          "symbol": "continuous load",
+          "meaning": "load expected to run at maximum current for 3 hours or more (lighting, signs, EV charging, HVAC in some uses)",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "noncontinuous load",
+          "meaning": "everything else",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "OCPD",
+          "meaning": "overcurrent protective device (breaker or fuse) rating",
+          "unit": "amperes (A)"
+        }
+      ],
+      "explanation": "A standard breaker is designed to carry 80 % of its rating continuously, so the Code requires sizing the device and conductor at 125 % of the continuous load. The conductor check uses the ampacity before any adjustment or correction factors; apply derating for ambient temperature and conduit fill separately, and the larger conductor governs. An exception allows 100 % sizing when the overcurrent device assembly is listed for continuous operation at 100 %."
+    },
+    {
+      "type": "example",
+      "problem": "A feeder supplies a panel whose calculated load is 60 A continuous (lighting and signs) plus 44 A noncontinuous (receptacles and equipment). Size the feeder overcurrent device and the copper conductors, using 75 °C terminations.",
+      "solutionSteps": [
+        "Minimum = 1.25 × 60 + 44 = 75 + 44 = 119 A.",
+        "Overcurrent device: 119 A is not a standard rating in 240.6(A); the next standard size up is 125 A. 240.4(B) permits the next higher standard rating because the feeder does not serve cord-and-plug receptacles and is under 800 A.",
+        "Conductors: must have an ampacity of at least 119 A before derating. Table 310.16, 75 °C column: 2 AWG copper = 115 A (not enough); 1 AWG copper = 130 A. Select 1 AWG copper.",
+        "Check the 125 A breaker against the 1 AWG conductor: 130 A ampacity ≥ 125 A, so the conductor is also protected without relying on 240.4(B).",
+        "Separately, a branch circuit with a 14 A continuous lighting load: 1.25 × 14 = 17.5 A, so a 20 A circuit with 12 AWG copper is required; a 15 A circuit would be overloaded by the rule even though 14 A is less than 15 A."
+      ],
+      "answer": "125 A overcurrent device with 1 AWG copper conductors (75 °C). The 14 A continuous lighting load needs a 20 A, 12 AWG branch circuit."
+    },
+    {
+      "type": "text",
+      "heading": "Dwelling units: required circuits, outlets and protection (210.11(C), 210.52, 210.70, 210.8, 210.12)",
+      "markdown": "Most residential inspection corrections come from this group of rules. Learn the concepts, then confirm the exact wording in your edition.\n\n**Required circuits, 210.11(C)**: at least two 20 A **small-appliance branch circuits** for the kitchen, dining and pantry receptacles (and nothing else); one 20 A **laundry** circuit; one 20 A **bathroom** receptacle circuit; and one 20 A **garage** circuit (2017 and later) for the garage receptacles.\n\n**Receptacle outlets, 210.52**:\n\n- **General spacing (A)**: in habitable rooms, no point along the floor line of any wall space is more than 6 ft from a receptacle, which means receptacles at most 12 ft apart and within 6 ft of any opening. A **wall space** is any wall 2 ft or wider, including spaces broken only by fixed panels or fireplaces; doorways, fireplaces and similar openings break the wall space. Floor receptacles count only within 18 in of the wall.\n- **Kitchen countertops (C)**: a receptacle within 24 in of any point along the wall countertop line (so no more than 4 ft apart); every counter space 12 in or wider gets one; receptacles not more than 20 in above the counter. Island and peninsula rules changed in 2023 (receptacles no longer required but provisions for one must be made); earlier editions require at least one.\n- **Bathrooms (D)**: at least one receptacle within 3 ft of the outside edge of each basin, on the wall or partition adjacent to it or on the basin cabinet side.\n- **Outdoors (E)**: at least one at the front and one at the back of a one- or two-family dwelling, accessible at grade and not more than 6½ ft above grade; balconies, decks and porches get one.\n- **Laundry (F)**, **garages, basements and accessory buildings (G)** (at least one in each vehicle bay, not more than 5½ ft above the floor in 2020 and later), **hallways 10 ft or longer (H)** and **foyers over 60 ft² (I)**.\n\n**Lighting outlets, 210.70**: a wall-switched lighting outlet in every habitable room, kitchen and bathroom; in hallways, stairways (switched at each level with six or more risers), attached garages and detached garages with power; and at every exterior entrance.\n\n**GFCI, 210.8(A)**: 125 V through 250 V receptacles (single-phase, 150 V or less to ground) in bathrooms, garages and accessory buildings, outdoors, crawl spaces, basements, kitchens (countertop receptacles, and all kitchen receptacles in 2023), within 6 ft of any sink, bathtub or shower, in laundry areas, in boathouses and in indoor damp and wet locations. 210.8(B) covers the same idea in non-dwelling occupancies with a longer list; 210.8(F) (2020 and later) adds GFCI for outdoor outlets at dwellings such as HVAC equipment, with edition-specific exceptions.\n\n**AFCI, 210.12(A)**: combination-type arc-fault protection for 120 V, 15 and 20 A branch circuits supplying outlets or devices in kitchens, family rooms, dining rooms, living rooms, bedrooms, closets, hallways, laundry areas and similar rooms, which in practice is nearly every circuit in a house except bathrooms, garages, unfinished basements and outdoors. Replacement receptacles and extended circuits also trigger AFCI (210.12(D), 406.4(D)).\n\n**HVAC service receptacle, 210.63**: a 125 V, 15 or 20 A receptacle within 25 ft of heating, air-conditioning and refrigeration equipment, on the same level, not connected to the load side of the equipment disconnect."
+    },
+    {
+      "type": "example",
+      "problem": "A living-room wall is 26 ft long. A 3 ft doorway starts 9 ft from the left end. How many receptacles does 210.52(A) require along this wall, at minimum, and where could they go?",
+      "solutionSteps": [
+        "The doorway breaks the wall into two wall spaces: 9 ft on the left and 26 − 9 − 3 = 14 ft on the right. Both are 2 ft or wider, so both count.",
+        "Left space (9 ft): a receptacle placed anywhere between 3 ft and 6 ft from the left end leaves every point within 6 ft. One receptacle.",
+        "Right space (14 ft): one receptacle at the center leaves the ends 7 ft away, which exceeds 6 ft. Two receptacles, for example at 4 ft and 10 ft from the doorway, leave no point more than 6 ft from a receptacle.",
+        "Minimum total: 3 receptacles. Practical layouts often add more for furniture, and any receptacle within 6 ft of the doorway on each side satisfies the \"within 6 ft of an opening\" intent."
+      ],
+      "answer": "Three receptacles minimum: one in the 9 ft space, two in the 14 ft space."
+    },
+    {
+      "type": "text",
+      "heading": "Feeders (Article 215)",
+      "markdown": "A feeder carries the load of everything downstream, so its rules are mostly about size and protection:\n\n- **Sizing, 215.2(A)**: conductors must carry 125 % of the continuous plus 100 % of the noncontinuous load, and never less than the calculated load from Article 220. Where a feeder supplies several branch circuits, it need not be larger than the service conductors feeding it.\n- **Overcurrent protection, 215.3**: the feeder overcurrent device follows the same 125 % rule and Article 240.\n- **Grounded conductor, 215.2 and 220.61**: the feeder neutral can be sized for the calculated unbalanced load, but must be large enough for the equipment grounding function during faults (250.122) and must not be reduced where it serves major nonlinear loads.\n- **Equipment grounding, 215.6**: a feeder that supplies branch circuits needing an EGC must include or provide one.\n- **Ground-fault protection of equipment, 215.10**: feeders of 1,000 A or more on solidly grounded wye systems over 150 V to ground (480Y/277 V) need GFPE, mirroring 230.95 for services.\n- **Identification, 215.12**: same conductor identification rules as branch circuits.\n- **Feeder taps**: a smaller conductor tapped from a feeder without overcurrent protection at the tap point is permitted only under the tap rules in 240.21(B): the 10 ft rule, the 25 ft rule, the outside tap rule and others, each with conditions on ampacity ratio, protection at the load end and physical protection.\n\nFeeders to **detached buildings** follow Article 225 for clearances and the requirement for a disconnecting means at the second building (225.31), and 250.32 for grounding: the second building gets its own grounding electrode, the feeder carries an EGC, and the neutral is **not** bonded to ground again at the second building (except in some pre-2008 installations)."
+    },
+    {
+      "type": "text",
+      "heading": "Services (Article 230): the basics",
+      "markdown": "**Service point** is where the utility's conductors end and the premises wiring begins; the utility's rules govern upstream and the NEC downstream. An overhead **service drop** (utility-owned) or **overhead service conductors** (customer-owned) and an underground **service lateral** or **underground service conductors** bring power to the **service-entrance conductors**, which terminate in the **service equipment**.\n\nConcepts to know:\n\n- **One service per building (230.2)**, with exceptions for fire pumps, emergency systems, multiple occupancies, capacity and other listed reasons.\n- **Clearances (230.24, 230.9)**: overhead service conductors need 8 ft above roofs (with exceptions), 10 ft above finished grade at the drip loop, 12 ft over residential driveways and property, 15 ft over areas with non-truck vehicle traffic and 18 ft over public streets and alleys; and 3 ft from windows, doors and porches (except above the top of a window).\n- **Service-entrance conductor sizing (230.42)**: 125 % continuous plus 100 % noncontinuous, never smaller than the Article 220 load, with a minimum of 100 A for a one-family dwelling in practice (via 230.79).\n- **Disconnecting means location (230.70)**: readily accessible, either outside the building or inside nearest the point of entrance of the service conductors; not in bathrooms; and marked as the service disconnect. \"Nearest the point of entrance\" is enforced by the AHJ with a length of unprotected conductor inside the building that is as short as practicable (many California jurisdictions limit it to a few feet).\n- **Number of disconnects (230.71)**: no more than six for each service; since the 2020 edition each must be in its own enclosure or a separated compartment, so a six-breaker \"six-throw\" panel without a main is no longer compliant for new work.\n- **Rating (230.79)**: 100 A minimum for a one-family dwelling, 60 A for other installations, with 15 A and 30 A allowed for one- and two-circuit limited installations. The disconnect must carry the calculated load and be rated for the available fault current (110.9).\n- **Emergency disconnect (230.85, 2020 and later)**: one- and two-family dwellings need an outdoor, readily accessible emergency disconnect so firefighters can kill power without entering, marked per the section.\n- **Overcurrent protection (230.90)** at the service disconnect, and **GFPE (230.95)** for solidly grounded wye services over 150 V to ground rated 1,000 A or more.\n- **Grounding** at the service is where the system neutral is bonded to the equipment and to the grounding electrode system; that is the subject of the next lesson.\n\n**Load calculation** for a service or feeder follows Article 220: general lighting by square footage (3 VA/ft² for dwellings), small-appliance and laundry circuits at 1,500 VA each, demand factors, appliance and dryer loads, cooking equipment from Table 220.55, and the larger of heating or cooling. The optional method in 220.82 simplifies dwelling calculations. Expect several exam questions that require this arithmetic."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Service conductors are protected only by the utility transformer's capacity, which can deliver tens of thousands of amperes into a fault. Work on the line side of the service disconnect is utility-coordinated, de-energized work: have the utility pull the meter or cut at the pole, verify, and never attempt to \"pull the meter\" yourself without the utility's permission and the right PPE. Meter sockets have killed experienced electricians."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "On the exam, questions in this area hinge on three distinctions: continuous vs noncontinuous (3 hours), dwelling vs non-dwelling (the GFCI and receptacle rules differ), and service vs feeder vs branch circuit (which article, and where the neutral-ground bond belongs). Identify which side of each distinction the question sits on before opening the book."
+    }
+  ],
+  "practice": [
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p1",
+      "type": "numeric",
+      "prompt": "A branch circuit supplies a continuous lighting load of 15 A. What is the minimum overcurrent device rating, in amperes, before selecting a standard size?",
+      "answer": 18.75,
+      "unit": "A",
+      "tolerance": 0.05,
+      "explanation": "1.25 × 15 = 18.75 A, so a 20 A circuit with 12 AWG copper is the practical minimum."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p2",
+      "type": "numeric",
+      "prompt": "A feeder serves 40 A of continuous load and 70 A of noncontinuous load. Minimum conductor ampacity before derating?",
+      "answer": 120,
+      "unit": "A",
+      "tolerance": 0.5,
+      "explanation": "1.25 × 40 + 70 = 50 + 70 = 120 A. A 125 A device and 1 AWG copper (130 A at 75 °C) would be typical."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p3",
+      "type": "numeric",
+      "prompt": "What is the minimum service disconnect rating, in amperes, for a one-family dwelling?",
+      "answer": 100,
+      "unit": "A",
+      "tolerance": 0,
+      "explanation": "230.79(C) sets 100 A as the minimum for a one-family dwelling."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p4",
+      "type": "numeric",
+      "prompt": "Along a dwelling kitchen countertop wall, receptacles must be spaced so that no point along the wall line is more than how many inches from a receptacle?",
+      "answer": 24,
+      "unit": "in",
+      "tolerance": 0,
+      "explanation": "210.52(C)(1): within 24 in, so receptacles at most 4 ft apart along the countertop."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p5",
+      "type": "multiple_choice",
+      "prompt": "Which receptacle rating is permitted on a 20 A branch circuit serving several outlets?",
+      "choices": [
+        "15 A only",
+        "15 A or 20 A",
+        "20 A or 30 A",
+        "30 A only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Table 210.21(B)(3): a 20 A circuit may serve 15 A or 20 A receptacles. A 15 A circuit may serve only 15 A receptacles."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p6",
+      "type": "multiple_choice",
+      "prompt": "Which conductors are \"feeders\" by definition?",
+      "choices": [
+        "Conductors from the utility transformer to the meter",
+        "Conductors between the service equipment (or other source) and the final branch-circuit overcurrent device",
+        "Conductors between the final overcurrent device and the receptacle",
+        "Conductors from a receptacle to an appliance"
+      ],
+      "correctIndex": 1,
+      "explanation": "Feeders run from the service equipment or a separately derived system to the last overcurrent device before the outlets. Branch circuits begin at that device."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p7",
+      "type": "multiple_choice",
+      "prompt": "A multiwire branch circuit in a dwelling panel requires:",
+      "choices": [
+        "two single-pole breakers on the same bus bar",
+        "a means to disconnect all ungrounded conductors simultaneously (two-pole breaker or identified handle tie) and grouping of the conductors in the panel",
+        "a separate neutral for each ungrounded conductor",
+        "AFCI protection only"
+      ],
+      "correctIndex": 1,
+      "explanation": "210.4(B) and (D). The shared neutral must be on opposite legs and the circuit must be disconnected as a unit so no one works on a \"dead\" leg while the neutral is still carrying current."
+    },
+    {
+      "id": "nec-branch-circuits-feeders-services-overview-p8",
+      "type": "multiple_choice",
+      "prompt": "A 125 V, 15 A receptacle serving a basement workbench in a dwelling requires:",
+      "choices": [
+        "no special protection",
+        "GFCI protection per 210.8(A)",
+        "a 30 A circuit",
+        "a dedicated 240 V circuit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basements are in the dwelling GFCI list (all basements in 2020 and later; unfinished portions in earlier editions). AFCI may also apply depending on the room's use and the edition."
+    }
+  ],
+  "quiz": {
+    "key": "nec-branch-circuits-feeders-services-overview-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q1",
+        "type": "numeric",
+        "prompt": "A continuous load of 32 A is the only load on a feeder. What is the minimum overcurrent device rating in amperes (before choosing a standard size)?",
+        "answer": 40,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "1.25 × 32 = 40 A, which is itself a standard size."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q2",
+        "type": "numeric",
+        "prompt": "How many 20 A small-appliance branch circuits, at minimum, must serve the kitchen and dining receptacles of a dwelling?",
+        "answer": 2,
+        "unit": "circuits",
+        "tolerance": 0,
+        "explanation": "210.11(C)(1) requires at least two 20 A small-appliance branch circuits."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q3",
+        "type": "numeric",
+        "prompt": "In a habitable room, a receptacle must be within how many feet of any point along the floor line of a wall space?",
+        "answer": 6,
+        "unit": "ft",
+        "tolerance": 0,
+        "explanation": "210.52(A)(1): 6 ft, so receptacles are at most 12 ft apart."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q4",
+        "type": "numeric",
+        "prompt": "The maximum number of service disconnects permitted for a single service is:",
+        "answer": 6,
+        "unit": "disconnects",
+        "tolerance": 0,
+        "explanation": "230.71 allows up to six, each in a separate enclosure or compartment in the 2020 edition and later."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q5",
+        "type": "multiple_choice",
+        "prompt": "A branch circuit is rated by:",
+        "choices": [
+          "the conductor size",
+          "the rating of its overcurrent device",
+          "the receptacle rating",
+          "the connected load"
+        ],
+        "correctIndex": 1,
+        "explanation": "210.3: the branch-circuit rating is the rating of the overcurrent device protecting it."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q6",
+        "type": "multiple_choice",
+        "prompt": "The 125 % factor for continuous loads exists because:",
+        "choices": [
+          "conductors are rated at only 80 % of their ampacity",
+          "standard overcurrent devices are designed to carry 80 % of their rating continuously without nuisance tripping or overheating",
+          "the utility adds 25 % to bills for continuous loads",
+          "motors draw 125 % of nameplate"
+        ],
+        "correctIndex": 1,
+        "explanation": "Unless listed for 100 % operation, a breaker in an enclosure is intended for 80 % continuous loading, so the device and its conductors are sized at 125 % of the continuous load."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q7",
+        "type": "multiple_choice",
+        "prompt": "Where must the service disconnecting means be installed?",
+        "choices": [
+          "Anywhere inside the building",
+          "At a readily accessible location outside the building or inside nearest the point of entrance of the service conductors",
+          "In the bathroom near the water heater",
+          "At the utility pole"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.70(A)(1) and (A)(2): readily accessible, nearest the point of entrance, and not in a bathroom."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q8",
+        "type": "multiple_choice",
+        "prompt": "In the 2020 NEC and later, one- and two-family dwelling services must include:",
+        "choices": [
+          "a 400 A minimum disconnect",
+          "an outdoor, readily accessible emergency disconnect for first responders",
+          "a generator transfer switch",
+          "two meters"
+        ],
+        "correctIndex": 1,
+        "explanation": "230.85 requires an emergency disconnect outdoors at a readily accessible location, marked as required."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q9",
+        "type": "multiple_choice",
+        "prompt": "Which dwelling receptacle is NOT in the 210.8(A) GFCI list in recent editions?",
+        "choices": [
+          "A receptacle within 6 ft of a kitchen sink",
+          "A receptacle in an attached garage",
+          "A receptacle on a bedroom wall",
+          "An outdoor receptacle on the back patio"
+        ],
+        "correctIndex": 2,
+        "explanation": "Bedroom receptacles require AFCI protection (210.12) but not GFCI, unless within 6 ft of a sink or in another listed location."
+      },
+      {
+        "id": "nec-branch-circuits-feeders-services-overview-q10",
+        "type": "multiple_choice",
+        "prompt": "A 10 ft feeder tap from a 200 A feeder to a 60 A panel without overcurrent protection at the tap point is permitted:",
+        "choices": [
+          "never",
+          "under the conditions of the 240.21(B) tap rules, including conductor ampacity and termination in a single overcurrent device",
+          "only in dwellings",
+          "only if the tap conductors are aluminum"
+        ],
+        "correctIndex": 1,
+        "explanation": "Feeder taps are allowed only under the specific 240.21(B) rules (10 ft, 25 ft, outside, transformer and others), each with conditions."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Articles 210, 215, 220, 225, 230; 240.21(B), 240.4(B), Table 310.16 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Building Standards Commission — Title 24, Part 3 California Electrical Code",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "Mullin & Simmons, Electrical Wiring Residential (Cengage)",
+      "url": "https://www.cengage.com/"
+    },
+    {
+      "title": "Mike Holt, Understanding the NEC Volume 1 (Articles 90–480)",
+      "url": "https://www.mikeholt.com/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}
