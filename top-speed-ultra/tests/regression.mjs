@@ -1520,7 +1520,8 @@ await group('livephone', async (use) => {
         }
         const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
         await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
-        expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
+        // innerText follows text-transform: this branch's theme sets panel headings in capitals ("YOU'RE INVITED TO CREW WXYZ")
+        expect(/invited to crew WXYZ/i.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
         // the card sits on top of the menu: a tap on its button lands on the button, not on the menu under it
         const onTop = await p2.evaluate(() => { const b = [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)), r = b.getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === b; });
         expect(onTop, 'the menu covers the welcome card');
