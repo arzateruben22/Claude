@@ -29,6 +29,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // App pages only; API routes, static assets, PWA files and the extension handshake are excluded.
-    "/((?!api|_next/static|_next/image|favicon\\.ico|manifest\\.webmanifest|sw\\.js|icons/|images/|robots\\.txt|share).*)",
+    "/((?!api|_next/static|_next/image|favicon\\.ico|manifest\\.webmanifest|sw\\.js|icons/|images/|robots\\.txt|offline\\.html).*)",
   ],
 };
