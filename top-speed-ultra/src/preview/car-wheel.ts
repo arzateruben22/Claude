@@ -14,7 +14,7 @@
 // rim's radius with chamfered hex nuts in dark recesses, and every open style has a valve stem at the barrel.
 // Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves on
 // high; no lettering); finely drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the
-// car's colour with the wordmark on an 8:1 strip.
+// car's colour with the wordmark on a strip of its map's own aspect (8:1 for ROSSINI and VELA, 2.67:1 for the OC mark).
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
 // caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
@@ -283,10 +283,14 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
     put(kit, 'caliper', g);
   }
-  // the wordmark along the caliper's outer face: a 16 mm strip over 0.75 rad (128 mm at r 0.17), 8:1 like its map,
-  // so ROSSINI and the OC mark read unsquashed (the old 36 mm x 109 mm strip stood them up 2.7 times too tall)
+  // the wordmark along the caliper's outer face, on a strip as long for its height as its map (car.ts calText), so
+  // it reads unsquashed. ROSSINI and VELA are 8:1 maps: a 16 mm strip over 0.75 rad (128 mm at r 0.17; the old 36 mm
+  // x 109 mm strip stood them up 2.7 times too tall). The OC mark is a 2.67:1 map (512 x 192), and the mark is never
+  // stretched: on the hypercar's own rim (multi, which no other car is offered; its other rim, the aero cover, hides
+  // the caliper) it gets a 28 mm strip over 0.44 rad (75 mm at r 0.17)
+  const ocMark = style === 'multi', r0 = ocMark ? 0.156 : 0.162, hT = ocMark ? 0.028 : 0.016, aT = ocMark ? 0.44 : 0.75;
   const tRows: V3[][] = [];
-  for (let i = 0; i <= 1; i++) { const r = 0.162 + 0.016 * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + 0.375 - 0.75 * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
+  for (let i = 0; i <= 1; i++) { const r = r0 + hT * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + aT / 2 - aT * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
   const tg = gridGeo(tRows, { flip: true });
   const tuv = tg.attributes.uv as THREE.BufferAttribute;
   for (let i = 0; i <= 1; i++) for (let j = 0; j <= 12; j++) tuv.setXY(i * 13 + j, j / 12, i);
