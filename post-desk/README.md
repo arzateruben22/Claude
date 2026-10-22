@@ -110,6 +110,18 @@ that matter most:
 
 Unknown settings are rejected with a clear message, so a typo can't silently do nothing.
 
+**Dilemma stories** (`dilemma` in `[writer] formats`): the overheard-argument shape that pulls thousands of
+replies. One line on who and where, the exact numbers, both sides in their own quoted words (each with a point
+worth defending), one line that raises the stakes, then an either/or question with no verdict from you: the
+replies are the verdict. The writer keeps them to anonymous everyday people (no names, no real venues or dated
+events), everyday stakes (money habits, weddings, rent, gym, raves, roommates), never cheating accusations, abuse,
+health scares or anything illegal, and rotates who's being unreasonable so it's never "women are..." or "men
+are...". Scene numbers may be made up as part of the telling; statistics, news and quotes from real people may
+not. They're invented scenes told in the "overheard" style, so read each one before you approve it. Without X
+Premium a post stops at 280 characters, so `story_chars = 280`; with Premium, raise it to 700–1000 for the long
+version. The stats and the nightly lessons now show **replies per 1,000 views** for each format, and name the
+format that starts the most conversations once there are enough posts to tell.
+
 **The bot diary** (`bot_diary` in `[writer] formats`): deadpan posts about your paper-trading bots, built from
 the paper book's real numbers ("24 bots, $1,000 of fake money each, the one called Patient hasn't traded in six
 days"). `postdesk/paperfacts.py` reads `../paper-book/output/deck.json` and hands the writer a few true facts: how

@@ -204,6 +204,11 @@ COMEDY_ORIGINALS["storytime"] = [
     "Guy at my gym has done the same 3 exercises since 2019. Same shirt. Same playlist. Same PR. Man is a historic landmark at this point.",
     "Friend said she'd leave the rave 'right after this song.' That was 2 hours, 4 waters and a brand new best friend named Tyler ago.",
 ]
+COMEDY_ORIGINALS["dilemma"] = [   # demo only: invented scenes
+    "Gym couple next to me, mid-set. He wants to split a $90 membership. She wants her own $40 one \"so I'm not on your schedule.\" He: \"It's $10 more to be apart?\" She: \"It's $10 for peace.\"\n\nShared gym or separate gyms?",
+    "Two friends at the festival gate. One spent $480 on VIP. The other: \"I'm not standing alone in GA for 9 hours.\" VIP: \"Then buy VIP.\" GA: \"With what, your $480?\"\n\nDo you leave your friend for the good view?",
+    "Roommates at brunch. One splits the bill exactly: \"You had the $19 omelette, I had toast.\" The other: \"We've split evenly for 3 years.\" Toast: \"And I've been losing for 3 years.\"\n\nItemize or split it even?",
+]
 COMEDY_ORIGINALS["bot_diary"] = [   # demo only: the numbers are invented
     "Day 6 of running 24 trading bots on fake money. The one called 'Patient' has made zero trades. It's not patient. It's scared.",
     "My paper-trading bots are down $41 of fake money today and I still checked them 30 times. Not one dollar is real. My stress is.",

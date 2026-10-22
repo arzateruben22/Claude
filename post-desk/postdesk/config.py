@@ -69,6 +69,7 @@ class WriterCfg:
     drafts_per_batch: int = 6
     formats: List[str] = field(default_factory=lambda: ["take", "list", "how_to", "question", "story", "data"])
     max_chars: int = 280
+    story_chars: int = 0                                       # storytime and dilemma posts may run this long (0 = max_chars)
     hashtags_max: int = 1
     links: str = "never"
     ai_daily_usd: float = 0.50
@@ -173,6 +174,12 @@ def validate(cfg: Config) -> None:
         raise ValueError("[writer] edge must be clean, edgy or spicy")
     if not all(isinstance(k, str) and isinstance(v, str) for k, v in cfg.writer.slang.items()):
         raise ValueError("[writer.slang] entries look like: unc = \"someone getting old\"")
+    if not cfg.writer.story_chars:
+        cfg.writer.story_chars = cfg.writer.max_chars
+    if cfg.writer.story_chars < cfg.writer.max_chars:
+        raise ValueError("[writer] story_chars can't be shorter than max_chars")
+    if cfg.writer.story_chars > 280 and not cfg.account.premium:
+        raise ValueError("[writer] story_chars over 280 needs X Premium: set [account] premium = true once you have it")
     if cfg.writer.links not in ("never", "allowed"):
         raise ValueError("[writer] links must be never or allowed")
     for name in ("writer", "review"):

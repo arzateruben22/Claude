@@ -76,7 +76,8 @@ def check(d: Draft, cfg: Config, recent: Iterable[str] = (), borrowed: Iterable[
     hard = 25_000 if cfg.account.premium else 280
     add("fits on X", n <= hard, f"{n} characters (X's limit here is {hard:,})")
     if n <= hard:
-        add("short", n <= cfg.writer.max_chars, f"{n} characters; you aim for {cfg.writer.max_chars}", "warn")
+        aim = cfg.writer.story_chars if d.format in ("storytime", "dilemma") else cfg.writer.max_chars
+        add("short", n <= aim, f"{n} characters; you aim for {aim}", "warn")
     mentions = MENTION.findall(text)
     add("no @mentions", not mentions, "automated mentions of other people break X's rules: " + " ".join(mentions)
         if mentions else "")

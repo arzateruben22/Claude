@@ -43,6 +43,11 @@ FORMAT_HELP = {
                   "bit, never a real accusation"),
     "fake_quote": ("one punchy line, written twice on its own lines, then a ridiculous attribution "
                    "('- Sun Tzu', '- the 6am spin class', '- my pre-workout')"),
+    "dilemma": ("an overheard-style scene built to be argued about. One line on who and where (anonymous everyday "
+                "people: a couple, roommates, gym partners, two friends at a festival). The concrete numbers that make "
+                "it real (what it costs, how long, how many). Each side makes its case in its own quoted words, and "
+                "both have a point worth defending. One last line that raises the stakes. Then hand it to the reader "
+                "with a clear either/or question. No narrator verdict: the replies are the verdict"),
     "bot_diary": ("a deadpan diary entry about the owner's paper-trading bots, built only from paper_bot_facts: "
                   "one or two real numbers from those facts, hyper-specific, then a one-line verdict. It must say the "
                   "money is fake or paper. The joke is the owner and the bots (their names, their patience, their "
@@ -50,6 +55,7 @@ FORMAT_HELP = {
                   "about what to buy or sell, no predictions"),
 }
 DIARY = "bot_diary"
+STORY_FORMATS = ("storytime", "dilemma")          # may run to [writer] story_chars
 
 COMEDY_RULES = """
 This is a comedy account. Write jokes, not advice.
@@ -65,6 +71,13 @@ This is a comedy account. Write jokes, not advice.
 - Make fun of situations and habits, never of people for who they are. Never punch down.
 - Stories ("my buddy...", "saw a guy at the gym...") must read as a bit: exaggerated details and a
   verdict that's a joke, not a believable accusation about a real person.
+- Scene details in a story or dilemma (prices, savings, guest counts, years) are part of the telling and
+  may be made up. Statistics, studies, news and anything said by a real person may not.
+- Dilemmas are about everyday people nobody could identify: no names, no real venues, businesses or
+  dated events. Keep the stakes everyday (money habits, weddings, rent, gym, raves, roommates, texting).
+  Never cheating accusations, abuse, health scares, children at risk or anything illegal.
+- In a dilemma both sides must be defensible, and the unreasonable one isn't always the woman or always
+  the man: rotate it. The fight is about the choice, never about what men or women are like.
 - Fake quotes go to absurd sources (an object, a crowd, a time of day) or long-dead historical figures as
   an obvious joke. Never invent a quote from a real living person.
 - Never copy or lightly reword someone else's joke. Posts and headlines you're shown are prompts for
@@ -109,6 +122,9 @@ def new_id() -> str:
 def system_prompt(cfg: Config) -> str:
     a, w, t = cfg.account, cfg.writer, cfg.topics
     notes = "\n".join(f"- {n}" for n in a.notes) or "- (none given)"
+    long = [f for f in w.formats if f in STORY_FORMATS]
+    story_room = (f" {' and '.join(long)} posts may run to {w.story_chars} characters: spend them on the "
+                  "numbers and the quoted lines, not on setup." if long and w.story_chars > w.max_chars else "")
     if w.style == "comedy":
         facts_rule = ("- Never invent facts, numbers, quotes or news. True facts about the owner (above) can "
                       "inspire jokes.")
@@ -131,7 +147,7 @@ True facts about the owner you may use (and nothing beyond them):
 
 Rules for every post:
 - Original and specific. Each post stands on its own and says something worth reading.
-- At most {w.max_chars} characters. Shorter is usually better.
+- At most {w.max_chars} characters. Shorter is usually better.{story_room}
 - No @mentions of anyone. At most {w.hashtags_max} hashtag, and none is usually best.
 - {"No links." if w.links == "never" else "Links only when they're the point of the post."}
 - No engagement bait: never ask for likes, reposts, follows or tags.

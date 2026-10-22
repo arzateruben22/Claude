@@ -53,7 +53,7 @@ def rows(store: Store, cfg: Config, now: datetime, days: float = 3650) -> List[d
         out.append({
             "id": d.id, "post_id": d.posted_id, "kind": d.kind, "format": d.format, "text": d.text, "by": d.by,
             "decided_by": d.decided_by, "at": d.posted_at, "hour": local.hour, "minute": local.hour * 60 + local.minute,
-            "day": local.date(), "views": views, "eng": m.engagements if m else 0,
+            "day": local.date(), "views": views, "eng": m.engagements if m else 0, "replies": m.replies if m else 0,
             "reach": views / max(followers_at(series, d.posted_at), MIN_AUDIENCE),
             "mature": now - d.posted_at >= MATURE and m is not None,
         })
@@ -100,7 +100,8 @@ def _group(rs: List[dict], key: str) -> Dict:
         views = sum(r["views"] for r in g)
         out[k] = {"n": len(g), "median": int(median(r["views"] for r in g)),
                   "factor": round(factors.get(k, 1.0), 2),
-                  "eng_rate": round(sum(r["eng"] for r in g) / views, 4) if views else 0.0}
+                  "eng_rate": round(sum(r["eng"] for r in g) / views, 4) if views else 0.0,
+                  "replies_per_k": round(sum(r.get("replies", 0) for r in g) / views * 1000, 2) if views else 0.0}
     return out
 
 
@@ -132,6 +133,12 @@ def learnings(rs: List[dict]) -> List[str]:
         if w["factor"] <= 0.85:
             out.append(f"'{worst}' posts reach the fewest: {w['factor']:.1f}x a typical post ({w['n']} posts). "
                        "Write fewer of these, or make them sharper.")
+    if len(fmts) >= 2:
+        talk = sorted(fmts.items(), key=lambda kv: kv[1]["replies_per_k"], reverse=True)
+        (top_k, t), rest = talk[0], [v["replies_per_k"] for _, v in talk[1:]]
+        if t["replies_per_k"] > 0 and t["replies_per_k"] >= 1.5 * median(rest):
+            out.append(f"'{top_k}' posts start the most conversations: {t['replies_per_k']:.1f} replies per 1,000 views "
+                       f"({t['n']} posts). Replies are what X rewards most; keep their endings open.")
     mature = sorted((r for r in rs if r["mature"]), key=lambda r: r["reach"], reverse=True)
     if len(mature) >= 6:
         top = mature[0]
@@ -210,7 +217,8 @@ def render(store: Store, cfg: Config, now: datetime, followers: int, verified_fo
         lines.append("By format (reach = views per follower, adjusted for the hour posted; 1.0x = typical):")
         for k, v in sorted(fmts.items(), key=lambda kv: kv[1]["factor"], reverse=True):
             flag = "" if v["n"] >= MIN_N else "  (too few to judge)"
-            lines.append(f"  {k.replace('_', ' '):<14} {v['factor']:>4.1f}x   {v['n']:>3} posts   ~{v['median']:>7,} views{flag}")
+            lines.append(f"  {k.replace('_', ' '):<14} {v['factor']:>4.1f}x   {v['n']:>3} posts   ~{v['median']:>7,} views   "
+                         f"{v.get('replies_per_k', 0):>4.1f} replies/1k{flag}")
         lines.append("")
     hours = by_hour(rs)
     if hours:

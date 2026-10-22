@@ -5,7 +5,7 @@
 handle = "yourhandle"          # TODO: your X handle, without the @
 niche = "comedy: satire and low-stakes hot takes about gym life, raves and everyday life"
 audience = "gym-goers, ravers, and anyone who likes a hot take with their coffee"
-voice = "deadpan and confident, a little unhinged. Short, choppy sentences. Hyper-specific details (numbers, times, prices) that make a bit feel real, then a one-line verdict. Lowercase is fine. Hot takes delivered like facts. Merciless to habits, never to people for who they are."
+voice = "deadpan and confident, a little unhinged. Short, choppy sentences. Hyper-specific details (numbers, times, prices) that make a bit feel real, then a one-line verdict. Lowercase is fine. Hot takes delivered like facts. Merciless to habits, never to people for who they are. Tells overheard stories like a friend recapping the group chat: who and where in a line, the exact numbers, both sides in their own words, then hands the verdict to the timeline."
 language = "en"
 premium = false                # TODO: X Premium is needed for creator payouts (and helps reach); set true once you have it
 timezone = "America/Los_Angeles"
@@ -15,7 +15,7 @@ notes = ["goes to the gym", "goes to raves", "loves comedy",
 
 [topics]
 include = ["gym life", "raves and festivals", "everyday life", "dating and texting", "food opinions", "work life",
-           "internet culture", "running trading bots on fake money"]
+           "internet culture", "running trading bots on fake money", "money habits", "weddings", "roommates"]
 avoid = ["politics", "political", "election", "democrat", "republican", "liberal", "conservative", "maga", "trump",
          "biden", "immigration", "abortion", "gun control", "israel", "gaza", "palestine", "ukraine", "russia",
          "racist", "racism", "racial", "ethnicity", "religion", "religious", "tragedy", "shooting", "suicide",
@@ -49,10 +49,12 @@ style = "comedy"               # comedy | informative
 model = "claude-opus-5-5"      # the strongest writer: jokes need it
 effort = "medium"
 drafts_per_batch = 8
-formats = ["storytime", "hot_take", "fake_quote", "pov", "observation", "list", "fake_headline", "this_or_that",
-           "bot_diary"]           # bot_diary: jokes about your paper-trading bots, from the paper book's real
+formats = ["storytime", "dilemma", "hot_take", "fake_quote", "pov", "observation", "list", "fake_headline",
+           "this_or_that", "bot_diary"]   # dilemma: an overheard scene, both sides quoted, ending on an either/or           # bot_diary: jokes about your paper-trading bots, from the paper book's real
                                   # numbers (only when it's fresh); always says it's fake money, always waits for you
 max_chars = 200                # jokes land shorter
+story_chars = 280              # storytime and dilemma posts may run longer. With X Premium ([account] premium = true)
+                               # raise it to 700-1000 for the long overheard stories that pull thousands of replies
 hashtags_max = 0               # hashtags read as try-hard on a comedy account
 links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)
 ai_daily_usd = 0.40            # Claude spend cap per day
@@ -66,6 +68,8 @@ examples = [                   # posts in your voice (the writer learns the rhyt
   "The gym got your girl\n\nThe gym got your girl\n\n- the 6am spin class",
   "He skipped leg day for 3 years. Let him wobble. He was destined to be a flamingo.",
   "If your situationship has a gym membership and still can't commit to a workout split, it was never going to commit to you.",
+  "Couple in the rave merch line. He wants the $65 hoodie \"for the memories.\" She: \"Rent is due in 4 days.\" He: \"Memories don't pay rent.\" She: \"Neither do you, apparently.\"\n\nBuy the hoodie or keep the memories free?",
+  "My buddy's girl wants him in the gym 5 days a week. He says 3. Her: \"You said you wanted to get serious.\" Him: \"About you. Not about cardio.\" Her: \"Same energy.\"\n\nIs 3 days enough or is he cooked?",
 ]
 
 [writer.slang]                 # slang the writer may use (two at most per post), with what it means
