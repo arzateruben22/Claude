@@ -26,7 +26,7 @@ def entry(cs: List[Candle], r: RulesCfg) -> Tuple[bool, str]:
     """Buy when the candle closes above the trend average AND above the previous breakout window's high
     (with breakout_hours = 0, the close above the average is enough: a plain trend filter)."""
     if len(cs) < r.candles_needed():
-        return False, "not enough history yet"
+        return False, f"not enough history yet ({len(cs)} of the {r.candles_needed()} {r.candle_word()}s it needs)"
     last = cs[-1]
     trend = ema([c.c for c in cs], r.trend)
     if last.c <= trend:

@@ -8,7 +8,7 @@ import pytest
 from majors import __main__ as cli
 from majors import config, rules
 from majors.desk import Desk, buy_and_hold, replay
-from majors.market import HOUR, Candle, Coinbase, DemoMarket, MarketError
+from majors.market import HOUR, Bucketed, Candle, Coinbase, DemoMarket, MarketError
 
 T0 = datetime(2026, 9, 1, tzinfo=timezone.utc)
 BASE = config.load()
@@ -528,3 +528,18 @@ def test_the_hour_still_trading_is_never_kept_in_the_cache(tmp_path, monkeypatch
     (tmp_path / "ETH-USD.json.gz").write_bytes(gzip.compress(json.dumps(old).encode()))   # the old format
     healed = cb._load_cache("ETH", "USD")
     assert healed and max(c.t for c in healed) < this_hour - timedelta(days=Coinbase.HEAL_DAYS - 1)
+
+
+def test_an_hour_the_exchange_never_reported_does_not_starve_a_long_rule():
+    class Gappy(DemoMarket):                       # one hour missing, 100 days back: its whole day is dropped
+        def history(self, coin, quote, start, end):
+            hole = datetime(2026, 7, 1, 13, tzinfo=timezone.utc)
+            return [c for c in super().history(coin, quote, start, end) if c.t != hole]
+
+    now = datetime(2026, 10, 9, 0, 5, tzinfo=timezone.utc)
+    got = Bucketed(Gappy(7), 24).recent("BTC", "USD", now, 200)
+    assert len(got) == 200 and datetime(2026, 7, 1, tzinfo=timezone.utc) not in {c.t for c in got}
+    assert got[-1].closed_at == datetime(2026, 10, 9, tzinfo=timezone.utc)
+    trend = config.load(config.book_paths("trend")[0]).rules
+    ok, why = rules.entry(got, trend)
+    assert not ok and why == "not enough history yet (200 of the 300 24-hour candles it needs)"

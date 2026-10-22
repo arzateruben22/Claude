@@ -69,14 +69,22 @@ def aggregate(candles: List[Candle], hours: int) -> List[Candle]:
 
 
 class Bucketed:
-    """A market of longer candles, built from an hourly market's candles (kept on disk by that market)."""
+    """A market of longer candles, built from an hourly market's candles (kept on disk by that market).
+
+    The exchange leaves out an hour with no trades (or one it was down for), and that drops the whole bucket. So
+    `recent` asks for a few more buckets than it needs and returns the last n whole ones: a missing day is skipped,
+    the way a backtest skips it, instead of leaving a 300-day rule one candle short every day for 300 days.
+    """
+
+    SLACK = 0.1
 
     def __init__(self, inner, hours: int):
         self.inner, self.hours, self.name = inner, hours, inner.name
 
     def recent(self, coin: str, quote: str, now: datetime, n: int) -> List[Candle]:
         end = floor_to(now, self.hours)
-        got = self.inner.history(coin, quote, end - n * self.hours * HOUR, end)
+        extra = max(5, int(n * self.SLACK))
+        got = self.inner.history(coin, quote, end - (n + extra) * self.hours * HOUR, end)
         return [c for c in aggregate(got, self.hours) if c.closed_at <= now][-n:]
 
     def history(self, coin: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
