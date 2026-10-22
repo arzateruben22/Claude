@@ -2,9 +2,9 @@
 import re, sys, os, json
 src, out, title, version = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 s = open(src, encoding="utf-8").read()
-if version == "v3":
+if version != "v2":
     assert s.count('version: "v2",') == 1
-    s = s.replace('version: "v2",', 'version: "v3",')
+    s = s.replace('version: "v2",', 'version: "%s",' % version)
 i = s.index("</title>") + len("</title>")
 s = "<title>" + title + "</title>" + s[i:]
 s = re.sub(r"\s*</body>\s*</html>\s*$", "\n", s)
