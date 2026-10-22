@@ -1217,7 +1217,9 @@ await group('live', async (use) => {
       step('A draws B');
       const sa = await status(A), sb = await status(B);
       expect(sa.cap === 2 && sb.cap === 2 && sb.peers === 1, JSON.stringify({ sa, sb }));
-      const chip = await A.locator('.livechip').innerText();
+      // the control rail's buttons lay their parts out as flex items, so innerText breaks the line between the word and
+      // the count ("LIVE\n2/2"): compare the words
+      const chip = (await A.locator('.livechip').innerText()).replace(/\s+/g, ' ');
       expect(chip.toLowerCase() === 'live 2/2', `the chip says "${chip}"`);
       await game(A, () => window.__game.setCam('chase'));
       await frames(A, 2);
