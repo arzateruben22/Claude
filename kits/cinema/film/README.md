@@ -75,6 +75,29 @@ New here:
   title and end card), with `pos` and `shown` as before. It reads positions at `t + 0.7` and never
   seeks before 0 or past the end.
 
+## Deliver and measure
+
+After the final's `--assemble` (pass the studio's `build/audio/mix.m4a`, or `mix.wav`, which is
+encoded here with the same AAC 256k settings), three steps finish an episode:
+
+```
+E=<episode dir>
+cp $E/build/final/9x16/contact-sheet.jpg $E/out/<id>-9x16-contact.jpg
+python3 -I kits/cinema/film/qa.py $E                 # → $E/build/qa-delivery.json; exit 1 on a failed gate
+python3 -I kits/cinema/film/scorecard.py $E          # the measured table for review/scorecard.md
+python3 -I kits/cinema/script/claims_sheet.py $E --reviewer "a physicist"   # → review/CLAIMS-REVIEW.md
+```
+
+`qa.py` reads only the delivered mp4 (and the render's `audit.json`): format, picture against sound
+(≤ 1 frame), length 60–75 s, loudness and true peak on the decoded AAC (−15…−13 LUFS, ≤ −1 dBTP),
+correlation and mono loss, and **flashing**: WCAG 2.3.1's general-flash rule on relative luminance
+(a change of ≥ 0.1 with the darker side < 0.8, over ≥ 25% of the frame; a flash is a pair of opposite
+changes; ≤ 3 in any second). On the Skin School delivery it reproduces the hand-measured scorecard
+(−14.1 LUFS, −1.9 dBTP, correlation 0.79, one large-area change, no flashes) in 16 s.
+`scorecard.py` adds the studio's own sync, voice-over-music and phone numbers from
+`build/audio/qa.json` and the render cost from the chunk lines of the log (`--log`, default
+`films/channels/finals.log`). Each episode then gets `assets.md` and `review/HUMAN-REVIEW.md`.
+
 ## The scene contract
 
 ```js

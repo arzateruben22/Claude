@@ -84,6 +84,10 @@ the first three episodes says `"search excerpt"`, and a person opens each link b
 posts. A computed figure (a range, a light-time, a drop time) cites the source of its inputs and
 shows the arithmetic in `note`.
 
+`claims_sheet.py <episode> --reviewer "a physicist"` turns the ledger into `review/CLAIMS-REVIEW.md`,
+the sign-off sheet: one row per claim with the sentence, the claim, the source link, how it was
+checked, an empty box and a notes column.
+
 ## lint.py
 
 `python3 -I kits/cinema/script/lint.py <episode folder> [--segment NAME] [--bpm N] [--wps 2.5] [--json] [--sources]`
