@@ -1,9 +1,7 @@
 # Project status: four science-video formulas to 100%
 
-> **PAUSED by the user (22 Oct, 13:37 UTC).** The finals driver and the physics render were stopped
-> cleanly (frames 0–1769 of 2248 are on disk; it resumes from there). The 2-hourly check-in
-> (`trig_01RobrDAZpWDmvW9a3s2U5Xb`) is disabled. To resume: re-enable it, and restart
-> `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`.
+> Resumed 24 Oct, 00:13 UTC ("Keep finishing and going"): finals driver restarted (physics resumed at frame 1770),
+> the 2-hourly check-in re-enabled.
 
 The user's instruction (2026-10-22): keep going until all four formulas are complete, through
 usage limits (continue after each reset). Check-ins are scheduled into this session; each one
