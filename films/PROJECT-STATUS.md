@@ -1,7 +1,10 @@
 # Project status: four science-video formulas to 100%
 
-> Resumed 24 Oct, 00:13 UTC ("Keep finishing and going"): finals driver restarted (physics resumed at frame 1770),
-> the 2-hourly check-in re-enabled.
+> **ON HOLD for a notes redesign (24 Oct, 01:32 UTC).** The user, watching the space final: "the notes for the
+> graphs / animations need to be more aesthetic and easy to follow along with". The body final was stopped at
+> frame 60 (resumable, but it will re-render with the new notes). **Check-ins: do NOT restart render-finals.sh.**
+> Plan: redesign the HUD notes (badges, labels, readouts) in kits/cinema/sci/hud.js + each theme, send before/after
+> stills for approval, then re-render all three finals.
 
 The user's instruction (2026-10-22): keep going until all four formulas are complete, through
 usage limits (continue after each reset). Check-ins are scheduled into this session; each one
@@ -38,7 +41,7 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
   Then per episode: QA on the delivered file (loudness, audit, flashing), scorecard, assets.md, HUMAN-REVIEW.md, commit, send.
   - [x] Physics: `films/channels/physics/ep01/out/rest-frame-001-9x16.mp4` (24 Oct 00:28; −14.0 LUFS / −2.0 dBTP, QA PASS, sent)
   - [x] Space: `films/channels/space/ep01/out/lightminute-001-9x16.mp4` (24 Oct 01:26; −14.1 LUFS / −1.9 dBTP, QA PASS, sent)
-  - [ ] Body (rendering from 01:26 UTC; projected ~2–2.6 h)
+  - [ ] Body (stopped at frame 60 for the notes redesign)
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
 ## Usage pacing (12:07 UTC, 22 Oct)
