@@ -1,6 +1,7 @@
 # Light Minute No. 001: "If the Sun vanished"
 
-74.7 s, 9:16. Built end to end up to a draft preview. It has not been posted or rendered at the final tier.
+74.7 s, 9:16. **The final is delivered** (24 Oct): `out/lightminute-001-9x16.mp4` (−14.1 LUFS / −1.9 dBTP, QA PASS),
+with its poster, contact sheet, `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md` and `assets.md`. It has not been posted.
 The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset `lightminute-vacuum`).
 
 - Preview: `review/preview-ep01.mp4` (540×960, 15 fps, AAC 44.1 kHz 192k)
@@ -129,7 +130,7 @@ ffmpeg -i $E/build/assembled/preview-ep01-48k.mp4 -i $E/build/audio/mix.wav -map
   - The Sun's vanishing (two times) and reappearing (rewind) are single one-frame pops, never a flash.
   - The kilonova glow ramps up over 0.6 s.
   - Earth darkens over about 0.3 s when the news arrives.
-  - An analyzer pass is still TODO.
+  - Analyzer pass on the final (`kits/cinema/film/qa.py`): no frame changes luminance over more than 3% of the screen; 0 flashes.
 - **Badges and scale pills are silent.** The preset maps no sound to the `badge` and `scale` kinds. Their events are in `sheet.json` anyway.
 
 ## Kit issues worked around here (kit files not edited)
