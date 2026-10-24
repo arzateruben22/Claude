@@ -25,3 +25,18 @@ applied. The user can override any of them; nothing here is published.
 - Space episode "Nearest star" goes second (it is tied to 18 Nov 2026).
 - Cadence: render on one box per channel (one cloud session each), bank 5–7 episodes per channel, then go daily.
 - Names: open-web searches only. Handle and trademark checks (USPTO, EUIPO, TikTok/YouTube/Instagram) are TODO before launch.
+
+## Platforms (the user, 24 Oct)
+- **YouTube and TikTok: one channel per subject.** Meanwhile, Inside, Light Minute and Rest Frame
+  each get their own YouTube channel and their own TikTok account, and so does every subject added
+  later. Each keeps its own name, look, narrator and sound.
+- **Instagram: one combined account** that posts every channel's episodes. Each post still
+  carries its own channel's look, name, end card and AI label. The account's name and bio frame
+  it as the studio's science shelf.
+  - TODO: the combined account's name and handle.
+  - Open question: the user said "all 4 channels". Skin School belongs to the client (Lumevina,
+    Evelyn Romero), so it posts on the combined account only if Evelyn agrees in writing. Until
+    then it stays on Lumevina's own accounts.
+- **Writing, for every channel:** `kits/cinema/script/WRITING.md` (the story standard: a person, a
+  wrong idea or stakes in every episode; open loops; earned wonder; the "Never write" list, which
+  `lint.py` checks).

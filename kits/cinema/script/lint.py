@@ -78,6 +78,23 @@ SIGNALS = set("""always never every all most only none than because faster slowe
 farther further longer shorter heavier lighter""".split())
 
 
+# WRITING.md "Never write": phrases that announce wonder instead of earning it, or talk like an ad
+FORCED = [
+    (r"\byou won'?t believe\b", "promises a shock instead of delivering one"),
+    (r"\b(mind[- ]?blowing|insane|crazy|unbelievable|jaw[- ]dropping|epic)\b", "announces the wonder"),
+    (r"\bdid you know\b", "is a quiz-book opener"),
+    (r"\bhave you ever wondered\b", "is a throat-clear; ask the question itself"),
+    (r"\bhere'?s the thing\b", "is filler"),
+    (r"\blet that sink in\b", "tells the viewer how to feel"),
+    (r"\b(the answer|this) (may|will|might) (surprise|shock) you\b", "promises a shock instead of delivering one"),
+    (r"\bscience says\b", "hides the source; name what was measured"),
+    (r"\b(in this video|today we|stick around|wait for it|smash that|like and subscribe)\b", "talks about the video, not the subject"),
+    (r"\bliterally\b", "is a filler intensifier"),
+    (r"\bbut there'?s a catch\b", "is a fake cliffhanger unless a real catch follows in the next line"),
+    (r"!", "an exclamation mark: the voice and the picture carry the energy"),
+]
+
+
 def syllables(word):
     """A rough English syllable count (vowel groups, less a silent final e or -ed). Good enough to
     estimate how long a short phrase takes; the voice's own timings replace it once voiced."""
@@ -222,6 +239,12 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
             (r.error if b["id"] in NEED_STAR else r.warn)(b["id"], "no *starred* word (a camera landing or a sound hit)")
         if "..." in b["vo"]:
             r.warn(b["id"], "'...' ends a sentence here; use '…' for a pause inside one")
+        for pat, why in FORCED:
+            m = re.search(pat, b["text"], re.I)
+            if m:
+                r.warn(b["id"], f"'{m.group(0)}' {why} (WRITING.md, 'Never write')")
+        if b["id"] != "hook" and len(re.findall(r"\?", b["text"])) >= 2:
+            r.warn(b["id"], "two questions in one beat outside the hook: answer one, or cut one (WRITING.md)")
         if re.search(r"\d", b["text"]):
             r.warn(b["id"], "digits in the spoken line; spell numbers out (the voice reads digits its own way, "
                             "and align.py maps digits to words only up to 100)")
