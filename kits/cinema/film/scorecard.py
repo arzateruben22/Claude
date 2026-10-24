@@ -62,7 +62,8 @@ def main(argv):
             rows.append(("Determinism", "resumable, byte-stable",
                          f"{len(ch)} chunks, every frame's sha256 checked against its log before encoding"))
             rows.append(("Render cost", "≤ 4 h", f"{secs / 3600:.1f} h for {n} frames ({secs / n:.2f} s/frame, K avg {kavg:.1f}, max {max(c[2] for c in ch.values())})"))
-    out = ["| Gate | Target | Result |", "|---|---|---|"] + [f"| {a} | {b} | {c} |" for a, b, c in rows]
+    minus = lambda t: re.sub(r"(?<![\w.])-(?=\d)", "−", t)        # typographic minus on numbers
+    out = ["| Gate | Target | Result |", "|---|---|---|"] + [f"| {a} | {b} | {minus(c)} |" for a, b, c in rows]
     print("\n".join(out))
 
 

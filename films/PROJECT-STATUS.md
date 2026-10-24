@@ -36,6 +36,9 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
   idempotent; log `films/channels/finals.log`). If no `kits/cinema/film/render.mjs` process is alive and the log
   doesn't end in 'all three finals delivered', restart it: `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`.
   Then per episode: QA on the delivered file (loudness, audit, flashing), scorecard, assets.md, HUMAN-REVIEW.md, commit, send.
+  - [x] Physics: `films/channels/physics/ep01/out/rest-frame-001-9x16.mp4` (24 Oct 00:28; −14.0 LUFS / −2.0 dBTP, QA PASS, sent)
+  - [ ] Space (rendering from 00:28 UTC, ~1 h 50 m)
+  - [ ] Body (after space)
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
 ## Usage pacing (12:07 UTC, 22 Oct)
