@@ -98,6 +98,32 @@ changes; ≤ 3 in any second). On the Skin School delivery it reproduces the han
 `build/audio/qa.json` and the render cost from the chunk lines of the log (`--log`, default
 `films/channels/finals.log`). Each episode then gets `assets.md` and `review/HUMAN-REVIEW.md`.
 
+## Compilations (long-form YouTube)
+
+Every 4–6 episodes, a channel's latest episodes become one 5–10 minute 16:9 video:
+
+```
+node kits/cinema/film/compilation.mjs --channel films/channels/physics --episodes ep01,ep02,ep03,ep04,ep05 \
+     --title "Everyday physics, slowed down" --thumb "Which lands first?" --name vol01
+```
+
+The episodes are the delivered finals, played whole at full height in the middle of a 1920×1080 frame drawn
+in the channel's theme. On the left are the channel and the episode's title. On the right is the chapter list,
+with the current episode lit, and "Narration: synthetic voice (AI)" sits along the bottom. A 4 s intro card
+(the name, the promise and the posters, over the channel's sonic signature from the studio) opens the video. An
+8 s outro card closes it ("A new one every day", Subscribe), with the right half clear for YouTube's end screen.
+The cards' music sits 4 dB under the episodes.
+
+Output in `<channel>/compilations/<name>/`:
+- `<name>-16x9.mp4`
+- `thumbnail.jpg` (1280×720)
+- `chapters.txt`: YouTube chapters. The first starts at 0:00 and each runs ≥ 10 s.
+- `description.md`: chapters, every episode's sources, the AI label and credits.
+- `qa.json`: the size, the length (5–11 min), loudness and true peak, and the chapters.
+
+`--cards-only` draws the cards and the thumbnail and stops, for design passes. Tested 24 Oct on two copies of
+Rest Frame No. 001 (the v1 file): −14.3 LUFS, −2.0 dBTP, 3 min 20 s to build on this box.
+
 ## The scene contract
 
 ```js
