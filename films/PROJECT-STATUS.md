@@ -48,6 +48,10 @@ otherwise: finish the in-flight episode builds and their review, run the three f
 (machine time, little usage), assemble, QA and deliver. Do **not** start new multi-agent
 workflows or episode 2+ batches; keep check-ins short.
 
+## Effort (24 Oct)
+The user turned ultracode off and kept extra effort. Finals need no workflows. For the daily routine: one
+session per episode, plus one independent review agent per episode as the quality gate; no multi-agent fan-outs.
+
 ## Running state (update when it changes)
 - Final render (Skin School): detached `run.sh`, log `films/skin-school-tiktok/build/final/9x16/render.log`.
   A worker restart kills it (seen 07:22 UTC): check with `ps -eo args | grep [r]ender.mjs` (never
