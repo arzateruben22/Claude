@@ -143,12 +143,13 @@ HOOK_END = 0.305                                         # … 0.305 s into its 
 HOOK_TAU0 = HOOK_END - FREEZE * SLOW / 2 - SLOW * F_h    # so frame 0 is 0.23 s in: ghosts 0–4 already stamped, level in pairs
 L_n = A("vo02:down")                                     # the drop lands on "down"
 R_n = L_n - (RAMP + (T_LAND - TAU_RAMP) / SLOW)          # … released (at ×1, ramping to ×1/20) on "slowed"
-L_c = A("vo03:same#3")                                   # both land on "same frame"
+L_c = max(A("vo03:same#3"), round((cut("change") + 0.15 + RAMP + (T_LAND - TAU_RAMP) / SLOW) * FPS + 0.5) / FPS)   # both land on "same frame" (later in the phrase if the fall needs it)
 R_c = L_c - (RAMP + (T_LAND - TAU_RAMP) / SLOW)
-R_w = A("vo04:pulls")                                    # why: released on "Gravity *pulls*", already slowed
-F_w = R_w + (T_LAND - FREEZE * SLOW / 2) / SLOW          # frozen at the moment of contact
+F_w = A("vo04:same", -0.1)                               # why: the balls touch down as "same height" is said, and freeze
+R_w = F_w - (T_LAND - FREEZE * SLOW / 2) / SLOW          # … so released (already slowed) while Galileo is named
+assert cut("why") + 1.0 < A("vo04:drew") and A("vo04:drew") + 2.0 < R_w < A("vo04:steady") - 0.3, (A("vo04:drew"), R_w, A("vo04:steady"))
 C_w = F_w + FREEZE
-L_o = A("vo05:same")                                     # whoa: all four land on "same frame"
+L_o = max(A("vo05:same"), round((cut("whoa") + T_LAND / SLOW) * FPS + 0.5) / FPS)   # whoa: all four land on "same frame" (a frame after its start if the fall needs it)
 R_o = L_o - T_LAND / SLOW                                # released at ×1/20 right after the cut ("Throw")
 
 KEYS = [
@@ -207,6 +208,26 @@ GAPS = [round(m0 + (m1 - m0) * i / 8, 4) for i in range(9)]   # gap i+1 is count
 # shrink into it and read as gravity weakening: centre at 20 cm, 0.412 s into the fall
 TAU_TIP = math.sqrt(2 * (DROP + RB - 20.0) / G)
 
+# "Old gunnery books drew cannonballs flying straight, then dropping": the 1500s drawing as dots, from the
+# thrown ball's release: straight out 24 cm, a quarter turn of radius 10 cm, then straight down to the floor
+# (it lands 34 cm out, against the real throw's 20)
+def _old_path(step=3.2):
+    y0, pts = DROP + RB, []
+    segs = [("line", (X_THROW, y0), (X_THROW + 24.0, y0)), ("arc", (X_THROW + 24.0, y0 - 10.0), 10.0), ("line", (X_THROW + 34.0, y0 - 10.0), (X_THROW + 34.0, RB))]
+    for sg in segs:
+        if sg[0] == "line":
+            (ax, ay), (bx, by) = sg[1], sg[2]
+            n = max(1, round(math.hypot(bx - ax, by - ay) / step))
+            pts += [[round(ax + (bx - ax) * i / n, 3), round(ay + (by - ay) * i / n, 3), -2.0] for i in range(n)]
+        else:
+            (cx, cy), r = sg[1], sg[2]
+            n = max(1, round(math.pi / 2 * r / step))
+            pts += [[round(cx + r * math.sin(math.pi / 2 * i / n), 3), round(cy + r * math.cos(math.pi / 2 * i / n), 3), -2.0] for i in range(n)]
+    return pts + [[X_THROW + 34.0, RB, -2.0]]
+
+
+OLD_PTS = _old_path()
+
 # ── the cue table the scene reads (film seconds) ────────────────────────────────────────────────
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 CUE = {
@@ -214,9 +235,9 @@ CUE = {
     "normal": {"R": R_n, "L": L_n, "gaps": A("vo02:gaps"), "gravity": A("vo02:falling"), "gTip": clk.tOf(TAKES["normal"]["tauR"] + TAU_TIP)},
     "change": {"R": R_c, "L": L_c},
     "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "gTip": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "two": A("vo04:two"), "glide": A("vo04:glide"),
-            "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same#2")]},
+            "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same")], "old": {"pts": OLD_PTS, "drew": A("vo04:drew"), "out": A("vo04:Gravity", -0.3)}},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
-    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:For")]]},
+    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:holds")]]},
     "tease": {"out": A("vo08:Next")},
     "cuts": CUTS,
 }
@@ -233,7 +254,8 @@ LABELS = [
     {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:throw"), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},
     {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
     {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": C_w, "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same#2"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
+    {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:Gravity", -0.3), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
     {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
     {"id": "ms-1m", "text": "1 m", "color": "ghost", "t0": A("vo06:one-meter"), "t1": None, "anchor": {"point": [STICK_X, 100.0, 0.0]}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "tk-when", "text": "all 0.45 s", "color": "ghost", "t0": A("vo07:when"), "t1": None, "anchor": {"rung": ["whoa", 9], "u": 0.0}, "side": -1, "fixed": True, "v": "above"},
@@ -278,7 +300,7 @@ CAM = {
     # labels sit to the right of what they name, so the action keeps to the left half (room above the rail for the badge)
     "change": [key(cut("change"), view(19.0, top_px=345.0)), key(cut("why"), view(16.0, top_px=345.0), "sine")],
     "why": [key(cut("why"), full(26.0)), key(A("vo04:So", -0.2), full(23.0), "sine"),
-            key(A("vo04:same#2"), {**view(2.0), "yaw": 52.0, "pitch": 7.0, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 10}, "p3"),
+            key(A("vo04:same"), {**view(2.0), "yaw": 52.0, "pitch": 7.0, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 10}, "p3"),
             key(cut("whoa"), {**view(2.0), "yaw": 55.0, "pitch": 7.5, "look": [2.0, 40.0, 0.0], "dist": view(2.0)["dist"] + 16}, "sine")],
     "whoa": [key(cut("whoa"), {"look": [-2.0, 97.0, 0.0], "dist": 232.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}),
              key(R_o + 0.35, {"look": [-2.0, 96.0, 0.0], "dist": 238.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}, "sine"),
@@ -350,7 +372,7 @@ for i, t in enumerate(GAPS):
 ev.append({"t": CUE["measure"]["counter"][0], "kind": "counter.show", "tag": "clock"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
-ev.append({"t": A("vo04:same#2"), "kind": "reveal", "tag": "same-height"})
+ev.append({"t": A("vo04:same"), "kind": "reveal", "tag": "same-height"})
 
 # merge the page's own measurements, when render.mjs --cues has run
 cues_file = HERE / "build" / f"cues-{film['id']}-9x16.json"

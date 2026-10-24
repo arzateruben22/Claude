@@ -260,15 +260,15 @@ def _anchor(sig, how, voice):
     raise ValueError(f"unknown anchor {how}")
 
 
-def _masked(events, P, fps, window=0.2):
+def _masked(events, P, fps, window=0.2, shown=None):
     """Two sounds within `window` of each other blur into one. Keep the more important (lower prio
     in events.json); the other drops out. Equal priorities both play (a run of cells, ticks)."""
-    times = []
+    times, shown = [], shown or {}
     for n, e in enumerate(events):
-        if e["kind"] in P["foley"] and not (e["kind"] == "section" and e["t"] <= 0):
+        if e["kind"] in P["foley"] and not _on_frame0(e):
             row = EVENTS.get(e["kind"], {})
             if not row.get("span"):
-                times.append((first_frame(e["t"], fps, row.get("after", False)), row.get("prio", 2), n))
+                times.append((_show(e, fps, row.get("after", False), shown), row.get("prio", 2), n))
     out = set()
     for ta, pa, na in times:
         for tb, pb, nb in times:
@@ -277,23 +277,38 @@ def _masked(events, P, fps, window=0.2):
     return out
 
 
+def _show(e, fps, after, shown):
+    """The frame a cue lands on. A label or counter whose first visible frame the page measured (render.mjs
+    --cues "shown") lands exactly there; anything else on first_frame()."""
+    if e["kind"] in ("label", "counter.show") and shown.get(e.get("tag")) is not None:
+        return round(shown[e["tag"]] * fps) / fps
+    return first_frame(e["t"], fps, after)
+
+
+def _on_frame0(e):
+    """A part that grows in (events.json "after") with t ≤ 0 is already on screen at frame 0 (hud.js from0):
+    it never arrives, so it makes no arrival sound. The same holds for a section that starts the film."""
+    return e["t"] <= 0 and (e["kind"] == "section" or EVENTS.get(e["kind"], {}).get("after", False))
+
+
 def foley(sheet, P):
     """Returns (effects stem, placed cues). Each sound's anchor lands on its event's frame: its
     onset by default, its peak or its end for sounds that build up to a moment (see ANCHOR). An
     entry with "at": "t1" lands on the frame that shows the event's end instead of its start."""
     fps, bus, placed, count = sheet["fps"], Bus(sheet["duration"], "effects"), [], {}
-    masked = _masked(sheet["events"], P, fps)
+    shown = sheet.get("shown", {})
+    masked = _masked(sheet["events"], P, fps, shown=shown)
     for n, e in enumerate(sheet["events"]):
         spec = P["foley"].get(e["kind"])
         if not spec:
             continue
         idx = count.get(e["kind"], 0)
         count[e["kind"]] = idx + 1
-        if (e["kind"] == "section" and e["t"] <= 0) or n in masked:
+        if _on_frame0(e) or n in masked:
             continue
         sig = _voice(spec, e, idx, fps)
         row = EVENTS.get(e["kind"], {})
-        show = first_frame(e.get("t1", e["t"]) if spec.get("at") == "t1" else e["t"], fps, row.get("after", False))
+        show = first_frame(e.get("t1", e["t"]), fps, row.get("after", False)) if spec.get("at") == "t1" else _show(e, fps, row.get("after", False), shown)
         lead = row.get("lead", 0.0)
         anchor = _anchor(sig, spec.get("anchor") or ANCHOR.get(spec["voice"], "onset"), spec["voice"])
         t_place = show - lead - anchor / SR

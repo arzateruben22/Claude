@@ -26,59 +26,59 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Rewind. Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second. Sunlight crosses that gap in eight minutes and twenty seconds.",
+   "text": "Rewind. We circle the Sun at nearly thirty kilometers a second. It's so far away that even its light needs eight minutes and twenty seconds to reach us.",
    "stars": [
     "Sun",
     "eight minutes and twenty seconds"
    ],
-   "phonemes": "ɹᵻwˈaɪnd. ˈɜːθ sˈɜːkəlz ðə sˈʌn ɐbˌaʊt ɐ hˈʌndɹɪd ænd fˈɪfti mˈɪliən kˈɪləmˌiːɾɚz ˈaʊt, æt nˌɪɹli θˈɜːɾi kˈɪləmˌiːɾɚz ɐ sˈɛkənd. sˈʌnlaɪt kɹˈɔsᵻz ðæt ɡˈæp ɪn ˈeɪt mˈɪnɪts ænd twˈɛnti sˈɛkəndz.",
-   "speed": 1.06,
+   "phonemes": "ɹᵻwˈaɪnd. wiː sˈɜːkəl ðə sˈʌn æt nˌɪɹli θˈɜːɾi kˈɪləmˌiːɾɚz ɐ sˈɛkənd. ɪts sˈoʊ fˌɑːɹ ɐwˈeɪ ðæt ˈiːvən ɪts lˈaɪt nˈiːdz ˈeɪt mˈɪnɪts ænd twˈɛnti sˈɛkəndz tə ɹˈiːtʃ ˌʌs.",
+   "speed": 1.08,
    "file": "02.wav",
-   "dur": 11.698,
-   "sha256": "a972db95c6f829c8b53f6ab88659fda651d3b8ab4ef754c720f135ef88f3856a"
+   "dur": 9.424,
+   "sha256": "bab7727dad2b717768abf581d664fb307e45b112aaf148456baae706e6d8956c"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now switch the Sun off. Its last light is still on the way, so for over eight minutes, your sky looks exactly the same.",
+   "text": "Now switch it off. Down here, nothing changes. Its last light is on the way: for over eight minutes, your sky looks exactly the same.",
    "stars": [
     "off",
     "exactly the same"
    ],
-   "phonemes": "nˈaʊ swˈɪtʃ ðə sˈʌn ˈɔf. ɪts lˈæst lˈaɪt ɪz stˈɪl ɔnðə wˈeɪ, sˌoʊ fɔːɹ ˌoʊvɚɹ ˈeɪt mˈɪnɪts, jʊɹ skˈaɪ lˈʊks ɛɡzˈæktli ðə sˈeɪm.",
-   "speed": 0.93,
+   "phonemes": "nˈaʊ swˈɪtʃ ɪɾ ˈɔf. dˌaʊn hˈɪɹ, nˈʌθɪŋ tʃˈeɪndʒᵻz. ɪts lˈæst lˈaɪt ɪz ɔnðə wˈeɪ: fɔːɹ ˌoʊvɚɹ ˈeɪt mˈɪnɪts, jʊɹ skˈaɪ lˈʊks ɛɡzˈæktli ðə sˈeɪm.",
+   "speed": 0.95,
    "file": "03.wav",
-   "dur": 8.137,
-   "sha256": "0fb1329407ec83b43638380ab180aa51fd410d688fd16a8a6d89bd71a28d5b06"
+   "dur": 9.176,
+   "sha256": "2470b81cdbae76f6508c9865a3edee603b8327217d94fb9d08d5bdd8a031e909"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, gravitational waves and light from colliding neutron stars crossed a hundred and thirty million light-years, and arrived less than two seconds apart.",
+   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, we caught two neutron stars colliding. Their light and gravitational waves crossed a hundred and thirty million light-years, and arrived under two seconds apart.",
    "stars": [
     "speed of light",
     "two seconds"
    ],
-   "phonemes": "ɡɹˈævᵻɾi ɪz nˈoʊ fˈæstɚ: tʃˈeɪndʒᵻz ɪn ɪt tɹˈævəl æt ðə spˈiːd ʌv lˈaɪt. ɪn twˈɛnti sˈɛvəntˌiːn, ɡɹˌævɪtˈeɪʃənəl wˈeɪvz ænd lˈaɪt fɹʌm kəlˈaɪdɪŋ nˈuːtɹɑːn stˈɑːɹz kɹˈɔst ɐ hˈʌndɹɪd ænd θˈɜːɾi mˈɪliən lˈaɪtjˈɪɹz, ænd ɚɹˈaɪvd lˈɛs ðɐn tˈuː sˈɛkəndz ɐpˈɑːɹt.",
-   "speed": 1.06,
+   "phonemes": "ɡɹˈævᵻɾi ɪz nˈoʊ fˈæstɚ: tʃˈeɪndʒᵻz ɪn ɪt tɹˈævəl æt ðə spˈiːd ʌv lˈaɪt. ɪn twˈɛnti sˈɛvəntˌiːn, wiː kˈɔːt tˈuː nˈuːtɹɑːn stˈɑːɹz kəlˈaɪdɪŋ. ðɛɹ lˈaɪt ænd ɡɹˌævɪtˈeɪʃənəl wˈeɪvz kɹˈɔst ɐ hˈʌndɹɪd ænd θˈɜːɾi mˈɪliən lˈaɪtjˈɪɹz, ænd ɚɹˈaɪvd ˌʌndɚ tˈuː sˈɛkəndz ɐpˈɑːɹt.",
+   "speed": 1.1,
    "file": "04.wav",
-   "dur": 15.203,
-   "sha256": "4bc38bda73a88226c26ac99d4fe93d0f165981eb6fbd9b7a8024cb7e11070d52"
+   "dur": 15.628,
+   "sha256": "7646c1b2b7f3ad4ed8e3aa20abce3e5aa819974229f4aadfbfac3181cc5d6e74"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off in a straight line.",
+   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off, straight into the dark.",
    "stars": [
     "circling",
     "arrives",
-    "straight line"
+    "straight"
    ],
-   "phonemes": "sˌoʊ fɔːɹ ˈeɪt mˈɪnɪts, ˈɜːθ kˈiːps sˈɜːklɪŋ ɐ sˈʌn ðæt ˌɪzənt ðˈɛɹ. ðˈɛn ðə nˈuːz ɚɹˈaɪvz, ænd ˈɜːθ sˈeɪlz ˈɔf ɪn ɐ stɹˈeɪt lˈaɪn.",
-   "speed": 0.93,
+   "phonemes": "sˌoʊ fɔːɹ ˈeɪt mˈɪnɪts, ˈɜːθ kˈiːps sˈɜːklɪŋ ɐ sˈʌn ðæt ˌɪzənt ðˈɛɹ. ðˈɛn ðə nˈuːz ɚɹˈaɪvz, ænd ˈɜːθ sˈeɪlz ˈɔf, stɹˈeɪt ˌɪntʊ ðə dˈɑːɹk.",
+   "speed": 0.97,
    "file": "05.wav",
-   "dur": 8.139,
-   "sha256": "c7e6cc396125917a737454d0a61727de69ba1f6f0d481ec00182345ae45a40e9"
+   "dur": 8.349,
+   "sha256": "392f100526b9c0cf443e2901cc38680edb17f0a7d6b531f0ecb8ee5c30909acf"
   },
   {
    "id": "vo06",
@@ -96,28 +96,29 @@
   {
    "id": "vo07",
    "beat": "readout",
-   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. From the center of our galaxy: twenty-seven thousand years.",
+   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. Our galaxy's center: light from the last Ice Age.",
    "stars": [
-    "Light time"
+    "Light time",
+    "Ice Age"
    ],
-   "phonemes": "lˈaɪt tˈaɪm, sˈʌn tʊ ˈɜːθ: ˈeɪt mˈɪnɪts, twˈɛnti sˈɛkəndz. fɹʌmðə sˈɛntɚɹ ʌv ˌaʊɚ ɡˈælɐksi: twˈɛntisˈɛvən θˈaʊzənd jˈɪɹz.",
-   "speed": 1.0,
+   "phonemes": "lˈaɪt tˈaɪm, sˈʌn tʊ ˈɜːθ: ˈeɪt mˈɪnɪts, twˈɛnti sˈɛkəndz. ˌaʊɚ ɡˈælɐksiz sˈɛntɚ: lˈaɪt fɹʌmðə lˈæst ˈaɪs ˈeɪdʒ.",
+   "speed": 1.02,
    "file": "07.wav",
-   "dur": 7.288,
-   "sha256": "7a658186fa1ddaf7f98fff409b38c0a1477227ea6d18a5acfd38298c108acec5"
+   "dur": 6.802,
+   "sha256": "02a1efe407cd75cb3fba3d4a7941c79daec2a6668f095c85c2155dcbfbdf1b63"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: how long would it take us to reach the nearest star?",
+   "text": "Next: leave for the nearest star today. When do we arrive?",
    "stars": [
-    "us"
+    "arrive"
    ],
-   "phonemes": "nˈɛkst: hˌaʊ lˈɔŋ wʊd ɪt tˈeɪk ˈʌs tə ɹˈiːtʃ ðə nˌɪɹɪst stˈɑːɹ?",
-   "speed": 0.79,
+   "phonemes": "nˈɛkst: lˈiːv fɚðə nˌɪɹɪst stˈɑːɹ tədˈeɪ. wˌɛn dˈuː wiː ɚɹˈaɪv?",
+   "speed": 0.95,
    "file": "08.wav",
-   "dur": 4.29,
-   "sha256": "626d4e71575904942520c3ff6a80d1032216cb80badefe0a03ba73faab99efff"
+   "dur": 3.684,
+   "sha256": "43d48acc9648879a88f4c168ce4606fb3ef3d48a789a97f479b334f18c512df5"
   }
  ]
 }

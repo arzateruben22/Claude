@@ -11,6 +11,11 @@ preview. **Nothing has been posted.** A physiologist signs off the script and th
 | Ten final-tier stills (1080×1920, full finish) | `review/stills-ep01.jpg`; the PNGs are in `build/stills/final/9x16/frames/` |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` |
 
+
+## v2 (24 Oct): new narration and notes
+
+The script was rewritten to the studio story standard (`kits/cinema/script/WRITING.md`; an independent review's fixes applied), re-voiced, and the direction re-pointed to the new words. The HUD notes are the redesigned speed/tag/card notes. Older sections below describe v1 where they quote lines; `script.md`, `claims.json` and `review/HUMAN-REVIEW.md` are current.
+
 ## Files
 
 | File | What it is |

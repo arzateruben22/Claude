@@ -23,32 +23,32 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: Which ball lands *first*? One thrown sideways, one just dropped. {-}
 
 ## normal {shot: reset, slider drift · events: time.slow to ×1/20, the strobe every 1/20 s · labels: "1/20 s apart", "gravity" · pre: 0.15 · energy: 0.45} (4.5–14.1 s)
-vo: Here's a drop, slowed twenty times. {-} Ghosts every twentieth of a second, and the gaps keep
-*growing*: a falling ball speeds up the whole way down. {c1}
+vo: First, just the drop, slowed twenty times. {-} Ghosts every twentieth of a second, and the gaps
+keep *growing*: a falling ball speeds up the whole way down. {c1}
 
 ## change {events: the second ball thrown from the rail at 0.44 m/s, landing 20 cm out; both knocks on one frame · pre: 0.1 · energy: 0.5} (14.1–23.5 s)
-vo: Now throw one sideways from the same height, at the same instant. {-} It sails twenty
-centimeters across… and lands on the *same frame*. {c2}
+vo: Now throw one sideways: same height, same instant. {-} It flies twenty centimeters farther… and
+still lands on the *same frame*. {c2}
 
 ## why {shot: the turn, 60–90°, landing on "same height" · vectors: equal gravity arrows, a constant sideways arrow · picture-only 2 s · pre: 0.25 · energy: 0.55} (23.5–39.2 s)
-vo: Gravity pulls both balls *down* the same way. {c3} In sixteen thirty-eight, Galileo described
-a throw as two motions: a steady glide across, plus a fall. {c4} So at every tick, both sit at
-the *same height*. {c5}
+vo: Old gunnery books drew cannonballs flying straight, then dropping. {c13} Galileo saw two motions
+at once: a steady glide across, plus a fall. {c4} Gravity pulls only *down*, so at every tick, both
+sit at the *same height*. {c3,c5}
 
 ## whoa {shot: pull back · events: throws at 0.89 and 1.33 m/s land 40 and 60 cm out; rungs across four trails, four knocks on one frame · picture-only 3 s · energy: 0.7} (39.2–52.3 s)
-vo: Throw twice as hard, then three times: forty centimeters out, then sixty. {c6} Every row of
-ghosts stays *level*, and all four land on the *same frame*. {c7}
+vo: Throw twice as hard, then three times: forty centimeters, then sixty. {c6} Every row of ghosts
+stays *level*, and all four land on the *same frame*. {c7}
 
 ## measure {segment: measure · the strobe ladder: count the nine rungs down the dropped ball's trail, then the stopwatch reads "0.45 s" · pre: 0.2 · energy: 0.5} (52.3–61.1 s)
-vo: *Measure it*: nine gaps of a twentieth of a second. {c8} A one-meter fall takes about
-*point four five seconds*, thrown or dropped. {c9}
+vo: *Measure it*: nine gaps, a twentieth of a second each. {c8} A one-meter fall takes about *point
+four five seconds*, thrown or dropped. {c9}
 
 ## takeaway {shot: hold on the four trails · badge: "air ignored: the fastest throw would land 0.3 ms late; a frame here is 1.7 ms" · energy: 0.45} (61.1–68.8 s)
-vo: Sideways speed changes *where* a ball lands, not *when*. {c10} For a level throw, only the
-height sets the clock. {c11}
+vo: Speed decides *where* a ball lands. {c10} Height alone decides *when*. {c11} That holds even for
+a bullet fired level. {c14}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (68.8–74.9 s)
-vo: Next: why big swings and small swings take almost the *same time*. {c12}
+vo: Next: one pendulum, big swing against small. {-} It's *almost* a tie. {c12}
 end card: "Next: the swing's secret" · "Follow Rest Frame"
 
 ## Notes

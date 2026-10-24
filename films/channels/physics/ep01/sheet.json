@@ -7,48 +7,48 @@
   {
    "id": "hook",
    "t0": 0.0,
-   "t1": 4.5333,
+   "t1": 4.2667,
    "energy": 0.7
   },
   {
    "id": "normal",
-   "t0": 4.5333,
-   "t1": 14.1333,
+   "t0": 4.2667,
+   "t1": 14.4,
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 14.1333,
-   "t1": 23.4667,
+   "t0": 14.4,
+   "t1": 22.9333,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 23.4667,
+   "t0": 22.9333,
    "t1": 39.2,
    "energy": 0.55
   },
   {
    "id": "whoa",
    "t0": 39.2,
-   "t1": 52.2667,
+   "t1": 52.0,
    "energy": 0.7
   },
   {
    "id": "measure",
-   "t0": 52.2667,
+   "t0": 52.0,
    "t1": 61.0667,
    "energy": 0.5
   },
   {
    "id": "takeaway",
    "t0": 61.0667,
-   "t1": 68.8,
+   "t1": 68.5333,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 68.8,
+   "t0": 68.5333,
    "t1": 74.9333,
    "energy": 0.4
   }
@@ -58,7 +58,7 @@
    "t": 0.0,
    "kind": "section",
    "id": "hook",
-   "t1": 4.5333
+   "t1": 4.2667
   },
   {
    "t": 0.3,
@@ -67,22 +67,22 @@
    "gain": -4.0
   },
   {
-   "t": 0.3667,
+   "t": 0.3,
    "kind": "strobe",
    "tag": "hook:g5"
   },
   {
-   "t": 1.3838,
+   "t": 1.3172,
    "kind": "strobe",
    "tag": "hook:g6"
   },
   {
-   "t": 1.6667,
+   "t": 1.6,
    "kind": "time.slow",
-   "tag": "slow@1.67"
+   "tag": "slow@1.60"
   },
   {
-   "t": 2.033333333333333,
+   "t": 1.9666666666666666,
    "kind": "label",
    "tag": "hk-thrown",
    "pos": [
@@ -91,7 +91,7 @@
    ]
   },
   {
-   "t": 3.466666666666667,
+   "t": 3.3333333333333335,
    "kind": "label",
    "tag": "hk-dropped",
    "pos": [
@@ -100,13 +100,13 @@
    ]
   },
   {
-   "t": 4.5333,
+   "t": 4.2667,
    "kind": "section",
    "id": "normal",
-   "t1": 14.1333
+   "t1": 14.4
   },
   {
-   "t": 5.8056,
+   "t": 5.9056,
    "kind": "contact",
    "tag": "normal:release",
    "pos": [
@@ -115,80 +115,80 @@
    ]
   },
   {
-   "t": 5.8056,
+   "t": 5.9056,
    "kind": "strobe",
    "tag": "normal:g0"
   },
   {
-   "t": 5.8748,
+   "t": 5.9748,
    "kind": "strobe",
    "tag": "normal:g1"
   },
   {
-   "t": 6.1056,
+   "t": 6.2056,
    "kind": "time.slow",
-   "tag": "slow@6.11"
+   "tag": "slow@6.21"
   },
   {
-   "t": 6.2029,
+   "t": 6.3029,
    "kind": "strobe",
    "tag": "normal:g2"
   },
   {
-   "t": 7.2029,
+   "t": 7.3029,
    "kind": "strobe",
    "tag": "normal:g3"
   },
   {
-   "t": 7.466666666666667,
+   "t": 7.6,
    "kind": "label",
    "tag": "nm-apart",
    "pos": [
-    0.584,
+    0.585,
     0.176
    ]
   },
   {
-   "t": 8.2029,
+   "t": 8.3029,
    "kind": "strobe",
    "tag": "normal:g4"
   },
   {
-   "t": 9.2029,
+   "t": 9.3029,
    "kind": "strobe",
    "tag": "normal:g5"
   },
   {
-   "t": 10.2029,
+   "t": 10.3029,
    "kind": "strobe",
    "tag": "normal:g6"
   },
   {
-   "t": 11.2,
-   "kind": "label",
-   "tag": "nm-gravity",
-   "pos": [
-    0.523,
-    0.55
-   ]
-  },
-  {
-   "t": 11.2029,
+   "t": 11.3029,
    "kind": "strobe",
    "tag": "normal:g7"
   },
   {
-   "t": 12.2029,
+   "t": 11.366666666666667,
+   "kind": "label",
+   "tag": "nm-gravity",
+   "pos": [
+    0.523,
+    0.555
+   ]
+  },
+  {
+   "t": 12.3029,
    "kind": "strobe",
    "tag": "normal:g8"
   },
   {
-   "t": 13.2029,
+   "t": 13.3029,
    "kind": "strobe",
    "tag": "normal:g9"
   },
   {
-   "t": 13.2333,
+   "t": 13.3333,
    "kind": "bounce",
    "tag": "normal:drop:land",
    "pos": [
@@ -197,31 +197,22 @@
    ]
   },
   {
-   "t": 14.1333,
+   "t": 14.4,
    "kind": "section",
    "id": "change",
-   "t1": 23.4667
+   "t1": 22.9333
   },
   {
-   "t": 14.466666666666667,
+   "t": 14.533333333333333,
    "kind": "label",
    "tag": "ch-dropped",
    "pos": [
     0.192,
-    0.184
+    0.191
    ]
   },
   {
-   "t": 14.6,
-   "kind": "label",
-   "tag": "ch-thrown",
-   "pos": [
-    0.609,
-    0.187
-   ]
-  },
-  {
-   "t": 14.8056,
+   "t": 14.5389,
    "kind": "contact",
    "tag": "change:release",
    "pos": [
@@ -230,76 +221,89 @@
    ]
   },
   {
-   "t": 14.8056,
+   "t": 14.5389,
    "kind": "strobe",
    "tag": "change:g0"
   },
   {
-   "t": 14.8748,
+   "t": 14.6082,
    "kind": "strobe",
    "tag": "change:g1"
   },
   {
-   "t": 15.1056,
+   "t": 14.8389,
    "kind": "time.slow",
-   "tag": "slow@15.11"
+   "tag": "slow@14.84"
   },
   {
-   "t": 15.2029,
+   "t": 14.866666666666667,
+   "kind": "label",
+   "tag": "ch-thrown",
+   "pos": [
+    0.617,
+    0.199
+   ]
+  },
+  {
+   "t": 14.9362,
    "kind": "strobe",
    "tag": "change:g2"
   },
   {
-   "t": 16.2029,
+   "t": 15.9362,
    "kind": "strobe",
    "tag": "change:g3"
   },
   {
-   "t": 17.2029,
+   "t": 16.9362,
    "kind": "strobe",
    "tag": "change:g4"
   },
   {
-   "t": 18.2029,
+   "t": 17.9362,
    "kind": "strobe",
    "tag": "change:g5"
   },
   {
-   "t": 19.2029,
+   "t": 18.9362,
    "kind": "strobe",
    "tag": "change:g6"
   },
   {
-   "t": 19.333333333333332,
+   "t": 19.233333333333334,
    "kind": "label",
-   "tag": "ch-0"
-  },
-  {
-   "t": 19.333333333333332,
-   "kind": "label",
-   "tag": "ch-20",
+   "tag": "ch-0",
    "pos": [
-    0.521,
+    0.384,
     0.612
    ]
   },
   {
-   "t": 20.2029,
+   "t": 19.233333333333334,
+   "kind": "label",
+   "tag": "ch-20",
+   "pos": [
+    0.522,
+    0.612
+   ]
+  },
+  {
+   "t": 19.9362,
    "kind": "strobe",
    "tag": "change:g7"
   },
   {
-   "t": 21.2029,
+   "t": 20.9362,
    "kind": "strobe",
    "tag": "change:g8"
   },
   {
-   "t": 22.2029,
+   "t": 21.9362,
    "kind": "strobe",
    "tag": "change:g9"
   },
   {
-   "t": 22.2333,
+   "t": 21.9667,
    "kind": "bounce",
    "tag": "change:drop:land",
    "pos": [
@@ -308,7 +312,7 @@
    ]
   },
   {
-   "t": 22.2333,
+   "t": 21.9667,
    "kind": "bounce",
    "tag": "change:t44:land",
    "pos": [
@@ -317,22 +321,22 @@
    ]
   },
   {
-   "t": 23.4667,
+   "t": 22.9333,
    "kind": "section",
    "id": "why",
    "t1": 39.2
   },
   {
-   "t": 23.766666666666666,
+   "t": 24.666666666666668,
    "kind": "label",
-   "tag": "wy-gravity",
+   "tag": "wy-old",
    "pos": [
-    0.176,
-    0.252
+    0.668,
+    0.317
    ]
   },
   {
-   "t": 24.3,
+   "t": 27.5029,
    "kind": "contact",
    "tag": "why:release",
    "pos": [
@@ -341,66 +345,89 @@
    ]
   },
   {
-   "t": 24.3,
+   "t": 27.5029,
    "kind": "strobe",
    "tag": "why:g0"
   },
   {
-   "t": 25.3,
+   "t": 28.5029,
    "kind": "strobe",
    "tag": "why:g1"
   },
   {
-   "t": 26.3,
+   "t": 29.5029,
    "kind": "strobe",
    "tag": "why:g2"
   },
   {
-   "t": 27.3,
+   "t": 30.133333333333333,
+   "kind": "label",
+   "tag": "wy-glide",
+   "pos": [
+    0.642,
+    0.226
+   ]
+  },
+  {
+   "t": 30.5029,
    "kind": "strobe",
    "tag": "why:g3"
   },
   {
-   "t": 28.3,
+   "t": 31.5029,
    "kind": "strobe",
    "tag": "why:g4"
   },
   {
-   "t": 29.3,
+   "t": 32.5029,
    "kind": "strobe",
    "tag": "why:g5"
   },
   {
-   "t": 30.3,
+   "t": 32.86666666666667,
+   "kind": "label",
+   "tag": "wy-gravity",
+   "pos": [
+    0.176,
+    0.437
+   ]
+  },
+  {
+   "t": 33.5029,
    "kind": "strobe",
    "tag": "why:g6"
   },
   {
-   "t": 31.3,
+   "t": 34.5029,
    "kind": "strobe",
    "tag": "why:g7"
   },
   {
-   "t": 31.866666666666667,
-   "kind": "label",
-   "tag": "wy-glide",
-   "pos": [
-    0.693,
-    0.514
-   ]
-  },
-  {
-   "t": 32.3,
+   "t": 35.5029,
    "kind": "strobe",
    "tag": "why:g8"
   },
   {
-   "t": 33.3743,
+   "t": 36.43333333333333,
+   "kind": "label",
+   "tag": "wy-same",
+   "pos": [
+    0.665,
+    0.342
+   ]
+  },
+  {
+   "t": 36.43333333333333,
+   "kind": "reveal",
+   "tag": "same-height"
+  },
+  {
+   "t": 36.5772,
    "kind": "strobe",
    "tag": "why:g9"
   },
   {
-   "t": 33.5305,
+   "t": 36.7333,
    "kind": "bounce",
    "tag": "why:drop:land",
    "pos": [
@@ -409,7 +436,7 @@
    ]
   },
   {
-   "t": 33.5305,
+   "t": 36.7333,
    "kind": "bounce",
    "tag": "why:t44:land",
    "pos": [
@@ -418,38 +445,24 @@
    ]
   },
   {
-   "t": 33.5305,
+   "t": 36.7333,
    "kind": "time.slow",
-   "tag": "slow@33.53"
-  },
-  {
-   "t": 36.6,
-   "kind": "label",
-   "tag": "wy-same",
-   "pos": [
-    0.666,
-    0.342
-   ]
-  },
-  {
-   "t": 36.6,
-   "kind": "reveal",
-   "tag": "same-height"
+   "tag": "slow@36.73"
   },
   {
    "t": 39.2,
    "kind": "section",
    "id": "whoa",
-   "t1": 52.2667
+   "t1": 52.0
   },
   {
-   "t": 39.4362,
+   "t": 39.2029,
    "kind": "badge",
    "tag": "overlaid",
    "text": "3 throws overlaid"
   },
   {
-   "t": 39.4362,
+   "t": 39.2029,
    "kind": "contact",
    "tag": "whoa:release",
    "pos": [
@@ -458,27 +471,31 @@
    ]
   },
   {
-   "t": 39.4362,
+   "t": 39.2029,
    "kind": "strobe",
    "tag": "whoa:g0"
   },
   {
-   "t": 40.4362,
+   "t": 40.2029,
    "kind": "strobe",
    "tag": "whoa:g1"
   },
   {
-   "t": 41.4362,
+   "t": 41.2029,
    "kind": "strobe",
    "tag": "whoa:g2"
   },
   {
-   "t": 42.13333333333333,
+   "t": 42.06666666666667,
    "kind": "label",
-   "tag": "wo-0"
+   "tag": "wo-0",
+   "pos": [
+    0.31,
+    0.612
+   ]
   },
   {
-   "t": 42.13333333333333,
+   "t": 42.06666666666667,
    "kind": "label",
    "tag": "wo-20",
    "pos": [
@@ -487,7 +504,12 @@
    ]
   },
   {
-   "t": 42.333333333333336,
+   "t": 42.2029,
+   "kind": "strobe",
+   "tag": "whoa:g3"
+  },
+  {
+   "t": 42.266666666666666,
    "kind": "label",
    "tag": "wo-40",
    "pos": [
@@ -496,17 +518,12 @@
    ]
   },
   {
-   "t": 42.4362,
-   "kind": "strobe",
-   "tag": "whoa:g3"
-  },
-  {
-   "t": 43.4362,
+   "t": 43.2029,
    "kind": "strobe",
    "tag": "whoa:g4"
   },
   {
-   "t": 43.9,
+   "t": 43.666666666666664,
    "kind": "label",
    "tag": "wo-60",
    "pos": [
@@ -515,17 +532,17 @@
    ]
   },
   {
-   "t": 44.4362,
+   "t": 44.2029,
    "kind": "strobe",
    "tag": "whoa:g5"
   },
   {
-   "t": 45.4362,
+   "t": 45.2029,
    "kind": "strobe",
    "tag": "whoa:g6"
   },
   {
-   "t": 46.43333333333333,
+   "t": 46.13333333333333,
    "kind": "label",
    "tag": "wo-level",
    "pos": [
@@ -534,22 +551,22 @@
    ]
   },
   {
-   "t": 46.4362,
+   "t": 46.2029,
    "kind": "strobe",
    "tag": "whoa:g7"
   },
   {
-   "t": 47.4362,
+   "t": 47.2029,
    "kind": "strobe",
    "tag": "whoa:g8"
   },
   {
-   "t": 48.4362,
+   "t": 48.2029,
    "kind": "strobe",
    "tag": "whoa:g9"
   },
   {
-   "t": 48.4667,
+   "t": 48.2333,
    "kind": "bounce",
    "tag": "whoa:drop:land",
    "pos": [
@@ -558,7 +575,7 @@
    ]
   },
   {
-   "t": 48.4667,
+   "t": 48.2333,
    "kind": "bounce",
    "tag": "whoa:t44:land",
    "pos": [
@@ -567,7 +584,7 @@
    ]
   },
   {
-   "t": 48.4667,
+   "t": 48.2333,
    "kind": "bounce",
    "tag": "whoa:t89:land",
    "pos": [
@@ -576,7 +593,7 @@
    ]
   },
   {
-   "t": 48.4667,
+   "t": 48.2333,
    "kind": "bounce",
    "tag": "whoa:t133:land",
    "pos": [
@@ -585,13 +602,13 @@
    ]
   },
   {
-   "t": 52.2667,
+   "t": 52.0,
    "kind": "section",
    "id": "measure",
    "t1": 61.0667
   },
   {
-   "t": 52.600033,
+   "t": 52.333333,
    "kind": "counter.show",
    "tag": "clock",
    "pos": [
@@ -600,64 +617,64 @@
    ]
   },
   {
-   "t": 53.0,
+   "t": 52.7,
    "kind": "counter.tick",
    "tag": "gap1"
   },
   {
-   "t": 53.2542,
+   "t": 52.9792,
    "kind": "counter.tick",
    "tag": "gap2"
   },
   {
-   "t": 53.5083,
+   "t": 53.2583,
    "kind": "counter.tick",
    "tag": "gap3"
   },
   {
-   "t": 53.7625,
+   "t": 53.5375,
    "kind": "counter.tick",
    "tag": "gap4"
   },
   {
-   "t": 54.0167,
+   "t": 53.8167,
    "kind": "counter.tick",
    "tag": "gap5"
   },
   {
-   "t": 54.2708,
+   "t": 54.0958,
    "kind": "counter.tick",
    "tag": "gap6"
   },
   {
-   "t": 54.525,
+   "t": 54.375,
    "kind": "counter.tick",
    "tag": "gap7"
   },
   {
-   "t": 54.7792,
+   "t": 54.6542,
    "kind": "counter.tick",
    "tag": "gap8"
   },
   {
-   "t": 55.0333,
+   "t": 54.9333,
    "kind": "counter.end",
    "tag": "gap9"
   },
   {
-   "t": 55.93333333333333,
+   "t": 56.1,
    "kind": "label",
    "tag": "ms-1m",
    "pos": [
     0.183,
-    0.182
+    0.181
    ]
   },
   {
    "t": 61.0667,
    "kind": "section",
    "id": "takeaway",
-   "t1": 68.8
+   "t1": 68.5333
   },
   {
    "t": 62.05,
@@ -666,12 +683,16 @@
    "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms."
   },
   {
-   "t": 63.0,
+   "t": 62.4,
    "kind": "label",
-   "tag": "tk-0"
+   "tag": "tk-0",
+   "pos": [
+    0.318,
+    0.612
+   ]
   },
   {
-   "t": 64.66666666666667,
+   "t": 65.13333333333334,
    "kind": "label",
    "tag": "tk-when",
    "pos": [
@@ -680,7 +701,7 @@
    ]
   },
   {
-   "t": 68.8,
+   "t": 68.5333,
    "kind": "section",
    "id": "tease",
    "t1": 74.9333
@@ -699,17 +720,17 @@
   },
   {
    "id": "vo02",
-   "t": 4.666666666666667,
+   "t": 4.4,
    "file": "vo/02.wav"
   },
   {
    "id": "vo03",
-   "t": 14.233333333333333,
+   "t": 14.5,
    "file": "vo/03.wav"
   },
   {
    "id": "vo04",
-   "t": 23.733333333333334,
+   "t": 23.2,
    "file": "vo/04.wav"
   },
   {
@@ -719,7 +740,7 @@
   },
   {
    "id": "vo06",
-   "t": 52.46666666666667,
+   "t": 52.2,
    "file": "vo/06.wav"
   },
   {
@@ -729,27 +750,31 @@
   },
   {
    "id": "vo08",
-   "t": 69.1,
+   "t": 68.83333333333333,
    "file": "vo/08.wav"
   }
  ],
  "shown": {
-  "hk-thrown": 2.0667,
-  "hk-dropped": 3.5,
-  "nm-apart": 7.5,
-  "nm-gravity": 11.2333,
-  "ch-dropped": 14.5,
-  "ch-thrown": 14.6333,
-  "wy-gravity": 23.8,
-  "wy-glide": 31.9,
-  "wy-same": 36.6333,
-  "wo-level": 46.4667,
-  "ms-1m": 55.9667,
-  "tk-when": 64.7,
-  "ch-20": 19.3667,
-  "wo-20": 42.1667,
-  "wo-40": 42.3667,
-  "wo-60": 43.9333,
-  "clock": 52.6333
+  "hk-thrown": 2,
+  "hk-dropped": 3.3667,
+  "nm-apart": 7.6333,
+  "nm-gravity": 11.4,
+  "ch-dropped": 14.5667,
+  "ch-thrown": 14.9,
+  "wy-gravity": 32.9,
+  "wy-glide": 30.1667,
+  "wy-old": 24.7,
+  "wy-same": 36.4667,
+  "wo-level": 46.1667,
+  "ms-1m": 56.1333,
+  "tk-when": 65.1667,
+  "ch-0": 19.2667,
+  "ch-20": 19.2667,
+  "wo-0": 42.1,
+  "wo-20": 42.1,
+  "wo-40": 42.3,
+  "wo-60": 43.7,
+  "tk-0": 62.4333,
+  "clock": 52.3667
  }
 }

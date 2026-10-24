@@ -1,18 +1,18 @@
 [
  {
   "id": "c1",
-  "sentence": "Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second.",
+  "sentence": "It's so far away that even its light needs eight minutes and twenty seconds to reach us.",
   "claim": "The Sun's average distance from Earth is about 150 million km.",
   "source_url": "https://howthingsfly.si.edu/ask-an-explainer/how-long-does-it-take-light-sun-get-earth",
   "source_title": "How long does it take light from the Sun to get to Earth? (Smithsonian National Air and Space Museum, How Things Fly)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: using the Sun's average distance of 150 million km, light takes about 8 minutes 20 seconds. 1 AU = 149.6 million km."
+  "note": "The distance itself is on screen (the '150 million km' scale pill) while this is said; the sentence gives it as light time."
  },
  {
   "id": "c2",
-  "sentence": "Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second.",
+  "sentence": "We circle the Sun at nearly thirty kilometers a second.",
   "claim": "Earth's mean orbital speed is 29.78 km/s (29.29–30.29 km/s).",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
   "source_title": "Earth Fact Sheet (NASA NSSDC)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Sunlight crosses that gap in eight minutes and twenty seconds.",
+  "sentence": "It's so far away that even its light needs eight minutes and twenty seconds to reach us.",
   "claim": "Sunlight takes about 8 minutes 20 seconds to cross the roughly 150 million km to Earth.",
   "source_url": "https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/",
   "source_title": "Voyager 1: What Is a Light-Day? (NASA Science)",
@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Its last light is still on the way, so for over eight minutes, your sky looks exactly the same.",
+  "sentence": "Its last light is on the way: for over eight minutes, your sky looks exactly the same.",
   "claim": "Light takes time to cross space, so we see the Sun as it was about 8.3 minutes earlier.",
   "source_url": "https://spaceplace.nasa.gov/light-year/en/",
   "source_title": "What Is a Light-Year? (NASA Space Place)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "In twenty seventeen, gravitational waves and light from colliding neutron stars crossed a hundred and thirty million light-years, and arrived less than two seconds apart.",
+  "sentence": "Their light and gravitational waves crossed a hundred and thirty million light-years, and arrived under two seconds apart.",
   "claim": "In August 2017 the gamma-ray burst from a binary neutron star merger in NGC 4993 (about 40 Mpc away) arrived about 1.7 s after its gravitational waves.",
   "source_url": "https://ligo.org/wp-content/uploads/2024/07/GW170817GRB.pdf",
   "source_title": "LIGO science summary: gravitational waves and gamma-rays from a binary neutron star merger (GW170817 and GRB 170817A)",
@@ -78,14 +78,14 @@
  },
  {
   "id": "c8",
-  "sentence": "Then the news arrives, and Earth sails off in a straight line.",
+  "sentence": "Then the news arrives, and Earth sails off, straight into the dark.",
   "claim": "With no net force acting, an object keeps moving at constant velocity in a straight line (Newton's first law).",
   "source_url": "https://www.grc.nasa.gov/www/k-12/BGP/newton1.html",
   "source_title": "Newton's First Law of Motion (NASA Glenn Research Center, Beginner's Guide to Aeronautics)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'every object will remain at rest or in uniform motion in a straight line unless compelled to change its state by the action of an external force.' Other planets' pulls are ignored (thought experiment)."
+  "note": "'Into the dark': with the Sun gone, nothing lights Earth's path; the straight line is Newton's first law."
  },
  {
   "id": "c9",
@@ -122,13 +122,35 @@
  },
  {
   "id": "c12",
-  "sentence": "From the center of our galaxy: twenty-seven thousand years.",
+  "sentence": "Our galaxy's center: light from the last Ice Age.",
   "claim": "The Sun is 8,275 ± 9 (stat) ± 33 (sys) parsecs from Sagittarius A*, the galaxy's centre: about 27,000 light-years, so its light left about 27,000 years ago.",
   "source_url": "https://www.mpe.mpg.de/6588951/The-black-hole",
   "source_title": "The Massive Black Hole (Max Planck Institute for Extraterrestrial Physics, citing GRAVITY Collaboration 2021)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "8,275 pc × 3.2616 ly/pc = 26,990 ly (computed). Cross-check fix: the channel's one galactic-centre figure is 'about 27,000 light-years', replacing B9's 26,000 and NASA StarChild's dated 28,000. ESO/EHT (2022) also says 27,000."
+  "note": "The ring's label shows '27,000 years' as the line is spoken. Light that reaches us now from the galaxy's centre left it about 27,000 years ago."
+ },
+ {
+  "id": "c13",
+  "sentence": "In twenty seventeen, we caught two neutron stars colliding.",
+  "claim": "On 17 August 2017, LIGO and Virgo detected gravitational waves from the merger of two neutron stars (GW170817), followed by light across the spectrum. The merger itself happened about 130 million years earlier (about 40 Mpc away).",
+  "source_url": "https://ligo.org/wp-content/uploads/2024/07/GW170817GRB.pdf",
+  "source_title": "LIGO science summary: gravitational waves and gamma-rays from a binary neutron star merger (GW170817 and GRB 170817A)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "'Caught' = observed: the collision is old news by 130 million years, which is the film's point. Same event as c5, c6 and c9."
+ },
+ {
+  "id": "c14",
+  "sentence": "Our galaxy's center: light from the last Ice Age.",
+  "claim": "The last glacial period lasted from about 115,000 to about 11,700 years ago, so light that left the galactic centre about 27,000 years ago left during it.",
+  "source_url": "https://en.wikipedia.org/wiki/Last_Glacial_Period",
+  "source_title": "Last Glacial Period (Wikipedia, summarising the stratigraphic dates)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 27,000 years ago is inside 115,000–11,700 years ago (and just before the Last Glacial Maximum, 26,000–20,000 BP). A person may prefer a primary source (e.g. the ICS Holocene GSSP, 11,700 b2k)."
  }
 ]

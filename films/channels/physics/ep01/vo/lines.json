@@ -1,6 +1,6 @@
 {
  "voice": "af_bella",
- "speed": 0.95,
+ "speed": 1.0,
  "lang": "en-us",
  "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
@@ -17,96 +17,96 @@
    ],
    "phonemes": "wˌɪtʃ bˈɔːl lˈændz fˈɜːst? wˈʌn θɹˈoʊn sˈaɪdweɪz, wˈʌn dʒˈʌst dɹˈɑːpt.",
    "file": "01.wav",
-   "dur": 3.859,
-   "sha256": "00e26b25fb1c83079df32a66141e8c6dfa60c91f7109be749c1e3694e206d8ae"
+   "dur": 3.715,
+   "sha256": "2a2c0fdead145d04aa1238b5ad509e798158ee238ec80993e98868cc9f541adf"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Here's a drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing: a falling ball speeds up the whole way down.",
+   "text": "First, just the drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing: a falling ball speeds up the whole way down.",
    "stars": [
     "growing"
    ],
-   "phonemes": "hˈɪɹz ɐ dɹˈɑːp, slˈoʊd twˈɛnti tˈaɪmz. ɡˈoʊsts ˈɛvɹi twˈɛntiəθ əvə sˈɛkənd, ænd ðə ɡˈæps kˈiːp ɡɹˈoʊɪŋ: ɐ fˈɔːlɪŋ bˈɔːl spˈiːdz ˌʌp ðə hˈoʊl wˈeɪ dˈaʊn.",
+   "phonemes": "fˈɜːst, dʒˈʌst ðə dɹˈɑːp, slˈoʊd twˈɛnti tˈaɪmz. ɡˈoʊsts ˈɛvɹi twˈɛntiəθ əvə sˈɛkənd, ænd ðə ɡˈæps kˈiːp ɡɹˈoʊɪŋ: ɐ fˈɔːlɪŋ bˈɔːl spˈiːdz ˌʌp ðə hˈoʊl wˈeɪ dˈaʊn.",
    "file": "02.wav",
-   "dur": 9.032,
-   "sha256": "1c7f7c0e67005932f96f8b3bed487fedad5e8752365812f3f4b573a3551582fa"
+   "dur": 9.389,
+   "sha256": "76f40b33ae45da6c81b5bb907ed49a95de25d8fd2126e70895271100b95f3559"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now throw one sideways from the same height, at the same instant. It sails twenty centimeters across… and lands on the same frame.",
+   "text": "Now throw one sideways: same height, same instant. It flies twenty centimeters farther… and still lands on the same frame.",
    "stars": [
     "same frame"
    ],
-   "phonemes": "nˈaʊ θɹˈoʊ wˈʌn sˈaɪdweɪz fɹʌmðə sˈeɪm hˈaɪt, æt ðə sˈeɪm ˈɪnstənt. ɪt sˈeɪlz twˈɛnti sˈɛntɪmˌiːɾɚz əkɹˈɑːs… ænd lˈændz ɔnðə sˈeɪm fɹˈeɪm.",
+   "phonemes": "nˈaʊ θɹˈoʊ wˈʌn sˈaɪdweɪz: sˈeɪm hˈaɪt, sˈeɪm ˈɪnstənt. ɪt flˈaɪz twˈɛnti sˈɛntɪmˌiːɾɚz fˈɑːɹðɚ… ænd stˈɪl lˈændz ɔnðə sˈeɪm fɹˈeɪm.",
    "file": "03.wav",
-   "dur": 8.806,
-   "sha256": "d195b9cbd7d606e334575fa0ac615818b998952cc63722124c52e12c6d00d587"
+   "dur": 7.917,
+   "sha256": "84c1462bb50ce6928b754047e68aa2341e9de0208855861e86843e3905ec09e9"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Gravity pulls both balls down the same way. In sixteen thirty-eight, Galileo described a throw as two motions: a steady glide across, plus a fall. So at every tick, both sit at the same height.",
+   "text": "Old gunnery books drew cannonballs flying straight, then dropping. Galileo saw two motions at once: a steady glide across, plus a fall. Gravity pulls only down, so at every tick, both sit at the same height.",
    "stars": [
     "down",
     "same height"
    ],
-   "phonemes": "ɡɹˈævᵻɾi pˈʊlz bˈoʊθ bˈɔːlz dˌaʊn ðə sˈeɪm wˈeɪ. ɪn sˈɪkstiːn θˈɜːɾiˈeɪt, ɡˌælɪlˈeɪoʊ dᵻskɹˈaɪbd ɐ θɹˈoʊ æz tˈuː mˈoʊʃənz: ɐ stˈɛdi ɡlˈaɪd əkɹˈɑːs, plˈʌs ɐ fˈɔːl. sˌoʊ æɾ ˈɛvɹi tˈɪk, bˈoʊθ sˈɪt æt ðə sˈeɪm hˈaɪt.",
+   "phonemes": "ˈoʊld ɡˈʌnɚɹi bˈʊks dɹˈuː kˈænənbˌɔːlz flˈaɪɪŋ stɹˈeɪt, ðˈɛn dɹˈɑːpɪŋ. ɡˌælɪlˈeɪoʊ sˈɔː tˈuː mˈoʊʃənz ɐtwˈʌns: ɐ stˈɛdi ɡlˈaɪd əkɹˈɑːs, plˈʌs ɐ fˈɔːl. ɡɹˈævᵻɾi pˈʊlz ˈoʊnli dˈaʊn, sˌoʊ æɾ ˈɛvɹi tˈɪk, bˈoʊθ sˈɪt æt ðə sˈeɪm hˈaɪt.",
    "file": "04.wav",
-   "dur": 13.451,
-   "sha256": "9f03681dabf6123b939507d5f149109fea4d94ee7a7b5160edb8c7e69945cb1a"
+   "dur": 13.814,
+   "sha256": "9759a8b66c51b99f71bf332cf8d658a93ff1bdf192f8cced13b4e26c70578b87"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Throw twice as hard, then three times: forty centimeters out, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "text": "Throw twice as hard, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
    "stars": [
     "level",
     "same frame"
    ],
-   "phonemes": "θɹˈoʊ twˈaɪs æz hˈɑːɹd, ðˈɛn θɹˈiː tˈaɪmz: fˈɔːɹɾi sˈɛntɪmˌiːɾɚz ˈaʊt, ðˈɛn sˈɪksti. ˈɛvɹi ɹˈoʊ ʌv ɡˈoʊsts stˈeɪz lˈɛvəl, ænd ˈɔːl fˈɔːɹ lˈænd ɔnðə sˈeɪm fɹˈeɪm.",
+   "phonemes": "θɹˈoʊ twˈaɪs æz hˈɑːɹd, ðˈɛn θɹˈiː tˈaɪmz: fˈɔːɹɾi sˈɛntɪmˌiːɾɚz , ðˈɛn sˈɪksti. ˈɛvɹi ɹˈoʊ ʌv ɡˈoʊsts stˈeɪz lˈɛvəl, ænd ˈɔːl fˈɔːɹ lˈænd ɔnðə sˈeɪm fɹˈeɪm.",
    "file": "05.wav",
-   "dur": 9.751,
-   "sha256": "1157e291da386d17588c3219de42fa4f27394be34d74db33dd7fd20b840abd23"
+   "dur": 9.372,
+   "sha256": "8a1337785d0b28f9ed9424197da325f1a580ace8f8cf499100a22c4deef289d3"
   },
   {
    "id": "vo06",
    "beat": "measure",
-   "text": "Measure it: nine gaps of a twentieth of a second. A one-meter fall takes about point four five seconds, thrown or dropped.",
+   "text": "Measure it: nine gaps, a twentieth of a second each. A one-meter fall takes about point four five seconds, thrown or dropped.",
    "stars": [
     "Measure it",
     "point four five seconds"
    ],
-   "phonemes": "mˈɛʒɚɹ ɪt: nˈaɪn ɡˈæps əvə twˈɛntiəθ əvə sˈɛkənd. ɐ wˈʌnmˈiːɾɚ fˈɔːl tˈeɪks ɐbˌaʊt pˈɔɪnt fˈɔːɹ fˈaɪv sˈɛkəndz, θɹˈoʊn ɔːɹ dɹˈɑːpt.",
+   "phonemes": "mˈɛʒɚɹ ɪt: nˈaɪn ɡˈæps, ˈeɪ twˈɛntiəθ əvə sˈɛkənd ˈiːtʃ. ɐ wˈʌnmˈiːɾɚ fˈɔːl tˈeɪks ɐbˌaʊt pˈɔɪnt fˈɔːɹ fˈaɪv sˈɛkəndz, θɹˈoʊn ɔːɹ dɹˈɑːpt.",
    "file": "06.wav",
-   "dur": 8.163,
-   "sha256": "c491b38ad032eda2bb48458e007749c0b5d039849ccd387efcd78071be580fd0"
+   "dur": 8.374,
+   "sha256": "ae1be31ef0e83d5d75e09aaa3de05d13f95bb95fa050e014cec9602e0f712f28"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Sideways speed changes where a ball lands, not when. For a level throw, only the height sets the clock.",
+   "text": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet fired level.",
    "stars": [
     "where",
     "when"
    ],
-   "phonemes": "sˈaɪdweɪz spˈiːd tʃˈeɪndʒᵻz wˌɛɹ ɐ bˈɔːl lˈændz, nˌɑːt wˈɛn. fɚɹə lˈɛvəl θɹˈoʊ, ˈoʊnli ðə hˈaɪt sˈɛts ðə klˈɑːk.",
+   "phonemes": "spˈiːd dᵻsˈaɪdz wˌɛɹ ɐ bˈɔːl lˈændz. hˈaɪt ɐlˈoʊn dᵻsˈaɪdz wˈɛn. ðæt hˈoʊldz ˈiːvən fɚɹə bˈʊlɪt fˈaɪɚd lˈɛvəl.",
    "file": "07.wav",
-   "dur": 6.974,
-   "sha256": "0f7985bfe91f0c988bb54806d751abf4901aee8edc0d079de23560cc9f88e4db"
+   "dur": 6.758,
+   "sha256": "704e2c0891e226a20a68730a6e3dcc7ebca642977454222103e57063ecc0cd58"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: why big swings and small swings take almost the same time.",
+   "text": "Next: one pendulum, big swing against small. It's almost a tie.",
    "stars": [
-    "same time"
+    "almost"
    ],
-   "phonemes": "nˈɛkst: wˌaɪ bˈɪɡ swˈɪŋz ænd smˈɔːl swˈɪŋz tˈeɪk ˈɔːlmoʊst ðə sˈeɪm tˈaɪm.",
+   "phonemes": "nˈɛkst: wˈʌn pˈɛndʒuːləm, bˈɪɡ swˈɪŋ ɐɡˈɛnst smˈɔːl. ɪts ˈɔːlmoʊst ɐ tˈaɪ.",
    "file": "08.wav",
-   "dur": 4.157,
-   "sha256": "a16e4d73a54b86e2434396382646f86dcdbdc1cc88c6a476b70bd6d5018cd7e5"
+   "dur": 4.298,
+   "sha256": "ef865133313fb9368f3cef9174bf08b5621c6d2e996ed097ac15f388d93ffb5d"
   }
  ]
 }

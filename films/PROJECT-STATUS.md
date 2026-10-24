@@ -1,11 +1,9 @@
 # Project status: four science-video formulas to 100%
 
-> **ON HOLD for a notes redesign (24 Oct, 01:32 UTC).** The user, watching the space final: "the notes for the
-> graphs / animations need to be more aesthetic and easy to follow along with". The body final was stopped at
-> frame 60 (resumable, but it will re-render with the new notes). **Check-ins: do NOT restart render-finals.sh.**
-> Done (01:47): the notes redesign in kits/cinema/sci/hud.js (speed / tag / card notes, plain wording, smooth
-> reflow and change animation); before/after sheets in films/channels/review-notes/, sent to the user.
-> **Waiting on the user's OK**, then: --cues + compile + soundtrack per episode, and re-render all three finals.
+> **Finals v2 rendering (24 Oct, from 02:51 UTC).** The user approved the notes redesign and the rewritten scripts
+> (kits/cinema/script/WRITING.md; an independent review's fixes applied) and said "keep going, I have credits" (full
+> speed). The old physics/space deliveries were removed; render-finals.sh renders physics → space → body again.
+> After the finals: the compilation builder (task 17), then episodes 2–6 per channel.
 
 The user's instruction (2026-10-22): keep going until all four formulas are complete, through
 usage limits (continue after each reset). Check-ins are scheduled into this session; each one
@@ -40,12 +38,12 @@ User choices: separate channels, curious adults / wonder, 60–75 s, a different
   idempotent; log `films/channels/finals.log`). If no `kits/cinema/film/render.mjs` process is alive and the log
   doesn't end in 'all three finals delivered', restart it: `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`.
   Then per episode: QA on the delivered file (loudness, audit, flashing), scorecard, assets.md, HUMAN-REVIEW.md, commit, send.
-  - [x] Physics: `films/channels/physics/ep01/out/rest-frame-001-9x16.mp4` (24 Oct 00:28; −14.0 LUFS / −2.0 dBTP, QA PASS, sent)
-  - [x] Space: `films/channels/space/ep01/out/lightminute-001-9x16.mp4` (24 Oct 01:26; −14.1 LUFS / −1.9 dBTP, QA PASS, sent)
-  - [ ] Body (stopped at frame 60 for the notes redesign)
+  - [ ] Physics v2 (v1 delivered 00:28 and superseded by the notes redesign and the new script)
+  - [ ] Space v2 (v1 delivered 01:26, superseded)
+  - [ ] Body v2
 - [ ] Daily routine: one episode per channel per day (scheduled sessions; confirm usage cost with the user)
 
-## Usage pacing (12:07 UTC, 22 Oct)
+## Usage pacing (12:07 UTC, 22 Oct; lifted 24 Oct: the user has credits and asked to keep going)
 The **weekly (7-day) limit is at "warning"**; it resets **Sat 25 Oct, about 22:00 UTC**. Hitting it
 blocks all of the user's Claude use until then, not just this project. Until the user says
 otherwise: finish the in-flight episode builds and their review, run the three final renders

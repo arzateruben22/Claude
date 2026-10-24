@@ -13,6 +13,11 @@ delivered** (24 Oct). **Nothing has been posted.** A physicist signs off the scr
 | Ten final-tier stills (1080×1920, full finish) | `review/stills-ep01.jpg`; the PNGs are in `build/stills/final/9x16/frames/` |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` |
 
+
+## v2 (24 Oct): new narration and notes
+
+The script was rewritten to the studio story standard (`kits/cinema/script/WRITING.md`; an independent review's fixes applied), re-voiced, and the direction re-pointed to the new words. The HUD notes are the redesigned speed/tag/card notes. Older sections below describe v1 where they quote lines; `script.md`, `claims.json` and `review/HUMAN-REVIEW.md` are current.
+
 ## Files
 
 | File | What it is |
@@ -61,7 +66,7 @@ E=films/channels/physics/ep01; V=<scratchpad>/longform/venv/bin/python; M=<scrat
 export PLAYWRIGHT_DIR=$(dirname $(npm root -g)) CHROMIUM=/opt/pw-browsers/chromium
 cd $E
 # 1. voice (only when a vo line changes), then lint on the measured pace
-nice -n 10 $V -I ../../../../kits/cinema/voice/tts.py script.md vo --voice af_bella --speed 0.95 --lexicon pron.json --models $M
+nice -n 10 $V -I ../../../../kits/cinema/voice/tts.py script.md vo --voice af_bella --speed 1.0 --lexicon pron.json --models $M
 nice -n 10 $V -I ../../../../kits/cinema/voice/align.py vo $M
 python3 -I ../../../../kits/cinema/script/lint.py . --segment measure --bpm 112.5
 # 2. direction → film.json + sheet.json; the page's cue table; then again to merge it

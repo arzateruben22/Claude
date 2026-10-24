@@ -12,8 +12,8 @@
  },
  {
   "id": "c2",
-  "sentence": "Meet a red blood cell: a disc about seven micrometers across, dimpled on both sides, with no nucleus.",
-  "claim": "Red blood cells are 7–8 µm across and have no nucleus.",
+  "sentence": "Meet a red blood cell: a dimpled disc, about seven micrometers across.",
+  "claim": "Red blood cells are dimpled (biconcave) discs, 7–8 µm across.",
   "source_url": "https://www.elsevier.com/resources/anatomy/blood/blood-cells/erythrocyte/16056",
   "source_title": "Erythrocyte (Elsevier, Complete Anatomy)",
   "accessed": "2026-10-22",
@@ -23,14 +23,14 @@
  },
  {
   "id": "c3",
-  "sentence": "Meet a red blood cell: a disc about seven micrometers across, dimpled on both sides, with no nucleus.",
-  "claim": "Red blood cells are biconcave discs: plump at the rim, very thin in the centre.",
-  "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_1e_(OpenStax)/Unit_4%3A_Fluids_and_Transport/18%3A_The_Cardiovascular_System_-_Blood/18.03%3A_Erythrocytes",
-  "source_title": "OpenStax Anatomy and Physiology, 18.3 Erythrocytes (LibreTexts copy)",
-  "accessed": "2026-10-22",
+  "sentence": "It even pushed out its own nucleus.",
+  "claim": "A maturing mammalian red blood cell expels its nucleus (enucleation): a ring of actin pinches the nucleus off, and macrophages clear it, so mature red cells have none.",
+  "source_url": "https://wi.mit.edu/news/how-red-blood-cells-nuke-their-nuclei",
+  "source_title": "Whitehead Institute, How red blood cells nuke their nuclei",
+  "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'Erythrocytes are biconcave disks; that is, they are plump at their periphery and very thin in the center.'"
+  "note": "Rewritten 24 Oct with the script (v2). The biconcave shape moved into c2."
  },
  {
   "id": "c4",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c5",
-  "sentence": "Now follow it as the vessel branches, and branches again, into a capillary.",
+  "sentence": "Follow it as the vessel branches, and branches again, into a capillary.",
   "claim": "Arteries branch into smaller vessels, the arterioles, which feed capillary beds.",
   "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04%3A_Fluids_and_Transport/20%3A_The_Cardiovascular_System_-_Blood_Vessels_and_Circulation/20.09%3A_Chapter_Review",
   "source_title": "OpenStax Anatomy and Physiology 2e, chapter 20 review (LibreTexts copy)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "The narrowest are slimmer than the cell, so cells go through in single file.",
+  "sentence": "There's no room to overtake, so cells go through in single file.",
   "claim": "The narrowest microvessels (about 3 µm) are smaller than a red cell, and in capillaries red cells travel in single file.",
   "source_url": "https://www.bme.rochester.edu/research/red-blood-cells.html",
   "source_title": "Red blood cells are highly deformable (University of Rochester, Biomedical Engineering)",
@@ -67,18 +67,18 @@
  },
  {
   "id": "c7",
-  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "sentence": "It can't.",
   "claim": "Squeezing through narrow capillaries, a red cell deforms at constant volume and nearly constant surface area: its membrane strongly resists stretching.",
   "source_url": "https://resolve.cambridge.org/core/journals/journal-of-fluid-mechanics/article/squeezing-of-red-blood-cells-through-capillaries-with-nearminimal-diameters/2B2B5F3222CFED12071E045D2C824D2E",
   "source_title": "Halpern & Secomb 1989, The squeezing of red blood cells through capillaries with near-minimal diameters, J. Fluid Mech. 203:381",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'They must deform at constant volume ... and also at nearly constant surface area, because the red cell membrane strongly resists dilation.'"
+  "note": "The membrane strongly resists stretching: a squeezed red cell keeps nearly constant surface area, so it folds rather than stretches (the wrong guess the line sets up)."
  },
  {
   "id": "c8",
-  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "sentence": "The dimples give it spare surface for its volume, so it folds into a parachute instead.",
   "claim": "A red cell's surface-area-to-volume ratio, more than its stiffness, decides how narrow a passage it can get through.",
   "source_url": "https://www.biorxiv.org/content/10.1101/2020.07.11.191494.full.pdf",
   "source_title": "Namvar et al. 2020, Surface area-to-volume ratio, not cellular rigidity, determines red blood cell traversal through small capillaries (bioRxiv)",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "The dimples give it spare surface for its volume, so it can fold into a parachute without stretching.",
+  "sentence": "The dimples give it spare surface for its volume, so it folds into a parachute instead.",
   "claim": "In capillary flow, a red cell changes from a disc to a parachute shape as the flow speeds up.",
   "source_url": "https://www.pnas.org/doi/10.1073/pnas.0504243102",
   "source_title": "Noguchi & Gompper 2005, Shape transitions of fluid vesicles and red blood cells in capillary flows, PNAS 102:14159",
@@ -111,7 +111,7 @@
  },
  {
   "id": "c11",
-  "sentence": "And it squeezes through them for its whole life: about a hundred and twenty days.",
+  "sentence": "And it keeps squeezing through, all its life: about a hundred and twenty days.",
   "claim": "A red blood cell lives about 120 days on average.",
   "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D004905",
   "source_title": "Erythrocyte Aging, MeSH (US National Library of Medicine)",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c12",
-  "sentence": "It gets your blood through your smallest vessels, where oxygen is handed out.",
+  "sentence": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out.",
   "claim": "Capillary beds are extremely narrow, which slows red cells and gives gas exchange time to happen.",
   "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_1e_(OpenStax)/Unit_4%3A_Fluids_and_Transport/18%3A_The_Cardiovascular_System_-_Blood/18.03%3A_Erythrocytes",
   "source_title": "OpenStax Anatomy and Physiology, 18.3 Erythrocytes (LibreTexts copy)",
@@ -134,7 +134,7 @@
  {
   "id": "c13",
   "sentence": "Meanwhile, as you watched, your bone marrow made over a hundred million new red cells.",
-  "claim": "The body makes about two million red blood cells every second.",
+  "claim": "The body makes about two million red blood cells every second, in the bone marrow.",
   "source_url": "https://medlineplus.gov/ency/anatomyvideos/000104.htm",
   "source_title": "Blood cells (MedlinePlus, US National Library of Medicine)",
   "accessed": "2026-10-22",
@@ -144,7 +144,7 @@
  },
  {
   "id": "c14",
-  "sentence": "About a billion passengers.",
+  "sentence": "Room for about a billion passengers.",
   "claim": "A red blood cell holds about 270 million hemoglobin molecules.",
   "source_url": "https://www.merckmillipore.com/BD/en/technical-documents/technical-article/clinical-testing-and-diagnostics-manufacturing/hematology/hemoglobin-heme-products",
   "source_title": "Hemoglobin and heme products (Merck technical article)",
@@ -155,7 +155,7 @@
  },
  {
   "id": "c15",
-  "sentence": "About a billion passengers.",
+  "sentence": "Room for about a billion passengers.",
   "claim": "Each hemoglobin has four heme groups, each binding one oxygen molecule: four O₂ per hemoglobin.",
   "source_url": "https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids",
   "source_title": "OpenStax Biology 2e, 39.4 Transport of Gases in Human Bodily Fluids",
@@ -163,5 +163,16 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "Excerpt: hemoglobin is 'made of four subunits'; 'each heme group that contains iron binds one oxygen molecule'."
+ },
+ {
+  "id": "c16",
+  "sentence": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out.",
+  "claim": "In sickle cell disease, red cells with hemoglobin S form rigid strands and become sticky; in the smallest vessels they can get stuck and clog the capillaries, blocking blood flow.",
+  "source_url": "https://internet-prod.nhlbi.nih.gov/sites/default/files/publications/SickleCellDisease_FactSheet_July2022.pdf",
+  "source_title": "NHLBI, Sickle Cell Disease fact sheet (July 2022)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NHLBI fact sheet PDF): 'some of them form into rigid strands and become sticky. Those strands often get stuck, clogging the capillaries.' MedlinePlus agrees. 'Can' keeps it to what the sources say; the cause is hemoglobin S, not the dimple, and the line doesn't say otherwise. A 2012 Drexel study places most obstruction just downstream of the capillaries; 'the smallest vessels' covers both. A physiologist signs off the wording and the naming; pin the NHLBI fact sheet in the comments if it stays."
  }
 ]

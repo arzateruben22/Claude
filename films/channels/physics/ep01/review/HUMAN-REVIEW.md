@@ -1,5 +1,12 @@
 # What a person must check before this posts
 
+## Changed in v2
+- **New in v2 (24 Oct): the wrong idea.** "Old gunnery books drew cannonballs flying straight, then dropping", with a dotted "1500s drawing" on screen (c13). It says *drew*, not *believed*: historians differ on whether Tartaglia's diagrams were meant literally. The physicist checks the wording.
+- **New in v2: "That holds even for a bullet fired level."** It's true without air (c14, OpenStax 4.3) and is said under the "Air ignored" card. MythBusters' 39.6 ms result is background only, not cited.
+- **New in v2: the tease** compares big and small swings of one pendulum ("almost a tie", c12), so a longer pendulum isn't implied.
+- **Narrator speed** is now 1.0 (was 0.95), to fit the new lines under 75 s. Listen for pace.
+
+## Every episode
 1. **Claims.** A physicist works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt only, so a person opens each source link and ticks it. The episode does not post until every row is ticked.
 2. **A physicist's look at the pictures.** The episode README's "For a human to review" section lists everything shown but not claimed, and every honesty badge.
 3. **End-card wording.** The card says "Next drop: the swing's secret"; the script's line says "Next: the swing's secret". Pick one (provisional: the card).

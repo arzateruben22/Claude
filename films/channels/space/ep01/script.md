@@ -25,32 +25,31 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: What if the Sun *vanished*? How soon would you *know*?
 
 ## normal {shot: rewind, a slow arc of at most 1.5° a second · labels: Sun, Earth · ring "8 min 20 s" · picture-only 0.2 s · energy: 0.45} (4–15 s)
-vo: Rewind. Earth circles the *Sun* about a hundred and fifty million kilometers out, at nearly
-thirty kilometers a second. {c1,c2} Sunlight crosses that gap in *eight minutes and twenty
-seconds*. {c3}
+vo: Rewind. {-} We circle the *Sun* at nearly thirty kilometers a second. {c2} It's so far away that
+even its light needs *eight minutes and twenty seconds* to reach us. {c1,c3}
 
 ## change {events: body.vanish (a one-frame pop, no flash), light.front, the light clock 0:00 → 8:20 in true time · badge: thought experiment · energy: 0.5} (15–24.5 s)
-vo: Now switch the Sun *off*. {-} Its last light is still on the way, so for over eight minutes,
-your sky looks *exactly the same*. {c4}
+vo: Now switch it *off*. {-} Down here, nothing changes. {-} Its last light is on the way: for over
+eight minutes, your sky looks *exactly the same*. {c4}
 
-## why {shot: gravity grid; the well flattens outward at the light front's speed · badge: analogy · picture-only 2 s · energy: 0.55} (24.5–40 s)
-vo: Gravity is no faster: changes in it travel at the *speed of light*. {c5} In twenty seventeen,
-gravitational waves and light from colliding neutron stars crossed a hundred and thirty
-million light-years, and arrived less than *two seconds* apart. {c6}
+## why {shot: gravity grid; the well flattens outward at the light front's speed · badge: analogy · picture-only 2 s · energy: 0.55} (24.5–40.5 s)
+vo: Gravity is no faster: changes in it travel at the *speed of light*. {c5} In twenty seventeen, we
+caught two neutron stars colliding. {c13} Their light and gravitational waves crossed a hundred and
+thirty million light-years, and arrived under *two seconds* apart. {c6}
 
-## whoa {shot: Earth at Earth scale moves its true 14,900 km (1.2 Earth widths) while the clock runs; then the diagram, its arc badged "orbit sped up ×N" apart from the light clock · events: arrive; Earth leaves on its tangent · picture-only 3 s · energy: 0.7} (40–52 s)
+## whoa {shot: Earth at Earth scale moves its true 14,900 km (1.2 Earth widths) while the clock runs; then the diagram, its arc badged "orbit sped up ×N" apart from the light clock · events: arrive; Earth leaves on its tangent · picture-only 3 s · energy: 0.7} (40.5–52 s)
 vo: So for eight minutes, Earth keeps *circling* a Sun that isn't there. {c7} Then the news
-*arrives*, and Earth sails off in a *straight line*. {c8}
+*arrives*, and Earth sails off, *straight* into the dark. {c8}
 
 ## takeaway {shot: pull back to the light-time ring · picture-only 0.2 s · energy: 0.5} (52–58.5 s)
 vo: Light and gravity share one speed limit. {c9} Everything you see in the sky is *old news*. {c10}
 
 ## readout {segment: readout · the closing light-time readout: ring "8 min 20 s", then a wider ring "27,000 years" around the galaxy's center (the episode's one scale jump, at most 3 s) · a ping per ring · energy: 0.45} (58.5–65.5 s)
-vo: *Light time*, Sun to Earth: eight minutes, twenty seconds. {c11} From the center of our
-galaxy: twenty-seven thousand years. {c12}
+vo: *Light time*, Sun to Earth: eight minutes, twenty seconds. {c11} Our galaxy's center: light from
+the last *Ice Age*. {c12,c14}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
-vo: Next: how long would it take *us* to reach the nearest star?
+vo: Next: leave for the nearest star today. {-} When do we *arrive*?
 end card: "Next: the nearest star" · "Light Minute · No. 002"
 
 ## Notes

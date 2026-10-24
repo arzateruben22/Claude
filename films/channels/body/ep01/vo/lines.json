@@ -40,38 +40,44 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Meet a red blood cell: a disc about seven micrometers across, dimpled on both sides, with no nucleus. You have about twenty-five trillion of them: most of your own cells.",
+   "text": "Meet a red blood cell: a dimpled disc, about seven micrometers across. It even pushed out its own nucleus. You have about twenty-five trillion of them: most of your own cells.",
    "stars": [
     "red blood cell",
-    "no nucleus"
+    "nucleus"
    ],
-   "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪsk ɐbˌaʊt sˈɛvən mˈaɪkɹəʊmˌiːtəz əkɹˈɒs, dˈɪmpəld ˌɒn bˈəʊθ sˈaɪdz, wɪð nˈəʊ njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
+   "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪmpəld dˈɪsk, ɐbˌaʊt sˈɛvən mˈaɪkɹəʊmˌiːtəz əkɹˈɒs. ɪt ˈiːvən pˈʊʃt ˈaʊt ɪts ˈəʊn njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
    "speeds": [
+    0.97,
     0.97,
     0.97
    ],
    "gaps": [
+    0.3,
     0.3
    ],
    "silences": [
     [
-     6.3345,
-     6.6345
+     4.3504,
+     4.6504
+    ],
+    [
+     6.71,
+     7.01
     ]
    ],
    "file": "02.wav",
-   "dur": 10.349,
-   "sha256": "72c96b9af8a00df88335e9fa58f74bdda6f217ee06d9462bad7b7f8cae698e7f"
+   "dur": 10.724,
+   "sha256": "cc36f322671f1ec0e4173649b08380cc2d1f66dd5b01928d9e3e4cde548604ef"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now follow it as the vessel branches, and branches again, into a capillary. The narrowest are slimmer than the cell, so cells go through in single file.",
+   "text": "Follow it as the vessel branches, and branches again, into a capillary. There's no room to overtake, so cells go through in single file.",
    "stars": [
     "capillary",
     "single file"
    ],
-   "phonemes": "nˈaʊ fˈɒləʊ ɪt az ðə vˈɛsəl bɹˈantʃɪz, and bɹˈantʃɪz ɐɡˈɛn, ˌɪntʊ ɐ kəpˈɪləɹi . ðə nˈaɹəʊɪst ɑː slˈɪmə ðɐn ðə sˈɛl, sˌəʊ sˈɛlz ɡˌəʊ θɹuː ɪn sˈɪŋɡəl fˈaɪl.",
+   "phonemes": "fˈɒləʊ ɪt az ðə vˈɛsəl bɹˈantʃɪz, and bɹˈantʃɪz ɐɡˈɛn, ˌɪntʊ ɐ kəpˈɪləɹi . ðeəz nˈəʊ ɹˈuːm tʊ ˌəʊvətˈeɪk, sˌəʊ sˈɛlz ɡˌəʊ θɹuː ɪn sˈɪŋɡəl fˈaɪl.",
    "speeds": [
     0.86,
     0.86
@@ -81,23 +87,23 @@
    ],
    "silences": [
     [
-     4.4755,
-     4.7755
+     4.1599,
+     4.4599
     ]
    ],
    "file": "03.wav",
-   "dur": 9.072,
-   "sha256": "0ca885a8cc19d75c13bedff0966bfafb7085ab362840712bc6a582efb8a46da8"
+   "dur": 8.456,
+   "sha256": "3d9ac66ad3ead40e9c9f5af9ca1cdfb22a4bd2e384da1a723c4114ae1ea940af"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Here's the trick. The dimples give it spare surface for its volume, so it can fold into a parachute without stretching. Squeeze, slide, spring back.",
+   "text": "You'd guess it stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
    "stars": [
     "dimples",
     "parachute"
    ],
-   "phonemes": "hˈiəz ðə tɹˈɪk. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt kan fˈəʊld ˌɪntʊ ɐ pˈaɹəʃˌuːt wɪðˌaʊt stɹˈɛtʃɪŋ. skwˈiːz, slˈaɪd, spɹˈɪŋ bˈak.",
+   "phonemes": "juːd ɡˈɛs ɪt stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt fˈəʊldz ˌɪntʊ ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
     0.95,
     0.94,
@@ -109,27 +115,27 @@
    ],
    "silences": [
     [
-     1.1351,
-     1.4351
+     1.7818,
+     2.0818
     ],
     [
-     6.5932,
-     6.8932
+     3.0045,
+     3.3045
     ]
    ],
    "file": "04.wav",
-   "dur": 8.79,
-   "sha256": "64761697b7317b5968c6ac3757bebddea58d5c53ce6e984481a10e9b61ba02e6"
+   "dur": 8.015,
+   "sha256": "e55aa629dee9ba8c9a9a9f6b92e9b616597f5bbff1f0e3926deb985498ae9a3a"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "The tightest are about three micrometers: less than half its width. And it squeezes through them for its whole life: about a hundred and twenty days.",
+   "text": "The tightest are about three micrometers: less than half its width. And it keeps squeezing through, all its life: about a hundred and twenty days.",
    "stars": [
     "half its width",
     "a hundred and twenty days"
    ],
-   "phonemes": "ðə tˈaɪtɪst ɑːɹ ɐbˌaʊt θɹˈiː mˈaɪkɹəʊmˌiːtəz : lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt skwˈiːzɪz θɹuː ðˌɛm fɔːɹ ɪts hˈəʊl lˈaɪf: ɐbˌaʊt ɐ hˈʌndɹɪd and twˈɛnti dˈeɪz.",
+   "phonemes": "ðə tˈaɪtɪst ɑːɹ ɐbˌaʊt θɹˈiː mˈaɪkɹəʊmˌiːtəz : lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt kˈiːps skwˈiːzɪŋ θɹˈuː, ˈɔːl ɪts lˈaɪf: ɐbˌaʊt ɐ hˈʌndɹɪd and twˈɛnti dˈeɪz.",
    "speeds": [
     0.88,
     0.88
@@ -144,17 +150,17 @@
     ]
    ],
    "file": "05.wav",
-   "dur": 8.858,
-   "sha256": "209dbc3ce35db5a227c6fffe03e7d674282a9ebd3041f6a412bb6c0ce255bac0"
+   "dur": 8.817,
+   "sha256": "88f8583020742e7e297ac08144e898b519562e38eb76b1fc9cd0067825fa817f"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So that dimple isn't decoration. It gets your blood through your smallest vessels, where oxygen is handed out.",
+   "text": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out. That dimple isn't decoration.",
    "stars": [
     "smallest vessels"
    ],
-   "phonemes": "sˌəʊ ðat dˈɪmpəl ˌɪzənt dˌɛkəɹˈeɪʃən. ɪt ɡˈɛts jɔː blˈʌd θɹuː jɔː smˈɔːlɪst vˈɛsəlz, wˌeəɹ ˈɒksɪdʒən ɪz hˈandɪd ˈaʊt.",
+   "phonemes": "stˈɪf sˈɪkəl sˈɛlz kan dʒˈam ðə smˈɔːlɪst vˈɛsəlz, wˌeəɹ ˈɒksɪdʒən ɪz hˈandɪd ˈaʊt. ðat dˈɪmpəl ˌɪzənt dˌɛkəɹˈeɪʃən.",
    "speeds": [
     0.97,
     0.98
@@ -164,13 +170,13 @@
    ],
    "silences": [
     [
-     1.9963,
-     2.2963
+     4.4838,
+     4.7838
     ]
    ],
    "file": "06.wav",
-   "dur": 6.333,
-   "sha256": "93a10d2b81a32a52cf0afb00aa61a3b30512ff86dd6733c40870db693cf1673a"
+   "dur": 6.574,
+   "sha256": "443b8ca5f457ced57a534f545db205ca364a1f913a67b9c02aa62524b3713917"
   },
   {
    "id": "vo07",
@@ -192,11 +198,11 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next time: what this cell is carrying. About a billion passengers.",
+   "text": "Next: what this cell carries. Room for about a billion passengers.",
    "stars": [
-    "carrying"
+    "carries"
    ],
-   "phonemes": "nˈɛkst tˈaɪm: wˌɒt ðɪs sˈɛl ɪz kˈaɹiɪŋ. ɐbˌaʊt ɐ bˈɪliən pˈasɪndʒəz.",
+   "phonemes": "nˈɛkst: wˌɒt ðɪs sˈɛl kˈaɹiz. ɹˈuːm fɔːɹ ɐbˌaʊt ɐ bˈɪliən pˈasɪndʒəz.",
    "speeds": [
     0.96,
     0.92
@@ -206,13 +212,13 @@
    ],
    "silences": [
     [
-     2.0099,
-     2.3099
+     1.6655,
+     1.9655
     ]
    ],
    "file": "08.wav",
-   "dur": 4.08,
-   "sha256": "b3e237057caa67eeea6449f1546e2fdeb3e1ca7dcba557ae27a6ff15100c6f44"
+   "dur": 4.14,
+   "sha256": "7d82f16fb7636946cfea34bb85f65e23b2bb98aa62abc080d1c8ab39ed634fd5"
   }
  ]
 }

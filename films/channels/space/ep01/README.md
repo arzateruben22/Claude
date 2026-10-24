@@ -7,6 +7,11 @@ The narrator is synthetic (Kokoro am_michael) and the score is original (studio 
 - Preview: `review/preview-ep01.mp4` (540×960, 15 fps, AAC 44.1 kHz 192k)
 - Ten final-tier stills: `review/stills-ep01.jpg`
 
+
+## v2 (24 Oct): new narration and notes
+
+The script was rewritten to the studio story standard (`kits/cinema/script/WRITING.md`; an independent review's fixes applied), re-voiced, and the direction re-pointed to the new words. The HUD notes are the redesigned speed/tag/card notes. Older sections below describe v1 where they quote lines; `script.md`, `claims.json` and `review/HUMAN-REVIEW.md` are current.
+
 ## Files
 
 | File | What it is |

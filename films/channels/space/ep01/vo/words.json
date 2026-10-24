@@ -70,340 +70,340 @@
   },
   {
    "id": "vo02",
-   "text": "Rewind. Earth circles the Sun about a hundred and fifty million kilometers out, at nearly thirty kilometers a second. Sunlight crosses that gap in eight minutes and twenty seconds.",
-   "heard": "Rewind. Earth circles the Sun about 150 million kilometers out at nearly 30 kilometers a second. Sunlight crosses that gap in 8 minutes and 20 seconds.",
+   "text": "Rewind. We circle the Sun at nearly thirty kilometers a second. It's so far away that even its light needs eight minutes and twenty seconds to reach us.",
+   "heard": "Rewind. We circle the sun at nearly 30 kilometers a second. It's so far away that even its light needs 8 minutes and 20 seconds to reach us.",
    "words": [
     {
      "w": "Rewind.",
      "start": 0.02,
-     "end": 1.04,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "Earth",
-     "start": 1.14,
-     "end": 1.44,
+     "w": "We",
+     "start": 1.1,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "circles",
-     "start": 1.32,
-     "end": 1.92,
+     "w": "circle",
+     "start": 1.13,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.87,
-     "end": 2.08,
+     "start": 1.585,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "Sun",
-     "start": 2.105,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 2.415,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.705,
-     "end": 3.76,
-     "heard": false
-    },
-    {
-     "w": "hundred",
-     "start": 2.735,
-     "end": 3.76,
-     "heard": false
-    },
-    {
-     "w": "and",
-     "start": 2.765,
-     "end": 3.76,
-     "heard": false
-    },
-    {
-     "w": "fifty",
-     "start": 2.795,
-     "end": 3.76,
-     "heard": false
-    },
-    {
-     "w": "million",
-     "start": 3.67,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "kilometers",
-     "start": 4.295,
-     "end": 5.04,
-     "heard": true
-    },
-    {
-     "w": "out,",
-     "start": 5.115,
-     "end": 5.36,
+     "start": 1.85,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "at",
-     "start": 5.535,
-     "end": 5.6,
+     "start": 2.175,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "nearly",
-     "start": 5.63,
-     "end": 6.0,
+     "start": 2.205,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "thirty",
-     "start": 6.035,
-     "end": 6.48,
+     "start": 2.735,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "kilometers",
-     "start": 6.545,
-     "end": 7.2,
+     "start": 3.14,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.25,
-     "end": 7.36,
+     "start": 3.82,
+     "end": 3.87,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 7.405,
-     "end": 8.08,
+     "start": 3.98,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "Sunlight",
-     "start": 8.195,
-     "end": 8.72,
+     "w": "It's",
+     "start": 4.615,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "crosses",
-     "start": 8.73,
-     "end": 9.2,
+     "w": "so",
+     "start": 4.855,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 5.13,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "away",
+     "start": 5.535,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "that",
-     "start": 9.105,
-     "end": 9.44,
+     "start": 5.88,
+     "end": 6.0,
      "heard": true
     },
     {
-     "w": "gap",
-     "start": 9.44,
-     "end": 9.84,
+     "w": "even",
+     "start": 6.08,
+     "end": 6.24,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 9.845,
-     "end": 10.0,
+     "w": "its",
+     "start": 6.22,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 6.435,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "needs",
+     "start": 6.86,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "eight",
-     "start": 10.095,
-     "end": 10.32,
+     "start": 7.27,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "minutes",
-     "start": 10.265,
-     "end": 10.64,
+     "start": 7.46,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "and",
-     "start": 10.57,
-     "end": 10.8,
+     "start": 7.73,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "twenty",
-     "start": 10.8,
-     "end": 11.12,
+     "start": 7.97,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "seconds.",
-     "start": 11.185,
-     "end": 11.68,
+     "w": "seconds",
+     "start": 8.375,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 8.72,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 8.75,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 9.025,
+     "end": 9.36,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Now switch the Sun off. Its last light is still on the way, so for over eight minutes, your sky looks exactly the same.",
-   "heard": "Now switch the sun off. Its last light is still on the way, so for over 8 minutes, your sky looks exactly the same.",
+   "text": "Now switch it off. Down here, nothing changes. Its last light is on the way: for over eight minutes, your sky looks exactly the same.",
+   "heard": "Now switch it off. Down here nothing changes. Its last light is on the way. For over eight minutes your sky looks exactly the same.",
    "words": [
     {
      "w": "Now",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "switch",
-     "start": 0.305,
-     "end": 0.72,
+     "start": 0.415,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.755,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "Sun",
-     "start": 0.785,
-     "end": 1.36,
+     "w": "it",
+     "start": 0.88,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "off.",
-     "start": 1.45,
-     "end": 1.92,
+     "start": 0.985,
+     "end": 1.44,
      "heard": true
     },
     {
-     "w": "Its",
-     "start": 2.075,
-     "end": 2.24,
+     "w": "Down",
+     "start": 1.515,
+     "end": 1.84,
      "heard": true
     },
     {
-     "w": "last",
-     "start": 2.15,
+     "w": "here,",
+     "start": 1.905,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 2.335,
      "end": 2.56,
      "heard": true
     },
     {
-     "w": "light",
-     "start": 2.625,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 2.96,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "still",
-     "start": 3.215,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "on",
-     "start": 3.51,
+     "w": "changes.",
+     "start": 2.54,
      "end": 3.6,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 3.59,
-     "end": 3.84,
+     "w": "Its",
+     "start": 3.7,
+     "end": 3.92,
      "heard": true
     },
     {
-     "w": "way,",
-     "start": 3.72,
-     "end": 4.24,
+     "w": "last",
+     "start": 3.85,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "so",
-     "start": 4.305,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 4.54,
+     "w": "light",
+     "start": 4.27,
      "end": 4.64,
      "heard": true
     },
     {
-     "w": "over",
-     "start": 4.57,
+     "w": "is",
+     "start": 4.63,
      "end": 4.88,
      "heard": true
     },
     {
-     "w": "eight",
-     "start": 4.955,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "minutes,",
-     "start": 5.125,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "your",
-     "start": 5.845,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "sky",
-     "start": 6.095,
-     "end": 6.48,
-     "heard": true
-    },
-    {
-     "w": "looks",
-     "start": 6.525,
-     "end": 6.88,
-     "heard": true
-    },
-    {
-     "w": "exactly",
-     "start": 6.785,
-     "end": 7.52,
+     "w": "on",
+     "start": 4.8,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.44,
-     "end": 7.68,
+     "start": 5.115,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "way:",
+     "start": 5.295,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 5.815,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 5.845,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 6.275,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "minutes,",
+     "start": 6.45,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 6.94,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 7.255,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "looks",
+     "start": 7.66,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 7.86,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.37,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "same.",
-     "start": 7.675,
-     "end": 8.08,
+     "start": 8.745,
+     "end": 9.12,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, gravitational waves and light from colliding neutron stars crossed a hundred and thirty million light-years, and arrived less than two seconds apart.",
-   "heard": "Gravity is no faster. Changes in it travel at the speed of light. In 2017, gravitational waves and light from colliding neutron stars crossed 130 million light years and arrived less than two seconds apart.",
+   "text": "Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, we caught two neutron stars colliding. Their light and gravitational waves crossed a hundred and thirty million light-years, and arrived under two seconds apart.",
+   "heard": "Gravity is no faster. Changes in it travel at the speed of light. In 2017, we caught two neutron stars colliding. Their light and gravitational waves crossed 130 million light years and arrived under two seconds apart.",
    "words": [
     {
      "w": "Gravity",
@@ -425,220 +425,232 @@
     },
     {
      "w": "faster:",
-     "start": 0.985,
-     "end": 1.84,
+     "start": 0.98,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "changes",
-     "start": 1.875,
-     "end": 2.4,
+     "start": 1.825,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.365,
-     "end": 2.56,
+     "start": 2.315,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "it",
-     "start": 2.66,
-     "end": 2.72,
+     "start": 2.605,
+     "end": 2.655,
      "heard": true
     },
     {
      "w": "travel",
-     "start": 2.785,
-     "end": 3.12,
+     "start": 2.635,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "at",
-     "start": 3.255,
-     "end": 3.305,
+     "start": 3.18,
+     "end": 3.23,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.285,
-     "end": 3.44,
+     "start": 3.21,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "speed",
-     "start": 3.495,
-     "end": 3.68,
+     "start": 3.42,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "of",
-     "start": 3.755,
-     "end": 3.92,
+     "start": 3.56,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "light.",
-     "start": 4.0,
-     "end": 4.64,
+     "start": 3.93,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "In",
-     "start": 4.745,
-     "end": 4.8,
+     "start": 4.62,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "twenty",
-     "start": 4.86,
-     "end": 6.08,
+     "start": 4.65,
+     "end": 5.84,
      "heard": false
     },
     {
      "w": "seventeen,",
-     "start": 4.89,
-     "end": 6.08,
+     "start": 4.735,
+     "end": 5.84,
      "heard": false
     },
     {
-     "w": "gravitational",
-     "start": 6.22,
-     "end": 7.04,
+     "w": "we",
+     "start": 5.93,
+     "end": 6.0,
      "heard": true
     },
     {
-     "w": "waves",
-     "start": 7.05,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 7.505,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "light",
-     "start": 7.765,
-     "end": 8.0,
-     "heard": true
-    },
-    {
-     "w": "from",
-     "start": 7.975,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "colliding",
-     "start": 8.245,
-     "end": 8.8,
-     "heard": true
-    },
-    {
-     "w": "neutron",
-     "start": 8.69,
-     "end": 9.44,
-     "heard": true
-    },
-    {
-     "w": "stars",
-     "start": 9.48,
-     "end": 9.92,
-     "heard": true
-    },
-    {
-     "w": "crossed",
-     "start": 9.955,
-     "end": 10.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 10.24,
-     "end": 11.44,
-     "heard": false
-    },
-    {
-     "w": "hundred",
-     "start": 10.395,
-     "end": 11.44,
-     "heard": false
-    },
-    {
-     "w": "and",
-     "start": 10.425,
-     "end": 11.44,
-     "heard": false
-    },
-    {
-     "w": "thirty",
-     "start": 10.455,
-     "end": 11.44,
-     "heard": false
-    },
-    {
-     "w": "million",
-     "start": 11.32,
-     "end": 11.84,
-     "heard": true
-    },
-    {
-     "w": "light-years,",
-     "start": 11.725,
-     "end": 12.8,
-     "heard": false
-    },
-    {
-     "w": "and",
-     "start": 12.915,
-     "end": 13.04,
-     "heard": true
-    },
-    {
-     "w": "arrived",
-     "start": 12.98,
-     "end": 13.6,
-     "heard": true
-    },
-    {
-     "w": "less",
-     "start": 13.55,
-     "end": 13.92,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 13.975,
-     "end": 14.08,
+     "w": "caught",
+     "start": 6.05,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "two",
-     "start": 14.17,
-     "end": 14.24,
+     "start": 6.36,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "neutron",
+     "start": 6.46,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "stars",
+     "start": 7.33,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "colliding.",
+     "start": 7.7,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "Their",
+     "start": 8.765,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 8.795,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.3,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "gravitational",
+     "start": 9.475,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "waves",
+     "start": 10.28,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "crossed",
+     "start": 10.775,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.065,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 11.095,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 11.195,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "thirty",
+     "start": 11.225,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "million",
+     "start": 12.12,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "light-years,",
+     "start": 12.635,
+     "end": 13.44,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 13.575,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "arrived",
+     "start": 13.645,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 14.26,
+     "end": 14.56,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 14.58,
+     "end": 14.64,
      "heard": true
     },
     {
      "w": "seconds",
-     "start": 14.4,
-     "end": 14.72,
+     "start": 14.78,
+     "end": 15.2,
      "heard": true
     },
     {
      "w": "apart.",
-     "start": 14.655,
-     "end": 15.12,
+     "start": 15.335,
+     "end": 15.6,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off in a straight line.",
-   "heard": "So for eight minutes, Earth keeps circling a sun that isn't there. Then the news arrives and Earth sails off in a straight line.",
+   "text": "So for eight minutes, Earth keeps circling a Sun that isn't there. Then the news arrives, and Earth sails off, straight into the dark.",
+   "heard": "So for eight minutes, Earth keeps circling a sun that isn't there. Then the news arrives and Earth sails off, straight into the dark.",
    "words": [
     {
      "w": "So",
@@ -660,128 +672,128 @@
     },
     {
      "w": "minutes,",
-     "start": 0.55,
-     "end": 1.28,
+     "start": 0.555,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "Earth",
-     "start": 1.425,
-     "end": 1.76,
+     "start": 1.325,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "keeps",
-     "start": 1.76,
-     "end": 2.0,
+     "start": 1.66,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "circling",
-     "start": 1.96,
+     "start": 1.86,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.445,
      "end": 2.56,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 2.59,
-     "end": 2.72,
-     "heard": true
-    },
-    {
      "w": "Sun",
-     "start": 2.745,
-     "end": 2.96,
+     "start": 2.595,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "that",
-     "start": 2.97,
-     "end": 3.12,
+     "start": 2.895,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "isn't",
-     "start": 3.08,
-     "end": 3.68,
+     "start": 2.925,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "there.",
-     "start": 3.69,
-     "end": 4.32,
+     "start": 3.53,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "Then",
-     "start": 4.36,
-     "end": 4.56,
+     "start": 4.135,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.655,
-     "end": 4.8,
+     "start": 4.2,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "news",
-     "start": 4.71,
-     "end": 5.2,
+     "start": 4.46,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "arrives,",
-     "start": 5.225,
-     "end": 5.76,
+     "start": 4.8,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.91,
-     "end": 6.0,
+     "start": 5.4,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "Earth",
-     "start": 6.13,
-     "end": 6.48,
+     "start": 5.71,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "sails",
-     "start": 6.52,
-     "end": 6.88,
+     "start": 6.095,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "off",
-     "start": 6.855,
-     "end": 7.12,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 7.165,
-     "end": 7.28,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 7.4,
-     "end": 7.45,
+     "w": "off,",
+     "start": 6.7,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "straight",
-     "start": 7.43,
+     "start": 7.055,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 7.485,
      "end": 7.68,
      "heard": true
     },
     {
-     "w": "line.",
-     "start": 7.655,
-     "end": 8.08,
+     "w": "the",
+     "start": 7.62,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "dark.",
+     "start": 7.66,
+     "end": 8.32,
      "heard": true
     }
    ]
@@ -891,8 +903,8 @@
   },
   {
    "id": "vo07",
-   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. From the center of our galaxy: twenty-seven thousand years.",
-   "heard": "Light time Sun to Earth 8 minutes 20 seconds from the center of our galaxy 27,000 years",
+   "text": "Light time, Sun to Earth: eight minutes, twenty seconds. Our galaxy's center: light from the last Ice Age.",
+   "heard": "Light time, Sun to Earth, 8 minutes 20 seconds. Our galaxy center, light from the last ice age.",
    "words": [
     {
      "w": "Light",
@@ -902,183 +914,177 @@
     },
     {
      "w": "time,",
-     "start": 0.32,
-     "end": 0.56,
+     "start": 0.305,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "Sun",
-     "start": 0.805,
-     "end": 1.04,
+     "start": 0.725,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.16,
-     "end": 1.21,
+     "start": 1.075,
+     "end": 1.125,
      "heard": true
     },
     {
      "w": "Earth:",
-     "start": 1.19,
+     "start": 1.105,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "eight",
-     "start": 1.89,
-     "end": 2.08,
+     "start": 1.69,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "minutes,",
-     "start": 2.06,
-     "end": 2.48,
+     "start": 1.85,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "twenty",
-     "start": 2.555,
-     "end": 2.96,
+     "start": 2.27,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "seconds.",
-     "start": 2.955,
-     "end": 3.44,
+     "start": 2.65,
+     "end": 3.36,
      "heard": true
     },
     {
-     "w": "From",
-     "start": 3.855,
-     "end": 4.0,
+     "w": "Our",
+     "start": 3.395,
+     "end": 3.6,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 3.895,
-     "end": 4.08,
+     "w": "galaxy's",
+     "start": 3.485,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "center:",
+     "start": 4.27,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "center",
-     "start": 4.02,
-     "end": 4.48,
+     "w": "light",
+     "start": 4.885,
+     "end": 5.2,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 4.39,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "our",
-     "start": 4.575,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "galaxy:",
-     "start": 4.765,
+     "w": "from",
+     "start": 5.165,
      "end": 5.36,
      "heard": true
     },
     {
-     "w": "twenty-seven",
-     "start": 5.635,
-     "end": 6.8,
-     "heard": false
+     "w": "the",
+     "start": 5.26,
+     "end": 5.52,
+     "heard": true
     },
     {
-     "w": "thousand",
-     "start": 5.665,
-     "end": 6.8,
-     "heard": false
+     "w": "last",
+     "start": 5.4,
+     "end": 5.68,
+     "heard": true
     },
     {
-     "w": "years.",
-     "start": 6.79,
-     "end": 7.04,
+     "w": "Ice",
+     "start": 5.835,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "Age.",
+     "start": 6.27,
+     "end": 6.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "Next: how long would it take us to reach the nearest star?",
-   "heard": "Next, how long would it take us to reach the nearest star?",
+   "text": "Next: leave for the nearest star today. When do we arrive?",
+   "heard": "Next, leave for the nearest star today. When do we arrive?",
    "words": [
     {
      "w": "Next:",
      "start": 0.02,
-     "end": 0.96,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "how",
+     "w": "leave",
+     "start": 0.445,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "for",
      "start": 0.92,
-     "end": 1.2,
-     "heard": true
-    },
-    {
-     "w": "long",
-     "start": 1.255,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 1.575,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 1.895,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "take",
-     "start": 1.945,
-     "end": 2.24,
-     "heard": true
-    },
-    {
-     "w": "us",
-     "start": 2.165,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 2.51,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "reach",
-     "start": 2.555,
-     "end": 2.96,
+     "end": 0.97,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.035,
-     "end": 3.12,
+     "start": 0.95,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "nearest",
-     "start": 3.065,
-     "end": 3.68,
+     "start": 1.005,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "star?",
-     "start": 3.795,
-     "end": 4.24,
+     "w": "star",
+     "start": 1.545,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 1.83,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 2.68,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 2.71,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 2.9,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "arrive?",
+     "start": 3.125,
+     "end": 3.6,
      "heard": true
     }
    ]

@@ -4,599 +4,593 @@
   {
    "id": "vo01",
    "text": "Which ball lands first? One thrown sideways, one just dropped.",
-   "heard": "Which ball lands first? One thrown sideways, one just dropped?",
+   "heard": "Which ball lands first? One thrown sideways, one just dropped.",
    "words": [
     {
      "w": "Which",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "ball",
-     "start": 0.28,
-     "end": 0.64,
+     "start": 0.23,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "lands",
-     "start": 0.72,
-     "end": 1.04,
+     "start": 0.635,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "first?",
-     "start": 1.025,
-     "end": 1.6,
+     "start": 0.925,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "One",
-     "start": 1.675,
-     "end": 1.92,
+     "start": 1.585,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "thrown",
-     "start": 1.945,
-     "end": 2.32,
+     "start": 1.855,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "sideways,",
-     "start": 2.37,
-     "end": 2.96,
+     "start": 2.285,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "one",
-     "start": 2.92,
-     "end": 3.2,
+     "start": 2.82,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "just",
-     "start": 3.295,
-     "end": 3.36,
+     "start": 3.025,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "dropped.",
-     "start": 3.36,
-     "end": 3.84,
+     "start": 3.245,
+     "end": 3.68,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "Here's a drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing: a falling ball speeds up the whole way down.",
-   "heard": "Here's a drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing. A falling ball speeds up the whole way down.",
+   "text": "First, just the drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing: a falling ball speeds up the whole way down.",
+   "heard": "First just the drop, slowed twenty times. Ghosts every twentieth of a second, and the gaps keep growing. A falling ball speeds up the whole way down.",
    "words": [
     {
-     "w": "Here's",
-     "start": 0.02,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.325,
+     "w": "First,",
+     "start": 0.04,
      "end": 0.4,
      "heard": true
     },
     {
+     "w": "just",
+     "start": 0.445,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.68,
+     "end": 0.8,
+     "heard": true
+    },
+    {
      "w": "drop,",
-     "start": 0.355,
-     "end": 0.96,
+     "start": 0.77,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "slowed",
-     "start": 0.92,
-     "end": 1.44,
+     "start": 1.305,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "twenty",
-     "start": 1.47,
-     "end": 1.92,
+     "start": 1.85,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "times.",
-     "start": 1.985,
-     "end": 2.72,
+     "start": 2.335,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "Ghosts",
-     "start": 2.805,
-     "end": 3.36,
+     "start": 3.185,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "every",
-     "start": 3.32,
-     "end": 3.52,
+     "start": 3.7,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "twentieth",
-     "start": 3.61,
-     "end": 4.08,
+     "start": 3.985,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "of",
-     "start": 3.96,
-     "end": 4.16,
+     "start": 4.3,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.23,
-     "end": 4.28,
-     "heard": true
-    },
-    {
-     "w": "second,",
-     "start": 4.375,
+     "start": 4.585,
      "end": 4.64,
      "heard": true
     },
     {
+     "w": "second,",
+     "start": 4.735,
+     "end": 5.12,
+     "heard": true
+    },
+    {
      "w": "and",
-     "start": 4.665,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 4.87,
-     "end": 4.92,
-     "heard": true
-    },
-    {
-     "w": "gaps",
-     "start": 4.9,
+     "start": 5.175,
      "end": 5.28,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 5.375,
+     "end": 5.425,
+     "heard": true
+    },
+    {
+     "w": "gaps",
+     "start": 5.405,
+     "end": 5.76,
+     "heard": true
+    },
+    {
      "w": "keep",
-     "start": 5.27,
-     "end": 5.52,
+     "start": 5.74,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "growing:",
-     "start": 5.51,
-     "end": 6.24,
+     "start": 5.965,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.385,
-     "end": 6.48,
+     "start": 6.815,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "falling",
-     "start": 6.535,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "ball",
-     "start": 7.005,
+     "start": 6.965,
      "end": 7.36,
      "heard": true
     },
     {
-     "w": "speeds",
-     "start": 7.51,
+     "w": "ball",
+     "start": 7.4,
      "end": 7.76,
      "heard": true
     },
     {
+     "w": "speeds",
+     "start": 7.875,
+     "end": 8.16,
+     "heard": true
+    },
+    {
      "w": "up",
-     "start": 7.75,
-     "end": 8.0,
+     "start": 8.305,
+     "end": 8.355,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.945,
-     "end": 8.08,
+     "start": 8.41,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "whole",
-     "start": 8.08,
-     "end": 8.32,
+     "start": 8.44,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "way",
-     "start": 8.32,
-     "end": 8.56,
+     "start": 8.7,
+     "end": 8.96,
      "heard": true
     },
     {
      "w": "down.",
-     "start": 8.56,
-     "end": 8.96,
+     "start": 8.92,
+     "end": 9.36,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Now throw one sideways from the same height, at the same instant. It sails twenty centimeters across… and lands on the same frame.",
-   "heard": "Now throw one sideways from the same height at the same instant. It sails 20 centimeters across and lands on the same frame.",
+   "text": "Now throw one sideways: same height, same instant. It flies twenty centimeters farther… and still lands on the same frame.",
+   "heard": "Now throw one sideways. Same height, same instant. It flies 20 centimeters farther and still lands on the same frame.",
    "words": [
     {
      "w": "Now",
-     "start": 0.225,
-     "end": 0.32,
+     "start": 0.02,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "throw",
-     "start": 0.38,
+     "start": 0.35,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.725,
-     "end": 1.04,
+     "start": 0.585,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "sideways",
-     "start": 1.08,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "from",
-     "start": 1.695,
+     "w": "sideways:",
+     "start": 0.87,
      "end": 1.84,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.915,
-     "end": 2.0,
-     "heard": true
-    },
-    {
      "w": "same",
-     "start": 2.01,
-     "end": 2.24,
+     "start": 1.855,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "height,",
-     "start": 2.28,
-     "end": 2.64,
+     "start": 2.255,
+     "end": 2.8,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 2.915,
+     "w": "same",
+     "start": 2.72,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 3.005,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "same",
-     "start": 3.19,
-     "end": 3.52,
-     "heard": true
-    },
-    {
      "w": "instant.",
-     "start": 3.455,
-     "end": 4.4,
+     "start": 3.11,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "It",
-     "start": 4.595,
-     "end": 4.645,
+     "start": 4.205,
+     "end": 4.255,
      "heard": true
     },
     {
-     "w": "sails",
-     "start": 4.68,
-     "end": 5.04,
+     "w": "flies",
+     "start": 4.265,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "twenty",
-     "start": 5.105,
-     "end": 5.44,
+     "start": 4.73,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "centimeters",
-     "start": 5.495,
-     "end": 6.16,
+     "start": 5.055,
+     "end": 5.6,
      "heard": true
     },
     {
-     "w": "across…",
-     "start": 6.185,
-     "end": 6.8,
+     "w": "farther…",
+     "start": 5.545,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "and",
-     "start": 6.985,
-     "end": 7.12,
+     "start": 6.035,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 6.245,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "lands",
-     "start": 7.215,
-     "end": 7.6,
+     "start": 6.41,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "on",
-     "start": 7.665,
-     "end": 7.84,
+     "start": 6.84,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.89,
-     "end": 8.0,
+     "start": 6.87,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "same",
-     "start": 7.99,
-     "end": 8.24,
+     "start": 7.175,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "frame.",
-     "start": 8.325,
-     "end": 8.8,
+     "start": 7.39,
+     "end": 7.84,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "Gravity pulls both balls down the same way. In sixteen thirty-eight, Galileo described a throw as two motions: a steady glide across, plus a fall. So at every tick, both sit at the same height.",
-   "heard": "Gravity pulls both balls down the same way. In 1638, Galileo described a throw as two motions: a steady glide across plus a fall, so at every tick, both sit at the same height.",
+   "text": "Old gunnery books drew cannonballs flying straight, then dropping. Galileo saw two motions at once: a steady glide across, plus a fall. Gravity pulls only down, so at every tick, both sit at the same height.",
+   "heard": "Old gunnery books drew cannonballs flying straight, then dropping. Galileo saw two motions at once: a steady glide across plus a fall. Gravity pulls only down, so at every tick, both sit at the same height.",
    "words": [
     {
-     "w": "Gravity",
+     "w": "Old",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "pulls",
-     "start": 0.56,
+     "w": "gunnery",
+     "start": 0.285,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "books",
+     "start": 0.67,
      "end": 0.96,
      "heard": true
     },
     {
-     "w": "both",
-     "start": 1.005,
-     "end": 1.28,
+     "w": "drew",
+     "start": 0.98,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "balls",
-     "start": 1.355,
-     "end": 1.84,
+     "w": "cannonballs",
+     "start": 1.155,
+     "end": 2.0,
      "heard": true
     },
     {
-     "w": "down",
-     "start": 1.84,
-     "end": 2.08,
+     "w": "flying",
+     "start": 1.915,
+     "end": 2.4,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 2.145,
-     "end": 2.32,
+     "w": "straight,",
+     "start": 2.46,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "same",
-     "start": 2.41,
-     "end": 2.56,
+     "w": "then",
+     "start": 3.025,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "way.",
-     "start": 2.645,
-     "end": 3.2,
+     "w": "dropping.",
+     "start": 3.245,
+     "end": 4.32,
      "heard": true
-    },
-    {
-     "w": "In",
-     "start": 3.295,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "sixteen",
-     "start": 3.52,
-     "end": 4.72,
-     "heard": false
-    },
-    {
-     "w": "thirty-eight,",
-     "start": 3.55,
-     "end": 4.72,
-     "heard": false
     },
     {
      "w": "Galileo",
-     "start": 4.825,
-     "end": 5.52,
+     "start": 4.425,
+     "end": 5.12,
      "heard": true
     },
     {
-     "w": "described",
-     "start": 5.51,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 5.98,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "throw",
-     "start": 6.17,
-     "end": 6.48,
-     "heard": true
-    },
-    {
-     "w": "as",
-     "start": 6.555,
-     "end": 6.72,
+     "w": "saw",
+     "start": 5.14,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "two",
-     "start": 6.73,
-     "end": 6.96,
+     "start": 5.31,
+     "end": 5.52,
      "heard": true
     },
     {
-     "w": "motions:",
-     "start": 6.99,
-     "end": 7.84,
+     "w": "motions",
+     "start": 5.52,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 6.04,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "once:",
+     "start": 6.07,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.09,
-     "end": 8.14,
+     "start": 6.85,
+     "end": 6.9,
      "heard": true
     },
     {
      "w": "steady",
-     "start": 8.12,
-     "end": 8.56,
+     "start": 6.935,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "glide",
-     "start": 8.605,
-     "end": 9.04,
+     "start": 7.37,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "across,",
-     "start": 9.085,
-     "end": 9.6,
+     "start": 7.845,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "plus",
-     "start": 9.63,
-     "end": 9.84,
+     "start": 8.365,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.925,
-     "end": 10.08,
+     "start": 8.72,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "fall.",
-     "start": 10.01,
+     "start": 8.75,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "Gravity",
+     "start": 9.655,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "pulls",
+     "start": 10.14,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 10.41,
      "end": 10.8,
      "heard": true
     },
     {
-     "w": "So",
-     "start": 10.86,
-     "end": 10.96,
+     "w": "down,",
+     "start": 10.69,
+     "end": 11.28,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 10.89,
-     "end": 11.2,
-     "heard": true
-    },
-    {
-     "w": "every",
-     "start": 11.165,
+     "w": "so",
+     "start": 11.31,
      "end": 11.44,
      "heard": true
     },
     {
+     "w": "at",
+     "start": 11.34,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 11.69,
+     "end": 11.84,
+     "heard": true
+    },
+    {
      "w": "tick,",
-     "start": 11.47,
-     "end": 11.92,
+     "start": 11.855,
+     "end": 12.32,
      "heard": true
     },
     {
      "w": "both",
-     "start": 11.925,
-     "end": 12.24,
-     "heard": true
-    },
-    {
-     "w": "sit",
-     "start": 12.265,
+     "start": 12.45,
      "end": 12.64,
      "heard": true
     },
     {
+     "w": "sit",
+     "start": 12.64,
+     "end": 12.96,
+     "heard": true
+    },
+    {
      "w": "at",
-     "start": 12.68,
-     "end": 12.73,
+     "start": 13.06,
+     "end": 13.12,
      "heard": true
     },
     {
      "w": "the",
-     "start": 12.71,
-     "end": 12.8,
+     "start": 13.09,
+     "end": 13.2,
      "heard": true
     },
     {
      "w": "same",
-     "start": 12.86,
-     "end": 13.04,
+     "start": 13.225,
+     "end": 13.36,
      "heard": true
     },
     {
      "w": "height.",
-     "start": 13.11,
-     "end": 13.44,
+     "start": 13.455,
+     "end": 13.76,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Throw twice as hard, then three times: forty centimeters out, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
-   "heard": "Throw twice as hard, then three times, forty centimeters out, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "text": "Throw twice as hard, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "heard": "Throw twice as hard, then three times. Forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
    "words": [
     {
      "w": "Throw",
@@ -606,322 +600,177 @@
     },
     {
      "w": "twice",
-     "start": 0.405,
+     "start": 0.38,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "as",
-     "start": 0.785,
+     "start": 0.76,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "hard,",
-     "start": 0.855,
+     "start": 0.835,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "then",
-     "start": 1.435,
+     "start": 1.385,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "three",
-     "start": 1.65,
-     "end": 2.0,
+     "start": 1.605,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "times:",
-     "start": 1.895,
-     "end": 2.72,
+     "start": 1.815,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "forty",
-     "start": 2.825,
+     "start": 2.78,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "centimeters",
-     "start": 3.125,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "out,",
-     "start": 3.84,
-     "end": 4.08,
+     "w": "centimeters,",
+     "start": 3.11,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "then",
-     "start": 4.02,
-     "end": 4.32,
+     "start": 3.775,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "sixty.",
-     "start": 4.385,
-     "end": 5.36,
+     "start": 4.16,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "Every",
-     "start": 5.49,
-     "end": 5.68,
+     "start": 5.24,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "row",
-     "start": 5.62,
-     "end": 5.92,
+     "start": 5.365,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.8,
-     "end": 6.08,
+     "start": 5.775,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "ghosts",
-     "start": 6.17,
-     "end": 6.64,
+     "start": 5.895,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "stays",
-     "start": 6.55,
-     "end": 6.96,
+     "start": 6.42,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "level,",
-     "start": 6.925,
-     "end": 7.52,
+     "start": 6.65,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.605,
-     "end": 7.68,
+     "start": 7.255,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "all",
-     "start": 7.635,
-     "end": 7.92,
+     "start": 7.285,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "four",
-     "start": 8.015,
-     "end": 8.08,
+     "start": 7.665,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "land",
-     "start": 8.24,
-     "end": 8.56,
+     "start": 7.92,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "on",
-     "start": 8.585,
-     "end": 8.8,
+     "start": 8.225,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.855,
-     "end": 8.96,
+     "start": 8.48,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "same",
-     "start": 8.95,
-     "end": 9.2,
+     "start": 8.575,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "frame.",
-     "start": 9.29,
-     "end": 9.68,
+     "start": 8.84,
+     "end": 9.36,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "Measure it: nine gaps of a twentieth of a second. A one-meter fall takes about point four five seconds, thrown or dropped.",
-   "heard": "Measure it, nine gaps of a twentieth of a second. A one meter fall takes about 0.45 seconds, thrown or dropped.",
+   "text": "Measure it: nine gaps, a twentieth of a second each. A one-meter fall takes about point four five seconds, thrown or dropped.",
+   "heard": "Measure it, nine gaps, a twentieth of a second each. A one-meter fall takes about 0.45 seconds, thrown or dropped.",
    "words": [
     {
      "w": "Measure",
      "start": 0.02,
-     "end": 0.48,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "it:",
-     "start": 0.545,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "nine",
-     "start": 0.9,
-     "end": 1.2,
-     "heard": true
-    },
-    {
-     "w": "gaps",
-     "start": 1.275,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 1.515,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 1.77,
-     "end": 1.82,
-     "heard": true
-    },
-    {
-     "w": "twentieth",
-     "start": 1.8,
-     "end": 2.16,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 2.145,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.42,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "second.",
-     "start": 2.565,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "A",
-     "start": 3.425,
-     "end": 3.475,
-     "heard": true
-    },
-    {
-     "w": "one-meter",
-     "start": 3.455,
-     "end": 4.08,
-     "heard": false
-    },
-    {
-     "w": "fall",
-     "start": 4.095,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "takes",
-     "start": 4.435,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 4.6,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "point",
-     "start": 4.935,
-     "end": 5.92,
-     "heard": false
-    },
-    {
-     "w": "four",
-     "start": 4.965,
-     "end": 5.92,
-     "heard": false
-    },
-    {
-     "w": "five",
-     "start": 4.995,
-     "end": 5.92,
-     "heard": false
-    },
-    {
-     "w": "seconds,",
-     "start": 5.97,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "thrown",
-     "start": 6.745,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "or",
-     "start": 7.375,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "dropped.",
-     "start": 7.405,
-     "end": 8.08,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo07",
-   "text": "Sideways speed changes where a ball lands, not when. For a level throw, only the height sets the clock.",
-   "heard": "Sideways speed changes where a ball lands, not when. For a level throw, only the height sets the clock.",
-   "words": [
-    {
-     "w": "Sideways",
-     "start": 0.02,
+     "start": 0.515,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "speed",
-     "start": 0.77,
-     "end": 1.04,
+     "w": "nine",
+     "start": 0.785,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "changes",
-     "start": 1.05,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "where",
-     "start": 1.62,
-     "end": 1.76,
+     "w": "gaps,",
+     "start": 1.135,
+     "end": 1.68,
      "heard": true
     },
     {
@@ -931,166 +780,293 @@
      "heard": true
     },
     {
-     "w": "ball",
-     "start": 1.855,
-     "end": 2.16,
+     "w": "twentieth",
+     "start": 2.07,
+     "end": 2.24,
      "heard": true
     },
     {
-     "w": "lands,",
-     "start": 2.16,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "not",
-     "start": 2.795,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "when.",
-     "start": 3.29,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "For",
-     "start": 3.96,
-     "end": 4.01,
+     "w": "of",
+     "start": 2.305,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.99,
-     "end": 4.16,
+     "start": 2.59,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "level",
-     "start": 4.16,
+     "w": "second",
+     "start": 2.72,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "each.",
+     "start": 3.145,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 3.87,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "one-meter",
+     "start": 3.9,
      "end": 4.56,
      "heard": true
     },
     {
-     "w": "throw,",
-     "start": 4.54,
+     "w": "fall",
+     "start": 4.61,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 4.9,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.06,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "point",
+     "start": 5.375,
+     "end": 6.32,
+     "heard": false
+    },
+    {
+     "w": "four",
+     "start": 5.405,
+     "end": 6.32,
+     "heard": false
+    },
+    {
+     "w": "five",
+     "start": 5.435,
+     "end": 6.32,
+     "heard": false
+    },
+    {
+     "w": "seconds,",
+     "start": 6.41,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "thrown",
+     "start": 7.14,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 7.68,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "dropped.",
+     "start": 7.86,
+     "end": 8.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet fired level.",
+   "heard": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet-fired level.",
+   "words": [
+    {
+     "w": "Speed",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "decides",
+     "start": 0.475,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 1.04,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.24,
+     "end": 1.29,
+     "heard": true
+    },
+    {
+     "w": "ball",
+     "start": 1.27,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "lands.",
+     "start": 1.51,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "Height",
+     "start": 2.49,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "alone",
+     "start": 2.68,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "decides",
+     "start": 3.19,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "when.",
+     "start": 3.76,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 4.495,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 4.725,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "even",
+     "start": 5.04,
      "end": 5.2,
      "heard": true
     },
     {
-     "w": "only",
-     "start": 5.295,
+     "w": "for",
+     "start": 5.185,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.405,
      "end": 5.52,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 5.615,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "height",
-     "start": 5.645,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "sets",
-     "start": 6.05,
+     "w": "bullet",
+     "start": 5.66,
      "end": 6.4,
-     "heard": true
+     "heard": false
     },
     {
-     "w": "the",
-     "start": 6.315,
-     "end": 6.56,
-     "heard": true
+     "w": "fired",
+     "start": 5.69,
+     "end": 6.4,
+     "heard": false
     },
     {
-     "w": "clock.",
-     "start": 6.525,
-     "end": 6.96,
+     "w": "level.",
+     "start": 6.365,
+     "end": 6.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "Next: why big swings and small swings take almost the same time.",
-   "heard": "Next, why big swings and small swings take almost the same time?",
+   "text": "Next: one pendulum, big swing against small. It's almost a tie.",
+   "heard": "Next, one pendulum big swing against small. It's almost a tie.",
    "words": [
     {
      "w": "Next:",
      "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.75,
      "end": 0.8,
      "heard": true
     },
     {
-     "w": "why",
-     "start": 0.935,
-     "end": 0.985,
+     "w": "pendulum,",
+     "start": 1.02,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "big",
-     "start": 1.165,
-     "end": 1.28,
-     "heard": true
-    },
-    {
-     "w": "swings",
-     "start": 1.455,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 1.77,
+     "start": 1.645,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "small",
-     "start": 2.005,
+     "w": "swing",
+     "start": 1.955,
      "end": 2.24,
      "heard": true
     },
     {
-     "w": "swings",
-     "start": 2.335,
-     "end": 2.72,
+     "w": "against",
+     "start": 2.22,
+     "end": 2.56,
      "heard": true
     },
     {
-     "w": "take",
-     "start": 2.74,
-     "end": 2.88,
+     "w": "small.",
+     "start": 2.55,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "almost",
-     "start": 2.895,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "the",
+     "w": "It's",
      "start": 3.305,
      "end": 3.44,
      "heard": true
     },
     {
-     "w": "same",
-     "start": 3.465,
+     "w": "almost",
+     "start": 3.38,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "time.",
-     "start": 3.7,
-     "end": 4.08,
+     "w": "a",
+     "start": 3.735,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "tie.",
+     "start": 3.85,
+     "end": 4.24,
      "heard": true
     }
    ]

@@ -89,6 +89,25 @@ scene.add(PEG.group);
     when: (tau) => Math.max(CUE.why.glide + tau * 1.6, clk.tOf(tk.tauR + tau) + 0.05), t0: tk.t0, t1: tk.t1, slot: 0, color: INK2 });
 }
 
+// "Old gunnery books drew cannonballs flying straight, then dropping": the 1500s drawing, dotted (film.json cue.why.old),
+// drawn on along its path from "drew" and taken back from its end as the real glide starts
+const OLD = CUE.why.old, OLDN = OLD.pts.length;
+const oldMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }), OLDN);
+oldMesh.frustumCulled = false;
+for (let i = 0; i < OLDN; i++) oldMesh.setColorAt(i, INK2);
+scene.add(oldMesh);
+const om = new THREE.Matrix4(), oq = new THREE.Quaternion(), os = new THREE.Vector3(), op = new THREE.Vector3();
+const oldUpdate = (t) => {
+  for (let i = 0; i < OLDN; i++) {
+    const a = OLD.drew + (1.5 * i) / OLDN, b = OLD.out + (0.35 * (OLDN - 1 - i)) / OLDN;
+    const k = t < a ? 0 : Math.min(E.back(seg(t, a, a + 0.16)), 1 - E.in3(seg(t, b, b + 0.2)));
+    const r = 0.95 * Math.max(0, k), at = r > 0 ? OLD.pts[i] : [10, 50, 0];   // parked inside the set when hidden (the probe reads it)
+    om.compose(op.set(at[0], at[1], at[2]), oq, os.set(r, r, r));
+    oldMesh.setMatrixAt(i, om);
+  }
+  oldMesh.instanceMatrix.needsUpdate = true;
+};
+
 // the vectors: gravity (force), sideways speed and the gaps (motion); ink outlines
 const FORCE = unlit(TK.force || "#1F3BD1"), MOTION = unlit(TK.motion || "#08805A");
 const AR = arrows({ max: 24, shaft: 0.62, head: [3.6, 1.6], outline: 0.34, ink: acesInv(TK.ink || "#15171C"), park: [10, 50, 0] });
@@ -136,7 +155,6 @@ const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("warp", { from: clk, slot: "tr" });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
-{ const st = document.createElement("style"); st.textContent = "#hud-air { white-space: pre-line; line-height: 1.22; }"; document.head.appendChild(st); }
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball[0], an.ball[1], t);
   if (an.gap) { const [take, k] = an.gap, x = ballSpec(take, "drop").x0 + (an.dx || 0); return () => [x, (gyk(k) + gyk(k + 1)) / 2, 0]; }
@@ -168,7 +186,7 @@ window.seek = function (t) {
     if (b) { const p = ballAt(local(take, t), b); m.position.set(p[0], p[1], p[2]); casters.push([p[0], p[1], p[2], R_BALL]); }
   });
   P.rig.release(take ? local(take, t) : 1);
-  S.update(t); PEG.update(t); AR.update(t);
+  S.update(t); PEG.update(t); AR.update(t); oldUpdate(t);
   cyc.update({ grid: 1, casters });
   if (window.CINEMA && window.CINEMA.mode === "probe") {
     PROBE_PTS.forEach((p, i) => {                     // on-screen points only: what leaves the frame can't smear

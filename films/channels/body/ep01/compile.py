@@ -50,10 +50,14 @@ def cut(t):
 
 
 # ── shots and the irises that join them ─────────────────────────────────────────────────────────
+# "You'd guess it stretches to fit. It can't. … so it folds into a parachute instead." Then, in the picture-only
+# hold, squeeze, slide and spring back, spaced as the old spoken "Squeeze, slide, spring back" were (1.115 s apart)
+SQUEEZE = A("vo04:instead:end", 0.3)
+SPRING = round((SQUEEZE + 1.115) * FPS) / FPS
 CUT = {
     "meet": cut(B["normal"]["t0"]),                     # the capillary → an artery (same scale, another place)
     "tree": cut(B["change"]["t0"]),                     # the cell → the vessel tree (scale out)
-    "road": cut(A("vo03:The#2", -0.05)),                # the tree → riding beside the cell (scale in)
+    "road": cut(A("vo03:There's", -0.05)),             # the tree → riding beside the cell (scale in)
     "net": cut(A("vo05:And", -0.12)),                   # the tightest vessel → the capillary net (the reveal pull)
     "out": cut(B["takeaway"]["t0"]),                    # the net → the cell popping out (scale in)
     "tease": cut(B["tease"]["t0"]),                     # into the cell
@@ -78,23 +82,23 @@ HERO = {
     # the meet shot: a free disc in an artery's crowd; its tumble (axis relative to the camera) and its cut
     "meet": {"turn": [[CUT["meet"], "face"], [A("vo02:dimpled", -0.35), "face"], [A("vo02:dimpled", 0.5), "edge"],
                       [A("vo02:You", 0.6), "edge"], [A("vo02:most", 0.2), "tumble"]],
-             "cut": [[A("vo02:no", -0.5), 0.0], [A("vo02:no", 0.05), 1.0], [A("vo02:You", 0.35), 1.0], [A("vo02:You", 0.95), 0.0]]},
+             "cut": [[A("vo02:nucleus", -0.5), 0.0], [A("vo02:nucleus", 0.05), 1.0], [A("vo02:You", 0.35), 1.0], [A("vo02:You", 0.95), 0.0]]},
     # the journey, one continuous solve from the tree to the tightest: [film time, feature reached]
     "road": [
         [A("vo03:branches"), "bp1"],                     # the first branch point, on "branches"
         [A("vo03:branches#2"), "bp2"],                   # the second, on "branches" again
         [A("vo03:capillary"), "cap"],                    # into the capillary, on "capillary"
-        [A("vo03:slimmer", -0.2), "narrow"],             # the capillary narrows below the cell's width
-        [A("vo04:trick", 0.3), "wide"],                  # a wider stretch: the cell has relaxed to a disc by "here's the trick"
-        [A("vo04:Squeeze"), "pinch"],                    # "Squeeze": its nose enters the pinch
+        [A("vo03:room", -0.2), "narrow"],                # the capillary narrows below the cell's width ("no room to overtake")
+        [A("vo04:guess", 0.3), "wide"],                  # a wider stretch: the cell has relaxed to a disc by "you'd guess"
+        [SQUEEZE, "pinch"],                               # in the picture-only hold after "instead": its nose enters the pinch
         [A("vo05:tightest", 0.35), "tight"],             # the tightest, about three micrometers
     ],
     "why_cut": [[A("vo04:dimples", -0.55), 0.0], [A("vo04:dimples", -0.05), 1.0], [A("vo04:volume:end", 0.15), 1.0], [A("vo04:so", 0.45), 0.0]],
-    # the takeaway: it pops out of the capillary into a venule on "dimple" and springs back to a disc
-    "out": {"at": A("vo06:dimple"), "place": "exit",
+    # the takeaway: it pops out of the capillary into a venule as the beat opens, and springs back to a disc
+    "out": {"at": CUT["out"] + 0.3, "place": "exit",
             # the camera lets the cell go and looks back down the capillary it left (the smallest vessels)
-            "track": [A("vo06:smallest", -1.7), A("vo06:smallest", 0.4)]},
-    "tease_cut": [[A("vo08:carrying", -0.4), 0.0], [A("vo08:carrying", 0.25), 1.0]],
+            "track": [max(CUT["out"] + 0.3, A("vo06:smallest", -1.7)), A("vo06:smallest", 0.4)]},
+    "tease_cut": [[A("vo08:carries", -0.4), 0.0], [A("vo08:carries", 0.25), 1.0]],
     "sparkle": [A("vo08:billion"), A("vo08:passengers:end", 0.3)],
 }
 
@@ -109,7 +113,7 @@ CAM = {
     "meet": [
         {"t": CUT["meet"], "pos": [1.5, 3.0, 30.0], "look": [0.0, -1.4, 0.0], "fov": 34},
         {"t": A("vo02:dimpled", -0.3), "pos": [-2.0, 2.5, 26.0], "look": [0.0, -1.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo02:no", 0.1), "pos": [-1.0, -1.6, 34.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "p2"},   # in to the cut, level with it
+        {"t": A("vo02:nucleus", 0.1), "pos": [-1.0, -1.6, 34.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "p2"},   # in to the cut, level with it
         {"t": A("vo02:You", 0.5), "pos": [-0.8, -1.5, 34.5], "look": [0.0, -1.5, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:trillion", 0.2), "pos": [14.0, 12.0, 74.0], "look": [0.0, 3.0, 0.0], "fov": 36, "ease": "p3"},   # crane back: the crowd
         {"t": CUT["tree"], "pos": [18.0, 16.0, 92.0], "look": [0.0, 4.0, 0.0], "fov": 36, "ease": "sine"},
@@ -128,7 +132,7 @@ CAM = {
         {"t": A("vo04:dimples", -0.6), "pos": [1.5, 0.6, 27.0], "look": [0.0, -1.2, 0.0], "fov": 34, "ease": "p2"},     # face the cut
         {"t": A("vo04:volume:end", 0.3), "pos": [1.5, 0.6, 26.0], "look": [0.0, -1.2, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo04:parachute", -0.2), "pos": [9.5, -5.0, 27.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "p2"},   # three-quarter: the cup
-        {"t": A("vo04:Squeeze"), "pos": [8.5, -3.0, 26.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": SQUEEZE, "pos": [8.5, -3.0, 26.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["why"]["t1"] - 0.2, "pos": [11.0, -6.0, 32.0], "look": [0.0, -4.0, 0.0], "fov": 34, "ease": "sine"},    # the next cell squeezes too
         {"t": A("vo05:tightest", -0.2), "pos": [3.0, -1.5, 30.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "p2"},     # side on: the 3 µm vessel
         {"t": CUT["net"], "pos": [3.0, -1.5, 29.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "sine"},
@@ -143,7 +147,7 @@ CAM = {
     ],
     "out": [
         {"t": CUT["out"], "pos": [7.0, -7.0, 28.0], "look": [0.0, -2.0, 0.0], "fov": 34},
-        {"t": A("vo06:decoration:end", 0.2), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo06:Stiff", 0.5), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo06:smallest", 0.4), "pos": [10.0, -8.0, 50.0], "look": [0.0, -4.0, 0.0], "fov": 36, "ease": "p2"},     # (now on the capillary)
         {"t": A("vo06:oxygen", 0.6), "pos": [10.0, -9.0, 53.0], "look": [0.0, -4.5, 0.0], "fov": 36, "ease": "sine"},
         {"t": B["meanwhile"]["t0"] + 0.6, "pos": [18.0, -16.0, 92.0], "look": [0.0, 12.0, 0.0], "fov": 36, "ease": "p2"},  # room for the tally
@@ -151,7 +155,7 @@ CAM = {
     ],
     "tease": [
         {"t": CUT["tease"], "pos": [0.0, -2.0, 36.0], "look": [0.0, -2.0, 0.0], "fov": 34},
-        {"t": A("vo08:carrying"), "pos": [0.0, -1.9, 29.0], "look": [0.0, -1.9, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo08:carries"), "pos": [0.0, -1.9, 29.0], "look": [0.0, -1.9, 0.0], "fov": 34, "ease": "sine"},
         {"t": EC, "pos": [0.0, -1.4, 19.0], "look": [0.0, -1.4, 0.0], "fov": 34, "ease": "p2"},     # push into the cell
         {"t": DUR, "pos": [0.0, -1.3, 17.5], "look": [0.0, -1.3, 0.0], "fov": 34, "ease": "sine"},
     ],
@@ -162,7 +166,7 @@ for keys in CAM.values():                                # every key is an offse
 # focus: "hero" is the cell; "cap" its cut face; "ahead" the road ahead; "below" the capillary it left. f is the f-stop.
 FOC = {
     "hook": [{"t": 0.0, "at": "hero", "f": 0.55}, {"t": A("vo01:narrower", -0.2), "at": "ahead", "f": 0.5}],
-    "meet": [{"t": CUT["meet"], "at": "hero", "f": 0.5}, {"t": A("vo02:no", -0.2), "at": "cap", "f": 0.5},
+    "meet": [{"t": CUT["meet"], "at": "hero", "f": 0.5}, {"t": A("vo02:nucleus", -0.2), "at": "cap", "f": 0.5},
              {"t": A("vo02:trillion"), "at": "hero", "f": 0.3}],
     "tree": [{"t": CUT["tree"], "at": "hero", "f": 0.25}],
     "road": [{"t": CUT["road"], "at": "hero", "f": 0.45}, {"t": A("vo03:single", -0.4), "at": "hero", "f": 0.3},
@@ -171,30 +175,30 @@ FOC = {
     "net": [{"t": CUT["net"], "at": "hero", "f": 0.25}],
     "out": [{"t": CUT["out"], "at": "hero", "f": 0.5}, {"t": A("vo06:smallest", -0.5), "at": "below", "f": 0.4},
             {"t": B["meanwhile"]["t0"] + 0.3, "at": "below", "f": 0.75}],
-    "tease": [{"t": CUT["tease"], "at": "hero", "f": 0.5}, {"t": A("vo08:carrying"), "at": "cap", "f": 0.55}],
+    "tease": [{"t": CUT["tease"], "at": "hero", "f": 0.5}, {"t": A("vo08:carries"), "at": "cap", "f": 0.55}],
 }
 
 # ── the overlay: labels (each names its part in words; colour on the dot and border), pills, counters ──
 LABELS = [
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "hero", "t0": A("vo02:red"), "t1": CUT["tree"], "shot": "meet", "side": 1},
-    {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:no"), "t1": A("vo02:You", 0.6), "shot": "meet", "side": -1},
+    {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:nucleus"), "t1": A("vo02:You", 0.6), "shot": "meet", "side": -1},
     {"id": "capillary", "text": "capillary", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:capillary"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "dimple", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dimples"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
     {"id": "ghostw", "text": "its width: 7.5 µm", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2", "t0": A("vo06:oxygen"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "out", "side": 1},
 ]
 SCALES = [
-    {"id": "cell", "text": "7.5 µm", "len": 7.5, "at": "hero", "t0": A("vo02:seven"), "t1": A("vo02:no", -0.3), "shot": "meet"},
+    {"id": "cell", "text": "7.5 µm", "len": 7.5, "at": "hero", "t0": A("vo02:seven"), "t1": A("vo02:nucleus", -0.3), "shot": "meet"},
     {"id": "vessel", "text": "3 µm", "len": 3.0, "at": "hero", "t0": A("vo05:three"), "t1": CUT["net"] - 0.3, "shot": "road"},
     {"id": "net", "text": "50 µm", "len": 50.0, "at": "hero", "t0": CUT["net"] + 2.4, "t1": CUT["out"] - 0.3, "shot": "net"},
 ]
 GHOST = [A("vo05:half", -0.1), CUT["net"]]               # the undeformed cell's outline, beside the folded one
 LIFE = {"t0": A("vo05:about#2", -0.2), "keys": [[A("vo05:about#2"), 0], [A("vo05:days"), 120]], "t1": CUT["out"] - 0.3, "unit": "days", "label": "a red cell's life, about"}
-TALLY = {"t0": B["meanwhile"]["t0"], "t1": CUT["tease"] - 0.25, "rate": 2_000_000, "label": "new red cells while you watched"}   # c13: 2,000,000 × t from frame 0
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.25, "rate": 2_000_000, "label": "new red cells while you watched"}   # c13: 2,000,000 × t from frame 0
 BADGES = [
     {"id": "nts-tree", "text": "not to scale", "t0": CUT["tree"], "t1": CUT["road"] - 0.3},
     {"id": "nts-o2", "text": "not to scale", "t0": A("vo06:oxygen", -0.3), "t1": CUT["tease"] - 0.3},
-    {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carrying"), "t1": EC},
+    {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
 TITLE = {"series": "Meanwhile, Inside · No. 01", "title": "Single *file*", "t1": round(A("vo01:Because") + 0.35, 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *a billion passengers*", "next": "Meanwhile, Inside · No. 02", "follow": "Follow Meanwhile, Inside"}
@@ -232,8 +236,8 @@ for k, t in enumerate(SEG_BEATS):                        # the segment's lub-dub
 # the ride: a rush of plasma as the clock runs ×10 (the preset's "breath", a whoosh from its onset)
 ev.append({"t": RIDE0, "kind": "breath", "tag": "ride", "t1": RIDE1 + RIDE_BACK})
 # the squeeze through the pinch (a squish over the span) and the spring back (a soft thump)
-ev.append({"t": A("vo04:Squeeze"), "kind": "cell.pass", "tag": "squeeze", "t1": A("vo04:spring")})
-ev.append({"t": A("vo04:spring"), "kind": "impact", "tag": "spring"})
+ev.append({"t": SQUEEZE, "kind": "cell.pass", "tag": "squeeze", "t1": SPRING})
+ev.append({"t": SPRING, "kind": "impact", "tag": "spring"})
 ev.append({"t": HERO["out"]["at"], "kind": "impact", "tag": "pop", "gain": -4.0})
 # the reveal pull: a low swell under the net; O₂ handed out: a sparkle of mallet grains over the diffusion
 ev.append({"t": CUT["net"], "kind": "swell", "tag": "net-swell", "t1": CUT["net"] + 2.4})
