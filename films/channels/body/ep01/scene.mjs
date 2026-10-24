@@ -60,7 +60,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
 `; document.head.appendChild(css);
 
-const clk = clock(FILM.clock, { words: { slow: "slowed ×{n}" } });
+const clk = clock(FILM.clock, { words: { slow: "{n}× slower" } });
 const world = new THREE.Group(); scene.add(world);          // the vessels, the tissue: hidden in the artery shot
 
 // ── the hero's vessel H: a gently wandering vertical line that bends into the venule at the top ──────

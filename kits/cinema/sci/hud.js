@@ -6,7 +6,7 @@
 //   const hud = createHud({ camera });          // after the scene made its camera
 //   hud.captions(FILM.captions);                // word-lit captions from film.json
 //   hud.label("planet", { text: "planet", glyph: "●", color: "ice", at: (t) => planetAt(t), t0: 1.2 });
-//   hud.badge("warp", { from: clk });           // clock.js badges ("slowed ×20"), one element
+//   hud.badge("warp", { from: clk });           // the clock's speed note ("20× slower"), one element
 //   hud.badge("nts", { text: "not to scale", t0: 2 });
 //   hud.counter("tau", { value: (t) => clk.tau(t), fmt: (v) => v.toFixed(2), unit: "s", t0: 1 });
 //   hud.scale("au", { text: "1 AU", bar: (t) => px, t0: 3 });
@@ -34,8 +34,17 @@
 //                          Vector3 in world space, or screen: (t) => [px, py]; side: 1 right / -1 left
 //                          (preferred), v: "above" | "middle", t0, t1, shot (only in that shot), fixed
 //                          (true: only the preferred spot, clamped; no jumping for fast anchors) }
-// hud.badge(id, o)         o: { text: string or (t) => string | null, t0, t1, from: a clock.js clock
-//                          (its badges, faded at each segment), slot: "tr" | "tl" | "br" | "bl" }
+// hud.badge(id, o)         a note: o: { text: string or (t) => string | null, t0, t1, from: a clock.js
+//                          clock, slot: "tl" | "tr" | "bl" | "br", kind, title }. Three kinds, one look
+//                          (the caption plate's face and corners, sentence case):
+//                            "speed" (from a clock): an icon (▶▶ faster, ▮▶ slower, ▮▮ paused) and
+//                              "64× faster" with the number in the accent. When the rate changes the
+//                              new text rolls up over the old one and the plate glows once
+//                            "tag": a quiet line with an accent bar ("Not to scale")
+//                            "card": a heading in the accent and a sentence (o.title, or text with
+//                              "\n": its first line is the heading)
+//                          Notes in one slot stack in the order they were made and reflow smoothly as
+//                          one arrives or leaves.
 // hud.counter(id, o)       o: { keys: [[t, v], ...] or value: (t) => v, fmt, unit, label, t0, t1,
 //                          at: [x, y] centre as fractions, lit: (v) => bool, ease, minCh }
 // hud.scale(id, o)         o: { text: string or (t) => string, bar: (t) => px or null, t0, t1,
@@ -76,9 +85,23 @@ const CSS = `
 .hud-cap i { font-style: normal; color: var(--hud-cap-next); padding: 0 .1em; border-radius: .16em; }
 .hud-cap i.said { color: var(--hud-cap-said); }
 .hud-cap i.on { color: var(--hud-cap-lit); background: var(--hud-cap-lit-bg); }
-.hud-badge { position: absolute; left: 0; top: 0; z-index: 3; white-space: nowrap; padding: .9vmin 1.8vmin; border-radius: var(--hud-badge-radius, 1.2vmin);
-  font: var(--hud-badge-weight, 600) var(--hud-badge-size, 2.9vmin)/1.15 var(--font-mono); letter-spacing: .02em; color: var(--hud-badge-text);
-  background: var(--hud-badge-bg); border: .3vmin solid var(--hud-badge-border); }
+.hud-badge { position: absolute; left: 0; top: 0; z-index: 3; box-sizing: border-box; overflow: hidden; white-space: nowrap; color: var(--hud-text);
+  font: var(--hud-note-weight, 600) var(--hud-note-size, 3.4vmin)/1.2 var(--font-text); letter-spacing: 0;
+  background: var(--hud-note-bg, var(--hud-plate)); border-radius: var(--hud-note-radius, var(--hud-cap-radius, 2vmin)); box-shadow: var(--hud-shadow); }
+.hud-badge .in { display: flex; width: max-content; align-items: center; gap: 1.3vmin; padding: 1.2vmin 2.3vmin 1.2vmin 2vmin; }
+.hud-badge .in.was { position: absolute; left: 0; top: 0; }
+.hud-badge .ic { flex: none; width: 3vmin; height: 3vmin; fill: var(--hud-accent); }
+.hud-badge .n { color: var(--hud-accent); font-weight: 750; font-variant-numeric: tabular-nums lining-nums; }
+.hud-badge .glow { position: absolute; inset: 0; background: var(--hud-accent); opacity: 0; }
+.hud-badge.speed { font-size: var(--hud-speed-size, 3.7vmin); font-weight: 650; }
+.hud-badge.tag { font-size: var(--hud-tag-size, 3.15vmin); font-weight: 550; color: var(--hud-tag-text, var(--hud-text));
+  background: var(--hud-tag-bg, var(--hud-badge-bg, var(--hud-plate))); box-shadow: none; }
+.hud-badge.tag .in { gap: 1.4vmin; padding: 1vmin 2.1vmin 1vmin 1.6vmin; }
+.hud-badge .bar { flex: none; width: .6vmin; height: 2.9vmin; border-radius: .3vmin; background: var(--hud-accent); }
+.hud-badge.card { white-space: normal; font-size: var(--hud-card-size, 3.15vmin); }
+.hud-badge.card .in { display: block; width: auto; padding: 1.6vmin 2.4vmin 1.7vmin; }
+.hud-badge.card .hd { display: flex; align-items: center; gap: 1.2vmin; color: var(--hud-accent); font-weight: 750; margin-bottom: .6vmin; }
+.hud-badge.card .bd { display: block; font-weight: 500; line-height: 1.32; color: var(--hud-text); text-wrap: pretty; }
 .hud-counter { position: absolute; left: 0; top: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
 .hud-counter .row { display: flex; align-items: baseline; gap: 1.2vmin; }
 .hud-counter .v { font: 700 var(--hud-counter-size, 10vmin)/1 var(--font-mono); font-variant-numeric: tabular-nums lining-nums; letter-spacing: -.02em;
@@ -248,42 +271,108 @@ export const createHud = (opts = {}) => {
     leads.innerHTML = svg.join("");
   };
 
-  // ── badges ────────────────────────────────────────────────────────────────
+  // ── notes (badges): speed, tag, card ────────────────────────────────────
+  const ICON = {
+    fast: "M3 5.5l8.5 6.5L3 18.5zM12 5.5l8.5 6.5-8.5 6.5z",
+    slow: "M4 5.5h3.2v13H4zM10 5.5l10.5 6.5L10 18.5z",
+    pause: "M5.5 5.5h4.2v13H5.5zM14.3 5.5h4.2v13h-4.2z",
+    note: "M10.5 4h3v3h-3zM10.5 9h3v11h-3z",
+  };
+  const icon = (k) => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICON[k]}"/></svg>`;
+  const cap1 = (x) => (x ? x.charAt(0).toUpperCase() + x.slice(1) : x);
+  const SUPS = "\u00B2\u00B3\u00B9\u2070-\u207B";
+  const speedHTML = (text) => {
+    const k = /paus|froz/i.test(text) ? "pause" : /slow/i.test(text) ? "slow" : "fast";
+    const m = text.match(new RegExp(`^([\\d.,${SUPS}]+×)\\s*(.*)$`)) || text.match(new RegExp(`^(.*?)\\s*(×[\\d.,${SUPS}]+)$`));
+    const body = m ? (m[1].includes("×") && /^[\d.,]/.test(m[1]) ? `<b class="n">${esc(m[1])}</b> ${esc(m[2])}` : `${esc(cap1(m[1]))} <b class="n">${esc(m[2])}</b>`) : esc(cap1(text));
+    return icon(k) + "<span>" + body + "</span>";
+  };
+  const tagHTML = (text) => '<i class="bar"></i><span>' + esc(cap1(text)) + "</span>";
+  const keep = (x) => String(x).replace(/(\d) (?=[A-Za-zµ°%])/g, "$1\u00A0");   // a number stays with its unit
+  const cardHTML = (title, text) => '<span class="hd">' + icon("note") + esc(cap1(title)) + '</span><span class="bd">' + esc(keep(cap1(text))) + "</span>";
   const badge = (id, o) => {
     const el = mk("div", "hud-badge");
     el.id = "hud-" + id;
-    B.push({ id, el, o });
+    const text0 = typeof o.text === "string" ? o.text : "";
+    const kind = o.kind || (o.from ? "speed" : o.title || text0.includes("\n") ? "card" : "tag");
+    el.classList.add(kind);
+    el.innerHTML = '<div class="glow"></div><div class="in was"></div><div class="in now"></div>';
+    const html = (text) => {
+      if (kind === "speed") return speedHTML(text);
+      if (kind === "card") {
+        if (o.title) return cardHTML(o.title, text);
+        const [hd, ...rest] = text.split("\n");
+        return cardHTML(hd.replace(/:\s*$/, ""), rest.join(" "));
+      }
+      return tagHTML(text);
+    };
+    if (kind === "card") el.style.width = Math.min((SAFE.r - SAFE.l) * (o.maxW ?? 0.8), 720 * S1).toFixed(2) + "px";
+    B.push({ id, el, o, kind, html, now: el.querySelector(".in.now"), was: el.querySelector(".in.was"), glow: el.querySelector(".glow"), shown: [null, null] });
     return el;
   };
+  // the note at t: its text, the text it is rolling up from (a clock's previous rate, when the two
+  // touch), how far the roll has got (0..1) and its presence. A run of touching clock badges fades in
+  // once, at the run's start, and out once, at its end; inside the run only the text rolls.
+  const ROLL = 0.42;
   const badgeNow = (o, t) => {
     if (o.from) {
-      const segs = o.from.badges || [];
-      let b = null;
-      for (const s of segs) if (t >= s.t0) b = s;                        // the latest that has started
-      if (!b) return null;
-      const t1 = b.t1 === Infinity ? null : b.t1;
-      return { text: b.text, pr: presence(t, from0(b.t0), t1, { d: 0.35, out: 0.3 }) };
+      const segs = (o.from.badges || []).filter((s) => s.text != null);
+      let i = -1;
+      for (let k = 0; k < segs.length; k++) if (t >= segs[k].t0) i = k;
+      if (i < 0) return null;
+      const b = segs[i], touch = (k) => k > 0 && segs[k - 1].t1 >= segs[k].t0 - 1e-6;
+      let r0 = i;
+      while (touch(r0)) r0--;
+      let r1 = i;
+      while (r1 + 1 < segs.length && touch(r1 + 1)) r1++;
+      const end = segs[r1].t1 === Infinity ? null : segs[r1].t1;
+      if (end != null && t >= end + 0.3) return null;
+      const at = touch(i) ? b.t0 : null;
+      return { text: b.text, prev: at != null ? segs[i - 1].text : null, at, pr: presence(t, from0(segs[r0].t0), end, { d: 0.35, out: 0.3, dy: 0.01 }) };
     }
     const text = typeof o.text === "function" ? o.text(t) : o.text;
     if (text == null) return null;
-    return { text, pr: presence(t, from0(o.t0), o.t1 ?? null, { d: 0.35, out: 0.3 }) };
+    return { text, prev: null, at: null, pr: presence(t, from0(o.t0), o.t1 ?? null, { d: 0.35, out: 0.3, dy: 0.01 }) };
   };
   const drawBadges = (t, obstacles) => {
-    const stack = { tr: SAFE.t, tl: SAFE.t, br: capY - GAP, bl: capY - GAP }, rects = [];
+    const gapY = 12 * S1, stack = { tr: SAFE.t, tl: SAFE.t, br: capY - GAP, bl: capY - GAP }, rects = [];
     for (const bd of B) {
       const { el, o } = bd, now = badgeNow(o, t);
-      // a clock's badge can also be limited to a window of its own (t0, t1)
-      const win = o.from && (o.t0 != null || o.t1 != null) ? presence(t, from0(o.t0), o.t1 ?? null, { d: 0.35, out: 0.3 }).o : 1;
+      // a clock's note can also be limited to a window of its own (t0, t1)
+      const win = o.from && (o.t0 != null || o.t1 != null) ? presence(t, from0(o.t0), o.t1 ?? null, { d: 0.35, out: 0.3 }) : null;
       if (!now) { apply(el, { o: 0, x: 0, y: 0, s: 1 }); continue; }
-      if (el.textContent !== now.text) el.textContent = now.text;
-      const pr = { ...now.pr, o: now.pr.o * win * gate }, w = el.offsetWidth, h = el.offsetHeight, slot = o.slot || "tr";
-      const x = slot[1] === "r" ? SAFE.r - w : SAFE.l;
+      const roll = now.at != null ? seg(t, now.at, now.at + ROLL) : 1, prevText = roll < 1 ? now.prev : null;
+      if (bd.shown[0] !== now.text) { bd.now.innerHTML = bd.html(now.text); bd.shown[0] = now.text; }
+      if (bd.shown[1] !== prevText) { bd.was.innerHTML = prevText == null ? "" : bd.html(prevText); bd.shown[1] = prevText; }
+      // the change: the old text lifts away in the first half, the new one rises into place in the second
+      // (they never overlap); the plate eases between their sizes
+      const r = E.inout3(roll), wN = bd.now.offsetWidth, hN = bd.now.offsetHeight;
+      let w = wN, h = hN;
+      if (prevText != null) {
+        const wW = bd.was.offsetWidth, hW = bd.was.offsetHeight, a = E.in3(Math.min(1, roll * 2)), b = E.out3(Math.max(0, roll * 2 - 1));
+        w = wW + (wN - wW) * r; h = hW + (hN - hW) * r;
+        bd.was.style.translate = `0px ${(-a * hW * 0.28).toFixed(2)}px`; bd.was.style.opacity = (1 - a).toFixed(4);
+        bd.now.style.translate = `0px ${((1 - b) * hN * 0.28).toFixed(2)}px`; bd.now.style.opacity = b.toFixed(4);
+        bd.was.style.visibility = "visible";
+      } else {
+        bd.was.style.visibility = "hidden"; bd.now.style.translate = "0px 0px"; bd.now.style.opacity = "1";
+      }
+      if (bd.kind !== "card") { el.style.width = w.toFixed(2) + "px"; el.style.height = h.toFixed(2) + "px"; }
+      bd.glow.style.opacity = (now.at != null ? 0.24 * (1 - E.out3(seg(t, now.at, now.at + 0.9))) : 0).toFixed(4);   // the plate glows once as the rate changes
+      const p0 = now.pr, wo = win ? win.o : 1;
+      const pr = { ...p0, o: p0.o * wo * gate };
+      // the stack reflows with the note's own in/out, so a neighbour slides instead of jumping
+      const kIn = E.inout3(p0.p) * (win ? E.inout3(win.p) : 1), kOut = 1 - E.inout3(Math.max(p0.q, win ? win.q : 0)), k = kIn * kOut * gate;
+      const hh = el.offsetHeight, ww = el.offsetWidth, slot = o.slot || "tl";
+      const x = slot[1] === "r" ? SAFE.r - ww : SAFE.l;
+      // the two columns of a row never overlap: a note that would run into one already placed moves past it
+      const hit = (yy) => rects.find((q) => q.slot !== slot && x < q.r + gapY && x + ww > q.l - gapY && yy < q.b + gapY && yy + hh > q.t - gapY);
       let y;
-      if (slot[0] === "t") { y = stack[slot]; if (pr.o > 0.001) stack[slot] += h + 10 * S1; }
-      else { y = stack[slot] - h; if (pr.o > 0.001) stack[slot] -= h + 10 * S1; }
+      if (slot[0] === "t") { y = stack[slot]; for (let q = hit(y); q; q = hit(y)) y = q.b + gapY; stack[slot] = y + (hh + gapY) * k; }
+      else { y = stack[slot] - hh; for (let q = hit(y); q; q = hit(y)) y = q.t - gapY - hh; stack[slot] = y - gapY * k + hh * (1 - k); }
       place(el, x, y);
       apply(el, pr);
-      if (pr.o > 0.01) rects.push(box(x, y, w, h));
+      if (pr.o > 0.01) rects.push({ ...box(x, y, ww, hh), slot });
     }
     obstacles.push(...rects);
   };

@@ -1191,7 +1191,7 @@
   "tissue": "#F0C9B8",
   "vessel": "#E9B3A8",
   "light-hemi-sky": "#DDF3EC",
-  "light-hemi-ground": "#0A1F1C",
+  "light-hemi-ground": "#33524A",
   "light-key": "#FFF1E6",
   "light-rim": "#CFF5E6",
   "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"

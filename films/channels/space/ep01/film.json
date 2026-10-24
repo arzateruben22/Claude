@@ -809,17 +809,59 @@
    "slot": "bl"
   },
   {
-   "id": "b-orbit",
-   "text": "orbit sped up ×5,000",
+   "id": "b-time-d",
+   "clock": "diagram",
    "t0": 4.7667,
    "t1": 24.7667,
    "slot": "tl"
   },
   {
-   "id": "b-time-d",
-   "clock": "diagram",
+   "id": "b-time-g",
+   "clock": "grid",
+   "t0": 25.0667,
+   "t1": 29.6667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-time-r",
+   "clock": "race",
+   "t0": 29.966666666666665,
+   "t1": 42.3667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-time-w",
+   "clock": "whoa",
+   "t0": 42.6667,
+   "t1": 54.1,
+   "slot": "tl"
+  },
+  {
+   "id": "b-time-t",
+   "clock": "restore",
+   "t0": 54.4,
+   "t1": 60.5667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-orbit",
+   "text": "Orbit 5,000× faster",
    "t0": 4.7667,
    "t1": 24.7667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-orbit-n",
+   "text": "Orbit 5,000× faster",
+   "t0": 47.166666666666664,
+   "t1": 54.1,
+   "slot": "tl"
+  },
+  {
+   "id": "b-orbit-t",
+   "text": "Orbit 5,000× faster",
+   "t0": 54.4,
+   "t1": 60.5667,
    "slot": "tl"
   },
   {
@@ -833,7 +875,7 @@
    "id": "b-thought-c",
    "text": "thought experiment",
    "t0": 17.733333333333334,
-   "t1": 24.7667,
+   "t1": 21.733333333333334,
    "slot": "tr"
   },
   {
@@ -844,13 +886,6 @@
    "slot": "tr"
   },
   {
-   "id": "b-time-g",
-   "clock": "grid",
-   "t0": 25.0667,
-   "t1": 29.6667,
-   "slot": "tl"
-  },
-  {
    "id": "b-thought-g",
    "text": "thought experiment",
    "t0": 26.633333333333333,
@@ -858,32 +893,11 @@
    "slot": "tr"
   },
   {
-   "id": "b-time-r",
-   "clock": "race",
-   "t0": 29.966666666666665,
-   "t1": 42.3667,
-   "slot": "tl"
-  },
-  {
    "id": "b-nts-r",
    "text": "not to scale",
    "t0": 29.966666666666665,
    "t1": 42.3667,
    "slot": "tr"
-  },
-  {
-   "id": "b-orbit-n",
-   "text": "orbit sped up ×5,000",
-   "t0": 47.166666666666664,
-   "t1": 54.1,
-   "slot": "tl"
-  },
-  {
-   "id": "b-time-w",
-   "clock": "whoa",
-   "t0": 42.6667,
-   "t1": 54.1,
-   "slot": "tl"
   },
   {
    "id": "b-true",
@@ -903,22 +917,8 @@
    "id": "b-thought-w",
    "text": "thought experiment",
    "t0": 42.6667,
-   "t1": 54.1,
+   "t1": 46.6667,
    "slot": "tr"
-  },
-  {
-   "id": "b-time-t",
-   "clock": "restore",
-   "t0": 54.4,
-   "t1": 60.5667,
-   "slot": "tl"
-  },
-  {
-   "id": "b-orbit-t",
-   "text": "orbit sped up ×5,000",
-   "t0": 54.4,
-   "t1": 60.5667,
-   "slot": "tl"
   },
   {
    "id": "b-nts-t",

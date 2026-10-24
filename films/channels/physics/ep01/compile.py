@@ -240,7 +240,7 @@ LABELS = [
 ]
 BADGES = [
     {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": cut("takeaway") - 0.3, "slot": "tr"},
-    {"id": "air", "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
+    {"id": "air", "title": "Air ignored", "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
 ]
 READOUTS = [
     {"id": "ch-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},     # the throw point: distances are measured from here

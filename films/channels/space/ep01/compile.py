@@ -204,7 +204,7 @@ LABELS = [
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_rw0, "slot": "bl"},
     {"id": "b-nts", "text": "not to scale", "t0": 0.0, "t1": t_rw0, "slot": "bl"},
-    {"id": "b-orbit", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": t_rw1, "t1": B["why"]["t0"], "slot": "tl"},
+    {"id": "b-orbit", "text": f"Orbit {int(N_ORBIT):,}× faster", "t0": t_rw1, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-time-d", "clock": "diagram", "t0": t_rw1, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-nts-d", "text": "not to scale", "t0": t_rw1, "t1": B["why"]["t0"], "slot": "tr"},
     {"id": "b-thought-c", "text": "thought experiment", "t0": t_off, "t1": B["why"]["t0"], "slot": "tr"},
@@ -213,16 +213,23 @@ BADGES = [
     {"id": "b-thought-g", "text": "thought experiment", "t0": A("vo04:changes", -0.6), "t1": t_race, "slot": "tr"},
     {"id": "b-time-r", "clock": "race", "t0": t_race, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-nts-r", "text": "not to scale", "t0": t_race, "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-orbit-n", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tl"},
+    {"id": "b-orbit-n", "text": f"Orbit {int(N_ORBIT):,}× faster", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-time-w", "clock": "whoa", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-true", "text": "true scale", "t0": B["whoa"]["t0"], "t1": t_w2, "slot": "tr"},
     {"id": "b-nts-n", "text": "not to scale", "t0": t_w2, "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-thought-w", "text": "thought experiment", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-time-t", "clock": "restore", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
-    {"id": "b-orbit-t", "text": f"orbit sped up ×{int(N_ORBIT):,}", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
+    {"id": "b-orbit-t", "text": f"Orbit {int(N_ORBIT):,}× faster", "t0": B["takeaway"]["t0"], "t1": B["readout"]["t0"] + 0.3, "slot": "tl"},
     {"id": "b-nts-t", "text": "not to scale", "t0": B["takeaway"]["t0"], "t1": t_j0, "slot": "tr"},
     {"id": "b-illus", "text": "illustration", "t0": t_j1, "t1": t_end, "slot": "tr"},   # the galaxy is drawn, not imaged
 ]
+# notes: one speed column on the left (the clock first, then the orbit), context tags on the right.
+# "thought experiment" frames a moment, so it shows for 4 s where it starts; the cheats ("not to scale",
+# the speeds) hold as long as they are true.
+for b in BADGES:
+    if b.get("text") == "thought experiment" and b["t0"] > 0:
+        b["t1"] = min(b["t1"], b["t0"] + 4.0)
+BADGES.sort(key=lambda b: (b["slot"], 0 if "clock" in b else 1 if "orbit" in b.get("text", "") else 2))
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
 

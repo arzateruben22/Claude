@@ -14,8 +14,9 @@
 //     badge   overrides the badge text for this key (null: no badge; a string: that text)
 //   Before the first key, the first key's rate holds. Rates are never negative.
 //   opts: { tau0 = 0 (τ at t = 0), words, round }
-//     words   the badge wording: { slow: "slowed ×{n}", fast: "sped up ×{n}", freeze: "frozen",
-//             normal: null }. Each channel words its own ("time ×{n}", "orbit sped up ×{n}").
+//     words   the badge wording: { slow: "{n}× slower", fast: "{n}× faster", freeze: "paused",
+//             normal: null }: plain words, the number first (hud.js lights it and picks the icon from
+//             "faster" / "slower" / "paused"). A channel may word its own.
 //
 //   C.tau(t)      scene time at film time t
 //   C.rate(t)     the playback rate at t (scene seconds per film second)
@@ -42,7 +43,7 @@ export const factor = (n) => {
   return String(+n.toFixed(2));
 };
 
-export const WORDS = { slow: "slowed ×{n}", fast: "sped up ×{n}", freeze: "frozen", normal: null };
+export const WORDS = { slow: "{n}× slower", fast: "{n}× faster", freeze: "paused", normal: null };
 export const rateText = (rate, words = WORDS) => {
   const w = { ...WORDS, ...words };
   if (rate === 0) return w.freeze;

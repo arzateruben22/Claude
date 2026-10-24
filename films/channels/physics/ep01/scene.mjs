@@ -43,7 +43,7 @@ scene.add(cyc.group, P.group);
 P.rig.place({ x0: -8, x1: 0, gatesAt: [-8, 0] });
 window.SCENE_READY = P.ready;
 
-const clk = clock(FILM.clock, { words: { slow: "slowed ×{n}", freeze: "frozen" } });
+const clk = clock(FILM.clock, { words: { slow: "{n}× slower", freeze: "paused" } });
 const TAKE_NAMES = Object.keys(TAKES);
 const takeAt = (t) => TAKE_NAMES.find((n) => t >= TAKES[n].t0 && t < TAKES[n].t1) || null;
 const ballSpec = (take, id) => TAKES[take].balls.find((b) => b.id === id);
@@ -135,7 +135,7 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("warp", { from: clk, slot: "tr" });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 { const st = document.createElement("style"); st.textContent = "#hud-air { white-space: pre-line; line-height: 1.22; }"; document.head.appendChild(st); }
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball[0], an.ball[1], t);

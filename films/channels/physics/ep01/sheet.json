@@ -663,7 +663,7 @@
    "t": 62.05,
    "kind": "badge",
    "tag": "air",
-   "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms"
+   "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms."
   },
   {
    "t": 63.0,

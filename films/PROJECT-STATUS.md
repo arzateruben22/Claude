@@ -3,8 +3,9 @@
 > **ON HOLD for a notes redesign (24 Oct, 01:32 UTC).** The user, watching the space final: "the notes for the
 > graphs / animations need to be more aesthetic and easy to follow along with". The body final was stopped at
 > frame 60 (resumable, but it will re-render with the new notes). **Check-ins: do NOT restart render-finals.sh.**
-> Plan: redesign the HUD notes (badges, labels, readouts) in kits/cinema/sci/hud.js + each theme, send before/after
-> stills for approval, then re-render all three finals.
+> Done (01:47): the notes redesign in kits/cinema/sci/hud.js (speed / tag / card notes, plain wording, smooth
+> reflow and change animation); before/after sheets in films/channels/review-notes/, sent to the user.
+> **Waiting on the user's OK**, then: --cues + compile + soundtrack per episode, and re-render all three finals.
 
 The user's instruction (2026-10-22): keep going until all four formulas are complete, through
 usage limits (continue after each reset). Check-ins are scheduled into this session; each one

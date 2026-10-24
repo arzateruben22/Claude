@@ -11,7 +11,7 @@ import * as THREE from "three";
 // (GW170817) · earth (Earth's true 14,900 km) · news (the diagram again: the news arrives) · restore
 // (takeaway and the readout, with the one scale jump) · end (the end card over the galaxy).
 // Honesty: every cheat on screen carries its badge (film.json "badges"): "not to scale" on every diagram,
-// "time ×N" from each scene clock, "orbit sped up ×5,000" apart from the light clock, "analogy" on the grid,
+// "64× faster" from each scene clock, "Orbit 5,000× faster" apart from the light clock, "analogy" on the grid,
 // "thought experiment" while the Sun is gone, and "true scale" on the one shot that is.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -46,7 +46,7 @@ window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 
 // ── scene clocks (clock.js; each pinned so τ(anchor t) = anchor τ) ─────────
-const WORDS = { fast: "time ×{n}", slow: "slowed ×{n}", freeze: null };
+const WORDS = { fast: "{n}× faster", slow: "{n}× slower", freeze: null };
 const pinned = (c) => { const c0 = clock(c.keys, { words: WORDS }); return clock(c.keys, { words: WORDS, tau0: c.anchor[1] - c0.tau(c.anchor[0]) }); };
 const CLK = Object.fromEntries(Object.entries(FILM.clk).map(([k, c]) => [k, pinned(c)]));
 const DG = FILM.clk.diagram;

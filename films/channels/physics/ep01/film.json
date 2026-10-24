@@ -579,7 +579,8 @@
   },
   {
    "id": "air",
-   "text": "air ignored:\nthe fastest throw would\nland 0.3 ms late;\na frame here is 1.7 ms",
+   "title": "Air ignored",
+   "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms.",
    "t0": 62.050033,
    "t1": null,
    "slot": "tr"
