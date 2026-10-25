@@ -20,6 +20,11 @@
   const RED = css("--red", "#ff3b30");
   const fname = (f) => (f === "how_to" ? "how-to" : String(f || "").replace(/_/g, " "));
   const fcolor = (f) => COLOR[f] || COLOR.repost;
+  const apps = $("apps");                 // back to the home screen: the paper book's port, this same address
+  if (apps && !REPLAY && /^https?:$/.test(location.protocol)) {
+    apps.href = `${location.protocol}//${location.hostname}:8790/`;
+    apps.hidden = false;
+  }
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

@@ -152,6 +152,12 @@ python -m postdesk run          # the desk and its dashboard; leave it running
 The dashboard only listens on your own computer (127.0.0.1). Its buttons need a key that's
 written into the page when you open it, so other websites can't press them.
 
+**The home screen.** On the always-on machine, the paper book's page on port 8790 shows this desk next to the
+trading desks: on air or not, the drafts waiting for you (the first two), today's posts, the next slot and your
+followers, with a button that opens this dashboard. While it runs, the desk saves that summary every half minute
+to `output/live/status.json` (`postdesk/status.py`: no keys, no token, nothing the dashboard doesn't show). The
+**apps** link next to the mode badge goes back to the home screen.
+
 **A good routine:** open the dashboard once in the morning and approve or edit a day's worth
 of drafts (five minutes). Glance at the review at night. When you find yourself approving almost
 everything, the review will suggest `auto_originals`. That choice is yours.

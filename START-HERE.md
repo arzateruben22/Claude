@@ -129,6 +129,14 @@ every paper trade and finishes with a list of **flags to check** before any real
 Galaxy** (`/galaxy`) draws the same trades as a universe that grows. Open them on your phone after step 6
 of Part 3 (`sudo bash server/phone.sh`), at the address it prints, port 8790.
 
+**One home screen for both apps.** That address (port 8790) opens on **Desks**: two cards side by side. **Trading**
+has every desk's paper profit so far, today's, the best desk, the market weather and the next read date, with
+buttons for the deck, standings, proving ground, crawler, galaxy and book. **Post Desk** has whether your X
+account is on air, how many drafts are waiting for you (with the first two), today's posts, the next slot and
+your followers, with a button that opens the Post Desk dashboard. The Post Desk numbers are never more than a
+minute old. On your phone, add it to the home screen (Share, then **Add to Home Screen**) and it opens like an
+app with its own icon. The deck moved to `/deck`, and both dashboards have a link back home.
+
 ## Part 3: Start posting on X (about 30 minutes, once)
 
 1. **Make the X app.** Go to **developer.x.com**, sign in with the account that will post, and
@@ -147,8 +155,8 @@ of Part 3 (`sudo bash server/phone.sh`), at the address it prints, port 8790.
    - Your browser lands on a page that won't load. That's normal.
    - Copy the whole address from the address bar, paste it back into the server, and press Enter.
 6. **Approve from your phone (optional):** run `sudo bash server/phone.sh` and follow what it
-   prints. Install the Tailscale app, sign in, and open the addresses it gives you: Post Desk
-   on port 8788, and the Trading Deck on port 8790.
+   prints. Install the Tailscale app, sign in, and open the address it gives you on port 8790: the
+   home screen with both apps. Add it to your phone's home screen.
 7. **On X:** turn on the **Automated** label (Settings → Your account → Account information →
    Automation).
 

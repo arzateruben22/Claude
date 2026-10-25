@@ -11,4 +11,4 @@ echo
 echo
 "$DIR/.venv/bin/python" "$DIR/paper-book/paperbook.py" --proving
 echo
-echo "Trading Deck: http://127.0.0.1:8790 (proving ground: /proving, crawler: /crawler, galaxy: /galaxy, book: /book) through ssh -L 8790:127.0.0.1:8790 (or your Tailscale address after phone.sh)"
+echo "Home, both apps: http://127.0.0.1:8790 (Trading Deck: /deck, proving ground: /proving, crawler: /crawler, galaxy: /galaxy, book: /book; Post Desk: port 8788) through ssh -L 8790:127.0.0.1:8790 -L 8788:127.0.0.1:8788 (or your Tailscale address after phone.sh)"

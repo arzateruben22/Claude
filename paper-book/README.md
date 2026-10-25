@@ -72,9 +72,21 @@ public prices, no key). The paper book, `server/status.sh`, the crawler's result
 all show it beside the big-coin desk. If a desk can't beat just holding, it isn't earning its keep. The
 start is saved in `output/benchmark.json`; `server/fresh-start.sh` resets it with everything else.
 
+## Home: both apps on one screen
+
+The first page on port 8790 (`home.py`) is **Desks**: a Trading card (every desk's paper profit so far and today,
+open positions, the best desk, green weeks, the market weather, the next read date, and buttons for every view)
+and a Post Desk card (on air or not, drafts waiting for you with the first two, today's posts, the next slot,
+followers and views, and a button to its dashboard on port 8788 of the same address). The trading numbers come
+from each refresh (`output/home.json`); the Post Desk card reads the summary the running desk saves every half
+minute (`post-desk/output/live/status.json`) when the page is asked for, and says plainly when Post Desk isn't
+connected yet or has stopped. The page reloads itself every minute while it's open, reads fine without
+JavaScript, and has a web-app manifest and icon (`web/icon.svg`, rendered to `web/icon-180.png` and
+`icon-512.png`), so a phone can add it to its home screen like an app.
+
 ## The Trading Deck
 
-The home page on port 8790 (`output/deck.html`): every desk as a lane of light on one time axis, from day one to
+At `/deck` on port 8790 (`output/deck.html`): every desk as a lane of light on one time axis, from day one to
 now. Each lane's ribbon is that desk's paper profit over time, every closed trade is a spark (up for a win, down for
 a loss, pink when flagged), and each lane carries its own **day 28** flag, the end of its four-week test. The lanes
 sort themselves by return, so the order *is* the scoreboard, and a replay runs from day one to now when the page
@@ -126,7 +138,7 @@ Every refresh also writes `output/galaxy.html`: the same trades drawn as a unive
   Each one stays locked, showing a progress bar, until there are enough trades to say anything.
   They describe what happened, not what will happen.
 
-`python paperbook.py --serve 8790` serves the deck at http://127.0.0.1:8790, the crawler at `/crawler`, the
+`python paperbook.py --serve 8790` serves the home screen at http://127.0.0.1:8790, the deck at `/deck`, the crawler at `/crawler`, the
 galaxy at `/galaxy` and the paper book at `/book`. Both pages check for new trades every two minutes. The crawler
 finishes its pass and shows the flags, then crawls again with the new trades a minute later (or
 right away with **Crawl new trades**). On the always-on machine, `server/phone.sh` puts all three on

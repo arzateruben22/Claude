@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Callable
 
 from .desk import Desk
+from .status import StatusFile
 
 WEB = Path(__file__).resolve().parent / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
@@ -46,10 +47,11 @@ def wall_clock() -> datetime:
 class Runner(threading.Thread):
     """Steps the desk forever and keeps a ready-to-serve JSON snapshot."""
 
-    def __init__(self, desk: Desk, clock: Callable[[], datetime], tick: float = 0.5):
+    def __init__(self, desk: Desk, clock: Callable[[], datetime], tick: float = 0.5, status: StatusFile = None):
         super().__init__(daemon=True)
         self.desk, self.clock, self.tick = desk, clock, tick
         self.lock = threading.Lock()
+        self.status = status or StatusFile(None)          # the home screen's summary (port 8790)
         self.latest = json.dumps(desk.state(clock()))
         self.stopped = threading.Event()
         self.error = ""
@@ -64,13 +66,15 @@ class Runner(threading.Thread):
         try:
             if step:
                 self.desk.step(now)
-            snapshot = json.dumps(self.desk.state(now))
+            state = self.desk.state(now)
         except Exception as exc:          # keep the page alive and say what broke
             self.error = f"{type(exc).__name__}: {exc}"
             self.desk.say(now, "error", f"Desk error: {self.error}", key="crash")
-            snapshot = json.dumps(self.desk.state(now))
+            state = self.desk.state(now)
+        snapshot = json.dumps(state)
         with self.lock:
             self.latest = snapshot
+        self.status.maybe_write(state, force=not step)    # right away after you act, else every half minute
 
     def act(self, action: str, draft_id: str = "", text: str = "", fmt: str = "") -> tuple:
         ok, msg = self.desk.act(self.clock(), action, draft_id, text, fmt)
@@ -79,6 +83,7 @@ class Runner(threading.Thread):
 
     def stop(self) -> None:
         self.stopped.set()
+        self.status.maybe_write(self.desk.state(self.clock()), force=True, stopped=True)
 
 
 def make_server(runner: Runner, host: str = "127.0.0.1", port: int = 8788, token: str = "") -> ThreadingHTTPServer:

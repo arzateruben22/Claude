@@ -103,7 +103,9 @@ def test_served_read_only(tmp_path):
         return r.status, r.read()
 
     try:
-        assert get("/") == (200, b"<p>deck</p>") and get("/galaxy") == (200, b"<p>galaxy</p>")
+        code, body = get("/")                              # the home screen, made for this request
+        assert code == 200 and b"<title>Desks</title>" in body and b"Open the Trading Deck" in body
+        assert get("/galaxy") == (200, b"<p>galaxy</p>")
         assert get("/crawler") == (200, b"<p>crawler</p>") and get("/deck") == (200, b"<p>deck</p>")
         assert get("/secret.txt")[0] == 404 and get("/../book.toml")[0] == 404
         assert get("/book")[0] == 404                      # not written yet

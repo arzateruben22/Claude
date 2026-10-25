@@ -10,7 +10,7 @@ Everything on one small Linux machine that never sleeps:
 | `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: the eight memecoin rulebooks still running, in one process on one price feed, each on its own $1,000 (dashboards at `/`, `/sniper/`, `/momentum/`...) | right away |
 | `majors` | big coins on Coinbase prices and stocks held for days on Alpaca's daily bars, paper money: the daily, slow, loose, trend and rush coin rulebooks plus the index, sectors and leaders stock rulebooks, in one process, each deciding at its own candle close, each on its own $1,000 | coins right away; the stock ones once the Alpaca keys are in (then `sudo systemctl restart majors`) |
 | `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for every `criteria*.toml` left in the scanner's folder (`--books all`: one market read, one journal and one $1,000 bank each) | once your Alpaca paper keys are in (step 6) |
-| `paperbook` | one ledger of every paper trade from every running desk, refreshed every 15 minutes, plus the Trading Deck (the home page), the Proving Ground (`/proving`), Trade Crawler and Paper Galaxy on port 8790 | right away |
+| `paperbook` | one ledger of every paper trade from every running desk, refreshed every 15 minutes, plus the home screen with both apps (`/`), the Trading Deck (`/deck`), the Proving Ground (`/proving`), Trade Crawler and Paper Galaxy on port 8790 | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for every memecoin rulebook still running | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
@@ -97,7 +97,10 @@ ssh -L 8788:127.0.0.1:8788 -L 8787:127.0.0.1:8787 -L 8790:127.0.0.1:8790 you@you
 ```
 
 - http://127.0.0.1:8788: **Post Desk**. Approve drafts here, ideally once in the morning.
-- http://127.0.0.1:8790: the **Trading Deck**, every desk as a lane on one time axis, sorted live by return.
+- http://127.0.0.1:8790: **Desks**, the home screen: the trading desks and Post Desk side by side, each with its
+  latest numbers and a button to open it. Post Desk's card reads `post-desk/output/live/status.json`, which the
+  running desk saves every half minute.
+- http://127.0.0.1:8790/deck: the **Trading Deck**, every desk as a lane on one time axis, sorted live by return.
   `/crawler` is the **Trade Crawler**, which crawls every paper trade and ends with the flags to
   check. The galaxy is at `/galaxy` and the paper book at `/book`.
 - http://127.0.0.1:8787: **Night Desk**, the memecoin desk.

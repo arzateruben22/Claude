@@ -26,7 +26,8 @@ systemctl restart paperbook || true
 cat <<MSG
 
 On your phone: install the Tailscale app, sign in with the same account, then open
-  http://$IP:8788        Post Desk: approve posts
-  http://$IP:8790        Trading Deck (/crawler for the crawler, /galaxy for the galaxy, /book for the paper book)
-and add them to your home screen. Only devices signed in to your Tailscale can reach them.
+  http://$IP:8790        Home: both apps on one screen, the trading desks and Post Desk. Pick one and go.
+and add it to your home screen (Share, then Add to Home Screen): it opens like an app, with its own icon.
+Straight to either one: http://$IP:8790/deck (Trading Deck) or http://$IP:8788 (Post Desk).
+Only devices signed in to your Tailscale can reach them.
 MSG

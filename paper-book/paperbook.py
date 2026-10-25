@@ -913,15 +913,19 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     import galaxy                                  # ...and drawn as a universe
 
     import proving                                 # ...and every running rulebook's history test, graded
+    import home                                    # ...and the home screen: these desks and Post Desk, side by side
 
     crawler.write(book, out)
     galaxy.write(book, out)
     deck.write(book, out)
     proving.write(book, out)
+    home.write(book, out)
     return book
 
 
-SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/deck.json": "deck.json",
+SERVED = {"/": "home.html", "/home": "home.html", "/home.html": "home.html",
+          "/manifest.webmanifest": "manifest.webmanifest", "/icon-180.png": "icon-180.png", "/icon-512.png": "icon-512.png",
+          "/deck": "deck.html", "/deck.html": "deck.html", "/deck.json": "deck.json",
           "/crawler": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
           "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv",
@@ -929,12 +933,13 @@ SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/d
           "/proving": "proving.html", "/proving.html": "proving.html", "/proving.json": "proving.json",
           "/weather.json": "weather.json"}
 TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8",
-         ".txt": "text/plain; charset=utf-8"}
+         ".txt": "text/plain; charset=utf-8", ".png": "image/png", ".webmanifest": "application/manifest+json"}
+LIVE = ("/", "/home", "/home.html")                # made for each request: Post Desk's numbers are never stale
 
 
 def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):
-    """Read-only: the deck, the crawler, the galaxy, the paper book and the ledger, nothing else. Answers only to its
-    own address."""
+    """Read-only: the home screen, the deck, the crawler, the galaxy, the paper book and the ledger, nothing else.
+    Answers only to its own address."""
     import threading
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -945,6 +950,14 @@ def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):
             file = out / path if path else None
             if name not in ("127.0.0.1", "localhost", "::1", host):
                 code, body, ctype = 403, b"wrong host", "text/plain"
+            elif self.path.split("?", 1)[0] in LIVE:
+                import home
+
+                try:
+                    code, body, ctype = 200, home.serve(out, name), TYPES[".html"]
+                except Exception:  # noqa: BLE001 - a half-written summary: the last built page instead
+                    ok = file is not None and file.is_file()
+                    code, body, ctype = (200, file.read_bytes(), TYPES[".html"]) if ok else (503, b"starting", "text/plain")
             elif not file or not file.is_file():
                 code, body, ctype = 404, b"not found (nothing written yet?)", "text/plain"
             else:

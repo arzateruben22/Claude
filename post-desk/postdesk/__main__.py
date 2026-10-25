@@ -70,7 +70,9 @@ def cmd_run(args) -> int:
             return 1
         clock = wall_clock
 
-    runner = Runner(desk, clock)
+    from .status import StatusFile
+
+    runner = Runner(desk, clock, status=StatusFile(_folder(args) / "status.json", args.port))
     runner.start()
     server = make_server(runner, args.host, args.port)
     url = f"http://{args.host}:{server.server_address[1]}/"
@@ -319,6 +321,9 @@ def cmd_sim(args) -> int:
             day = d
             print(f"\r  day {d + 1}/{math.ceil(args.days)} · {int(desk.me.get('followers', 0)):,} followers", end="", flush=True)
         t += timedelta(minutes=2)
+    from .status import StatusFile
+
+    StatusFile(OUTPUT / "demo" / "status.json").maybe_write(desk.state(end), force=True, stopped=True)
     print(f"\nDone. Next: python -m postdesk stats --demo   (lessons so far: {OUTPUT / 'demo' / 'lessons.md'})")
     return 0
 

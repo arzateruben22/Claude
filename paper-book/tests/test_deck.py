@@ -100,7 +100,7 @@ def test_written_page_is_safe_and_served_at_the_root(tmp_path):
     assert payload["meta"]["trades"] == 1
     for part in ('id="chips"', 'id="standings"', 'id="checks"', 'id="axis"', "renderStandings", "deck.market"):
         assert part in page, part                                       # the chips, the standings table, the dates
-    assert pb.SERVED["/"] == "deck.html" and pb.SERVED["/crawler"] == "crawler.html" and pb.SERVED["/deck.json"] == "deck.json"
+    assert pb.SERVED["/"] == "home.html" and pb.SERVED["/deck"] == "deck.html" and pb.SERVED["/crawler"] == "crawler.html" and pb.SERVED["/deck.json"] == "deck.json"
 
 
 def test_idea_follows_each_stock_desks_own_rules(tmp_path):
