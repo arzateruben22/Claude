@@ -1,0 +1,121 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/space/ep02/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How long to the nearest star? Say we leave today.",
+   "stars": [
+    "star",
+    "today"
+   ],
+   "phonemes": "hˌaʊ lˈɔŋ tə ðə nˌɪɹɪst stˈɑːɹ? sˈeɪ wiː lˈiːv tədˈeɪ.",
+   "speed": 0.85,
+   "file": "01.wav",
+   "dur": 3.379,
+   "sha256": "223ac42293f9af5db333434a65c23f9c246f051f6fd82d8ccbffc0054323c20f"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second: Earth to the Moon in six hours.",
+   "stars": [
+    "Voyager 1",
+    "six hours"
+   ],
+   "phonemes": "ˌaʊɚ ɹˈaɪd ɪz vˈɔɪɪdʒɚ wˈʌn, ðə fˈɑːɹðɪst θˈɪŋ wiːv sˈɛnt. ɪt lˈɛft ɪn nˈaɪntiːn sˈɛvəntisˈɛvən. ɪt kˈoʊsts æɾ ɐbˌaʊt sˈɛvəntˌiːn kˈɪləmˌiːɾɚz ɐ sˈɛkənd: ˈɜːθ tə ðə mˈuːn ɪn sˈɪks ˈaʊɚz.",
+   "speed": 1.16,
+   "file": "02.wav",
+   "dur": 11.023,
+   "sha256": "2310f1e38cec86562bed54b68e8a667a28d5a673ceab3273c82b3bb77e248b9d"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "On November eighteenth, it crosses a line. Its signal now needs a full day to reach us. The team sends a command today. The answer comes the day after tomorrow.",
+   "stars": [
+    "day",
+    "tomorrow"
+   ],
+   "phonemes": "ˌɔn noʊvˈɛmbɚɹ ˈeɪtiːnθ, ɪt kɹˈɔsᵻz ɐ lˈaɪn. ɪts sˈɪɡnəl nˈaʊ nˈiːdz ɐ fˈʊl dˈeɪ tə ɹˈiːtʃ ˌʌs. ðə tˈiːm sˈɛndz ɐ kəmˈænd tədˈeɪ. ðɪ ˈænsɚ kˈʌmz ðə dˈeɪ ˈæftɚ təmˈɑːɹoʊ.",
+   "speed": 1.1,
+   "file": "03.wav",
+   "dur": 10.292,
+   "sha256": "ac6f19f2220e2d2d8e865ac3f7a208a5d87a744887d89863027dde4155b164ad"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's three hundred years away. Getting through it: thirty thousand more.",
+   "stars": [
+    "comets"
+   ],
+   "phonemes": "ɪn twˈɛnti twˈɛlv, ɪt kɹˈɔst ˌɪntʊ ˌɪntɚstˈɛlɚ spˈeɪs. nˌɪɹli ðˈɛɹ, ðˈɛn? ɪt hˈæzənt ˈiːvən ɹˈiːtʃt ðə sˈʌnz klˈaʊd ʌv kˈɑːmɪts. ðæts θɹˈiː hˈʌndɹɪd jˈɪɹz ɐwˈeɪ. ɡˌɛɾɪŋ θɹˈuː ɪt: θˈɜːɾi θˈaʊzənd mˈɔːɹ.",
+   "speed": 1.15,
+   "file": "04.wav",
+   "dur": 11.296,
+   "sha256": "bc1a101f37901cfdb2bfb5eff72bf00db7d26fe5218b8182d4a8ca510fc73c82"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species hadn't reached Europe.",
+   "stars": [
+    "seventy-five thousand years",
+    "Europe"
+   ],
+   "phonemes": "ðə nˌɪɹɪst stˈɑːɹ, pɹˈɑːksɪmə sɛntˈɔːɹi, ɪz ɐbˌaʊt fˈɪftiːn hˈʌndɹɪd lˈaɪtdˈeɪz ˈaʊt. æt vˈɔɪɪdʒɚz spˈiːd: ɐbˌaʊt sˈɛvəntifˈaɪv θˈaʊzənd jˈɪɹz. kˈaʊnt bˈæk ðæt fˈɑːɹ, ænd ˌaʊɚ spˈiːsiːz hˈædənt ɹˈiːtʃt jˈʊɹɹəp.",
+   "speed": 1.16,
+   "file": "05.wav",
+   "dur": 11.637,
+   "sha256": "c50559c083a705b624de96a227cd4fb44b24f990e3d64e6963b65292c9553a93"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So we haven't left for the stars. Voyager has crossed day one of fifteen hundred.",
+   "stars": [
+    "fifteen hundred"
+   ],
+   "phonemes": "sˌoʊ wiː hˈævənt lˈɛft fɚðə stˈɑːɹz. vˈɔɪɪdʒɚ hɐz kɹˈɔst dˈeɪ wˈʌn ʌv fˈɪftiːn hˈʌndɹɪd.",
+   "speed": 0.97,
+   "file": "06.wav",
+   "dur": 5.025,
+   "sha256": "9b57dc2d0e2533bf78321ae22111abdccc2d1dc516329b8abe45dc9c5d456bef"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, Earth to Voyager: one day. To Proxima Centauri: four years and three months.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, ˈɜːθ tə vˈɔɪɪdʒɚ: wˈʌn dˈeɪ. tə pɹˈɑːksɪmə sɛntˈɔːɹi: fˈɔːɹ jˈɪɹz ænd θɹˈiː mˈʌnθs.",
+   "speed": 1.1,
+   "file": "07.wav",
+   "dur": 5.779,
+   "sha256": "ab05322b04aeec228d6e530bfd6c3a2ea31bb2681e723397aa00523708a9009b"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a world that turns slower than it orbits. And backwards.",
+   "stars": [
+    "backwards"
+   ],
+   "phonemes": "nˈɛkst: ɐ wˈɜːld ðæt tˈɜːnz slˈoʊɚ ðɐn ɪɾ ˈɔːɹbɪts. ænd bˈækwɚdz.",
+   "speed": 0.9,
+   "file": "08.wav",
+   "dur": 4.115,
+   "sha256": "7c0140008e03a429f99069f8dc21b8f3d28db0dc9fb3a00b462c231ba746c2f5"
+  }
+ ]
+}

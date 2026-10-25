@@ -1,0 +1,1045 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Which holds a million Earths? They look like twins.",
+   "heard": "which holds a million Earths. They look like twins.",
+   "words": [
+    {
+     "w": "Which",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 0.255,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.48,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 0.78,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Earths?",
+     "start": 1.16,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 1.89,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 2.095,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.14,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "twins.",
+     "start": 2.4,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "In your sky, the Sun and the full Moon look the same size. But one is about four hundred times wider, and four hundred times farther away.",
+   "heard": "In your sky, the sun and the full moon look the same size, but one is about 400 times wider and 400 times farther away.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.26,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "sky,",
+     "start": 0.445,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.1,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.13,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.66,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.82,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "full",
+     "start": 1.95,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 2.095,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 2.655,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.775,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 2.97,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "size.",
+     "start": 3.34,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 4.31,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.375,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.755,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.9,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 5.125,
+     "end": 6.0,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 5.155,
+     "end": 6.0,
+     "heard": false
+    },
+    {
+     "w": "times",
+     "start": 5.98,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "wider,",
+     "start": 6.39,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.165,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 7.24,
+     "end": 8.08,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 7.27,
+     "end": 8.08,
+     "heard": false
+    },
+    {
+     "w": "times",
+     "start": 8.14,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "farther",
+     "start": 8.655,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "away.",
+     "start": 8.84,
+     "end": 9.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Line Earths up across the Sun's face: a hundred and nine. Your whole world would fit inside one big sunspot.",
+   "heard": "line Earths up across the sun's face, 109, your whole world would fit inside one big sunspot.",
+   "words": [
+    {
+     "w": "Line",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "Earths",
+     "start": 0.52,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 1.02,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 1.125,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.42,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "Sun's",
+     "start": 1.61,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "face:",
+     "start": 2.17,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.8,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 2.83,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 2.86,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "nine.",
+     "start": 2.89,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "Your",
+     "start": 4.365,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 4.56,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "world",
+     "start": 4.885,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 5.21,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "fit",
+     "start": 5.505,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 5.77,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.185,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 6.575,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "sunspot.",
+     "start": 6.625,
+     "end": 7.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about eight thousand.",
+   "heard": "Nearly 25 centuries ago in Athens, Anaxagoras said the sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about 8,000.",
+   "words": [
+    {
+     "w": "Nearly",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "twenty-five",
+     "start": 0.35,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "centuries",
+     "start": 1.11,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "ago,",
+     "start": 1.6,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.875,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "Athens,",
+     "start": 2.085,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "Anaxagoras",
+     "start": 2.79,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "said",
+     "start": 3.6,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.72,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 3.955,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 4.335,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.48,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "fiery",
+     "start": 4.56,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "stone,",
+     "start": 5.215,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 5.935,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 6.125,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "southern",
+     "start": 6.535,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "Greece.",
+     "start": 6.865,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "Calling",
+     "start": 7.84,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.245,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.335,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "stone,",
+     "start": 8.64,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 9.01,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.37,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "god,",
+     "start": 9.43,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 9.9,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "him",
+     "start": 10.065,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "charged",
+     "start": 10.25,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 10.765,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "impiety.",
+     "start": 10.795,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "He",
+     "start": 12.04,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 12.07,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "right.",
+     "start": 12.325,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "By",
+     "start": 13.195,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 13.335,
+     "end": 13.44,
+     "heard": true
+    },
+    {
+     "w": "factor",
+     "start": 13.45,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 13.69,
+     "end": 13.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 14.005,
+     "end": 14.24,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 14.32,
+     "end": 14.54,
+     "heard": false
+    },
+    {
+     "w": "thousand.",
+     "start": 14.35,
+     "end": 14.54,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
+   "heard": "Melt down 1.3 million Earths and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
+   "words": [
+    {
+     "w": "Melt",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 0.365,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.71,
+     "end": 1.6,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 0.74,
+     "end": 1.6,
+     "heard": false
+    },
+    {
+     "w": "three",
+     "start": 0.785,
+     "end": 1.6,
+     "heard": false
+    },
+    {
+     "w": "million",
+     "start": 1.48,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "Earths,",
+     "start": 2.175,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.815,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "they'd",
+     "start": 2.955,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "fill",
+     "start": 3.295,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 3.8,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "Yet",
+     "start": 4.205,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "among",
+     "start": 4.31,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.655,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "stars,",
+     "start": 4.875,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 5.45,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "ordinary.",
+     "start": 5.685,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "Some",
+     "start": 6.835,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 7.11,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 7.16,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 7.615,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.83,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 7.965,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 8.485,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "wider.",
+     "start": 8.68,
+     "end": 9.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Astronomers even file the Sun under dwarf stars. Out there, this is what ordinary looks like.",
+   "heard": "Astronomers even file the sun under dwarf stars. Out there, this is what ordinary looks like.",
+   "words": [
+    {
+     "w": "Astronomers",
+     "start": 0.095,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "even",
+     "start": 0.885,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "file",
+     "start": 1.195,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.66,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.905,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 2.255,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "dwarf",
+     "start": 2.395,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "stars.",
+     "start": 2.815,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "Out",
+     "start": 3.86,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "there,",
+     "start": 4.09,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 4.82,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.055,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 5.085,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "ordinary",
+     "start": 5.5,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "looks",
+     "start": 6.19,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "like.",
+     "start": 6.32,
+     "end": 6.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time, across the Sun: about five seconds. Sun to Earth: eight minutes, twenty seconds.",
+   "heard": "Light time across the sun, about 5 seconds. Sun to Earth, 8 minutes, 20 seconds.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time,",
+     "start": 0.305,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 0.72,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.02,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Sun:",
+     "start": 1.22,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.61,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 1.92,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 2.395,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 3.19,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.65,
+     "end": 3.7,
+     "heard": true
+    },
+    {
+     "w": "Earth:",
+     "start": 3.68,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 4.245,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "minutes,",
+     "start": 4.41,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 4.88,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 5.25,
+     "end": 5.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: since this started, you've flown at least two thousand kilometers. How?",
+   "heard": "Next, since this started, you've flown at least 2000 kilometers. How?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "since",
+     "start": 0.67,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 0.93,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "started,",
+     "start": 1.19,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "you've",
+     "start": 1.67,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "flown",
+     "start": 1.975,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.355,
+     "end": 2.405,
+     "heard": true
+    },
+    {
+     "w": "least",
+     "start": 2.385,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 2.64,
+     "end": 3.36,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 2.71,
+     "end": 3.36,
+     "heard": false
+    },
+    {
+     "w": "kilometers.",
+     "start": 3.34,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "How?",
+     "start": 4.66,
+     "end": 5.12,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
