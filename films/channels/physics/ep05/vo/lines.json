@@ -1,0 +1,110 @@
+{
+ "voice": "af_bella",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why does it speed up? Nobody pushes. Nothing pushes.",
+   "stars": [
+    "up"
+   ],
+   "phonemes": "wˌaɪ dˈʌz ɪt spˈiːd ˈʌp? nˈoʊbɑːdi pˈʊʃᵻz. nˈʌθɪŋ pˈʊʃᵻz.",
+   "file": "01.wav",
+   "dur": 3.054,
+   "sha256": "cdfd1b62d4e15b10891723f5d7bb7146fb4ce3bd4a119311bee55bf049bdb12a"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Sit on a swivel chair with two dumbbells, arms out wide. Give yourself one gentle push. You turn about once every two seconds.",
+   "stars": [
+    "seconds"
+   ],
+   "phonemes": "sˈɪt ˌɔn ɐ swˈɪvəl tʃˈɛɹ wɪð tˈuː dˈʌmbɛlz, ˈɑːɹmz ˈaʊt wˈaɪd. ɡˈɪv jɔːɹsˈɛlf wˈʌn dʒˈɛntəl pˈʊʃ. juː tˈɜːn ɐbˌaʊt wˈʌns ˈɛvɹi tˈuː sˈɛkəndz.",
+   "file": "02.wav",
+   "dur": 8.038,
+   "sha256": "9236e80a74b61ee04713ab56034f9c981362696058cd4c6bbcabad7c426f6751"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now pull both dumbbells in, to your chest. Suddenly, you're whipping round more than twice as fast.",
+   "stars": [
+    "fast"
+   ],
+   "phonemes": "nˈaʊ pˈʊl bˈoʊθ dˈʌmbɛlz ˈɪn, tə jʊɹ tʃˈɛst. sˈʌdənli, jʊɹ wˈɪpɪŋ ɹˈaʊnd mˈɔːɹ ðɐn twˈaɪs æz fˈæst.",
+   "file": "03.wav",
+   "dur": 5.718,
+   "sha256": "9b9182e8605fbf1b53381719051c74da29082e68ceba74ba583721307ce3215d"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so that same amount turns you faster. Your arms paid for every extra turn.",
+   "stars": [
+    "outside",
+    "faster"
+   ],
+   "phonemes": "ɪt fˈiːlz lˈaɪk sˈʌmθɪŋ pˈʊʃt. nˈʌθɪŋ aʊtsˈaɪd dˈɪd. wɪð nˈoʊ twˈɪst fɹʌm aʊtsˈaɪd, jʊɹ tˈoʊɾəl ɐmˈaʊnt ʌv spˈɪn kˈænt tʃˈeɪndʒ. wˈeɪt nˌɪɹ ðə mˈɪdəl ɪz ˈiːziɚ tə tˈɜːn, sˌoʊ ðæt sˈeɪm ɐmˈaʊnt tˈɜːnz juː fˈæstɚ. jʊɹ ˈɑːɹmz pˈeɪd fɔːɹ ˈɛvɹi ˈɛkstɹə tˈɜːn.",
+   "file": "04.wav",
+   "dur": 15.056,
+   "sha256": "b2575e2bf19d76b8c607a2218921edb46fbd8c9d574ec1753dd2ce06fa7b981e"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Skaters use this. In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a minute. Nearly six turns a second.",
+   "stars": [
+    "minute"
+   ],
+   "phonemes": "skˈeɪɾɚz jˈuːs ðˈɪs. ɪn twˈɛnti fˈɪftiːn, ɐ jˈʌŋ kɐnˈeɪdiən skˈeɪɾɚ spˈʌn æt θɹˈiː hˈʌndɹɪd fˈɔːɹɾitˈuː tˈɜːnz ɐ mˈɪnɪt. nˌɪɹli sˈɪks tˈɜːnz ɐ sˈɛkənd.",
+   "file": "05.wav",
+   "dur": 9.177,
+   "sha256": "7f542c0b34cd6e8ce70a021bcde562aed650d79c99c75fb4b6b1c0d512ba4d4b"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: ghosts a tenth of a second apart. Arms out, eighteen degrees. Arms in, nearly fifty.",
+   "stars": [
+    "Measure it",
+    "fifty"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ɡˈoʊsts ɐ tˈɛnθ əvə sˈɛkənd ɐpˈɑːɹt. ˈɑːɹmz ˈaʊt, ˈeɪtiːn dᵻɡɹˈiːz. ˈɑːɹmz ˈɪn, nˌɪɹli fˈɪfti.",
+   "file": "06.wav",
+   "dur": 6.206,
+   "sha256": "bb15796d962f10143fa4558018ec977f2baa24193c2bf0057da9510eb85c29a8"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "One push set your total spin. Your arms just decide how fast.",
+   "stars": [
+    "fast"
+   ],
+   "phonemes": "wˈʌn pˈʊʃ sˈɛt jʊɹ tˈoʊɾəl spˈɪn. jʊɹ ˈɑːɹmz dʒˈʌst dᵻsˈaɪd hˌaʊ fˈæst.",
+   "file": "07.wav",
+   "dur": 4.015,
+   "sha256": "c7338356536ffa0a84529c5603378f01cab44bb8d834eb6624f35ffbc197b1f5"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a drinking straw, three storeys tall. Could you still drink through it?",
+   "stars": [
+    "drink"
+   ],
+   "phonemes": "nˈɛkst: ɐ dɹˈɪŋkɪŋ stɹˈɔː, θɹˈiː stˈɔːɹiz tˈɔːl. kʊd juː stˈɪl dɹˈɪŋk θɹˈuː ɪt?",
+   "file": "08.wav",
+   "dur": 4.391,
+   "sha256": "169168dc1d6a94f4cb72a1de274e5ab63db4bbf56a72951ff4a028b3b6dcf224"
+  }
+ ]
+}

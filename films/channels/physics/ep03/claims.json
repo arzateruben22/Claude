@@ -1,0 +1,200 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Fifty-six centimeters back up.",
+  "claim": "A tennis ball dropped onto a hard floor comes back to a little over half its drop height: the ITF approves balls that, dropped from 254 cm onto concrete, rebound to 135–147 cm (53–58%). The bench's ball keeps 56% (restitution 0.75): 100 cm down, 56 cm up.",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: 'dropped from 254 cm (100 inches) onto concrete, and a bounce between 135 and 147 cm (53 to 58 inches) is acceptable' (also the ITF approval-tests PDF, https://m.itftennis.com/media/2100/balls-ball-approval-tests.pdf). Computed: e = √(141/254) = 0.745 at the middle of the range; the bench uses e = 0.75, so each top is e² = 0.5625 of the last: 100 → 56.25 cm."
+ },
+ {
+  "id": "c2",
+  "sentence": "Then thirty-two.",
+  "claim": "With each bounce keeping 0.5625 of the height, the second top of a 1 m drop is 31.6 cm.",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 100 × 0.5625 = 56.25; × 0.5625 = 31.64; × 0.5625 = 17.80 cm (heights of the ball's bottom). Real bounces vary a little with speed; the scene keeps e fixed and doesn't claim more."
+ },
+ {
+  "id": "c16",
+  "sentence": "Then eighteen.",
+  "claim": "The third top is 17.8 cm (0.5625³ × 100 cm).",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 100 × 0.5625 = 56.25; × 0.5625 = 31.64; × 0.5625 = 17.80 cm (heights of the ball's bottom). Real bounces vary a little with speed; the scene keeps e fixed and doesn't claim more."
+ },
+ {
+  "id": "c3",
+  "sentence": "Each bounce keeps just over half its height.",
+  "claim": "In the ITF test a tennis ball keeps 53–58% of its drop height in one bounce.",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "53–58% = 135/254 … 147/254. The bench's 56% sits in that range."
+ },
+ {
+  "id": "c4",
+  "sentence": "The knock: a puff of sound.",
+  "claim": "Part of a bounce's kinetic energy leaves as sound (a collision that loses kinetic energy to heat, sound or vibration is inelastic).",
+  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
+  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (related search): collisions where some of the kinetic energy 'is dissipated as heat, sound or vibration are called inelastic'. The sound rings on screen are an illustration (badged), not to scale."
+ },
+ {
+  "id": "c5",
+  "sentence": "The ball squashes, and doesn't quite spring back.",
+  "claim": "In a bounce the ball deforms and does not return all the energy of the deformation: internal friction in the rubber turns part of it into heat. This, not sound, is where most of a hard-floor bounce's lost energy goes.",
+  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
+  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: collisions where kinetic energy 'is dissipated as heat, sound or vibration are called inelastic' (McMaster, related search); the same search: 'some energy goes to deforming the ball', 'some of the KE is lost by frictional forces that generate heat'. The squash on screen is exaggerated (a few millimetres in reality at 4.4 m/s) and badged. The review's correction: 'flat' was false and the floor's shiver is negligible on concrete; both were cut."
+ },
+ {
+  "id": "c6",
+  "sentence": "In the eighteen-forties, he let falling weights turn a paddle in water, and the water warmed.",
+  "claim": "In the 1840s James Joule drove paddle wheels in a vessel of water with falling weights, and measured the water warming with a thermometer; the weights' lost energy became heat (British Association abstract 1845; Philosophical Transactions 1850).",
+  "source_url": "https://jimclifford.ca/philosophical-transactions-ocr-1665-1869/articles/jstor-108427/",
+  "source_title": "J. P. Joule, On the Mechanical Equivalent of Heat, Philosophical Transactions of the Royal Society 140 (1850) (OCR text)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: the paper was read in June 1849 and appeared in Phil. Trans. vol. 140 (1850); 'Falling masses turned paddle wheels inside a copper vessel of water or mercury, and friction heated the fluid'; a thermometer measured the change. Also the 1845 abstract (ChemTeam, https://www.chemteam.info/Chem-History/Joule-Heat-1845.html): 'weights thrown over two pulleys turning a paddle in a can of water'. The line says 'the eighteen-forties', not one year."
+ },
+ {
+  "id": "c7",
+  "sentence": "Energy doesn't vanish.",
+  "claim": "Energy is conserved: the kinetic energy that leaves a bounce is converted into other forms (thermal energy, sound, vibration), not destroyed.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/8-3-conservation-of-energy",
+  "source_title": "OpenStax University Physics Volume 1, 8.3 Conservation of Energy",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OpenStax 8.3): the total energy of a system is conserved; non-conservative forces such as friction convert mechanical energy into thermal energy."
+ },
+ {
+  "id": "c8",
+  "sentence": "It becomes heat, shaking and sound, spread too thin to see.",
+  "claim": "The energy a bounce loses ends up as thermal energy, vibration and sound, spread through the ball, the floor and the air.",
+  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
+  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same excerpts as c4, c5, c7. 'Too thin to see': c12 sizes it."
+ },
+ {
+  "id": "c9",
+  "sentence": "The basketball hands over most of its bounce.",
+  "claim": "Dropped stacked, the heavy basketball bounces off the floor first and then hits the light tennis ball coming down: it hands most of its energy to the tennis ball and leaves much slower (with perfect bounces, at 0.65 of its speed, 43% of its height).",
+  "source_url": "https://demos.smu.ca/demos/mechanics/143-double-ball-drop",
+  "source_title": "Saint Mary's University physics demos, 143 Double ball drop",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The bible's source for this whoa; also Iowa (https://instructional-resources.physics.uiowa.edu/1n3060-tennis-ball-and-basketball). Computed, perfect (elastic) bounces, basketball 0.6 kg, tennis ball 0.057 kg: after the floor the basketball rises at v; after the hit it leaves at (M − 3m)/(M + m)·v = (0.6 − 0.171)/0.657 = 0.65 v and the tennis ball at (3M − m)/(M + m)·v = 2.65 v."
+ },
+ {
+  "id": "c10",
+  "sentence": "The tennis ball rockets past your hand.",
+  "claim": "With perfect bounces the tennis ball leaves at 2.65 times its landing speed and rises 7.0 times as high as it fell; real balls lose part of that but still fly well above the height they were dropped from. (The ideal limit for a very heavy lower ball is 3× the speed and 9× the height.)",
+  "source_url": "https://sites.physics.unt.edu/~klittler/demo_room/mech_demos/1N30_60.html",
+  "source_title": "University of North Texas demo room, 1N30.60 collisions in one dimension",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (UNT): 'maximum height is about 9 times the initial dropping height, with the tennis ball's velocity 3 times greater' (the limit for M ≫ m). Computed for M = 0.6 kg, m = 0.057 kg: 2.65² = 7.04 (the bible's 'about 7×'). The bench drops the stack 50 cm, so the tennis ball climbs 3.5 m above the collision. Shown with the badge 'Perfect bounces: real balls go less high'. The basketball's mass (about 0.6 kg) was checked only on a low-authority page: TODO a FIBA source."
+ },
+ {
+  "id": "c11",
+  "sentence": "A quarter of a joule.",
+  "claim": "A 57 g tennis ball that falls 100 cm and comes back to 56 cm is missing 44 cm of height: m·g·Δh = 0.057 × 9.81 × 0.4375 = 0.245 J, a quarter of a joule.",
+  "source_url": "https://m.itftennis.com/media/2100/balls-ball-approval-tests.pdf",
+  "source_title": "ITF, Tennis ball approval tests (rebound, mass)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "ITF tennis ball mass 56.0–59.4 g (excerpt; the ITF approval-tests PDF). Computed: 0.057 kg × 9.81 m/s² × 0.4375 m = 0.245 J. The 44 cm is the gap on screen between the hand line and the first top."
+ },
+ {
+  "id": "c12",
+  "sentence": "Even if it all stays in the ball, two thousandths of a degree.",
+  "claim": "If all 0.245 J stayed in the 57 g ball as heat (natural rubber's specific heat about 1.9–2.1 J/(g·K)), the ball would warm by about 0.002 °C on average.",
+  "source_url": "https://analyzing-testing.netzsch.com/en/polymers-netzsch-com/elastomers/nr-natural-rubber",
+  "source_title": "NETZSCH, NR: natural rubber (DSC specific heat)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NETZSCH DSC): natural rubber 'Specific Heat Capacity 1.91 to 2.08 J/(g*K)'. Computed: 0.245 / (57 × 2.0) = 0.0021 K. Caveats (review): the felt's specific heat is lower (about 1.3 J/(g·K)), which would raise the figure a little, and the contact patch heats far more than the average; the line gives the whole-ball average, as an order of magnitude."
+ },
+ {
+  "id": "c13",
+  "sentence": "A bounce never destroys energy.",
+  "claim": "In a bounce, total energy is conserved: the mechanical energy that is 'lost' becomes thermal energy, vibration and sound.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/8-3-conservation-of-energy",
+  "source_title": "OpenStax University Physics Volume 1, 8.3 Conservation of Energy",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same as c7. 'Loses' in the everyday sense the why sets up (energy destroyed)."
+ },
+ {
+  "id": "c14",
+  "sentence": "It gives it away, knock by knock.",
+  "claim": "Each bounce gives some of the ball's mechanical energy to its surroundings and to the ball itself (heat in the rubber, sound in the air, vibration in the floor); here 44% of what is left, every knock.",
+  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
+  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same as c4, c5, c8."
+ },
+ {
+  "id": "c15",
+  "sentence": "Next: a hammer, a feather, the Moon.",
+  "claim": "In 1971 Apollo 15 astronaut David Scott dropped a hammer and a falcon feather on the Moon, and they landed together.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html",
+  "source_title": "NASA NSSDCA, The Apollo 15 Hammer-Feather Drop",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The bible's source for episode 4 (§7 #4); episode 4 sources it in full."
+ },
+ {
+  "id": "c17",
+  "sentence": "Nobody wins.",
+  "claim": "On the Moon (no air) the hammer and the feather landed at the same time.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html",
+  "source_title": "NASA NSSDCA, The Apollo 15 Hammer-Feather Drop",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "NASA excerpt for the Apollo 15 drop: they landed together. Episode 4 sources it in full."
+ },
+ {
+  "id": "c19",
+  "sentence": "Somewhere, nearly half its bounce disappeared.",
+  "claim": "A tennis ball dropped onto a hard floor rebounds to only about half its drop height (53–58% in the ITF test), so about half of the height is gone after one bounce.",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same excerpt as c1 and c3: 42–47% of the height is gone in the ITF test (the bench: 44%)."
+ }
+]

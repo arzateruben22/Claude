@@ -1,0 +1,112 @@
+{
+ "voice": "af_bella",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why can't it reach your hand? Somewhere, nearly half its bounce disappeared.",
+   "stars": [
+    "hand"
+   ],
+   "phonemes": "wˌaɪ kˈænt ɪt ɹˈiːtʃ jʊɹ hˈænd? sˈʌmwɛɹ, nˌɪɹli hˈæf ɪts bˈaʊns dˌɪsɐpˈɪɹd.",
+   "file": "01.wav",
+   "dur": 4.021,
+   "sha256": "ab968a20a8fdb9dec6caf59779944d9716c3516740df5afec073ab24a958b3aa"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "One meter down. Fifty-six centimeters back up. Then thirty-two. Then eighteen. Each bounce keeps just over half its height.",
+   "stars": [
+    "half"
+   ],
+   "phonemes": "wˈʌn mˈiːɾɚ dˈaʊn. fˈɪftisˈɪks sˈɛntɪmˌiːɾɚz bˈæk ˈʌp. ðˈɛn θˈɜːɾitˈuː. ðˈɛn ˈeɪtiːn. ˈiːtʃ bˈaʊns kˈiːps dʒˈʌst ˌoʊvɚ hˈæf ɪts hˈaɪt.",
+   "file": "02.wav",
+   "dur": 7.95,
+   "sha256": "aa3380f57dce60aa70df970288b249bdeae86fc9d4f840234d6238c77961cb86"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't quite spring back.",
+   "stars": [
+    "sound",
+    "back"
+   ],
+   "phonemes": "lˈʊk klˈoʊsɚ. ðə nˈɑːk: ɐ pˈʌf ʌv sˈaʊnd. ðə bˈɔːl skwˈɑːʃᵻz, ænd dˈʌzənt kwˈaɪt spɹˈɪŋ bˈæk.",
+   "file": "03.wav",
+   "dur": 5.516,
+   "sha256": "a5e381afc5442df62c32893fea2c6529812af05a704804d39f4efa77d89b8810"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "We call that energy lost. James Joule wouldn't. In the eighteen-forties, he let falling weights turn a paddle in water, and the water warmed. Energy doesn't vanish. It becomes heat, shaking and sound, spread too thin to see.",
+   "stars": [
+    "lost",
+    "warmed",
+    "see"
+   ],
+   "phonemes": "wiː kˈɔːl ðæt ˈɛnɚdʒi lˈɔst. dʒˈeɪmz ʤˈuːl wˈʊdənt. ɪnðɪ ˈeɪtiːnfˈɔːɹɾiz, hiː lˈɛt fˈɔːlɪŋ wˈeɪts tˈɜːn ɐ pˈædəl ɪn wˈɔːɾɚ, ænd ðə wˈɔːɾɚ wˈɔːɹmd. ˈɛnɚdʒi dˈʌzənt vˈænɪʃ. ɪt bɪkˌʌmz hˈiːt, ʃˈeɪkɪŋ ænd sˈaʊnd, spɹˈɛd tˈuː θˈɪn tə sˈiː.",
+   "file": "04.wav",
+   "dur": 14.252,
+   "sha256": "63e93164e7da5419d8893a1324ef72be81b008fdec2be13ed4a55267c45f8544"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Balance it on a basketball. Drop both together. The basketball hands over most of its bounce. The tennis ball rockets past your hand.",
+   "stars": [
+    "hand"
+   ],
+   "phonemes": "bˈæləns ɪɾ ˌɔn ɐ bˈæskɪtbˌɔːl. dɹˈɑːp bˈoʊθ təɡˈɛðɚ. ðə bˈæskɪtbˌɔːl hˈændz ˌoʊvɚ mˈoʊst əv ɪts bˈaʊns. ðə tˈɛnɪs bˈɔːl ɹˈɑːkɪts pˈæst jʊɹ hˈænd.",
+   "file": "05.wav",
+   "dur": 8.606,
+   "sha256": "3872b90fae009f8c52fc11ccd900968154cf1c9782d5e7edfea9931dc13cfba9"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball, two thousandths of a degree.",
+   "stars": [
+    "Measure it",
+    "degree"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ðoʊz mˈɪsɪŋ fˈɔːɹɾifˈɔːɹ sˈɛntɪmˌiːɾɚz? ɐ kwˈɔːɹɾɚɹ əvə ʤˈuːl . ˈiːvən ɪf ɪɾ ˈɔːl stˈeɪz ɪnðə bˈɔːl, tˈuː θˈaʊzəndθs əvə dᵻɡɹˈiː.",
+   "file": "06.wav",
+   "dur": 8.253,
+   "sha256": "92d8984de5796452e4e3ed808eea95ec260e92112f534cb348f31e398a43f91b"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "A bounce never destroys energy. It gives it away, knock by knock.",
+   "stars": [
+    "destroys"
+   ],
+   "phonemes": "ɐ bˈaʊns nˈɛvɚ dᵻstɹˈɔɪz ˈɛnɚdʒi. ɪt ɡˈɪvz ɪɾ ɐwˈeɪ, nˈɑːk baɪ nˈɑːk.",
+   "file": "07.wav",
+   "dur": 4.189,
+   "sha256": "39b0db577b74f043a818b82a7fe17fe506982b10ad7274de2749ed9657b1bd53"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a hammer, a feather, the Moon. Nobody wins.",
+   "stars": [
+    "Moon"
+   ],
+   "phonemes": "nˈɛkst: ɐ hˈæmɚ, ɐ fˈɛðɚ, ðə mˈuːn. nˈoʊbɑːdi wˈɪnz.",
+   "file": "08.wav",
+   "dur": 3.082,
+   "sha256": "83873b3983009a7f9df4d396b4e741ed40f852d527180768489d14bd83e46f45"
+  }
+ ]
+}

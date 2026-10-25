@@ -1,0 +1,799 @@
+{
+ "duration": 71.7333,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.4667,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 3.4667,
+   "t1": 13.6,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 13.6,
+   "t1": 20.0,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 20.0,
+   "t1": 38.1333,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 38.1333,
+   "t1": 49.6,
+   "energy": 0.8
+  },
+  {
+   "id": "measure",
+   "t0": 49.6,
+   "t1": 59.7333,
+   "energy": 0.3
+  },
+  {
+   "id": "takeaway",
+   "t0": 59.7333,
+   "t1": 65.6,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 65.6,
+   "t1": 71.7333,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 3.4667
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 0.6833,
+   "kind": "strobe",
+   "tag": "hook:g4"
+  },
+  {
+   "t": 1.7333,
+   "kind": "time.slow",
+   "tag": "hook:freeze"
+  },
+  {
+   "t": 1.8333333333333333,
+   "kind": "label",
+   "tag": "hk-big",
+   "pos": [
+    0.477,
+    0.39
+   ]
+  },
+  {
+   "t": 2.5,
+   "kind": "label",
+   "tag": "hk-small",
+   "pos": [
+    0.695,
+    0.554
+   ]
+  },
+  {
+   "t": 3.4667,
+   "kind": "section",
+   "id": "normal",
+   "t1": 13.6
+  },
+  {
+   "t": 3.7500329999999997,
+   "kind": "counter.show",
+   "tag": "spine",
+   "pos": [
+    0.25,
+    0.235
+   ]
+  },
+  {
+   "t": 4.866666666666666,
+   "kind": "label",
+   "tag": "nm-len",
+   "pos": [
+    0.566,
+    0.389
+   ]
+  },
+  {
+   "t": 8.3647,
+   "kind": "contact",
+   "tag": "normal:release",
+   "pos": [
+    0.5,
+    0.35
+   ]
+  },
+  {
+   "t": 9.366666666666667,
+   "kind": "label",
+   "tag": "nm-1s",
+   "pos": [
+    0.422,
+    0.529
+   ]
+  },
+  {
+   "t": 9.3667,
+   "kind": "contact",
+   "tag": "normal:arrive",
+   "pos": [
+    0.62,
+    0.55
+   ]
+  },
+  {
+   "t": 9.3667,
+   "kind": "strobe",
+   "tag": "normal:g0"
+  },
+  {
+   "t": 9.4912,
+   "kind": "strobe",
+   "tag": "normal:g1"
+  },
+  {
+   "t": 9.6667,
+   "kind": "time.slow",
+   "tag": "normal:slow"
+  },
+  {
+   "t": 9.7205,
+   "kind": "strobe",
+   "tag": "normal:g2"
+  },
+  {
+   "t": 10.0205,
+   "kind": "strobe",
+   "tag": "normal:g3"
+  },
+  {
+   "t": 10.266666666666667,
+   "kind": "label",
+   "tag": "nm-apart",
+   "pos": [
+    0.558,
+    0.525
+   ]
+  },
+  {
+   "t": 10.3205,
+   "kind": "strobe",
+   "tag": "normal:g4"
+  },
+  {
+   "t": 10.6205,
+   "kind": "strobe",
+   "tag": "normal:g5"
+  },
+  {
+   "t": 10.9205,
+   "kind": "strobe",
+   "tag": "normal:g6"
+  },
+  {
+   "t": 11.2205,
+   "kind": "strobe",
+   "tag": "normal:g7"
+  },
+  {
+   "t": 11.5205,
+   "kind": "strobe",
+   "tag": "normal:g8"
+  },
+  {
+   "t": 11.8205,
+   "kind": "strobe",
+   "tag": "normal:g9"
+  },
+  {
+   "t": 12.1205,
+   "kind": "strobe",
+   "tag": "normal:g10"
+  },
+  {
+   "t": 13.6,
+   "kind": "section",
+   "id": "change",
+   "t1": 20.0
+  },
+  {
+   "t": 14.8,
+   "kind": "label",
+   "tag": "ch-30",
+   "pos": [
+    0.147,
+    0.441
+   ]
+  },
+  {
+   "t": 15.566666666666666,
+   "kind": "label",
+   "tag": "ch-10",
+   "pos": [
+    0.309,
+    0.543
+   ]
+  },
+  {
+   "t": 15.9952,
+   "kind": "contact",
+   "tag": "change:release",
+   "pos": [
+    0.5,
+    0.35
+   ]
+  },
+  {
+   "t": 15.9952,
+   "kind": "strobe",
+   "tag": "change:g0"
+  },
+  {
+   "t": 16.4952,
+   "kind": "strobe",
+   "tag": "change:g1"
+  },
+  {
+   "t": 16.9952,
+   "kind": "strobe",
+   "tag": "change:g2"
+  },
+  {
+   "t": 17.4952,
+   "kind": "strobe",
+   "tag": "change:g3"
+  },
+  {
+   "t": 17.9952,
+   "kind": "strobe",
+   "tag": "change:g4"
+  },
+  {
+   "t": 18.4952,
+   "kind": "strobe",
+   "tag": "change:g5"
+  },
+  {
+   "t": 18.5,
+   "kind": "counter.tick",
+   "tag": "change:bottom-small"
+  },
+  {
+   "t": 18.5388,
+   "kind": "counter.tick",
+   "tag": "change:bottom-big"
+  },
+  {
+   "t": 18.9952,
+   "kind": "strobe",
+   "tag": "change:g6"
+  },
+  {
+   "t": 19.4952,
+   "kind": "strobe",
+   "tag": "change:g7"
+  },
+  {
+   "t": 20.0,
+   "kind": "section",
+   "id": "why",
+   "t1": 38.1333
+  },
+  {
+   "t": 20.3,
+   "kind": "badge",
+   "tag": "galileo",
+   "text": "Wide or narrow, every swing takes the same time."
+  },
+  {
+   "t": 29.233333333333334,
+   "kind": "label",
+   "tag": "wy-pull-big",
+   "pos": [
+    0.426,
+    0.473
+   ]
+  },
+  {
+   "t": 29.4,
+   "kind": "label",
+   "tag": "wy-pull-small",
+   "pos": [
+    0.538,
+    0.549
+   ]
+  },
+  {
+   "t": 31.4952,
+   "kind": "contact",
+   "tag": "why:release",
+   "pos": [
+    0.5,
+    0.35
+   ]
+  },
+  {
+   "t": 31.4952,
+   "kind": "strobe",
+   "tag": "why:g0"
+  },
+  {
+   "t": 31.9952,
+   "kind": "strobe",
+   "tag": "why:g1"
+  },
+  {
+   "t": 32.4952,
+   "kind": "strobe",
+   "tag": "why:g2"
+  },
+  {
+   "t": 32.9952,
+   "kind": "strobe",
+   "tag": "why:g3"
+  },
+  {
+   "t": 33.43333333333333,
+   "kind": "label",
+   "tag": "wy-v-big",
+   "pos": [
+    0.72,
+    0.482
+   ]
+  },
+  {
+   "t": 33.4952,
+   "kind": "strobe",
+   "tag": "why:g4"
+  },
+  {
+   "t": 33.56666666666667,
+   "kind": "label",
+   "tag": "wy-v-small",
+   "pos": [
+    0.692,
+    0.55
+   ]
+  },
+  {
+   "t": 33.9952,
+   "kind": "strobe",
+   "tag": "why:g5"
+  },
+  {
+   "t": 34.0,
+   "kind": "counter.tick",
+   "tag": "why:bottom-small"
+  },
+  {
+   "t": 34.0388,
+   "kind": "counter.tick",
+   "tag": "why:bottom-big"
+  },
+  {
+   "t": 34.4952,
+   "kind": "strobe",
+   "tag": "why:g6"
+  },
+  {
+   "t": 34.9952,
+   "kind": "strobe",
+   "tag": "why:g7"
+  },
+  {
+   "t": 35.333333333333336,
+   "kind": "label",
+   "tag": "wy-same",
+   "pos": [
+    0.664,
+    0.454
+   ]
+  },
+  {
+   "t": 35.333333333333336,
+   "kind": "reveal",
+   "tag": "same-moments"
+  },
+  {
+   "t": 35.4952,
+   "kind": "strobe",
+   "tag": "why:g8"
+  },
+  {
+   "t": 35.9952,
+   "kind": "strobe",
+   "tag": "why:g9"
+  },
+  {
+   "t": 36.4952,
+   "kind": "strobe",
+   "tag": "why:g10"
+  },
+  {
+   "t": 38.1333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 49.6
+  },
+  {
+   "t": 38.3206,
+   "kind": "contact",
+   "tag": "wave:release",
+   "pos": [
+    0.5,
+    0.35
+   ]
+  },
+  {
+   "t": 38.6667,
+   "kind": "swell",
+   "tag": "whoa:turn"
+  },
+  {
+   "t": 39.7706,
+   "kind": "time.normal",
+   "tag": "whoa:fast"
+  },
+  {
+   "t": 40.13333333333333,
+   "kind": "label",
+   "tag": "wo-15",
+   "pos": [
+    0.575,
+    0.35
+   ]
+  },
+  {
+   "t": 40.9667,
+   "kind": "badge",
+   "tag": "harvard",
+   "text": "Harvard's 15-pendulum design"
+  },
+  {
+   "t": 46.0333,
+   "kind": "time.slow",
+   "tag": "whoa:normal"
+  },
+  {
+   "t": 46.03333333333333,
+   "kind": "label",
+   "tag": "wo-line",
+   "pos": [
+    0.678,
+    0.535
+   ]
+  },
+  {
+   "t": 46.03333333333333,
+   "kind": "reveal",
+   "tag": "in-line"
+  },
+  {
+   "t": 49.6,
+   "kind": "section",
+   "id": "measure",
+   "t1": 59.7333
+  },
+  {
+   "t": 49.7006,
+   "kind": "contact",
+   "tag": "measure:release",
+   "pos": [
+    0.5,
+    0.35
+   ]
+  },
+  {
+   "t": 49.901011,
+   "kind": "counter.tick",
+   "tag": "swing1"
+  },
+  {
+   "t": 50.101396,
+   "kind": "counter.tick",
+   "tag": "swing2"
+  },
+  {
+   "t": 50.301782,
+   "kind": "counter.tick",
+   "tag": "swing3"
+  },
+  {
+   "t": 50.502167,
+   "kind": "counter.tick",
+   "tag": "swing4"
+  },
+  {
+   "t": 50.702553,
+   "kind": "counter.tick",
+   "tag": "swing5"
+  },
+  {
+   "t": 50.902938,
+   "kind": "counter.tick",
+   "tag": "swing6"
+  },
+  {
+   "t": 51.103323,
+   "kind": "counter.tick",
+   "tag": "swing7"
+  },
+  {
+   "t": 51.303709,
+   "kind": "counter.tick",
+   "tag": "swing8"
+  },
+  {
+   "t": 51.504094,
+   "kind": "counter.tick",
+   "tag": "swing9"
+  },
+  {
+   "t": 51.704479,
+   "kind": "counter.tick",
+   "tag": "swing10"
+  },
+  {
+   "t": 51.904865,
+   "kind": "counter.tick",
+   "tag": "swing11"
+  },
+  {
+   "t": 52.10525,
+   "kind": "counter.tick",
+   "tag": "swing12"
+  },
+  {
+   "t": 52.305636,
+   "kind": "counter.tick",
+   "tag": "swing13"
+  },
+  {
+   "t": 52.506021,
+   "kind": "counter.tick",
+   "tag": "swing14"
+  },
+  {
+   "t": 52.706406,
+   "kind": "counter.tick",
+   "tag": "swing15"
+  },
+  {
+   "t": 52.906792,
+   "kind": "counter.tick",
+   "tag": "swing16"
+  },
+  {
+   "t": 53.107177,
+   "kind": "counter.tick",
+   "tag": "swing17"
+  },
+  {
+   "t": 53.307563,
+   "kind": "counter.tick",
+   "tag": "swing18"
+  },
+  {
+   "t": 53.507948,
+   "kind": "counter.tick",
+   "tag": "swing19"
+  },
+  {
+   "t": 53.8333,
+   "kind": "time.slow",
+   "tag": "measure:freeze"
+  },
+  {
+   "t": 53.833333,
+   "kind": "counter.end",
+   "tag": "swing20"
+  },
+  {
+   "t": 53.833333333333336,
+   "kind": "label",
+   "tag": "ms-home",
+   "pos": [
+    0.482,
+    0.543
+   ]
+  },
+  {
+   "t": 53.96666666666667,
+   "kind": "label",
+   "tag": "ms-behind",
+   "pos": [
+    0.237,
+    0.469
+   ]
+  },
+  {
+   "t": 58.6667,
+   "kind": "badge",
+   "tag": "1in57",
+   "text": "30° swing: 1.7% slower"
+  },
+  {
+   "t": 59.7333,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 65.6
+  },
+  {
+   "t": 60.06666666666667,
+   "kind": "label",
+   "tag": "tk-len",
+   "pos": [
+    0.691,
+    0.375
+   ]
+  },
+  {
+   "t": 60.5166,
+   "kind": "badge",
+   "tag": "ideal",
+   "text": "No air, no friction."
+  },
+  {
+   "t": 63.93333333333333,
+   "kind": "label",
+   "tag": "tk-fast",
+   "pos": [
+    0.589,
+    0.483
+   ]
+  },
+  {
+   "t": 65.6,
+   "kind": "section",
+   "id": "tease",
+   "t1": 71.7333
+  },
+  {
+   "t": 68.4166,
+   "kind": "strobe",
+   "tag": "loop:g0"
+  },
+  {
+   "t": 69.4166,
+   "kind": "strobe",
+   "tag": "loop:g1"
+  },
+  {
+   "t": 70.2333,
+   "kind": "signature",
+   "tag": "end"
+  },
+  {
+   "t": 70.4166,
+   "kind": "strobe",
+   "tag": "loop:g2"
+  },
+  {
+   "t": 71.4166,
+   "kind": "strobe",
+   "tag": "loop:g3"
+  },
+  {
+   "t": 72.4166,
+   "kind": "strobe",
+   "tag": "loop:g4"
+  },
+  {
+   "t": 73.4166,
+   "kind": "strobe",
+   "tag": "loop:g5"
+  },
+  {
+   "t": 74.4166,
+   "kind": "strobe",
+   "tag": "loop:g6"
+  },
+  {
+   "t": 75.4166,
+   "kind": "strobe",
+   "tag": "loop:g7"
+  },
+  {
+   "t": 76.4166,
+   "kind": "strobe",
+   "tag": "loop:g8"
+  },
+  {
+   "t": 77.4166,
+   "kind": "strobe",
+   "tag": "loop:g9"
+  },
+  {
+   "t": 78.4166,
+   "kind": "strobe",
+   "tag": "loop:g10"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 3.6,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 13.7,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 20.266666666666666,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 38.43333333333333,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 49.8,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 60.03333333333333,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 65.9,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "hk-big": 1.8667,
+  "hk-small": 2.5333,
+  "nm-len": 4.9,
+  "nm-1s": 9.4,
+  "nm-apart": 10.3,
+  "ch-30": 14.8333,
+  "ch-10": 15.6,
+  "wy-pull-big": 29.2667,
+  "wy-pull-small": 29.4333,
+  "wy-v-big": 33.4667,
+  "wy-v-small": 33.6,
+  "wy-same": 35.3667,
+  "wo-15": 40.1667,
+  "wo-line": 46.0667,
+  "ms-home": 53.8667,
+  "ms-behind": 54,
+  "tk-len": 60.1,
+  "tk-fast": 63.9667,
+  "spine": 3.7667
+ }
+}
