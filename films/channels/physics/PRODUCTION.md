@@ -20,7 +20,7 @@ delivered).
 
 | # | Title | State |
 |---|---|---|
-| 02 | The swing's secret | scripted · reviewed (7/10; fixes applied) · voiced (172 words, 71.7 s; lint 0 errors before and after) · built · stills OK · **rendering** (final, started 22:21 UTC 25 Oct) |
+| 02 | The swing's secret | **delivered** (25 Oct 23:04 UTC): 71.7 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (86 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 41.5 min · `out/rest-frame-002-9x16.mp4` |
 | 03 | Where does the bounce go? | scripted · reviewed (7/10; fixes applied: "squashes flat", "motion doesn't vanish", "never loses energy" corrected) · voiced (153 words, 66.9 s; lint 0 errors before and after) · compile and scene written; animatic waits for ep02's final (one Chromium job) |
 | 04 | The hammer and the feather | scripted · reviewed (6.5/10; fixes applied: wrong takeaway, MICROSCOPE dates 2016–18, "a few parts" in 10¹⁵) · voiced (166 words, 72.0 s; lint 0 errors before and after) · compile and scene written |
 | 05 | The spinning chair | scripted (lint 0 errors) · in review · set: spin model (`spin.js`, checked against its port and a brute integral) and the chair with a mannequin (`chair.js`) |

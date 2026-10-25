@@ -2,36 +2,47 @@
 // any spin that conserves angular momentum. SI units (kg, m, s, rad). Plain ES module, no imports; ported in
 // bench_py.py (Spinner) and checked against it in Node.
 //
-//   const S = spinner({ I0: 2.0, m: 2, mArm: 3.5, rS: 0.19, rOut: 0.8, rIn: 0.2, w0: Math.PI, pull: [t0, t1] });
-//   S.r(τ)      the weights' distance from the axis: rOut until t0, a smoothstep to rIn by t1, then rIn
+//   const S = spinner({ I0: 2.0, m: 2, mArm: 3.5, rS: 0.19, r0: 0.8, w0: Math.PI, moves: [[t0, t1, rTo], ...] });
+//   S.r(τ)      the weights' distance from the axis: r0, then each move a smoothstep to rTo over [t0, t1]
 //   S.I(τ)      I0 + 2 m r² + 2 · mArm (rS² + rS r + r²)/3 (each arm a rod from the shoulder to the hand)
-//   S.omega(τ)  L / I(τ), with L = I(0)·w0 (no outside torque: friction ignored)
-//   S.phi(τ)    the turned angle: closed form outside the pull, a fine Simpson table inside it (built once, pure)
-//   S.ratio     ω after / ω before = I_out / I_in
-export const spinner = ({ I0 = 2.0, m = 2, mArm = 0, rS = 0.19, rOut = 0.8, rIn = 0.2, w0 = Math.PI, pull = [1, 1.6], N = 600 } = {}) => {
-  const [t0, t1] = pull, d = t1 - t0;
-  const r = (tau) => { if (tau <= t0) return rOut; if (tau >= t1) return rIn; const u = (tau - t0) / d, s = u * u * (3 - 2 * u); return rOut + (rIn - rOut) * s; };
-  // each arm: a uniform rod from the shoulder (rS from the axis) to the hand (r): m(rS² + rS·r + r²)/3
+//   S.omega(τ)  L / I(τ), with L = I(r0)·w0 (no outside torque: friction ignored); 0 before τ = 0 (the push)
+//   S.phi(τ)    the turned angle: closed form between moves, a fine Simpson table inside each move (built once, pure)
+//   S.ratio(rA, rB)  ω at rB / ω at rA = I(rA) / I(rB)
+export const spinner = ({ I0 = 2.0, m = 2, mArm = 0, rS = 0.19, r0 = 0.8, w0 = Math.PI, moves = [], N = 600 } = {}) => {
   const Ir = (x) => I0 + 2 * m * x * x + (2 * mArm * (rS * rS + rS * x + x * x)) / 3;
-  const I = (tau) => Ir(r(tau));
-  const L = Ir(rOut) * w0;
-  const omega = (tau) => L / I(tau);
-  // the angle turned during the pull, tabulated by Simpson's rule on a fine grid (N steps over the pull)
-  const tab = new Float64Array(N + 1);
-  for (let i = 1; i <= N; i++) {
-    const a = t0 + (d * (i - 1)) / N, b = t0 + (d * i) / N;
-    tab[i] = tab[i - 1] + ((b - a) / 6) * (omega(a) + 4 * omega((a + b) / 2) + omega(b));
-  }
-  const phiPull = (tau) => {
-    const x = ((tau - t0) / d) * N, i = Math.min(N - 1, Math.floor(x)), f = x - i;
-    const a = t0 + (d * i) / N, h = (tau - a);                     // exact Simpson from the grid point to τ
-    return tab[i] + (h / 6) * (omega(a) + 4 * omega(a + h / 2) + omega(tau)) + 0 * f;
+  const L = Ir(r0) * w0;
+  const mv = moves.map(([t0, t1, to], i) => ({ t0, t1, to, from: i ? moves[i - 1][2] : r0 }));
+  const r = (tau) => {
+    let x = r0;
+    for (const q of mv) {
+      if (tau <= q.t0) return x;
+      if (tau < q.t1) { const u = (tau - q.t0) / (q.t1 - q.t0); return q.from + (q.to - q.from) * u * u * (3 - 2 * u); }
+      x = q.to;
+    }
+    return x;
   };
+  const omega = (tau) => (tau < 0 ? 0 : L / Ir(r(tau)));
+  // phi at each move's start, and a table inside each move
+  const simpson = (a, b) => ((b - a) / 6) * (omega(a) + 4 * omega((a + b) / 2) + omega(b));
+  let acc = 0, last = 0;
+  for (const q of mv) {
+    acc += (L / Ir(q.from)) * (q.t0 - last); q.phi0 = acc;
+    q.tab = new Float64Array(N + 1);
+    for (let i = 1; i <= N; i++) q.tab[i] = q.tab[i - 1] + simpson(q.t0 + ((q.t1 - q.t0) * (i - 1)) / N, q.t0 + ((q.t1 - q.t0) * i) / N);
+    acc += q.tab[N]; last = q.t1;
+  }
   const phi = (tau) => {
     if (tau <= 0) return 0;
-    if (tau <= t0) return w0 * tau;
-    if (tau <= t1) return w0 * t0 + phiPull(tau);
-    return w0 * t0 + tab[N] + omega(t1) * (tau - t1);
+    let base = 0, from = 0, rr = r0;
+    for (const q of mv) {
+      if (tau <= q.t0) return base + (L / Ir(rr)) * (tau - from);
+      if (tau < q.t1) {
+        const x = ((tau - q.t0) / (q.t1 - q.t0)) * N, i = Math.min(N - 1, Math.floor(x)), a = q.t0 + ((q.t1 - q.t0) * i) / N, h = tau - a;
+        return q.phi0 + q.tab[i] + (h / 6) * (omega(a) + 4 * omega(a + h / 2) + omega(tau));
+      }
+      base = q.phi0 + q.tab[N]; from = q.t1; rr = q.to;
+    }
+    return base + (L / Ir(rr)) * (tau - from);
   };
-  return { r, I, omega, phi, L, ratio: Ir(rOut) / Ir(rIn) };
+  return { r, I: (tau) => Ir(r(tau)), Ir, omega, phi, L, ratio: (a, b) => Ir(a) / Ir(b) };
 };

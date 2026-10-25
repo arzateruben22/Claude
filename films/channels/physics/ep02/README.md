@@ -7,7 +7,7 @@ script before it posts.
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish) | `out/rest-frame-002-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (see `review/scorecard.md` for the measured gates) |
+| **Final** (1080×1920, 30 fps, full finish, −14.1 LUFS / −1.9 dBTP; `qa.py` PASS) | `out/rest-frame-002-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
 | Ten final-tier stills | `review/stills-ep02.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` (not committed) |

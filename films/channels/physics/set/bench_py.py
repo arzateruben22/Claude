@@ -151,42 +151,60 @@ class Pendulum:
 
 
 class Spinner:
-    """set/spin.js: a body whose moment of inertia changes as two weights are pulled in (SI units, friction ignored)."""
+    """set/spin.js: a spin whose moment of inertia changes as two weights (and the arms) move (SI, friction ignored).
+    moves: [(t0, t1, rTo), ...]; omega is 0 before tau = 0 (the push)."""
 
-    def __init__(self, I0=2.0, m=2.0, mArm=0.0, rS=0.19, rOut=0.8, rIn=0.2, w0=math.pi, pull=(1.0, 1.6), N=600):
-        self.I0, self.m, self.rOut, self.rIn, self.w0, self.t0, self.t1, self.N = I0, m, rOut, rIn, w0, pull[0], pull[1], N
-        self.mArm, self.rS = mArm, rS
-        self.d = self.t1 - self.t0
-        self.L = self.Ir(rOut) * w0
-        self.ratio = self.Ir(rOut) / self.Ir(rIn)
-        self.tab = [0.0]
-        for i in range(1, N + 1):
-            a, b = self.t0 + self.d * (i - 1) / N, self.t0 + self.d * i / N
-            self.tab.append(self.tab[-1] + (b - a) / 6 * (self.omega(a) + 4 * self.omega((a + b) / 2) + self.omega(b)))
-
-    def r(self, tau):
-        if tau <= self.t0:
-            return self.rOut
-        if tau >= self.t1:
-            return self.rIn
-        u = (tau - self.t0) / self.d
-        return self.rOut + (self.rIn - self.rOut) * u * u * (3 - 2 * u)
+    def __init__(self, I0=2.0, m=2.0, mArm=0.0, rS=0.19, r0=0.8, w0=math.pi, moves=(), N=600):
+        self.I0, self.m, self.mArm, self.rS, self.r0, self.w0, self.N = I0, m, mArm, rS, r0, w0, N
+        self.L = self.Ir(r0) * w0
+        self.mv = []
+        for i, (t0, t1, to) in enumerate(moves):
+            self.mv.append({"t0": t0, "t1": t1, "to": to, "from": moves[i - 1][2] if i else r0})
+        acc, last = 0.0, 0.0
+        for q in self.mv:
+            acc += self.L / self.Ir(q["from"]) * (q["t0"] - last)
+            q["phi0"] = acc
+            tab, d = [0.0], q["t1"] - q["t0"]
+            for i in range(1, N + 1):
+                a, b = q["t0"] + d * (i - 1) / N, q["t0"] + d * i / N
+                tab.append(tab[-1] + (b - a) / 6 * (self.omega(a) + 4 * self.omega((a + b) / 2) + self.omega(b)))
+            q["tab"] = tab
+            acc += tab[N]
+            last = q["t1"]
 
     def Ir(self, x):
         return self.I0 + 2 * self.m * x * x + 2 * self.mArm * (self.rS ** 2 + self.rS * x + x * x) / 3
 
+    def r(self, tau):
+        x = self.r0
+        for q in self.mv:
+            if tau <= q["t0"]:
+                return x
+            if tau < q["t1"]:
+                u = (tau - q["t0"]) / (q["t1"] - q["t0"])
+                return q["from"] + (q["to"] - q["from"]) * u * u * (3 - 2 * u)
+            x = q["to"]
+        return x
+
     def omega(self, tau):
-        return self.L / self.Ir(self.r(tau))
+        return 0.0 if tau < 0 else self.L / self.Ir(self.r(tau))
+
+    def ratio(self, a, b):
+        return self.Ir(a) / self.Ir(b)
 
     def phi(self, tau):
         if tau <= 0:
             return 0.0
-        if tau <= self.t0:
-            return self.w0 * tau
-        if tau <= self.t1:
-            x = (tau - self.t0) / self.d * self.N
-            i = min(self.N - 1, int(math.floor(x)))
-            a = self.t0 + self.d * i / self.N
-            h = tau - a
-            return self.w0 * self.t0 + self.tab[i] + h / 6 * (self.omega(a) + 4 * self.omega(a + h / 2) + self.omega(tau))
-        return self.w0 * self.t0 + self.tab[self.N] + self.omega(self.t1) * (tau - self.t1)
+        base, frm, rr = 0.0, 0.0, self.r0
+        for q in self.mv:
+            if tau <= q["t0"]:
+                return base + self.L / self.Ir(rr) * (tau - frm)
+            if tau < q["t1"]:
+                d = q["t1"] - q["t0"]
+                x = (tau - q["t0"]) / d * self.N
+                i = min(self.N - 1, int(math.floor(x)))
+                a = q["t0"] + d * i / self.N
+                h = tau - a
+                return q["phi0"] + q["tab"][i] + h / 6 * (self.omega(a) + 4 * self.omega(a + h / 2) + self.omega(tau))
+            base, frm, rr = q["phi0"] + q["tab"][self.N], q["t1"], q["to"]
+        return base + self.L / self.Ir(rr) * (tau - frm)
