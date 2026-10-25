@@ -255,6 +255,12 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   .cf-acts { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
   .cf-acts .linkish { margin-left: auto; }
   .cf-done { margin: 0; padding: 1rem 1.05rem; background: var(--card); border: 1px solid var(--edge); border-radius: 16px; color: var(--ink-soft); }
+  /* Check spelling: her answer with the fix marked in place */
+  .sp-diff { margin: 0; padding: 0.8rem 0.95rem; background: var(--field); border-radius: 12px; font-size: 0.97rem; line-height: 1.55; white-space: pre-wrap; }
+  .sp-diff del { color: var(--danger); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .sp-diff ins { text-decoration: none; background: rgba(78, 106, 69, 0.18); color: var(--ink); border-radius: 4px; padding: 0 2px; font-weight: 600; }
+  .sp-status { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+  .sp-all[hidden], .sp-run[hidden], .sp-card[hidden], .sp-edit[hidden], .sp-save[hidden], .sp-use[hidden], .sp-mine[hidden], .sp-diff[hidden] { display: none; }
   .cf-pick[hidden], .cf-draft[hidden], .cf-edit[hidden], .cf-save[hidden], .cf-yes[hidden], .cf-fix[hidden], .cf-card[hidden], .cf-done[hidden], .cf-note[hidden] { display: none; }
   @media (prefers-reduced-motion: reduce) { .cf-progress span { transition: none; } }
 </style>
@@ -752,6 +758,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     document.getElementById("meter").style.width = (reqDone / required * 100) + "%";
     document.getElementById("count").textContent = all + " answered";
     if (typeof paintConfirm === "function") paintConfirm();
+    if (typeof spPaint === "function") spPaint();
   };
 
   var current = null;
@@ -1185,6 +1192,178 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       paintConfirm();
     }, function () { /* this phone's copy stands */ });
   };
+  /* ── Check spelling. Claude reads her written answers and fixes spelling, capital letters, punctuation
+     and the names of her own products, never her wording; a suggestion that changes more than that is
+     dropped before she sees it. She sees each fix marked in place and taps Use the fix or Keep mine;
+     only a fix she takes replaces her answer, in the same place the tabs write. What's been checked,
+     and what she kept, is remembered (playbook/spelling), so nothing is suggested twice. ── */
+  var spell = { checked: {}, kept: {} }, spQueue = [], spBusy = false, spCur = null;
+  var spellTab = el("button", "tab tab-spell");
+  spellTab.type = "button"; spellTab.setAttribute("role", "tab"); spellTab.dataset.sid = "spell";
+  spellTab.innerHTML = CHECK;
+  spellTab.appendChild(document.createTextNode("Check spelling"));
+  spellTab.appendChild(el("span", "tab-n", ""));
+  tabsEl.insertBefore(spellTab, talkTab.nextSibling);
+  var spSec = el("section", "section spell");
+  spSec.id = "s-spell";
+  spSec.setAttribute("aria-labelledby", "h-spell");
+  spSec.innerHTML =
+    '<div class="section-head"><h2 id="h-spell">Check spelling</h2>' +
+    "<p>Before your answers go into the product guide and the course, Claude fixes spelling, capital letters, punctuation and your product names. Your words stay yours: nothing is reworded. Tap <strong>Use the fix</strong>, or <strong>Keep mine</strong>.</p></div>" +
+    '<div class="cf-top"><p class="sp-status"></p><button class="btn btn-ghost small sp-run" type="button">Check my answers</button></div>' +
+    '<div class="cf-card sp-card" hidden><p class="cf-k sp-k"></p><p class="cf-q sp-q"></p><p class="sp-diff"></p>' +
+    '<textarea class="cf-edit sp-edit" rows="5" aria-label="Your version" hidden></textarea>' +
+    '<div class="cf-acts"><button class="btn sp-use" type="button">Use the fix</button><button class="btn btn-ghost sp-mine" type="button">Keep mine</button>' +
+    '<button class="btn sp-save" type="button" hidden>Save my version</button><button class="linkish sp-fixit" type="button">Fix it myself</button></div></div>' +
+    '<button class="linkish sp-all" type="button" hidden></button>';
+  main.insertBefore(spSec, cfSec.nextSibling);
+  var $s = function (sel) { return spSec.querySelector(sel); };
+  var hash = function (t) { var h = 5381; t = String(t); for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return String(h >>> 0); };
+  /* every written answer: text boxes, the boxes under tap questions, each of her pasted replies */
+  var spEntries = function () {
+    var out = [];
+    FIELDS.forEach(function (f) {
+      var a = state[f.sid] || {};
+      var add = function (id, key, n, v) { if (typeof v === "string" && v.trim().length >= 3) out.push({ id: id, sid: f.sid, key: key, n: n, text: v, f: f }); };
+      if (f.field.kind === "text") add(f.sid + "/" + f.key, f.key, null, a[f.key]);
+      else if (f.field.kind === "list") (Array.isArray(a[f.key]) ? a[f.key] : []).forEach(function (v, i) { add(f.sid + "/" + f.key + "#" + i, f.key, i, v); });
+      else add(f.sid + "/" + f.key + ".text", f.key + ".text", null, a[f.key + ".text"]);
+    });
+    return out;
+  };
+  var spCurrent = function (q) { var v = (state[q.sid] || {})[q.key]; return q.n == null ? v : (Array.isArray(v) ? v[q.n] : undefined); };
+  var spUnchecked = function () { return spEntries().filter(function (e) { var h = hash(e.text); return spell.checked[e.id] !== h && spell.kept[e.id] !== h; }); };
+  /* a fix may only correct letters, capitals and punctuation: the words, their order and their meaning stay */
+  var words = function (t) { return String(t).toLowerCase().replace(/[^a-z0-9%\s]/g, " ").split(/\s+/).filter(Boolean); };
+  var lev = function (a, b) {
+    if (a === b) return 0;
+    var m = a.length, n = b.length, row = [], i, j;
+    for (j = 0; j <= n; j++) row[j] = j;
+    for (i = 1; i <= m; i++) { var prev = row[0]; row[0] = i; for (j = 1; j <= n; j++) { var t = row[j]; row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = t; } }
+    return row[n];
+  };
+  var safeFix = function (from, to) {
+    if (typeof to !== "string" || !to.trim() || to === from) return false;
+    var a = words(from), b = words(to);
+    if (Math.abs(a.length - b.length) > Math.max(2, Math.round(a.length * 0.1))) return false;
+    var x = a.join(" "), y = b.join(" ");
+    return 1 - lev(x, y) / Math.max(x.length, y.length, 1) >= 0.85;
+  };
+  /* her answer with the fix marked in place: words taken out struck through, words put in highlighted */
+  var diffHtml = function (from, to) {
+    var A = from.match(/\s+|[^\s]+/g) || [], B = to.match(/\s+|[^\s]+/g) || [], m = A.length, n = B.length, L = [], i, j;
+    for (i = 0; i <= m; i++) { L[i] = []; for (j = 0; j <= n; j++) L[i][j] = 0; }
+    for (i = m - 1; i >= 0; i--) for (j = n - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    var out = "", e = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+    i = 0; j = 0;
+    while (i < m || j < n) {
+      if (i < m && j < n && A[i] === B[j]) { out += e(A[i]); i++; j++; }
+      else if (i < m && (j >= n || L[i + 1][j] >= L[i][j + 1])) { out += /^\s+$/.test(A[i]) ? "" : "<del>" + e(A[i]) + "</del>"; i++; }   /* what she wrote, struck, then the fix */
+      else { out += /^\s+$/.test(B[j]) ? e(B[j]) : "<ins>" + e(B[j]) + "</ins>"; j++; }
+    }
+    return out;
+  };
+  var spWriting = false, spAgain = false;
+  var saveSpell = function () {
+    try { localStorage.setItem(LOCAL + "spelling", JSON.stringify(spell)); } catch (e) { /* storage off */ }
+    if (!db || canSave === false) return;
+    if (spWriting) { spAgain = true; return; }
+    spWriting = true;
+    db.doc(COLL + "/spelling").set(JSON.parse(JSON.stringify({ checked: spell.checked, kept: spell.kept, updatedAt: new Date().toISOString() })))
+      .catch(function () { /* this phone remembers; the answers themselves save separately */ })
+      .then(function () { spWriting = false; if (spAgain) { spAgain = false; saveSpell(); } });
+  };
+  var SHELF = [].concat.apply([], SPEC.shelf.map(function (g) { return g.items; }));
+  var spPaint = function () {
+    spQueue = spQueue.filter(function (q) { return spCurrent(q) === q.from; });   /* she changed it since: the fix no longer applies */
+    var q = spQueue[0] || null, card = $s(".sp-card"), left = spUnchecked().length;
+    spellTab.querySelector(".tab-n").textContent = spQueue.length ? String(spQueue.length) : "";
+    $s(".sp-status").textContent = spBusy ? "Checking your answers…"
+      : spQueue.length ? spQueue.length + (spQueue.length === 1 ? " fix to look at" : " fixes to look at")
+      : left ? left + (left === 1 ? " answer" : " answers") + " not checked yet."
+      : spEntries().length ? "All your answers are checked." : "Nothing written yet. Once you've answered a few questions, come back here.";
+    $s(".sp-run").hidden = spBusy || !left || spQueue.length > 0;
+    var all = $s(".sp-all");
+    all.hidden = spQueue.length < 3; all.textContent = "Use all " + spQueue.length + " fixes";
+    card.hidden = !q;
+    if (!q) { spCur = null; return; }
+    if (q === spCur && card.contains(document.activeElement)) return;
+    spCur = q;
+    $s(".sp-k").textContent = sectionTitle(q.sid) + " · " + itemTitle(q.sid, q.f.item);
+    $s(".sp-q").textContent = q.f.field.q.replace(/^"|"$/g, "");
+    $s(".sp-diff").innerHTML = diffHtml(q.from, q.to); $s(".sp-diff").hidden = false;
+    var ed = $s(".sp-edit"); ed.value = q.to; ed.hidden = true;
+    $s(".sp-save").hidden = true; $s(".sp-use").hidden = false; $s(".sp-mine").hidden = false; $s(".sp-fixit").hidden = false;
+  };
+  var spDrop = function (q) { spQueue = spQueue.filter(function (x) { return x !== q; }); };
+  var spApply = function (q, text) {
+    var a = state[q.sid];
+    if (q.n == null) a[q.key] = text;
+    else { var l = Array.isArray(a[q.key]) ? a[q.key].slice() : []; l[q.n] = text; a[q.key] = l; }
+    spell.checked[q.id] = hash(text);
+    schedule(q.sid, 0);
+  };
+  var spRun = function () {
+    if (spBusy) return;
+    var todo = spUnchecked().slice(0, 25);
+    if (!todo.length) { spPaint(); return; }
+    var go = function (smp) {
+      if (!smp) { $s(".sp-status").textContent = "Checking spelling needs Claude, which isn't available on this link for you."; return; }
+      spBusy = true; spPaint();
+      var input = [
+        "You are proofreading answers that Evelyn Romero, a licensed esthetician, wrote about her own spa, treatments and skincare products. They will be shown to her clients.",
+        "Fix ONLY: misspelled words, obvious typos, capital letters (sentence starts, \"I\", and the names of her products and brands exactly as written in this list: " + SHELF.join("; ") + "), punctuation and spacing.",
+        "Never reword, never add or remove information, never change a number, an amount or a timing, never expand her abbreviations or shorthand, never change her tone. If you aren't sure a word is a mistake, leave it.",
+        "Answers (JSON): " + JSON.stringify(todo.map(function (t) { return { id: t.id, text: t.text }; })),
+        'Reply with JSON only: {"fixes": [{"id": "<id>", "text": "<the whole answer, corrected>"}]}, listing only the answers that needed a fix.'
+      ].join("\n\n");
+      smp.json(input, { modelTier: "quick", cache: false }).then(function (r) {
+        var fixes = (r && Array.isArray(r.fixes)) ? r.fixes : [];
+        var byId = {}; fixes.forEach(function (x) { if (x && x.id) byId[x.id] = x.text; });
+        todo.forEach(function (t) {
+          if (spCurrent(t) !== t.text) return;
+          var to = byId[t.id];
+          if (safeFix(t.text, to)) spQueue.push({ id: t.id, sid: t.sid, key: t.key, n: t.n, f: t.f, from: t.text, to: String(to) });
+          else spell.checked[t.id] = hash(t.text);
+        });
+        saveSpell();
+      }, function (err) {
+        $s(".sp-status").textContent = err && err.code === "rate_limited" ? "Claude is busy right now. Try again in a minute." : "Couldn't check right now. Try again in a minute.";
+      }).then(function () { spBusy = false; spPaint(); if (!spQueue.length && spUnchecked().length) spRun(); });
+    };
+    if (sample) go(sample);
+    else if (window.claude && window.claude.use) window.claude.use("sample").then(go);
+    else go(null);
+  };
+  spSec.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.classList.contains("sp-run")) { spRun(); return; }
+    if (b.classList.contains("sp-all")) { spQueue.slice().forEach(function (q) { spApply(q, q.to); }); spQueue = []; saveSpell(); spPaint(); return; }
+    var q = spCur;
+    if (!q) return;
+    if (b.classList.contains("sp-use")) { spApply(q, q.to); spDrop(q); saveSpell(); spPaint(); }
+    else if (b.classList.contains("sp-mine")) { spell.kept[q.id] = hash(q.from); spell.checked[q.id] = hash(q.from); spDrop(q); saveSpell(); spPaint(); }
+    else if (b.classList.contains("sp-fixit")) {
+      $s(".sp-diff").hidden = true; $s(".sp-use").hidden = true; $s(".sp-mine").hidden = true; b.hidden = true;
+      var ed = $s(".sp-edit"); ed.hidden = false; $s(".sp-save").hidden = false; ed.focus();
+    }
+    else if (b.classList.contains("sp-save")) { var v = $s(".sp-edit").value.trim(); if (!v) return; spApply(q, v); spDrop(q); saveSpell(); spPaint(); }
+  });
+  tabsEl.addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (t && t.dataset.sid === "spell" && !spQueue.length) spRun(); });
+  var startSpell = function () {
+    try { var local = JSON.parse(localStorage.getItem(LOCAL + "spelling")); if (local) spell = { checked: local.checked || {}, kept: local.kept || {} }; } catch (e) { /* storage off */ }
+    spPaint();
+  };
+  var loadSpell = function () {
+    if (!db) return;
+    db.doc(COLL + "/spelling").get().then(function (d) {
+      var v = d && d.exists ? d.data() : null;
+      if (v) { ["checked", "kept"].forEach(function (k) { Object.keys(v[k] || {}).forEach(function (id) { if (!spell[k][id]) spell[k][id] = v[k][id]; }); }); }
+      spPaint();
+    }, function () { /* this phone's copy stands */ });
+  };
+
   var logEl = $t(".talk-log"), inEl = $t(".talk-in"), sendEl = $t(".talk-send"), statusEl = $t(".talk-status"), micEl = $t(".talk-mic"), aloudEl = $t(".talk-aloud");
   var setTalkStatus = function (t, bad) { statusEl.textContent = t || ""; statusEl.className = "talk-status" + (bad ? " is-bad" : ""); };
 
@@ -1435,9 +1614,10 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     SPEC.sections.forEach(function (s) { state[s.id] = (data && data[s.id]) || readLocal(s.id); });
     var tab = null; try { tab = localStorage.getItem(LOCAL + "tab"); } catch (e) { /* storage off */ }
     paint();
-    show(tab === "talk" || tab === "confirm" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : "confirm");
+    show(tab === "talk" || tab === "confirm" || tab === "spell" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : "confirm");
     tidy();
     startConfirm();
+    startSpell();
     startTalk();
     if (!window.claude || !window.claude.use) { setSave("Saved on this phone"); return; }
     Promise.all([window.claude.use("db"), window.claude.use("user"), window.claude.use("assets")]).then(function (r) {
@@ -1473,6 +1653,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         paint();
         tidy();
         loadConfirm();
+        loadSpell();
         loadTalk();
         if (canSave !== false && !pending()) setSave("Saved", "is-ok");
       }, function () { setSave("Saved on this phone"); });
