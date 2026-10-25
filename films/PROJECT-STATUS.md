@@ -1,15 +1,17 @@
 # Project status: four science-video formulas to 100%
 
-> **Finals v2 rendering (24 Oct, from 02:51 UTC).** The user approved the notes redesign and the rewritten scripts
-> (kits/cinema/script/WRITING.md; an independent review's fixes applied) and said "keep going, I have credits" (full
-> speed). The old physics/space deliveries were removed; render-finals.sh renders physics → space → body again.
-> Compilation builder done (kits/cinema/film/compilation.mjs, a95cf0a). Episodes 2–6 are being built by one cloud
-> session per channel (03:00 UTC), each on its own branch with PRODUCTION.md as its status log:
+> **25 Oct, 22:10 UTC: resumed after the weekly limit reset.** The weekly limit stopped everything on 24 Oct
+> 03:24 UTC. Physics ep01 v2 is delivered (QA PASS, 62ccebd). render-finals.sh was restarted for space, then body
+> (worker restarts kill it: re-run `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`).
+> The three channel sessions are resumed and working, now committing at every milestone:
 >   Rest Frame `session_01XeV9KyDKhsTHczMRmqhVPa` → `claude/rest-frame-ep02-06`;
 >   Light Minute `session_01BAAPP9f3tomRz7SrhFYqeA` → `claude/light-minute-ep02-06`;
 >   Meanwhile, Inside `session_01CKYj7J7Avi512i6ioovugE` → `claude/meanwhile-inside-ep02-06`.
-> Check-ins: read each branch's PRODUCTION.md (git fetch), help a stalled session, merge delivered episodes into this
-> branch, and build each channel's compilation (vol01) once it has 4–6 delivered episodes.
+> The user's target: 5 shorts per channel (ep01–05) plus one 16:9 compilation per channel (vol01, the 5 shorts
+> back to back). ETA ~26 Oct 10:00–15:00 UTC unless a usage limit hits again.
+> Prism Studio (the content studio app, `prism-studio/`) Stage A is done (e1c6513); see prism-studio/PROJECT_STATE.md.
+> Check-ins: git fetch each branch, help a stalled session, merge delivered episodes into this branch, run
+> `npm run import:episodes` in prism-studio, and build each channel's vol01 once it has ep01–05.
 
 The user's instruction (2026-10-22): keep going until all four formulas are complete, through
 usage limits (continue after each reset). Check-ins are scheduled into this session; each one
