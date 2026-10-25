@@ -1,5 +1,10 @@
 # Project status: four science-video formulas to 100%
 
+> **25 Oct, 23:15 UTC: paused at the user's request; see `films/ASSESSMENT-2026-10-25.md`.** The 2-hourly check-in
+> is in low-usage mode (restart stalled renders, merge and QA delivered episodes, build a compilation when a channel
+> has ep01–05; nothing new). Physics 001–002 and space 001–002 are delivered; body 001 is rendering here (slow scene,
+> ~4 h); the three channel sessions are pipelining ep03–05.
+>
 > **25 Oct, 22:10 UTC: resumed after the weekly limit reset.** The weekly limit stopped everything on 24 Oct
 > 03:24 UTC. Physics ep01 v2 is delivered (QA PASS, 62ccebd). render-finals.sh was restarted for space, then body
 > (worker restarts kill it: re-run `setsid nohup films/channels/render-finals.sh >/dev/null 2>&1 &`).
