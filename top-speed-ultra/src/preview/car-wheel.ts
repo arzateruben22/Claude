@@ -1,4 +1,4 @@
-// The garage cars' wheels, one generator in four styles:
+// The garage cars' wheels, one generator in seven styles:
 //   twin5 (Rossini GT)    20-inch forged twin-five-spoke rims, machined faces, gunmetal sides, a deep concave
 //   five  (Rossini Brio)  19-inch five-spoke, painted silver with a machined lip
 //   cl10  (Rossini Corsa) ten straight spokes in satin black, a centre-lock hub with a red hex nut
@@ -10,12 +10,15 @@
 //   blade (garage option) seven blades swept toward the rim like a turbine's (mirrored on the left, as directional
 //                         wheels are)
 // The garage's Wheels tab (cars.ts WHEELS) offers each car its own style and one second style.
-// Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
-// lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
+// Spoke faces are crowned (a highlight runs along each spoke); the five-bolt styles sit on a boss a third of the
+// rim's radius with chamfered hex nuts in dark recesses, and every open style has a valve stem at the barrel.
+// Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves on
+// high; no lettering); finely drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the
+// car's colour with the wordmark on a strip of its map's own aspect (8:1 for ROSSINI and VELA, 2.67:1 for the OC mark).
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
 // caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
-import { Kit, V3, v3, gridGeo, latheGeo, capGeo } from './car-kit';
+import { Kit, V3, v3, gridGeo, latheGeo, between } from './car-kit';
 
 export const WHEEL = { R: 0.345, rim: 0.254, wF: 0.245, wR: 0.305 };
 export const TREAD_V: [number, number] = [0.3, 0.7];
@@ -39,14 +42,16 @@ function lathe(profile: [number, number][], vs: number[], segs: number, flip: bo
 }
 const pathLen = (pts: [number, number][]) => { const c = [0]; for (let i = 1; i < pts.length; i++) c.push(c[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); return c; };
 
-function tyre(w: number, segs: number) {
+// grooves: the three circumferential grooves (6.8 mm deep, 12 profile points) are cut only on high; no phone camera
+// can see them and the tread's normal map carries the pattern (about 1,340 triangles a wheel saved there)
+function tyre(w: number, segs: number, grooves: boolean) {
   const hw = w / 2, R = WHEEL.R;
   const side: [number, number][] = [
     [0.256, hw - 0.012], [0.266, hw + 0.001], [0.276, hw + 0.009], [0.283, hw + 0.012], [0.289, hw + 0.008], [0.298, hw + 0.01],
     [0.312, hw + 0.011], [0.325, hw + 0.007], [0.334, hw - 0.001], [0.34, hw - 0.012], [0.3438, hw - 0.025], [R, hw - 0.038],
   ];
   const tread: [number, number][] = [];
-  for (const gx of [0.5, 0.12, -0.3].map((k) => k * hw)) tread.push([R, gx + 0.0055], [R - 0.0068, gx + 0.0042], [R - 0.0068, gx - 0.0042], [R, gx - 0.0055]);
+  if (grooves) for (const gx of [0.5, 0.12, -0.3].map((k) => k * hw)) tread.push([R, gx + 0.0055], [R - 0.0068, gx + 0.0042], [R - 0.0068, gx - 0.0042], [R, gx - 0.0055]);
   const inner = side.map(([r, x]) => [r, -x] as [number, number]).reverse();
   const prof = [...side, ...tread, ...inner];
   // v: outer sidewall 0..0.3, tread 0.3..0.7, inner sidewall 0.7..1 (each by arc length)
@@ -61,7 +66,9 @@ function tyre(w: number, segs: number) {
 export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero' | 'multi' | 'mesh' | 'blade';
 // sidewall: the tyre's sidewall height as a share of the standard one; below 1 the rim, spokes, hub and brake grow
 // to meet it (a low-profile tyre on a bigger rim, the same outside diameter)
-export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number }
+// brand: whose mark the caliper carries (car-shape's P.brand), which sets the wordmark strip's aspect; absent, the OC
+// Hypercar is known by its low sidewall (no other car has one) or its own rim (multi, offered to no other car)
+export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number; brand?: 'rossini' | 'vela' | 'oc' }
 // add one wheel (built for the right side) to a kit; m places it, out = -1 mirrors it for the left
 export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -1, spin?: Kit) {
   const high = o.q === 'high', segs = high ? 120 : 56, style = o.style ?? 'twin5';
@@ -87,15 +94,16 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     k.add(key, g, m);
   };
 
-  put(S, 'tyre', tyre(w, segs));
+  put(S, 'tyre', tyre(w, segs, high));
   // rim lip (machined) and barrel (painted)
   const lip: [number, number][] = [[0.257, hw - 0.01], [0.268, hw - 0.002], [0.2705, hw + 0.006], [0.2665, hw + 0.0118], [0.256, hw + 0.0132], [0.245, hw + 0.0105], [0.2385, hw + 0.003]];
   put(S, style === 'multi' ? 'rimPaint' : 'machined', lathe(lip, lip.map((p) => p[0] * 6), segs, false));
   const barrel: [number, number][] = [[0.2385, hw + 0.003], [0.236, hw - 0.016], [0.236, -hw + 0.01], [0.246, -hw - 0.004], [0.256, -hw - 0.006]];
   put(S, 'rimPaint', lathe(barrel, barrel.map((p) => p[1] * 4), high ? 72 : 40, false));
 
-  // spokes: (centre angle, splay sign) for each spoke, and how each style shapes them
-  const xh = hw - 0.062, xr = hw + 0.009, rh = 0.088, rr = 0.239, nR = high ? 14 : 8;
+  // spokes: (centre angle, splay sign) for each spoke, and how each style shapes them. The five-bolt styles' spokes
+  // grow from a boss of r 0.082 (34 % of the rim, as forged five-bolt wheels are); the Corsa's centre-lock boss is bigger
+  const xh = hw - 0.062, xr = hw + 0.009, hb = style === 'cl10' ? 0.098 : 0.082, rh = style === 'cl10' ? 0.088 : 0.074, rr = 0.239, nR = high ? 14 : 8;
   const spokes: [number, number][] = [];
   if (style === 'twin5') for (let pr = 0; pr < 5; pr++) for (const s of [-1, 1]) spokes.push([(pr / 5) * Math.PI * 2 + Math.PI / 2, s]);
   if (style === 'five') for (let k = 0; k < 5; k++) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, 0]);
@@ -117,19 +125,29 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
         : style === 'mesh' ? pc + s * 0.15 * (1 - 2 * f)          // the pair crosses at half the spoke's length
         : style === 'blade' ? pc + 0.6 * Math.pow(f, 1.4)        // swept back toward the rim
         : pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
-      // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave; multi:
-      // a half of a slim spoke, offset to its side until the halves part
-      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : style === 'multi' ? 0.029 - 0.012 * f
-        : style === 'mesh' ? 0.015 - 0.004 * f : style === 'blade' ? 0.036 - 0.016 * f : 0.026 - 0.009 * f;
+      // widths: forged faces of 28-44 mm at the hub tapering to the rim (twin5, cl10, blade; the old 22-36 mm read
+      // as wire); five: broad spokes that taper and thin toward the rim; multi: a half of a slim spoke, offset to
+      // its side until the halves part (the sheet's slim prongs); mesh: slim laces
+      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.028 - 0.008 * f : style === 'multi' ? 0.029 - 0.012 * f
+        : style === 'mesh' ? 0.015 - 0.004 * f : style === 'blade' ? 0.044 - 0.018 * f : 0.036 - 0.012 * f;
       const dep = style === 'five' ? 0.032 - 0.01 * f : style === 'multi' ? 0.03 - 0.012 * f : style === 'mesh' ? 0.024 - 0.008 * f : 0.036 - 0.012 * f;
       // mesh: the two spokes of a pair sit 3 mm apart in depth where they cross, so neither face fights the other
       const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : style === 'multi' ? 0.5 : style === 'blade' ? 0.55 : 0.62) + (style === 'mesh' ? s * 0.0015 : 0);
       const off = style === 'multi' ? s * wdt * 0.5 * (1 - split) : 0;
       const Rd = v3(0, Math.cos(th), Math.sin(th)), T = v3(0, -Math.sin(th), Math.cos(th));
       const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t + off)).setX(x);
-      const fl = at(xf, -wdt * 0.36), fr = at(xf, wdt * 0.36), cl = at(xf - 0.005, -wdt / 2), cr = at(xf - 0.005, wdt / 2);
-      const bl = at(xf - dep, -wdt * 0.42), br = at(xf - dep, wdt * 0.42);
-      faceRows.push([fl, fr]); sideL.push([bl, cl, fl]); sideR.push([fr, cr, br]);
+      // the face's edges, across the spoke. A twin5 pair's two spokes overlap out to about 40 % of their length,
+      // so there each face stops at the pair's centre line: one Y-shaped face with a seam down its stem, instead
+      // of two crowns cutting through each other
+      let tl = -wdt * 0.36, tr = wdt * 0.36;
+      if (style === 'twin5') { const tc = r * Math.sin(pc - th); if (s > 0) tl = Math.max(tl, tc); else tr = Math.min(tr, tc); }
+      // the face is crowned: its middle sits up to 3 mm proud of its edges, so the smooth normals turn through
+      // about 20 deg across it and a highlight runs along the spoke, where a flat face went all black or all white
+      const cw = tr - tl, crown = Math.min(0.003, 0.11 * cw);
+      const fl = at(xf, tl), fm1 = at(xf + crown, tl + 0.3 * cw), fm2 = at(xf + crown, tl + 0.7 * cw), fr = at(xf, tr);
+      const cl = at(xf - 0.005, tl - 0.14 * wdt), cr = at(xf - 0.005, tr + 0.14 * wdt);
+      const bl = at(xf - dep, tl - 0.06 * wdt), br = at(xf - dep, tr + 0.06 * wdt);
+      faceRows.push([fl, fm1, fm2, fr]); sideL.push([bl, cl, fl]); sideR.push([fr, cr, br]);
     }
     const face = gridGeo(faceRows, { flip: false });
     const fuv = face.attributes.uv as THREE.BufferAttribute, fp = face.attributes.position;
@@ -142,40 +160,49 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     put(S, 'rimPaint', gridGeo(backRows, { flip: false }));
   }
   if (style === 'aero') {
-    // a dished cover from the hub to the rim with five curved turbine slots; behind it, the spokes' shadows
-    const outline: THREE.Vector2[] = [];
-    for (let k = 0; k < 72; k++) { const a = (k / 72) * Math.PI * 2; outline.push(new THREE.Vector2(Math.cos(a) * 0.238, Math.sin(a) * 0.238)); }
-    const holes: THREE.Vector2[][] = [];
+    // a dished cover from the hub to the rim with five curved turbine slots; behind it, the spokes' shadows.
+    // The dish: x = h(r), proud at the rim and 28 mm in at the hub. Slot k runs from t = 0 (r 0.115) to t = 1
+    // (r 0.22), its near edge at near(k, t) and its far edge a width wd(t) further round.
+    const RC = 0.238, dish = (r: number) => xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / RC), 1.6);
+    const slotR = (t: number) => 0.115 + 0.105 * t, slotW = (t: number) => 0.012 + 0.018 * Math.sin(Math.PI * Math.min(1, t * 1.1));
+    const near = (k: number, t: number) => (k / 5) * Math.PI * 2 + 0.3 + 0.55 * t * t;
+    const far = (k: number, t: number) => near(k, t) + slotW(t) / slotR(t);
+    const at = (r: number, a: number) => v3(dish(r), Math.cos(a) * r, Math.sin(a) * r);
+    // The cover is polar grids on the dish, not a triangulated cap: a cap with point holes came out as fans of
+    // slivers (aspect up to 500, edges of 430 mm on a 476 mm cover) and the per-vertex normal tilt and the baked
+    // 'ao' interpolated along them, so the clearcoat shaded the dish in vertical bands. Here every cell is about
+    // 10 x 18 mm: five gap grids between the slots, with rows at the slot walls' own t = j/10 and columns from
+    // slot k's far edge to slot k+1's near edge, and two annuli (hub ring to the slots' start, slots' end to the
+    // rim) whose columns are the gap grids' columns, so every edge meets a gap grid or a slot's end wall exactly.
+    const nT = 10, nC = high ? 10 : 5;
+    const gapCols = (k: number, t: number) => { const a0 = far(k, t), a1 = near(k + 1, t); return Array.from({ length: nC + 1 }, (_, c) => a0 + (a1 - a0) * (c / nC)); };
+    const ringCols = (t: number) => { const as: number[] = []; for (let k = 0; k < 5; k++) as.push(...gapCols(k, t)); return as; };
+    const pieces: [V3[][], boolean][] = [];
     for (let k = 0; k < 5; k++) {
-      const a0 = (k / 5) * Math.PI * 2 + 0.3, slot: THREE.Vector2[] = [], inner: THREE.Vector2[] = [];
-      for (let j = 0; j <= 10; j++) {
-        const t = j / 10, r = 0.115 + 0.105 * t, a = a0 + 0.55 * t * t, wd = 0.012 + 0.018 * Math.sin(Math.PI * Math.min(1, t * 1.1));
-        slot.push(new THREE.Vector2(Math.cos(a) * r, Math.sin(a) * r));
-        inner.push(new THREE.Vector2(Math.cos(a + wd / r * 1.0) * r, Math.sin(a + wd / r * 1.0) * r));
+      const rows: V3[][] = [];
+      for (let j = 0; j <= nT; j++) { const t = j / nT, r = slotR(t); rows.push(gapCols(k, t).map((a) => at(r, a))); }
+      pieces.push([rows, false]);
+    }
+    const annulus = (r0: number, r1: number, n: number, t: number) => { const as = ringCols(t), rows: V3[][] = []; for (let i = 0; i <= n; i++) { const r = r0 + (r1 - r0) * (i / n); rows.push(as.map((a) => at(r, a))); } return rows; };
+    pieces.push([annulus(0.05, slotR(0), high ? 4 : 3, 0), true]);
+    pieces.push([annulus(slotR(1), RC, 1, 1), true]);
+    for (const [rows, closeU] of pieces) {
+      const g = gridGeo(rows, { closeU, flip: false });
+      // the dish's normals from its formula (x = h(r)); UVs round the wheel and out along it
+      const gp = g.attributes.position, gn = g.attributes.normal as THREE.BufferAttribute, gu = g.attributes.uv as THREE.BufferAttribute;
+      for (let k = 0; k < gp.count; k++) {
+        const y = gp.getY(k), z = gp.getZ(k), r = Math.hypot(y, z), dh = 0.028 * 1.6 * Math.pow(Math.max(0, 1 - r / RC), 0.6) / RC;
+        const n = v3(1, r > 1e-6 ? -dh * y / r : 0, r > 1e-6 ? -dh * z / r : 0).normalize();
+        gn.setXYZ(k, n.x, n.y, n.z);
+        gu.setXY(k, Math.atan2(z, y) / (Math.PI * 2), r * 6);
       }
-      holes.push([...slot, ...inner.reverse()]);
+      put(S, 'aero', g);
     }
-    const ring: THREE.Vector2[] = []; for (let k = 0; k < 40; k++) { const a = -(k / 40) * Math.PI * 2; ring.push(new THREE.Vector2(Math.cos(a) * 0.05, Math.sin(a) * 0.05)); }
-    const disc = capGeo(outline, [...holes, ring], high ? 0.022 : 0.04);
-    // dish it: the face sits proud at the rim and steps in toward the hub, then turn it to face +x
-    const dp = disc.attributes.position;
-    for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), y, z); }
-    // the dish's normals from its formula (x = h(r)): the cap's triangulation has long slivers, and normals averaged
-    // over them shaded the cover in streaks
-    const dn = new Float32Array(dp.count * 3);
-    for (let k = 0; k < dp.count; k++) {
-      const y = dp.getY(k), z = dp.getZ(k), r = Math.hypot(y, z), dh = 0.028 * 1.6 * Math.pow(Math.max(0, 1 - r / 0.238), 0.6) / 0.238;
-      const n = v3(1, r > 1e-6 ? -dh * y / r : 0, r > 1e-6 ? -dh * z / r : 0).normalize();
-      dn[k * 3] = n.x; dn[k * 3 + 1] = n.y; dn[k * 3 + 2] = n.z;
-    }
-    disc.setAttribute('normal', new THREE.BufferAttribute(dn, 3));
-    const du = disc.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < du.count; k++) { const y = dp.getY(k), z = dp.getZ(k); du.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
-    // (the cap faced +z in its own plane; the cyclic swap of axes above keeps its winding, so it now faces +x)
-    put(S, 'aero', disc);
-    // the slot walls, down to a dark backing plate
-    for (const h of holes) {
-      const top = h.map((p) => { const r = Math.hypot(p.x, p.y); return v3(xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), p.x, p.y); });
-      const bot = top.map((p) => p.clone().setX(p.x - 0.03));
+    // the slot walls, down to a dark backing plate: the same points as the gap grids' edge columns
+    for (let k = 0; k < 5; k++) {
+      const slot: V3[] = [], inner: V3[] = [];
+      for (let j = 0; j <= nT; j++) { const t = j / nT, r = slotR(t); slot.push(at(r, near(k, t))); inner.push(at(r, far(k, t))); }
+      const top = [...slot, ...inner.reverse()], bot = top.map((p) => p.clone().setX(p.x - 0.03));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: true }));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: false }));
     }
@@ -192,14 +219,18 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const cone = latheGeo([[0.0, xh + 0.046], [0.018, xh + 0.044], [0.03, xh + 0.03]], 24, 'x', { flip: true }); put(S, 'chrome', cone);
     const peg = new THREE.CylinderGeometry(0.005, 0.005, 0.012, 8); peg.rotateZ(-Math.PI / 2); peg.translate(xh + 0.006, 0.07, 0); put(S, 'chrome', peg);
   } else if (style !== 'aero') {
-    const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.07, xh + 0.004], [0.088, xh + 0.001], [0.096, xh - 0.008], [0.098, xh - 0.034]];
-    put(S, style === 'twin5' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
+    // the boss: a centre-cap ring, a flat bolt face (the bolt circle at r 0.056, its recesses out to 0.0715) and a
+    // bevel down to the bell at r 0.082; the mesh style's is machined like its laces
+    const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.062, xh + 0.004], [0.074, xh + 0.001], [0.0805, xh - 0.008], [hb, xh - 0.034]];
+    put(S, style === 'twin5' || style === 'mesh' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
     for (let k = 0; k < (style === 'multi' ? 0 : 5); k++) {   // multi: the big centre cap covers the bolts
       const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
-      const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0055, y, z);
+      const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0065, y, z);
       put(S, 'dark', rec);
-      const bolt = new THREE.CylinderGeometry(0.0105, 0.0105, 0.016, 6); bolt.rotateZ(-Math.PI / 2); bolt.translate(xh + 0.006, y, z);
-      put(S, 'chrome', bolt.toNonIndexed());
+      // a 19 mm hex nut, 12 mm tall, under a chamfer cap that takes its corners down to a 12 mm flat; faceted
+      const hex = (rt: number, rb: number, h: number, x: number, open: boolean) => { const g = new THREE.CylinderGeometry(rt, rb, h, 6, 1, open).toNonIndexed(); g.computeVertexNormals(); g.rotateZ(-Math.PI / 2); g.translate(x, y, z); return g; };
+      put(S, 'chrome', hex(0.0095, 0.0095, 0.012, xh + 0.012, true));
+      put(S, 'chrome', hex(0.006, 0.0095, 0.003, xh + 0.0195, false));
     }
   }
   if (style !== 'cl10') {
@@ -207,6 +238,18 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const cap = new THREE.CircleGeometry(style === 'multi' ? 0.042 : 0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(style === 'aero' ? xr - 0.031 : style === 'multi' ? xh + 0.0105 : xh + 0.0078, 0, 0);
     put(S, 'badge', cap);
     if (style === 'aero') { const cr = latheGeo([[0.05, xr - 0.032], [0.05, xr - 0.06]], 32, 'x', { flip: false }); put(S, 'dark', cr); }
+  }
+  // the valve: a rubber stem out of the barrel between two spokes, leaning 25 deg outboard, under a chrome cap (the
+  // aero cover hides the barrel, so that style has none). The stem is 'dark' (the recesses' near-black), not 'rubber':
+  // in the game every key is a mesh per wheel, and a key of its own would cost four draw calls a car
+  if (style !== 'aero') {
+    const av = Math.PI / 2 + (style === 'cl10' || style === 'mesh' ? Math.PI / 10 : style === 'blade' ? 0.6 + Math.PI / 7 : Math.PI / 5);
+    const Rv = v3(0, Math.cos(av), Math.sin(av)), dir = Rv.clone().multiplyScalar(-Math.cos(0.436)).setX(Math.sin(0.436));
+    const base = Rv.clone().multiplyScalar(0.238).setX(hw - 0.02), tip = base.clone().addScaledVector(dir, 0.028);
+    put(S, 'dark', new THREE.CylinderGeometry(0.004, 0.004, 1, 8, 1, true).applyMatrix4(between(base, tip)));
+    // the cap: chrome where the wheel has chrome nuts already; black on the hypercar's black-on-black multi (no
+    // chrome there, so a chrome cap would be a mesh of its own on each wheel)
+    put(S, style === 'multi' ? 'dark' : 'chrome', new THREE.CylinderGeometry(0.0045, 0.0045, 1, 8).applyMatrix4(between(base.clone().addScaledVector(dir, 0.02), tip)));
   }
 
   // brake: drilled carbon-ceramic friction ring on an anodised bell
@@ -216,10 +259,16 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   for (let i = 0; i <= 3; i++) { const r = ri + (Rd - ri) * (i / 3), row: V3[] = []; for (let j = 0; j <= dsegs; j++) { const a = (j / dsegs) * Math.PI * 2; row.push(v3(xo, Math.cos(a) * r, Math.sin(a) * r)); } ringRows.push(row); }
   const ring = gridGeo(ringRows, { flip: false });
   const ruv = ring.attributes.uv as THREE.BufferAttribute;
-  for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, j / dsegs, i / 3);
+  // u round the ring repeats the map four times, so its holes (drawn round in texels, 24 a repeat) come out 7 x 8 mm,
+  // 96 a row at a 10.7 mm pitch: a finely drilled ring, not the 28 x 8 mm ovals one repeat stretched them to. An
+  // integer repeat, so the pattern meets itself at the seam
+  for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, 4 * j / dsegs, i / 3);
   put(S, 'disc', ring);
+  // the edge stays 'dark': a heat-tinted edge in the exhaust tips' iridescent steel was tried. Edge-on from the side,
+  // and at 3/4 only a thin light sliver past the lip that reads as chrome, not heat; and in the game a key of its own
+  // is a mesh per wheel (four draw calls a car)
   put(S, 'dark', lathe([[Rd, xi], [Rd, xo]], [0, 1], dsegs, false));
-  const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [0.1, xo + 0.026], [0.098, xh - 0.034]];
+  const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [hb + 0.002, xo + 0.026], [hb, xh - 0.034]];
   put(S, 'rimPaint', lathe(bell, bell.map((p) => p[0] * 6), high ? 48 : 24, false));
 
   // caliper (does not spin): a U round the disc edge, rear-top of the disc
@@ -237,9 +286,15 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
     put(kit, 'caliper', g);
   }
-  // the wordmark along the caliper's outer face
+  // the wordmark along the caliper's outer face, on a strip as long for its height as its map (car.ts calText), so
+  // it reads unsquashed. ROSSINI and VELA are 8:1 maps: a 16 mm strip over 0.75 rad (128 mm at r 0.17; the old 36 mm
+  // x 109 mm strip stood them up 2.7 times too tall). The OC mark is a 2.67:1 map (512 x 192), and the mark is never
+  // stretched: on the hypercar (either of its rims; the aero cover lets it show through the slots) it gets a 28 mm
+  // strip over 0.44 rad (75 mm at r 0.17)
+  const ocMark = o.brand ? o.brand === 'oc' : style === 'multi' || sw < 1;
+  const r0 = ocMark ? 0.156 : 0.162, hT = ocMark ? 0.028 : 0.016, aT = ocMark ? 0.44 : 0.75;
   const tRows: V3[][] = [];
-  for (let i = 0; i <= 1; i++) { const r = 0.152 + 0.036 * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + 0.32 - 0.64 * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
+  for (let i = 0; i <= 1; i++) { const r = r0 + hT * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + aT / 2 - aT * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
   const tg = gridGeo(tRows, { flip: true });
   const tuv = tg.attributes.uv as THREE.BufferAttribute;
   for (let i = 0; i <= 1; i++) for (let j = 0; j <= 12; j++) tuv.setXY(i * 13 + j, j / 12, i);
