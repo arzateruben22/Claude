@@ -1,0 +1,488 @@
+{
+ "duration": 72.8,
+ "fps": 30,
+ "preset": "meanwhile-pulse",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.8,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 4.8,
+   "t1": 14.8,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.8,
+   "t1": 24.8,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 24.8,
+   "t1": 40.0,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 40.0,
+   "t1": 53.6,
+   "energy": 0.7
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.6,
+   "t1": 60.0,
+   "energy": 0.5
+  },
+  {
+   "id": "meanwhile",
+   "t0": 60.0,
+   "t1": 65.6,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 65.6,
+   "t1": 72.8,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "badge",
+   "tag": "nts-cell",
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.146
+   ]
+  },
+  {
+   "t": 0.0,
+   "kind": "label",
+   "tag": "o2hook",
+   "pos": [
+    0.7,
+    0.429
+   ]
+  },
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.8
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -3.0
+  },
+  {
+   "t": 2.9,
+   "kind": "dissolve",
+   "tag": "billion",
+   "t1": 4.3
+  },
+  {
+   "t": 4.8,
+   "kind": "section",
+   "id": "normal",
+   "t1": 14.8
+  },
+  {
+   "t": 6.6,
+   "kind": "label",
+   "tag": "hb",
+   "pos": [
+    0.614,
+    0.436
+   ]
+  },
+  {
+   "t": 10.35,
+   "kind": "badge",
+   "tag": "ill-hb",
+   "text": "illustration",
+   "pos": [
+    0.191,
+    0.146
+   ]
+  },
+  {
+   "t": 11.266666666666667,
+   "kind": "diffuse",
+   "tag": "irons",
+   "t1": 12.833333333333334
+  },
+  {
+   "t": 11.533333333333333,
+   "kind": "label",
+   "tag": "iron",
+   "pos": [
+    0.748,
+    0.418
+   ]
+  },
+  {
+   "t": 13.7,
+   "kind": "label",
+   "tag": "o2",
+   "pos": [
+    0.7,
+    0.202
+   ]
+  },
+  {
+   "t": 14.8,
+   "kind": "section",
+   "id": "change",
+   "t1": 24.8
+  },
+  {
+   "t": 18.366666666666667,
+   "kind": "bind",
+   "tag": "board0"
+  },
+  {
+   "t": 19.7,
+   "kind": "bind",
+   "tag": "board1"
+  },
+  {
+   "t": 20.3,
+   "kind": "bind",
+   "tag": "board2"
+  },
+  {
+   "t": 20.7,
+   "kind": "bind",
+   "tag": "board3"
+  },
+  {
+   "t": 22.633333333333333,
+   "kind": "swell",
+   "tag": "flush",
+   "t1": 24.833333333333332
+  },
+  {
+   "t": 24.783333,
+   "kind": "badge",
+   "tag": "ill-skin",
+   "text": "illustration · not to scale",
+   "pos": [
+    0.289,
+    0.146
+   ]
+  },
+  {
+   "t": 24.8,
+   "kind": "section",
+   "id": "why",
+   "t1": 40.0
+  },
+  {
+   "t": 25.333333333333332,
+   "kind": "label",
+   "tag": "vein",
+   "pos": [
+    0.75,
+    0.291
+   ]
+  },
+  {
+   "t": 30.8,
+   "kind": "label",
+   "tag": "venous",
+   "pos": [
+    0.654,
+    0.582
+   ]
+  },
+  {
+   "t": 33.333333333333336,
+   "kind": "label",
+   "tag": "redlight",
+   "pos": [
+    0.62,
+    0.183
+   ]
+  },
+  {
+   "t": 33.63333333333333,
+   "kind": "label",
+   "tag": "bluelight",
+   "pos": [
+    0.2,
+    0.221
+   ]
+  },
+  {
+   "t": 35.266666666666666,
+   "kind": "impact",
+   "tag": "swallow",
+   "gain": -6.0
+  },
+  {
+   "t": 39.983333,
+   "kind": "badge",
+   "tag": "nts-lung",
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.191
+   ]
+  },
+  {
+   "t": 39.983333,
+   "kind": "swell",
+   "tag": "lung-swell",
+   "t1": 42.383333
+  },
+  {
+   "t": 40.0,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 53.6
+  },
+  {
+   "t": 41.93333333333333,
+   "kind": "label",
+   "tag": "back",
+   "pos": [
+    0.299,
+    0.582
+   ]
+  },
+  {
+   "t": 42.7,
+   "kind": "label",
+   "tag": "sac",
+   "pos": [
+    0.184,
+    0.252
+   ]
+  },
+  {
+   "t": 46.466667,
+   "kind": "diffuse",
+   "tag": "o2-in",
+   "t1": 50.46666666666667
+  },
+  {
+   "t": 47.066667,
+   "kind": "breath",
+   "tag": "fill",
+   "t1": 50.06666666666667
+  },
+  {
+   "t": 47.36666666666667,
+   "kind": "counter.show",
+   "tag": "quarter",
+   "pos": [
+    0.5,
+    0.235
+   ]
+  },
+  {
+   "t": 50.06666666666667,
+   "kind": "counter.end",
+   "tag": "quarter-end"
+  },
+  {
+   "t": 53.6,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.0
+  },
+  {
+   "t": 53.93333333333333,
+   "kind": "label",
+   "tag": "arrive",
+   "pos": [
+    0.262,
+    0.582
+   ]
+  },
+  {
+   "t": 57.166666666666664,
+   "kind": "label",
+   "tag": "leave",
+   "pos": [
+    0.645,
+    0.151
+   ]
+  },
+  {
+   "t": 60.0,
+   "kind": "beat",
+   "tag": "beat0"
+  },
+  {
+   "t": 60.0,
+   "kind": "section",
+   "id": "meanwhile",
+   "t1": 65.6
+  },
+  {
+   "t": 60.3,
+   "kind": "counter.show",
+   "tag": "tally",
+   "pos": [
+    0.458,
+    0.29
+   ]
+  },
+  {
+   "t": 60.8,
+   "kind": "beat",
+   "tag": "beat1"
+  },
+  {
+   "t": 61.6,
+   "kind": "beat",
+   "tag": "beat2"
+  },
+  {
+   "t": 62.4,
+   "kind": "beat",
+   "tag": "beat3"
+  },
+  {
+   "t": 63.2,
+   "kind": "beat",
+   "tag": "beat4"
+  },
+  {
+   "t": 64.0,
+   "kind": "beat",
+   "tag": "beat5"
+  },
+  {
+   "t": 64.8,
+   "kind": "beat",
+   "tag": "beat6"
+  },
+  {
+   "t": 65.583333,
+   "kind": "badge",
+   "tag": "nts-nerve",
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.146
+   ]
+  },
+  {
+   "t": 65.6,
+   "kind": "section",
+   "id": "tease",
+   "t1": 72.8
+  },
+  {
+   "t": 68.1333,
+   "kind": "spike",
+   "tag": "jump0"
+  },
+  {
+   "t": 68.43333333333334,
+   "kind": "label",
+   "tag": "node",
+   "pos": [
+    0.608,
+    0.31
+   ]
+  },
+  {
+   "t": 68.7778,
+   "kind": "spike",
+   "tag": "jump1"
+  },
+  {
+   "t": 69.4222,
+   "kind": "spike",
+   "tag": "jump2"
+  },
+  {
+   "t": 70.0667,
+   "kind": "spike",
+   "tag": "jump3"
+  },
+  {
+   "t": 70.7111,
+   "kind": "spike",
+   "tag": "jump4"
+  },
+  {
+   "t": 70.8,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.1,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 15.1,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 25.1,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 40.3,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.9,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 60.3,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 65.9,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "o2hook": 0,
+  "hb": 6.6333,
+  "iron": 11.5667,
+  "o2": 13.7333,
+  "vein": 25.3667,
+  "venous": 30.8333,
+  "redlight": 33.3667,
+  "bluelight": 33.6667,
+  "sac": 42.7333,
+  "back": 41.9667,
+  "arrive": 53.9667,
+  "leave": 57.2,
+  "node": 68.4667,
+  "quarter": 47.4,
+  "tally": 60.3333
+ }
+}
