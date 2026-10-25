@@ -6,14 +6,18 @@ import { destinationsAll, onboardingView } from "@/lib/data";
 import { OFFICIAL, ONBOARDING_ITEMS, SHARED_ONBOARDING } from "@/domain/catalog";
 import { formatLocal } from "@/domain/time";
 import { PLATFORM_LABEL, PROVENANCE_LABEL, topicStyle } from "@/lib/format";
-import { saveDestination, toggleOnboarding } from "@/app/actions";
+import { disconnectDestination, saveDestination, setAutomationCaps, toggleOnboarding } from "@/app/actions";
+import { connectionSummary } from "@/domain/connections";
+import { connectorFor } from "@/integrations";
+import { integrationsConfigured } from "@/lib/crypto";
 import { ActionForm } from "@/components/ActionForm";
 import { studio } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Accounts" };
 
-export default async function Connections() {
-  const [dests, onb, chans, s] = await Promise.all([destinationsAll(), onboardingView(), db().select().from(S.channels).orderBy(asc(S.channels.sort)), studio()]);
+export default async function Connections({ searchParams }: { searchParams: Promise<{ connected?: string; error?: string }> }) {
+  const [dests, onb, chans, s, conns, q] = await Promise.all([destinationsAll(), onboardingView(), db().select().from(S.channels).orderBy(asc(S.channels.sort)), studio(), connectionSummary(db()), searchParams]);
+  const keyOk = integrationsConfigured();
   const label = (item: string) => [...ONBOARDING_ITEMS, ...SHARED_ONBOARDING].find((o) => o.item === item)?.label ?? item;
   const groups = [...chans.map((c) => ({ key: c.id, title: c.name.replace(/ \(name TBD\)$/, ""), channel: c as typeof c | null })), { key: "shared", title: "Shared Instagram and studio", channel: null }];
   return (
@@ -21,6 +25,13 @@ export default async function Connections() {
       <div className="kicker">11 destinations · manual publishing</div>
       <h1>Accounts</h1>
       <p className="lede">One YouTube channel and one TikTok account per channel, plus one Instagram for all five. Saving a handle or link here is not a connection: it tells the Upload Desk who to post as.</p>
+      {q.connected ? <div className="notice good" style={{ marginBottom: 16 }}>Connected {q.connected}. Approved episodes on this account can now be published by the worker.</div> : null}
+      {q.error ? <div className="notice bad" style={{ marginBottom: 16 }}>{q.error}</div> : null}
+      <div className="card stack-sm" style={{ marginBottom: 16 }}>
+        <div className="kicker">Automated publishing</div>
+        <p style={{ margin: 0 }}>Connect an account and the studio can upload approved episodes itself, at their scheduled time (channel automation set to &ldquo;Approved&rdquo;) or when you press <b>Publish now</b> on the desk. Each platform&apos;s conditions are shown on its card. Nothing posts without a live approval of that exact video and text.</p>
+        {!keyOk ? <p className="muted" style={{ margin: 0 }}>Set <span className="mono">INTEGRATIONS_KEY</span> and <span className="mono">PUBLIC_ORIGIN</span> in <span className="mono">.env.local</span> to turn Connect on. See INTEGRATIONS.md.</p> : null}
+      </div>
       <div className="notice info stack-sm" style={{ marginBottom: 24 }}>
         <b>Keep accounts safe</b>
         <span>Prism never asks for or stores platform passwords, recovery codes or 2-step codes: keep them in your password manager. Give each TikTok account its own email, and don&apos;t attach one phone number to all five. Turn on 2-step verification everywhere. Only official links are accepted below (youtube.com, tiktok.com, instagram.com, facebook.com).</span>
@@ -50,6 +61,31 @@ export default async function Connections() {
                       <span className={`chip ${d.provenance === "owner_confirmed" ? "good" : d.provenance === "unset" ? "warn" : ""}`}>{PROVENANCE_LABEL[d.provenance]}</span>
                     </div>
                     {d.lastConfirmedAt ? <div className="faint" style={{ fontSize: 13 }}>Confirmed {formatLocal(d.lastConfirmedAt, s.timezone)}</div> : null}
+                    {(() => {
+                      const conn = conns.get(d.id), connector = connectorFor(d.platform);
+                      if (!connector) return <p className="faint" style={{ margin: 0, fontSize: 13 }}>No connector for {PLATFORM_LABEL[d.platform]} yet: manual publishing.</p>;
+                      return (
+                        <div className="card flat stack-sm" style={{ padding: 12 }}>
+                          <div className="row spread">
+                            <b>Connection</b>
+                            {conn ? <span className={`chip ${conn.status === "connected" ? "good" : "bad"}`}>{conn.status}{conn.expiresAt ? ` · token to ${formatLocal(conn.expiresAt, s.timezone, { dateStyle: "medium" })}` : ""}</span> : <span className="chip">not connected</span>}
+                          </div>
+                          <p className="faint" style={{ margin: 0, fontSize: 13 }}>{connector.capabilities.conditions}</p>
+                          <div className="row">
+                            {keyOk && connector.configured() ? <a className="btn topic small" href={`/api/auth/${d.platform}/start?destination=${d.id}`}>{conn ? "Reconnect" : "Connect"} {PLATFORM_LABEL[d.platform]}</a>
+                              : <span className="chip warn">needs {connector.envVars.join(", ")}{keyOk ? "" : " and INTEGRATIONS_KEY"}</span>}
+                            {conn ? <ActionForm action={disconnectDestination} submit="Disconnect" submitClass="btn danger small" confirm="Disconnect this account? Publishing goes back to manual."><input type="hidden" name="destinationId" value={d.id} /></ActionForm> : null}
+                          </div>
+                          {conn && d.platform === "tiktok" ? (
+                            <ActionForm action={setAutomationCaps} className="row" submit="Save" submitClass="btn ghost small">
+                              <input type="hidden" name="destinationId" value={d.id} />
+                              <label className="check" style={{ padding: 0 }}><input type="checkbox" name="audited" defaultChecked={!!(conn.capabilities as { audited?: boolean }).audited} /> <span>TikTok audited this app (direct public posts allowed)</span></label>
+                              <input type="hidden" name="privacy" value="public" />
+                            </ActionForm>
+                          ) : null}
+                        </div>
+                      );
+                    })()}
                     <input type="hidden" name="destinationId" value={d.id} />
                     <div className="grid2" style={{ gap: 10 }}>
                       <label className="field">Display name <input name="displayName" defaultValue={d.displayName} /></label>

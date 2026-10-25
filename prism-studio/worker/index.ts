@@ -5,6 +5,7 @@ import os from "node:os";
 import { db, pool } from "../src/db/client";
 import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
+import { enqueueDuePublishes } from "../src/domain/publish";
 import { audit } from "../src/domain/core";
 import { eq } from "drizzle-orm";
 import * as S from "../src/db/schema";
@@ -33,8 +34,14 @@ async function runOne(): Promise<boolean> {
   return true;
 }
 
-let lastHousekeeping = 0;
+let lastHousekeeping = 0, lastSchedule = 0;
 async function housekeeping() {
+  // every minute: queue publications that are due on connected, automatic destinations
+  if (Date.now() - lastSchedule >= 60_000) {
+    lastSchedule = Date.now();
+    const queued = await enqueueDuePublishes(db());
+    if (queued) console.log(`[worker] queued ${queued} due publication${queued > 1 ? "s" : ""}`);
+  }
   if (Date.now() - lastHousekeeping < 15 * 60_000) return;
   lastHousekeeping = Date.now();
   const recovered = await recoverExpired(db());

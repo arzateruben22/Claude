@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-10-25 (Stage B + Stage C first cut)
+- Lessons (compilations) built by the worker; Learn screen; posting text engine with POSTING.md packs.
+- Automated publishing: connector contract, sealed OAuth grants, connect flow, publish and status jobs, scheduler, Publish now.
+- Fixed: multi-line VO lines were cut at the first line end when read from script.md.
+
 ## 0.1.0 — 2026-10-25 (Stage A)
 - Foundation: schema, domain rules, seed, and the episode import from the films pipeline.
 - Every Stage A screen, the Upload Desk with manual publishing, the PWA shell, the worker.

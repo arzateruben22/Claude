@@ -2,7 +2,7 @@
 // buttons, and the owner's confirmation.
 import Link from "next/link";
 import type { UploadTask } from "@/lib/data";
-import { reportUploaded, undoReport } from "@/app/actions";
+import { publishNow, reportUploaded, undoReport } from "@/app/actions";
 import { OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
@@ -11,7 +11,7 @@ import { ActionForm } from "./ActionForm";
 import { CopyButton } from "./CopyButton";
 import { HandOff } from "./HandOff";
 
-export function TaskCard({ t, tz, stopExternal }: { t: UploadTask; tz: string; stopExternal: boolean }) {
+export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz: string; stopExternal: boolean; connected?: boolean }) {
   const { p, e, dest, x, approval, version, channel } = t;
   const platform = PLATFORM_LABEL[dest.platform];
   const done = ["owner_reported", "scheduled_on_platform"].includes(p.status);
@@ -45,6 +45,7 @@ export function TaskCard({ t, tz, stopExternal }: { t: UploadTask; tz: string; s
           : <div className="confirm">Add this account&apos;s handle in <Link href="/connections">Accounts</Link> so the desk can show who to post as.</div>}
       </div>
 
+      {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Mark uploaded once it is live, or wait for the worker to confirm.</div> : null}
       {!x ? <div className="notice">No export for {platform} yet: this episode has no rendered version.</div>
         : version?.superseded ? <div className="notice">A newer render exists. Open the episode and approve the new version.</div>
         : !approval ? <div className="notice">Not approved for this account yet. <Link href={`/episodes/${e.id}#placements`}>Review and approve</Link></div> : null}
@@ -71,7 +72,15 @@ export function TaskCard({ t, tz, stopExternal }: { t: UploadTask; tz: string; s
             </div>
           </div>
           {stopExternal ? <div className="notice bad">External actions are stopped in Settings.</div> : (
-            <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={fileName} uploadUrl={uploadUrl} platformLabel={platform} shareText={fullCaption} disabled={!ready} />
+            <>
+              {connected ? (
+                <ActionForm action={publishNow} className="row" submit={`Publish now to ${handle || platform}`} submitClass="btn topic" confirm={`Upload this exact video and text to ${handle || platform} now?`}>
+                  <input type="hidden" name="publicationId" value={p.id} />
+                  {!ready ? <span className="faint" style={{ fontSize: 13 }}>Needs the approval first.</span> : null}
+                </ActionForm>
+              ) : null}
+              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={fileName} uploadUrl={uploadUrl} platformLabel={platform} shareText={fullCaption} disabled={!ready} />
+            </>
           )}
           <details>
             <summary style={{ cursor: "pointer", fontWeight: 650 }}>I&apos;ve posted it: mark uploaded</summary>

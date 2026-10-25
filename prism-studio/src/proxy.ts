@@ -2,7 +2,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { COOKIE, verifySession } from "./lib/session";
 
-const OPEN = [/^\/login$/, /^\/icon\.png$/, /^\/api\/auth\//, /^\/manifest\.webmanifest$/, /^\/sw\.js$/, /^\/icons\//, /^\/fonts\//, /^\/offline$/, /^\/favicon/];
+const OPEN = [/^\/login$/, /^\/icon\.png$/, /^\/api\/auth\//, /^\/api\/public-media\//, /^\/manifest\.webmanifest$/, /^\/sw\.js$/, /^\/icons\//, /^\/fonts\//, /^\/offline$/, /^\/favicon/];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

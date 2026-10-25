@@ -10,6 +10,8 @@ import type { JobRow } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
 import { refreshEvolution } from "../src/domain/living";
 import { lessonBuildPlan, recordLessonBuild } from "../src/domain/lessons";
+import { finalizeProcessing, publishPublication } from "../src/domain/publish";
+import { DomainError } from "../src/domain/core";
 import { importEpisodes } from "../scripts/import-episodes";
 
 export type Beat = (p: number, msg: string) => Promise<boolean>;   // false = cancel requested
@@ -42,6 +44,16 @@ export const HANDLERS: Record<string, Handler> = {
       chapters: read("chapters.txt"), description: read("description.md"), qa,
     });
     return { video: plan.outDir, sha256: sha.slice(0, 12), qa };
+  },
+  // Publish one approved publication through its connected destination (scheduled, or the owner's "Publish now").
+  async publish(job, beat, d) {
+    const r = await publishPublication(d, String(job.payload.publicationId), { manual: job.payload.manual === true, onProgress: beat });
+    return { ...r };
+  },
+  // A post the platform was still processing: ask again; throw (retryable, with backoff) while it still is.
+  async publish_status(job, _, d) {
+    try { return { ...(await finalizeProcessing(d, String(job.payload.publicationId))) }; }
+    catch (e) { if (e instanceof DomainError && e.code === "processing") throw new Error("still processing on the platform"); throw e; }
   },
   async reschedule_missed(_, __, d) {
     return { moved: await rescheduleMissed(d) };

@@ -515,3 +515,46 @@ export async function regenerateText(_: Result, fd: FormData) {
     return ok(`Rewrote ${r.platforms} platform texts from the script.${r.revoked ? ` ${r.revoked} approval${r.revoked > 1 ? "s" : ""} withdrawn: approve again.` : ""}${r.warnings.length ? ` Check: ${r.warnings.join("; ")}.` : ""}`);
   });
 }
+
+// ── connections and automated publishing ───────────────────────────────────
+export async function disconnectDestination(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("destinationId"));
+    const { disconnect } = await import("@/domain/connections");
+    await disconnect(db(), id);
+    refresh("/connections", "/upload");
+    return ok("Disconnected. This destination is manual again; the handle stays.");
+  });
+}
+export async function setAutomationCaps(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("destinationId"));
+    const { connectionFor } = await import("@/domain/connections");
+    const conn = await connectionFor(db(), id);
+    if (!conn) throw new DomainError("not_connected", "connect it first");
+    const caps = { ...(conn.capabilities as Record<string, unknown>), audited: fd.get("audited") === "on", privacy: fd.get("privacy") === "private" ? "private" : "public" };
+    await db().update(S.connections).set({ capabilities: caps, updatedAt: new Date() }).where(eq(S.connections.id, conn.id));
+    await audit(db(), "owner", "connection.caps", "connection", conn.id, caps);
+    refresh("/connections");
+    return ok("Saved.");
+  });
+}
+/** "Publish now": queue one approved publication for the worker, through the destination's connection. */
+export async function publishNow(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("publicationId"));
+    const s = await settings(db());
+    if (s.stopExternalActions) throw new DomainError("stopped", "External actions are stopped in Settings.");
+    const [p] = await db().select().from(S.publications).where(eq(S.publications.id, id));
+    if (!p?.exportId) throw new DomainError("no_export", "no export");
+    const { currentApproval } = await import("@/domain/approvals");
+    if (!(await currentApproval(db(), p.exportId, p.destinationId))) throw new DomainError("not_approved", "Approve this exact video and text for this account first.");
+    const { connectionFor } = await import("@/domain/connections");
+    const conn = await connectionFor(db(), p.destinationId);
+    if (!conn || conn.status !== "connected") throw new DomainError("not_connected", "This account isn't connected (Accounts → Connect).");
+    const [e] = await db().select().from(S.episodes).where(eq(S.episodes.id, p.episodeId));
+    const r = await enqueue(db(), { type: "publish", channelId: e.channelId, payload: { publicationId: id, manual: true }, idempotencyKey: `publish:${id}`, priority: 10, maxAttempts: 3 });
+    refresh("/upload", "/queue");
+    return ok(r.created ? "Queued: the worker uploads it now. Watch the Queue; the task updates itself when the platform answers." : "Already queued.");
+  });
+}

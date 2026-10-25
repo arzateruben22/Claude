@@ -94,12 +94,14 @@ export async function uploadTasks() {
     .where(or(inArray(S.publications.status, ["planned", "ready", "handed_off"]), and(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform"]), gte(S.publications.reportedAt, startOfToday))))
     .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
   const chans = await d.select().from(S.channels);
+  const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
   const vers = rows.length ? await d.select().from(S.versions).where(inArray(S.versions.id, rows.flatMap((r) => (r.x ? [r.x.versionId] : [])).concat(["00000000-0000-0000-0000-000000000000"]))) : [];
   const tasks = await Promise.all(rows.map(async (r) => {
     const approval = r.x ? await currentApproval(d, r.x.id, r.dest.id) : null;
     const version = r.x ? vers.find((v) => v.id === r.x!.versionId) ?? null : null;
     const channel = chans.find((c) => c.id === r.e.channelId)!;
-    return { ...r, approval, version, channel };
+    const connected = r.dest.publishMethod === "api" && conns.some((c) => c.destinationId === r.dest.id && c.status === "connected");
+    return { ...r, approval, version, channel, connected };
   }));
   const done = tasks.filter((t) => ["owner_reported", "scheduled_on_platform"].includes(t.p.status));
   const open = tasks.filter((t) => !done.includes(t));

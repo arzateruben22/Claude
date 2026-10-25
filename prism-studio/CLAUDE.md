@@ -15,5 +15,6 @@
   budgets are separate, and paid generation stays off without one.
 - **Demo data** is always labelled DEMO (or SIMULATED) on screen and never counts as real progress.
 - Times are stored in UTC and shown in the studio timezone (`src/domain/time.ts`, DST-safe).
+- **Connectors** (`src/integrations/`) are pure API clients with injected `fetch`; the studio decides what/when to publish (`src/domain/publish.ts`). Only a platform's own "published" answer verifies a publication. Tokens are sealed; never log them.
 - Raw SQL: drizzle expands a JS array parameter into a parenthesised list. Write `col in ${arr}`, never `= any(${arr})`.
 - Verify with `npm run typecheck && npm test && npx next build`, then click through at 390 px and desktop.

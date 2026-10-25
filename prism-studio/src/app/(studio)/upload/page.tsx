@@ -11,7 +11,7 @@ export default async function UploadDesk() {
   const section = (title: string, list: typeof v.due, empty?: string) => (
     <section className="section">
       <div className="section-head"><h2 style={{ margin: 0 }}>{title}</h2><span className="num faint">{list.length}</span></div>
-      {list.length ? <div className="stack">{list.map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} />)}</div> : empty ? <p className="muted">{empty}</p> : null}
+      {list.length ? <div className="stack">{list.map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />)}</div> : empty ? <p className="muted">{empty}</p> : null}
     </section>
   );
   return (
@@ -28,7 +28,7 @@ export default async function UploadDesk() {
         <section className="section">
           <div className="section-head"><h2 style={{ margin: 0 }}>Not scheduled</h2><span className="num faint">{v.backlog.length}</span></div>
           <p className="muted">These have no slot yet. <Link href="/calendar">Plan the week</Link> to give them one, or post one now.</p>
-          <div className="stack">{v.backlog.slice(0, 6).map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} />)}</div>
+          <div className="stack">{v.backlog.slice(0, 6).map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />)}</div>
         </section>
       ) : null}
     </div>
