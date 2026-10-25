@@ -19,7 +19,7 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `{-}` marks a sentence that states nothing outside the film. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/physics/ep02 --segment measure`.
 
-## hook {shot: measure view; frame 0: both pendulums mid-swing near the bottom, neck and neck, their ghosts behind them · title drop: "The swing's secret" · badge: slowed · pre: 0.1 · energy: 0.7} (0–3.5 s)
+## hook {shot: measure view; frame 0: both pendulums mid-swing near the bottom, neck and neck, their ghosts behind them · title drop: "The swing's secret" · badge: slowed · pre: 0.1 · energy: 0.6} (0–3.5 s)
 vo: Which swing gets back *first*? Big? Or small? {-}
 
 ## normal {shot: one pendulum, released at ×1, then ×1/5 for the swing back with ghosts every 1/10 s · labels: "99.4 cm", "1 s", "1/10 s apart" · pre: 0.15 · energy: 0.45} (3.5–14 s)
@@ -35,11 +35,11 @@ vo: Galileo claimed every swing takes the same time, wide or narrow. {c5} For sm
 *nearly* right. {c6} Three times farther out, the pull is almost three times stronger. {c7} So it
 covers triple the path at nearly triple the speed: *nearly* the same time. {c8}
 
-## whoa {shot: the turn, from the front (fifteen look like one) to above the row · fifteen pendulums, 51–65 back-and-forth swings a minute, run fast; they realign on "line" · picture-only 3 s · energy: 0.7} (39–51 s)
+## whoa {shot: the turn, from the front (fifteen look like one) to above the row · fifteen pendulums, 51–65 back-and-forth swings a minute, run fast; they realign on "line" · picture-only 3 s · energy: 0.8} (39–51 s)
 vo: So hang fifteen, each a little shorter. {c9} Only length changes. {c16} For about a minute, they drift
 apart. {c10} Then, all at once… back in *line*. {c17}
 
-## measure {segment: measure · the two pendulums again, run fast; a counter counts twenty swings, then it freezes with the big one behind · pre: 0.2 · energy: 0.5} (51–61 s)
+## measure {segment: measure · the two pendulums again, run fast; a counter counts twenty swings, then it freezes with the big one behind · pre: 0.2 · energy: 0.3} (51–61 s)
 vo: *Measure it*: twenty swings, and the big one is three tenths of a second *behind*. {c11} At
 thirty degrees, Galileo is off by about one part in sixty. {c12}
 

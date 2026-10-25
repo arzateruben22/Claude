@@ -43,8 +43,9 @@ def cut(beat):
 
 # ── the swing set ───────────────────────────────────────────────────────────────────────────────
 L, PIV_Y = 99.4, 116.0                                   # the seconds pendulum (c1); pivots 116 cm up
-R_BOB = 3.4
-LANE = {"small": 0.0, "big": -40.0}                      # z of each lane: the small swing in front
+R_BOB = 4.6
+LANE = {"small": 30.0, "big": -20.0}                     # z of each lane: the small swing in front, the big 50 cm behind
+                                                         # (the cyc wall curves forward on the left: z −44 at x −50, so the rig stands forward)
 TH = {"small": -10 * D2R, "big": -30 * D2R}              # both pulled to the left (−x), released toward +x
 PEND = {k: Pendulum(L, TH[k], pivot=(0.0, PIV_Y, LANE[k])) for k in TH}
 T10, T30 = PEND["small"].T, PEND["big"].T                # 2.00385 s, 2.03486 s (c2, c11)
@@ -52,7 +53,7 @@ Q10, Q30 = T10 / 4, T30 / 4                              # the bottom passes: 0.
 DT, NG = 0.1, 11                                         # a ghost every 1/10 s: k = 0 … 10 (one swing)
 
 # ── the pendulum wave (whoa): Harvard's fifteen, 51 … 65 back-and-forth swings in 60 s (c10) ────
-WAVE_N, WAVE_TH, WAVE_Y, WAVE_DZ = 15, -15 * D2R, 62.0, -5.0
+WAVE_N, WAVE_TH, WAVE_Y, WAVE_DZ, WAVE_Z0 = 15, -15 * D2R, 62.0, -5.0, 30.0
 WAVE_L = [round(G * (60.0 / (51 + n) / (2 * math.pi)) ** 2, 4) for n in range(WAVE_N)]   # 34.39 … 21.17 cm
 WAVE_ALIGN = 60.0 * period_ratio(WAVE_TH)                # 15° lengthens every period alike: realigned at 60.26 s (c17)
 WAVE_R = 1.7
@@ -94,8 +95,8 @@ R_m = F_m - (TAU_20 - FAST_M * M_FRZ / 2) / FAST_M
 assert cut("measure") + 0.1 < R_m < A("vo06:twenty"), (cut("measure"), R_m)
 
 KEYS = [
-    {"t": 0.0, "rate": SLOW_H},
-    {"t": F_h, "rate": 0.0, "ramp": FREEZE},
+    {"t": 0.0, "rate": SLOW_H, "badge": None},          # the hook's speed note sits bottom-right (HOOK_NOTE), clear of the title
+    {"t": F_h, "rate": 0.0, "ramp": FREEZE, "badge": None},
     {"t": cut("normal"), "rate": 1.0},
     {"t": R_n + T10 / 2, "rate": SLOW_N, "ramp": RAMP},
     {"t": cut("change"), "rate": SLOW},
@@ -105,6 +106,7 @@ KEYS = [
     {"t": cut("measure"), "rate": FAST_M},
     {"t": F_m, "rate": 0.0, "ramp": M_FRZ},
     {"t": cut("takeaway"), "rate": 1.0},
+    {"t": cut("tease"), "rate": SLOW_H, "ramp": 0.4},
 ]
 # the plateau is whatever fits between the ramps; check the realignment lands on "line" and adjust the release
 clk = Clock(KEYS)
@@ -119,20 +121,26 @@ for _ in range(60):                                      # solve W_R (and so W_U
     clk = Clock(KEYS)
 assert cut("whoa") + 0.2 < W_R < A("vo05:fifteen,"), (cut("whoa"), W_R)
 
+# the tease re-releases both so the film's last frame is frame 0's moment again (a seamless replay): at ×1/10,
+# τ reaches the hook's frame-0 τ exactly at the film's end
+R_t = DUR - HOOK_TAU0 / SLOW_H
+assert cut("tease") + 0.4 < R_t < EC - 0.3, (cut("tease"), R_t, EC)
 TAKES = {
     "hook": {"t0": -1e9, "t1": cut("normal"), "tauR": clk.tau(0.0) - HOOK_TAU0, "pend": ["small", "big"]},
     "normal": {"t0": cut("normal"), "t1": cut("change"), "tauR": clk.tau(R_n), "R": R_n, "pend": ["small"]},
     "change": {"t0": cut("change"), "t1": cut("why"), "tauR": clk.tau(R_c), "R": R_c, "pend": ["small", "big"]},
     "why": {"t0": cut("why"), "t1": cut("whoa"), "tauR": clk.tau(R_w), "R": R_w, "pend": ["small", "big"]},
     "wave": {"t0": cut("whoa"), "t1": cut("measure"), "tauR": clk.tau(W_R), "R": W_R, "pend": []},
-    "measure": {"t0": cut("measure"), "t1": 1e9, "tauR": clk.tau(R_m), "R": R_m, "pend": ["small", "big"]},
+    "measure": {"t0": cut("measure"), "t1": cut("tease"), "tauR": clk.tau(R_m), "R": R_m, "pend": ["small", "big"]},
+    "loop": {"t0": cut("tease"), "t1": 1e9, "tauR": clk.tau(R_t), "R": R_t, "pend": ["small", "big"]},
 }
 # where each take's ghost ladders start (τ local) and when their stamps show
-LADDER = {"hook": 0.0, "normal": T10 / 2, "change": 0.0, "why": 0.0}
+LADDER = {"hook": 0.0, "normal": T10 / 2, "change": 0.0, "why": 0.0, "loop": 0.0}
 for name, tau0 in LADDER.items():
     tk = TAKES[name]
     tk["ladder"] = tau0
     tk["stamps"] = [round(clk.tOf(tk["tauR"] + tau0 + k * DT), 6) for k in range(NG)]
+assert abs(clk.tau(DUR) - TAKES["loop"]["tauR"] - HOOK_TAU0) < 1e-9
 assert TAKES["hook"]["stamps"][3] + 0.2 < 0 < TAKES["hook"]["stamps"][4], TAKES["hook"]["stamps"][:6]
 for name in ("normal", "why"):                            # (the change cuts away mid-swing: its later ghosts never show)
     s = TAKES[name]["stamps"]
@@ -161,7 +169,7 @@ CUE = {
     "hook": {"freeze": [F_h, F_h + FREEZE]},
     "normal": {"R": R_n, "arrive": ARRIVE_N},
     "change": {"pull": [A("vo03:Pull"), A("vo03:farther.")], "R": R_c, "bottom": BOTTOM["change"]},
-    "why": {"R": R_w, "bottom": BOTTOM["why"], "pull": A("vo04:pull"), "speed": A("vo04:triple#2"), "rungs": A("vo04:same")},
+    "why": {"R": R_w, "bottom": BOTTOM["why"], "pull": A("vo04:pull"), "speed": A("vo04:triple#2"), "rungs": A("vo04:same#2")},
     "whoa": {"R": W_R, "line": W_LINE},
     "measure": {"R": R_m, "freeze": F_m + M_FRZ, "swings": SWINGS, "counter": [cut("measure") + 0.3, cut("takeaway") - 0.3],
                 "lit": [A("vo06:behind."), cut("takeaway") - 0.3]},
@@ -182,22 +190,36 @@ LABELS = [
     {"id": "ch-10", "text": "10°", "color": "ghost", "t0": A("vo03:Let"), "t1": cut("why"), "anchor": {"bob": ["change", "small"]}, "side": -1, "fixed": True},
     {"id": "wy-pull-big", "text": "pull ×2.9", "color": "force", "t0": A("vo04:pull"), "t1": R_w, "anchor": {"arrow": "wy-f-big"}, "side": 1, "fixed": True},
     {"id": "wy-pull-small", "text": "pull ×1", "color": "force", "t0": A("vo04:pull", 0.15), "t1": R_w, "anchor": {"arrow": "wy-f-small"}, "side": 1, "fixed": True},
-    {"id": "wy-v-big", "text": "speed ×3", "color": "motion", "t0": A("vo04:triple#2"), "t1": A("vo04:same", -0.15), "anchor": {"arrow": "wy-v-big"}, "side": 1, "fixed": True},
-    {"id": "wy-v-small", "text": "speed ×1", "color": "motion", "t0": A("vo04:triple#2", 0.15), "t1": A("vo04:same", -0.15), "anchor": {"arrow": "wy-v-small"}, "side": 1, "fixed": True},
-    {"id": "wy-same", "text": "same moments", "color": "ghost", "t0": A("vo04:same"), "t1": cut("whoa"), "anchor": {"ghost": ["why", "big", 8]}, "side": 1, "fixed": True},
-    {"id": "wo-15", "text": "15 lengths", "color": "ghost", "t0": A("vo05:shorter."), "t1": A("vo05:For", -0.1), "anchor": {"wave": 14}, "side": 1, "fixed": True},
+    {"id": "wy-v-big", "text": "speed ×3", "color": "motion", "t0": A("vo04:triple#2"), "t1": A("vo04:same#2", -0.15), "anchor": {"arrow": "wy-v-big"}, "side": 1, "fixed": True},
+    {"id": "wy-v-small", "text": "speed ×1", "color": "motion", "t0": A("vo04:triple#2", 0.15), "t1": A("vo04:same#2", -0.15), "anchor": {"arrow": "wy-v-small"}, "side": 1, "fixed": True},
+    {"id": "wy-same", "text": "same moments", "color": "ghost", "t0": A("vo04:same#2"), "t1": cut("whoa"), "anchor": {"ghost": ["why", "big", 8]}, "side": 1, "fixed": True},
+    {"id": "wo-15", "text": "15 lengths", "color": "ghost", "t0": A("vo05:shorter."), "t1": A("vo05:For", -0.1), "anchor": {"wave": 7}, "side": 1, "fixed": True},
     {"id": "wo-line", "text": "in line", "color": "ghost", "t0": W_LINE, "t1": cut("measure") - 0.3, "anchor": {"wave": 0}, "side": 1, "fixed": True},
     {"id": "ms-home", "text": "home", "color": "motion", "t0": A("vo06:behind."), "t1": cut("takeaway") - 0.3, "anchor": {"bob": ["measure", "small"]}, "side": 1, "fixed": True},
     {"id": "ms-behind", "text": "0.31 s behind", "color": "energy", "t0": A("vo06:behind.", 0.12), "t1": cut("takeaway") - 0.3, "anchor": {"bob": ["measure", "big"]}, "side": -1, "fixed": True},
-    {"id": "ms-1in57", "text": "30°: 1.7% slower than a tiny swing", "color": "ghost", "t0": A("vo06:sixty."), "t1": cut("takeaway") - 0.3, "anchor": {"string": "big", "u": 0.3}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "tk-len", "text": "same length", "color": "ghost", "t0": A("vo07:Length"), "t1": A("vo07:A", -0.1), "anchor": {"string": "small", "u": 0.45}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "tk-fast", "text": "faster, not quite enough", "color": "motion", "t0": A("vo07:almost"), "t1": None, "anchor": {"bob": ["measure", "big"]}, "side": 1, "fixed": True},
+    {"id": "tk-fast", "text": "faster, not quite enough", "color": "motion", "t0": A("vo07:almost"), "t1": cut("tease") - 0.2, "anchor": {"bob": ["measure", "big"]}, "side": 1, "fixed": True},
 ]
 BADGES = [
     {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr"},
-    {"id": "harvard", "text": "Harvard's design: 51 to 65 swings a minute", "t0": A("vo05:Only"), "t1": cut("measure") - 0.3, "slot": "bl"},
-    {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction. The motion is exact, not the small-swing formula.", "t0": cut("takeaway") + 0.8, "t1": None, "slot": "tr"},
+    {"id": "harvard", "text": "Harvard's 15-pendulum design", "t0": A("vo05:Only"), "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:sixty."), "t1": cut("takeaway") - 0.3, "slot": "tr"},
+    {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction.", "t0": cut("takeaway") + 0.8, "t1": cut("tease"), "slot": "tr"},
 ]
+
+# ── the spine readout: one number on screen from the normal to the end card; its label names the beat ──
+# kind "watch": scene seconds since a take's release, capped; "const": a fixed value; "count": swings passed (cue.measure.swings)
+SPINE = [
+    {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "one swing", "unit": "s", "dp": 2, "kind": "watch", "take": "normal", "cap": T10 / 2},
+    {"t0": cut("change"), "t1": A("vo04:pull"), "label": "to the bottom", "unit": "s", "dp": 2, "kind": "watch", "take": "change", "cap": Q10},
+    {"t0": A("vo04:pull"), "t1": A("vo04:triple#2"), "label": "pull, big ÷ small", "unit": "×", "dp": 2, "kind": "const", "v": math.sin(30 * D2R) / math.sin(10 * D2R)},
+    {"t0": A("vo04:triple#2"), "t1": cut("whoa"), "label": "speed, big ÷ small", "unit": "×", "dp": 2, "kind": "const", "v": math.sin(15 * D2R) / math.sin(5 * D2R)},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "the wave's minute", "unit": "s", "dp": 1, "kind": "watch", "take": "wave", "cap": WAVE_ALIGN},
+    {"t0": cut("measure"), "t1": A("vo06:behind."), "label": "swings, small one", "unit": "", "dp": 0, "kind": "count"},
+    {"t0": A("vo06:behind."), "t1": cut("tease") - 0.3, "label": "big one, behind", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+]
+# "as in a grandfather clock": a 2 m long-case clock drawn in ink beside the rig, its 99.4 cm pendulum swinging with the small one
+CLOCK = {"x": 90.0, "z": -30.0, "h": 212.0, "w": 50.0, "pivotY": 168.0, "t0": A("vo02:as", -0.2), "t1": A("vo02:Ghosts", -0.2)}
 
 # ── camera: orbit keys per shot (yaw 0 = the measure view, looking along −z; pitch > 0 looks down) ─
 def cam(look, dist, yaw=0.0, pitch=14.0, fov=32.0):
@@ -208,21 +230,25 @@ def key(t, v, ease="p2", **over):
     return {"t": round(t, 4), **v, **over, "ease": ease}
 
 
-SET = cam([0.0, 62.0, -20.0], 520.0)                      # both lanes, pivots to floor
-SMALL = cam([0.0, 58.0, 0.0], 470.0, pitch=10.0)          # the front swing alone
-HOOK = cam([4.0, 40.0, -20.0], 400.0, pitch=16.0)         # the bottoms of both arcs, under the title
-WAVE_END = cam([0.0, 40.0, -35.0], 300.0, yaw=0.0, pitch=4.0)
-WAVE_TOP = cam([0.0, 30.0, -35.0], 210.0, yaw=0.0, pitch=62.0)
+SET = cam([0.0, 29.0, 5.0], 492.0, pitch=20.0)          # both lanes: pivots at y 338 px, the front bottom at 1129 px
+SMALL = cam([0.0, 34.0, 30.0], 516.0, pitch=10.0)          # the front swing alone
+WIDE = cam([25.0, 43.0, 5.0], 924.0, pitch=10.0)        # the rig beside a 2 m grandfather clock (the human-scale anchor)
+HOOK = cam([-14.0, 15.0, 5.0], 324.0, pitch=30.0)       # looking down on both bottoms: the strings run up the right, clear of the title
+WAVE_END = cam([0.0, 32.0, -5.0], 300.0, yaw=0.0, pitch=4.0)
+WAVE_TOP = cam([0.0, -3.0, -5.0], 352.0, yaw=0.0, pitch=55.0)   # the row from y 267 (far) to 1079 px (near)
 CAM = {
-    "hook": [key(0.0, HOOK), key(cut("normal"), {**HOOK, "dist": 390.0}, "sine")],
-    "normal": [key(cut("normal"), SMALL), key(cut("change"), {**SMALL, "dist": 455.0}, "sine")],
-    "change": [key(cut("change"), SET), key(cut("why"), {**SET, "dist": 505.0}, "sine")],
-    "why": [key(cut("why"), {**SET, "dist": 505.0}), key(A("vo04:So"), {**SET, "dist": 490.0}, "sine"), key(cut("whoa"), {**SET, "dist": 480.0, "look": [2.0, 60.0, -20.0]}, "sine")],
-    # the turn: end-on (fifteen look like one) craning up over the row as "each a little shorter" is said
-    "whoa": [key(cut("whoa"), WAVE_END), key(A("vo05:hang"), WAVE_END, "sine"), key(A("vo05:Only"), WAVE_TOP, "p3"), key(cut("measure"), {**WAVE_TOP, "dist": 200.0}, "sine")],
-    "measure": [key(cut("measure"), SET), key(cut("takeaway"), {**SET, "dist": 500.0}, "sine")],
-    "takeaway": [key(cut("takeaway"), {**SET, "dist": 500.0}), key(cut("tease"), {**SET, "dist": 515.0}, "sine")],
-    "tease": [key(cut("tease"), {**SET, "dist": 515.0}), key(DUR, {**SET, "dist": 540.0, "look": [0.0, 50.0, -20.0]}, "sine")],
+    "hook": [key(0.0, HOOK), key(cut("normal"), {**HOOK, "dist": 262.0}, "sine")],
+    "normal": [key(cut("normal"), {**HOOK, "dist": 262.0}), key(A("vo02:Each"), SMALL, "p3"), key(A("vo02:as"), SMALL, "sine"),
+               key(A("vo02:clock.", 0.2), WIDE, "p3"), key(A("vo02:One", 0.1), WIDE, "sine"), key(A("vo02:about"), SMALL, "p3"),
+               key(cut("change"), {**SMALL, "dist": 505.0}, "sine")],
+    "change": [key(cut("change"), {**SMALL, "dist": 505.0}), key(A("vo03:farther."), SET, "p3"), key(cut("why"), {**SET, "dist": 486.0}, "sine")],
+    "why": [key(cut("why"), {**SET, "dist": 486.0}), key(A("vo04:So"), {**SET, "dist": 476.0}, "sine"), key(cut("whoa"), {**SET, "dist": 470.0}, "sine")],
+    # a cut on the section's sound, then the turn: end-on (fifteen look like one), craning up over the row
+    "whoa": [key(cut("whoa"), WAVE_END), key(A("vo05:hang"), WAVE_END, "sine"), key(A("vo05:Only"), WAVE_TOP, "p3"), key(cut("measure"), {**WAVE_TOP, "dist": 345.0}, "sine")],
+    "measure": [key(cut("measure"), SET), key(cut("takeaway"), {**SET, "dist": 482.0}, "sine")],
+    "takeaway": [key(cut("takeaway"), {**SET, "dist": 482.0}), key(cut("tease"), {**SET, "dist": 470.0}, "sine")],
+    # the tease eases back to the hook's framing, so the last frame hands back to frame 0
+    "tease": [key(cut("tease"), {**SET, "dist": 470.0}), key(EC, HOOK, "p3"), key(DUR, HOOK, "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
@@ -232,11 +258,12 @@ film = {
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE,
     "swing": {"L": L, "pivotY": PIV_Y, "r": R_BOB, "lanes": LANE, "theta": TH, "dt": DT, "n": NG, "T": {"small": T10, "big": T30}, "thetaBigFreeze": TH_BIG_F},
-    "wave": {"n": WAVE_N, "L": WAVE_L, "theta": WAVE_TH, "y": WAVE_Y, "dz": WAVE_DZ, "r": WAVE_R, "align": WAVE_ALIGN},
-    "labels": LABELS, "badges": BADGES, "cam": CAM,
+    "wave": {"z0": WAVE_Z0, "n": WAVE_N, "L": WAVE_L, "theta": WAVE_TH, "y": WAVE_Y, "dz": WAVE_DZ, "r": WAVE_R, "align": WAVE_ALIGN},
+    "labels": LABELS, "badges": BADGES, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]}, "cam": CAM, "spine": SPINE, "gclock": CLOCK,
     "captionY": 0.632, "title": TITLE,
     "captions": f.captions(max_chars=24), "endCard": EC,
-    "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Rest Frame"},
+    "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Rest Frame",
+            "foot": "Huygens built the first pendulum clock in 1656. It kept time to about a minute a day."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
@@ -263,11 +290,11 @@ for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd["text"]})
 for i, t in enumerate(SWINGS):
     ev.append({"t": t, "kind": "counter.end" if i == 19 else "counter.tick", "tag": f"swing{i + 1}"})
-ev.append({"t": CUE["measure"]["counter"][0], "kind": "counter.show", "tag": "swings"})
+ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
 ev.append({"t": W_LINE, "kind": "reveal", "tag": "in-line"})
-ev.append({"t": A("vo04:same"), "kind": "reveal", "tag": "same-moments"})
+ev.append({"t": A("vo04:same#2"), "kind": "reveal", "tag": "same-moments"})
 ev.append({"t": round(A("vo05:hang"), 4), "kind": "swell", "tag": "whoa:turn"})
 
 cues_file = HERE / "build" / f"cues-{film['id']}-9x16.json"
