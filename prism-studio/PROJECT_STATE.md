@@ -24,11 +24,11 @@ _Updated 2026-10-25._
 
 ## Stage C (first cut, in progress)
 - Connector contract (`src/integrations/types.ts`), sealed tokens, OAuth start/callback routes with a sealed state cookie and PKCE, signed public media links (Instagram), connections domain (verify account onto the destination, refresh, expire, disconnect), publish job + `publish_status` follow-up, the minute scheduler for "Approved" channels, Publish now on the desk, Connect/Disconnect on Accounts. 12 tests with a fake connector.
-- Connectors for YouTube, TikTok and Instagram: being written (mocked-fetch tests); registered in `src/integrations/index.ts` when they land.
+- Connectors for YouTube (resumable upload, captions, thumbnail, status, metrics), TikTok (inbox upload or direct post, status, metrics) and Instagram (Reels container → publish, limit check, insights): registered; 62 mocked-fetch tests. Each connector's `conditions` text states what could not be verified against the live docs (the sandbox can't open Google/TikTok/Meta developer pages; web-search excerpts were used).
 - Not yet: API analytics import, costs/budgets UI, demo-data toggle.
 
 ## Next
-- Register the three connectors; connect the first real account (needs the owner's Google Cloud / TikTok / Meta app credentials in `.env.local`); verify a real upload end to end on a private test video.
+- Connect the first real account (needs the owner's Google Cloud / TikTok / Meta app credentials in `.env.local`); verify a real upload end to end on a private test video.
 - API analytics (`metric_snapshots` source `api`), costs and budgets UI, demo-data toggle.
 - **Stage D/E:** hosted deployment (managed Postgres, object storage for media), push notifications for due uploads.
 
