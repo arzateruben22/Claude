@@ -35,7 +35,8 @@ export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
 // wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
 export interface CarConfig { car: CarId; paint: number; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
-export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number }
+// paused: the game is paused (the hands' off-wheel blend and wave hold still)
+export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
 const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
@@ -186,7 +187,7 @@ export class PlayerCar {
       const r = front ? A.r : rearR(P), k = r / 0.345, scale = new THREE.Matrix4().makeScale(1, k, k);
       for (const out of [1, -1] as const) {
         const hub = new Kit(), spinKit = new Kit();
-        addWheel(hub, { q: c.quality, front, style: c.wheel ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, scale, out, spinKit);
+        addWheel(hub, { q: c.quality, front, style: c.wheel ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall, brand: P.brand }, scale, out, spinKit);
         const steer = new THREE.Group(), spin = new THREE.Group();
         hub.build(this.mats, steer, { shadow: () => false });
         spinKit.build(this.mats, spin, { shadow: (key) => key === 'tyre' || key === 'rimPaint' });
@@ -313,7 +314,7 @@ export class PlayerCar {
         kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE' });
       this.interior.update?.(dt);
     }
-    this.arms?.setWheelAngle(this.wheelAngle);
+    this.arms?.setWheelAngle(this.wheelAngle, s.paused ? 0 : dt);
   }
 
   // place everything for this frame; alpha blends the last two physics steps. With the road's path the beam pool is

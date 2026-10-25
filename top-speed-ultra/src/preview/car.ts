@@ -96,7 +96,7 @@ export function addWheels(kit: Kit, B: CarBody, q: Quality, rim?: WheelStyle) {
       const r = front ? A.r : rearR(P), k = r / 0.345;
       for (const out of [1, -1] as const) {
         const m = new THREE.Matrix4().compose(v3(out * track, r, z), new THREE.Quaternion(), v3(1, k, k));
-        addWheel(kit, { q, front, style: rim ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, m, out);
+        addWheel(kit, { q, front, style: rim ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall, brand: P.brand }, m, out);
       }
     }
   });

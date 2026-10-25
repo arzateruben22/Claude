@@ -93,6 +93,14 @@ the snapshot is a mid-edit state that never reached a judge, so merge only if ts
 pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
 small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
 
+**Resumed 04:27 UTC (2026-10-22, the owner: "keep going ... connect it to this branch and integrate both systems
+seamlessly"; they chose: the live server + this game, landing only after a judge).** Three workflows: the Fable overdrive
+(resumed), the Retro finish (resumed), and the live integration: `integrate/live` cut from `claude/hypercar`, bringing
+ONLY `top-speed-ultra/` from `origin/claude/live-server` db324db (no `server/`, `paper-book/`, desks or `START-HERE.md`),
+as a regular commit (a merge commit dropping those paths would revert them in a later merge back). The Live UI moves onto
+this branch's theme and navigation (the rail's Online row, Settings, the phone). The live-server session was told
+(04:35); `claude/live-server` itself is untouched.
+
 **Paused 23:02 UTC by the owner (see the progress log's 23:02 entry for each branch's state); was in flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
@@ -117,8 +125,60 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
+**The always-on session is active again (07:03 UTC message).** At the owner's request (two phone screenshots) it is
+condensing the in-race HUD for phone first (`HUD.tsx`, the HUD styles, the HUD bits of `App.tsx`) and fixing the seat
+POV. It asked this session to hold the HUD files. This session starts no HUD work; the live integration touches them only
+to resolve the merge (both sides' readouts kept, no redesign). Whichever lands second builds on the other. Agreed at 07:10: the always-on session's condensed HUD lands first on
+`local/live-preview` (pushed), with `docs/specs/HUD_CONDENSED.md` giving a slot to every live and story readout; this
+session then CHERRY-PICKS only those HUD commits (never a merge of `local/live-preview`, which carries the store) onto
+`integrate/live` or `claude/hypercar` and fits the readouts into the slots. If `integrate/live` lands first, message
+that session its commit. The always-on
+session is also merging `claude/hypercar` (388cfa2) into its `local/live-preview` for the owner's main link.
+
+**Connecting to `claude/always-on` (the owner, 04:40 UTC).** After the live integration lands on `claude/hypercar`,
+this session merges `claude/hypercar` into `claude/always-on` (only `top-speed-ultra/` differs; the diff outside it must be
+empty), and keeps doing so after every judged landing. The live server's deploy pieces outside the game folder
+(`server/live*.sh`, `server/systemd/oc-live.service`, the setup/status/backup hooks, `paper-book/watchdog.py`'s oc-live
+alert, START-HERE.md Part 4) stay on `claude/live-server`. The owner chose (04:48) that the live-server session merges
+`claude/live-server` into `claude/always-on` when it is resumed, after this session's merge, resolving the desks' files
+itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's integrated side. Before landing,
+`integrate/live` must pass every core group (the live-server session's last core run on db324db was cut off).
+
 ### Decisions waiting (the owner's)
 
+- **Sim mode's low-speed slides (physics plan item 1, 2026-10-22).** Below about 6 m/s of forward speed a "parking cart"
+  rescue catches a sideways slide and swings the yaw hard, at 2,651 deg/s², 4.7 times what the tyres allow (558). An
+  implicit lateral/yaw step removes that snap (166 deg/s²). But without the rescue, Sim slides past about 60 deg can
+  spin, so 82 of the harness's Sim catch checks fail. Choose:
+  - (a) big Sim slides may spin, and the Sim catch checks become "a finite spin that stops rotating", like the Sim
+    power-over check already is; or
+  - (b) keep the rescue.
+
+  If (a), apply `scratchpad/fable/physics/after/item1-not-committed/item1-refined-on-d885737.patch` (it applies
+  cleanly; the evidence is in the same folder). Fix the harness's backwards-travel drift reading first.
+- **The pause (13:38 UTC): what waits for the owner.**
+  - Hair and body: plans from their audits, branched from the face head.
+  - The Retro finish (`retro/port`, judge pending).
+  - **Face/eyes (`fable/face`, b5ac6a2, pushed; not landed).** Round 2 built teeth, beard/goatee/moustache strand
+    cards, smile coupling, eyes set in their sockets, a cheaper phone skin shader and mouth corners, then one repair
+    round. The re-judge (Opus) still said revise. Next round:
+    - **(sev 3)** full-beard men at yaw 45 deg or more show the beard as a hard-edged dark box over the front of the
+      ear. Build masks.ts `side` from smooth ramps that stop before the ear.
+    - **(sev 2)** greying facial hair over a dark hair colour still speckles at game distance. Keep the card base at
+      hairColor*0.55 unless the hair is itself grey/white.
+    - **(sev 1, small):**
+      - a person.ts one-liner to feed uEyeP (eyeSize, tilt, hooded) from getFaceMat;
+      - move MORPHS/MI/NM to a leaf module (an import cycle);
+      - taper the beard tufts at macro;
+      - re-aim the talk-mouth crop;
+      - correct the brow-difference numbers.
+
+    Evidence: `scratchpad/fable/face/judge1`, `judge2` and `after/`.
+  - The walk-in interiors (needs the always-on session's S1 engine).
+  - Smaller follow-ups:
+    - hands: smooth the thumb-bone weights, the knee pose's thumb, the nail tint;
+    - wheels: the twin5 seam, the crown at the spoke root, the recess disc, a high-tier tyre pass.
+- **The weekly usage budget: answered (06:50 UTC).** The owner: "Continue all 3 even if my current session runs out - continue once it resets". Every area continues (hands, wheels and the live integration, then Retro, then physics, face/eyes, hair and body); when a limit stops work, the hourly task resumes it after the reset, and a one-off check-in is set for the weekly reset (Sunday 2026-10-25 22:05 UTC).
 - The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
 - Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.
 - Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`

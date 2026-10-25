@@ -4,6 +4,163 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
+
+- **The owner (13:38 UTC): "Take a pause once tasks are complete."** The work in flight finishes and lands if judged
+  keep: the live integration, the face/eyes judge, and this physics landing. Nothing new starts: hair, body and the
+  Retro finish wait. A watcher stops overdrive round 2 if it reaches hair or body. When the in-flight work is done, the
+  hourly task and the Sunday check-in are switched off.
+- **Landed `fable/physics` on `claude/hypercar`** as e1c2270 (2 commits, `src/game/vehicle/Physics.ts` only). The judge (Opus)
+  returned keep and reproduced every claim byte for byte.
+  - **What changed:**
+    - A step longer than 1/120 s now runs as equal 1/120 s steps with the controls held, so a 60 Hz caller gets the
+      120 Hz car. Measured 60 against 120 Hz: 0-60 within 0.37 % (was 2.94 %), 0-100 0.22 % (1.08 %), quarter mile
+      0.10 % (0.55 %), top speed 0.00 %, 100-0 0.11 %, lateral g 0.000 g, catch time within 9.8 % (the scripted driver
+      decides at 60 Hz).
+    - A barrier grind costs per second, not per step. 240 against 120 Hz, the barrier's share of the speed lost is
+      within 0.4-3.0 % in the judge's harder press (base: up to +99 %).
+  - **In the game nothing changes for a player:** the game always steps at exactly 1/120 s, a path the judge proved
+    bit-identical. The value is that the model now meets the dynamics design's dt-independence requirement and protects
+    any future caller at another rate.
+  - **The judge's guards** (f00ae9f, by the coordinator):
+    - a non-finite step is ignored, and a long one is capped at 12 steps (`step(Infinity)` used to loop forever);
+    - a landing counts as a fresh barrier touch.
+
+    Both are bit-identical at 120 Hz.
+  - **Verified on the merged build:**
+
+    | Check | Result |
+    | --- | --- |
+    | `node tests/dynamics.mjs` | 1742 passed, 0 failed; the JSON byte-identical to the judge's and to before (sha256 e28f83e5) |
+    | `--hz=60 --only=perf,drift` | 1163 passed, 13 failed, byte-identical to the judge's (base: 31 failed). The 13 are harness artefacts |
+    | survival | 7/7 |
+    | race | 6/6 |
+
+    The 13 harness artefacts: the 60 Hz kTop sampling aliases on the rev limiter (8 top-speed rows with tops equal to
+    120 Hz's), plus driver-rate checks.
+  - **Not done:**
+    - **Plan item 1** (an implicit lateral/yaw step, which takes the low-speed yaw snap from 2,651 to 166 deg/s², under
+      the tyres' 558 ceiling) is built but not committed: it fails 82 Sim catch checks. That's the owner's call (see the
+      handoff's "Decisions waiting").
+    - **Harness fixes for the tests lane:**
+      - the advisory rows print `[object Object]`;
+      - kTop should be sampled per 1/120 s;
+      - a car travelling backwards reads a drift angle of 0.
+    - The audit's step-cost label was out by 1,000: the model costs about 0.018 % of one core, not 21 %.
+
+## 2026-10-22 (12:45 UTC): the overdrive's round 1 landed: the thumbs and the wheels
+
+- **Landed on `claude/hypercar`** after independent adversarial judges, each running on Opus (the session's model since
+  the Fable limit at 05:28), returned **keep**:
+  - `fable/wheels` as 7ab71b5 (8 commits, `src/preview/car-wheel.ts` only);
+  - `fable/hands` as fb35439 (13 commits: `hands.ts`, `hands-sdf.ts`, `hands-geo.ts`, `hands-skin.ts`, `test-hands.ts`
+    and new `tools/preview-hands-*` tools).
+- **The thumbs (the owner's "Fix the thumbs still").**
+  - Each thumb lies along the rim's front face toward twelve, with the nail square to the driver's eye (cosine 0.98 m /
+    0.97 f) and the tip's pad on the leather.
+  - The first web space is a saddle instead of a mound, so the rim shows in a notch between the index knuckle and the
+    thumb (no eye ray through the web meets the rim, 0/105).
+  - There's an IP knuckle and crease that also reads on the shaded thumb in the game (luminance 50 at the IP against
+    61-66 beside it, where before there was no dip), and a wider nail.
+  - Off the wheel (the Closer's watch check, the Ace's wave) a thumb bone curls the thumb into the fist, so those poses
+    no longer read as a thumbs-up. On the wheel the render is pixel-identical to the pass before it.
+  - **Cost:** 664 triangles (+0.9 %, 75,744 to 76,408 in the seat view), no new draw calls, 2 more skeleton bones, still
+    no per-frame allocation.
+  - **The judge** re-rendered the seat view at the game's framing (`?frame=game`, 1170x2532 High): pixel-identical to the
+    implementer's shot. It then built the game and shot it in game at the owner's capture size (393x852 at 3x).
+- **The wheels.**
+  - The Aero Disc's banding is gone: the cover is re-meshed as polar grids (max triangle aspect 3.6, was 499).
+  - Every spoke style has crowned faces that catch a highlight; twin5, cl10 and blade are forged-wide.
+  - The five-bolt hub boss is smaller (34 % of the rim, was 41 %), with chamfered nuts and a valve stem on every open
+    style.
+  - Round 7 x 8 mm drill holes on the discs instead of ovals.
+  - The caliper wordmarks sit on a strip of their own aspect (stretch 1.00, was 0.38).
+  - Phone tyres drop their groove geometry: about 13 % fewer triangles per car on phone (GT 141,920 to 122,384 for all
+    five cars' wheels), with the sidewall pixel-identical.
+  - **Cost:** High +388 to +1,228 triangles a wheel, no new material keys, so no new draw calls.
+  - **The judge** re-rendered the headline shot (GT twin5 wheel-side, High): byte-identical.
+- **The judges' one-line hooks** (fbb60a7, outside the two branches' files):
+  - the hands' off-wheel blend and wave hold while the game is paused (`CockpitState.paused`, so `setWheelAngle` gets
+    0 then);
+  - the calipers pick their wordmark strip by the car's brand (`brand: P.brand` in `car.ts` and `PlayerCar.buildWheels`);
+  - a NaN step can no longer leave the arms at NaN.
+- **Verified on the merged build** (fbb60a7; tsc clean, `npm run build` clean), one group at a time:
+
+  | Group | Result |
+  | --- | --- |
+  | boot | 6/6 |
+  | abilities | 4/4 (fires the abilities' off-wheel hand poses) |
+  | launch | 11/11 (the Wheels tab check included) |
+  | render | 14/14 |
+
+  Both branches had also passed these groups at their own heads. The render group's "reset" check failed once on each
+  branch (29.21 against a 30 m/s pre-reset speed) and passed on the re-run: a load flake, not these changes.
+- **Not done or not proven, honestly:**
+  - **Hands:**
+    - The thumb's IP and MCP stand 2.5 and 5-7 mm off the leather; only the tip touches. It's hidden from the seat.
+    - The thumb-bone weights change sharply across the web in the off-wheel poses; smoothing them is queued.
+    - The Wrench's knee pose curls the thumb more than it should.
+    - The nail reads near-white under the test page's light.
+  - **Wheels:**
+    - A 1 px dashed seam on the twin5's Y stem at close range.
+    - The crown stands up to 2 mm proud of the boss at the spoke root.
+    - The recess disc floats 0.7-4.9 mm over the sloped boss.
+    - On the phone chase camera the wheels look the same; the gain shows in the garage and close views.
+  - No real-phone frame rates (SwiftShader only).
+- **Republished** the test build (version 9, from fbb60a7).
+- **Not yet merged into `claude/always-on`, on purpose.** A trial merge conflicted in `Game.ts`, `settings.ts`, `App.tsx`,
+  `HUD.tsx`, `styles.css` and three docs. The two branches split at 9cdcf07. Since then, always-on's 18 game commits are
+  all in the live server's code by patch, except decision 16 (`PROJECT_OC_DECISIONS.md`). That code reaches this branch
+  only through `integrate/live`, a plain commit, so git can't see the overlap. Resolving now would either undo
+  always-on's live work or repeat the integration's work by hand. The merge was aborted. It happens right after
+  `integrate/live` lands: game files resolve to this branch's versions, decision 16's lines are kept, and the diff outside
+  `top-speed-ultra/` stays empty.
+- **A lesson from the run.** At 11:40 the overdrive was stopped and resumed with the hands and wheels judges moved ahead
+  of the other implementers. A Workflow resume replays saved results only until its first new agent call; after that
+  everything runs live. So the face, physics, hair and body audits ran live on Fable and failed at once (no Fable usage
+  spent). Round 2 (`overdrive-round2.js`, from 12:15) carries those four audits inline and makes no Fable calls:
+  - physics and face/eyes first;
+  - then hair and body, branched from the face head if face is kept.
+
+## 2026-10-22 (08:40 UTC): the five-hour limit again; the integration is committed, resumed for its proofs
+
+- **About 07:05 UTC:** the session's five-hour limit stopped all three agents; it reset at 07:50.
+- **What the agents had committed (all pushed):**
+  - **`integrate/live`:**
+    - 1b0bc0c, the integration itself: `top-speed-ultra/` only from `claude/live-server` db324db, a regular commit
+      with nothing outside the game folder;
+    - Live in this branch's navigation: the phone's Online app, the radial menu's Online wedge, the live drive;
+    - the live side's menu details on the cinematic menu, the account avatar in the car's accent;
+    - the Live panel usable mid-drive; live drivers' names on the World Map; the control rail placed under the sky
+      camera;
+    - the tests moved to the unified menu (the live groups open Live from the rail's Online row; the mode cards' arrow
+      keys; the mid-drive Live panel from the phone).
+  - **`fable/hands`:** the thumb now separates from the hand (a web valley beside the proximal phalanx) and its joint
+    reads (two segments, a crease, a spatulate tip), plus measuring tools.
+  - **`fable/wheels`:** the OC mark unstretched on the hypercar's calipers and Aero Disc.
+- **Not yet done:** none of this is proven by a full test run or judged. Those runs' results were lost with the
+  agents, so the resumed integrator re-runs every core group and the live groups before its judge. Hands and wheels
+  continue to their proofs and judges.
+
+## 2026-10-22 (05:27 UTC): a container restart; the work kept and resumed
+
+- **05:20 UTC:** the session's container restarted and every running agent stopped. The disk survived.
+- **Kept, and now pushed:**
+  - `fable/hands`: 5 more commits, including a node check for the thumbs and the first web space
+    (`tools/preview-hands-web.mjs`) and a merge of `claude/hypercar`;
+  - `fable/wheels`: brought up to `claude/hypercar`;
+  - `retro/port`: brought up to `claude/hypercar`.
+- **The live integration** (`integrate/live`) was mid-merge: every path outside `top-speed-ultra/` already restored, and
+  all eight conflicts resolved in the working tree but unstaged. The rerun reviews those resolutions against both sides
+  before committing, then runs every core group plus the live ones (the live-server session's core run on db324db had
+  been cut off).
+- **05:28: the Fable model's usage limit was reached.** Every relaunched agent failed at once, before doing any work. The
+  remaining agents (the implementers, judges, the critic and the integrator) now run on Opus, the session's model. The
+  seven audits stay Fable's, replayed from the journal. Which model judged each landing will be named in its entry.
+- **Relaunched at 05:27, then on Opus at 05:31,** at most three agents at once: the integration and the overdrive (its implementers continue
+  their existing branches). The Retro finish waits for the first free slot. No log says whether memory caused the
+  restart; the cap is a precaution.
+
 ## 2026-10-21 (23:02 UTC): paused by the owner
 
 The owner said "Pause". Both workflows were stopped and the hourly task switched off. The 00:20 stop-and-ask check-in was
