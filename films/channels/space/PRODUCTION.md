@@ -8,9 +8,17 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
 | 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | **delivered** 25 Oct: 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.2 LU over music, sync PASS, 0 flashes, qa.py PASS; render 31 min |
 | 003 | Venus day | §7 #2 | reviewed, voiced (74.67 s, 17 claims), built (−14.1 LUFS, voice 12.3 LU over music, sync PASS), stills OK, **rendering final** (from 22:52 UTC) |
-| 004 | Falling Moon | §7 #3 | reviewed (fixes applied), voiced (73.07 s, lint 0 errors, 18 claims) |
-| 005 | Sun size | §7 #4 | reviewed (fixes applied), voiced (74.13 s, lint 0 errors, 17 claims) |
-| 006 | Your speed | §7 #5 | — |
+| 004 | Falling Moon | §7 #3 | reviewed, voiced (73.07 s, 18 claims), compile + scene written, soundtrack built (−14.1 LUFS, 12.5 LU, sync PASS; pre-cues), docs drafted; **next: animatic/final-tier stills (picture not checked yet)** |
+| 005 | Sun size | §7 #4 | reviewed, voiced (74.13 s, 17 claims), compile + scene written, soundtrack built (−14.1 LUFS, 12.4 LU, sync PASS; pre-cues), docs drafted; **next: stills (picture not checked yet)** |
+| 006 | Your speed | §7 #5 | scripted, reviewed (fixes applied), lint 0 errors, 15 claims; not voiced (waits for 005 per the coordinating session) |
+
+## Paused (the user, 25 Oct ~23:27 UTC): how to resume
+1. `git status`; `ps -eo args | grep "[r]ender.mjs"` (nothing should run). Voice venv: `kits/cinema/voice/setup.sh <dir>` if the container was replaced.
+2. 003: if `out/lightminute-003-9x16.mp4` is missing, `kits/cinema/film/run.sh films/channels/space/ep03` (resumes), then
+   `--assemble --audio build/audio/mix.wav`, contact sheet to `out/`, `qa.py`, `scorecard.py` → `review/scorecard.md`.
+3. 004, then 005: `render.mjs --tier animatic/final --times …` stills → fix → `--cues` → compile → studio → `run.sh --tier final` → deliver.
+4. 006: voice (`voice.py`), compile.py and scene.mjs (not written yet), then as above.
+5. Then the summary at the top of this file and the one-line-per-episode reply to the coordinating session.
 
 ## Picture rules (WRITING.md "The picture", merged 25 Oct from a0adc1a) and how each episode applies them
 - **002:** one world (the hook's local view, then one continuous shot: flight → signal → heliopause → ×12 pull to the
