@@ -10,6 +10,7 @@ import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport } from "../src/domain/episodes";
 import { HASHTAGS, type Topic } from "../src/domain/catalog";
+import { captionsToSrt } from "../src/domain/srt";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -55,6 +56,7 @@ export async function importEpisodes(d = db()) {
       await d.update(S.episodes).set({
         title: film?.title?.title ? plain(film.title.title) : title, question, seasonId: season[0].id, seriesId: se.id, seriesOrder: n,
         script: info ? info.vo.join("\n\n") : ep.script, storyboard: info ? info.beats : ep.storyboard, durationS: film?.dur ?? ep.durationS,
+        captionsSrt: film?.captions ? captionsToSrt(film.captions) : ep.captionsSrt,
         filmsPath: exists ? rel(dir) : ep.filmsPath, state: advance as typeof ep.state, updatedAt: new Date(),
       }).where(eq(S.episodes.id, ep.id));
       // claims → sources (replace: claims.json is the source of truth for an imported episode)

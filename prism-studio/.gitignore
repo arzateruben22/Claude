@@ -9,3 +9,4 @@ data/backups/
 next-env.d.ts
 playwright-report/
 data/DEV-PASSWORD.txt
+data/preview/

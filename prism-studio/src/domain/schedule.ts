@@ -1,8 +1,8 @@
 // The daily plan: which destinations are due when, in the studio timezone. A scheduled time on a manual
 // destination is an upload task due for the owner. Missed slots move to the next open slot (no catch-up burst).
-import { and, eq, gte, inArray, isNull, lt, lte, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { blackouts, channels, destinations, episodes, publications, publishingWindows } from "../db/schema";
+import { blackouts, channels, destinations, episodes, platformExports, publications, publishingWindows, versions } from "../db/schema";
 import { audit, type Conn, settings } from "./core";
 import { addDays, localDate, zonedTimeToUtc } from "./time";
 
@@ -86,4 +86,59 @@ export async function rescheduleMissed(d: DB, now = new Date(), graceHours = 6) 
 /** Episodes ready for a destination, in channel order (the next to post first). */
 export async function nextReadyEpisodes(c: Conn, channelId: string) {
   return c.select().from(episodes).where(and(eq(episodes.channelId, channelId), inArray(episodes.state, ["approved", "scheduled", "published", "analytics"]))).orderBy(episodes.number);
+}
+
+/**
+ * Fill the next `days` local days' open slots. A channel's YouTube/TikTok slot takes that destination's next
+ * unscheduled publication in episode order; the shared Instagram takes the next channel in turn that has an
+ * Instagram export not yet placed there. Planning never approves anything: the Upload Desk still requires a
+ * live approval of the exact export before a task can be marked uploaded. Returns how many were placed.
+ */
+export async function planDays(d: DB, from: string, days: number, now = new Date()) {
+  let placed = 0;
+  for (let i = 0; i < days; i++) {
+    const slots = await slotsForDate(d, addDays(from, i));
+    for (const slot of slots) {
+      if (slot.at <= now) continue;
+      const [taken] = await d.select({ id: publications.id }).from(publications)
+        .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled")));
+      if (taken) continue;
+      if (slot.kind !== "instagram") {
+        const [next] = await d.select({ id: publications.id }).from(publications)
+          .innerJoin(episodes, eq(episodes.id, publications.episodeId))
+          .where(and(eq(publications.destinationId, slot.destinationId), isNull(publications.scheduledFor), inArray(publications.status, ["planned", "ready"]), eq(episodes.isDemo, false), eq(publications.simulated, false)))
+          .orderBy(asc(episodes.number)).limit(1);
+        if (!next) continue;
+        await d.update(publications).set({ scheduledFor: slot.at, originalSlot: slot.at, updatedAt: new Date() }).where(eq(publications.id, next.id));
+        await audit(d, "owner", "publication.planned", "publication", next.id, { at: slot.at });
+        placed++;
+        continue;
+      }
+      // shared Instagram: rotate through channels, oldest unplaced episode first
+      const chans = await d.select().from(channels).where(eq(channels.paused, false)).orderBy(asc(channels.sort));
+      const [last] = await d.select({ channelId: episodes.channelId }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
+        .where(and(eq(publications.destinationId, slot.destinationId), ne(publications.status, "cancelled"))).orderBy(desc(publications.scheduledFor)).limit(1);
+      const start = last ? (chans.findIndex((c) => c.id === last.channelId) + 1) % Math.max(1, chans.length) : 0;
+      for (let k = 0; k < chans.length; k++) {
+        const ch = chans[(start + k) % chans.length];
+        const [cand] = await d.select({ episodeId: episodes.id, exportId: platformExports.id }).from(platformExports)
+          .innerJoin(versions, eq(versions.id, platformExports.versionId)).innerJoin(episodes, eq(episodes.id, versions.episodeId))
+          .where(and(eq(episodes.channelId, ch.id), eq(platformExports.platform, "instagram"), eq(versions.superseded, false), eq(episodes.isDemo, false),
+            sql`not exists (select 1 from publications p where p.episode_id = ${episodes.id} and p.destination_id = ${slot.destinationId})`))
+          .orderBy(asc(episodes.number)).limit(1);
+        if (!cand) continue;
+        const [row] = await d.insert(publications).values({ episodeId: cand.episodeId, destinationId: slot.destinationId, exportId: cand.exportId, kind: "instagram", status: "planned", scheduledFor: slot.at, originalSlot: slot.at })
+          .onConflictDoNothing().returning();
+        if (row) { await audit(d, "owner", "publication.planned", "publication", row.id, { at: slot.at }); placed++; }
+        break;
+      }
+    }
+  }
+  return placed;
+}
+
+/** Take a publication off the calendar (back to the unscheduled backlog). */
+export async function unschedule(d: DB, publicationId: string) {
+  await d.update(publications).set({ scheduledFor: null, updatedAt: new Date() })
+    .where(and(eq(publications.id, publicationId), inArray(publications.status, ["planned", "ready", "handed_off"])));
 }

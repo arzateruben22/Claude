@@ -29,30 +29,17 @@ export function localMonth(at: Date, tz: string): string {
 export function zonedTimeToUtc(date: string, time: string, tz: string): Date {
   const [y, m, d] = date.split("-").map(Number);
   const [hh, mm] = time.split(":").map(Number);
-  const want = Date.UTC(y, m - 1, d, hh, mm);
-  // the offset at a guess, then refine once: two passes settle every case except gaps
-  let guess = want;
-  for (let i = 0; i < 3; i++) {
-    const p = zonedParts(new Date(guess), tz);
-    const asUtc = Date.UTC(p.y, p.m - 1, p.d, p.h, p.min, p.s);
-    guess += want - asUtc;
-  }
-  const p = zonedParts(new Date(guess), tz);
-  const got = Date.UTC(p.y, p.m - 1, p.d, p.h, p.min);
-  if (got !== want) {
-    // inside a spring-forward gap: walk forward minute by minute to the first valid local time
-    let t = guess;
-    for (let i = 0; i < 180; i++) {
-      t += 60_000;
-      const q = zonedParts(new Date(t), tz);
-      if (Date.UTC(q.y, q.m - 1, q.d, q.h, q.min) >= want) return new Date(t - q.s * 1000);
-    }
-  }
-  // fall-back overlap: prefer the earlier instant if an hour earlier shows the same wall time
-  const earlier = guess - 3_600_000;
-  const e = zonedParts(new Date(earlier), tz);
-  if (Date.UTC(e.y, e.m - 1, e.d, e.h, e.min) === want) return new Date(earlier);
-  return new Date(guess);
+  const want = Date.UTC(y, m - 1, d, hh, mm);            // the wall time, written as if it were UTC
+  const wall = (t: number) => { const p = zonedParts(new Date(t), tz); return Date.UTC(p.y, p.m - 1, p.d, p.h, p.min, p.s); };
+  const offset = (t: number) => wall(t) - t;             // local minus UTC at instant t
+  const before = offset(want - 86_400_000), after = offset(want + 86_400_000);
+  // the instant is want minus the offset in force; try both offsets around the date (they differ only near a change)
+  const valid = [want - before, want - after].filter((t) => wall(t) === want).sort((p, q) => p - q);
+  if (valid.length) return new Date(valid[0]);           // fall-back overlap: two valid instants, take the earlier
+  // spring-forward gap: no instant shows this wall time; return the transition (the first valid instant after it)
+  let lo = want - before - 3 * 3_600_000, hi = want - after + 3 * 3_600_000;   // offset(lo) = before, offset(hi) = after
+  while (hi - lo > 60_000) { const mid = lo + Math.floor((hi - lo) / 120_000) * 60_000; if (offset(mid) === before) lo = mid; else hi = mid; }
+  return new Date(hi);
 }
 
 /** Add whole days to a "YYYY-MM-DD" date (calendar arithmetic, no timezone involved). */

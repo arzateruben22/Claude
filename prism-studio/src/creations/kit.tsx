@@ -166,13 +166,14 @@ export function motionCss(p: string, motion: Motion): string {
   const pause = `.prism-paused ${S} *,${S}.prism-paused *{animation-play-state:paused!important}`;
   const base = `${S} g{transform-box:view-box;transform-origin:0 0}${S} .a-sweep,${S} .a-swirl{opacity:0}`;
   if (motion === "static") return base + pause;
-  const kinds = (motion === "full" ? Object.keys(KF) : ["shimmer"]) as AnimKind[];
+  // reduced: only very slow, opacity-only breathing (shimmer + glow pulse at 1/3 speed)
+  const kinds = (motion === "full" ? Object.keys(KF) : ["shimmer", "pulse"]) as AnimKind[];
   const frames = kinds.map((k) => `@keyframes ${p}-${k}{${KF[k][0]}}`).join("");
   const rules = kinds
     .map(
       (k) =>
         `${S} .a-${k}{animation-name:${p}-${k};animation-duration:calc(var(--d,${k === "shimmer" ? 9 : 6}s)*var(--k,1)${
-          motion === "reduced" ? "*2" : ""
+          motion === "reduced" ? "*3" : ""
         });animation-delay:calc(var(--dl,0s)*var(--k,1));animation-timing-function:${KF[k][1]};animation-iteration-count:infinite;animation-fill-mode:both}`,
     )
     .join("");
@@ -300,6 +301,44 @@ export function orbit(ctx: Ctx, key: string, s: OrbitSpec, body: React.ReactNode
           <polygon points={half(1)} />
         </clipPath>
         <g clipPath={`url(#${fid})`}>{make()}</g>
+      </g>
+    ),
+  };
+}
+
+/**
+ * Clip one node into its far (back) and near (front) halves around a line
+ * through (cx,cy) at `rot` degrees, for layering around a central body.
+ */
+export function halves(ctx: Ctx, key: string, cx: number, cy: number, rot: number, node: React.ReactNode) {
+  const t = (rot * Math.PI) / 180;
+  const ux = Math.cos(t);
+  const uy = Math.sin(t);
+  const L = 600;
+  const poly = (sgn: 1 | -1) =>
+    pts([
+      [cx + ux * L, cy + uy * L],
+      [cx - ux * L, cy - uy * L],
+      [cx - ux * L - uy * L * sgn, cy - uy * L + ux * L * sgn],
+      [cx + ux * L - uy * L * sgn, cy + uy * L + ux * L * sgn],
+    ]);
+  const bid = ctx.id(`hv-${key}-b`);
+  const fid = ctx.id(`hv-${key}-f`);
+  return {
+    back: (
+      <g>
+        <clipPath id={bid}>
+          <polygon points={poly(-1)} />
+        </clipPath>
+        <g clipPath={`url(#${bid})`}>{node}</g>
+      </g>
+    ),
+    front: (
+      <g>
+        <clipPath id={fid}>
+          <polygon points={poly(1)} />
+        </clipPath>
+        <g clipPath={`url(#${fid})`}>{node}</g>
       </g>
     ),
   };

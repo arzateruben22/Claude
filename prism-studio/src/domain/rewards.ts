@@ -19,7 +19,7 @@ export async function rewardBalances(c: Conn, at = new Date()) {
   const month = localMonth(at, s.timezone);
   const [rs] = await c.select().from(rewardSettings).where(eq(rewardSettings.id, 1));
   const sum = async (kinds: string[], m?: string) => {
-    const r = await c.execute(sql`select coalesce(sum(amount_cents), 0)::int as v from reward_ledger where kind::text = any(${kinds}) ${m ? sql`and month = ${m}` : sql``}`);
+    const r = await c.execute(sql`select coalesce(sum(amount_cents), 0)::int as v from reward_ledger where kind::text in ${kinds} ${m ? sql`and month = ${m}` : sql``}`);
     return Number((r.rows[0] as { v: number }).v);
   };
   const funded = (await sum(["allocation"])) + (await sum(["adjustment"]));

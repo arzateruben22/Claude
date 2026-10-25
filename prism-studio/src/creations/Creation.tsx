@@ -43,7 +43,10 @@ export function Creation(props: CreationProps): React.JSX.Element {
     locked = false,
     className,
   } = props;
-  const p = `pc${rid.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const mode = locked ? "static" : motion;
+  // The signature keeps ids/classes distinct even if useId collides across separate React roots.
+  const sig = `${creation.slice(0, 2)}${form}${branch ?? "n"}${ascended ? "x" : ""}${locked ? "l" : ""}${mode[0]}${activity.slice(0, 2)}`;
+  const p = `pc${sig}${rid.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const ctx = makeCtx(p, {
     form,
     branch: branch === "b" ? "b" : "a",
@@ -51,7 +54,6 @@ export function Creation(props: CreationProps): React.JSX.Element {
     activity: locked ? "idle" : activity,
     locked,
   });
-  const mode = locked ? "static" : motion;
   const k = activity === "resting" ? 2 : activity === "rendering" ? 0.8 : 1;
   const draw = RENDER[creation] ?? GlassGarden;
   return (

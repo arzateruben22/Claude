@@ -23,7 +23,7 @@ export async function enqueue(c: Conn, v: { type: string; payload?: Record<strin
  */
 export async function claim(d: DB, workerId: string, o: { types?: string[]; leaseSeconds?: number; perChannel?: number } = {}): Promise<JobRow | null> {
   const lease = o.leaseSeconds ?? 120, per = o.perChannel ?? 1;
-  const types = o.types?.length ? sql`and j.type = any(${o.types})` : sql``;
+  const types = o.types?.length ? sql`and j.type in ${o.types}` : sql``;
   const r = await d.execute(sql`
     with running as (
       select channel_id, count(*) as n from jobs where status = 'running' group by channel_id
