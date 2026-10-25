@@ -115,44 +115,47 @@ assert len(SUNRISES) >= 3, SUNRISES
 # turn) and the diagram (the normal, the whoa, the takeaway, the readout); the end card pushes back in, so a
 # replay loops to frame 0 ──
 AZ = math.degrees(TH_V0)                   # the close view looks across the Sun's direction: Venus half lit on frame 0
-CLOSE = {"target": [0, 0, 0], "dist": 17.0, "el": 10.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.32}
-DIAG = {"target": [0, 0, 0], "dist": 150.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.30}
+CLOSE = {"target": [0, 0, 0], "dist": 24.0, "el": 10.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.38}
+# the change and why close-ups look across the Sun's direction as it is then (the orbit has moved), on whichever side is nearer AZ
+th_why = math.degrees(th_v(B["why"]["t0"]))
+AZ2 = min((th_why + k * 180.0 for k in range(-8, 9)), key=lambda a: abs(a - AZ))
+CLOSE2 = dict(CLOSE, az=AZ2, el=24.0)   # higher, so the "backwards" arrow round the equator reads as a ring
+DIAG = {"target": [0, 0, 0], "dist": 165.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.36}
 key = lambda t, P, **k: {"t": round(t, 4), **P, **k}
 t_pull, t_push1 = A("vo02:On", 0.0), A("vo02:hides", 0.4)
 t_push2, t_back, t_end = B["change"]["t0"], B["whoa"]["t0"], A("vo08:Next", -0.25)
 CAM = {"space": [
-    key(0.0, CLOSE, dist=16.6), key(t_cut, CLOSE, dist=17.0, ease="sine"),
-    key(t_pull + 2.2, DIAG, ease="inout3"), key(t_push1, DIAG, dist=146.0, ease="sine"),
-    key(t_push2 + 1.6, CLOSE, ease="inout3"), key(B["why"]["t0"], CLOSE, dist=16.0, ease="sine"),
-    key(t_w - 0.2, CLOSE, dist=15.2, ease="sine"), key(t_w + 2.2, DIAG, ease="inout3"),
-    key(t_end, DIAG, dist=144.0, ease="sine"), key(t_end + 2.4, CLOSE, dist=16.6, ease="inout3"),
-    key(B["tease"]["t1"], CLOSE, dist=17.0, ease="sine"),
+    key(0.0, CLOSE, dist=23.4), key(t_cut, CLOSE, dist=24.0, ease="sine"),
+    key(t_pull + 2.2, DIAG, ease="inout3"), key(t_push1, DIAG, dist=161.0, ease="sine"),
+    key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, dist=23.0, ease="sine"),
+    key(t_w - 0.2, CLOSE2, dist=22.0, ease="sine"), key(t_w + 2.2, DIAG, ease="inout3"),
+    key(t_end, DIAG, dist=159.0, ease="sine"), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"),
+    key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine"),
 ]}
 # how much the target follows Venus (1 in the close view, 0 on the diagram), eased with the same moves
 FOLLOW = [[0.0, 1], [t_cut, 1], [t_pull + 2.2, 0], [t_push2, 0], [t_push2 + 1.6, 1], [t_w - 0.2, 1], [t_w + 2.2, 0],
           [t_end, 0], [t_end + 2.4, 1]]
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
-CAM["end"] = [key(t_end, DIAG, dist=144.0), key(t_end + 2.4, CLOSE, dist=16.6, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=17.0, ease="sine")]
+CAM["end"] = [key(t_end, DIAG, dist=159.0), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine")]
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-venus-h", "text": "Venus", "kind": "body", "anchor": "venus", "t0": 0.0, "t1": t_cut, "side": 1},
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Earth"), "t1": t_push2, "side": 1},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Venus"), "t1": t_push2, "side": 1},
     {"id": "l-venus", "text": "Venus", "kind": "body", "anchor": "venus", "t0": A("vo02:Venus"), "t1": t_push2, "side": -1},
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": A("vo02:Next"), "side": 1},
     {"id": "l-g1", "text": "guess: about 23 hours", "kind": "gravity", "anchor": "pin", "t0": A("vo03:clocked"), "t1": round(t_g2 - 0.1, 4), "side": 1},
     {"id": "l-g2", "text": "guess: one face to the Sun", "kind": "gravity", "anchor": "pin", "t0": round(t_g2 + 0.4, 4), "t1": A("vo04:radar"), "side": 1},
     {"id": "l-radar", "text": "radar · 1962", "kind": "light", "anchor": "beam", "t0": A("vo04:radar"), "t1": A("vo04:Venus"), "side": -1},
     {"id": "l-back", "text": "turns backwards", "kind": "gravity", "anchor": "arrow", "t0": A("vo04:backwards"), "t1": t_w, "side": 1},
-    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": A("vo05:Stand"), "t1": t_rd, "side": 1},
-    {"id": "l-west", "text": "the Sun rises in the west", "kind": "star", "anchor": "pin", "t0": A("vo05:rising"), "t1": t_rd, "side": -1},
+    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": A("vo05:Stand"), "t1": A("vo05:hundred"), "side": 1},
     {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": t_end, "side": -1},
     {"id": "l-echo", "text": "4 min there and back", "kind": "light", "anchor": "echo", "t0": A("vo07:round"), "t1": t_end, "side": 1},
 ]
 BADGES = [
-    {"id": "b-nts", "text": "not to scale", "t0": 0.0, "t1": t_end, "slot": "tr"},
-    {"id": "b-illus", "text": "Venus's clouds: illustration", "t0": 0.0, "t1": t_end, "slot": "tr"},
+    {"id": "b-nts", "text": "not to scale", "t0": t_cut, "t1": t_end, "slot": "tr"},
+    {"id": "b-illus-h", "text": "clouds: illustration", "t0": 0.0, "t1": t_cut, "slot": "bl"},
+    {"id": "b-illus", "text": "clouds: illustration", "t0": t_push2, "t1": t_w, "slot": "tr"},
     {"id": "b-orbit", "clock": "orbit", "t0": t_cut, "t1": t_rd, "slot": "tl"},
     {"id": "b-spin", "clock": "spin", "t0": t_true, "t1": t_w, "slot": "tl"},
     {"id": "b-guess", "clock": "guess", "t0": t_g1, "t1": t_g2, "slot": "tl"},
@@ -160,15 +163,16 @@ BADGES = [
 ]
 COUNTERS = [
     {"id": "c-turn-h", "label": "one turn on Venus · days", "text": "?", "t0": 0.0, "t1": t_cut},
-    {"id": "c-earth", "label": "sunrises a year · Earth", "text": "365", "t0": A("vo02:Sun"), "t1": A("vo02:Next")},
+    {"id": "c-earth", "label": "sunrises a year · Earth", "text": "365", "t0": A("vo02:Sun"), "t1": A("vo02:Next", -0.2)},
     {"id": "c-g1", "label": "guess · one turn", "text": "23 hours", "t0": A("vo03:clocked"), "t1": t_g2},
     {"id": "c-g2", "label": "guess · one turn", "text": "225 days", "t0": t_g2, "t1": A("vo04:radar")},
     {"id": "c-radar", "label": "radar · one turn, days", "text": "243", "t0": A("vo04:two"), "t1": A("vo04:longer")},
     {"id": "c-vs", "label": "one turn · one year (days)", "text": "243 > 225", "t0": A("vo04:longer"), "t1": t_w},
-    {"id": "c-solar", "label": "sunrise to sunrise · days", "text": "117", "t0": A("vo05:hundred"), "t1": t_tk},
+    {"id": "c-solar", "label": "sunrise to sunrise · days", "text": "117", "t0": A("vo05:hundred"), "t1": A("vo05:rising")},
+    {"id": "c-west", "label": "where the Sun rises on Venus", "text": "west", "t0": A("vo05:rising"), "t1": t_tk},
     {"id": "c-live", "label": "the day you'd live by · days", "text": "117", "t0": A("vo06:But"), "t1": t_rd},
-    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:The") - 0.05, 4), "at": [0.5, 0.2]},
-    {"id": "c-read-echo", "label": "radar echo · Earth–Venus–Earth", "text": "4 min", "read": True, "t0": A("vo07:The"), "t1": t_end, "at": [0.5, 0.2]},
+    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:The") - 0.05, 4)},
+    {"id": "c-read-echo", "label": "radar echo · Earth–Venus–Earth", "text": "4 min", "read": True, "t0": A("vo07:The"), "t1": t_end},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)

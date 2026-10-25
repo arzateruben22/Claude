@@ -73,33 +73,59 @@
   {
    "t": 4.2667,
    "kind": "badge",
-   "tag": "b-orbit"
+   "tag": "b-nts"
   },
   {
-   "t": 4.8,
-   "kind": "label",
-   "tag": "l-earth"
+   "t": 4.2667,
+   "kind": "badge",
+   "tag": "b-orbit"
   },
   {
    "t": 5.966666666666667,
    "kind": "label",
-   "tag": "l-sun"
+   "tag": "l-sun",
+   "pos": [
+    0.597,
+    0.327
+   ]
   },
   {
    "t": 5.966666666666667,
    "kind": "counter.show",
-   "tag": "c-earth"
+   "tag": "c-earth",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 10.666666666666666,
    "kind": "label",
-   "tag": "l-venus"
+   "tag": "l-earth",
+   "pos": [
+    0.734,
+    0.429
+   ]
+  },
+  {
+   "t": 10.666666666666666,
+   "kind": "label",
+   "tag": "l-venus",
+   "pos": [
+    0.196,
+    0.218
+   ]
   },
   {
    "t": 14.4,
    "kind": "section",
    "id": "change",
    "t1": 26.6667
+  },
+  {
+   "t": 14.4,
+   "kind": "badge",
+   "tag": "b-illus"
   },
   {
    "t": 19.3,
@@ -109,22 +135,38 @@
   {
    "t": 21.266666666666666,
    "kind": "label",
-   "tag": "l-g1"
+   "tag": "l-g1",
+   "pos": [
+    0.59,
+    0.418
+   ]
   },
   {
    "t": 21.266666666666666,
    "kind": "counter.show",
-   "tag": "c-g1"
+   "tag": "c-g1",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 23.466666666666665,
    "kind": "counter.show",
-   "tag": "c-g2"
+   "tag": "c-g2",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 23.8667,
    "kind": "label",
-   "tag": "l-g2"
+   "tag": "l-g2",
+   "pos": [
+    0.549,
+    0.394
+   ]
   },
   {
    "t": 26.6667,
@@ -135,7 +177,11 @@
   {
    "t": 28.533333333333335,
    "kind": "label",
-   "tag": "l-radar"
+   "tag": "l-radar",
+   "pos": [
+    0.671,
+    0.385
+   ]
   },
   {
    "t": 28.533333333333335,
@@ -160,17 +206,29 @@
   {
    "t": 35.166666666666664,
    "kind": "counter.show",
-   "tag": "c-radar"
+   "tag": "c-radar",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 36.833333333333336,
    "kind": "counter.show",
-   "tag": "c-vs"
+   "tag": "c-vs",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 39.0,
    "kind": "label",
-   "tag": "l-back"
+   "tag": "l-back",
+   "pos": [
+    0.352,
+    0.364
+   ]
   },
   {
    "t": 42.1333,
@@ -186,7 +244,11 @@
   {
    "t": 42.46666666666667,
    "kind": "label",
-   "tag": "l-you"
+   "tag": "l-you",
+   "pos": [
+    0.746,
+    0.452
+   ]
   },
   {
    "t": 44.8926,
@@ -196,7 +258,11 @@
   {
    "t": 47.13333333333333,
    "kind": "counter.show",
-   "tag": "c-solar"
+   "tag": "c-solar",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 47.4145,
@@ -205,8 +271,12 @@
   },
   {
    "t": 49.06666666666667,
-   "kind": "label",
-   "tag": "l-west"
+   "kind": "counter.show",
+   "tag": "c-west",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 49.9363,
@@ -232,7 +302,11 @@
   {
    "t": 57.43333333333333,
    "kind": "counter.show",
-   "tag": "c-live"
+   "tag": "c-live",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 57.5018,
@@ -253,22 +327,38 @@
   {
    "t": 61.13333333333333,
    "kind": "counter.show",
-   "tag": "c-read-sun"
+   "tag": "c-read-sun",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 62.7,
    "kind": "label",
-   "tag": "l-ring"
+   "tag": "l-ring",
+   "pos": [
+    0.625,
+    0.42
+   ]
   },
   {
    "t": 63.833333333333336,
    "kind": "counter.show",
-   "tag": "c-read-echo"
+   "tag": "c-read-echo",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 64.46666666666667,
    "kind": "label",
-   "tag": "l-echo"
+   "tag": "l-echo",
+   "pos": [
+    0.484,
+    0.238
+   ]
   },
   {
    "t": 67.7333,
@@ -323,5 +413,17 @@
    "t": 68.03333333333333,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "l-sun": 6,
+  "l-earth": 10.7,
+  "l-venus": 10.7,
+  "l-g1": 21.3,
+  "l-g2": 23.9,
+  "l-radar": 28.5667,
+  "l-back": 39.0333,
+  "l-you": 42.5,
+  "l-ring": 62.7333,
+  "l-echo": 64.5
+ }
 }

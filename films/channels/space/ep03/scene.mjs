@@ -64,7 +64,7 @@ scene.add(venus.group, earth.group);
 const you = createBeacon({ color: hdr("teal", 1.2), px: 11, core: 0.5 });
 scene.add(you.mesh);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
-const C = { orbit: line("lilac", 0.45), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3) };
+const C = { orbit: line("lilac", 0.75), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3) };
 const orbV = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_v, ...XZ });
 const orbE = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_e, ...XZ });
 const ticks = FILM.sunrises.map(() => segment({ color: C.tealHi, width: 4, opacity: 0 }));
@@ -128,8 +128,8 @@ window.seek = function (t) {
   applyPose(camera, poseFor(shot, t));
   const tv = thV(t), te = thE(t), vp = onOrbit(PH.r_v, tv), ep = onOrbit(PH.r_e, te);
   const norm = (a) => { const l = Math.hypot(...a) || 1; return a.map((v) => v / l); };
-  sun.set({ tau: CLK.orbit.tau(t), on: true, camera, center: [0, 0, 0] });
-  const psi = psiAt(t);
+  sun.set({ tau: CLK.orbit.tau(t), on: followW(t) < 0.5, camera, center: [0, 0, 0] });   // off in the close view (it would fill a corner)
+  const psi = psiAt(t), wf = followW(t);
   venus.set({ center: vp, sunDir: norm(vp.map((v) => -v)), sun: 1, spin: psi - Math.PI });
   earth.set({ center: ep, sunDir: norm(ep.map((v) => -v)), sun: 1, spin: 2 * Math.PI * CLK.orbit.tau(t) / 86164 });
   const pinDir = [Math.cos(psi), 0, -Math.sin(psi)];
@@ -138,7 +138,6 @@ window.seek = function (t) {
   S.pin = vp.map((v, j) => v + pinDir[j] * VR * 1.15);
   S.venus = [vp[0], vp[1] + VR * 0.8, vp[2]]; S.earth = [ep[0], ep[1] + ER * 0.8, ep[2]]; S.sun = [0, 1.4, 0];
   // the orbits fade in the close view (they would cut through Venus)
-  const wf = followW(t);
   orbV.set({ opacity: 1 - 0.85 * wf }); orbE.set({ opacity: 1 - 0.85 * wf });
   // the sunrise ticks: one across the orbit wherever Venus was at each sunrise
   FILM.sunrises.forEach((s, i) => {
