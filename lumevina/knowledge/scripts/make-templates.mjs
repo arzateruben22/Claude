@@ -4,6 +4,7 @@
 //   knowledge/treatments/explained/<id>.md  one per treatment: what to expect
 //   knowledge/treatments/<id>.md         one per treatment's aftercare
 //   knowledge/products/<id>.md           one per live product (label facts filled, her notes empty)
+//   knowledge/school/module-<n>.md      one per course module: her verdict and tip per lesson
 //   knowledge/visits.md, routine.md, materials.md, hard-lines.md, voice.md
 //
 // Safe to run again: a file that already has answers in it is left alone.
@@ -74,4 +75,11 @@ write(path.join(K, "hard-lines.md"), front({ id: "hard-lines", kind: "hard-lines
   S.HARD_LINE_FIELDS.map(section).join("\n"));
 write(path.join(K, "voice.md"), front({ id: "voice", kind: "voice", title: "Her voice", source: "playbook", answered: "" }) +
   "\n# Her voice\n\n" + S.VOICE_FIELDS.map(section).join("\n"));
+await import(path.join(root, "docs/school/curriculum.js"));
+for (const lv of globalThis.window.SCHOOL.levels) for (const m of lv.modules) {
+  const id = "module-" + m.lessons[0].id.split("-")[0];
+  write(path.join(K, "school", id + ".md"), front({ id, kind: "school", title: m.name, source: "playbook", answered: "" }) +
+    `\n# Skin School: ${m.name}\n\nEvelyn's verdict on each lesson as it reads now (docs/school/curriculum.js), what she'd change, and her own tip for it.\n\n` +
+    m.lessons.flatMap(S.SCHOOL_FIELDS).map(section).join("\n"));
+}
 console.log("templates ready");

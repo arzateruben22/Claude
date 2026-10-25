@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumevina Product Guide</title>
+<style>
+@font-face { font-family: "Inter"; src: url("../../fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Cormorant Garamond"; src: url("../../fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+@font-face { font-family: "Cormorant Garamond"; src: url("../../fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "Cormorant Garamond"; src: url("../../fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-weight: 500; font-style: italic; }
+/* the studio's colors on white paper: linen panels, cocoa and espresso, ink */
+:root { --linen: #F5F1EA; --porcelain: #FFFFFF; --blush: #EDE5DA; --khaki: #D7C9B8; --cocoa: #7D5A44; --espresso: #4A342A; --ink: #161412; --muted: #6B5D52;
+  --serif: "Cormorant Garamond", Georgia, serif; --sans: "Inter", -apple-system, system-ui, sans-serif; }
+@page { size: Letter; margin: 0.55in 0.6in 0.6in; }
+@page :first { margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #FFFFFF; color: var(--ink); font-family: var(--sans); font-size: 9.6pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.wrap { max-width: 7.3in; margin: 0 auto; padding: 0.3in 0 0.6in; }
+@media print { .wrap { padding: 0; max-width: none; } }
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+.k { font-size: 7.4pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cocoa); margin: 0; }
+/* cover */
+.cover { height: 11in; background: var(--linen); padding: 0.85in 0.75in 0.7in; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+.cover img.logo { width: 2.3in; display: block; }
+.cover h1 { font-size: 44pt; line-height: 1.02; margin-top: 0.25in; max-width: 6in; }
+.cover h1 em { font-style: italic; color: var(--cocoa); font-weight: 500; }
+.cover .lead { font-size: 11.5pt; color: var(--espresso); max-width: 4.8in; margin: 0.22in 0 0; }
+.cover .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.3in; border-top: 1px solid var(--khaki); padding-top: 0.14in; color: var(--muted); font-size: 8.4pt; }
+.draft { display: inline-block; margin-top: 0.25in; padding: 0.06in 0.14in; border-radius: 999px; background: var(--blush); color: var(--espresso); font-size: 8.4pt; font-weight: 600; }
+/* how to use this guide, and her basics */
+.intro { break-after: page; }
+.intro h2 { font-size: 26pt; margin: 0.06in 0 0.16in; }
+.basics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.14in; }
+.basic { background: var(--linen); border-radius: 10px; padding: 0.15in 0.17in; break-inside: avoid; }
+.basic.is-stop { grid-column: 1 / -1; background: var(--espresso); color: #FFFFFF; }
+.basic.is-stop h4, .basic.is-stop .k { color: #EDE5DA; }
+.basic h4, .row h4 { font-family: var(--sans); font-size: 7.4pt; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cocoa); margin: 0 0 0.05in; }
+.basic p, .row p { margin: 0 0 0.05in; } .basic ul, .row ul { margin: 0 0 0.05in; padding-left: 1.1em; }
+.how { color: var(--espresso); max-width: 5.6in; margin: 0 0 0.22in; font-size: 10pt; }
+.pending { border: 1px dashed var(--khaki); border-radius: 10px; padding: 0.16in 0.18in; color: var(--muted); }
+.pending b { color: var(--espresso); }
+/* products */
+.cat { break-before: page; margin: 0 0 0.12in; padding-bottom: 0.08in; border-bottom: 1px solid var(--khaki); display: flex; align-items: baseline; justify-content: space-between; }
+.cat h2 { font-size: 22pt; }
+.cat span { color: var(--muted); font-size: 8.4pt; }
+.prod { display: grid; grid-template-columns: 1.05in 1fr; gap: 0.2in; padding: 0.16in 0; border-bottom: 1px solid rgba(74, 52, 42, 0.12); break-inside: avoid; }
+.prod:last-child { border-bottom: 0; }
+.ph { width: 1.05in; height: 1.32in; border-radius: 8px; background: var(--linen); display: grid; place-items: center; overflow: hidden; }
+.ph img { width: 100%; height: 100%; object-fit: contain; }
+.br { font-size: 7.6pt; color: var(--muted); margin: 0; letter-spacing: 0.02em; }
+.prod h3 { font-size: 15.5pt; line-height: 1.12; margin: 0.02in 0 0.03in; }
+.lbl { margin: 0 0 0.08in; color: var(--espresso); font-style: italic; font-family: var(--serif); font-size: 11pt; }
+.rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0.07in 0.2in; }
+.row.is-stop { grid-column: 1 / -1; background: var(--blush); border-radius: 7px; padding: 0.07in 0.1in; }
+.row.is-tip { grid-column: 1 / -1; }
+.row.is-tip p { font-family: var(--serif); font-size: 11.5pt; font-style: italic; color: var(--espresso); }
+.wait { margin: 0.02in 0 0; color: var(--muted); font-size: 8.6pt; }
+.prod.is-empty .ph { opacity: 0.75; }
+/* back */
+.back { break-before: page; min-height: 9.2in; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 0.12in; }
+.back h2 { font-size: 30pt; max-width: 5in; }
+.back p { color: var(--espresso); font-size: 11pt; margin: 0; max-width: 4.6in; }
+.back .c { margin-top: 0.12in; font-weight: 600; color: var(--ink); }
+</style></head>
+<body><div class="wrap">
+
+<section class="cover">
+  <div>
+    <img class="logo" src="../../img/logo-full.svg" alt="Lumevina Aesthetics Spa">
+    <h1>Your products, <em>and how to use them.</em></h1>
+    <p class="lead">Every product on Evelyn's shelf: when to use it, how, what's normal when you start, and when to stop and message her. Keep it by your sink.</p>
+    <span class="draft">Draft · 0 of 43 products filled in by Evelyn</span>
+  </div>
+  <div class="foot"><span>Evelyn Romero · Licensed esthetician<br>Lumevina Aesthetics Spa · Woodland Hills</span><span>October 2026</span></div>
+</section>
+
+<section class="intro">
+  <p class="k">Before you start</p>
+  <h2>A few things first</h2>
+  <p class="how">Each product has its own page: when to use it, how, what's normal, and the signs that mean stop and message Evelyn. Your routine is the one Evelyn built for you; if something here and her advice to you differ, follow her.</p>
+  <div class="pending"><b>Coming from Evelyn:</b> your routine in order, when to stop a product and message her, what not to mix, sunscreen, and how to start the stronger products. She answers these once in her Skin Playbook ("Your products, in order").</div>
+</section>
+
+<section><div class="cat"><h2>Cleansers</h2><span>7 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-barrier-cream-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 6 fl oz / 180 ml</p>
+    <h3>Barrier Balance Creamy Cleanser</h3>
+    <p class="lbl">A daily calming wash. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-gentle-gel-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Ultra Gentle Gel Cleanser (travel size)</h3>
+    <p class="lbl">A daily antioxidant wash. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-mandelic-face-and-body.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 6 fl oz / 180 ml</p>
+    <h3>L-Mandelic Face and Body Wash</h3>
+    <p class="lbl">Cleanses and brightens. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-ultra-gentle-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 6 fl oz / 180 ml</p>
+    <h3>Ultra Gentle Gel Cleanser</h3>
+    <p class="lbl">A daily antioxidant wash. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-glycolic-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 8 fl oz / 236 ml</p>
+    <h3>Glycolic Facial Cleanser</h3>
+    <p class="lbl">With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-vitamin-c-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 6.75 fl oz / 200 ml</p>
+    <h3>Vitamin C Cleanser</h3>
+    <p class="lbl">Step 1 of the GlyMed Plus routine: cleanse.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/ci-vitamin-veil-cleanser.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Circadia · 6.7 fl oz / 198 ml</p>
+    <h3>Vitamin Veil Cleansing Oil</h3>
+    <p class="lbl">A cleansing oil.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Toners &amp; mists</h2><span>5 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-moisture-balance-toner.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 6 fl oz / 180 ml</p>
+    <h3>Moisture Balance Toner</h3>
+    <p class="lbl">Hydrates and replenishes.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-moisture-balance-toner-14.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Moisture Balance Toner (2 fl oz)</h3>
+    <p class="lbl">Hydrates and replenishes.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-omni-clear-mist.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 3.4 fl oz / 100 ml</p>
+    <h3>Omni Clear Mist</h3>
+    <p class="lbl">Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-soothing-radiance-toner.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 6 fl oz / 180 ml</p>
+    <h3>Soothing Radiance Toner</h3>
+    <p class="lbl">Calms and nourishes.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-skin-recovery-mist.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 4 fl oz / 118 ml</p>
+    <h3>Skin Recovery Mist</h3>
+    <p class="lbl">Step 2 of the GlyMed Plus routine: treat.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Serums</h2><span>11 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-11pct-mandelic-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>11% L-Mandelic Serum</h3>
+    <p class="lbl">Exfoliates and brightens.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-15pct-mandelic-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>15% L-Mandelic Serum</h3>
+    <p class="lbl">Exfoliates and brightens.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-5pct-mandelic-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>5% L-Mandelic Serum</h3>
+    <p class="lbl">Exfoliates and brightens.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-8pct-mandelic-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>8% L-Mandelic Serum</h3>
+    <p class="lbl">Exfoliates and brightens.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-glowtone-corrective.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>GlowTone Corrective Serum</h3>
+    <p class="lbl">Targets discoloration, with Hexa-Bright Complex.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-hydraremedy-gel-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1.7 fl oz / 50 ml</p>
+    <h3>HydraRemedy Gel Serum</h3>
+    <p class="lbl">Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-retinal-b3-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>Retinal B3 Serum</h3>
+    <p class="lbl">Gently corrects and renews. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-retinol-peptide-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1 fl oz / 30 ml</p>
+    <h3>Retinol Peptide Serum</h3>
+    <p class="lbl">Intensely corrects and renews.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-firming-serum.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 1 oz / 30 ml</p>
+    <h3>Firming Serum with Phyto-Stem Cells</h3>
+    <p class="lbl">Part of the GlyMed Plus Elite line; step 2 of its routine: treat.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-revitalizing-essence-nadplus.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 1.35 oz / 40 ml</p>
+    <h3>Revitalizing Essence with NAD+</h3>
+    <p class="lbl">Part of the GlyMed Plus Elite line; step 2 of its routine: treat.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/mx-dew-drops.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Mixi Skincare · 1 fl oz</p>
+    <h3>Dew Drop</h3>
+    <p class="lbl">Silky smooth hydration with beta-glucan. Non-pore-clogging.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Acne &amp; spot care</h2><span>5 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-2-5pct-adv-acne-med.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1.5 fl oz / 44 ml</p>
+    <h3>2.5% Advanced Acne Med</h3>
+    <p class="lbl">Benzoyl peroxide acne medication.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-5pct-adv-acne-med.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1.5 fl oz / 44 ml</p>
+    <h3>5% Advanced Acne Med</h3>
+    <p class="lbl">Benzoyl peroxide acne medication.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-invisiclear.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 24 patches</p>
+    <h3>invisiClear Hydrocolloid Spot Patches</h3>
+    <p class="lbl">Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-sulfur-spot-treatment.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1.5 fl oz / 44 ml</p>
+    <h3>Sulfur Spot Treatment</h3>
+    <p class="lbl">A 6% sulfur acne treatment.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/mx-hydroxi.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Mixi Skincare · 1.7 fl oz</p>
+    <h3>Hydroxi</h3>
+    <p class="lbl">Hydrogen peroxide acne cream.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Moisturizers</h2><span>5 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-barrier-gel-cream.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Barrier Care Gel Cream</h3>
+    <p class="lbl">Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-cran-peptide-cream.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Cran-Peptide Cream</h3>
+    <p class="lbl">Rich and restorative. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-hydrabalance-gel.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 1.7 fl oz / 50 ml</p>
+    <h3>HydraBalance Gel</h3>
+    <p class="lbl">Hydrates and balances oil. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-barrier-repair-cream.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 4 fl oz / 118 ml</p>
+    <h3>Barrier Repair Cream</h3>
+    <p class="lbl">With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-cell-protection-balm.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 2 fl oz / 59 ml</p>
+    <h3>Cell Protection Balm</h3>
+    <p class="lbl">Step 3 of the GlyMed Plus routine: balance.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Eye care</h2><span>3 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-antioxidant-eye-gel.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 0.4 fl oz / 12 ml</p>
+    <h3>Antioxidant Peptide Eye Gel</h3>
+    <p class="lbl">Smooths and visibly depuffs.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-eye-calm.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 0.3 fl oz / 10 ml</p>
+    <h3>Eye Calm</h3>
+    <p class="lbl">Step 3 of the GlyMed Plus routine: balance.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/gm-firming-eye-cream.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">GlyMed Plus · 0.3 oz / 10 ml</p>
+    <h3>Firming Eye Cream</h3>
+    <p class="lbl">Part of the GlyMed Plus Elite line; step 3 of its routine: balance.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Sun care</h2><span>5 products</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-brilliant-defense-50.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Brilliant Defense SPF 50</h3>
+    <p class="lbl">Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-daily-spf-30.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Daily SPF 30 Plus</h3>
+    <p class="lbl">Broad-spectrum SPF 30 sunscreen. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-mineral-matte-spf-28.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>Mineral Matte SPF 28</h3>
+    <p class="lbl">Broad-spectrum SPF 28 sunscreen. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-powdermineral-spf-50.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2 fl oz / 60 ml</p>
+    <h3>PowerMineral SPF 50</h3>
+    <p class="lbl">Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article><article class="prod is-empty">
+  <div class="ph"><img src="img/mx-spf-50-mineral-spf.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Mixi Skincare · 2 fl oz</p>
+    <h3>Mineral SPF 50</h3>
+    <p class="lbl">UVA/UVB protection. Medical-grade sunscreen.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Masks</h2><span>1 product</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-hydrcalm-mask.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 2.5 fl oz / 73 ml</p>
+    <h3>HydraCalm Mask</h3>
+    <p class="lbl">Soothes and boosts hydration.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+<section><div class="cat"><h2>Supplements</h2><span>1 product</span></div><article class="prod is-empty">
+  <div class="ph"><img src="img/fr-clear-skin-balance.jpg" alt=""></div>
+  <div class="tx">
+    <p class="br">Face Reality · 60 softgels</p>
+    <h3>Clear Skin Balance</h3>
+    <p class="lbl">Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin.</p>
+    <p class="wait">Evelyn is adding how to use this one.</p>
+  </div>
+</article></section>
+
+<section class="back">
+  <p class="k">Questions?</p>
+  <h2>Something doesn't feel right, or you're not sure?</h2>
+  <p>Message Evelyn before you change anything. Bring this guide and your products to your next visit and she'll update your routine.</p>
+  <p class="c">Lumevina.aesthetics@gmail.com · @lumevina on Instagram</p>
+</section>
+
+</div></body></html>

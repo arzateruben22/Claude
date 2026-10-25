@@ -169,7 +169,8 @@ export const ROUTINE_FIELDS = [
   { key: "acne_med", kind: "text", q: "Starting the Advanced Acne Med", hint: "2.5% vs. 5%, how much, how often, and how to build up." },
   { key: "retinal_vs_retinol", kind: "text", q: "Retinal B3 Serum vs. Retinol Peptide Serum", hint: "Who gets which, and how to start." },
   { key: "dont_mix", kind: "text", q: "What not to mix, or not on the same night" },
-  { key: "sun", kind: "text", q: "Anything you always say about sunscreen" }
+  { key: "sun", kind: "text", q: "Anything you always say about sunscreen" },
+  { key: "stop_signs", kind: "text", q: "When should a client stop a product and message you?", hint: "Once, for every product: it goes on the first page of your product guide." }
 ];
 
 export const HARD_LINE_OPTIONS = [
@@ -193,12 +194,37 @@ export const VOICE_FIELDS = [
   { key: "greeting", kind: "one", q: "How do you open a reply?", options: ["Hi [name]!", "Hey [name],", "Hello [name],", "Straight to the answer"], text: "Or something else" }
 ];
 
+// One card per product on her shelf. The answers feed the assistant, the
+// lessons' "On Evelyn's shelf", and her take-home product guide (a PDF:
+// knowledge/scripts/build-product-guide.mjs), so each card asks what a client
+// needs at home: when, how, what's normal, when to stop. The options are
+// timings and signs she picks from, never a claim about the product; a photo
+// of the back of the bottle puts the label's own directions and warnings in
+// the guide word for word. "Same as" lets the other strengths and sizes copy
+// a product she has answered, so she only writes what's different.
 export const PRODUCT_FIELDS = [
+  { key: "like", kind: "products", q: "Same as another product?", hint: "For another strength or size of something you've answered: tap it, then fill in only what's different." },
   { key: "who", kind: "text", q: "Who is it for?", hint: "The skin and concern you reach for it with." },
-  { key: "how", kind: "text", q: "How to use it", hint: "Amount, when, how often, how to start." },
-  { key: "tip", kind: "text", q: "Your tip", hint: "What you tell clients at the counter." },
+  { key: "when", kind: "one", q: "When do they use it?", options: ["Morning", "Night", "Morning and night", "A few nights a week", "Once or twice a week", "As a spot treatment"], text: "Anything that changes it" },
+  { key: "how", kind: "text", q: "How to use it", hint: "How much, where it goes in the routine, and how to start: the first week, and when they can use it more." },
+  { key: "normal", kind: "text", q: "What's normal when they start", hint: "A tingle, a little dryness, purging: what you tell them not to worry about. Leave it empty if nothing." },
+  { key: "stop", kind: "multi", q: "When should they stop using it and message you?", options: ["Burning or stinging that doesn't settle", "A rash or hives", "Swelling", "Peeling or cracking that keeps going", "Anything that feels wrong to them"], text: "In your words, or anything else" },
+  { key: "pause", kind: "one", q: "Pause it before a treatment?", options: ["No need to pause", "2 to 3 days before", "3 to 5 days before", "A week before"], text: "Which treatments, and when they can start it again" },
+  { key: "sun", kind: "one", q: "Sun care with this one", options: ["Their usual daily SPF", "SPF every morning is a must with this", "Night only, because of the sun"], text: "Anything else" },
+  { key: "pregnancy", kind: "one", q: "Pregnant or breastfeeding?", options: ["Fine to keep using", "Pause it", "Check with their doctor first", "Ask me first"], text: "Anything else" },
   { key: "pairs", kind: "text", q: "Pairs well with, and what not to use it with" },
+  { key: "tip", kind: "text", q: "Your tip", hint: "What you tell clients at the counter." },
   { key: "lasts", kind: "text", q: "How long it usually lasts" }
+];
+
+// Skin School: each module's lessons, as they read now (docs/school/curriculum.js).
+// She says whether it's how she'd teach it, or what to change, and adds her
+// own tip, which shows in the lesson as "Evelyn says" (build-course-notes.mjs).
+// The cards are built from the curriculum at build time, one per module.
+export const SCHOOL_FIELDS = (ls) => [
+  { key: ls.id + "_ok", kind: "one", q: `Lesson ${ls.id}, ${ls.t}`, hint: ls.sum + " " + ls.learn.join(" ") + " Try this: " + ls.try,
+    options: ["Yes, that's how I'd teach it", "Change something"], text: "What would you change?" },
+  { key: ls.id + "_tip", kind: "text", q: `Your tip for lesson ${ls.id}`, hint: "Optional. What you tell clients about this, in your words.", rows: 2 }
 ];
 
 export const SECTIONS = [
@@ -208,7 +234,8 @@ export const SECTIONS = [
   { id: "aftercare", title: "Aftercare", intro: "What you tell clients after each treatment." },
   { id: "visits", title: "Visits and the studio", intro: "The practical questions before someone walks in." },
   { id: "routine", title: "Your products, in order", intro: "How a routine fits together, and how clients start the stronger products." },
-  { id: "products", title: "Product by product", intro: "Optional. A line or two per product, in your words. Label facts are already on the site." },
+  { id: "products", title: "Your product guide", intro: "One card per product on your shelf. Your answers become the product guide clients take home (a PDF) and what the assistant says about each product: when to use it, how, what's normal, and when to stop. Start with the ones you sell most. Add a photo of the back of the bottle and its directions and warnings go in the guide word for word. For another strength or size, tap Same as and fill in only what's different." },
+  { id: "school", title: "Skin School", intro: "Your course, lesson by lesson, as it reads now. Tap Yes if it's how you'd teach it, or say what to change. Add your own tip and it shows in the lesson as \"Evelyn says\"." },
   { id: "materials", title: "Your materials", intro: "Anything you already have written: aftercare cards, product guides, your GlossGenius descriptions, Instagram FAQ highlights, texts you send a lot. Add screenshots and the assistant learns from them." },
   { id: "hard-lines", title: "Hard lines", intro: "What the assistant must never answer for you." },
   { id: "voice", title: "Your voice", intro: "So it sounds like you, not a robot." }

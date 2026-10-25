@@ -127,18 +127,35 @@ How a routine fits together, and how clients start the stronger products.
 - **Retinal B3 Serum vs. Retinol Peptide Serum** Who gets which, and how to start.
 - **What not to mix, or not on the same night**
 - **Anything you always say about sunscreen**
+- **When should a client stop a product and message you?** Once, for every product: it goes on the first page of your product guide.
 
-## Product by product
+## Your product guide
 
-Optional. A line or two per product, in your words. Label facts are already on the site.
+One card per product on your shelf. Your answers become the product guide clients take home (a PDF) and what the assistant says about each product: when to use it, how, what's normal, and when to stop. Start with the ones you sell most. Add a photo of the back of the bottle and its directions and warnings go in the guide word for word. For another strength or size, tap Same as and fill in only what's different.
 
-For each of the 43 live products on her shelf, optional:
+For each of the 44 live products on her shelf (these make her take-home product guide, `build-product-guide.mjs`):
 
+- **Same as another product?** For another strength or size of something you've answered: tap it, then fill in only what's different. Pick one: the other products of the same type. Plus a box: "In your words".
 - **Who is it for?** The skin and concern you reach for it with.
-- **How to use it** Amount, when, how often, how to start.
-- **Your tip** What you tell clients at the counter.
+- **When do they use it?** Pick one: Morning · Night · Morning and night · A few nights a week · Once or twice a week · As a spot treatment. Plus a box: "Anything that changes it".
+- **How to use it** How much, where it goes in the routine, and how to start: the first week, and when they can use it more.
+- **What's normal when they start** A tingle, a little dryness, purging: what you tell them not to worry about. Leave it empty if nothing.
+- **When should they stop using it and message you?** Tap all that apply: Burning or stinging that doesn't settle · A rash or hives · Swelling · Peeling or cracking that keeps going · Anything that feels wrong to them. Plus a box: "In your words, or anything else".
+- **Pause it before a treatment?** Pick one: No need to pause · 2 to 3 days before · 3 to 5 days before · A week before. Plus a box: "Which treatments, and when they can start it again".
+- **Sun care with this one** Pick one: Their usual daily SPF · SPF every morning is a must with this · Night only, because of the sun. Plus a box: "Anything else".
+- **Pregnant or breastfeeding?** Pick one: Fine to keep using · Pause it · Check with their doctor first · Ask me first. Plus a box: "Anything else".
 - **Pairs well with, and what not to use it with**
+- **Your tip** What you tell clients at the counter.
 - **How long it usually lasts**
+
+## Skin School
+
+Your course, lesson by lesson, as it reads now. Tap Yes if it's how you'd teach it, or say what to change. Add your own tip and it shows in the lesson as "Evelyn says".
+
+One card per module (14), and for each of its lessons (40 in all), showing the lesson as it reads now:
+
+- **Lesson <id>, <title>** Shows the lesson's summary, three key points and its try-this. Pick one: Yes, that's how I'd teach it · Change something. Plus a box: "What would you change?".
+- **Your tip for lesson <id>** Optional. What you tell clients about this, in your words.
 
 ## Your materials
 

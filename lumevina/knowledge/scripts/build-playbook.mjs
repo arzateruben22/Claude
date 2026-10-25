@@ -20,6 +20,20 @@ const CAT = globalThis.window.LUMEVINA_CATALOG;
 const live = CAT.products.filter((p) => !p.draft);
 const byType = CAT.categories.map((c) => ({ cat: c, items: live.filter((p) => p.cat === c) })).filter((g) => g.items.length);
 const label = (p) => p.name + (p.brand !== "Face Reality" ? " (" + p.brand + ")" : "");
+// a product card's questions: "Same as" offers the other products of its own type
+const productFields = (p, items) => S.PRODUCT_FIELDS.flatMap((f) => {
+  if (f.key !== "like") return [f];
+  const others = items.filter((x) => x.id !== p.id).map(label);
+  return others.length ? [{ ...f, kind: "one", options: others, text: "Or type its name" }] : [];
+});
+
+// her course, module by module, as it reads now (docs/school/curriculum.js)
+await import(path.join(root, "docs/school/curriculum.js"));
+const SCHOOL = globalThis.window.SCHOOL;
+const modules = SCHOOL.levels.flatMap((lv) => lv.modules.map((m) => ({
+  id: "module-" + m.lessons[0].id.split("-")[0], title: m.name, sub: "Level " + lv.n + " · " + m.lessons.length + " lessons",
+  fields: m.lessons.flatMap(S.SCHOOL_FIELDS)
+})));
 
 // ── the question list, as data the page renders ──
 const spec = {
@@ -31,8 +45,8 @@ const spec = {
   visitFields: S.VISIT_FIELDS, materialsFields: S.MATERIALS_FIELDS,
   aftercare: S.TREATMENT_AFTERCARE, aftercareFields: S.AFTERCARE_FIELDS,
   routineFields: S.ROUTINE_FIELDS,
-  products: byType.map((g) => ({ cat: g.cat, items: g.items.map((p) => ({ id: p.id, name: label(p), size: p.size || "" })) })),
-  productFields: S.PRODUCT_FIELDS,
+  products: byType.map((g) => ({ cat: g.cat, items: g.items.map((p) => ({ id: p.id, name: label(p), size: p.size || "", fields: productFields(p, g.items) })) })),
+  school: modules,
   hardLineFields: S.HARD_LINE_FIELDS,
   voiceFields: S.VOICE_FIELDS,
   treatments: S.TREATMENTS,
@@ -289,6 +303,17 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   var state = {}; SPEC.sections.forEach(function (s) { state[s.id] = {}; });
   var readLocal = function (sid) { try { return JSON.parse(localStorage.getItem(LOCAL + sid)) || {}; } catch (e) { return {}; } };
   var writeLocal = function (sid) { try { localStorage.setItem(LOCAL + sid, JSON.stringify(state[sid])); } catch (e) { /* storage off */ } };
+  /* what the database last confirmed, per section, kept on this phone too: an answer that differs from it hasn't
+     reached the database yet, so it wins over what's online and is sent again the next time the page opens */
+  var synced = {}, onlineHas = {};
+  var readSynced = function (sid) { try { return JSON.parse(localStorage.getItem(LOCAL + sid + ".synced")); } catch (e) { return null; } };
+  var writeSynced = function (sid) { try { localStorage.setItem(LOCAL + sid + ".synced", JSON.stringify(synced[sid] || {})); } catch (e) { /* storage off */ } };
+  var same = function (x, y) { return JSON.stringify(x == null ? "" : x) === JSON.stringify(y == null ? "" : y); };
+  var changedKeys = function (sid) {
+    var a = state[sid] || {}, b = synced[sid] || {}, out = {};
+    Object.keys(a).concat(Object.keys(b)).forEach(function (k) { if (!same(a[k], b[k])) out[k] = a[k] == null ? "" : a[k]; });
+    return out;
+  };
   var has = function (v) { return Array.isArray(v) ? v.some(function (x) { return x && String(x).trim(); }) : !!(v && String(v).trim()); };
 
   /* ── every field, flattened: { sid, key, item, field } ── */
@@ -305,7 +330,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   addFields("materials", "materials", SPEC.materialsFields);
   SPEC.aftercare.forEach(function (t) { addFields("aftercare", t.id, SPEC.aftercareFields); });
   addFields("routine", "routine", SPEC.routineFields);
-  SPEC.products.forEach(function (g) { g.items.forEach(function (p) { addFields("products", p.id, SPEC.productFields); }); });
+  SPEC.products.forEach(function (g) { g.items.forEach(function (p) { addFields("products", p.id, p.fields); }); });
+  SPEC.school.forEach(function (m) { addFields("school", m.id, m.fields); });
   addFields("hard-lines", "hard-lines", SPEC.hardLineFields);
   addFields("voice", "voice", SPEC.voiceFields);
   var answeredKey = function (sid, key) { var a = state[sid]; return has(a[key]) || has(a[key + ".text"]); };
@@ -319,7 +345,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   };
 
   /* ── building the page ── */
-  var MANY = { "client-questions": 1, concerns: 1, treatments: 1, aftercare: 1 };
+  var MANY = { "client-questions": 1, concerns: 1, treatments: 1, aftercare: 1, school: 1 };
+  var OPTIONAL = { products: 1, school: 1 };   // counted on their own tab, not in the progress bar
   var tabsEl = document.getElementById("tabs");
   var main = document.getElementById("sections");
 
@@ -588,8 +615,9 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     if (s.id === "routine") { var r = item("routine", { id: "routine", title: "Routine and starting actives" }, SPEC.routineFields); r.open = true; sec.appendChild(r); }
     if (s.id === "products") SPEC.products.forEach(function (g) {
       sec.appendChild(el("p", "group-k", g.cat));
-      g.items.forEach(function (p) { sec.appendChild(item("products", { id: p.id, title: p.name }, SPEC.productFields, p.size)); });
+      g.items.forEach(function (p) { sec.appendChild(item("products", { id: p.id, title: p.name }, p.fields, p.size)); });
     });
+    if (s.id === "school") SPEC.school.forEach(function (m) { sec.appendChild(item("school", m, m.fields, m.sub)); });
     if (MANY[s.id]) {
       sec.querySelectorAll("details.item").forEach(function (d, i) { d.dataset.i = String(i); });
       var doneBox = el("details", "done-items");
@@ -717,10 +745,10 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       if (t.dataset.sid === "talk") return;
       var c = sectionDone(t.dataset.sid);
       all += c.done;
-      t.querySelector(".tab-n").textContent = t.dataset.sid === "products" ? (c.done ? String(c.done) : "") : c.done + "/" + c.total;
+      t.querySelector(".tab-n").textContent = OPTIONAL[t.dataset.sid] ? (c.done ? String(c.done) : "") : c.done + "/" + c.total;
     });
-    var required = FIELDS.filter(function (f) { return f.sid !== "products"; }).length;
-    var reqDone = FIELDS.filter(function (f) { return f.sid !== "products" && answeredKey(f.sid, f.key); }).length;
+    var required = FIELDS.filter(function (f) { return !OPTIONAL[f.sid]; }).length;
+    var reqDone = FIELDS.filter(function (f) { return !OPTIONAL[f.sid] && answeredKey(f.sid, f.key); }).length;
     document.getElementById("meter").style.width = (reqDone / required * 100) + "%";
     document.getElementById("count").textContent = all + " answered";
     if (typeof paintConfirm === "function") paintConfirm();
@@ -738,35 +766,59 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   tabsEl.addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (t) show(t.dataset.sid); });
   main.addEventListener("toggle", function (e) { if (e.target.matches && e.target.matches("details.item") && e.target.open) tidyItem(e.target); }, true);
 
-  /* ── saving: one write at a time per section, after she pauses ── */
+  /* ── saving. Every keystroke and tap is kept on this phone at once; the database gets what changed
+     a moment after she pauses, when she leaves a box, and when she switches away from the page. Only
+     the answers that changed are sent, merged into what's saved, so the page open on another phone or
+     computer never wipes out what she wrote there. One write at a time per section. ── */
   var saveEl = document.getElementById("save");
   var setSave = function (text, cls) { saveEl.textContent = text; saveEl.className = "save" + (cls ? " " + cls : ""); };
-  var db = null, canSave = null, timers = {}, writing = {}, again = {};
+  var db = null, canSave = null, timers = {}, writing = {}, again = {}, fails = {};
+  var pending = function () { return Object.keys(timers).some(function (k) { return timers[k]; }) || Object.keys(writing).some(function (k) { return writing[k]; }); };
+  var cantSave = function () {
+    canSave = false;
+    setSave("Can't save here", "is-bad");
+    document.getElementById("copy-note").textContent = "This link can't save online. Your answers stay on this phone: use Copy all my answers and send them to Ruben.";
+  };
   var flush = function (sid) {
-    timers[sid] = null;
+    clearTimeout(timers[sid]); timers[sid] = null;
     if (!db || canSave === false) return;
     if (writing[sid]) { again[sid] = true; return; }
+    var changes = changedKeys(sid);
+    if (!Object.keys(changes).length) { if (!pending()) setSave("Saved", "is-ok"); return; }
     writing[sid] = true;
     setSave("Saving…");
-    var body = JSON.parse(JSON.stringify({ answers: state[sid], updatedAt: new Date().toISOString() }));
-    db.doc(COLL + "/" + sid).set(body).then(function () {
-      setSave("Saved", "is-ok");
+    var at = new Date().toISOString(), ref = db.doc(COLL + "/" + sid);
+    var whole = function () { var body = JSON.parse(JSON.stringify({ answers: state[sid], updatedAt: at })); return ref.set(body).then(function () { return body.answers; }); };
+    var sent = JSON.parse(JSON.stringify(changes));
+    var write = onlineHas[sid]
+      ? ref.update({ answers: sent, updatedAt: at }).then(function () { return null; }, function (err) {
+          if (err && err.code === "invalid_argument") return whole();   // the section's document isn't there yet
+          throw err;
+        })
+      : whole();
+    write.then(function (all) {
+      onlineHas[sid] = true; fails[sid] = 0;
+      if (all) synced[sid] = all;
+      else { synced[sid] = synced[sid] || {}; Object.keys(sent).forEach(function (k) { synced[sid][k] = sent[k]; }); }
+      writeSynced(sid);
     }, function (err) {
-      if (err && err.code === "invalid_argument") {
-        canSave = false;
-        setSave("Can't save here", "is-bad");
-        document.getElementById("copy-note").textContent = "This link can't save online. Your answers stay on this phone: use Copy all my answers and send them to Ruben.";
-      } else { setSave("Not saved yet · trying again", "is-bad"); again[sid] = true; }
+      if (err && err.code === "invalid_argument") cantSave();
+      else { fails[sid] = (fails[sid] || 0) + 1; setSave(navigator.onLine === false ? "Saved on this phone · sends when you're back online" : "Not saved yet · trying again", "is-bad"); again[sid] = true; }
     }).then(function () {
       writing[sid] = false;
-      if (again[sid]) { again[sid] = false; schedule(sid, 1500); }
+      if (again[sid]) { again[sid] = false; schedule(sid, Math.min(15000, 1500 * Math.max(1, fails[sid] || 0)), true); }
+      else if (!pending() && canSave !== false && Object.keys(changedKeys(sid)).length === 0) setSave("Saved", "is-ok");
     });
   };
-  var schedule = function (sid, ms) {
+  var flushAll = function () { Object.keys(state).forEach(function (sid) { if (timers[sid] || Object.keys(changedKeys(sid)).length) flush(sid); }); };
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flushAll(); });
+  window.addEventListener("pagehide", flushAll);
+  window.addEventListener("online", flushAll);
+  var schedule = function (sid, ms, retry) {
     writeLocal(sid);
     paint();
     if (!db) return;
-    if (canSave !== false) setSave("Saving…");
+    if (canSave !== false && !retry) setSave("Saving…");
     clearTimeout(timers[sid]);
     timers[sid] = setTimeout(function () { flush(sid); }, ms == null ? 900 : ms);
   };
@@ -795,6 +847,11 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       a[t.dataset.key] = l;
     } else a[t.dataset.key] = t.value;
     schedule(t.dataset.sid);
+  });
+  /* leaving a box saves it right away */
+  main.addEventListener("focusout", function (e) {
+    var t = e.target;
+    if (t && t.dataset && t.dataset.sid && timers[t.dataset.sid]) flush(t.dataset.sid);
   });
 
   /* ── one message with everything, as a backup ── */
@@ -897,6 +954,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     if (f.field.options) s += " She may pick from: " + f.field.options.join("; ") + ".";
     if (k === "products") s += " She names products from her shelf, and how to use them.";
     if (k === "treatments") s += " She names treatments from her menu.";
+    if (f.sid === "school" && /_ok$/.test(f.key)) s += " This is a lesson of her online course as it reads now (in brackets): tell her what it says in a sentence or two, and ask whether that's how she'd teach it. If she'd change something, save what she'd change, in her words.";
+    if (f.sid === "products" && f.field.key === "stop") s += " Only the signs she names; never suggest any.";
     if (k === "list") s += " Real replies she has sent clients, names removed: save each one she shares as its own value.";
     var d = SPEC.drafts[f.sid + "/" + f.key];
     if (d) s += ' A common answer to offer her, from standard practice: "' + (typeof d === "string" ? d : [].concat(d.pick || []).join(", ") + (d.text ? ". " + d.text : "")).replace(/"/g, "\'") + '"';
@@ -1134,7 +1193,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     var b = el("button", "linkish", "Or talk it through with Claude");
     b.type = "button";
     b.style.marginLeft = "0.25rem";
-    b.addEventListener("click", function () { var sid = h.closest(".section").id.slice(2); if (TALK_ORDER.indexOf(sid) !== -1 || sid === "products") talk.focus = sid; show("talk"); paintTalk(); });
+    b.addEventListener("click", function () { var sid = h.closest(".section").id.slice(2); if (TALK_ORDER.indexOf(sid) !== -1 || sid === "products" || sid === "school") talk.focus = sid; show("talk"); paintTalk(); });
     h.appendChild(b);
   });
 
@@ -1392,23 +1451,30 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         snap.docs.forEach(function (d) { if (d.exists) saved[d.id] = (d.data() || {}).answers || {}; });
         SPEC.sections.forEach(function (s) {
           var online = saved[s.id], local = state[s.id], merged = online ? JSON.parse(JSON.stringify(online)) : {};
-          var extra = false;
-          /* an answer only this phone has comes back, unless the same words are saved under another question (it was moved there) */
-          var saved2 = online ? Object.keys(online).map(function (k) { return JSON.stringify(online[k]); }) : [];
-          Object.keys(local).forEach(function (k) {
-            if (!has(merged[k]) && has(local[k]) && saved2.indexOf(JSON.stringify(local[k])) === -1) { merged[k] = local[k]; extra = true; }
-          });
+          var last = readSynced(s.id);
+          onlineHas[s.id] = !!online;
+          synced[s.id] = online ? JSON.parse(JSON.stringify(online)) : {};
+          if (last) {
+            /* what she typed here that never reached the database wins; everything else comes from the database,
+               so an answer she changed on another phone shows here too */
+            Object.keys(local).concat(Object.keys(last)).forEach(function (k) { if (!same(local[k], last[k])) merged[k] = local[k] == null ? "" : local[k]; });
+          } else {
+            /* (a phone from before this was kept) an answer only this phone has comes back, unless the same words are saved under another question (it was moved there) */
+            var saved2 = online ? Object.keys(online).map(function (k) { return JSON.stringify(online[k]); }) : [];
+            Object.keys(local).forEach(function (k) {
+              if (!has(merged[k]) && has(local[k]) && saved2.indexOf(JSON.stringify(local[k])) === -1) merged[k] = local[k];
+            });
+          }
           state[s.id] = merged;
-          if (migrate(s.id)) extra = true;
-          writeLocal(s.id);
-          if (extra && online) schedule(s.id, 0);
-          else if (!online && Object.keys(local).some(function (k) { return has(local[k]); })) schedule(s.id, 0);
+          migrate(s.id);
+          writeLocal(s.id); writeSynced(s.id);
+          if (Object.keys(changedKeys(s.id)).length && (online || Object.keys(merged).some(function (k) { return has(merged[k]); }))) schedule(s.id, 0);
         });
         paint();
         tidy();
         loadConfirm();
         loadTalk();
-        if (canSave !== false && !Object.keys(timers).some(function (k) { return timers[k]; })) setSave("Saved", "is-ok");
+        if (canSave !== false && !pending()) setSave("Saved", "is-ok");
       }, function () { setSave("Saved on this phone"); });
     });
   };
@@ -1467,8 +1533,12 @@ for (const s of S.SECTIONS) {
   }
   if (s.id === "routine") S.ROUTINE_FIELDS.forEach((f) => md.push(fieldLine(f)));
   if (s.id === "products") {
-    md.push(`For each of the ${live.length} live products on her shelf, optional:`, "");
-    S.PRODUCT_FIELDS.forEach((f) => md.push(fieldLine(f)));
+    md.push(`For each of the ${live.length} live products on her shelf (these make her take-home product guide, \`build-product-guide.mjs\`):`, "");
+    S.PRODUCT_FIELDS.forEach((f) => md.push(fieldLine(f.key === "like" ? { ...f, kind: "one", options: ["the other products of the same type"] } : f)));
+  }
+  if (s.id === "school") {
+    md.push(`One card per module (${modules.length}), and for each of its lessons (${modules.reduce((n, m) => n + m.fields.length / 2, 0)} in all), showing the lesson as it reads now:`, "");
+    S.SCHOOL_FIELDS({ id: "<id>", t: "<title>", sum: "", learn: [], try: "" }).forEach((f) => md.push(fieldLine({ ...f, hint: f.key.endsWith("_ok") ? "Shows the lesson's summary, three key points and its try-this." : f.hint })));
   }
   if (s.id === "hard-lines") S.HARD_LINE_FIELDS.forEach((f) => md.push(fieldLine(f)));
   if (s.id === "voice") S.VOICE_FIELDS.forEach((f) => md.push(fieldLine(f)));
@@ -1482,4 +1552,5 @@ console.log("wrote knowledge/playbook/evelyn-playbook.html (" + Math.round(html.
   clientQs + S.CONCERNS.length * S.CONCERN_FIELDS.length + S.TREATMENT_DETAILS.length * S.TREATMENT_DETAIL_FIELDS.length
   + S.TREATMENT_AFTERCARE.length * S.AFTERCARE_FIELDS.length + S.VISIT_FIELDS.length + S.MATERIALS_FIELDS.length
   + S.ROUTINE_FIELDS.length + S.HARD_LINE_FIELDS.length + S.VOICE_FIELDS.length,
-  "(" + clientQs + " client texts) +", live.length * S.PRODUCT_FIELDS.length, "optional product notes");
+  "(" + clientQs + " client texts) +", spec.products.reduce((n, g) => n + g.items.reduce((m, p) => m + p.fields.length, 0), 0), "for the product guide +",
+  modules.reduce((n, m) => n + m.fields.length, 0), "for Skin School");

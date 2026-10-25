@@ -6,7 +6,7 @@
 // The folder holds one JSON file per section, as the questionnaire's database
 // stores them (ArtifactData "list" on collection "playbook", saved with out_dir):
 //   client-questions.json, concerns.json, treatments.json, aftercare.json, visits.json,
-//   routine.json, products.json, materials.json, hard-lines.json, voice.json
+//   routine.json, products.json, school.json, materials.json, hard-lines.json, voice.json
 // each shaped { "id": "<section>", "data": { "answers": { "<item>.<field>": ... } } } or just the answers object.
 // (interview.json, the Talk it through conversation, is a record only: the
 // answers it gathered are already in the section files.)
@@ -100,10 +100,37 @@ globalThis.window = {};
 await import(path.join(ROOT, "js/catalog.js"));
 const CAT = globalThis.window.LUMEVINA_CATALOG;
 const prods = section("products");
-for (const p of CAT.products.filter((x) => !x.draft)) {
+// "Same as": a card that names another product takes that product's answers
+// for every question it leaves empty, with a note saying so
+const live = CAT.products.filter((x) => !x.draft);
+const byLabel = Object.fromEntries(live.map((p) => [(p.name + (p.brand !== "Face Reality" ? " (" + p.brand + ")" : "")).toLowerCase(), p]));
+for (const p of live) {
+  const like = [].concat(prods[p.id + ".like"] || prods[p.id + ".like.text"] || [])[0];
+  const src = like && byLabel[String(like).trim().toLowerCase()];
+  if (!src || src.id === p.id) continue;
+  for (const f of S.PRODUCT_FIELDS) {
+    if (f.key === "like") continue;
+    const k = p.id + "." + f.key;
+    if (has(prods[k]) || has(prods[k + ".text"])) continue;
+    if (!has(prods[src.id + "." + f.key]) && !has(prods[src.id + "." + f.key + ".text"])) continue;
+    prods[k] = prods[src.id + "." + f.key];
+    prods[k + ".text"] = [prods[src.id + "." + f.key + ".text"], `_(Same as ${src.name}, per Evelyn.)_`].filter(has).join("\n\n");
+  }
+}
+for (const p of live) {
   const lead = `**Brand:** ${p.brand}  \n**Type:** ${p.cat}  \n**Size:** ${p.size || "(not on file)"}  \n**Price:** $${p.price}  \n` +
     (p.about ? `**On the label:** ${p.about}\n` : "") + (p.inv ? `**In her GlossGenius inventory as:** ${p.inv}\n` : "") +
     "\nLabel facts above come from the product's own packaging. Everything below is Evelyn's.";
   n += file(`products/${p.id}.md`, { id: p.id, kind: "product", title: p.name, brand: p.brand, category: p.cat, size: p.size || "", price: p.price, source: "label + playbook" }, p.name, lead, S.PRODUCT_FIELDS, prods, p.id);
+}
+// Skin School: her verdict on each lesson as it reads now, what she'd change, and her tip
+// (build-course-notes.mjs puts the tips in the lessons as "Evelyn says"; the changes are for whoever edits the course)
+globalThis.window.SCHOOL || await import(path.join(ROOT, "docs/school/curriculum.js"));
+const school = section("school");
+for (const lv of globalThis.window.SCHOOL.levels) for (const m of lv.modules) {
+  const id = "module-" + m.lessons[0].id.split("-")[0];
+  n += file(`school/${id}.md`, { id, kind: "school", title: m.name, source: "playbook" }, `Skin School: ${m.name}`,
+    "Evelyn's verdict on each lesson as it reads now (docs/school/curriculum.js), what she'd change, and her own tip for it.",
+    m.lessons.flatMap(S.SCHOOL_FIELDS), school, id);
 }
 console.log(`imported: ${n} files with answers (dated ${today}).` + (unread ? ` ${unread} screenshot${unread === 1 ? "" : "s"} not read yet: run read-screenshots.mjs first, then import again.` : "") + " Now run: node knowledge/scripts/build-bundle.mjs");

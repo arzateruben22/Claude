@@ -108,6 +108,8 @@ export const DRAFTS = {
   "routine/routine.retinal_vs_retinol": "Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.",
   "routine/routine.dont_mix": "Not on the same night: a retinoid with an acid; two exfoliants; benzoyl peroxide with retinol. Vitamin C goes in the morning, actives at night. Nothing active on skin that's freshly treated or waxed. Niacinamide and vitamin C are fine together.",
   "routine/routine.sun": "Every morning, rain or shine, SPF 30 or higher, enough of it, and reapplied when you're outside. It's the one product that protects everything else we're doing: every active makes you burn more easily, and sun is what brings dark spots back.",
+  // from her own answer on the breakouts card (concerns/breakouts-and-acne.avoid), offered back to her for every product
+  "routine/routine.stop_signs": "If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.",
 
   /* ── Visits and the studio ── */
   "visits/visits.wear_bring": "Just yourself. Come with a clean face if you can (I'll remove makeup if not), hair you don't mind getting a little damp at the hairline, and for a wax, loose comfortable clothing. Bring a list or photos of what you're using at home.",

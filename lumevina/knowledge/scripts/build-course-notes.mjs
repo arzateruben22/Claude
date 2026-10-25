@@ -75,6 +75,11 @@ S.CONCERNS.forEach((c) => set("concerns", c.id, S.CONCERN_FIELDS));
 S.TREATMENT_DETAILS.forEach((t) => set("treatments/explained", t.id, S.TREATMENT_DETAIL_FIELDS));
 S.TREATMENT_AFTERCARE.forEach((t) => set("treatments", t.id, S.AFTERCARE_FIELDS));
 set("", "visits", S.VISIT_FIELDS); set("", "routine", S.ROUTINE_FIELDS); set("", "hard-lines", S.HARD_LINE_FIELDS); set("", "voice", S.VOICE_FIELDS);
+// her Skin School card for each module (knowledge/school/module-<n>.md): her tip per lesson, and what she'd change
+globalThis.window = globalThis.window || {};
+await import(path.join(root, "docs/school/curriculum.js"));
+const LESSONS = globalThis.window.SCHOOL.levels.flatMap((lv) => lv.modules.flatMap((m) => m.lessons.map((ls) => ({ ls, module: "module-" + m.lessons[0].id.split("-")[0] }))));
+globalThis.window.SCHOOL.levels.forEach((lv) => lv.modules.forEach((m) => set("school", "module-" + m.lessons[0].id.split("-")[0], m.lessons.flatMap(S.SCHOOL_FIELDS))));
 
 const clean = (t) => t.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/_\(How to read this:[^)]*\)_/g, "").replace(/\s+/g, " ").trim();
 const sections = (md) => {
@@ -115,14 +120,13 @@ const herNotes = (kind, item, key) => {
     const list = paras.filter((p) => /^(- |\d+\. )/.test(p)).flatMap((p) => p.split("\n").map((l) => clean(l.replace(/^(- |\d+\. )/, ""))));
     const text = paras.filter((p) => !/^(- |\d+\. )/.test(p)).map(clean).join(" ");
     const picks = list.length > 8 ? `${list.slice(0, 8).join(", ")} and ${list.length - 8} more` : list.join(", ");
-    if (text) out.push(`${label}: ${text}`);
+    if (text) out.push(kind === "school" ? text : `${label}: ${text}`);   // her tip for a lesson needs no label
     if (list.length) out.push(text ? `Her picks: ${picks}.` : `${label}: ${picks}.`);
   }
   return out;
 };
 
 // her shelf, by category
-globalThis.window = {};
 await import(path.join(root, "js/catalog.js"));
 const CAT = globalThis.window.LUMEVINA_CATALOG;
 const shelfFor = (cats) => CAT.products.filter((p) => !p.draft && !p.hidden && cats.includes(p.cat)).slice(0, 6)
@@ -149,6 +153,16 @@ for (const [id, m] of Object.entries(MAP)) {
   if (n.evelyn.length) withHer++;
   notes[id] = n;
 }
+// her own tip for each lesson goes first; a lesson she wants changed is listed for whoever edits the course
+const changes = [];
+for (const { ls, module } of LESSONS) {
+  const tip = herNotes("school", module, ls.id + "_tip");
+  const n = notes[ls.id] || (notes[ls.id] = { evelyn: [], general: [], shelf: [] });
+  if (tip.length) { if (!n.evelyn.length) withHer++; n.evelyn = [...tip, ...n.evelyn].slice(0, 6); }
+  const verdict = herNotes("school", module, ls.id + "_ok").join(" ");
+  if (/Change something/.test(verdict)) changes.push(`  ${ls.id} ${ls.t}: ${verdict.replace(/^Change something\s*/, "") || "(no details yet)"}`);
+}
+if (changes.length) console.warn(`Evelyn wants ${changes.length} lesson${changes.length === 1 ? "" : "s"} changed (edit docs/school/curriculum.js, then rebuild):\n` + changes.join("\n"));
 if (missing.length) console.warn("sections not found:", missing.join(", "));
 const built = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(root, "docs/school/notes.js"),

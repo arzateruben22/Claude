@@ -38,7 +38,9 @@ export const itemTitle = (sid, itemId) => {
     routine: () => "Routine and starting actives",
     materials: () => "Her own materials",
     "hard-lines": () => "Hard lines",
-    voice: () => "How she talks to clients"
+    voice: () => "How she talks to clients",
+    products: () => itemId,
+    school: () => "Skin School, " + itemId.replace("module-", "module ")
   }[sid] || (() => itemId))() || itemId;
 };
 

@@ -31,3 +31,7 @@ _(not answered yet)_
 ## Anything you always say about sunscreen
 
 _(not answered yet)_
+
+## When should a client stop a product and message you?
+
+_(not answered yet)_
