@@ -280,9 +280,19 @@ export const lessons = pgTable("lessons", {
   outline: jsonb("outline").$type<{ part: string; episodeId?: string; seconds?: number; note?: string }[]>().notNull().default([]),
   state: episodeStateEnum("state").notNull().default("outline"),
   videoPath: text("video_path").notNull().default(""),
+  name: text("name").notNull().default(""),                  // vol01, vol02… (the compilation's folder name)
+  videoSha256: text("video_sha256").notNull().default(""),
+  thumbnailPath: text("thumbnail_path").notNull().default(""),
+  chapters: text("chapters").notNull().default(""),          // YouTube chapters, ready to paste
+  description: text("description").notNull().default(""),    // ready to paste: chapters, sources, AI label
+  qa: jsonb("qa").$type<Record<string, unknown>>().notNull().default({}),
+  approvedHash: text("approved_hash").notNull().default(""), // sha256(video, title, description) at approval
+  postUrl: text("post_url").notNull().default(""),
+  reportedAt: timestamp("reported_at", { withTimezone: true }),
   isTestFixture: boolean("is_test_fixture").notNull().default(false),
   isDemo: boolean("is_demo").notNull().default(false),
   createdAt: created(),
+  updatedAt: updated(),
 });
 export const lessonEpisodes = pgTable("lesson_episodes", {          // a consumed bundle: an episode joins one lesson
   lessonId: uuid("lesson_id").references(() => lessons.id, { onDelete: "cascade" }).notNull(),

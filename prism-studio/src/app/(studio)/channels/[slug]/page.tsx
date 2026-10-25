@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
 import { channelBySlug, episodesFor, studio, worldView } from "@/lib/data";
@@ -11,8 +11,10 @@ import type { CreationKey, Form } from "@/creations/types";
 import { count, PLATFORM_LABEL, PROVENANCE_LABEL, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { saveChannel } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
+import { Lessons } from "@/components/Lessons";
+import { availableForLesson } from "@/domain/lessons";
 
-const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
+const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const c = await channelBySlug((await params).slug);
@@ -23,11 +25,15 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
   const [{ slug }, { tab = "overview" }] = await Promise.all([params, searchParams]);
   const c = await channelBySlug(slug);
   if (!c) notFound();
-  const [eps, w, s, dests, ser] = await Promise.all([
+  const [eps, w, s, dests, ser, lessonRows, available] = await Promise.all([
     episodesFor(c.id), worldView(c.id), studio(),
     db().select().from(S.destinations).where(eq(S.destinations.channelId, c.id)),
     db().select().from(S.series).where(eq(S.series.channelId, c.id)).orderBy(asc(S.series.sort)),
+    db().select().from(S.lessons).where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false))).orderBy(desc(S.lessons.createdAt)),
+    availableForLesson(db(), c.id),
   ]);
+  const lessonParts = lessonRows.length ? (await db().select({ le: S.lessonEpisodes, episode: S.episodes }).from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
+    .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id)))).map((r) => ({ ...r.le, episode: r.episode })) : [];
   const key = w.creation.creationKey as CreationKey, meta = CREATIONS[key];
   const name = c.name.replace(/ \(name TBD\)$/, "");
   const pct = (w.xp.xp - w.xp.levelStart) / Math.max(1, w.xp.next - w.xp.levelStart);
@@ -83,6 +89,10 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
           </ul>
           {!eps.length ? <p className="muted">No episodes yet.</p> : null}
         </div>
+      ) : null}
+
+      {tab === "lessons" ? (
+        <Lessons channelId={c.id} channelName={name} ytHandle={dests.find((d) => d.platform === "youtube")?.handle ?? ""} lessons={lessonRows} parts={lessonParts} available={available} tz={s.timezone} />
       ) : null}
 
       {tab === "series" ? (

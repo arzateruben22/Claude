@@ -418,3 +418,55 @@ export async function cancelJob(fd: FormData) {
   await requestCancel(db(), z.string().uuid().parse(fd.get("jobId")));
   revalidatePath("/queue");
 }
+
+// ── lessons (compilations) ─────────────────────────────────────────────────
+export async function newLesson(_: Result, fd: FormData) {
+  return run(async () => {
+    const channelId = z.string().uuid().parse(fd.get("channelId"));
+    const episodeIds = z.array(z.string().uuid()).parse(fd.getAll("episodeIds").map(String));
+    const { createLesson } = await import("@/domain/lessons");
+    const l = await createLesson(db(), { channelId, episodeIds, title: str(fd, "title") });
+    const [ch] = await db().select().from(S.channels).where(eq(S.channels.id, channelId));
+    refresh(`/channels/${ch.slug}`, "/queue");
+    return ok(`${l.name} queued: the worker builds it with compilation.mjs (a few minutes).`);
+  });
+}
+export async function approveLessonAction(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("lessonId"));
+    const { approveLesson } = await import("@/domain/lessons");
+    await approveLesson(db(), id);
+    refresh();
+    return ok("Approved this exact video, title and description.");
+  });
+}
+export async function saveLesson(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("lessonId"));
+    const v = z.object({ title: z.string().min(3).max(100, "YouTube titles are at most 100 characters"), description: z.string().max(5000, "YouTube descriptions are at most 5,000 characters") })
+      .parse({ title: str(fd, "title"), description: str(fd, "description") });
+    const { editLesson } = await import("@/domain/lessons");
+    await editLesson(db(), id, v);
+    refresh();
+    return ok("Saved. Approve again before uploading.");
+  });
+}
+export async function reportLessonUploaded(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("lessonId"));
+    if (fd.get("confirmAccount") !== "on") throw new DomainError("confirm", "Tick the box to confirm which channel you uploaded to.");
+    const { markLessonUploaded } = await import("@/domain/lessons");
+    await markLessonUploaded(db(), id, { postUrl: str(fd, "postUrl") || undefined });
+    refresh("/analytics");
+    return ok("Recorded as uploaded.");
+  });
+}
+export async function dissolveLessonAction(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("lessonId"));
+    const { dissolveLesson } = await import("@/domain/lessons");
+    await dissolveLesson(db(), id);
+    refresh();
+    return ok("Dissolved: its episodes can join another lesson.");
+  });
+}

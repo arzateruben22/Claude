@@ -3,40 +3,18 @@
 // Run alongside the web app: `npm run worker`. Stops cleanly on SIGINT/SIGTERM (the current job finishes).
 import os from "node:os";
 import { db, pool } from "../src/db/client";
-import * as S from "../src/db/schema";
-import { claim, complete, fail, heartbeat, markCancelled, recoverExpired, type JobRow } from "../src/domain/jobs";
+import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
-import { refreshEvolution } from "../src/domain/living";
 import { audit } from "../src/domain/core";
-import { importEpisodes } from "../scripts/import-episodes";
-import { loadEnv } from "../scripts/env";
 import { eq } from "drizzle-orm";
+import * as S from "../src/db/schema";
+import { HANDLERS, runHandler } from "./handlers";
+import { loadEnv } from "../scripts/env";
 loadEnv();
 
 const ID = `${os.hostname()}:${process.pid}`;
 let stopping = false;
 for (const sig of ["SIGINT", "SIGTERM"] as const) process.on(sig, () => { stopping = true; console.log(`[worker] ${sig}: finishing the current job, then stopping`); });
-
-type Handler = (job: JobRow, beat: (p: number, msg: string) => Promise<boolean>) => Promise<Record<string, unknown>>;
-const HANDLERS: Record<string, Handler> = {
-  async import_episodes(_, beat) {
-    await beat(0.1, "reading films/channels");
-    const report = await importEpisodes(db());
-    return { report };
-  },
-  async reschedule_missed() {
-    return { moved: await rescheduleMissed(db()) };
-  },
-  async refresh_evolution(_, beat) {
-    const chans = await db().select().from(S.channels);
-    const out: Record<string, number[]> = {};
-    for (const [i, c] of chans.entries()) {
-      if (!(await beat(i / chans.length, `checking ${c.slug}`))) break;
-      out[c.slug] = await refreshEvolution(db(), c.id);
-    }
-    return out;
-  },
-};
 
 async function runOne(): Promise<boolean> {
   const job = await claim(db(), ID, { types: Object.keys(HANDLERS), perChannel: 1 });
@@ -44,7 +22,7 @@ async function runOne(): Promise<boolean> {
   console.log(`[worker] ${job.type} ${job.id.slice(0, 8)} (attempt ${job.attempts}/${job.maxAttempts})`);
   const beat = async (p: number, msg: string) => !(await heartbeat(db(), job.id, ID, p, msg));   // false = cancel requested
   try {
-    const result = await HANDLERS[job.type](job, beat);
+    const result = await runHandler(job.type, job, beat, db());
     const [j] = await db().select({ c: S.jobs.cancelRequested }).from(S.jobs).where(eq(S.jobs.id, job.id));
     if (j?.c) await markCancelled(db(), job.id, ID);
     else await complete(db(), job.id, ID, result);
