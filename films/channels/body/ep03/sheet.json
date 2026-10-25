@@ -1,0 +1,705 @@
+{
+ "duration": 74.8,
+ "fps": 30,
+ "preset": "meanwhile-pulse",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 15.2,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 15.2,
+   "t1": 25.6,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6,
+   "t1": 42.4,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 42.4,
+   "t1": 54.4,
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.4,
+   "t1": 61.2,
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 61.2,
+   "t1": 68.0,
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 68.0,
+   "t1": 74.8,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -3.0
+  },
+  {
+   "t": 0.248,
+   "kind": "spike",
+   "tag": "hook0"
+  },
+  {
+   "t": 0.868,
+   "kind": "spike",
+   "tag": "hook1"
+  },
+  {
+   "t": 1.488,
+   "kind": "spike",
+   "tag": "hook2"
+  },
+  {
+   "t": 2.108,
+   "kind": "spike",
+   "tag": "hook3"
+  },
+  {
+   "t": 2.728,
+   "kind": "spike",
+   "tag": "hook4"
+  },
+  {
+   "t": 3.348,
+   "kind": "spike",
+   "tag": "hook5"
+  },
+  {
+   "t": 3.968,
+   "kind": "spike",
+   "tag": "hook6"
+  },
+  {
+   "t": 4.588,
+   "kind": "spike",
+   "tag": "hook7"
+  },
+  {
+   "t": 5.208,
+   "kind": "spike",
+   "tag": "hook8"
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 15.2
+  },
+  {
+   "t": 5.828,
+   "kind": "spike",
+   "tag": "hook9"
+  },
+  {
+   "t": 6.448,
+   "kind": "spike",
+   "tag": "hook10"
+  },
+  {
+   "t": 7.068,
+   "kind": "spike",
+   "tag": "hook11"
+  },
+  {
+   "t": 8.133333333333333,
+   "kind": "label",
+   "tag": "soma",
+   "pos": [
+    0.251,
+    0.391
+   ]
+  },
+  {
+   "t": 9.733333333333333,
+   "kind": "counter.show",
+   "tag": "len",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 15.183333,
+   "kind": "badge",
+   "tag": "ill-drum",
+   "text": "illustration: Helmholtz's 1850 method",
+   "pos": [
+    0.387,
+    0.146
+   ]
+  },
+  {
+   "t": 15.2,
+   "kind": "section",
+   "id": "change",
+   "t1": 25.6
+  },
+  {
+   "t": 17.733333333333334,
+   "kind": "counter.show",
+   "tag": "light",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 20.733333333333334,
+   "kind": "label",
+   "tag": "muscle",
+   "pos": [
+    0.231,
+    0.409
+   ]
+  },
+  {
+   "t": 21.066666666666666,
+   "kind": "label",
+   "tag": "nerve",
+   "pos": [
+    0.203,
+    0.151
+   ]
+  },
+  {
+   "t": 21.266666666666666,
+   "kind": "counter.show",
+   "tag": "frog",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 21.366666666666667,
+   "kind": "impact",
+   "tag": "twitch1",
+   "gain": -6.0
+  },
+  {
+   "t": 22.1,
+   "kind": "impact",
+   "tag": "twitch2",
+   "gain": -6.0
+  },
+  {
+   "t": 22.133333333333333,
+   "kind": "label",
+   "tag": "trace",
+   "pos": [
+    0.559,
+    0.514
+   ]
+  },
+  {
+   "t": 23.9,
+   "kind": "counter.end",
+   "tag": "frog-end"
+  },
+  {
+   "t": 25.583333,
+   "kind": "badge",
+   "tag": "nts-fib",
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.146
+   ]
+  },
+  {
+   "t": 25.6,
+   "kind": "section",
+   "id": "why",
+   "t1": 42.4
+  },
+  {
+   "t": 26.1,
+   "kind": "label",
+   "tag": "bare",
+   "pos": [
+    0.705,
+    0.375
+   ]
+  },
+  {
+   "t": 27.9,
+   "kind": "counter.show",
+   "tag": "fired",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 30.1333,
+   "kind": "spike",
+   "tag": "why0"
+  },
+  {
+   "t": 30.9333,
+   "kind": "spike",
+   "tag": "why1"
+  },
+  {
+   "t": 31.266666666666666,
+   "kind": "label",
+   "tag": "myelin",
+   "pos": [
+    0.592,
+    0.392
+   ]
+  },
+  {
+   "t": 31.7333,
+   "kind": "spike",
+   "tag": "why2"
+  },
+  {
+   "t": 32.5333,
+   "kind": "spike",
+   "tag": "why3"
+  },
+  {
+   "t": 33.2,
+   "kind": "label",
+   "tag": "gap",
+   "pos": [
+    0.204,
+    0.447
+   ]
+  },
+  {
+   "t": 33.3333,
+   "kind": "spike",
+   "tag": "why4"
+  },
+  {
+   "t": 34.1333,
+   "kind": "spike",
+   "tag": "why5"
+  },
+  {
+   "t": 35.0333,
+   "kind": "spike",
+   "tag": "ms0"
+  },
+  {
+   "t": 35.5833,
+   "kind": "spike",
+   "tag": "ms1"
+  },
+  {
+   "t": 35.86666666666667,
+   "kind": "label",
+   "tag": "ms",
+   "pos": [
+    0.438,
+    0.375
+   ]
+  },
+  {
+   "t": 36.1333,
+   "kind": "spike",
+   "tag": "ms2"
+  },
+  {
+   "t": 36.6833,
+   "kind": "spike",
+   "tag": "ms3"
+  },
+  {
+   "t": 37.2333,
+   "kind": "spike",
+   "tag": "ms4"
+  },
+  {
+   "t": 37.7833,
+   "kind": "spike",
+   "tag": "ms5"
+  },
+  {
+   "t": 39.63333333333333,
+   "kind": "impact",
+   "tag": "stall",
+   "gain": -8.0
+  },
+  {
+   "t": 42.4,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.4
+  },
+  {
+   "t": 42.6,
+   "kind": "badge",
+   "tag": "slow",
+   "text": "slowed · distances compressed",
+   "pos": [
+    0.337,
+    0.185
+   ]
+  },
+  {
+   "t": 44.3,
+   "kind": "counter.show",
+   "tag": "crawl",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 44.3,
+   "kind": "label",
+   "tag": "racebare",
+   "pos": [
+    0.291,
+    0.435
+   ]
+  },
+  {
+   "t": 46.4333,
+   "kind": "spike",
+   "tag": "race0"
+  },
+  {
+   "t": 46.43333333333333,
+   "kind": "counter.show",
+   "tag": "wrap",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 46.5276,
+   "kind": "spike",
+   "tag": "race1"
+  },
+  {
+   "t": 46.6218,
+   "kind": "spike",
+   "tag": "race2"
+  },
+  {
+   "t": 46.716,
+   "kind": "spike",
+   "tag": "race3"
+  },
+  {
+   "t": 46.733333333333334,
+   "kind": "label",
+   "tag": "racewrap",
+   "pos": [
+    0.668,
+    0.51
+   ]
+  },
+  {
+   "t": 46.8102,
+   "kind": "spike",
+   "tag": "race4"
+  },
+  {
+   "t": 46.9044,
+   "kind": "spike",
+   "tag": "race5"
+  },
+  {
+   "t": 46.9987,
+   "kind": "spike",
+   "tag": "race6"
+  },
+  {
+   "t": 47.0929,
+   "kind": "spike",
+   "tag": "race7"
+  },
+  {
+   "t": 47.1871,
+   "kind": "spike",
+   "tag": "race8"
+  },
+  {
+   "t": 47.2813,
+   "kind": "spike",
+   "tag": "race9"
+  },
+  {
+   "t": 47.3756,
+   "kind": "spike",
+   "tag": "race10"
+  },
+  {
+   "t": 47.4698,
+   "kind": "spike",
+   "tag": "race11"
+  },
+  {
+   "t": 47.564,
+   "kind": "spike",
+   "tag": "race12"
+  },
+  {
+   "t": 47.6582,
+   "kind": "spike",
+   "tag": "race13"
+  },
+  {
+   "t": 47.7524,
+   "kind": "spike",
+   "tag": "race14"
+  },
+  {
+   "t": 48.0,
+   "kind": "counter.end",
+   "tag": "wrap-end"
+  },
+  {
+   "t": 49.1,
+   "kind": "counter.show",
+   "tag": "kmh",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 54.4,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 61.2
+  },
+  {
+   "t": 54.86666666666667,
+   "kind": "counter.show",
+   "tag": "toe",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 56.5,
+   "kind": "badge",
+   "tag": "real",
+   "text": "real time",
+   "pos": [
+    0.181,
+    0.185
+   ]
+  },
+  {
+   "t": 57.1,
+   "kind": "impact",
+   "tag": "stub"
+  },
+  {
+   "t": 57.2,
+   "kind": "spike",
+   "tag": "jolt"
+  },
+  {
+   "t": 59.3,
+   "kind": "swell",
+   "tag": "ache",
+   "t1": 60.9
+  },
+  {
+   "t": 60.8,
+   "kind": "beat",
+   "tag": "beat0"
+  },
+  {
+   "t": 61.2,
+   "kind": "section",
+   "id": "meanwhile",
+   "t1": 68.0
+  },
+  {
+   "t": 61.5,
+   "kind": "counter.show",
+   "tag": "tally",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 61.6,
+   "kind": "beat",
+   "tag": "beat1"
+  },
+  {
+   "t": 62.4,
+   "kind": "beat",
+   "tag": "beat2"
+  },
+  {
+   "t": 63.2,
+   "kind": "beat",
+   "tag": "beat3"
+  },
+  {
+   "t": 64.0,
+   "kind": "beat",
+   "tag": "beat4"
+  },
+  {
+   "t": 64.8,
+   "kind": "beat",
+   "tag": "beat5"
+  },
+  {
+   "t": 65.6,
+   "kind": "beat",
+   "tag": "beat6"
+  },
+  {
+   "t": 66.4,
+   "kind": "beat",
+   "tag": "beat7"
+  },
+  {
+   "t": 67.2,
+   "kind": "beat",
+   "tag": "beat8"
+  },
+  {
+   "t": 68.0,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.8
+  },
+  {
+   "t": 69.56666666666666,
+   "kind": "label",
+   "tag": "terminal",
+   "pos": [
+    0.603,
+    0.29
+   ]
+  },
+  {
+   "t": 70.5333,
+   "kind": "spike",
+   "tag": "tease0"
+  },
+  {
+   "t": 71.0333,
+   "kind": "spike",
+   "tag": "tease1"
+  },
+  {
+   "t": 71.5333,
+   "kind": "spike",
+   "tag": "tease2"
+  },
+  {
+   "t": 72.0333,
+   "kind": "spike",
+   "tag": "tease3"
+  },
+  {
+   "t": 72.8,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 15.5,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 25.9,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 42.7,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 54.7,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.5,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 68.3,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "soma": 8.1667,
+  "muscle": 20.7667,
+  "nerve": 21.1,
+  "trace": 22.1667,
+  "bare": 26.1333,
+  "myelin": 31.3,
+  "gap": 33.2333,
+  "ms": 35.9,
+  "racebare": 44.3333,
+  "racewrap": 46.4667,
+  "terminal": 69.6,
+  "len": 9.7667,
+  "light": 17.7667,
+  "frog": 21.3,
+  "fired": 27.9333,
+  "crawl": 44.3333,
+  "wrap": 46.4667,
+  "kmh": 49.1333,
+  "toe": 54.9,
+  "tally": 61.5333
+ }
+}

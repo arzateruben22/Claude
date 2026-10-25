@@ -44,6 +44,17 @@
   "note": "Excerpt (UGA manuscript): Müller cited possible speeds up to 60 times the speed of light and thought conduction extremely fast. Review fix: the 60× figure was a cited estimate, not his own guess, so the line says 'might be as fast as light'."
  },
  {
+  "id": "c20",
+  "sentence": "Johannes Müller thought it might be as fast as light.",
+  "claim": "The speed of light in vacuum is exactly 299,792,458 m/s (shown on screen as Müller's guess).",
+  "source_url": "https://physics.nist.gov/cgi-bin/cuu/Value?c",
+  "source_title": "Speed of light in vacuum (NIST, CODATA fundamental physical constants)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "A defined constant: 299 792 458 m/s exact. The readout labels it 'Müller's guess: as fast as light?', with the question mark: c4 says he thought it might be of that order."
+ },
+ {
   "id": "c5",
   "sentence": "In eighteen fifty, his former student Helmholtz timed it.",
   "claim": "In January 1850 Hermann Helmholtz, who had trained under Müller in Berlin, reported measuring the nerve's conduction speed with a frog nerve-muscle preparation.",

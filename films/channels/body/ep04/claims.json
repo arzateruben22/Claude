@@ -1,0 +1,178 @@
+[
+ {
+  "id": "c1",
+  "sentence": "For decades, the best microscopes couldn't tell.",
+  "claim": "Conventional light microscopes resolve down to about 200 nm; the synaptic cleft (about 10–50 nm) is far smaller, so it could not be seen until electron microscopy in the 1950s.",
+  "source_url": "https://www.nagwa.com/en/videos/632148386161/",
+  "source_title": "Why the synaptic cleft needs an electron microscope (Nagwa explainer)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: Abbe's limit gives light microscopy about 200 nm lateral resolution; the cleft is 10–50 nm, too small for conventional microscopes; electron microscopes resolve far finer. 'For decades': from Cajal and Golgi's work in the 1880s–1900s to the electron micrographs of 1954–55 (c7)."
+ },
+ {
+  "id": "c2",
+  "sentence": "Each one reaches out to thousands of others.",
+  "claim": "A neuron typically forms thousands of connections (synapses).",
+  "source_url": "https://bri.ucla.edu/brain-fact/billions-of-neurons-trillions-of-synapses/",
+  "source_title": "Billions of neurons, trillions of synapses (UCLA Brain Research Institute, Brain Fact)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: about 86 billion neurons, 'each forming thousands of connections'. Some estimates run up to 10,000 per neuron."
+ },
+ {
+  "id": "c3",
+  "sentence": "Your brain holds about a hundred trillion of these meeting points.",
+  "claim": "The human brain has an estimated 100 trillion synapses.",
+  "source_url": "https://bri.ucla.edu/brain-fact/billions-of-neurons-trillions-of-synapses/",
+  "source_title": "Billions of neurons, trillions of synapses (UCLA Brain Research Institute, Brain Fact)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'resulting in an estimated 100 trillion synapses'. Estimates range about 100–500 trillion; neocortex counts give about 150–164 trillion (Pakkenberg; Synapse 2001). 'About a hundred trillion' is the commonly cited estimate; the readout says 'about'."
+ },
+ {
+  "id": "c4",
+  "sentence": "Camillo Golgi saw one continuous web.",
+  "claim": "Camillo Golgi supported the reticular theory: the nervous system as one continuous network.",
+  "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
+  "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Golgi backed the reticular theory, which held that the nervous system was one continuous network; his Nobel lecture again emphasised it."
+ },
+ {
+  "id": "c5",
+  "sentence": "Santiago Ramón y Cajal saw separate cells.",
+  "claim": "Santiago Ramón y Cajal argued, using Golgi's own stain, that neurons are discrete cells that communicate at specialised junctions (the neuron doctrine).",
+  "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
+  "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Cajal provided evidence that neurons are discrete cells that communicate through specialized junctions."
+ },
+ {
+  "id": "c6",
+  "sentence": "In nineteen oh six they shared a Nobel Prize, still disagreeing.",
+  "claim": "Golgi and Cajal shared the 1906 Nobel Prize in Physiology or Medicine; in their Nobel lectures Golgi defended the reticular theory and Cajal refuted it.",
+  "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
+  "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: they shared the prize but disagreed; Golgi's lecture emphasised the reticular theory and Cajal respectfully refuted it."
+ },
+ {
+  "id": "c7",
+  "sentence": "Electron microscopes settled it in the nineteen fifties: there's a gap.",
+  "claim": "Electron micrographs from 1954–55 (Palay and Palade; De Robertis and Bennett) showed the pre- and postsynaptic membranes separated by a cleft, confirming that neurons are separate cells.",
+  "source_url": "https://rupress.org/jcb/article-pdf/168/1/12/1317505/jcb168112.pdf",
+  "source_title": "Palay, Palade and the synapse (Journal of Cell Biology, 2005 retrospective; De Robertis & Bennett 1955, Palay & Palade 1955)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: Palade and Palay's early electron micrographs 'weighed in definitively' on the neuron-doctrine debate; De Robertis and Bennett (1955) describe membranes separated by an intermembranal space of 100–150 Å (10–15 nm). Electron microscopy later showed a plasma membrane enclosing each neuron (Scientifica)."
+ },
+ {
+  "id": "c8",
+  "sentence": "The signal can't cross it as electricity.",
+  "claim": "At a chemical synapse the electrical signal does not pass to the next cell directly; it is converted into the release of a chemical neurotransmitter. (Electrical synapses, where current passes through gap junctions, also exist.)",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK526047/",
+  "source_title": "Physiology, Synapse (StatPearls, NCBI Bookshelf NBK526047)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (StatPearls): chemical synapses transmit via neurotransmitter across the cleft; electrical synapses also exist. The picture is a chemical synapse; bible §9 asks for 'most' (said in episode 3's tease and on screen here)."
+ },
+ {
+  "id": "c9",
+  "sentence": "So calcium floods the tip, bubbles of chemical messenger burst, and the message drifts across.",
+  "claim": "When the action potential reaches the terminal, voltage-gated calcium channels open and calcium entry triggers synaptic vesicles to fuse with the membrane and release neurotransmitter.",
+  "source_url": "https://www.jove.com/science-education/v/14896/chemical-synapses",
+  "source_title": "Chemical synapses (JoVE Science Education)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: depolarization opens voltage-gated calcium channels; calcium entry drives vesicles to fuse with the presynaptic membrane. 'Burst' = fuse and release (exocytosis); 'floods' is plain speech for the calcium influx."
+ },
+ {
+  "id": "c10",
+  "sentence": "So calcium floods the tip, bubbles of chemical messenger burst, and the message drifts across.",
+  "claim": "Neurotransmitter is stored in synaptic vesicles; once released it diffuses across the synaptic cleft and binds receptors on the next cell.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK11166/",
+  "source_title": "Purves et al., Neuroscience 2nd ed., Neurotransmitter release from synaptic vesicles (NCBI Bookshelf NBK11166)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S15; excerpt: neurotransmitters are stored in synaptic vesicles and released by exocytosis. JoVE: they diffuse across the cleft and bind postsynaptic receptors. 'Drifts' = diffuses."
+ },
+ {
+  "id": "c11",
+  "sentence": "The crossing takes about a thousandth of a second.",
+  "claim": "Synaptic transmission adds a delay of about 1 ms (release, diffusion across the cleft, receptor binding).",
+  "source_url": "https://www.jove.com/science-education/v/14896/chemical-synapses",
+  "source_title": "Chemical synapses (JoVE Science Education)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'approximately one millisecond delay because neurotransmitters must be released from synaptic vesicles, diffuse across the synaptic cleft, and bind to postsynaptic receptors'. Bible S17."
+ },
+ {
+  "id": "c12",
+  "sentence": "And these gaps can strengthen with use: one way your brain is thought to learn.",
+  "claim": "Synapses can strengthen or weaken with activity (synaptic plasticity, e.g. long-term potentiation); this is considered a main cellular mechanism of learning and memory.",
+  "source_url": "https://www.neuroscience.umn.edu/research-areas/synaptic-plasticity-and-learning",
+  "source_title": "Synaptic plasticity and learning (University of Minnesota, Department of Neuroscience)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (UMN): synaptic plasticity is the best cellular and molecular model of learning and memory. An NIMH-funded researcher: 'Synaptic plasticity is thought to be a basis of learning and memory'. 'Is thought to' keeps the hedge; reviews note it does not explain every kind of learning."
+ },
+ {
+  "id": "c13",
+  "sentence": "So your nerves aren't wired together.",
+  "claim": "Neurons are separate cells; at chemical synapses they are not physically continuous.",
+  "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
+  "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "As c5 and c7 (electron microscopy showed each neuron enclosed by its own membrane). Electrical synapses join some cells through gap junctions; 'wired together' refers to the continuous web Golgi proposed."
+ },
+ {
+  "id": "c16",
+  "sentence": "They talk across gaps, in chemicals.",
+  "claim": "Most signalling between neurons is chemical, across synaptic clefts.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK526047/",
+  "source_title": "Physiology, Synapse (StatPearls, NCBI Bookshelf NBK526047)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "As c8; 'talk' is a metaphor for synaptic transmission."
+ },
+ {
+  "id": "c14",
+  "sentence": "Meanwhile, as you watched, you took about fifteen breaths.",
+  "claim": "A normal resting breathing rate for adults is about 12–20 breaths a minute; the tally uses 15 a minute.",
+  "source_url": "https://www.lung.org/blog/respiratory-rate-vital-signs",
+  "source_title": "Respiratory rate: a vital sign (American Lung Association)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: normal respiratory rate for a healthy adult at rest is 12 to 20 breaths per minute. The tally is 15/60 × t from frame 0; the line lands near 60 s, about 15 (computed). At 12–20 a minute the same span gives 12–20, so 'about fifteen' is an estimate for the viewer."
+ },
+ {
+  "id": "c15",
+  "sentence": "Each was ordered by a nerve, across a gap like this one.",
+  "claim": "Each breath in is driven by the phrenic nerve making the diaphragm contract; nerve and muscle meet at a synapse, the neuromuscular junction.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513325/",
+  "source_title": "Anatomy, thorax, phrenic nerves (StatPearls, NCBI Bookshelf NBK513325; title as excerpted)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (StatPearls, phrenic nerve): it provides the diaphragm's complete motor innervation; its activation makes the diaphragm contract with inspiration. Bio-protocol excerpt: the neuromuscular junction is the specialized synapse by which motor neurons control skeletal muscle. 'Like this one': a chemical synapse (it uses acetylcholine), not identical to the brain synapse drawn."
+ }
+]

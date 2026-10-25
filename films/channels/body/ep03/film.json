@@ -1,0 +1,1915 @@
+{
+ "id": "meanwhile-inside-003",
+ "fps": 30,
+ "bpm": 75,
+ "dur": 74.8,
+ "poster": 0.0,
+ "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 15.183333,
+   "name": "drum"
+  },
+  {
+   "at": 25.583333,
+   "name": "fibres"
+  },
+  {
+   "at": 72.783333,
+   "name": "loop"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 15.2,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 15.2,
+   "t1": 25.6,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6,
+   "t1": 42.4,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 42.4,
+   "t1": 54.4,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.4,
+   "t1": 61.2,
+   "line": "vo06",
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 61.2,
+   "t1": 68.0,
+   "line": "vo07",
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 68.0,
+   "t1": 74.8,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "iris": [
+  {
+   "t": 15.183333,
+   "cx": 0.5,
+   "cy": 0.42
+  },
+  {
+   "t": 25.583333,
+   "cx": 0.5,
+   "cy": 0.42
+  },
+  {
+   "t": 72.783333,
+   "cx": 0.5,
+   "cy": 0.42
+  }
+ ],
+ "hop": 0.62,
+ "hookSig": {
+  "node0": 7,
+  "t0": -0.372
+ },
+ "whyJump": {
+  "t0": 30.133333333333333,
+  "hop": 0.8
+ },
+ "ms": {
+  "t0": 35.03333333333333,
+  "hop": 0.55,
+  "bad": 6,
+  "stall": 39.63333333333333
+ },
+ "bare": {
+  "t0": 25.8,
+  "v": 9.0
+ },
+ "race": {
+  "bare0": 44.1,
+  "vbare": 3.0,
+  "wrap0": 46.43333333333333,
+  "vwrap": 450.0
+ },
+ "tease": {
+  "t0": 68.3,
+  "hop": 0.5,
+  "arrive": 72.03333333333333
+ },
+ "toe": {
+  "stub": 57.1,
+  "fast": 57.2,
+  "slow": 59.3
+ },
+ "drum": {
+  "spin0": 15.2,
+  "traces": [
+   21.366666666666667,
+   22.1
+  ],
+  "stim": [
+   21.366666666666667,
+   22.1
+  ]
+ },
+ "fig": {
+  "t0": 54.55,
+  "t1": 68.2
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "pos": [
+     322.0,
+     26.0,
+     150.0
+    ],
+    "look": [
+     316.0,
+     -6.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 4.333333333333333,
+    "pos": [
+     316.0,
+     22.0,
+     132.0
+    ],
+    "look": [
+     312.0,
+     -6.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 7.166666666666667,
+    "pos": [
+     200.0,
+     34.0,
+     170.0
+    ],
+    "look": [
+     170.0,
+     -4.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 8.133333333333333,
+    "pos": [
+     16.0,
+     40.0,
+     210.0
+    ],
+    "look": [
+     14.0,
+     -6.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 10.5,
+    "pos": [
+     300.0,
+     60.0,
+     900.0
+    ],
+    "look": [
+     300.0,
+     -20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 15.183333,
+    "pos": [
+     310.0,
+     64.0,
+     960.0
+    ],
+    "look": [
+     310.0,
+     -20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "drum": [
+   {
+    "t": 15.183333,
+    "pos": [
+     44.0,
+     26.0,
+     200.0
+    ],
+    "look": [
+     4.0,
+     10.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 20.833333333333332,
+    "pos": [
+     36.0,
+     20.0,
+     180.0
+    ],
+    "look": [
+     4.0,
+     8.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 21.566666666666666,
+    "pos": [
+     44.0,
+     0.0,
+     84.0
+    ],
+    "look": [
+     28.0,
+     -6.0,
+     6.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 25.583333,
+    "pos": [
+     42.0,
+     0.0,
+     80.0
+    ],
+    "look": [
+     28.0,
+     -6.0,
+     6.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "fibres": [
+   {
+    "t": 25.583333,
+    "pos": [
+     96.0,
+     40.0,
+     120.0
+    ],
+    "look": [
+     90.0,
+     18.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 29.233333333333334,
+    "pos": [
+     136.0,
+     38.0,
+     124.0
+    ],
+    "look": [
+     130.0,
+     16.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 30.233333333333334,
+    "pos": [
+     130.0,
+     16.0,
+     150.0
+    ],
+    "look": [
+     130.0,
+     -4.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 34.666666666666664,
+    "pos": [
+     190.0,
+     14.0,
+     150.0
+    ],
+    "look": [
+     190.0,
+     -4.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 35.333333333333336,
+    "pos": [
+     222.0,
+     -12.0,
+     130.0
+    ],
+    "look": [
+     222.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 40.63333333333333,
+    "pos": [
+     262.0,
+     -16.0,
+     112.0
+    ],
+    "look": [
+     262.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 42.6,
+    "pos": [
+     300.0,
+     12.0,
+     520.0
+    ],
+    "look": [
+     300.0,
+     12.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 54.4,
+    "pos": [
+     300.0,
+     12.0,
+     540.0
+    ],
+    "look": [
+     300.0,
+     12.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 68.0,
+    "pos": [
+     430.0,
+     8.0,
+     400.0
+    ],
+    "look": [
+     430.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 70.4,
+    "pos": [
+     640.0,
+     16.0,
+     120.0
+    ],
+    "look": [
+     652.0,
+     -8.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 72.783333,
+    "pos": [
+     646.0,
+     14.0,
+     110.0
+    ],
+    "look": [
+     656.0,
+     -8.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "loop": [
+   {
+    "t": 72.783333,
+    "pos": [
+     322.0,
+     26.0,
+     150.0
+    ],
+    "look": [
+     316.0,
+     -6.0,
+     0.0
+    ],
+    "fov": 34
+   }
+  ]
+ },
+ "foc": {
+  "hook": [
+   {
+    "t": 0.0,
+    "at": "spark",
+    "f": 0.5
+   },
+   {
+    "t": 7.166666666666667,
+    "at": "spark",
+    "f": 0.3
+   },
+   {
+    "t": 7.733333333333333,
+    "at": "soma",
+    "f": 0.35
+   },
+   {
+    "t": 10.4,
+    "at": "mid",
+    "f": 0.2
+   }
+  ],
+  "drum": [
+   {
+    "t": 15.183333,
+    "at": "rig",
+    "f": 0.3
+   },
+   {
+    "t": 21.466666666666665,
+    "at": "traces",
+    "f": 0.45
+   }
+  ],
+  "fibres": [
+   {
+    "t": 25.583333,
+    "at": "bare",
+    "f": 0.45
+   },
+   {
+    "t": 30.133333333333333,
+    "at": "spark",
+    "f": 0.45
+   },
+   {
+    "t": 35.233333333333334,
+    "at": "ms",
+    "f": 0.45
+   },
+   {
+    "t": 42.4,
+    "at": "mid",
+    "f": 0.15
+   },
+   {
+    "t": 70.1,
+    "at": "terminal",
+    "f": 0.5
+   }
+  ],
+  "loop": [
+   {
+    "t": 72.783333,
+    "at": "spark",
+    "f": 0.5
+   }
+  ]
+ },
+ "labels": [
+  {
+   "id": "soma",
+   "text": "one nerve cell",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "soma",
+   "t0": 8.133333333333333,
+   "t1": 10.4,
+   "shot": "hook",
+   "side": 1
+  },
+  {
+   "id": "muscle",
+   "text": "frog muscle",
+   "color": "muscle",
+   "mark": "dot",
+   "at": "muscle",
+   "t0": 20.733333333333334,
+   "t1": 22.233333333333334,
+   "shot": "drum",
+   "side": -1
+  },
+  {
+   "id": "nerve",
+   "text": "its nerve",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "frognerve",
+   "t0": 21.066666666666666,
+   "t1": 22.233333333333334,
+   "shot": "drum",
+   "side": 1
+  },
+  {
+   "id": "trace",
+   "text": "two twitches, a beat apart",
+   "color": "text",
+   "mark": "dot",
+   "at": "traces",
+   "t0": 22.133333333333333,
+   "t1": 25.283333,
+   "shot": "drum",
+   "side": 1
+  },
+  {
+   "id": "bare",
+   "text": "bare fibre",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "bare",
+   "t0": 26.1,
+   "t1": 30.233333333333334,
+   "shot": "fibres",
+   "side": 1
+  },
+  {
+   "id": "myelin",
+   "text": "myelin",
+   "color": "bone",
+   "mark": "dot",
+   "at": "sheath",
+   "t0": 31.266666666666666,
+   "t1": 34.833333333333336,
+   "shot": "fibres",
+   "side": 1
+  },
+  {
+   "id": "gap",
+   "text": "bare gap",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "node",
+   "t0": 33.2,
+   "t1": 34.833333333333336,
+   "shot": "fibres",
+   "side": -1
+  },
+  {
+   "id": "ms",
+   "text": "damaged myelin · brain and spinal cord",
+   "color": "bone",
+   "mark": "dashed",
+   "at": "damaged",
+   "t0": 35.86666666666667,
+   "t1": 42.199999999999996,
+   "shot": "fibres",
+   "side": 1
+  },
+  {
+   "id": "racebare",
+   "text": "thinnest bare fibre",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "barefront",
+   "t0": 44.3,
+   "t1": 54.1,
+   "shot": "fibres",
+   "side": -1
+  },
+  {
+   "id": "racewrap",
+   "text": "wrapped fibre",
+   "color": "bone",
+   "mark": "dot",
+   "at": "wrapfront",
+   "t0": 46.733333333333334,
+   "t1": 54.1,
+   "shot": "fibres",
+   "side": 1
+  },
+  {
+   "id": "terminal",
+   "text": "the end of the line",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "terminal",
+   "t0": 69.56666666666666,
+   "t1": 72.8,
+   "shot": "fibres",
+   "side": -1
+  }
+ ],
+ "spine": [
+  {
+   "id": "q",
+   "t0": 0.0,
+   "t1": 9.233333333333333,
+   "text": "?",
+   "unit": "m/s",
+   "label": "how fast is this spark?"
+  },
+  {
+   "id": "len",
+   "t0": 9.733333333333333,
+   "t1": 14.883332999999999,
+   "value": 1,
+   "unit": "m",
+   "label": "your longest nerve cells, about"
+  },
+  {
+   "id": "light",
+   "t0": 17.733333333333334,
+   "t1": 18.466666666666665,
+   "value": 299792458,
+   "unit": "m/s",
+   "label": "Müller's guess: as fast as light?"
+  },
+  {
+   "id": "frog",
+   "t0": 21.266666666666666,
+   "t1": 25.283333,
+   "keys": [
+    [
+     22.433333333333334,
+     0
+    ],
+    [
+     23.9,
+     27
+    ]
+   ],
+   "unit": "m/s",
+   "label": "Helmholtz, 1850, frog · about cheetah speed"
+  },
+  {
+   "id": "fired",
+   "t0": 27.9,
+   "t1": 34.833333333333336,
+   "count": "fired",
+   "unit": "",
+   "label": "re-fired along the way"
+  },
+  {
+   "id": "crawl",
+   "t0": 44.3,
+   "t1": 46.333333333333336,
+   "value": 1,
+   "unit": "m/s",
+   "label": "thinnest bare fibres, about"
+  },
+  {
+   "id": "wrap",
+   "t0": 46.43333333333333,
+   "t1": 49.0,
+   "keys": [
+    [
+     46.43333333333333,
+     1
+    ],
+    [
+     48.0,
+     150
+    ]
+   ],
+   "unit": "m/s",
+   "label": "wrapped fibres, up to"
+  },
+  {
+   "id": "kmh",
+   "t0": 49.1,
+   "t1": 54.199999999999996,
+   "value": 540,
+   "unit": "km/h",
+   "label": "that's · Formula One record: 373 km/h"
+  },
+  {
+   "id": "toe",
+   "t0": 54.86666666666667,
+   "t1": 61.300000000000004,
+   "keys": [
+    [
+     57.1,
+     0.0
+    ],
+    [
+     59.3,
+     2.2
+    ]
+   ],
+   "unit": "s",
+   "label": "since the stub, real time",
+   "fmt": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "nts-hook",
+   "text": "not to scale",
+   "t0": 0.0,
+   "t1": 14.883332999999999
+  },
+  {
+   "id": "ill-drum",
+   "text": "illustration: Helmholtz's 1850 method",
+   "t0": 15.183333,
+   "t1": 25.283333
+  },
+  {
+   "id": "nts-fib",
+   "text": "not to scale",
+   "t0": 25.583333,
+   "t1": 72.8
+  },
+  {
+   "id": "slow",
+   "text": "slowed · distances compressed",
+   "t0": 42.6,
+   "t1": 54.1
+  },
+  {
+   "id": "real",
+   "text": "real time",
+   "t0": 56.5,
+   "t1": 61.2
+  }
+ ],
+ "tally": {
+  "t0": 61.5,
+  "t1": 67.8,
+  "rate": 1.25,
+  "unit": "beats",
+  "label": "a resting heart, while you watched"
+ },
+ "segBeats": [
+  60.8,
+  61.6,
+  62.4,
+  63.2,
+  64.0,
+  64.8,
+  65.6,
+  66.4,
+  67.2
+ ],
+ "title": {
+  "series": "Meanwhile, Inside · No. 03",
+  "title": "The *jump*",
+  "t1": 2.5333,
+  "sig": 0.0,
+  "y": 0.15
+ },
+ "endCard": 72.8,
+ "end": {
+  "t0": 72.8,
+  "title": "Next, inside: *the gap*",
+  "next": "Meanwhile, Inside · No. 04",
+  "follow": "Follow Meanwhile, Inside",
+  "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."
+ },
+ "look": {
+  "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
+  "rbc": "#E5334F",
+  "rbc-deep": "#8E2A3F",
+  "tissue": "#F0C9B8",
+  "vessel": "#E9B3A8",
+  "light-hemi-sky": "#DDF3EC",
+  "light-hemi-ground": "#33524A",
+  "light-key": "#FFF1E6",
+  "light-rim": "#CFF5E6",
+  "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+ },
+ "captions": [
+  {
+   "t0": 0.12,
+   "t1": 2.02,
+   "lines": [
+    [
+     [
+      "How",
+      0.12
+     ],
+     [
+      "fast",
+      0.41
+     ],
+     [
+      "is",
+      0.755
+     ],
+     [
+      "this",
+      0.965
+     ],
+     [
+      "spark?",
+      1.27
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.22,
+   "t1": 4.32,
+   "lines": [
+    [
+     [
+      "The",
+      2.22
+     ],
+     [
+      "leading",
+      2.25
+     ],
+     [
+      "expert",
+      2.755
+     ]
+    ],
+    [
+     [
+      "doubted",
+      3.2
+     ],
+     [
+      "it",
+      3.755
+     ],
+     [
+      "could",
+      3.785
+     ],
+     [
+      "ever",
+      3.935
+     ],
+     [
+      "be",
+      4.205
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.32,
+   "t1": 5.07,
+   "lines": [
+    [
+     [
+      "timed.",
+      4.32
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.92,
+   "t1": 8.48,
+   "lines": [
+    [
+     [
+      "It's",
+      5.92
+     ],
+     [
+      "a",
+      6.02
+     ],
+     [
+      "nerve",
+      6.12
+     ],
+     [
+      "signal,",
+      6.565
+     ]
+    ],
+    [
+     [
+      "racing",
+      7.175
+     ],
+     [
+      "down",
+      7.605
+     ],
+     [
+      "one",
+      7.86
+     ],
+     [
+      "cell's",
+      8.15
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.48,
+   "t1": 9.5,
+   "lines": [
+    [
+     [
+      "thin",
+      8.48
+     ],
+     [
+      "fibre.",
+      8.75
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.535,
+   "t1": 11.745,
+   "lines": [
+    [
+     [
+      "Your",
+      9.535
+     ],
+     [
+      "longest",
+      9.74
+     ],
+     [
+      "run",
+      10.075
+     ]
+    ],
+    [
+     [
+      "from",
+      10.42
+     ],
+     [
+      "spine",
+      10.71
+     ],
+     [
+      "to",
+      11.115
+     ],
+     [
+      "toe:",
+      11.145
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.745,
+   "t1": 12.95,
+   "lines": [
+    [
+     [
+      "about",
+      11.745
+     ],
+     [
+      "a",
+      11.98
+     ],
+     [
+      "metre.",
+      12.23
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.95,
+   "t1": 14.69,
+   "lines": [
+    [
+     [
+      "How",
+      12.95
+     ],
+     [
+      "long",
+      13.26
+     ],
+     [
+      "does",
+      13.525
+     ],
+     [
+      "that",
+      13.745
+     ],
+     [
+      "take?",
+      13.94
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.52,
+   "t1": 17.745,
+   "lines": [
+    [
+     [
+      "Johannes",
+      15.52
+     ],
+     [
+      "Müller",
+      16.105
+     ],
+     [
+      "thought",
+      16.52
+     ]
+    ],
+    [
+     [
+      "it",
+      16.695
+     ],
+     [
+      "might",
+      17.06
+     ],
+     [
+      "be",
+      17.09
+     ],
+     [
+      "as",
+      17.275
+     ],
+     [
+      "fast",
+      17.305
+     ],
+     [
+      "as",
+      17.6
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.745,
+   "t1": 18.495,
+   "lines": [
+    [
+     [
+      "light.",
+      17.745
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.57,
+   "t1": 21.48,
+   "lines": [
+    [
+     [
+      "In",
+      18.57
+     ],
+     [
+      "eighteen",
+      18.73
+     ],
+     [
+      "fifty,",
+      18.76
+     ],
+     [
+      "his",
+      19.885
+     ]
+    ],
+    [
+     [
+      "former",
+      19.915
+     ],
+     [
+      "student",
+      20.475
+     ],
+     [
+      "Helmholtz",
+      20.825
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.48,
+   "t1": 22.445,
+   "lines": [
+    [
+     [
+      "timed",
+      21.48
+     ],
+     [
+      "it.",
+      22.0
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.445,
+   "t1": 25.395,
+   "lines": [
+    [
+     [
+      "About",
+      22.445
+     ],
+     [
+      "thirty",
+      22.76
+     ],
+     [
+      "metres",
+      23.025
+     ],
+     [
+      "a",
+      23.675
+     ]
+    ],
+    [
+     [
+      "second:",
+      23.705
+     ],
+     [
+      "cheetah",
+      24.22
+     ],
+     [
+      "speed.",
+      24.645
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.92,
+   "t1": 27.525,
+   "lines": [
+    [
+     [
+      "It",
+      25.92
+     ],
+     [
+      "isn't",
+      26.0
+     ],
+     [
+      "current",
+      26.305
+     ]
+    ],
+    [
+     [
+      "in",
+      26.61
+     ],
+     [
+      "a",
+      26.685
+     ],
+     [
+      "wire:",
+      26.815
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.525,
+   "t1": 29.92,
+   "lines": [
+    [
+     [
+      "the",
+      27.525
+     ],
+     [
+      "cell",
+      27.555
+     ],
+     [
+      "re-fires",
+      27.89
+     ],
+     [
+      "it,",
+      28.575
+     ]
+    ],
+    [
+     [
+      "step",
+      28.74
+     ],
+     [
+      "by",
+      28.98
+     ],
+     [
+      "step.",
+      29.235
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.92,
+   "t1": 32.0,
+   "lines": [
+    [
+     [
+      "Many",
+      29.92
+     ],
+     [
+      "of",
+      30.315
+     ],
+     [
+      "yours",
+      30.345
+     ]
+    ],
+    [
+     [
+      "wear",
+      30.77
+     ],
+     [
+      "fatty",
+      31.015
+     ],
+     [
+      "myelin,",
+      31.25
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.21,
+   "t1": 35.02,
+   "lines": [
+    [
+     [
+      "re-firing",
+      32.21
+     ],
+     [
+      "only",
+      32.835
+     ],
+     [
+      "at",
+      33.08
+     ],
+     [
+      "gaps,",
+      33.21
+     ]
+    ],
+    [
+     [
+      "so",
+      33.71
+     ],
+     [
+      "the",
+      33.805
+     ],
+     [
+      "signal",
+      33.835
+     ],
+     [
+      "leaps.",
+      34.27
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.025,
+   "t1": 36.515,
+   "lines": [
+    [
+     [
+      "Where",
+      35.025
+     ],
+     [
+      "myelin",
+      35.17
+     ],
+     [
+      "is",
+      35.84
+     ],
+     [
+      "damaged,",
+      35.87
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.515,
+   "t1": 38.11,
+   "lines": [
+    [
+     [
+      "as",
+      36.515
+     ],
+     [
+      "in",
+      36.545
+     ],
+     [
+      "multiple",
+      36.66
+     ]
+    ],
+    [
+     [
+      "sclerosis,",
+      37.36
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.375,
+   "t1": 40.29,
+   "lines": [
+    [
+     [
+      "signals",
+      38.375
+     ],
+     [
+      "can",
+      38.91
+     ]
+    ],
+    [
+     [
+      "slow",
+      39.17
+     ],
+     [
+      "or",
+      39.51
+     ],
+     [
+      "stall.",
+      39.54
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.725,
+   "t1": 45.715,
+   "lines": [
+    [
+     [
+      "The",
+      42.725
+     ],
+     [
+      "thinnest",
+      42.97
+     ],
+     [
+      "bare",
+      43.44
+     ],
+     [
+      "fibres",
+      43.83
+     ]
+    ],
+    [
+     [
+      "crawl",
+      44.31
+     ],
+     [
+      "at",
+      44.7
+     ],
+     [
+      "about",
+      44.815
+     ],
+     [
+      "a",
+      44.975
+     ],
+     [
+      "metre",
+      45.01
+     ],
+     [
+      "a",
+      45.565
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.715,
+   "t1": 46.425,
+   "lines": [
+    [
+     [
+      "second.",
+      45.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.425,
+   "t1": 48.44,
+   "lines": [
+    [
+     [
+      "Wrapped",
+      46.425
+     ],
+     [
+      "ones,",
+      46.72
+     ],
+     [
+      "up",
+      47.345
+     ],
+     [
+      "to",
+      47.385
+     ]
+    ],
+    [
+     [
+      "a",
+      47.6
+     ],
+     [
+      "hundred",
+      47.63
+     ],
+     [
+      "and",
+      47.66
+     ],
+     [
+      "fifty.",
+      47.69
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.085,
+   "t1": 51.36,
+   "lines": [
+    [
+     [
+      "Faster",
+      49.085
+     ],
+     [
+      "than",
+      49.61
+     ],
+     [
+      "a",
+      49.805
+     ]
+    ],
+    [
+     [
+      "Formula",
+      49.88
+     ],
+     [
+      "One",
+      50.36
+     ],
+     [
+      "car.",
+      50.61
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.85,
+   "t1": 57.045,
+   "lines": [
+    [
+     [
+      "So",
+      54.85
+     ],
+     [
+      "a",
+      55.135
+     ],
+     [
+      "stubbed",
+      55.165
+     ],
+     [
+      "toe",
+      55.42
+     ]
+    ],
+    [
+     [
+      "can",
+      55.785
+     ],
+     [
+      "hurt",
+      55.95
+     ],
+     [
+      "twice.",
+      56.295
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.205,
+   "t1": 59.725,
+   "lines": [
+    [
+     [
+      "The",
+      57.205
+     ],
+     [
+      "jolt",
+      57.235
+     ],
+     [
+      "rides",
+      57.65
+     ],
+     [
+      "faster",
+      58.125
+     ]
+    ],
+    [
+     [
+      "wires;",
+      58.54
+     ],
+     [
+      "the",
+      59.275
+     ],
+     [
+      "ache,",
+      59.305
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.725,
+   "t1": 60.7,
+   "lines": [
+    [
+     [
+      "bare",
+      59.725
+     ],
+     [
+      "ones.",
+      59.95
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.52,
+   "t1": 64.015,
+   "lines": [
+    [
+     [
+      "Meanwhile,",
+      61.52
+     ],
+     [
+      "as",
+      62.21
+     ],
+     [
+      "you",
+      62.475
+     ]
+    ],
+    [
+     [
+      "watched,",
+      62.505
+     ],
+     [
+      "a",
+      63.25
+     ],
+     [
+      "heart",
+      63.28
+     ],
+     [
+      "at",
+      63.675
+     ],
+     [
+      "rest",
+      63.705
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.015,
+   "t1": 65.58,
+   "lines": [
+    [
+     [
+      "beat",
+      64.015
+     ],
+     [
+      "about",
+      64.305
+     ],
+     [
+      "eighty",
+      64.465
+     ],
+     [
+      "times.",
+      64.83
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.765,
+   "t1": 67.58,
+   "lines": [
+    [
+     [
+      "Each",
+      65.765
+     ],
+     [
+      "began",
+      66.12
+     ],
+     [
+      "with",
+      66.49
+     ],
+     [
+      "a",
+      66.59
+     ],
+     [
+      "spark.",
+      66.83
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.55,
+   "t1": 70.315,
+   "lines": [
+    [
+     [
+      "Next:",
+      68.55
+     ]
+    ],
+    [
+     [
+      "the",
+      68.785
+     ],
+     [
+      "end",
+      68.97
+     ],
+     [
+      "of",
+      69.295
+     ],
+     [
+      "the",
+      69.325
+     ],
+     [
+      "line.",
+      69.565
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 70.41,
+   "t1": 72.79,
+   "lines": [
+    [
+     [
+      "A",
+      70.41
+     ],
+     [
+      "gap",
+      70.61
+     ],
+     [
+      "most",
+      70.845
+     ],
+     [
+      "signals",
+      71.225
+     ]
+    ],
+    [
+     [
+      "can't",
+      71.675
+     ],
+     [
+      "jump.",
+      72.04
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.741,
+   "file": "vo/01.wav",
+   "text": "How fast is this spark? The leading expert doubted it could ever be timed."
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "dur": 8.599,
+   "file": "vo/02.wav",
+   "text": "It's a nerve signal, racing down one cell's thin fibre. Your longest run from spine to toe: about a metre. How long does that take?"
+  },
+  {
+   "id": "vo03",
+   "t": 15.5,
+   "dur": 9.612,
+   "file": "vo/03.wav",
+   "text": "Johannes Müller thought it might be as fast as light. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed."
+  },
+  {
+   "id": "vo04",
+   "t": 25.9,
+   "dur": 14.226,
+   "file": "vo/04.wav",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall."
+  },
+  {
+   "id": "vo05",
+   "t": 42.7,
+   "dur": 8.389,
+   "file": "vo/05.wav",
+   "text": "The thinnest bare fibres crawl at about a metre a second. Wrapped ones, up to a hundred and fifty. Faster than a Formula One car."
+  },
+  {
+   "id": "vo06",
+   "t": 54.7,
+   "dur": 5.799,
+   "file": "vo/06.wav",
+   "text": "So a stubbed toe can hurt twice. The jolt rides faster wires; the ache, bare ones."
+  },
+  {
+   "id": "vo07",
+   "t": 61.5,
+   "dur": 5.929,
+   "file": "vo/07.wav",
+   "text": "Meanwhile, as you watched, a heart at rest beat about eighty times. Each began with a spark."
+  },
+  {
+   "id": "vo08",
+   "t": 68.3,
+   "dur": 4.299,
+   "file": "vo/08.wav",
+   "text": "Next: the end of the line. A gap most signals can't jump."
+  }
+ ]
+}

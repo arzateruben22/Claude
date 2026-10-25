@@ -34,7 +34,7 @@ vo: It's a nerve signal, racing down one cell's thin fibre. {c2} Your longest ru
 to *toe*: about a metre. {c3} How long does that take? {-}
 
 ## change {shot: Helmholtz's 1850 method, illustrated: a frog muscle on its nerve, a lever and a pen on a turning drum; two twitch traces offset; the readout settles on 27 m/s, "about cheetah speed" · energy: 0.55} (15.3–25.8 s)
-vo: Johannes Müller thought it might be as fast as *light*. {c4} In eighteen fifty, his former
+vo: Johannes Müller thought it might be as fast as *light*. {c4,c20} In eighteen fifty, his former
 student Helmholtz timed it. {c5} About thirty metres a second: *cheetah*
 speed. {c6,c17}
 
