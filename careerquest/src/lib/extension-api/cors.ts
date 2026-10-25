@@ -12,7 +12,7 @@
 const EXTENSION_ORIGIN = /^chrome-extension:\/\/[a-p]{32}$/;
 
 export const CORS_ALLOWED_METHODS = "GET, POST, OPTIONS";
-export const CORS_ALLOWED_HEADERS = "authorization, content-type";
+export const CORS_ALLOWED_HEADERS = "authorization, content-type, accept";
 export const CORS_MAX_AGE_SECONDS = 600;
 
 /** Origin (scheme://host[:port]) of APP_URL, or null when unset or not http(s). */

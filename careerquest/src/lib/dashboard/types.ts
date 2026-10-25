@@ -1,4 +1,4 @@
-import type { ApplicationEventType, ApplicationStatus, EventSource, InterviewType, MissionType } from "@/generated/prisma/enums";
+import type { ApplicationEventType, ApplicationStatus, EventSource, InterviewType } from "@/generated/prisma/enums";
 import type { CampaignTimeline } from "@/lib/dashboard/campaign";
 import type { FunnelCounts } from "@/lib/dashboard/funnel";
 import type { Interval } from "@/lib/analytics/stats";
@@ -50,16 +50,6 @@ export type RecentEvent = {
   positionTitle: string;
 };
 
-export type MissionItem = {
-  id: string;
-  title: string;
-  description: string;
-  type: MissionType;
-  target: number;
-  progress: number;
-  xpReward: number;
-};
-
 export type DashboardData = {
   userName: string;
   timezone: string;
@@ -82,7 +72,6 @@ export type DashboardData = {
   xp: { totalXp: number; level: number; current: number; next: number; progress: number };
   streak: { current: number; longest: number; lastActiveKey: string | null };
   recent: RecentEvent[];
-  missions: MissionItem[];
   nextAction: NextAction;
 };
 

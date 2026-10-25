@@ -8,7 +8,7 @@ export default function SettingsTabsLayout({ children }: { children: ReactNode }
       <PageHeader
         eyebrow="Settings"
         title="Settings"
-        description="Your profile, campaign targets, private filters, appearance, account and developer tokens."
+        description="Your profile, campaign targets, private filters, appearance, account, developer tokens and notification preferences."
       />
       <LinkTabs tabs={[...SETTINGS_TABS]} />
       {children}

@@ -214,7 +214,7 @@ describe("week, campaign and stats components", () => {
     expect(out).toContain("$150K Electrician Path");
     expect(out).toContain("120");
     expect(out).toContain("40 self-reported hours");
-    expect(out).toContain('href="/career-map"');
+    expect(out).toContain('href="/career-map?node=supervised-experience"');
     expect(out).toContain('href="/academy"');
     expect(out).toContain("not a promise");
   });

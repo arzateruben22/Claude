@@ -178,7 +178,7 @@ describe("CORS", () => {
     const ext = await capturesOPTIONS(req("/api/extension/captures", { method: "OPTIONS", origin: EXT_ORIGIN }));
     expect(ext.status).toBe(204);
     expect(ext.headers.get("access-control-allow-origin")).toBe(EXT_ORIGIN);
-    expect(ext.headers.get("access-control-allow-headers")).toBe("authorization, content-type");
+    expect(ext.headers.get("access-control-allow-headers")).toBe("authorization, content-type, accept");
     expect(ext.headers.get("access-control-allow-methods")).toContain("POST");
     expect(ext.headers.get("access-control-allow-credentials")).toBeNull();
 

@@ -19,6 +19,7 @@ import {
 import { dateKey, todayInTz } from "@/lib/dates";
 import type { ApplicationInput } from "@/lib/validation/application";
 import { evaluateAchievements } from "@/lib/game/achievements";
+import { applyEventToMissions } from "@/lib/game/missions";
 import {
   detectPlatform,
   extractRequisitionId,
@@ -1164,6 +1165,14 @@ export async function markInterviewOutcome(
         activityDate: todayInTz(ctx.timezone, now),
       });
       if (prep.awarded) xpAwarded += prep.amount;
+      // Interview-prep missions complete now rather than on the next missions/dashboard view.
+      await applyEventToMissions(tx, {
+        userId,
+        type: "INTERVIEW_PREPARED",
+        occurredAt: now,
+        activityDate: todayInTz(ctx.timezone, now),
+        sourceId: interviewId,
+      });
     }
     return { interview, xpAwarded };
   });

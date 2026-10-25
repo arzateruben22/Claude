@@ -17,6 +17,7 @@ import { ConversionTable } from "@/components/analytics/conversion-table";
 import { StatusDistribution } from "@/components/analytics/status-distribution";
 import { SourcesCard } from "@/components/analytics/sources-card";
 import { FollowUpCard } from "@/components/analytics/follow-up-card";
+import { ReportsTabs } from "@/components/reports/reports-tabs";
 import type { ApplicationSource } from "@/generated/prisma/enums";
 
 export const metadata = { title: "Analytics · CareerQuest" };
@@ -31,6 +32,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
     return (
       <>
         <PageHeader eyebrow="Observed from your tracker" title="Analytics" description="Response, interview and offer rates computed from the applications you log." />
+        <ReportsTabs />
         <EmptyState
           icon={<BarChart3 className="h-8 w-8" aria-hidden />}
           title="No applications yet"
@@ -63,6 +65,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           </a>
         }
       />
+      <ReportsTabs />
 
       <FilterBar filters={filters} options={data.options} matched={data.totals.applications} rangeLabel={data.range.label} />
 

@@ -16,7 +16,6 @@ import { FunnelStrip } from "@/components/dashboard/funnel-strip";
 import { FollowUpsCard } from "@/components/dashboard/follow-ups-card";
 import { InterviewsCard } from "@/components/dashboard/interviews-card";
 import { XpStreakCard } from "@/components/dashboard/xp-streak-card";
-import { MissionsCard } from "@/components/dashboard/missions-card";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { WelcomeCard } from "@/components/dashboard/welcome-card";
 import { MilestoneLadder } from "@/components/dashboard/milestone-ladder";
@@ -49,7 +48,6 @@ const empty: DashboardData = {
   xp: { totalXp: 0, level: 1, current: 0, next: 150, progress: 0 },
   streak: { current: 0, longest: 0, lastActiveKey: null },
   recent: [],
-  missions: [],
   nextAction: recommendNextAction({ overdueFollowUps: 0, firstOverdueApplicationId: null, todaySubmitted: 0, dailyTarget: 5, totalApplications: 0, totalSubmitted: 0, nextInterview: null, onboardingComplete: false, now }),
 };
 
@@ -70,7 +68,6 @@ const populated: DashboardData = {
   xp: { totalXp: 1075, level: 4, current: 669, next: 1000, progress: 0.5 },
   streak: { current: 4, longest: 9, lastActiveKey: "2026-10-12" },
   recent: [{ id: "e1", type: "APPLIED", label: "Applied", occurredAt: now, source: "EMAIL", verified: true, applicationId: "a1", companyName: "Acme", positionTitle: "Apprentice" }],
-  missions: [{ id: "m1", title: "Submit 5 applications", description: "Hit today's target", type: "DAILY", target: 5, progress: 3, xpReward: 20 }],
   nextAction: recommendNextAction({ overdueFollowUps: 1, firstOverdueApplicationId: "a1", todaySubmitted: 3, dailyTarget: 5, totalApplications: 45, totalSubmitted: 40, nextInterview: null, onboardingComplete: true, now }),
 };
 
@@ -86,7 +83,6 @@ describe("dashboard components render", () => {
     expect(render(createElement(FollowUpsCard, { overdue: [], dueToday: [], capped: false }))).toContain("No follow-ups are due today");
     expect(render(createElement(InterviewsCard, { interviews: [], timezone: "America/Los_Angeles" }))).toContain("No interviews scheduled");
     expect(render(createElement(XpStreakCard, { xp: empty.xp, streak: empty.streak }))).toContain("No active streak");
-    expect(render(createElement(MissionsCard, { missions: [] }))).toContain("No active missions loaded yet");
     expect(render(createElement(RecentActivity, { events: [] }))).toContain("No activity recorded yet");
     expect(render(createElement(WelcomeCard, { name: "Ada Lovelace", onboardingComplete: false }))).toContain("Welcome to CareerQuest, Ada");
   });
@@ -106,7 +102,6 @@ describe("dashboard components render", () => {
     const iv = render(createElement(InterviewsCard, { interviews: populated.interviews, timezone: "America/Los_Angeles" }));
     expect(iv).toContain("Tue, Oct 13, 10:00 AM");
     expect(render(createElement(XpStreakCard, { xp: populated.xp, streak: populated.streak }))).toContain("4-day streak");
-    expect(render(createElement(MissionsCard, { missions: populated.missions }))).toContain("+20 XP");
     const recent = render(createElement(RecentActivity, { events: populated.recent }));
     expect(recent).toContain("Applied");
     expect(recent).toContain("verified");

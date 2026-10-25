@@ -69,10 +69,14 @@ export async function appliedDayKeys(db: Tx, userId: string, timezone: string, r
   return rows.map((r) => r.d).sort();
 }
 
-/** Sum of employer-verified + official-record work hours. */
+/**
+ * Sum of employer-verified + official-record on-the-job work hours. Classroom instruction
+ * (`workType: CLASSROOM`) is study, not work experience, so it is excluded here exactly as the
+ * Academy's hours log and TRAINING_MILESTONE XP exclude it (same definition everywhere).
+ */
 export async function verifiedHoursTotal(db: Tx, userId: string): Promise<number> {
   const agg = await db.workHourEntry.aggregate({
-    where: { userId, verification: { in: [...VERIFIED_HOUR_SOURCES] } },
+    where: { userId, verification: { in: [...VERIFIED_HOUR_SOURCES] }, workType: { not: "CLASSROOM" } },
     _sum: { hours: true },
   });
   const v = agg._sum.hours;

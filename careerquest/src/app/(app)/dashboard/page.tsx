@@ -14,7 +14,7 @@ import { FunnelStrip } from "@/components/dashboard/funnel-strip";
 import { FollowUpsCard } from "@/components/dashboard/follow-ups-card";
 import { InterviewsCard } from "@/components/dashboard/interviews-card";
 import { XpStreakCard } from "@/components/dashboard/xp-streak-card";
-import { MissionsCard } from "@/components/dashboard/missions-card";
+import { TodayMissionsCard } from "@/components/game/today-missions-card";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { fmtLongDay } from "@/components/dashboard/format";
 
@@ -65,7 +65,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <XpStreakCard xp={data.xp} streak={data.streak} />
           <FollowUpsCard overdue={data.followUps.overdue} dueToday={data.followUps.dueToday} capped={data.followUps.capped} />
           <InterviewsCard interviews={data.interviews} timezone={data.timezone} />
-          <MissionsCard missions={data.missions} />
+          <TodayMissionsCard userId={user.id} />
           <RecentActivity events={data.recent} />
         </div>
       </div>

@@ -33,7 +33,7 @@ describe("CORS policy", () => {
       Vary: "Origin",
       "Access-Control-Allow-Origin": EXT,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "authorization, content-type",
+      "Access-Control-Allow-Headers": "authorization, content-type, accept",
       "Access-Control-Max-Age": "600",
     });
     expect(corsHeaders(EXT, null)).toEqual({ Vary: "Origin", "Access-Control-Allow-Origin": EXT, "Access-Control-Expose-Headers": "Retry-After" });

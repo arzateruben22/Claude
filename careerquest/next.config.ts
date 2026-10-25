@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
     },
   },
   serverExternalPackages: ["pg", "bcryptjs"],
+  experimental: {
+    // Uploads travel through Server Actions (multipart form posts): documents up to 10 MB,
+    // .eml/.mbox email exports up to 25 MB and spreadsheets up to 10 MB. Next's default limit is
+    // 1 MB; the limit applies to the raw request body including multipart overhead, so leave room.
+    serverActions: { bodySizeLimit: "26mb" },
+    // src/proxy.ts matches every app page, and the proxy buffers request bodies in memory up to
+    // this size (default 10 MB) before the server action sees them; it must cover the same uploads.
+    proxyClientMaxBodySize: "26mb",
+  },
   headers: async () => [
     {
       source: "/(.*)",

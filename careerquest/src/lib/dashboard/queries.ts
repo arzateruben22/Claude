@@ -7,7 +7,7 @@ import { campaignTimeline, type CampaignTimeline } from "@/lib/dashboard/campaig
 import { ACTIVE_STATUSES, EVENT_LABELS, dashboardFunnelCounts, rate } from "@/lib/dashboard/funnel";
 import { recommendNextAction } from "@/lib/dashboard/next-action";
 import { buildDailySeries, followUpDateKey, followUpDueBound } from "@/lib/dashboard/time";
-import type { DashboardData, DashboardProfile, FollowUpItem, GoalsData, InterviewItem, MissionItem, RecentEvent } from "@/lib/dashboard/types";
+import type { DashboardData, DashboardProfile, FollowUpItem, GoalsData, InterviewItem, RecentEvent } from "@/lib/dashboard/types";
 import { FUNNEL_EVENT_TYPES, appliedDayKey, classifyApplication, computeFunnel } from "@/lib/analytics/funnel";
 import type { FunnelApplication, FunnelResult } from "@/lib/analytics/types";
 import { adjustmentDataRequirements, computePace, recommendAdjustments, weekProgress, weekTargets } from "@/lib/goals/calculator";
@@ -159,7 +159,7 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
   const { profile, today, todayKey } = ctx;
   const weekStart = startOfWeekUtc(today);
 
-  const [metrics, stats, followUpRows, interviewRows, recentRows, missionRows] = await Promise.all([
+  const [metrics, stats, followUpRows, interviewRows, recentRows] = await Promise.all([
     loadMetrics(userId, profile.timezone),
     prisma.playerStats.findUnique({
       where: { userId },
@@ -203,12 +203,6 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
         application: { select: { companyName: true, positionTitle: true } },
       },
     }),
-    prisma.mission.findMany({
-      where: { userId, status: "ACTIVE", periodStart: { lte: today }, periodEnd: { gte: today } },
-      orderBy: { createdAt: "asc" },
-      take: 6,
-      select: { id: true, title: true, description: true, type: true, target: true, progress: true, xpReward: true },
-    }),
   ]);
 
   const activityByDate = metrics.appliedByDay;
@@ -249,7 +243,6 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
     positionTitle: e.application.positionTitle,
   }));
 
-  const missions: MissionItem[] = missionRows;
   const funnel = dashboardFunnelCounts(metrics.funnel.counts);
   const totalApplications = metrics.funnel.counts.total;
   const { interviewRate, responseRate } = metrics.funnel.rates;
@@ -297,7 +290,6 @@ export async function getDashboardData(userId: string, now = new Date()): Promis
       lastActiveKey: stats?.lastActiveDate ? utcDateKey(stats.lastActiveDate) : null,
     },
     recent,
-    missions,
     nextAction,
   };
 }

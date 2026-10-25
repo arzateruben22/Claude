@@ -75,7 +75,7 @@ export const GAME_LINKS = {
   certification: { href: "/academy/certification", label: "Open the certification tracker" },
   careerMap: { href: "/career-map", label: "Open the Career Map" },
   onboarding: { href: "/settings/onboarding", label: "Finish setup" },
-  resume: { href: "/coach", label: "Work on your résumé" },
+  resume: { href: "/coach/resumes", label: "Work on your résumé" },
   integrations: { href: "/integrations", label: "Open Integrations" },
   targets: { href: "/discovery", label: "Open Job Discovery" },
   analytics: { href: "/analytics", label: "Open Analytics" },

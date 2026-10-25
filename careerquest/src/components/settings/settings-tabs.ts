@@ -6,4 +6,5 @@ export const SETTINGS_TABS = [
   { href: "/settings/appearance", label: "Appearance" },
   { href: "/settings/account", label: "Account & data" },
   { href: "/settings/tokens", label: "Developer tokens" },
+  { href: "/notifications", label: "Notifications" },
 ] as const;

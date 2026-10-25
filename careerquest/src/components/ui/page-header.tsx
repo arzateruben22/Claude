@@ -8,7 +8,7 @@ export function PageHeader({ title, description, actions, eyebrow }: { title: st
         <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{title}</h1>
         {description && <p className="mt-1 text-sm text-fg-muted max-w-2xl">{description}</p>}
       </div>
-      {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
+      {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
     </div>
   );
 }

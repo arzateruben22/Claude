@@ -2,7 +2,10 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import type { Prisma, UserProfile } from "@/generated/prisma/client";
 import type { CampaignStatus, PrimaryTrade, UiTheme } from "@/generated/prisma/enums";
-import { awardXpStandalone } from "@/lib/game/xp";
+import { awardXp } from "@/lib/game/xp";
+import { applyEventToMissions } from "@/lib/game/missions";
+import { evaluateAchievements } from "@/lib/game/achievements";
+import { mergeGetHiredMeta, readGetHiredMeta } from "@/lib/game/campaign-meta";
 import { todayInTz } from "@/lib/dates";
 import { addDaysUtc, diffDaysUtc } from "@/lib/goals/days";
 import type { ProfileInput } from "@/lib/validation/profile";
@@ -154,26 +157,34 @@ export type CompleteOnboardingResult = { alreadyCompleted: boolean; xpAwarded: n
  * repeatedly: the completion timestamp is only set the first time and the XP ledger dedupes.
  */
 export async function completeOnboarding(userId: string): Promise<CompleteOnboardingResult> {
-  const profile = await ensureProfile(prisma, userId);
-  const alreadyCompleted = profile.onboardingCompletedAt !== null;
-  let completedAt = profile.onboardingCompletedAt;
-  if (!completedAt) {
-    const updated = await prisma.userProfile.update({
-      where: { userId },
-      data: { onboardingCompletedAt: new Date() },
-      select: { onboardingCompletedAt: true },
+  // One transaction: the completion timestamp, the XP award and the mission/achievement update
+  // land together, so "Complete onboarding" completes immediately rather than on the next view.
+  return prisma.$transaction(async (tx) => {
+    const profile = await ensureProfile(tx, userId);
+    const alreadyCompleted = profile.onboardingCompletedAt !== null;
+    const now = new Date();
+    let completedAt = profile.onboardingCompletedAt;
+    if (!completedAt) {
+      const updated = await tx.userProfile.update({
+        where: { userId },
+        data: { onboardingCompletedAt: now },
+        select: { onboardingCompletedAt: true },
+      });
+      completedAt = updated.onboardingCompletedAt;
+    }
+    const activityDate = todayInTz(profile.timezone, now);
+    const xp = await awardXp(tx, {
+      userId,
+      reason: "PROFILE_COMPLETED",
+      dedupeKey: PROFILE_COMPLETED_DEDUPE(userId),
+      sourceType: "UserProfile",
+      sourceId: userId,
+      activityDate,
     });
-    completedAt = updated.onboardingCompletedAt;
-  }
-  const xp = await awardXpStandalone({
-    userId,
-    reason: "PROFILE_COMPLETED",
-    dedupeKey: PROFILE_COMPLETED_DEDUPE(userId),
-    sourceType: "UserProfile",
-    sourceId: userId,
-    activityDate: todayInTz(profile.timezone),
+    await applyEventToMissions(tx, { userId, type: "PROFILE_UPDATED", occurredAt: now, activityDate });
+    await evaluateAchievements(tx, userId);
+    return { alreadyCompleted, xpAwarded: xp.awarded ? xp.amount : 0, completedAt: completedAt ?? now };
   });
-  return { alreadyCompleted, xpAwarded: xp.awarded ? xp.amount : 0, completedAt: completedAt ?? new Date() };
 }
 
 
@@ -225,23 +236,39 @@ export function appendRestart(existing: unknown, previousStartedAt: Date | null,
 }
 
 /**
- * Restart the GET_HIRED campaign from today. Only the campaign row changes: applications, events,
- * XP ledger, achievements and daily activity are untouched.
+ * Restart the GET_HIRED campaign from today. Applications, events, XP ledger, achievements and daily
+ * activity are untouched. When the campaign had been completed by a reported job, restarting means
+ * the job search is open again: the self-reported job moves to employment history and
+ * `PlayerStats.currentSalary` is cleared (the same bookkeeping as "Re-open job search" on
+ * /missions/campaign), so stale employment never lingers on an active campaign.
  */
 export async function restartCampaign(userId: string): Promise<CampaignView> {
   const profile = await ensureProfile(prisma, userId);
-  const today = todayInTz(profile.timezone);
+  const now = new Date();
+  const today = todayInTz(profile.timezone, now);
   const targetEndAt = addDaysUtc(today, profile.campaignLengthDays);
-  const previous = await prisma.campaignState.findUnique({
-    where: { userId_campaign: { userId, campaign: "GET_HIRED" } },
-    select: { startedAt: true, metadata: true },
+  return prisma.$transaction(async (tx) => {
+    const previous = await tx.campaignState.findUnique({
+      where: { userId_campaign: { userId, campaign: "GET_HIRED" } },
+      select: { startedAt: true, metadata: true, status: true },
+    });
+    let metadata: Prisma.InputJsonObject = appendRestart(previous?.metadata, previous?.startedAt ?? null, now);
+    if (previous?.status === "COMPLETED") {
+      const meta = readGetHiredMeta(metadata);
+      if (meta.employment) {
+        metadata = mergeGetHiredMeta(metadata, {
+          employment: null,
+          pastEmployment: [...meta.pastEmployment, { ...meta.employment, endedAt: now.toISOString() }],
+        }) as Prisma.InputJsonObject;
+      }
+      await tx.playerStats.updateMany({ where: { userId }, data: { currentSalary: null } });
+    }
+    const row = await tx.campaignState.upsert({
+      where: { userId_campaign: { userId, campaign: "GET_HIRED" } },
+      create: { userId, campaign: "GET_HIRED", startedAt: today, targetEndAt, status: "ACTIVE", metadata },
+      update: { startedAt: today, targetEndAt, status: "ACTIVE", completedAt: null, metadata },
+      select: { status: true, startedAt: true, targetEndAt: true, completedAt: true },
+    });
+    return campaignView(row, profile.campaignLengthDays, today);
   });
-  const metadata = appendRestart(previous?.metadata, previous?.startedAt ?? null);
-  const row = await prisma.campaignState.upsert({
-    where: { userId_campaign: { userId, campaign: "GET_HIRED" } },
-    create: { userId, campaign: "GET_HIRED", startedAt: today, targetEndAt, status: "ACTIVE", metadata },
-    update: { startedAt: today, targetEndAt, status: "ACTIVE", completedAt: null, metadata },
-    select: { status: true, startedAt: true, targetEndAt: true, completedAt: true },
-  });
-  return campaignView(row, profile.campaignLengthDays, today);
 }

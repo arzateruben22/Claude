@@ -501,6 +501,8 @@ model ApplicationSourceLink {
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@index([applicationId])
+  /// Matcher: a saved source link with the same posting URL.
+  @@index([url])
 }
 
 enum DuplicateStatus {
@@ -613,6 +615,8 @@ model JobLead {
   convertedApplication Application? @relation(fields: [convertedApplicationId], references: [id], onDelete: SetNull)
 
   @@index([userId, status])
+  /// Lead de-duplication by posting URL.
+  @@index([userId, normalizedUrl])
 }
 
 model TargetCompany {
@@ -765,6 +769,8 @@ model EmailMessage {
   @@unique([userId, provider, externalId])
   @@index([userId, reviewStatus])
   @@index([userId, classification])
+  /// Matcher: other messages of the same thread already linked to a record.
+  @@index([userId, threadId])
 }
 
 enum ImportKind {

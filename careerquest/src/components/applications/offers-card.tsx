@@ -76,8 +76,10 @@ export function OffersCard({
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-medium tnum">
-                  {o.baseAmount === null ? "Amount not recorded" : formatCurrency(o.baseAmount, { cents: o.period === "HOURLY" })}{" "}
-                  {SALARY_PERIOD_LABELS[o.period]}
+                  <Link href={`/salary/offers/${encodeURIComponent(o.id)}`} className="hover:underline" data-testid="offer-link">
+                    {o.baseAmount === null ? "Amount not recorded" : formatCurrency(o.baseAmount, { cents: o.period === "HOURLY" })}{" "}
+                    {SALARY_PERIOD_LABELS[o.period]}
+                  </Link>
                 </p>
                 <Badge
                   tone={
@@ -132,6 +134,9 @@ export function OffersCard({
                   {o.notes}
                 </p>
               )}
+              <Link href={`/salary/offers/${encodeURIComponent(o.id)}`} className="mt-2 inline-block text-xs text-accent hover:underline">
+                Compare / negotiate
+              </Link>
             </div>
           ))}
         </CardContent>

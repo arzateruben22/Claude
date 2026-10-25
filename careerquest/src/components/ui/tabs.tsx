@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 /** Link-based tabs (URL is the state) — works without JS and keeps back/forward intuitive. */
 export function LinkTabs({ tabs, className }: { tabs: { href: string; label: string; exact?: boolean }[]; className?: string }) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   return (
     <nav className={cn("flex gap-1 overflow-x-auto no-scrollbar border-b border-line mb-5", className)} aria-label="Sections">
       {tabs.map((t) => {

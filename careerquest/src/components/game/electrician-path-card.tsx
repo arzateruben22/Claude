@@ -59,7 +59,7 @@ export function ElectricianPathCard({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3 text-sm">
-        <Link href="/career-map" className="inline-flex items-center gap-1 text-accent hover:underline">
+        <Link href="/career-map?node=supervised-experience" className="inline-flex items-center gap-1 text-accent hover:underline">
           Career Map: programs, hours and certification
           <ArrowRight className="h-3.5 w-3.5" aria-hidden />
         </Link>
