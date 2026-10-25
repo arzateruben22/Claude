@@ -67,6 +67,9 @@ for (const name of ["hook", "normal", "record", "loop"]) {
   S.ladder(name, { at: (tau) => { const p = ballAt(tau, SPEC); return [p[0], p[1], p[2] - 2]; }, dt: BN.dt, n: BN.n,
     when: name === "record" ? () => tk.t0 - 1 : (tau) => clk.tOf(tk.tauR + tau), t0: tk.t0, t1: tk.t1, slot: 0, color: P.ghostColor });
 }
+// the stack's climb: the tennis ball every 1/20 s from the hit to its peak, slowing all the way up
+S.ladder("stack", { at: (tau) => { const p = STK.small(tau); return [p[0], p[1], p[2] - 2]; }, tau0: ST.thit, dt: BN.dt, n: 18,
+  when: (tau) => clk.tOf(TAKES.stack.tauR + tau), t0: TAKES.stack.t0, t1: TAKES.stack.t1, slot: 0, color: P.ghostColor });
 
 // ── ink drawings: the hands, Joule's apparatus ──
 const I = inkSet({ color: TK["ink-2"] || "#4B505B", accent: TK.energy || "#B8321A" });
@@ -74,6 +77,7 @@ const handB = hand(I, { x: BN.x0 - 4.5, y: BN.drop + 2 * BN.r + 1.6, z: 1.5, sca
 const handS = hand(I, { x: ST.x - 4.5, y: ST.handY + 1.6, z: 1.5, scale: 1.0 });
 const IJ = inkSet({ color: TK["ink-2"] || "#4B505B", accent: TK.energy || "#B8321A" });   // its own material: it draws on and off
 const J = joule(IJ, { x: FILM.joule.x, z: FILM.joule.z });
+J.group.scale.setScalar(FILM.joule.s);
 scene.add(handB, handS, J.group);
 const handAt = (which) => (which === "stack" ? [ST.x - 2, ST.handY + 5, 1.5] : [BN.x0 - 2, BN.drop + 2 * BN.r + 5, 1.5]);
 
@@ -83,7 +87,7 @@ const rings = [0, 1, 2].map(() => { const m = new THREE.Mesh(new THREE.TorusGeom
 const glowMat = new THREE.MeshBasicMaterial({ color: unlit(TK.energy || "#B8321A"), transparent: true, opacity: 0, depthWrite: false });
 const glow = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12), glowMat); scene.add(glow);
 const CONTACT = [BN.x0 + BN.vx * BN.land, 0.6, 1.0];
-const ringR = (k, t, t0) => { const u = seg(t, t0 + 0.28 * k, t0 + 0.28 * k + 1.6); return { r: 2.5 + 34 * E.out3(u), a: u > 0 && u < 1 ? (1 - u) * 0.95 : 0 }; };
+const ringR = (k, t, t0) => { const u = seg(t, t0 + 0.28 * k, t0 + 0.28 * k + 1.6); return { r: 2.5 + 12 * E.out3(u), a: u > 0 && u < 1 ? (1 - u) * 0.95 : 0 }; };
 const ringPt = (k, t) => { const t0 = t < CUE.cuts.why ? CUE.change.rings : CUE.why.sound, q = ringR(k - 1, t, t0); return [CONTACT[0] + q.r * 0.7, CONTACT[1] + q.r * 0.7, CONTACT[2]]; };
 
 // ── camera ──
@@ -112,13 +116,15 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("warp", { from: clk, slot: "tr" });
+{ const HN = FILM.hookNote;   // the hook's speed note, bottom-right: the poster's title keeps the top to itself
+  hud.badge("hook-speed", { kind: "speed", slot: "br", t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "5× slower" : "paused") }); }
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball, t);
   if (an.hand) return () => handAt(an.hand);
   if (an.tennis) return (t) => STK.small(local("stack", t));
   if (an.ring) return (t) => ringPt(an.ring, t);
-  if (an.joule) return () => (an.joule === "therm" ? [FILM.joule.x + 26, 30, FILM.joule.z] : [FILM.joule.x + 30, 82, FILM.joule.z]);
+  if (an.joule) { const s = FILM.joule.s; return () => (an.joule === "therm" ? [FILM.joule.x + 26 * s, 30 * s, FILM.joule.z] : [FILM.joule.x + 30 * s, 82 * s, FILM.joule.z]); }
   return () => an.point;
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.anchor), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed, v: lb.v });
@@ -131,12 +137,12 @@ const spineVal = (t) => {
   const take = takeAt(t) || s.take;
   return Math.max(0, ballPos(take, t)[1] - BN.r);
 };
-const counterEl = hud.counter("spine", { value: spineVal, fmt: (v) => v.toFixed(0), unit: "cm", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.27, 0.235], minCh: 4 });
+const counterEl = hud.counter("spine", { value: spineVal, fmt: (v) => v.toFixed(0), unit: "cm", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.26, 0.19], minCh: 4 });
 const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
 { const st = document.createElement("style");
-  st.textContent = ".hud-badge.card { max-width: 44vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } "
+  st.textContent = ".hud-badge.card { max-width: 40vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } "
     + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });

@@ -86,8 +86,8 @@ assert A("vo05:together.") < R_w < A("vo05:hands"), (R_w,)
 F_w = A("vo05:hand.") + 1.2                              # it falls a little, then freezes for the hold
 
 KEYS = [
-    {"t": 0.0, "rate": SLOW},
-    {"t": F_h, "rate": 0.0, "ramp": FREEZE},
+    {"t": 0.0, "rate": SLOW, "badge": None},             # the hook's speed note sits bottom-right (hookNote), clear of the title
+    {"t": F_h, "rate": 0.0, "ramp": FREEZE, "badge": None},
     {"t": cut("normal"), "rate": SLOW_N},
     {"t": cut("change"), "rate": MACRO},
     {"t": F_c, "rate": 0.0},
@@ -132,7 +132,7 @@ assert abs(S_PEAK_FT - A("vo05:hand.")) < 1e-6
 # bottom) · "const"
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "bounce height", "unit": "cm", "dp": 0, "kind": "height", "take": "normal"},
-    {"t0": cut("change"), "t1": cut("whoa"), "label": "height lost, this knock", "unit": "%", "dp": 0, "kind": "const", "v": 100 * (1 - E_REST ** 2)},
+    {"t0": cut("change"), "t1": cut("whoa"), "label": "lost, this knock", "unit": "%", "dp": 0, "kind": "const", "v": 100 * (1 - E_REST ** 2)},
     {"t0": cut("whoa"), "t1": cut("measure"), "label": "tennis ball height", "unit": "cm", "dp": 0, "kind": "stack"},
     {"t0": cut("measure"), "t1": A("vo06:A"), "label": "height missing", "unit": "cm", "dp": 0, "kind": "const", "v": DROP - TOP_H[0]},
     {"t0": A("vo06:A"), "t1": A("vo06:Even"), "label": "energy it took", "unit": "J", "dp": 3, "kind": "const", "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100},
@@ -148,7 +148,7 @@ CUE = {
     "hook": {"freeze": [F_h, F_h + FREEZE]},
     "normal": {"R": R_n, "tops": TOP_T["normal"], "lands": LAND_T["normal"]},
     "change": {"contact": T_CONTACT, "freeze": F_c, "spring": U_c, "rings": A("vo03:puff"), "heat": A("vo03:squashes,")},
-    "why": {"joule": [A("vo04:James"), A("vo04:Energy")], "fall": [A("vo04:let"), A("vo04:warmed.")], "heat": A("vo04:heat,"),
+    "why": {"joule": [A("vo04:James"), A("vo04:Energy#2")], "fall": [A("vo04:let"), A("vo04:warmed.")], "heat": A("vo04:heat,"),
             "shaking": A("vo04:shaking"), "sound": A("vo04:sound,")},
     "whoa": {"R": R_w, "hit": S_HIT_T, "peak": S_PEAK_FT, "freeze": F_w},
     "measure": {"gap": A("vo06:missing")},
@@ -164,8 +164,8 @@ LABELS = [
     {"id": "nm-18", "text": "18 cm", "color": "motion", "t0": A("vo02:eighteen."), "t1": cut("change"), "anchor": {"point": [TOPX[2], TOP_H[2] + RB, 0]}, "side": 1, "fixed": True},
     {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": cut("why") + 0.6, "anchor": {"ring": 1}, "side": 1, "fixed": True},
     {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") + 0.6, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
-    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:Energy", -0.2), "anchor": {"joule": "top"}, "side": 1, "fixed": True},
-    {"id": "wy-warm", "text": "the water warms", "color": "energy", "t0": A("vo04:warmed."), "t1": A("vo04:Energy", -0.2), "anchor": {"joule": "therm"}, "side": 1, "fixed": True},
+    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "top"}, "side": 1, "fixed": True},
+    {"id": "wy-warm", "text": "the water warms", "color": "energy", "t0": A("vo04:warmed."), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "therm"}, "side": 1, "fixed": True},
     {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa"), "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
     {"id": "wy-shake", "text": "shaking", "color": "pressure", "t0": A("vo04:shaking"), "t1": cut("whoa"), "anchor": {"point": [-30.0, 0.0, 0.0]}, "side": -1, "fixed": True},
     {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa"), "anchor": {"ring": 2}, "side": 1, "fixed": True},
@@ -174,9 +174,9 @@ LABELS = [
     {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": cut("tease") - 0.3, "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
 ]
 BADGES = [
-    {"id": "air", "title": "Air ignored", "text": "The bounces keep 56% each; air would take a little more.", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
-    {"id": "illus", "text": "Illustration: squash and sound exaggerated", "t0": cut("change") + 0.3, "t1": cut("whoa") - 0.3, "slot": "tr"},
-    {"id": "perfect", "title": "Perfect bounces", "text": "Real balls fly less high, but still far past the hand.", "t0": A("vo05:Drop"), "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "air", "text": "Air ignored", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
+    {"id": "illus", "text": "Not to scale", "t0": cut("change") + 0.3, "t1": A("vo04:James", -0.5), "slot": "tr"},
+    {"id": "perfect", "text": "Ideal bounces", "t0": A("vo05:Drop"), "t1": cut("measure") - 0.3, "slot": "tr"},
 ]
 
 # ── camera (level measure views, ep01's helper; the macro and the tilt-up as their own keys) ───
@@ -193,21 +193,25 @@ def key(t, v, ease="p2", **over):
     return {"t": round(t, 4), **v, **over, "ease": ease}
 
 
-BENCH = view(0.0)                                         # the hand, the stick, the bounces
+BENCH = view(-8.0, top_px=570.0)                          # the hand, the stick, the bounces; room above the hand for the spine
 HOOK = view(-6.0, top_px=640.0, floor_px=1150.0)          # under the title: the hand line and the first rebound
 MACRO_V = {"look": [X0 + VX * T_LAND, 4.0, 0.0], "dist": 62.0, "yaw": 0.0, "pitch": 4.0, "fov": 32.0}
 JOULE_X, JOULE_Z = 120.0, -20.0
-JOULE_V = {"look": [JOULE_X + 4.0, 44.0, JOULE_Z], "dist": 330.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
-BALL_REST = {"look": [X0 + VX * T_LAND, 22.0, 0.0], "dist": 190.0, "yaw": 0.0, "pitch": 3.0, "fov": 32.0}
+JOULE_V = {"look": [JOULE_X - 12.0, 20.0, JOULE_Z], "dist": 380.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
+BALL_REST = {"look": [X0 + VX * T_LAND, 4.0, 0.0], "dist": 170.0, "yaw": 0.0, "pitch": 3.0, "fov": 32.0}
 STACK_LO = view(S_X, top=S_HAND_Y + 30, top_px=420.0)
-STACK_HI = {"look": [S_X, S_PEAK_Y - 130.0, 0.0], "dist": 760.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
+STACK_MID = {"look": [S_X, 150.0, 0.0], "dist": 420.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
+STACK_HI = {"look": [S_X, 350.0, 0.0], "dist": 300.0,          # the cyc wall stops at 420 cm: keep the frame under it
+            "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
 CAM = {
     "hook": [key(0.0, HOOK), key(cut("normal"), {**HOOK, "dist": HOOK["dist"] + 8}, "sine")],
     "normal": [key(cut("normal"), {**HOOK, "dist": HOOK["dist"] + 8}), key(A("vo02:down."), BENCH, "p3"), key(cut("change"), {**BENCH, "dist": BENCH["dist"] - 10}, "sine")],
     "change": [key(cut("change"), {**MACRO_V, "dist": 120.0}), key(A("vo03:knock:"), MACRO_V, "p3"), key(cut("why"), {**MACRO_V, "dist": 56.0}, "sine")],
-    "why": [key(cut("why"), {**MACRO_V, "dist": 56.0}), key(A("vo04:James", -0.3), JOULE_V, "p3"), key(A("vo04:Energy", -0.4), {**JOULE_V, "dist": 318.0}, "sine"),
+    "why": [key(cut("why"), {**MACRO_V, "dist": 56.0}), key(A("vo04:James", -0.3), JOULE_V, "p3"), key(A("vo04:Energy#2", -0.4), {**JOULE_V, "dist": 370.0}, "sine"),
             key(A("vo04:vanish."), BALL_REST, "p3"), key(cut("whoa"), {**BALL_REST, "dist": 200.0}, "sine")],
-    "whoa": [key(cut("whoa"), STACK_LO), key(CUE["whoa"]["hit"], STACK_LO, "sine"), key(A("vo05:hand."), STACK_HI, "p3"), key(cut("measure"), {**STACK_HI, "dist": 780.0}, "sine")],
+    # the camera rides up with the tennis ball: fast off the hit, easing into its peak on "hand."
+    "whoa": [key(cut("whoa"), STACK_LO), key(CUE["whoa"]["hit"], STACK_LO, "sine"), key(clk.tOf(TAKES["stack"]["tauR"] + S_THIT + 0.2), STACK_MID, "p2"),
+             key(A("vo05:hand."), STACK_HI, "sine"), key(cut("measure"), {**STACK_HI, "dist": 310.0}, "sine")],
     "measure": [key(cut("measure"), BENCH), key(cut("takeaway"), {**BENCH, "dist": BENCH["dist"] + 12}, "sine")],
     "takeaway": [key(cut("takeaway"), {**BENCH, "dist": BENCH["dist"] + 12}), key(cut("tease"), {**BENCH, "dist": BENCH["dist"] + 20}, "sine")],
     "tease": [key(cut("tease"), {**BENCH, "dist": BENCH["dist"] + 20}), key(EC, HOOK, "p3"), key(DUR, HOOK, "sine")],
@@ -221,13 +225,13 @@ film = {
     "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE, "spine": SPINE,
     "bench": {"g": G, "drop": DROP, "r": RB, "e": E_REST, "x0": X0, "vx": VX, "dt": DT, "n": NG, "stickX": STICK_X, "land": T_LAND,
               "tops": TOPS, "topH": TOP_H, "dc": DC, "squash": SQUASH},
-    "stack": {"drop": S_DROP, "R": S_R, "M": S_M, "m": S_m, "x": S_X, "handY": S_HAND_Y, "peak": [S_PEAK_T, S_PEAK_Y]},
-    "joule": {"x": JOULE_X, "z": JOULE_Z},
-    "labels": LABELS, "badges": BADGES, "cam": CAM,
+    "stack": {"thit": S_THIT, "drop": S_DROP, "R": S_R, "M": S_M, "m": S_m, "x": S_X, "handY": S_HAND_Y, "peak": [S_PEAK_T, S_PEAK_Y]},
+    "joule": {"x": JOULE_X, "z": JOULE_Z, "s": 0.8},
+    "labels": LABELS, "badges": BADGES, "cam": CAM, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]},
     "captionY": 0.632, "title": TITLE,
     "captions": f.captions(max_chars=24), "endCard": EC,
     "end": {"title": "Next drop: the hammer and the *feather*", "follow": "Follow Rest Frame",
-            "foot": "Joule (1850): 772 foot-pounds of work warm a pound of water by 1 °F, within 1% of today's value."},
+            "foot": "Joule, 1850: 772 foot-pounds warm a pound of water 1 °F. Today's value is 778."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

@@ -74,7 +74,11 @@
   {
    "t": 1.1666666666666667,
    "kind": "label",
-   "tag": "hk-hand"
+   "tag": "hk-hand",
+   "pos": [
+    0.561,
+    0.309
+   ]
   },
   {
    "t": 1.1667,
@@ -104,7 +108,11 @@
   {
    "t": 4.8166329999999995,
    "kind": "counter.show",
-   "tag": "spine"
+   "tag": "spine",
+   "pos": [
+    0.26,
+    0.19
+   ]
   },
   {
    "t": 5.0666,
@@ -115,7 +123,7 @@
    "t": 5.1166,
    "kind": "badge",
    "tag": "air",
-   "text": "The bounces keep 56% each; air would take a little more."
+   "text": "Air ignored"
   },
   {
    "t": 5.3666,
@@ -130,7 +138,11 @@
   {
    "t": 5.933333333333334,
    "kind": "label",
-   "tag": "nm-56"
+   "tag": "nm-56",
+   "pos": [
+    0.617,
+    0.41
+   ]
   },
   {
    "t": 5.9666,
@@ -187,7 +199,11 @@
   {
    "t": 8.266666666666667,
    "kind": "label",
-   "tag": "nm-32"
+   "tag": "nm-32",
+   "pos": [
+    0.679,
+    0.475
+   ]
   },
   {
    "t": 8.3666,
@@ -212,7 +228,11 @@
   {
    "t": 9.5,
    "kind": "label",
-   "tag": "nm-18"
+   "tag": "nm-18",
+   "pos": [
+    0.725,
+    0.511
+   ]
   },
   {
    "t": 9.5666,
@@ -238,7 +258,7 @@
   {
    "t": 13.050033,
    "kind": "counter.tick",
-   "tag": "spine:height lost, this knock"
+   "tag": "spine:lost, this knock"
   },
   {
    "t": 13.0667,
@@ -255,7 +275,7 @@
    "t": 13.35,
    "kind": "badge",
    "tag": "illus",
-   "text": "Illustration: squash and sound exaggerated"
+   "text": "Not to scale"
   },
   {
    "t": 14.3333,
@@ -270,7 +290,11 @@
   {
    "t": 15.4,
    "kind": "label",
-   "tag": "ch-sound"
+   "tag": "ch-sound",
+   "pos": [
+    0.747,
+    0.283
+   ]
   },
   {
    "t": 16.8,
@@ -280,7 +304,11 @@
   {
    "t": 18.3,
    "kind": "label",
-   "tag": "ch-heat"
+   "tag": "ch-heat",
+   "pos": [
+    0.439,
+    0.283
+   ]
   },
   {
    "t": 19.2,
@@ -291,12 +319,20 @@
   {
    "t": 21.5,
    "kind": "label",
-   "tag": "wy-joule"
+   "tag": "wy-joule",
+   "pos": [
+    0.611,
+    0.151
+   ]
   },
   {
    "t": 27.166666666666668,
    "kind": "label",
-   "tag": "wy-warm"
+   "tag": "wy-warm",
+   "pos": [
+    0.65,
+    0.407
+   ]
   },
   {
    "t": 27.1667,
@@ -306,17 +342,29 @@
   {
    "t": 30.433333333333334,
    "kind": "label",
-   "tag": "wy-heat"
+   "tag": "wy-heat",
+   "pos": [
+    0.422,
+    0.568
+   ]
   },
   {
    "t": 30.966666666666665,
    "kind": "label",
-   "tag": "wy-shake"
+   "tag": "wy-shake",
+   "pos": [
+    0.185,
+    0.604
+   ]
   },
   {
    "t": 31.733333333333334,
    "kind": "label",
-   "tag": "wy-sound"
+   "tag": "wy-sound",
+   "pos": [
+    0.709,
+    0.604
+   ]
   },
   {
    "t": 35.716633,
@@ -333,12 +381,16 @@
    "t": 38.0,
    "kind": "badge",
    "tag": "perfect",
-   "text": "Real balls fly less high, but still far past the hand."
+   "text": "Ideal bounces"
   },
   {
    "t": 38.0,
    "kind": "label",
-   "tag": "wo-hand"
+   "tag": "wo-hand",
+   "pos": [
+    0.624,
+    0.276
+   ]
   },
   {
    "t": 39.5348,
@@ -358,7 +410,11 @@
   {
    "t": 44.2,
    "kind": "label",
-   "tag": "wo-7x"
+   "tag": "wo-7x",
+   "pos": [
+    0.63,
+    0.39
+   ]
   },
   {
    "t": 44.2,
@@ -379,7 +435,11 @@
   {
    "t": 48.93333333333333,
    "kind": "label",
-   "tag": "ms-44"
+   "tag": "ms-44",
+   "pos": [
+    0.673,
+    0.379
+   ]
   },
   {
    "t": 51.233333333333334,
@@ -560,5 +620,22 @@
    "t": 62.166666666666664,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "hk-hand": 1.2,
+  "nm-56": 5.9667,
+  "nm-32": 8.3,
+  "nm-18": 9.5333,
+  "ch-sound": 15.4333,
+  "ch-heat": 18.3333,
+  "wy-joule": 21.5333,
+  "wy-warm": 27.2,
+  "wy-heat": 30.4667,
+  "wy-shake": 31,
+  "wy-sound": 31.7667,
+  "wo-hand": 38.0333,
+  "wo-7x": 44.2333,
+  "ms-44": 48.9667,
+  "spine": 4.8333
+ }
 }
