@@ -156,6 +156,28 @@ Requests **not** applied, and why (candidates for a later stage):
 - Not yet run: axe accessibility scans, the Phase 2–3 browser tests with a local mock OAuth/Gmail/Outlook
   provider and the extension in the loop, the 20-step acceptance scenario.
 
+
+## Verification run on the integrated main branch (2026-10-25, paused here)
+- `npx vitest run` → 96 files / 1,418 tests passed. `npm run build` → compiled. `scripts/validate-academy.mjs` → PASS.
+- Playwright on main (both projects): `auth.spec.ts` passed; `smoke-routes.spec.ts` empty-state test passed.
+- **FAILING, to fix on resume:**
+  1. `phase1-acceptance.spec.ts` (desktop + iPhone): after onboarding the top bar shows **100 XP**, the test
+     expects 50. Since the wiring stage, `completeOnboarding` also evaluates missions, so the Phase 1 campaign
+     mission "complete onboarding" pays its own XP on top of PROFILE_COMPLETED. Decide: either the mission must
+     not pay separately for the same action (preferred: one real action → one award) or the spec's expected
+     totals must follow the mission catalog. Check every other "one action → two awards" pair (lesson quiz +
+     mission, hours entry + mission, application + daily mission) with the same rule.
+  2. `smoke-routes.spec.ts` with-data test (desktop + iPhone): a `locator.click` hung until the 15-minute test
+     timeout; the page snapshot shows the dashboard with the sidebar, so a click target was covered or never
+     became actionable (likely the achievement celebration overlay or a dialog). Reproduce with
+     `fuser -k 3100/tcp; npx playwright test tests/e2e/smoke-routes.spec.ts -g "with data" --project=desktop-chromium --trace on`
+     and read the trace; `test-results/` from this run is on disk.
+- Three e2e stages were running in worktrees `/home/user/cq-e2e-a` (branch e2e/phase2-3, port 3101),
+  `/home/user/cq-e2e-b` (e2e/phase4-7, 3102), `/home/user/cq-e2e-c` (e2e/acceptance, 3103) plus a read-only
+  review workflow. Their output lands as uncommitted changes in those worktrees; merge each branch into
+  `claude/careerquest` after committing it there, resolving conflicts in favour of the most tested version.
+- Preview gallery (real screenshots of this build): https://claude.ai/artifact/MYJWMy7foois8VFmtSWUra
+
 ## Next exact step
 Run the next integration stage: Phase 2–3 browser tests with a local mock OAuth/Gmail/Outlook provider and the
 extension in the loop, then Phase 4–7 browser tests incl. axe scans, then the 20-step acceptance scenario and the
