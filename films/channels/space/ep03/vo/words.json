@@ -1,0 +1,1069 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Can one day outlast a year? On Venus: yes. And no.",
+   "heard": "Can one day outlast a year? On Venus, yes and no.",
+   "words": [
+    {
+     "w": "Can",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.24,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.455,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "outlast",
+     "start": 0.655,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.135,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "year?",
+     "start": 1.255,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 1.845,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "Venus:",
+     "start": 2.055,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "yes.",
+     "start": 2.755,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 3.215,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "no.",
+     "start": 3.345,
+     "end": 3.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "On Earth, you see the Sun rise about three hundred sixty-five times a lap. Next door, Venus hides its face under a permanent lid of cloud.",
+   "heard": "On Earth, you see the sun rise about 365 times a lap. Next door, Venus hides its face under a permanent lid of cloud.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 0.24,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.865,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 0.895,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.175,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.385,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "rise",
+     "start": 1.6,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.12,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 2.335,
+     "end": 3.68,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 2.365,
+     "end": 3.68,
+     "heard": false
+    },
+    {
+     "w": "sixty-five",
+     "start": 2.395,
+     "end": 3.68,
+     "heard": false
+    },
+    {
+     "w": "times",
+     "start": 3.715,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.075,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "lap.",
+     "start": 4.185,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "Next",
+     "start": 5.1,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "door,",
+     "start": 5.405,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "Venus",
+     "start": 6.115,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "hides",
+     "start": 6.485,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 6.92,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "face",
+     "start": 7.09,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 7.4,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.695,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "permanent",
+     "start": 7.785,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "lid",
+     "start": 8.22,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.585,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "cloud.",
+     "start": 8.665,
+     "end": 9.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one face always faced the Sun.",
+   "heard": "For 300 years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about 23 hours. Schaparelli said one face always faced the sun.",
+   "words": [
+    {
+     "w": "For",
+     "start": 0.03,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 0.17,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 0.2,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "years,",
+     "start": 0.7,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "astronomers",
+     "start": 1.365,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "chased",
+     "start": 2.07,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "faint",
+     "start": 2.38,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "smudges",
+     "start": 2.695,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.24,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "those",
+     "start": 3.565,
+     "end": 3.615,
+     "heard": true
+    },
+    {
+     "w": "clouds.",
+     "start": 3.595,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 4.57,
+     "end": 4.62,
+     "heard": true
+    },
+    {
+     "w": "Cassinis,",
+     "start": 4.6,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "father",
+     "start": 5.44,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.665,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "son,",
+     "start": 6.0,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "clocked",
+     "start": 6.575,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.91,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "twenty-three",
+     "start": 7.22,
+     "end": 7.84,
+     "heard": false
+    },
+    {
+     "w": "hours.",
+     "start": 7.81,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "Schiaparelli",
+     "start": 8.775,
+     "end": 9.6,
+     "heard": false
+    },
+    {
+     "w": "said",
+     "start": 9.555,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 9.68,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "face",
+     "start": 10.065,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "always",
+     "start": 10.385,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "faced",
+     "start": 10.815,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.185,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "Sun.",
+     "start": 11.215,
+     "end": 11.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "In nineteen sixty-two, radar from a dish in California pierced the clouds. Both guesses were wrong. Venus turns once every two hundred forty-three days, longer than its year. And it turns backwards.",
+   "heard": "In 1962, radar from a dish in California pierced the clouds. Both guesses were wrong. Venus turns once every 243 days, longer than its year, and it turns backwards.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nineteen",
+     "start": 0.36,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "sixty-two,",
+     "start": 0.39,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "radar",
+     "start": 1.575,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 2.07,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.145,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "dish",
+     "start": 2.375,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.8,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "California",
+     "start": 2.83,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "pierced",
+     "start": 3.615,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.015,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "clouds.",
+     "start": 4.065,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "Both",
+     "start": 4.99,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "guesses",
+     "start": 5.265,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "were",
+     "start": 5.705,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "wrong.",
+     "start": 5.87,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "Venus",
+     "start": 6.72,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 7.125,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 7.56,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 7.895,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 8.195,
+     "end": 9.44,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 8.225,
+     "end": 9.44,
+     "heard": false
+    },
+    {
+     "w": "forty-three",
+     "start": 8.255,
+     "end": 9.44,
+     "heard": false
+    },
+    {
+     "w": "days,",
+     "start": 9.42,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 9.865,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 10.295,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 10.51,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "year.",
+     "start": 10.63,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 11.335,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 11.545,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 11.585,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "backwards.",
+     "start": 12.025,
+     "end": 12.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Stand there, and the spin and the orbit team up. The Sun comes back every hundred and seventeen days, rising in the west.",
+   "heard": "Stand there and the spin and the orbit team up. The sun comes back every hundred and seventeen days, rising in the west.",
+   "words": [
+    {
+     "w": "Stand",
+     "start": 0.025,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "there,",
+     "start": 0.415,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.625,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.7,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 1.065,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.405,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.61,
+     "end": 1.66,
+     "heard": true
+    },
+    {
+     "w": "orbit",
+     "start": 1.68,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "team",
+     "start": 2.08,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 2.625,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.23,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 3.26,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "comes",
+     "start": 3.705,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.99,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 4.41,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 4.71,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.93,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 5.295,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "days,",
+     "start": 5.855,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "rising",
+     "start": 6.645,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.145,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.2,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "west.",
+     "start": 7.445,
+     "end": 7.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So yes: one turn outlasts a year. But the day you'd live by is the Sun coming back.",
+   "heard": "So yes, one turn outlasts a year, but the day you'd live by is the sun coming back.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "yes:",
+     "start": 0.345,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.08,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "turn",
+     "start": 1.38,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "outlasts",
+     "start": 1.78,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.325,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "year.",
+     "start": 2.64,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 3.265,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.365,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 3.515,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 3.765,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "live",
+     "start": 3.905,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 4.34,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.715,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.87,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 5.105,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "coming",
+     "start": 5.34,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 5.685,
+     "end": 6.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time, Sun to Venus: six minutes. The radar's round trip, at its closest: about four minutes.",
+   "heard": "Light time Sun to Venus, 6 minutes. The radar's round trip at its closest, about 4 minutes.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time,",
+     "start": 0.285,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.7,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.88,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "Venus:",
+     "start": 1.025,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 1.585,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "minutes.",
+     "start": 1.885,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 2.74,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "radar's",
+     "start": 2.77,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "round",
+     "start": 3.38,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "trip,",
+     "start": 3.705,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 4.05,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 4.285,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "closest:",
+     "start": 4.39,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.1,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 5.38,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "minutes.",
+     "start": 5.74,
+     "end": 6.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: the Moon never stops falling toward us. So why doesn't it land?",
+   "heard": "Next, the moon never stops falling toward us, so why doesn't it land?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.555,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 0.705,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 1.135,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "stops",
+     "start": 1.385,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "falling",
+     "start": 1.77,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 2.195,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 2.675,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 3.24,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 3.435,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 3.745,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.075,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "land?",
+     "start": 4.105,
+     "end": 4.56,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
