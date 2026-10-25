@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 los-gueros-preview.html
+
+# stray tool output at the repo root
+/node_modules/
+/test-results/
+/playwright-report/
