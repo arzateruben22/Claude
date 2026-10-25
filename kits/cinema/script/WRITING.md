@@ -50,6 +50,30 @@ that changes how they see the first frame. The facts are the drama, so we don't 
 10. **Read it aloud at the narrator's pace.** If you stumble, wince or run out of breath, rewrite
     the line.
 
+## The picture: what the best references do
+
+From the user's references, including "What if a black hole was heading for Earth?" (moon2animation, 10.9M
+views, 80 s). It has no narration. It is one locked shot from a pier at night, and the black hole grows from
+a dot to filling the sky while one readout counts down. What makes that kind of short hold:
+
+1. **One world, few cuts.** Stage the episode as one continuous place the camera moves through (push, pull,
+   orbit, scale jump). When a cut is needed, cut on a sound and keep the subject in the same part of the
+   screen.
+2. **A spine readout.** One number lives on screen through the whole episode and changes as the story
+   escalates. The reference goes distance, then tide height, then distance, then "the event horizon: HERE".
+   Its small label names the beat. A number that keeps moving holds the eye between lines.
+3. **Human scale.** At least once, anchor the big idea to a place the viewer knows: a beach, a kitchen,
+   their own hand, their sky. Show the consequence there: the tide rising, the drink climbing the straw.
+4. **Escalate in visible steps.** Every beat changes the picture, not just the words. A beat whose image
+   doesn't change is a beat to cut.
+5. **One idea per caption line.** When a beat is a single image, one short line can carry it ("The tides keep
+   rising.").
+6. **End on a loop and a fact.** The last frame hands back to frame 0 (the same composition or the same
+   question), so a replay feels seamless. The end card carries one true-fact footnote that grounds the
+   premise (the reference: "The first lone black hole was found in 2022, about 5,000 light-years away").
+7. **Let the sound build.** The score rises with the escalation and drops to near-silence for the final
+   reveal.
+
 ## Never write
 
 `lint.py` warns on these:
