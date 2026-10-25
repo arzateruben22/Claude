@@ -1,6 +1,6 @@
 // Per-account approval: each destination approves one exact export (video file + title, caption, hashtags,
 // cover and disclosures). Editing any of it withdraws the approval; a newer render supersedes it.
-import { approveExport, saveExport, withdrawApproval } from "@/app/actions";
+import { approveExport, regenerateText, saveExport, withdrawApproval } from "@/app/actions";
 import type { episodeFull } from "@/lib/data";
 import { formatLocal } from "@/domain/time";
 import { PLATFORM_LABEL, PUB_LABEL, pubTone } from "@/lib/format";
@@ -11,6 +11,11 @@ type Full = NonNullable<Awaited<ReturnType<typeof episodeFull>>>;
 export function Placements({ full, tz }: { full: Full; tz: string }) {
   return (
     <div className="stack" id="placements">
+      {full.current ? (
+        <ActionForm action={regenerateText} className="row" submit="Regenerate titles, captions and hashtags from the script" submitClass="btn ghost small">
+          <input type="hidden" name="episodeId" value={full.ep.id} />
+        </ActionForm>
+      ) : null}
       {full.placements.map(({ dest, export: x, approval, lastRevoked, publication }) => (
         <div key={dest.id} className="card flat stack-sm">
           <div className="row spread">

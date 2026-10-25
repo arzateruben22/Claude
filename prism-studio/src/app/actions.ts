@@ -470,3 +470,48 @@ export async function dissolveLessonAction(_: Result, fd: FormData) {
     return ok("Dissolved: its episodes can join another lesson.");
   });
 }
+
+// ── experiments and learnings ──────────────────────────────────────────────
+export async function addExperiment(_: Result, fd: FormData) {
+  return run(async () => {
+    const v = z.object({ channelId: z.string().uuid(), hypothesis: z.string().min(5).max(300), change: z.string().min(3).max(300), metric: z.enum(["views", "avg_view_duration_s", "likes", "shares", "followers_gained"]), minSample: z.coerce.number().int().min(2).max(60) })
+      .parse({ channelId: fd.get("channelId"), hypothesis: str(fd, "hypothesis"), change: str(fd, "change"), metric: fd.get("metric"), minSample: str(fd, "minSample") || 6 });
+    await db().insert(S.experiments).values(v);
+    await audit(db(), "owner", "experiment.create", "experiment", "", { hypothesis: v.hypothesis });
+    revalidatePath("/learn");
+    return ok("Proposed. Change one thing, then judge it after the minimum sample.");
+  });
+}
+export async function setExperimentStatus(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("experimentId"));
+    const status = z.enum(["proposed", "running", "retained", "revised", "discarded"]).parse(fd.get("status"));
+    const [x] = await db().select().from(S.experiments).where(eq(S.experiments.id, id));
+    if (!x) throw new DomainError("not_found", "experiment not found");
+    const note = str(fd, "note");
+    if (["retained", "revised", "discarded"].includes(status) && x.status === "running" && !note) throw new DomainError("evidence", "Say what the numbers showed before closing an experiment.");
+    await db().update(S.experiments).set({ status, evidence: { ...x.evidence, [`${status}_at`]: new Date().toISOString(), ...(note ? { [`${status}_note`]: note } : {}) } }).where(eq(S.experiments.id, id));
+    revalidatePath("/learn");
+    return ok(`Now ${status}.`);
+  });
+}
+export async function addLearning(_: Result, fd: FormData) {
+  return run(async () => {
+    const v = z.object({ channelId: z.string().uuid(), finding: z.string().min(5).max(300), confidence: z.enum(["low", "medium", "high"]), evidence: z.string().max(500), counterexamples: z.string().max(500), decision: z.string().max(300) })
+      .parse({ channelId: fd.get("channelId"), finding: str(fd, "finding"), confidence: fd.get("confidence") ?? "low", evidence: str(fd, "evidence"), counterexamples: str(fd, "counterexamples"), decision: str(fd, "decision") });
+    await db().insert(S.learnings).values(v);
+    revalidatePath("/learn");
+    return ok("Recorded.");
+  });
+}
+
+// ── posting text ───────────────────────────────────────────────────────────
+export async function regenerateText(_: Result, fd: FormData) {
+  return run(async () => {
+    const episodeId = z.string().uuid().parse(fd.get("episodeId"));
+    const { regenerateExports } = await import("@/domain/exports");
+    const r = await regenerateExports(db(), episodeId);
+    refresh(`/episodes/${episodeId}`, "/review", "/upload");
+    return ok(`Rewrote ${r.platforms} platform texts from the script.${r.revoked ? ` ${r.revoked} approval${r.revoked > 1 ? "s" : ""} withdrawn: approve again.` : ""}${r.warnings.length ? ` Check: ${r.warnings.join("; ")}.` : ""}`);
+  });
+}

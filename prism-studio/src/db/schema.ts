@@ -145,7 +145,7 @@ export const episodes = pgTable("episodes", {
   objective: text("objective").notNull().default(""),
   state: episodeStateEnum("state").notNull().default("idea"),
   script: text("script").notNull().default(""),
-  storyboard: jsonb("storyboard").$type<{ beat: string; picture: string; seconds?: number }[]>().notNull().default([]),
+  storyboard: jsonb("storyboard").$type<{ beat: string; picture: string; seconds?: number; vo?: string }[]>().notNull().default([]),
   captionsSrt: text("captions_srt").notNull().default(""),
   revisionNotes: text("revision_notes").notNull().default(""),
   durationS: real("duration_s"),

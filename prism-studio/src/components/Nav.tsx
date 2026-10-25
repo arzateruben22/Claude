@@ -13,6 +13,7 @@ const MAIN: { href: string; label: string; icon: IconName }[] = [
 ];
 const MORE: { href: string; label: string; icon: IconName }[] = [
   { href: "/analytics", label: "Analytics", icon: "chart" },
+  { href: "/learn", label: "Learn", icon: "spark" },
   { href: "/connections", label: "Accounts", icon: "link" },
   { href: "/queue", label: "Queue", icon: "queue" },
   { href: "/settings", label: "Settings", icon: "settings" },
