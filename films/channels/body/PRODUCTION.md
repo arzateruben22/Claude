@@ -12,6 +12,16 @@ These five feed the first long-form compilation (with episode 1).
 | 05 | Where breath goes | reviewed · voiced (74.4 s, lint 0 errors) · direction + scene written (compile passing); first looks wait for Chromium |
 | 06 | The exit | not started |
 
+## Paused (25 Oct, 23:15 UTC, the user's request) — how to resume
+1. Episode 2's final was left rendering (detached; resumable). Check: `ps -eo args | grep "[r]ender.mjs"`; if it
+   stopped, a bare `kits/cinema/film/run.sh films/channels/body/ep02` resumes it. When it ends: assemble with
+   `--audio build/audio/mix.wav`, copy the contact sheet to `out/`, run `qa.py` and `scorecard.py`, write
+   `review/scorecard.md`, commit ("final delivered").
+2. Episode 3: `render.mjs --cues` + compile + soundtrack (the race label was staggered), ten final stills, fixes,
+   then its final.
+3. Episodes 4 and 5: first looks (`qa/peek.mjs`), fixes, cues, soundtrack, stills, finals — one Chromium job at a time.
+4. Episode 6 after episode 5 ships.
+
 ## Picture rules (WRITING.md "The picture", merged 25 Oct from the coordinating session)
 Applied from episode 2 on: a spine readout through each episode (its label names the beat); the body
 locator as the human-scale anchor; every beat changes the picture; the last frame irises back to frame 0's
