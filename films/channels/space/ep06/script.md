@@ -42,7 +42,7 @@ vo: So your speed has no single answer. {c15} First ask: compared to *what*? {c1
 vo: *Light time*, across your galactic trip so far: about a twentieth of a second. {c11} To the galaxy's center: about twenty-seven thousand years. {c12}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (68.5–74.5 s)
-vo: Next: trees on Earth, or stars in our galaxy. {-} Which are there *more* of? {-}
+vo: Next: more trees on Earth, or stars in our *galaxy*? {-}
 end card: "Next light: trees or *stars*" · "Light Minute · No. 007"
 
 ## Notes
