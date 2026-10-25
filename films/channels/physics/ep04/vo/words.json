@@ -1,0 +1,1057 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Which lands first? A geology hammer, or a falcon feather?",
+   "heard": "Which lands first, a geology hammer or a falcon feather?",
+   "words": [
+    {
+     "w": "Which",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "lands",
+     "start": 0.2,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "first?",
+     "start": 0.63,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.435,
+     "end": 1.485,
+     "heard": true
+    },
+    {
+     "w": "geology",
+     "start": 1.52,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "hammer,",
+     "start": 2.09,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 2.525,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.725,
+     "end": 2.775,
+     "heard": true
+    },
+    {
+     "w": "falcon",
+     "start": 2.76,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "feather?",
+     "start": 3.225,
+     "end": 3.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
+   "heard": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 0.235,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 0.655,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 1.055,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "contest.",
+     "start": 1.085,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "From",
+     "start": 2.235,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "shoulder",
+     "start": 2.485,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "height,",
+     "start": 2.79,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.305,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "hammer",
+     "start": 3.335,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "lands",
+     "start": 3.735,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.145,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.315,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 4.445,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.625,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 4.985,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 5.645,
+     "end": 5.695,
+     "heard": true
+    },
+    {
+     "w": "feather",
+     "start": 5.675,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.115,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 6.335,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "halfway.",
+     "start": 6.715,
+     "end": 7.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Now take the air away. On the Moon, in nineteen seventy-one, astronaut David Scott dropped both. They landed together. \"Mister Galileo was correct in his findings,\" he said.",
+   "heard": "Now take the air away. On the moon in 1971, astronaut David Scott dropped both. They landed together. Mr. Galileo was correct in his findings, he said.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 0.325,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.535,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 0.565,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "away.",
+     "start": 0.945,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 1.845,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.875,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "Moon,",
+     "start": 2.08,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.485,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "nineteen",
+     "start": 2.64,
+     "end": 4.0,
+     "heard": false
+    },
+    {
+     "w": "seventy-one,",
+     "start": 2.67,
+     "end": 4.0,
+     "heard": false
+    },
+    {
+     "w": "astronaut",
+     "start": 4.1,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "David",
+     "start": 4.675,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "Scott",
+     "start": 5.055,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "dropped",
+     "start": 5.615,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "both.",
+     "start": 6.03,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 6.74,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "landed",
+     "start": 6.77,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 7.25,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "\"Mister",
+     "start": 8.325,
+     "end": 8.56,
+     "heard": false
+    },
+    {
+     "w": "Galileo",
+     "start": 8.495,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 9.465,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "correct",
+     "start": 9.5,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 9.805,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "his",
+     "start": 10.08,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "findings,\"",
+     "start": 10.115,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "he",
+     "start": 11.02,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "said.",
+     "start": 11.05,
+     "end": 11.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "For nearly two thousand years, most scholars followed Aristotle: heavier things fall faster. Gravity does pull the hammer harder. But a heavier thing is harder to speed up, by exactly as much. So without air, they tie.",
+   "heard": "For nearly 2,000 years, most scholars followed Aristotle. Heavier things fall faster. Gravity does pull the hammer harder. But a heavier thing is harder to speed up by exactly as much. So without air, they tie.",
+   "words": [
+    {
+     "w": "For",
+     "start": 0.03,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.475,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 0.555,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "years,",
+     "start": 1.235,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 1.505,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "scholars",
+     "start": 1.84,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "followed",
+     "start": 2.495,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "Aristotle:",
+     "start": 2.93,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "heavier",
+     "start": 4.065,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "things",
+     "start": 4.485,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 4.805,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "faster.",
+     "start": 5.095,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "Gravity",
+     "start": 6.195,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 6.71,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "pull",
+     "start": 7.01,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.215,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "hammer",
+     "start": 7.33,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "harder.",
+     "start": 7.855,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 8.535,
+     "end": 8.585,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.565,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "heavier",
+     "start": 8.705,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "thing",
+     "start": 9.135,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.36,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "harder",
+     "start": 9.55,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 9.81,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 10.085,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "up,",
+     "start": 10.41,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 10.72,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 11.02,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 11.61,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "much.",
+     "start": 11.85,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 12.47,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "without",
+     "start": 12.5,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "air,",
+     "start": 13.0,
+     "end": 13.44,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 13.48,
+     "end": 13.6,
+     "heard": true
+    },
+    {
+     "w": "tie.",
+     "start": 13.69,
+     "end": 14.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "How exact is exactly? Starting in twenty sixteen, a satellite let two metals fall around Earth for months. They matched to within a few parts in a million billion.",
+   "heard": "How exact is exactly? Starting in 2016, a satellite let two metals fall around Earth for months. They matched to within a few parts in a million billion.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "exact",
+     "start": 0.335,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.63,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "exactly?",
+     "start": 0.845,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Starting",
+     "start": 1.945,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.2,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 2.565,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "sixteen,",
+     "start": 2.595,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 3.645,
+     "end": 3.695,
+     "heard": true
+    },
+    {
+     "w": "satellite",
+     "start": 3.675,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 4.34,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 4.59,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "metals",
+     "start": 4.68,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 5.255,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 5.6,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 5.835,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 6.17,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "months.",
+     "start": 6.415,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 7.21,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "matched",
+     "start": 7.24,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.765,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "within",
+     "start": 7.795,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.195,
+     "end": 8.245,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 8.225,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "parts",
+     "start": 8.41,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 8.73,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.8,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 8.935,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "billion.",
+     "start": 9.45,
+     "end": 9.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: on the Moon, that drop takes about one point four seconds. On Earth, under six tenths.",
+   "heard": "Measure it. On the moon, that drop takes about 1.4 seconds. On Earth, under 6 tenths.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.955,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.985,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Moon,",
+     "start": 1.29,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 1.655,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 1.895,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 2.21,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.34,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.61,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 2.64,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "four",
+     "start": 2.67,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "seconds.",
+     "start": 3.585,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 4.52,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 4.69,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 5.04,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 5.37,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "tenths.",
+     "start": 5.615,
+     "end": 6.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Gravity treats them equally. Only the air tells them apart.",
+   "heard": "Gravity treats them equally. Only the air tells them apart.",
+   "words": [
+    {
+     "w": "Gravity",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "treats",
+     "start": 0.44,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 0.775,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "equally.",
+     "start": 1.09,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "Only",
+     "start": 1.845,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.16,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 2.305,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "tells",
+     "start": 2.565,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 2.87,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "apart.",
+     "start": 3.08,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: a spinning office chair. Pull in your arms, and you accelerate. Why?",
+   "heard": "Next, a spinning office chair. Pull in your arms and you accelerate. Why?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.61,
+     "end": 0.66,
+     "heard": true
+    },
+    {
+     "w": "spinning",
+     "start": 0.735,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "office",
+     "start": 1.12,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "chair.",
+     "start": 1.335,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Pull",
+     "start": 2.075,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.12,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.46,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "arms,",
+     "start": 2.49,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.915,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.945,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "accelerate.",
+     "start": 3.22,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "Why?",
+     "start": 4.15,
+     "end": 4.48,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
