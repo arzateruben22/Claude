@@ -21,9 +21,9 @@ delivered).
 | # | Title | State |
 |---|---|---|
 | 02 | The swing's secret | scripted · reviewed (7/10; fixes applied) · voiced (172 words, 71.7 s; lint 0 errors before and after) · built · stills OK · **rendering** (final, started 22:21 UTC 25 Oct) |
-| 03 | Where does the bounce go? | — |
-| 04 | The hammer and the feather | — |
-| 05 | The spinning chair | — |
+| 03 | Where does the bounce go? | scripted · reviewed (7/10; fixes applied: "squashes flat", "motion doesn't vanish", "never loses energy" corrected) · voiced (153 words, 66.9 s; lint 0 errors before and after) · compile and scene written; animatic waits for ep02's final (one Chromium job) |
+| 04 | The hammer and the feather | scripted · reviewed (6.5/10; fixes applied: wrong takeaway, MICROSCOPE dates 2016–18, "a few parts" in 10¹⁵) · voiced (166 words, 72.0 s; lint 0 errors before and after) · compile and scene written |
+| 05 | The spinning chair | scripted (lint 0 errors) · in review · set: spin model (`spin.js`, checked against its port and a brute integral) and the chair with a mannequin (`chair.js`) |
 | 06 | The ten-metre straw | — (after 05 is delivered) |
 
 ## New in the channel set (`set/`)
@@ -31,8 +31,13 @@ delivered).
 - `swing.js`: B6, the exact simple pendulum (Jacobi elliptic functions by the AGM), plus a mass on a spring.
   Checked against a numeric integration: under 1e-9 rad at 10°, 30° and 80°.
 - `pendulum.js`: the gantry prop (beam, post and arm, clamps, ink strings, brass bobs), for any number of pendulums.
-- `bench_py.py`: the Python ports the compilers share: `Clock` (clock.js, copied from ep01's compiler) and
-  `Pendulum` (swing.js).
+- `bench_py.py`: the Python ports the compilers share: `Clock` (clock.js, copied from ep01's compiler),
+  `Pendulum` (swing.js) and `Spinner` (spin.js).
+- `ink.js`: line drawings standing in the set (a hand, Joule's paddle-wheel apparatus; helpers for more).
+- `balls.js`: a basketball and the closed-form stacked drop (perfect or lossy bounces).
+- `moon.js`: the bible's Moon dressing (a regolith floor faded in over the paper cyc), a geological hammer, a falcon feather.
+- `spin.js`: a spin whose moment of inertia changes, angular momentum conserved.
+- `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms).
 
 ## Kit changes
 

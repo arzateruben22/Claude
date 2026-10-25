@@ -1,0 +1,504 @@
+{
+ "duration": 72.0,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.2667,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.2667,
+   "t1": 12.2667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 12.2667,
+   "t1": 24.2667,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 24.2667,
+   "t1": 40.8,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 40.8,
+   "t1": 54.1333,
+   "energy": 0.8
+  },
+  {
+   "id": "measure",
+   "t0": 54.1333,
+   "t1": 61.0667,
+   "energy": 0.3
+  },
+  {
+   "id": "takeaway",
+   "t0": 61.0667,
+   "t1": 65.3333,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 65.3333,
+   "t1": 72.0,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.2667
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 1.6333,
+   "kind": "strobe",
+   "tag": "hook:g8"
+  },
+  {
+   "t": 2.2,
+   "kind": "label",
+   "tag": "hk-hammer"
+  },
+  {
+   "t": 3.3333,
+   "kind": "time.slow",
+   "tag": "hook:freeze"
+  },
+  {
+   "t": 3.3333333333333335,
+   "kind": "label",
+   "tag": "hk-feather"
+  },
+  {
+   "t": 4.2667,
+   "kind": "section",
+   "id": "normal",
+   "t1": 12.2667
+  },
+  {
+   "t": 4.550033,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 4.85,
+   "kind": "badge",
+   "tag": "drift",
+   "text": "Illustration: the feather's drift"
+  },
+  {
+   "t": 7.1155,
+   "kind": "contact",
+   "tag": "earth:release"
+  },
+  {
+   "t": 7.1155,
+   "kind": "strobe",
+   "tag": "earth:g0"
+  },
+  {
+   "t": 7.5155,
+   "kind": "strobe",
+   "tag": "earth:g2"
+  },
+  {
+   "t": 7.9155,
+   "kind": "strobe",
+   "tag": "earth:g4"
+  },
+  {
+   "t": 8.3155,
+   "kind": "strobe",
+   "tag": "earth:g6"
+  },
+  {
+   "t": 8.7155,
+   "kind": "strobe",
+   "tag": "earth:g8"
+  },
+  {
+   "t": 9.1155,
+   "kind": "strobe",
+   "tag": "earth:g10"
+  },
+  {
+   "t": 9.4,
+   "kind": "impact",
+   "tag": "earth:hammer"
+  },
+  {
+   "t": 9.4,
+   "kind": "label",
+   "tag": "nm-land"
+  },
+  {
+   "t": 9.77,
+   "kind": "time.slow",
+   "tag": "earth:freeze"
+  },
+  {
+   "t": 11.1,
+   "kind": "label",
+   "tag": "nm-half"
+  },
+  {
+   "t": 12.250033,
+   "kind": "counter.tick",
+   "tag": "spine:both, on the Moon"
+  },
+  {
+   "t": 12.2667,
+   "kind": "section",
+   "id": "change",
+   "t1": 24.2667
+  },
+  {
+   "t": 12.4,
+   "kind": "swell",
+   "tag": "moon:arrive"
+  },
+  {
+   "t": 13.3,
+   "kind": "badge",
+   "tag": "moon",
+   "text": "Gravity 1.62 m/s², a sixth of Earth's. No air."
+  },
+  {
+   "t": 18.1945,
+   "kind": "contact",
+   "tag": "moon:release"
+  },
+  {
+   "t": 18.1945,
+   "kind": "strobe",
+   "tag": "moon:g0"
+  },
+  {
+   "t": 18.4945,
+   "kind": "strobe",
+   "tag": "moon:g3"
+  },
+  {
+   "t": 18.7945,
+   "kind": "strobe",
+   "tag": "moon:g6"
+  },
+  {
+   "t": 19.0945,
+   "kind": "strobe",
+   "tag": "moon:g9"
+  },
+  {
+   "t": 19.3945,
+   "kind": "strobe",
+   "tag": "moon:g12"
+  },
+  {
+   "t": 19.6,
+   "kind": "bounce",
+   "tag": "moon:both"
+  },
+  {
+   "t": 19.6,
+   "kind": "label",
+   "tag": "ch-together"
+  },
+  {
+   "t": 19.6,
+   "kind": "reveal",
+   "tag": "together"
+  },
+  {
+   "t": 20.7,
+   "kind": "badge",
+   "tag": "scott",
+   "text": "\"Mr Galileo was correct in his findings.\""
+  },
+  {
+   "t": 24.250033,
+   "kind": "counter.tick",
+   "tag": "spine:each one's acceleration"
+  },
+  {
+   "t": 24.2667,
+   "kind": "section",
+   "id": "why",
+   "t1": 40.8
+  },
+  {
+   "t": 30.7333,
+   "kind": "badge",
+   "tag": "notscale",
+   "text": "Arrows not to scale between the two"
+  },
+  {
+   "t": 30.733333333333334,
+   "kind": "label",
+   "tag": "wy-pull"
+  },
+  {
+   "t": 35.4224,
+   "kind": "contact",
+   "tag": "why:release"
+  },
+  {
+   "t": 35.4224,
+   "kind": "strobe",
+   "tag": "why:g0"
+  },
+  {
+   "t": 35.56666666666667,
+   "kind": "label",
+   "tag": "wy-acc"
+  },
+  {
+   "t": 35.8224,
+   "kind": "strobe",
+   "tag": "why:g2"
+  },
+  {
+   "t": 36.2224,
+   "kind": "strobe",
+   "tag": "why:g4"
+  },
+  {
+   "t": 36.6224,
+   "kind": "strobe",
+   "tag": "why:g6"
+  },
+  {
+   "t": 37.0224,
+   "kind": "strobe",
+   "tag": "why:g8"
+  },
+  {
+   "t": 37.4224,
+   "kind": "strobe",
+   "tag": "why:g10"
+  },
+  {
+   "t": 37.8224,
+   "kind": "strobe",
+   "tag": "why:g12"
+  },
+  {
+   "t": 38.2224,
+   "kind": "strobe",
+   "tag": "why:g14"
+  },
+  {
+   "t": 38.2333,
+   "kind": "bounce",
+   "tag": "why:both"
+  },
+  {
+   "t": 38.233333333333334,
+   "kind": "label",
+   "tag": "wy-tie"
+  },
+  {
+   "t": 40.783333,
+   "kind": "counter.tick",
+   "tag": "spine:difference, titanium vs platinum"
+  },
+  {
+   "t": 40.8,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.1333
+  },
+  {
+   "t": 41.2833,
+   "kind": "badge",
+   "tag": "orbit",
+   "text": "Illustration: Earth and the orbit"
+  },
+  {
+   "t": 44.766666666666666,
+   "kind": "label",
+   "tag": "wo-sat"
+  },
+  {
+   "t": 50.53333333333333,
+   "kind": "reveal",
+   "tag": "billion"
+  },
+  {
+   "t": 54.116633,
+   "kind": "counter.tick",
+   "tag": "spine:the drop, Moon"
+  },
+  {
+   "t": 54.1333,
+   "kind": "section",
+   "id": "measure",
+   "t1": 61.0667
+  },
+  {
+   "t": 56.5279,
+   "kind": "contact",
+   "tag": "measure:release"
+  },
+  {
+   "t": 56.5279,
+   "kind": "strobe",
+   "tag": "measure:g0"
+  },
+  {
+   "t": 56.8279,
+   "kind": "strobe",
+   "tag": "measure:g3"
+  },
+  {
+   "t": 57.1279,
+   "kind": "strobe",
+   "tag": "measure:g6"
+  },
+  {
+   "t": 57.4279,
+   "kind": "strobe",
+   "tag": "measure:g9"
+  },
+  {
+   "t": 57.7279,
+   "kind": "strobe",
+   "tag": "measure:g12"
+  },
+  {
+   "t": 57.9333,
+   "kind": "bounce",
+   "tag": "measure:both"
+  },
+  {
+   "t": 57.93333333333333,
+   "kind": "counter.end",
+   "tag": "spine:moon"
+  },
+  {
+   "t": 58.86666666666667,
+   "kind": "counter.tick",
+   "tag": "spine:the same drop, Earth"
+  },
+  {
+   "t": 61.0667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 65.3333
+  },
+  {
+   "t": 65.3333,
+   "kind": "section",
+   "id": "tease",
+   "t1": 72.0
+  },
+  {
+   "t": 65.6222,
+   "kind": "contact",
+   "tag": "loop:release"
+  },
+  {
+   "t": 65.6222,
+   "kind": "strobe",
+   "tag": "loop:g0"
+  },
+  {
+   "t": 67.6333,
+   "kind": "strobe",
+   "tag": "loop:g2"
+  },
+  {
+   "t": 69.6333,
+   "kind": "strobe",
+   "tag": "loop:g4"
+  },
+  {
+   "t": 70.5,
+   "kind": "signature",
+   "tag": "end"
+  },
+  {
+   "t": 71.6333,
+   "kind": "strobe",
+   "tag": "loop:g6"
+  },
+  {
+   "t": 73.6333,
+   "kind": "strobe",
+   "tag": "loop:g8"
+  },
+  {
+   "t": 75.6333,
+   "kind": "strobe",
+   "tag": "loop:g10"
+  },
+  {
+   "t": 77.6333,
+   "kind": "strobe",
+   "tag": "loop:g12"
+  },
+  {
+   "t": 79.6333,
+   "kind": "strobe",
+   "tag": "loop:g14"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.4,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 12.366666666666667,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 24.533333333333335,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 41.1,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 54.333333333333336,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.36666666666667,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 65.63333333333334,
+   "file": "vo/08.wav"
+  }
+ ]
+}

@@ -4,6 +4,7 @@
              Node by each episode's qa/clockcheck.mjs
   Pendulum   set/swing.js (the exact simple pendulum, Jacobi elliptic functions), checked against it in Node
              by ep02/qa/swingcheck.mjs
+  Spinner    set/spin.js (a spin whose moment of inertia changes; angular momentum conserved)
 
     sys.path.insert(0, str(HERE.parent / "set")); from bench_py import Clock, Pendulum, period_ratio
 """
@@ -147,3 +148,45 @@ class Pendulum:
     def pos(self, tau):
         a = self.theta(tau)
         return [self.pivot[0] + self.L * math.sin(a), self.pivot[1] - self.L * math.cos(a), self.pivot[2]]
+
+
+class Spinner:
+    """set/spin.js: a body whose moment of inertia changes as two weights are pulled in (SI units, friction ignored)."""
+
+    def __init__(self, I0=2.0, m=2.0, mArm=0.0, rS=0.19, rOut=0.8, rIn=0.2, w0=math.pi, pull=(1.0, 1.6), N=600):
+        self.I0, self.m, self.rOut, self.rIn, self.w0, self.t0, self.t1, self.N = I0, m, rOut, rIn, w0, pull[0], pull[1], N
+        self.mArm, self.rS = mArm, rS
+        self.d = self.t1 - self.t0
+        self.L = self.Ir(rOut) * w0
+        self.ratio = self.Ir(rOut) / self.Ir(rIn)
+        self.tab = [0.0]
+        for i in range(1, N + 1):
+            a, b = self.t0 + self.d * (i - 1) / N, self.t0 + self.d * i / N
+            self.tab.append(self.tab[-1] + (b - a) / 6 * (self.omega(a) + 4 * self.omega((a + b) / 2) + self.omega(b)))
+
+    def r(self, tau):
+        if tau <= self.t0:
+            return self.rOut
+        if tau >= self.t1:
+            return self.rIn
+        u = (tau - self.t0) / self.d
+        return self.rOut + (self.rIn - self.rOut) * u * u * (3 - 2 * u)
+
+    def Ir(self, x):
+        return self.I0 + 2 * self.m * x * x + 2 * self.mArm * (self.rS ** 2 + self.rS * x + x * x) / 3
+
+    def omega(self, tau):
+        return self.L / self.Ir(self.r(tau))
+
+    def phi(self, tau):
+        if tau <= 0:
+            return 0.0
+        if tau <= self.t0:
+            return self.w0 * tau
+        if tau <= self.t1:
+            x = (tau - self.t0) / self.d * self.N
+            i = min(self.N - 1, int(math.floor(x)))
+            a = self.t0 + self.d * i / self.N
+            h = tau - a
+            return self.w0 * self.t0 + self.tab[i] + h / 6 * (self.omega(a) + 4 * self.omega(a + h / 2) + self.omega(tau))
+        return self.w0 * self.t0 + self.tab[self.N] + self.omega(self.t1) * (tau - self.t1)
