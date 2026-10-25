@@ -8,8 +8,8 @@ These five feed the first long-form compilation (with episode 1).
 |---|---|---|
 | 02 | A billion passengers | reviewed · voiced (72.8 s, lint 0/0) · built · stills OK · **rendering** final (started 25 Oct 22:26 UTC) · soundtrack −14.1 LUFS / −1.9 dBTP, sync PASS, voice 15.9 LU over music |
 | 03 | The jump | reviewed (6/10 → fixes applied) · voiced (74.8 s, 175 words, lint 0/0) · built (compile + scene; soundtrack −14.1 LUFS, one label staggered for sync) · stills next, after the ep02 final frees Chromium |
-| 04 | The gap | reviewed (6/10 → fixes applied) · voiced (74.0 s, 163 words, lint 0/0 voiced; Golgi and Ramón y Cajal fixed in pron.json) · direction next |
-| 05 | Where breath goes | not started |
+| 04 | The gap | reviewed · voiced (74.0 s, lint 0/0) · direction + scene written (compile passing); first looks wait for Chromium |
+| 05 | Where breath goes | scripted (159 words, lint 0/0) · independent review running |
 | 06 | The exit | not started |
 
 ## Picture rules (WRITING.md "The picture", merged 25 Oct from the coordinating session)

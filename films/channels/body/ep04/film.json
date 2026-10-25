@@ -1,0 +1,1746 @@
+{
+ "id": "meanwhile-inside-004",
+ "fps": 30,
+ "bpm": 75,
+ "dur": 74.0,
+ "poster": 0.0,
+ "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "syn"
+  },
+  {
+   "at": 67.583333,
+   "name": "sac"
+  },
+  {
+   "at": 71.983333,
+   "name": "loop"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.2,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 5.2,
+   "t1": 14.4,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.4,
+   "t1": 25.6,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6,
+   "t1": 41.6,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 41.6,
+   "t1": 53.2,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.2,
+   "t1": 59.2,
+   "line": "vo06",
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 59.2,
+   "t1": 67.6,
+   "line": "vo07",
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 67.6,
+   "t1": 74.0,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "iris": [
+  {
+   "t": 67.583333,
+   "cx": 0.5,
+   "cy": 0.42
+  },
+  {
+   "t": 71.983333,
+   "cx": 0.5,
+   "cy": 0.42
+  }
+ ],
+ "sharp": [
+  28.4,
+  29.933333333333334
+ ],
+ "rel": {
+  "sig": [
+   30.433333333333334,
+   32.93333333333333
+  ],
+  "ca": [
+   33.8,
+   35.03333333333333
+  ],
+  "spill": [
+   35.833333333333336,
+   36.86666666666667
+  ],
+  "drift": [
+   37.6,
+   38.7
+  ],
+  "post": 38.63333333333333
+ },
+ "replay": [
+  41.833333333333336,
+  44.733333333333334
+ ],
+ "use": {
+  "t0": 45.13333333333333,
+  "beats": [
+   45.1333,
+   45.7533,
+   46.3733,
+   46.9933,
+   47.6133,
+   48.2333,
+   48.8533,
+   49.4733,
+   50.0933,
+   50.7133,
+   51.3333,
+   51.9533,
+   52.5733
+  ],
+  "grow": [
+   45.56666666666667,
+   49.333333333333336
+  ]
+ },
+ "breaths": [
+  60.0,
+  64.0
+ ],
+ "panels": {
+  "t0": 14.55,
+  "golgi": 16.5,
+  "cajal": 18.9,
+  "t1": 25.5,
+  "nobel": 22.133333333333333
+ },
+ "loc": {
+  "t0": 59.6,
+  "t1": 67.283333,
+  "region": [
+   0.5,
+   0.36
+  ]
+ },
+ "cam": {
+  "syn": [
+   {
+    "t": 0.0,
+    "pos": [
+     2.0,
+     4.0,
+     46.0
+    ],
+    "look": [
+     7.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 3.8666666666666667,
+    "pos": [
+     1.0,
+     3.0,
+     42.0
+    ],
+    "look": [
+     7.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 6.633333333333334,
+    "pos": [
+     -120.0,
+     80.0,
+     420.0
+    ],
+    "look": [
+     -60.0,
+     30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 10.433333333333334,
+    "pos": [
+     -40.0,
+     60.0,
+     980.0
+    ],
+    "look": [
+     -20.0,
+     20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 12.266666666666667,
+    "pos": [
+     -30.0,
+     50.0,
+     940.0
+    ],
+    "look": [
+     -20.0,
+     20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 13.333333333333334,
+    "pos": [
+     2.0,
+     4.0,
+     50.0
+    ],
+    "look": [
+     7.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p3"
+   },
+   {
+    "t": 28.4,
+    "pos": [
+     3.0,
+     3.0,
+     44.0
+    ],
+    "look": [
+     7.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 30.333333333333332,
+    "pos": [
+     4.0,
+     2.0,
+     36.0
+    ],
+    "look": [
+     8.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 30.433333333333334,
+    "pos": [
+     -14.0,
+     6.0,
+     52.0
+    ],
+    "look": [
+     -6.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 33.8,
+    "pos": [
+     4.0,
+     3.0,
+     34.0
+    ],
+    "look": [
+     6.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 38.7,
+    "pos": [
+     7.0,
+     2.0,
+     30.0
+    ],
+    "look": [
+     9.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 41.6,
+    "pos": [
+     8.0,
+     1.5,
+     28.0
+    ],
+    "look": [
+     10.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 44.93333333333333,
+    "pos": [
+     6.0,
+     4.0,
+     40.0
+    ],
+    "look": [
+     9.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 47.06666666666667,
+    "pos": [
+     80.0,
+     60.0,
+     700.0
+    ],
+    "look": [
+     60.0,
+     20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 53.2,
+    "pos": [
+     70.0,
+     50.0,
+     660.0
+    ],
+    "look": [
+     60.0,
+     20.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 55.4,
+    "pos": [
+     2.0,
+     3.0,
+     40.0
+    ],
+    "look": [
+     8.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p3"
+   },
+   {
+    "t": 59.2,
+    "pos": [
+     3.0,
+     6.0,
+     52.0
+    ],
+    "look": [
+     8.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 67.583333,
+    "pos": [
+     4.0,
+     8.0,
+     60.0
+    ],
+    "look": [
+     8.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "sac": [
+   {
+    "t": 67.583333,
+    "pos": [
+     3000.0,
+     20.0,
+     200.0
+    ],
+    "look": [
+     3000.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 71.983333,
+    "pos": [
+     3000.0,
+     14.0,
+     160.0
+    ],
+    "look": [
+     3000.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "loop": [
+   {
+    "t": 71.983333,
+    "pos": [
+     2.0,
+     4.0,
+     46.0
+    ],
+    "look": [
+     7.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34
+   }
+  ]
+ },
+ "foc": {
+  "syn": [
+   {
+    "t": 0.0,
+    "at": "behind",
+    "f": 0.9
+   },
+   {
+    "t": 6.433333333333334,
+    "at": "net",
+    "f": 0.25
+   },
+   {
+    "t": 12.933333333333334,
+    "at": "behind",
+    "f": 0.9
+   },
+   {
+    "t": 28.4,
+    "at": "behind",
+    "f": 0.9
+   },
+   {
+    "t": 29.933333333333334,
+    "at": "gap",
+    "f": 0.45
+   },
+   {
+    "t": 45.333333333333336,
+    "at": "net",
+    "f": 0.25
+   },
+   {
+    "t": 55.0,
+    "at": "gap",
+    "f": 0.45
+   }
+  ],
+  "sac": [
+   {
+    "t": 67.583333,
+    "at": "sac",
+    "f": 0.35
+   }
+  ],
+  "loop": [
+   {
+    "t": 71.983333,
+    "at": "behind",
+    "f": 0.9
+   }
+  ]
+ },
+ "labels": [
+  {
+   "id": "gap",
+   "text": "the gap",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "gap",
+   "t0": 29.9,
+   "t1": 30.233333333333334,
+   "shot": "syn",
+   "side": 1
+  },
+  {
+   "id": "tip",
+   "text": "nerve ending",
+   "color": "text",
+   "mark": "dot",
+   "at": "tip",
+   "t0": 32.93333333333333,
+   "t1": 33.699999999999996,
+   "shot": "syn",
+   "side": -1
+  },
+  {
+   "id": "ca",
+   "text": "calcium",
+   "glyph": "Ca²⁺",
+   "color": "bone",
+   "mark": "ring",
+   "at": "ca",
+   "t0": 33.9,
+   "t1": 35.833333333333336,
+   "shot": "syn",
+   "side": -1
+  },
+  {
+   "id": "ves",
+   "text": "sacs of messenger",
+   "color": "lining",
+   "mark": "dot",
+   "at": "ves",
+   "t0": 35.666666666666664,
+   "t1": 37.6,
+   "shot": "syn",
+   "side": -1
+  },
+  {
+   "id": "rec",
+   "text": "receptors on the next cell",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "rec",
+   "t0": 38.333333333333336,
+   "t1": 41.4,
+   "shot": "syn",
+   "side": 1
+  },
+  {
+   "id": "used",
+   "text": "used often: stronger",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "used",
+   "t0": 47.36666666666667,
+   "t1": 53.0,
+   "shot": "syn",
+   "side": 1
+  },
+  {
+   "id": "gap2",
+   "text": "the gap",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "gap",
+   "t0": 56.53333333333333,
+   "t1": 59.6,
+   "shot": "syn",
+   "side": 1
+  }
+ ],
+ "spine": [
+  {
+   "id": "q",
+   "t0": 0.0,
+   "t1": 8.333333333333334,
+   "text": "?",
+   "unit": "",
+   "label": "touching?"
+  },
+  {
+   "id": "count",
+   "t0": 9.766666666666667,
+   "t1": 14.1,
+   "text": "100+ trillion",
+   "unit": "",
+   "label": "junctions in your brain, estimated"
+  },
+  {
+   "id": "width",
+   "t0": 30.3,
+   "t1": 30.333333333333332,
+   "text": "20–50",
+   "unit": "nm",
+   "label": "the gap, about"
+  },
+  {
+   "id": "hand",
+   "t0": 41.833333333333336,
+   "t1": 44.86666666666667,
+   "keys": [
+    [
+     42.03333333333334,
+     0.0
+    ],
+    [
+     44.733333333333334,
+     0.001
+    ]
+   ],
+   "unit": "s",
+   "label": "the handoff, about",
+   "fmt": 4
+  }
+ ],
+ "badges": [
+  {
+   "id": "nts",
+   "text": "not to scale",
+   "t0": 0.0,
+   "t1": 67.283333
+  },
+  {
+   "id": "ill",
+   "text": "illustration: one stained tissue, two readings",
+   "t0": 14.55,
+   "t1": 25.5
+  },
+  {
+   "id": "slow",
+   "text": "slowed",
+   "t0": 41.833333333333336,
+   "t1": 44.86666666666667
+  },
+  {
+   "id": "nts-sac",
+   "text": "not to scale",
+   "t0": 67.583333,
+   "t1": 72.0
+  }
+ ],
+ "tally": {
+  "t0": 59.5,
+  "t1": 67.333333,
+  "rate": 0.25,
+  "unit": "breaths",
+  "label": "while you watched, at rest",
+  "beats": [
+   60.0,
+   64.0
+  ]
+ },
+ "segBeats": [
+  59.2,
+  60.0,
+  60.8,
+  61.6,
+  62.4,
+  63.2,
+  64.0,
+  64.8,
+  65.6,
+  66.4,
+  67.2
+ ],
+ "title": {
+  "series": "Meanwhile, Inside · No. 04",
+  "title": "Do they *touch*?",
+  "t1": 2.3667,
+  "sig": 0.0,
+  "y": 0.15
+ },
+ "endCard": 72.0,
+ "end": {
+  "t0": 72.0,
+  "title": "Next, inside: *where breath goes*",
+  "next": "Meanwhile, Inside · No. 05",
+  "follow": "Follow Meanwhile, Inside",
+  "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."
+ },
+ "look": {
+  "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
+  "rbc": "#E5334F",
+  "rbc-deep": "#8E2A3F",
+  "tissue": "#F0C9B8",
+  "vessel": "#E9B3A8",
+  "light-hemi-sky": "#DDF3EC",
+  "light-hemi-ground": "#33524A",
+  "light-key": "#FFF1E6",
+  "light-rim": "#CFF5E6",
+  "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+ },
+ "captions": [
+  {
+   "t0": 0.12,
+   "t1": 1.87,
+   "lines": [
+    [
+     [
+      "Do",
+      0.12
+     ],
+     [
+      "your",
+      0.29
+     ],
+     [
+      "nerve",
+      0.5
+     ]
+    ],
+    [
+     [
+      "cells",
+      0.72
+     ],
+     [
+      "touch?",
+      1.12
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.075,
+   "t1": 3.995,
+   "lines": [
+    [
+     [
+      "For",
+      2.075
+     ],
+     [
+      "decades,",
+      2.235
+     ]
+    ],
+    [
+     [
+      "no",
+      2.75
+     ],
+     [
+      "microscope",
+      3.06
+     ],
+     [
+      "could",
+      3.75
+     ],
+     [
+      "show",
+      3.865
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.995,
+   "t1": 4.745,
+   "lines": [
+    [
+     [
+      "it.",
+      3.995
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.54,
+   "t1": 7.94,
+   "lines": [
+    [
+     [
+      "A",
+      5.54
+     ],
+     [
+      "typical",
+      5.685
+     ],
+     [
+      "one",
+      6.105
+     ],
+     [
+      "reaches",
+      6.42
+     ]
+    ],
+    [
+     [
+      "out",
+      6.76
+     ],
+     [
+      "to",
+      7.075
+     ],
+     [
+      "thousands",
+      7.215
+     ],
+     [
+      "of",
+      7.78
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.94,
+   "t1": 8.64,
+   "lines": [
+    [
+     [
+      "others.",
+      7.94
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.64,
+   "t1": 10.84,
+   "lines": [
+    [
+     [
+      "Your",
+      8.64
+     ],
+     [
+      "brain",
+      8.88
+     ],
+     [
+      "holds",
+      9.195
+     ],
+     [
+      "over",
+      9.485
+     ]
+    ],
+    [
+     [
+      "a",
+      9.685
+     ],
+     [
+      "hundred",
+      9.87
+     ],
+     [
+      "trillion",
+      10.245
+     ],
+     [
+      "of",
+      10.81
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.84,
+   "t1": 12.16,
+   "lines": [
+    [
+     [
+      "these",
+      10.84
+     ],
+     [
+      "meeting",
+      11.02
+     ],
+     [
+      "points.",
+      11.41
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.255,
+   "t1": 13.975,
+   "lines": [
+    [
+     [
+      "Up",
+      12.255
+     ],
+     [
+      "close,",
+      12.5
+     ]
+    ],
+    [
+     [
+      "they",
+      12.865
+     ],
+     [
+      "look",
+      13.115
+     ],
+     [
+      "joined.",
+      13.225
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.72,
+   "t1": 17.695,
+   "lines": [
+    [
+     [
+      "Using",
+      14.72
+     ],
+     [
+      "the",
+      15.145
+     ],
+     [
+      "same",
+      15.235
+     ],
+     [
+      "stain,",
+      15.44
+     ]
+    ],
+    [
+     [
+      "Camillo",
+      16.265
+     ],
+     [
+      "Golgi",
+      16.7
+     ],
+     [
+      "saw",
+      17.24
+     ],
+     [
+      "one",
+      17.435
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.695,
+   "t1": 18.995,
+   "lines": [
+    [
+     [
+      "continuous",
+      17.695
+     ],
+     [
+      "web.",
+      18.295
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.995,
+   "t1": 21.99,
+   "lines": [
+    [
+     [
+      "Santiago",
+      18.995
+     ],
+     [
+      "Ramón",
+      19.55
+     ],
+     [
+      "y",
+      19.58
+     ],
+     [
+      "Cajal",
+      19.675
+     ]
+    ],
+    [
+     [
+      "saw",
+      20.75
+     ],
+     [
+      "separate",
+      20.97
+     ],
+     [
+      "cells.",
+      21.24
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.11,
+   "t1": 24.33,
+   "lines": [
+    [
+     [
+      "In",
+      22.11
+     ],
+     [
+      "nineteen",
+      22.14
+     ],
+     [
+      "oh",
+      22.22
+     ],
+     [
+      "six",
+      22.25
+     ]
+    ],
+    [
+     [
+      "they",
+      23.13
+     ],
+     [
+      "shared",
+      23.16
+     ],
+     [
+      "a",
+      23.55
+     ],
+     [
+      "Nobel,",
+      23.58
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.385,
+   "t1": 25.315,
+   "lines": [
+    [
+     [
+      "still",
+      24.385
+     ],
+     [
+      "arguing.",
+      24.565
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.93,
+   "t1": 27.0,
+   "lines": [
+    [
+     [
+      "In",
+      25.93
+     ],
+     [
+      "the",
+      26.14
+     ],
+     [
+      "nineteen",
+      26.22
+     ],
+     [
+      "fifties,",
+      26.25
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.185,
+   "t1": 29.765,
+   "lines": [
+    [
+     [
+      "electron",
+      27.185
+     ],
+     [
+      "microscopes",
+      27.54
+     ]
+    ],
+    [
+     [
+      "finally",
+      28.4
+     ],
+     [
+      "showed",
+      28.95
+     ],
+     [
+      "it:",
+      29.305
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.765,
+   "t1": 30.63,
+   "lines": [
+    [
+     [
+      "a",
+      29.765
+     ],
+     [
+      "gap.",
+      29.89
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.63,
+   "t1": 33.32,
+   "lines": [
+    [
+     [
+      "At",
+      30.63
+     ],
+     [
+      "most",
+      30.74
+     ],
+     [
+      "junctions,",
+      31.095
+     ]
+    ],
+    [
+     [
+      "electricity",
+      31.825
+     ],
+     [
+      "can't",
+      32.565
+     ],
+     [
+      "jump",
+      32.835
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.32,
+   "t1": 33.81,
+   "lines": [
+    [
+     [
+      "it.",
+      33.32
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.81,
+   "t1": 36.375,
+   "lines": [
+    [
+     [
+      "Calcium",
+      33.81
+     ],
+     [
+      "floods",
+      34.335
+     ],
+     [
+      "the",
+      34.805
+     ],
+     [
+      "tip,",
+      34.835
+     ]
+    ],
+    [
+     [
+      "tiny",
+      35.22
+     ],
+     [
+      "sacs",
+      35.66
+     ],
+     [
+      "spill",
+      36.09
+     ],
+     [
+      "a",
+      36.345
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.375,
+   "t1": 39.09,
+   "lines": [
+    [
+     [
+      "chemical",
+      36.375
+     ],
+     [
+      "messenger,",
+      36.66
+     ]
+    ],
+    [
+     [
+      "and",
+      37.765
+     ],
+     [
+      "it",
+      37.795
+     ],
+     [
+      "drifts",
+      37.965
+     ],
+     [
+      "across.",
+      38.34
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.92,
+   "t1": 44.42,
+   "lines": [
+    [
+     [
+      "The",
+      41.92
+     ],
+     [
+      "handoff",
+      42.135
+     ],
+     [
+      "takes",
+      42.63
+     ]
+    ],
+    [
+     [
+      "about",
+      43.06
+     ],
+     [
+      "a",
+      43.22
+     ],
+     [
+      "thousandth",
+      43.42
+     ],
+     [
+      "of",
+      43.945
+     ],
+     [
+      "a",
+      44.265
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.42,
+   "t1": 45.15,
+   "lines": [
+    [
+     [
+      "second.",
+      44.42
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.15,
+   "t1": 47.815,
+   "lines": [
+    [
+     [
+      "Use",
+      45.15
+     ],
+     [
+      "a",
+      45.48
+     ],
+     [
+      "junction,",
+      45.58
+     ],
+     [
+      "and",
+      46.22
+     ]
+    ],
+    [
+     [
+      "it",
+      46.47
+     ],
+     [
+      "can",
+      46.5
+     ],
+     [
+      "grow",
+      46.675
+     ],
+     [
+      "stronger:",
+      47.065
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.99,
+   "t1": 49.88,
+   "lines": [
+    [
+     [
+      "likely",
+      47.99
+     ],
+     [
+      "part",
+      48.45
+     ],
+     [
+      "of",
+      48.665
+     ]
+    ],
+    [
+     [
+      "how",
+      48.695
+     ],
+     [
+      "you",
+      49.035
+     ],
+     [
+      "learn.",
+      49.13
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.53,
+   "t1": 56.14,
+   "lines": [
+    [
+     [
+      "So",
+      53.53
+     ],
+     [
+      "your",
+      53.79
+     ],
+     [
+      "nerve",
+      53.98
+     ],
+     [
+      "cells",
+      54.205
+     ]
+    ],
+    [
+     [
+      "mostly",
+      54.62
+     ],
+     [
+      "don't",
+      55.09
+     ],
+     [
+      "touch.",
+      55.39
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.265,
+   "t1": 58.655,
+   "lines": [
+    [
+     [
+      "They",
+      56.265
+     ],
+     [
+      "talk,",
+      56.525
+     ],
+     [
+      "across",
+      56.88
+     ],
+     [
+      "gaps,",
+      57.355
+     ]
+    ],
+    [
+     [
+      "in",
+      57.645
+     ],
+     [
+      "chemicals.",
+      57.905
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.52,
+   "t1": 61.025,
+   "lines": [
+    [
+     [
+      "Meanwhile,",
+      59.52
+     ]
+    ],
+    [
+     [
+      "as",
+      60.25
+     ],
+     [
+      "you",
+      60.28
+     ],
+     [
+      "watched,",
+      60.53
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.025,
+   "t1": 62.83,
+   "lines": [
+    [
+     [
+      "you",
+      61.025
+     ],
+     [
+      "took",
+      61.16
+     ],
+     [
+      "about",
+      61.365
+     ]
+    ],
+    [
+     [
+      "fifteen",
+      61.575
+     ],
+     [
+      "breaths.",
+      62.08
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.955,
+   "t1": 65.085,
+   "lines": [
+    [
+     [
+      "Each",
+      62.955
+     ],
+     [
+      "began",
+      63.27
+     ],
+     [
+      "in",
+      63.54
+     ],
+     [
+      "your",
+      63.755
+     ]
+    ],
+    [
+     [
+      "brainstem",
+      63.825
+     ],
+     [
+      "and",
+      64.585
+     ],
+     [
+      "crossed",
+      64.73
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.085,
+   "t1": 67.01,
+   "lines": [
+    [
+     [
+      "gaps",
+      65.085
+     ],
+     [
+      "like",
+      65.595
+     ],
+     [
+      "these",
+      65.705
+     ]
+    ],
+    [
+     [
+      "to",
+      66.015
+     ],
+     [
+      "your",
+      66.065
+     ],
+     [
+      "diaphragm.",
+      66.26
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.95,
+   "t1": 69.445,
+   "lines": [
+    [
+     [
+      "Next:",
+      67.95
+     ],
+     [
+      "those",
+      68.37
+     ],
+     [
+      "breaths.",
+      68.695
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.915,
+   "t1": 71.87,
+   "lines": [
+    [
+     [
+      "Where",
+      69.915
+     ],
+     [
+      "does",
+      70.215
+     ],
+     [
+      "all",
+      70.425
+     ]
+    ],
+    [
+     [
+      "that",
+      70.67
+     ],
+     [
+      "air",
+      70.81
+     ],
+     [
+      "go?",
+      71.12
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.383,
+   "file": "vo/01.wav",
+   "text": "Do your nerve cells touch? For decades, no microscope could show it."
+  },
+  {
+   "id": "vo02",
+   "t": 5.5,
+   "dur": 8.449,
+   "file": "vo/02.wav",
+   "text": "A typical one reaches out to thousands of others. Your brain holds over a hundred trillion of these meeting points. Up close, they look joined."
+  },
+  {
+   "id": "vo03",
+   "t": 14.7,
+   "dur": 10.463,
+   "file": "vo/03.wav",
+   "text": "Using the same stain, Camillo Golgi saw one continuous web. Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing."
+  },
+  {
+   "id": "vo04",
+   "t": 25.9,
+   "dur": 12.922,
+   "file": "vo/04.wav",
+   "text": "In the nineteen fifties, electron microscopes finally showed it: a gap. At most junctions, electricity can't jump it. Calcium floods the tip, tiny sacs spill a chemical messenger, and it drifts across."
+  },
+  {
+   "id": "vo05",
+   "t": 41.9,
+   "dur": 7.772,
+   "file": "vo/05.wav",
+   "text": "The handoff takes about a thousandth of a second. Use a junction, and it can grow stronger: likely part of how you learn."
+  },
+  {
+   "id": "vo06",
+   "t": 53.5,
+   "dur": 5.22,
+   "file": "vo/06.wav",
+   "text": "So your nerve cells mostly don't touch. They talk, across gaps, in chemicals."
+  },
+  {
+   "id": "vo07",
+   "t": 59.5,
+   "dur": 7.411,
+   "file": "vo/07.wav",
+   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each began in your brainstem and crossed gaps like these to your diaphragm."
+  },
+  {
+   "id": "vo08",
+   "t": 67.9,
+   "dur": 3.762,
+   "file": "vo/08.wav",
+   "text": "Next: those breaths. Where does all that air go?"
+  }
+ ]
+}

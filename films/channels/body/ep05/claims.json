@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Into about half a billion tiny sacs.",
+  "claim": "An adult's two lungs hold on average about 480 million alveoli (range 274–790 million in six lungs studied).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
+  "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S18; excerpt: mean alveolar number 480 million (range 274–790 million; CV 37%). BioNumbers notes 480 million is for the pair of lungs. 'About half a billion' rounds 480 million (computed); the readout shows 480,000,000 with 'about'."
+ },
+ {
+  "id": "c2",
+  "sentence": "Down your windpipe, the airways split in two, again and again, about twenty-three times.",
+  "claim": "In Weibel's classic model the airways branch dichotomously through about 23 generations from the trachea to the alveolar sacs.",
+  "source_url": "https://taylorandfrancis.com/knowledge/Medicine_and_healthcare/Anatomy/Respiratory_zone",
+  "source_title": "Respiratory zone (Taylor & Francis Knowledge; Weibel's airway model)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 23 dichotomously branching airway generations comprising conducting and respiratory zones; some count 24 depending on whether the trachea is generation 0. A model of an average path; real branching is irregular."
+ },
+ {
+  "id": "c3",
+  "sentence": "At the very ends hang the air sacs, each about a fifth of a millimetre across.",
+  "claim": "The mean volume of a single alveolus is about 4.2 million µm³, a diameter of about 0.2 mm.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
+  "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: the mean size of a single alveolus was rather constant at 4.2 × 10⁶ µm³. Computed: a sphere of that volume has a diameter (6V/π)^(1/3) ≈ 200 µm = a fifth of a millimetre. Alveoli are not spheres; 'about'."
+ },
+ {
+  "id": "c4",
+  "sentence": "For centuries, physicians thought lungs were fleshy, there to cool the heart.",
+  "claim": "In the Galenic tradition the lungs were thought to be fleshy (made of coagulated blood), and their function was held to be cooling the heart; Malpighi overturned both views.",
+  "source_url": "https://www.encyclopedia.com/doc/1G2-2830902791.html",
+  "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: in Galenic medicine the lungs were considered to be made up of coagulated blood; Malpighi held that the lungs did not cool the heart, 'as had previously been supposed'. 'Physicians' is the plain reading of the tradition he overturned."
+ },
+ {
+  "id": "c5",
+  "sentence": "In sixteen sixty-one, Marcello Malpighi looked through a microscope and saw bubbles.",
+  "claim": "In 1661, in De pulmonibus (letters to Borelli), Malpighi showed with a microscope that the lungs have a vesicular (bubble-like) structure, not a fleshy one, and described the capillaries in frog lungs.",
+  "source_url": "https://www.encyclopedia.com/doc/1G2-2830902791.html",
+  "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: using a microscope he showed that the lungs had a vesicular structure rather than being fleshy; the trachea's branches end in the vesicles; in the second letter, frog lungs, he described the capillaries. 'Bubbles' = vesicles (alveoli)."
+ },
+ {
+  "id": "c6",
+  "sentence": "Each sac is wrapped in a net of capillaries.",
+  "claim": "The alveoli are surrounded by a dense network of capillaries where gas exchange takes place.",
+  "source_url": "https://www.jove.com/science-education/10884/",
+  "source_title": "22.4: Gas Exchange and Transport (JoVE Science Education, following OpenStax Anatomy and Physiology 22.4)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (JoVE 22.4): alveoli and capillaries are intertwined and physically touch; both one cell thick, so gas exchange occurs easily. (Malpighi described the capillaries, c5.)"
+ },
+ {
+  "id": "c7",
+  "sentence": "The wall between air and blood is about half a micrometre: far thinner than a red cell.",
+  "claim": "The blood–air barrier is about 0.3–0.5 µm thick (averaging about 0.6 µm in some measurements), against a red cell about 7.5 µm across (episode 1).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
+  "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S19; excerpts: barrier 0.3–0.5 µm; a physiology lecture gives an average about 0.6 µm, as thin as 0.2 µm. 'About half a micrometre' sits in that span. A red cell is 7–8 µm across (episode 1, c2): over ten times wider (computed)."
+ },
+ {
+  "id": "c8",
+  "sentence": "Oxygen simply drifts across.",
+  "claim": "Oxygen moves from the alveolar air into the blood by passive diffusion, down its partial-pressure gradient; no active transport is involved.",
+  "source_url": "https://www.jove.com/science-education/10884/",
+  "source_title": "22.4: Gas Exchange and Transport (JoVE Science Education, following OpenStax Anatomy and Physiology 22.4)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (JoVE 22.4): gas travels from areas of higher partial pressure to lower; oxygen diffuses from the alveoli into the blood. 'Drifts' = diffuses (passive; no pump)."
+ },
+ {
+  "id": "c9",
+  "sentence": "Unfold every sac flat, and they'd cover about seventy square metres.",
+  "claim": "The alveolar (gas-exchange) surface of adult lungs is about 70–100 m²; morphometric estimates run to 120–140 m².",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
+  "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S19 (70–100 m²) and S20 (120–140 m² by morphometry). 'About seventy' is the low, commonly cited figure (a lecture: about 70 m² in a healthy adult male). The readout says about 70 m²."
+ },
+ {
+  "id": "c10",
+  "sentence": "About a third of a tennis court, folded inside your chest.",
+  "claim": "A singles tennis court is 23.77 m × 8.23 m = 195.6 m² (ITF); 70 m² is about 36% of it.",
+  "source_url": "https://en.wikipedia.org/wiki/Tennis_court",
+  "source_title": "Tennis court (Wikipedia, citing the ITF Rules of Tennis)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 78 ft (23.77 m) long, 27 ft (8.23 m) wide for singles (ITF Rules of Tennis). Computed: 23.77 × 8.23 = 195.6 m²; 70 / 195.6 = 0.36, 'about a third'. (At 100 m² it is about half: the comparison is for the 70 m² figure said.)"
+ },
+ {
+  "id": "c11",
+  "sentence": "So your lungs aren't two balloons.",
+  "claim": "The lungs are not hollow bags: their inside is divided into hundreds of millions of alveoli (a spongy, vesicular tissue).",
+  "source_url": "https://www.encyclopedia.com/doc/1G2-2830902791.html",
+  "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "As c1 and c5: vesicular, not hollow and not fleshy. 'Balloons' is the common picture the takeaway corrects."
+ },
+ {
+  "id": "c12",
+  "sentence": "They're a sponge, built to spread air thin.",
+  "claim": "The branching airways and alveoli spread the inhaled air over a very large, very thin surface for diffusion.",
+  "source_url": "https://www.jove.com/science-education/10884/",
+  "source_title": "22.4: Gas Exchange and Transport (JoVE Science Education, following OpenStax Anatomy and Physiology 22.4)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "As c6–c9: the large area (c9) and thin barrier (c7) are what make diffusion fast enough. 'Sponge' is a metaphor for the alveolar structure."
+ },
+ {
+  "id": "c13",
+  "sentence": "Meanwhile, as you watched, about eight litres of air went in and out of you.",
+  "claim": "At rest an adult breathes about 500 mL per breath (tidal volume) about 12–20 times a minute, roughly 5–8 L a minute; the tally uses 7.5 L a minute (500 mL × 15).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK482502/",
+  "source_title": "Physiology, Tidal Volume (StatPearls, NCBI Bookshelf NBK482502)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (StatPearls): tidal volume about 500 mL in an average healthy adult male (about 400 mL in a female). American Lung Association: 12–20 breaths a minute. Computed: 0.5 L × 15 = 7.5 L/min; the line lands near 62 s, about 7.7 L. A JoVE chapter gives 5–8 L/min at rest."
+ },
+ {
+  "id": "c14",
+  "sentence": "Next: a cell that leaves your blood by squeezing through a wall.",
+  "claim": "White blood cells leave the bloodstream by rolling along, arresting on and crawling over the vessel lining, then migrating through the vessel wall (transmigration).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17717539/",
+  "source_title": "Ley et al. 2007, Getting to the site of inflammation: the leukocyte adhesion cascade updated, Nat Rev Immunol (PubMed; bible S22)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S22: rolling, arrest, crawling, then migration through the wall. Episode 6 tells it."
+ }
+]
