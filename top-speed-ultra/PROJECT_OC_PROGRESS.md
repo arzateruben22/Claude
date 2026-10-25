@@ -4,6 +4,39 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-25 (23:35 UTC): the thumbs, wheels and physics in the main game (main link v9); paused by the owner
+
+- **The main game.** The owner asked for this branch's graphics in the game itself. claude/hypercar is merged into
+  local/live-preview, the main game's branch, as ef9f1b1. It was pushed as a fast-forward from the always-on session's
+  8d5ba6c.
+  - **Conflicts:** two only. In PlayerCar.ts the store's paint finish and the cockpit's pause flag are both kept; the
+    progress log keeps both sides. Nothing outside top-speed-ultra/ changed.
+  - **Verified on that build:** tsc and the build clean; boot 6/6, abilities 4/4, survival 8/8, race 6/6, render 15/15,
+    launch 11/11.
+  - **Published** to the main link as **version 9**. The live v8 matched the build of 8d5ba6c exactly (apart from the
+    page wrapper), so nothing in it was lost. The store and the owner unlock are kept.
+  - The always-on session (session_01NkQ41gebWX6mPbmCQZBc81) was told.
+  - **Agreed with that session:** its unreviewed HUD and seat-view work lives on claude/hud-pov and reaches
+    local/live-preview only once kept. Whoever lands last builds and publishes from the tip.
+- **The weekly limit (2026-10-22 ~17:00 to 2026-10-25 22:00 UTC)** stopped the live integration before its judge. The
+  hourly task was switched off while the session ran on overage. At 22:10 the owner said "Keep going", accepting the
+  overage. The integration (fourth start), the Retro finish and overdrive round 3 (face/eyes) were resumed.
+- **Paused by the owner at 23:32 UTC ("Okay take a pause").** All three were stopped before their judges.
+  - **Live integration (integrate/live 48d4262, pushed).** At 48d4262 every core group had passed (boot,
+    interchanges, survival, race, abilities, progression, render, phone, launch; 2026-10-22). The live group passed
+    again in the fourth start. livephone was running; live/ npm test, the story test and the judge had not run.
+  - **Retro (retro/port d21573d, pushed).** It is brought up to date with claude/hypercar. tsc and the build were clean,
+    and the boot, render and phone groups passed in its verify step. The shots, defaults and perf checks and the judge
+    had not finished.
+  - **Face/eyes round 3 (fable/face b5ac6a2, pushed).** The round-3 fixes for the re-judge's defects are uncommitted
+    in its worktree (.claude/worktrees/fable-face). A copy is saved at scratchpad/pause-2335/fable-face.patch, plus
+    morphs.ts.
+    - Done: the beard's side box ramps and the neck step; a leaf morphs.ts for the import cycle; the beard tufts
+      taper; the brow guard.
+    - Not done: the grey-beard speckle; the after shots; the judge.
+  - Hair and body did not start.
+- **Not yet:** claude/always-on is still unconnected; that waits on the integration landing.
+
 ## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
 
 - **The owner (13:38 UTC): "Take a pause once tasks are complete."** The work in flight finishes and lands if judged

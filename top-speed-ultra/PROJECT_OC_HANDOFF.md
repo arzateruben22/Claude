@@ -156,7 +156,19 @@ itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's inte
 
   If (a), apply `scratchpad/fable/physics/after/item1-not-committed/item1-refined-on-d885737.patch` (it applies
   cleanly; the evidence is in the same folder). Fix the harness's backwards-travel drift reading first.
-- **The pause (13:38 UTC): what waits for the owner.**
+- **Paused again 2026-10-25 23:32 UTC (owner: "Okay take a pause").** The main link is v9 (local/live-preview ef9f1b1:
+  the thumbs, wheels and physics).
+  - **To resume:**
+    - the live integration: run wf_2c8b59ec-2f7, still to do livephone, live/ npm test, the story test and its judge;
+    - Retro: run wf_4f0c2956-d09, still to do its shots and perf, then its judge;
+    - face round 3: worktree fable-face with uncommitted fixes; patch in scratchpad/pause-2335.
+  - **After each landing:** merge claude/hypercar into local/live-preview and publish the main link (see the progress
+    log, 2026-10-25).
+  - **Still the owner's to decide:**
+    - hair and body;
+    - physics item 1;
+    - whether to turn on the main link's `downloads` capability (the run card's save).
+- **The pause (13:38 UTC 2026-10-22): what waits for the owner.**
   - Hair and body: plans from their audits, branched from the face head.
   - The Retro finish (`retro/port`, judge pending).
   - **Face/eyes (`fable/face`, b5ac6a2, pushed; not landed).** Round 2 built teeth, beard/goatee/moustache strand
