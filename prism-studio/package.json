@@ -16,6 +16,7 @@
     "import:episodes": "tsx scripts/import-episodes.ts",
     "text:regenerate": "tsx scripts/regenerate-text.ts",
     "text:pack": "tsx scripts/posting-pack.ts",
+    "snapshot": "tsx scripts/snapshot.tsx",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "owner:password": "tsx scripts/owner-password.ts"
