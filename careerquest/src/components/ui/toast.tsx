@@ -33,7 +33,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             {toasts.map((t) => {
               const Icon = t.tone === "success" ? CheckCircle2 : t.tone === "danger" ? XCircle : Info;
               return (
-                <div key={t.id} className={cn("glass-strong rounded-ctl px-3.5 py-3 flex items-start gap-2.5 text-sm animate-rise bg-bg-elevated")}>
+                <div key={t.id} className={cn("glass-solid rounded-ctl px-3.5 py-3 flex items-start gap-2.5 text-sm animate-rise")}>
                   <Icon className={cn("h-4 w-4 mt-0.5 shrink-0", t.tone === "success" && "text-success", t.tone === "danger" && "text-danger", t.tone === "info" && "text-info")} aria-hidden />
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">{t.title}</p>

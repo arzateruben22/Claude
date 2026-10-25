@@ -207,6 +207,13 @@ body {
   -webkit-backdrop-filter: blur(var(--blur));
 }
 
+/* Opaque elevated surface for overlays, dialogs and toasts: content behind must never show through. */
+.glass-solid {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+}
+
 /* Focus ring (keyboard users) */
 :focus-visible {
   outline: 2px solid var(--accent);

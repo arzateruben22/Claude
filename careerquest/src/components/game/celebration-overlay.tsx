@@ -59,7 +59,7 @@ export function CelebrationOverlay({ items }: { items: UnseenAchievement[] }) {
           transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 300, damping: 24 }}
           className="fixed inset-x-4 bottom-24 z-50 mx-auto max-w-sm lg:bottom-8"
         >
-          <div className={cn("glass-strong relative overflow-hidden rounded-card border bg-bg-elevated p-5 shadow-card", tier.ring)}>
+          <div className={cn("glass-solid relative overflow-hidden rounded-card p-5", tier.ring)}>
             <button
               type="button"
               onClick={dismiss}

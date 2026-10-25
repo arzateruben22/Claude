@@ -51,7 +51,7 @@ export function Dialog({
       )}
       aria-labelledby={titleId}
     >
-      <div className={cn("glass-strong rounded-card w-full text-fg shadow-card bg-bg-elevated", className)} onClick={(e) => e.stopPropagation()}>
+      <div className={cn("glass-solid rounded-card w-full text-fg", className)} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between gap-3 px-5 pt-5">
           <div>
             <h2 id={titleId} className="text-base font-semibold">

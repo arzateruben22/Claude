@@ -83,6 +83,18 @@ for (const a of apps) {
   if (!appUrl && /\/applications\/[0-9a-f-]{36}/.test(page.url())) appUrl = new URL(page.url()).pathname.replace(/\?.*$/, "");
 }
 
+// Dismiss the one-time achievement celebration so it does not cover every screenshot.
+async function dismissCelebrations(p) {
+  for (let i = 0; i < 4; i++) {
+    const btn = p.getByRole("button", { name: /dismiss|close|nice!|got it/i }).first();
+    if (!(await btn.isVisible().catch(() => false))) break;
+    await btn.click().catch(() => {});
+    await p.waitForTimeout(400);
+  }
+}
+await page.goto(`${base}/missions/achievements`, { waitUntil: "networkidle" });
+await dismissCelebrations(page);
+
 const shots = [];
 async function shoot(p, name, label, route) {
   const url = route === "__APP__" ? appUrl : route;
