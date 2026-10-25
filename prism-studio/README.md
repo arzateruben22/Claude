@@ -9,6 +9,10 @@ and runs the daily routine through an **Upload Desk**. Publishing is manual unti
 verified (Stage C). It also keeps analytics, milestones and an optional, owner-funded reward budget, and each
 channel has a living creation that evolves with real work.
 
+![Prism Studio on a phone: Home, Upload Desk, Review, Evolution, an unlock, Rewards](docs/preview-phone.png)
+
+![The five creations: forms 1–5, branches, ascended, locked and working states](docs/creations.png)
+
 ## Run it
 
 ```bash
