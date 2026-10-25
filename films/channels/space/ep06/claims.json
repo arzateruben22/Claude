@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Earth spins, so at the equator you're riding at about sixteen hundred seventy kilometers an hour.",
+  "claim": "At the equator, Earth's rotation carries the surface at about 1,670 km/h (NASA Space Place gives 1,675 km/h).",
+  "source_url": "https://spaceplace.nasa.gov/launch-windows/en/",
+  "source_title": "Launch Windows (NASA Space Place)",
+  "accessed": "2026-10-25",
+  "note": "Bible source (§7 #5): 1,675 km/h (1,041 mph). National Geographic (Equator, encyclopedic entry): about 1,670 km/h. Computed: 40,075 km / 23.93 h = 1,674 km/h. Less away from the equator (× cos latitude).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "That's even faster than the speed of sound.",
+  "claim": "Sound travels about 1,225 km/h in air at sea level and 15 °C, so 1,670 km/h is faster than sound.",
+  "source_url": "https://www.nasa.gov/sites/default/files/atoms/files/speed_of_sound_9-12.pdf",
+  "source_title": "Speed of Sound (NASA education sheet, grades 9–12)",
+  "accessed": "2026-10-25",
+  "note": "Excerpt: sea level 340 m/s, 1225 km/h, 761 mph. 1,670 / 1,225 = 1.36 (Mach 1.4). The air moves with the ground, so no sonic boom (not said).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "And Earth circles the Sun at about thirty kilometers every second.",
+  "claim": "Earth's mean orbital speed is 29.78 km/s.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-10-25",
+  "note": "'About thirty kilometers every second'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "Since this began, you've covered over six hundred kilometers.",
+  "claim": "At 29.78 km/s, Earth covers over 600 km in the roughly 21 seconds from the start of the film to this line.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-10-25",
+  "note": "Computed after voicing from the line's time in the film (see compile.py's assert): 29.78 × t ≥ 600 km. Relative to the Sun.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "People once argued that if Earth moved, birds and clouds would be left behind.",
+  "claim": "A traditional argument against a moving Earth (going back to Ptolemy's Almagest) was that objects not attached to it, such as clouds and birds, would be left behind.",
+  "source_url": "https://en.wikipedia.org/wiki/Dialogue_Concerning_the_Two_Chief_World_Systems",
+  "source_title": "Dialogue Concerning the Two Chief World Systems (Wikipedia)",
+  "accessed": "2026-10-25",
+  "note": "The Dialogue's Second Day answers the classic objections to Earth's motion (falling bodies, birds, clouds). Ptolemy, Almagest I.7, gives the clouds-and-birds argument; an astronomer may prefer to cite it directly.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "In sixteen thirty-two, Galileo answered with a ship's cabin.",
+  "claim": "In his Dialogue Concerning the Two Chief World Systems (1632), Galileo described the cabin below decks of a large ship: flies, butterflies, fish in a bowl and dripping water behave the same whether the ship is at rest or moving smoothly.",
+  "source_url": "https://en.wikipedia.org/wiki/Galileo%27s_ship",
+  "source_title": "Galileo's ship (Wikipedia)",
+  "accessed": "2026-10-25",
+  "note": "Excerpt: in the main cabin below decks, flies, butterflies and other small flying animals, a bowl of fish and a dripping bottle behave identically if the ship moves uniformly; the motion is shared by everything, including the air.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "Below deck on calm water, butterflies fly the same, moving or not.",
+  "claim": "Galileo's cabin: the butterflies fly to every side alike whether the ship moves (uniformly, on calm water) or stands still.",
+  "source_url": "https://en.wikipedia.org/wiki/Galileo%27s_ship",
+  "source_title": "Galileo's ship (Wikipedia)",
+  "accessed": "2026-10-25",
+  "note": "Same passage as c6. 'Calm water' = uniform motion, no rocking.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "You feel a change in speed, never the speed itself.",
+  "claim": "Uniform motion in a straight line cannot be detected from inside; only acceleration (a change in speed or direction) can be felt (Galilean relativity).",
+  "source_url": "https://en.wikipedia.org/wiki/Galileo%27s_ship",
+  "source_title": "Galileo's ship (Wikipedia)",
+  "accessed": "2026-10-25",
+  "note": "Earth's spin and orbit are curved motions, so strictly they are accelerations, but far too small to feel: about 0.034 m/s² at the equator for the spin, 0.006 m/s² for the orbit (computed: v²/r).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "Stillness is a feeling, not a fact.",
+  "claim": "You cannot feel steady motion; feeling still says nothing about whether you are moving.",
+  "source_url": "https://en.wikipedia.org/wiki/Galileo%27s_ship",
+  "source_title": "Galileo's ship (Wikipedia)",
+  "accessed": "2026-10-25",
+  "note": "The takeaway, from c7.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "And the Sun carries us around the galaxy at two hundred thirty kilometers a second.",
+  "claim": "The Sun (and the solar system with it) moves around the centre of the Milky Way at about 828,000 km/h (about 230 km/s).",
+  "source_url": "https://science.nasa.gov/solar-system/overview/",
+  "source_title": "Our Solar System: Overview (NASA Science)",
+  "accessed": "2026-10-25",
+  "note": "Excerpt: about 515,000 mph (828,000 km/h). Computed: 828,000 / 3,600 = 230 km/s. Other estimates: Live Science 720,000 km/h. Bible §7 #5 [est.].",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "One lap: two hundred thirty million years.",
+  "claim": "One orbit of the Sun around the galactic centre takes about 230 million years.",
+  "source_url": "https://science.nasa.gov/solar-system/overview/",
+  "source_title": "Our Solar System: Overview (NASA Science)",
+  "accessed": "2026-10-25",
+  "note": "Excerpt: roughly 230 million years to complete one orbit. Chandra (NASA/CXC) gives the same; other estimates 225–250 million.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "Last time we were here, the first dinosaurs were just appearing.",
+  "claim": "The earliest known dinosaurs date to about 230 million years ago (Late Triassic, northwestern Argentina).",
+  "source_url": "https://www.amnh.org/explore/videos/dinosaurs-and-fossils/150-million-years-of-dinosaur-evolution",
+  "source_title": "150 Million Years of Dinosaur Evolution (American Museum of Natural History)",
+  "accessed": "2026-10-25",
+  "note": "Excerpts: the oldest known bones are about 230 million years old (Science News, 'Dawn of the Dinosaurs'); the Natural History Museum (London): the first definitive dinosaurs around 230 million years ago. 'Last time we were here' = one galactic orbit ago (c9); 'here' is where the Sun was relative to the galactic centre, not the same stars (the galaxy's stars move too).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "Light time, across what you've flown while watching: a twentieth of a second.",
+  "claim": "At about 230 km/s, in the roughly 62 seconds before this line the Sun has moved about 14,000 km around the galaxy; light crosses that in about 0.05 s.",
+  "source_url": "https://science.nasa.gov/solar-system/overview/",
+  "source_title": "Our Solar System: Overview (NASA Science)",
+  "accessed": "2026-10-25",
+  "note": "Computed after voicing (compile.py): 230 km/s × t / 299,792 km/s ≈ 1/20 s.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "To the galaxy's center: twenty-seven thousand years.",
+  "claim": "The Sun is about 27,000 light-years from the galactic centre (8,275 pc), so light from there takes about 27,000 years to reach us.",
+  "source_url": "https://www.mpe.mpg.de/6588951/The-black-hole",
+  "source_title": "The Massive Black Hole (Max Planck Institute for Extraterrestrial Physics, citing GRAVITY Collaboration 2021)",
+  "accessed": "2026-10-25",
+  "note": "The channel's one galactic-centre figure (episode 1, c12).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
