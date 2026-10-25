@@ -187,13 +187,24 @@ test.describe("phase 1 acceptance", () => {
       await expect(page.getByText("Application error")).toHaveCount(0);
     }
 
-    // Later-phase modules stay honest placeholders: no demo data, clearly marked as not built yet.
-    for (const route of ["/missions", "/discovery", "/career-map", "/academy", "/skills", "/coach", "/salary", "/integrations"]) {
+    // The later-phase modules are built now (Phases 2–7): each renders its own page with real empty
+    // states for a new account, and no "under construction" placeholder or demo data remains.
+    const modules: Array<[string, string]> = [
+      ["/missions", "Missions"],
+      ["/discovery", "Find your next job"],
+      ["/career-map", "Career Map"],
+      ["/academy", "Electrician Academy"],
+      ["/skills", "Skill Tree"],
+      ["/coach", "Career Advisor"],
+      ["/salary", "Salary Simulator"],
+      ["/integrations", "Integrations"],
+    ];
+    for (const [route, heading] of modules) {
       const res = await page.goto(route);
       expect(res?.status(), `${route} should return 200`).toBe(200);
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.getByRole("status").filter({ hasText: "Module under construction" })).toBeVisible();
-      await expect(page.getByText("no demo data is shown")).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: heading, exact: true })).toBeVisible();
+      await expect(page.getByText("Module under construction")).toHaveCount(0);
+      await expect(page.getByText("Application error")).toHaveCount(0);
     }
 
     // API exports share the browser session cookie.

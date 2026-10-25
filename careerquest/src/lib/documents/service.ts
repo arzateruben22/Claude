@@ -69,8 +69,10 @@ export function readFormFile(formData: FormData, field: string): FormFile | null
   if (!value || typeof value === "string") return null;
   const f = value as unknown as Partial<FormFile>;
   if (typeof f.arrayBuffer !== "function" || typeof f.size !== "number") return null;
-  // Browsers send an empty, nameless part when no file was chosen.
-  if (f.size === 0 && !f.name) return null;
+  // Browsers send an empty part when no file was chosen. Its name is "" in a plain form post but can
+  // arrive as "undefined" or "blob" through the Server Actions transport, so a zero-byte part always
+  // means "no file" (a real zero-byte upload is never a valid document either).
+  if (f.size === 0) return null;
   return { name: typeof f.name === "string" ? f.name : "", size: f.size, type: f.type, arrayBuffer: () => f.arrayBuffer!() };
 }
 

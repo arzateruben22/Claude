@@ -7,7 +7,8 @@ import { deliverPush } from "@/lib/notifications/push";
 /**
  * Scheduler entry point: `POST /api/notifications/dispatch` with `Authorization: Bearer $CRON_SECRET`.
  * Generates due reminders for every active user and delivers web push where enabled.
- * Run it every 15–60 minutes from cron, a platform scheduler, or `scripts/dispatch-notifications.sh`.
+ * Run it every 15–60 minutes from cron or a platform scheduler, e.g.
+ * `curl -fsS -X POST "$APP_URL/api/notifications/dispatch" -H "Authorization: Bearer $CRON_SECRET"`.
  */
 export async function POST(req: Request) {
   const secret = process.env.CRON_SECRET;

@@ -122,9 +122,15 @@ describe("storage and download", () => {
     const fd = new FormData();
     fd.set("file", new File([new Uint8Array(PDF)], "letter.pdf", { type: "application/pdf" }));
     fd.set("empty", new File([], "", { type: "application/octet-stream" }));
+    // Through the Server Actions transport an unchosen file input arrives as a zero-byte part with a
+    // placeholder name; it must still read as "no file" (regression: optional proof uploads failed).
+    fd.set("emptyNamed", new File([], "undefined", { type: "application/octet-stream" }));
+    fd.set("emptyBlob", new File([], "blob", { type: "application/octet-stream" }));
     const file = readFormFile(fd, "file");
     expect(file?.name).toBe("letter.pdf");
     expect(readFormFile(fd, "empty")).toBeNull();
+    expect(readFormFile(fd, "emptyNamed")).toBeNull();
+    expect(readFormFile(fd, "emptyBlob")).toBeNull();
     expect(readFormFile(fd, "missing")).toBeNull();
     const saved = await saveFormFile(ownerId, "HOURS_VERIFICATION", file!);
     expect(saved).toMatchObject({ ok: true });
