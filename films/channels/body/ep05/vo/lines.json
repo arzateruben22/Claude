@@ -1,0 +1,242 @@
+{
+ "voice": "bf_emma",
+ "speed": "per sentence",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/body/ep05/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.3,
+ "gap_question": 0.45,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Where does your breath go? Not into a bag. Into these.",
+   "stars": [
+    "go",
+    "these"
+   ],
+   "phonemes": "wˌeə dˈʌz jɔː bɹˈɛθ ɡˈəʊ? nˌɒt ˌɪntʊ ɐ bˈaɡ. ˌɪntʊ ðˈiːz.",
+   "speeds": [
+    1.0,
+    0.92,
+    0.85
+   ],
+   "gaps": [
+    0.45,
+    0.3
+   ],
+   "silences": [
+    [
+     1.3944,
+     1.8444
+    ],
+    [
+     3.1386,
+     3.4386
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.688,
+   "sha256": "aab4b9a044b09a8d5e1bbfe3eb19c956f111927c17e7ed75af63e46ce871113e"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Below your windpipe, the airways fork, again and again, up to about twenty-three times. At the tips hang about half a billion sacs. Each is about a fifth of a millimetre.",
+   "stars": [
+    "twenty-three"
+   ],
+   "phonemes": "bɪlˌəʊ jɔː wˈɪndpaɪp, ðɪ ˈeəweɪz fˈɔːk, ɐɡˈɛn and ɐɡˈɛn, ˌʌp tʊ ɐbˌaʊt twˈɛntiθɹˈiː tˈaɪmz. at ðə tˈɪps hˈaŋ ɐbˌaʊt hˈɑːf ɐ bˈɪliən sˈaks. ˈiːtʃ ɪz ɐbˌaʊt ɐ fˈɪfθ əvə mˈɪlɪmˌiːtə.",
+   "speeds": [
+    0.88,
+    0.88,
+    0.88
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     5.0145,
+     5.3145
+    ],
+    [
+     7.8247,
+     8.1247
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 10.537,
+   "sha256": "9bed13dfaae8f19eddefd0709fc661f78a31f8db9e8cf3a49cb8bc132b415769"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "For centuries, physicians taught the lung was airy flesh, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put a frog's lung under a microscope: bubbles.",
+   "stars": [
+    "heart",
+    "bubbles"
+   ],
+   "phonemes": "fɔː sˈɛntʃəɹiz, fɪzˈɪʃənz tˈɔːt ðə lˈʌŋ wɒz ˈeəɹi flˈɛʃ, ðeə tə kˈuːl ðə hˈɑːt. ɪn sˈɪkstiːn sˈɪkstiwˌɒn, mɑːtʃˈɛləʊ malpˈiːɡi pˌʊt ɐ fɹˈɒɡz lˈʌŋ ˌʌndəɹ ɐ mˈaɪkɹəskˌəʊp: bˈʌbəlz.",
+   "speeds": [
+    0.92,
+    0.9
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     4.5297,
+     4.8297
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 10.226,
+   "sha256": "f15a614c08b8222ca5cb7a11a33807846dd7c88ed34b1ef01442917df89159aa"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Each sac is wrapped in capillaries. At its thinnest, the wall between air and blood is about half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
+   "stars": [
+    "harder"
+   ],
+   "phonemes": "ˈiːtʃ sˈak ɪz ɹˈapt ɪn kˈapɪləɹiz. at ɪts θˈɪnɪst, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz ɐbˌaʊt hˈɑːf ɐ mˈaɪkɹəʊmˌiːtə: fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
+   "speeds": [
+    0.92,
+    0.94,
+    0.9,
+    0.88
+   ],
+   "gaps": [
+    0.3,
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     2.1097,
+     2.4097
+    ],
+    [
+     8.1301,
+     8.4301
+    ],
+    [
+     10.9489,
+     11.2489
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 13.668,
+   "sha256": "d7714ce5208c880581d8d547822950fa1fda7ab806e5f02ae0f53d3b49bd22ec"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Unfold every sac flat, and they'd cover at least seventy square metres. At least a third of a tennis court, folded inside your chest.",
+   "stars": [
+    "metres",
+    "chest"
+   ],
+   "phonemes": "ʌnfˈəʊld ˈɛvɹɪ sˈak flˈat, and ðeɪd kˈʌvəɹ at lˈiːst sˈɛvənti skwˈeə mˈiːtəz. at lˈiːst ɐ θˈɜːd əvə tˈɛnɪs kˈɔːt, fˈəʊldɪd ɪnsˈaɪd jɔː tʃˈɛst.",
+   "speeds": [
+    0.9,
+    0.88
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     4.401,
+     4.701
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 8.237,
+   "sha256": "366b1bb6cba78bffe81f18b8e3b76f39505c5cd17348b643d1ccdc356236ad18"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So your lungs aren't a bag. They're a sponge that spreads air thin.",
+   "stars": [
+    "sponge"
+   ],
+   "phonemes": "sˌəʊ jɔː lˈʌŋz ˌɑːnt ɐ bˈaɡ. ðeɪəɹ ɐ spˈʌndʒ ðat spɹˈɛdz ˈeə θˈɪn.",
+   "speeds": [
+    0.84,
+    0.84
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     1.9025,
+     2.2025
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 4.497,
+   "sha256": "8fffb470df994b68798ee5d55ae447eed29408ccf0ca05a72fb0a7f4dacb1526"
+  },
+  {
+   "id": "vo07",
+   "beat": "meanwhile",
+   "text": "Meanwhile, as you watched, air went in and out of you. About six litres of it.",
+   "stars": [
+    "Meanwhile"
+   ],
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, ˈeə wˈɛnt ɪn and ˌaʊtəv juː. ɐbˌaʊt sˈɪks lˈiːtəz ɒv ɪt.",
+   "speeds": [
+    0.8,
+    0.8
+   ],
+   "gaps": [
+    0.4
+   ],
+   "silences": [
+    [
+     3.3658,
+     3.7658
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.725,
+   "sha256": "d4a5b8ed25eed951afd165d7d1cd7e2b5755d9b1691c2a786c3cae6109239318"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a cell that leaves your blood. It squeezes through a wall.",
+   "stars": [
+    "through"
+   ],
+   "phonemes": "nˈɛkst: ɐ sˈɛl ðat lˈiːvz jɔː blˈʌd. ɪt skwˈiːzɪz θɹuː ɐ wˈɔːl.",
+   "speeds": [
+    0.86,
+    0.84
+   ],
+   "gaps": [
+    0.4
+   ],
+   "silences": [
+    [
+     2.1447,
+     2.5447
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 4.355,
+   "sha256": "bcd6b1409baa43c0d07cbb312d8aa2e3acb343b9a07b6569612f999d89d872ae"
+  }
+ ]
+}
