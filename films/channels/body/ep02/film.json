@@ -25,6 +25,10 @@
   {
    "at": 65.583333,
    "name": "nerve"
+  },
+  {
+   "at": 70.783333,
+   "name": "loop"
   }
  ],
  "beats": [
@@ -61,28 +65,28 @@
    "t0": 40.0,
    "t1": 53.6,
    "line": "vo05",
-   "energy": 0.7
+   "energy": 0.75
   },
   {
    "id": "takeaway",
    "t0": 53.6,
    "t1": 60.0,
    "line": "vo06",
-   "energy": 0.5
+   "energy": 0.3
   },
   {
    "id": "meanwhile",
    "t0": 60.0,
    "t1": 65.6,
    "line": "vo07",
-   "energy": 0.45
+   "energy": 0.4
   },
   {
    "id": "tease",
    "t0": 65.6,
    "t1": 72.8,
    "line": "vo08",
-   "energy": 0.4
+   "energy": 0.35
   }
  ],
  "iris": [
@@ -103,6 +107,11 @@
   },
   {
    "t": 65.583333,
+   "cx": 0.5,
+   "cy": 0.4
+  },
+  {
+   "t": 70.783333,
    "cx": 0.5,
    "cy": 0.4
   }
@@ -200,7 +209,7 @@
   "hop": 0.644444
  },
  "quarter": {
-  "t0": 47.36666666666667,
+  "t0": 42.533333,
   "keys": [
    [
     47.066667,
@@ -373,12 +382,12 @@
     "t": 24.783333,
     "pos": [
      58.0,
-     52.0,
+     40.0,
      128.0
     ],
     "look": [
      0.0,
-     -10.0,
+     -30.0,
      22.0
     ],
     "fov": 34
@@ -387,12 +396,12 @@
     "t": 29.066666666666666,
     "pos": [
      48.0,
-     44.0,
+     34.0,
      140.0
     ],
     "look": [
      0.0,
-     -10.0,
+     -30.0,
      26.0
     ],
     "fov": 34,
@@ -402,12 +411,12 @@
     "t": 30.7,
     "pos": [
      8.0,
-     -2.0,
-     176.0
+     -13.0,
+     184.0
     ],
     "look": [
      -1.0,
-     -13.0,
+     -24.0,
      40.0
     ],
     "fov": 34,
@@ -417,12 +426,12 @@
     "t": 35.266666666666666,
     "pos": [
      5.0,
-     -4.0,
-     168.0
+     -13.0,
+     178.0
     ],
     "look": [
      -1.0,
-     -14.0,
+     -24.0,
      40.0
     ],
     "fov": 34,
@@ -432,12 +441,12 @@
     "t": 39.983333,
     "pos": [
      3.0,
-     -5.0,
-     172.0
+     -13.0,
+     181.0
     ],
     "look": [
      -1.0,
-     -14.0,
+     -24.0,
      40.0
     ],
     "fov": 34,
@@ -525,13 +534,13 @@
    {
     "t": 56.03333333333333,
     "pos": [
-     -4.0,
+     -2.0,
      -10.0,
-     118.0
+     150.0
     ],
     "look": [
-     -14.0,
      -12.0,
+     -16.0,
      0.0
     ],
     "fov": 34,
@@ -540,13 +549,13 @@
    {
     "t": 65.583333,
     "pos": [
-     2.0,
+     4.0,
      -4.0,
-     140.0
+     172.0
     ],
     "look": [
+     -10.0,
      -12.0,
-     -9.0,
      0.0
     ],
     "fov": 34,
@@ -597,6 +606,22 @@
     ],
     "fov": 34,
     "ease": "sine"
+   }
+  ],
+  "loop": [
+   {
+    "t": 70.783333,
+    "pos": [
+     2.0,
+     1.2,
+     21.0
+    ],
+    "look": [
+     0.0,
+     -0.4,
+     0.0
+    ],
+    "fov": 34
    }
   ]
  },
@@ -664,6 +689,13 @@
     "t": 65.583333,
     "at": "front",
     "f": 0.35
+   }
+  ],
+  "loop": [
+   {
+    "t": 70.783333,
+    "at": "cap",
+    "f": 0.5
    }
   ]
  },
@@ -743,7 +775,7 @@
    "mark": "bar",
    "at": "redray",
    "t0": 33.333333333333336,
-   "t1": 39.683333000000005,
+   "t1": 38.783333,
    "shot": "skin",
    "side": -1
   },
@@ -754,7 +786,7 @@
    "mark": "bar",
    "at": "blueray",
    "t0": 33.63333333333333,
-   "t1": 39.683333000000005,
+   "t1": 38.783333,
    "shot": "skin",
    "side": 1
   },
@@ -767,7 +799,7 @@
    "t0": 42.7,
    "t1": 44.53333333333333,
    "shot": "lung",
-   "side": -1
+   "side": 1
   },
   {
    "id": "back",
@@ -776,7 +808,7 @@
    "mark": "dot",
    "at": "incoming",
    "t0": 41.93333333333333,
-   "t1": 44.53333333333333,
+   "t1": 43.733333333333334,
    "shot": "lung",
    "side": 1
   },
@@ -853,6 +885,53 @@
   "unit": "mL",
   "label": "oxygen your blood handed out while you watched"
  },
+ "spine": [
+  {
+   "id": "seats",
+   "t0": 2.3167,
+   "t1": 10.049999999999999,
+   "value": 1080000000,
+   "label": "O₂ seats in this one cell, about"
+  },
+  {
+   "id": "aboard",
+   "t0": 10.75,
+   "t1": 24.483333,
+   "steps": [
+    18.366666666666667,
+    19.7,
+    20.3,
+    20.7
+   ],
+   "unit": "of 4",
+   "label": "O₂ aboard this hemoglobin"
+  },
+  {
+   "id": "venous",
+   "t0": 30.8,
+   "t1": 33.1,
+   "value": 75,
+   "unit": "%",
+   "label": "seats still full in returning blood, about"
+  },
+  {
+   "id": "full",
+   "t0": 53.800000000000004,
+   "t1": 60.1,
+   "keys": [
+    [
+     56.03333333333333,
+     75
+    ],
+    [
+     57.56666666666667,
+     97
+    ]
+   ],
+   "unit": "%",
+   "label": "seats full: arriving → leaving, about"
+  }
+ ],
  "segBeats": [
   60.0,
   60.8,
@@ -874,7 +953,8 @@
   "t0": 70.8,
   "title": "Next, inside: *the jump*",
   "next": "Meanwhile, Inside · No. 03",
-  "follow": "Follow Meanwhile, Inside"
+  "follow": "Follow Meanwhile, Inside",
+  "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."
  },
  "look": {
   "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",

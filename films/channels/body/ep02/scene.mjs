@@ -55,8 +55,14 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-tally .v { font-size: 9.6vmin; }
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
+#hud-seats .v, #hud-aboard .v, #hud-venous .v, #hud-full .v, #hud-quarter .v { color: var(--pulse); }
+#hud-seats, #hud-aboard, #hud-venous, #hud-full { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
+#hud-seats .lb, #hud-aboard .lb, #hud-venous .lb, #hud-full .lb { color: var(--text); }
+#hud-seats .v { font-size: 8.4vmin; }
 `; document.head.appendChild(css);
 const lin = (h) => L.lin(h);
+const SLIDE = (sh) => (sh === "loop" ? "cell" : sh);   // the loop shot is frame 0's composition again
 const G = { cell: new THREE.Group(), hb: new THREE.Group(), skin: new THREE.Group(), lung: new THREE.Group(), nerve: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
 const clk = clock(FILM.clock, { words: { slow: "{n}× slower" } });
@@ -162,7 +168,7 @@ const writeHb = (t) => {
 };
 
 // ════ skin over a vein (1 unit = 50 µm) ═════════════════════════════════════════════════════════════
-const SK = { w: 160, d: 60, z: 40, veinY: -24, veinR: 8 };
+const SK = { w: 160, d: 90, z: 40, veinY: -24, veinR: 8 };
 {
   // the top surface: skin tone, with the vein's bluish band above it and a fine mottle (a canvas texture)
   const cv = document.createElement("canvas"); cv.width = 512; cv.height = 256;
@@ -211,7 +217,7 @@ const ray = (pts, hex, r = 0.7) => {
 const RAYS = {
   blue: [ray([[-15, 22], [-15, -3.5], [-12.5, -1.5], [-11, -4.2], [-8, 22]], "#7FB0FF"), ray([[-21, 22], [-20.5, -2.8], [-19, -4.6], [-17, 22]], "#7FB0FF")],
   red: ray([[-1, 22], [-1, SK.veinY + SK.veinR + 0.6]], "#FF5A6E"),
-  back: ray([[12, 22], [12, -30], [14, -34], [16.5, -28], [17.5, 22]], "#FF5A6E"),
+  back: ray([[12, 22], [12, -27], [14, -30.5], [16.5, -25], [17.5, 22]], "#FF5A6E"),
 };
 const writeSkin = (t) => {
   const S = FILM.skin;
@@ -247,7 +253,7 @@ const s0 = sF0 - V * tauF0;                               // the hero (slot 0) s
 const heroLS = (tau) => s0 + V * tau;
 const cellS = (i, tau) => { const s = heroLS(tau) - i * GAPS; return ((s % PL.length) + PL.length) % PL.length; };
 const oxyAt = (s) => E.inout2(seg(s, sF0, sF1));
-const DEOXY = new THREE.Color(0.3, 0.5, 0.6), cTmp = new THREE.Color();
+const DEOXY = new THREE.Color(0.24, 0.42, 0.55), cTmp = new THREE.Color();
 const qL = new THREE.Quaternion(), vY = new THREE.Vector3(0, 1, 0), vT = new THREE.Vector3();
 const LCELL = new Array(NC);
 const writeLung = (t) => {
@@ -297,10 +303,10 @@ const ANCH = {
   iron0: () => HB.ironWorld(0),
   o2first: (t) => boarderP(0, t),
   veintop: () => [0, 0.5, 6],
-  vein: () => [SK.veinR * 0.5, SK.veinY - 2, SK.z],
-  redray: (t) => RAYS.red.at(0.35),
-  blueray: (t) => RAYS.blue[0].at(0.2),
-  sac: () => [-34, 26, 0.42 * 58 - 24 + 4],
+  vein: () => [SK.veinR + 1.2, SK.veinY + 3, SK.z],
+  redray: (t) => RAYS.red.at(0.55),
+  blueray: (t) => RAYS.blue[0].at(0.62),
+  sac: () => [36, -26, 0.42 * 58 - 24 + 1],
   incoming: (t) => lungP(Math.max(10, sF0 - 30)),
   outgoing: (t) => lungP(Math.min(PL.length - 10, sF1 + 25)),
   node: (t) => NF.at(NERVE_NODES[nerveK0 + 3], 1.5),
@@ -309,15 +315,23 @@ for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph,
 hud.badge("warp", { from: clk, slot: "tl" });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tl" });
 const Q = FILM.quarter;
+const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+for (const sp of FILM.spine) {
+  const value = sp.steps ? (t) => sp.steps.filter((b) => t >= b).length : sp.keys ? null : () => sp.value;
+  hud.counter(sp.id, { ...(sp.keys ? { keys: sp.keys, ease: "lin" } : { value }), fmt: commas, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: [0.5, 0.235], minCh: 2 });
+}
 hud.counter("quarter", { keys: Q.keys, fmt: (v) => v.toFixed(2), unit: Q.unit, label: Q.label, t0: Q.t0, t1: Q.t1, at: [0.5, 0.235], minCh: 4, ease: "lin" });
 const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.round(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.458, 0.29], minCh: 3 });
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+{ const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
-const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 318 * S1, h: 232 * S1, region: [0.42, 0.26] });
+const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 430 * S1, h: 232 * S1, region: [0.42, 0.26] });
+const LOCARM = locator(document.getElementById("hud"), { x: 92 * S1, y: 430 * S1, h: 232 * S1, region: [0.83, 0.5] });   // the skin: a forearm
+const ARM_T = [SHOT.skin.at + 0.4, FILM.skin.section[0]];
 const lubs = (t0, t1) => { const out = []; for (let k = Math.ceil(t0 / 0.8); k * 0.8 <= t1; k++) out.push(+(k * 0.8).toFixed(4)); return out; };
 const LOC_T = [FILM.labels.find((l) => l.id === "sac").t0 - 0.3, FILM.labels.find((l) => l.id === "sac").t1];
 const LOC_BEATS = lubs(LOC_T[0], LOC_T[1]);
@@ -356,12 +370,12 @@ let TIER_KMAX = null;
 // ── seek ────────────────────────────────────────────────────────────────────────────────────────
 window.seek = function (t) {
   stage(t);
-  const sh = shotOf(t), C = window.CINEMA;
+  const shot = shotOf(t), sh = SLIDE(shot), C = window.CINEMA;
   for (const [k, g] of Object.entries(G)) g.visible = k === sh;
   const heroP = PL.at(heroLS(clk.tau(t)));
-  placeCamera(camera, FILM.cam[sh], t, { track: () => heroP, handheld: 0 });
+  placeCamera(camera, FILM.cam[shot], t, { track: () => heroP, handheld: 0 });
   camera.near = sh === "cell" ? 0.2 : 0.5; camera.far = 4000; camera.updateProjectionMatrix();
-  if (sh === "cell") writeCell(t);
+  if (sh === "cell") writeCell(shot === "loop" ? 0 : t);
   if (sh === "hb") writeHb(t);
   if (sh === "skin") writeSkin(t);
   if (sh === "lung") { writeLung(t); writeLungO2(t); }
@@ -374,6 +388,7 @@ window.seek = function (t) {
   yPulse.update(beatAmp(t, FILM.segBeats));
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, sh === "lung" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, LOC_BEATS));
+  LOCARM.update(t, sh === "skin" ? presence(t, ARM_T[0], ARM_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, lubs(ARM_T[0], ARM_T[1])));
   IR.update(t);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;

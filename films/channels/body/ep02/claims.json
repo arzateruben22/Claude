@@ -185,5 +185,27 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "Excerpt (Loyola Lumen): transit = 75 mL × 60 / 6000 mL/min = 0.75 s; 'Normally, gas equilibrations across the alveolocapillary membrane are complete in 0.25 sec. The safety factor ... is 0.5 sec or 2/3 of the cap length.' BioNumbers 101731 gives 0.75 s (Nunn). 'Board' = the blood's O₂ reaches equilibrium with the air in the alveoli; venous blood arrives partly loaded, so not every seat is empty on arrival. Review fix: 'the empty seats fill', not 'they board': returning blood at rest still carries most of its oxygen (venous saturation is commonly about 75%)."
+ },
+ {
+  "id": "c18",
+  "sentence": "Returning blood is darker red.",
+  "claim": "At rest, blood returning in the veins (PO₂ about 40 mmHg) still has about 75% of hemoglobin's O₂ sites filled. Shown on screen: 'seats still full in returning blood: about 75%'.",
+  "source_url": "https://cvphysiology.com/microcirculation/m002",
+  "source_title": "Oxygen transport and the oxyhemoglobin dissociation curve (R. E. Klabunde, Cardiovascular Physiology Concepts)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'at a venous PO2 of 40 mmHg, approximately 75% of the binding sites are occupied by O2'. A lecture source agrees (still about 75 percent saturated). An at-rest average; it differs by organ (StatPearls gives 37% for heart muscle, 92% for kidney). The on-screen readout says 'about'."
+ },
+ {
+  "id": "c19",
+  "sentence": "The red is a passenger count: brighter means fuller seats.",
+  "claim": "Arterial blood leaving the lungs has about 97% of hemoglobin's O₂ sites filled, against about 75% in returning venous blood at rest. Shown on screen: seats full 75% → 97%.",
+  "source_url": "https://cvphysiology.com/microcirculation/m002",
+  "source_title": "Oxygen transport and the oxyhemoglobin dissociation curve (R. E. Klabunde, Cardiovascular Physiology Concepts)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: arterial saturation 'roughly 97%' at a PO2 of about 100 mmHg; other sources round to 98%. The readout runs 75 → 97 % as the cells cross the air sac (computed span: about 22 points of the seats refill per pass at rest)."
  }
 ]

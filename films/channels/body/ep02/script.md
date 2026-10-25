@@ -14,6 +14,11 @@ passengers") and sets up episode 3 ("The jump").
   grips" → "each can hold"; "they board" → "the empty seats fill" (returning blood is still mostly
   loaded); "fuel gauge" → "passenger count"; the tease hedged to the fastest nerves; the whoa no
   longer repeats the hook's billion.
+- **The picture rules** (WRITING.md, "The picture", merged 25 Oct): a spine readout runs through
+  the episode (O₂ seats in one cell → O₂ aboard one hemoglobin → seats still full in returning blood →
+  seconds to fill → seats full, arriving → leaving → the tally); the body locator anchors the skin and
+  lung shots; the last frame irises back to frame 0's composition under the end card, which carries one
+  fact (270 million hemoglobins × 4 seats); the score builds to the whoa and drops for the reframe.
 - **No talk of pulse oximeters** (bible §9) and no advice.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
@@ -34,21 +39,21 @@ vo: Watch one fill. {-} The first oxygen struggles to board, but each one makes 
 
 ## why {shot: a vein under a slab of skin; red light sinks to the vein, blue bounces back near the surface · badge: illustration · picture-only 2.5 s · energy: 0.55} (27.5–42.5 s)
 vo: Your veins look *blue*, so it's easy to guess the blood inside them is. {c7} It never is. {c8}
-Returning blood is darker red. {c9} Red light sinks in, and the vein swallows it, so less red comes
+Returning blood is darker red. {c9,c18} Red light sinks in, and the vein swallows it, so less red comes
 *back*. {c10}
 
-## whoa {shot: reveal pull from the vein to the body's loop, then a lung capillary: dark cells flush bright on contact with the air sac, slowed, a 0.25 s counter · picture-only 3.5 s · energy: 0.7} (42.5–55 s)
+## whoa {shot: reveal pull from the vein to the body's loop, then a lung capillary: dark cells flush bright on contact with the air sac, slowed, a 0.25 s counter · picture-only 3.5 s · energy: 0.75} (42.5–55 s)
 vo: Your heart sends your blood back through your lungs about *once a minute*. {c11} There, the
 empty seats fill. {c12} In about a *quarter of a second*. {c17}
 
-## takeaway {shot: the lung capillary pulled back: darker cells arrive, bright cells leave · energy: 0.5} (55–62 s)
+## takeaway {shot: the lung capillary pulled back: darker cells arrive, bright cells leave; the score drops for the reframe · energy: 0.3} (55–62 s)
 vo: The blue is your skin's trick. {c13} The red is a passenger *count*: brighter means fuller
-seats. {c14}
+seats. {c14,c19}
 
-## meanwhile {segment: meanwhile · tally "while you watched": millilitres of oxygen your blood handed out, 250/60 × t from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.45} (62–67.5 s)
+## meanwhile {segment: meanwhile · tally "while you watched": millilitres of oxygen your blood handed out, 250/60 × t from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.4} (62–67.5 s)
 vo: *Meanwhile*, as you watched, your blood handed your body about a cup of oxygen. {c15}
 
-## tease {shot: a nerve fibre in the dark, a spark at one end · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.4} (67.5–74.5 s)
+## tease {shot: a nerve fibre in the dark, a spark at one end · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)
 vo: Next: the signal in your nerves. {-} In the fastest, it doesn't crawl; it *jumps*. {c16}
 end card: "Next: The jump" · "Meanwhile, Inside · No. 03"
 
