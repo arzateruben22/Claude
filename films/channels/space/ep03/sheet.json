@@ -1,0 +1,327 @@
+{
+ "duration": 74.6667,
+ "fps": 30,
+ "preset": "lightminute-vacuum",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.2667,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 4.2667,
+   "t1": 14.4,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.4,
+   "t1": 26.6667,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.6667,
+   "t1": 42.1333,
+   "energy": 0.62
+  },
+  {
+   "id": "whoa",
+   "t0": 42.1333,
+   "t1": 53.8667,
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.8667,
+   "t1": 60.8,
+   "energy": 0.3
+  },
+  {
+   "id": "readout",
+   "t0": 60.8,
+   "t1": 67.7333,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 67.7333,
+   "t1": 74.6667,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.2667
+  },
+  {
+   "t": 3.9,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 4.2667,
+   "kind": "section",
+   "id": "normal",
+   "t1": 14.4
+  },
+  {
+   "t": 4.2667,
+   "kind": "badge",
+   "tag": "b-orbit"
+  },
+  {
+   "t": 4.8,
+   "kind": "label",
+   "tag": "l-earth"
+  },
+  {
+   "t": 5.966666666666667,
+   "kind": "label",
+   "tag": "l-sun"
+  },
+  {
+   "t": 5.966666666666667,
+   "kind": "counter.show",
+   "tag": "c-earth"
+  },
+  {
+   "t": 10.666666666666666,
+   "kind": "label",
+   "tag": "l-venus"
+  },
+  {
+   "t": 14.4,
+   "kind": "section",
+   "id": "change",
+   "t1": 26.6667
+  },
+  {
+   "t": 19.3,
+   "kind": "badge",
+   "tag": "b-guess"
+  },
+  {
+   "t": 21.266666666666666,
+   "kind": "label",
+   "tag": "l-g1"
+  },
+  {
+   "t": 21.266666666666666,
+   "kind": "counter.show",
+   "tag": "c-g1"
+  },
+  {
+   "t": 23.466666666666665,
+   "kind": "counter.show",
+   "tag": "c-g2"
+  },
+  {
+   "t": 23.8667,
+   "kind": "label",
+   "tag": "l-g2"
+  },
+  {
+   "t": 26.6667,
+   "kind": "section",
+   "id": "why",
+   "t1": 42.1333
+  },
+  {
+   "t": 28.533333333333335,
+   "kind": "label",
+   "tag": "l-radar"
+  },
+  {
+   "t": 28.533333333333335,
+   "kind": "probe.ping",
+   "tag": "radar"
+  },
+  {
+   "t": 30.566666666666666,
+   "kind": "arrive",
+   "tag": "radar-in"
+  },
+  {
+   "t": 33.7,
+   "kind": "badge",
+   "tag": "b-spin"
+  },
+  {
+   "t": 33.7,
+   "kind": "badge",
+   "tag": "b-paused"
+  },
+  {
+   "t": 35.166666666666664,
+   "kind": "counter.show",
+   "tag": "c-radar"
+  },
+  {
+   "t": 36.833333333333336,
+   "kind": "counter.show",
+   "tag": "c-vs"
+  },
+  {
+   "t": 39.0,
+   "kind": "label",
+   "tag": "l-back"
+  },
+  {
+   "t": 42.1333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 53.8667
+  },
+  {
+   "t": 42.3708,
+   "kind": "orbit.pass",
+   "tag": "sunrise-0"
+  },
+  {
+   "t": 42.46666666666667,
+   "kind": "label",
+   "tag": "l-you"
+  },
+  {
+   "t": 44.8926,
+   "kind": "orbit.pass",
+   "tag": "sunrise-1"
+  },
+  {
+   "t": 47.13333333333333,
+   "kind": "counter.show",
+   "tag": "c-solar"
+  },
+  {
+   "t": 47.4145,
+   "kind": "orbit.pass",
+   "tag": "sunrise-2"
+  },
+  {
+   "t": 49.06666666666667,
+   "kind": "label",
+   "tag": "l-west"
+  },
+  {
+   "t": 49.9363,
+   "kind": "orbit.pass",
+   "tag": "sunrise-3"
+  },
+  {
+   "t": 52.4581,
+   "kind": "orbit.pass",
+   "tag": "sunrise-4"
+  },
+  {
+   "t": 53.8667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.8
+  },
+  {
+   "t": 54.98,
+   "kind": "orbit.pass",
+   "tag": "sunrise-5"
+  },
+  {
+   "t": 57.43333333333333,
+   "kind": "counter.show",
+   "tag": "c-live"
+  },
+  {
+   "t": 57.5018,
+   "kind": "orbit.pass",
+   "tag": "sunrise-6"
+  },
+  {
+   "t": 60.1494,
+   "kind": "orbit.pass",
+   "tag": "sunrise-7"
+  },
+  {
+   "t": 60.8,
+   "kind": "section",
+   "id": "readout",
+   "t1": 67.7333
+  },
+  {
+   "t": 61.13333333333333,
+   "kind": "counter.show",
+   "tag": "c-read-sun"
+  },
+  {
+   "t": 62.7,
+   "kind": "label",
+   "tag": "l-ring"
+  },
+  {
+   "t": 63.833333333333336,
+   "kind": "counter.show",
+   "tag": "c-read-echo"
+  },
+  {
+   "t": 64.46666666666667,
+   "kind": "label",
+   "tag": "l-echo"
+  },
+  {
+   "t": 67.7333,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.6667
+  },
+  {
+   "t": 67.8,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.566666666666666,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 14.7,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 26.966666666666665,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 42.43333333333333,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 54.166666666666664,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.1,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 68.03333333333333,
+   "file": "vo/08.wav"
+  }
+ ]
+}

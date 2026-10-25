@@ -1,0 +1,120 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/space/ep04/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What's holding the Moon up? Nothing. It's falling.",
+   "stars": [
+    "up",
+    "falling"
+   ],
+   "phonemes": "wˌʌts hˈoʊldɪŋ ðə mˈuːn ˈʌp? nˈʌθɪŋ. ɪts fˈɔːlɪŋ.",
+   "speed": 0.85,
+   "file": "01.wav",
+   "dur": 3.095,
+   "sha256": "4a6de0bc75755ffd679f544a06f2e6b7656c32b51c63b8a315f1b954ddd9f8bd"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Look up tonight: it's about thirty Earths away. And it moves sideways at about a kilometer every second. That's New York to Boston in five minutes.",
+   "stars": [
+    "minutes"
+   ],
+   "phonemes": "lˈʊk ˌʌp tənˈaɪt: ɪts ɐbˌaʊt θˈɜːɾi ˈɜːθs ɐwˈeɪ. ænd ɪt mˈuːvz sˈaɪdweɪz æɾ ɐbˌaʊt ɐ kɪlˈɑːmɪɾɚɹ ˈɛvɹi sˈɛkənd. ðæts nˈuː jˈɔːɹk tə bˈɔstən ɪn fˈaɪv mˈɪnɪts.",
+   "speed": 1.05,
+   "file": "02.wav",
+   "dur": 9.438,
+   "sha256": "71b86e306b9b49bee0dcdba9b1ebf54638f1b577ac74c07c0937c0a53c644145"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now switch gravity off. The Moon would fly off in a straight line. Gravity bends it back toward us. Every moment, all the way round.",
+   "stars": [
+    "straight line"
+   ],
+   "phonemes": "nˈaʊ swˈɪtʃ ɡɹˈævᵻɾi ˈɔf. ðə mˈuːn wʊd flˈaɪ ˈɔf ɪn ɐ stɹˈeɪt lˈaɪn. ɡɹˈævᵻɾi bˈɛndz ɪt bˈæk təwˈɔːɹd ˌʌs. ˈɛvɹi mˈoʊmənt, ˈɔːl ðə wˈeɪ ɹˈaʊnd.",
+   "speed": 1.0,
+   "file": "03.wav",
+   "dur": 8.907,
+   "sha256": "e7fc4a2e83ee524bae5cd24b37d4bedb8b6294d480bd4155b0d5d8f7ed1705f3"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "The heavens, people believed, had their own rules. Isaac Newton, the story goes, wondered if the pull that drops an apple reaches the Moon. The Moon is sixty times farther from Earth's center than the apple. So the pull there is thirty-six hundred times weaker.",
+   "stars": [
+    "apple",
+    "weaker"
+   ],
+   "phonemes": "ðə hˈɛvənz, pˈiːpəl bᵻlˈiːvd, hæd ðɛɹ ˈoʊn ɹˈuːlz. ˈaɪsək nˈuːtən, ðə stˈɔːɹi ɡˈoʊz, wˈʌndɚd ɪf ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɹˈiːtʃᵻz ðə mˈuːn. ðə mˈuːn ɪz sˈɪksti tˈaɪmz fˈɑːɹðɚ fɹʌm ˈɜːθz sˈɛntɚ ðɐn ðɪ ˈæpəl. sˌoʊ ðə pˈʊl ðɛɹ ɪz θˈɜːɾisˈɪks hˈʌndɹɪd tˈaɪmz wˈiːkɚ.",
+   "speed": 1.1,
+   "file": "04.wav",
+   "dur": 16.237,
+   "sha256": "ddf09582052cc7fa8a0fb981c594e558dc1c7a10257e9e4daf98be21ed46a2d8"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Then in one minute, the Moon should fall as far as an apple falls in one second. About five meters. And it does.",
+   "stars": [
+    "minute",
+    "does"
+   ],
+   "phonemes": "ðˈɛn ɪn wˈʌn mˈɪnɪt, ðə mˈuːn ʃˌʊd fˈɔːl æz fˈɑːɹ æz ɐn ˈæpəl fˈɔːlz ɪn wˈʌn sˈɛkənd. ɐbˌaʊt fˈaɪv mˈiːɾɚz. ænd ɪt dˈʌz.",
+   "speed": 0.9,
+   "file": "05.wav",
+   "dur": 7.81,
+   "sha256": "50885cbe26447445e5514979ee0899b0e397e4f59e40c1d49cd643b06ff8635e"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So the pull that drops an apple is the very same pull that holds the Moon.",
+   "stars": [
+    "Moon"
+   ],
+   "phonemes": "sˌoʊ ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɪz ðə vˈɛɹi sˈeɪm pˈʊl ðæt hˈoʊldz ðə mˈuːn.",
+   "speed": 0.8,
+   "file": "06.wav",
+   "dur": 5.749,
+   "sha256": "b8862b243090b4cf74a0bc5e6e92646c55f1917e424d9096370a8cf7cbbea9cc"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, Earth to Moon: one point three seconds. You always see the Moon that late.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, ˈɜːθ tə mˈuːn: wˈʌn pˈɔɪnt θɹˈiː sˈɛkəndz. juː ˈɔːlweɪz sˈiː ðə mˈuːn ðæt lˈeɪt.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 5.457,
+   "sha256": "659c2521bd5b5b9f91d4b325a2904a5cd83f94c52fa10b6ae4e81e9664a097a3"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: pour Earths into the Sun. How many to fill it up?",
+   "stars": [
+    "up"
+   ],
+   "phonemes": "nˈɛkst: pˈɔːɹ ˈɜːθs ˌɪntʊ ðə sˈʌn. hˌaʊ mˈɛni tə fˈɪl ɪɾ ˈʌp?",
+   "speed": 0.8,
+   "file": "08.wav",
+   "dur": 4.131,
+   "sha256": "59897e7f422a394d4e1f59e13c9a6cdce9b87f54af56ece21d8d641d98f1f93f"
+  }
+ ]
+}
