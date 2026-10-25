@@ -1,0 +1,243 @@
+{
+ "voice": "bf_emma",
+ "speed": "per sentence",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/body/ep03/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.3,
+ "gap_question": 0.45,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How fast is this spark? The leading expert doubted it could ever be timed.",
+   "stars": [
+    "spark",
+    "timed"
+   ],
+   "phonemes": "hˌaʊ fˈast ɪz ðɪs spˈɑːk? ðə lˈiːdɪŋ ˈɛkspɜːt dˈaʊtɪd ɪt kʊd ˈɛvə biː tˈaɪmd.",
+   "speeds": [
+    1.0,
+    0.95
+   ],
+   "gaps": [
+    0.45
+   ],
+   "silences": [
+    [
+     1.6523,
+     2.1023
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.741,
+   "sha256": "834c42552c2c8eaefb5bcc4d1a4bde476d67d329d1b83d4af1d3f058afa09f3c"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It's a nerve signal, racing down one cell's thin fibre. Your longest run from spine to toe: about a metre. How long does that take?",
+   "stars": [
+    "toe"
+   ],
+   "phonemes": "ɪts ɐ nˈɜːv sˈɪɡnəl, ɹˈeɪsɪŋ dˌaʊn wˈɒn sˈɛlz θˈɪn fˈaɪbə. jɔː lˈɒŋɡɪst ɹˈʌn fɹɒm spˈaɪn tə tˈəʊ: ɐbˌaʊt ɐ mˈiːtə. hˌaʊ lˈɒŋ dˈʌz ðat tˈeɪk?",
+   "speeds": [
+    0.92,
+    0.92,
+    0.95
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.3156,
+     3.6156
+    ],
+    [
+     6.7153,
+     7.0153
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 8.599,
+   "sha256": "bbb99a96c8e735ab85f2c458995191d738af96d1c653d413b64ab1d17d1840d2"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Johannes Müller thought it might be as fast as light. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
+   "stars": [
+    "light",
+    "cheetah"
+   ],
+   "phonemes": "jəʊhˈanɪs mˈuːlə θˈɔːt ɪt mˌaɪt biː az fˈast az lˈaɪt. ɪn ˈeɪtiːn fˈɪfti, hɪz fˈɔːmə stjˈuːdənt hˈɛlmhəʊltz tˈaɪmd ɪt. ɐbˌaʊt θˈɜːti mˈiːtəz ɐ sˈɛkənd: tʃˈiːtə spˈiːd.",
+   "speeds": [
+    0.92,
+    0.92,
+    0.9
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     2.7491,
+     3.0491
+    ],
+    [
+     6.6037,
+     6.9037
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 9.612,
+   "sha256": "d10ea8d4fc041cd12223b46d469f5fb3a83bdd00dd7e6381835ee3054718d75d"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "stars": [
+    "myelin",
+    "leaps"
+   ],
+   "phonemes": "ɪt ˌɪzənt kˈʌɹənt ɪn ɐ wˈaɪə: ðə sˈɛl ɹˌiːfˈaɪəz ɪt, stˈɛp baɪ stˈɛp. mˈɛnɪəv jˈɔːz wˈeə fˈati mˈaɪɪlˌɪn, ɹˌiːfˈaɪəɹɪŋ ˈəʊnli at ɡˈaps, sˌəʊ ðə sˈɪɡnəl lˈiːps. wˌeə mˈaɪɪlˌɪn ɪz dˈamɪdʒd, az ɪn mˌʌltɪpəl skləɹˈəʊsɪs, sˈɪɡnəlz kan slˈəʊ ɔː stˈɔːl.",
+   "speeds": [
+    0.95,
+    0.95,
+    0.94
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.6968,
+     3.9968
+    ],
+    [
+     8.8027,
+     9.1028
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 14.226,
+   "sha256": "853363083dad598dce5a3211720f99508b64d543b53e3badb6bcbcd58a97e632"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "The thinnest bare fibres crawl at about a metre a second. Wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
+   "stars": [
+    "car"
+   ],
+   "phonemes": "ðə θˈɪnɪst bˈeə fˈaɪbəz kɹˈɔːl at ɐbˌaʊt ɐ mˈiːtəɹ ɐ sˈɛkənd. ɹˈapt wˌɒnz, ˌʌp tʊ ɐ hˈʌndɹɪd and fˈɪfti. fˈastə ðˌanə fˈɔːmjʊlə wˈɒn kˈɑː.",
+   "speeds": [
+    0.86,
+    0.86,
+    0.88
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.4023,
+     3.7023
+    ],
+    [
+     6.0659,
+     6.3659
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 8.389,
+   "sha256": "b1fa87e2641d1c770324d22de8853cca37b12310a813ffce814801fc33158892"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So a stubbed toe can hurt twice. The jolt rides faster wires; the ache, bare ones.",
+   "stars": [
+    "twice"
+   ],
+   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt ɹˈaɪdz fˈastə wˈaɪəz; ðɪ ˈeɪk, bˈeə wˌɒnz.",
+   "speeds": [
+    0.84,
+    0.84
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     2.184,
+     2.484
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 5.799,
+   "sha256": "41d5224d46b463b39a5b6bdea9bb110bf3b3dccc8d2f4a3fd684f7f77535b4b3"
+  },
+  {
+   "id": "vo07",
+   "beat": "meanwhile",
+   "text": "Meanwhile, as you watched, a heart at rest beat about eighty times. Each began with a spark.",
+   "stars": [
+    "Meanwhile",
+    "spark"
+   ],
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, ɐ hˈɑːt at ɹˈɛst bˈiːt ɐbˌaʊt ˈeɪti tˈaɪmz. ˈiːtʃ bɪɡˈan wɪð ɐ spˈɑːk.",
+   "speeds": [
+    0.9,
+    0.9
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     3.9448,
+     4.2448
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.929,
+   "sha256": "94606763b4bb720e652d74f3847c0862af189c2ad26c5ae8ab6f8b995437b33f"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: the end of the line. A gap most signals can't jump.",
+   "stars": [
+    "jump"
+   ],
+   "phonemes": "nˈɛkst: ðɪ ˈɛnd ɒvðə lˈaɪn. ɐ ɡˈap mˈəʊst sˈɪɡnəlz kˈɑːnt dʒˈʌmp.",
+   "speeds": [
+    0.88,
+    0.84
+   ],
+   "gaps": [
+    0.4
+   ],
+   "silences": [
+    [
+     1.6899,
+     2.0899
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 4.299,
+   "sha256": "348703b76b4f8f3cc67216f074a59680ce5d732a866d67e063e34ca1177a72cc"
+  }
+ ]
+}

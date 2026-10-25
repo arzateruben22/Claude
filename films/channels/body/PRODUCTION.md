@@ -7,7 +7,7 @@ These five feed the first long-form compilation (with episode 1).
 | # | Title | State |
 |---|---|---|
 | 02 | A billion passengers | reviewed · voiced (72.8 s, lint 0/0) · built · stills OK · **rendering** final (started 25 Oct 22:26 UTC) · soundtrack −14.1 LUFS / −1.9 dBTP, sync PASS, voice 15.9 LU over music |
-| 03 | The jump | not started |
+| 03 | The jump | scripted · reviewed (independent review 6/10; fixes applied: the why now answers the change, Müller/Helmholtz wording, hedges) · voiced (74.8 s, 175 words, lint 0/0 voiced) · building |
 | 04 | The gap | not started |
 | 05 | Where breath goes | not started |
 | 06 | The exit | not started |

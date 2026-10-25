@@ -1,0 +1,1135 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How fast is this spark? The leading expert doubted it could ever be timed.",
+   "heard": "How fast is this spark? The leading expert doubted it could ever be timed.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 0.31,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.655,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 0.865,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "spark?",
+     "start": 1.17,
+     "end": 1.652,
+     "heard": true,
+     "end_asr": 1.68
+    },
+    {
+     "w": "The",
+     "start": 2.12,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "leading",
+     "start": 2.15,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "expert",
+     "start": 2.655,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "doubted",
+     "start": 3.1,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.655,
+     "end": 3.705,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 3.685,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 3.835,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 4.105,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "timed.",
+     "start": 4.22,
+     "end": 4.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "It's a nerve signal, racing down one cell's thin fibre. Your longest run from spine to toe: about a metre. How long does that take?",
+   "heard": "It's a nerve signal, racing down one cell's thin fiber. Your longest run from spine to toe, about a meter. How long does that take?",
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.12,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 0.22,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "signal,",
+     "start": 0.665,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "racing",
+     "start": 1.275,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 1.705,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.96,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "cell's",
+     "start": 2.25,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 2.58,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "fibre.",
+     "start": 2.85,
+     "end": 3.316,
+     "heard": false,
+     "end_asr": 3.6
+    },
+    {
+     "w": "Your",
+     "start": 3.635,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "longest",
+     "start": 3.84,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "run",
+     "start": 4.175,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 4.52,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "spine",
+     "start": 4.81,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.215,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "toe:",
+     "start": 5.245,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.845,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.08,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "metre.",
+     "start": 6.33,
+     "end": 6.715,
+     "heard": false,
+     "end_asr": 7.12
+    },
+    {
+     "w": "How",
+     "start": 7.05,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 7.36,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 7.625,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 7.845,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "take?",
+     "start": 8.04,
+     "end": 8.56,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Johannes Müller thought it might be as fast as light. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
+   "heard": "Johannes Müller thought it might be as fast as light. In 1850, his former student Helmholtz timed it. About 30 meters a second, cheetah speed.",
+   "words": [
+    {
+     "w": "Johannes",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "Müller",
+     "start": 0.605,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "thought",
+     "start": 1.02,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.195,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "might",
+     "start": 1.56,
+     "end": 1.61,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 1.59,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.775,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 1.805,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.1,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "light.",
+     "start": 2.245,
+     "end": 2.749,
+     "heard": true,
+     "end_asr": 3.04
+    },
+    {
+     "w": "In",
+     "start": 3.07,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "eighteen",
+     "start": 3.23,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "fifty,",
+     "start": 3.26,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "his",
+     "start": 4.385,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "former",
+     "start": 4.415,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "student",
+     "start": 4.975,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "Helmholtz",
+     "start": 5.325,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "timed",
+     "start": 5.98,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 6.5,
+     "end": 6.604,
+     "heard": true,
+     "end_asr": 6.96
+    },
+    {
+     "w": "About",
+     "start": 6.945,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "thirty",
+     "start": 7.26,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "metres",
+     "start": 7.525,
+     "end": 8.08,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 8.175,
+     "end": 8.225,
+     "heard": true
+    },
+    {
+     "w": "second:",
+     "start": 8.205,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "cheetah",
+     "start": 8.72,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "speed.",
+     "start": 9.145,
+     "end": 9.6,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "heard": "It isn't current in a wire, the cell refires it step by step. Many of yours wear fatty myelin, refiring only at gaps so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 0.1,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "current",
+     "start": 0.405,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.71,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.785,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "wire:",
+     "start": 0.915,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.625,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 1.655,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "re-fires",
+     "start": 1.99,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 2.675,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 2.84,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 3.08,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "step.",
+     "start": 3.335,
+     "end": 3.697,
+     "heard": true,
+     "end_asr": 4.0
+    },
+    {
+     "w": "Many",
+     "start": 4.02,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.415,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "yours",
+     "start": 4.445,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "wear",
+     "start": 4.87,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "fatty",
+     "start": 5.115,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "myelin,",
+     "start": 5.35,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "re-firing",
+     "start": 6.31,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.935,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 7.18,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "gaps,",
+     "start": 7.31,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 7.81,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.905,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 7.935,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "leaps.",
+     "start": 8.37,
+     "end": 8.803,
+     "heard": true,
+     "end_asr": 9.04
+    },
+    {
+     "w": "Where",
+     "start": 9.125,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "myelin",
+     "start": 9.27,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.94,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "damaged,",
+     "start": 9.97,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 10.615,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 10.645,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "multiple",
+     "start": 10.76,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "sclerosis,",
+     "start": 11.46,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "signals",
+     "start": 12.475,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 13.01,
+     "end": 13.2,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 13.27,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 13.61,
+     "end": 13.68,
+     "heard": true
+    },
+    {
+     "w": "stall.",
+     "start": 13.64,
+     "end": 14.16,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "The thinnest bare fibres crawl at about a metre a second. Wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
+   "heard": "The thinnest bare fibers crawl at about a meter a second. Wrapped ones up to 150. Faster than a Formula One car.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "thinnest",
+     "start": 0.27,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "bare",
+     "start": 0.74,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "fibres",
+     "start": 1.13,
+     "end": 1.6,
+     "heard": false
+    },
+    {
+     "w": "crawl",
+     "start": 1.61,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.0,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.115,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.275,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "metre",
+     "start": 2.31,
+     "end": 2.8,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 2.865,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 3.015,
+     "end": 3.402,
+     "heard": true,
+     "end_asr": 3.68
+    },
+    {
+     "w": "Wrapped",
+     "start": 3.725,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "ones,",
+     "start": 4.02,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 4.645,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.685,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.9,
+     "end": 6.066,
+     "heard": false,
+     "end_asr": 6.4
+    },
+    {
+     "w": "hundred",
+     "start": 4.93,
+     "end": 6.066,
+     "heard": false,
+     "end_asr": 6.4
+    },
+    {
+     "w": "and",
+     "start": 4.96,
+     "end": 6.066,
+     "heard": false,
+     "end_asr": 6.4
+    },
+    {
+     "w": "fifty.",
+     "start": 4.99,
+     "end": 6.066,
+     "heard": false,
+     "end_asr": 6.4
+    },
+    {
+     "w": "Faster",
+     "start": 6.385,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 6.91,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.105,
+     "end": 7.155,
+     "heard": true
+    },
+    {
+     "w": "Formula",
+     "start": 7.18,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 7.66,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "car.",
+     "start": 7.91,
+     "end": 8.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "So a stubbed toe can hurt twice. The jolt rides faster wires; the ache, bare ones.",
+   "heard": "So a stubbed toe can hurt twice. The jolt rides faster wires, the ache bare ones.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.15,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.435,
+     "end": 0.485,
+     "heard": true
+    },
+    {
+     "w": "stubbed",
+     "start": 0.465,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "toe",
+     "start": 0.72,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.085,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "hurt",
+     "start": 1.25,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "twice.",
+     "start": 1.595,
+     "end": 2.184,
+     "heard": true,
+     "end_asr": 2.4
+    },
+    {
+     "w": "The",
+     "start": 2.505,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "jolt",
+     "start": 2.535,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "rides",
+     "start": 2.95,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 3.425,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "wires;",
+     "start": 3.84,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.575,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "ache,",
+     "start": 4.605,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "bare",
+     "start": 5.025,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "ones.",
+     "start": 5.25,
+     "end": 5.76,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo07",
+   "text": "Meanwhile, as you watched, a heart at rest beat about eighty times. Each began with a spark.",
+   "heard": "Meanwhile as you watched, a heart at rest beat about eighty times. Each began with a spark.",
+   "words": [
+    {
+     "w": "Meanwhile,",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.71,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.975,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "watched,",
+     "start": 1.005,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.75,
+     "end": 1.8,
+     "heard": true
+    },
+    {
+     "w": "heart",
+     "start": 1.78,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.175,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "rest",
+     "start": 2.205,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "beat",
+     "start": 2.515,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.805,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "eighty",
+     "start": 2.965,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "times.",
+     "start": 3.33,
+     "end": 3.945,
+     "heard": true,
+     "end_asr": 4.24
+    },
+    {
+     "w": "Each",
+     "start": 4.265,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "began",
+     "start": 4.62,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 4.99,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.09,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "spark.",
+     "start": 5.33,
+     "end": 5.68,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next: the end of the line. A gap most signals can't jump.",
+   "heard": "Next the end of the line. A gap most signals can't jump.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.25,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.485,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "end",
+     "start": 0.67,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.995,
+     "end": 1.045,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.025,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "line.",
+     "start": 1.265,
+     "end": 1.69,
+     "heard": true,
+     "end_asr": 2.0
+    },
+    {
+     "w": "A",
+     "start": 2.11,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "gap",
+     "start": 2.31,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 2.545,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "signals",
+     "start": 2.925,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "can't",
+     "start": 3.375,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "jump.",
+     "start": 3.74,
+     "end": 4.08,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  }
+ ],
+ "clamped_by": "films/channels/body/ep03/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

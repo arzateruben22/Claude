@@ -1,0 +1,211 @@
+[
+ {
+  "id": "c1",
+  "sentence": "The leading expert doubted it could ever be timed.",
+  "claim": "Johannes Müller, the leading physiologist of the 1840s, held that the nerve signal was so fast it could never be measured.",
+  "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
+  "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Müller reasoned that nerve conduction was extremely fast and would probably never be measured. Review fix: 'doubted', not 'swore'."
+ },
+ {
+  "id": "c2",
+  "sentence": "It's a nerve signal, racing down one cell's thin fibre.",
+  "claim": "A nerve signal (action potential) travels along an axon, the long, thin projection of a single nerve cell, typically about a micrometre across.",
+  "source_url": "https://en.wikipedia.org/wiki/Axon",
+  "source_title": "Axon (Wikipedia)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: most individual axons are microscopic in diameter, typically about one micrometer across, and some extend a metre or more."
+ },
+ {
+  "id": "c3",
+  "sentence": "Your longest run from spine to toe: about a metre.",
+  "claim": "The longest human axons run from the base of the spinal cord to the big toe, about a metre.",
+  "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=104901",
+  "source_title": "BioNumbers 104901: length of neuron from base of spine to big toe, the longest cell in the human body",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: length of neuron from base of spine to big toe, range ≤1 metre. Guinness gives about 1.3 m for these motor neurons; the sensory paths from toe to brain are longer still. 'About a metre' sits in that range."
+ },
+ {
+  "id": "c4",
+  "sentence": "Johannes Müller thought it might be as fast as light.",
+  "claim": "Müller thought the nerve signal's speed might be of the order of the speed of light; he cited estimates up to 60 times the speed of light.",
+  "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
+  "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (UGA manuscript): Müller cited possible speeds up to 60 times the speed of light and thought conduction extremely fast. Review fix: the 60× figure was a cited estimate, not his own guess, so the line says 'might be as fast as light'."
+ },
+ {
+  "id": "c5",
+  "sentence": "In eighteen fifty, his former student Helmholtz timed it.",
+  "claim": "In January 1850 Hermann Helmholtz, who had trained under Müller in Berlin, reported measuring the nerve's conduction speed with a frog nerve-muscle preparation.",
+  "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
+  "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Helmholtz sent a short note on 15 January 1850 to du Bois-Reymond and to Müller; frog nerve-muscle preparation. Müller supervised Helmholtz's doctorate; in 1850 Helmholtz was a professor at Königsberg, hence 'former student' (review fix; BYU-Idaho history of psychology agrees). The frog's nerve-muscle preparation is shown (an illustration) rather than said."
+ },
+ {
+  "id": "c6",
+  "sentence": "About thirty metres a second: cheetah speed.",
+  "claim": "Helmholtz's frog measurement came to roughly 27 m/s (about 90 ft/s); his reported values span about 25–43 m/s.",
+  "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
+  "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'roughly 90 feet per second' (= 27.4 m/s, computed); Schmidgen's account gives 25–43 m/s. 'About thirty' covers it."
+ },
+ {
+  "id": "c17",
+  "sentence": "About thirty metres a second: cheetah speed.",
+  "claim": "A cheetah's top speed is roughly 26–29 m/s: wild cheetahs measured up to about 25.9 m/s, captive ones up to about 29 m/s.",
+  "source_url": "https://www.nationalgeographic.com/animals/article/130612-cheetah-speed-hunting-big-cats-animal-science",
+  "source_title": "Cheetahs' speed is only half the story (National Geographic, 2013, on Wilson et al., Nature)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (National Geographic on Wilson et al. 2013, Nature): wild cheetahs' fastest 25.9 m/s (58 mph, 93 km/h); captive cheetahs in straight runs up to 29 m/s. So about 30 m/s is cheetah speed (computed comparison)."
+ },
+ {
+  "id": "c18",
+  "sentence": "It isn't current in a wire: the cell re-fires it, step by step.",
+  "claim": "An action potential is not carried passively like current in a wire (which would fade over distance); it is regenerated by voltage-gated ion channels in each successive patch of membrane, which is why conduction is far slower than electricity in a wire.",
+  "source_url": "https://iu.pressbooks.pub/humanphys/chapter/action-potential-conduction/",
+  "source_title": "Action potential conduction (Indiana University, Human Physiology open textbook)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bible S13; excerpt: the action potential is regenerated as it travels; in myelinated axons it is regenerated at each node. Purves (NBK10921) agrees: passive current flow alone decays with distance, so the signal is regenerated along the way. 'Step by step' = patch by patch of membrane."
+ },
+ {
+  "id": "c7",
+  "sentence": "Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "claim": "Many vertebrate axons are wrapped in myelin, an insulating sheath of membrane layers made by glial cells (oligodendrocytes and Schwann cells), interrupted by bare gaps, the nodes of Ranvier.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
+  "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: myelin is formed by oligodendrocytes (CNS) and Schwann cells (PNS); the gaps are the nodes of Ranvier. 'Fatty': myelin is a lipid-rich membrane (standard description). 'Many of yours': not all axons are myelinated."
+ },
+ {
+  "id": "c8",
+  "sentence": "Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "claim": "In myelinated axons action potentials are generated only at the nodes of Ranvier; current flows passively under the myelin to the next node, so the signal appears to jump (saltatory conduction).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
+  "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: action potentials are generated only at the nodes; current passes passively to the next node, where the cycle repeats. 'Leaps' is the textbook picture; ions do not physically jump."
+ },
+ {
+  "id": "c9",
+  "sentence": "Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+  "claim": "In multiple sclerosis, damage to myelin disrupts or slows nerve signals; signals can be slowed, garbled or blocked.",
+  "source_url": "https://health.harvard.edu/topics/multiple-sclerosis",
+  "source_title": "Multiple sclerosis (Harvard Health Publishing)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (Harvard Health): damage to myelin disrupts or slows nerve signals. MSD Manuals: signals slowed, garbled or blocked. NINDS: MS attacks myelinated axons in the CNS. 'Can' and 'stall' (= blocked) keep it to the sources. No advice. MS affects the brain, spinal cord and optic nerves (NINDS), so the shot is labelled a brain-and-spinal-cord fibre (review fix)."
+ },
+ {
+  "id": "c10",
+  "sentence": "The thinnest bare fibres crawl at about a metre a second.",
+  "claim": "Unmyelinated C fibres conduct at about 0.5–2 m/s (typically about 1 m/s); unmyelinated axons in general 0.5–10 m/s.",
+  "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
+  "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: C fibres slow, about 0.5–2 m/s (~1 m/s typical). Review fix: 'the thinnest bare fibres' (bare fibres in general run 0.5–10 m/s, NBK10921)."
+ },
+ {
+  "id": "c11",
+  "sentence": "Wrapped ones, up to a hundred and fifty.",
+  "claim": "Myelinated axons conduct at up to about 150 m/s.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
+  "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NBK10921): myelinated axons up to 150 m/s. 'Can hit' = the top of the range."
+ },
+ {
+  "id": "c12",
+  "sentence": "Faster than a Formula One car.",
+  "claim": "150 m/s is 540 km/h; the fastest speed recorded in a Formula One Grand Prix is 372.6 km/h.",
+  "source_url": "https://www.guinnessworldrecords.com/world-records/fastest-speed-outright-in-a-formula-one-grand-prix",
+  "source_title": "Fastest speed outright in a Formula One Grand Prix (Guinness World Records)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 372.6 km/h (231.5 mph), Juan Pablo Montoya, McLaren-Mercedes, Monza, 4 September 2005. Computed: 150 m/s × 3.6 = 540 km/h > 372.6 km/h. (Bottas's 378 km/h in 2016 was team data, not the official trap.)"
+ },
+ {
+  "id": "c13",
+  "sentence": "So a stubbed toe can hurt twice.",
+  "claim": "A painful stimulus far from the brain, such as a stubbed toe, is often felt as two pains: a sharp first pain, then a dull, aching second pain.",
+  "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
+  "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'."
+ },
+ {
+  "id": "c19",
+  "sentence": "The jolt rides faster wires; the ache, bare ones.",
+  "claim": "Painful stimuli are carried by thinly myelinated A-delta fibres (about 5–25 m/s), giving a sharp, well-localised first pain, and by unmyelinated C fibres (about 0.5–2 m/s), giving a dull, aching second pain that follows; the delay is easiest to notice far from the brain.",
+  "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
+  "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'."
+ },
+ {
+  "id": "c14",
+  "sentence": "Meanwhile, as you watched, a heart at rest beat about eighty times.",
+  "claim": "A normal resting heart rate for adults is 60–100 beats a minute; the tally uses 75 a minute (the channel's tempo).",
+  "source_url": "https://www.mayoclinic.org/healthy-lifestyle/fitness/expert-answers/heart-rate/faq-20057979",
+  "source_title": "What's a normal resting heart rate? (Mayo Clinic)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'A normal resting heart rate for adults ranges from 60 to 100 beats per minute.' The tally is 75/60 × t beats from frame 0; the line lands near 64 s, about 80 (computed). At 60–100 a minute the same span gives 64–107, so 'a resting heart … about eighty' is an example, not the viewer's own."
+ },
+ {
+  "id": "c15",
+  "sentence": "Each began with a spark.",
+  "claim": "Each heartbeat is initiated by an electrical impulse from the sinoatrial node, the heart's natural pacemaker.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK459238/",
+  "source_title": "Physiology, Sinoatrial Node (StatPearls, NCBI Bookshelf NBK459238)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (StatPearls): the SA node is the primary pacemaker, generating the impulses that start each heartbeat. Bible S23. Sets up episode 7. 'Spark' = the electrical impulse."
+ },
+ {
+  "id": "c16",
+  "sentence": "A gap most signals can't jump.",
+  "claim": "At most synapses (chemical synapses) the electrical signal does not cross the narrow synaptic cleft: it is converted into a chemical signal, neurotransmitter released into the gap.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK526047/",
+  "source_title": "Physiology, Synapse (StatPearls, NCBI Bookshelf NBK526047)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (StatPearls Synapse): chemical synapses pass the signal as neurotransmitter across the synaptic cleft; electrical synapses also exist, hence 'most' (review fix). Episode 4 tells it."
+ }
+]
