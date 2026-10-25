@@ -102,7 +102,10 @@ CAM = {
     "space": [
         {"t": t_cut, **POSE, "dist": 70, "az": 0.0},
         {"t": t_launch, **POSE, "dist": 70, "az": 0.0, "ease": "sine"},
-        {"t": t_stop + RAMP_F, **POSE, "dist": 1205, "az": 1.0, "ease": "inout2"},
+        # the pull-back follows Voyager: the camera's distance grows with Voyager's, so it climbs to the same height
+        *[{"t": round(t_launch + (yr - Y0) * YEAR / RATE_F, 4), **POSE, "dist": round(max(70.0, (R_SAT + SLOPE * (yr - Y_SAT)) * 1205 / LD_AU), 1),
+           "az": round((yr - Y0) / (Y_NOW - Y0), 3), "ease": "lin"} for yr in (1983, 1990, 2000, 2010, 2020)],
+        {"t": t_stop + RAMP_F, **POSE, "dist": 1205, "az": 1.0, "ease": "sine"},
         {"t": B["why"]["t0"], **POSE, "dist": 1193, "az": 2.0, "ease": "sine"},
         {"t": t_j0, **POSE, "dist": 1184, "az": 4.0, "ease": "sine"},
         {"t": B["takeaway"]["t0"], **POSE, "dist": 1184, "az": 3.0, "ease": "sine"},
@@ -136,7 +139,7 @@ LABELS = [
     {"id": "l-ld", "text": "1 light-day", "kind": "light", "anchor": "ldring", "t0": round(t_arr1 + 0.5, 4), "t1": B["why"]["t0"], "shot": "space", "side": 1},
     {"id": "l-ans", "text": "answer", "kind": "light", "anchor": "front2", "t0": round(t_ans + 0.25, 4), "t1": round(t_arr2 + 0.4, 4), "shot": "space", "side": 1},
     # why: the heliopause, then the comet cloud
-    {"id": "l-hp", "text": "edge of the Sun's wind · 2012", "kind": "light", "anchor": "hp", "t0": A("vo04:twenty"), "t1": t_p0, "shot": "space", "side": 1},
+    {"id": "l-hp", "text": "edge of the Sun's wind", "kind": "light", "anchor": "hp", "t0": A("vo04:twenty"), "t1": t_p0, "shot": "space", "side": 1, "fixed": True},
     {"id": "l-oort", "text": "comet cloud", "kind": "body", "anchor": "oort", "t0": A("vo04:cloud"), "t1": t_j0, "shot": "space", "side": 1},
     {"id": "l-300", "text": "300 years", "kind": "body", "anchor": "ghost", "t0": A("vo04:three"), "t1": t_j0, "shot": "space", "side": -1},
     {"id": "l-30k", "text": "30,000 more to cross", "kind": "body", "anchor": "oort-deep", "t0": A("vo04:thirty"), "t1": t_j0, "shot": "space", "side": -1},
@@ -166,25 +169,34 @@ def before_cut(t1, lead=0.3):
     return round(t1 - lead, 4) if any(abs(t1 - c) < 1e-6 for c in CUTS) else t1
 
 
+# the spine readout (WRITING.md, "The picture", rule 2): one number in one place for the whole story, its small
+# label naming the beat; then the channel's readout segment takes over in its usual place and size
+SPINE = [0.26, 0.47]
+t_tk = B["takeaway"]["t0"]
 COUNTERS = [
-    {"id": "c-year", "label": "Voyager 1 · year", "fmt": "year", "t0": t_launch, "t1": B["change"]["t0"], "at": [0.27, 0.42]},
-    {"id": "c-sig1", "label": "signal travel time", "fmt": "hours", "t0": t_sig, "t1": round(t_ans - 0.05, 4), "at": [0.27, 0.42], "lit": 24},
-    {"id": "c-sig2", "label": "command → answer", "fmt": "hours", "t0": t_ans, "t1": B["why"]["t0"], "at": [0.27, 0.42], "lit": 48},
-    {"id": "c-trip", "label": "at Voyager's speed · about", "fmt": "text", "text": "75,000 years", "t0": A("vo05:seventy-five"), "t1": B["takeaway"]["t0"], "at": [0.5, 0.43]},
-    {"id": "c-read-ld", "label": "light time · Earth to Voyager", "fmt": "text", "text": "1 day", "t0": A("vo07:Light"), "t1": round(A("vo07:To") - 0.05, 4), "at": [0.5, 0.43]},
-    {"id": "c-read-px", "label": "light time · Proxima to Sun", "fmt": "text", "text": "4 years, 3 months", "t0": A("vo07:To"), "t1": end_out, "at": [0.5, 0.43]},
+    {"id": "c-prox-h", "label": "light-years to Proxima", "fmt": "text", "text": "4.24", "t0": 0.0, "t1": t_cut, "at": SPINE},
+    {"id": "c-year", "label": "Voyager 1 · year", "fmt": "year", "t0": t_launch, "t1": t_sig, "at": SPINE},
+    {"id": "c-sig1", "label": "signal travel · hours", "fmt": "hours", "t0": t_sig, "t1": t_ans, "at": SPINE, "lit": 24},
+    {"id": "c-sig2", "label": "command → answer · hours", "fmt": "hours", "t0": t_ans, "t1": A("vo04:twenty"), "at": SPINE, "lit": 48},
+    {"id": "c-hp", "label": "into interstellar space · year", "fmt": "text", "text": "2012", "t0": A("vo04:twenty"), "t1": A("vo04:hasn't"), "at": SPINE},
+    {"id": "c-oort0", "label": "years to the comet cloud", "fmt": "text", "text": "300", "t0": A("vo04:hasn't"), "t1": A("vo04:thirty"), "at": SPINE},
+    {"id": "c-oort1", "label": "years more to cross it", "fmt": "text", "text": "30,000", "t0": A("vo04:thirty"), "t1": A("vo05:fifteen"), "at": SPINE},
+    {"id": "c-ld0", "label": "light-days to Proxima, about", "fmt": "text", "text": "1,550", "t0": A("vo05:fifteen"), "t1": A("vo05:seventy-five"), "at": SPINE},
+    {"id": "c-trip", "label": "years to Proxima, at Voyager's speed", "fmt": "text", "text": "75,000", "t0": A("vo05:seventy-five"), "t1": t_tk, "at": SPINE},
+    {"id": "c-days", "label": "light-days to Proxima", "fmt": "text", "text": "1,550", "t0": t_tk, "t1": B["readout"]["t0"], "at": SPINE},
+    {"id": "c-read-ld", "label": "light time · Earth to Voyager", "fmt": "text", "text": "1 day", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:To") - 0.05, 4), "at": [0.5, 0.43]},
+    {"id": "c-read-px", "label": "light time · Proxima to Sun", "fmt": "text", "text": "4 years, 3 months", "read": True, "t0": A("vo07:To"), "t1": end_out, "at": [0.5, 0.43]},
 ]
 for row in BADGES + COUNTERS:
     row["t1"] = before_cut(row["t1"])
 PILLS = [
-    {"id": "p-ly-h", "text": "4.24 light-years", "t0": 0.0, "t1": t_cut, "shot": "hook", "at": [90 / 1080, 0.53]},
     {"id": "p-moon", "text": "Earth to the Moon: 6 hours", "t0": A("vo02:Earth"), "t1": B["change"]["t0"], "shot": "space", "at": [90 / 1080, 0.53]},
-    {"id": "p-ld", "text": "about 1,550 light-days", "t0": A("vo05:fifteen"), "t1": A("vo05:Count", -0.2), "shot": "space", "at": [90 / 1080, 0.53]},
     {"id": "p-europe", "text": "75,000 years ago: no Homo sapiens in Europe", "t0": A("vo05:Count"), "t1": B["takeaway"]["t0"], "shot": "space", "at": [90 / 1080, 0.53]},
 ]
 
 TITLE = {"series": "Light Minute · No. 002", "title": "The *nearest star*", "t1": B["normal"]["t0"] - 0.25, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the planet that turns *backwards*", "follow": "Light Minute · No. 003"}
+END = {"title": "Next light: the planet that turns *backwards*", "follow": "Light Minute · No. 003",
+       "next": "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)."}   # the true-fact footnote (c5)
 
 CUE = {"launch": t_launch, "stop": t_stop, "sig": t_sig, "arr1": t_arr1, "ans": t_ans, "arr2": t_arr2,
        "hp": A("vo04:twenty"), "ghost": A("vo04:three"), "deep": A("vo04:thirty"), "jump": [t_j0, t_j1], "pull": [t_p0, t_p1],

@@ -136,7 +136,7 @@ const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, b.clock ? { from: CLK[b.clock], t0: b.t0, t1: b.t1, slot: b.slot } : { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const FMT = {
   year: { value: (t) => yearAt(t), fmt: (v) => String(Math.floor(v + 1e-6)), lit: (v) => v >= PH.y_now - 1e-6, minCh: 4 },
-  hours: (c) => ({ value: (t) => CLK.signal.tau(t) / 3600, fmt: (v) => `${Math.floor(v + 1e-6)} h`, lit: (v) => v >= c.lit - 1e-6, minCh: 4 }),
+  hours: (c) => ({ value: (t) => CLK.signal.tau(t) / 3600, fmt: (v) => `${Math.floor(v + 1e-3)} h`, lit: (v) => v >= c.lit - 1e-3, minCh: 4 }),
 };
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1, at: c.at };
@@ -144,14 +144,17 @@ for (const c of FILM.counters) {
   else if (c.fmt === "hours") Object.assign(o, FMT.hours(c));
   else Object.assign(o, { value: () => 0, fmt: () => c.text, lit: () => true });
   const el = hud.counter(c.id, o);
-  el.classList.add(c.fmt === "text" ? "lm-read" : "lm-clock");
+  el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (c.fmt === "text" && c.text.length > 12) { const v = el.querySelector(".v"); if (v) v.style.fontSize = "5.5vmin"; }   // "4 years, 3 months" stays inside the safe box
 }
 for (const p of FILM.pills) hud.scale(p.id, { text: p.text, bar: null, t0: p.t0, t1: p.t1, at: p.at });
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
-  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v });
+  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+const foot = endEl.querySelector(".nx");                                    // the end card's footnote: small and quiet
+if (foot) Object.assign(foot.style, { fontSize: "2.6vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "62vmin", margin: "4vmin auto 0" });
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
@@ -212,7 +215,7 @@ window.seek = function (t) {
   ghost.seg(g0, g1).set({ opacity: aO * fadeIn(t, CUE.ghost, 0.6) });
   oortRim.set({ center: [0, 0, 0], r: PH.r_oort0, opacity: aO * (shot === "hook" || t >= CUE.jump[1] ? 0.25 : 0.6) });
   S.ghost = toS("oort", g0.map((v, i) => (v + g1[i]) / 2));
-  const ao = 0.35;
+  const ao = 1.2;
   S.oort = toS("oort", [PH.r_oort0 * 1.05 * Math.cos(ao), PH.r_oort0 * 1.05 * Math.sin(ao), 0]);
   S["oort-deep"] = toS("oort", VDIR.map((v) => v * PH.r_oort0 * 1.4));
 
@@ -228,7 +231,7 @@ window.seek = function (t) {
   S.lane = toS("local", PROX_L.map((v) => v * 0.5));
   const bp = faceOn(PROX_L), rp = Math.hypot(...PROX_L);
   pxRing.arc({ center: [0, 0, 0], r: rp, ...bp }).set({ opacity: aL * fadeIn(t, CUE.pxring, 0.8) });
-  S.pxring = toS("local", [0, 1, 2].map((j) => rp * (bp.e1[j] * Math.cos(1.25) + bp.e2[j] * Math.sin(1.25))));
+  S.pxring = toS("local", [0, 1, 2].map((j) => rp * (bp.e1[j] * Math.cos(0.7) + bp.e2[j] * Math.sin(0.7))));
 
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1, bandGain: 1 });
   hud.update(t);

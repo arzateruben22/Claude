@@ -27,16 +27,16 @@ vo: How long to the nearest *star*? Say we leave *today*. {-}
 ## normal {shot: cut to the solar view, the planets' orbits; Voyager 1 flies out of the plane, 1977 → 2026 under a speed note, a year counter · labels: Earth, Voyager 1, "about 17 km/s" · pill: "Earth → Moon in about 6 h" · picture-only 0.2 s · energy: 0.45} (4–15 s)
 vo: Our ride is *Voyager 1*, the farthest thing we've sent. {c1} It left in nineteen seventy-seven. {c2} It coasts at about seventeen kilometers a second: Earth to the Moon in *six hours*. {c3,c4}
 
-## change {events: light.front from Earth, a counter 0 → 24 h; the reply comes back, 48 h · ring "1 light-day" · picture-only 0.2 s · energy: 0.5} (15–26 s)
+## change {events: light.front from Earth, a counter 0 → 24 h; the reply comes back, 48 h · ring "1 light-day" · picture-only 0.2 s · energy: 0.55} (15–26 s)
 vo: On November eighteenth, it crosses a line. {c5} Its signal now needs a full *day* to reach us. {c6} The team sends a command today. {-} The answer comes the day after *tomorrow*. {c7}
 
-## why {shot: the heliopause as a faint bubble, labelled "2012"; then a gentle pull-back (×12) until the inner edge of the comet cloud (theory, badged) shows far beyond Voyager; a ghost path to it, "300 years" · picture-only 2 s · energy: 0.55} (26–42 s)
+## why {shot: the heliopause as a faint bubble, labelled "2012"; then a gentle pull-back (×12) until the inner edge of the comet cloud (theory, badged) shows far beyond Voyager; a ghost path to it, "300 years" · picture-only 2 s · energy: 0.62} (26–42 s)
 vo: In twenty twelve, it crossed into interstellar space. {c8} Nearly there, then? {-} It hasn't even reached the Sun's cloud of *comets*. {c9} That's three hundred years away. {c10} Getting through it: thirty thousand more. {c19}
 
-## whoa {shot: the episode's one scale jump: the solar view shrinks until the light-day ring is a speck beside the Sun, and Proxima Centauri arrives · events: scale.jump, arrive · counter "at Voyager's speed: about 75,000 years" · tag "at today's distance" · picture-only 3 s · energy: 0.7} (42–56 s)
+## whoa {shot: the episode's one scale jump: the solar view shrinks until the light-day ring is a speck beside the Sun, and Proxima Centauri arrives · events: scale.jump, arrive · counter "at Voyager's speed: about 75,000 years" · tag "at today's distance" · picture-only 3 s · energy: 0.8} (42–56 s)
 vo: The nearest star, Proxima Centauri, is about fifteen hundred light-days out. {c11} At Voyager's speed: about *seventy-five thousand years*. {c12} Count back that far, and our species hadn't reached *Europe*. {c13}
 
-## takeaway {shot: hold on the local view; the speck labelled "day 1", the lane to Proxima "of about 1,550" · picture-only 0.2 s · energy: 0.5} (56–62 s)
+## takeaway {shot: hold on the local view; the speck labelled "day 1", the lane to Proxima "of about 1,550" · picture-only 0.2 s · energy: 0.3} (56–62 s)
 vo: So we haven't left for the stars. {-} Voyager has crossed day one of *fifteen hundred*. {c14}
 
 ## readout {segment: readout · the closing light-time readout: ring "1 day" (the speck), then a wide ring "4 years, 3 months" through Proxima · a ping per ring · picture-only 0.2 s · energy: 0.45} (62–68.5 s)
