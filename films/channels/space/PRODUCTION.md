@@ -6,7 +6,7 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | No. | Title | Bible | State |
 |---|---|---|---|
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
-| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | reviewed, voiced (74.67 s, lint 0 errors, 19 claims), built (−14.1 LUFS, voice 12.2 LU over music, sync PASS), stills OK, **rendering final** (from 22:15 UTC, 25 Oct) |
+| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | **delivered** 25 Oct: 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.2 LU over music, sync PASS, 0 flashes, qa.py PASS; render 31 min |
 | 003 | Venus day | §7 #2 | reviewed (fixes applied), voiced (74.67 s, lint 0 errors, 17 claims), compile and scene written; picture next |
 | 004 | Falling Moon | §7 #3 | reviewed (fixes applied), voiced (73.07 s, lint 0 errors, 18 claims) |
 | 005 | Sun size | §7 #4 | reviewed (fixes applied), voiced (74.13 s, lint 0 errors, 17 claims) |
