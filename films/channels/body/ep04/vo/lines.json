@@ -1,0 +1,239 @@
+{
+ "voice": "bf_emma",
+ "speed": "per sentence",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/body/ep04/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.3,
+ "gap_question": 0.45,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Do your nerve cells touch? For decades, no microscope could show it.",
+   "stars": [
+    "touch",
+    "show"
+   ],
+   "phonemes": "dˈuː jɔː nˈɜːv sˈɛlz tˈʌtʃ? fɔː dˈɛkeɪdz, nˈəʊ mˈaɪkɹəskˌəʊp kʊd ʃˈəʊ ɪt.",
+   "speeds": [
+    1.0,
+    0.92
+   ],
+   "gaps": [
+    0.45
+   ],
+   "silences": [
+    [
+     1.4995,
+     1.9495
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.383,
+   "sha256": "c04473fbb2cb432a3e6593a5fad6d984688cfe7bc0e39e7dac36ebed305c29b1"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "A typical one reaches out to thousands of others. Your brain holds over a hundred trillion of these meeting points. Up close, they look joined.",
+   "stars": [
+    "joined"
+   ],
+   "phonemes": "ɐ tˈɪpɪkəl wˈɒn ɹˈiːtʃɪz ˈaʊt tə θˈaʊzəndz ɒv ˈʌðəz. jɔː bɹˈeɪn hˈəʊldz ˌəʊvəɹ ɐ hˈʌndɹɪd tɹˈɪliən ɒv ðiːz mˈiːtɪŋ pˈɔɪnts. ˌʌp klˈəʊs, ðeɪ lˈʊk dʒˈɔɪnd.",
+   "speeds": [
+    0.88,
+    0.88,
+    0.88
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     2.8199,
+     3.1199
+    ],
+    [
+     6.4152,
+     6.7152
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 8.449,
+   "sha256": "702e25ca7a91b84d2579c286e4cec173489303a8384ccd04fa72cfe8421dc549"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Using the same stain, Camillo Golgi saw one continuous web. Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing.",
+   "stars": [
+    "web",
+    "cells",
+    "arguing"
+   ],
+   "phonemes": "jˈuːzɪŋ ðə sˈeɪm stˈeɪn, kamˈɪləʊ ɡˈɒldʒi sˈɔː wˈɒn kəntˈɪnjuːəs wˈɛb. sˌantɪˈɑːɡəʊ ɹamˈɒn i kəhˈɑːl sˈɔː sˈɛpɹət sˈɛlz. ɪn nˈaɪntiːn ˈəʊ sˈɪks ðeɪ ʃˈeəd ɐ nəʊbˈɛl, stˈɪl ˈɑːɡjuːɪŋ.",
+   "speeds": [
+    0.9,
+    0.9,
+    0.9
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.9728,
+     4.2728
+    ],
+    [
+     7.0785,
+     7.3785
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 10.463,
+   "sha256": "c3e9a91fba98d04539dd982e4e79c749428e68da8594e8be749a9a059c2061f4"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "In the nineteen fifties, electron microscopes finally showed it: a gap. At most junctions, electricity can't jump it. Calcium floods the tip, tiny sacs spill a chemical messenger, and it drifts across.",
+   "stars": [
+    "gap",
+    "drifts"
+   ],
+   "phonemes": "ɪnðə nˈaɪntiːn fˈɪftiz, ɪlˈɛktɹɒn mˈaɪkɹəskˌəʊps fˈaɪnəli ʃˈəʊd ɪt: ɐ ɡˈap. at mˈəʊst dʒˈʌŋkʃənz, ɪlɛktɹˈɪsɪti kˈɑːnt dʒˈʌmp ɪt. kˈalsiəm flˈʌdz ðə tˈɪp, tˈaɪni sˈaks spˈɪl ɐ kˈɛmɪkəl mˈɛsɪndʒə, and ɪt dɹˈɪfts əkɹˈɒs.",
+   "speeds": [
+    0.92,
+    0.9,
+    0.9
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     4.4093,
+     4.7093
+    ],
+    [
+     7.5609,
+     7.8609
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 12.922,
+   "sha256": "0a2c7c2aa928da9e2c5a58f72357e19420cef727106bab5fcac6cdae0a6f4a7c"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "The handoff takes about a thousandth of a second. Use a junction, and it can grow stronger: likely part of how you learn.",
+   "stars": [
+    "stronger",
+    "learn"
+   ],
+   "phonemes": "ðə hˈandɒf tˈeɪks ɐbˌaʊt ɐ θˈaʊzəndθ əvə sˈɛkənd. jˈuːs ɐ dʒˈʌŋkʃən, and ɪt kan ɡɹˈəʊ stɹˈɒŋɡə: lˈaɪkli pˈɑːt ɒv hˌaʊ juː lˈɜːn.",
+   "speeds": [
+    0.84,
+    0.82
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     2.931,
+     3.231
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 7.772,
+   "sha256": "eff9e9aa3176dea393988550937dfd1e8b66c41709a82a6d1ddcbc0e84dbd965"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So your nerve cells mostly don't touch. They talk, across gaps, in chemicals.",
+   "stars": [
+    "touch",
+    "talk"
+   ],
+   "phonemes": "sˌəʊ jɔː nˈɜːv sˈɛlz mˈəʊstli dˈəʊnt tˈʌtʃ. ðeɪ tˈɔːk, əkɹˌɒs ɡˈaps, ɪn kˈɛmɪkəlz.",
+   "speeds": [
+    0.86,
+    0.86
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     2.4373,
+     2.7373
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 5.22,
+   "sha256": "323d61daf55284d9d502beb61b0bce4a46f00fb4c3d308128c96368a04b31026"
+  },
+  {
+   "id": "vo07",
+   "beat": "meanwhile",
+   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each began in your brainstem and crossed gaps like these to your diaphragm.",
+   "stars": [
+    "Meanwhile"
+   ],
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, juː tˈʊk ɐbˌaʊt fˈɪftiːn bɹˈɛθs. ˈiːtʃ bɪɡˈan ɪn jɔː bɹˈeɪnstəm and kɹˈɒst ɡˈaps lˈaɪk ðiːz tə jɔː dˈaɪəfɹˌam.",
+   "speeds": [
+    0.88,
+    0.88
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     3.1395,
+     3.4395
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 7.411,
+   "sha256": "fbc6652c188977cf2b0bd14d25049164fe3e4be9ca1a29cbd5ee13a02c48cea7"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: those breaths. Where does all that air go?",
+   "stars": [
+    "go"
+   ],
+   "phonemes": "nˈɛkst: ðəʊz bɹˈɛθs. wˌeə dˈʌz ˈɔːl ðat ˈeə ɡˈəʊ?",
+   "speeds": [
+    0.86,
+    0.86
+   ],
+   "gaps": [
+    0.5
+   ],
+   "silences": [
+    [
+     1.496,
+     1.996
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 3.762,
+   "sha256": "fbe96cf763c4c4973ba72a9dcafa7df9d5ab1b28bf79ac9b7106a5fcc1c29475"
+  }
+ ]
+}
