@@ -188,7 +188,7 @@ const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean;
 
 const HANDOFF_TOOL = {
   name: "hand_to_evelyn",
-  description: "Send this question to Evelyn instead of answering it. Use it for anything personal or medical, anything about the client's own skin or which products suit them that her playbook doesn't answer, anything on her hard-lines list, anything not covered by what you know, and any request to talk to her. For an emergency use kind \"urgent\".",
+  description: "Send this question to Evelyn instead of answering it. Only for: a reaction, pregnancy or breastfeeding, a medication or recent procedure, a named skin condition, her hard-lines list, reading someone's skin from a photo, a change to a plan she wrote for them, a skin question her playbook has nothing on after you've asked what you need, or a request to talk to her. Never for a skin or product question her routines and answers cover: answer that yourself. For an emergency use kind \"urgent\".",
   strict: true,
   input_schema: {
     type: "object",

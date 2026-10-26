@@ -85,7 +85,7 @@
     var a = p ? PL.answer(p, text, who ? who.name.split(" ")[0] : "") : null;
     if (!a) return null;
     var ids = PL.products && PL.part ? PL.products(p, PL.part(text)) : [];
-    return { answer: a, acts: bagActs(ids).concat([["See my plan", "account"], ["Ask Evelyn", "skin"]]), plan: true };
+    return { answer: a, acts: bagActs(ids).concat([["See my plan", "account"]]), plan: true };
   };
 
   /* ── Add to bag (js/cart.js), for products on the shelf right now ── */
@@ -196,8 +196,8 @@
       for (var i = state.log.length - 1; i >= 0; i--) if (state.log[i].who === "bot" && state.log[i].text) { last = state.log[i].text; break; }
       if (!last) return "Ask me anything about prices, booking, prep, aftercare or products, and I’ll keep it simple.";
       var first = (/^[\s\S]*?[.!?](?=\s|$)/.exec(last) || [last])[0];
-      return "Let me put that more simply: " + (first.length > 170 ? first.slice(0, 168).replace(/\s\S*$/, "") + "…" : first) + " Want the rest, or should I send it to Evelyn?"; },
-      acts: [["Ask Evelyn", "skin"]] },
+      return "Let me put that more simply: " + (first.length > 170 ? first.slice(0, 168).replace(/\s\S*$/, "") + "…" : first) + " Want the rest? Just say so."; },
+      acts: [] },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
     { id: "live", k: /in[- ]person|group class|workshop|glow party|\bpart(y|ies)\b|girls'? night|bachelorette|pro night|skin school live|live class/, a: function () {
       return "Skin School Live is Evelyn’s in-person class: two hours at the studio with six people, a skin check under the lamp, your routine built on the spot and a kit to take home, for $129 ($109 for members). Want it just for your friends? A Glow Party is $690 for up to six, at the studio or at your place. Estheticians can join Pro Night for $249."; },
@@ -227,7 +227,7 @@
       var st = window.LumevinaAsk && window.LumevinaAsk.status ? window.LumevinaAsk.status() : "";
       if (st === "existing") return "Returning clients book the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re in the Acne Bootcamp. Not sure? Message Evelyn and she’ll point you to the right one.";
       return "If you’re new and don’t have acne concerns, book New Clients Start Here. If you’re new with acne concerns, book the Acne Bootcamp consultation + treatment. Returning clients: the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re working on acne. Not sure? Message Evelyn and she’ll point you to the right one."; },
-      acts: [["Book", "n:book"], ["What happens at a first visit", "t:What happens at a first visit?"], ["Ask Evelyn", "skin"]] },
+      acts: [["Book", "n:book"], ["What happens at a first visit", "t:What happens at a first visit?"]] },
     { id: "mine", k: /\bmy (lumevina )?products\b|products (do|did) i (have|buy|get|own)|what (have|did) i (bought|buy|order)|how (do|should) i use (my|the one i)|what('?s| is) in my (bag|routine) from/i, a: function () {
       var who = me(), mine = who ? myShelf(who.email) : [];
       if (!who) return "Sign in to My Lumevina and I’ll know what you’ve bought here, so I can talk about your own products by name.";
@@ -282,8 +282,8 @@
       return "Two plans. Glow, " + memPrice("glow") + " a month: a Custom Facial or the Monthly Acne Treatment every month. Ageless, " + memPrice("ageless") + ": everything in Glow plus the Ageless Grace Facial and dermaplaning every other visit. Members book with no deposit, bank a facial they can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours." + foundingNote(); },
       acts: [["See memberships", "#membership"]] },
     { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|toner|mask|what do you sell/, a: function () {
-      return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8, free over $75, or pick up free at your visit. Not sure what’s right for your skin? Ask her and she’ll reply."; },
-      acts: [["See the shop", "#shop"], ["Ask Evelyn", "skin"]] },
+      return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8, free over $75, or pick up free at your visit. Not sure what’s right for your skin? Tell me if it’s more dry or oily and I’ll show you her routine for it."; },
+      acts: [["See the shop", "#shop"], ["Show me her routine", "t:Which products should I use for my skin?"]] },
     { id: "lashes", k: /lash|nails?\b|manicure|pedicure|tint|lamination/, a: function () {
       return "Lumevina’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }
   ];
@@ -591,36 +591,36 @@
     /* how to use one of her products: its card */
     if (howTo && named.length && !concern) {
       var c = SG.cards[named[0].id];
-      if (c) return { answer: base(named[0].name) + ", from Evelyn’s product guide:\n" + c.split("\n").filter(function (l) { return !/^From the label:/.test(l); }).slice(0, 5).join("\n"), acts: [["Ask Evelyn", "skin"]] };
+      if (c) return { answer: base(named[0].name) + ", from Evelyn’s product guide:\n" + c.split("\n").filter(function (l) { return !/^From the label:/.test(l); }).slice(0, 5).join("\n"), acts: [] };
     }
-    if (concern === "after") return { answer: said(H.breakoutAfter), acts: [["Send Evelyn a photo", "skin"]] };
-    if (concern === "purge") return { answer: said(H.purge + (H.purgeEscalate ? " " + H.purgeEscalate : "")), acts: [["Send Evelyn a photo", "skin"]] };
-    if (concern === "ingrown") return { answer: lines(said(H.ingrownHabits), H.ingrownAvoid ? "What to avoid: " + H.ingrownAvoid : "", H.ingrownEscalate), acts: [["Ask Evelyn", "skin"]] };
-    if (concern === "spots") return { answer: lines(said(H.spotsHabits), H.spotsAvoid ? "What to avoid: " + H.spotsAvoid : "", H.spotsEscalate), acts: [["Ask Evelyn", "skin"]] };
-    if (concern === "aging") return { answer: lines(said(H.retinal), H.sun ? "And the sun: " + H.sun : "") + fitText, acts: [["Ask Evelyn", "skin"]] };
+    if (concern === "after") return { answer: said(H.breakoutAfter), acts: [] };
+    if (concern === "purge") return { answer: said(H.purge + (H.purgeEscalate ? " " + H.purgeEscalate : "")), acts: [] };
+    if (concern === "ingrown") return { answer: lines(said(H.ingrownHabits), H.ingrownAvoid ? "What to avoid: " + H.ingrownAvoid : "", H.ingrownEscalate), acts: [] };
+    if (concern === "spots") return { answer: lines(said(H.spotsHabits), H.spotsAvoid ? "What to avoid: " + H.spotsAvoid : "", H.spotsEscalate), acts: [] };
+    if (concern === "aging") return { answer: lines(said(H.retinal), H.sun ? "And the sun: " + H.sun : "") + fitText, acts: [] };
     if (concern === "sensitive") {
       var sens = lines(said([H.barrier, H.irritation].filter(Boolean).join(" ")), H.exfoliation ? "Her rule: " + H.exfoliation : "");
-      return k ? { answer: lines(sens, routineText(k)) + fitText, acts: essentialsAct(k).concat([["Ask Evelyn", "skin"]]) }
+      return k ? { answer: lines(sens, routineText(k)) + fitText, acts: essentialsAct(k) }
                : { answer: sens + "\n\nIs your skin more on the dry side or the oily side? Her routine depends on it.", acts: TYPE_ACTS("sensitive") };
     }
     if (concern === "acne") {
       var head = said(H.acneTimeline);
       if (!k) return { answer: lines(head, "Her routine depends on your skin: is it more dry or oily?"), acts: TYPE_ACTS("breaking out") };
       return { answer: lines(head, routineText(k), H.picking ? "And: " + H.picking : "", actives && H.alternate && mine.some(function (p) { return /retin/i.test(p.name); }) ? H.alternate : "") + fitText,
-               acts: essentialsAct(k).concat([["Ask Evelyn", "skin"]]) };
+               acts: essentialsAct(k) };
     }
     /* the products they use: where each fits in her routine for their type, and her word on mixing */
     if (named.length && using && (!concern || concern === "dry" || concern === "oily") && !typeIn(t)) {
       var fl = fitLines(named, k);
       var mix = named.filter(isActive).length > 1 && H.dontMix ? "\n\n" + said(H.dontMix) : "";
       return { answer: (fl.length ? fl.join(" ") : said(H.ownProducts)) + mix + (k ? "" : "\n\nIs your skin more dry or oily? I’ll show you her full routine for it."),
-               acts: k ? essentialsAct(k).concat([["Ask Evelyn", "skin"]]) : TYPE_ACTS("") };
+               acts: k ? essentialsAct(k) : TYPE_ACTS("") };
     }
     if (concern === "dull" && !k) return { answer: lines(H.exfoliation ? said(H.exfoliation) : "", "Her routine depends on your skin: is it more dry or oily?"), acts: TYPE_ACTS("dull") };
     if (concern === "dry" || concern === "oily" || concern === "dull" || (!concern && k)) {
       var kk = concern === "dry" ? "dry" : concern === "oily" ? "oily" : k;
       var note = kk === "dry" ? (actives ? said([H.barrier, H.irritation].filter(Boolean).join(" ")) : said(H.water)) : "";
-      return { answer: lines(routineText(kk), note) + fitText, acts: essentialsAct(kk).concat([["Ask Evelyn", "skin"]]) };
+      return { answer: lines(routineText(kk), note) + fitText, acts: essentialsAct(kk) };
     }
     /* a skin question with nothing to go on yet: one question, not a form */
     return { answer: "I can help with that from Evelyn’s playbook. What’s going on: dry or tight, oily, breaking out, dark spots, or something else? And what are you using now?",
@@ -929,7 +929,6 @@
     var acts = [];
     if (/\bbook|facial|appointment|calendar/i.test(answer)) acts.push(["Book", "book"]);
     if (!hasProducts && /shelf|shop|cleanser|serum|\bspf\b|sunscreen|moisturi|toner|mask|patch/i.test(answer)) acts.push(["See the shop", "#shop"]);
-    acts.push(["Ask Evelyn", "skin"]);
     return acts;
   };
   var remote = function (text) {
@@ -1123,7 +1122,7 @@
     if (!CHUNKS.length || (r.handoff && !r.unsure) || r.plan || r.unclear) return r;
     var t = TY ? TY.fix(text) : text.toLowerCase();
     var hit = playbookHit(text);
-    if (hit && (r.unsure || (hit.score >= 4 && !NOT_PLAYBOOK.test(t)))) return { answer: hit.answer, acts: [["Book", "book"], ["Ask Evelyn", "skin"]] };
+    if (hit && (r.unsure || (hit.score >= 4 && !NOT_PLAYBOOK.test(t)))) return { answer: hit.answer, acts: [["Book", "book"]] };
     return r;
   };
 
@@ -1182,6 +1181,12 @@
       return render();
     }
     if (r.answer && state.strikes) state.strikes--;
+    /* a question nothing here answers: ask for it another way first; Evelyn only if it still doesn't land */
+    if (r.handoff === "other" && r.unsure && !state.unsureOnce) {
+      state.unsureOnce = true; state.pending = null;
+      push({ who: "bot", text: "I don’t have that one yet. Could you put it another way? I can answer most questions about your skin, your products, prices, booking, prep and aftercare.", acts: UNCLEAR_ACTS });
+      return render();
+    }
     if (r.unclear) {
       state.unclear = (state.unclear || 0) + 1;
       if (state.unclear === 1) {
