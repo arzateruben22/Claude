@@ -78,6 +78,22 @@ section + section { border-top: 1px solid rgba(74, 52, 42, 0.084); }
 .skin-wrap { position: relative; aspect-ratio: 16 / 9; border-radius: 22px; overflow: hidden; background: #0b0807;
   box-shadow: 0 24px 60px rgba(74, 52, 42, 0.22); }
 .skin-vid { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* the clip's subtitles and its two controls (pause, CC) */
+.skin-sub { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 28px); margin: 0;
+  padding: 6px 12px; border-radius: 10px; background: rgba(11, 8, 7, 0.74); color: #fff; font-size: 0.95rem; line-height: 1.35; text-align: center;
+  text-wrap: balance; transition: opacity .25s ease; }
+.skin-sub:empty, .skin-wrap[data-cc="off"] .skin-sub { opacity: 0; }
+.skin-ctl { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; }
+.skin-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(11, 8, 7, 0.55); color: #fff;
+  display: grid; place-items: center; font: 700 0.7rem/1 inherit; letter-spacing: 0.04em; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.skin-btn:hover { background: rgba(11, 8, 7, 0.75); }
+.skin-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.skin-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.skin-btn .i-play, .skin-wrap.is-paused .skin-btn .i-pause { display: none; }
+.skin-wrap.is-paused .skin-btn .i-play { display: block; }
+.skin-btn[aria-pressed="false"] { opacity: 0.6; text-decoration: line-through; }
+/* with subtitles on the clip, the line under it keeps just the level */
+.skin-col:has(.skin-wrap:not([data-cc="off"])) #skin-desc { display: none; }
 .skin-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.95rem; color: var(--text-2);
   transition: opacity .5s ease; margin-top: 4px; text-align: center; min-height: 3em; }
 .skin-cap b { color: var(--text); font-weight: 600; }
@@ -518,6 +534,8 @@ html.lock { overflow: hidden; }
   .cta-row { justify-content: center; }
   .skin-wrap { aspect-ratio: 4 / 3; margin-top: 14px; border-radius: 18px; }
   .skin-cap { margin-top: 10px; }
+  .skin-sub { font-size: 0.82rem; bottom: 10px; padding: 5px 10px; }
+  .skin-ctl { top: 10px; right: 10px; }
   .ceiling, .inside { grid-template-columns: 1fr; gap: 36px; }
   .levels, .tiers, .cur, .totals { grid-template-columns: 1fr; }
   .totals { grid-template-columns: repeat(3, 1fr); gap: 8px; }

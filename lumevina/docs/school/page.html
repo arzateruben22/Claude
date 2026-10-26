@@ -45,6 +45,15 @@
         <video id="skin" class="skin-vid" autoplay muted loop playsinline preload="metadata" poster="img/school/video/hero.jpg" aria-label="A cross-section of living skin: new cells rise to the surface and shed, drops of vitamin C, a retinoid and niacinamide sink in, then dark spots fade and collagen builds.">
           <source src="img/school/video/hero.webm" type="video/webm"><source src="img/school/video/hero.mp4" type="video/mp4">
         </video>
+        <!-- subtitles for the clip (it has no sound: these are its words), timed in hero.js, and its two controls -->
+        <p class="skin-sub" id="skin-sub"></p>
+        <div class="skin-ctl">
+          <button type="button" class="skin-btn" id="skin-cc" aria-pressed="true" aria-label="Subtitles">CC</button>
+          <button type="button" class="skin-btn" id="skin-pp" aria-label="Pause the animation">
+            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          </button>
+        </div>
       </div>
       <div class="skin-cap"><b id="skin-phase">Level 1 · Know your skin</b><span id="skin-desc">New cells rise to the surface about every four weeks.</span></div>
     </div>
