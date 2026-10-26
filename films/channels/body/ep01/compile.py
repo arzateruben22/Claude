@@ -186,12 +186,16 @@ LABELS = [
     {"id": "capillary", "text": "capillary", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:capillary"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "dimple", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dimples"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
     {"id": "ghostw", "text": "its width: 7.5 µm", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
-    {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2", "t0": A("vo06:oxygen"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "out", "side": 1},
+    # the O₂ label lands on "out" ("oxygen is handed out"), once its molecule has climbed out of the vessel: from "oxygen"
+    # its anchor sweeps ~1100 px up the frame in a second, and a label shown during the climb trails its leader across the captions
+    {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2", "t0": A("vo06:out"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "out", "side": 1},
 ]
+O2_OUT = A("vo06:oxygen")                                # the O₂ swarm's clock (scene.mjs): it leaves the vessel on "oxygen"
 SCALES = [
     {"id": "cell", "text": "7.5 µm", "len": 7.5, "at": "hero", "t0": A("vo02:seven"), "t1": A("vo02:nucleus", -0.3), "shot": "meet"},
-    {"id": "vessel", "text": "3 µm", "len": 3.0, "at": "hero", "t0": A("vo05:three"), "t1": CUT["net"] - 0.3, "shot": "road"},
-    {"id": "net", "text": "50 µm", "len": 50.0, "at": "hero", "t0": CUT["net"] + 2.4, "t1": CUT["out"] - 0.3, "shot": "net"},
+    {"id": "vessel", "text": "3 µm", "len": 3.0, "at": "hero", "t0": A("vo05:three"), "t1": CUT["net"] - 0.4, "shot": "road"},   # the HUD fades over 0.4 s: gone by the cut
+    # from +2.9 s: before that the pull is still too close for a 50 µm bar to fit (scene.mjs shows no bar rather than a clamped one)
+    {"id": "net", "text": "50 µm", "len": 50.0, "at": "hero", "t0": CUT["net"] + 2.9, "t1": CUT["out"] - 0.4, "shot": "net"},
 ]
 GHOST = [A("vo05:half", -0.1), CUT["net"]]               # the undeformed cell's outline, beside the folded one
 LIFE = {"t0": A("vo05:about#2", -0.2), "keys": [[A("vo05:about#2"), 0], [A("vo05:days"), 120]], "t1": CUT["out"] - 0.3, "unit": "days", "label": "a red cell's life, about"}
@@ -212,7 +216,7 @@ film = {
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK, "ride": [RIDE0, RIDE1 + RIDE_BACK],
     "hero": HERO, "cam": CAM, "foc": FOC,
-    "labels": LABELS, "scales": SCALES, "ghost": GHOST, "life": LIFE, "tally": TALLY, "badges": BADGES,
+    "labels": LABELS, "o2": O2_OUT, "scales": SCALES, "ghost": GHOST, "life": LIFE, "tally": TALLY, "badges": BADGES,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),

@@ -27,14 +27,23 @@ Applied, re-voiced, re-directed and re-mixed (lint 0 errors; sync PASS):
 - **Direction.** The takeaway opens on the hero still cupped at the mouth of its capillary. It pops out and springs back to a disc on
   "disc shape" (the pop's thump lands on "disc"), and the camera then hands over to the capillary it left, landing there on "jam".
 - **F3 (a sickle cell on screen) is not built.** See "For a human to review".
+- **Scale pills (v3 review fix).** The meet close-up's "7.5 µm" pill used to draw a bar clamped by hud.js to 60 % of the
+  safe width (486 px at 1080 wide), while a true 7.5 µm there is 690–860 px, so read literally the bar made the cell about
+  12.5 µm, just as the voice says "about seven and a half micrometers". `scene.mjs` (`barPx`) now shows no bar for any
+  length the HUD would clamp, so that pill reads "7.5 µm" as text alone. The "50 µm" pill on the net arrives at +2.9 s
+  into the pull (it was +2.4 s), once a true 50 µm bar fits; the "3 µm" bar (about 320 px) was never clamped.
+- **The O₂ label lands on "out"** ("oxygen is handed out", 56.47 s), not on "oxygen". From "oxygen" its molecule sweeps
+  about 1,100 px up the frame in a second, and the label's leader crossed the captions while it faded in. The O₂ swarm
+  still leaves the vessel on "oxygen" (`film.json` "o2"), with the diffuse sound.
 - **Claims.** c8 now cites the published paper (Cell Microbiol 23:e13270). c16 cites NHLBI's sickle cell disease page and lists MIT
   News (2012) and the NHLBI fact sheet in its note; the audit could not re-confirm the fact-sheet quote. c3's claim no longer
   calls the actin ring general to mammals (it was seen in mouse cells). c17 is new.
 - **Timing.** The film is 1.2 s longer (72.0 s); everything after the meet shot moves later. Every anchor hangs on a word, so nothing
   was retimed by hand. The planned windows of the normal, change, takeaway, meanwhile and tease headings moved by 0.5 s so lint's
   planned pace stays under 3.0 words a second.
-- **Not redone in v3:** the draft preview (`review/preview-ep01.mp4`), the ten-still sheet and `qa/kprobe.mjs` are still v2's. Stills of
-  the changed beats were rendered at final quality and checked one by one.
+- **Not redone in v3:** the draft preview (`review/preview-ep01.mp4`), the ten-still sheet (`review/stills-ep01.jpg`) and `qa/kprobe.mjs`
+  are still v2's. Stills of the changed beats were rendered at final quality and checked one by one. **The physiologist reviews
+  from the new final, not from the `review/` folder's preview and stills.**
 
 ## v2 (24 Oct): new narration and notes
 
@@ -127,11 +136,11 @@ node ../../../../kits/cinema/film/render.mjs --film . --tier final --assemble --
 | Beat | Film s | What lands on what |
 |---|---|---|
 | hook | 0–5.6 | Frame 0 is the payoff: the hero folded into a parachute in a 4.6 µm capillary, with the title "Single *file*" and its pulse line kicking on the signature (0, +0.4 s). On "narrower" the camera looks up the road ahead |
-| normal | 5.6–17.6 | Iris to an artery's crowd, with the locator. Label on "red"; "7.5 µm" pill on "seven" (the voice says "about seven and a half micrometers"). The cell turns edge-on after "dimpled" and is cut open on "nucleus" ("no nucleus" points at the waist of the section). Crane back on "trillion" |
+| normal | 5.6–17.6 | Iris to an artery's crowd, with the locator. Label on "red"; "7.5 µm" pill on "seven" (the voice says "about seven and a half micrometers"; text only, since a true 7.5 µm bar in this close-up is wider than the HUD allows). The cell turns edge-on after "dimpled" and is cut open on "nucleus" ("no nucleus" points at the waist of the section). Crane back on "trillion" |
 | change | 17.6–26.8 | Iris to the vessel tree ("not to scale"). The hero reaches the first branch point on "branches", the second on "branches" again, and the capillary on "capillary" (label). Iris at 22.32 into the **ride-along, slowed ×10, 22.32–25.32 (3.0 s)**: the capillary narrows below the cell's width and it folds. Then, on "single", the cells coming up behind it in single file |
 | why | 26.8–38.4 | A wider stretch: the hero has relaxed to a disc by "guess" ("You'd guess its surface stretches to fit"). It is cut along its axis on "dimples", showing the biconcave profile (label "dimple"), and seen three-quarter on "parachute" as it cups. Picture-only after "instead": its nose enters a 3.8 µm pinch (35.8 s, a squish) and it springs back to a disc with a damped overshoot (36.9 s, a thump). The next cell squeezes too |
-| whoa | 38.4–51.6 | The tightest vessel, 3 µm, from "tightest" ("The tightest vessels are about three micrometers"). "3 µm" pill on "three". On "half" a ghost outline of the undeformed cell appears across the vessel, labelled "its width: 7.5 µm". Iris at 43.45, then the reveal pull to the capillary net ("50 µm" pill). The counter runs 0 → 120 days from "about" to "days" (counter.end plays the signature) |
-| takeaway | 51.6–59.2 | Iris to the hero, still cupped at the mouth of its capillary. It pops out into a venule and springs back to a disc on "disc shape" (53.03 s, the pop's thump). From 53.77 s the camera hands over to the capillary it left, landing there on "jam" (55.2 s). O₂ diffuses out through the wall on "oxygen" (label, "not to scale") |
+| whoa | 38.4–51.6 | The tightest vessel, 3 µm, from "tightest" ("The tightest vessels are about three micrometers"). "3 µm" pill on "three". On "half" a ghost outline of the undeformed cell appears across the vessel, labelled "its width: 7.5 µm". Iris at 43.45, then the reveal pull to the capillary net ("50 µm" pill from 46.35 s, once its bar fits). The counter runs 0 → 120 days from "about" to "days" (counter.end plays the signature) |
+| takeaway | 51.6–59.2 | Iris to the hero, still cupped at the mouth of its capillary. It pops out into a venule and springs back to a disc on "disc shape" (53.03 s, the pop's thump). From 53.77 s the camera hands over to the capillary it left, landing there on "jam" (55.2 s). O₂ diffuses out through the wall from "oxygen" ("not to scale"); its label lands on "out" (56.47 s), once its molecule has climbed out |
 | meanwhile | 59.2–65.2 | **The tally**: "new red cells while you watched", 2,000,000 × t from frame 0, so it reads 119.0 million when it appears and as the line starts (59.5 s). It sits on a pulse line that kicks on each lub, and a lub-dub thump plays on each beat |
 | tease | 65.2–72.0 | Iris; the hero is cut open on "carries", showing its "passengers" (not to scale), which sparkle on "billion". The end card arrives at 70.0 s: the pulse line flat-lines into "Next, inside: *a billion passengers*" and holds 2.0 s |
 
@@ -150,7 +159,7 @@ so a tracking shot cannot lose it.
 | Purity | 40 frames sought in order and then shuffled: **canvas identical 40/40, whole page 40/40** |
 | Renderer's own audit, after the fixes | The animatic (425 frames) and the draft (1,062 frames, 0.99 s/frame, K avg 2.5, max 6) are both clean |
 | Preview file (v2, not redone for v3) | Video 1,062 frames = 70.800 s, audio 70.800 s (equal). The delivered AAC (44.1 kHz, 192k) measures −14.1 LUFS, peak −1.9 dBFS |
-| Stills | Ten final-tier stills, reviewed one by one (see "For a human to review"). v3: eleven more at the changed beats (9.6, 28.6, 40.6, 42.9, 51.9, 53.2, 54.2, 55.5, 57.6, 61.5 and 71.0 s), no text warnings |
+| Stills | Ten final-tier stills, reviewed one by one (see "For a human to review"). v3: eleven more at the changed beats (9.6, 28.6, 40.6, 42.9, 51.9, 53.2, 54.2, 55.5, 57.6, 61.5 and 71.0 s), no text warnings. After the v3 review's pill and O₂-label fixes: nine more (9.6, 11.5, 40.6, 46.4, 47.2, 55.5, 56.7, 57.6 and 71.0 s), no text warnings; `qa/audit.mjs` clean at all 360 moments |
 
 ## Render budget
 
@@ -211,6 +220,10 @@ so a tracking shot cannot lose it.
   the hook's question, 0.30 s elsewhere. Check by eye and ear the starred words inside a phrase: folded,
   narrower, red blood cell, nucleus, capillary, single file, dimples, parachute, half its width, a hundred and
   twenty days, disc shape, carries. The pop's thump lands on "disc".
+- **Known polish, not fixed (seen in v2 and v3):** where the translucent venule wall crosses at top left in the takeaway
+  (about x 170–260, y 100–470 at 53.2 and 54.2 s, and at about 51.3 s in v2), the surfaces flicker into a striped,
+  dithered patch, which looks like depth fighting where two vessel surfaces overlap. The fix is in the vessel geometry:
+  the venules' layout in `scene.mjs`, or `../set/vessel.js`, which episodes 2–6 share. It was left for this pass.
 - **A physiologist's sign-off** on the script and the pictures, especially the fold (the membrane's area doesn't
   stretch; the model keeps its arc length), the ghost comparison (3 µm against 7.5 µm) and the sickle-cell line
   (c16: whether to name the disease, and "where oxygen is handed out" for the capillaries).
@@ -249,5 +262,8 @@ None of the protected files were edited. Each workaround lives in this episode o
    recognizer's value as `end_asr`.
 6. **render.mjs's audit checks only two moments per shot.** It caught the tally. `qa/audit.mjs` runs the same
    AUDIT, plus the UI zones, every 0.2 s.
-7. **hud.js `scale` caps its bar at 60 % of the safe width.** A 7.5 µm comparison bar could not show in the
-   close-up, so the whoa uses a ghost outline with a label instead.
+7. **hud.js `scale` caps its bar at 60 % of the safe width** (and floors it at 4 px), so a clamped bar no longer
+   matches its text. A 7.5 µm comparison bar could not show in the close-up, so the whoa uses a ghost outline with a
+   label instead, and `scene.mjs` (`barPx`) shows no bar for any length the cap would clamp: the meet's "7.5 µm" pill
+   is text only (a true bar there is 690–860 px against the 486 px cap). A kit fix would let `scale` report a clamp
+   (or hide the bar itself) rather than draw a shorter one.

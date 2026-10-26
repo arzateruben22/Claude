@@ -4,6 +4,8 @@
 - **Stakes, reworded.** "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration." (c12, c16, c17). The button now follows from the line before it: the jam comes with losing the disc shape, and the dimple sentence cites Namvar et al. 2021 (c17). The physiologist decides whether to name the disease and whether "where oxygen is handed out" (the capillaries) is right; the old "the smallest vessels" also covered obstruction just downstream of them. If it stays, pin NHLBI's sickle cell disease page in the comments. No sickle cell is drawn (audit F3; see the README).
 - **The wrong idea, reworded.** "You'd guess its surface stretches to fit. It can't." (c7: a red cell does lengthen, but its membrane's area can't grow).
 - **"The tightest vessels are about three micrometers"** (the noun is back) and **"about seven and a half micrometers"** (it now matches the 7.5 µm pill on screen).
+- **The meet shot's "7.5 µm" pill is text only.** Its bar used to be clamped by the HUD to about 60 % of the cell's width on screen, so read literally it made the cell about 12.5 µm. A true 7.5 µm bar in that close-up is wider than the HUD allows, so the pill now shows no bar. The "3 µm" and "50 µm" bars are drawn at their true lengths. The O₂ label now lands on "out" ("oxygen is handed out"), once its molecule is out of the vessel.
+- **Review from the new final.** `preview-ep01.mp4` and `stills-ep01.jpg` in this folder are still v2's (old words, old pills). Watch the v3 final render instead.
 
 ## Changed in v2
 - **New in v2 (24 Oct): stakes.** First voiced as "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out." (reworded in v3, above).
