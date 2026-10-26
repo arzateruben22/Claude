@@ -35,6 +35,7 @@ Built on Anthropic's iMessage channel for Claude Code (a research preview): http
    ```sh
    claude --channels plugin:imessage@claude-plugins-official
    ```
+   On a plan that includes it, `--model claude-fable-5-1` before `--channels` runs the drafts on Fable, the same model as the website's chat.
 7. **Text yourself** from the iPhone (Messages → new message to your own number or Apple ID email). The first time Claude replies, the Mac asks whether Terminal may control Messages: click **OK**.
 8. **Keep the Mac awake** while it's on duty: in a second Terminal tab run `caffeinate -dims`, or set the Mac never to sleep on power.
 

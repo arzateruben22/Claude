@@ -17,6 +17,13 @@
  *
  *   Members hear back within 24 hours; everyone else within 2 days.
  *
+ *   It opens by asking whether the client is new here or has been in
+ *   before (kept for this browser; a client with a plan on file counts as
+ *   returning). The answer picks the topic chips, points a first visit to
+ *   New Clients Start Here or the Acne Bootcamp consultation, and goes to
+ *   the server and the preview with every question so the assistant sends
+ *   them to the right service.
+ *
  *   Signed in, with a skin plan from Evelyn (js/skin-plans.js): "what do I
  *   use tonight?", "what should I avoid?", "what's next?" are answered from
  *   that plan, with Add to bag buttons for its products. Changing it, or
@@ -188,6 +195,15 @@
     { id: "cancel", node: "cancel", k: /cancel|reschedul|move my|change my (appointment|booking|time)|running late|\blate\b|no.?show/, a: function () {
       return "Cancel or reschedule at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you (same month). Same-day changes keep the deposit and add a $43 fee. Saturdays can’t be moved. There’s a 10-minute grace period if you’re running late."; },
       acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
+    /* her own answer (Skin Playbook: "I don't know which facial to book"), by whether they've been in before */
+    { id: "which", k: /which (facial|one|treatment|service)|what (facial|treatment) (should|do) i|first (visit|time|facial)|new (client|here)|never been|start(ing)? with/, a: function () {
+      var st = window.LumevinaAsk && window.LumevinaAsk.status ? window.LumevinaAsk.status() : "";
+      if (st === "existing") return "Returning clients book the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re in the Acne Bootcamp. Not sure? Message Evelyn and she’ll point you to the right one.";
+      return "If you’re new and don’t have acne concerns, book New Clients Start Here. If you’re new with acne concerns, book the Acne Bootcamp consultation + treatment. Returning clients: the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re working on acne. Not sure? Message Evelyn and she’ll point you to the right one."; },
+      acts: [["Book", "n:book"], ["What happens at a first visit", "t:What happens at a first visit?"], ["Ask Evelyn", "skin"]] },
+    { id: "first", k: /what happens|first visit|what('?s| is) (it|a visit|a facial) like|what to expect|walk me through/, a: function () {
+      return "We start by talking: your skin, what you’re using now, what you want. Evelyn looks at your skin up close, then a fully customized facial: double cleanse, enzyme exfoliation, extractions, a targeted mask, massage, LED and cryo globes. You leave with a home routine and a plan for the next visit. Come with a clean face if you can (she’ll remove makeup if not) and bring a list or photos of what you use at home."; },
+      acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["Book", "n:book"]] },
     { id: "book", node: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
       var H = window.LumevinaHours;
       var gg = window.LumevinaBooking && window.LumevinaBooking.external;
@@ -222,10 +238,10 @@
         ". Acne starts at " + price("new-client-consultation-acne", 220) + ". Waxing starts at " + price("upper-lip-wax", 10) + "; a Brazilian is " + price("brazilian-wax", 75) + "."; },
       acts: [["See the menu", "#services"], ["Book", "book"]] },
     { id: "before", node: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {
-      return "Before your facial: stop retinol or prescription retinoids 5 to 7 days ahead, pause exfoliating acids 2 to 3 days ahead, and don’t wax or shave your face for 2 days. After Botox or fillers, wait 2 weeks (or book the facial the same day, before injections). Skip booking on the day of a big event."; },
+      return "Before your facial: pause retinol and other retinoids, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels 3 to 5 days ahead; a prescription retinoid like tretinoin, about a week, and tell Evelyn you’re on it. Keep your cleanser, moisturizer and SPF, and don’t wax your face for 2 days. After Botox or fillers, wait 2 weeks (or book the facial the same day, before injections). Skip booking on the day of a big event."; },
       acts: [["All prep notes", "#policies"]] },
     { id: "after", node: "after", k: /after (my|the|a) (facial|appointment|visit|treatment)|aftercare|work ?out|exercise|gym|sweat|makeup after/, a: function () {
-      return "After your facial: skip makeup for the rest of the day, avoid workouts and heavy sweating for 24 hours (a week after a body peel), and don’t wax or shave your face for 2 days. If anything feels off, message within 24 hours."; } },
+      return "After your facial: nothing on your skin for the rest of the day (mineral makeup is fine the next morning), no heat or sweat for 24 hours (gym, sauna, steam, hot yoga, hot tubs, swimming), and don’t wax or shave your face for 2 days. After a peel, dermaplaning or microchanneling, give it 48 hours. If anything feels off, message within 24 hours."; } },
     { id: "member", node: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
       return "Two plans. Glow, " + memPrice("glow") + " a month: a Custom Facial or the Monthly Acne Treatment every month. Ageless, " + memPrice("ageless") + ": everything in Glow plus the Ageless Grace Facial and dermaplaning every other visit. Members book with no deposit, bank a facial they can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours." + foundingNote(); },
       acts: [["See memberships", "#membership"]] },
@@ -320,16 +336,17 @@
     "c-dep": info("Every booking takes a non-refundable deposit that goes toward your total. With 48 hours’ notice it moves to a new date in the same month.", [["Something else", "n:cancel"]]),
     before: info("Getting ready for your facial. Which part?", [["Retinol and acids", "n:b-ret"], ["Botox or fillers", "n:b-botox"], ["Waxing or shaving", "n:b-wax"],
       ["Permanent makeup", "n:b-pmu"], ["Accutane, laser or surgery", "n:b-med"], ["A big event", "n:b-event"], ["Sunburn or a cold sore", "n:b-sun"]]),
-    "b-ret": info("Stop retinol or prescription retinoids 5 to 7 days before, and pause exfoliants (salicylic, benzoyl peroxide, glycolic and other acids) 2 to 3 days before.", [["Something else", "n:before"]]),
+    /* her words (Skin Playbook: client questions, before and after) */
+    "b-ret": info("Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell Evelyn you’re on it. Keep your cleanser, moisturizer and SPF as usual, and at least moisturizer and SPF the day of your appointment.", [["Something else", "n:before"]]),
     "b-botox": info("Wait 2 weeks after Botox or fillers, or book your facial the same day, before your injections.", [["Something else", "n:before"]]),
-    "b-wax": info("Don’t wax or shave your face for 2 days before your facial, or for 2 days after.", [["Something else", "n:before"]]),
+    "b-wax": info("Don’t wax your face for 2 days before your facial, or wax or shave it for 2 days after. Shaving the morning of a facial is fine, but not right before a peel or dermaplaning.", [["Something else", "n:before"]]),
     "b-pmu": info("After permanent makeup, wait 2 weeks before a facial. A facial is fine up to 1 week before your PMU appointment.", [["Something else", "n:before"]]),
     "b-med": info("After Accutane, recent laser, cosmetic surgery, radiation or chemotherapy, wait 6 to 12 months or bring your doctor’s clearance. Evelyn can look at your situation herself.", [["Ask Evelyn about mine", "skin"], ["Something else", "n:before"]]),
     "b-event": info("Don’t book your facial the same day as a big event: makeup isn’t recommended right after. A few days before is ideal.", [["Book", "n:book"], ["Something else", "n:before"]]),
     "b-sun": info("Sunburn, windburn, an open wound or an active cold sore means your skin needs to heal first. Let Evelyn know as soon as possible so you can move your appointment.", [["Move an appointment", "move"], ["Ask Evelyn", "skin"]]),
     after: info("After your facial. Which part?", [["Makeup", "n:a-makeup"], ["Working out", "n:a-work"], ["Waxing or shaving", "n:a-wax"], ["Something feels off", "skin"]]),
-    "a-makeup": info("Skip makeup for the rest of the day so your skin can take in everything from the treatment.", [["Something else", "n:after"]]),
-    "a-work": info("Give it 24 hours: no workouts or heavy sweating. After a body peel, give it a week.", [["Something else", "n:after"]]),
+    "a-makeup": info("Give your skin the rest of the day with nothing on it. Mineral makeup is fine the next morning after a facial; after a peel, dermaplaning or microchanneling, wait until it’s no longer pink and tight, usually 24 to 48 hours.", [["Something else", "n:after"]]),
+    "a-work": info("Skip heat and sweat for 24 hours after a facial or wax, and 48 hours after a peel, dermaplaning or microchanneling: no gym, sauna, steam, hot yoga, hot tubs or swimming. After a body peel, give it a week.", [["Something else", "n:after"]]),
     "a-wax": info("No waxing or shaving your face for 2 days after your facial.", [["Something else", "n:after"]]),
     member: info("Two plans. What would you like to know?", function () { return [["Glow · " + memPrice("glow"), "n:m-glow"], ["Ageless · " + memPrice("ageless"), "n:m-ageless"], ["Banking a facial", "n:m-bank"],
       ["Pausing or cancelling", "n:m-pause"], ["Ask Evelyn any time", "n:m-ask"], ["Join", "#membership"]]; }),
@@ -492,9 +509,30 @@
     ["After my facial", "n:after"], ["Cancel or reschedule", "n:cancel"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"],
     ["Parking", "t:Where do I park?"], ["A question about my skin", "skin"]]
     .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
+  var NEW_FIRST = [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["My first visit", "t:What happens at a first visit?"]];
+  var chipsFor = function (st) {
+    if (st === "new") return NEW_FIRST.concat(CHIPS.filter(function (c) { return c[1] !== "n:cancel" && c[1] !== "t:Where is my order?"; }));
+    return CHIPS;
+  };
 
   var state = chat();
   var save = function () { write(CHAT_KEY, state); };
+  /* new here, or been in before: asked first, kept for this browser, and told to the assistant */
+  var STATUS = {
+    "new": { label: "I’m new here", say: "Welcome! For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Anything about your own skin, I’ll pass to Evelyn.",
+      acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["What happens at a first visit", "t:What happens at a first visit?"], ["What should I bring?", "t:What should I wear or bring to my appointment?"], ["Prices", "n:prices"], ["Book", "n:book"]] },
+    existing: { label: "I’ve been in before", say: "Welcome back! Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Anything about your own skin, I’ll pass to Evelyn.",
+      acts: [["Book", "n:book"], ["Move or cancel", "n:cancel"], ["Before my facial", "n:before"], ["After my facial", "n:after"], ["Where’s my order?", "t:Where is my order?"], ["Buy again", "account"]] }
+  };
+  var status = function () { return state.status === "new" || state.status === "existing" ? state.status : (myPlan() ? "existing" : ""); };
+  var setStatus = function (which) {
+    if (!STATUS[which]) return;
+    state.status = which;
+    state.pending = null;
+    push({ who: "you", text: STATUS[which].label });
+    push({ who: "bot", text: STATUS[which].say, acts: STATUS[which].acts });
+    render();
+  };
   var push = function (m) { state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
 
   /* answers Evelyn has sent for this browser's questions (live: fetched for a signed-in client, below) */
@@ -583,10 +621,14 @@
   var render = function () {
     logEl.innerHTML = "";
     var who = me();
+    var st = status();
     bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
       : myProfile() ? "I have your skin profile, so ask me about prep, aftercare, products or booking and I’ll keep your routine in mind. Changes to your routine, I’ll pass to Evelyn."
-      : "Ask me about prices, booking, prep, aftercare or products, or where your order is. Anything about your own skin, I’ll pass to Evelyn.")));
+      : st ? "Ask me about prices, booking, prep, aftercare or products, or where your order is. Anything about your own skin, I’ll pass to Evelyn."
+      : "Welcome to Lumevina. Are you new here, or have you been in before?")) +
+      (st ? '<span class="ask-status">' + (st === "new" ? "New client" : "Been in before") + ' · <button type="button" class="ask-status-x" data-act="status:' + (st === "new" ? "existing" : "new") + '">' + (st === "new" ? "I’ve been in before" : "I’m new here") + '</button></span>'
+        : '<div class="ask-acts"><button type="button" class="ask-act is-primary" data-act="status:new">' + esc(STATUS["new"].label) + '</button><button type="button" class="ask-act is-primary" data-act="status:existing">' + esc(STATUS.existing.label) + '</button></div>'));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
     var lastBot = -1;
@@ -618,8 +660,8 @@
         '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert">' + esc(sendErr) + '</p>';
       box.appendChild(f);
     }
-    chipsEl.parentNode.hidden = state.log.length > 0 && !!pending;
-    chipsEl.innerHTML = CHIPS.map(function (c) { return '<button type="button" class="ask-chip" data-go="' + esc(c[1]) + '">' + esc(c[0]) + "</button>"; }).join("");
+    chipsEl.parentNode.hidden = (state.log.length > 0 && !!pending) || !st;
+    chipsEl.innerHTML = chipsFor(st).map(function (c) { return '<button type="button" class="ask-chip" data-go="' + esc(c[1]) + '">' + esc(c[0]) + "</button>"; }).join("");
     chipsEl.scrollLeft = 0;
     setTimeout(paintNav, 0);
     replies().forEach(function (q) { state.seen[q.id] = true; });
@@ -689,7 +731,7 @@
     var who = me();
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
-    post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "" }).then(function (r) {
+    post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "", client: status() }).then(function (r) {
       if (r && r.answer) {
         var answer = String(r.answer), ids = Array.isArray(r.products) ? r.products.map(String) : [];
         var links = (Array.isArray(r.links) ? r.links : []).filter(function (l) { return l && /^https:\/\//.test(l.url); })
@@ -717,7 +759,7 @@
     window.claude.use("sample").then(function (fn) { sampler = fn || null; }, function () { sampler = null; });
   }
   var PREVIEW_MODEL = "claude-fable-5-1";   /* the viewer's plan decides; otherwise the quick tier answers */
-  var KINDS = ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"];
+  var KINDS = ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "personal", "request", "other"];
   var MEM_KINDS = ["skin", "concern", "product", "supplement", "treatment", "sensitivity", "goal", "other"];
   var GONE = { not_granted: 1, sampling_disabled: 1, not_declared: 1, capability_disabled: 1, capability_removed: 1 };
   var stockNote = function (id) {
@@ -740,7 +782,7 @@
       lines.length ? "Their skin profile, in their own words:\n" + lines.join("\n") : "They haven't filled in a skin profile yet.",
       mem.length ? "What they've told you before:\n" + mem.join("\n") : "",
       "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\"). You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax), and send the decision to Evelyn." +
-        (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"skin\")." : "") +
+        (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"personal\")." : "") +
         " Use their first name now and then."
     ].filter(Boolean).join("\n\n");
   };
@@ -759,6 +801,8 @@
         return "- " + p.name + " (" + p.brand + ", " + p.type + (p.size ? ", " + p.size : "") + "): $" + p.price + stockNote(p.id) + (p.about ? ". " + p.about : "") + " [id: " + p.id + "]";
       }).join("\n"),
       who ? clientBlock(who) : "",
+      status() === "new" ? "# This client is new to the studio\n\nThey said they haven't been in before. Their first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern; not the returning-client facials. If they aren't local, the online Skin Consult. Explain what a first visit is like from her playbook when asked."
+        : status() === "existing" ? "# This client has been in before\n\nThey said they're a returning client: they book the Lumevina Custom Facial, or the Monthly Acne Treatment if they're in the Acne Bootcamp; don't send them to the new-client services." : "",
       [
         "# How to reply here",
         "- There are no tools in this chat: where the instructions above say to call hand_to_evelyn, show_products or remember, write the matching line below instead. Order look-ups and gift balances are answered by the website itself.",
@@ -1054,6 +1098,7 @@
     if (isStep(act)) return go(b.textContent, act);
     if (act.indexOf("book:") === 0) { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(act.slice(5)); return; }
     if (act === "send") return send();
+    if (act.indexOf("status:") === 0) return setStatus(act.slice(7));
     if (act === "nevermind") { state.pending = null; shots = []; sendErr = ""; push({ who: "bot", text: "No problem. Anything else?" }); return render(); }
     if (act.indexOf("unshot:") === 0) { shots.splice(Number(act.slice(7)), 1); sendErr = ""; return render(); }
     if (act.indexOf("add:") === 0 || act.indexOf("addall:") === 0) return addToBag(act.slice(act.indexOf(":") + 1).split(","), act.indexOf("addall:") === 0);
@@ -1134,5 +1179,5 @@
   paintFab();
   fetchReplies();
 
-  window.LumevinaAsk = { open: open, ask: function (t) { open(t); }, classify: classify, questions: questions };
+  window.LumevinaAsk = { open: open, ask: function (t) { open(t); }, classify: classify, questions: questions, status: status };
 })();

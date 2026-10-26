@@ -47,14 +47,14 @@ export async function suggestLesson(db: any, q: { id: string; kind: string; text
     const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY") });
     const msg = await anthropic.beta.messages.create({
       model: MODEL,
-      max_tokens: 700,
+      max_tokens: 1500,                                // thinking and the answer together
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: { effort: "low", format: FORMAT },
       system: [{ type: "text", text: RULES }],
       messages: [{ role: "user", content: `The client asked: ${q.text}\n\nEvelyn replied:\n${reply}` }],
     });
-    if (msg.stop_reason === "refusal") return null;
+    if (msg.stop_reason !== "end_turn") return null;   // refused or cut off: nothing to suggest
     const out = JSON.parse(textOf(msg));
     const question = String(out.question ?? "").trim().slice(0, 300), answer = String(out.answer ?? "").trim().slice(0, 1500);
     if (!out.teach || !question || !answer) return null;

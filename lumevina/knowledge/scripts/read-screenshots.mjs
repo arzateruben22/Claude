@@ -24,7 +24,7 @@ import { allShots, itemTitle, SHOTS_DIR, ROOT } from "./playbook-data.mjs";
 const [dir, images] = process.argv.slice(2);
 if (!dir || !images) { console.error("usage: node knowledge/scripts/read-screenshots.mjs <folder with the playbook JSON files> <folder with the screenshots>"); process.exit(1); }
 
-const MODEL = "claude-opus-5-5";
+const MODEL = "claude-fable-5-1";   // reads dense, blurry or flipped screenshots best; a safety decline falls back server-side
 const TYPES = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif", ".pdf": "application/pdf" };
 const today = new Date().toISOString().slice(0, 10);
 
@@ -76,15 +76,19 @@ for (const s of todo) {
   const data = fs.readFileSync(src.f);
   if (data.length > 5 * 1024 * 1024) { console.log("over 5 MB, skipped:", s.id, `"${s.name}"`); continue; }
   const source = { type: "base64", media_type: src.type, data: data.toString("base64") };
-  const msg = await client.messages.create({
+  const msg = await client.beta.messages.create({
     model: MODEL,
-    max_tokens: 4000,
+    max_tokens: 6000,                                   // thinking and the transcription together
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
+    output_config: { effort: "medium" },
     system: SYSTEM,
     messages: [{ role: "user", content: [
       src.type === "application/pdf" ? { type: "document", source } : { type: "image", source },
       { type: "text", text: context(s) }
     ] }]
   });
+  if (msg.stop_reason !== "end_turn") { console.log(msg.stop_reason === "refusal" ? "declined (read it by hand):" : "cut off, try again:", s.id, `"${s.name}"`); continue; }
   const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
   const keep = text && text !== "NOTHING TO KEEP";
   const front = { id: s.id, section: s.sid, item: s.item, name: JSON.stringify(s.name), read: today, keep: keep ? "yes" : "no" };

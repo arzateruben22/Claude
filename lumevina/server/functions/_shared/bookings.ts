@@ -291,7 +291,7 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
   } else if (kind === "reminder") {
     subject = `See you ${when.replace(/,.*? at /, " at ")}`;
     title = `See you soon${first ? ", " + first : ""}.`;
-    body = details + formLine + `<p style="font-size:14px;line-height:1.5">Before a facial: no retinol for 5 to 7 days, no exfoliating acids for 2 to 3 days, and no waxing or shaving your face for 2 days.</p>` + arrive + manage + policy;
+    body = details + formLine + `<p style="font-size:14px;line-height:1.5">Before a facial: pause retinol and acids (glycolic, lactic, salicylic, mandelic) for 3 to 5 days, a prescription retinoid about a week, and no waxing your face for 2 days. Keep your cleanser, moisturizer and SPF.</p>` + arrive + manage + policy;
     sms = `Lumevina reminder: ${svc} ${when}. Need to change it? ${manageUrl(b)}`;
   } else if (kind === "cancelled") {
     subject = "Your Lumevina appointment is cancelled";

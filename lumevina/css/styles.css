@@ -5960,6 +5960,8 @@ html:not(.book-site) .bk-move { display: none; }
 .ask-err { color: var(--danger); font-size: 0.78rem; min-height: 0; }
 .ask-err:empty { display: none; }
 .ask-act:disabled { opacity: 0.6; cursor: progress; }
+.ask-status { display: block; margin-top: 6px; font-size: 0.74rem; color: var(--muted); }
+.ask-status-x { font: inherit; color: var(--mauve); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 /* photos for Evelyn, on a question going to her */
 .ask-shots { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 2px; }
 .ask-shot { position: relative; width: 56px; height: 56px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--panel-edge); }

@@ -36,7 +36,8 @@
 //
 // Requests, with the client's Supabase session when signed in (Authorization:
 // Bearer <their access token>; the anon key otherwise):
-//   POST { message, history?: [{role, content}], name?, email? }
+//   POST { message, history?: [{role, content}], name?, email?, client?: "new" | "existing" }
+//     `client` is what they tapped first in the chat: new here, or been in before.
 //     → { answer, products?: [shelf ids], links?: [{label, url}] }
 //     or { handoff: kind, why?, urgent? }   (nothing is saved yet: the website asks first)
 //     or, when Claude can't be reached, a 5xx { error } that tells the website
@@ -52,6 +53,14 @@
 // tools) is cached for an hour, so each question pays mostly for its own few
 // hundred tokens. A look-up adds one more short round. Check
 // usage.cache_read_input_tokens in the logs.
+//
+// The model (Claude Fable 5.1) always thinks before it answers, so max_tokens
+// covers the thinking and the reply together: the chat runs at low effort
+// (quick, short answers; low is plenty here) and the draft Evelyn edits at
+// medium. A safety decline falls back to another model server-side; a reply
+// cut off at max_tokens is used when it has text and handed to her when not.
+// Each round passes the whole previous turn back unchanged (thinking blocks
+// included), as the model requires.
 
 import Anthropic from "npm:@anthropic-ai/sdk@0.131.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -72,6 +81,16 @@ const GUEST_HOURS = 48;
 const KIND_SET = new Set(["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "personal", "request", "other"]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ROUNDS = 4;                                 // an answer, plus up to three rounds of looking things up
+const CHAT_TOKENS = 2048;                         // thinking and a few sentences, with room for a tool call
+const DRAFT_TOKENS = 2500;
+type Status = "new" | "existing" | "";
+const statusOf = (v: unknown): Status => v === "new" || v === "existing" ? v : "";
+// what they tapped first in the chat, so the answer sends a first visit to the right service
+const statusLine = (st: Status) => st === "new"
+  ? "The client said they're new to the studio: a first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern, never the returning-client facials; if they aren't local, the online Skin Consult. When asked, say what a first visit is like from her playbook."
+  : st === "existing"
+  ? "The client said they've been in before: they book the Lumevina Custom Facial, or the Monthly Acne Treatment if they're in the Acne Bootcamp; don't send them to the new-client services."
+  : "";
 
 const admin = () => createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY") });
@@ -280,26 +299,26 @@ const runLookup = async (db: ReturnType<typeof admin>, signedIn: string | null, 
 };
 
 // the draft Evelyn checks, and a plain line on what any photos show; never fails the save
-const writeDraft = async (site: Site, who: { name: string }, kind: string, why: string, q: string, fileText: string | null, photos: Photo[]) => {
+const writeDraft = async (site: Site, who: { name: string }, kind: string, why: string, q: string, fileText: string | null, photos: Photo[], status: Status) => {
   try {
     const msg = await anthropic.beta.messages.create({
       model: MODEL,
-      max_tokens: 900,
+      max_tokens: DRAFT_TOKENS,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      output_config: { effort: "low", format: DRAFT_FORMAT },
+      output_config: { effort: "medium", format: DRAFT_FORMAT },   // she edits this one: worth a little more thought
       system: [{ type: "text", text: DRAFT[site], cache_control: { type: "ephemeral", ttl: "1h" } }],
       messages: [{
         role: "user",
         content: [
           ...photos.map((ph) => ({ type: "image" as const, source: { type: "base64" as const, media_type: "image/jpeg" as const, data: ph.base64 } })),
-          { type: "text" as const, text: `Client: ${who.name}\nKind: ${kind}${why ? `\nWhat they need: ${why}` : ""}\nQuestion: ${q}` +
+          { type: "text" as const, text: `Client: ${who.name}${status === "new" ? " (new to the studio, no visit yet)" : status === "existing" ? " (has been in before)" : ""}\nKind: ${kind}${why ? `\nWhat they need: ${why}` : ""}\nQuestion: ${q}` +
             (photos.length ? `\nPhotos attached: ${photos.length}` : "\nNo photos.") +
             (fileText ? `\n\nTheir file (use it to make the draft specific to them; don't change their plan in the draft unless Evelyn would):\n${fileText}` : "") },
         ],
       }],
     });
-    if (msg.stop_reason === "refusal") return { draft: "", note: "" };
+    if (msg.stop_reason !== "end_turn") return { draft: "", note: "" };   // a refusal, or cut off: she writes it herself
     const out = JSON.parse(textOf(msg));
     return { draft: String(out.draft ?? "").trim(), note: photos.length ? String(out.photo_note ?? "").trim() : "" };
   } catch (e) {
@@ -317,6 +336,7 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   const q = String(body.message ?? "").trim().slice(0, 600);
   const site = siteOf(body.site);
+  const status = statusOf(body.client);
   if (!q) return json({ error: "Empty question" }, 400);
 
   // who's asking: a signed-in client, whether they're a member, and their file
@@ -350,7 +370,7 @@ Deno.serve(async (req) => {
     const why = String(body.why ?? "").trim().slice(0, 200);
     const photos = readPhotos(body.photos);
     const paths = await savePhotos(db, id, photos);
-    const { draft, note } = await writeDraft(site, who, kind, why, q, file?.text ?? null, photos);
+    const { draft, note } = await writeDraft(site, who, kind, why, q, file?.text ?? null, photos, status);
     const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();
     const { error } = await db.from("questions").insert({
       id, client_id: who.id, name: who.name, email: who.email, member, kind, text: q, why: why || null,
@@ -385,6 +405,7 @@ Deno.serve(async (req) => {
       ...(learned ? [{ type: "text" as const, text: learned, cache_control: { type: "ephemeral" as const, ttl: "1h" as const } }] : []),
       ...(file && client ? [{ type: "text" as const, text: fileBlock(client.name, file) }] : []),
       { type: "text" as const, text: (signedIn ? `The client is signed in as ${signedIn}, so look_up_order finds their own orders without details, and remember saves what they tell you about their skin and routine.` : "The client isn't signed in, so don't use remember.") +
+        (statusLine(status) ? "\n\n" + statusLine(status) : "") +
         "\n\n" + await stockBlock(db) },
     ];
     const products: string[] = [];
@@ -403,7 +424,7 @@ Deno.serve(async (req) => {
     for (let round = 0; round < ROUNDS; round++) {
       const reply = await anthropic.beta.messages.create({
         model: MODEL,
-        max_tokens: 1024,                              // answers are a few sentences by design
+        max_tokens: CHAT_TOKENS,
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",                          // a safety decline re-runs on a fallback model
         output_config: { effort: "low" },              // a chat route: quick, short answers
@@ -415,6 +436,11 @@ Deno.serve(async (req) => {
       console.log(JSON.stringify({ built: BUILT_AT, round, file: file ? (file.hasPlan ? "plan" : "file") : "none", stop: reply.stop_reason, cached: reply.usage.cache_read_input_tokens, wrote: reply.usage.cache_creation_input_tokens, out: reply.usage.output_tokens }));
 
       if (reply.stop_reason === "refusal") { kind = "other"; break; }
+      if (reply.stop_reason === "max_tokens") {          // ran long: a finished sentence stands, otherwise Evelyn answers
+        const cut = textOf(reply).replace(/[^.!?]*$/, "").trim();
+        if (cut) return json({ answer: cut });
+        kind = "other"; break;
+      }
       const calls = reply.content.filter((b): b is Anthropic.Beta.Messages.BetaToolUseBlock => b.type === "tool_use");
       const hand = calls.find((c) => c.name === "hand_to_evelyn");
       if (hand) {

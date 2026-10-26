@@ -303,6 +303,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   var SPEC = ${JSON.stringify(spec)};
   var COLL = "playbook";
   var LOCAL = "lumevina_playbook_";
+  var MODEL = "claude-fable-5-1";   /* for the interview and the spelling check; her plan decides, otherwise the quick tier answers */
   var el = function (tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
   /* ── state: one document per section; keys are "item.field" ── */
@@ -1317,7 +1318,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         "Answers (JSON): " + JSON.stringify(todo.map(function (t) { return { id: t.id, text: t.text }; })),
         'Reply with JSON only: {"fixes": [{"id": "<id>", "text": "<the whole answer, corrected>"}]}, listing only the answers that needed a fix.'
       ].join("\n\n");
-      smp.json(input, { modelTier: "quick", cache: false }).then(function (r) {
+      smp.json(input, { model: MODEL, effort: "low", modelTier: "quick", cache: false }).then(function (r) {
         var fixes = (r && Array.isArray(r.fixes)) ? r.fixes : [];
         var byId = {}; fixes.forEach(function (x) { if (x && x.id) byId[x.id] = x.text; });
         todo.forEach(function (t) {
@@ -1491,7 +1492,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     setTalkStatus("");
     paintTalk();
     logEl.lastChild.scrollIntoView({ block: "nearest" });
-    sample.json(buildInput(note), { modelTier: "quick", cache: false, signal: ctl.signal }).then(function (r) {
+    sample.json(buildInput(note), { model: MODEL, effort: "low", modelTier: "quick", cache: false, signal: ctl.signal }).then(function (r) {
       var say = String(r && r.say || "").trim() || "Got it. Shall we keep going?";
       var saved = applySaves(r && r.save);
       (Array.isArray(r && r.skip) ? r.skip : []).forEach(function (id) { if (BY_ID[id] && talk.skips.indexOf(id) === -1) talk.skips.push(id); });
