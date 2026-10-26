@@ -1,5 +1,5 @@
 {
- "duration": 71.7333,
+ "duration": 72.8,
  "fps": 30,
  "preset": "restframe-bench",
  "duck_db": -9.0,
@@ -19,37 +19,37 @@
   {
    "id": "change",
    "t0": 13.6,
-   "t1": 20.0,
+   "t1": 20.5333,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 20.0,
-   "t1": 38.1333,
+   "t0": 20.5333,
+   "t1": 38.6667,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 38.1333,
-   "t1": 49.6,
+   "t0": 38.6667,
+   "t1": 50.6667,
    "energy": 0.8
   },
   {
    "id": "measure",
-   "t0": 49.6,
-   "t1": 59.7333,
+   "t0": 50.6667,
+   "t1": 60.8,
    "energy": 0.3
   },
   {
    "id": "takeaway",
-   "t0": 59.7333,
-   "t1": 65.6,
+   "t0": 60.8,
+   "t1": 66.6667,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 65.6,
-   "t1": 71.7333,
+   "t0": 66.6667,
+   "t1": 72.8,
    "energy": 0.4
   }
  ],
@@ -218,10 +218,10 @@
    "t": 13.6,
    "kind": "section",
    "id": "change",
-   "t1": 20.0
+   "t1": 20.5333
   },
   {
-   "t": 14.8,
+   "t": 15.066666666666666,
    "kind": "label",
    "tag": "ch-30",
    "pos": [
@@ -230,7 +230,7 @@
    ]
   },
   {
-   "t": 15.566666666666666,
+   "t": 15.866666666666667,
    "kind": "label",
    "tag": "ch-10",
    "pos": [
@@ -239,7 +239,7 @@
    ]
   },
   {
-   "t": 15.9952,
+   "t": 16.5285,
    "kind": "contact",
    "tag": "change:release",
    "pos": [
@@ -248,69 +248,69 @@
    ]
   },
   {
-   "t": 15.9952,
+   "t": 16.5285,
    "kind": "strobe",
    "tag": "change:g0"
   },
   {
-   "t": 16.4952,
+   "t": 17.0285,
    "kind": "strobe",
    "tag": "change:g1"
   },
   {
-   "t": 16.9952,
+   "t": 17.5285,
    "kind": "strobe",
    "tag": "change:g2"
   },
   {
-   "t": 17.4952,
+   "t": 18.0285,
    "kind": "strobe",
    "tag": "change:g3"
   },
   {
-   "t": 17.9952,
+   "t": 18.5285,
    "kind": "strobe",
    "tag": "change:g4"
   },
   {
-   "t": 18.4952,
+   "t": 19.0285,
    "kind": "strobe",
    "tag": "change:g5"
   },
   {
-   "t": 18.5,
+   "t": 19.0333,
    "kind": "counter.tick",
    "tag": "change:bottom-small"
   },
   {
-   "t": 18.5388,
+   "t": 19.0721,
    "kind": "counter.tick",
    "tag": "change:bottom-big"
   },
   {
-   "t": 18.9952,
+   "t": 19.5285,
    "kind": "strobe",
    "tag": "change:g6"
   },
   {
-   "t": 19.4952,
+   "t": 20.0285,
    "kind": "strobe",
    "tag": "change:g7"
   },
   {
-   "t": 20.0,
+   "t": 20.5333,
    "kind": "section",
    "id": "why",
-   "t1": 38.1333
+   "t1": 38.6667
   },
   {
-   "t": 20.3,
+   "t": 20.8333,
    "kind": "badge",
    "tag": "galileo",
    "text": "Wide or narrow, every swing takes the same time."
   },
   {
-   "t": 29.233333333333334,
+   "t": 29.766666666666666,
    "kind": "label",
    "tag": "wy-pull-big",
    "pos": [
@@ -319,7 +319,7 @@
    ]
   },
   {
-   "t": 29.4,
+   "t": 29.933333333333334,
    "kind": "label",
    "tag": "wy-pull-small",
    "pos": [
@@ -328,7 +328,7 @@
    ]
   },
   {
-   "t": 31.4952,
+   "t": 32.0285,
    "kind": "contact",
    "tag": "why:release",
    "pos": [
@@ -337,27 +337,27 @@
    ]
   },
   {
-   "t": 31.4952,
+   "t": 32.0285,
    "kind": "strobe",
    "tag": "why:g0"
   },
   {
-   "t": 31.9952,
+   "t": 32.5285,
    "kind": "strobe",
    "tag": "why:g1"
   },
   {
-   "t": 32.4952,
+   "t": 33.0285,
    "kind": "strobe",
    "tag": "why:g2"
   },
   {
-   "t": 32.9952,
+   "t": 33.5285,
    "kind": "strobe",
    "tag": "why:g3"
   },
   {
-   "t": 33.43333333333333,
+   "t": 33.96666666666667,
    "kind": "label",
    "tag": "wy-v-big",
    "pos": [
@@ -366,12 +366,12 @@
    ]
   },
   {
-   "t": 33.4952,
+   "t": 34.0285,
    "kind": "strobe",
    "tag": "why:g4"
   },
   {
-   "t": 33.56666666666667,
+   "t": 34.1,
    "kind": "label",
    "tag": "wy-v-small",
    "pos": [
@@ -380,32 +380,32 @@
    ]
   },
   {
-   "t": 33.9952,
+   "t": 34.5285,
    "kind": "strobe",
    "tag": "why:g5"
   },
   {
-   "t": 34.0,
+   "t": 34.5333,
    "kind": "counter.tick",
    "tag": "why:bottom-small"
   },
   {
-   "t": 34.0388,
+   "t": 34.5721,
    "kind": "counter.tick",
    "tag": "why:bottom-big"
   },
   {
-   "t": 34.4952,
+   "t": 35.0285,
    "kind": "strobe",
    "tag": "why:g6"
   },
   {
-   "t": 34.9952,
+   "t": 35.5285,
    "kind": "strobe",
    "tag": "why:g7"
   },
   {
-   "t": 35.333333333333336,
+   "t": 35.86666666666667,
    "kind": "label",
    "tag": "wy-same",
    "pos": [
@@ -414,33 +414,38 @@
    ]
   },
   {
-   "t": 35.333333333333336,
+   "t": 35.86666666666667,
    "kind": "reveal",
    "tag": "same-moments"
   },
   {
-   "t": 35.4952,
+   "t": 36.0285,
    "kind": "strobe",
    "tag": "why:g8"
   },
   {
-   "t": 35.9952,
+   "t": 36.5285,
    "kind": "strobe",
    "tag": "why:g9"
   },
   {
-   "t": 36.4952,
+   "t": 37.0285,
    "kind": "strobe",
    "tag": "why:g10"
   },
   {
-   "t": 38.1333,
+   "t": 38.6667,
    "kind": "section",
    "id": "whoa",
-   "t1": 49.6
+   "t1": 50.6667
   },
   {
-   "t": 38.3206,
+   "t": 39.3333,
+   "kind": "swell",
+   "tag": "whoa:turn"
+  },
+  {
+   "t": 39.3873,
    "kind": "contact",
    "tag": "wave:release",
    "pos": [
@@ -449,17 +454,7 @@
    ]
   },
   {
-   "t": 38.6667,
-   "kind": "swell",
-   "tag": "whoa:turn"
-  },
-  {
-   "t": 39.7706,
-   "kind": "time.normal",
-   "tag": "whoa:fast"
-  },
-  {
-   "t": 40.13333333333333,
+   "t": 40.833333333333336,
    "kind": "label",
    "tag": "wo-15",
    "pos": [
@@ -468,18 +463,18 @@
    ]
   },
   {
-   "t": 40.9667,
+   "t": 40.8373,
+   "kind": "time.normal",
+   "tag": "whoa:fast"
+  },
+  {
+   "t": 41.6,
    "kind": "badge",
    "tag": "harvard",
    "text": "Harvard's pendulum wave"
   },
   {
-   "t": 46.0333,
-   "kind": "time.slow",
-   "tag": "whoa:normal"
-  },
-  {
-   "t": 46.03333333333333,
+   "t": 47.1,
    "kind": "label",
    "tag": "wo-line",
    "pos": [
@@ -488,18 +483,23 @@
    ]
   },
   {
-   "t": 46.03333333333333,
+   "t": 47.1,
    "kind": "reveal",
    "tag": "in-line"
   },
   {
-   "t": 49.6,
-   "kind": "section",
-   "id": "measure",
-   "t1": 59.7333
+   "t": 47.1,
+   "kind": "time.slow",
+   "tag": "whoa:normal"
   },
   {
-   "t": 49.7006,
+   "t": 50.6667,
+   "kind": "section",
+   "id": "measure",
+   "t1": 60.8
+  },
+  {
+   "t": 50.8006,
    "kind": "contact",
    "tag": "measure:release",
    "pos": [
@@ -508,112 +508,112 @@
    ]
   },
   {
-   "t": 49.901011,
+   "t": 51.001011,
    "kind": "counter.tick",
    "tag": "swing1"
   },
   {
-   "t": 50.101396,
+   "t": 51.201396,
    "kind": "counter.tick",
    "tag": "swing2"
   },
   {
-   "t": 50.301782,
+   "t": 51.401782,
    "kind": "counter.tick",
    "tag": "swing3"
   },
   {
-   "t": 50.502167,
+   "t": 51.602167,
    "kind": "counter.tick",
    "tag": "swing4"
   },
   {
-   "t": 50.702553,
+   "t": 51.802553,
    "kind": "counter.tick",
    "tag": "swing5"
   },
   {
-   "t": 50.902938,
+   "t": 52.002938,
    "kind": "counter.tick",
    "tag": "swing6"
   },
   {
-   "t": 51.103323,
+   "t": 52.203323,
    "kind": "counter.tick",
    "tag": "swing7"
   },
   {
-   "t": 51.303709,
+   "t": 52.403709,
    "kind": "counter.tick",
    "tag": "swing8"
   },
   {
-   "t": 51.504094,
+   "t": 52.604094,
    "kind": "counter.tick",
    "tag": "swing9"
   },
   {
-   "t": 51.704479,
+   "t": 52.804479,
    "kind": "counter.tick",
    "tag": "swing10"
   },
   {
-   "t": 51.904865,
+   "t": 53.004865,
    "kind": "counter.tick",
    "tag": "swing11"
   },
   {
-   "t": 52.10525,
+   "t": 53.20525,
    "kind": "counter.tick",
    "tag": "swing12"
   },
   {
-   "t": 52.305636,
+   "t": 53.405636,
    "kind": "counter.tick",
    "tag": "swing13"
   },
   {
-   "t": 52.506021,
+   "t": 53.606021,
    "kind": "counter.tick",
    "tag": "swing14"
   },
   {
-   "t": 52.706406,
+   "t": 53.806406,
    "kind": "counter.tick",
    "tag": "swing15"
   },
   {
-   "t": 52.906792,
+   "t": 54.006792,
    "kind": "counter.tick",
    "tag": "swing16"
   },
   {
-   "t": 53.107177,
+   "t": 54.207177,
    "kind": "counter.tick",
    "tag": "swing17"
   },
   {
-   "t": 53.307563,
+   "t": 54.407563,
    "kind": "counter.tick",
    "tag": "swing18"
   },
   {
-   "t": 53.507948,
+   "t": 54.607948,
    "kind": "counter.tick",
    "tag": "swing19"
   },
   {
-   "t": 53.8333,
+   "t": 54.9333,
    "kind": "time.slow",
    "tag": "measure:freeze"
   },
   {
-   "t": 53.833333,
+   "t": 54.933333,
    "kind": "counter.end",
    "tag": "swing20"
   },
   {
-   "t": 53.833333333333336,
+   "t": 54.93333333333333,
    "kind": "label",
    "tag": "ms-home",
    "pos": [
@@ -622,7 +622,7 @@
    ]
   },
   {
-   "t": 53.96666666666667,
+   "t": 55.03333333333333,
    "kind": "label",
    "tag": "ms-behind",
    "pos": [
@@ -631,19 +631,19 @@
    ]
   },
   {
-   "t": 55.0,
+   "t": 56.0667,
    "kind": "badge",
    "tag": "1in57",
    "text": "30° swing: 1.7% slower"
   },
   {
-   "t": 59.7333,
+   "t": 60.8,
    "kind": "section",
    "id": "takeaway",
-   "t1": 65.6
+   "t1": 66.6667
   },
   {
-   "t": 60.06666666666667,
+   "t": 61.13333333333333,
    "kind": "label",
    "tag": "tk-len",
    "pos": [
@@ -652,13 +652,13 @@
    ]
   },
   {
-   "t": 60.5166,
+   "t": 61.5833,
    "kind": "badge",
    "tag": "ideal",
    "text": "No air, no friction."
   },
   {
-   "t": 63.93333333333333,
+   "t": 65.0,
    "kind": "label",
    "tag": "tk-fast",
    "pos": [
@@ -667,68 +667,68 @@
    ]
   },
   {
-   "t": 65.6,
+   "t": 66.6667,
    "kind": "section",
    "id": "tease",
-   "t1": 71.7333
+   "t1": 72.8
   },
   {
-   "t": 68.4166,
+   "t": 69.4833,
    "kind": "strobe",
    "tag": "loop:g0"
   },
   {
-   "t": 69.4166,
+   "t": 70.4833,
    "kind": "strobe",
    "tag": "loop:g1"
   },
   {
-   "t": 70.2333,
+   "t": 71.3,
    "kind": "signature",
    "tag": "end"
   },
   {
-   "t": 70.4166,
+   "t": 71.4833,
    "kind": "strobe",
    "tag": "loop:g2"
   },
   {
-   "t": 71.4166,
+   "t": 72.4833,
    "kind": "strobe",
    "tag": "loop:g3"
   },
   {
-   "t": 72.4166,
+   "t": 73.4833,
    "kind": "strobe",
    "tag": "loop:g4"
   },
   {
-   "t": 73.4166,
+   "t": 74.4833,
    "kind": "strobe",
    "tag": "loop:g5"
   },
   {
-   "t": 74.4166,
+   "t": 75.4833,
    "kind": "strobe",
    "tag": "loop:g6"
   },
   {
-   "t": 75.4166,
+   "t": 76.4833,
    "kind": "strobe",
    "tag": "loop:g7"
   },
   {
-   "t": 76.4166,
+   "t": 77.4833,
    "kind": "strobe",
    "tag": "loop:g8"
   },
   {
-   "t": 77.4166,
+   "t": 78.4833,
    "kind": "strobe",
    "tag": "loop:g9"
   },
   {
-   "t": 78.4166,
+   "t": 79.4833,
    "kind": "strobe",
    "tag": "loop:g10"
   }
@@ -751,27 +751,27 @@
   },
   {
    "id": "vo04",
-   "t": 20.266666666666666,
+   "t": 20.8,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 38.43333333333333,
+   "t": 38.96666666666667,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 49.8,
+   "t": 50.86666666666667,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 60.03333333333333,
+   "t": 61.1,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 65.9,
+   "t": 66.96666666666667,
    "file": "vo/08.wav"
   }
  ],

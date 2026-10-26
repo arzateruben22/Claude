@@ -203,8 +203,8 @@
   },
   {
    "id": "vo03",
-   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't quite spring back.",
-   "heard": "Look closer. The knock, a puff of sound. The ball squashes and doesn't quite spring back.",
+   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't spring back as hard.",
+   "heard": "Look closer. The knock, a puff of sound. The ball squashes and doesn't spring back as hard.",
    "words": [
     {
      "w": "Look",
@@ -220,13 +220,13 @@
     },
     {
      "w": "The",
-     "start": 1.135,
+     "start": 1.11,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "knock:",
-     "start": 1.165,
+     "start": 1.14,
      "end": 1.68,
      "heard": true
     },
@@ -256,50 +256,56 @@
     },
     {
      "w": "The",
-     "start": 3.175,
-     "end": 3.225,
+     "start": 3.21,
+     "end": 3.26,
      "heard": true
     },
     {
      "w": "ball",
-     "start": 3.205,
-     "end": 3.52,
+     "start": 3.24,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "squashes,",
-     "start": 3.62,
-     "end": 4.16,
+     "start": 3.695,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.16,
-     "end": 4.32,
+     "start": 4.23,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "doesn't",
-     "start": 4.285,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "quite",
-     "start": 4.61,
-     "end": 4.8,
+     "start": 4.365,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "spring",
-     "start": 4.91,
-     "end": 5.12,
+     "start": 4.775,
+     "end": 5.04,
      "heard": true
     },
     {
-     "w": "back.",
-     "start": 5.145,
-     "end": 5.44,
+     "w": "back",
+     "start": 5.02,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.215,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "hard.",
+     "start": 5.435,
+     "end": 5.76,
      "heard": true
     }
    ]
@@ -686,8 +692,8 @@
   },
   {
    "id": "vo06",
-   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball, two thousandths of a degree.",
-   "heard": "Measure it, those missing forty-four centimeters, a quarter of a joule, even if it all stays in the ball, two thousandths of a degree.",
+   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball: about three thousandths of a degree.",
+   "heard": "Measure it, those missing forty-four centimeters, a quarter of a joule, even if it all stays in the ball, about three thousandths of a degree.",
    "words": [
     {
      "w": "Measure",
@@ -698,139 +704,145 @@
     {
      "w": "it:",
      "start": 0.495,
-     "end": 0.8,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "those",
-     "start": 0.775,
-     "end": 1.04,
+     "start": 0.74,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "missing",
-     "start": 1.005,
+     "start": 0.985,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "forty-four",
-     "start": 1.45,
-     "end": 1.92,
+     "start": 1.425,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "centimeters?",
-     "start": 2.17,
-     "end": 3.2,
+     "start": 2.095,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "A",
-     "start": 3.3,
+     "start": 3.28,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "quarter",
-     "start": 3.41,
-     "end": 3.76,
+     "start": 3.38,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "of",
-     "start": 3.855,
-     "end": 3.905,
+     "start": 3.775,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.885,
-     "end": 4.0,
+     "start": 3.94,
+     "end": 3.99,
      "heard": true
     },
     {
      "w": "joule.",
-     "start": 4.015,
-     "end": 4.8,
+     "start": 3.97,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "Even",
-     "start": 4.86,
-     "end": 5.04,
+     "start": 4.76,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "if",
-     "start": 4.99,
-     "end": 5.2,
+     "start": 4.905,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.185,
-     "end": 5.36,
+     "start": 5.115,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "all",
-     "start": 5.27,
+     "start": 5.195,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "stays",
-     "start": 5.62,
-     "end": 5.84,
+     "start": 5.545,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "in",
-     "start": 5.89,
-     "end": 6.0,
+     "start": 5.815,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "the",
-     "start": 6.115,
-     "end": 6.165,
+     "start": 6.045,
+     "end": 6.095,
      "heard": true
     },
     {
-     "w": "ball,",
-     "start": 6.145,
-     "end": 6.64,
+     "w": "ball:",
+     "start": 6.075,
+     "end": 6.8,
      "heard": true
     },
     {
-     "w": "two",
-     "start": 6.69,
-     "end": 6.88,
+     "w": "about",
+     "start": 6.795,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 7.075,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "thousandths",
-     "start": 7.0,
-     "end": 7.6,
+     "start": 7.505,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "of",
-     "start": 7.49,
-     "end": 7.68,
+     "start": 7.985,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.77,
-     "end": 7.82,
+     "start": 8.25,
+     "end": 8.3,
      "heard": true
     },
     {
      "w": "degree.",
-     "start": 7.8,
-     "end": 8.24,
+     "start": 8.28,
+     "end": 8.72,
      "heard": true
     }
    ]

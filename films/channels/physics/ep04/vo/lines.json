@@ -23,14 +23,14 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
+   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather? Still drifting down.",
    "stars": [
     "second"
    ],
-   "phonemes": "ˌɔn ˈɜːθ, ɪts nˈoʊ kˈɑːntɛst. fɹʌm ʃˈoʊldɚ hˈaɪt, ðə hˈæmɚ lˈændz ɪn ɐbˌaʊt hˈæf ɐ sˈɛkənd. ðə fˈɛðɚɹ ɪz bˈɛɹli hˈæfweɪ.",
+   "phonemes": "ˌɔn ˈɜːθ, ɪts nˈoʊ kˈɑːntɛst. fɹʌm ʃˈoʊldɚ hˈaɪt, ðə hˈæmɚ lˈændz ɪn ɐbˌaʊt hˈæf ɐ sˈɛkənd. ðə fˈɛðɚ? stˈɪl dɹˈɪftɪŋ dˈaʊn.",
    "file": "02.wav",
-   "dur": 7.257,
-   "sha256": "5ac0ae9d92bd88c7c7c2de9b7bf10581462e0a28aba1da26798c0c7748486748"
+   "dur": 7.215,
+   "sha256": "251434387eb1348ad1816693cf9f46d9ecef95b6ddb88e139e16bd8ba997758a"
   },
   {
    "id": "vo03",
@@ -86,26 +86,26 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Gravity treats them equally. Only the air tells them apart.",
+   "text": "Gravity speeds them up equally. Only the air tells them apart.",
    "stars": [
     "air"
    ],
-   "phonemes": "ɡɹˈævᵻɾi tɹˈiːts ðˌɛm ˈiːkwəli. ˈoʊnli ðɪ ˈɛɹ tˈɛlz ðˌɛm ɐpˈɑːɹt.",
+   "phonemes": "ɡɹˈævᵻɾi spˈiːdz ðˌɛm ˌʌp ˈiːkwəli. ˈoʊnli ðɪ ˈɛɹ tˈɛlz ðˌɛm ɐpˈɑːɹt.",
    "file": "07.wav",
-   "dur": 3.514,
-   "sha256": "b50e4a78905bfb80090148c9dff6a0e5a7fdfaea1d78369c69e1da2bfa5ff6a2"
+   "dur": 3.809,
+   "sha256": "90650a6b5bb5704581a584a8bc60c4d314cac0ea8a147af6b5a60b2dd86e5657"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: a spinning office chair. Pull in your arms, and you accelerate. Why?",
+   "text": "Next: a spinning office chair. Pull in your arms, and it spins faster. Why?",
    "stars": [
     "Why"
    ],
-   "phonemes": "nˈɛkst: ɐ spˈɪnɪŋ ˈɑːfɪs tʃˈɛɹ. pˈʊl ɪn jʊɹ ˈɑːɹmz, ænd juː ɐksˈɛlɚɹˌeɪt. wˈaɪ?",
+   "phonemes": "nˈɛkst: ɐ spˈɪnɪŋ ˈɑːfɪs tʃˈɛɹ. pˈʊl ɪn jʊɹ ˈɑːɹmz, ænd ɪt spˈɪnz fˈæstɚ. wˈaɪ?",
    "file": "08.wav",
-   "dur": 4.557,
-   "sha256": "b035d672b4d665fd2ec650126b68e88119702b59fcf2ea85cdfa97af38ecfe1a"
+   "dur": 4.726,
+   "sha256": "30f22df1dd7ac6284a142f4a45bc88446170354b423b336c9a61a1df60666481"
   }
  ]
 }

@@ -185,8 +185,8 @@ const anchorFn = (an) => {
   return () => an.point;
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.anchor), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed, v: lb.v });
-// the spine readout: its step at t (label, unit, digits, lit window), set from t in seek before hud.update, so the plate
-// is measured and placed (set/spine.js placeSpine, FILM.spineAt: a step at each cut) with this frame's text
+// the spine readout: its step at t (label, wrap, unit, digits, lit window), set from t in seek before hud.update, so the
+// plate is measured and placed (set/spine.js placeSpine, FILM.spineAt: a step at each cut) with this frame's text
 const SP = FILM.spine;
 const spineSeg = (t) => SP.find((s) => t >= s.t0 && t < s.t1) || (t < SP[0].t0 ? SP[0] : SP[SP.length - 1]);
 const spineNum = (s, t) => (s.kind === "const" ? s.v : s.kind === "watch" ? Math.min(s.cap, Math.max(0, local(s.take, t))) : 0);
@@ -249,6 +249,7 @@ window.seek = function (t) {
   dropT(t); dropE(t);
   spNow = spineSeg(t); spLit = !!(spNow.lit && t >= spNow.lit[0] && t < spNow.lit[1]);
   counterLb.textContent = spNow.label; counterU.textContent = spNow.unit; counterV.style.minWidth = (spNow.minCh ?? 4) + "ch";
+  counterLb.style.maxWidth = spNow.wrap ? spNow.wrap + "vmin" : "";   // this step's wrap: a wrapped label's box is the wrap's width
   hud.update(t);   // writes the value through fmt (this step's digits or text), measures the plate, places it, lights it
   renderer.render(scene, camera);
 };

@@ -1,5 +1,5 @@
 {
- "duration": 66.9333,
+ "duration": 67.4667,
  "fps": 30,
  "preset": "restframe-bench",
  "duck_db": -9.0,
@@ -19,37 +19,37 @@
   {
    "id": "change",
    "t0": 13.0667,
-   "t1": 19.2,
+   "t1": 19.4667,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 19.2,
-   "t1": 35.7333,
+   "t0": 19.4667,
+   "t1": 36.0,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 35.7333,
-   "t1": 47.7333,
+   "t0": 36.0,
+   "t1": 48.0,
    "energy": 0.8
   },
   {
    "id": "measure",
-   "t0": 47.7333,
-   "t1": 56.8,
+   "t0": 48.0,
+   "t1": 57.3333,
    "energy": 0.3
   },
   {
    "id": "takeaway",
-   "t0": 56.8,
-   "t1": 61.8667,
+   "t0": 57.3333,
+   "t1": 62.4,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 61.8667,
-   "t1": 66.9333,
+   "t0": 62.4,
+   "t1": 67.4667,
    "energy": 0.4
   }
  ],
@@ -264,7 +264,7 @@
    "t": 13.0667,
    "kind": "section",
    "id": "change",
-   "t1": 19.2
+   "t1": 19.4667
   },
   {
    "t": 13.07,
@@ -278,7 +278,7 @@
    "text": "Not to scale"
   },
   {
-   "t": 14.3333,
+   "t": 14.3,
    "kind": "impact",
    "tag": "change:knock"
   },
@@ -297,12 +297,12 @@
    ]
   },
   {
-   "t": 16.8,
+   "t": 16.8667,
    "kind": "heat",
    "tag": "change:heat"
   },
   {
-   "t": 18.3,
+   "t": 18.2,
    "kind": "label",
    "tag": "ch-heat",
    "pos": [
@@ -311,13 +311,13 @@
    ]
   },
   {
-   "t": 19.2,
+   "t": 19.4667,
    "kind": "section",
    "id": "why",
-   "t1": 35.7333
+   "t1": 36.0
   },
   {
-   "t": 21.5,
+   "t": 21.766666666666666,
    "kind": "label",
    "tag": "wy-joule",
    "pos": [
@@ -326,7 +326,12 @@
    ]
   },
   {
-   "t": 27.166666666666668,
+   "t": 27.4333,
+   "kind": "heat",
+   "tag": "why:warm"
+  },
+  {
+   "t": 27.433333333333334,
    "kind": "label",
    "tag": "wy-warm",
    "pos": [
@@ -335,12 +340,7 @@
    ]
   },
   {
-   "t": 27.1667,
-   "kind": "heat",
-   "tag": "why:warm"
-  },
-  {
-   "t": 30.433333333333334,
+   "t": 30.7,
    "kind": "label",
    "tag": "wy-heat",
    "pos": [
@@ -349,7 +349,7 @@
    ]
   },
   {
-   "t": 30.966666666666665,
+   "t": 31.233333333333334,
    "kind": "label",
    "tag": "wy-shake",
    "pos": [
@@ -358,7 +358,7 @@
    ]
   },
   {
-   "t": 31.733333333333334,
+   "t": 32.0,
    "kind": "label",
    "tag": "wy-sound",
    "pos": [
@@ -367,24 +367,18 @@
    ]
   },
   {
-   "t": 35.716633,
+   "t": 35.983333,
    "kind": "counter.tick",
    "tag": "spine:tennis ball height"
   },
   {
-   "t": 35.7333,
+   "t": 36.0,
    "kind": "section",
    "id": "whoa",
-   "t1": 47.7333
+   "t1": 48.0
   },
   {
-   "t": 38.0,
-   "kind": "badge",
-   "tag": "perfect",
-   "text": "Ideal bounces"
-  },
-  {
-   "t": 38.0,
+   "t": 38.266666666666666,
    "kind": "label",
    "tag": "wo-hand",
    "pos": [
@@ -393,22 +387,28 @@
    ]
   },
   {
-   "t": 39.5348,
+   "t": 38.2667,
+   "kind": "badge",
+   "tag": "perfect",
+   "text": "Ideal bounces"
+  },
+  {
+   "t": 39.8015,
    "kind": "contact",
    "tag": "whoa:release"
   },
   {
-   "t": 40.8119,
+   "t": 41.0786,
    "kind": "impact",
    "tag": "whoa:hit"
   },
   {
-   "t": 40.8119,
+   "t": 41.0786,
    "kind": "swell",
    "tag": "whoa:climb"
   },
   {
-   "t": 44.2,
+   "t": 44.46666666666667,
    "kind": "label",
    "tag": "wo-7x",
    "pos": [
@@ -417,23 +417,23 @@
    ]
   },
   {
-   "t": 44.2,
+   "t": 44.4667,
    "kind": "reveal",
    "tag": "whoa:peak"
   },
   {
-   "t": 47.716633,
+   "t": 47.983333,
    "kind": "counter.tick",
    "tag": "spine:height missing"
   },
   {
-   "t": 47.7333,
+   "t": 48.0,
    "kind": "section",
    "id": "measure",
-   "t1": 56.8
+   "t1": 57.3333
   },
   {
-   "t": 48.93333333333333,
+   "t": 49.2,
    "kind": "label",
    "tag": "ms-44",
    "pos": [
@@ -442,139 +442,139 @@
    ]
   },
   {
-   "t": 51.233333333333334,
+   "t": 51.46666666666667,
    "kind": "counter.tick",
    "tag": "spine:energy it took"
   },
   {
-   "t": 52.8,
+   "t": 52.96666666666667,
    "kind": "counter.tick",
-   "tag": "spine:ball warms by, at most"
+   "tag": "spine:average warming, about"
   },
   {
-   "t": 55.733333333333334,
+   "t": 56.46666666666667,
    "kind": "counter.end",
    "tag": "spine:degree"
   },
   {
-   "t": 56.783333,
+   "t": 57.316633,
    "kind": "counter.tick",
    "tag": "spine:energy destroyed"
   },
   {
-   "t": 56.8,
+   "t": 57.3333,
    "kind": "section",
    "id": "takeaway",
-   "t1": 61.8667
+   "t1": 62.4
   },
   {
-   "t": 61.8667,
+   "t": 62.4,
    "kind": "section",
    "id": "tease",
-   "t1": 66.9333
+   "t1": 67.4667
   },
   {
-   "t": 63.9491,
+   "t": 64.4825,
    "kind": "contact",
    "tag": "loop:release"
   },
   {
-   "t": 63.9491,
+   "t": 64.4825,
    "kind": "strobe",
    "tag": "loop:g0"
   },
   {
-   "t": 64.4491,
+   "t": 64.9825,
    "kind": "strobe",
    "tag": "loop:g2"
   },
   {
-   "t": 64.9491,
+   "t": 65.4825,
    "kind": "strobe",
    "tag": "loop:g4"
   },
   {
-   "t": 65.4333,
+   "t": 65.9667,
    "kind": "signature",
    "tag": "end"
   },
   {
-   "t": 65.4491,
+   "t": 65.9825,
    "kind": "strobe",
    "tag": "loop:g6"
   },
   {
-   "t": 65.9491,
+   "t": 66.4825,
    "kind": "strobe",
    "tag": "loop:g8"
   },
   {
-   "t": 66.4491,
+   "t": 66.9825,
    "kind": "strobe",
    "tag": "loop:g10"
   },
   {
-   "t": 66.9491,
+   "t": 67.4825,
    "kind": "strobe",
    "tag": "loop:g12"
   },
   {
-   "t": 67.4491,
+   "t": 67.9825,
    "kind": "strobe",
    "tag": "loop:g14"
   },
   {
-   "t": 67.9491,
+   "t": 68.4825,
    "kind": "strobe",
    "tag": "loop:g16"
   },
   {
-   "t": 68.4491,
+   "t": 68.9825,
    "kind": "strobe",
    "tag": "loop:g18"
   },
   {
-   "t": 68.9491,
+   "t": 69.4825,
    "kind": "strobe",
    "tag": "loop:g20"
   },
   {
-   "t": 69.4491,
+   "t": 69.9825,
    "kind": "strobe",
    "tag": "loop:g22"
   },
   {
-   "t": 69.9491,
+   "t": 70.4825,
    "kind": "strobe",
    "tag": "loop:g24"
   },
   {
-   "t": 70.4491,
+   "t": 70.9825,
    "kind": "strobe",
    "tag": "loop:g26"
   },
   {
-   "t": 70.9491,
+   "t": 71.4825,
    "kind": "strobe",
    "tag": "loop:g28"
   },
   {
-   "t": 71.4491,
+   "t": 71.9825,
    "kind": "strobe",
    "tag": "loop:g30"
   },
   {
-   "t": 71.9491,
+   "t": 72.4825,
    "kind": "strobe",
    "tag": "loop:g32"
   },
   {
-   "t": 72.4491,
+   "t": 72.9825,
    "kind": "strobe",
    "tag": "loop:g34"
   },
   {
-   "t": 72.9491,
+   "t": 73.4825,
    "kind": "strobe",
    "tag": "loop:g36"
   }
@@ -597,27 +597,27 @@
   },
   {
    "id": "vo04",
-   "t": 19.466666666666665,
+   "t": 19.733333333333334,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 36.03333333333333,
+   "t": 36.3,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 47.93333333333333,
+   "t": 48.2,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 57.1,
+   "t": 57.63333333333333,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 62.166666666666664,
+   "t": 62.7,
    "file": "vo/08.wav"
   }
  ],

@@ -215,7 +215,7 @@ CARD_W = 0.52
 BADGES = [
     {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr", "maxW": CARD_W},
     # a framing tag: it names the picture, so it visits from "Only" to "Then," (3.7 s, 4.0 s with its fade)
-    {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": A("vo05:Then,"), "slot": "tr", "frame": True},
+    {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": min(A("vo05:Then,"), A("vo05:Only") + 3.7), "slot": "tr", "frame": True},   # a framing tag: 4 s at most
     # the number behind "about one part in sixty", from the start of its sentence ("At thirty degrees") to the takeaway
     {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:At"), "t1": cut("takeaway") - 0.3, "slot": "tr"},
     {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction.", "t0": cut("takeaway") + 0.8, "t1": cut("tease"), "slot": "tr", "maxW": CARD_W},
@@ -354,7 +354,7 @@ TITLE = {"series": "Rest Frame · No. 002", "title": "The swing's *secret*", "t1
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'Ghosts every tenth / of a second | bunch up at the turns.',
-    'Pull one / three times farther.',
+    'Pull its twin / three times farther.',
     'Three times farther out, | the pull is almost / three times stronger.',
     'Measure it: / twenty swings, | and the big one | is three tenths / of a second behind.',
     'At thirty degrees, / Galileo is off | by about / one part in sixty.',

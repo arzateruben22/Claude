@@ -40,7 +40,7 @@ def cut(beat):
 G_E, G_M, H0 = 981.0, 162.0, 160.0
 T_E = math.sqrt(2 * H0 / G_E)                            # 0.571 s (c1)
 T_M = math.sqrt(2 * H0 / G_M)                            # 1.405 s (c11)
-VT = 160.0                                               # the feather's illustrated sinking speed on Earth (cm/s)
+VT = 100.0                                               # the feather's illustrated sinking speed on Earth (cm/s; published figures 0.5–1 m/s)
 XH, XF = 16.0, -16.0                                     # the hammer right, the feather left
 DT, NG = 0.1, 15                                         # Moon ghosts every 1/10 s: k 0 … 14 (τ 1.4)
 DT_E, NG_E = 0.05, 12                                    # Earth ghosts every 1/20 s: the hammer's 0.55 s
@@ -115,20 +115,24 @@ FEATHER_AT_HAMMER_LANDING = feather_drop_earth(T_E)      # 79 cm of 160: "barely
 # the measure's stopwatch lights on "seconds." and stays lit from there: the Moon's 1.41 s, the Earth's 0.57 s on "On
 # Earth", then held at 0.57 through the takeaway with a label that says what it now means (both of them, on Earth, once
 # the air is gone: c12 + c13 + c14). It never leaves at the payoff (it goes 0.3 s before the tease).
-# The why's acceleration carries its unit in the label: "1.62 m/s²" in the row makes a 416 px plate, wider than the
-# 372 px the bench leaves left of the feather (x 90–462); "< 3" keeps 3 figures' width (minCh 3) so its plate clears the
-# whoa's ink orbit at the top left while the camera pushes in.
+# Its width (measured on the animatic's plates: a one-line label is as wide as its text, but a wrapped label's box takes
+# the whole wrap width, 34vmin = 367 px by default, so any wrapped label made a 415 px plate). The bench leaves 372 px
+# left of the feather (x 90–462), so each step sets its own wrap ("wrap", vmin; the scene sets the label's max-width):
+# 26vmin keeps the plates at about 333 px, the why's 28vmin keeps "acceleration (m/s²)" on one line, the whoa's 19vmin
+# keeps its plate about 255 px wide, clear of the ink orbit at the top left while the camera pushes in. The why's
+# acceleration carries its unit in the label: "1.62 m/s²" in the row alone makes a 412 px plate. "< 3" keeps three
+# figures' width (minCh 3).
 SPINE = [
-    {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "the hammer's fall, Earth", "unit": "s", "dp": 2, "kind": "watch", "take": "earth", "cap": T_E},
-    {"t0": cut("change"), "t1": cut("why"), "label": "both, on the Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "moon", "cap": T_M},
-    {"t0": cut("why"), "t1": cut("whoa"), "label": "each one's acceleration (m/s²)", "unit": "", "dp": 2, "kind": "const", "v": 1.62},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "parts in a million billion", "unit": "", "kind": "text", "text": "< 3", "minCh": 3,
+    {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "the hammer's fall, Earth", "unit": "s", "dp": 2, "kind": "watch", "take": "earth", "cap": T_E, "wrap": 26},
+    {"t0": cut("change"), "t1": cut("why"), "label": "both, on the Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "moon", "cap": T_M, "wrap": 26},
+    {"t0": cut("why"), "t1": cut("whoa"), "label": "each one's acceleration (m/s²)", "unit": "", "dp": 2, "kind": "const", "v": 1.62, "wrap": 28},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "parts in a million billion", "unit": "", "kind": "text", "text": "< 5", "minCh": 3, "wrap": 19,
      "lit": [A("vo05:billion."), cut("measure")]},
-    {"t0": cut("measure"), "t1": A("vo06:On#2"), "label": "the drop, Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "measure", "cap": T_M,
+    {"t0": cut("measure"), "t1": A("vo06:On#2"), "label": "the drop, Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "measure", "cap": T_M, "wrap": 26,
      "lit": [A("vo06:seconds."), A("vo06:On#2")]},
-    {"t0": A("vo06:On#2"), "t1": cut("takeaway"), "label": "the same drop, Earth", "unit": "s", "dp": 2, "kind": "const", "v": T_E,
+    {"t0": A("vo06:On#2"), "t1": cut("takeaway"), "label": "the same drop, Earth", "unit": "s", "dp": 2, "kind": "const", "v": T_E, "wrap": 26,
      "lit": [A("vo06:On#2"), cut("takeaway")]},
-    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "both, on Earth, without air", "unit": "s", "dp": 2, "kind": "const", "v": T_E,
+    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "both, on Earth, without air", "unit": "s", "dp": 2, "kind": "const", "v": T_E, "wrap": 26,
      "lit": [cut("takeaway"), cut("tease") - 0.3], "tick": False},
 ]
 assert all(a["t1"] == b["t0"] for a, b in zip(SPINE, SPINE[1:])), "the readout never leaves between its steps"
@@ -140,13 +144,13 @@ assert SPINE[-1]["t1"] > B["takeaway"]["t1"] - 0.5 and SPINE[-1]["v"] == SPINE[-
 # Projected through each shot's camera keys (placeCam) at every frame, start and end of each shot:
 #   bench shots (normal from "From", change, why, measure, takeaway): the hands and the release at x 472–608, y 482–551,
 #     the falls and their ghost rows x 469–636 down to the floor at y 1150 (the tipped hammer to x 697); so the centre
-#     [0.5, 0.245] (plate y 364–576) sits on the hands: the plate goes left of the feather (x 90–462)
-#   normal, change, measure, takeaway  L1 [0.25, 0.31] (y ≈ 490–700): under the change's cards (x 403–900, to y ≈ 474),
+#     [0.5, 0.245] (plate y ≈ 364–576) sits on the hands: the plate goes left of the feather, x ≈ 104–436
+#   normal, change, measure, takeaway  L1 [0.25, 0.31] (y ≈ 490–700): under the change's card (x 403–900, to y ≈ 425),
 #     over "barely halfway" (y ≈ 766–836)
-#   why                                L0 [0.25, 0.245] (y ≈ 364–576): under the speed note, over "gravity: far stronger
-#     on the hammer" (a 750 px label at y ≈ 605–675)
-#   whoa                               the top-left corner (no speed note: real time): the ink orbit is 373–707 × 361–696
-#     at the cut and grows to 235–845 × 565–1176 as the camera pushes in; the MICROSCOPE card is x 403–900
+#   why                                L0 [0.25, 0.245] (y ≈ 364–576): under the speed note (to y ≈ 324), over "gravity:
+#     far stronger on the hammer" (a 750 px label at y ≈ 602–672)
+#   whoa                               the top-left corner, x ≈ 90–345 (no speed note: real time): the ink orbit is
+#     373–707 × 361–696 at the cut and grows to 235–845 × 565–1176 as the camera pushes in; the MICROSCOPE card is x 403–900
 SPINE_L1, SPINE_L0, SPINE_TL = [0.25, 0.31], [0.25, 0.245], [0.0, 0.0]
 SPINE_PLACE = {"hook": SPINE_L1, "normal": SPINE_L1, "change": SPINE_L1, "why": SPINE_L0, "whoa": SPINE_TL,
                "measure": SPINE_L1, "takeaway": SPINE_L1, "tease": SPINE_L1}
@@ -204,10 +208,10 @@ LABELS = [
     {"id": "hk-hammer", "text": "hammer", "color": "ghost", "t0": A("vo01:hammer,"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "hammer"]}, "side": 1, "fixed": True},
     {"id": "hk-feather", "text": "feather", "color": "ghost", "t0": A("vo01:feather?"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "feather"]}, "side": -1, "fixed": True},
     {"id": "nm-land", "text": "0.57 s", "color": "motion", "t0": A("vo02:second."), "t1": T_FEATHER, "anchor": {"obj": ["earth", "hammer"]}, "side": 1, "fixed": True},
-    {"id": "nm-half", "text": "barely halfway", "color": "ghost", "t0": A("vo02:halfway."), "t1": cut("change"), "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
+    {"id": "nm-half", "text": "still drifting", "color": "ghost", "t0": A("vo02:down."), "t1": cut("change"), "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
     {"id": "ch-together", "text": "together", "color": "motion", "t0": A("vo03:together."), "t1": cut("why"), "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
     {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity", 0.3), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:exactly"), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:harder#2", 0.4), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-tie", "text": "tie", "color": "motion", "t0": A("vo04:tie."), "t1": cut("whoa"), "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
     {"id": "wo-earth", "text": "Earth", "color": "ghost", "t0": A("vo05:Earth"), "t1": A("vo05:They"), "anchor": {"point": [0.0, 190.0, -20.0]}, "side": 1, "v": "middle", "fixed": True},
 ]

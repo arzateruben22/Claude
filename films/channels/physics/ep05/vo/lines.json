@@ -11,14 +11,14 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Why does it speed up? Nobody pushes. Nothing pushes.",
+   "text": "Why does it speed up? Nobody pushes. Nothing motorized.",
    "stars": [
     "up"
    ],
-   "phonemes": "wˌaɪ dˈʌz ɪt spˈiːd ˈʌp? nˈoʊbɑːdi pˈʊʃᵻz. nˈʌθɪŋ pˈʊʃᵻz.",
+   "phonemes": "wˌaɪ dˈʌz ɪt spˈiːd ˈʌp? nˈoʊbɑːdi pˈʊʃᵻz. nˈʌθɪŋ mˈoʊɾɚɹˌaɪzd.",
    "file": "01.wav",
-   "dur": 3.054,
-   "sha256": "cdfd1b62d4e15b10891723f5d7bb7146fb4ce3bd4a119311bee55bf049bdb12a"
+   "dur": 3.258,
+   "sha256": "803c225a8db10e529f8b62bc7c7da850dd034937d39fbba52fc81c7f70e77b48"
   },
   {
    "id": "vo02",
@@ -47,27 +47,27 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so that same amount turns you faster. Your arms paid for every extra turn.",
+   "text": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so the same amount turns you faster. Your arms paid for every extra turn.",
    "stars": [
     "outside",
     "faster"
    ],
-   "phonemes": "ɪt fˈiːlz lˈaɪk sˈʌmθɪŋ pˈʊʃt. nˈʌθɪŋ aʊtsˈaɪd dˈɪd. wɪð nˈoʊ twˈɪst fɹʌm aʊtsˈaɪd, jʊɹ tˈoʊɾəl ɐmˈaʊnt ʌv spˈɪn kˈænt tʃˈeɪndʒ. wˈeɪt nˌɪɹ ðə mˈɪdəl ɪz ˈiːziɚ tə tˈɜːn, sˌoʊ ðæt sˈeɪm ɐmˈaʊnt tˈɜːnz juː fˈæstɚ. jʊɹ ˈɑːɹmz pˈeɪd fɔːɹ ˈɛvɹi ˈɛkstɹə tˈɜːn.",
+   "phonemes": "ɪt fˈiːlz lˈaɪk sˈʌmθɪŋ pˈʊʃt. nˈʌθɪŋ aʊtsˈaɪd dˈɪd. wɪð nˈoʊ twˈɪst fɹʌm aʊtsˈaɪd, jʊɹ tˈoʊɾəl ɐmˈaʊnt ʌv spˈɪn kˈænt tʃˈeɪndʒ. wˈeɪt nˌɪɹ ðə mˈɪdəl ɪz ˈiːziɚ tə tˈɜːn, sˌoʊ ðə sˈeɪm ɐmˈaʊnt tˈɜːnz juː fˈæstɚ. jʊɹ ˈɑːɹmz pˈeɪd fɔːɹ ˈɛvɹi ˈɛkstɹə tˈɜːn.",
    "file": "04.wav",
-   "dur": 15.056,
-   "sha256": "b2575e2bf19d76b8c607a2218921edb46fbd8c9d574ec1753dd2ce06fa7b981e"
+   "dur": 14.881,
+   "sha256": "29c1063cb5ba34266a7d1350583188e674a88f27109f2f367ac3aa96d8984c67"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Skaters use this. In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a minute. Nearly six turns a second.",
+   "text": "Skaters use this. The record, set by a young Canadian skater: three hundred forty-two turns a minute. Nearly six turns a second.",
    "stars": [
     "minute"
    ],
-   "phonemes": "skˈeɪɾɚz jˈuːs ðˈɪs. ɪn twˈɛnti fˈɪftiːn, ɐ jˈʌŋ kɐnˈeɪdiən skˈeɪɾɚ spˈʌn æt θɹˈiː hˈʌndɹɪd fˈɔːɹɾitˈuː tˈɜːnz ɐ mˈɪnɪt. nˌɪɹli sˈɪks tˈɜːnz ɐ sˈɛkənd.",
+   "phonemes": "skˈeɪɾɚz jˈuːs ðˈɪs. ðə ɹˈɛkɚd, sˈɛt baɪ ɐ jˈʌŋ kɐnˈeɪdiən skˈeɪɾɚ: θɹˈiː hˈʌndɹɪd fˈɔːɹɾitˈuː tˈɜːnz ɐ mˈɪnɪt. nˌɪɹli sˈɪks tˈɜːnz ɐ sˈɛkənd.",
    "file": "05.wav",
-   "dur": 9.177,
-   "sha256": "7f542c0b34cd6e8ce70a021bcde562aed650d79c99c75fb4b6b1c0d512ba4d4b"
+   "dur": 8.839,
+   "sha256": "e763273d34c91f9adcd2e90a17f535c0b4534edc1c535bb45e297aa009a33665"
   },
   {
    "id": "vo06",

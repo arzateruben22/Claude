@@ -276,7 +276,7 @@ CAM = {
     # the turn: from above down to the side as "With no twist from outside" is said
     "why": [key(cut("why"), {**TOP, "dist": 700.0}), key(A("vo04:With"), {**TOP, "dist": 690.0}, "sine"), key(A("vo04:change."), SIDE, "p3"),
             key(cut("whoa"), {**SIDE, "dist": 480.0}, "sine")],
-    "whoa": [key(cut("whoa"), {**SIDE, "dist": 480.0}), key(A("vo05:In"), WIDE, "p3"), key(cut("measure"), {**WIDE, "dist": 770.0}, "sine")],
+    "whoa": [key(cut("whoa"), {**SIDE, "dist": 480.0}), key(A("vo05:record,"), WIDE, "p3"), key(cut("measure"), {**WIDE, "dist": 770.0}, "sine")],
     "measure": [key(cut("measure"), TOP), key(cut("takeaway"), {**TOP, "dist": 750.0}, "sine")],
     "takeaway": [key(cut("takeaway"), {**TOP, "dist": 750.0}), key(cut("tease"), {**SIDE, "pitch": 30.0, "dist": 560.0}, "p3")],
     "tease": [key(cut("tease"), {**SIDE, "pitch": 30.0, "dist": 560.0}), key(EC, HOOK, "p3"), key(DUR, HOOK, "sine")],

@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Why does it speed up? Nobody pushes. Nothing pushes.",
-   "heard": "Why does it speed up? Nobody pushes, nothing pushes.",
+   "text": "Why does it speed up? Nobody pushes. Nothing motorized.",
+   "heard": "Why does it speed up? Nobody pushes, nothing motorized.",
    "words": [
     {
      "w": "Why",
@@ -32,32 +32,32 @@
     },
     {
      "w": "up?",
-     "start": 0.835,
-     "end": 1.12,
+     "start": 0.86,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "Nobody",
-     "start": 1.155,
-     "end": 1.52,
+     "start": 1.23,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "pushes.",
-     "start": 1.605,
-     "end": 2.16,
+     "start": 1.68,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "Nothing",
-     "start": 2.12,
-     "end": 2.48,
+     "start": 2.225,
+     "end": 2.56,
      "heard": true
     },
     {
-     "w": "pushes.",
-     "start": 2.525,
-     "end": 3.04,
+     "w": "motorized.",
+     "start": 2.445,
+     "end": 3.2,
      "heard": true
     }
    ]
@@ -318,8 +318,8 @@
   },
   {
    "id": "vo04",
-   "text": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so that same amount turns you faster. Your arms paid for every extra turn.",
-   "heard": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so that same amount turns you faster. Your arms paid for every extra turn.",
+   "text": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so the same amount turns you faster. Your arms paid for every extra turn.",
+   "heard": "It feels like something pushed. Nothing outside did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so the same amount turns you faster. Your arms paid for every extra turn.",
    "words": [
     {
      "w": "It",
@@ -353,13 +353,13 @@
     },
     {
      "w": "Nothing",
-     "start": 1.875,
+     "start": 1.87,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "outside",
-     "start": 2.275,
+     "start": 2.27,
      "end": 2.88,
      "heard": true
     },
@@ -383,7 +383,7 @@
     },
     {
      "w": "twist",
-     "start": 3.945,
+     "start": 3.94,
      "end": 4.24,
      "heard": true
     },
@@ -401,43 +401,43 @@
     },
     {
      "w": "your",
-     "start": 5.19,
-     "end": 5.28,
+     "start": 5.215,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "total",
-     "start": 5.345,
+     "start": 5.37,
      "end": 5.68,
      "heard": true
     },
     {
      "w": "amount",
-     "start": 5.62,
+     "start": 5.56,
      "end": 5.92,
      "heard": true
     },
     {
      "w": "of",
-     "start": 6.005,
-     "end": 6.08,
+     "start": 6.01,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "spin",
-     "start": 6.035,
+     "start": 6.275,
      "end": 6.56,
      "heard": true
     },
     {
      "w": "can't",
-     "start": 6.53,
+     "start": 6.555,
      "end": 7.04,
      "heard": true
     },
     {
      "w": "change.",
-     "start": 6.98,
+     "start": 7.0,
      "end": 7.84,
      "heard": true
     },
@@ -449,19 +449,19 @@
     },
     {
      "w": "near",
-     "start": 8.21,
+     "start": 8.215,
      "end": 8.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.48,
+     "start": 8.47,
      "end": 8.56,
      "heard": true
     },
     {
      "w": "middle",
-     "start": 8.51,
+     "start": 8.5,
      "end": 8.88,
      "heard": true
     },
@@ -486,99 +486,99 @@
     {
      "w": "turn,",
      "start": 9.56,
-     "end": 10.16,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "so",
-     "start": 10.19,
+     "start": 10.135,
      "end": 10.32,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 10.22,
-     "end": 10.56,
+     "w": "the",
+     "start": 10.2,
+     "end": 10.48,
      "heard": true
     },
     {
      "w": "same",
-     "start": 10.53,
-     "end": 10.8,
+     "start": 10.48,
+     "end": 10.64,
      "heard": true
     },
     {
      "w": "amount",
-     "start": 10.895,
-     "end": 11.28,
+     "start": 10.64,
+     "end": 11.04,
      "heard": true
     },
     {
      "w": "turns",
-     "start": 11.28,
-     "end": 11.6,
+     "start": 11.105,
+     "end": 11.44,
      "heard": true
     },
     {
      "w": "you",
-     "start": 11.62,
-     "end": 11.84,
+     "start": 11.445,
+     "end": 11.68,
      "heard": true
     },
     {
      "w": "faster.",
-     "start": 11.795,
-     "end": 12.64,
+     "start": 11.635,
+     "end": 12.48,
      "heard": true
     },
     {
      "w": "Your",
-     "start": 12.76,
-     "end": 12.88,
+     "start": 12.58,
+     "end": 12.72,
      "heard": true
     },
     {
      "w": "arms",
-     "start": 12.935,
-     "end": 13.36,
+     "start": 12.755,
+     "end": 13.12,
      "heard": true
     },
     {
      "w": "paid",
-     "start": 13.345,
-     "end": 13.68,
+     "start": 13.17,
+     "end": 13.44,
      "heard": true
     },
     {
      "w": "for",
-     "start": 13.69,
-     "end": 13.84,
+     "start": 13.515,
+     "end": 13.68,
      "heard": true
     },
     {
      "w": "every",
-     "start": 13.835,
-     "end": 14.08,
+     "start": 13.655,
+     "end": 13.92,
      "heard": true
     },
     {
      "w": "extra",
-     "start": 14.175,
-     "end": 14.56,
+     "start": 14.0,
+     "end": 14.32,
      "heard": true
     },
     {
      "w": "turn.",
-     "start": 14.585,
-     "end": 15.04,
+     "start": 14.41,
+     "end": 14.8,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Skaters use this. In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a minute. Nearly six turns a second.",
-   "heard": "Skaters use this. In 2015, a young Canadian skater spun at 342 turns a minute, nearly six turns a second.",
+   "text": "Skaters use this. The record, set by a young Canadian skater: three hundred forty-two turns a minute. Nearly six turns a second.",
+   "heard": "Skaters use this. The record, set by a young Canadian skater, 342 turns a minute, nearly six turns a second.",
    "words": [
     {
      "w": "Skaters",
@@ -588,134 +588,128 @@
     },
     {
      "w": "use",
-     "start": 0.52,
+     "start": 0.53,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "this.",
-     "start": 0.845,
+     "start": 0.85,
      "end": 1.52,
      "heard": true
     },
     {
-     "w": "In",
+     "w": "The",
      "start": 1.655,
      "end": 1.76,
      "heard": true
     },
     {
-     "w": "twenty",
-     "start": 1.86,
-     "end": 2.8,
-     "heard": false
+     "w": "record,",
+     "start": 1.685,
+     "end": 2.48,
+     "heard": true
     },
     {
-     "w": "fifteen,",
-     "start": 1.89,
-     "end": 2.8,
-     "heard": false
+     "w": "set",
+     "start": 2.46,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 2.75,
+     "end": 2.88,
+     "heard": true
     },
     {
      "w": "a",
-     "start": 2.915,
-     "end": 2.965,
+     "start": 2.88,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "young",
-     "start": 2.945,
+     "start": 3.055,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "Canadian",
-     "start": 3.385,
-     "end": 3.92,
+     "start": 3.405,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "skater",
-     "start": 3.985,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "spun",
-     "start": 4.575,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "at",
-     "start": 5.06,
-     "end": 5.11,
+     "w": "skater:",
+     "start": 4.095,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "three",
-     "start": 5.09,
-     "end": 6.16,
+     "start": 4.865,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 5.12,
-     "end": 6.16,
+     "start": 4.895,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "forty-two",
-     "start": 5.15,
-     "end": 6.16,
+     "start": 4.925,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "turns",
-     "start": 6.235,
-     "end": 6.64,
+     "start": 6.015,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.635,
-     "end": 6.8,
+     "start": 6.435,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "minute.",
-     "start": 6.895,
-     "end": 7.52,
+     "start": 6.64,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "Nearly",
-     "start": 7.55,
-     "end": 7.92,
+     "start": 7.25,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "six",
-     "start": 8.005,
-     "end": 8.24,
+     "start": 7.695,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "turns",
-     "start": 8.255,
-     "end": 8.56,
+     "start": 7.96,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.61,
-     "end": 8.72,
+     "start": 8.23,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 8.775,
-     "end": 9.12,
+     "start": 8.425,
+     "end": 8.8,
      "heard": true
     }
    ]

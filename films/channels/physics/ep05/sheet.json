@@ -7,30 +7,30 @@
   {
    "id": "hook",
    "t0": 0.0,
-   "t1": 3.7333,
+   "t1": 4.0,
    "energy": 0.6
   },
   {
    "id": "normal",
-   "t0": 3.7333,
-   "t1": 12.5333,
+   "t0": 4.0,
+   "t1": 12.8,
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 12.5333,
-   "t1": 18.9333,
+   "t0": 12.8,
+   "t1": 19.2,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 18.9333,
-   "t1": 36.2667,
+   "t0": 19.2,
+   "t1": 36.5333,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 36.2667,
+   "t0": 36.5333,
    "t1": 48.8,
    "energy": 0.8
   },
@@ -58,7 +58,7 @@
    "t": 0.0,
    "kind": "section",
    "id": "hook",
-   "t1": 3.7333
+   "t1": 4.0
   },
   {
    "t": 0.3,
@@ -77,147 +77,147 @@
    "tag": "hook:g15"
   },
   {
-   "t": 1.2666666666666666,
+   "t": 1.3333333333333333,
    "kind": "label",
    "tag": "hk-weights"
   },
   {
-   "t": 3.7333,
+   "t": 4.0,
    "kind": "section",
    "id": "normal",
-   "t1": 12.5333
+   "t1": 12.8
   },
   {
-   "t": 4.016633,
+   "t": 4.283333,
    "kind": "counter.show",
    "tag": "spine"
   },
   {
-   "t": 6.833333333333333,
+   "t": 7.133333333333334,
    "kind": "label",
    "tag": "nm-out"
   },
   {
-   "t": 9.1333,
+   "t": 9.4333,
    "kind": "contact",
    "tag": "push"
   },
   {
-   "t": 9.3333,
+   "t": 9.6333,
    "kind": "strobe",
    "tag": "out:g0"
   },
   {
-   "t": 9.6333,
+   "t": 9.9333,
    "kind": "strobe",
    "tag": "out:g3"
   },
   {
-   "t": 9.9333,
+   "t": 10.2333,
    "kind": "strobe",
    "tag": "out:g6"
   },
   {
-   "t": 10.2333,
+   "t": 10.5333,
    "kind": "strobe",
    "tag": "out:g9"
   },
   {
-   "t": 12.5333,
+   "t": 12.8,
    "kind": "section",
    "id": "change",
-   "t1": 18.9333
+   "t1": 19.2
   },
   {
-   "t": 12.9667,
+   "t": 13.2333,
    "kind": "swell",
    "tag": "move1:start"
   },
   {
-   "t": 14.6333,
-   "kind": "spring",
-   "tag": "move1"
-  },
-  {
-   "t": 14.633333333333333,
+   "t": 14.9,
    "kind": "label",
    "tag": "ch-in"
   },
   {
-   "t": 14.7833,
+   "t": 14.9,
+   "kind": "spring",
+   "tag": "move1"
+  },
+  {
+   "t": 15.05,
    "kind": "strobe",
    "tag": "in:g0"
   },
   {
-   "t": 15.0833,
+   "t": 15.35,
    "kind": "strobe",
    "tag": "in:g3"
   },
   {
-   "t": 15.3833,
+   "t": 15.65,
    "kind": "strobe",
    "tag": "in:g6"
   },
   {
-   "t": 15.5333,
+   "t": 15.8,
    "kind": "badge",
    "tag": "model",
    "text": "Body 2.0 kg·m², assumed."
   },
   {
-   "t": 18.9333,
+   "t": 19.2,
    "kind": "section",
    "id": "why",
-   "t1": 36.2667
+   "t1": 36.5333
   },
   {
-   "t": 27.1667,
+   "t": 27.4333,
    "kind": "energy.loss",
    "tag": "move2:start"
   },
   {
-   "t": 27.7,
+   "t": 27.9667,
    "kind": "spring",
    "tag": "move2"
   },
   {
-   "t": 28.233333333333334,
+   "t": 28.5,
    "kind": "label",
    "tag": "wy-easier"
   },
   {
-   "t": 30.4667,
+   "t": 30.5667,
    "kind": "swell",
    "tag": "move3:start"
   },
   {
-   "t": 31.3,
+   "t": 31.4,
    "kind": "spring",
    "tag": "move3"
   },
   {
-   "t": 32.13333333333333,
+   "t": 32.233333333333334,
    "kind": "label",
    "tag": "wy-arms"
   },
   {
-   "t": 36.250033,
+   "t": 36.516633,
    "kind": "counter.tick",
    "tag": "spine:fastest spin on ice skates"
   },
   {
-   "t": 36.2667,
+   "t": 36.5333,
    "kind": "section",
    "id": "whoa",
    "t1": 48.8
   },
   {
-   "t": 36.6,
+   "t": 36.86666666666667,
    "kind": "label",
    "tag": "wo-skater"
   },
   {
-   "t": 37.1,
+   "t": 37.3667,
    "kind": "badge",
    "tag": "skater",
    "text": "Illustration"
@@ -330,22 +330,22 @@
   },
   {
    "id": "vo02",
-   "t": 3.8666666666666667,
+   "t": 4.166666666666667,
    "file": "vo/02.wav"
   },
   {
    "id": "vo03",
-   "t": 12.633333333333333,
+   "t": 12.9,
    "file": "vo/03.wav"
   },
   {
    "id": "vo04",
-   "t": 19.2,
+   "t": 19.466666666666665,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 36.56666666666667,
+   "t": 36.833333333333336,
    "file": "vo/05.wav"
   },
   {

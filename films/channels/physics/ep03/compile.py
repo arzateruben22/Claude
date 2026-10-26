@@ -143,8 +143,8 @@ SPINE = [
      "lit": [A("vo05:hand."), cut("measure")], "minCh": 4, "tick": False},
     {"t0": cut("measure"), "t1": A("vo06:A"), "label": "height missing", "unit": "cm", "dp": 0, "kind": "const", "v": DROP - TOP_H[0], "minCh": 4},
     {"t0": A("vo06:A"), "t1": A("vo06:Even"), "label": "energy it took", "unit": "J", "dp": 3, "kind": "const", "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100, "minCh": 4},
-    {"t0": A("vo06:Even"), "t1": cut("takeaway"), "label": "ball warms by, at most", "unit": "°C", "dp": 4, "kind": "const",
-     "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100 / (57 * 2.0), "lit": [A("vo06:degree."), cut("takeaway")], "minCh": 4},
+    {"t0": A("vo06:Even"), "t1": cut("takeaway"), "label": "average warming, about", "unit": "°C", "dp": 3, "kind": "const",
+     "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100 / (57 * 1.5), "lit": [A("vo06:degree."), cut("takeaway")], "minCh": 4},   # c12: a filled core, about 1.5 J/(g·K)
     {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "energy destroyed", "unit": "J", "dp": 3, "kind": "const", "v": 0.0,
      "lit": [cut("takeaway"), cut("tease") - 0.3], "minCh": 4},
 ]
@@ -321,7 +321,7 @@ SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Rest Frame · No. 003", "title": "Where does the *bounce* go?", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
-    'Even if it all / stays in the ball, | two thousandths / of a degree.',
+    'Even if it all / stays in the ball: | about three thousandths / of a degree.',
 ]
 
 film = {
