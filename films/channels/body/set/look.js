@@ -34,7 +34,10 @@ const rrt = (v) => v.map((x) => (x * (x + 0.0245786) - 0.000090537) / (x * (0.98
 export const aces = (c, exposure = 1) => mul(OUT, rrt(mul(IN, c.map((x) => (x * exposure) / 0.6)))).map((x) => Math.min(1, Math.max(0, x)));
 export const acesInv = (hex, exposure = 1) => {
   const want = hexRgb(hex).map(srgbToLin);
-  let c = want.map((x) => Math.max(1e-4, x));
+  // start from a grey guess: started at `want`, Newton can land where ACES clips a channel to 0 (its Jacobian row
+  // vanishes there) and stay; #123A33 came back as #002A22
+  const m = Math.max(1e-4, (want[0] + want[1] + want[2]) / 3);
+  let c = [m, m, m];
   for (let it = 0; it < 60; it++) {                 // Newton with a numerical Jacobian (3×3), damped
     const f = aces(c, exposure), r = [f[0] - want[0], f[1] - want[1], f[2] - want[2]];
     if (Math.max(...r.map(Math.abs)) < 1e-7) break;
@@ -65,7 +68,9 @@ export const look = (THREE, o) => {
   for (let k = 0; k < STOPS; k++) {
     const u = k / (STOPS - 1), s = [0, 1, 2].map((i) => hi[i] + (bg[i] - hi[i]) * u);   // CSS mixes in sRGB
     const hex = "#" + s.map((x) => Math.round(x * 255).toString(16).padStart(2, "0")).join("");
-    table.push(new THREE.Vector3(...acesInv(hex, exposure)));
+    const c = acesInv(hex, exposure), back = aces(c, exposure), want = hexRgb(hex).map(srgbToLin);
+    if (Math.max(...back.map((x, i) => Math.abs(x - want[i]))) > 0.5 / 255) throw new Error(`look.js: the backdrop stop ${hex} does not round-trip through ACES`);
+    table.push(new THREE.Vector3(...c));
   }
   const GRAD = `
     uniform vec3 uBgTable[${STOPS}]; uniform vec2 uRes;

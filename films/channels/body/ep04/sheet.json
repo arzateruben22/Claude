@@ -73,6 +73,12 @@
    "t1": 14.4
   },
   {
+   "t": 6.433333333333334,
+   "kind": "badge",
+   "tag": "few",
+   "text": "simplified: a few of thousands drawn"
+  },
+  {
    "t": 9.766666666666667,
    "kind": "counter.show",
    "tag": "count"
@@ -85,15 +91,15 @@
   },
   {
    "t": 14.55,
-   "kind": "badge",
-   "tag": "ill",
-   "text": "illustration: one stained tissue, two readings"
-  },
-  {
-   "t": 14.55,
    "kind": "swell",
    "tag": "panels",
    "t1": 16.55
+  },
+  {
+   "t": 16.1,
+   "kind": "badge",
+   "tag": "ill",
+   "text": "illustration: one stained tissue, two readings"
   },
   {
    "t": 25.6,
@@ -113,12 +119,18 @@
    "gain": -4.0
   },
   {
-   "t": 30.3,
+   "t": 30.033333333333335,
    "kind": "counter.show",
    "tag": "width"
   },
   {
-   "t": 32.93333333333333,
+   "t": 30.433333333333334,
+   "kind": "badge",
+   "tag": "slow-why",
+   "text": "slowed"
+  },
+  {
+   "t": 31.833333333333332,
    "kind": "label",
    "tag": "tip"
   },
@@ -182,7 +194,7 @@
    "tag": "hand"
   },
   {
-   "t": 44.733333333333334,
+   "t": 44.5984,
    "kind": "counter.end",
    "tag": "hand-end"
   },
@@ -191,6 +203,12 @@
    "kind": "spike",
    "tag": "use0",
    "gain": -6.0
+  },
+  {
+   "t": 45.13333333333333,
+   "kind": "badge",
+   "tag": "fast",
+   "text": "sped up"
   },
   {
    "t": 45.7533,
@@ -276,9 +294,21 @@
    "t1": 59.2
   },
   {
+   "t": 55.93333333333333,
+   "kind": "badge",
+   "tag": "slow-talk",
+   "text": "slowed"
+  },
+  {
    "t": 56.53333333333333,
    "kind": "label",
    "tag": "gap2"
+  },
+  {
+   "t": 58.031,
+   "kind": "spike",
+   "tag": "talk",
+   "gain": -4.0
   },
   {
    "t": 59.2,
@@ -295,6 +325,12 @@
    "t": 59.5,
    "kind": "counter.show",
    "tag": "tally"
+  },
+  {
+   "t": 59.6,
+   "kind": "badge",
+   "tag": "slow-b0",
+   "text": "slowed"
   },
   {
    "t": 60.0,
@@ -320,6 +356,12 @@
    "t": 63.2,
    "kind": "beat",
    "tag": "beat5"
+  },
+  {
+   "t": 63.6,
+   "kind": "badge",
+   "tag": "slow-b1",
+   "text": "slowed"
   },
   {
    "t": 64.0,
@@ -350,7 +392,7 @@
    "t": 67.583333,
    "kind": "badge",
    "tag": "nts-sac",
-   "text": "not to scale"
+   "text": "illustration, not to scale"
   },
   {
    "t": 67.583333,

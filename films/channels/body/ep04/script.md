@@ -51,7 +51,7 @@ vo: The handoff takes about a thousandth of a second. {c11} Use a junction, and 
 ## takeaway {shot: the two cells, the gap between them lit; the score drops · energy: 0.3} (53–58.5 s)
 vo: So your nerve cells mostly don't *touch*. {c13} They *talk*, across gaps, in chemicals. {c16}
 
-## meanwhile {segment: meanwhile · tally "while you watched": breaths at a resting 15 a minute, from frame 0, on the pulse line; the body locator marks the chest · mallet ticks on the lub-dub · energy: 0.4} (58.5–67.3 s)
+## meanwhile {segment: meanwhile · tally "while you watched": breaths at a resting 15 a minute, from frame 0, on the pulse line; the body locator marks the brainstem · mallet ticks on the lub-dub · energy: 0.4} (58.5–67.3 s)
 vo: *Meanwhile*, as you watched, you took about fifteen breaths. {c14} Each began in your brainstem
 and crossed gaps like these to your diaphragm. {c15}
 

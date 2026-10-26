@@ -1,0 +1,254 @@
+{
+ "voice": "bf_emma",
+ "speed": "per sentence",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/body/ep06/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.3,
+ "gap_question": 0.45,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How does this cell leave your blood? This wall has no open door.",
+   "stars": [
+    "leave",
+    "door"
+   ],
+   "phonemes": "hˌaʊ dˈʌz ðɪs sˈɛl lˈiːv jɔː blˈʌd? ðɪs wˈɔːl hɐz nˈəʊ ˈəʊpən dˈɔː.",
+   "speeds": [
+    1.0,
+    0.8
+   ],
+   "gaps": [
+    0.5
+   ],
+   "silences": [
+    [
+     1.7021,
+     2.2021
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.697,
+   "sha256": "906dfe55d441e9bafce2d932743687aa4911ab5b80f924acf61d4f70142d5bee"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It's a neutrophil, your commonest white cell, about eight micrometres across. Yet under a sore fingertip, they pile up outside the wall.",
+   "stars": [
+    "neutrophil",
+    "outside"
+   ],
+   "phonemes": "ɪts ɐ njˈuːtɹəfˌɪl, jɔː kˈɒmənɪst wˈaɪt sˈɛl, ɐbˌaʊt ˈeɪt mˈaɪkɹəʊmˌiːtəz əkɹˈɒs. jˈɛt ˌʌndəɹ ɐ sˈɔː fˈɪŋɡətˌɪp, ðeɪ pˈaɪl ˌʌp aʊtsˈaɪd ðə wˈɔːl.",
+   "speeds": [
+    0.92,
+    0.9
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     4.4386,
+     4.7386
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 7.931,
+   "sha256": "4307322866e8a3c6a16484a527890323b358235006a1787aa4a7298dd71a444c"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Rudolf Virchow taught that pus grew from the inflamed tissue. In eighteen sixty-seven, his assistant Julius Cohnheim watched a living frog's vessels. White cells climbed out.",
+   "stars": [
+    "tissue",
+    "out"
+   ],
+   "phonemes": "ɹˈuːdɒlf fˈɪəkəʊ tˈɔːt ðat pˈʌs ɡɹˈuː fɹʌmðɪ ɪnflˈeɪmd tˈɪʃuː. ɪn ˈeɪtiːn sˈɪkstisˈɛvən, hɪz ɐsˈɪstənt dʒˈuːlɪəs kˈəʊnhaɪm wˈɒtʃt ɐ lˈɪvɪŋ fɹˈɒɡz vˈɛsəlz. wˈaɪt sˈɛlz klˈaɪmd ˈaʊt.",
+   "speeds": [
+    0.95,
+    0.92,
+    0.92
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.2902,
+     3.5902
+    ],
+    [
+     8.9319,
+     9.2319
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 10.833,
+   "sha256": "e71f6fb21e6bf3fea278930efd93f6bed2dd47b20b7af337486adf35da3e2f5e"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Where tissue is inflamed, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
+   "stars": [
+    "rolls",
+    "stops",
+    "seam",
+    "past"
+   ],
+   "phonemes": "wˌeə tˈɪʃuː ɪz ɪnflˈeɪmd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˌɒn pˈast.",
+   "speeds": [
+    0.92,
+    0.92,
+    0.92,
+    0.9,
+    0.86
+   ],
+   "gaps": [
+    0.3,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.6653,
+     3.9653
+    ],
+    [
+     6.0409,
+     6.3409
+    ],
+    [
+     8.7872,
+     9.0872
+    ],
+    [
+     12.3509,
+     12.6509
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 14.31,
+   "sha256": "ce21195de2902b73875ec7fc8006edd410611156b0ad3b7622b3263e7174062f"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. Behind it, the seam seals shut.",
+   "stars": [
+    "own",
+    "pours",
+    "shut"
+   ],
+   "phonemes": "ðˈɪswˌɒn wˈɛdʒɪz ɪts njˈuːklɪəs ˌɪntʊ ðə sˈiːm, mˌeɪkɪŋ ɪts ˈəʊn dˈɔː. ɪt pˈɔːz θɹuː ɐ ɡˈap nˈaɹəʊə ðɐn ɪtsˈɛlf. bɪhˈaɪnd ɪt, ðə sˈiːm sˈiːlz ʃˈʌt.",
+   "speeds": [
+    0.9,
+    0.88,
+    0.86
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     3.6844,
+     3.9844
+    ],
+    [
+     6.5061,
+     6.8061
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 8.947,
+   "sha256": "8d484d2363c0d364419d146b4acb1c9111a166cf7095395e56aa0dc8e47e844b"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So pus is mostly white cells from your blood. Each one let itself out.",
+   "stars": [
+    "blood"
+   ],
+   "phonemes": "sˌəʊ pˈʌs ɪz mˈəʊstli wˈaɪt sˈɛlz fɹɒm jɔː blˈʌd. ˈiːtʃ wˈɒn lˈɛt ɪtsˈɛlf ˈaʊt.",
+   "speeds": [
+    0.86,
+    0.84
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     2.821,
+     3.121
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 4.96,
+   "sha256": "a84dd8e6215425dd2b080a7f3e97bca8be865235e74bf1e9f4758376707ef4fc"
+  },
+  {
+   "id": "vo07",
+   "beat": "meanwhile",
+   "text": "Meanwhile, as you watched, your bone marrow made new neutrophils. More than ten million.",
+   "stars": [
+    "Meanwhile",
+    "million"
+   ],
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː bˈəʊn mˈaɹəʊ mˌeɪd njˈuː njˈuːtɹəfˌɪlz. mˈɔː ðɐn tˈɛn mˈɪliən.",
+   "speeds": [
+    0.88,
+    0.82
+   ],
+   "gaps": [
+    0.4
+   ],
+   "silences": [
+    [
+     3.7607,
+     4.1607
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.747,
+   "sha256": "8a36827fe39cd8b253e24f15313118dfaddcfc08a494f6a3d8870a46bc816e5c"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: the spark. What sets off every heartbeat you've ever had?",
+   "stars": [
+    "heartbeat"
+   ],
+   "phonemes": "nˈɛkst: ðə spˈɑːk. wˌɒt sˈɛts ˈɒf ˈɛvɹɪ hˈɑːtbiːt juːv ˈɛvə hˌad?",
+   "speeds": [
+    0.88,
+    0.86
+   ],
+   "gaps": [
+    0.4
+   ],
+   "silences": [
+    [
+     1.4135,
+     1.8135
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 4.401,
+   "sha256": "449c3e466e6702fbd178cb6147a77b76afdf616a9351ff11a0f837895ad33a3f"
+  }
+ ]
+}

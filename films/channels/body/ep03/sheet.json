@@ -67,49 +67,39 @@
    "gain": -3.0
   },
   {
-   "t": 0.248,
+   "t": 0.34,
    "kind": "spike",
    "tag": "hook0"
   },
   {
-   "t": 0.868,
+   "t": 1.19,
    "kind": "spike",
    "tag": "hook1"
   },
   {
-   "t": 1.488,
+   "t": 2.04,
    "kind": "spike",
    "tag": "hook2"
   },
   {
-   "t": 2.108,
+   "t": 2.89,
    "kind": "spike",
    "tag": "hook3"
   },
   {
-   "t": 2.728,
+   "t": 3.74,
    "kind": "spike",
    "tag": "hook4"
   },
   {
-   "t": 3.348,
+   "t": 4.59,
    "kind": "spike",
    "tag": "hook5"
   },
   {
-   "t": 3.968,
+   "t": 5.44,
    "kind": "spike",
    "tag": "hook6"
-  },
-  {
-   "t": 4.588,
-   "kind": "spike",
-   "tag": "hook7"
-  },
-  {
-   "t": 5.208,
-   "kind": "spike",
-   "tag": "hook8"
   },
   {
    "t": 5.6,
@@ -118,19 +108,19 @@
    "t1": 15.2
   },
   {
-   "t": 5.828,
+   "t": 6.29,
    "kind": "spike",
-   "tag": "hook9"
+   "tag": "hook7"
   },
   {
-   "t": 6.448,
+   "t": 7.14,
    "kind": "spike",
-   "tag": "hook10"
+   "tag": "hook8"
   },
   {
-   "t": 7.068,
+   "t": 7.8667,
    "kind": "spike",
-   "tag": "hook11"
+   "tag": "run0"
   },
   {
    "t": 8.133333333333333,
@@ -142,6 +132,16 @@
    ]
   },
   {
+   "t": 8.7167,
+   "kind": "spike",
+   "tag": "run1"
+  },
+  {
+   "t": 9.5667,
+   "kind": "spike",
+   "tag": "run2"
+  },
+  {
    "t": 9.733333333333333,
    "kind": "counter.show",
    "tag": "len",
@@ -151,10 +151,45 @@
    ]
   },
   {
+   "t": 10.4167,
+   "kind": "spike",
+   "tag": "run3"
+  },
+  {
+   "t": 11.2667,
+   "kind": "spike",
+   "tag": "run4"
+  },
+  {
+   "t": 12.1167,
+   "kind": "spike",
+   "tag": "run5"
+  },
+  {
+   "t": 12.933333333333334,
+   "kind": "counter.show",
+   "tag": "take"
+  },
+  {
+   "t": 12.9667,
+   "kind": "spike",
+   "tag": "run6"
+  },
+  {
+   "t": 13.8167,
+   "kind": "spike",
+   "tag": "run7"
+  },
+  {
+   "t": 14.6667,
+   "kind": "spike",
+   "tag": "run8"
+  },
+  {
    "t": 15.183333,
    "kind": "badge",
    "tag": "ill-drum",
-   "text": "illustration: Helmholtz's 1850 method",
+   "text": "illustration: Helmholtz's method · slowed",
    "pos": [
     0.387,
     0.146
@@ -176,7 +211,7 @@
    ]
   },
   {
-   "t": 20.733333333333334,
+   "t": 18.566666666666666,
    "kind": "label",
    "tag": "muscle",
    "pos": [
@@ -185,21 +220,12 @@
    ]
   },
   {
-   "t": 21.066666666666666,
+   "t": 18.966666666666665,
    "kind": "label",
    "tag": "nerve",
    "pos": [
     0.203,
     0.151
-   ]
-  },
-  {
-   "t": 21.266666666666666,
-   "kind": "counter.show",
-   "tag": "frog",
-   "pos": [
-    0.5,
-    0.31
    ]
   },
   {
@@ -209,13 +235,22 @@
    "gain": -6.0
   },
   {
-   "t": 22.1,
+   "t": 22.433333333333334,
+   "kind": "counter.show",
+   "tag": "frog",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 23.166666666666668,
    "kind": "impact",
    "tag": "twitch2",
    "gain": -6.0
   },
   {
-   "t": 22.133333333333333,
+   "t": 23.866666666666667,
    "kind": "label",
    "tag": "trace",
    "pos": [
@@ -239,6 +274,16 @@
    ]
   },
   {
+   "t": 25.583333,
+   "kind": "badge",
+   "tag": "slow",
+   "text": "slowed · distances compressed",
+   "pos": [
+    0.337,
+    0.185
+   ]
+  },
+  {
    "t": 25.6,
    "kind": "section",
    "id": "why",
@@ -256,16 +301,21 @@
   {
    "t": 27.9,
    "kind": "counter.show",
-   "tag": "fired",
-   "pos": [
-    0.5,
-    0.31
-   ]
+   "tag": "patch"
   },
   {
    "t": 30.1333,
    "kind": "spike",
    "tag": "why0"
+  },
+  {
+   "t": 30.133333333333333,
+   "kind": "counter.show",
+   "tag": "fired",
+   "pos": [
+    0.5,
+    0.31
+   ]
   },
   {
    "t": 30.9333,
@@ -316,12 +366,12 @@
    "tag": "ms0"
   },
   {
-   "t": 35.5833,
+   "t": 35.9333,
    "kind": "spike",
    "tag": "ms1"
   },
   {
-   "t": 35.86666666666667,
+   "t": 36.6333,
    "kind": "label",
    "tag": "ms",
    "pos": [
@@ -330,24 +380,9 @@
    ]
   },
   {
-   "t": 36.1333,
+   "t": 36.8333,
    "kind": "spike",
    "tag": "ms2"
-  },
-  {
-   "t": 36.6833,
-   "kind": "spike",
-   "tag": "ms3"
-  },
-  {
-   "t": 37.2333,
-   "kind": "spike",
-   "tag": "ms4"
-  },
-  {
-   "t": 37.7833,
-   "kind": "spike",
-   "tag": "ms5"
   },
   {
    "t": 39.63333333333333,
@@ -362,23 +397,9 @@
    "t1": 54.4
   },
   {
-   "t": 42.6,
-   "kind": "badge",
-   "tag": "slow",
-   "text": "slowed · distances compressed",
-   "pos": [
-    0.337,
-    0.185
-   ]
-  },
-  {
    "t": 44.3,
    "kind": "counter.show",
-   "tag": "crawl",
-   "pos": [
-    0.5,
-    0.31
-   ]
+   "tag": "race"
   },
   {
    "t": 44.3,
@@ -395,30 +416,6 @@
    "tag": "race0"
   },
   {
-   "t": 46.43333333333333,
-   "kind": "counter.show",
-   "tag": "wrap",
-   "pos": [
-    0.5,
-    0.31
-   ]
-  },
-  {
-   "t": 46.5276,
-   "kind": "spike",
-   "tag": "race1"
-  },
-  {
-   "t": 46.6218,
-   "kind": "spike",
-   "tag": "race2"
-  },
-  {
-   "t": 46.716,
-   "kind": "spike",
-   "tag": "race3"
-  },
-  {
    "t": 46.733333333333334,
    "kind": "label",
    "tag": "racewrap",
@@ -428,64 +425,19 @@
    ]
   },
   {
-   "t": 46.8102,
+   "t": 47.6333,
    "kind": "spike",
-   "tag": "race4"
-  },
-  {
-   "t": 46.9044,
-   "kind": "spike",
-   "tag": "race5"
-  },
-  {
-   "t": 46.9987,
-   "kind": "spike",
-   "tag": "race6"
-  },
-  {
-   "t": 47.0929,
-   "kind": "spike",
-   "tag": "race7"
-  },
-  {
-   "t": 47.1871,
-   "kind": "spike",
-   "tag": "race8"
-  },
-  {
-   "t": 47.2813,
-   "kind": "spike",
-   "tag": "race9"
-  },
-  {
-   "t": 47.3756,
-   "kind": "spike",
-   "tag": "race10"
-  },
-  {
-   "t": 47.4698,
-   "kind": "spike",
-   "tag": "race11"
-  },
-  {
-   "t": 47.564,
-   "kind": "spike",
-   "tag": "race12"
-  },
-  {
-   "t": 47.6582,
-   "kind": "spike",
-   "tag": "race13"
-  },
-  {
-   "t": 47.7524,
-   "kind": "spike",
-   "tag": "race14"
+   "tag": "race1"
   },
   {
    "t": 48.0,
    "kind": "counter.end",
    "tag": "wrap-end"
+  },
+  {
+   "t": 48.8333,
+   "kind": "spike",
+   "tag": "race2"
   },
   {
    "t": 49.1,
@@ -497,19 +449,30 @@
    ]
   },
   {
+   "t": 50.0333,
+   "kind": "spike",
+   "tag": "race3"
+  },
+  {
+   "t": 51.2333,
+   "kind": "spike",
+   "tag": "race4"
+  },
+  {
+   "t": 52.4333,
+   "kind": "spike",
+   "tag": "race5"
+  },
+  {
+   "t": 53.6333,
+   "kind": "spike",
+   "tag": "race6"
+  },
+  {
    "t": 54.4,
    "kind": "section",
    "id": "takeaway",
    "t1": 61.2
-  },
-  {
-   "t": 54.86666666666667,
-   "kind": "counter.show",
-   "tag": "toe",
-   "pos": [
-    0.5,
-    0.31
-   ]
   },
   {
    "t": 56.5,
@@ -519,6 +482,15 @@
    "pos": [
     0.181,
     0.185
+   ]
+  },
+  {
+   "t": 56.7,
+   "kind": "counter.show",
+   "tag": "toe",
+   "pos": [
+    0.5,
+    0.31
    ]
   },
   {
@@ -593,9 +565,20 @@
    "tag": "beat7"
   },
   {
+   "t": 66.83333333333333,
+   "kind": "spike",
+   "tag": "pacemaker"
+  },
+  {
    "t": 67.2,
    "kind": "beat",
    "tag": "beat8"
+  },
+  {
+   "t": 67.9,
+   "kind": "badge",
+   "tag": "nts-tease",
+   "text": "not to scale"
   },
   {
    "t": 68.0,
@@ -613,24 +596,35 @@
    ]
   },
   {
-   "t": 70.5333,
+   "t": 69.7333,
+   "kind": "badge",
+   "tag": "slow-tease",
+   "text": "slowed"
+  },
+  {
+   "t": 70.0333,
    "kind": "spike",
    "tag": "tease0"
   },
   {
-   "t": 71.0333,
+   "t": 70.5333,
    "kind": "spike",
    "tag": "tease1"
   },
   {
-   "t": 71.5333,
+   "t": 71.0333,
    "kind": "spike",
    "tag": "tease2"
   },
   {
-   "t": 72.0333,
+   "t": 71.5333,
    "kind": "spike",
    "tag": "tease3"
+  },
+  {
+   "t": 72.0333,
+   "kind": "spike",
+   "tag": "tease4"
   },
   {
    "t": 72.8,
@@ -696,8 +690,6 @@
   "light": 17.7667,
   "frog": 21.3,
   "fired": 27.9333,
-  "crawl": 44.3333,
-  "wrap": 46.4667,
   "kmh": 49.1333,
   "toe": 54.9,
   "tally": 61.5333

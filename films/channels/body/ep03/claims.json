@@ -52,7 +52,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "A defined constant: 299 792 458 m/s exact. The readout labels it 'Müller's guess: as fast as light?', with the question mark: c4 says he thought it might be of that order."
+  "note": "A defined constant: 299 792 458 m/s exact. The readout rounds it to 300,000,000 m/s and labels it 'Müller wondered: as fast as light?', with the question mark: c4 says he thought it might be of that order (the 60× figure he cited was an estimate, not his own guess)."
  },
  {
   "id": "c5",
@@ -74,7 +74,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'roughly 90 feet per second' (= 27.4 m/s, computed); Schmidgen's account gives 25–43 m/s. 'About thirty' covers it."
+  "note": "Excerpt: 'roughly 90 feet per second' (= 27.4 m/s, computed); Schmidgen's account gives 25–43 m/s. 'About thirty' covers it. The drum is an illustration of his method (badged 'illustration: Helmholtz's method · slowed'): the far stimulus's later rise is drawn far wider than the real few thousandths of a second."
  },
  {
   "id": "c17",
@@ -184,7 +184,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'."
+  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'. The on-screen timer stops at 2.2 s (the slow signal lands on the spoken 'ache'): computed, 2.2 s over about 1.6 m toe to brain is about 0.73 m/s, inside the C-fibre range of 0.5–2 m/s (0.8–3.2 s over 1.6 m)."
  },
  {
   "id": "c14",
