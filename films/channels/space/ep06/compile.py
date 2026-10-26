@@ -47,9 +47,11 @@ assert 0.04 < LT_TRIP < 0.055, LT_TRIP                                    # c11:
 t_n, t_c, t_why, t_w, t_tk = B["normal"]["t0"], B["change"]["t0"], B["why"]["t0"], B["whoa"]["t0"], B["takeaway"]["t0"]
 t_zoom = A("vo05:Zoom")
 t_p0, t_p1 = A("vo03:And"), A("vo03:Sun", 0.6)          # the pull-back from Earth to its orbit
+t_e0 = A("vo04:Ptolemy")                                 # back in to Earth for the argument (the clouds ride along) ...
+t_e1 = round(t_e0 + 1.8, 4)                              # ... the orbit clock stops there, so Earth holds still for the push
 CLK = {
-    "spin": [{"t": 0.0, "rate": 2000.0}, {"t": t_zoom, "rate": 0.0, "badge": None}],           # one turn in 43 s
-    "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_p1, "rate": 1e6}, {"t": t_zoom, "rate": 0.0, "badge": None}],   # 11.6 days a second
+    "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_n, "rate": 2000.0}, {"t": t_zoom, "rate": 0.0, "badge": None}],   # still on "Sitting perfectly still"; one turn in 43 s
+    "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_p1, "rate": 1e6}, {"t": t_e0, "rate": 0.0, "badge": None}],     # 11.6 days a second
     "gal": [{"t": 0.0, "rate": 0.0}, {"t": t_zoom, "rate": 1e14}],                              # one lap in 73 s
 }
 
@@ -62,8 +64,10 @@ assert t_p1 - t_p0 <= 3.0 and 1.0 < t_j1 - t_j0 <= 3.0, (t_p0, t_p1, t_j0, t_j1)
 LADDER = {
     "units": {"earth": 1000.0, "solar": 1e6, "galaxy": 1000 * LY},
     "keys": [{"t": t_p0, "scale": S_E, "focus": "earth"}, {"t": t_p1, "scale": S_S, "focus": "sun", "ease": "inout3"},
-             {"t": t_j0, "scale": S_S, "focus": "sun"}, {"t": t_j1, "scale": S_G, "focus": "gc", "ease": "inout3"}],
-    "show": {"earth": [1.5, 3.4], "solar": [4.6, 7.5], "galaxy": [13.5, 17.0]},
+             {"t": t_e0, "scale": S_S, "focus": "sun"}, {"t": t_e1, "scale": S_E, "focus": "earthW", "ease": "inout3"},
+             {"t": t_j0, "scale": S_E, "focus": "earthW"}, {"t": t_j1, "scale": S_G, "focus": "gc", "ease": "inout3"}],
+    # the rungs overlap, so a pull-back never passes through an empty frame (the sphere hands off to Earth's marker)
+    "show": {"earth": [1.5, 4.3], "solar": [4.0, 7.5], "galaxy": [13.5, 17.0]},
     "fade": {"earth": 0.6, "solar": 0.7, "galaxy": 1.0},
 }
 
@@ -83,10 +87,10 @@ SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
 # ── overlay ─────────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-you-h", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": 0.0, "t1": t_n, "side": 1},
-    {"id": "l-you", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": A("vo02:equator"), "t1": t_c, "side": 1},
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earthS", "t0": A("vo03:Earth"), "t1": t_w, "side": 1, "fixed": True},   # rides with Earth
-    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo03:Sun"), "t1": t_why, "side": -1},
+    {"id": "l-you", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": 0.0, "t1": t_p0, "side": 1},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earthS", "t0": round(t_p1 - 0.3, 4), "t1": t_e0, "side": 1, "fixed": True},   # rides with Earth
+    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": t_p1, "t1": t_e0, "side": -1},
+    {"id": "l-you-w", "text": "you, and the clouds with you", "kind": "light", "anchor": "pin", "t0": round(t_e1 + 0.2, 4), "t1": round(t_j0 - 0.2, 4), "side": 1},
     {"id": "l-here", "text": "the Sun, and you", "kind": "star", "anchor": "sunG", "t0": A("vo05:drags"), "t1": t_end, "side": 1, "fixed": True},
     {"id": "l-gc", "text": "galactic center", "kind": "star", "anchor": "gc", "t0": A("vo05:galaxy"), "t1": t_end, "side": -1},
     {"id": "l-lap", "text": "the Sun's lap", "kind": "gravity", "anchor": "lap", "t0": A("vo05:One"), "t1": t_tk, "side": -1},
@@ -98,9 +102,10 @@ PILLS = [
 ]
 BADGES = [
     {"id": "b-spin", "clock": "spin", "t0": t_n, "t1": t_c, "slot": "tl"},
-    {"id": "b-orbit", "clock": "orbit", "t0": t_p1, "t1": t_zoom, "slot": "tl"},
+    {"id": "b-orbit", "clock": "orbit", "t0": t_p1, "t1": t_e0, "slot": "tl"},
+    {"id": "b-spin2", "clock": "spin", "t0": t_e1, "t1": t_zoom, "slot": "tl"},
     {"id": "b-gal", "clock": "gal", "t0": t_j1, "t1": t_end, "slot": "tl"},
-    {"id": "b-nts", "text": "not to scale", "t0": t_p1, "t1": t_zoom, "slot": "tr"},
+    {"id": "b-nts", "text": "not to scale", "t0": t_p1, "t1": t_e0, "slot": "tr"},
     {"id": "b-illus", "text": "galaxy: illustration", "t0": t_j1, "t1": t_end, "slot": "tr"},
 ]
 COUNTERS = [
@@ -126,7 +131,7 @@ for a, b in zip(spine, spine[1:]):
 TITLE = {"series": "Light Minute · No. 006", "title": "Your *speed*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: trees or *stars*", "follow": "Light Minute · No. 007",
        "next": "One lap of the galaxy takes the Sun about 230 million years."}   # footnote (c9)
-CUE = {"zoom": t_zoom, "p0": t_p0, "p1": t_p1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To")}
+CUE = {"zoom": t_zoom, "p0": t_p0, "p1": t_p1, "e0": t_e0, "e1": t_e1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To")}
 POSTER = A("vo05:appeared", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["sixteen hundred seventy", "kilometers an hour."],

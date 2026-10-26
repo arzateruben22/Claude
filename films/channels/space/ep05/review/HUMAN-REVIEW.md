@@ -15,6 +15,11 @@
 - **Tease:** "at least two thousand kilometers since this started" counts Earth's orbit alone (c16).
 - **Pronunciation at T0:** Anaxagoras, impiety, sunspot.
 
+- **After the 26 Oct recheck:** the hook pair is badged "true sizes, shown side by side" (a composition, not a
+  moment); the side view's dots are badged "dots enlarged"; a ring grows from southern Greece's true size to the Sun's
+  limb on "by a factor of about eight thousand" (the ratio of 166 km to 1.39 million km is about 8,400); the readout
+  draws Earth's orbit to the outline's scale (1 AU ≈ 215 Sun radii, computed).
+
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md` (every claim from a search excerpt).
 2. **Pictures.** The README's honesty table.

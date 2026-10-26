@@ -5,7 +5,7 @@ import * as THREE from "three";
 // from Earth through a long lens: twins. The camera swings out and the depth shows: one is 400 times wider and 400
 // times farther. "sun": the Sun at true scale against Earths (109 across its face), a big sunspot with an Earth in
 // it, the Peloponnese as a dot, the Sun melted into beads (1 dot = 200 Earths), and the one scale jump: everything
-// shrinks ×2,400 until the Sun is a dot inside the outline of the largest known stars. The end card cuts back to the
+// shrinks ×3,400 until the Sun is a dot inside the outline of the largest known stars. The end card cuts back to the
 // sky view, so a replay loops.
 // Set: ../set (sky, star, planet with earthSurface, moon.js, beacon, rig, look, motif). Kit: hud, front.
 import { stage, seg, E, clamp01, rng } from "cinema/film/runtime.js";
@@ -45,9 +45,9 @@ const K = PH.sky_k, G = { sky: new THREE.Group(), sun: new THREE.Group() };
 scene.add(G.sky, G.sun);
 const dM = PH.d_moon_km * K, dS = PH.d_sun_km * K;
 const MOON_AT = [-dM * Math.tan(PH.sep), 0, -dM], SUN_AT = [dS * Math.tan(PH.sep), 0, -dS];
-const skyMoon = createPlanet({ radius: PH.r_moon_km * K, surface: moonSurface({ width: 512, seed: 9 }), rimDay: 0.2, rimNight: 0.3, segments: 64 });
+const skyMoon = createPlanet({ radius: PH.r_moon_km * K, surface: moonSurface({ width: W >= 1000 ? 2048 : 1024, seed: 9 }), rimDay: 0.0, rimNight: 0.15, segments: 96 });
 skyMoon.group.position.fromArray(MOON_AT);
-const skySun = createStar({ radius: PH.r_sun_km * K, intensity: 2.4, corona: 1.5, coronaI: 0.35 });
+const skySun = createStar({ radius: PH.r_sun_km * K, intensity: 1.15, corona: 1.5, coronaI: 0.3, limb: 0.6, granulation: 0.2 });   // a face, not a blown disc: the twins read as twins
 skySun.set({ center: SUN_AT });
 const moonDot = createBeacon({ color: hdr("ice", 1.0), px: 9, core: 0.5 }), earthDot = createBeacon({ color: hdr("ice", 1.1), px: 10, core: 0.5 });
 const sunMark = createBeacon({ color: hdr("text", 1.6), px: 14, core: 0.4 });   // the Sun from the side (a 4 px disc at this scale)
@@ -57,8 +57,8 @@ G.sky.add(skyMoon.group, skySun.group, moonDot.mesh, earthDot.mesh, sunMark.mesh
 // ── "sun": the Sun at true scale (100 units = 696,000 km) ───────────────────
 const world = new THREE.Group();                                          // shrinks in the jump
 G.sun.add(world);
-const SUN_I = 1.3, CORONA_I = 0.3;                                       // under the bloom threshold: the face keeps its limb and granulation
-const sun = createStar({ radius: 100, intensity: SUN_I, corona: 1.35, coronaI: CORONA_I });
+const SUN_I = 1.15, CORONA_I = 0.3;                                     // under the bloom threshold: the face keeps its limb and granulation
+const sun = createStar({ radius: 100, intensity: SUN_I, corona: 1.35, coronaI: CORONA_I, limb: 0.6, granulation: 0.22 });   // limb darkening and granulation show
 world.add(sun.group);
 const RE = PH.r_e, N = PH.n_across;
 // silhouettes, as Earth looks crossing the Sun; drawn in the plane of the limb, over the corona glow
@@ -76,15 +76,17 @@ spot.position.fromArray(SD.map((v) => v * 100.3)); pen.position.fromArray(SD.map
 spot.quaternion.copy(qSpot); pen.quaternion.copy(qSpot);
 world.add(pen, spot);
 const spotEarth = createPlanet({ radius: RE, surface: earthSurface({ width: 512 }), tilt: 23.44, rimDay: 0.5, rimNight: 0.4, segments: 48 });
-spotEarth.group.position.fromArray(SD.map((v) => v * 101.6));
+const SE_AT = SD.map((v, i) => v * 100.3 + (i === 2 ? 1.3 : 0));            // in front of the spot's centre as seen (the view looks along -z)
+spotEarth.group.position.fromArray(SE_AT);
 world.add(spotEarth.group);
 const PD = norm([-0.32, -0.22, 0.92]);
 const peloMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0 });
 const pelo = new THREE.Mesh(new THREE.CircleGeometry(1.0, 24), peloMat);   // a dark dot (enlarged: badged)
 pelo.position.fromArray(PD.map((v) => v * 100.4));
 pelo.quaternion.copy(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...PD)));
-const peloRing = ring({ color: C.teal, width: 2.4, opacity: 0 });
-world.add(pelo, peloRing.mesh);
+const peloRing = ring({ color: C.ice, width: 2.4, opacity: 0 });
+const xRing = ring({ color: C.tealHi, width: 2.6, opacity: 0 });                // "by a factor of about eight thousand": southern Greece grown to the Sun
+world.add(pelo, peloRing.mesh, xRing.mesh);
 // the melted Sun: 6,500 dots filling the sphere from the bottom (1 dot = 200 Earths, by volume)
 const R6 = rng(17), NP = PH.dots, P = new Float32Array(NP * 3), order = [];
 for (let i = 0; i < NP; i++) { let x, y, z; do { x = R6() * 2 - 1; y = R6() * 2 - 1; z = R6() * 2 - 1; } while (x * x + y * y + z * z > 0.97); P.set([x * 100, y * 100, z * 100], i * 3); order.push(y); }
@@ -136,7 +138,9 @@ for (const L of FILM.labels) {
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0" });
+const fo = endEl.querySelector(".fo");
+if (fo) fo.style.marginTop = "1.8vmin";                                      // the pill sits inside the ring
 const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
@@ -149,7 +153,7 @@ window.seek = function (t) {
   G.sky.visible = shot === "sky" || shot === "side"; G.sun.visible = shot === "sun";
 
   // sky: full Moon lit from behind the viewer; the depth shows as the camera swings out
-  skyMoon.set({ center: MOON_AT, sunDir: [0.05, 0.05, 1], sun: 1, spin: 0 });
+  skyMoon.set({ center: MOON_AT, sunDir: [0.05, 0.05, 1], sun: 1, spin: -Math.PI / 2 });   // the near side (longitude 0) toward Earth
   skySun.set({ tau: t * 600, on: true, camera, center: SUN_AT });
   // side: Earth and the Moon one dot (2,560 km apart at this scale, 2 px), the sight lines drawn out to the Sun's limbs
   const side = shot === "side" ? 1 : 0, reach = E.inout2(seg(t, CUE.side + 0.3, CUE.side + 1.9));
@@ -162,7 +166,7 @@ window.seek = function (t) {
   // sun: the row, the spot, the dot, the melt, the jump
   const k = PH.base * Math.exp(Math.log(PH.shrink) * E.inout3(seg(t, CUE.j0, CUE.j1)));
   world.scale.setScalar(k);
-  const molten = fadeIn(t, CUE.melt0, 0.8);
+  const molten = fadeIn(t, CUE.melt0, 1.5);                                  // ≥ 1.5 s: no sudden large change in brightness
   // the melt dims the Sun (it stays faintly there behind the dots); in the jump it comes back as the dots fade, so they
   // never pile into one over-bright point
   const back = fadeIn(t, CUE.j0, 0.7);
@@ -179,21 +183,27 @@ window.seek = function (t) {
   S.row = [40, 3, 0].map((v) => v * k);
   const so = winOp(t, CUE.spot - 0.4, CUE.melt0 - 0.6, 0.5) * (1 - molten);
   spotMat.opacity = so; penMat.opacity = so * 0.85; spot.visible = pen.visible = so > 0.01;
-  spotEarth.set({ center: SD.map((v) => v * 101.6), sunDir: SD, sun: 1, spin: t * 0.2 });
+  spotEarth.set({ center: SE_AT, sunDir: SD, sun: 1, spin: t * 0.2 });
   spotEarth.group.visible = so > 0.01;
   S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.25 * k, PH.spot_r * 0.55 * k, 0][i]);
-  S.spotearth = SD.map((v) => v * 101.6 * k).map((v, i) => v + [RE * k, RE * k, 0][i]);
+  S.spotearth = SE_AT.map((v) => v * k).map((v, i) => v + [RE * k, RE * k, 0][i]);
   const po = winOp(t, CUE.pelo, CUE.melt0, 0.4);
   peloMat.opacity = po; pelo.visible = po > 0.01;
   peloRing.arc({ center: PD.map((v) => v * 100.6), r: 4.5, e1: [1, 0, 0], e2: [0, 1, 0] }).set({ opacity: po });
   S.pelo = PD.map((v) => v * 100.4 * k);
+  // ×8,000: a ring from southern Greece's true size out to the Sun's limb, log-eased, between "By" and "thousand"
+  const ux = E.inout2(seg(t, CUE.x0, CUE.x1)), rx = Math.exp(Math.log(PH.pelo_km / 2 / PH.u) + (Math.log(100) - Math.log(PH.pelo_km / 2 / PH.u)) * ux);
+  const cx = PD.map((v) => v * 100.4 * (1 - ux));
+  xRing.arc({ center: cx, r: rx, ...cb() }).set({ opacity: winOp(t, CUE.x0, CUE.melt0 - 0.4, 0.3) });
+  const cbx = cb();
+  S.x8000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.5) + cbx.e2[j] * Math.sin(0.5))) * k);
   dotMat.uniforms.uLevel.value = -1.05 + 2.1 * E.inout2(seg(t, CUE.melt0 + 0.4, CUE.melt1));
   dotMat.uniforms.uOp.value = molten * (1 - back);
   sunDot.set({ center: [0, 0, 0], camera, opacity: fadeIn(t, CUE.j0 + 1.6, 0.8) });
   S.sundot = [0, 0, 0];
   const gr = PH.giant * 100 * k;
-  giant.arc({ center: [0, 0, 0], r: gr, ...cb() }).set({ opacity: shot === "sun" ? fadeIn(t, CUE.giant, 0.8) : 0 });
-  S.giant = [gr * Math.cos(2.2), gr * Math.sin(2.2), 0].map((v, i) => v);
+  giant.arc({ center: [0, 0, 0], r: gr, ...cb() }).set({ opacity: shot === "sun" ? fadeIn(t, CUE.j0 + 0.9, 0.6) : 0 });   // in with the zoom-out, not after it
+  S.giant = [gr * Math.cos(2.5), gr * Math.sin(2.5), 0];
   const orr = PH.au_r * 100 * k, oo = shot === "sun" ? fadeIn(t, CUE.orbit, 0.8) : 0;
   orbitE.arc({ center: [0, 0, 0], r: orr, ...cb() }).set({ opacity: oo });
   S.orbit = [orr * Math.cos(-2.4), orr * Math.sin(-2.4), 0];

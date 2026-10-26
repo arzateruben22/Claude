@@ -47,7 +47,7 @@ SPOT_R = 2.6 * R_E                         # a big sunspot, 2.6 Earth radii (abo
 PELO_KM = 2 * math.sqrt(21550 / math.pi)   # c15: 166 km
 GIANT = 1000.0                             # c8: the largest known stars, over 1,000 × the Sun's radius
 SKY_K = 1.0 / 150000.0                     # "sky" place: km → units (the Moon 2.56 units out, the Sun 997)
-SEP = 0.0105                               # the pair's angular offset either side of the line of sight (rad)
+SEP = 0.0080                               # the pair's angular offset either side of the line of sight (rad): both discs whole in the frame
 assert N_ACROSS == 109 and abs(VOL - 1.30e6) < 0.02e6, (N_ACROSS, VOL)
 
 t_cut = B["change"]["t0"]
@@ -58,17 +58,34 @@ t_melt0, t_melt1 = A("vo05:Melt"), A("vo05:fill")
 t_j0, t_j1 = A("vo05:Yet", -0.1), A("vo05:Some")
 assert t_j1 - t_j0 <= 3.0, (t_j0, t_j1)
 t_end = A("vo08:Next", -0.25)
-SHRINK = 1.0 / 600.0                       # the jump: the "sun" place shrinks ×600 more (the 1,000× outline then 42 units)
+SHRINK = 1.0 / 850.0                       # the jump: the "sun" place shrinks ×850 more (the 1,000× outline then 29 units, above the spine)
 
 # ── camera (rig.js keys; one per place) ─────────────────────────────────────
 key = lambda t, **k: {"t": round(t, 4), "fx": 0.5, **{"fov": 24, **k}}
 mz = D_MOON_KM * SKY_K
-SKY0 = dict(target=[0, 0, -mz], dist=mz, el=0.0, az=0.0, fy=0.36, fov=2.6)   # at Earth, looking at the pair (a long lens)
+SKY0 = dict(target=[0, 0, -mz], dist=mz, el=0.0, az=0.0, fy=0.36, fov=3.3)   # at Earth, looking at the pair (a long lens)
 # "side": the same place seen square-on, from far out to the side, rolled so the line runs from Earth (lower left,
 # above the spine) to the Sun (upper right): the depth the twins hid. A cut at "But", then a slow drift.
 # (the roll turns the frame offset too: fx, fy are chosen so the midpoint lands at x 0.5, y 0.33 after it)
 SIDE = dict(target=[0, 0, -D_SUN_KM * SKY_K * 0.5], dist=4660.0, el=12.0, az=90.0, roll=-40.0, fx=0.6943, fy=0.3698, fov=30)
 SUNF = dict(target=[0, 0, 0], dist=420.0, el=0.0, az=0.0, fy=0.33)        # the Sun about 0.29 of the frame's height
+def zoom(ta, tb, pa, pb, n=4):
+    """log-spaced fov keys from pose pa (at ta) to pose pb (at tb): the zoom's magnification grows evenly in time"""
+    out = []
+    for i in range(1, n + 1):
+        u = i / n
+        e = u * u * (3 - 2 * u)                     # a smoothstep on log fov, so the move starts and lands gently
+        lerp = lambda a, b: a + (b - a) * e
+        out.append(key(ta + (tb - ta) * u, target=[lerp(pa["target"][j], pb["target"][j]) for j in range(3)],
+                       dist=math.exp(lerp(math.log(pa["dist"]), math.log(pb["dist"]))), el=lerp(pa["el"], pb["el"]), az=lerp(pa["az"], pb["az"]),
+                       fov=math.degrees(2 * math.atan(math.exp(lerp(math.log(math.tan(math.radians(pa["fov"]) / 2)), math.log(math.tan(math.radians(pb["fov"]) / 2)))))),
+                       fy=lerp(pa["fy"], pb["fy"]), ease="lin"))
+    return out
+ROWV = dict(SUNF, dist=268.0, fy=0.27, fov=24.0)
+SPOTV = dict(target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.25, fy=0.3)
+SPOTV2 = dict(SPOTV, fov=1.15)
+ZOOM_IN = zoom(t_spot - 0.3, t_spot + 1.0, ROWV, SPOTV, n=6)
+ZOOM_OUT = zoom(A("vo04:ago"), A("vo04:said"), SPOTV2, dict(SUNF, dist=405.0, fov=24.0), n=8)
 CAM = {
     "sky": [key(0.0, **SKY0), key(B["normal"]["t0"], **SKY0),
             key(t_end, **dict(SKY0, dist=mz * 1.02)), key(t_end + 2.6, **SKY0, ease="inout3")],
@@ -78,9 +95,10 @@ CAM = {
     # (the Sun about 0.78 of the frame's width at dist 270, each Earth about 8 px; its lower limb stays above the spine)
     "sun": [key(t_cut, **SUNF), key(t_row0, **SUNF, ease="sine"), key(t_row1, **dict(SUNF, dist=270.0, fy=0.27), ease="inout3"),
             key(t_spot - 0.3, **dict(SUNF, dist=268.0, fy=0.27), ease="sine"),
-            key(t_spot + 1.0, target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.25, fy=0.3, ease="inout3"),
+            # the ×20 zoom in log-spaced steps (the rig lerps fov linearly; one key would bunch the zoom into half a second)
+            *ZOOM_IN,
             key(A("vo04:ago"), target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.15, fy=0.3, ease="sine"),
-            key(A("vo04:said"), **dict(SUNF, dist=405.0), ease="inout3"),
+            *ZOOM_OUT,
             key(t_melt0, **dict(SUNF, dist=400.0, el=10.0, az=8.0), ease="sine"),
             key(t_j0, **dict(SUNF, dist=395.0, el=12.0, az=12.0), ease="sine"),
             key(t_end, **dict(SUNF, dist=390.0, el=14.0, az=15.0), ease="sine")],
@@ -97,20 +115,24 @@ LABELS = [
     {"id": "l-sun-x", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": A("vo02:But") + 0.2, "t1": t_cut, "side": -1, "shot": "side"},
     {"id": "l-you", "text": "Earth and Moon", "kind": "body", "anchor": "you", "t0": A("vo02:But") + 0.6, "t1": t_cut, "side": 1, "shot": "side"},
     {"id": "l-row", "text": "109 Earths", "kind": "body", "anchor": "row", "t0": t_row1, "t1": A("vo03:Your"), "side": 1, "shot": "sun"},
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "spotearth", "t0": A("vo03:world"), "t1": B["why"]["t0"] + 1.0, "side": 1, "shot": "sun"},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "spotearth", "t0": round(t_spot + 0.1, 4), "t1": B["why"]["t0"] + 1.0, "side": 1, "shot": "sun"},
     {"id": "l-spot", "text": "a big sunspot", "kind": "star", "anchor": "spot", "t0": t_spot, "t1": B["why"]["t0"] + 1.0, "side": -1, "shot": "sun"},
-    {"id": "l-pelo", "text": "southern Greece, to scale", "kind": "light", "anchor": "pelo", "t0": t_pelo, "t1": t_melt0, "side": 1, "shot": "sun"},
-    {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:ordinary"), "t1": t_end, "side": -1, "shot": "sun"},
-    {"id": "l-giant", "text": "the largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": t_end, "side": 1, "shot": "sun"},
+    {"id": "l-pelo", "text": "southern Greece", "kind": "body", "anchor": "pelo", "t0": t_pelo, "t1": A("vo04:By"), "side": 1, "shot": "sun"},
+    {"id": "l-x8000", "text": "×8,000", "kind": "light", "anchor": "x8000", "t0": A("vo04:thousand"), "t1": t_melt0, "side": 1, "shot": "sun"},
+    {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:ordinary"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
+    {"id": "l-giant", "text": "largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": B["readout"]["t0"], "side": 1, "shot": "sun"},
     # the readout: Earth's orbit drawn to the same scale (1 AU = about 215 Sun radii), inside the giants' outline
     {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": t_end, "side": -1, "shot": "sun"},
 ]
+TITLE_T1 = B["normal"]["t0"] - 0.5
 BADGES = [
-    {"id": "b-sky", "text": "true distances, shrunk · dots enlarged", "t0": A("vo02:But"), "t1": t_cut, "slot": "tr"},   # the side view
+    {"id": "b-pair", "text": "true sizes, shown side by side", "t0": round(TITLE_T1 + 0.45, 4), "t1": A("vo02:But"), "slot": "tr"},
+    {"id": "b-sky", "text": "true distances, shrunk", "t0": A("vo02:But"), "t1": t_cut, "slot": "tl"},   # the side view
+    {"id": "b-dots", "text": "dots enlarged", "t0": A("vo02:But"), "t1": t_cut, "slot": "tl"},
     {"id": "b-true", "text": "true scale", "t0": t_cut, "t1": t_pelo, "slot": "tr"},
     {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": t_melt0, "slot": "tr"},
-    {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": t_j1, "slot": "tr"},
-    {"id": "b-illus", "text": "illustration", "t0": t_j0, "t1": t_end, "slot": "tr"},
+    {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": round(t_j0 + 0.7, 4), "slot": "tr"},
+    {"id": "b-illus", "text": "illustration", "t0": A("vo05:Some"), "t1": t_end, "slot": "tr"},
 ]
 COUNTERS = [
     {"id": "c-hook", "label": "Earths inside", "text": "?", "t0": 0.0, "t1": B["normal"]["t0"]},
@@ -119,7 +141,7 @@ COUNTERS = [
     {"id": "c-guess", "label": "Anaxagoras · the Sun is bigger than", "text": "southern Greece", "t0": A("vo04:bigger"), "t1": A("vo04:By")},
     {"id": "c-8000", "label": "he was right · by a factor of", "text": "8,000", "t0": A("vo04:By"), "t1": t_melt0},
     {"id": "c-melt", "label": "Earths inside, by volume", "fmt": "count", "from": 0, "to": round(VOL, -5), "c0": t_melt0, "c1": t_melt1, "t0": t_melt0, "t1": A("vo05:Some")},
-    {"id": "c-giant", "label": "the largest known stars · wider than the Sun", "text": "1,000×+", "t0": A("vo05:Some"), "t1": B["takeaway"]["t0"]},
+    {"id": "c-giant", "label": "wider than the Sun", "text": ">1,000×", "t0": A("vo05:Some"), "t1": B["takeaway"]["t0"]},
     {"id": "c-dwarf", "label": "the Sun's class", "text": "G2V · dwarf", "t0": A("vo06:dwarf"), "t1": B["readout"]["t0"]},
     {"id": "c-read-x", "label": "light time · across the Sun", "text": "5 s", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:Sun#2") - 0.05, 4)},
     {"id": "c-read-e", "label": "light time · Sun to Earth", "text": "8 min 20 s", "read": True, "t0": A("vo07:Sun#2"), "t1": t_end},
@@ -131,16 +153,16 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
        "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c8 note; NASA)
 
-CUE = {"side": A("vo02:But"), "orbit": A("vo07:Sun#2"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
+CUE = {"side": A("vo02:But"), "orbit": A("vo07:Sun#2"), "x0": A("vo04:By"), "x1": A("vo04:thousand"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
 POSTER = A("vo05:wider", 0.8)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["the Sun", "the full Moon", "look the same size."],
          "vo03": ["would fit inside", "one big sunspot."],
-         "vo04": ["a fiery stone,", "bigger than", "southern Greece."],
+         "vo04": ["a fiery stone,", "than southern Greece."],
          "vo05": ["a thousand"], "vo06": ["the Sun", "dwarf stars."],
          "vo07": ["the Sun:", "about five seconds.", "Sun to Earth:", "eight minutes,", "twenty seconds."]})
 

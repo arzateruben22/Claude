@@ -16,6 +16,12 @@
 - **Readout:** "about a twentieth of a second" counts the galactic leg only, at about 60 s in (c11).
 - **Pronunciation at T0:** Ptolemy, Galileo, "sixteen hundred seventy", "two hundred thirty million".
 
+- **After the 26 Oct recheck:** "you" stand on the equator in Ecuador (78.5° W), drawn on the side facing the
+  camera; Earth holds still on "Sitting perfectly still" and starts turning (badged 2,000×) on "Earth spins". For
+  Ptolemy and Galileo the picture returns to Earth (the orbit clock stops; the spin plays on) with the label "you,
+  and the clouds with you"; the one zoom then goes from Earth to the galaxy. The Sun is drawn larger than true (not to
+  scale, badged). The readout draws light's path from the Sun to the galaxy's centre.
+
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md` (every claim from a search excerpt).
 2. **Pictures.** The README's honesty table.

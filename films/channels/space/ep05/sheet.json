@@ -65,6 +65,11 @@
    "tag": "title"
   },
   {
+   "t": 3.6833,
+   "kind": "badge",
+   "tag": "b-pair"
+  },
+  {
    "t": 3.7333,
    "kind": "section",
    "id": "normal",
@@ -84,6 +89,11 @@
    "t": 8.333333333333334,
    "kind": "badge",
    "tag": "b-sky"
+  },
+  {
+   "t": 8.333333333333334,
+   "kind": "badge",
+   "tag": "b-dots"
   },
   {
    "t": 8.533333333333333,
@@ -127,14 +137,14 @@
    "tag": "row-full"
   },
   {
-   "t": 19.066666666666666,
-   "kind": "label",
-   "tag": "l-earth"
-  },
-  {
    "t": 20.8,
    "kind": "label",
    "tag": "l-spot"
+  },
+  {
+   "t": 20.9,
+   "kind": "label",
+   "tag": "l-earth"
   },
   {
    "t": 22.4,
@@ -163,6 +173,11 @@
    "tag": "c-8000"
   },
   {
+   "t": 37.06666666666667,
+   "kind": "label",
+   "tag": "l-x8000"
+  },
+  {
    "t": 40.0,
    "kind": "section",
    "id": "whoa",
@@ -185,11 +200,6 @@
   },
   {
    "t": 44.4,
-   "kind": "badge",
-   "tag": "b-illus"
-  },
-  {
-   "t": 44.4,
    "kind": "scale.jump",
    "tag": "to-giants",
    "t1": 47.13333333333333
@@ -208,6 +218,11 @@
    "t": 47.13333333333333,
    "kind": "counter.show",
    "tag": "c-giant"
+  },
+  {
+   "t": 47.13333333333333,
+   "kind": "badge",
+   "tag": "b-illus"
   },
   {
    "t": 52.8,

@@ -16,6 +16,11 @@
 - **Readout:** "the radar's round trip, at its closest: about four minutes" = 2 × 38.2 million km / c = 255 s (c16).
 - **Pronunciation at T0:** Schiaparelli (skya-pa-REL-li), Cassinis, "two hundred forty-three".
 
+- **After the 26 Oct recheck (drawing conventions to check):** a small "your sky on Venus" dial under the captions
+  shows the Sun's place in the pin's sky (west on the left) as the clocks run; the light-time ring grows from the Sun
+  and the radar round trip runs as a ping (both faster than light, illustrations of the readout's numbers); the bodies
+  are drawn about 25% larger on the diagram (not to scale, badged); the Sun shrinks away as the camera follows Venus.
+
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md` (every claim from a search excerpt; open each link).
 2. **Pictures.** The README's honesty table lists every badge and drawing convention.

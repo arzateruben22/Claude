@@ -14,6 +14,12 @@
 - **"And it does."** The agreement is within about 1% (c12's note).
 - **Readout:** "You always see the Moon that late" (1.3 s; the light left the Sun 8 min 20 s before that).
 
+- **After the 26 Oct recheck:** the gravity-off thought experiment now plays (its cue matched the wrong "gravity"
+  before, so the delivered 26 Oct cut had no straight-line flight): check it reads as a thought experiment (badged).
+  In the whoa an apple falls beside the Moon: its first second (4.9 m) drawn at the same ×1,000,000 as the Moon's
+  minute, so the two falls are the same length on screen. The readout's ring grows at the real speed of light
+  (badged): 1.3 s of film to the Moon's distance. The Moon's texture was rebaked on the sphere (no pinch at the poles).
+
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md` (every claim from a search excerpt).
 2. **Pictures.** The README's honesty table.
