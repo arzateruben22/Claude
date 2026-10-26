@@ -85,8 +85,12 @@ const pelo = new THREE.Mesh(new THREE.CircleGeometry(1.0, 24), peloMat);   // a 
 pelo.position.fromArray(PD.map((v) => v * 100.4));
 pelo.quaternion.copy(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...PD)));
 const peloRing = ring({ color: C.ice, width: 2.4, opacity: 0 });
-const xRing = ring({ color: C.tealHi, width: 2.6, opacity: 0 });                // "by a factor of about eight thousand": southern Greece grown to the Sun
-world.add(pelo, peloRing.mesh, xRing.mesh);
+// "by a factor of about eight thousand": southern Greece's true size grown to the Sun's; drawn dark (a line of light
+// would vanish on the white face), over the face, a constant 4 px thick
+const xMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
+const xRing = new THREE.Mesh(new THREE.RingGeometry(0.9, 1, 160), xMat);
+xRing.renderOrder = 6; xRing.frustumCulled = false;
+world.add(pelo, peloRing.mesh, xRing);
 // the melted Sun: 6,500 dots filling the sphere from the bottom (1 dot = 200 Earths, by volume)
 const R6 = rng(17), NP = PH.dots, P = new Float32Array(NP * 3), order = [];
 for (let i = 0; i < NP; i++) { let x, y, z; do { x = R6() * 2 - 1; y = R6() * 2 - 1; z = R6() * 2 - 1; } while (x * x + y * y + z * z > 0.97); P.set([x * 100, y * 100, z * 100], i * 3); order.push(y); }
@@ -194,7 +198,13 @@ window.seek = function (t) {
   // ×8,000: a ring from southern Greece's true size out to the Sun's limb, log-eased, between "By" and "thousand"
   const ux = E.inout2(seg(t, CUE.x0, CUE.x1)), rx = Math.exp(Math.log(PH.pelo_km / 2 / PH.u) + (Math.log(100) - Math.log(PH.pelo_km / 2 / PH.u)) * ux);
   const cx = PD.map((v) => v * 100.4 * (1 - ux));
-  xRing.arc({ center: cx, r: rx, ...cb() }).set({ opacity: winOp(t, CUE.x0, CUE.melt0 - 0.4, 0.3) });
+  const xo = winOp(t, CUE.x0, CUE.melt0 - 0.4, 0.3);
+  xMat.opacity = 0.9 * xo; xRing.visible = xo > 0.01;
+  if (xRing.visible) {
+    const pxw = (2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.length()) / H / k;   // world units per pixel at the Sun
+    xRing.geometry.dispose(); xRing.geometry = new THREE.RingGeometry(Math.max(0, rx - 4 * S1 * pxw), rx, 160);
+    xRing.position.fromArray(cx); xRing.quaternion.copy(camera.quaternion);
+  }
   const cbx = cb();
   S.x8000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.5) + cbx.e2[j] * Math.sin(0.5))) * k);
   dotMat.uniforms.uLevel.value = -1.05 + 2.1 * E.inout2(seg(t, CUE.melt0 + 0.4, CUE.melt1));
