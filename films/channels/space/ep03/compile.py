@@ -43,16 +43,22 @@ assert abs(SOLAR - 116.75) < 0.1, SOLAR
 # ── the clocks ──────────────────────────────────────────────────────────────
 t_cut = B["normal"]["t0"]
 t_g1, t_g2 = A("vo03:Cassinis"), A("vo03:Schiaparelli")
-t_true = A("vo04:Venus")
+t_radar, t_true = A("vo04:radar"), A("vo04:Venus")
 t_w, t_tk, t_rd = B["whoa"]["t0"], B["takeaway"]["t0"], B["readout"]["t0"]
+t_echo = A("vo07:round")
 STOP = 1.2                                 # the takeaway's clocks slow to a stop over 1.2 s, ending as the readout starts
-R1, R2, R4 = 1e6, 2e6, 4e6                 # 11.6, 23 and 46 days a second ("10⁶×", "2,000,000×", "4,000,000×")
+# 11.6 and 46 days a second; the true turn (R2) runs at 10⁶× too, so the pin crosses the face through "backwards"
+# (at 2,000,000× it had gone behind the limb). R1 is badged by hand: clock.js would print "10⁶×"
+R1, R2, R4 = 1e6, 1e6, 4e6
+SLOW = "slowing to a stop"                 # the ramp keeps a note: the planets still move until the readout
 CLK = {
     "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_cut, "rate": R1, "badge": "1,000,000× faster"}, {"t": B["change"]["t0"], "rate": 0.0, "badge": None},
-              {"t": t_g2, "rate": R1, "badge": "1,000,000× faster"}, {"t": B["why"]["t0"], "rate": 0.0, "badge": None},
-              {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": None}],
+              # the orbit's note waits 0.35 s for the guess's to leave, so the two never share the slot
+              {"t": t_g2, "rate": R1, "badge": None}, {"t": round(t_g2 + 0.35, 4), "rate": R1, "badge": "1,000,000× faster"},
+              {"t": B["why"]["t0"], "rate": 0.0, "badge": None},
+              {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
     "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_cut, "rate": R1, "badge": "1,000,000× faster"}, {"t": B["change"]["t0"], "rate": 0.0, "badge": None},
-             {"t": t_true, "rate": R2}, {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": None}],
+             {"t": t_true, "rate": R2, "badge": "1,000,000× faster"}, {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
     "guess": [{"t": 0.0, "rate": 0.0}, {"t": t_g1, "rate": 5e4}, {"t": t_g2, "rate": 0.0, "badge": None}],
 }
 
@@ -78,7 +84,8 @@ def tau(keys, t):
 
 # ── phases: Venus and Earth line up (inferior conjunction) as the readout starts; the pin is just before
 # sunrise on frame 0 (the hook's "watch": the night side, the Sun about to come up behind the limb) ──
-TH_C = math.radians(-35.0)                 # where the conjunction happens on the diagram (lower right)
+TH_C = math.radians(-35.0)                 # the conjunction's angle on the orbit (its place on screen is set by the clocks:
+                                           # the camera's az is TH_V0's, so it renders at the upper left whatever TH_C is)
 tau_c = tau(CLK["orbit"], t_rd)
 TH_V0 = TH_C - 2 * math.pi * tau_c / P_ORB
 TH_E0 = TH_C - 2 * math.pi * tau_c / P_EARTH
@@ -112,6 +119,8 @@ while t < t_rd:
         SUNRISES.append({"t": round(b, 4), "th": round(th_v(b), 6)})
     t, h0 = t1, h1
 assert len(SUNRISES) >= 3, SUNRISES
+# the sunrise the label names: the first after "you" has gone, so the two pills never crowd Venus together
+RISE_I = next(i for i, s in enumerate(SUNRISES) if s["t"] >= A("vo05:hundred"))
 
 # ── the camera: one shot. A close view that follows Venus (the hook, the guesses, the radar and the true
 # turn) and the diagram (the normal, the whoa, the takeaway, the readout); the end card pushes back in, so a
@@ -122,26 +131,37 @@ CLOSE = {"target": [0, 0, 0], "dist": 24.0, "el": 10.0, "az": AZ, "fov": 24, "fx
 th_why = math.degrees(th_v(B["why"]["t0"]))
 AZ2 = min((th_why + k * 180.0 for k in range(-8, 9)), key=lambda a: abs(a - AZ))
 CLOSE2 = dict(CLOSE, az=AZ2, el=24.0)   # higher, so the "backwards" arrow round the equator reads as a ring
-DIAG = {"target": [0, 0, 0], "dist": 205.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.34}   # Earth's orbit clears the notes and the spine
+AZ3 = AZ2 + 10.0                           # the change beat's slow orbit (0.7° a second), held through the why
+# Earth's orbit (y 176–482 of 960 at 225) clears the top notes and the spine's label
+DIAG = {"target": [0, 0, 0], "dist": 225.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.34}
+# the readout's push: onto Venus and Earth, lined up at the conjunction, so the round trip between them can be seen
+r_mid = (R_V + R_E) / 2
+PAIR = dict(DIAG, target=[round(r_mid * math.cos(TH_C), 4), 0.0, round(-r_mid * math.sin(TH_C), 4)], dist=45.0, el=66.0, az=AZ + 3.0, fx=0.55, fy=0.35)
 key = lambda t, P, **k: {"t": round(t, 4), **P, **k}
 t_pull = A("vo02:On", 0.0)
 t_push2, t_back, t_end = A("vo02:hides"), B["whoa"]["t0"], A("vo08:Next", -0.25)   # the push lands on the clouds on "lid of cloud"
 CAM = {"space": [
-    key(0.0, CLOSE, dist=23.4), key(t_cut, CLOSE, dist=24.0, ease="sine"),
+    key(0.0, CLOSE, dist=25.5), key(t_cut, CLOSE, dist=23.0, ease="sine"),   # the hook pushes in (2.4% a second): Venus never sits still
     key(t_pull + 2.2, DIAG, ease="inout3"),
-    key(t_push2, DIAG, dist=200.0, ease="sine"),   # hold the diagram until the push starts with the follow (else it dollies at the Sun)
-    key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, dist=23.0, ease="sine"),
-    key(t_w - 0.2, CLOSE2, dist=22.0, ease="sine"), key(t_w + 2.2, DIAG, ease="inout3"),
-    # the whoa and the takeaway: a slow turn and push on the diagram (≤ 1.5° a second), so the sunrises don't sit still
-    key(t_tk, DIAG, dist=198.0, el=64.0, az=AZ + 12.0, fy=0.32, ease="sine"),   # Earth's orbit and the planets clear the spine's label
-    key(t_end, DIAG, dist=194.0, el=66.0, az=AZ + 3.0, fy=0.32, ease="sine"), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"),
-    key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine"),
+    key(t_push2, DIAG, dist=220.0, ease="sine"),   # hold the diagram until the push starts with the follow (else it dollies at the Sun)
+    key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, az=AZ3, dist=23.0, ease="sine"),
+    # the radar beat: Venus eases left, so the beam and the ping have room on the right; back to centre for the true turn
+    key(t_radar, CLOSE2, az=AZ3, dist=22.9, fx=0.42, ease="sine"), key(t_true, CLOSE2, az=AZ3, dist=22.5, fx=0.42, ease="sine"),
+    key(t_true + 1.6, CLOSE2, az=AZ3, dist=22.4, ease="sine"), key(t_w - 0.2, CLOSE2, az=AZ3, dist=22.0, ease="sine"),
+    # the pull to the diagram rises over Venus first, while the target still follows it (FOLLOW holds), so it never turns
+    # its night side to the camera on "Stand there"
+    key(t_w + 0.7, CLOSE2, az=AZ3, dist=45.0, el=58.0, ease="inout2"), key(t_w + 2.2, DIAG, ease="inout3"),
+    # the whoa and the takeaway: a slow turn on the diagram (≤ 1.5° a second), so the sunrises don't sit still
+    key(t_tk, DIAG, el=64.0, az=AZ + 12.0, ease="sine"),
+    key(t_echo, DIAG, dist=222.0, el=66.0, az=AZ + 3.0, ease="sine"),   # the light-time ring whole; held until the round trip is named
+    key(t_echo + 1.2, PAIR, ease="inout3"), key(t_end, PAIR),
+    key(t_end + 2.4, CLOSE, dist=24.5, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=25.5, ease="sine"),   # frame 0's pose: the loop
 ]}
 # how much the target follows Venus (1 in the close view, 0 on the diagram), eased with the same moves
-FOLLOW = [[0.0, 1], [t_cut, 1], [t_pull + 2.2, 0], [t_push2, 0], [t_push2 + 1.6, 1], [t_w - 0.2, 1], [t_w + 2.2, 0],
+FOLLOW = [[0.0, 1], [t_cut, 1], [t_pull + 2.2, 0], [t_push2, 0], [t_push2 + 1.6, 1], [t_w - 0.2, 1], [t_w + 0.7, 1], [t_w + 2.2, 0],
           [t_end, 0], [t_end + 2.4, 1]]
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
-CAM["end"] = [key(t_end, DIAG, dist=194.0, el=66.0, az=AZ + 3.0, fy=0.32), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine")]
+CAM["end"] = [key(t_end, PAIR), key(t_end + 2.4, CLOSE, dist=24.5, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=25.5, ease="sine")]
 for shot, keys in CAM.items():                    # the bible's arc limit: ≤ 1.5° a second (the follow-pushes excepted: they cut across)
     for a, b in zip(keys, keys[1:]):
         if a.get("az") is not None and abs(a["az"] - b["az"]) < 30:
