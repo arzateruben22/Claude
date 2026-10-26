@@ -231,15 +231,6 @@
    "tag": "change:g1"
   },
   {
-   "t": 14.566666666666666,
-   "kind": "label",
-   "tag": "ch-thrown",
-   "pos": [
-    0.617,
-    0.225
-   ]
-  },
-  {
    "t": 14.5722,
    "kind": "time.slow",
    "tag": "slow@14.57"
@@ -248,6 +239,15 @@
    "t": 14.6695,
    "kind": "strobe",
    "tag": "change:g2"
+  },
+  {
+   "t": 15.4,
+   "kind": "label",
+   "tag": "ch-thrown",
+   "pos": [
+    0.631,
+    0.222
+   ]
   },
   {
    "t": 15.6695,
@@ -760,7 +760,7 @@
   "nm-apart": 7.5667,
   "nm-gravity": 11.3333,
   "ch-dropped": 14.3,
-  "ch-thrown": 14.6,
+  "ch-thrown": 15.4333,
   "wy-gravity": 32.5333,
   "wy-glide": 29.8,
   "wy-old": 24.3333,

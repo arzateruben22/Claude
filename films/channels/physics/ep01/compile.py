@@ -256,11 +256,12 @@ LABELS = [
     {"id": "nm-gravity", "text": "gravity", "color": "force", "t0": A("vo02:falling"), "t1": clk.tOf(TAKES["normal"]["tauR"] + TAU_TIP), "anchor": {"arrow": "nm-g"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "ch-dropped", "text": "dropped", "color": "ghost", "t0": A("vo03:Now"), "t1": cut("why"), "anchor": {"ball": ["change", "drop"]}, "side": -1, "fixed": True},
     # beside the ball, not above it: above, its plate ran into the speed badge's as the throw left the rail (14.6–15.2 s)
-    {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:throw"), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:sideways", 0.3), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},   # above its ball; it arrives once the speed badge has gone (it touched it at 14.6–15.2 s); "middle" clamped it over the ball
     # leaves on "tick", before the turn carries the arrow's tip (and the label's dot) under the caption plate (35.3 s)
     {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": A("vo04:tick"), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
     # gone (its 0.4 s fade included) before the turn carries the ball, the arrow tip and the label's dot under the caption plate
-    {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": A("vo04:both"), "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": A("vo04:only"),   # gone (0.4 s fade) before the ball drops to where the plate clamps over it (33.9 s)
+     "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
     # the drawing's label leaves on "plus a fall", before the falling glide label reaches it (the dots stay until "Gravity")
     {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:plus"), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
     # gone by the cut: fading across it, it jumped to the whoa camera's projection of a rung no longer drawn, its dot in the caption plate

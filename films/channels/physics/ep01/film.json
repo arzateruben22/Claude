@@ -686,7 +686,7 @@
    "id": "ch-thrown",
    "text": "thrown · 0.44 m/s",
    "color": "motion",
-   "t0": 14.566666666666666,
+   "t0": 15.4,
    "t1": 22.650033,
    "anchor": {
     "ball": [
@@ -695,8 +695,7 @@
     ]
    },
    "side": 1,
-   "fixed": true,
-   "v": "middle"
+   "fixed": true
   },
   {
    "id": "wy-gravity",
@@ -716,7 +715,7 @@
    "text": "steady glide",
    "color": "motion",
    "t0": 29.766666666666666,
-   "t1": 35.266666666666666,
+   "t1": 33.233333333333334,
    "anchor": {
     "arrow": "wy-v"
    },

@@ -16,9 +16,10 @@ delivered** (24 Oct). **Nothing has been posted.** A physicist signs off the scr
 
 ## v3.1 (26 Oct): the reviewer's polish notes, before the final
 
-The text audit checks text against text, so label, badge and caption plates could still touch. A plate sweep (every label, badge and caption plate, leader and dot, every 0.1 s, and every frame around each fix) found the reviewer's four and four more; seven are fixed, and nothing now touches:
+The text audit checks text against text, so label, badge and caption plates could still touch. A plate sweep (every label, badge and caption plate, leader and dot, every 0.1 s, and every frame around each fix) found the reviewer's four and four more; seven are fixed. An independent check then caught one the polish caused (below, fixed). What still comes close is listed under "Known, left as is":
 
-- "1/20 s apart" sits beside its gap (`v: middle`), 25 px under the speed badge (it tucked 18–27 px under it, 7.6–14.1 s). "thrown · 0.44 m/s" likewise (it touched the speed badge as the throw left the rail, 14.6–15.2 s).
+- "1/20 s apart" sits beside its gap (`v: middle`), 25 px under the speed badge (it tucked 18–27 px under it, 7.6–14.1 s). "thrown · 0.44 m/s" stays above its ball and now arrives 0.3 s after "sideways" (15.4 s), once the speed badge has gone (it touched it at 14.6–15.2 s). Putting it beside the ball (`v: middle`) had clamped its plate over the ball from 17.4 s to the cut, landing included; the independent check caught that, and it was undone.
+- "steady glide" ends on "only" (33.2 s), faded out before the ball drops to where its plate clamped over it (33.9–35.6 s, already in v2).
 - "level" names row 5, not row 4: 80 px under "3 throws overlaid" (it sat ~5 px under it).
 - "steady glide" leaves on "both" and "gravity" on "tick", each gone (fade included) before the turn carries its arrow tip and dot under the caption plate. "same height" is gone before the whoa cut: fading across it, it jumped to the new camera's projection of a rung no longer drawn, its dot in the caption plate.
 - The speed badge's last exit (the measure cut) fades in 0.15 s, not hud.js's 0.3 s (`CUE.measure.warpOut`, applied in `scene.mjs`): hud.js slides "3 throws overlaid" up as the leaving note fades, and over 0.3 s the plates overlapped (51.4 s). Kit finding 6 below.
@@ -226,3 +227,8 @@ Nothing protected was edited. Each workaround lives in this episode or the chann
     pan and first-shown times.
 11. **Voiced length.** At af_bella 0.95 the voiced layout came to 76.0 s, over the lint's 75 s. Fixed
     with four `pre:` lead-ins in the script headings; the words are unchanged.
+
+### Known, left as is (v3.1)
+- The floor readout plates (0/20 cm, the whoa and takeaway rows) come within 1–2 px of the caption plate and slide 3–6 px into it for a few frames as they fade in; the takeaway's three readouts close to about −1 px at 72.6–73.2 s.
+- "1500s drawing" sits over its own dot at 24.4–31.5 s (kit finding 5: a plate clamped at the safe box's edge goes back over its anchor).
+- c14's note in claims.json names the bible's drag.py model on purpose: it is the reviewer's provenance. The public posting text doesn't mention it.
