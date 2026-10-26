@@ -18,7 +18,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
 sys.path.insert(0, str(HERE.parent / "set"))
-from capglue import glue    # noqa: E402
+from capglue import glue, hold    # noqa: E402
 
 FPS, BPM = 30, 56.25
 ID = "lightminute-006"
@@ -149,7 +149,7 @@ film = {
     "clk": CLK, "ladder": LADDER, "cam": CAM, "cue": CUE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24),
+    "captions": hold(f, f.captions(max_chars=24)),   # each page stays until its last phrase has been spoken
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]

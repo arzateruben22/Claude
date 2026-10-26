@@ -5,8 +5,13 @@ two lines. glue() merges each named run of words in a voice line into one token 
 timed from its first word to its last), so the caption breaker can't split it. Call it after the last f.at()
 lookup (the anchors still see the separate words) and before f.captions().
 
-    from capglue import glue
+    from capglue import glue, hold
     glue(f, {"vo02": ["nineteen seventy-seven", "the Moon"]})
+    captions = hold(f, f.captions(max_chars=24))
+
+timeline.Film.captions() ends a page `linger` after its last word's start plus 0.45 s (a word's usual length), so a
+glued phrase at a page's end ("the day after tomorrow.") would leave before it has been spoken. hold() keeps every
+page up until its last word or phrase has ended (plus `linger`), never past the next page's start.
 """
 import re
 
@@ -33,3 +38,22 @@ def glue(film, runs):
                     break
             else:
                 raise ValueError(f"capglue: {ph!r} not found in {lid}")
+
+
+def hold(film, pages, linger=0.3):
+    """pages: film.captions()'s output, changed in place and returned. Each page's t1 becomes at least the spoken end
+    of its last token plus `linger`, and never later than the next page's t0."""
+    ends = {}
+    for ln in film.lines:
+        for w in ln["words"]:
+            ends[(w["w"], round(ln["t"] + w["start"], 3))] = ln["t"] + w.get("end", w["start"] + 0.45)
+    for k, pg in enumerate(pages):
+        w, t = pg["lines"][-1][-1]
+        end = ends.get((w, round(t, 3)))
+        if end is None:
+            raise ValueError(f"capglue.hold: no spoken end for {w!r} at {t}")
+        t1 = max(pg["t1"], end + linger)
+        if k + 1 < len(pages):
+            t1 = min(t1, pages[k + 1]["t0"])
+        pg["t1"] = round(t1, 3)
+    return pages

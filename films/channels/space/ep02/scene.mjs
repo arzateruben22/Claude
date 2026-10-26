@@ -48,7 +48,7 @@ const yearAt = (t) => Math.min(PH.y_now, PH.y0 + Math.max(0, CLK.flight.tau(t)) 
 // ── Voyager's drawn path (simplified: a smooth curve out to Saturn's distance, then a straight line) ──
 const D2R = Math.PI / 180;
 const VDIR = [-Math.cos(PH.voy_dir * D2R) * Math.sin(PH.voy_az * D2R), Math.sin(PH.voy_dir * D2R), -Math.cos(PH.voy_dir * D2R) * Math.cos(PH.voy_az * D2R)];   // 35° above the ecliptic, heading away from the camera
-const E0 = [-0.2, 0, -0.98];                                                  // Earth's direction at launch (in the ecliptic)
+const E0 = [0.2, 0, -0.98];                                                   // Earth's direction at launch (in the ecliptic)
 const smooth = (x) => x * x * (3 - 2 * x);
 const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
 const voyAt = (y) => {
@@ -80,18 +80,18 @@ const NTRAIL = PH.ys.length - 1;
 const trail = Array.from({ length: NTRAIL }, (_, i) => segment({ color: C.trail, width: 3, opacity: 0, fade: [0.55 + 0.45 * i / NTRAIL, 0.55 + 0.45 * (i + 1) / NTRAIL] }));
 const voy = createBeacon({ color: hdr("ice", 1.25), px: 16, core: 0.3 });
 const hpShell = shell({ color: C.hp, opacity: 0, power: 3.2 });
-const hpTick = segment({ color: C.tealHi, width: 3.6, opacity: 0 });
-const hpRim = ring({ color: C.teal, width: 2.6, opacity: 0 });
+const hpTick = segment({ color: line("ice", 1, 1.2), width: 5, opacity: 0 });
+const hpRim = ring({ color: line("ice", 0.6), width: 2.6, opacity: 0 });   // ice, not teal: a boundary, not light
 const front1 = ring({ color: C.tealHi, width: 4, opacity: 0 }), frontC = ring({ color: C.tealHi, width: 4, opacity: 0 }), front2 = ring({ color: C.tealHi, width: 4, opacity: 0 });
 const ldRing = ring({ color: C.teal, width: 2.6, opacity: 0 });
 G.solar.add(...orbits.map((o) => o.mesh), ...trail.map((s) => s.mesh), voy.mesh, hpShell.mesh, hpTick.mesh, hpRim.mesh, front1.mesh, frontC.mesh, front2.mesh, ldRing.mesh);
 const solarProbe = probes(G.solar, 2);
 
 // oort rung (1 unit = 1 AU): the comet cloud (a theory, badged) and the dashed road to it
-const oort = createComets({ n: 9000, r0: PH.r_oort0, r1: PH.r_oort1, seed: 7, color: [0.75, 0.85, 1.1] });
+const oort = createComets({ n: 16000, r0: PH.r_oort0, r1: PH.r_oort1, seed: 7, color: [0.85, 0.95, 1.2] });
 const ghost = segment({ color: C.ghost, width: 3.5, opacity: 0, dash: 0.03, duty: 0.5 });
 const deep = segment({ color: line("ice", 0.6), width: 3, opacity: 0, dash: 0.02, duty: 0.5 });   // on into the cloud ("thirty thousand more")
-const oortRim = shell({ color: line("ice", 0.5), opacity: 0, power: 2.6 });
+const oortRim = shell({ color: line("ice", 0.6), opacity: 0, power: 2.2 });
 const voyO = createBeacon({ color: hdr("ice", 1.25), px: 16, core: 0.3 });     // Voyager today, at the comet cloud's scale
 G.oort.add(oort.group, ghost.mesh, deep.mesh, oortRim.mesh, voyO.mesh);
 
@@ -99,7 +99,7 @@ G.oort.add(oort.group, ghost.mesh, deep.mesh, oortRim.mesh, voyO.mesh);
 const LU = FILM.ladder.units.local, AU = PH.au;
 const speck = ring({ color: C.teal, width: 2.6, opacity: 1 });
 const speckDot = createBeacon({ color: hdr("teal", 1.1), px: 9, core: 0.45 });
-const prox = createBeacon({ color: hdr("lemon", 1.6), px: 34, core: 0.24 });
+const prox = createBeacon({ color: hdr("lemon", 2.0), px: 44, core: 0.24 });
 const lane = segment({ color: C.teal, width: 3.2, opacity: 0, dash: 0.02, duty: 0.55 });   // the road to Proxima, dashed
 const laneLit = segment({ color: C.tealHi, width: 4, opacity: 0 });                    // the part light (or Voyager) has covered
 const pulse = createBeacon({ color: hdr("teal", 1.4), px: 14, core: 0.4 });           // light running the lane
@@ -173,15 +173,18 @@ const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
 const cAU = PH.c_km / AU;                                                    // light, AU per scene second
 
 window.seek = function (t) {
-  const st = stage(t), shot = st.name;
   const tr = Math.round(t * FPS) / FPS;
+  if (stage(t).name !== stage(tr).name) t = tr;   // a frame's motion blur never blends two shots across a cut
+  const st = stage(t), shot = st.name;
   rig.place(camera, shot, t);
   const view = ladder.apply(shot === "hook" ? VIEW_END : dolly(t));
   const aS = view.alpha.solar, aO = view.alpha.oort, aL = view.alpha.local;
   const toS = (id, p) => ladder.toScene(id, p, view);
 
   // the Sun
-  sun.set({ center: [0, 0, 0], camera, opacity: 1 - 0.7 * fadeIn(t, FILM.endCard, 0.6) });   // the end card doesn't sit on a bright Sun
+  // the end card doesn't sit on a bright Sun; through the whoa the Sun steps back so Proxima wins
+  const sunDim = shot === "space" ? 0.5 * winOp(t, CUE.jump[1] - 0.3, CUE.takeaway, 0.6) : 0;
+  sun.set({ center: [0, 0, 0], camera, opacity: (1 - sunDim) * (1 - 0.7 * fadeIn(t, FILM.endCard, 0.6)) });
   S.sun = [0, 0, 0];
 
   // ── solar rung ──
@@ -192,21 +195,21 @@ window.seek = function (t) {
     if (ya >= y || aS <= 1e-4) { trail[i].set({ opacity: 0 }); continue; }
     trail[i].seg(voyAt(ya), voyAt(yb)).set({ opacity: aS * (1 - 0.65 * fadeIn(t, B0.change, 0.8)) });   // the flight steps back once it's told
   }
-  voy.set({ center: pv, camera, opacity: aS * (y > PH.y0 + 0.01 || t >= CUE.launch ? 1 : 0) });
+  voy.set({ center: pv, camera, opacity: aS * (y > PH.y0 + 0.01 || t >= CUE.voy ? 1 : 0) });   // named at its launch spot, then flies
   const g0 = voyAt(PH.y_now);
   S.voy = aO > aS ? toS("oort", g0) : toS("solar", pv);                      // the label follows Voyager onto the comet-cloud rung
   S["voy-v"] = toS("solar", voyAt(Math.max(PH.y0, y - 8)));                  // on the trail just behind the probe: the motion
-  const nep = PH.planets[4][1], an = 2.9;
+  const nep = PH.planets[4][1], an = 1.75;   // on the orbit's back arc, inside the frame
   S.neptune = toS("solar", [nep * Math.cos(an), 0, -nep * Math.sin(an)]);
   // the heliopause: a faint shell, and a tick across the path where Voyager crossed it (2012)
   // (rings that mean "this far from the Sun" are drawn as circles on the screen, through the point as seen)
   const bS0 = screenBasis(), fw = new THREE.Vector3(); camera.getWorldDirection(fw);
   const seen = (p) => { const d = p[0] * fw.x + p[1] * fw.y + p[2] * fw.z; return Math.hypot(p[0] - d * fw.x, p[1] - d * fw.y, p[2] - d * fw.z); };
-  const hpOp = aS * fadeIn(t, CUE.hp, 0.8);
+  const hpOp = aS * fadeIn(t, CUE.hp, 0.8) * (1 - fadeIn(t, CUE.pull[0], 0.6));   // it leaves with the pull-back
   const php = voyAt(PH.y_hp), nrm = norm([-VDIR[1], VDIR[0], 0]);
-  hpShell.set({ center: [0, 0, 0], r: PH.r_hp, opacity: 0.3 * hpOp });
+  hpShell.set({ center: [0, 0, 0], r: seen(php), opacity: 0.3 * hpOp });            // one boundary: the shell's edge is the rim
   hpRim.arc({ center: [0, 0, 0], r: seen(php), ...bS0 }).set({ opacity: 0.8 * hpOp });
-  hpTick.seg(php.map((v, i) => v - nrm[i] * 12), php.map((v, i) => v + nrm[i] * 12)).set({ opacity: hpOp });
+  hpTick.seg(php.map((v, i) => v - nrm[i] * 22), php.map((v, i) => v + nrm[i] * 22)).set({ opacity: hpOp });
   S.hp = toS("solar", php);
   // the light: Voyager's signal home (a day), then the command out (a day) and the answer back (a day). At this
   // scale Earth sits on the Sun. Fronts are screen circles (so a light-day looks like one), scaled by Voyager as seen.
@@ -233,7 +236,7 @@ window.seek = function (t) {
   // ── oort rung ──
   // the cloud is a theory (badged while it's on screen): it comes with the pull-back, thins through the jump so its
   // points don't strobe, and is gone by the takeaway; never in the hook or the end, so the loop matches
-  const cl = shot === "space" ? (1 - 0.6 * E.inout2(seg(t, CUE.jump[0] + 0.2, CUE.jump[1]))) * (1 - fadeIn(t, CUE.takeaway - 1.2, 1.2)) : 0;
+  const cl = shot === "space" ? (1 - 0.6 * E.inout2(seg(t, CUE.jump[0] + 0.2, CUE.jump[1]))) * (1 - fadeIn(t, CUE.jump[1], 0.8)) : 0;   // gone just after the jump
   oort.set({ gain: cl });
   // Voyager's road to the cloud, drawn on the screen so it ends on the cloud's rim as seen, then on into it
   const gs = (() => { const d = g0[0] * fw.x + g0[1] * fw.y + g0[2] * fw.z; return norm([g0[0] - d * fw.x, g0[1] - d * fw.y, g0[2] - d * fw.z]); })();
@@ -241,28 +244,32 @@ window.seek = function (t) {
   ghost.seg(g0, g1).set({ opacity: aO * fadeIn(t, CUE.ghost, 0.6) });
   deep.seg(g1, g2).set({ opacity: aO * fadeIn(t, CUE.deep, 0.8) * (1 - fadeIn(t, CUE.jump[0], 0.5)) });
   voyO.set({ center: g0, camera, opacity: aO * (1 - fadeIn(t, CUE.jump[0], 0.4)) });
-  oortRim.set({ center: [0, 0, 0], r: PH.r_oort0, opacity: aO * 0.6 * cl });
+  oortRim.set({ center: [0, 0, 0], r: PH.r_oort0, opacity: aO * 0.9 * cl });
   S.ghost = toS("oort", g0.map((v, i) => (v + g1[i]) / 2));
   const ao = 1.2;
   S.oort = toS("oort", [PH.r_oort0 * 1.05 * Math.cos(ao), PH.r_oort0 * 1.05 * Math.sin(ao), 0]);
 
   // ── local rung ──
   const bS = screenBasis(), pxU = (2 * Math.tan((camera.fov * D2R) / 2) * camera.position.length()) / H;   // scene units per pixel at the Sun
-  speck.arc({ center: [0, 0, 0], r: Math.max(LD_L, 14 * S1 * pxU), ...bS }).set({ opacity: aL });   // at least 14 px: the speck is a mark, badged
+  speck.arc({ center: [0, 0, 0], r: Math.max(LD_L, 24 * S1 * pxU), ...bS }).set({ opacity: aL });   // at least 24 px (clear of a label's dot): the speck is a mark, badged
   speckDot.set({ center: [0, 0, 0], camera, opacity: aL * (shot === "hook" || t >= CUE.speck ? 1 : 0.6) });
   S.speck = toS("local", [0, 0, 0]);
   prox.set({ center: PROX_L, camera, opacity: aL });
   S.prox = toS("local", PROX_L);
   // the lane: named on "fifteen hundred" (it wins: full strength, a pulse of light runs it); steps back for the readout
   const named = shot === "hook" ? 1 : fadeIn(t, CUE.lane, 0.6);
-  const laneOp = named * (shot === "hook" ? 0.75 : 1 - 0.65 * fadeIn(t, CUE.pxring, 0.8));
+  const offEnd = 1 - fadeIn(t, FILM.endCard - 0.3, 0.5);                   // nothing of the readout under the end card
+  const laneOp = named * (shot === "hook" ? 0.75 : (1 - 0.65 * fadeIn(t, CUE.pxring, 0.8)) * offEnd);
   lane.seg(PROX_L.map((v) => v * 0.04), PROX_L.map((v) => v * 0.94)).set({ opacity: aL * laneOp });
-  const run = shot === "space" ? E.inout2(seg(t, CUE.lane, CUE.lane + 2.4)) : 0;
+  // a pulse of light runs the lane on "fifteen hundred" (the whoa), and again on the takeaway's "fifteen hundred"
+  const run1 = E.inout2(seg(t, CUE.lane, CUE.lane + 2.4)), run2 = E.inout2(seg(t, CUE.lane2, CUE.lane2 + 1.8));
+  const run = shot === "space" ? (t < CUE.lane2 ? run1 : run2) : 0;
   pulse.set({ center: PROX_L.map((v) => v * (0.04 + 0.9 * run)), camera, opacity: aL * (run > 0 && run < 1 ? 1 : 0) });
-  laneLit.seg(PROX_L.map((v) => v * 0.04), PROX_L.map((v) => v * (0.04 + 0.9 * run))).set({ opacity: aL * (run > 0.002 ? 0.9 * (1 - fadeIn(t, CUE.lane + 2.6, 0.8)) : 0) });
+  const litOff = t < CUE.lane2 ? fadeIn(t, CUE.lane + 2.6, 0.8) : fadeIn(t, CUE.lane2 + 2.0, 0.8);
+  laneLit.seg(PROX_L.map((v) => v * 0.04), PROX_L.map((v) => v * (0.04 + 0.9 * run))).set({ opacity: aL * (run > 0.002 ? 0.9 * (1 - litOff) : 0) });
   S.lane = toS("local", PROX_L.map((v) => v * 0.72));
   const bp = faceOn(PROX_L), rp = Math.hypot(...PROX_L);
-  pxRing.arc({ center: [0, 0, 0], r: rp, ...bp }).set({ opacity: aL * fadeIn(t, CUE.pxring, 0.8) * (1 - 0.85 * fadeIn(t, FILM.endCard, 0.6)) });
+  pxRing.arc({ center: [0, 0, 0], r: rp, ...bp }).set({ opacity: aL * fadeIn(t, CUE.pxring, 0.8) * offEnd });
   S.pxring = toS("local", [0, 1, 2].map((j) => rp * (bp.e1[j] * Math.cos(0.7) + bp.e2[j] * Math.sin(0.7))));
 
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1, bandGain: 1 });
