@@ -10,9 +10,11 @@
 >   avoid all text, masters at CRF 12 and deliveries at CRF 15 with aq-mode 3, and WRITING.md rule 8 "One line wins".
 >   Every episode, ep02 included, is re-rendered on it.
 > - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
-> Order: ep02 final re-render (running) → ep03 final re-render → ep04 → ep05 → ep06. One Chromium job at a time;
-> `ps -eo args | grep "[r]ender.mjs"` shows it, a bare `kits/cinema/film/run.sh <dir>` resumes it.
-> The previous ep02 frames are kept in `ep02/build/final/9x16.prev` until the new delivery passes QA.
+> Order (04:40 UTC): the rule-8 pass on ep02–05 runs as a workflow (one implementer, one independent reviewer and one
+> fixer per episode; agents never run Chromium); meanwhile ep06 (written with rule 8 from the start) renders its final,
+> then each of ep02–05 gets compile → cues → compile → soundtrack → stills at 390 px → final → QA, in order.
+> `ps -eo args | grep "[r]ender.mjs"` shows the one render; a bare `kits/cinema/film/run.sh <dir>` resumes it.
+> The pre-merge ep02 frames are in `ep02/build/final/9x16.prev`; ep03's first final is in `ep03/build/superseded/` (not committed).
 
 Branch `claude/rest-frame-ep02-06`. One line per episode, updated as it moves. The process for each episode is
 episode 1's (`ep01/README.md`), plus the picture rules added to `kits/cinema/script/WRITING.md` on 24 Oct ("The
@@ -34,11 +36,11 @@ delivered).
 
 | # | Title | State |
 |---|---|---|
-| 02 | The swing's secret | **delivered** (25 Oct 23:04 UTC): 71.7 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (86 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 41.5 min · `out/rest-frame-002-9x16.mp4` |
-| 03 | Where does the bounce go? | scripted · reviewed (7/10; fixes applied: "squashes flat", "motion doesn't vanish", "never loses energy" corrected) · voiced (153 words, 66.9 s; lint 0 errors before and after) · built · animatic checked (six rounds) · soundtrack −14.1 LUFS, sync PASS, voice 20.8 LU over music · ten final-tier stills OK (`review/stills-ep03.jpg`; two re-framed and re-checked) · **ready for the final, not started** |
-| 04 | The hammer and the feather | scripted · reviewed (6.5/10; fixes applied: wrong takeaway, MICROSCOPE dates 2016–18, "a few parts" in 10¹⁵, Scott's quote added) · voiced (166 words, 72.0 s; lint 0 errors before and after) · compile and scene written; animatic not yet run |
-| 05 | The spinning chair | scripted · reviewed (7/10; fixes applied: arms added to the spin model, seated body 2.0 kg·m² badged as an assumption, 'Nothing outside did', 'total amount of spin') · voiced (156 words, 66.9 s; lint 0 errors before and after) · set: `spin.js` (several arm moves; matches its port and a brute integral to 1e-10 rad) and `chair.js` · compile and scene not yet written |
-| 06 | The ten-metre straw | scripted (165 words; lint 0 errors) · claims ledger (11 + footnote) · in independent review · set block `straw.js` written (glass without transmission, liquid columns, jar, pump, ink house, boiling, Torricelli's tube) |
+| 02 | The swing's secret | **delivered** (25 Oct 23:04 UTC): 71.7 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (86 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 41.5 min · `out/rest-frame-002-9x16.mp4` · **re-render pending** (26 Oct recheck: phrase captions, spine layout, rule 8, the readability kit) |
+| 03 | Where does the bounce go? | scripted · reviewed · voiced (153 words, 66.9 s) · built · animatic checked · soundtrack (−14.1 LUFS, sync PASS) · first final rendered 25 Oct but superseded by the recheck (labels lingered across cuts; mid-phrase captions) · **re-render pending** (rule 8 pass in progress) |
+| 04 | The hammer and the feather | scripted · reviewed · voiced (166 words, 72.0 s) · compile and scene · animatic checked (bench camera lowered, MICROSCOPE card, labels) · **rule 8 pass in progress**, then cues, soundtrack, stills, final |
+| 05 | The spinning chair | scripted · reviewed · voiced (156 words, 66.9 s; tease re-voiced for US spelling, audio identical) · compile and scene written · HUD audit clean · **rule 8 pass in progress**, then animatic, cues, soundtrack, stills, final |
+| 06 | The ten-meter straw | scripted · reviewed (not ready → fixed: the pumped jar replaced by an airtight lid on a full glass, "Surprisingly, not suction", US spelling, the whoa answers the tease first, "the air above") · voiced (163 words, 68.8 s; lint 0 errors before and after, 1 warning: the change beat is 18 words) · compile and scene with rule 8 · animatic checked · HUD audit 0 issues · soundtrack −14.08 LUFS, sync PASS, voice 21.0 LU over music · final-tier stills OK at 390 px · **final rendering** |
 
 ## New in the channel set (`set/`)
 
@@ -74,4 +76,11 @@ None (`KIT-CHANGES.md`: a `--crf` option was added and withdrawn on 26 Oct when 
 
 ## Questions
 
-None yet. Choices taken provisionally from the bible are marked in each episode's HUMAN-REVIEW.md.
+1. **Spelling: US or UK?** The voice is American and episodes 1–5's captions are US ("meter", "centimeters"); the bible
+   writes "ten-metre" and "storeys". Taken provisionally: US everywhere on screen (episode 6's title is "The ten-meter
+   straw"; episode 5's tease and end card were changed to match, its audio unchanged).
+2. **Rule 8's layout for Rest Frame.** Taken from the coordinating session's own episode: the speed column top-left, the
+   standing cheats top-right, the spine readout between and below them (moved per shot when the subject is there).
+3. **Episode 6's open paper floor.** The 11 m house can't stand inside the 4.2 m cyc, so episode 6 hides the cyc wall
+   (the floor stays). Provisional; the alternative is a taller wall option in `set/cyc.js`.
+Choices taken provisionally from the bible are marked in each episode's HUMAN-REVIEW.md.
