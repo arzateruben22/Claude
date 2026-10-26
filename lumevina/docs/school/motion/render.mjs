@@ -55,6 +55,7 @@ const opt = (k, d) => { const i = args.indexOf("--" + k); if (i === -1) return d
 const only = opt("only", "") ? String(opt("only")).split(",") : null;
 const aspects = String(opt("aspect", "16x9")).split(",");
 const quick = opt("quick", false) === true;
+const stills = opt("at", "") ? String(opt("at")).split(",").map(Number) : null;   // --at 4,9.5: those moments as PNGs in review/, nothing else
 const verify = opt("verify", false) === true;
 const fps = quick ? 6 : Number(opt("fps", 30));
 const SIZES = { "16x9": [1280, 720], "9x16": [720, 1280] };
@@ -67,6 +68,9 @@ const runtime = fs.readFileSync(path.join(here, "motion.js"), "utf8");
 // the solid scenes share one studio set (studio3d.js): rounded blocks, a warm floor, a drifting camera.
 // Every box a scene makes becomes a SoftBox, then the set goes in right after the three.js import.
 const studio3d = fs.readFileSync(path.join(here, "studio3d.js"), "utf8");
+// the skin (skin3d.js): the scenes' grids of cells become one piece of tissue, shaded as skin;
+// every InstancedMesh of cells a scene makes becomes a stand-in that writes into it. --cubes renders the old blocks.
+const skin3d = opt("cubes", false) === true ? "" : fs.readFileSync(path.join(here, "skin3d.js"), "utf8");
 // the film finish (cinema3d.js, from the cinema kit on the made-with-claude-film branch): each frame a
 // short exposure with real motion blur, focus where the scene says, bloom and a filmic tone curve.
 // It goes in before the studio set; --plain renders without it.
@@ -76,8 +80,9 @@ const studioModule = (src) => {
   const imp = 'import * as THREE from "../vendor/three.module.min.js";';
   let body = src.split("new THREE.BoxGeometry(").join("new SoftBox(");
   if (cinema3d) body = body.split("new THREE.WebGLRenderer(").join("cinemaRenderer(");
+  if (skin3d) body = body.split("new THREE.InstancedMesh(").join("skinOrInstanced(");
   const at = body.indexOf(imp);
-  return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + cinema3d + "\n" + studio3d + "\n" + body.slice(at + imp.length);
+  return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + cinema3d + "\n" + studio3d + "\n" + skin3d + "\n" + body.slice(at + imp.length);
 };
 
 if (opt("list", false) === true) {
@@ -168,7 +173,7 @@ const encode = (file, fpsOut) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglev
 // capture can show a tile (a frame-wide band 256 px tall) at low resolution while something in it
 // is still changing, a lighter stripe across the frame for a frame or two
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined, args: ["--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--ignore-gpu-blocklist", "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw", "--disable-checker-imaging"] });
-const tmp = path.join(here, ".tmp"); fs.mkdirSync(tmp, { recursive: true });
+const tmp = path.join(here, `.tmp-${process.pid}`); fs.mkdirSync(tmp, { recursive: true });   // one folder per run: a stills run beside a long render must not sweep its pages away
 let videos = {};
 const sheetFrames = [];
 const videosFile = path.join(here, "..", "videos.js");
@@ -182,9 +187,11 @@ for (const scene of Object.values(SCENES)) {
     const file = path.join(tmp, `${scene.id}-${aspect}.html`);
     fs.writeFileSync(file, page(scene, W, H));
     const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+    if (opt("skin", "")) await pg.addInitScript((o) => { window.SKIN_OPTS = o; }, Object.fromEntries(String(opt("skin")).split(",").map((kv) => { const [k, v] = kv.split("="); return [k, isNaN(Number(v)) ? v : Number(v)]; })));   // --skin bump=0,res=0.3: the skin's knobs, for tuning
     await pg.addInitScript(() => { let s = 1234567; Math.random = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }; const T0 = 1700000000000; Date.now = () => T0; performance.now = () => 0; window.requestAnimationFrame = () => 0; });
     const errors = [];
     pg.on("pageerror", (e) => errors.push(e.message));
+    if (stills) pg.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") errors.push(m.text().slice(0, 600)); });   // a shader that failed to compile says so here
     await pg.goto("file://" + file);
     await pg.evaluate(() => document.fonts.ready);
     await pg.waitForFunction(() => typeof window.seek === "function", null, { timeout: 30000 }).catch(() => {});
@@ -205,6 +212,16 @@ for (const scene of Object.values(SCENES)) {
       }
       console.log(`${scene.id} ${aspect}: deterministic: ${diff === 0 && same > 0} (${same} of ${same + diff} sampled frames match the log)`);
       (log[scene.id] ||= {})[aspect] = { ...((log[scene.id] || {})[aspect] || {}), verified: diff === 0 && same > 0, verifiedAt: new Date().toISOString().slice(0, 10) };
+      await pg.close(); continue;
+    }
+    if (stills) {
+      for (const t of stills) {
+        await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [t, Number(opt("fps", 30))]);
+        const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
+        fs.writeFileSync(path.join(review, `${scene.id}-${aspect}-${t}.png`), Buffer.from(data, "base64"));
+      }
+      const skin = await pg.evaluate(() => { const T = window.SKIN && window.SKIN.tissue; if (!T || !T.mc) return null; const p = T.mc.geometry.attributes.position, n = T.mc.count; let top = -1e9; for (let i = 0; i < n; i++) top = Math.max(top, p.getY(i)); return { grid: T.g, res: T.f.res, size: T.f.size, tris: Math.round(n / 3), top: Math.round((top * T.mc.scale.y + T.mc.position.y) * 100) / 100, sets: window.SKIN.sets.map((s) => [s.count, s.size.map((v) => +v.toFixed(2))]) }; });
+      console.log(`${scene.id} ${aspect}: ${stills.length} stills in review/${skin ? "  skin " + JSON.stringify(skin) : ""}${errors.length ? "\n  ! " + errors.join("\n  ! ") : ""}`);
       await pg.close(); continue;
     }
     if (!quick) ff = encode(mp4, fps);
@@ -253,6 +270,6 @@ for (const scene of Object.values(SCENES)) {
   }
 }
 await browser.close();
-fs.rmSync(tmp, { recursive: true, force: true });
-fs.writeFileSync(logFile, JSON.stringify(log, null, 1));
-if (!quick && !verify) fs.writeFileSync(videosFile, `/* GENERATED by docs/school/motion/render.mjs: the lessons with a rendered explainer in img/school/video/. Don't edit; render again. */\nwindow.SCHOOL_VIDEOS = ${JSON.stringify(videos)};\n`);
+if (!opt("keep", false)) fs.rmSync(tmp, { recursive: true, force: true });   // --keep leaves the scene pages in .tmp for probing
+if (!stills) fs.writeFileSync(logFile, JSON.stringify(log, null, 1));
+if (!quick && !verify && !stills) fs.writeFileSync(videosFile, `/* GENERATED by docs/school/motion/render.mjs: the lessons with a rendered explainer in img/school/video/. Don't edit; render again. */\nwindow.SCHOOL_VIDEOS = ${JSON.stringify(videos)};\n`);
