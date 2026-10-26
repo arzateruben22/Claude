@@ -102,6 +102,8 @@ LABELS = [
     {"id": "l-pelo", "text": "southern Greece, to scale", "kind": "light", "anchor": "pelo", "t0": t_pelo, "t1": t_melt0, "side": 1, "shot": "sun"},
     {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:ordinary"), "t1": t_end, "side": -1, "shot": "sun"},
     {"id": "l-giant", "text": "the largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": t_end, "side": 1, "shot": "sun"},
+    # the readout: Earth's orbit drawn to the same scale (1 AU = about 215 Sun radii), inside the giants' outline
+    {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": t_end, "side": -1, "shot": "sun"},
 ]
 BADGES = [
     {"id": "b-sky", "text": "true distances, shrunk · dots enlarged", "t0": A("vo02:But"), "t1": t_cut, "slot": "tr"},   # the side view
@@ -133,7 +135,7 @@ TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "
 END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
        "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c8 note; NASA)
 
-CUE = {"side": A("vo02:But"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
+CUE = {"side": A("vo02:But"), "orbit": A("vo07:Sun#2"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
 POSTER = A("vo05:wider", 0.8)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["the Sun", "the full Moon", "look the same size."],
@@ -146,7 +148,7 @@ film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS,
     "phys": {"u": U, "r_e": R_E, "n_across": N_ACROSS, "vol": VOL, "dots": DOTS, "per_dot": PER_DOT, "spot_r": SPOT_R, "spot_dir": SPOT_DIR, "pelo_km": PELO_KM,
-             "giant": GIANT, "sky_k": SKY_K, "sep": SEP, "r_sun_km": R_SUN_KM, "r_moon_km": R_MOON_KM, "d_moon_km": D_MOON_KM, "d_sun_km": D_SUN_KM, "shrink": SHRINK, "base": BASE},
+             "giant": GIANT, "au_r": D_SUN_KM / R_SUN_KM, "sky_k": SKY_K, "sep": SEP, "r_sun_km": R_SUN_KM, "r_moon_km": R_MOON_KM, "d_moon_km": D_MOON_KM, "d_sun_km": D_SUN_KM, "shrink": SHRINK, "base": BASE},
     "cam": CAM, "cue": CUE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,

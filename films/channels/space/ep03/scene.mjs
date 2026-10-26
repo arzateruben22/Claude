@@ -58,10 +58,10 @@ scene.add(sky.group);
 const sun = createStar({ radius: 1.6, intensity: 2.6, corona: 2.7 });
 scene.add(sun.group);
 const VR = 1.3, ER = 0.9;
-const venus = createPlanet({ radius: VR, surface: venusSurface({ width: W >= 1000 ? 1024 : 512, seed: 3 }), tilt: -2.64, pin: 1, rimDay: 0.45, rimNight: 0.5, segments: 96 });
-const earth = createPlanet({ radius: ER, surface: earthSurface({ width: 512 }), tilt: 23.44, rimDay: 0.5, rimNight: 0.4, segments: 48 });
+const venus = createPlanet({ radius: VR, surface: venusSurface({ width: W >= 1000 ? 2048 : 1024, seed: 3 }), tilt: -2.64, pin: 1, rimDay: 0.45, rimNight: 0.5, segments: 96 });
+const earth = createPlanet({ radius: ER, surface: earthSurface({ width: 512 }), tilt: 23.44, rimDay: 0.5, rimNight: 0.8, segments: 48 });   // its night side still reads as a disc
 scene.add(venus.group, earth.group);
-const you = createBeacon({ color: hdr("teal", 1.2), px: 11, core: 0.5 });
+const you = createBeacon({ color: hdr("teal", 1.2), px: 16, core: 0.5 });
 scene.add(you.mesh);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
 const C = { orbit: line("lilac", 0.75), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3) };
@@ -69,11 +69,13 @@ const orbV = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_v, ...
 const orbE = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_e, ...XZ });
 const ticks = FILM.sunrises.map(() => segment({ color: C.tealHi, width: 4, opacity: 0 }));
 const beam = segment({ color: C.teal, width: 3.6, opacity: 0, dash: 2.2, duty: 0.5 });
-const pulse = createBeacon({ color: hdr("teal", 1.5), px: 16, core: 0.4 });   // the radar pulse on its way in
-scene.add(pulse.mesh);
-const arrow = [ring({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 })];
+
+const C_ARROW = line("ice", 0.95, 1.1);                                       // the turn is motion, not gravity: ice, not lilac
+const arrow = [ring({ color: C_ARROW, width: 4.6, opacity: 0 }), segment({ color: C_ARROW, width: 4.6, opacity: 0 }), segment({ color: C_ARROW, width: 4.6, opacity: 0 })];
 const lightRing = ring({ color: C.teal, width: 2.8, opacity: 0 }).arc({ r: PH.r_v + 0.25, ...XZ });
 const echo = segment({ color: C.tealHi, width: 3.4, opacity: 0 });
+const pulse = createBeacon({ color: hdr("teal", 1.5), px: 16, core: 0.4 });   // a radar ping, out and back
+scene.add(pulse.mesh);
 [orbV, orbE, ...ticks, beam, ...arrow, lightRing, echo].forEach((r) => scene.add(r.mesh));
 
 // ── the camera: rig.js's poseAt, with the target following Venus by FILM.follow's weight ──
@@ -123,6 +125,19 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
 const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
+// "your sky on Venus": a small horizon dial under the captions for the whoa, the Sun crossing it from the west
+const dial = document.createElement("div");
+const DW = 620 * S1, DH = 128 * S1, RX = 190 * S1, RY = 78 * S1, DCX = DW / 2, DCY = DH - 30 * S1;
+Object.assign(dial.style, { position: "absolute", left: `${(W - DW) / 2}px`, top: `${0.678 * H}px`, width: `${DW}px`, height: `${DH}px`, opacity: 0, zIndex: 3, pointerEvents: "none" });
+const tx = (x, y, a, txt, w = 650, sz = 24) => `<text x="${x}" y="${y}" text-anchor="${a}" style="fill:var(--text-2);font:${w} ${sz * S1}px var(--font-text)">${txt}</text>`;
+dial.innerHTML = `<svg width="${DW}" height="${DH}" viewBox="0 0 ${DW} ${DH}" style="overflow:visible">
+  <path d="M ${DCX - RX} ${DCY} A ${RX} ${RY} 0 0 1 ${DCX + RX} ${DCY}" fill="none" style="stroke:var(--text-2)" stroke-width="${1.8 * S1}" stroke-dasharray="${5 * S1} ${6 * S1}" opacity="0.6"/>
+  <line x1="${DCX - RX - 24 * S1}" y1="${DCY}" x2="${DCX + RX + 24 * S1}" y2="${DCY}" style="stroke:var(--text-2)" stroke-width="${2.6 * S1}"/>
+  ${tx(DCX - RX - 34 * S1, DCY + 9 * S1, "end", "W")}${tx(DCX + RX + 34 * S1, DCY + 9 * S1, "start", "E")}
+  ${tx(DCX, DCY + 26 * S1, "middle", "your sky on Venus", 550, 21)}
+  <circle id="dial-sun" r="${15 * S1}" style="fill:var(--lemon)"/></svg>`;
+document.getElementById("hud").appendChild(dial);
+const dialSun = dial.querySelector("#dial-sun");
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d)));
@@ -132,10 +147,17 @@ window.seek = function (t) {
   applyPose(camera, poseFor(shot, t));
   const tv = thV(t), te = thE(t), vp = onOrbit(PH.r_v, tv), ep = onOrbit(PH.r_e, te);
   const norm = (a) => { const l = Math.hypot(...a) || 1; return a.map((v) => v / l); };
-  sun.set({ tau: CLK.orbit.tau(t), on: followW(t) < 0.5, camera, center: [0, 0, 0] });   // off in the close view (it would fill a corner)
   const psi = psiAt(t), wf = followW(t);
+  // the Sun goes with the follow (off in the close view, where it would fill a corner): it shrinks away at full
+  // brightness over the move instead of popping (dimming it would leave a grey disc)
+  const sunK = 1 - E.inout2(clamp01((wf - 0.2) / 0.6));
+  sun.set({ tau: CLK.orbit.tau(t), on: sunK > 0.01, camera, center: [0, 0, 0] });
+  sun.group.scale.setScalar(Math.max(sunK, 0.01));
   venus.set({ center: vp, sunDir: norm(vp.map((v) => -v)), sun: 1, spin: psi - Math.PI });
-  earth.set({ center: ep, sunDir: norm(ep.map((v) => -v)), sun: 1, spin: 2 * Math.PI * CLK.orbit.tau(t) / 86164 });
+  earth.set({ center: ep, sunDir: norm(ep.map((v) => -v)), sun: 1, spin: 2 * Math.PI * 0.15 * t });   // an illustrative slow turn (at 10⁶× it would strobe)
+  earth.group.visible = shot !== "end";                                     // the end card pushes back to frame 0's Venus alone
+  const big = 1 + 0.25 * (1 - wf);                                          // the bodies a little larger on the diagram (not to scale)
+  venus.group.scale.setScalar(big); earth.group.scale.setScalar(big);
   const pinDir = [Math.cos(psi), 0, -Math.sin(psi)];
   const pinAt = vp.map((v, j) => v + pinDir[j] * VR * 1.01);
   you.set({ center: pinAt, camera });
@@ -144,21 +166,26 @@ window.seek = function (t) {
   const camX = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray();
   S.limb = vp.map((v, j) => v + camX[j] * VR * 1.06);                        // Venus's right limb, as seen
   // the orbits fade in the close view (they would cut through Venus)
-  orbV.set({ opacity: 1 - 0.85 * wf }); orbE.set({ opacity: 1 - 0.85 * wf });
+  orbV.set({ opacity: 1 - wf }); orbE.set({ opacity: 1 - wf });
   // the sunrise ticks: one across the orbit wherever Venus was at each sunrise
   S.rise = onOrbit(PH.r_v + 0.9, FILM.sunrises[0].th);
   FILM.sunrises.forEach((s, i) => {
     const a = onOrbit(PH.r_v - 0.9, s.th), b = onOrbit(PH.r_v + 0.9, s.th);
-    ticks[i].seg(a, b).set({ opacity: t >= s.t && t < FILM.endCard + 0.6 ? fadeIn(t, s.t, 0.25) : 0 });
+    ticks[i].seg(a, b).set({ opacity: (t >= s.t && t < FILM.endCard + 0.6 ? fadeIn(t, s.t, 0.25) : 0) * (1 - wf) });
   });
   // the radar beam (1962): Earth to Venus, dashed
   // the radar (1962): a dashed beam from Earth, and a pulse that reaches Venus on "pierced"
   beam.seg(ep, vp).set({ opacity: winOp(t, CUE.radar, CUE.true, 0.35) });
-  const u = E.inout2(seg(t, CUE.radar, CUE.pierce)), toE = norm(ep.map((v, j) => v - vp[j]));
-  pulse.set({ center: ep.map((v, j) => v + (vp[j] + toE[j] * VR - v) * u), camera, opacity: u > 0 && u < 1 ? 1 : 0 });
-  S.beam = vp.map((v, j) => v + toE[j] * VR * 1.9);
-  // "backwards": an arc arrow around Venus's equator, pointing the way it turns (clockwise seen from north)
-  const ra = VR * 1.45, a0 = psi + 0.5, a1 = psi - 1.2, ao = winOp(t, CUE.back, FILM.beats.find((b) => b.id === "whoa").t0, 0.35);
+  // the ping goes out on "radar" and reaches Venus on "pierced"; its echo heads home
+  const toE = norm(ep.map((v, j) => v - vp[j])), hit = vp.map((v, j) => v + toE[j] * VR);
+  const uo = E.inout2(seg(t, CUE.radar, CUE.pierce)), ub = E.inout2(seg(t, CUE.pierce, CUE.pierce + (CUE.pierce - CUE.radar)));
+  const pr = t < CUE.pierce ? ep.map((v, j) => v + (hit[j] - v) * uo) : hit.map((v, j) => v + (ep[j] - v) * ub);
+  const live = (t > CUE.radar && t < CUE.pierce) || (t >= CUE.pierce && ub < 1);
+  S.beam = vp.map((v, j) => v + toE[j] * VR * 2.3);
+  // "backwards": an arc arrow around Venus's equator on the side facing the camera (it stays put while the pin turns
+  // under it), pointing the way Venus turns (clockwise seen from north)
+  const aCam = Math.atan2(-(camera.position.z - vp[2]), camera.position.x - vp[0]);
+  const ra = VR * 1.3, a0 = aCam + 0.95, a1 = aCam - 0.95, ao = winOp(t, CUE.back, FILM.beats.find((b) => b.id === "whoa").t0, 0.35);
   const ex = { center: vp, ...XZ };
   arrow[0].arc({ r: ra, a0: a1, a1: a0, ...ex }).set({ opacity: ao });
   const tip = [vp[0] + ra * Math.cos(a1), 0, vp[2] - ra * Math.sin(a1)];
@@ -166,14 +193,31 @@ window.seek = function (t) {
   const rad = [Math.cos(a1), 0, -Math.sin(a1)];
   arrow[1].seg(tip, tip.map((v, j) => v - tan[j] * 0.35 + rad[j] * 0.2)).set({ opacity: ao });
   arrow[2].seg(tip, tip.map((v, j) => v - tan[j] * 0.35 - rad[j] * 0.2)).set({ opacity: ao });
-  S.arrow = [vp[0] + ra * Math.cos(psi - 0.35), 0, vp[2] - ra * Math.sin(psi - 0.35)];
+  // the label at whichever end of the arc is on the left of the frame, just outside it
+  const endA = [a0, a1].map((a) => [vp[0] + ra * 1.2 * Math.cos(a), 0, vp[2] - ra * 1.2 * Math.sin(a)]);
+  const sx = (p) => new THREE.Vector3(...p).project(camera).x;
+  S.arrow = sx(endA[0]) < sx(endA[1]) ? endA[0] : endA[1];
+  // Schiaparelli's lock: a pointer toward the (off-frame) Sun
+
   // the readout: Venus's light-time ring, then the radar's round trip (Venus and Earth lined up)
-  lightRing.set({ opacity: fadeIn(t, CUE.ring, 0.6) * (1 - 0.65 * fadeIn(t, CUE.echo, 0.6)) * (1 - wf) });   // steps back when the echo is named
+  // the light-time ring grows out from the Sun to Venus's orbit; it steps back when the echo is named
+  lightRing.arc({ r: 1.6 + (PH.r_v + 0.25 - 1.6) * E.out3(seg(t, CUE.ring, CUE.ring + 1.2)), ...XZ })
+    .set({ opacity: (t >= CUE.ring ? 1 : 0) * (1 - 0.65 * fadeIn(t, CUE.echo, 0.6)) * (1 - wf) });
   const ar = Math.PI * 0.8;
   S.ring = [(PH.r_v + 0.25) * Math.cos(ar), 0, -(PH.r_v + 0.25) * Math.sin(ar)];
   const d = norm(vp), e0 = vp.map((v, j) => v + d[j] * VR * 1.2), e1 = ep.map((v, j) => v - d[j] * ER * 1.2);
   echo.seg(e0, e1).set({ opacity: fadeIn(t, CUE.echo, 0.5) * (1 - wf) });
-  S.echo = vp.map((v, j) => (v + ep[j]) / 2);
+  S.echo = ep.map((v, j) => v + d[j] * ER * 2.6);                              // outside Earth's orbit, on the same line
+  // the readout's ping: Earth → Venus → Earth over two seconds (the radar ping above shares the beacon)
+  const ue = seg(t, CUE.echo, CUE.echo + 2.0), tri = ue < 0.5 ? E.inout2(ue * 2) : E.inout2(2 - ue * 2);
+  const pe = e1.map((v, j) => v + (e0[j] - v) * tri), liveE = ue > 0 && ue < 1;
+  pulse.set({ center: liveE ? pe : pr, camera, opacity: liveE || live ? 1 : 0 });
+  // the dial: the Sun's place in the sky of the pin ("you"), from its hour angle (0 = noon, +π/2 = sunrise, in the west)
+  const hA = ((psi - (thV(t) + Math.PI)) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI;
+  const th = Math.PI / 2 + hA, up = Math.abs(hA) <= Math.PI / 2;
+  dialSun.setAttribute("cx", (DCX + RX * Math.cos(th)).toFixed(2)); dialSun.setAttribute("cy", (DCY - RY * Math.sin(th)).toFixed(2));
+  dialSun.setAttribute("opacity", up ? "1" : "0");
+  dial.style.opacity = (winOp(t, CUE.dial0, CUE.dial1, 0.4) * (shot === "end" ? 0 : 1)).toFixed(3);
 
   sky.update(camera, { frameCam: (applyPose(tmpCam, poseFor(shot, tr)), tmpCam), starGain: 1, bandGain: 1 });
   hud.update(t);

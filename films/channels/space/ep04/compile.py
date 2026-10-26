@@ -108,7 +108,7 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-moon-h", "text": "Moon", "kind": "body", "anchor": "moon", "t0": 0.0, "t1": B["normal"]["t0"], "side": -1},
     {"id": "l-line-h", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1},
-    {"id": "l-fall-h", "text": "a minute's fall, drawn ×1,000,000", "kind": "gravity", "anchor": "gap", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1},
+    {"id": "l-fall-h", "text": "a minute's fall, drawn ×1,000,000", "kind": "gravity", "anchor": "gap", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1, "v": "middle"},
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Look"), "t1": B["change"]["t0"], "side": 1},
     {"id": "l-moon", "text": "Moon", "kind": "body", "anchor": "moon", "t0": A("vo02:Look", 0.3), "t1": B["why"]["t0"], "side": -1},
     {"id": "l-30", "text": "30 Earths", "kind": "body", "anchor": "row", "t0": A("vo02:thirty"), "t1": A("vo02:And"), "side": 1},
@@ -119,8 +119,8 @@ LABELS = [
     # the side view names its two ends as soon as it settles (the heavens and the Earth, on one line)
     {"id": "l-earth-w", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(B["why"]["t0"] + 2.6, 4), "t1": A("vo04:apple"), "side": 1},
     {"id": "l-moon-w", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(B["why"]["t0"] + 2.6, 4), "t1": t_w, "side": -1},
-    {"id": "l-line", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": round(t_min0 + 0.6, 4), "t1": t_tk, "side": 1},
-    {"id": "l-fall", "text": "4.9 m in a minute", "kind": "gravity", "anchor": "gap", "t0": A("vo05:About"), "t1": t_tk, "side": -1},
+    {"id": "l-line", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": round(t_min0 + 0.6, 4), "t1": round(t_min1 + 0.4, 4), "side": 1},
+    {"id": "l-fall", "text": "4.9 m in a minute", "kind": "gravity", "anchor": "gap", "t0": A("vo05:About"), "t1": round(t_min1 + 0.4, 4), "side": -1},
     # the takeaway: the same two, the pull between them, the straight lines it bends all the way round
     {"id": "l-earth-t", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": 1},
     {"id": "l-moon-t", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": -1},
@@ -135,7 +135,7 @@ BADGES = [
     {"id": "b-mag", "text": "fall drawn ×1,000,000", "t0": t_min0, "t1": t_tk, "slot": "tr"},
 ]
 COUNTERS = [
-    {"id": "c-fall-h", "label": "fallen below its straight line · each second", "text": "1.4 mm", "t0": 0.0, "t1": B["normal"]["t0"]},
+    {"id": "c-fall-h", "label": "falls below its line · each second", "text": "1.4 mm", "t0": 0.0, "t1": B["normal"]["t0"]},
     {"id": "c-earths", "label": "Earths from here to the Moon", "text": "30", "t0": A("vo02:thirty"), "t1": A("vo02:And")},
     {"id": "c-speed", "label": "the Moon's speed · km a second", "text": "1", "t0": A("vo02:And"), "t1": A("vo02:That's")},
     {"id": "c-nyb", "label": "New York → Boston, at that speed", "text": "5 min", "t0": A("vo02:That's"), "t1": B["change"]["t0"]},

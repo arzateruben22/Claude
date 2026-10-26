@@ -382,7 +382,8 @@
    "anchor": "gap",
    "t0": 0.0,
    "t1": 3.7333,
-   "side": 1
+   "side": 1,
+   "v": "middle"
   },
   {
    "id": "l-earth",
@@ -471,7 +472,7 @@
    "kind": "light",
    "anchor": "ghost",
    "t0": 43.9667,
-   "t1": 53.8667,
+   "t1": 51.2667,
    "side": 1
   },
   {
@@ -480,7 +481,7 @@
    "kind": "gravity",
    "anchor": "gap",
    "t0": 48.2,
-   "t1": 53.8667,
+   "t1": 51.2667,
    "side": -1
   },
   {
@@ -558,7 +559,7 @@
  "counters": [
   {
    "id": "c-fall-h",
-   "label": "fallen below its straight line · each second",
+   "label": "falls below its line · each second",
    "text": "1.4 mm",
    "t0": 0.0,
    "t1": 3.7333,

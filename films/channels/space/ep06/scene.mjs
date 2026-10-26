@@ -60,6 +60,8 @@ const galaxy = createGalaxy({ n: 40000, radius: 50, seed: 27, sunAngle: Math.PI 
 const lap = ring({ color: line("lilac", 0.8), width: 2.4, opacity: 0, dash: 90, duty: 0.55 }).arc({ r: SUN_LY / 1000, ...XZ });
 const gcRing = ring({ color: line("teal", 0.9), width: 2.8, opacity: 0 }).arc({ r: SUN_LY / 1000 + 0.4, ...XZ });
 const sunG = createBeacon({ color: hdr("text", 1.6), px: 12, core: 0.4 });
+const sunJ = createBeacon({ color: hdr("text", 1.6), px: 12, core: 0.4 });   // the Sun through the jump (between the rungs)
+scene.add(sunJ.mesh);
 G.galaxy.add(galaxy.group, lap.mesh, gcRing.mesh, sunG.mesh);
 galaxy.set({ angle: 0 });
 const SUN0 = galaxy.sunAt();
@@ -143,6 +145,9 @@ window.seek = function (t) {
   const la = Math.atan2(sp[2], sp[0]) + 2.2, rl = SUN_LY / 1000;
   S.lap = toS("galaxy", [rl * Math.cos(la), 0, rl * Math.sin(la)]);
 
+  // through the jump the Sun stays a point: in when the orbit fades, out when the galaxy's own Sun has come in
+  const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4);
+  sunJ.set({ center: toS("solar", [0, 0, 0]), camera, opacity: jIn * (1 - jOut) * (1 - view.alpha.solar) });
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1 - clamp01((view.s - 12) / 2), bandGain: 1 - clamp01((view.s - 12) / 2) });
   hud.update(t);
   tRing.update(t);

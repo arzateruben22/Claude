@@ -106,7 +106,8 @@ world.add(rim.mesh);
 const sunDot = createBeacon({ color: hdr("text", 1.8), px: 10, core: 0.35 });
 G.sun.add(sunDot.mesh);
 const giant = ring({ color: C.lemon, width: 2.6, opacity: 0, dash: 140, duty: 0.6 });
-G.sun.add(giant.mesh);
+const orbitE = ring({ color: line("lilac", 0.8), width: 2.4, opacity: 0 });        // Earth's orbit, same scale (the readout)
+G.sun.add(giant.mesh, orbitE.mesh);
 const sunProbe = probes(G.sun, 2);
 
 const rig = createRig(FILM.cam);
@@ -193,6 +194,9 @@ window.seek = function (t) {
   const gr = PH.giant * 100 * k;
   giant.arc({ center: [0, 0, 0], r: gr, ...cb() }).set({ opacity: shot === "sun" ? fadeIn(t, CUE.giant, 0.8) : 0 });
   S.giant = [gr * Math.cos(2.2), gr * Math.sin(2.2), 0].map((v, i) => v);
+  const orr = PH.au_r * 100 * k, oo = shot === "sun" ? fadeIn(t, CUE.orbit, 0.8) : 0;
+  orbitE.arc({ center: [0, 0, 0], r: orr, ...cb() }).set({ opacity: oo });
+  S.orbit = [orr * Math.cos(-2.4), orr * Math.sin(-2.4), 0];
   sunProbe(shot === "sun" && t > CUE.j0 && t < CUE.j1 + 0.2 ? [[60 * k, 0, 0], [0, 60 * k, 0]] : [null, null]);
 
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1, bandGain: 1 });
