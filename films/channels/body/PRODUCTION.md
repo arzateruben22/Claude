@@ -9,9 +9,9 @@ These five feed the first long-form compilation (with episode 1).
 | 01 | Single file | **delivered** (v3 final, 71.6 s, −14.1 LUFS, QA PASS): the 26 Oct audit's fixes, a sickle cell on screen, balanced captions |
 | 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) |
 | 03 | The jump | **delivered** (74.8 s, −14.1 LUFS, QA PASS, 0 flashes) after a three-lens frame review (drum mirrored so time reads left to right, labels, readouts) |
-| 04 | The gap | **paused by the owner** · audit applied · first-look frames rendered; frame review stopped part-way · next: review fixes, cues, soundtrack, final |
-| 05 | Where breath goes | **paused by the owner** · audit applied (court redrawn as a doubles court) · first-look frames rendered; frame review stopped part-way · next: as ep04 |
-| 06 | The exit | **paused by the owner** · audit applied · first browser run OK; seen: the parked tally plate over the hero and the engraving, the locator clipping the lit tally's label, an off-screen leader at 14 s, a standing-cheat note in the speed column · next: as ep04 |
+| 04 | The gap | **paused by the owner (26 Oct 21:21 UTC)** · verified frame-review fixes applied (incl. the messenger mist, which had never been added to the scene) · soundtrack −14.1 LUFS, sync PASS · final stopped at about frame 1,770 of 2,232 (~25 min left): resume with `kits/cinema/film/run.sh films/channels/body/ep04` (a bare run.sh resumes), then assemble with `--audio films/channels/body/ep04/build/audio/mix.wav`, QA, scorecard |
+| 05 | Where breath goes | **paused** · verified frame-review fixes applied (not yet re-checked in a browser) · next: re-peek, cues, soundtrack, final |
+| 06 | The exit | **paused** · verified frame-review fixes applied (not yet re-checked in a browser) · next: re-peek, cues, soundtrack, final |
 
 ## Visual review (26 Oct)
 A multi-agent review (motion, layout, graphics, honesty lenses per episode; raw findings in the session's
