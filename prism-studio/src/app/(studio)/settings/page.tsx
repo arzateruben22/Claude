@@ -29,7 +29,10 @@ export default async function Settings() {
           <label className="check"><input type="checkbox" name="globalPause" defaultChecked={s.globalPause} /> <span><b>Pause publishing</b><br /><span className="muted">Nothing new is planned; the desk stays usable.</span></span></label>
           <label className="check"><input type="checkbox" name="stopExternalActions" defaultChecked={s.stopExternalActions} /> <span><b>Stop external actions</b><br /><span className="muted">Hides hand-off buttons, blocks automated publishing and pauses analytics pulls from the platforms.</span></span></label>
           <label className="check"><input type="checkbox" name="paidGenerationEnabled" defaultChecked={s.paidGenerationEnabled} /> <span><b>Paid generation</b><br /><span className="muted">Stays off until a channel has a production budget, and only runs while that budget has room. Rendering today is local and free.</span></span></label>
-          <p className="faint" style={{ margin: 0, fontSize: 13.5 }}>Production budgets and cost entries live in <Link href="/costs">Costs</Link>. Prism records costs; it never pays or moves money.</p>
+          <div className="row">
+            <Link href="/costs" className="btn ghost small">Budgets and costs</Link>
+            <span className="faint" style={{ fontSize: 13.5 }}>Prism records costs; it never pays or moves money.</span>
+          </div>
         </section>
         <section className="card stack-sm">
           <h3>Demo data</h3>

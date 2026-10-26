@@ -115,8 +115,9 @@ let server: ChildProcess | null = null;
 const serverLog: string[] = [];
 
 async function startServer(port: number) {
-  // its own process group (detached), so stopping it takes next start's children too
-  server = spawn(process.execPath, [NEXT_BIN, "start", "-p", String(port), "-H", "127.0.0.1"], {
+  // the standalone server, as `npm start` and the Docker image run it; in its own process group (detached), so
+  // stopping it takes any children too
+  server = spawn(process.execPath, [path.join(ROOT, "scripts", "start.mjs"), "-p", String(port), "-H", "127.0.0.1"], {
     cwd: ROOT, detached: true, stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, NODE_ENV: "production", PORT: String(port) },
   });

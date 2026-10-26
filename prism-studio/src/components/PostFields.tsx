@@ -1,8 +1,9 @@
 // The exact words for one post, each with its copy button: the YouTube title (and its 16:9 thumbnail), the description or
 // caption, the hashtags, the pinned / first comment with the sources and, when they don't fit one comment, each reply
-// ("Copy reply 1" …, posted under it in order), YouTube's keyword tags, and a short checklist for the upload screen. Shared by the monitor screens' post cards and the Upload Desk. The caption shows without its trailing
-// hashtag line (the tags have their own box); "Copy caption + hashtags" copies the exact stored text (composePostText),
-// so the tags are pasted once.
+// ("Reply", or "Reply 1", "Reply 2" … when there are several, posted under it in order), YouTube's keyword tags, and a
+// short checklist for the upload screen. Shared by the monitor screens' post cards and the Upload Desk. The caption
+// shows without its trailing hashtag line (the tags have their own box); "Copy caption + hashtags" copies the exact
+// stored text (composePostText), so the tags are pasted once.
 import type { ReactNode } from "react";
 import type { PostItem } from "@/lib/data";
 import { captionBody, composePostText, FIRST_COMMENT, parsePostingNotes } from "@/domain/metadata";
@@ -46,7 +47,8 @@ function CommentText({ text }: { text: string }) {
 export function PostFields({ x, platform, thumb }: { x: Export; platform: Platform; thumb?: { url: string; name: string } | null }) {
   const notes = parsePostingNotes(x.postingNotes);
   const body = captionBody(x), full = composePostText(x);
-  const first = FIRST_COMMENT[platform], replies = notes.comment ? notes.replies : [], n = replies.length + 1;
+  const first = FIRST_COMMENT[platform], replies = notes.comment ? notes.replies : [];
+  const replyName = (k: number) => (replies.length === 1 ? "Reply" : `Reply ${k + 1}`);   // numbered only when there are several
   const ai = notes.aiLabel || !!x.disclosures?.aiVoice || !!x.disclosures?.aiVisuals;
   return (
     <div className="post-fields">
@@ -67,12 +69,12 @@ export function PostFields({ x, platform, thumb }: { x: Export; platform: Platfo
         </Field>
       ) : null}
       {notes.comment ? (
-        <Field label={n > 1 ? `${first} · 1 of ${n}` : first} actions={<CopyButton text={notes.comment} label="Copy comment" />}>
+        <Field label={first} actions={<CopyButton text={notes.comment} label="Copy comment" />}>
           <CommentText text={notes.comment} />
         </Field>
       ) : null}
       {replies.map((r, k) => (
-        <Field key={k} label={`Reply ${k + 1} · ${k + 2} of ${n}`} actions={<CopyButton text={r} label={`Copy reply ${k + 1}`} />}>
+        <Field key={k} label={replyName(k)} actions={<CopyButton text={r} label={`Copy ${replyName(k).toLowerCase()}`} />}>
           <CommentText text={r} />
         </Field>
       ))}
@@ -84,7 +86,7 @@ export function PostFields({ x, platform, thumb }: { x: Export; platform: Platfo
       {ai || notes.captionsOff || replies.length || notes.checks.length || notes.other.length ? (
         <ul className="checklist">
           {ai ? <li>Turn on the AI / synthetic content label</li> : null}
-          {replies.length ? <li>{platform === "instagram" ? "Post the first comment" : "Post and pin the comment"}, then reply to it with {replies.length === 1 ? "reply 1" : `replies 1–${replies.length}`}, in order</li> : null}
+          {replies.length ? <li>{platform === "instagram" ? "Post the first comment" : "Post and pin the comment"}, then {replies.length === 1 ? "post the reply under it" : `post replies ${replies.length === 2 ? "1 and 2" : `1–${replies.length}`} under it, in order`}</li> : null}
           {notes.captionsOff ? <li>Leave auto-captions off: the captions are burned in</li> : null}
           {notes.checks.map((c) => <li key={c} className="warn">Check: {c}</li>)}
           {notes.other.map((o) => <li key={o} className="plain">{o}</li>)}

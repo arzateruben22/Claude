@@ -1,15 +1,17 @@
 // Production costs and budgets. Prism records costs; it never pays, charges or moves money.
 // - Production budgets are separate from personal rewards: nothing here reads or writes the reward tables
 //   (rewards, reward_ledger, reward_settings), and nothing in rewards.ts reads these.
-// - A budget is monthly, studio-wide or for one channel. A row applies from its month on until a later row for the
-//   same scope replaces it; a row with no cap ends the budget from that month.
+// - A budget is monthly, for one channel or for the studio (a ceiling over every channel together). A row applies from
+//   its month on until a later row for the same scope replaces it; a row with no cap ends the budget from that month.
 // - Only actual (source "manual"), unvoided entries in the budget's currency count as spent. Estimates are labelled
 //   ESTIMATE and never count as spent. Prism never converts currencies, so an actual cost in another currency is
-//   shown apart, and it keeps paid generation off for that month (Prism can't tell whether the budget has room).
+//   listed apart ("not converted") in the figures it belongs to: its channel's and the all-channels total.
 // - Paid generation is allowed only when Settings has it on, external actions aren't stopped, the channel has a
-//   production budget this month with room for the amount, and the studio-wide budget (when one is set) has room too.
+//   production budget this month with room for the amount, and the studio budget (when one is set) has room too, in
+//   its own currency. A channel's own cost in another currency keeps that channel off for the month (Prism can't tell
+//   whether its budget has room); a studio-wide one (no channel) or another channel's never does.
 // Money is integer cents throughout; months are "YYYY-MM" and cost dates "YYYY-MM-DD" in the studio timezone.
-import { asc, eq, lte, sql } from "drizzle-orm";
+import { and, asc, eq, isNull, lte, ne, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { budgets, channels, costLedger, episodes } from "../db/schema";
 import { audit, type Conn, DomainError, settings } from "./core";
@@ -180,6 +182,8 @@ export type ScopeSummary = {
   overCents: number;                                    // how far spending went past the budget
 };
 
+/** One channel's own entries against its budget; with channelId null, every entry (each channel's and the studio-wide
+ *  ones, recorded with no channel) against the studio budget. */
 export function summarizeScope(aggs: Agg[], rows: Budget[], channelId: string | null, month: string): ScopeSummary {
   const budget = effectiveBudget(rows, channelId, month);
   const currency = budget?.currency ?? DEFAULT_CURRENCY;
@@ -211,9 +215,21 @@ export type PaidGenerationCheck = {
 
 const fmt = (cents: number, currency: string) => (cents / 100).toLocaleString("en-US", { style: "currency", currency });
 
+/** The reason a channel's own costs in another currency keep paid generation off, naming them:
+ *  "This channel has a €15.00 entry in another currency this month (Display font licence); …". */
+export function otherCurrencyReason(entries: { description: string; category: string; currency: string; cents: number }[]) {
+  const what = (e: (typeof entries)[number]) => e.description || e.category;
+  const head = entries.length === 1
+    ? `This channel has a ${fmt(entries[0].cents, entries[0].currency)} entry in another currency this month (${what(entries[0])})`
+    : `This channel has ${entries.length} entries in another currency this month (${entries.slice(0, 3).map((e) => `${fmt(e.cents, e.currency)} ${what(e)}`).join(", ")}${entries.length > 3 ? ` and ${entries.length - 3} more` : ""})`;
+  return `${head}; Prism doesn't convert, so it can't tell whether this channel's budget has room.`;
+}
+
 /**
  * May a job spend `amountCents` (in the channel budget's currency) on paid generation for this channel now?
  * Read-only: it records nothing and reserves nothing (Prism never pays; the cost is recorded once it's known).
+ * The budgets are read in their own currencies first (a cost in another currency can only use room up, so "no room"
+ * is the surer answer); then only this channel's own costs in another currency can hold it back.
  */
 export async function canUsePaidGeneration(c: Conn, channelId: string, amountCents: number, at = new Date()): Promise<PaidGenerationCheck> {
   const s = await settings(c);
@@ -227,12 +243,18 @@ export async function canUsePaidGeneration(c: Conn, channelId: string, amountCen
   if (!s.paidGenerationEnabled) return no("switch_off", "Paid generation is off in Settings.", room);
   if (s.stopExternalActions) return no("stopped", "External actions are stopped in Settings.", room);
   if (!ch.budget) return no("no_budget", "This channel has no production budget this month.");
-  if (ch.unconverted.length || (studio.budget && studio.unconverted.length))
-    return no("unconverted", `There are costs this month in another currency (${[...ch.unconverted, ...(studio.budget ? studio.unconverted : [])].map((u) => u.currency).join(", ")}); Prism doesn't convert, so it can't tell whether the budget has room.`, room);
   if (ch.remainingCents! < amountCents) return no("no_room", `Not enough room: ${fmt(ch.remainingCents!, ch.currency)} left in this channel's budget this month.`, room);
   if (studio.budget) {
-    if (studio.currency !== ch.currency) return no("unconverted", `The studio-wide budget is in ${studio.currency} and this channel's in ${ch.currency}; Prism doesn't convert.`, room);
-    if (studio.remainingCents! < amountCents) return no("studio_no_room", `Not enough room in the studio-wide budget: ${fmt(studio.remainingCents!, studio.currency)} left this month.`, room);
+    if (studio.currency !== ch.currency) return no("unconverted", `The studio budget is in ${studio.currency} and this channel's in ${ch.currency}; Prism doesn't convert.`, room);
+    if (studio.remainingCents! < amountCents) return no("studio_no_room", `Not enough room in the studio budget: ${fmt(studio.remainingCents!, studio.currency)} left this month.`, room);
+  }
+  if (ch.unconverted.length) {
+    const rows = await c.select({ description: costLedger.description, category: costLedger.category, currency: costLedger.currency, cents: costLedger.actualCents })
+      .from(costLedger)
+      .where(and(eq(costLedger.channelId, channelId), isNull(costLedger.voidedAt), ne(costLedger.source, "estimate"), ne(costLedger.currency, ch.currency),
+        sql`to_char(${costLedger.incurredOn}, 'YYYY-MM') = ${month}`, sql`${costLedger.actualCents} > 0`))
+      .orderBy(asc(costLedger.incurredOn), asc(costLedger.createdAt));
+    return no("unconverted", otherCurrencyReason(rows.map((r) => ({ ...r, cents: r.cents ?? 0 }))), room);
   }
   return { ok: true, code: "ok", reason: `Allowed: ${fmt(ch.remainingCents!, ch.currency)} left in this channel's budget this month.`, month, currency: ch.currency, remainingCents: ch.remainingCents };
 }

@@ -102,7 +102,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
         <div className="card">
           <ul className="list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {eps.map((e) => (
-              <li key={e.id} className="row spread">
+              <li key={e.id} className="row spread ep-row">
                 <Link href={`/episodes/${e.id}`} style={{ textDecoration: "none" }}><span className="num faint">No. {String(e.number).padStart(3, "0")}</span> <b>{e.title}</b>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
                 <span className={`chip ${stateTone(e.state)}`}>{STATE_LABEL[e.state]}</span>
               </li>
@@ -145,7 +145,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
               <Link href={`/connections#dest-${d.id}`} className="btn ghost small" style={{ justifySelf: "start" }}>Edit in Accounts</Link>
             </div>
           ))}
-          <div className="card flat"><p className="muted" style={{ margin: 0 }}>Instagram is one shared account for all five channels: set it up in <Link href="/connections">Accounts</Link>.</p></div>
+          <div className="card flat note-row"><p className="muted">Instagram is one shared account for all five channels: set it up in Accounts.</p><Link href="/connections" className="btn ghost small">Accounts</Link></div>
         </div>
       ) : null}
 

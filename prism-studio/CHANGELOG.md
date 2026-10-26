@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.3 — 2026-10-26 (last review fixes)
+- Costs: a cost in another currency holds back paid generation only for the channel it was recorded for, and the reason names it ("a £4.00 entry in another currency this month (Stock clip)"). A studio-wide one is listed as not converted in the All channels figures and turns no channel off. A budget already used now says "budget used" (or "studio budget used") instead of "another currency". The reason shows under the chip on each row, not only as a tooltip.
+- Costs: "All channels" and "All entries" for the unfiltered views; "Studio-wide" now only means entries with no channel; categories read "Voice", not "voice". The over-budget amount in By month no longer breaks after its minus sign, and estimates there carry the boxed ESTIMATE tag.
+- Record a cost: with a channel chosen, only its episodes can be picked; on Studio-wide, picking an episode moves Channel to the episode's channel. The hint says so.
+- Phones: every standalone link and button is at least 44 px tall (the Costs and channel tabs, the channel names on Costs, list and title links, status chips that link); routes that sat inside a sentence ("Plan the week", "Add its handle", "Reconnect in Accounts", "All analytics", Settings → "Budgets and costs") are buttons beside it.
+- The More menu is opaque, so the page no longer shows through it.
+- Upload Desk: on wider screens the post fields sit right beside the portrait video (no empty column).
+- Sources thread: "Pinned comment", then "Reply" (or "Reply 1", "Reply 2" when there are several), each counted once; the checklist reads "then post the reply under it".
+- `npm start` runs the standalone server (`scripts/start.mjs`), as the Docker image does; `next start` warned that it doesn't support standalone output. `npm run preview` uses it too.
+
 ## 0.6.2 — 2026-10-26 (review fixes)
 - Sign-in: the redirect after signing in stays on the site (`/<tab>/evil.example` used to leave it); a device you've signed in on before gets past the studio-wide ceiling, so strangers filling it can't lock you out (`prism_device` cookie; DEPLOY.md section 8).
 - Analytics: a token refresh that fails on the network no longer marks the connection expired (the job retries); Instagram's "(#10) not enough viewers" fails that post's pull only, instead of stopping the account's publishing; a same-day re-pull that lowers the views flags the unlocks it backed; Refresh now pressed twice in a minute says "Just refreshed" instead of "Already queued".

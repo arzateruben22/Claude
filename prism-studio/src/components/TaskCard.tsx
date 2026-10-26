@@ -59,16 +59,17 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
         <div>
           <div className="handle">{handle || accountName}</div>
           <div className="faint" style={{ fontSize: 13 }}>
-            {handle ? <>{accountName} · {platform}. Check the app is signed in as {handle}.</> : <>{platform} · not set up: <Link href="/connections">add its handle</Link> so the desk shows who to post as.</>}
+            {handle ? <>{accountName} · {platform}. Check the app is signed in as {handle}.</> : <>{platform} · not set up yet: add its handle so the desk shows who to post as.</>}
           </div>
         </div>
+        {!handle ? <Link href="/connections" className="btn ghost small acct-action">Add its handle</Link> : null}
       </div>
 
       {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Mark uploaded once it is live, or wait for the worker to confirm.</div> : null}
 
       {x && !done && ready ? (
         <>
-          <div className="grid2">
+          <div className="grid2 desk-media">
             {version ? (
               <div className="player-wrap">
                 <video className="player" controls preload="none" playsInline poster={cover ? mediaUrl(cover) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 420 }} />

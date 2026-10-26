@@ -72,7 +72,7 @@ export function PullLine({ publicationId, platform, pull, tz }: { publicationId:
   const b = pull.blocked;
   if (b && b.code !== "needs_reconnect" && b.code !== "stopped") return null;   // not an API post: log numbers by hand or CSV
   const name = PLATFORM_LABEL[platform];
-  const status = b?.code === "needs_reconnect" ? <span className="chip bad">{name} connection needs reconnecting: <Link href="/connections">Accounts</Link></span>
+  const status = b?.code === "needs_reconnect" ? <span className="chip bad">{name} connection needs reconnecting</span>
     : b?.code === "stopped" ? <span className="chip warn">API pulls paused: external actions are stopped</span>
     : pull.queued ? <span className="chip info">Pull queued</span>
     : pull.lastOutcome === "failed" ? <span className="chip warn">Last pull failed; the next one is on schedule</span>
@@ -86,6 +86,7 @@ export function PullLine({ publicationId, platform, pull, tz }: { publicationId:
         {status}
         <span className="faint pull-last">{last}</span>
       </div>
+      {b?.code === "needs_reconnect" ? <Link href="/connections" className="btn ghost small">Reconnect in Accounts</Link> : null}
       {!b && !pull.queued ? (
         <ActionForm action={refreshMetrics} className="pull-refresh" submit="Refresh now" submitClass="btn quiet small">
           <input type="hidden" name="publicationId" value={publicationId} />

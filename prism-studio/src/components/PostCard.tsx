@@ -93,7 +93,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
                   <label className="check"><input type="checkbox" name="confirmAccount" /> <span>I posted it to <b>{account}</b> on {platform}.</span></label>
                 </ActionForm>
               </details>
-            ) : <p className="faint post-note">Not planned yet: <Link href="/calendar">plan the week</Link> to give it a slot, then mark it uploaded from the Upload Desk.</p>}
+            ) : <div className="note-row"><p className="faint post-note">Not planned yet: plan the week to give it a slot, then mark it uploaded from the Upload Desk.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div>}
           </div>
         ) : x ? (
           <div className="post-actions">

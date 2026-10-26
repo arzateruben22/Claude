@@ -198,11 +198,73 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     for (const amount of [0, -100, 12.5, Number.NaN]) expect(await canUsePaidGeneration(db, c.id, amount, OCT)).toMatchObject({ ok: false, code: "bad_amount" });
   });
 
-  it("stays off while there are unconverted costs in another currency that month", async () => {
+  it("stays off while the channel has its own costs in another currency that month, and names them", async () => {
     const { c } = await channel(db);
     await setBudget(db, { channelId: c.id, month: "2026-10", capCents: 2000 });
-    await addCost(db, cost({ channelId: c.id, amountCents: 100, currency: "GBP" }));
-    expect(await canUsePaidGeneration(db, c.id, 100, OCT)).toMatchObject({ ok: false, code: "unconverted" });
+    await addCost(db, cost({ channelId: c.id, amountCents: 1500, currency: "GBP", description: "Stock clip" }));
+    const one = await canUsePaidGeneration(db, c.id, 100, OCT);
+    expect(one).toMatchObject({ ok: false, code: "unconverted", currency: "USD", remainingCents: 2000 });
+    expect(one.reason).toContain("a £15.00 entry in another currency this month (Stock clip)");
+    await addCost(db, cost({ channelId: c.id, amountCents: 250, currency: "EUR", description: "Font licence", incurredOn: "2026-10-14" }));
+    await addCost(db, cost({ channelId: c.id, amountCents: 999, currency: "EUR", source: "estimate", description: "Not an actual cost" }));
+    const two = await canUsePaidGeneration(db, c.id, 100, OCT);
+    expect(two.reason).toContain("2 entries in another currency this month (£15.00 Stock clip, €2.50 Font licence)");
+    expect(two.reason).not.toContain("Not an actual cost");
+    // voided, they hold nothing back
+    for (const e of await db.select().from(S.costLedger)) if (e.source === "manual") await voidCost(db, e.id, "refunded");
+    expect(await canUsePaidGeneration(db, c.id, 100, OCT)).toMatchObject({ ok: true });
+  });
+
+  it("a studio-wide cost in another currency stays in the studio figures and never turns a channel off", async () => {
+    const a = (await channel(db, "physics")).c, b = (await channel(db, "space")).c;
+    await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 2000 });
+    await setBudget(db, { channelId: b.id, month: "2026-10", capCents: 2000 });
+    await addCost(db, cost({ channelId: null, amountCents: 1500, currency: "EUR", description: "Display font licence" }));
+    expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
+    // with a studio budget too: its room is read in its own currency, and the EUR entry is listed, not converted
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
+    expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
+    expect(await canUsePaidGeneration(db, b.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
+    const studio = (await costTotals(db, ["2026-10"])).scope(null, "2026-10");
+    expect(studio).toMatchObject({ spentCents: 0, remainingCents: 5000, unconverted: [{ currency: "EUR", cents: 1500 }] });
+    expect((await costTotals(db, ["2026-10"])).scope(a.id, "2026-10").unconverted).toEqual([]);
+  });
+
+  it("another channel's cost in another currency turns only that channel off", async () => {
+    const a = (await channel(db, "physics")).c, b = (await channel(db, "space")).c;
+    await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 2000 });
+    await setBudget(db, { channelId: b.id, month: "2026-10", capCents: 2000 });
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
+    await addCost(db, cost({ channelId: b.id, amountCents: 700, currency: "CAD", description: "Star map" }));
+    expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true });
+    expect(await canUsePaidGeneration(db, b.id, 100, OCT)).toMatchObject({ ok: false, code: "unconverted" });
+  });
+
+  it("a budget already used says so, whatever else is in another currency", async () => {
+    const a = (await channel(db, "physics")).c, b = (await channel(db, "space")).c;
+    await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 2000 });
+    await addCost(db, cost({ channelId: a.id, amountCents: 2500 }));
+    await addCost(db, cost({ channelId: a.id, amountCents: 100, currency: "EUR" }));
+    expect(await canUsePaidGeneration(db, a.id, 1, OCT)).toMatchObject({ ok: false, code: "no_room", remainingCents: 0 });
+    // the studio budget is used up by another channel: that is the answer, not this channel's other currency
+    await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 10_000 });
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 3000 });
+    await addCost(db, cost({ channelId: b.id, amountCents: 500 }));
+    expect(await canUsePaidGeneration(db, a.id, 1, OCT)).toMatchObject({ ok: false, code: "studio_no_room" });
+  });
+
+  it("the studio budget's room counts only its own currency, and a studio budget in another currency refuses", async () => {
+    const { c } = await channel(db);
+    await setBudget(db, { channelId: c.id, month: "2026-10", capCents: 5000 });
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 1000 });
+    await addCost(db, cost({ channelId: null, amountCents: 400 }));
+    await addCost(db, cost({ channelId: null, amountCents: 9000, currency: "GBP" }));
+    expect(await canUsePaidGeneration(db, c.id, 600, OCT)).toMatchObject({ ok: true });
+    expect(await canUsePaidGeneration(db, c.id, 601, OCT)).toMatchObject({ ok: false, code: "studio_no_room" });
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 1000, currency: "EUR" });
+    const r = await canUsePaidGeneration(db, c.id, 100, OCT);
+    expect(r).toMatchObject({ ok: false, code: "unconverted" });
+    expect(r.reason).toMatch(/studio budget is in EUR and this channel's in USD/);
   });
 
   it("uses the studio timezone's month: 23:00 on Oct 31 in Los Angeles is still October", async () => {

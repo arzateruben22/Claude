@@ -113,7 +113,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
             </ul>
           </div>
         ) : <p className="muted">Nothing else queued. {v.accounts.some((a) => a.next) ? "The next posts are above." : "New renders appear here once they pass review."}</p>}
-        {unscheduled.length ? <p className="faint small-note"><Link href="/calendar">Plan the week</Link> to give unscheduled posts a slot.</p> : null}
+        {unscheduled.length ? <div className="note-row small-note"><p className="faint">Plan the week to give unscheduled posts a slot.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
       </section>
 
       <section className="section">
@@ -192,7 +192,7 @@ async function InstagramScreen() {
             ))}
           </div>
         ) : <div className="card"><p className="muted">{v.paused ? "Publishing is paused, so there are no slots today." : "No Instagram slots today (blackout)."}</p></div>}
-        {v.slots.some((x) => x.state === "unplanned") ? <p className="faint small-note">These are the next episodes in rotation. <Link href="/calendar">Plan the week</Link> to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p> : null}
+        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
       </section>
 
       <section className="section">

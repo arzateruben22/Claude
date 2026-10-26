@@ -36,6 +36,7 @@ Checks: `npm run typecheck`, `npm test` (needs `TEST_DATABASE_URL`; it wipes tha
 | Command | What it does |
 |---|---|
 | `npm run dev` / `npm run worker` | The app on port 3100 / the job runner (publishing, analytics pulls, notifications, housekeeping) |
+| `npx next build && npm start` | The production build on port 3100 (`npm start -- -p 3107` for another), run by Next's standalone server as in the Docker image: `scripts/start.mjs` puts `.next/static` and `public` beside `server.js` and reads `.env.local` (not `next start`, which doesn't support standalone output) |
 | `npm run db:migrate` / `db:seed` | Apply migrations / add channels, destinations and rules (safe to repeat; `-- --demo` adds a labelled demo series) |
 | `npm run import:episodes` | Bring rendered episodes in from `films/channels` (also Queue → Import rendered episodes) |
 | `npm run covers` | Draw the 9:16 cover and 16:9 thumbnail for each delivered episode (films machine: Chromium + ffmpeg) |

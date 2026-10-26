@@ -8,7 +8,7 @@ import { CURRENCIES, amountOf } from "@/domain/costs";
 import { dayLabel, monthLabel, moneyIn, PAID_GEN as GATE, topicStyle } from "@/lib/format";
 import { addCostEntry, editCostEntry, saveBudget, voidCostEntry } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
-import { CostFields } from "@/components/CostFields";
+import { CATEGORY_LABEL, CostFields } from "@/components/CostFields";
 import { ScrollTabs } from "@/components/ScrollTabs";
 
 export const metadata: Metadata = { title: "Costs" };
@@ -42,7 +42,10 @@ function Extra({ s }: { s: ScopeSummary }) {
   );
 }
 
-function BudgetRow({ name, href, s, gate, style }: { name: string; href?: string; s: ScopeSummary; gate?: PaidGenerationCheck; style?: React.CSSProperties }) {
+// The reason under the chip, in words (no tooltip: a phone can't hover). "Budget used" needs none: the row's figures say it.
+const why = (gate: PaidGenerationCheck) => GATE[gate.code].detail && gate.code !== "no_room";
+
+function BudgetRow({ name, href, s, gate, style, reason = true }: { name: string; href?: string; s: ScopeSummary; gate?: PaidGenerationCheck; style?: React.CSSProperties; reason?: boolean }) {
   return (
     <li className="budget" style={style} data-nobudget={!s.budget || undefined}>
       {href ? <Link href={href} className="budget-name"><span className="dot" aria-hidden /> {name}</Link> : <span className="budget-name"><span className="dot studio" aria-hidden /> {name}</span>}
@@ -50,7 +53,9 @@ function BudgetRow({ name, href, s, gate, style }: { name: string; href?: string
       <Figures s={s} />
       <span className="budget-meta">
         <Extra s={s} />
-        {gate ? <span className={`chip ${GATE[gate.code].tone}`} title={gate.reason}>{GATE[gate.code].label}</span> : <span className="faint">a ceiling for every channel</span>}
+        {gate ? <span className={`chip ${GATE[gate.code].tone}`}>{GATE[gate.code].label}</span>
+          : <span className="faint">{s.budget ? "the studio budget: a ceiling for every channel together" : "no studio budget (a ceiling for every channel together)"}</span>}
+        {gate && reason && why(gate) ? <span className="budget-why faint">{gate.reason}</span> : null}
       </span>
     </li>
   );
@@ -67,7 +72,7 @@ function Entry({ e, v }: { e: CostsView["entries"][number]; v: CostsView }) {
       <span className="cost-amt num">{void_ ? <span className="tag faint-tag">VOID</span> : est ? <span className="tag">ESTIMATE</span> : null} <span className="cost-sum">{moneyIn(amountOf(e), e.currency)}</span></span>
       <span className="cost-meta">
         <span>{dayLabel(e.incurredOn, e.incurredOn.slice(0, 4) !== v.today.slice(0, 4))}</span>
-        <span>{e.category}</span>
+        <span>{CATEGORY_LABEL[e.category] ?? e.category}</span>
         <span className={ch ? "topic-text" : undefined}>{ch ? plain(ch.name) : "Studio-wide"}</span>
         {ep ? <Link href={`/episodes/${ep.id}`}>No. {String(ep.number).padStart(3, "0")} · {ep.title}</Link> : null}
         {e.provider && e.provider !== "local" ? <span>paid to {e.provider}</span> : null}
@@ -98,12 +103,13 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
   const v = await costsView(channel);
   const opts = v.channels.map((c) => ({ id: c.id, name: plain(c.name) }));
   const focus = v.focus, focusRow = focus ? v.scopes.find((x) => x.channel.id === focus.id) : null;
-  const scopeName = focus ? plain(focus.name) : "Studio-wide";
+  // "Studio-wide" means only the entries with no channel; the unfiltered views are "All channels" / "All entries"
+  const scopeName = focus ? plain(focus.name) : "All channels";
   return (
     <div style={focus ? topicStyle(focus) : undefined}>
       <div className="kicker">Production · {focus ? `${scopeName} · ` : ""}{monthLabel(v.month)}</div>
       <h1>Costs</h1>
-      <p className="lede">What making the films costs, against the budgets you set. Prism only records costs: it never pays, charges or moves money. Production budgets are separate from your personal <Link href="/rewards">rewards</Link>.</p>
+      <p className="lede">What making the films costs, against the budgets you set. Prism only records costs: it never pays, charges or moves money. Production budgets are separate from your personal rewards.</p>
       <ScrollTabs label="Whose costs" current={focus?.id ?? "all"}>
         <Link href="/costs" aria-current={!focus ? "page" : undefined}>All channels</Link>
         {v.channels.map((c) => <Link key={c.id} href={`/costs?channel=${c.slug}`} aria-current={focus?.id === c.id ? "page" : undefined}>{plain(c.name)}</Link>)}
@@ -119,13 +125,14 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
         <div className="section-head"><h2>This month</h2><span className="faint num">{monthLabel(v.month)}</span></div>
         <div className="card flush">
           <ul className="budgets">
-            <BudgetRow name="Studio-wide" s={v.studio} />
+            <BudgetRow name="All channels" s={v.studio} />
             {v.scopes.filter((x) => !focus || x.channel.id === focus.id).map((x) => (
-              <BudgetRow key={x.channel.id} name={plain(x.channel.name)} href={`/costs?channel=${x.channel.slug}`} s={x.sum} gate={x.gate} style={topicStyle(x.channel)} />
+              <BudgetRow key={x.channel.id} name={plain(x.channel.name)} href={`/costs?channel=${x.channel.slug}`} s={x.sum} gate={x.gate} style={topicStyle(x.channel)} reason={!focus} />
             ))}
           </ul>
         </div>
-        <p className="faint small-note">Spent counts actual costs only; voided entries and estimates never count. Paid generation needs Settings → Paid generation on and a channel budget with room this month (and room in the studio-wide budget, when one is set). It is {v.paidSwitch ? "on" : "off"} in <Link href="/settings">Settings</Link>{v.stopExternal ? "; external actions are stopped" : ""}.</p>
+        <p className="faint small-note">Spent counts actual costs only; voided entries and estimates never count. A cost in another currency is listed, never converted, and holds back paid generation only for its own channel. Paid generation needs Settings → Paid generation on and a channel budget with room this month (and room in the studio budget, when one is set).</p>
+        <div className="note-row small-note"><p className="faint">Paid generation is {v.paidSwitch ? "on" : "off"} in Settings{v.stopExternal ? "; external actions are stopped" : ""}.</p><Link href="/settings" className="btn ghost small">Settings</Link></div>
       </section>
 
       <section className="section">
@@ -139,7 +146,7 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
                 <tr key={h.month}>
                   <th scope="row">{monthLabel(h.month, true)}</th>
                   <td className="num">{h.budget ? moneyIn(h.budget.capCents, h.currency) : <span className="faint">none</span>}</td>
-                  <td className="num">{moneyIn(h.spentCents, h.currency)}{h.estimateCents ? <span className="cell-note">+ {moneyIn(h.estimateCents, h.currency)} ESTIMATE</span> : null}</td>
+                  <td className="num">{moneyIn(h.spentCents, h.currency)}{h.estimateCents ? <span className="cell-note"><span className="nowrap">+ {moneyIn(h.estimateCents, h.currency)}</span> <span className="tag">ESTIMATE</span></span> : null}</td>
                   <td className="num">{h.budget ? (h.overCents ? <span className="over-text">−{moneyIn(h.overCents, h.currency)}</span> : moneyIn(h.remainingCents, h.currency)) : <span className="faint">—</span>}</td>
                 </tr>
               ))}
@@ -156,7 +163,7 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
             <h3>Set a monthly budget</h3>
             <label className="field">For
               <select name="scope" defaultValue={focus?.id ?? "studio"}>
-                <option value="studio">Studio-wide ceiling</option>
+                <option value="studio">Studio budget (all channels together)</option>
                 {opts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </label>
@@ -175,7 +182,7 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
       </section>
 
       <section className="section">
-        <div className="section-head"><h2>Entries</h2><span className="faint num">{scopeName}{v.entries.length ? ` · ${v.entries.length}` : ""}</span></div>
+        <div className="section-head"><h2>Entries</h2><span className="faint num">{focus ? scopeName : "All entries"}{v.entries.length ? ` · ${v.entries.length}` : ""}</span></div>
         {v.entries.length ? (
           <div className="card flush"><ul className="costs">{v.entries.map((e) => <Entry key={e.id} e={e} v={v} />)}</ul></div>
         ) : <div className="card"><p className="muted" style={{ margin: 0 }}>No costs recorded{focus ? ` for ${scopeName}` : ""} yet. Rendering with the local cinema kit is free; record voices, music or services you pay for.</p></div>}

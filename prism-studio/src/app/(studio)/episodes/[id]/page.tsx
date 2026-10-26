@@ -80,7 +80,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
 
       {numbers.length ? (
         <section className="section" id="numbers">
-          <div className="section-head"><h2 style={{ margin: 0 }}>Numbers</h2><Link href="/analytics" className="num">All analytics</Link></div>
+          <div className="section-head"><h2 style={{ margin: 0 }}>Numbers</h2><Link href="/analytics" className="btn ghost small">All analytics</Link></div>
           <div className="grid2">
             {numbers.map((r) => (
               <article key={r.p.id} className="card flat stack-sm">

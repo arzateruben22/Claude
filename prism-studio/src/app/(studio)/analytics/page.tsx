@@ -25,7 +25,7 @@ export default async function Analytics() {
           <span className="faint">Demo, simulated and estimated numbers are never in these totals.</span>
         </p>
       ) : null}
-      {!rows.length ? <div className="card"><p className="muted" style={{ margin: 0 }}>No posts yet. Once you mark an upload done on the <Link href="/upload">Upload Desk</Link>, it shows up here.</p></div> : null}
+      {!rows.length ? <div className="card note-row"><p className="muted">No posts yet. Once you mark an upload done on the Upload Desk, it shows up here.</p><Link href="/upload" className="btn ghost small">Upload Desk</Link></div> : null}
       <div className="stack">
         {rows.map((r) => (
           <article key={r.p.id} className="card topic stack-sm" style={topicStyle(r.channel)}>

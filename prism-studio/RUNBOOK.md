@@ -61,10 +61,13 @@ On the server: `deploy/sync-media.sh you@server:/srv/prism/prism-studio/films-mi
   stopped (upload due).
 
 ## Costs
-- **Costs** (More → Costs): set a monthly production budget per channel (and, if you like, a studio-wide ceiling). It
-  carries on each month until you change it. Record what you pay for (voices, music, services); tick **estimate** for
-  quotes. Estimates and voided entries never count as spent. Prism only records costs; it never pays anything.
-- Paid generation stays off unless Settings → **Paid generation** is on and that channel's budget has room this month.
+- **Costs** (More → Costs): set a monthly production budget per channel (and, if you like, a studio budget: a ceiling
+  for all channels together). It carries on each month until you change it. Record what you pay for (voices, music,
+  services); tick **estimate** for quotes. Estimates and voided entries never count as spent. Prism only records
+  costs; it never pays anything.
+- Paid generation stays off unless Settings → **Paid generation** is on and that channel's budget has room this month
+  (and the studio budget, when set). A cost in another currency is never converted: it holds back only the channel it
+  was recorded for, and the reason under the chip names it. "Studio-wide" entries are the ones with no channel.
 
 ## Demo data
 `npm run db:seed -- --demo` adds a labelled demo series. It stays hidden until Settings → **Show demo data**; shown or
@@ -86,8 +89,15 @@ not, it never counts toward progress, rewards, XP, achievements or analytics tot
 - Logs: `docker compose logs -f app worker`. Health: `https://<domain>/api/health` prints `{"ok":true}`.
 - Never `docker compose down -v`: it deletes the database volume.
 
+## Production build on this machine
+`nice -n 10 npx next build && npm start` serves the build on port 3100 (`npm start -- -p 3107 -H 127.0.0.1` for another
+port or interface). `npm start` runs `.next/standalone/server.js`, the same server as the Docker image, after copying
+`.next/static` and `public` next to it; it reads `.env.local` and makes `MEDIA_ROOT` and `FILMS_REPO_ROOT` absolute
+(the server runs inside `.next/standalone`). Stop it with Ctrl-C. `next start` is not used: it doesn't support the
+standalone output.
+
 ## Preview gallery
-`npm run preview` builds if needed, starts the production server on a free port against the dev database, signs in
+`npm run preview` builds if needed, starts the production server (`scripts/start.mjs`) on a free port against the dev database, signs in
 with `data/DEV-PASSWORD.txt`, retakes the screenshots in `docs/preview-gallery/`, rewrites the figures and date in its
 `index.html`, and stops the server. It needs Playwright with Chromium (`npm install -g playwright`). The captions are
 in `scripts/preview.ts`; the "Where it stands" section is written by hand.
