@@ -176,16 +176,16 @@
    "t1": 58.8
   },
   {
-   "t": 51.53333333333333,
-   "kind": "badge",
-   "tag": "ill-sickle",
-   "text": "illustration: a sickle cell"
-  },
-  {
    "t": 52.63333333333333,
    "kind": "impact",
    "tag": "pop",
    "gain": -4.0
+  },
+  {
+   "t": 53.8,
+   "kind": "badge",
+   "tag": "ill-sickle",
+   "text": "illustration: a sickle cell"
   },
   {
    "t": 54.6,

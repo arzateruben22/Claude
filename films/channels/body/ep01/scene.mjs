@@ -267,14 +267,15 @@ const lateral = (P, s, r, i) => {       // cells spread across a wide vessel, ce
 };
 // ── the takeaway's sickle cell (26 Oct audit): a stylised crescent, the cell right behind the hero, that lodges in the
 // capillary the hero just left; the companions behind it queue against it (an illustration, badged; the cause,
-// hemoglobin S, is not drawn). Pointed tips, 8.6 µm tip to tip, 2.7 µm wide, bent so it wedges across the 5.2 µm lumen
+// hemoglobin S, is not drawn). Pointed tips, 8.6 µm tip to tip, 2.7 µm wide, bent so its tips and back span 4.6 µm of
+// the 5.2 µm lumen: wedged across it
 const SK = { s: sJ - 22, half: 4.3, gap: 7.4, step: 6.8 };
 const sickle = (() => {
-  const g = new THREE.SphereGeometry(1, 64, 32), pa = g.attributes.position, L0 = 4.6, R0 = 7.0;
+  const g = new THREE.SphereGeometry(1, 64, 32), pa = g.attributes.position, L0 = 5.79, R0 = 4.47;
   for (let i = 0; i < pa.count; i++) {
     const ux = pa.getX(i), c = Math.sqrt(Math.max(0, 1 - ux * ux)), f = c > 1e-5 ? Math.pow(c, 0.6) : 0;
     const x = ux * L0, y = pa.getY(i) * f * 1.35, z = pa.getZ(i) * f * 0.95, a = x / R0;
-    pa.setXYZ(i, Math.sin(a) * (R0 + y), Math.cos(a) * (R0 + y) - R0 + 0.73, z);   // bent on a circle; the middle lifted so it straddles the axis
+    pa.setXYZ(i, Math.sin(a) * (R0 + y), Math.cos(a) * (R0 + y) - R0 + 0.95, z);   // bent on a circle; the middle lifted so it straddles the axis
   }
   g.computeVertexNormals();
   const m = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(FILM.look["rbc-deep"] || "#8E2A3F"), emissive: L.lin("#B0243C"), emissiveIntensity: 0.12, roughness: 0.55 }), { fresnel: 0.22, key: "sickle" });
@@ -282,10 +283,16 @@ const sickle = (() => {
   return mesh;
 })();
 const vSx = new THREE.Vector3(), vSy = new THREE.Vector3(), vSz = new THREE.Vector3(), mS = new THREE.Matrix4();
-const placeSickle = (s) => {
+// min(s, q), eased over ~w µm: a cell that reaches its place in the queue slows into it instead of stopping dead
+const qClamp = (s, q, w = 0.8) => { const x = (q - s) / w; return q - w * (x > 30 ? x : Math.log1p(Math.exp(x))); };
+// where the takeaway's k = −1 cell (the sickle cell) is at t: a pure function of t, shared by writeCells and its label
+const sickleS = (t) => qClamp(FH.s(clk.tau(t) + offOut - GAP), SK.s);
+const sickleBasis = (s) => {
   const T = PH.tangent(s); vSx.set(T[0], T[1], T[2]).normalize();
   vSz.set(0, 0, 1).addScaledVector(vSx, -vSx.z).normalize(); vSy.crossVectors(vSz, vSx);   // the crescent's bend faces the lens (+z)
-  mS.makeBasis(vSx, vSy, vSz); sickle.quaternion.setFromRotationMatrix(mS);
+};
+const placeSickle = (s) => {
+  sickleBasis(s); mS.makeBasis(vSx, vSy, vSz); sickle.quaternion.setFromRotationMatrix(mS);
   const p = PH.at(s); sickle.position.set(p[0], p[1], p[2]); sickle.visible = true;
 };
 const q0 = new THREE.Quaternion();
@@ -293,6 +300,7 @@ const CELLSTATE = new Array(NCELL);
 const writeCells = (t, sh) => {
   const tau = clk.tau(t);
   for (let i = 0; i < NCELL; i++) CELLSTATE[i] = null;
+  sickle.visible = false;   // decided afresh on every seek, the meet shot included (render chunks seek out of order)
   if (sh === "meet") {
     for (let i = 0; i < CROWD.n; i++) {
       const p = CROWD.at(i, t), sc = 1;
@@ -304,13 +312,12 @@ const writeCells = (t, sh) => {
   } else {
     const off = sh === "hook" ? offHook : sh === "out" || sh === "tease" ? offOut : offRoad, th0 = tau + off;
     const jam = sh === "out" || sh === "tease";   // the takeaway on: the cell behind the hero is the sickle cell, lodged at SK.s
-    sickle.visible = false;
     for (let j = 0; j < 2 * NCOMP; j++) {
       const k = j < NCOMP ? j + 1 : -(j - NCOMP + 1), tk = th0 + k * GAP;
       let s = FH.s(tk);
       const inside = tk > 0 && tk < FH.T;
-      if (jam && k === -1) { placeSickle(Math.min(s, SK.s)); instance(cells, j, PH.at(0), null, 0); CELLSTATE[j] = null; continue; }
-      if (jam && k < -1) s = Math.min(s, SK.s - SK.gap - SK.step * (-k - 2));   // queued behind it
+      if (jam && k === -1) { placeSickle(sickleS(t)); instance(cells, j, PH.at(0), null, 0); aFold.setXY(j, 0, 1); CELLSTATE[j] = null; continue; }
+      if (jam && k < -1) s = qClamp(s, SK.s - SK.gap - SK.step * (-k - 2));   // queued behind it
       const sc = inside ? wrapScale(s, PH.length, 6) : 0, r = hR(s), [kf, th] = hFold(s);
       const p = lateral(PH, s, r, j + 1000);
       instance(cells, j, p, cellQuat(PH.tangent(s), r, j, tau, q0), sc); aFold.setXY(j, kf, th);
@@ -475,7 +482,7 @@ const ANCH = {
   capwall: () => { const s = feat.cap + 10, r = hR(s), F = PH.frame(s), a = Math.PI * 1.2; return [F.p[0] + (F.n[0] * Math.cos(a) + F.b[0] * Math.sin(a)) * r, F.p[1] + (F.n[1] * Math.cos(a) + F.b[1] * Math.sin(a)) * r, F.p[2] + (F.n[2] * Math.cos(a) + F.b[2] * Math.sin(a)) * r]; },
   o2: (t) => O2.at(o2Hero, t),
   ghost: () => { const r = vD.set(1, 0, 0).applyQuaternion(camera.quaternion); return [hero.p[0] + r.x * RC, hero.p[1] + r.y * RC, hero.p[2] + r.z * RC]; },
-  sickle: () => { const p = PH.at(SK.s); return [p[0] + vSy.x * 1.9, p[1] + vSy.y * 1.9, p[2] + vSy.z * 1.9 + 0.6]; },   // its convex edge
+  sickle: (t) => { const s = sickleS(t), p = PH.at(s); sickleBasis(s); return [p[0] + vSy.x * 2.1, p[1] + vSy.y * 2.1, p[2] + vSy.z * 2.1 + 0.6]; },   // its convex edge, from t alone
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
 hud.badge("warp", { from: clk, slot: "tl" });
