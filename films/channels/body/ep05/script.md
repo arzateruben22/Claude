@@ -14,7 +14,7 @@ all that air go?") and sets up episode 6 ("The exit").
   Into these." plants the bag the takeaway corrects); the half-billion moves to the normal beat; "up to
   about twenty-three" (Weibel's idealised model); "airy flesh" (Galen's lung was foam-like, not solid) and
   Malpighi's frog lung; "at its thinnest" for the barrier; "at least seventy square metres" and "at least a
-  third" (morphometry gives about 130 m²); 6 L/min for the tally; stakes in the why (a thickened wall);
+  third" (morphometry gives about 130 m²); 5.5 L/min for the tally (it reads 6.0 L on "six"); stakes in the why (a thickened wall);
   court lines in the whoa's shot. The channel keeps episode 1's beat order (takeaway, then the segment).
 - **Spine readout:** air sacs → airway splits → sac size → wall thickness → floor area → the tally.
 
@@ -53,7 +53,7 @@ vo: Next: a cell that leaves your blood. {-} It squeezes *through* a wall. {c14}
 end card: "Next: The exit" · "Meanwhile, Inside · No. 06"
 
 ## Notes
-- The tally counts litres at 6 a minute (a common resting figure; 5–8 L/min) from frame 0; the line
-  lands near 62 s, about 6.2 L: "about six".
+- The tally counts litres at 5.5 a minute (inside the 5–8 L/min resting range) from frame 0; "six" is
+  said at 65.3 s, when it reads 6.0 L, and it leaves at about 6.2 L: "about six".
 - Listen at T0: alveoli is not said; Malpighi (mal-PEE-ghee, a hard G), micrometre, sixteen sixty-one.
 - TODO: the handle, a physiologist's sign-off, and the AI-voice label in the post.

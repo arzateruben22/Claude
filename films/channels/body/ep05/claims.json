@@ -8,7 +8,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Bible S18; excerpt: mean alveolar number 480 million (range 274–790 million; CV 37%). BioNumbers notes 480 million is for the pair of lungs. 'About half a billion' rounds 480 million (computed); the readout shows 480,000,000 with 'about'. Alveoli also line the respiratory bronchioles and ducts; 'at the tips' is the grape-cluster simplification."
+  "note": "Bible S18; excerpt: mean alveolar number 480 million (range 274–790 million; CV 37%). BioNumbers notes 480 million is for the pair of lungs. 'About half a billion' rounds 480 million (computed); the readout shows '480 million' with 'about'. Alveoli also line the respiratory bronchioles and ducts; 'at the tips' is the grape-cluster simplification."
  },
  {
   "id": "c2",
@@ -162,7 +162,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. Review fix: the tally runs at 6 L/min, a common resting figure; the line lands near 62 s, about 6.2 L (computed): 'about six'."
+  "note": "Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. The tally runs at 5.5 L/min (inside 5–8), so it reads 6.0 L as 'six' is said at 65.3 s (5.5 / 60 × 65.3 = 5.99, computed) and about 6.2 L when it leaves: 'about six'."
  },
  {
   "id": "c14",

@@ -80,6 +80,12 @@
   },
   {
    "t": 6.933333333333334,
+   "kind": "badge",
+   "tag": "few",
+   "text": "simplified: 7 of ~23 forks drawn"
+  },
+  {
+   "t": 6.933333333333334,
    "kind": "counter.show",
    "tag": "forks"
   },
@@ -94,7 +100,7 @@
    "tag": "sacs"
   },
   {
-   "t": 12.8,
+   "t": 11.9,
    "kind": "label",
    "tag": "sac"
   },
@@ -138,7 +144,7 @@
    "t1": 44.0
   },
   {
-   "t": 29.6,
+   "t": 28.233333333333334,
    "kind": "label",
    "tag": "cap"
   },
@@ -146,7 +152,12 @@
    "t": 30.516666,
    "kind": "badge",
    "tag": "scale",
-   "text": "drawn to scale"
+   "text": "wall and cell to scale · O₂ enlarged"
+  },
+  {
+   "t": 31.6,
+   "kind": "label",
+   "tag": "wall"
   },
   {
    "t": 32.266666666666666,
@@ -162,6 +173,12 @@
    "t": 35.833333333333336,
    "kind": "label",
    "tag": "rbc"
+  },
+  {
+   "t": 36.166666666666664,
+   "kind": "badge",
+   "tag": "slow",
+   "text": "slowed"
   },
   {
    "t": 36.666666666666664,
@@ -230,6 +247,12 @@
    "kind": "swell",
    "tag": "fold",
    "t1": 58.03333333333333
+  },
+  {
+   "t": 57.83333333333333,
+   "kind": "badge",
+   "tag": "ill3",
+   "text": "illustration"
   },
   {
    "t": 60.8,
@@ -315,6 +338,12 @@
    "t": 68.66666666666667,
    "kind": "label",
    "tag": "wbc"
+  },
+  {
+   "t": 70.1,
+   "kind": "badge",
+   "tag": "fast",
+   "text": "sped up"
   },
   {
    "t": 70.3,

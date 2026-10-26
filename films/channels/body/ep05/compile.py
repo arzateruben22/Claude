@@ -44,52 +44,61 @@ def cut(t):
     return round(fr(t) - HALF, 6)
 
 
-CUT = {"wall": cut(A("vo04:At", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
-SHOTS = [{"at": 0.0, "name": "lung"}] + [{"at": t, "name": n} for n, t in CUT.items()]
+# the hook holds on the cluster through "Into these."; the iris then cuts (on the section's sound) to the windpipe
+CUT = {"lung": cut(B["normal"]["t0"]), "wall": cut(A("vo04:At", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
+SHOTS = [{"at": 0.0, "name": "hook"}] + [{"at": t, "name": n} for n, t in CUT.items()]
 IRIS = [{"t": t, "cx": 0.5, "cy": 0.42} for t in CUT.values()]
 
 FLESH = [A("vo03:airy", -0.2), A("vo03:bubbles", -0.15), A("vo03:bubbles", 0.45)]    # the old idea drawn over the cluster; dissolves on "bubbles"
 WALL = {"slip": [A("vo04:Oxygen", -0.1), A("vo04:needed", 0.3)], "thick": [A("vo04:Thicken", -0.05), A("vo04:wall#2", 0.3)], "slow": A("vo04:harder")}
 ROOM = {"unfold": [A("vo05:Unfold"), A("vo05:metres", 0.2)], "court": A("vo05:tennis", -0.1), "chest": A("vo05:chest"),
-        "fold": [A("vo06:So", 0.0), A("vo06:bag", 0.3)], "breath0": B["meanwhile"]["t0"] - 3.2}
+        "fold": [A("vo06:So", 0.0), A("vo06:bag", 0.3)], "sponge": A("vo06:sponge", -0.1), "breath0": B["meanwhile"]["t0"] - 3.2}
 EXIT = {"t0": B["tease"]["t0"], "push": [A("vo08:squeezes", -0.3), A("vo08:wall", 0.4)]}
 
 # camera keys; the lung's are offsets from the hero cluster at the origin (the tree's root is far above it)
 CAM = {
-    "lung": [
-        {"t": 0.0, "pos": [4.0, 3.0, 15.0], "look": [0.0, 0.2, 0.0], "fov": 34},                       # the cluster, the hero sac open
+    "hook": [
+        {"t": 0.0, "pos": [4.0, 3.0, 15.0], "look": [0.0, 0.2, 0.0], "fov": 34},                       # the cluster
         {"t": A("vo01:these"), "pos": [3.2, 2.4, 12.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["normal"]["t0"] + 0.1, "pos": [60.0, 330.0, 330.0], "look": [0.0, 170.0, 0.0], "fov": 34, "ease": "p3"},   # the whole tree from the windpipe
+        {"t": CUT["lung"], "pos": [3.0, 2.3, 12.0], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},  # held through "Into these."
+    ],
+    "lung": [
+        {"t": CUT["lung"], "pos": [60.0, 330.0, 330.0], "look": [0.0, 170.0, 0.0], "fov": 34},                             # the whole tree from the windpipe
         {"t": A("vo02:times"), "pos": [40.0, 140.0, 170.0], "look": [0.0, 60.0, 0.0], "fov": 34, "ease": "p2"},            # down the forks
-        {"t": A("vo02:sacs"), "pos": [8.0, 14.0, 34.0], "look": [0.0, 2.0, 0.0], "fov": 34, "ease": "p2"},                 # the tips: clusters
+        {"t": A("vo02:sacs"), "pos": [8.0, 14.0, 34.0], "look": [0.0, -0.3, 0.0], "fov": 34, "ease": "p2"},                # the tips: clusters, above the caption
         {"t": A("vo02:millimetre"), "pos": [4.2, 3.0, 15.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "p2"},
         {"t": B["change"]["t0"], "pos": [6.0, 4.0, 22.0], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": FLESH[1], "pos": [5.0, 3.4, 18.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo03:sixteen"), "pos": [5.6, 3.8, 20.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},            # under the microscope: a slow push
+        {"t": FLESH[1], "pos": [3.8, 2.7, 14.0], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["why"]["t0"] + 0.2, "pos": [2.6, 1.8, 9.0], "look": "HERO", "fov": 34, "ease": "p2"},           # the open sac, its capillaries
         {"t": CUT["wall"], "pos": [2.2, 1.5, 7.8], "look": "HERO", "fov": 34, "ease": "sine"},
     ],
+    # the camera sits between the wall's faces (no side face adds to its width: the wall reads at its true 0.5 µm),
+    # the cell and the crossing band above the caption plate
     "wall": [
-        {"t": CUT["wall"], "pos": [2.6, 2.0, 30.0], "look": [2.0, 0.0, 0.0], "fov": 34},
-        {"t": WALL["slip"][0], "pos": [2.0, 1.5, 27.0], "look": [2.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": WALL["thick"][0], "pos": [2.2, 1.2, 26.0], "look": [2.4, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["room"], "pos": [2.0, 1.0, 25.0], "look": [2.4, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["wall"], "pos": [0.4, 1.0, 30.0], "look": [2.2, -1.1, 0.0], "fov": 34},
+        {"t": WALL["slip"][0], "pos": [0.4, 0.6, 27.0], "look": [2.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": WALL["thick"][0], "pos": [0.4, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["room"], "pos": [0.4, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
     ],
     "room": [
-        {"t": CUT["room"], "pos": [3.0, 2.2, 5.0], "look": [0.0, 1.2, 0.0], "fov": 34},                  # the person, close
+        {"t": CUT["room"], "pos": [3.0, 2.35, 5.0], "look": [0.0, 1.35, 0.0], "fov": 34},                # the person, close (the head below the readout)
         {"t": A("vo05:metres", -0.4), "pos": [7.0, 9.0, 16.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2"},   # the floor spreads
-        {"t": A("vo05:tennis", 0.2), "pos": [9.0, 22.0, 26.0], "look": [0.0, 0.0, -1.0], "fov": 34, "ease": "p2"},  # the court's lines around it
-        {"t": B["takeaway"]["t0"], "pos": [8.0, 20.0, 24.0], "look": [0.0, 0.0, -1.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo06:They're"), "pos": [3.4, 2.6, 6.0], "look": [0.0, 1.25, 0.0], "fov": 34, "ease": "p2"},         # back to the person: it's in there
-        {"t": CUT["exit"], "pos": [3.0, 2.2, 5.4], "look": [0.0, 1.25, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo05:tennis", 0.2), "pos": [6.0, 46.0, 34.0], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "p2"},   # the whole court around it
+        {"t": B["takeaway"]["t0"], "pos": [5.0, 44.0, 32.0], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "sine"},
+        {"t": A("vo06:They're"), "pos": [3.4, 2.4, 6.6], "look": [0.0, 1.45, 0.0], "fov": 34, "ease": "p2"},         # back to the person: it's in there
+        {"t": CUT["exit"], "pos": [3.4, 2.4, 6.6], "look": [0.0, 1.45, 0.0], "fov": 34, "ease": "sine"},
     ],
+    # the squeeze above the caption plate: the cell high, the seam at about half height
     "exit": [
-        {"t": CUT["exit"], "pos": [0.0, 6.0, 40.0], "look": [0.0, 0.0, 0.0], "fov": 34},
-        {"t": CUT["loop"], "pos": [0.0, 5.0, 33.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["exit"], "pos": [0.0, -2.0, 64.0], "look": [0.0, -5.6, 0.0], "fov": 34},
+        {"t": CUT["loop"], "pos": [0.0, -2.5, 58.0], "look": [0.0, -5.8, 0.0], "fov": 34, "ease": "sine"},
     ],
 }
-CAM["loop"] = [dict(CAM["lung"][0], t=CUT["loop"])]
+CAM["loop"] = [dict(CAM["hook"][0], t=CUT["loop"])]
 FOC = {
-    "lung": [{"t": 0.0, "at": "sac", "f": 0.55}, {"t": B["normal"]["t0"], "at": "tree", "f": 0.15}, {"t": A("vo02:sacs", -0.5), "at": "sac", "f": 0.45}],
+    "hook": [{"t": 0.0, "at": "sac", "f": 0.55}],
+    "lung": [{"t": CUT["lung"], "at": "tree", "f": 0.15}, {"t": A("vo02:sacs", -0.5), "at": "sac", "f": 0.45}],
     "wall": [{"t": CUT["wall"], "at": "wall", "f": 0.4}],
     "room": [{"t": CUT["room"], "at": "chest", "f": 0.4}, {"t": A("vo05:metres", -0.6), "at": "floor", "f": 0.15}, {"t": A("vo06:They're", -0.3), "at": "chest", "f": 0.4}],
     "exit": [{"t": CUT["exit"], "at": "wbc", "f": 0.45}],
@@ -97,31 +106,37 @@ FOC = {
 }
 
 LABELS = [
-    {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo02:sacs"), "t1": A("vo02:millimetre", 0.6), "shot": "lung", "side": 1},
-    {"id": "flesh", "text": "the old idea: airy flesh", "color": "text", "mark": "dashed", "at": "flesh", "t0": A("vo03:flesh", -0.1), "t1": FLESH[1], "shot": "lung", "side": 1},
-    {"id": "cap", "text": "capillaries", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:capillaries"), "t1": CUT["wall"] - 0.25, "shot": "lung", "side": -1},
-    {"id": "air", "text": "air", "color": "o2", "mark": "ring", "glyph": "O₂", "at": "air", "t0": A("vo04:air", 0.0), "t1": CUT["room"] - 0.3, "shot": "wall", "side": -1},
+    {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo02:half"), "t1": A("vo02:Each", -0.1), "shot": "lung", "side": 1},
+    {"id": "flesh", "text": "the old idea: airy flesh", "color": "text", "mark": "dashed", "at": "flesh", "t0": A("vo03:flesh", -0.1), "t1": A("vo03:sixteen", -0.2), "shot": "lung", "side": 1},
+    {"id": "cap", "text": "capillaries", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:Each", -0.1), "t1": CUT["wall"] - 0.25, "shot": "lung", "side": -1},
+    {"id": "air", "text": "air", "color": "o2", "mark": "ring", "glyph": "O₂", "at": "air", "t0": A("vo04:air", 0.0), "t1": WALL["thick"][0] - 0.1, "shot": "wall", "side": -1},
+    {"id": "wall", "text": "the wall", "color": "text", "mark": "bar", "at": "wallf", "t0": A("vo04:wall"), "t1": A("vo04:red", -0.3), "shot": "wall", "side": -1},
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "rbc", "t0": A("vo04:red", 0.0), "t1": CUT["room"] - 0.3, "shot": "wall", "side": 1},
     {"id": "person", "text": "you, to scale", "color": "text", "mark": "dot", "at": "head", "t0": A("vo05:metres", 0.1), "t1": B["takeaway"]["t0"], "shot": "room", "side": 1},
     {"id": "court", "text": "a singles tennis court", "color": "lining", "mark": "bar", "at": "court", "t0": A("vo05:tennis"), "t1": B["takeaway"]["t0"], "shot": "room", "side": -1},
-    {"id": "wbc", "text": "white blood cell", "color": "immune", "mark": "dashed", "at": "wbc", "t0": A("vo08:cell", 0.0), "t1": EC, "shot": "exit", "side": 1},
+    {"id": "wbc", "text": "white blood cell", "color": "immune", "mark": "dashed", "at": "wbc", "t0": A("vo08:cell", 0.0), "t1": EC, "shot": "exit", "side": 1, "v": "above"},
 ]
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": A("vo02:Below", -0.3), "text": "?", "unit": "", "label": "air sacs in your lungs"},
+    {"id": "q", "t0": 0.0, "t1": A("vo02:Below", -0.3), "text": "?", "unit": "", "label": "air sacs in your lungs", "at": [0.5, 0.36]},   # below the title's line
     {"id": "forks", "t0": A("vo02:fork", -0.2), "t1": A("vo02:At", -0.2), "keys": [[A("vo02:fork"), 1], [A("vo02:twenty-three", 0.3), 23]], "unit": "", "label": "forks, up to about"},   # c2
-    {"id": "sacs", "t0": A("vo02:half", -0.2), "t1": A("vo02:Each", -0.2), "text": "480,000,000", "unit": "", "label": "air sacs, about"},   # c1
+    {"id": "sacs", "t0": A("vo02:half", -0.2), "t1": A("vo02:Each", -0.2), "text": "480", "unit": "million", "label": "air sacs, about"},   # c1 (a mean: 274–790 million)
     {"id": "size", "t0": A("vo02:Each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each, about"},   # c3
-    {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": CUT["wall"] - 0.3, "text": "1661", "unit": "", "label": "Malpighi's microscope, a frog's lung"},   # c5
-    {"id": "wallt", "t0": A("vo04:half", -0.2), "t1": WALL["thick"][0] - 0.2, "text": "0.5", "unit": "µm", "label": "the wall at its thinnest, about"},   # c7
+    {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": A("vo03:bubbles", 0.7), "text": "1661", "unit": "", "label": "Malpighi's microscope"},   # c5
+    {"id": "wallt", "t0": A("vo04:half", -0.2), "t1": A("vo04:red", -0.15), "text": "0.5", "unit": "µm", "label": "the wall at its thinnest, about", "at": [0.5, 0.24]},   # c7
     {"id": "area", "t0": A("vo05:Unfold"), "t1": B["takeaway"]["t0"] - 0.2, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": "unfolded, at least"},   # c9
 ]
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["exit"] - 0.25, "rate": 6.0 / 60.0, "unit": "L", "label": "air in and out while you watched", "fmt": 1}   # c13
+# 5.5 L a minute (c13: 5–8 at rest): the tally reads 6.0 L as "six" is said
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["exit"] - 0.25, "rate": 5.5 / 60.0, "unit": "L", "label": "air in and out while you watched, about", "fmt": 1}   # c13
 BADGES = [
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": CUT["wall"] - 0.3},
+    {"id": "few", "text": "simplified: 7 of ~23 forks drawn", "t0": A("vo02:fork", -0.2), "t1": A("vo02:millimetre", 0.6)},
     {"id": "ill", "text": "illustration: the old idea", "t0": FLESH[0], "t1": FLESH[2]},
-    {"id": "scale", "text": "drawn to scale", "t0": CUT["wall"], "t1": CUT["room"] - 0.3},
-    {"id": "ill2", "text": "illustration · area to scale", "t0": CUT["room"], "t1": CUT["exit"] - 0.3},
-    {"id": "nts2", "text": "not to scale", "t0": CUT["exit"], "t1": EC},
+    {"id": "scale", "text": "wall and cell to scale · O₂ enlarged", "t0": CUT["wall"], "t1": CUT["room"] - 0.3},
+    {"id": "slow", "text": "slowed", "slot": "tl", "t0": WALL["slip"][0] - 0.5, "t1": CUT["room"] - 0.3},
+    {"id": "ill2", "text": "illustration · area to scale", "t0": CUT["room"], "t1": ROOM["fold"][1] + 0.3},
+    {"id": "ill3", "text": "illustration", "t0": ROOM["fold"][1] + 0.3, "t1": CUT["exit"] - 0.3},
+    {"id": "nts2", "text": "not to scale", "t0": CUT["exit"], "t1": DUR},
+    {"id": "fast", "text": "sped up", "slot": "tl", "t0": EXIT["push"][0] - 0.2, "t1": EC},
 ]
 TITLE = {"series": "Meanwhile, Inside · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the exit*", "next": "Meanwhile, Inside · No. 06", "follow": "Follow Meanwhile, Inside",
@@ -152,8 +167,9 @@ for bd in BADGES:
 for sp in SPINE:
     if sp["t0"] > 0:
         ev.append({"t": sp["t0"], "kind": "counter.show", "tag": sp["id"]})
-ev.append({"t": SPINE[1]["keys"][1][0], "kind": "counter.end", "tag": "forks-end"})
-ev.append({"t": SPINE[6]["keys"][1][0], "kind": "counter.end", "tag": "area-end"})
+SP = {sp["id"]: sp for sp in SPINE}
+ev.append({"t": SP["forks"]["keys"][1][0], "kind": "counter.end", "tag": "forks-end"})
+ev.append({"t": SP["area"]["keys"][1][0], "kind": "counter.end", "tag": "area-end"})
 ev.append({"t": TALLY["t0"], "kind": "counter.show", "tag": "tally"})
 for k, t in enumerate(SEG_BEATS):
     ev.append({"t": t, "kind": "beat", "tag": f"beat{k}"})
