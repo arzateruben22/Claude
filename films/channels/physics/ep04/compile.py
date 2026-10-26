@@ -236,7 +236,7 @@ LABELS = [
     {"id": "hk-hammer", "text": "hammer", "color": "ghost", "t0": A("vo01:hammer,"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "hammer"]}, "side": 1, "fixed": True},
     {"id": "hk-feather", "text": "feather", "color": "ghost", "t0": A("vo01:feather?"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "feather"]}, "side": -1, "fixed": True},
     {"id": "nm-land", "text": "0.57 s", "color": "motion", "t0": A("vo02:second."), "t1": T_FEATHER, "anchor": {"obj": ["earth", "hammer"]}, "side": 1, "fixed": True},
-    {"id": "nm-half", "text": "still drifting", "color": "ghost", "t0": A("vo02:down."), "t1": cut("change") - LABEL_OUT, "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
+    {"id": "nm-half", "text": "still drifting", "color": "ghost", "t0": A("vo02:Still"), "t1": cut("change") - LABEL_OUT, "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
     {"id": "ch-together", "text": "together", "color": "motion", "t0": A("vo03:together."), "t1": cut("why") - LABEL_OUT, "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
     {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity", 0.3), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:harder#2", 0.4), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
