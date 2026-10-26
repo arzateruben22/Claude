@@ -9116,8 +9116,8 @@
    "dur": 21,
    "w": 1280,
    "h": 720,
-   "bytes": 1053988,
-   "hash": "237307f99f0575b21285f11a351752c1241d4de1",
+   "bytes": 1052387,
+   "hash": "15f07edd210ec5aefbe634b501480aa82aec821c",
    "samples": [
     [
      0,
@@ -9181,55 +9181,55 @@
     ],
     [
      225,
-     "ea4c8d11528144023961f96bdd6c09d3612c4d81"
+     "48da3d020c15247922f9dc947f457fb88319ce54"
     ],
     [
      240,
-     "bfb9e55af01e0e19497290666a910c593334fe09"
+     "daa2f356040800a3aebc1a77e2236c0c4fafe964"
     ],
     [
      255,
-     "878b61f44a5f1d7ddcbe60bebecc36f5aa98e5f7"
+     "0fa7c485bdec691da91981c71b2207eab9efe0e7"
     ],
     [
      270,
-     "27f3d923fb67e42d94896da3729ee46e601a743a"
+     "74480fae9be079774707258fc848326317ba7e34"
     ],
     [
      285,
-     "9ce674c9619389ee29ff442108c89d89288b4f0f"
+     "59a7b8b47d64a82d7c0f465353b769871bad6593"
     ],
     [
      300,
-     "597b86bec2a89d20cd53c19f5687efb878b7639b"
+     "bca65d515f9af432008a737e4691162db541191e"
     ],
     [
      315,
-     "ad3c329515ad88cb3f6348337605032ee37e143c"
+     "8f3a0bf09cbaf25d4413cea00725c73b54dc391d"
     ],
     [
      330,
-     "e710bbb8e89f690e7d9a078d4a0145efcc01608f"
+     "0844cd769a238029a528df76fa432fefc5baca98"
     ],
     [
      345,
-     "2073e6046e3af9ea5458a7ceec6343eaca0fdfb5"
+     "73931fb8bea648e9a7719961a22e9bdf01c9c79a"
     ],
     [
      360,
-     "03dca0d3fda5002738d9aea5c57299bd9191a814"
+     "fd559ef64efaea28f579b842f32533ac12d4e468"
     ],
     [
      375,
-     "7861ca9c5ed6eb46e24f0022cd8ec253ccf31570"
+     "0c89eade1cd12892b5d9fabffc5f57eafb8ae3ba"
     ],
     [
      390,
-     "52758d953df3c928030276ff55448c7595c03213"
+     "7e555da6a854a894103ee7efd2ce13662d754608"
     ],
     [
      405,
-     "d4c81c722a9fcb11ba2a7d384ad66fd9eb020bd4"
+     "cbd4e8bfb48c7227cfaefd180a2a9dd1873e142a"
     ],
     [
      420,
@@ -9289,8 +9289,8 @@
     ]
    ],
    "warnings": [],
-   "renderSec": 121.7,
-   "renderedAt": "2026-10-22",
+   "renderSec": 133.3,
+   "renderedAt": "2026-10-26",
    "quick": false
   },
   "9x16": {
@@ -9299,8 +9299,8 @@
    "dur": 21,
    "w": 720,
    "h": 1280,
-   "bytes": 1060144,
-   "hash": "9539aff0c34eb4a2dd3c8c02fbb41e7c138741bb",
+   "bytes": 1057343,
+   "hash": "7b433979f1176e3dc26f23cd48ff075643986477",
    "samples": [
     [
      0,
@@ -9364,55 +9364,55 @@
     ],
     [
      225,
-     "a2fafa573357a5a8b4dde23e0e867418e382f236"
+     "5109128862fce4be6a446ebcee7d39fe5bf0c92e"
     ],
     [
      240,
-     "aa335b549a9e4dfeb1bc84f1ecd4abd006153932"
+     "4b8c28c35dab6751adcac535368c5d0c5d2554ff"
     ],
     [
      255,
-     "c7ade05dc169e3dd557c1c7b50ef13aff3cae6d2"
+     "093a722d5555e85e52dc54f2cd24dc9684cec49a"
     ],
     [
      270,
-     "d30159af8fada98adcad7bb1c766de99811cc192"
+     "e2ca9d40a09eb0dda6d511e09b9dc04469b362f9"
     ],
     [
      285,
-     "b5f878479fadea3c7e8fa6d9ee810fbd8f0fcd87"
+     "872f0d88cf61591b1285fd9d148bc8d281f86309"
     ],
     [
      300,
-     "38a9d43d2fd9ef9bbbd5c6fb38ba08203ff2ab3a"
+     "4dbc445bc44e1e7740e94139e992143cdeb9e7ef"
     ],
     [
      315,
-     "e0440cd474fb7298bd08538523e6087ab312803f"
+     "130c393780895c27e5a77fb6a1fe5b46dd686ddd"
     ],
     [
      330,
-     "0351e74909ead0953dca896fc8d27afd906f3d6f"
+     "cb1cb4f40ce30ff61adb5ff533a178f3991c88a2"
     ],
     [
      345,
-     "48a0eea0f0242758e28ab3886340b95345e2096f"
+     "98416ed05833145b7aa4a0c3219f6e8d8639bbaa"
     ],
     [
      360,
-     "0202a9a6cb79070b0adb0d469a571c4effe81f06"
+     "196d869b58e1796dbfcb7d1140fc1568ee4dc9a7"
     ],
     [
      375,
-     "b3520c52371d8db8baa6502b476a057a119d3620"
+     "56bd9b07c58d878f1a595b9975a042c90c3a1bde"
     ],
     [
      390,
-     "95ef903bffb826eb05bb23549a0ff67009cb5abf"
+     "fc0c63e15e928b0373db1b077110259abee34a61"
     ],
     [
      405,
-     "0e982c1558c1e16fc384e99ba46a6ff3fef45074"
+     "14f6962a3cc2b074af6794f2ee97c3c21c17a181"
     ],
     [
      420,
@@ -9472,8 +9472,8 @@
     ]
    ],
    "warnings": [],
-   "renderSec": 105.5,
-   "renderedAt": "2026-10-22",
+   "renderSec": 113,
+   "renderedAt": "2026-10-26",
    "quick": false
   }
  },
