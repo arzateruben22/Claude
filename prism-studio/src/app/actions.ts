@@ -72,7 +72,7 @@ const exportSchema = z.object({
   title: z.string().max(100, "YouTube titles are at most 100 characters"),
   caption: z.string().max(2200, "Captions are at most 2,200 characters"),
   hashtags: z.string().max(400),
-  postingNotes: z.string().max(2000),
+  postingNotes: z.string().max(20000, "Posting notes are at most 20,000 characters"),   // the sources thread can run to several 2,200-character comments
 });
 export async function saveExport(_: Result, fd: FormData) {
   return run(async () => {

@@ -11,7 +11,7 @@ import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
 import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
-import { buildMetadata, type MetaInput } from "../src/domain/metadata";
+import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -111,8 +111,7 @@ export async function importEpisodes(d = db()) {
         const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(file)}`, fileSha256: hash,
           title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath,
           disclosures: { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
-          postingNotes: ["Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.",
-            m.pinnedComment ? `Pinned/first comment:\n${m.pinnedComment}` : "", m.tags.length ? `Tags: ${m.tags.join(", ")}` : "", m.warnings.length ? `Check: ${m.warnings.join("; ")}` : ""].filter(Boolean).join("\n\n") });
+          postingNotes: postingNotesFor(m) });
         if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
       }
       // planned publications for this channel's YouTube and TikTok (Instagram picks from the backlog separately)

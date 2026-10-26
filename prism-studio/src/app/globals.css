@@ -458,7 +458,8 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
   background: var(--glass); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: var(--blur); min-width: 0; }
 .post-cover { grid-area: cover; min-width: 0; }
 .post-head { grid-area: head; display: grid; align-content: start; gap: var(--s2); min-width: 0; }
-.post-fields { grid-area: fields; margin: 0; }
+.post-fields { margin: 0; }
+.post > .post-fields { grid-area: fields; }   /* only inside the post card's grid: elsewhere (the desk card) a named area makes an implicit half-width column */
 .post-actions { grid-area: actions; }
 @media (min-width: 600px) {
   .post { grid-template-columns: 132px minmax(0, 1fr); grid-template-areas: "cover head" "cover fields" "cover actions"; grid-template-rows: auto auto 1fr; gap: var(--s4) var(--s5); padding: var(--s5); }

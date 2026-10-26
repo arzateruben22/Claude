@@ -5,7 +5,7 @@ import type { DB } from "../db/client";
 import { channels, episodes, platformExports, series, sources, versions } from "../db/schema";
 import { audit, DomainError } from "./core";
 import { editExport } from "./episodes";
-import { buildMetadata, type MetaInput, type Topic } from "./metadata";
+import { buildMetadata, postingNotesFor, type MetaInput, type Topic } from "./metadata";
 
 export async function metaInputFromDb(d: DB, episodeId: string): Promise<MetaInput> {
   const [ep] = await d.select().from(episodes).where(eq(episodes.id, episodeId));
@@ -36,9 +36,7 @@ export async function regenerateExports(d: DB, episodeId: string) {
   for (const x of xs) {
     const m = meta[x.platform];
     const r = await editExport(d, x.id, {
-      title: m.title, caption: m.caption, hashtags: m.hashtags,
-      postingNotes: ["Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.",
-        m.pinnedComment ? `Pinned/first comment:\n${m.pinnedComment}` : "", m.tags.length ? `Tags: ${m.tags.join(", ")}` : "", m.warnings.length ? `Check: ${m.warnings.join("; ")}` : ""].filter(Boolean).join("\n\n"),
+      title: m.title, caption: m.caption, hashtags: m.hashtags, postingNotes: postingNotesFor(m),
     });
     revoked += r.revoked;
     warnings.push(...m.warnings.map((w) => `${x.platform}: ${w}`));
