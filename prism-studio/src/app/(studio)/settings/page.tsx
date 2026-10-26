@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { studio } from "@/lib/data";
-import { saveSettings, signOut } from "@/app/actions";
+import { notificationsView, studio } from "@/lib/data";
+import { resetPushKeys, saveSettings, sendTestPush, signOut } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
+import { PushDevices } from "@/components/PushDevices";
 
 export const metadata: Metadata = { title: "Settings" };
 
 export default async function Settings() {
-  const s = await studio();
+  const [s, push] = await Promise.all([studio(), notificationsView()]);
+  const canUse = push.status.canSeal && push.status.keys !== "unreadable";
   return (
     <div>
       <div className="kicker">Studio</div>
@@ -39,6 +41,35 @@ export default async function Settings() {
           <label className="check"><input type="checkbox" name="lowPowerArt" defaultChecked={s.lowPowerArt} /> <span>Still creations (saves battery; reduced-motion is always respected)</span></label>
         </section>
       </ActionForm>
+      <section id="notifications" className="card stack push-card" aria-labelledby="push-h">
+        <div className="stack-sm">
+          <h3 id="push-h">Notifications</h3>
+          <p className="muted" style={{ margin: 0 }}>Prism notifies the devices you turn on here when an upload is due (30 minutes before a manual slot whose post is approved and ready), when a scheduled automatic publish fails or needs you to finish it, and when an Instagram slot passes with nothing planned. Each event notifies once; demo posts never do.</p>
+        </div>
+        {push.status.problem ? <div className={`notice${push.status.keys === "unreadable" ? " bad" : ""}`}>{push.status.problem}</div> : null}
+        {push.status.keys === "unreadable" ? (
+          <ActionForm action={resetPushKeys} className="row" submit="Reset notifications" submitClass="btn danger small" confirm="Make a new signing key and remove every device? Each one then turns notifications on again.">
+            <span className="faint" style={{ fontSize: 13.5 }}>Makes a new key; every device turns notifications on again.</span>
+          </ActionForm>
+        ) : null}
+        <PushDevices devices={push.devices} canUse={canUse} />
+        {push.devices.length && canUse ? (
+          <ActionForm action={sendTestPush} className="push-test" submit="Send a test notification" submitClass="btn ghost small" />
+        ) : null}
+        {push.recent.length ? (
+          <div className="stack-sm">
+            <div className="label">Recent notifications</div>
+            <ul className="push-log">
+              {push.recent.map((e) => (
+                <li key={e.id}>
+                  <span className="push-log-title">{e.title}</span>
+                  <span className="faint num">{e.at} · {e.sent ? `${e.sent} delivered` : "not delivered"}{e.failed ? ` · ${e.failed} failed` : ""}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </section>
       <section className="section">
         <form action={signOut}><button className="btn ghost">Sign out</button></form>
       </section>

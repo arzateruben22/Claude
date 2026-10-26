@@ -622,6 +622,25 @@ a.budget-name:hover { text-decoration: underline; }
 .metric-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .metric-history .num { color: var(--text); }
 
+/* settings: notifications (push) — this device, the device list, the test and the recent log */
+.push-card { margin-top: var(--s6); }
+.push-card h3 { margin: 0; }
+.push-this { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.push-label { flex: 1 1 220px; max-width: 360px; }
+.push-note { margin: 0; font-size: 14px; }
+.devices, .push-log { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.device { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name remove" "meta remove"; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.device-name { grid-area: name; font-weight: 600; overflow-wrap: anywhere; }
+.device-meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; color: var(--text-3); }
+.device-meta .chip { font-size: 13px; }
+.device-remove { grid-area: remove; display: grid; justify-items: end; }
+.device-remove [role="status"] { margin: 0; font-size: 12.5px; text-align: right; }
+.push-test { display: grid; justify-items: start; }
+.push-test [role="status"] { margin: 6px 0 0; font-size: 13.5px; }
+.push-log li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.push-log-title { min-width: 0; overflow-wrap: anywhere; color: var(--text-2); }
+@media (min-width: 720px) { .push-card { margin-top: var(--s7); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .confetti { display: none; }

@@ -11,6 +11,7 @@ import { canUsePaidGeneration, costEntries, costTotals, monthsBack } from "@/dom
 import { channelXp, requirementsFor } from "@/domain/living";
 import { rewardBalances } from "@/domain/rewards";
 import { pullStates } from "@/domain/api-analytics";
+import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
 import { CHANNELS, OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
 import { slotsForDate } from "@/domain/schedule";
@@ -226,6 +227,23 @@ export async function costsView(channelSlug?: string) {
   };
 }
 export type CostsView = Awaited<ReturnType<typeof costsView>>;
+
+/** Settings → Notifications: whether push can work here, each device (no endpoint, no keys) and the latest events,
+ *  with times already in the studio timezone. */
+export async function notificationsView() {
+  const d = db();
+  const [s, status, devices, recent] = await Promise.all([settings(d), pushStatus(d), listDevices(d), recentPushEvents(d, 5)]);
+  const at = (t: Date | null) => (t ? formatLocal(t, s.timezone, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
+  return {
+    status,
+    devices: devices.map((x) => ({
+      id: x.id, label: x.label, service: x.service, hash: x.endpointHash, added: formatLocal(x.createdAt, s.timezone, { month: "short", day: "numeric", year: "numeric" }),
+      lastSuccess: at(x.lastSuccessAt), lastFailure: at(x.lastFailureAt), failures: x.failureCount, lastError: x.lastError,
+    })),
+    recent: recent.map((e) => ({ ...e, at: at(e.createdAt) })),
+  };
+}
+export type NotificationsView = Awaited<ReturnType<typeof notificationsView>>;
 
 export async function onboardingView() {
   const d = db();

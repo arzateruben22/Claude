@@ -29,6 +29,13 @@
       "when": 1793010597905,
       "tag": "0003_api_analytics",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793011557834,
+      "tag": "0004_push_notifications",
+      "breakpoints": true
     }
   ]
 }

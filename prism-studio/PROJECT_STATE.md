@@ -31,10 +31,17 @@ _Updated 2026-10-26._
 - Fixed on Accounts: the connection's Disconnect and TikTok forms were nested inside the account's Save form (invalid HTML: a hydration error, and without JS the Save fields fell outside their form).
 - Not yet: watch time from YouTube (needs the YouTube Analytics API scope, so a reconnect) and Instagram reel watch-time insights; the pull records them as soon as a connector returns them.
 
+## Stage E (push notifications: done)
+- Settings → Notifications: **Notify this device** (service worker + PushManager with the studio's VAPID public key, the only key that reaches a browser), the device list with **Remove** (and "this device" found by an endpoint hash, never the endpoint), **Send a test notification**, and the last five notifications. **Turn off on this device** unsubscribes and forgets it. iPhone/iPad: from the Home Screen app only (the screen says so).
+- Rules in `src/domain/push.ts` (migration `0004_push_notifications`: `push_keys`, `push_subscriptions`, `push_events`): VAPID keys made on first need, private key sealed (INTEGRATIONS_KEY, else HKDF from SESSION_SECRET; refused with a clear message when neither is set; an unreadable key offers a reset); endpoints only on known push services over https; one row per browser; 404/410 deletes the device; the worker's minute tick sends (a) upload due 30 min before a manual slot with an approved, ready post, (b) a scheduled automatic publish that dead-lettered or ended handed off (inbox/private), (c) an Instagram slot passed with nothing planned; each at most once (dedupe key inserted before sending). Never for demo or simulated posts. Events older than 90 days are pruned.
+- `public/sw.js`: `push` shows the notification, `notificationclick` opens its screen (same origin only: the desk task, Calendar or Settings), `pushsubscriptionchange` re-saves a renewed subscription through the owner-only `POST /api/push/subscription`.
+- `src/lib/push-sender.ts` is the only code that reaches a push service (web-push); the domain takes the sender as a parameter. 24 tests with a fake sender (no network), including one that checks web-push accepts the options and the VAPID JWT verifies against the public key.
+- Verified in Chromium at 390 px and 1440 px (no overflow, no page errors; the no-JS view lists devices with working Remove). A real subscription can't complete in this sandbox (it can't reach Google's push registration), so the flow was checked up to the browser's subscribe call; the subscribe now gives up after 30 s with a clear message instead of "Working…" forever.
+
 ## Next
 - Connect the first real account (needs the owner's Google Cloud / TikTok / Meta app credentials in `.env.local`); verify a real upload end to end on a private test video.
 - When a paid generator exists: its job calls `canUsePaidGeneration` first and records its estimate, then the actual cost, in `cost_ledger` (with `job_id`); concurrent paid jobs will need a reservation under a lock, like rewards.
-- **Stage D/E:** hosted deployment (managed Postgres, object storage for media), push notifications for due uploads.
+- **Stage D:** hosted deployment (managed Postgres, object storage for media). Then turn on notifications on the owner's phone from the Home Screen app and send a test; set `PUSH_SUBJECT` (mailto: or the https site) for Safari.
 
 ## Open owner decisions
 - Final names for Skincare and What If? (both are working names); the Skincare narrator voice.

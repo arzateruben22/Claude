@@ -17,6 +17,15 @@
   the time they were pulled). For the rest, log views from each app (or paste a CSV). Milestones unlock from real numbers only.
 - **Queue:** look for dead jobs, then retry or read the error.
 
+## Notifications
+- On each phone or computer: Settings → **Notify this device**, allow notifications, then **Send a test notification**.
+  On iPhone/iPad, add Prism Studio to the Home Screen first and turn them on from there.
+- You get: **Upload due** 30 minutes before a manual slot whose post is approved; **Publish failed** or **Needs you**
+  when a scheduled automatic publish gave up or ended in the TikTok inbox / as private; **Instagram slot passed** when
+  a slot went by with nothing planned. Tapping one opens that task, the Calendar or Settings. Each event notifies once.
+- The worker sends them (`npm run worker`); nothing is sent while publishing is paused (upload due, Instagram) or
+  external actions are stopped (upload due).
+
 ## Costs
 - **Costs** (More → Costs): set a monthly production budget per channel (and, if you like, a studio-wide ceiling). It
   carries on each month until you change it. Record what you pay for (voices, music, services); tick **estimate** for
@@ -41,6 +50,8 @@ Review.
 | Jobs stuck "running" | The worker died: start `npm run worker`. Expired leases are recovered within 15 minutes |
 | Marked uploaded by mistake | Use **Undo** on the task (the audit log keeps the history) |
 | Everything must stop | Settings → **Pause publishing** and/or **Stop external actions** (also pauses analytics pulls) |
+| No notifications arrive | Settings → Notifications: is the device listed, and does the test arrive? A device with failed sends shows why; one the browser dropped disappears on its own. Is the worker running? |
+| "The notification signing key can't be opened" | `INTEGRATIONS_KEY` or `SESSION_SECRET` changed. Put the old one back, or press **Reset notifications** and turn them on again on each device |
 | A post says "connection needs reconnecting" | The platform refused the token. Accounts → **Reconnect**; pulls resume on their own |
 
 ## Backups

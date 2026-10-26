@@ -1,5 +1,6 @@
 // Prism Studio worker: claims jobs from the Postgres queue (fair per channel, leased, heartbeated), runs them,
-// and does the periodic housekeeping: recover expired leases, move missed uploads, queue due analytics pulls.
+// and does the periodic housekeeping: recover expired leases, move missed uploads, queue due analytics pulls, and
+// notify the owner's devices (upload due, a scheduled publish that needs them, an empty Instagram slot).
 // Run alongside the web app: `npm run worker`. Stops cleanly on SIGINT/SIGTERM (the current job finishes).
 import os from "node:os";
 import { db, pool } from "../src/db/client";
@@ -7,6 +8,7 @@ import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from 
 import { rescheduleMissed } from "../src/domain/schedule";
 import { enqueueDuePublishes } from "../src/domain/publish";
 import { enqueueDuePulls } from "../src/domain/api-analytics";
+import { notifyDue, prunePushEvents } from "../src/domain/push";
 import { audit, DomainError } from "../src/domain/core";
 import { eq } from "drizzle-orm";
 import * as S from "../src/db/schema";
@@ -35,13 +37,26 @@ async function runOne(): Promise<boolean> {
   return true;
 }
 
-let lastHousekeeping = 0, lastSchedule = 0;
+let lastHousekeeping = 0, lastSchedule = 0, lastPushSkip = "";
+/** Push notifications for whatever became due this minute. A push problem never stops the worker; only counts are logged. */
+async function notify() {
+  try {
+    const r = await notifyDue(db());
+    if (r.events) console.log(`[worker] notified ${r.events} event${r.events > 1 ? "s" : ""}: ${r.sent} delivered, ${r.failed} failed, ${r.removed} device${r.removed === 1 ? "" : "s"} gone`);
+    const skip = r.skipped === "no devices" ? "" : r.skipped;
+    if (skip !== lastPushSkip) { if (skip) console.warn(`[worker] notifications paused: ${skip}`); lastPushSkip = skip; }
+  } catch (e) {
+    console.error("[worker] notifications:", (e as Error).message);
+  }
+}
+
 async function housekeeping() {
-  // every minute: queue publications that are due on connected, automatic destinations
+  // every minute: queue publications that are due on connected, automatic destinations, then notify
   if (Date.now() - lastSchedule >= 60_000) {
     lastSchedule = Date.now();
     const queued = await enqueueDuePublishes(db());
     if (queued) console.log(`[worker] queued ${queued} due publication${queued > 1 ? "s" : ""}`);
+    await notify();
   }
   if (Date.now() - lastHousekeeping < 15 * 60_000) return;
   lastHousekeeping = Date.now();
@@ -50,6 +65,7 @@ async function housekeeping() {
   // API analytics: daily for each verified post's first 30 days, then weekly (one pull per post per UTC day at most)
   const pulls = await enqueueDuePulls(db());
   if (pulls) console.log(`[worker] queued ${pulls} analytics pull${pulls > 1 ? "s" : ""}`);
+  await prunePushEvents(db());
   if (recovered || moved || pulls) await audit(db(), "worker", "housekeeping", "jobs", "", { recovered, moved, pulls });
 }
 

@@ -4,7 +4,7 @@ const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // the worker and scripts run outside Next; the app reads media through /api/media (owner-only)
-  serverExternalPackages: ["pg"],
+  serverExternalPackages: ["pg", "web-push"],
   async headers() {
     return [
       // the wallpaper files keep their names when re-rendered, so a week's cache (then revalidated in the background), not "immutable"

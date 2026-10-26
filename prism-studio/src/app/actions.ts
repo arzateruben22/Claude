@@ -617,3 +617,63 @@ export async function voidCostEntry(_: Result, fd: FormData) {
     return ok("Void: it stays on the record and no longer counts.");
   });
 }
+
+// ── push notifications (the owner's devices) ───────────────────────────────
+/** The VAPID public key a browser subscribes with (made on first need). The only key that ever leaves the server. */
+export async function pushPublicKey(): Promise<Result> {
+  return run(async () => {
+    const { vapidPublicKey } = await import("@/domain/push");
+    return ok("", { publicKey: await vapidPublicKey(db()) });
+  });
+}
+const pushDevice = z.object({
+  endpoint: z.string().max(2048),
+  keys: z.object({ p256dh: z.string().max(200), auth: z.string().max(100) }),
+  label: z.string().max(120).default(""),
+});
+/** "Notify this device": save the subscription this browser just made. */
+export async function savePushDevice(input: unknown): Promise<Result> {
+  return run(async () => {
+    const v = pushDevice.parse(input);
+    const { saveSubscription } = await import("@/domain/push");
+    const r = await saveSubscription(db(), { endpoint: v.endpoint, keys: v.keys }, v.label);
+    revalidatePath("/settings");
+    return ok(`On: ${r.label} gets notifications. Send a test to check.`);
+  });
+}
+/** "Turn off on this device": the browser unsubscribed; forget its endpoint. */
+export async function forgetPushEndpoint(endpoint: string): Promise<Result> {
+  return run(async () => {
+    const { removeEndpoint } = await import("@/domain/push");
+    await removeEndpoint(db(), z.string().max(2048).parse(endpoint));
+    revalidatePath("/settings");
+    return ok("Off on this device.");
+  });
+}
+export async function removePushDevice(_: Result, fd: FormData) {
+  return run(async () => {
+    const { removeSubscription } = await import("@/domain/push");
+    const gone = await removeSubscription(db(), z.string().uuid().parse(fd.get("deviceId")));
+    revalidatePath("/settings");
+    return ok(gone ? "Removed. That device gets nothing more." : "Already removed.");
+  });
+}
+export async function sendTestPush(_: Result, _fd: FormData) {
+  return run(async () => {
+    const { sendTestNotification } = await import("@/domain/push");
+    const r = await sendTestNotification(db());
+    revalidatePath("/settings");
+    const gone = r.removed ? ` ${r.removed} device${r.removed === 1 ? " had" : "s had"} dropped notifications and ${r.removed === 1 ? "was" : "were"} removed.` : "";
+    if (!r.sent) return { ok: false, message: `Not delivered: ${r.failed ? "the push service refused it (see the device list)" : "no device is left"}.${gone}` };
+    return ok(`Sent to ${r.sent} of ${r.devices} device${r.devices === 1 ? "" : "s"}${r.failed ? `; ${r.failed} failed (see the device list)` : ""}.${gone}`);
+  });
+}
+/** Start over when the signing key can't be opened (its secret changed): every device turns notifications on again. */
+export async function resetPushKeys(_: Result, _fd: FormData) {
+  return run(async () => {
+    const { resetPush } = await import("@/domain/push");
+    const n = await resetPush(db());
+    revalidatePath("/settings");
+    return ok(`Reset. ${n ? `${n} device${n === 1 ? " was" : "s were"} removed: ` : ""}press Notify this device on each one again.`);
+  });
+}

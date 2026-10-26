@@ -545,6 +545,48 @@ export const costLedger = pgTable("cost_ledger", {
   check("cost_ledger_amount_ok", sql`(${t.source} = 'estimate' and ${t.actualCents} is null and ${t.estimateCents} >= 0) or (${t.source} <> 'estimate' and ${t.actualCents} is not null and ${t.actualCents} >= 0)`),
 ]);
 
+// ── push notifications (Stage E): upload reminders and "needs you" alerts on the owner's devices ──────────────
+// The studio's VAPID key pair: one row, made the first time it's needed. The private key is sealed (lib/crypto:
+// INTEGRATIONS_KEY, or a key derived from SESSION_SECRET when that isn't set; sealed_with says which) and never leaves
+// the server. Only the public key reaches a browser.
+export const pushKeys = pgTable("push_keys", {
+  id: integer("id").primaryKey().default(1),
+  publicKey: text("public_key").notNull(),
+  privateKeySealed: text("private_key_sealed").notNull(),
+  sealedWith: text("sealed_with").notNull(),   // integrations, session
+  createdAt: created(),
+  updatedAt: updated(),
+}, (t) => [check("push_keys_one_row", sql`${t.id} = 1`), check("push_keys_sealed_with", sql`${t.sealedWith} in ('integrations', 'session')`)]);
+
+// One browser that asked to be notified. The endpoint and keys are the browser's own and stay server-side; screens
+// get the label, the dates and a hash of the endpoint (to say "this device"). A 404/410 from the push service deletes it.
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: id(),
+  endpoint: text("endpoint").notNull().unique(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  label: text("label").notNull().default(""),
+  createdAt: created(),
+  lastSuccessAt: timestamp("last_success_at", { withTimezone: true }),
+  lastFailureAt: timestamp("last_failure_at", { withTimezone: true }),
+  failureCount: integer("failure_count").notNull().default(0),   // since the last success
+  lastError: text("last_error").notNull().default(""),
+});
+
+// One row per event Prism notified about: the dedupe guard (each event notifies at most once, even with two workers).
+export const pushEvents = pgTable("push_events", {
+  id: id(),
+  dedupeKey: text("dedupe_key").notNull().unique(),   // "upload_due:<publication>:<slot>", "publish_failed:<job>:<at>", …
+  kind: text("kind").notNull(),                       // upload_due, publish_failed, publish_handed_off, instagram_unplanned
+  title: text("title").notNull(),
+  body: text("body").notNull().default(""),
+  url: text("url").notNull().default("/"),
+  publicationId: uuid("publication_id").references(() => publications.id, { onDelete: "set null" }),
+  sent: integer("sent").notNull().default(0),
+  failed: integer("failed").notNull().default(0),
+  createdAt: created(),
+}, (t) => [index("push_events_created").on(t.createdAt)]);
+
 // ── audit ──────────────────────────────────────────────────────────────────
 export const auditLog = pgTable("audit_log", {
   id: id(),

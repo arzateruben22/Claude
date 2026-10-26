@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 — 2026-10-26 (Stage E: push notifications)
+- Settings → Notifications: Notify this device, the device list with Remove, Send a test notification, recent notifications.
+- The worker notifies: upload due (30 min before a manual slot with an approved post), a scheduled automatic publish that failed or needs you, an Instagram slot passed with nothing planned. Each once.
+- VAPID keys made on first use and sealed; dropped browsers (404/410) removed; the service worker opens the right screen.
+
 ## 0.4.0 — 2026-10-26 (Stage C: API analytics)
 - API analytics: the worker pulls each verified post's numbers from its connected platform (daily for 30 days, then weekly), one row per post, metric and UTC day; Refresh now on Analytics and the episode page; source tags (API / CSV / MANUAL / ESTIMATE / DEMO) with pulled-at times; expired grants show "needs reconnecting" and stop pulling.
 - Episode page: a Numbers section for its posts.
