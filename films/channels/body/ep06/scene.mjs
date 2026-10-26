@@ -238,7 +238,7 @@ for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1,
 hud.scale("size", { text: FILM.scale.text, t0: FILM.scale.t0, t1: FILM.scale.t1, bar: (t) => { const c = heroWorld(t), a = hud.project([c[0] - HERO.R, c[1], c[2]]), b = hud.project([c[0] + HERO.R, c[1], c[2]]); return Math.hypot(b.x - a.x, b.y - a.y); } });
 // the spine readout: the meanwhile's tally itself, from frame 0, dimmed to a third until the meanwhile
 const commas = (n) => String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: commas, unit: "", label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.5, 0.345], minCh: 10 });
+const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: commas, unit: "", label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.5, 0.362], minCh: 10 });   // its plate clears the title's pulse line
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
