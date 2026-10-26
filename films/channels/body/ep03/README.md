@@ -18,7 +18,8 @@ episode 4 ("The gap"). **Nothing has been posted.** A physiologist signs off the
   that take?"
 - **Change (the person and the wrong idea):** Johannes Müller thought it might be as fast as light; in 1850 his former
   student Helmholtz timed it (an illustration of his method: a frog muscle on its nerve, a lever and a pen on a turning
-  drum, two twitch traces a beat apart). About thirty metres a second: cheetah speed.
+  drum, two twitch traces a beat apart, the later one to the right: the rig is drawn mirrored so time reads left to
+  right; badged "illustration · delay exaggerated" and "slowed"). About thirty metres a second: cheetah speed.
 - **Why (answering the surprise):** it isn't current in a wire; the cell re-fires it, step by step (a bare fibre's slow
   glow). Many of your fibres wear myelin and re-fire only at the gaps, so the signal leaps. Where myelin is damaged (a fibre
   labelled brain and spinal cord), signals can slow or stall.
@@ -53,9 +54,9 @@ One world, few cuts (WRITING.md, "The picture"): three fibres stacked along x in
 and a fibre below with one damaged sheath. Each leap is an arc of light from gap to gap just over the sheath, a
 stylisation (the current flows inside; the action potential is re-fired at the gaps). One illustrated slide: the
 drum. Three cuts in all, each on the iris. The spine readout (one place, its label naming the beat): ? m/s → spine to
-toe: about 1 m → Müller: as fast as light? (300,000,000 m/s) → Helmholtz, 1850, frog: 27 m/s → gaps re-fired so far →
-thinnest bare fibres, about 1 m/s → thick wrapped fibres, up to 150 m/s → 540 km/h (Formula One record: 373) → since the
-stub, real time: 0 → 2.2 s → the tally. The body locator marks the toe in the normal beat; the takeaway's silhouette
+toe: about 1 m → spine to toe takes ? s → Müller: as fast as light? (300,000,000 m/s) → Helmholtz, 1850, frog: 27 m/s →
+gaps re-fired so far → thinnest bare fibres, about 1 m/s → thick wrapped fibres, up to 150 m/s → wrapped fibre · F1 record:
+373, 540 km/h → since the stub, real time: 0 → 2.2 s → the tally ("a heart at rest, as you watched"). The body locator marks the toe in the normal beat; the takeaway's silhouette
 is the human anchor. The score rises to 0.75 at the race and drops to 0.3 for the toe.
 
 ## Files
@@ -82,11 +83,12 @@ As episode 2 (`../ep02/README.md`), with this folder and the stills at
 
 - **Shown but not claimed:** the arcs over the sheath (a stylisation of saltatory conduction); internodes of 40 µm
   (real ones are about 0.2–2 mm), badged "not to scale"; the race slowed and compressed but at the true 150 : 1 ratio;
-  the race's wrapped fibre drawn 1.5× thicker than elsewhere in the film (it thickens during the camera's move into
+  the race's wrapped fibre drawn 1.5× thicker (its label lifted over the pulses' arcs) than elsewhere in the film (it thickens during the camera's move into
   the race and thins back under the dimmed meanwhile; the race camera sits 2 µm lower so its lower edge clears the
   caption plate; a real fast wrapped fibre, about 13–20 µm, is ten or more times
   as wide as a thin bare one, about 1 µm, so the thicknesses stay not to scale); the damaged sheath's look; the 1850
-  apparatus (an illustration of the method, not Helmholtz's actual instrument); the toe route on the silhouette
+  apparatus (an illustration of the method, not Helmholtz's actual instrument, drawn mirrored so the traces read left to
+  right; the near-to-far delay drawn about 13× its real share of a twitch, badged "delay exaggerated"); the toe route on the silhouette
   (A-delta at about 15 m/s and C at about 0.7 m/s over 1.5 m, real time).
 - **The readouts** are claims too: 1 m (c3), 300,000,000 m/s (c20: light's 299,792,458 m/s, rounded, labelled "Müller: as fast as light?"),
   27 m/s (c6), 1 and 150 m/s (c10, c11), 540 and 373 km/h (c12), 0.1 and 2.2 s (c13, c19 notes), the beats (c14).
