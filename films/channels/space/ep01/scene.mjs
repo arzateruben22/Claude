@@ -11,7 +11,7 @@ import * as THREE from "three";
 // (GW170817) · earth (Earth's true 14,900 km) · news (the diagram again: the news arrives) · restore
 // (takeaway and the readout, with the one scale jump) · end (the end card over the galaxy).
 // Honesty: every cheat on screen carries its badge (film.json "badges"): "not to scale" on every diagram,
-// "64× faster" from each scene clock, "Orbit 5,000× faster" apart from the light clock, "analogy" on the grid,
+// "55× faster" from each scene clock, "Orbit 5,000× faster" apart from the light clock, "analogy" on the grid,
 // "thought experiment" while the Sun is gone, and "true scale" on the one shot that is.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -81,13 +81,13 @@ const sun = createStar({ radius: SUN_R, intensity: 2.6, corona: 2.7 });
 const earth = createPlanet({ radius: EARTH_R, surface, tilt: 23.44, rimDay: 0.5, rimNight: 0.55, segments: 48 });   // a strong night rim: Earth stays legible once the news has darkened it
 G.diagram.add(sun.group, earth.group);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };                              // angles run counterclockwise seen from +y (north up)
-const orbitRing = ring({ color: C.orbit, width: 2.2, opacity: 1 }).arc({ r: R, ...XZ });
+const orbitRing = ring({ color: C.orbit, width: 3.0, opacity: 1 }).arc({ r: R, ...XZ });
 const trail = ring({ color: C.lilac, width: 4.6, opacity: 1, fade: [0.12, 1] });
-const freePath = segment({ color: C.lilac, width: 4.6, opacity: 1, fade: [0.35, 1] });
+const freePath = segment({ color: C.ice, width: 5.2, opacity: 1, fade: [1, 1] });   // no gravity, so not lilac: Earth's own colour, full strength from the release
 const R_AU = R + 0.32;                                                     // drawn just outside the orbit, so both read
 const ringAU = ring({ color: C.teal, width: 2.6, opacity: 0 }).arc({ r: R_AU, ...XZ });
-const ghost = ring({ color: C.ghost, width: 2.2, opacity: 0, dash: 16, duty: 0.5 }).arc({ r: SUN_R, ...XZ });
-const oldOrbit = ring({ color: line("lilac", 0.72), width: 3, opacity: 0, dash: 90, duty: 0.5 });   // the curve Earth no longer follows
+const ghost = ring({ color: C.ghost, width: 2.8, opacity: 0, dash: 12, duty: 0.5 }).arc({ r: SUN_R, ...XZ });
+const oldOrbit = ring({ color: line("lilac", 0.72), width: 3.6, opacity: 0, dash: 90, duty: 0.5 });   // the curve Earth no longer follows
 const gravFront = ring({ color: C.lilac, width: 3.2, opacity: 0, dash: 72, duty: 0.55 });
 const radiusLine = segment({ color: C.ghost, width: 2, opacity: 0, dash: 1.1, duty: 0.5 });
 const vArrow = [segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 })];
@@ -205,18 +205,19 @@ const diagram = (t, tau, mode, shot) => {
   const lit = story ? clamp01(1 - (tau - (dist - EARTH_R) / cD) / ((2 * EARTH_R) / cD)) : 1;
   earth.set({ center: p, sunDir: norm([-p[0], -p[1], -p[2]]), sun: lit, spin: SPIN(tau) + 1.2 });
   S.earth = [p[0], p[1] + EARTH_R * 0.6, p[2]];
-  // the orbit: solid while bound; once the news arrives the circle Earth left is dashed (the old orbit)
-  orbitRing.set({ opacity: released ? 0.8 : 1, dash: released ? 64 : 0 });
+  // the orbit stays solid; once the news arrives it recedes to a faint reference and only the curve ahead (oldOrbit) is dashed
+  orbitRing.set({ opacity: released ? 0.5 : 1, dash: 0 });
   // the arc it travelled since the vanish (sped up ×N, badged), then the straight line
   if (story && tau > 0) {
     const a1 = PH.e0 + (2 * Math.PI * PH.n_orbit * Math.min(tau, T_ARR)) / PH.year;
-    trail.arc({ r: R, a0: PH.e0, a1, ...XZ }).set({ opacity: 1 });
+    trail.arc({ r: R, a0: PH.e0, a1, ...XZ }).set({ opacity: 1 - 0.45 * clamp01((tau - T_ARR) / 60) });   // the travelled arc steps back once the path takes over
   } else trail.set({ opacity: 0 });
   if (released) freePath.seg(orb.at(T_ARR), p).set({ opacity: 1 }); else freePath.set({ opacity: 0 });
   // once released, the stretch of orbit ahead of the release point is drawn dashed and brighter: the curve it left
   const aRel = PH.e0 + (2 * Math.PI * PH.n_orbit * T_ARR) / PH.year;
-  oldOrbit.arc({ r: R, a0: aRel, a1: aRel + 1.7, ...XZ }).set({ opacity: released ? clamp01((tau - T_ARR) / 60) : 0, fade: [1, 0.15] });
+  oldOrbit.arc({ r: R, a0: aRel, a1: aRel + 1.7, ...XZ }).set({ opacity: released ? clamp01((tau - T_ARR) / 60) : 0, fade: [1, 0.35] });
   // light: one front every PERIOD while the Sun shines; after the vanish nothing follows the last one
+  const rN = story && tau > 0 ? cD * tau : 0, hand = shot === "news" && rN > R ? 1 - 0.7 * clamp01((rN - R - 1.5) / 4) : 1;   // the news delivered: the front steps back, the path takes the frame
   const fr = train(tau, { c: cD, period: FILM.ripple.period, to: story ? 0 : Infinity, rMax: RMAX + 2 });
   let lastR = null;
   ripples.forEach((rp, i) => {
@@ -224,15 +225,15 @@ const diagram = (t, tau, mode, shot) => {
     if (!f || f.r < SUN_R * 0.9) { rp.set({ opacity: 0 }); return; }
     const isLast = story && tau >= 0 && Math.abs(f.t0) < 1e-6, isHi = !story ? false : Math.abs(f.t0 - FILM.ripple.hi) < 1e-3 && tau < 0;
     const fade = clamp01((f.r - SUN_R) / 2.2) * (1 - clamp01((f.r - (RMAX - 10)) / 10));
-    rp.arc({ r: f.r, ...XZ }).set({ opacity: fade, width: isLast || isHi ? 4.2 : 1.8, color: isLast || isHi ? C.tealHi : C.ripple });
+    rp.arc({ r: f.r, ...XZ }).set({ opacity: fade * (isLast ? hand : shot === "news" ? 0.35 : 1), width: isLast || isHi ? 4.2 : 1.8, color: isLast || isHi ? C.tealHi : C.ripple });
     if (isLast) lastR = f.r;
   });
   // the news: light (teal) and gravity (lilac, dashed, drawn just outside it), together
   const rNews = story && tau > 0 ? cD * tau : null;
-  gravFront.arc({ r: (rNews || 0) + 0.24, ...XZ }).set({ opacity: rNews && shot === "news" ? (1 - clamp01((rNews - (RMAX - 10)) / 10)) : 0 });
+  gravFront.arc({ r: (rNews || 0) + 0.24, ...XZ }).set({ opacity: rNews && shot === "news" ? hand * (1 - clamp01((rNews - (RMAX - 10)) / 10)) : 0 });
   // the front's label anchor: well ahead of Earth while the front is on its way (so its label and Earth's never
   // compete), close to Earth in the news shot, where the two meet
-  const ae = Math.atan2(-p[2], p[0]) + (shot === "news" ? 0.55 : 1.15);
+  const ae = Math.atan2(-p[2], p[0]) + (shot === "news" ? 0.55 : 2.3);   // on its way: on the far side from Earth, in the clear left of the ring, away from the clock above
   S.front = rNews ? [rNews * Math.cos(ae), 0, -rNews * Math.sin(ae)] : [0, 0, 0];
   frontProbe(rNews && rNews < RMAX ? [S.front, [rNews * Math.cos(ae - 0.6), 0, -rNews * Math.sin(ae - 0.6)]] : [null, null]);
   // the light-time ring "8 min 20 s" and its label's spot (on the far side of the ring, up the frame)

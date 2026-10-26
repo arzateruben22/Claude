@@ -61,7 +61,7 @@ a dot to filling the sky while one readout counts down. What makes that kind of 
    screen.
 2. **A spine readout.** One number lives on screen through the whole episode and changes as the story
    escalates. The reference goes distance, then tide height, then distance, then "the event horizon: HERE".
-   Its small label names the beat. A number that keeps moving holds the eye between lines.
+   Its small label names the beat. A number that keeps moving holds the eye between lines. When it reaches its final value it holds there, lit, through the whoa and the takeaway, and its label changes to say what the number now means; it never leaves at the payoff. Park it in the frame's empty region, not over the subject or its path.
 3. **Human scale.** At least once, anchor the big idea to a place the viewer knows: a beach, a kitchen,
    their own hand, their sky. Show the consequence there: the tide rising, the drink climbing the straw.
 4. **Escalate in visible steps.** Every beat changes the picture, not just the words. A beat whose image
@@ -73,6 +73,7 @@ a dot to filling the sky while one readout counts down. What makes that kind of 
    premise (the reference: "The first lone black hole was found in 2022, about 5,000 light-years away").
 7. **Let the sound build.** The score rises with the escalation and drops to near-silence for the final
    reveal.
+8. **One line wins.** The line or object the caption names is the brightest thing in the picture at that moment; whatever delivered the previous beat (a front, a ring, a prop) drops to about a third of its strength as the new beat begins. Honesty notes are metadata: one tier below labels in size and colour. Each top corner holds at most two notes at once (the speed column left, the standing cheats right), with the spine readout between them; a framing tag visits for 4 s at most, and a third note waits for one to leave.
 
 ## Never write
 

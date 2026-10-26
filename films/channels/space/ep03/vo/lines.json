@@ -1,0 +1,118 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/space/ep03/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Can one day outlast a year? On Venus: yes. And no.",
+   "stars": [
+    "year",
+    "Venus"
+   ],
+   "phonemes": "kæn wˈʌn dˈeɪ aʊtlˈæst ɐ jˈɪɹ? ˌɔn vˈiːnəs: jˈɛs. ænd nˈoʊ.",
+   "speed": 0.9,
+   "file": "01.wav",
+   "dur": 3.815,
+   "sha256": "1b6fe4676a027953725077d9a796eb5c596de120a351d42c8a8664f11589bdee"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "On Earth, you see the Sun rise about three hundred sixty-five times a lap. Next door, Venus hides its face under a permanent lid of cloud.",
+   "stars": [
+    "cloud"
+   ],
+   "phonemes": "ˌɔn ˈɜːθ, juː sˈiː ðə sˈʌn ɹˈaɪz ɐbˌaʊt θɹˈiː hˈʌndɹɪd sˈɪkstifˈaɪv tˈaɪmz ɐ lˈæp. nˈɛkst dˈɔːɹ, vˈiːnəs hˈaɪdz ɪts fˈeɪs ˌʌndɚɹ ɐ pˈɜːmənənt lˈɪd ʌv klˈaʊd.",
+   "speed": 1.1,
+   "file": "02.wav",
+   "dur": 9.138,
+   "sha256": "175a9c912aa794afc95e66c0ff79f5c8a002eb0d94fd1fef634bff20e98326b9"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one face always faced the Sun.",
+   "stars": [
+    "Sun"
+   ],
+   "phonemes": "fɔːɹ θɹˈiː hˈʌndɹɪd jˈɪɹz, ɐstɹˈɑːnəmɚz tʃˈeɪst fˈeɪnt smˈʌdʒᵻz ɪn ðoʊz klˈaʊdz. ðə kəsˈiːniz , fˈɑːðɚɹ ænd sˈʌn, klˈɑːkt ɐbˌaʊt twˈɛntiθɹˈiː ˈaʊɚz. skjˌɑːpəɹˈɛli sˈɛd wˈʌn fˈeɪs ˈɔːlweɪz fˈeɪsd ðə sˈʌn.",
+   "speed": 1.15,
+   "file": "03.wav",
+   "dur": 11.633,
+   "sha256": "3796b2cc8438ec6cfb9d962441230fe315aa8fce0d1520e7884edecec0ab31f3"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "In nineteen sixty-two, radar from a dish in California pierced the clouds. Both guesses were wrong. Venus turns once every two hundred forty-three days, longer than its year. And it turns backwards.",
+   "stars": [
+    "backwards"
+   ],
+   "phonemes": "ɪn nˈaɪntiːn sˈɪkstitˈuː, ɹˈeɪdɑːɹ fɹʌm ɐ dˈɪʃ ɪn kˌælɪfˈɔːɹniə pˈɪɹst ðə klˈaʊdz. bˈoʊθ ɡˈɛsᵻz wɜː ɹˈɔŋ. vˈiːnəs tˈɜːnz wˈʌns ˈɛvɹi tˈuː hˈʌndɹɪd fˈɔːɹɾiθɹˈiː dˈeɪz, lˈɔŋɡɚ ðɐn ɪts jˈɪɹ. ænd ɪt tˈɜːnz bˈækwɚdz.",
+   "speed": 1.15,
+   "file": "04.wav",
+   "dur": 12.7,
+   "sha256": "ef9f2132806c46ecb07606211a2cf2256f8304729c2053fa31d980048fb469fd"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Stand there, and the spin and the orbit team up. The Sun comes back every hundred and seventeen days, rising in the west.",
+   "stars": [
+    "west"
+   ],
+   "phonemes": "stˈænd ðˈɛɹ, ænd ðə spˈɪn ænd ðɪ ˈɔːɹbɪt tˈiːm ˈʌp. ðə sˈʌn kˈʌmz bˈæk ˈɛvɹi hˈʌndɹɪd ænd sˈɛvəntˌiːn dˈeɪz, ɹˈaɪzɪŋ ɪnðə wˈɛst.",
+   "speed": 1.0,
+   "file": "05.wav",
+   "dur": 7.94,
+   "sha256": "a46bb8335c0c1188da22254e27afa857a01a5a0cf8db914f6da2b88d18b40be1"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So yes: one turn outlasts a year. But the day you'd live by is the Sun coming back.",
+   "stars": [
+    "back"
+   ],
+   "phonemes": "sˌoʊ jˈɛs: wˈʌn tˈɜːn aʊtlˈæsts ɐ jˈɪɹ. bˌʌt ðə dˈeɪ juːd lˈaɪv baɪ ɪz ðə sˈʌn kˈʌmɪŋ bˈæk.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 6.057,
+   "sha256": "7aab72f845d59564da67f7c0024f2dca2d5357def1986dc445a8ef91ef295f97"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, Sun to Venus: six minutes. The radar's round trip, at its closest: about four minutes.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, sˈʌn tə vˈiːnəs: sˈɪks mˈɪnɪts. ðə ɹˈeɪdɑːɹz ɹˈaʊnd tɹˈɪp, æɾ ɪts klˈoʊsɪst: ɐbˌaʊt fˈɔːɹ mˈɪnɪts.",
+   "speed": 1.08,
+   "file": "07.wav",
+   "dur": 6.219,
+   "sha256": "b69fe6815c3e1ea6a2c24daf8f73ccca8bd5d4ebfc2e2efe69d334f3558e5ddb"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: the Moon never stops falling toward us. So why doesn't it land?",
+   "stars": [
+    "land"
+   ],
+   "phonemes": "nˈɛkst: ðə mˈuːn nˈɛvɚ stˈɑːps fˈɔːlɪŋ təwˈɔːɹd ˌʌs. sˌoʊ wˌaɪ dˈʌzənt ɪt lˈænd?",
+   "speed": 0.92,
+   "file": "08.wav",
+   "dur": 4.571,
+   "sha256": "818166d5703b116b456ea9a589b4ad11f643e899566c3655c4d582e285d3b38c"
+  }
+ ]
+}

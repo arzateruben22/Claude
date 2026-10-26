@@ -1,0 +1,110 @@
+{
+ "voice": "af_bella",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Which swing gets back first? Big? Or small?",
+   "stars": [
+    "first"
+   ],
+   "phonemes": "wˌɪtʃ swˈɪŋ ɡˈɛts bˈæk fˈɜːst? bˈɪɡ? ɔːɹ smˈɔːl?",
+   "file": "01.wav",
+   "dur": 2.817,
+   "sha256": "7f93848763e6a29d4acd1ea19b41a97d16cb8224d730a7a33148b0ef325b9f50"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Each string is just under a meter, as in a grandfather clock. One swing: about one second. Ghosts every tenth of a second bunch up at the turns.",
+   "stars": [
+    "one second"
+   ],
+   "phonemes": "ˈiːtʃ stɹˈɪŋ ɪz dʒˈʌst ˌʌndɚɹ ɐ mˈiːɾɚ, æz ɪn ɐ ɡɹˈændfɑːðɚ klˈɑːk. wˈʌn swˈɪŋ: ɐbˌaʊt wˈʌn sˈɛkənd. ɡˈoʊsts ˈɛvɹi tˈɛnθ əvə sˈɛkənd bˈʌntʃ ˌʌp æt ðə tˈɜːnz.",
+   "file": "02.wav",
+   "dur": 9.574,
+   "sha256": "9e046baca305b525e67749d67cb58632c6231a8d096d9b3dd9ad0dbc1fbebd61"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Pull one three times farther. Let both go. Three times the path… and still, neck and neck.",
+   "stars": [
+    "neck and neck"
+   ],
+   "phonemes": "pˈʊl wˈʌn θɹˈiː tˈaɪmz fˈɑːɹðɚ. lˈɛt bˈoʊθ ɡˈoʊ. θɹˈiː tˈaɪmz ðə pˈæθ… ænd stˈɪl, nˈɛk ænd nˈɛk.",
+   "file": "03.wav",
+   "dur": 5.679,
+   "sha256": "e5df01594e76477c3d70d37402731cc5e532d9c318cec89245beb5d83c11ab88"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Galileo claimed every swing takes the same time, wide or narrow. For small swings, he was nearly right. Three times farther out, the pull is almost three times stronger. So it covers triple the path at nearly triple the speed: nearly the same time.",
+   "stars": [
+    "nearly",
+    "nearly"
+   ],
+   "phonemes": "ɡˌælɪlˈeɪoʊ klˈeɪmd ˈɛvɹi swˈɪŋ tˈeɪks ðə sˈeɪm tˈaɪm, wˈaɪd ɔːɹ nˈæɹoʊ. fɔːɹ smˈɔːl swˈɪŋz, hiː wʌz nˌɪɹli ɹˈaɪt. θɹˈiː tˈaɪmz fˈɑːɹðɚɹ ˈaʊt, ðə pˈʊl ɪz ˈɔːlmoʊst θɹˈiː tˈaɪmz stɹˈɔŋɡɚ. sˌoʊ ɪt kˈʌvɚz tɹˈɪpəl ðə pˈæθ æt nˌɪɹli tɹˈɪpəl ðə spˈiːd: nˌɪɹli ðə sˈeɪm tˈaɪm.",
+   "file": "04.wav",
+   "dur": 15.766,
+   "sha256": "214a0125861b1a67e34fa788105cd096c935833268072f3b136e46531ebaf2e9"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "So hang fifteen, each a little shorter. Only length changes. For about a minute, they drift apart. Then, all at once… back in line.",
+   "stars": [
+    "line"
+   ],
+   "phonemes": "sˌoʊ hˈæŋ fˈɪftiːn, ˈiːtʃ ɐ lˈɪɾəl ʃˈɔːɹɾɚ. ˈoʊnli lˈɛŋθ tʃˈeɪndʒᵻz. fɔːɹ ɐbˌaʊt ɐ mˈɪnɪt, ðeɪ dɹˈɪft ɐpˈɑːɹt. ðˈɛn, ˈɔːl ɐtwˈʌns… bˈæk ɪn lˈaɪn.",
+   "file": "05.wav",
+   "dur": 8.101,
+   "sha256": "5e4e9256c49aa992850fb369fb36782f987e41f0c28b1a92faeb956f9bd5059f"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: twenty swings, and the big one is three tenths of a second behind. At thirty degrees, Galileo is off by about one part in sixty.",
+   "stars": [
+    "Measure it",
+    "behind"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: twˈɛnti swˈɪŋz, ænd ðə bˈɪɡ wˈʌn ɪz θɹˈiː tˈɛnθs əvə sˈɛkənd bᵻhˈaɪnd. æt θˈɜːɾi dᵻɡɹˈiːz, ɡˌælɪlˈeɪoʊ ɪz ˈɔf baɪ ɐbˌaʊt wˈʌn pˈɑːɹt ɪn sˈɪksti.",
+   "file": "06.wav",
+   "dur": 9.369,
+   "sha256": "4fda425e865b45b659365820279ae4553b2d9e6c426529a390575716106db6b7"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Length sets the beat. A wider swing just moves faster: almost fast enough.",
+   "stars": [
+    "almost"
+   ],
+   "phonemes": "lˈɛŋθ sˈɛts ðə bˈiːt. ɐ wˈaɪdɚ swˈɪŋ dʒˈʌst mˈuːvz fˈæstɚ: ˈɔːlmoʊst fˈæst ɪnˈʌf.",
+   "file": "07.wav",
+   "dur": 4.982,
+   "sha256": "ffd706e4bd3d34cedfadaa90d8c1a956f4a865037c9daba1f99828a1f93454de"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a dropped ball, bouncing back. It never reaches your hand.",
+   "stars": [
+    "hand"
+   ],
+   "phonemes": "nˈɛkst: ɐ dɹˈɑːpt bˈɔːl, bˈaʊnsɪŋ bˈæk. ɪt nˈɛvɚ ɹˈiːtʃᵻz jʊɹ hˈænd.",
+   "file": "08.wav",
+   "dur": 4.037,
+   "sha256": "53f51cbaf0e93fe0bdceab1f1e614858af3a7ba77921f405787a251281f32bb7"
+  }
+ ]
+}

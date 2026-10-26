@@ -25,7 +25,7 @@
 //   frames/<chunk>/<frame>.png        written as .tmp, then renamed; deleted once the chunk's mp4 is verified
 //   frames/<chunk>/frames.jsonl       one line per finished frame: frame, t, sha256, K, ms (kept)
 //   frames/<chunk>/chunk.json         the versions that rendered into the chunk, and its verified encode
-//   chunks/<chunk>.mp4                x264 crf 15, constant fps, keyframe every second
+//   chunks/<chunk>.mp4                x264 crf 12 (near-lossless intermediate), constant fps, keyframe every second
 //   master.mp4, master-audio.mp4, contact-sheet.jpg, audit.json, render.log (from run.sh)
 // <film>/build/.tmp/                  the page HTML · <film>/build/.render.lock · <film>/build/cues-<id>-<aspect>.json
 // <film>/out/<name>.mp4 + .jpg        the delivery file and its poster
@@ -488,7 +488,7 @@ const finishChunk = async (k) => {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   try {
     await ffmpeg(["-framerate", String(fps), "-start_number", String(a), "-i", path.join(chunkDir(k), "%05d.png"), "-frames:v", String(n),
-      ...X264, "-preset", "medium", "-crf", "15", "-g", String(fps), "-r", String(fps), "-fps_mode", "cfr", "-an", part]);
+      ...X264, "-preset", "slow", "-crf", "12", "-x264-params", "aq-mode=3", "-g", String(fps), "-r", String(fps), "-fps_mode", "cfr", "-an", part]);
     const got = await countFrames(part, true);
     if (got !== n) throw new Error(`the encode decodes to ${got} frames, expected ${n}`);
     fs.renameSync(part, out);
@@ -702,7 +702,7 @@ const assemble = async () => {
 
   // 3. the delivery encode
   const out = path.join(outDir, name + ".mp4");
-  await ffmpeg(["-i", src, "-map", "0:v:0", ...(audio ? ["-map", "0:a:0", "-c:a", "copy"] : []), "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "12M", "-bufsize", "24M",
+  await ffmpeg(["-i", src, "-map", "0:v:0", ...(audio ? ["-map", "0:a:0", "-c:a", "copy"] : []), "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-maxrate", "20M", "-bufsize", "40M", "-x264-params", "aq-mode=3:deblock=-1,-1",
     "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(fps), "-fps_mode", "cfr", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv",
     "-movflags", "+faststart", partOf(out)]);
   const dFrames = await countFrames(partOf(out), false), d = await streams(partOf(out));

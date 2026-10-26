@@ -1,6 +1,6 @@
 # Light Minute No. 001: "If the Sun vanished"
 
-74.7 s, 9:16. **The final is delivered** (24 Oct): `out/lightminute-001-9x16.mp4` (−14.1 LUFS / −1.9 dBTP, QA PASS),
+74.7 s, 9:16. **The final is delivered** (v2, 25 Oct): `out/lightminute-001-9x16.mp4` (−14.1 LUFS / −1.9 dBTP, QA PASS),
 with its poster, contact sheet, `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md` and `assets.md`. It has not been posted.
 The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset `lightminute-vacuum`).
 

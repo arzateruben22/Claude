@@ -38,15 +38,16 @@
 //                          clock, slot: "tl" | "tr" | "bl" | "br", kind, title }. Three kinds, one look
 //                          (the caption plate's face and corners, sentence case):
 //                            "speed" (from a clock): an icon (▶▶ faster, ▮▶ slower, ▮▮ paused) and
-//                              "64× faster" with the number in the accent. When the rate changes the
+//                              "64× faster" with the number in the text colour (theme role badge-num to change it). When the rate changes the
 //                              new text rolls up over the old one and the plate glows once
 //                            "tag": a quiet line with an accent bar ("Not to scale")
 //                            "card": a heading in the accent and a sentence (o.title, or text with
 //                              "\n": its first line is the heading)
 //                          Notes in one slot stack in the order they were made and reflow smoothly as
 //                          one arrives or leaves.
-// hud.counter(id, o)       o: { keys: [[t, v], ...] or value: (t) => v, fmt, unit, label, t0, t1,
-//                          at: [x, y] centre as fractions, lit: (v) => bool, ease, minCh }
+// hud.counter(id, o)       o: { keys: [[t, v], ...] or value: (t) => v, fmt, unit, label (a string, or [[t, text], ...] keyed), t0, t1,
+//                          at: [x, y] centre as fractions, or [[t, [x, y]], ...] keyed (a step at each t, for cuts), or (t) => [x, y],
+//                          lit: (v) => bool, ease, minCh }
 // hud.scale(id, o)         o: { text: string or (t) => string, bar: (t) => px or null, t0, t1,
 //                          at: [x, y] top-left as fractions (default: bottom-left, above the captions) }
 // hud.title(o)             o: { series, title ("*word*" is the accent), sub, t0 = 0, t1, y, sig (when the
@@ -85,30 +86,30 @@ const CSS = `
 .hud-cap i { font-style: normal; color: var(--hud-cap-next); padding: 0 .1em; border-radius: .16em; }
 .hud-cap i.said { color: var(--hud-cap-said); }
 .hud-cap i.on { color: var(--hud-cap-lit); background: var(--hud-cap-lit-bg); }
-.hud-badge { position: absolute; left: 0; top: 0; z-index: 3; box-sizing: border-box; overflow: hidden; white-space: nowrap; color: var(--hud-text);
+.hud-badge { position: absolute; left: 0; top: 0; z-index: 3; box-sizing: border-box; overflow: hidden; white-space: nowrap; color: var(--hud-badge-text, var(--hud-text));
   font: var(--hud-note-weight, 600) var(--hud-note-size, 3.4vmin)/1.2 var(--font-text); letter-spacing: 0;
   background: var(--hud-note-bg, var(--hud-plate)); border-radius: var(--hud-note-radius, var(--hud-cap-radius, 2vmin)); box-shadow: var(--hud-shadow); }
 .hud-badge .in { display: flex; width: max-content; align-items: center; gap: 1.3vmin; padding: 1.2vmin 2.3vmin 1.2vmin 2vmin; }
 .hud-badge .in.was { position: absolute; left: 0; top: 0; }
 .hud-badge .ic { flex: none; width: 3vmin; height: 3vmin; fill: var(--hud-accent); }
-.hud-badge .n { color: var(--hud-accent); font-weight: 750; font-variant-numeric: tabular-nums lining-nums; }
+.hud-badge .n { color: var(--hud-badge-num, var(--hud-text)); font-weight: 750; font-variant-numeric: tabular-nums lining-nums; }
 .hud-badge .glow { position: absolute; inset: 0; background: var(--hud-accent); opacity: 0; }
 .hud-badge.speed { font-size: var(--hud-speed-size, 3.7vmin); font-weight: 650; }
-.hud-badge.tag { font-size: var(--hud-tag-size, 3.15vmin); font-weight: 550; color: var(--hud-tag-text, var(--hud-text));
+.hud-badge.tag { font-size: var(--hud-tag-size, 3.15vmin); font-weight: 550; color: var(--hud-tag-text, var(--hud-badge-text, var(--hud-text)));
   background: var(--hud-tag-bg, var(--hud-badge-bg, var(--hud-plate))); box-shadow: none; }
 .hud-badge.tag .in { gap: 1.4vmin; padding: 1vmin 2.1vmin 1vmin 1.6vmin; }
 .hud-badge .bar { flex: none; width: .6vmin; height: 2.9vmin; border-radius: .3vmin; background: var(--hud-accent); }
-.hud-badge.card { white-space: normal; font-size: var(--hud-card-size, 3.15vmin); }
+.hud-badge.card { white-space: normal; font-size: var(--hud-card-size, 3.4vmin); }
 .hud-badge.card .in { display: block; width: auto; padding: 1.6vmin 2.4vmin 1.7vmin; }
 .hud-badge.card .hd { display: flex; align-items: center; gap: 1.2vmin; color: var(--hud-accent); font-weight: 750; margin-bottom: .6vmin; }
-.hud-badge.card .bd { display: block; font-weight: 500; line-height: 1.32; color: var(--hud-text); text-wrap: pretty; }
+.hud-badge.card .bd { display: block; font-weight: 550; line-height: 1.28; color: var(--hud-text); text-wrap: pretty; }
 .hud-counter { position: absolute; left: 0; top: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
 .hud-counter .row { display: flex; align-items: baseline; gap: 1.2vmin; }
 .hud-counter .v { font: 700 var(--hud-counter-size, 10vmin)/1 var(--font-mono); font-variant-numeric: tabular-nums lining-nums; letter-spacing: -.02em;
   color: var(--hud-text); text-shadow: var(--hud-text-shadow); text-align: right; }
 .hud-counter.lit .v { color: var(--hud-accent); }
 .hud-counter .u { font: 650 4.2vmin/1 var(--font-text); color: var(--hud-text); text-shadow: var(--hud-text-shadow); }
-.hud-counter .lb { font: 600 2.9vmin/1.2 var(--font-text); color: var(--hud-text-2); margin-bottom: .6vmin; text-shadow: var(--hud-text-shadow); }
+.hud-counter .lb { font: 600 var(--hud-counter-label-size, 3.4vmin)/1.2 var(--font-text); color: var(--hud-text-2); margin-bottom: .8vmin; text-shadow: var(--hud-text-shadow); }
 .hud-scale { position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: center; gap: 1.4vmin; white-space: nowrap; padding: 1vmin 2.1vmin;
   border-radius: 999px; background: var(--hud-label-bg); font: 600 3vmin/1 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--hud-text); }
 .hud-scale .bar { display: block; flex: none; height: 1.5vmin; border: .38vmin solid var(--hud-scale-line); border-top: 0; box-sizing: border-box; }
@@ -240,15 +241,17 @@ export const createHud = (opts = {}) => {
       const side = o.side ?? 1, rise = (o.v || "above") === "above" ? y - h - 12 * S1 : y - h / 2;
       const sx = (s) => (s > 0 ? x + g : x - w - g);
       const cands = [[sx(side), rise], [sx(-side), rise], [x - w / 2, y - h - 22 * S1], [x - w / 2, y + 22 * S1],
-        [sx(side), y - h - g], [sx(-side), y - h - g], [sx(side), y + g], [sx(-side), y + g]];
+        [sx(side), y - h - g], [sx(-side), y - h - g], [sx(side), y + g], [sx(-side), y + g],
+        // farther out, for when the near spots are all taken by text (a counter, a note, the caption)
+        [x - w / 2, y - 2 * h - 34 * S1], [x - w / 2, y + h + 34 * S1], [sx(side) + side * w * 0.5, y - h / 2], [sx(-side) - side * w * 0.5, y - h / 2]];
       const fit = ([cl, ct]) => [Math.min(SAFE.r - w, Math.max(SAFE.l, cl)), Math.min(bottom - h, Math.max(top, ct))];
       const over = (r, q) => Math.max(0, Math.min(r.r, q.r + m) - Math.max(r.l, q.l - m)) * Math.max(0, Math.min(r.b, q.b + m) - Math.max(r.t, q.t - m));
       const cost = ([cl, ct]) => {
         const r = box(cl, ct, w, h);
         let c = 0;
         for (const p of spots) if (p.x > r.l - m && p.x < r.r + m && p.y > r.t - m && p.y < r.b + m) c += w * h;   // never on a spot a label names
-        for (const q of placed) c += 2 * over(r, q);
-        for (const q of obstacles) c += over(r, q);
+        for (const q of placed) c += 4 * over(r, q);
+        for (const q of obstacles) c += 4 * over(r, q);   // other text (notes, counters, the caption): never read through a label
         return c;
       };
       let [lx, ly] = fit(cands[0]);
@@ -306,7 +309,7 @@ export const createHud = (opts = {}) => {
       }
       return tagHTML(text);
     };
-    if (kind === "card") el.style.width = Math.min((SAFE.r - SAFE.l) * (o.maxW ?? 0.8), 720 * S1).toFixed(2) + "px";
+    if (kind === "card") el.style.width = Math.min((SAFE.r - SAFE.l) * (o.maxW ?? 0.88), 760 * S1).toFixed(2) + "px";   // wide enough that the larger card text keeps two lines
     B.push({ id, el, o, kind, html, now: el.querySelector(".in.now"), was: el.querySelector(".in.was"), glow: el.querySelector(".glow"), shown: [null, null] });
     return el;
   };
@@ -358,7 +361,7 @@ export const createHud = (opts = {}) => {
         bd.was.style.visibility = "hidden"; bd.now.style.translate = "0px 0px"; bd.now.style.opacity = "1";
       }
       if (bd.kind !== "card") { el.style.width = w.toFixed(2) + "px"; el.style.height = h.toFixed(2) + "px"; }
-      bd.glow.style.opacity = (now.at != null ? 0.24 * (1 - E.out3(seg(t, now.at, now.at + 0.9))) : 0).toFixed(4);   // the plate glows once as the rate changes
+      bd.glow.style.opacity = (now.at != null ? 0.12 * (1 - E.out3(seg(t, now.at, now.at + 0.9))) : 0).toFixed(4);   // the plate glows once as the rate changes
       const p0 = now.pr, wo = win ? win.o : 1;
       const pr = { ...p0, o: p0.o * wo * gate };
       // the stack reflows with the note's own in/out, so a neighbour slides instead of jumping
@@ -378,12 +381,13 @@ export const createHud = (opts = {}) => {
   };
 
   // ── counters (tabular figures) ────────────────────────────────────────────
+  const stepped = (v, t) => (typeof v === "function" ? v(t) : Array.isArray(v) && Array.isArray(v[0]) ? (v.filter(([k]) => t >= k).pop() || v[0])[1] : v);   // [[t, v], ...] steps at each t (for cuts), (t) => v, or a plain value
   const counter = (id, o) => {
     const el = mk("div", "hud-counter");
     el.id = "hud-" + id;
-    el.innerHTML = (o.label ? '<span class="lb">' + esc(o.label) + "</span>" : "") + '<span class="row"><b class="v"></b>' + (o.unit ? '<span class="u">' + esc(o.unit) + "</span>" : "") + "</span>";
+    el.innerHTML = (o.label ? '<span class="lb">' + esc(stepped(o.label, -Infinity)) + "</span>" : "") + '<span class="row"><b class="v"></b>' + (o.unit ? '<span class="u">' + esc(o.unit) + "</span>" : "") + "</span>";
     if (o.minCh) el.querySelector(".v").style.minWidth = o.minCh + "ch";
-    C.push({ id, el, v: el.querySelector(".v"), o });
+    C.push({ id, el, v: el.querySelector(".v"), lb: o.label && typeof o.label !== "string" ? el.querySelector(".lb") : null, o });
     return el;
   };
   const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -393,9 +397,10 @@ export const createHud = (opts = {}) => {
       const val = o.value ? o.value(t) : keyed(o.keys || [[0, 0]], t, o.ease ? ease(o.ease) : E.inout3);
       const txt = (o.fmt || commas)(val);
       if (v.textContent !== txt) v.textContent = txt;
+      if (ct.lb) { const L = stepped(o.label, t); if (ct.lb.textContent !== L) ct.lb.textContent = L; }
       el.classList.toggle("lit", !!(o.lit && o.lit(val)));
       const pr = gated(presence(t, from0(o.t0), o.t1 ?? null, { dy: 0.02 })), w = el.offsetWidth, h = el.offsetHeight;
-      const [fx, fy] = o.at || [(SAFE.l + SAFE.r) / 2 / W, 0.47];
+      const [fx, fy] = stepped(o.at, t) || [(SAFE.l + SAFE.r) / 2 / W, 0.47];
       const x = fx * W - w / 2, y = fy * H - h / 2;
       place(el, x, y);
       apply(el, pr);

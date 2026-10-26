@@ -1,0 +1,121 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/space/ep05/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Which holds a million Earths? They look like twins.",
+   "stars": [
+    "Earths",
+    "twins"
+   ],
+   "phonemes": "wˌɪtʃ hˈoʊldz ɐ mˈɪliən ˈɜːθs? ðeɪ lˈʊk lˈaɪk twˈɪnz.",
+   "speed": 1.0,
+   "file": "01.wav",
+   "dur": 3.033,
+   "sha256": "a35ea755445c8db4dfd8f0c6a613badb9f3f221e25cdc7b4412c9f95718b0cd3"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "In your sky, the Sun and the full Moon look the same size. But one is about four hundred times wider, and four hundred times farther away.",
+   "stars": [
+    "away"
+   ],
+   "phonemes": "ɪn jʊɹ skˈaɪ, ðə sˈʌn ænd ðə fˈʊl mˈuːn lˈʊk ðə sˈeɪm sˈaɪz. bˌʌt wˈʌn ɪz ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd tˈaɪmz wˈaɪdɚ, ænd fˈɔːɹ hˈʌndɹɪd tˈaɪmz fˈɑːɹðɚɹ ɐwˈeɪ.",
+   "speed": 1.0,
+   "file": "02.wav",
+   "dur": 9.424,
+   "sha256": "b999ca008a9c9a2ed782ee4cceb0daea8fbac137f4e77fa23b080bc4260b8e1a"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Line Earths up across the Sun's face: a hundred and nine. Your whole world would fit inside one big sunspot.",
+   "stars": [
+    "nine",
+    "sunspot"
+   ],
+   "phonemes": "lˈaɪn ˈɜːθs ˌʌp əkɹˌɑːs ðə sˈʌnz fˈeɪs: ɐ hˈʌndɹɪd ænd nˈaɪn. jʊɹ hˈoʊl wˈɜːld wʊd fˈɪt ɪnsˈaɪd wˈʌn bˈɪɡ sˈʌnspɑːt.",
+   "speed": 0.95,
+   "file": "03.wav",
+   "dur": 7.567,
+   "sha256": "bced6e8e599f860760e8f47af5aa050c1320be0fad6c9e46a4136b676de9065d"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about eight thousand.",
+   "stars": [
+    "Greece",
+    "thousand"
+   ],
+   "phonemes": "nˌɪɹli twˈɛntifˈaɪv sˈɛntʃɚɹiz ɐɡˈoʊ, ɪn ˈæθᵻnz, ˌænəksˈæɡəɹəs sˈɛd ðə sˈʌn wʌzɐ fˈaɪɚɹi stˈoʊn, bˈɪɡɚ ðɐn sˈʌðɚn ɡɹˈiːs. kˈɔːlɪŋ ɪɾ ɐ stˈoʊn, nˌɑːɾə ɡˈɑːd, ɡɑːt hˌɪm tʃˈɑːɹdʒd wɪð ɪmpˈaɪəɾi. hiː wʌz ɹˈaɪt. baɪ ɐ fˈæktɚɹ ʌv ɐbˌaʊt ˈeɪt θˈaʊzənd.",
+   "speed": 1.05,
+   "file": "04.wav",
+   "dur": 15.172,
+   "sha256": "7ee0d3aa2af9dfc4152ad75c00c7e2c4549b5f7a1754a894f44e17eab9c511bf"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
+   "stars": [
+    "fill",
+    "wider"
+   ],
+   "phonemes": "mˈɛlt dˌaʊn wˈʌn pˈɔɪnt θɹˈiː mˈɪliən ˈɜːθs, ænd ðeɪd fˈɪl ɪt. jˈɛt ɐmˌʌŋ ðə stˈɑːɹz, ɪts ˈɔːɹdɪnˌɛɹi. sˌʌm ɑːɹ mˈɔːɹ ðˌænə θˈaʊzənd tˈaɪmz wˈaɪdɚ.",
+   "speed": 0.95,
+   "file": "05.wav",
+   "dur": 9.439,
+   "sha256": "69fcf881b4420ac4d2f9c86a4cb6c63667938be945f84420cd6ffbae4e3f89bf"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "Astronomers even file the Sun under dwarf stars. Out there, this is what ordinary looks like.",
+   "stars": [
+    "dwarf"
+   ],
+   "phonemes": "ɐstɹˈɑːnəmɚz ˈiːvən fˈaɪl ðə sˈʌn ˌʌndɚ dwˈɔːɹf stˈɑːɹz. ˈaʊt ðˈɛɹ, ðɪs ɪz wʌt ˈɔːɹdɪnˌɛɹi lˈʊks lˈaɪk.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 6.75,
+   "sha256": "cc7845bce3f75233b41526a859df790c42f4482e091e7327ce2bd08025c89ff6"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, across the Sun: about five seconds. Sun to Earth: eight minutes, twenty seconds.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, əkɹˌɑːs ðə sˈʌn: ɐbˌaʊt fˈaɪv sˈɛkəndz. sˈʌn tʊ ˈɜːθ: ˈeɪt mˈɪnɪts, twˈɛnti sˈɛkəndz.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 5.713,
+   "sha256": "e2f2521849c14aad99a358f8f884024820cfbbe62b92fa4aef692cae5a50c1db"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: since this started, you've flown at least two thousand kilometers. How?",
+   "stars": [
+    "How"
+   ],
+   "phonemes": "nˈɛkst: sˈɪns ðɪs stˈɑːɹɾᵻd, juːv flˈoʊn æt lˈiːst tˈuː θˈaʊzənd kɪlˈɑːmɪɾɚz. hˈaʊ?",
+   "speed": 0.9,
+   "file": "08.wav",
+   "dur": 5.126,
+   "sha256": "b893dd86a3a81bc3e4138ea96658de3ce87d63768280a1d6654120accade8b08"
+  }
+ ]
+}

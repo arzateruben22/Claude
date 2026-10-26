@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Suddenly, you're whipping round more than twice as fast.",
+  "claim": "Pulling two 2 kg dumbbells (and the arms holding them) from 0.8 m to 0.2 m from the axis while seated on a freely turning chair raises the spin rate by about 2.2–3.1 times (2.68 in the scene's model).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: with negligible net torque angular momentum is constant, 'Iω = I′ω′'. Model (computed, set/spin.js): I = I0 + 2·m·r² + 2·m_arm·(r_s² + r_s·r + r²)/3, with I0 (the seated body and the chair's top, without the arms) = 2.0 kg·m² (an assumption: a seated person with legs forward and a chair seat; a standing body as a cylinder gives 0.8–1.6, and the review suggested 2–3 seated), dumbbells m = 2 kg each, each arm a 3.5 kg uniform rod from the shoulder (r_s = 0.19 m) to the hand, hands from r = 0.80 m to 0.20 m. I_out = 2.0 + 2.56 + 1.93 = 6.49; I_in = 2.0 + 0.16 + 0.27 = 2.43; ω_in/ω_out = 2.68. For I0 = 1.5–3.0 kg·m²: 3.1–2.2. The assumption is badged on screen."
+ },
+ {
+  "id": "c2",
+  "sentence": "Nothing outside did.",
+  "claim": "Pulling the arms in exerts no torque about the chair's axis from outside the person-and-chair system; the only outside torque is the small friction at the pivot (ignored here, badged).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OpenStax 11.3, skater): friction is small and applied near the pivot, so the net torque is close to zero. The forces of pulling in are internal. Inside the system the arms do push the body round (the dumbbells' angular momentum goes to the body); the line says 'outside' (review fix)."
+ },
+ {
+  "id": "c3",
+  "sentence": "With no twist from outside, your total amount of spin can't change.",
+  "claim": "With negligible net external torque, a system's angular momentum L = Iω is conserved.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'her angular momentum is constant, so that L = L′ or Iω = I′ω′'. 'Total amount of spin' is the script's plain word for angular momentum, used again in c4, c10 and c11; the spin rate is called 'fast'."
+ },
+ {
+  "id": "c4",
+  "sentence": "Weight near the middle is easier to turn, so that same amount turns you faster.",
+  "claim": "A mass m at distance r adds m·r² to the moment of inertia, so weight pulled toward the axis is easier to turn; with the angular momentum fixed, ω = L/I rises.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/10-4-moment-of-inertia-and-rotational-kinetic-energy",
+  "source_title": "OpenStax University Physics Volume 1, 10.4 Moment of Inertia and Rotational Kinetic Energy",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The bible's source for I = Σ m r² (OpenStax 10.4). Model (computed, set/spin.js): I = I0 + 2·m·r² + 2·m_arm·(r_s² + r_s·r + r²)/3, with I0 (the seated body and the chair's top, without the arms) = 2.0 kg·m² (an assumption: a seated person with legs forward and a chair seat; a standing body as a cylinder gives 0.8–1.6, and the review suggested 2–3 seated), dumbbells m = 2 kg each, each arm a 3.5 kg uniform rod from the shoulder (r_s = 0.19 m) to the hand, hands from r = 0.80 m to 0.20 m. I_out = 2.0 + 2.56 + 1.93 = 6.49; I_in = 2.0 + 0.16 + 0.27 = 2.43; ω_in/ω_out = 2.68. For I0 = 1.5–3.0 kg·m²: 3.1–2.2. The assumption is badged on screen."
+ },
+ {
+  "id": "c5",
+  "sentence": "Your arms paid for every extra turn.",
+  "claim": "The rotational kinetic energy L²/(2I) rises as I falls; the extra energy equals the work the arms do pulling the weights inward.",
+  "source_url": "https://app.jove.com/v/12716",
+  "source_title": "JoVE Science Education, Conservation of Angular Momentum (adapted from OpenStax)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (adapted OpenStax): the skater's rotational kinetic energy increases as her moment of inertia drops, from 'the work the skater does pulling her arms inward'. In the model the energy rises 2.68×."
+ },
+ {
+  "id": "c13",
+  "sentence": "Skaters use this.",
+  "claim": "Figure skaters speed up their spins by pulling their arms in, lowering their moment of inertia (OpenStax's own example of angular momentum conservation).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OpenStax 11.3, Figure 11.14): the skater pulls in her arms, her moment of inertia drops and her angular velocity rises."
+ },
+ {
+  "id": "c6",
+  "sentence": "In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a minute.",
+  "claim": "Guinness World Records lists the fastest spin on ice skates as 342 rpm, by Olivia Oliver (Canada) in Warsaw, Poland, on 19 January 2015.",
+  "source_url": "https://www.guinnessworldrecords.com/world-records/fastest-spin-ice-skating",
+  "source_title": "Guinness World Records, Fastest spin on ice skates",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'the fastest spin on ice skates is 342 RPM and was achieved by Olivia Oliver (Canada) in Warsaw, Poland, on 19 January 2015'. Local coverage gives her age as 12 (Dartmouth Tribune) or 11 (CTV): the line says 'young', no age. 'Pulled in so tight' was cut (the record page doesn't describe her position; review fix)."
+ },
+ {
+  "id": "c7",
+  "sentence": "Nearly six turns a second.",
+  "claim": "342 revolutions per minute is 5.7 revolutions per second.",
+  "source_url": "https://www.guinnessworldrecords.com/world-records/fastest-spin-ice-skating",
+  "source_title": "Guinness World Records, Fastest spin on ice skates",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 342 / 60 = 5.70."
+ },
+ {
+  "id": "c8",
+  "sentence": "Arms out, eighteen degrees.",
+  "claim": "Turning once every 2 s (180° a second), the chair turns 18° in each 1/10 s between ghosts.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 360° / 2 s × 0.1 s = 18°. The scene's starting spin (one turn every 2 s, 30 rpm) is chosen, not claimed as typical."
+ },
+ {
+  "id": "c9",
+  "sentence": "Arms in, nearly fifty.",
+  "claim": "After the pull the spin is 2.68 times faster in the model, so each 1/10 s step is 48°; for a body of 1.5–3.0 kg·m², 39–56°.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 18° × 2.676 = 48.2° ('nearly fifty'); 18 × 2.19 = 39°, 18 × 3.11 = 56°. The ghosts are the model's output, badged as a model. Model (computed, set/spin.js): I = I0 + 2·m·r² + 2·m_arm·(r_s² + r_s·r + r²)/3, with I0 (the seated body and the chair's top, without the arms) = 2.0 kg·m² (an assumption: a seated person with legs forward and a chair seat; a standing body as a cylinder gives 0.8–1.6, and the review suggested 2–3 seated), dumbbells m = 2 kg each, each arm a 3.5 kg uniform rod from the shoulder (r_s = 0.19 m) to the hand, hands from r = 0.80 m to 0.20 m. I_out = 2.0 + 2.56 + 1.93 = 6.49; I_in = 2.0 + 0.16 + 0.27 = 2.43; ω_in/ω_out = 2.68. For I0 = 1.5–3.0 kg·m²: 3.1–2.2. The assumption is badged on screen."
+ },
+ {
+  "id": "c10",
+  "sentence": "One push set your total spin.",
+  "claim": "After the push, with no outside torque (friction ignored), the person-and-chair's angular momentum stays what the push gave it.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same as c3."
+ },
+ {
+  "id": "c11",
+  "sentence": "Your arms just decide how fast.",
+  "claim": "With the angular momentum fixed, moving the arms (and weights) in or out changes the moment of inertia and so sets the spin rate: in is faster, out is slower.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same as c3, c4."
+ }
+]

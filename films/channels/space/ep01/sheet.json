@@ -178,19 +178,14 @@
    "t1": 24.0
   },
   {
-   "t": 16.1042,
+   "t": 16.2576,
    "kind": "counter.tick",
    "tag": "c-clock-m1"
   },
   {
-   "t": 17.0417,
+   "t": 17.3485,
    "kind": "counter.tick",
    "tag": "c-clock-m2"
-  },
-  {
-   "t": 17.9792,
-   "kind": "counter.tick",
-   "tag": "c-clock-m3"
   },
   {
    "t": 18.0,
@@ -202,27 +197,32 @@
    ]
   },
   {
-   "t": 18.9167,
+   "t": 18.4394,
+   "kind": "counter.tick",
+   "tag": "c-clock-m3"
+  },
+  {
+   "t": 19.5303,
    "kind": "counter.tick",
    "tag": "c-clock-m4"
   },
   {
-   "t": 19.8542,
+   "t": 20.6212,
    "kind": "counter.tick",
    "tag": "c-clock-m5"
   },
   {
-   "t": 20.7917,
+   "t": 21.7121,
    "kind": "counter.tick",
    "tag": "c-clock-m6"
   },
   {
-   "t": 21.7292,
+   "t": 22.803,
    "kind": "counter.tick",
    "tag": "c-clock-m7"
   },
   {
-   "t": 22.6667,
+   "t": 23.8939,
    "kind": "counter.tick",
    "tag": "c-clock-m8"
   },
