@@ -3,7 +3,7 @@
 Meanwhile, Inside No. 02, "A billion passengers". Nothing has been posted.
 
 ## This episode
-- **The wrong idea: blue blood.** "Your veins look blue, so it's easy to guess the blood inside them is. It never is."
+- **The wrong idea: blue blood.** "Veins often look blue, so it's easy to guess the blood inside them is. It never is."
   (c7, c8: Live Science; Waterloo). How blue a vein looks depends on its depth and on skin tone; under darker skin
   veins often look green. The physiologist decides whether to add that as an on-screen note.
 - **Cooperative binding** is said as "each one makes the next one easier" (affinity, c5). The picture shows each O₂

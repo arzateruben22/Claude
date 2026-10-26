@@ -149,6 +149,37 @@ END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the spark*", "next": "Mean
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": B["tease"]["t0"] - 0.3, "region": [0.42, 0.52]}   # the bone marrow (the pelvis and thigh bones)
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(DUR / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "this cell",
+    "your blood",
+    "no open door",
+    "white cell",
+    "white cells",
+    "eight micrometres",
+    "sore fingertip",
+    "Rudolf Virchow",
+    "Julius Cohnheim",
+    "eighteen sixty-seven",
+    "his assistant",
+    "living frog's vessels",
+    "inflamed tissue",
+    "switch on",
+    "two wall cells",
+    "rare inherited condition",
+    "its nucleus",
+    "own door",
+    "narrower than itself",
+    "seals shut",
+    "bone marrow",
+    "new neutrophils",
+    "ten million",
+    "every heartbeat",
+    "the spark",
+    "pile up",
+    "as you watched",
+]
+
 film = {
     "id": "meanwhile-inside-006", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -157,7 +188,7 @@ film = {
     "cam": CAM, "foc": FOC, "labels": LABELS, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

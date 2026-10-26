@@ -126,9 +126,9 @@ CAM = {
     "skin": [
         {"t": CUT["skin"], "pos": [40.0, 80.0, 118.0], "look": [0.0, -12.0, 18.0], "fov": 34},               # the block's corner: the bluish band on top, the vein in the cut face
         {"t": SKIN["section"][0], "pos": [34.0, 72.0, 130.0], "look": [0.0, -12.0, 22.0], "fov": 34, "ease": "sine"},
-        {"t": SKIN["section"][1], "pos": [8.0, -13.0, 184.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "p2"},  # square to the cut face
-        {"t": SKIN["red"][1], "pos": [5.0, -13.0, 178.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo04:back:end", 0.3), "pos": [4.0, -13.0, 180.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
+        {"t": SKIN["section"][1], "pos": [11.0, -13.0, 184.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "p2"},  # square to the cut face
+        {"t": SKIN["red"][1], "pos": [8.0, -13.0, 178.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:back:end", 0.3), "pos": [7.0, -13.0, 180.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
         # the beat closes back on the surface: the bluish band above the vein, the rays still drawn
         {"t": CUT["lung"], "pos": [30.0, 52.0, 150.0], "look": [0.0, -14.0, 26.0], "fov": 34, "ease": "sine"},
     ],
@@ -177,15 +177,14 @@ LABELS = [
     {"id": "hb", "text": "hemoglobin", "color": "oxy", "mark": "dot", "at": "hblit", "t0": A("vo02:hemoglobin"), "t1": CUT["hb"] - 0.3, "shot": "cell", "side": -1},
     {"id": "iron", "text": "iron", "color": "bone", "mark": "dot", "at": "iron0", "t0": A("vo02:iron"), "t1": A("vo03:Watch", 0.2), "shot": "hb", "side": 1},
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2first", "t0": A("vo02:oxygen"), "t1": BOARD[0] + 0.4, "shot": "hb", "side": -1},
-    {"id": "vein", "text": "vein, seen through skin", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
-    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Returning"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1},
+    {"id": "vein", "text": "vein, seen through skin", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:Veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
+    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Returning"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
     {"id": "redlight", "text": "red light", "color": "#FF6A3D", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
     {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1, "fixed": True},
     {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:lungs"), "t1": SLOW0, "shot": "lung", "side": 1},
-    {"id": "back", "text": "back from the body", "color": "deoxy", "mark": "dot", "at": "incoming", "t0": A("vo05:back"), "t1": SLOW0 - 0.8, "shot": "lung", "side": 1},
     {"id": "arrive", "text": "arriving: darker", "color": "deoxy", "mark": "dot", "at": "incoming", "t0": A("vo06:The", 0.0), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "lung", "side": 1},
     {"id": "leave", "text": "leaving: brighter", "color": "oxy", "mark": "dot", "at": "outgoing", "t0": A("vo06:count"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "lung", "side": -1},
-    {"id": "node", "text": "gap in the insulation", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo08:fastest"), "t1": EC, "shot": "nerve", "side": 1},
+    {"id": "node", "text": "gap in the insulation", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo08:crawl"), "t1": EC, "shot": "nerve", "side": 1},
 ]
 BADGES = [
     {"id": "nts-cell", "text": "not to scale", "t0": 0.0, "t1": CUT["hb"] - 0.3},
@@ -193,7 +192,6 @@ BADGES = [
     {"id": "ill-skin", "text": "illustration · not to scale", "t0": CUT["skin"], "t1": CUT["lung"] - 0.3},
     {"id": "nts-lung", "text": "not to scale", "t0": CUT["lung"], "t1": CUT["nerve"] - 0.3},
     {"id": "nts-nerve", "text": "not to scale · slowed", "t0": CUT["nerve"], "t1": EC},
-    {"id": "nts-loop", "text": "not to scale", "t0": CUT["loop"], "t1": DUR},   # frame 0's cheat, badged again for the replay
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number on screen in one place from the title's exit to the
 # tally, its label naming the beat. Each is its own counter, handing over to the next in the same spot.
@@ -210,6 +208,36 @@ END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Meanw
        "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."}   # c1, c2
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "billion passengers",
+    "one protein",
+    "two hundred and seventy million",
+    "seventy million copies",
+    "four iron atoms",
+    "an oxygen",
+    "first oxygen",
+    "next one",
+    "red light",
+    "passenger count",
+    "fuller seats",
+    "once a minute",
+    "a quarter of a second",
+    "skin's trick",
+    "a cup of oxygen",
+    "your blood",
+    "your body",
+    "your nerves",
+    "it doesn't",
+    "at the start",
+    "darker red",
+    "bright red",
+    "less red",
+    "sinks in",
+    "as you watched",
+    "a billion",
+]
+
 film = {
     "id": "meanwhile-inside-002", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -218,7 +246,7 @@ film = {
     "cam": CAM, "foc": FOC, "labels": LABELS, "badges": BADGES, "tally": TALLY, "spine": SPINE,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

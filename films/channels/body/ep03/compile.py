@@ -153,6 +153,35 @@ END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Meanwhile, Inside 
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "multiple sclerosis",
+    "Formula One",
+    "Johannes Müller",
+    "a metre a second",
+    "thirty metres",
+    "eighteen fifty",
+    "fatty myelin",
+    "spine to toe",
+    "nerve signal",
+    "leading expert",
+    "thin fibre",
+    "bare fibres",
+    "faster wires",
+    "bare ones",
+    "stubbed toe",
+    "a hundred and fifty",
+    "eighty times",
+    "end of the line",
+    "at rest",
+    "former student",
+    "as fast as light",
+    "could ever be timed",
+    "cheetah speed",
+    "the cell",
+    "up to",
+]
+
 film = {
     "id": "meanwhile-inside-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -161,7 +190,7 @@ film = {
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

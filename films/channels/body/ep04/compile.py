@@ -143,6 +143,34 @@ END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Meanwhil
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.3, "region": [0.5, 0.16]}   # the brainstem, where each breath begins
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "nerve cells",
+    "a hundred trillion",
+    "meeting points",
+    "Camillo Golgi",
+    "Santiago Ramón y Cajal",
+    "continuous web",
+    "separate cells",
+    "nineteen oh six",
+    "nineteen fifties",
+    "electron microscopes",
+    "chemical messenger",
+    "a thousandth of a second",
+    "grow stronger",
+    "gaps like these",
+    "your brainstem",
+    "your diaphragm",
+    "fifteen breaths",
+    "those breaths",
+    "that air",
+    "a typical one",
+    "thousands of others",
+    "tiny sacs",
+    "reaches out",
+    "in your brainstem",
+]
+
 film = {
     "id": "meanwhile-inside-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -151,7 +179,7 @@ film = {
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

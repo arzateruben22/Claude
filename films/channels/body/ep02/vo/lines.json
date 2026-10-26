@@ -98,12 +98,12 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Your veins look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back.",
+   "text": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back.",
    "stars": [
     "blue",
     "back"
    ],
-   "phonemes": "jɔː vˈeɪnz lˈʊk blˈuː, sˌəʊ ɪts ˈiːzi tə ɡˈɛs ðə blˈʌd ɪnsˈaɪd ðˌɛm ɪz. ɪt nˈɛvəɹ ɪz. ɹɪtˈɜːnɪŋ blˈʌd ɪz dˈɑːkə ɹˈɛd. ɹˈɛd lˈaɪt sˈɪŋks ˈɪn, and ðə vˈeɪn swˈɒləʊz ɪt, sˌəʊ lˈɛs ɹˈɛd kˈʌmz bˈak.",
+   "phonemes": "vˈeɪnz ˈɒfən lˈʊk blˈuː, sˌəʊ ɪts ˈiːzi tə ɡˈɛs ðə blˈʌd ɪnsˈaɪd ðˌɛm ɪz. ɪt nˈɛvəɹ ɪz. ɹɪtˈɜːnɪŋ blˈʌd ɪz dˈɑːkə ɹˈɛd. ɹˈɛd lˈaɪt sˈɪŋks ˈɪn, and ðə vˈeɪn swˈɒləʊz ɪt, sˌəʊ lˈɛs ɹˈɛd kˈʌmz bˈak.",
    "speeds": [
     0.88,
     0.88,
@@ -117,21 +117,21 @@
    ],
    "silences": [
     [
-     3.8366,
-     4.1366
+     4.0699,
+     4.3699
     ],
     [
-     5.3425,
-     5.6425
+     5.5758,
+     5.8758
     ],
     [
-     7.7817,
-     8.0817
+     8.015,
+     8.315
     ]
    ],
    "file": "04.wav",
-   "dur": 12.075,
-   "sha256": "560fdc71ffa472c531a5b21f68b184b037af3eb28b66029cef877206c01698ac"
+   "dur": 12.309,
+   "sha256": "d3ec5ab5c569d409f876da8bc18fb002e34f0e258a006d53578634bd4efaa934"
   },
   {
    "id": "vo05",

@@ -269,7 +269,7 @@ const ray = (pts, hex, r = 0.38) => {
 const RAYS = {
   blue: [ray([[-5, 3], [-5, -3.5], [-2.5, -1.5], [-1, -4.2], [2, 3]], "#3D7BFF"), ray([[-19, 3], [-18.5, -2.8], [-17, -4.6], [-15, 3]], "#3D7BFF")],
   red: ray([[4, 3], [4, SK.veinY + SK.veinR + 0.6]], "#FF4A2A"),
-  back: ray([[13, 3], [13, -27], [15, -30.5], [17.5, -25], [18.5, 3]], "#FF4A2A"),
+  back: ray([[11, 3], [11, -27], [12.5, -30.5], [14.5, -25], [15.5, 3]], "#FF4A2A"),
 };
 const writeSkin = (t) => {
   const S = FILM.skin;
@@ -358,10 +358,10 @@ const ANCH = {
   iron0: () => HB.ironWorld(0),
   o2first: (t) => { const p = boarderP(0, t), s = HB.seat(0), d = Math.hypot(p[0] - s[0], p[1] - s[1], p[2] - s[2]) || 1; return p.map((x, k) => x + ((p[k] - s[k]) / d) * 1.2); },
   veintop: () => [0, 0.5, 22],
-  vein: () => [SK.veinR * 0.35, SK.veinY + SK.veinR * 0.55, SK.z + 0.4],   // inside the lumen
+  vein: () => [0, SK.veinY + SK.veinR - 0.6, SK.z + 0.4],                  // just inside the lumen's top edge
   redray: (t) => RAYS.red.at(0.55),
   blueray: (t) => RAYS.blue[0].at(0.5),                                     // the bounce near the surface
-  sac: () => [36, -26, 0.42 * 58 - 24 + 1],
+  sac: () => [0, 30, -2.15],                                             // the hero sac's upper face
   incoming: (t) => lungP(Math.max(10, sF0 - 15)),
   outgoing: (t) => lungP(Math.min(PL.length - 10, sF1 - 10)),
   node: (t) => NF.at(NERVE_NODES[nerveK0 + 3], 1.5),

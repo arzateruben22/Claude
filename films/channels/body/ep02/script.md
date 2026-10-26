@@ -26,19 +26,19 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `{-}` marks a sentence that states nothing outside the film. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/body/ep02 --segment meanwhile`.
 
-## hook {shot: macro; frame 0 is the hero cell cut open, packed with glowing hemoglobin, one O₂ boarding at the cut (labelled O₂) · title: "A billion passengers" · pre: 0.1 · energy: 0.7} (0–5 s)
+## hook {shot: macro; frame 0 is the hero cell cut open, packed with glowing hemoglobin, one O₂ boarding at the cut (labelled O₂) · title: "A billion passengers" · badge: "not to scale", held to the iris · pre: 0.1 · energy: 0.7} (0–5 s)
 vo: What's this cell *carrying*? Room for about a *billion* passengers. {c1,c2}
 
 ## normal {shot: push into the cut, then the iris to one hemoglobin · labels: hemoglobin, iron · energy: 0.45} (5–16 s)
 vo: It's packed with one protein, *hemoglobin*: about two hundred and seventy million copies. {c3}
 Each one has four iron atoms, and each can hold an *oxygen*. {c4}
 
-## change {shot: one hemoglobin fills, four O₂ boarding one by one, each sooner; garnet to crimson · label: O₂, white with its glyph and ring · energy: 0.55} (16–27.5 s)
+## change {shot: one hemoglobin fills, four O₂ boarding one by one, each sooner; garnet to crimson · badge: "illustration · slowed" · label: O₂, white with its glyph and ring · energy: 0.55} (16–27.5 s)
 vo: Watch one fill. {-} The first oxygen struggles to board, but each one makes the next one
 *easier*. {c5} Dark red at the start; full, it's *bright* red. {c6}
 
 ## why {shot: a vein under a slab of skin; red light sinks to the vein, blue bounces back near the surface · badge: illustration · picture-only 2.5 s · energy: 0.55} (27.5–42.5 s)
-vo: Your veins look *blue*, so it's easy to guess the blood inside them is. {c7} It never is. {c8}
+vo: Veins often look *blue*, so it's easy to guess the blood inside them is. {c7} It never is. {c8}
 Returning blood is darker red. {c9,c18} Red light sinks in, and the vein swallows it, so less red comes
 *back*. {c10}
 

@@ -145,6 +145,37 @@ LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["exit"] - 0.3, "region": [0.4
 BREATHS = [round(ROOM["breath0"] + 4.0 * n, 4) for n in range(0, 6) if ROOM["breath0"] + 4.0 * n < CUT["exit"]]
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "your breath",
+    "your windpipe",
+    "twenty-three times",
+    "half a billion",
+    "a fifth of a millimetre",
+    "airy flesh",
+    "sixteen sixty-one",
+    "Marcello Malpighi",
+    "a frog's lung",
+    "half a micrometre",
+    "a red cell",
+    "no pump",
+    "breathing gets harder",
+    "every sac",
+    "they'd cover",
+    "seventy square metres",
+    "a tennis court",
+    "your chest",
+    "six litres",
+    "a cell",
+    "the airways fork",
+    "the heart",
+    "in and out",
+    "aren't a bag",
+    "air thin",
+    "again and again",
+    "as you watched",
+]
+
 film = {
     "id": "meanwhile-inside-005", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -152,7 +183,7 @@ film = {
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

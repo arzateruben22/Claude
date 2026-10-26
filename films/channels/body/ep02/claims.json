@@ -67,14 +67,14 @@
  },
  {
   "id": "c7",
-  "sentence": "Your veins look blue, so it's easy to guess the blood inside them is.",
+  "sentence": "Veins often look blue, so it's easy to guess the blood inside them is.",
   "claim": "Veins under the skin often look blue, and a common belief is that the blood in them is blue.",
   "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
   "source_title": "If blood is red, why do veins look bluish? (Live Science)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: the blue look 'is an illusion' caused by the skin layer over the vein; blood is always red. The line states the appearance and the wrong guess, then corrects it (WRITING.md: a wrong idea). Bible §9: how blue a vein looks depends on its depth and on skin tone; under darker skin veins often look green (Live Science)."
+  "note": "Excerpt: the blue look 'is an illusion' caused by the skin layer over the vein; blood is always red. The line states the appearance and the wrong guess, then corrects it (WRITING.md: a wrong idea). Bible §9: how blue a vein looks depends on its depth and on skin tone; under darker skin veins often look green (Live Science). 26 Oct audit: the line said 'Your veins look blue', which tells every viewer theirs do; it now says 'Veins often look blue' (the claim's own wording), same 14 words."
  },
  {
   "id": "c8",
@@ -114,7 +114,7 @@
   "sentence": "Your heart sends your blood back through your lungs about once a minute.",
   "claim": "At rest the heart pumps about 5 L a minute, about equal to the body's whole blood volume, so on average the blood makes a full loop (through the lungs) about once a minute.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK54473/",
-  "source_title": "NCBI Bookshelf NBK54473 (physiology textbook chapter on blood volume and cardiac output; title not seen, only the search excerpt)",
+  "source_title": "David B. Young, Control of Cardiac Output (Morgan & Claypool, 2010), ch. 1, Introduction (NCBI Bookshelf NBK54473)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
