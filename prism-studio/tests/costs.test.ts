@@ -215,16 +215,19 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     expect(await canUsePaidGeneration(db, c.id, 100, OCT)).toMatchObject({ ok: true });
   });
 
-  it("a studio-wide cost in another currency stays in the studio figures and never turns a channel off", async () => {
+  it("a studio-wide cost in another currency blocks no channel without a studio budget; with one, every channel waits and it is named", async () => {
     const a = (await channel(db, "physics")).c, b = (await channel(db, "space")).c;
     await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 2000 });
     await setBudget(db, { channelId: b.id, month: "2026-10", capCents: 2000 });
     await addCost(db, cost({ channelId: null, amountCents: 1500, currency: "EUR", description: "Display font licence" }));
     expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
-    // with a studio budget too: its room is read in its own currency, and the EUR entry is listed, not converted
+    // with a studio budget: the ceiling covers the EUR entry too, and Prism can't convert it, so every channel waits
     await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
-    expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
-    expect(await canUsePaidGeneration(db, b.id, 100, OCT)).toMatchObject({ ok: true, code: "ok" });
+    for (const id of [a.id, b.id]) {
+      const r = await canUsePaidGeneration(db, id, 100, OCT);
+      expect(r).toMatchObject({ ok: false, code: "unconverted" });
+      expect(r.reason).toContain("An entry this month is in another currency than the studio budget (€15.00 Display font licence, studio-wide)");
+    }
     const studio = (await costTotals(db, ["2026-10"])).scope(null, "2026-10");
     expect(studio).toMatchObject({ spentCents: 0, remainingCents: 5000, unconverted: [{ currency: "EUR", cents: 1500 }] });
     expect((await costTotals(db, ["2026-10"])).scope(a.id, "2026-10").unconverted).toEqual([]);
@@ -234,10 +237,14 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     const a = (await channel(db, "physics")).c, b = (await channel(db, "space")).c;
     await setBudget(db, { channelId: a.id, month: "2026-10", capCents: 2000 });
     await setBudget(db, { channelId: b.id, month: "2026-10", capCents: 2000 });
-    await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
     await addCost(db, cost({ channelId: b.id, amountCents: 700, currency: "CAD", description: "Star map" }));
     expect(await canUsePaidGeneration(db, a.id, 100, OCT)).toMatchObject({ ok: true });
     expect(await canUsePaidGeneration(db, b.id, 100, OCT)).toMatchObject({ ok: false, code: "unconverted" });
+    // a studio budget covers both channels, so the CAD entry now holds back the other channel too, named with its channel
+    await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
+    const r = await canUsePaidGeneration(db, a.id, 100, OCT);
+    expect(r).toMatchObject({ ok: false, code: "unconverted" });
+    expect(r.reason).toMatch(/CA\$7\.00 Star map, Light Minute|\$7\.00 Star map, Light Minute/);
   });
 
   it("a budget already used says so, whatever else is in another currency", async () => {
@@ -259,8 +266,11 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     await setBudget(db, { channelId: null, month: "2026-10", capCents: 1000 });
     await addCost(db, cost({ channelId: null, amountCents: 400 }));
     await addCost(db, cost({ channelId: null, amountCents: 9000, currency: "GBP" }));
-    expect(await canUsePaidGeneration(db, c.id, 600, OCT)).toMatchObject({ ok: true });
+    // room is read in USD only: 601 is "no room" whatever the GBP entry is; 600 fits, but the GBP entry makes it unreadable
     expect(await canUsePaidGeneration(db, c.id, 601, OCT)).toMatchObject({ ok: false, code: "studio_no_room" });
+    const g = await canUsePaidGeneration(db, c.id, 600, OCT);
+    expect(g).toMatchObject({ ok: false, code: "unconverted" });
+    expect(g.reason).toContain("another currency than the studio budget (£90.00");
     await setBudget(db, { channelId: null, month: "2026-10", capCents: 1000, currency: "EUR" });
     const r = await canUsePaidGeneration(db, c.id, 100, OCT);
     expect(r).toMatchObject({ ok: false, code: "unconverted" });

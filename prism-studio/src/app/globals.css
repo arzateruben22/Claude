@@ -217,6 +217,9 @@ details:not(.more) > summary:hover { color: var(--text); }
   .q-title, .eps li a, .cost-meta a, .post-when a, .post-title a, a.kicker, table.t td a, .ledger th[scope="row"] a, .ep-row > a { display: inline-flex; align-items: center; min-height: 44px; }
   .eps li, .list > .ep-row { padding-block: 0; min-height: 44px; }
   .ep-row > a { flex-wrap: wrap; column-gap: .3em; }   /* "No. 001" and the title keep their space as flex items */
+  /* links inside a line of text: a taller hit area without moving the text */
+  .home-meta a { display: inline-block; padding-block: 15px; margin-block: -15px; }
+  h2 > a { display: inline-block; padding-block: 8px; margin-block: -8px; }
 }
 
 table.t { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -612,7 +615,7 @@ a.budget-name:hover { text-decoration: underline; }
 .cost:first-child { border-top: 0; }
 .cost-what { grid-area: what; font-weight: 600; overflow-wrap: anywhere; }
 .cost-amt { grid-area: amt; display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; font-size: 14px; white-space: nowrap; }
-.cost-meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; color: var(--text-3); }
+.cost-meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; font-size: 13px; color: var(--text-3); }
 .cost-meta a { color: var(--text-2); }
 .cost-change { grid-area: change; }
 .cost-change > summary { min-height: 36px; font-size: 13px; }

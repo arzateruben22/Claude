@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.4 — 2026-10-26 (final check)
+- Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)
+  holds back paid generation for every channel, after the "budget used" checks, and the reason names each entry and
+  where it was recorded ("€15.00 Display font licence, studio-wide"). 0.6.3 had let such entries past the studio
+  budget; without a studio budget they still hold back nothing but their own channel.
+- Posting sheets and the ZIP text file label the sources thread once ("Pinned comment", then "Reply" or "Reply 1, 2…"),
+  like the screens.
+- Phones: the home header links and review titles get a 44 px tap area without moving the text; cost rows align their
+  episode link with the other details.
+
 ## 0.6.3 — 2026-10-26 (last review fixes)
 - Costs: a cost in another currency holds back paid generation only for the channel it was recorded for, and the reason names it ("a £4.00 entry in another currency this month (Stock clip)"). A studio-wide one is listed as not converted in the All channels figures and turns no channel off. A budget already used now says "budget used" (or "studio budget used") instead of "another currency". The reason shows under the chip on each row, not only as a tooltip.
 - Costs: "All channels" and "All entries" for the unfiltered views; "Studio-wide" now only means entries with no channel; categories read "Voice", not "voice". The over-budget amount in By month no longer breaks after its minus sign, and estimates there carry the boxed ESTIMATE tag.

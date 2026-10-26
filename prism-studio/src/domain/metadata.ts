@@ -209,8 +209,8 @@ export function postingSheet(input: MetaInput, meta = buildMetadata(input)): str
   const thread = (p: Platform, limit: string) => {
     const first = FIRST_COMMENT[p], replies = meta[p].replies ?? [], n = replies.length + 1;
     if (!meta[p].pinnedComment) return [];
-    return [`**${first}** (${n > 1 ? `1 of ${n} · ` : ""}${limit}-character limit)${n > 1 ? ": post it, then each reply under it, in order" : ""}`, "", "```", meta[p].pinnedComment, "```",
-      ...replies.flatMap((r, k) => ["", `**Reply ${k + 1}** (${k + 2} of ${n}, under the ${first.toLowerCase()})`, "", "```", r, "```"])];
+    return [`**${first}** (${limit}-character limit)${n > 1 ? `: post it, then ${n > 2 ? "each reply" : "the reply"} under it${n > 2 ? ", in order" : ""}` : ""}`, "", "```", meta[p].pinnedComment, "```",
+      ...replies.flatMap((r, k) => ["", `**${replies.length > 1 ? `Reply ${k + 1}` : "Reply"}** (under the ${first.toLowerCase()})`, "", "```", r, "```"])];
   };
   return [
     `# Posting sheet: ${ch} ${padNo(input.episode.number)}, "${input.episode.title}"`, "",
@@ -267,7 +267,7 @@ export function handOffText(x: PostText & { title: string; postingNotes: string 
   const notes = parsePostingNotes(x.postingNotes), n = notes.replies.length + 1;
   const first = FIRST_COMMENT[platform].toUpperCase(), rest = noteBlocks(x.postingNotes).filter((b) => !THREAD_BLOCK.test(b)).join("\n\n");
   return [platform === "youtube" ? `TITLE\n${x.title}\n` : "", `CAPTION\n${composePostText(x)}\n`, `POST TO\n${postTo}\n`,
-    notes.comment ? `${first}${n > 1 ? ` (1 of ${n})` : ""}\n${notes.comment}\n` : "",
-    ...notes.replies.map((r, k) => `REPLY ${k + 1} (${k + 2} of ${n}, under the ${first.toLowerCase()})\n${r}\n`),
+    notes.comment ? `${first}\n${notes.comment}\n` : "",
+    ...notes.replies.map((r, k) => `${notes.replies.length > 1 ? `REPLY ${k + 1}` : "REPLY"} (under the ${first.toLowerCase()})\n${r}\n`),
     rest ? `NOTES\n${rest}\n` : ""].filter(Boolean).join("\n");
 }

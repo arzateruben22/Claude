@@ -193,7 +193,8 @@ describe("the sources thread", () => {
   it("the posting sheet and posting.json carry the replies; posting.json keeps every earlier field", () => {
     const big = { ...input, sources: many(30, (k) => `Claim ${k + 1}: ${"a sourced sentence ".repeat(6)}`, (k) => `Observatory of Place ${k + 1}`) };
     const m = buildMetadata(big), sheet = postingSheet(big, m);
-    expect(sheet).toContain("**Reply 1** (2 of");
+    expect(sheet).toMatch(/\*\*Reply( 1)?\*\* \(under the /);
+    expect(sheet).not.toMatch(/\(\d+ of \d+[,·]|\(1 of \d+ · /);   // no "(2 of 3, …" or "(1 of 3 · …" counts on the comments
     for (const r of [...m.tiktok.replies, ...m.instagram.replies]) expect(sheet).toContain(r);
     const json = JSON.parse(JSON.stringify(m));
     for (const p of ["youtube", "tiktok", "instagram"] as const) {
@@ -206,7 +207,7 @@ describe("the sources thread", () => {
     const t = handOffText({ title: m.tiktok.title, caption: m.tiktok.caption, hashtags: m.tiktok.hashtags, postingNotes: `${postingNotesFor(m.tiktok)}\n\nPost after 6pm.` }, "tiktok", "@restframe on tiktok");
     const n = m.tiktok.replies.length + 1;
     expect(t).not.toContain("TITLE");
-    const order = ["CAPTION\n", "POST TO\n@restframe on tiktok", `PINNED COMMENT (1 of ${n})\n${m.tiktok.pinnedComment}`, ...m.tiktok.replies.map((r, k) => `REPLY ${k + 1} (${k + 2} of ${n}, under the pinned comment)\n${r}`), "NOTES\n"].map((s) => t.indexOf(s));
+    const order = ["CAPTION\n", "POST TO\n@restframe on tiktok", `PINNED COMMENT\n${m.tiktok.pinnedComment}`, ...m.tiktok.replies.map((r, k) => `${n > 2 ? `REPLY ${k + 1}` : "REPLY"} (under the pinned comment)\n${r}`), "NOTES\n"].map((s) => t.indexOf(s));
     expect(order.every((at) => at >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     const notes = t.slice(t.indexOf("NOTES\n"));

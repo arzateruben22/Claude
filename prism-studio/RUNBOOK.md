@@ -66,8 +66,11 @@ On the server: `deploy/sync-media.sh you@server:/srv/prism/prism-studio/films-mi
   services); tick **estimate** for quotes. Estimates and voided entries never count as spent. Prism only records
   costs; it never pays anything.
 - Paid generation stays off unless Settings → **Paid generation** is on and that channel's budget has room this month
-  (and the studio budget, when set). A cost in another currency is never converted: it holds back only the channel it
-  was recorded for, and the reason under the chip names it. "Studio-wide" entries are the ones with no channel.
+  (and the studio budget, when set). A cost in another currency is never converted: it holds back the channel it was
+  recorded for, and, while a studio budget is set, every channel (the studio budget covers them all, so Prism can't
+  tell whether it has room). The reason under the chip names the entry and where it was recorded. Without a studio
+  budget, a studio-wide or other channel's entry in another currency holds nothing back. "Studio-wide" entries are the
+  ones with no channel.
 
 ## Demo data
 `npm run db:seed -- --demo` adds a labelled demo series. It stays hidden until Settings → **Show demo data**; shown or

@@ -131,7 +131,7 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
             ))}
           </ul>
         </div>
-        <p className="faint small-note">Spent counts actual costs only; voided entries and estimates never count. A cost in another currency is listed, never converted, and holds back paid generation only for its own channel. Paid generation needs Settings → Paid generation on and a channel budget with room this month (and room in the studio budget, when one is set).</p>
+        <p className="faint small-note">Spent counts actual costs only; voided entries and estimates never count. A cost in another currency is listed, never converted, and holds back paid generation for its own channel, and for every channel while a studio budget is set. Paid generation needs Settings → Paid generation on and a channel budget with room this month (and room in the studio budget, when one is set).</p>
         <div className="note-row small-note"><p className="faint">Paid generation is {v.paidSwitch ? "on" : "off"} in Settings{v.stopExternal ? "; external actions are stopped" : ""}.</p><Link href="/settings" className="btn ghost small">Settings</Link></div>
       </section>
 

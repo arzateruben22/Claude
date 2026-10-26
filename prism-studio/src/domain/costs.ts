@@ -225,11 +225,20 @@ export function otherCurrencyReason(entries: { description: string; category: st
   return `${head}; Prism doesn't convert, so it can't tell whether this channel's budget has room.`;
 }
 
+/** Why a studio budget can't be checked: entries that count under it are in another currency (named, with where). */
+export function studioCurrencyReason(entries: { description: string; category: string; currency: string; cents: number; where: string }[]) {
+  const one = (e: (typeof entries)[number]) => `${fmt(e.cents, e.currency)} ${e.description || e.category}, ${e.where}`;
+  const list = entries.slice(0, 3).map(one).join("; ") + (entries.length > 3 ? `; and ${entries.length - 3} more` : "");
+  return `${entries.length === 1 ? "An entry" : `${entries.length} entries`} this month ${entries.length === 1 ? "is" : "are"} in another currency than the studio budget (${list}); Prism doesn't convert, so it can't tell whether the studio budget has room.`;
+}
+
 /**
  * May a job spend `amountCents` (in the channel budget's currency) on paid generation for this channel now?
  * Read-only: it records nothing and reserves nothing (Prism never pays; the cost is recorded once it's known).
  * The budgets are read in their own currencies first (a cost in another currency can only use room up, so "no room"
- * is the surer answer); then only this channel's own costs in another currency can hold it back.
+ * is the surer answer). Then a cost in another currency holds a job back wherever it makes a budget unreadable: this
+ * channel's own, and, while a studio budget is set, any entry that month (studio-wide or any channel's), since the
+ * studio ceiling covers them all. Without a studio budget, other entries in another currency block nothing.
  */
 export async function canUsePaidGeneration(c: Conn, channelId: string, amountCents: number, at = new Date()): Promise<PaidGenerationCheck> {
   const s = await settings(c);
@@ -255,6 +264,14 @@ export async function canUsePaidGeneration(c: Conn, channelId: string, amountCen
         sql`to_char(${costLedger.incurredOn}, 'YYYY-MM') = ${month}`, sql`${costLedger.actualCents} > 0`))
       .orderBy(asc(costLedger.incurredOn), asc(costLedger.createdAt));
     return no("unconverted", otherCurrencyReason(rows.map((r) => ({ ...r, cents: r.cents ?? 0 }))), room);
+  }
+  if (studio.budget && studio.unconverted.length) {
+    const rows = await c.select({ description: costLedger.description, category: costLedger.category, currency: costLedger.currency, cents: costLedger.actualCents, channel: channels.name })
+      .from(costLedger).leftJoin(channels, eq(channels.id, costLedger.channelId))
+      .where(and(isNull(costLedger.voidedAt), ne(costLedger.source, "estimate"), ne(costLedger.currency, studio.currency!),
+        sql`to_char(${costLedger.incurredOn}, 'YYYY-MM') = ${month}`, sql`${costLedger.actualCents} > 0`))
+      .orderBy(asc(costLedger.incurredOn), asc(costLedger.createdAt));
+    return no("unconverted", studioCurrencyReason(rows.map((r) => ({ ...r, cents: r.cents ?? 0, where: r.channel ?? "studio-wide" }))), room);
   }
   return { ok: true, code: "ok", reason: `Allowed: ${fmt(ch.remainingCents!, ch.currency)} left in this channel's budget this month.`, month, currency: ch.currency, remainingCents: ch.remainingCents };
 }
