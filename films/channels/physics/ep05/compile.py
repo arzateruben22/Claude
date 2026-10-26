@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "kits/cinema/script"))
 sys.path.insert(0, str(HERE.parent / "set"))
 from timeline import Film   # noqa: E402
 from bench_py import Clock, Spinner   # noqa: E402
+from captions_py import phrase_captions   # noqa: E402
 
 FPS, BPM = 30, 112.5
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
@@ -115,7 +116,7 @@ LABELS = [
     {"id": "ms-48", "text": "48°", "color": "motion", "t0": A("vo06:fifty."), "t1": cut("takeaway"), "anchor": {"gap": ["in", 2]}, "side": 1, "fixed": True},
 ]
 BADGES = [
-    {"id": "model", "text": "Model: body 2.0 kg·m² (assumed)", "t0": A("vo03:Suddenly,"), "t1": cut("why") + 0.5, "slot": "tr"},
+    {"id": "model", "title": "Model", "text": "Body 2.0 kg·m², assumed.", "t0": A("vo03:Suddenly,"), "t1": cut("why") + 0.5, "slot": "tr"},
     {"id": "friction", "text": "Friction ignored", "t0": cut("takeaway") + 0.6, "t1": cut("tease"), "slot": "tr"},
     {"id": "skater", "text": "Illustration", "t0": cut("whoa") + 0.5, "t1": cut("measure") - 0.3, "slot": "tr"},
 ]
@@ -148,6 +149,11 @@ CAM = {
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
 TITLE = {"series": "Rest Frame · No. 005", "title": "The spinning *chair*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+# caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
+CAP_FIX = [
+    'Measure it: | ghosts a tenth / of a second apart.',
+]
+
 film = {
     "id": "rest-frame-005", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -156,7 +162,7 @@ film = {
     "skater": {"x": 115.0, "z": -25.0, "h": 162.0},
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE, "hookNote": {"text": "2× slower", "t1": cut("normal")},
-    "captions": f.captions(max_chars=24), "endCard": EC,
+    "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: the ten-metre *straw*", "follow": "Follow Rest Frame",
             "foot": "Olivia Oliver, 342 rpm, Warsaw 2015: the Guinness record for the fastest spin on ice skates (as of 2026)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

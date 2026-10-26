@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT / "kits/cinema/script"))
 sys.path.insert(0, str(HERE.parent / "set"))
 from timeline import Film   # noqa: E402
 from bench_py import Clock, Pendulum, period_ratio, G   # noqa: E402
+from captions_py import phrase_captions   # noqa: E402
 
 FPS, BPM = 30, 112.5
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
@@ -202,7 +203,7 @@ LABELS = [
 ]
 BADGES = [
     {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr"},
-    {"id": "harvard", "text": "Harvard's 15-pendulum design", "t0": A("vo05:Only"), "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": cut("measure") - 0.3, "slot": "tr"},
     {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:sixty."), "t1": cut("takeaway") - 0.3, "slot": "tr"},
     {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction.", "t0": cut("takeaway") + 0.8, "t1": cut("tease"), "slot": "tr"},
 ]
@@ -253,6 +254,15 @@ CAM = {
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
 TITLE = {"series": "Rest Frame · No. 002", "title": "The swing's *secret*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+# caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
+CAP_FIX = [
+    'Ghosts every tenth / of a second | bunch up at the turns.',
+    'Pull one / three times farther.',
+    'Three times farther out, | the pull is almost / three times stronger.',
+    'Measure it: / twenty swings, | and the big one | is three tenths / of a second behind.',
+    'At thirty degrees, / Galileo is off | by about / one part in sixty.',
+]
+
 film = {
     "id": "rest-frame-002", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -261,7 +271,7 @@ film = {
     "wave": {"z0": WAVE_Z0, "n": WAVE_N, "L": WAVE_L, "theta": WAVE_TH, "y": WAVE_Y, "dz": WAVE_DZ, "r": WAVE_R, "align": WAVE_ALIGN},
     "labels": LABELS, "badges": BADGES, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]}, "cam": CAM, "spine": SPINE, "gclock": CLOCK,
     "captionY": 0.632, "title": TITLE,
-    "captions": f.captions(max_chars=24), "endCard": EC,
+    "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Rest Frame",
             "foot": "Huygens built the first pendulum clock in 1656. It kept time to about a minute a day."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

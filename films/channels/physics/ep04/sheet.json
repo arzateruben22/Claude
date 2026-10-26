@@ -101,7 +101,7 @@
    "t": 4.85,
    "kind": "badge",
    "tag": "drift",
-   "text": "Illustration: the feather's drift"
+   "text": "Illustration"
   },
   {
    "t": 7.1155,
@@ -246,7 +246,7 @@
    "t": 30.7333,
    "kind": "badge",
    "tag": "notscale",
-   "text": "Arrows not to scale between the two"
+   "text": "Not to scale"
   },
   {
    "t": 30.733333333333334,
@@ -316,7 +316,7 @@
   {
    "t": 40.783333,
    "kind": "counter.tick",
-   "tag": "spine:difference, titanium vs platinum"
+   "tag": "spine:difference: parts in a million billion"
   },
   {
    "t": 40.8,
@@ -328,12 +328,18 @@
    "t": 41.2833,
    "kind": "badge",
    "tag": "orbit",
-   "text": "Illustration: Earth and the orbit"
+   "text": "Illustration"
   },
   {
-   "t": 44.766666666666666,
+   "t": 43.43333333333333,
    "kind": "label",
-   "tag": "wo-sat"
+   "tag": "wo-earth"
+  },
+  {
+   "t": 44.7667,
+   "kind": "badge",
+   "tag": "microscope",
+   "text": "Satellite test, 2016–2018."
   },
   {
    "t": 50.53333333333333,

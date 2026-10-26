@@ -16,6 +16,7 @@ import { createProps } from "../set/props.js";
 import { createMoonFloor, createHammer, createFeather } from "../set/moon.js";
 import { inkSet, hand } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
+import { SPINE_CSS, pinSpine } from "../set/spine.js";
 import { unlit, acesInv } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
@@ -36,8 +37,9 @@ const P = createProps({ tokens: TK, stickX: -46 });
 P.rig.group.visible = false; P.stick.visible = false;
 scene.add(cyc.group, P.group);
 window.SCENE_READY = P.ready;
-const moon = createMoonFloor({ size: 420, z: -20 }); scene.add(moon.group);
+const moon = createMoonFloor({ size: 1200, z: -20 });   // the whole floor: the cove and the wall hide its edge scene.add(moon.group);
 const hammer = createHammer(), feather = createFeather();
+feather.scale.setScalar(1.35);                           // a falcon flight feather, about 32 cm
 scene.add(hammer, feather);
 const HAM_LOW = 29.4;                                     // the hammer's origin (head centre) above its lowest point (the handle's end)
 
@@ -147,12 +149,13 @@ const spineTxt = (t) => {
   if (s.kind === "const") return s.v.toFixed(s.dp);
   return Math.min(s.cap, Math.max(0, local(s.take, t))).toFixed(s.dp);
 };
-const counterEl = hud.counter("spine", { value: () => 0, fmt: () => "0.00", unit: "s", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.29, 0.235], minCh: 4 });
+const spineOpts = { value: () => 0, fmt: () => "0.00", unit: "s", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.26, 0.19], minCh: 4 }, counterEl = hud.counter("spine", spineOpts);
+pinSpine(spineOpts, counterEl, hud, W, 0.19);
 const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
 { const st = document.createElement("style");
-  st.textContent = ".hud-badge.card { max-width: 44vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } "
+  st.textContent = SPINE_CSS
     + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });

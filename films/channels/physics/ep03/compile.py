@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / "kits/cinema/script"))
 sys.path.insert(0, str(HERE.parent / "set"))
 from timeline import Film   # noqa: E402
 from bench_py import Clock   # noqa: E402
+from captions_py import phrase_captions   # noqa: E402
 
 FPS, BPM = 30, 112.5
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
@@ -158,17 +159,17 @@ CUE = {
 # {"basket": 1} · {"point": [x, y, z]} · {"joule": "therm" | "weights"}
 TOPX = [X0 + VX * tt for tt in TOPS]
 LABELS = [
-    {"id": "hk-hand", "text": "your hand", "color": "ghost", "t0": A("vo01:hand?"), "t1": cut("normal") - 0.35, "anchor": {"hand": "bench"}, "side": 1, "fixed": True},
-    {"id": "nm-56", "text": "56 cm", "color": "motion", "t0": A("vo02:Fifty-six"), "t1": cut("change"), "anchor": {"point": [TOPX[0], TOP_H[0] + RB, 0]}, "side": 1, "fixed": True},
-    {"id": "nm-32", "text": "32 cm", "color": "motion", "t0": A("vo02:thirty-two."), "t1": cut("change"), "anchor": {"point": [TOPX[1], TOP_H[1] + RB, 0]}, "side": 1, "fixed": True},
-    {"id": "nm-18", "text": "18 cm", "color": "motion", "t0": A("vo02:eighteen."), "t1": cut("change"), "anchor": {"point": [TOPX[2], TOP_H[2] + RB, 0]}, "side": 1, "fixed": True},
-    {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": cut("why") + 0.6, "anchor": {"ring": 1}, "side": 1, "fixed": True},
-    {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") + 0.6, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
-    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "top"}, "side": 1, "fixed": True},
+    {"id": "hk-hand", "text": "your hand", "color": "ghost", "t0": A("vo01:hand?"), "t1": cut("normal") - 0.35, "anchor": {"hand": "bench"}, "side": 1, "fixed": False},
+    {"id": "nm-56", "text": "56 cm", "color": "motion", "t0": A("vo02:Fifty-six"), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[0], TOP_H[0] + RB, 0]}, "side": 1, "fixed": False},
+    {"id": "nm-32", "text": "32 cm", "color": "motion", "t0": A("vo02:thirty-two."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[1], TOP_H[1] + RB, 0]}, "side": 1, "fixed": False},
+    {"id": "nm-18", "text": "18 cm", "color": "motion", "t0": A("vo02:eighteen."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[2], TOP_H[2] + RB, 0]}, "side": 1, "fixed": False},
+    {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": cut("why") - 0.35, "anchor": {"ring": 1}, "side": 1, "fixed": True},
+    {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
+    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "top"}, "side": 1, "fixed": False},
     {"id": "wy-warm", "text": "the water warms", "color": "energy", "t0": A("vo04:warmed."), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "therm"}, "side": 1, "fixed": True},
-    {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa"), "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
-    {"id": "wy-shake", "text": "shaking", "color": "pressure", "t0": A("vo04:shaking"), "t1": cut("whoa"), "anchor": {"point": [-30.0, 0.0, 0.0]}, "side": -1, "fixed": True},
-    {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa"), "anchor": {"ring": 2}, "side": 1, "fixed": True},
+    {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
+    {"id": "wy-shake", "text": "shaking", "color": "pressure", "t0": A("vo04:shaking"), "t1": cut("whoa") - 0.35, "anchor": {"point": [-30.0, 0.0, 0.0]}, "side": -1, "fixed": True},
+    {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa") - 0.35, "anchor": {"ring": 2}, "side": 1, "fixed": True},
     {"id": "wo-hand", "text": "your hand", "color": "ghost", "t0": A("vo05:Drop"), "t1": A("vo05:The#2", -0.1), "anchor": {"hand": "stack"}, "side": 1, "fixed": True},
     {"id": "wo-7x", "text": "7× its fall", "color": "motion", "t0": A("vo05:hand."), "t1": cut("measure") - 0.35, "anchor": {"tennis": 1}, "side": 1, "fixed": True},
     {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": cut("tease") - 0.3, "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
@@ -219,6 +220,11 @@ CAM = {
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
 TITLE = {"series": "Rest Frame · No. 003", "title": "Where does the *bounce* go?", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+# caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
+CAP_FIX = [
+    'Even if it all / stays in the ball, | two thousandths / of a degree.',
+]
+
 film = {
     "id": "rest-frame-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -229,7 +235,7 @@ film = {
     "joule": {"x": JOULE_X, "z": JOULE_Z, "s": 0.8},
     "labels": LABELS, "badges": BADGES, "cam": CAM, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]},
     "captionY": 0.632, "title": TITLE,
-    "captions": f.captions(max_chars=24), "endCard": EC,
+    "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: the hammer and the *feather*", "follow": "Follow Rest Frame",
             "foot": "Joule, 1850: 772 foot-pounds warm a pound of water 1 °F. Today's value is 778."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

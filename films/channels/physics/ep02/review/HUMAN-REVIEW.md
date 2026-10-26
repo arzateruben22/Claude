@@ -7,7 +7,7 @@ Rest Frame No. 002, "The swing's secret". The measured gates are in `scorecard.m
 2. **Galileo's claim (c5).** The line says he *claimed* every swing takes the same time, wide or narrow. The source is Palmieri's history of Galileo's pendulum experiments (British Journal for the History of Science): Galileo asserted isochronism for arcs under 180° (a 1602 letter; Two New Sciences). The Fourth Day's report of 80° against 4–5° swings was **not** used on air: the search excerpts disagreed on its wording. A historian or the physicist checks the wording "claimed".
 3. **"Neck and neck" (c4).** The two pass the bottom 7.8 ms apart (2 frames at ×1/5). The line says neck and neck, not together, on purpose.
 4. **The ×10 fast-forward in the whoa.** At ×10 each pendulum swings about 3 frames per period, so the middle of the minute reads as a blur of motion (with motion blur). The speed note says "10× faster" throughout, ramping in and out (log ramps). The realignment is exact and lands on "line".
-5. **Honesty notes on screen:** the speed note (10× slower, paused, 3× and 5× slower, 10× faster, 5× faster); "Ideal pendulums: no air, no friction" (takeaway); "Harvard's 15-pendulum design"; "30° swing: 1.7% slower".
+5. **Honesty notes on screen:** the speed note (10× slower, paused, 3× and 5× slower, 10× faster, 5× faster); "Ideal pendulums: no air, no friction" (takeaway); "Harvard's pendulum wave"; "30° swing: 1.7% slower".
 6. **Shown but not claimed:**
    - The bobs are 4.6 cm brass spheres, and the length (99.4 cm) is to their centres. A real bob that size makes a physical pendulum about 0.09% slower than the ideal point bob; the scene runs the ideal.
    - The two swings stand in lanes 50 cm apart, the small one in front.

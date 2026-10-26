@@ -15,6 +15,7 @@ import { createSitter } from "../set/chair.js";
 import { spinner } from "../set/spin.js";
 import { inkSet } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
+import { SPINE_CSS, pinSpine } from "../set/spine.js";
 import { unlit } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
@@ -125,13 +126,14 @@ const spineVal = (t) => {
   const tau = local(s.take, t);
   return (SPIN.chair.omega(tau) * 60) / (2 * Math.PI);
 };
-const counterEl = hud.counter("spine", { value: spineVal, fmt: (v) => v.toFixed(0), unit: "rpm", label: SPN[0].label, t0: SPN[0].t0, t1: SPN[SPN.length - 1].t1, at: [0.26, 0.19], minCh: 3 });
+const spineOpts = { value: spineVal, fmt: (v) => v.toFixed(0), unit: "rpm", label: SPN[0].label, t0: SPN[0].t0, t1: SPN[SPN.length - 1].t1, at: [0.26, 0.19], minCh: 3 }, counterEl = hud.counter("spine", spineOpts);
+pinSpine(spineOpts, counterEl, hud, W, 0.19);
 const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
 hud.badge("hook-speed", { kind: "speed", slot: "br", t0: 0, t1: FILM.hookNote.t1, text: FILM.hookNote.text });
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
 { const st = document.createElement("style");
-  st.textContent = ".hud-badge.card { max-width: 40vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } "
+  st.textContent = SPINE_CSS
     + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });

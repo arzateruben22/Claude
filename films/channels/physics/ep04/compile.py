@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "kits/cinema/script"))
 sys.path.insert(0, str(HERE.parent / "set"))
 from timeline import Film   # noqa: E402
 from bench_py import Clock   # noqa: E402
+from captions_py import phrase_captions   # noqa: E402
 
 FPS, BPM = 30, 112.5
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
@@ -114,7 +115,7 @@ SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "the hammer's fall, Earth", "unit": "s", "dp": 2, "kind": "watch", "take": "earth", "cap": T_E},
     {"t0": cut("change"), "t1": cut("why"), "label": "both, on the Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "moon", "cap": T_M},
     {"t0": cut("why"), "t1": cut("whoa"), "label": "each one's acceleration", "unit": "m/s²", "dp": 2, "kind": "const", "v": 1.62},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "difference, titanium vs platinum", "unit": "", "kind": "text", "text": "< 3×10⁻¹⁵"},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "difference: parts in a million billion", "unit": "", "kind": "text", "text": "< 3"},
     {"t0": cut("measure"), "t1": A("vo06:On#2"), "label": "the drop, Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "measure", "cap": T_M,
      "lit": [A("vo06:seconds."), A("vo06:On#2")]},
     {"t0": A("vo06:On#2"), "t1": cut("tease") - 0.3, "label": "the same drop, Earth", "unit": "s", "dp": 2, "kind": "const", "v": T_E},
@@ -139,14 +140,15 @@ LABELS = [
     {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity"), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:exactly"), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-tie", "text": "tie", "color": "motion", "t0": A("vo04:tie."), "t1": cut("whoa"), "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
-    {"id": "wo-sat", "text": "MICROSCOPE, 2016–2018", "color": "ghost", "t0": A("vo05:satellite"), "t1": cut("measure") - 0.3, "anchor": {"sat": 1}, "side": 1, "fixed": True},
+    {"id": "wo-earth", "text": "Earth", "color": "ghost", "t0": A("vo05:Starting", 0.4), "t1": cut("measure") - 0.3, "anchor": {"point": [0.0, 190.0, -20.0]}, "side": 1, "v": "middle", "fixed": True},
 ]
 BADGES = [
     {"id": "moon", "title": "The Moon", "text": "Gravity 1.62 m/s², a sixth of Earth's. No air.", "t0": A("vo03:away."), "t1": cut("why") - 0.2, "slot": "tr"},
-    {"id": "drift", "text": "Illustration: the feather's drift", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
-    {"id": "scott", "title": "David Scott, Apollo 15", "text": "\"Mr Galileo was correct in his findings.\"", "t0": A("vo03:\"Mister"), "t1": cut("why") - 0.2, "slot": "tl"},
-    {"id": "notscale", "text": "Arrows not to scale between the two", "t0": A("vo04:Gravity"), "t1": cut("whoa") - 0.3, "slot": "tr"},
-    {"id": "orbit", "text": "Illustration: Earth and the orbit", "t0": cut("whoa") + 0.5, "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "drift", "text": "Illustration", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
+    {"id": "scott", "title": "David Scott, Apollo 15", "text": "\"Mr Galileo was correct in his findings.\"", "t0": A("vo03:\"Mister"), "t1": cut("why") - 0.2, "slot": "tr"},
+    {"id": "notscale", "text": "Not to scale", "t0": A("vo04:Gravity"), "t1": cut("whoa") - 0.3, "slot": "tr"},
+    {"id": "orbit", "text": "Illustration", "t0": cut("whoa") + 0.5, "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "microscope", "title": "MICROSCOPE", "text": "Satellite test, 2016–2018.", "t0": A("vo05:satellite"), "t1": cut("measure") - 0.3, "slot": "tr"},
 ]
 
 # ── camera ─────────────────────────────────────────────────────────────────────────────────────
@@ -160,8 +162,8 @@ def key(t, v, ease="p2", **over):
     return {"t": round(t, 4), **v, **over, "ease": ease}
 
 
-BENCH = view(0.0)
-HOOK = view(0.0, top_px=620.0, floor_px=1150.0, top=150.0)
+BENCH = {"look": [0.0, 59.0, 0.0], "dist": 1020.0, "yaw": 0.0, "pitch": 9.0, "fov": 32.0}   # looking down a little (the regolith reads as ground); the hand at 0.27 H, under the spine readout, the floor at 0.6 H
+HOOK = view(0.0, top_px=650.0, floor_px=1150.0, top=175.0, pitch=9.0)   # under the title
 SPACE = {"look": [0.0, 175.0, -20.0], "dist": 560.0, "yaw": 0.0, "pitch": 0.0, "fov": 32.0}
 CAM = {
     "hook": [key(0.0, HOOK), key(cut("normal"), {**HOOK, "dist": HOOK["dist"] + 10}, "sine")],
@@ -176,6 +178,16 @@ CAM = {
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
 TITLE = {"series": "Rest Frame · No. 004", "title": "The hammer and the *feather*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+# caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
+CAP_FIX = [
+    'On the Moon, / in nineteen seventy-one, | astronaut David Scott / dropped both.',
+    'For nearly / two thousand years, | most scholars / followed Aristotle: | heavier things fall faster.',
+    'Starting in / twenty sixteen, | a satellite let / two metals fall | around Earth for months.',
+    'They matched / to within | a few parts / in a million billion.',
+    'Measure it: on the Moon, | that drop takes about / one point four seconds.',
+    'Next: / a spinning office chair.',
+]
+
 film = {
     "id": "rest-frame-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -183,7 +195,7 @@ film = {
     "drop": {"gE": G_E, "gM": G_M, "h0": H0, "tE": T_E, "tM": T_M, "vt": VT, "xh": XH, "xf": XF, "dt": DT, "n": NG, "dtE": DT_E, "nE": NG_E},
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
-    "captions": f.captions(max_chars=24), "endCard": EC,
+    "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: the spinning *chair*", "follow": "Follow Rest Frame",
             "foot": "The feather was a falcon's. Apollo 15's lunar module was named Falcon."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

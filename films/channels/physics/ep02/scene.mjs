@@ -18,6 +18,7 @@ import { createProps } from "../set/props.js";
 import { createGantry, brassGhost } from "../set/pendulum.js";
 import { pendulum } from "../set/swing.js";
 import { dropTitle } from "../set/title.js";
+import { SPINE_CSS, pinSpine } from "../set/spine.js";
 import { unlit, acesInv } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
@@ -163,13 +164,14 @@ const spineVal = (t) => {
   if (s.kind === "count") return nSw(t);
   return Math.min(s.cap, Math.max(0, local(s.take, t)));
 };
-const counterEl = hud.counter("spine", { value: spineVal, fmt: (v) => v.toFixed(2), unit: "s", label: "one swing",
-  t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.25, 0.235], minCh: 4 });
+const spineOpts = { value: spineVal, fmt: (v) => v.toFixed(2), unit: "s", label: "one swing",
+  t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.25, 0.235], minCh: 4 }, counterEl = hud.counter("spine", spineOpts);
+pinSpine(spineOpts, counterEl, hud, W, 0.235);
 const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
 { const st = document.createElement("style");
-  st.textContent = ".hud-badge.card { max-width: 44vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } .rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
+  st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 
