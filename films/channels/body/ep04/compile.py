@@ -83,13 +83,14 @@ CAM = {
         {"t": SHARP[1] + 0.4, "pos": [1.0, 3.5, 63.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p2"},
         # a motivated pull-out over "electricity can't jump it": the axon, the terminal and the gap in one frame
         {"t": A("vo04:electricity"), "pos": [-10.0, 1.0, 110.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:jump", 0.35), "pos": [-9.0, 1.2, 106.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},   # hold wide: the glow reaches the wall and stops there, on the words
         # the tip, close, a little lower and wider so the receptors and the drift clear the caption plate
-        {"t": REL["ca"][0], "pos": [2.5, 5.2, 66.0], "look": [6.0, -2.4, 0.0], "fov": 34, "ease": "p2"},
+        {"t": A("vo04:floods", 0.0), "pos": [2.5, 5.2, 66.0], "look": [6.0, -2.4, 0.0], "fov": 34, "ease": "p2"},
         {"t": REL["drift"][1], "pos": [5.5, 3.5, 62.0], "look": [9.0, -2.6, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["whoa"]["t0"], "pos": [6.5, 2.6, 70.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo05:Use", -0.2), "pos": [6.5, 2.6, 72.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
+        {"t": REPLAY[1], "pos": [6.5, 2.6, 72.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
         # the field: a cell with five junctions on it; the one used again and again pulses and grows
-        {"t": A("vo05:stronger", 0.0), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},
+        {"t": A("vo05:junction", 0.3), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
         {"t": B["takeaway"]["t0"], "pos": [140.0, -200.0, 240.0], "look": [88.0, -288.0, -232.0], "fov": 34, "ease": "sine"},
         {"t": A("vo06:touch", 0.0), "pos": [-2.5, 5.2, 70.0], "look": [8.0, -1.0, 0.0], "fov": 34, "ease": "p3"},             # back to the gap, lit
         {"t": B["meanwhile"]["t0"], "pos": [-1.0, 12.0, 125.0], "look": [8.0, -0.5, 0.0], "fov": 34, "ease": "sine"},        # under the tally
@@ -104,7 +105,7 @@ CAM["loop"] = [dict(CAM["syn"][0], t=CUT["loop"])]
 FOC = {
     # frame 0 and the hook: focus far behind the contact (a soft light-microscope blur); it snaps sharp on "gap"
     "syn": [{"t": 0.0, "at": "behind", "f": 0.9}, {"t": A("vo02:reaches", 0.0), "at": "net", "f": 0.25}, {"t": A("vo02:joined", -0.3), "at": "behind", "f": 0.9},
-            {"t": SHARP[0], "at": "behind", "f": 0.9}, {"t": SHARP[1], "at": "gap", "f": 0.45}, {"t": A("vo05:Use", 0.2), "at": "cell2", "f": 0.3},
+            {"t": SHARP[0], "at": "behind", "f": 0.9}, {"t": SHARP[1], "at": "gap", "f": 0.45}, {"t": A("vo05:Use", -0.1), "at": "cell2", "f": 0.3},
             {"t": A("vo06:touch", -0.4), "at": "gap", "f": 0.45}],
     "sac": [{"t": CUT["sac"], "at": "sac", "f": 0.35}],
     "loop": [{"t": CUT["loop"], "at": "behind", "f": 0.9}],
@@ -116,7 +117,7 @@ LABELS = [
     {"id": "ca", "text": "calcium", "glyph": "Ca²⁺", "color": "bone", "mark": "dot", "at": "ca", "t0": A("vo04:Calcium", 0.1), "t1": A("vo04:sacs", -0.5), "shot": "syn", "side": -1},
     {"id": "ves", "text": "sacs of messenger", "color": "lining", "mark": "dot", "at": "ves", "t0": A("vo04:sacs"), "t1": REL["drift"][0], "shot": "syn", "side": -1},
     {"id": "rec", "text": "receptors on the next cell", "color": "nerve", "mark": "dot", "at": "rec", "t0": A("vo04:across", 0.0), "t1": B["whoa"]["t0"] - 0.2, "shot": "syn", "side": 1},
-    {"id": "used", "text": "used often: can strengthen", "color": "nerve", "mark": "dot", "at": "used", "t0": A("vo05:stronger", 0.3), "t1": B["takeaway"]["t0"] - 0.2, "shot": "syn", "side": 1},
+    {"id": "used", "text": "used often: can strengthen", "color": "nerve", "mark": "dot", "at": "used", "t0": A("vo05:stronger", 0.3), "t1": B["takeaway"]["t0"] - 0.2, "shot": "syn", "side": 1, "lift": 64},   # raised clear of the grown terminal
     {"id": "gap2", "text": "the gap", "color": "nerve", "mark": "dot", "at": "gap", "t0": A("vo06:talk"), "t1": B["meanwhile"]["t0"] - 0.3, "shot": "syn", "side": 1},
 ]
 # the handoff readout counts from the signal's arrival at the terminal to the receptors lighting, in the replay's time
@@ -125,20 +126,20 @@ SPINE = [
     {"id": "q", "t0": 0.0, "t1": B["normal"]["t0"], "text": "?", "unit": "", "label": "touching"},
     {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Through", 0.0), "text": "100+ trillion", "unit": "", "label": "brain junctions, estimated"},   # c3
     {"id": "width", "t0": A("vo04:gap", 0.15), "t1": A("vo04:jump", 0.2), "text": "20–50", "unit": "nm", "label": "the gap, about"},   # c10
-    {"id": "hand", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3), "keys": [[round(REPLAY[0] + (REL["sig"][1] - REL["sig"][0]) * _k, 4), 0.0], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), 0.001]],
-     "unit": "s", "label": "the handoff, about", "fmt": 4},   # c11
+    {"id": "hand", "t0": REPLAY[0], "t1": B["meanwhile"]["t0"] - 0.1, "keys": [[round(REPLAY[0] + (REL["sig"][1] - REL["sig"][0]) * _k, 4), 0.0], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), 0.001]],
+     "unit": "s", "label": [[REPLAY[0], "the handoff, timed"], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), "the handoff, about"], [A("vo05:Use", 0.0), "each handoff, about"]], "fmt": 4},   # c11: held through the whoa and the takeaway
 ]
 # each panel shows the plain stain first; Golgi's reading arrives as he "saw one continuous web" (after "who made the
 # stain"), Cajal's with his name
 PANELS = {"t0": B["change"]["t0"] + 0.15, "golgi": A("vo03:saw", -0.2), "cajal": A("vo03:Santiago", -0.1), "t1": B["why"]["t0"] - 0.1, "nobel": A("vo03:nineteen", 0.0)}
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["sac"] - 0.25, "rate": 15.0 / 60.0, "unit": "breaths", "label": "while you watched, at rest, about", "beats": BREATHS}   # c14
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["sac"] - 0.45, "rate": 15.0 / 60.0, "unit": "breaths", "label": "while you watched, at rest, about", "beats": BREATHS}   # c14
 BADGES = [
     # one note in the top-right corner at a time: "not to scale", then "illustration · not to scale" over the
     # electron-microscope-style view (it is a model, not a micrograph or footage), then "not to scale" again
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": round(EM[0] - 0.3, 4)},
     {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": A("vo05:Use", -0.3)},   # through the whoa's slowed replay of the same picture
     {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
-    {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:Through", -0.2)},
+    {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
     {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": EM[1]},
     {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
@@ -150,7 +151,7 @@ BADGES = [
 TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Meanwhile, Inside · No. 05", "follow": "Follow Meanwhile, Inside",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
-LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.3, "region": [0.5, 0.16]}   # the brainstem, where each breath begins
+LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.4, "region": [0.5, 0.16]}   # the brainstem, where each breath begins
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
 # caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
