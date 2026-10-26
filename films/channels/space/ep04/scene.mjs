@@ -56,7 +56,9 @@ const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
 const pos = (c) => c.map((v) => Math.max(0, v));
 // a beacon's halo is that light dimmed: clamped and mixed toward white, it stays pale (not royal or pure blue)
 const pale = (c) => pos(c).map((v) => 0.35 + 0.65 * v);
-const C = { orbit: line("lilac", 0.8), lilac: line("lilac", 0.8), lilacHi: line("lilac", 1), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3), ice: line("ice", 0.6), iceHi: line("ice", 0.95), ghost: line("ice", 0.75) };
+// the "Hi" lilac and ice stay under the bloom's knee (a max linear channel of 0.6–0.7): line("lilac", 1) carries blue 5.1
+// and blooms royal blue; tealHi is meant to glow (the light, the would-be path), clamped so its halo stays teal
+const C = { orbit: line("lilac", 0.8), lilac: line("lilac", 0.8), lilacHi: line("lilac", 0.82), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3).map((v) => Math.max(0, v)), ice: line("ice", 0.6), iceHi: line("ice", 0.82), ghost: line("ice", 0.75) };
 const orbitRing = ring({ color: C.orbit, width: 3, opacity: 1 }).arc({ r: R, ...XZ });
 const row = Array.from({ length: 30 }, () => ring({ color: C.iceHi, width: 2.8, opacity: 0 }));   // bright enough to read as rings, not a dotted line
 const vArrow = [0, 1, 2].map(() => segment({ color: pos(C.iceHi), width: 4, opacity: 0 }));   // speed: ice (lilac is gravity)
@@ -230,9 +232,9 @@ window.seek = function (t) {
   apple2.set({ center: aNow, camera, opacity: oa });
   dropLine.seg(a0p, aNow).set({ opacity: ud > 0.02 ? oa : 0 });
   S.apple2 = aNow; S.apple2end = add(a0p, fdir, (PH.drop_1m * PH.mag) / 1000 / PH.u);   // where the apple lands: its label hangs below
-  // takeaway: the straight lines the Moon keeps falling away from: a fan of them from its last dozen places on its
-  // orbit (3.5° apart, so they read as separate lines, not one bright wedge), moving on with it, older ones fainter
-  tanTicks.forEach((k, i) => { const a = th - (i * 3.5 * Math.PI) / 180, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 13)).set({ opacity: 0.9 * (1 - (0.75 * i) / 11) * winOp(t, CUE.settle + 0.1 + i * 0.08, B.readout.t0, 0.5) }); });
+  // takeaway: the straight lines the Moon keeps falling away from: five of them, from its places 8° apart behind it,
+  // each 20 units long (about 30° of orbit), so each one visibly leaves the circle the Moon stays on; older ones fainter
+  tanTicks.forEach((k, i) => { const a = th - (i * 8 * Math.PI) / 180, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 20)).set({ opacity: i < 5 ? 0.9 * (1 - (0.7 * i) / 4) * winOp(t, CUE.settle + 0.1 + i * 0.12, B.readout.t0, 0.5) : 0 }); });
   // the orbit: faint while gravity is off; gone through the swing from the side view into the whoa (it would slice the
   // frame); dimmed under Newton's ruler and curve (lilac on lilac) and while its near arc sweeps up behind the caption in
   // the pull back; gone under the end card, back for the loop to frame 0

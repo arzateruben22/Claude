@@ -57,7 +57,7 @@ meters. And it does. So the pull that drops an apple is the same pull that keeps
   screen ("1 second", "1 minute"). The apple's second runs on the same ×8 clock as the Moon's minute: it waits on the
   line, then falls in a blink, while the Moon takes the 7.5 s. The spine's label steps to the Moon on "And it does".
 - **The takeaway:** the Moon runs on round its orbit at 20,000× under a fan of the straight lines it keeps falling away
-  from (each from one of its last dozen places on the orbit, 3.5° apart, older ones fainter). The diagram is turned so the readout holds
+  from (five, from its places 8° apart behind it, each leaving the circle, older ones fainter). The diagram is turned so the readout holds
   the Moon 15° left of the top, clear of the "real speed of light" note; its name arrives as the takeaway's speed note
   leaves.
 

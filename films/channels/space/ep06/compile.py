@@ -84,7 +84,7 @@ LADDER = {
     # the rungs overlap, so a pull-back never passes through an empty frame (the sphere hands off to Earth's marker);
     # the jump holds on the Sun's neighbourhood (1 unit = 1 light-year), fully shown through the hold and gone before
     # the ball shrinks into a bright knot on the Sun
-    "show": {"earth": [1.5, 4.3], "solar": [4.0, 7.5], "local": [11.6, 13.9], "galaxy": [13.5, 17.0]},
+    "show": {"earth": [1.5, 4.3], "solar": [4.0, 7.5], "local": [11.6, 13.6], "galaxy": [13.5, 17.0]},
     "fade": {"earth": 0.6, "solar": 0.7, "local": 0.8, "galaxy": 1.0},
 }
 
