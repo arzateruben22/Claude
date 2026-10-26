@@ -58,7 +58,10 @@
   "use strict";
 
   var KEY = "lumevina_questions";          /* every question sent to Evelyn */
-  var CHAT_KEY = "lumevina_ask_chat";      /* this browser's conversation */
+  /* the conversation lives for this page only: every visit opens fresh, with the new-or-returning question. A reply
+     from Evelyn still reaches the client by email, and a signed-in client's plan, profile and purchases stay on the
+     server, so nothing a client needs is lost between visits. (The key is cleared for browsers that kept one before.) */
+  var CHAT_KEY = "lumevina_ask_chat";
   var MEMBER_HOURS = 24;
   var GUEST_HOURS = 48;
   var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -67,7 +70,7 @@
   var read = function (k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
   var write = function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; /* private mode, or full */ } };
   var questions = function () { return read(KEY, []); };
-  var chat = function () { return read(CHAT_KEY, { log: [], seen: {} }); };
+  var chat = function () { try { localStorage.removeItem(CHAT_KEY); } catch (e) { /* private mode */ } return { log: [], seen: {} }; };
 
   /* ── who's asking, and the plan Evelyn wrote for them ── */
   var PL = window.LumevinaPlans;
@@ -551,7 +554,7 @@
   };
 
   var state = chat();
-  var save = function () { write(CHAT_KEY, state); };
+  var save = function () { /* kept in memory only: a new visit starts over */ };
   /* new here, or been in before: asked first, kept for this browser, and told to the assistant */
   var STATUS = {
     "new": { label: "I’m new here", say: "Welcome! For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Anything about your own skin, I’ll pass to Evelyn.",
