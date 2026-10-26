@@ -9,8 +9,10 @@ export const dynamic = "force-dynamic";
 
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
   const d = db();
-  const [up] = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).where(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day'`);
-  const [rv] = await d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]));
+  // badge counts are real work only: demo episodes never count, even when "Show demo data" is on
+  const [up] = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
+    .where(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day' and not ${S.episodes.isDemo}`);
+  const [rv] = await d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), eq(S.episodes.isDemo, false)));
   const fresh = await d.select({ id: S.achievementEvents.id, title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))
     .where(and(isNull(S.achievementEvents.seenAt), gt(S.achievementEvents.achievedAt, new Date(Date.now() - 10 * 60_000))));

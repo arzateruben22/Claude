@@ -3,6 +3,27 @@ import type { CSSProperties } from "react";
 export const money = (cents: number | null | undefined) =>
   cents == null ? "—" : (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: cents % 100 ? 2 : 0 });
 
+/** A cost or budget amount in its own currency, always with cents ("$12.40", "€3.00"). */
+export const moneyIn = (cents: number | null | undefined, currency = "USD") =>
+  cents == null ? "—" : (cents / 100).toLocaleString("en-US", { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/** The paid-generation gate's state (src/domain/costs.ts canUsePaidGeneration), as a dot and a few words. "detail":
+ *  the gate's own reason adds something the label doesn't (how much room is left, which currency). */
+export const PAID_GEN: Record<string, { label: string; tone: string; detail: boolean }> = {
+  ok: { label: "Paid generation allowed", tone: "good", detail: false },
+  switch_off: { label: "Paid generation off in Settings", tone: "", detail: false },
+  stopped: { label: "Paid generation off: external actions stopped", tone: "", detail: false },
+  no_budget: { label: "Paid generation off: no budget", tone: "", detail: false },
+  no_room: { label: "Paid generation off: budget used", tone: "warn", detail: true },
+  studio_no_room: { label: "Paid generation off: studio budget used", tone: "warn", detail: true },
+  unconverted: { label: "Paid generation off: another currency", tone: "warn", detail: true },
+  bad_amount: { label: "Paid generation off", tone: "", detail: false },
+};
+/** Cents as a form value ("12.40"), for editing. */
+export const centsInput = (cents: number) => `${Math.floor(cents / 100)}.${String(cents % 100).padStart(2, "0")}`;
+/** "2026-10" → "October 2026" (or "Oct 2026"); "2026-10-24" → "Oct 24". Calendar values, no timezone shift. */
+export const monthLabel = (month: string, short = false) => new Date(`${month}-15T12:00:00Z`).toLocaleString("en-US", { month: short ? "short" : "long", year: "numeric", timeZone: "UTC" });
+export const dayLabel = (day: string, withYear = false) => new Date(`${day}T12:00:00Z`).toLocaleString("en-US", { month: "short", day: "numeric", ...(withYear ? { year: "numeric" } : {}), timeZone: "UTC" });
+
 export const count = (n: number | null | undefined) => (n == null ? "—" : Math.round(n).toLocaleString("en-US"));
 
 export const compact = (n: number) => Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);

@@ -33,9 +33,9 @@ Checks: `npm run typecheck`, `npm test` (needs `TEST_DATABASE_URL`; it wipes tha
 
 | Path | What |
 |---|---|
-| `src/db/schema.ts` | Every business fact (34 tables). Times are UTC; money is integer cents |
+| `src/db/schema.ts` | Every business fact (34 tables). Times are UTC; money is integer cents; production budgets and costs are separate from rewards |
 | `src/domain/` | The rules: episodes and states, approvals, publications, schedule, rewards, the living studio, jobs, time |
-| `src/app/(studio)/` | Screens: Home, Upload Desk, Review, Calendar, Rewards, channels, episodes, evolution, analytics, accounts, queue, settings |
+| `src/app/(studio)/` | Screens: Home, Upload Desk, Review, Calendar, Rewards, channels, episodes, evolution, analytics, accounts, queue, costs, settings |
 | `src/app/actions.ts` | Every mutation (server actions, zod-validated, owner-checked) |
 | `src/app/api/` | Media with HTTP Range, the SRT captions, the per-task ZIP bundle |
 | `src/creations/` | The five creations, drawn as inline SVG (forms 1–5, branches, ascended, reveal) |

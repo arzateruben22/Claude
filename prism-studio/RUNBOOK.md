@@ -16,6 +16,16 @@
 - **Analytics:** log views from each app (or paste a CSV). Milestones unlock from real numbers only.
 - **Queue:** look for dead jobs, then retry or read the error.
 
+## Costs
+- **Costs** (More → Costs): set a monthly production budget per channel (and, if you like, a studio-wide ceiling). It
+  carries on each month until you change it. Record what you pay for (voices, music, services); tick **estimate** for
+  quotes. Estimates and voided entries never count as spent. Prism only records costs; it never pays anything.
+- Paid generation stays off unless Settings → **Paid generation** is on and that channel's budget has room this month.
+
+## Demo data
+`npm run db:seed -- --demo` adds a labelled demo series. It stays hidden until Settings → **Show demo data**; shown or
+not, it never counts toward progress, rewards, XP, achievements or analytics totals.
+
 ## New episodes from the films pipeline
 Render, then QA (`kits/cinema/film/qa.py`). Then either **Queue → Import rendered episodes** or
 `npm run import:episodes`. A new render becomes a new version: older approvals end, and the episode comes back to

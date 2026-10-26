@@ -49,7 +49,7 @@ export default async function Calendar() {
                       <span className="row" style={{ gap: 10 }}>
                         <span className="num" style={{ minWidth: 64 }}>{formatLocal(r.p.scheduledFor, v.tz, { timeStyle: "short" })}</span>
                         <span className="chip topic">{r.dest.shared ? "IG" : r.channel.label} · {PLATFORM_LABEL[r.dest.platform]}</span>
-                        <Link href={`/episodes/${r.e.id}`}>{r.e.title}</Link>
+                        <Link href={`/episodes/${r.e.id}`}>{r.e.title}</Link>{r.e.isDemo ? <span className="demo-tag">DEMO</span> : null}
                       </span>
                       <span className="row">
                         <span className={`chip ${pubTone(r.p.status)}`}>{PUB_LABEL[r.p.status]}</span>

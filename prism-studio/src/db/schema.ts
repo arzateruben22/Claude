@@ -3,7 +3,7 @@
 // Money is integer cents. Demo rows carry is_demo = true and never reserve real rewards or count as real progress.
 import { sql } from "drizzle-orm";
 import {
-  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, uniqueIndex, index, primaryKey, bigint,
+  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, uniqueIndex, index, primaryKey, bigint, date, check,
 } from "drizzle-orm/pg-core";
 
 const id = () => uuid("id").primaryKey().defaultRandom();
@@ -45,6 +45,7 @@ export const studioSettings = pgTable("studio_settings", {
   celebrationSound: boolean("celebration_sound").notNull().default(false),
   lowPowerArt: boolean("low_power_art").notNull().default(false),
   paidGenerationEnabled: boolean("paid_generation_enabled").notNull().default(false),
+  showDemo: boolean("show_demo").notNull().default(false),    // off: demo rows are hidden; on: shown, labelled DEMO, never counted
   updatedAt: updated(),
 });
 
@@ -479,26 +480,51 @@ export const onboarding = pgTable("onboarding", {
   doneAt: timestamp("done_at", { withTimezone: true }),
 }, (t) => [uniqueIndex("onboarding_item").on(t.channelId, t.item)]);
 
-// ── costs ──────────────────────────────────────────────────────────────────
+// ── costs (production budgets: separate from personal rewards; Prism records costs, it never pays or moves money) ──
+// A production budget is monthly, studio-wide or for one channel. A row applies from its month on, until a later row
+// for the same scope replaces it (cap null = no budget from that month).
 export const budgets = pgTable("budgets", {
   id: id(),
-  scope: text("scope").notNull(),           // job, channel_daily, daily, monthly
+  scope: text("scope").notNull(),           // studio, channel
+  scopeKey: text("scope_key").notNull().default("studio"),   // "studio" or the channel id: one row per scope per month
   channelId: uuid("channel_id").references(() => channels.id, { onDelete: "cascade" }),
-  capCents: integer("cap_cents").notNull(),
+  month: text("month").notNull().default(""),   // "YYYY-MM" in the studio timezone
+  capCents: integer("cap_cents"),           // null = no budget from this month on
+  currency: text("currency").notNull().default("USD"),
   concurrency: integer("concurrency"),
-});
+  note: text("note").notNull().default(""),
+  createdAt: created(),
+  updatedAt: updated(),
+}, (t) => [
+  uniqueIndex("budgets_scope_month").on(t.scopeKey, t.month),
+  check("budgets_scope_ok", sql`(${t.scope} = 'studio' and ${t.channelId} is null and ${t.scopeKey} = 'studio') or (${t.scope} = 'channel' and ${t.channelId} is not null and ${t.scopeKey} = ${t.channelId}::text)`),
+  check("budgets_cap_ok", sql`${t.capCents} is null or ${t.capCents} >= 0`),
+]);
+// One cost entry. An estimate (source "estimate") keeps its amount in estimate_cents and never counts as spent; an
+// actual cost keeps it in actual_cents. Voided entries stay for the record and count for nothing.
 export const costLedger = pgTable("cost_ledger", {
   id: id(),
   jobId: uuid("job_id").references(() => jobs.id, { onDelete: "set null" }),
   channelId: uuid("channel_id").references(() => channels.id, { onDelete: "set null" }),
-  category: text("category").notNull(),     // research, voice, visuals, render, storage, publishing, retry
-  provider: text("provider").notNull().default("local"),
+  episodeId: uuid("episode_id").references(() => episodes.id, { onDelete: "set null" }),
+  category: text("category").notNull(),     // voice, visuals, music, research, render, storage, software, publishing, other
+  description: text("description").notNull().default(""),   // what it was
+  provider: text("provider").notNull().default("local"),     // who was paid (owner-entered), or the job's provider
+  source: text("source").notNull().default("manual"),        // manual (owner-recorded actual), estimate
+  currency: text("currency").notNull().default("USD"),
   estimateCents: integer("estimate_cents").notNull().default(0),
   actualCents: integer("actual_cents"),
+  incurredOn: date("incurred_on", { mode: "string" }).notNull().default(sql`CURRENT_DATE`),   // a calendar day in the studio timezone
   reserved: boolean("reserved").notNull().default(false),
   note: text("note").notNull().default(""),
+  voidedAt: timestamp("voided_at", { withTimezone: true }),
+  voidReason: text("void_reason").notNull().default(""),
   createdAt: created(),
-});
+  updatedAt: updated(),
+}, (t) => [
+  index("cost_ledger_incurred").on(t.incurredOn),
+  check("cost_ledger_amount_ok", sql`(${t.source} = 'estimate' and ${t.actualCents} is null and ${t.estimateCents} >= 0) or (${t.source} <> 'estimate' and ${t.actualCents} is not null and ${t.actualCents} >= 0)`),
+]);
 
 // ── audit ──────────────────────────────────────────────────────────────────
 export const auditLog = pgTable("audit_log", {

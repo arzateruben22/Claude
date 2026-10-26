@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { analyticsRows, studio } from "@/lib/data";
+import { db } from "@/db/client";
+import { analyticsTotals } from "@/domain/analytics";
 import { formatLocal } from "@/domain/time";
 import { count, PLATFORM_LABEL, topicStyle } from "@/lib/format";
 import { addMetric, importCsv } from "@/app/actions";
@@ -11,19 +13,26 @@ export const metadata: Metadata = { title: "Analytics" };
 const SOURCE_LABEL: Record<string, string> = { api: "API", csv: "CSV", manual: "owner-confirmed", estimate: "estimate", demo: "DEMO" };
 
 export default async function Analytics() {
-  const [rows, s] = await Promise.all([analyticsRows(), studio()]);
+  const [rows, s, totals] = await Promise.all([analyticsRows(), studio(), analyticsTotals(db())]);
   return (
     <div>
       <div className="kicker">Platform-reported numbers only</div>
       <h1>Analytics</h1>
       <p className="lede">Until the platforms are connected, log numbers from each app&apos;s analytics (or paste a CSV export). A missing number stays blank, never 0. Only API, CSV and owner-confirmed views count toward milestones; estimates and demo numbers never do.</p>
+      {rows.length ? (
+        <p className="row totals" aria-label="Totals">
+          <span><b className="num">{count(totals.posts)}</b> <span className="faint">post{totals.posts === 1 ? "" : "s"}</span></span>
+          <span><b className="num">{count(totals.views)}</b> <span className="faint">views, platform-reported ({totals.measured} of {totals.posts} measured)</span></span>
+          <span className="faint">Demo, simulated and estimated numbers are never in these totals.</span>
+        </p>
+      ) : null}
       {!rows.length ? <div className="card"><p className="muted" style={{ margin: 0 }}>No posts yet. Once you mark an upload done on the <Link href="/upload">Upload Desk</Link>, it shows up here.</p></div> : null}
       <div className="stack">
         {rows.map((r) => (
           <article key={r.p.id} className="card topic stack-sm" style={topicStyle(r.channel)}>
             <div className="row spread top">
               <div>
-                <div className="kicker" style={{ color: "var(--topic-ink)" }}>{r.channel.label} · {PLATFORM_LABEL[r.dest.platform]}{r.p.simulated ? " · " : ""}{r.p.simulated ? <span className="sim-tag">SIMULATED</span> : null}</div>
+                <div className="kicker" style={{ color: "var(--topic-ink)" }}>{r.channel.label} · {PLATFORM_LABEL[r.dest.platform]}{r.p.simulated ? " · " : ""}{r.p.simulated ? <span className="sim-tag">SIMULATED</span> : null}{r.e.isDemo ? " · " : ""}{r.e.isDemo ? <span className="demo-tag">DEMO</span> : null}</div>
                 <h3 style={{ margin: "4px 0 0" }}><Link href={`/episodes/${r.e.id}`}>{r.e.title}</Link></h3>
                 <div className="faint" style={{ fontSize: 13 }}>Posted {formatLocal(r.p.reportedAt, s.timezone)}{r.p.postUrl ? <> · <a href={r.p.postUrl} target="_blank" rel="noopener noreferrer">open post</a></> : null}</div>
               </div>

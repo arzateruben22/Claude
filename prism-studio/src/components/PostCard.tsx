@@ -42,7 +42,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
       <header className="post-head">
         <div>
           <div className="kicker topic-text">{heading ? `${heading} · ` : ""}{platform}{handle ? ` · ${handle}` : ""}</div>
-          <h3 className="post-title"><Link href={`/episodes/${e.id}`}>{e.title}</Link></h3>
+          <h3 className="post-title"><Link href={`/episodes/${e.id}`}>{e.title}</Link>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3>
           <div className="post-when">
             No. {no}
             {" · "}

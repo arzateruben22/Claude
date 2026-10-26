@@ -8,11 +8,14 @@ import { channelBySlug, episodesFor, studio, worldView } from "@/lib/data";
 import { Creation } from "@/creations/Creation";
 import { CREATIONS } from "@/creations/meta";
 import type { CreationKey, Form } from "@/creations/types";
-import { count, PLATFORM_LABEL, PROVENANCE_LABEL, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { count, moneyIn, PAID_GEN, PLATFORM_LABEL, PROVENANCE_LABEL, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { saveChannel } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { Lessons } from "@/components/Lessons";
 import { availableForLesson } from "@/domain/lessons";
+import { demoFilter } from "@/domain/demo";
+import { canUsePaidGeneration, costTotals } from "@/domain/costs";
+import { localMonth } from "@/domain/time";
 
 const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
 
@@ -25,13 +28,18 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
   const [{ slug }, { tab = "overview" }] = await Promise.all([params, searchParams]);
   const c = await channelBySlug(slug);
   if (!c) notFound();
-  const [eps, w, s, dests, ser, lessonRows, available] = await Promise.all([
-    episodesFor(c.id), worldView(c.id), studio(),
+  const s = await studio();
+  const month = localMonth(new Date(), s.timezone);
+  const [eps, w, dests, ser, lessonRows, available, costs, gate] = await Promise.all([
+    episodesFor(c.id, s.showDemo), worldView(c.id),
     db().select().from(S.destinations).where(eq(S.destinations.channelId, c.id)),
-    db().select().from(S.series).where(eq(S.series.channelId, c.id)).orderBy(asc(S.series.sort)),
-    db().select().from(S.lessons).where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false))).orderBy(desc(S.lessons.createdAt)),
+    db().select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort)),
+    db().select().from(S.lessons).where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(desc(S.lessons.createdAt)),
     availableForLesson(db(), c.id),
+    costTotals(db(), [month]), canUsePaidGeneration(db(), c.id, 1),
   ]);
+  const real = eps.filter((e) => !e.isDemo);   // counts never include demo episodes, even when they're shown
+  const spend = costs.scope(c.id, month);
   const lessonParts = lessonRows.length ? (await db().select({ le: S.lessonEpisodes, episode: S.episodes }).from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
     .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id)))).map((r) => ({ ...r.le, episode: r.episode })) : [];
   const key = w.creation.creationKey as CreationKey, meta = CREATIONS[key];
@@ -70,8 +78,20 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
             </div>
             <div className="card stack-sm">
               <div className="kicker">Episodes</div>
-              <div className="row">{Object.entries(eps.reduce<Record<string, number>>((a, e) => ({ ...a, [e.state]: (a[e.state] ?? 0) + 1 }), {})).map(([st, n]) => <span key={st} className={`chip ${stateTone(st)}`}>{n} {STATE_LABEL[st].toLowerCase()}</span>)}</div>
+              <div className="row">{Object.entries(real.reduce<Record<string, number>>((a, e) => ({ ...a, [e.state]: (a[e.state] ?? 0) + 1 }), {})).map(([st, n]) => <span key={st} className={`chip ${stateTone(st)}`}>{n} {STATE_LABEL[st].toLowerCase()}</span>)}</div>
               <Link href={`/channels/${slug}?tab=episodes`} className="btn ghost small" style={{ justifySelf: "start" }}>All episodes</Link>
+            </div>
+            <div className="card stack-sm budget-card">
+              <div className="kicker">Production budget · this month</div>
+              {spend.budget ? (
+                <>
+                  <div className="num">{moneyIn(spend.spentCents, spend.currency)} <span className="faint">of {moneyIn(spend.budget.capCents, spend.currency)} · {spend.overCents ? `over by ${moneyIn(spend.overCents, spend.currency)}` : `${moneyIn(spend.remainingCents, spend.currency)} left`}</span></div>
+                  <div className={`bar${spend.overCents ? " over" : ""}`}><i style={{ width: `${spend.budget.capCents ? Math.min(100, (spend.spentCents / spend.budget.capCents) * 100) : 100}%` }} /></div>
+                </>
+              ) : <p className="muted" style={{ margin: 0 }}>No production budget{spend.spentCents ? ` · ${moneyIn(spend.spentCents, spend.currency)} spent` : ""}. Paid generation stays off without one.</p>}
+              <span className={`chip ${PAID_GEN[gate.code].tone}`} title={gate.reason}>{PAID_GEN[gate.code].label}</span>
+              {PAID_GEN[gate.code].detail ? <span className="faint" style={{ fontSize: 13 }}>{gate.reason}</span> : null}
+              <Link href={`/costs?channel=${slug}`} className="btn ghost small" style={{ justifySelf: "start" }}>Costs and budget</Link>
             </div>
           </div>
         </div>
@@ -99,14 +119,14 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
         <div className="stack">
           {ser.map((x) => {
             const parts = eps.filter((e) => e.seriesId === x.id);
-            const done = parts.filter((e) => ["published", "analytics"].includes(e.state)).length;
+            const done = parts.filter((e) => !e.isDemo && ["published", "analytics"].includes(e.state)).length;
             return (
               <div key={x.id} className="card topic stack-sm">
-                <div className="row spread"><h3 style={{ margin: 0 }}>{x.title}</h3><span className="chip">{x.status}</span></div>
+                <div className="row spread"><h3 style={{ margin: 0 }}>{x.title}{x.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3><span className="chip">{x.status}</span></div>
                 <p className="muted" style={{ margin: 0 }}>{x.objective}</p>
                 <div className="bar"><i style={{ width: `${(done / Math.max(1, s.lessonBundleSize)) * 100}%` }} /></div>
                 <div className="faint num">{done}/{s.lessonBundleSize} published · the lesson is built from all {s.lessonBundleSize}</div>
-                <ol style={{ margin: 0, paddingLeft: 20 }}>{parts.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0)).map((e) => <li key={e.id}><Link href={`/episodes/${e.id}`}>{e.title}</Link> <span className="faint">· {STATE_LABEL[e.state]}</span></li>)}</ol>
+                <ol style={{ margin: 0, paddingLeft: 20 }}>{parts.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0)).map((e) => <li key={e.id}><Link href={`/episodes/${e.id}`}>{e.title}</Link>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null} <span className="faint">· {STATE_LABEL[e.state]}</span></li>)}</ol>
               </div>
             );
           })}

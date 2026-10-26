@@ -12,7 +12,7 @@ import { Placements } from "@/components/Placements";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const f = /^[0-9a-f-]{36}$/.test((await params).id) ? await episodeFull((await params).id) : null;
-  return { title: f?.ep.title ?? "Episode" };
+  return { title: f ? (f.ep.isDemo ? "Demo episode" : f.ep.title) : "Episode" };
 }
 
 export default async function Episode({ params }: { params: Promise<{ id: string }> }) {
@@ -21,6 +21,13 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   const [f, s] = await Promise.all([episodeFull(id), studio()]);
   if (!f) notFound();
   const { ep, channel, current } = f;
+  if (ep.isDemo && !s.showDemo) return (
+    <div style={topicStyle(channel)}>
+      <Link href={`/channels/${channel.slug}?tab=episodes`} className="kicker" style={{ color: "var(--topic-ink)", textDecoration: "none" }}>← {channel.name.replace(/ \(name TBD\)$/, "")}</Link>
+      <h1>Demo episode hidden</h1>
+      <p className="lede"><span className="demo-tag">DEMO</span> This is demo data. Demo data is hidden; turn on <Link href="/settings">Settings → Show demo data</Link> to see it. It never counts toward progress either way.</p>
+    </div>
+  );
   const moves = ([...PIPELINE, ...SIDE_STATES] as EpisodeState[]).filter((to) => canTransition(ep.state as EpisodeState, to));
   const step = PIPELINE.indexOf(ep.state as (typeof PIPELINE)[number]);
   const fails = current ? qaFails(current.qa) : null;

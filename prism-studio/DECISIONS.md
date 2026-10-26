@@ -15,4 +15,8 @@
 | 2026-10-25 | Missed slots move to the next free day for that destination (never two a day) | No catch-up bursts |
 | 2026-10-25 | Captions (.srt) come from the film's own word timings (film.json) | The burned-in captions and the uploaded captions match exactly |
 | 2026-10-25 | Media is served only for allow-listed keys (`films:` inside `films/`, `media:` inside MEDIA_ROOT) | No path traversal; .env and source files are unreachable |
+| 2026-10-26 | Production budgets are monthly rows that carry forward until replaced; costs are recorded, never paid | One place to see spend against a plan; history stays correct when a budget changes. Prism never moves money, and the reward ledger is never touched |
+| 2026-10-26 | Estimates and voided entries never count as spent; no currency conversion (other-currency costs keep paid generation off that month) | Only real, recorded spend uses budget room; Prism can't know an exchange rate, so it refuses to guess |
+| 2026-10-26 | Paid generation needs the Settings switch, a channel budget with room, and room in the studio-wide budget when one is set | A studio-wide budget is a ceiling, never permission on its own |
+| 2026-10-26 | "Show demo data" only changes what lists show; counting queries filter `is_demo` themselves | The switch can never make demo data count toward progress, rewards, XP, achievements or analytics totals |
 | 2026-10-25 | Default posting windows are provisional (YouTube 09:00, TikTok 12:00, Instagram 11:30/18:30, staggered 20 min per channel) | Not claimed to be optimal; analytics will decide |

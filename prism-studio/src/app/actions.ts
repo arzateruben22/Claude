@@ -16,6 +16,7 @@ import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } f
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
 import { planDays, unschedule } from "@/domain/schedule";
 import { enqueue, requestCancel, retry } from "@/domain/jobs";
+import { addCost, anyChannelBudget, editCost, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
 import { localDate, zonedTimeToUtc } from "@/domain/time";
 import { checkPassword } from "@/lib/auth";
 import { COOKIE, makeSession } from "@/lib/session";
@@ -390,12 +391,11 @@ export async function saveSettings(_: Result, fd: FormData) {
       timezone: z.string().refine((tz) => { try { new Intl.DateTimeFormat("en-US", { timeZone: tz }); return true; } catch { return false; } }, "Unknown timezone"),
       instagramDaily: z.coerce.number().int().min(0).max(3), shortsPerChannelDaily: z.coerce.number().int().min(0).max(3), bufferDays: z.coerce.number().int().min(0).max(30),
     }).parse({ timezone: str(fd, "timezone"), instagramDaily: str(fd, "instagramDaily"), shortsPerChannelDaily: str(fd, "shortsPerChannelDaily"), bufferDays: str(fd, "bufferDays") });
-    const budgets = await db().select().from(S.budgets);
-    const paid = fd.get("paidGenerationEnabled") === "on";
-    if (paid && !budgets.length) throw new DomainError("budget", "Paid generation stays off until a production budget exists.");
-    await db().update(S.studioSettings).set({ ...v, globalPause: fd.get("globalPause") === "on", stopExternalActions: fd.get("stopExternalActions") === "on", celebrationSound: fd.get("celebrationSound") === "on", lowPowerArt: fd.get("lowPowerArt") === "on", paidGenerationEnabled: paid, updatedAt: new Date() }).where(eq(S.studioSettings.id, 1));
-    await audit(db(), "owner", "settings.save", "studio_settings", "1", v);
-    refresh("/settings", "/calendar", "/upload");
+    const paid = fd.get("paidGenerationEnabled") === "on", showDemo = fd.get("showDemo") === "on";
+    if (paid && !(await anyChannelBudget(db()))) throw new DomainError("budget", "Paid generation stays off until a channel has a production budget this month (Costs).");
+    await db().update(S.studioSettings).set({ ...v, globalPause: fd.get("globalPause") === "on", stopExternalActions: fd.get("stopExternalActions") === "on", celebrationSound: fd.get("celebrationSound") === "on", lowPowerArt: fd.get("lowPowerArt") === "on", paidGenerationEnabled: paid, showDemo, updatedAt: new Date() }).where(eq(S.studioSettings.id, 1));
+    await audit(db(), "owner", "settings.save", "studio_settings", "1", { ...v, paidGenerationEnabled: paid, showDemo });
+    revalidatePath("/", "layout");   // the demo switch changes what every list shows
     return ok("Settings saved.");
   });
 }
@@ -556,5 +556,51 @@ export async function publishNow(_: Result, fd: FormData) {
     const r = await enqueue(db(), { type: "publish", channelId: e.channelId, payload: { publicationId: id, manual: true }, idempotencyKey: `publish:${id}`, priority: 10, maxAttempts: 3 });
     refresh("/upload", "/queue");
     return ok(r.created ? "Queued: the worker uploads it now. Watch the Queue; the task updates itself when the platform answers." : "Already queued.");
+  });
+}
+
+// ── costs and production budgets (records only: Prism never pays or moves money) ──
+const optionalId = z.union([z.literal(""), z.string().uuid()]).transform((v) => v || null);
+const costPaths = async (channelId: string | null) => {
+  const [ch] = channelId ? await db().select({ slug: S.channels.slug }).from(S.channels).where(eq(S.channels.id, channelId)) : [];
+  refresh("/costs", "/settings", ...(ch ? [`/channels/${ch.slug}`] : []));
+};
+function costInput(fd: FormData): CostInput {
+  return {
+    description: str(fd, "description"), amountCents: parseMoney(str(fd, "amount")), currency: str(fd, "currency") || "USD",
+    incurredOn: str(fd, "incurredOn"), source: fd.get("estimate") === "on" ? "estimate" : "manual", category: str(fd, "category"),
+    channelId: optionalId.parse(str(fd, "channelId")), episodeId: optionalId.parse(str(fd, "episodeId")), provider: str(fd, "provider"), note: str(fd, "note"),
+  };
+}
+export async function saveBudget(_: Result, fd: FormData) {
+  return run(async () => {
+    const scope = str(fd, "scope");
+    const channelId = scope === "studio" ? null : z.string().uuid("Pick who the budget is for").parse(scope);
+    const raw = str(fd, "amount");
+    const capCents = raw === "" ? null : parseMoney(raw);
+    await setBudget(db(), { channelId, month: str(fd, "month"), capCents, currency: str(fd, "currency") || "USD" });
+    await costPaths(channelId);
+    return ok(capCents == null ? "Budget ended from that month: paid generation stays off without one." : "Budget saved. It applies from that month on until you change it.");
+  });
+}
+export async function addCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const e = await addCost(db(), costInput(fd));
+    await costPaths(e.channelId);
+    return ok(e.source === "estimate" ? "Estimate recorded. It's labelled ESTIMATE and doesn't count as spent." : "Cost recorded. Prism only writes it down; it never pays anything.");
+  });
+}
+export async function editCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const e = await editCost(db(), z.string().uuid().parse(fd.get("costId")), costInput(fd));
+    await costPaths(e.channelId);
+    return ok("Saved.");
+  });
+}
+export async function voidCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const e = await voidCost(db(), z.string().uuid().parse(fd.get("costId")), str(fd, "reason"));
+    await costPaths(e.channelId);
+    return ok("Void: it stays on the record and no longer counts.");
   });
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 — 2026-10-26 (Stage B complete)
+- Costs screen: monthly production budgets (studio-wide and per channel), spent vs budget by month, cost entries with add/edit/void, ESTIMATE labels, and the paid-generation gate (`canUsePaidGeneration`).
+- Settings → Show demo data (off by default); DEMO labels on the desk, review, calendar and analytics; real-only analytics totals; `db:seed -- --demo`.
+- Nav badge counts and channel episode counts no longer include demo episodes.
+
 ## 0.2.0 — 2026-10-25 (Stage B + Stage C first cut)
 - Lessons (compilations) built by the worker; Learn screen; posting text engine with POSTING.md packs.
 - Automated publishing: connector contract, sealed OAuth grants, connect flow, publish and status jobs, scheduler, Publish now.

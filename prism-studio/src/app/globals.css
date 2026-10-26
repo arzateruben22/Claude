@@ -554,6 +554,53 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .waiting > p { margin: 0 0 var(--s3); }
 .login { min-height: 100dvh; display: grid; align-content: center; padding-top: 0; padding-bottom: 0; }
 
+/* ── costs ("/costs") ──────────────────────────────────────────────────── */
+/* a neutral label for ESTIMATE / VOID: words, not colour */
+.tag { display: inline-block; font: 600 10.5px/1 var(--mono); letter-spacing: .12em; padding: 3px 6px; border-radius: 3px; border: 1px solid var(--line-3); color: var(--text-2); vertical-align: middle; }
+.tag.faint-tag { border-color: var(--line-2); color: var(--text-3); }
+.cost-gate { margin: 0 0 var(--s2); font-size: 13.5px; gap: 4px 12px; }
+.budgets, .costs { list-style: none; margin: 0; padding: 0; }
+.budget { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name figs" "bar bar" "meta meta"; gap: 8px 12px; padding: 14px 16px; border-top: 1px solid var(--line); align-items: baseline; }
+.budget:first-child { border-top: 0; }
+.budget-name { grid-area: name; display: inline-flex; align-items: center; gap: 9px; min-height: 28px; font: 600 15px/1.3 var(--ui); color: var(--text); text-decoration: none; }
+a.budget-name:hover { text-decoration: underline; }
+.budget-name .dot { flex: none; width: 8px; height: 8px; border-radius: 1px; background: var(--topic); transform: rotate(45deg); }
+.budget-name .dot.studio { background: none; box-shadow: inset 0 0 0 1.5px var(--text-2); }
+.budget-figs { grid-area: figs; text-align: right; color: var(--text); white-space: nowrap; }
+.budget-bar { grid-area: bar; }
+.bar.over > i { background: var(--warn); }
+.budget-meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: 13px; color: var(--text-2); }
+@media (max-width: 959px) { .budget[data-nobudget] { grid-template-areas: "name figs" "meta meta"; } .budget[data-nobudget] .budget-bar { display: none; } }
+@media (min-width: 960px) {
+  .budget { grid-template-columns: 180px minmax(120px, 1fr) 190px minmax(0, 1.25fr); grid-template-areas: "name bar figs meta"; align-items: center; gap: 12px 20px; padding: 12px 20px; }
+  .budget-meta { justify-content: flex-end; text-align: right; }
+}
+.cell-note { display: block; font: 500 11.5px/1.3 var(--mono); color: var(--text-3); margin-top: 2px; }
+.over-text { color: var(--warn); }
+.cost-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.cost-pair > .field, .cost-pair input, .cost-pair select { min-width: 0; }
+.cost { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "what amt" "meta meta" "change change"; gap: 4px 12px; padding: 12px 16px; border-top: 1px solid var(--line); align-items: baseline; }
+.cost:first-child { border-top: 0; }
+.cost-what { grid-area: what; font-weight: 600; overflow-wrap: anywhere; }
+.cost-amt { grid-area: amt; display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; font-size: 14px; white-space: nowrap; }
+.cost-meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; color: var(--text-3); }
+.cost-meta a { color: var(--text-2); }
+.cost-change { grid-area: change; }
+.cost-change > summary { min-height: 36px; font-size: 13px; }
+@media (max-width: 899px), (pointer: coarse) { .cost-change > summary { min-height: 44px; } }
+.cost-forms { display: grid; gap: var(--s5); padding: var(--s2) 0 var(--s3); }
+.cost-void { padding-top: var(--s4); border-top: 1px solid var(--line); }
+.cost[data-void] .cost-what, .cost[data-void] .cost-sum { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--text-3); }
+@media (min-width: 760px) {
+  .cost { padding: 12px 20px; }
+  .cost-forms { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; }
+  .cost-void { padding-top: 0; padding-left: var(--s5); border-top: 0; border-left: 1px solid var(--line); }
+}
+.totals { gap: 6px 20px; margin: 0 0 var(--s4); font-size: 14px; }
+.totals b.num { font-size: 15px; color: var(--text); }
+/* the channel page's production budget card */
+.budget-card .bar { margin: 2px 0; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .confetti { display: none; }
