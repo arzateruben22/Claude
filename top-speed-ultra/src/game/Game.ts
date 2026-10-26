@@ -81,6 +81,9 @@ export interface Hud {
   // the camera in use ('back' while looking back) and whether the car's own cluster shows the live speed and gear (the
   // hypercar's display): together they let the HUD drop its duplicate speed in the seat view
   view: CamMode | 'back'; liveCluster: boolean;
+  // the condensed HUD: the brake pedal (0..1; a hard stop wakes the tucked map), the time the sky shows ('12:30 PM') and
+  // where the temperature comes from ('simulated'), for the pause screen, the phone and the desktop map caption
+  brake: number; clock: string; tempNote: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -1182,9 +1185,10 @@ export class Game {
       this.car.body.getWorldQuaternion(this.wantQ);
       this.tmpV.set(this.head.x, 0, this.head.z).applyQuaternion(this.wantQ); this.wantP.add(this.tmpV);
       // portrait: aim for a 50-degree horizontal view (Three's fov is vertical, so it follows the aspect, 62..84
-      // degrees) with the horizon 37% from the top. The old 96 degrees took in a 62-degree width at the owner's phone
-      // aspect, with the door filling the left third, and drew the cluster small in the middle of the screen; this one
-      // draws it 1.3x larger under the road and leaves the door as a strip at the edge. Landscape is unchanged.
+      // degrees, clamped at 84 on tall phones) with the horizon 37% from the top. The old 96 degrees took in a 61-degree
+      // width at the owner's phone aspect: the door and the flank through the side window crowded the left edge and the
+      // cluster was drawn small mid-screen; this one draws it about 1.25x larger under the road, the door at the edge.
+      // Landscape is unchanged.
       const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, 84) : 58;
       const basePitch = portrait ? -Math.atan((0.5 - SEAT_HORIZON_P) * 2 * Math.tan((vBase / 2) * DEG)) : -0.085;
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
@@ -1426,6 +1430,7 @@ export class Game {
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
+      brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }

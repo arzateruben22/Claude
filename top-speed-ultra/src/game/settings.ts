@@ -107,6 +107,9 @@ export const STARTS: { label: string; at: number; blurb: string }[] = [
   { label: 'CA-241 North', at: 0.3, blurb: 'The Foothill toll road' },
 ];
 
+// a phone's first run starts in the Minimal HUD (it tucks the map and the icons after 4 s of just driving); a saved choice wins
+const firstHud = (): HudStyle => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'minimal' : 'modern');
+
 function guessQuality(): Quality {
   const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
   if (coarse) return 'low';
@@ -118,7 +121,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: 'modern', owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
+    hudStyle: firstHud(), owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
 
@@ -169,7 +172,7 @@ function readSettings(): Settings {
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
-      hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
+      hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       owner: v.owner === true,
       look: v.look === 'hd' ? 'hd' : 'ultra',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
