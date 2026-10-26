@@ -1,0 +1,12 @@
+node_modules
+.next
+.env
+.env.local
+.env.*.local
+data/media
+data/backups
+data/preview
+data/DEV-PASSWORD.txt
+*.tsbuildinfo
+playwright-report
+docs/*.png

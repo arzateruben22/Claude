@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LoginForm } from "./LoginForm";
+import { Wallpaper } from "@/components/Wallpaper";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -7,6 +8,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
   const { next } = await searchParams;
   return (
     <main className="main" style={{ maxWidth: 440, paddingTop: "12vh" }}>
+      <Wallpaper variant="soft" />
       <div className="kicker">Owner only</div>
       <h1>Prism <em className="accent">Studio</em></h1>
       <p className="lede">Five channels, one studio. Sign in with your studio passphrase.</p>

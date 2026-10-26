@@ -26,6 +26,8 @@ export const HANDLERS: Record<string, Handler> = {
   async build_lesson(job, beat, d) {
     const plan = await lessonBuildPlan(d, String(job.payload.lessonId));
     const root = path.resolve(process.env.FILMS_REPO_ROOT || "..");
+    // the films toolchain (kit, Chromium, ffmpeg) lives with the films repo, not in the hosted image
+    if (!fs.existsSync(path.join(root, plan.args[0]))) throw new DomainError("needs_films_toolchain", "lessons are built where the films repo lives: run `npm run worker` on the films machine, then sync the compilation (deploy/sync-media.sh)");
     await beat(0.05, `compilation.mjs ${plan.lesson.name}`);
     await new Promise<void>((resolve, reject) => {
       const child = spawn("node", plan.args, { cwd: root, stdio: ["ignore", "pipe", "pipe"] });

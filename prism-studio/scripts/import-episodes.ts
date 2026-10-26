@@ -8,7 +8,7 @@ import { createHash } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
-import { createEpisode, addVersion, upsertExport } from "../src/domain/episodes";
+import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
 import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
 import { buildMetadata, type MetaInput } from "../src/domain/metadata";
@@ -101,13 +101,19 @@ export async function importEpisodes(d = db()) {
       }
       const meta = buildMetadata(metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
         { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: n, seriesTotal: slate.titles.length }));
+      // the designed 9:16 cover (npm run covers) when it is newer than this render (the covers script's own rule), else
+      // the film's poster: a cover drawn from an earlier render never rides on a re-rendered video
+      const coverFile = file.replace(/-9x16\.mp4$/, "-cover.jpg");
+      const coverFresh = fs.existsSync(coverFile) && fs.statSync(coverFile).mtimeMs > fs.statSync(file).mtimeMs;
+      const coverPath = `films:${rel(coverFresh ? coverFile : file.replace(/\.mp4$/, ".jpg"))}`;
       for (const platform of ["youtube", "tiktok", "instagram"] as const) {
         const m = meta[platform];
-        await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(file)}`, fileSha256: hash,
-          title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath: `films:${rel(file.replace(/\.mp4$/, ".jpg"))}`,
+        const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(file)}`, fileSha256: hash,
+          title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath,
           disclosures: { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
           postingNotes: ["Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.",
             m.pinnedComment ? `Pinned/first comment:\n${m.pinnedComment}` : "", m.tags.length ? `Tags: ${m.tags.join(", ")}` : "", m.warnings.length ? `Check: ${m.warnings.join("; ")}` : ""].filter(Boolean).join("\n\n") });
+        if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
       }
       // planned publications for this channel's YouTube and TikTok (Instagram picks from the backlog separately)
       const dests = await d.select().from(S.destinations).where(eq(S.destinations.channelId, ch.id));

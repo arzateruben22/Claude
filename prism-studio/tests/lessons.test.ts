@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { freshDb, renderedEpisode, channel, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
+import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
+import { HANDLERS } from "../worker/handlers";
+import type { JobRow } from "../src/domain/jobs";
 import { approveLesson, availableForLesson, createLesson, dissolveLesson, editLesson, lessonBuildPlan, lessonHash, markLessonUploaded, recordLessonBuild } from "../src/domain/lessons";
 
 let db: DB, end: () => Promise<void>;
@@ -35,6 +40,16 @@ describe("lessons", () => {
     expect(plan.args).toEqual(["kits/cinema/film/compilation.mjs", "--channel", "films/channels/physics", "--episodes", "ep01,ep02,ep03,ep04", "--title", "Forces you can see", "--name", "vol01"]);
     const jobs = await db.select().from(S.jobs).where(eq(S.jobs.type, "build_lesson"));
     expect(jobs).toHaveLength(1);
+  });
+  it("a host without the films toolchain refuses the build once, with where to run it", async () => {
+    const { c } = await channel(db, "space");
+    const l = await createLesson(db, { channelId: c.id, episodeIds: await fourRendered("space"), title: "Light, late" });
+    const prev = process.env.FILMS_REPO_ROOT;
+    process.env.FILMS_REPO_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), "no-films-"));
+    try {
+      const job = { id: "j", type: "build_lesson", payload: { lessonId: l.id } } as unknown as JobRow;
+      await expect(HANDLERS.build_lesson(job, async () => true, db)).rejects.toMatchObject({ code: "needs_films_toolchain" });
+    } finally { process.env.FILMS_REPO_ROOT = prev; }
   });
   it("approval binds the built video, title and description", async () => {
     const { c } = await channel(db, "body");

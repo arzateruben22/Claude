@@ -158,3 +158,37 @@ export function postingSheet(input: MetaInput, meta = buildMetadata(input)): str
     block("instagram", "Instagram Reel (shared account)", ["**Caption**", "", "```", meta.instagram.caption, "```", "", "**First comment**", "", "```", meta.instagram.pinnedComment, "```"]),
   ].join("\n");
 }
+
+// ── the text a person pastes ──────────────────────────────────────────────────────────────────────────────────────
+type PostText = { caption: string; hashtags: string };
+
+/** The exact text to paste into the platform: the stored caption, with the hashtags added only when the caption doesn't
+ *  already carry them (buildMetadata ends every caption with its tags, so normally nothing is added). */
+export function composePostText(x: PostText): string {
+  const caption = x.caption.trimEnd(), tags = x.hashtags.trim();
+  if (!tags || caption.includes(tags)) return caption;
+  return caption ? `${caption}\n\n${tags}` : tags;
+}
+
+/** The caption without its trailing hashtag line, for showing the words and the tags in separate boxes. */
+export function captionBody(x: PostText): string {
+  const caption = x.caption.trimEnd(), tags = x.hashtags.trim();
+  return tags && caption.endsWith(tags) ? caption.slice(0, -tags.length).trimEnd() : caption;
+}
+
+/** An export's posting notes, split into the parts a screen shows separately. regenerateExports and the episode import
+ *  write them as blocks separated by a blank line: the label instructions, "Pinned/first comment:", "Tags:", "Check:".
+ *  Anything else (the owner's own notes) stays in `other`, word for word. */
+export function parsePostingNotes(notes: string | null | undefined) {
+  const out = { comment: "", tags: "", checks: [] as string[], aiLabel: false, captionsOff: false, other: [] as string[] };
+  for (const raw of (notes ?? "").split(/\n\s*\n(?=\S)/)) {
+    const b = raw.trim();
+    if (!b) continue;
+    if (/^Pinned\/first comment:/i.test(b)) out.comment = b.replace(/^Pinned\/first comment:\s*/i, "").trim();
+    else if (/^Tags:/i.test(b)) out.tags = b.replace(/^Tags:\s*/i, "").trim();
+    else if (/^Check:/i.test(b)) out.checks.push(...b.replace(/^Check:\s*/i, "").split(/;\s*/).filter(Boolean));
+    else if (/synthetic content label/i.test(b) && b.length < 200) { out.aiLabel = true; out.captionsOff = /auto-captions off/i.test(b); }
+    else out.other.push(b);
+  }
+  return out;
+}

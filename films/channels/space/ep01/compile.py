@@ -247,7 +247,7 @@ COUNTERS = [
     {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:two"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
     # the readout (the channel's segment): light time for this episode's distance, then the galaxy's
     {"id": "c-read-au", "label": "light time · Sun to Earth", "fmt": "text", "text": "8 min 20 s", "t0": A("vo07:Light"), "t1": t_j0 + 0.2, "at": [0.5, 0.2]},
-    {"id": "c-read-gc", "label": "light time · galactic center to Sun", "fmt": "text", "text": "27,000 years", "t0": A("vo07:light#2"), "t1": end_out, "at": [0.5, 0.2]},
+    {"id": "c-read-gc", "label": "light time · galaxy's center", "fmt": "text", "text": "27,000 years", "t0": A("vo07:light#2"), "t1": end_out, "at": [0.5, 0.2]},
 ]
 for row in BADGES + COUNTERS:
     row["t1"] = before_cut(row["t1"])

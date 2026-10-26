@@ -1009,7 +1009,7 @@
   },
   {
    "id": "c-read-gc",
-   "label": "light time · galactic center to Sun",
+   "label": "light time · galaxy's center",
    "fmt": "text",
    "text": "27,000 years",
    "t0": 64.93333333333334,
