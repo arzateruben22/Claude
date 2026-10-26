@@ -114,7 +114,7 @@ STEP_IN = math.degrees(SP.omega(T_IN + 0.5) * DT)        # 48.2°
 # skater:" never sits over 80 rpm under the record's label (the whoa's cut only widens the plate to three digits)
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("whoa"), "label": "spin rate", "unit": "rpm", "dp": 0, "kind": "rpm", "take": "chair", "minCh": 2},
-    {"t0": cut("whoa"), "t1": A("vo05:three"), "label": "spin rate", "unit": "rpm", "dp": 0, "kind": "rpm", "take": "chair", "minCh": 3},
+    {"t0": cut("whoa"), "t1": A("vo05:three"), "label": "your spin, arms in", "unit": "rpm", "dp": 0, "kind": "rpm", "take": "chair", "minCh": 3},   # named as the chair's, so it isn't read as the skater's
     {"t0": A("vo05:three"), "t1": cut("measure"), "label": "fastest spin on ice skates", "unit": "rpm", "dp": 0, "kind": "ramp",
      "keys": [[A("vo05:three"), RPM_IN], [A("vo05:minute."), 342.0]], "lit": [A("vo05:minute."), cut("measure")], "minCh": 3},
     {"t0": cut("measure"), "t1": A("vo06:Arms#2"), "label": "turn per 1/10 s, arms out", "unit": "°", "dp": 0, "kind": "const", "v": STEP_OUT, "minCh": 2},
@@ -321,7 +321,9 @@ ev.append({"t": A("vo05:minute."), "kind": "reveal", "tag": "342"})
 for k in ("out", "in", "hook", "loop"):
     L = LADDERS[k]
     for i, t in enumerate(L["stamps"]):
-        if math.isfinite(t) and 0.05 < t < L["t1"] and i % 3 == 0:                        # one shutter per three ghosts
+        # one shutter per three ghosts; none in the last 0.15 s or past the end (the loop's ladder runs on past DUR,
+        # and a click cut off by the film's end can't be heard or synced)
+        if math.isfinite(t) and 0.05 < t < min(L["t1"], DUR - 0.15) and i % 3 == 0:
             ev.append({"t": round(t, 4), "kind": "strobe", "tag": f"{k}:g{i}"})
 for lb in LABELS:
     ev.append({"t": lb["t0"], "kind": "label", "tag": lb["id"]})

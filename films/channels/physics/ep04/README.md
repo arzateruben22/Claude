@@ -1,16 +1,14 @@
 # Rest Frame No. 004, "The hammer and the feather"
 
-Episode 4 of Rest Frame, the physics channel (films/channels/physics). It is 72.0 s long (as first built; the 26 Oct
-audit's re-voiced lines lengthened the direction to 72.3 s, and the final, not rendered yet, renders on it with the
-rule-8 fix), 9:16, narrated by af_bella at speed 1.0 (a synthetic voice, labeled as AI). It pays off episode 3's tease
+Episode 4 of Rest Frame, the physics channel (films/channels/physics). It is 72.3 s long, 9:16, narrated by af_bella at speed 1.0 (a synthetic voice, labeled as AI). It pays off episode 3's tease
 ("Next: a hammer, a feather, the Moon. Nobody wins.") and sets up episode 5. **Nothing has been posted.** A physicist
 signs off the script before it posts.
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish; not rendered yet: it renders on the current direction) | `out/rest-frame-004-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
+| **Final** (26 Oct 14:27: 1080×1920, 30 fps, full finish, −14.1 LUFS / −2.0 dBTP; `qa.py` PASS) | `out/rest-frame-004-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
-| Ten final-tier stills | `review/stills-ep04.jpg` (made from the final) |
+| Thirteen final-tier stills | `review/stills-ep04.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
 
 ## The story
 

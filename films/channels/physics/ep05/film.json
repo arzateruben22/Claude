@@ -191,7 +191,7 @@
   {
    "t0": 36.516633,
    "t1": 41.7,
-   "label": "spin rate",
+   "label": "your spin, arms in",
    "unit": "rpm",
    "dp": 0,
    "kind": "rpm",
