@@ -42,7 +42,6 @@ export default async function Review() {
                   <div className="row">
                     <p className="faint" style={{ margin: 0 }}>{facts.join(" · ")}</p>
                     {unchecked ? <span className="chip bad">{unchecked} unresolved</span> : null}
-                    {fails ? <span className="chip bad">QA: {fails} failed</span> : null}
                   </div>
                   <Placements full={f} tz={s.timezone} />
                   <Link href={`/episodes/${f.ep.id}`} className="btn quiet small" style={{ justifySelf: "start" }}>Script, sources and notes</Link>

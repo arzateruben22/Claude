@@ -203,8 +203,8 @@ details:not(.more)[open] > summary::before { transform: rotate(45deg); }
 details:not(.more) > summary:hover { color: var(--text); }
 /* an empty live region takes no room (it stays in the DOM so a message is still announced) */
 .status-line { margin: 0; font-size: 13px; }
-.status-line:empty { display: block; height: 0; overflow: hidden; }
-.stack > .status-line:empty { margin-top: calc(-1 * var(--s4)); } .stack-sm > .status-line:empty { margin-top: calc(-1 * var(--s2)); }
+/* out of the flow while empty, so a grid or flex parent gives it no row and no gap */
+.status-line:empty { position: absolute; width: 1px; height: 0; overflow: hidden; }
 
 table.t { width: 100%; border-collapse: collapse; font-size: 14px; }
 table.t th { text-align: left; font: 600 12.5px/1.3 var(--ui); letter-spacing: 0; text-transform: none; color: var(--text-3); padding: 9px 8px; border-bottom: 1px solid var(--line-2); }
@@ -239,7 +239,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .acct { display: flex; gap: var(--s3); align-items: center; padding: var(--s3); background: var(--glass-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
 .acct .avatar { width: 40px; height: 40px; border-radius: var(--r-sm); display: grid; place-items: center; background: var(--fill); color: var(--text-2); font: 600 13px/1 var(--mono); flex: none; }
 .acct .handle { font: 600 16px/1.3 var(--ui); }
-.acct-line { display: grid; gap: 2px; }
+.acct-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 
 /* trophies */
 .trophy { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
@@ -268,6 +268,8 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .home-meta > span + span::before { content: "·"; margin: 0 .7em; color: var(--text-3); }
 .home-meta a { color: var(--text); text-decoration-color: var(--line-3); }
 .home-meta .day-long, .home-meta > .quiet-bit { display: none; }
+/* phones: the date on its own line, the day's status under it (no separator at the start of a line) */
+@media (max-width: 719px) { .home-meta > span:first-child { flex-basis: 100%; } .home-meta > span:nth-child(2)::before { content: none; } }
 @media (min-width: 720px) {
   .home-meta { letter-spacing: .14em; }
   .home-meta > span + span::before { margin: 0 .9em; }
@@ -306,7 +308,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .mon-screen::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(118deg, rgba(255, 255, 255, .06) 0%, rgba(255, 255, 255, .015) 34%, transparent 35%); }
 .mon-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.68) saturate(.85); z-index: 0; }
 /* covers drawn on light paper (the channel's theme bg is light) are held down so they never outshine the night */
-.mon[data-tone="light"] .mon-cover, .ig-tile[data-tone="light"] img, .thumb[data-tone="light"] .thumb-screen img, .thumb-tile[data-tone="light"] img { filter: brightness(.58) saturate(.75) contrast(1.05); }
+.mon[data-tone="light"] .mon-cover, .ig-tile[data-tone="light"] img, .thumb[data-tone="light"] .thumb-screen img, .thumb-tile[data-tone="light"] img { filter: brightness(.5) saturate(.7) contrast(1.05); }
 /* landscape screen with a 9:16 cover: pillarboxed, the way a vertical video sits on a wide monitor */
 .mon-landscape .mon-cover { left: 50%; right: auto; width: auto; aspect-ratio: 9 / 16; translate: -50% 0; }
 .mon-standby { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; font: 500 clamp(11px, 5cqi, 12px)/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: rgba(141, 148, 159, .55); }
@@ -314,6 +316,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .mon-chin { display: grid; justify-items: center; gap: 2px; padding: clamp(6px, 3cqi, 10px) 2px clamp(4px, 2cqi, 6px); text-align: center; }
 .mon-name { font: 400 clamp(17px, 11cqi, 26px)/1.04 var(--display); letter-spacing: -.005em; color: var(--text); text-wrap: balance; }
 .mon-status { font: 520 clamp(11.5px, 6.6cqi, 13.5px)/1.3 var(--ui); color: var(--text-2); text-wrap: balance; }
+.mon-status > span + span::before { content: " · "; }
 .mon-landscape .mon-chin { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 12px; padding: clamp(6px, 1.6cqi, 10px) 2px clamp(4px, 1.2cqi, 6px); }
 .mon-landscape .mon-chin .mon-name { font-size: clamp(17px, 4.8cqi, 26px); }
 .mon-landscape .mon-chin .mon-status { font-size: clamp(11.5px, 2.8cqi, 14px); }
@@ -338,7 +341,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .ig-tile { position: relative; width: 24cqi; aspect-ratio: 9 / 16; border-radius: 2px; overflow: hidden; background: #08090C; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09); }
 .ig-tile img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.72) saturate(.85); }
 .ig-tile[data-state="unplanned"] img { filter: brightness(.6) saturate(.7); }
-.ig-tile[data-state="unplanned"][data-tone="light"] img { filter: brightness(.5) saturate(.6) contrast(1.05); }
+.ig-tile[data-state="unplanned"][data-tone="light"] img { filter: brightness(.44) saturate(.6) contrast(1.05); }
 .ig-cap { position: absolute; left: 0; right: 0; bottom: 0; display: grid; gap: 3px; padding: 34% 7% 8%; background: linear-gradient(to top, rgba(0, 0, 0, .94), rgba(0, 0, 0, .7) 55%, transparent); }
 .ig-time { font: 500 clamp(11px, 2.4cqi, 12.5px)/1 var(--mono); letter-spacing: .02em; color: #fff; white-space: nowrap; }
 .ig-note { font: 520 clamp(11px, 2.4cqi, 12.5px)/1.2 var(--ui); color: rgba(255, 255, 255, .82); }
@@ -356,6 +359,10 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
   .mon[data-empty] .mon-chin { display: grid; }
   .mon[data-empty] .mon-name { font-size: 17px; }
   .mon[data-empty] .mon-status { font-size: 11.5px; }
+  /* the switched-off row: three equal screens, each status part on its own line ("1 in script" / "5 ideas") */
+  .mon[data-empty] .mon-bezel { height: 100%; }
+  .mon[data-empty] .mon-status > span { display: block; }
+  .mon[data-empty] .mon-status > span + span::before { content: none; }
 }
 
 /* ≥ 900 px: the rig itself, on a pole with steel arms */
@@ -426,7 +433,8 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 /* phones: a scrolling row of labelled buttons, Instagram first */
 @media (max-width: 719px) {
   .strip { gap: var(--s2); }
-  .strip-rig { margin: 0; overflow-x: auto; scrollbar-width: none; gap: 8px; padding: 4px 2px; align-items: center; }
+  .strip-rig { margin: 0; overflow-x: auto; scrollbar-width: none; gap: 8px; padding: 4px 2px; align-items: center;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
   .strip-col { display: contents; }
   .thumb { order: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 22px; color: var(--text-2); }
   .thumb[data-pos="center"] { order: 0; } .thumb[data-pos="innerLeft"] { order: 1; } .thumb[data-pos="innerRight"] { order: 1; }

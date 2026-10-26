@@ -28,7 +28,7 @@ export function Monitor({ m, pos, tz }: { m: MonitorCard; pos: RigPosition; tz: 
         {ig ? null : (
           <span className="mon-chin">
             <span className="mon-name">{m.name}</span>
-            <span className="mon-status">{m.status}</span>
+            <span className="mon-status">{m.status.split(" · ").map((part, i) => <span key={i}>{part}</span>)}</span>
           </span>
         )}
         <span className="mon-led" data-led={m.led} aria-hidden />
