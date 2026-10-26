@@ -129,6 +129,9 @@ DIM = {
     "stunt": [[0.0, 1.0], [CLIMB["t0"], 1.0], [CLIMB["t0"] + 0.5, THIRD], [DUR, THIRD]],                # the stunt's seven, once the pump takes over
     "ghosts": [[0.0, 1.0], [BOIL_T - 0.6, 1.0], [BOIL_T, THIRD], [cut("measure"), THIRD], [cut("measure") + 0.5, 1.0], [AIR_W[0], 1.0], [AIR_W[0] + 0.5, THIRD], [DUR, THIRD]],
     "air": [[0.0, 1.0], [LINE_W[0], 1.0], [LINE_W[0] + 0.5, THIRD], [DUR, THIRD]],                      # the air column, once the water line is named
+    # the house is a backdrop at the bench (a third) and the subject from "tall." through the measure; full again by the end card (the loop)
+    "house": [[0.0, 1.0], [cut("normal"), 1.0], [cut("normal") + 0.5, THIRD], [A("vo05:tall.") - 0.8, THIRD], [A("vo05:tall."), 1.0],
+              [cut("takeaway"), 1.0], [cut("takeaway") + 0.5, THIRD], [cut("tease"), THIRD], [EC, 1.0], [DUR, 1.0]],
 }
 
 # ── the spine: the air in the straw (hPa), then the tall column (m), held lit at 10.1 through the takeaway ──

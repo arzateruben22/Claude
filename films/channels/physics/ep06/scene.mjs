@@ -172,6 +172,7 @@ window.seek = function (t) {
   const lv = benchLevel(t);
   SA.fill(lv); SB.fill(lv);
   lidAt(keyed(FILM.lid, t, "inout3"));
+  I.opacity(onScreen(dimAt("house", t), HEX.ink2));                  // the house: a backdrop at the bench, the subject in the whoa and the measure
   // ink: Torricelli's tube (a third once the air takes over), the lungs' meter, the stunt's seven, the measure's marks
   const bk = win(t, CUE.baro) * dimAt("baro", t);
   BARO.group.visible = bk > 0.001; IB.opacity(onScreen(bk, HEX.ink2)); BARO.opacity(onScreen(bk, HEX.hg));

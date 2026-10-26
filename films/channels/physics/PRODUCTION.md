@@ -20,6 +20,15 @@
 > Order (04:40 UTC): the rule-8 pass on ep02–05 runs as a workflow (one implementer, one independent reviewer and one
 > fixer per episode; agents never run Chromium); meanwhile ep06 (written with rule 8 from the start) renders its final,
 > then each of ep02–05 gets compile → cues → compile → soundtrack → stills at 390 px → final → QA, in order.
+> **ep06 audit (08:15 UTC, from the coordinating session): the 05:09 delivery (339bc41) is superseded.** Applied: the
+> hook "Something invisible, pushing." ("not suction" overclaimed), "however hard you like" (a hard sip, not a
+> maximum), "Your lungs alone? About one meter." then the 7 m mouth-pumping stunt (c15, Veritasium 2012; the audit's
+> mouth-suction paper not found in our searches, so not cited), the takeaway "its push runs out near ten meters".
+> Re-voiced (175 words, 73.3 s; lint 0 errors). It re-renders after ep02–05 (commit 11c7b36).
+> **A third on screen (08:30).** Blending and the lerp toward the paper both happen in scene light, before the
+> finish's ACES curve, so opacity 1/3 (or a 2/3 lerp) keeps only about 1/11 of a mark's contrast on screen; ep02's
+> review caught it. `set/aces.js` now has `screenAlpha(k, ink, paper)` (the opacity that keeps k of the contrast,
+> about 0.7 for a third); ep06 uses it, and each of ep02–05 is mapped through it before its final.
 > `ps -eo args | grep "[r]ender.mjs"` shows the one render; a bare `kits/cinema/film/run.sh <dir>` resumes it.
 > The pre-merge ep02 frames are in `ep02/build/final/9x16.prev`; ep03's first final is in `ep03/build/superseded/` (not committed).
 
@@ -47,7 +56,7 @@ delivered).
 | 03 | Where does the bounce go? | scripted · reviewed · voiced (153 words, 66.9 s) · built · animatic checked · soundtrack (−14.1 LUFS, sync PASS) · first final rendered 25 Oct but superseded by the recheck (labels lingered across cuts; mid-phrase captions) · **re-render pending** (rule 8 pass in progress) |
 | 04 | The hammer and the feather | scripted · reviewed · voiced (166 words, 72.0 s) · compile and scene · animatic checked (bench camera lowered, MICROSCOPE card, labels) · **rule 8 pass in progress**, then cues, soundtrack, stills, final |
 | 05 | The spinning chair | scripted · reviewed · voiced (156 words, 66.9 s; tease re-voiced for US spelling, audio identical) · compile and scene written · HUD audit clean · **rule 8 pass in progress**, then animatic, cues, soundtrack, stills, final |
-| 06 | The ten-meter straw | scripted · reviewed (not ready → fixed: the pumped jar replaced by an airtight lid on a full glass, "Surprisingly, not suction", US spelling, the whoa answers the tease first, "the air above") · voiced (163 words, 68.8 s; lint 0 errors before and after, 1 warning: the change beat is 18 words) · compile and scene with rule 8 · animatic checked · HUD audit 0 issues · soundtrack −14.08 LUFS, sync PASS, voice 21.0 LU over music · final-tier stills OK at 390 px · **final rendering** |
+| 06 | The ten-meter straw | scripted · reviewed · voiced · built with rule 8 · delivered 05:09 (QA PASS), **superseded by the coordinating session's audit** (08:15): re-voiced (175 words, 73.3 s; lint 0 errors), the 7 m stunt added, screen-true thirds · **final re-render queued after ep02–05** |
 
 ## New in the channel set (`set/`)
 
@@ -63,9 +72,10 @@ delivered).
 - `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms); `reach()` and
   `dumbbells: false` for empty hands (ep06).
 - `captions_py.py`: the caption pager every compile.py uses (phrase breaks, per-sentence fixes, end-card clearance).
+- `aces.js` (added): `acesFwd`, the finish's forward curve, and `screenAlpha`, the opacity that keeps a share of a mark's contrast on screen.
 - `spine.js`: where the spine readout sits (pinned to the safe line, wrapping label) and the card width.
 - `straw.js`: glass without transmission (a Fresnel rim and a highlight stripe), a glass of water, straws and tall pipes
-  with a liquid column, a bell jar, a hand vacuum pump and hose, an ink house front with a metre scale, boiling
+  with a liquid column, a screw lid, a hand vacuum pump and hose, an ink house front with a meter scale, boiling
   bubbles, Torricelli's tube in ink; the hydrostatics helpers (h = Δp/ρg).
 
 ## ep05 plan (for the resume)
