@@ -105,8 +105,8 @@
    "kind": "counter.show",
    "tag": "spine",
    "pos": [
-    0.25,
-    0.235
+    0.28,
+    0.28
    ]
   },
   {
@@ -631,7 +631,7 @@
    ]
   },
   {
-   "t": 58.6667,
+   "t": 55.0,
    "kind": "badge",
    "tag": "1in57",
    "text": "30° swing: 1.7% slower"

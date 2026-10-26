@@ -63,8 +63,8 @@ R_m = A("vo06:seconds.") - T_M                           # the measure: real tim
 assert A("vo06:drop") - 0.2 < R_m < A("vo06:about"), (R_m,)
 
 KEYS = [
-    {"t": 0.0, "rate": SLOW_H},
-    {"t": F_h, "rate": 0.0, "ramp": FREEZE},
+    {"t": 0.0, "rate": SLOW_H, "badge": None},           # the hook's speed note is its own badge (film.json hookNote), bottom-right:
+    {"t": F_h, "rate": 0.0, "ramp": FREEZE, "badge": None},   # the title drop owns the top through the hook (frame 0)
     {"t": cut("normal"), "rate": SLOW_N},
     {"t": F_n, "rate": 0.0, "ramp": 0.25},
     {"t": cut("change"), "rate": 1.0},
@@ -110,16 +110,82 @@ def feather_drop_earth(tau):
 
 FEATHER_AT_HAMMER_LANDING = feather_drop_earth(T_E)      # 79 cm of 160: "barely halfway"
 
-# ── the spine ──────────────────────────────────────────────────────────────────────────────────
+# ── the spine (WRITING.md "The picture" 2) ──────────────────────────────────────────────────────
+# One number from the normal to the tease; its label names the beat. The whoa's "< 3" lights when it is said ("billion.");
+# the measure's stopwatch lights on "seconds." and stays lit from there: the Moon's 1.41 s, the Earth's 0.57 s on "On
+# Earth", then held at 0.57 through the takeaway with a label that says what it now means (both of them, on Earth, once
+# the air is gone: c12 + c13 + c14). It never leaves at the payoff (it goes 0.3 s before the tease).
+# The why's acceleration carries its unit in the label: "1.62 m/s²" in the row makes a 416 px plate, wider than the
+# 372 px the bench leaves left of the feather (x 90–462); "< 3" keeps 3 figures' width (minCh 3) so its plate clears the
+# whoa's ink orbit at the top left while the camera pushes in.
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "the hammer's fall, Earth", "unit": "s", "dp": 2, "kind": "watch", "take": "earth", "cap": T_E},
     {"t0": cut("change"), "t1": cut("why"), "label": "both, on the Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "moon", "cap": T_M},
-    {"t0": cut("why"), "t1": cut("whoa"), "label": "each one's acceleration", "unit": "m/s²", "dp": 2, "kind": "const", "v": 1.62},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "difference: parts in a million billion", "unit": "", "kind": "text", "text": "< 3"},
+    {"t0": cut("why"), "t1": cut("whoa"), "label": "each one's acceleration (m/s²)", "unit": "", "dp": 2, "kind": "const", "v": 1.62},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "parts in a million billion", "unit": "", "kind": "text", "text": "< 3", "minCh": 3,
+     "lit": [A("vo05:billion."), cut("measure")]},
     {"t0": cut("measure"), "t1": A("vo06:On#2"), "label": "the drop, Moon", "unit": "s", "dp": 2, "kind": "watch", "take": "measure", "cap": T_M,
      "lit": [A("vo06:seconds."), A("vo06:On#2")]},
-    {"t0": A("vo06:On#2"), "t1": cut("tease") - 0.3, "label": "the same drop, Earth", "unit": "s", "dp": 2, "kind": "const", "v": T_E},
+    {"t0": A("vo06:On#2"), "t1": cut("takeaway"), "label": "the same drop, Earth", "unit": "s", "dp": 2, "kind": "const", "v": T_E,
+     "lit": [A("vo06:On#2"), cut("takeaway")]},
+    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "both, on Earth, without air", "unit": "s", "dp": 2, "kind": "const", "v": T_E,
+     "lit": [cut("takeaway"), cut("tease") - 0.3], "tick": False},
 ]
+assert all(a["t1"] == b["t0"] for a, b in zip(SPINE, SPINE[1:])), "the readout never leaves between its steps"
+assert all(a["lit"][1] == b["lit"][0] for a, b in zip(SPINE[4:], SPINE[5:])), "lit from 'seconds.' through the takeaway, without a gap"
+assert SPINE[-1]["t1"] > B["takeaway"]["t1"] - 0.5 and SPINE[-1]["v"] == SPINE[-2]["v"], "it holds its final value through the takeaway"
+
+# Where it sits (set/spine.js placeSpine: [[t, [fx, fy]], ...] plate centres as fractions of the frame, a step at each
+# cut, clamped inside the safe box x 90–900, y 250–1420). The corners hold the notes (speed top-left, cheats top-right).
+# Projected through each shot's camera keys (placeCam) at every frame, start and end of each shot:
+#   bench shots (normal from "From", change, why, measure, takeaway): the hands and the release at x 472–608, y 482–551,
+#     the falls and their ghost rows x 469–636 down to the floor at y 1150 (the tipped hammer to x 697); so the centre
+#     [0.5, 0.245] (plate y 364–576) sits on the hands: the plate goes left of the feather (x 90–462)
+#   normal, change, measure, takeaway  L1 [0.25, 0.31] (y ≈ 490–700): under the change's cards (x 403–900, to y ≈ 474),
+#     over "barely halfway" (y ≈ 766–836)
+#   why                                L0 [0.25, 0.245] (y ≈ 364–576): under the speed note, over "gravity: far stronger
+#     on the hammer" (a 750 px label at y ≈ 605–675)
+#   whoa                               the top-left corner (no speed note: real time): the ink orbit is 373–707 × 361–696
+#     at the cut and grows to 235–845 × 565–1176 as the camera pushes in; the MICROSCOPE card is x 403–900
+SPINE_L1, SPINE_L0, SPINE_TL = [0.25, 0.31], [0.25, 0.245], [0.0, 0.0]
+SPINE_PLACE = {"hook": SPINE_L1, "normal": SPINE_L1, "change": SPINE_L1, "why": SPINE_L0, "whoa": SPINE_TL,
+               "measure": SPINE_L1, "takeaway": SPINE_L1, "tease": SPINE_L1}
+SPINE_AT = [[0.0 if b["id"] == "hook" else cut(b["id"]), SPINE_PLACE[b["id"]]] for b in BEATS]
+
+# ── rule 8, one line wins (WRITING.md "The picture" 8) ─────────────────────────────────────────────
+# The line or object the caption names is the brightest thing in the picture; whatever delivered the previous beat (or
+# line) drops to about a third of its strength, eased over half a second from the cut or the word. Each table is
+# [[t, strength], ...] for keyed() (cinema/film/runtime.js), 1 = as built, LOW = a third: the scene turns it into opacity
+# (the ink) or a two-thirds lerp toward the paper #E6E2D8 (the ghost rows, the rungs, the hammer and the feather). Every
+# key is a cut or a spoken word; every table starts and ends at 1, so frame 0 and the loop's last frame are as built.
+LOW, FADE = 1 / 3, 0.5
+T_FEATHER = A("vo02:feather")
+DIM = {
+    # the hammer and its ghost row (Earth): they delivered "the hammer lands in about half a second"; on "The feather is
+    # barely halfway" the feather and its row are what the caption names. The Moon's takes re-drop it at full (a cut)
+    "hammer": [[0.0, 1], [T_FEATHER, 1], [T_FEATHER + FADE, LOW], [cut("change"), LOW], [cut("change"), 1]],
+    # the ink hands: they released the Earth drop; from the change they hold and release as context, a third, except
+    # where the caption names the drop by a person ("astronaut David Scott dropped both"). Full again in the tease: they
+    # release the loop's drop, and the last frame is frame 0's
+    "hands": [[0.0, 1], [cut("change"), 1], [cut("change") + FADE, LOW], [A("vo03:astronaut"), LOW], [A("vo03:astronaut") + FADE, 1],
+              [A("vo03:They"), 1], [A("vo03:They") + FADE, LOW], [cut("tease"), LOW], [cut("tease") + FADE, 1]],
+    # the whoa's ink Earth: "a satellite let two metals fall" names the satellite (and its two metals, the accent), so
+    # the Earth's heavy ring steps back; "around Earth for months" names it again; "They matched ... a million billion"
+    # names the metals and the number (the readout lights on "billion.")
+    "earthInk": [[0.0, 1], [A("vo05:satellite"), 1], [A("vo05:satellite") + FADE, LOW], [A("vo05:around"), LOW], [A("vo05:around") + FADE, 1],
+                 [A("vo05:They"), 1], [A("vo05:They") + FADE, LOW], [cut("measure"), LOW], [cut("measure"), 1]],
+    # the orbit: the satellite's path ("fall around Earth") until the metals and the number take over
+    "orbitInk": [[0.0, 1], [A("vo05:They"), 1], [A("vo05:They") + FADE, LOW], [cut("measure"), LOW], [cut("measure"), 1]],
+    # the measure's drop (both ghost rows, the rung, the hammer and the feather): it delivered "one point four seconds";
+    # "On Earth, under six tenths" names the readout's Earth time. The takeaway holds on both rows, level ("Gravity treats
+    # them equally"), so they are full again from its cut
+    "drop": [[0.0, 1], [A("vo06:On#2"), 1], [A("vo06:On#2") + FADE, LOW], [cut("takeaway"), LOW], [cut("takeaway") + FADE, 1]],
+}
+for name, keys in DIM.items():
+    assert keys[0] == [0.0, 1] and keys[-1][1] == 1 and keys[-1][0] < DUR, (name, "frame 0 and the loop's last frame are as built")
+    assert all(a[0] <= b[0] for a, b in zip(keys, keys[1:])) and all(LOW - 1e-9 <= k <= 1 for _, k in keys), (name, keys)
+assert TAKES["earth"]["t0"] < T_FEATHER and DIM["hammer"][-1][0] == TAKES["earth"]["t1"], "the hammer steps back only in the Earth take"
+assert TAKES["measure"]["t0"] < A("vo06:On#2") and DIM["drop"][-1][0] + 1e-9 < TAKES["measure"]["t1"], "the drop steps back only in the measure take"
 
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 CUE = {
@@ -131,25 +197,95 @@ CUE = {
     "measure": {"R": R_m, "land": LAND["measure"]},
     "cuts": CUTS,
 }
+# Labels name what the caption names and leave at their beat's cut at the latest (rule 8). "0.57 s" leaves as the
+# hammer steps back on "feather" (the readout keeps the 0.57); "Earth" names the Earth while the caption does. The pull's
+# label lands as its arrow finishes drawing (0.3 s): riding the growing tip, it would cross the why's readout plate.
 LABELS = [
     {"id": "hk-hammer", "text": "hammer", "color": "ghost", "t0": A("vo01:hammer,"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "hammer"]}, "side": 1, "fixed": True},
     {"id": "hk-feather", "text": "feather", "color": "ghost", "t0": A("vo01:feather?"), "t1": cut("normal") - 0.4, "anchor": {"obj": ["hook", "feather"]}, "side": -1, "fixed": True},
-    {"id": "nm-land", "text": "0.57 s", "color": "motion", "t0": A("vo02:second."), "t1": cut("change"), "anchor": {"obj": ["earth", "hammer"]}, "side": 1, "fixed": True},
+    {"id": "nm-land", "text": "0.57 s", "color": "motion", "t0": A("vo02:second."), "t1": T_FEATHER, "anchor": {"obj": ["earth", "hammer"]}, "side": 1, "fixed": True},
     {"id": "nm-half", "text": "barely halfway", "color": "ghost", "t0": A("vo02:halfway."), "t1": cut("change"), "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
     {"id": "ch-together", "text": "together", "color": "motion", "t0": A("vo03:together."), "t1": cut("why"), "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
-    {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity"), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity", 0.3), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:exactly"), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-tie", "text": "tie", "color": "motion", "t0": A("vo04:tie."), "t1": cut("whoa"), "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
-    {"id": "wo-earth", "text": "Earth", "color": "ghost", "t0": A("vo05:Starting", 0.4), "t1": cut("measure") - 0.3, "anchor": {"point": [0.0, 190.0, -20.0]}, "side": 1, "v": "middle", "fixed": True},
+    {"id": "wo-earth", "text": "Earth", "color": "ghost", "t0": A("vo05:Earth"), "t1": A("vo05:They"), "anchor": {"point": [0.0, 190.0, -20.0]}, "side": 1, "v": "middle", "fixed": True},
 ]
+NEXT_CUT = {a["id"]: cut(b["id"]) for a, b in zip(BEATS, BEATS[1:])}
+for lb in LABELS:
+    beat = next(b for b in BEATS if b["t0"] - HALF <= lb["t0"] < b["t1"] - HALF)
+    assert lb["t0"] < lb["t1"] <= NEXT_CUT.get(beat["id"], DUR) + 1e-9, (lb["id"], "a label leaves at its beat's cut at the latest")
+
+# ── notes (rule 8's layout for Rest Frame) ─────────────────────────────────────────────────────
+# The speed column top-left (the clock's note), the standing cheats top-right (model cards, "Not to scale",
+# "Illustration"), at most two notes in a top corner at once; a framing tag (a note that names the picture, "framing")
+# visits for 4 s at most; the spine readout sits between and below the corners. The hook's speed note is the one
+# exception: bottom-right, because the title drop owns the top through the hook (frame 0's title falls through
+# y ≈ 266–433, where a top-left note would sit on it), as in episodes 2, 3 and 5.
+# The Moon card leaves before Scott's card arrives: stacked, the two cards would reach y ≈ 666 over the hands and the
+# tops of the ghost rows (x 403–900), and the readout under them.
+HOOK_NOTE = {"slot": "br", "slow": [0.0, F_h], "paused": [F_h, cut("normal")], "text": ["10× slower", "paused"]}
+# The clock's note is drawn in two windows (hud.badge's own t0/t1 for a clock): the why's "2× slower" leaves with the why's
+# other notes, 0.3 s before the whoa (the drop landed at 38.2 s), so the whoa's readout can take the empty top-left
+# corner at the cut; the tease's "10× slower" is the second window
+WARP_WINDOWS = [[None, cut("whoa") - 0.3], [cut("tease"), None]]
+assert abs(SLOW_H - 0.1) < 1e-12, "the hook note's text"
 BADGES = [
-    {"id": "moon", "title": "The Moon", "text": "Gravity 1.62 m/s², a sixth of Earth's. No air.", "t0": A("vo03:away."), "t1": cut("why") - 0.2, "slot": "tr"},
-    {"id": "drift", "text": "Illustration", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
-    {"id": "scott", "title": "David Scott, Apollo 15", "text": "\"Mr Galileo was correct in his findings.\"", "t0": A("vo03:\"Mister"), "t1": cut("why") - 0.2, "slot": "tr"},
+    {"id": "drift", "text": "Illustration", "t0": A("vo02:hammer"), "t1": A("vo02:hammer") + 4.0, "slot": "tr", "framing": True},   # the feather's drift, as it drifts and while "barely halfway" is said
+    {"id": "moon", "title": "The Moon", "text": "Gravity 1.62 m/s², a sixth of Earth's. No air.", "t0": A("vo03:away."), "t1": A("vo03:\"Mister", -0.4), "slot": "tr"},
+    {"id": "scott", "title": "David Scott, Apollo 15", "text": "\"Mr Galileo was correct in his findings.\"", "t0": A("vo03:\"Mister"), "t1": cut("why") - 0.3, "slot": "tr"},
     {"id": "notscale", "text": "Not to scale", "t0": A("vo04:Gravity"), "t1": cut("whoa") - 0.3, "slot": "tr"},
-    {"id": "orbit", "text": "Illustration", "t0": cut("whoa") + 0.5, "t1": cut("measure") - 0.3, "slot": "tr"},
+    {"id": "orbit", "text": "Illustration", "t0": cut("whoa") + 0.5, "t1": cut("whoa") + 4.5, "slot": "tr", "framing": True},          # the ink Earth and orbit
     {"id": "microscope", "title": "MICROSCOPE", "text": "Satellite test, 2016–2018.", "t0": A("vo05:satellite"), "t1": cut("measure") - 0.3, "slot": "tr"},
 ]
+CLOCK_WORDS = {"slow": "{n}× slower", "fast": "{n}× faster", "freeze": "paused"}   # scene.mjs's clock words
+
+
+def rate_text(rate):                                     # kits/cinema/sci/clock.js rateText with CLOCK_WORDS
+    if rate == 0:
+        return CLOCK_WORDS["freeze"]
+    if abs(rate - 1) < 1e-12:
+        return None
+    n = 1 / rate if rate < 1 else rate
+    n = str(round(n)) if abs(n - round(n)) < 1e-9 else str(round(n, 2))
+    return CLOCK_WORDS["slow" if rate < 1 else "fast"].replace("{n}", n)
+
+
+CLOCK_NOTES = []                                         # clock.js C.badges: one per run of keys with the same wording
+for i, k in enumerate(KEYS):
+    text, t1 = (k["badge"] if "badge" in k else rate_text(k["rate"])), (KEYS[i + 1]["t"] if i + 1 < len(KEYS) else math.inf)
+    if text is None:
+        continue
+    if CLOCK_NOTES and CLOCK_NOTES[-1]["t1"] == k["t"] and CLOCK_NOTES[-1]["text"] == text:
+        CLOCK_NOTES[-1]["t1"] = t1
+    else:
+        CLOCK_NOTES.append({"text": text, "t0": k["t"], "t1": t1})
+
+
+def in_windows(n):                                       # a clock note as its windows show it (scene.mjs: one badge per window)
+    out = []
+    for j, (w0, w1) in enumerate(WARP_WINDOWS):
+        a, b = max(n["t0"], -math.inf if w0 is None else w0), min(n["t1"], math.inf if w1 is None else w1, EC)
+        if a < b:
+            out.append({"id": f"warp{j + 1}" if j else "warp", "t0": a, "t1": b})
+    return out
+
+
+NOTES = ([{"slot": "tl", "text": n["text"], "speed": True, **w} for n in CLOCK_NOTES for w in in_windows(n)]
+         + [{"id": "hook-speed", "slot": HOOK_NOTE["slot"], "t0": 0.0, "t1": HOOK_NOTE["paused"][1], "text": " / ".join(HOOK_NOTE["text"]), "speed": True}]
+         + [{**b, "speed": False} for b in BADGES])
+assert [n["text"] for n in CLOCK_NOTES] == ["4× slower", "paused", "2× slower", "10× slower"], CLOCK_NOTES
+assert all(n["slot"] == "tl" for n in NOTES if n["speed"] and n["id"] != "hook-speed"), "the speed column is top-left"
+assert all(b["slot"] == "tr" for b in BADGES), "the standing cheats are top-right"
+for n in NOTES:
+    assert not n.get("framing") or n["t1"] - n["t0"] <= 4.0 + 1e-9, (n["id"], "a framing tag visits for 4 s at most")
+for slot in ("tl", "tr"):                                # each note fades out over 0.3 s after its t1
+    for fr in range(int(DUR * FPS) + 1):
+        t = fr / FPS
+        on = {n["id"] for n in NOTES if n["slot"] == slot and n["t0"] <= t < n["t1"] + 0.3}   # a clock's run is one note
+        assert len(on) <= 2, (slot, t, on)
+cards = [b for b in BADGES if b.get("title")]
+assert not any(a["t0"] < b["t1"] + 0.3 and b["t0"] < a["t1"] + 0.3 for i, a in enumerate(cards) for b in cards[i + 1:]), "one card at a time"
 
 # ── camera ─────────────────────────────────────────────────────────────────────────────────────
 def view(cx, top_px=330.0, floor_px=1140.0, top=200.0, fov=32.0, pitch=0.0, z=0.0):
@@ -191,8 +327,8 @@ CAP_FIX = [
 film = {
     "id": "rest-frame-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
-    "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE, "spine": SPINE,
-    "drop": {"gE": G_E, "gM": G_M, "h0": H0, "tE": T_E, "tM": T_M, "vt": VT, "xh": XH, "xf": XF, "dt": DT, "n": NG, "dtE": DT_E, "nE": NG_E},
+    "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE, "spine": SPINE, "spineAt": SPINE_AT, "dim": DIM,
+    "hookNote": HOOK_NOTE, "warpWindows": WARP_WINDOWS, "drop": {"gE": G_E, "gM": G_M, "h0": H0, "tE": T_E, "tM": T_M, "vt": VT, "xh": XH, "xf": XF, "dt": DT, "n": NG, "dtE": DT_E, "nE": NG_E},
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
@@ -222,7 +358,8 @@ for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd["text"]})
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 for s in SPINE[1:]:
-    ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
+    if s.get("tick", True):                              # the takeaway's step changes the label only, not the number
+        ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
 ev.append({"t": A("vo06:seconds."), "kind": "counter.end", "tag": "spine:moon"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
@@ -262,4 +399,6 @@ print(f"film.json: {len(SHOTS)} shots, {len(KEYS)} clock keys, {len(TAKES)} take
 print(f"sheet.json: {len(sheet['events'])} events ({'with' if shown else 'without'} the page's cue measurements)")
 for b in BEATS:
     print(f"  {b['id']:<9} {b['t0']:6.2f}–{b['t1']:6.2f}  cut {CUTS[b['id']]:.4f}")
+print("  rule 8: " + "; ".join(f"{k} " + " ".join(f"{t:.2f}:{v:.2f}" for t, v in ks[1:]) for k, ks in DIM.items()))
+print("  spine at: " + ", ".join(f"{t:.2f} {xy}" for t, xy in SPINE_AT))
 print(f"  Earth: hammer {T_E:.3f} s, the feather {FEATHER_AT_HAMMER_LANDING:.1f} cm down then; Moon {T_M:.3f} s; lands {[(k, round(v, 3)) for k, v in LAND.items()]}; loop {R_t:.3f}")

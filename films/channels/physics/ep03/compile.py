@@ -134,7 +134,7 @@ assert abs(S_PEAK_FT - A("vo05:hand.")) < 1e-6
 # and go; 0 lets a constant's plate fit its text). tick: False keeps a step off the cue sheet (it rides another event).
 # WRITING.md "The picture" 2: at the whoa's payoff the readout stops at the peak and holds it, lit, its label saying
 # what the number now is; from "degree." it stays lit to the end of the takeaway (no unlit gap at the cut).
-S_PEAK_H = S_PEAK_Y - RB                                 # the tennis ball's bottom at its peak: 374 cm
+S_PEAK_H = S_PEAK_Y - RB                                 # the tennis ball's bottom at its peak: 376 cm
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "bounce height", "unit": "cm", "dp": 0, "kind": "height", "take": "normal", "minCh": 4},
     {"t0": cut("change"), "t1": cut("whoa"), "label": "lost, this knock", "unit": "%", "dp": 0, "kind": "const", "v": 100 * (1 - E_REST ** 2), "minCh": 0},
@@ -413,3 +413,5 @@ for b in BEATS:
     print(f"  {b['id']:<9} {b['t0']:6.2f}–{b['t1']:6.2f}  line {b['line']}  cut {CUTS[b['id']]:.4f}")
 print(f"  tops (normal) {[round(t, 2) for t in TOP_T['normal']]}, heights {[round(h, 2) for h in TOP_H[:3]]}; contact {T_CONTACT:.3f} freeze {F_c:.3f}–{U_c:.3f}")
 print(f"  stack: hit {S_HIT_T:.3f}, peak {S_PEAK_FT:.3f} at {S_PEAK_Y:.1f} cm (×{S_U / S_V:.3f} speed, ×{(S_U / S_V) ** 2:.2f} height); loop release {R_t:.3f}")
+print(f"  spine at {[(round(t, 2), xy) for t, xy in SPINE_AT]}; peak held at {S_PEAK_H:.0f} cm")
+print("  rule 8: " + "; ".join(f"{k} " + " ".join(f"{t:.2f}:{v:.2f}" for t, v in ks[1:]) for k, ks in DIM.items()))

@@ -98,12 +98,6 @@
    "tag": "spine"
   },
   {
-   "t": 4.85,
-   "kind": "badge",
-   "tag": "drift",
-   "text": "Illustration"
-  },
-  {
    "t": 7.1155,
    "kind": "contact",
    "tag": "earth:release"
@@ -117,6 +111,12 @@
    "t": 7.5155,
    "kind": "strobe",
    "tag": "earth:g2"
+  },
+  {
+   "t": 7.7333,
+   "kind": "badge",
+   "tag": "drift",
+   "text": "Illustration"
   },
   {
    "t": 7.9155,
@@ -234,7 +234,7 @@
   {
    "t": 24.250033,
    "kind": "counter.tick",
-   "tag": "spine:each one's acceleration"
+   "tag": "spine:each one's acceleration (m/s²)"
   },
   {
    "t": 24.2667,
@@ -249,7 +249,7 @@
    "text": "Not to scale"
   },
   {
-   "t": 30.733333333333334,
+   "t": 31.033333333333335,
    "kind": "label",
    "tag": "wy-pull"
   },
@@ -316,7 +316,7 @@
   {
    "t": 40.783333,
    "kind": "counter.tick",
-   "tag": "spine:difference: parts in a million billion"
+   "tag": "spine:parts in a million billion"
   },
   {
    "t": 40.8,
@@ -331,15 +331,15 @@
    "text": "Illustration"
   },
   {
-   "t": 43.43333333333333,
-   "kind": "label",
-   "tag": "wo-earth"
-  },
-  {
    "t": 44.7667,
    "kind": "badge",
    "tag": "microscope",
    "text": "Satellite test, 2016–2018."
+  },
+  {
+   "t": 46.93333333333333,
+   "kind": "label",
+   "tag": "wo-earth"
   },
   {
    "t": 50.53333333333333,

@@ -217,7 +217,7 @@
    "tag": "wo-skater"
   },
   {
-   "t": 36.75,
+   "t": 37.1,
    "kind": "badge",
    "tag": "skater",
    "text": "Illustration"
@@ -254,19 +254,19 @@
    "tag": "spine:turn per 1/10 s, arms in"
   },
   {
+   "t": 54.43333333333333,
+   "kind": "label",
+   "tag": "ms-48"
+  },
+  {
    "t": 54.733333333333334,
    "kind": "counter.end",
    "tag": "spine:fifty"
   },
   {
-   "t": 54.733333333333334,
-   "kind": "label",
-   "tag": "ms-48"
-  },
-  {
    "t": 55.716633,
    "kind": "counter.tick",
-   "tag": "spine:spin rate"
+   "tag": "spine:one push, arms in"
   },
   {
    "t": 55.7333,

@@ -96,7 +96,7 @@ R_m = F_m - (TAU_20 - FAST_M * M_FRZ / 2) / FAST_M
 assert cut("measure") + 0.1 < R_m < A("vo06:twenty"), (cut("measure"), R_m)
 
 KEYS = [
-    {"t": 0.0, "rate": SLOW_H, "badge": None},          # the hook's speed note sits bottom-right (HOOK_NOTE), clear of the title
+    {"t": 0.0, "rate": SLOW_H, "badge": None},          # the hook's speed note is its own badge (film.json hookNote), bottom-left
     {"t": F_h, "rate": 0.0, "ramp": FREEZE, "badge": None},
     {"t": cut("normal"), "rate": 1.0},
     {"t": R_n + T10 / 2, "rate": SLOW_N, "ramp": RAMP},
@@ -170,7 +170,8 @@ CUE = {
     "hook": {"freeze": [F_h, F_h + FREEZE]},
     "normal": {"R": R_n, "arrive": ARRIVE_N},
     "change": {"pull": [A("vo03:Pull"), A("vo03:farther.")], "R": R_c, "bottom": BOTTOM["change"]},
-    "why": {"R": R_w, "bottom": BOTTOM["why"], "pull": A("vo04:pull"), "speed": A("vo04:triple#2"), "rungs": A("vo04:same#2")},
+    # the speed arrows leave as their caption page ends ("nearly the same time." takes over: rule 8)
+    "why": {"R": R_w, "bottom": BOTTOM["why"], "pull": A("vo04:pull"), "speed": A("vo04:triple#2"), "speedOut": A("vo04:nearly#3"), "rungs": A("vo04:same#2")},
     "whoa": {"R": W_R, "line": W_LINE},
     "measure": {"R": R_m, "freeze": F_m + M_FRZ, "swings": SWINGS, "counter": [cut("measure") + 0.3, cut("takeaway") - 0.3],
                 "lit": [A("vo06:behind."), cut("takeaway") - 0.3]},
@@ -191,8 +192,8 @@ LABELS = [
     {"id": "ch-10", "text": "10°", "color": "ghost", "t0": A("vo03:Let"), "t1": cut("why"), "anchor": {"bob": ["change", "small"]}, "side": -1, "fixed": True},
     {"id": "wy-pull-big", "text": "pull ×2.9", "color": "force", "t0": A("vo04:pull"), "t1": R_w, "anchor": {"arrow": "wy-f-big"}, "side": 1, "fixed": True},
     {"id": "wy-pull-small", "text": "pull ×1", "color": "force", "t0": A("vo04:pull", 0.15), "t1": R_w, "anchor": {"arrow": "wy-f-small"}, "side": 1, "fixed": True},
-    {"id": "wy-v-big", "text": "speed ×3", "color": "motion", "t0": A("vo04:triple#2"), "t1": A("vo04:same#2", -0.15), "anchor": {"arrow": "wy-v-big"}, "side": 1, "fixed": True},
-    {"id": "wy-v-small", "text": "speed ×1", "color": "motion", "t0": A("vo04:triple#2", 0.15), "t1": A("vo04:same#2", -0.15), "anchor": {"arrow": "wy-v-small"}, "side": 1, "fixed": True},
+    {"id": "wy-v-big", "text": "speed ×3", "color": "motion", "t0": A("vo04:triple#2"), "t1": CUE["why"]["speedOut"], "anchor": {"arrow": "wy-v-big"}, "side": 1, "fixed": True},
+    {"id": "wy-v-small", "text": "speed ×1", "color": "motion", "t0": A("vo04:triple#2", 0.15), "t1": CUE["why"]["speedOut"], "anchor": {"arrow": "wy-v-small"}, "side": 1, "fixed": True},
     {"id": "wy-same", "text": "same moments", "color": "ghost", "t0": A("vo04:same#2"), "t1": cut("whoa"), "anchor": {"ghost": ["why", "big", 8]}, "side": 1, "fixed": True},
     {"id": "wo-15", "text": "15 lengths", "color": "ghost", "t0": A("vo05:shorter."), "t1": A("vo05:For", -0.1), "anchor": {"wave": 7}, "side": 1, "fixed": True},
     {"id": "wo-line", "text": "in line", "color": "ghost", "t0": W_LINE, "t1": cut("measure") - 0.3, "anchor": {"wave": 0}, "side": 1, "fixed": True},
@@ -201,15 +202,52 @@ LABELS = [
     {"id": "tk-len", "text": "same length", "color": "ghost", "t0": A("vo07:Length"), "t1": A("vo07:A", -0.1), "anchor": {"string": "small", "u": 0.45}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "tk-fast", "text": "faster, not quite enough", "color": "motion", "t0": A("vo07:almost"), "t1": cut("tease") - 0.2, "anchor": {"bob": ["measure", "big"]}, "side": 1, "fixed": True},
 ]
+# Notes (WRITING.md, "The picture" 8): the speed column top-left, the standing cheats and cards top-right, at most two
+# in a top corner at once; a framing tag (one that names the picture) visits for 4 s at most. The hook's speed note is
+# the one exception to the speed column: through the hook the title drop owns the top band (at frame 0 the falling
+# title's first line spans y ≈ 256–350 px from the safe line, exactly where a top-left note would sit), so the
+# hook's note sits bottom-left, clear of the small bob (in the old bottom-right spot the bob's lower edge reached
+# the note from about 1 s on).
+# Cards are narrowed to 0.52 of the safe width (421 px: "Ideal pendulums" still fits its heading line) so the
+# spine plate on the left and a card on the right never meet.
+NOTE_SLOT = {"speed": "tl", "hook": "bl"}
+CARD_W = 0.52
 BADGES = [
-    {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr"},
-    {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": cut("measure") - 0.3, "slot": "tr"},
-    {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:sixty."), "t1": cut("takeaway") - 0.3, "slot": "tr"},
-    {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction.", "t0": cut("takeaway") + 0.8, "t1": cut("tease"), "slot": "tr"},
+    {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr", "maxW": CARD_W},
+    # a framing tag: it names the picture, so it visits from "Only" to "Then," (3.7 s, 4.0 s with its fade)
+    {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": A("vo05:Then,"), "slot": "tr", "frame": True},
+    # the number behind "about one part in sixty", from the start of its sentence ("At thirty degrees") to the takeaway
+    {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:At"), "t1": cut("takeaway") - 0.3, "slot": "tr"},
+    {"id": "ideal", "title": "Ideal pendulums", "text": "No air, no friction.", "t0": cut("takeaway") + 0.8, "t1": cut("tease"), "slot": "tr", "maxW": CARD_W},
 ]
+NOTE_OUT = 0.3                                            # hud.js: a note takes 0.3 s to leave after its t1
+
+
+def speed_windows(keys):
+    """the clock's speed note (one element in the speed slot) is up wherever a key's badge text is not None (clock.js)"""
+    out = []
+    for i, k in enumerate(keys):
+        text = k["badge"] if "badge" in k else (None if abs(k["rate"] - 1) < 1e-12 else "on")
+        if text is not None:
+            out.append((k["t"], keys[i + 1]["t"] if i + 1 < len(keys) else math.inf))
+    return out
+
+
+_corner = {"tl": [], "tr": []}
+_corner[NOTE_SLOT["speed"]] += speed_windows(KEYS)
+for bd in BADGES:
+    if bd["slot"] in _corner:
+        _corner[bd["slot"]].append((bd["t0"], bd["t1"]))
+    if bd.get("frame"):
+        assert bd["t1"] + NOTE_OUT - bd["t0"] <= 4.0 + 1e-9, ("a framing tag visits for 4 s at most", bd["id"])
+for _slot, _wins in _corner.items():
+    _peak = max(sum(1 for a, b in _wins if a <= i / FPS < b + NOTE_OUT) for i in range(int(DUR * FPS) + 1))
+    assert _peak <= 2, ("at most two notes in a top corner", _slot, _peak)
 
 # ── the spine readout: one number on screen from the normal to the end card; its label names the beat ──
 # kind "watch": scene seconds since a take's release, capped; "const": a fixed value; "count": swings passed (cue.measure.swings)
+# From "behind." it holds its final value, lit, to the end, and its label changes to say what 0.31 s now means:
+# the big one's lag, then how far Galileo's equal-times claim is off, then what a wider swing loses (rule 2).
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "one swing", "unit": "s", "dp": 2, "kind": "watch", "take": "normal", "cap": T10 / 2},
     {"t0": cut("change"), "t1": A("vo04:pull"), "label": "to the bottom", "unit": "s", "dp": 2, "kind": "watch", "take": "change", "cap": Q10},
@@ -217,8 +255,67 @@ SPINE = [
     {"t0": A("vo04:triple#2"), "t1": cut("whoa"), "label": "speed, big ÷ small", "unit": "×", "dp": 2, "kind": "const", "v": math.sin(15 * D2R) / math.sin(5 * D2R)},
     {"t0": cut("whoa"), "t1": cut("measure"), "label": "the wave's minute", "unit": "s", "dp": 1, "kind": "watch", "take": "wave", "cap": WAVE_ALIGN},
     {"t0": cut("measure"), "t1": A("vo06:behind."), "label": "swings, small one", "unit": "", "dp": 0, "kind": "count"},
-    {"t0": A("vo06:behind."), "t1": cut("tease") - 0.3, "label": "big one, behind", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+    {"t0": A("vo06:behind."), "t1": A("vo06:At"), "label": "big one, behind", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+    {"t0": A("vo06:At"), "t1": A("vo07:A"), "label": "Galileo, off by", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+    {"t0": A("vo07:A"), "t1": cut("tease") - 0.3, "label": "wider swing loses", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
 ]
+for a, b in zip(SPINE, SPINE[1:]):
+    assert abs(a["t1"] - b["t0"]) < 1e-9, (a["label"], b["label"])
+assert all(len(s["label"]) <= 18 for s in SPINE)                # one line under the 34vmin wrap: a narrow plate
+
+# Where the spine plate sits, per shot (centre fractions; placeSpine clamps the plate into the safe box, so fx 0
+# puts its left edge on the safe line). Every shot here hangs its subject from the frame's centre line (the pivots
+# at x 0.5, the strings fanning ±30° below them; the wave's row at x 0.40–0.60), so the centred default would sit
+# on the strings: the empty region is the upper left, under the speed column. (The right is no use: the safe box
+# ends at x 0.833, so a 0.32 W plate there always reaches the centre line.) Measured by projecting the strings,
+# bobs, beam, arm, post, ghosts, the clock drawing and the wave rig through each shot's camera keys:
+#   normal  (small view, then wide with the clock on the right): x 0.12–0.44, y 0.23–0.33, below the gantry's arm
+#           (y 0.21) and right of its post (x 0.09–0.10), left of the strings and of the clock (x ≥ 0.63)
+#   change … takeaway (the set view; the whoa's wave rig): the left edge on the safe line, x 0.08–0.40, y 0.21–0.31;
+#           the 30° string only clips the plate's lower-right corner while it is out at −30° (about 120 of its
+#           650 px, mostly the why's hold), and the wave never reaches it. One place from the change on, so it
+#           steps once, on the change cut, where its label and value change too.
+SPINE_PLACE = {"normal": [0.28, 0.28], "change": [0.0, 0.26], "why": [0.0, 0.26], "whoa": [0.0, 0.26],
+               "measure": [0.0, 0.26], "takeaway": [0.0, 0.26], "tease": [0.0, 0.26]}
+SPINE_AT = []
+for b in BEATS:
+    xy = SPINE_PLACE.get(b["id"])
+    if xy and (not SPINE_AT or SPINE_AT[-1][1] != xy):
+        SPINE_AT.append([CUTS[b["id"]], xy])
+assert all(k in CUTS.values() for k, _ in SPINE_AT) and SPINE_AT[0][0] <= SPINE[0]["t0"], SPINE_AT   # it steps on cuts only
+
+# ── rule 8, "One line wins": the line or object the caption names is the brightest thing in the picture; whatever
+# delivered the previous beat drops to about a third of its strength as the new one begins (eased over 0.5 s from
+# the cut or the word). Per element, [[t, k], ...] for keyed(): k is the opacity of a lane's bob and string, or a
+# factor on the clock drawing's own draw-on. The ghost ladders, labels, arrows and cards already leave at their
+# cuts and page changes (each take's ladder lives cut to cut), so only what stays in frame needs a dim.
+DIM, DIM_EASE = 0.33, 0.5
+
+
+def dimkeys(steps, k0=1.0):
+    keys, k = [[0.0, k0]], k0
+    for t, v in steps:
+        assert t >= keys[-1][0] + DIM_EASE - 1e-9, ("dim steps closer than their ease", t, keys[-1])
+        keys += [[round(t, 4), k], [round(t + DIM_EASE, 4), v]]
+        k = v
+    return keys
+
+
+DIMS = {
+    # the big one: hangs at rest through the normal ("one pendulum"), named again on "Pull one"; drops for "For small
+    # swings, he was nearly right" and is back for "Three times farther out"
+    "big": dimkeys([(cut("normal"), DIM), (cut("change"), 1.0), (A("vo04:For"), DIM), (A("vo04:Three"), 1.0)]),
+    # the small one: delivered the normal, so it drops while the big one is pulled out, back on "Let both go"; drops
+    # for "and the big one is three tenths of a second behind" (its "home" label still marks it), back for "Length
+    # sets the beat" (both strings), drops again for "A wider swing…", and is back for the tease's re-release
+    "small": dimkeys([(cut("change"), DIM), (A("vo03:Let"), 1.0), (A("vo06:big"), DIM), (cut("takeaway"), 1.0),
+                      (A("vo07:A"), DIM), (cut("tease"), 1.0)]),
+    # the grandfather clock delivered "as in a grandfather clock": it drops as "One swing: about one second" begins
+    "gclock": dimkeys([(A("vo02:One"), DIM)]),
+}
+for k in ("big", "small"):                                # the loop: by the film's end both are back at frame 0's state
+    assert DIMS[k][0][1] == 1.0 and DIMS[k][-1][1] == 1.0 and DIMS[k][-1][0] < DUR, (k, DIMS[k][-1])
+assert A("vo04:triple#2") < CUE["why"]["speedOut"] < A("vo04:same#2"), CUE["why"]
 # "as in a grandfather clock": a 2 m long-case clock drawn in ink beside the rig, its 99.4 cm pendulum swinging with the small one
 CLOCK = {"x": 90.0, "z": -30.0, "h": 212.0, "w": 50.0, "pivotY": 168.0, "t0": A("vo02:as", -0.2), "t1": A("vo02:Ghosts", -0.2)}
 
@@ -269,7 +366,8 @@ film = {
     "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE,
     "swing": {"L": L, "pivotY": PIV_Y, "r": R_BOB, "lanes": LANE, "theta": TH, "dt": DT, "n": NG, "T": {"small": T10, "big": T30}, "thetaBigFreeze": TH_BIG_F},
     "wave": {"z0": WAVE_Z0, "n": WAVE_N, "L": WAVE_L, "theta": WAVE_TH, "y": WAVE_Y, "dz": WAVE_DZ, "r": WAVE_R, "align": WAVE_ALIGN},
-    "labels": LABELS, "badges": BADGES, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]}, "cam": CAM, "spine": SPINE, "gclock": CLOCK,
+    "labels": LABELS, "badges": BADGES, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]}, "noteSlots": NOTE_SLOT,
+    "cam": CAM, "spine": SPINE, "spineAt": SPINE_AT, "dim": DIMS, "gclock": CLOCK,
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Rest Frame",
