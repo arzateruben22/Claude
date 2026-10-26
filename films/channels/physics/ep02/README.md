@@ -56,7 +56,7 @@ python3 -I $E/compile.py && node kits/cinema/film/render.mjs --film $E --cues &&
 (cd $E && python3 -I ../../../../kits/cinema/studio/render.py sheet.json build/audio --root .)
 node kits/cinema/film/render.mjs --film $E --tier animatic
 kits/cinema/film/run.sh $E --tier final
-node kits/cinema/film/render.mjs --film $E --tier final --assemble --audio $E/build/audio/mix.wav
+node kits/cinema/film/render.mjs --film $E --tier final --assemble --audio $E/build/audio/mix.wav --crf 16
 cp $E/build/final/9x16/contact-sheet.jpg $E/out/rest-frame-002-9x16-contact.jpg
 python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py $E --log $E/build/final/9x16/render.log
 ```
@@ -76,7 +76,9 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 
 ## Kit and pipeline notes
 
-- No kit file was changed (`../KIT-CHANGES.md`).
+- Re-delivered on 26 Oct in the recheck pass: phrase-broken captions (`../set/captions_py.py`), the spine readout pinned
+  clear of the cards (`../set/spine.js`), and the delivery encoded at CRF 16 with the new `render.mjs --crf` option (the
+  one kit change, backward-compatible: `../KIT-CHANGES.md`).
 - `render.mjs --build` is relative to the working directory, not the film: run stills with `--build <film>/build/stills` from the repo root.
 - Kokoro (af_bella, 1.0) speaks short lines at 3.1–4 words a second. The voiced lint (≤ 3.0) needed lines with full stops and longer words; `kits/cinema/voice` has no per-line speed, and the channel's speed stays 1.0.
 - The cyc's wall curves forward on the left (z −44 at x −50): a rig whose back lane sat at z −50 put the big pendulum inside the wall. The rig stands 30 cm forward.

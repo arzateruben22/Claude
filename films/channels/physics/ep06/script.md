@@ -1,0 +1,61 @@
+# Rest Frame No. 006: "The ten-metre straw" (draft; a physicist signs off before it posts)
+
+About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+original score. Built from the bible's episode 6 (`../bible.md`, §7 #6) and episode 5's tease ("Next: a
+drinking straw, three storeys tall. Could you still drink through it?"), which this episode pays off.
+
+- One world: a bench with a glass of water and a straw, the wooden mannequin sipping, and beside it an ink
+  house front three storeys tall with a straw running up it to a pump on the roof.
+- The physics (`../set/straw.js`): the drink rises until the pressure difference holds the column,
+  h = Δp / (ρ g). A sip of about 2 kPa holds 20 cm; normal lungs manage about 7–12 kPa (70–125 cm of water);
+  a perfect pump at the top leaves only water's own vapour, 2.3 kPa at 20 °C, so the column stops at
+  10.1 m (10.3 m with no vapour at all). How fast it climbs is illustrated, not computed (badged).
+- The spine reads the pressure inside the straw in hPa: 1013 at rest, 993 for the sip, near 0 in the jar,
+  23 at the top of the tall straw. The measure reads the frozen column against the house's metre marks.
+- The whoa: the tall straw. The water climbs, slows, and stops near 10 m; at the top it boils at room
+  temperature.
+
+One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
+direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and
+`{-}` marks a sentence that states nothing outside the film. Check it with
+`python3 -I kits/cinema/script/lint.py films/channels/physics/ep06 --segment measure`.
+
+## hook {shot: low, up the house front: the tall straw with its column stopped near the top, empty above, the glass and the mannequin at its foot; frame 0 is the loop's · title drop: "The ten-metre straw" · pre: 0.1 · energy: 0.6} (0–4 s)
+vo: What lifts a drink up a *straw*? {-} It isn't you. {-}
+
+## normal {shot: down to the bench: the mannequin sips; the water climbs the short straw · pre: 0.15 · energy: 0.45} (4–12 s)
+vo: A glass of water, a straw, a sip. {-} The water climbs twenty centimeters to your lips. {-} It feels like
+you *pull* it. {-}
+
+## change {shot: a glass jar comes down over the glass, the straw through its lid; a hose pumps the air out; the mannequin sips, nothing moves · pre: 0.1 · energy: 0.5} (12–20 s)
+vo: Now seal the glass in a jar, and pump out the air. {-} Sip as hard as you like. {-} *Nothing*
+rises. {c2}
+
+## why {shot: the jar lifts away; the air drawn as ink arrows pressing on the drink · picture-only 2 s · pre: 0.25 · energy: 0.55} (20–37 s)
+vo: In sixteen forty-four, Evangelista Torricelli saw why. {c3} We live at the bottom of an ocean of
+air, and it presses on everything. {c4} A sip lowers the pressure inside the straw, and the air
+outside pushes the drink *up*. {c5}
+
+## whoa {shot: up the house front with the climbing water, three storeys, to the pump on the roof · picture-only 3 s · energy: 0.8} (37–50 s)
+vo: Make it three storeys tall, with a perfect pump on top. {-} The water stops near ten *meters*. {c6}
+At the top, room-temperature water boils. {c7} Your lungs? {-} About one meter. {c8}
+
+## measure {segment: measure · frozen: the column's ghosts every tenth of a second bunching under the top, against the storey marks · pre: 0.2 · energy: 0.3} (50–58 s)
+vo: *Measure it*: the air on one square centimeter weighs about a kilogram. {c1} So does ten point
+three meters of water. {c9}
+
+## takeaway {shot: back down to the glass, the mannequin sipping · energy: 0.45} (58–63 s)
+vo: Straws don't pull. {c10} You thin the air inside, and the sky *pushes*. {c11}
+
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (63–69.5 s)
+vo: Next: an ice cube, made of water, floating on water. {-} Why doesn't it *sink*? {-}
+end card: "Next drop: why ice *floats*" · "Follow Rest Frame" · footnote: "Torricelli, 1644: the same air held a column of mercury about 76 cm high."
+
+## Notes
+- The heights are computed from the pressures (h = Δp / ρg); the rise's speed is an illustration (badged).
+- "Perfect pump" is an idealisation, said aloud. The column stops at 10.1 m for water at 20 °C (vapour
+  pressure 2.3 kPa); the measure's 10.3 m is the column that weighs as much as the whole air above it.
+- Every claim was checked through search excerpts only (the proxy blocks page fetches); see
+  `claims.json`. A person opens each link before posting.
+- Listen at T0: "Evangelista Torricelli", "centimeters".
+- TODO: the handle, a physicist's sign-off, the AI-voice label in the post.

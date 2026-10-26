@@ -1,18 +1,16 @@
 # Rest Frame: production log, episodes 2–6
 
-> **Paused by the user at 23:25 UTC, 25 Oct.** Nothing is rendering. To resume, in order:
-> 1. ep03 final: `kits/cinema/film/run.sh films/channels/physics/ep03 --tier final` (about 45 min, detached; check with
->    `ps -eo args | grep "[r]ender.mjs"`, resume with a bare `run.sh <dir>`). Then `render.mjs --film <dir> --tier final
->    --assemble --audio <dir>/build/audio/mix.wav`, copy the contact sheet to `out/rest-frame-003-9x16-contact.jpg`,
->    `qa.py`, `scorecard.py --log <dir>/build/final/9x16/render.log`, `claims_sheet.py` (add the footnote row from
->    `footnote-claim.json`), then scorecard.md, assets.md, HUMAN-REVIEW.md and README.md as in ep02.
->    `build/` is not committed: on a fresh container, re-run `compile.py`, `render.mjs --cues`, `compile.py` and the
->    studio render first (the voice is committed).
-> 2. ep04: animatic (`render.mjs --film films/channels/physics/ep04 --tier animatic`), fix what it shows, cues, soundtrack,
->    stills, final, paperwork.
-> 3. ep05: write `compile.py` and `scene.mjs` (plan in the ep05 notes below), then as ep04.
-> 4. ep06 after ep05 is delivered.
-> The voice toolchain lives in `~/.cache/cinema-voice` (`kits/cinema/voice/setup.sh` rebuilds it on a new container).
+> **Recheck pass (26 Oct, from 03:35 UTC), at the user's request: "complete and rechecked and rendered for better
+> placement on subtitles, animations, HD quality / graphics".** What changed for every episode:
+> - Captions break at phrases (`set/captions_py.py`), not mid-phrase ("…a tenth of a / second bunch up at the" is gone);
+>   a few sentences are laid out by hand (`CAP_FIX` in each compile.py); the last caption clears before the end card.
+> - The spine readout is pinned to the safe line with a wrapping label, cards stop at 38vmin (`set/spine.js`), so no
+>   card or tag sits on it; a step-through audit of every HUD plate (each 0.25 s) leaves only sub-0.25 s crossfades.
+> - Deliveries are encoded at CRF 16 (`render.mjs --crf`, a new backward-compatible kit option) instead of 19.
+> - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
+> Order: ep02 final re-render (running) → ep03 final re-render → ep04 → ep05 → ep06. One Chromium job at a time;
+> `ps -eo args | grep "[r]ender.mjs"` shows it, a bare `kits/cinema/film/run.sh <dir>` resumes it.
+> The previous ep02 frames are kept in `ep02/build/final/9x16.prev` until the new delivery passes QA.
 
 Branch `claude/rest-frame-ep02-06`. One line per episode, updated as it moves. The process for each episode is
 episode 1's (`ep01/README.md`), plus the picture rules added to `kits/cinema/script/WRITING.md` on 24 Oct ("The
@@ -38,7 +36,7 @@ delivered).
 | 03 | Where does the bounce go? | scripted · reviewed (7/10; fixes applied: "squashes flat", "motion doesn't vanish", "never loses energy" corrected) · voiced (153 words, 66.9 s; lint 0 errors before and after) · built · animatic checked (six rounds) · soundtrack −14.1 LUFS, sync PASS, voice 20.8 LU over music · ten final-tier stills OK (`review/stills-ep03.jpg`; two re-framed and re-checked) · **ready for the final, not started** |
 | 04 | The hammer and the feather | scripted · reviewed (6.5/10; fixes applied: wrong takeaway, MICROSCOPE dates 2016–18, "a few parts" in 10¹⁵, Scott's quote added) · voiced (166 words, 72.0 s; lint 0 errors before and after) · compile and scene written; animatic not yet run |
 | 05 | The spinning chair | scripted · reviewed (7/10; fixes applied: arms added to the spin model, seated body 2.0 kg·m² badged as an assumption, 'Nothing outside did', 'total amount of spin') · voiced (156 words, 66.9 s; lint 0 errors before and after) · set: `spin.js` (several arm moves; matches its port and a brute integral to 1e-10 rad) and `chair.js` · compile and scene not yet written |
-| 06 | The ten-metre straw | — (after 05 is delivered) |
+| 06 | The ten-metre straw | scripted (165 words; lint 0 errors) · claims ledger (11 + footnote) · in independent review · set block `straw.js` written (glass without transmission, liquid columns, jar, pump, ink house, boiling, Torricelli's tube) |
 
 ## New in the channel set (`set/`)
 
@@ -51,7 +49,13 @@ delivered).
 - `balls.js`: a basketball and the closed-form stacked drop (perfect or lossy bounces).
 - `moon.js`: the bible's Moon dressing (a regolith floor faded in over the paper cyc), a geological hammer, a falcon feather.
 - `spin.js`: a spin whose moment of inertia changes, angular momentum conserved.
-- `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms).
+- `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms); `reach()` and
+  `dumbbells: false` for empty hands (ep06).
+- `captions_py.py`: the caption pager every compile.py uses (phrase breaks, per-sentence fixes, end-card clearance).
+- `spine.js`: where the spine readout sits (pinned to the safe line, wrapping label) and the card width.
+- `straw.js`: glass without transmission (a Fresnel rim and a highlight stripe), a glass of water, straws and tall pipes
+  with a liquid column, a bell jar, a hand vacuum pump and hose, an ink house front with a metre scale, boiling
+  bubbles, Torricelli's tube in ink; the hydrostatics helpers (h = Δp/ρg).
 
 ## ep05 plan (for the resume)
 - Takes: hook (from above, mid-pull, ghosts of both dumbbells) · normal: the push on "push." (30 rpm, arms out) ·
@@ -64,7 +68,7 @@ delivered).
 
 ## Kit changes
 
-None so far (`KIT-CHANGES.md`).
+One (`KIT-CHANGES.md`): `render.mjs --crf N` for the delivery encode; the default output is unchanged.
 
 ## Questions
 
