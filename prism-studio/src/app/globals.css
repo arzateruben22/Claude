@@ -600,6 +600,27 @@ a.budget-name:hover { text-decoration: underline; }
 .totals b.num { font-size: 15px; color: var(--text); }
 /* the channel page's production budget card */
 .budget-card .bar { margin: 2px 0; }
+/* analytics: where each number came from (API / CSV / MANUAL / ESTIMATE), the views figure and the API pull line */
+.src-tag { display: inline-block; font: 600 10px/1 var(--mono); letter-spacing: .12em; padding: 3px 5px; border-radius: 3px; border: 1px solid var(--line-3); color: var(--text-2); vertical-align: middle; white-space: nowrap; }
+.src-tag.est { border-style: dashed; color: var(--text-3); }
+.views-fig { text-align: right; display: grid; justify-items: end; gap: 3px; }
+.views-fig .num-display { margin: 0; font-variant-numeric: tabular-nums; }
+.views-meta { font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 559px) {   /* on a phone the figure wraps under the title: read it left to right */
+  .views-fig { text-align: left; justify-items: start; flex-basis: 100%; }
+  .views-meta { justify-content: flex-start; }
+}
+.metric-chips { gap: 6px 18px; font-size: 13.5px; }
+.metric-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.metric-chip b.num { font-size: 13.5px; color: var(--text); }
+.pull-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; padding-top: var(--s3); border-top: 1px solid var(--line); }
+.pull-state { display: grid; gap: 3px; min-width: 0; }
+.pull-last { font-size: 12.5px; overflow-wrap: anywhere; }
+.pull-refresh { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.pull-refresh [role="status"] { margin: 0; font-size: 13px; }
+.metric-history { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; }
+.metric-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.metric-history .num { color: var(--text); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

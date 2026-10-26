@@ -13,7 +13,8 @@
 ## Weekly
 - **Review** new renders: watch each one, check the sources, then approve each account's video and text.
 - **Calendar → Plan the next 7 days**. Add blackout days for travel.
-- **Analytics:** log views from each app (or paste a CSV). Milestones unlock from real numbers only.
+- **Analytics:** posts on connected accounts are read by the worker (daily for 30 days, then weekly; tagged API with
+  the time they were pulled). For the rest, log views from each app (or paste a CSV). Milestones unlock from real numbers only.
 - **Queue:** look for dead jobs, then retry or read the error.
 
 ## Costs
@@ -39,7 +40,8 @@ Review.
 | A post link is refused | Paste the platform's own https link. TikTok links must belong to the saved handle |
 | Jobs stuck "running" | The worker died: start `npm run worker`. Expired leases are recovered within 15 minutes |
 | Marked uploaded by mistake | Use **Undo** on the task (the audit log keeps the history) |
-| Everything must stop | Settings → **Pause publishing** and/or **Stop external actions** |
+| Everything must stop | Settings → **Pause publishing** and/or **Stop external actions** (also pauses analytics pulls) |
+| A post says "connection needs reconnecting" | The platform refused the token. Accounts → **Reconnect**; pulls resume on their own |
 
 ## Backups
 `pg_dump "$DATABASE_URL" > data/backups/prism-$(date +%F).sql` (the `data/backups` folder is git-ignored).

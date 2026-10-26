@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { episodeFull, studio } from "@/lib/data";
+import { analyticsRows, episodeFull, studio } from "@/lib/data";
 import { canTransition, PIPELINE, SIDE_STATES, type EpisodeState } from "@/domain/episodes";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { addNote, moveEpisode, resolveNote, toggleSource } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { Placements } from "@/components/Placements";
+import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const f = /^[0-9a-f-]{36}$/.test((await params).id) ? await episodeFull((await params).id) : null;
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function Episode({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
-  const [f, s] = await Promise.all([episodeFull(id), studio()]);
+  const [f, s, numbers] = await Promise.all([episodeFull(id), studio(), analyticsRows({ episodeId: id })]);
   if (!f) notFound();
   const { ep, channel, current } = f;
   if (ep.isDemo && !s.showDemo) return (
@@ -76,6 +77,28 @@ export default async function Episode({ params }: { params: Promise<{ id: string
           <Placements full={f} tz={s.timezone} />
         </section>
       </div>
+
+      {numbers.length ? (
+        <section className="section" id="numbers">
+          <div className="section-head"><h2 style={{ margin: 0 }}>Numbers</h2><Link href="/analytics" className="num">All analytics</Link></div>
+          <div className="grid2">
+            {numbers.map((r) => (
+              <article key={r.p.id} className="card flat stack-sm">
+                <div className="row spread top">
+                  <div>
+                    <div className="label">{PLATFORM_LABEL[r.dest.platform]}{r.dest.shared ? " · shared" : ""}{r.p.simulated ? <> · <span className="sim-tag">SIMULATED</span></> : null}</div>
+                    <div className="faint" style={{ fontSize: 13 }}>Posted {formatLocal(r.p.reportedAt, s.timezone)}{r.p.postUrl ? <> · <a href={r.p.postUrl} target="_blank" rel="noopener noreferrer">open post</a></> : null}</div>
+                  </div>
+                  <ViewsFigure snap={r.latest.views} tz={s.timezone} />
+                </div>
+                <MetricChips latest={r.latest} />
+                <PullLine publicationId={r.p.id} platform={r.dest.platform} pull={r.pull} tz={s.timezone} />
+                <MetricHistory history={r.history} tz={s.timezone} />
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="section-head"><h2 style={{ margin: 0 }}>Sources</h2><span className="num faint">{f.sources.filter((x) => x.reviewerOk).length}/{f.sources.length} checked by you</span></div>

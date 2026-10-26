@@ -11,10 +11,13 @@ import { rescheduleMissed } from "../src/domain/schedule";
 import { refreshEvolution } from "../src/domain/living";
 import { lessonBuildPlan, recordLessonBuild } from "../src/domain/lessons";
 import { finalizeProcessing, publishPublication } from "../src/domain/publish";
+import { pullMetrics } from "../src/domain/api-analytics";
 import { DomainError } from "../src/domain/core";
 import { importEpisodes } from "../scripts/import-episodes";
 
 export type Beat = (p: number, msg: string) => Promise<boolean>;   // false = cancel requested
+/** Failures that another attempt can't fix: the worker dead-letters these at once instead of retrying. */
+export const NON_RETRYABLE = new Set(["needs_films_toolchain", "needs_reconnect", "pull_failed"]);
 export type Handler = (job: JobRow, beat: Beat, d: DB) => Promise<Record<string, unknown>>;
 export const HANDLERS: Record<string, Handler> = {
   async import_episodes(_, beat, d) {
@@ -56,6 +59,12 @@ export const HANDLERS: Record<string, Handler> = {
   async publish_status(job, _, d) {
     try { return { ...(await finalizeProcessing(d, String(job.payload.publicationId))) }; }
     catch (e) { if (e instanceof DomainError && e.code === "processing") throw new Error("still processing on the platform"); throw e; }
+  },
+  // API analytics for one verified post (housekeeping queues due ones; "Refresh now" queues one). Network trouble
+  // retries with backoff; an expired grant marks the connection for reconnecting and stops (needs_reconnect).
+  async pull_metrics(job, beat, d) {
+    await beat(0.1, "asking the platform for this post's numbers");
+    return { ...(await pullMetrics(d, String(job.payload.publicationId))) };
   },
   async reschedule_missed(_, __, d) {
     return { moved: await rescheduleMissed(d) };

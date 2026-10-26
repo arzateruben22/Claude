@@ -10,6 +10,7 @@ import { channelEpisodes, demoFilter } from "@/domain/demo";
 import { canUsePaidGeneration, costEntries, costTotals, monthsBack } from "@/domain/costs";
 import { channelXp, requirementsFor } from "@/domain/living";
 import { rewardBalances } from "@/domain/rewards";
+import { pullStates } from "@/domain/api-analytics";
 import { currentApproval } from "@/domain/approvals";
 import { CHANNELS, OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
 import { slotsForDate } from "@/domain/schedule";
@@ -156,21 +157,28 @@ export async function jobsList() {
   return db().select().from(S.jobs).where(demoFilter(s.showDemo, S.jobs.isDemo)).orderBy(desc(S.jobs.createdAt)).limit(60);
 }
 
-export async function analyticsRows() {
+const METRICS = ["views", "likes", "comments", "shares", "avg_view_duration_s", "watch_time_s", "followers_gained"] as const;
+/** Posted publications (all, or one episode's) with each metric's latest value, recent history and API pull state. */
+export async function analyticsRows(o: { episodeId?: string } = {}) {
   const d = db();
   const s = await settings(d);
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations })
     .from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId)).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
-    .where(and(or(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform", "verified_published"]), eq(S.publications.simulated, true)), demoFilter(s.showDemo, S.episodes.isDemo)))
+    .where(and(or(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform", "verified_published"]), eq(S.publications.simulated, true)), demoFilter(s.showDemo, S.episodes.isDemo),
+      o.episodeId ? eq(S.publications.episodeId, o.episodeId) : undefined))
     .orderBy(desc(S.publications.reportedAt));
-  const snaps = rows.length ? await d.select().from(S.metricSnapshots).where(inArray(S.metricSnapshots.publicationId, rows.map((r) => r.p.id))).orderBy(desc(S.metricSnapshots.retrievedAt)) : [];
+  const ids = rows.map((r) => r.p.id);
+  const snaps = ids.length ? await d.select().from(S.metricSnapshots).where(inArray(S.metricSnapshots.publicationId, ids)).orderBy(desc(S.metricSnapshots.retrievedAt)) : [];
+  const pulls = await pullStates(d, ids);
   const chans = await d.select().from(S.channels);
   return rows.map((r) => ({
     ...r, channel: chans.find((c) => c.id === r.e.channelId)!,
-    latest: Object.fromEntries(["views", "avg_view_duration_s", "likes", "shares", "followers_gained"].map((m) => [m, snaps.find((s) => s.publicationId === r.p.id && s.metric === m) ?? null])),
-    history: snaps.filter((s) => s.publicationId === r.p.id).slice(0, 8),
+    latest: Object.fromEntries(METRICS.map((m) => [m, snaps.find((s) => s.publicationId === r.p.id && s.metric === m) ?? null])) as Record<(typeof METRICS)[number], typeof S.metricSnapshots.$inferSelect | null>,
+    history: snaps.filter((s) => s.publicationId === r.p.id).slice(0, 10),
+    pull: pulls.get(r.p.id) ?? null,
   }));
 }
+export type AnalyticsRow = Awaited<ReturnType<typeof analyticsRows>>[number];
 
 export async function rewardsView() {
   const d = db();

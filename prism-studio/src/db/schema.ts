@@ -341,7 +341,26 @@ export const metricSnapshots = pgTable("metric_snapshots", {
   source: metricSourceEnum("source").notNull(),
   status: text("status").notNull().default("ok"),        // ok, revised, flagged
   supersedes: uuid("supersedes"),
-}, (t) => [index("metrics_pub_metric").on(t.publicationId, t.metric)]);
+  // Set by the API analytics pull: the UTC day it ran. One pulled row per (publication, metric, UTC day); a re-pull
+  // that day updates it. Null on CSV, manual, estimate and demo rows.
+  utcDay: date("utc_day", { mode: "string" }),
+}, (t) => [
+  index("metrics_pub_metric").on(t.publicationId, t.metric),
+  uniqueIndex("metrics_api_daily").on(t.publicationId, t.metric, t.utcDay).where(sql`${t.source} = 'api'`),
+]);
+
+// API analytics pull state, one row per publication: when Prism last asked the platform (success or not) and what
+// happened. The cadence (daily for 30 days after publication, then weekly) counts from the last attempt, so a
+// failure waits for the next period instead of retrying in a loop. Holds no tokens and no numbers.
+export const metricPulls = pgTable("metric_pulls", {
+  publicationId: uuid("publication_id").primaryKey().references(() => publications.id, { onDelete: "cascade" }),
+  lastAttemptAt: timestamp("last_attempt_at", { withTimezone: true }),
+  lastSuccessAt: timestamp("last_success_at", { withTimezone: true }),
+  lastOutcome: text("last_outcome").notNull().default(""),   // ok, empty, needs_reconnect, failed
+  lastError: text("last_error").notNull().default(""),
+  pulls: integer("pulls").notNull().default(0),
+  updatedAt: updated(),
+});
 
 export const experiments = pgTable("experiments", {
   id: id(),

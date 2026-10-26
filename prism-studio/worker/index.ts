@@ -1,15 +1,16 @@
 // Prism Studio worker: claims jobs from the Postgres queue (fair per channel, leased, heartbeated), runs them,
-// and does the periodic housekeeping: recover expired leases, move missed uploads, re-check evolutions.
+// and does the periodic housekeeping: recover expired leases, move missed uploads, queue due analytics pulls.
 // Run alongside the web app: `npm run worker`. Stops cleanly on SIGINT/SIGTERM (the current job finishes).
 import os from "node:os";
 import { db, pool } from "../src/db/client";
 import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
 import { enqueueDuePublishes } from "../src/domain/publish";
+import { enqueueDuePulls } from "../src/domain/api-analytics";
 import { audit, DomainError } from "../src/domain/core";
 import { eq } from "drizzle-orm";
 import * as S from "../src/db/schema";
-import { HANDLERS, runHandler } from "./handlers";
+import { HANDLERS, NON_RETRYABLE, runHandler } from "./handlers";
 import { loadEnv } from "../scripts/env";
 loadEnv();
 
@@ -29,7 +30,7 @@ async function runOne(): Promise<boolean> {
     else await complete(db(), job.id, ID, result);
   } catch (e) {
     console.error(`[worker] ${job.type} failed:`, e);
-    await fail(db(), job.id, ID, (e as Error).message ?? String(e), { retryable: !(e instanceof DomainError && e.code === "needs_films_toolchain") });
+    await fail(db(), job.id, ID, (e as Error).message ?? String(e), { retryable: !(e instanceof DomainError && NON_RETRYABLE.has(e.code)) });
   }
   return true;
 }
@@ -46,7 +47,10 @@ async function housekeeping() {
   lastHousekeeping = Date.now();
   const recovered = await recoverExpired(db());
   const moved = await rescheduleMissed(db());
-  if (recovered || moved) await audit(db(), "worker", "housekeeping", "jobs", "", { recovered, moved });
+  // API analytics: daily for each verified post's first 30 days, then weekly (one pull per post per UTC day at most)
+  const pulls = await enqueueDuePulls(db());
+  if (pulls) console.log(`[worker] queued ${pulls} analytics pull${pulls > 1 ? "s" : ""}`);
+  if (recovered || moved || pulls) await audit(db(), "worker", "housekeeping", "jobs", "", { recovered, moved, pulls });
 }
 
 console.log(`[worker] ${ID} started`);

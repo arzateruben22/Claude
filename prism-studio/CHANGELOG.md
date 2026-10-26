@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 — 2026-10-26 (Stage C: API analytics)
+- API analytics: the worker pulls each verified post's numbers from its connected platform (daily for 30 days, then weekly), one row per post, metric and UTC day; Refresh now on Analytics and the episode page; source tags (API / CSV / MANUAL / ESTIMATE / DEMO) with pulled-at times; expired grants show "needs reconnecting" and stop pulling.
+- Episode page: a Numbers section for its posts.
+- Fixed: Accounts nested the connection forms inside the account's Save form.
+
 ## 0.3.0 — 2026-10-26 (Stage B complete)
 - Costs screen: monthly production budgets (studio-wide and per channel), spent vs budget by month, cost entries with add/edit/void, ESTIMATE labels, and the paid-generation gate (`canUsePaidGeneration`).
 - Settings → Show demo data (off by default); DEMO labels on the desk, review, calendar and analytics; real-only analytics totals; `db:seed -- --demo`.

@@ -33,13 +33,13 @@ Checks: `npm run typecheck`, `npm test` (needs `TEST_DATABASE_URL`; it wipes tha
 
 | Path | What |
 |---|---|
-| `src/db/schema.ts` | Every business fact (34 tables). Times are UTC; money is integer cents; production budgets and costs are separate from rewards |
-| `src/domain/` | The rules: episodes and states, approvals, publications, schedule, rewards, the living studio, jobs, time |
+| `src/db/schema.ts` | Every business fact (36 tables). Times are UTC; money is integer cents; production budgets and costs are separate from rewards |
+| `src/domain/` | The rules: episodes and states, approvals, publications, schedule, rewards, the living studio, jobs, time, publishing and API analytics |
 | `src/app/(studio)/` | Screens: Home, Upload Desk, Review, Calendar, Rewards, channels, episodes, evolution, analytics, accounts, queue, costs, settings |
 | `src/app/actions.ts` | Every mutation (server actions, zod-validated, owner-checked) |
 | `src/app/api/` | Media with HTTP Range, the SRT captions, the per-task ZIP bundle |
 | `src/creations/` | The five creations, drawn as inline SVG (forms 1–5, branches, ascended, reveal) |
-| `worker/index.ts` | The job runner and housekeeping (expired leases, missed slots) |
+| `worker/index.ts` | The job runner and housekeeping (expired leases, missed slots, due publications, due analytics pulls) |
 | `scripts/` | migrate, seed, import episodes from `films/channels`, owner password, dev reset |
 | `tests/` | Vitest: the failure paths (approvals, double counting, money, queue, DST, URLs, traversal) |
 

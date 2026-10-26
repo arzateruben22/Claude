@@ -51,8 +51,11 @@ export interface PublishResult {
   raw?: Record<string, unknown>;
 }
 
+/** Lifetime numbers for one post. A metric the platform doesn't give is left undefined (never 0). */
 export interface Metrics {
   views?: number; likes?: number; comments?: number; shares?: number; avg_view_duration_s?: number; followers_gained?: number;
+  /** total watch time in seconds, when the platform reports it */
+  watch_time_s?: number;
   retrievedAt: string;
 }
 

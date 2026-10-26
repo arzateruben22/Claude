@@ -21,6 +21,7 @@ import { localDate, zonedTimeToUtc } from "@/domain/time";
 import { checkPassword } from "@/lib/auth";
 import { COOKIE, makeSession } from "@/lib/session";
 import { requireOwner } from "@/lib/owner";
+import { PLATFORM_LABEL } from "@/lib/format";
 
 export type Result = { ok: boolean; message: string; data?: Record<string, unknown> } | null;
 const ok = (message: string, data?: Record<string, unknown>): Result => ({ ok: true, message, data });
@@ -249,13 +250,25 @@ export async function toggleOnboarding(fd: FormData) {
 export async function addMetric(_: Result, fd: FormData) {
   return run(async () => {
     const publicationId = z.string().uuid().parse(fd.get("publicationId"));
-    const metric = z.enum(["views", "avg_view_duration_s", "likes", "shares", "followers_gained"]).parse(fd.get("metric"));
+    const metric = z.enum(["views", "avg_view_duration_s", "likes", "comments", "shares", "followers_gained"]).parse(fd.get("metric"));
     const value = z.coerce.number({ message: "Enter a number" }).min(0).parse(str(fd, "value").replace(/[, ]/g, ""));
     const source = z.enum(["manual", "estimate", "demo"]).parse(fd.get("source") ?? "manual");
     const r = await recordMetric(db(), { publicationId, metric, value, source, definition: source === "manual" ? "owner-confirmed from the platform's analytics" : source });
     const titles = r.unlocked.length ? (await db().select().from(S.milestoneRules)).filter((m) => r.unlocked.some((u) => u.ruleId === m.id)).map((m) => m.title) : [];
     refresh("/analytics", "/rewards");
     return ok(titles.length ? `Logged. Unlocked: ${titles.join(", ")}${source === "demo" ? " (demo)" : ""}.` : "Logged.");
+  });
+}
+
+/** "Refresh now": queue an API pull of this post's numbers (verified posts on a connected account only). */
+export async function refreshMetrics(_: Result, fd: FormData) {
+  return run(async () => {
+    const publicationId = z.string().uuid().parse(fd.get("publicationId"));
+    const { requestPull } = await import("@/domain/api-analytics");
+    const r = await requestPull(db(), publicationId);
+    const [p] = await db().select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.id, publicationId));
+    refresh("/analytics", "/queue", ...(p ? [`/episodes/${p.episodeId}`] : []));
+    return ok(r.created ? `Queued: the worker asks ${PLATFORM_LABEL[r.platform]} now. The numbers appear here once it answers.` : "Already queued.");
   });
 }
 
