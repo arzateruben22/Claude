@@ -22,7 +22,7 @@ script before it posts.
 | whoa | "Skaters use this. In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a *minute*. Nearly six turns a second." | An ink skater (a scratch spin) beside the chair, motion arcs; the spine climbs to 342 rpm |
 | measure | "*Measure it*: ghosts a tenth of a second apart. Arms out, eighteen degrees. Arms in, nearly *fifty*." | Frozen from above: the arms-out ladder (18°) and the arms-in ladder (48°) |
 | takeaway | "One push set your total spin. Your arms just decide how *fast*." | Spinning on, arms in; "Friction ignored" |
-| tease | "Next: a drinking straw, three storeys tall. Could you still *drink* through it?" | Back to the hook's moment for the loop; footnote: Olivia Oliver's 342 rpm record |
+| tease | "Next: a drinking straw, three stories tall. Could you still *drink* through it?" | Back to the hook's moment for the loop; footnote: Olivia Oliver's 342 rpm record |
 
 ## Files
 

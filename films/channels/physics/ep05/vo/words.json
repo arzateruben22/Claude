@@ -910,7 +910,7 @@
   },
   {
    "id": "vo08",
-   "text": "Next: a drinking straw, three storeys tall. Could you still drink through it?",
+   "text": "Next: a drinking straw, three stories tall. Could you still drink through it?",
    "heard": "Next, a drinking straw three stories tall. Could you still drink through it?",
    "words": [
     {
@@ -944,10 +944,10 @@
      "heard": true
     },
     {
-     "w": "storeys",
+     "w": "stories",
      "start": 2.075,
      "end": 2.48,
-     "heard": false
+     "heard": true
     },
     {
      "w": "tall.",

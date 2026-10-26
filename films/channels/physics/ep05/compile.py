@@ -163,7 +163,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE, "hookNote": {"text": "2× slower", "t1": cut("normal")},
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: the ten-metre *straw*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: the ten-meter *straw*", "follow": "Follow Rest Frame",
             "foot": "Olivia Oliver, 342 rpm, Warsaw 2015: the Guinness record for the fastest spin on ice skates (as of 2026)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

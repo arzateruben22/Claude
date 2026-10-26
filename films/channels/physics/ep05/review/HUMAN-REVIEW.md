@@ -10,7 +10,7 @@ Rest Frame No. 005, "The spinning chair". The measured gates are in `scorecard.m
 5. **Hook wording.** "Nobody pushes. Nothing pushes." is the hook's framing; the why corrects it to "Nothing *outside* did."
 6. **Honesty notes on screen:** speed notes; the "Model" card ("Body 2.0 kg·m², assumed."); "Illustration" (the skater); "Friction ignored".
 7. **The spine:** spin rate (rpm, live: 0 → 30 → 80, out to 30 and in to 80 again in the why) → the skating record (80 → 342 rpm) → the turn per 1/10 s, 18° then 48°.
-8. **A listen:** "swivel", "three hundred forty-two", "storeys".
+8. **A listen:** "swivel", "three hundred forty-two", "stories".
 
 ## Every episode
 - **The channel.** Rest Frame and the narrator are provisional (`films/channels/DECISIONS.md`). TODO before the first post: the handle (@restframe) on TikTok, YouTube and Instagram, and a USPTO/EUIPO trademark search.

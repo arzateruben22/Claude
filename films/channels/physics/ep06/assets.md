@@ -1,11 +1,11 @@
-# Assets: Rest Frame No. 006, "The ten-metre straw"
+# Assets: Rest Frame No. 006, "The ten-meter straw"
 
 Everything in this film is made in code, by the studio or by the open-source projects below. No stock footage,
 photos, samples or licensed music.
 
 | What | Source | License / owner |
 |---|---|---|
-| The 3D set | "The Bench": `set/cyc.js`, `aces.js`, `props.js` (the lights), `title.js`, `set/chair.js` (the seated wooden artist's mannequin, no face or likeness, here with empty hands), `set/ink.js`, and new: `set/straw.js` (glass without a transmission material, a glass of water, a bendy straw and a tall pipe with liquid columns, a bell jar, a hand vacuum pump and hose, boiling bubbles, a small table; the ink house front with a metre scale and Torricelli's tube, line drawings) (the channel's reusable set, `films/channels/physics/set/`) | Studio code |
+| The 3D set | "The Bench": `set/cyc.js`, `aces.js`, `props.js` (the lights), `title.js`, `set/chair.js` (the seated wooden artist's mannequin, no face or likeness, here with empty hands), `set/ink.js`, `set/spine.js` (the readout's place), and new: `set/straw.js` (glass without a transmission material, a glass of water, a bendy straw and a tall pipe with liquid columns, a screw lid with a grommet, a hand vacuum pump and hose, boiling bubbles, a small table, a dashed ink line; the ink house front with a metre scale and Torricelli's tube, line drawings) (the channel's reusable set, `films/channels/physics/set/`) | Studio code |
 | This episode's staging | `ep06/scene.mjs`, directed by `ep06/compile.py` (with the caption pager in `set/captions_py.py`) → `film.json` | Studio code |
 | Science overlays and shared blocks (captions, labels, badges, counters, cards; the episode's motion blocks) | `kits/cinema/sci/hud.js`, `clock.js`, `strobe.js`, `arrows.js` | Studio code |
 | Film runtime and renderer | `kits/cinema/film/` (page, runtime, chunked resumable renderer) | Studio code |
