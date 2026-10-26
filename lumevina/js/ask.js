@@ -116,7 +116,7 @@
     }); });
     return out;
   };
-  var day = function (d) { try { return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }); } catch (e) { return ""; } };
+  var boughtOn = function (d) { try { return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }); } catch (e) { return ""; } };
   var me = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
     if (!s) return null;
@@ -230,7 +230,7 @@
       if (!who) return "Sign in to My Lumevina and I’ll know what you’ve bought here, so I can talk about your own products by name.";
       if (!mine.length) return "Nothing bought here under " + who.email + " yet. Once you do, I’ll know your products by name: how and when Evelyn uses them, and when a bottle may be running low.";
       var low = mine.filter(function (b) { return b.soon; });
-      return "Your Lumevina products: " + mine.map(function (b) { return b.name + " (" + b.where + ", " + day(b.at) + ")"; }).join("; ") + "." +
+      return "Your Lumevina products: " + mine.map(function (b) { return b.name + " (" + b.where + ", " + boughtOn(b.at) + ")"; }).join("; ") + "." +
         (low.length ? " Probably running low: " + low.map(function (b) { return b.name; }).join(", ") + ". Buy again puts them back in your bag." : "") +
         " Ask me how to use any of them, or what to pause before a visit."; },
       acts: [["Buy again", "account"], ["Before my facial", "n:before"], ["After my facial", "n:after"]] },
@@ -819,7 +819,7 @@
       lines.length ? "Their skin profile, in their own words:\n" + lines.join("\n") : "They haven't filled in a skin profile yet.",
       mem.length ? "What they've told you before:\n" + mem.join("\n") : "",
       mine.length ? "Their Lumevina products, bought here (newest first):\n" + mine.map(function (b) {
-        return "- " + b.name + ": " + b.where + ", " + day(b.at) + (b.low ? b.soon ? "; probably running low by now" : "; may run low around " + day(b.low) : "");
+        return "- " + b.name + ": " + b.where + ", " + boughtOn(b.at) + (b.low ? b.soon ? "; probably running low by now" : "; may run low around " + boughtOn(b.low) : "");
       }).join("\n") + "\nWhen they say \"my serum\", \"my cleanser\" or \"the one I bought\", it's one of these: answer by name, from that product's card under \"Her shelf\" (how, when, what's normal, when to stop). One that's probably running low: you may say so in one line, once, with [[products: <id>]] so they can reorder. Never push anything they don't already have." : "",
       "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\"). You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax), and send the decision to Evelyn." +
         (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"personal\")." : "") +
