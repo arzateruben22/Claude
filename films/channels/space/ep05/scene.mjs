@@ -229,6 +229,7 @@ window.seek = function (t) {
   spotMat.uniforms.uOp.value = so; spot.visible = so > 0.01;
   spotEarth.set({ center: SE_AT, sunDir: SD, sun: 1, spin: t * 0.2 });
   spotEarth.group.visible = so > 0.01;
+  spotEarth.group.scale.setScalar(Math.max(1e-3, so));   // the planet shader has no opacity: it shrinks away with the spot instead of popping
   // the anchors: inside the (foreshortened) penumbra, clear of the umbra; and on Earth's disc
   S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.1 * k, PH.spot_r * 0.3 * k, 0][i]);
   S.spotearth = SE_AT.map((v) => v * k).map((v, i) => v + [0.6 * RE * k, 0.6 * RE * k, 0][i]);

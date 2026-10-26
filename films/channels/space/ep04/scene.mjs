@@ -3,10 +3,12 @@ import * as THREE from "three";
 //
 // One shot, true scale (1 unit = 10,000 km: Earth 1.27 units across, the Moon 38.44 units out). Frame 0 is the payoff:
 // the Moon a minute after leaving its straight line, the gap drawn a million times larger. Then the diagram from
-// above (thirty Earths in a row reach the Moon; its speed), gravity switched off (a ghost Moon flies straight) and
-// back on (the pull toward Earth), a turn to the side for Newton's test (an apple on Earth's surface, the Moon 60
-// Earth radii out, the pull shrinking 3,600 times along the way), the whoa's minute (the Moon falls 4.9 m below its
-// straight line, drawn ×1,000,000) and the readout's light-time ring. The end card pushes back into frame 0.
+// above (thirty Earths in a row reach the Moon; its speed), gravity switched off (the Moon flies on along its straight
+// line) and back on (the pull toward Earth bends it back), a turn to the side for Newton's test (an apple on Earth's
+// surface, the Moon 60 Earth radii out, the pull shrinking 3,600 times along the way), the whoa's minute (the Moon
+// falls 4.9 m below its straight line, drawn ×1,000,000, beside an apple's first second), the takeaway (the Moon runs on
+// under a fan of the straight lines it keeps falling from) and the readout's light-time ring. The end card pushes back
+// into frame 0.
 // Set: ../set (sky, planet with earthSurface, moon.js (new), beacon, rig's poseAt, look, motif). Kit: hud, clock, front.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -40,7 +42,7 @@ const onOrbit = (th, r = R) => [r * Math.cos(th), 0, -r * Math.sin(th)];
 const tanAt = (th) => [-Math.sin(th), 0, -Math.cos(th)];                     // counterclockwise seen from +y
 const add = (a, b, k = 1) => a.map((v, i) => v + b[i] * k);
 const norm = (a) => { const l = Math.hypot(...a) || 1; return a.map((v) => v / l); };
-const TAU_MIN0 = CLK.moon.tau(CUE.min0);
+const TAU_MIN0 = CLK.moon.tau(CUE.min0), TAU_DROP = CLK.moon.tau(CUE.drop);
 
 // ── the set ─────────────────────────────────────────────────────────────────
 const sky = createSky({ stars: 6000, seed: 41 });
@@ -52,29 +54,34 @@ scene.add(earth.group, moon.group);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
 // the ice token's linear solve has a negative red channel: clamped, a dimmed or bloomed halo stays pale ice (not royal blue)
 const pos = (c) => c.map((v) => Math.max(0, v));
-const C = { orbit: line("lilac", 0.8), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3), ice: line("ice", 0.6), iceHi: line("ice", 0.95), ghost: line("ice", 0.75) };
+// a beacon's halo is that light dimmed: clamped and mixed toward white, it stays pale (not royal or pure blue)
+const pale = (c) => pos(c).map((v) => 0.35 + 0.65 * v);
+const C = { orbit: line("lilac", 0.8), lilac: line("lilac", 0.8), lilacHi: line("lilac", 1), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3), ice: line("ice", 0.6), iceHi: line("ice", 0.95), ghost: line("ice", 0.75) };
 const orbitRing = ring({ color: C.orbit, width: 3, opacity: 1 }).arc({ r: R, ...XZ });
-const row = Array.from({ length: 30 }, () => ring({ color: C.ice, width: 1.6, opacity: 0 }));
+const row = Array.from({ length: 30 }, () => ring({ color: C.iceHi, width: 2.8, opacity: 0 }));   // bright enough to read as rings, not a dotted line
 const vArrow = [0, 1, 2].map(() => segment({ color: pos(C.iceHi), width: 4, opacity: 0 }));   // speed: ice (lilac is gravity)
-const freePath = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 1.2, duty: 0.5 });
+// gravity off: the straight line, a trail behind the flying Moon and dashed ahead of it (dash is per unit: 3.3 units a dash)
+const FREE_DASH = 0.3, freePath = segment({ color: C.tealHi, width: 4, opacity: 0, dash: FREE_DASH, duty: 0.6 }), trail = segment({ color: C.tealHi, width: 4, opacity: 0, fade: [0.3, 1] });
 const ghostMoon = ring({ color: C.ghost, width: 3, opacity: 0 });
 const pull = [0, 1, 2].map(() => segment({ color: C.lilac, width: 4.5, opacity: 0 }));
 // Newton's test: the pull's strength along the Earth–Moon line, hung below it (height ∝ 1/r²), drawn out from the apple
 const NPROF = 40, prof = Array.from({ length: NPROF }, () => segment({ color: C.lilac, width: 3.4, opacity: 0 }));
-const profHead = createBeacon({ color: pos(hdr("lilac", 1.3)), px: 12, core: 0.5 });
 const ruler = segment({ color: C.lilac, width: 3, opacity: 0 });
 const ticks = Array.from({ length: 13 }, () => segment({ color: C.lilac, width: 3, opacity: 0 }));
 const tangent = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 0.25, duty: 0.5 });
-const gap = segment({ color: C.tealHi, width: 3.6, opacity: 0, depthTest: false });   // centre to centre, over the Moon's disc
+const tangent2 = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 0.25, duty: 0.5 });   // the change's, at the moving Moon (tangent is frame 0's)
+// the two falls, the Moon's minute and the apple's second: one colour (gravity), one weight, the same length
+const gap = segment({ color: C.lilacHi, width: 3.6, opacity: 0, depthTest: false });   // centre to centre, over the Moon's disc
 const ghostAt = ring({ color: C.ghost, width: 3, opacity: 0, dash: 24, duty: 0.5 });
-const dropLine = segment({ color: C.ice, width: 3, opacity: 0, dash: 0.08, duty: 0.5 });   // the apple's first second, beside the Moon's minute
+const dropLine = segment({ color: C.lilacHi, width: 3.6, opacity: 0 });   // the apple's first second, beside the Moon's minute
 const lightRing = ring({ color: C.tealHi, width: 3.4, opacity: 0 }).arc({ r: R + 1.6, ...XZ });
-const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 3.2, opacity: 0, fade: [1, 0.45] }));
+const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 4.5, opacity: 0, fade: [1, 0.2] }));
 // hollow marker rings of a fixed size in pixels round Earth and the Moon, so the true-scale bodies can be found in the diagrams (they claim no size)
 const markM = ring({ color: C.ice, width: 2, opacity: 0 }), markE = ring({ color: C.ice, width: 2, opacity: 0 });
-[markM, markE, orbitRing, ...row, ...vArrow, freePath, ghostMoon, ...pull, ...prof, ruler, ...ticks, tangent, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
-const apple = createBeacon({ color: pos(hdr("ice", 1.1)), px: 14, core: 0.55 }), apple2 = createBeacon({ color: pos(hdr("ice", 1.1)), px: 16, core: 0.55 });
-scene.add(apple.mesh, apple2.mesh, profHead.mesh);
+[markM, markE, orbitRing, ...row, ...vArrow, trail, freePath, ghostMoon, ...pull, ...prof, ruler, ...ticks, tangent, tangent2, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
+const apple = createBeacon({ color: pale(hdr("ice", 1.1)), px: 14, core: 0.8 }), apple2 = createBeacon({ color: pale(hdr("ice", 1.1)), px: 16, core: 0.8 });
+const moonGlow = createBeacon({ color: pale(hdr("ice", 1.2)), px: 14, core: 0.8 });   // gravity off: the flying Moon (its disc is a pixel)
+scene.add(apple.mesh, apple2.mesh, moonGlow.mesh);
 
 const rig = createRig(FILM.cam);
 
@@ -123,17 +130,24 @@ window.seek = function (t) {
   // the Moon: on its orbit, except in the hook (frame 0, the whoa's end state), with gravity off (on its straight line,
   // then drawn back onto the orbit) and in the whoa's minute (the fall magnified; back onto the orbit only once the
   // camera is well back, so it never "un-falls" in close-up)
-  const inMin = t >= CUE.min0 && t < CUE.tk + 1.8, isHook = t < B.normal.t0 || t > FILM.endCard + 1.6;   // the end card hands back frame 0
+  const inMin = t >= CUE.min0 && t < CUE.home1, isHook = t < B.normal.t0 || t > FILM.endCard + 1.6;   // the end card hands back frame 0
   const dt = isHook ? 60 : Math.min(60, Math.max(0, tau - TAU_MIN0));
   const F = fallState(dt);
-  const tauOff = CLK.moon.tau(CUE.off), thOff = thAt(tauOff), pOff = onOrbit(thOff);
-  const gAt = (tt) => add(pOff, tanAt(thOff), V * Math.max(0, CLK.moon.tau(tt) - tauOff));
+  const tauOff = CLK.moon.tau(CUE.off), thOff = thAt(tauOff), pOff = onOrbit(thOff), tOff = tanAt(thOff);
+  const sOff = (tt) => V * Math.max(0, CLK.moon.tau(tt) - tauOff);              // how far along its straight line it has flown
+  const gAt = (tt) => add(pOff, tOff, sOff(tt));
   const lerp3 = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
   let mp = onOrbit(th);
   if (isHook) mp = F.drawn;
   else if (t >= CUE.off && t < CUE.back) mp = gAt(t);
-  else if (t >= CUE.back && t < CUE.back + 1.0) mp = lerp3(gAt(CUE.back), onOrbit(th), E.inout2(seg(t, CUE.back, CUE.back + 1.0)));
-  else if (inMin) mp = t < CUE.tk + 0.9 ? F.drawn : lerp3(F.drawn, onOrbit(th), E.inout2(seg(t, CUE.tk + 0.9, CUE.tk + 1.8)));
+  else if (t >= CUE.back && t < CUE.back + 1.0) {
+    // bent back, not slid: angle and radius ease together, so the Moon swoops forward onto its orbit (the angle
+    // unwrapped first, so it never goes the long way round)
+    const g = gAt(CUE.back), u = E.inout2(seg(t, CUE.back, CUE.back + 1.0)), ra = Math.hypot(g[0], g[2]);
+    let aa = Math.atan2(-g[2], g[0]);
+    aa += 2 * Math.PI * Math.round((th - aa) / (2 * Math.PI));
+    mp = onOrbit(aa + (th - aa) * u, ra + (R - ra) * u);
+  } else if (inMin) mp = t < CUE.home0 ? F.drawn : lerp3(F.drawn, onOrbit(th), E.inout2(seg(t, CUE.home0, CUE.home1)));
   moon.set({ center: mp, sunDir: SUN, sun: 1, spin: -th + Math.PI });               // tidally locked: the near side faces Earth
   earth.set({ center: [0, 0, 0], sunDir: SUN, sun: 1, spin: 0.9 + tau * 7.292e-5 });
   S.moon = add(mp, [0, PH.r_moon * 1.4, 0]); S.earth = [0, PH.r_earth * 1.3, 0];
@@ -144,19 +158,23 @@ window.seek = function (t) {
     const c = dirM.map((v) => v * PH.r_earth * (2 * k + 3));
     rg.arc({ center: c, r: PH.r_earth, ...XZ }).set({ opacity: winOp(t, CUE.row + k * 0.04, FILM.labels.find((l) => l.id === "l-30").t1, 0.3) });
   });
-  S.row = dirM.map((v, i) => v * R * 0.32 + [-dirM[2], 0, dirM[0]][i] * 6.0 + (i === 1 ? 1.5 : 0));   // beside the row, in the empty side of the orbit
+  S.row = dirM.map((v) => v * R * 0.32);                                     // on the row it names
   const ov = winOp(t, CUE.speed0, CUE.speed1);                                // the speed arrow (the spine says "1 km a second")
   const tn = tanAt(th), tip = add(mp, tn, 14), back = add(tip, tn, -2.4), sd = [-tn[2] * 1.2, 0, tn[0] * 1.2];
   vArrow[0].seg(add(mp, tn, PH.r_moon * 2), tip).set({ opacity: ov }); vArrow[1].seg(tip, add(back, sd)).set({ opacity: ov }); vArrow[2].seg(tip, add(back, sd, -1)).set({ opacity: ov });
   S["moon-v"] = tip;
 
-  // change: gravity off: the Moon itself flies on along its straight line (the whole would-be path drawn at once, the
-  // orbit faint); back on: the pull toward Earth, and the Moon drawn back onto its orbit (under the thought-experiment note)
-  const og = t >= CUE.off ? winOp(t, CUE.off, CUE.back + 0.6, 0.3) : 0;
-  freePath.seg(pOff, add(pOff, tanAt(thOff), 48)).set({ opacity: 0.6 * og });
+  // change: gravity off: the Moon itself flies on along its straight line (lit, a trail behind it, the rest of the line
+  // dashed ahead, the orbit faint); back on: the pull toward Earth, the Moon bent back onto its orbit (under the
+  // thought-experiment note; the straight flight stays up meanwhile), then the straight line it now falls below
+  const og = t >= CUE.off ? winOp(t, CUE.off, CUE.back + 0.6, 0.3) : 0, sNow = sOff(Math.min(t, CUE.back));
+  trail.seg(pOff, add(pOff, tOff, sNow)).set({ opacity: og });
+  freePath.seg(add(pOff, tOff, Math.floor(sNow * FREE_DASH) / FREE_DASH), add(pOff, tOff, 48)).set({ opacity: og });   // from a whole dash back: the dashes stay put
+  moonGlow.set({ center: mp, camera, opacity: winOp(t, CUE.off, CUE.back + 1.0, 0.3) });
+  tangent2.seg(mp, add(mp, tanAt(th), 14)).set({ opacity: winOp(t, CUE.back + 1.0, B.why.t0, 0.4) });   // what the spine's "below its straight line" means
   const cb = { e1: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray(), e2: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).toArray() };
   ghostMoon.set({ opacity: 0 });
-  S.free = add(pOff, tanAt(thOff), 20);
+  S.free = add(pOff, tOff, 4);                                                 // early on the line: its label sits under it, behind the Moon
   const op = Math.max(winOp(t, CUE.back, B.why.t0, 0.3), winOp(t, CUE.settle, B.readout.t0, 0.4)), toE = norm(mp.map((v) => -v)), pt = add(mp, toE, 22), pb = add(pt, toE, -3.0), ps = [-toE[2] * 1.6, 0, toE[0] * 1.6];
   pull[0].seg(add(mp, toE, PH.r_moon * 2), pt).set({ opacity: op }); pull[1].seg(pt, add(pb, ps)).set({ opacity: op }); pull[2].seg(pt, add(pb, ps, -1)).set({ opacity: op });
   S.pull = add(mp, toE, 20);                                                    // at the arrow's head: the label names the pull, not its shaft
@@ -175,34 +193,41 @@ window.seek = function (t) {
     const tail = add(ap, dirM, 3.0), head = add(ap, dirM, 0.25), hb = 0.7;
     pull[0].seg(tail, head).set({ opacity: ow }); pull[1].seg(head, add(add(head, dirM, hb), [0, hb * 0.6, 0])).set({ opacity: ow }); pull[2].seg(head, add(add(head, dirM, hb), [0, -hb * 0.6, 0])).set({ opacity: ow });
   }
-  const r0 = PH.r_earth + 0.6, HP = 4.5, prOf = (r) => add(dirM.map((v) => v * r), [0, -HP * (r0 / r) ** 2, 0]);
+  const r0 = PH.r_earth + 0.6, HP = 8.0, prOf = (r) => add(dirM.map((v) => v * r), [0, -HP * (r0 / r) ** 2, 0]);
   const uP = E.inout2(seg(t, CUE.ruler, CUE.weak)), rU = r0 * Math.pow(R / r0, uP), opP = t >= CUE.ruler ? orl : 0;
   prof.forEach((sg, k) => {
     const ra = r0 * Math.pow(R / r0, k / NPROF), rb = Math.min(rU, r0 * Math.pow(R / r0, (k + 1) / NPROF));
     sg.seg(prOf(ra), prOf(Math.max(ra, rb))).set({ opacity: rb > ra ? opP : 0 });
   });
-  profHead.set({ center: prOf(rU), camera, opacity: opP * (uP > 0.001 ? 1 : 0) });
   S.prof = prOf(r0 * 1.6);
 
-  // whoa (and frame 0): the straight line, the ghost where it would be, the gap ×1,000,000
-  const om = isHook ? 1 : winOp(t, CUE.min0, B.takeaway.t0, 0.4);
+  // whoa (and frame 0): the straight line, the ghost where it would be, the gap ×1,000,000; under the end card they
+  // step back, and come up again for the loop to frame 0
+  const endK = E.out3(seg(t, FILM.endCard, FILM.endCard + 0.6)) * (1 - E.inout2(seg(t, FILM.dur - 0.8, FILM.dur - 0.1)));
+  const om = (isHook ? 1 : winOp(t, CUE.min0, B.takeaway.t0, 0.4)) * (1 - 0.8 * endK);
   tangent.seg(add(F.p0, tanAt(F.th0), -0.9), add(F.p0, tanAt(F.th0), 1.1)).set({ opacity: om });
   gap.seg(F.g, F.drawn).set({ opacity: dt > 2 ? om : 0 });
   ghostAt.arc({ center: F.g, r: PH.r_moon, ...cb }).set({ opacity: om * 0.9 });
   // the gap runs centre to centre (the line through the ghost's centre to the Moon's), as the apple's drop runs
   // from the line to the apple, so the two 4.9 m falls are the same length on screen; its label sits at its middle
   S.ghost = add(F.p0, tanAt(F.th0), 0.85); S.gap = F.g.map((v, i) => (v + F.drawn[i]) / 2);
-  // the apple beside it: 4.9 m in its first second, drawn at the same ×1,000,000 (the same length as the gap)
+  // the apple beside it: 4.9 m in its first second, drawn at the same ×1,000,000 (the same length as the gap); its
+  // second runs on the Moon's clock (×8: a blink beside the Moon's minute), so it waits on the line first
   const fdir = norm(F.drawn.map((v, i) => v - F.g[i]));
-  const a0p = add(F.g, tanAt(F.th0), 0.5), ud = E.in2(seg(t, CUE.drop, CUE.drop + 1.0)), oa = isHook ? 0 : winOp(t, CUE.drop, B.takeaway.t0 - 0.3, 0.3);
+  const a0p = add(F.g, tanAt(F.th0), 0.5), ud = E.in2(clamp01(CLK.moon.tau(t) - TAU_DROP)), oa = isHook ? 0 : winOp(t, CUE.drop - 0.5, B.takeaway.t0 - 0.3, 0.3);
   const aNow = add(a0p, fdir, (PH.drop_1m * PH.mag) / 1000 / PH.u * ud);   // 4.9 m × 1,000,000 = 0.49 units
   apple2.set({ center: aNow, camera, opacity: oa });
-  dropLine.seg(a0p, aNow).set({ opacity: oa * (ud > 0.02 ? 0.8 : 0) });
+  dropLine.seg(a0p, aNow).set({ opacity: ud > 0.02 ? oa : 0 });
   S.apple2 = aNow; S.apple2end = add(a0p, fdir, (PH.drop_1m * PH.mag) / 1000 / PH.u);   // where the apple lands: its label hangs below
-  // takeaway: the fall all the way round: a dozen short straight lines, each leaving the orbit
-  tanTicks.forEach((k, i) => { const a = (i / 12) * 2 * Math.PI, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 13)).set({ opacity: 0.9 * winOp(t, CUE.settle + 0.1 + i * 0.08, B.readout.t0, 0.5) }); });
-  // the orbit: faint while gravity is off; gone through the swing from the side view into the whoa (it would slice the frame)
-  orbitRing.set({ opacity: (1 - 0.75 * winOp(t, CUE.off, CUE.back, 0.3)) * (1 - winOp(t, CUE.weak + 0.6, CUE.min0 - 0.2, 0.4)) });
+  // takeaway: the straight lines the Moon keeps falling away from: a fan of them from its last dozen places on its
+  // orbit (0.8° apart), moving on with it
+  tanTicks.forEach((k, i) => { const a = th - (i * 0.8 * Math.PI) / 180, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 13)).set({ opacity: 0.9 * winOp(t, CUE.settle + 0.1 + i * 0.08, B.readout.t0, 0.5) }); });
+  // the orbit: faint while gravity is off; gone through the swing from the side view into the whoa (it would slice the
+  // frame); dimmed under Newton's ruler and curve (lilac on lilac) and while its near arc sweeps up behind the caption in
+  // the pull back; gone under the end card, back for the loop to frame 0
+  const endOut = E.in3(seg(t, FILM.endCard - 0.3, FILM.endCard + 0.3)) * (1 - E.inout2(seg(t, FILM.dur - 0.8, FILM.dur - 0.1)));
+  orbitRing.set({ opacity: (1 - 0.75 * winOp(t, CUE.off, CUE.back, 0.3)) * (1 - winOp(t, CUE.weak + 0.6, CUE.min0 - 0.2, 0.4))
+    * (1 - 0.7 * winOp(t, CUE.ruler, CUE.weak + 0.6, 0.4)) * (1 - 0.7 * winOp(t, CUE.tk + 2.5, CUE.tk + 3.1, 0.2)) * (1 - endOut) });
   // the readout: light leaves Earth and reaches the Moon's distance in 1.3 s of film, its real speed (badged)
   const lr = PH.r_earth + (R + 1.6 - PH.r_earth) * clamp01((t - CUE.ring) / 1.3);
   lightRing.arc({ r: lr, ...XZ }).set({ opacity: (t >= CUE.ring ? 1 : 0) * (1 - E.in3(seg(t, FILM.endCard - 0.3, FILM.endCard + 0.3))) });

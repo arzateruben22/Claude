@@ -118,7 +118,7 @@ CAM = {
             key(A("vo04:ago"), target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.15, fy=0.3, ease="sine"),
             *ZOOM_OUT,
             key(A("vo04:Calling"), **dict(SUNF, dist=380.0, el=10.0 * u_why(A("vo04:Calling")), az=8.0 * u_why(A("vo04:Calling"))), ease="sine"),
-            key(A("vo04:thousand"), **dict(SUNF, dist=345.0, el=10.0 * u_why(A("vo04:thousand")), az=8.0 * u_why(A("vo04:thousand"))), ease="sine"),
+            key(A("vo04:thousand"), **dict(SUNF, dist=358.0, el=10.0 * u_why(A("vo04:thousand")), az=8.0 * u_why(A("vo04:thousand"))), ease="sine"),
             key(t_melt0, **dict(SUNF, dist=400.0, el=10.0, az=8.0), ease="sine"),
             key(t_j0, **dict(SUNF, dist=395.0, el=12.0, az=12.0), ease="sine"),
             # one star among many: a slow orbit through the star field (the parallax), a push that keeps the 1,000×
