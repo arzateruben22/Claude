@@ -5,12 +5,13 @@ sheet.json. Every moment hangs on a beat or a spoken word; every physical number
 
 Two places, one cut between them (on the change's section sound):
 - "sky": the Moon and the Sun at their true size and distance ratios (Moon 1737 km at 384,400 km, Sun 696,000 km at
-  149.6 million km), scaled down together, so from the camera at Earth they really look the same size. The camera then
-  moves sideways and up, and the depth shows.
+  149.6 million km), scaled down together, so from the camera at Earth they really look the same size. On "But" a cut
+  to "wide" (beside the Sun, the Moon moved next to it at its true size: 400 times narrower), on "and" a cut to "side"
+  (the line seen square-on: 400 times farther).
 - "sun": the Sun 100 units in radius (1 unit = 6,963 km) at true scale with 109 Earths across its face, a big sunspot
   with an Earth in it, the Peloponnese as a dot, the Sun melted down into beads (1 dot = 200 Earths, badged), then
-  the episode's one scale jump: the whole place shrinks ×2,000 until the Sun is a dot inside the outline of the
-  largest known stars (over 1,000 times wider).
+  the episode's one scale jump: the whole place shrinks ×850 until the Sun is a dot among stars, inside the outline of
+  the largest known stars (over 1,000 times wider).
 """
 import json
 import math
@@ -52,7 +53,8 @@ SEP = 0.0080                               # the pair's angular offset either si
 assert N_ACROSS == 109 and abs(VOL - 1.30e6) < 0.02e6, (N_ACROSS, VOL)
 
 t_cut = B["change"]["t0"]
-t_row0, t_row1 = A("vo03:Line"), A("vo03:nine")
+t_wide, t_side = A("vo02:But"), A("vo02:and#2")   # "wider" beside the Sun, "farther" from the side
+t_row0, t_row1 = A("vo03:Line"), A("vo03:Your", -0.9)   # "nine" is said about 17.6 s (the aligner bunched the spelled number at its start)
 t_spot = A("vo03:sunspot")
 t_pelo = A("vo04:Greece")
 t_melt0, t_melt1 = A("vo05:Melt"), A("vo05:fill")
@@ -64,33 +66,48 @@ SHRINK = 1.0 / 850.0                       # the jump: the "sun" place shrinks �
 # ── camera (rig.js keys; one per place) ─────────────────────────────────────
 key = lambda t, **k: {"t": round(t, 4), "fx": 0.5, **{"fov": 24, **k}}
 mz = D_MOON_KM * SKY_K
-SKY0 = dict(target=[0, 0, -mz], dist=mz, el=0.0, az=0.0, fy=0.36, fov=3.3)   # at Earth, looking at the pair (a long lens)
+SKY0 = dict(target=[0, 0, -mz], dist=mz, el=0.0, az=0.0, fy=0.40, fov=3.3)   # at Earth, looking at the pair (a long lens; below the title)
+# "wide": 78 units off the Sun (about half the frame's width), the Moon moved beside it at its true size (1 px, ringed):
+# "four hundred times wider". The Sun sits left of centre so the Moon and its label stay inside the safe box.
+SUN_AT = [D_SUN_KM * SKY_K * math.tan(SEP), 0.0, -D_SUN_KM * SKY_K]
+WIDE = dict(target=SUN_AT, dist=78.0, el=0.0, az=0.0, fx=0.36, fy=0.33, fov=24)
 # "side": the same place seen square-on, from far out to the side, rolled so the line runs from Earth (lower left,
-# above the spine) to the Sun (upper right): the depth the twins hid. A cut at "But", then a slow drift.
+# above the spine) to the Sun (upper right): the depth the twins hid. A cut on "and" ("four hundred times farther"),
+# then a slow drift.
 # (the roll turns the frame offset too: fx, fy are chosen so the midpoint lands at x 0.5, y 0.33 after it)
 SIDE = dict(target=[0, 0, -D_SUN_KM * SKY_K * 0.5], dist=4660.0, el=12.0, az=90.0, roll=-40.0, fx=0.6943, fy=0.3698, fov=30)
 SUNF = dict(target=[0, 0, 0], dist=420.0, el=0.0, az=0.0, fy=0.33)        # the Sun about 0.29 of the frame's height
 def zoom(ta, tb, pa, pb, n=4):
-    """log-spaced fov keys from pose pa (at ta) to pose pb (at tb): the zoom's magnification grows evenly in time"""
+    """log-spaced fov keys from pose pa (at ta) to pose pb (at tb): the zoom's magnification grows evenly in time. The aim
+    moves in step with the magnification m = 1/(dist·tan(fov/2)), so the subject slides straight to its place instead of
+    swinging through the spine and the caption (a plain lerp moves the aim early, while m is still small)"""
+    ltan = lambda p: math.log(math.tan(math.radians(p["fov"]) / 2))
+    ma, mb = 1 / (pa["dist"] * math.exp(ltan(pa))), 1 / (pb["dist"] * math.exp(ltan(pb)))
     out = []
     for i in range(1, n + 1):
         u = i / n
         e = u * u * (3 - 2 * u)                     # a smoothstep on log fov, so the move starts and lands gently
         lerp = lambda a, b: a + (b - a) * e
-        out.append(key(ta + (tb - ta) * u, target=[lerp(pa["target"][j], pb["target"][j]) for j in range(3)],
-                       dist=math.exp(lerp(math.log(pa["dist"]), math.log(pb["dist"]))), el=lerp(pa["el"], pb["el"]), az=lerp(pa["az"], pb["az"]),
-                       fov=math.degrees(2 * math.atan(math.exp(lerp(math.log(math.tan(math.radians(pa["fov"]) / 2)), math.log(math.tan(math.radians(pb["fov"]) / 2)))))),
-                       fy=lerp(pa["fy"], pb["fy"]), ease="lin"))
+        dist, lt = math.exp(lerp(math.log(pa["dist"]), math.log(pb["dist"]))), lerp(ltan(pa), ltan(pb))
+        m = 1 / (dist * math.exp(lt))
+        w = 1 - (1 - e) * ma / m if mb > ma else e * mb / m   # the aim's share of the way (zooming in, then out)
+        out.append(key(ta + (tb - ta) * u, target=[pa["target"][j] + (pb["target"][j] - pa["target"][j]) * w for j in range(3)],
+                       dist=dist, el=lerp(pa["el"], pb["el"]), az=lerp(pa["az"], pb["az"]),
+                       fov=math.degrees(2 * math.atan(math.exp(lt))), fy=lerp(pa["fy"], pb["fy"]), ease="lin"))
     return out
 ROWV = dict(SUNF, dist=268.0, fy=0.27, fov=24.0)
 SPOTV = dict(target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.25, fy=0.3)
 SPOTV2 = dict(SPOTV, fov=1.15)
 ZOOM_IN = zoom(t_spot - 0.3, t_spot + 1.0, ROWV, SPOTV, n=6)
 ZOOM_OUT = zoom(A("vo04:ago"), A("vo04:said"), SPOTV2, dict(SUNF, dist=405.0, fov=24.0), n=8)
+# the why beat: a slow push while Anaxagoras is told and the ring grows (the el/az drift to the melt runs on through it)
+u_why = lambda t: (t - A("vo04:said")) / (t_melt0 - A("vo04:said"))
 CAM = {
-    "sky": [key(0.0, **SKY0), key(B["normal"]["t0"], **SKY0),
-            key(t_end, **dict(SKY0, dist=mz * 1.02)), key(t_end + 2.6, **SKY0, ease="inout3")],
-    "side": [key(A("vo02:But"), **SIDE), key(t_cut, **dict(SIDE, dist=4480.0, az=92.0), ease="sine")],
+    # the hook: a slow push on the twins from frame 0 (frame 0 is SKY0, so the loop holds); the end card comes back to it
+    "sky": [key(0.0, **SKY0), key(t_wide - 0.05, **dict(SKY0, fov=3.0), ease="sine"),
+            key(t_end + 0.3, **dict(SKY0, dist=mz * 1.02)), key(t_end + 2.6, **SKY0, ease="inout3")],
+    "wide": [key(t_wide, **WIDE), key(t_side, **dict(WIDE, dist=75.0), ease="sine")],
+    "side": [key(t_side, **SIDE), key(t_cut, **dict(SIDE, dist=4480.0, az=92.0), ease="sine")],
     # the row: push in while the Earths are counted (each Earth about 7 px across), then a long lens on the sunspot near
     # the lower limb (dark sky under it for the text), from the same spot in front of the Sun
     # (the Sun about 0.78 of the frame's width at dist 270, each Earth about 8 px; its lower limb stays above the spine)
@@ -100,52 +117,73 @@ CAM = {
             *ZOOM_IN,
             key(A("vo04:ago"), target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.15, fy=0.3, ease="sine"),
             *ZOOM_OUT,
+            key(A("vo04:Calling"), **dict(SUNF, dist=380.0, el=10.0 * u_why(A("vo04:Calling")), az=8.0 * u_why(A("vo04:Calling"))), ease="sine"),
+            key(A("vo04:thousand"), **dict(SUNF, dist=345.0, el=10.0 * u_why(A("vo04:thousand")), az=8.0 * u_why(A("vo04:thousand"))), ease="sine"),
             key(t_melt0, **dict(SUNF, dist=400.0, el=10.0, az=8.0), ease="sine"),
             key(t_j0, **dict(SUNF, dist=395.0, el=12.0, az=12.0), ease="sine"),
-            key(t_end, **dict(SUNF, dist=390.0, el=14.0, az=15.0), ease="sine")],
+            # one star among many: a slow orbit through the star field (the parallax), a push that keeps the 1,000×
+            # outline's lower edge above the readout's spine (dist ≥ 372 at fy 0.31)
+            key(B["readout"]["t0"], **dict(SUNF, dist=380.0, el=13.5, az=25.0, fy=0.31), ease="sine"),
+            key(t_end, **dict(SUNF, dist=372.0, el=14.0, az=30.0, fy=0.31), ease="sine")],
 }
-SHOTS = [{"at": 0.0, "name": "sky"}, {"at": A("vo02:But"), "name": "side"}, {"at": t_cut, "name": "sun"}, {"at": t_end, "name": "sky"}]
+for shot, keys in CAM.items():           # the bible's arc limit: ≤ 1.5° a second, in azimuth and in elevation
+    for a, b in zip(keys, keys[1:]):
+        for k in ("az", "el"):
+            rate = abs(b[k] - a[k]) / (b["t"] - a["t"])
+            assert rate <= 1.5 + 1e-9, f"{shot}: {k} turns {rate:.2f}°/s between {a['t']:.2f} and {b['t']:.2f} s (keep ≤ 1.5°/s)"
+# the end card's cut lands 0.3 s after the card starts, under its scrim (no bright frame under the arriving title)
+SHOTS = [{"at": 0.0, "name": "sky"}, {"at": t_wide, "name": "wide"}, {"at": t_side, "name": "side"}, {"at": t_cut, "name": "sun"},
+         {"at": round(t_end + 0.3, 4), "name": "sky"}]
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-sun-h", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1, "shot": "sky"},
-    {"id": "l-moon-h", "text": "Moon", "kind": "body", "anchor": "skymoon", "t0": 0.0, "t1": B["normal"]["t0"], "side": -1, "shot": "sky"},
-    {"id": "l-sun-s", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": A("vo02:Sun"), "t1": A("vo02:But"), "side": 1, "shot": "sky"},
-    {"id": "l-moon-s", "text": "Moon", "kind": "body", "anchor": "skymoon", "t0": A("vo02:Moon"), "t1": A("vo02:But"), "side": -1, "shot": "sky"},
-    {"id": "l-sun-x", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": A("vo02:But") + 0.2, "t1": t_cut, "side": -1, "shot": "side"},
-    {"id": "l-you", "text": "Earth and Moon", "kind": "body", "anchor": "you", "t0": A("vo02:But") + 0.6, "t1": t_cut, "side": 1, "shot": "side"},
-    {"id": "l-row", "text": "109 Earths", "kind": "body", "anchor": "row", "t0": t_row1, "t1": A("vo03:Your"), "side": 1, "shot": "sun"},
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "spotearth", "t0": round(t_spot + 0.1, 4), "t1": B["why"]["t0"] + 1.0, "side": 1, "shot": "sun"},
-    {"id": "l-spot", "text": "a big sunspot", "kind": "star", "anchor": "spot", "t0": t_spot, "t1": B["why"]["t0"] + 1.0, "side": -1, "shot": "sun"},
-    {"id": "l-pelo", "text": "southern Greece", "kind": "body", "anchor": "pelo", "t0": t_pelo, "t1": A("vo04:By"), "side": 1, "shot": "sun"},
-    {"id": "l-x7000", "text": "×7,000", "kind": "light", "anchor": "x7000", "t0": A("vo04:thousand"), "t1": t_melt0, "side": 1, "shot": "sun"},
+    # the twins keep their names through the push (one pair, no blink), until the cut
+    {"id": "l-sun-h", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": 0.0, "t1": t_wide, "side": 1, "shot": "sky"},
+    {"id": "l-moon-h", "text": "Moon", "kind": "body", "anchor": "skymoon", "t0": 0.0, "t1": t_wide, "side": -1, "shot": "sky"},
+    # the wide shot: the Moon's label hangs above-right of its ring (clear of the Sun's limb)
+    {"id": "l-sun-w", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": round(t_wide + 0.2, 4), "t1": t_side, "side": -1, "shot": "wide"},
+    {"id": "l-moon-w", "text": "Moon", "kind": "body", "anchor": "wmoon", "t0": round(t_wide + 0.6, 4), "t1": t_side, "side": 1, "shot": "wide"},
+    {"id": "l-sun-x", "text": "Sun", "kind": "star", "anchor": "skysun", "t0": round(t_side + 0.2, 4), "t1": t_cut, "side": -1, "shot": "side"},
+    # below Earth: the sight lines leave it up and to the right
+    {"id": "l-you", "text": "Earth and Moon", "kind": "body", "anchor": "you", "t0": round(t_side + 0.6, 4), "t1": t_cut, "side": 1, "v": "below", "shot": "side"},
+    {"id": "l-row", "text": "109 Earths", "kind": "body", "anchor": "row", "t0": t_row1, "t1": A("vo03:inside"), "side": 1, "shot": "sun"},
+    # the sunspot's pills arrive as the zoom lands (not riding its fastest part)
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "spotearth", "t0": round(t_spot + 1.1, 4), "t1": B["why"]["t0"] + 1.0, "side": 1, "shot": "sun"},
+    {"id": "l-spot", "text": "a big sunspot", "kind": "star", "anchor": "spot", "t0": round(t_spot + 1.0, 4), "t1": B["why"]["t0"] + 1.0, "side": -1, "shot": "sun"},
+    {"id": "l-pelo", "text": "southern Greece", "kind": "body", "anchor": "pelo", "t0": t_pelo, "t1": A("vo04:thousand"), "side": 1, "shot": "sun"},
+    {"id": "l-x7000", "text": "×7,000", "kind": "star", "anchor": "x7000", "t0": A("vo04:thousand"), "t1": round(t_melt0 - 0.45, 4), "side": 1, "shot": "sun"},
     {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:giant"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
-    {"id": "l-giant", "text": "largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": B["readout"]["t0"], "side": 1, "shot": "sun"},
+    # inside the outline, below and left of its lower-right arc (the pill never lies across the line it names)
+    {"id": "l-giant", "text": "largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
     # the readout: Earth's orbit drawn to the same scale (1 AU = about 215 Sun radii), inside the giants' outline
-    {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": t_end, "side": -1, "shot": "sun"},
+    {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": round(t_end - 0.45, 4), "side": -1, "shot": "sun"},
 ]
 TITLE_T1 = B["normal"]["t0"] - 0.5
+# A note leaves before the next one in its slot arrives (a note's fade is 0.3 s): nothing slides over an outgoing plate
 BADGES = [
-    {"id": "b-pair", "text": "true sizes, shown side by side", "t0": round(TITLE_T1 + 0.45, 4), "t1": A("vo02:But"), "slot": "tr"},
-    {"id": "b-sky", "text": "true distances, shrunk", "t0": A("vo02:But"), "t1": t_cut, "slot": "tl"},   # the side view
-    {"id": "b-dots", "text": "dots enlarged", "t0": round(A("vo02:But") + 0.5, 4), "t1": t_cut, "slot": "tl"},   # after the first note has settled (they stack)
-    {"id": "b-true", "text": "true scale", "t0": t_cut, "t1": t_pelo, "slot": "tr"},
-    {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": t_melt0, "slot": "tr"},
-    {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": round(t_j0 + 0.7, 4), "slot": "tr"},
-    {"id": "b-illus", "text": "illustration", "t0": A("vo05:Some"), "t1": t_end, "slot": "tr"},
+    {"id": "b-pair", "text": "true sizes, shown side by side", "t0": 0.0, "t1": round(t_wide - 0.3, 4), "slot": "tr"},   # on frame 0 (the loop point), above the title
+    {"id": "b-wide", "text": "true sizes, not distances", "t0": t_wide, "t1": round(t_side - 0.3, 4), "slot": "tr"},   # the Moon moved beside the Sun
+    {"id": "b-sky", "text": "true distances, shrunk", "t0": t_side, "t1": round(t_cut - 0.3, 4), "slot": "tl"},   # the side view
+    {"id": "b-dots", "text": "dots enlarged", "t0": round(t_side + 0.5, 4), "t1": round(t_cut - 0.6, 4), "slot": "tl"},   # after the first note has settled; the lower note leaves first
+    {"id": "b-true", "text": "true scale", "t0": t_cut, "t1": round(t_pelo - 0.3, 4), "slot": "tr"},
+    {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": A("vo04:thousand"), "slot": "tr"},   # until the ring has grown from the dot
+    {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": round(t_j0 + 0.1, 4), "slot": "tr"},
+    {"id": "b-illus", "text": "illustration · star spacing not to scale", "t0": A("vo05:giant"), "t1": round(t_end - 0.45, 4), "slot": "tr"},
+    # the why beat's card (narrow, so it never meets the right-hand notes: no stacking, no hop)
+    {"id": "b-anax", "text": "Anaxagoras\nAthens, 5th century BCE", "t0": A("vo04:Athens"), "t1": A("vo04:impiety"), "slot": "tl", "maxW": 0.6},
 ]
 COUNTERS = [
     {"id": "c-hook", "label": "Earths inside", "text": "?", "t0": 0.0, "t1": B["normal"]["t0"]},
-    {"id": "c-400", "label": "wider · farther", "text": "400× · 400×", "t0": A("vo02:four"), "t1": t_cut},
-    {"id": "c-row", "label": "Earths across", "fmt": "count", "from": 1, "to": N_ACROSS, "c0": t_row0, "c1": t_row1, "t0": t_row0, "t1": t_spot - 0.2},   # the spine rests over the bright close-up
+    {"id": "c-400", "label": "wider · farther", "text": "400× · 400×", "t0": A("vo02:four"), "t1": round(t_cut - 0.4, 4)},
+    {"id": "c-row", "label": "Earths across", "fmt": "count", "from": 1, "to": N_ACROSS, "c0": t_row0, "c1": t_row1, "t0": t_row0, "t1": round(t_spot - 0.75, 4)},   # gone before the zoom fills the frame with white
     {"id": "c-guess", "label": "Anaxagoras · the Sun is bigger than", "text": "southern Greece", "t0": A("vo04:bigger"), "t1": A("vo04:By")},
-    {"id": "c-7000", "label": "bigger, yes · wider by a factor of", "text": "7,000", "t0": A("vo04:By"), "t1": t_melt0},
-    {"id": "c-melt", "label": "Earths inside, by volume", "fmt": "count", "from": 0, "to": round(VOL, -5), "c0": t_melt0, "c1": t_melt1, "t0": t_melt0, "t1": A("vo05:Some")},
+    {"id": "c-7000", "label": "bigger, yes · wider by a factor of", "text": "7,000", "t0": A("vo04:seven"), "t1": t_melt0},
+    {"id": "c-melt", "label": "Earths inside, by volume", "fmt": "count", "from": 0, "to": round(VOL, -5), "c0": t_melt0, "c1": t_melt1, "t0": t_melt0, "t1": round(t_j0 + 0.6, 4)},   # leaves as the jump starts
     {"id": "c-giant", "label": "wider than the Sun", "text": ">1,000×", "t0": A("vo05:Some"), "t1": B["takeaway"]["t0"]},
     {"id": "c-dwarf", "label": "the Sun's class", "text": "G2V · dwarf", "t0": A("vo06:dwarf"), "t1": B["readout"]["t0"]},
     {"id": "c-read-x", "label": "light time · across the Sun", "text": "5 s", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:Sun#2") - 0.05, 4)},
-    {"id": "c-read-e", "label": "light time · Sun to Earth", "text": "8 min 20 s", "read": True, "t0": A("vo07:Sun#2"), "t1": t_end},
+    {"id": "c-read-e", "label": "light time · Sun to Earth", "text": "8 min 20 s", "read": True, "t0": A("vo07:Sun#2"), "t1": round(t_end - 0.45, 4)},   # gone before the end card
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
@@ -154,14 +192,21 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05), "y": 0.17}   # below the hook's note
 END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
        "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c18; NASA)
 
-CUE = {"side": A("vo02:But"), "orbit": A("vo07:Sun#2"), "x0": A("vo04:By"), "x1": A("vo04:thousand"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
-POSTER = A("vo05:wider", 0.8)
-# captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["the Sun", "the full Moon", "look the same size."],
+CUE = {"wide": t_wide, "side": t_side, "orbit": A("vo07:Sun#2"), "light": A("vo07:Light"), "twenty": A("vo07:twenty"), "x0": A("vo04:Bigger#2"), "x1": A("vo04:thousand"),
+       "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
+POSTER = round(t_melt1 + 0.5, 4)           # the filled bead Sun with "1,300,000"
+# captions: the aligner didn't hear the spelled numbers and bunched their words at the number's start; the highlight
+# takes the word starts measured from the voice's envelope (film seconds; after the last anchor lookup, before glue)
+HEARD = {"vo02": {"four": 9.35, "hundred": 9.6}, "vo03": {"hundred": 17.1, "and": 17.4, "nine.": 17.55}, "vo04": {"thousand.": 37.65}}
+for ln in f.lines:
+    for w, ts in HEARD.get(ln["id"], {}).items():
+        next(x for x in ln["words"] if x["w"] == w)["start"] = round(ts - ln["t"], 3)
+# number phrases and fixed phrases stay on one line
+glue(f, {"vo01": ["a million"], "vo02": ["the Sun", "the full Moon", "look the same size."],
          "vo03": ["would fit inside", "one big sunspot."],
          "vo04": ["a fiery stone,", "than southern Greece."],
          "vo05": ["a thousand"], "vo06": ["the Sun", "dwarf stars."],

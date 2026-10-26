@@ -2,15 +2,16 @@ import * as THREE from "three";
 // Light Minute No. 005, "How big is the Sun" (films/channels/space/ep05). The picture as a pure function of t.
 //
 // Two places and one cut. "sky": the Moon and the Sun at their true size and distance ratios (shrunk together), seen
-// from Earth through a long lens: twins. The camera swings out and the depth shows: one is 400 times wider and 400
-// times farther. "sun": the Sun at true scale against Earths (109 across its face), a big sunspot with an Earth in
-// it, the Peloponnese as a dot, the Sun melted into beads (1 dot = 200 Earths), and the one scale jump: everything
-// shrinks ×3,400 until the Sun is a dot inside the outline of the largest known stars. The end card cuts back to the
-// sky view, so a replay loops.
+// from Earth through a long lens: twins. Then "wide": beside the Sun, the Moon moved next to it at its true size (one
+// is 400 times wider), and "side": the line seen square-on (400 times farther). "sun": the Sun at true scale against
+// Earths (109 across its face), a big sunspot with an Earth in it, the Peloponnese as a dot, the Sun melted into beads
+// (1 dot = 200 Earths), and the one scale jump: everything shrinks ×3,400 until the Sun is a dot among stars, inside
+// the outline of the largest known stars; the readout sends its light out to Earth's orbit. The end card cuts back to
+// the sky view, so a replay loops.
 // Set: ../set (sky, star, planet with earthSurface, moon.js, beacon, rig, look, motif). Kit: hud, front.
 import { stage, seg, E, clamp01, rng } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
-import { ring, segment, shell, probes } from "cinema/sci/front.js";
+import { ring, segment, probes } from "cinema/sci/front.js";
 import { createSky } from "../set/sky.js";
 import { createStar } from "../set/star.js";
 import { createPlanet, earthSurface } from "../set/planet.js";
@@ -44,15 +45,19 @@ scene.add(sky.group);
 const K = PH.sky_k, G = { sky: new THREE.Group(), sun: new THREE.Group() };
 scene.add(G.sky, G.sun);
 const dM = PH.d_moon_km * K, dS = PH.d_sun_km * K;
-const MOON_AT = [-dM * Math.tan(PH.sep), 0, -dM], SUN_AT = [dS * Math.tan(PH.sep), 0, -dS];
+const MOON_AT = [-dM * Math.tan(PH.sep), 0, -dM], SUN_AT = [dS * Math.tan(PH.sep), 0, -dS], rS = PH.r_sun_km * K;
+const MOON_W = [SUN_AT[0] + rS * 1.6, 0, SUN_AT[2]];                      // "wide": the Moon moved beside the Sun (badged)
 const skyMoon = createPlanet({ radius: PH.r_moon_km * K, surface: moonSurface({ width: W >= 1000 ? 2048 : 1024, seed: 9 }), rimDay: 0.0, rimNight: 0.15, segments: 96 });
 skyMoon.group.position.fromArray(MOON_AT);
 const skySun = createStar({ radius: PH.r_sun_km * K, intensity: 1.15, corona: 1.5, coronaI: 0.3, limb: 0.6, granulation: 0.2 });   // a face, not a blown disc: the twins read as twins
 skySun.set({ center: SUN_AT });
-const moonDot = createBeacon({ color: hdr("ice", 1.0), px: 9, core: 0.5 }), earthDot = createBeacon({ color: hdr("ice", 1.1), px: 10, core: 0.5 });
-const sunMark = createBeacon({ color: hdr("text", 1.6), px: 14, core: 0.4 });   // the Sun from the side (a 4 px disc at this scale)
+// the markers' colours stay on the palette: ice for Earth and the Moon, a neutral near-white for the Sun (the text
+// token through ACES reads blue-violet)
+const moonDot = createBeacon({ color: line("ice", 1, 1.3), px: 9, core: 0.5 }), earthDot = createBeacon({ color: line("ice", 1, 1.3), px: 10, core: 0.5 });
+const sunMark = createBeacon({ color: hdr("#EEF0F4", 1.6), px: 14, core: 0.4 });   // the Sun from the side (a 4 px disc at this scale)
 const cone = [segment({ color: C.teal, width: 1.6, opacity: 0 }), segment({ color: C.teal, width: 1.6, opacity: 0 })];
-G.sky.add(skyMoon.group, skySun.group, moonDot.mesh, earthDot.mesh, sunMark.mesh, ...cone.map((c) => c.mesh));
+const moonRing = ring({ color: line("ice", 0.9), width: 2.2, opacity: 0 });   // "wide": marks the 1 px Moon (a glow would read as its size)
+G.sky.add(skyMoon.group, skySun.group, moonDot.mesh, earthDot.mesh, sunMark.mesh, moonRing.mesh, ...cone.map((c) => c.mesh));
 
 // ── "sun": the Sun at true scale (100 units = 696,000 km) ───────────────────
 const world = new THREE.Group();                                          // shrinks in the jump
@@ -69,28 +74,34 @@ world.add(row);
 const m4 = new THREE.Matrix4();
 const SD = PH.spot_dir, SP = SD.map((v) => v * 100.15);
 const qSpot = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...SD));
-const spotMat = new THREE.MeshBasicMaterial({ color: 0x050608, transparent: true, opacity: 0 });
-const penMat = new THREE.MeshBasicMaterial({ color: 0x3a3b44, transparent: true, opacity: 0 });
-const spot = new THREE.Mesh(new THREE.CircleGeometry(PH.spot_r, 48), spotMat), pen = new THREE.Mesh(new THREE.CircleGeometry(PH.spot_r * 1.6, 48), penMat);
-spot.position.fromArray(SD.map((v) => v * 100.3)); pen.position.fromArray(SD.map((v) => v * 100.2));
-spot.quaternion.copy(qSpot); pen.quaternion.copy(qSpot);
-world.add(pen, spot);
+// the sunspot: one disc, a dark umbra in a grey penumbra with faint radial filaments, soft edges feathered into the
+// face (the radii stay the umbra's, spot_r, and the penumbra's, 1.6 spot_r: true scale)
+const spotMat = new THREE.ShaderMaterial({
+  uniforms: { uOp: { value: 0 }, uR: { value: PH.spot_r }, uU: { value: new THREE.Color(0x050608) }, uP: { value: new THREE.Color(0x3a3b44) } },
+  vertexShader: "varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+  fragmentShader: "uniform float uOp, uR; uniform vec3 uU, uP; varying vec2 vP; void main(){ float r = length(vP) / uR, a = atan(vP.y, vP.x);"
+    + " float fil = 1.0 + 0.15 * sin(80.0 * a + 2.5 * sin(11.0 * a) + 1.7 * sin(29.0 * a)), pen = smoothstep(0.88, 1.08, r);"
+    + " gl_FragColor = vec4(mix(uU, uP * fil, pen), (1.0 - smoothstep(1.45, 1.75, r)) * mix(1.0, 0.85, pen) * uOp); }",
+  transparent: true, depthWrite: false,
+});
+const spot = new THREE.Mesh(new THREE.CircleGeometry(PH.spot_r * 1.75, 96), spotMat);
+spot.position.fromArray(SD.map((v) => v * 100.25)); spot.quaternion.copy(qSpot);
+world.add(spot);
 const spotEarth = createPlanet({ radius: RE, surface: earthSurface({ width: 512 }), tilt: 23.44, rimDay: 0.5, rimNight: 0.4, segments: 48 });
 const SE_AT = SD.map((v, i) => v * 100.3 + (i === 2 ? 1.3 : 0));            // in front of the spot's centre as seen (the view looks along -z)
 spotEarth.group.position.fromArray(SE_AT);
 world.add(spotEarth.group);
 const PD = norm([-0.32, -0.22, 0.92]);
 const peloMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0 });
-const pelo = new THREE.Mesh(new THREE.CircleGeometry(1.0, 24), peloMat);   // a dark dot (enlarged: badged)
+const pelo = new THREE.Mesh(new THREE.CircleGeometry(3.0, 32), peloMat);   // a dark dot, big enough to see (enlarged: badged)
 pelo.position.fromArray(PD.map((v) => v * 100.4));
 pelo.quaternion.copy(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...PD)));
-const peloRing = ring({ color: C.ice, width: 2.4, opacity: 0 });
 // "by a factor of about seven thousand": southern Greece's width grown to the Sun's; drawn dark (a line of light
-// would vanish on the white face), over the face, a constant 4 px thick
+// would vanish on the white face), over the face, a constant 7 px thick (the bloom thins a dark line)
 const xMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
 const xRing = new THREE.Mesh(new THREE.RingGeometry(0.9, 1, 160), xMat);
 xRing.renderOrder = 6; xRing.frustumCulled = false;
-world.add(pelo, peloRing.mesh, xRing);
+world.add(pelo, xRing);
 // the melted Sun: 6,500 dots filling the sphere from the bottom (1 dot = 200 Earths, by volume)
 const R6 = rng(17), NP = PH.dots, P = new Float32Array(NP * 3), order = [];
 for (let i = 0; i < NP; i++) { let x, y, z; do { x = R6() * 2 - 1; y = R6() * 2 - 1; z = R6() * 2 - 1; } while (x * x + y * y + z * z > 0.97); P.set([x * 100, y * 100, z * 100], i * 3); order.push(y); }
@@ -107,16 +118,33 @@ const dotMat = new THREE.ShaderMaterial({
 const dots = new THREE.Points(dotGeo, dotMat);
 dots.frustumCulled = false; dots.renderOrder = 4;
 world.add(dots);
-const rim = shell({ color: line("lemon", 0.9), opacity: 0, power: 2.4 });
-world.add(rim.mesh);
-const sunDot = createBeacon({ color: hdr("text", 1.8), px: 10, core: 0.35 });
-G.sun.add(sunDot.mesh);
-const giant = ring({ color: C.lemon, width: 2.6, opacity: 0, dash: 140, duty: 0.6 });
+// the fill level that holds a fraction of the sphere's volume: (h + 1)²(2 − h) / 4 = frac, h from −1 to 1
+const levelFor = (frac) => { let a = -1, b = 1; for (let i = 0; i < 30; i++) { const h = (a + b) / 2; if (((h + 1) ** 2 * (2 - h)) / 4 < frac) a = h; else b = h; } return (a + b) / 2; };
+const limb = ring({ color: line("lemon", 1, 1.2), width: 3, opacity: 0 });   // the melted Sun's outline: a crisp limb, not a glow (dim lemon reads olive)
+const sunDot = createBeacon({ color: hdr("#EEF0F4", 1.6), px: 10, core: 0.5 });   // the Sun as a point: neutral near-white
+G.sun.add(limb.mesh, sunDot.mesh);
+const giant = ring({ color: line("lemon", 1, 1.3), width: 4.0, opacity: 0, dash: 140, duty: 0.75 });   // the subject of "a thousand times wider": the line that wins
 const orbitE = ring({ color: line("lilac", 0.8), width: 2.4, opacity: 0 });        // Earth's orbit, same scale (the readout)
-G.sun.add(giant.mesh, orbitE.mesh);
+// the readout's light: a ping on the Sun on "Light", then a ring of light out to Earth's orbit by "twenty" (Earth on it)
+const lightRing = ring({ color: C.tealHi, width: 3, opacity: 0 });
+const ping = createBeacon({ color: hdr("teal", 1.4), px: 16, core: 0.4 }), earthO = createBeacon({ color: line("ice", 1, 1.3), px: 12, core: 0.5 });
+G.sun.add(giant.mesh, orbitE.mesh, lightRing.mesh, ping.mesh, earthO.mesh);
 const sunProbe = probes(G.sun, 2);
 
 const rig = createRig(FILM.cam);
+
+// one star among many: a field around the Sun in the jump's own units, so it streams in as everything shrinks. It stays
+// clear of the giants' outline (1,000 Sun radii = 100,000 units) from every view the camera takes after the jump, inside
+// the last frame's width, each star smaller and dimmer than the Sun's dot (badged: star spacing not to scale)
+const R5 = rng(31), D2R = Math.PI / 180, VIEWS = [], field = [];
+for (let tv = CUE.j0 + 2.0; tv <= FILM.endCard + 0.3; tv += 0.5) { const P = rig.pose("sun", tv), e = P.el * D2R, a = P.az * D2R; VIEWS.push([Math.cos(e) * Math.sin(a), Math.sin(e), Math.cos(e) * Math.cos(a)]); }
+const offAxis = (p, d) => { const s = p[0] * d[0] + p[1] * d[1] + p[2] * d[2]; return Math.hypot(p[0] - s * d[0], p[1] - s * d[1], p[2] - s * d[2]); };
+while (field.length < 72) {
+  const p = [(R5() * 2 - 1) * 150000, -200000 + 380000 * R5(), (R5() * 2 - 1) * 100000];
+  if (VIEWS.some((d) => offAxis(p, d) < 115000)) continue;
+  const b = createBeacon({ color: hdr("#EEF0F4", 0.45 + 0.4 * R5()), px: 3 + 4 * R5(), core: 0.5 });
+  world.add(b.mesh); field.push({ p, b });
+}
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
@@ -126,11 +154,14 @@ const KIND = { body: { color: "ice", glyph: "●", mark: "none" }, star: { color
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+for (const b of FILM.badges) {
+  const el = hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot, maxW: b.maxW });
+  if (b.text.includes("\n")) el.style.setProperty("--hud-card-size", "2.778vmin");   // a card at the notes' size (the channel's badge size)
+}
 const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true };
-  if (c.fmt === "count") Object.assign(o, { value: (t) => c.from + (c.to - c.from) * E.inout2(seg(t, c.c0, c.c1)), fmt: (v) => commas(v), lit: (v) => v >= c.to - 0.5, minCh: 3 });
+  if (c.fmt === "count") Object.assign(o, { value: (t) => c.from + (c.to - c.from) * E.inout2(seg(t, c.c0, c.c1)), fmt: (v) => commas(v), lit: (v) => v >= c.to - 0.5, minCh: commas(c.to).length });   // the number grows in place
   else Object.assign(o, { value: () => 0, fmt: () => c.text });
   const el = hud.counter(c.id, o);
   el.classList.add(c.read ? "lm-read" : "lm-clock");
@@ -138,7 +169,7 @@ for (const c of FILM.counters) {
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
-  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, shot: L.shot });
+  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, v: L.v, fixed: L.fixed, shot: L.shot });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
