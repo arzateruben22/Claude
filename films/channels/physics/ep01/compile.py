@@ -262,7 +262,8 @@ LABELS = [
 ]
 BADGES = [
     {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": cut("takeaway") - 0.3, "slot": "tr"},
-    {"id": "air", "title": "Air ignored", "text": "With air, the fastest throw lands 0.3 ms after the drop. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
+    {"id": "air", "title": "Air ignored", "text": "With air, the fastest throw lands 0.3 ms after the drop. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr",
+     "maxW": 1.0},   # the card's widest (760 px): the text keeps two lines, so the card clears the "1 m" label under it
 ]
 READOUTS = [
     {"id": "ch-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},     # the throw point: distances are measured from here

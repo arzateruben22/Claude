@@ -40,16 +40,16 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Meet a red blood cell: a dimpled disc, about seven micrometers across. It even pushed out its own nucleus. You have about twenty-five trillion of them: most of your own cells.",
+   "text": "Meet a red blood cell: a dimpled disc, about seven and a half micrometers. It even pushed out its own nucleus. You have about twenty-five trillion of them: most of your own cells.",
    "stars": [
     "red blood cell",
     "nucleus"
    ],
-   "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪmpəld dˈɪsk, ɐbˌaʊt sˈɛvən mˈaɪkɹəʊmˌiːtəz əkɹˈɒs. ɪt ˈiːvən pˈʊʃt ˈaʊt ɪts ˈəʊn njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
+   "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪmpəld dˈɪsk, ɐbˌaʊt sˈɛvən and ɐ hˈɑːf mˈaɪkɹəʊmˌiːtəz . ɪt ˈiːvən pˈʊʃt ˈaʊt ɪts ˈəʊn njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
    "speeds": [
-    0.97,
-    0.97,
-    0.97
+    0.88,
+    0.95,
+    0.95
    ],
    "gaps": [
     0.3,
@@ -57,17 +57,17 @@
    ],
    "silences": [
     [
-     4.3504,
-     4.6504
+     4.7918,
+     5.0918
     ],
     [
-     6.71,
-     7.01
+     7.1624,
+     7.4624
     ]
    ],
    "file": "02.wav",
-   "dur": 10.724,
-   "sha256": "cc36f322671f1ec0e4173649b08380cc2d1f66dd5b01928d9e3e4cde548604ef"
+   "dur": 11.196,
+   "sha256": "e01026854aae98a7fac0679e86930d1be1e91e26fccfee959b3358bf2bedb3ae"
   },
   {
    "id": "vo03",
@@ -98,14 +98,14 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "You'd guess it stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
+   "text": "You'd guess its surface stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
    "stars": [
     "dimples",
     "parachute"
    ],
-   "phonemes": "juːd ɡˈɛs ɪt stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt fˈəʊldz ˌɪntʊ ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
+   "phonemes": "juːd ɡˈɛs ɪts sˈɜːfɪs stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt fˈəʊldz ˌɪntʊ ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
-    0.95,
+    0.92,
     0.94,
     0.92
    ],
@@ -115,27 +115,27 @@
    ],
    "silences": [
     [
-     1.7818,
-     2.0818
+     2.2492,
+     2.5492
     ],
     [
-     3.0045,
-     3.3045
+     3.4718,
+     3.7718
     ]
    ],
    "file": "04.wav",
-   "dur": 8.015,
-   "sha256": "e55aa629dee9ba8c9a9a9f6b92e9b616597f5bbff1f0e3926deb985498ae9a3a"
+   "dur": 8.482,
+   "sha256": "92930fa3b023252cc292e8f7cf8746e59eba8fc8afbcbb7287a16ad7aa44f723"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "The tightest are about three micrometers: less than half its width. And it keeps squeezing through, all its life: about a hundred and twenty days.",
+   "text": "The tightest vessels are about three micrometers: less than half its width. And it keeps squeezing through, all its life: about a hundred and twenty days.",
    "stars": [
     "half its width",
     "a hundred and twenty days"
    ],
-   "phonemes": "ðə tˈaɪtɪst ɑːɹ ɐbˌaʊt θɹˈiː mˈaɪkɹəʊmˌiːtəz : lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt kˈiːps skwˈiːzɪŋ θɹˈuː, ˈɔːl ɪts lˈaɪf: ɐbˌaʊt ɐ hˈʌndɹɪd and twˈɛnti dˈeɪz.",
+   "phonemes": "ðə tˈaɪtɪst vˈɛsəlz ɑːɹ ɐbˌaʊt θɹˈiː mˈaɪkɹəʊmˌiːtəz : lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt kˈiːps skwˈiːzɪŋ θɹˈuː, ˈɔːl ɪts lˈaɪf: ɐbˌaʊt ɐ hˈʌndɹɪd and twˈɛnti dˈeɪz.",
    "speeds": [
     0.88,
     0.88
@@ -145,22 +145,22 @@
    ],
    "silences": [
     [
-     4.0961,
-     4.3961
+     4.5659,
+     4.8659
     ]
    ],
    "file": "05.wav",
-   "dur": 8.817,
-   "sha256": "88f8583020742e7e297ac08144e898b519562e38eb76b1fc9cd0067825fa817f"
+   "dur": 9.287,
+   "sha256": "827b05deb57002351ab900a93b7381318c1ca4f18553e3e23969c891011810aa"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out. That dimple isn't decoration.",
+   "text": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration.",
    "stars": [
-    "smallest vessels"
+    "disc shape"
    ],
-   "phonemes": "stˈɪf sˈɪkəl sˈɛlz kan dʒˈam ðə smˈɔːlɪst vˈɛsəlz, wˌeəɹ ˈɒksɪdʒən ɪz hˈandɪd ˈaʊt. ðat dˈɪmpəl ˌɪzənt dˌɛkəɹˈeɪʃən.",
+   "phonemes": "sˈɪkəl sˈɛlz lˈuːz ðə dˈɪsk ʃˈeɪp, stˈɪfən, and kan dʒˈam wˌeəɹ ˈɒksɪdʒən ɪz hˈandɪd ˈaʊt. ðat dˈɪmpəl ˌɪzənt dˌɛkəɹˈeɪʃən.",
    "speeds": [
     0.97,
     0.98
@@ -170,13 +170,13 @@
    ],
    "silences": [
     [
-     4.4838,
-     4.7838
+     4.7467,
+     5.0467
     ]
    ],
    "file": "06.wav",
-   "dur": 6.574,
-   "sha256": "443b8ca5f457ced57a534f545db205ca364a1f913a67b9c02aa62524b3713917"
+   "dur": 6.837,
+   "sha256": "e9e90c1853a39c21f5a3a5acf4dc018038158b155d06a9a3536ed8c1b3ed5530"
   },
   {
    "id": "vo07",

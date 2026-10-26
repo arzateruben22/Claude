@@ -154,7 +154,7 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("warp", { from: clk, slot: "tr" });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot, maxW: b.maxW });
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball[0], an.ball[1], t);
   if (an.gap) { const [take, k] = an.gap, x = ballSpec(take, "drop").x0 + (an.dx || 0); return () => [x, (gyk(k) + gyk(k + 1)) / 2, 0]; }

@@ -19,35 +19,35 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/physics/ep01 --segment measure`.
 
-## hook {shot: measure view; frame 0: two balls mid-fall, their ghosts level · title drop: "Thrown or dropped?" · badge: slowed ×20 · pre: 0.1 · energy: 0.7} (0–4.5 s)
+## hook {shot: measure view; frame 0: two balls mid-fall, their ghosts level · title drop: "Thrown or dropped?" · badge: slowed ×20 · pre: 0.1 · energy: 0.7} (0–4.3 s)
 vo: Which ball lands *first*? One thrown sideways, one just dropped. {-}
 
-## normal {shot: reset, slider drift · events: time.slow to ×1/20, the strobe every 1/20 s · labels: "1/20 s apart", "gravity" · pre: 0.15 · energy: 0.45} (4.5–14.1 s)
+## normal {shot: reset, slider drift · events: time.slow to ×1/20, the strobe every 1/20 s · labels: "1/20 s apart", "gravity" · pre: 0.08 · energy: 0.45} (4.3–14.1 s)
 vo: First, just the drop, slowed twenty times. {-} Ghosts every twentieth of a second, and the gaps
 keep *growing*: a falling ball speeds up the whole way down. {c1}
 
-## change {events: the second ball thrown from the rail at 0.44 m/s, landing 20 cm out; both knocks on one frame · pre: 0.1 · energy: 0.5} (14.1–23.5 s)
+## change {events: the second ball thrown from the rail at 0.44 m/s, landing 20 cm out; both knocks on one frame · pre: 0.1 · energy: 0.5} (14.1–22.7 s)
 vo: Now throw one sideways: same height, same instant. {-} It flies twenty centimeters farther… and
 still lands on the *same frame*. {c2}
 
-## why {shot: the turn, 60–90°, landing on "same height" · vectors: equal gravity arrows, a constant sideways arrow · picture-only 2 s · pre: 0.25 · energy: 0.55} (23.5–39.2 s)
+## why {shot: the turn, 60–90°, landing on "same height" · vectors: equal gravity arrows, a constant sideways arrow · picture-only 2 s · pre: 0.18 · energy: 0.55} (22.7–38.7 s)
 vo: Old gunnery books drew cannonballs flying straight, then dropping. {c13} Galileo saw two motions
 at once: a steady glide across, plus a fall. {c4} Gravity pulls only *down*, so at every tick, both
 sit at the *same height*. {c3,c5}
 
-## whoa {shot: pull back · events: throws at 0.89 and 1.33 m/s land 40 and 60 cm out; rungs across four trails, four knocks on one frame · picture-only 3 s · energy: 0.7} (39.2–52.3 s)
+## whoa {shot: pull back · events: throws at 0.89 and 1.33 m/s land 40 and 60 cm out; rungs across four trails, four knocks on one frame · picture-only 3 s · pre: 0.15 · energy: 0.7} (38.7–51.2 s)
 vo: Throw twice as fast, then three times: forty centimeters, then sixty. {c6} Every row of ghosts
 stays *level*, and all four land on the *same frame*. {c7}
 
-## measure {segment: measure · the strobe ladder: count the nine gaps between the dropped ball's ten ghosts, then the stopwatch reads "0.45 s" · pre: 0.2 · energy: 0.5} (52.3–61.1 s)
+## measure {segment: measure · the strobe ladder: count the nine gaps between the dropped ball's ten ghosts, then the stopwatch reads "0.45 s" · pre: 0.2 · energy: 0.5} (51.2–60.3 s)
 vo: *Measure it*: nine gaps, a twentieth of a second each. {c8} A one-meter fall takes about *point
 four five seconds*, thrown or dropped. {c9}
 
-## takeaway {shot: hold on the four trails · badge: "air ignored: with air, the fastest throw lands 0.3 ms after the drop; a frame here is 1.7 ms" · energy: 0.45} (61.1–68.8 s)
+## takeaway {shot: hold on the four trails · badge: "air ignored: with air, the fastest throw lands 0.3 ms after the drop; a frame here is 1.7 ms" · pre: 0.25 · energy: 0.45} (60.3–68.5 s)
 vo: Sideways speed decides *where* it lands. {c10} Height alone decides *when*. {c11} In air, the
 throws land a sliver after the drop. {c14}
 
-## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (68.8–74.9 s)
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (68.5–74.9 s)
 vo: Next: one pendulum, big swing against small. {-} It's *almost* a tie. {c12}
 end card: "Next: the swing's secret" · "Follow Rest Frame" · footnote: "Two motions at once: Galileo, Two New Sciences, 1638"
 
