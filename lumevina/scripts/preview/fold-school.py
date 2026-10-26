@@ -19,6 +19,11 @@ s = s.replace(anchor, anchor + " var BLOBS = " + json.dumps(ids, separators=(","
 v_old = "var v = VIDEOS[ls.id];"
 assert s.count(v_old) == 1
 s = s.replace(v_old, "var v = BLOBS[ls.id] && VIDEOS[ls.id];")
+# the page's hero clip (img/school/video/hero.*) plays from the asset store too, under the id "hero"; its poster is a published file
+hero_old = '<source src="img/school/video/hero.webm" type="video/webm"><source src="img/school/video/hero.mp4" type="video/mp4">'
+if "hero" in ids:
+    assert s.count(hero_old) == 1, s.count(hero_old)
+    s = s.replace(hero_old, '<source src="/_blob/' + ids["hero"] + '" type="video/mp4">')
 if hub:
     s = s.replace('href="index.html', 'href="site.html')
 open(out, "w", encoding="utf-8").write(s)
