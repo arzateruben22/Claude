@@ -420,7 +420,7 @@ const heroWorld = (p) => vC.set(p[0], p[1], p[2]).applyQuaternion(qH).add(heroPo
 const capWorld = () => (HC.cap.visible ? heroWorld(HC.capCentre()) : hero.p.slice());
 
 // ── O₂ leaving the capillary (takeaway) and the passengers inside the cut cell (tease): one swarm mesh ──
-const O2N = 110, PAXN = 170, sO2 = (FILM.labels.find((l) => l.id === "o2") || {}).t0 ?? 56.5;
+const O2N = 110, PAXN = 170, sO2 = FILM.o2 ?? (FILM.labels.find((l) => l.id === "o2") || {}).t0 ?? 56.5;   // the swarm leaves on "oxygen"; its label lands later
 const O2 = swarm({
   n: O2N, seed: 5, waves: [{ amp: 0.3, omega: 1.6 }, { amp: 0.1, omega: 3.2 }],
   home: (i, r) => { const s = sJ - 44 + 34 * r(), a = 6.283 * r(), F = PH.frame(s), m = 1.2 * Math.sqrt(r()); return [F.p[0] + F.b[0] * Math.cos(a) * m + F.n[0] * Math.sin(a) * m, F.p[1] + F.b[1] * Math.cos(a) * m, F.p[2] + Math.sin(a) * m - 0.3]; },
@@ -480,10 +480,15 @@ const ANCH = {
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
 hud.badge("warp", { from: clk, slot: "tl" });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tl" });
+// a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
+// clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
+// would be clamped shows no bar: the pill keeps its text alone
 const barPx = (len) => () => {
   const p = hero.p, right = vD.set(1, 0, 0).applyQuaternion(camera.quaternion);
   const a = hud.project(p), b = hud.project([p[0] + right.x * len, p[1] + right.y * len, p[2] + right.z * len]);
-  return a.front && b.front ? Math.hypot(b.x - a.x, b.y - a.y) : null;
+  if (!a.front || !b.front) return null;
+  const px = Math.hypot(b.x - a.x, b.y - a.y);
+  return px >= 4 * S1 && px <= (hud.safe.r - hud.safe.l) * 0.6 ? px : null;
 };
 for (const sp of FILM.scales) hud.scale(sp.id, { text: sp.text, bar: barPx(sp.len), t0: sp.t0, t1: sp.t1, at: sp.pos });
 hud.counter("life", { keys: FILM.life.keys, fmt: (v) => String(Math.round(v)), unit: FILM.life.unit, label: FILM.life.label, t0: FILM.life.t0, t1: FILM.life.t1, at: [0.458, 0.235], minCh: 3, ease: "lin" });

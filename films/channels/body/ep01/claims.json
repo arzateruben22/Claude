@@ -24,13 +24,13 @@
  {
   "id": "c3",
   "sentence": "It even pushed out its own nucleus.",
-  "claim": "A maturing mammalian red blood cell expels its nucleus (enucleation): a ring of actin pinches the nucleus off, and macrophages clear it, so mature red cells have none.",
+  "claim": "A maturing mammalian red blood cell expels its nucleus (enucleation), so mature red cells have none. In the Whitehead study (mouse erythroblasts), a contracting ring of actin pinches the nucleus off and macrophages clear it.",
   "source_url": "https://wi.mit.edu/news/how-red-blood-cells-nuke-their-nuclei",
   "source_title": "Whitehead Institute, How red blood cells nuke their nuclei",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Rewritten 24 Oct with the script (v2). The biconcave shape moved into c2."
+  "note": "Rewritten 24 Oct with the script (v2). The biconcave shape moved into c2. 26 Oct audit: the actin ring is reported in mouse, not human, erythroblasts (a 2024 review), so the claim no longer calls it general; the voiced line, 'pushed out its own nucleus', is unchanged."
  },
  {
   "id": "c4",
