@@ -78,6 +78,11 @@
   {
    "t": 3.7333,
    "kind": "badge",
+   "tag": "b-marks"
+  },
+  {
+   "t": 3.7333,
+   "kind": "badge",
    "tag": "b-time"
   },
   {
@@ -117,7 +122,7 @@
    ]
   },
   {
-   "t": 7.4,
+   "t": 7.8,
    "kind": "label",
    "tag": "l-moon2",
    "pos": [
@@ -258,6 +263,11 @@
    ]
   },
   {
+   "t": 37.6,
+   "kind": "label",
+   "tag": "l-prof"
+  },
+  {
    "t": 39.56666666666667,
    "kind": "counter.show",
    "tag": "c-pull",
@@ -325,24 +335,6 @@
    "t1": 61.3333
   },
   {
-   "t": 58.1333,
-   "kind": "label",
-   "tag": "l-earth-t",
-   "pos": [
-    0.614,
-    0.302
-   ]
-  },
-  {
-   "t": 58.1333,
-   "kind": "label",
-   "tag": "l-moon-t",
-   "pos": [
-    0.386,
-    0.15
-   ]
-  },
-  {
    "t": 58.3,
    "kind": "counter.show",
    "tag": "c-same",
@@ -352,10 +344,28 @@
    ]
   },
   {
+   "t": 58.6333,
+   "kind": "label",
+   "tag": "l-earth-t",
+   "pos": [
+    0.614,
+    0.302
+   ]
+  },
+  {
    "t": 61.3333,
    "kind": "section",
    "id": "readout",
    "t1": 67.7333
+  },
+  {
+   "t": 61.6333,
+   "kind": "label",
+   "tag": "l-moon-t",
+   "pos": [
+    0.386,
+    0.15
+   ]
   },
   {
    "t": 61.666666666666664,

@@ -24,7 +24,7 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 ## hook {shot: the local view (frame 0, the payoff): the Sun's tiny teal light-day ring, labelled "Voyager 1 is in here", and Proxima Centauri far off with its dashed 4.24-light-year lane · badge: not to scale · title: "The nearest star" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–4 s)
 vo: How long to the nearest *star*? Say we leave *today*. {-}
 
-## normal {shot: cut to the solar view, the planets' orbits; Voyager 1 flies out of the plane, 1977 → 2026 under a speed note, a year counter · labels: Earth, Voyager 1, "about 17 km/s" · pill: "Earth → Moon in about 6 h" · picture-only 0.2 s · energy: 0.45} (4–15 s)
+## normal {shot: cut to the solar view, the planets' orbits; Voyager 1 flies out of the plane, 1977 → 2026 under a speed note, a year counter · labels: Earth, Voyager 1 (the speed is in the caption) · pill: "Earth → Moon in about 6 h" · picture-only 0.2 s · energy: 0.45} (4–15 s)
 vo: Our ride is *Voyager 1*, the farthest thing we've sent. {c1} It left in nineteen seventy-seven. {c2} It coasts at about seventeen kilometers a second. {c3} Earth to the Moon in *six hours*. {c4}
 
 ## change {events: light.front from Earth, a counter 0 → 24 h; the reply comes back, 48 h · ring "1 light-day" · picture-only 0.2 s · energy: 0.55} (15–26 s)
@@ -36,7 +36,7 @@ vo: In twenty twelve, it crossed into interstellar space. {c8} Nearly there, the
 ## whoa {shot: the episode's one scale jump: the solar view shrinks until the light-day ring is a speck beside the Sun, and Proxima Centauri arrives · events: scale.jump, arrive · counter "at Voyager's speed: about 75,000 years" · tag "at today's distance" · picture-only 3 s · energy: 0.8} (42–56 s)
 vo: The nearest star, Proxima Centauri, is about fifteen hundred light-days out. {c11} At Voyager's speed: about *seventy-five thousand years*. {c12} Count back that far, and our species wasn't in *Europe*. {c13}
 
-## takeaway {shot: hold on the local view; the speck labelled "day 1", the lane to Proxima "of about 1,550" · picture-only 0.2 s · energy: 0.3} (56–62 s)
+## takeaway {shot: hold on the local view; the speck labelled "day 1", the lane to Proxima "of ≈1,500" · picture-only 0.2 s · energy: 0.3} (56–62 s)
 vo: So we've barely left for the stars. {-} Voyager has crossed day one of *fifteen hundred*. {c14}
 
 ## readout {segment: readout · the closing light-time readout: ring "1 day" (the speck), then a wide ring "4 years, 3 months" through Proxima · a ping per ring · picture-only 0.2 s · energy: 0.45} (62–68.5 s)

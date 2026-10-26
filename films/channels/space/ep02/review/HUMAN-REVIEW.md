@@ -26,15 +26,23 @@
   the team's command going out (a day) and the answer coming back (a day), in step with the voice. The fronts,
   the light-day circle and the heliopause rim are drawn as circles on the screen through Voyager *as seen* (a
   drawing convention: the real sphere is seen at an angle). Check that an astronomer is happy with that.
-- **The speck** (one light-day around the Sun) is drawn at least 24 px in radius in the local view; at true scale
-  it would be under a pixel. It sits under the "not to scale · illustration" note.
+- **The speck** (one light-day around the Sun) is drawn at least 30 px in radius in the local view (at a 1080-px
+  short side); at true scale it would be under a pixel. It sits under the "not to scale · illustration" note.
 - **The re-layout (26 Oct, after the audit):** Voyager's path now climbs to the right of the Sun (it was drawn up-left,
   under the spine); the direction is a drawing choice either way (Voyager 1 heads for Ophiuchus, north of the
-  ecliptic). The spine's hedged numbers carry "≈" (≈300, ≈30,000, ≈1,550), matching "about" and "maybe" in the voice.
+  ecliptic). The spine's hedged numbers carry "≈" (≈300, ≈30,000, ≈1,500, ≈75,000), matching "about" and "maybe" in
+  the voice.
 - **After the 26 Oct script audit:** vo02 and vo04–vo06 were re-voiced ("It coasts at about seventeen kilometers a
   second. Earth to the Moon in six hours."; "about three hundred"; "maybe thirty thousand"; "wasn't in Europe"; "So
   we've barely left for the stars."), and the end card now teases "a planet that turns backwards" (Uranus does too;
   c18). The film was rendered again from scratch after these changes.
+- **After the draft review (26 Oct):** the speck now shows (a 30 px ring; its floor was in the wrong units), Voyager
+  starts right of the Sun and the flight starts after "nineteen seventy-seven" is said, the speed and "Sun's wind
+  ends" labels are gone (the caption and the spine say them), labels no longer hop or pop, the comet cloud collapses
+  early in the jump, and the whoa pushes in. New notes: "Voyager isn't headed there" in the hook and "light sped up"
+  on each lane pulse. The spine now reads ≈1,500 light-days ("about fifteen hundred"; 1,549 computed) and ≈75,000.
+  Two caption breaks remain ("reached the Sun's" | "cloud of comets."; "three" / "hundred years away."): they can't be
+  mended within 24 characters a line.
 
 
 ## Every episode
@@ -51,7 +59,7 @@
 6. **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/space/ep02 --sources`.
 7. **A listen.** Phone speaker and headphones. Names to check: Voyager, Proxima Centauri, interstellar,
    "nineteen seventy-seven", "seventy-five thousand".
-8. **Cover frame.** The poster (`out/lightminute-002-9x16.jpg`) is at about 49 s: Proxima, the speck and "75,000".
+8. **Cover frame.** The poster (`out/lightminute-002-9x16.jpg`) is at about 50 s: Proxima, the speck and "≈75,000".
 9. **Upload.** Upload the MP4 as delivered; leave auto-captions off (captions are burned in).
 
 TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted.

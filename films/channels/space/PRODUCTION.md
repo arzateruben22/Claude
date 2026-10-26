@@ -1,13 +1,11 @@
 # Light Minute: production log (episodes 2–6)
 
-> **Paused 26 Oct, 09:46 UTC (by the owner).** Nothing is rendering. State: the script audit is applied to all five
-> episodes; captions now hold until a glued phrase has been spoken (`set/capglue.py` `hold`); No. 002 is re-laid-out
-> (the flight climbs right, clear of the spine); No. 004 carries the 38 fixes from its independent cut review (stills
-> check still to do); every text was checked against the safe box at each label's middle. No. 004's 26 Oct delivery
-> predates the caption fix, so all five episodes still need their final. To resume: draft-tier review round
-> (`render.mjs --tier draft`, ep06 draft done, ep03 stopped part-way, ep05 and ep02 not started) → an independent
-> two-lens review per draft → fixes and stills → the five finals one at a time (about an hour each on 4 CPUs) → QA,
-> scorecards, docs, the reply to the coordinating session.
+> **Resumed 26 Oct (by the owner, after a pause at 09:46 UTC): draft-tier review rounds.** Each episode gets a draft cut
+> (`render.mjs --tier draft`, 540×960 at 15 fps), an independent two-lens review (text/layout and picture, every finding
+> adversarially verified), then the fixes (one implementer per episode, then an independent code check, then a stills
+> check here), and a second draft and review where the first round found a lot. Confirmed findings so far: No. 002 32;
+> No. 003 41 (round 1); No. 004 38 (its cut review), then 33 (draft); No. 005 41; No. 006 26 (round 2). Then the five finals one at a time
+> (about an hour each on 4 CPUs), QA, scorecards, docs and the reply to the coordinating session.
 
 Branch `claude/light-minute-ep02-06`. One line per episode, updated as it moves:
 scripted → reviewed → voiced → built → stills OK → rendering → delivered (+ QA numbers).

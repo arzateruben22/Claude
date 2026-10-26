@@ -65,7 +65,7 @@ SHOTS = [{"at": 0.0, "name": "hook"}, {"at": t_cut, "name": "space"}, {"at": t_e
 # ── scene clocks (clock.js keys; "anchor": [t, τ]) ──────────────────────────
 RATE_F = 2.5e8                            # the flight: 49 years in 6.2 s ("250,000,000× faster")
 T49 = (Y_NOW - Y0) * YEAR
-t_launch = A("vo02:nineteen")             # the year counter starts as the year is spoken
+t_launch = A("vo02:seventy-seven", 0.6)   # the flight starts as the year has been said (the counter shows 1977 from "nineteen")
 RAMP_F = 0.6
 t_stop = round(t_launch + (T49 - RATE_F * RAMP_F / 2) / RATE_F, 4)   # a linear ramp to a stop lands τ on 18 Nov 2026 exactly
 RATE_S = 5e4                              # the signal: a day in 1.73 s ("50,000× faster")
@@ -107,7 +107,7 @@ WIDE = dict(POSE, fx=0.53)
 CAM = {
     "hook": [{"t": 0.0, **POSE, "dist": 1169, "az": -1.2}, {"t": t_cut, **POSE, "dist": 1184, "az": 0.0, "ease": "sine"}],
     "space": [
-        {"t": t_cut, **WIDE, "dist": 70, "az": 0.0},
+        {"t": t_cut, **WIDE, "dist": 80, "az": -0.8},                                       # a slow push-in to the launch spot
         {"t": t_launch, **WIDE, "dist": 70, "az": 0.0, "ease": "sine"},
         # the pull-back follows Voyager: the camera's distance grows with Voyager's, so it climbs to the same height
         *[{"t": round(t_launch + (yr - Y0) * YEAR / RATE_F, 4), **WIDE, "dist": round(70.0 + 1135.0 * max(0.0, (R_SAT + SLOPE * (yr - Y_SAT) - R_SAT) / (LD_AU - R_SAT)) ** 0.75, 1),
@@ -120,7 +120,8 @@ CAM = {
         {"t": B["why"]["t0"], **WIDE, "dist": 1590, "az": 2.6, "ease": "sine"},
         {"t": t_j0, **WIDE, "dist": 1580, "az": 4.0, "ease": "sine"},
         {"t": t_j1, **WIDE, "dist": 1580, "az": 3.8, "ease": "sine"},
-        {"t": B["takeaway"]["t0"], **WIDE, "dist": 1470, "az": 2.6, "ease": "sine"},     # a slow push through the whoa
+        {"t": B["takeaway"]["t0"], **WIDE, "dist": 1150, "az": 2.6, "ease": "sine"},     # a push through the whoa, so the climax moves
+        {"t": A("vo07:Earth"), **WIDE, "dist": 1420, "az": 2.0, "ease": "sine"},         # ... and back for the readout (peak drift 4.9%/s)
         {"t": t_end + 0.4, **WIDE, "dist": 1420, "az": 1.5, "ease": "sine"},
     ],
     # the end card: back to the hook's pose, so the replay's first frame continues the last
@@ -140,39 +141,48 @@ end_out = t_end
 LABELS = [
     # hook: the payoff, Proxima far off and the speck that holds everything we've sent
     {"id": "l-prox-h", "text": "Proxima Centauri", "kind": "star", "anchor": "prox", "t0": 0.0, "t1": t_cut, "shot": "hook", "side": -1, "v": "middle"},
-    {"id": "l-in-h", "text": "Voyager 1 is in here", "kind": "light", "anchor": "speck", "t0": 0.0, "t1": t_cut, "shot": "hook", "side": -1},
+    {"id": "l-in-h", "text": "Voyager 1 is in here", "kind": "light", "anchor": "speck", "t0": 0.0, "t1": t_cut, "shot": "hook", "side": -1, "fixed": True},   # above-left of the speck, over the two notes
     # normal: the flight
     {"id": "l-nep", "text": "Neptune's orbit", "kind": "gravity", "anchor": "neptune", "t0": A("vo02:farthest"), "t1": A("vo02:left"), "shot": "space", "side": -1},
     # Voyager's name in two fixed placements (no hopping): from its launch spot through the flight, the change and the
-    # why, then at the comet cloud's scale; hidden through the pull-back itself. Its speed rides the trail behind it.
-    {"id": "l-voy", "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": A("vo02:Voyager"), "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": -1, "fixed": True},
-    {"id": "l-v", "text": "about 17 km/s", "kind": "body", "anchor": "voy-v", "t0": A("vo02:seventeen"), "t1": B["change"]["t0"], "shot": "space", "side": 1, "v": "middle", "fixed": True},
-    {"id": "l-voy-o", "quiet": True, "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": round(t_p1 + 0.2, 4), "t1": t_j0, "shot": "space", "side": 1, "v": "middle", "fixed": True},
+    # why (on its right, clear of the spine), then at the comet cloud's scale (below it, off the road to the cloud);
+    # hidden through the pull-back itself. Its speed is in the caption.
+    {"id": "l-voy", "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": A("vo02:Voyager"), "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": 1, "fixed": True},
+    {"id": "l-voy-o", "quiet": True, "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": round(t_p1 + 0.2, 4), "t1": t_j0, "shot": "space", "side": 1, "v": "below", "fixed": True},
     # change: the signal
-    {"id": "l-ld", "text": "1 light-day", "kind": "light", "anchor": "ldring", "t0": A("vo03:line"), "t1": B["why"]["t0"], "shot": "space", "side": 1},
+    {"id": "l-ld", "text": "1 light-day", "kind": "light", "anchor": "ldring", "t0": A("vo03:line"), "t1": B["why"]["t0"], "shot": "space", "side": -1, "v": "middle", "fixed": True},   # inside the ring's right edge, above the caption
     {"id": "l-earth", "text": "Earth, by the Sun", "kind": "body", "anchor": "sun", "t0": round(t_sig + 0.2, 4), "t1": A("vo03:us", 0.4), "shot": "space", "side": 1},
-    {"id": "l-sig", "text": "signal", "kind": "light", "anchor": "front1", "t0": round(t_sig + 0.25, 4), "t1": round(t_arr1 - 0.2, 4), "shot": "space", "side": 1},
-    {"id": "l-cmd", "text": "command", "kind": "light", "anchor": "frontc", "t0": round(t_cmd + 0.25, 4), "t1": round(t_ans - 0.1, 4), "shot": "space", "side": 1},
-    {"id": "l-ans", "text": "answer", "kind": "light", "anchor": "front2", "t0": round(t_ans + 0.25, 4), "t1": round(t_arr2 - 0.2, 4), "shot": "space", "side": 1},
-    # why: the heliopause, then the comet cloud
-    {"id": "l-hp", "text": "Sun's wind ends", "kind": "body", "anchor": "hp", "t0": A("vo04:twenty"), "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": -1, "fixed": True},
-    {"id": "l-oort", "text": "comet cloud", "kind": "body", "anchor": "oort", "t0": t_p1, "t1": t_j0, "shot": "space", "side": 1, "fixed": True},   # once the rim has settled
-    # whoa: Proxima arrives
-    {"id": "l-prox", "text": "Proxima Centauri", "kind": "star", "anchor": "prox", "t0": round(t_j1 - 0.4, 4), "t1": end_out, "shot": "space", "side": -1, "v": "middle", "fixed": True},   # as the star settles
+    # the fronts' names ride their fronts (fixed: no hopping); each arrives once it is clear of Voyager's dot and name,
+    # and the command's leaves before it nears them
+    {"id": "l-sig", "text": "signal", "kind": "light", "anchor": "front1", "t0": round(t_sig + 0.5, 4), "t1": round(t_arr1 - 0.2, 4), "shot": "space", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-cmd", "text": "command", "kind": "light", "anchor": "frontc", "t0": round(t_cmd + 0.25, 4), "t1": round(t_cmd + 0.85, 4), "shot": "space", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-ans", "text": "answer", "kind": "light", "anchor": "front2", "t0": round(t_ans + 0.5, 4), "t1": round(t_arr2 - 0.2, 4), "shot": "space", "side": 1, "v": "above", "fixed": True},
+    # why: the comet cloud (the 2012 crossing is named by the spine and its tick)
+    {"id": "l-oort", "text": "comet cloud", "kind": "body", "anchor": "oort", "t0": t_p1, "t1": t_j0, "shot": "space", "side": -1, "fixed": True},   # once the rim has settled; off the road
+    # whoa: Proxima arrives, named as the star settles; the name leaves as the readout's ring arrives (the ring passes
+    # through the star, so any pill beside it would sit on the ring; the readout names Proxima from there)
+    {"id": "l-prox", "text": "Proxima Centauri", "kind": "star", "anchor": "prox", "t0": round(t_j1 - 0.4, 4), "t1": A("vo07:Proxima"), "shot": "space", "side": -1, "v": "middle", "fixed": True},
     # takeaway: day one of fifteen hundred
-    {"id": "l-day1", "text": "day 1", "kind": "light", "anchor": "speck", "t0": A("vo06:day"), "t1": B["readout"]["t0"], "shot": "space", "side": -1},
+    {"id": "l-day1", "text": "day 1", "kind": "light", "anchor": "speck", "t0": A("vo06:day"), "t1": B["readout"]["t0"], "shot": "space", "side": -1, "v": "middle", "fixed": True},
     # readout: a ping per ring
-    {"id": "l-ring-ld", "text": "Voyager 1", "kind": "light", "anchor": "speck", "t0": A("vo07:Earth"), "t1": end_out, "shot": "space", "side": -1},
+    {"id": "l-ring-ld", "text": "Voyager 1", "kind": "light", "anchor": "speck", "t0": A("vo07:Earth"), "t1": end_out, "shot": "space", "side": -1, "v": "middle", "fixed": True},
 ]
+# a pulse of light runs the lane to Proxima on each "fifteen hundred": 4.24 light-years in RUN seconds (sped up, badged)
+t_lane1, t_lane2 = A("vo05:fifteen"), A("vo06:fifteen")
+RUN = [2.4, 1.0]                          # the second ends with "of fifteen hundred", before the readout
 BADGES = [
     {"id": "b-nts-h", "text": "not to scale · illustration", "t0": 0.0, "t1": t_cut, "slot": "bl"},
+    {"id": "b-head-h", "text": "Voyager isn't headed there", "t0": 0.0, "t1": t_cut, "slot": "bl"},   # the hook draws the lane too
     {"id": "b-nts", "text": "not to scale · illustration", "t0": t_cut, "t1": t_end, "slot": "tr"},
     {"id": "b-path", "text": "path simplified", "t0": t_launch, "t1": t_p1, "slot": "tr"},   # the trail stays until the pull-back ends
     {"id": "b-time-f", "clock": "flight", "t0": t_launch, "t1": round(t_stop + RAMP_F + 0.4, 4), "slot": "tl"},
     {"id": "b-time-s", "clock": "signal", "t0": t_sig, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-theory", "text": "comet cloud: theory", "t0": A("vo04:cloud"), "t1": round(t_j1 + 0.6, 4), "slot": "tr"},   # the cloud thins out through the jump
+    {"id": "b-theory", "text": "comet cloud: theory", "t0": A("vo04:cloud"), "t1": round(t_j0 + 1.0, 4), "slot": "tr"},   # the cloud collapses in the jump's first 0.9 s
     {"id": "b-head", "text": "Voyager isn't headed there", "t0": t_j1, "t1": t_end, "slot": "tr"},
     {"id": "b-today", "text": "at today's distance", "t0": A("vo05:seventy-five"), "t1": B["takeaway"]["t0"], "slot": "bl"},   # right under the 75,000
+    # on before each pulse moves, until its lit lane steps back
+    {"id": "b-light", "text": "light sped up", "t0": round(t_lane1 - 0.2, 4), "t1": round(t_lane1 + RUN[0] + 0.2, 4), "slot": "tl"},
+    {"id": "b-light2", "text": "light sped up", "t0": round(t_lane2 - 0.2, 4), "t1": round(t_lane2 + RUN[1] + 0.2, 4), "slot": "tl"},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
@@ -187,20 +197,24 @@ SPINE = [0.31, 0.47]                     # the widest label (24 characters) stay
 t_tk = B["takeaway"]["t0"]
 COUNTERS = [
     {"id": "c-prox-h", "label": "light-years to Proxima", "fmt": "text", "text": "4.24", "t0": 0.0, "t1": t_cut, "at": [0.29, 0.40]},
-    {"id": "c-year", "label": "Voyager 1 · year", "fmt": "year", "t0": t_launch, "t1": t_sig, "at": SPINE},
+    {"id": "c-year", "label": "Voyager 1 · year", "fmt": "year", "t0": A("vo02:nineteen"), "t1": t_sig, "at": SPINE},   # 1977 until the flight starts
     {"id": "c-sig1", "label": "signal travel · hours", "fmt": "hours", "off": 0, "t0": t_sig, "t1": t_cmd, "at": SPINE, "lit": 24},
     {"id": "c-sig2", "label": "command → answer", "fmt": "hours", "off": 24, "t0": t_cmd, "t1": A("vo04:twenty"), "at": SPINE, "lit": 48},
     {"id": "c-hp", "label": "out of the Sun's wind", "fmt": "text", "text": "2012", "t0": A("vo04:twenty"), "t1": A("vo04:three"), "at": SPINE},
     {"id": "c-oort0", "label": "years to the comet cloud", "fmt": "text", "text": "≈300", "t0": A("vo04:three"), "t1": A("vo04:thirty"), "at": SPINE},
     {"id": "c-oort1", "label": "years more to cross it", "fmt": "text", "text": "≈30,000", "t0": A("vo04:thirty"), "t1": t_j0, "at": SPINE},
-    {"id": "c-ld0", "label": "light-days to Proxima", "fmt": "text", "text": "≈1,550", "t0": A("vo05:fifteen"), "t1": A("vo05:seventy-five"), "at": SPINE},
-    {"id": "c-trip", "label": "years at Voyager's speed", "fmt": "text", "text": "75,000", "t0": A("vo05:seventy-five"), "t1": t_tk, "at": SPINE},
-    {"id": "c-days", "label": "light-days to Proxima", "fmt": "text", "text": "≈1,550", "t0": t_tk, "t1": B["readout"]["t0"], "at": SPINE},
+    # 4.24 ly is 1,549 light-days and the trip 74,800 years: the spine reads what the voice says ("about fifteen hundred",
+    # "about seventy-five thousand"), hedged with ≈
+    {"id": "c-ld0", "label": "light-days to Proxima", "fmt": "text", "text": "≈1,500", "t0": t_lane1, "t1": A("vo05:seventy-five"), "at": SPINE},
+    {"id": "c-trip", "label": "years at Voyager's speed", "fmt": "text", "text": "≈75,000", "t0": A("vo05:seventy-five"), "t1": t_tk, "at": SPINE},
+    {"id": "c-days", "label": "light-days to Proxima", "fmt": "text", "text": "≈1,500", "t0": t_tk, "t1": B["readout"]["t0"], "at": SPINE},
     {"id": "c-read-ld", "label": "light time · Earth to Voyager", "fmt": "text", "text": "1 day", "read": True, "t0": A("vo07:Light"), "t1": A("vo07:To#2"), "at": [0.5, 0.27]},
     {"id": "c-read-px", "label": "light time · Earth to Proxima", "fmt": "text", "text": "4 years, 3 months", "read": True, "t0": A("vo07:To#2"), "t1": end_out, "at": [0.5, 0.27]},   # above Proxima and its lane, not on them
 ]
 for row in BADGES + COUNTERS:
     row["t1"] = before_cut(row["t1"])
+for row in LABELS:                        # a label's fade (0.4 s) ends just before the cut: nothing pops off
+    row["t1"] = before_cut(row["t1"], 0.45)
 # two values never share the screen: each counter leaves 0.4 s before the next one arrives (the spine hands over to the
 # readout in another place, so the rule holds wherever they sit)
 for a, b in zip(COUNTERS, COUNTERS[1:]):
@@ -214,7 +228,7 @@ END = {"title": "Next light: a planet that turns *backwards*", "follow": "Light 
 
 CUE = {"voy": A("vo02:Voyager"), "launch": t_launch, "stop": t_stop, "line": A("vo03:line"), "sig": t_sig, "arr1": t_arr1, "cmd": t_cmd, "ans": t_ans, "arr2": t_arr2, "takeaway": t_tk,
        "hp": A("vo04:twenty"), "ghost": A("vo04:three"), "deep": A("vo04:thirty"), "jump": [t_j0, t_j1], "pull": [t_p0, t_p1],
-       "lane": A("vo05:fifteen"), "lane2": A("vo06:fifteen"), "pxring": A("vo07:Proxima"), "speck": A("vo06:day")}
+       "lane": t_lane1, "lane2": t_lane2, "run": RUN, "pxring": A("vo07:Proxima"), "speck": A("vo06:day")}
 
 POSTER = A("vo05:years", 0.4)               # Proxima, the speck and "about 75,000 years"
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
@@ -223,6 +237,14 @@ glue(f, {"vo01": ["the nearest star?"], "vo03": ["a full day", "the day after to
          "vo04": ["twenty twelve,", "into interstellar space.", "hundred years away.", "thirty thousand", "cloud of comets."],
          "vo05": ["Proxima Centauri,", "fifteen hundred", "about seventy-five", "thousand years.", "wasn't in Europe."],
          "vo06": ["day one", "of fifteen hundred."], "vo07": ["four years", "three months."]})
+CAPS = hold(f, keep_units(f.captions(max_chars=24)))   # each page stays until its last phrase has been spoken
+# ... and a line's last page until its voice has stopped (an interpolated word end can be early: "of fifteen hundred.")
+for ln in f.lines:
+    mine = [k for k, pg in enumerate(CAPS) if ln["t"] <= pg["t0"] <= ln["t"] + ln["dur"]]
+    if mine:
+        k = mine[-1]
+        nxt = CAPS[k + 1]["t0"] if k + 1 < len(CAPS) else math.inf
+        CAPS[k]["t1"] = round(max(CAPS[k]["t1"], min(nxt, ln["t"] + ln["dur"] + 0.3)), 3)
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
@@ -233,7 +255,7 @@ film = {
     "clk": CLK, "cam": CAM, "ladder": LADDER, "cue": CUE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": hold(f, keep_units(f.captions(max_chars=24))),   # each page stays until its last phrase has been spoken
+    "captions": CAPS,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
