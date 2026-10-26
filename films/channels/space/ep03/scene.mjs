@@ -73,7 +73,8 @@ const ticks = FILM.sunrises.map(() => segment({ color: C.tealHi, width: 4, opaci
 const beam = segment({ color: C.tealHi, width: 5, opacity: 0, dash: 2.2, duty: 0.5 });   // the brightest line in the radar beat
 const toSun = segment({ color: C.teal, width: 3.6, opacity: 0, dash: 2.2, duty: 0.5 });   // Schiaparelli's lock: the pin's face toward the Sun
 
-const C_ARROW = line("ice", 1, 1.4);                                          // the turn is motion, not gravity: ice, not lilac
+// the turn is motion, not gravity: ice, not lilac (clamped: the ice token's linear solve has a negative red that reads royal blue)
+const C_ARROW = line("ice", 1, 1.4).map((v) => Math.max(0, v));
 const arrow = [ring({ color: C_ARROW, width: 6, opacity: 0 }), segment({ color: C_ARROW, width: 6, opacity: 0 }), segment({ color: C_ARROW, width: 6, opacity: 0 })];
 const lightRing = ring({ color: C.teal, width: 2.8, opacity: 0 }).arc({ r: PH.r_v + 0.25, ...XZ });
 const echo = segment({ color: C.tealHi, width: 3.4, opacity: 0 });
@@ -159,6 +160,8 @@ window.seek = function (t) {
   const psi = psiAt(t), wf = followW(t);
   // the end card: the diagram's parts (Earth, the readout's lines, the ticks) shrink or fade under it instead of popping
   const eK = shot === "end" ? 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6)) : 1;
+  // the readout's push onto the Venus–Earth pair: the diagram's rings and ticks would cross the frame as stray lines up close
+  const pK = 1 - E.inout2(seg(t, CUE.echo, CUE.echo + 0.8));
   // the Sun goes with the follow and with the readout's push onto the pair (off in the close views, where it would fill a
   // corner): it shrinks away at full brightness over the move instead of popping (dimming it would leave a grey disc). It
   // grows late in a pull, so it never rises through the top notes
@@ -187,12 +190,12 @@ window.seek = function (t) {
   const camX = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray();
   S.limb = vp.map((v, j) => v + camX[j] * VR * 1.06);                        // Venus's right limb, as seen
   // the orbits fade in the close view (they would cut through Venus)
-  orbV.set({ opacity: (1 - wf) * eK }); orbE.set({ opacity: (1 - wf) * eK });
+  orbV.set({ opacity: (1 - wf) * eK * pK }); orbE.set({ opacity: (1 - wf) * eK * pK });
   // the sunrise ticks: one across the orbit wherever Venus was at each sunrise; the label names the first after "you"
   S.rise = onOrbit(PH.r_v + 0.9, FILM.sunrises[CUE.rise_i].th);
   FILM.sunrises.forEach((s, i) => {
     const a = onOrbit(PH.r_v - 0.9, s.th), b = onOrbit(PH.r_v + 0.9, s.th);
-    ticks[i].seg(a, b).set({ opacity: (t >= s.t ? fadeIn(t, s.t, 0.25) : 0) * (1 - wf) * eK });
+    ticks[i].seg(a, b).set({ opacity: (t >= s.t ? fadeIn(t, s.t, 0.25) : 0) * (1 - wf) * eK * pK });
   });
   // the radar beam (1962): Earth to Venus, dashed
   // the radar (1962): a dashed beam from Earth, and a pulse that reaches Venus on "pierced"
@@ -222,12 +225,12 @@ window.seek = function (t) {
   // the light-time ring grows out from the Sun to Venus's orbit with "Light time, Sun to Venus"; it steps back when the
   // echo is named. Its label hangs from the ring's foot, outside it
   const rr = 1.6 + (PH.r_v + 0.25 - 1.6) * E.out3(seg(t, CUE.ring, CUE.ring + 1.2));
-  lightRing.arc({ r: rr, ...XZ }).set({ opacity: (t >= CUE.ring ? 1 : 0) * (1 - 0.65 * fadeIn(t, CUE.echo, 0.6)) * (1 - wf) * eK });
+  lightRing.arc({ r: rr, ...XZ }).set({ opacity: (t >= CUE.ring ? 1 : 0) * (1 - wf) * eK * pK });
   S.ring = onOrbit(rr, Math.PI * 0.55);
   // the round trip, from limb to limb as drawn (the bodies are drawn big on the diagram); its label at the middle
   const d = norm(vp), e0 = vp.map((v, j) => v + d[j] * VR * big * 1.15), e1 = ep.map((v, j) => v - d[j] * ER * big * 1.15);
   echo.seg(e0, e1).set({ opacity: fadeIn(t, CUE.echo, 0.5) * (1 - wf) * eK });
-  S.echo = e0.map((v, j) => (v + e1[j]) / 2);
+  S.echo = e0.map((v, j) => (v + e1[j]) / 2 - camY[j] * ER * big * 0.6);   // a little below the hop, so the pill clears Earth's lower limb
   // the readout's ping: Earth → Venus → Earth over two seconds, once the push has landed (the radar ping above shares the beacon)
   const ue = seg(t, CUE.ping, CUE.ping + 2.0), tri = ue < 0.5 ? E.inout2(ue * 2) : E.inout2(2 - ue * 2);
   const pe = e1.map((v, j) => v + (e0[j] - v) * tri), liveE = ue > 0 && ue < 1;

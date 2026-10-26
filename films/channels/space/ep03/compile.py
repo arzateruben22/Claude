@@ -46,6 +46,7 @@ t_g1, t_g2 = A("vo03:Cassinis"), A("vo03:Schiaparelli")
 t_radar, t_true = A("vo04:radar"), A("vo04:Venus")
 t_w, t_tk, t_rd = B["whoa"]["t0"], B["takeaway"]["t0"], B["readout"]["t0"]
 t_echo = A("vo07:round")
+t_ping = round(t_echo + 1.0, 4)            # the readout's ping (and its label) once the push onto the pair has (nearly) landed
 STOP = 1.2                                 # the takeaway's clocks slow to a stop over 1.2 s, ending as the readout starts
 # 11.6 and 46 days a second; the true turn (R2) runs at 10⁶× too, so the pin crosses the face through "backwards"
 # (at 2,000,000× it had gone behind the limb). R1 is badged by hand: clock.js would print "10⁶×"
@@ -176,11 +177,12 @@ LABELS = [
     # (the guesses, the radar and "backwards" are the spine's and the caption's to say: a label on Venus would cover the
     # turning meridian, the beam or the arrow)
     # on the diagram, from just above Venus's disc (fixed: Venus laps every 4.9 s, so the pill rides above it, never jumps onto it)
-    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_w + 2.2, 4), "t1": A("vo05:hundred"), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_w + 2.2, 4), "t1": round(A("vo05:The") - 0.2, 4), "side": 1, "v": "above", "fixed": True},   # gone before the Sun passes under it
     {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": SUNRISES[RISE_I]["t"], "t1": round(SUNRISES[RISE_I]["t"] + 3.5, 4), "side": 1},
     # from the ring's foot, under it (outside the ring); it leaves with the spine's 6 min
     {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": round(t_echo - 0.4, 4), "side": 1, "v": "below"},
-    {"id": "l-echo", "text": "4 min round trip", "kind": "light", "anchor": "echo", "t0": t_echo, "t1": round(t_end - 0.6, 4), "side": -1, "v": "below", "fixed": True},
+    # with the ping: while the push is still landing, its pill would sit on Venus (clamped at the safe box's left)
+    {"id": "l-echo", "text": "4 min round trip", "kind": "light", "anchor": "echo", "t0": t_ping, "t1": round(t_end - 0.6, 4), "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [   # a slot stacks in this order: a note arrives under the ones already up, never on top of them
     {"id": "b-nts", "text": "not to scale", "t0": t_cut, "t1": t_end, "slot": "tr"},
@@ -208,7 +210,7 @@ COUNTERS = [
     {"id": "c-vs2", "label": "one turn · one year (days)", "text": "243 > 225", "t0": t_tk, "t1": A("vo06:But")},   # the payoff holds, lit
     {"id": "c-live", "label": "the day you'd live by · one year (days)", "text": "117 < 225", "t0": A("vo06:But"), "t1": t_rd},   # closes the hook's "no"
     {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": t_echo},
-    # the 4 min arrives with its label on "round" and leaves before the end card fades in over it
+    # the 4 min arrives on "round" (its label with the ping) and leaves before the end card fades in over it
     {"id": "c-read-echo", "label": "radar round trip, at its closest", "text": "4 min", "read": True, "t0": t_echo, "t1": round(t_end - 0.6, 4)},
 ]
 for c in COUNTERS:
@@ -218,14 +220,14 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):          # two values never share the s
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the Moon that never *lands*", "follow": "Light Minute · No. 004",   # breaks after "Next light:"
+END = {"title": "Next light: the\u00a0Moon that never *lands*", "follow": "Light Minute · No. 004",   # breaks after "Next light:"
        "next": "Radar first timed Venus's turn in 1962: about 243 days, backwards."}   # the true-fact footnote (c7)
 
 # "close": the push has landed (the pin's blip on the far pole fades until the guesses play on it); "ring": the
 # light-time ring grows with "Light time, Sun to Venus" and has landed before "six"; "ping": the round trip's ping
 # runs once the readout's push has (nearly) landed
 CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": t_radar, "pierce": A("vo04:pierced"), "back": A("vo04:backwards"), "whoa": t_w, "tk": t_tk,
-       "close": round(t_push2 + 1.6, 4), "ring": A("vo07:Light"), "echo": t_echo, "ping": round(t_echo + 1.0, 4), "you": A("vo05:Stand"),
+       "close": round(t_push2 + 1.6, 4), "ring": A("vo07:Light"), "echo": t_echo, "ping": t_ping, "you": A("vo05:Stand"),
        "sun_lbl": A("vo02:Sun"), "rise_i": RISE_I, "dial0": A("vo05:Sun"), "dial1": t_tk}
 POSTER = A("vo05:west", 0.5)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)

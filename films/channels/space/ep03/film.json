@@ -617,7 +617,7 @@
    "kind": "light",
    "anchor": "pin",
    "t0": 44.3333,
-   "t1": 47.13333333333333,
+   "t1": 42.9333,
    "side": 1,
    "v": "above",
    "fixed": true
@@ -646,7 +646,7 @@
    "text": "4 min round trip",
    "kind": "light",
    "anchor": "echo",
-   "t0": 64.46666666666667,
+   "t0": 65.4667,
    "t1": 67.2,
    "side": -1,
    "v": "below",
