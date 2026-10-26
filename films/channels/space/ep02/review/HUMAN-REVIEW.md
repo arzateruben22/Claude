@@ -26,8 +26,11 @@
   the team's command going out (a day) and the answer coming back (a day), in step with the voice. The fronts,
   the light-day circle and the heliopause rim are drawn as circles on the screen through Voyager *as seen* (a
   drawing convention: the real sphere is seen at an angle). Check that an astronomer is happy with that.
-- **The speck** (one light-day around the Sun) is drawn at least 14 px in radius in the local view; at true scale
+- **The speck** (one light-day around the Sun) is drawn at least 24 px in radius in the local view; at true scale
   it would be under a pixel. It sits under the "not to scale · illustration" note.
+- **The re-layout (26 Oct, after the audit):** Voyager's path now climbs to the right of the Sun (it was drawn up-left,
+  under the spine); the direction is a drawing choice either way (Voyager 1 heads for Ophiuchus, north of the
+  ecliptic). The spine's hedged numbers carry "≈" (≈300, ≈30,000, ≈1,550), matching "about" and "maybe" in the voice.
 - **After the 26 Oct script audit:** vo02 and vo04–vo06 were re-voiced ("It coasts at about seventeen kilometers a
   second. Earth to the Moon in six hours."; "about three hundred"; "maybe thirty thousand"; "wasn't in Europe"; "So
   we've barely left for the stars."), and the end card now teases "a planet that turns backwards" (Uranus does too;
