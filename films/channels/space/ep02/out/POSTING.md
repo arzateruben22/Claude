@@ -2,6 +2,8 @@
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
+**Cover / thumbnail**: `lightminute-002-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `lightminute-002-thumb.jpg` (16:9 YouTube thumbnail)
+
 ## YouTube Shorts
 **Title**
 

@@ -254,7 +254,8 @@ LABELS = [
     {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:throw"), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},
     {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
     {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": C_w, "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:Gravity", -0.3), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
+    # the drawing's label leaves on "plus a fall", before the falling glide label reaches it (the dots stay until "Gravity")
+    {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:plus"), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
     {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
     {"id": "ms-1m", "text": "1 m", "color": "ghost", "t0": A("vo06:one-meter"), "t1": None, "anchor": {"point": [STICK_X, 100.0, 0.0]}, "side": 1, "fixed": True, "v": "middle"},

@@ -59,7 +59,7 @@ end card: "Next: A billion passengers" · "Meanwhile, Inside · No. 02"
 
 ## Notes
 - The tally counts from frame 0 at 2 million a second (MedlinePlus). The line lands at about
-  59 s, when it reads about 118 million, so "over a hundred million" holds while the line starts
+  59.5 s, when it reads 119 million, so "over a hundred million" holds while the line starts
   after 50 s. If the beats move earlier than that, reword it.
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see
   `claims.json`. A person opens each link before posting.
