@@ -547,10 +547,12 @@
     .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
   var NEW_FIRST = [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["My first visit", "t:What happens at a first visit?"]];
   var MINE_CHIP = ["My products", "t:What have I bought here, and how do I use it?"];
+  /* four suggestions at most: the rest is a question away, and the answer's own buttons lead on */
+  var pick = function (ids) { return ids.map(function (id) { return CHIPS.filter(function (c) { return c[1] === id; })[0]; }).filter(Boolean); };
   var chipsFor = function (st) {
-    if (st === "new") return NEW_FIRST.concat(CHIPS.filter(function (c) { return c[1] !== "n:cancel" && c[1] !== "t:Where is my order?"; }));
+    if (st === "new") return NEW_FIRST.concat(pick(["n:prices", "n:book"]));
     var who = me();
-    return who && myShelf(who.email).length ? [MINE_CHIP].concat(CHIPS) : CHIPS;
+    return (who && myShelf(who.email).length ? [MINE_CHIP] : pick(["t:Where is my order?"])).concat(pick(["n:book", "n:before", "n:after"]));
   };
 
   var state = chat();
@@ -593,6 +595,7 @@
   /* menu steps (n:, s:, t:, skin) only on the newest answer; actions (book, move, #…) stay */
   var isStep = function (t) { return /^(n:|s:|t:|skin$)/.test(t); };
   var actsHtml = function (acts, last) {
+    acts = (acts || []).slice(0, 3);   /* three buttons at most under an answer */
     acts = (acts || []).filter(function (a) { return last || !isStep(a[1]); });
     if (!acts.length) return "";
     return '<div class="ask-acts">' + acts.map(function (a) {
