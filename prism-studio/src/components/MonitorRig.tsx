@@ -14,6 +14,7 @@ export function MonitorRig({ v }: { v: RigView }) {
         <span className="rig-pole" aria-hidden />
         <span className="rig-arm" aria-hidden />
         <span className="rig-base" aria-hidden />
+        {[1, 2, 3, 4].map((i) => <span key={i} className={`rig-joint j${i}`} aria-hidden />)}
         {PHONE_ORDER.map((pos) => {
           const m = v.monitors.find((x) => x.slug === slugAt(pos));
           return m ? <Monitor key={pos} m={m} pos={pos} tz={v.tz} /> : null;

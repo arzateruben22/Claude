@@ -1,5 +1,7 @@
 // Read models for the screens. Server-only: every function here runs in a server component or action.
 import "server-only";
+import fs from "node:fs";
+import path from "node:path";
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, or, sql, type SQL } from "drizzle-orm";
 import { db, type DB } from "@/db/client";
 import * as S from "@/db/schema";
@@ -7,10 +9,12 @@ import { settings } from "@/domain/core";
 import { channelXp, requirementsFor } from "@/domain/living";
 import { rewardBalances } from "@/domain/rewards";
 import { currentApproval } from "@/domain/approvals";
-import { OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
+import { CHANNELS, OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG } from "@/lib/rig";
+import { resolveMedia } from "@/lib/media";
+import { STATE_LABEL } from "@/lib/format";
 
 export type Channel = typeof S.channels.$inferSelect;
 export type Destination = typeof S.destinations.$inferSelect;
@@ -189,19 +193,6 @@ export async function onboardingView() {
   return d.select().from(S.onboarding);
 }
 
-export async function homeView() {
-  const d = db();
-  const [worlds, tasks, review, rv, unseenEv, onb] = await Promise.all([
-    channelsWithWorlds(), uploadTasks(),
-    d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(eq(S.episodes.state, "ready_for_review")),
-    rewardsView(),
-    d.select().from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))),
-    d.select().from(S.onboarding),
-  ]);
-  const unseenAch = await d.select({ ev: S.achievementEvents, rule: S.milestoneRules }).from(S.achievementEvents)
-    .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
-  return { worlds, tasks, reviewCount: review[0]?.n ?? 0, rewards: rv, unseenEvolutions: unseenEv, unseenAchievements: unseenAch, onboarding: { done: onb.filter((o) => o.done).length, total: onb.length } };
-}
 
 // ── the monitor wall ("/") and each monitor's extension ("/m/[slug]") ─────────────────────────────────────────
 
@@ -209,10 +200,12 @@ export type Task = Awaited<ReturnType<typeof loadTasks>>[number];
 /** One post for one account: a planned publication, or (Instagram only) the next episode in rotation, not planned yet. */
 export type PostItem = Omit<Task, "p"> & { p: Task["p"] | null };
 export type Led = "ready" | "review" | "off";
-export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "needs_approval" | "unplanned" | "empty" };
+export type CoverTone = "light" | "dark";
+/** One Instagram slot. "missed": its time passed with nothing planned (no rotation episode is spent on it). */
+export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "needs_approval" | "unplanned" | "missed" | "empty"; tone?: CoverTone };
 export type MonitorCard = {
   slug: string; kind: "channel" | "instagram"; href: string; name: string; label: string; color: string; colorInk: string;
-  cover: string | null; status: string; led: Led; ledLabel: string; slots?: IgSlot[];
+  cover: string | null; coverTone?: CoverTone; status: string; led: Led; ledLabel: string; slots?: IgSlot[];
 };
 
 const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
@@ -227,6 +220,45 @@ export function uploadUrlFor(dest: Destination) {
 
 /** The picture for a post: the export's own cover when one is set, else the render's poster frame. */
 export const coverOf = (t: Pick<PostItem, "x" | "version">) => t.x?.coverPath || t.version?.posterPath || null;
+
+const mediaFile = (key: string) => { const abs = resolveMedia(key); return abs && fs.existsSync(abs) ? abs : null; };
+
+/** The 480-px copy of a designed cover (scripts/covers.ts writes <name>-cover-480.jpg) for small pictures: the monitor
+ *  strip, queue rows, Instagram tiles. Falls back to the full cover when the small one is missing or older. */
+export function smallCover(key: string | null): string | null {
+  if (!key || !/-cover\.jpg$/.test(key)) return key;
+  const small = key.replace(/-cover\.jpg$/, "-cover-480.jpg"), a = mediaFile(small), b = mediaFile(key);
+  return a && b && fs.statSync(a).mtimeMs >= fs.statSync(b).mtimeMs ? small : key;
+}
+
+/** The 16:9 YouTube thumbnail drawn with a post's designed cover (<name>-thumb.jpg), when it exists. */
+export function thumbOf(t: Pick<PostItem, "x" | "version">): string | null {
+  const cover = coverOf(t);
+  if (!cover || !/-cover\.jpg$/.test(cover)) return null;
+  const thumb = cover.replace(/-cover\.jpg$/, "-thumb.jpg");
+  return mediaFile(thumb) ? thumb : null;
+}
+
+/** Whether a channel's covers are drawn on light paper (its theme.json tokens.bg luminance above 0.5): the wall dims those
+ *  so a beige cover never outshines the night. Read once per channel. */
+const tones = new Map<string, CoverTone>();
+export function coverTone(slug: string): CoverTone {
+  if (tones.has(slug)) return tones.get(slug)!;
+  let tone: CoverTone = "dark";
+  const dir = CHANNELS.find((c) => c.slug === slug)?.filmsPath;
+  try {
+    if (dir) {
+      const theme = JSON.parse(fs.readFileSync(path.join(path.resolve(/* turbopackIgnore: true */ process.env.FILMS_REPO_ROOT || ".."), dir, "theme.json"), "utf8")) as { tokens?: { bg?: string } };
+      const hex = (theme.tokens?.bg ?? "").replace("#", "");
+      if (/^[0-9a-f]{6}$/i.test(hex)) {
+        const lin = (i: number) => { const c = parseInt(hex.slice(i, i + 2), 16) / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+        if (0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4) > 0.5) tone = "light";
+      }
+    }
+  } catch { /* no theme: treat as dark */ }
+  tones.set(slug, tone);
+  return tone;
+}
 
 /** A ready post has a live approval of the current render's exact export. */
 export const isReady = (t: Pick<PostItem, "approval" | "x" | "version">) => !!t.approval && !!t.x && !t.version?.superseded;
@@ -263,22 +295,34 @@ async function instagramRotation(d: DB, ig: Destination, limit: number): Promise
   return out;
 }
 
-/** Today's Instagram slots (2 a day by default, studio_settings.instagram_daily), each with its post or the next in rotation. */
-async function instagramToday(d: DB, ig: Destination | undefined, tz: string, today: string) {
-  if (!ig) return { slots: [] as IgSlot[], rotation: [] as PostItem[] };
-  const start = zonedTimeToUtc(today, "00:00", tz), end = zonedTimeToUtc(addDays(today, 1), "00:00", tz);
-  const times = (await slotsForDate(d, today)).filter((s) => s.kind === "instagram").map((s) => s.at);
-  const todays = await loadTasks(d, and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end)));
-  const at = [...new Set([...times, ...todays.map((t) => t.p.scheduledFor!)].map((x) => +x))].sort((a, b) => a - b).map((x) => new Date(x));
-  const rotation = await instagramRotation(d, ig, Math.max(4, at.length));
+/**
+ * The Instagram slots that matter now (2 a day by default, studio_settings.instagram_daily), each with its post or the
+ * next in rotation. A slot whose time has passed with nothing planned is "missed" and spends no rotation episode. Once
+ * every slot today is over (nothing still open on it), tomorrow's slots are shown instead (day: "tomorrow").
+ */
+async function instagramToday(d: DB, ig: Destination | undefined, tz: string, today: string, now = new Date()) {
+  if (!ig) return { slots: [] as IgSlot[], rotation: [] as PostItem[], day: "today" as "today" | "tomorrow" };
+  const dayOf = async (date: string) => {
+    const start = zonedTimeToUtc(date, "00:00", tz), end = zonedTimeToUtc(addDays(date, 1), "00:00", tz);
+    const times = (await slotsForDate(d, date)).filter((s) => s.kind === "instagram").map((s) => s.at);
+    const tasks = await loadTasks(d, and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end)));
+    const at = [...new Set([...times, ...tasks.map((t) => t.p.scheduledFor!)].map((x) => +x))].sort((a, b) => a - b).map((x) => new Date(x));
+    return { at, tasks, find: (when: Date) => tasks.find((x) => +x.p.scheduledFor! === +when) };
+  };
+  let day: "today" | "tomorrow" = "today";
+  let cur = await dayOf(today);
+  const stillOpen = (when: Date) => { const t = cur.find(when); return t ? !POSTED.includes(t.p.status) : when >= now; };
+  if (cur.at.length && !cur.at.some(stillOpen)) { cur = await dayOf(addDays(today, 1)); day = "tomorrow"; }
+  const rotation = await instagramRotation(d, ig, Math.max(4, cur.at.length));
   let next = 0;
-  const slots: IgSlot[] = at.map((when) => {
-    const t = todays.find((x) => +x.p.scheduledFor! === +when);
-    if (t) return { at: when, item: t, state: POSTED.includes(t.p.status) ? "posted" : isReady(t) ? "ready" : "needs_approval" };
+  const slots: IgSlot[] = cur.at.map((when): IgSlot => {
+    const t = cur.find(when);
+    if (t) return { at: when, item: t, tone: coverTone(t.channel.slug), state: POSTED.includes(t.p.status) ? "posted" : isReady(t) ? "ready" : "needs_approval" };
+    if (when < now) return { at: when, item: null, state: "missed" };
     const cand = rotation[next++] ?? null;
-    return { at: when, item: cand, state: cand ? "unplanned" : "empty" };
+    return { at: when, item: cand, tone: cand ? coverTone(cand.channel.slug) : undefined, state: cand ? "unplanned" : "empty" };
   });
-  return { slots, rotation };
+  return { slots, rotation, day };
 }
 
 /** The six monitors: each one's cover, one status line and its status light. */
@@ -304,26 +348,31 @@ export async function rigView() {
     const reviewRender = renders.find((r) => toReview.some((e) => e.id === r.e.id));
     const anyRender = renders.find((r) => r.e.channelId === c.id);
     const cover = (next ? coverOf(next) : null) ?? (mine[0] ? coverOf(mine[0]) : null) ?? (reviewRender ? coverOf(reviewRender) : null) ?? (anyRender ? coverOf(anyRender) : null);
+    // in production = past the idea stage; ideas are counted separately ("1 in script · 5 ideas")
+    const inWork = chEps.filter((e) => e.state !== "idea"), ideas = chEps.length - inWork.length;
+    const production = [
+      inWork.length === 1 ? `1 in ${(STATE_LABEL[inWork[0].state] ?? inWork[0].state).toLowerCase()}` : inWork.length ? `${inWork.length} in production` : "",
+      ideas ? `${ideas} idea${ideas === 1 ? "" : "s"}` : "",
+    ].filter(Boolean).join(" · ");
     const status = next ? `Next: ${next.e.title} · ${PLATFORM_NAME[next.dest.platform]} ${when(next.p.scheduledFor!)}`
       : toReview.length ? `${toReview.length} ready to review`
       : mine.length ? `${mine.length} to schedule`
-      : chEps.length ? `${chEps.length} episode${chEps.length === 1 ? "" : "s"} in production`
-      : "No episodes yet";
+      : production || "No episodes yet";
     const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
     return {
-      slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, status, led,
+      slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
       ledLabel: led === "ready" ? "ready to post today" : led === "review" ? "needs review" : "nothing queued today",
     };
   });
 
-  const { slots } = await instagramToday(d, ig, tz, today);
+  const { slots, day } = await instagramToday(d, ig, tz, today);
   const posted = slots.filter((x) => x.state === "posted").length, ready = slots.filter((x) => x.state === "ready").length;
   const waiting = slots.filter((x) => x.state === "needs_approval").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
   const igStatus = !ig ? "Instagram isn't set up" : s.globalPause ? "Publishing is paused" : !slots.length ? "No Instagram slots today"
-    : posted === slots.length ? `Today's ${slots.length} posted`
-    : ready ? `${ready} ready to post today${posted ? ` · ${posted} posted` : ""}`
-    : waiting ? `${waiting} today need${waiting === 1 ? "s" : ""} approval`
-    : unplanned ? `${slots.length} slots today · not planned yet` : "Nothing in rotation yet";
+    : posted === slots.length ? `${day === "today" ? "Today" : "Tomorrow"}'s ${slots.length} posted`
+    : ready ? `${ready} ready to post ${day}${posted ? ` · ${posted} posted` : ""}`
+    : waiting ? `${waiting} need${waiting === 1 ? "s" : ""} approval`
+    : unplanned ? `Plan ${day}'s ${unplanned === 1 ? "post" : `${unplanned} posts`}` : "Nothing in rotation yet";
   const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
   monitors.push({
     slug: INSTAGRAM_SLUG, kind: "instagram", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
@@ -335,7 +384,10 @@ export async function rigView() {
     .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
   const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
-  return { tz, today, monitors, reviewCount, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length, paused: s.globalPause, stopExternal: s.stopExternalActions };
+  return {
+    tz, today, monitors, reviewCount, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
+    instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
+  };
 }
 export type RigView = Awaited<ReturnType<typeof rigView>>;
 
@@ -368,7 +420,7 @@ export async function instagramExtension() {
   const tz = s.timezone, today = localDate(new Date(), tz);
   const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
   const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
-  const { slots, rotation } = await instagramToday(d, ig, tz, today);
+  const { slots, rotation, day } = await instagramToday(d, ig, tz, today);
   const upcoming = ig ? (await loadTasks(d, and(eq(S.publications.destinationId, ig.id), inArray(S.publications.status, [...OPEN_STATUSES]), gte(S.publications.scheduledFor, zonedTimeToUtc(addDays(today, 1), "00:00", tz))))).slice(0, 14) : [];
   const pubs = ig ? await d.select({ episodeId: S.publications.episodeId, status: S.publications.status }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
   const exportsIg = await currentExports(d, "instagram");
@@ -384,7 +436,7 @@ export async function instagramExtension() {
   const sum = (k: "ready" | "posted" | "planned" | "never" | "episodes") => ledger.reduce((a, r) => a + r[k], 0);
   return {
     tz, today, ig: ig ?? null, uploadUrl: ig ? uploadUrlFor(ig) : OFFICIAL.instagram.upload, daily: s.instagramDaily, paused: s.globalPause, stopExternal: s.stopExternalActions,
-    slots, rotation: rotation.filter((r) => !slots.some((x) => x.item?.e.id === r.e.id)), upcoming, ledger,
+    slots, day, rotation: rotation.filter((r) => !slots.some((x) => x.item?.e.id === r.e.id)), upcoming, ledger,
     totals: { episodes: sum("episodes"), ready: sum("ready"), posted: sum("posted"), planned: sum("planned"), never: sum("never") },
   };
 }

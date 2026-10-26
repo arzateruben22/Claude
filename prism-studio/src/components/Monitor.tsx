@@ -40,7 +40,7 @@ function InstagramScreen({ m, tz }: { m: MonitorCard; tz: string }) {
   return (
     <span className="ig">
       <span className="ig-info">
-        <span className="mon-label">All series · {slots.length || 2} a day</span>
+        <span className="mon-label">All series</span>
         <span className="mon-name">Instagram</span>
         <span className="mon-status">{m.status}</span>
       </span>

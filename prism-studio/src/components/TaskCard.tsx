@@ -65,6 +65,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
               <div className="kicker">Caption</div>
               <div style={{ whiteSpace: "pre-wrap", fontSize: 14.5, background: "var(--ivory)", borderRadius: 12, padding: 12, maxHeight: 180, overflow: "auto" }}>{fullCaption}</div>
               <div className="row"><CopyButton text={fullCaption} label="Copy caption" />
+                {x.coverPath ? <a className="btn ghost small" href={mediaUrl(x.coverPath, fileName.replace(/\.mp4$/, "-cover.jpg"))} download={fileName.replace(/\.mp4$/, "-cover.jpg")}>Cover .jpg</a> : null}
                 {dest.platform === "youtube" && e.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${e.id}`} download>Captions .srt</a> : null}
                 <a className="btn ghost small" href={`/api/bundle/${p.id}`} download>Bundle .zip</a></div>
               {x.postingNotes ? <p className="faint" style={{ fontSize: 13, margin: 0 }}>{x.postingNotes}</p> : null}

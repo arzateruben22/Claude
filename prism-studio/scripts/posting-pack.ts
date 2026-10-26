@@ -21,7 +21,10 @@ for (const dir of dirs) {
   const input = metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic },
     { number: n, title: film?.title?.title ? plain(film.title.title) : slate?.titles[n - 1] ?? path.basename(dir), durationS: film?.dur, seriesTitle: slate?.series, seriesOrder: n, seriesTotal: slate?.titles.length });
   const meta = buildMetadata(input);
-  fs.writeFileSync(path.join(out, "POSTING.md"), postingSheet(input, meta));
+  const name = fs.readdirSync(out).find((f) => /-9x16\.mp4$/.test(f))!.replace(/-9x16\.mp4$/, "");
+  const art = [[`${name}-cover.jpg`, "9:16 cover: TikTok, Reels, Shorts"], [`${name}-thumb.jpg`, "16:9 YouTube thumbnail"]].filter(([f]) => fs.existsSync(path.join(out, f)));
+  const coverLine = `**Cover / thumbnail**: ${art.length ? art.map(([f, use]) => `\`${f}\` (${use})`).join(" · ") : `\`${name}-9x16.jpg\` (the poster; \`npm run covers\` makes the designed cover and thumbnail)`}`;
+  fs.writeFileSync(path.join(out, "POSTING.md"), postingSheet(input, meta).replace(/\n## /, `\n${coverLine}\n\n## `));
   fs.writeFileSync(path.join(out, "posting.json"), JSON.stringify({ generated: new Date().toISOString().slice(0, 10), ...meta }, null, 1));
   const warn = Object.values(meta).flatMap((m) => m.warnings);
   console.log(`${path.relative(ROOT, dir)}: POSTING.md, posting.json${warn.length ? ` · check: ${warn.join("; ")}` : ""}`);

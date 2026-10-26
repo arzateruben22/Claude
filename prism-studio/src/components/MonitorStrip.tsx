@@ -23,7 +23,7 @@ export function MonitorStrip({ monitors, current }: { monitors: MonitorCard[]; c
   const [ol, il, top, center, ir, or] = RIG_ORDER;
   return (
     <nav className="strip" aria-label="Monitors">
-      <Link href="/" className="strip-back"><Icon name="back" size={18} /> <span>Wall</span></Link>
+      <Link href="/" className="strip-back"><Icon name="back" size={18} /> <span className="strip-back-label">Wall</span></Link>
       <div className="strip-rig">
         {cell(ol.position, ol.slug)}
         {cell(il.position, il.slug)}

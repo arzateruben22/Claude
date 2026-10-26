@@ -50,7 +50,7 @@ const COMPOSITIONS = {
   landscape: {
     cam: [0, 255, 160], pitch: -6.0, vfov: 50,
     calm: [0.5, 0.52, 0.30, 0.26],      // centre (uv) + radii of the quiet zone behind the monitor rig
-    beam: { src: { ndcX: -0.60, fwd: 1700, y: 128 }, hit: { ndcX: -0.43, ndcY: 0.70 } },
+    beam: { src: { ndcX: -0.60, fwd: 1700, y: 128 }, hit: { ndcX: -0.43, ndcY: 0.70 }, gain: 1.0 },
     landmarks: [
       { ndcX: -1.10, fwd: 235, w: 66, d: 58, h: 430, style: 'deco', flood: 0, occ: 0.30, spire: false },
       { ndcX: -0.90, fwd: 480, w: 44, d: 44, h: 335, style: 'gothic', flood: 0.55, occ: 0.24 },
@@ -63,7 +63,7 @@ const COMPOSITIONS = {
   portrait: {
     cam: [178, 268, 210], pitch: -8.5, vfov: 72,
     calm: [0.5, 0.55, 0.36, 0.22],
-    beam: { src: { ndcX: -0.40, fwd: 1250, y: 128 }, hit: { ndcX: -0.56, ndcY: 0.55 } },
+    beam: { src: { ndcX: -0.40, fwd: 1250, y: 128 }, hit: { ndcX: -0.56, ndcY: 0.55 }, gain: 0.62 },
     landmarks: [
       { ndcX: -1.18, fwd: 175, w: 52, d: 50, h: 440, style: 'deco', flood: 0, occ: 0.30, spire: false },
       { ndcX: -0.92, fwd: 430, w: 40, d: 40, h: 330, style: 'gothic', flood: 0.55, occ: 0.24 },
@@ -103,6 +103,19 @@ float fbmAA(vec2 p, float fp, int oct){
     p = mat2(1.6, 1.2, -1.2, 1.6) * p + vec2(7.13, 3.71); f *= 2.0; a *= 0.5;
   }
   return s / nrm;
+}
+
+// Distance to the nearest feature point (cellular noise), for stratocumulus cells
+float worley(vec2 p){
+  vec2 i = floor(p), f = fract(p);
+  float d = 8.0;
+  for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++){
+    vec2 g = vec2(x, y);
+    vec2 o = vec2(hash2(i + g, 21.0), hash2(i + g, 22.0));
+    vec2 r = g + o - f;
+    d = min(d, dot(r, r));
+  }
+  return sqrt(d);
 }
 
 // The haze is lit by the city from below: warm smoky grey near the horizon, steel above.
@@ -175,7 +188,7 @@ void main(){
   // Light that reaches a facade at 2 a.m.: the glowing cloud above, the city around,
   // the street below (warm, fading within a few storeys).
   vec3 skyAmb = vec3(0.34, 0.33, 0.33);
-  vec3 sideAmb = vec3(0.20, 0.215, 0.24);
+  vec3 sideAmb = vec3(0.22, 0.24, 0.27);
   vec3 amb = mix(sideAmb, skyAmb, pow(clamp(n.y, 0.0, 1.0), 2.0));
   vec3 street = vec3(1.0, 0.58, 0.30) * uStreetGain * exp(-max(p.y, 0.0) / 14.0);
   // facades turned towards the bright core of the city get a little more glow
@@ -327,13 +340,13 @@ vec3 farShore(vec2 q, float fpA){
 }
 
 vec3 river(vec2 q, vec3 rd, float dr, float dist){
-  vec3 col = vec3(0.0030, 0.0038, 0.0050);
+  vec3 col = vec3(0.0022, 0.0029, 0.0040);
   // ripples break the mirror
   vec2 w = vec2(fbmAA(q / vec2(140.0, 22.0), 0.0, 3), fbmAA(q / vec2(140.0, 22.0) + 9.0, 0.0, 3)) - 0.5;
   vec3 nn = normalize(vec3(w.x * 0.10, 1.0, w.y * 0.22));
   vec3 rr = reflect(rd, nn);
   float fres = 0.02 + 0.98 * pow(1.0 - max(-rd.y, 0.0), 5.0);
-  col += hazeCol(rr) * fres * 0.42;
+  col += hazeCol(rr) * fres * 0.30;
   // long broken reflections of the far-shore lights, running towards the viewer
   float s = (q.x - cameraPosition.x) / max(cameraPosition.z - q.y, 1.0);
   float col_id = floor(s * 1400.0);
@@ -375,6 +388,7 @@ void main(){
 const CLOUD_FS = COMMON + /* glsl */ `
 varying vec3 vWorld;
 uniform vec3 uBeamHit;
+uniform float uSpotGain;
 uniform float uRiverZ;
 uniform float uCloudGain;
 float riverZ(float x){ return uRiverZ + 0.16 * x + 110.0 * sin(x / 1300.0 + 0.7); }
@@ -387,17 +401,22 @@ void main(){
   vec2 warp = vec2(fbmAA(wq + 3.1, fp / 3000.0, 4), fbmAA(wq + 7.7, fp / 3000.0, 4)) - 0.5;
   float n = fbmAA(q / 1500.0 + warp * 2.0, fp / 1500.0, 6);
   float bil = 1.0 - abs(2.0 * fbmAA(q / 620.0 + warp * 3.0 + 4.0, fp / 620.0, 5) - 1.0);
-  float dens = smoothstep(0.40, 0.70, n * 0.72 + bil * 0.38);
+  // stratocumulus: rounded cells with dark seams, broken up by the larger fbm
+  vec2 cq = q / 520.0 + warp * 1.4;
+  float cellAA = 1.0 - smoothstep(0.25, 0.7, fp / 520.0);
+  float cells = mix(0.55, 1.0 - worley(cq), cellAA);
+  float cells2 = mix(0.55, 1.0 - worley(cq * 2.3 + 5.0), 1.0 - smoothstep(0.25, 0.7, fp * 2.3 / 520.0));
+  float dens = smoothstep(0.30, 0.72, n * 0.55 + cells * 0.38 + cells2 * 0.14 + bil * 0.10 - 0.08);
   float det = fbmAA(q / 210.0 + warp * 4.0, fp / 210.0, 5);
   // lit from below: brightest over the dense city and towards the horizon, darkest overhead
   float overCity = smoothstep(riverZ(q.x) - 900.0, riverZ(q.x) + 1600.0, q.y);
   float glow = mix(0.45, 1.0, overCity) * (0.55 + 0.6 * det) * mix(0.30, 1.0, smoothstep(700.0, 4800.0, dist));
-  vec3 lit = mix(vec3(0.050, 0.052, 0.058), vec3(0.108, 0.083, 0.063), smoothstep(1200.0, 5200.0, dist)) * glow;
+  vec3 lit = mix(vec3(0.046, 0.050, 0.058), vec3(0.100, 0.081, 0.066), smoothstep(1200.0, 5200.0, dist)) * glow;
   vec3 gap = vec3(0.005, 0.0065, 0.010);
   vec3 col = mix(gap, lit, dens * 0.9 + 0.1 * det * dens);
   // the searchlight's soft spot where it enters the cloud
   float sd = length(q - uBeamHit.xz);
-  col += vec3(0.60, 0.64, 0.68) * (0.055 * exp(-sd*sd / (150.0*150.0)) + 0.016 * exp(-sd / 420.0)) * (0.45 + 0.55 * dens);
+  col += vec3(0.60, 0.64, 0.68) * (0.055 * exp(-sd*sd / (150.0*150.0)) + 0.016 * exp(-sd / 420.0)) * (0.45 + 0.55 * dens) * uSpotGain;
   col *= uCloudGain;
   col = mix(col, hazeCol(rd), 1.0 - exp(-dist / 6500.0));
   gl_FragColor = vec4(col, 1.0);
@@ -588,7 +607,11 @@ function tower(B, cx, cz, w, d, H, style, r, o = {}) {
       B.cone(cx, y, cz, Math.max(1.6, cw * 0.8), sh, Math.max(1.6, cd * 0.8), I(1, flood * 0.8), tone);
     }
   } else if (style === 'gothic') {
-    const rh = Math.min(tw, td) * (1.15 + 0.75 * r());
+    if (Math.min(tw, td) > 30) {
+      // a broad gothic top: two stepped stages before the pyramid
+      for (let s2 = 0; s2 < 2; s2++) { const ch = 4 + r() * 4; B.box(cx, y, cz, tw * 0.8, ch, td * 0.8, I(1, flood), win, tone); y += ch; tw *= 0.62; td *= 0.62; }
+    }
+    const rh = Math.min(Math.min(tw, td) * (1.15 + 0.75 * r()), Math.max(10, H * 0.28));
     B.cone(cx, y, cz, tw * 0.94, rh, td * 0.94, I(1, flood), tone);
     const pw = Math.max(1.2, tw * 0.09), ph = rh * (0.5 + 0.2 * r());
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
@@ -728,6 +751,7 @@ function buildCity(comp, cam, aspect) {
         const inner = Math.abs(ndc) < 0.62;
         if (inner && fwd < 1150) H = Math.min(H, 34 + (fwd - 300) * 0.15 + (r() < 0.12 ? 40 : 0));
         if (Math.abs(ndc) < 0.58 && fwd >= 1500 && fwd < 4200) H = Math.min(H, 95 + 120 * Math.abs(ndc) / 0.58 + (r() < 0.06 ? 60 : 0));
+        if (Math.abs(ndc) < 0.62 && fwd >= 3300) H = Math.min(H, 22 + 30 * Math.abs(ndc) / 0.62);
         const dHero = Math.hypot(cx - W.hero.x, cz - W.hero.z);
         if (dHero < 420) H = Math.min(H, 70 + dHero * 0.25);
         H = Math.max(H, 12);
@@ -832,10 +856,10 @@ function genLights(comp, tanH) {
     if (rnd() < 0.2) add(x + rnd() * 40, 4, z + rnd() * 40, rnd() < 0.75 ? SOD : WHITE, 1.6, 0.4);
   }
   // embankments
-  for (let x = -9000; x < 9000; x += 34) {
+  for (let x = -9000; x < 9000; x += 22) {
     const zr = riverZ(x);
-    add(x, 6, zr + W.riverHalf - 5, SOD, 2.6, 0.55);
-    add(x + 17, 6, zr - W.riverHalf + 5, SOD, 2.2, 0.55);
+    add(x, 6, zr + W.riverHalf - 5, SOD, 3.6, 0.6);
+    add(x + 11, 6, zr - W.riverHalf + 5, rnd() < 0.8 ? SOD : WHITE, 3.0, 0.6);
   }
   // bridge: kerb lamps along the deck, warning lamps on the tower tops
   {
@@ -861,9 +885,9 @@ function genLights(comp, tanH) {
         const dev = Math.min(1, Math.max(0, (vnoiseJS(jx / 2300 + 5, jz / 2300) * 0.65 + vnoiseJS(jx / 800, jz / 800 + 9) * 0.35 - 0.30) / 0.40));
         const road = Math.abs(((gz % 900) + 900) % 900 - 450) < cell * 0.5 ? 0.35 : 0;
         const town = Math.max(0, 1 - Math.hypot(jx + 2300, jz - (zr - W.riverHalf - 500)) / 1400) * 0.4 + Math.max(0, 1 - Math.hypot(jx - 2000, jz - (zr - W.riverHalf - 500)) / 1100) * 0.35;
-        if (rnd() > baseD * (0.2 + 1.3 * dev) + road + town) continue;
+        if (rnd() > baseD * (0.05 + 1.4 * dev * dev) + road * 0.7 + town) continue;
         void gx;
-        add(jx, 5, jz, rnd() < 0.72 ? SOD : (rnd() < 0.6 ? LAMP : WHITE), 2.0 + rnd() * 1.6, rr);
+        add(jx, 5, jz, rnd() < 0.72 ? SOD : (rnd() < 0.6 ? LAMP : WHITE), 1.4 + rnd() * 1.4, rr);
       }
     }
   }
@@ -900,12 +924,12 @@ function screenRay(cam, nx, ny) {
 }
 
 const LOOK = {
-  hazeLow: [0.040, 0.030, 0.0225],
+  hazeLow: [0.037, 0.030, 0.0245],
   hazeHigh: [0.0055, 0.0080, 0.0125],
   winGain: 0.72, floodGain: 0.20, streetGain: 1.5, lampGain: 0.55,
-  cloudGain: 1.0, beamGain: 0.075,
+  cloudGain: 1.0, beamGain: 0.09,
   lightGain: 1.0,
-  exposure: 1.28, bloom: 0.6, bloomThresh: 0.16, sat: 0.80, calmAmt: 0.22,
+  exposure: 1.28, bloom: 0.6, bloomThresh: 0.16, sat: 0.78, calmAmt: 0.30,
 };
 
 function buildScene(format, aspect, pixAng, ss) {
@@ -975,7 +999,7 @@ function buildScene(format, aspect, pixAng, ss) {
 
   const cMat = new THREE.ShaderMaterial({
     vertexShader: GROUND_VS, fragmentShader: CLOUD_FS, side: THREE.DoubleSide,
-    uniforms: { ...common, uBeamHit: { value: hit.clone() }, uRiverZ: { value: W.riverZ }, uCloudGain: { value: LOOK.cloudGain } },
+    uniforms: { ...common, uBeamHit: { value: hit.clone() }, uSpotGain: { value: comp.beam.gain ?? 1 }, uRiverZ: { value: W.riverZ }, uCloudGain: { value: LOOK.cloudGain } },
   });
   const cGeo = new THREE.PlaneGeometry(130000, 130000); cGeo.rotateX(Math.PI / 2);
   const cloud = new THREE.Mesh(cGeo, cMat);
@@ -1021,7 +1045,7 @@ function buildScene(format, aspect, pixAng, ss) {
     const mat = new THREE.ShaderMaterial({
       vertexShader: BEAM_VS, fragmentShader: BEAM_FS, transparent: true, depthWrite: false,
       blending: THREE.AdditiveBlending, side: THREE.FrontSide,
-      uniforms: { ...common, uLen: { value: len }, uBeamGain: { value: LOOK.beamGain } },
+      uniforms: { ...common, uLen: { value: len }, uBeamGain: { value: LOOK.beamGain * (comp.beam.gain ?? 1) } },
     });
     const beam = new THREE.Mesh(geo, mat);
     beam.position.copy(src);
@@ -1178,7 +1202,7 @@ function soften(canvas, width) {
   const c = document.createElement('canvas'); c.width = width; c.height = h;
   const g = c.getContext('2d');
   g.fillStyle = '#060709'; g.fillRect(0, 0, width, h);
-  g.filter = `blur(${Math.round(width / 64)}px) brightness(0.58) saturate(0.8)`;
+  g.filter = `blur(${Math.round(width / 64)}px) brightness(0.72) saturate(0.8)`;
   const ox = width * 0.06, oy = h * 0.06;
   g.drawImage(canvas, -ox, -oy, width + 2 * ox, h + 2 * oy);
   g.filter = 'none';

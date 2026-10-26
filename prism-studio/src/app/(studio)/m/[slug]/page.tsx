@@ -35,6 +35,7 @@ export default async function Extension({ params }: { params: Promise<{ slug: st
 function QueueRow({ t, tz }: { t: PostItem; tz: string }) {
   return (
     <li className="q-row" style={topicStyle(t.channel)}>
+      <span className="q-cover" aria-hidden>{coverOf(t) ? <img src={mediaUrl(coverOf(t)!)} alt="" decoding="async" loading="lazy" /> : null}</span>
       <span className="q-when num">{t.p?.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled"}</span>
       <span className="q-where">{t.dest.shared ? `Instagram · ${t.channel.label}` : PLATFORM_LABEL[t.dest.platform]}</span>
       <Link href={`/episodes/${t.e.id}`} className="q-title">{t.e.title}</Link>
@@ -187,12 +188,6 @@ async function InstagramScreen() {
             </ul>
           </div>
         ) : <p className="muted">Nothing else in rotation.</p>}
-        <div className="rotation-covers" aria-hidden>
-          {[...v.upcoming, ...v.rotation].slice(0, 8).map((t, i) => {
-            const cover = coverOf(t);
-            return <span key={i} className="rc" style={topicStyle(t.channel)}>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" /> : null}<i>{t.channel.label}</i></span>;
-          })}
-        </div>
       </section>
 
       <section className="section">

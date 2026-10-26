@@ -5,6 +5,7 @@ import { and, eq } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { destinations, publications } from "../db/schema";
 import { audit, type Conn, DomainError } from "./core";
+import { currentApproval } from "./approvals";
 
 export type PubStatus = typeof publications.$inferSelect["status"];
 
@@ -38,10 +39,13 @@ async function load(c: Conn, id: string) {
   return p;
 }
 
-/** The owner took the materials to the platform (download/share/open). Not a publication. */
+/** The owner took the approved materials to the platform (download/share/open). Not a publication. Ignored (the record
+ *  is returned unchanged) unless the exact export is approved for this destination: an unapproved video never counts
+ *  as handed off, however the download was reached. */
 export async function markHandedOff(d: DB, id: string) {
   const p = await load(d, id);
   if (["owner_reported", "verified_published", "scheduled_on_platform"].includes(p.status)) return p;
+  if (!p.exportId || !(await currentApproval(d, p.exportId, p.destinationId))) return p;
   const [row] = await d.update(publications).set({ status: "handed_off", handedOffAt: new Date(), updatedAt: new Date() }).where(eq(publications.id, id)).returning();
   await audit(d, "owner", "publication.handed_off", "publication", id);
   return row;

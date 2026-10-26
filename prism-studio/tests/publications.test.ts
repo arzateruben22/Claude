@@ -3,6 +3,7 @@ import { freshDb, renderedEpisode, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
 import { markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoUploaded } from "../src/domain/publications";
 import { onPublicationReported, channelXp } from "../src/domain/living";
+import { approve } from "../src/domain/approvals";
 
 let db: DB, end: () => Promise<void>;
 beforeAll(async () => ({ db, end } = await freshDb()));
@@ -34,10 +35,17 @@ describe("one record per destination", () => {
     expect(tt.status).toBe("planned");
   });
   it("handing off (download/share/open) is not a publication", async () => {
-    const { pubs } = await renderedEpisode(db);
+    const { pubs, exports, tt } = await renderedEpisode(db);
+    await approve(db, { exportId: exports.tiktok.id, destinationId: tt.id });
     const p = await markHandedOff(db, pubs.tiktok.id);
     expect(p.status).toBe("handed_off");
     expect(p.reportedAt).toBeNull();
+  });
+  it("hand-off without approval is ignored", async () => {
+    const { pubs } = await renderedEpisode(db);
+    const p = await markHandedOff(db, pubs.tiktok.id);
+    expect(p.status).toBe("planned");
+    expect(p.handedOffAt).toBeNull();
   });
   it("a TikTok link from another account is refused", async () => {
     const { pubs, tt } = await renderedEpisode(db);
