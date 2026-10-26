@@ -18,7 +18,7 @@ script and the pictures before it posts.
 - **Normal:** one protein, hemoglobin, about 270 million copies; four irons, four seats.
 - **Change:** one hemoglobin fills. The first O₂ struggles to board; each makes the next easier (cooperative
   binding); full, it flushes from garnet to crimson.
-- **Why (the wrong idea):** veins look blue, so people guess the blood is. It never is: returning blood is darker
+- **Why (the wrong idea):** veins often look blue, so people guess the blood is. It never is: returning blood is darker
   red, red light sinks in and the vein swallows it, so less red comes back.
 - **Whoa:** your blood comes back through your lungs about once a minute; there the empty seats fill in about a
   quarter of a second (shown 12× slower, with a 0.25 s readout).
@@ -77,7 +77,7 @@ fastest fibres; the whoa no longer repeats the hook's billion but escalates to t
   gaps, and the signal as a chartreuse glow, continuous ("flow") or node by node ("jump"), with a glowing band at
   each lit node. Episode 3 builds on it; episode 4 adds the terminal.
 
-No kit file was changed (`../KIT-CHANGES.md`).
+One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
 
 ## Rebuild
 
@@ -102,8 +102,10 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
   on boarding; each O₂ boarding a little sooner (c5 says "easier", which is affinity); the lung capillary speed
   (240 µm/s) and the 60 µm over which the colour changes; the skin's layer thicknesses, the vein's depth and the
   light paths (an illustration of c10); the nerve's internodes (compressed, badged).
-- **Badges:** "not to scale" on the cell (hemoglobin oversized), "illustration" on the hemoglobin, "illustration ·
-  not to scale" on the skin, "12× slower" and "not to scale" on the lung, "not to scale" on the nerve.
+- **Badges:** "not to scale" on the cell (hemoglobin oversized), "illustration · slowed" on the hemoglobin (the
+  boardings take seconds, not microseconds), "illustration · not to scale" on the skin, "12× slower" (the clock's own
+  note, gone when the cells return to real speed on "Meanwhile") and "not to scale" on the lung, "not to scale ·
+  slowed" on the nerve.
 - **The readouts** are claims too: about 1,000,000,000 seats (c2, computed 1.08 billion, rounded as spoken), about 270,000,000 hemoglobins (c1), 75% in returning blood (c18), 75 → 97%
   (c19), 0.25 s (c17), the mL tally (c15).
 - **Listen at T0:** hemoglobin, "the empty seats fill", the pauses before "In about a quarter of a second".

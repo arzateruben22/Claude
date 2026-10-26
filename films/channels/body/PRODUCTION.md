@@ -6,7 +6,7 @@ These five feed the first long-form compilation (with episode 1).
 
 | # | Title | State |
 |---|---|---|
-| 02 | A billion passengers | reviewed · voiced (72.8 s, lint 0/0) · visual review fixes applied · stills OK at 390 px · soundtrack −14.1 LUFS / −1.9 dBTP, sync PASS, voice 15.9 LU over music · **rendering** final (restarted 26 Oct 05:34 UTC after the backdrop fix) |
+| 02 | A billion passengers | reviewed · voiced (72.8 s, lint 0/0) · visual review fixes applied · the 26 Oct fact-check audit applied (vo04 re-voiced: "Veins often look blue") · balanced captions · soundtrack −14.05 LUFS / −2.0 dBTP, sync PASS, voice 15.8 LU over music · **rendering** final (started 26 Oct 08:19 UTC, ≈3 h) |
 | 03 | The jump | reviewed · voiced (74.8 s, lint 0/0) · visual review fixes applied in code (the race, the hook's spike train, the drum, readout colours, the figure) · first looks, cues, soundtrack, stills next (after ep02's final frees Chromium) |
 | 04 | The gap | reviewed · voiced (74.0 s, lint 0/0) · visual review fixes applied in code (the joined-looking hook, the field's used junction, the gap readout, the bursts) · first looks next |
 | 05 | Where breath goes | reviewed · voiced (74.4 s, lint 0 errors) · visual review fixes applied in code (the hook's cut, the wall at its true 0.5 µm, the sponge, the squeeze above the caption) · first looks next |
@@ -26,7 +26,8 @@ scratchpad) went over the ep02–ep05 builds at 390 px and HD. The real fixes we
 - `set/hemoglobin.js` (ep02 only): a dark-red protein instead of grey plastic, a material per iron so each can
   glint, a glow parameter.
 - `set/wanderer.js` (new, ep06): the neutrophil.
-No kit file changed (`KIT-CHANGES.md`). Pulse pink is now kept to blood in every episode: nerve readouts take the
+One kit change, opt-in (`KIT-CHANGES.md`): `timeline.py`'s balanced caption pager (`balance=True` and a `keep`
+list per episode), which ends the one-word caption tails; the default path is byte-identical for episode 1. Pulse pink is now kept to blood in every episode: nerve readouts take the
 nerve colour, ep05's take the text colour.
 
 ## Running order from here
