@@ -6767,4 +6767,12 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .app-store b { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; }
 .app-phone { margin: 0; justify-self: center; width: min(18rem, 100%); }
 .app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(74, 52, 42, 0.28)); }
-@media (max-width: 800px) { .app-grid { grid-template-columns: 1fr; gap: 2rem; } .app-phone { width: min(14rem, 100%); } }
+.app-copy .section-sub { margin-bottom: 0; }
+@media (max-width: 800px) {
+  .app-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .app-phone { width: min(14rem, 100%); }
+  /* on a phone the section stacks: everything centred over the phone picture */
+  .app-copy { text-align: center; }
+  .app-copy .section-sub { margin-left: auto; margin-right: auto; }
+  .app-store { display: flex; width: max-content; margin-left: auto; margin-right: auto; text-align: left; }
+}
