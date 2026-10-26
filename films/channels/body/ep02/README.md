@@ -35,7 +35,7 @@ fastest fibres; the whoa no longer repeats the hook's billion but escalates to t
 ## The picture rules (WRITING.md, "The picture", applied from this episode on)
 
 - **A spine readout** in one place under the safe box's top edge, from the title's exit to the tally, its label naming
-  the beat: O₂ seats in this one cell (1,080,000,000) → O₂ aboard this hemoglobin (0 → 4 of 4, a step on each
+  the beat: O₂ seats in this one cell (about 1,000,000,000) → hemoglobins in it (about 270,000,000, as it is spoken) → O₂ aboard this hemoglobin (0 → 4 of 4, a step on each
   boarding) → seats still full in returning blood (about 75%) → seats filling, in lung time (0.00 → 0.25 s) → seats
   full, arriving → leaving (75 → 97%) → the tally (mL of oxygen handed out).
 - **Human scale:** the body locator marks the forearm over the skin shot and the chest over the lung shot.
@@ -104,6 +104,6 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
   light paths (an illustration of c10); the nerve's internodes (compressed, badged).
 - **Badges:** "not to scale" on the cell (hemoglobin oversized), "illustration" on the hemoglobin, "illustration ·
   not to scale" on the skin, "12× slower" and "not to scale" on the lung, "not to scale" on the nerve.
-- **The readouts** are claims too: 1,080,000,000 seats (c2, computed), 75% in returning blood (c18), 75 → 97%
+- **The readouts** are claims too: about 1,000,000,000 seats (c2, computed 1.08 billion, rounded as spoken), about 270,000,000 hemoglobins (c1), 75% in returning blood (c18), 75 → 97%
   (c19), 0.25 s (c17), the mL tally (c15).
 - **Listen at T0:** hemoglobin, "the empty seats fill", the pauses before "In about a quarter of a second".

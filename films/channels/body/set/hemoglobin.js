@@ -15,7 +15,8 @@
 // `shift` (0..1) turns the two αβ halves a few degrees against each other: the T → R change that makes
 // the next O₂ bind more readily (c5), drawn, not measured.
 //
-// hemoglobin(THREE, L, o) → { group, units: [Mesh ×4], hemes: [Mesh ×4], set({ load, shift }),
+// hemoglobin(THREE, L, o) → { group, units: [Mesh ×4], hemes: [Mesh ×4], set({ load, shift, glow }) (glow 0..1: a
+//   brief warm glow of the whole molecule, no hue change),
 //   seat(i) → world [x, y, z] (where O₂ i docks), seatLocal(i), centre() → world, rmax }
 // hbGeometry(THREE, { detail = 2, seed = 4 }) → one merged BufferGeometry of the four blobs (crowds:
 //   inside the cut cell, the reveal pull), radius ≈ HB_R, with a vertex colour for a subtle unit shading
@@ -48,14 +49,16 @@ export const hemoglobin = (THREE, L, o = {}) => {
   const heme = new THREE.CylinderGeometry(0.95, 0.95, 0.22, 28);
   const ironG = new THREE.IcosahedronGeometry(0.34, 2);
   const hemeMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin("#3A0E18"), emissive: L.lin("#8E2A3F"), emissiveIntensity: 0.25, roughness: 0.4 }), { fresnel: 0.15, key: "heme" });
-  const ironMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin("#E8C9A0"), emissive: L.lin("#FFD9A8"), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.2 }), { fresnel: 0.1, key: "iron" });
+  // one material per iron, so each can glint on its own (the count "four")
+  const ironMat = () => L.patch(new THREE.MeshStandardMaterial({ color: L.lin("#E8C9A0"), emissive: L.lin("#FFD9A8"), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.2 }), { fresnel: 0.1, key: "iron" });
   C4.forEach((c, i) => {
-    const m = L.patch(new THREE.MeshStandardMaterial({ color: garnet.clone(), roughness: 0.55 }), { fresnel: 0.32, fresnelPower: 2.4, key: "hb" + i });
+    // a dark-red protein with a soft rim (a strong fresnel greys it): its own colour glows faintly
+    const m = L.patch(new THREE.MeshStandardMaterial({ color: garnet.clone(), emissive: garnet.clone(), emissiveIntensity: 0.15, roughness: 0.45 }), { fresnel: 0.12, fresnelPower: 4.0, key: "hb" + i });
     const u = new THREE.Mesh(lumpy(THREE, 2.75, seed * 17 + i, o.detail ?? 4), m);
     u.position.set(...c); units.push(u); mats.push(m);
     // the heme pocket: outward and a little up from the unit's centre, the disc facing out
     const n = out([c[0] * 1.0, c[1] * 0.6 + (i < 2 ? 0.9 : -0.9), c[2] * 1.0]);
-    const h = new THREE.Mesh(heme, hemeMat), fe = new THREE.Mesh(ironG, ironMat);
+    const h = new THREE.Mesh(heme, hemeMat), fe = new THREE.Mesh(ironG, ironMat());
     const at = c.map((x, k) => x + n[k] * 2.45);
     h.position.set(...at); h.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...n));
     fe.position.set(...at.map((x, k) => x + n[k] * 0.12));
@@ -64,8 +67,11 @@ export const hemoglobin = (THREE, L, o = {}) => {
   });
   const vA = new THREE.Vector3();
   const set = (s = {}) => {
-    const load = s.load || [0, 0, 0, 0], shift = s.shift ?? 0;
-    for (let i = 0; i < 4; i++) mats[i].color.copy(garnet).lerp(crimson, Math.min(1, Math.max(0, load[i])));
+    const load = s.load || [0, 0, 0, 0], shift = s.shift ?? 0, glow = s.glow ?? 0;
+    for (let i = 0; i < 4; i++) {
+      mats[i].color.copy(garnet).lerp(crimson, Math.min(1, Math.max(0, load[i])));
+      mats[i].emissive.copy(mats[i].color); mats[i].emissiveIntensity = 0.15 + 0.45 * glow;
+    }
     halves[0].rotation.set(0, 0.13 * shift, 0); halves[1].rotation.set(0, -0.13 * shift, 0);
     halves[0].position.set(0, 0.12 * shift, 0); halves[1].position.set(0, -0.12 * shift, 0);
     group.updateMatrixWorld(true);

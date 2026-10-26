@@ -67,14 +67,17 @@ CELL = {
     "hbLit": A("vo02:hemoglobin", -0.1),                    # the labelled hemoglobin brightens
 }
 
-# ── one hemoglobin: four O₂ board, each sooner than the last (c5: easier, drawn as sooner) ──────────
-BOARD = [A("vo03:board", 0.1), A("vo03:makes", 0.05), A("vo03:next", 0.05), A("vo03:easier", 0.1)]
-APPROACH = [2.6, 1.0, 0.75, 0.6]                         # seconds from setting off to the seat
+# ── one hemoglobin: the first O₂ struggles (a failed first docking), then each docks on first contact ──
+# (c5 is affinity, not speed: every O₂ flies at the same speed; the first one slips off its seat once)
+BOARD = [A("vo03:board", 0.15), A("vo03:makes", 0.05), A("vo03:next", 0.05), A("vo03:easier", 0.1)]
+APPROACH = [0.6, 0.6, 0.6, 0.6]                          # seconds from setting off to the seat (the 2nd–4th)
 HB = {
     "board": BOARD, "approach": APPROACH,
     "glint": [A("vo02:four"), A("vo02:atoms:end", 0.2)],   # the four irons glint on "four … iron atoms"
     "free": A("vo02:oxygen", -0.4),                        # free O₂ drift in on "oxygen"
-    # each unit takes 40% of its colour as its O₂ boards; the whole molecule flushes on "full, it's bright"
+    # the first O₂: sets off, nearly docks on "struggles", slips back, docks on "board"
+    "struggle": [A("vo03:The", -0.2), A("vo03:struggles", -0.05), A("vo03:struggles", 0.3)],
+    # each unit takes its full colour as its own O₂ docks; on "full, it's bright" the molecule glows once
     "flush": [A("vo03:full", -0.1), A("vo03:bright", 0.35)],
     "shift": [BOARD[0], BOARD[0] + 0.9],                   # the T → R turn after the first boarding
 }
@@ -93,13 +96,15 @@ SLOW0 = A("vo05:There", -0.3)                            # the camera has moved 
 RATE = 1.0 / 12.0
 FLUSH1 = A("vo05:second:end", 0.1)
 FLUSH0 = round(FLUSH1 - 0.25 / RATE, 6)                  # ≈ "fill": the hero meets the air sac's face
-CLOCK = [{"t": 0.0, "rate": 1.0}, {"t": CUT["lung"], "rate": RATE}, {"t": CUT["nerve"], "rate": 1.0}]
-LUNG = {"flush": [FLUSH0, FLUSH1], "o2": [FLUSH0 - 0.6, FLUSH1 + 0.4]}
-QUARTER = {"t0": CUT["lung"] + 2.55, "keys": [[FLUSH0, 0.0], [FLUSH1, 0.25]], "t1": B["takeaway"]["t0"] - 0.3,
-           "unit": "s", "label": "seats filling, in lung time"}
+# real speed again on "Meanwhile": the cells surge, and the speed note leaves by itself (it reads the clock)
+CLOCK = [{"t": 0.0, "rate": 1.0}, {"t": CUT["lung"], "rate": RATE}, {"t": B["meanwhile"]["t0"], "rate": 1.0}]
+LUNG = {"flush": [FLUSH0, FLUSH1], "o2": [FLUSH0 - 0.6, FLUSH1 + 0.4],
+        "loop": [A("vo05:sends"), A("vo05:minute:end")]}   # the locator draws the blood's round trip: one lap, closing on "minute"
+QUARTER = {"t0": FLUSH0 - 1.0, "keys": [[FLUSH0, 0.0], [FLUSH1, 0.25]], "t1": B["takeaway"]["t0"] - 0.3,
+           "unit": "s", "label": "seats filling, in lung time, about"}
 
 # ── the nerve: the signal jumps node to node, landing on "jumps" ───────────────────────────────────
-NERVE = {"t0": A("vo08:in#2", 0.0), "jump": A("vo08:jumps")}
+NERVE = {"t0": A("vo08:signal"), "jump": A("vo08:jumps")}
 NERVE["hop"] = round((NERVE["jump"] - NERVE["t0"]) / 3, 6)   # three hops to the gap that lands on "jumps", then on
 
 # ── camera keys per shot (absolute, in each slide's own units; "rel" ones follow the lung's hero) ──
@@ -111,40 +116,48 @@ CAM = {
         {"t": CUT["hb"], "pos": [0.5, 0.3, 7.5], "look": [0.3, -0.1, 0.0], "fov": 32, "ease": "p2"},     # into the crowd
     ],
     "hb": [
-        {"t": CUT["hb"], "pos": [14.0, 10.0, 62.0], "look": [0.0, 0.0, 0.0], "fov": 34},
-        {"t": A("vo02:oxygen"), "pos": [8.0, 9.0, 58.0], "look": [0.0, 0.5, 0.0], "fov": 34, "ease": "sine"},
-        {"t": BOARD[0], "pos": [-3.0, 7.0, 52.0], "look": [0.5, 0.8, 0.0], "fov": 34, "ease": "sine"},
-        {"t": BOARD[3] + 0.4, "pos": [-12.0, 5.0, 54.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": HB["flush"][1], "pos": [-15.0, 3.0, 58.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["skin"], "pos": [-16.0, 2.5, 61.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["hb"], "pos": [14.0, 10.0, 62.0], "look": [0.0, -2.4, 0.0], "fov": 34},
+        {"t": A("vo02:oxygen"), "pos": [8.0, 9.0, 58.0], "look": [1.0, -1.9, 0.0], "fov": 34, "ease": "sine"},   # room on the right for the first O₂
+        {"t": BOARD[0], "pos": [-3.0, 7.0, 52.0], "look": [2.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": BOARD[3] + 0.4, "pos": [-12.0, 5.0, 54.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "sine"},
+        {"t": HB["flush"][1], "pos": [-15.0, 3.0, 58.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["skin"], "pos": [-16.0, 2.5, 61.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "sine"},
     ],
     "skin": [
-        {"t": CUT["skin"], "pos": [58.0, 40.0, 128.0], "look": [0.0, -30.0, 22.0], "fov": 34},               # the block's corner: the bluish band on top, the vein in the cut face
-        {"t": SKIN["section"][0], "pos": [48.0, 34.0, 140.0], "look": [0.0, -30.0, 26.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["skin"], "pos": [40.0, 80.0, 118.0], "look": [0.0, -12.0, 18.0], "fov": 34},               # the block's corner: the bluish band on top, the vein in the cut face
+        {"t": SKIN["section"][0], "pos": [34.0, 72.0, 130.0], "look": [0.0, -12.0, 22.0], "fov": 34, "ease": "sine"},
         {"t": SKIN["section"][1], "pos": [8.0, -13.0, 184.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "p2"},  # square to the cut face
         {"t": SKIN["red"][1], "pos": [5.0, -13.0, 178.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["lung"], "pos": [3.0, -13.0, 181.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:back:end", 0.3), "pos": [4.0, -13.0, 180.0], "look": [-1.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
+        # the beat closes back on the surface: the bluish band above the vein, the rays still drawn
+        {"t": CUT["lung"], "pos": [30.0, 52.0, 150.0], "look": [0.0, -14.0, 26.0], "fov": 34, "ease": "sine"},
     ],
     "lung": [
         {"t": CUT["lung"], "pos": [40.0, 30.0, 260.0], "look": [0.0, 0.0, 0.0], "fov": 34},                # the air sac and its capillary
         {"t": A("vo05:lungs", 0.3), "pos": [30.0, 20.0, 220.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": SLOW0 + 0.2, "pos": [6.0, 10.0, 34.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2", "rel": True},   # beside the hero
         {"t": FLUSH1 + 0.5, "pos": [4.0, 9.0, 30.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
-        {"t": B["takeaway"]["t0"] + 0.2, "pos": [5.0, 10.0, 40.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
+        {"t": FLUSH1 + 1.2, "pos": [5.0, 10.0, 40.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
     ],
     "lungwide": [
         {"t": B["takeaway"]["t0"] + 0.2, "pos": [0.0, 0.0, 0.0], "look": [0.0, 0.0, 0.0], "fov": 34},
     ],
+    # two gaps in frame (16.5 apart), the view drifting with the signal, so each leap lands inside the frame
     "nerve": [
-        {"t": CUT["nerve"], "pos": [60.0, 16.0, 66.0], "look": [76.0, -4.0, 0.0], "fov": 34},
-        {"t": NERVE["jump"], "pos": [118.0, 14.0, 62.0], "look": [134.0, -4.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": DUR, "pos": [150.0, 13.0, 60.0], "look": [166.0, -4.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["nerve"], "pos": [72.0, 16.0, 110.0], "look": [84.0, -3.0, 0.0], "fov": 34},
+        {"t": NERVE["t0"], "pos": [76.0, 16.0, 108.0], "look": [88.0, -3.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": NERVE["jump"], "pos": [114.0, 14.0, 104.0], "look": [126.0, -3.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": DUR, "pos": [122.0, 13.0, 102.0], "look": [134.0, -3.0, 0.0], "fov": 34, "ease": "sine"},
     ],
 }
-# the takeaway and the tally pull back from the hero to the whole air sac (absolute keys, appended to "lung")
+# after "second" the picture pulls back from the one cell to the whole file flushing across the air sac (dark in at
+# the lower left, bright out at the upper right, both above the caption plate); on "Meanwhile" it pulls back again,
+# at real speed, so the tally runs over a stream of cells (absolute keys, appended to "lung")
 CAM["lung"] += [
-    {"t": A("vo06:red", 0.0), "pos": [-2.0, -10.0, 150.0], "look": [-12.0, -16.0, 0.0], "fov": 34, "ease": "p2"},   # the flush zone: dark in, bright out
-    {"t": CUT["nerve"], "pos": [4.0, -4.0, 172.0], "look": [-10.0, -12.0, 0.0], "fov": 34, "ease": "sine"},
+    {"t": B["takeaway"]["t0"] + 0.3, "pos": [-9.0, -24.0, 240.0], "look": [-19.0, -30.0, 0.0], "fov": 34, "ease": "p2"},
+    {"t": B["meanwhile"]["t0"] + 0.3, "pos": [-9.0, -24.0, 240.0], "look": [-19.0, -30.0, 0.0], "fov": 34, "ease": "sine"},
+    {"t": B["meanwhile"]["t0"] + 2.6, "pos": [-9.0, -24.0, 340.0], "look": [-19.0, -30.0, 0.0], "fov": 34, "ease": "sine"},
+    {"t": CUT["nerve"], "pos": [-10.0, -26.0, 360.0], "look": [-19.0, -30.0, 0.0], "fov": 34, "ease": "sine"},
 ]
 del CAM["lungwide"]
 CAM["loop"] = [dict(CAM["cell"][0], t=CUT["loop"])]   # frame 0's camera: the replay starts where this ends
@@ -153,7 +166,7 @@ FOC = {
     "cell": [{"t": 0.0, "at": "cap", "f": 0.5}, {"t": A("vo02:hemoglobin", -0.3), "at": "hblit", "f": 0.5}],
     "hb": [{"t": CUT["hb"], "at": "hb", "f": 0.45}, {"t": BOARD[0] - 0.8, "at": "seat0", "f": 0.5}, {"t": BOARD[3] + 0.3, "at": "hb", "f": 0.45}],
     "skin": [{"t": CUT["skin"], "at": "surface", "f": 0.3}, {"t": SKIN["section"][1] - 0.4, "at": "vein", "f": 0.3}],
-    "lung": [{"t": CUT["lung"], "at": "sac", "f": 0.25}, {"t": SLOW0, "at": "hero", "f": 0.5}, {"t": A("vo06:red"), "at": "sac", "f": 0.25}],
+    "lung": [{"t": CUT["lung"], "at": "sac", "f": 0.25}, {"t": SLOW0, "at": "hero", "f": 0.5}, {"t": B["takeaway"]["t0"] + 0.3, "at": "sac", "f": 0.25}],
     "nerve": [{"t": CUT["nerve"], "at": "front", "f": 0.35}],
     "loop": [{"t": CUT["loop"], "at": "cap", "f": 0.5}],
 }
@@ -164,10 +177,10 @@ LABELS = [
     {"id": "hb", "text": "hemoglobin", "color": "oxy", "mark": "dot", "at": "hblit", "t0": A("vo02:hemoglobin"), "t1": CUT["hb"] - 0.3, "shot": "cell", "side": -1},
     {"id": "iron", "text": "iron", "color": "bone", "mark": "dot", "at": "iron0", "t0": A("vo02:iron"), "t1": A("vo03:Watch", 0.2), "shot": "hb", "side": 1},
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2first", "t0": A("vo02:oxygen"), "t1": BOARD[0] + 0.4, "shot": "hb", "side": -1},
-    {"id": "vein", "text": "vein", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
+    {"id": "vein", "text": "vein, seen through skin", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
     {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Returning"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1},
-    {"id": "redlight", "text": "red light", "color": "pulse", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
-    {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": 1},
+    {"id": "redlight", "text": "red light", "color": "#FF6A3D", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
+    {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1, "fixed": True},
     {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:lungs"), "t1": SLOW0, "shot": "lung", "side": 1},
     {"id": "back", "text": "back from the body", "color": "deoxy", "mark": "dot", "at": "incoming", "t0": A("vo05:back"), "t1": SLOW0 - 0.8, "shot": "lung", "side": 1},
     {"id": "arrive", "text": "arriving: darker", "color": "deoxy", "mark": "dot", "at": "incoming", "t0": A("vo06:The", 0.0), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "lung", "side": 1},
@@ -176,22 +189,24 @@ LABELS = [
 ]
 BADGES = [
     {"id": "nts-cell", "text": "not to scale", "t0": 0.0, "t1": CUT["hb"] - 0.3},
-    {"id": "ill-hb", "text": "illustration", "t0": CUT["hb"], "t1": CUT["skin"] - 0.3},
+    {"id": "ill-hb", "text": "illustration · slowed", "t0": CUT["hb"], "t1": CUT["skin"] - 0.3},
     {"id": "ill-skin", "text": "illustration · not to scale", "t0": CUT["skin"], "t1": CUT["lung"] - 0.3},
     {"id": "nts-lung", "text": "not to scale", "t0": CUT["lung"], "t1": CUT["nerve"] - 0.3},
-    {"id": "nts-nerve", "text": "not to scale", "t0": CUT["nerve"], "t1": EC},
+    {"id": "nts-nerve", "text": "not to scale · slowed", "t0": CUT["nerve"], "t1": EC},
+    {"id": "nts-loop", "text": "not to scale", "t0": CUT["loop"], "t1": DUR},   # frame 0's cheat, badged again for the replay
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number on screen in one place from the title's exit to the
 # tally, its label naming the beat. Each is its own counter, handing over to the next in the same spot.
 SPINE = [
-    {"id": "seats", "t0": round(A("vo01:Room") + 0.35, 4), "t1": CUT["hb"] - 0.3, "value": 1_080_000_000, "label": "O₂ seats in this one cell, about"},   # c2
+    {"id": "seats", "t0": round(A("vo01:Room") + 0.35, 4), "t1": A("vo02:about", -0.2), "value": 1_000_000_000, "label": "O₂ seats in this one cell, about"},   # c2: 1.0–1.2 billion, "about a billion"
+    {"id": "copies", "t0": A("vo02:about"), "t1": CUT["hb"] - 0.3, "value": 270_000_000, "label": "hemoglobins in this one cell, about"},   # c1: the spoken number, on screen as it is said
     {"id": "aboard", "t0": CUT["hb"] + 0.4, "t1": CUT["skin"] - 0.3, "steps": BOARD, "unit": "of 4", "label": "O₂ aboard this hemoglobin"},
     {"id": "venous", "t0": A("vo04:Returning"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
     {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "oxygen your blood handed out while you watched"}   # c15
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
 TITLE = {"series": "Meanwhile, Inside · No. 02", "title": "A billion *passengers*", "t1": round(A("vo01:Room") + 0.35, 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *the jump*", "next": "Meanwhile, Inside · No. 03", "follow": "Follow Meanwhile, Inside",
+END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Meanwhile, Inside · No. 03", "follow": "Follow Meanwhile, Inside",
        "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."}   # c1, c2
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
@@ -221,7 +236,7 @@ ev.append({"t": QUARTER["keys"][1][0], "kind": "counter.end", "tag": "quarter-en
 ev.append({"t": TALLY["t0"], "kind": "counter.show", "tag": "tally"})
 for sp in SPINE:
     ev.append({"t": sp["t0"], "kind": "counter.show", "tag": sp["id"]})
-ev.append({"t": SPINE[3]["keys"][1][0], "kind": "counter.end", "tag": "full-end"})
+ev.append({"t": next(sp for sp in SPINE if sp["id"] == "full")["keys"][1][0], "kind": "counter.end", "tag": "full-end"})
 for k, t in enumerate(SEG_BEATS):
     ev.append({"t": t, "kind": "beat", "tag": f"beat{k}"})
 ev.append({"t": CELL["sparkle"][0], "kind": "dissolve", "tag": "billion", "t1": CELL["sparkle"][1]})

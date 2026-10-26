@@ -51,8 +51,13 @@ export const fibre = (THREE, L, o = {}) => {
     const g = M.node ?? 2, il = M.internode ?? 60, start = M.start ?? g;
     // one sheath: a lathe that tapers into the axon at both ends (the paranode), so the gap reads as a waist
     const prof = [];
-    for (let i = 0; i <= 24; i++) { const u = i / 24, x = u * il, e = Math.min(1, Math.min(x, il - x) / (il * 0.12)), s = Math.sin((e * Math.PI) / 2); prof.push(new THREE.Vector2(ar + (M.r - ar) * Math.pow(s, 0.7), x)); }
-    const sg = new THREE.LatheGeometry(prof, 40); sg.rotateZ(-Math.PI / 2);
+    // half the samples in the two tapers, so the paranode ends are smooth curves, not cones
+    const xs = [];
+    for (let i = 0; i <= 24; i++) xs.push((i / 24) * il * 0.12);
+    for (let i = 1; i < 24; i++) xs.push(il * 0.12 + (i / 24) * il * 0.76);
+    for (let i = 24; i >= 0; i--) xs.push(il - (i / 24) * il * 0.12);
+    for (const x of xs) { const e = Math.min(1, Math.min(x, il - x) / (il * 0.12)), s = Math.sin((e * Math.PI) / 2); prof.push(new THREE.Vector2(ar + (M.r - ar) * Math.pow(s, 0.7), x)); }
+    const sg = new THREE.LatheGeometry(prof, 64); sg.rotateZ(-Math.PI / 2);
     for (let x = start; x + il <= len; x += il + g) {
       const m = new THREE.Mesh(sg, sheathMat); m.position.x = x; group.add(m); sheaths.push([x, x + il]);
       if (sheaths.length > 1) nodes.push(x - g / 2);

@@ -82,7 +82,7 @@ export const look = (THREE, o) => {
       return mix(a, b, f);
     }
     float bgDither(vec2 fc) { return fract(sin(dot(floor(fc), vec2(12.9898, 78.233))) * 43758.5453) - 0.5; }`;
-  const uniforms = { uBgTable: { value: table }, uRes: { value: new THREE.Vector2(W, H) } };
+  const uniforms = { uBgTable: { value: table }, uRes: { value: new THREE.Vector2(W, H) }, uFogStart: { value: 0 } };
   const backdrop = new THREE.Mesh(new THREE.SphereGeometry(o.backdropRadius ?? 1500, 32, 16), new THREE.ShaderMaterial({
     uniforms, side: THREE.BackSide, depthWrite: true, fog: false,
     vertexShader: "void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
@@ -126,10 +126,10 @@ export const look = (THREE, o) => {
       if (prev) prev(sh, r);
       Object.assign(sh.uniforms, uniforms, { uFres: { value: fres }, uFresCol: { value: rimCol }, uFresPow: { value: fresPow } });
       sh.fragmentShader = sh.fragmentShader
-        .replace("#include <common>", "#include <common>\n" + GRAD + "\nuniform float uFres, uFresPow; uniform vec3 uFresCol;")
+        .replace("#include <common>", "#include <common>\n" + GRAD + "\nuniform float uFres, uFresPow, uFogStart; uniform vec3 uFresCol;")
         .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\n  totalEmissiveRadiance += uFresCol * uFres * pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), uFresPow);")
         .replace("#include <fog_fragment>", `#ifdef USE_FOG
-          float fogF = 1.0 - exp(-fogDensity * fogDensity * vFogDepth * vFogDepth);
+          float fogD = max(0.0, vFogDepth - uFogStart), fogF = 1.0 - exp(-fogDensity * fogDensity * fogD * fogD);
           gl_FragColor.rgb = mix(gl_FragColor.rgb, innerBg(gl_FragCoord.xy), fogF);
         #endif`);
     };

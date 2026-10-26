@@ -8,7 +8,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: '~270 million hemoglobin molecules' per cell (episode 1, c14). Sources range 250–300 million, so the product below is 1.0–1.2 billion. 'Passengers' are oxygen molecules, the capacity, not a count of what is aboard at every moment."
+  "note": "Excerpt: '~270 million hemoglobin molecules' per cell (episode 1, c14). Sources range 250–300 million, so the product below is 1.0–1.2 billion. 'Passengers' are oxygen molecules, the capacity, not a count of what is aboard at every moment. The readout shows 270,000,000 ('about') while the number is spoken."
  },
  {
   "id": "c2",
@@ -19,7 +19,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: hemoglobin is 'made of four subunits'; 'each heme group that contains iron binds one oxygen molecule'. 270,000,000 × 4 = 1,080,000,000 (computed): 'about a billion'."
+  "note": "Excerpt: hemoglobin is 'made of four subunits'; 'each heme group that contains iron binds one oxygen molecule'. 270,000,000 × 4 = 1,080,000,000 (computed): 'about a billion'. The on-screen readout rounds to 1,000,000,000 with 'about', matching the narration."
  },
  {
   "id": "c3",
@@ -52,7 +52,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Search excerpts (UCSB overview; Berg, Biochemistry 8e §7.2 'Hemoglobin binds oxygen cooperatively'): 'the more oxygen is bound to hemoglobin, the easier it is for more oxygen to bind'; the first binds with difficulty, then a conformational change makes the next easier. 'Easier' = higher affinity (review fix: not 'faster'). The film shows each boarding a little sooner as staging, badged as an illustration."
+  "note": "Search excerpts (UCSB overview; Berg, Biochemistry 8e §7.2 'Hemoglobin binds oxygen cooperatively'): 'the more oxygen is bound to hemoglobin, the easier it is for more oxygen to bind'; the first binds with difficulty, then a conformational change makes the next easier. 'Easier' = higher affinity (review fix: not 'faster'). The film shows it as a failed first docking (the first O₂ slips off its seat once) and then three dockings on first contact, all at the same speed; badged 'illustration · slowed'."
  },
  {
   "id": "c6",

@@ -1,105 +1,124 @@
 # Meanwhile, Inside No. 06: "The exit" (draft; a physiologist signs off before it posts)
 
-About 72 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
+About 74 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-6 row (`../bible.md`, §7) to the story standard
 (`kits/cinema/script/WRITING.md`, including "The picture"). It pays off episode 5's tease ("Next: a
 cell that leaves your blood. It squeezes through a wall.") and sets up episode 7 ("The spark").
 
-- **The wrong idea and the person:** Rudolf Virchow taught that pus grew from the injured tissue
-  itself; in 1867 his own assistant, Julius Cohnheim, watched a living frog's vessels and saw white
-  cells climbing out. Said as "taught", never "was wrong" (Stricker held out for years). Cohnheim
-  "watched", never "discovered" (Britannica: he "confirmed earlier suspicions"), and the end card
-  gives Augustus Waller (1846) his due.
-- **Plant and payoff:** the hook's "This wall has no door" (sourced to Barzilai 2017, not to a
-  dictionary) pays off by name in the whoa: "making its own door". The normal's sore fingertip sets
-  pus up before Virchow names it, and the change's wrong idea pays off in the takeaway.
-- **The mechanism (answering the change):** the wall's sticky molecules catch the cell and it rolls;
-  its own grips switch on and it stops; it crawls to a seam between two wall cells. The wedge is kept
-  for the whoa: it pushes its nucleus into the seam, pours through a gap narrower than itself, and
-  the wall pulls tight around it (Heemskerk 2016).
-- **The stakes:** in a rare inherited condition (LAD-I, not named on air) those grips fail and white
-  cells struggle to leave. It comes after the crawl, so roll, stop, crawl run unbroken, and it is
-  drawn the way LAD-I works: the cells still roll, then tumble on without stopping. Factual, hedged,
-  no immunity or treatment talk (bible §9, Ep 6).
-- **Human scale:** a stylised sore fingertip at about 12 s and again in the takeaway: a swelling and
-  a soft glow, never an open wound, a splinter, blood or pus, and no skin colour voiced (bible §9).
+- **The wrong idea and the person:** Rudolf Virchow taught that pus grew from the inflamed tissue;
+  in 1867 his assistant, Julius Cohnheim, watched a living frog's vessels and saw white cells climb
+  out. Said as "taught", never "was wrong" (Stricker held out for years). Cohnheim "watched", never
+  "discovered" (Britannica: he "confirmed earlier suspicions"), and the end card gives Augustus
+  Waller (1846) his due.
+- **Plant and payoff:** the hook states the belief to break, "This wall has no open door" (Barzilai
+  2017); the normal turns it into a paradox ("Yet … they pile up outside the wall"); the whoa pays it
+  off by name ("making its own door"). The change's "the inflamed tissue" is answered by the
+  takeaway's "from your blood". The why ends on an open loop (faulty cells roll on past) that the
+  whoa's "This one" answers.
+- **The mechanism (answering the change):** where tissue is inflamed the wall turns sticky
+  (selectins) and the cell rolls; its grips (β2 integrins) switch on and it stops; it crawls to a
+  seam between two wall cells. The wedge is kept for the whoa: it pushes its nucleus into the seam,
+  pours through a gap of about 4–5 µm (the Alon lab, not voiced), and the seam closes behind it
+  (VE-cadherin gaps reseal once the cell is through, in cultured-cell imaging).
+- **The stakes:** in a rare inherited condition (LAD-I, not named on air) those grips are faulty
+  (CD18 missing, too few or not working). The cells still roll but don't stick (von Andrian 1993), so
+  the why's last line is "Cells roll on past." It comes after the crawl, so roll, stop, crawl run
+  unbroken. Factual, hedged, no immunity or treatment talk (bible §9, Ep 6).
+- **Human scale:** one stylised sore fingertip, in the takeaway's pull-out only, so it lands as the
+  reveal: a swelling and a soft glow, never an open wound, a splinter, blood or pus, and no skin
+  colour voiced (bible §9).
 - **Sizes, honestly:** the bible's 12–15 µm is a smear value (a cell flattened on glass). The voice
-  uses the round cell in blood, about 8 µm (BioNumbers), badged "round, in blood". The bible's S21
-  page never came up in research, so c2 cites StatPearls NBK570571.
-- **Spine readout:** one quantity in one unit, "the way out" in µm: "?" at frame 0 → "0 µm" from the
-  normal (wall cells edge to edge) → it climbs to "a few µm" as the seam opens in the whoa (label "the
-  door it made") and holds there, lit, through the takeaway (label "your blood's way out") → the
-  meanwhile tally. The rolling speed and the cell's 8 µm are notes a tier below, never a second readout.
+  uses the round cell in blood, about 8 µm (BioNumbers), badged "round, in blood", shown once, in the
+  normal. No red-cell comparison: 8.3 against 7.5–8 µm is within scatter.
+- **Spine readout:** the meanwhile tally itself, from frame 0, with one label ("while you watched:
+  new neutrophils"), badged "low estimate", counting at 173,611 a second. It sits dimmed to a third
+  in the empty upper third, clear of the cell and its path, through every beat; it lights for the
+  meanwhile, drops onto the pulse line, and holds its last value under the end card. It always shows
+  digits. Every other number is a note a tier below, never a second readout.
 - **Three judges (26 Oct) fixed:** the hook's second line no longer describes frame 0; "door" is
-  planted in the hook and paid off by name; pus is set up in the normal; the change's 22-word
-  sentence is split and Virchow has a pron.json entry (Kokoro reads it "VUR-chow"); the stakes follow
-  the crawl and the why is 40 words; "lumpy" is gone; no starred word repeats; "more than thirty
-  million" replaces "tens of millions"; the readout keeps one unit; the whoa has no drawn ring and no
-  "no leak"; the cut-away's badge carries no minutes (press-only); the end card adds "21 years
-  before Cohnheim"; the tease hands off to episode 7's hook.
+  planted in the hook and paid off by name; Virchow has a pron.json entry; the stakes follow the
+  crawl; "lumpy" is gone; no starred word repeats; the whoa has no drawn ring and no "no leak"; the
+  cut-away's badge carries no minutes; the end card adds "21 years before Cohnheim"; the tease hands
+  off to episode 7's hook.
+- **An independent review (26 Oct, 6/10) fixed:** the hook asks about the cell on screen and states
+  a belief to break ("no open door": the seam is a regulated junction, not a wall without joins);
+  the normal states the paradox and drops "a little wider than a red cell"; the change says "his
+  assistant" (one "own" is left, in the whoa's door) and "the inflamed tissue", runs 26 words, and
+  no sentence carries three commas; the why says where the wall turns sticky and ends on an open
+  loop ("faulty", then "Cells roll on past."); "the wall pulls tight" (against Barzilai's "no
+  contractility needed") becomes "the seam seals shut", sourced; "narrower than itself" rests on a
+  measured 4–5 µm gap; the takeaway reframes (what pus is, with a pathology source) and drops
+  "squeezed"; "More than ten million" holds under the 19 h half-life as well as the 6–8 h one, and
+  the tally's rate matches it; "white cell(s)" is said three times, "own" once; the picture is
+  simpler (one fingertip, one engraving, one faulty cell, two labels in the whoa); c4 left with its
+  line, and c6 now cites the page its excerpt came from.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
 direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.json`; `{-}` marks a
 sentence that states nothing outside the film.
 
-## hook {shot: frame 0: inside a venule under a fingertip's skin, one neutrophil (the B8 wanderer: immune cream, translucent) caught halfway through a seam between two wall cells, its lobed nucleus pinched at the waist, red cells streaming past behind it; spine readout "the way out: ? µm", parked in the empty upper third, clear of the cell's path · title: "The exit" · pre: 0.1 · energy: 0.7} (0–4.6 s)
-vo: How do cells *leave* your blood? {-} This wall has no *door*. {c1}
+## hook {shot: frame 0: inside a venule under a fingertip's skin, one neutrophil (the B8 wanderer: immune cream, translucent) caught halfway through a seam between two wall cells, its lobed nucleus pinched at the waist, red cells streaming past behind it; the spine readout "while you watched: new neutrophils" already counting from 0, dimmed to a third, parked in the empty upper third, clear of the cell's path · title: "The exit" · pre: 0.1 · energy: 0.7} (0–5.2 s)
+vo: How does this cell *leave* your blood? {-} This wall has no open *door*. {c1}
 
-## normal {shot: the same cell a minute earlier, round, riding the stream among red-cell discs; the lining edge to edge, no opening, and the readout drops to "the way out: 0 µm"; on "eight micrometres" a scale pill beside the cell reads "about 8 µm · round, in blood" and the readout dims to a third; on "red cell" a disc drifts alongside it (no second figure); on "fingertip" a scale jump out through the wall and the skin to a fingertip with one small, stylised sore spot (a swelling and a soft glow, the same on any skin tone; no wound, no blood), the locator's pulse-line blip on the fingertip; then back in: white cells gathered in the tissue beyond the wall · energy: 0.45} (4.6–14.4 s)
-vo: It's a *neutrophil*, your commonest white cell. {c2} About eight micrometres across, a little
-wider than a red cell. {c3,c4} Under a sore *fingertip*, white cells gather. {c5}
+## normal {shot: the same cell a minute earlier, round, riding the stream among red-cell discs; the lining edge to edge, no opening; on "eight micrometres" a scale pill beside the cell reads "about 8 µm · round, in blood"; on "outside" the camera drifts through the lining into the tissue beyond it, where white cells have piled up (no fingertip here: it is saved for the takeaway) · energy: 0.45} (5.2–14.4 s)
+vo: It's a *neutrophil*, your commonest white cell, about eight micrometres across. {c2,c3} Yet under
+a sore fingertip, they pile up *outside* the wall. {c5}
 
-## change {shot: on a sound, the tissue and the vessel redrawn as a 19th-century engraving (badge "the old idea, illustrated"): pus cells budding from the tissue's own cells; on "Julius Cohnheim" it redraws as his view of a living frog's gut membrane (badge "a frog, 1867, illustrated"), an engraved white cell holding the hero's place on screen (the hero itself is never drawn into the frog): white cells glued to the inside of the wall, pressing into it; on "out" they spill into the tissue; the readout holds "0 µm", dimmed · energy: 0.55} (14.4–25.8 s)
-vo: Rudolf Virchow taught that pus grew from the injured tissue *itself*. {c6} In eighteen sixty-seven,
-his own assistant, Julius Cohnheim, watched a living frog's vessels. {c7,c8} White cells were
-climbing *out*. {c9,c10}
+## change {shot: on a sound, that tissue and its vessel redrawn as one 19th-century engraving with one badge, "illustrated"; on "tissue" the tissue's cells glow, where the old idea grew pus; on "Julius Cohnheim" the same engraving comes alive as a living frog's thin gut membrane (no redraw); on "out" engraved white cells push through the vessel wall and spill into the tissue; the spine readout dimmed · energy: 0.55} (14.4–24.9 s)
+vo: Rudolf Virchow taught that pus grew from the inflamed *tissue*. {c6} In eighteen sixty-seven, his
+assistant Julius Cohnheim watched a living frog's vessels. {c7,c24,c8} White cells climbed *out*. {c9,c10}
 
-## why {shot: on a sound, back in the live venule, the hero in the same place on screen, slowed: fine sticky threads on the lining snag it and it tumbles (left-corner note "rolling: about 10 µm/s · in a mouse"); on "stops" its own grips light, the note falls to 0 on a thump and the stream parts around it; it crawls across the lining to a seam between two wall cells, which glows; on the stakes line a ghost pass (badge "illustration: a rare inherited condition"): cells with dark, faulty grips are caught and roll, then tumble on downstream without stopping, crowding the flow, one or two still crossing · picture-only 2 s, before the whoa: back on the hero at the seam, its lobed nucleus pressed to the join, the readout still "0 µm" · energy: 0.55} (25.8–42.4 s)
-vo: Sticky molecules on the wall catch it, and it *rolls*. {c11} Its own grips switch on, and it
-*stops*. {c12} It crawls to a *seam* between two wall cells. {c13,c14} In a rare inherited condition,
-those grips fail: white cells struggle to leave. {c15}
+## why {shot: on a sound, back in the live venule, the hero in the same place on screen, slowed; on "sticky" fine threads light on the lining, snag it, and it tumbles (no note); on "stops" its grips light and the stream parts around it; it crawls across the lining to a seam between two wall cells, which glows; on the stakes line one faulty cell, its grips dark (badge "illustration: a rare inherited condition"), rolls along the lining and on past the seam without stopping, and nothing else comes in · picture-only 2 s, before the whoa: back on the hero at the seam, its lobed nucleus pressed to the join · energy: 0.55} (24.9–42.5 s)
+vo: Where tissue is inflamed, the wall turns sticky, and the cell *rolls*. {c27,c11} Then its grips
+switch on, and it *stops*. {c12} It crawls to a *seam* between two wall cells. {c13,c14} In a rare
+inherited condition, those grips are faulty. {c15} Cells roll on *past*. {c25}
 
-## whoa {shot: a cut-away through the seam on a sound, the hero in the same place (badge "sped up"): the lobed nucleus wedges in and the two wall cells part around it, their actin thinning at the join; the readout climbs from 0 to "a few µm" as the gap opens, its label now "the door it made"; on "pours" the cell flows through, its waist pinched to the gap, a red-cell disc beside it for scale and a note a tier below, "the cell: about 8 µm"; on "tight" the wall's edges cinch at its waist (no drawn ring: the channel has no circles); squish under "pours"; the score at its peak · picture-only 3 s, after the line and before the takeaway's pull-out: the last of the cell slips through and the seam closes behind it; the readout holds, lit · energy: 0.75} (42.4–55.1 s)
+## whoa {shot: a cut-away through the seam on a sound, the hero in the same place on screen; the only words on screen are one badge in the top-right corner, "sped up", and the spine readout, dimmed; the lobed nucleus wedges in and the two wall cells part around it; on "pours" the cell flows through, its waist pinched to the gap; squish under "pours"; on "shut" the seam closes behind it; the score at its peak · picture-only 3 s, after the line and before the takeaway's pull-out: the cell free in the tissue, the seam closed behind it · energy: 0.75} (42.5–55.4 s)
 vo: This one wedges its nucleus into the seam, making its *own* door. {c16} It *pours* through a gap
-narrower than itself. {c17} Around it, the wall pulls *tight*. {c18}
+narrower than itself. {c17} Behind it, the seam seals *shut*. {c26}
 
-## takeaway {shot: pull out through the wall and the skin to the same sore fingertip: white cells gathered in the tissue beneath it (stylised; no wound, no blood, no pus drawn); the readout holds, lit, its label now "your blood's way out: a few µm"; the score drops to near silence · energy: 0.3} (55.1–61.8 s)
-vo: So pus mostly comes from your *blood*. {c19,c20} White cells that rolled, stopped, crawled and
-squeezed out. {c21}
+## takeaway {shot: the episode's one pull-out: back through the wall and the skin to a fingertip with one small, stylised sore spot (a swelling and a soft glow, the same on any skin tone; no wound, no blood, no pus drawn), the white cells ghosted in the tissue beneath it; the spine readout passes 10,000,000 at 57.6 s; the score drops to near silence · energy: 0.3} (55.4–61.5 s)
+vo: So pus is mostly white cells from your *blood*. {c19,c20} Each one let itself out. {c21}
 
-## meanwhile {segment: meanwhile · tally "while you watched: new neutrophils", 578,704 a second from frame 0, badged "low estimate", on the pulse line (it passes 30 million at 51.8 s); the body locator marks the bone marrow · mallet ticks on the lub-dub · energy: 0.4} (61.8–67.6 s)
-vo: *Meanwhile*, as you watched, your bone marrow made new neutrophils. {c22} More than thirty
+## meanwhile {segment: meanwhile · tally "while you watched: new neutrophils": the spine readout itself, 173,611 a second from frame 0, badged "low estimate", lights and drops onto the pulse line (about 10.7–11.6 million while the line is spoken); the body locator marks the bone marrow · mallet ticks on the lub-dub · energy: 0.4} (61.5–67.4 s)
+vo: *Meanwhile*, as you watched, your bone marrow made new neutrophils. {c22} More than ten
 *million*. {c23}
 
-## tease {shot: pull back out of the fingertip, up the arm, to the heart; a small patch high in its upper right chamber flickers chartreuse on each lub (picture only; its sources belong to episode 7) · end card held ≥ 2 s; under it the membrane iris returns to frame 0, the cell halfway through the wall (a seamless replay); the card's fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim (Philosophical Magazine 29: 397) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.6–74.1 s)
+## tease {shot: pull back out of the fingertip, up the arm, to the heart; a small patch high in its upper right chamber flickers chartreuse on each lub (picture only; its sources belong to episode 7) · end card held ≥ 2 s, the tally holding its last value; under it the membrane iris returns to frame 0, the cell halfway through the wall (a seamless replay; the tally starts again from 0); the card's fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim (Philosophical Magazine 29: 397) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.4–73.9 s)
 vo: Next: the spark. {-} What sets off every *heartbeat* you've ever had? {-}
 end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
 
 ## Notes
-- The tally counts new neutrophils at 578,704 a second from frame 0: 5 × 10¹⁰ a day ÷ 86,400 s, the
-  low end of Summers 2010 (computed), badged "low estimate". It passes 30 million at 51.8 s
-  (computed). The line is planned for about 62.1–67.2 s, where the tally reads about 36–39 million
-  (at the top of the range, 10¹¹ a day, about 72–78 million), so "more than thirty million" holds at
-  either end. Cross-checks: Dancey (0.85 × 10⁹ per kg a day, about 6 × 10¹⁰ for 70 kg, about 690,000
-  a second, computed) and Britannica (about 100 billion a day). Headroom: the line holds down to
-  about 3.9 × 10¹⁰ a day (computed); if the reviewer wants more, "Tens of millions." holds down to
-  about 1.3 × 10¹⁰. No lifespan is voiced (6–8 h against about 5.4 days is disputed). A resting
-  adult's basal rate, not a verdict on anyone.
-- Picture-only numbers, all badged: rolling "about 10 µm/s · in a mouse" (hairless-mouse skin
-  venules, Nova record: about 9.6 µm/s against red cells at about 359 µm/s; the red-cell figure is
-  left off so the corner holds one number); the gap "a few µm" (Barzilai 2017's "micron-scale"; the
-  4–5 µm figure is press coverage only, so no digit); "sped up" on the cut-away, with no minutes (the
-  "about 4 min in mice" figure is secondary press coverage); "about 8 µm" for the cell (c3). The
-  nucleus is drawn lobed (3–5 lobes, StatPearls 31353), never threading "one lobe at a time" (hedged
-  in its own source, with data against it). The wall's actin thins at the seam (Barzilai's title), so
-  "making its own door" is the cell's push, not the whole story. The cinch is Heemskerk 2016's
-  contractile pore (mostly cultured cells), drawn without a ring; the seam closing behind the cell is
-  drawn, not said.
+- The tally (the spine readout, from frame 0) counts new neutrophils at 173,611 a second: 1.5 × 10¹⁰
+  a day ÷ 86,400 s (computed), badged "low estimate". It passes 10 million at 10,000,000 ÷ 173,611 =
+  57.6 s (computed), in the takeaway. The line is planned for about 61.8–67.0 s, where the tally reads
+  about 10.7–11.6 million (computed), so "more than ten million" holds at the floor, and the screen
+  and the voice agree. Why the floor sits low: Summers 2010's 5–10 × 10¹⁰ a day rests on a 6–8 h
+  blood half-life; Lahoz-Beneytez 2016 measures about 19 h (13–19 h). For the same blood pool,
+  production scales as 1 ÷ half-life: 5 × 10¹⁰ × 6/19 ≈ 1.6 × 10¹⁰ and 10 × 10¹⁰ × 8/19 ≈ 4.2 × 10¹⁰
+  a day (computed). Cross-checks: the classic total blood granulocyte pool (70 × 10⁷ a kg, about
+  4.9 × 10¹⁰ for 70 kg) turning over with a 19 h half-life gives 4.9 × 10¹⁰ × 0.693 × 24 ÷ 19 ≈
+  4.3 × 10¹⁰ a day, or about 1.9 × 10¹⁰ for the circulating part alone (31 × 10⁷ a kg); Dancey's
+  marrow count (0.85 × 10⁹ a kg a day, about 6 × 10¹⁰ for 70 kg) does not use the blood half-life at
+  all (all computed). At the top of the range (10¹¹ a day) the line's window reads about 72–78
+  million. "More than ten million" holds while the rate is at least 10,000,000 ÷ 61.8 s × 86,400 ≈
+  1.4 × 10¹⁰ a day (computed), and every estimate above clears that. "Tens of millions" was the
+  reviewer's choice, but at the floor the screen reads about 11 million, so the line says what the
+  tally shows. After voicing, check that "ten million" still lands after 57.6 s. No lifespan is
+  voiced. A resting adult's basal rate, not a verdict on anyone.
+- Picture-only numbers, all badged: "about 8 µm · round, in blood" for the cell (c3), once, in the
+  normal; "sped up" on the cut-away, with no minutes (in cultured cells the crossing and the reseal
+  take about 5 min, c26, but the film's world is a living venule). The rolling-speed note is cut (a
+  mouse figure, and the corner stays clear). The gap's 4–5 µm (c17) is voiced as "narrower than
+  itself", not shown. The nucleus is drawn lobed (3–5 lobes, StatPearls 31353), never threading
+  "one lobe at a time" (hedged in its own source, with data against it). The wall's actin is not
+  drawn, and nothing cinches round the cell: the seam simply closes behind it (c26).
 - The whoa's "narrower than itself" echoes episode 1 on purpose: there a red cell folds through a
   road narrower than itself; here a white cell pours through a door it makes.
-- The LAD-I ghost pass: the cells still roll (selectins, c11, need no CD18) but don't stop (the β2
-  grip of c12 is the part that fails, c15), and one or two still cross (severity varies; one case
-  with complete CD18 loss still formed some pus). Hence "struggle", not "can't".
+- The LAD-I pass is one faulty cell, no crowd. It still rolls (selectins, c11, need no CD18) but
+  doesn't stop (the β2 grip of c12 is the faulty part, c15), so it rolls on past the seam (c25: von
+  Andrian 1993, a CD18-deficient patient's cells rolled normally but could not stick). Severity
+  varies with how much CD18 is left, so the line describes the faulty cells, not every patient.
 - End card fact: Waller, "Microscopic Observations on the Perforation of the Capillaries by the
   Corpuscles of the Blood", Philosophical Magazine, November 1846, 29: 397–405 (historyofmedicine.com,
   Garrison-Morton); "21 years" is 1867 − 1846 (computed); also in c10's note. He was one of the first
@@ -114,17 +133,15 @@ end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
   Cohnheim tagged white cells with dye and found them as the pus in an inflamed frog cornea
   (PMC10022970; the dye's name varies between sources, so leave it out); Metchnikoff's rose thorn in
   starfish larvae, 1882; "diapedesis" means "a leaping through" (Dictionary.com), though the move is
-  a slow pour. The word is never said.
-- Listen at T0: Virchow (FEER-koh: Kokoro's own reading is "VUR-chow", so pron.json sets
-  "fˈɪəkəʊ"), Cohnheim (KOHN-hime, "kˈəʊnhaɪm", Kokoro's default, pinned), neutrophil
-  (NYOO-truh-fil), micrometres, eighteen sixty-seven. Every starred word but "Meanwhile" sits inside
-  a phrase, so its landing gets the by-eye-and-ear check at T0 (voice README, "How accurate").
+  a slow pour. The word is never said. Heemskerk 2016's contractile ring of actin round the crossing
+  cell (mostly cultured cells) is left out of the picture and the voice.
+- Listen at T0: Virchow (FEER-koh: the voice's own reading is "VUR-chow", so pron.json sets
+  "fˈɪəkəʊ"), Cohnheim (KOHN-hime, "kˈəʊnhaɪm", the voice's default, pinned), neutrophil
+  (NYOO-truh-fil), micrometres, eighteen sixty-seven. The hook's question is estimated to end at
+  about 1.94 s, close to the 2.0 s limit: check it in the voice. Every starred word but "Meanwhile"
+  sits inside a phrase, so its landing gets the by-eye-and-ear check at T0 (voice README, "How
+  accurate").
 - Imagery and palette (bible §9, theme.json): stylised cells only; the fingertip spot is a swelling
   and a soft glow, never an open wound, splinter, blood, needle or pus. The hero is immune cream
   (#F3EEE4), never amber (another client's accent). No circles anywhere (theme.json `no_circle`).
-- TODO: open PMC6108650 and confirm the Virchow excerpt is on that page (else PMC6088652); c6 stays
-  "TODO open link" until then (this session's proxy refuses the host). If neither carries it: "Leading
-  pathologists taught that pus grew from the injured tissue itself." then "In eighteen sixty-seven,
-  Julius Cohnheim watched a living frog's vessels." TODO: confirm the Leeds guide states a red cell's
-  7.5 µm (c4, also unreachable here). TODO: the handle, a physiologist's sign-off, and the AI-voice
-  label in the post.
+- TODO: the handle, a physiologist's sign-off, and the AI-voice label in the post.
