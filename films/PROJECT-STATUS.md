@@ -1,5 +1,11 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 21:20 UTC: PAUSED by the owner** ("pause on everything now"). Final and collected: Rest Frame 001–006 + vol01,
+> Meanwhile, Inside 001–003, Light Minute 001, 004, 006. Still to do on resume: Meanwhile, Inside 004 (final was
+> rendering, frames kept), 005–006; Light Minute 002, 003, 005 (review fixes, then finals); vol01 for both. The 2-hourly
+> check-in (trig_01RobrDAZpWDmvW9a3s2U5Xb) is disabled; both channel sessions were told to stop, keep frames, push resume
+> notes and go idle. To resume: re-enable the check-in and send each channel session "resume".
+>
 > **26 Oct, 20:35 UTC:** collected Light Minute 006 "Your speed" (QA PASS, 74.7 s), then at 20:55 004 "The falling
 > Moon" (QA PASS, 74.1 s); the branch's 002–003 renders predate the audit and stay there. Meanwhile, Inside 004 final due ~22:00, 005 ~01:00, 006 ~04:00 UTC; Light Minute 002–005
 > in review fixes. Prism Studio: each channel screen now shows its long video; the wall counts ones waiting on approval.
