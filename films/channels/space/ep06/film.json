@@ -558,7 +558,7 @@
   },
   {
    "id": "c-gal",
-   "label": "the Sun round the galaxy · km a second",
+   "label": "Sun round the galaxy · km a second",
    "text": "230",
    "t0": 42.63333333333333,
    "t1": 44.6,
@@ -602,7 +602,7 @@
   },
   {
    "id": "c-read-trip",
-   "label": "light time · your galactic trip so far",
+   "label": "light time · your galactic trip",
    "text": "1/20 s",
    "read": true,
    "t0": 60.06666666666667,
@@ -614,7 +614,7 @@
   },
   {
    "id": "c-read-gc",
-   "label": "light time · to the galaxy's center",
+   "label": "light time · galaxy's center",
    "text": "27,000 years",
    "read": true,
    "t0": 64.8,

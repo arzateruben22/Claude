@@ -117,12 +117,12 @@ COUNTERS = [
     {"id": "c-sound", "label": "the speed of sound · km/h", "text": "1,225", "t0": A("vo02:That"), "t1": A("vo03:thirty")},
     {"id": "c-orb", "label": "Earth around the Sun · km a second", "text": "30", "t0": A("vo03:thirty"), "t1": t_since},
     {"id": "c-since", "label": "km round the Sun since this began", "fmt": "since", "t0": t_since, "t1": A("vo05:two")},
-    {"id": "c-gal", "label": "the Sun round the galaxy · km a second", "text": "230", "t0": A("vo05:two"), "t1": A("vo05:One")},
+    {"id": "c-gal", "label": "Sun round the galaxy · km a second", "text": "230", "t0": A("vo05:two"), "t1": A("vo05:One")},
     {"id": "c-lap", "label": "one lap · million years", "text": "230", "t0": A("vo05:One"), "t1": A("vo05:Last")},
     {"id": "c-dino", "label": "last time round", "text": "first dinosaurs", "t0": A("vo05:Last"), "t1": t_tk},
     {"id": "c-what", "label": "your speed · compared to what", "text": "?", "t0": A("vo06:So"), "t1": t_rd},
-    {"id": "c-read-trip", "label": "light time · your galactic trip so far", "text": "1/20 s", "read": True, "t0": t_rd, "t1": round(A("vo07:To") - 0.05, 4)},
-    {"id": "c-read-gc", "label": "light time · to the galaxy's center", "text": "27,000 years", "read": True, "t0": A("vo07:To"), "t1": t_end},
+    {"id": "c-read-trip", "label": "light time · your galactic trip", "text": "1/20 s", "read": True, "t0": t_rd, "t1": round(A("vo07:To") - 0.05, 4)},
+    {"id": "c-read-gc", "label": "light time · galaxy's center", "text": "27,000 years", "read": True, "t0": A("vo07:To"), "t1": t_end},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)

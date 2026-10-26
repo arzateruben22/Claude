@@ -129,7 +129,7 @@ TITLE_T1 = B["normal"]["t0"] - 0.5
 BADGES = [
     {"id": "b-pair", "text": "true sizes, shown side by side", "t0": round(TITLE_T1 + 0.45, 4), "t1": A("vo02:But"), "slot": "tr"},
     {"id": "b-sky", "text": "true distances, shrunk", "t0": A("vo02:But"), "t1": t_cut, "slot": "tl"},   # the side view
-    {"id": "b-dots", "text": "dots enlarged", "t0": A("vo02:But"), "t1": t_cut, "slot": "tl"},
+    {"id": "b-dots", "text": "dots enlarged", "t0": round(A("vo02:But") + 0.5, 4), "t1": t_cut, "slot": "tl"},   # after the first note has settled (they stack)
     {"id": "b-true", "text": "true scale", "t0": t_cut, "t1": t_pelo, "slot": "tr"},
     {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": t_melt0, "slot": "tr"},
     {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": round(t_j0 + 0.7, 4), "slot": "tr"},

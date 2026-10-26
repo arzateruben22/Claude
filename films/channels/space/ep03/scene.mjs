@@ -127,15 +127,16 @@ const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
 // a small horizon dial under the captions for the whoa: the Sun's place in the pin's sky (a diagram: the clouds hide it), crossing from the west
 const dial = document.createElement("div");
-const DW = 620 * S1, DH = 128 * S1, RX = 190 * S1, RY = 78 * S1, DCX = DW / 2, DCY = DH - 30 * S1;
-Object.assign(dial.style, { position: "absolute", left: `${(W - DW) / 2}px`, top: `${0.678 * H}px`, width: `${DW}px`, height: `${DH}px`, opacity: 0, zIndex: 3, pointerEvents: "none" });
+const DW = 620 * S1, DH = 128 * S1, RX = 190 * S1, RY = 40 * S1,   // flat: the Sun at noon clears a two-line caption plate
+      DCX = DW / 2, DCY = DH - 34 * S1;
+Object.assign(dial.style, { position: "absolute", left: `${(W - DW) / 2}px`, top: `${0.672 * H}px`, width: `${DW}px`, height: `${DH}px`, opacity: 0, zIndex: 3, pointerEvents: "none" });
 const tx = (x, y, a, txt, w = 650, sz = 24) => `<text x="${x}" y="${y}" text-anchor="${a}" style="fill:var(--text-2);font:${w} ${sz * S1}px var(--font-text)">${txt}</text>`;
 dial.innerHTML = `<svg width="${DW}" height="${DH}" viewBox="0 0 ${DW} ${DH}" style="overflow:visible">
   <path d="M ${DCX - RX} ${DCY} A ${RX} ${RY} 0 0 1 ${DCX + RX} ${DCY}" fill="none" style="stroke:var(--text-2)" stroke-width="${1.8 * S1}" stroke-dasharray="${5 * S1} ${6 * S1}" opacity="0.6"/>
   <line x1="${DCX - RX - 24 * S1}" y1="${DCY}" x2="${DCX + RX + 24 * S1}" y2="${DCY}" style="stroke:var(--text-2)" stroke-width="${2.6 * S1}"/>
   ${tx(DCX - RX - 34 * S1, DCY + 9 * S1, "end", "W")}${tx(DCX + RX + 34 * S1, DCY + 9 * S1, "start", "E")}
   ${tx(DCX, DCY + 26 * S1, "middle", "the Sun's place, behind the clouds", 550, 21)}
-  <circle id="dial-sun" r="${15 * S1}" style="fill:var(--lemon)"/></svg>`;
+  <circle id="dial-sun" r="${12.5 * S1}" style="fill:var(--lemon)"/></svg>`;
 document.getElementById("hud").appendChild(dial);
 const dialSun = dial.querySelector("#dial-sun");
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
