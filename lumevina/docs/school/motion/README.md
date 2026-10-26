@@ -102,3 +102,7 @@ moves slowly and with intent, the explanation carried by what the objects do.
 - 8-2 is the film session's directed pilot (keyed camera, focus pulls, falling plug cells, the
   serum drops that land and turn to liquid). Its scored cut, for posting with sound, is
   `marketing/ads/out/video/8-2-sound.mp4` (the silent cut stays the default).
+
+## The course page's hero
+
+`scenes3d.mjs` → `"hero"` is the Skin School page's opening picture, not a lesson: a 24-second loop of the living-skin block told in the course's three levels (the cells rise and the sun leaves two spots; drops of vitamin C, a retinoid and niacinamide sink in; the spots fade, the dermis brightens and the skin glows), with the camera on one slow orbit so the last frame meets the first. It carries `bare: true`, so the page template draws no header, caption bar or foot (the page under it says what each level is), and it stays out of `videos.js`. Render it with `--only hero --aspect 16x9`; `docs/school/hero.js` plays it and keeps the caption under it in step.

@@ -133,6 +133,7 @@ svg text { font-family: "InterV", system-ui, sans-serif; }
 .ec-big { margin: 0; font-size: 7vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; text-wrap: balance; }
 @media (orientation: portrait) { .ec-big { font-size: 8.4vmin; } .ec-in { padding: 0 7vmin; } }
 @media (orientation: portrait) { .stage { padding: 7vmin 6vmin 5vmin; } h1 { font-size: 6.4vmin; } .foot { display: none; } .cap { max-width: 100%; } }
+${scene.bare ? "header, footer { display: none !important; } .stage { padding: 0; gap: 0; } main.canvas { position: absolute; inset: 0; }" : ""}
 ${scene.css}
 </style></head><body><div class="stage">
 <canvas class="room" width="${W}" height="${H}" aria-hidden="true"></canvas>
@@ -265,7 +266,7 @@ for (const scene of Object.values(SCENES)) {
     const bytes = !quick && fs.existsSync(mp4) ? fs.statSync(mp4).size : 0;
     const entry = { frames, fps, dur: scene.dur, w: W, h: H, bytes, hash: sha(Buffer.from(hashes.join(""))), samples, warnings, renderSec: Math.round((Date.now() - t0) / 100) / 10, renderedAt: new Date().toISOString().slice(0, 10), quick };
     (log[scene.id] ||= {})[aspect] = entry;
-    if (!quick && aspect === "16x9") videos[scene.id] = { dur: scene.dur, w: W, h: H, bytes };
+    if (!quick && aspect === "16x9" && !scene.bare) videos[scene.id] = { dur: scene.dur, w: W, h: H, bytes };   // a bare scene (the page's hero) isn't a lesson
     console.log(`${scene.id} ${aspect}: ${frames} frames, ${entry.renderSec}s${bytes ? `, ${(bytes / 1024).toFixed(0)} KB` : " (quick)"}${warnings.length ? `\n  ! ${warnings.join("\n  ! ")}` : ""}`);
   }
 }

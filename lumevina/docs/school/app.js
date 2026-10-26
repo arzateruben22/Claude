@@ -364,9 +364,19 @@
     }
     if (n.shelf && n.shelf.length) {
       parts.push("Her shelf");
-      body += '<div class="ls-dp"><b>On Evelyn&rsquo;s shelf</b><p class="ls-chips">' + n.shelf.map(function (p) {
-        return '<span title="' + esc(p.about || "") + '">' + esc(p.name) + ' <small>$' + p.price + '</small></span>';
-      }).join("") + '</p><a class="ls-shop" href="index.html#shop">See the shop</a></div>';
+      /* each product opens to its card: her answers for it, and what she said once that applies to it (knowledge/scripts/product-cards.mjs) */
+      var withCard = n.shelf.filter(function (p) { return p.card; }), plain = n.shelf.filter(function (p) { return !p.card; });
+      body += '<div class="ls-dp"><b>On Evelyn&rsquo;s shelf</b>' +
+        (withCard.length ? '<div class="ls-prods">' + withCard.map(function (p) {
+          return '<details class="ls-prod"><summary>' + esc(p.name) + ' <small>$' + p.price + '</small></summary><p>' + p.card.split("\n").map(function (l) {
+            var k = l.indexOf(": "); return k > 0 ? "<b>" + esc(l.slice(0, k)) + ":</b> " + esc(l.slice(k + 2)) : esc(l);
+          }).join("<br>") + '</p></details>';
+        }).join("") + '</div>' : "") +
+        (plain.length ? '<p class="ls-chips">' + plain.map(function (p) {
+          return '<span title="' + esc(p.about || "") + '">' + esc(p.name) + ' <small>$' + p.price + '</small></span>';
+        }).join("") + '</p>' : "") +
+        (withCard.length ? '<p class="ls-k">How and when Evelyn uses each one, from her Skin Playbook.</p>' : "") +
+        '<a class="ls-shop" href="index.html#shop">See the shop</a></div>';
     }
     if (!parts.length) return "";
     return '<details class="ls-more"><summary>Go deeper <small>' + parts.join(" · ") + '</small></summary>' + body + '</details>';
@@ -1031,6 +1041,7 @@
   var paintAll = function () {
     var n = doneCount();
     $("#tb-me-l").textContent = st.tier ? "My course · " + Math.round(pct() * 100) + "%" : n ? "Keep learning" : "Free lessons";
+    $("#tb-me").classList.toggle("has-progress", !!(st.tier || n));   /* the EV mark until there's a ring to fill */
     $(".topbar .mini-ring .fg").setAttribute("stroke-dashoffset", String(56.55 * (1 - pct())));
     paintCur();
   };

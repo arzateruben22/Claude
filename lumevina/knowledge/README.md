@@ -27,6 +27,8 @@ Everything the website's assistant may say lives here: Evelyn's words, the studi
    ```sh
    node knowledge/scripts/build-product-guide.mjs [--final]     # → docs/product-guide/index.html and docs/Lumevina-Product-Guide.pdf
 
+   Under each Skin School lesson, the products on her shelf for that lesson open to the same card (`build-course-notes.mjs` puts it in `docs/school/notes.js`).
+
    What she said once for a kind of product (her routines by skin type, pausing actives before a treatment and bringing them back after, how the mandelic serums and the acne med start, what's normal, when to stop, how long a bottle lasts) is put on each product it applies to by `scripts/product-cards.mjs`, the layer the guide and the chat share: `build-bundle.mjs` gives every shelf product its card, so the assistant can say how and when to use the one a client owns, and `lastsMonths` (her rule of thumb as a number) tells a signed-in client's chat when a bottle they bought may be running low. Her own card for a product always wins over what was derived.
    ```
    Only her words and the label go in. Until every product is answered it prints as a draft that says how many are done; `--final` leaves out the ones she hasn't answered.

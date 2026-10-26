@@ -9,7 +9,7 @@ Sources, all in this folder:
   curriculum.js   the three levels, 40 lessons and the tiers
   notes.js        per lesson: Evelyn's answers, the general layer, her shelf (knowledge/scripts/build-course-notes.mjs)
   visuals.js      which lessons have a diagram in ../../img/school (visuals/build-visuals.mjs)
-  hero.js         the opening animation (a living cross-section of skin)
+  hero.js         the opening clip's controller (the clip itself: motion/scenes3d.mjs → "hero", rendered to ../../img/school/video/hero.*)
   scenes.js       one animation per level
   app.js          quiz, lesson preview, checkout, course player
 plus the site's payment engine, ../../js/payments.js.

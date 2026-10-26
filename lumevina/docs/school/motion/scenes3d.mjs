@@ -1334,5 +1334,145 @@ window.seek = function (t) {
   renderer.render(scene, camera);
 };
 `
+  },
+  /* ───────── the course page's hero: a living cross-section of skin, told in the three levels ─────────
+     bare: no header, caption bar or foot; the page under it says what each level is. One loop of 24 s:
+     the camera, the cells' rise, the sun, the drops and the glow all return to where they began. */
+  "hero": {
+    id: "hero", bare: true, kicker: "Lumevina Skin School", title: `Know your skin. <span class="grad">Then glow for life.</span>`, dur: 24, poster: 20.5,
+    shots: [
+      { at: 0, name: "know", cap: "New cells rise to the surface about every four weeks." },
+      { at: 8, name: "actives", cap: "The right active, in the right order, on the right night." },
+      { at: 16, name: "treat", cap: "Spots fade, collagen builds, and the glow comes through." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }`,
+    html: `<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, E } = M;
+const DUR = 24, TAU = Math.PI * 2;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.55));
+const key = new THREE.DirectionalLight(0xffe9d6, 2.7); key.position.set(9, 16, 14); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -16; key.shadow.camera.right = 16; key.shadow.camera.top = 16; key.shadow.camera.bottom = -16; key.shadow.camera.near = 1; key.shadow.camera.far = 60; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xf4c9d6, 0.35); fill.position.set(-12, 6, -6); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xf4c9d6, 1.7); rim.position.set(-5, 15, -16); scene.add(rim);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block: X across, Y up, Z toward the camera; the cut face is the front. A follicle with its hair, as in 8-2.
+const NX = 16, NY = 14, NZ = 9, PORE = { x: [-1, 0], z: [7, 8], from: 6 };
+const PZ = 8 - NZ / 2;
+const inPore = (x, y, z) => PORE.x.includes(x) && PORE.z.includes(z) && y >= PORE.from;
+const cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  if (inPore(x, y, z)) continue;
+  const i = cells.length, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 11) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 13 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone(), ph: hash(i + 77) * TAU, k: hash(i + 99) });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const mat = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 });
+const block = new THREE.InstancedMesh(geo, mat, cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+const hair = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 12, 10), new THREE.MeshStandardMaterial({ color: 0x4a2c22, roughness: 0.5 }));
+hair.position.set(0, PORE.from + 5.6, PZ); hair.rotation.z = 0.08; hair.castShadow = true; scene.add(hair);
+
+// the sun: a warm ray that touches the surface in level 1 and leaves two dark patches on the cut face
+const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 1.6, 26, 18, 1, true), new THREE.MeshBasicMaterial({ color: 0xffd27a, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false }));
+ray.position.set(-3.6, 26, PZ - 1); ray.rotation.z = 0.22; scene.add(ray);
+const SPOTS = [[-4, -3, -2, -3, -4, -2], [3, 4, 5, 4, 3, 5]];   // x columns of two patches, on the front rows
+const spotK = cells.map((c) => {
+  if (c.y < 11 || c.z < NZ - 3) return 0;
+  const d = Math.min(Math.hypot(c.x + 3, (c.y - 13) * 0.7), Math.hypot(c.x - 4, (c.y - 13) * 0.7));
+  return Math.max(0, 1 - d / 2.4) * (c.y === 13 ? 1 : 0.6);
+});
+const BROWN = new THREE.Color(0x6a3a2c), GLOW = new THREE.Color(0xd79aa2), TOPGLOW = new THREE.Color(0xf6d6c8);
+const tmp = new THREE.Color();
+
+// the drops: vitamin C, a retinoid, niacinamide; each falls, lands with a squash, spreads and sinks in
+const SURF = 13.5;
+const mkDrop = (col) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 18), new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.15, transmission: 0.25, opacity: 0.9, transparent: true })); m.visible = false; m.castShadow = true; scene.add(m); return m; };
+const ring = (col) => { const m = new THREE.Mesh(new THREE.RingGeometry(0.86, 1, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(1.6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.rotation.x = -Math.PI / 2; m.visible = false; scene.add(m); return m; };
+const DROPS = [
+  { m: mkDrop(0xf1d57a), r: ring(0xf1d57a), x: -4.6, z: PZ - 2.4, t0: 8.4 },
+  { m: mkDrop(0xf4c9d6), r: ring(0xf4c9d6), x: 0.8, z: PZ - 3.2, t0: 10.6 },
+  { m: mkDrop(0xffffff), r: ring(0xffffff), x: 5.2, z: PZ - 2.0, t0: 12.8 }
+];
+const splash = (m, x, z, q) => { m.visible = q >= 0 && q < 0.7; if (!m.visible) return; const k = 1 - Math.pow(1 - q / 0.7, 3); m.position.set(x, SURF + 0.03, z); m.scale.setScalar(0.6 + 2.8 * k); m.material.opacity = 0.75 * Math.pow(1 - q / 0.7, 1.6); };
+
+// the camera: one slow orbit of the cut face per loop, so the last frame meets the first
+const look = new THREE.Vector3(0, 9.6, 1.2), lk = new THREE.Vector3();
+window.CINEMA_FOCUS = () => ({ point: lk.copy(look), fstop: 0.5 });
+const place = (t) => {
+  const a = TAU * t / DUR, sc = portrait ? 1.3 : 1;
+  camera.position.set((7.5 + 2.4 * Math.sin(a)) * sc, 15.2 + 1.1 * Math.sin(a + 1.1), (23.5 + 1.8 * Math.cos(a)) * sc);
+  camera.fov = 32 + (portrait ? 12 : 0); camera.updateProjectionMatrix();
+  camera.lookAt(look.x + 0.3 * Math.sin(a + 0.4), look.y + 0.2 * Math.sin(a + 2), look.z);
+};
+const smooth = (x) => x * x * (3 - 2 * x);
+window.seek = function (t) {
+  M.stage(t);
+  place(t);
+  // the sun, in level 1
+  const sun = t < 8 ? Math.sin(Math.PI * seg(t, 1.2, 7.2)) : 0;
+  ray.material.opacity = 0.22 * sun;
+  // the spots: made by the sun, faded by level 3; the fade ends before the loop wraps
+  const made = E.out(seg(t, 2.4, 7.0)), faded = E.inout(seg(t, 16.5, 21.5));
+  const spot = made * (1 - faded);
+  // level 3: the dermis brightens as collagen builds, the surface glows; both ease back by the end of the loop
+  const glow = E.inout(seg(t, 16.8, 20.4)) * (1 - E.inout(seg(t, 22.2, 23.9)));
+  key.intensity = 2.7 + 0.9 * glow; rim.intensity = 1.7 + 1.1 * glow;
+  // the cells: a slow swell that travels up through the epidermis, the turnover, all year round
+  for (let i = 0; i < cells.length; i++) {
+    const c = cells[i];
+    let lift = 0, sw = 1;
+    if (c.y >= 11) {
+      const w = Math.sin(TAU * (2 * t / DUR) - (c.y - 11) * 0.9 + c.ph * 0.35 + c.x * 0.18);
+      lift = 0.16 * w; sw = 1 + 0.14 * w;
+    } else if (c.y >= 3) { sw = 1 + 0.06 * glow * Math.sin(c.ph); }
+    dummy.position.set(c.x + 0.5, c.y + lift, c.z + 0.5 - NZ / 2); dummy.scale.set(sw, sw, sw); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix);
+    tmp.copy(c.base);
+    if (spotK[i]) tmp.lerp(BROWN, spotK[i] * spot);
+    if (c.y >= 3 && c.y < 11) tmp.lerp(GLOW, 0.55 * glow);
+    else if (c.y === 13) tmp.lerp(TOPGLOW, 0.5 * glow);
+    block.setColorAt(i, tmp);
+  }
+  block.instanceMatrix.needsUpdate = true; block.instanceColor.needsUpdate = true;
+  // the drops, in level 2
+  for (const d of DROPS) {
+    const q = t - (d.t0 + 0.9);
+    splash(d.r, d.x, d.z, q);
+    const on = t > d.t0 && q < 2.2;
+    d.m.visible = on;
+    if (!on) continue;
+    const u = seg(t, d.t0, d.t0 + 0.9), f = u * u * u, speed = 3 * u * u;
+    let sy, sxz, y;
+    if (q < 0) { sy = Math.min(1.5, 1 + 0.2 * speed); sxz = 1 / Math.sqrt(sy); y = 22 - (22 - (SURF + 0.8)) * f; }
+    else { const flat = 0.6 * (1 - Math.exp(-q * 6)), wob = 0.12 * Math.sin(q * 22) * Math.exp(-q * 4.5), sink = smooth(seg(q, 0.9, 2.2)); sy = Math.max(0.15, 1 - flat + wob) * (1 - sink); sxz = (1 + 1.3 * flat - 0.5 * wob) * (1 - 0.3 * sink); y = SURF + 0.8 * sy; }
+    d.m.position.set(d.x, y, d.z); d.m.scale.set(Math.max(0.001, sxz), Math.max(0.001, sy), Math.max(0.001, sxz));
+    d.m.material.opacity = 0.9 * (1 - seg(q, 1.4, 2.2));
+  }
+  renderer.render(scene, camera);
+};
+`
   }
 };
