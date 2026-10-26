@@ -7,8 +7,10 @@ preview. **Nothing has been posted.** A physiologist signs off the script and th
 
 | | |
 |---|---|
-| Preview: draft tier (540×960, 15 fps, finish with K ≤ 6), final mix as AAC 44.1 kHz 192k | `review/preview-ep01.mp4` |
-| Ten final-tier stills (1080×1920, full finish) | `review/stills-ep01.jpg`; the PNGs are in `build/stills/final/9x16/frames/` |
+| **Delivery (v3, final tier)** | `out/meanwhile-inside-001-9x16.mp4` (1080×1920, 30 fps, 71.6 s, −14.1 LUFS, QA PASS), poster `out/meanwhile-inside-001-9x16.jpg`, contact sheet `out/meanwhile-inside-001-9x16-contact.jpg` |
+| Measured gates | `review/scorecard.md` |
+| Ten final-tier stills | `review/stills-ep01.jpg` (from the delivered file at 0, 9.6, 20.5, 23.8, 30.9, 40.6, 47, 54.9, 61.5 and 70.6 s) |
+| v2 preview (history) | draft tier (540×960, 15 fps), `review/preview-ep01.mp4` |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` |
 
 
