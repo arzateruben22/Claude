@@ -44,7 +44,7 @@ Review.
 ## Problems
 | Symptom | Do |
 |---|---|
-| Can't sign in | Check `OWNER_PASSWORD_HASH` and `SESSION_SECRET` in `.env.local`. Five wrong tries lock sign-in for 15 minutes (per server process) |
+| Can't sign in | Check `OWNER_PASSWORD_HASH` and `SESSION_SECRET` in `.env.local`. Wrong tries wait 1, 2, 4, 8 s; the 5th locks that address for 15 min (doubling each time, up to 24 h); 20 wrong tries an hour from anywhere pause sign-in for everyone. The message says how long. Restarting the web server clears it; signed-in devices stay signed in |
 | A task says "not approved" | Open Review: an edit or a new render withdrew the approval. Approve again |
 | A post link is refused | Paste the platform's own https link. TikTok links must belong to the saved handle |
 | Jobs stuck "running" | The worker died: start `npm run worker`. Expired leases are recovered within 15 minutes |
@@ -55,5 +55,11 @@ Review.
 | A post says "connection needs reconnecting" | The platform refused the token. Accounts → **Reconnect**; pulls resume on their own |
 
 ## Backups
-`pg_dump "$DATABASE_URL" > data/backups/prism-$(date +%F).sql` (the `data/backups` folder is git-ignored).
-Restore into an empty database with `psql`. The rendered videos live in the films repo (`films/channels/*/ep*/out`).
+- **On the server** (`docker-compose.yml`): the `backup` service dumps the database every night at 03:15 into
+  `backups/` (14 daily, 8 weekly) and backs up at once on start if the newest is over a day old. Copy `backups/` off the
+  server now and then. Restore: `docker compose stop app worker`, `docker compose run --rm backup restore
+  daily/prism-YYYY-MM-DD.sql.gz`, `docker compose up -d` (deploy/DEPLOY.md, section 7; the replaced database is kept).
+- **On a laptop:** `BACKUP_DIR=data/backups PGHOST=localhost PGUSER=prism PGPASSWORD=… PGDATABASE=prism
+  sh deploy/backup.sh once` (the `data/backups` folder is git-ignored). Restore into an empty database with
+  `gunzip -c FILE | psql`.
+- The rendered videos live in the films repo (`films/channels/*/ep*/out`), not in the database.

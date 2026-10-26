@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 — 2026-10-26 (going online: ops hardening)
+- Sign-in protection: per-address exponential backoff and doubling lockouts, a studio-wide ceiling of 20 failures an hour, one check at a time (parallel requests can't slip past), an async constant-time passphrase check, and audit entries for sign-ins, failures and lockouts (never the passphrase).
+- Nightly database backups on the server (`backup` service, `deploy/backup.sh`): 03:15, 14 daily + 8 weekly, verified, with `once`, `list` and a `restore` that keeps the replaced database.
+- A smaller Docker image (1.44 GB → 405 MB): Next standalone output and only the worker's and scripts' packages.
+- Fixed: `.env.production` was neither git-ignored nor docker-ignored (the old image could have carried it).
+
 ## 0.5.0 — 2026-10-26 (Stage E: push notifications)
 - Settings → Notifications: Notify this device, the device list with Remove, Send a test notification, recent notifications.
 - The worker notifies: upload due (30 min before a manual slot with an approved post), a scheduled automatic publish that failed or needs you, an Instagram slot passed with nothing planned. Each once.

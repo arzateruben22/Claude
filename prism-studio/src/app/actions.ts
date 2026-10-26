@@ -2,7 +2,7 @@
 // Every mutation the screens can make. Each action re-checks the owner's session (the proxy already did), validates
 // its input with zod, calls the domain layer, and revalidates the screens that show the result.
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
@@ -18,7 +18,8 @@ import { planDays, unschedule } from "@/domain/schedule";
 import { enqueue, requestCancel, retry } from "@/domain/jobs";
 import { addCost, anyChannelBudget, editCost, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
 import { localDate, zonedTimeToUtc } from "@/domain/time";
-import { checkPassword } from "@/lib/auth";
+import { attemptSignIn, clientKey, SignInThrottle } from "@/domain/signin";
+import { checkPasswordAsync } from "@/lib/auth";
 import { COOKIE, makeSession } from "@/lib/session";
 import { requireOwner } from "@/lib/owner";
 import { PLATFORM_LABEL } from "@/lib/format";
@@ -34,18 +35,19 @@ const refresh = (...paths: string[]) => { for (const p of ["/", ...paths]) reval
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 
 // ── sign in / out ──────────────────────────────────────────────────────────
-const attempts = new Map<string, { n: number; until: number }>();   // per process: slows guessing
+// one throttle per web process (globalThis: survives dev reloads); the rules and the audit entries are in the domain
+const g = globalThis as unknown as { __prismSignIn?: SignInThrottle };
+const throttle = () => (g.__prismSignIn ??= new SignInThrottle());
 export async function signIn(_: Result, fd: FormData): Promise<Result> {
-  const key = "owner", a = attempts.get(key) ?? { n: 0, until: 0 };
-  if (a.until > Date.now()) return { ok: false, message: `Too many tries. Wait ${Math.ceil((a.until - Date.now()) / 60000)} min.` };
-  const pass = str(fd, "passphrase");
-  if (!pass || !checkPassword(pass)) {
-    a.n++; if (a.n >= 5) { a.until = Date.now() + 15 * 60_000; a.n = 0; }
-    attempts.set(key, a);
-    await new Promise((r) => setTimeout(r, 400));
-    return { ok: false, message: "That passphrase didn't match." };
-  }
-  attempts.delete(key);
+  const h = await headers();
+  const r = await attemptSignIn({
+    throttle: throttle(),
+    client: clientKey(h.get("x-forwarded-for"), h.get("x-real-ip")),
+    passphrase: str(fd, "passphrase"),   // trimmed, as before (phone keyboards add a trailing space)
+    check: (p) => checkPasswordAsync(p),
+    audit: (action, detail) => audit(db(), action === "auth.sign_in" ? "owner" : "system", action, "owner", "", detail),
+  });
+  if (!r.ok) return { ok: false, message: r.message };
   const s = await makeSession();
   (await cookies()).set(COOKIE, s.value, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: s.maxAge });
   const next = str(fd, "next");

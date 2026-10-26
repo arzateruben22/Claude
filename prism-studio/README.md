@@ -41,6 +41,7 @@ Checks: `npm run typecheck`, `npm test` (needs `TEST_DATABASE_URL`; it wipes tha
 | `src/creations/` | The five creations, drawn as inline SVG (forms 1–5, branches, ascended, reveal) |
 | `worker/index.ts` | The job runner and housekeeping (expired leases, missed slots, due publications, due analytics pulls, push notifications) |
 | `scripts/` | migrate, seed, import episodes from `films/channels`, owner password, dev reset |
+| `deploy/`, `Dockerfile`, `docker-compose.yml` | Hosting on one server: Postgres, the web app, the worker, nightly backups (`backup.sh`), Caddy; `deploy/DEPLOY.md` |
 | `tests/` | Vitest: the failure paths (approvals, double counting, money, queue, DST, URLs, traversal) |
 
 See `RUNBOOK.md` for day-to-day operation, `DECISIONS.md` for why things are the way they are, `INTEGRATIONS.md`
