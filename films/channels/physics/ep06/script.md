@@ -12,9 +12,10 @@ drinking straw, three stories tall. Could you still drink through it?"), which t
   10.1 m (10.3 m with no vapor at all). How fast it climbs is illustrated, not computed (badged). Heights on
   the house's scale are measured from the basin's surface.
 - The spine reads the pressure inside the straw in hPa: 1013 at rest, 994 for the sip, about 915 in the lidded
-  glass (the hardest sip, and nothing rises); then the tall column in meters, 1.0 on the lungs, 10.1 with the
-  perfect pump, held lit through the takeaway. The measure reads the frozen column against the house's meter marks.
-- The whoa: the tall straw. Lungs lift it about a meter; a perfect pump takes it up, slowing, to stop near 10 m;
+  glass (a hard sip, and nothing rises); then the tall column in meters, 1.0 on the lungs alone, 7 for a mouth
+  pumping with cheeks and tongue (a stunt), 10.1 with the perfect pump, held lit through the takeaway. The measure reads the frozen column against the house's meter marks.
+- The whoa: the tall straw. Lungs alone lift it about a meter, a pumping mouth (a stunt) about seven; a perfect pump
+  takes it up, slowing, to stop near 10 m;
   at the top it boils at room temperature.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
@@ -23,14 +24,14 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `python3 -I kits/cinema/script/lint.py films/channels/physics/ep06 --segment measure`.
 
 ## hook {shot: low, up the house front: the tall straw with its column stopped near the top, empty above, the glass and the mannequin at its foot; frame 0 is the loop's · title drop: "The ten-meter straw" · pre: 0.1 · energy: 0.6} (0–4 s)
-vo: What lifts a drink up a *straw*? {-} Surprisingly, not suction. {c13}
+vo: What lifts a drink up a *straw*? {-} Something invisible, pushing. {c13}
 
 ## normal {shot: down to the bench: the mannequin sips; the water climbs the short straw · pre: 0.15 · energy: 0.45} (4–12 s)
 vo: A glass of water. {-} A straw. {-} One sip. {-} The water climbs twenty centimeters, to your lips. {-} It feels
 like you're *pulling* it. {-}
 
 ## change {shot: the glass is topped up to the brim and an airtight lid, sealed around the straw, comes down onto it; the mannequin sips, nothing moves · badge: "Rigid lid, no air inside" · pre: 0.1 · energy: 0.5} (12–20 s)
-vo: Now fill it completely. {-} Seal it, airtight, with a lid. {-} Then sip, as hard as possible. {-}
+vo: Now fill it completely. {-} Seal it, airtight, with a lid. {-} Then sip, however hard you like. {-}
 *Nothing* rises. {c2}
 
 ## why {shot: the lid comes off; Torricelli's tube in ink beside the table; the air drawn as arrows pressing on the drink · picture-only 2 s · pre: 0.25 · energy: 0.55} (20–37 s)
@@ -38,18 +39,19 @@ vo: In sixteen forty-four, Torricelli saw why. {c3} We live at the bottom of an 
 presses on everything. {c4} A sip lowers the pressure inside the straw, and the air outside pushes the
 drink *up*. {c5} How hard can it push? {-}
 
-## whoa {shot: the tall straw up the house front: the lungs lift it a meter, then the pump on the roof takes it up, slowing, to stop near 10 m; up close, boiling at the top · picture-only 3 s · energy: 0.8} (37–50 s)
-vo: Make the straw three stories tall. {-} Your lungs? {-} About one meter. {c8} With a perfect pump,
-the water stops near ten *meters*. {c6} At the top, room-temperature water boils. {c7}
+## whoa {shot: the tall straw up the house front: lungs alone lift it a meter, a pumping mouth (a stunt) seven, then the pump on the roof takes it up, slowing, to stop near 10 m; up close, boiling at the top · picture-only 3 s · energy: 0.8} (37–54 s)
+vo: Make the straw three stories tall. {-} Your lungs alone? {-} About one meter. {c8} Pumping with cheeks and
+tongue, one stunt reached seven. {c15} With a perfect pump, the water stops near ten *meters*. {c6} At the top,
+room-temperature water boils. {c7}
 
-## measure {segment: measure · frozen: the column's ghosts every fifth of a second bunching under the top, against the meter marks; a 1 cm² square of air on the basin, and the 10.3 m line · pre: 0.2 · energy: 0.3} (50–58 s)
+## measure {segment: measure · frozen: the column's ghosts every fifth of a second bunching under the top, against the meter marks; a 1 cm² square of air on the basin, and the 10.3 m line · pre: 0.2 · energy: 0.3} (54–62 s)
 vo: *Measure it*: the air above one square centimeter weighs just over a kilogram. {c1} So does ten
 point three meters of water. {c9}
 
-## takeaway {shot: back down to the glass, the mannequin sipping · energy: 0.45} (58–63 s)
-vo: Straws don't pull. {c10} You thin the air inside, and the atmosphere *pushes*. {c11}
+## takeaway {shot: back down to the glass, the mannequin sipping · energy: 0.45} (62–67.5 s)
+vo: Straws don't pull. {c10} The atmosphere *pushes*, and its push runs out near ten meters. {c11}
 
-## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (63–69.5 s)
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (67.5–74 s)
 vo: Next: frozen water, floating on liquid water. {c14} Why doesn't it *sink*? {-}
 end card: "Next drop: why ice *floats*" · "Follow Rest Frame" · footnote: "Torricelli, 1644: the same air held a column of mercury about 76 cm high."
 
@@ -60,5 +62,5 @@ end card: "Next drop: why ice *floats*" · "Follow Rest Frame" · footnote: "Tor
   on screen says both).
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see
   `claims.json`. A person opens each link before posting.
-- Listen at T0: "Torricelli", "centimeters", "room-temperature", "stories".
+- Listen at T0: "Torricelli", "centimeters", "room-temperature", "stories", "cheeks and tongue".
 - TODO: the handle, a physicist's sign-off, the AI-voice label in the post.

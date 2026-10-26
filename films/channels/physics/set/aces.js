@@ -32,6 +32,28 @@ export const acesInv = (hex, exposure = 1) => {
   return mul(IN_INV, x).map((c) => Math.max(0, (c * 0.6) / exposure));
 };
 export const unlit = (hex, exposure = 1) => { const c = acesInv(hex, exposure); return new THREE.Color().setRGB(c[0], c[1], c[2]); };
+// the forward curve, as the finish applies it: scene light [r, g, b] → the screen's sRGB, 0–1 (acesFwd(acesInv(hex)) ≈ hex)
+const IN_M = [[0.59719, 0.35458, 0.04823], [0.07600, 0.90834, 0.01566], [0.02840, 0.13383, 0.83777]];
+const OUT_M = [[1.60475, -0.53108, -0.07367], [-0.10208, 1.10813, -0.00605], [-0.00327, -0.07276, 1.07602]];
+const l2s = (c) => (c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+export const acesFwd = (c, exposure = 1) => {
+  const x = mul(IN_M, c.map((v) => (v * exposure) / 0.6)).map((v) => (v * (v + 0.0245786) - 0.000090537) / (v * (0.983729 * v + 0.432951) + 0.238081));
+  return mul(OUT_M, x).map((y) => l2s(Math.min(1, Math.max(0, y))));
+};
+// the opacity at which a mark showing inkHex over paperHex keeps k (0–1) of its contrast on screen. Blending happens in
+// scene light, before the curve, so opacity 1/3 shows far less than a third (about 1/11 for ink-2 on the cyc; a third needs about 0.7)
+export const screenAlpha = (k, inkHex, paperHex = "#E6E2D8") => {
+  if (k >= 1) return 1;
+  if (k <= 0) return 0;
+  const a = acesInv(inkHex), b = acesInv(paperHex), lum = (c) => 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  const P = lum(hexRgb(paperHex)), I = lum(hexRgb(inkHex));
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 22; i++) {
+    const m = (lo + hi) / 2, d = lum(acesFwd(a.map((v, j) => m * v + (1 - m) * b[j])));
+    if ((P - d) / (P - I) < k) lo = m; else hi = m;
+  }
+  return (lo + hi) / 2;
+};
 // three's sRGB → linear for a lit material's albedo (ColorManagement does the same for new THREE.Color(hex))
 export const albedo = (hex, k = 1) => { const c = hexRgb(hex).map(s2l); return new THREE.Color().setRGB(c[0] * k, c[1] * k, c[2] * k); };
 

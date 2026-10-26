@@ -52,7 +52,7 @@
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: a straw works because of atmospheric pressure, not suction; lowering the pressure inside the straw lets the air pressing on the drink push the liquid up; a straw wouldn't work in space, where there is no atmospheric pressure. 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.' Arithmetic for the scene: lifting the drink 20 cm needs 998 × 9.81 × 0.20 = 1,958 Pa ≈ 20 hPa, so the spine goes 1013 → 993 hPa."
+  "note": "Excerpt: a straw works because of atmospheric pressure, not suction; lowering the pressure inside the straw lets the air pressing on the drink push the liquid up; a straw wouldn't work in space, where there is no atmospheric pressure. 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.' Arithmetic for the scene: lifting the drink 20 cm needs 998 × 9.81 × 0.20 = 1,958 Pa ≈ 20 hPa, so the spine goes 1013 → 994 hPa."
  },
  {
   "id": "c6",
@@ -79,13 +79,13 @@
  {
   "id": "c8",
   "sentence": "About one meter.",
-  "claim": "Healthy adults' strongest suction at the mouth (maximal inspiratory pressure) is typically about 70–125 cm of water, so lungs alone could hold water in a straw only about 0.7–1.25 m up.",
+  "claim": "Healthy adults' strongest suction from the breathing muscles alone (maximal inspiratory pressure) is typically about 70–125 cm of water, so lungs alone could hold water in a straw only about 0.7–1.25 m up.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/9817693/",
   "source_title": "Determinants of maximal inspiratory pressure. The Baltimore Longitudinal Study of Aging (PubMed)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: mean MIP 101 cmH2O for men, 72 for women (Baltimore); 75 ± 27 cmH2O (Manizales, Colombia, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4001942/); a Singapore study median 95 (IQR 73–122). Arithmetic: a pressure of 100 cm of water holds a 1.0 m column of water, by the unit's definition. The sentence answers 'Your lungs?' ({-}). The scene's spine shows 1013 − 98 = 915 hPa for the lungs' best (≈ 100 cm of water). Maximal inspiratory pressure measures the breathing muscles (the lungs); an ordinary sip mostly uses the cheeks and tongue, which these sources don't cover, so the line says 'your lungs', not 'you'."
+  "note": "Excerpts: mean MIP 101 cmH2O for men, 72 for women (Baltimore); 75 ± 27 cmH2O (Manizales, Colombia, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4001942/); a Singapore study median 95 (IQR 73–122). Arithmetic: a pressure of 100 cm of water holds a 1.0 m column of water, by the unit's definition. The sentence answers 'Your lungs?' ({-}). The scene's spine shows 1013 − 98 = 915 hPa for the lungs' best (≈ 100 cm of water). Maximal inspiratory pressure measures the breathing muscles (the lungs); an ordinary sip mostly uses the cheeks and tongue, which these sources don't cover, so the line says 'your lungs', not 'you'. The line now says 'Your lungs alone?' (26 Oct, audit): a mouth pumping with cheeks and tongue does better (c15)."
  },
  {
   "id": "c9",
@@ -111,25 +111,25 @@
  },
  {
   "id": "c11",
-  "sentence": "You thin the air inside, and the atmosphere pushes.",
-  "claim": "Sipping lowers the air pressure inside the straw, and the weight of the air above the drink pushes it up.",
+  "sentence": "The atmosphere pushes, and its push runs out near ten meters.",
+  "claim": "The atmosphere pushes the drink up the straw, and its push can hold up at most a water column of about 10 m (10.3 m with no vapor; about 10.1 m for water at 20 °C).",
   "source_url": "https://www.ipm.org/show/amomentofscience/2023-11-21/air-pressure-and-drinking-straws",
   "source_title": "A Moment of Science (WFIU/WTIU, Indiana Public Media), Air pressure and drinking straws",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: a straw works because of atmospheric pressure, not suction; lowering the pressure inside the straw lets the air pressing on the drink push the liquid up; a straw wouldn't work in space, where there is no atmospheric pressure. 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.'"
+  "note": "Excerpt: a straw works because of atmospheric pressure, not suction; lowering the pressure inside the straw lets the air pressing on the drink push the liquid up; a straw wouldn't work in space, where there is no atmospheric pressure. 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.' Arithmetic as c6 and c9. Reworded on 26 Oct (audit): the takeaway repeated the why; it now carries the limit."
  },
  {
   "id": "c13",
-  "sentence": "Surprisingly, not suction.",
-  "claim": "A straw lifts a drink by atmospheric pressure, not by suction pulling it.",
+  "sentence": "Something invisible, pushing.",
+  "claim": "What lifts a drink up a straw is the push of the (invisible) air on the drink, not a pull: atmospheric pressure pushes the liquid up.",
   "source_url": "https://www.ipm.org/show/amomentofscience/2023-11-21/air-pressure-and-drinking-straws",
   "source_title": "A Moment of Science (WFIU/WTIU, Indiana Public Media), Air pressure and drinking straws",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: a straw works 'because of atmospheric pressure, not suction'; 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.' 'Suction' here is the everyday idea of the mouth pulling the drink; the sipper does lower the pressure in the straw (said in the why). The bible lists 'straws suck the drink up' among the misconceptions to avoid (§9)."
+  "note": "Excerpt: a straw works 'because of atmospheric pressure, not suction'; 'A more accurate description would be to say that the atmospheric pressure is pushing the liquid up the straw.' 'Suction' here is the everyday idea of the mouth pulling the drink; the sipper does lower the pressure in the straw (said in the why). The bible lists 'straws suck the drink up' among the misconceptions to avoid (§9). Reworded on 26 Oct (audit): 'Surprisingly, not suction' announced the wonder and fought the why ('a sip lowers the pressure'); the line now names what does the work."
  },
  {
   "id": "c14",
@@ -141,5 +141,16 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "The bible's episode 7 source (§7 #7: 'Freezing lowers water's density by about 9%, and about 10% of an iceberg shows above water'), not re-fetched here; the next episode re-checks it."
+ },
+ {
+  "id": "c15",
+  "sentence": "Pumping with cheeks and tongue, one stunt reached seven.",
+  "claim": "Sucking with the mouth (cheeks and tongue working as a pump), the Veritasium team lifted water about 7 m up a tube in 2012 ('World's Longest Straw'); lungs alone can't get near that.",
+  "source_url": "https://www-legacy.stem.org.uk/resources/elibrary/resource/424985/worlds-longest-vertical-straw",
+  "source_title": "STEM Learning, Veritasium: World's Longest (Vertical) Straw (2012)",
+  "accessed": "2026-10-26",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (a summary of the video): starting with a 1 m straw of taped drinking straws, then two 6 m tubes, then a 10.5 m tube over a cliff's edge; 'The best result was about 7 metres though theoretically up to 10.3 metres is possible if a perfect vacuum is created.' The coordinating session's audit also cites Santander et al. 2013 (a median mouth suction of about −279 mbar, about 2.8 m of water); we did not find that paper in our own searches, so it is not cited here. 'Seven' means about 7 m of lift; the scene's column reaches 7.0 m above the basin on 'seven.'. Added on 26 Oct (audit)."
  }
 ]

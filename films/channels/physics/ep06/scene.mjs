@@ -19,7 +19,7 @@ import { inkSet } from "../set/ink.js";
 import { createGlass, createStraw, createLid, createPump, createHouse, createBubbles, inkBarometer, inkDash, createTable } from "../set/straw.js";
 import { dropTitle } from "../set/title.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
-import { acesInv } from "../set/aces.js";
+import { acesInv, screenAlpha } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const CUE = FILM.cue, GEO = FILM.geo, EC = FILM.endCard, DUR = FILM.dur, DIM = FILM.dim;
@@ -33,6 +33,9 @@ if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 2.6, bloom: 0.35, f
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(32, W / H, 5, 8000);
 const dimAt = (name, t) => keyed(DIM[name], t, "linear");
+// a mark at strength k (1 as built, 1/3 stepped back) keeps k of its contrast against the paper on screen (set/aces.js)
+const PAPER_HEX = TK.cyc || "#E6E2D8", onScreen = (k, hex) => screenAlpha(k, hex, PAPER_HEX);
+const HEX = { ink2: TK["ink-2"] || "#4B505B", hg: "#2E3139", energy: TK.energy || "#B8321A", pressure: TK.pressure || "#0B6F86", motion: TK.motion || "#08805A", ghost: "#55585F" };
 
 // ── the set ───────────────────────────────────────────────────────────────
 const cyc = createCyc({ W, H, tokens: TK });
@@ -72,9 +75,11 @@ cap.position.set(PI.x, PI.top + 2.5, PI.z);
 const topHose = topPump.connect(topPump.outlet(), [PI.x, PI.top + 5, PI.z], -4);
 scene.add(basin.group, TS.group, topPump.group, cap, topHose);
 const boil = createBubbles({ n: 16, seed: 1644, spread: 1.4 }); scene.add(boil.group);   // inside the column (inner radius 2.6)
-// the lungs' meter (an accent tick on the straw) and the measure's two marks: the air above 1 cm², the 10.3 m line
-const IL = inkSet({ color: TK.energy || "#B8321A" }), lungsMark = IL.group();
+// the lungs' meter and the stunt's seven (accent ticks on the straw), and the measure's two marks: the air above 1 cm², the 10.3 m line
+const IL = inkSet({ color: HEX.energy }), lungsMark = IL.group();
 lungsMark.add(IL.bar(-9, 0, 9, 0, 1.6)); lungsMark.position.set(PI.x, PI.surf + PI.lungs, PI.z + PI.r + 1); scene.add(lungsMark);
+const IS = inkSet({ color: HEX.energy }), stuntMark = IS.group();
+stuntMark.add(IS.bar(-9, 0, 9, 0, 1.6)); stuntMark.position.set(PI.x, PI.surf + PI.stunt, PI.z + PI.r + 1); scene.add(stuntMark);
 const IA = inkSet({ color: TK.pressure || "#0B6F86" }), airCol = IA.group();
 airCol.add(inkDash(IA, 0, PI.surf, 0, 2600, { dash: 14, gap: 10, w: 2.2 })); airCol.add(IA.bar(-3, PI.surf, 3, PI.surf, 1.6));
 airCol.position.set(PI.x - PI.r - 9, 0, PI.z); scene.add(airCol);
@@ -93,8 +98,8 @@ AR.add("up", { tail: () => [ST.a[0] + 2.4, GEO.surfB - 2, ST.a[2]], vec: () => [
 const S = strobe({ geometry: new THREE.CylinderGeometry(1, 1, 0.6, 20), radius: PI.r * 1.25, max: 40, pop: 0.12,
   material: new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true }), rim: { color: [0.045, 0.048, 0.055], width: 0.42, strength: 0.62 }, park: [PI.x, 60, PI.z] });
 scene.add(S.group);
-const climbY = (t) => {                                   // the lungs' meter → the stop (an ease-out: the illustrated pace)
-  const c = CUE.climb, u = Math.max(0, Math.min(1, (t - c.t0) / c.T)), y0 = PI.surf + PI.lungs;
+const climbY = (t) => {                                   // the stunt's seven → the stop (an ease-out: the illustrated pace)
+  const c = CUE.climb, u = Math.max(0, Math.min(1, (t - c.t0) / c.T)), y0 = PI.surf + PI.stunt;
   return y0 + (PI.stop - y0) * (1 - Math.pow(1 - u, c.p));
 };
 const L = FILM.ladder;
@@ -167,15 +172,17 @@ window.seek = function (t) {
   const lv = benchLevel(t);
   SA.fill(lv); SB.fill(lv);
   lidAt(keyed(FILM.lid, t, "inout3"));
-  // ink: Torricelli's tube (a third once the air takes over), the lungs' meter, the measure's marks
+  // ink: Torricelli's tube (a third once the air takes over), the lungs' meter, the stunt's seven, the measure's marks
   const bk = win(t, CUE.baro) * dimAt("baro", t);
-  BARO.group.visible = bk > 0.001; IB.opacity(bk); BARO.opacity(bk);
+  BARO.group.visible = bk > 0.001; IB.opacity(onScreen(bk, HEX.ink2)); BARO.opacity(onScreen(bk, HEX.hg));
   const lk = win(t, CUE.lungs) * dimAt("lungs", t);
-  lungsMark.visible = lk > 0.001; IL.opacity(lk);
+  lungsMark.visible = lk > 0.001; IL.opacity(onScreen(lk, HEX.energy));
+  const sk = win(t, CUE.stunt) * dimAt("stunt", t);
+  stuntMark.visible = sk > 0.001; IS.opacity(onScreen(sk, HEX.energy));
   const ak = win(t, CUE.air) * dimAt("air", t);
-  airCol.visible = ak > 0.001; IA.opacity(ak);
+  airCol.visible = ak > 0.001; IA.opacity(onScreen(ak, HEX.pressure));
   const wk = win(t, CUE.line);
-  line103.visible = wk > 0.001; IW.opacity(wk);
+  line103.visible = wk > 0.001; IW.opacity(onScreen(wk, HEX.motion));
   // the tall straw: the column, boiling at the top once it stops (the loop's last frame is frame 0's bubbles)
   const ty = tallLevel(t);
   TS.fill(ty);
@@ -183,7 +190,7 @@ window.seek = function (t) {
   boil.group.visible = bk2 > 0.01;
   if (bk2 > 0.01) boil.update(bt, [PI.x, ty, PI.z], PI.r * 1.5, Math.min(1, bk2 * 3), 1.4);   // larger bubbles so they read; still only in the top 1.4 cm (c7)
   boil.group.children.forEach((m) => { m.material.opacity = 0.85 * Math.min(1, bk2); });
-  S.group.children.forEach((m) => { if (m.material && "opacity" in m.material && m.material.transparent) m.material.opacity = dimAt("ghosts", t); });
+  S.group.children.forEach((m) => { if (m.material && "opacity" in m.material && m.material.transparent) m.material.opacity = onScreen(dimAt("ghosts", t), HEX.ghost); });
   S.update(t);
   { const u = (dimAt("press", t) - 0.33) / 0.67; pressC.setRGB(...[0, 1, 2].map((j) => PRESS3[j] + (PRESS[j] - PRESS3[j]) * u)); }
   AR.update(t);

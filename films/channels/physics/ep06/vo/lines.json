@@ -11,14 +11,14 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "What lifts a drink up a straw? Surprisingly, not suction.",
+   "text": "What lifts a drink up a straw? Something invisible, pushing.",
    "stars": [
     "straw"
    ],
-   "phonemes": "wˌʌt lˈɪfts ɐ dɹˈɪŋk ˌʌp ɐ stɹˈɔː? sɚpɹˈaɪzɪŋli, nˌɑːt sˈʌkʃən.",
+   "phonemes": "wˌʌt lˈɪfts ɐ dɹˈɪŋk ˌʌp ɐ stɹˈɔː? sˈʌmθɪŋ ɪnvˈɪzᵻbəl, pˈʊʃɪŋ.",
    "file": "01.wav",
-   "dur": 3.405,
-   "sha256": "45c4a28e358ff9f43e723bd1d4cccb4e5d1c106d2c4d8780d68a4a94184da5f1"
+   "dur": 3.372,
+   "sha256": "22d45fabedba7ce334d9d35a7db5bcbcde1e6534ecea061117d48a4377f16abb"
   },
   {
    "id": "vo02",
@@ -35,14 +35,14 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, as hard as possible. Nothing rises.",
+   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, however hard you like. Nothing rises.",
    "stars": [
     "Nothing"
    ],
-   "phonemes": "nˈaʊ fˈɪl ɪt kəmplˈiːtli. sˈiːl ɪt, ˈɛɹtaɪt, wɪð ɐ lˈɪd. ðˈɛn sˈɪp, æz hˈɑːɹd æz pˈɑːsᵻbəl. nˈʌθɪŋ ɹˈaɪzᵻz.",
+   "phonemes": "nˈaʊ fˈɪl ɪt kəmplˈiːtli. sˈiːl ɪt, ˈɛɹtaɪt, wɪð ɐ lˈɪd. ðˈɛn sˈɪp, haʊˈɛvɚ hˈɑːɹd juː lˈaɪk. nˈʌθɪŋ ɹˈaɪzᵻz.",
    "file": "03.wav",
-   "dur": 6.414,
-   "sha256": "0d3f9ac9fb7d20b355a538d69ee1363080e418a4f53866d71b64079faea6a375"
+   "dur": 6.268,
+   "sha256": "622c2b6ab10bb3a68a847488fc73c59f01de477f62409b51e667269a75f13032"
   },
   {
    "id": "vo04",
@@ -59,14 +59,14 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Make the straw three stories tall. Your lungs? About one meter. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
+   "text": "Make the straw three stories tall. Your lungs alone? About one meter. Pumping with cheeks and tongue, one stunt reached seven. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
    "stars": [
     "meters"
    ],
-   "phonemes": "mˌeɪk ðə stɹˈɔː θɹˈiː stˈɔːɹiz tˈɔːl. jʊɹ lˈʌŋz? ɐbˌaʊt wˈʌn mˈiːɾɚ. wɪð ɐ pˈɜːfɛkt pˈʌmp, ðə wˈɔːɾɚ stˈɑːps nˌɪɹ tˈɛn mˈiːɾɚz. æt ðə tˈɑːp, ɹˈuːmtˈɛmpɹɪtʃɚ wˈɔːɾɚ bˈɔɪlz.",
+   "phonemes": "mˌeɪk ðə stɹˈɔː θɹˈiː stˈɔːɹiz tˈɔːl. jʊɹ lˈʌŋz ɐlˈoʊn? ɐbˌaʊt wˈʌn mˈiːɾɚ. pˈʌmpɪŋ wɪð tʃˈiːks ænd tˈʌŋ, wˈʌn stˈʌnt ɹˈiːtʃt sˈɛvən. wɪð ɐ pˈɜːfɛkt pˈʌmp, ðə wˈɔːɾɚ stˈɑːps nˌɪɹ tˈɛn mˈiːɾɚz. æt ðə tˈɑːp, ɹˈuːmtˈɛmpɹɪtʃɚ wˈɔːɾɚ bˈɔɪlz.",
    "file": "05.wav",
-   "dur": 10.177,
-   "sha256": "131e62efb0ec86669df0682953bb0bdad1e92c23e0aa5abf2005217fb4445b46"
+   "dur": 13.878,
+   "sha256": "2ed0d0bf60f756092ccb07a37326cbd1b1a21183b98090b7c2dd189f1a8b0f69"
   },
   {
    "id": "vo06",
@@ -83,14 +83,14 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Straws don't pull. You thin the air inside, and the atmosphere pushes.",
+   "text": "Straws don't pull. The atmosphere pushes, and its push runs out near ten meters.",
    "stars": [
     "pushes"
    ],
-   "phonemes": "stɹˈɔːz dˈoʊnt pˈʊl. juː θˈɪn ðɪ ˈɛɹ ɪnsˈaɪd, ænd ðɪ ˈætməsfˌɪɹ pˈʊʃᵻz.",
+   "phonemes": "stɹˈɔːz dˈoʊnt pˈʊl. ðɪ ˈætməsfˌɪɹ pˈʊʃᵻz, ænd ɪts pˈʊʃ ɹˈʌnz ˈaʊt nˌɪɹ tˈɛn mˈiːɾɚz.",
    "file": "07.wav",
-   "dur": 4.124,
-   "sha256": "e3f2f07a634b8e2b553ee82eb82cc0c660cdf48cf2364e35429b8c5561d7be99"
+   "dur": 4.928,
+   "sha256": "b6a8703c1afa7a2a18f424aa7eaf2d4b61c03e7cd48b136bfd2f6d1ef7e2e089"
   },
   {
    "id": "vo08",

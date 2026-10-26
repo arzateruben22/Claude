@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "What lifts a drink up a straw? Surprisingly, not suction.",
-   "heard": "What lifts a drink up a straw? Surprisingly, not suction.",
+   "text": "What lifts a drink up a straw? Something invisible, pushing.",
+   "heard": "What lifts a drink up a straw? Something invisible pushing.",
    "words": [
     {
      "w": "What",
@@ -14,55 +14,55 @@
     },
     {
      "w": "lifts",
-     "start": 0.165,
+     "start": 0.185,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.39,
+     "start": 0.43,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "drink",
-     "start": 0.54,
-     "end": 0.8,
+     "start": 0.585,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "up",
-     "start": 0.86,
-     "end": 0.96,
+     "start": 0.905,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.03,
-     "end": 1.12,
+     "start": 1.095,
+     "end": 1.145,
      "heard": true
     },
     {
      "w": "straw?",
-     "start": 1.06,
-     "end": 1.76,
+     "start": 1.125,
+     "end": 1.84,
      "heard": true
     },
     {
-     "w": "Surprisingly,",
-     "start": 1.785,
-     "end": 2.64,
+     "w": "Something",
+     "start": 1.85,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "not",
-     "start": 2.525,
-     "end": 2.88,
+     "w": "invisible,",
+     "start": 2.045,
+     "end": 2.8,
      "heard": true
     },
     {
-     "w": "suction.",
-     "start": 2.835,
+     "w": "pushing.",
+     "start": 2.855,
      "end": 3.36,
      "heard": true
     }
@@ -209,8 +209,8 @@
   },
   {
    "id": "vo03",
-   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, as hard as possible. Nothing rises.",
-   "heard": "Now fill it completely. Seal it airtight with a lid. Then sip as hard as possible, nothing rises.",
+   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, however hard you like. Nothing rises.",
+   "heard": "Now fill it completely. Seal it airtight with a lid. Then sip however hard you like, nothing rises.",
    "words": [
     {
      "w": "Now",
@@ -220,104 +220,104 @@
     },
     {
      "w": "fill",
-     "start": 0.31,
+     "start": 0.285,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "it",
-     "start": 0.57,
+     "start": 0.545,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "completely.",
-     "start": 0.795,
+     "start": 0.77,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "Seal",
-     "start": 1.605,
-     "end": 1.92,
+     "start": 1.58,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "it,",
-     "start": 2.015,
-     "end": 2.08,
+     "start": 1.86,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "airtight,",
-     "start": 2.08,
-     "end": 2.64,
+     "start": 2.075,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "with",
-     "start": 2.56,
+     "start": 2.535,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.635,
-     "end": 2.88,
+     "start": 2.61,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "lid.",
-     "start": 2.97,
+     "start": 2.895,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "Then",
-     "start": 3.54,
-     "end": 3.6,
+     "start": 3.465,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "sip,",
-     "start": 3.835,
-     "end": 4.16,
+     "start": 3.755,
+     "end": 4.08,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 4.18,
-     "end": 4.4,
+     "w": "however",
+     "start": 4.055,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "hard",
-     "start": 4.38,
-     "end": 4.64,
+     "start": 4.515,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 4.73,
-     "end": 4.8,
+     "w": "you",
+     "start": 4.705,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "possible.",
-     "start": 4.76,
-     "end": 5.44,
+     "w": "like.",
+     "start": 4.905,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "Nothing",
-     "start": 5.365,
-     "end": 5.76,
+     "start": 5.23,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "rises.",
-     "start": 5.82,
-     "end": 6.4,
+     "start": 5.665,
+     "end": 6.24,
      "heard": true
     }
    ]
@@ -583,8 +583,8 @@
   },
   {
    "id": "vo05",
-   "text": "Make the straw three stories tall. Your lungs? About one meter. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
-   "heard": "Make the straw three stories tall. Your lungs, about one meter. With a perfect pump, the water stops near 10 meters. At the top, room temperature water boils.",
+   "text": "Make the straw three stories tall. Your lungs alone? About one meter. Pumping with cheeks and tongue, one stunt reached seven. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
+   "heard": "Make the straw three stories tall. Your lungs alone, about one meter. Pumping with cheeks and tongue, one stunt reached seven. With a perfect pump, the water stops near ten meters. At the top, room temperature water boils.",
    "words": [
     {
      "w": "Make",
@@ -594,13 +594,13 @@
     },
     {
      "w": "the",
-     "start": 0.205,
+     "start": 0.155,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "straw",
-     "start": 0.38,
+     "start": 0.205,
      "end": 0.8,
      "heard": true
     },
@@ -612,7 +612,7 @@
     },
     {
      "w": "stories",
-     "start": 1.005,
+     "start": 0.995,
      "end": 1.44,
      "heard": true
     },
@@ -624,128 +624,188 @@
     },
     {
      "w": "Your",
-     "start": 2.18,
-     "end": 2.32,
+     "start": 2.155,
+     "end": 2.24,
      "heard": true
     },
     {
-     "w": "lungs?",
-     "start": 2.35,
-     "end": 3.12,
+     "w": "lungs",
+     "start": 2.185,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "About",
-     "start": 3.19,
+     "w": "alone?",
+     "start": 2.545,
      "end": 3.36,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 3.4,
+     "w": "About",
+     "start": 3.435,
      "end": 3.52,
      "heard": true
     },
     {
+     "w": "one",
+     "start": 3.66,
+     "end": 3.84,
+     "heard": true
+    },
+    {
      "w": "meter.",
-     "start": 3.68,
-     "end": 4.4,
+     "start": 3.92,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "With",
-     "start": 4.535,
-     "end": 4.585,
+     "w": "Pumping",
+     "start": 4.83,
+     "end": 5.2,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 4.6,
-     "end": 4.72,
+     "w": "with",
+     "start": 5.275,
+     "end": 5.36,
      "heard": true
     },
     {
-     "w": "perfect",
-     "start": 4.735,
-     "end": 5.12,
+     "w": "cheeks",
+     "start": 5.36,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "pump,",
-     "start": 5.165,
-     "end": 5.6,
+     "w": "and",
+     "start": 5.685,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 5.555,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "water",
-     "start": 5.585,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "stops",
-     "start": 6.08,
+     "w": "tongue,",
+     "start": 5.93,
      "end": 6.4,
      "heard": true
     },
     {
-     "w": "near",
-     "start": 6.295,
-     "end": 6.64,
+     "w": "one",
+     "start": 6.32,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "ten",
-     "start": 6.645,
-     "end": 6.96,
+     "w": "stunt",
+     "start": 6.735,
+     "end": 7.04,
      "heard": true
     },
     {
-     "w": "meters.",
-     "start": 7.055,
-     "end": 7.76,
+     "w": "reached",
+     "start": 6.97,
+     "end": 7.44,
      "heard": true
     },
     {
-     "w": "At",
-     "start": 7.84,
-     "end": 7.92,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.945,
+     "w": "seven.",
+     "start": 7.535,
      "end": 8.08,
      "heard": true
     },
     {
-     "w": "top,",
-     "start": 8.04,
+     "w": "With",
+     "start": 8.28,
+     "end": 8.33,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.31,
      "end": 8.48,
      "heard": true
     },
     {
+     "w": "perfect",
+     "start": 8.485,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "pump,",
+     "start": 8.91,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.29,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 9.53,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "stops",
+     "start": 9.755,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 9.97,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 10.32,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "meters.",
+     "start": 10.735,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 11.515,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.615,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "top,",
+     "start": 11.715,
+     "end": 12.16,
+     "heard": true
+    },
+    {
      "w": "room-temperature",
-     "start": 8.495,
-     "end": 9.36,
+     "start": 12.2,
+     "end": 13.04,
      "heard": false
     },
     {
      "w": "water",
-     "start": 9.305,
-     "end": 9.6,
+     "start": 13.035,
+     "end": 13.28,
      "heard": true
     },
     {
      "w": "boils.",
-     "start": 9.63,
-     "end": 10.16,
+     "start": 13.33,
+     "end": 13.84,
      "heard": true
     }
    ]
@@ -885,79 +945,91 @@
   },
   {
    "id": "vo07",
-   "text": "Straws don't pull. You thin the air inside, and the atmosphere pushes.",
-   "heard": "Straws don't pull. You thin the air inside and the atmosphere pushes.",
+   "text": "Straws don't pull. The atmosphere pushes, and its push runs out near ten meters.",
+   "heard": "Straws don't pull. The atmosphere pushes, and its push runs out near 10 meters.",
    "words": [
     {
      "w": "Straws",
      "start": 0.02,
-     "end": 0.48,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "don't",
-     "start": 0.44,
-     "end": 0.72,
+     "start": 0.47,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "pull.",
-     "start": 0.64,
-     "end": 1.28,
+     "start": 0.74,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "You",
-     "start": 1.44,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "thin",
-     "start": 1.59,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 1.86,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "air",
-     "start": 1.89,
-     "end": 2.16,
-     "heard": true
-    },
-    {
-     "w": "inside,",
-     "start": 2.25,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 2.745,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 2.775,
-     "end": 2.96,
+     "w": "The",
+     "start": 1.5,
+     "end": 1.55,
      "heard": true
     },
     {
      "w": "atmosphere",
-     "start": 2.975,
-     "end": 3.52,
+     "start": 1.53,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "pushes.",
-     "start": 3.6,
-     "end": 4.08,
+     "w": "pushes,",
+     "start": 2.205,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.875,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 3.04,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 3.17,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "runs",
+     "start": 3.475,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.705,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 3.885,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 4.155,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "meters.",
+     "start": 4.4,
+     "end": 4.88,
      "heard": true
     }
    ]
