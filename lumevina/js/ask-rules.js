@@ -10,7 +10,9 @@
  *   pregnancy   pregnant, breastfeeding, trying
  *   medication  Accutane, prescriptions, procedures that change what's safe
  *   condition   a named skin condition
- *   skin        "my skin", "what should I use", "is this normal", "what's wrong" from a photo: personal
+ *   skin        "my skin", "what should I use", "is this normal": answered from her playbook (her
+ *               routines by skin type, her answers, where the client's products fit), with Evelyn a
+ *               tap away; only "what's wrong" from a photo (PHOTO) goes straight to her
  *   personal    Evelyn's own hard lines (her Skin Playbook): supplements, results or guarantees,
  *               discounts or price exceptions, clients under 18
  *
@@ -94,5 +96,15 @@
     return kind(raw, fixed) ? null : found;   // a real skin or studio question wins over a weak signal
   };
 
-  window.LumevinaAskRules = { URGENT: URGENT, KINDS: KINDS, OFF: OFF, FIRST: FIRST, OURS: OURS, kind: kind, offTopic: offTopic };
+  /* reading someone's skin from a photo is on her hard-lines list: that one always goes to her */
+  var PHOTO = /what('?s| is) (wrong|going on|this|that) (with|on) (my|this|her|his)|(look at|see) (this|my|the) (photo|pic|picture|selfie)|from (a|this|my|the) (photo|pic|picture)/i;
+  /* where a question goes: a hand-off kind, or null for the chat. A "skin" question is the chat's, from her playbook,
+     unless it asks her to read a photo */
+  var route = function (raw, fixed) {
+    var k = kind(raw, fixed);
+    if (k === "skin" && !PHOTO.test(String(raw || "")) && !PHOTO.test(String(fixed || ""))) return null;
+    return k;
+  };
+
+  window.LumevinaAskRules = { URGENT: URGENT, KINDS: KINDS, OFF: OFF, FIRST: FIRST, OURS: OURS, PHOTO: PHOTO, kind: kind, route: route, offTopic: offTopic };
 })();

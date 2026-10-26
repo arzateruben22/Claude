@@ -184,7 +184,7 @@
   /* ── everyday answers, in Evelyn's voice ── */
   var KB = [
     { id: "hi", k: /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|what'?s up|good (morning|afternoon|evening))[\s!.,]*(there|evelyn|lumevina)?[\s!.?]*$/, a: function () {
-      return "Hi! I can help with prices, booking, prep, aftercare and memberships, any time. Anything about your own skin goes straight to Evelyn."; } },
+      return "Hi! I can help with your skin, your products, prices, booking, prep and aftercare, any time, from Evelyn’s own playbook. She’s a tap away for anything personal."; } },
     { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "Anytime. Anything else I can help with?"; } },
     { id: "bye", k: /^(bye+|see you|see ya|talk (later|soon)|talk to you later|good ?night|have a good (one|day|night)|ttyl|later)[\s!.]*$/, a: function () {
       return "See you at the studio. Evelyn’s here whenever you need her."; } },
@@ -463,6 +463,170 @@
     return true;
   };
 
+
+  /* ── skin questions, answered from her playbook (js/ask-skin.js, generated from it by build-bundle.mjs): her
+     routine for their skin type, product by product from her shelf, her own lines on the concern, and where the
+     products they already use fit. Skin type comes from what they say, their skin profile, or one question. Evelyn
+     stays a button away; a reaction, pregnancy, a medication, a named condition, reading a photo or changing a
+     plan she wrote still go straight to her (js/ask-rules.js). Nothing here is written by anyone but her. ── */
+  var SG = window.LumevinaSkin || null;
+  var sgProduct = function (id) { return SG ? SG.products.filter(function (p) { return p.id === id; })[0] || null : null; };
+  var base = function (name) { return String(name).replace(/\s*\([^)]*\)\s*$/, ""); };   // the travel size reads as the product
+  var sgNorm = function (s) { return " " + String(s || "").toLowerCase().replace(/[’']/g, "").replace(/-/g, " ").replace(/[^a-z0-9%.\s]/g, " ").replace(/\s+/g, " ") + " "; };
+  /* her products in what someone typed: every distinctive word of the name ("cran peptide", "8% mandelic") */
+  var namedIn = function (text) {
+    if (!SG) return [];
+    var t = sgNorm(text), flat = t.replace(/\s/g, ""), seen = {};
+    return SG.products.filter(function (p) {
+      return p.words.length && p.words.every(function (w) { return t.indexOf(" " + w + " ") !== -1 || (w.length > 5 && flat.indexOf(w) !== -1); });
+    }).filter(function (p) { var k = base(p.name); if (seen[k]) return false; seen[k] = 1; return true; });
+  };
+  /* one step of her routine: "Cran-Peptide Cream", "L-Mandelic Serum (5% or 8%)", "PowerMineral SPF 50 or Mineral SPF 50" */
+  var stepName = function (alts) {
+    var names = [], seen = {};
+    alts.forEach(function (id) { var p = sgProduct(id), n = p ? base(p.name) : id; if (!seen[n]) { seen[n] = 1; names.push(n); } });
+    var m = names.map(function (n) { return /^([\d.]+%) (.+)$/.exec(n); });
+    if (names.length > 1 && m.every(function (x) { return x && x[2] === m[0][2]; })) return m[0][2] + " (" + m.map(function (x) { return x[1]; }).join(" or ") + ")";
+    return names.join(" or ");
+  };
+  var typeLabel = function (k) { return k === "dry" ? "dry or normal skin" : "oily or combination skin"; };
+  var routineText = function (k) {
+    var r = SG && SG.routines[k];
+    if (!r || !r.morning.length) return "";
+    return "Evelyn’s routine for " + typeLabel(k) + ":\nMorning: " + r.morning.map(stepName).join(", ") + ".\nNight: " + r.night.map(stepName).join(", ") + "." +
+      (SG.tolerance && r.morning.concat(r.night).some(function (a) { return a.length > 1 && /mandelic|acne med/.test(a[0]); }) ? "\nWhich strength depends on your tolerance: start with the one Evelyn gives you." : "");
+  };
+  /* her essentials ("cleanser, hydrator, moisturizer, and SPF") from the routine for their type, the ones that need no consult */
+  var essentials = function (k) {
+    var r = SG.routines[k], all = r.morning.concat(r.night), out = [];
+    ["Cleansers", "Serums", "Moisturizers", "Sun care"].forEach(function (cat) {
+      for (var i = 0; i < all.length; i++) {
+        var p = sgProduct(all[i][0]);
+        if (p && p.cat === cat && !p.consult && onShelf(p.id)) { out.push(p.id); return; }
+      }
+    });
+    return out;
+  };
+  var essentialsAct = function (k) {
+    var ids = essentials(k), total = ids.reduce(function (s, id) { var p = onShelf(id); return s + (p ? p.price : 0); }, 0);
+    return ids.length > 1 && window.LumevinaCart ? [["Add her essentials · $" + total, "addall:" + ids.join(",")]] : [["See the shop", "#shop"]];
+  };
+  var isActive = function (p) { return /mandelic|acne med|retin|glycolic|lactic|salicylic/i.test(p.name); };
+  var role = function (id, k) {
+    var r = SG.routines[k], has = function (list) { return list.some(function (a) { return a.indexOf(id) !== -1; }); };
+    var m = has(r.morning), n = has(r.night);
+    return m && n ? "morning and night" : m ? "in the morning" : n ? "at night" : "";
+  };
+  var sameStep = function (p, k) {   // the step of the same kind in her routine for k
+    var r = SG.routines[k], all = r.morning.concat(r.night);
+    for (var i = 0; i < all.length; i++) { var q = sgProduct(all[i][0]); if (q && q.cat === p.cat) return stepName(all[i]); }
+    return "";
+  };
+  /* where the products they use sit in her routine */
+  var fitLines = function (ps, k) {
+    return ps.slice(0, 4).map(function (p) {
+      var name = base(p.name);
+      if (k) {
+        var here = role(p.id, k), there = role(p.id, k === "dry" ? "oily" : "dry");
+        if (here) return "Your " + name + " is in it, " + here + ".";
+        if (there) { var alt = sameStep(p, k); return "Your " + name + " is in her routine for " + typeLabel(k === "dry" ? "oily" : "dry") + (alt ? "; for yours, that step is " + alt : "") + "."; }
+      } else {
+        var d = role(p.id, "dry"), o = role(p.id, "oily");
+        if (d || o) return "Your " + name + " is in her routine for " + (d && o ? "both skin types" : d ? "dry or normal skin" : "oily or combination skin") + ", " + (d || o) + ".";
+      }
+      var c = SG.cards[p.id], w = c && /^When: (.+)$/m.exec(c);
+      return w ? "Your " + name + ": " + w[1] + "." : "";
+    }).filter(Boolean);
+  };
+  var said = function (line) { return line ? "Evelyn: “" + line + "”" : ""; };
+  var profileOf = function () { var s = window.LumevinaProfile && window.LumevinaProfile.snapshot ? window.LumevinaProfile.snapshot() : null; return s && s.profile; };
+  var owned = function () {
+    var ids = {}, out = [], add = function (p) { if (p && !ids[p.id]) { ids[p.id] = 1; out.push(p); } };
+    var who = me(), pf = profileOf();
+    if (who) myShelf(who.email).forEach(function (b) { add(sgProduct(b.id)); });
+    if (pf) namedIn([pf.morning, pf.night, pf.weekly].join(" ")).forEach(add);
+    state.log.forEach(function (m) { if (m.who === "you") namedIn(m.text).forEach(add); });
+    return out;
+  };
+  var typeIn = function (t) {
+    return /\b(oily|greasy|shiny|combination)\b|\bcombo\b/.test(t) ? "oily" : /\b(dry|tight|flaky|flaking|dehydrated|parched)\b|normal skin/.test(t) ? "dry" : null;
+  };
+  var skinTypeFor = function (t) {
+    var k = typeIn(t);
+    if (k) return (state.skin = k);
+    if (state.skin) return state.skin;
+    var pf = profileOf();
+    if (pf && pf.skinType) return /oily|combination|acne/i.test(pf.skinType) ? "oily" : /dry|normal/i.test(pf.skinType) ? "dry" : null;
+    return null;
+  };
+  var CONCERNS = [
+    ["after", /(broke|break|breaking) ?out after (my|a|the|your)? ?(facial|peel|treatment|visit|extraction)/],
+    ["purge", /purg/],
+    ["ingrown", /ingrown|razor bumps?/],
+    ["spots", /dark (spot|mark)s?|pigment|discolou?r|sun ?spots?|acne marks|marks (left|from)|post ?acne/],
+    ["acne", /acne|break ?outs?|breaking out|broke out|pimples?|\bzits?\b|blemish|whiteheads?|blackheads?|clogged|congest/],
+    ["aging", /wrinkl|fine lines?|\baging|ageing|firm(ness)?\b|sagg/],
+    ["sensitive", /sensitiv|redness|\bred\b|blotch|reactive/],
+    ["dull", /\bdull|texture|uneven|bumpy|rough/],
+    ["oily", /\b(oily|greasy|shiny|shine)\b|\bcombo\b|combination|large pores|\bpores\b/],
+    ["dry", /\b(dry|tight|flaky|flaking|dehydrated|parched)\b/]
+  ];
+  var TYPE_ACTS = function (c) { return [["Dry or normal", "t:My skin is dry or normal" + (c ? ", " + c : "")], ["Oily or combination", "t:My skin is oily or combination" + (c ? ", " + c : "")]]; };
+  var skinGuide = function (t, sure) {
+    if (!SG) return null;
+    var concern = null;
+    for (var i = 0; i < CONCERNS.length; i++) if (CONCERNS[i][1].test(t)) { concern = CONCERNS[i][0]; break; }
+    var named = namedIn(t);
+    var using = /\b(i|im|i m) (use|using|have|bought|got|own)\b|\bmy (routine|products?|serum|cleanser|moisturi[sz]er|toner|spf|sunscreen)\b/.test(t);
+    var howTo = /how (do|should|often) (i|do i) use|when (do|should) i use|how often|how much (do|should) i use/.test(t);
+    /* outside a clear skin question, only a concern in a skin context or her products in their routine; a visit question stays the menu's */
+    if (!sure && (/facial|peel|wax|dermaplan|appointment|\bbook|price|cost|in stock|ship/.test(t) || !(concern && /skin|face|routine|products?|what (should|do|can) i|recommend|help|use|\b(i|im|my)\b/.test(t) || (named.length && (using || howTo))))) return null;
+    var k = skinTypeFor(t), mine = owned(), H = SG.her;
+    var actives = mine.filter(isActive).length || /mandelic|acne med|retin|acid|exfoliat|benzoyl/.test(t);
+    var ask = !mine.length && !state.askedUse ? "\n\nWhat are you using now? Tell me the products and I’ll show you where each fits." : "";
+    if (ask) state.askedUse = true;
+    var fits = fitLines(mine, k);
+    var fitText = fits.length ? "\n\n" + fits.join(" ") : ask;
+    var lines = function () { return Array.prototype.slice.call(arguments).filter(Boolean).join("\n\n"); };
+    /* how to use one of her products: its card */
+    if (howTo && named.length && !concern) {
+      var c = SG.cards[named[0].id];
+      if (c) return { answer: base(named[0].name) + ", from Evelyn’s product guide:\n" + c.split("\n").filter(function (l) { return !/^From the label:/.test(l); }).slice(0, 5).join("\n"), acts: [["Ask Evelyn", "skin"]] };
+    }
+    if (concern === "after") return { answer: said(H.breakoutAfter), acts: [["Send Evelyn a photo", "skin"]] };
+    if (concern === "purge") return { answer: said(H.purge + (H.purgeEscalate ? " " + H.purgeEscalate : "")), acts: [["Send Evelyn a photo", "skin"]] };
+    if (concern === "ingrown") return { answer: lines(said(H.ingrownHabits), H.ingrownAvoid ? "What to avoid: " + H.ingrownAvoid : "", H.ingrownEscalate), acts: [["Ask Evelyn", "skin"]] };
+    if (concern === "spots") return { answer: lines(said(H.spotsHabits), H.spotsAvoid ? "What to avoid: " + H.spotsAvoid : "", H.spotsEscalate), acts: [["Ask Evelyn", "skin"]] };
+    if (concern === "aging") return { answer: lines(said(H.retinal), H.sun ? "And the sun: " + H.sun : "") + fitText, acts: [["Ask Evelyn", "skin"]] };
+    if (concern === "sensitive") {
+      var sens = lines(said([H.barrier, H.irritation].filter(Boolean).join(" ")), H.exfoliation ? "Her rule: " + H.exfoliation : "");
+      return k ? { answer: lines(sens, routineText(k)) + fitText, acts: essentialsAct(k).concat([["Ask Evelyn", "skin"]]) }
+               : { answer: sens + "\n\nIs your skin more on the dry side or the oily side? Her routine depends on it.", acts: TYPE_ACTS("sensitive") };
+    }
+    if (concern === "acne") {
+      var head = said(H.acneTimeline);
+      if (!k) return { answer: lines(head, "Her routine depends on your skin: is it more dry or oily?"), acts: TYPE_ACTS("breaking out") };
+      return { answer: lines(head, routineText(k), H.picking ? "And: " + H.picking : "", actives && H.alternate && mine.some(function (p) { return /retin/i.test(p.name); }) ? H.alternate : "") + fitText,
+               acts: essentialsAct(k).concat([["Ask Evelyn", "skin"]]) };
+    }
+    /* the products they use: where each fits in her routine for their type, and her word on mixing */
+    if (named.length && using && (!concern || concern === "dry" || concern === "oily") && !typeIn(t)) {
+      var fl = fitLines(named, k);
+      var mix = named.filter(isActive).length > 1 && H.dontMix ? "\n\n" + said(H.dontMix) : "";
+      return { answer: (fl.length ? fl.join(" ") : said(H.ownProducts)) + mix + (k ? "" : "\n\nIs your skin more dry or oily? I’ll show you her full routine for it."),
+               acts: k ? essentialsAct(k).concat([["Ask Evelyn", "skin"]]) : TYPE_ACTS("") };
+    }
+    if (concern === "dull" && !k) return { answer: lines(H.exfoliation ? said(H.exfoliation) : "", "Her routine depends on your skin: is it more dry or oily?"), acts: TYPE_ACTS("dull") };
+    if (concern === "dry" || concern === "oily" || concern === "dull" || (!concern && k)) {
+      var kk = concern === "dry" ? "dry" : concern === "oily" ? "oily" : k;
+      var note = kk === "dry" ? (actives ? said([H.barrier, H.irritation].filter(Boolean).join(" ")) : said(H.water)) : "";
+      return { answer: lines(routineText(kk), note) + fitText, acts: essentialsAct(kk).concat([["Ask Evelyn", "skin"]]) };
+    }
+    /* a skin question with nothing to go on yet: one question, not a form */
+    return { answer: "I can help with that from Evelyn’s playbook. What’s going on: dry or tight, oily, breaking out, dark spots, or something else? And what are you using now?",
+             acts: [["Dry or tight", "t:My skin feels dry"], ["Breaking out", "t:I'm breaking out"]] };
+  };
+
   var TY = window.LumevinaTypos;
   var classify = function (text) {
     var raw = text.toLowerCase();
@@ -472,10 +636,14 @@
     var rk = RULES ? RULES.kind(raw, t) : null;
     /* "my routine" from a client with a plan: her plan answers it; anything else the rules catch goes to her */
     if ((!rk || rk === "skin") && fromPlan(t)) return fromPlan(t);
+    /* a skin question is answered from her playbook first; reading a photo is hers */
+    if (rk === "skin" && !(RULES.PHOTO && RULES.PHOTO.test(t))) { var sg = skinGuide(t, true); if (sg) return sg; }
     if (rk) return { handoff: rk };
     /* changing their plan ("can I add vitamin C to my routine?") is Evelyn's call */
     if (myPlan() && /\bmy (routine|regimen|plan|products|skin ?care)\b/.test(t)) return { handoff: "skin" };
     if (ORDER_ASK.test(t) || ORDER_NO.test(text)) return orderAnswer(text);
+    var sg2 = skinGuide(t, false);
+    if (sg2) return sg2;
     if (GIFT_LEFT.test(t)) return { answer: NODES["g-left"].say, acts: [["Gift certificates", "n:gift"]] };
     if (off("membership") && /member|monthly plan|subscri|\bglow plan|join\b|\bbank/.test(t)) return { answer: "Memberships are paused right now. Facials book one at a time on the calendar here, and Evelyn’s shelf is open on this site.", acts: [["Book", "book"], ["See the shop", "#shop"]] };
     if (off("school") && /\bcourses?\b|\bclass(es)?\b|skin school|\blessons?\b|glow party|pro night|workshop/.test(t)) return { answer: "Skin School and classes are paused right now. Evelyn is happy to answer questions one on one.", acts: [["Ask Evelyn", "skin"]] };
@@ -522,7 +690,7 @@
   panel.hidden = true;
   panel.innerHTML =
     '<header class="ask-head"><div><p class="ask-title">Ask Lumevina</p>' +
-    '<p class="ask-sub">Instant answers, any time. Anything about your skin goes to Evelyn.</p></div>' +
+    '<p class="ask-sub">Instant answers from Evelyn’s own playbook, any time.</p></div>' +
     '<button type="button" class="ask-x" aria-label="Close">&times;</button></header>' +
     '<div class="ask-log" aria-live="polite"></div>' +
     '<div class="ask-chips-wrap"><button type="button" class="ask-nav prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>' +
@@ -559,9 +727,9 @@
   var save = function () { /* kept in memory only: a new visit starts over */ };
   /* new here, or been in before: asked first, kept for this browser, and told to the assistant */
   var STATUS = {
-    "new": { label: "I’m new here", say: "Welcome! For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Anything about your own skin, I’ll pass to Evelyn.",
+    "new": { label: "I’m new here", say: "Welcome! For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
       acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["What happens at a first visit", "t:What happens at a first visit?"], ["What should I bring?", "t:What should I wear or bring to my appointment?"], ["Prices", "n:prices"], ["Book", "n:book"]] },
-    existing: { label: "I’ve been in before", say: "Welcome back! Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Anything about your own skin, I’ll pass to Evelyn.",
+    existing: { label: "I’ve been in before", say: "Welcome back! Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
       acts: [["Book", "n:book"], ["Move or cancel", "n:cancel"], ["Before my facial", "n:before"], ["After my facial", "n:after"], ["Where’s my order?", "t:Where is my order?"], ["Buy again", "account"]] }
   };
   var status = function () { return state.status === "new" || state.status === "existing" ? state.status : (myPlan() ? "existing" : ""); };
@@ -666,7 +834,7 @@
     bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
       : myProfile() ? "I have your skin profile, so ask me about prep, aftercare, products or booking and I’ll keep your routine in mind. Changes to your routine, I’ll pass to Evelyn."
-      : st ? "Ask me about prices, booking, prep, aftercare or products, or where your order is. Anything about your own skin, I’ll pass to Evelyn."
+      : st ? "Ask me about your skin, your products, prices, booking, prep or aftercare. I answer from Evelyn’s own playbook, and she’s a tap away."
       : "Welcome to Lumevina. Are you new here, or have you been in before?")) +
       (st ? '<span class="ask-status">' + (st === "new" ? "New client" : "Been in before") + ' · <button type="button" class="ask-status-x" data-act="status:' + (st === "new" ? "existing" : "new") + '">' + (st === "new" ? "I’ve been in before" : "I’m new here") + '</button></span>'
         : '<div class="ask-acts"><button type="button" class="ask-act is-primary" data-act="status:new">' + esc(STATUS["new"].label) + '</button><button type="button" class="ask-act is-primary" data-act="status:existing">' + esc(STATUS.existing.label) + '</button></div>'));
@@ -767,9 +935,9 @@
   var remote = function (text) {
     if (!ENDPOINT || /^about my skin:/i.test(text)) return false;
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
-    var rk = RULES ? RULES.kind(raw, t) : null;
-    /* a "my skin" question still goes to the server when it can see this client's plan or skin profile */
-    if (rk && !(rk === "skin" && token() && (myPlan() || myProfile()))) return false;
+    /* hand-offs stay here; a "my skin" question goes to the server, which answers it from her playbook */
+    var rk = RULES ? (RULES.route ? RULES.route(raw, t) : RULES.kind(raw, t)) : null;
+    if (rk) return false;
     var who = me();
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
@@ -828,7 +996,7 @@
       mine.length ? "Their Lumevina products, bought here (newest first):\n" + mine.map(function (b) {
         return "- " + b.name + ": " + b.where + ", " + boughtOn(b.at) + (b.low ? b.soon ? "; probably running low by now" : "; may run low around " + boughtOn(b.low) : "");
       }).join("\n") + "\nWhen they say \"my serum\", \"my cleanser\" or \"the one I bought\", it's one of these: answer by name, from that product's card under \"Her shelf\" (how, when, what's normal, when to stop). One that's probably running low: you may say so in one line, once, with [[products: <id>]] so they can reorder. Never push anything they don't already have." : "",
-      "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\"). You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax), and send the decision to Evelyn." +
+      "Use their profile, what they've told you and the products they've bought here to make an answer from Evelyn's playbook specific to them: name their products and say where each sits in her routine for their skin type, and which of them to pause before a facial. Where one isn't in her routine for their type, say which step of hers it would be and what her routine uses there, as her routine, not your advice. Her rules on mixing actives, in a sentence. A change to a plan Evelyn wrote is hers (kind \"skin\")." +
         (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"personal\")." : "") +
         " Use their first name now and then."
     ].filter(Boolean).join("\n\n");
@@ -884,9 +1052,9 @@
   var preview = function (text) {
     if (!sampler || /^about my skin:/i.test(text)) return false;
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
-    var rk = RULES ? RULES.kind(raw, t) : null;
-    /* a "my skin" question still goes to Claude when it can see this client's skin profile */
-    if (rk && !(rk === "skin" && myProfile())) return false;
+    /* hand-offs stay here; a "my skin" question goes to Claude, which answers it from her playbook */
+    var rk = RULES ? (RULES.route ? RULES.route(raw, t) : RULES.kind(raw, t)) : null;
+    if (rk) return false;
     /* her plan, order look-ups and small talk answer here, instantly */
     if (fromPlan(t) || ORDER_ASK.test(t) || ORDER_NO.test(text) || GIFT_LEFT.test(t) || CHITCHAT.test(t)) return false;
     var who = me(), live = bubble("bot", "…", "thinking");

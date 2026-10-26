@@ -1,6 +1,6 @@
 # Chat eval
 
-Run 2026-10-26: 62 of 62 as expected.
+Run 2026-10-26: 67 of 67 as expected.
 
 | Question | Goes to | Expected | Her words in the knowledge |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Run 2026-10-26: 62 of 62 as expected.
 | Any discount for a first visit? | Evelyn (personal) | Evelyn (personal) |  |
 | My son is 14, can he get an acne facial? | Evelyn (personal) | Evelyn (personal) |  |
 | What's wrong with my skin? Look at this pic | Evelyn (skin) | Evelyn (skin) |  |
-| I broke out after my facial, is that normal? | Evelyn (skin) | Evelyn (skin) |  |
+| I broke out after my facial, is that normal? | the chat | the chat | yes |
 | Do I need to stop retinol before a facial? | the chat | the chat | yes |
 | When can I wear makeup after a facial? | the chat | the chat | yes |
 | Can I work out after a peel? | the chat | the chat | yes |
@@ -66,3 +66,8 @@ Run 2026-10-26: 62 of 62 as expected.
 | I love you guys, the facial was amazing. When can I book again? | the chat | the chat | yes |
 | How do I use the mandelic serum I bought? | the chat | the chat | yes |
 | How long does a 1 oz serum usually last? | the chat | the chat | yes |
+| My face feels dry | the chat | the chat | yes |
+| My skin is oily, what should I use? | the chat | the chat | yes |
+| I keep getting breakouts on my chin | the chat | the chat | yes |
+| I think I'm purging from the mandelic | the chat | the chat | yes |
+| How do I fade my dark spots? | the chat | the chat | yes |

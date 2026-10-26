@@ -188,3 +188,56 @@ export async function cards(root) {
   }
   return out;
 }
+
+// ── the chat's skin guide (js/ask-skin.js, written by build-bundle.mjs) ──
+// What the website chat answers a skin question from when it has no AI to ask: her routines by skin type
+// with each step matched to her shelf, a way to find her products in what a client types, and her own
+// lines on dryness, breakouts, purging, dark spots, ingrowns, actives and sun, copied from her answers.
+// Nothing is written here: a line she hasn't answered is simply missing, and the chat leaves it out.
+const STOP = new Set(["the", "and", "with", "for", "fl", "oz", "ml", "g", "travel", "size", "serum", "cream", "cleanser", "toner", "gel", "spf", "mask", "mist", "lotion", "balm", "treatment", "face", "skin", "daily", "advanced"]);
+const paras = (t) => String(t || "").split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+const lead = (t) => { const p = paras(t); return p.length > 1 && p[0].length < 40 ? p.slice(1).join(" ") : p.join(" "); };   // drop a tapped option ("3 to 6 months") before her words
+const line = (t, re) => (String(t || "").split("\n").map((l) => l.replace(/^[-*]\s*/, "").trim()).find((l) => re.test(l)) || "");
+export async function skinGuide(root) {
+  const D = await derived(root, { final: true });
+  const steps = (when, skin) => (D.ROUTINES.find((r) => r.when === when && r.skin === skin) || { steps: [] }).steps;
+  const routines = {
+    dry: { morning: steps("Morning", "Dry or normal skin"), night: steps("Night", "Dry or normal skin") },
+    oily: { morning: steps("Morning", "Oily or combination skin"), night: steps("Night", "Oily or combination skin") }
+  };
+  // her products as a client types them: the distinctive words of each name ("cran peptide", "8% mandelic"), plus the
+  // shorthand from her own routines (ALIAS in the guide's layer, e.g. "barrier cream cleanser")
+  const products = D.live.map((p) => ({ id: p.id, name: p.name, cat: p.cat, consult: !!p.consult,
+    words: p.name.toLowerCase().replace(/[()]/g, " ").replace(/-/g, " ").split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w) || /^\d+(\.\d+)?%$/.test(w)) }));
+  const C = await cards(root);
+  const her = {
+    avoid: D.acne.avoid ? lead(D.acne.avoid).replace(/\s*\(list examples[^)]*\)/i, "") : "",
+    barrier: line(D.acne.habits, /^Dryness, burning/i),
+    irritation: line(D.acne.habits, /^If irritation develops/i),
+    exfoliation: line(D.acne.habits, /^More exfoliation/i),
+    water: line(D.acne.habits, /^Drinking water/i),
+    picking: line(D.acne.habits, /^Never pick/i),
+    acneFirst: D.acne.first_questions ? lead(D.acne.first_questions) : "",
+    acneTimeline: D.acne.timeline ? lead(D.acne.timeline) : "",
+    acneEscalate: D.acne.escalate ? lead(D.acne.escalate) : "",
+    purge: D.purge.timeline ? lead(D.purge.timeline) : "",
+    purgeEscalate: D.purge.escalate ? lead(D.purge.escalate) : "",
+    breakoutAfter: D.after.breakout_after ? lead(D.after.breakout_after) : "",
+    sun: D.routine.sun ? lead(D.routine.sun) : "",
+    sunscreen: D.daily.sunscreen ? lead(D.daily.sunscreen) : "",
+    mandelic: D.routine.mandelic ? lead(D.routine.mandelic) : "",
+    retinal: D.routine.retinal_vs_retinol ? lead(D.routine.retinal_vs_retinol) : "",
+    dontMix: D.routine.dont_mix ? lead(D.routine.dont_mix) : "",
+    stopSigns: D.routine.stop_signs ? lead(D.routine.stop_signs) : "",
+    ownProducts: D.daily.own_products ? lead(D.daily.own_products) : "",
+    alternate: D.alternate || ""
+  };
+  const conc = (id) => { const f = path.join(root, "knowledge/concerns", id + ".md"); return fs.existsSync(f) ? answers(fs.readFileSync(f, "utf8"), S.CONCERN_FIELDS) : {}; };
+  const spots = conc("dark-spots"), ingrown = conc("ingrown-hairs");
+  Object.assign(her, {
+    spotsHabits: spots.habits ? lead(spots.habits) : "", spotsAvoid: spots.avoid ? lead(spots.avoid) : "", spotsEscalate: spots.escalate ? lead(spots.escalate) : "",
+    ingrownHabits: ingrown.habits ? lead(ingrown.habits) : "", ingrownAvoid: ingrown.avoid ? lead(ingrown.avoid) : "", ingrownEscalate: ingrown.escalate ? lead(ingrown.escalate) : ""
+  });
+  for (const k of Object.keys(her)) her[k] = her[k].replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+  return { routines, products, cards: Object.fromEntries(Object.entries(C).filter(([, c]) => c.text).map(([id, c]) => [id, c.text])), her, tolerance: !!D.tolerance };
+}

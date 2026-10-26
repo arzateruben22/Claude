@@ -109,6 +109,7 @@ const KINDS = RULES.kinds.map((k) => ({ kind: k.kind, any: k.any.map(rx), both: 
 const OFF = (RULES.off ?? []).map((k) => ({ kind: k.kind, any: k.any.map(rx) }));
 const FIRST = new Set(RULES.first ?? []);
 const OURS = rx(RULES.ours);   // the studio's own words: never "unrelated"
+const PHOTO = rx(RULES.photo); // reading someone's skin from a photo: always Evelyn's
 const offKind = (t: string): string | null => {
   if (URGENT.test(t)) return null;
   const found = OFF.find((k) => k.any.some((r) => r.test(t)))?.kind ?? null;
@@ -175,11 +176,11 @@ const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean;
   `How to use this file:`,
   file.hasPlan
     ? `- Answer questions about their own routine from Evelyn's plan: which product, when, in what order, how much, how often, what to avoid, what comes next. Say it's from the plan Evelyn wrote for them, and use their first name now and then.`
-    : `- Evelyn hasn't written a plan for them yet. You may answer from her playbook, made specific with their profile below; anything about changing their routine (which products to add, stop or swap for their skin) goes to her with hand_to_evelyn (kind "skin").`,
-  `- Never change or add to the plan. Adding, stopping or swapping a product, moving up a strength, a new concern, or anything about how their skin is reacting goes to Evelyn with hand_to_evelyn.`,
+    : `- Evelyn hasn't written a plan for them yet. Answer from her playbook, made specific with their profile and products below: her routine for their skin type and where what they use fits in it.`,
+  `- Never change or add to a plan Evelyn wrote: moving up a strength or swapping something in her plan, and anything about how their skin is reacting, goes to Evelyn with hand_to_evelyn.`,
   `- If anything under "Cautions on file" bears on the question, hand it to Evelyn.`,
-  `- Their skin profile and what they've told you before are in their own words. Use them to make an answer from Evelyn's playbook specific to them (for example, when they ask what to stop before a facial, name the products they listed that it applies to). Don't recommend changes to their routine yourself: that goes to Evelyn.`,
-  `- You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax, an active on freshly treated skin), and send the decision to Evelyn with hand_to_evelyn (kind "skin"). Never tell them to add, stop or swap anything yourself.`,
+  `- Their skin profile, what they've told you before and the products they've bought here are in the file. Use them: name their products, say where each sits in Evelyn's routine for their skin type, and when they ask what to stop before a facial, name the ones it applies to.`,
+  `- Where a product they use isn't in her routine for their skin type, say which step of hers it would be and what her routine uses there, as her routine, not as your advice. Two actives on the same night, a retinoid before a wax, an active on freshly treated skin: say her rule in a sentence. A change to a plan she wrote is hers.`,
   ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "personal".`] : []),
   ...(file.hasProducts ? [`- Their Lumevina products are listed in the file: when they say "my serum", "my cleanser" or "the one I bought", it's one of those, so answer by name, from that product's card under "Her shelf" (how, when, what's normal, when to stop) and from Evelyn's plan when there is one. One that's probably running low: you may say so in one line, once, and call show_products with its id so they can reorder. Never push anything they don't already have or that isn't in their plan.`] : []),
   `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
@@ -432,7 +433,9 @@ Deno.serve(async (req) => {
     return json({ offtopic: off, quiet });
   }
   let kind: string | null = ruleKind(q.toLowerCase()) ?? ruleKind(fixTypos(q));
-  if (kind === "skin" && (file?.hasPlan || file?.hasProfile)) kind = null;   // their plan or profile lets Claude answer from the playbook, specific to them
+  // a "my skin" question is answered from her playbook (her routines by skin type, her answers, where their products fit);
+  // only reading a photo goes straight to her
+  if (kind === "skin" && !PHOTO.test(q) && !PHOTO.test(fixTypos(q))) kind = null;
   if (kind) return json({ handoff: kind, urgent: kind === "urgent" });
 
   // 2) an everyday question: Claude, from the bundle, with look-ups and a way to hand off

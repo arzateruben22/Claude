@@ -1,6 +1,6 @@
-// The chat's eval, offline: 60 client messages (knowledge/eval/questions.json). Each one either goes to
-// Evelyn (the hand-off rules in js/ask-rules.js, which run before any AI, on the website and the server
-// alike), is waved off as not the chat's lane (flirting, abuse, "ignore your instructions", homework:
+// The chat's eval, offline: 67 client messages (knowledge/eval/questions.json). Each one either goes to
+// Evelyn (the hand-off rules in js/ask-rules.js → route(), which run before any AI, on the website and the
+// server alike; a "my skin" question is the chat's, from her playbook, unless it asks her to read a photo), is waved off as not the chat's lane (flirting, abuse, "ignore your instructions", homework:
 // one light line, no AI, no Evelyn), or is answered from her words, so what it "must" say has to be in
 // what the assistant is given (knowledge/eval/bundle.json). Writes knowledge/eval/results.md.
 //
@@ -25,7 +25,7 @@ const given = flat([B.prompt, B.facts, B.knowledge, B.general, B.hardLines, ...B
 const rows = Q.map(({ q, handoff = null, offtopic = null, must = [] }) => {
   const low = q.toLowerCase();
   const off = R.offTopic(low, low) || null;
-  const got = off ? null : R.kind(q, q) || null;
+  const got = off ? null : (R.route ? R.route(q, q) : R.kind(q, q)) || null;
   const missing = got || off ? [] : must.filter((m) => !given.includes(flat(m)));
   const ok = got === handoff && off === offtopic && !missing.length;
   return { q, handoff, offtopic, got, off, missing, ok };

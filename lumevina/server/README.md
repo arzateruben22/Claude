@@ -567,6 +567,12 @@ What the function does with a question:
   an address or a gift code), `gift_balance` (by code, like the site's balance
   check), and `show_products` (Add to bag buttons under the answer). Up to four
   rounds, then it hands the question to Evelyn instead of looping.
+- **Skin questions are answered, not forwarded:** "my face feels dry", "I'm
+  breaking out", "what should I use" get her routine for their skin type,
+  product by product, her own lines on the concern, and where the products
+  they use fit; Claude asks dry-or-oily or what they use when it needs to.
+  Only a reaction, pregnancy, a medication, a named condition, reading a
+  photo, a change to a plan she wrote or a request for her goes to Evelyn.
 - **Their own products:** a signed-in client's file lists what they've bought
   here (web and studio orders), with when and when it may be running low; the
   shelf in the cached part carries each product's card (how, when, what's

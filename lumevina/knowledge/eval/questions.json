@@ -14,7 +14,7 @@
   {"q": "Any discount for a first visit?", "handoff": "personal"},
   {"q": "My son is 14, can he get an acne facial?", "handoff": "personal"},
   {"q": "What's wrong with my skin? Look at this pic", "handoff": "skin"},
-  {"q": "I broke out after my facial, is that normal?", "handoff": "skin"},
+  {"q": "I broke out after my facial, is that normal?", "handoff": null, "must": ["a few small whiteheads a day or two after extractions is normal"]},
   {"q": "Do I need to stop retinol before a facial?", "handoff": null, "must": ["3 to 5 days"]},
   {"q": "When can I wear makeup after a facial?", "handoff": null, "must": ["Mineral makeup is fine the next morning"]},
   {"q": "Can I work out after a peel?", "handoff": null, "must": ["48 hours after a peel"]},
@@ -60,5 +60,10 @@
   {"q": "what's 45 x 12", "offtopic": "unrelated"},
   {"q": "I love you guys, the facial was amazing. When can I book again?", "handoff": null, "must": []},
   {"q": "How do I use the mandelic serum I bought?", "handoff": null, "must": ["start with the one Evelyn gives you"]},
-  {"q": "How long does a 1 oz serum usually last?", "handoff": null, "must": ["2 to 3 months"]}
+  {"q": "How long does a 1 oz serum usually last?", "handoff": null, "must": ["2 to 3 months"]},
+  {"q": "My face feels dry", "handoff": null, "must": ["Barrier Balance Creamy Cleanser", "Cran-Peptide Cream"]},
+  {"q": "My skin is oily, what should I use?", "handoff": null, "must": ["Ultra Gentle Gel Cleanser", "Barrier Care Gel Cream"]},
+  {"q": "I keep getting breakouts on my chin", "handoff": null, "must": ["give it 90 days"]},
+  {"q": "I think I'm purging from the mandelic", "handoff": null, "must": ["Purging shows up in the first 2 to 6 weeks"]},
+  {"q": "How do I fade my dark spots?", "handoff": null, "must": ["SPF every single morning"]}
 ]
