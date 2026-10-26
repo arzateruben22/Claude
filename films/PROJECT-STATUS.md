@@ -1,5 +1,12 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 09:50 UTC: PAUSED by the owner.** Final at the new standard (readability kit + 26 Oct fact audit): Light
+> Minute 001 and 004, Rest Frame 003 (3 of 18 shorts; 0 of 3 compilations). All 18 scripts are written, audited and
+> fixed. Still running on their own (machine time, no usage): Meanwhile, Inside 001 here (rerender-finals.sh, ~13:30),
+> and whatever final each channel session had in flight (they finish, commit, then stay idle). Stopped: the Rest Frame
+> 001 polish workflow (resume run wf_4be75c8c-873; its edits so far are committed), the 2-hourly check-in
+> (trig_01RobrDAZpWDmvW9a3s2U5Xb, disabled). Rest Frame 001's final stays held (scratchpad RERENDER-HOLD) until resume.
+>
 > **26 Oct, 08:15 UTC:** independent script audit of every episode done (`films/audits/2026-10-26/`: ep02–06 ×3,
 > ep01 ×3, ep06 physics/body; each finding adversarially verified). Space and physics sessions applied theirs; body
 > working. Here: Light Minute 001 fixed (label fits the safe box, c15, small footnote; sound QA no longer misreads a
