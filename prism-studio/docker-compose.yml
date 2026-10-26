@@ -1,0 +1,56 @@
+# Prism Studio on one small server: Postgres, the web app, the worker, and Caddy for automatic HTTPS.
+#   cp deploy/env.example .env.production && edit it, then: docker compose --env-file .env.production up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: prism
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: prism
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U prism"], interval: 5s, timeout: 3s, retries: 20 }
+
+  app: &app
+    build: .
+    image: prism-studio:latest
+    restart: unless-stopped
+    init: true                          # tini as PID 1: signals reach the app and the worker (it finishes its job on SIGTERM)
+    stop_grace_period: 60s
+    command: ["web"]
+    depends_on: { db: { condition: service_healthy } }
+    environment: &env
+      DATABASE_URL: postgres://prism:${POSTGRES_PASSWORD}@db:5432/prism
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET}
+      OWNER_PASSWORD_HASH: ${OWNER_PASSWORD_HASH:?set OWNER_PASSWORD_HASH}
+      INTEGRATIONS_KEY: ${INTEGRATIONS_KEY:-}
+      PUBLIC_ORIGIN: https://${DOMAIN:?set DOMAIN}
+      FILMS_REPO_ROOT: /films
+      MEDIA_ROOT: /data/media
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      TIKTOK_CLIENT_KEY: ${TIKTOK_CLIENT_KEY:-}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
+      INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID:-}
+      INSTAGRAM_APP_SECRET: ${INSTAGRAM_APP_SECRET:-}
+    volumes:
+      - media:/data/media
+      - ./films-mirror:/films:ro        # the rendered episodes (deploy/sync-media.sh copies films/channels/*/ep*/out here)
+
+  worker:
+    <<: *app
+    command: ["worker"]
+    healthcheck: { disable: true }
+    volumes:
+      - media:/data/media
+      - ./films-mirror:/films:ro
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment: { DOMAIN: "${DOMAIN}" }
+    volumes: [./deploy/Caddyfile:/etc/caddy/Caddyfile:ro, caddy_data:/data, caddy_config:/config]
+    depends_on: [app]
+
+volumes: { pgdata: {}, media: {}, caddy_data: {}, caddy_config: {} }

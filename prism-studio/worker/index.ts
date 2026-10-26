@@ -6,7 +6,7 @@ import { db, pool } from "../src/db/client";
 import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
 import { enqueueDuePublishes } from "../src/domain/publish";
-import { audit } from "../src/domain/core";
+import { audit, DomainError } from "../src/domain/core";
 import { eq } from "drizzle-orm";
 import * as S from "../src/db/schema";
 import { HANDLERS, runHandler } from "./handlers";
@@ -29,7 +29,7 @@ async function runOne(): Promise<boolean> {
     else await complete(db(), job.id, ID, result);
   } catch (e) {
     console.error(`[worker] ${job.type} failed:`, e);
-    await fail(db(), job.id, ID, (e as Error).message ?? String(e));
+    await fail(db(), job.id, ID, (e as Error).message ?? String(e), { retryable: !(e instanceof DomainError && e.code === "needs_films_toolchain") });
   }
   return true;
 }
