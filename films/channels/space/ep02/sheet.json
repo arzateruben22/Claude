@@ -94,39 +94,6 @@
    ]
   },
   {
-   "t": 4.8,
-   "kind": "counter.show",
-   "tag": "c-year",
-   "pos": [
-    0.26,
-    0.47
-   ]
-  },
-  {
-   "t": 4.8,
-   "kind": "badge",
-   "tag": "b-path"
-  },
-  {
-   "t": 4.8,
-   "kind": "badge",
-   "tag": "b-time-f"
-  },
-  {
-   "t": 5.0,
-   "kind": "label",
-   "tag": "l-voy",
-   "pos": [
-    0.27,
-    0.311
-   ]
-  },
-  {
-   "t": 5.1665,
-   "kind": "counter.tick",
-   "tag": "c-year-1980"
-  },
-  {
    "t": 5.966666666666667,
    "kind": "label",
    "tag": "l-nep",
@@ -136,19 +103,47 @@
    ]
   },
   {
-   "t": 6.7444,
+   "t": 8.1,
+   "kind": "counter.show",
+   "tag": "c-year",
+   "pos": [
+    0.26,
+    0.47
+   ]
+  },
+  {
+   "t": 8.1,
+   "kind": "badge",
+   "tag": "b-path"
+  },
+  {
+   "t": 8.1,
+   "kind": "badge",
+   "tag": "b-time-f"
+  },
+  {
+   "t": 8.3,
+   "kind": "label",
+   "tag": "l-voy",
+   "pos": [
+    0.27,
+    0.311
+   ]
+  },
+  {
+   "t": 8.3932,
+   "kind": "counter.tick",
+   "tag": "c-year-1980"
+  },
+  {
+   "t": 9.6555,
    "kind": "counter.tick",
    "tag": "c-year-1990"
   },
   {
-   "t": 8.3223,
+   "t": 10.9178,
    "kind": "counter.tick",
    "tag": "c-year-2000"
-  },
-  {
-   "t": 9.9002,
-   "kind": "counter.tick",
-   "tag": "c-year-2010"
   },
   {
    "t": 11.0,
@@ -160,14 +155,19 @@
    ]
   },
   {
-   "t": 11.4781,
+   "t": 12.1801,
    "kind": "counter.tick",
-   "tag": "c-year-2020"
+   "tag": "c-year-2010"
   },
   {
    "t": 13.166666666666666,
    "kind": "scale",
    "tag": "p-moon"
+  },
+  {
+   "t": 13.4424,
+   "kind": "counter.tick",
+   "tag": "c-year-2020"
   },
   {
    "t": 15.4667,
@@ -176,12 +176,12 @@
    "t1": 26.6667
   },
   {
-   "t": 18.5387,
+   "t": 18.0,
    "kind": "label",
-   "tag": "l-earth",
+   "tag": "l-ld",
    "pos": [
-    0.734,
-    0.523
+    0.68,
+    0.274
    ]
   },
   {
@@ -201,13 +201,22 @@
   {
    "t": 18.5387,
    "kind": "probe.ping",
-   "tag": "command"
+   "tag": "signal"
   },
   {
    "t": 18.5387,
    "kind": "light.front",
-   "tag": "signal-out",
+   "tag": "signal-in",
    "t1": 20.266666666666666
+  },
+  {
+   "t": 18.7387,
+   "kind": "label",
+   "tag": "l-earth",
+   "pos": [
+    0.734,
+    0.523
+   ]
   },
   {
    "t": 18.7887,
@@ -221,25 +230,32 @@
   {
    "t": 20.266666666666666,
    "kind": "arrive",
-   "tag": "signal-in"
+   "tag": "signal-home"
   },
   {
-   "t": 20.7667,
-   "kind": "label",
-   "tag": "l-ld",
-   "pos": [
-    0.68,
-    0.274
-   ]
-  },
-  {
-   "t": 23.6387,
+   "t": 21.9107,
    "kind": "counter.show",
    "tag": "c-sig2",
    "pos": [
     0.26,
     0.47
    ]
+  },
+  {
+   "t": 21.9107,
+   "kind": "probe.ping",
+   "tag": "command"
+  },
+  {
+   "t": 21.9107,
+   "kind": "light.front",
+   "tag": "command-out",
+   "t1": 23.6387
+  },
+  {
+   "t": 22.1607,
+   "kind": "label",
+   "tag": "l-cmd"
   },
   {
    "t": 23.6387,
@@ -291,15 +307,6 @@
    ]
   },
   {
-   "t": 31.5,
-   "kind": "counter.show",
-   "tag": "c-oort0",
-   "pos": [
-    0.26,
-    0.47
-   ]
-  },
-  {
    "t": 31.933333333333334,
    "kind": "scale.jump",
    "tag": "to-comets",
@@ -321,20 +328,11 @@
   },
   {
    "t": 34.5,
-   "kind": "label",
-   "tag": "l-300",
+   "kind": "counter.show",
+   "tag": "c-oort0",
    "pos": [
-    0.694,
-    0.447
-   ]
-  },
-  {
-   "t": 37.1,
-   "kind": "label",
-   "tag": "l-30k",
-   "pos": [
-    0.327,
-    0.4
+    0.26,
+    0.47
    ]
   },
   {
@@ -425,15 +423,6 @@
    ]
   },
   {
-   "t": 60.46666666666667,
-   "kind": "label",
-   "tag": "l-1500",
-   "pos": [
-    0.647,
-    0.396
-   ]
-  },
-  {
    "t": 61.8667,
    "kind": "section",
    "id": "readout",
@@ -458,21 +447,12 @@
    ]
   },
   {
-   "t": 63.06666666666667,
+   "t": 64.8,
    "kind": "counter.show",
    "tag": "c-read-px",
    "pos": [
     0.5,
     0.43
-   ]
-  },
-  {
-   "t": 65.56666666666666,
-   "kind": "label",
-   "tag": "l-ring-px",
-   "pos": [
-    0.412,
-    0.346
    ]
   },
   {
