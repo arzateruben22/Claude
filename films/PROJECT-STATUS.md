@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 04:05 UTC check-in:** space ep01 re-render 19%; body session merged the kit; physics + space sessions rechecking (space delivered No. 004 on the old kit before the merge: it will be re-rendered).
+>
 > **26 Oct, 03:50 UTC: full speed until completion (owner).** Readability pass landed (767b57b: notes one tier down,
 > spine readout holds through the payoff, labels never cover text, sharper masters; space ep01 fixes incl. the 23 s
 > early-arrival bug). This container re-renders ep01 ×3 with it (`films/channels/rerender-finals.sh`, log
