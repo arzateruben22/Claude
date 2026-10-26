@@ -60,8 +60,10 @@ const C = { orbit: line("lilac", 0.8), lilac: line("lilac", 0.8), lilacHi: line(
 const orbitRing = ring({ color: C.orbit, width: 3, opacity: 1 }).arc({ r: R, ...XZ });
 const row = Array.from({ length: 30 }, () => ring({ color: C.iceHi, width: 2.8, opacity: 0 }));   // bright enough to read as rings, not a dotted line
 const vArrow = [0, 1, 2].map(() => segment({ color: pos(C.iceHi), width: 4, opacity: 0 }));   // speed: ice (lilac is gravity)
-// gravity off: the straight line, a trail behind the flying Moon and dashed ahead of it (dash is per unit: 3.3 units a dash)
-const FREE_DASH = 0.3, freePath = segment({ color: C.tealHi, width: 4, opacity: 0, dash: FREE_DASH, duty: 0.6 }), trail = segment({ color: C.tealHi, width: 4, opacity: 0, fade: [0.3, 1] });
+// gravity off: the straight line, a trail behind the flying Moon and dashed ahead of it (dash is per unit: 3.3 units a
+// dash, 2 of them lit); the rest of the dash the Moon is in is a piece of its own
+const FREE_DASH = 0.3, FREE_ON = 0.6, freePath = segment({ color: C.tealHi, width: 4, opacity: 0, dash: FREE_DASH, duty: FREE_ON }), trail = segment({ color: C.tealHi, width: 4, opacity: 0, fade: [0.3, 1] });
+const freeHead = segment({ color: C.tealHi, width: 4, opacity: 0 });
 const ghostMoon = ring({ color: C.ghost, width: 3, opacity: 0 });
 const pull = [0, 1, 2].map(() => segment({ color: C.lilac, width: 4.5, opacity: 0 }));
 // Newton's test: the pull's strength along the Earth–Moon line, hung below it (height ∝ 1/r²), drawn out from the apple
@@ -79,7 +81,7 @@ const lightRing = ring({ color: C.tealHi, width: 3.4, opacity: 0 }).arc({ r: R +
 const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 4.5, opacity: 0, fade: [1, 0.2] }));
 // hollow marker rings of a fixed size in pixels round Earth and the Moon, so the true-scale bodies can be found in the diagrams (they claim no size)
 const markM = ring({ color: C.ice, width: 2, opacity: 0 }), markE = ring({ color: C.ice, width: 2, opacity: 0 });
-[markM, markE, orbitRing, ...row, ...vArrow, trail, freePath, ghostMoon, ...pull, ...prof, reach, ruler, ...ticks, tangent, tangent2, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
+[markM, markE, orbitRing, ...row, ...vArrow, trail, freeHead, freePath, ghostMoon, ...pull, ...prof, reach, ruler, ...ticks, tangent, tangent2, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
 const apple = createBeacon({ color: pale(hdr("ice", 1.1)), px: 14, core: 0.8 }), apple2 = createBeacon({ color: pale(hdr("ice", 1.1)), px: 16, core: 0.8 });
 const moonGlow = createBeacon({ color: pale(hdr("ice", 1.2)), px: 14, core: 0.8 });   // gravity off: the flying Moon (its disc is a pixel)
 scene.add(apple.mesh, apple2.mesh, moonGlow.mesh);
@@ -169,8 +171,12 @@ window.seek = function (t) {
   // dashed ahead, the orbit faint); back on: the pull toward Earth, the Moon bent back onto its orbit (under the
   // thought-experiment note; the straight flight stays up meanwhile), then the straight line it now falls below
   const og = t >= CUE.off ? winOp(t, CUE.off, CUE.back + 0.6, 0.3) : 0, sNow = sOff(Math.min(t, CUE.back));
+  const sDash = Math.floor(sNow * FREE_DASH) / FREE_DASH;                       // where the dash the Moon is in starts
   trail.seg(pOff, add(pOff, tOff, sNow)).set({ opacity: og });
-  freePath.seg(add(pOff, tOff, Math.floor(sNow * FREE_DASH) / FREE_DASH), add(pOff, tOff, 48)).set({ opacity: og });   // from a whole dash back: the dashes stay put
+  // ahead of it: the rest of that dash, then whole dashes from the next one on, so the dashes stay put and no stretch is
+  // drawn twice (lines add: a dash over the trail flashed brighter behind the Moon at every dash, about 4 a second)
+  freeHead.seg(add(pOff, tOff, sNow), add(pOff, tOff, Math.max(sNow, sDash + FREE_ON / FREE_DASH))).set({ opacity: og });
+  freePath.seg(add(pOff, tOff, sDash + 1 / FREE_DASH), add(pOff, tOff, 48)).set({ opacity: og });
   moonGlow.set({ center: mp, camera, opacity: winOp(t, CUE.off, CUE.back + 1.0, 0.3) });
   // what the spine's "below its straight line" means; once the thought-experiment note has gone (it runs up into its corner)
   tangent2.seg(mp, add(mp, tanAt(th), 14)).set({ opacity: winOp(t, CUE.back + 1.3, B.why.t0, 0.4) });
