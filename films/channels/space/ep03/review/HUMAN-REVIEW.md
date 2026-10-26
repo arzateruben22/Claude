@@ -31,6 +31,13 @@
   toward the Sun stands for Schiaparelli's "one side always faced the Sun"; the readout carries a new note, "light sped
   up", and pushes in on Venus and Earth for the round trip; the cloud note now reads "clouds: drawn"; a spine readout
   "300 · years of guessing" joins the change beat. Not yet rendered: a stills check comes first.
+- **After the second draft review (26 Oct):** in the whoa the orbit now waits for "orbit" and then runs with the spin
+  at 4,500,000× (was 4,000,000× from "Stand there"), so the dial's Sun rises in the west on "rising in the west"; the
+  sunrise ticks fall from 45.0 s, every 2.24 s (still 116.75 days). The 1962 radar ping now carries "light sped up";
+  the spine strikes out the two guesses ("23 h, 225 d") on "Both guesses were wrong"; the dial's note is shortened to
+  "the Sun's place, behind clouds" so it can be set larger. The cloud deck now carries one broad darker marking that
+  turns with the planet, so the turn can be seen: check it reads as an illustration (it is badged "clouds: drawn"; the
+  real cloud features circle Venus in about four days, unrelated to its spin, c4's note). Not yet rendered.
 
 
 ## Every episode

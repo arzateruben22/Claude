@@ -48,18 +48,22 @@ t_w, t_tk, t_rd = B["whoa"]["t0"], B["takeaway"]["t0"], B["readout"]["t0"]
 t_echo = A("vo07:round")
 t_ping = round(t_echo + 1.0, 4)            # the readout's ping (and its label) once the push onto the pair has (nearly) landed
 STOP = 1.2                                 # the takeaway's clocks slow to a stop over 1.2 s, ending as the readout starts
-# 11.6 and 46 days a second; the true turn (R2) runs at 10⁶× too, so the pin crosses the face through "backwards"
+# 11.6 and 52 days a second; the true turn (R2) runs at 10⁶× too, so the pin crosses the face through "backwards"
 # (at 2,000,000× it had gone behind the limb). R1 is badged by hand: clock.js would print "10⁶×"
-R1, R2, R4 = 1e6, 1e6, 4e6
+R1, R2, R4 = 1e6, 1e6, 4.5e6
+# the whoa: the orbit stays paused through "Stand there, and the spin" and joins on "orbit" (the two "team up"), so
+# Venus keeps its lit side to the camera through the pull and the Sun rises in the dial on "rising in the west";
+# 4,500,000× keeps the whoa's orbit (and so every phase before it) within about 2 days of 4,000,000× from the whoa's start
+t_orb = A("vo05:orbit")
 SLOW = "slowing to a stop"                 # the ramp keeps a note: the planets still move until the readout
 CLK = {
     "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_cut, "rate": R1, "badge": "1,000,000× faster"}, {"t": B["change"]["t0"], "rate": 0.0, "badge": None},
               # the orbit's note waits 0.35 s for the guess's to leave, so the two never share the slot
               {"t": t_g2, "rate": R1, "badge": None}, {"t": round(t_g2 + 0.35, 4), "rate": R1, "badge": "1,000,000× faster"},
               {"t": B["why"]["t0"], "rate": 0.0, "badge": None},
-              {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
+              {"t": t_orb, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
     "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_cut, "rate": R1, "badge": "1,000,000× faster"}, {"t": B["change"]["t0"], "rate": 0.0, "badge": None},
-             {"t": t_true, "rate": R2, "badge": "1,000,000× faster"}, {"t": t_w, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
+             {"t": t_true, "rate": R2, "badge": "1,000,000× faster"}, {"t": t_orb, "rate": R4}, {"t": round(t_rd - STOP, 4), "rate": 0.0, "ramp": STOP, "badge": SLOW}],
     "guess": [{"t": 0.0, "rate": 0.0}, {"t": t_g1, "rate": 5e4}, {"t": t_g2, "rate": 0.0, "badge": None}],
 }
 
@@ -120,8 +124,8 @@ while t < t_rd:
         SUNRISES.append({"t": round(b, 4), "th": round(th_v(b), 6)})
     t, h0 = t1, h1
 assert len(SUNRISES) >= 3, SUNRISES
-# the sunrise the label names: the first after "you" has gone, so the two pills never crowd Venus together
-RISE_I = next(i for i, s in enumerate(SUNRISES) if s["t"] >= A("vo05:hundred"))
+# the sunrise the label names: the first on "rising in the west" (the dial's Sun is up in the west through "west")
+RISE_I = next(i for i, s in enumerate(SUNRISES) if s["t"] >= A("vo05:rising"))
 
 # ── the camera: one shot. A close view that follows Venus (the hook, the guesses, the radar and the true
 # turn) and the diagram (the normal, the whoa, the takeaway, the readout); the end card pushes back in, so a
@@ -133,6 +137,7 @@ th_why = math.degrees(th_v(B["why"]["t0"]))
 AZ2 = min((th_why + k * 180.0 for k in range(-8, 9)), key=lambda a: abs(a - AZ))
 CLOSE2 = dict(CLOSE, az=AZ2, el=24.0)   # higher, so the "backwards" arrow round the equator reads as a ring
 AZ3 = AZ2 + 10.0                           # the change beat's slow orbit (0.7° a second), held through the why
+FY2 = 0.365                                # from the guesses on, Venus a little higher: its limb clears the spine's label by ≥ 12 px at 540
 # Earth's orbit (y 176–482 of 960 at 225) clears the top notes and the spine's label
 DIAG = {"target": [0, 0, 0], "dist": 225.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.34}
 # the readout's push: onto Venus and Earth, lined up at the conjunction, so the round trip between them can be seen
@@ -145,10 +150,12 @@ CAM = {"space": [
     key(0.0, CLOSE, dist=25.5), key(t_cut, CLOSE, dist=23.0, ease="sine"),   # the hook pushes in (2.4% a second): Venus never sits still
     key(t_pull + 2.2, DIAG, ease="inout3"),
     key(t_push2, DIAG, dist=220.0, ease="sine"),   # hold the diagram until the push starts with the follow (else it dollies at the Sun)
-    key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, az=AZ3, dist=23.0, ease="sine"),
+    # the change beat pushes in (5%, ≤ 1.2% a second) on the "three hundred years" of smudges, then keeps creeping in to the whoa
+    key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(t_g1, CLOSE2, az=AZ2 + 5.0, dist=22.8, fy=FY2, ease="sine"),
+    key(B["why"]["t0"], CLOSE2, az=AZ3, dist=22.7, fy=FY2, ease="sine"),
     # the radar beat: Venus eases left, so the beam and the ping have room on the right; back to centre for the true turn
-    key(t_radar, CLOSE2, az=AZ3, dist=22.9, fx=0.42, ease="sine"), key(t_true, CLOSE2, az=AZ3, dist=22.5, fx=0.42, ease="sine"),
-    key(t_true + 1.6, CLOSE2, az=AZ3, dist=22.4, ease="sine"), key(t_w - 0.2, CLOSE2, az=AZ3, dist=22.0, ease="sine"),
+    key(t_radar, CLOSE2, az=AZ3, dist=22.6, fx=0.42, fy=FY2, ease="sine"), key(t_true, CLOSE2, az=AZ3, dist=22.5, fx=0.42, fy=FY2, ease="sine"),
+    key(t_true + 1.6, CLOSE2, az=AZ3, dist=22.4, fy=FY2, ease="sine"), key(t_w - 0.2, CLOSE2, az=AZ3, dist=22.0, fy=FY2, ease="sine"),
     # the pull to the diagram rises over Venus first, while the target still follows it (FOLLOW holds), so it never turns
     # its night side to the camera on "Stand there"
     key(t_w + 0.7, CLOSE2, az=AZ3, dist=45.0, el=58.0, ease="inout2"), key(t_w + 2.2, DIAG, ease="inout3"),
@@ -173,12 +180,15 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_pull + 2.0, 4), "t1": t_push2, "side": 1},   # once Earth has settled in frame
     {"id": "l-venus", "text": "Venus", "kind": "body", "anchor": "venus", "t0": A("vo02:Next"), "t1": round(t_push2 + 0.3, 4), "side": -1},   # takes over from the Sun's
-    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": A("vo02:Next"), "side": 1},
+    {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": A("vo02:Next"), "side": -1},   # left: Venus passes up its right
     # (the guesses, the radar and "backwards" are the spine's and the caption's to say: a label on Venus would cover the
     # turning meridian, the beam or the arrow)
-    # on the diagram, from just above Venus's disc (fixed: Venus laps every 4.9 s, so the pill rides above it, never jumps onto it)
-    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_w + 2.2, 4), "t1": round(A("vo05:The") - 0.2, 4), "side": 1, "v": "above", "fixed": True},   # gone before the Sun passes under it
-    {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": SUNRISES[RISE_I]["t"], "t1": round(SUNRISES[RISE_I]["t"] + 3.5, 4), "side": 1},
+    # on the diagram, from just above Venus's disc (fixed: Venus laps every 4.3 s, so the pill rides above it, never jumps onto it);
+    # gone as the dial arrives ("The Sun": the first "the" in the line is "the spin")
+    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_w + 2.2, 4), "t1": round(A("vo05:Sun") - 0.2, 4), "side": 1, "v": "above", "fixed": True},
+    # under the tick's outer end (the safe box pins it there), once Venus and Earth have moved up past it; gone before Venus
+    # comes round to the tick again (a lap is 4.3 s)
+    {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": round(SUNRISES[RISE_I]["t"] + 0.5, 4), "t1": round(SUNRISES[RISE_I]["t"] + 3.35, 4), "side": 1, "v": "below"},
     # from the ring's foot, under it (outside the ring); it leaves with the spine's 6 min
     {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": round(t_echo - 0.4, 4), "side": 1, "v": "below"},
     # with the ping: while the push is still landing, its pill would sit on Venus (clamped at the safe box's left)
@@ -191,10 +201,13 @@ BADGES = [   # a slot stacks in this order: a note arrives under the ones alread
     {"id": "b-illus-h", "text": "clouds: drawn", "t0": 0.0, "t1": round(t_pull + 1.4, 4), "slot": "bl"},
     {"id": "b-illus", "text": "clouds: drawn", "t0": t_push2, "t1": round(t_w + 1.4, 4), "slot": "tr"},   # narrow: the speed note keeps row 1 beside it
     {"id": "b-orbit", "clock": "orbit", "t0": t_cut, "t1": t_true, "slot": "tl"},
-    {"id": "b-spin", "clock": "spin", "t0": t_true, "t1": t_rd, "slot": "tl"},   # rolls 1,000,000× → 4,000,000× in place (both clocks run at R4 in the whoa)
+    {"id": "b-spin", "clock": "spin", "t0": t_true, "t1": t_rd, "slot": "tl"},   # rolls 1,000,000× → 4,500,000× in place on "orbit" (both clocks run at R4)
     {"id": "b-guess", "clock": "guess", "t0": t_g1, "t1": t_g2, "slot": "tl"},
-    {"id": "b-paused", "text": "orbit paused", "t0": round(t_true + 0.4, 4), "t1": t_w, "slot": "tl"},   # under the spin's note, once it is in
+    {"id": "b-paused", "text": "orbit paused", "t0": round(t_true + 0.4, 4), "t1": t_orb, "slot": "tl"},   # under the spin's note, once it is in
     {"id": "b-light", "text": "light sped up", "t0": A("vo07:Light"), "t1": round(t_end - 0.5, 4), "slot": "tr"},   # the ring and the ping run far faster than light
+    {"id": "b-illus-r", "text": "clouds: drawn", "t0": round(t_echo + 0.8, 4), "t1": round(t_end - 0.5, 4), "slot": "tr"},   # the push shows the deck up close again
+    # the 1962 ping makes its minutes-long round trip in 4 s; the slot is empty from the orbit's note to the spin's
+    {"id": "b-light-r", "text": "light sped up", "t0": t_radar, "t1": round(2 * A("vo04:pierced") - t_radar, 4), "slot": "tl"},
 ]
 COUNTERS = [
     {"id": "c-turn-h", "label": "one turn on Venus · days", "text": "?", "t0": 0.0, "t1": t_cut},
@@ -203,6 +216,8 @@ COUNTERS = [
     {"id": "c-g1", "label": "guess · one turn", "text": "23 hours", "t0": A("vo03:clocked"), "t1": t_g2},
     {"id": "c-g2", "label": "guess · one turn = one year", "text": "225 days", "t0": t_g2, "t1": A("vo04:nineteen")},
     {"id": "c-1962", "label": "radar sees through the clouds", "text": "1962", "t0": A("vo04:nineteen"), "t1": A("vo04:two")},
+    # "Both guesses were wrong": the two guesses, struck out (11 characters, the spine's widest); gone before "Venus turns"
+    {"id": "c-wrong", "label": "both guesses", "text": "23 h, 225 d", "strike": True, "t0": A("vo04:Both"), "t1": A("vo04:Venus")},
     {"id": "c-radar", "label": "radar · one turn, days", "text": "243", "t0": A("vo04:two"), "t1": A("vo04:longer")},
     {"id": "c-vs", "label": "one turn · one year (days)", "text": "243 > 225", "t0": A("vo04:longer"), "t1": t_w},
     {"id": "c-solar", "label": "sunrise to sunrise · days", "text": "117", "t0": A("vo05:hundred"), "t1": A("vo05:rising")},
@@ -218,20 +233,23 @@ for c in COUNTERS:
 for a, b in zip(COUNTERS, COUNTERS[1:]):          # two values never share the spot: 0.4 s between them
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
+# a word lookup that lands on the wrong word can invert a window, and the overlay then never shows it (its sound still plays)
+for x in LABELS + BADGES + COUNTERS:
+    assert x["t1"] - x["t0"] >= (1.0 if x in LABELS else 0.0) + 1e-9, (x["id"], x["t0"], x["t1"])
 
 TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: the\u00a0Moon that never *lands*", "follow": "Light Minute · No. 004",   # breaks after "Next light:"
        "next": "Radar first timed Venus's turn in 1962: about 243 days, backwards."}   # the true-fact footnote (c7)
 
-# "close": the push has landed (the pin's blip on the far pole fades until the guesses play on it); "ring": the
+# "close": the push is landing (the pin's blip on the far pole fades until the guesses play on it); "ring": the
 # light-time ring grows with "Light time, Sun to Venus" and has landed before "six"; "ping": the round trip's ping
 # runs once the readout's push has (nearly) landed
 CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": t_radar, "pierce": A("vo04:pierced"), "back": A("vo04:backwards"), "whoa": t_w, "tk": t_tk,
-       "close": round(t_push2 + 1.6, 4), "ring": A("vo07:Light"), "echo": t_echo, "ping": t_ping, "you": A("vo05:Stand"),
+       "close": round(t_push2 + 0.6, 4), "ring": A("vo07:Light"), "echo": t_echo, "ping": t_ping, "you": A("vo05:Stand"),
        "sun_lbl": A("vo02:Sun"), "rise_i": RISE_I, "dial0": A("vo05:Sun"), "dial1": t_tk}
-POSTER = A("vo05:west", 0.5)
+POSTER = round(SUNRISES[RISE_I]["t"] + 0.25, 4)   # the dial's Sun about 40° up in the west, the spine on "west"
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["three hundred sixty-five", "a permanent"], "vo03": ["one side", "faced the Sun."],
+glue(f, {"vo02": ["three hundred sixty-five", "under a permanent"], "vo03": ["one side", "always faced the Sun."],
          "vo04": ["nineteen sixty-two,", "in California", "two hundred forty-three"],
          "vo05": ["Stand there,", "the spin", "and the orbit team up.", "hundred and seventeen", "rising in the west."],
          "vo06": ["live by", "is the Sun coming back."]})

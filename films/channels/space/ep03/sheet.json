@@ -176,6 +176,11 @@
   },
   {
    "t": 28.533333333333335,
+   "kind": "badge",
+   "tag": "b-light-r"
+  },
+  {
+   "t": 28.533333333333335,
    "kind": "probe.ping",
    "tag": "radar"
   },
@@ -183,6 +188,11 @@
    "t": 30.566666666666666,
    "kind": "arrive",
    "tag": "radar-in"
+  },
+  {
+   "t": 31.966666666666665,
+   "kind": "counter.show",
+   "tag": "c-wrong"
   },
   {
    "t": 33.7,
@@ -219,11 +229,6 @@
    "t1": 53.8667
   },
   {
-   "t": 43.3837,
-   "kind": "orbit.pass",
-   "tag": "sunrise-0"
-  },
-  {
    "t": 44.3333,
    "kind": "label",
    "tag": "l-you",
@@ -233,9 +238,9 @@
    ]
   },
   {
-   "t": 45.9055,
+   "t": 45.0015,
    "kind": "orbit.pass",
-   "tag": "sunrise-1"
+   "tag": "sunrise-0"
   },
   {
    "t": 47.13333333333333,
@@ -247,18 +252,9 @@
    ]
   },
   {
-   "t": 48.4273,
-   "kind": "label",
-   "tag": "l-rise",
-   "pos": [
-    0.697,
-    0.337
-   ]
-  },
-  {
-   "t": 48.4273,
+   "t": 47.2431,
    "kind": "orbit.pass",
-   "tag": "sunrise-2"
+   "tag": "sunrise-1"
   },
   {
    "t": 49.06666666666667,
@@ -270,14 +266,23 @@
    ]
   },
   {
-   "t": 50.9492,
+   "t": 49.4847,
    "kind": "orbit.pass",
-   "tag": "sunrise-3"
+   "tag": "sunrise-2"
   },
   {
-   "t": 53.471,
+   "t": 49.9847,
+   "kind": "label",
+   "tag": "l-rise",
+   "pos": [
+    0.697,
+    0.337
+   ]
+  },
+  {
+   "t": 51.7264,
    "kind": "orbit.pass",
-   "tag": "sunrise-4"
+   "tag": "sunrise-3"
   },
   {
    "t": 53.8667,
@@ -295,7 +300,12 @@
    ]
   },
   {
-   "t": 55.9928,
+   "t": 53.968,
+   "kind": "orbit.pass",
+   "tag": "sunrise-4"
+  },
+  {
+   "t": 56.2096,
    "kind": "orbit.pass",
    "tag": "sunrise-5"
   },
@@ -309,7 +319,7 @@
    ]
   },
   {
-   "t": 58.5147,
+   "t": 58.4512,
    "kind": "orbit.pass",
    "tag": "sunrise-6"
   },
@@ -350,6 +360,11 @@
     0.5,
     0.555
    ]
+  },
+  {
+   "t": 65.2667,
+   "kind": "badge",
+   "tag": "b-illus-r"
   },
   {
    "t": 65.4667,

@@ -12,6 +12,10 @@ its poster (50.4 s), contact sheet and `review/` (scorecard round 4 lists the re
 the honesty notes below describe them). That cut has not been rendered yet: the MP4 above predates it, and a stills
 check comes before the final.
 
+**After the second draft review (26 Oct):** the round-2 fixes are in `compile.py` and `scene.mjs` (the whoa's clocks,
+the "you" label, "a sunrise", the radar ping, the readout's push, Earth in the pulls, the deck's marking; described
+below). Not rendered yet: a stills check comes first.
+
 ## The story
 Can one day outlast a year? On Venus: yes, and no. For three hundred years astronomers chased faint smudges in
 its clouds; the Cassinis clocked about 23 hours, Schiaparelli said one face always faced the Sun. In 1962 radar
@@ -25,7 +29,7 @@ So yes, one turn outlasts a year; but the day you'd live by is the Sun coming ba
 |---|---|
 | `script.md`, `claims.json`, `pron.json` | The words, the claims ledger (17 claims), pronunciations (Schiaparelli, Cassinis) |
 | `voice.py`, `vo/` | Voiced one Kokoro speed per line (hook 0.9, normal 1.1, change 1.15, why 1.15, whoa 1.0, takeaway 0.95, readout 1.08, tease 0.92) |
-| `compile.py` | The direction. Two scene clocks for Venus, "orbit" and "spin", plus "guess" for the Cassinis' 23 hours; piecewise constant (one linear stop), integrated here as clock.js does, so the sunrise ticks (7, from 43.4 s, every 2.52 s = 116.75 days) and the inferior conjunction at the readout are computed |
+| `compile.py` | The direction. Two scene clocks for Venus, "orbit" and "spin", plus "guess" for the Cassinis' 23 hours; piecewise constant (one linear stop), integrated here as clock.js does, so the sunrise ticks (7, from 45.0 s, every 2.24 s = 116.75 days) and the inferior conjunction at the readout are computed |
 | `scene.mjs` | The picture: one shot that follows Venus in close (rig.js's `poseAt` with a follow weight) and pulls back to the diagram |
 | `../set/venus.js` | **New reusable block:** Venus's cloud deck, baked (an illustration in pale greys; no yellow, the channel has no warm hues) |
 
@@ -34,23 +38,31 @@ Rebuild: as episode 2's README (`E=films/channels/space/ep03`; lint with `--segm
 ## The direction
 - **Close view** (hook, guesses, radar, the true turn): the camera follows Venus and looks across the Sun's
   direction, so Venus is half lit and the teal meridian pin ("you") crosses the terminator. The hook pushes in
-  slowly; the change beat orbits 10° (0.7° a second). The pin fades while it would show only as a blip on the far
+  slowly; the change beat orbits 10° (0.7° a second) and pushes in 5% on the smudges. From the guesses on Venus sits a
+  little higher, so its limb clears the spine's label. The pin fades while it would show only as a blip on the far
   pole. The guesses play on the pin: 23 hours forwards (50,000×), then locked to face the Sun while the orbit runs
   (1,000,000×), with a dashed teal pointer from the pin toward the off-frame Sun. For the radar, Venus eases left so
-  the dashed beam (Earth to Venus) and its ping have room; the pin dims under it. The truth: the orbit paused
-  (badged) and the spin at 1,000,000×, backwards: the pin crosses the face through "backwards", under an arc arrow
-  with a large head (no label: the caption says it).
-- **Diagram** (normal, whoa, takeaway, readout): the pull to it rises over Venus first, so Venus never turns its night
-  side to the camera on "Stand there"; the Sun grows in late in each pull, below the notes. "you" hangs just above
-  Venus's disc. Both clocks run at 4,000,000×; each sunrise (the pin's local hour falling through sunrise) drops a
-  teal tick on Venus's orbit with a low ping, and "a sunrise" names the first one after "you" has gone ("rising in
-  the west"). The clocks slow to a stop with Venus and Earth lined up (inferior conjunction). The readout holds on
-  the light-time ring (it grows with "Light time, Sun to Venus", "6 min" at its foot), then pushes onto Venus and
-  Earth for the radar's round trip: a ping runs between their drawn limbs, "4 min round trip" at the middle.
+  the dashed beam (Earth to Venus) and its ping have room: the ping comes in on the beam from the frame's edge on
+  "radar" at a steady speed and sinks into the clouds on "pierced"; its echo heads back out; the pin dims under it. On
+  "Both guesses were wrong" the spine strikes out "23 h, 225 d". The truth: the orbit paused (badged) and the spin at
+  1,000,000×, backwards: the pin crosses the face through "backwards", under an ice arc arrow with a large head (no
+  label: the caption says it).
+- **Diagram** (normal, whoa, takeaway, readout): the pull to it rises over Venus first; the orbit stays paused through
+  "Stand there, and the spin" (the true turn's 1,000,000× carries on) and joins on "orbit", so Venus keeps its lit
+  side to the camera through the pull. The Sun and Earth grow in late in each pull (Earth goes with the follow too, so
+  it never sweeps through a pull as a dark disc), below the notes. "you" hangs just above Venus's disc until "The
+  Sun". Then both clocks run at 4,500,000×; each sunrise (the pin's local hour falling through sunrise) drops a teal
+  tick on Venus's orbit with a low ping, and "a sunrise" names the one on "rising in the west", under its tick. The
+  clocks slow to a stop with Venus and Earth lined up (inferior conjunction). The readout holds on the light-time ring
+  (it grows with "Light time, Sun to Venus", "6 min" at its foot), then pushes onto Venus and Earth for the radar's
+  round trip: the bodies ease back from their diagram enlargement and the pin goes off, so the hop between the drawn
+  limbs is the widest teal line, a ping runs along it, "4 min round trip" at the middle.
 - **Your sky** (the whoa, under the captions): a horizon dial laid out as a sky seen facing south on Earth (east on
-  the left), so the Sun visibly rises on the right, in the west, and crosses the other way from Earth's.
-- **Spine readout** (above the captions, centred): ? → 365 → 300 → 23 hours → 225 days → 1962 → 243 → 243 > 225 →
-  117 → west → 243 > 225 → 117 < 225. Then the readout segment in the same place (6 min, then 4 min with "round").
+  the left), so the Sun visibly rises on the right, in the west, and crosses the other way from Earth's. Each sunrise
+  rings teal round the rising Sun at W, with its tick on the orbit; the Sun is up in the west through "west".
+- **Spine readout** (above the captions, centred): ? → 365 → 300 → 23 hours → 225 days → 1962 → 23 h, 225 d (struck
+  out) → 243 → 243 > 225 → 117 → west → 243 > 225 → 117 < 225. Then the readout segment in the same place (6 min,
+  then 4 min with "round").
 - **Loop:** the end card pushes back into the hook's close view; Earth shrinks away under the card. Footnote:
   "Radar first timed Venus's turn in 1962: about 243 days, backwards."
 
@@ -58,14 +70,17 @@ Rebuild: as episode 2's README (`E=films/channels/space/ep03`; lint with `--segm
 
 | Badge | Where | Why |
 |---|---|---|
-| `clouds: drawn` | Hook (bottom left, until the pull has taken the deck out of frame); the close views | The cloud deck is drawn, not imaged; the real one is featureless in visible light |
+| `clouds: drawn` | Hook (bottom left, until the pull has taken the deck out of frame); the close views; the readout's push | The cloud deck is drawn, not imaged; the real one is featureless in visible light |
 | `not to scale` | The diagram | Venus, Earth and the Sun are enlarged |
-| `1,000,000× faster`, `50,000× faster`, `4,000,000× faster`, `slowing to a stop` | From the clocks (one note at a time, top left) | The orbit and the spin are sped up; the last note holds while they slow to the readout's stop |
+| `1,000,000× faster`, `50,000× faster`, `4,500,000× faster`, `slowing to a stop` | From the clocks (one note at a time, top left) | The orbit and the spin are sped up; the last note holds while they slow to the readout's stop |
 | `orbit paused` | The true turn | The spin alone, so the 243-day turn is seen against a fixed Sun |
-| `light sped up` | The readout | The light-time ring crosses 108 million km in 1.2 s and the ping makes the 4-minute round trip in 2 s |
+| `light sped up` | The 1962 radar ping; the readout | The 1962 ping makes its minutes-long round trip in 4 s; the light-time ring crosses 108 million km in 1.2 s and the readout's ping makes the 4-minute round trip in 2 s |
 
 Drawing conventions: Venus's 2.6° axial tilt is drawn upright-ish (−2.64°, i.e. retrograde, as 177.4° is); the
 pin stands on the equator; the guesses blend into each other over 0.4–0.8 s; the Sun is hidden in the close views
 and in the readout's push (it shrinks away with the move: it would fill a corner and bloom); Earth is drawn brighter
-on the diagram; Schiaparelli's pointer and the radar's dashed beam are diagram marks; the "your sky" dial
-shows where the Sun is, behind the clouds (its note says so).
+on the diagram (its night side filled a little) and away in the close views (it shrinks with the camera's follow, as
+the Sun does); Schiaparelli's pointer and the radar's dashed beam are diagram marks; the cloud deck carries one broad
+darker marking that turns with the planet so the turn can be seen (the real cloud tops circle Venus in about four
+days, whatever the ground below does); the "your sky" dial shows where the Sun is, behind the clouds (its note says
+so).
