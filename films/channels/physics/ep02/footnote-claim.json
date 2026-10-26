@@ -1,0 +1,11 @@
+{
+ "id": "foot",
+ "sentence": "Huygens built the first pendulum clock in 1656. It kept time to about a minute a day.",
+ "claim": "Christiaan Huygens completed his first pendulum clock in late 1656; its error was about a minute a day (sources differ: 15 s to 1 min a day).",
+ "source_url": "https://www.ebsco.com/research-starters/history/huygenss-pendulum-clocks",
+ "source_title": "EBSCO Research Starters, Huygens's Pendulum Clocks",
+ "accessed": "2026-10-25",
+ "verified_via": "search excerpt",
+ "status": "ok",
+ "note": "End-card footnote (on screen, not spoken). Also APS News (https://aps.org/publications/apsnews/201706/history.cfm) and History of Information (15 min to 15 s a day). The card uses the cautious figure. Carried over from the 25 Oct claims sheet."
+}

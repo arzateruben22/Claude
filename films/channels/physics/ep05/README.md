@@ -19,7 +19,7 @@ script before it posts.
 | normal | "Sit on a swivel chair with two dumbbells, arms out wide. Give yourself one gentle push. You turn about once every two *seconds*." | "80 cm from the axis" from "wide." until the push lands on "push."; 30 rpm with the arms out, a ghost every 1/10 s 18° apart; the spine counts rpm ("spin rate") |
 | change | "Now pull both dumbbells in, to your chest. Suddenly, you're whipping round more than twice as *fast*." | The arms come in from "pull" to "chest." ("20 cm"); 80 rpm; the arms-in ghosts' gaps open up as the arms-out ladder steps back to a third; the model's assumption on a card from "Suddenly," |
 | why | "It feels like something pushed. Nothing *outside* did. With no twist from outside, your total amount of spin can't change. Weight near the middle is easier to turn, so the same amount turns you *faster*. Your arms paid for every extra turn." | The arms-in ghosts step back to a third, and both ladders leave on "With" as the camera turns from above down to the side; the arms out again on "Weight near the middle" (slower), in again on "turns you faster"; "your arms do the work" from "arms" |
-| whoa | "Skaters use this. The record, set by a young Canadian skater: three hundred forty-two turns a *minute*. Nearly six turns a second." | An ink skater (a scratch spin) beside the chair, motion arcs, "Illustration" from "use" to "skater"; the chair and its sitter step back to a third from "Skaters"; the spine keeps the chair's 80 rpm until "three", then "fastest spin on ice skates" climbs to 342 rpm, lit from "minute." |
+| whoa | "Skaters use this. The record, set by a young Canadian skater: three hundred forty-two turns a *minute*. Nearly six turns a second." | An ink skater (a scratch spin) beside the chair, motion arcs, "Illustration" from "use" to "skater"; the chair and its sitter step back to a third from "Skaters"; the spine keeps the chair's 80 rpm ("your spin, arms in") until "three", then "fastest spin on ice skates" climbs to 342 rpm, lit from "minute." |
 | measure | "*Measure it*: ghosts a tenth of a second apart. Arms out, eighteen degrees. Arms in, nearly *fifty*." | Frozen from above: the arms-out ladder ("18°" from "eighteen" to "Arms in") and the arms-in ladder ("48°" from "nearly"), both full on "ghosts a tenth of a second apart", then each full while its number is said and a third while the other's is; the spine: the turn per 1/10 s, 18° then 48° (lit from "fifty.") |
 | takeaway | "One push set your total spin. Your arms just decide how *fast*." | Spinning on, arms in, the chair full again; the record's ghosts at a third, gone on "Your arms"; the spine held lit at 80 rpm, "one push, arms in"; "Friction ignored" |
 | tease | "Next: a drinking straw, three stories tall. Could you still *drink* through it?" | Back to the hook's moment at ×1/2 ("2× slower" top-left) for the loop; footnote: Olivia Oliver's 342 rpm record |
@@ -53,9 +53,11 @@ As in `../ep02/README.md`, with `E=films/channels/physics/ep05`.
   toward the paper both act in scene light, before the finish's ACES curve, so opacity 1/3 (or a two-thirds lerp) would
   keep only about 1/11; each strength goes through `screenAlpha` (`../set/aces.js`) first, so a third is an opacity of
   about 0.7 (a lerp of about 0.3).
-- The rule-8 fix stage split the whoa's spine (the chair's 80 rpm stays on screen as "your spin, arms in" from the whoa's
-  cut until "three", so it isn't read as the skater's and the record's label arrives with its number), removed the "easier to turn" label (its end, "your total
-  amount", came before its start, so it never showed and its cue sounded over nothing) and made "18°" leave on "Arms in".
+- The rule-8 fix stage split the whoa's spine (the chair's 80 rpm stays on screen from the whoa's cut until "three", so
+  the record's label arrives with its number), removed the "easier to turn" label (its end, "your total amount", came
+  before its start, so it never showed and its cue sounded over nothing) and made "18°" leave on "Arms in". The HUD
+  audit and stills then renamed the chair's readout in the whoa "your spin, arms in" (it had read "spin rate" just as
+  the skater came in, as if it were hers).
 - The coordinating session's fact audit (26 Oct, fa0e26b) changed the hook ("Nothing motorized.", not "Nothing
   pushes.": the arms do push the body round from inside), the whoa ("The record, set by a young Canadian skater:", the
   year left to the end-card footnote) and the why ("so the same amount", not "so that same amount"); the changed lines

@@ -29,8 +29,8 @@
 > finish's ACES curve, so opacity 1/3 (or a 2/3 lerp) keeps only about 1/11 of a mark's contrast on screen; ep02's
 > review caught it. `set/aces.js` now has `screenAlpha(k, ink, paper)` (the opacity that keeps k of the contrast,
 > about 0.7 for a third); ep06 uses it, and each of ep02–05 is mapped through it before its final.
-> **Paused 09:46 UTC at the user's request.** ep03 delivered (e5824ae). ep02's final stopped at frame 2070 of 2184 (frames
-> on disk): resume with `kits/cinema/film/run.sh films/channels/physics/ep02 --tier final`, then deliver (assemble with
+> **Paused 09:46 UTC at the user's request.** ep03 delivered (e5824ae). ep02's final stopped with 2093 of 2184 frames
+> on disk: resume with `kits/cinema/film/run.sh films/channels/physics/ep02 --tier final`, then deliver (assemble with
 > build/audio/mix.wav, contact sheet, qa.py, scorecard; its stills are in build/stills/). Then ep04 → ep05 → ep06
 > (each: HUD audit, cues, compile, soundtrack, stills at 390 px, final).
 > `ps -eo args | grep "[r]ender.mjs"` shows the one render; a bare `kits/cinema/film/run.sh <dir>` resumes it.

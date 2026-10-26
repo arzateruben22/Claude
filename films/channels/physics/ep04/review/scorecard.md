@@ -15,18 +15,19 @@ Measured on the delivered file `out/rest-frame-004-9x16.mp4` by `kits/cinema/fil
 | Text in the safe box | x 90–900, y 250–1420 | Render audit: 0 warnings over 2168 frames |
 | Flashing | ≤ 3 flashes a second | 0 large-area luminance changes (frames none), 0 flash pairs, worst 0/s |
 | Determinism | resumable, byte-stable | 8 chunks, every frame's sha256 checked against its log before encoding |
-| Render cost | ≤ 4 h | 0.5 h for 2168 frames (0.88 s/frame, K avg 2.1, max 8) |
+| Render cost | ≤ 4 h | 0.6 h for 2168 frames (0.88 s/frame, K avg 2.1, max 8) |
 
 ## Review rounds
 1. **Script review** (independent, before voicing): its fixes were applied before the voice was locked (25 Oct,
    00274e2).
-2. **Animatic rounds** (25–26 Oct): the bench camera lowered and widened so the drop sits between the readout and the
-   captions; MICROSCOPE as a card; Earth labeled at its center; the labels and notes kept off the readout.
+2. **Animatic check** (26 Oct; its fixes went in with the recheck pass, 10f2150): the bench camera lowered and
+   widened so the drop sits between the readout and the captions; MICROSCOPE as a card; Earth labeled at its center;
+   the labels and notes kept off the readout.
 3. **Recheck pass** (26 Oct, at the user's request): captions break at phrases; the spine readout pinned to the safe
    line with a wrapping label.
 4. **Fact audit** (the coordinating session, 26 Oct): "The feather? Still drifting down." (52 cm of 160 when the hammer
    lands, at a 100 cm/s terminal speed), "Gravity speeds them up equally.", the "< 5" readout for MICROSCOPE's parts in a
-   million billion; the changed lines re-voiced (lint 0 errors before and after).
+   million billion, the tease's "it spins faster"; the changed lines re-voiced (lint 0 errors before and after; fa0e26b).
 5. **Rule 8, "One line wins"** (an implementer, an independent reviewer and a fixer): the reviewer's must-fix restored
    the Moon floor (`scene.add` sat inside a comment); stepped-back props and ghost rows mix toward the paper on screen
    (a display-space shader), ink and arrows by their color, so a third keeps a third of the contrast; the Earth rows
@@ -47,7 +48,7 @@ Measured on the delivered file `out/rest-frame-004-9x16.mp4` by `kits/cinema/fil
 
 ## Noted, not fixed
 - The whoa's readout shows "< 5" (parts in a million billion) from the cut, before the narration reaches the number;
-  it lights on "a few parts in a million billion".
+  it lights on "billion." (50.5 s).
 - A stepped-back hammer or feather keeps its full-strength contact shadow (the cyc's casters have no strength setting).
 
 ## Not measured here

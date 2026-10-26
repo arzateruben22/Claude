@@ -21,10 +21,11 @@ Measured on the delivered file `out/rest-frame-005-9x16.mp4` by `kits/cinema/fil
 1. **Script review** (independent, before voicing): its fixes were applied before the voice was locked (25 Oct,
    a3a3b4f): the arms counted in the spin model, and "outside" for the torque (nothing outside pushed).
 2. **Build and recheck** (26 Oct): the direction and scene written; captions break at phrases; the spine readout pinned
-   to the safe line; the model note as a card; HUD audit clean.
-3. **Fact audit** (the coordinating session, 26 Oct): "Nothing motorized." in the hook, the record re-voiced ("The
-   record, set by a young Canadian skater: three hundred forty-two turns a minute. Nearly six turns a second."), the
-   whoa's camera keyed on "record,"; US spelling in the tease and end card; lint 0 errors before and after.
+   to the safe line; the model note as a card; HUD audit clean; US spelling in the tease and end card ("three
+   stories", "ten-meter"; re-voiced, audio identical).
+3. **Fact audit** (the coordinating session, 26 Oct, fa0e26b): "Nothing motorized." in the hook, the record re-voiced
+   ("The record, set by a young Canadian skater: three hundred forty-two turns a minute. Nearly six turns a second."),
+   "so the same amount" in the why, the whoa's camera keyed on "record,"; lint 0 errors before and after.
 4. **Rule 8, "One line wins"** (an implementer, an independent reviewer and a fixer): the review's must-fix split the
    whoa's spine so the record's label arrives with its number; the never-shown "easier to turn" label (and its orphan
    sound) removed; "18°" leaves on "Arms in". The chair and the ghost ladders step back through `set/aces.js`
@@ -32,8 +33,9 @@ Measured on the delivered file `out/rest-frame-005-9x16.mp4` by `kits/cinema/fil
 5. **HUD audit and stills** (every 0.25 s, the whole film: 0 issues; sixteen final-tier stills looked at 390 px wide):
    the whoa's readout read "spin rate 80 rpm" just as the ink skater came in, as if it were hers; it now reads "your
    spin, arms in" until "three".
-6. **Soundtrack**: sync failed on the loop's last ghost click, scheduled on the film's last frame (two more were past
-   the end); the clicks now stop 0.15 s before the end. −14.1 LUFS, −2.0 dBTP, sync PASS.
+6. **Soundtrack**: sync failed on the loop's last ghost click, scheduled at the film's very end, 66.93 s, just after
+   its last frame (two more were past the end); the clicks now stop 0.15 s before the end. −14.1 LUFS, −2.0 dBTP,
+   sync PASS.
 7. **Final**: one run, 40 min, no restarts.
 
 ## Noted, not fixed

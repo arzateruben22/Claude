@@ -37,18 +37,19 @@ Measured on the delivered file `out/rest-frame-002-9x16.mp4` by `kits/cinema/fil
 8. **Fact audit** (the coordinating session, 26 Oct): "Pull its twin three times farther… Three times the distance… and
    still, neck and neck" and "Now hang fifteen, each a little shorter. Only length changes. For half a minute, they
    drift apart. Then, just as gradually… back in line" re-voiced (lint 0 errors before and after); c4, c11 and c12
-   retitled to Lima & Arun (Am. J. Phys. 74, 892); c6 and c15 repointed; c10 and c17 at 15° / 60.26 s; c16 says 15°.
+   retitled to Lima & Arun (Am. J. Phys. 74, 892); c6 and c15 repointed; c10 and c17 reworded for the symmetric half-minute; c16 and c17 at 15° (realigned at 60.26 s).
 9. **Rule 8, "One line wins"** (an implementer, an independent reviewer and a fixer): the lanes step back by opacity
    0.70 (a third of their contrast on screen; 0.33 had kept a tenth) and 0.50 under the ghost ladders; the clock steps
-   back on "One swing"; the spine is keyed per shot and its held 0.31 s is relabelled "30° lag, 20 swings", then
+   back on "One swing"; the spine is keyed per shot and its held 0.31 s is relabeled "30° lag, 20 swings", then
    "lost in 20 swings"; the speed note top left, the hook's bottom left; lanes drawn back to front.
 10. **HUD audit** (every 0.25 s, the whole film): one crossfade overlap ("1 s across" with "1/10 s apart" at 10.5 s);
     the ghost pill now lands on "tenth". Twelve final-tier stills (`stills-ep02.jpg`) looked at 390 px wide.
-11. **Final**: 0.6 h; stopped at frame 2070 for a pause, resumed after a machine restart from its finished frames (2093
-    kept), each frame's sha256 checked before encoding.
+11. **Final**: 0.6 h; stopped for a pause at 09:46 with 2093 of 2184 frames on disk (its last progress line read
+    2070/2184), resumed at 13:40 after a machine restart from those finished frames (91 rendered), each frame's sha256
+    checked before encoding.
 
 ## Noted, not fixed
-- In the whoa's ×10 stretch each pendulum makes about one swing every 3 frames; with motion blur it reads as a
+- In the whoa's ×10 stretch each pendulum makes about one back-and-forth swing every 3 frames; with motion blur it reads as a
   shimmer of the wave pattern. It is badged "10× faster".
 - The whoa's 1.2 s ramp from ×10 back to real time (45.90–47.10 s) has no speed note: "10× faster" leaves as the
   ramp begins (HUMAN-REVIEW item 4 gives the window).
