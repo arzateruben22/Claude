@@ -45,7 +45,7 @@ a tennis court, folded inside your *chest*. {c10}
 ## takeaway {shot: the floor folds back into the person's chest; the score drops · energy: 0.3} (55.5–61 s)
 vo: So your lungs aren't a bag. {c16} They're a *sponge* that spreads air thin. {c12}
 
-## meanwhile {segment: meanwhile · tally "while you watched": litres of air, 6 a minute from frame 0, on the pulse line; the body locator marks the chest · mallet ticks on the lub-dub · energy: 0.4} (61–67.5 s)
+## meanwhile {segment: meanwhile · tally "while you watched": litres of air, 5.5 a minute from frame 0, on the pulse line; the body locator marks the chest · mallet ticks on the lub-dub · energy: 0.4} (61–67.5 s)
 vo: *Meanwhile*, as you watched, air went in and out of you. {-} About six litres of it. {c13}
 
 ## tease {shot: a white blood cell pressed against a vessel wall, a seam opening · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: about 480 million air sacs (Ochs, 2004) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)

@@ -1,0 +1,33 @@
+# What a person must check before this posts
+
+Meanwhile, Inside No. 06, "The exit". Nothing has been posted.
+
+## This episode
+- **History.** Virchow taught that pus grew from the inflamed tissue (c6; said as "taught", never "was wrong");
+  Cohnheim, his assistant (c24), watched a living frog's vessels in 1867 (c7, c8; Garrison-Morton gives Virchows
+  Archiv vol. 40, 1867; two encyclopedias give vol. 41) and saw white cells climb out (c9, c10). The end card gives
+  Augustus Waller (1846) his due.
+- **"This wall has no open door"** (c1): the seam is a regulated junction, not a wall without joins.
+- **The mechanism** (c27, c11–c14, c16, c17, c26): sticky only where tissue is inflamed (some baseline stickiness
+  exists in skin and bone-marrow vessels, so "only" is not said); rolling, the grips switching on, the crawl to a
+  seam, the wedge, a gap of about 4–5 µm against a cell of about 8 µm, the seam resealing (cultured-cell imaging).
+- **The stakes** (c15, c25): a rare inherited condition (LAD-I, not named on air): the grips are missing, too few or
+  not working; the cells still roll but don't stick. Factual and hedged; no treatment talk.
+- **"So pus is mostly white cells from your blood"** (c19, c20): a pathology source; **"Each one let itself out"**
+  (c21): the cell sets the opening off and the wall's own machinery does part of the work (noted in the claim).
+- **The tally** (c23): "more than ten million" holds at the floor of every estimate in the note (a 19 h half-life
+  gives 1.6–4.2 × 10¹⁰ a day; the tally runs at 1.5 × 10¹⁰), badged "low estimate".
+- **The fingertip** is stylised: a swelling and a soft glow, the same on any skin; no wound, blood or pus drawn.
+
+## Every episode
+1. **Claims.** A physiologist works through `CLAIMS-REVIEW.md` (every row from a search excerpt only).
+2. **The pictures.** The README's "For a human to review" lists everything shown but not claimed, and every badge.
+3. **The channel.** The handle (@meanwhileinside (TODO: not yet chosen)) and a trademark search before the first post.
+4. **AI labelling.** TikTok's AI-generated label; "Voice: synthetic" in the post text; the same on Reels and Shorts.
+5. **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/body/ep06 --sources`.
+6. **A listen.** Virchow (FEER-koh) and Cohnheim (KOHN-hime), fixed in pron.json; "eighteen sixty-seven"; "past" and
+   "million" (the recognizer heard neither: check them by ear).
+7. **Cover frame.** Frame 0: the cell halfway through the wall and "The exit".
+8. **Upload** the MP4 directly; auto-captions off.
+
+TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted.
