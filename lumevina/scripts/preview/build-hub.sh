@@ -7,6 +7,7 @@
 #   dashboard.html  Evelyn's dashboard      app.html       the iPhone app sample
 #   blueprint.html  the Growth Blueprint    plan.html      the first 90 days
 #   shipping.html   the shipping kit        privacy.html   the privacy policy
+#   guide.html      the product guide, with Lumevina-Product-Guide.pdf beside it
 #   img/            each card's picture of the page it opens (docs/hub/img, from hub-shots.mjs)
 # Run from anywhere:  scripts/preview/build-hub.sh <out dir>
 set -e
@@ -34,6 +35,7 @@ if not s.lstrip().lower().startswith("<!doctype"):
 open(sys.argv[2], "w", encoding="utf-8").write(s)
 PY
 done
+python3 scripts/preview/fold-guide.py docs/product-guide/index.html "$OUT/guide.html" && cp docs/Lumevina-Product-Guide.pdf "$OUT/"
 cp docs/hub/index.html "$OUT/index.html"
 # each card's picture of the page it opens (docs/hub/img; refresh with scripts/preview/hub-shots.mjs "$OUT")
 cp docs/hub/img/*.jpg "$OUT/img/"
