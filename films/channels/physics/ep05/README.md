@@ -53,8 +53,8 @@ As in `../ep02/README.md`, with `E=films/channels/physics/ep05`.
   toward the paper both act in scene light, before the finish's ACES curve, so opacity 1/3 (or a two-thirds lerp) would
   keep only about 1/11; each strength goes through `screenAlpha` (`../set/aces.js`) first, so a third is an opacity of
   about 0.7 (a lerp of about 0.3).
-- The rule-8 fix stage split the whoa's spine (the chair's 80 rpm stays under "spin rate" from the whoa's cut until
-  "three", so the record's label arrives with its number), removed the "easier to turn" label (its end, "your total
+- The rule-8 fix stage split the whoa's spine (the chair's 80 rpm stays on screen as "your spin, arms in" from the whoa's
+  cut until "three", so it isn't read as the skater's and the record's label arrives with its number), removed the "easier to turn" label (its end, "your total
   amount", came before its start, so it never showed and its cue sounded over nothing) and made "18°" leave on "Arms in".
 - The coordinating session's fact audit (26 Oct, fa0e26b) changed the hook ("Nothing motorized.", not "Nothing
   pushes.": the arms do push the body round from inside), the whoa ("The record, set by a young Canadian skater:", the
