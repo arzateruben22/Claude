@@ -70,7 +70,7 @@ SHOTS = [
 ]
 
 # ── scene clocks (clock.js keys; "anchor": [t, τ] pins τ at one film time) ──
-RATE_D, RATE_G, RATE_R = 64.0, 300.0, 1e15
+RATE_D, RATE_T, RATE_G, RATE_R = 55.0, 64.0, 300.0, 1e15   # RATE_D: the change beat ends with the last light just short of Earth; RATE_T keeps the takeaway's pace
 # the whoa clock starts soon after the vanish and reads 8:20 exactly on "arrives": its rate follows the voice,
 # rounded down to a multiple of 5 for the badge ("95× faster"), so the counter opens a few seconds in
 RATE_W = 5.0 * math.floor((T_ARR - 1.0) / (t_arr - B["whoa"]["t0"]) / 5.0)
@@ -82,12 +82,12 @@ CLK = {
     # the race: the merger at τ = 0, the fronts reach Earth on "arrived"
     "race": {"keys": [{"t": t_race, "rate": RATE_R}], "anchor": [A("vo04:arrived"), RACE_S]},
     # the whoa (Earth scale, then the diagram): one clock, 8:20 exactly on "arrives"
-    # (after the news it speeds up, so in the 3 s of picture Earth gets far enough along its tangent for the
-    #  straight line and the abandoned curve to separate clearly; the badge follows the clock)
-    "whoa": {"keys": [{"t": B["whoa"]["t0"], "rate": RATE_W}, {"t": A("vo05:sails"), "rate": 300.0, "ramp": 1.4}], "anchor": [t_arr, T_ARR]},
+    # (half a second after "arrives" it speeds up, so the straight line and the abandoned curve have clearly
+    #  separated by "sails off"; the badge follows the clock)
+    "whoa": {"keys": [{"t": B["whoa"]["t0"], "rate": RATE_W}, {"t": A("vo05:arrives", 0.5), "rate": 300.0, "ramp": 1.4}], "anchor": [t_arr, T_ARR]},
     # the restored system: the Sun on (τ < 0 throughout)
     # (it stops for the readout: a still diagram needs no time badge, and the readout is read, not watched)
-    "restore": {"keys": [{"t": B["takeaway"]["t0"], "rate": RATE_D}, {"t": B["readout"]["t0"], "rate": 0.0, "ramp": 0.6, "badge": None}],
+    "restore": {"keys": [{"t": B["takeaway"]["t0"], "rate": RATE_T}, {"t": B["readout"]["t0"], "rate": 0.0, "ramp": 0.6, "badge": None}],
                 "anchor": [B["takeaway"]["t0"], -6000.0]},
 }
 
@@ -143,9 +143,9 @@ CAM = {
         {"t": t_w2, "target": [0.3, -1.6, 0], "dist": 190, "el": 6, "az": -21, "fov": 19, "fy": 0.42, "fx": 0.46, "ease": "sine"},
     ],
     "news": [
-        {"t": t_w2, "target": [7.6, 0, -1.6], "dist": 122, "el": 64, "az": 12, "fov": 24, "fy": 0.4},
-        {"t": A("vo05:sails"), "target": [7.8, 0, -2.2], "dist": 124, "el": 64, "az": 13, "fov": 24, "fy": 0.4, "ease": "sine"},
-        {"t": B["takeaway"]["t0"], "target": [8.0, 0, -9.0], "dist": 150, "el": 65, "az": 15, "fov": 24, "fy": 0.4, "ease": "inout2"},
+        {"t": t_w2, "target": [10.4, 0, -1.2], "dist": 122, "el": 64, "az": 12, "fov": 24, "fy": 0.4},
+        {"t": A("vo05:sails"), "target": [10.6, 0, -1.8], "dist": 124, "el": 64, "az": 13, "fov": 24, "fy": 0.4, "ease": "sine"},
+        {"t": B["takeaway"]["t0"], "target": [10.8, 0, -10.6], "dist": 150, "el": 65, "az": 15, "fov": 24, "fy": 0.4, "ease": "inout2"},
     ],
     "restore": [
         {"t": B["takeaway"]["t0"], "target": [14.2, 0, 2.6], "dist": 40, "el": 58, "az": -6, "fov": 24, "fy": 0.42},
@@ -242,8 +242,8 @@ def before_cut(t1, lead=0.3):
 
 COUNTERS = [
     # the light clock: true time since the Sun vanished (the time badge says how fast it plays)
-    {"id": "c-clock", "label": "since the Sun vanished", "clock": "diagram", "fmt": "clock", "t0": t_off, "t1": B["why"]["t0"], "at": [0.5, 0.245]},
-    {"id": "c-clock-w", "label": "since the Sun vanished", "clock": "whoa", "fmt": "clock", "t0": B["whoa"]["t0"], "t1": t_arr + 1.6, "at": [0.5, 0.245], "lit": T_ARR, "stop": T_ARR},
+    {"id": "c-clock", "label": "since the Sun vanished", "clock": "diagram", "fmt": "clock", "t0": t_off, "t1": B["why"]["t0"], "at": [0.5, 0.255]},
+    {"id": "c-clock-w", "label": [[0.0, "since the Sun vanished"], [t_arr, "the news took"]], "clock": "whoa", "fmt": "clock", "t0": B["whoa"]["t0"], "t1": B["takeaway"]["t0"], "at": [[0.0, [0.5, 0.245]], [t_w2, [0.37, 0.475]]], "lit": T_ARR, "stop": T_ARR},   # 8:20 holds, lit, through the payoff, in the clear middle-left of the news shot
     {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:two"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
     # the readout (the channel's segment): light time for this episode's distance, then the galaxy's
     {"id": "c-read-au", "label": "light time · Sun to Earth", "fmt": "text", "text": "8 min 20 s", "t0": A("vo07:Light"), "t1": t_j0 + 0.2, "at": [0.5, 0.2]},

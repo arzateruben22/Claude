@@ -17,9 +17,8 @@ const CSS = `
 .lm-ering { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
 .lm-band { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; opacity: 0;
   background: linear-gradient(180deg, rgba(8, 10, 28, 0) 0%, rgba(8, 10, 28, .74) 26%, rgba(8, 10, 28, .74) 74%, rgba(8, 10, 28, 0) 100%); }
-.hud-counter.lm-read .lb { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 2.3vmin; color: var(--teal); }
+.hud-counter.lm-read .lb { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 2.6vmin; color: var(--teal); }
 .hud-counter.lm-read .v { font-size: 7.2vmin; }
-.hud-counter.lm-clock .lb { font-size: 2.6vmin; }
 `;
 let injected = false;
 export const injectCss = () => {
