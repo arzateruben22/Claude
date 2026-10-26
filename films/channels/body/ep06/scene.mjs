@@ -222,6 +222,7 @@ const hud = createHud({ camera });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const tPulse = pulseLine({ width: Math.round(330 * S1), height: Math.round(70 * S1), at: 0.3 });
+tPulse.el.style.width = `${Math.round(330 * S1)}px`;   // its own width: .mi-pulse is width 100% of the title box (~840 px), which scaled a narrow line ×2.5–4 into a thick bar below the title
 titleEl.appendChild(tPulse.el);
 const wp = (k, p) => [p[0] + PLACE[k][0], p[1] + PLACE[k][1], p[2] + PLACE[k][2]];
 const ANCH = {

@@ -181,7 +181,7 @@ LABELS = [
     {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Returning"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
     {"id": "redlight", "text": "red light", "color": "#FF6A3D", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
     {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1, "fixed": True},
-    {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:lungs"), "t1": SLOW0, "shot": "lung", "side": 1},
+    {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:blood"), "t1": A("vo05:lungs", 0.4), "shot": "lung", "side": 1},   # gone before the push-in carries its anchor off the top (under the badge)
     {"id": "arrive", "text": "arriving: darker", "color": "deoxy", "mark": "dot", "at": "incoming", "t0": A("vo06:The", 0.0), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "lung", "side": 1},
     {"id": "leave", "text": "leaving: brighter", "color": "oxy", "mark": "dot", "at": "outgoing", "t0": A("vo06:count"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "lung", "side": -1},
     {"id": "node", "text": "gap in the insulation", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo08:crawl"), "t1": EC, "shot": "nerve", "side": 1},

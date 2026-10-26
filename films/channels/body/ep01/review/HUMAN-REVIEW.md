@@ -10,7 +10,7 @@
   name the disease; the cause is hemoglobin S, not the dimple, and the line doesn't say otherwise.
 - **The sickle cell on screen.** On "jam" the camera looks back down the capillary the hero left: a stylised
   crescent (8.6 µm tip to tip) is lodged there and the normal cells behind it queue against it. Labelled "sickle
-  cell", badged "illustration: a sickle cell". A real sickled cell's shape varies; this is one drawn crescent.
+  cell", badged "illustration · not to scale". A real sickled cell's shape varies; this is one drawn crescent.
 - **"About seven and a half micrometers"** (c2), so the voice agrees with the 7.5 µm pill shown at the same moment;
   **"The tightest vessels are about three micrometers"** (c10: the noun was missing after the silent hold).
 - **c8** now cites the peer-reviewed paper (Cell Microbiology 23:e13270), not its bioRxiv preprint.

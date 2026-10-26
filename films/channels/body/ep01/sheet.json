@@ -75,23 +75,39 @@
   {
    "t": 6.466666666666667,
    "kind": "label",
-   "tag": "rbc"
+   "tag": "rbc",
+   "pos": [
+    0.669,
+    0.517
+   ]
   },
   {
    "t": 8.8,
    "kind": "scale",
-   "tag": "cell"
+   "tag": "cell",
+   "pos": [
+    0.154,
+    0.589
+   ]
   },
   {
    "t": 12.166666666666666,
    "kind": "label",
-   "tag": "nonuc"
+   "tag": "nonuc",
+   "pos": [
+    0.362,
+    0.398
+   ]
   },
   {
    "t": 17.583333,
    "kind": "badge",
    "tag": "nts-tree",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.191
+   ]
   },
   {
    "t": 17.6,
@@ -102,7 +118,11 @@
   {
    "t": 21.4,
    "kind": "label",
-   "tag": "capillary"
+   "tag": "capillary",
+   "pos": [
+    0.313,
+    0.387
+   ]
   },
   {
    "t": 22.316666,
@@ -119,7 +139,11 @@
   {
    "t": 30.933333333333334,
    "kind": "label",
-   "tag": "dimple"
+   "tag": "dimple",
+   "pos": [
+    0.618,
+    0.4
+   ]
   },
   {
    "t": 35.733333333333334,
@@ -141,12 +165,20 @@
   {
    "t": 39.833333333333336,
    "kind": "scale",
-   "tag": "vessel"
+   "tag": "vessel",
+   "pos": [
+    0.295,
+    0.589
+   ]
   },
   {
    "t": 41.9,
    "kind": "label",
-   "tag": "ghostw"
+   "tag": "ghostw",
+   "pos": [
+    0.64,
+    0.338
+   ]
   },
   {
    "t": 43.05,
@@ -157,12 +189,20 @@
   {
    "t": 45.666666666666664,
    "kind": "counter.show",
-   "tag": "life"
+   "tag": "life",
+   "pos": [
+    0.458,
+    0.235
+   ]
   },
   {
    "t": 45.949999999999996,
    "kind": "scale",
-   "tag": "net"
+   "tag": "net",
+   "pos": [
+    0.319,
+    0.589
+   ]
   },
   {
    "t": 47.06666666666667,
@@ -185,18 +225,20 @@
    "t": 53.8,
    "kind": "badge",
    "tag": "ill-sickle",
-   "text": "illustration: a sickle cell"
+   "text": "illustration · not to scale",
+   "pos": [
+    0.289,
+    0.191
+   ]
   },
   {
    "t": 54.6,
    "kind": "label",
-   "tag": "sickle"
-  },
-  {
-   "t": 54.63333333333333,
-   "kind": "badge",
-   "tag": "nts-o2",
-   "text": "not to scale"
+   "tag": "sickle",
+   "pos": [
+    0.238,
+    0.402
+   ]
   },
   {
    "t": 54.93333333333333,
@@ -207,7 +249,11 @@
   {
    "t": 56.06666666666667,
    "kind": "label",
-   "tag": "o2"
+   "tag": "o2",
+   "pos": [
+    0.7,
+    0.205
+   ]
   },
   {
    "t": 58.4,
@@ -222,8 +268,22 @@
   },
   {
    "t": 59.099999999999994,
+   "kind": "badge",
+   "tag": "nts-o2",
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.191
+   ]
+  },
+  {
+   "t": 59.099999999999994,
    "kind": "counter.show",
-   "tag": "tally"
+   "tag": "tally",
+   "pos": [
+    0.458,
+    0.29
+   ]
   },
   {
    "t": 59.2,
@@ -270,7 +330,11 @@
    "t": 66.2,
    "kind": "badge",
    "tag": "nts-in",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.198,
+    0.191
+   ]
   },
   {
    "t": 68.0,
@@ -325,5 +389,16 @@
    "t": 65.1,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "rbc": 6.5,
+  "nonuc": 12.2,
+  "capillary": 21.4333,
+  "dimple": 30.9667,
+  "ghostw": 41.9333,
+  "sickle": 54.6333,
+  "o2": 56.1,
+  "life": 45.7,
+  "tally": 59.1333
+ }
 }

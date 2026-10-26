@@ -204,8 +204,10 @@ LIFE = {"t0": A("vo05:about#2", -0.2), "keys": [[A("vo05:about#2"), 0], [A("vo05
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.25, "rate": 2_000_000, "label": "new red cells while you watched"}   # c13: 2,000,000 × t from frame 0
 BADGES = [
     {"id": "nts-tree", "text": "not to scale", "t0": CUT["tree"], "t1": CUT["road"] - 0.3},
-    {"id": "ill-sickle", "text": "illustration: a sickle cell", "t0": A("vo06:jam", -0.6), "t1": B["meanwhile"]["t0"]},   # while the camera is on the lodged crescent
-    {"id": "nts-o2", "text": "not to scale", "t0": A("vo06:oxygen", -0.3), "t1": CUT["tease"] - 0.3},
+    # rule 8: at most two notes in the corner (the clock's speed note is the other): one note while the camera is on the
+    # lodged crescent and the oversized O₂, then "not to scale" alone
+    {"id": "ill-sickle", "text": "illustration · not to scale", "t0": A("vo06:jam", -0.6), "t1": B["meanwhile"]["t0"]},
+    {"id": "nts-o2", "text": "not to scale", "t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.3},
     {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
 TITLE = {"series": "Meanwhile, Inside · No. 01", "title": "Single *file*", "t1": round(A("vo01:Because") + 0.35, 4), "sig": 0.0, "y": 0.17}
