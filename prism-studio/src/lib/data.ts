@@ -1,13 +1,16 @@
 // Read models for the screens. Server-only: every function here runs in a server component or action.
 import "server-only";
-import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, or, sql } from "drizzle-orm";
-import { db } from "@/db/client";
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, or, sql, type SQL } from "drizzle-orm";
+import { db, type DB } from "@/db/client";
 import * as S from "@/db/schema";
 import { settings } from "@/domain/core";
 import { channelXp, requirementsFor } from "@/domain/living";
 import { rewardBalances } from "@/domain/rewards";
 import { currentApproval } from "@/domain/approvals";
-import { addDays, localDate, zonedTimeToUtc } from "@/domain/time";
+import { OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
+import { slotsForDate } from "@/domain/schedule";
+import { addDays, formatLocal, localDate, zonedTimeToUtc } from "@/domain/time";
+import { INSTAGRAM_SLUG } from "@/lib/rig";
 
 export type Channel = typeof S.channels.$inferSelect;
 export type Destination = typeof S.destinations.$inferSelect;
@@ -79,6 +82,29 @@ export async function reviewQueue() {
   }));
 }
 
+const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
+
+/** Publications with everything a task needs: the episode, account, export, live approval, render and channel. */
+async function loadTasks(d: DB, where: SQL | undefined) {
+  const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations, x: S.platformExports })
+    .from(S.publications)
+    .innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
+    .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+    .leftJoin(S.platformExports, eq(S.platformExports.id, S.publications.exportId))
+    .where(where)
+    .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
+  const chans = await d.select().from(S.channels);
+  const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
+  const vers = rows.length ? await d.select().from(S.versions).where(inArray(S.versions.id, rows.flatMap((r) => (r.x ? [r.x.versionId] : [])).concat(["00000000-0000-0000-0000-000000000000"]))) : [];
+  return Promise.all(rows.map(async (r) => {
+    const approval = r.x ? await currentApproval(d, r.x.id, r.dest.id) : null;
+    const version = r.x ? vers.find((v) => v.id === r.x!.versionId) ?? null : null;
+    const channel = chans.find((c) => c.id === r.e.channelId)!;
+    const connected = r.dest.publishMethod === "api" && conns.some((c) => c.destinationId === r.dest.id && c.status === "connected");
+    return { ...r, approval, version, channel, connected };
+  }));
+}
+
 /** Upload Desk: every publication that still needs the owner, grouped by when it's due. */
 export async function uploadTasks() {
   const d = db();
@@ -86,23 +112,7 @@ export async function uploadTasks() {
   const today = localDate(new Date(), s.timezone);
   const endOfToday = zonedTimeToUtc(addDays(today, 1), "00:00", s.timezone);
   const startOfToday = zonedTimeToUtc(today, "00:00", s.timezone);
-  const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations, x: S.platformExports })
-    .from(S.publications)
-    .innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
-    .leftJoin(S.platformExports, eq(S.platformExports.id, S.publications.exportId))
-    .where(or(inArray(S.publications.status, ["planned", "ready", "handed_off"]), and(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform"]), gte(S.publications.reportedAt, startOfToday))))
-    .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
-  const chans = await d.select().from(S.channels);
-  const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
-  const vers = rows.length ? await d.select().from(S.versions).where(inArray(S.versions.id, rows.flatMap((r) => (r.x ? [r.x.versionId] : [])).concat(["00000000-0000-0000-0000-000000000000"]))) : [];
-  const tasks = await Promise.all(rows.map(async (r) => {
-    const approval = r.x ? await currentApproval(d, r.x.id, r.dest.id) : null;
-    const version = r.x ? vers.find((v) => v.id === r.x!.versionId) ?? null : null;
-    const channel = chans.find((c) => c.id === r.e.channelId)!;
-    const connected = r.dest.publishMethod === "api" && conns.some((c) => c.destinationId === r.dest.id && c.status === "connected");
-    return { ...r, approval, version, channel, connected };
-  }));
+  const tasks = await loadTasks(d, or(inArray(S.publications.status, [...OPEN_STATUSES]), and(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform"]), gte(S.publications.reportedAt, startOfToday))));
   const done = tasks.filter((t) => ["owner_reported", "scheduled_on_platform"].includes(t.p.status));
   const open = tasks.filter((t) => !done.includes(t));
   return {
@@ -191,4 +201,190 @@ export async function homeView() {
   const unseenAch = await d.select({ ev: S.achievementEvents, rule: S.milestoneRules }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
   return { worlds, tasks, reviewCount: review[0]?.n ?? 0, rewards: rv, unseenEvolutions: unseenEv, unseenAchievements: unseenAch, onboarding: { done: onb.filter((o) => o.done).length, total: onb.length } };
+}
+
+// ── the monitor wall ("/") and each monitor's extension ("/m/[slug]") ─────────────────────────────────────────
+
+export type Task = Awaited<ReturnType<typeof loadTasks>>[number];
+/** One post for one account: a planned publication, or (Instagram only) the next episode in rotation, not planned yet. */
+export type PostItem = Omit<Task, "p"> & { p: Task["p"] | null };
+export type Led = "ready" | "review" | "off";
+export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "needs_approval" | "unplanned" | "empty" };
+export type MonitorCard = {
+  slug: string; kind: "channel" | "instagram"; href: string; name: string; label: string; color: string; colorInk: string;
+  cover: string | null; status: string; led: Led; ledLabel: string; slots?: IgSlot[];
+};
+
+const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
+const plainName = (name: string) => name.replace(/ \(name TBD\)$/, "");
+const PLATFORM_NAME = { youtube: "YouTube", tiktok: "TikTok", instagram: "Instagram" } as const;
+const INSTAGRAM_LOOK = { color: "#C9CED6", colorInk: "#E4E7EC", label: "INSTAGRAM" };   // neutral pale silver, not a channel colour
+
+/** The account's official upload page: the saved link, a Studio link built from a verified YouTube id, or the generic one. */
+export function uploadUrlFor(dest: Destination) {
+  return dest.uploadUrl || (dest.platform === "youtube" && dest.platformAccountId ? youtubeStudioFor(dest.platformAccountId) : OFFICIAL[dest.platform].upload);
+}
+
+/** The picture for a post: the export's own cover when one is set, else the render's poster frame. */
+export const coverOf = (t: Pick<PostItem, "x" | "version">) => t.x?.coverPath || t.version?.posterPath || null;
+
+/** A ready post has a live approval of the current render's exact export. */
+export const isReady = (t: Pick<PostItem, "approval" | "x" | "version">) => !!t.approval && !!t.x && !t.version?.superseded;
+
+/** The current render's export for one platform, per episode (non-demo). */
+async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram", channelIds?: string[]) {
+  return d.select({ e: S.episodes, x: S.platformExports, version: S.versions }).from(S.platformExports)
+    .innerJoin(S.versions, eq(S.versions.id, S.platformExports.versionId)).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
+    .where(and(eq(S.platformExports.platform, platform), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false),
+      channelIds ? inArray(S.episodes.channelId, channelIds.length ? channelIds : ["00000000-0000-0000-0000-000000000000"]) : undefined))
+    .orderBy(asc(S.episodes.number));
+}
+
+/**
+ * The shared Instagram's next episodes, in the order planning would take them: the channel after the last one placed
+ * on Instagram, then round the channels, oldest unplaced episode first. Display only: this mirrors planDays
+ * (src/domain/schedule.ts), which is what actually places posts and never puts an episode on Instagram twice.
+ */
+async function instagramRotation(d: DB, ig: Destination, limit: number): Promise<PostItem[]> {
+  const chans = await d.select().from(S.channels).where(eq(S.channels.paused, false)).orderBy(asc(S.channels.sort));
+  const [last] = await d.select({ channelId: S.episodes.channelId }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
+    .where(and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"))).orderBy(desc(S.publications.scheduledFor)).limit(1);
+  const placed = new Set((await d.select({ id: S.publications.episodeId }).from(S.publications).where(eq(S.publications.destinationId, ig.id))).map((r) => r.id));
+  const rows = (await currentExports(d, "instagram")).filter((r) => !placed.has(r.e.id));
+  const queues = new Map(chans.map((c) => [c.id, rows.filter((r) => r.e.channelId === c.id)]));
+  const out: PostItem[] = [];
+  let k = last ? chans.findIndex((c) => c.id === last.channelId) + 1 : 0;
+  while (out.length < limit && [...queues.values()].some((q) => q.length)) {
+    const ch = chans[((k % chans.length) + chans.length) % chans.length];
+    const r = queues.get(ch.id)!.shift();
+    if (r) out.push({ p: null, e: r.e, dest: ig, x: r.x, version: r.version, channel: ch, connected: false, approval: await currentApproval(d, r.x.id, ig.id) });
+    k++;
+  }
+  return out;
+}
+
+/** Today's Instagram slots (2 a day by default, studio_settings.instagram_daily), each with its post or the next in rotation. */
+async function instagramToday(d: DB, ig: Destination | undefined, tz: string, today: string) {
+  if (!ig) return { slots: [] as IgSlot[], rotation: [] as PostItem[] };
+  const start = zonedTimeToUtc(today, "00:00", tz), end = zonedTimeToUtc(addDays(today, 1), "00:00", tz);
+  const times = (await slotsForDate(d, today)).filter((s) => s.kind === "instagram").map((s) => s.at);
+  const todays = await loadTasks(d, and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end)));
+  const at = [...new Set([...times, ...todays.map((t) => t.p.scheduledFor!)].map((x) => +x))].sort((a, b) => a - b).map((x) => new Date(x));
+  const rotation = await instagramRotation(d, ig, Math.max(4, at.length));
+  let next = 0;
+  const slots: IgSlot[] = at.map((when) => {
+    const t = todays.find((x) => +x.p.scheduledFor! === +when);
+    if (t) return { at: when, item: t, state: POSTED.includes(t.p.status) ? "posted" : isReady(t) ? "ready" : "needs_approval" };
+    const cand = rotation[next++] ?? null;
+    return { at: when, item: cand, state: cand ? "unplanned" : "empty" };
+  });
+  return { slots, rotation };
+}
+
+/** The six monitors: each one's cover, one status line and its status light. */
+export async function rigView() {
+  const d = db();
+  const s = await settings(d);
+  const tz = s.timezone, today = localDate(new Date(), tz);
+  const endOfToday = zonedTimeToUtc(addDays(today, 1), "00:00", tz);
+  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  const tasks = (await loadTasks(d, inArray(S.publications.status, [...OPEN_STATUSES]))).filter((t) => !t.e.isDemo && !t.p.simulated);
+  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes).where(eq(S.episodes.isDemo, false));
+  const renders = [...await currentExports(d, "youtube"), ...await currentExports(d, "tiktok")];
+  const when = (at: Date) => formatLocal(at, tz, at < endOfToday ? { hour: "numeric", minute: "2-digit" } : { weekday: "short", hour: "numeric", minute: "2-digit" });
+
+  const monitors: MonitorCard[] = chans.map((c) => {
+    const mine = tasks.filter((t) => t.channel.id === c.id && !t.dest.shared);
+    const scheduled = mine.filter((t) => t.p.scheduledFor);
+    const dueToday = scheduled.filter((t) => t.p.scheduledFor! < endOfToday);
+    const chEps = eps.filter((e) => e.channelId === c.id);
+    const toReview = chEps.filter((e) => ["ready_for_review", "correction_needed"].includes(e.state));
+    const next = scheduled[0] ?? null;
+    const reviewRender = renders.find((r) => toReview.some((e) => e.id === r.e.id));
+    const anyRender = renders.find((r) => r.e.channelId === c.id);
+    const cover = (next ? coverOf(next) : null) ?? (mine[0] ? coverOf(mine[0]) : null) ?? (reviewRender ? coverOf(reviewRender) : null) ?? (anyRender ? coverOf(anyRender) : null);
+    const status = next ? `Next: ${next.e.title} · ${PLATFORM_NAME[next.dest.platform]} ${when(next.p.scheduledFor!)}`
+      : toReview.length ? `${toReview.length} ready to review`
+      : mine.length ? `${mine.length} to schedule`
+      : chEps.length ? `${chEps.length} episode${chEps.length === 1 ? "" : "s"} in production`
+      : "No episodes yet";
+    const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
+    return {
+      slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, status, led,
+      ledLabel: led === "ready" ? "ready to post today" : led === "review" ? "needs review" : "nothing queued today",
+    };
+  });
+
+  const { slots } = await instagramToday(d, ig, tz, today);
+  const posted = slots.filter((x) => x.state === "posted").length, ready = slots.filter((x) => x.state === "ready").length;
+  const waiting = slots.filter((x) => x.state === "needs_approval").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
+  const igStatus = !ig ? "Instagram isn't set up" : s.globalPause ? "Publishing is paused" : !slots.length ? "No Instagram slots today"
+    : posted === slots.length ? `Today's ${slots.length} posted`
+    : ready ? `${ready} ready to post today${posted ? ` · ${posted} posted` : ""}`
+    : waiting ? `${waiting} today need${waiting === 1 ? "s" : ""} approval`
+    : unplanned ? `${slots.length} slots today · not planned yet` : "Nothing in rotation yet";
+  const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
+  monitors.push({
+    slug: INSTAGRAM_SLUG, kind: "instagram", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
+    cover: slots.map((x) => (x.item ? coverOf(x.item) : null)).find(Boolean) ?? null, status: igStatus, led: igLed,
+    ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs approval" : "nothing queued today", slots,
+  });
+  const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
+  const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
+    .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
+  const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
+    .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
+  return { tz, today, monitors, reviewCount, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length, paused: s.globalPause, stopExternal: s.stopExternalActions };
+}
+export type RigView = Awaited<ReturnType<typeof rigView>>;
+
+/** A channel's extension: its accounts' next posts, its queue, its series. */
+export async function channelExtension(slug: string) {
+  const d = db();
+  const s = await settings(d);
+  const c = await channelBySlug(slug);
+  if (!c) return null;
+  const dests = (await d.select().from(S.destinations).where(eq(S.destinations.channelId, c.id)))
+    .sort((a, b) => ["youtube", "tiktok"].indexOf(a.platform) - ["youtube", "tiktok"].indexOf(b.platform));
+  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  const tasks = (await loadTasks(d, and(inArray(S.publications.status, [...OPEN_STATUSES]), eq(S.episodes.channelId, c.id)))).filter((t) => !t.p.simulated);
+  const accounts = dests.map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
+  const eps = await episodesFor(c.id);
+  const ser = await d.select().from(S.series).where(eq(S.series.channelId, c.id)).orderBy(asc(S.series.sort));
+  const series = ser.map((x) => ({ series: x, episodes: eps.filter((e) => e.seriesId === x.id).sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number)) }));
+  const loose = eps.filter((e) => !e.seriesId || !ser.some((x) => x.id === e.seriesId));
+  return {
+    tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts,
+    upcoming: tasks.filter((t) => !accounts.some((a) => a.next?.p?.id === t.p.id)).slice(0, 16), igAccount: ig ?? null,
+    series, loose, reviewCount: eps.filter((e) => ["ready_for_review", "correction_needed"].includes(e.state)).length,
+  };
+}
+
+/** The shared Instagram's extension: today's slots, the rotation across series, and the never-repeats ledger. */
+export async function instagramExtension() {
+  const d = db();
+  const s = await settings(d);
+  const tz = s.timezone, today = localDate(new Date(), tz);
+  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const { slots, rotation } = await instagramToday(d, ig, tz, today);
+  const upcoming = ig ? (await loadTasks(d, and(eq(S.publications.destinationId, ig.id), inArray(S.publications.status, [...OPEN_STATUSES]), gte(S.publications.scheduledFor, zonedTimeToUtc(addDays(today, 1), "00:00", tz))))).slice(0, 14) : [];
+  const pubs = ig ? await d.select({ episodeId: S.publications.episodeId, status: S.publications.status }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
+  const exportsIg = await currentExports(d, "instagram");
+  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId }).from(S.episodes).where(eq(S.episodes.isDemo, false));
+  const ledger = chans.map((c) => {
+    const ready = exportsIg.filter((r) => r.e.channelId === c.id);
+    const statusOf = (id: string) => pubs.filter((p) => p.episodeId === id).map((p) => p.status);
+    const posted = ready.filter((r) => statusOf(r.e.id).some((st) => POSTED.includes(st))).length;
+    const planned = ready.filter((r) => !statusOf(r.e.id).some((st) => POSTED.includes(st)) && statusOf(r.e.id).some((st) => (OPEN_STATUSES as readonly string[]).includes(st))).length;
+    const never = ready.filter((r) => !statusOf(r.e.id).length).length;
+    return { channel: c, name: plainName(c.name), episodes: eps.filter((e) => e.channelId === c.id).length, ready: ready.length, posted, planned, never };
+  });
+  const sum = (k: "ready" | "posted" | "planned" | "never" | "episodes") => ledger.reduce((a, r) => a + r[k], 0);
+  return {
+    tz, today, ig: ig ?? null, uploadUrl: ig ? uploadUrlFor(ig) : OFFICIAL.instagram.upload, daily: s.instagramDaily, paused: s.globalPause, stopExternal: s.stopExternalActions,
+    slots, rotation: rotation.filter((r) => !slots.some((x) => x.item?.e.id === r.e.id)), upcoming, ledger,
+    totals: { episodes: sum("episodes"), ready: sum("ready"), posted: sum("posted"), planned: sum("planned"), never: sum("never") },
+  };
 }

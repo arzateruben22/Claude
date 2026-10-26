@@ -1,5 +1,5 @@
 // A small, consistent line-icon set (24px grid, 1.8 stroke), drawn here so the app has no icon dependency.
-export type IconName = "home" | "upload" | "review" | "calendar" | "trophy" | "chart" | "link" | "queue" | "settings" | "copy" | "share" | "download" | "external" | "check" | "spark" | "lock";
+export type IconName = "home" | "upload" | "review" | "calendar" | "trophy" | "chart" | "link" | "queue" | "settings" | "copy" | "share" | "download" | "external" | "check" | "spark" | "lock" | "wall" | "more" | "back";
 const P: Record<IconName, string> = {
   home: "M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5.5h-5V21H5a1 1 0 0 1-1-1z",
   upload: "M12 16V5m0 0-4.5 4.5M12 5l4.5 4.5M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15",
@@ -17,6 +17,9 @@ const P: Record<IconName, string> = {
   check: "m5 12.5 4.5 4.5L19 7.5",
   spark: "M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3",
   lock: "M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z",
+  wall: "M3.5 7h4.5v10H3.5zM16 7h4.5v10H16zM9.5 4.5h5v4h-5zM9.5 10.5h5v5h-5zM12 15.5V20m-2.5 0h5",
+  more: "M6 10.6a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm6 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm6 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Z",
+  back: "M14.5 6 8.5 12l6 6",
 };
 export function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
   return (
