@@ -60,7 +60,10 @@ const quick = opt("quick", false) === true;
 const stills = opt("at", "") ? String(opt("at")).split(",").map(Number) : null;   // --at 4,9.5: those moments as PNGs in review/, nothing else
 const verify = opt("verify", false) === true;
 const fps = quick ? 6 : Number(opt("fps", 30));
-const SIZES = { "16x9": [1280, 720], "9x16": [720, 1280] };
+// --hd renders at 1080p (1920×1080, and 1080×1920 for the 9:16 cut): sharper on a phone, where the
+// course page crops the clip to 4:3 and a retina screen shows every pixel; it takes about twice as long
+const hd = opt("hd", false) === true;
+const SIZES = hd ? { "16x9": [1920, 1080], "9x16": [1080, 1920] } : { "16x9": [1280, 720], "9x16": [720, 1280] };
 const OUT = { "16x9": path.join(root, "img/school/video"), "9x16": path.join(root, "marketing/ads/out/video") };
 const review = path.join(here, "review"), logFile = path.join(here, "render-log.json");
 fs.mkdirSync(review, { recursive: true });
@@ -70,9 +73,12 @@ const runtime = fs.readFileSync(path.join(here, "motion.js"), "utf8");
 // the solid scenes share one studio set (studio3d.js): rounded blocks, a warm floor, a drifting camera.
 // Every box a scene makes becomes a SoftBox, then the set goes in right after the three.js import.
 const studio3d = fs.readFileSync(path.join(here, "studio3d.js"), "utf8");
-// the skin (skin3d.js): the scenes' grids of cells become one piece of tissue, shaded as skin;
-// every InstancedMesh of cells a scene makes becomes a stand-in that writes into it. --cubes renders the old blocks.
-const skin3d = opt("cubes", false) === true ? "" : fs.readFileSync(path.join(here, "skin3d.js"), "utf8");
+// the cells' look, --look blocks|tissue|cubes. blocks (skinblock.js, the default): the rounded cubes stay,
+// each with a touch of skin on its surface (lines, pores, tone, a velvet rim). tissue (skin3d.js): the
+// grid of cells melts into one piece of living skin (softer, and four times slower to render). cubes:
+// the plain blocks (--cubes says the same).
+const look = opt("cubes", false) === true ? "cubes" : String(opt("look", "blocks"));
+const skin3d = look === "cubes" ? "" : fs.readFileSync(path.join(here, look === "tissue" ? "skin3d.js" : "skinblock.js"), "utf8");
 // the film finish (cinema3d.js, from the cinema kit on the made-with-claude-film branch): each frame a
 // short exposure with real motion blur, focus where the scene says, bloom and a filmic tone curve.
 // It goes in before the studio set; --plain renders without it.
@@ -190,7 +196,7 @@ for (const scene of Object.values(SCENES)) {
     const file = path.join(tmp, `${scene.id}-${aspect}.html`);
     fs.writeFileSync(file, page(scene, W, H));
     const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
-    if (opt("skin", "")) await pg.addInitScript((o) => { window.SKIN_OPTS = o; }, Object.fromEntries(String(opt("skin")).split(",").map((kv) => { const [k, v] = kv.split("="); return [k, isNaN(Number(v)) ? v : Number(v)]; })));   // --skin bump=0,res=0.3: the skin's knobs, for tuning
+    if (opt("skin", "")) await pg.addInitScript((o) => { window.SKIN_OPTS = window.SKINBLOCK_OPTS = o; }, Object.fromEntries(String(opt("skin")).split(",").map((kv) => { const [k, v] = kv.split("="); return [k, isNaN(Number(v)) ? v : Number(v)]; })));   // --skin bump=0,res=0.3: the skin's knobs, for tuning (skinblock: lines, pores, bump, rim, dew)
     await pg.addInitScript(() => { let s = 1234567; Math.random = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }; const T0 = 1700000000000; Date.now = () => T0; performance.now = () => 0; window.requestAnimationFrame = () => 0; });
     const errors = [];
     pg.on("pageerror", (e) => errors.push(e.message));

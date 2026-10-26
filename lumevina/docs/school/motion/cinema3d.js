@@ -153,7 +153,7 @@ const CINEMA = (window.CINEMA = {
         : typeof STUDIO === "undefined" ? v.set(0, 0, 0) : STUDIO.hasFocus ? STUDIO.focus : STUDIO.center;
       const focusDist = Math.max(0.5, camera.position.distanceTo(fp));
       const fstop = F.fstop == null ? CINEMA.fstop : F.fstop;
-      const U = { focusDist, cocScale: fstop * T.H * 0.034, maxCoc: T.H * CINEMA.maxCoc, nearClip: camera.near, farClip: camera.far };
+      const U = { focusDist, cocScale: fstop * (CINEMA.dofScale == null ? 1 : CINEMA.dofScale) * T.H * 0.034, maxCoc: T.H * CINEMA.maxCoc, nearClip: camera.near, farClip: camera.far };
       for (const mat of [T.tileMat, T.blurMat, T.compMat]) { for (const k in U) mat.uniforms[k].value = U[k]; mat.uniforms.tDepth.value = T.depth.texture; }
       pass(r, T.tileMat, T.tile);
       T.dilMat.uniforms.tTile.value = T.tile.texture; pass(r, T.dilMat, T.dil);

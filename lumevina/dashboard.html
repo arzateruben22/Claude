@@ -40,6 +40,19 @@
       letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-45); margin-top: 0.35rem; }
     .period { font-size: 0.8rem; color: var(--ink-45); text-align: right; }
     .period strong { color: var(--ink-70); font-weight: 500; }
+    /* the quick bar (under the demo tag): sticks to the top, scrolls sideways on a phone */
+    .jump { position: sticky; top: 0; z-index: 20; display: flex; gap: 0.45rem; overflow-x: auto; scrollbar-width: none;
+      margin: -1rem calc(-1 * clamp(1rem, 4vw, 2.5rem)) 1.6rem; padding: 0.65rem clamp(1rem, 4vw, 2.5rem);
+      background: var(--ground); background: color-mix(in srgb, var(--ground) 90%, transparent);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--edge); }
+    .jump::-webkit-scrollbar { display: none; }
+    .jump a { flex: none; font-size: 0.84rem; font-weight: 500; color: var(--ink-70); text-decoration: none;
+      padding: 0.5rem 0.95rem; border-radius: 999px; border: 1px solid var(--edge); background: var(--card); }
+    .jump a.go { background: var(--plum); border-color: var(--plum); color: #fff; }
+    .jump a:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
+    .card[id], #priorities { scroll-margin-top: 4.4rem; }
+    .crm-hint { font-size: 0.85rem; color: var(--plum); background: var(--data-soft); border-radius: 12px; padding: 0.55rem 0.8rem; margin: -0.4rem 0 1rem; }
+    .crm-hint[hidden] { display: none; }
     .demo-tag { display: inline-block; margin: 0.9rem 0 2rem; font-size: 0.72rem; letter-spacing: 0.06em;
       color: var(--plum); background: var(--data-soft); border: 1px dashed rgba(74, 52, 42, 0.4);
       border-radius: 999px; padding: 0.35rem 0.9rem; }
@@ -651,6 +664,50 @@
     </header>
     <span class="demo-tag">Sample data — a preview of your live command center once bookings run through the site &amp; app</span>
 
+    <!-- ── the quick bar: her everyday tools one tap away, held at the top on a long scroll ── -->
+    <nav class="jump" aria-label="Go to">
+      <a class="go" href="#checkout">Check out a client</a>
+      <a href="#priorities">Today</a>
+      <a href="#clients">Clients</a>
+      <a href="#client-questions">Questions</a>
+      <a href="#inventory">Inventory</a>
+      <a href="#books">Books</a>
+    </nav>
+
+    <!-- ── Today: her priorities, ranked (js/studio-priorities.js; PRIORITIES.md) ── -->
+    <div class="card pr-card" id="priorities"></div>
+
+    <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
+         client, waitlist (js/studio-appointments.js). In v2 it stays hidden
+         and Settle visits below does the after-visit job. ── -->
+    <div class="card ap-card" id="appointments" hidden></div>
+
+    <!-- ── Client CRM ── -->
+    <div class="card crm-card" id="clients">
+      <div class="crm-head">
+        <div>
+          <h2>Clients</h2>
+          <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
+          <p class="crm-hint" id="crm-hint" hidden>Tap <b>Check out</b> on the client to add what they're taking and charge them, or <b>New sale</b> for someone who isn't listed.</p>
+        </div>
+        <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
+        <button type="button" class="bk-export" id="crm-sale-new">New sale</button>
+      </div>
+      <!-- a sale to someone not in the list yet (js/studio-sale.js) -->
+      <div class="crm-sale-top" id="crm-sale-top" hidden></div>
+      <form class="crm-new" id="crm-new" autocomplete="off">
+        <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
+        <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
+        <button class="bk-export" type="submit">Write a skin plan</button>
+        <p class="crm-new-status" id="crm-new-status" role="status"></p>
+      </form>
+      <ul class="crm-list" id="crm-list"></ul>
+      <div class="ap-import" id="clients-import" hidden></div>
+    </div>
+
+    <!-- ── Consults: the gate on the actives, and the online Skin Consult (js/studio-consults.js) ── -->
+    <div class="card cs-card" id="consults"></div>
+
     <!-- ── Lumevina Studio: this dashboard as an app on her phone ── -->
     <div class="card studio-card" id="studio">
       <h2>Lumevina Studio</h2>
@@ -672,17 +729,6 @@
       <h3 style="font-size:0.95rem;margin:0.6rem 0 0.2rem">Recent</h3>
       <ul class="st-feed" id="st-feed"></ul>
     </div>
-
-    <!-- ── Today: her priorities, ranked (js/studio-priorities.js; PRIORITIES.md) ── -->
-    <div class="card pr-card" id="priorities"></div>
-
-    <!-- ── Consults: the gate on the actives, and the online Skin Consult (js/studio-consults.js) ── -->
-    <div class="card cs-card" id="consults"></div>
-
-    <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
-         client, waitlist (js/studio-appointments.js). In v2 it stays hidden
-         and Settle visits below does the after-visit job. ── -->
-    <div class="card ap-card" id="appointments" hidden></div>
 
     <h2>This month at a glance</h2>
     <p class="sub">September 2026, compared with the month before.</p>
@@ -806,7 +852,7 @@
     </div>
 
     <!-- ── Bookkeeping & profit ── -->
-    <div class="card">
+    <div class="card" id="books">
       <div class="crm-head">
         <div>
           <h2>Bookkeeping &amp; profit</h2>
@@ -835,7 +881,7 @@
     </div>
 
     <!-- ── Glow Membership ── -->
-    <div class="card">
+    <div class="card" id="members">
       <div class="crm-head">
         <div>
           <h2>Glow Membership</h2>
@@ -968,28 +1014,6 @@
         <button class="bk-export" id="cal-ics">Download calendar (.ics)</button>
       </div>
       <p class="cal-note" id="cal-note"></p>
-    </div>
-
-    <!-- ── Client CRM ── -->
-    <div class="card crm-card">
-      <div class="crm-head">
-        <div>
-          <h2>Clients</h2>
-          <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
-        </div>
-        <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
-        <button type="button" class="bk-export" id="crm-sale-new">New sale</button>
-      </div>
-      <!-- a sale to someone not in the list yet (js/studio-sale.js) -->
-      <div class="crm-sale-top" id="crm-sale-top" hidden></div>
-      <form class="crm-new" id="crm-new" autocomplete="off">
-        <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
-        <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
-        <button class="bk-export" type="submit">Write a skin plan</button>
-        <p class="crm-new-status" id="crm-new-status" role="status"></p>
-      </form>
-      <ul class="crm-list" id="crm-list"></ul>
-      <div class="ap-import" id="clients-import" hidden></div>
     </div>
 
     <div class="proof">
@@ -2572,7 +2596,7 @@
       var saleBox = document.createElement("div");
       saleBox.className = "crm-plan crm-sale";
       saleBox.hidden = true;
-      detail.appendChild(saleBox);
+      detail.insertBefore(saleBox, detail.firstChild);   /* Check out opens right under the name, above the history */
       var planBox = document.createElement("div");
       planBox.className = "crm-plan";
       detail.appendChild(planBox);
@@ -2635,6 +2659,19 @@
       draw(this.value);
     });
     /* a sale to someone who isn't in the list yet: name, email, what they're taking */
+    /* the quick bar's "Check out a client" (and dashboard.html#checkout from the hub): to the client
+       list with a one-line hint; a tap also puts the cursor in the search, ready for a name */
+    var toCheckout = function (focus) {
+      var box = document.getElementById("clients");
+      document.getElementById("crm-hint").hidden = false;
+      box.scrollIntoView({ behavior: focus ? "smooth" : "auto", block: "start" });
+      if (focus) document.getElementById("crm-search").focus({ preventScroll: true });
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('a[href="#checkout"]'), function (a) {
+      a.addEventListener("click", function (e) { e.preventDefault(); try { history.replaceState(null, "", "#checkout"); } catch (x) { /* sandboxed */ } toCheckout(true); });
+    });
+    if (location.hash === "#checkout") setTimeout(function () { toCheckout(false); }, 400);
+
     document.getElementById("crm-sale-new").addEventListener("click", function () {
       var top = document.getElementById("crm-sale-top");
       if (!window.LumevinaStudioSale) return;

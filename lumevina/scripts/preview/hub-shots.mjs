@@ -19,7 +19,7 @@ const shots = [
   ["home", "site.html", PHONE],
   ["app", "app.html", PHONE],
   ["school", "file://" + path.join(root, "school.html") + "#learn-8-2", PHONE],
-  ["dash", "dashboard.html", DESK, "This month at a glance"],
+  ["dash-phone", "dashboard.html#checkout", PHONE],   // the client list, ready to check someone out
   ["blueprint", "blueprint.html", DESK, null, 5000],
   ["plan", "plan.html", DESK],
   ["shipping", "shipping.html", DESK],
