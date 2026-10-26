@@ -102,11 +102,12 @@ th_cut = TH0 + 2 * math.pi * tau(CLK["moon"], B["normal"]["t0"]) / P_ORB
 # the Moon sweeps about 112° in the normal and the change (×20,000, then ×120,000 with gravity off): it enters 60°
 # below the frame's right and leaves about 52° above it, on the side away from the spine and the notes
 TOPN = dict(TOP, az=math.degrees(th_cut) + 60.0)
-# the takeaway and the readout: turned so the Moon, where the readout holds it, sits 30° left of the top: its name and
-# the light ring's arrival clear of the "real speed of light" note, and its marker below the takeaway's speed note
-# while it runs there (8.5° on)
+# the takeaway and the readout: turned so the Moon, where the readout holds it, sits 15° left of the top: its name and
+# the light ring's arrival clear of the "real speed of light" note. The takeaway's run carries it 8.5° of that, so the
+# pull back turns only 6.5° (at 30° it turned 21.5° in 1.6 s, a whip)
 th_rd = TH0 + 2 * math.pi * tau(CLK["moon"], t_rd) / P_ORB
-TOPT = dict(TOP, az=math.degrees(th_rd) - 90.0 - 30.0)
+TOPT = dict(TOP, az=math.degrees(th_rd) - 90.0 - 15.0)
+assert abs(TOPT["az"] - CLOSE["az"]) < 8.0, (TOPT["az"], CLOSE["az"])
 t_end = A("vo08:Next", -0.25)
 t_weak = A("vo04:weaker")
 CAM = {
@@ -165,11 +166,12 @@ LABELS = [
     {"id": "l-moon-t", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(t_rd + 0.3, 4), "t1": round(t_end - 0.5, 4), "side": -1, "fixed": True},
     {"id": "l-ring", "text": "light in 1.3 s", "kind": "light", "anchor": "ring", "t0": round(A("vo07:one") + 1.3, 4), "t1": round(t_end - 0.5, 4), "side": 1},   # once the ring is there
 ]
-# Notes in one corner stack in this order, and hud.js tests even a note that is off screen against the other corner's
-# visible ones: a wide one pushed below the speed note drags every later note in its corner down a row. So the normal's
-# honesty note is two narrow tags (each clears the widest speed note, "120,000× faster", x 45–254 of 540 in the draft:
-# "Markers enlarged" x 267–450, "True scale" x 331–450, the shorter one below, where the orbit's top arc passes), and
-# the wide apple note comes last.
+# Notes in one corner stack in this order, and each is pushed below any visible note of the other corner made before
+# it: the speed note sat under the old wide scale tag and jumped up when it left. hud.js tests even a note that is off
+# screen, so a wide one pushed below the speed note drags every later note in its corner down a row. So the normal's
+# honesty note is two narrow tags (each clears the widest speed note, "120,000× faster", x 45–254 of 540 in the draft,
+# plus the 6 px gap: "Markers enlarged" x 267–450, "True scale" x 331–450, the shorter one below, where the orbit's top
+# arc passes), and the wide apple note comes last.
 BADGES = [
     {"id": "b-marks", "text": "markers enlarged", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},   # the rings round Earth and the Moon
     {"id": "b-true", "text": "true scale", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},

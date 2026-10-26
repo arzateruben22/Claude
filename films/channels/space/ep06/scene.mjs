@@ -114,6 +114,8 @@ for (const c of FILM.counters) {
   const lb = el.querySelector(".lb");                                          // the small label stays readable on the galaxy's grain
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   if (c.text && c.text.length > 12) { const v = el.querySelector(".v"); if (v) v.style.fontSize = "5.5vmin"; }
+  // "230 million" at full size is 11 × 0.68 em = 748 px round x 540, past the safe box's right edge (900): a little smaller
+  else if (c.text && c.text.length > 10 && !c.read) { const v = el.querySelector(".v"); if (v) v.style.fontSize = "8.5vmin"; }
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];

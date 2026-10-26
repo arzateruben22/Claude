@@ -54,7 +54,7 @@ t_jolt = A("vo04:jolt")
 CLK = {
     # still on "Sitting perfectly still"; one turn in 86 s. The spin waits while Earth is a dot in the orbit view (t_p1 to t_e1)
     # and behind the cabin (t_cab0 to t_cab1), so "you" stay on the face toward the camera in both Earth views (about 55° left
-    # of centre to 65° right) and come back from the cabin where they went in
+    # of centre to 45° right) and come back from the cabin where they went in
     "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_n, "rate": 1000.0}, {"t": t_p1, "rate": 0.0, "badge": None},
              {"t": t_e1, "rate": 1000.0}, {"t": t_cab0, "rate": 0.0, "badge": None}, {"t": t_cab1, "rate": 1000.0},
              {"t": t_zoom, "rate": 0.0, "badge": None}],
