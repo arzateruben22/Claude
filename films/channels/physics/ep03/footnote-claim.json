@@ -1,0 +1,11 @@
+{
+ "id": "c18",
+ "sentence": "Joule (1850): 772 foot-pounds warm a pound of water 1 °F, within 1% of today's value.",
+ "claim": "Joule's 1850 paper gives 772 foot-pounds as the work that raises a pound of water by 1 °F; the modern value is 778.2 ft·lbf/BTU, so his is 0.8% low.",
+ "source_url": "https://jimclifford.ca/philosophical-transactions-ocr-1665-1869/articles/jstor-108427/",
+ "source_title": "J. P. Joule, On the Mechanical Equivalent of Heat, Philosophical Transactions of the Royal Society 140 (1850) (OCR text)",
+ "accessed": "2026-10-25",
+ "verified_via": "search excerpt",
+ "status": "ok",
+ "note": "End-card footnote (on screen, not spoken). Excerpt: 'The paper gives 772 foot-pounds as the work needed to raise a pound of water by one degree Fahrenheit.' Computed: 772/778.17 = 0.992. The modern 778.17 ft·lbf per BTU (IT) is from the same search's comparison (4.1868 J/cal)."
+}

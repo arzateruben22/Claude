@@ -1,0 +1,564 @@
+{
+ "duration": 66.9333,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.5333,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.5333,
+   "t1": 13.0667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 13.0667,
+   "t1": 19.2,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 19.2,
+   "t1": 35.7333,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 35.7333,
+   "t1": 47.7333,
+   "energy": 0.8
+  },
+  {
+   "id": "measure",
+   "t0": 47.7333,
+   "t1": 56.8,
+   "energy": 0.3
+  },
+  {
+   "id": "takeaway",
+   "t0": 56.8,
+   "t1": 61.8667,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 61.8667,
+   "t1": 66.9333,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.5333
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 0.5158,
+   "kind": "strobe",
+   "tag": "hook:g14"
+  },
+  {
+   "t": 1.1666666666666667,
+   "kind": "label",
+   "tag": "hk-hand"
+  },
+  {
+   "t": 1.1667,
+   "kind": "time.slow",
+   "tag": "hook:freeze"
+  },
+  {
+   "t": 4.5333,
+   "kind": "section",
+   "id": "normal",
+   "t1": 13.0667
+  },
+  {
+   "t": 4.7666,
+   "kind": "contact",
+   "tag": "normal:release",
+   "pos": [
+    0.42,
+    0.25
+   ]
+  },
+  {
+   "t": 4.7666,
+   "kind": "strobe",
+   "tag": "normal:g0"
+  },
+  {
+   "t": 4.8166329999999995,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 5.0666,
+   "kind": "strobe",
+   "tag": "normal:g2"
+  },
+  {
+   "t": 5.1166,
+   "kind": "badge",
+   "tag": "air",
+   "text": "The bounces keep 56% each; air would take a little more."
+  },
+  {
+   "t": 5.3666,
+   "kind": "strobe",
+   "tag": "normal:g4"
+  },
+  {
+   "t": 5.6666,
+   "kind": "strobe",
+   "tag": "normal:g6"
+  },
+  {
+   "t": 5.933333333333334,
+   "kind": "label",
+   "tag": "nm-56"
+  },
+  {
+   "t": 5.9666,
+   "kind": "strobe",
+   "tag": "normal:g8"
+  },
+  {
+   "t": 6.1212,
+   "kind": "bounce",
+   "tag": "normal:land1",
+   "gain": -0.0
+  },
+  {
+   "t": 6.2666,
+   "kind": "strobe",
+   "tag": "normal:g10"
+  },
+  {
+   "t": 6.5666,
+   "kind": "strobe",
+   "tag": "normal:g12"
+  },
+  {
+   "t": 6.8666,
+   "kind": "strobe",
+   "tag": "normal:g14"
+  },
+  {
+   "t": 7.1666,
+   "kind": "strobe",
+   "tag": "normal:g16"
+  },
+  {
+   "t": 7.4666,
+   "kind": "strobe",
+   "tag": "normal:g18"
+  },
+  {
+   "t": 7.7666,
+   "kind": "strobe",
+   "tag": "normal:g20"
+  },
+  {
+   "t": 8.0666,
+   "kind": "strobe",
+   "tag": "normal:g22"
+  },
+  {
+   "t": 8.1531,
+   "kind": "bounce",
+   "tag": "normal:land2",
+   "gain": -3.0
+  },
+  {
+   "t": 8.266666666666667,
+   "kind": "label",
+   "tag": "nm-32"
+  },
+  {
+   "t": 8.3666,
+   "kind": "strobe",
+   "tag": "normal:g24"
+  },
+  {
+   "t": 8.6666,
+   "kind": "strobe",
+   "tag": "normal:g26"
+  },
+  {
+   "t": 8.9666,
+   "kind": "strobe",
+   "tag": "normal:g28"
+  },
+  {
+   "t": 9.2666,
+   "kind": "strobe",
+   "tag": "normal:g30"
+  },
+  {
+   "t": 9.5,
+   "kind": "label",
+   "tag": "nm-18"
+  },
+  {
+   "t": 9.5666,
+   "kind": "strobe",
+   "tag": "normal:g32"
+  },
+  {
+   "t": 9.677,
+   "kind": "bounce",
+   "tag": "normal:land3",
+   "gain": -6.0
+  },
+  {
+   "t": 9.8666,
+   "kind": "strobe",
+   "tag": "normal:g34"
+  },
+  {
+   "t": 10.1666,
+   "kind": "strobe",
+   "tag": "normal:g36"
+  },
+  {
+   "t": 13.050033,
+   "kind": "counter.tick",
+   "tag": "spine:height lost, this knock"
+  },
+  {
+   "t": 13.0667,
+   "kind": "section",
+   "id": "change",
+   "t1": 19.2
+  },
+  {
+   "t": 13.07,
+   "kind": "time.slow",
+   "tag": "change:macro"
+  },
+  {
+   "t": 13.35,
+   "kind": "badge",
+   "tag": "illus",
+   "text": "Illustration: squash and sound exaggerated"
+  },
+  {
+   "t": 14.3333,
+   "kind": "impact",
+   "tag": "change:knock"
+  },
+  {
+   "t": 15.0,
+   "kind": "wave.on",
+   "tag": "change:rings"
+  },
+  {
+   "t": 15.4,
+   "kind": "label",
+   "tag": "ch-sound"
+  },
+  {
+   "t": 16.8,
+   "kind": "heat",
+   "tag": "change:heat"
+  },
+  {
+   "t": 18.3,
+   "kind": "label",
+   "tag": "ch-heat"
+  },
+  {
+   "t": 19.2,
+   "kind": "section",
+   "id": "why",
+   "t1": 35.7333
+  },
+  {
+   "t": 21.5,
+   "kind": "label",
+   "tag": "wy-joule"
+  },
+  {
+   "t": 27.166666666666668,
+   "kind": "label",
+   "tag": "wy-warm"
+  },
+  {
+   "t": 27.1667,
+   "kind": "heat",
+   "tag": "why:warm"
+  },
+  {
+   "t": 30.433333333333334,
+   "kind": "label",
+   "tag": "wy-heat"
+  },
+  {
+   "t": 30.966666666666665,
+   "kind": "label",
+   "tag": "wy-shake"
+  },
+  {
+   "t": 31.733333333333334,
+   "kind": "label",
+   "tag": "wy-sound"
+  },
+  {
+   "t": 35.716633,
+   "kind": "counter.tick",
+   "tag": "spine:tennis ball height"
+  },
+  {
+   "t": 35.7333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 47.7333
+  },
+  {
+   "t": 38.0,
+   "kind": "badge",
+   "tag": "perfect",
+   "text": "Real balls fly less high, but still far past the hand."
+  },
+  {
+   "t": 38.0,
+   "kind": "label",
+   "tag": "wo-hand"
+  },
+  {
+   "t": 39.5348,
+   "kind": "contact",
+   "tag": "whoa:release"
+  },
+  {
+   "t": 40.8119,
+   "kind": "impact",
+   "tag": "whoa:hit"
+  },
+  {
+   "t": 40.8119,
+   "kind": "swell",
+   "tag": "whoa:climb"
+  },
+  {
+   "t": 44.2,
+   "kind": "label",
+   "tag": "wo-7x"
+  },
+  {
+   "t": 44.2,
+   "kind": "reveal",
+   "tag": "whoa:peak"
+  },
+  {
+   "t": 47.716633,
+   "kind": "counter.tick",
+   "tag": "spine:height missing"
+  },
+  {
+   "t": 47.7333,
+   "kind": "section",
+   "id": "measure",
+   "t1": 56.8
+  },
+  {
+   "t": 48.93333333333333,
+   "kind": "label",
+   "tag": "ms-44"
+  },
+  {
+   "t": 51.233333333333334,
+   "kind": "counter.tick",
+   "tag": "spine:energy it took"
+  },
+  {
+   "t": 52.8,
+   "kind": "counter.tick",
+   "tag": "spine:ball warms by, at most"
+  },
+  {
+   "t": 55.733333333333334,
+   "kind": "counter.end",
+   "tag": "spine:degree"
+  },
+  {
+   "t": 56.783333,
+   "kind": "counter.tick",
+   "tag": "spine:energy destroyed"
+  },
+  {
+   "t": 56.8,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 61.8667
+  },
+  {
+   "t": 61.8667,
+   "kind": "section",
+   "id": "tease",
+   "t1": 66.9333
+  },
+  {
+   "t": 63.9491,
+   "kind": "contact",
+   "tag": "loop:release"
+  },
+  {
+   "t": 63.9491,
+   "kind": "strobe",
+   "tag": "loop:g0"
+  },
+  {
+   "t": 64.4491,
+   "kind": "strobe",
+   "tag": "loop:g2"
+  },
+  {
+   "t": 64.9491,
+   "kind": "strobe",
+   "tag": "loop:g4"
+  },
+  {
+   "t": 65.4333,
+   "kind": "signature",
+   "tag": "end"
+  },
+  {
+   "t": 65.4491,
+   "kind": "strobe",
+   "tag": "loop:g6"
+  },
+  {
+   "t": 65.9491,
+   "kind": "strobe",
+   "tag": "loop:g8"
+  },
+  {
+   "t": 66.4491,
+   "kind": "strobe",
+   "tag": "loop:g10"
+  },
+  {
+   "t": 66.9491,
+   "kind": "strobe",
+   "tag": "loop:g12"
+  },
+  {
+   "t": 67.4491,
+   "kind": "strobe",
+   "tag": "loop:g14"
+  },
+  {
+   "t": 67.9491,
+   "kind": "strobe",
+   "tag": "loop:g16"
+  },
+  {
+   "t": 68.4491,
+   "kind": "strobe",
+   "tag": "loop:g18"
+  },
+  {
+   "t": 68.9491,
+   "kind": "strobe",
+   "tag": "loop:g20"
+  },
+  {
+   "t": 69.4491,
+   "kind": "strobe",
+   "tag": "loop:g22"
+  },
+  {
+   "t": 69.9491,
+   "kind": "strobe",
+   "tag": "loop:g24"
+  },
+  {
+   "t": 70.4491,
+   "kind": "strobe",
+   "tag": "loop:g26"
+  },
+  {
+   "t": 70.9491,
+   "kind": "strobe",
+   "tag": "loop:g28"
+  },
+  {
+   "t": 71.4491,
+   "kind": "strobe",
+   "tag": "loop:g30"
+  },
+  {
+   "t": 71.9491,
+   "kind": "strobe",
+   "tag": "loop:g32"
+  },
+  {
+   "t": 72.4491,
+   "kind": "strobe",
+   "tag": "loop:g34"
+  },
+  {
+   "t": 72.9491,
+   "kind": "strobe",
+   "tag": "loop:g36"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.666666666666667,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 13.166666666666666,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 19.466666666666665,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 36.03333333333333,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 47.93333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 57.1,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 62.166666666666664,
+   "file": "vo/08.wav"
+  }
+ ]
+}

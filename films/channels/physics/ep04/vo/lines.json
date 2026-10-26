@@ -1,0 +1,111 @@
+{
+ "voice": "af_bella",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Which lands first? A geology hammer, or a falcon feather?",
+   "stars": [
+    "first"
+   ],
+   "phonemes": "wˌɪtʃ lˈændz fˈɜːst? ɐ dʒɪˈɑːlədʒi hˈæmɚ, ɔːɹ ɐ fˈælkən fˈɛðɚ?",
+   "file": "01.wav",
+   "dur": 3.595,
+   "sha256": "0cbe516d9568bb166b20cbe6c4ab91f59f45cb72a8123707bd3dd0ee5e4b28f1"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
+   "stars": [
+    "second"
+   ],
+   "phonemes": "ˌɔn ˈɜːθ, ɪts nˈoʊ kˈɑːntɛst. fɹʌm ʃˈoʊldɚ hˈaɪt, ðə hˈæmɚ lˈændz ɪn ɐbˌaʊt hˈæf ɐ sˈɛkənd. ðə fˈɛðɚɹ ɪz bˈɛɹli hˈæfweɪ.",
+   "file": "02.wav",
+   "dur": 7.257,
+   "sha256": "5ac0ae9d92bd88c7c7c2de9b7bf10581462e0a28aba1da26798c0c7748486748"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now take the air away. On the Moon, in nineteen seventy-one, astronaut David Scott dropped both. They landed together. \"Mister Galileo was correct in his findings,\" he said.",
+   "stars": [
+    "together"
+   ],
+   "phonemes": "nˈaʊ tˈeɪk ðɪ ˈɛɹ ɐwˈeɪ. ɔnðə mˈuːn, ɪn nˈaɪntiːn sˈɛvəntiwˌʌn, ˈæstɹənˌɔːt dˈeɪvɪd skˈɑːt dɹˈɑːpt bˈoʊθ. ðeɪ lˈændᵻd təɡˈɛðɚ. \"mˈɪstɚ ɡˌælɪlˈeɪoʊ wʌz kɚɹˈɛkt ɪn hɪz fˈaɪndɪŋz,\" hiː sˈɛd.",
+   "file": "03.wav",
+   "dur": 11.455,
+   "sha256": "a8bff4840ce575d2e5319352a98810aaafd399090f5bb1c8a069ce96e3ab5aef"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "For nearly two thousand years, most scholars followed Aristotle: heavier things fall faster. Gravity does pull the hammer harder. But a heavier thing is harder to speed up, by exactly as much. So without air, they tie.",
+   "stars": [
+    "faster",
+    "exactly"
+   ],
+   "phonemes": "fɔːɹ nˌɪɹli tˈuː θˈaʊzənd jˈɪɹz, mˈoʊst skˈɑːlɚz fˈɑːloʊd ˈæɹɪstˌɑːtəl : hˈɛviɚ θˈɪŋz fˈɔːl fˈæstɚ. ɡɹˈævᵻɾi dˈʌz pˈʊl ðə hˈæmɚ hˈɑːɹdɚ. bˌʌt ɐ hˈɛviɚ θˈɪŋ ɪz hˈɑːɹdɚ tə spˈiːd ˈʌp, baɪ ɛɡzˈæktli æz mˈʌtʃ. sˌoʊ wɪðˌaʊt ˈɛɹ, ðeɪ tˈaɪ.",
+   "file": "04.wav",
+   "dur": 14.114,
+   "sha256": "2cf6bc853c0936eb197aa7c228381e27da0b92fcc1a8a59af079d690576c7b9e"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "How exact is exactly? Starting in twenty sixteen, a satellite let two metals fall around Earth for months. They matched to within a few parts in a million billion.",
+   "stars": [
+    "exactly",
+    "billion"
+   ],
+   "phonemes": "hˌaʊ ɛɡzˈækt ɪz ɛɡzˈæktli? stˈɑːɹɾɪŋ ɪn twˈɛnti sˈɪkstiːn, ɐ sˈæɾəlˌaɪt lˈɛt tˈuː mˈɛɾəlz fˈɔːl ɚɹˈaʊnd ˈɜːθ fɔːɹ mˈʌnθs. ðeɪ mˈætʃt tʊ wɪðˌɪn ɐ fjˈuː pˈɑːɹts ɪn ɐ mˈɪliən bˈɪliən.",
+   "file": "05.wav",
+   "dur": 9.947,
+   "sha256": "cca92fc673b6f0761d3ff2335ce025c5ab90c0fcba5a2be1e826a8a52cb4c508"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: on the Moon, that drop takes about one point four seconds. On Earth, under six tenths.",
+   "stars": [
+    "Measure it",
+    "seconds"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ɔnðə mˈuːn, ðæt dɹˈɑːp tˈeɪks ɐbˌaʊt wˈʌn pˈɔɪnt fˈɔːɹ sˈɛkəndz. ˌɔn ˈɜːθ, ˌʌndɚ sˈɪks tˈɛnθs.",
+   "file": "06.wav",
+   "dur": 6.074,
+   "sha256": "b7f09955e1c43235898f42c0d3cd157ee677b727052540257d25ef2adadbaec0"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Gravity treats them equally. Only the air tells them apart.",
+   "stars": [
+    "air"
+   ],
+   "phonemes": "ɡɹˈævᵻɾi tɹˈiːts ðˌɛm ˈiːkwəli. ˈoʊnli ðɪ ˈɛɹ tˈɛlz ðˌɛm ɐpˈɑːɹt.",
+   "file": "07.wav",
+   "dur": 3.514,
+   "sha256": "b50e4a78905bfb80090148c9dff6a0e5a7fdfaea1d78369c69e1da2bfa5ff6a2"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a spinning office chair. Pull in your arms, and you accelerate. Why?",
+   "stars": [
+    "Why"
+   ],
+   "phonemes": "nˈɛkst: ɐ spˈɪnɪŋ ˈɑːfɪs tʃˈɛɹ. pˈʊl ɪn jʊɹ ˈɑːɹmz, ænd juː ɐksˈɛlɚɹˌeɪt. wˈaɪ?",
+   "file": "08.wav",
+   "dur": 4.557,
+   "sha256": "b035d672b4d665fd2ec650126b68e88119702b59fcf2ea85cdfa97af38ecfe1a"
+  }
+ ]
+}

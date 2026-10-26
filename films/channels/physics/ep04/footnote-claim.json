@@ -1,0 +1,11 @@
+{
+ "id": "c15",
+ "sentence": "The feather was a falcon's. Apollo 15's lunar module was named Falcon.",
+ "claim": "The feather Scott dropped was a falcon feather, and Apollo 15's lunar module was named Falcon.",
+ "source_url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html",
+ "source_title": "NASA NSSDCA, The Apollo 15 Hammer-Feather Drop; and NASA NSSDCA, Apollo 15 mission page (https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo15info.html)",
+ "accessed": "2026-10-25",
+ "verified_via": "search excerpt",
+ "status": "ok",
+ "note": "End-card footnote (on screen, not spoken). Excerpts: 'a light object (a 0.03-kg* falcon feather)' (NASA, c3); the drop happened 'near the LM Falcon' at Hadley Rille/Apennines (NASA's Apollo 15 page)."
+}

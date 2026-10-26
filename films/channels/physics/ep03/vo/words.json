@@ -1,0 +1,979 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Why can't it reach your hand? Somewhere, nearly half its bounce disappeared.",
+   "heard": "Why can't it reach your hand? Somewhere, nearly half its bounce disappeared.",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "can't",
+     "start": 0.225,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.495,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 0.635,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.7,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "hand?",
+     "start": 1.055,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "Somewhere,",
+     "start": 1.645,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 2.185,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 2.525,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.815,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "bounce",
+     "start": 2.96,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "disappeared.",
+     "start": 3.345,
+     "end": 4.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "One meter down. Fifty-six centimeters back up. Then thirty-two. Then eighteen. Each bounce keeps just over half its height.",
+   "heard": "1 meter down, 56 centimeters back up, then 32, then 18. Each bounce keeps just over half its height.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "meter",
+     "start": 0.415,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "down.",
+     "start": 0.81,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Fifty-six",
+     "start": 1.28,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "centimeters",
+     "start": 1.785,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 2.445,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 2.65,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 3.285,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "thirty-two.",
+     "start": 3.595,
+     "end": 4.56,
+     "heard": false
+    },
+    {
+     "w": "Then",
+     "start": 4.585,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "eighteen.",
+     "start": 4.82,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 5.835,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "bounce",
+     "start": 6.125,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 6.48,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 6.755,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 6.99,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 7.13,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 7.52,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "height.",
+     "start": 7.55,
+     "end": 7.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't quite spring back.",
+   "heard": "Look closer. The knock, a puff of sound. The ball squashes and doesn't quite spring back.",
+   "words": [
+    {
+     "w": "Look",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "closer.",
+     "start": 0.305,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.135,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "knock:",
+     "start": 1.165,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.75,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "puff",
+     "start": 1.85,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.04,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 2.245,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.175,
+     "end": 3.225,
+     "heard": true
+    },
+    {
+     "w": "ball",
+     "start": 3.205,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "squashes,",
+     "start": 3.62,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.16,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 4.285,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "quite",
+     "start": 4.61,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "spring",
+     "start": 4.91,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 5.145,
+     "end": 5.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "We call that energy lost. James Joule wouldn't. In the eighteen-forties, he let falling weights turn a paddle in water, and the water warmed. Energy doesn't vanish. It becomes heat, shaking and sound, spread too thin to see.",
+   "heard": "We call that energy lost. James Jewell wouldn't. In the 1840s, he let falling weights turn a paddle in water and the water warmed. Energy doesn't vanish. It becomes heat, shaking and sound, spread too thin to see.",
+   "words": [
+    {
+     "w": "We",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "call",
+     "start": 0.12,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.36,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "energy",
+     "start": 0.57,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "lost.",
+     "start": 1.08,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "James",
+     "start": 1.745,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "Joule",
+     "start": 2.195,
+     "end": 2.64,
+     "heard": false
+    },
+    {
+     "w": "wouldn't.",
+     "start": 2.71,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 3.485,
+     "end": 3.535,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.515,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "eighteen-forties,",
+     "start": 3.72,
+     "end": 4.64,
+     "heard": false
+    },
+    {
+     "w": "he",
+     "start": 4.7,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 4.73,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "falling",
+     "start": 4.965,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "weights",
+     "start": 5.36,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "turn",
+     "start": 5.74,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.075,
+     "end": 6.125,
+     "heard": true
+    },
+    {
+     "w": "paddle",
+     "start": 6.17,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.47,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 6.72,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.06,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.09,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 7.29,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "warmed.",
+     "start": 7.71,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "Energy",
+     "start": 8.72,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 9.13,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "vanish.",
+     "start": 9.36,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 10.385,
+     "end": 10.435,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 10.47,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "heat,",
+     "start": 10.975,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "shaking",
+     "start": 11.51,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 12.17,
+     "end": 12.24,
+     "heard": true
+    },
+    {
+     "w": "sound,",
+     "start": 12.27,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 12.83,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 13.215,
+     "end": 13.44,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 13.485,
+     "end": 13.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 13.695,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "see.",
+     "start": 13.91,
+     "end": 14.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Balance it on a basketball. Drop both together. The basketball hands over most of its bounce. The tennis ball rockets past your hand.",
+   "heard": "Balance it on a basketball. Drop both together. The basketball hands over most of its bounce. The tennis ball rockets past your hand.",
+   "words": [
+    {
+     "w": "Balance",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.49,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.565,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.79,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "basketball.",
+     "start": 0.82,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Drop",
+     "start": 1.96,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "both",
+     "start": 2.27,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 2.545,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.42,
+     "end": 3.47,
+     "heard": true
+    },
+    {
+     "w": "basketball",
+     "start": 3.535,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "hands",
+     "start": 4.275,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 4.72,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 4.88,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.095,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.27,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "bounce.",
+     "start": 5.39,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 6.375,
+     "end": 6.425,
+     "heard": true
+    },
+    {
+     "w": "tennis",
+     "start": 6.5,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "ball",
+     "start": 6.97,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "rockets",
+     "start": 7.275,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "past",
+     "start": 7.765,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 8.015,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "hand.",
+     "start": 8.17,
+     "end": 8.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball, two thousandths of a degree.",
+   "heard": "Measure it, those missing forty-four centimeters, a quarter of a joule, even if it all stays in the ball, two thousandths of a degree.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.495,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "those",
+     "start": 0.775,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "missing",
+     "start": 1.005,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "forty-four",
+     "start": 1.45,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "centimeters?",
+     "start": 2.17,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 3.3,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "quarter",
+     "start": 3.41,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.855,
+     "end": 3.905,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.885,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "joule.",
+     "start": 4.015,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "Even",
+     "start": 4.86,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 4.99,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.185,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 5.27,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 5.62,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.89,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.115,
+     "end": 6.165,
+     "heard": true
+    },
+    {
+     "w": "ball,",
+     "start": 6.145,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 6.69,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "thousandths",
+     "start": 7.0,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.49,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.77,
+     "end": 7.82,
+     "heard": true
+    },
+    {
+     "w": "degree.",
+     "start": 7.8,
+     "end": 8.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "A bounce never destroys energy. It gives it away, knock by knock.",
+   "heard": "A bounce never destroys energy. It gives it away, knock by knock.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "bounce",
+     "start": 0.13,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 0.5,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "destroys",
+     "start": 0.775,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "energy.",
+     "start": 1.45,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 2.195,
+     "end": 2.245,
+     "heard": true
+    },
+    {
+     "w": "gives",
+     "start": 2.225,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.48,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "away,",
+     "start": 2.665,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "knock",
+     "start": 3.23,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 3.61,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "knock.",
+     "start": 3.76,
+     "end": 4.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: a hammer, a feather, the Moon. Nobody wins.",
+   "heard": "Next, a hammer a feather the moon. Nobody wins.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.535,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "hammer,",
+     "start": 0.675,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.965,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "feather,",
+     "start": 1.145,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.425,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "Moon.",
+     "start": 1.695,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "Nobody",
+     "start": 2.215,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "wins.",
+     "start": 2.475,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

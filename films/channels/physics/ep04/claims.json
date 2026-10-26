@@ -1,0 +1,178 @@
+[
+ {
+  "id": "c1",
+  "sentence": "From shoulder height, the hammer lands in about half a second.",
+  "claim": "Dropped from about 1.6 m (Apollo 15's release height, a standing adult's shoulder) on Earth, a hammer falls in √(2 × 1.6 / 9.81) = 0.57 s; air changes a hammer's fall time negligibly over 1.6 m.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OpenStax 3.5): free fall with negligible air resistance, g = 9.81 m/s². Computed: √(3.2/9.81) = 0.571 s ('about half a second'). Release height from NASA's page (c3): 'approximately 1.6 m'. The hammer's drag is left out (it is under a frame)."
+ },
+ {
+  "id": "c2",
+  "sentence": "The feather is barely halfway.",
+  "claim": "Air drag on a light, broad object like a feather is large compared with its weight, so it falls far more slowly than a hammer; drag grows with air density, the square of the speed, the area and the shape.",
+  "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
+  "source_title": "NASA Glenn, Beginner's Guide to Aeronautics: the drag equation",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NASA Glenn): drag depends on the density of the air, the square of the velocity, the reference area and a drag coefficient (shape). The feather's drift on screen is an illustration (badged): it is drawn about halfway down when the hammer lands; no fall time or speed is claimed for it."
+ },
+ {
+  "id": "c3",
+  "sentence": "On the Moon, in nineteen seventy-one, astronaut David Scott dropped both.",
+  "claim": "In 1971, during Apollo 15's last moonwalk, Commander David Scott dropped a 1.32 kg aluminium geological hammer and a falcon feather together from about 1.6 m, live on television.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html",
+  "source_title": "NASA NSSDCA, The Apollo 15 Hammer-Feather Drop (quoting NASA SP-289)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'A heavy object (a 1.32-kg aluminum geological hammer) and a light object (a 0.03-kg* falcon feather) were released simultaneously from approximately the same height (approximately 1.6 m)'; NASA notes the 0.03 kg feather mass is probably a typo (feathers weigh 0.3–3 g), so no feather mass is said or shown."
+ },
+ {
+  "id": "c4",
+  "sentence": "They landed together.",
+  "claim": "On the Moon, with no air, the hammer and the feather hit the surface at the same time.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html",
+  "source_title": "NASA NSSDCA, The Apollo 15 Hammer-Feather Drop (quoting NASA SP-289)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: the objects hit the lunar surface simultaneously, as predicted by well-established theory, because there is no air resistance."
+ },
+ {
+  "id": "c16",
+  "sentence": "\"Mister Galileo was correct in his findings,\" he said.",
+  "claim": "After the hammer and feather landed together, Scott said: 'Mr Galileo was correct in his findings.'",
+  "source_url": "https://physicsworld.com/a/the-legend-of-the-leaning-tower/",
+  "source_title": "Physics World, The legend of the Leaning Tower",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (Physics World's transcript): Scott says 'Mr Galileo was correct in his findings' right after they hit the ground. Alan Bean's gallery page gives the same sentence with a different lead-in. The official air-to-ground transcript was not reached (TODO: a person checks it)."
+ },
+ {
+  "id": "c5",
+  "sentence": "For nearly two thousand years, most scholars followed Aristotle: heavier things fall faster.",
+  "claim": "Aristotle held that heavier bodies fall faster than lighter ones, and his ideas on motion were accepted for nearly two thousand years (though challenged, e.g. by Philoponus in the 6th century).",
+  "source_url": "https://mathshistory.st-andrews.ac.uk/HistTopics/Gravitation",
+  "source_title": "MacTutor (University of St Andrews), Theories of gravitation",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: 'Aristotle believed that heavier objects fell more rapidly than lighter ones'; 'these ideas were accepted for nearly two thousand years'. 'Scholars followed' rather than 'everyone believed': there were dissenters (Philoponus, arXiv physics/0702155). Dissenters before Galileo: Philoponus (6th century), Benedetti (1553), Stevin and de Groot (Delft, 1586): hence 'most scholars'. Aristotle died 322 BC; Galileo's work 1590–1638: about 1,900–1,960 years, 'nearly two thousand'."
+ },
+ {
+  "id": "c6",
+  "sentence": "Gravity does pull the hammer harder.",
+  "claim": "An object's weight (the gravitational force on it) is W = m·g, proportional to its mass: the hammer's is far larger than the feather's.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Weight W = mg (OpenStax; also the free-fall reference in the same search: 'its weight is W = mg'). Arrows on screen are not to scale between the two (the feather's would be about 1/500 of the hammer's) and are badged."
+ },
+ {
+  "id": "c7",
+  "sentence": "But a heavier thing is harder to speed up, by exactly as much.",
+  "claim": "By Newton's second law a = F/m: a mass twice as large needs twice the force for the same acceleration. With F = mg the masses cancel, a = g, provided gravitational mass equals inertial mass, which experiments confirm.",
+  "source_url": "https://arxiv.org/abs/2209.15487v1",
+  "source_title": "Touboul et al., MICROSCOPE Mission: Final Results of the Test of the Equivalence Principle (arXiv:2209.15487; Phys. Rev. Lett. 129, 121102, 2022)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "F = ma with F = mg gives a = g: the mass cancels if gravitational and inertial mass are equal, the weak equivalence principle, which MICROSCOPE tested (c10). 'Exactly' is said as the claim the whoa then measures ('How exact is exactly?'). Also the TutorChase notes (excerpt): 'mg = ma, and the mass cancels, leaving a = g'."
+ },
+ {
+  "id": "c8",
+  "sentence": "So without air, they tie.",
+  "claim": "With air negligible, all objects at the same place fall with the same acceleration g, whatever their mass.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (OpenStax 3.5, the bible's source): without air resistance heavy and light objects fall together with acceleration g."
+ },
+ {
+  "id": "c9",
+  "sentence": "Starting in twenty sixteen, a satellite let two metals fall around Earth for months.",
+  "claim": "The MICROSCOPE satellite (CNES; in orbit and operating from 25 April 2016 until it was deactivated on 16 October 2018) compared the free fall of titanium and platinum test masses around Earth, using about five months of science free-fall data; its final results were published in 2022.",
+  "source_url": "https://arxiv.org/abs/2209.15487v1",
+  "source_title": "Touboul et al., MICROSCOPE Mission: Final Results of the Test of the Equivalence Principle (arXiv:2209.15487; Phys. Rev. Lett. 129, 121102, 2022)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: 'operated from April 25, 2016 until the deactivation of the satellite on October 16, 2018' (LKB, https://www.lkb.upmc.fr/?p=11813); 'cumulating five months worth of science free-fall data'. The test masses are held by electrostatic servo control inside a drag-compensated satellite in free fall: 'let two metals fall' is shorthand (review)."
+ },
+ {
+  "id": "c10",
+  "sentence": "They matched to within a few parts in a million billion.",
+  "claim": "MICROSCOPE found no difference in the free fall of titanium and platinum: the Eötvös parameter η(Ti,Pt) = [−1.5 ± 2.3 (stat) ± 1.5 (syst)] × 10⁻¹⁵, i.e. equal to within a few parts in 10¹⁵.",
+  "source_url": "https://arxiv.org/abs/2209.15487v1",
+  "source_title": "Touboul et al., MICROSCOPE Mission: Final Results of the Test of the Equivalence Principle (arXiv:2209.15487; Phys. Rev. Lett. 129, 121102, 2022)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: η(Ti,Pt) = [−1.5 ± 2.3 (stat) ± 1.5 (syst)] × 10⁻¹⁵; LKB: 'a record precision of a few 10-15'. Combined uncertainty √(2.3² + 1.5²) = 2.7 × 10⁻¹⁵: 'a few parts in a million billion' (10¹⁵). The review's fix of 'one part'."
+ },
+ {
+  "id": "c11",
+  "sentence": "Measure it: on the Moon, that drop takes about one point four seconds.",
+  "claim": "A 1.6 m fall at the Moon's surface gravity of 1.62 m/s² takes √(2 × 1.6 / 1.62) = 1.41 s.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+  "source_title": "NASA NSSDCA, Moon Fact Sheet",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (Moon Fact Sheet): surface gravity 1.62 m/s², Moon/Earth 0.165. Computed: √(3.2/1.62) = 1.405 s. The release height is approximate (c3)."
+ },
+ {
+  "id": "c12",
+  "sentence": "On Earth, under six tenths.",
+  "claim": "The same 1.6 m drop takes 0.57 s on Earth, under 0.6 s (the Moon's 1.41 s is 2.46 times as long).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: √(3.2/9.81) = 0.571 s; 1.405/0.571 = 2.46 = √(9.81/1.62)."
+ },
+ {
+  "id": "c13",
+  "sentence": "Gravity treats them equally.",
+  "claim": "Gravity gives every object at the same place the same acceleration g, whatever its mass (weight is proportional to mass, and so is the resistance to speeding up).",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
+  "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same as c8."
+ },
+ {
+  "id": "c14",
+  "sentence": "Only the air tells them apart.",
+  "claim": "On Earth the hammer and the feather fall differently only because of air drag, which is large compared with the feather's tiny weight and negligible for the hammer's; with no air (the Moon) they fall together.",
+  "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
+  "source_title": "NASA Glenn, Beginner's Guide to Aeronautics: the drag equation",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "NASA Glenn (drag) and the Moon drop (c4). The review's fix: the old takeaway ('weight never decided') was wrong in air, where weight against drag is exactly what decides."
+ },
+ {
+  "id": "c15",
+  "sentence": "Pull in your arms, and you accelerate.",
+  "claim": "On a freely spinning chair, pulling your arms (and anything in your hands) closer to the axis lowers your moment of inertia, so your spin rate rises to keep angular momentum constant.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
+  "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The bible's source for episode 5; its skater example: 'Iω = I′ω′', a smaller moment of inertia forces the angular velocity up. 'Accelerate' means the spin speeds up. Episode 5 sources it in full."
+ }
+]
