@@ -68,10 +68,24 @@ compress to a few hundred KB per clip.
 
 ## Sound
 
-The clips are silent on purpose and the captions carry every line, which is
-how Reels are watched. Evelyn's voice goes over them when she records: the
-lesson box says "Evelyn's video next" and her 9-minute lesson video replaces
-the explainer as the main video when it exists.
+Every lesson clip carries a soft music bed, and the captions still carry every
+line, so a clip watched with the sound off (how most Reels are watched) loses
+nothing. The bed is original, made in code, so nothing is licensed:
+
+    node docs/school/motion/music.mjs        # → music/bed.m4a: 48 s, a slow four-chord loop in F, -20 LUFS
+    node docs/school/motion/add-music.mjs    # lays it under every lesson in videos.js (--only 1-1,6-2 for some)
+
+`music.mjs` builds a pad of soft sine voices, a round bass and a chime every
+few seconds, and ffmpeg adds a little room and sets the level soft.
+`add-music.mjs` copies each clip's picture as it is (no re-encode), lays the
+bed under it, fading in over 0.8 s and out over the last 1.5 s, and starts
+each lesson at one of three chords so lessons watched back to back don't open
+the same way. It does the 16:9 MP4 and WebM and the 9:16 cut, and running it
+again replaces the music rather than stacking it. `render.mjs` calls it on
+every lesson it renders. The page's hero stays silent: it plays muted on a
+loop. Evelyn's voice goes over the clips when she records: the lesson box says
+"Evelyn's video next" and her 9-minute lesson video replaces the explainer as
+the main video when it exists.
 
 ## Adding a scene
 
@@ -101,7 +115,7 @@ moves slowly and with intent, the explanation carried by what the objects do.
   imports `../metaballs.js` itself.
 - 8-2 is the film session's directed pilot (keyed camera, focus pulls, falling plug cells, the
   serum drops that land and turn to liquid). Its scored cut, for posting with sound, is
-  `marketing/ads/out/video/8-2-sound.mp4` (the silent cut stays the default).
+  `marketing/ads/out/video/8-2-sound.mp4` (the cut with the music bed stays the default).
 
 ## The course page's hero
 

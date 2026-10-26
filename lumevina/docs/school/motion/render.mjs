@@ -5,9 +5,10 @@
 //
 // For every scene in scenes.mjs it opens the scene page in Chromium at the
 // frame size, calls seek(t) for every frame, captures the frame and pipes it
-// into ffmpeg (H.264, yuv420p, faststart). Every page is the same room: a warm
-// backdrop with a pool of light drawn on a canvas behind the scene (motion.js),
-// the header, the scene's canvas, the caption bar and a film grain. It writes:
+// into ffmpeg (H.264, yuv420p, faststart), then lays the music bed under a
+// lesson (add-music.mjs). Every page is the same room: a warm backdrop with a
+// pool of light drawn on a canvas behind the scene (motion.js), the header, the
+// scene's canvas, the caption bar and a film grain. It writes:
 //   img/school/video/<id>.mp4 + <id>.webm + <id>.jpg     the lesson's explainer (16:9, 1280×720; the WebM for browsers without H.264)
 //   marketing/ads/out/video/<id>-9x16.mp4 + .jpg           the Reels/TikTok cut (9:16, 720×1280), only with --aspect 9x16
 //   docs/school/motion/review/<id>-<aspect>.jpg            a contact sheet, one frame every 1.5 s (not committed)
@@ -30,6 +31,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { SCENES as FLAT, PALETTE } from "./scenes.mjs";
 import { SCENES as SOLID } from "./scenes3d.mjs";
+import { addMusic } from "./add-music.mjs";
 const SCENES = { ...FLAT, ...SOLID };
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../../..");
@@ -254,7 +256,8 @@ for (const scene of Object.values(SCENES)) {
       run = 1;
     }
     if (ff) { ff.stdin.end(); await new Promise((r) => ff.on("close", r)); }
-    if (ff && aspect === "16x9") await new Promise((r) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", mp4, "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-cpu-used", "4", "-an", path.join(outDir, `${base}.webm`)], { stdio: "inherit" }).on("close", r));
+    if (ff && !scene.bare) addMusic(mp4, scene.id);   // the music bed (add-music.mjs); the hero stays silent
+    if (ff && aspect === "16x9") await new Promise((r) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", mp4, "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-cpu-used", "4", ...(scene.bare ? ["-an"] : ["-c:a", "libopus", "-b:a", "96k"]), path.join(outDir, `${base}.webm`)], { stdio: "inherit" }).on("close", r));
     // the contact sheet
     const sheet = await browser.newPage({ viewport: { width: 1600, height: 900 } });
     const cols = aspect === "16x9" ? 4 : 6, cw = Math.floor(1584 / cols);

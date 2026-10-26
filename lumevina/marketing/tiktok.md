@@ -1,8 +1,8 @@
 # TikTok, the first twelve weeks: one explainer a week, with its caption
 
-The clips are in `marketing/ads/out/video/` (9:16, 720×1280, silent, captions on screen). Post one a week on the same weekday, Evelyn's face for the other posts. Each caption below is the first line (the hook, shown before "more"), the body, and five hashtags. Nothing claims a result; the facts are the lesson's. The link in bio is the shop; the call to action is the free lesson or the online consult, never a discount.
+The clips are in `marketing/ads/out/video/` (9:16, 720×1280, a soft original music bed, captions on screen). Post one a week on the same weekday, Evelyn's face for the other posts. Each caption below is the first line (the hook, shown before "more"), the body, and five hashtags. Nothing claims a result; the facts are the lesson's. The link in bio is the shop; the call to action is the free lesson or the online consult, never a discount.
 
-How to post: upload the mp4, keep the sound off or add TikTok's library music low, cover = the first frame, caption pasted as is, "Skin School" sticker optional. Reply to comments with one line, in her voice; anything personal ("is this purging?") gets "send me a photo in daylight through the site" rather than an answer in public.
+How to post: upload the mp4 with its own music (original, made for the clips, so it's safe to post) or turn it off and add TikTok's library music low, cover = the first frame, caption pasted as is, "Skin School" sticker optional. Reply to comments with one line, in her voice; anything personal ("is this purging?") gets "send me a photo in daylight through the site" rather than an answer in public.
 
 | Week | Clip | Hook (first line) | Body | Hashtags |
 |---|---|---|---|---|

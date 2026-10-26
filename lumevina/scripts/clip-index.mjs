@@ -19,6 +19,6 @@ for (const r of rows) {
   const dur = vids[r.id] ? Math.round(vids[r.id].dur) + " s" : "";
   lines.push(`| ${r.week} | ${have ? "`" + file + "`" : "*rendering*"} | ${r.title} | ${r.hook} | ${dur} |`);
 }
-lines.push("", "Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.");
+lines.push("", "Post the pore clip first (skin science travels), then one a week in this order. Each has a soft original music bed and the words on screen; the caption's first line is the hook.");
 fs.writeFileSync(path.join(out, "README.md"), lines.join("\n") + "\n");
 console.log(`clip index: ${rows.length} rows, ${rows.filter((r) => fs.existsSync(path.join(out, `${r.id}-9x16.mp4`))).length} rendered`);

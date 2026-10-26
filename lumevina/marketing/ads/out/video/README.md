@@ -45,4 +45,4 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 39 | `14-1-9x16.mp4` | Your first visit: which one to book | Two questions decide which appointment to book. | 24 s |
 | 40 | `14-2-9x16.mp4` | Her shelf: how the products fit together | How a routine is built from one shelf, in order. | 24 s |
 
-Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
+Post the pore clip first (skin science travels), then one a week in this order. Each has a soft original music bed and the words on screen; the caption's first line is the hook.
