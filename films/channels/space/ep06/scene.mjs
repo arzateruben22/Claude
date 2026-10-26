@@ -10,7 +10,7 @@ import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
 import { ring, segment } from "cinema/sci/front.js";
-import { createLadder, logDolly } from "cinema/sci/ladder.js";
+import { createLadder, logDolly, setOpacity } from "cinema/sci/ladder.js";
 import { createSky } from "../set/sky.js";
 import { createStar } from "../set/star.js";
 import { createPlanet, earthSurface } from "../set/planet.js";
@@ -56,7 +56,8 @@ const trail = ring({ color: line("teal", 1, 1.2), width: 4, opacity: 0 });
 const earthDot = createBeacon({ color: hdr("ice", 1.1), px: 14, core: 0.5 });
 G.solar.add(sun.group, orbitR.mesh, trail.mesh, earthDot.mesh);
 // local rung (1 unit = 1 light-year): the Sun's neighbourhood, a cloud of nearby stars the jump passes through
-const cloud = createCloud({ n: 1800, radius: 60, seed: 5 });
+const cloud = createCloud({ n: 3000, radius: 60, seed: 5 });
+cloud.material.uniforms.uGain.value = 2.2;                                    // bright enough to read as a fly-through
 G.local.add(cloud.group);
 // galaxy rung (1 unit = 1,000 light-years): the Milky Way (illustration), the Sun's lap, the Sun
 const galaxy = createGalaxy({ n: 40000, radius: 50, seed: 27, sunAngle: Math.PI * 0.75 });
@@ -67,7 +68,8 @@ const gcHead = createBeacon({ color: hdr("teal", 1.4), px: 16, core: 0.5 });    
 // the Sun as a point (in the jump and in the galaxy): pale lemon-white like its ✦ label, not Earth's ice-blue marker
 const sunG = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });
 const sunJ = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });   // the Sun through the jump (between the rungs)
-scene.add(sunJ.mesh);
+const earthJ = createBeacon({ color: hdr("ice", 1.1), px: 12, core: 0.5 });   // Earth as a point as the jump begins
+scene.add(sunJ.mesh, earthJ.mesh);
 G.galaxy.add(galaxy.group, lap.mesh, gcRing.mesh, gcPath.mesh, gcHead.mesh, sunG.mesh);
 galaxy.set({ angle: 0 });
 const SUN0 = galaxy.sunAt();
@@ -150,8 +152,9 @@ cab.innerHTML = `<svg width="${CW}" height="${CH}" viewBox="0 0 800 520" preserv
 document.getElementById("hud").appendChild(cab);
 const CAB = { water: cab.querySelector("#cab-water"), ship: cab.querySelector("#cab-ship"), fish: cab.querySelector("#cab-fish"),
   drops: [...cab.querySelectorAll("#cab-drops circle")], b1: cab.querySelector("#cab-b1"), b2: cab.querySelector("#cab-b2") };
+const cabOp = (t) => Math.min(E.out3(seg(t, CUE.cab0, CUE.cab0 + 0.45)), 1 - E.in3(seg(t, CUE.cab1 - 0.45, CUE.cab1)));
 const cabin = (t) => {
-  const op = Math.min(E.out3(seg(t, CUE.cab0, CUE.cab0 + 0.45)), 1 - E.in3(seg(t, CUE.cab1 - 0.45, CUE.cab1)));
+  const op = cabOp(t);
   cab.style.opacity = op.toFixed(3);
   if (op <= 0.001) return;
   const u = t - CUE.cab0;
@@ -177,6 +180,8 @@ window.seek = function (t) {
   if (inJump) G.solar.visible = false;
   // the push back in to Earth (e0 → e1): the orbit and its trail would pass the lens as huge arcs; they leave first
   const kPush = t > CUE.e0 && t < CUE.j0 ? 1 - E.out3(seg(t, CUE.e0, CUE.e0 + 0.35)) : 1;
+  const kCab = cabOp(t);                                                        // Earth steps back behind Galileo's cabin
+  if (kCab > 0.001) setOpacity(G.earth, view.alpha.earth * (1 - 0.85 * kCab));
   const toS = (id, p) => ladder.toScene(id, p, view);
   const sunDirE = (() => { const l = Math.hypot(...ea); return ea.map((v) => -v / l); })();
 
@@ -203,7 +208,7 @@ window.seek = function (t) {
   galaxy.set({ angle: -ga, gain: (1.5 - 0.5 * fadeIn(t, CUE.lap - 0.6, 0.6)) * (1 - 0.35 * fadeIn(t, CUE.rd, 0.5)) });
   const sp = galaxy.sunAt();
   sunG.set({ center: sp, camera, opacity: view.alpha.galaxy });
-  lap.set({ opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) * (1 - 0.6 * fadeIn(t, CUE.gcring, 0.5)) });
+  lap.set({ opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) * (1 - 0.55 * fadeIn(t, CUE.last, 0.6)) * (1 - 0.5 * fadeIn(t, CUE.gcring, 0.5)) });   // loud for "One lap", then quieter
   gcRing.set({ opacity: 0 });
   // the readout: light's path from the Sun to the galaxy's centre, drawn out on "To the galaxy's center"
   const ug = E.inout2(seg(t, CUE.gcring, CUE.gcring + 0.8)), gEnd = sp.map((v) => v * (1 - ug));
@@ -214,18 +219,19 @@ window.seek = function (t) {
   const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4), sJ = toS("solar", [0, 0, 0]), sG = toS("galaxy", sp);
   S.sunG = t > CUE.j0 && t < CUE.j1 + 0.1 ? sG.map((v, i) => sJ[i] + (v - sJ[i]) * jOut) : sG;
   S.gc = toS("galaxy", [0, 0, 0]);
-  // the lap's label: on the ring's lowest point on screen (its near side), with the pill hanging below the ring
+  // the lap's label: on the ring's upper-left corner on screen (the far side, away from the Sun's path and the core)
   camera.updateMatrixWorld();
   const rl = SUN_LY / 1000;
   let best = null, by = -Infinity;
   for (let k = 0; k < 72; k++) {
-    const a = (k / 72) * 2 * Math.PI, pL = new THREE.Vector3(rl * Math.cos(a), 0, rl * Math.sin(a)), pS = toS("galaxy", pL.toArray());
-    const sy = -new THREE.Vector3(...pS).project(camera).y;
-    if (sy > by) { by = sy; best = pS; }
+    const a = (k / 72) * 2 * Math.PI, pS = toS("galaxy", [rl * Math.cos(a), 0, rl * Math.sin(a)]);
+    const q = new THREE.Vector3(...pS).project(camera), sc = q.y - q.x;
+    if (sc > by) { by = sc; best = pS; }
   }
   S.lap = best;
 
   sunJ.set({ center: sJ, camera, opacity: jIn * (1 - jOut) * (inJump ? 1 : 1 - view.alpha.solar) });
+  earthJ.set({ center: toS("earth", [0, 0, 0]), camera, opacity: inJump ? (1 - view.alpha.earth) * (1 - fadeIn(t, CUE.jm - 0.3, 0.4)) : 0 });
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1 - clamp01((view.s - 12) / 2), bandGain: 1 - clamp01((view.s - 12) / 2) });
   cabin(t);
   hud.update(t);
