@@ -50,18 +50,21 @@ skyMoon.group.position.fromArray(MOON_AT);
 const skySun = createStar({ radius: PH.r_sun_km * K, intensity: 2.4, corona: 1.5, coronaI: 0.35 });
 skySun.set({ center: SUN_AT });
 const moonDot = createBeacon({ color: hdr("ice", 1.0), px: 9, core: 0.5 }), earthDot = createBeacon({ color: hdr("ice", 1.1), px: 10, core: 0.5 });
+const sunMark = createBeacon({ color: hdr("text", 1.6), px: 14, core: 0.4 });   // the Sun from the side (a 4 px disc at this scale)
 const cone = [segment({ color: C.teal, width: 1.6, opacity: 0 }), segment({ color: C.teal, width: 1.6, opacity: 0 })];
-G.sky.add(skyMoon.group, skySun.group, moonDot.mesh, earthDot.mesh, ...cone.map((c) => c.mesh));
+G.sky.add(skyMoon.group, skySun.group, moonDot.mesh, earthDot.mesh, sunMark.mesh, ...cone.map((c) => c.mesh));
 
 // ── "sun": the Sun at true scale (100 units = 696,000 km) ───────────────────
 const world = new THREE.Group();                                          // shrinks in the jump
 G.sun.add(world);
-const sun = createStar({ radius: 100, intensity: 2.3, corona: 1.45, coronaI: 0.4 });
+const SUN_I = 1.3, CORONA_I = 0.3;                                       // under the bloom threshold: the face keeps its limb and granulation
+const sun = createStar({ radius: 100, intensity: SUN_I, corona: 1.35, coronaI: CORONA_I });
 world.add(sun.group);
 const RE = PH.r_e, N = PH.n_across;
-const rowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(...tok("ice")).multiplyScalar(0.9) });
+// silhouettes, as Earth looks crossing the Sun; drawn in the plane of the limb, over the corona glow
+const rowMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, depthTest: false, depthWrite: false });
 const row = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 16, 12), rowMat, N);
-row.frustumCulled = false;
+row.frustumCulled = false; row.renderOrder = 5;
 world.add(row);
 const m4 = new THREE.Matrix4();
 const SD = PH.spot_dir, SP = SD.map((v) => v * 100.15);
@@ -76,23 +79,27 @@ const spotEarth = createPlanet({ radius: RE, surface: earthSurface({ width: 512 
 spotEarth.group.position.fromArray(SD.map((v) => v * 101.6));
 world.add(spotEarth.group);
 const PD = norm([-0.32, -0.22, 0.92]);
-const pelo = createBeacon({ color: hdr("teal", 1.2), px: 6, core: 0.6 });
-pelo.mesh.position.fromArray(PD.map((v) => v * 100.4));
-world.add(pelo.mesh);
+const peloMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0 });
+const pelo = new THREE.Mesh(new THREE.CircleGeometry(1.0, 24), peloMat);   // a dark dot (enlarged: badged)
+pelo.position.fromArray(PD.map((v) => v * 100.4));
+pelo.quaternion.copy(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...PD)));
+const peloRing = ring({ color: C.teal, width: 2.4, opacity: 0 });
+world.add(pelo, peloRing.mesh);
 // the melted Sun: 6,500 dots filling the sphere from the bottom (1 dot = 200 Earths, by volume)
 const R6 = rng(17), NP = PH.dots, P = new Float32Array(NP * 3), order = [];
 for (let i = 0; i < NP; i++) { let x, y, z; do { x = R6() * 2 - 1; y = R6() * 2 - 1; z = R6() * 2 - 1; } while (x * x + y * y + z * z > 0.97); P.set([x * 100, y * 100, z * 100], i * 3); order.push(y); }
-const dotGeo = new THREE.BufferGeometry();
+const dotGeo = new THREE.BufferGeometry(), SH = new Float32Array(NP).map(() => 0.7 + 0.3 * R6());
 dotGeo.setAttribute("position", new THREE.BufferAttribute(P, 3));
+dotGeo.setAttribute("sh", new THREE.BufferAttribute(SH, 1));
 dotGeo.setAttribute("yy", new THREE.BufferAttribute(new Float32Array(order), 1));
 const dotMat = new THREE.ShaderMaterial({
-  uniforms: { uLevel: { value: -2 }, uS1: { value: S1 }, uOp: { value: 0 }, uCol: { value: new THREE.Vector3(...tok("ice")).multiplyScalar(0.85) } },
-  vertexShader: "attribute float yy; uniform float uLevel, uS1; varying float vOn; void main(){ vOn = step(yy, uLevel); vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = 3.2 * uS1; }",
-  fragmentShader: "uniform vec3 uCol; uniform float uOp; varying float vOn; void main(){ if (vOn < 0.5) discard; vec2 q = gl_PointCoord * 2.0 - 1.0; if (dot(q, q) > 1.0) discard; gl_FragColor = vec4(uCol * uOp, uOp); }",
-  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  uniforms: { uLevel: { value: -2 }, uS1: { value: S1 }, uOp: { value: 0 }, uA: { value: new THREE.Vector3(...line("ice", 0.9)) }, uB: { value: new THREE.Vector3(...line("ice", 0.7)) } },
+  vertexShader: "attribute float yy, sh; uniform float uLevel, uS1; varying float vOn, vSh; void main(){ vOn = step(yy, uLevel); vSh = sh; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = 5.0 * uS1; }",
+  fragmentShader: "uniform vec3 uA, uB; uniform float uOp; varying float vOn, vSh; void main(){ if (vOn < 0.5) discard; vec2 q = gl_PointCoord * 2.0 - 1.0; float r = dot(q, q); if (r > 1.0) discard; gl_FragColor = vec4(mix(uB, uA, (vSh - 0.7) / 0.3 * (1.0 - 0.5 * r)), uOp); }",
+  transparent: true, depthWrite: false, depthTest: false,   // the beads fill the (dimmed) Sun: drawn over its face
 });
 const dots = new THREE.Points(dotGeo, dotMat);
-dots.frustumCulled = false;
+dots.frustumCulled = false; dots.renderOrder = 4;
 world.add(dots);
 const rim = shell({ color: line("lemon", 0.9), opacity: 0, power: 2.4 });
 world.add(rim.mesh);
@@ -120,6 +127,7 @@ for (const c of FILM.counters) {
   else Object.assign(o, { value: () => 0, fmt: () => c.text });
   const el = hud.counter(c.id, o);
   el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (c.text && c.text.length > 10) { const v = el.querySelector(".v"); if (v) v.style.fontSize = "5.2vmin"; }   // long values stay inside the safe box
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
@@ -133,41 +141,51 @@ const cb = () => ({ e1: new THREE.Vector3().setFromMatrixColumn(camera.matrixWor
 
 window.seek = function (t) {
   const st = stage(t), shot = st.name, tr = Math.round(t * FPS) / FPS;
+  camera.near = shot === "sun" ? 2 : 0.01;                                 // depth precision for the spot close-up (the sky needs the near plane close)
   rig.place(camera, shot, t);
-  G.sky.visible = shot === "sky"; G.sun.visible = shot === "sun";
+  G.sky.visible = shot === "sky" || shot === "side"; G.sun.visible = shot === "sun";
 
   // sky: full Moon lit from behind the viewer; the depth shows as the camera swings out
   skyMoon.set({ center: MOON_AT, sunDir: [0.05, 0.05, 1], sun: 1, spin: 0 });
   skySun.set({ tau: t * 600, on: true, camera, center: SUN_AT });
-  const side = shot === "sky" && t < FILM.endCard ? fadeIn(t, FILM.labels.find((l) => l.id === "l-you").t0 - 1.5, 1.2) : 0;
-  moonDot.set({ center: MOON_AT, camera, opacity: side }); earthDot.set({ center: [0, 0, 0], camera, opacity: side });
-  const rS = PH.r_sun_km * K, oc = shot === "sky" ? winOp(t, FILM.labels.find((l) => l.id === "l-sun-s").t0 + 1.8, CUE.cut, 0.6) : 0;
-  cone[0].seg([0, 0, 0], [SUN_AT[0], rS, SUN_AT[2]]).set({ opacity: oc }); cone[1].seg([0, 0, 0], [SUN_AT[0], -rS, SUN_AT[2]]).set({ opacity: oc });
+  // side: Earth and the Moon one dot (2,560 km apart at this scale, 2 px), the sight lines drawn out to the Sun's limbs
+  const side = shot === "side" ? 1 : 0, reach = E.inout2(seg(t, CUE.side + 0.3, CUE.side + 1.9));
+  moonDot.set({ center: MOON_AT, camera, opacity: 0 }); earthDot.set({ center: [0, 0, 0], camera, opacity: side });
+  sunMark.set({ center: SUN_AT, camera, opacity: side });
+  const rS = PH.r_sun_km * K, oc = side * (reach > 0.002 ? 1 : 0), far = (v) => v * reach;
+  cone[0].seg([0, 0, 0], [SUN_AT[0], rS, SUN_AT[2]].map(far)).set({ opacity: oc }); cone[1].seg([0, 0, 0], [SUN_AT[0], -rS, SUN_AT[2]].map(far)).set({ opacity: oc });
   S.skysun = [SUN_AT[0], rS * 1.1, SUN_AT[2]]; S.skymoon = [MOON_AT[0], PH.r_moon_km * K * 1.1, MOON_AT[2]]; S.you = [0, 0, 0];
 
   // sun: the row, the spot, the dot, the melt, the jump
-  const k = Math.exp(Math.log(PH.shrink) * E.inout3(seg(t, CUE.j0, CUE.j1)));
+  const k = PH.base * Math.exp(Math.log(PH.shrink) * E.inout3(seg(t, CUE.j0, CUE.j1)));
   world.scale.setScalar(k);
   const molten = fadeIn(t, CUE.melt0, 0.8);
-  sun.set({ tau: t * 300, on: molten < 0.999, camera, center: [0, 0, 0], intensity: 2.3 * (1 - molten) });
-  rim.set({ center: [0, 0, 0], r: 100, opacity: 0.9 * molten });
+  // the melt dims the Sun (it stays faintly there behind the dots); in the jump it comes back as the dots fade, so they
+  // never pile into one over-bright point
+  const back = fadeIn(t, CUE.j0, 0.7);
+  const dim = 1 - 0.96 * molten * (1 - back);
+  sun.set({ tau: t * 300, on: true, camera, center: [0, 0, 0], intensity: SUN_I * dim });
+  sun.corona.material.uniforms.uI.value = CORONA_I * dim;
+  rim.set({ center: [0, 0, 0], r: 101, opacity: 0.9 * molten * (1 - back) });
   const nOn = Math.round(N * E.inout2(seg(t, CUE.row0, CUE.row1))), rowOp = 1 - fadeIn(t, B.why.t0 + 0.6, 0.6);
   for (let i = 0; i < N; i++) {
     const x = -100 + RE + 2 * RE * i, on = i < nOn && rowOp > 0.01 ? 1 : 0;
-    row.setMatrixAt(i, m4.compose(new THREE.Vector3(x, 0, 101.2), new THREE.Quaternion(), new THREE.Vector3(RE * on, RE * on, RE * on)));
+    row.setMatrixAt(i, m4.compose(new THREE.Vector3(x, 0, 0), new THREE.Quaternion(), new THREE.Vector3(RE * on, RE * on, RE * on)));
   }
   row.instanceMatrix.needsUpdate = true;
-  S.row = [40, 6, 101.2].map((v) => v * k);
+  S.row = [40, 3, 0].map((v) => v * k);
   const so = winOp(t, CUE.spot - 0.4, CUE.melt0 - 0.6, 0.5) * (1 - molten);
   spotMat.opacity = so; penMat.opacity = so * 0.85; spot.visible = pen.visible = so > 0.01;
   spotEarth.set({ center: SD.map((v) => v * 101.6), sunDir: SD, sun: 1, spin: t * 0.2 });
   spotEarth.group.visible = so > 0.01;
-  S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.7, PH.spot_r * 1.2, 0][i]);
-  S.spotearth = SD.map((v) => v * 101.6 * k).map((v, i) => v + [RE, RE, 0][i]);
-  pelo.set({ camera, opacity: winOp(t, CUE.pelo, CUE.melt0, 0.4) });
+  S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.25 * k, PH.spot_r * 0.55 * k, 0][i]);
+  S.spotearth = SD.map((v) => v * 101.6 * k).map((v, i) => v + [RE * k, RE * k, 0][i]);
+  const po = winOp(t, CUE.pelo, CUE.melt0, 0.4);
+  peloMat.opacity = po; pelo.visible = po > 0.01;
+  peloRing.arc({ center: PD.map((v) => v * 100.6), r: 4.5, e1: [1, 0, 0], e2: [0, 1, 0] }).set({ opacity: po });
   S.pelo = PD.map((v) => v * 100.4 * k);
   dotMat.uniforms.uLevel.value = -1.05 + 2.1 * E.inout2(seg(t, CUE.melt0 + 0.4, CUE.melt1));
-  dotMat.uniforms.uOp.value = molten * (1 - fadeIn(t, CUE.j1, 0.8));
+  dotMat.uniforms.uOp.value = molten * (1 - back);
   sunDot.set({ center: [0, 0, 0], camera, opacity: fadeIn(t, CUE.j0 + 1.6, 0.8) });
   S.sundot = [0, 0, 0];
   const gr = PH.giant * 100 * k;
