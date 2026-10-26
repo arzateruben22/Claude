@@ -1,6 +1,6 @@
 # What a person must check before this posts
 
-Rest Frame No. 005, "The spinning chair". The measured gates are in `scorecard.md` (written with the final, which is not rendered yet). Nothing has been posted.
+Rest Frame No. 005, "The spinning chair". The measured gates are in `scorecard.md`. Nothing has been posted.
 
 ## This episode
 1. **Claims.** A physicist works through `CLAIMS-REVIEW.md`: every claim was checked from search excerpts only, so a person opens each link and ticks it.
