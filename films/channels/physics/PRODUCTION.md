@@ -10,6 +10,8 @@
 >   avoid all text, masters at CRF 12 and deliveries at CRF 15 with aq-mode 3, and WRITING.md rule 8 "One line wins".
 >   Every episode, ep02 included, is re-rendered on it.
 > - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
+> **Paused 06:07–08:12 UTC by the session's usage limit** (the worker restarted; ep03's final resumed from frame 476; the
+> rule-8 fix stage for ep02, ep04 and ep05 re-run after the reset). ep06 delivered 05:09 (QA PASS).
 > **Fact audit (26 Oct, from the coordinating session; reports on its branch, films/audits/2026-10-26).** Every confirmed
 > finding checked against our files and applied (commit fa0e26b): ep02's pendulum wave comes back "just as gradually"
 > (x(60−t) = x(t)), ep03's "doesn't spring back as hard" and "about three thousandths of a degree", ep04's "< 5" readout,
