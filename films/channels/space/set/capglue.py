@@ -1,8 +1,8 @@
 """capglue.py (films/channels/space/set): keep number phrases and fixed phrases on one caption line.
 
 timeline.Film.captions() breaks pages and lines between word tokens, so "nineteen / seventy-seven" can land on
-two lines. glue() merges each named run of words in a voice line into one token (joined with a no-break space,
-timed from its first word to its last), so the caption breaker can't split it. Call it after the last f.at()
+two lines. glue() merges each named run of words in a voice line into one token (joined with a figure space, which
+doesn't break and matches the captions' word gap; timed from its first word to its last), so the caption breaker can't split it. Call it after the last f.at()
 lookup (the anchors still see the separate words) and before f.captions().
 
     from capglue import glue, hold
@@ -15,7 +15,7 @@ page up until its last word or phrase has ended (plus `linger`), never past the 
 """
 import re
 
-NBSP = " "
+NBSP = "\u2007"   # a figure space: non-breaking, and as wide (0.55 em in Lexend) as the captions' word gap (0.28 em + 0.2 em padding)
 
 
 def _key(w):
