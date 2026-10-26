@@ -1,5 +1,5 @@
 {
- "duration": 74.0,
+ "duration": 74.4,
  "fps": 30,
  "preset": "meanwhile-pulse",
  "duck_db": -9.0,
@@ -13,43 +13,43 @@
   {
    "id": "normal",
    "t0": 5.2,
-   "t1": 14.4,
+   "t1": 14.8,
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 14.4,
-   "t1": 25.6,
+   "t0": 14.8,
+   "t1": 26.0,
    "energy": 0.55
   },
   {
    "id": "why",
-   "t0": 25.6,
-   "t1": 41.6,
+   "t0": 26.0,
+   "t1": 42.0,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 41.6,
-   "t1": 53.2,
+   "t0": 42.0,
+   "t1": 53.6,
    "energy": 0.75
   },
   {
    "id": "takeaway",
-   "t0": 53.2,
-   "t1": 59.2,
+   "t0": 53.6,
+   "t1": 59.6,
    "energy": 0.3
   },
   {
    "id": "meanwhile",
-   "t0": 59.2,
-   "t1": 67.6,
+   "t0": 59.6,
+   "t1": 68.0,
    "energy": 0.4
   },
   {
    "id": "tease",
-   "t0": 67.6,
-   "t1": 74.0,
+   "t0": 68.0,
+   "t1": 74.4,
    "energy": 0.35
   }
  ],
@@ -70,242 +70,254 @@
    "t": 5.2,
    "kind": "section",
    "id": "normal",
-   "t1": 14.4
+   "t1": 14.8
   },
   {
-   "t": 6.433333333333334,
+   "t": 6.866666666666666,
    "kind": "badge",
    "tag": "few",
    "text": "simplified: a few of thousands drawn"
   },
   {
-   "t": 9.766666666666667,
+   "t": 9.733333333333333,
    "kind": "counter.show",
    "tag": "count"
   },
   {
-   "t": 14.4,
+   "t": 14.8,
    "kind": "section",
    "id": "change",
-   "t1": 25.6
+   "t1": 26.0
   },
   {
-   "t": 14.55,
+   "t": 14.950000000000001,
    "kind": "swell",
    "tag": "panels",
-   "t1": 16.55
+   "t1": 16.950000000000003
   },
   {
-   "t": 16.1,
+   "t": 15.0,
    "kind": "badge",
    "tag": "ill",
    "text": "illustration: one stained tissue, two readings"
   },
   {
-   "t": 25.6,
+   "t": 26.0,
    "kind": "section",
    "id": "why",
-   "t1": 41.6
+   "t1": 42.0
   },
   {
-   "t": 29.9,
+   "t": 28.8,
+   "kind": "badge",
+   "tag": "ill-em",
+   "text": "illustration · not to scale"
+  },
+  {
+   "t": 30.3,
    "kind": "label",
    "tag": "gap"
   },
   {
-   "t": 29.933333333333334,
+   "t": 30.333333333333332,
    "kind": "impact",
    "tag": "sharp",
    "gain": -4.0
   },
   {
-   "t": 30.033333333333335,
+   "t": 30.433333333333334,
    "kind": "counter.show",
    "tag": "width"
   },
   {
-   "t": 30.433333333333334,
+   "t": 30.833333333333332,
    "kind": "badge",
    "tag": "slow-why",
    "text": "slowed"
   },
   {
-   "t": 31.833333333333332,
+   "t": 32.233333333333334,
    "kind": "label",
    "tag": "tip"
   },
   {
-   "t": 32.93333333333333,
+   "t": 33.333333333333336,
    "kind": "spike",
    "tag": "arrive"
   },
   {
-   "t": 33.8,
+   "t": 34.2,
    "kind": "diffuse",
    "tag": "calcium",
-   "t1": 35.03333333333333
+   "t1": 35.43333333333333
   },
   {
-   "t": 33.9,
+   "t": 34.3,
    "kind": "label",
    "tag": "ca"
   },
   {
-   "t": 35.666666666666664,
+   "t": 36.06666666666667,
    "kind": "label",
    "tag": "ves"
   },
   {
-   "t": 35.833333333333336,
+   "t": 36.233333333333334,
    "kind": "bind",
    "tag": "spill"
   },
   {
-   "t": 37.6,
+   "t": 38.0,
    "kind": "dissolve",
    "tag": "drift",
-   "t1": 38.7
+   "t1": 39.1
   },
   {
-   "t": 38.333333333333336,
+   "t": 38.733333333333334,
    "kind": "label",
    "tag": "rec"
   },
   {
-   "t": 38.63333333333333,
+   "t": 39.03333333333333,
    "kind": "spike",
    "tag": "post"
   },
   {
-   "t": 41.6,
-   "kind": "section",
-   "id": "whoa",
-   "t1": 53.2
+   "t": 40.9333,
+   "kind": "badge",
+   "tag": "nts2",
+   "text": "not to scale"
   },
   {
-   "t": 41.833333333333336,
+   "t": 42.0,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 53.6
+  },
+  {
+   "t": 42.233333333333334,
    "kind": "badge",
    "tag": "slow",
    "text": "slowed"
   },
   {
-   "t": 41.833333333333336,
+   "t": 42.233333333333334,
    "kind": "counter.show",
    "tag": "hand"
   },
   {
-   "t": 44.5984,
+   "t": 44.9984,
    "kind": "counter.end",
    "tag": "hand-end"
   },
   {
-   "t": 45.1333,
+   "t": 45.5333,
    "kind": "spike",
    "tag": "use0",
    "gain": -6.0
   },
   {
-   "t": 45.13333333333333,
+   "t": 45.53333333333333,
    "kind": "badge",
    "tag": "fast",
    "text": "sped up"
   },
   {
-   "t": 45.7533,
+   "t": 46.1533,
    "kind": "spike",
    "tag": "use1",
    "gain": -5.2
   },
   {
-   "t": 46.3733,
+   "t": 46.7733,
    "kind": "spike",
    "tag": "use2",
    "gain": -4.4
   },
   {
-   "t": 46.9933,
+   "t": 47.3933,
    "kind": "spike",
    "tag": "use3",
    "gain": -3.5999999999999996
   },
   {
-   "t": 47.36666666666667,
+   "t": 47.766666666666666,
    "kind": "label",
    "tag": "used"
   },
   {
-   "t": 47.6133,
+   "t": 48.0133,
    "kind": "spike",
    "tag": "use4",
    "gain": -2.8
   },
   {
-   "t": 48.2333,
+   "t": 48.6333,
    "kind": "spike",
    "tag": "use5",
    "gain": -2.0
   },
   {
-   "t": 48.8533,
+   "t": 49.2533,
    "kind": "spike",
    "tag": "use6",
    "gain": -2.0
   },
   {
-   "t": 49.4733,
+   "t": 49.8733,
    "kind": "spike",
    "tag": "use7",
    "gain": -2.0
   },
   {
-   "t": 50.0933,
+   "t": 50.4933,
    "kind": "spike",
    "tag": "use8",
    "gain": -2.0
   },
   {
-   "t": 50.7133,
+   "t": 51.1133,
    "kind": "spike",
    "tag": "use9",
    "gain": -2.0
   },
   {
-   "t": 51.3333,
+   "t": 51.7333,
    "kind": "spike",
    "tag": "use10",
    "gain": -2.0
   },
   {
-   "t": 51.9533,
+   "t": 52.3533,
    "kind": "spike",
    "tag": "use11",
    "gain": -2.0
   },
   {
-   "t": 52.5733,
+   "t": 52.9733,
    "kind": "spike",
    "tag": "use12",
    "gain": -2.0
   },
   {
-   "t": 53.2,
+   "t": 53.6,
    "kind": "section",
    "id": "takeaway",
-   "t1": 59.2
+   "t1": 59.6
   },
   {
-   "t": 55.93333333333333,
+   "t": 56.333333333333336,
    "kind": "badge",
    "tag": "slow-talk",
    "text": "slowed"
   },
   {
-   "t": 56.53333333333333,
+   "t": 56.93333333333333,
    "kind": "label",
    "tag": "gap2"
   },
   {
-   "t": 58.031,
+   "t": 58.431,
    "kind": "spike",
    "tag": "talk",
    "gain": -4.0
@@ -316,21 +328,21 @@
    "tag": "beat0"
   },
   {
-   "t": 59.2,
-   "kind": "section",
-   "id": "meanwhile",
-   "t1": 67.6
-  },
-  {
-   "t": 59.5,
-   "kind": "counter.show",
-   "tag": "tally"
-  },
-  {
    "t": 59.6,
    "kind": "badge",
    "tag": "slow-b0",
    "text": "slowed"
+  },
+  {
+   "t": 59.6,
+   "kind": "section",
+   "id": "meanwhile",
+   "t1": 68.0
+  },
+  {
+   "t": 59.9,
+   "kind": "counter.show",
+   "tag": "tally"
   },
   {
    "t": 60.0,
@@ -389,25 +401,25 @@
    "tag": "beat10"
   },
   {
-   "t": 67.583333,
+   "t": 67.983333,
    "kind": "badge",
    "tag": "nts-sac",
    "text": "illustration, not to scale"
   },
   {
-   "t": 67.583333,
+   "t": 67.983333,
    "kind": "breath",
    "tag": "sac",
-   "t1": 69.383333
+   "t1": 69.783333
   },
   {
-   "t": 67.6,
+   "t": 68.0,
    "kind": "section",
    "id": "tease",
-   "t1": 74.0
+   "t1": 74.4
   },
   {
-   "t": 72.0,
+   "t": 72.4,
    "kind": "signature",
    "tag": "end"
   }
@@ -425,32 +437,32 @@
   },
   {
    "id": "vo03",
-   "t": 14.7,
+   "t": 15.1,
    "file": "vo/03.wav"
   },
   {
    "id": "vo04",
-   "t": 25.9,
+   "t": 26.3,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 41.9,
+   "t": 42.3,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 53.5,
+   "t": 53.9,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 59.5,
+   "t": 59.9,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 67.9,
+   "t": 68.3,
    "file": "vo/08.wav"
   }
  ]

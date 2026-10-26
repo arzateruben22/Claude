@@ -23,14 +23,14 @@
  },
  {
   "id": "c3",
-  "sentence": "Your longest run from spine to toe: about a metre.",
-  "claim": "The longest human axons run from the base of the spinal cord to the big toe, about a metre.",
+  "sentence": "Some fibres reach from spine to toe: about a metre.",
+  "claim": "Some human axons run from the lower spinal cord to the toes, about a metre long.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=104901",
   "source_title": "BioNumbers 104901: length of neuron from base of spine to big toe, the longest cell in the human body",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: length of neuron from base of spine to big toe, range ≤1 metre. Guinness gives about 1.3 m for these motor neurons; the sensory paths from toe to brain are longer still. 'About a metre' sits in that range."
+  "note": "Excerpt: length of neuron from base of spine to big toe, range ≤1 metre. Guinness gives about 1.3 m for these motor neurons. The sensory fibres from the toe, running up the spinal cord to the brainstem, are longer still (about 1.5 m in an adult; Guinness, guinnessworldrecords.com/world-records/67725-longest-cell, search excerpt: about the body's height), so these are not the longest (BioNumbers' own title says 'longest cell'; its ≤1 m is for this route only). 'About a metre' sits in the spine-to-toe range. 26 Oct audit: the line said 'Your longest run from spine to toe' and the readout 'longest nerve cell, about 1 m'; 'longest' is wrong (the toe's sensory fibres are longer) and 'Your longest run' was heard as a jog, so the line says 'Some fibres reach from spine to toe' and the readout 'spine to toe: about 1 m'."
  },
  {
   "id": "c4",
@@ -100,25 +100,25 @@
  },
  {
   "id": "c7",
-  "sentence": "Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "sentence": "Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps.",
   "claim": "Many vertebrate axons are wrapped in myelin, an insulating sheath of membrane layers made by glial cells (oligodendrocytes and Schwann cells), interrupted by bare gaps, the nodes of Ranvier.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
   "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: myelin is formed by oligodendrocytes (CNS) and Schwann cells (PNS); the gaps are the nodes of Ranvier. 'Fatty': myelin is a lipid-rich membrane (standard description). 'Many of yours': not all axons are myelinated."
+  "note": "Excerpt: myelin is formed by oligodendrocytes (CNS) and Schwann cells (PNS); the gaps are the nodes of Ranvier. 'Fatty': myelin is a lipid-rich membrane (standard description). 'Many of your fibres': not all axons are myelinated. 26 Oct audit: 'Many of yours' had no noun a listener could point it back to (the sentence before ends on 'wire' and 'cell'), so it names the fibres; myelin wraps the fibre (axon), not the cell."
  },
  {
   "id": "c8",
-  "sentence": "Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "sentence": "Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps.",
   "claim": "In myelinated axons action potentials are generated only at the nodes of Ranvier; current flows passively under the myelin to the next node, so the signal appears to jump (saltatory conduction).",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
   "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: action potentials are generated only at the nodes; current passes passively to the next node, where the cycle repeats. 'Leaps' is the textbook picture; ions do not physically jump."
+  "note": "Excerpt: action potentials are generated only at the nodes; current passes passively to the next node, where the cycle repeats. 'Leaps' is the textbook picture; ions do not physically jump. 26 Oct audit: 'Many of yours' became 'Many of your fibres' (wording only)."
  },
  {
   "id": "c9",
@@ -144,14 +144,14 @@
  },
  {
   "id": "c11",
-  "sentence": "Wrapped ones, up to a hundred and fifty.",
-  "claim": "Myelinated axons conduct at up to about 150 m/s.",
+  "sentence": "Thick wrapped ones, up to a hundred and fifty.",
+  "claim": "Myelinated axons conduct at up to about 150 m/s; the fastest are the thickest.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
   "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (NBK10921): myelinated axons up to 150 m/s. 'Can hit' = the top of the range."
+  "note": "Excerpt (NBK10921): myelinated axons up to 150 m/s; bare ones 0.5–10 m/s. 'Up to' = the top of the range, reached by the thickest wrapped fibres (A-alpha, about 13–20 µm). 26 Oct audit: the line said 'Wrapped ones', which set the thinnest bare fibres against the fastest wrapped ones and left the whole gap to myelin. Part of it is thickness: speed grows with the square root of a bare fibre's diameter and roughly in proportion to a wrapped one's (Monash physiology, search excerpt), so at equal thickness myelin gives roughly 20–30 times (a 15–20 µm bare fibre would run about 4 m/s, a wrapped one about 90–120 m/s; the audit's arithmetic), not 150; the rest is thickness. The line now says 'Thick wrapped ones' and the race draws the wrapped fibre thicker."
  },
  {
   "id": "c12",
@@ -173,18 +173,18 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'."
+  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster' fibres (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'. 26 Oct audit: the next sentence (c19) now says 'faster fibres', not 'faster wires'."
  },
  {
   "id": "c19",
-  "sentence": "The jolt rides faster wires; the ache, bare ones.",
+  "sentence": "The jolt rides faster fibres; the ache, bare ones.",
   "claim": "Painful stimuli are carried by thinly myelinated A-delta fibres (about 5–25 m/s), giving a sharp, well-localised first pain, and by unmyelinated C fibres (about 0.5–2 m/s), giving a dull, aching second pain that follows; the delay is easiest to notice far from the brain.",
   "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
   "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster wires' (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'. The on-screen timer stops at 2.2 s (the slow signal lands on the spoken 'ache'): computed, 2.2 s over about 1.6 m toe to brain is about 0.73 m/s, inside the C-fibre range of 0.5–2 m/s (0.8–3.2 s over 1.6 m)."
+  "note": "Excerpt: first pain (thinly myelinated A-delta, about 5–25 m/s) precedes second pain (unmyelinated C, about 0.5–2 m/s), easiest to tell apart far from the brain. Computed: over about 1.5 m, about 0.1 s (at 15 m/s) against about 1.5 s (at 1 m/s). Review fix: 'faster' fibres (A-delta are thinly myelinated, not the 150 m/s fibres) and 'can hurt twice'. The on-screen timer stops at 2.2 s (the slow signal lands on the spoken 'ache'): computed, 2.2 s over about 1.6 m toe to brain is about 0.73 m/s, inside the C-fibre range of 0.5–2 m/s (0.8–3.2 s over 1.6 m). 26 Oct audit: 'faster wires' became 'faster fibres' (the why has just said the signal isn't current in a wire)."
  },
  {
   "id": "c14",

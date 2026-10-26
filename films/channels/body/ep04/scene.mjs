@@ -247,7 +247,7 @@ for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1,
 for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : (v) => v.toFixed(sp.fmt ?? 0);
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: () => 0 };
-  // the readout sits above the subject (clear of the terminal's rim and the receptors); frame 0's "touching?" beside the title
+  // the readout sits above the subject (clear of the terminal's rim and the receptors); frame 0's "touching: ?" beside the title
   hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: sp.id === "q" ? [0.735, 0.215] : [0.5, 0.235], minCh: 1 }).classList.add("mi-spine");
 }
 const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.floor(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.54, 0.235], minCh: 2 });

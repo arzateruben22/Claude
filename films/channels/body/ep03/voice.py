@@ -61,8 +61,10 @@ SPEEDS = {
     "vo08": [0.88, 0.84],
 }
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question
-# per-line pauses where a line wants more air (episode 2: the whoa breathes before its number)
-GAPS = {"vo08": [0.4]}
+# per-line pauses where a line wants more air (episode 2: the whoa breathes before its number). vo05 (26 Oct audit:
+# "Thick wrapped ones", one word longer): 0.38 s before it keeps the line inside 3.0 words/s (8.667 s or more)
+# and its end plus the whoa's 3 s hold on the 54.4 s grid line (8.70 s or less), so no later beat moves
+GAPS = {"vo05": [0.38, 0.3], "vo08": [0.4]}
 
 
 def split(text):

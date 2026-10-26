@@ -40,11 +40,11 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "It's a nerve signal, racing down one cell's thin fibre. Your longest run from spine to toe: about a metre. How long does that take?",
+   "text": "It's a nerve signal, racing down one cell's thin fibre. Some fibres reach from spine to toe: about a metre. How long does that take?",
    "stars": [
     "toe"
    ],
-   "phonemes": "ɪts ɐ nˈɜːv sˈɪɡnəl, ɹˈeɪsɪŋ dˌaʊn wˈɒn sˈɛlz θˈɪn fˈaɪbə. jɔː lˈɒŋɡɪst ɹˈʌn fɹɒm spˈaɪn tə tˈəʊ: ɐbˌaʊt ɐ mˈiːtə. hˌaʊ lˈɒŋ dˈʌz ðat tˈeɪk?",
+   "phonemes": "ɪts ɐ nˈɜːv sˈɪɡnəl, ɹˈeɪsɪŋ dˌaʊn wˈɒn sˈɛlz θˈɪn fˈaɪbə. sˌʌm fˈaɪbəz ɹˈiːtʃ fɹɒm spˈaɪn tə tˈəʊ: ɐbˌaʊt ɐ mˈiːtə. hˌaʊ lˈɒŋ dˈʌz ðat tˈeɪk?",
    "speeds": [
     0.92,
     0.92,
@@ -60,13 +60,13 @@
      3.6156
     ],
     [
-     6.7153,
-     7.0153
+     6.9389,
+     7.2389
     ]
    ],
    "file": "02.wav",
-   "dur": 8.599,
-   "sha256": "bbb99a96c8e735ab85f2c458995191d738af96d1c653d413b64ab1d17d1840d2"
+   "dur": 8.822,
+   "sha256": "9ef471c92343428b377337897edcc996717056254bc9803bd7f9194ac84ec5b0"
   },
   {
    "id": "vo03",
@@ -103,12 +103,12 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
    "stars": [
     "myelin",
     "leaps"
    ],
-   "phonemes": "ɪt ˌɪzənt kˈʌɹənt ɪn ɐ wˈaɪə: ðə sˈɛl ɹˌiːfˈaɪəz ɪt, stˈɛp baɪ stˈɛp. mˈɛnɪəv jˈɔːz wˈeə fˈati mˈaɪɪlˌɪn, ɹˌiːfˈaɪəɹɪŋ ˈəʊnli at ɡˈaps, sˌəʊ ðə sˈɪɡnəl lˈiːps. wˌeə mˈaɪɪlˌɪn ɪz dˈamɪdʒd, az ɪn mˌʌltɪpəl skləɹˈəʊsɪs, sˈɪɡnəlz kan slˈəʊ ɔː stˈɔːl.",
+   "phonemes": "ɪt ˌɪzənt kˈʌɹənt ɪn ɐ wˈaɪə: ðə sˈɛl ɹˌiːfˈaɪəz ɪt, stˈɛp baɪ stˈɛp. mˈɛnɪəv jɔː fˈaɪbəz wˈeə fˈati mˈaɪɪlˌɪn, ɹˌiːfˈaɪəɹɪŋ ˈəʊnli at ɡˈaps, sˌəʊ ðə sˈɪɡnəl lˈiːps. wˌeə mˈaɪɪlˌɪn ɪz dˈamɪdʒd, az ɪn mˌʌltɪpəl skləɹˈəʊsɪs, sˈɪɡnəlz kan slˈəʊ ɔː stˈɔːl.",
    "speeds": [
     0.95,
     0.95,
@@ -124,53 +124,53 @@
      3.9968
     ],
     [
-     8.8027,
-     9.1028
+     9.0014,
+     9.3014
     ]
    ],
    "file": "04.wav",
-   "dur": 14.226,
-   "sha256": "853363083dad598dce5a3211720f99508b64d543b53e3badb6bcbcd58a97e632"
+   "dur": 14.425,
+   "sha256": "5364059827f5c4b05066ff2f08217b47bd282b6b7bb445471104142a91291c15"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "The thinnest bare fibres crawl at about a metre a second. Wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
+   "text": "The thinnest bare fibres crawl at about a metre a second. Thick wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
    "stars": [
     "car"
    ],
-   "phonemes": "ðə θˈɪnɪst bˈeə fˈaɪbəz kɹˈɔːl at ɐbˌaʊt ɐ mˈiːtəɹ ɐ sˈɛkənd. ɹˈapt wˌɒnz, ˌʌp tʊ ɐ hˈʌndɹɪd and fˈɪfti. fˈastə ðˌanə fˈɔːmjʊlə wˈɒn kˈɑː.",
+   "phonemes": "ðə θˈɪnɪst bˈeə fˈaɪbəz kɹˈɔːl at ɐbˌaʊt ɐ mˈiːtəɹ ɐ sˈɛkənd. θˈɪk ɹˈapt wˌɒnz, ˌʌp tʊ ɐ hˈʌndɹɪd and fˈɪfti. fˈastə ðˌanə fˈɔːmjʊlə wˈɒn kˈɑː.",
    "speeds": [
     0.86,
     0.86,
     0.88
    ],
    "gaps": [
-    0.3,
+    0.38,
     0.3
    ],
    "silences": [
     [
      3.4023,
-     3.7023
+     3.7823
     ],
     [
-     6.0659,
-     6.3659
+     6.3548,
+     6.6548
     ]
    ],
    "file": "05.wav",
-   "dur": 8.389,
-   "sha256": "b1fa87e2641d1c770324d22de8853cca37b12310a813ffce814801fc33158892"
+   "dur": 8.678,
+   "sha256": "3cce6b68b9d3d9cb864fe09a26b03137a60c6c45c6ade605768798ef1927f965"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So a stubbed toe can hurt twice. The jolt rides faster wires; the ache, bare ones.",
+   "text": "So a stubbed toe can hurt twice. The jolt rides faster fibres; the ache, bare ones.",
    "stars": [
     "twice"
    ],
-   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt ɹˈaɪdz fˈastə wˈaɪəz; ðɪ ˈeɪk, bˈeə wˌɒnz.",
+   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt ɹˈaɪdz fˈastə fˈaɪbəz; ðɪ ˈeɪk, bˈeə wˌɒnz.",
    "speeds": [
     0.84,
     0.84
@@ -185,8 +185,8 @@
     ]
    ],
    "file": "06.wav",
-   "dur": 5.799,
-   "sha256": "41d5224d46b463b39a5b6bdea9bb110bf3b3dccc8d2f4a3fd684f7f77535b4b3"
+   "dur": 5.848,
+   "sha256": "7e93ff3f96db9b0260e827e3d06f6c49fb6b4489fa37c95cfe4bce387ad53c92"
   },
   {
    "id": "vo07",

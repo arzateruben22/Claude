@@ -3,7 +3,8 @@ Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
 
   python3 -I films/channels/body/ep04/compile.py
 
-One world (scene.mjs; units arbitrary, the junction hugely enlarged, badged "not to scale"):
+One world (scene.mjs; units arbitrary, the junction hugely enlarged, badged "not to scale"; over the electron-microscope-style
+view of the why, "illustration · not to scale"):
   the hero junction at the origin: a terminal cut open (its vesicles inside), the gap, the next cell's surface
   and its receptors; around it a small network of nerve cells the camera pulls back to (normal, whoa).
 The change is two illustrated panels in the overlay (the same stained tissue read two ways: Golgi's continuous web,
@@ -54,6 +55,9 @@ REL = {
     "drift": [A("vo04:drifts", -0.35), A("vo04:across", 0.35)],
     "post": A("vo04:across", 0.3),                              # the next cell lights: a new signal (in the hold)
 }
+# the electron-microscope-style view, badged "illustration · not to scale": from the blur's sharpening until the
+# why's handoff ends (scene.mjs: the receptors are dark again at post + 1.6, when "slowed" leaves too)
+EM = [SHARP[0], round(REL["post"] + 1.6, 4)]
 # the whoa: the handoff replayed slowed, its readout 0 → 0.001 s; then the pull back, one junction used again and again
 REPLAY = [A("vo05:The", -0.1), A("vo05:second", 0.3)]
 USE = {"t0": A("vo05:Use", 0.0), "beats": [], "grow": [A("vo05:junction", 0.0), A("vo05:learn", 0.2)]}
@@ -73,7 +77,7 @@ CAM = {
         {"t": A("vo01:show"), "pos": [-34.0, 5.2, 66.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:reaches", 0.2), "pos": [-70.0, -140.0, 1200.0], "look": [-100.0, -200.0, -80.0], "fov": 34, "ease": "p2"},   # one cell's reach
         {"t": A("vo02:trillion", 0.2), "pos": [-60.0, -160.0, 1700.0], "look": [-90.0, -200.0, -100.0], "fov": 34, "ease": "p2"},   # the network
-        {"t": A("vo02:Up", 0.0), "pos": [-55.0, -150.0, 1640.0], "look": [-90.0, -200.0, -100.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo02:Through", 0.0), "pos": [-55.0, -150.0, 1640.0], "look": [-90.0, -200.0, -100.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:joined", 0.1), "pos": [-36.0, 7.0, 76.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "p3"},           # back to the contact
         {"t": SHARP[0], "pos": [-30.0, 5.2, 72.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": SHARP[1] + 0.4, "pos": [1.0, 3.5, 63.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p2"},
@@ -118,8 +122,8 @@ LABELS = [
 # the handoff readout counts from the signal's arrival at the terminal to the receptors lighting, in the replay's time
 _k = (REPLAY[1] - REPLAY[0]) / (REL["post"] + 0.4 - REL["sig"][0])
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": A("vo02:Your", -0.3), "text": "?", "unit": "", "label": "touching?"},
-    {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Up", 0.0), "text": "100+ trillion", "unit": "", "label": "junctions in your brain, estimated"},   # c3
+    {"id": "q", "t0": 0.0, "t1": A("vo02:Your", -0.3), "text": "?", "unit": "", "label": "touching"},
+    {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Through", 0.0), "text": "100+ trillion", "unit": "", "label": "junctions in your brain, estimated"},   # c3
     {"id": "width", "t0": A("vo04:gap", 0.15), "t1": A("vo04:jump", 0.2), "text": "20–50", "unit": "nm", "label": "the gap, about"},   # c10
     {"id": "hand", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3), "keys": [[round(REPLAY[0] + (REL["sig"][1] - REL["sig"][0]) * _k, 4), 0.0], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), 0.001]],
      "unit": "s", "label": "the handoff, about", "fmt": 4},   # c11
@@ -127,10 +131,14 @@ SPINE = [
 PANELS = {"t0": B["change"]["t0"] + 0.15, "golgi": A("vo03:Golgi", -0.2), "cajal": A("vo03:Santiago", -0.1), "t1": B["why"]["t0"] - 0.1, "nobel": A("vo03:nineteen", 0.0)}
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["sac"] - 0.25, "rate": 15.0 / 60.0, "unit": "breaths", "label": "while you watched, at rest, about", "beats": BREATHS}   # c14
 BADGES = [
-    {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": CUT["sac"]},
-    {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:Up", -0.2)},
+    # one note in the top-right corner at a time: "not to scale", then "illustration · not to scale" over the
+    # electron-microscope-style view (it is a model, not a micrograph or footage), then "not to scale" again
+    {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": round(EM[0] - 0.3, 4)},
+    {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": EM[1]},
+    {"id": "nts2", "text": "not to scale", "t0": round(EM[1] + 0.3, 4), "t1": CUT["sac"]},
+    {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:Through", -0.2)},
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["golgi"] - 0.4, "t1": PANELS["t1"] - 0.35},
-    {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": REL["post"] + 1.6},
+    {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": EM[1]},
     {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
     {"id": "fast", "text": "sped up", "slot": "tl", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
     {"id": "slow-talk", "text": "slowed", "slot": "tl", "t0": TALK, "t1": TALK + 2.4},
@@ -164,10 +172,10 @@ CAPTION_KEEP = [
     "fifteen breaths",
     "those breaths",
     "that air",
-    "a typical one",
+    "a typical nerve cell",
     "thousands of others",
     "tiny sacs",
-    "reaches out",
+    "reaches thousands",
     "in your brainstem",
 ]
 

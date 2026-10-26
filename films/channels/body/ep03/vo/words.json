@@ -96,8 +96,8 @@
   },
   {
    "id": "vo02",
-   "text": "It's a nerve signal, racing down one cell's thin fibre. Your longest run from spine to toe: about a metre. How long does that take?",
-   "heard": "It's a nerve signal, racing down one cell's thin fiber. Your longest run from spine to toe, about a meter. How long does that take?",
+   "text": "It's a nerve signal, racing down one cell's thin fibre. Some fibres reach from spine to toe: about a metre. How long does that take?",
+   "heard": "It's a nerve signal racing down one cell's thin fiber. Some fibers reach from spine to toe, about a meter. How long does that take?",
    "words": [
     {
      "w": "It's",
@@ -120,7 +120,7 @@
     {
      "w": "signal,",
      "start": 0.665,
-     "end": 1.2,
+     "end": 1.04,
      "heard": true
     },
     {
@@ -161,94 +161,94 @@
      "end_asr": 3.6
     },
     {
-     "w": "Your",
-     "start": 3.635,
+     "w": "Some",
+     "start": 3.64,
      "end": 3.84,
      "heard": true
     },
     {
-     "w": "longest",
-     "start": 3.84,
-     "end": 4.24,
-     "heard": true
+     "w": "fibres",
+     "start": 3.93,
+     "end": 4.4,
+     "heard": false
     },
     {
-     "w": "run",
-     "start": 4.175,
-     "end": 4.48,
+     "w": "reach",
+     "start": 4.49,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "from",
-     "start": 4.52,
-     "end": 4.72,
+     "start": 4.545,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "spine",
-     "start": 4.81,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 5.215,
+     "start": 4.97,
      "end": 5.28,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 5.38,
+     "end": 5.44,
+     "heard": true
+    },
+    {
      "w": "toe:",
-     "start": 5.245,
-     "end": 5.84,
+     "start": 5.415,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "about",
-     "start": 5.845,
-     "end": 6.08,
+     "start": 6.055,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.08,
-     "end": 6.24,
+     "start": 6.295,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "metre.",
-     "start": 6.33,
-     "end": 6.715,
+     "start": 6.59,
+     "end": 6.939,
      "heard": false,
-     "end_asr": 7.12
+     "end_asr": 7.28
     },
     {
      "w": "How",
-     "start": 7.05,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "long",
-     "start": 7.36,
+     "start": 7.275,
      "end": 7.6,
      "heard": true
     },
     {
-     "w": "does",
-     "start": 7.625,
+     "w": "long",
+     "start": 7.6,
      "end": 7.84,
      "heard": true
     },
     {
-     "w": "that",
+     "w": "does",
      "start": 7.845,
      "end": 8.08,
      "heard": true
     },
     {
+     "w": "that",
+     "start": 8.07,
+     "end": 8.32,
+     "heard": true
+    },
+    {
      "w": "take?",
-     "start": 8.04,
-     "end": 8.56,
+     "start": 8.26,
+     "end": 8.8,
      "heard": true
     }
    ],
@@ -422,8 +422,8 @@
   },
   {
    "id": "vo04",
-   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of yours wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
-   "heard": "It isn't current in a wire, the cell refires it step by step. Many of yours wear fatty myelin, refiring only at gaps so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "heard": "It isn't current in a wire, the cell refires it step by step. Many of your fibers wear fatty myelin, refiring only at gaps so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
    "words": [
     {
      "w": "It",
@@ -502,169 +502,175 @@
      "start": 3.335,
      "end": 3.697,
      "heard": true,
-     "end_asr": 4.0
+     "end_asr": 3.92
     },
     {
      "w": "Many",
-     "start": 4.02,
-     "end": 4.32,
+     "start": 4.015,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "of",
-     "start": 4.415,
-     "end": 4.48,
+     "start": 4.24,
+     "end": 4.4,
      "heard": true
     },
     {
-     "w": "yours",
-     "start": 4.445,
-     "end": 4.8,
+     "w": "your",
+     "start": 4.405,
+     "end": 4.56,
      "heard": true
+    },
+    {
+     "w": "fibres",
+     "start": 4.61,
+     "end": 5.04,
+     "heard": false
     },
     {
      "w": "wear",
-     "start": 4.87,
-     "end": 5.04,
+     "start": 5.07,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "fatty",
-     "start": 5.115,
-     "end": 5.44,
+     "start": 5.335,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "myelin,",
-     "start": 5.35,
-     "end": 6.24,
+     "start": 5.57,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "re-firing",
-     "start": 6.31,
-     "end": 6.96,
+     "start": 6.55,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "only",
-     "start": 6.935,
-     "end": 7.12,
+     "start": 7.145,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "at",
-     "start": 7.18,
-     "end": 7.28,
+     "start": 7.45,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "gaps,",
-     "start": 7.31,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "so",
-     "start": 7.81,
+     "start": 7.555,
      "end": 7.92,
      "heard": true
     },
     {
+     "w": "so",
+     "start": 7.82,
+     "end": 8.08,
+     "heard": true
+    },
+    {
      "w": "the",
-     "start": 7.905,
-     "end": 8.0,
+     "start": 8.005,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "signal",
-     "start": 7.935,
-     "end": 8.32,
+     "start": 8.095,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "leaps.",
-     "start": 8.37,
-     "end": 8.803,
+     "start": 8.585,
+     "end": 9.001,
      "heard": true,
-     "end_asr": 9.04
+     "end_asr": 9.2
     },
     {
      "w": "Where",
-     "start": 9.125,
-     "end": 9.28,
+     "start": 9.32,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "myelin",
-     "start": 9.27,
-     "end": 9.84,
+     "start": 9.35,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "is",
-     "start": 9.94,
-     "end": 10.0,
+     "start": 10.135,
+     "end": 10.185,
      "heard": true
     },
     {
      "w": "damaged,",
-     "start": 9.97,
-     "end": 10.56,
+     "start": 10.165,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "as",
-     "start": 10.615,
-     "end": 10.72,
+     "start": 10.815,
+     "end": 10.96,
      "heard": true
     },
     {
      "w": "in",
-     "start": 10.645,
-     "end": 10.88,
+     "start": 10.955,
+     "end": 11.12,
      "heard": true
     },
     {
      "w": "multiple",
-     "start": 10.76,
-     "end": 11.36,
+     "start": 11.025,
+     "end": 11.52,
      "heard": true
     },
     {
      "w": "sclerosis,",
-     "start": 11.46,
-     "end": 12.48,
+     "start": 11.435,
+     "end": 12.64,
      "heard": true
     },
     {
      "w": "signals",
-     "start": 12.475,
-     "end": 12.96,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 13.01,
+     "start": 12.675,
      "end": 13.2,
      "heard": true
     },
     {
+     "w": "can",
+     "start": 13.21,
+     "end": 13.36,
+     "heard": true
+    },
+    {
      "w": "slow",
-     "start": 13.27,
-     "end": 13.52,
+     "start": 13.24,
+     "end": 13.76,
      "heard": true
     },
     {
      "w": "or",
-     "start": 13.61,
-     "end": 13.68,
+     "start": 13.8,
+     "end": 13.92,
      "heard": true
     },
     {
      "w": "stall.",
-     "start": 13.64,
-     "end": 14.16,
+     "start": 13.83,
+     "end": 14.4,
      "heard": true
     }
    ],
@@ -672,12 +678,12 @@
   },
   {
    "id": "vo05",
-   "text": "The thinnest bare fibres crawl at about a metre a second. Wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
-   "heard": "The thinnest bare fibers crawl at about a meter a second. Wrapped ones up to 150. Faster than a Formula One car.",
+   "text": "The thinnest bare fibres crawl at about a metre a second. Thick wrapped ones, up to a hundred and fifty. Faster than a Formula One car.",
+   "heard": "The thinnest bare fibers crawl at about a meter a second. Thick wrapped ones up to 150. Faster than a Formula One car.",
    "words": [
     {
      "w": "The",
-     "start": 0.025,
+     "start": 0.035,
      "end": 0.24,
      "heard": true
     },
@@ -740,94 +746,100 @@
      "start": 3.015,
      "end": 3.402,
      "heard": true,
-     "end_asr": 3.68
+     "end_asr": 3.76
     },
     {
-     "w": "Wrapped",
-     "start": 3.725,
-     "end": 4.08,
+     "w": "Thick",
+     "start": 3.815,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "wrapped",
+     "start": 4.06,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "ones,",
-     "start": 4.02,
-     "end": 4.4,
+     "start": 4.37,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "up",
-     "start": 4.645,
-     "end": 4.72,
+     "start": 4.87,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 4.685,
-     "end": 4.88,
+     "start": 5.065,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.9,
-     "end": 6.066,
+     "start": 5.115,
+     "end": 6.355,
      "heard": false,
-     "end_asr": 6.4
+     "end_asr": 6.72
     },
     {
      "w": "hundred",
-     "start": 4.93,
-     "end": 6.066,
+     "start": 5.145,
+     "end": 6.355,
      "heard": false,
-     "end_asr": 6.4
+     "end_asr": 6.72
     },
     {
      "w": "and",
-     "start": 4.96,
-     "end": 6.066,
+     "start": 5.285,
+     "end": 6.355,
      "heard": false,
-     "end_asr": 6.4
+     "end_asr": 6.72
     },
     {
      "w": "fifty.",
-     "start": 4.99,
-     "end": 6.066,
+     "start": 5.315,
+     "end": 6.355,
      "heard": false,
-     "end_asr": 6.4
+     "end_asr": 6.72
     },
     {
      "w": "Faster",
-     "start": 6.385,
-     "end": 6.88,
+     "start": 6.675,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "than",
-     "start": 6.91,
-     "end": 7.04,
+     "start": 7.05,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.105,
-     "end": 7.155,
+     "start": 7.395,
+     "end": 7.445,
      "heard": true
     },
     {
      "w": "Formula",
-     "start": 7.18,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "One",
-     "start": 7.66,
+     "start": 7.495,
      "end": 7.92,
      "heard": true
     },
     {
+     "w": "One",
+     "start": 7.955,
+     "end": 8.24,
+     "heard": true
+    },
+    {
      "w": "car.",
-     "start": 7.91,
-     "end": 8.32,
+     "start": 8.2,
+     "end": 8.64,
      "heard": true
     }
    ],
@@ -835,12 +847,12 @@
   },
   {
    "id": "vo06",
-   "text": "So a stubbed toe can hurt twice. The jolt rides faster wires; the ache, bare ones.",
-   "heard": "So a stubbed toe can hurt twice. The jolt rides faster wires, the ache bare ones.",
+   "text": "So a stubbed toe can hurt twice. The jolt rides faster fibres; the ache, bare ones.",
+   "heard": "So a stubbed toe can hurt twice. The jolt rides faster fibers, the ache bare wands.",
    "words": [
     {
      "w": "So",
-     "start": 0.15,
+     "start": 0.03,
      "end": 0.24,
      "heard": true
     },
@@ -901,39 +913,39 @@
     },
     {
      "w": "faster",
-     "start": 3.425,
+     "start": 3.34,
      "end": 3.92,
      "heard": true
     },
     {
-     "w": "wires;",
-     "start": 3.84,
+     "w": "fibres;",
+     "start": 3.89,
      "end": 4.48,
-     "heard": true
+     "heard": false
     },
     {
      "w": "the",
-     "start": 4.575,
-     "end": 4.64,
+     "start": 4.62,
+     "end": 4.67,
      "heard": true
     },
     {
      "w": "ache,",
-     "start": 4.605,
-     "end": 4.88,
+     "start": 4.65,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "bare",
-     "start": 5.025,
+     "start": 5.075,
      "end": 5.2,
      "heard": true
     },
     {
      "w": "ones.",
-     "start": 5.25,
-     "end": 5.76,
-     "heard": true
+     "start": 5.295,
+     "end": 5.5,
+     "heard": false
     }
    ],
    "clamped": true

@@ -12,14 +12,14 @@
  },
  {
   "id": "c2",
-  "sentence": "A typical one reaches out to thousands of others.",
+  "sentence": "A typical nerve cell reaches thousands of others.",
   "claim": "A neuron typically forms thousands of connections (synapses).",
   "source_url": "https://bri.ucla.edu/brain-fact/billions-of-neurons-trillions-of-synapses/",
   "source_title": "Billions of neurons, trillions of synapses (UCLA Brain Research Institute, Brain Fact)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: about 86 billion neurons, 'each forming thousands of connections'. Some estimates run up to 10,000 per neuron."
+  "note": "Excerpt: about 86 billion neurons, 'each forming thousands of connections'. Some estimates run up to 10,000 per neuron. 26 Oct audit: the line said 'A typical one reaches out to thousands of others'; heard straight after '…no microscope could show it', 'one' attached to 'microscope', so the line now names the nerve cell."
  },
  {
   "id": "c3",
@@ -30,29 +30,40 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'resulting in an estimated 100 trillion synapses'. Estimates range about 100–500 trillion; neocortex counts give about 150–164 trillion (Pakkenberg; Synapse 2001). 'About a hundred trillion' is the commonly cited estimate; the readout says 'about'."
+  "note": "Excerpt: 'resulting in an estimated 100 trillion synapses'. Estimates range about 100–500 trillion. Second source, for 'over': Tang, Nyengaard, De Groot & Gundersen 2001, 'Total regional and global number of synapses in the human brain neocortex', Synapse 41(3):258–273 (abstract, search excerpt of its TNO repository record, https://repository.tno.nl/SingleDoc?docId=9368): an average of 164 × 10^12 neocortical synapses in five young male brains (CV 0.17), restated as about 164 trillion ±17% in the State of Brain Emulation Report 2025 (https://arxiv.org/pdf/2510.15745). Pakkenberg et al. 2003 (https://pubmed.ncbi.nlm.nih.gov/12543266/, abstract): 'approximately 0.15 x 10(15)' in the neocortex. Computed: 164 × (1 − 0.17) ≈ 136 trillion, above 100 trillion even one SD low, before the cerebellum. 26 Oct audit: UCLA says 'an estimated 100 trillion', not 'over', and the old note was stale; Tang et al. is now cited for 'over'. UCLA's ~100 trillion is the low end; Tang's 164 trillion for the neocortex alone supports 'over'; the readout says '100+ trillion'."
+ },
+ {
+  "id": "c17",
+  "sentence": "Through a lens, they look joined.",
+  "claim": "A conventional light microscope resolves about 200 nm (Abbe: 550 nm / (2 × 1.4) ≈ 196 nm); the synaptic cleft is about 20–50 nm, 4–10 times smaller, so under a light microscope the contact between two nerve cells looks continuous.",
+  "source_url": "https://www.nagwa.com/en/videos/632148386161/",
+  "source_title": "Why the synaptic cleft needs an electron microscope (Nagwa explainer)",
+  "accessed": "2026-10-26",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: Nagwa (as c1): Abbe's limit gives light microscopy about 200 nm lateral resolution; the cleft is too small for conventional microscopes. Cleft width: JoVE, Chemical synapses (https://www.jove.com/science-education/v/14896/chemical-synapses), as on c10's readout: about 20–50 nm. Computed: d = λ / (2·NA) = 550 / (2 × 1.4) ≈ 196 nm; 196 / 50 ≈ 3.9 and 196 / 20 ≈ 9.8. 'A lens' is the light microscope the hook names; the electron microscope (c7) is what shows the gap. 26 Oct audit: the line was 'Up close, they look joined.' tagged {-}, but it says how real junctions look, and 'up close' is untrue at electron-microscope range; it now says 'through a lens' and carries this claim."
  },
  {
   "id": "c4",
-  "sentence": "Using the same stain, Camillo Golgi saw one continuous web.",
-  "claim": "Camillo Golgi supported the reticular theory: the nervous system as one continuous network.",
+  "sentence": "Camillo Golgi, who made the stain, saw one continuous web.",
+  "claim": "Camillo Golgi devised the silver stain used to see nerve cells (the 'black reaction', 1873) and supported the reticular theory: the nervous system as one continuous network.",
   "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
   "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: Golgi backed the reticular theory, which held that the nervous system was one continuous network; his Nobel lecture again emphasised it. Cajal used Golgi's own silver stain (Scientifica; c5), hence 'using the same stain'."
+  "note": "Excerpts (Scientifica): Golgi started working with potassium dichromate and silver nitrate in 1873 and formulated the recipe for the 'reazione nera' (black reaction); he backed the reticular theory, which held that the nervous system was one continuous network; his Nobel lecture again emphasised it. Cross-check: 'An Important Step in Neuroscience: Camillo Golgi and His Discoveries', Cells 2022 (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9776620/): he worked out his 'black reaction' in 1873 in a makeshift laboratory at Abbiategrasso. 26 Oct audit: the line said 'Using the same stain, Camillo Golgi saw…'; heard aloud, 'the same stain' had nothing to refer back to and hid that Golgi made it; it now says so (Cajal's use of it: c5)."
  },
  {
   "id": "c5",
-  "sentence": "Santiago Ramón y Cajal saw separate cells.",
-  "claim": "Santiago Ramón y Cajal argued, using Golgi's own stain, that neurons are discrete cells that communicate at specialised junctions (the neuron doctrine).",
+  "sentence": "With it, Santiago Ramón y Cajal saw separate cells.",
+  "claim": "Using Golgi's stain, Santiago Ramón y Cajal argued that neurons are discrete cells that communicate at specialised junctions (the neuron doctrine).",
   "source_url": "https://www.scientifica.uk.com/neurowire/meet-the-nobels-golgi-and-cajal",
   "source_title": "Meet the Nobels: Golgi and Cajal (Scientifica, Neurowire)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: Cajal provided evidence that neurons are discrete cells that communicate through specialized junctions."
+  "note": "Excerpt (Scientifica): Cajal provided evidence that neurons are discrete cells that communicate through specialized junctions. 'With it' (Golgi's stain): Pfizer, '6 Views of a Neuron by Golgi and Cajal' (https://www.pfizer.com/news/articles/6_views_of_a_neuron_by_golgi_and_cajal), in the search tool's summary (not a verbatim quote): Golgi's method reached Spain about 14 years after its invention, and Cajal began using Golgi's stain to argue that the nervous system is made of distinct elements. 26 Oct audit: 'With it,' added, so the stain Golgi made is the one Cajal used against him."
  },
  {
   "id": "c6",
@@ -123,13 +134,13 @@
  {
   "id": "c12",
   "sentence": "Use a junction, and it can grow stronger: likely part of how you learn.",
-  "claim": "Synapses can strengthen or weaken with activity (synaptic plasticity, e.g. long-term potentiation); this is considered a main cellular mechanism of learning and memory.",
-  "source_url": "https://www.neuroscience.umn.edu/research-areas/synaptic-plasticity-and-learning",
-  "source_title": "Synaptic plasticity and learning (University of Minnesota, Department of Neuroscience)",
-  "accessed": "2026-10-25",
+  "claim": "Synapses can strengthen or weaken with activity (synaptic plasticity, e.g. long-term potentiation); the evidence supports plasticity being necessary for learning and memory, though not that it is sufficient.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/10845078/",
+  "source_title": "Martin, Grimwood & Morris 2000, Synaptic plasticity and memory: an evaluation of the hypothesis (Annu Rev Neurosci 23:649–711, PubMed 10845078)",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (UMN): synaptic plasticity is the best cellular and molecular model of learning and memory. An NIMH-funded researcher: 'Synaptic plasticity is thought to be a basis of learning and memory'. 'Likely part of' keeps the hedge; reviews note it does not explain every kind of learning."
+  "note": "Excerpt (abstract): 'We conclude that a wealth of data supports the notion that synaptic plasticity is necessary for learning and memory, but that little data currently supports the notion of sufficiency.' Necessary but not shown to be sufficient is what 'likely part of' says; it does not explain every kind of learning. 26 Oct audit: the University of Minnesota page did not carry the 'best cellular and molecular model' wording the note credited to it (that came from a 2013 University of Washington symposium page), and the NIMH quote had no source; both are replaced by this review's abstract."
  },
  {
   "id": "c13",
@@ -140,7 +151,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "As c5 and c7 (electron microscopy showed each neuron enclosed by its own membrane). Electrical synapses join some cells through gap junctions; 'wired together' refers to the continuous web Golgi proposed."
+  "note": "As c5 and c7 (electron microscopy showed each neuron enclosed by its own membrane). Electrical synapses join some cells through gap junctions, hence 'mostly'. 26 Oct audit: a stale clause about wording the script dropped in the 25 Oct review was removed."
  },
  {
   "id": "c16",
@@ -162,7 +173,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: normal respiratory rate for a healthy adult at rest is 12 to 20 breaths per minute. The tally is 15/60 × t from frame 0; the line lands near 60 s, about 15 (computed). At 12–20 a minute the same span gives 12–20, so 'about fifteen' is an estimate for the viewer."
+  "note": "Excerpt: normal respiratory rate for a healthy adult at rest is 12 to 20 breaths per minute. The tally is 15/60 × t from frame 0; in the voiced film the line starts at 59.9 s and 'fifteen' is spoken at 62.0 s, when the tally reads 15 (15/60 × 62.0 = 15.5; computed). At 12–20 a minute the same span gives about 12–21 (12.4–20.7), so 'about fifteen' is an estimate for the viewer. 26 Oct audit: this note and the script's note gave different landing times; both now give the voiced timing."
  },
  {
   "id": "c15",

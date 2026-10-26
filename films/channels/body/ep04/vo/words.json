@@ -84,159 +84,159 @@
   },
   {
    "id": "vo02",
-   "text": "A typical one reaches out to thousands of others. Your brain holds over a hundred trillion of these meeting points. Up close, they look joined.",
-   "heard": "A typical one reaches out to thousands of others. Your brain holds over a hundred trillion of these meeting points. Up close they look joined.",
+   "text": "A typical nerve cell reaches thousands of others. Your brain holds over a hundred trillion of these meeting points. Through a lens, they look joined.",
+   "heard": "A typical nerve cell reaches thousands of others. Your brain holds over a hundred trillion of these meeting points. Through a lens they look joined.",
    "words": [
     {
      "w": "A",
-     "start": 0.04,
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "typical",
-     "start": 0.185,
-     "end": 0.64,
+     "start": 0.16,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 0.605,
-     "end": 0.88,
+     "w": "nerve",
+     "start": 0.44,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 0.975,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "reaches",
-     "start": 0.92,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "out",
-     "start": 1.26,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 1.575,
+     "start": 1.375,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "thousands",
-     "start": 1.715,
-     "end": 2.24,
+     "start": 1.705,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "of",
-     "start": 2.28,
-     "end": 2.4,
+     "start": 2.255,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "others.",
-     "start": 2.44,
-     "end": 2.82,
+     "start": 2.41,
+     "end": 2.785,
      "heard": true,
-     "end_asr": 3.12
+     "end_asr": 3.04
     },
     {
      "w": "Your",
-     "start": 3.14,
-     "end": 3.36,
+     "start": 3.105,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "brain",
-     "start": 3.38,
+     "start": 3.345,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "holds",
-     "start": 3.695,
+     "start": 3.66,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "over",
-     "start": 3.985,
+     "start": 3.95,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.185,
-     "end": 4.4,
+     "start": 4.15,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "hundred",
-     "start": 4.37,
-     "end": 4.72,
+     "start": 4.335,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "trillion",
-     "start": 4.745,
-     "end": 5.2,
+     "start": 4.71,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.31,
-     "end": 5.36,
+     "start": 5.205,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "these",
-     "start": 5.34,
-     "end": 5.52,
+     "start": 5.275,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "meeting",
-     "start": 5.52,
+     "start": 5.485,
      "end": 5.92,
      "heard": true
     },
     {
      "w": "points.",
-     "start": 5.91,
-     "end": 6.415,
+     "start": 5.875,
+     "end": 6.38,
      "heard": true,
-     "end_asr": 6.72
+     "end_asr": 6.64
     },
     {
-     "w": "Up",
-     "start": 6.755,
+     "w": "Through",
+     "start": 6.7,
      "end": 6.96,
      "heard": true
     },
     {
-     "w": "close,",
-     "start": 7.0,
-     "end": 7.28,
+     "w": "a",
+     "start": 6.84,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "lens,",
+     "start": 7.035,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "they",
-     "start": 7.365,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "look",
-     "start": 7.615,
+     "start": 7.595,
      "end": 7.68,
      "heard": true
     },
     {
+     "w": "look",
+     "start": 7.625,
+     "end": 7.92,
+     "heard": true
+    },
+    {
      "w": "joined.",
-     "start": 7.725,
-     "end": 8.4,
+     "start": 7.955,
+     "end": 8.56,
      "heard": true
     }
    ],
@@ -244,171 +244,183 @@
   },
   {
    "id": "vo03",
-   "text": "Using the same stain, Camillo Golgi saw one continuous web. Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing.",
-   "heard": "Using the same stain, Camillo Golgi saw one continuous web. Santiago Ramon Icahal saw separate cells. In 1906 they shared a Nobel, still arguing.",
+   "text": "Camillo Golgi, who made the stain, saw one continuous web. With it, Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing.",
+   "heard": "Camillo Golgi who made the stain, saw one continuous web. With it Santiago Ramon Icajal saw separate cells. In 1906 they shared a Nobel, still arguing.",
    "words": [
     {
-     "w": "Using",
+     "w": "Camillo",
      "start": 0.02,
-     "end": 0.4,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "Golgi,",
+     "start": 0.49,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 1.025,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "made",
+     "start": 1.33,
+     "end": 1.38,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.445,
-     "end": 0.56,
-     "heard": true
-    },
-    {
-     "w": "same",
-     "start": 0.535,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "stain,",
-     "start": 0.74,
+     "start": 1.36,
      "end": 1.44,
      "heard": true
     },
     {
-     "w": "Camillo",
-     "start": 1.565,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "Golgi",
-     "start": 2.0,
-     "end": 2.56,
+     "w": "stain,",
+     "start": 1.5,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "saw",
-     "start": 2.54,
-     "end": 2.8,
+     "start": 2.01,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "one",
-     "start": 2.735,
-     "end": 3.04,
+     "start": 2.325,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "continuous",
-     "start": 2.995,
-     "end": 3.6,
+     "start": 2.58,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "web.",
-     "start": 3.595,
-     "end": 3.973,
+     "start": 3.185,
+     "end": 3.561,
      "heard": true,
-     "end_asr": 4.24
+     "end_asr": 3.84
+    },
+    {
+     "w": "With",
+     "start": 3.88,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 3.91,
+     "end": 4.16,
+     "heard": true
     },
     {
      "w": "Santiago",
-     "start": 4.295,
+     "start": 4.235,
      "end": 4.96,
      "heard": true
     },
     {
      "w": "Ramón",
-     "start": 4.85,
-     "end": 6.08,
+     "start": 4.84,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "y",
-     "start": 4.88,
-     "end": 6.08,
+     "start": 4.87,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "Cajal",
-     "start": 4.975,
-     "end": 6.08,
+     "start": 4.95,
+     "end": 6.0,
      "heard": false
     },
     {
      "w": "saw",
-     "start": 6.05,
+     "start": 5.975,
      "end": 6.24,
      "heard": true
     },
     {
      "w": "separate",
-     "start": 6.27,
-     "end": 6.64,
+     "start": 6.345,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "cells.",
-     "start": 6.54,
-     "end": 7.079,
+     "start": 6.465,
+     "end": 6.995,
      "heard": true,
-     "end_asr": 7.36
+     "end_asr": 7.28
     },
     {
      "w": "In",
-     "start": 7.41,
-     "end": 7.52,
+     "start": 7.325,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "nineteen",
-     "start": 7.44,
-     "end": 8.4,
+     "start": 7.355,
+     "end": 8.32,
      "heard": false
     },
     {
      "w": "oh",
-     "start": 7.52,
-     "end": 8.4,
+     "start": 7.44,
+     "end": 8.32,
      "heard": false
     },
     {
      "w": "six",
-     "start": 7.55,
-     "end": 8.4,
+     "start": 7.47,
+     "end": 8.32,
      "heard": false
     },
     {
      "w": "they",
-     "start": 8.43,
-     "end": 8.56,
+     "start": 8.345,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "shared",
-     "start": 8.46,
-     "end": 8.8,
+     "start": 8.375,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.85,
-     "end": 8.96,
+     "start": 8.765,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "Nobel,",
-     "start": 8.88,
-     "end": 9.68,
+     "start": 8.795,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "still",
-     "start": 9.685,
-     "end": 9.84,
+     "start": 9.6,
+     "end": 9.76,
      "heard": true
     },
     {
      "w": "arguing.",
-     "start": 9.865,
-     "end": 10.4,
+     "start": 9.79,
+     "end": 10.32,
      "heard": true
     }
    ],

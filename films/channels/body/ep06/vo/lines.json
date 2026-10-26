@@ -105,7 +105,7 @@
     "seam",
     "past"
    ],
-   "phonemes": "wˌeə tˈɪʃuː ɪz ɪnflˈeɪmd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˌɒn pˈast.",
+   "phonemes": "wˌeə tˈɪʃuː ɪz ɪnflˈeɪmd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˈɒn pˈɑːst .",
    "speeds": [
     0.92,
     0.92,
@@ -138,8 +138,8 @@
     ]
    ],
    "file": "04.wav",
-   "dur": 14.31,
-   "sha256": "ce21195de2902b73875ec7fc8006edd410611156b0ad3b7622b3263e7174062f"
+   "dur": 14.36,
+   "sha256": "9b98a67ee3a6af61812039b70e12c6d1d4c13a7d5c80fcbb1bc959b224ed163d"
   },
   {
    "id": "vo05",
@@ -228,11 +228,11 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: the spark. What sets off every heartbeat you've ever had?",
+   "text": "Next: the spark. What sets off nearly every heartbeat you have?",
    "stars": [
     "heartbeat"
    ],
-   "phonemes": "nˈɛkst: ðə spˈɑːk. wˌɒt sˈɛts ˈɒf ˈɛvɹɪ hˈɑːtbiːt juːv ˈɛvə hˌad?",
+   "phonemes": "nˈɛkst: ðə spˈɑːk. wˌɒt sˈɛts ˈɒf nˌiəli ˈɛvɹɪ hˈɑːtbiːt juː hˈav?",
    "speeds": [
     0.88,
     0.86
@@ -247,8 +247,8 @@
     ]
    ],
    "file": "08.wav",
-   "dur": 4.401,
-   "sha256": "449c3e466e6702fbd178cb6147a77b76afdf616a9351ff11a0f837895ad33a3f"
+   "dur": 4.414,
+   "sha256": "0188a20445264a0f3e3ed5a0dbe428184b265f68b388d2bfd64b7abfa1b4d258"
   }
  ]
 }

@@ -77,12 +77,12 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "For centuries, physicians taught the lung was airy flesh, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put a frog's lung under a microscope: bubbles.",
+   "text": "For centuries, physicians taught the lung was clotted blood, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put an animal's lung under a microscope: bubbles.",
    "stars": [
     "heart",
     "bubbles"
    ],
-   "phonemes": "fɔː sˈɛntʃəɹiz, fɪzˈɪʃənz tˈɔːt ðə lˈʌŋ wɒz ˈeəɹi flˈɛʃ, ðeə tə kˈuːl ðə hˈɑːt. ɪn sˈɪkstiːn sˈɪkstiwˌɒn, mɑːtʃˈɛləʊ malpˈiːɡi pˌʊt ɐ fɹˈɒɡz lˈʌŋ ˌʌndəɹ ɐ mˈaɪkɹəskˌəʊp: bˈʌbəlz.",
+   "phonemes": "fɔː sˈɛntʃəɹiz, fɪzˈɪʃənz tˈɔːt ðə lˈʌŋ wɒz klˈɒtɪd blˈʌd, ðeə tə kˈuːl ðə hˈɑːt. ɪn sˈɪkstiːn sˈɪkstiwˌɒn, mɑːtʃˈɛləʊ malpˈiːɡi pˌʊt ɐn ˈanɪməlz lˈʌŋ ˌʌndəɹ ɐ mˈaɪkɹəskˌəʊp: bˈʌbəlz.",
    "speeds": [
     0.92,
     0.9
@@ -92,22 +92,22 @@
    ],
    "silences": [
     [
-     4.5297,
-     4.8297
+     4.5767,
+     4.8767
     ]
    ],
    "file": "03.wav",
-   "dur": 10.226,
-   "sha256": "f15a614c08b8222ca5cb7a11a33807846dd7c88ed34b1ef01442917df89159aa"
+   "dur": 10.522,
+   "sha256": "cc0c8eba96a862cd7b3ade8240e32a5b324aa0d5a64c422db7a89bf2427caca5"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Each sac is wrapped in capillaries. At its thinnest, the wall between air and blood is about half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
+   "text": "Each sac is wrapped in capillaries. Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
    "stars": [
     "harder"
    ],
-   "phonemes": "ˈiːtʃ sˈak ɪz ɹˈapt ɪn kˈapɪləɹiz. at ɪts θˈɪnɪst, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz ɐbˌaʊt hˈɑːf ɐ mˈaɪkɹəʊmˌiːtə: fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
+   "phonemes": "ˈiːtʃ sˈak ɪz ɹˈapt ɪn kˈapɪləɹiz. ˌəʊvə mˈʌtʃ ɒv ɪt, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz ˌʌndə hˈɑːf ɐ mˈaɪkɹəʊmˌiːtə: fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
    "speeds": [
     0.92,
     0.94,
@@ -125,27 +125,27 @@
      2.4097
     ],
     [
-     8.1301,
-     8.4301
+     8.2031,
+     8.5031
     ],
     [
-     10.9489,
-     11.2489
+     11.0219,
+     11.3219
     ]
    ],
    "file": "04.wav",
-   "dur": 13.668,
-   "sha256": "d7714ce5208c880581d8d547822950fa1fda7ab806e5f02ae0f53d3b49bd22ec"
+   "dur": 13.741,
+   "sha256": "00175a6b41a6301c0523670accfbe4f25cf6ee4291c49ff968f2caa2fca88c71"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Unfold every sac flat, and they'd cover at least seventy square metres. At least a third of a tennis court, folded inside your chest.",
+   "text": "Unfold every sac flat, and they'd cover about seventy square metres. About a quarter of a tennis court, folded inside your chest.",
    "stars": [
     "metres",
     "chest"
    ],
-   "phonemes": "ʌnfˈəʊld ˈɛvɹɪ sˈak flˈat, and ðeɪd kˈʌvəɹ at lˈiːst sˈɛvənti skwˈeə mˈiːtəz. at lˈiːst ɐ θˈɜːd əvə tˈɛnɪs kˈɔːt, fˈəʊldɪd ɪnsˈaɪd jɔː tʃˈɛst.",
+   "phonemes": "ʌnfˈəʊld ˈɛvɹɪ sˈak flˈat, and ðeɪd kˈʌvəɹ ɐbˌaʊt sˈɛvənti skwˈeə mˈiːtəz. ɐbˌaʊt ɐ kwˈɔːtəɹ əvə tˈɛnɪs kˈɔːt, fˈəʊldɪd ɪnsˈaɪd jɔː tʃˈɛst.",
    "speeds": [
     0.9,
     0.88
@@ -155,13 +155,13 @@
    ],
    "silences": [
     [
-     4.401,
-     4.701
+     4.4071,
+     4.7071
     ]
    ],
    "file": "05.wav",
-   "dur": 8.237,
-   "sha256": "366b1bb6cba78bffe81f18b8e3b76f39505c5cd17348b643d1ccdc356236ad18"
+   "dur": 8.193,
+   "sha256": "c1918b380a2fc895e7613115d721e8953b1f67d77be929f31b7317c321d017eb"
   },
   {
    "id": "vo06",

@@ -85,7 +85,7 @@ vo: *Meanwhile*, as you watched, your bone marrow made new neutrophils. {c22} Mo
 *million*. {c23}
 
 ## tease {shot: pull back out of the fingertip, up the arm, to the heart; a small patch high in its upper right chamber flickers chartreuse on each lub (picture only; its sources belong to episode 7) · end card held ≥ 2 s, the tally holding its last value; under it the membrane iris returns to frame 0, the cell halfway through the wall (a seamless replay; the tally starts again from 0); the card's fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim (Philosophical Magazine 29: 397) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.4–73.9 s)
-vo: Next: the spark. {-} What sets off every *heartbeat* you've ever had? {-}
+vo: Next: the spark. {-} What sets off nearly every *heartbeat* you have? {-}
 end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
 
 ## Notes

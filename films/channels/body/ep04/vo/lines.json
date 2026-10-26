@@ -40,11 +40,11 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "A typical one reaches out to thousands of others. Your brain holds over a hundred trillion of these meeting points. Up close, they look joined.",
+   "text": "A typical nerve cell reaches thousands of others. Your brain holds over a hundred trillion of these meeting points. Through a lens, they look joined.",
    "stars": [
     "joined"
    ],
-   "phonemes": "ɐ tˈɪpɪkəl wˈɒn ɹˈiːtʃɪz ˈaʊt tə θˈaʊzəndz ɒv ˈʌðəz. jɔː bɹˈeɪn hˈəʊldz ˌəʊvəɹ ɐ hˈʌndɹɪd tɹˈɪliən ɒv ðiːz mˈiːtɪŋ pˈɔɪnts. ˌʌp klˈəʊs, ðeɪ lˈʊk dʒˈɔɪnd.",
+   "phonemes": "ɐ tˈɪpɪkəl nˈɜːv sˈɛl ɹˈiːtʃɪz θˈaʊzəndz ɒv ˈʌðəz. jɔː bɹˈeɪn hˈəʊldz ˌəʊvəɹ ɐ hˈʌndɹɪd tɹˈɪliən ɒv ðiːz mˈiːtɪŋ pˈɔɪnts. θɹuː ɐ lˈɛnz, ðeɪ lˈʊk dʒˈɔɪnd.",
    "speeds": [
     0.88,
     0.88,
@@ -56,28 +56,28 @@
    ],
    "silences": [
     [
-     2.8199,
-     3.1199
+     2.785,
+     3.085
     ],
     [
-     6.4152,
-     6.7152
+     6.3803,
+     6.6803
     ]
    ],
    "file": "02.wav",
-   "dur": 8.449,
-   "sha256": "702e25ca7a91b84d2579c286e4cec173489303a8384ccd04fa72cfe8421dc549"
+   "dur": 8.627,
+   "sha256": "dc12b85a54dd9568820de323e6109f6046fe9995c26199ad971b639b1326c0d6"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Using the same stain, Camillo Golgi saw one continuous web. Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing.",
+   "text": "Camillo Golgi, who made the stain, saw one continuous web. With it, Santiago Ramón y Cajal saw separate cells. In nineteen oh six they shared a Nobel, still arguing.",
    "stars": [
     "web",
     "cells",
     "arguing"
    ],
-   "phonemes": "jˈuːzɪŋ ðə sˈeɪm stˈeɪn, kamˈɪləʊ ɡˈɒldʒi sˈɔː wˈɒn kəntˈɪnjuːəs wˈɛb. sˌantɪˈɑːɡəʊ ɹamˈɒn i kəhˈɑːl sˈɔː sˈɛpɹət sˈɛlz. ɪn nˈaɪntiːn ˈəʊ sˈɪks ðeɪ ʃˈeəd ɐ nəʊbˈɛl, stˈɪl ˈɑːɡjuːɪŋ.",
+   "phonemes": "kamˈɪləʊ ɡˈɒldʒi , hˌuː mˌeɪd ðə stˈeɪn, sˈɔː wˈɒn kəntˈɪnjuːəs wˈɛb. wɪð ɪt, sˌantɪˈɑːɡəʊ ɹamˈɒn i kəhˈɑːl sˈɔː sˈɛpɹət sˈɛlz. ɪn nˈaɪntiːn ˈəʊ sˈɪks ðeɪ ʃˈeəd ɐ nəʊbˈɛl, stˈɪl ˈɑːɡjuːɪŋ.",
    "speeds": [
     0.9,
     0.9,
@@ -89,17 +89,17 @@
    ],
    "silences": [
     [
-     3.9728,
-     4.2728
+     3.5607,
+     3.8607
     ],
     [
-     7.0785,
-     7.3785
+     6.995,
+     7.295
     ]
    ],
    "file": "03.wav",
-   "dur": 10.463,
-   "sha256": "c3e9a91fba98d04539dd982e4e79c749428e68da8594e8be749a9a059c2061f4"
+   "dur": 10.379,
+   "sha256": "795b5946c31142545b4c50acd4f6c3bebbae845b4cdb59c2c1a0205ec880c75b"
   },
   {
    "id": "vo04",

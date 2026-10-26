@@ -2,6 +2,7 @@
 //
 // One world (µm, internodes compressed; badged "not to scale"): three nerve fibres along x (set/neuron.js):
 //   hero  y = 0     myelinated, its cell body at x < 0 and its terminal at x = 660 (the tease's "end of the line")
+//                   (the race's thick wrapped racer: its cross-section drawn 1.5× thicker there, FILM.race.thick)
 //   bare  y = +24   a thin bare fibre: the signal re-fired step by step, a slow glow (the why; the slow racer)
 //   ms    y = −24   a fibre in brain and spinal cord with one damaged sheath: the leaps falter there and stall
 // Each leap of the hero's signal is drawn as an arc from gap to gap just over the sheath (a stylisation of
@@ -126,6 +127,9 @@ const setArc = (m, a, b, u, lift) => {
   m.geometry.setDrawRange(0, Math.max(1, Math.round(uu * ARCN)) * ARCR * 6);
   h.visible = uu < 0.999; h.position.set(a + uu * STEP * sx, lift + ARCH * Math.sin(Math.PI * uu), 0);
 };
+// the race's thick wrapped fibre (26 Oct audit): the hero's cross-section, 1 → race.thick during the camera's move into the
+// race (race.grow), back to 1 under the dimmed, defocused meanwhile (race.shrink); 1 everywhere else, so frame 0 and the loop match
+const raceThick = (t) => { const R = FILM.race; return R.thick ? 1 + (R.thick - 1) * (E.inout2(seg(t, R.grow[0], R.grow[1])) - E.inout2(seg(t, R.shrink[0], R.shrink[1]))) : 1; };
 // the hero's signal at t: { k (the last node fired), u (progress of the leap to node k + 1) } or null
 const HOP = FILM.hop;
 // (hook: a spike train across the framed internode, each leap taking 70% of a hop, then the landing lit; from "cell's",
@@ -150,7 +154,8 @@ const heroState = (t, sh) => {
   return null;
 };
 const writeFibres = (t, sh) => {
-  // the hero
+  // the hero; in the race it is the thick wrapped racer, drawn FILM.race.thick × thicker (its arc's head stays round)
+  const th = raceThick(t); HERO.group.scale.set(1, th, th); arcH.userData.head.scale.set(th, 1, 1);
   const st = heroState(t, sh), kLast = NODES.length - 1;
   if (st && st.k >= 0) {
     const k = Math.min(st.k, kLast);
@@ -288,7 +293,7 @@ const ANCH = {
   node: () => [NODES[FILM.whyJump.k0 + 4], MY.r + 0.3, 1.2],   // the gap the leap lands in on "gaps": the top of its notch
   damaged: () => MSF.group.localToWorld(vW.set(MNODES[BAD] + 8, 1.8, 1.0)).toArray(),
   barefront: (t) => [FILM.race.x0 + Math.max(0, FILM.race.vbare * (t - FILM.race.bare0)), 24, 0],
-  wrapfront: () => [100, MY.r, 1],   // the wrapped fibre, in frame (its pulses streak past)
+  wrapfront: (t) => [100, MY.r * raceThick(t), 1],   // the wrapped fibre's top, in frame (its pulses streak past), drawn thicker in the race
   terminal: () => [TX + 4, 6, 2],
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
