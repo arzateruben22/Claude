@@ -5,9 +5,10 @@ The narrator is synthetic (Kokoro am_michael) and the score is original (studio 
 It pays off episode 1's tease ("Next: leave for the nearest star today. When do we arrive?") and sets up
 episode 3 ("Next: a world that turns slower than it orbits. And backwards.").
 
-**Delivered (25 Oct):** `out/lightminute-002-9x16.mp4` (74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.2 LU over the music,
-sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS), with its poster (49.3 s), contact sheet, `review/scorecard.md`,
-`HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md` and `assets.md`. It has not been posted.
+**Delivered (25 Oct), rechecked and re-rendered (26 Oct):** `out/lightminute-002-9x16.mp4` (74.67 s, −14.1 LUFS /
+−1.8 dBTP, voice 12.2 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS; 1.7 Mbps at CRF 15), with
+its poster (49.3 s), contact sheet, `review/scorecard.md` (round 5 lists the recheck's fixes), `HUMAN-REVIEW.md`,
+`CLAIMS-REVIEW.md` and `assets.md`. It has not been posted.
 
 ## The story
 Our farthest traveller, Voyager 1 (1977, about 17 km/s), crosses one light-day on 18 November 2026: every
