@@ -22,7 +22,7 @@ import { createBasketball, stackDrop } from "../set/balls.js";
 import { inkSet, hand, joule } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
-import { unlit } from "../set/aces.js";
+import { unlit, screenAlpha } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const CUE = FILM.cue, BN = FILM.bench, ST = FILM.stack, TAKES = FILM.takes, EC = FILM.endCard;
@@ -64,10 +64,13 @@ const macroAt = (tau) => {
 const ballPos = (take, t) => (TAKES[take].kind === "macro" ? macroAt(local(take, t)).p : ballAt(local(take, t), SPEC));
 
 // ── rule 8: stepping back. dimAt(name, t) is the strength (1 as built, 1/3 stepped back); an unlit or lit surface
-// steps back by a two-thirds lerp toward the paper, on the scene-linear value that lands on #E6E2D8 (set/aces.js) ──
+// steps back by a lerp toward the paper, on the scene-linear value that lands on #E6E2D8 (set/aces.js). The lerp and
+// opacity both act in scene light, before the finish's curve, so a strength k goes through screenAlpha first: a third
+// keeps a third of the contrast on screen (a two-thirds lerp would keep about 1/11) ──
 const DIM = FILM.dim || {};
 const dimAt = (name, t) => (DIM[name] ? keyed(DIM[name], t) : 1);
-const PAPER = unlit(TK.cyc || "#E6E2D8");
+const PAPER_HEX = TK.cyc || "#E6E2D8", PAPER = unlit(PAPER_HEX), INK2_HEX = TK["ink-2"] || "#4B505B";
+const onScreen = (k, hex = INK2_HEX) => screenAlpha(k, hex, PAPER_HEX);
 
 // ── the strobe ladders: the drop and its bounces, a ghost every 1/20 s ──
 // the ghosts fade toward the paper as one (one ladder is on screen at a time): after the rim, before tone mapping,
@@ -141,7 +144,8 @@ hud.badge("warp", { from: clk, slot: NS.clock });
   hud.badge("hook-speed", { kind: "speed", slot: NS.hook, t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "5× slower" : "paused") }); }
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
-  if (an.ball) return (t) => ballPos(an.ball, t);
+  if (an.ball) return (t) => { const p = ballPos(an.ball, t);   // off: [dx, dy] in ball radii (the heat pills point at the contact patch, beside the ball)
+    return an.off ? [p[0] + an.off[0] * BN.r, p[1] + an.off[1] * BN.r, p[2]] : p; };
   if (an.hand) return () => handAt(an.hand);
   if (an.tennis) return (t) => STK.small(local("stack", t));
   if (an.ring) return (t) => ringPt(an.ring, t);
@@ -194,24 +198,24 @@ window.seek = function (t) {
   }
   // the live ball (and the stack's tennis ball: one material) steps back by a lerp toward the paper: its lit felt
   // scaled down, the paper added as emission (both exact at strength 1: white and black, as built)
-  { const a = 1 - dimAt("ball", t); P.ballMat.color.setScalar(1 - a); P.ballMat.emissive.copy(PAPER).multiplyScalar(a); }
+  { const a = 1 - onScreen(dimAt("ball", t)); P.ballMat.color.setScalar(1 - a); P.ballMat.emissive.copy(PAPER).multiplyScalar(a); }
   // the hands: the bench's from the start to the change and from the measure on; the stack's in the whoa
   const hb = take === "macro" ? 0 : isStack ? 0 : 1;
   handB.visible = hb > 0; handS.visible = isStack;
-  I.opacity(dimAt("hand", t));   // one at a time on screen: full where the caption names "your hand", a third after
+  I.opacity(onScreen(dimAt("hand", t)));   // one at a time on screen: full where the caption names "your hand", a third after
   // Joule's apparatus draws on and off in the why; on "warmed." its ink steps back and the red column carries it
   const jk = Math.min(E.out3(seg(t, CUE.why.joule[0] - 0.4, CUE.why.joule[0] + 0.3)), 1 - E.in3(seg(t, CUE.why.joule[1] - 0.2, CUE.why.joule[1] + 0.5)));
   J.group.visible = jk > 0.001;
-  IJ.opacity(jk); IJ.mat.opacity = jk * dimAt("jouleInk", t);
+  IJ.opacity(jk); IJ.mat.opacity = jk * onScreen(dimAt("jouleInk", t));
   J.update(E.inout2(seg(t, CUE.why.fall[0], CUE.why.fall[1])), E.out2(seg(t, CUE.why.fall[0] + 0.8, CUE.why.fall[1] + 0.6)));
   // the sound rings: in the change ("puff of sound") and again in the why ("sound")
   const r0 = t < CUE.cuts.why ? CUE.change.rings : CUE.why.sound;
   rings.forEach((m, k) => { const q = ringR(k, t, r0); m.visible = q.a > 0.001 && (take === "macro"); m.material.opacity = q.a; m.position.set(...CONTACT); m.scale.setScalar(q.r); });
   // the heat glow at the contact patch: from "squashes" on, fading slowly
   const gk = take === "macro" ? Math.min(E.out2(seg(t, CUE.change.heat, CUE.change.heat + 0.5)), 1) * (t < CUE.cuts.whoa ? 1 : 0) : 0;
-  glow.visible = gk > 0.001; glowMat.opacity = 0.55 * gk * dimAt("glow", t);   // a third in the why until "heat,"
+  glow.visible = gk > 0.001; glowMat.opacity = 0.55 * gk * onScreen(dimAt("glow", t), TK.energy || "#B8321A");   // a third in the why until "heat,"
   if (glow.visible) { glow.position.set(ball.position.x, ball.position.y - BN.r * ball.scale.y * 0.82, 0.6); glow.scale.set(1.9, 0.55, 1.9); }
-  ghostFade.value = 1 - dimAt("ghost", t);
+  ghostFade.value = 1 - onScreen(dimAt("ghost", t));
   S.update(t);
   cyc.update({ grid: 1, casters });
   if (window.CINEMA && window.CINEMA.mode === "probe") {

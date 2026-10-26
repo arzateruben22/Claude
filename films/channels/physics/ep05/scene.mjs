@@ -22,7 +22,7 @@ import { spinner } from "../set/spin.js";
 import { inkSet } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
-import { unlit } from "../set/aces.js";
+import { unlit, screenAlpha } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const CUE = FILM.cue, TAKES = FILM.takes, LAD = FILM.ladders, EC = FILM.endCard;
@@ -50,8 +50,11 @@ const SPIN = { chair: spinner({ ...FILM.model, moves: FILM.moves }), hook: spinn
 const DIM = FILM.dim || {};
 const dimAt = (name, t) => (DIM[name] ? keyed(DIM[name], t, "inout2") : 1);
 // the chair and its sitter step back by a lerp toward the paper, after lighting and before tone mapping, on the
-// scene-linear value that lands on #E6E2D8 (set/aces.js): at strength 1 the mix is 0, so the materials are as built
-const PAPER = unlit(TK.cyc || "#E6E2D8"), chairFade = { value: 0 };
+// scene-linear value that lands on #E6E2D8 (set/aces.js): at strength 1 the mix is 0, so the materials are as built.
+// The lerp and the ghosts' opacity act in scene light, before the finish's curve, so a strength k goes through
+// screenAlpha first: a third keeps a third of the contrast on screen (a two-thirds lerp would keep about 1/11)
+const PAPER_HEX = TK.cyc || "#E6E2D8", PAPER = unlit(PAPER_HEX), chairFade = { value: 0 };
+const onScreen = (k) => screenAlpha(k, TK["ink-2"] || "#4B505B", PAPER_HEX);
 { const mats = new Set();
   C.group.traverse((o) => { if (o.isMesh && o.material) mats.add(o.material); });
   mats.forEach((m) => {
@@ -177,10 +180,10 @@ window.seek = function (t) {
   placeCam(t);
   const take = takeAt(t), p = pose(take, local(take, t));
   C.set(p.phi, p.R);
-  chairFade.value = 1 - dimAt("chair", t);   // a third from "Skaters" to the takeaway: the skater, then the record, win
+  chairFade.value = 1 - onScreen(dimAt("chair", t));   // a third from "Skaters" to the takeaway: the skater, then the record, win
   const sk = t >= CUE.skater[0] && t < CUE.skater[1];
   skater.visible = sk; arcs.forEach((g, k) => { g.visible = sk; g.rotation.y = 2.4 * (t - CUE.skater[0]) + k * 1.3; });
-  SO.mesh.material.opacity = dimAt("out", t); SI.mesh.material.opacity = dimAt("in", t);
+  SO.mesh.material.opacity = onScreen(dimAt("out", t)); SI.mesh.material.opacity = onScreen(dimAt("in", t));
   SO.update(t); SI.update(t);
   const hands = [0, 1].map((i) => C.handAt(p.phi, p.R, i));
   cyc.update({ grid: 1, casters: [[0, 48, 0, 26], [hands[0][0], 60, hands[0][2], 6], [hands[1][0], 60, hands[1][2], 6]] });

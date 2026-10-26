@@ -181,11 +181,6 @@
    "tag": "move2"
   },
   {
-   "t": 28.5,
-   "kind": "label",
-   "tag": "wy-easier"
-  },
-  {
    "t": 30.5667,
    "kind": "swell",
    "tag": "move3:start"
@@ -199,11 +194,6 @@
    "t": 32.233333333333334,
    "kind": "label",
    "tag": "wy-arms"
-  },
-  {
-   "t": 36.516633,
-   "kind": "counter.tick",
-   "tag": "spine:fastest spin on ice skates"
   },
   {
    "t": 36.5333,
@@ -221,6 +211,11 @@
    "kind": "badge",
    "tag": "skater",
    "text": "Illustration"
+  },
+  {
+   "t": 41.7,
+   "kind": "counter.tick",
+   "tag": "spine:fastest spin on ice skates"
   },
   {
    "t": 43.46666666666667,

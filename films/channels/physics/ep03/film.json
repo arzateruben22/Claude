@@ -813,9 +813,13 @@
    "text": "heat",
    "color": "energy",
    "t0": 18.2,
-   "t1": 19.100033,
+   "t1": 18.850033,
    "anchor": {
-    "ball": "macro"
+    "ball": "macro",
+    "off": [
+     -0.92,
+     -0.62
+    ]
    },
    "side": -1,
    "fixed": true
@@ -851,7 +855,11 @@
    "t0": 30.7,
    "t1": 35.633333,
    "anchor": {
-    "ball": "macro"
+    "ball": "macro",
+    "off": [
+     -0.92,
+     -0.62
+    ]
    },
    "side": -1,
    "fixed": true

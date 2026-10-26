@@ -108,10 +108,14 @@ STEP_IN = math.degrees(SP.omega(T_IN + 0.5) * DT)        # 48.2°
 # ── the spine: rpm on the chair, the skater's record, then degrees per 1/10 s ───────────────────
 # WRITING.md "The picture" 2: at its final value it holds, lit, through the whoa and the takeaway, its label saying what
 # the number now means (the takeaway: 80 rpm is what one push gives with the arms in). minCh per step: the chair's rpm
-# and the degrees never pass two digits, the record's climb reaches three (the plate only widens on a cut)
+# and the degrees never pass two digits, the record's climb reaches three (the plate only widens on a cut). In the whoa
+# the plate keeps the chair's 80 rpm under "spin rate", as since the normal, until the record's number is said ("three
+# hundred…"): only then does the label name the record and the number climb, so "The record, set by a young Canadian
+# skater:" never sits over 80 rpm under the record's label (the whoa's cut only widens the plate to three digits)
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("whoa"), "label": "spin rate", "unit": "rpm", "dp": 0, "kind": "rpm", "take": "chair", "minCh": 2},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "fastest spin on ice skates", "unit": "rpm", "dp": 0, "kind": "ramp",
+    {"t0": cut("whoa"), "t1": A("vo05:three"), "label": "spin rate", "unit": "rpm", "dp": 0, "kind": "rpm", "take": "chair", "minCh": 3},
+    {"t0": A("vo05:three"), "t1": cut("measure"), "label": "fastest spin on ice skates", "unit": "rpm", "dp": 0, "kind": "ramp",
      "keys": [[A("vo05:three"), RPM_IN], [A("vo05:minute."), 342.0]], "lit": [A("vo05:minute."), cut("measure")], "minCh": 3},
     {"t0": cut("measure"), "t1": A("vo06:Arms#2"), "label": "turn per 1/10 s, arms out", "unit": "°", "dp": 0, "kind": "const", "v": STEP_OUT, "minCh": 2},
     {"t0": A("vo06:Arms#2"), "t1": cut("takeaway"), "label": "turn per 1/10 s, arms in", "unit": "°", "dp": 0, "kind": "const", "v": STEP_IN,
@@ -123,6 +127,8 @@ SPINE = [
 assert all(a["t1"] == b["t0"] for a, b in zip(SPINE, SPINE[1:])), "the readout never leaves between its steps"
 assert SPINE[-2]["lit"][1] == SPINE[-1]["lit"][0], "lit from 'fifty.' through the takeaway, without a gap at the cut"
 assert A("vo07:fast.") < SPINE[-1]["t1"], "it never leaves at the payoff"
+REC_STEP = next(s for s in SPINE if s["kind"] == "ramp")
+assert REC_STEP["t0"] == REC_STEP["keys"][0][0] and cut("whoa") < REC_STEP["t0"], "the record's label arrives with its number"
 assert max(len(str(round(RPM_IN))), len(str(round(STEP_IN)))) <= 2 and len(str(round(342.0))) <= 3
 
 # where it sits (set/spine.js placeSpine: [[t, [fx, fy]], ...] plate centres as fractions of the frame, a step at each
@@ -185,23 +191,24 @@ CUE = {"push": T_PUSH, "moves": [[T_PUSH + a, T_PUSH + b, r] for a, b, r in MOVE
        "cuts": CUTS}
 # "80 cm from the axis" rides on the hand, so it leaves as the push lands: once the chair turns, the hand (and the pill
 # above it) swings up over the ring's top arc toward the readout's corner. "48°" arrives on "nearly" (it must leave at the
-# takeaway's cut, so "fifty." would leave it 0.6 s). "easier to turn" is left as authored, and never shows: the word
-# lookup is case-insensitive, so "vo04:Your" is "your total amount" (24.4 s), before its t0 ("Your#2" was meant); fixed,
-# the pill would ride hand 0, which in the side view sweeps the whole frame width (and off it) every 2 s (open question)
+# takeaway's cut, so "fifty." would leave it 0.6 s). "18°" leaves on "Arms in" (rule 8: its ladder steps back then, and
+# the 48° the caption names is the one bright pill; the 18 stays in the ladder's third). The "easier to turn" label is
+# gone: its t1 ("vo04:Your", case-insensitive, is "your total amount") came before its t0, so it never showed, and its
+# cue sounded over nothing; at "Weight near the middle is easier to turn" the arms are going out (the slow half of the
+# demonstration), so the chair and its sitter at full carry the line without a pill
 LABELS = [
     {"id": "hk-weights", "text": "2 kg each", "color": "ghost", "t0": A("vo01:Nobody"), "t1": cut("normal") - 0.4, "anchor": {"hand": ["hook", 1]}, "side": 1, "fixed": True},
     {"id": "nm-out", "text": "80 cm from the axis", "color": "ghost", "t0": A("vo02:wide."), "t1": T_PUSH, "anchor": {"hand": ["chair", 1]}, "side": 1, "fixed": True},
     {"id": "ch-in", "text": "20 cm", "color": "ghost", "t0": A("vo03:chest."), "t1": cut("why") - 0.35, "anchor": {"hand": ["chair", 1]}, "side": 1, "fixed": True},
-    {"id": "wy-easier", "text": "easier to turn", "color": "motion", "t0": A("vo04:easier"), "t1": A("vo04:Your", -0.1), "anchor": {"hand": ["chair", 0]}, "side": -1, "fixed": True},
     {"id": "wy-arms", "text": "your arms do the work", "color": "energy", "t0": A("vo04:arms"), "t1": cut("whoa") - 0.35, "anchor": {"hand": ["chair", 1]}, "side": 1, "fixed": True},
     {"id": "wo-skater", "text": "a scratch spin", "color": "ghost", "t0": A("vo05:Skaters"), "t1": cut("measure") - 0.35, "anchor": {"skater": 1}, "side": -1, "fixed": True},
-    {"id": "ms-18", "text": "18°", "color": "motion", "t0": A("vo06:eighteen"), "t1": cut("takeaway") - 0.35, "anchor": {"gap": ["out", 3]}, "side": 1, "fixed": True},
+    {"id": "ms-18", "text": "18°", "color": "motion", "t0": A("vo06:eighteen"), "t1": T_ARMS_IN, "anchor": {"gap": ["out", 3]}, "side": 1, "fixed": True},
     {"id": "ms-48", "text": "48°", "color": "motion", "t0": A("vo06:nearly"), "t1": cut("takeaway") - 0.35, "anchor": {"gap": ["in", 2]}, "side": 1, "fixed": True},
 ]
 # rule 8: a label leaves at its beat's cut (its 0.4 s fade-out ends by then, give or take a frame or two)
 NEXT_CUT = {b["id"]: (cut(BEATS[k + 1]["id"]) if k + 1 < len(BEATS) else EC) for k, b in enumerate(BEATS)}
 for lb in LABELS:
-    assert lb["t0"] + 0.9 <= lb["t1"] or lb["id"] == "wy-easier", (lb["id"], "on screen long enough to read (a word anchor can match an earlier word)")
+    assert lb["t0"] + 0.9 <= lb["t1"], (lb["id"], "on screen long enough to read (a word anchor can match an earlier word)")
     home = [b["id"] for b in BEATS if CUTS[b["id"]] <= lb["t0"]][-1]
     assert lb["t1"] <= NEXT_CUT[home] - 0.3, (lb["id"], home, lb["t1"], NEXT_CUT[home])
 
@@ -321,8 +328,9 @@ for lb in LABELS:
 for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd["text"]})
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
-for s in SPINE[1:]:
-    ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
+for a, s in zip(SPINE, SPINE[1:]):
+    if s["label"] != a["label"]:                         # a tick where the label changes (the whoa's cut only widens the plate)
+        ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
 ev.append({"t": A("vo06:fifty."), "kind": "counter.end", "tag": "spine:fifty"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})

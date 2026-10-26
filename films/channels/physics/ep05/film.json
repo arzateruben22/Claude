@@ -190,6 +190,16 @@
   },
   {
    "t0": 36.516633,
+   "t1": 41.7,
+   "label": "spin rate",
+   "unit": "rpm",
+   "dp": 0,
+   "kind": "rpm",
+   "take": "chair",
+   "minCh": 3
+  },
+  {
+   "t0": 41.7,
    "t1": 48.783333,
    "label": "fastest spin on ice skates",
    "unit": "rpm",
@@ -636,21 +646,6 @@
    "fixed": true
   },
   {
-   "id": "wy-easier",
-   "text": "easier to turn",
-   "color": "motion",
-   "t0": 28.5,
-   "t1": 24.566666666666666,
-   "anchor": {
-    "hand": [
-     "chair",
-     0
-    ]
-   },
-   "side": -1,
-   "fixed": true
-  },
-  {
    "id": "wy-arms",
    "text": "your arms do the work",
    "color": "energy",
@@ -682,7 +677,7 @@
    "text": "18°",
    "color": "motion",
    "t0": 52.53333333333333,
-   "t1": 55.366633,
+   "t1": 53.8,
    "anchor": {
     "gap": [
      "out",

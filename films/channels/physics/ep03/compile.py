@@ -223,10 +223,10 @@ LABELS = [
     {"id": "nm-32", "text": "32 cm", "color": "motion", "t0": A("vo02:thirty-two."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[1], TOP_H[1] + RB, 0]}, "side": 1, "fixed": False},
     {"id": "nm-18", "text": "18 cm", "color": "motion", "t0": A("vo02:eighteen."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[2], TOP_H[2] + RB, 0]}, "side": 1, "fixed": False},
     {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": A("vo03:The#2", -0.1), "anchor": {"ring": 1}, "side": 1, "fixed": True},
-    {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
+    {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") - 0.6, "anchor": {"ball": "macro", "off": [-0.92, -0.62]}, "side": -1, "fixed": True},   # the contact patch, at the ball's lower-left edge
     {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:warmed.", -0.1), "anchor": {"joule": "top"}, "side": 1, "fixed": False},
     {"id": "wy-warm", "text": "the water warms", "color": "energy", "t0": A("vo04:warmed."), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "therm"}, "side": 1, "fixed": True},
-    {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
+    {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa") - 0.35, "anchor": {"ball": "macro", "off": [-0.92, -0.62]}, "side": -1, "fixed": True},   # the contact patch, at the ball's lower-left edge
     {"id": "wy-shake", "text": "shaking", "color": "pressure", "t0": A("vo04:shaking"), "t1": cut("whoa") - 0.35, "anchor": {"point": [-30.0, 0.0, 0.0]}, "side": -1, "fixed": True},
     {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa") - 0.35, "anchor": {"ring": 2}, "side": 1, "fixed": True},
     {"id": "wo-hand", "text": "your hand", "color": "ghost", "t0": A("vo05:Drop"), "t1": A("vo05:The#2", -0.1), "anchor": {"hand": "stack"}, "side": 1, "fixed": True},
