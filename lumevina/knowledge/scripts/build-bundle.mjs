@@ -36,6 +36,7 @@ const rules = {
   off: (RULES.OFF || []).map((k) => ({ kind: k.kind, any: (k.any || []).map(re) })),
   first: RULES.FIRST || [],
   photo: re(RULES.PHOTO),   // "what's wrong with my skin" from a photo: always hers (her hard lines)
+  asksHer: re(RULES.ASKS_HER), symptom: re(RULES.SYMPTOM),   // when an AI hand-off stands (ask-rules handOffOk)
   ours: re(RULES.OURS)   // the studio's own words: a message with one of these is never "unrelated"
 };
 
@@ -215,7 +216,7 @@ export const SHELF: ShelfItem[] = ${JSON.stringify(shelf, null, 1)};
 /** The hand-off rules (js/ask-rules.js): plain code that runs before any AI. */
 export type Rule = { source: string; flags: string };
 export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
-export const RULES: { urgent: Rule; kinds: RuleKind[]; off: RuleKind[]; first: string[]; ours: Rule; photo: Rule } = ${JSON.stringify(rules, null, 1)};
+export const RULES: { urgent: Rule; kinds: RuleKind[]; off: RuleKind[]; first: string[]; ours: Rule; photo: Rule; asksHer: Rule; symptom: Rule } = ${JSON.stringify(rules, null, 1)};
 
 /** Texting shorthand and the chat's vocabulary (js/ask-typos.js), for _shared/typos.ts. */
 export const TYPOS: { vocab: string[]; common: string[]; short: Record<string, string> } = ${JSON.stringify(TYPOS)};

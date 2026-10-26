@@ -106,5 +106,18 @@
     return k;
   };
 
-  window.LumevinaAskRules = { URGENT: URGENT, KINDS: KINDS, OFF: OFF, FIRST: FIRST, OURS: OURS, PHOTO: PHOTO, kind: kind, route: route, offTopic: offTopic };
+  /* when the AI wants to hand a question to Evelyn that the rules above let through: only if the latest message
+     itself calls for it. An emergency, her hard lines or a practical request (a refund, an address) always do; a
+     medical kind needs a symptom or a medical word in this message, not one from earlier in the chat; and anyone
+     who asks for her gets her. Everything else (a topic from earlier, a question her playbook covers) is answered. */
+  var ASKS_HER = /\bevelyn\b|talk to (someone|a person|a human|her|a real)|speak (to|with)|real person|\ba human\b|call me|text me|email me|have her (call|text|email|reach)/i;
+  var SYMPTOM = /react|rash|burn|on fire|swell|swollen|itch|hives?|allerg|blister|bleed|infect|\bpus\b|ooz|sting|irritat|hurt|pain|sore|raw\b|peeling|redness|red and|\bhot\b|pregnan|nursing|breastfeed|trying to conceive|medic|prescri|\bpills?\b|doctor|dermatolog|eczema|rosacea|psoria|dermatitis|lump|mole\b|cyst|cold sore|accutane|tretinoin|antibiotic/i;
+  var handOffOk = function (k, text) {
+    text = String(text || "");
+    if (k === "urgent" || k === "personal" || k === "request" || ASKS_HER.test(text)) return true;
+    if (k === "reaction" || k === "pregnancy" || k === "medication" || k === "condition") return SYMPTOM.test(text);
+    return false;
+  };
+
+  window.LumevinaAskRules = { URGENT: URGENT, KINDS: KINDS, OFF: OFF, FIRST: FIRST, OURS: OURS, PHOTO: PHOTO, ASKS_HER: ASKS_HER, SYMPTOM: SYMPTOM, kind: kind, route: route, offTopic: offTopic, handOffOk: handOffOk };
 })();

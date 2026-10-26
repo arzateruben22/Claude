@@ -228,6 +228,7 @@ export async function skinGuide(root) {
     mandelic: D.routine.mandelic ? lead(D.routine.mandelic) : "",
     retinal: D.routine.retinal_vs_retinol ? lead(D.routine.retinal_vs_retinol) : "",
     dontMix: D.routine.dont_mix ? lead(D.routine.dont_mix) : "",
+    order: D.routine.order ? lead(D.routine.order) : "",
     stopSigns: D.routine.stop_signs ? lead(D.routine.stop_signs) : "",
     ownProducts: D.daily.own_products ? lead(D.daily.own_products) : "",
     alternate: D.alternate || ""

@@ -110,6 +110,13 @@ const OFF = (RULES.off ?? []).map((k) => ({ kind: k.kind, any: k.any.map(rx) }))
 const FIRST = new Set(RULES.first ?? []);
 const OURS = rx(RULES.ours);   // the studio's own words: never "unrelated"
 const PHOTO = rx(RULES.photo); // reading someone's skin from a photo: always Evelyn's
+// when Claude wants to hand a question off, it has to be this message that calls for it (js/ask-rules.js → handOffOk):
+// an emergency, her hard lines, a practical request, a symptom or medical word here, or a request for her
+const ASKS_HER = rx(RULES.asksHer), SYMPTOM = rx(RULES.symptom);
+const handOffOk = (k: string, text: string) =>
+  k === "urgent" || k === "personal" || k === "request" || ASKS_HER.test(text) ||
+  (["reaction", "pregnancy", "medication", "condition"].includes(k) && SYMPTOM.test(text));
+const NOT_HANDED = "Not handed off: nothing in the client's latest message needs Evelyn. Answer that message itself (not an earlier one) from her playbook, in a sentence or two.";
 const offKind = (t: string): string | null => {
   if (URGENT.test(t)) return null;
   const found = OFF.find((k) => k.any.some((r) => r.test(t)))?.kind ?? null;
@@ -487,12 +494,17 @@ Deno.serve(async (req) => {
       }
       const calls = reply.content.filter((b): b is Anthropic.Beta.Messages.BetaToolUseBlock => b.type === "tool_use");
       const hand = calls.find((c) => c.name === "hand_to_evelyn");
+      let declined: string | null = null;
       if (hand) {
         const input = hand.input as { kind?: string; why?: string; note?: string };
-        kind = KIND_SET.has(String(input.kind)) ? String(input.kind) : "other";
-        why = String(input.why ?? "");
-        note = String(input.note ?? "").trim().slice(0, 400);
-        break;
+        const k = KIND_SET.has(String(input.kind)) ? String(input.kind) : "other";
+        if (handOffOk(k, q) || round === ROUNDS - 1) {
+          kind = k;
+          why = String(input.why ?? "");
+          note = String(input.note ?? "").trim().slice(0, 400);
+          break;
+        }
+        declined = hand.id;   // a topic from earlier in the chat, or a question her playbook covers: answered instead
       }
       const kept: Record<string, string> = {};
       const offCall = calls.find((c) => c.name === "off_topic");
@@ -508,15 +520,16 @@ Deno.serve(async (req) => {
         for (const id of (c.input as { ids?: string[] }).ids ?? []) if (!products.includes(id)) products.push(id);
       }
       const answer = textOf(reply);
+      if (declined && answer) return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}) });
       // done: no look-ups pending (Add to bag buttons and remembering need no second round once the answer is written)
-      if (reply.stop_reason !== "tool_use" || (answer && calls.every((c) => QUIET.has(c.name)))) {
+      if (!declined && (reply.stop_reason !== "tool_use" || (answer && calls.every((c) => QUIET.has(c.name))))) {
         if (!answer) break;
         return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}),
           ...(remembered.length ? { remembered } : {}) });
       }
       messages.push({ role: "assistant", content: reply.content });
       const results = [];
-      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: kept[c.id] ?? await runLookup(db, signedIn, c, links) });
+      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: c.id === declined ? NOT_HANDED : kept[c.id] ?? await runLookup(db, signedIn, c, links) });
       messages.push({ role: "user", content: results });
     }
     return json({ handoff: kind ?? "other", ...(why ? { why } : {}), ...(note ? { note } : {}), urgent: kind === "urgent" });   // nothing usable came back: Evelyn answers

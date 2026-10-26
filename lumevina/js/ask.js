@@ -472,7 +472,7 @@
   var SG = window.LumevinaSkin || null;
   var sgProduct = function (id) { return SG ? SG.products.filter(function (p) { return p.id === id; })[0] || null : null; };
   var base = function (name) { return String(name).replace(/\s*\([^)]*\)\s*$/, ""); };   // the travel size reads as the product
-  var sgNorm = function (s) { return " " + String(s || "").toLowerCase().replace(/[’']/g, "").replace(/-/g, " ").replace(/[^a-z0-9%.\s]/g, " ").replace(/\s+/g, " ") + " "; };
+  var sgNorm = function (s) { return " " + String(s || "").toLowerCase().replace(/[’']/g, "").replace(/-/g, " ").replace(/\bhydro/g, "hydra").replace(/[^a-z0-9%.\s]/g, " ").replace(/\s+/g, " ") + " "; };
   /* her products in what someone typed: every distinctive word of the name ("cran peptide", "8% mandelic") */
   var namedIn = function (text) {
     if (!SG) return [];
@@ -572,8 +572,36 @@
     ["dry", /\b(dry|tight|flaky|flaking|dehydrated|parched)\b/]
   ];
   var TYPE_ACTS = function (c) { return [["Dry or normal", "t:My skin is dry or normal" + (c ? ", " + c : "")], ["Oily or combination", "t:My skin is oily or combination" + (c ? ", " + c : "")]]; };
+  /* "does X go before or after my moisturizer?": where it sits in her routine, and her order in her words */
+  var ORDER_Q = /before or after|after or before|what order|in what order|which (one )?(goes|comes) (on )?first|(go|goes|put it|put them|apply it) (on )?(before|after)|\blayer/;
+  var STEP_LABEL = { "Moisturizers": "moisturizer", "Serums": "serum", "Toners & mists": "toner", "Cleansers": "cleanser", "Sun care": "SPF", "Eye care": "eye gel" };
+  var STEP_WORDS = [["Moisturizers", /moisturi[sz]er|\bcream\b/], ["Serums", /\bserum/], ["Toners & mists", /toner|\bmist\b/], ["Cleansers", /cleanser|face wash/], ["Sun care", /\bspf\b|sunscreen/], ["Eye care", /eye (gel|cream)/]];
+  var orderAnswer = function (t, named, k) {
+    var H = SG.her, out = "";
+    var a = named[0], b = named[1];
+    var tryIn = (k ? [k, k === "dry" ? "oily" : "dry"] : ["dry", "oily"]);
+    for (var x = 0; a && x < tryIn.length && !out; x++) {
+      ["night", "morning"].forEach(function (when) {
+        if (out) return;
+        var steps = SG.routines[tryIn[x]][when], i = -1, j = -1, other = "";
+        steps.forEach(function (alts, n) { if (alts.indexOf(a.id) !== -1) i = n; });
+        if (i < 0) return;
+        if (b) steps.forEach(function (alts, n) { if (alts.indexOf(b.id) !== -1) { j = n; other = base(b.name); } });
+        else STEP_WORDS.forEach(function (w) {
+          if (j >= 0 || !w[1].test(t) || new RegExp(w[1].source).test(a.name.toLowerCase()) && w[0] !== a.cat) return;
+          steps.forEach(function (alts, n) { var q = sgProduct(alts[0]); if (j < 0 && n !== i && q && q.cat === w[0]) { j = n; other = "your " + STEP_LABEL[w[0]]; } });
+        });
+        if (j < 0) return;
+        var first = i < j ? base(a.name) : other, then = i < j ? other : base(a.name);
+        out = first.charAt(0).toUpperCase() + first.slice(1) + " first, then " + then + ". In Evelyn’s " + when + " routine for " + typeLabel(tryIn[x]) + ": " + steps.map(stepName).join(", ") + ".";
+      });
+    }
+    return { answer: [out, said(H.order)].filter(Boolean).join("\n\n") || said(H.order), acts: [] };
+  };
   var skinGuide = function (t, sure) {
     if (!SG) return null;
+    var namedO = namedIn(t);
+    if (ORDER_Q.test(t) && SG.her.order && (namedO.length || /products|routine|skin ?care|steps/.test(t) || STEP_WORDS.some(function (w) { return w[1].test(t); }))) return orderAnswer(t, namedO, skinTypeFor(t));
     var concern = null;
     for (var i = 0; i < CONCERNS.length; i++) if (CONCERNS[i][1].test(t)) { concern = CONCERNS[i][0]; break; }
     var named = namedIn(t);
@@ -1073,7 +1101,9 @@
       if (asking === ctl) asking = null;
       var mk = marks(r.text), answer = shown(r.text);
       if (mk.offtopic) return settle(text, { offtopic: mk.offtopic });
-      if (mk.handoff) return settle(text, { handoff: mk.handoff, why: mk.why, note: mk.note });
+      /* a hand-off has to come from this message (js/ask-rules.js → handOffOk); otherwise what Claude wrote stands,
+         or the website's own answer */
+      if (mk.handoff && (!RULES || !RULES.handOffOk || RULES.handOffOk(mk.handoff, text))) return settle(text, { handoff: mk.handoff, why: mk.why, note: mk.note });
       if (!answer) return settle(text, local(text));
       settle(text, { answer: answer, acts: bagActs(mk.ids).concat(nextActs(answer, mk.ids.length > 0)) });
       var LP = window.LumevinaProfile;
