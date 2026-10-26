@@ -24,7 +24,7 @@ Sources
 3. In Two New Sciences (1638), Fourth Day, Galileo treats a projectile's motion as compounded of a uniform horizontal motion and a naturally accelerated vertical one. — UVA Galileo and Einstein: https://galileoandeinstein.phys.virginia.edu/tns244.htm
 4. One pendulum's period is nearly independent of its amplitude, especially below about 15°; at 30° it is about 1.7% longer. (The tease compares big and small swings of the same pendulum.) — LibreTexts Physics: https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums
 5. Sixteenth-century gunnery treatises (Tartaglia's Nova Scientia, 1537, and those after it, e.g. Ryff 1547, Santbech 1561) drew a cannonball's path as a straight line, then a curve, then a vertical drop. — IOP Spark: https://spark.iop.org/early-perceptions-projectile-motion
-6. In air, drag delays the thrown tennis balls by 0.04, 0.15 and 0.30 ms behind the drop, under the 1.67 ms frame at ×1/20 (drag.py). — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
+6. Computed with NASA Glenn's drag equation (tennis ball, 1 m drop): the throws land 0.04, 0.15 and 0.30 ms after the drop, under the 1.67 ms frame at ×1/20. — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
@@ -45,7 +45,7 @@ Sources
 3. In Two New Sciences (1638), Fourth Day, Galileo treats a projectile's motion as compounded of a uniform horizontal motion and a naturally accelerated vertical one. — UVA Galileo and Einstein: https://galileoandeinstein.phys.virginia.edu/tns244.htm
 4. One pendulum's period is nearly independent of its amplitude, especially below about 15°; at 30° it is about 1.7% longer. (The tease compares big and small swings of the same pendulum.) — LibreTexts Physics: https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums
 5. Sixteenth-century gunnery treatises (Tartaglia's Nova Scientia, 1537, and those after it, e.g. Ryff 1547, Santbech 1561) drew a cannonball's path as a straight line, then a curve, then a vertical drop. — IOP Spark: https://spark.iop.org/early-perceptions-projectile-motion
-6. In air, drag delays the thrown tennis balls by 0.04, 0.15 and 0.30 ms behind the drop, under the 1.67 ms frame at ×1/20 (drag.py). — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
+6. Computed with NASA Glenn's drag equation (tennis ball, 1 m drop): the throws land 0.04, 0.15 and 0.30 ms after the drop, under the 1.67 ms frame at ×1/20. — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
 ```
 
 
@@ -87,6 +87,6 @@ Sources
 3. In Two New Sciences (1638), Fourth Day, Galileo treats a projectile's motion as compounded of a uniform horizontal motion and a naturally accelerated vertical one. — UVA Galileo and Einstein: https://galileoandeinstein.phys.virginia.edu/tns244.htm
 4. One pendulum's period is nearly independent of its amplitude, especially below about 15°; at 30° it is about 1.7% longer. (The tease compares big and small swings of the same pendulum.) — LibreTexts Physics: https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums
 5. Sixteenth-century gunnery treatises (Tartaglia's Nova Scientia, 1537, and those after it, e.g. Ryff 1547, Santbech 1561) drew a cannonball's path as a straight line, then a curve, then a vertical drop. — IOP Spark: https://spark.iop.org/early-perceptions-projectile-motion
-6. In air, drag delays the thrown tennis balls by 0.04, 0.15 and 0.30 ms behind the drop, under the 1.67 ms frame at ×1/20 (drag.py). — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
+6. Computed with NASA Glenn's drag equation (tennis ball, 1 m drop): the throws land 0.04, 0.15 and 0.30 ms after the drop, under the 1.67 ms frame at ×1/20. — NASA: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
 ```
 

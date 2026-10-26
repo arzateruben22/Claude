@@ -576,6 +576,10 @@
      64.53333333333333,
      65.33333333333333
     ]
+   ],
+   "warpOut": [
+    51.183333,
+    51.333332999999996
    ]
   },
   "tease": {
@@ -647,7 +651,8 @@
     "dx": 4.4
    },
    "side": 1,
-   "fixed": true
+   "fixed": true,
+   "v": "middle"
   },
   {
    "id": "nm-gravity",
@@ -690,14 +695,15 @@
     ]
    },
    "side": 1,
-   "fixed": true
+   "fixed": true,
+   "v": "middle"
   },
   {
    "id": "wy-gravity",
    "text": "gravity",
    "color": "force",
    "t0": 32.5,
-   "t1": 35.380674285174244,
+   "t1": 34.7,
    "anchor": {
     "arrow": "wy-g-drop"
    },
@@ -710,7 +716,7 @@
    "text": "steady glide",
    "color": "motion",
    "t0": 29.766666666666666,
-   "t1": 36.36666666666667,
+   "t1": 35.266666666666666,
    "anchor": {
     "arrow": "wy-v"
    },
@@ -740,7 +746,7 @@
    "text": "same height",
    "color": "ghost",
    "t0": 36.06666666666667,
-   "t1": 38.650033,
+   "t1": 38.200033,
    "anchor": {
     "rung": [
      "why",
@@ -760,7 +766,7 @@
    "anchor": {
     "rung": [
      "whoa",
-     4
+     5
     ],
     "u": 1.0
    },
@@ -2214,7 +2220,7 @@
  "end": {
   "title": "Next drop: the swing's *secret*",
   "follow": "Follow Rest Frame",
-  "foot": "Two motions at once: Galileo, Two New Sciences, 1638"
+  "foot": "Two motions at once: Galileo, Two New Sciences, 1638"
  },
  "voice": [
   {
