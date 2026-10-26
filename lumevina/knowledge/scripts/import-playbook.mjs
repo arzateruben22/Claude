@@ -25,7 +25,48 @@ const dir = process.argv[2];
 if (!dir) { console.error("usage: node knowledge/scripts/import-playbook.mjs <folder with the playbook JSON files>"); process.exit(1); }
 
 const today = new Date().toISOString().slice(0, 10);
-const section = (sid) => readSection(dir, sid) || {};
+// Spelling: clear misspellings and capitals only, never her wording (the list below is every one found in her
+// answers so far; add to it as needed). An answer she chose to keep as written in the playbook's Check spelling
+// tab (playbook/spelling "kept", by the same hash the page uses) is left exactly as she wrote it. Every change is
+// listed in knowledge/SPELLING-FIXES.md for her to see.
+const FIXES = [
+  [/\binstuctions\b/g, "instructions"], [/\breccomendations\b/g, "recommendations"], [/\breccommended\b/g, "recommended"],
+  [/\bmoisurizer\b/g, "moisturizer"], [/\bapoitnment\b/g, "appointment"], [/\bactvies\b/g, "actives"], [/\bbefre\b/g, "before"],
+  [/\btolorance\b/g, "tolerance"], [/\bseperate\b/g, "separate"], [/\babd\b/g, "and"], [/\bmaks\b/g, "masks"],
+  [/\bnoa ctive\b/g, "no active"], [/\byoure\b/g, "you're"], [/\bapart of\b/g, "a part of"], [/\bmicrochannelling\b/gi, "microchanneling"],
+  [/\bIts\b(?= (a|an|the|not|normal|very|best|important|okay|ok|fine)\b)/g, "It's"], [/\bif its\b/gi, (m) => m.slice(0, 3) + "it's"],
+  [/\bi\b(?!\.e\.)/g, "I"], [/\bi'(ll|m|ve|d)\b/g, "I'$1"], [/\bspf\b/gi, "SPF"], [/\bLed therapy\b/g, "LED therapy"]
+];
+const hash = (t) => { let h = 5381; t = String(t); for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return String(h >>> 0); };
+const spellingDoc = (() => { try { const j = JSON.parse(fs.readFileSync(path.join(dir, "spelling.json"), "utf8")); return j.data || j; } catch (e) { return {}; } })();
+const kept = spellingDoc.kept || {};
+const fixLog = [];
+const tidy = (sid, key, text) => {
+  if (typeof text !== "string" || kept[sid + "/" + key] === hash(text)) return text;
+  let t = text;
+  for (const [re, to] of FIXES) t = t.replace(re, to);
+  t = t.replace(/(^|[.!?]\s+|\n\s*)([a-z])/g, (m, a, c) => a + c.toUpperCase());   // a sentence starts with a capital
+  if (t !== text) fixLog.push({ sid, key, before: text, after: t });
+  return t;
+};
+// which answers are her own writing (a box), per section: a tap answer stays exactly the option she tapped
+const TEXT = {
+  "client-questions": () => true, concerns: (f) => f === "first_questions" || f === "avoid" || f === "mistakes" || f === "habits" || f === "escalate",
+  treatments: (f) => S.TREATMENT_DETAIL_FIELDS.some((x) => x.key === f && x.kind === "text"), aftercare: () => true,
+  visits: (f) => S.VISIT_FIELDS.some((x) => x.key === f && x.kind === "text"), routine: () => true, materials: () => true,
+  "hard-lines": (f) => f === "handoff_wording" || f === "never_say", voice: (f) => f === "words_use" || f === "words_avoid",
+  products: (f) => S.PRODUCT_FIELDS.some((x) => x.key === f && x.kind === "text"), school: (f) => /_tip$/.test(f)
+};
+const tidySection = (sid, a) => {
+  for (const k of Object.keys(a)) {
+    const field = k.split(".").pop();
+    if (/\.(shots|voice)$/.test(k)) continue;
+    if (typeof a[k] === "string" && (/\.text$/.test(k) || (TEXT[sid] && TEXT[sid](field)))) a[k] = tidy(sid, k, a[k]);
+    else if (Array.isArray(a[k]) && sid === "voice" && field === "replies") a[k] = a[k].map((x, i) => tidy(sid, k + "#" + i, x));
+  }
+  return a;
+};
+const section = (sid) => tidySection(sid, readSection(dir, sid) || {});
 const render = (f, v, extra) => {
   if (!has(v) && !has(extra)) return "_(not answered yet)_";
   let out = "";
@@ -45,6 +86,11 @@ const noteFor = (f, v, extra) => {
   const t = [v, extra].filter(has).map((x) => Array.isArray(x) ? x.join(" ") : String(x)).join(" ");
   if (f.key === "night" && /\bmorning\b/i.test(t) && !/\b(night|evening|pm|bed(time)?)\b/i.test(t))
     return "\n\n_(How to read this: she wrote her morning routines by skin type in this box. Her night routine isn't answered yet: hand night-routine questions to her.)_";
+  if (f.key === "mistakes" && /\bnight routines?\b/i.test(t))
+    return "\n\n_(How to read this: she wrote her night routines by skin type in this box, so it answers \"what's your night routine\" for this concern. The common mistakes question isn't answered yet: hand that one to her.)_";
+  // her routines put the mandelic serums in the morning; the drafted "starting" answer she confirmed says nights
+  if ((f.key === "dont_mix" && /mandelic[^.]*\bmorning\b/i.test(t)) || (f.key === "mandelic" && /\bnights?\b/i.test(t)))
+    return "\n\n_(How to read this: her answers differ on when the mandelic serums go on. Her routines by skin type and \"What not to mix\" put them in the morning; \"Starting the mandelic serums\" says nights. Until she settles it, tell a client to use theirs when Evelyn told them to, and hand a morning-or-night question about it to her.)_";
   return "";
 };
 let unread = 0;
@@ -133,4 +179,8 @@ for (const lv of globalThis.window.SCHOOL.levels) for (const m of lv.modules) {
     "Evelyn's verdict on each lesson as it reads now (docs/school/curriculum.js), what she'd change, and her own tip for it.",
     m.lessons.flatMap(S.SCHOOL_FIELDS), school, id);
 }
+fs.writeFileSync(path.join(K, "SPELLING-FIXES.md"), "# Spelling fixes in Evelyn's answers\n\n" +
+  "Made by import-playbook.mjs on " + today + ": clear misspellings and capitals only, never her wording. Her playbook still holds what she typed; an answer she keeps as written in Check spelling is left alone on the next import.\n\n" +
+  (fixLog.length ? fixLog.map((x) => `- **${x.sid} · ${x.key}**\n  - she wrote: ${x.before.replace(/\n/g, " ").slice(0, 400)}\n  - now reads: ${x.after.replace(/\n/g, " ").slice(0, 400)}`).join("\n") : "None.") + "\n");
+console.log(`spelling: ${fixLog.length} answers tidied (knowledge/SPELLING-FIXES.md)`);
 console.log(`imported: ${n} files with answers (dated ${today}).` + (unread ? ` ${unread} screenshot${unread === 1 ? "" : "s"} not read yet: run read-screenshots.mjs first, then import again.` : "") + " Now run: node knowledge/scripts/build-bundle.mjs");

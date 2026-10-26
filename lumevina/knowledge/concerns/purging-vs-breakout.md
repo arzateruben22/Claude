@@ -3,7 +3,7 @@ id: purging-vs-breakout
 kind: concern
 title: Purging vs. a breakout
 source: playbook
-answered: ""
+answered: 2026-10-26
 ---
 
 # Purging vs. a breakout
@@ -12,7 +12,7 @@ Evelyn's own words, from her Skin Playbook. Empty sections mean she hasn't answe
 
 ## What do you ask a client first?
 
-_(not answered yet)_
+What did you start, and when? Where are the bumps: the places you usually break out, or somewhere new? Do they sting or itch? How long have they been there?
 
 ## Morning: what do you recommend from your shelf?
 
@@ -28,7 +28,9 @@ _(not answered yet)_
 
 ## How long until they see results?
 
-_(not answered yet)_
+4 to 6 weeks
+
+Purging shows up in the first 2 to 6 weeks after starting an active, in the spots you usually break out, and clears fast. A reaction shows up in new places, with redness, itching or stinging, and keeps going: stop and message me.
 
 ## When should they book a facial, and which one?
 
@@ -44,4 +46,4 @@ _(not answered yet)_
 
 ## When must this come to you, or to a doctor?
 
-_(not answered yet)_
+Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.

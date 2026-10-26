@@ -642,9 +642,9 @@ window.seek = function (t) {
   "4-2": {
     id: "4-2", kicker: "How often, and how much", title: `More exfoliation <span class="grad">isn't better.</span>`, dur: 24, poster: 11,
     shots: [
-      { at: 0, name: "dose", cap: "An exfoliating acid loosens the dead cells on top so fresh skin shows. Two nights a week is the dose for most skin; some tops out at three." },
-      { at: 7, name: "overdose", cap: "Every night is the most common way people wreck their barrier: a shine like plastic, stinging, redness, flaking." },
-      { at: 15, name: "rest", cap: "Stop and rest: a gentle cleanser, moisturizer, SPF, no acids for a week or two. And never an acid and a retinoid on the same night until your skin has settled into both." }
+      { at: 0, name: "dose", cap: "An exfoliating acid loosens the dead cells on top so fresh skin shows. Start with a few nights a week, and build up only as your skin allows." },
+      { at: 7, name: "overdose", cap: "Every night from day one, or two exfoliants on the same night, is how most barriers break: a shine like plastic, stinging, redness, flaking." },
+      { at: 15, name: "rest", cap: "If it burns or stings, back off and message Evelyn. Rest with a gentle cleanser, moisturizer and SPF, and never an acid and a retinoid on the same night." }
     ],
     css: `
 #gl { position: absolute; inset: 0; z-index: 0; }

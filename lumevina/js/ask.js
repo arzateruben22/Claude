@@ -245,10 +245,11 @@
   var DRAFTS = {
     reaction: "Hi {name}, thank you for telling me. Some redness for a day or two can be normal, but I want to see it. For now, pause any actives (retinol, acids, exfoliants) and use just a gentle cleanser and moisturizer; a cool compress can help. Could you send me a photo in daylight? If it spreads, gets worse, or you notice swelling around your eyes or lips, please see a doctor right away. — Evelyn",
     pregnancy: "Hi {name}, congratulations! Facials are still on the table. I switch to pregnancy-safe products and skip retinoids and some peels, and it’s always good to check with your doctor too. Let’s plan your next visit together and I’ll adjust everything for you. — Evelyn",
-    medication: "Hi {name}, thank you for letting me know. Some medications change what I can safely do: after Accutane I usually wait 6 to 12 months or ask for your doctor’s OK, and prescription retinoids pause 5 to 7 days before a facial. Tell me what you’re taking and since when, and I’ll tell you exactly what we can do. — Evelyn",
+    medication: "Hi {name}, thank you for letting me know. Some medications change what I can safely do: after Accutane I usually wait 6 to 12 months or ask for your doctor’s OK, and a prescription retinoid like tretinoin pauses about a week before a facial. Tell me what you’re taking and since when, and I’ll tell you exactly what we can do. — Evelyn",
     condition: "Hi {name}, thanks for asking. I’d love to help, and I want to see your skin before I recommend anything. Could you send a photo in natural light and tell me what you’re using now? If you’re seeing a dermatologist for it, let me know that too. — Evelyn",
     skin: "Hi {name}, great question. I’d love to see your skin before I recommend anything. Could you send me a photo in natural light and tell me what you use morning and night? I’ll tell you what I’d change. — Evelyn",
     urgent: "Hi {name}, I saw your message. I hope you were able to get care right away. Please tell me how you’re doing when you can, and I’ll call you. — Evelyn",
+    personal: "Hi {name}, thanks for asking! — Evelyn",
     request: "Hi {name}, thanks for reaching out! — Evelyn",
     other: "Hi {name}, thanks for your question! — Evelyn"
   };
@@ -636,11 +637,13 @@
   var UNCLEAR_ACTS = [["Prices", "n:prices"], ["Book", "n:book"], ["Cancel or move", "n:cancel"], ["Memberships", "n:member"]];
   var LEADS = {
     urgent: "That could be serious. If you’re having trouble breathing, or your lips, tongue or throat are swelling, call 911 now. I’m also sending this to Evelyn.",
-    reaction: "I’m sorry you’re dealing with that. Evelyn should answer this one herself, not me.",
-    pregnancy: "Good question to ask first. Evelyn will answer this one herself, since it depends on you.",
-    medication: "Thanks for mentioning it. What’s safe depends on what you’re taking, so Evelyn will answer this one herself.",
-    condition: "Evelyn will want to answer this one herself, since it depends on your skin.",
-    skin: "That depends on your skin, so Evelyn will answer this one herself.",
+    /* her own hand-off line (her Skin Playbook, Hard lines), said about her rather than as her */
+    reaction: "I’m sorry you’re dealing with that. That one’s for Evelyn to answer personally. She’ll get back to you herself, usually within a day or two.",
+    pregnancy: "Good question to ask first. That one’s for Evelyn to answer personally, since it depends on you. She’ll get back to you herself, usually within a day or two.",
+    medication: "Thanks for mentioning it. That one’s for Evelyn to answer personally, since it depends on what you’re taking. She’ll get back to you herself, usually within a day or two.",
+    condition: "That one’s for Evelyn to answer personally, since it depends on your skin. She’ll get back to you herself, usually within a day or two.",
+    skin: "That one’s for Evelyn to answer personally, since it depends on you. She’ll get back to you herself, usually within a day or two.",
+    personal: "That one’s for Evelyn to answer personally. She’ll get back to you herself, usually within a day or two.",
     request: "Of course. I’ll send your message to Evelyn.",
     other: "I’m not sure I’ve got that one right. Want me to send it to Evelyn?",
     again: "Still not catching it, sorry. Want me to send your message to Evelyn as it is?"

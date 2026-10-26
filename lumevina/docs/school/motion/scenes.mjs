@@ -340,7 +340,7 @@ export const SCENES = {
     shots: [
       { at: 0, name: "retinoid-acid", cap: "A retinoid and an acid: alternate nights instead." },
       { at: 4, name: "two-exfoliants", cap: "Two exfoliants, two acids, an acid plus a scrub: pick one." },
-      { at: 8, name: "bp-retinol", cap: "Benzoyl peroxide and retinol can cancel each other and irritate. Morning and night." },
+      { at: 8, name: "bp-retinol", cap: "Benzoyl peroxide and retinol can cancel each other and irritate. Never on the same night: alternate them." },
       { at: 12, name: "vitc-acid", cap: "Pure vitamin C and an acid or retinoid in one step: vitamin C in the morning, actives at night." },
       { at: 16, name: "niacinamide-vitc", cap: "Niacinamide and vitamin C are fine together. That caution is outdated." },
       { at: 20, name: "fresh-skin", cap: "Any active on freshly treated skin: wait the days the aftercare says." }
@@ -850,7 +850,7 @@ export const SCENES = {
     id: "12-2", kicker: "After your facial, peel or wax", title: `The first day, <span class="grad">then the first week.</span>`, dur: 21, poster: 10,
     shots: [
       { at: 0, name: "day one", cap: "The first day: no makeup, no touching, no heat or sweat, no sun. A gentle cleanse that night or the next morning, moisturizer, SPF." },
-      { at: 7, name: "actives", cap: "No actives for two or three days after a facial; five to seven after a peel, dermaplaning or microchanneling, or until the skin feels normal." },
+      { at: 7, name: "actives", cap: "No actives for two or three days after a facial, three to five after dermaplaning, and a week after a peel or microchanneling." },
       { at: 14, name: "week", cap: "Let flaking fall by itself; pulled skin leaves marks. Change the pillowcase, clean the phone, and skip waxing, threading and new products for a week." }
     ],
     css: `

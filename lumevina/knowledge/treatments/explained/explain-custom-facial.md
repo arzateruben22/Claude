@@ -3,7 +3,7 @@ id: explain-custom-facial
 kind: treatment-explained
 title: Lumevina Custom Facial
 source: playbook
-answered: ""
+answered: 2026-10-26
 ---
 
 # Lumevina Custom Facial: what to expect
@@ -22,7 +22,9 @@ _(not answered yet)_
 
 ## How often should they book it?
 
-_(not answered yet)_
+Every 4 to 6 weeks
+
+Every 2 to 4 weeks during a corrective stretch.
 
 ## When will they see results, and how long do they last?
 
@@ -30,7 +32,7 @@ _(not answered yet)_
 
 ## Who it's best for, and who should book something else
 
-_(not answered yet)_
+Returning clients who are on a routine with me and want to keep their skin on track. If you're new, book New Clients Start Here; if acne is the concern, the Monthly Acne Treatment includes more time for peels and extractions.
 
 ## Who has to wait, or can't have it
 

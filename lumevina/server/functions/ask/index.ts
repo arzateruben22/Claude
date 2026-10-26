@@ -69,7 +69,7 @@ import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
 const MODEL = "claude-fable-5-1";
 const MEMBER_HOURS = 24;
 const GUEST_HOURS = 48;
-const KIND_SET = new Set(["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"]);
+const KIND_SET = new Set(["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "personal", "request", "other"]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ROUNDS = 4;                                 // an answer, plus up to three rounds of looking things up
 
@@ -141,7 +141,7 @@ const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean;
   `- If anything under "Cautions on file" bears on the question, hand it to Evelyn.`,
   `- Their skin profile and what they've told you before are in their own words. Use them to make an answer from Evelyn's playbook specific to them (for example, when they ask what to stop before a facial, name the products they listed that it applies to). Don't recommend changes to their routine yourself: that goes to Evelyn.`,
   `- You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax, an active on freshly treated skin), and send the decision to Evelyn with hand_to_evelyn (kind "skin"). Never tell them to add, stop or swap anything yourself.`,
-  ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "skin".`] : []),
+  ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "personal".`] : []),
   `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
 ].join("\n\n");
 
@@ -152,7 +152,7 @@ const HANDOFF_TOOL = {
   input_schema: {
     type: "object",
     properties: {
-      kind: { type: "string", enum: ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"] },
+      kind: { type: "string", enum: ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "personal", "request", "other"] },
       why: { type: "string", description: "One short line for Evelyn: what the client is asking for." },
       note: { type: "string", description: "One or two short sentences the client sees while the question goes to Evelyn: the general rule that applies and why it's her call (for example, how long waxing usually waits after Accutane, or that a flare of a named condition is a doctor's). General only: nothing about this client's own skin, no diagnosis, never \"that's normal\", nothing they could take as the answer. \"\" when there's nothing useful to add." },
     },

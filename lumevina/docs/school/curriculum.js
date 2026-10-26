@@ -156,11 +156,11 @@ window.SCHOOL = {
             { id: "4-2", t: "How often, and how much", min: 2,
               sum: "More exfoliation isn't better. It's the top way barriers break.",
               learn: [
-                "Start with two nights a week; most skin tops out at three.",
-                "Plastic-looking shine, stinging, redness or flaking: stop and rest.",
-                "No acid with a retinoid until adjusted, and none the week around a peel."
+                "Start with a few nights a week and build up only as your skin allows. Moving up is Evelyn's call.",
+                "Burning, stinging, plastic-looking shine or flaking: back off and message Evelyn.",
+                "Never an acid and a retinoid, or two exfoliants, on the same night; none the week around a peel."
               ],
-              try: "Put two exfoliating nights on your calendar, not back to back.",
+              try: "Put your first exfoliating nights on your calendar, not back to back.",
               q: { ask: "Your skin looks tight and shiny like plastic after a week of daily acids. What should you do?", opts: ["Add a stronger acid", "Stop acids and focus on repair for a week or two", "Scrub harder"], a: 1,
                 why: "Plastic shine means over-exfoliated. Rest with the basics." } },
             { id: "4-3", t: "Scrubs, brushes and dermaplaning", min: 2,
@@ -226,8 +226,8 @@ window.SCHOOL = {
             { id: "6-2", t: "What not to mix", min: 2,
               sum: "Most mixing rules are myths. A few are real.",
               learn: [
-                "Real: a retinoid and a strong acid together is too much. Alternate nights.",
-                "Real: benzoyl peroxide breaks down some tretinoin; adapalene is fine with it.",
+                "Real: a retinoid and an acid, or two exfoliants, never on the same night. Alternate them.",
+                "Real: benzoyl peroxide and retinol, never on the same night either.",
                 "Myth: vitamin C and niacinamide cancel out. Unsure? Split morning and night."
               ],
               try: "Find any acid-and-retinoid nights and split them.",
@@ -445,7 +445,7 @@ window.SCHOOL = {
               sum: "What you keep off treated skin decides the result.",
               learn: [
                 "Day one: no makeup, touching, heat, sweat or sun. Gentle cleanse, moisturizer, SPF.",
-                "No actives for 2 to 3 days after a facial, 5 to 7 after a peel.",
+                "No actives for 2 to 3 days after a facial, 3 to 5 after dermaplaning, a week after a peel or microchanneling.",
                 "Let flakes fall. A clean pillowcase, and no waxing or new products for a week."
               ],
               try: "Book nothing sweaty for the day after your visit.",

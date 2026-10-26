@@ -2693,7 +2693,7 @@
       });
     };
     var KIND = { urgent: "Urgent", reaction: "Reaction", pregnancy: "Pregnancy", medication: "Medication", condition: "Skin condition",
-                 skin: "Skin advice", request: "Asked for you", other: "Other" };
+                 skin: "Skin advice", personal: "Your call", request: "Asked for you", other: "Other" };
     var esc = function (t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; };
     var dueText = function (q) {
       var h = (new Date(q.dueAt) - Date.now()) / 36e5;

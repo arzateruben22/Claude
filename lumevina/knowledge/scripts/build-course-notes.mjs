@@ -25,51 +25,53 @@ const read = (p) => fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "";
 // "<knowledge path>#<field key>" or "#*" for every answered field; shelf: categories ──
 const MAP = {
   "1-1": { general: ["skin-basics#Turnover and why results take weeks", "skin-basics#Skin tone and sensitivity to injury", "skin-basics#Oil, pores and what can't change"] },
-  "1-2": { general: ["skin-basics#Skin type vs. skin condition", "skin-basics#Dry vs. dehydrated", "skin-basics#Oil, pores and what can't change"] },
-  "1-3": { general: ["skin-basics#The barrier", "skin-basics#Dry vs. dehydrated", "routine#Starting with less", "ingredients#Hydrators and moisturizers"], shelf: ["Moisturizers"] },
-  "2-1": { general: ["ingredients#Cleansers"], shelf: ["Cleansers"], evelyn: ["client-questions/cq-after#wash_after"] },
-  "2-2": { general: ["ingredients#Hydrators and moisturizers"], shelf: ["Moisturizers"] },
-  "2-3": { general: ["ingredients#Sunscreen", "skin-basics#Sun"], shelf: ["Sun care"], evelyn: ["client-questions/cq-routine#sunscreen", "routine#sun"] },
+  "1-2": { general: ["skin-basics#Skin type vs. skin condition", "skin-basics#Dry vs. dehydrated", "skin-basics#Oil, pores and what can't change"], evelyn: ["concerns/breakouts-and-acne#first_questions", "concerns/breakouts-and-acne#morning"] },
+  "1-3": { general: ["skin-basics#The barrier", "skin-basics#Dry vs. dehydrated", "routine#Starting with less", "ingredients#Hydrators and moisturizers"], shelf: ["Moisturizers"], evelyn: ["routine#stop_signs", "concerns/breakouts-and-acne#avoid"] },
+  "2-1": { general: ["ingredients#Cleansers"], shelf: ["Cleansers"], evelyn: ["routine#order", "client-questions/cq-after#wash_after"] },
+  "2-2": { general: ["ingredients#Hydrators and moisturizers"], shelf: ["Moisturizers"], evelyn: ["client-questions/cq-routine#buy_everything"] },
+  "2-3": { general: ["ingredients#Sunscreen", "skin-basics#Sun"], shelf: ["Sun care"], evelyn: ["client-questions/cq-routine#sunscreen", "routine#sun", "concerns/dark-spots#habits"] },
   "3-1": { general: ["ingredients#Fragrance and essential oils", "ingredients#Brighteners"] },
   "3-2": { general: ["routine#Starting with less", "routine#Using other brands alongside", "routine#How much to use"], evelyn: ["client-questions/cq-routine#buy_everything", "client-questions/cq-routine#own_products", "routine#order"] },
-  "3-3": { general: ["routine#Missing days", "routine#Traveling", "routine#How long things last (rough)"], evelyn: ["client-questions/cq-routine#missed_days", "client-questions/cq-routine#travel", "client-questions/cq-routine#how_long_lasts", "client-questions/cq-results#between_visits"] },
+  "3-3": { general: ["routine#Missing days", "routine#Traveling", "routine#How long things last (rough)"], evelyn: ["client-questions/cq-routine#missed_days", "client-questions/cq-results#between_visits", "concerns/breakouts-and-acne#habits", "client-questions/cq-routine#travel", "client-questions/cq-routine#how_long_lasts"] },
   "4-1": { general: ["ingredients#Exfoliants"], shelf: ["Serums"], evelyn: ["routine#mandelic"] },
-  "4-2": { general: ["routine#Introducing something new"] },
+  "4-2": { general: ["routine#Introducing something new"], evelyn: ["routine#mandelic", "routine#dont_mix", "routine#stop_signs"] },
   "4-3": { general: ["treatments#Dermaplaning", "aftercare#After dermaplaning"], evelyn: ["treatments/explained/explain-dermaplaning#*", "treatments/dermaplaning#*"] },
-  "5-1": { general: ["ingredients#Brighteners"] },
+  "5-1": { general: ["ingredients#Brighteners"], evelyn: ["routine#dont_mix"] },
   "5-2": { general: ["ingredients#Retinoids"], evelyn: ["routine#retinal_vs_retinol"] },
-  "5-3": { general: ["ingredients#Acne actives"] },
+  "5-3": { general: ["ingredients#Acne actives"], evelyn: ["routine#dont_mix"] },
   "6-1": { general: ["routine#The order of steps"], evelyn: ["routine#order"] },
   "6-2": { general: ["routine#What generally isn't combined"], evelyn: ["routine#dont_mix"] },
   "6-3": { general: ["concerns#Purging vs. a breakout", "routine#Introducing something new"], evelyn: ["concerns/purging-vs-breakout#*", "client-questions/cq-after#breakout_after"] },
-  "7-3": { general: ["routine#Traveling", "skin-basics#Sun", "concerns#Dryness and dehydration"] },
+  "7-1": { general: ["routine#The order of steps"], evelyn: ["client-questions/cq-results#between_visits", "visits#first_visit"] },
+  "7-2": { general: ["routine#The order of steps"], evelyn: ["client-questions/cq-results#between_visits"] },
+  "7-3": { general: ["routine#Traveling", "skin-basics#Sun", "concerns#Dryness and dehydration"], evelyn: ["client-questions/cq-routine#travel", "routine#sun"] },
   "8-1": { general: ["concerns#Breakouts and acne", "skin-basics#Hormones", "concerns#Blackheads and congestion"], evelyn: ["concerns/breakouts-and-acne#first_questions", "concerns/breakouts-and-acne#escalate"] },
-  "8-2": { general: ["ingredients#Acne actives"], shelf: ["Acne & spot care"], evelyn: ["concerns/breakouts-and-acne#morning", "concerns/breakouts-and-acne#night", "concerns/breakouts-and-acne#avoid", "routine#acne_med"] },
-  "8-3": { general: ["concerns#Hormonal breakouts", "concerns#Back and body breakouts", "ingredients#Supplements"], evelyn: ["concerns/breakouts-and-acne#timeline", "concerns/breakouts-and-acne#mistakes", "concerns/breakouts-and-acne#habits", "client-questions/cq-results#acne_how_long"] },
+  "8-2": { general: ["ingredients#Acne actives"], shelf: ["Acne & spot care"], evelyn: ["concerns/breakouts-and-acne#morning", "concerns/breakouts-and-acne#mistakes", "concerns/breakouts-and-acne#avoid", "concerns/breakouts-and-acne#night", "routine#acne_med"] },
+  "8-3": { general: ["concerns#Hormonal breakouts", "concerns#Back and body breakouts", "ingredients#Supplements"], evelyn: ["concerns/breakouts-and-acne#timeline", "concerns/breakouts-and-acne#habits", "concerns/breakouts-and-acne#escalate", "client-questions/cq-results#acne_how_long"] },
   "9-1": { general: ["concerns#Dark spots and post-acne marks", "ingredients#Brighteners", "skin-basics#Skin tone and sensitivity to injury"], evelyn: ["concerns/dark-spots#*"] },
-  "9-2": { general: ["ingredients#Brighteners"] },
-  "9-3": { general: ["concerns#Melasma and sun spots", "skin-basics#Sun", "ingredients#Sunscreen"], evelyn: ["concerns/melasma#*"] },
-  "10-1": { general: ["concerns#Fine lines and firmness", "skin-basics#Sun", "treatments#Microchanneling and microneedling (collagen induction)"] },
-  "10-2": { general: ["ingredients#Retinoids", "ingredients#Hydrators and moisturizers"] },
+  "9-2": { general: ["ingredients#Brighteners"], evelyn: ["concerns/dark-spots#avoid"] },
+  "9-3": { general: ["concerns#Melasma and sun spots", "skin-basics#Sun", "ingredients#Sunscreen"], evelyn: ["concerns/melasma#*", "concerns/dark-spots#habits", "concerns/dark-spots#escalate"] },
+  "10-1": { general: ["concerns#Fine lines and firmness", "skin-basics#Sun", "treatments#Microchanneling and microneedling (collagen induction)"], evelyn: ["routine#sun", "treatments/explained/explain-ageless-grace#best_for"] },
+  "10-2": { general: ["ingredients#Retinoids", "ingredients#Hydrators and moisturizers"], evelyn: ["routine#retinal_vs_retinol", "routine#sun"] },
   "10-3": { general: ["treatments#A professional facial", "treatments#Chemical peels", "treatments#Microchanneling and microneedling (collagen induction)", "treatments#LED light"],
     evelyn: ["treatments/explained/explain-ageless-grace#*", "treatments/explained/explain-procell#*", "treatments/explained/explain-refresh-peel#*", "treatments/explained/explain-corrective-peel#*"] },
-  "11-1": { general: ["concerns#Redness and sensitivity", "ingredients#Fragrance and essential oils", "red-flags-and-scope#Allergies and sensitivities"], evelyn: ["concerns/redness-sensitivity#*"] },
-  "11-2": { general: ["red-flags-and-scope#Standard contraindications (why a treatment waits)"] },
+  "11-1": { general: ["concerns#Redness and sensitivity", "ingredients#Fragrance and essential oils", "red-flags-and-scope#Allergies and sensitivities"], evelyn: ["concerns/redness-sensitivity#*", "routine#stop_signs"] },
+  "11-2": { general: ["red-flags-and-scope#Standard contraindications (why a treatment waits)"], evelyn: ["treatments/explained/explain-corrective-peel#wait", "treatments/explained/explain-procell#wait"] },
   "11-3": { general: ["red-flags-and-scope#Always a doctor", "red-flags-and-scope#What an esthetician does, and doesn't"], evelyn: ["hard-lines#always_evelyn", "hard-lines#never_say"] },
-  "12-1": { general: ["red-flags-and-scope#Standard contraindications (why a treatment waits)"], evelyn: ["client-questions/cq-before#stop_products", "client-questions/cq-before#sun_before", "client-questions/cq-before#breaking_out", "client-questions/cq-before#period"] },
+  "12-1": { general: ["red-flags-and-scope#Standard contraindications (why a treatment waits)"], evelyn: ["client-questions/cq-before#stop_products", "client-questions/cq-before#sun_before", "client-questions/cq-before#breaking_out", "treatments/explained/explain-corrective-peel#before", "treatments/explained/explain-procell#before", "client-questions/cq-before#period"] },
   "12-2": { general: ["aftercare#After any facial, peel, dermaplaning or microchanneling", "aftercare#After a peel in particular", "aftercare#After microchanneling"],
     evelyn: ["treatments/facials#*", "treatments/light-peel#*", "treatments/medium-peel#*", "treatments/procell#*", "client-questions/cq-after#makeup_after", "client-questions/cq-after#workout_after", "client-questions/cq-after#actives_after", "client-questions/cq-after#peeling_after"] },
   "12-3": { general: ["aftercare#Why the rules exist", "red-flags-and-scope#Always a doctor"], evelyn: ["treatments/facials#normal", "treatments/facials#not_normal", "treatments/medium-peel#normal", "treatments/medium-peel#not_normal"] },
   "13-1": { general: ["waxing#Before", "waxing#First Brazilian tips"], evelyn: ["client-questions/cq-before#hair_length", "client-questions/cq-before#shave_before", "client-questions/cq-before#first_wax", "treatments/explained/explain-brazilian#*"] },
   "13-2": { general: ["waxing#After (24 to 48 hours)", "waxing#After that: preventing ingrown hairs", "waxing#What's normal", "waxing#What isn't", "waxing#How often, and does it get better"],
     evelyn: ["client-questions/cq-after#bumps_after_wax", "client-questions/cq-results#wax_how_often", "client-questions/cq-results#wax_pain", "treatments/waxing#*", "treatments/brazilian#*", "concerns/ingrown-hairs#*"] },
-  "14-1": { general: ["treatments#Consultations", "treatments#Acne programs", "treatments#A professional facial", "red-flags-and-scope#Standard contraindications (why a treatment waits)"], evelyn: ["visits#first_visit", "visits#wear_bring", "visits#makeup_arrive", "client-questions/cq-booking#which_facial", "concerns/breakouts-and-acne#facial", "treatments/explained/explain-new-client#*"] },
-  "14-2": { general: ["routine#The order of steps"], shelf: ["Cleansers", "Toners & mists", "Serums", "Moisturizers", "Sun care"], evelyn: ["concerns/breakouts-and-acne#morning", "routine#order", "client-questions/cq-routine#buy_everything"] },
+  "14-1": { general: ["treatments#Consultations", "treatments#Acne programs", "treatments#A professional facial", "red-flags-and-scope#Standard contraindications (why a treatment waits)"], evelyn: ["client-questions/cq-booking#which_facial", "visits#first_visit", "visits#wear_bring", "client-questions/cq-booking#add_on_day", "client-questions/cq-booking#switch_treatment", "visits#makeup_arrive"] },
+  "14-2": { general: ["routine#The order of steps"], shelf: ["Cleansers", "Toners & mists", "Serums", "Moisturizers", "Sun care"], evelyn: ["client-questions/cq-routine#buy_everything", "routine#order", "routine#mandelic", "concerns/breakouts-and-acne#morning", "concerns/breakouts-and-acne#mistakes"] },
 };
 
 // ── her question headings, by file kind and field key ──
 const Q = {};
-const set = (kind, item, fields) => { Q[kind + "/" + item] = Object.fromEntries(fields.map((f) => [f.key, f.q])); };
+const set = (kind, item, fields) => { Q[(kind ? kind + "/" : "") + item] = Object.fromEntries(fields.map((f) => [f.key, f.q])); };
 S.CLIENT_QUESTION_GROUPS.forEach((g) => set("client-questions", g.id, g.questions));
 S.CONCERNS.forEach((c) => set("concerns", c.id, S.CONCERN_FIELDS));
 S.TREATMENT_DETAILS.forEach((t) => set("treatments/explained", t.id, S.TREATMENT_DETAIL_FIELDS));
@@ -115,7 +117,9 @@ const herNotes = (kind, item, key) => {
   for (const k of keys) {
     const q = qs[k], body = q ? secs[q] : null;
     if (!body || /_\(not answered yet\)_/.test(body)) continue;
-    const label = String(q).replace(/^"|"$/g, "").replace(/\?$/, "");
+    let label = String(q).replace(/^"|"$/g, "").replace(/\?$/, "");
+    if (/_\(How to read this: she wrote her night routines/.test(body)) label = "Her night routines";
+    else if (/_\(How to read this: she wrote her morning routines/.test(body)) label = "Her morning routines";
     const paras = body.split(/\n\s*\n/).map((p) => p.trim()).filter((p) => p && !/^_\(How to read/.test(p));
     const list = paras.filter((p) => /^(- |\d+\. )/.test(p)).flatMap((p) => p.split("\n").map((l) => clean(l.replace(/^(- |\d+\. )/, ""))));
     const text = paras.filter((p) => !/^(- |\d+\. )/.test(p)).map(clean).join(" ");

@@ -3,7 +3,7 @@ id: dark-spots
 kind: concern
 title: Dark spots and post-acne marks
 source: playbook
-answered: ""
+answered: 2026-10-26
 ---
 
 # Dark spots and post-acne marks
@@ -24,7 +24,7 @@ _(not answered yet)_
 
 ## What should they avoid?
 
-_(not answered yet)_
+Picking, sun without SPF, Not using daily SPF properly, harsh scrubs, over-exfoliating, and lightening products from the internet. Dark marks fade with time, protection and gentle consistent care, not with force.
 
 ## How long until they see results?
 
@@ -40,8 +40,8 @@ _(not answered yet)_
 
 ## Habits and everyday tips you give
 
-_(not answered yet)_
+SPF every single morning and reapplied every 2-3 hours outside, a hat in strong sun, hands off breakouts, and patience: marks take months to fade, faster on skin that isn't being irritated.
 
 ## When must this come to you, or to a doctor?
 
-_(not answered yet)_
+A dark patch that's new, growing, uneven or changing, or a spot that bleeds or itches, needs a doctor, not a product. Large symmetrical patches on the cheeks or upper lip can be melasma, which we manage together with a doctor.

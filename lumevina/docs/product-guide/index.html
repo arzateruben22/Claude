@@ -31,11 +31,18 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
 .basics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.14in; }
 .basic { background: var(--linen); border-radius: 10px; padding: 0.15in 0.17in; break-inside: avoid; }
 .basic.is-stop { grid-column: 1 / -1; background: var(--espresso); color: #FFFFFF; }
+.basic.is-wide { grid-column: 1 / -1; }
+.basic.is-confirm, .row.is-confirm { background: #FFFFFF; border: 1.5px dashed var(--cocoa); }
+.row.is-confirm { grid-column: 1 / -1; border-radius: 7px; padding: 0.07in 0.1in; }
+.src { color: var(--muted); font-size: 8.2pt; margin: 0.04in 0 0 !important; }
+.rt { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1in 0.22in; margin-top: 0.04in; }
+.rt-h { font-weight: 650; color: var(--espresso); margin: 0 0 0.03in !important; }
+.rt ol { margin: 0; padding-left: 1.3em; } .rt li { margin: 0 0 0.01in; }
 .basic.is-stop h4, .basic.is-stop .k { color: #EDE5DA; }
 .basic h4, .row h4 { font-family: var(--sans); font-size: 7.4pt; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cocoa); margin: 0 0 0.05in; }
 .basic p, .row p { margin: 0 0 0.05in; } .basic ul, .row ul { margin: 0 0 0.05in; padding-left: 1.1em; }
 .how { color: var(--espresso); max-width: 5.6in; margin: 0 0 0.22in; font-size: 10pt; }
-.pending { border: 1px dashed var(--khaki); border-radius: 10px; padding: 0.16in 0.18in; color: var(--muted); }
+.pending { border: 1px dashed var(--khaki); border-radius: 10px; padding: 0.16in 0.18in; color: var(--muted); margin-top: 0.14in; }
 .pending b { color: var(--espresso); }
 /* products */
 .cat { break-before: page; margin: 0 0 0.12in; padding-bottom: 0.08in; border-bottom: 1px solid var(--khaki); display: flex; align-items: baseline; justify-content: space-between; }
@@ -76,48 +83,59 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
   <p class="k">Before you start</p>
   <h2>A few things first</h2>
   <p class="how">Each product has its own page: when to use it, how, what's normal, and the signs that mean stop and message Evelyn. Your routine is the one Evelyn built for you; if something here and her advice to you differ, follow her.</p>
-  <div class="pending"><b>Coming from Evelyn:</b> your routine in order, when to stop a product and message her, what not to mix, sunscreen, and how to start the stronger products. She answers these once in her Skin Playbook ("Your products, in order").</div>
+  <div class="basics">
+      <div class="basic is-wide"><h4>Your routine, in order</h4><p>Morning: cleanser, toner, serum, eye gel, moisturizer, SPF. Night: cleanse (double cleanse if you wore makeup or SPF), toner, your treatment product (your active or acne med), serum, eye gel, moisturizer. Thin to thick, and a spot treatment goes on last, only on the spot. Please be sure to wash hands before applying eye products to prevent actives from bleeding into eye area and causing dryness or irritation.</p></div>
+      <div class="basic is-wide"><h4>Evelyn's usual routines</h4>
+  <div class="rt"><div><p class="rt-h">Morning · Dry or normal skin</p><ol><li>Barrier Balance Creamy Cleanser</li><li>Soothing Radiance Toner</li><li>HydraRemedy Gel Serum</li><li>5% L-Mandelic Serum or 8% L-Mandelic Serum</li><li>Antioxidant Peptide Eye Gel</li><li>Cran-Peptide Cream</li><li>PowerMineral SPF 50 or Mineral SPF 50 or Brilliant Defense SPF 50</li></ol></div><div><p class="rt-h">Morning · Oily or combination skin</p><ol><li>Ultra Gentle Gel Cleanser</li><li>Moisture Balance Toner</li><li>8% L-Mandelic Serum or 11% L-Mandelic Serum or 15% L-Mandelic Serum</li><li>Antioxidant Peptide Eye Gel</li><li>Barrier Care Gel Cream</li><li>PowerMineral SPF 50 or Mineral SPF 50 or Brilliant Defense SPF 50</li></ol></div><div><p class="rt-h">Night · Dry or normal skin</p><ol><li>Barrier Balance Creamy Cleanser</li><li>Soothing Radiance Toner</li><li>HydraRemedy Gel Serum</li><li>Cran-Peptide Cream</li></ol></div><div><p class="rt-h">Night · Oily or combination skin</p><ol><li>Ultra Gentle Gel Cleanser</li><li>Moisture Balance Toner</li><li>2.5% Advanced Acne Med or 5% Advanced Acne Med</li><li>HydraBalance Gel</li><li>Barrier Care Gel Cream</li></ol></div></div>
+  <p class="src">The mandelic strength depends on your tolerance. If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night. Routines vary from client to client: yours is the one Evelyn builds for you.</p></div>
+      <div class="basic is-stop"><h4>When to stop a product and message Evelyn</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div>
+      <div class="basic"><h4>Your actives on Evelyn's shelf</h4><ul><li>Glycolic Facial Cleanser</li><li>L-Mandelic Face and Body Wash</li><li>5% L-Mandelic Serum</li><li>8% L-Mandelic Serum</li><li>11% L-Mandelic Serum</li><li>15% L-Mandelic Serum</li><li>Retinal B3 Serum</li><li>Retinol Peptide Serum</li></ul><p class="src">Retinoids and acids: the ones to pause before a treatment, and to stop if your skin flares up. Not sure about something else you use? Message Evelyn.</p></div>
+      <div class="basic"><h4>Ask Evelyn before you start anything if</h4><p>You have, or are on:</p><ul><li>Pregnancy or breastfeeding</li><li>Accutane, past or present</li><li>Prescription retinoids or antibiotics</li><li>Any other prescription</li><li>A reaction, rash, burning or swelling</li><li>Eczema, rosacea, psoriasis or another condition</li></ul></div>
+      <div class="basic"><h4>What not to mix</h4><p>Not on the same night: a retinoid with an acid; two exfoliants; benzoyl peroxide with retinol. Vitamin C and Mandelic Acid goes in the morning, actives at night. Nothing active on skin that's freshly treated or waxed. Niacinamide and vitamin C are fine together.</p></div><div class="basic"><h4>Sunscreen</h4><p>Every morning, rain or shine, SPF 30 or higher, enough of it, and reapplied when you're outside. It's the one product that protects everything else we're doing: every active makes you burn more easily, and sun is what brings dark spots back.</p></div><div class="basic"><h4>Starting a mandelic serum</h4><p>Start with the strength I give you, usually the lowest, a few nights a week, and build up to nightly as your skin allows. Moving up a strength is my call, after a few weeks with no stinging or flaking. If it ever burns or your skin gets sensitive, back off and message me.</p></div><div class="basic is-confirm"><h4>Evelyn to confirm</h4><p>Morning or night? Your routines and "what not to mix" put the mandelic serums in the morning; your answer on starting them says a few nights a week.</p></div><div class="basic"><h4>Retinal or retinol</h4><p>Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.</p></div>
+      <div class="basic"><h4>Choosing and applying sunscreen</h4><p>Broad spectrum, SPF 30 or higher, every morning, enough of it (about 2 thin fingers worth), reapplied if you're outside or in a room with windows. Mineral if your skin is sensitive, acne-prone or freshly treated. The ones I carry are the ones I trust; ask me which fits you.</p></div><div class="basic"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="basic"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="basic"><h4>Running low, or skipped a few days</h4><p>Don't stretch it or stop; message me and I'll set one aside for pickup, or order it from the shop with shipping. Running out of the treatment product for a week or two usually means starting back at a few nights a week.</p><p>No, a few days doesn't undo anything. Pick it back up at the same strength. If it's been a week or more, go back to a few nights a week with your actives first, then build up again. Reach out if you're unsure.</p></div><div class="basic"><h4>Using your own products too</h4><p>Usually yes; what matters is not doubling up: two exfoliants, two retinoids or several actives at once. Send me a photo of what you're using and I'll tell you what stays, what goes and what waits.</p></div>
+    </div>
+    <div class="pending"><b>Still to come from Evelyn:</b> starting the advanced acne med, and her notes on each product.</div>
 </section>
 
-<section><div class="cat"><h2>Cleansers</h2><span>7 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Cleansers</h2><span>7 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-barrier-cream-cleanser.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 6 fl oz / 180 ml</p>
     <h3>Barrier Balance Creamy Cleanser</h3>
     <p class="lbl">A daily calming wash. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Night, dry or normal skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-gentle-gel-cleanser.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Ultra Gentle Gel Cleanser (travel size)</h3>
     <p class="lbl">A daily antioxidant wash. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li><li>Night, oily or combination skin</li></ul></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-mandelic-face-and-body.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 6 fl oz / 180 ml</p>
     <h3>L-Mandelic Face and Body Wash</h3>
     <p class="lbl">Cleanses and brightens. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Lasts about</h4><p>3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-ultra-gentle-cleanser.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 6 fl oz / 180 ml</p>
     <h3>Ultra Gentle Gel Cleanser</h3>
     <p class="lbl">A daily antioxidant wash. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li><li>Night, oily or combination skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/gm-glycolic-cleanser.jpg" alt=""></div>
   <div class="tx">
     <p class="br">GlyMed Plus · 8 fl oz / 236 ml</p>
     <h3>Glycolic Facial Cleanser</h3>
     <p class="lbl">With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/gm-vitamin-c-cleanser.jpg" alt=""></div>
@@ -136,21 +154,21 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
 </article></section>
-<section><div class="cat"><h2>Toners &amp; mists</h2><span>5 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Toners &amp; mists</h2><span>5 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-moisture-balance-toner.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 6 fl oz / 180 ml</p>
     <h3>Moisture Balance Toner</h3>
     <p class="lbl">Hydrates and replenishes.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li><li>Night, oily or combination skin</li></ul></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-moisture-balance-toner-14.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Moisture Balance Toner (2 fl oz)</h3>
     <p class="lbl">Hydrates and replenishes.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li><li>Night, oily or combination skin</li></ul></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/fr-omni-clear-mist.jpg" alt=""></div>
@@ -160,13 +178,13 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="lbl">Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested.</p>
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-soothing-radiance-toner.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 6 fl oz / 180 ml</p>
     <h3>Soothing Radiance Toner</h3>
     <p class="lbl">Calms and nourishes.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Night, dry or normal skin</li></ul></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/gm-skin-recovery-mist.jpg" alt=""></div>
@@ -177,77 +195,77 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
 </article></section>
-<section><div class="cat"><h2>Serums</h2><span>11 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Serums</h2><span>11 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-11pct-mandelic-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>11% L-Mandelic Serum</h3>
     <p class="lbl">Exfoliates and brightens.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Who it's for</h4><p>Which strength depends on your tolerance: start with the one Evelyn gives you.</p></div><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>How to use it</h4><p>Start with the strength I give you, usually the lowest, a few nights a week, and build up to nightly as your skin allows. Moving up a strength is my call, after a few weeks with no stinging or flaking. If it ever burns or your skin gets sensitive, back off and message me.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row is-confirm"><h4>Evelyn to confirm</h4><p>Morning or night? Your routines and "what not to mix" put the mandelic serums in the morning; your answer on starting them says a few nights a week.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-15pct-mandelic-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>15% L-Mandelic Serum</h3>
     <p class="lbl">Exfoliates and brightens.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Who it's for</h4><p>Which strength depends on your tolerance: start with the one Evelyn gives you.</p></div><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>How to use it</h4><p>Start with the strength I give you, usually the lowest, a few nights a week, and build up to nightly as your skin allows. Moving up a strength is my call, after a few weeks with no stinging or flaking. If it ever burns or your skin gets sensitive, back off and message me.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row is-confirm"><h4>Evelyn to confirm</h4><p>Morning or night? Your routines and "what not to mix" put the mandelic serums in the morning; your answer on starting them says a few nights a week.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-5pct-mandelic-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>5% L-Mandelic Serum</h3>
     <p class="lbl">Exfoliates and brightens.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Who it's for</h4><p>Which strength depends on your tolerance: start with the one Evelyn gives you.</p></div><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li></ul></div><div class="row"><h4>How to use it</h4><p>Start with the strength I give you, usually the lowest, a few nights a week, and build up to nightly as your skin allows. Moving up a strength is my call, after a few weeks with no stinging or flaking. If it ever burns or your skin gets sensitive, back off and message me.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row is-confirm"><h4>Evelyn to confirm</h4><p>Morning or night? Your routines and "what not to mix" put the mandelic serums in the morning; your answer on starting them says a few nights a week.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-8pct-mandelic-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>8% L-Mandelic Serum</h3>
     <p class="lbl">Exfoliates and brightens.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Who it's for</h4><p>Which strength depends on your tolerance: start with the one Evelyn gives you.</p></div><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>How to use it</h4><p>Start with the strength I give you, usually the lowest, a few nights a week, and build up to nightly as your skin allows. Moving up a strength is my call, after a few weeks with no stinging or flaking. If it ever burns or your skin gets sensitive, back off and message me.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row is-confirm"><h4>Evelyn to confirm</h4><p>Morning or night? Your routines and "what not to mix" put the mandelic serums in the morning; your answer on starting them says a few nights a week.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-glowtone-corrective.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>GlowTone Corrective Serum</h3>
     <p class="lbl">Targets discoloration, with Hexa-Bright Complex.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-hydraremedy-gel-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1.7 fl oz / 50 ml</p>
     <h3>HydraRemedy Gel Serum</h3>
     <p class="lbl">Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Night, dry or normal skin</li></ul></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-retinal-b3-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>Retinal B3 Serum</h3>
     <p class="lbl">Gently corrects and renews. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>How to use it</h4><p>Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Pairs with, and not with</h4><p>If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-retinol-peptide-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1 fl oz / 30 ml</p>
     <h3>Retinol Peptide Serum</h3>
     <p class="lbl">Intensely corrects and renews.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>How to use it</h4><p>Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p></div><div class="row"><h4>Before a treatment</h4><p>Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.</p></div><div class="row"><h4>After a treatment</h4><p>After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.</p></div><div class="row"><h4>Pairs with, and not with</h4><p>If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.</p></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/gm-firming-serum.jpg" alt=""></div>
   <div class="tx">
     <p class="br">GlyMed Plus · 1 oz / 30 ml</p>
     <h3>Firming Serum with Phyto-Stem Cells</h3>
     <p class="lbl">Part of the GlyMed Plus Elite line; step 2 of its routine: treat.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/gm-revitalizing-essence-nadplus.jpg" alt=""></div>
@@ -257,30 +275,30 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="lbl">Part of the GlyMed Plus Elite line; step 2 of its routine: treat.</p>
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/mx-dew-drops.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Mixi Skincare · 1 fl oz</p>
     <h3>Dew Drop</h3>
     <p class="lbl">Silky smooth hydration with beta-glucan. Non-pore-clogging.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.</p></div></div>
   </div>
 </article></section>
-<section><div class="cat"><h2>Acne &amp; spot care</h2><span>5 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Acne &amp; spot care</h2><span>5 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-2-5pct-adv-acne-med.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1.5 fl oz / 44 ml</p>
     <h3>2.5% Advanced Acne Med</h3>
     <p class="lbl">Benzoyl peroxide acne medication.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Night, oily or combination skin</li></ul></div><div class="row"><h4>What's normal at first</h4><p>If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p><p>Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.</p></div><div class="row"><h4>Pairs with, and not with</h4><p>If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-5pct-adv-acne-med.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1.5 fl oz / 44 ml</p>
     <h3>5% Advanced Acne Med</h3>
     <p class="lbl">Benzoyl peroxide acne medication.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Night, oily or combination skin</li></ul></div><div class="row"><h4>What's normal at first</h4><p>If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.</p></div><div class="row is-stop"><h4>Stop and message Evelyn if</h4><p>If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.</p><p>Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.</p></div><div class="row"><h4>Pairs with, and not with</h4><p>If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.</p></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/fr-invisiclear.jpg" alt=""></div>
@@ -307,29 +325,29 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
 </article></section>
-<section><div class="cat"><h2>Moisturizers</h2><span>5 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Moisturizers</h2><span>5 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-barrier-gel-cream.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Barrier Care Gel Cream</h3>
     <p class="lbl">Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, oily or combination skin</li><li>Night, oily or combination skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-cran-peptide-cream.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Cran-Peptide Cream</h3>
     <p class="lbl">Rich and restorative. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Night, dry or normal skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-hydrabalance-gel.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 1.7 fl oz / 50 ml</p>
     <h3>HydraBalance Gel</h3>
     <p class="lbl">Hydrates and balances oil. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Night, oily or combination skin</li></ul></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/gm-barrier-repair-cream.jpg" alt=""></div>
@@ -339,22 +357,22 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="lbl">With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.</p>
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/gm-cell-protection-balm.jpg" alt=""></div>
   <div class="tx">
     <p class="br">GlyMed Plus · 2 fl oz / 59 ml</p>
     <h3>Cell Protection Balm</h3>
     <p class="lbl">Step 3 of the GlyMed Plus routine: balance.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.</p></div></div>
   </div>
 </article></section>
-<section><div class="cat"><h2>Eye care</h2><span>3 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Eye care</h2><span>3 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-antioxidant-eye-gel.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 0.4 fl oz / 12 ml</p>
     <h3>Antioxidant Peptide Eye Gel</h3>
     <p class="lbl">Smooths and visibly depuffs.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Morning, oily or combination skin</li></ul></div></div>
   </div>
 </article><article class="prod is-empty">
   <div class="ph"><img src="img/gm-eye-calm.jpg" alt=""></div>
@@ -373,45 +391,45 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
     <p class="wait">Evelyn is adding how to use this one.</p>
   </div>
 </article></section>
-<section><div class="cat"><h2>Sun care</h2><span>5 products</span></div><article class="prod is-empty">
+<section><div class="cat"><h2>Sun care</h2><span>5 products</span></div><article class="prod">
   <div class="ph"><img src="img/fr-brilliant-defense-50.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Brilliant Defense SPF 50</h3>
     <p class="lbl">Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-daily-spf-30.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Daily SPF 30 Plus</h3>
     <p class="lbl">Broad-spectrum SPF 30 sunscreen. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-mineral-matte-spf-28.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>Mineral Matte SPF 28</h3>
     <p class="lbl">Broad-spectrum SPF 28 sunscreen. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>Lasts about</h4><p>About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/fr-powdermineral-spf-50.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Face Reality · 2 fl oz / 60 ml</p>
     <h3>PowerMineral SPF 50</h3>
     <p class="lbl">Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.</p></div></div>
   </div>
-</article><article class="prod is-empty">
+</article><article class="prod">
   <div class="ph"><img src="img/mx-spf-50-mineral-spf.jpg" alt=""></div>
   <div class="tx">
     <p class="br">Mixi Skincare · 2 fl oz</p>
     <h3>Mineral SPF 50</h3>
     <p class="lbl">UVA/UVB protection. Medical-grade sunscreen.</p>
-    <p class="wait">Evelyn is adding how to use this one.</p>
+    <div class="rows"><div class="row"><h4>In Evelyn's routines</h4><ul><li>Morning, dry or normal skin</li><li>Morning, oily or combination skin</li></ul></div><div class="row"><h4>Lasts about</h4><p>About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.</p></div></div>
   </div>
 </article></section>
 <section><div class="cat"><h2>Masks</h2><span>1 product</span></div><article class="prod is-empty">
@@ -436,8 +454,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01e
 <section class="back">
   <p class="k">Questions?</p>
   <h2>Something doesn't feel right, or you're not sure?</h2>
-  <p>Message Evelyn before you change anything. Bring this guide and your products to your next visit and she'll update your routine.</p>
-  <p class="c">Lumevina.aesthetics@gmail.com · @lumevina on Instagram</p>
+  <p>Message Evelyn before you change anything, through the website's contact form or her business line. She answers within two days, and members within 24 hours. Bring this guide and your products to your next visit and she'll update your routine.</p>
+  <p class="c">818-312-2627 · Lumevina.aesthetics@gmail.com · @lumevina on Instagram</p>
 </section>
 
 </div></body></html>

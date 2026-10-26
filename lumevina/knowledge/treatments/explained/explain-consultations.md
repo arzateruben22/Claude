@@ -3,14 +3,14 @@ id: explain-consultations
 kind: treatment-explained
 title: In-Person and Virtual Consultations
 source: playbook
-answered: ""
+answered: 2026-10-26
 ---
 
 # In-Person and Virtual Consultations: what to expect
 
 ## What happens, step by step
 
-_(not answered yet)_
+We go through your skin, your routine, your habits and your goals, I look at your skin (in person, or close-up photos in natural light for a virtual one), and you leave with a plan: which treatment, which products, in what order. The fee is for consultation the product purchase is separate.
 
 ## Does it hurt? How does it feel?
 
@@ -30,7 +30,7 @@ _(not answered yet)_
 
 ## Who it's best for, and who should book something else
 
-_(not answered yet)_
+Anyone who wants a plan before committing to a treatment, or has a routine question that needs more than a text. Virtual works for routine questions; in person is better when I need to see your skin up close.
 
 ## Who has to wait, or can't have it
 
