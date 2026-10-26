@@ -104,7 +104,7 @@ LABELS = [
     {"id": "l-giant", "text": "the largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": t_end, "side": 1, "shot": "sun"},
 ]
 BADGES = [
-    {"id": "b-sky", "text": "true sizes and distances, shrunk", "t0": A("vo02:But"), "t1": t_cut, "slot": "tr"},
+    {"id": "b-sky", "text": "true distances, shrunk · dots enlarged", "t0": A("vo02:But"), "t1": t_cut, "slot": "tr"},   # the side view
     {"id": "b-true", "text": "true scale", "t0": t_cut, "t1": t_pelo, "slot": "tr"},
     {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": t_melt0, "slot": "tr"},
     {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": t_j1, "slot": "tr"},

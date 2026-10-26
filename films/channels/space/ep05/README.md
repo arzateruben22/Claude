@@ -41,8 +41,8 @@ some are more than a thousand times wider. Astronomers even file the Sun under d
 
 | Badge | Where | Why |
 |---|---|---|
-| `true sizes and distances, shrunk` | The sky view | Ratios exact, everything scaled down together |
-| `true scale` | The row of Earths and the sunspot | |
+| `true distances, shrunk · dots enlarged` | The side view (from "But") | The distances are true ratios, scaled down together; at that scale the Moon sits 2 px from Earth and the Sun is 4 px across, so Earth-and-Moon and the Sun are marked with glowing dots |
+| `true scale` | The row of Earths and the sunspot | The row is drawn in the plane of the Sun's limb, so it spans the disc exactly as seen; the Sun's face is drawn just under the bloom (white-grey) so the silhouettes read |
 | `dot enlarged` | The Peloponnese | At true scale it would be 1/8,400 of the Sun's width, under a pixel |
 | `1 dot = 200 Earths, by volume` | The melt | Whole spheres would pack fewer (about 960,000) |
 | `illustration` | The giant outline | One circle for "the largest known stars" (their sizes are uncertain) |

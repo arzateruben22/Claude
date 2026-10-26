@@ -40,6 +40,18 @@ one line (`set/capglue.py`). One Chromium job at a time; to resume after a resta
   Human scale: "look up tonight", New York to Boston. Footnote: the Moon falls about 1.4 mm a second below a straight
   line. The end card pushes back into frame 0.
 
+- **005:** two places, two cuts: the sky (the Moon and the Sun at true angular sizes through a long lens: twins), a cut
+  on "But" to the same line seen square-on from far out (Earth and the Moon at one end, the Sun 400 times farther at the
+  other), then the Sun at true scale (the row of 109 Earths, a sunspot with an Earth in it, the Peloponnese as a dot, the
+  melt into 6,500 beads, the one scale jump to the giants' outline); the end card cuts back to the sky (a loop). Spine:
+  ? → 400× · 400× → 1 → 109 → southern Greece → 8,000 → 1,300,000 → 1,000×+ → G2V · dwarf. Human scale: your whole world
+  inside one sunspot; a Greek peninsula against the Sun. Footnote: the Sun holds about 99.8% of the solar system's mass.
+
+- **006:** one world on three rungs of the ladder: Earth at the equator ("you"), a pull-back to Earth's orbit, the one
+  jump to the galaxy. Spine: ? → 1,670 → 1,225 → 30 → km since this began (live, true speed) → 230 → 230 → first
+  dinosaurs → ?. Human scale: the speed of sound, New York to Boston. Footnote: one lap of the galaxy takes the Sun about
+  230 million years.
+
 ## Questions (for Ruben; the bible's recommendation is taken provisionally)
 - None yet.
 
