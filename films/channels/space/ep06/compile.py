@@ -17,6 +17,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
+sys.path.insert(0, str(HERE.parent / "set"))
+from capglue import glue    # noqa: E402
 
 FPS, BPM = 30, 56.25
 ID = "lightminute-006"
@@ -52,7 +54,9 @@ CLK = {
 }
 
 # ── the ladder ─────────────────────────────────────────────────────────────
-S_E, S_S, S_G = 400.0, 2.4e6, GC_LY * LY / 70.0                         # km per scene unit in each view
+# km per scene unit in each view: Earth about 0.6 of the frame's width (above the spine); Earth's orbit about 0.75
+# of it (so the orbit and Earth stay in frame); the galaxy's 100,000 light-years about 0.95 of it
+S_E, S_S, S_G = 600.0, 1.1e7, 1e5 * LY / 34.0
 t_j0, t_j1 = t_zoom, A("vo05:galaxy", 0.4)
 assert t_p1 - t_p0 <= 3.0 and 1.0 < t_j1 - t_j0 <= 3.0, (t_p0, t_p1, t_j0, t_j1)
 LADDER = {
@@ -81,14 +85,16 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-you-h", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": 0.0, "t1": t_n, "side": 1},
     {"id": "l-you", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": A("vo02:equator"), "t1": t_c, "side": 1},
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earthS", "t0": A("vo03:Earth"), "t1": t_w, "side": 1},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earthS", "t0": A("vo03:Earth"), "t1": t_w, "side": 1, "fixed": True},   # rides with Earth
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo03:Sun"), "t1": t_why, "side": -1},
-    {"id": "l-pto", "text": "Ptolemy: birds and clouds left behind?", "kind": "gravity", "anchor": "earthS", "t0": A("vo04:birds"), "t1": A("vo04:In"), "side": -1},
-    {"id": "l-gal", "text": "Galileo, 1632: you can't feel a smooth ride", "kind": "light", "anchor": "earthS", "t0": A("vo04:Below"), "t1": t_w, "side": -1},
-    {"id": "l-here", "text": "the Sun, and you", "kind": "star", "anchor": "sunG", "t0": A("vo05:drags"), "t1": t_end, "side": 1},
+    {"id": "l-here", "text": "the Sun, and you", "kind": "star", "anchor": "sunG", "t0": A("vo05:drags"), "t1": t_end, "side": 1, "fixed": True},
     {"id": "l-gc", "text": "galactic center", "kind": "star", "anchor": "gc", "t0": A("vo05:galaxy"), "t1": t_end, "side": -1},
     {"id": "l-lap", "text": "the Sun's lap", "kind": "gravity", "anchor": "lap", "t0": A("vo05:One"), "t1": t_tk, "side": -1},
-    {"id": "l-27k", "text": "27,000 light-years", "kind": "light", "anchor": "lap", "t0": A("vo07:To"), "t1": t_end, "side": -1},
+]
+# the argument, as two notes under the captions (the picture stays on the orbit)
+PILLS = [
+    {"id": "p-pto", "text": "Ptolemy: birds left behind?", "t0": A("vo04:birds"), "t1": A("vo04:In", -0.2), "at": [90 / 1080, 0.705]},
+    {"id": "p-gal", "text": "Galileo, 1632: a ship's cabin", "t0": A("vo04:Galileo"), "t1": t_w, "at": [90 / 1080, 0.705]},
 ]
 BADGES = [
     {"id": "b-spin", "clock": "spin", "t0": t_n, "t1": t_c, "slot": "tl"},
@@ -117,16 +123,23 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 006", "title": "Your *speed*", "t1": t_n - 0.25, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Light Minute · No. 006", "title": "Your *speed*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: trees or *stars*", "follow": "Light Minute · No. 007",
        "next": "One lap of the galaxy takes the Sun about 230 million years."}   # footnote (c9)
 CUE = {"zoom": t_zoom, "p0": t_p0, "p1": t_p1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To")}
+POSTER = A("vo05:appeared", 0.4)
+# captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
+glue(f, {"vo02": ["sixteen hundred seventy", "kilometers an hour."],
+         "vo03": ["the Sun", "about thirty", "New York", "to Boston."],
+         "vo04": ["sixteen thirty-two,", "a ship's cabin."],
+         "vo05": ["the galaxy", "two hundred thirty", "kilometers a second.", "about two hundred thirty", "million years.", "the first dinosaurs", "had just appeared."]})
+
 film = {
-    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:appeared", 0.4),
+    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS,
     "phys": {"c_km": C_KM, "ly": LY, "v_orb": V_ORB, "v_gal": V_GAL, "gc_ly": GC_LY, "year": YEAR, "sidereal": SIDEREAL, "lap_y": LAP_Y},
     "clk": CLK, "ladder": LADDER, "cam": CAM, "cue": CUE,
-    "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
+    "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": f.captions(max_chars=24),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

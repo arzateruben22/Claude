@@ -139,16 +139,6 @@
    "t1": 38.9333
   },
   {
-   "t": 23.9,
-   "kind": "label",
-   "tag": "l-pto"
-  },
-  {
-   "t": 30.566666666666666,
-   "kind": "label",
-   "tag": "l-gal"
-  },
-  {
    "t": 38.9333,
    "kind": "section",
    "id": "whoa",
@@ -221,11 +211,6 @@
    "t": 60.06666666666667,
    "kind": "counter.show",
    "tag": "c-read-trip"
-  },
-  {
-   "t": 64.8,
-   "kind": "label",
-   "tag": "l-27k"
   },
   {
    "t": 64.8,

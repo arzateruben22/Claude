@@ -20,6 +20,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
+sys.path.insert(0, str(HERE.parent / "set"))
+from capglue import glue    # noqa: E402
 
 FPS, BPM = 30, 56.25
 ID = "lightminute-005"
@@ -127,13 +129,21 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": B["normal"]["t0"] - 0.25, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
        "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c8 note; NASA)
 
 CUE = {"side": A("vo02:But"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
+POSTER = A("vo05:wider", 0.8)
+# captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
+glue(f, {"vo02": ["the Sun", "the full Moon", "look the same size."],
+         "vo03": ["would fit inside", "one big sunspot."],
+         "vo04": ["a fiery stone,", "bigger than", "southern Greece."],
+         "vo05": ["a thousand"], "vo06": ["the Sun", "dwarf stars."],
+         "vo07": ["the Sun:", "about five seconds.", "Sun to Earth:", "eight minutes,", "twenty seconds."]})
+
 film = {
-    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:wider", 0.8),
+    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS,
     "phys": {"u": U, "r_e": R_E, "n_across": N_ACROSS, "vol": VOL, "dots": DOTS, "per_dot": PER_DOT, "spot_r": SPOT_R, "spot_dir": SPOT_DIR, "pelo_km": PELO_KM,
              "giant": GIANT, "sky_k": SKY_K, "sep": SEP, "r_sun_km": R_SUN_KM, "r_moon_km": R_MOON_KM, "d_moon_km": D_MOON_KM, "d_sun_km": D_SUN_KM, "shrink": SHRINK, "base": BASE},

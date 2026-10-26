@@ -18,6 +18,12 @@
   (Grotte Mandrin) about 54,000. A palaeoanthropologist may want a primary source.
 - **Proxima's direction and colour** are drawn for the picture (badged "Voyager isn't headed there").
 - **Readout:** "To Proxima Centauri: four years and three months" is light time from Proxima to us (4.24 years).
+- **The light, after the 26 Oct recheck.** The change now shows Voyager's signal travelling home (a day), then
+  the team's command going out (a day) and the answer coming back (a day), in step with the voice. The fronts,
+  the light-day circle and the heliopause rim are drawn as circles on the screen through Voyager *as seen* (a
+  drawing convention: the real sphere is seen at an angle). Check that an astronomer is happy with that.
+- **The speck** (one light-day around the Sun) is drawn at least 14 px in radius in the local view; at true scale
+  it would be under a pixel. It sits under the "not to scale · illustration" note.
 
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt

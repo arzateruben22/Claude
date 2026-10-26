@@ -27,6 +27,7 @@ reached Europe. Voyager has crossed day one of fifteen hundred.
 | `scene.mjs` | The picture, a pure function of t |
 | `../set/beacon.js` | **New reusable block:** a constant-pixel glow for stars and probes at any rung of the scale ladder |
 | `../set/comets.js` | **New reusable block:** the Oort cloud as a thick shell of points (log-uniform radii), shown under a "theory" badge |
+| `../set/capglue.py` | **New reusable helper (26 Oct):** keeps number phrases ("nineteen seventy-seven", "three hundred") on one caption line |
 | `review/` | stills, scorecard, human review, claims sign-off |
 
 ## Rebuild

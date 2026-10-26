@@ -175,6 +175,11 @@
    "t1": 42.1333
   },
   {
+   "t": 27.333333333333332,
+   "kind": "counter.show",
+   "tag": "c-1962"
+  },
+  {
    "t": 28.533333333333335,
    "kind": "label",
    "tag": "l-radar",
@@ -238,6 +243,11 @@
   },
   {
    "t": 42.3708,
+   "kind": "label",
+   "tag": "l-rise"
+  },
+  {
+   "t": 42.3708,
    "kind": "orbit.pass",
    "tag": "sunrise-0"
   },
@@ -293,6 +303,11 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 60.8
+  },
+  {
+   "t": 53.8667,
+   "kind": "counter.show",
+   "tag": "c-vs2"
   },
   {
    "t": 54.98,

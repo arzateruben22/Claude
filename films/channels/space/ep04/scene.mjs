@@ -50,8 +50,8 @@ const earth = createPlanet({ radius: PH.r_earth, surface: earthSurface({ width: 
 const moon = createPlanet({ radius: PH.r_moon, surface: moonSurface({ width: 512, seed: 9 }), rimDay: 0.4, rimNight: 0.5, segments: 64 });
 scene.add(earth.group, moon.group);
 const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
-const C = { orbit: line("lilac", 0.5), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3), ice: line("ice", 0.6), ghost: line("text-2", 0.7) };
-const orbitRing = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: R, ...XZ });
+const C = { orbit: line("lilac", 0.65), lilac: line("lilac", 0.8), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3), ice: line("ice", 0.6), ghost: line("text-2", 0.7) };
+const orbitRing = ring({ color: C.orbit, width: 2.8, opacity: 1 }).arc({ r: R, ...XZ });
 const row = Array.from({ length: 30 }, () => ring({ color: C.ice, width: 1.6, opacity: 0 }));
 const vArrow = [segment({ color: C.lilac, width: 3.2, opacity: 0 }), segment({ color: C.lilac, width: 3.2, opacity: 0 }), segment({ color: C.lilac, width: 3.2, opacity: 0 })];
 const freePath = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 1.2, duty: 0.5 });
@@ -91,7 +91,9 @@ for (const L of FILM.labels) {
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "2.6vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "62vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+const endT = endEl.querySelector(".t");
+if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d)));
@@ -139,7 +141,7 @@ window.seek = function (t) {
   const cb = { e1: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray(), e2: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).toArray() };
   ghostMoon.arc({ center: gPos, r: Math.max(PH.r_moon * 3, 0.9), ...cb }).set({ opacity: og });
   S.free = gPos;
-  const op = winOp(t, CUE.back, B.why.t0, 0.3), toE = norm(mp.map((v) => -v)), pt = add(mp, toE, 9), pb = add(pt, toE, -1.6), ps = [-toE[2] * 0.9, 0, toE[0] * 0.9];
+  const op = Math.max(winOp(t, CUE.back, B.why.t0, 0.3), winOp(t, CUE.same, B.readout.t0, 0.4)), toE = norm(mp.map((v) => -v)), pt = add(mp, toE, 9), pb = add(pt, toE, -1.6), ps = [-toE[2] * 0.9, 0, toE[0] * 0.9];
   pull[0].seg(add(mp, toE, PH.r_moon * 2), pt).set({ opacity: op }); pull[1].seg(pt, add(pb, ps)).set({ opacity: op }); pull[2].seg(pt, add(pb, ps, -1)).set({ opacity: op });
   S.pull = add(mp, toE, 5);
 

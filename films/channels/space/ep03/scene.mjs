@@ -68,7 +68,9 @@ const C = { orbit: line("lilac", 0.75), lilac: line("lilac", 0.8), teal: line("t
 const orbV = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_v, ...XZ });
 const orbE = ring({ color: C.orbit, width: 2, opacity: 1 }).arc({ r: PH.r_e, ...XZ });
 const ticks = FILM.sunrises.map(() => segment({ color: C.tealHi, width: 4, opacity: 0 }));
-const beam = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 2.2, duty: 0.5 });
+const beam = segment({ color: C.teal, width: 3.6, opacity: 0, dash: 2.2, duty: 0.5 });
+const pulse = createBeacon({ color: hdr("teal", 1.5), px: 16, core: 0.4 });   // the radar pulse on its way in
+scene.add(pulse.mesh);
 const arrow = [ring({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 }), segment({ color: C.lilac, width: 3.4, opacity: 0 })];
 const lightRing = ring({ color: C.teal, width: 2.8, opacity: 0 }).arc({ r: PH.r_v + 0.25, ...XZ });
 const echo = segment({ color: C.tealHi, width: 3.4, opacity: 0 });
@@ -114,11 +116,13 @@ for (const c of FILM.counters) {
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
-  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, fixed: L.fixed });
+  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, v: L.v, fixed: L.fixed });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "2.6vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "62vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+const endT = endEl.querySelector(".t");
+if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d)));
@@ -137,16 +141,22 @@ window.seek = function (t) {
   you.set({ center: pinAt, camera });
   S.pin = vp.map((v, j) => v + pinDir[j] * VR * 1.15);
   S.venus = [vp[0], vp[1] + VR * 0.8, vp[2]]; S.earth = [ep[0], ep[1] + ER * 0.8, ep[2]]; S.sun = [0, 1.4, 0];
+  const camX = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray();
+  S.limb = vp.map((v, j) => v + camX[j] * VR * 1.06);                        // Venus's right limb, as seen
   // the orbits fade in the close view (they would cut through Venus)
   orbV.set({ opacity: 1 - 0.85 * wf }); orbE.set({ opacity: 1 - 0.85 * wf });
   // the sunrise ticks: one across the orbit wherever Venus was at each sunrise
+  S.rise = onOrbit(PH.r_v + 0.9, FILM.sunrises[0].th);
   FILM.sunrises.forEach((s, i) => {
     const a = onOrbit(PH.r_v - 0.9, s.th), b = onOrbit(PH.r_v + 0.9, s.th);
     ticks[i].seg(a, b).set({ opacity: t >= s.t && t < FILM.endCard + 0.6 ? fadeIn(t, s.t, 0.25) : 0 });
   });
   // the radar beam (1962): Earth to Venus, dashed
+  // the radar (1962): a dashed beam from Earth, and a pulse that reaches Venus on "pierced"
   beam.seg(ep, vp).set({ opacity: winOp(t, CUE.radar, CUE.true, 0.35) });
-  S.beam = vp.map((v, j) => v + (ep[j] - v) * 0.12);
+  const u = E.inout2(seg(t, CUE.radar, CUE.pierce)), toE = norm(ep.map((v, j) => v - vp[j]));
+  pulse.set({ center: ep.map((v, j) => v + (vp[j] + toE[j] * VR - v) * u), camera, opacity: u > 0 && u < 1 ? 1 : 0 });
+  S.beam = vp.map((v, j) => v + toE[j] * VR * 1.9);
   // "backwards": an arc arrow around Venus's equator, pointing the way it turns (clockwise seen from north)
   const ra = VR * 1.45, a0 = psi + 0.5, a1 = psi - 1.2, ao = winOp(t, CUE.back, FILM.beats.find((b) => b.id === "whoa").t0, 0.35);
   const ex = { center: vp, ...XZ };
@@ -158,7 +168,7 @@ window.seek = function (t) {
   arrow[2].seg(tip, tip.map((v, j) => v - tan[j] * 0.35 - rad[j] * 0.2)).set({ opacity: ao });
   S.arrow = [vp[0] + ra * Math.cos(psi - 0.35), 0, vp[2] - ra * Math.sin(psi - 0.35)];
   // the readout: Venus's light-time ring, then the radar's round trip (Venus and Earth lined up)
-  lightRing.set({ opacity: fadeIn(t, CUE.ring, 0.6) * (1 - wf) });
+  lightRing.set({ opacity: fadeIn(t, CUE.ring, 0.6) * (1 - 0.65 * fadeIn(t, CUE.echo, 0.6)) * (1 - wf) });   // steps back when the echo is named
   const ar = Math.PI * 0.8;
   S.ring = [(PH.r_v + 0.25) * Math.cos(ar), 0, -(PH.r_v + 0.25) * Math.sin(ar)];
   const d = norm(vp), e0 = vp.map((v, j) => v + d[j] * VR * 1.2), e1 = ep.map((v, j) => v - d[j] * ER * 1.2);

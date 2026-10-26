@@ -17,6 +17,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
+sys.path.insert(0, str(HERE.parent / "set"))
+from capglue import glue    # noqa: E402
 
 FPS, BPM = 30, 56.25
 ID = "lightminute-003"
@@ -145,12 +147,14 @@ LABELS = [
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Venus"), "t1": t_push2, "side": 1},
     {"id": "l-venus", "text": "Venus", "kind": "body", "anchor": "venus", "t0": A("vo02:Venus"), "t1": t_push2, "side": -1},
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": A("vo02:Next"), "side": 1},
-    {"id": "l-g1", "text": "guess: about 23 hours", "kind": "gravity", "anchor": "pin", "t0": A("vo03:clocked"), "t1": round(t_g2 - 0.1, 4), "side": 1},
-    {"id": "l-g2", "text": "guess: one face to the Sun", "kind": "gravity", "anchor": "pin", "t0": round(t_g2 + 0.4, 4), "t1": A("vo04:radar"), "side": 1},
-    {"id": "l-radar", "text": "radar · 1962", "kind": "light", "anchor": "beam", "t0": A("vo04:radar"), "t1": A("vo04:Venus"), "side": -1},
+    # the guesses and the radar point at Venus's lit limb from outside it, never across its face
+    {"id": "l-g1", "text": "guess: about 23 hours", "kind": "gravity", "anchor": "limb", "t0": A("vo03:clocked"), "t1": round(t_g2 - 0.1, 4), "side": 1, "v": "middle"},
+    {"id": "l-g2", "text": "guess: one face to the Sun", "kind": "gravity", "anchor": "limb", "t0": round(t_g2 + 0.4, 4), "t1": A("vo04:nineteen"), "side": 1, "v": "middle"},
+    {"id": "l-radar", "text": "radar from Earth", "kind": "light", "anchor": "beam", "t0": A("vo04:radar"), "t1": A("vo04:Venus"), "side": 1},
     {"id": "l-back", "text": "turns backwards", "kind": "gravity", "anchor": "arrow", "t0": A("vo04:backwards"), "t1": t_w, "side": 1},
     {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": A("vo05:Stand"), "t1": A("vo05:hundred"), "side": 1},
-    {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": t_end, "side": -1},
+    {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": SUNRISES[0]["t"], "t1": round(SUNRISES[0]["t"] + 3.5, 4), "side": 1},
+    {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": round(A("vo07:round") - 0.3, 4), "side": -1},
     {"id": "l-echo", "text": "4 min there and back", "kind": "light", "anchor": "echo", "t0": A("vo07:round"), "t1": t_end, "side": 1},
 ]
 BADGES = [
@@ -166,26 +170,38 @@ COUNTERS = [
     {"id": "c-turn-h", "label": "one turn on Venus · days", "text": "?", "t0": 0.0, "t1": t_cut},
     {"id": "c-earth", "label": "sunrises a year · Earth", "text": "365", "t0": A("vo02:Sun"), "t1": A("vo02:Next", -0.2)},
     {"id": "c-g1", "label": "guess · one turn", "text": "23 hours", "t0": A("vo03:clocked"), "t1": t_g2},
-    {"id": "c-g2", "label": "guess · one turn", "text": "225 days", "t0": t_g2, "t1": A("vo04:radar")},
+    {"id": "c-g2", "label": "guess · one turn", "text": "225 days", "t0": t_g2, "t1": A("vo04:nineteen")},
+    {"id": "c-1962", "label": "radar sees through the clouds", "text": "1962", "t0": A("vo04:nineteen"), "t1": A("vo04:two")},
     {"id": "c-radar", "label": "radar · one turn, days", "text": "243", "t0": A("vo04:two"), "t1": A("vo04:longer")},
     {"id": "c-vs", "label": "one turn · one year (days)", "text": "243 > 225", "t0": A("vo04:longer"), "t1": t_w},
     {"id": "c-solar", "label": "sunrise to sunrise · days", "text": "117", "t0": A("vo05:hundred"), "t1": A("vo05:rising")},
     {"id": "c-west", "label": "where the Sun rises on Venus", "text": "west", "t0": A("vo05:rising"), "t1": t_tk},
+    {"id": "c-vs2", "label": "one turn · one year (days)", "text": "243 > 225", "t0": t_tk, "t1": A("vo06:But")},   # the payoff holds, lit
     {"id": "c-live", "label": "the day you'd live by · days", "text": "117", "t0": A("vo06:But"), "t1": t_rd},
-    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": round(A("vo07:The") - 0.05, 4)},
+    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": A("vo07:The")},
     {"id": "c-read-echo", "label": "radar echo · Earth–Venus–Earth", "text": "4 min", "read": True, "t0": A("vo07:The"), "t1": t_end},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
+for a, b in zip(COUNTERS, COUNTERS[1:]):          # two values never share the spot: 0.4 s between them
+    if b["t0"] - a["t1"] < 0.4:
+        a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.25, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: the Moon that never *lands*", "follow": "Light Minute · No. 004",
        "next": "Radar first timed Venus's turn in 1962: about 243 days, backwards."}   # the true-fact footnote (c7)
 
-CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": A("vo04:radar"), "pierce": A("vo04:pierced"), "back": A("vo04:backwards"),
+CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": A("vo04:radar"), "pierce": A("vo04:pierced"), "back": A("vo04:backwards"), "whoa": t_w, "tk": t_tk,
        "ring": A("vo07:six"), "echo": A("vo07:round"), "you": A("vo05:Stand"), "sun_lbl": A("vo02:Sun")}
+POSTER = A("vo05:west", 0.5)
+# captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
+glue(f, {"vo02": ["three hundred sixty-five"], "vo03": ["one face", "faced the Sun."],
+         "vo04": ["nineteen sixty-two,", "in California", "two hundred forty-three"],
+         "vo05": ["Stand there,", "the spin", "and the orbit team up.", "hundred and seventeen", "rising in the west."],
+         "vo06": ["live by", "the Sun coming back."]})
+
 film = {
-    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:west", 0.5),
+    "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS,
     "phys": {"p_orb": P_ORB, "p_rot": P_ROT, "p_earth": P_EARTH, "r_v": R_V, "r_e": R_E, "th_v0": TH_V0, "th_e0": TH_E0, "psi0": PSI0,
              "solar": SOLAR, "lt_sun": LT_SUN, "lt_radar": LT_RADAR},

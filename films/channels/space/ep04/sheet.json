@@ -141,20 +141,6 @@
    "t1": 24.0
   },
   {
-   "t": 14.9,
-   "kind": "label",
-   "tag": "l-pull",
-   "pos": [
-    0.724,
-    0.362
-   ]
-  },
-  {
-   "t": 14.9,
-   "kind": "arrive",
-   "tag": "gravity-back"
-  },
-  {
    "t": 15.533333333333333,
    "kind": "badge",
    "tag": "b-thought"
@@ -175,10 +161,38 @@
    ]
   },
   {
+   "t": 18.833333333333332,
+   "kind": "label",
+   "tag": "l-pull",
+   "pos": [
+    0.724,
+    0.362
+   ]
+  },
+  {
+   "t": 18.833333333333332,
+   "kind": "arrive",
+   "tag": "gravity-back"
+  },
+  {
    "t": 24.0,
    "kind": "section",
    "id": "why",
    "t1": 42.6667
+  },
+  {
+   "t": 26.6,
+   "kind": "label",
+   "tag": "l-earth-w"
+  },
+  {
+   "t": 26.6,
+   "kind": "label",
+   "tag": "l-moon-w",
+   "pos": [
+    0.734,
+    0.389
+   ]
   },
   {
    "t": 27.933333333333334,
@@ -198,15 +212,6 @@
    "t": 31.833333333333332,
    "kind": "badge",
    "tag": "b-glyph"
-  },
-  {
-   "t": 33.7,
-   "kind": "label",
-   "tag": "l-moon-w",
-   "pos": [
-    0.734,
-    0.389
-   ]
   },
   {
    "t": 34.36666666666667,
@@ -292,6 +297,16 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 60.2667
+  },
+  {
+   "t": 55.2667,
+   "kind": "label",
+   "tag": "l-earth-t"
+  },
+  {
+   "t": 55.2667,
+   "kind": "label",
+   "tag": "l-moon-t"
   },
   {
    "t": 57.6,
