@@ -745,7 +745,7 @@
         settle(text, { answer: answer, acts: bagActs(ids).concat(links, nextActs(answer, ids.length > 0)) });
         noted(Array.isArray(r.remembered) ? r.remembered.map(String) : []);
         if (r.remembered && window.LumevinaProfile) window.LumevinaProfile.remembered();
-      } else if (r && r.offtopic) settle(text, { offtopic: String(r.offtopic) });
+      } else if (r && r.offtopic) settle(text, { offtopic: String(r.offtopic), quiet: !!r.quiet });
       else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "", note: r.note ? String(r.note) : "" });
       else settle(text, classify(text));
     }, function () { settle(text, classify(text)); });
@@ -966,7 +966,7 @@
       /* identity questions get an honest line and no strike; the rest count, and a good question later forgives one */
       var n = r.offtopic === "identity" ? 0 : (state.strikes = (state.strikes || 0) + 1);
       state.pending = null;
-      if (n >= 6) {
+      if (n >= 6 || r.quiet) {   // the server counts across the whole visit, the page across this chat
         state.quietUntil = Date.now() + QUIET_MIN * 60000; state.strikes = 0;
         push({ who: "bot", text: "I’ll give this a rest for " + QUIET_MIN + " minutes. The topic buttons still work, and Evelyn is a tap away for anything real.", acts: UNCLEAR_ACTS });
       } else push({ who: "bot", text: offLine(r.offtopic, n), acts: n >= 3 ? UNCLEAR_ACTS.concat([["A question about my skin", "skin"]]) : UNCLEAR_ACTS });
