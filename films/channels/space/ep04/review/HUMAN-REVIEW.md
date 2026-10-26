@@ -20,6 +20,11 @@
   In the whoa an apple falls beside the Moon: its first second (4.9 m) drawn at the same ×1,000,000 as the Moon's
   minute, so the two falls are the same length on screen. The readout's ring grows at the real speed of light
   (badged): 1.3 s of film to the Moon's distance. The Moon's texture was rebaked on the sphere (no pinch at the poles).
+- **After the independent cut review (26 Oct):** gravity off now plays at 120,000× (noted) with the Moon itself on its
+  straight line, then drawn back onto the orbit (an illustration of "bends it back"); Newton's test draws the pull's
+  strength along the line (∝ 1/r²); the whoa's two falls are drawn centre to centre, the same length; the end card's
+  footnote is shorter ("Each second the Moon falls about 1.4 mm below a straight line."). Check that the 1/r² curve
+  reads as an illustration of the inverse square, not as a trajectory.
 - **After the 26 Oct script audit:** re-voiced lines: "So it falls, and always misses." (answers episode 3's
   tease), "Newton, the story goes, wondered…", "Gravity fades with distance squared: thirty-six hundred times weaker."
   and "So the pull that drops an apple is the same pull that keeps the Moon falling." The film was rendered again
