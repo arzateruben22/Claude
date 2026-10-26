@@ -107,7 +107,7 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 | Badge | Where | Why |
 |---|---|---|
 | `not to scale` | Throughout | The Sun's and Voyager's glows are sizes in pixels; Proxima's too |
-| `path simplified` | The flight, until the pull-back has shrunk the path to a few pixels | Voyager's 1979–80 Jupiter and Saturn flybys are drawn as one smooth curve; the straight part runs at 3.556 AU/yr (16.9 km/s), so the drawn heliopause crossing is at 122.5 AU (the real one: 121.7 AU, 18.2 billion km) |
+| `path simplified` | The flight, until the pull-back has shrunk the flybys' curve into the Sun's glow (3–6 px) | Voyager's 1979–80 Jupiter and Saturn flybys are drawn as one smooth curve; the straight part runs at 3.556 AU/yr (16.9 km/s), so the drawn heliopause crossing is at 122.5 AU (the real one: 121.7 AU, 18.2 billion km) |
 | `250,000,000× faster`, `50,000× faster` | The flight; the signal | From the clocks |
 | `light sped up` | While each pulse runs the lane to Proxima (top left) | The pulses cover 4.24 light-years in 2.4 s and 1 s |
 | `comet cloud: theory` | From "cloud" until the cloud's rim has shrunk away in the jump (1.35 s in) | No object in the distant Oort cloud has been seen. Drawn from 1,240 AU (Voyager's position plus 300 years) to 108,000 AU (plus 30,000 years), NASA's two figures |

@@ -182,7 +182,7 @@ BADGES = [
     # would print over each other)
     {"id": "b-head-h", "text": "Voyager isn't headed there", "t0": 0.0, "t1": round(t_cut - 0.85, 4), "slot": "bl"},
     {"id": "b-nts", "text": "not to scale · illustration", "t0": t_cut, "t1": t_end, "slot": "tr"},
-    {"id": "b-path", "text": "path simplified", "t0": t_launch, "t1": round(A("vo04:cloud") - 0.35, 4), "slot": "tr"},   # gone before the theory note arrives (the trail is a few px by then)
+    {"id": "b-path", "text": "path simplified", "t0": t_launch, "t1": round(A("vo04:cloud") - 0.35, 4), "slot": "tr"},   # gone before the theory note arrives (the flybys' curve is 3–6 px by then, inside the Sun's glow)
     {"id": "b-time-f", "clock": "flight", "t0": t_launch, "t1": round(t_stop + RAMP_F + 0.4, 4), "slot": "tl"},
     {"id": "b-time-s", "clock": "signal", "t0": t_sig, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-theory", "text": "comet cloud: theory", "t0": A("vo04:cloud"), "t1": round(t_j0 + 1.35, 4), "slot": "tr"},   # until the cloud's rim has shrunk away in the jump
