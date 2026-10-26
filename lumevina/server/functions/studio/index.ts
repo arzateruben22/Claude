@@ -10,7 +10,12 @@
 // POST { action: "alerts", limit? }                → { alerts }  the feed (orders, questions, low stock)
 // POST { action: "orders", limit? }                → { orders }  paid orders, newest first
 // POST { action: "shelf_set", id, stock?, price?, hidden? }   a recount, a new price, on/off the site
-// POST { action: "sell", id, qty }                 → { stock }  an in-person sale takes stock off
+// POST { action: "sell", id, qty }                 → { stock }  an in-person sale takes stock off (no receipt, no client)
+// POST { action: "sale", email, name?, phone?, items: [{ id, qty }], services?: [ids], discount_cents?, tip_cents?,
+//        method: "card" | "cash" | "link" | "other" }   a sale at the studio to a client (_shared/sales.ts): the
+//                                                    same finish as a web order: stock, receipt, Glow Points, Buy again.
+//                                                    → { order, points } or { url } (a pay link) or { reason }
+// POST { action: "client_orders", email }           → { orders }  what that client bought, newest first
 // POST { action: "shelf_add", id, name, brand?, category?, price, stock? }   a product she brings in
 // POST { action: "questions", limit? }             → { questions }  Client questions: every one waiting, and the
 //                                                    last 30 days answered, each photo as an hour-long link
@@ -44,6 +49,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { notifyOwner, pushAll } from "../_shared/notify.ts";
 import { priorities } from "../_shared/priorities.ts";
 import { studioOk } from "../_shared/studio.ts";
+import { recordSale } from "../_shared/sales.ts";
 import { BUCKET } from "../_shared/photos.ts";
 import { esc, page, sendEmail } from "../_shared/mail.ts";
 import { EMAIL, norm, unsubscribeUrl } from "../_shared/contacts.ts";
@@ -148,6 +154,17 @@ Deno.serve(async (req) => {
       const row = data[0];
       if (row.low) await notifyOwner(db, { kind: "low_stock", title: `Low stock: ${row.name}`, body: row.stock === 0 ? "Sold out on the website now." : `${row.stock} left.`, url: "dashboard.html#inventory" });
       return json({ id: row.id, stock: row.stock });
+    }
+    case "sale": {
+      const r = await recordSale(db, body);
+      if (!r.ok) return json({ reason: r.reason, id: (r as any).id, name: (r as any).name, left: (r as any).left }, r.reason === "failed" || r.reason === "payment_unavailable" ? 502 : 400);
+      return json(r.url ? { url: r.url, order: r.order } : { order: r.order, points: Math.round((r.order?.subtotal_cents ?? 0) / 100) });
+    }
+    case "client_orders": {
+      const email = norm(body.email);
+      if (!EMAIL.test(email)) return json({ reason: "email" }, 400);
+      const { data } = await db.from("orders").select("id, ref, status, source, items, total_cents, paid_at, created_at").eq("email", email).eq("status", "paid").order("paid_at", { ascending: false }).limit(50);
+      return json({ orders: data ?? [] });
     }
     case "questions": {
       const since = new Date(Date.now() - 30 * 864e5).toISOString();

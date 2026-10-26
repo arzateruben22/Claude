@@ -1,7 +1,9 @@
 // Lumevina — finishing a shop order once Stripe says it's paid (called from
-// stripe-webhook). In one pass: mark it paid with the real totals, take the
-// stock off, issue and email any gift certificates, put a shipped order on
-// the Shipping list, email the receipt, and tell Evelyn (order + low stock).
+// stripe-webhook), or a sale at the studio once Evelyn records it (_shared/
+// sales.ts, orders.source "studio"). In one pass: mark it paid with the real
+// totals, take the stock off, issue and email any gift certificates, put a
+// shipped order on the Shipping list, email the receipt, land the Glow
+// Points, and tell Evelyn (order + low stock).
 // Safe to run twice: only the first delivery of an event claims the order.
 
 // deno-lint-ignore-file no-explicit-any
@@ -72,8 +74,9 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
 
   // the shelf
   let low: any[] = [];
-  if (order.items.length) {
-    const { data, error } = await db.rpc("take_stock", { p_items: order.items.map((i: any) => ({ id: i.id, qty: i.qty })) });
+  const shelf = order.items.filter((i: any) => !i.kind);                 // a studio sale also lists a treatment, a discount or a tip as items
+  if (shelf.length) {
+    const { data, error } = await db.rpc("take_stock", { p_items: shelf.map((i: any) => ({ id: i.id, qty: i.qty })) });
     if (error) console.error("take_stock", error);
     low = (data ?? []).filter((r: any) => r.low);
   }
@@ -113,7 +116,7 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
 
   // the receipt
   const lines = [
-    ...order.items.map((i: any) => [`${i.name} × ${i.qty}`, money(i.price_cents * i.qty)]),
+    ...order.items.map((i: any) => [i.kind ? i.name : `${i.name} × ${i.qty}`, (i.price_cents < 0 ? "−" : "") + money(Math.abs(i.price_cents * i.qty))]),
     ...order.gifts.map((g: any, k: number) => [`Gift certificate${g.recipient_name ? " for " + g.recipient_name : ""}${codes[k] && g.to_buyer ? " · " + codes[k] : ""}`, money(g.amount_cents)]),
     ...(order.delivery === "ship" ? [["Shipping", shipping ? money(shipping) : "Free"]] : []),
     ...(order.delivery === "pickup" ? [["Pickup at your visit", "Free"]] : []),
@@ -122,28 +125,30 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   const table = `<table style="width:100%;border-collapse:collapse;font-size:15px">` +
     lines.map(([a, b]) => `<tr><td style="padding:6px 0;border-bottom:1px solid #D7C9B8">${esc(a)}</td><td style="padding:6px 0;border-bottom:1px solid #D7C9B8;text-align:right">${esc(b)}</td></tr>`).join("") +
     `<tr><td style="padding:10px 0;font-weight:700">Total</td><td style="padding:10px 0;font-weight:700;text-align:right">${money(total)}</td></tr></table>`;
-  const next = order.delivery === "ship" ? "It ships within two business days, and the tracking number comes by email."
+  const studio = order.source === "studio";
+  const next = studio ? `Bought at the studio with Evelyn${session.paid_how === "card" ? ", charged to the card on file" : session.paid_how === "cash" ? ", paid in cash" : session.paid_how === "link" ? ", paid on your phone" : ""}.`
+    : order.delivery === "ship" ? "It ships within two business days, and the tracking number comes by email."
     : order.delivery === "pickup" ? "It will be waiting for you at your next visit."
     : consult ? "Evelyn messages you within two business days to set your 15-minute call; the details are in the next email."
     : order.gifts.some((g: any) => !g.to_buyer) ? "Each certificate is emailed to its recipient (on the date you chose, if you picked one)." : "";
-  const track = order.items.length ? ` Ask Lumevina on the website${site() ? ` (<a href="${esc(site())}" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>)` : ""} can tell you where it is any time with this number and your email.` : "";
+  const track = shelf.length && !studio ? ` Ask Lumevina on the website${site() ? ` (<a href="${esc(site())}" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>)` : ""} can tell you where it is any time with this number and your email.` : "";
   // the shelf products, back in the bag in one tap next time (js/cart.js reads ?reorder=; Buy again in My Lumevina does the same signed in)
-  const shelfIds = order.items.map((i: any) => i.id).filter((id: string) => !isConsultItem(id));
+  const shelfIds = shelf.map((i: any) => i.id).filter((id: string) => !isConsultItem(id));
   const again = shelfIds.length && site() ? `<p style="font-size:14px;line-height:1.5;margin-top:14px;color:#4A342A">Running low later? <a href="${esc(site())}/?reorder=${encodeURIComponent(shelfIds.join(","))}#shop" style="color:#161412">Put these back in your bag</a> in one tap, or sign in and open Buy again under My Lumevina.</p>` : "";
-  await sendEmail(order.email, `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
+  await sendEmail(order.email, studio ? "Your Lumevina receipt" : `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
     `<p style="margin:0 0 12px;font-size:13px;color:#7D5A44">Order number <strong style="color:#161412;letter-spacing:.04em">${esc(order.ref)}</strong></p>` + table +
     (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "") + again));
 
   // Glow Points on the products and gift certificates (not shipping or tax), and her client list
   await upsertContact(db, { email: order.email, name: name || undefined });
   const earned = order.subtotal_cents > 0
-    ? await earn(db, order.email, order.subtotal_cents, { label: "Shop order", order_id: order.id }).catch((e) => { console.error("points", e); return null; })
+    ? await earn(db, order.email, order.subtotal_cents, { label: studio ? "At the studio" : "Shop order", order_id: order.id }).catch((e) => { console.error("points", e); return null; })
     : null;
   if (earned?.points) console.log(JSON.stringify({ order: order.id, points: earned.points }));
 
   // Evelyn
-  const what = [...order.items.map((i: any) => `${i.qty} × ${i.name}`), ...order.gifts.map((g: any) => `gift certificate ${money(g.amount_cents)}`)].join(", ");
-  await notifyOwner(db, {
+  const what = [...order.items.filter((i: any) => i.kind !== "adjust").map((i: any) => i.kind ? i.name : `${i.qty} × ${i.name}`), ...order.gifts.map((g: any) => `gift certificate ${money(g.amount_cents)}`)].join(", ");
+  if (!studio) await notifyOwner(db, {
     kind: order.gifts.length && !order.items.length ? "gift" : "order",
     title: `New order ${order.ref}: ${money(total)}`,
     body: `${name || order.email}: ${what}. ${order.delivery === "ship" ? "Ship by " + new Date(shipBy()).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) + "." : order.delivery === "pickup" ? "Pickup at their visit." : ""}`,
@@ -152,7 +157,7 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   for (const l of low) {
     await notifyOwner(db, { kind: "low_stock", title: `Low stock: ${l.name}`, body: l.stock === 0 ? "Sold out on the website now." : `${l.stock} left.`, url: "dashboard.html#inventory" });
   }
-  return "paid";
+  return studio ? "sold" : "paid";
 }
 
 export async function cancelOrder(db: any, session: any) {

@@ -174,7 +174,7 @@
     .ap-seg button { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.85rem; border: 1px solid var(--edge); border-radius: 999px;
       background: #FFFFFF; color: var(--ink-70); cursor: pointer; }
     .ap-seg button:hover { border-color: var(--ink-45); }
-    .ap-seg button.on { background: var(--plum); border-color: var(--plum); color: #161412; }
+    .ap-seg button.on { background: var(--plum); border-color: var(--plum); color: #fff; }
     .ap-pts label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; color: var(--ink-70); }
     .ap-lines { list-style: none; margin: 0; padding: 0; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
     .ap-lines li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.18rem 0; color: var(--ink-70); }
@@ -309,7 +309,7 @@
     .crm-row.open .crm-caret { transform: rotate(90deg); }
     .crm-detail { display: none; padding: 0.2rem 0.2rem 1.2rem; }
     .crm-row.open .crm-detail { display: block; }
-    .crm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+    .crm-cols { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 1.4rem; }
     .crm-detail h3 { font-family: var(--font-d); font-weight: 700; letter-spacing: -0.03em; font-size: 1.05rem;
       color: var(--plum); margin: 0.2rem 0 0.5rem; }
     .crm-visit { font-size: 0.85rem; color: var(--ink-70); padding: 0.35rem 0;
@@ -364,6 +364,16 @@
     .crm-chip.plan { color: #f0d6b8; background: rgba(227,180,143,0.14); margin-left: 0.3rem; }
     .crm-chips { justify-self: end; display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
     .crm-chips .crm-chip { margin: 0; }
+    .crm-chip.act { border: 1px solid var(--edge); background: var(--ink); color: var(--paper, #fff); cursor: pointer; font-weight: 600; }
+    .crm-chip.act:hover { opacity: 0.85; }
+    .crm-sale-top { margin: 0.6rem 0 0.4rem; }
+    .crm-sale-top[hidden], .crm-sale[hidden] { display: none; }
+    .sale-who { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 0.5rem; }
+    .sale-who input { min-width: 0; font: inherit; padding: 0.5rem 0.65rem; border: 1px solid var(--edge); border-radius: 10px; background: var(--card, #fff); color: var(--ink); }
+    .sale-client { margin: 0; font-size: 0.95rem; } .sale-client small { color: var(--ink-60); margin-left: 0.4rem; }
+    .sale-pts span:last-child { color: #a8dcb9; }
+    .sale-done p { margin: 0 0 0.6rem; }
+    @media (max-width: 700px) { .sale-who { grid-template-columns: 1fr; } }
     .crm-new { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin: -0.2rem 0 1rem; }
     .crm-new label, .pe label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
     .crm-new label { flex: 1 1 11rem; }
@@ -629,9 +639,11 @@
     .cs-no { color: #b4473a; }
     .cs-list { list-style: none; margin: 0; padding: 0; font-size: .9rem; line-height: 1.6; }
     .cs-st { font-weight: 600; } .cs-st.is-approved, .cs-st.is-done { color: #2f7d4f; } .cs-st.is-declined { color: #b4473a; }
-  </style>
+  .ev-ico { display: inline-block; width: 0.9em; height: 1em; vertical-align: -0.12em; fill: currentColor; }
+</style>
 </head>
 <body data-palette="#4A342A,#B2967D">
+  <svg hidden aria-hidden="true" focusable="false"><symbol id="ev-mark" viewBox="654.7 654.7 329.4 364.3"><path fill="currentColor" d="M669.6 965.8Q679.3 965.8 683.7 964.4Q688.2 963.0 689.7 958.8Q691.3 954.7 691.3 946.1V813.9Q691.3 805.3 689.7 801.3Q688.2 797.3 683.6 795.7Q679.0 794.2 669.6 794.2Q668.7 794.2 668.7 792.4Q668.7 790.7 669.6 790.7H788.4Q791.3 790.7 791.3 793.3L791.9 830.4Q791.9 831.0 790.3 831.2Q788.7 831.3 788.4 830.4Q781.6 798.2 749.0 798.2H737.3Q726.7 798.2 722.6 801.9Q718.4 805.6 718.4 814.4V945.0Q718.4 954.4 722.0 958.1Q725.6 961.8 734.7 961.8H748.7Q787.0 961.8 797.3 925.0Q797.3 924.4 798.7 924.4Q800.7 924.4 800.7 925.3Q797.9 947.0 797.9 965.0Q797.9 967.3 797.0 968.3Q796.1 969.3 793.6 969.3H669.6Q668.7 969.3 668.7 967.6Q668.7 965.8 669.6 965.8ZM745.6 880.1H705.6V872.7H745.9Q777.3 872.7 777.3 851.6Q777.3 850.7 778.9 850.7Q780.4 850.7 780.4 851.6L780.1 876.4L780.4 889.9Q781.0 899.0 781.0 904.7Q781.0 905.3 779.3 905.3Q777.6 905.3 777.6 904.7Q777.6 880.1 745.6 880.1Z M1004.1 794.2Q994.1 794.2 985.5 801.9Q977.0 809.6 971.5 824.2L915.8 969.0Q915.5 970.1 912.7 970.1Q909.8 970.1 909.5 969.0L837.3 814.4Q832.1 803.9 827.0 799.0Q821.9 794.2 814.7 794.2Q813.9 794.2 813.9 792.4Q813.9 790.7 814.7 790.7L822.1 791.0Q829.0 791.6 836.4 791.6Q856.4 791.6 872.4 791.0Q877.0 790.7 883.8 790.7Q884.7 790.7 884.7 792.4Q884.7 794.2 883.8 794.2Q875.3 794.2 870.7 797.3Q866.1 800.4 866.1 806.4Q866.1 811.6 869.0 817.3L924.1 936.7L912.4 956.4L963.8 823.0Q966.4 816.2 966.4 810.7Q966.4 802.7 961.1 798.4Q955.8 794.2 945.5 794.2Q944.7 794.2 944.7 792.4Q944.7 790.7 945.5 790.7L958.7 791.0Q970.1 791.6 979.0 791.6Q984.4 791.6 992.4 791.0L1004.1 790.7Q1005.0 790.7 1005.0 792.4Q1005.0 794.2 1004.1 794.2Z"/></symbol></svg>
   <div class="wrap">
     <header>
       <div class="brand">Lumevina<small>Owner Dashboard</small></div>
@@ -966,7 +978,10 @@
           <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
         </div>
         <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
+        <button type="button" class="bk-export" id="crm-sale-new">New sale</button>
       </div>
+      <!-- a sale to someone not in the list yet (js/studio-sale.js) -->
+      <div class="crm-sale-top" id="crm-sale-top" hidden></div>
       <form class="crm-new" id="crm-new" autocomplete="off">
         <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
         <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
@@ -998,6 +1013,7 @@
   <script src="js/services.js"></script>
   <script src="js/payments.js"></script>
   <script src="js/studio-appointments.js"></script>
+  <script src="js/studio-sale.js"></script>
   <script src="js/studio-learn.js"></script>
   <script src="js/studio-priorities.js"></script>
   <script src="js/studio-consults.js"></script>
@@ -2089,7 +2105,7 @@
               : mc(v.online) + ' online · ' + mc(v.balance) + ' balance') + '</span></div>';
           var action;
           if (v.prepaid) {
-            action = '<div class="settle-state">✦ Prepaid by gift certificate' +
+            action = '<div class="settle-state"><svg class="ev-ico" aria-hidden="true"><use href="#ev-mark"/></svg> Prepaid by gift certificate' +
               (v.gift ? ' · ' + mc(v.gift) : '') + '</div>';
           } else if (s.status === "paid") {
             action = '<div class="settle-state">✓ Balance ' + mc(v.balance) + ' paid · ' +
@@ -2522,7 +2538,7 @@
         '<div class="crm-name">' + (c.name || "—") + '<small>' + (c.email || "") + '</small></div>' +
         '<div class="crm-meta">' + visits.length + ' visit' + (visits.length === 1 ? "" : "s") +
           ' · ' + money(c.spent) + (last ? ' · last ' + fmtDate(last.date) : "") + '</div>' +
-        '<span class="crm-chips"><span class="crm-chip ' + (hasForm ? "on" : "off") + '">' +
+        '<span class="crm-chips"><button type="button" class="crm-chip act" data-sale>Check out</button><span class="crm-chip ' + (hasForm ? "on" : "off") + '">' +
           (hasForm ? "Form on file" : "No form yet") + '</span>' +
           (planFor(c.email) ? '<span class="crm-chip plan">Skin plan</span>' : "") + '</span>' +
         '<span class="crm-caret">›</span>';
@@ -2551,7 +2567,12 @@
 
       detail.innerHTML =
         '<div class="crm-cols"><div><h3>Visit history</h3>' + visitsHtml + '</div>' +
-        '<div><h3>Pre-visit form</h3>' + ansHtml + '</div></div>';
+        '<div><h3>Pre-visit form</h3>' + ansHtml + '</div><div class="crm-buys"></div></div>';
+      /* the sale panel (js/studio-sale.js): what they're taking today, paid how */
+      var saleBox = document.createElement("div");
+      saleBox.className = "crm-plan crm-sale";
+      saleBox.hidden = true;
+      detail.appendChild(saleBox);
       var planBox = document.createElement("div");
       planBox.className = "crm-plan";
       detail.appendChild(planBox);
@@ -2562,9 +2583,19 @@
       if (window.LumevinaStudioProfile && c.email) { window.LumevinaStudioProfile.attach(profileBox, c.email); detail.appendChild(profileBox); }
       li.appendChild(detail);
 
-      sum.addEventListener("click", function () {
+      var buys = detail.querySelector(".crm-buys");
+      var loadBuys = function () { if (window.LumevinaStudioSale && c.email && !buys.dataset.loaded) { buys.dataset.loaded = "1"; window.LumevinaStudioSale.purchases(buys, c.email); } };
+      sum.addEventListener("click", function (e) {
+        var sale = e.target.closest("[data-sale]");
+        if (sale) {
+          li.classList.add("open");
+          if (window.LumevinaStudioSale) window.LumevinaStudioSale.open(saleBox, c, { onClose: function () { buys.dataset.loaded = ""; loadBuys(); } });
+          saleBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          loadBuys();
+          return;
+        }
         li.classList.toggle("open");
-        if (li.classList.contains("open") && profileBox.load) profileBox.load();
+        if (li.classList.contains("open")) { if (profileBox.load) profileBox.load(); loadBuys(); }
       });
       return li;
     };
@@ -2602,6 +2633,21 @@
     draw("");
     document.getElementById("crm-search").addEventListener("input", function () {
       draw(this.value);
+    });
+    /* a sale to someone who isn't in the list yet: name, email, what they're taking */
+    document.getElementById("crm-sale-new").addEventListener("click", function () {
+      var top = document.getElementById("crm-sale-top");
+      if (!window.LumevinaStudioSale) return;
+      if (!top.hidden) { top.hidden = true; top.innerHTML = ""; return; }
+      window.LumevinaStudioSale.open(top, { name: "", email: "" }, { who: true, onClose: function () { draw(document.getElementById("crm-search").value); } });
+    });
+    /* a sale lands in the row's purchases and totals right away */
+    document.addEventListener("lumevina:sale", function (e) {
+      var d = e.detail || {};
+      Array.prototype.forEach.call(listEl.querySelectorAll(".crm-row"), function (li) {
+        var em = li.querySelector(".crm-name small");
+        if (em && em.textContent.toLowerCase() === (d.email || "")) { var b = li.querySelector(".crm-buys"); if (b) { b.dataset.loaded = ""; if (li.classList.contains("open")) window.LumevinaStudioSale.purchases(b, d.email); } }
+      });
     });
     if (PLAN) PLAN.all(studioKey()).then(function (map) {
       plans = map;

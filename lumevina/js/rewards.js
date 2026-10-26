@@ -14,7 +14,7 @@
    in js/booking.js; in the app they become push notifications.)
 
    DEMO: everything persists in localStorage, and the referral credit
-   (150 ✦ to the referrer) is explained rather than paid.
+   (150 points to the referrer) is explained rather than paid.
    LIVE (v3, js/site-config.js → shop): the server keeps the ledger
    (functions/rewards; points are written where the money is: bookings,
    checkouts and shop orders), so this shows a signed-in client's own
@@ -198,7 +198,7 @@
     };
     if (navigator.share) {
       navigator.share({ title: "Lumevina", text: text, url: url }).then(function () {
-        say("Sent. They get $15 off, and you earn " + REFERRAL_BONUS + " ✦ when their first visit is done.");
+        say("Sent. They get $15 off, and you earn " + REFERRAL_BONUS + " Glow Points when their first visit is done.");
       }, function (e) { if (!(e && e.name === "AbortError")) copy(); });
     } else copy();
   };
@@ -261,7 +261,7 @@
       label.textContent = h.label;
       var delta = document.createElement("span");
       delta.className = h.delta >= 0 ? "rw-plus" : "rw-minus";
-      delta.textContent = (h.delta >= 0 ? "+" : "") + h.delta + " ✦";
+      delta.innerHTML = (h.delta >= 0 ? "+" : "") + Number(h.delta) + " <svg class='ev-ico' aria-hidden='true'><use href='#ev-mark'/></svg>";
       li.appendChild(label);
       li.appendChild(delta);
       hist.appendChild(li);

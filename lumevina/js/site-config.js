@@ -21,7 +21,8 @@
  *      "partners"    links out to the brands' own websites (GlyMed Plus,
  *                    Le Mieux, Beautology Lab), off while the shop sells
  *                    those lines here
- *    (v3 brings "membership" and "rewards" with it.)
+ *      "app"         the app page: the website on the home screen, with the membership
+ *    (v3 brings "membership", "rewards" and "app" with it.)
  *
  * 3. Where clients book, in v2 (v3 always books here).
  *      "glossgenius"  every Book button opens her GlossGenius page (now:
@@ -76,9 +77,9 @@
   /* each version's sections and booking */
   var VERSIONS = {
     v2: { features: [], booking: null },
-    v3: { features: ["membership", "rewards"], booking: "site" },
+    v3: { features: ["membership", "rewards", "app"], booking: "site" },
     /* everything at once: v3 plus Skin School, the preview that connects the site and the course */
-    v4: { features: ["membership", "rewards", "school"], booking: "site" }
+    v4: { features: ["membership", "rewards", "app", "school"], booking: "site" }
   };
   /* ?preview=v3 (or v2, v4): this browser only, until the tab closes */
   var preview = null;

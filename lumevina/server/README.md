@@ -276,6 +276,21 @@ supabase functions deploy create-checkout
 supabase secrets set SITE_URL=https://her-domain STRIPE_TAX=on   # STRIPE_TAX once Stripe Tax is set up
 ```
 
+## A sale at the studio
+
+Dashboard → Clients: **Check out** on a client, or **New sale** at the top for
+someone not in the list yet (js/studio-sale.js). She adds what they're taking
+from the shelf, any treatment done on the spot, a discount and a tip, and how
+they paid: their card on file (charged now), cash, a pay link (Stripe's page
+on their phone), or other. `functions/studio` → `sale` (`_shared/sales.ts`)
+writes it as an order with `source: 'studio'` and runs the same finish as a
+web order (`_shared/orders.ts` → `fulfillOrder`): stock off, receipt emailed,
+Glow Points landed on the subtotal, the products under their Buy again, and
+her books. A pay link finishes through the webhook when they pay. The row's
+Purchases column (`client_orders`) shows everything they've bought, online
+and at the studio. Run the current `schema.sql` once for the `orders.source`
+column.
+
 ## Lumevina Studio (Evelyn's phone)
 
 The dashboard installs to her home screen (`studio.webmanifest`); `sw.js`

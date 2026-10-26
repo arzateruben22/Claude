@@ -368,6 +368,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   letter-spacing: -0.022em;
 }
 
+.nav-ev { font-style: normal; color: var(--cocoa); }
+.ev-ico { display: inline-block; width: 0.9em; height: 1em; vertical-align: -0.12em; fill: currentColor; }
 .nav-brand-sub {
   font-family: var(--font-body);
   font-size: 0.6rem;
@@ -6059,7 +6061,8 @@ html:not(.has-membership) [data-feature~="membership"],
 html:not(.has-rewards) [data-feature~="rewards"],
 html:not(.has-routine) [data-feature~="routine"],
 html:not(.has-school) [data-feature~="school"],
-html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
+html:not(.has-partners) [data-feature~="partners"],
+html:not(.has-app) [data-feature~="app"] { display: none !important; }
 
 /* old links (#spa, #journal) still land on the section that replaced them */
 .anchor-alias { position: absolute; top: 0; left: 0; width: 1px; height: 1px; }
@@ -6210,7 +6213,22 @@ html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
 }
 
 /* ─── Book a facial: every opening on one calendar ─── */
-.section-book { background: var(--porcelain); border-top: 1px solid var(--ink-15); }
+.section-book { background: #EFE8DE; border-top: 1px solid rgba(125, 90, 68, 0.45); border-bottom: 1px solid rgba(125, 90, 68, 0.3); }
+.section-book .bkl-cal, .section-book .bkl-pick, .section-book .bk-notice, .section-book .slot-btn, .section-book .sh-chip { border-color: rgba(125, 90, 68, 0.5); }
+.section-book .bkl-cal { border-width: 1.5px; border-radius: 12px; background: var(--porcelain); box-shadow: 0 10px 30px rgba(74, 52, 42, 0.08); }
+.section-book .bkl-pick { border-width: 1.5px; border-radius: 10px; }
+.section-book .bk-notice { border-left-width: 4px; border-left-color: var(--cocoa); border-radius: 10px; }
+.section-book .slot-btn { border-radius: 8px; font-weight: 600; background: var(--porcelain); }
+.section-book .slot-btn:hover:not(:disabled) { border-color: var(--cocoa); background: rgba(125, 90, 68, 0.06); }
+.section-book .slot-btn.selected { background: var(--cocoa); border-color: var(--cocoa); color: #fff; }
+.section-book .cal-day { border-radius: 8px; }
+.section-book .cal-day.is-open { border-color: rgba(125, 90, 68, 0.28); background: rgba(255, 255, 255, 0.7); }
+.section-book .cal-day.is-few { border-color: rgba(125, 90, 68, 0.55); background: rgba(125, 90, 68, 0.08); }
+.section-book .cal-day.is-selected, .section-book .cal-day.is-selected:hover { background: var(--cocoa); border-color: var(--cocoa); }
+.section-book .cal-day.is-today { box-shadow: inset 0 0 0 1.5px rgba(125, 90, 68, 0.6); }
+.section-book .cal-wd { color: var(--cocoa); }
+.section-book .cal-title { color: var(--ink); }
+.section-book .sh-chip[aria-pressed="true"], .section-book .sh-chip.on { background: var(--cocoa); border-color: var(--cocoa); color: #fff; }
 .book-head { margin-bottom: var(--space-4); }
 .book-head .section-sub { margin-bottom: 0.75rem; }
 .bk-gg-alt { margin: 0; font-size: 0.92rem; color: var(--ink-60); }
@@ -6726,7 +6744,8 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 
 /* ── Skin science in twenty seconds: the rendered explainers (#watch) ── */
 .section-watch .section-inner { max-width: 1120px; margin: 0 auto; }
-.watch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1.6rem; margin-top: 1.6rem; }
+.watch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem 1.4rem; margin-top: 1.6rem; }
+@media (max-width: 1000px) { .watch-grid { grid-template-columns: repeat(2, 1fr); } }
 .watch-item { margin: 0; }
 .watch-item video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; background: #000; object-fit: cover; box-shadow: 0 10px 30px rgba(22,20,18,.12); }
 .watch-item.no-src video { pointer-events: none; opacity: .85; }
@@ -6735,3 +6754,16 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .watch-item figcaption span { color: #7d5a44; font-size: .82rem; }
 .watch-more { margin: 1.6rem 0 0; max-width: 42rem; font-size: 0.98rem; line-height: 1.5; color: var(--ink-60); }
 @media (max-width: 760px) { .watch-grid { grid-template-columns: 1fr; gap: 1.4rem; } }
+
+/* ── the app page (v3): the website on the home screen ── */
+.section-app { background: var(--linen); border-top: 1px solid var(--ink-15); }
+.app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 2.5rem; align-items: center; }
+.app-steps { margin: 1.2rem 0 0; padding: 0; list-style: none; counter-reset: app; display: grid; gap: 0.7rem; max-width: 34rem; }
+.app-steps li { position: relative; padding-left: 2.6rem; color: var(--ink-60); line-height: 1.5; }
+.app-steps li::before { counter-increment: app; content: counter(app); position: absolute; left: 0; top: 0.05rem; width: 1.8rem; height: 1.8rem; border-radius: 50%;
+  display: grid; place-items: center; font-size: 0.85rem; font-weight: 700; color: var(--cocoa); background: rgba(125, 90, 68, 0.12); }
+.app-steps strong { color: var(--ink); font-weight: 600; }
+.app-ctas { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.4rem; }
+.app-phone { margin: 0; justify-self: center; width: min(18rem, 100%); }
+.app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(74, 52, 42, 0.28)); }
+@media (max-width: 800px) { .app-grid { grid-template-columns: 1fr; gap: 2rem; } .app-phone { width: min(14rem, 100%); } }

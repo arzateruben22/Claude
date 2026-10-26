@@ -577,7 +577,7 @@
       /* first sign-in on this device claims the welcome bonus */
       var bonus = rw() ? rw().claimWelcome() : 0;
       if (bonus) {
-        welcomeEl.textContent = "✦ " + bonus + " welcome points added — " +
+        welcomeEl.innerHTML = "<svg class='ev-ico' aria-hidden='true'><use href='#ev-mark'/></svg> " + Number(bonus) + " welcome points added — " +
           "you're halfway to your first $10 reward.";
         welcomeEl.hidden = false;
         pointsEl.textContent = String(rw().points());

@@ -728,3 +728,11 @@ create table if not exists request_log (
 );
 create index if not exists request_log_key on request_log (key, at desc);
 alter table request_log enable row level security;
+
+-- ── Sales at the studio (functions/studio → sale, _shared/sales.ts) ─────────
+-- An order Evelyn records on the dashboard for a client in front of her: the
+-- same row and the same finish as a web order (stock, receipt, Glow Points,
+-- Buy again), marked by where it happened. Items may carry a kind: a
+-- treatment done on the spot ("service"), or a discount or tip ("adjust").
+alter table orders add column if not exists source text not null default 'web' check (source in ('web', 'studio'));
+create index if not exists orders_email on orders (email, paid_at desc);

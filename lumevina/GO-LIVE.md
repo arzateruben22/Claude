@@ -50,6 +50,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [ ] Send a skin question with a photo: it shows on the dashboard's Client questions with the photo and a line on what it shows; Send reply emails the test address, and (signed in) the reply appears in the chat.
 - [ ] Skin plan: write one in the dashboard for a test email, sign in on the website with that email (the link arrives by email), see it under My Lumevina, then ask the chat "what do I use at night?" (answered from the plan) and "can I add vitamin C?" (goes to Evelyn).
 - [ ] Gift certificate: buy a $100 one, then on the dashboard use it on a $50 visit ($50 should stay on it) and on a $120 visit (it covers the last $50; the client pays $70). "Check a gift balance" on the site should show each step, from another phone too.
+- [ ] A sale at the studio: Clients → Check out on a test client, one product and a tip, paid cash. Stock drops, the receipt arrives, their Glow Points go up, the product shows under Buy again when they sign in, and the row's Purchases lists it. Then one with a pay link, paid with the test card.
 - [ ] Switch Stripe to **live** keys, then the payment checklist below.
 
 ### Payments: the security checklist (read once, tick before the first real charge)
