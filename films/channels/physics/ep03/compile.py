@@ -130,18 +130,72 @@ assert abs(S_PEAK_FT - A("vo05:hand.")) < 1e-6
 
 # ── the spine readout ──────────────────────────────────────────────────────────────────────────
 # kinds: "height" (the live ball's bottom, cm) · "top" (the latest top reached in a take) · "stack" (the tennis ball's
-# bottom) · "const"
+# bottom) · "const". minCh: the value's minimum width (4 for a live number, so the plate keeps its width as digits come
+# and go; 0 lets a constant's plate fit its text). tick: False keeps a step off the cue sheet (it rides another event).
+# WRITING.md "The picture" 2: at the whoa's payoff the readout stops at the peak and holds it, lit, its label saying
+# what the number now is; from "degree." it stays lit to the end of the takeaway (no unlit gap at the cut).
+S_PEAK_H = S_PEAK_Y - RB                                 # the tennis ball's bottom at its peak: 374 cm
 SPINE = [
-    {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "bounce height", "unit": "cm", "dp": 0, "kind": "height", "take": "normal"},
-    {"t0": cut("change"), "t1": cut("whoa"), "label": "lost, this knock", "unit": "%", "dp": 0, "kind": "const", "v": 100 * (1 - E_REST ** 2)},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "tennis ball height", "unit": "cm", "dp": 0, "kind": "stack"},
-    {"t0": cut("measure"), "t1": A("vo06:A"), "label": "height missing", "unit": "cm", "dp": 0, "kind": "const", "v": DROP - TOP_H[0]},
-    {"t0": A("vo06:A"), "t1": A("vo06:Even"), "label": "energy it took", "unit": "J", "dp": 3, "kind": "const", "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100},
+    {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "bounce height", "unit": "cm", "dp": 0, "kind": "height", "take": "normal", "minCh": 4},
+    {"t0": cut("change"), "t1": cut("whoa"), "label": "lost, this knock", "unit": "%", "dp": 0, "kind": "const", "v": 100 * (1 - E_REST ** 2), "minCh": 0},
+    {"t0": cut("whoa"), "t1": A("vo05:hand."), "label": "tennis ball height", "unit": "cm", "dp": 0, "kind": "stack", "minCh": 4},
+    {"t0": A("vo05:hand."), "t1": cut("measure"), "label": "tennis ball's peak", "unit": "cm", "dp": 0, "kind": "const", "v": S_PEAK_H,
+     "lit": [A("vo05:hand."), cut("measure")], "minCh": 4, "tick": False},
+    {"t0": cut("measure"), "t1": A("vo06:A"), "label": "height missing", "unit": "cm", "dp": 0, "kind": "const", "v": DROP - TOP_H[0], "minCh": 4},
+    {"t0": A("vo06:A"), "t1": A("vo06:Even"), "label": "energy it took", "unit": "J", "dp": 3, "kind": "const", "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100, "minCh": 4},
     {"t0": A("vo06:Even"), "t1": cut("takeaway"), "label": "ball warms by, at most", "unit": "°C", "dp": 4, "kind": "const",
-     "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100 / (57 * 2.0), "lit": [A("vo06:degree."), cut("takeaway")]},
+     "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100 / (57 * 2.0), "lit": [A("vo06:degree."), cut("takeaway")], "minCh": 4},
     {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "energy destroyed", "unit": "J", "dp": 3, "kind": "const", "v": 0.0,
-     "lit": [A("vo07:destroys"), cut("tease") - 0.3]},
+     "lit": [cut("takeaway"), cut("tease") - 0.3], "minCh": 4},
 ]
+assert abs(S_PEAK_FT - SPINE[3]["t0"]) < 1e-6 and SPINE[3]["lit"][0] == SPINE[3]["t0"]   # the hold starts on the peak itself
+assert all(a["t1"] == b["t0"] for a, b in zip(SPINE, SPINE[1:])), "the readout never leaves between its steps"
+assert SPINE[-2]["lit"][1] == SPINE[-1]["lit"][0], "lit from 'degree.' through the takeaway, without a gap at the cut"
+
+# where it sits (set/spine.js placeSpine: [[t, [fx, fy]], ...] plate centres as fractions of the frame, a step at each
+# cut). The corners hold the notes (speed left, cheats right; 250–323 px), the readout sits between and below them.
+# fy 0.225 rather than 0.245: the bench's ink hand tops out at 539–558 px in these views, and the plate is 175 px tall.
+# Measured with the scene's camera on every frame (the subject, its path, the fixed labels, the notes, the caption):
+#   normal, measure, takeaway  centred: the ball and its ladder are below the hand, the tops labels to the right
+#   change, why                left (fx 0.2 clamps the plate's left edge to the safe line): the macro ball is 400 px wide
+#                              in the middle of the frame and springs back up into the top half; the narrow constant
+#                              plate (minCh 0) also leaves the why's "Joule's paddle wheel" label its own spot
+#   whoa                       left, under the speed note: the tennis ball climbs the middle of the frame
+SPINE_C, SPINE_L = [0.5, 0.225], [0.2, 0.225]
+SPINE_PLACE = {"hook": SPINE_C, "normal": SPINE_C, "change": SPINE_L, "why": SPINE_L, "whoa": SPINE_L,
+               "measure": SPINE_C, "takeaway": SPINE_C, "tease": SPINE_C}
+SPINE_AT = [[0.0 if b["id"] == "hook" else cut(b["id"]), SPINE_PLACE[b["id"]]] for b in BEATS]
+
+# ── rule 8, one line wins (WRITING.md "The picture" 8) ─────────────────────────────────────────────
+# The line or object the caption names is the brightest thing in the picture; whatever delivered the previous beat
+# drops to about a third of its strength as the new beat begins (eased over half a second from the cut or the word).
+# Each table is [[t, strength], ...] for keyed() (cinema/film/runtime.js), 1 = as built, LOW = a third: the scene turns
+# it into opacity (ink, the glow) or a two-thirds lerp toward the paper #E6E2D8 (the ghost ladders, the live ball).
+# Every key is a cut or a spoken word; every table starts and ends at 1, so frame 0 and the loop's last frame match.
+LOW, FADE = 1 / 3, 0.5
+T_MISSING, T_GIVES = A("vo06:missing"), A("vo07:It")
+DIM = {
+    # the ink hand: named in the hook ("your hand?"); from the normal on it has delivered, so it steps back. The stack's
+    # hand is named again in the whoa ("past your hand"), so it is full there; the bench's hand steps back again in the
+    # measure and comes back in the tease, where it re-drops the ball for the loop
+    "hand": [[0.0, 1], [cut("normal"), 1], [cut("normal") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1],
+             [cut("measure"), 1], [cut("measure") + FADE, LOW], [cut("tease"), LOW], [cut("tease") + FADE, 1]],
+    # the live ball: it delivered the change ("squashes, and doesn't quite spring back"); in the why the heat, the
+    # shaking and the sound are named, so the ball steps back (the whoa's tennis ball is full again)
+    "ball": [[0.0, 1], [cut("why"), 1], [cut("why") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1]],
+    # the heat glow: it delivered "back." in the change; it steps back with the ball and is full again on "heat,"
+    "glow": [[0.0, 1], [cut("why"), 1], [cut("why") + FADE, LOW], [A("vo04:heat,"), LOW], [A("vo04:heat,") + FADE, 1]],
+    # Joule's ink: the weights and the paddle delivered "falling weights turn a paddle"; on "warmed." the thermometer's
+    # red column (the accent, untouched) is what the caption names
+    "jouleInk": [[0.0, 1], [A("vo04:warmed."), 1], [A("vo04:warmed.") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1]],
+    # the ghost ladders (one on screen at a time): the record steps back when the measure names the missing 44 cm (its
+    # label and the readout carry the segment) and comes back on "It gives it away, knock by knock", the takeaway's ladder
+    "ghost": [[0.0, 1], [T_MISSING, 1], [T_MISSING + FADE, LOW], [T_GIVES, LOW], [T_GIVES + FADE, 1]],
+}
+for name, keys in DIM.items():
+    assert keys[0] == [0.0, 1] and keys[-1][1] == 1, (name, "frame 0 and the loop's last frame are as built")
+    assert all(a[0] <= b[0] for a, b in zip(keys, keys[1:])) and all(LOW - 1e-9 <= k <= 1 for _, k in keys), (name, keys)
+assert cut("measure") < T_MISSING and T_GIVES + FADE < cut("tease"), "the record's ladder is full again before the loop's"
 
 # ── cue table, labels, badges ──────────────────────────────────────────────────────────────────
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
@@ -172,13 +226,58 @@ LABELS = [
     {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa") - 0.35, "anchor": {"ring": 2}, "side": 1, "fixed": True},
     {"id": "wo-hand", "text": "your hand", "color": "ghost", "t0": A("vo05:Drop"), "t1": A("vo05:The#2", -0.1), "anchor": {"hand": "stack"}, "side": 1, "fixed": True},
     {"id": "wo-7x", "text": "7× its fall", "color": "motion", "t0": A("vo05:hand."), "t1": cut("measure") - 0.35, "anchor": {"tennis": 1}, "side": 1, "fixed": True},
-    {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": cut("tease") - 0.3, "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": cut("takeaway") - 0.35, "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
 ]
+# rule 8: a label leaves at its beat's cut (its 0.4 s fade-out ends by then, give or take a frame or two)
+NEXT_CUT = {b["id"]: (cut(BEATS[k + 1]["id"]) if k + 1 < len(BEATS) else EC) for k, b in enumerate(BEATS)}
+for lb in LABELS:
+    home = [b["id"] for b in BEATS if CUTS[b["id"]] <= lb["t0"]][-1]
+    assert lb["t1"] <= NEXT_CUT[home] - 0.3, (lb["id"], home, lb["t1"], NEXT_CUT[home])
+
+# ── notes (WRITING.md "The picture" 8; the channel's layout) ─────────────────────────────────────
+# Honesty notes are metadata, one tier below labels. The top-left corner holds the speed column (the clock's badge),
+# the top-right the standing cheats; at most two notes per top corner at once; a framing tag (a note that names the
+# picture, "framing": True) visits for 4 s at most; the spine readout sits between and below them. The hook's speed
+# note is the one exception: it sits bottom-right because the title drop owns the top through the hook (frame 0 falls
+# through 256–530 px, where a top-left note would sit on the title).
+NOTE_SLOT = {"clock": "tl", "hook": "br"}
 BADGES = [
     {"id": "air", "text": "Air ignored", "t0": cut("normal") + 0.6, "t1": cut("change") - 0.2, "slot": "tr"},
     {"id": "illus", "text": "Not to scale", "t0": cut("change") + 0.3, "t1": A("vo04:James", -0.5), "slot": "tr"},
     {"id": "perfect", "text": "Ideal bounces", "t0": A("vo05:Drop"), "t1": cut("measure") - 0.3, "slot": "tr"},
 ]
+
+
+def rate_text(rate):                                     # kits/cinema/sci/clock.js rateText, with its default words
+    if rate == 0:
+        return "paused"
+    if abs(rate - 1) < 1e-12:
+        return None
+    n = 1 / rate if rate < 1 else rate
+    return f"{round(n) if abs(n - round(n)) < 1e-9 else round(n, 2)}× {'slower' if rate < 1 else 'faster'}"
+
+
+CLOCK_NOTES = []                                         # clock.js C.badges: one per run of keys with the same wording
+for i, k in enumerate(KEYS):
+    text, t1 = (k["badge"] if "badge" in k else rate_text(k["rate"])), (KEYS[i + 1]["t"] if i + 1 < len(KEYS) else math.inf)
+    if text is None:
+        continue
+    if CLOCK_NOTES and CLOCK_NOTES[-1]["t1"] == k["t"] and CLOCK_NOTES[-1]["text"] == text:
+        CLOCK_NOTES[-1]["t1"] = t1
+    else:
+        CLOCK_NOTES.append({"text": text, "t0": k["t"], "t1": t1})
+NOTES = ([{"slot": NOTE_SLOT["clock"], "t0": n["t0"], "t1": min(n["t1"], EC), "text": n["text"], "speed": True} for n in CLOCK_NOTES]
+         + [{"slot": NOTE_SLOT["hook"], "t0": 0.0, "t1": cut("normal"), "text": "5× slower / paused", "speed": True}]
+         + [{**b, "speed": False} for b in BADGES])
+assert all(n["slot"] == "tl" for n in NOTES if n["speed"] and n["t0"] >= cut("normal")), "the speed column is top-left"
+assert all(b["slot"] == "tr" for b in BADGES), "the standing cheats are top-right"
+for n in NOTES:
+    assert not n.get("framing") or n["t1"] - n["t0"] <= 4.0, (n, "a framing tag visits for 4 s at most")
+for slot in ("tl", "tr"):                                # each note fades out over 0.3 s after its t1
+    for fr in range(int(DUR * FPS) + 1):
+        t = fr / FPS
+        on = [n["text"] for n in NOTES if n["slot"] == slot and n["t0"] <= t < n["t1"] + 0.3]
+        assert len(on) <= 2, (slot, t, on)
 
 # ── camera (level measure views, ep01's helper; the macro and the tilt-up as their own keys) ───
 FPX = 960 / math.tan(math.radians(16))
@@ -228,7 +327,8 @@ CAP_FIX = [
 film = {
     "id": "rest-frame-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
-    "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE, "spine": SPINE,
+    "shots": SHOTS, "beats": BEATS, "clock": KEYS, "takes": TAKES, "cue": CUE, "spine": SPINE, "spineAt": SPINE_AT, "dim": DIM,
+    "notes": NOTE_SLOT,
     "bench": {"g": G, "drop": DROP, "r": RB, "e": E_REST, "x0": X0, "vx": VX, "dt": DT, "n": NG, "stickX": STICK_X, "land": T_LAND,
               "tops": TOPS, "topH": TOP_H, "dc": DC, "squash": SQUASH},
     "stack": {"thit": S_THIT, "drop": S_DROP, "R": S_R, "M": S_M, "m": S_m, "x": S_X, "handY": S_HAND_Y, "peak": [S_PEAK_T, S_PEAK_Y]},
@@ -268,7 +368,8 @@ for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd["text"]})
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 for s in SPINE[1:]:
-    ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
+    if s.get("tick", True):
+        ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
 ev.append({"t": A("vo06:degree."), "kind": "counter.end", "tag": "spine:degree"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})

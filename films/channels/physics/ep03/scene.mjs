@@ -6,8 +6,12 @@
 // The physics: a tennis ball dropped from 1 m bouncing with restitution 0.75 (set/bench.js, exact, no air); one
 // contact slowed ×40 with a 5 ms squash (an illustration, badged); a tennis ball on a basketball dropped from 50 cm
 // with perfect bounces (set/balls.js, badged). The sound rings, the heat glow and Joule's apparatus are illustrations.
+//
+// WRITING.md "The picture" 8, one line wins: what the caption names is the brightest thing; what delivered the beat
+// before steps back to about a third (FILM.dim, keyed on cuts and words in compile.py). The notes keep the channel's
+// corners (speed top-left, cheats top-right) and the spine readout sits between and below them (FILM.spineAt).
 import * as THREE from "three";
-import { stage, seg, E, ease, shotAt } from "cinema/film/runtime.js";
+import { stage, seg, E, ease, shotAt, keyed } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
 import { strobe } from "cinema/sci/strobe.js";
@@ -17,7 +21,7 @@ import { ballAt, R_BALL } from "../set/bench.js";
 import { createBasketball, stackDrop } from "../set/balls.js";
 import { inkSet, hand, joule } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
-import { SPINE_CSS, pinSpine } from "../set/spine.js";
+import { SPINE_CSS, placeSpine } from "../set/spine.js";
 import { unlit } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
@@ -59,9 +63,24 @@ const macroAt = (tau) => {
 };
 const ballPos = (take, t) => (TAKES[take].kind === "macro" ? macroAt(local(take, t)).p : ballAt(local(take, t), SPEC));
 
+// ── rule 8: stepping back. dimAt(name, t) is the strength (1 as built, 1/3 stepped back); an unlit or lit surface
+// steps back by a two-thirds lerp toward the paper, on the scene-linear value that lands on #E6E2D8 (set/aces.js) ──
+const DIM = FILM.dim || {};
+const dimAt = (name, t) => (DIM[name] ? keyed(DIM[name], t) : 1);
+const PAPER = unlit(TK.cyc || "#E6E2D8");
+
 // ── the strobe ladders: the drop and its bounces, a ghost every 1/20 s ──
+// the ghosts fade toward the paper as one (one ladder is on screen at a time): after the rim, before tone mapping,
+// so a stepped-back ghost loses its dark rim too. strobe() chains this onBeforeCompile ahead of its rim
+const ghostFade = { value: 0 };
+const ghostMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+ghostMat.onBeforeCompile = (sh) => {
+  sh.uniforms.uFade = ghostFade; sh.uniforms.uPaper = { value: PAPER };
+  sh.fragmentShader = "uniform float uFade;\nuniform vec3 uPaper;\n" + sh.fragmentShader.replace("#include <tonemapping_fragment>",
+    "gl_FragColor.rgb = mix(gl_FragColor.rgb, uPaper, uFade);\n#include <tonemapping_fragment>");
+};
 const S = strobe({ geometry: new THREE.SphereGeometry(1, 24, 16), radius: BN.r * 0.6, max: 48, pop: 0.16,
-  material: new THREE.MeshLambertMaterial({ color: 0xffffff }), rim: { color: [0.045, 0.048, 0.055], width: 0.42, strength: 0.62 }, park: [0, 50, 0] });
+  material: ghostMat, rim: { color: [0.045, 0.048, 0.055], width: 0.42, strength: 0.62 }, park: [0, 50, 0] });
 scene.add(S.group);
 for (const name of ["hook", "normal", "record", "loop"]) {
   const tk = TAKES[name];
@@ -116,9 +135,10 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
-hud.badge("warp", { from: clk, slot: "tr" });
-{ const HN = FILM.hookNote;   // the hook's speed note, bottom-right: the poster's title keeps the top to itself
-  hud.badge("hook-speed", { kind: "speed", slot: "br", t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "5× slower" : "paused") }); }
+const NS = FILM.notes || { clock: "tl", hook: "br" };   // the speed column top-left, the standing cheats top-right
+hud.badge("warp", { from: clk, slot: NS.clock });
+{ const HN = FILM.hookNote;   // the hook's speed note, bottom-right: the poster's title drop owns the top through the hook
+  hud.badge("hook-speed", { kind: "speed", slot: NS.hook, t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "5× slower" : "paused") }); }
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball, t);
@@ -130,16 +150,20 @@ const anchorFn = (an) => {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.anchor), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed, v: lb.v });
 const SP = FILM.spine;
-const spineAt = (t) => SP.find((s) => t >= s.t0 && t < s.t1) || (t < SP[0].t0 ? SP[0] : SP[SP.length - 1]);
+const spineSeg = (t) => SP.find((s) => t >= s.t0 && t < s.t1) || (t < SP[0].t0 ? SP[0] : SP[SP.length - 1]);
 const spineVal = (t) => {
-  const s = spineAt(t);
+  const s = spineSeg(t);
   if (s.kind === "const") return s.v;
   if (s.kind === "stack") return Math.max(0, STK.small(local("stack", t))[1] - BN.r);
   const take = takeAt(t) || s.take;
   return Math.max(0, ballPos(take, t)[1] - BN.r);
 };
-const spineOpts = { value: spineVal, fmt: (v) => v.toFixed(0), unit: "cm", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.26, 0.19], minCh: 4 }, counterEl = hud.counter("spine", spineOpts);
-pinSpine(spineOpts, counterEl, hud, W, 0.19);
+// the step this frame shows: seek sets it from t before hud.update, so the plate is measured (and centred by
+// placeSpine) with this frame's label, unit, digits and width, never the last frame's
+let spNow = SP[0], spLit = false;
+const spineOpts = { value: spineVal, fmt: (v) => v.toFixed(spNow.dp), unit: "cm", label: SP[0].label, t0: SP[0].t0, t1: SP[SP.length - 1].t1,
+  minCh: 4, lit: () => spLit }, counterEl = hud.counter("spine", spineOpts);
+placeSpine(spineOpts, counterEl, hud, W, H, FILM.spineAt);
 const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
@@ -168,21 +192,26 @@ window.seek = function (t) {
     basket.position.set(...b); tennis2.position.set(...s); basket.rotation.z = 0.25 - 0.002 * b[1];
     casters.push([b[0], b[1], 0, ST.R], [s[0], s[1], 0, BN.r]);
   }
+  // the live ball (and the stack's tennis ball: one material) steps back by a lerp toward the paper: its lit felt
+  // scaled down, the paper added as emission (both exact at strength 1: white and black, as built)
+  { const a = 1 - dimAt("ball", t); P.ballMat.color.setScalar(1 - a); P.ballMat.emissive.copy(PAPER).multiplyScalar(a); }
   // the hands: the bench's from the start to the change and from the measure on; the stack's in the whoa
   const hb = take === "macro" ? 0 : isStack ? 0 : 1;
   handB.visible = hb > 0; handS.visible = isStack;
-  // ink opacity: hands always full where shown; Joule's apparatus draws on and off in the why
+  I.opacity(dimAt("hand", t));   // one at a time on screen: full where the caption names "your hand", a third after
+  // Joule's apparatus draws on and off in the why; on "warmed." its ink steps back and the red column carries it
   const jk = Math.min(E.out3(seg(t, CUE.why.joule[0] - 0.4, CUE.why.joule[0] + 0.3)), 1 - E.in3(seg(t, CUE.why.joule[1] - 0.2, CUE.why.joule[1] + 0.5)));
   J.group.visible = jk > 0.001;
-  IJ.opacity(jk);
+  IJ.opacity(jk); IJ.mat.opacity = jk * dimAt("jouleInk", t);
   J.update(E.inout2(seg(t, CUE.why.fall[0], CUE.why.fall[1])), E.out2(seg(t, CUE.why.fall[0] + 0.8, CUE.why.fall[1] + 0.6)));
   // the sound rings: in the change ("puff of sound") and again in the why ("sound")
   const r0 = t < CUE.cuts.why ? CUE.change.rings : CUE.why.sound;
   rings.forEach((m, k) => { const q = ringR(k, t, r0); m.visible = q.a > 0.001 && (take === "macro"); m.material.opacity = q.a; m.position.set(...CONTACT); m.scale.setScalar(q.r); });
   // the heat glow at the contact patch: from "squashes" on, fading slowly
   const gk = take === "macro" ? Math.min(E.out2(seg(t, CUE.change.heat, CUE.change.heat + 0.5)), 1) * (t < CUE.cuts.whoa ? 1 : 0) : 0;
-  glow.visible = gk > 0.001; glowMat.opacity = 0.55 * gk;
+  glow.visible = gk > 0.001; glowMat.opacity = 0.55 * gk * dimAt("glow", t);   // a third in the why until "heat,"
   if (glow.visible) { glow.position.set(ball.position.x, ball.position.y - BN.r * ball.scale.y * 0.82, 0.6); glow.scale.set(1.9, 0.55, 1.9); }
+  ghostFade.value = 1 - dimAt("ghost", t);
   S.update(t);
   cyc.update({ grid: 1, casters });
   if (window.CINEMA && window.CINEMA.mode === "probe") {
@@ -192,9 +221,8 @@ window.seek = function (t) {
     });
   }
   dropT(t); dropE(t);
-  { const s = spineAt(t); counterLb.textContent = s.label; }
-  hud.update(t);
-  { const s = spineAt(t); counterU.textContent = s.unit; counterV.textContent = spineVal(t).toFixed(s.dp);
-    counterEl.classList.toggle("lit", !!(s.lit && t >= s.lit[0] && t < s.lit[1])); }
+  spNow = spineSeg(t); spLit = !!(spNow.lit && t >= spNow.lit[0] && t < spNow.lit[1]);
+  counterLb.textContent = spNow.label; counterU.textContent = spNow.unit; counterV.style.minWidth = (spNow.minCh ?? 4) + "ch";
+  hud.update(t);   // writes the value through fmt (this step's decimals), measures the plate, places it, lights it
   renderer.render(scene, camera);
 };
