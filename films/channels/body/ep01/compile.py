@@ -96,8 +96,8 @@ HERO = {
     "why_cut": [[A("vo04:dimples", -0.55), 0.0], [A("vo04:dimples", -0.05), 1.0], [A("vo04:volume:end", 0.15), 1.0], [A("vo04:so", 0.45), 0.0]],
     # the takeaway: it pops out of the capillary into a venule as the beat opens, and springs back to a disc
     "out": {"at": CUT["out"] + 0.3, "place": "exit",
-            # the camera lets the cell go and looks back down the capillary it left (the smallest vessels)
-            "track": [max(CUT["out"] + 0.3, A("vo06:smallest", -1.7)), A("vo06:smallest", 0.4)]},
+            # the camera lets the cell go and looks back down the capillary it left, where a sickle cell is lodged (on "jam")
+            "track": [max(CUT["out"] + 0.3, A("vo06:jam", -1.7)), A("vo06:jam", 0.4)]},
     "tease_cut": [[A("vo08:carries", -0.4), 0.0], [A("vo08:carries", 0.25), 1.0]],
     "sparkle": [A("vo08:billion"), A("vo08:passengers:end", 0.3)],
 }
@@ -147,8 +147,8 @@ CAM = {
     ],
     "out": [
         {"t": CUT["out"], "pos": [7.0, -7.0, 28.0], "look": [0.0, -2.0, 0.0], "fov": 34},
-        {"t": A("vo06:Stiff", 0.5), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo06:smallest", 0.4), "pos": [10.0, -8.0, 50.0], "look": [0.0, -4.0, 0.0], "fov": 36, "ease": "p2"},     # (now on the capillary)
+        {"t": A("vo06:Sickle", 0.5), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo06:jam", 0.4), "pos": [10.0, -8.0, 50.0], "look": [0.0, -4.0, 0.0], "fov": 36, "ease": "p2"},     # (now on the capillary)
         {"t": A("vo06:oxygen", 0.6), "pos": [10.0, -9.0, 53.0], "look": [0.0, -4.5, 0.0], "fov": 36, "ease": "sine"},
         {"t": B["meanwhile"]["t0"] + 0.6, "pos": [18.0, -16.0, 92.0], "look": [0.0, 12.0, 0.0], "fov": 36, "ease": "p2"},  # room for the tally
         {"t": CUT["tease"], "pos": [22.0, -18.0, 100.0], "look": [0.0, 12.0, 0.0], "fov": 36, "ease": "sine"},
@@ -173,7 +173,7 @@ FOC = {
              {"t": A("vo04:dimples", -0.6), "at": "cap", "f": 0.5}, {"t": A("vo04:parachute", -0.2), "at": "hero", "f": 0.5},
              {"t": A("vo05:tightest", -0.2), "at": "hero", "f": 0.5}],
     "net": [{"t": CUT["net"], "at": "hero", "f": 0.25}],
-    "out": [{"t": CUT["out"], "at": "hero", "f": 0.5}, {"t": A("vo06:smallest", -0.5), "at": "below", "f": 0.4},
+    "out": [{"t": CUT["out"], "at": "hero", "f": 0.5}, {"t": A("vo06:jam", -0.5), "at": "below", "f": 0.4},
             {"t": B["meanwhile"]["t0"] + 0.3, "at": "below", "f": 0.75}],
     "tease": [{"t": CUT["tease"], "at": "hero", "f": 0.5}, {"t": A("vo08:carries"), "at": "cap", "f": 0.55}],
 }
@@ -185,6 +185,7 @@ LABELS = [
     {"id": "capillary", "text": "capillary", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:capillary"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "dimple", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dimples"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
     {"id": "ghostw", "text": "its width: 7.5 µm", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
+    {"id": "sickle", "text": "sickle cell", "color": "deoxy", "mark": "dot", "at": "sickle", "t0": A("vo06:jam", 0.2), "t1": A("vo06:oxygen", -0.15), "shot": "out", "side": -1},   # the 26 Oct audit: the stakes on screen
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2", "t0": A("vo06:oxygen"), "t1": B["meanwhile"]["t0"] + 0.4, "shot": "out", "side": 1},
 ]
 SCALES = [
@@ -197,6 +198,7 @@ LIFE = {"t0": A("vo05:about#2", -0.2), "keys": [[A("vo05:about#2"), 0], [A("vo05
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.25, "rate": 2_000_000, "label": "new red cells while you watched"}   # c13: 2,000,000 × t from frame 0
 BADGES = [
     {"id": "nts-tree", "text": "not to scale", "t0": CUT["tree"], "t1": CUT["road"] - 0.3},
+    {"id": "ill-sickle", "text": "illustration: a sickle cell", "t0": A("vo06:Sickle", 0.0), "t1": A("vo06:oxygen", -0.6)},
     {"id": "nts-o2", "text": "not to scale", "t0": A("vo06:oxygen", -0.3), "t1": CUT["tease"] - 0.3},
     {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
@@ -206,6 +208,44 @@ END = {"t0": EC, "title": "Next, inside: *a billion passengers*", "next": "Meanw
 # the lub-dub: beats on the 75 BPM grid (a beat is 0.8 s); the pulse line kicks on each lub
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
+# caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+CAPTION_KEEP = [
+    "red blood cell",
+    "a dimpled disc",
+    "seven and a half micrometers",
+    "its own nucleus",
+    "twenty-five trillion",
+    "your own cells",
+    "the vessel branches",
+    "branches again",
+    "a capillary",
+    "no room",
+    "single file",
+    "its surface",
+    "spare surface",
+    "give it",
+    "its volume",
+    "a parachute",
+    "The tightest vessels",
+    "three micrometers",
+    "half its width",
+    "less than",
+    "all its life",
+    "a hundred and twenty days",
+    "Sickle cells",
+    "the disc shape",
+    "can jam",
+    "oxygen is handed out",
+    "That dimple",
+    "as you watched",
+    "bone marrow",
+    "over a hundred million",
+    "new red cells",
+    "this cell",
+    "about a billion",
+    "a billion passengers",
+]
+
 film = {
     "id": "meanwhile-inside-001", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -214,7 +254,7 @@ film = {
     "labels": LABELS, "scales": SCALES, "ghost": GHOST, "life": LIFE, "tally": TALLY, "badges": BADGES,
     "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"]),
+    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

@@ -12,14 +12,14 @@
  },
  {
   "id": "c2",
-  "sentence": "Meet a red blood cell: a dimpled disc, about seven micrometers across.",
+  "sentence": "Meet a red blood cell: a dimpled disc, about seven and a half micrometers.",
   "claim": "Red blood cells are dimpled (biconcave) discs, 7–8 µm across.",
   "source_url": "https://www.elsevier.com/resources/anatomy/blood/blood-cells/erythrocyte/16056",
   "source_title": "Erythrocyte (Elsevier, Complete Anatomy)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt gives 7–8 µm and 'they lack a nucleus, organelles, and cannot divide'. Other texts give 7.5–8 µm; 'about seven' sits at the low end of the range. A scale pill, if one shows the size, reads 7.5 µm."
+  "note": "Excerpt gives 7–8 µm and 'they lack a nucleus, organelles, and cannot divide'. Other texts give 7.5–8 µm. The scale pill on the hero reads 7.5 µm at the same moment. 26 Oct audit (independent fact check): 'about seven' became 'about seven and a half' so the voice and the 7.5 µm pill agree."
  },
  {
   "id": "c3",
@@ -74,18 +74,18 @@
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "The membrane strongly resists stretching: a squeezed red cell keeps nearly constant surface area, so it folds rather than stretches (the wrong guess the line sets up)."
+  "note": "The membrane strongly resists stretching: a squeezed red cell keeps nearly constant surface area, so it folds rather than stretches (the wrong guess the line sets up). 26 Oct audit (independent fact check): the wrong guess now says 'its surface stretches to fit': a red cell does lengthen easily (optical-tweezer studies stretch it); what it can't do is grow its membrane area (lysis at about 2–4% area expansion). The guess and its correction are now the same idea, and match this claim."
  },
  {
   "id": "c8",
   "sentence": "The dimples give it spare surface for its volume, so it folds into a parachute instead.",
   "claim": "A red cell's surface-area-to-volume ratio, more than its stiffness, decides how narrow a passage it can get through.",
-  "source_url": "https://www.biorxiv.org/content/10.1101/2020.07.11.191494.full.pdf",
-  "source_title": "Namvar et al. 2020, Surface area-to-volume ratio, not cellular rigidity, determines red blood cell traversal through small capillaries (bioRxiv)",
-  "accessed": "2026-10-22",
+  "source_url": "https://findanexpert.unimelb.edu.au/scholarlywork/1466622-surface-area-to-volume-ratio--not-cellular-viscoelasticity--is-the-major-determinant-of-red-blood-cell-traversal-through-small-channels",
+  "source_title": "Namvar et al., Surface area-to-volume ratio, not cellular viscoelasticity, is the major determinant of red blood cell traversal through small channels, Cellular Microbiology 23(1):e13270 (University of Melbourne record)",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "'Spare surface for its volume' is the standard reading of that ratio (a sphere of the same volume has less surface). Preprint; the cross-check also accepts it as the standard explanation."
+  "note": "'Spare surface for its volume' is the standard reading of that ratio (a sphere of the same volume has less surface). Excerpt (abstract): 'Dramatic stiffening of RBCs had no measurable effect on their ability to traverse small channels', while 'a moderate decrease in the SA:V ratio had a marked effect'. 26 Oct audit (independent fact check): cited as the peer-reviewed paper (DOI 10.1111/cmi.13270) instead of its bioRxiv preprint (https://www.biorxiv.org/content/10.1101/2020.07.11.191494.full.pdf, 'not cellular rigidity')."
  },
  {
   "id": "c9",
@@ -100,14 +100,14 @@
  },
  {
   "id": "c10",
-  "sentence": "The tightest are about three micrometers: less than half its width.",
+  "sentence": "The tightest vessels are about three micrometers: less than half its width.",
   "claim": "Red cells traverse microvessels only about 3 µm across, about 40% of a 7.5 µm cell.",
   "source_url": "https://www.bme.rochester.edu/research/red-blood-cells.html",
   "source_title": "Red blood cells are highly deformable (University of Rochester, Biomedical Engineering)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Cross-check fix: replaces the unsupported 'only about half its width' [S3, PMC8215585]. 3 / 7.5 = 0.40 (computed)."
+  "note": "Cross-check fix: replaces the unsupported 'only about half its width' [S3, PMC8215585]. 3 / 7.5 = 0.40 (computed). 26 Oct audit (independent fact check): 'The tightest' became 'The tightest vessels' (heard after a silent hold, the noun was missing)."
  },
  {
   "id": "c11",
@@ -122,14 +122,14 @@
  },
  {
   "id": "c12",
-  "sentence": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out.",
+  "sentence": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out.",
   "claim": "Capillary beds are extremely narrow, which slows red cells and gives gas exchange time to happen.",
   "source_url": "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_1e_(OpenStax)/Unit_4%3A_Fluids_and_Transport/18%3A_The_Cardiovascular_System_-_Blood/18.03%3A_Erythrocytes",
   "source_title": "OpenStax Anatomy and Physiology, 18.3 Erythrocytes (LibreTexts copy)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'Capillary beds are extremely narrow, slowing the passage of the erythrocytes and providing an extended opportunity for gas exchange to occur.'"
+  "note": "Excerpt: 'Capillary beds are extremely narrow, slowing the passage of the erythrocytes and providing an extended opportunity for gas exchange to occur.' 26 Oct audit (independent fact check): the line was 'Stiff sickle cells can jam the smallest vessels…'; it now names the lost disc shape (the link to the dimple) and drops 'the smallest vessels'."
  },
  {
   "id": "c13",
@@ -166,13 +166,24 @@
  },
  {
   "id": "c16",
-  "sentence": "Stiff sickle cells can jam the smallest vessels, where oxygen is handed out.",
-  "claim": "In sickle cell disease, red cells with hemoglobin S form rigid strands and become sticky; in the smallest vessels they can get stuck and clog the capillaries, blocking blood flow.",
-  "source_url": "https://internet-prod.nhlbi.nih.gov/sites/default/files/publications/SickleCellDisease_FactSheet_July2022.pdf",
-  "source_title": "NHLBI, Sickle Cell Disease fact sheet (July 2022)",
-  "accessed": "2026-10-24",
+  "sentence": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out.",
+  "claim": "In sickle cell disease, red cells take a sickle or crescent shape instead of a disc shape; they are stiff and sticky, don't bend or move easily, and can clog capillaries and block blood flow.",
+  "source_url": "https://www.nhlbi.nih.gov/health/sickle-cell-disease",
+  "source_title": "NHLBI, Sickle Cell Disease",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (NHLBI fact sheet PDF): 'some of them form into rigid strands and become sticky. Those strands often get stuck, clogging the capillaries.' MedlinePlus agrees. 'Can' keeps it to what the sources say; the cause is hemoglobin S, not the dimple, and the line doesn't say otherwise. A 2012 Drexel study places most obstruction just downstream of the capillaries; 'the smallest vessels' covers both. A physiologist signs off the wording and the naming; pin the NHLBI fact sheet in the comments if it stays."
+  "note": "Excerpt (NHLBI): sickle cell disease 'causes the red blood cells to have a sickle or crescent shape instead of a disc shape'; healthy cells are disc-shaped and flexible, sickled cells 'do not bend or move easily and can block blood flow'. MIT News, 1 March 2012 (https://news.mit.edu/2012/sickle-cell-blood-flow-0301), excerpt: 'crescent-shaped red blood cells that clog capillaries instead of flowing smoothly, like ordinary, disc-shaped red blood cells do.' NHLBI fact sheet (July 2022, https://internet-prod.nhlbi.nih.gov/sites/default/files/publications/SickleCellDisease_FactSheet_July2022.pdf), earlier excerpt: 'rigid strands … clogging the capillaries' (the audit could not re-find that phrase; a person checks it). 'Can' keeps it to what the sources say; the cause is hemoglobin S, not the dimple. 'Where oxygen is handed out' points at the capillaries, which NHLBI and MIT both name; a 2012 Drexel study places much obstruction just downstream of them. 26 Oct audit (independent fact check): rewritten from 'Stiff sickle cells can jam the smallest vessels' so the takeaway's button ('That dimple isn't decoration') follows: sickle cells lose the disc."
+ },
+ {
+  "id": "c17",
+  "sentence": "That dimple isn't decoration.",
+  "claim": "The biconcave disc's spare surface for its volume (its surface-area-to-volume ratio) is what lets a red cell pass narrow channels; a moderate loss of it markedly narrows what the cell can get through, while stiffening alone had no measurable effect.",
+  "source_url": "https://findanexpert.unimelb.edu.au/scholarlywork/1466622-surface-area-to-volume-ratio--not-cellular-viscoelasticity--is-the-major-determinant-of-red-blood-cell-traversal-through-small-channels",
+  "source_title": "Namvar et al., Surface area-to-volume ratio, not cellular viscoelasticity, is the major determinant of red blood cell traversal through small channels, Cellular Microbiology 23(1):e13270 (University of Melbourne record)",
+  "accessed": "2026-10-26",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (abstract): 'a moderate decrease in the SA:V ratio had a marked effect on the equivalent cylinder diameter traversable by RBCs of similar cellular viscoelasticity'; 'the SA:V ratio should be given more prominence in studies of RBC pathologies'. 26 Oct audit (independent fact check): the line was tagged {-}, but it asserts that the shape has a function, so it now carries this claim."
  }
 ]
