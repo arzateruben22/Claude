@@ -4,8 +4,10 @@
 > Minute 001 and Rest Frame 003 (2 of 18 shorts; 0 of 3 compilations). Light Minute 004's 08:54 render predates a
 > caption-timing fix and 38 review fixes, so it is not final. All 18 scripts are written, audited and fixed. The
 > channel sessions stopped their in-flight finals with frames kept: Rest Frame 002 at 2070/2184 (~2 min to finish),
-> Meanwhile, Inside 002 at 1290/2184 (~35 min); Light Minute has resume notes atop its PRODUCTION.md. Still running
-> here (machine time, no usage): Meanwhile, Inside 001 (rerender-finals.sh, ~13:30). Stopped: the Rest Frame 001
+> Meanwhile, Inside 002 at 1290/2184 (~35 min); Light Minute has resume notes atop its PRODUCTION.md. At 09:55 the owner
+> asked for everything but Prism Studio to stay paused: Meanwhile, Inside 001's final was stopped too (frames kept; resume
+> with films/channels/rerender-finals.sh films/channels/body/ep01). Only the Prism Studio completion workflow runs; after
+> it, nothing continues until the owner says so. Stopped: the Rest Frame 001
 > polish workflow (resume run wf_4be75c8c-873; edits so far committed) and the 2-hourly check-in
 > (trig_01RobrDAZpWDmvW9a3s2U5Xb, disabled). Rest Frame 001's final stays held (scratchpad RERENDER-HOLD).
 >
