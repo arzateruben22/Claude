@@ -1,5 +1,12 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 08:15 UTC:** independent script audit of every episode done (`films/audits/2026-10-26/`: ep02–06 ×3,
+> ep01 ×3, ep06 physics/body; each finding adversarially verified). Space and physics sessions applied theirs; body
+> working. Here: Light Minute 001 fixed (label fits the safe box, c15, small footnote; sound QA no longer misreads a
+> masked tick) and its last chunks re-render; Rest Frame 001 (no-firearms line, badge, count) and Meanwhile, Inside
+> 001 (stretch/sickle lines) are being fixed and re-voiced before their finals. Hosting for Prism Studio built and
+> tested (`prism-studio/deploy/`). A session limit paused work 06:00–08:00.
+>
 > **26 Oct, 04:05 UTC check-in:** space ep01 re-render 19%; body session merged the kit; physics + space sessions rechecking (space delivered No. 004 on the old kit before the merge: it will be re-rendered).
 >
 > **26 Oct, 03:50 UTC: full speed until completion (owner).** Readability pass landed (767b57b: notes one tier down,
