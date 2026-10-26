@@ -133,7 +133,8 @@ assert abs(S_PEAK_FT - A("vo05:hand.")) < 1e-6
 # bottom) · "const". minCh: the value's minimum width (4 for a live number, so the plate keeps its width as digits come
 # and go; 0 lets a constant's plate fit its text). tick: False keeps a step off the cue sheet (it rides another event).
 # WRITING.md "The picture" 2: at the whoa's payoff the readout stops at the peak and holds it, lit, its label saying
-# what the number now is; from "degree." it stays lit to the end of the takeaway (no unlit gap at the cut).
+# what the number now is; from "degree." it stays lit to the end of the takeaway (no unlit gap at the cut) and through
+# its 0.4 s exit (hud.js presence), so the payoff never turns from the accent to ink as it leaves.
 S_PEAK_H = S_PEAK_Y - RB                                 # the tennis ball's bottom at its peak: 376 cm
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "bounce height", "unit": "cm", "dp": 0, "kind": "height", "take": "normal", "minCh": 4},
@@ -146,11 +147,12 @@ SPINE = [
     {"t0": A("vo06:Even"), "t1": cut("takeaway"), "label": "average warming, about", "unit": "°C", "dp": 3, "kind": "const",
      "v": 0.057 * 9.81 * (DROP - TOP_H[0]) / 100 / (57 * 1.5), "lit": [A("vo06:degree."), cut("takeaway")], "minCh": 4},   # c12: a filled core, about 1.5 J/(g·K)
     {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "energy destroyed", "unit": "J", "dp": 3, "kind": "const", "v": 0.0,
-     "lit": [cut("takeaway"), cut("tease") - 0.3], "minCh": 4},
+     "lit": [cut("takeaway"), cut("tease") + 0.2], "minCh": 4},   # lit past t1: scene.mjs keeps the last step after it
 ]
 assert abs(S_PEAK_FT - SPINE[3]["t0"]) < 1e-6 and SPINE[3]["lit"][0] == SPINE[3]["t0"]   # the hold starts on the peak itself
 assert all(a["t1"] == b["t0"] for a, b in zip(SPINE, SPINE[1:])), "the readout never leaves between its steps"
 assert SPINE[-2]["lit"][1] == SPINE[-1]["lit"][0], "lit from 'degree.' through the takeaway, without a gap at the cut"
+assert SPINE[-1]["lit"][1] >= SPINE[-1]["t1"] + 0.4 and SPINE[-1]["lit"][1] < EC, "the payoff stays lit through its exit"
 
 # where it sits (set/spine.js placeSpine: [[t, [fx, fy]], ...] plate centres as fractions of the frame, a step at each
 # cut). The corners hold the notes (speed left, cheats right; 250–323 px), the readout sits between and below them.
@@ -173,29 +175,32 @@ SPINE_AT = [[0.0 if b["id"] == "hook" else cut(b["id"]), SPINE_PLACE[b["id"]]] f
 # it into opacity (ink, the glow) or a two-thirds lerp toward the paper #E6E2D8 (the ghost ladders, the live ball).
 # Every key is a cut or a spoken word; every table starts and ends at 1, so frame 0 and the loop's last frame match.
 LOW, FADE = 1 / 3, 0.5
-T_MISSING, T_GIVES = A("vo06:missing"), A("vo07:It")
+T_PRICE, T_GIVES = A("vo06:A"), A("vo07:It")
 DIM = {
     # the ink hand: named in the hook ("your hand?"); from the normal on it has delivered, so it steps back. The stack's
-    # hand is named again in the whoa ("past your hand"), so it is full there; the bench's hand steps back again in the
-    # measure and comes back in the tease, where it re-drops the ball for the loop
+    # hand is named again in the whoa ("past your hand"), so it is full there. The bench's hand comes back at full with
+    # the measure: it marks the 100 cm end of "those missing forty-four centimeters?" (the record's release ghosts are
+    # the same end, its first top the other), so it steps back only when the caption turns to the readout ("A quarter
+    # of a joule"), and comes back in the tease, where it re-drops the ball for the loop
     "hand": [[0.0, 1], [cut("normal"), 1], [cut("normal") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1],
-             [cut("measure"), 1], [cut("measure") + FADE, LOW], [cut("tease"), LOW], [cut("tease") + FADE, 1]],
-    # the live ball: it delivered the change ("squashes, and doesn't quite spring back"); in the why the heat, the
+             [T_PRICE, 1], [T_PRICE + FADE, LOW], [cut("tease"), LOW], [cut("tease") + FADE, 1]],
+    # the live ball: it delivered the change ("squashes, and doesn't spring back as hard"); in the why the heat, the
     # shaking and the sound are named, so the ball steps back (the whoa's tennis ball is full again)
     "ball": [[0.0, 1], [cut("why"), 1], [cut("why") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1]],
-    # the heat glow: it delivered "back." in the change; it steps back with the ball and is full again on "heat,"
+    # the heat glow: it delivered "back" in the change; it steps back with the ball and is full again on "heat,"
     "glow": [[0.0, 1], [cut("why"), 1], [cut("why") + FADE, LOW], [A("vo04:heat,"), LOW], [A("vo04:heat,") + FADE, 1]],
     # Joule's ink: the weights and the paddle delivered "falling weights turn a paddle"; on "warmed." the thermometer's
     # red column (the accent, untouched) is what the caption names
     "jouleInk": [[0.0, 1], [A("vo04:warmed."), 1], [A("vo04:warmed.") + FADE, LOW], [cut("whoa"), LOW], [cut("whoa"), 1]],
-    # the ghost ladders (one on screen at a time): the record steps back when the measure names the missing 44 cm (its
-    # label and the readout carry the segment) and comes back on "It gives it away, knock by knock", the takeaway's ladder
-    "ghost": [[0.0, 1], [T_MISSING, 1], [T_MISSING + FADE, LOW], [T_GIVES, LOW], [T_GIVES + FADE, 1]],
+    # the ghost ladders (one on screen at a time): the record draws the missing 44 cm (its release ghosts at 100 cm, its
+    # first top at 56 cm), so it is full while the caption names them; it steps back with the hand when the caption
+    # turns to the readout ("A quarter of a joule"), and comes back on "It gives it away, knock by knock"
+    "ghost": [[0.0, 1], [T_PRICE, 1], [T_PRICE + FADE, LOW], [T_GIVES, LOW], [T_GIVES + FADE, 1]],
 }
 for name, keys in DIM.items():
     assert keys[0] == [0.0, 1] and keys[-1][1] == 1, (name, "frame 0 and the loop's last frame are as built")
     assert all(a[0] <= b[0] for a, b in zip(keys, keys[1:])) and all(LOW - 1e-9 <= k <= 1 for _, k in keys), (name, keys)
-assert cut("measure") < T_MISSING and T_GIVES + FADE < cut("tease"), "the record's ladder is full again before the loop's"
+assert A("vo06:centimeters?") < T_PRICE and T_GIVES + FADE < cut("tease"), "the record steps back after the 44 cm are named, is full before the loop"
 
 # ── cue table, labels, badges ──────────────────────────────────────────────────────────────────
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
@@ -217,22 +222,29 @@ LABELS = [
     {"id": "nm-56", "text": "56 cm", "color": "motion", "t0": A("vo02:Fifty-six"), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[0], TOP_H[0] + RB, 0]}, "side": 1, "fixed": False},
     {"id": "nm-32", "text": "32 cm", "color": "motion", "t0": A("vo02:thirty-two."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[1], TOP_H[1] + RB, 0]}, "side": 1, "fixed": False},
     {"id": "nm-18", "text": "18 cm", "color": "motion", "t0": A("vo02:eighteen."), "t1": cut("change") - 0.35, "anchor": {"point": [TOPX[2], TOP_H[2] + RB, 0]}, "side": 1, "fixed": False},
-    {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": cut("why") - 0.35, "anchor": {"ring": 1}, "side": 1, "fixed": True},
+    {"id": "ch-sound", "text": "sound", "color": "wave", "t0": A("vo03:sound."), "t1": A("vo03:The#2", -0.1), "anchor": {"ring": 1}, "side": 1, "fixed": True},
     {"id": "ch-heat", "text": "heat", "color": "energy", "t0": A("vo03:back."), "t1": cut("why") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
-    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "top"}, "side": 1, "fixed": False},
+    {"id": "wy-joule", "text": "Joule's paddle wheel", "color": "ghost", "t0": A("vo04:James", 0.3), "t1": A("vo04:warmed.", -0.1), "anchor": {"joule": "top"}, "side": 1, "fixed": False},
     {"id": "wy-warm", "text": "the water warms", "color": "energy", "t0": A("vo04:warmed."), "t1": A("vo04:Energy#2", -0.2), "anchor": {"joule": "therm"}, "side": 1, "fixed": True},
     {"id": "wy-heat", "text": "heat", "color": "energy", "t0": A("vo04:heat,"), "t1": cut("whoa") - 0.35, "anchor": {"ball": "macro"}, "side": -1, "fixed": True},
     {"id": "wy-shake", "text": "shaking", "color": "pressure", "t0": A("vo04:shaking"), "t1": cut("whoa") - 0.35, "anchor": {"point": [-30.0, 0.0, 0.0]}, "side": -1, "fixed": True},
     {"id": "wy-sound", "text": "sound", "color": "wave", "t0": A("vo04:sound,"), "t1": cut("whoa") - 0.35, "anchor": {"ring": 2}, "side": 1, "fixed": True},
     {"id": "wo-hand", "text": "your hand", "color": "ghost", "t0": A("vo05:Drop"), "t1": A("vo05:The#2", -0.1), "anchor": {"hand": "stack"}, "side": 1, "fixed": True},
     {"id": "wo-7x", "text": "7× its fall", "color": "motion", "t0": A("vo05:hand."), "t1": cut("measure") - 0.35, "anchor": {"tennis": 1}, "side": 1, "fixed": True},
-    {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": cut("takeaway") - 0.35, "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "ms-44", "text": "44 cm missing", "color": "energy", "t0": A("vo06:missing"), "t1": A("vo06:A", -0.1), "anchor": {"point": [-8.0, (DROP + TOP_H[0]) / 2 + RB, 0]}, "side": 1, "fixed": True, "v": "middle"},
 ]
 # rule 8: a label leaves at its beat's cut (its 0.4 s fade-out ends by then, give or take a frame or two)
 NEXT_CUT = {b["id"]: (cut(BEATS[k + 1]["id"]) if k + 1 < len(BEATS) else EC) for k, b in enumerate(BEATS)}
 for lb in LABELS:
     home = [b["id"] for b in BEATS if CUTS[b["id"]] <= lb["t0"]][-1]
     assert lb["t1"] <= NEXT_CUT[home] - 0.3, (lb["id"], home, lb["t1"], NEXT_CUT[home])
+# … and within a beat, a label leaves when the caption leaves what it names, or with the drawing it names as that
+# steps back (its 0.4 s fade lands by the time the drawing is at a third)
+LB = {lb["id"]: lb for lb in LABELS}
+assert LB["ch-sound"]["t1"] < A("vo03:The#2"), "'sound' leaves as the caption turns to the ball"
+assert LB["wy-joule"]["t1"] <= A("vo04:warmed.") and LB["wy-joule"]["t1"] + 0.4 <= A("vo04:warmed.") + FADE, "Joule's label leaves with its ink"
+assert LB["ms-44"]["t1"] <= T_PRICE and LB["ms-44"]["t1"] + 0.4 <= T_PRICE + FADE, "'44 cm missing' leaves as its span steps back"
+assert LB["ms-44"]["t1"] - LB["ms-44"]["t0"] >= 2.0, "… after it has been up long enough to read"
 
 # ── notes (WRITING.md "The picture" 8; the channel's layout) ─────────────────────────────────────
 # Honesty notes are metadata, one tier below labels. The top-left corner holds the speed column (the clock's badge),
