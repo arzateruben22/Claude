@@ -83,7 +83,7 @@ const NTRAIL = PH.ys.length - 1;
 const trail = Array.from({ length: NTRAIL }, (_, i) => segment({ color: C.trail, width: 3, opacity: 0, fade: [0.55 + 0.45 * i / NTRAIL, 0.55 + 0.45 * (i + 1) / NTRAIL] }));
 const voy = createBeacon({ color: pos(hdr("ice", 1.25)), px: 16, core: 0.3 });
 const hpShell = shell({ color: C.hp, opacity: 0, power: 3.2 });
-const hpTick = segment({ color: pos(line("ice", 1, 1.2)), width: 5, opacity: 0 });
+const hpTick = segment({ color: line("ice", 0.85), width: 5, opacity: 0 });   // under the bloom knee: pale ice, not a royal-blue halo
 const hpRim = ring({ color: line("ice", 0.6), width: 2.6, opacity: 0 });   // ice, not teal: a boundary, not light
 const front1 = ring({ color: C.tealHi, width: 4, opacity: 0 }), frontC = ring({ color: C.tealHi, width: 4, opacity: 0 }), front2 = ring({ color: C.tealHi, width: 4, opacity: 0 });
 const ldRing = ring({ color: C.teal, width: 2.6, opacity: 0 });

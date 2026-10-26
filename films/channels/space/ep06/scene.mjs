@@ -10,7 +10,7 @@ import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
 import { ring, segment } from "cinema/sci/front.js";
-import { createLadder, logDolly, setOpacity } from "cinema/sci/ladder.js";
+import { createLadder, logDolly } from "cinema/sci/ladder.js";
 import { createSky } from "../set/sky.js";
 import { createStar } from "../set/star.js";
 import { createPlanet, earthSurface } from "../set/planet.js";
@@ -32,6 +32,7 @@ if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 12, threshold: 0.9, bloo
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
+const pos = (c) => c.map((v) => Math.max(0, v));                              // no negative light (an inverted token can dip below 0)
 const B = Object.fromEntries(FILM.beats.map((b) => [b.id, b]));
 
 const WORDS = { fast: "{n}× faster", slow: "{n}× slower", freeze: null };
@@ -48,25 +49,29 @@ Object.values(G).forEach((g) => scene.add(g));
 // earth rung (1 unit = 1,000 km): Earth at true size, a meridian pin, "you" on the equator
 const earth = createPlanet({ radius: 6.371, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 128 });
 const you = createBeacon({ color: hdr("teal", 1.2), px: 12, core: 0.5 });
-G.earth.add(earth.group, you.mesh);
+// the equator "you" stand on (on "at the equator"): solid, so it stays on the turning ground; the planet hides its far half
+const eqR = ring({ color: pos(line("ice", 0.5)), width: 2, opacity: 0 }).arc({ r: 6.371 * 1.004, ...XZ });
+G.earth.add(earth.group, you.mesh, eqR.mesh);
 // solar rung (1 unit = 1 million km): the Sun (not to scale), Earth's orbit, Earth's marker, the arc it has run
 const sun = createStar({ radius: 8, intensity: 1.4, corona: 2.4, limb: 0.6, granulation: 0.2 });   // not to scale (badged): a face, not a dot
 const orbitR = ring({ color: line("lilac", 0.7), width: 2, opacity: 1 }).arc({ r: AU / 1e6, ...XZ });
-const trail = ring({ color: line("teal", 1, 1.2), width: 4, opacity: 0 });
-const earthDot = createBeacon({ color: hdr("ice", 1.1), px: 14, core: 0.5 });
+const trail = ring({ color: pos(line("ice", 0.8)), width: 4, opacity: 0 });               // ice, a body's path (teal is light's)
+const earthDot = createBeacon({ color: pos(line("ice", 0.85)), px: 14, core: 0.5 });     // under the bloom's knee: hdr ice blooms royal blue
 G.solar.add(sun.group, orbitR.mesh, trail.mesh, earthDot.mesh);
 // local rung (1 unit = 1 light-year): the Sun's neighbourhood, a cloud of nearby stars the jump passes through
 const cloud = createCloud({ n: 3000, radius: 60, seed: 5 });
-cloud.material.uniforms.uGain.value = 2.2;                                    // bright enough to read as a fly-through
+cloud.material.uniforms.uGain.value = 2.6;                                    // bright enough to read as a ball of stars through the hold
 G.local.add(cloud.group);
 // galaxy rung (1 unit = 1,000 light-years): the Milky Way (illustration), the Sun's lap, the Sun
 const galaxy = createGalaxy({ n: 40000, radius: 50, seed: 27, sunAngle: Math.PI * 0.75 });
-const lap = ring({ color: line("lilac", 1, 1.5), width: 6, opacity: 0, dash: 40, duty: 0.6 }).arc({ r: SUN_LY / 1000, ...XZ });   // reads over the arms' grain
+// the lap stays under the bloom's knee (pushed into it, lilac blooms royal blue) and wide enough to read over the arms' grain
+const lap = ring({ color: pos(line("lilac", 0.8)), width: 7, opacity: 0, dash: 40, duty: 0.6 }).arc({ r: SUN_LY / 1000, ...XZ });
 const gcRing = ring({ color: line("teal", 0.9), width: 2.8, opacity: 0 }).arc({ r: SUN_LY / 1000 + 0.4, ...XZ });
 const gcPath = segment({ color: line("teal", 1, 1.8), width: 7, opacity: 0 });
 const gcHead = createBeacon({ color: hdr("teal", 1.4), px: 16, core: 0.5 });    // the light's front, riding the path's drawn end
-// the Sun as a point (in the jump and in the galaxy): pale lemon-white like its ✦ label, not Earth's ice-blue marker
-const sunG = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });
+// the Sun as a point (in the jump and in the galaxy): pale lemon-white like its ✦ label, not Earth's ice-blue marker. In the
+// galaxy it glows past its label's dot and outshines the bulge's points (the line says "the Sun"); lemon blooms lemon
+const sunG = createBeacon({ color: pos(hdr("lemon", 1.8)), px: 30, core: 0.5 });
 const sunJ = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });   // the Sun through the jump (between the rungs)
 const earthJ = createBeacon({ color: hdr("ice", 1.1), px: 12, core: 0.5 });   // Earth as a point as the jump begins
 scene.add(sunJ.mesh, earthJ.mesh);

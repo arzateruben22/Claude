@@ -43,7 +43,9 @@ some are more than a thousand times wider. Astronomers even file the Sun under d
   slow orbit through it, 12° → 30°, for parallax) inside the dashed outline of the largest known stars (1,000 × its
   radius), which comes in as the jump lands. The readout: a teal ping on the Sun on "Light time", then a ring of light
   grows out to Earth's orbit (same scale: 1 AU, about 215 Sun radii, Earth on it) by "twenty seconds"; the giants'
-  outline steps back to 35%, and the light is gone before the end card.
+  outline steps back to 35% for "Light time, across the Sun" and fades out as light heads for Earth (the light ring and
+  the orbit win), and the light is gone before the end card. The readout is framed a little wider and lower (dist 440,
+  fy 0.35), so the outline stays between the top notes and the spine.
 - **Spine readout:** ? → 400× · 400× → 1–109 → southern Greece → 7,000 → 0–1,300,000 → >1,000× → G2V · dwarf. Then the
   readout segment.
 - **Loop:** the end card cuts back to the sky view of frame 0, 0.3 s after the card starts (under its scrim). Footnote:
@@ -60,7 +62,7 @@ some are more than a thousand times wider. Astronomers even file the Sun under d
 | `true scale` | The row of Earths and the sunspot | The row is drawn in the plane of the Sun's limb, so it spans the disc exactly as seen; the Sun's face is drawn just under the bloom (white-grey) so the silhouettes read |
 | `dot enlarged` | The Peloponnese | At true scale it would be about 1/7,000 of the Sun's width, under a pixel |
 | `1 dot = 200 Earths, by volume` | The melt | Whole spheres would pack fewer (about 830,000 at random, 960,000 at best) |
-| `illustration · star spacing not to scale` | The giant outline and the star field | One circle for "the largest known stars" (their sizes are uncertain). The stars around the Sun are placed for the picture, far closer together than real stars, and their dots don't show their sizes. Earth's orbit in the readout is drawn to the same scale |
+| `illustration · star spacing not to scale` | The giant outline and the star field | One circle for "the largest known stars" (their sizes are uncertain). The stars around the Sun are placed for the picture, far closer together than real stars, and their dots don't show their sizes. Earth's orbit in the readout is drawn to the outline's scale (the outline has faded by then) |
 | `light sped up` | The readout's ring of light | It reaches Earth's orbit in 1.7 s of film; the real trip takes 8 min 20 s |
 
 The full Moon is drawn lit from behind the viewer; in the sky the two are not seen full at once, so the hook frame is a

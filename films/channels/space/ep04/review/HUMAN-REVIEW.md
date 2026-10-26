@@ -29,6 +29,12 @@
   tease), "Newton, the story goes, wondered…", "Gravity fades with distance squared: thirty-six hundred times weaker."
   and "So the pull that drops an apple is the same pull that keeps the Moon falling." The film was rendered again
   from scratch after these changes.
+- **After the draft review (26 Oct):** the 1/r² curve is deeper, has no moving head and is labelled "pull:
+  1/distance²" (the apple's name leaves before it is drawn); check it now reads as a strength, not a path. The apple's
+  first second runs on the whoa's ×8 clock (it falls in a blink; the "8× faster" note was wrong for it before), both
+  falls are solid lilac, and the spine names the Moon's minute on "And it does". The gravity-off Moon is lit, with a
+  trail, and swoops back onto its orbit; the takeaway's Moon runs on at 20,000× (noted) under a fan of straight lines.
+  The normal's note is two tags ("Markers enlarged", "True scale"). Not yet rendered: a stills check comes first.
 
 
 ## Every episode

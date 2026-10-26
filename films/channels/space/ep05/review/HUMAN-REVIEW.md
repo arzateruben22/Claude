@@ -35,7 +35,9 @@
   light: a ring from the Sun to Earth's orbit in 1.7 s of film for the real 8 min 20 s ("light sped up"). The why beat
   has a card, "Anaxagoras" / "Athens, 5th century BCE" (c4: mid-5th century BCE). The ×7,000 ring now starts on
   "Bigger, yes" and grows out of the southern Greece dot (drawn larger, still badged "dot enlarged"). The spine's
-  "7,000" waits for "seven" and "109 Earths" for the count to finish being said. No number or claim changed.
+  "7,000" waits for "seven" and "109 Earths" for the count to finish being said. After the stills check the Sun sits a
+  little lower in the why beat (clear of the card), the readout is framed wider (the outline clear of the top notes) and
+  the outline fades out on "Sun to Earth". No number or claim changed.
 
 
 ## Every episode

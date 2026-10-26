@@ -257,7 +257,8 @@ window.seek = function (t) {
   for (const f of field) f.b.set(fs > 0 ? { center: f.p, camera, opacity: fs } : { opacity: 0 });
   const gr = PH.giant * 100 * k, onSun = shot === "sun" ? 1 : 0;
   // in once it is inside the frame (it never sweeps through the spine or the caption); quieter under the readout
-  giant.arc({ center: [0, 0, 0], r: gr, ...cbx }).set({ opacity: onSun * fadeIn(t, CUE.j0 + 2.45, 0.5) * (1 - 0.65 * fadeIn(t, B.readout.t0, 0.8)) });
+  // the outline steps back for the readout and is gone when light heads for Earth (the light ring and the orbit win)
+  giant.arc({ center: [0, 0, 0], r: gr, ...cbx }).set({ opacity: onSun * fadeIn(t, CUE.j0 + 2.45, 0.5) * (1 - 0.65 * fadeIn(t, B.readout.t0, 0.8)) * (1 - fadeIn(t, CUE.orbit - 0.6, 0.6)) });
   S.giant = [0, 1, 2].map((j) => gr * (cbx.e1[j] * Math.cos(-0.45) + cbx.e2[j] * Math.sin(-0.45)));
   // the readout: a teal ping on the Sun on "Light", then the light's ring out to Earth's orbit by "twenty" (Earth
   // brightens as it arrives); the light is gone before the end card, the orbit leaves with its label

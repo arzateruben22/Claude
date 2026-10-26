@@ -114,8 +114,9 @@ CAM = {
            "az": round((yr - Y0) / (Y_NOW - Y0), 3), "ease": "lin"} for yr in (1983, 1990, 2000, 2010, 2020)],
         {"t": t_stop + RAMP_F, **WIDE, "dist": 1205, "az": 1.0, "ease": "sine"},
         # the change: the camera eases back and the Sun to the middle, so the light-day circle through Voyager fits
-        # the frame (and, at this distance, so do the comet cloud and the ring through Proxima later)
-        {"t": B["change"]["t0"], **WIDE, "dist": 1205, "az": 1.2, "ease": "sine"},
+        # the frame (and, at this distance, so do the comet cloud and the ring through Proxima later); the flight ends
+        # 0.19 s before the change, so the camera holds there (a 0.2° turn in that gap peaked at 1.7°/s)
+        {"t": B["change"]["t0"], **WIDE, "dist": 1205, "az": 1.0, "ease": "sine"},
         {"t": A("vo03:line"), **WIDE, "dist": 1600, "az": 2.0, "ease": "inout2"},
         {"t": B["why"]["t0"], **WIDE, "dist": 1590, "az": 2.6, "ease": "sine"},
         {"t": t_j0, **WIDE, "dist": 1580, "az": 4.0, "ease": "sine"},

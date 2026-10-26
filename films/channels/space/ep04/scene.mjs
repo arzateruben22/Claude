@@ -67,6 +67,7 @@ const pull = [0, 1, 2].map(() => segment({ color: C.lilac, width: 4.5, opacity: 
 // Newton's test: the pull's strength along the Earth–Moon line, hung below it (height ∝ 1/r²), drawn out from the apple
 const NPROF = 40, prof = Array.from({ length: NPROF }, () => segment({ color: C.lilac, width: 3.4, opacity: 0 }));
 const ruler = segment({ color: C.lilac, width: 3, opacity: 0 });
+const reach = segment({ color: C.lilac, width: 3, opacity: 0, fade: [0.35, 1] });   // "…reaches the Moon": brightest at its leading end
 const ticks = Array.from({ length: 13 }, () => segment({ color: C.lilac, width: 3, opacity: 0 }));
 const tangent = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 0.25, duty: 0.5 });
 const tangent2 = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 0.25, duty: 0.5 });   // the change's, at the moving Moon (tangent is frame 0's)
@@ -78,7 +79,7 @@ const lightRing = ring({ color: C.tealHi, width: 3.4, opacity: 0 }).arc({ r: R +
 const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 4.5, opacity: 0, fade: [1, 0.2] }));
 // hollow marker rings of a fixed size in pixels round Earth and the Moon, so the true-scale bodies can be found in the diagrams (they claim no size)
 const markM = ring({ color: C.ice, width: 2, opacity: 0 }), markE = ring({ color: C.ice, width: 2, opacity: 0 });
-[markM, markE, orbitRing, ...row, ...vArrow, trail, freePath, ghostMoon, ...pull, ...prof, ruler, ...ticks, tangent, tangent2, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
+[markM, markE, orbitRing, ...row, ...vArrow, trail, freePath, ghostMoon, ...pull, ...prof, reach, ruler, ...ticks, tangent, tangent2, gap, ghostAt, dropLine, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
 const apple = createBeacon({ color: pale(hdr("ice", 1.1)), px: 14, core: 0.8 }), apple2 = createBeacon({ color: pale(hdr("ice", 1.1)), px: 16, core: 0.8 });
 const moonGlow = createBeacon({ color: pale(hdr("ice", 1.2)), px: 14, core: 0.8 });   // gravity off: the flying Moon (its disc is a pixel)
 scene.add(apple.mesh, apple2.mesh, moonGlow.mesh);
@@ -171,7 +172,8 @@ window.seek = function (t) {
   trail.seg(pOff, add(pOff, tOff, sNow)).set({ opacity: og });
   freePath.seg(add(pOff, tOff, Math.floor(sNow * FREE_DASH) / FREE_DASH), add(pOff, tOff, 48)).set({ opacity: og });   // from a whole dash back: the dashes stay put
   moonGlow.set({ center: mp, camera, opacity: winOp(t, CUE.off, CUE.back + 1.0, 0.3) });
-  tangent2.seg(mp, add(mp, tanAt(th), 14)).set({ opacity: winOp(t, CUE.back + 1.0, B.why.t0, 0.4) });   // what the spine's "below its straight line" means
+  // what the spine's "below its straight line" means; once the thought-experiment note has gone (it runs up into its corner)
+  tangent2.seg(mp, add(mp, tanAt(th), 14)).set({ opacity: winOp(t, CUE.back + 1.3, B.why.t0, 0.4) });
   const cb = { e1: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray(), e2: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).toArray() };
   ghostMoon.set({ opacity: 0 });
   S.free = add(pOff, tOff, 4);                                                 // early on the line: its label sits under it, behind the Moon
@@ -185,6 +187,9 @@ window.seek = function (t) {
   const ow = winOp(t, CUE.apple, CUE.weak + 0.6, 0.4), ap = dirM.map((v) => v * (PH.r_earth + 0.6));
   apple.set({ center: ap, camera, opacity: ow });
   S.apple = ap;
+  // "…reaches the Moon": the pull's reach wiped along the line from the apple's arrow out to the Moon, gone before the ruler
+  const uR = E.inout2(seg(t, CUE.reach, CUE.reach + 0.8));
+  reach.seg(add(ap, dirM, 3.0), add(ap, dirM, 3.0 + (R - PH.r_earth - 3.6) * uR)).set({ opacity: uR > 0.01 ? winOp(t, CUE.reach, CUE.ruler - 0.4, 0.3) : 0 });
   const orl = winOp(t, CUE.ruler, CUE.weak + 0.6, 0.4), up = [0, 3.0, 0];
   ruler.seg(add([0, 0, 0], up), add(dirM.map((v) => v * R), up)).set({ opacity: orl });
   ticks.forEach((k, i) => { const x = dirM.map((v) => v * PH.r_earth * i * 5); k.seg(add(x, [0, 2.4, 0]), add(x, [0, 3.6, 0])).set({ opacity: orl * (i % 2 ? 0.55 : 1) }); });

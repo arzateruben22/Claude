@@ -99,7 +99,7 @@ ROWV = dict(SUNF, dist=268.0, fy=0.27, fov=24.0)
 SPOTV = dict(target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.25, fy=0.3)
 SPOTV2 = dict(SPOTV, fov=1.15)
 ZOOM_IN = zoom(t_spot - 0.3, t_spot + 1.0, ROWV, SPOTV, n=6)
-ZOOM_OUT = zoom(A("vo04:ago"), A("vo04:said"), SPOTV2, dict(SUNF, dist=405.0, fov=24.0), n=8)
+ZOOM_OUT = zoom(A("vo04:ago"), A("vo04:said"), SPOTV2, dict(SUNF, dist=405.0, fov=24.0, fy=0.36), n=8)
 # the why beat: a slow push while Anaxagoras is told and the ring grows (the el/az drift to the melt runs on through it)
 u_why = lambda t: (t - A("vo04:said")) / (t_melt0 - A("vo04:said"))
 CAM = {
@@ -117,14 +117,15 @@ CAM = {
             *ZOOM_IN,
             key(A("vo04:ago"), target=SPOT_P, dist=420.0, el=0.0, az=0.0, fov=1.15, fy=0.3, ease="sine"),
             *ZOOM_OUT,
-            key(A("vo04:Calling"), **dict(SUNF, dist=380.0, el=10.0 * u_why(A("vo04:Calling")), az=8.0 * u_why(A("vo04:Calling"))), ease="sine"),
-            key(A("vo04:thousand"), **dict(SUNF, dist=358.0, el=10.0 * u_why(A("vo04:thousand")), az=8.0 * u_why(A("vo04:thousand"))), ease="sine"),
+            # (the Sun a little low while the Anaxagoras card is up: its limb stays under the card's plate)
+            key(A("vo04:Calling"), **dict(SUNF, dist=380.0, fy=0.36, el=10.0 * u_why(A("vo04:Calling")), az=8.0 * u_why(A("vo04:Calling"))), ease="sine"),
+            key(A("vo04:thousand"), **dict(SUNF, dist=358.0, fy=0.34, el=10.0 * u_why(A("vo04:thousand")), az=8.0 * u_why(A("vo04:thousand"))), ease="sine"),
             key(t_melt0, **dict(SUNF, dist=400.0, el=10.0, az=8.0), ease="sine"),
             key(t_j0, **dict(SUNF, dist=395.0, el=12.0, az=12.0), ease="sine"),
-            # one star among many: a slow orbit through the star field (the parallax), a push that keeps the 1,000×
-            # outline's lower edge above the readout's spine (dist ≥ 372 at fy 0.31)
-            key(B["readout"]["t0"], **dict(SUNF, dist=380.0, el=13.5, az=25.0, fy=0.31), ease="sine"),
-            key(t_end, **dict(SUNF, dist=372.0, el=14.0, az=30.0, fy=0.31), ease="sine")],
+            # one star among many: a slow orbit through the star field (the parallax) with a slight push; the 1,000×
+            # outline stays between the top notes and the readout's spine (dist 430–440 at fy 0.35)
+            key(B["readout"]["t0"], **dict(SUNF, dist=440.0, el=13.5, az=25.0, fy=0.35), ease="sine"),
+            key(t_end, **dict(SUNF, dist=430.0, el=14.0, az=30.0, fy=0.35), ease="sine")],
 }
 for shot, keys in CAM.items():           # the bible's arc limit: ≤ 1.5° a second, in azimuth and in elevation
     for a, b in zip(keys, keys[1:]):
@@ -172,7 +173,8 @@ BADGES = [
     {"id": "b-illus", "text": "illustration · star spacing not to scale", "t0": A("vo05:giant"), "t1": round(t_end - 0.45, 4), "slot": "tr"},
     # the readout's ring of light reaches Earth's orbit in 1.7 s, not 8 min 20 s; it leaves with the light, before the note above it
     {"id": "b-light", "text": "light sped up", "t0": A("vo07:Sun#2"), "t1": round(t_end - 0.75, 4), "slot": "tr"},
-    # the why beat's card (narrow, so it never meets the right-hand notes: no stacking, no hop)
+    # the why beat's card (narrow, so it never meets the right-hand notes: no stacking, no hop; the why beat's framing
+    # keeps the Sun's limb under it)
     {"id": "b-anax", "text": "Anaxagoras\nAthens, 5th century BCE", "t0": A("vo04:Athens"), "t1": A("vo04:impiety"), "slot": "tl", "maxW": 0.6},
 ]
 COUNTERS = [

@@ -54,6 +54,7 @@ assert t_back > t_off + 2.0, (t_off, t_back)
 # the pull back after the whoa: the Moon goes back onto its orbit only once the camera is past dist 300 (0.49 units is
 # then under 4 px: it doesn't "un-fall" in close-up), and the diagram settles after it
 t_home0, t_home1, t_set = round(t_tk + 2.6, 4), round(t_tk + 3.1, 4), round(t_tk + 3.6, 4)
+assert t_set < t_rd, (t_set, t_rd)          # the takeaway's run (below) ends before the readout
 CLK = {"moon": [{"t": 0.0, "rate": 0.0}, {"t": B["normal"]["t0"], "rate": RATE_O},
                 {"t": t_off, "rate": RATE_OFF}, {"t": t_back, "rate": RATE_O},
                 {"t": B["why"]["t0"], "rate": 0.0, "badge": None},
@@ -101,10 +102,11 @@ th_cut = TH0 + 2 * math.pi * tau(CLK["moon"], B["normal"]["t0"]) / P_ORB
 # the Moon sweeps about 112° in the normal and the change (×20,000, then ×120,000 with gravity off): it enters 60°
 # below the frame's right and leaves about 52° above it, on the side away from the spine and the notes
 TOPN = dict(TOP, az=math.degrees(th_cut) + 60.0)
-# the takeaway and the readout: turned so the Moon, where the readout holds it, sits 25° left of the top (its name
-# and the light ring's arrival clear of the "real speed of light" note)
+# the takeaway and the readout: turned so the Moon, where the readout holds it, sits 30° left of the top: its name and
+# the light ring's arrival clear of the "real speed of light" note, and its marker below the takeaway's speed note
+# while it runs there (8.5° on)
 th_rd = TH0 + 2 * math.pi * tau(CLK["moon"], t_rd) / P_ORB
-TOPT = dict(TOP, az=math.degrees(th_rd) - 90.0 - 25.0)
+TOPT = dict(TOP, az=math.degrees(th_rd) - 90.0 - 30.0)
 t_end = A("vo08:Next", -0.25)
 t_weak = A("vo04:weaker")
 CAM = {
@@ -113,7 +115,8 @@ CAM = {
     "space": [
         key(B["normal"]["t0"], TOPN, dist=460.0), key(A("vo02:about", 0.4), TOPN, ease="sine"), key(B["why"]["t0"], TOPN, dist=534.0, ease="sine"),
         # the why: turn to the side so the apple and the Moon sit on one line from Earth's centre (a cut on the line's start)
-        key(B["why"]["t0"] + 2.6, SIDE, ease="inout3"), key(t_weak + 0.6, SIDE, dist=SIDE["dist"] - 4.0, ease="sine"),
+        # then a slow push (about 0.5% a second) while Newton's test is drawn
+        key(B["why"]["t0"] + 2.6, SIDE, ease="inout3"), key(t_weak + 0.6, SIDE, dist=SIDE["dist"] - 20.0, ease="sine"),
         # into the whoa over 2.8 s (not a whip), in two legs: onto the Moon, halfway round and still far, then a push in
         # on it (in one leg the distance, eased in log, ran ahead of the target and the Moon left the frame)
         key(t_weak + 2.0, dict(CLOSE, dist=60.0, **{k: (SIDE[k] + CLOSE[k]) / 2 for k in ("el", "az", "fx", "fy")}), ease="inout3"),
@@ -137,7 +140,7 @@ LABELS = [
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Look"), "t1": B["change"]["t0"], "side": 1},
     # the Moon's name steps aside while the row of thirty Earths reaches it (each in one spot: no hops)
     {"id": "l-moon", "text": "Moon", "kind": "body", "anchor": "moon", "t0": A("vo02:Look", 0.3), "t1": round(A("vo02:thirty") - 0.4, 4), "side": -1, "fixed": True},
-    {"id": "l-30", "text": "30 Earths", "kind": "body", "anchor": "row", "t0": A("vo02:thirty"), "t1": A("vo02:And"), "side": -1, "v": "middle", "fixed": True},
+    {"id": "l-30", "text": "30 Earths", "kind": "body", "anchor": "row", "t0": A("vo02:thirty"), "t1": A("vo02:And"), "side": -1, "v": "below", "fixed": True},   # off the row (it runs up-left to Earth)
     {"id": "l-moon2", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(A("vo02:And") + 0.4, 4), "t1": t_off, "side": -1, "fixed": True},   # once "30 Earths" has gone
     # under the straight line, behind the flying Moon (it flies up and to the right, away from its name)
     {"id": "l-free", "text": "no gravity: a straight line", "kind": "light", "anchor": "free", "t0": round(t_off + 0.6, 4), "t1": round(t_back - 0.45, 4), "side": -1, "v": "below", "fixed": True},
@@ -165,10 +168,11 @@ LABELS = [
 # Notes in one corner stack in this order, and hud.js tests even a note that is off screen against the other corner's
 # visible ones: a wide one pushed below the speed note drags every later note in its corner down a row. So the normal's
 # honesty note is two narrow tags (each clears the widest speed note, "120,000× faster", x 45–254 of 540 in the draft:
-# "True scale" x 331–450, "Markers enlarged" x 267–450), and the wide apple note comes last.
+# "Markers enlarged" x 267–450, "True scale" x 331–450, the shorter one below, where the orbit's top arc passes), and
+# the wide apple note comes last.
 BADGES = [
-    {"id": "b-true", "text": "true scale", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},
     {"id": "b-marks", "text": "markers enlarged", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},   # the rings round Earth and the Moon
+    {"id": "b-true", "text": "true scale", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},
     {"id": "b-time", "clock": "moon", "t0": B["normal"]["t0"], "t1": t_end, "slot": "tl"},
     {"id": "b-thought", "text": "thought experiment", "t0": t_off, "t1": round(t_back + 1.0, 4), "slot": "tr"},   # through the bend back
     {"id": "b-mag", "text": "falls ×1,000,000", "t0": t_min0, "t1": t_home1, "slot": "tr"},   # until the Moon is back on its orbit
@@ -205,7 +209,7 @@ END = {"title": "Next light: how\u00a0many Earths fill the *Sun*?", "follow": "L
        "next": "Each second the Moon falls about 1.4 mm below a straight line."}   # footnote (c17), two lines inside the ring
 
 CUE = {"tk": t_tk, "home0": t_home0, "home1": t_home1, "settle": t_set, "speed0": A("vo02:sideways"), "speed1": B["change"]["t0"], "off": t_off, "back": t_back, "row": A("vo02:thirty"), "min0": t_min0, "min1": t_min1, "ring": A("vo07:one"),
-       "apple": A("vo04:apple"), "ruler": A("vo04:sixty"), "weak": A("vo04:weaker"), "drop": A("vo05:apple"), "same": A("vo06:same")}
+       "apple": A("vo04:apple"), "reach": A("vo04:reaches"), "ruler": A("vo04:sixty"), "weak": A("vo04:weaker"), "drop": A("vo05:apple"), "same": A("vo06:same")}
 POSTER = A("vo05:does", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["thirty Earths away.", "every second.", "New York", "to Boston", "in five minutes."],

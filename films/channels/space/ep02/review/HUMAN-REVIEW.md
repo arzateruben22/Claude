@@ -41,8 +41,9 @@
   ends" labels are gone (the caption and the spine say them), labels no longer hop or pop, the comet cloud collapses
   early in the jump, and the whoa pushes in. New notes: "Voyager isn't headed there" in the hook and "light sped up"
   on each lane pulse. The spine now reads ≈1,500 light-days ("about fifteen hundred"; 1,549 computed) and ≈75,000.
-  Two caption breaks remain ("reached the Sun's" | "cloud of comets."; "three" / "hundred years away."): they can't be
-  mended within 24 characters a line.
+  Two caption breaks remain ("reached the Sun's" | "cloud of comets."; "three" / "hundred years away."). The first
+  can't be mended within 24 characters a line; the second only by a 0.47 s page ("That's about" | "three hundred /
+  years away."), too short to read, so it stays.
 
 
 ## Every episode
