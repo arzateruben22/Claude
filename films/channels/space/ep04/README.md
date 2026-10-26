@@ -1,19 +1,20 @@
 # Light Minute No. 004: "The falling Moon"
 
-73.1 s, 9:16. The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset
+74.1 s, 9:16. The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset
 `lightminute-vacuum`). It pays off episode 3's tease ("Next: the Moon never stops falling toward us. So why doesn't
 it land?") and sets up episode 5 ("Next: pour Earths into the Sun. How many to fill it up?").
 
-**Delivered (26 Oct):** `out/lightminute-004-9x16.mp4` (73.07 s, −14.1 LUFS / −1.9 dBTP, voice 12.5 LU over the music,
-sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS), with its poster (50.6 s), contact sheet and `review/`. Not posted.
+**Delivered (26 Oct, after the recheck and the script audit):** `out/lightminute-004-9x16.mp4` (74.13 s, −14.1 LUFS /
+−1.8 dBTP, voice 12.5 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS), with its poster
+(51.7 s), contact sheet and `review/`. Not posted.
 
 ## The story
 What's holding the Moon up? Nothing: it's falling. It is about thirty Earths away and moves sideways at about a
 kilometer a second (New York to Boston in five minutes). Switch gravity off and it would fly off in a straight line;
-gravity bends it back, every moment. The heavens, people believed, had their own rules. Isaac Newton, the story goes,
-wondered if the pull that drops an apple reaches the Moon: sixty times farther from Earth's centre, so thirty-six
-hundred times weaker. Then in one minute the Moon should fall as far as an apple falls in one second: about five
-meters. And it does. So the pull that drops an apple is the very same pull that holds the Moon.
+gravity bends it back toward us. So it falls, and always misses. The heavens, people believed, had their own rules.
+Newton, the story goes, wondered if the pull that drops an apple reaches the Moon: sixty times farther from Earth's
+centre, and gravity fades with distance squared, so thirty-six hundred times weaker. Then in one minute the Moon should fall as far as an apple falls in one second: about five
+meters. And it does. So the pull that drops an apple is the same pull that keeps the Moon falling.
 
 ## Files
 
@@ -31,7 +32,7 @@ meters. And it does. So the pull that drops an apple is the very same pull that 
 - **Frame 0 = the whoa's last frame:** the Moon a minute after leaving its straight line, with the gap.
 - **True scale throughout**, except two things, both badged: the Moon's fall below its straight line is drawn a
   million times larger (4.9 m → 4,900 km on screen), and the apple is a glyph.
-- **Spine readout:** 1.4 mm a second → 30 Earths → 1 km a second → 5 min → 60 Earth radii → 1/3,600 → apple 4.9 m in
+- **Spine readout:** 4.9 m in a minute (the hook) → 30 Earths → 1 km a second → 5 min → 60 Earth radii → 1/3,600 → apple 4.9 m in
   a second → Moon 4.9 m in a minute → gravity. Then the readout segment.
 - **Newton's test, drawn:** the pull's arrow slides out from the apple to the Moon along the ruler of 60 Earth radii,
   its length falling as 1/r² (it is invisible by the time it reaches the Moon: 1/3,600).

@@ -8,7 +8,7 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
 | 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | re-delivered 26 Oct after the recheck (74.67 s, −14.1 LUFS, QA PASS); **script audit applied** (4 lines re-voiced, end card); fresh final queued |
 | 003 | Venus day | §7 #2 | re-delivered 26 Oct after the recheck (74.67 s, −14.1 LUFS, QA PASS); **script audit applied** (vo03 re-voiced, dial label, day counter, sources); fresh final queued |
-| 004 | Falling Moon | §7 #3 | rechecked (gravity-off bug fixed, labels, captions); **script audit applied** (3 lines re-voiced, Conduitt source); fresh final queued |
+| 004 | Falling Moon | §7 #3 | **delivered 26 Oct after the recheck and the script audit:** 74.13 s, −14.1 LUFS / −1.8 dBTP, voice 12.5 LU over music, sync PASS, 0 flashes, qa.py PASS, 1.4 Mbps; render 33 min |
 | 005 | Sun size | §7 #4 | rechecked (side view, row, sunspot, melt, ×7,000 ring); **script audit applied** ("Bigger, yes", "seven thousand", "no giant"; 19 claims); fresh final queued |
 | 006 | Your speed | §7 #5 | rechecked (Earth return, pin on the equator, framing); **script audit applied** (spine heading, Ptolemy re-sourced; no re-voice); fresh final queued |
 
