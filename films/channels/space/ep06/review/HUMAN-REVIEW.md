@@ -24,6 +24,9 @@
   Ptolemy and Galileo the picture returns to Earth (the orbit clock stops; the spin picks up again) with the label "you,
   and the clouds with you"; the one zoom then goes from Earth, through the Sun as a point, to the galaxy. The Sun is drawn larger than true (not to
   scale, badged). The readout draws light's path from the Sun to the galaxy's centre.
+- **After the draft review (26 Oct):** Galileo's cabin is drawn as an inset (ship, cutaway cabin, bowl and fish,
+  dripping bottle, butterflies, after the Dialogue's Second Day); a historian may check the details. The jump now passes
+  through a cloud of nearby stars (an illustration of the Sun's neighbourhood); the galaxy turns with its arms trailing.
 - **After the 26 Oct script audit:** the why beat's spine heading in the script now reads "what you can feel: a
   jolt, not speed" (Earth's orbital speed itself changes by about 3,600 km/h over a year, unfelt). That heading is
   a script note: the cut's spine shows the km counter, so the picture doesn't change. No line was re-voiced.

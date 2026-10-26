@@ -25,8 +25,11 @@ first dinosaurs had just appeared. So your speed has no single answer. First ask
 
 ## The direction
 - **One world, one camera:** Earth at true size with a teal pin on the equator ("you") turning; the pull-back to the
-  orbit (Earth's marker runs a teal arc); Ptolemy's and Galileo's lines labelled on Earth; "Zoom out": the jump to the
-  galaxy, the Sun on its lap (a dashed lilac ring of 27,000 light-years); the readout ring.
+  orbit (Earth's marker runs a teal arc); back to Earth for Ptolemy's objection; **Galileo's cabin** as an inset over
+  Earth (a ship on calm water, the hull cut away below deck: the water slides past while the drops fall straight, the
+  fish swims and the butterflies flutter in place; the ship lurches once on "jolt"); "Zoom out": the one jump, through
+  a cloud of nearby stars, to the galaxy, the Sun on its lap (a dashed lilac ring of 27,000 light-years, the disc
+  turning with its arms trailing); the readout: light's path from the Sun to the centre, its front riding it.
 - **Spine readout:** ? → 1,670 → 1,225 → 30 → **the real km round the Sun since the film began, counting live**
   (29.78 × t) → 230 → 230 (million years) → first dinosaurs → ? ("compared to what"). The last "?" loops to frame 0's.
 - **Footnote:** one lap of the galaxy takes the Sun about 230 million years.
@@ -35,8 +38,9 @@ first dinosaurs had just appeared. So your speed has no single answer. First ask
 
 | Badge | Where | Why |
 |---|---|---|
-| `1,000× faster`, `10⁶× faster`, `10¹⁴× faster` | From the clocks | The spin waits while Earth is a dot in the orbit view (it is not drawn turning there); the jump hides the orbit's rung (it would only flash past) |
-| `not to scale` | The orbit | The Sun and Earth's marker are enlarged |
+| `1,000× faster`, `10⁶× faster`, `10¹⁴× faster` | From the clocks | The spin waits while Earth is a dot in the orbit view (it is not drawn turning there); the jump hides the orbit's rung (it would only flash past); the galaxy's clock runs from the jump's end and stops for the readout ("your galactic trip so far") |
+| `not to scale` | While the enlarged Sun is in frame | The Sun and Earth's marker are enlarged |
+| `illustration` | Galileo's cabin | A drawing of the Dialogue's thought experiment (1632), not a scene from it |
 | `galaxy: illustration` | The galaxy | Drawn, not imaged; the Sun 27,000 light-years from the centre (the channel's figure) |
 
 The live km counter is true time (it does not follow the orbit clock's speed-up). Earth's axial tilt is drawn upright.
