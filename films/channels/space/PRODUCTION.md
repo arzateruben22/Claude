@@ -8,7 +8,7 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
 | 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | **delivered** 25 Oct: 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.2 LU over music, sync PASS, 0 flashes, qa.py PASS; render 31 min |
 | 003 | Venus day | §7 #2 | **delivered** 26 Oct: 74.67 s, −14.1 LUFS / −1.7 dBTP, voice 12.3 LU over music, sync PASS, 0 flashes, qa.py PASS (chunk 001 re-rendered for a camera fix) |
-| 004 | Falling Moon | §7 #3 | reviewed, voiced (73.07 s, 18 claims), built (−14.1 LUFS, voice 12.5 LU over music, sync PASS), stills OK (18), **rendering final** (from 03:16 UTC, 26 Oct) |
+| 004 | Falling Moon | §7 #3 | **delivered** 26 Oct: 73.07 s, −14.1 LUFS / −1.9 dBTP, voice 12.5 LU over music, sync PASS, 0 flashes, qa.py PASS |
 | 005 | Sun size | §7 #4 | reviewed, voiced (74.13 s, 17 claims), compile + scene written, soundtrack built (−14.1 LUFS, 12.4 LU, sync PASS; pre-cues), docs drafted; **next: stills (picture not checked yet)** |
 | 006 | Your speed | §7 #5 | scripted, reviewed (fixes applied), lint 0 errors, 15 claims; not voiced (waits for 005 per the coordinating session) |
 
