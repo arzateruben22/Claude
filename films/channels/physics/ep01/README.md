@@ -7,7 +7,7 @@ delivered** (24 Oct). **Nothing has been posted.** A physicist signs off the scr
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish, −14.0 LUFS / −2.0 dBTP; QA PASS) | `out/rest-frame-001-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` |
+| **Final** (1080×1920, 30 fps, full finish, −14.1 LUFS / −2.0 dBTP; QA PASS) | `out/rest-frame-001-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
 | Preview (draft tier: 540×960, 15 fps, finish with K ≤ 6; the final mix as AAC 44.1 kHz 192k) | `review/preview-ep01.mp4` (poster `review/preview-ep01.jpg`) |
 | Ten final-tier stills (1080×1920, full finish) | `review/stills-ep01.jpg`; the PNGs are in `build/stills/final/9x16/frames/` |

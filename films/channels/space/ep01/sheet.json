@@ -109,8 +109,8 @@
    "kind": "label",
    "tag": "l-earth",
    "pos": [
-    0.597,
-    0.442
+    0.607,
+    0.43
    ]
   },
   {
@@ -128,7 +128,7 @@
    "tag": "l-v",
    "pos": [
     0.65,
-    0.387
+    0.376
    ]
   },
   {
@@ -157,7 +157,7 @@
    "tag": "c-clock",
    "pos": [
     0.5,
-    0.245
+    0.255
    ]
   },
   {
@@ -178,51 +178,51 @@
    "t1": 24.0
   },
   {
-   "t": 16.1042,
+   "t": 16.2576,
    "kind": "counter.tick",
    "tag": "c-clock-m1"
   },
   {
-   "t": 17.0417,
+   "t": 17.3485,
    "kind": "counter.tick",
    "tag": "c-clock-m2"
-  },
-  {
-   "t": 17.9792,
-   "kind": "counter.tick",
-   "tag": "c-clock-m3"
   },
   {
    "t": 18.0,
    "kind": "label",
    "tag": "l-last",
    "pos": [
-    0.633,
-    0.313
+    0.218,
+    0.334
    ]
   },
   {
-   "t": 18.9167,
+   "t": 18.4394,
+   "kind": "counter.tick",
+   "tag": "c-clock-m3"
+  },
+  {
+   "t": 19.5303,
    "kind": "counter.tick",
    "tag": "c-clock-m4"
   },
   {
-   "t": 19.8542,
+   "t": 20.6212,
    "kind": "counter.tick",
    "tag": "c-clock-m5"
   },
   {
-   "t": 20.7917,
+   "t": 21.7121,
    "kind": "counter.tick",
    "tag": "c-clock-m6"
   },
   {
-   "t": 21.7292,
+   "t": 22.803,
    "kind": "counter.tick",
    "tag": "c-clock-m7"
   },
   {
-   "t": 22.6667,
+   "t": 23.8939,
    "kind": "counter.tick",
    "tag": "c-clock-m8"
   },
@@ -444,7 +444,7 @@
    "tag": "l-earth-n",
    "pos": [
     0.734,
-    0.428
+    0.411
    ]
   },
   {
@@ -452,8 +452,8 @@
    "kind": "label",
    "tag": "l-news",
    "pos": [
-    0.649,
-    0.344
+    0.436,
+    0.269
    ]
   },
   {

@@ -6,7 +6,9 @@
 >   a few sentences are laid out by hand (`CAP_FIX` in each compile.py); the last caption clears before the end card.
 > - The spine readout is pinned to the safe line with a wrapping label, cards stop at 38vmin (`set/spine.js`), so no
 >   card or tag sits on it; a step-through audit of every HUD plate (each 0.25 s) leaves only sub-0.25 s crossfades.
-> - Deliveries are encoded at CRF 16 (`render.mjs --crf`, a new backward-compatible kit option) instead of 19.
+> - The coordinating branch's readability pass is merged (`767b57b`): bigger counter labels and card text, labels that
+>   avoid all text, masters at CRF 12 and deliveries at CRF 15 with aq-mode 3, and WRITING.md rule 8 "One line wins".
+>   Every episode, ep02 included, is re-rendered on it.
 > - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
 > Order: ep02 final re-render (running) → ep03 final re-render → ep04 → ep05 → ep06. One Chromium job at a time;
 > `ps -eo args | grep "[r]ender.mjs"` shows it, a bare `kits/cinema/film/run.sh <dir>` resumes it.
@@ -68,7 +70,7 @@ delivered).
 
 ## Kit changes
 
-One (`KIT-CHANGES.md`): `render.mjs --crf N` for the delivery encode; the default output is unchanged.
+None (`KIT-CHANGES.md`: a `--crf` option was added and withdrawn on 26 Oct when the upstream readability pass made the same change).
 
 ## Questions
 
