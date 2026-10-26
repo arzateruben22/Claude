@@ -1,0 +1,108 @@
+{
+ "voice": "af_bella",
+ "speed": 1.0,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What lifts a drink up a straw? Surprisingly, not suction.",
+   "stars": [
+    "straw"
+   ],
+   "phonemes": "wˌʌt lˈɪfts ɐ dɹˈɪŋk ˌʌp ɐ stɹˈɔː? sɚpɹˈaɪzɪŋli, nˌɑːt sˈʌkʃən.",
+   "file": "01.wav",
+   "dur": 3.405,
+   "sha256": "45c4a28e358ff9f43e723bd1d4cccb4e5d1c106d2c4d8780d68a4a94184da5f1"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "A glass of water. A straw. One sip. The water climbs twenty centimeters, to your lips. It feels like you're pulling it.",
+   "stars": [
+    "pulling"
+   ],
+   "phonemes": "ɐ ɡlˈæs ʌv wˈɔːɾɚ. ɐ stɹˈɔː. wˈʌn sˈɪp. ðə wˈɔːɾɚ klˈaɪmz twˈɛnti sˈɛntɪmˌiːɾɚz, tə jʊɹ lˈɪps. ɪt fˈiːlz lˈaɪk jʊɹ pˈʊlɪŋ ɪt.",
+   "file": "02.wav",
+   "dur": 7.376,
+   "sha256": "08299e0d778665f63f946dcedf44a539702970ad8c156475d51a577c8d728f4b"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, as hard as possible. Nothing rises.",
+   "stars": [
+    "Nothing"
+   ],
+   "phonemes": "nˈaʊ fˈɪl ɪt kəmplˈiːtli. sˈiːl ɪt, ˈɛɹtaɪt, wɪð ɐ lˈɪd. ðˈɛn sˈɪp, æz hˈɑːɹd æz pˈɑːsᵻbəl. nˈʌθɪŋ ɹˈaɪzᵻz.",
+   "file": "03.wav",
+   "dur": 6.414,
+   "sha256": "0d3f9ac9fb7d20b355a538d69ee1363080e418a4f53866d71b64079faea6a375"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "In sixteen forty-four, Torricelli saw why. We live at the bottom of an ocean of air, and it presses on everything. A sip lowers the pressure inside the straw, and the air outside pushes the drink up. How hard can it push?",
+   "stars": [
+    "up"
+   ],
+   "phonemes": "ɪn sˈɪkstiːn fˈɔːɹɾifˈɔːɹ, tˌɔɹəʧˈɛli sˈɔː wˈaɪ. wiː lˈɪv æt ðə bˈɑːɾəm əvən ˈoʊʃən ʌv ˈɛɹ, ænd ɪt pɹˈɛsᵻz ˌɔn ˈɛvɹɪθˌɪŋ. ɐ sˈɪp lˈoʊɚz ðə pɹˈɛʃɚɹ ɪnsˈaɪd ðə stɹˈɔː, ænd ðɪ ˈɛɹ aʊtsˈaɪd pˈʊʃᵻz ðə dɹˈɪŋk ˈʌp. hˌaʊ hˈɑːɹd kæn ɪt pˈʊʃ?",
+   "file": "04.wav",
+   "dur": 14.32,
+   "sha256": "59a3f9496267b46fc8a0da70987bbc27289acb96ea33f588a58b694255534fc3"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Make the straw three stories tall. Your lungs? About one meter. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
+   "stars": [
+    "meters"
+   ],
+   "phonemes": "mˌeɪk ðə stɹˈɔː θɹˈiː stˈɔːɹiz tˈɔːl. jʊɹ lˈʌŋz? ɐbˌaʊt wˈʌn mˈiːɾɚ. wɪð ɐ pˈɜːfɛkt pˈʌmp, ðə wˈɔːɾɚ stˈɑːps nˌɪɹ tˈɛn mˈiːɾɚz. æt ðə tˈɑːp, ɹˈuːmtˈɛmpɹɪtʃɚ wˈɔːɾɚ bˈɔɪlz.",
+   "file": "05.wav",
+   "dur": 10.177,
+   "sha256": "131e62efb0ec86669df0682953bb0bdad1e92c23e0aa5abf2005217fb4445b46"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: the air above one square centimeter weighs just over a kilogram. So does ten point three meters of water.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ðɪ ˈɛɹ əbˌʌv wˈʌn skwˈɛɹ sˈɛntɪmˌiːɾɚ wˈeɪz dʒˈʌst ˌoʊvɚɹ ɐ kˈɪləɡɹˌæm. sˌoʊ dˈʌz tˈɛn pˈɔɪnt θɹˈiː mˈiːɾɚz ʌv wˈɔːɾɚ.",
+   "file": "06.wav",
+   "dur": 7.652,
+   "sha256": "aad63966f0306e88c470e71beb79a909d02f630ad1b89fa293056ddbd8d2a001"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Straws don't pull. You thin the air inside, and the atmosphere pushes.",
+   "stars": [
+    "pushes"
+   ],
+   "phonemes": "stɹˈɔːz dˈoʊnt pˈʊl. juː θˈɪn ðɪ ˈɛɹ ɪnsˈaɪd, ænd ðɪ ˈætməsfˌɪɹ pˈʊʃᵻz.",
+   "file": "07.wav",
+   "dur": 4.124,
+   "sha256": "e3f2f07a634b8e2b553ee82eb82cc0c660cdf48cf2364e35429b8c5561d7be99"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: frozen water, floating on liquid water. Why doesn't it sink?",
+   "stars": [
+    "sink"
+   ],
+   "phonemes": "nˈɛkst: fɹˈoʊzən wˈɔːɾɚ, flˈoʊɾɪŋ ˌɔn lˈɪkwɪd wˈɔːɾɚ. wˌaɪ dˈʌzənt ɪt sˈɪŋk?",
+   "file": "08.wav",
+   "dur": 4.197,
+   "sha256": "4985515cd330c782ec0982059d9b6bdca6418bb7bd8c0c6cac5f565dd73b7002"
+  }
+ ]
+}

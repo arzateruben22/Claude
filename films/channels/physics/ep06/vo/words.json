@@ -1,0 +1,1039 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What lifts a drink up a straw? Surprisingly, not suction.",
+   "heard": "What lifts a drink up a straw? Surprisingly, not suction.",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "lifts",
+     "start": 0.165,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.39,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "drink",
+     "start": 0.54,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 0.86,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.03,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "straw?",
+     "start": 1.06,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "Surprisingly,",
+     "start": 1.785,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 2.525,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "suction.",
+     "start": 2.835,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "A glass of water. A straw. One sip. The water climbs twenty centimeters, to your lips. It feels like you're pulling it.",
+   "heard": "A glass of water. A straw. One sip. The water climbs 20 centimeters to your lips. It feels like you're pulling it.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "glass",
+     "start": 0.12,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.53,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 0.795,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.47,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "straw.",
+     "start": 1.675,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 2.27,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "sip.",
+     "start": 2.71,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.44,
+     "end": 3.49,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 3.47,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "climbs",
+     "start": 3.815,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 4.22,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "centimeters,",
+     "start": 4.55,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.2,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 5.23,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "lips.",
+     "start": 5.415,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 6.14,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 6.255,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 6.54,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 6.67,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "pulling",
+     "start": 6.83,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 7.2,
+     "end": 7.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Now fill it completely. Seal it, airtight, with a lid. Then sip, as hard as possible. Nothing rises.",
+   "heard": "Now fill it completely. Seal it airtight with a lid. Then sip as hard as possible, nothing rises.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "fill",
+     "start": 0.31,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.57,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 0.795,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "Seal",
+     "start": 1.605,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 2.015,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "airtight,",
+     "start": 2.08,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.56,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.635,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "lid.",
+     "start": 2.97,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 3.54,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "sip,",
+     "start": 3.835,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.18,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "hard",
+     "start": 4.38,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.73,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "possible.",
+     "start": 4.76,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "Nothing",
+     "start": 5.365,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "rises.",
+     "start": 5.82,
+     "end": 6.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "In sixteen forty-four, Torricelli saw why. We live at the bottom of an ocean of air, and it presses on everything. A sip lowers the pressure inside the straw, and the air outside pushes the drink up. How hard can it push?",
+   "heard": "In 1644, Torricelli saw why. We live at the bottom of an ocean of air, and it presses on everything. A sip lowers the pressure inside the straw, and the air outside pushes the drink up. How hard can it push?",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 0.32,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "forty-four,",
+     "start": 0.35,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "Torricelli",
+     "start": 1.565,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "saw",
+     "start": 2.315,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "why.",
+     "start": 2.805,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "We",
+     "start": 3.41,
+     "end": 3.46,
+     "heard": true
+    },
+    {
+     "w": "live",
+     "start": 3.44,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.78,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.81,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "bottom",
+     "start": 3.88,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.305,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 4.335,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "ocean",
+     "start": 4.6,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.035,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "air,",
+     "start": 5.105,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.675,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.88,
+     "end": 5.93,
+     "heard": true
+    },
+    {
+     "w": "presses",
+     "start": 5.91,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 6.5,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "everything.",
+     "start": 6.82,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 7.635,
+     "end": 7.685,
+     "heard": true
+    },
+    {
+     "w": "sip",
+     "start": 7.665,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "lowers",
+     "start": 8.055,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.525,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "pressure",
+     "start": 8.635,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 9.03,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.455,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "straw,",
+     "start": 9.64,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.325,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.355,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 10.55,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "outside",
+     "start": 10.815,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 11.525,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.96,
+     "end": 12.01,
+     "heard": true
+    },
+    {
+     "w": "drink",
+     "start": 12.05,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 12.535,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "How",
+     "start": 13.075,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "hard",
+     "start": 13.35,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 13.645,
+     "end": 13.695,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 13.685,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "push?",
+     "start": 13.9,
+     "end": 14.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Make the straw three stories tall. Your lungs? About one meter. With a perfect pump, the water stops near ten meters. At the top, room-temperature water boils.",
+   "heard": "Make the straw three stories tall. Your lungs, about one meter. With a perfect pump, the water stops near 10 meters. At the top, room temperature water boils.",
+   "words": [
+    {
+     "w": "Make",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.205,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "straw",
+     "start": 0.38,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 0.68,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "stories",
+     "start": 1.005,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "tall.",
+     "start": 1.435,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "Your",
+     "start": 2.18,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "lungs?",
+     "start": 2.35,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "About",
+     "start": 3.19,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.4,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "meter.",
+     "start": 3.68,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "With",
+     "start": 4.535,
+     "end": 4.585,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.6,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "perfect",
+     "start": 4.735,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "pump,",
+     "start": 5.165,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.555,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 5.585,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "stops",
+     "start": 6.08,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 6.295,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 6.645,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "meters.",
+     "start": 7.055,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 7.84,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.945,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "top,",
+     "start": 8.04,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "room-temperature",
+     "start": 8.495,
+     "end": 9.36,
+     "heard": false
+    },
+    {
+     "w": "water",
+     "start": 9.305,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "boils.",
+     "start": 9.63,
+     "end": 10.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: the air above one square centimeter weighs just over a kilogram. So does ten point three meters of water.",
+   "heard": "Measure it, the air above one square centimeter weighs just over a kilogram. So does 10.3 meters of water.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.555,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.99,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 1.115,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "above",
+     "start": 1.455,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.635,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "square",
+     "start": 2.015,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "centimeter",
+     "start": 2.41,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "weighs",
+     "start": 2.86,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 3.5,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 3.75,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.905,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "kilogram.",
+     "start": 4.09,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 5.23,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 5.41,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 5.675,
+     "end": 6.72,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 5.705,
+     "end": 6.72,
+     "heard": false
+    },
+    {
+     "w": "three",
+     "start": 5.735,
+     "end": 6.72,
+     "heard": false
+    },
+    {
+     "w": "meters",
+     "start": 6.72,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.22,
+     "end": 7.27,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 7.25,
+     "end": 7.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Straws don't pull. You thin the air inside, and the atmosphere pushes.",
+   "heard": "Straws don't pull. You thin the air inside and the atmosphere pushes.",
+   "words": [
+    {
+     "w": "Straws",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "don't",
+     "start": 0.44,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "pull.",
+     "start": 0.64,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 1.44,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 1.59,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.86,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 1.89,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "inside,",
+     "start": 2.25,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.745,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.775,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "atmosphere",
+     "start": 2.975,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "pushes.",
+     "start": 3.6,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: frozen water, floating on liquid water. Why doesn't it sink?",
+   "heard": "Next, frozen water floating on liquid water. Why doesn't it sink?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "frozen",
+     "start": 0.67,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 1.28,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "floating",
+     "start": 1.6,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.805,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "liquid",
+     "start": 2.265,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 2.655,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "Why",
+     "start": 3.335,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 3.365,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.75,
+     "end": 3.8,
+     "heard": true
+    },
+    {
+     "w": "sink?",
+     "start": 3.78,
+     "end": 4.16,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
