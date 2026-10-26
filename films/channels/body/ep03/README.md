@@ -7,6 +7,7 @@ episode 4 ("The gap"). **Nothing has been posted.** A physiologist signs off the
 | | |
 |---|---|
 | Delivery | `out/meanwhile-inside-003-9x16.mp4`, poster `out/meanwhile-inside-003-9x16.jpg`, contact sheet `out/meanwhile-inside-003-9x16-contact.jpg` |
+| Ten final-tier stills | `review/stills-ep03.jpg` (from the delivered file at 0, 9, 21, 24.5, 31.5, 37.5, 48, 53.5, 64.5 and 73.5 s) |
 | Measured gates | `review/scorecard.md` |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (20 claims), `review/HUMAN-REVIEW.md` |
 
