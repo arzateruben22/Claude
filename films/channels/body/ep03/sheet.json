@@ -67,39 +67,34 @@
    "gain": -3.0
   },
   {
-   "t": 0.34,
+   "t": 0.5525,
    "kind": "spike",
    "tag": "hook0"
   },
   {
-   "t": 1.19,
+   "t": 1.4025,
    "kind": "spike",
    "tag": "hook1"
   },
   {
-   "t": 2.04,
+   "t": 2.2525,
    "kind": "spike",
    "tag": "hook2"
   },
   {
-   "t": 2.89,
+   "t": 3.1025,
    "kind": "spike",
    "tag": "hook3"
   },
   {
-   "t": 3.74,
+   "t": 3.9525,
    "kind": "spike",
    "tag": "hook4"
   },
   {
-   "t": 4.59,
+   "t": 4.8025,
    "kind": "spike",
    "tag": "hook5"
-  },
-  {
-   "t": 5.44,
-   "kind": "spike",
-   "tag": "hook6"
   },
   {
    "t": 5.6,
@@ -108,12 +103,17 @@
    "t1": 15.2
   },
   {
-   "t": 6.29,
+   "t": 5.6525,
+   "kind": "spike",
+   "tag": "hook6"
+  },
+  {
+   "t": 6.5025,
    "kind": "spike",
    "tag": "hook7"
   },
   {
-   "t": 7.14,
+   "t": 7.3525,
    "kind": "spike",
    "tag": "hook8"
   },
@@ -193,7 +193,7 @@
    "t": 15.183333,
    "kind": "badge",
    "tag": "ill-drum",
-   "text": "illustration: Helmholtz's method · slowed",
+   "text": "illustration · delay exaggerated",
    "pos": [
     0.511,
     0.146
@@ -204,6 +204,12 @@
    "kind": "section",
    "id": "change",
    "t1": 25.6
+  },
+  {
+   "t": 15.3333,
+   "kind": "badge",
+   "tag": "slow-drum",
+   "text": "slowed"
   },
   {
    "t": 17.733333333333334,
@@ -331,18 +337,18 @@
    "tag": "why1"
   },
   {
-   "t": 31.466666666666665,
+   "t": 31.7,
+   "kind": "spike",
+   "tag": "why2"
+  },
+  {
+   "t": 31.733333333333334,
    "kind": "label",
    "tag": "myelin",
    "pos": [
     0.409,
     0.417
    ]
-  },
-  {
-   "t": 31.7,
-   "kind": "spike",
-   "tag": "why2"
   },
   {
    "t": 32.5,
@@ -410,21 +416,21 @@
    "t1": 54.4
   },
   {
+   "t": 42.96666666666667,
+   "kind": "label",
+   "tag": "racebare",
+   "pos": [
+    0.291,
+    0.386
+   ]
+  },
+  {
    "t": 44.3,
    "kind": "counter.show",
    "tag": "race",
    "pos": [
     0.5,
     0.31
-   ]
-  },
-  {
-   "t": 44.3,
-   "kind": "label",
-   "tag": "racebare",
-   "pos": [
-    0.291,
-    0.386
    ]
   },
   {

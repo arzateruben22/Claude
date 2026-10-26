@@ -33,7 +33,8 @@
 //                          (a theme token name, "--var", or any CSS colour), at: (t) => [x, y, z] or a
 //                          Vector3 in world space, or screen: (t) => [px, py]; side: 1 right / -1 left
 //                          (preferred), v: "above" | "middle", t0, t1, shot (only in that shot), fixed
-//                          (true: only the preferred spot, clamped; no jumping for fast anchors) }
+//                          (true: only the preferred spot, clamped; no jumping for fast anchors), lift
+//                          (px at 1080 wide between the anchor and an "above" pill's bottom; default 12) }
 // hud.badge(id, o)         a note: o: { text: string or (t) => string | null, t0, t1, from: a clock.js
 //                          clock, slot: "tl" | "tr" | "bl" | "br", kind, title }. Three kinds, one look
 //                          (the caption plate's face and corners, sentence case):
@@ -238,7 +239,7 @@ export const createHud = (opts = {}) => {
     L.forEach((lb, i) => {
       const { el, o } = lb, { pr, a } = now[i], w = el.offsetWidth, h = el.offsetHeight;
       const x = Number.isFinite(a.x) ? a.x : (SAFE.l + SAFE.r) / 2, y = Number.isFinite(a.y) ? a.y : (top + bottom) / 2;
-      const side = o.side ?? 1, rise = (o.v || "above") === "above" ? y - h - 12 * S1 : y - h / 2;
+      const side = o.side ?? 1, rise = (o.v || "above") === "above" ? y - h - (o.lift ?? 12) * S1 : y - h / 2;
       const sx = (s) => (s > 0 ? x + g : x - w - g);
       const cands = [[sx(side), rise], [sx(-side), rise], [x - w / 2, y - h - 22 * S1], [x - w / 2, y + 22 * S1],
         [sx(side), y - h - g], [sx(-side), y - h - g], [sx(side), y + g], [sx(-side), y + g],

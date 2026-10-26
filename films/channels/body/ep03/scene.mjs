@@ -46,6 +46,9 @@ if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, 
 const lin = (h) => L.lin(h);
 const G = { fibres: new THREE.Group(), drum: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
+// the drum rig is drawn mirrored (muscle and lever on the right), so the drum's surface runs right to left past the pen
+// and its traces read left to right in time: the far stimulus's later twitch lands to the right (time reads forward)
+G.drum.scale.x = -1; G.drum.updateMatrixWorld(true);
 const SIG = "#D6F25F";
 
 // ════ the fibres ═════════════════════════════════════════════════════════════════════════════════
@@ -209,9 +212,9 @@ const ENV = (() => {
   for (const [x, z, s] of [[DR.c[0], DR.c[2], 40], [-27, -4, 10]]) { const d = new THREE.Mesh(new THREE.PlaneGeometry(s, s), shade); d.rotation.x = -Math.PI / 2; d.position.set(x, -22.45, z); G.drum.add(d); }
 }
 const twitch = (s) => { const x = (s - 0.22) / 0.78; return x <= 0 ? 0 : Math.pow(x / 0.32, 2) * Math.exp(2 * (1 - x / 0.32)) * 0.5; };   // a latency, a rise, a slow fall
-const TRACE_T = 1.3, ROWS = [3.2, -3.2], SHIFT = [0, 0.16];   // near and far stimulation; the far one's rise comes later (drawn wider: slowed)
+const TRACE_T = 1.3, ROWS = [-3.2, 3.2], SHIFT = [0, 0.16];   // near and far stimulation; the far one (upper row) rises later (drawn about 13× wider than the real ~2 ms: badged "delay exaggerated")
 // the drum's turn: steady, plus one extra whirl between the recordings so the second starts on the same strip as the
-// first (the far trace sits right under the near one); it stops once the second is written
+// first (the far trace sits right over the near one); it stops once the second is written
 const WHIRL = [D.traces[0] + TRACE_T + 0.02, D.traces[1] - 0.05], WX = 2 * Math.PI - DR.w * (D.traces[1] - D.traces[0]), DSTOP = D.traces[1] + TRACE_T + 0.1;
 const drumAngle = (t) => DR.w * (Math.min(t, DSTOP) - D.spin0) + WX * E.inout2(seg(t, WHIRL[0], WHIRL[1]));
 const penAngle = (t) => DR.pen - drumAngle(t);           // the drum-local angle under the pen
@@ -263,7 +266,7 @@ const writeDrum = (t) => {
   penTip.position.set(...pen); penTip.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), vM.set(-Math.sin(DR.pen), 0, -Math.cos(DR.pen)));
   nerveMat.emissiveIntensity = 0;
 };
-const traceAnchor = () => { const a = A0 - DR.w * TRACE_T * 0.45; drum.updateMatrixWorld(true); return drum.localToWorld(new THREE.Vector3(Math.sin(a) * DR.r, ROWS[1] + 3, Math.cos(a) * DR.r)).toArray(); };
+const traceAnchor = () => { const a = A0 - DR.w * TRACE_T * 0.63; drum.updateMatrixWorld(true); return drum.localToWorld(new THREE.Vector3(Math.sin(a) * DR.r, ROWS[1] + 5.4, Math.cos(a) * DR.r)).toArray(); };   // just over the far twitch's peak
 
 // ════ the overlay ════════════════════════════════════════════════════════════════════════════════
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
@@ -272,7 +275,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 .mi-spine { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 .mi-spine .v { color: var(--nerve); } .mi-spine .lb { color: var(--text); }   /* nerve numbers in the nerve colour: pink is for blood only */
-#hud-ms { white-space: normal; max-width: 46vmin; border-radius: 3vmin; }
+#hud-ms { white-space: pre-line; max-width: none; border-radius: 3vmin; }
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-tally .lb { color: var(--text); }
 .mi-fig { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
@@ -285,19 +288,19 @@ tPulse.el.style.width = `${Math.round(200 * S1)}px`;   // its own width: .mi-pul
 titleEl.appendChild(tPulse.el);
 const vW = new THREE.Vector3();
 const ANCH = {
-  soma: () => [-13, 9, 6],
-  muscle: () => [MUSC[0] + 6, MUSC[1] - 2, 6],   // its right flank: the pill sits in the gap toward the drum
-  frognerve: () => { const p = nerveP.at(nerveP.length * 0.6); return [p[0] + 1, p[1], p[2] + 1]; },
+  soma: () => [-3, -7.5, 3.5],   // the soma's lower-right flank: the pill sits below the axon, clear of the dendrites
+  muscle: () => [-(MUSC[0] + 6), MUSC[1] - 2, 6],   // its flank toward the drum (the rig is mirrored): the pill sits in the gap
+  frognerve: () => { const p = nerveP.at(nerveP.length * 0.6); return [-(p[0] + 1), p[1], p[2] + 1]; },   // mirrored rig
   traces: () => traceAnchor(),
   bare: (t) => { const b = FILM.bare, d = Math.max(0, b.v * (t - b.t0)); return [b.x0 + b.step * Math.floor(d / b.step) - 3, 25, 0]; },   // the glow's head, as it steps
   sheath: () => [NODES[3] + 30, MY.r, 1.5],
-  node: () => [NODES[FILM.whyJump.k0 + 4], MY.r + 0.3, 1.2],   // the gap the leap lands in on "gaps": the top of its notch
+  node: () => [NODES[FILM.whyJump.k0 + 5], -(MY.r + 0.3), 1.2],   // node 7, where the leap in flight on "gaps" lands: the bottom of its notch (the pill sits below the arcs)
   damaged: () => MSF.group.localToWorld(vW.set(MNODES[BAD] + 8, 1.8, 1.0)).toArray(),
   barefront: (t) => [FILM.race.x0 + Math.max(0, FILM.race.vbare * (t - FILM.race.bare0)), 24, 0],
   wrapfront: (t) => [80, MY.r * raceThick(t), 1],   // the wrapped fibre's top, in frame (its pulses streak past), drawn thicker in the race
   terminal: () => [TX + 4, 6, 2],
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v, lift: lb.lift });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
 const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -307,9 +310,9 @@ for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : sp.fmt ? (v) => v.toFixed(sp.fmt) : commas;
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: sp.count === "fired" ? firedAt : () => sp.value ?? 0 };
   // over the body figure (the stub, the tally) the readout sits higher, so the figure fits between it and the caption
-  const el = hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: [0.5, sp.id === "toe" ? FIG_Y : 0.31], minCh: 1 });
+  const el = hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: [sp.id === "light" ? 0.55 : 0.5, sp.id === "toe" ? FIG_Y : 0.31], minCh: 1 });   // light's plate right of the frog's nerve
   el.classList.add("mi-spine");
-  if (sp.id === "light") el.querySelector(".v").style.fontSize = "7.4vmin";   // nine digits inside the safe box
+  if (sp.id === "light") el.querySelector(".v").style.fontSize = "6.8vmin";   // nine digits inside the safe box, right of the nerve
 }
 const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.floor(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.5, FIG_Y], minCh: 2 });
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
@@ -342,7 +345,7 @@ figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns
     <path class="brain" d="M41 18 C44 10 56 10 59 18 C60 24 56 28 50 28 C44 28 40 24 41 18 Z" fill="var(--signal)" opacity="0"/>
     <rect class="fast" x="-4" y="-4" width="8" height="8" rx="2" fill="var(--signal)" opacity="0"/>
     <rect class="slow" x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="var(--text)" opacity="0"/>
-    <polyline class="heart" fill="none" stroke="var(--pulse)" stroke-width="${(6 / FS * S1).toFixed(3)}" stroke-linejoin="round" points=""/>
+    <polyline class="heart" fill="none" stroke="var(--signal)" stroke-width="${(6 / FS * S1).toFixed(3)}" stroke-linejoin="round" points=""/>
     <rect class="pace" x="-1.8" y="-1.8" width="3.6" height="3.6" rx="0.9" transform="translate(52.5 58)" fill="var(--signal)" opacity="0"/>
   </g></svg>`;
 document.getElementById("hud").prepend(figEl);
@@ -354,12 +357,14 @@ const writeFig = (t) => {
   figEl.style.opacity = o.toFixed(3);
   if (o <= 0.001) return;
   // the meanwhile: in to the heart (×1.6 about the chest)
-  const z = 1 + 0.6 * E.inout2(seg(t, F.zoom[0], F.zoom[1])), hx0 = 54, hy0 = 64;
-  figQ("body").setAttribute("transform", `translate(${(FX + hx0 * FS * (1 - z)).toFixed(1)} ${(FY + hy0 * FS * (1 - z)).toFixed(1)}) scale(${(FS * z).toFixed(4)})`);
+  // ×1.6 about the chest, lowered as it grows so the head stays under the tally plate
+  const dz = E.inout2(seg(t, F.zoom[0], F.zoom[1])), z = 1 + 0.6 * dz, hx0 = 54, hy0 = 64;
+  figQ("body").setAttribute("transform", `translate(${(FX + hx0 * FS * (1 - z)).toFixed(1)} ${(FY + hy0 * FS * (1 - z) + 120 * S1 * dz).toFixed(1)}) scale(${(FS * z).toFixed(4)})`);
   const uf = seg(t, T.stub, T.fast), us = seg(t, T.stub, T.slow);
   const pf = routeAt(uf), ps = routeAt(us);
   // the route draws on from the toe before the stub ("toe … twice"); each signal leaves its trail along it
   figQ("route").setAttribute("stroke-dashoffset", (1 - E.inout2(seg(t, F.route[0], F.route[1]))).toFixed(4));
+  figQ("route").setAttribute("opacity", (1 - 0.67 * dz).toFixed(3));   // the takeaway's route steps back for the heart
   figQ("fasttrail").setAttribute("stroke-dashoffset", (1 - uf).toFixed(4)); figQ("fasttrail").setAttribute("opacity", (t >= T.stub ? 1 - seg(t, T.fast + 0.6, T.fast + 1.2) : 0).toFixed(3));
   figQ("slowtrail").setAttribute("stroke-dashoffset", (1 - us).toFixed(4)); figQ("slowtrail").setAttribute("opacity", (t >= T.stub ? 1 - seg(t, T.slow + 0.8, T.slow + 1.6) : 0).toFixed(3));
   figQ("fast").setAttribute("transform", `translate(${pf[0].toFixed(2)} ${pf[1].toFixed(2)})`); figQ("fast").setAttribute("opacity", (t >= T.stub ? 1 - seg(t, T.fast + 0.6, T.fast + 1.2) : 0).toFixed(3));
@@ -381,10 +386,10 @@ const writeFig = (t) => {
 };
 
 // ── focus ───────────────────────────────────────────────────────────────────────────────────────
-const sparkPt = (t) => { const s = heroState(t, shotOf(t)); return s && s.k >= 0 ? [NODES[Math.min(s.k, NODES.length - 1)] + 20 * Math.min(1, s.u), MY.r, 0] : [322, 0, 0]; };
+const sparkPt = (t) => { const s = heroState(t, shotOf(t)); return s && s.k >= 0 ? [NODES[Math.min(s.k, NODES.length - 1)] + 20 * Math.min(1, s.u), MY.r, 0] : [109.5, 0, 0]; };
 const TARGETS = {
   spark: (t) => sparkPt(t), soma: () => [-13, 0, 0], mid: () => [300, 10, 0], race: () => [60, 12, 0], near: () => [70, 12, 140],
-  rig: () => [4, 6, 0], traces: () => traceAnchor(),
+  rig: () => [-4, 6, 0], traces: () => traceAnchor(),
   bare: () => [100, 24, 0], ms: () => [MNODES[BAD] + 10, -24, 0], terminal: () => [TX + 4, 0, 0],
 };
 window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc.hook, t, { targets: TARGETS });
@@ -393,7 +398,7 @@ window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc.hook, t, { 
 const PR = { fibres: probe(THREE, { W, H, near: 15, ndc: 1.15 }), drum: probe(THREE, { W, H, near: 15, ndc: 1.15 }) };
 const STATIC = { fibres: [], drum: [] };
 for (let x = -40; x <= 720; x += 15) for (const y of [-24, 0, 24]) STATIC.fibres.push([x, y, 0]);
-for (const p of [[-14, 0, 0], [-22, 50, 0], [22, -8, 6], [22, 6, -10], [4, -24, 10], [-27, 20, -4]]) STATIC.drum.push(p);
+for (const p of [[14, 0, 0], [22, 50, 0], [-22, -8, 6], [-22, 6, -10], [-4, -24, 10], [27, 20, -4]]) STATIC.drum.push(p);   // mirrored rig
 let TIER_KMAX = null;
 
 // ── seek ────────────────────────────────────────────────────────────────────────────────────────
@@ -419,7 +424,7 @@ window.seek = function (t) {
     C.kMax = Math.min(TIER_KMAX, 12);
     const P = PR[sl]; P.begin(camera);
     STATIC[sl].forEach((p, i) => P.add(`s${i}`, p));
-    if (sl === "fibres") { P.add("spark", sparkPt(t)); } else { TRACES.forEach((T, i) => P.add(`pen${i}`, penTip.position.toArray())); }
+    if (sl === "fibres") { P.add("spark", sparkPt(t)); } else { TRACES.forEach((T, i) => P.add(`pen${i}`, penTip.getWorldPosition(new THREE.Vector3()).toArray())); }
     scene.visible = false; renderer.render(scene, camera); scene.visible = true;
     return;
   }
