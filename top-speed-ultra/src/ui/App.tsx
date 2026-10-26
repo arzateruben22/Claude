@@ -208,7 +208,13 @@ export function App() {
       // hold Tab while driving for the quick menu (released, the menu picks or cancels)
       if (e.code === 'Tab' && screen === 'playing' && !panel && !e.repeat && !radial) { e.preventDefault(); clearTimeout(holdT.current); holdT.current = window.setTimeout(() => setRadial({ x: innerWidth / 2, y: innerHeight / 2 }), 300); }
     };
-    const ku = (e: KeyboardEvent) => { if (e.code === 'Tab') clearTimeout(holdT.current); };
+    // a quick Tab (let go before the quick menu opens) still moves focus, through the HUD's controls while driving
+    const ku = (e: KeyboardEvent) => {
+      if (e.code !== 'Tab') return;
+      const pending = holdT.current && !radial && screen === 'playing' && !panel;
+      clearTimeout(holdT.current); holdT.current = 0;
+      if (pending) focusHudControl(e.shiftKey ? -1 : 1);
+    };
     addEventListener('keyup', ku, true);
     addEventListener('keydown', k, true);
     return () => { removeEventListener('keydown', k, true); removeEventListener('keyup', ku, true); };
@@ -513,7 +519,7 @@ export function App() {
   );
 
   return (
-    <div className={'app' + (idle ? ' hud-idle' : '')} data-hud={layout} style={{ '--map': `${cornerPx}px` } as CSSProperties}>
+    <div className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout} style={{ '--map': `${cornerPx}px` } as CSSProperties}>
       <div className="stage" ref={host} />
       <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} />
       {/* the corner window: the road map is a round dial (the compass is its rim, HUD.tsx); the sky camera keeps its
@@ -659,7 +665,7 @@ export function App() {
       {/* the World Map fills the screen over the menu or the paused drive (WorldMap.tsx) */}
       {/* the in-game phone (U6), from the pause screen: a screen of its own over the paused drive (Phone.tsx) */}
       {panel === 'phone' && game.current && (
-        <Phone clock={() => game.current?.env.clockText() ?? ''} name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
+        <Phone clock={() => lastHud.current?.clock ?? ''} name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
           onJob={(j) => {
             // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
             if (j.kind === 'race') update({ course: j.course });
@@ -756,6 +762,14 @@ function useIdle(active: boolean, padAt: () => number) {
     };
   }, [active]);
   return active && idle;
+}
+
+// the next (or previous) visible HUD control after the focused one: the icons, the map, the ability
+function focusHudControl(step: 1 | -1) {
+  const els = [...document.querySelectorAll<HTMLElement>('.tbar .tbtn, .corner, .hud-ability')].filter((e) => e.getBoundingClientRect().width > 0 && getComputedStyle(e).visibility !== 'hidden');
+  if (!els.length) return;
+  const i = els.indexOf(document.activeElement as HTMLElement);
+  els[(i < 0 ? (step > 0 ? 0 : els.length - 1) : (i + step + els.length) % els.length)].focus({ focusVisible: true } as FocusOptions);
 }
 
 // the HUD's layout for this window: a phone upright or on its side, or a desktop (a narrow window with a mouse takes the

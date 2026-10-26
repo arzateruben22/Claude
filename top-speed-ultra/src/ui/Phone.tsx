@@ -1,7 +1,7 @@
 // The in-game phone (U6 in PROJECT_OC_UI_TARGET.md; the style library's 09_PHONE_UI): a phone-shaped overlay that
 // slides in from the right of the pause screen. Its apps open only what exists (the map, the garage, the races, the
 // radio, your bests, your profile, settings, feedback, your homes, your credits, and since 2026-10-21 the story's
-// Messages and Contacts, story.ts). The clock is this device's. Credits are earned by driving; nothing on the phone
+// Messages and Contacts, story.ts). The clock is the game's (the time the sky shows). Credits are earned by driving; nothing on the phone
 // costs real money, and no message is sent or received over a network: the characters are the game's own.
 import { useEffect, useState } from 'react';
 import { Ico } from './Icons';
