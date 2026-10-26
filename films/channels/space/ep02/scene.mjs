@@ -259,7 +259,7 @@ window.seek = function (t) {
   // the lane: named on "fifteen hundred" (it wins: full strength, a pulse of light runs it); steps back for the readout
   const named = shot === "hook" ? 1 : fadeIn(t, CUE.lane, 0.6);
   const offEnd = 1 - fadeIn(t, FILM.endCard - 0.3, 0.5);                   // nothing of the readout under the end card
-  const laneOp = named * (shot === "hook" ? 0.75 : (1 - 0.65 * fadeIn(t, CUE.pxring, 0.8)) * offEnd);
+  const laneOp = named * (shot === "hook" ? 1 : (1 - 0.65 * fadeIn(t, CUE.pxring, 0.8)) * offEnd);   // full strength in the hook: the payoff
   lane.seg(PROX_L.map((v) => v * 0.04), PROX_L.map((v) => v * 0.94)).set({ opacity: aL * laneOp });
   // a pulse of light runs the lane on "fifteen hundred" (the whoa), and again on the takeaway's "fifteen hundred"
   const run1 = E.inout2(seg(t, CUE.lane, CUE.lane + 2.4)), run2 = E.inout2(seg(t, CUE.lane2, CUE.lane2 + 1.8));

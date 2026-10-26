@@ -143,11 +143,10 @@ LABELS = [
     {"id": "l-in-h", "text": "Voyager 1 is in here", "kind": "light", "anchor": "speck", "t0": 0.0, "t1": t_cut, "shot": "hook", "side": -1},
     # normal: the flight
     {"id": "l-nep", "text": "Neptune's orbit", "kind": "gravity", "anchor": "neptune", "t0": A("vo02:farthest"), "t1": A("vo02:left"), "shot": "space", "side": -1},
-    # Voyager's name in four fixed placements (no hopping): at its launch spot, with its speed on the flight, through
-    # the change and why, and at the comet cloud's scale; hidden through the pull-back itself
-    {"id": "l-voy", "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": A("vo02:Voyager"), "t1": A("vo02:seventeen"), "shot": "space", "side": -1, "fixed": True},
-    {"id": "l-voy-v", "quiet": True, "text": "Voyager 1 · about 17 km/s", "kind": "body", "anchor": "voy", "t0": A("vo02:seventeen"), "t1": B["change"]["t0"], "shot": "space", "side": -1, "fixed": True},
-    {"id": "l-voy-c", "quiet": True, "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": B["change"]["t0"], "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": -1, "fixed": True},
+    # Voyager's name in two fixed placements (no hopping): from its launch spot through the flight, the change and the
+    # why, then at the comet cloud's scale; hidden through the pull-back itself. Its speed rides the trail behind it.
+    {"id": "l-voy", "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": A("vo02:Voyager"), "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": -1, "fixed": True},
+    {"id": "l-v", "text": "about 17 km/s", "kind": "body", "anchor": "voy-v", "t0": A("vo02:seventeen"), "t1": B["change"]["t0"], "shot": "space", "side": 1, "v": "middle", "fixed": True},
     {"id": "l-voy-o", "quiet": True, "text": "Voyager 1", "kind": "body", "anchor": "voy", "t0": round(t_p1 + 0.2, 4), "t1": t_j0, "shot": "space", "side": 1, "v": "middle", "fixed": True},
     # change: the signal
     {"id": "l-ld", "text": "1 light-day", "kind": "light", "anchor": "ldring", "t0": A("vo03:line"), "t1": B["why"]["t0"], "shot": "space", "side": 1},
@@ -159,7 +158,7 @@ LABELS = [
     {"id": "l-hp", "text": "Sun's wind ends", "kind": "body", "anchor": "hp", "t0": A("vo04:twenty"), "t1": round(t_p0 - 0.1, 4), "shot": "space", "side": -1, "fixed": True},
     {"id": "l-oort", "text": "comet cloud", "kind": "body", "anchor": "oort", "t0": t_p1, "t1": t_j0, "shot": "space", "side": 1, "fixed": True},   # once the rim has settled
     # whoa: Proxima arrives
-    {"id": "l-prox", "text": "Proxima Centauri", "kind": "star", "anchor": "prox", "t0": A("vo05:Proxima"), "t1": end_out, "shot": "space", "side": -1, "v": "middle", "fixed": True},   # rides in with the star
+    {"id": "l-prox", "text": "Proxima Centauri", "kind": "star", "anchor": "prox", "t0": round(t_j1 - 0.4, 4), "t1": end_out, "shot": "space", "side": -1, "v": "middle", "fixed": True},   # as the star settles
     # takeaway: day one of fifteen hundred
     {"id": "l-day1", "text": "day 1", "kind": "light", "anchor": "speck", "t0": A("vo06:day"), "t1": B["readout"]["t0"], "shot": "space", "side": -1},
     # readout: a ping per ring
