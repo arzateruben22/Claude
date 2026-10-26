@@ -1587,45 +1587,123 @@ Never promise results or say something is "guaranteed" or "cures" anything. Neve
 # Her shelf (every product the website sells)
 
 - 11% L-Mandelic Serum (Face Reality, Serums, 1 fl oz / 30 ml): $46. Exfoliates and brightens.
+  Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.
+  In Evelyn's routines: Morning, oily or combination skin
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - 15% L-Mandelic Serum (Face Reality, Serums, 1 fl oz / 30 ml): $48. Exfoliates and brightens.
+  Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.
+  In Evelyn's routines: Morning, oily or combination skin
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - 2.5% Advanced Acne Med (Face Reality, Acne & spot care, 1.5 fl oz / 44 ml): $29. Benzoyl peroxide acne medication.
+  In Evelyn's routines: Night, oily or combination skin
+  What's normal at first: If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me. Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.
+  Pairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.
 - 5% Advanced Acne Med (Face Reality, Acne & spot care, 1.5 fl oz / 44 ml): $30. Benzoyl peroxide acne medication.
+  In Evelyn's routines: Night, oily or combination skin
+  What's normal at first: If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me. Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.
+  Pairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.
 - 5% L-Mandelic Serum (Face Reality, Serums, 1 fl oz / 30 ml): $42. Exfoliates and brightens.
+  Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.
+  In Evelyn's routines: Morning, dry or normal skin
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - 8% L-Mandelic Serum (Face Reality, Serums, 1 fl oz / 30 ml): $44. Exfoliates and brightens.
+  Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.
+  In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Antioxidant Peptide Eye Gel (Face Reality, Eye care, 0.4 fl oz / 12 ml): $48. Smooths and visibly depuffs.
+  In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
 - Barrier Balance Creamy Cleanser (Face Reality, Cleansers, 6 fl oz / 180 ml): $37. A daily calming wash. Acne-safe.
+  In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin
+  Lasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.
 - Barrier Care Gel Cream (Face Reality, Moisturizers, 2 fl oz / 60 ml): $38. Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe.
+  In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.
 - Brilliant Defense SPF 50 (Face Reality, Sun care, 2 fl oz / 60 ml): $42. Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe.
+  In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
+  Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Clear Skin Balance (Face Reality, Supplements, 60 softgels): $44. Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin.
 - Cran-Peptide Cream (Face Reality, Moisturizers, 2 fl oz / 60 ml): $33. Rich and restorative. Acne-safe.
+  In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.
 - Daily SPF 30 Plus (Face Reality, Sun care, 2 fl oz / 60 ml): $36. Broad-spectrum SPF 30 sunscreen. Acne-safe.
+  Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Ultra Gentle Gel Cleanser (travel size) (Face Reality, Cleansers, 2 fl oz / 60 ml): $14. A daily antioxidant wash. Acne-safe.
+  In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin
 - GlowTone Corrective Serum (Face Reality, Serums, 1 fl oz / 30 ml): $64. Targets discoloration, with Hexa-Bright Complex.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - HydraBalance Gel (Face Reality, Moisturizers, 1.7 fl oz / 50 ml): $34. Hydrates and balances oil. Acne-safe.
+  In Evelyn's routines: Night, oily or combination skin
 - HydraRemedy Gel Serum (Face Reality, Serums, 1.7 fl oz / 50 ml): $46. Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe.
+  In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin
 - HydraCalm Mask (Face Reality, Masks, 2.5 fl oz / 73 ml): $42. Soothes and boosts hydration.
 - invisiClear Hydrocolloid Spot Patches (Face Reality, Acne & spot care, 24 patches): $10. Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.
 - L-Mandelic Face and Body Wash (Face Reality, Cleansers, 6 fl oz / 180 ml): $38. Cleanses and brightens. Acne-safe.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Lasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.
 - Mineral Matte SPF 28 (Face Reality, Sun care, 2 fl oz / 60 ml): $36. Broad-spectrum SPF 28 sunscreen. Acne-safe.
+  Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Moisture Balance Toner (Face Reality, Toners & mists, 6 fl oz / 180 ml): $34. Hydrates and replenishes.
+  In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin
 - Moisture Balance Toner (2 fl oz) (Face Reality, Toners & mists, 2 fl oz / 60 ml): $14. Hydrates and replenishes.
+  In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin
 - Omni Clear Mist (Face Reality, Toners & mists, 3.4 fl oz / 100 ml): $40. Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested.
 - PowerMineral SPF 50 (Face Reality, Sun care, 2 fl oz / 60 ml): $42. Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe.
+  In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
+  Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Retinal B3 Serum (Face Reality, Serums, 1 fl oz / 30 ml): $54. Gently corrects and renews. Acne-safe.
+  How to use it: Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Pairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Retinol Peptide Serum (Face Reality, Serums, 1 fl oz / 30 ml): $60. Intensely corrects and renews.
+  How to use it: Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
+  Pairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Soothing Radiance Toner (Face Reality, Toners & mists, 6 fl oz / 180 ml): $32. Calms and nourishes.
+  In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin
 - Sulfur Spot Treatment (Face Reality, Acne & spot care, 1.5 fl oz / 44 ml): $35. A 6% sulfur acne treatment.
 - Ultra Gentle Gel Cleanser (Face Reality, Cleansers, 6 fl oz / 180 ml): $33. A daily antioxidant wash. Acne-safe.
+  In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin
+  Lasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.
 - Barrier Repair Cream (GlyMed Plus, Moisturizers, 4 fl oz / 118 ml): $83.2. With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.
 - Cell Protection Balm (GlyMed Plus, Moisturizers, 2 fl oz / 59 ml): $34. Step 3 of the GlyMed Plus routine: balance.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.
 - Eye Calm (GlyMed Plus, Eye care, 0.3 fl oz / 10 ml): $48. Step 3 of the GlyMed Plus routine: balance.
 - Firming Eye Cream (GlyMed Plus, Eye care, 0.3 oz / 10 ml): $70. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.
 - Firming Serum with Phyto-Stem Cells (GlyMed Plus, Serums, 1 oz / 30 ml): $142. Part of the GlyMed Plus Elite line; step 2 of its routine: treat.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Glycolic Facial Cleanser (GlyMed Plus, Cleansers, 8 fl oz / 236 ml): $41. With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse.
+  Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.
+  Before a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.
+  After a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.
 - Revitalizing Essence with NAD+ (GlyMed Plus, Serums, 1.35 oz / 40 ml): $50. Part of the GlyMed Plus Elite line; step 2 of its routine: treat.
 - Skin Recovery Mist (GlyMed Plus, Toners & mists, 4 fl oz / 118 ml): $46. Step 2 of the GlyMed Plus routine: treat.
 - Vitamin C Cleanser (GlyMed Plus, Cleansers, 6.75 fl oz / 200 ml): $47. Step 1 of the GlyMed Plus routine: cleanse.
 - Dew Drop (Mixi Skincare, Serums, 1 fl oz): $56. Silky smooth hydration with beta-glucan. Non-pore-clogging.
+  Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Hydroxi (Mixi Skincare, Acne & spot care, 1.7 fl oz): $40. Hydrogen peroxide acne cream.
 - Mineral SPF 50 (Mixi Skincare, Sun care, 2 fl oz): $65. UVA/UVB protection. Medical-grade sunscreen.
+  In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
+  Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Vitamin Veil Cleansing Oil (Circadia, Cleansers, 6.7 fl oz / 198 ml): $40. A cleansing oil.

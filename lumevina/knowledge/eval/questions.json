@@ -58,5 +58,7 @@
   {"q": "write my cover letter", "offtopic": "unrelated"},
   {"q": "who is the president", "offtopic": "unrelated"},
   {"q": "what's 45 x 12", "offtopic": "unrelated"},
-  {"q": "I love you guys, the facial was amazing. When can I book again?", "handoff": null, "must": []}
+  {"q": "I love you guys, the facial was amazing. When can I book again?", "handoff": null, "must": []},
+  {"q": "How do I use the mandelic serum I bought?", "handoff": null, "must": ["start with the one Evelyn gives you"]},
+  {"q": "How long does a 1 oz serum usually last?", "handoff": null, "must": ["2 to 3 months"]}
 ]

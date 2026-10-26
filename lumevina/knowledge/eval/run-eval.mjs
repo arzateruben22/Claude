@@ -20,7 +20,7 @@ const R = globalThis.window.LumevinaAskRules;
 const B = JSON.parse(fs.readFileSync(path.join(here, "bundle.json"), "utf8"));
 const Q = JSON.parse(fs.readFileSync(path.join(here, "questions.json"), "utf8"));
 const flat = (s) => String(s).toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ");
-const given = flat([B.prompt, B.facts, B.knowledge, B.general, B.hardLines].join("\n"));
+const given = flat([B.prompt, B.facts, B.knowledge, B.general, B.hardLines, ...B.shelf.map((p) => p.card)].join("\n"));
 
 const rows = Q.map(({ q, handoff = null, offtopic = null, must = [] }) => {
   const low = q.toLowerCase();

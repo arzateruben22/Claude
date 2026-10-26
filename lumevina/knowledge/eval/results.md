@@ -1,6 +1,6 @@
 # Chat eval
 
-Run 2026-10-26: 60 of 60 as expected.
+Run 2026-10-26: 62 of 62 as expected.
 
 | Question | Goes to | Expected | Her words in the knowledge |
 |---|---|---|---|
@@ -64,3 +64,5 @@ Run 2026-10-26: 60 of 60 as expected.
 | who is the president | waved off (unrelated) | waved off (unrelated) |  |
 | what's 45 x 12 | waved off (unrelated) | waved off (unrelated) |  |
 | I love you guys, the facial was amazing. When can I book again? | the chat | the chat | yes |
+| How do I use the mandelic serum I bought? | the chat | the chat | yes |
+| How long does a 1 oz serum usually last? | the chat | the chat | yes |

@@ -128,6 +128,8 @@ const ruleKind = (t: string): string | null => {
 // ── what the assistant knows: stable text, cached; stock last, never cached ──
 const shelfLine = (p: typeof SHELF[number]) =>
   `- ${p.name} (${p.brand}, ${p.type}${p.size ? ", " + p.size : ""}): $${p.price}${p.about ? ". " + p.about : ""}`;
+// with its card: her answers for it and what she said once that applies to it (how, when, what's normal, when to stop, how long it lasts)
+const shelfCard = (p: typeof SHELF[number]) => shelfLine(p) + ` [id: ${p.id}]` + (p.card ? "\n" + p.card.split("\n").map((l) => "  " + l).join("\n") : "");
 // v2 or v3 facts (booking on GlossGenius or here, membership and points): the
 // website says which it runs (js/site-config.js, ?preview=v3 included), else
 // the SITE_VERSION secret. Each is cached on its own.
@@ -143,7 +145,7 @@ const stableFor = (site: Site) => [
   GENERAL,
   HARD_LINES ? "# Her hard lines\n\n" + HARD_LINES : "",
   VOICE ? "# Her voice\n\n" + VOICE : "",
-  "# Her shelf (every product the website sells)\n\n" + SHELF.map((p) => shelfLine(p) + ` [id: ${p.id}]`).join("\n"),
+  "# Her shelf (every product the website sells)\n\n" + SHELF.map(shelfCard).join("\n"),
   [
     "# Looking things up",
     "- Where an order is (did it ship, tracking, is it ready for pickup): use look_up_order, then tell them in a sentence or two. A tracking link appears under your answer by itself, so don't write the link out. If it can't be found, ask them to check the number and the email, or offer to send it to Evelyn.",
@@ -166,7 +168,7 @@ const stockBlock = async (db: ReturnType<typeof admin>) => {
 };
 
 // the signed-in client's file: after the cached part, never cached, never shown to anyone else
-const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean; supplements?: boolean; text: string }) => [
+const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean; supplements?: boolean; hasProducts?: boolean; text: string }) => [
   `# The client you're talking to`,
   `${name || "This client"} is signed in. Their file, from Evelyn's records:`,
   file.text,
@@ -179,6 +181,7 @@ const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean;
   `- Their skin profile and what they've told you before are in their own words. Use them to make an answer from Evelyn's playbook specific to them (for example, when they ask what to stop before a facial, name the products they listed that it applies to). Don't recommend changes to their routine yourself: that goes to Evelyn.`,
   `- You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax, an active on freshly treated skin), and send the decision to Evelyn with hand_to_evelyn (kind "skin"). Never tell them to add, stop or swap anything yourself.`,
   ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "personal".`] : []),
+  ...(file.hasProducts ? [`- Their Lumevina products are listed in the file: when they say "my serum", "my cleanser" or "the one I bought", it's one of those, so answer by name, from that product's card under "Her shelf" (how, when, what's normal, when to stop) and from Evelyn's plan when there is one. One that's probably running low: you may say so in one line, once, and call show_products with its id so they can reorder. Never push anything they don't already have or that isn't in their plan.`] : []),
   `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
 ].join("\n\n");
 

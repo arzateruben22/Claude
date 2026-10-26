@@ -99,6 +99,24 @@
     if (ps.length > 1) acts.push(["Add all " + ps.length + " to my bag", "addall:" + ps.map(function (p) { return p.id; }).join(",")]);
     return acts;
   };
+  /* what the signed-in client has bought here, in this browser's demo records (web orders in js/cart.js,
+     studio sales in js/studio-sale.js); live, the server reads their paid orders itself. Newest first, each product once. */
+  var myShelf = function (email) {
+    if (!email) return [];
+    email = String(email).toLowerCase();
+    var rows = read("lumevina_orders", []).concat(read("lumevina_sales", [])).filter(function (o) { return o && String(o.email || "").toLowerCase() === email; })
+      .sort(function (a, b) { return String(b.at || "").localeCompare(String(a.at || "")); });
+    var seen = {}, out = [];
+    rows.forEach(function (o) { (o.items || []).forEach(function (it) {
+      if (!it || !it.id || it.kind || seen[it.id]) return;
+      seen[it.id] = true;
+      var card = BUNDLE && BUNDLE.shelf ? BUNDLE.shelf.filter(function (p) { return p.id === it.id; })[0] : null;
+      var months = card && card.lastsMonths, low = months && o.at ? new Date(new Date(o.at).getTime() + months * Math.max(1, it.qty || 1) * 30.4 * 864e5) : null;
+      out.push({ id: it.id, name: it.name, at: o.at, where: String(o.id || "").indexOf("S-") === 0 ? "at the studio" : "on the website", low: low, soon: !!low && low.getTime() <= Date.now() + 14 * 864e5 });
+    }); });
+    return out;
+  };
+  var day = function (d) { try { return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }); } catch (e) { return ""; } };
   var me = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
     if (!s) return null;
@@ -207,6 +225,15 @@
       if (st === "existing") return "Returning clients book the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re in the Acne Bootcamp. Not sure? Message Evelyn and she’ll point you to the right one.";
       return "If you’re new and don’t have acne concerns, book New Clients Start Here. If you’re new with acne concerns, book the Acne Bootcamp consultation + treatment. Returning clients: the Lumevina Custom Facial, or the Monthly Acne Treatment if you’re working on acne. Not sure? Message Evelyn and she’ll point you to the right one."; },
       acts: [["Book", "n:book"], ["What happens at a first visit", "t:What happens at a first visit?"], ["Ask Evelyn", "skin"]] },
+    { id: "mine", k: /\bmy (lumevina )?products\b|products (do|did) i (have|buy|get|own)|what (have|did) i (bought|buy|order)|how (do|should) i use (my|the one i)|what('?s| is) in my (bag|routine) from/i, a: function () {
+      var who = me(), mine = who ? myShelf(who.email) : [];
+      if (!who) return "Sign in to My Lumevina and I’ll know what you’ve bought here, so I can talk about your own products by name.";
+      if (!mine.length) return "Nothing bought here under " + who.email + " yet. Once you do, I’ll know your products by name: how and when Evelyn uses them, and when a bottle may be running low.";
+      var low = mine.filter(function (b) { return b.soon; });
+      return "Your Lumevina products: " + mine.map(function (b) { return b.name + " (" + b.where + ", " + day(b.at) + ")"; }).join("; ") + "." +
+        (low.length ? " Probably running low: " + low.map(function (b) { return b.name; }).join(", ") + ". Buy again puts them back in your bag." : "") +
+        " Ask me how to use any of them, or what to pause before a visit."; },
+      acts: [["Buy again", "account"], ["Before my facial", "n:before"], ["After my facial", "n:after"]] },
     { id: "first", k: /what happens|first visit|what('?s| is) (it|a visit|a facial) like|what to expect|walk me through/, a: function () {
       return "We start by talking: your skin, what you’re using now, what you want. Evelyn looks at your skin up close, then a fully customized facial: double cleanse, enzyme exfoliation, extractions, a targeted mask, massage, LED and cryo globes. You leave with a home routine and a plan for the next visit. Come with a clean face if you can (she’ll remove makeup if not) and bring a list or photos of what you use at home."; },
       acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["Book", "n:book"]] },
@@ -516,9 +543,11 @@
     ["Parking", "t:Where do I park?"], ["A question about my skin", "skin"]]
     .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
   var NEW_FIRST = [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["My first visit", "t:What happens at a first visit?"]];
+  var MINE_CHIP = ["My products", "t:What have I bought here, and how do I use it?"];
   var chipsFor = function (st) {
     if (st === "new") return NEW_FIRST.concat(CHIPS.filter(function (c) { return c[1] !== "n:cancel" && c[1] !== "t:Where is my order?"; }));
-    return CHIPS;
+    var who = me();
+    return who && myShelf(who.email).length ? [MINE_CHIP].concat(CHIPS) : CHIPS;
   };
 
   var state = chat();
@@ -783,11 +812,15 @@
       PROFILE_LABELS.forEach(function (f) { if (p[f[0]]) lines.push(f[1] + ": " + p[f[0]]); });
     }
     var mem = ((snap && snap.memories) || []).slice(0, 30).map(function (m) { return "- " + m.fact; });
+    var mine = myShelf(who.email);
     return [
       "# The client you're talking to",
       who.name + " is signed in" + (who.member ? ", a " + who.plan + " member" : "") + ".",
       lines.length ? "Their skin profile, in their own words:\n" + lines.join("\n") : "They haven't filled in a skin profile yet.",
       mem.length ? "What they've told you before:\n" + mem.join("\n") : "",
+      mine.length ? "Their Lumevina products, bought here (newest first):\n" + mine.map(function (b) {
+        return "- " + b.name + ": " + b.where + ", " + day(b.at) + (b.low ? b.soon ? "; probably running low by now" : "; may run low around " + day(b.low) : "");
+      }).join("\n") + "\nWhen they say \"my serum\", \"my cleanser\" or \"the one I bought\", it's one of these: answer by name, from that product's card under \"Her shelf\" (how, when, what's normal, when to stop). One that's probably running low: you may say so in one line, once, with [[products: <id>]] so they can reorder. Never push anything they don't already have." : "",
       "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\"). You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax), and send the decision to Evelyn." +
         (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"personal\")." : "") +
         " Use their first name now and then."
@@ -805,7 +838,8 @@
       BUNDLE.hardLines ? "# Her hard lines\n\n" + BUNDLE.hardLines : "",
       BUNDLE.voice ? "# Her voice\n\n" + BUNDLE.voice : "",
       "# Her shelf (every product the website sells)\n\n" + BUNDLE.shelf.map(function (p) {
-        return "- " + p.name + " (" + p.brand + ", " + p.type + (p.size ? ", " + p.size : "") + "): $" + p.price + stockNote(p.id) + (p.about ? ". " + p.about : "") + " [id: " + p.id + "]";
+        return "- " + p.name + " (" + p.brand + ", " + p.type + (p.size ? ", " + p.size : "") + "): $" + p.price + stockNote(p.id) + (p.about ? ". " + p.about : "") + " [id: " + p.id + "]" +
+          (p.card ? "\n" + p.card.split("\n").map(function (l) { return "  " + l; }).join("\n") : "");
       }).join("\n"),
       who ? clientBlock(who) : "",
       status() === "new" ? "# This client is new to the studio\n\nThey said they haven't been in before. Their first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern; not the returning-client facials. If they aren't local, the online Skin Consult. Explain what a first visit is like from her playbook when asked."

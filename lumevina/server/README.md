@@ -150,6 +150,17 @@ live, the website's demo checkout issues codes in the buyer's browser
 
 ## Skin plans, and what the chat knows about a signed-in client
 
+A signed-in client's chat file (`_shared/plans.ts` → `clientFile`) is Evelyn's
+plan for them, their skin profile and what they've told the chat, their
+pre-visit form and cautions, their visits, her answered questions, and now
+**their Lumevina products** (`_shared/bought.ts`): every product they've paid
+for here, on the website or at the studio, newest first, with when, how many
+times, and when the last bottle may be running low (her rule of thumb for how
+long a bottle lasts, from the product's card in the bundle). So "my serum"
+means the one they own, the answer about using it comes from that product's
+card and her plan, and a bottle that's probably near the bottom gets one line
+and an Add to bag button, never a pitch for anything they don't have.
+
 `schema.sql` → `client_plans`: the routine Evelyn writes for each client in
 her dashboard (Clients → Skin plan): skin type, what they're working on,
 where they are now, morning, night and weekly steps from her shelf, what to
@@ -556,6 +567,11 @@ What the function does with a question:
   an address or a gift code), `gift_balance` (by code, like the site's balance
   check), and `show_products` (Add to bag buttons under the answer). Up to four
   rounds, then it hands the question to Evelyn instead of looping.
+- **Their own products:** a signed-in client's file lists what they've bought
+  here (web and studio orders), with when and when it may be running low; the
+  shelf in the cached part carries each product's card (how, when, what's
+  normal, when to stop, how long it lasts, from `knowledge/scripts/product-cards.mjs`),
+  so the chat talks about the products they own by name.
 - **Stays in its lane:** flirting, insults, "ignore your instructions", a
   request to role-play, homework and other things that aren't Lumevina, her
   treatments, her products, booking or skin get `{ offtopic: flirt | abuse |

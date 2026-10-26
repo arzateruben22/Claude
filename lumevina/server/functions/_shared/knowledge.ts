@@ -1844,7 +1844,7 @@ That one's for me to answer personally, since it depends on you. I'll get back t
 Never promise results or say something is "guaranteed" or "cures" anything. Never say what someone's skin condition is, never say a reaction is "normal", never recommend another brand or store, and never quote a price or policy that isn't on the website.`;
 export const VOICE = ``;
 
-export type ShelfItem = { id: string; name: string; brand: string; type: string; size: string; price: number; stock: number | null; about: string };
+export type ShelfItem = { id: string; name: string; brand: string; type: string; size: string; price: number; stock: number | null; about: string; card: string; lastsMonths: number | null };
 export const SHELF: ShelfItem[] = [
  {
   "id": "fr-11pct-mandelic-serum",
@@ -1854,7 +1854,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 46,
   "stock": 0,
-  "about": "Exfoliates and brightens."
+  "about": "Exfoliates and brightens.",
+  "card": "Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.\nIn Evelyn's routines: Morning, oily or combination skin\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-15pct-mandelic-serum",
@@ -1864,7 +1866,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 48,
   "stock": 0,
-  "about": "Exfoliates and brightens."
+  "about": "Exfoliates and brightens.",
+  "card": "Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.\nIn Evelyn's routines: Morning, oily or combination skin\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-2-5pct-adv-acne-med",
@@ -1874,7 +1878,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.5 fl oz / 44 ml",
   "price": 29,
   "stock": 1,
-  "about": "Benzoyl peroxide acne medication."
+  "about": "Benzoyl peroxide acne medication.",
+  "card": "In Evelyn's routines: Night, oily or combination skin\nWhat's normal at first: If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me. Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.\nPairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.",
+  "lastsMonths": null
  },
  {
   "id": "fr-5pct-adv-acne-med",
@@ -1884,7 +1890,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.5 fl oz / 44 ml",
   "price": 30,
   "stock": 0,
-  "about": "Benzoyl peroxide acne medication."
+  "about": "Benzoyl peroxide acne medication.",
+  "card": "In Evelyn's routines: Night, oily or combination skin\nWhat's normal at first: If you are a part of my acne program and are on a new routine and starting acne treatments it is very normal to purge/breakout and the amount of time everyone purge varies.\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me. Bumps that are spreading to new areas, stinging, itchy or hive-like, or any purge that's still going after 6 to 8 weeks. Send me a photo and we adjust.\nPairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.",
+  "lastsMonths": null
  },
  {
   "id": "fr-5pct-mandelic-serum",
@@ -1894,7 +1902,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 42,
   "stock": 0,
-  "about": "Exfoliates and brightens."
+  "about": "Exfoliates and brightens.",
+  "card": "Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.\nIn Evelyn's routines: Morning, dry or normal skin\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-8pct-mandelic-serum",
@@ -1904,7 +1914,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 44,
   "stock": 1,
-  "about": "Exfoliates and brightens."
+  "about": "Exfoliates and brightens.",
+  "card": "Who it's for: Which strength depends on your tolerance: start with the one Evelyn gives you.\nIn Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-antioxidant-eye-gel",
@@ -1914,7 +1926,9 @@ export const SHELF: ShelfItem[] = [
   "size": "0.4 fl oz / 12 ml",
   "price": 48,
   "stock": 1,
-  "about": "Smooths and visibly depuffs."
+  "about": "Smooths and visibly depuffs.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-barrier-cream-cleanser",
@@ -1924,7 +1938,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6 fl oz / 180 ml",
   "price": 37,
   "stock": 0,
-  "about": "A daily calming wash. Acne-safe."
+  "about": "A daily calming wash. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin\nLasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.",
+  "lastsMonths": 3
  },
  {
   "id": "fr-barrier-gel-cream",
@@ -1934,7 +1950,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 38,
   "stock": 0,
-  "about": "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe."
+  "about": "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-brilliant-defense-50",
@@ -1944,7 +1962,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 42,
   "stock": 0,
-  "about": "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe."
+  "about": "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin\nLasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.",
+  "lastsMonths": null
  },
  {
   "id": "fr-clear-skin-balance",
@@ -1954,7 +1974,9 @@ export const SHELF: ShelfItem[] = [
   "size": "60 softgels",
   "price": 44,
   "stock": 1,
-  "about": "Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin."
+  "about": "Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "fr-cran-peptide-cream",
@@ -1964,7 +1986,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 33,
   "stock": 0,
-  "about": "Rich and restorative. Acne-safe."
+  "about": "Rich and restorative. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-daily-spf-30",
@@ -1974,7 +1998,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 36,
   "stock": 0,
-  "about": "Broad-spectrum SPF 30 sunscreen. Acne-safe."
+  "about": "Broad-spectrum SPF 30 sunscreen. Acne-safe.",
+  "card": "Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.",
+  "lastsMonths": null
  },
  {
   "id": "fr-gentle-gel-cleanser",
@@ -1984,7 +2010,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 14,
   "stock": 0,
-  "about": "A daily antioxidant wash. Acne-safe."
+  "about": "A daily antioxidant wash. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-glowtone-corrective",
@@ -1994,7 +2022,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 64,
   "stock": 0,
-  "about": "Targets discoloration, with Hexa-Bright Complex."
+  "about": "Targets discoloration, with Hexa-Bright Complex.",
+  "card": "Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-hydrabalance-gel",
@@ -2004,7 +2034,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.7 fl oz / 50 ml",
   "price": 34,
   "stock": 0,
-  "about": "Hydrates and balances oil. Acne-safe."
+  "about": "Hydrates and balances oil. Acne-safe.",
+  "card": "In Evelyn's routines: Night, oily or combination skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-hydraremedy-gel-serum",
@@ -2014,7 +2046,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.7 fl oz / 50 ml",
   "price": 46,
   "stock": 0,
-  "about": "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe."
+  "about": "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-hydrcalm-mask",
@@ -2024,7 +2058,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2.5 fl oz / 73 ml",
   "price": 42,
   "stock": 0,
-  "about": "Soothes and boosts hydration."
+  "about": "Soothes and boosts hydration.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "fr-invisiclear",
@@ -2034,7 +2070,9 @@ export const SHELF: ShelfItem[] = [
   "size": "24 patches",
   "price": 10,
   "stock": 0,
-  "about": "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types."
+  "about": "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "fr-mandelic-face-and-body",
@@ -2044,7 +2082,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6 fl oz / 180 ml",
   "price": 38,
   "stock": 0,
-  "about": "Cleanses and brightens. Acne-safe."
+  "about": "Cleanses and brightens. Acne-safe.",
+  "card": "Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nLasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.",
+  "lastsMonths": 3
  },
  {
   "id": "fr-mineral-matte-spf-28",
@@ -2054,7 +2094,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 36,
   "stock": 0,
-  "about": "Broad-spectrum SPF 28 sunscreen. Acne-safe."
+  "about": "Broad-spectrum SPF 28 sunscreen. Acne-safe.",
+  "card": "Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.",
+  "lastsMonths": null
  },
  {
   "id": "fr-moisture-balance-toner",
@@ -2064,7 +2106,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6 fl oz / 180 ml",
   "price": 34,
   "stock": 2,
-  "about": "Hydrates and replenishes."
+  "about": "Hydrates and replenishes.",
+  "card": "In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-moisture-balance-toner-14",
@@ -2074,7 +2118,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 14,
   "stock": 1,
-  "about": "Hydrates and replenishes."
+  "about": "Hydrates and replenishes.",
+  "card": "In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-omni-clear-mist",
@@ -2084,7 +2130,9 @@ export const SHELF: ShelfItem[] = [
   "size": "3.4 fl oz / 100 ml",
   "price": 40,
   "stock": 4,
-  "about": "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested."
+  "about": "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "fr-powdermineral-spf-50",
@@ -2094,7 +2142,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 60 ml",
   "price": 42,
   "stock": 3,
-  "about": "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe."
+  "about": "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin\nLasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.",
+  "lastsMonths": null
  },
  {
   "id": "fr-retinal-b3-serum",
@@ -2104,7 +2154,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 54,
   "stock": null,
-  "about": "Gently corrects and renews. Acne-safe."
+  "about": "Gently corrects and renews. Acne-safe.",
+  "card": "How to use it: Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nPairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-retinol-peptide-serum",
@@ -2114,7 +2166,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz / 30 ml",
   "price": 60,
   "stock": 0,
-  "about": "Intensely corrects and renews."
+  "about": "Intensely corrects and renews.",
+  "card": "How to use it: Retinol is the gentler, slower one and where most people start; retinal works faster and is for skin that's already used to a retinoid or wants more. Either way: a pea for the whole face, 2 or 3 nights a week at first, moisturizer over it, SPF every morning, and never alongside an acid on the same night.\nStop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.\nPairs with, and not with: If clients are on acne med and retinol/retinal they just alternate acne med and retinol at night.\nLasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "fr-soothing-radiance-toner",
@@ -2124,7 +2178,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6 fl oz / 180 ml",
   "price": 32,
   "stock": 0,
-  "about": "Calms and nourishes."
+  "about": "Calms and nourishes.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Night, dry or normal skin",
+  "lastsMonths": null
  },
  {
   "id": "fr-sulfur-spot-treatment",
@@ -2134,7 +2190,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.5 fl oz / 44 ml",
   "price": 35,
   "stock": 0,
-  "about": "A 6% sulfur acne treatment."
+  "about": "A 6% sulfur acne treatment.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "fr-ultra-gentle-cleanser",
@@ -2144,7 +2202,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6 fl oz / 180 ml",
   "price": 33,
   "stock": 0,
-  "about": "A daily antioxidant wash. Acne-safe."
+  "about": "A daily antioxidant wash. Acne-safe.",
+  "card": "In Evelyn's routines: Morning, oily or combination skin; Night, oily or combination skin\nLasts about: 3 to 4 months: Evelyn's rule of thumb for a 6 oz cleanser.",
+  "lastsMonths": 3
  },
  {
   "id": "gm-barrier-repair-cream",
@@ -2154,7 +2214,9 @@ export const SHELF: ShelfItem[] = [
   "size": "4 fl oz / 118 ml",
   "price": 83.2,
   "stock": 0,
-  "about": "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance."
+  "about": "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "gm-cell-protection-balm",
@@ -2164,7 +2226,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz / 59 ml",
   "price": 34,
   "stock": 0,
-  "about": "Step 3 of the GlyMed Plus routine: balance."
+  "about": "Step 3 of the GlyMed Plus routine: balance.",
+  "card": "Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 2 oz moisturizer.",
+  "lastsMonths": 2
  },
  {
   "id": "gm-eye-calm",
@@ -2174,7 +2238,9 @@ export const SHELF: ShelfItem[] = [
   "size": "0.3 fl oz / 10 ml",
   "price": 48,
   "stock": 0,
-  "about": "Step 3 of the GlyMed Plus routine: balance."
+  "about": "Step 3 of the GlyMed Plus routine: balance.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "gm-firming-eye-cream",
@@ -2184,7 +2250,9 @@ export const SHELF: ShelfItem[] = [
   "size": "0.3 oz / 10 ml",
   "price": 70,
   "stock": 0,
-  "about": "Part of the GlyMed Plus Elite line; step 3 of its routine: balance."
+  "about": "Part of the GlyMed Plus Elite line; step 3 of its routine: balance.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "gm-firming-serum",
@@ -2194,7 +2262,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 oz / 30 ml",
   "price": 142,
   "stock": 0,
-  "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat."
+  "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat.",
+  "card": "Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "gm-glycolic-cleanser",
@@ -2204,7 +2274,9 @@ export const SHELF: ShelfItem[] = [
   "size": "8 fl oz / 236 ml",
   "price": 41,
   "stock": 0,
-  "about": "With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse."
+  "about": "With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse.",
+  "card": "Stop and message Evelyn if: If anything is burning, stinging or feels sensitive, reach out to me right away so we can make changes. If your skin has eczema, dermatitis, psoriasis or any unusual reaction or flare-up, stop your actives immediately and message me.\nBefore a treatment: Pause retinol or any retinoid, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels for 3 to 5 days before your facial; a prescription retinoid like tretinoin, about a week, and tell me you're on it. Keep your cleanser, moisturizer and SPF as usual. Be sure to at least apply moisturizer and SPF the day of your appointment.\nAfter a treatment: After a facial, 2 or 3 days. After a peel, dermaplaning or microchanneling, about a week, once the skin has stopped flaking and feels normal again. Then start back at a few nights a week, not every night.",
+  "lastsMonths": null
  },
  {
   "id": "gm-revitalizing-essence-nadplus",
@@ -2214,7 +2286,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.35 oz / 40 ml",
   "price": 50,
   "stock": 0,
-  "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat."
+  "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "gm-skin-recovery-mist",
@@ -2224,7 +2298,9 @@ export const SHELF: ShelfItem[] = [
   "size": "4 fl oz / 118 ml",
   "price": 46,
   "stock": 0,
-  "about": "Step 2 of the GlyMed Plus routine: treat."
+  "about": "Step 2 of the GlyMed Plus routine: treat.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "gm-vitamin-c-cleanser",
@@ -2234,7 +2310,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6.75 fl oz / 200 ml",
   "price": 47,
   "stock": 0,
-  "about": "Step 1 of the GlyMed Plus routine: cleanse."
+  "about": "Step 1 of the GlyMed Plus routine: cleanse.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "mx-dew-drops",
@@ -2244,7 +2322,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1 fl oz",
   "price": 56,
   "stock": 0,
-  "about": "Silky smooth hydration with beta-glucan. Non-pore-clogging."
+  "about": "Silky smooth hydration with beta-glucan. Non-pore-clogging.",
+  "card": "Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.",
+  "lastsMonths": 2
  },
  {
   "id": "mx-hydroxi",
@@ -2254,7 +2334,9 @@ export const SHELF: ShelfItem[] = [
   "size": "1.7 fl oz",
   "price": 40,
   "stock": 2,
-  "about": "Hydrogen peroxide acne cream."
+  "about": "Hydrogen peroxide acne cream.",
+  "card": "",
+  "lastsMonths": null
  },
  {
   "id": "mx-spf-50-mineral-spf",
@@ -2264,7 +2346,9 @@ export const SHELF: ShelfItem[] = [
   "size": "2 fl oz",
   "price": 65,
   "stock": 1,
-  "about": "UVA/UVB protection. Medical-grade sunscreen."
+  "about": "UVA/UVB protection. Medical-grade sunscreen.",
+  "card": "In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin\nLasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.",
+  "lastsMonths": null
  },
  {
   "id": "ci-vitamin-veil-cleanser",
@@ -2274,7 +2358,9 @@ export const SHELF: ShelfItem[] = [
   "size": "6.7 fl oz / 198 ml",
   "price": 40,
   "stock": 1,
-  "about": "A cleansing oil."
+  "about": "A cleansing oil.",
+  "card": "",
+  "lastsMonths": null
  }
 ];
 

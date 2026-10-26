@@ -17,6 +17,7 @@
 import { CATALOG } from "./catalog.ts";
 import { SHELF } from "./knowledge.ts";
 import { profileParts } from "./profiles.ts";
+import { bought, boughtText } from "./bought.ts";
 
 export const SKIN_TYPES = ["Dry", "Normal", "Combination", "Oily", "Sensitive", "Acne-prone"];
 
@@ -86,7 +87,7 @@ export async function clientFile(db: any, email: string, clientId: string | null
   const visits = (col: string, v: string): Promise<any[]> => db.from("bookings").select("id, date, services")
     .eq(col, v).in("status", ["pending", "held", "completed"]).order("date", { ascending: false }).limit(8)
     .then((r: any) => r.data ?? [], () => []);
-  const [planRow, intake, asGuest, asClient, answered, mine] = await Promise.all([
+  const [planRow, intake, asGuest, asClient, answered, mine, shelf] = await Promise.all([
     db.from("client_plans").select("plan, updated_at").eq("email", email).maybeSingle().then((r: any) => r.data, () => null),
     db.from("intake_forms").select("answers, signed_at").eq("email", email).maybeSingle().then((r: any) => r.data, () => null),
     visits("guest_email", email),
@@ -94,6 +95,7 @@ export async function clientFile(db: any, email: string, clientId: string | null
     db.from("questions").select("text, reply, answered_at").eq("email", email).eq("status", "answered")
       .order("answered_at", { ascending: false }).limit(4).then((r: any) => r.data ?? [], () => []),
     profileParts(db, email).catch(() => ({ parts: [] as string[], hasProfile: false, supplements: false })),
+    bought(db, email).catch(() => []),
   ]);
   const seen = new Set();
   const bookings = [...asGuest, ...asClient].filter((b: any) => !seen.has(b.id) && seen.add(b.id))
@@ -103,6 +105,7 @@ export async function clientFile(db: any, email: string, clientId: string | null
   const plan = planRow ? cleanPlan(planRow.plan) : null;
   if (plan) parts.push(planText(plan, planRow.updated_at));
   parts.push(...mine.parts);
+  if (shelf.length) parts.push(boughtText(shelf));
 
   const a = intake?.answers ?? null;
   if (a) {
@@ -141,5 +144,5 @@ export async function clientFile(db: any, email: string, clientId: string | null
   }
 
   if (!parts.length) return null;
-  return { hasPlan: !!plan, plan, hasProfile: mine.hasProfile, supplements: mine.supplements, text: parts.join("\n\n") };
+  return { hasPlan: !!plan, plan, hasProfile: mine.hasProfile, supplements: mine.supplements, hasProducts: shelf.length > 0, text: parts.join("\n\n") };
 }
