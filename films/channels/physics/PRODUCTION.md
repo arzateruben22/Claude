@@ -10,6 +10,11 @@
 >   avoid all text, masters at CRF 12 and deliveries at CRF 15 with aq-mode 3, and WRITING.md rule 8 "One line wins".
 >   Every episode, ep02 included, is re-rendered on it.
 > - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
+> **Fact audit (26 Oct, from the coordinating session; reports on its branch, films/audits/2026-10-26).** Every confirmed
+> finding checked against our files and applied (commit fa0e26b): ep02's pendulum wave comes back "just as gradually"
+> (x(60−t) = x(t)), ep03's "doesn't spring back as hard" and "about three thousandths of a degree", ep04's "< 5" readout,
+> "Still drifting down" and "Gravity speeds them up equally", ep05's "Nothing motorized"; sources repointed where an
+> excerpt didn't come from the cited page. The changed lines were re-voiced (lint 0 errors before and after).
 > Order (04:40 UTC): the rule-8 pass on ep02–05 runs as a workflow (one implementer, one independent reviewer and one
 > fixer per episode; agents never run Chromium); meanwhile ep06 (written with rule 8 from the start) renders its final,
 > then each of ep02–05 gets compile → cues → compile → soundtrack → stills at 390 px → final → QA, in order.
