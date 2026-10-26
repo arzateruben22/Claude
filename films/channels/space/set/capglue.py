@@ -60,22 +60,32 @@ def hold(film, pages, linger=0.3):
 
 
 UNITS = ("kilometers", "kilometer", "meters", "years", "days", "hours", "minutes", "seconds", "light-days", "light-years")
+# (a unit may carry punctuation: "days," opens "days, / rising in the west.")
 
 
 def keep_units(pages, units=UNITS, max_chars=24):
     """pages: film.captions()'s output, changed in place and returned. Where a sentence's page break falls between a
     number and its unit (a two-row page, then a one-row page starting with the unit: "about thirty" / "kilometers every
     second."), the number's row moves onto the next page, so the number and its unit are read together."""
-    for a, b in zip(pages, pages[1:]):
-        if len(a["lines"]) != 2 or len(b["lines"]) != 1:
-            continue
-        first = b["lines"][0][0][0].replace(NBSP, " ").split(" ")[0].lower()
+    k = 0
+    while k + 1 < len(pages):
+        a, b = pages[k], pages[k + 1]
+        first = b["lines"][0][0][0].replace(NBSP, " ").split(" ")[0].lower().rstrip(",.;:")
         last = a["lines"][-1][-1][0]
-        if first not in units or last.rstrip()[-1:] in ".?!":
-            continue
-        if len(" ".join(w for w, _ in a["lines"][-1])) > max_chars:
+        if len(a["lines"]) != 2 or first not in units or last.rstrip()[-1:] in ".?!":
+            k += 1
             continue
         row = a["lines"].pop()
-        b["lines"].insert(0, row)
-        a["t1"] = b["t0"] = row[0][1]
+        a["t1"] = row[0][1]
+        if len(b["lines"]) == 2:
+            # the unit opens a two-row page ("days, / longer than its year."): the number and its unit take a page of
+            # their own, and the rest of that page follows on the next
+            rest = {"t0": b["lines"][1][0][1], "t1": b["t1"], "lines": [b["lines"][1]]}
+            b["lines"] = [row, b["lines"][0]]
+            b["t1"] = rest["t0"]
+            pages.insert(k + 2, rest)
+        else:
+            b["lines"].insert(0, row)
+        b["t0"] = row[0][1]
+        k += 1
     return pages
