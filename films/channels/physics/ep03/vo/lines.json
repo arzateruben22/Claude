@@ -35,15 +35,15 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't quite spring back.",
+   "text": "Look closer. The knock: a puff of sound. The ball squashes, and doesn't spring back as hard.",
    "stars": [
     "sound",
-    "back"
+    "hard"
    ],
-   "phonemes": "lˈʊk klˈoʊsɚ. ðə nˈɑːk: ɐ pˈʌf ʌv sˈaʊnd. ðə bˈɔːl skwˈɑːʃᵻz, ænd dˈʌzənt kwˈaɪt spɹˈɪŋ bˈæk.",
+   "phonemes": "lˈʊk klˈoʊsɚ. ðə nˈɑːk: ɐ pˈʌf ʌv sˈaʊnd. ðə bˈɔːl skwˈɑːʃᵻz, ænd dˈʌzənt spɹˈɪŋ bˈæk æz hˈɑːɹd.",
    "file": "03.wav",
-   "dur": 5.516,
-   "sha256": "a5e381afc5442df62c32893fea2c6529812af05a704804d39f4efa77d89b8810"
+   "dur": 5.804,
+   "sha256": "34af9cdfd86b1d1a97712c00a7c29ea451de679f9a77faa6d44ae51ea0fa3452"
   },
   {
    "id": "vo04",
@@ -74,15 +74,15 @@
   {
    "id": "vo06",
    "beat": "measure",
-   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball, two thousandths of a degree.",
+   "text": "Measure it: those missing forty-four centimeters? A quarter of a joule. Even if it all stays in the ball: about three thousandths of a degree.",
    "stars": [
     "Measure it",
     "degree"
    ],
-   "phonemes": "mˈɛʒɚɹ ɪt: ðoʊz mˈɪsɪŋ fˈɔːɹɾifˈɔːɹ sˈɛntɪmˌiːɾɚz? ɐ kwˈɔːɹɾɚɹ əvə ʤˈuːl . ˈiːvən ɪf ɪɾ ˈɔːl stˈeɪz ɪnðə bˈɔːl, tˈuː θˈaʊzəndθs əvə dᵻɡɹˈiː.",
+   "phonemes": "mˈɛʒɚɹ ɪt: ðoʊz mˈɪsɪŋ fˈɔːɹɾifˈɔːɹ sˈɛntɪmˌiːɾɚz? ɐ kwˈɔːɹɾɚɹ əvə ʤˈuːl . ˈiːvən ɪf ɪɾ ˈɔːl stˈeɪz ɪnðə bˈɔːl: ɐbˌaʊt θɹˈiː θˈaʊzəndθs əvə dᵻɡɹˈiː.",
    "file": "06.wav",
-   "dur": 8.253,
-   "sha256": "92d8984de5796452e4e3ed808eea95ec260e92112f534cb348f31e398a43f91b"
+   "dur": 8.73,
+   "sha256": "ed58e000cc84e34fc139bd5007dad8028768f53b9f0039eada0e4eb205d92d5c"
   },
   {
    "id": "vo07",

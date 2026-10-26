@@ -10,6 +10,7 @@
 //   C.hand(i) → [x, y, z]          // dumbbell i's centre in world space, after set()
 //   C.handAt(phi, R, i) → [x, y, z] // the same for any pose, without touching the meshes (ghosts, labels)
 //   C.base, C.top                  // the fixed star base and the turning part
+//   createSitter({ dumbbells: false }); C.reach(phi, [[x, y, z], [x, y, z]])   // empty hands at two seat-local targets (cm)
 import * as THREE from "three";
 import { albedo } from "./aces.js";
 
@@ -57,6 +58,7 @@ export const createSitter = (o = {}) => {
     [-1, 1].forEach((e) => { const w = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 4, 6), iron); w.rotation.x = Math.PI / 2; w.position.z = e * 6.5; b.add(w); });
     const e = new THREE.Mesh(new THREE.SphereGeometry(4.4, 14, 10), wood), sh = new THREE.Mesh(new THREE.SphereGeometry(5.4, 14, 10), wood);
     sh.position.copy(shoulders[i]);
+    b.visible = o.dumbbells !== false;
     top.add(u, f, h, b, e, sh); upper.push(u); fore.push(f); hands.push(h); bells.push(b); elbows.push(e);
   }
   group.add(top);
@@ -73,10 +75,10 @@ export const createSitter = (o = {}) => {
     const rr = R;
     return new THREE.Vector3(s * rr * Math.cos(ang), 95, rr * Math.sin(ang) + 4 * (1 - k));
   };
-  const set = (phi, R) => {
+  const ik = (phi, targetOf) => {
     top.rotation.y = phi;
     for (let i = 0; i < 2; i++) {
-      const S = shoulders[i]; T.copy(handTarget(i, R));
+      const S = shoulders[i]; T.copy(targetOf(i));
       dir.copy(T).sub(S); let d = dir.length(); const dmax = A1 + A2 - 0.5;
       if (d > dmax) { dir.multiplyScalar(dmax / d); T.copy(S).add(dir); d = dmax; }
       dir.normalize();
@@ -88,6 +90,8 @@ export const createSitter = (o = {}) => {
       hands[i].position.copy(T); bells[i].position.copy(T); elbows[i].position.copy(Eb);
     }
   };
+  const set = (phi, R) => ik(phi, (i) => handTarget(i, R));
+  const reach = (phi, targets) => ik(phi, (i) => new THREE.Vector3(...targets[i]));
   // dumbbell i's centre in world space for a pose (pure: no matrices), for ghosts and labels
   const clampT = (i, R) => { const S = shoulders[i], t = handTarget(i, R), d = t.clone().sub(S), l = d.length(), m = A1 + A2 - 0.5;
     return l > m ? S.clone().add(d.multiplyScalar(m / l)) : t; };
@@ -95,5 +99,5 @@ export const createSitter = (o = {}) => {
     return [group.position.x + t.x * c + t.z * s, t.y, group.position.z - t.x * s + t.z * c]; };
   const hand = (i) => { top.updateMatrixWorld(true); const v = bells[i].position.clone(); top.localToWorld(v); return [v.x, v.y, v.z]; };
   set(0, 80);
-  return { group, top, base, set, hand, handAt, handTarget };
+  return { group, top, base, set, reach, hand, handAt, handTarget, mouth: [0, 110.5, 4.6] };
 };

@@ -47,23 +47,23 @@
   "id": "c4",
   "sentence": "The knock: a puff of sound.",
   "claim": "Part of a bounce's kinetic energy leaves as sound (a collision that loses kinetic energy to heat, sound or vibration is inelastic).",
-  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
-  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "source_url": "https://openstax.org/books/college-physics/pages/8-5-inelastic-collisions-in-one-dimension",
+  "source_title": "OpenStax College Physics, 8.5 Inelastic Collisions in One Dimension",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (related search): collisions where some of the kinetic energy 'is dissipated as heat, sound or vibration are called inelastic'. The sound rings on screen are an illustration (badged), not to scale."
+  "note": "OpenStax excerpt: in an inelastic collision the internal kinetic energy is not conserved; in its example it 'is mostly converted to thermal energy and sound'. Repointed on 26 Oct (audit): the earlier McMaster citation's excerpt came from a related search, not that page. Excerpt (related search): collisions where some of the kinetic energy 'is dissipated as heat, sound or vibration are called inelastic'. The sound rings on screen are an illustration (badged), not to scale."
  },
  {
   "id": "c5",
-  "sentence": "The ball squashes, and doesn't quite spring back.",
-  "claim": "In a bounce the ball deforms and does not return all the energy of the deformation: internal friction in the rubber turns part of it into heat. This, not sound, is where most of a hard-floor bounce's lost energy goes.",
-  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
-  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "sentence": "The ball squashes, and doesn't spring back as hard.",
+  "claim": "A tennis ball regains its round shape after the squash but pushes back with less force than it took to squash it (hysteresis in the rubber), so it returns less energy than went in.",
+  "source_url": "https://lida.sport-iat.de/ta/Record/4005426?lng=en",
+  "source_title": "Dynamic testing of tennis balls (sport-iat / SPONET record 4005426)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: collisions where kinetic energy 'is dissipated as heat, sound or vibration are called inelastic' (McMaster, related search); the same search: 'some energy goes to deforming the ball', 'some of the KE is lost by frictional forces that generate heat'. The squash on screen is exaggerated (a few millimetres in reality at 4.4 m/s) and badged. The review's correction: 'flat' was false and the floor's shiver is negligible on concrete; both were cut."
+  "note": "Excerpt: a ball dropped from 100 in rebounds to about 55 in, losing roughly 45% of its energy in the bounce, against about 15% in a slow compression test; a piezo force plate gives a dynamic force-displacement hysteresis loop. Corrected on 26 Oct (audit): the line had said 'doesn't quite spring back', which reads as the ball staying dented; the picture springs fully back round, with less push."
  },
  {
   "id": "c6",
@@ -91,12 +91,12 @@
   "id": "c8",
   "sentence": "It becomes heat, shaking and sound, spread too thin to see.",
   "claim": "The energy a bounce loses ends up as thermal energy, vibration and sound, spread through the ball, the floor and the air.",
-  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
-  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "source_url": "https://openstax.org/books/college-physics/pages/8-5-inelastic-collisions-in-one-dimension",
+  "source_title": "OpenStax College Physics, 8.5 Inelastic Collisions in One Dimension",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Same excerpts as c4, c5, c7. 'Too thin to see': c12 sizes it."
+  "note": "OpenStax excerpt: in an inelastic collision the internal kinetic energy is not conserved; in its example it 'is mostly converted to thermal energy and sound'. Repointed on 26 Oct (audit): the earlier McMaster citation's excerpt came from a related search, not that page. Same excerpts as c4, c5, c7. 'Too thin to see': c12 sizes it. 'Shaking': the ball's and the floor's vibration after the knock, which ends as heat; Cambridge Engineering's bounce study (https://www.eng.cam.ac.uk/node/2245, search excerpt) lists resonance with sound and heat among the losses under study."
  },
  {
   "id": "c9",
@@ -118,7 +118,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (UNT): 'maximum height is about 9 times the initial dropping height, with the tennis ball's velocity 3 times greater' (the limit for M ≫ m). Computed for M = 0.6 kg, m = 0.057 kg: 2.65² = 7.04 (the bible's 'about 7×'). The bench drops the stack 50 cm, so the tennis ball climbs 3.5 m above the collision. Shown with the badge 'Perfect bounces: real balls go less high'. The basketball's mass (about 0.6 kg) was checked only on a low-authority page: TODO a FIBA source."
+  "note": "Excerpt (UNT): 'maximum height is about 9 times the initial dropping height, with the tennis ball's velocity 3 times greater' (the limit for M ≫ m). Computed for M = 0.6 kg, m = 0.057 kg: 2.65² = 7.04 (the bible's 'about 7×'). The bench drops the stack 50 cm, so the tennis ball climbs 3.5 m above the collision. Shown with the badge 'Ideal bounces' (top right, 38.3–47.7 s). The basketball's mass (about 0.6 kg) was checked only on a low-authority page: TODO a FIBA source."
  },
  {
   "id": "c11",
@@ -133,14 +133,14 @@
  },
  {
   "id": "c12",
-  "sentence": "Even if it all stays in the ball, two thousandths of a degree.",
-  "claim": "If all 0.245 J stayed in the 57 g ball as heat (natural rubber's specific heat about 1.9–2.1 J/(g·K)), the ball would warm by about 0.002 °C on average.",
-  "source_url": "https://analyzing-testing.netzsch.com/en/polymers-netzsch-com/elastomers/nr-natural-rubber",
-  "source_title": "NETZSCH, NR: natural rubber (DSC specific heat)",
+  "sentence": "Even if it all stays in the ball: about three thousandths of a degree.",
+  "claim": "If all of the bounce's quarter joule stayed in the 57 g ball as heat, the ball would warm on average by about three thousandths of a degree Celsius.",
+  "source_url": "https://m.itftennis.com/media/2167/balls-ball-manufacture.pdf",
+  "source_title": "ITF, Balls: ball manufacture (core recipe)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (NETZSCH DSC): natural rubber 'Specific Heat Capacity 1.91 to 2.08 J/(g*K)'. Computed: 0.245 / (57 × 2.0) = 0.0021 K. Caveats (review): the felt's specific heat is lower (about 1.3 J/(g·K)), which would raise the figure a little, and the contact patch heats far more than the average; the line gives the whole-ball average, as an order of magnitude."
+  "note": "Excerpt: a pressurised core recipe in parts by weight: natural rubber 72, butadiene rubber 28, clay 40, magnesium carbonate 8, calcium carbonate 20, zinc oxide 2.5, sulphur 3.5 ('a high loading of fine-particle filler'); the core is about 57% rubber. Computed: with rubber about 1.9–2.0 J/(g·K) (NETZSCH, natural rubber, https://analyzing-testing.netzsch.com/en/polymers-netzsch-com/elastomers/nr-natural-rubber, search excerpt) and the minerals about 0.5–1.0 (textbook values, an estimate), the core averages about 1.5 J/(g·K); the felt (about 1.3–1.5) changes little. ΔT = 0.2446 J / (57 g × 1.5) = 0.0029 K: 'about three thousandths'. Pure rubber would give 0.0021, so the earlier 'two thousandths' was the low end. The contact patch warms far more than this average. On screen: 'average warming, about 0.003 °C'. Corrected on 26 Oct (audit)."
  },
  {
   "id": "c13",
@@ -157,12 +157,12 @@
   "id": "c14",
   "sentence": "It gives it away, knock by knock.",
   "claim": "Each bounce gives some of the ball's mechanical energy to its surroundings and to the ball itself (heat in the rubber, sound in the air, vibration in the floor); here 44% of what is left, every knock.",
-  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
-  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "source_url": "https://openstax.org/books/college-physics/pages/8-5-inelastic-collisions-in-one-dimension",
+  "source_title": "OpenStax College Physics, 8.5 Inelastic Collisions in One Dimension",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Same as c4, c5, c8."
+  "note": "OpenStax excerpt: in an inelastic collision the internal kinetic energy is not conserved; in its example it 'is mostly converted to thermal energy and sound'. Repointed on 26 Oct (audit): the earlier McMaster citation's excerpt came from a related search, not that page. Same as c4, c5, c8."
  },
  {
   "id": "c15",
@@ -196,5 +196,16 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "Same excerpt as c1 and c3: 42–47% of the height is gone in the ITF test (the bench: 44%)."
+ },
+ {
+  "id": "c20",
+  "sentence": "James Joule wouldn't.",
+  "claim": "Joule held that what we now call energy is never destroyed: in 1843 he wrote that 'the grand agents of nature are, by the Creator's fiat, indestructible', and that wherever mechanical force is expended an exact equivalent of heat is obtained.",
+  "source_url": "https://www.nature.com/articles/120280b0",
+  "source_title": "Nature 120, 280 (1927), Calendar of Discovery and Invention (Joule, 1843)",
+  "accessed": "2026-10-26",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: the 1843 postscript to Joule's British Association paper (Cork, August 1843): satisfied that the great agents of nature are indestructible by the Creator's fiat, and that wherever mechanical force is expended an exact equivalent of heat is always obtained. The same wording in Scientific American Supplement No. 363 (1882, https://manybooks.net/titles/anonetext058036310.html) and Wikipedia's James Prescott Joule (https://en.wikipedia.org/wiki/James_Prescott_Joule). Joule wrote 'force' and 'agents of nature', not 'energy'; the line says what he would not call lost. Added on 26 Oct (audit: the line had no claim)."
  }
 ]
