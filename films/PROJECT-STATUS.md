@@ -1,5 +1,12 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 03:50 UTC: full speed until completion (owner).** Readability pass landed (767b57b: notes one tier down,
+> spine readout holds through the payoff, labels never cover text, sharper masters; space ep01 fixes incl. the 23 s
+> early-arrival bug). This container re-renders ep01 ×3 with it (`films/channels/rerender-finals.sh`, log
+> films/channels/rerender.log); the three channel sessions merge it and deliver ep02–06 re-rendered at this quality.
+> Prism Studio redesign in progress: code-rendered NYC night skyline, six-monitor home (Instagram centre), a screen
+> per channel, designed covers/thumbnails.
+>
 > **25 Oct, 23:15 UTC: paused at the user's request; see `films/ASSESSMENT-2026-10-25.md`.** The 2-hourly check-in
 > is in low-usage mode (restart stalled renders, merge and QA delivered episodes, build a compilation when a channel
 > has ep01–05; nothing new). Physics 001–002 and space 001–002 are delivered; body 001 is rendering here (slow scene,
