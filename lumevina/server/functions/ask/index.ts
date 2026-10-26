@@ -74,6 +74,7 @@ import { fixTypos } from "../_shared/typos.ts";
 import { notifyOwner } from "../_shared/notify.ts";
 import { EMAIL, giftBalance, lookUpOrder } from "../_shared/lookups.ts";
 import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
+import { tooMany } from "../_shared/guard.ts";
 
 const MODEL = "claude-fable-5-1";
 const MEMBER_HOURS = 24;
@@ -93,6 +94,8 @@ const statusLine = (st: Status) => st === "new"
   : "";
 
 const admin = () => createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+let shared: ReturnType<typeof admin> | null = null;
+const db0 = () => shared ?? (shared = admin());
 const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY") });
 
 // ── the rules: plain code, before any AI ──
@@ -338,6 +341,8 @@ Deno.serve(async (req) => {
   const site = siteOf(body.site);
   const status = statusOf(body.client);
   if (!q) return json({ error: "Empty question" }, 400);
+  // every answer costs a Claude call: a chatty client asks a few a minute, a script asks hundreds (the website then falls back to its keyword answers)
+  if (await tooMany(db0(), req, "ask", 30, 10)) return json({ error: "assistant_busy" }, 429);
 
   // who's asking: a signed-in client, whether they're a member, and their file
   const db = admin();

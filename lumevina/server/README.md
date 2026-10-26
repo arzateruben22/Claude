@@ -237,6 +237,17 @@ link (no password, no extra library: `js/account.js`). In Supabase → Authentic
 - Email sign-ins are on by default; for her own sending address, set up
   custom SMTP with the same Resend account as the confirmations.
 
+## Brakes on the public functions
+
+`create-checkout`, `book` (create and waitlist) and `ask` count their calls per
+caller in `request_log` (`_shared/guard.ts`): 8 checkouts in 15 minutes, 6
+bookings in 30, 10 waitlist adds in an hour, 30 chat questions in 10, by IP
+and by the email given. Past that the call gets a 429 with `reason:
+"slow_down"` (the website says so; the chat falls back to its keyword
+answers). No real client gets near it; a script holding every time slot or
+running up the assistant's bill does. The brake fails open if the table is
+missing. Rows clear themselves after a day.
+
 ## The shop: checkout, stock and orders
 
 `schema.sql` → `products` (one row per product, with the one stock count;

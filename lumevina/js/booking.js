@@ -2009,7 +2009,8 @@
     services: "One of these treatments can't be booked online. Ask Evelyn and she'll book it for you.",
     email: "Check your name and email (signed in? book with your own email).",
     consent: "Please sign the consent first.",
-    payment_unavailable: "Payments aren't available right now. Please try again in a few minutes."
+    payment_unavailable: "Payments aren't available right now. Please try again in a few minutes.",
+    slow_down: "That's a lot of tries in a row. Give it a few minutes and try again."
   };
   var liveBook = function () {
     payBtn.disabled = true;

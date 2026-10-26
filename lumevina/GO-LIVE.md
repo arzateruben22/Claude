@@ -50,7 +50,24 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [ ] Send a skin question with a photo: it shows on the dashboard's Client questions with the photo and a line on what it shows; Send reply emails the test address, and (signed in) the reply appears in the chat.
 - [ ] Skin plan: write one in the dashboard for a test email, sign in on the website with that email (the link arrives by email), see it under My Lumevina, then ask the chat "what do I use at night?" (answered from the plan) and "can I add vitamin C?" (goes to Evelyn).
 - [ ] Gift certificate: buy a $100 one, then on the dashboard use it on a $50 visit ($50 should stay on it) and on a $120 visit (it covers the last $50; the client pays $70). "Check a gift balance" on the site should show each step, from another phone too.
-- [ ] Switch Stripe to **live** keys.
+- [ ] Switch Stripe to **live** keys, then the payment checklist below.
+
+### Payments: the security checklist (read once, tick before the first real charge)
+
+How it's built, so nothing here is a surprise: **no card number ever touches the website or the server.** Every payment (a product, a deposit, a membership, a pay link) opens Stripe's own page, and the card on file is kept by Stripe; the server stores only a card label like "Visa •••• 4242" and Stripe's ids. That keeps Evelyn in PCI's simplest tier (SAQ A, the questionnaire Stripe fills with her). Every price is worked out by the server from her own product and service tables, never from the browser. Stripe tells the server what was paid through a signed webhook (the signature is checked, old events are rejected, and a paid order is only ever finished once). Every table has row-level security: a signed-in client can read their own orders, bookings and plan and nothing else; the dashboard's changes go through functions that need her studio key. Scripts that hammer checkout, booking or the chat get a "slow down" after a handful of calls.
+
+- [ ] **Live keys, live webhook.** `STRIPE_SECRET_KEY=sk_live_…` and a *new* webhook endpoint in live mode with its own `STRIPE_WEBHOOK_SECRET` (test and live secrets differ; a test event on the live deployment is ignored and logged).
+- [ ] **`SITE_URL` is set** to her real https address, so Stripe only sends people back to her site.
+- [ ] **Studio key:** at least 20 characters, made with a password manager, saved only in the dashboard and in Supabase's secrets (never in a text or email). Rotate it if a phone with the dashboard is lost.
+- [ ] **The dashboard lives on its own address** (for example `studio.her-domain`, or the Supabase-hosted page behind her sign-in), not next to the public pages: the studio key sits in that page's browser storage, and a separate origin keeps the public site's scripts away from it.
+- [ ] **HTTPS only, with the headers** in `_headers` (Netlify or Cloudflare Pages pick the file up; on Vercel copy them into `vercel.json`). Check with https://securityheaders.com after the first deploy.
+- [ ] **Stripe Radar** is on (it is by default); turn on "block if CVC fails" and "block if postal code fails" in Stripe → Radar → Rules. 3-D Secure runs on Stripe's page when a bank asks for it, nothing to set.
+- [ ] **Apple Pay** on her domain: Stripe → Settings → Payment methods → Apple Pay → add the domain (the verification file goes at `/.well-known/`).
+- [ ] **Receipts and refunds:** Stripe → Settings → Emails, turn on successful-payment and refund emails as a second receipt. Refunds happen in Stripe's dashboard (the order's payment is linked from Shipping) or from the dashboard's checkout for a visit.
+- [ ] **Stripe Tax** on, with the studio's address, then `STRIPE_TAX=on`; check one test order shows California sales tax.
+- [ ] **One real $1 test**: buy the cheapest item with a real card, see the order, stock, receipt and her notification, then refund it in Stripe and check the refund email arrives.
+- [ ] **Two-step sign-in** on Stripe, Supabase, the domain registrar and Google (her calendar), with the recovery codes in her password manager.
+- [ ] **Who gets alerts:** `OWNER_EMAIL` is hers, and Stripe → Settings → Team has only her (and Ruben if she wants, as Developer, not Administrator).
 
 ## 5. Launch
 

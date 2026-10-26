@@ -796,6 +796,7 @@
         j.reason === "stock" ? (j.left ? "Only " + j.left + " of " + (j.name || "one item") + " left. Lower the amount in your cart and try again." : (j.name || "One item") + " just sold out. Take it out of your cart and try again.")
         : j.reason === "unavailable" ? "One item isn't available any more. Take it out of your cart and try again."
         : j.reason === "consult_needed" ? (j.name || "One item") + " needs a quick consult first." + (window.LumevinaConsult && window.LumevinaConsult.email() && window.LumevinaConsult.email() !== checkoutForm.elements.email.value.trim().toLowerCase() ? " Evelyn\u2019s yes is for " + window.LumevinaConsult.email() + ": use that email here." : " Tap \u201cNeeds a quick consult\u201d on it in the shop and Evelyn unlocks it for this email, usually within a day.")
+        : j.reason === "slow_down" ? "That's a lot of tries in a row. Give it a few minutes and try again."
         : j.reason === "email" ? "Check your email address."
         : j.reason === "gift_email" ? "Check the recipient's email address."
         : "Payments aren't available right now. Please try again in a few minutes.";

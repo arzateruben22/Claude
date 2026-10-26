@@ -25,6 +25,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { isLive, memberFor, PLANS } from "../_shared/membership.ts";
 import { approvedFor, mayBuy } from "../_shared/consults.ts";
+import { tooMany } from "../_shared/guard.ts";
 
 const SHIP_CENTS = 800, FREE_OVER_CENTS = 7500;           // same rule as js/cart.js
 const GIFT_MIN = 25, GIFT_MAX = 1000;
@@ -44,6 +45,8 @@ Deno.serve(async (req) => {
   const email = clip(body.email, 200).toLowerCase();
   if (!EMAIL.test(email)) return json({ reason: "email" }, 400);
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  // each call opens a Stripe page and a pending order: a handful per person is plenty
+  if (await tooMany(db, req, "checkout", 8, 15, email)) return json({ reason: "slow_down" }, 429);
 
   // a signed-in member buying for themselves: their plan's shelf discount, free shipping
   let rate = 0;
@@ -109,9 +112,11 @@ Deno.serve(async (req) => {
   if (error || !order) { console.error(error); return json({ reason: "failed" }, 500); }
 
   // ── the Stripe page ──
+  // back to the page that called, on her site (or, before SITE_URL is set, the page's own origin)
   const site = (Deno.env.get("SITE_URL") ?? "").replace(/\/$/, "");
-  const back = /^https:\/\//.test(String(body.returnUrl ?? "")) && (!site || String(body.returnUrl).startsWith(site))
-    ? String(body.returnUrl).split(/[?#]/)[0] : site + "/";
+  const home = site || req.headers.get("origin") || "";
+  const ret = String(body.returnUrl ?? "");
+  const back = /^https:\/\//.test(ret) && home && ret.startsWith(home) ? ret.split(/[?#]/)[0] : (site || home) + "/";
   const tax = Deno.env.get("STRIPE_TAX") === "on";
   const f = new URLSearchParams();
   f.set("mode", "payment");

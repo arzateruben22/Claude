@@ -42,12 +42,11 @@ async function verifyStripeSignature(
   sigHeader: string,
   secret: string,
 ): Promise<boolean> {
-  const parts = Object.fromEntries(
-    sigHeader.split(",").map((kv) => kv.split("=") as [string, string]),
-  );
-  const t = parts["t"];
-  const v1 = parts["v1"];
-  if (!t || !v1) return false;
+  if (!secret || !sigHeader) return false;                    // no secret set, or none sent: nothing gets in
+  const parts = sigHeader.split(",").map((kv) => kv.split("=") as [string, string]);
+  const t = parts.find(([k]) => k === "t")?.[1];
+  const sigs = parts.filter(([k]) => k === "v1").map(([, v]) => v);   // more than one while a secret is being rotated
+  if (!t || !sigs.length) return false;
   // Reject stale events (5-minute tolerance) to prevent replay.
   if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
 
@@ -58,13 +57,13 @@ async function verifyStripeSignature(
   const mac = await crypto.subtle.sign("HMAC", key, encoder.encode(`${t}.${payload}`));
   const expected = Array.from(new Uint8Array(mac))
     .map((b) => b.toString(16).padStart(2, "0")).join("");
-  // Constant-time compare.
-  if (expected.length !== v1.length) return false;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected.charCodeAt(i) ^ v1.charCodeAt(i);
-  }
-  return diff === 0;
+  // Constant-time compare, against each signature sent.
+  return sigs.some((v1) => {
+    if (expected.length !== v1.length) return false;
+    let diff = 0;
+    for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ v1.charCodeAt(i);
+    return diff === 0;
+  });
 }
 
 /** The card a finished Checkout Session left on file, and what it charged. */
@@ -85,11 +84,17 @@ Deno.serve(async (req) => {
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature") ?? "";
   const ok = await verifyStripeSignature(
-    payload, sig, Deno.env.get("STRIPE_WEBHOOK_SECRET")!,
+    payload, sig, Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "",
   );
   if (!ok) return new Response("bad signature", { status: 400 });
 
   const event = JSON.parse(payload);
+  // a test-mode event can't confirm anything once the keys are live (and the other way round)
+  const live = (Deno.env.get("STRIPE_SECRET_KEY") ?? "").startsWith("sk_live_");
+  if (typeof event.livemode === "boolean" && event.livemode !== live) {
+    console.error("stripe-webhook", `${event.livemode ? "live" : "test"} event on a ${live ? "live" : "test"} deployment: ignored`);
+    return new Response("mode mismatch", { status: 200 });
+  }
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
   const o = event.data?.object ?? {};
   const done = (msg = "ok") => new Response(msg, { status: 200 });

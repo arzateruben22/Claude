@@ -715,3 +715,16 @@ create table site_settings (
 );
 alter table site_settings enable row level security;
 create policy "anyone reads the site settings" on site_settings for select using (true);
+
+-- ── A brake on the public functions (functions/_shared/guard.ts) ───────────
+-- One row per call to create-checkout, book or ask, keyed by the caller
+-- (IP, and email when given). Counted over the last few minutes; a script
+-- that goes past the limit gets a 429. Rows older than a day are cleared
+-- by the functions themselves. No policies: only the service key writes.
+create table if not exists request_log (
+  id bigint generated always as identity primary key,
+  key text not null,
+  at timestamptz not null default now()
+);
+create index if not exists request_log_key on request_log (key, at desc);
+alter table request_log enable row level security;

@@ -35,6 +35,7 @@ import { EMAIL, getContact, norm, upsertContact } from "../_shared/contacts.ts";
 import { balance, BLOCK_CENTS, BLOCK_POINTS } from "../_shared/points.ts";
 import { customerFor, stripe } from "../_shared/stripe.ts";
 import { notifyOwner } from "../_shared/notify.ts";
+import { tooMany } from "../_shared/guard.ts";
 import {
   CANCEL_HOURS, cancelBooking, confirmBooking, fmtWhen, hoursUntil, isSaturday, names, priceVisit, sendBookingMessage, site,
 } from "../_shared/bookings.ts";
@@ -43,6 +44,12 @@ const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[0-9a-f]{32}$/;
 const AHEAD_DAYS = 62;
 const clip = (v: unknown, n: number) => String(v ?? "").trim().slice(0, n);
+/** Where Stripe sends them back: the page that called, on her site (or, before SITE_URL is set, the page's own origin). */
+const returnTo = (req: Request, url: unknown, site: string) => {
+  const u = String(url ?? "");
+  const home = site || req.headers.get("origin") || "";
+  return /^https:\/\//.test(u) && home && u.startsWith(home) ? u.split(/[?#]/)[0] : (site || home) + "/";
+};
 /** An extra Monday still in its members-first days, for someone who isn't a member. */
 const membersOnly = async (db: any, h: Hours, date: string, email: string) =>
   isExtraMonday(h, date) && hoursUntil(date, 0) > MEMBERS_FIRST_HOURS && !isLive(await memberFor(db, email));
@@ -87,6 +94,8 @@ Deno.serve(async (req) => {
       const email = norm(body.email);
       const name = clip(body.name, 120);
       if (!EMAIL.test(email) || !name) return json({ reason: "email" }, 400);
+      // a held time blocks the calendar for half an hour: a few tries is plenty for a person
+      if (await tooMany(db, req, "book", 6, 30, email)) return json({ reason: "slow_down" }, 429);
       if (signedIn && signedIn !== email) return json({ reason: "email" }, 400);   // signed in: books as themselves
       if (!clip(body.consent?.signature, 200)) return json({ reason: "consent" }, 400);
       const date = String(body.date ?? ""), start = Math.round(Number(body.start_min));
@@ -155,8 +164,7 @@ Deno.serve(async (req) => {
       }
 
       // Stripe's page: pay the deposit and keep the card, or just keep the card
-      const back = /^https:\/\//.test(String(body.returnUrl ?? "")) && (!site() || String(body.returnUrl).startsWith(site()))
-        ? String(body.returnUrl).split(/[?#]/)[0] : site() + "/";
+      const back = returnTo(req, body.returnUrl, site());
       const customer = await customerFor(email, name, contact?.stripe_customer);
       if (customer && !contact?.stripe_customer) await db.from("contacts").update({ stripe_customer: customer }).eq("email", email);
       const what = `${names(price.services)}, ${fmtWhen(date, start)}`;
@@ -246,6 +254,7 @@ Deno.serve(async (req) => {
     }
 
     case "waitlist": {
+      if (await tooMany(db, req, "waitlist", 10, 60)) return json({ reason: "slow_down" }, 429);
       const email = norm(body.email), name = clip(body.name, 120), date = String(body.date ?? "");
       if (!EMAIL.test(email) || !name) return json({ reason: "email" }, 400);
       if (!DAY.test(date) || hoursUntil(date, 1439) < 0) return json({ reason: "time" }, 400);
