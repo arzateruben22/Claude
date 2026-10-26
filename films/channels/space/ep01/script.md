@@ -29,7 +29,7 @@ vo: Rewind. {-} We circle the *Sun* at nearly thirty kilometers a second. {c2} I
 even its light needs *eight minutes and twenty seconds* to reach us. {c1,c3}
 
 ## change {events: body.vanish (a one-frame pop, no flash), light.front, the light clock 0:00 → 8:20 in true time · badge: thought experiment · energy: 0.5} (15–24.5 s)
-vo: Now switch it *off*. {-} Down here, nothing changes. {-} Its last light is on the way: for over
+vo: Now switch it *off*. {-} Down here, nothing changes. {c15} Its last light is on the way: for over
 eight minutes, your sky looks *exactly the same*. {c4}
 
 ## why {shot: gravity grid; the well flattens outward at the light front's speed · badge: analogy · picture-only 2 s · energy: 0.55} (24.5–40.5 s)
@@ -50,7 +50,7 @@ the last *Ice Age*. {c12,c14}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: leave for the nearest star today. {-} When do we *arrive*?
-end card: "Next: the nearest star" · "Light Minute · No. 002"
+end card: "Next light: the *nearest star*" · "Light Minute · No. 002" · footnote: "Measured in 2017: gravity travels at light speed (LIGO, Fermi)." (c5)
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see
