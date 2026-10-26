@@ -8,9 +8,9 @@ these files.
 
 | File | Size | Use |
 |---|---|---|
-| `skyline-landscape.jpg` | 3840×2160 | Home screen on desktop and tablet, behind the six-monitor rig |
-| `skyline-portrait.jpg` | 1440×3120 | Home screen on phones. The camera is recomposed for portrait, not cropped |
-| `skyline-soft.jpg` | 1280×720 | Inner pages: the landscape image heavily blurred and darkened |
+| `skyline-landscape.jpg` | 3840×2160 | 720 px and wider on 2x screens: the home rig and sign-in, and every inner page under a heavy scrim |
+| `skyline-landscape-1920.jpg` | 1920×1080 | The same picture for 1x screens (CSS `image-set`) |
+| `skyline-portrait.jpg` | 1440×3120 | Under 720 px, for the same pages. The camera is recomposed for portrait, not cropped |
 
 ## What is in the picture
 
@@ -19,7 +19,11 @@ these files.
 - Windows come from a shader. Most floors are dark, and lit windows come in small groups of
   sodium amber, warm lamp light or pale white. Some have their blinds half drawn.
 - One spire tower stands alone in the upper-middle third. Its stepped crown is floodlit in a
-  muted gold.
+  muted gold. Left of centre (landscape) a second landmark rises: a stepped crown of
+  diminishing lit arches with a needle, in the Chrysler manner.
+- Near facades carry stone piers between the window bays and a spandrel under each floor, and
+  the top course of every block and each roof parapet catch a little warm street light, so the
+  foreground has texture at 1x.
 - About 38,000 point-sprite lamps: the avenues read as thin, dull amber lines far below, plus
   late traffic, the embankments and a bridge. The far shore's lights run all the way to the
   horizon.
@@ -28,13 +32,13 @@ these files.
 - One plain, faint searchlight beam. There is no emblem, sign, billboard, logo or readable
   text anywhere in the picture.
 - The middle of the frame is kept low and quiet, and slightly darkened, so the monitor rig
-  and light UI text sit over it with only a light scrim. Mean luminance is about 24/255
-  (landscape), 22/255 (portrait) and 15/255 (soft).
+  and light UI text sit over it with only a light scrim. Mean luminance is about 24.5/255
+  (landscape) and 22.3/255 (portrait); keep it under 26.
 
 ## Re-rendering
 
 ```bash
-npm run wallpaper                                   # all three files, about 2 minutes
+npm run wallpaper                                   # every file, about 3 minutes
 node scripts/wallpaper/render.mjs --only portrait   # one composition
 node scripts/wallpaper/render.mjs --preview --out /tmp/wp   # quick half-size, 1x check
 ```

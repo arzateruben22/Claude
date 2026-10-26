@@ -7,6 +7,8 @@ const config: NextConfig = {
   serverExternalPackages: ["pg"],
   async headers() {
     return [
+      // the wallpaper files keep their names when re-rendered, so a week's cache (then revalidated in the background), not "immutable"
+      { source: "/wallpaper/:file(.*\\.jpg)", headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" }] },
       { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache" }, { key: "Service-Worker-Allowed", value: "/" }] },
       { source: "/(.*)", headers: [
         { key: "X-Content-Type-Options", value: "nosniff" },

@@ -1,7 +1,7 @@
 // Renders the Prism Studio skyline wallpaper (scene.js) in headless Chromium and writes the
 // JPEGs to public/wallpaper/.
 //
-//   npm run wallpaper                      # all three files, full quality (a few minutes)
+//   npm run wallpaper                      # every file, full quality (a few minutes)
 //   node scripts/wallpaper/render.mjs --preview --out /tmp/wp   # quick half-size look, 1x
 //   node scripts/wallpaper/render.mjs --only portrait
 //
@@ -47,7 +47,8 @@ const FILES = {
 };
 
 const JOBS = [
-  { key: 'landscape', format: 'landscape', width: 3840, height: 2160, file: 'skyline-landscape.jpg', soft: 1280, softFile: 'skyline-soft.jpg' },
+  // the 3840 file for 2x screens and a 1920 copy for 1x (globals.css picks one with image-set)
+  { key: 'landscape', format: 'landscape', width: 3840, height: 2160, file: 'skyline-landscape.jpg', half: 'skyline-landscape-1920.jpg' },
   { key: 'portrait', format: 'portrait', width: 1440, height: 3120, file: 'skyline-portrait.jpg' },
 ].filter((j) => only === 'all' || only === j.key);
 
@@ -76,14 +77,22 @@ for (const job of JOBS) {
   const width = Math.round(job.width * scale), height = Math.round(job.height * scale);
   const t = Date.now();
   const res = await page.evaluate((o) => window.renderWallpaper(o), {
-    format: job.format, width, height, ss, quality: 0.88, soft: job.soft ? Math.round(job.soft * scale) : 0,
+    format: job.format, width, height, ss, quality: 0.88, soft: 0,
   });
   const main = save(job.file, res.jpeg);
   console.log(`${job.file}  ${width}x${height}  ${main.kb} KB  ${((Date.now() - t) / 1000).toFixed(1)} s`, JSON.stringify(res.counts), JSON.stringify(res.timings));
   console.log('  look:', JSON.stringify(res.stats));
-  if (res.soft) {
-    const soft = save(job.softFile, res.soft);
-    console.log(`${job.softFile}  ${soft.kb} KB`, '  look:', JSON.stringify(res.softStats));
+  if (job.half) {
+    // the 1x copy: the finished frame downscaled in the same browser (high-quality smoothing), so no image library is needed
+    const half = await page.evaluate(async ({ src, w }) => {
+      const img = new Image(); img.src = src; await img.decode();
+      const c = document.createElement('canvas'); c.width = w; c.height = Math.round(img.height * w / img.width);
+      const g = c.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+      g.drawImage(img, 0, 0, c.width, c.height);
+      return c.toDataURL('image/jpeg', 0.86);
+    }, { src: res.jpeg, w: Math.round(width / 2) });
+    const h = save(job.half, half);
+    console.log(`${job.half}  ${Math.round(width / 2)}px  ${h.kb} KB`);
   }
 }
 await browser.close();

@@ -23,5 +23,6 @@ export const RIG_ORDER: { position: RigPosition; slug: string }[] = [
   { position: "outerRight", slug: RIG.outerRight },
 ];
 
-/** Phone order: Instagram first, the top screen, then the four portraits two by two (inner pair first). */
-export const PHONE_ORDER: RigPosition[] = ["center", "top", "innerLeft", "innerRight", "outerLeft", "outerRight"];
+/** Phone (and reading) order: Instagram first, then the inner pair (the channels with episodes), the top screen and the
+ *  outer pair. Under 900 px, any monitor with nothing to show also drops to one compact row at the end (globals.css). */
+export const PHONE_ORDER: RigPosition[] = ["center", "innerLeft", "innerRight", "top", "outerLeft", "outerRight"];

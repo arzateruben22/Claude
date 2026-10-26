@@ -237,7 +237,7 @@ CUE = {
     "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "gTip": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "two": A("vo04:two"), "glide": A("vo04:glide"),
             "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same")], "old": {"pts": OLD_PTS, "drew": A("vo04:drew"), "out": A("vo04:Gravity", -0.3)}},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
-    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:holds")]]},
+    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:In")]]},
     "tease": {"out": A("vo08:Next")},
     "cuts": CUTS,
 }
@@ -262,7 +262,7 @@ LABELS = [
 ]
 BADGES = [
     {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": cut("takeaway") - 0.3, "slot": "tr"},
-    {"id": "air", "title": "Air ignored", "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
+    {"id": "air", "title": "Air ignored", "text": "With air, the fastest throw lands 0.3 ms after the drop. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
 ]
 READOUTS = [
     {"id": "ch-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},     # the throw point: distances are measured from here
@@ -332,7 +332,8 @@ film = {
     "labels": LABELS, "badges": BADGES, "readouts": READOUTS, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": f.captions(max_chars=24), "endCard": EC,
-    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Rest Frame"},
+    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Rest Frame",
+            "foot": "Two motions at once: Galileo, Two New Sciences, 1638"},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

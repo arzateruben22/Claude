@@ -171,6 +171,13 @@ const counterLb = counterEl.querySelector(".lb");
 const RD = createReadouts({ project: hud.project });
 for (const r of FILM.readouts) RD.add(r.id, { at: r.at, text: r.text, t0: r.t0, t1: r.t1 ?? null });
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
+// the end card's one true-fact footnote (WRITING.md picture rule 6), styled as the channel's later episodes
+if (FILM.end.foot) {
+  const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
+  const st = document.createElement("style");
+  st.textContent = ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
+  document.head.appendChild(st);
+}
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 const hudCues = window.SCENE_CUES;
 window.SCENE_CUES = () => { const c = hudCues(); return { ...c, events: [...c.events, ...RD.cues()].sort((a, b) => a.t - b.t) }; };
