@@ -125,8 +125,8 @@ BADGES = [
     {"id": "nts-hook", "text": "not to scale", "t0": 0.0, "t1": CUT["drum"] - 0.3},
     {"id": "ill-drum", "text": "illustration: Helmholtz's 1850 method", "t0": CUT["drum"], "t1": CUT["fibres"] - 0.3},
     {"id": "nts-fib", "text": "not to scale", "t0": CUT["fibres"], "t1": EC},
-    {"id": "slow", "text": "slowed · distances compressed", "t0": B["whoa"]["t0"] + 0.2, "t1": B["takeaway"]["t0"] - 0.3},
-    {"id": "real", "text": "real time", "t0": TOE["stub"] - 0.6, "t1": B["meanwhile"]["t0"]},
+    {"id": "slow", "text": "slowed · distances compressed", "slot": "tl", "t0": B["whoa"]["t0"] + 0.2, "t1": B["takeaway"]["t0"] - 0.3},
+    {"id": "real", "text": "real time", "slot": "tl", "t0": TOE["stub"] - 0.6, "t1": B["meanwhile"]["t0"]},
 ]
 FIG = {"t0": B["takeaway"]["t0"] + 0.15, "t1": B["tease"]["t0"] + 0.2}     # the body silhouette over the dimmed fibres
 TITLE = {"series": "Meanwhile, Inside · No. 03", "title": "The *jump*", "t1": round(A("vo01:The", 0.3), 4), "sig": 0.0, "y": 0.17}

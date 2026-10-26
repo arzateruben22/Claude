@@ -119,7 +119,7 @@ TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["sac"] - 0.25, "rate": 15.0
 BADGES = [
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": CUT["sac"] - 0.3},
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"]},
-    {"id": "slow", "text": "slowed", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
+    {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
     {"id": "nts-sac", "text": "not to scale", "t0": CUT["sac"], "t1": EC},
 ]
 TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}

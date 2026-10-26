@@ -212,7 +212,8 @@ const ANCH = {
   wbc: () => wp("exit", [3, 4, 2]),
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tl" });
+// rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
 for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : (v) => String(Math.round(v));
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: () => 0 };

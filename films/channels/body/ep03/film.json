@@ -801,12 +801,14 @@
   {
    "id": "slow",
    "text": "slowed · distances compressed",
+   "slot": "tl",
    "t0": 42.6,
    "t1": 54.1
   },
   {
    "id": "real",
    "text": "real time",
+   "slot": "tl",
    "t0": 56.5,
    "t1": 61.2
   }
