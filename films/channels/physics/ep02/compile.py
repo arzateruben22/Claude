@@ -187,7 +187,8 @@ LABELS = [
     {"id": "hk-small", "text": "small swing", "color": "ghost", "t0": A("vo01:small?"), "t1": cut("normal") - 0.4, "anchor": {"bob": ["hook", "small"]}, "side": 1, "fixed": True},
     {"id": "nm-len", "text": "99.4 cm", "color": "ghost", "t0": A("vo02:meter,"), "t1": A("vo02:One", -0.1), "anchor": {"string": "small", "u": 0.5}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "nm-1s", "text": "1 s across", "color": "motion", "t0": A("vo02:second."), "t1": A("vo02:Ghosts", -0.1), "anchor": {"bob": ["normal", "small"]}, "side": -1, "fixed": True},
-    {"id": "nm-apart", "text": "1/10 s apart", "color": "ghost", "t0": A("vo02:Ghosts"), "t1": cut("change"), "anchor": {"ghost": ["normal", "small", 9]}, "side": 1, "fixed": True},
+    {"id": "nm-apart", "text": "1/10 s apart", "color": "ghost", "t0": A("vo02:tenth"),   # on its word, after "1 s across" has faded (no crossfade overlap)
+     "t1": cut("change"), "anchor": {"ghost": ["normal", "small", 9]}, "side": 1, "fixed": True},
     {"id": "ch-30", "text": "30°", "color": "ghost", "t0": A("vo03:farther."), "t1": cut("why"), "anchor": {"bob": ["change", "big"]}, "side": -1, "fixed": True},
     {"id": "ch-10", "text": "10°", "color": "ghost", "t0": A("vo03:Let"), "t1": cut("why"), "anchor": {"bob": ["change", "small"]}, "side": -1, "fixed": True},
     {"id": "wy-pull-big", "text": "pull ×2.9", "color": "force", "t0": A("vo04:pull"), "t1": R_w, "anchor": {"arrow": "wy-f-big"}, "side": 1, "fixed": True},

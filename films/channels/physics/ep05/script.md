@@ -1,13 +1,13 @@
 # Rest Frame No. 005: "The spinning chair" (draft; a physicist signs off before it posts)
 
-About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 5 (`../bible.md`, §7 #5) and episode 4's tease ("Next: a
 spinning office chair. Pull in your arms, and it spins faster. Why?"), which this episode pays off.
 
 - A person on a swivel chair holding two 2 kg dumbbells pulls them from 80 cm to 20 cm from the axis.
   The model (`../set/spin.js`): angular momentum conserved (friction ignored, badged); the seated person and
   the chair's top without the arms are taken as 2.0 kg·m² (an assumption, badged), and each arm (3.5 kg) is a
-  rod from the shoulder (19 cm out) to the hand, moving in with it. The spin goes up 2.67× (2.2–3.1× for a
+  rod from the shoulder (19 cm out) to the hand, moving in with it. The spin goes up 2.68× (2.2–3.1× for a
   body of 1.5–3.0 kg·m²: "more than twice as fast"). The spine counts rpm: 30, then 80, then the skater's 342.
 - The measure segment reads the strobe ladder seen from above: ghosts every 1/10 s, 18° apart with the
   arms out (one turn every 2 s), 48° apart with them in.

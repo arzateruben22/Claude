@@ -1,6 +1,6 @@
 # Rest Frame No. 006: "The ten-meter straw" (draft; a physicist signs off before it posts)
 
-About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 6 (`../bible.md`, §7 #6) and episode 5's tease ("Next: a
 drinking straw, three stories tall. Could you still drink through it?"), which this episode pays off.
 

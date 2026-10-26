@@ -171,15 +171,6 @@
    "tag": "normal:g3"
   },
   {
-   "t": 10.266666666666667,
-   "kind": "label",
-   "tag": "nm-apart",
-   "pos": [
-    0.558,
-    0.525
-   ]
-  },
-  {
    "t": 10.3205,
    "kind": "strobe",
    "tag": "normal:g4"
@@ -193,6 +184,15 @@
    "t": 10.9205,
    "kind": "strobe",
    "tag": "normal:g6"
+  },
+  {
+   "t": 11.1,
+   "kind": "label",
+   "tag": "nm-apart",
+   "pos": [
+    0.558,
+    0.525
+   ]
   },
   {
    "t": 11.2205,
@@ -234,8 +234,8 @@
    "kind": "label",
    "tag": "ch-10",
    "pos": [
-    0.309,
-    0.543
+    0.308,
+    0.542
    ]
   },
   {
@@ -458,7 +458,7 @@
    "kind": "label",
    "tag": "wo-15",
    "pos": [
-    0.575,
+    0.705,
     0.35
    ]
   },
@@ -780,20 +780,20 @@
   "hk-small": 2.5333,
   "nm-len": 4.9,
   "nm-1s": 9.4,
-  "nm-apart": 10.3,
-  "ch-30": 14.8333,
-  "ch-10": 15.6,
-  "wy-pull-big": 29.2667,
-  "wy-pull-small": 29.4333,
-  "wy-v-big": 33.4667,
-  "wy-v-small": 33.6,
-  "wy-same": 35.3667,
-  "wo-15": 40.1667,
-  "wo-line": 46.0667,
-  "ms-home": 53.8667,
-  "ms-behind": 54,
-  "tk-len": 60.1,
-  "tk-fast": 63.9667,
+  "nm-apart": 11.1333,
+  "ch-30": 15.1,
+  "ch-10": 15.9,
+  "wy-pull-big": 29.8,
+  "wy-pull-small": 29.9667,
+  "wy-v-big": 34,
+  "wy-v-small": 34.1333,
+  "wy-same": 35.9,
+  "wo-15": 40.8667,
+  "wo-line": 47.1333,
+  "ms-home": 54.9667,
+  "ms-behind": 55.0667,
+  "tk-len": 61.1667,
+  "tk-fast": 65.0333,
   "spine": 3.7667
  }
 }

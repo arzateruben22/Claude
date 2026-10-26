@@ -1,7 +1,7 @@
 # Rest Frame No. 006, "The ten-meter straw"
 
 Episode 6 of Rest Frame, the physics channel (films/channels/physics). It is 73.3 s long, 9:16, narrated by af_bella
-at speed 1.0 (a synthetic voice, labelled as AI). It pays off episode 5's tease ("Next: a drinking straw, three stories
+at speed 1.0 (a synthetic voice, labeled as AI). It pays off episode 5's tease ("Next: a drinking straw, three stories
 tall. Could you still drink through it?") and sets up episode 7 (why ice floats). **Nothing has been posted.** A
 physicist signs off the script before it posts.
 

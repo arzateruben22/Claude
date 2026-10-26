@@ -1,6 +1,6 @@
 # Rest Frame No. 004: "The hammer and the feather" (draft; a physicist signs off before it posts)
 
-About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 4 (`../bible.md`, §7 #4) and episode 3's tease ("Next: a
 hammer, a feather, the Moon. Nobody wins."), which this episode pays off.
 

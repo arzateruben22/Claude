@@ -1,6 +1,6 @@
 # Rest Frame No. 002: "The swing's secret" (draft; a physicist signs off before it posts)
 
-About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 2 (`../bible.md`, §7 #2) and episode 1's tease
 ("Next: one pendulum, big swing against small. It's almost a tie."), which this episode pays off.
 
@@ -26,7 +26,7 @@ vo: Which swing gets back *first*? Big? Or small? {-}
 vo: Each string is just under a meter, as in a grandfather clock. {c1} One swing: about
 *one second*. {c2} Ghosts every tenth of a second bunch up at the turns. {c3}
 
-## change {events: both released together at ×1/4 from 30° and 10°; both pass the bottom on one word · labels: "30°", "10°" · pre: 0.1 · energy: 0.5} (14–21.5 s)
+## change {events: both released together at ×1/5 from 30° and 10°; both pass the bottom on one word · labels: "30°", "10°" · pre: 0.1 · energy: 0.5} (14–21.5 s)
 vo: Pull its twin three times farther. {-} Let both go. {-} Three times the distance… and still,
 *neck and neck*. {c4}
 

@@ -1,6 +1,6 @@
 # Rest Frame No. 003: "Where does the bounce go?" (draft; a physicist signs off before it posts)
 
-About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 3 (`../bible.md`, §7 #3) and episode 2's tease ("Next: a
 dropped ball, bouncing back. It never reaches your hand."), which this episode pays off.
 
@@ -48,7 +48,7 @@ vo: A bounce never *destroys* energy. {c13} It gives it away, knock by knock. {c
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (66.5–72 s)
 vo: Next: a hammer, a feather, the *Moon*. {c15} Nobody wins. {c17}
-end card: "Next drop: the hammer and the feather" · "Follow Rest Frame" · footnote: "Joule (1850): 772 foot-pounds warm a pound of water 1 °F, within 1% of today's value."
+end card: "Next drop: the hammer and the feather" · "Follow Rest Frame" · footnote: "Joule, 1850: 772 foot-pounds warm a pound of water 1 °F. Today's value is 778."
 
 ## Notes
 - The bounce series and the stacked drop are closed form (no simulation), without air.

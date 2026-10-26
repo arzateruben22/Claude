@@ -158,8 +158,8 @@ SPINE_AT = [[0.0 if b["id"] == "hook" else cut(b["id"]), SPINE_PLACE[b["id"]]] f
 # is [[t, strength], ...] for keyed() (cinema/film/runtime.js): 1 as built, LOW a third, 0 gone (a ladder leaving over
 # LEAVE before its window ends). The scene turns it into the ghosts' opacity (one material per ladder group: "out" is
 # the arms-out ladders, live and recorded, and the hook's and the loop's spirals, which share its slots; "in" is the
-# arms-in ladders) and, for the chair and its sitter, a two-thirds lerp toward the paper (the scene-linear value that
-# lands on #E6E2D8). Every key is a cut or a spoken word; between one ladder's window and the next a table may step
+# arms-in ladders) and, for the chair and its sitter, a lerp toward the paper (the scene-linear value that lands on
+# #E6E2D8), each through set/aces.js screenAlpha so a third keeps a third of the contrast on screen. Every key is a cut or a spoken word; between one ladder's window and the next a table may step
 # (nothing of that group is on screen); every table starts and ends at 1, so frame 0 and the loop's last frame match.
 T_SKATERS, T_ARMS_OUT, T_ARMS_IN = A("vo05:Skaters"), A("vo06:Arms"), A("vo06:Arms#2")
 DIM = {

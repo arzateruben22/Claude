@@ -16,7 +16,7 @@ Rest Frame No. 006, "The ten-meter straw". The measured gates are in `scorecard.
 
 ## Every episode
 - **The channel.** Rest Frame and the narrator are provisional (`films/channels/DECISIONS.md`). TODO before the first post: the handle (@restframe) on TikTok, YouTube and Instagram, and a USPTO/EUIPO trademark search.
-- **AI labelling.** The narrator is synthetic (Kokoro). Turn on TikTok's AI-generated label and put "Voice: synthetic" in the post text; the same on Reels and Shorts.
+- **AI labeling.** The narrator is synthetic (Kokoro). Turn on TikTok's AI-generated label and put "Voice: synthetic" in the post text; the same on Reels and Shorts.
 - **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/physics/ep06 --sources` prints the list.
 - **Cover frame.** The poster is frame 0.
 - **Upload.** Upload the MP4 as is; leave auto-captions off (captions are burned in).

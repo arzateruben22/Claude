@@ -172,7 +172,8 @@ SPINE_AT = [[0.0 if b["id"] == "hook" else cut(b["id"]), SPINE_PLACE[b["id"]]] f
 # The line or object the caption names is the brightest thing in the picture; whatever delivered the previous beat
 # drops to about a third of its strength as the new beat begins (eased over half a second from the cut or the word).
 # Each table is [[t, strength], ...] for keyed() (cinema/film/runtime.js), 1 = as built, LOW = a third: the scene turns
-# it into opacity (ink, the glow) or a two-thirds lerp toward the paper #E6E2D8 (the ghost ladders, the live ball).
+# it into opacity (ink, the glow) or a lerp toward the paper #E6E2D8 (the ghost ladders, the live ball), each through
+# set/aces.js screenAlpha so a third keeps a third of the contrast on screen (opacity 1/3 would keep about 1/11).
 # Every key is a cut or a spoken word; every table starts and ends at 1, so frame 0 and the loop's last frame match.
 LOW, FADE = 1 / 3, 0.5
 T_PRICE, T_GIVES = A("vo06:A"), A("vo07:It")
