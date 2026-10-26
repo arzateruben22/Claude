@@ -30,6 +30,13 @@
 - **After the 26 Oct script audit:** the why beat's spine heading in the script now reads "what you can feel: a
   jolt, not speed" (Earth's orbital speed itself changes by about 3,600 km/h over a year, unfelt). That heading is
   a script note: the cut's spine shows the km counter, so the picture doesn't change. No line was re-voiced.
+- **After the second draft review (26 Oct):** Earth now really dims behind Galileo's cabin and its spin waits there,
+  so "you" come back where they went in; the spin's note leaves while the cabin is up. The cabin's butterflies are
+  drawn as butterflies, the hull sits in the water, and on "jolt" the drops and butterflies keep their place while the
+  ship lurches. The jump holds for a moment on the Sun among its neighbours (a drawn cloud of nearby stars, noted
+  "illustration"). The equator is drawn on "at the equator"; the orbit's note reads "1,000,000× faster"; the spine
+  reads "230 million" for the lap. In the readout light's front moves at one speed and the camera drifts in; the end
+  card's words arrive over a quieter galaxy. No line was re-voiced and no claim changed.
 
 
 ## Every episode

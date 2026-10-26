@@ -626,6 +626,13 @@
    "slot": "tr"
   },
   {
+   "id": "b-cloud",
+   "text": "illustration",
+   "t0": 40.0333,
+   "t1": 41.2333,
+   "slot": "tr"
+  },
+  {
    "id": "b-illus",
    "text": "galaxy: illustration",
    "t0": 41.6333,

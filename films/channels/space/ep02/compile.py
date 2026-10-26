@@ -126,7 +126,8 @@ CAM = {
         {"t": t_end + 0.4, **WIDE, "dist": 1420, "az": 1.5, "ease": "sine"},
     ],
     # the end card: back to the hook's pose, so the replay's first frame continues the last
-    "end": [{"t": t_end, **WIDE, "dist": 1428, "az": 1.6}, {"t": B["tease"]["t1"], **POSE, "dist": 1169, "az": -1.2, "ease": "inout2"}],
+    # (sine, not inout2: the 18% push then peaks at 5%/s, the rig's drift limit)
+    "end": [{"t": t_end, **WIDE, "dist": 1428, "az": 1.6}, {"t": B["tease"]["t1"], **POSE, "dist": 1169, "az": -1.2, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # the bible's arc limit: ≤ 1.5° a second
     for a, b in zip(keys, keys[1:]):

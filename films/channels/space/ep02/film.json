@@ -492,7 +492,7 @@
     "fy": 0.55,
     "dist": 1169,
     "az": -1.2,
-    "ease": "inout2"
+    "ease": "sine"
    }
   ]
  },

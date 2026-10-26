@@ -131,19 +131,26 @@ const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 
 // Galileo's cabin (an illustration, as an inset over Earth): a ship on calm water, the hull cut away below deck. The
 // water slides past (the ship is moving); inside nothing shows it: the drops fall straight down (lilac: gravity), the
-// fish swims, the butterflies flutter in place. On "jolt" the ship lurches once; then the smooth ride again.
+// fish swims, the butterflies flutter in place. On "jolt" the ship lurches once (what is fixed to it lurches; the drops
+// and butterflies keep their place, the fish lags); then the smooth ride again. The hull is filled, so it sits in the
+// water. The panel covers Earth's lower limb and stays clear of the notes above and the spine below.
 const cab = document.createElement("div");
-const CW = 0.8 * W, CH = 0.3 * H;
-Object.assign(cab.style, { position: "absolute", left: `${(W - CW) / 2}px`, top: `${0.165 * H}px`, width: `${CW}px`, height: `${CH}px`, opacity: 0, zIndex: 3,
-  pointerEvents: "none", background: "rgba(8,10,28,.9)", borderRadius: "3vmin", boxShadow: "0 0 0 1px rgba(170,185,230,.18)" });
-const wave = (y, a, ph) => { let d = `M -100 ${y}`; for (let x = -100; x <= 900; x += 20) d += ` L ${x} ${(y + a * Math.sin((x / 100) * Math.PI + ph)).toFixed(1)}`; return d; };
+const CW = 0.8 * W, CH = 0.31 * H;
+Object.assign(cab.style, { position: "absolute", left: `${(W - CW) / 2}px`, top: `${0.185 * H}px`, width: `${CW}px`, height: `${CH}px`, opacity: 0, zIndex: 3,
+  pointerEvents: "none", background: "rgba(8,10,28,.97)", borderRadius: "3vmin", boxShadow: "0 0 0 1px rgba(170,185,230,.18)" });
+// x runs to 1100: the water slides up to 200 left, and its right end must stay outside the 800-wide box
+const wave = (y, a, ph) => { let d = `M -100 ${y}`; for (let x = -100; x <= 1100; x += 20) d += ` L ${x} ${(y + a * Math.sin((x / 100) * Math.PI + ph)).toFixed(1)}`; return d; };
+// a butterfly: a body, larger forewings, smaller hindwings, antennae (pale; lilac is gravity's, the drops')
+const BFLY = `<path d="M 1 -6 C 6 -18 18 -22 21 -15 C 23 -8 13 -2 1 -1 Z M -1 -6 C -6 -18 -18 -22 -21 -15 C -23 -8 -13 -2 -1 -1 Z
+    M 1 0 C 9 1 15 8 12 13 C 9 17 3 10 1 4 Z M -1 0 C -9 1 -15 8 -12 13 C -9 17 -3 10 -1 4 Z" style="fill:rgba(238,240,255,.22)"/>
+    <path d="M 0 -8 L 0 9 M -1 -8 Q -3 -15 -7 -18 M 1 -8 Q 3 -15 7 -18"/>`;
 cab.innerHTML = `<svg width="${CW}" height="${CH}" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" style="overflow:hidden;border-radius:3vmin">
   <g id="cab-water" style="stroke:var(--ice)" fill="none" stroke-width="3" stroke-linecap="round" opacity="0.55">
-    <path d="${wave(450, 6, 0)}"/><path d="${wave(478, 5, 1.3)}" opacity="0.7"/><path d="${wave(504, 4, 2.4)}" opacity="0.45"/></g>
+    <path d="${wave(418, 5, 0)}"/><path d="${wave(446, 4, 1.3)}" opacity="0.7"/><path d="${wave(474, 3, 2.4)}" opacity="0.45"/></g>
   <g id="cab-ship" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <path d="M 400 168 L 400 34" style="stroke:var(--text-2)" stroke-width="4"/>
     <path d="M 408 44 L 408 150 L 560 150 Z" style="stroke:var(--text-2)" stroke-width="3"/>
-    <path d="M 40 168 L 760 168 L 700 432 Q 400 462 100 432 Z" style="stroke:var(--ice)" stroke-width="4"/>
+    <path d="M 40 168 L 760 168 L 700 432 Q 400 462 100 432 Z" style="stroke:var(--ice);fill:#080A1C" stroke-width="4"/>
     <rect x="130" y="192" width="540" height="214" rx="10" style="stroke:var(--text-2);fill:rgba(143,208,255,.05)" stroke-width="2.5"/>
     <path d="M 430 352 L 640 352 M 450 352 L 450 404 M 620 352 L 620 404" style="stroke:var(--text-2)" stroke-width="3"/>
     <circle cx="535" cy="322" r="30" style="stroke:var(--ice)" stroke-width="3"/>
@@ -151,8 +158,8 @@ cab.innerHTML = `<svg width="${CW}" height="${CH}" viewBox="0 0 800 520" preserv
     <path d="M 238 192 L 238 206 M 224 206 L 252 206 L 247 232 L 229 232 Z" style="stroke:var(--text-2)" stroke-width="3"/>
     <path d="M 226 372 L 226 400 L 250 400 L 250 372 M 222 372 L 254 372" style="stroke:var(--text-2)" stroke-width="3"/>
     <g id="cab-drops" style="fill:var(--lilac)"><circle r="4.5"/><circle r="4.5"/><circle r="4.5"/></g>
-    <g id="cab-b1" style="stroke:var(--text)" stroke-width="2.5"><path d="M 0 0 Q -14 -14 -18 0 Q -14 12 0 0 Q 14 -14 18 0 Q 14 12 0 0"/></g>
-    <g id="cab-b2" style="stroke:var(--text)" stroke-width="2.5"><path d="M 0 0 Q -12 -12 -15 0 Q -12 10 0 0 Q 12 -12 15 0 Q 12 10 0 0"/></g>
+    <g id="cab-b1" style="stroke:var(--text)" stroke-width="2">${BFLY}</g>
+    <g id="cab-b2" style="stroke:var(--text)" stroke-width="2">${BFLY}</g>
   </g></svg>`;
 document.getElementById("hud").appendChild(cab);
 const CAB = { water: cab.querySelector("#cab-water"), ship: cab.querySelector("#cab-ship"), fish: cab.querySelector("#cab-fish"),
@@ -164,13 +171,15 @@ const cabin = (t) => {
   if (op <= 0.001) return;
   const u = t - CUE.cab0;
   CAB.water.setAttribute("transform", `translate(${(-(u * 60) % 200).toFixed(1)} 0)`);   // the water slides past: the ship moves
-  const j = t - CUE.jolt, lurch = j > 0 && j < 0.7 ? 16 * Math.sin(j * 2 * Math.PI * 5) * Math.exp(-j / 0.18) : 0;
+  // the jolt: a damped lurch (1.4 s, so it has died away before it stops); the ship moves, the free things stay put in the
+  // world (so inside the cabin they swing: the drops miss the cup), the fish in its water lags
+  const j = t - CUE.jolt, lurch = j > 0 && j < 1.4 ? 34 * Math.sin(j * 2 * Math.PI * 2.2) * Math.exp(-j / 0.3) : 0;
   CAB.ship.setAttribute("transform", `translate(${lurch.toFixed(2)} ${(lurch * 0.25).toFixed(2)})`);
-  CAB.fish.setAttribute("transform", `translate(${(535 + 12 * Math.sin(u * 1.3)).toFixed(1)} 324) scale(${Math.cos(u * 1.3) >= 0 ? 1 : -1} 1)`);
-  CAB.drops.forEach((d, k) => { const q = ((u / 0.9) + k / 3) % 1; d.setAttribute("cx", "238"); d.setAttribute("cy", (236 + q * 132).toFixed(1)); d.setAttribute("opacity", q < 0.94 ? "1" : "0"); });
+  CAB.fish.setAttribute("transform", `translate(${(535 + 12 * Math.sin(u * 1.3) - 0.6 * lurch).toFixed(1)} 324) scale(${Math.cos(u * 1.3) >= 0 ? 1 : -1} 1)`);
+  CAB.drops.forEach((d, k) => { const q = ((u / 0.9) + k / 3) % 1; d.setAttribute("cx", (238 - lurch).toFixed(1)); d.setAttribute("cy", (236 + q * 132 - 0.25 * lurch).toFixed(1)); d.setAttribute("opacity", q < 0.94 ? "1" : "0"); });
   const flap = (ph) => (0.35 + 0.65 * Math.abs(Math.cos(u * 9 + ph))).toFixed(3);
-  CAB.b1.setAttribute("transform", `translate(${(330 + 6 * Math.sin(u * 0.8)).toFixed(1)} ${(262 + 4 * Math.sin(u * 1.7)).toFixed(1)}) scale(${flap(0)} 1)`);
-  CAB.b2.setAttribute("transform", `translate(${(610 + 5 * Math.sin(u * 0.9 + 1)).toFixed(1)} ${(236 + 4 * Math.sin(u * 1.5 + 2)).toFixed(1)}) scale(${flap(1.7)} 1)`);
+  CAB.b1.setAttribute("transform", `translate(${(330 + 6 * Math.sin(u * 0.8) - lurch).toFixed(1)} ${(262 + 4 * Math.sin(u * 1.7) - 0.25 * lurch).toFixed(1)}) scale(1.4) scale(${flap(0)} 1)`);
+  CAB.b2.setAttribute("transform", `translate(${(600 + 5 * Math.sin(u * 0.9 + 1) - lurch).toFixed(1)} ${(236 + 4 * Math.sin(u * 1.5 + 2) - 0.25 * lurch).toFixed(1)}) scale(1.3) scale(${flap(1.7)} 1)`);
 };
 
 window.seek = function (t) {
@@ -180,23 +189,25 @@ window.seek = function (t) {
   ORIGIN.earth[0] = ea[0]; ORIGIN.earth[1] = ea[1]; ORIGIN.earth[2] = ea[2];
   const view = ladder.apply(dolly(t));
   // the jump passes the orbit's rung in about half a second: drawn, its ring and trail only slash across the frame and
-  // the spine, so the jump shows Earth shrinking, the Sun as a point, then the galaxy
+  // the spine, so the jump shows Earth shrinking, the Sun as a point among its neighbours, then the galaxy
   const inJump = t > CUE.j0 && t < CUE.j1;
   if (inJump) G.solar.visible = false;
   // the push back in to Earth (e0 → e1): the orbit and its trail would pass the lens as huge arcs; they leave first
   const kPush = t > CUE.e0 && t < CUE.j0 ? 1 - E.out3(seg(t, CUE.e0, CUE.e0 + 0.35)) : 1;
   const kCab = cabOp(t);                                                        // Earth steps back behind Galileo's cabin
-  if (kCab > 0.001) setOpacity(G.earth, view.alpha.earth * (1 - 0.85 * kCab));
   const toS = (id, p) => ladder.toScene(id, p, view);
   const sunDirE = (() => { const l = Math.hypot(...ea); return ea.map((v) => -v / l); })();
 
   // Earth: spinning at the clock's rate (counterclockwise seen from the north); "you" stand on the equator in Ecuador
-  // (longitude 78.5° W), which crosses the side facing the camera from left to right while the spin plays
-  const psi = 3.955 + (2 * Math.PI * CLK.spin.tau(t)) / PH.sidereal;
-  earth.set({ center: [0, 0, 0], sunDir: norm([sunDirE[0] + 0.35, 0.25, sunDirE[2] + 0.6]), sun: 1, spin: psi + (78.5 * Math.PI) / 180 });
+  // (longitude 78.5° W), which crosses the side facing the camera from left to right while the spin plays. Behind the
+  // cabin it dims through its own light (its shader has no opacity): about a tenth of its sunlight and rim, plus the fill
+  const psi = 3.955 + (2 * Math.PI * CLK.spin.tau(t)) / PH.sidereal, kE = 1 - 0.9 * kCab;
+  earth.set({ center: [0, 0, 0], sunDir: norm([sunDirE[0] + 0.35, 0.25, sunDirE[2] + 0.6]), sun: kE, rimNight: 0.5 * kE, spin: psi + (78.5 * Math.PI) / 180 });
   const pinL = [6.371 * 1.01 * Math.cos(psi), 0, -6.371 * 1.01 * Math.sin(psi)];
-  you.set({ center: pinL, camera, opacity: view.alpha.earth });
-  S.pin = toS("earth", pinL.map((v) => v * 1.06));
+  you.set({ center: pinL, camera, opacity: view.alpha.earth * (1 - kCab) });
+  S.pin = toS("earth", pinL);                                                  // the label's dot on the beacon itself
+  // the equator, from "at the equator" until the pull-back starts (after ladder.apply: the ladder's fade would zero it)
+  eqR.set({ opacity: view.alpha.earth * fadeIn(t, CUE.eq, 0.6) * (1 - fadeIn(t, CUE.p0, 0.5)) * (1 - kCab) });
 
   // the orbit: the Sun, Earth's marker, the arc it has run since the orbit clock started
   sun.set({ tau: t * 300, on: view.alpha.solar > 0.001, camera, center: [0, 0, 0] });
@@ -208,35 +219,42 @@ window.seek = function (t) {
   S.sun = toS("solar", [0, 5, 0]);
 
   // the galaxy: the Sun on its lap. The disc turns so its arms trail (as real spiral arms do); it steps down while the
-  // lap is drawn and again for the readout, so the lap, the Sun and light's path win over the bulge
-  const ga = (2 * Math.PI * CLK.gal.tau(t)) / (PH.lap_y * PH.year);
-  galaxy.set({ angle: -ga, gain: (1.5 - 0.5 * fadeIn(t, CUE.lap - 0.6, 0.6)) * (1 - 0.35 * fadeIn(t, CUE.rd, 0.5)) });
+  // lap is drawn and again for the readout, so the lap, the Sun and light's path win over the bulge. Before the end card's
+  // words arrive, the path, the lap and the Sun leave and the disc dims a little (nothing bright runs through the text)
+  const ga = (2 * Math.PI * CLK.gal.tau(t)) / (PH.lap_y * PH.year), kEnd = fadeIn(t, FILM.endCard - 0.45, 0.45);
+  galaxy.set({ angle: -ga, gain: (1.25 - 0.25 * fadeIn(t, CUE.lap - 0.6, 0.6)) * (1 - 0.35 * fadeIn(t, CUE.rd, 0.5)) * (1 - 0.3 * kEnd) });
   const sp = galaxy.sunAt();
-  sunG.set({ center: sp, camera, opacity: view.alpha.galaxy });
-  lap.set({ opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) * (1 - 0.55 * fadeIn(t, CUE.last, 0.6)) * (1 - 0.5 * fadeIn(t, CUE.gcring, 0.5)) });   // loud for "One lap", then quieter
+  // through the jump the Sun stays a point (sunJ): it brightens beside Earth's dot once the zoom has brought it within
+  // about 30 px (by scale, so it never streaks in from the frame's edge) and takes the dot's place; the galaxy's own Sun
+  // takes over at the jump's end (not before: the galaxy's rung is already up through the hold, and two Suns would add)
+  const jIn = clamp01((view.s - 8.2) / 0.5), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4);
+  sunG.set({ center: sp, camera, opacity: view.alpha.galaxy * jOut * (1 - kEnd) });
+  // loud for "One lap", then quieter: dimmed by colour, not opacity (lilac scaled down comes out blue through the finish)
+  lap.set({ color: pos(line("lilac", 0.8 - 0.25 * fadeIn(t, CUE.last, 0.6) - 0.1 * fadeIn(t, CUE.gcring, 0.5))), opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) * (1 - kEnd) });
   gcRing.set({ opacity: 0 });
-  // the readout: light's path from the Sun to the galaxy's centre, drawn out on "To the galaxy's center"
-  const ug = E.inout2(seg(t, CUE.gcring, CUE.gcring + 0.8)), gEnd = sp.map((v) => v * (1 - ug));
-  gcPath.seg(sp, gEnd).set({ opacity: view.alpha.galaxy * (ug > 0.002 ? 1 : 0) });
-  gcHead.set({ center: gEnd, camera, opacity: view.alpha.galaxy * (ug > 0.002 && ug < 0.999 ? 1 : 0) });
-  // through the jump the Sun stays a point: in when the orbit fades, out when the galaxy's own Sun has come in;
-  // "the Sun, and you" rides that point and hands over to the galaxy's Sun as it comes in
-  const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4), sJ = toS("solar", [0, 0, 0]), sG = toS("galaxy", sp);
+  // the readout: light's path from the Sun to the galaxy's centre, drawn out on "To the galaxy's center"; its front
+  // moves at one speed (light doesn't ease)
+  const ug = seg(t, CUE.gcring, CUE.gcring + 2.6), gEnd = sp.map((v) => v * (1 - ug));
+  gcPath.seg(sp, gEnd).set({ opacity: view.alpha.galaxy * (ug > 0.002 ? 1 : 0) * (1 - kEnd) });
+  gcHead.set({ center: gEnd, camera, opacity: view.alpha.galaxy * (ug > 0.002 && ug < 0.999 ? 1 : 0) * (1 - kEnd) });
+  // "the Sun, and you" rides the jump's Sun and hands over to the galaxy's Sun as it comes in
+  const sJ = toS("solar", [0, 0, 0]), sG = toS("galaxy", sp);
   S.sunG = t > CUE.j0 && t < CUE.j1 + 0.1 ? sG.map((v, i) => sJ[i] + (v - sJ[i]) * jOut) : sG;
   S.gc = toS("galaxy", [0, 0, 0]);
-  // the lap's label: on the ring's upper-left corner on screen (the far side, away from the Sun's path and the core)
+  // the lap's label: above the ring's top on screen (the far side, away from the Sun's path and the core; the pill covers
+  // only the outer arms there, where the ring drops away under it)
   camera.updateMatrixWorld();
   const rl = SUN_LY / 1000;
   let best = null, by = -Infinity;
   for (let k = 0; k < 72; k++) {
     const a = (k / 72) * 2 * Math.PI, pS = toS("galaxy", [rl * Math.cos(a), 0, rl * Math.sin(a)]);
-    const q = new THREE.Vector3(...pS).project(camera), sc = q.y - q.x;
+    const q = new THREE.Vector3(...pS).project(camera), sc = q.y;
     if (sc > by) { by = sc; best = pS; }
   }
   S.lap = best;
 
   sunJ.set({ center: sJ, camera, opacity: jIn * (1 - jOut) * (inJump ? 1 : 1 - view.alpha.solar) });
-  earthJ.set({ center: toS("earth", [0, 0, 0]), camera, opacity: inJump ? (1 - view.alpha.earth) * (1 - fadeIn(t, CUE.jm - 0.3, 0.4)) : 0 });
+  earthJ.set({ center: toS("earth", [0, 0, 0]), camera, opacity: inJump ? (1 - view.alpha.earth) * (1 - jIn) * (1 - fadeIn(t, CUE.jm - 0.3, 0.4)) : 0 });   // the Sun takes its place
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1 - clamp01((view.s - 12) / 2), bandGain: 1 - clamp01((view.s - 12) / 2) });
   cabin(t);
   hud.update(t);
