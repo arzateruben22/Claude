@@ -547,12 +547,12 @@
     .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
   var NEW_FIRST = [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["My first visit", "t:What happens at a first visit?"]];
   var MINE_CHIP = ["My products", "t:What have I bought here, and how do I use it?"];
-  /* four suggestions at most: the rest is a question away, and the answer's own buttons lead on */
+  /* three suggestions at most, and none while the latest answer has buttons of its own: the rest is a question away */
   var pick = function (ids) { return ids.map(function (id) { return CHIPS.filter(function (c) { return c[1] === id; })[0]; }).filter(Boolean); };
   var chipsFor = function (st) {
-    if (st === "new") return NEW_FIRST.concat(pick(["n:prices", "n:book"]));
+    if (st === "new") return NEW_FIRST.concat(pick(["n:prices"]));
     var who = me();
-    return (who && myShelf(who.email).length ? [MINE_CHIP] : pick(["t:Where is my order?"])).concat(pick(["n:book", "n:before", "n:after"]));
+    return (who && myShelf(who.email).length ? [MINE_CHIP] : pick(["t:Where is my order?"])).concat(pick(["n:book", "n:before"]));
   };
 
   var state = chat();
@@ -595,7 +595,7 @@
   /* menu steps (n:, s:, t:, skin) only on the newest answer; actions (book, move, #…) stay */
   var isStep = function (t) { return /^(n:|s:|t:|skin$)/.test(t); };
   var actsHtml = function (acts, last) {
-    acts = (acts || []).slice(0, 3);   /* three buttons at most under an answer */
+    acts = (acts || []).slice(0, 2);   /* two buttons at most under an answer */
     acts = (acts || []).filter(function (a) { return last || !isStep(a[1]); });
     if (!acts.length) return "";
     return '<div class="ask-acts">' + acts.map(function (a) {
@@ -677,7 +677,7 @@
     if (lastBot >= 0 && state.log.slice(lastBot + 1).some(function (m) { return m.who === "you"; })) lastBot = -1;
     state.log.forEach(function (m, i) {
       if (m.who === "you") bubble("you", esc(m.text));
-      else if (m.who === "bot") bubble("bot", esc(m.text) + actsHtml(m.acts, i === lastBot && !state.pending), m.warn ? "warn" : "");
+      else if (m.who === "bot") bubble("bot", esc(m.text) + (i === lastBot ? actsHtml(m.acts, !state.pending) : ""), m.warn ? "warn" : "");   /* only the latest answer keeps its buttons */
       else if (m.who === "note") bubble("note", '<span class="ask-tag">Noted in your skin profile</span>' + esc(m.text) +
         ' <button type="button" class="ask-note-see" data-act="account">See or change it</button>');
       else if (m.who === "sent") {
@@ -701,7 +701,8 @@
         '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert">' + esc(sendErr) + '</p>';
       box.appendChild(f);
     }
-    chipsEl.parentNode.hidden = (state.log.length > 0 && !!pending) || !st;
+    var lastM = state.log[state.log.length - 1], lastHasActs = !!(lastM && lastM.who === "bot" && lastM.acts && lastM.acts.length);
+    chipsEl.parentNode.hidden = (state.log.length > 0 && !!pending) || !st || lastHasActs;
     chipsEl.innerHTML = chipsFor(st).map(function (c) { return '<button type="button" class="ask-chip" data-go="' + esc(c[1]) + '">' + esc(c[0]) + "</button>"; }).join("");
     chipsEl.scrollLeft = 0;
     setTimeout(paintNav, 0);
