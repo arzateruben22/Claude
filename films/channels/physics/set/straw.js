@@ -7,9 +7,11 @@
 //   const G = createGlass({ r: 4, h: 13, x, y, z }); G.setWater(11)        // water depth (cm) above the inside bottom
 //   const S = createStraw({ a: [x, y, z], b: [x, y, z], r: 0.35 }); S.fill(yTop)   // the column up to world height yTop
 //   const J = createJar({ r: 9, h: 24 }); J.group.position.set(…)            // a bell jar (straw hole in its top)
-//   const Hs = createHouse(I, { x, z, storeys: 3, storey: 340, w: 300 })     // an ink house front with metre ticks
+//   const Hs = createHouse(I, { x, z, storeys: 3, storey: 340, w: 300, roof: "flat" | gable, scaleX, scaleY0 })   // an ink house front with metre ticks
 //   const B = createBubbles({ n: 14, seed }); B.update(t, [x, y, z], r, k)    // boiling under a meniscus at y (k 0–1)
 //   const T = inkBarometer(I, { x, y, z, s })                                  // Torricelli's tube: 76 cm of mercury, empty above
+//   const Ld = createLid({ r: 4.2, hole: 0.4 }); Ld.group.position.set(x, yTop, z)   // a screw lid with a grommet for the straw
+//   inkDash(I, x0, y0, x1, y1, { dash, gap, w, m })                           // a dashed ink line (a group)
 import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
 import { albedo } from "./aces.js";
@@ -129,7 +131,8 @@ export const createPump = (o = {}) => {                   // o: { x, y, z, s (sc
 export const createHouse = (I, o = {}) => {
   const n = o.storeys ?? 3, sh = o.storey ?? 340, w = o.w ?? 300, x0 = -w / 2, g = new THREE.Group(), Ht = n * sh;
   g.add(I.poly([[x0, 0], [x0, Ht], [x0 + w, Ht], [x0 + w, 0]], 1.6));                       // the walls
-  g.add(I.poly([[x0 - 14, Ht], [x0 + w / 2, Ht + 110], [x0 + w + 14, Ht]], 1.6));             // the roof
+  if (o.roof === "flat") g.add(I.poly([[x0 - 8, Ht], [x0 - 8, Ht + 28], [x0 + w + 8, Ht + 28], [x0 + w + 8, Ht]], 1.6));   // a flat roof's parapet
+  else g.add(I.poly([[x0 - 14, Ht], [x0 + w / 2, Ht + 110], [x0 + w + 14, Ht]], 1.6));        // the roof
   for (let k = 1; k < n; k++) g.add(I.bar(x0, k * sh, x0 + w, k * sh, 0.8));                  // the floors
   for (let k = 0; k < n; k++) {                                                               // two windows a storey
     [0.3, 0.72].forEach((fx, j) => {
@@ -140,13 +143,13 @@ export const createHouse = (I, o = {}) => {
     });
   }
   { const cx = x0 + w * 0.3; g.add(I.poly([[cx - 40, 0], [cx - 40, 210], [cx + 40, 210], [cx + 40, 0]], 1.1)); }   // the door
-  const sx = o.scaleX ?? x0 + w + 26;                                                         // the metre scale
+  const sx = o.scaleX ?? x0 + w + 26, z0 = o.scaleY0 ?? 0;                                    // the metre scale, its zero at scaleY0 (a drink's surface)
   if (o.scale !== false) {
-    g.add(I.bar(sx, 0, sx, Math.ceil(Ht / 100) * 100 + 40, 0.9));
-    for (let m = 0; m * 100 <= Ht + 60; m++) g.add(I.bar(sx, m * 100, sx + (m % 5 === 0 ? 16 : 9), m * 100, m % 5 === 0 ? 1.2 : 0.8));
+    g.add(I.bar(sx, z0, sx, z0 + Math.ceil((Ht - z0) / 100) * 100 + 40, 0.9));
+    for (let m = 0; z0 + m * 100 <= Ht + 60; m++) g.add(I.bar(sx, z0 + m * 100, sx + (m % 5 === 0 ? 16 : 9), z0 + m * 100, m % 5 === 0 ? 1.2 : 0.8));
   }
   g.position.set(o.x ?? 0, o.y ?? 0, o.z ?? 0);
-  return { group: g, height: Ht, scaleX: sx };
+  return { group: g, height: Ht, scaleX: sx, scaleY0: z0 };
 };
 
 // ── boiling: small vapour bubbles born under a meniscus, swelling as they rise, bursting at the surface ──
@@ -163,7 +166,7 @@ export const createBubbles = (o = {}) => {
       m.visible = on;
       if (!on) continue;
       const y = top[1] - depthCm * p.depth * (1 - u), sz = r * 0.32 * p.s * (0.35 + 0.65 * u) * (u > 0.93 ? (1 - u) / 0.07 : 1);
-      m.position.set(top[0] + p.ax * r * 0.45, y, top[2] + p.az * r * 0.45); m.scale.setScalar(Math.max(0.01, sz));
+      m.position.set(top[0] + p.ax * Math.min(r * 0.45, o.spread ?? Infinity), y, top[2] + p.az * Math.min(r * 0.45, o.spread ?? Infinity)); m.scale.setScalar(Math.max(0.01, sz));
     }
   };
   return { group: g, update };
@@ -195,4 +198,23 @@ export const createTable = (o = {}) => {
   });
   g.position.set(o.x ?? 0, 0, o.z ?? 0);
   return { group: g, topY: h };
+};
+
+// ── a screw lid: a thin metal disc with a knurled rim and a rubber grommet round the straw's hole ──
+export const createLid = (o = {}) => {
+  const r = o.r ?? 4.2, hole = o.hole ?? 0.4, g = new THREE.Group();
+  const metal = new THREE.MeshStandardMaterial({ color: albedo(o.color || "#8C9198"), roughness: 0.38, metalness: 0.55 });
+  const rub = new THREE.MeshStandardMaterial({ color: albedo("#2F3136"), roughness: 0.85 });
+  const disc = new THREE.Mesh(new THREE.RingGeometry(hole + 0.35, r, 40, 1), metal); disc.rotation.x = -Math.PI / 2; disc.position.y = 1.1;
+  const skirt = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1.2, 40, 1, true), metal); skirt.position.y = 0.55;
+  const grom = new THREE.Mesh(new THREE.TorusGeometry(hole + 0.22, 0.2, 8, 20), rub); grom.rotation.x = Math.PI / 2; grom.position.y = 1.2;
+  g.add(disc, skirt, grom);
+  return { group: g };
+};
+
+// ── a dashed ink line between two points (in the drawing's plane) ──
+export const inkDash = (I, x0, y0, x1, y1, o = {}) => {
+  const g = new THREE.Group(), L = Math.hypot(x1 - x0, y1 - y0), d = o.dash ?? 6, q = o.gap ?? 4, ux = (x1 - x0) / L, uy = (y1 - y0) / L;
+  for (let s = 0; s < L; s += d + q) { const e = Math.min(L, s + d); g.add(I.bar(x0 + ux * s, y0 + uy * s, x0 + ux * e, y0 + uy * e, o.w ?? 0.9, o.m)); }
+  return g;
 };
