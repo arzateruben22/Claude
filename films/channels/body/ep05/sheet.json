@@ -100,7 +100,7 @@
    "tag": "sacs"
   },
   {
-   "t": 11.9,
+   "t": 12.566666666666666,
    "kind": "label",
    "tag": "sac"
   },
@@ -160,11 +160,6 @@
    "tag": "wall"
   },
   {
-   "t": 32.233333333333334,
-   "kind": "label",
-   "tag": "air"
-  },
-  {
    "t": 33.166666666666664,
    "kind": "counter.show",
    "tag": "wallt"
@@ -185,6 +180,17 @@
    "kind": "diffuse",
    "tag": "slip",
    "t1": 39.166666666666664
+  },
+  {
+   "t": 36.6,
+   "kind": "label",
+   "tag": "air"
+  },
+  {
+   "t": 39.43333333333333,
+   "kind": "badge",
+   "tag": "thick",
+   "text": "illustration: a thickened wall"
   },
   {
    "t": 39.43333333333333,
@@ -213,17 +219,17 @@
    "t": 44.333333333333336,
    "kind": "dissolve",
    "tag": "unfold",
-   "t1": 48.333333333333336
+   "t1": 47.63333333333333
+  },
+  {
+   "t": 47.63333333333333,
+   "kind": "counter.end",
+   "tag": "area-end"
   },
   {
    "t": 48.233333333333334,
    "kind": "label",
    "tag": "person"
-  },
-  {
-   "t": 48.333333333333336,
-   "kind": "counter.end",
-   "tag": "area-end"
   },
   {
    "t": 49.86666666666667,
@@ -252,6 +258,12 @@
    "t": 57.83333333333333,
    "kind": "badge",
    "tag": "ill3",
+   "text": "illustration · estimates 50–140 m²"
+  },
+  {
+   "t": 60.5,
+   "kind": "badge",
+   "tag": "ill4",
    "text": "illustration"
   },
   {
@@ -329,6 +341,12 @@
    "text": "not to scale"
   },
   {
+   "t": 67.583333,
+   "kind": "badge",
+   "tag": "flow",
+   "text": "blood flow slowed"
+  },
+  {
    "t": 67.6,
    "kind": "section",
    "id": "tease",
@@ -343,7 +361,7 @@
    "t": 70.1,
    "kind": "badge",
    "tag": "fast",
-   "text": "sped up"
+   "text": "squeeze sped up"
   },
   {
    "t": 70.3,

@@ -21,7 +21,8 @@ voice, labelled as AI). It pays off episode 4's tease ("Where does all that air 
   (1661, an animal's lung under the microscope).
 - **Why:** each sac wrapped in capillaries; an iris to the air–blood wall at true scale beside a red cell, under
   0.5 µm over much of it (drawn 0.4 µm); oxygen slips across and the cell flushes; the wall thickens toward the air,
-  the oxygen piles up against it and the cell dulls: breathing gets harder.
+  the oxygen crosses at a fifth of the rate (Fick: flux falls as the wall thickens; badged "illustration: a thickened
+  wall") and the cell dulls: breathing gets harder.
 - **Whoa:** the sacs unfold from a person's chest into a 70 m² floor inside a full doubles tennis court's lines
   (260.8 m², drawn whole): about a quarter of it, folded inside your chest. The readout says about 70 m² and the
   corner badge "area to scale · estimates 50–140 m²".
