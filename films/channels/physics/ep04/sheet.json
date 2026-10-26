@@ -113,12 +113,6 @@
    "tag": "earth:g2"
   },
   {
-   "t": 7.2667,
-   "kind": "badge",
-   "tag": "drift",
-   "text": "Illustration"
-  },
-  {
    "t": 7.3821,
    "kind": "strobe",
    "tag": "earth:g4"
@@ -142,6 +136,12 @@
    "t": 8.866666666666667,
    "kind": "label",
    "tag": "nm-land"
+  },
+  {
+   "t": 8.8667,
+   "kind": "badge",
+   "tag": "drift",
+   "text": "Illustration"
   },
   {
    "t": 8.8667,

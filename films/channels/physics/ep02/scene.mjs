@@ -49,8 +49,9 @@ const WAVE = createGantry({ pivots: WPIV, L: WV.L, r: WV.r, beamX: 0, post: [40,
 const WP = WV.L.map((L, n) => pendulum({ L, theta0: WV.theta, pivot: WPIV[n] }));
 scene.add(RIG.group, WAVE.group);
 // "One line wins" (WRITING.md, the picture 8): each lane's bob and string get their own brass and ink, so the lane
-// the caption is not about can drop to a third (film.json "dim", keyed on cuts and words). They stay in the
-// transparent pass at every opacity (no program change between frames); at 1 they draw exactly as opaque.
+// the caption is not about can drop to a third (film.json "dim", keyed on cuts and words; the opacities are chosen
+// for how they read through the finish's ACES, see compile.py). They stay in the transparent pass at every opacity
+// (no program change between frames); at 1 they draw exactly as opaque.
 const DIMK = FILM.dim, dimAt = (k, t) => keyed(DIMK[k], t, E.inout2);
 const LANE_MAT = LANES.map((_, i) => {
   const brass = RIG.materials.brass.clone(), ink = RIG.materials.ink.clone();
@@ -59,6 +60,15 @@ const LANE_MAT = LANES.map((_, i) => {
   RIG.strings[i].material = ink;
   return [brass, ink];
 });
+// The transparent pass draws in scene-graph order (sortObjects is off), so put the lanes back to front: the far lane
+// (the big one, z −20; the camera is always on the +z side) before the near one. A dimmed near lane then blends over
+// the far one where they cross, instead of writing depth first and cutting a cyc-pale gap through it. Each lane
+// keeps its depth writes (its hook stays hidden inside its own bob). At full opacity the pixels are unchanged.
+{ const ch = RIG.group.children, byDepth = LANES.map((_, i) => i).sort((a, b) => PIV[a][2] - PIV[b][2]);
+  const lanes = byDepth.flatMap((i) => [RIG.strings[i], RIG.bobs[i]]);
+  const at = Math.min(...lanes.map((o) => ch.indexOf(o)));
+  lanes.forEach((o) => ch.splice(ch.indexOf(o), 1));
+  ch.splice(at, 0, ...lanes); }
 
 // "as in a grandfather clock": a 2 m long-case clock drawn as ink lines beside the rig (an illustration, the
 // human-scale anchor), its 99.4 cm pendulum swinging with the small one; it draws on and off with the line

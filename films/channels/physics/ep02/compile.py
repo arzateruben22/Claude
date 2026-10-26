@@ -214,7 +214,7 @@ NOTE_SLOT = {"speed": "tl", "hook": "bl"}
 CARD_W = 0.52
 BADGES = [
     {"id": "galileo", "title": "Galileo's claim", "text": "Wide or narrow, every swing takes the same time.", "t0": A("vo04:Galileo"), "t1": A("vo04:Three", -0.2), "slot": "tr", "maxW": CARD_W},
-    # a framing tag: it names the picture, so it visits from "Only" to "Then," (3.7 s, 4.0 s with its fade)
+    # a framing tag: it names the picture, so it visits from "Only" for 3.7 s (4.0 s with its fade), leaving as "Then," begins
     {"id": "harvard", "text": "Harvard's pendulum wave", "t0": A("vo05:Only"), "t1": min(A("vo05:Then,"), A("vo05:Only") + 3.7), "slot": "tr", "frame": True},   # a framing tag: 4 s at most
     # the number behind "about one part in sixty", from the start of its sentence ("At thirty degrees") to the takeaway
     {"id": "1in57", "text": "30° swing: 1.7% slower", "t0": A("vo06:At"), "t1": cut("takeaway") - 0.3, "slot": "tr"},
@@ -246,8 +246,10 @@ for _slot, _wins in _corner.items():
 
 # ── the spine readout: one number on screen from the normal to the end card; its label names the beat ──
 # kind "watch": scene seconds since a take's release, capped; "const": a fixed value; "count": swings passed (cue.measure.swings)
-# From "behind." it holds its final value, lit, to the end, and its label changes to say what 0.31 s now means:
-# the big one's lag, then how far Galileo's equal-times claim is off, then what a wider swing loses (rule 2).
+# From "behind." it holds its final value, lit, to the end, and its label changes to say what 0.31 s now means
+# (rule 2), always with its base, so the number stays true (c11: the 30° swing's lag on the 10° one over twenty
+# swings): the big one's lag; on "At thirty degrees", that lag named as the 30° swing's over twenty swings (the
+# 1.7% against the small-swing ideal is the top-right note's, c12); on "A wider swing", what it lost in them.
 SPINE = [
     {"t0": cut("normal") + 0.3, "t1": cut("change"), "label": "one swing", "unit": "s", "dp": 2, "kind": "watch", "take": "normal", "cap": T10 / 2},
     {"t0": cut("change"), "t1": A("vo04:pull"), "label": "to the bottom", "unit": "s", "dp": 2, "kind": "watch", "take": "change", "cap": Q10},
@@ -256,40 +258,49 @@ SPINE = [
     {"t0": cut("whoa"), "t1": cut("measure"), "label": "the wave's minute", "unit": "s", "dp": 1, "kind": "watch", "take": "wave", "cap": WAVE_ALIGN},
     {"t0": cut("measure"), "t1": A("vo06:behind."), "label": "swings, small one", "unit": "", "dp": 0, "kind": "count"},
     {"t0": A("vo06:behind."), "t1": A("vo06:At"), "label": "big one, behind", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
-    {"t0": A("vo06:At"), "t1": A("vo07:A"), "label": "Galileo, off by", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
-    {"t0": A("vo07:A"), "t1": cut("tease") - 0.3, "label": "wider swing loses", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+    {"t0": A("vo06:At"), "t1": A("vo07:A"), "label": "30° lag, 20 swings", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
+    {"t0": A("vo07:A"), "t1": cut("tease") - 0.3, "label": "lost in 20 swings", "unit": "s", "dp": 2, "kind": "const", "v": LAG, "lit": True},
 ]
 for a, b in zip(SPINE, SPINE[1:]):
     assert abs(a["t1"] - b["t0"]) < 1e-9, (a["label"], b["label"])
 assert all(len(s["label"]) <= 18 for s in SPINE)                # one line under the 34vmin wrap: a narrow plate
 
-# Where the spine plate sits, per shot (centre fractions; placeSpine clamps the plate into the safe box, so fx 0
-# puts its left edge on the safe line). Every shot here hangs its subject from the frame's centre line (the pivots
-# at x 0.5, the strings fanning ±30° below them; the wave's row at x 0.40–0.60), so the centred default would sit
-# on the strings: the empty region is the upper left, under the speed column. (The right is no use: the safe box
-# ends at x 0.833, so a 0.32 W plate there always reaches the centre line.) Measured by projecting the strings,
-# bobs, beam, arm, post, ghosts, the clock drawing and the wave rig through each shot's camera keys:
-#   normal  (small view, then wide with the clock on the right): x 0.12–0.44, y 0.23–0.33, below the gantry's arm
-#           (y 0.21) and right of its post (x 0.09–0.10), left of the strings and of the clock (x ≥ 0.63)
-#   change … takeaway (the set view; the whoa's wave rig): the left edge on the safe line, x 0.08–0.40, y 0.21–0.31;
-#           the 30° string only clips the plate's lower-right corner while it is out at −30° (about 120 of its
-#           650 px, mostly the why's hold), and the wave never reaches it. One place from the change on, so it
-#           steps once, on the change cut, where its label and value change too.
-SPINE_PLACE = {"normal": [0.28, 0.28], "change": [0.0, 0.26], "why": [0.0, 0.26], "whoa": [0.0, 0.26],
-               "measure": [0.0, 0.26], "takeaway": [0.0, 0.26], "tease": [0.0, 0.26]}
-SPINE_AT = []
-for b in BEATS:
-    xy = SPINE_PLACE.get(b["id"])
-    if xy and (not SPINE_AT or SPINE_AT[-1][1] != xy):
-        SPINE_AT.append([CUTS[b["id"]], xy])
-assert all(k in CUTS.values() for k, _ in SPINE_AT) and SPINE_AT[0][0] <= SPINE[0]["t0"], SPINE_AT   # it steps on cuts only
+# Where the spine plate sits (centre fractions; placeSpine clamps the plate into the safe box, so fx 0 puts its left
+# edge on the safe line and fx 1 its right edge). Every shot hangs its subject from the frame's centre line (the
+# pivots at x 0.5, the strings fanning ±30° below them; the wave's row at x 0.40–0.60), so the centred default would
+# sit on the strings, and a plate 0.32 W wide on either side reaches the 30° string at about y 0.27. The empty side
+# is the one the swings are not on, so the place steps with them, on a cut or where the plate's own label and value
+# change. Measured by projecting the strings and bobs, beam, arm, post, ghosts, the clock drawing and the wave rig
+# frame by frame through the camera keys against the plate (an 8 px margin; overlap with the subject per shot):
+#   normal  [0.28, 0.28]: x 0.12–0.44, y 0.23–0.33, below the gantry's arm, left of the strings and of the clock
+#           (0.4 s, while the camera pulls out to the clock and back)
+#   change and the why's hold [1, 0.38] (x 0.52–0.83, y 0.33–0.43): the big one is pulled out and held on the
+#           left, so the right is empty until they swing over at the change's end (1.4 s, after "neck and neck")
+#   from "triple" #2 (the speed page, its label and value change) [0, 0.26] (x 0.08–0.40, y 0.21–0.31): the swings
+#           are on their way right; the wave never reaches it (why 0 s, measure 1.3 s in flicks at ×5)
+#   from "Length" (the takeaway's first word, once the measure's "paused" note has left the top-left corner) [0, 0.19]
+#           (y 0.14–0.24): the takeaway runs at ×1, so that corner is empty, and up there the 30° string's left
+#           turns pass below the plate (takeaway 0.3 s, from the cut to "Length"; 1.8 s at [0, 0.26]). It covers the
+#           gantry's arm there (y 0.17–0.18), the set rather than the subject; the 'Ideal pendulums' card stays right of it.
+SPINE_AT = [[cut("normal"), [0.28, 0.28]], [cut("change"), [1.0, 0.38]], [A("vo04:triple#2"), [0.0, 0.26]],
+            [A("vo07:Length"), [0.0, 0.19]]]
+_steps = set(CUTS.values()) | {s["t0"] for s in SPINE} | {A("vo07:Length")}
+assert all(k in _steps for k, _ in SPINE_AT) and SPINE_AT[0][0] <= SPINE[0]["t0"], SPINE_AT   # on cuts, label changes or a beat's first word
+assert all(a[0] < b[0] for a, b in zip(SPINE_AT, SPINE_AT[1:])), SPINE_AT
+assert A("vo07:Length") >= cut("takeaway") + NOTE_OUT, "the plate moves up only once the measure's speed note has left"
+# up in the top-left corner from "Length", the plate meets no speed note: the tease's arrives as the plate leaves
+assert all(not (a < SPINE[-1]["t1"] and b + NOTE_OUT > A("vo07:Length")) for a, b in speed_windows(KEYS)), speed_windows(KEYS)
 
 # ── rule 8, "One line wins": the line or object the caption names is the brightest thing in the picture; whatever
 # delivered the previous beat drops to about a third of its strength as the new one begins (eased over 0.5 s from
 # the cut or the word). Per element, [[t, k], ...] for keyed(): k is the opacity of a lane's bob and string, or a
 # factor on the clock drawing's own draw-on. The ghost ladders, labels, arrows and cards already leave at their
 # cuts and page changes (each take's ladder lives cut to cut), so only what stays in frame needs a dim.
-DIM, DIM_EASE = 0.33, 0.5
+# The opacity blends in scene-linear light, before the finish's ACES, which squeezes the pale end: on the cyc
+# (L* 90) opacity 0.33 leaves a brass bob (L* 40) at L* 85, a tenth of its contrast. Through the curve 0.70 is a
+# third (brass L* 73, the ink-2 clock 0.31, the ink string 0.29), and 0.50 is a sixth (brass L* 81), under the pale
+# ghost beads (L* 79, about a fifth): the live bobs drop to it on the pages that name the ghosts or the rungs.
+DIM_LANE, DIM_UNDER, DIM_EASE = 0.70, 0.50, 0.5
 
 
 def dimkeys(steps, k0=1.0):
@@ -301,17 +312,23 @@ def dimkeys(steps, k0=1.0):
     return keys
 
 
+# Both lanes, on the pages that name a trace of the swing rather than the swing: "Ghosts every tenth of a second"
+# (the normal's ladder; the hanging big one is in frame behind it), "So it covers triple the path" (the why's
+# ladders), back for "at nearly triple the speed" (the speed arrows ride on the bobs), and under again for "nearly
+# the same time." (the ink rungs), to the whoa's cut (the swing set is out of shot there, so the measure opens at full)
+UNDER_WHY = [(A("vo04:So"), DIM_UNDER), (A("vo04:at"), 1.0), (A("vo04:nearly#3"), DIM_UNDER), (cut("whoa"), 1.0)]
 DIMS = {
-    # the big one: hangs at rest through the normal ("one pendulum"), named again on "Pull one"; drops for "For small
-    # swings, he was nearly right" and is back for "Three times farther out"
-    "big": dimkeys([(cut("normal"), DIM), (cut("change"), 1.0), (A("vo04:For"), DIM), (A("vo04:Three"), 1.0)]),
-    # the small one: delivered the normal, so it drops while the big one is pulled out, back on "Let both go"; drops
-    # for "and the big one is three tenths of a second behind" (its "home" label still marks it), back for "Length
-    # sets the beat" (both strings), drops again for "A wider swing…", and is back for the tease's re-release
-    "small": dimkeys([(cut("change"), DIM), (A("vo03:Let"), 1.0), (A("vo06:big"), DIM), (cut("takeaway"), 1.0),
-                      (A("vo07:A"), DIM), (cut("tease"), 1.0)]),
+    # the big one: hangs at rest through the normal (the small string is named), under its ghosts, named again on
+    # "Pull its twin"; drops for "For small swings, he was nearly right" and is back for "Three times farther out"
+    "big": dimkeys([(cut("normal"), DIM_LANE), (A("vo02:Ghosts"), DIM_UNDER), (cut("change"), 1.0),
+                    (A("vo04:For"), DIM_LANE), (A("vo04:Three"), 1.0)] + UNDER_WHY),
+    # the small one: under its ghosts, then a third while its twin is pulled out (it delivered the normal), back on
+    # "Let both go"; drops for "and the big one is three tenths of a second behind" (its "home" label still marks
+    # it), back for "Length sets the beat" (both strings), drops again for "A wider swing…", back for the tease
+    "small": dimkeys([(A("vo02:Ghosts"), DIM_UNDER), (cut("change"), DIM_LANE), (A("vo03:Let"), 1.0)] + UNDER_WHY
+                     + [(A("vo06:big"), DIM_LANE), (cut("takeaway"), 1.0), (A("vo07:A"), DIM_LANE), (cut("tease"), 1.0)]),
     # the grandfather clock delivered "as in a grandfather clock": it drops as "One swing: about one second" begins
-    "gclock": dimkeys([(A("vo02:One"), DIM)]),
+    "gclock": dimkeys([(A("vo02:One"), DIM_LANE)]),
 }
 for k in ("big", "small"):                                # the loop: by the film's end both are back at frame 0's state
     assert DIMS[k][0][1] == 1.0 and DIMS[k][-1][1] == 1.0 and DIMS[k][-1][0] < DUR, (k, DIMS[k][-1])

@@ -7,9 +7,10 @@
 // illustration (badged). The whoa's Earth, orbit and satellite are an ink illustration.
 //
 // WRITING.md "The picture" 8, one line wins: what the caption names is the brightest thing; whatever delivered the beat
-// (or line) before steps back to about a third (FILM.dim, keyed on cuts and words in compile.py). The notes keep the
-// channel's corners (the speed column top-left, the standing cheats top-right; the hook's speed note bottom-right, under
-// the title drop) and the spine readout sits between and below them, in each shot's empty region (FILM.spineAt).
+// (or line) before steps back to about a third of its contrast on screen (FILM.dim, keyed on cuts and words in
+// compile.py). The notes keep the channel's corners (the speed column top-left, the standing cheats top-right; the
+// hook's speed note bottom-right, under the title drop) and the spine readout sits between and below them, in each
+// shot's empty region (FILM.spineAt).
 import * as THREE from "three";
 import { stage, seg, E, ease, shotAt, keyed } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -22,23 +23,36 @@ import { createMoonFloor, createHammer, createFeather } from "../set/moon.js";
 import { inkSet, hand } from "../set/ink.js";
 import { dropTitle } from "../set/title.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
-import { unlit, acesInv } from "../set/aces.js";
+import { unlit, acesInv, hexRgb, ACES_INV_GLSL } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const CUE = FILM.cue, DR = FILM.drop, TAKES = FILM.takes, EC = FILM.endCard;
 
-// ── rule 8: stepping back. dimAt(name, t) is the strength (1 as built, a third stepped back). Unlit ink steps back by its
-// opacity; the lit props and the ghost rows by a mix toward the paper, after lighting and before tone mapping, on the
-// scene-linear value that lands on #E6E2D8 (set/aces.js); the rungs by their colour, mixed toward the paper on screen ──
+// ── rule 8: stepping back. dimAt(name, t) is the strength (1 as built, a third stepped back), measured on screen: the
+// displayed colour (sRGB, after the ACES curve the draft and the finish share) goes two-thirds of the way to the paper
+// #E6E2D8, so a third of its contrast against the paper is left in either path. Unlit things (the ink, the arrows, the
+// rungs) take the mixed hex through the ACES inverse (set/aces.js); the lit props and the ghost rows do the same mix in
+// their shaders, after lighting and before tone mapping (rfToPaper: tone-map, mix, map back). At 1 nothing changes ──
 const DIM = FILM.dim || {};
 const dimAt = (name, t) => (DIM[name] ? keyed(DIM[name], t) : 1);
-const INK2_HEX = TK["ink-2"] || "#4B505B", PAPER_HEX = TK.cyc || "#E6E2D8", PAPER = unlit(PAPER_HEX);
+const INK_HEX = TK.ink || "#15171C", INK2_HEX = TK["ink-2"] || "#4B505B", FORCE_HEX = TK.force || "#1F3BD1", PAPER_HEX = TK.cyc || "#E6E2D8";
 const mixHex = (a, b, u) => "#" + [1, 3, 5].map((i) => { const x = parseInt(a.slice(i, i + 2), 16), y = parseInt(b.slice(i, i + 2), 16);
   return Math.round(x + (y - x) * u).toString(16).padStart(2, "0"); }).join("");
-const toPaper = (sh, fade) => {   // the fragment's lit colour → the paper, by fade (a GLSL float expression)
-  sh.uniforms.uPaper = { value: PAPER };
-  sh.fragmentShader = "uniform vec3 uPaper;\n" + sh.fragmentShader.replace("#include <tonemapping_fragment>",
-    `gl_FragColor.rgb = mix(gl_FragColor.rgb, uPaper, ${fade});\n#include <tonemapping_fragment>`);
+const stepped = (hex, k) => unlit(mixHex(hex, PAPER_HEX, 1 - k));   // an unlit colour at strength k, as a THREE.Color
+const STEP_GLSL = ACES_INV_GLSL + `
+uniform vec3 uPaperD;
+vec3 rfAces(vec3 c) {   // three's ACESFilmicToneMapping at exposure 1 (the finish's cinAces): scene light to display-linear
+  const mat3 IN = mat3(vec3(0.59719, 0.07600, 0.02840), vec3(0.35458, 0.90834, 0.13383), vec3(0.04823, 0.01566, 0.83777));
+  const mat3 OUT = mat3(vec3(1.60475, -0.10208, -0.00327), vec3(-0.53108, 1.10813, -0.07276), vec3(-0.07367, -0.00605, 1.07602));
+  c = IN * (c / 0.6); c = (c * (c + 0.0245786) - 0.000090537) / (c * (0.983729 * c + 0.4329510) + 0.238081);
+  return clamp(OUT * c, 0.0, 1.0); }
+vec3 rfEnc(vec3 c) { return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c)); }
+vec3 rfToPaper(vec3 c, float fade) { return fade > 0.0 ? acesInv(srgbToLinear(mix(rfEnc(rfAces(c)), uPaperD, fade)), 1.0) : c; }
+`;
+const toPaper = (sh, fade) => {   // the fragment's lit colour → the paper on screen, by fade (a GLSL float expression)
+  sh.uniforms.uPaperD = { value: new THREE.Vector3(...hexRgb(PAPER_HEX)) };
+  sh.fragmentShader = STEP_GLSL + sh.fragmentShader.replace("#include <tonemapping_fragment>",
+    `gl_FragColor.rgb = rfToPaper(gl_FragColor.rgb, ${fade});\n#include <tonemapping_fragment>`);
 };
 const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -56,7 +70,9 @@ const P = createProps({ tokens: TK, stickX: -46 });
 P.rig.group.visible = false; P.stick.visible = false;
 scene.add(cyc.group, P.group);
 window.SCENE_READY = P.ready;
-const moon = createMoonFloor({ size: 1200, z: -20 });   // the whole floor: the cove and the wall hide its edge scene.add(moon.group);
+// the regolith covers the whole visible floor: centred on the cyc's floor (x 40, z 200), its near edge is the floor's own
+// (z 800, below every shot's frame) and the cove and the wall hide the rest of its edge
+const moon = createMoonFloor({ size: 1200, x: 40, z: 200 }); scene.add(moon.group);
 const hammer = createHammer(), feather = createFeather();
 feather.scale.setScalar(1.35);                           // a falcon flight feather, about 32 cm
 scene.add(hammer, feather);
@@ -92,11 +108,12 @@ const objAt = (take, which, t) => {
 };
 
 // ── ghost rows: beads at the hammer's head and the feather's middle, every 1/10 s (Moon) or 1/20 s (Earth) ──
-// Each bead carries its own step-back (aFade, an instance attribute: the hammer's row is slots 0–15, the feather's
-// 16–31), mixed toward the paper after the rim, so a stepped-back bead loses its dark rim too. strobe() chains this
-// onBeforeCompile ahead of its rim. The rungs (one take's at a time) share one colour, RUNG
-const RUNG = unlit(INK2_HEX);
-const ghostGeo = new THREE.SphereGeometry(1, 20, 14), ghostFade = new THREE.InstancedBufferAttribute(new Float32Array(48), 1);
+// Each bead carries its own step-back (aFade, an instance attribute: the take's hammer row is slots 0–15, its feather
+// row 16–31; the Earth's rows held through the change, FILM.hold, 32–47 and 48–63), mixed toward the paper after the
+// rim, so a stepped-back bead loses its dark rim too. strobe() chains this onBeforeCompile ahead of its rim. The rungs
+// (one take's at a time) share one colour, RUNG
+const GMAX = 64, RUNG = unlit(INK2_HEX);
+const ghostGeo = new THREE.SphereGeometry(1, 20, 14), ghostFade = new THREE.InstancedBufferAttribute(new Float32Array(GMAX), 1);
 ghostGeo.setAttribute("aFade", ghostFade);
 const ghostMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
 ghostMat.onBeforeCompile = (sh) => {
@@ -104,7 +121,7 @@ ghostMat.onBeforeCompile = (sh) => {
   toPaper(sh, "vFade");
   sh.fragmentShader = "varying float vFade;\n" + sh.fragmentShader;
 };
-const S = strobe({ geometry: ghostGeo, radius: 1.6, max: 48, pop: 0.14,
+const S = strobe({ geometry: ghostGeo, radius: 1.6, max: GMAX, pop: 0.14,
   material: ghostMat, rim: { color: [0.045, 0.048, 0.055], width: 0.42, strength: 0.62 },
   rungs: { max: 16, radius: 0.22 }, park: [0, 60, 0] });
 scene.add(S.group);
@@ -113,24 +130,30 @@ for (const name of TAKE_NAMES) {
   const tk = TAKES[name];
   if (!tk.stamps) continue;
   const earth = tk.world === "earth", dt = earth ? DR.dtE : DR.dt, n = earth ? DR.nE : DR.n;
-  ["hammer", "feather"].forEach((which, j) => S.ladder(`${name}:${which}`, {
+  // the take's own rows; the Earth's are copied once more for the change (FILM.hold), where they stand at a third
+  const rows = [[name, tk.t0, tk.t1, 0]].concat(earth && FILM.hold ? [["hold", FILM.hold.t0, FILM.hold.t1, 32]] : []);
+  for (const [id, t0, t1, base] of rows) ["hammer", "feather"].forEach((which, j) => S.ladder(`${id}:${which}`, {
     at: (tau) => { const y = DR.h0 - fallen(tk.world, which, tau); return which === "hammer" ? [DR.xh, y + HAM_LOW, -2] : [DR.xf + (earth ? 4 * Math.sin(5 * tau) : 0), y + 12, -2]; },
-    dt, n, when: (tau) => clk.tOf(tk.tauR + tau), t0: tk.t0, t1: tk.t1, slot: j * 16, color: which === "hammer" ? HCOL : FCOL,
+    dt, n, when: (tau) => clk.tOf(tk.tauR + tau), t0, t1, slot: base + j * 16, color: which === "hammer" ? HCOL : FCOL,
   }));
   if (!earth) S.rung(`${name}:r`, { a: `${name}:feather`, b: `${name}:hammer`, k: [0, n - 1], slot: 0, color: RUNG, grow: 0.2 });
 }
 
 // ── the why's vectors: gravity's pull (force) and the acceleration (motion) ──
-const FORCE = unlit(TK.force || "#1F3BD1"), MOTION = unlit(TK.motion || "#08805A");
-const AR = arrows({ max: 8, shaft: 0.6, head: [3.6, 1.6], outline: 0.34, ink: acesInv(TK.ink || "#15171C"), park: [0, 60, 0] });
+// FORCE (the pull arrows' colour) and the outline's ink are read by reference each update: the pull steps back by them
+// (FILM.dim "pull"); the outline is shared by every arrow, so that table is back at 1 before the acceleration draws
+const FORCE = unlit(FORCE_HEX), MOTION = unlit(TK.motion || "#08805A");
+const AR = arrows({ max: 8, shaft: 0.6, head: [3.6, 1.6], outline: 0.34, ink: acesInv(INK_HEX), park: [0, 60, 0] });
+const AR_INK = AR.meshes[2] ? AR.meshes[2].material : null;   // the outline hulls' one material (arrows.js)
 scene.add(AR.group);
 const HOLD = [TAKES.why.t0, TAKES.why.t1];
 AR.add("pull-h", { tail: (t) => objAt("why", "hammer", t), vec: [0, -34, 0], color: FORCE, t0: CUE.why.pull, t1: CUE.why.inertia, slot: 0, hold: HOLD });
 AR.add("pull-f", { tail: (t) => objAt("why", "feather", t), vec: [0, -1.2, 0], color: FORCE, t0: CUE.why.pull + 0.15, t1: CUE.why.inertia, slot: 1, hold: HOLD });
-AR.add("acc-h", { tail: (t) => objAt("why", "hammer", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.inertia + 0.4, t1: CUE.why.R + 0.4, slot: 2, hold: HOLD });
-AR.add("acc-f", { tail: (t) => objAt("why", "feather", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.inertia + 0.55, t1: CUE.why.R + 0.4, slot: 3, hold: HOLD });
+AR.add("acc-h", { tail: (t) => objAt("why", "hammer", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0], t1: CUE.why.acc[1], slot: 2, hold: HOLD });
+AR.add("acc-f", { tail: (t) => objAt("why", "feather", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0] + 0.15, t1: CUE.why.acc[1], slot: 3, hold: HOLD });
 
-// ── ink: two hands that held them (I: their own strength, FILM.dim "hands"), the whoa's Earth and orbit ──
+// ── ink: two hands that held them (I: their own strength, FILM.dim "hands"), the whoa's Earth and orbit; each set
+// steps back by its colour (opacity would blend in scene light under the finish and keep far less than a third) ──
 const I = inkSet({ color: TK["ink-2"] || "#4B505B" });
 const handH = hand(I, { x: DR.xh - 3.5, y: DR.h0 + HAM_LOW + 3.6, z: 2, scale: 0.9 });
 const handF = hand(I, { x: DR.xf + 3.5, y: DR.h0 + 24 + 1.4, z: 2, scale: 0.9 }); handF.scale.x = -1;
@@ -218,9 +241,13 @@ window.seek = function (t) {
   // props, both rows, the rung) on "On Earth"; the hands outside their drops; each back at full by the loop's frame
   const kDrop = dimAt("drop", t), kHam = Math.min(dimAt("hammer", t), kDrop);
   propFade.hammer.value = 1 - kHam; propFade.feather.value = 1 - kDrop;
-  ghostFade.array.fill(1 - kHam, 0, 16); ghostFade.array.fill(1 - kDrop, 16, 32); ghostFade.needsUpdate = true;
-  RUNG.copy(unlit(mixHex(INK2_HEX, PAPER_HEX, 1 - kDrop)));
-  I.opacity(dimAt("hands", t));
+  ghostFade.array.fill(1 - kHam, 0, 16); ghostFade.array.fill(1 - kDrop, 16, 32);
+  ghostFade.array.fill(1 - dimAt("earthRowH", t), 32, 48); ghostFade.array.fill(1 - dimAt("earthRowF", t), 48, 64); ghostFade.needsUpdate = true;
+  RUNG.copy(stepped(INK2_HEX, kDrop));
+  I.mat.color.copy(stepped(INK2_HEX, dimAt("hands", t)));
+  IE.mat.color.copy(stepped(INK2_HEX, dimAt("earthInk", t))); IO.mat.color.copy(stepped(INK2_HEX, dimAt("orbitInk", t)));   // the satellite (IS) stays full
+  // the why's pull arrows step back on "But" (their fill and the outline; nothing else draws an arrow then)
+  { const kp = dimAt("pull", t); FORCE.copy(stepped(FORCE_HEX, kp)); if (AR_INK) AR_INK.color.setRGB(...acesInv(mixHex(INK_HEX, PAPER_HEX, 1 - kp))); }
   if (showObj) {
     const h = objAt(take, "hammer", t), fe = objAt(take, "feather", t), tau = local(take, t);
     hammer.position.set(...h);
@@ -236,7 +263,6 @@ window.seek = function (t) {
   space.visible = inSpace;
   if (inSpace) {
     const s = satAt(t); sat.position.set(s[0], s[1], 0); sat.rotation.z = Math.atan2(s[1], s[0]);
-    IE.opacity(dimAt("earthInk", t)); IO.opacity(dimAt("orbitInk", t));   // the satellite (IS) stays full
   }
   S.update(t); AR.update(t);
   cyc.update({ grid: 1, casters });
