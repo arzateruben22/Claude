@@ -1,7 +1,7 @@
 #!/bin/bash
 # Re-render episode finals after a kit change, one after another: cues → compile → soundtrack → final → assemble
-# → QA. Idempotent and restart-safe: each film gets a marker per commit, a final that was started at this commit
-# resumes (render.mjs keeps every verified frame), and a film already done at this commit is skipped.
+# → QA. Idempotent and restart-safe: each film gets a marker per kit version, a final started with this kit
+# resumes (render.mjs keeps every verified frame), and a film already done with this kit is skipped.
 #
 #   setsid nohup films/channels/rerender-finals.sh films/channels/space/ep01 films/channels/physics/ep01 … >/dev/null 2>&1 &
 #   log: films/channels/rerender.log
@@ -9,12 +9,14 @@ set -u
 cd "$(dirname "$0")/../.."
 export PLAYWRIGHT_DIR=$(dirname "$(npm root -g)") CHROMIUM=/opt/pw-browsers/chromium
 LOG=films/channels/rerender.log
-REV=$(git rev-parse --short HEAD)
+REV=kit-$(git rev-parse --short HEAD:kits/cinema)   # keyed by the kit, so unrelated commits never restart a render
 say() { echo "[$(date -u +%FT%TZ)] $*" >> "$LOG"; }
 R=kits/cinema/film/render.mjs
 for F in "$@"; do
   B=$F/build
   mkdir -p "$B"
+  # markers from before the kit-keyed scheme: e837620 rendered with this same kit (5623233)
+  [ "$REV" = kit-5623233 ] && for m in "$B"/rerender-e837620.started "$B"/rerender-e837620.done; do [ -f "$m" ] && touch "${m/e837620/$REV}"; done
   if [ -f "$B/rerender-$REV.done" ]; then say "$F: already re-rendered at $REV"; continue; fi
   if [ ! -f "$B/rerender-$REV.started" ]; then
     say "$F: start at $REV (cues, compile, soundtrack)"
