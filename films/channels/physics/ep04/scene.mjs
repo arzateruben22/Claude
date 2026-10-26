@@ -147,10 +147,12 @@ const AR = arrows({ max: 8, shaft: 0.6, head: [3.6, 1.6], outline: 0.34, ink: ac
 const AR_INK = AR.meshes[2] ? AR.meshes[2].material : null;   // the outline hulls' one material (arrows.js)
 scene.add(AR.group);
 const HOLD = [TAKES.why.t0, TAKES.why.t1];
-AR.add("pull-h", { tail: (t) => objAt("why", "hammer", t), vec: [0, -34, 0], color: FORCE, t0: CUE.why.pull, t1: CUE.why.inertia, slot: 0, hold: HOLD });
-AR.add("pull-f", { tail: (t) => objAt("why", "feather", t), vec: [0, -1.2, 0], color: FORCE, t0: CUE.why.pull + 0.15, t1: CUE.why.inertia, slot: 1, hold: HOLD });
-AR.add("acc-h", { tail: (t) => objAt("why", "hammer", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0], t1: CUE.why.acc[1], slot: 2, hold: HOLD });
-AR.add("acc-f", { tail: (t) => objAt("why", "feather", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0] + 0.15, t1: CUE.why.acc[1], slot: 3, hold: HOLD });
+// the arrows start just under each object (the handle's end, the feather's tip), so the hammer's own handle doesn't hide them
+const below = (which, t) => { const p = objAt("why", which, t); return which === "hammer" ? [p[0], p[1] - HAM_LOW - 1.5, p[2]] : [p[0], p[1] - 13.5, p[2]]; };
+AR.add("pull-h", { tail: (t) => below("hammer", t), vec: [0, -34, 0], color: FORCE, t0: CUE.why.pull, t1: CUE.why.inertia, slot: 0, hold: HOLD });
+AR.add("pull-f", { tail: (t) => below("feather", t), vec: [0, -1.2, 0], color: FORCE, t0: CUE.why.pull + 0.15, t1: CUE.why.inertia, slot: 1, hold: HOLD });
+AR.add("acc-h", { tail: (t) => below("hammer", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0], t1: CUE.why.acc[1], slot: 2, hold: HOLD });
+AR.add("acc-f", { tail: (t) => below("feather", t), vec: [0, -16, 0], color: MOTION, t0: CUE.why.acc[0] + 0.15, t1: CUE.why.acc[1], slot: 3, hold: HOLD });
 
 // ── ink: two hands that held them (I: their own strength, FILM.dim "hands"), the whoa's Earth and orbit; each set
 // steps back by its colour (opacity would blend in scene light under the finish and keep far less than a third) ──

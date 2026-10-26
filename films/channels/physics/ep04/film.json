@@ -824,27 +824,27 @@
   },
   {
    "id": "wy-pull",
-   "text": "gravity: far stronger on the hammer",
+   "text": "pulled far harder",
    "color": "force",
    "t0": 31.033333333333335,
    "t1": 32.96666666666667,
    "anchor": {
     "arrow": "pull-h"
    },
-   "side": 1,
+   "side": -1,
    "fixed": true,
    "v": "middle"
   },
   {
    "id": "wy-acc",
-   "text": "same acceleration",
+   "text": "same speed-up",
    "color": "motion",
    "t0": 34.46666666666667,
    "t1": 35.722419857628104,
    "anchor": {
-    "arrow": "acc-h"
+    "arrow": "acc-f"
    },
-   "side": 1,
+   "side": -1,
    "fixed": true,
    "v": "middle"
   },

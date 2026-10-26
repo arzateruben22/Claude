@@ -1,16 +1,14 @@
 # Rest Frame No. 002, "The swing's secret"
 
-Episode 2 of Rest Frame, the physics channel (films/channels/physics). It is 71.7 s long (the 25 Oct delivery; the
-26 Oct audit's re-voiced lines lengthened the direction to 72.8 s, and the final is being re-rendered on it with the
-rule-8 fix), 9:16, narrated by af_bella at speed 1.0 (a synthetic voice, labeled as AI). It pays off episode 1's tease
+Episode 2 of Rest Frame, the physics channel (films/channels/physics). It is 72.8 s long, 9:16, narrated by af_bella at speed 1.0 (a synthetic voice, labeled as AI). It pays off episode 1's tease
 ("one pendulum, big swing against small. It's almost a tie.") and sets up episode 3. **Nothing has been posted.** A
 physicist signs off the script before it posts.
 
 | | |
 |---|---|
-| **Final** (the 25 Oct delivery, being re-rendered on the current direction: 1080×1920, 30 fps, full finish, −14.1 LUFS / −1.9 dBTP; `qa.py` PASS) | `out/rest-frame-002-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
+| **Final** (26 Oct 13:43: 1080×1920, 30 fps, full finish, −14.1 LUFS / −1.9 dBTP; `qa.py` PASS) | `out/rest-frame-002-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
-| Ten final-tier stills | `review/stills-ep02.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
+| Twelve final-tier stills | `review/stills-ep02.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` (not committed) |
 
 ## The story
@@ -80,8 +78,8 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 - The 26 Oct recheck pass brought phrase-broken captions (`../set/captions_py.py`), the spine readout placed clear of
   the cards (`../set/spine.js`; now keyed per shot, `FILM.spineAt`), WRITING.md rule 8 ("One line wins"), and the kit's
   readability pass (merged from the coordinating branch: larger counter labels and card text, labels that avoid all
-  text, masters at CRF 12 and deliveries at CRF 15). The final in `out/` (and `review/scorecard.md`, the stills) is still
-  the 25 Oct delivery; it is being re-rendered on the current direction. No kit file was changed here (`../KIT-CHANGES.md`).
+  text, masters at CRF 12 and deliveries at CRF 15). The final in `out/` was re-rendered on 26 Oct on the audit and
+  rule-8 direction (the 25 Oct delivery is superseded). No kit file was changed here (`../KIT-CHANGES.md`).
 - Rule 8 ("One line wins") is built in: `FILM.dim` steps back what the caption is not about, eased over 0.5 s from a cut
   or a word. The big one is at a third through the normal (it hangs while the small one is named) and for "For small
   swings, he was nearly right"; the small one while its twin is pulled out (back on "Let both go"), from "big one" to
@@ -96,9 +94,9 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 - The coordinating session's audit (26 Oct) changed the change ("Pull its twin", "Three times the distance") and the
   whoa ("Now hang fifteen", "For half a minute", "just as gradually": the pattern is symmetric about the half-minute,
   c10, c17), gave c4, c11 and c12 Lima & Arun's real title, and repointed c6 and c15; the 25 Oct delivery is superseded.
-  `review/CLAIMS-REVIEW.md` and `out/POSTING.md` / `posting.json` were written before the audit and still carry its
-  old text until they are regenerated: both have c6 on arXiv:1805.00002 and c15 on McMaster; the claims sheet also has
-  the old sentences, c4, c11 and c12's old title and c17 at 12° / 60.17 s.
+  `review/CLAIMS-REVIEW.md` is regenerated from the audited claims. `out/POSTING.md` / `posting.json` (the coordinating
+  session's posting sheets) were written before the audit and still have c6 on arXiv:1805.00002 and c15 on McMaster:
+  regenerate them before posting.
 - `render.mjs --build` is relative to the working directory, not the film: run stills with `--build <film>/build/stills` from the repo root.
 - Kokoro (af_bella, 1.0) speaks short lines at 3.1–4 words a second. The voiced lint (≤ 3.0) needed lines with full stops and longer words; `kits/cinema/voice` has no per-line speed, and the channel's speed stays 1.0.
 - The cyc's wall curves forward on the left (z −44 at x −50): a rig whose back lane sat at z −50 put the big pendulum inside the wall. The rig stands 30 cm forward.

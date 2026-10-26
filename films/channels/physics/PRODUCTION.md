@@ -56,7 +56,7 @@ delivered).
 
 | # | Title | State |
 |---|---|---|
-| 02 | The swing's secret | **delivered** (25 Oct 23:04 UTC): 71.7 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (86 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 41.5 min · `out/rest-frame-002-9x16.mp4` · **re-render pending** (26 Oct recheck: phrase captions, spine layout, rule 8, the readability kit) |
+| 02 | The swing's secret | **delivered** (26 Oct 13:43 UTC): 72.8 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (85 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 0.6 h · `out/rest-frame-002-9x16.mp4` · on the fact audit and rule 8 (the 25 Oct delivery is superseded); its posting sheets predate the audit |
 | 03 | Where does the bounce go? | **delivered** (26 Oct 09:08 UTC): 67.5 s, −14.0 LUFS / −1.9 dBTP, voice 20.9 LU over music, sync PASS (57 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 27.5 min · `out/rest-frame-003-9x16.mp4` · on the audit, rule 8 and screen-true thirds (the 08:35 final, QA PASS, was superseded: its stepped-back ball nearly vanished) |
 | 04 | The hammer and the feather | scripted · reviewed · voiced (166 words, 72.0 s) · compile and scene · animatic checked (bench camera lowered, MICROSCOPE card, labels) · **rule 8 pass in progress**, then cues, soundtrack, stills, final |
 | 05 | The spinning chair | scripted · reviewed · voiced (156 words, 66.9 s; tease re-voiced for US spelling, audio identical) · compile and scene written · HUD audit clean · **rule 8 pass in progress**, then animatic, cues, soundtrack, stills, final |

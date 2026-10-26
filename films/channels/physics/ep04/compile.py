@@ -147,11 +147,14 @@ assert SPINE[-1]["t1"] > B["takeaway"]["t1"] - 0.5 and SPINE[-1]["v"] == SPINE[-
 #     [0.5, 0.245] (plate y ≈ 362–578) sits on the hands: the plate goes left of the feather, x ≈ 104–436
 #   normal, why                        L0 [0.25, 0.245] (y ≈ 362–578): under the speed note (to y ≈ 324). In the normal it
 #     clears "still drifting" (an 81 px pill above the feather, y ≈ 686–767, from "down."), which L1 would cover; in the
-#     why it sits over "gravity: far stronger on the hammer" (a 750 px label at y ≈ 602–683)
+#     why it sits above "pulled far harder" (a pill left of the hammer's pull arrow, below the feather)
 #   change, measure, takeaway          L1 [0.25, 0.31] (y ≈ 487–703): under the change's card (x 403–900, to y ≈ 425),
 #     which L0 would touch; no label is above y ≈ 1030 in these shots
 #   whoa                               the top-left corner, x ≈ 90–345 (no speed note: real time): the ink orbit is
 #     373–707 × 361–696 at the cut and grows to 235–845 × 565–1176 as the camera pushes in; the MICROSCOPE card is x 403–900
+# The why's two arrow pills sit LEFT of their arrows: right of the hammer only ~290 px of the safe box remain, so a
+# right-side pill (about 390 px at the label size) is clamped back over the arrow. "same speed-up" names the
+# feather's arrow (its twin on the hammer is the same length), its pill left of the feather, clear of both arrows.
 SPINE_L1, SPINE_L0, SPINE_TL = [0.25, 0.31], [0.25, 0.245], [0.0, 0.0]
 SPINE_PLACE = {"hook": SPINE_L1, "normal": SPINE_L0, "change": SPINE_L1, "why": SPINE_L0, "whoa": SPINE_TL,
                "measure": SPINE_L1, "takeaway": SPINE_L1, "tease": SPINE_L1}
@@ -238,8 +241,9 @@ LABELS = [
     {"id": "nm-land", "text": "0.57 s", "color": "motion", "t0": A("vo02:second."), "t1": T_FEATHER, "anchor": {"obj": ["earth", "hammer"]}, "side": 1, "fixed": True},
     {"id": "nm-half", "text": "still drifting", "color": "ghost", "t0": A("vo02:Still"), "t1": cut("change") - LABEL_OUT, "anchor": {"obj": ["earth", "feather"]}, "side": -1, "fixed": True},
     {"id": "ch-together", "text": "together", "color": "motion", "t0": A("vo03:together."), "t1": cut("why") - LABEL_OUT, "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
-    {"id": "wy-pull", "text": "gravity: far stronger on the hammer", "color": "force", "t0": A("vo04:Gravity", 0.3), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-acc", "text": "same acceleration", "color": "motion", "t0": A("vo04:harder#2", 0.4), "t1": R_w + 0.3, "anchor": {"arrow": "acc-h"}, "side": 1, "fixed": True, "v": "middle"},
+    {"id": "wy-pull", "text": "pulled far harder",   # on the hammer's pull arrow, its pill to the left (see the note above SPINE_L1)
+     "color": "force", "t0": A("vo04:Gravity", 0.3), "t1": A("vo04:But", -0.1), "anchor": {"arrow": "pull-h"}, "side": -1, "fixed": True, "v": "middle"},
+    {"id": "wy-acc", "text": "same speed-up", "color": "motion", "t0": A("vo04:harder#2", 0.4), "t1": R_w + 0.3, "anchor": {"arrow": "acc-f"}, "side": -1, "fixed": True, "v": "middle"},
     {"id": "wy-tie", "text": "tie", "color": "motion", "t0": A("vo04:tie."), "t1": cut("whoa") - LABEL_OUT, "anchor": {"point": [0.0, 4.0, 0.0]}, "side": 1, "fixed": True},
     {"id": "wo-earth", "text": "Earth", "color": "ghost", "t0": A("vo05:Earth"), "t1": A("vo05:They"), "anchor": {"point": [0.0, 190.0, -20.0]}, "side": 1, "v": "middle", "fixed": True},
 ]
@@ -373,6 +377,9 @@ film = {
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
+# vo01's "s" in "lands" (0.52 s into the line) is a near-Nyquist burst; mastered to -14 LUFS, the native AAC
+# encoder rang on it to +3.1 dBTP (the WAV: -4.3). Half a decibel less on that line keeps the AAC under the gate.
+VOICE_GAIN = {"vo01": -0.5}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
 ev.append({"t": round(F_h + FREEZE, 4), "kind": "time.slow", "tag": "hook:freeze"})
 ev.append({"t": round(F_n + 0.25, 4), "kind": "time.slow", "tag": "earth:freeze"})
@@ -395,7 +402,7 @@ for bd in BADGES:
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 for s in SPINE[1:]:
     if s.get("tick", True):                              # the takeaway's step changes the label only, not the number
-        ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
+        ev.append({"t": s["t0"], "kind": "counter.tick", "tag": "spine:" + s["label"].replace("²", "2")})   # the studio reads a tick's pitch from the tag's digits; ² is a digit int() can't read
 ev.append({"t": A("vo06:seconds."), "kind": "counter.end", "tag": "spine:moon"})
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
@@ -414,7 +421,8 @@ if cues_file.exists():
 sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9.0,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: (e["t"], e["kind"])),
-         "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}
+         "voice": [{"id": v["id"], "t": v["t"], "file": v["file"], **({"gain": VOICE_GAIN[v["id"]]} if v["id"] in VOICE_GAIN else {})}
+                   for v in film["voice"]]}
 if shown:
     sheet["shown"] = shown
 

@@ -74,7 +74,11 @@
   {
    "t": 2.2,
    "kind": "label",
-   "tag": "hk-hammer"
+   "tag": "hk-hammer",
+   "pos": [
+    0.664,
+    0.394
+   ]
   },
   {
    "t": 3.3333,
@@ -84,7 +88,11 @@
   {
    "t": 3.3333333333333335,
    "kind": "label",
-   "tag": "hk-feather"
+   "tag": "hk-feather",
+   "pos": [
+    0.346,
+    0.426
+   ]
   },
   {
    "t": 4.2667,
@@ -95,7 +103,11 @@
   {
    "t": 4.550033,
    "kind": "counter.show",
-   "tag": "spine"
+   "tag": "spine",
+   "pos": [
+    0.25,
+    0.245
+   ]
   },
   {
    "t": 6.5821,
@@ -135,7 +147,11 @@
   {
    "t": 8.866666666666667,
    "kind": "label",
-   "tag": "nm-land"
+   "tag": "nm-land",
+   "pos": [
+    0.65,
+    0.523
+   ]
   },
   {
    "t": 8.8667,
@@ -156,7 +172,11 @@
   {
    "t": 10.4,
    "kind": "label",
-   "tag": "nm-half"
+   "tag": "nm-half",
+   "pos": [
+    0.3,
+    0.379
+   ]
   },
   {
    "t": 12.250033,
@@ -218,7 +238,11 @@
   {
    "t": 19.6,
    "kind": "label",
-   "tag": "ch-together"
+   "tag": "ch-together",
+   "pos": [
+    0.623,
+    0.567
+   ]
   },
   {
    "t": 19.6,
@@ -234,7 +258,7 @@
   {
    "t": 24.250033,
    "kind": "counter.tick",
-   "tag": "spine:each one's acceleration (m/s²)"
+   "tag": "spine:each one's acceleration (m/s2)"
   },
   {
    "t": 24.2667,
@@ -251,12 +275,20 @@
   {
    "t": 31.033333333333335,
    "kind": "label",
-   "tag": "wy-pull"
+   "tag": "wy-pull",
+   "pos": [
+    0.352,
+    0.387
+   ]
   },
   {
    "t": 34.46666666666667,
    "kind": "label",
-   "tag": "wy-acc"
+   "tag": "wy-acc",
+   "pos": [
+    0.265,
+    0.356
+   ]
   },
   {
    "t": 35.4224,
@@ -311,7 +343,11 @@
   {
    "t": 38.233333333333334,
    "kind": "label",
-   "tag": "wy-tie"
+   "tag": "wy-tie",
+   "pos": [
+    0.57,
+    0.567
+   ]
   },
   {
    "t": 40.783333,
@@ -339,7 +375,11 @@
   {
    "t": 46.93333333333333,
    "kind": "label",
-   "tag": "wo-earth"
+   "tag": "wo-earth",
+   "pos": [
+    0.595,
+    0.454
+   ]
   },
   {
    "t": 50.53333333333333,
@@ -469,7 +509,8 @@
   {
    "id": "vo01",
    "t": 0.1,
-   "file": "vo/01.wav"
+   "file": "vo/01.wav",
+   "gain": -0.5
   },
   {
    "id": "vo02",
@@ -506,5 +547,17 @@
    "t": 65.9,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "hk-hammer": 2.2333,
+  "hk-feather": 3.3667,
+  "nm-land": 8.9,
+  "nm-half": 10.4333,
+  "ch-together": 19.6333,
+  "wy-pull": 31.0667,
+  "wy-acc": 34.5,
+  "wy-tie": 38.2667,
+  "wo-earth": 46.9667,
+  "spine": 4.5667
+ }
 }

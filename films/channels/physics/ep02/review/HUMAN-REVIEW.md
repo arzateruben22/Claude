@@ -1,6 +1,6 @@
 # What a person must check before this posts
 
-Rest Frame No. 002, "The swing's secret". The measured gates are in `scorecard.md` (the 25 Oct delivery's; the final is being re-rendered on the current direction). Nothing has been posted.
+Rest Frame No. 002, "The swing's secret". The measured gates are in `scorecard.md`. Nothing has been posted.
 
 ## This episode
 1. **Claims.** A physicist works through `CLAIMS-REVIEW.md`: all 17 claims were checked from search excerpts only, so a person opens each link and ticks it. The episode does not post until every row is ticked. The copy in `review/` was written on 25 Oct, before the 26 Oct audit: it still has the old sentences ("Three times the path", "So hang fifteen", "For about a minute", "all at once"), c4, c11 and c12's old title, c6 on arXiv:1805.00002, c15 on McMaster and c17 at 12° / 60.17 s. Regenerate it from `claims.json` (`kits/cinema/script/claims_sheet.py`) before the sign-off and carry over its hand-added footnote row (item 9), which `claims.json` does not hold. In `claims.json`, c16's claim text still says "same 12° start"; the fifteen start at 15° (its own note, c17, `compile.py`).
