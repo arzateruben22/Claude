@@ -61,7 +61,7 @@ section + section { border-top: 1px solid rgba(74, 52, 42, 0.084); }
 .tb-me { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 8px 14px 8px 8px; background: #FFFFFF;
   font-size: .9rem; font-weight: 600; cursor: pointer; }
 .tb-me:hover { background: #F3EDE4; }
-.tb-me .ev-ico { width: 20px; height: 22px; fill: var(--text); margin-left: 4px; }
+.tb-me .ev-ico { display: block; width: 25px; height: 13.5px; fill: var(--text); margin: 0 1px 0 5px; }   /* centred in the button's left circle, like the ring it stands in for */
 .tb-me.has-progress .ev-ico { display: none; }
 .tb-me:not(.has-progress) .mini-ring { display: none; }
 .mini-ring { width: 24px; height: 24px; transform: rotate(-90deg); }

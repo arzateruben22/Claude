@@ -369,7 +369,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 }
 
 .nav-ev { font-style: normal; color: var(--cocoa); }
-.ev-ico { display: inline-block; width: 0.9em; height: 1em; vertical-align: -0.12em; fill: currentColor; }
+.ev-ico { display: inline-block; width: 1.3em; height: 0.7em; vertical-align: 0; fill: currentColor; }   /* the EV mark: wide, sitting on the baseline at cap height */
 .nav-brand-sub {
   font-family: var(--font-body);
   font-size: 0.6rem;
