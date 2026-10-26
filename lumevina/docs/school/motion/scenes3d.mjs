@@ -1405,12 +1405,12 @@ const spotK = cells.map((c) => {
   const d = Math.min(Math.hypot(c.x + 3, (c.y - 13) * 0.7), Math.hypot(c.x - 4, (c.y - 13) * 0.7));
   return Math.max(0, 1 - d / 2.4) * (c.y === 13 ? 1 : 0.6);
 });
-const BROWN = new THREE.Color(0x6a3a2c), GLOW = new THREE.Color(0xd79aa2), TOPGLOW = new THREE.Color(0xf6d6c8);
+const BROWN = new THREE.Color(0x7a4634), GLOW = new THREE.Color(0xd79aa2), TOPGLOW = new THREE.Color(0xf6d6c8);
 const tmp = new THREE.Color();
 
 // the drops: vitamin C, a retinoid, niacinamide; each falls, lands with a squash, spreads and sinks in
 const SURF = 13.5;
-const mkDrop = (col) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 18), new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.15, transmission: 0.25, opacity: 0.9, transparent: true })); m.visible = false; m.castShadow = true; scene.add(m); return m; };
+const mkDrop = (col) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1.1, 24, 18), new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.15, transmission: 0.25, opacity: 0.9, transparent: true })); m.visible = false; m.castShadow = true; scene.add(m); return m; };
 const ring = (col) => { const m = new THREE.Mesh(new THREE.RingGeometry(0.86, 1, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(1.6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.rotation.x = -Math.PI / 2; m.visible = false; scene.add(m); return m; };
 const DROPS = [
   { m: mkDrop(0xf1d57a), r: ring(0xf1d57a), x: -4.6, z: PZ - 2.4, t0: 8.4 },
@@ -1420,11 +1420,11 @@ const DROPS = [
 const splash = (m, x, z, q) => { m.visible = q >= 0 && q < 0.7; if (!m.visible) return; const k = 1 - Math.pow(1 - q / 0.7, 3); m.position.set(x, SURF + 0.03, z); m.scale.setScalar(0.6 + 2.8 * k); m.material.opacity = 0.75 * Math.pow(1 - q / 0.7, 1.6); };
 
 // the camera: one slow orbit of the cut face per loop, so the last frame meets the first
-const look = new THREE.Vector3(0, 9.6, 1.2), lk = new THREE.Vector3();
+const look = new THREE.Vector3(0, 9.4, 1.2), lk = new THREE.Vector3();
 window.CINEMA_FOCUS = () => ({ point: lk.copy(look), fstop: 0.5 });
 const place = (t) => {
   const a = TAU * t / DUR, sc = portrait ? 1.3 : 1;
-  camera.position.set((7.5 + 2.4 * Math.sin(a)) * sc, 15.2 + 1.1 * Math.sin(a + 1.1), (23.5 + 1.8 * Math.cos(a)) * sc);
+  camera.position.set((6.2 + 2.0 * Math.sin(a)) * sc, 13.8 + 0.9 * Math.sin(a + 1.1), (19.0 + 1.5 * Math.cos(a)) * sc);
   camera.fov = 32 + (portrait ? 12 : 0); camera.updateProjectionMatrix();
   camera.lookAt(look.x + 0.3 * Math.sin(a + 0.4), look.y + 0.2 * Math.sin(a + 2), look.z);
 };
@@ -1451,7 +1451,7 @@ window.seek = function (t) {
     } else if (c.y >= 3) { sw = 1 + 0.06 * glow * Math.sin(c.ph); }
     dummy.position.set(c.x + 0.5, c.y + lift, c.z + 0.5 - NZ / 2); dummy.scale.set(sw, sw, sw); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix);
     tmp.copy(c.base);
-    if (spotK[i]) tmp.lerp(BROWN, spotK[i] * spot);
+    if (spotK[i]) tmp.lerp(BROWN, 0.85 * spotK[i] * spot);
     if (c.y >= 3 && c.y < 11) tmp.lerp(GLOW, 0.55 * glow);
     else if (c.y === 13) tmp.lerp(TOPGLOW, 0.5 * glow);
     block.setColorAt(i, tmp);
@@ -1459,15 +1459,15 @@ window.seek = function (t) {
   block.instanceMatrix.needsUpdate = true; block.instanceColor.needsUpdate = true;
   // the drops, in level 2
   for (const d of DROPS) {
-    const q = t - (d.t0 + 0.9);
+    const q = t - (d.t0 + 1.2);
     splash(d.r, d.x, d.z, q);
     const on = t > d.t0 && q < 2.2;
     d.m.visible = on;
     if (!on) continue;
-    const u = seg(t, d.t0, d.t0 + 0.9), f = u * u * u, speed = 3 * u * u;
+    const u = seg(t, d.t0, d.t0 + 1.2), f = u * u * u, speed = 3 * u * u;
     let sy, sxz, y;
-    if (q < 0) { sy = Math.min(1.5, 1 + 0.2 * speed); sxz = 1 / Math.sqrt(sy); y = 22 - (22 - (SURF + 0.8)) * f; }
-    else { const flat = 0.6 * (1 - Math.exp(-q * 6)), wob = 0.12 * Math.sin(q * 22) * Math.exp(-q * 4.5), sink = smooth(seg(q, 0.9, 2.2)); sy = Math.max(0.15, 1 - flat + wob) * (1 - sink); sxz = (1 + 1.3 * flat - 0.5 * wob) * (1 - 0.3 * sink); y = SURF + 0.8 * sy; }
+    if (q < 0) { sy = Math.min(1.5, 1 + 0.2 * speed); sxz = 1 / Math.sqrt(sy); y = 22 - (22 - (SURF + 1.1)) * f; }
+    else { const flat = 0.65 * (1 - Math.exp(-q * 6)), wob = 0.12 * Math.sin(q * 22) * Math.exp(-q * 4.5), sink = smooth(seg(q, 0.9, 2.2)); sy = Math.max(0.15, 1 - flat + wob) * (1 - sink); sxz = (1 + 1.6 * flat - 0.5 * wob) * (1 - 0.3 * sink); y = SURF + 1.1 * sy; }
     d.m.position.set(d.x, y, d.z); d.m.scale.set(Math.max(0.001, sxz), Math.max(0.001, sy), Math.max(0.001, sxz));
     d.m.material.opacity = 0.9 * (1 - seg(q, 1.4, 2.2));
   }
