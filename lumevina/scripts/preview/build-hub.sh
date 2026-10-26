@@ -2,7 +2,8 @@
 # Everything Lumevina: the hub page and every page it opens, built fresh into one folder for the
 # claude.ai preview (published with index.html as the page and the rest as files beside it):
 #   index.html      the hub (docs/hub/index.html)
-#   site.html       the home page, v4 (membership, Glow Points, Skin School switched on)
+#   site.html       the home page, v4 (booking here, membership, Glow Points, Skin School switched on)
+#   site-simple.html  the same site as v2 (booking on GlossGenius, no membership or points), so Evelyn can compare
 #   school.html     Skin School; each lesson's video plays from the preview's asset store
 #   dashboard.html  Evelyn's dashboard      app.html       the iPhone app sample
 #   blueprint.html  the Growth Blueprint    plan.html      the first 90 days
@@ -19,6 +20,7 @@ node scripts/build-single-file.mjs dashboard.html dist/dashboard.html
 node scripts/build-single-file.mjs shipping-kit.html dist/shipping.html
 node scripts/build-single-file.mjs privacy.html dist/privacy.html
 python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site.html" "Lumevina" v4 file
+python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site-simple.html" "Lumevina" v2 file v4
 python3 scripts/preview/fold-school.py school.html "$OUT/school.html" v4 hub
 cp dist/dashboard.html "$OUT/dashboard.html"; cp dist/privacy.html "$OUT/privacy.html"
 python3 docs/blueprint/build.py "$OUT/.bp" >/dev/null && cp "$OUT/.bp/web.html" "$OUT/blueprint.html"
