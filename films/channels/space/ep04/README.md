@@ -4,9 +4,9 @@
 `lightminute-vacuum`). It pays off episode 3's tease ("Next: the Moon never stops falling toward us. So why doesn't
 it land?") and sets up episode 5 ("Next: pour Earths into the Sun. How many to fill it up?").
 
-**Delivered (26 Oct, after the recheck and the script audit):** `out/lightminute-004-9x16.mp4` (74.13 s, −14.1 LUFS /
-−1.8 dBTP, voice 12.5 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS), with its poster
-(51.7 s), contact sheet and `review/`. Not posted.
+**Delivered (26 Oct, after the cut review and a draft-review round):** `out/lightminute-004-9x16.mp4` (74.13 s,
+−14.1 LUFS / −1.8 dBTP, voice 12.5 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS), with its
+poster, contact sheet and `review/`. Not posted.
 
 ## The story
 What's holding the Moon up? Nothing: it's falling. It is about thirty Earths away and moves sideways at about a

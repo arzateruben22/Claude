@@ -34,7 +34,10 @@
   first second runs on the whoa's ×8 clock (it falls in a blink; the "8× faster" note was wrong for it before), both
   falls are solid lilac, and the spine names the Moon's minute on "And it does". The gravity-off Moon is lit, with a
   trail, and swoops back onto its orbit; the takeaway's Moon runs on at 20,000× (noted) under a fan of straight lines.
-  The normal's note is two tags ("Markers enlarged", "True scale"). Not yet rendered: a stills check comes first.
+  The normal's note is two tags ("Markers enlarged", "True scale"). After the stills: the lilac and ice lines stay
+  under the bloom's knee (the falls, the 30-Earths row and the speed arrows no longer bloom royal blue), and the
+  takeaway's fan is five straight lines leaving the orbit behind the Moon. The final (26 Oct, QA PASS) is
+  `out/lightminute-004-9x16.mp4`.
 
 
 ## Every episode
