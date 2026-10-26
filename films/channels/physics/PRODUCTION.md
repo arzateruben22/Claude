@@ -1,5 +1,84 @@
 # Rest Frame: production log, episodes 2–6
 
+## Summary (26 Oct, 15:55 UTC): episodes 2–6 delivered, rechecked and re-rendered
+
+| # | Title | Length | Loudness (AAC) | QA | Final |
+|---|---|---|---|---|---|
+| 01 | Thrown or dropped? | 74.9 s | −14.1 LUFS / −2.0 dBTP | PASS | the coordinating session's (24–25 Oct; not part of this branch's work) |
+| 02 | The swing's secret | 72.8 s | −14.1 LUFS / −1.9 dBTP | PASS | 26 Oct 13:43, `ep02/out/rest-frame-002-9x16.mp4` |
+| 03 | Where does the bounce go? | 67.5 s | −14.0 LUFS / −1.9 dBTP | PASS | 26 Oct 09:08, `ep03/out/rest-frame-003-9x16.mp4` |
+| 04 | The hammer and the feather | 72.3 s | −14.1 LUFS / −2.0 dBTP | PASS | 26 Oct 14:27, `ep04/out/rest-frame-004-9x16.mp4` |
+| 05 | The spinning chair | 66.9 s | −14.1 LUFS / −2.0 dBTP | PASS | 26 Oct 15:12, `ep05/out/rest-frame-005-9x16.mp4` |
+| 06 | The ten-meter straw | 73.3 s | −14.0 LUFS / −1.9 dBTP | PASS | 26 Oct 15:49, `ep06/out/rest-frame-006-9x16.mp4` |
+
+Episodes 2–6, every final: 1080×1920, 30 fps, H.264 High; voice ≥ 20 LU over the music; sound sync PASS; 0 text-audit warnings;
+0 flashes; the last frame hands back to frame 0. **Nothing has been posted.** Each episode's `review/scorecard.md`
+has every gate; `review/HUMAN-REVIEW.md` lists what a person must check; `review/CLAIMS-REVIEW.md` is the physicist's
+sheet (every claim checked from search excerpts only).
+
+**What the recheck changed (all of 2–6):** captions break at phrases; the spine readout sits clear of the subject and
+the notes, holding lit at its final value through the payoff; rule 8 ("One line wins"), with a stepped-back element
+keeping a true third of its contrast on screen (`set/aces.js` `screenAlpha`: opacity 1/3 had kept about 1/11); the
+coordinating session's fact audits applied and re-voiced; every final re-rendered on the readability kit (CRF 15
+delivery, aq-mode 3); final-tier stills looked at 390 px wide before each final, and an every-0.25 s HUD audit.
+Fixes found that way: ep03's heat pills sat on the ball; ep04's force arrows were hidden behind the hammer's handle
+and its pills clamped over them; ep05's readout read as the skater's; ep06's house outline competed with the sip and
+its tease crossed a blank page.
+
+**Before posting:**
+- A physicist signs off each `CLAIMS-REVIEW.md` (TODO: the name).
+- Episode 2's posting sheets (`ep02/out/POSTING.md`, `posting.json`, the coordinating session's) predate the fact audit
+  (c6 on arXiv:1805.00002, c15 on McMaster): regenerate them. Episodes 3–6 have none yet (held for episode 6, as asked).
+- Episode 6's "one stunt reached seven" (c15) rests on a search excerpt of a STEM Learning listing of Veritasium's 2012
+  video: watch the video to confirm the 7 m.
+- TODO placeholders in every episode: the channel handle (@restframe) and a trademark search, the posting accounts, a
+  pinned sources page, the physicist's name; the AI-voice label on each platform.
+
+**For the kit's owners (found here; nothing in `kits/` was changed):**
+- `studio/compose.py` reads a tick's pitch from its tag's digits with `str.isdigit` then `int()`: a superscript (²)
+  passes the first and crashes the second. Episode 4 writes its tag with a plain 2.
+- `studio/master.py` lowers the limiter ceiling when the AAC true peak is over the gate, but the native AAC encoder can
+  ring on strong sibilance whatever the level (episode 4's vo01: +3.1 dBTP from a −4.3 dBTP WAV). Episode 4 sets that
+  line 0.5 dB lower (`VOICE_GAIN`), which landed the AAC at −2.0.
+- `sci/hud.js`: a `fixed` label wider than the room beside its anchor is clamped into the safe box back over its own
+  anchor; episode 4 places those pills on the other side.
+
+> **Recheck pass (26 Oct, from 03:35 UTC), at the user's request: "complete and rechecked and rendered for better
+> placement on subtitles, animations, HD quality / graphics".** What changed for every episode:
+> - Captions break at phrases (`set/captions_py.py`), not mid-phrase ("…a tenth of a / second bunch up at the" is gone);
+>   a few sentences are laid out by hand (`CAP_FIX` in each compile.py); the last caption clears before the end card.
+> - The spine readout is pinned to the safe line with a wrapping label, cards stop at 38vmin (`set/spine.js`), so no
+>   card or tag sits on it; a step-through audit of every HUD plate (each 0.25 s) leaves only sub-0.25 s crossfades.
+> - The coordinating branch's readability pass is merged (`767b57b`): bigger counter labels and card text, labels that
+>   avoid all text, masters at CRF 12 and deliveries at CRF 15 with aq-mode 3, and WRITING.md rule 8 "One line wins".
+>   Every episode, ep02 included, is re-rendered on it.
+> - ep04's bench camera is lower and wider (the drop sits between the readout and the captions).
+> **Paused 06:07–08:12 UTC by the session's usage limit** (the worker restarted; ep03's final resumed from frame 476; the
+> rule-8 fix stage for ep02, ep04 and ep05 re-run after the reset). ep06 delivered 05:09 (QA PASS).
+> **Fact audit (26 Oct, from the coordinating session; reports on its branch, films/audits/2026-10-26).** Every confirmed
+> finding checked against our files and applied (commit fa0e26b): ep02's pendulum wave comes back "just as gradually"
+> (x(60−t) = x(t)), ep03's "doesn't spring back as hard" and "about three thousandths of a degree", ep04's "< 5" readout,
+> "Still drifting down" and "Gravity speeds them up equally", ep05's "Nothing motorized"; sources repointed where an
+> excerpt didn't come from the cited page. The changed lines were re-voiced (lint 0 errors before and after).
+> Order (04:40 UTC): the rule-8 pass on ep02–05 runs as a workflow (one implementer, one independent reviewer and one
+> fixer per episode; agents never run Chromium); meanwhile ep06 (written with rule 8 from the start) renders its final,
+> then each of ep02–05 gets compile → cues → compile → soundtrack → stills at 390 px → final → QA, in order.
+> **ep06 audit (08:15 UTC, from the coordinating session): the 05:09 delivery (339bc41) is superseded.** Applied: the
+> hook "Something invisible, pushing." ("not suction" overclaimed), "however hard you like" (a hard sip, not a
+> maximum), "Your lungs alone? About one meter." then the 7 m mouth-pumping stunt (c15, Veritasium 2012; the audit's
+> mouth-suction paper not found in our searches, so not cited), the takeaway "its push runs out near ten meters".
+> Re-voiced (175 words, 73.3 s; lint 0 errors). It re-renders after ep02–05 (commit 11c7b36).
+> **A third on screen (08:30).** Blending and the lerp toward the paper both happen in scene light, before the
+> finish's ACES curve, so opacity 1/3 (or a 2/3 lerp) keeps only about 1/11 of a mark's contrast on screen; ep02's
+> review caught it. `set/aces.js` now has `screenAlpha(k, ink, paper)` (the opacity that keeps k of the contrast,
+> about 0.7 for a third); ep06 uses it, and each of ep02–05 is mapped through it before its final.
+> **Paused 09:46–13:40 UTC at the user's request (resumed by the user; ep02 resumed from its finished frames after a machine restart).** ep03 delivered (e5824ae). ep02's final stopped with 2093 of 2184 frames
+> on disk: resume with `kits/cinema/film/run.sh films/channels/physics/ep02 --tier final`, then deliver (assemble with
+> build/audio/mix.wav, contact sheet, qa.py, scorecard; its stills are in build/stills/). Then ep04 → ep05 → ep06
+> (each: HUD audit, cues, compile, soundtrack, stills at 390 px, final).
+> `ps -eo args | grep "[r]ender.mjs"` shows the one render; a bare `kits/cinema/film/run.sh <dir>` resumes it.
+> The pre-merge ep02 frames are in `ep02/build/final/9x16.prev`; ep03's first final is in `ep03/build/superseded/` (not committed).
+
 Branch `claude/rest-frame-ep02-06`. One line per episode, updated as it moves. The process for each episode is
 episode 1's (`ep01/README.md`), plus the picture rules added to `kits/cinema/script/WRITING.md` on 24 Oct ("The
 picture: what the best references do"), which apply from episode 2 on:
@@ -20,11 +99,11 @@ delivered).
 
 | # | Title | State |
 |---|---|---|
-| 02 | The swing's secret | **delivered** (25 Oct 23:04 UTC): 71.7 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (86 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 41.5 min · `out/rest-frame-002-9x16.mp4` |
-| 03 | Where does the bounce go? | scripted · reviewed (7/10; fixes applied: "squashes flat", "motion doesn't vanish", "never loses energy" corrected) · voiced (153 words, 66.9 s; lint 0 errors before and after) · compile and scene written; animatic waits for ep02's final (one Chromium job) |
-| 04 | The hammer and the feather | scripted · reviewed (6.5/10; fixes applied: wrong takeaway, MICROSCOPE dates 2016–18, "a few parts" in 10¹⁵) · voiced (166 words, 72.0 s; lint 0 errors before and after) · compile and scene written |
-| 05 | The spinning chair | scripted (lint 0 errors) · in review · set: spin model (`spin.js`, checked against its port and a brute integral) and the chair with a mannequin (`chair.js`) |
-| 06 | The ten-metre straw | — (after 05 is delivered) |
+| 02 | The swing's secret | **delivered** (26 Oct 13:43 UTC): 72.8 s, −14.1 LUFS / −1.9 dBTP, voice 21.3 LU over music, sync PASS (85 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 0.6 h · `out/rest-frame-002-9x16.mp4` · on the fact audit and rule 8 (the 25 Oct delivery is superseded); its posting sheets predate the audit |
+| 03 | Where does the bounce go? | **delivered** (26 Oct 09:08 UTC): 67.5 s, −14.0 LUFS / −1.9 dBTP, voice 20.9 LU over music, sync PASS (57 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 27.5 min · `out/rest-frame-003-9x16.mp4` · on the audit, rule 8 and screen-true thirds (the 08:35 final, QA PASS, was superseded: its stepped-back ball nearly vanished) |
+| 04 | The hammer and the feather | **delivered** (26 Oct 14:27 UTC): 72.3 s, −14.1 LUFS / −2.0 dBTP, voice 21.2 LU over music, sync PASS, 0 audit warnings, 0 flashes; `qa.py` PASS; render 33.5 min · `out/rest-frame-004-9x16.mp4` · on the fact audit and rule 8, with the why's arrows drawn under each object |
+| 05 | The spinning chair | **delivered** (26 Oct 15:12 UTC): 66.9 s, −14.1 LUFS / −2.0 dBTP, voice 20.9 LU over music, sync PASS, 0 audit warnings, 0 flashes; `qa.py` PASS; render 40 min · `out/rest-frame-005-9x16.mp4` · on the fact audit and rule 8 |
+| 06 | The ten-meter straw | **delivered** (26 Oct 15:49 UTC): 73.3 s, −14.0 LUFS / −1.9 dBTP, voice 21.0 LU over music, sync PASS (41 events), 0 audit warnings, 0 flashes; `qa.py` PASS; render 34 min · `out/rest-frame-006-9x16.mp4` · on the coordinating session's audit (the 05:09 final, 339bc41, is superseded) and screen-true thirds; posting sheets held |
 
 ## New in the channel set (`set/`)
 
@@ -37,12 +116,35 @@ delivered).
 - `balls.js`: a basketball and the closed-form stacked drop (perfect or lossy bounces).
 - `moon.js`: the bible's Moon dressing (a regolith floor faded in over the paper cyc), a geological hammer, a falcon feather.
 - `spin.js`: a spin whose moment of inertia changes, angular momentum conserved.
-- `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms).
+- `chair.js`: a swivel chair with a seated wooden mannequin holding two dumbbells (two-bone IK arms); `reach()` and
+  `dumbbells: false` for empty hands (ep06).
+- `captions_py.py`: the caption pager every compile.py uses (phrase breaks, per-sentence fixes, end-card clearance).
+- `aces.js` (added): `acesFwd`, the finish's forward curve, and `screenAlpha`, the opacity that keeps a share of a mark's contrast on screen.
+- `spine.js`: where the spine readout sits (pinned to the safe line, wrapping label) and the card width.
+- `straw.js`: glass without transmission (a Fresnel rim and a highlight stripe), a glass of water, straws and tall pipes
+  with a liquid column, a screw lid, a hand vacuum pump and hose, an ink house front with a meter scale, boiling
+  bubbles, Torricelli's tube in ink; the hydrostatics helpers (h = Δp/ρg).
+
+## ep05 plan (for the resume)
+- Takes: hook (from above, mid-pull, ghosts of both dumbbells) · normal: the push on "push." (30 rpm, arms out) ·
+  change: arms in from "pull" to "chest." (80 rpm) · why: the turn from above to the side; arms out on "Weight near the
+  middle", in again on "turns you faster" (`spinner` moves) · whoa: an ink skater beside the chair, the spine counting to
+  342 rpm on "three hundred forty-two" · measure: frozen from above, the arms-out ghosts (18°) and arms-in ghosts (48°) ·
+  takeaway: spinning on, "Friction ignored" and "Model: body 2.0 kg·m² (assumed)" notes · tease: re-run the hook so
+  the last frame is frame 0.
+- Spine: rpm (30 → 80), then 342 for the skater, then degrees per 1/10 s (18 → 48).
 
 ## Kit changes
 
-None so far (`KIT-CHANGES.md`).
+None (`KIT-CHANGES.md`: a `--crf` option was added and withdrawn on 26 Oct when the upstream readability pass made the same change).
 
 ## Questions
 
-None yet. Choices taken provisionally from the bible are marked in each episode's HUMAN-REVIEW.md.
+1. **Spelling: US or UK?** The voice is American and episodes 1–5's captions are US ("meter", "centimeters"); the bible
+   writes "ten-metre" and "storeys". Taken provisionally: US everywhere on screen (episode 6's title is "The ten-meter
+   straw"; episode 5's tease and end card were changed to match, its audio unchanged).
+2. **Rule 8's layout for Rest Frame.** Taken from the coordinating session's own episode: the speed column top-left, the
+   standing cheats top-right, the spine readout between and below them (moved per shot when the subject is there).
+3. **Episode 6's open paper floor.** The 11 m house can't stand inside the 4.2 m cyc, so episode 6 hides the cyc wall
+   (the floor stays). Provisional; the alternative is a taller wall option in `set/cyc.js`.
+Choices taken provisionally from the bible are marked in each episode's HUMAN-REVIEW.md.

@@ -1,0 +1,11 @@
+{
+ "id": "c12",
+ "sentence": "Torricelli, 1644: the same air held a column of mercury about 76 cm high.",
+ "claim": "Torricelli's mercury column (1644) stood about 76 cm above the dish, held by atmospheric pressure.",
+ "source_url": "https://www.aps.org/apsnews/2012/10/torricelli-demonstrates-existence-vacuum",
+ "source_title": "APS News, This Month in Physics History: Torricelli demonstrates the existence of a vacuum (October 2012)",
+ "accessed": "2026-10-26",
+ "verified_via": "search excerpt",
+ "status": "ok",
+ "note": "End-card footnote (on screen, not spoken). Excerpt: 'The mercury settled at about 76 cm above the dish', attributed to atmospheric pressure. The Florence history-of-science museum's page (https://imss.fi.it/vuoto/eesper2.html) also dates it to spring 1644 at about 76 cm. NOAA's 29.92 inHg (760 mm) is the same column at standard pressure. The date: 1644 (APS; the Florence museum's 'spring 1644'; the Ricci letter of 11 June 1644), though many textbooks say 1643."
+}

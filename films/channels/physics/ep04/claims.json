@@ -12,14 +12,14 @@
  },
  {
   "id": "c2",
-  "sentence": "The feather is barely halfway.",
-  "claim": "Air drag on a light, broad object like a feather is large compared with its weight, so it falls far more slowly than a hammer; drag grows with air density, the square of the speed, the area and the shape.",
+  "sentence": "Still drifting down.",
+  "claim": "When the hammer lands, the feather, slowed by air drag, is still in the air.",
   "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
   "source_title": "NASA Glenn, Beginner's Guide to Aeronautics: the drag equation",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (NASA Glenn): drag depends on the density of the air, the square of the velocity, the reference area and a drag coefficient (shape). The feather's drift on screen is an illustration (badged): it is drawn about halfway down when the hammer lands; no fall time or speed is claimed for it."
+  "note": "Excerpt (NASA Glenn): drag depends on the density of the air, the square of the velocity, the reference area and a drag coefficient (shape). The feather's drift on screen is an illustration (badged): it is drawn about halfway down when the hammer lands; no fall time or speed is claimed for it. Corrected on 26 Oct (audit): the line had said 'barely halfway', a number no source gives; published sinking speeds for a feather are about 0.5–1 m/s, so the scene's drift (an illustration, badged) now sinks at 1.0 m/s: about 52 cm of 160 when the hammer lands."
  },
  {
   "id": "c3",
@@ -118,7 +118,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: η(Ti,Pt) = [−1.5 ± 2.3 (stat) ± 1.5 (syst)] × 10⁻¹⁵; LKB: 'a record precision of a few 10-15'. Combined uncertainty √(2.3² + 1.5²) = 2.7 × 10⁻¹⁵: 'a few parts in a million billion' (10¹⁵). The review's fix of 'one part'."
+  "note": "Excerpt: η(Ti,Pt) = [−1.5 ± 2.3 (stat) ± 1.5 (syst)] × 10⁻¹⁵; LKB: 'a record precision of a few 10-15'. Combined uncertainty √(2.3² + 1.5²) = 2.7 × 10⁻¹⁵: 'a few parts in a million billion' (10¹⁵). The review's fix of 'one part'. The on-screen readout says '< 5' parts in a million billion: the published η(Ti,Pt) = (−1.5 ± 2.3 stat ± 1.5 syst) × 10⁻¹⁵ (combined ±2.7) puts the 1σ range at −4.2 … +1.2 × 10⁻¹⁵, so |η| < 5 × 10⁻¹⁵ at 1σ (corrected on 26 Oct, audit: it had said '< 3')."
  },
  {
   "id": "c11",
@@ -144,14 +144,14 @@
  },
  {
   "id": "c13",
-  "sentence": "Gravity treats them equally.",
+  "sentence": "Gravity speeds them up equally.",
   "claim": "Gravity gives every object at the same place the same acceleration g, whatever its mass (weight is proportional to mass, and so is the resistance to speeding up).",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/3-5-free-fall",
   "source_title": "OpenStax University Physics Volume 1, 3.5 Free Fall",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Same as c8."
+  "note": "Same as c8. Corrected on 26 Oct (audit): 'Gravity treats them equally' contradicted the why beat (the force on the hammer is far larger); what is equal is the acceleration."
  },
  {
   "id": "c14",
@@ -166,13 +166,13 @@
  },
  {
   "id": "c15",
-  "sentence": "Pull in your arms, and you accelerate.",
+  "sentence": "Pull in your arms, and it spins faster.",
   "claim": "On a freely spinning chair, pulling your arms (and anything in your hands) closer to the axis lowers your moment of inertia, so your spin rate rises to keep angular momentum constant.",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/11-3-conservation-of-angular-momentum",
   "source_title": "OpenStax University Physics Volume 1, 11.3 Conservation of Angular Momentum",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "The bible's source for episode 5; its skater example: 'Iω = I′ω′', a smaller moment of inertia forces the angular velocity up. 'Accelerate' means the spin speeds up. Episode 5 sources it in full."
+  "note": "The bible's source for episode 5; its skater example: 'Iω = I′ω′', a smaller moment of inertia forces the angular velocity up. 'Accelerate' means the spin speeds up. Episode 5 sources it in full. Worded 'spins faster' (26 Oct, audit): 'accelerate' was loose; what rises is the spin rate."
  }
 ]

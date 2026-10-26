@@ -7,7 +7,7 @@ the script before it posts.
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish; 26 Oct 09:08, QA PASS, −14.0 LUFS) | `out/rest-frame-003-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
+| **Final** (1080×1920, 30 fps, full finish; 26 Oct 09:08, QA PASS, −14.0 LUFS / −1.9 dBTP) | `out/rest-frame-003-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
 | Twelve stills from the final | `review/stills-ep03.jpg` |
 

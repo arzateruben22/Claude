@@ -1,0 +1,394 @@
+{
+ "duration": 66.9333,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.0,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.0,
+   "t1": 12.8,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 12.8,
+   "t1": 19.2,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 19.2,
+   "t1": 36.5333,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 36.5333,
+   "t1": 48.8,
+   "energy": 0.8
+  },
+  {
+   "id": "measure",
+   "t0": 48.8,
+   "t1": 55.7333,
+   "energy": 0.3
+  },
+  {
+   "id": "takeaway",
+   "t0": 55.7333,
+   "t1": 60.5333,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 60.5333,
+   "t1": 66.9333,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.0
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 0.6,
+   "kind": "strobe",
+   "tag": "hook:g12"
+  },
+  {
+   "t": 1.2,
+   "kind": "strobe",
+   "tag": "hook:g15"
+  },
+  {
+   "t": 1.3333333333333333,
+   "kind": "label",
+   "tag": "hk-weights",
+   "pos": [
+    0.644,
+    0.488
+   ]
+  },
+  {
+   "t": 4.0,
+   "kind": "section",
+   "id": "normal",
+   "t1": 12.8
+  },
+  {
+   "t": 4.283333,
+   "kind": "counter.show",
+   "tag": "spine",
+   "pos": [
+    0.211,
+    0.185
+   ]
+  },
+  {
+   "t": 7.133333333333334,
+   "kind": "label",
+   "tag": "nm-out",
+   "pos": [
+    0.625,
+    0.402
+   ]
+  },
+  {
+   "t": 9.4333,
+   "kind": "contact",
+   "tag": "push"
+  },
+  {
+   "t": 9.6333,
+   "kind": "strobe",
+   "tag": "out:g0"
+  },
+  {
+   "t": 9.9333,
+   "kind": "strobe",
+   "tag": "out:g3"
+  },
+  {
+   "t": 10.2333,
+   "kind": "strobe",
+   "tag": "out:g6"
+  },
+  {
+   "t": 10.5333,
+   "kind": "strobe",
+   "tag": "out:g9"
+  },
+  {
+   "t": 12.8,
+   "kind": "section",
+   "id": "change",
+   "t1": 19.2
+  },
+  {
+   "t": 13.2333,
+   "kind": "swell",
+   "tag": "move1:start"
+  },
+  {
+   "t": 14.9,
+   "kind": "label",
+   "tag": "ch-in",
+   "pos": [
+    0.689,
+    0.371
+   ]
+  },
+  {
+   "t": 14.9,
+   "kind": "spring",
+   "tag": "move1"
+  },
+  {
+   "t": 15.05,
+   "kind": "strobe",
+   "tag": "in:g0"
+  },
+  {
+   "t": 15.35,
+   "kind": "strobe",
+   "tag": "in:g3"
+  },
+  {
+   "t": 15.65,
+   "kind": "strobe",
+   "tag": "in:g6"
+  },
+  {
+   "t": 15.8,
+   "kind": "badge",
+   "tag": "model",
+   "text": "Body 2.0 kg·m², assumed."
+  },
+  {
+   "t": 19.2,
+   "kind": "section",
+   "id": "why",
+   "t1": 36.5333
+  },
+  {
+   "t": 27.4333,
+   "kind": "energy.loss",
+   "tag": "move2:start"
+  },
+  {
+   "t": 27.9667,
+   "kind": "spring",
+   "tag": "move2"
+  },
+  {
+   "t": 30.5667,
+   "kind": "swell",
+   "tag": "move3:start"
+  },
+  {
+   "t": 31.4,
+   "kind": "spring",
+   "tag": "move3"
+  },
+  {
+   "t": 32.233333333333334,
+   "kind": "label",
+   "tag": "wy-arms",
+   "pos": [
+    0.595,
+    0.387
+   ]
+  },
+  {
+   "t": 36.516633,
+   "kind": "counter.tick",
+   "tag": "spine:your spin, arms in"
+  },
+  {
+   "t": 36.5333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 48.8
+  },
+  {
+   "t": 36.86666666666667,
+   "kind": "label",
+   "tag": "wo-skater",
+   "pos": [
+    0.677,
+    0.268
+   ]
+  },
+  {
+   "t": 37.3667,
+   "kind": "badge",
+   "tag": "skater",
+   "text": "Illustration"
+  },
+  {
+   "t": 41.7,
+   "kind": "counter.tick",
+   "tag": "spine:fastest spin on ice skates"
+  },
+  {
+   "t": 43.46666666666667,
+   "kind": "reveal",
+   "tag": "342"
+  },
+  {
+   "t": 48.7833,
+   "kind": "time.slow",
+   "tag": "measure:freeze"
+  },
+  {
+   "t": 48.783333,
+   "kind": "counter.tick",
+   "tag": "spine:turn per 1/10 s, arms out"
+  },
+  {
+   "t": 48.8,
+   "kind": "section",
+   "id": "measure",
+   "t1": 55.7333
+  },
+  {
+   "t": 52.53333333333333,
+   "kind": "label",
+   "tag": "ms-18",
+   "pos": [
+    0.528,
+    0.225
+   ]
+  },
+  {
+   "t": 53.8,
+   "kind": "counter.tick",
+   "tag": "spine:turn per 1/10 s, arms in"
+  },
+  {
+   "t": 54.43333333333333,
+   "kind": "label",
+   "tag": "ms-48",
+   "pos": [
+    0.544,
+    0.45
+   ]
+  },
+  {
+   "t": 54.733333333333334,
+   "kind": "counter.end",
+   "tag": "spine:fifty"
+  },
+  {
+   "t": 55.716633,
+   "kind": "counter.tick",
+   "tag": "spine:one push, arms in"
+  },
+  {
+   "t": 55.7333,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.5333
+  },
+  {
+   "t": 56.3166,
+   "kind": "badge",
+   "tag": "friction",
+   "text": "Friction ignored"
+  },
+  {
+   "t": 60.5333,
+   "kind": "section",
+   "id": "tease",
+   "t1": 66.9333
+  },
+  {
+   "t": 65.1333,
+   "kind": "strobe",
+   "tag": "loop:g0"
+  },
+  {
+   "t": 65.4333,
+   "kind": "signature",
+   "tag": "end"
+  },
+  {
+   "t": 65.7333,
+   "kind": "strobe",
+   "tag": "loop:g3"
+  },
+  {
+   "t": 66.3333,
+   "kind": "strobe",
+   "tag": "loop:g6"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.166666666666667,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 12.9,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 19.466666666666665,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 36.833333333333336,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 49.0,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 56.03333333333333,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 60.833333333333336,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "hk-weights": 1.3667,
+  "nm-out": 7.1667,
+  "ch-in": 14.9333,
+  "wy-arms": 32.2667,
+  "wo-skater": 36.9,
+  "ms-18": 52.5667,
+  "ms-48": 54.4667,
+  "spine": 4.3
+ }
+}

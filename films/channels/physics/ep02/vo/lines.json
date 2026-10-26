@@ -35,14 +35,14 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Pull one three times farther. Let both go. Three times the path… and still, neck and neck.",
+   "text": "Pull its twin three times farther. Let both go. Three times the distance… and still, neck and neck.",
    "stars": [
     "neck and neck"
    ],
-   "phonemes": "pˈʊl wˈʌn θɹˈiː tˈaɪmz fˈɑːɹðɚ. lˈɛt bˈoʊθ ɡˈoʊ. θɹˈiː tˈaɪmz ðə pˈæθ… ænd stˈɪl, nˈɛk ænd nˈɛk.",
+   "phonemes": "pˈʊl ɪts twˈɪn θɹˈiː tˈaɪmz fˈɑːɹðɚ. lˈɛt bˈoʊθ ɡˈoʊ. θɹˈiː tˈaɪmz ðə dˈɪstəns… ænd stˈɪl, nˈɛk ænd nˈɛk.",
    "file": "03.wav",
-   "dur": 5.679,
-   "sha256": "e5df01594e76477c3d70d37402731cc5e532d9c318cec89245beb5d83c11ab88"
+   "dur": 6.217,
+   "sha256": "5ed6568697b4e0e8819031d2180bbd9d389a86d449423cf1caa74d637c715acb"
   },
   {
    "id": "vo04",
@@ -60,14 +60,14 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "So hang fifteen, each a little shorter. Only length changes. For about a minute, they drift apart. Then, all at once… back in line.",
+   "text": "Now hang fifteen, each a little shorter. Only length changes. For half a minute, they drift apart. Then, just as gradually… back in line.",
    "stars": [
     "line"
    ],
-   "phonemes": "sˌoʊ hˈæŋ fˈɪftiːn, ˈiːtʃ ɐ lˈɪɾəl ʃˈɔːɹɾɚ. ˈoʊnli lˈɛŋθ tʃˈeɪndʒᵻz. fɔːɹ ɐbˌaʊt ɐ mˈɪnɪt, ðeɪ dɹˈɪft ɐpˈɑːɹt. ðˈɛn, ˈɔːl ɐtwˈʌns… bˈæk ɪn lˈaɪn.",
+   "phonemes": "nˈaʊ hˈæŋ fˈɪftiːn, ˈiːtʃ ɐ lˈɪɾəl ʃˈɔːɹɾɚ. ˈoʊnli lˈɛŋθ tʃˈeɪndʒᵻz. fɔːɹ hˈæf ɐ mˈɪnɪt, ðeɪ dɹˈɪft ɐpˈɑːɹt. ðˈɛn, dʒˈʌst æz ɡɹˈædʒuːəli… bˈæk ɪn lˈaɪn.",
    "file": "05.wav",
-   "dur": 8.101,
-   "sha256": "5e4e9256c49aa992850fb369fb36782f987e41f0c28b1a92faeb956f9bd5059f"
+   "dur": 8.678,
+   "sha256": "bc75a0e75fc260cd59674a449e8733c86a64e00b21fc13ce175b4bf91de13afb"
   },
   {
    "id": "vo06",

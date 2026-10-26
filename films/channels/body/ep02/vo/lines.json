@@ -1,0 +1,236 @@
+{
+ "voice": "bf_emma",
+ "speed": "per sentence",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/body/ep02/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.3,
+ "gap_question": 0.45,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What's this cell carrying? Room for about a billion passengers.",
+   "stars": [
+    "carrying",
+    "billion"
+   ],
+   "phonemes": "wˌɒts ðɪs sˈɛl kˈaɹiɪŋ? ɹˈuːm fɔːɹ ɐbˌaʊt ɐ bˈɪliən pˈasɪndʒəz.",
+   "speeds": [
+    1.0,
+    0.9
+   ],
+   "gaps": [
+    0.45
+   ],
+   "silences": [
+    [
+     1.3987,
+     1.8487
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.061,
+   "sha256": "a3375693e14fa68d9e06eaa17b6326c1aba6d4fe27ff98bbccb1668647916f30"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies. Each one has four iron atoms, and each can hold an oxygen.",
+   "stars": [
+    "hemoglobin",
+    "oxygen"
+   ],
+   "phonemes": "ɪts pˈakt wɪð wˈɒn pɹˈəʊtiːn, hˌiːməɡlˈəʊbɪn: ɐbˌaʊt tˈuː hˈʌndɹɪd and sˈɛvənti mˈɪliən kˈɒpɪz. ˈiːtʃ wˈɒn hɐz fˈɔːɹ ˈaɪən ˈatəmz, and ˈiːtʃ kan hˈəʊld ɐn ˈɒksɪdʒən.",
+   "speeds": [
+    0.92,
+    0.92
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     5.1384,
+     5.4384
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 9.107,
+   "sha256": "9cca9046208dff62d1aacb63dbb4d4ab9a4828a7c629ee3ea988a91fa68bcf1c"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start; full, it's bright red.",
+   "stars": [
+    "easier",
+    "bright"
+   ],
+   "phonemes": "wˈɒtʃ wˈɒn fˈɪl. ðə fˈɜːst ˈɒksɪdʒən stɹˈʌɡəlz tə bˈɔːd, bˌʌt ˈiːtʃ wˈɒn mˌeɪks ðə nˈɛkst wˈɒn ˈiːziə. dˈɑːk ɹˈɛd at ðə stˈɑːt; fˈʊl, ɪts bɹˈaɪt ɹˈɛd.",
+   "speeds": [
+    0.92,
+    0.92,
+    0.92
+   ],
+   "gaps": [
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     1.2078,
+     1.5078
+    ],
+    [
+     5.9737,
+     6.2737
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 8.919,
+   "sha256": "2bb9f4ed98f0e46c246e0929699669fe498f3225c98eb29ef6810af4ea5df34b"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back.",
+   "stars": [
+    "blue",
+    "back"
+   ],
+   "phonemes": "vˈeɪnz ˈɒfən lˈʊk blˈuː, sˌəʊ ɪts ˈiːzi tə ɡˈɛs ðə blˈʌd ɪnsˈaɪd ðˌɛm ɪz. ɪt nˈɛvəɹ ɪz. ɹɪtˈɜːnɪŋ blˈʌd ɪz dˈɑːkə ɹˈɛd. ɹˈɛd lˈaɪt sˈɪŋks ˈɪn, and ðə vˈeɪn swˈɒləʊz ɪt, sˌəʊ lˈɛs ɹˈɛd kˈʌmz bˈak.",
+   "speeds": [
+    0.88,
+    0.88,
+    0.88,
+    0.88
+   ],
+   "gaps": [
+    0.3,
+    0.3,
+    0.3
+   ],
+   "silences": [
+    [
+     4.0699,
+     4.3699
+    ],
+    [
+     5.5758,
+     5.8758
+    ],
+    [
+     8.015,
+     8.315
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 12.309,
+   "sha256": "d3ec5ab5c569d409f876da8bc18fb002e34f0e258a006d53578634bd4efaa934"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Your heart sends your blood back through your lungs about once a minute. There, the empty seats fill. In about a quarter of a second.",
+   "stars": [
+    "once a minute",
+    "quarter of a second"
+   ],
+   "phonemes": "jɔː hˈɑːt sˈɛndz jɔː blˈʌd bˈak θɹuː jɔː lˈʌŋz ɐbˌaʊt wˈʌns ɐ mˈɪnɪt. ðˈeə, ðɪ ˈɛmpti sˈiːts fˈɪl. ɪn ɐbˌaʊt ɐ kwˈɔːtəɹ əvə sˈɛkənd.",
+   "speeds": [
+    0.8,
+    0.78,
+    0.78
+   ],
+   "gaps": [
+    0.45,
+    0.55
+   ],
+   "silences": [
+    [
+     4.0633,
+     4.5133
+    ],
+    [
+     6.7717,
+     7.3217
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 9.731,
+   "sha256": "cc3632c9f680c0f221d12d7361a0257ba153bcb12494aa7f7ec627417d5c6f12"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "The blue is your skin's trick. The red is a passenger count: brighter means fuller seats.",
+   "stars": [
+    "count"
+   ],
+   "phonemes": "ðə blˈuː ɪz jɔː skˈɪnz tɹˈɪk. ðə ɹˈɛd ɪz ɐ pˈasɪndʒə kˈaʊnt: bɹˈaɪtə mˈiːnz fˈʊlə sˈiːts.",
+   "speeds": [
+    0.9,
+    0.9
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     1.7665,
+     2.0665
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 5.489,
+   "sha256": "19918e42648a41bf94dedd0411d27e25f95b297a6eb675873650e164438b6eef"
+  },
+  {
+   "id": "vo07",
+   "beat": "meanwhile",
+   "text": "Meanwhile, as you watched, your blood handed your body about a cup of oxygen.",
+   "stars": [
+    "Meanwhile"
+   ],
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː blˈʌd hˈandɪd jɔː bˈɒdi ɐbˌaʊt ɐ kˈʌp ɒv ˈɒksɪdʒən.",
+   "speeds": [
+    0.84
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "07.wav",
+   "dur": 4.684,
+   "sha256": "f708f3cfc3b5912c468a462df7a2fdae55ca598ebad3125cca4e2725dc92f7d8"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: the signal in your nerves. In the fastest, it doesn't crawl; it jumps.",
+   "stars": [
+    "jumps"
+   ],
+   "phonemes": "nˈɛkst: ðə sˈɪɡnəl ɪn jɔː nˈɜːvz. ɪnðə fˈastɪst, ɪt dˈʌzənt kɹˈɔːl; ɪt dʒˈʌmps.",
+   "speeds": [
+    0.92,
+    0.9
+   ],
+   "gaps": [
+    0.3
+   ],
+   "silences": [
+    [
+     1.9232,
+     2.2232
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 4.733,
+   "sha256": "a77c09fe0da2a1dc52b2b9ec976467dbc32717503317ca06993fda2317c8da44"
+  }
+ ]
+}

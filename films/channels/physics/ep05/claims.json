@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Weight near the middle is easier to turn, so that same amount turns you faster.",
+  "sentence": "Weight near the middle is easier to turn, so the same amount turns you faster.",
   "claim": "A mass m at distance r adds m·r² to the moment of inertia, so weight pulled toward the axis is easier to turn; with the angular momentum fixed, ω = L/I rises.",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/10-4-moment-of-inertia-and-rotational-kinetic-energy",
   "source_title": "OpenStax University Physics Volume 1, 10.4 Moment of Inertia and Rotational Kinetic Energy",
@@ -67,14 +67,14 @@
  },
  {
   "id": "c6",
-  "sentence": "In twenty fifteen, a young Canadian skater spun at three hundred forty-two turns a minute.",
+  "sentence": "The record, set by a young Canadian skater: three hundred forty-two turns a minute.",
   "claim": "Guinness World Records lists the fastest spin on ice skates as 342 rpm, by Olivia Oliver (Canada) in Warsaw, Poland, on 19 January 2015.",
   "source_url": "https://www.guinnessworldrecords.com/world-records/fastest-spin-ice-skating",
   "source_title": "Guinness World Records, Fastest spin on ice skates",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'the fastest spin on ice skates is 342 RPM and was achieved by Olivia Oliver (Canada) in Warsaw, Poland, on 19 January 2015'. Local coverage gives her age as 12 (Dartmouth Tribune) or 11 (CTV): the line says 'young', no age. 'Pulled in so tight' was cut (the record page doesn't describe her position; review fix)."
+  "note": "Excerpt: 'the fastest spin on ice skates is 342 RPM and was achieved by Olivia Oliver (Canada) in Warsaw, Poland, on 19 January 2015'. Local coverage gives her age as 12 (Dartmouth Tribune) or 11 (CTV): the line says 'young', no age. 'Pulled in so tight' was cut (the record page doesn't describe her position; review fix). Reworded on 26 Oct (audit story note): the line now says it is the record and leaves the year (2015) to the end-card footnote."
  },
  {
   "id": "c7",

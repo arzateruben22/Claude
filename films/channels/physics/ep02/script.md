@@ -1,6 +1,6 @@
 # Rest Frame No. 002: "The swing's secret" (draft; a physicist signs off before it posts)
 
-About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
+About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 2 (`../bible.md`, §7 #2) and episode 1's tease
 ("Next: one pendulum, big swing against small. It's almost a tie."), which this episode pays off.
 
@@ -26,8 +26,8 @@ vo: Which swing gets back *first*? Big? Or small? {-}
 vo: Each string is just under a meter, as in a grandfather clock. {c1} One swing: about
 *one second*. {c2} Ghosts every tenth of a second bunch up at the turns. {c3}
 
-## change {events: both released together at ×1/4 from 30° and 10°; both pass the bottom on one word · labels: "30°", "10°" · pre: 0.1 · energy: 0.5} (14–21.5 s)
-vo: Pull one three times farther. {-} Let both go. {-} Three times the path… and still,
+## change {events: both released together at ×1/5 from 30° and 10°; both pass the bottom on one word · labels: "30°", "10°" · pre: 0.1 · energy: 0.5} (14–21.5 s)
+vo: Pull its twin three times farther. {-} Let both go. {-} Three times the distance… and still,
 *neck and neck*. {c4}
 
 ## why {shot: frozen at release, then slowed · card: Galileo's claim · vectors: gravity's pull along the arc (about 3×), then the speed at the bottom (about 3×) · picture-only 2 s · pre: 0.25 · energy: 0.55} (21.5–39 s)
@@ -36,8 +36,8 @@ vo: Galileo claimed every swing takes the same time, wide or narrow. {c5} For sm
 covers triple the path at nearly triple the speed: *nearly* the same time. {c8}
 
 ## whoa {shot: the turn, from the front (fifteen look like one) to above the row · fifteen pendulums, 51–65 back-and-forth swings a minute, run fast; they realign on "line" · picture-only 3 s · energy: 0.8} (39–51 s)
-vo: So hang fifteen, each a little shorter. {c9} Only length changes. {c16} For about a minute, they drift
-apart. {c10} Then, all at once… back in *line*. {c17}
+vo: Now hang fifteen, each a little shorter. {c9} Only length changes. {c16} For half a minute, they drift apart. {c10} Then,
+just as gradually… back in *line*. {c17}
 
 ## measure {segment: measure · the two pendulums again, run fast; a counter counts twenty swings, then it freezes with the big one behind · pre: 0.2 · energy: 0.3} (51–61 s)
 vo: *Measure it*: twenty swings, and the big one is three tenths of a second *behind*. {c11} At

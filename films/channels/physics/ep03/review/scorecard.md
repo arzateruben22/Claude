@@ -6,7 +6,7 @@ Measured on the delivered file `out/rest-frame-003-9x16.mp4` by `kits/cinema/fil
 |---|---|---|
 | Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2024 frames, H.264 High BT709, AAC 48 kHz stereo 258k, 2.97 Mbps video, 27.3 MB |
 | Length | 60–75 s; picture = sound | 67.467 s / 67.467 s |
-| Hook | Payoff image at frame 0; question by 2 s | Frame 0: the ball's bounces stacked beside the meter stick, each top lower than the last, well under the hand, the title in the air. "Why can't it reach your hand?" is spoken by 1.70 s |
+| Hook | Payoff image at frame 0; question by 2 s | Frame 0: the strobe of the drop and first rebound beside the meter stick, the ball rising well under the hand, the title in the air. "Why can't it reach your hand?" is spoken by 1.70 s |
 | Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.0 LUFS, −1.9 dBTP**, LRA 3.8 LU |
 | Voice over music | ≥ 10 LU | 20.9 LU (dialogue −13.6, music −34.5 LUFS while speaking) |
 | Phone speaker | mono-safe | Correlation 0.96; mono loss −0.24 dB (dialogue 0.06 dB) |
@@ -26,7 +26,8 @@ Measured on the delivered file `out/rest-frame-003-9x16.mp4` by `kits/cinema/fil
    cuts, mid-phrase captions).
 4. **Fact audit** (the coordinating session, 26 Oct): "doesn't spring back as *hard*" and "about three thousandths of
    a *degree*" re-voiced (lint 0 errors before and after); c4, c8 and c14 repointed to OpenStax College Physics 8.5,
-   c5, c12 and c20 to the pages their excerpts came from.
+   c5 and c12 to the pages their new excerpts came from (the dynamic tennis-ball test; the ITF core recipe); "James
+   Joule wouldn't." given its own claim, c20 (his 1843 postscript).
 5. **Rule 8, "One line wins"** (an implementer, an independent reviewer and a fixer): the review's four should-fixes
    were taken (the record ladder and the hand step back on "A"; "sound" and Joule's labels leave with their drawings;
    the spine stays lit through its exit). `set/ink.js`: Joule's top cords were never drawn (a statement inside a
