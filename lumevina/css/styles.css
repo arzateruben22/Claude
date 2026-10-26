@@ -6758,12 +6758,13 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 /* ── the app page (v3): the website on the home screen ── */
 .section-app { background: var(--linen); border-top: 1px solid var(--ink-15); }
 .app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 2.5rem; align-items: center; }
-/* coming soon: two store badges, text only (no store logos until the app is listed) */
-.app-stores { list-style: none; margin: 1.4rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.7rem; }
-.app-store { display: inline-flex; flex-direction: column; justify-content: center; min-width: 10rem; padding: 0.55rem 1.1rem 0.6rem;
-  border-radius: 12px; background: var(--ink); color: #fff; line-height: 1.15; }
-.app-store small { font-size: 0.7rem; letter-spacing: 0.02em; opacity: 0.75; }
-.app-store b { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+/* coming soon on the App Store: a badge in Apple's shape (swap for Apple's official badge once the app is listed) */
+.app-store { display: inline-flex; align-items: center; gap: 0.65rem; margin: 1.4rem 0 0; padding: 0.55rem 1.2rem 0.6rem 0.95rem;
+  border-radius: 12px; background: #000; color: #fff; line-height: 1.1; }
+.app-store svg { width: 1.7rem; height: 1.7rem; fill: currentColor; flex: none; margin-top: -0.15rem; }
+.app-store span { display: flex; flex-direction: column; }
+.app-store small { font-size: 0.7rem; letter-spacing: 0.02em; opacity: 0.8; }
+.app-store b { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; }
 .app-phone { margin: 0; justify-self: center; width: min(18rem, 100%); }
 .app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(74, 52, 42, 0.28)); }
 @media (max-width: 800px) { .app-grid { grid-template-columns: 1fr; gap: 2rem; } .app-phone { width: min(14rem, 100%); } }
