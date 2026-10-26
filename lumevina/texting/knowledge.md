@@ -62,9 +62,9 @@ Services are non-refundable. If anything comes up after your visit, reach out wi
 Please read each service description before booking.
 
 ## Before & after your facial
-- Stop retinoids 5–7 days before, and exfoliants (salicylic, glycolic, benzoyl peroxide, AHAs/BHAs) 2–3 days before.
+- Pause retinol and other retinoids, acids (glycolic, lactic, salicylic, mandelic), scrubs and at-home peels 3–5 days before; a prescription retinoid like tretinoin, about a week, and tell Evelyn you’re on it. Keep your cleanser, moisturizer and SPF.
 
-- No waxing or shaving your face 2 days before or after.
+- No waxing your face 2 days before, and no waxing or shaving it 2 days after.
 
 - Botox, fillers or permanent makeup: wait 2 weeks (or have your facial first, the same day or a week before).
 
@@ -72,7 +72,7 @@ Please read each service description before booking.
 
 - Sunburn, windburn, open wounds or a cold sore? Tell us so we can reschedule.
 
-- Afterwards: no makeup right away, and no workouts or heavy sweating for 24 hours (a week after a body peel). Avoid booking the day of a big event.
+- Afterwards: nothing on your skin for the rest of the day (mineral makeup is fine the next morning), and no heat or sweat for 24 hours, 48 after a peel, dermaplaning or microchanneling (a week after a body peel). Avoid booking the day of a big event.
 
 ## Location & parking
 Woodland Hills, CA; the exact address is in your confirmation email. Park free in the lot,

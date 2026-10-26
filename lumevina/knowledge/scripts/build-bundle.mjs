@@ -31,7 +31,10 @@ const TYPOS = globalThis.window.LumevinaTypos.lists;   // shorthand and the word
 const re = (r) => ({ source: r.source, flags: r.flags });
 const rules = {
   urgent: re(RULES.URGENT),
-  kinds: RULES.KINDS.map((k) => ({ kind: k.kind, any: (k.any || []).map(re), both: k.both ? k.both.map(re) : undefined }))
+  kinds: RULES.KINDS.map((k) => ({ kind: k.kind, any: (k.any || []).map(re), both: k.both ? k.both.map(re) : undefined })),
+  off: (RULES.OFF || []).map((k) => ({ kind: k.kind, any: (k.any || []).map(re) })),
+  first: RULES.FIRST || [],
+  ours: re(RULES.OURS)   // the studio's own words: a message with one of these is never "unrelated"
 };
 
 // ── FAQ and policies, as plain text, from the homepage ──
@@ -188,7 +191,7 @@ export const SHELF: ShelfItem[] = ${JSON.stringify(shelf, null, 1)};
 /** The hand-off rules (js/ask-rules.js): plain code that runs before any AI. */
 export type Rule = { source: string; flags: string };
 export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
-export const RULES: { urgent: Rule; kinds: RuleKind[] } = ${JSON.stringify(rules, null, 1)};
+export const RULES: { urgent: Rule; kinds: RuleKind[]; off: RuleKind[]; first: string[]; ours: Rule } = ${JSON.stringify(rules, null, 1)};
 
 /** Texting shorthand and the chat's vocabulary (js/ask-typos.js), for _shared/typos.ts. */
 export const TYPOS: { vocab: string[]; common: string[]; short: Record<string, string> } = ${JSON.stringify(TYPOS)};

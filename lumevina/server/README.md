@@ -556,6 +556,16 @@ What the function does with a question:
   an address or a gift code), `gift_balance` (by code, like the site's balance
   check), and `show_products` (Add to bag buttons under the answer). Up to four
   rounds, then it hands the question to Evelyn instead of looping.
+- **Stays in its lane:** flirting, insults, "ignore your instructions", a
+  request to role-play, homework and other things that aren't Lumevina, her
+  treatments, her products, booking or skin get `{ offtopic: flirt | abuse |
+  jailbreak | identity | unrelated }` from the same word lists as the website
+  (`js/ask-rules.js` → `offTopic`, copied into the bundle), with no Claude call
+  and nothing for Evelyn; what the lists miss, the model marks with the
+  `off_topic` tool alongside its one-line reply. The website answers with one
+  light line and the topic buttons, counts a few in a row and then rests for
+  ten minutes; the server adds `quiet: true` after eight from one caller in
+  half an hour. "Are you a bot?" is answered honestly and doesn't count.
 - **Hand-offs:** the model can call `hand_to_evelyn`; nothing is saved until
   the client taps **Send to Evelyn**. Then the website posts `{ handoff, id,
   message, why, name, email, photos }`: the function stores up to three photos

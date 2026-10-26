@@ -52,7 +52,7 @@ Everything the website's assistant may say lives here: Evelyn's words, the studi
 | `voice.md` | Real replies she has sent, words she uses and avoids, how she opens and signs off. |
 | `general/*.md` | Not hers: standard esthetics knowledge for the assistant (how skin works, ingredients, routines, treatments, aftercare, waxing, common concerns, red flags and scope). It explains and fills gaps; her playbook wins where they differ; it is never used to diagnose, to call something normal, to change a routine or to decide a contraindication. Edit freely; rebuild the bundle after. |
 | `scripts/playbook-drafts.mjs` | The drafted common answers Quick confirm and Talk it through offer her. Nothing in it reaches the assistant until she confirms it. |
-| `eval/questions.json` | 50 client questions: whether each goes to Evelyn (and as which hand-off) or to the chat, and for the chat, her words that must be in what it's given. `node knowledge/eval/run-eval.mjs` checks both offline after `build-bundle.mjs` and writes `eval/results.md`; how Claude words an answer is for the preview chat. |
+| `eval/questions.json` | 60 client messages: whether each goes to Evelyn (and as which hand-off), is waved off as not the chat's lane (`offtopic`: flirting, abuse, a jailbreak, "are you a bot", homework), or goes to the chat, and for the chat, her words that must be in what it's given. `node knowledge/eval/run-eval.mjs` checks both offline after `build-bundle.mjs` and writes `eval/results.md`; how Claude words an answer is for the preview chat. |
 
 ## Her voice memos
 
@@ -65,6 +65,8 @@ The playbook also takes voice memos per item: recorded in her phone's own record
 ## Rules that don't depend on her answers, or on the model
 
 `js/ask-rules.js` is plain code: reactions, pregnancy, medications, named conditions, "my skin" questions and emergencies always go to Evelyn before any AI runs, on the website and on the server alike. The bundle builder copies the same rules into the server's TypeScript and the eval. Both sides run the rules on the message as typed and as the client meant it: `js/ask-typos.js` (and its server copy, `_shared/typos.ts`, fed the same word lists by the bundle) expands texting shorthand (wdym, idk, b4, appt, w/) and corrects misspelled topic words ("pregnent", "brazillian", "facail"), so "im pregnent" is still a hand-off. Nothing is ever corrected back at the client.
+
+The same file keeps the chat in its lane. `offTopic()` spots flirting, insults, "ignore your instructions" and role-play requests, "are you a bot?", and plain homework (essays, code, politics, the weather) after the urgent and hand-off checks, so a real skin question with an odd word in it still reaches Evelyn, and a message with any of the studio's own words in it (a DIY mask recipe, "translate the aftercare") is never called unrelated. Those messages get one light line and the topic buttons from the website itself, never Claude and never Evelyn's inbox; a few in a row and the chat rests for ten minutes. The prompt tells Claude the same for anything the lists miss (the `off_topic` tool on the server, an `[[offtopic: kind]]` mark in the preview).
 
 ## What never goes in here
 
