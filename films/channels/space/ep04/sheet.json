@@ -83,37 +83,56 @@
   {
    "t": 4.066666666666666,
    "kind": "label",
-   "tag": "l-earth"
+   "tag": "l-earth",
+   "pos": [
+    0.183,
+    0.582
+   ]
   },
   {
    "t": 4.366666666666666,
    "kind": "label",
-   "tag": "l-moon"
+   "tag": "l-moon",
+   "pos": [
+    0.734,
+    0.466
+   ]
   },
   {
    "t": 5.633333333333334,
    "kind": "label",
-   "tag": "l-30"
+   "tag": "l-30",
+   "pos": [
+    0.697,
+    0.34
+   ]
   },
   {
    "t": 5.633333333333334,
    "kind": "counter.show",
-   "tag": "c-earths"
+   "tag": "c-earths",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 7.4,
    "kind": "counter.show",
-   "tag": "c-speed"
-  },
-  {
-   "t": 8.066666666666666,
-   "kind": "label",
-   "tag": "l-v"
+   "tag": "c-speed",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 10.966666666666667,
    "kind": "counter.show",
-   "tag": "c-nyb"
+   "tag": "c-nyb",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 13.8667,
@@ -124,7 +143,11 @@
   {
    "t": 14.9,
    "kind": "label",
-   "tag": "l-pull"
+   "tag": "l-pull",
+   "pos": [
+    0.724,
+    0.362
+   ]
   },
   {
    "t": 14.9,
@@ -145,7 +168,11 @@
   {
    "t": 17.666666666666668,
    "kind": "label",
-   "tag": "l-free"
+   "tag": "l-free",
+   "pos": [
+    0.544,
+    0.279
+   ]
   },
   {
    "t": 24.0,
@@ -161,7 +188,11 @@
   {
    "t": 31.833333333333332,
    "kind": "label",
-   "tag": "l-apple"
+   "tag": "l-apple",
+   "pos": [
+    0.249,
+    0.327
+   ]
   },
   {
    "t": 31.833333333333332,
@@ -171,22 +202,38 @@
   {
    "t": 33.7,
    "kind": "label",
-   "tag": "l-moon-w"
+   "tag": "l-moon-w",
+   "pos": [
+    0.734,
+    0.389
+   ]
   },
   {
    "t": 34.36666666666667,
    "kind": "label",
-   "tag": "l-60"
+   "tag": "l-60",
+   "pos": [
+    0.663,
+    0.307
+   ]
   },
   {
    "t": 34.36666666666667,
    "kind": "counter.show",
-   "tag": "c-dist"
+   "tag": "c-dist",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 37.53333333333333,
    "kind": "counter.show",
-   "tag": "c-pull"
+   "tag": "c-pull",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 42.6667,
@@ -202,22 +249,38 @@
   {
    "t": 43.9667,
    "kind": "label",
-   "tag": "l-line"
+   "tag": "l-line",
+   "pos": [
+    0.276,
+    0.265
+   ]
   },
   {
    "t": 45.86666666666667,
    "kind": "counter.show",
-   "tag": "c-apple"
+   "tag": "c-apple",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 48.2,
    "kind": "label",
-   "tag": "l-fall"
+   "tag": "l-fall",
+   "pos": [
+    0.497,
+    0.359
+   ]
   },
   {
    "t": 48.2,
    "kind": "counter.show",
-   "tag": "c-moon"
+   "tag": "c-moon",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 50.2,
@@ -233,7 +296,11 @@
   {
    "t": 57.6,
    "kind": "counter.show",
-   "tag": "c-same"
+   "tag": "c-same",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 60.2667,
@@ -244,12 +311,20 @@
   {
    "t": 60.6,
    "kind": "counter.show",
-   "tag": "c-read"
+   "tag": "c-read",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 62.36666666666667,
    "kind": "label",
-   "tag": "l-ring"
+   "tag": "l-ring",
+   "pos": [
+    0.359,
+    0.437
+   ]
   },
   {
    "t": 66.6667,
@@ -304,5 +379,17 @@
    "t": 66.96666666666667,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "l-earth": 4.1,
+  "l-moon": 4.4,
+  "l-30": 5.6667,
+  "l-pull": 14.9333,
+  "l-apple": 31.8667,
+  "l-moon-w": 33.7333,
+  "l-60": 34.4,
+  "l-line": 44,
+  "l-fall": 48.2333,
+  "l-ring": 62.4
+ }
 }

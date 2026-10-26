@@ -62,9 +62,11 @@ const ticks = Array.from({ length: 13 }, () => segment({ color: C.lilac, width: 
 const tangent = segment({ color: C.teal, width: 2.6, opacity: 0, dash: 0.25, duty: 0.5 });
 const gap = segment({ color: C.tealHi, width: 3.6, opacity: 0 });
 const ghostAt = ring({ color: C.ghost, width: 2, opacity: 0, dash: 24, duty: 0.5 });
-const lightRing = ring({ color: C.teal, width: 2.8, opacity: 0 }).arc({ r: R + 1.2, ...XZ });
-const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 2, opacity: 0, dash: 0.6, duty: 0.5 }));
-[orbitRing, ...row, ...vArrow, freePath, ghostMoon, ...pull, ruler, ...ticks, tangent, gap, ghostAt, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
+const lightRing = ring({ color: C.tealHi, width: 3.4, opacity: 0 }).arc({ r: R + 1.6, ...XZ });
+const tanTicks = Array.from({ length: 12 }, () => segment({ color: C.teal, width: 2.4, opacity: 0, fade: [1, 0.1] }));
+// hollow marker rings of a fixed size in pixels round Earth and the Moon, so the true-scale bodies can be found in the diagrams (they claim no size)
+const markM = ring({ color: C.ice, width: 2, opacity: 0 }), markE = ring({ color: C.ice, width: 2, opacity: 0 });
+[markM, markE, orbitRing, ...row, ...vArrow, freePath, ghostMoon, ...pull, ruler, ...ticks, tangent, gap, ghostAt, lightRing, ...tanTicks].forEach((r) => scene.add(r.mesh));
 const apple = createBeacon({ color: hdr("ice", 1.1), px: 14, core: 0.55 });
 scene.add(apple.mesh);
 
@@ -124,7 +126,7 @@ window.seek = function (t) {
     rg.arc({ center: c, r: PH.r_earth, ...XZ }).set({ opacity: winOp(t, CUE.row + k * 0.04, FILM.labels.find((l) => l.id === "l-30").t1, 0.3) });
   });
   S.row = dirM.map((v, i) => v * R * 0.5 + (i === 1 ? 1.5 : 0));
-  const lv = FILM.labels.find((l) => l.id === "l-v"), ov = winOp(t, lv.t0, lv.t1);
+  const ov = winOp(t, CUE.speed0, CUE.speed1);                                // the speed arrow (the spine says "1 km a second")
   const tn = tanAt(th), tip = add(mp, tn, 8), back = add(tip, tn, -1.6), sd = [-tn[2] * 0.9, 0, tn[0] * 0.9];
   vArrow[0].seg(add(mp, tn, PH.r_moon * 2), tip).set({ opacity: ov }); vArrow[1].seg(tip, add(back, sd)).set({ opacity: ov }); vArrow[2].seg(tip, add(back, sd, -1)).set({ opacity: ov });
   S["moon-v"] = tip;
@@ -159,15 +161,21 @@ window.seek = function (t) {
 
   // whoa (and frame 0): the straight line, the ghost where it would be, the gap ×1,000,000
   const om = isHook ? 1 : winOp(t, CUE.min0, B.takeaway.t0, 0.4);
-  tangent.seg(add(F.p0, tanAt(F.th0), -1.2), add(F.p0, tanAt(F.th0), 1.6)).set({ opacity: om });
+  tangent.seg(add(F.p0, tanAt(F.th0), -0.9), add(F.p0, tanAt(F.th0), 1.1)).set({ opacity: om });
   gap.seg(F.g, add(F.drawn, norm(F.g.map((v, i) => v - F.drawn[i])), PH.r_moon)).set({ opacity: dt > 2 ? om : 0 });
   ghostAt.arc({ center: F.g, r: PH.r_moon, ...cb }).set({ opacity: om * 0.9 });
-  S.ghost = add(F.p0, tanAt(F.th0), 1.0); S.gap = F.g.map((v, i) => (v + F.drawn[i]) / 2);
+  S.ghost = add(F.p0, tanAt(F.th0), 0.85); S.gap = F.g.map((v, i) => (v + F.drawn[i]) / 2);
   // takeaway: the fall all the way round: a dozen short straight lines, each leaving the orbit
-  tanTicks.forEach((k, i) => { const a = (i / 12) * 2 * Math.PI, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 6)).set({ opacity: 0.8 * winOp(t, B.takeaway.t0 + 0.6 + i * 0.08, FILM.endCard, 0.3) }); });
+  tanTicks.forEach((k, i) => { const a = (i / 12) * 2 * Math.PI, p = onOrbit(a); k.seg(p, add(p, tanAt(a), 13)).set({ opacity: 0.9 * winOp(t, B.takeaway.t0 + 0.6 + i * 0.08, FILM.endCard, 0.3) }); });
   orbitRing.set({ opacity: 1 });
   lightRing.set({ opacity: fadeIn(t, CUE.ring, 0.6) * (t < FILM.endCard + 0.6 ? 1 : 0) });
-  S.ring = onOrbit(th + 2.4, R + 1.2);
+  S.ring = onOrbit(th + 2.4, R + 1.6);
+  // the markers: 26 px across wherever the body is smaller than that on screen
+  const pxW = (p) => (2 * camera.position.distanceTo(new THREE.Vector3(...p)) * Math.tan((camera.fov * Math.PI) / 360)) / H;
+  const mr = (p, r) => Math.max(r * 1.6, 13 * pxW(p));
+  const showMark = (p, r) => (13 * pxW(p) > r * 1.6 ? 1 : 0);
+  markM.arc({ center: mp, r: mr(mp, PH.r_moon), ...cb }).set({ opacity: 0.85 * showMark(mp, PH.r_moon) });
+  markE.arc({ center: [0, 0, 0], r: mr([0, 0, 0], PH.r_earth), ...cb }).set({ opacity: 0.85 * showMark([0, 0, 0], PH.r_earth) });
 
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1, bandGain: 1 });
   hud.update(t);

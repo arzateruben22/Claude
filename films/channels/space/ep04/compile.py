@@ -6,7 +6,7 @@ sheet.json. Every moment hangs on a beat or a spoken word; every physical number
 Units: 1 scene unit = 10,000 km, and Earth, the Moon and the orbit are drawn at true scale (Earth 1.27 units
 across, the orbit 38.44 units out: "about thirty Earths away"). The only magnification is the Moon's fall below its
 straight line, drawn a million times larger (badged), and the apple, a glyph of fixed size.
-One clock, "moon" (τ in seconds of the Moon's motion): ×100,000 for the orbit diagrams, and ×8 for the whoa's one
+One clock, "moon" (τ in seconds of the Moon's motion): ×20,000 for the orbit diagrams, and ×8 for the whoa's one
 minute, which plays in seven and a half seconds.
 """
 import json
@@ -43,7 +43,7 @@ t_min0 = A("vo05:one")                     # the whoa's minute starts on "in one
 RATE_W = 8.0                               # ... and plays at ×8, so it ends 7.5 s later, after "And it does."
 t_min1 = round(t_min0 + 60 / RATE_W, 4)
 assert t_min1 > A("vo05:does"), (t_min1, A("vo05:does"))
-RATE_O = 1e5                               # the orbit diagrams: a day in 0.86 s
+RATE_O = 2e4                               # the orbit diagrams: a day in 4.3 s (the Moon stays on one side of the frame)
 CLK = {"moon": [{"t": 0.0, "rate": 0.0}, {"t": B["normal"]["t0"], "rate": RATE_O},
                 {"t": B["why"]["t0"], "rate": 0.0, "badge": None},
                 {"t": t_min0, "rate": RATE_W}, {"t": t_min1, "rate": 0.0, "badge": None},
@@ -76,19 +76,25 @@ TH0 = TH_W - 2 * math.pi * tau(CLK["moon"], t_min0) / P_ORB
 t_off, t_back = A("vo03:off"), A("vo03:Gravity")
 
 # ── camera ──────────────────────────────────────────────────────────────────
-TOP = {"target": [0, 0, 0], "dist": 335.0, "el": 70.0, "az": math.degrees(TH_W), "fov": 24, "fx": 0.5, "fy": 0.36}
+TOP = {"target": [0, 0, 0], "dist": 470.0, "el": 70.0, "az": math.degrees(TH_W) - 90.0, "fov": 24, "fx": 0.5, "fy": 0.32}
 SIDE = {"target": [R_ORB / 2 * math.cos(TH_W), 0, -R_ORB / 2 * math.sin(TH_W)], "dist": 214.0, "el": 4.0, "az": math.degrees(TH_W), "fov": 24, "fx": 0.5, "fy": 0.36}
-mx, mz = R_ORB * math.cos(TH_W), -R_ORB * math.sin(TH_W)
-CLOSE = {"target": [mx, 0, mz], "dist": 7.0, "el": 62.0, "az": math.degrees(TH_W), "fov": 24, "fx": 0.5, "fy": 0.36}
+# the close view centres between the Moon's straight line and where the Moon is drawn after its minute (0.49 units
+# toward Earth), and looks so that the straight line runs across the frame and the fall points down
+GAP = DROP_1M * MAG / 1000 / U
+mx, mz = (R_ORB - GAP / 2) * math.cos(TH_W), -(R_ORB - GAP / 2) * math.sin(TH_W)
+CLOSE = {"target": [mx, 0, mz], "dist": 7.0, "el": 62.0, "az": math.degrees(TH_W) - 90.0, "fov": 24, "fx": 0.5, "fy": 0.36}
 key = lambda t, P, **k: {"t": round(t, 4), **P, **k}
+# the normal's diagram turns so the Moon passes over the top of the frame while it is talked about (away from the spine)
+th_cut = TH0 + 2 * math.pi * tau(CLK["moon"], B["normal"]["t0"]) / P_ORB
+TOPN = dict(TOP, az=math.degrees(th_cut) + 40.0)   # the Moon enters 40° below the frame's right, leaves about 20° above it
 t_end = A("vo08:Next", -0.25)
 CAM = {"space": [
     key(0.0, CLOSE, dist=7.2), key(B["normal"]["t0"], CLOSE, dist=7.0, ease="sine"),
-    key(A("vo02:about", 0.4), TOP, ease="inout3"), key(B["why"]["t0"], TOP, dist=330.0, ease="sine"),
+    key(A("vo02:about", 0.4), TOPN, ease="inout3"), key(B["why"]["t0"], TOPN, dist=464.0, ease="sine"),
     # the why: turn to the side so the apple and the Moon sit on one line from Earth's centre (a cut on the line's start)
     key(B["why"]["t0"] + 2.6, SIDE, ease="inout3"), key(t_w - 0.2, SIDE, dist=210.0, ease="sine"),
     key(t_min0, CLOSE, dist=7.4, ease="inout3"), key(t_min1, CLOSE, dist=7.0, ease="sine"),
-    key(t_tk + 1.4, TOP, ease="inout3"), key(t_end, TOP, dist=328.0, ease="sine"),
+    key(t_tk + 1.4, TOP, ease="inout3"), key(t_end, TOP, dist=462.0, ease="sine"),
     key(t_end + 2.6, CLOSE, dist=7.2, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=7.0, ease="sine"),
 ]}
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
@@ -99,10 +105,10 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-moon-h", "text": "Moon", "kind": "body", "anchor": "moon", "t0": 0.0, "t1": B["normal"]["t0"], "side": -1},
     {"id": "l-line-h", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1},
+    {"id": "l-fall-h", "text": "a minute's fall, drawn ×1,000,000", "kind": "gravity", "anchor": "gap", "t0": 0.0, "t1": B["normal"]["t0"], "side": 1},
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Look"), "t1": B["change"]["t0"], "side": 1},
     {"id": "l-moon", "text": "Moon", "kind": "body", "anchor": "moon", "t0": A("vo02:Look", 0.3), "t1": B["why"]["t0"], "side": -1},
     {"id": "l-30", "text": "30 Earths", "kind": "body", "anchor": "row", "t0": A("vo02:thirty"), "t1": A("vo02:And"), "side": 1},
-    {"id": "l-v", "text": "about 1 km/s", "kind": "gravity", "anchor": "moon-v", "t0": A("vo02:sideways"), "t1": B["change"]["t0"], "side": 1},
     {"id": "l-free", "text": "no gravity: a straight line", "kind": "light", "anchor": "free", "t0": A("vo03:straight"), "t1": t_back, "side": 1},
     {"id": "l-pull", "text": "gravity", "kind": "gravity", "anchor": "pull", "t0": t_back, "t1": B["why"]["t0"], "side": -1},
     {"id": "l-apple", "text": "apple", "kind": "body", "anchor": "apple", "t0": A("vo04:apple"), "t1": t_w, "side": 1},
@@ -113,7 +119,6 @@ LABELS = [
     {"id": "l-ring", "text": "1.3 s", "kind": "light", "anchor": "ring", "t0": A("vo07:one"), "t1": t_end, "side": 1},
 ]
 BADGES = [
-    {"id": "b-mag-h", "text": "fall drawn ×1,000,000", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
     {"id": "b-true", "text": "true scale", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},
     {"id": "b-time", "clock": "moon", "t0": B["normal"]["t0"], "t1": t_end, "slot": "tl"},
     {"id": "b-thought", "text": "thought experiment", "t0": t_off, "t1": t_back, "slot": "tr"},
@@ -131,16 +136,21 @@ COUNTERS = [
     {"id": "c-apple", "label": "apple · its first second", "text": "4.9 m", "t0": A("vo05:apple"), "t1": A("vo05:About")},
     {"id": "c-moon", "label": "Moon · one minute", "text": "4.9 m", "t0": A("vo05:About"), "t1": t_tk},
     {"id": "c-same", "label": "one pull · apple and Moon", "text": "gravity", "t0": A("vo06:same"), "t1": t_rd},
-    {"id": "c-read", "label": "light time · Earth to Moon", "text": "1.3 s", "read": True, "t0": A("vo07:Light"), "t1": t_end, "at": [0.5, 0.2]},
+    {"id": "c-read", "label": "light time · Earth to Moon", "text": "1.3 s", "read": True, "t0": A("vo07:Light"), "t1": t_end},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
+# the spine: one value fades out before the next fades in (0.4 s apart), so two never overlap
+spine = [c for c in COUNTERS if c["at"] == SPINE]
+for a, b in zip(spine, spine[1:]):
+    if b["t0"] - a["t1"] < 0.4:
+        a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "Light Minute · No. 004", "title": "The falling *Moon*", "t1": B["normal"]["t0"] - 0.25, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: how many Earths fill the *Sun*", "follow": "Light Minute · No. 005",
        "next": "Each second the Moon falls about 1.4 mm below a straight line, and keeps missing Earth."}   # footnote (c17)
 
-CUE = {"off": t_off, "back": t_back, "row": A("vo02:thirty"), "min0": t_min0, "min1": t_min1, "ring": A("vo07:one"),
+CUE = {"speed0": A("vo02:sideways"), "speed1": B["change"]["t0"], "off": t_off, "back": t_back, "row": A("vo02:thirty"), "min0": t_min0, "min1": t_min1, "ring": A("vo07:one"),
        "apple": A("vo04:apple"), "ruler": A("vo04:sixty"), "weak": A("vo04:weaker"), "drop": A("vo05:apple")}
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": A("vo05:does", 0.4),
