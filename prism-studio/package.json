@@ -16,10 +16,12 @@
     "import:episodes": "tsx scripts/import-episodes.ts",
     "text:regenerate": "tsx scripts/regenerate-text.ts",
     "text:pack": "tsx scripts/posting-pack.ts",
+    "covers": "tsx scripts/covers.ts",
     "snapshot": "tsx scripts/snapshot.tsx",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "owner:password": "tsx scripts/owner-password.ts"
+    "owner:password": "tsx scripts/owner-password.ts",
+    "wallpaper": "node scripts/wallpaper/render.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.4",

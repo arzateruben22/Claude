@@ -41,7 +41,7 @@
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "The line says 'saw' with no date, so it makes no claim about when; 1638 is when Two New Sciences was published (the cross-check's reason the old line said 'described')."
+  "note": "The line says 'saw' with no date, so it makes no claim about when; 1638 is when Two New Sciences was published (the cross-check's reason the old line said 'described'). The end card's footnote ('Two motions at once: Galileo, Two New Sciences, 1638') rests on this claim and gives the date on screen."
  },
  {
   "id": "c5",
@@ -56,25 +56,25 @@
  },
  {
   "id": "c6",
-  "sentence": "Throw twice as hard, then three times: forty centimeters, then sixty.",
+  "sentence": "Throw twice as fast, then three times: forty centimeters, then sixty.",
   "claim": "Level throws at 0.89 and 1.33 m/s from 1 m land 40.2 and 60.1 cm out, in the same 0.4515 s.",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
   "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed: range = v × √(2h/g); 0.89 × 0.4515 = 0.402 m, 1.33 × 0.4515 = 0.601 m. Cross-check fix: replaces the 1×/2×/3× of 1.33 m/s (1.19 m and 1.78 m out), which broke the 60 cm rule and the drag badge."
+  "note": "Computed: range = v × √(2h/g); 0.89 × 0.4515 = 0.402 m, 1.33 × 0.4515 = 0.601 m. Cross-check fix: replaces the 1×/2×/3× of 1.33 m/s (1.19 m and 1.78 m out), which broke the 60 cm rule and the drag badge. Audit fix (26 Oct): 'twice as hard' is now 'twice as fast': the throws are 2× and 3× the speed (4× and 9× the kinetic energy), so 'hard' was ambiguous."
  },
  {
   "id": "c7",
   "sentence": "Every row of ghosts stays level, and all four land on the same frame.",
-  "claim": "Without air, all four balls fall in the same 0.4515 s; with air, the fastest (1.33 m/s) tennis ball would land 0.30 ms late, under the 1.67 ms of physics time in one frame at ×1/20.",
+  "claim": "Without air, all four balls fall in the same 0.4515 s; with air, the fastest (1.33 m/s) tennis ball would land 0.30 ms after the dropped ball, under the 1.67 ms of physics time in one frame at ×1/20.",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
   "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed with the bible's drag.py model (tennis ball 57 g, 6.7 cm, Cd 0.55, air 1.2 kg/m³, 1 m drop): delays 0.04 / 0.15 / 0.30 ms at 0.44 / 0.89 / 1.33 m/s. A frame at 30 fps and ×1/20 is 1/600 s = 1.67 ms. The scene is drawn without air, and the takeaway's badge says so; 'always' is gone (at 3.99 m/s the delay is 1.66 ms, a full frame)."
+  "note": "Computed with the bible's drag.py model (tennis ball 57 g, 6.7 cm, Cd 0.55, air 1.2 kg/m³, 1 m drop): delays behind the drop of 0.04 / 0.15 / 0.30 ms at 0.44 / 0.89 / 1.33 m/s. Drag slows the drop too (0.4531 s, 1.54 ms later than without air), so the delays are measured against the dropped ball, not the air-free scene. A frame at 30 fps and ×1/20 is 1/600 s = 1.67 ms. The scene is drawn without air, and the takeaway's badge says so; 'always' is gone (at 3.99 m/s the delay is 1.66 ms, a full frame)."
  },
  {
   "id": "c8",
@@ -100,14 +100,14 @@
  },
  {
   "id": "c10",
-  "sentence": "Speed decides where a ball lands.",
+  "sentence": "Sideways speed decides where it lands.",
   "claim": "With air negligible, the sideways (horizontal) speed sets how far a level throw lands, not its time of flight.",
   "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
   "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Shown with the badge 'air ignored: the fastest throw would land 0.3 ms late; a frame here is 1.7 ms' (c7's numbers)."
+  "note": "Shown with the badge 'air ignored: with air, the fastest throw lands 0.3 ms after the drop; a frame here is 1.7 ms' (c7's numbers). Audit fix (26 Oct): 'Speed' is now 'Sideways speed': a throw angled up or down changes the time of flight (c11's note), so the takeaway names the sideways part."
  },
  {
   "id": "c11",
@@ -144,13 +144,13 @@
  },
  {
   "id": "c14",
-  "sentence": "That holds even for a bullet fired level.",
-  "claim": "With air neglected, the time of flight of a level (horizontal) launch depends only on the height, so a bullet fired level and one dropped from the same height land together.",
-  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion",
-  "source_title": "OpenStax University Physics Volume 1, 4.3 Projectile Motion",
-  "accessed": "2026-10-24",
+  "sentence": "In air, the throws land a sliver after the drop.",
+  "claim": "In air, drag delays the thrown tennis balls by 0.04, 0.15 and 0.30 ms behind the drop, under the 1.67 ms frame at ×1/20 (drag.py).",
+  "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
+  "source_title": "NASA Glenn, Beginner's Guide to Aeronautics: the drag equation",
+  "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Said under the 'Air ignored' card. Background, not cited: MythBusters (episode 125, 2009) measured a fired and a dropped bullet landing 39.6 ms apart in air (fan results site https://mythresults.com/knock-your-socks-off; physics note on why air delays the fired one: https://www.vttoth.com/CMS/physics-notes/121)."
+  "note": "Excerpt (NASA Glenn, as recorded for Rest Frame 004): drag depends on the density of the air, the square of the velocity, the reference area and a drag coefficient. Computed with the bible's drag.py model (tennis ball 57 g, 6.7 cm, Cd 0.55, air 1.2 kg/m³, 1 m drop, quadratic drag along the velocity): a faster ball feels more drag, including more of its upward part, so each throw lands slightly after the drop. Said under the 'Air ignored' card, whose numbers it matches. Audit fix (26 Oct): replaces 'That holds even for a bullet fired level', which broke the bible's no-firearms rule and was true only without air."
  }
 ]

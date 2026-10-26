@@ -45,9 +45,9 @@ export default async function Episode({ params }: { params: Promise<{ id: string
             <div className="player-wrap"><video className="player" controls preload="metadata" playsInline poster={current.posterPath ? mediaUrl(current.posterPath) : undefined} src={mediaUrl(current.videoPath)} /></div>
           ) : <div className="card"><p className="muted" style={{ margin: 0 }}>No render yet{ep.filmsPath ? `: the film lives in ${ep.filmsPath}` : ""}.</p></div>}
           {current ? (
-            <div className="row">
+            <div className="row" id="qa">
               <span className="chip">render v{current.versionNo}</span>
-              {fails === null ? <span className="chip">QA not attached</span> : fails ? <span className="chip bad">QA: {fails} failed</span> : <span className="chip good">QA passed</span>}
+              {fails === null ? <span className="chip">QA not attached</span> : fails ? <span className="chip bad">QA: {fails} failed · {((current.qa as { fails?: unknown[] }).fails ?? []).map(String).join("; ")}</span> : <span className="chip good">QA passed</span>}
               <span className="chip mono" title={current.sha256}>{current.sha256.slice(0, 10)}</span>
               {ep.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${ep.id}`} download>Captions .srt</a> : null}
             </div>

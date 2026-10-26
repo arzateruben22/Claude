@@ -1,5 +1,21 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 08:15 UTC:** independent script audit of every episode done (`films/audits/2026-10-26/`: ep02–06 ×3,
+> ep01 ×3, ep06 physics/body; each finding adversarially verified). Space and physics sessions applied theirs; body
+> working. Here: Light Minute 001 fixed (label fits the safe box, c15, small footnote; sound QA no longer misreads a
+> masked tick) and its last chunks re-render; Rest Frame 001 (no-firearms line, badge, count) and Meanwhile, Inside
+> 001 (stretch/sickle lines) are being fixed and re-voiced before their finals. Hosting for Prism Studio built and
+> tested (`prism-studio/deploy/`). A session limit paused work 06:00–08:00.
+>
+> **26 Oct, 04:05 UTC check-in:** space ep01 re-render 19%; body session merged the kit; physics + space sessions rechecking (space delivered No. 004 on the old kit before the merge: it will be re-rendered).
+>
+> **26 Oct, 03:50 UTC: full speed until completion (owner).** Readability pass landed (767b57b: notes one tier down,
+> spine readout holds through the payoff, labels never cover text, sharper masters; space ep01 fixes incl. the 23 s
+> early-arrival bug). This container re-renders ep01 ×3 with it (`films/channels/rerender-finals.sh`, log
+> films/channels/rerender.log); the three channel sessions merge it and deliver ep02–06 re-rendered at this quality.
+> Prism Studio redesign in progress: code-rendered NYC night skyline, six-monitor home (Instagram centre), a screen
+> per channel, designed covers/thumbnails.
+>
 > **25 Oct, 23:15 UTC: paused at the user's request; see `films/ASSESSMENT-2026-10-25.md`.** The 2-hourly check-in
 > is in low-usage mode (restart stalled renders, merge and QA delivered episodes, build a compilation when a channel
 > has ep01–05; nothing new). Physics 001–002 and space 001–002 are delivered; body 001 is rendering here (slow scene,

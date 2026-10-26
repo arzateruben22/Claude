@@ -1,0 +1,102 @@
+<title>Prism Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: the studio's own night glass. One column of real screenshots over the blurred skyline, captions beside or under each. */
+:root {
+  --night: #05060A; --graphite: #15181D; --steel: #8E96A2;
+  --glass: rgba(12, 14, 19, .80); --line: rgba(222, 229, 240, .10); --line-2: rgba(222, 229, 240, .18);
+  --text: #EDEFF2; --text-2: #B0B6C0; --text-3: #8D949F;
+  --good: #5DCB95; --warn: #E6B25C; --info: #93B0FF;
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --ui: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+body { background: var(--night); color: var(--text); font-family: var(--ui); font-size: 16px; line-height: 1.55; }
+.backdrop { position: fixed; inset: 0; z-index: 0; background: var(--night) url("backdrop.jpg") center 30% / cover no-repeat; }
+.backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 6, 10, .55) 0%, rgba(5, 6, 10, .82) 40%, var(--night) 100%); }
+.page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 56px 72px; display: grid; gap: 64px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); }
+header { display: grid; gap: 14px; max-width: 46rem; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(48px, 8vw, 84px); line-height: .95; letter-spacing: -.01em; margin: 0; }
+h1 em { color: var(--steel); }
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(28px, 4vw, 38px); line-height: 1.05; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lede { font-size: 18px; color: var(--text-2); max-width: 38rem; }
+figure { margin: 0; display: grid; gap: 16px; }
+.shot { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid var(--line-2); border-radius: 6px; background: var(--graphite); }
+figcaption { display: grid; gap: 6px; max-width: 44rem; color: var(--text-2); }
+figcaption b { color: var(--text); font-weight: 600; }
+.pair { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 32px; align-items: start; }
+.pair figure:first-child .shot { max-width: 300px; }
+.text { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.status { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 8px 24px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.row dt { display: flex; align-items: baseline; gap: 10px; font-weight: 600; }
+.row dd { margin: 0; color: var(--text-2); min-width: 0; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; transform: translateY(-1px); }
+.dot.good { background: var(--good); } .dot.warn { background: var(--warn); } .dot.info { background: var(--info); }
+footer { color: var(--text-3); font-size: 14px; display: grid; gap: 6px; max-width: 46rem; }
+a { color: var(--text); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-radius: 2px; }
+@media (max-width: 760px) {
+  .page { gap: 48px; padding-block: 36px 56px; }
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair figure:first-child .shot { max-width: 320px; }
+  .row { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+
+<div class="backdrop" aria-hidden="true"></div>
+<main class="page">
+  <header>
+    <div class="kicker">Preview · 26 October 2026 · real screenshots</div>
+    <h1>Prism <em>Studio</em></h1>
+    <p class="lede">The publishing desk for the five channels and the shared Instagram. Pick a monitor: each one holds the next post for every account it feeds, with the title, caption, hashtags, sources comment and cover ready to copy.</p>
+  </header>
+
+  <figure>
+    <img class="shot" src="wall-desktop.jpg" width="1440" height="900" alt="The home screen: six monitors over a dark New York skyline at night. Instagram is the large screen in the middle with today's two posts; What If? sits above it; Meanwhile, Inside and Rest Frame are on the left; Light Minute and Skincare are on the right.">
+    <figcaption>
+      <p><b>The wall.</b> Instagram in the middle: two posts a day from any series, and no episode goes up twice. What If? sits above it. Meanwhile, Inside and Rest Frame are on the left, Light Minute and Skincare on the right. A screen stays dark until its channel has a finished episode.</p>
+      <p>The skyline is original code-rendered art (Manhattan at 2 a.m.), not a photo.</p>
+    </figcaption>
+  </figure>
+
+  <section class="pair" aria-label="Phone and Instagram screen">
+    <figure>
+      <img class="shot" src="wall-phone.jpg" width="780" height="1688" alt="The same wall on a phone: Instagram first, then Rest Frame and Light Minute side by side, with a tab bar at the bottom.">
+      <figcaption><p><b>On a phone,</b> Instagram comes first, then the channels with episodes.</p></figcaption>
+    </figure>
+    <figure>
+      <img class="shot" src="instagram.jpg" width="1200" height="1300" alt="The Instagram screen: today's 11:30 AM and 6:30 PM slots, each with a cover, the caption, hashtags, a first comment with sources, and a Review and approve button.">
+      <figcaption>
+        <p><b>The Instagram screen.</b> Today's two slots with the episode the rotation picked for each, its caption and hashtags, and the sources for the first comment. A slot whose time passes with nothing planned shows as missed and keeps its episode for later.</p>
+      </figcaption>
+    </figure>
+  </section>
+
+  <figure>
+    <img class="shot" src="channel.jpg" width="1200" height="1100" alt="A channel screen for Light Minute: separate YouTube and TikTok cards, each with the cover, title, description or caption, hashtags, pinned comment and copy buttons.">
+    <figcaption>
+      <p><b>A channel screen.</b> One card per account (YouTube, TikTok) with copy buttons for each field and the cover. Download and Open YouTube or Open TikTok appear only after you approve that exact video and text; until then the card says what is missing.</p>
+    </figcaption>
+  </figure>
+
+  <section class="text" aria-labelledby="where">
+    <h2 id="where">Where it stands</h2>
+    <dl class="status">
+      <div class="row"><dt><span class="dot good"></span>Built and tested</dt><dd>The wall, a screen per channel, the Upload Desk, review and approval, the Instagram rotation, the posting-text engine and covers. 148 automated tests pass; every screen loads cleanly on phone and desktop.</dd></div>
+      <div class="row"><dt><span class="dot info"></span>Videos</dt><dd>Four episodes are in the studio now. The episode 1s are being re-rendered with fact-check fixes, and the channel sessions are rendering episodes 2–6.</dd></div>
+      <div class="row"><dt><span class="dot warn"></span>Hosting</dt><dd>A one-server setup with automatic HTTPS is ready and tested. It needs a domain and a small server to go live.</dd></div>
+      <div class="row"><dt><span class="dot warn"></span>Accounts</dt><dd>Connecting YouTube, TikTok and Instagram needs your developer apps from Google, TikTok and Meta. Nothing posts until you approve each video.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <p>Channel names marked as working names in the studio may still change. Nothing has been posted to any platform.</p>
+  </footer>
+</main>

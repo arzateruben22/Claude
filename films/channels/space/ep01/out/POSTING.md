@@ -2,6 +2,8 @@
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
+**Cover / thumbnail**: `lightminute-001-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `lightminute-001-thumb.jpg` (16:9 YouTube thumbnail)
+
 ## YouTube Shorts
 **Title**
 
@@ -14,7 +16,7 @@ What if the Sun vanished? How soon would you know?
 
 Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, we caught two neutron stars colliding. Their light and gravitational waves crossed a hundred and thirty million light-years, and arrived under two seconds apart. Light and gravity share one speed limit. Everything you see in the sky is old news.
 
-Series: Season 1: How far, how fast, part 1 of 6. Next: the nearest star
+Series: Season 1: How far, how fast, part 1 of 6.
 
 Sources
 1. The Sun's average distance from Earth is about 150 million km. — howthingsfly.si.edu: https://howthingsfly.si.edu/ask-an-explainer/how-long-does-it-take-light-sun-get-earth
@@ -25,6 +27,7 @@ Sources
 6. With no net force acting, an object keeps moving at constant velocity in a straight line (Newton's first law). — NASA: https://www.grc.nasa.gov/www/k-12/BGP/newton1.html
 7. The Sun is 8,275 ± 9 (stat) ± 33 (sys) parsecs from Sagittarius A, the galaxy's centre: about 27,000 light-years, so its light left about 27,000 years ago. — mpe.mpg.de: https://www.mpe.mpg.de/6588951/The-black-hole
 8. The last glacial period lasted from about 115,000 to about 11,700 years ago, so light that left the galactic centre about 27,000 years ago left during it. — Wikipedia: https://en.wikipedia.org/wiki/Last_Glacial_Period
+9. If the Sun vanished, changes in its gravity, like its light, would travel at light speed, so Earth's sky and orbit stay as they were for about 8 min 20 s. — bigthink.com: https://bigthink.com/starts-with-a-bang/this-is-why-the-speed-of-gravity-must-equal-the-speed-of-light/
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
@@ -48,6 +51,7 @@ Sources
 6. With no net force acting, an object keeps moving at constant velocity in a straight line (Newton's first law). — NASA: https://www.grc.nasa.gov/www/k-12/BGP/newton1.html
 7. The Sun is 8,275 ± 9 (stat) ± 33 (sys) parsecs from Sagittarius A, the galaxy's centre: about 27,000 light-years, so its light left about 27,000 years ago. — mpe.mpg.de: https://www.mpe.mpg.de/6588951/The-black-hole
 8. The last glacial period lasted from about 115,000 to about 11,700 years ago, so light that left the galactic centre about 27,000 years ago left during it. — Wikipedia: https://en.wikipedia.org/wiki/Last_Glacial_Period
+9. If the Sun vanished, changes in its gravity, like its light, would travel at light speed, so Earth's sky and orbit stay as they were for about 8 min 20 s. — bigthink.com: https://bigthink.com/starts-with-a-bang/this-is-why-the-speed-of-gravity-must-equal-the-speed-of-light/
 ```
 
 
@@ -61,7 +65,7 @@ What if the Sun vanished? Light and gravity share one speed limit. #space #astro
 **Pinned comment** (150-character limit)
 
 ```
-Sources: howthingsfly.si.edu; NASA; NASA Science; ligo.org; mpe.mpg.de; Wikipedia. Synthetic (AI) voice; code-rendered animation.
+Sources: howthingsfly.si.edu; NASA; NASA Science; ligo.org; mpe.mpg.de; Wikipedia; bigthink.com. Synthetic (AI) voice; code-rendered animation.
 ```
 
 
@@ -92,5 +96,6 @@ Sources
 6. With no net force acting, an object keeps moving at constant velocity in a straight line (Newton's first law). — NASA: https://www.grc.nasa.gov/www/k-12/BGP/newton1.html
 7. The Sun is 8,275 ± 9 (stat) ± 33 (sys) parsecs from Sagittarius A, the galaxy's centre: about 27,000 light-years, so its light left about 27,000 years ago. — mpe.mpg.de: https://www.mpe.mpg.de/6588951/The-black-hole
 8. The last glacial period lasted from about 115,000 to about 11,700 years ago, so light that left the galactic centre about 27,000 years ago left during it. — Wikipedia: https://en.wikipedia.org/wiki/Last_Glacial_Period
+9. If the Sun vanished, changes in its gravity, like its light, would travel at light speed, so Earth's sky and orbit stay as they were for about 8 min 20 s. — bigthink.com: https://bigthink.com/starts-with-a-bang/this-is-why-the-speed-of-gravity-must-equal-the-speed-of-light/
 ```
 

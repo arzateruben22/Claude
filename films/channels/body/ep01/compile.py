@@ -50,7 +50,7 @@ def cut(t):
 
 
 # ── shots and the irises that join them ─────────────────────────────────────────────────────────
-# "You'd guess it stretches to fit. It can't. … so it folds into a parachute instead." Then, in the picture-only
+# "You'd guess its surface stretches to fit. It can't. … so it folds into a parachute instead." Then, in the picture-only
 # hold, squeeze, slide and spring back, spaced as the old spoken "Squeeze, slide, spring back" were (1.115 s apart)
 SQUEEZE = A("vo04:instead:end", 0.3)
 SPRING = round((SQUEEZE + 1.115) * FPS) / FPS
@@ -94,10 +94,11 @@ HERO = {
         [A("vo05:tightest", 0.35), "tight"],             # the tightest, about three micrometers
     ],
     "why_cut": [[A("vo04:dimples", -0.55), 0.0], [A("vo04:dimples", -0.05), 1.0], [A("vo04:volume:end", 0.15), 1.0], [A("vo04:so", 0.45), 0.0]],
-    # the takeaway: it pops out of the capillary into a venule as the beat opens, and springs back to a disc
-    "out": {"at": CUT["out"] + 0.3, "place": "exit",
-            # the camera lets the cell go and looks back down the capillary it left (the smallest vessels)
-            "track": [max(CUT["out"] + 0.3, A("vo06:smallest", -1.7)), A("vo06:smallest", 0.4)]},
+    # the takeaway: the beat opens on it folded at the mouth of its capillary; it pops out into a venule and springs
+    # back to a disc on "disc shape" (the hero stands at the venule's mouth, mid-release, as "disc" starts)
+    "out": {"at": A("vo06:disc"), "place": "exit",
+            # then the camera lets the cell go and looks back down the capillary it left, landing there on "jam"
+            "track": [max(CUT["out"] + 0.3, A("vo06:shape:end", 0.1)), A("vo06:jam", 0.4)]},
     "tease_cut": [[A("vo08:carries", -0.4), 0.0], [A("vo08:carries", 0.25), 1.0]],
     "sparkle": [A("vo08:billion"), A("vo08:passengers:end", 0.3)],
 }
@@ -147,8 +148,8 @@ CAM = {
     ],
     "out": [
         {"t": CUT["out"], "pos": [7.0, -7.0, 28.0], "look": [0.0, -2.0, 0.0], "fov": 34},
-        {"t": A("vo06:Stiff", 0.5), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo06:smallest", 0.4), "pos": [10.0, -8.0, 50.0], "look": [0.0, -4.0, 0.0], "fov": 36, "ease": "p2"},     # (now on the capillary)
+        {"t": A("vo06:disc", 0.3), "pos": [5.0, -4.0, 25.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},      # in on the disc as it springs back
+        {"t": A("vo06:jam", 0.4), "pos": [10.0, -8.0, 50.0], "look": [0.0, -4.0, 0.0], "fov": 36, "ease": "p2"},     # (now on the capillary)
         {"t": A("vo06:oxygen", 0.6), "pos": [10.0, -9.0, 53.0], "look": [0.0, -4.5, 0.0], "fov": 36, "ease": "sine"},
         {"t": B["meanwhile"]["t0"] + 0.6, "pos": [18.0, -16.0, 92.0], "look": [0.0, 12.0, 0.0], "fov": 36, "ease": "p2"},  # room for the tally
         {"t": CUT["tease"], "pos": [22.0, -18.0, 100.0], "look": [0.0, 12.0, 0.0], "fov": 36, "ease": "sine"},
@@ -173,7 +174,7 @@ FOC = {
              {"t": A("vo04:dimples", -0.6), "at": "cap", "f": 0.5}, {"t": A("vo04:parachute", -0.2), "at": "hero", "f": 0.5},
              {"t": A("vo05:tightest", -0.2), "at": "hero", "f": 0.5}],
     "net": [{"t": CUT["net"], "at": "hero", "f": 0.25}],
-    "out": [{"t": CUT["out"], "at": "hero", "f": 0.5}, {"t": A("vo06:smallest", -0.5), "at": "below", "f": 0.4},
+    "out": [{"t": CUT["out"], "at": "hero", "f": 0.5}, {"t": A("vo06:jam", -0.5), "at": "below", "f": 0.4},
             {"t": B["meanwhile"]["t0"] + 0.3, "at": "below", "f": 0.75}],
     "tease": [{"t": CUT["tease"], "at": "hero", "f": 0.5}, {"t": A("vo08:carries"), "at": "cap", "f": 0.55}],
 }

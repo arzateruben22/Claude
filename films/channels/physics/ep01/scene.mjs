@@ -154,7 +154,7 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("warp", { from: clk, slot: "tr" });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot, maxW: b.maxW });
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball[0], an.ball[1], t);
   if (an.gap) { const [take, k] = an.gap, x = ballSpec(take, "drop").x0 + (an.dx || 0); return () => [x, (gyk(k) + gyk(k + 1)) / 2, 0]; }
@@ -171,6 +171,15 @@ const counterLb = counterEl.querySelector(".lb");
 const RD = createReadouts({ project: hud.project });
 for (const r of FILM.readouts) RD.add(r.id, { at: r.at, text: r.text, t0: r.t0, t1: r.t1 ?? null });
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
+// the end card's one true-fact footnote (WRITING.md picture rule 6), styled as the channel's later episodes. It sits
+// where the last caption page is, so it fades in only once that page has gone, as the card lands (EC)
+let foot = null;
+if (FILM.end.foot) {
+  foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
+  const st = document.createElement("style");
+  st.textContent = ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
+  document.head.appendChild(st);
+}
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 const hudCues = window.SCENE_CUES;
 window.SCENE_CUES = () => { const c = hudCues(); return { ...c, events: [...c.events, ...RD.cues()].sort((a, b) => a.t - b.t) }; };
@@ -197,6 +206,7 @@ window.seek = function (t) {
   const n = nGaps(t);                                   // everything that changes a HUD part's size, before the HUD measures it
   counterLb.textContent = `${n} gap${n === 1 ? "" : "s"} × 1/20 s`;
   dropT(t); dropE(t);
+  if (foot) foot.style.opacity = E.out3(seg(t, EC, EC + 0.3)).toFixed(4);
   hud.update(t);
   counterEl.classList.toggle("lit", CUE.measure.lit.some(([a, b]) => t >= a && t < b));
   RD.update(t, 1 - E.out3(seg(t, EC - 0.3, EC)));

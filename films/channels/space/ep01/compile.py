@@ -247,7 +247,7 @@ COUNTERS = [
     {"id": "c-gap", "label": "arrived apart by", "fmt": "lt2", "unit": "s", "t0": A("vo04:two"), "t1": B["whoa"]["t0"], "at": [0.5, 0.245]},
     # the readout (the channel's segment): light time for this episode's distance, then the galaxy's
     {"id": "c-read-au", "label": "light time · Sun to Earth", "fmt": "text", "text": "8 min 20 s", "t0": A("vo07:Light"), "t1": t_j0 + 0.2, "at": [0.5, 0.2]},
-    {"id": "c-read-gc", "label": "light time · galactic center to Sun", "fmt": "text", "text": "27,000 years", "t0": A("vo07:light#2"), "t1": end_out, "at": [0.5, 0.2]},
+    {"id": "c-read-gc", "label": "light time · galaxy's center", "fmt": "text", "text": "27,000 years", "t0": A("vo07:light#2"), "t1": end_out, "at": [0.5, 0.2]},
 ]
 for row in BADGES + COUNTERS:
     row["t1"] = before_cut(row["t1"])
@@ -259,7 +259,8 @@ PILLS = [
 # ── the title card and the end card ───────────────────────────────────────
 TITLE = {"series": "Light Minute · No. 001", "title": "If the Sun *vanished*", "t1": B["normal"]["t0"] - 0.25,
          "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002"}   # the channel's own tease form (theme.json)
+END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002",   # the channel's own tease form (theme.json)
+       "next": "Measured in 2017: gravity travels at light speed (LIGO, Fermi)."}   # the true-fact footnote (c5)
 
 CUE = {
     "off": t_off, "rewind": [t_rw0, t_rw1], "arrive": t_arr, "race": {"arrive": A("vo04:arrived"), "merge": t_of("race", 0.0)},

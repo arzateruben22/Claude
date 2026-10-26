@@ -33,7 +33,7 @@ export default async function Rewards() {
             <h2 style={{ margin: "6px 0 4px" }}>{oneM?.title}</h2>
             <p className="muted" style={{ margin: 0, maxWidth: "52ch" }}>{oneM?.description} Reward: {money(oneM?.rewardCents)}, reserved only from your funded budget within the monthly cap.</p>
           </div>
-          <Ring value={v.bestViews / 1_000_000} size={96} stroke={8} label={oneMEvent ? "✓" : compact(v.bestViews)} />
+          {v.bestViews > 0 || oneMEvent ? <Ring value={v.bestViews / 1_000_000} size={96} stroke={8} label={oneMEvent ? "✓" : compact(v.bestViews)} /> : null}
         </div>
         {oneMEvent ? <p style={{ margin: 0 }}>Unlocked {formatLocal(oneMEvent.achievedAt, s.timezone, { dateStyle: "long" })}{oneMEvent.evidenceStatus === "flagged" ? " · the platform later revised the number: evidence flagged for review" : ""}.</p>
           : <p className="muted" style={{ margin: 0 }}>Best single post so far: {count(v.bestViews)} platform-reported views.</p>}

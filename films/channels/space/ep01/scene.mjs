@@ -184,6 +184,8 @@ for (const L of FILM.labels) {
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: ANCHOR[L.anchor], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+const foot = endEl.querySelector(".nx");                                    // the end card's footnote: small and quiet (as in ep02–06)
+if (foot) Object.assign(foot.style, { fontSize: "2.6vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "62vmin", margin: "4vmin auto 0" });
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 
 // ── per-shot staging ────────────────────────────────────────────────────────

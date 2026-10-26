@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMetadata, clean, cut, LIMITS, postingSheet, type MetaInput } from "../src/domain/metadata";
+import { buildMetadata, captionBody, clean, composePostText, cut, LIMITS, parsePostingNotes, postingSheet, type MetaInput } from "../src/domain/metadata";
 
 const input: MetaInput = {
   channel: { name: "Rest Frame", label: "PHYSICS", tagline: "Everyday things, slowed down until the physics shows.", topic: "physics" },
@@ -81,5 +81,28 @@ describe("metadata", () => {
     const s = postingSheet(input);
     expect(s).toContain("## YouTube Shorts"); expect(s).toContain("## TikTok"); expect(s).toContain("## Instagram Reel");
     expect(s).toContain("Thrown or dropped? | Rest Frame No. 001");
+  });
+});
+
+describe("the pasted text", () => {
+  const count = (hay: string, needle: string) => hay.split(needle).length - 1;
+  it("carries each platform's hashtags exactly once", () => {
+    const m = buildMetadata(input);
+    for (const p of ["youtube", "tiktok", "instagram"] as const) {
+      const text = composePostText(m[p]);
+      expect(count(text, m[p].hashtags), p).toBe(1);
+      expect(text.startsWith(captionBody(m[p])), p).toBe(true);
+      expect(captionBody(m[p]).includes(m[p].hashtags), p).toBe(false);
+    }
+  });
+  it("adds the hashtags when an edited caption dropped them, and never doubles them", () => {
+    expect(composePostText({ caption: "Which lands first?", hashtags: "#physics #stem" })).toBe("Which lands first?\n\n#physics #stem");
+    expect(composePostText({ caption: "Which lands first? #physics #stem", hashtags: "#physics #stem" })).toBe("Which lands first? #physics #stem");
+    expect(composePostText({ caption: "Plain", hashtags: "" })).toBe("Plain");
+  });
+  it("splits posting notes into the comment, tags, checks and the label checklist", () => {
+    const n = parsePostingNotes("Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.\n\nPinned/first comment:\nSources\n1. A — OpenStax: https://openstax.org/x\n2. B — NASA\n\nTags: physics, science\n\nCheck: title cut; no hook\n\nPost after 6pm.");
+    expect(n).toMatchObject({ comment: "Sources\n1. A — OpenStax: https://openstax.org/x\n2. B — NASA", tags: "physics, science", checks: ["title cut", "no hook"], aiLabel: true, captionsOff: true, other: ["Post after 6pm."] });
+    expect(parsePostingNotes(null)).toMatchObject({ comment: "", other: [] });
   });
 });

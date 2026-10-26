@@ -1,0 +1,9 @@
+# Automatic HTTPS (Let's Encrypt) for the studio's domain; the app listens on 3100 inside the compose network.
+{$DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3100
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+}
