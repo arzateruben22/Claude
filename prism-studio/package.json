@@ -17,7 +17,7 @@
     "text:regenerate": "tsx scripts/regenerate-text.ts",
     "text:pack": "tsx scripts/posting-pack.ts",
     "covers": "tsx scripts/covers.ts",
-    "snapshot": "tsx scripts/snapshot.tsx",
+    "preview": "tsx scripts/preview.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "owner:password": "tsx scripts/owner-password.ts",

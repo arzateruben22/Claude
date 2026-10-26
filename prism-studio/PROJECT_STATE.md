@@ -1,62 +1,110 @@
 # Project state
 
-_Updated 2026-10-26._
+_Updated 2026-10-26._ The code for stages A to E is built and tested. What's left needs the owner: a domain and a
+server, developer apps at Google, TikTok and Meta, the 11 accounts, and a first private test upload.
+
+**Checks today:** `tsc` clean; `next build` clean; 269 Vitest tests pass (one more, the real lesson build, runs only
+when asked: `LESSON_E2E=1`). The screens were checked in Chromium at 390 px and 1440 px: no sideways scroll,
+no page errors, no failed requests. `npm run preview` retakes the gallery in `docs/preview-gallery/`.
 
 ## Stage A: foundation (done)
-- **Data and rules:**
-  - Schema, migrations and seed: 5 channels, 11 destinations, 5 creations, 40 challenges and quests, 8 milestone rules, 33 setup steps.
-  - Domain rules: episode numbering and states, version-bound approvals, per-destination publications, schedule/plan/reschedule, rewards, XP, evolution, the job queue.
-  - Real episodes imported from `films/channels` (claims become sources; finals become versions, exports and SRT captions).
-- **Screens:** Home, Upload Desk (share/download/copy/bundle, mark uploaded, undo, position memory), Review, episode detail, channels (5 tabs), Calendar (plan, blackouts), Accounts and setup checklists, Analytics (manual and CSV), Rewards (budget, cap, claim/release, trophies, demo preview), Evolution (tree, requirements, branch choice, challenges, quests, demo preview, one-time reveal), Queue, Settings, sign-in, offline page.
-- **App and server:**
-  - PWA: manifest, icons, and a service worker that caches only the offline shell.
-  - Owner-only proxy and per-action checks; media with Range support; allow-listed media keys.
-  - Worker with housekeeping.
-- **Verified:**
-  - `tsc` is clean and `next build` is clean.
-  - 52 Vitest tests on the failure paths.
-  - A 14-step Playwright run through the real UI on a test database (sign-in, approve, edit withdraws, plan, the upload desk refusals, mark uploaded celebrates, analytics unlock, evolution).
+- Schema, migrations and seed: 5 channels, 11 destinations, 5 creations, 40 challenges and quests, 8 milestone
+  rules, 33 setup steps.
+- Rules: episode numbering and states, version-bound approvals, one publication per destination, schedule, plan
+  and reschedule, rewards, XP, evolution, the job queue, DST-safe times.
+- Real episodes imported from `films/channels`: claims become sources; finals become versions, exports and SRT
+  captions.
+- Screens: Home, Upload Desk (share, download, copy, ZIP bundle, mark uploaded, undo, position memory), Review,
+  episode page, channels, Calendar, Accounts and setup checklists, Analytics, Rewards, Evolution, Queue, Settings,
+  sign-in, offline page. PWA shell; owner-only proxy plus a check in every action; media with HTTP Range from
+  allow-listed keys only.
+- Verified: a 14-step Playwright run through the real UI on a test database.
 
-## Stage B (done)
-- Lessons: 4–6 rendered shorts → one 16:9 compilation built by the worker (`compilation.mjs`), approved as an exact video + title + description, marked uploaded, dissolvable until published. Channel → Lessons tab.
-- Learn: experiments (one change, a metric, a minimum sample, a status trail) and learnings (finding, confidence, evidence, counter-examples, decision).
-- Posting text engine: per-platform titles, descriptions/captions, hashtags, YouTube tags and the sources comment, generated from the script's beats and claims.json, within every limit; `npm run text:regenerate`, `npm run text:pack` (writes `out/POSTING.md` + `posting.json` next to each delivered episode); Regenerate button in Review.
-- Posting-text polish (`src/domain/written.ts`, `src/domain/metadata.ts`):
-  - **Written forms:** descriptions and captions turn the narration's spoken numbers into written ones: years after a year word ("In twenty seventeen" → "In 2017", "the eighteen-forties" → "the 1840s"), "X percent" → "X%", and large numbers that read one way only ("a hundred and thirty million" → "130 million", "twenty-seven thousand" → "27,000"). Small counts, fractions, decimals under a hundred, a bare "a thousand" / "a million", ordinals, dates and times stay in words. Titles, the "Next:" line, sources and hashtags are never changed. Tested on every narration line of the real scripts.
-  - **Sources thread:** when the sources don't fit one comment (TikTok 150, Instagram 2,200, YouTube 10,000 characters), the first comment plus numbered replies ("Sources 1/2", "Sources 2/2"), split only between sources. `PlatformMeta.replies` (posting.json gains `replies`; every earlier field kept), "Reply N:" blocks in the posting notes (`postingNotesFor`, shared by the import and Regenerate), separate "Copy comment" / "Copy reply 1" fields on the post cards and the Upload Desk, reply sections in POSTING.md and in the ZIP's text file (`handOffText`). A warning only when one source alone is longer than the limit. The dev studio's texts were regenerated (no approvals existed): 0 "Check" warnings left, 4 exports carry a reply.
-  - Fixed on the Upload Desk: at phone width the post fields sat in an implicit half-width column (a `grid-area` meant for the post card's grid); the export edit form now accepts posting notes up to 20,000 characters (2,000 rejected Instagram's longer notes).
-  - The `out/POSTING.md` / `posting.json` files already in `films/` were written before this; `npm run text:pack` rewrites them with the written forms and threads.
-- Costs (`/costs`, in More, Settings and each channel's Overview): monthly production budgets (studio-wide and per channel, carried forward from the month they're set), spent vs budget this month and for the last six months, and cost entries (what, amount, currency, channel/episode, date, actual or ESTIMATE) the owner can add, edit and void. Rules in `src/domain/costs.ts`: whole cents, estimates and voided entries never count, no currency conversion, never touches the reward ledger, `canUsePaidGeneration(channelId, amount)` (Settings switch on, external actions not stopped, a channel budget with room, and room in the studio-wide one when set). Migration `0002_costs_demo_toggle`.
-- Demo-data switch (Settings → Show demo data, `studio_settings.show_demo`, off by default): lists hide demo episodes, series, lessons and jobs unless it's on; shown ones are labelled DEMO. Counting (XP, progress, achievements, rewards, analytics totals, badges, lesson eligibility, planning) filters `is_demo` itself and never reads the switch. `npm run db:seed -- --demo` adds a labelled demo series (numbered 901+, the channel counter untouched).
+## The wall (redesign, done)
+- Home is six monitors over an original, code-rendered night skyline (`npm run wallpaper`): the shared Instagram in
+  the middle, What If? above, two portrait screens each side (`src/lib/rig.ts`). On a phone, Instagram comes first.
+- Each monitor opens `/m/<slug>`: one card per account with the cover or thumbnail, title, caption, hashtags and
+  sources comment, each with a copy button. Download and the platform's upload page appear only for an approved
+  post.
+- Instagram: two slots a day, rotating across the channels, oldest unplaced episode first; an episode goes on
+  Instagram once. A slot that passes with nothing planned reads "Missed" and spends no episode.
+- Covers (`npm run covers`): a 9:16 cover and a 16:9 thumbnail per delivered episode, from a caption-free frame of
+  the final, in the channel's own theme. The import uses a cover only when it is newer than the render.
+- Verified: 16 pages and sign-in at 390 and 1440 px, no console errors, no broken images.
 
-## Stage C (in progress)
-- Connector contract (`src/integrations/types.ts`), sealed tokens, OAuth start/callback routes with a sealed state cookie and PKCE, signed public media links (Instagram), connections domain (verify account onto the destination, refresh, expire, disconnect), publish job + `publish_status` follow-up, the minute scheduler for "Approved" channels, Publish now on the desk, Connect/Disconnect on Accounts. 12 tests with a fake connector.
-- Connectors for YouTube (resumable upload, captions, thumbnail, status, metrics), TikTok (inbox upload or direct post, status, metrics) and Instagram (Reels container → publish, limit check, insights): registered; 62 mocked-fetch tests. Each connector's `conditions` text states what could not be verified against the live docs (the sandbox can't open Google/TikTok/Meta developer pages; web-search excerpts were used).
-- API analytics (`src/domain/api-analytics.ts`, job `pull_metrics`, migration `0003_api_analytics`): the worker's housekeeping queues a pull for each verified, real publication on a connected destination whose connector reads metrics, daily for 30 days after publication and then weekly (counted in UTC days from the last attempt, kept in `metric_pulls`). Rows are `metric_snapshots` with source `api`, one per post, metric and UTC day (a partial unique index; a re-pull that day updates it), and views run the milestone rules. Auth failures mark the connection expired ("needs reconnecting" on Analytics and Accounts) and stop its pulls with no retries; network errors retry with backoff; simulated and demo publications are never pulled; Stop external actions pauses pulls. Refresh now on Analytics and on the episode page (new Numbers section). Every number shows a source tag (API / CSV / MANUAL / ESTIMATE / DEMO) and when it was pulled or logged. 14 tests with a fake connector.
-- Fixed on Accounts: the connection's Disconnect and TikTok forms were nested inside the account's Save form (invalid HTML: a hydration error, and without JS the Save fields fell outside their form).
-- Not yet: watch time from YouTube (needs the YouTube Analytics API scope, so a reconnect) and Instagram reel watch-time insights; the pull records them as soon as a connector returns them.
+## Stage B: lessons, learning, text, costs (done)
+- Lessons: 4–6 shorts become one 16:9 compilation built by the worker, approved as an exact video and text.
+- Learn: experiments (one change, a metric, a minimum sample) and learnings (finding, confidence, evidence).
+- Posting text for every platform from the script and `claims.json`, within each limit; Regenerate in Review;
+  `npm run text:regenerate`, `npm run text:pack`.
+- Written forms in descriptions and captions ("In 2017", "130 million", "40%"); anything ambiguous stays in words.
+  Tested on every narration line of the real scripts.
+- Sources thread: sources that don't fit one comment become a first comment plus numbered replies, split only
+  between sources. Copy fields on the post cards and the desk, in POSTING.md, `posting.json` (`replies`) and the ZIP.
+- Costs (`/costs`): monthly production budgets per channel and studio-wide, cost entries (actual or ESTIMATE),
+  spent against budget for six months, and the paid-generation gate (`canUsePaidGeneration`).
+- Settings → Show demo data (off by default). Counting never reads the switch.
 
-## Stage E (push notifications: done)
-- Settings → Notifications: **Notify this device** (service worker + PushManager with the studio's VAPID public key, the only key that reaches a browser), the device list with **Remove** (and "this device" found by an endpoint hash, never the endpoint), **Send a test notification**, and the last five notifications. **Turn off on this device** unsubscribes and forgets it. iPhone/iPad: from the Home Screen app only (the screen says so).
-- Rules in `src/domain/push.ts` (migration `0004_push_notifications`: `push_keys`, `push_subscriptions`, `push_events`): VAPID keys made on first need, private key sealed (INTEGRATIONS_KEY, else HKDF from SESSION_SECRET; refused with a clear message when neither is set; an unreadable key offers a reset); endpoints only on known push services over https; one row per browser; 404/410 deletes the device; the worker's minute tick sends (a) upload due 30 min before a manual slot with an approved, ready post, (b) a scheduled automatic publish that dead-lettered or ended handed off (inbox/private), (c) an Instagram slot passed with nothing planned; each at most once (dedupe key inserted before sending). Never for demo or simulated posts. Events older than 90 days are pruned.
-- `public/sw.js`: `push` shows the notification, `notificationclick` opens its screen (same origin only: the desk task, Calendar or Settings), `pushsubscriptionchange` re-saves a renewed subscription through the owner-only `POST /api/push/subscription`.
-- `src/lib/push-sender.ts` is the only code that reaches a push service (web-push); the domain takes the sender as a parameter. 24 tests with a fake sender (no network), including one that checks web-push accepts the options and the VAPID JWT verifies against the public key.
-- Verified in Chromium at 390 px and 1440 px (no overflow, no page errors; the no-JS view lists devices with working Remove). A real subscription can't complete in this sandbox (it can't reach Google's push registration), so the flow was checked up to the browser's subscribe call; the subscribe now gives up after 30 s with a clear message instead of "Working…" forever.
+## Stage C: platform connections (built; waiting for the owner's developer apps)
+- Connect with OAuth (PKCE, sealed state), tokens sealed with `INTEGRATIONS_KEY`, refresh and expiry, Disconnect.
+- YouTube (resumable upload, captions, thumbnail, status, metrics), TikTok (inbox upload or direct post, status,
+  metrics) and Instagram (Reels container, publish, insights). Publish now on the desk; the minute scheduler for
+  channels set to "Approved". Only the platform's own answer marks a post verified.
+- API analytics: the worker pulls each verified post daily for 30 days, then weekly; one row per post, metric and UTC
+  day; Refresh now on Analytics and the episode page; source tags on every number.
+- Tested without the network: 62 connector tests with a mocked `fetch`, and 26 publishing and analytics tests with a
+  fake connector. Not tested against the live platforms: that needs the apps and accounts below. Each connector's `conditions` text says what couldn't be checked.
+- Not yet: YouTube watch time (needs the YouTube Analytics scope, so a reconnect) and Instagram reel watch time.
 
-## Stage D prep: ops hardening (done)
-- **Sign-in protection** (`src/domain/signin.ts`, used by `signIn` in `actions.ts`): per address (the last `X-Forwarded-For` entry) a 1/2/4/8 s backoff, then a 15 min lockout that doubles with each further lockout (up to 24 h); studio-wide at most 20 failures an hour; one check at a time per address; every limit is reserved synchronously before the check awaits, so parallel requests can't overshoot. The passphrase check is async scrypt with `timingSafeEqual` (`checkPasswordAsync`; malformed hashes never match). Audit rows `auth.sign_in`, `auth.sign_in_failed`, `auth.locked`, `auth.ceiling` carry the address, counts and times, never the passphrase. In-process (one web container). 16 tests (`tests/signin.test.ts`), one through the real `audit_log`.
-- **Backups:** `backup` service in `docker-compose.yml` (`postgres:16-alpine` running `deploy/backup.sh`): 03:15 server time (`BACKUP_TZ`/`BACKUP_AT`), gzipped plain SQL checked for completeness, 14 daily + 8 weekly (first of each ISO week, hard-linked) in `./backups`, a start-up backup when the newest is over a day old (after the tables exist), retries, a healthcheck (unhealthy after 26 h without one), `once` / `list` / `prune` / `next`, and `restore` (into a new database, swapped in by rename, the old one kept; refuses while the app is connected). Restore steps in `deploy/DEPLOY.md` §7.
-- **Image:** `output: "standalone"` (no sharp: `images.unoptimized`, traced out), runtime stage = standalone server + drizzle-orm/pg/web-push/tsx pruned from the same install + the TypeScript the worker and migrate/seed/import run; a build-time esbuild resolve fails the build if they import anything missing. 1.44 GB → 405 MB (381 → 93 MB compressed). `.env.production`, `backups/` and `films-mirror/` are now git- and docker-ignored.
-- **Verified** in this sandbox: image built from a clean `git archive` copy; db + app + worker + backup up with a test env; health 200; Playwright sign-in at 390 and 1440 px (wrong passphrase refused, backoff message, right one signs in, no page errors); import ran; backup once/list/prune/restore and the healthcheck; then `down -v` and the test image and build cache removed.
+## Stage D: going online (ready; needs a domain and a server)
+- One server with Docker Compose (`deploy/DEPLOY.md`): Postgres, the web app, the worker, Caddy for HTTPS, and a
+  nightly backup service (03:15, 14 daily and 8 weekly, a restore that keeps the replaced database).
+- Sign-in protection: per-address backoff and doubling lockouts, a studio-wide ceiling of 20 failures an hour,
+  audit entries without the passphrase.
+- Image 405 MB (was 1.44 GB): Next standalone output plus only what the worker and scripts load.
+- Verified in this sandbox: image built from a clean copy; db, app, worker and backup up; health 200; sign-in at 390
+  and 1440 px; import; backup, list, prune and restore. Not verified: Caddy's certificate and the platforms'
+  redirects (both need the real domain).
 
-## Next
-- Connect the first real account (needs the owner's Google Cloud / TikTok / Meta app credentials in `.env.local`); verify a real upload end to end on a private test video.
-- When a paid generator exists: its job calls `canUsePaidGeneration` first and records its estimate, then the actual cost, in `cost_ledger` (with `job_id`); concurrent paid jobs will need a reservation under a lock, like rewards.
-- **Stage D:** put it on a server with `deploy/DEPLOY.md` (Docker, Caddy, nightly backups: ready); later, if needed, managed Postgres and object storage for media. Then turn on notifications on the owner's phone from the Home Screen app and send a test; set `PUSH_SUBJECT` (mailto: or the https site) for Safari. Copy `backups/` off the server regularly (or turn on provider snapshots).
+## Stage E: notifications (done)
+- Settings → Notifications: turn on this device, the device list with Remove, a test notification, the last five.
+- The worker sends: upload due (30 min before a manual slot with an approved post), a scheduled publish that failed
+  or needs you, an Instagram slot passed with nothing planned. Each once; never for demo or simulated posts.
+- 24 tests with a fake push sender. A real subscription couldn't complete in the sandbox (no route to the browser's
+  push service); it needs the owner's phone on the hosted site.
+
+## What needs the owner
+1. **A domain and a server.** A subdomain with an A record to a small VPS (2 vCPU, 2 GB RAM, 40 GB), ports 80 and 443
+   open. Then `deploy/DEPLOY.md` sections 2–4: secrets, the passphrase hash, media sync and import.
+2. **Developer apps**, with redirect URIs on that domain (`DEPLOY.md` section 5, conditions in `INTEGRATIONS.md`):
+   - Google Cloud: an OAuth client with the YouTube Data API v3; publish the consent screen to production, or
+     tokens expire after 7 days.
+   - TikTok for Developers: Login Kit and the Content Posting API. Until TikTok audits the app, uploads go to the
+     inbox or post privately.
+   - Meta: an app with Instagram Business Login; the shared Instagram must be a professional account with a role on
+     the app.
+3. **The 11 accounts:** five YouTube channels, five TikTok accounts and the shared Instagram. Enter each handle and
+   link on Accounts, then Connect. Prism never stores passwords or 2-step codes.
+4. **A first private test upload:** approve one episode for one connected account, publish it as private (TikTok:
+   inbox), and check it turns verified and its numbers arrive. Then the next platform.
+5. **Notifications on the phone:** open the hosted studio from the Home Screen app, turn on notifications, send a
+   test. Set `PUSH_SUBJECT` (a mailto: or the https site) for Safari.
+6. **Backups off the server:** copy `backups/` now and then, or turn on the provider's disk snapshots.
 
 ## Open owner decisions
 - Final names for Skincare and What If? (both are working names); the Skincare narrator voice.
-- Real handles, emails and links for the 11 accounts (Accounts screen).
 - Whether Skin School content joins the shared Instagram (only with Evelyn/Lumevina's agreement).
+- Per channel: publish by hand, or let the worker publish approved posts ("Approved" automation).
+- Whether to apply for TikTok's audit (direct public posts) or keep inbox uploads.
 - Reward budget: monthly cap and funding (nothing is reserved until set).
-- Production budgets: a monthly amount per channel (Costs). Paid generation stays off until one is set and Settings → Paid generation is on.
+- Production budgets: a monthly amount per channel. Paid generation stays off until one is set and Settings → Paid
+  generation is on.
+- Posting windows: the defaults (YouTube 09:00, TikTok 12:00, Instagram 11:30 and 18:30) are provisional.
+
+## Next in code
+- When a paid generator exists: its job calls `canUsePaidGeneration` first and records its estimate, then the actual
+  cost, in `cost_ledger` with `job_id`. Concurrent paid jobs will need a reservation under a lock, like rewards.
+- After the first live uploads: correct each connector against what the platform really returns, and add YouTube
+  watch time.
+- If the media outgrows one disk: an object-storage adapter for media (not built; `.env.example` has the `S3_*`
+  names) and, if wanted, a managed database. See DECISIONS (single server).
