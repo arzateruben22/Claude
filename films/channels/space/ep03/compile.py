@@ -181,7 +181,7 @@ COUNTERS = [
     {"id": "c-solar", "label": "sunrise to sunrise · days", "text": "117", "t0": A("vo05:hundred"), "t1": A("vo05:rising")},
     {"id": "c-west", "label": "where the Sun rises on Venus", "text": "west", "t0": A("vo05:rising"), "t1": t_tk},
     {"id": "c-vs2", "label": "one turn · one year (days)", "text": "243 > 225", "t0": t_tk, "t1": A("vo06:But")},   # the payoff holds, lit
-    {"id": "c-live", "label": "the day you'd live by · days", "text": "117", "t0": A("vo06:But"), "t1": t_rd},
+    {"id": "c-live", "label": "the day you'd live by · one year (days)", "text": "117 < 225", "t0": A("vo06:But"), "t1": t_rd},   # closes the hook's "no"
     {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": A("vo07:The")},
     {"id": "c-read-echo", "label": "radar round trip, at its closest", "text": "4 min", "read": True, "t0": A("vo07:The"), "t1": round(t_end - 0.3, 4)},
 ]
@@ -200,7 +200,7 @@ CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": A("vo04:radar"), "pierce
        "dial0": A("vo05:Sun"), "dial1": t_tk}
 POSTER = A("vo05:west", 0.5)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["three hundred sixty-five"], "vo03": ["one face", "faced the Sun."],
+glue(f, {"vo02": ["three hundred sixty-five"], "vo03": ["one side", "faced the Sun."],
          "vo04": ["nineteen sixty-two,", "in California", "two hundred forty-three"],
          "vo05": ["Stand there,", "the spin", "and the orbit team up.", "hundred and seventeen", "rising in the west."],
          "vo06": ["live by", "the Sun coming back."]})

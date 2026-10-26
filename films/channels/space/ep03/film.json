@@ -158,7 +158,7 @@
     "rate": 0.0
    },
    {
-    "t": 19.3,
+    "t": 19.333333333333332,
     "rate": 50000.0
    },
    {
@@ -436,7 +436,7 @@
   ]
  ],
  "cue": {
-  "g1": 19.3,
+  "g1": 19.333333333333332,
   "g2": 23.466666666666665,
   "true": 33.7,
   "radar": 28.533333333333335,
@@ -610,7 +610,7 @@
   {
    "id": "b-guess",
    "clock": "guess",
-   "t0": 19.3,
+   "t0": 19.333333333333332,
    "t1": 23.466666666666665,
    "slot": "tl"
   },
@@ -735,8 +735,8 @@
   },
   {
    "id": "c-live",
-   "label": "the day you'd live by · days",
-   "text": "117",
+   "label": "the day you'd live by · one year (days)",
+   "text": "117 < 225",
    "t0": 57.43333333333333,
    "t1": 60.7333,
    "at": [
@@ -998,22 +998,22 @@
      ],
      [
       "three",
-      14.87
+      14.875
      ],
      [
       "hundred",
-      14.9
+      14.905
      ],
      [
       "years,",
-      15.4
+      15.395
      ]
     ]
    ]
   },
   {
    "t0": 16.065,
-   "t1": 19.045,
+   "t1": 19.06,
    "lines": [
     [
      [
@@ -1032,45 +1032,45 @@
     [
      [
       "smudges",
-      17.395
+      17.405
      ],
      [
       "in",
-      17.94
+      17.945
      ],
      [
       "those",
-      18.265
+      18.215
      ],
      [
       "clouds.",
-      18.295
+      18.31
      ]
     ]
    ]
   },
   {
-   "t0": 19.27,
+   "t0": 19.295,
    "t1": 21.275,
    "lines": [
     [
      [
       "The",
-      19.27
+      19.295
      ],
      [
       "Cassinis,",
-      19.3
+      19.325
      ]
     ],
     [
      [
       "father",
-      20.14
+      20.145
      ],
      [
       "and",
-      20.365
+      20.37
      ],
      [
       "son,",
@@ -1081,7 +1081,7 @@
   },
   {
    "t0": 21.275,
-   "t1": 23.26,
+   "t1": 23.255,
    "lines": [
     [
      [
@@ -1100,14 +1100,14 @@
      ],
      [
       "hours.",
-      22.51
+      22.505
      ]
     ]
    ]
   },
   {
    "t0": 23.475,
-   "t1": 25.515,
+   "t1": 25.39,
    "lines": [
     [
      [
@@ -1121,24 +1121,24 @@
     ],
     [
      [
-      "one face",
-      24.38
+      "one side",
+      24.42
      ],
      [
       "always",
-      25.085
+      25.185
      ]
     ]
    ]
   },
   {
-   "t0": 25.515,
-   "t1": 26.265,
+   "t0": 25.39,
+   "t1": 26.14,
    "lines": [
     [
      [
       "faced the Sun.",
-      25.515
+      25.39
      ]
     ]
    ]
@@ -1666,9 +1666,9 @@
   {
    "id": "vo03",
    "t": 14.7,
-   "dur": 11.633,
+   "dur": 11.733,
    "file": "vo/03.wav",
-   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one face always faced the Sun."
+   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one side always faced the Sun."
   },
   {
    "id": "vo04",

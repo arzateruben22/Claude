@@ -46,11 +46,11 @@
  {
   "id": "c5",
   "sentence": "Ptolemy argued that if Earth moved, birds and clouds would be left behind.",
-  "claim": "Ptolemy (Almagest I.7) argued that if Earth moved, objects not attached to it, such as clouds and birds, would be left behind.",
-  "source_url": "https://en.wikipedia.org/wiki/Dialogue_Concerning_the_Two_Chief_World_Systems",
-  "source_title": "Dialogue Concerning the Two Chief World Systems (Wikipedia)",
-  "accessed": "2026-10-25",
-  "note": "The Dialogue's Second Day answers the classic objections to Earth's motion (falling bodies, birds, clouds). Ptolemy, Almagest I.7, gives the clouds-and-birds argument; an astronomer may prefer to cite it directly.",
+  "claim": "Ptolemy (Almagest I.7) argued against Earth's motion: if Earth moved through space, things not attached to it would be left behind; and if it spun, clouds, birds in flight and thrown objects would not keep up with it (he aims the clouds-and-birds point at the spin).",
+  "source_url": "https://origin-www.alibris.com/Historical-Survey-of-the-Astronomy-of-the-Ancients-Sir-George-Cornewall-Lewis/book/2930164",
+  "source_title": "G. C. Lewis, An Historical Survey of the Astronomy of the Ancients (London, 1862), quoting Ptolemy, Almagest I.7 (tr. G. J. Toomer, Princeton UP, 1998)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): re-sourced; the Wikipedia Dialogue article did not show this in any excerpt and now stays with c6 only. Search excerpt (Lewis 1862, via the Alibris listing): 'Ptolemy admits that, with respect to the stars alone, this is the most simple hypothesis; but ... the clouds, and birds in their flight, and projectiles, would not accompany the earth in its rotation.' Toomer's translation of I.7 (quoted in a Filozofski vestnik article, per the audit): 'neither clouds nor other flying or thrown objects would ever be seen moving towards the east.' A public-domain scan of Lewis 1862 is listed by the Wellcome Collection (https://iiif.wellcomecollection.org/pdf/b21015855, as returned by search; a person confirms it is this book and finds the page). Toomer is the primary source but not open access. Steven Weinberg (To Explain the World) discusses the same argument.",
   "verified_via": "search excerpt",
   "status": "ok"
  },

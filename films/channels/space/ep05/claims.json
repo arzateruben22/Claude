@@ -67,12 +67,12 @@
  },
  {
   "id": "c6",
-  "sentence": "He was right.",
+  "sentence": "Bigger, yes.",
   "claim": "Anaxagoras's claim ('larger than the Peloponnese') is true: the Sun (1,392,700 km across) is far larger.",
   "source_url": "https://en.wikipedia.org/wiki/Peloponnese",
   "source_title": "Peloponnese (Wikipedia)",
   "accessed": "2026-10-25",
-  "note": "'Larger than' is a lower bound, so it was right (the reviewer's framing).",
+  "note": "'Larger than' is a lower bound, so it was right (the reviewer's framing). 26 Oct (script audit): 'He was right' sounded like it backed the stone idea (the Sun is hot plasma, not a stone); 'Bigger, yes' endorses only the size, which is what this claim supports.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -83,7 +83,7 @@
   "source_url": "https://science.nasa.gov/sun/facts/",
   "source_title": "Sun: Facts (NASA Science)",
   "accessed": "2026-10-25",
-  "note": "Bible source. Stanford Solar Center: volume 1.3 million times Earth's. 'Melt them down': by volume; whole spheres would pack fewer (about 960,000 at random close packing). The screen says 'by volume'.",
+  "note": "Bible source. Stanford Solar Center: volume 1.3 million times Earth's. 'Melt them down': by volume; whole spheres would pack fewer (about 830,000 at random close packing, 960,000 at the densest packing). The screen says 'by volume'.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -94,18 +94,18 @@
   "source_url": "https://en.wikipedia.org/wiki/Red_supergiant",
   "source_title": "Red supergiant (Wikipedia)",
   "accessed": "2026-10-25",
-  "note": "Excerpt: Stephenson 2-18 has an estimated radius 2,150 times the Sun's (uncertain); UY Scuti revised to about 755. 'More than a thousand times wider' holds for the largest few. The 99.8% of the solar system's mass moved to the end card's footnote (NASA, bible source).",
+  "note": "Excerpt: Stephenson 2-18 has an estimated radius 2,150 times the Sun's (uncertain); UY Scuti revised to about 755. 'More than a thousand times wider' holds for the largest few. The 99.8% (now c18) of the solar system's mass moved to the end card's footnote (NASA, bible source).",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c9",
-  "sentence": "Yet among the stars, it's ordinary.",
-  "claim": "The Sun is an ordinary star: most stars are smaller (red dwarfs make up about three quarters), and some are far larger.",
+  "sentence": "Yet among the stars, it's no giant.",
+  "claim": "The Sun is a main-sequence (dwarf) star, not a giant: the largest known stars are over 1,000 times wider. (It is not a typical size either: it is more massive than roughly 90–95% of the Milky Way's stars, most of which are red dwarfs.)",
   "source_url": "https://spaceplace.nasa.gov/sun-compare/en/",
   "source_title": "How Big Is the Sun? (NASA Space Place)",
   "accessed": "2026-10-25",
-  "note": "NASA Space Place calls it 'average-sized'; the reviewer notes that by count it outweighs about 90% of the Milky Way's stars, so the line says 'ordinary', not 'average'.",
+  "note": "NASA Space Place calls it 'average-sized'; the reviewer notes that by count it outweighs about 90% of the Milky Way's stars, so the line says 'ordinary', not 'average'. 26 Oct (script audit): 'it's ordinary', set against size, implied the Sun is a typical size, a popular myth. Search excerpts this session: AMNH ('more massive than nearly 90% of stars', https://www.amnh.org/explore/ology/astronomy/what-do-you-know-about-stars2), Big Think ('more mass than 95% of all stars'), Discover ('three-fourths are red dwarfs').",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -155,12 +155,12 @@
  },
  {
   "id": "c15",
-  "sentence": "By a factor of about eight thousand.",
-  "claim": "The Sun is about 8,000 times wider than the Peloponnese (21,550 km², about 166 km across as a circle of equal area).",
+  "sentence": "By a factor of about seven thousand.",
+  "claim": "The Sun (1,392,700 km across) is about 7,000 times wider than the Peloponnese: about 5,600× its longest diagonal (about 250 km), about 6,300–6,500× its width (about 215–220 km north–south and east–west), and about 8,400× a circle of its area (21,550 km², 166 km across).",
   "source_url": "https://en.wikipedia.org/wiki/Peloponnese",
   "source_title": "Peloponnese (Wikipedia)",
   "accessed": "2026-10-25",
-  "note": "Computed: 2 × √(21,550/π) = 166 km; 1,392,700 / 166 = 8,390 ('about eight thousand'). The peninsula is irregular (about 200–240 km at its widest: 5,800–7,000×), so 'about'. Sun diameter: Stanford Solar Center (c12).",
+  "note": "26 Oct (script audit): 8,000 was the equal-area figure, the top of the range; a viewer hears 'wider' as edge to edge. Area 21,549.6 km² (Wikipedia, search excerpt this session). The widths are computed from approximate coordinates (Cape Tainaron 36.39°N to Rio 38.31°N ≈ 214 km; Kyllini 21.12°E to Cape Skyllaion 23.55°E at 37.6°N ≈ 214 km), not from a source: a person checks. The picture's ring grows from 200 km (≈ 7,000×) to the Sun's width.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -183,6 +183,28 @@
   "source_title": "Astronomy Picture of the Day, 1 August 2008 (NASA)",
   "accessed": "2026-10-25",
   "note": "The hook's 'twins': the Sun and the full Moon look the same size (c1).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c18",
+  "sentence": "(end-card footnote, not spoken) The Sun holds about 99.8% of all the mass in the solar system.",
+  "claim": "The Sun accounts for about 99.8 percent of the mass in the solar system.",
+  "source_url": "https://www.nasa.gov/solar-system/its-surprisingly-hard-to-go-to-the-sun/",
+  "source_title": "It's Surprisingly Hard to Go to the Sun (NASA)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): the footnote had no claim of its own. Not spoken, so lint warns it is uncited and the post's generated source list leaves it out: add this source to the post by hand.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c19",
+  "sentence": "Which holds a million Earths?",
+  "claim": "By volume the Sun holds about 1.3 million Earths, more than a million (c7 says it in full).",
+  "source_url": "https://science.nasa.gov/sun/facts/",
+  "source_title": "Sun: Facts (NASA Science)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): the question takes the million for granted, so it carries a claim; it was tagged {-}.",
   "verified_via": "search excerpt",
   "status": "ok"
  }

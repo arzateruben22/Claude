@@ -19,21 +19,21 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `python3 -I kits/cinema/script/lint.py films/channels/space/ep03 --segment readout`.
 
 ## hook {shot: frame 0, the payoff: Venus close, its pin ("you") on the night side, the Sun low on its limb; spine "one turn: ? days" · badge: not to scale · title: "Venus day" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–4.6 s)
-vo: Can one day outlast a *year*? {-} On *Venus*: yes. {-} And no. {-}
+vo: Can one day outlast a *year*? {-} On *Venus*: yes. {c19} And no. {c20}
 
 ## normal {shot: pull back to the diagram: the Sun, Earth's and Venus's orbits; spine "Earth: 365 sunrises a lap" · labels: Earth, Venus · picture-only 0.2 s · energy: 0.45} (4.6–14.5 s)
 vo: On Earth, you see the Sun rise about three hundred sixty-five times a lap. {c1} Next door, Venus hides its face under a permanent lid of *cloud*. {c3}
 
 ## change {shot: push in on Venus, blurred clouds; two guesses play on its pin and are struck out · spine "guess: 23 hours", then "guess: 225 days" · picture-only 0.2 s · energy: 0.55} (14.5–25 s)
-vo: For three hundred years, astronomers chased faint smudges in those clouds. {c4} The Cassinis, father and son, clocked about twenty-three hours. {c5} Schiaparelli said one face always faced the *Sun*. {c6}
+vo: For three hundred years, astronomers chased faint smudges in those clouds. {c4} The Cassinis, father and son, clocked about twenty-three hours. {c5} Schiaparelli said one side always faced the *Sun*. {c6}
 
-## why {shot: a radar ping from Earth to Venus and back; the clouds clear to the pin; the true spin, backwards · spine "one turn: 243 days", then "one year: 225 days" · picture-only 2 s · energy: 0.62} (25–40 s)
+## why {shot: a radar ping from Earth to Venus and back, through the clouds to the pin (the deck stays, badged 'illustration'); the true spin, backwards · spine "one turn: 243 days", then "one year: 225 days" · picture-only 2 s · energy: 0.62} (25–40 s)
 vo: In nineteen sixty-two, radar from a dish in California pierced the clouds. {c7} Both guesses were wrong. {c18} Venus turns once every two hundred forty-three days, longer than its year. {c8} And it turns *backwards*. {c10}
 
-## whoa {shot: the diagram, two Venus years under a speed note; each sunrise drops a teal tick on the orbit; the pin's sky: the Sun up in the west · spine "sunrise to sunrise: 117 days" · picture-only 3 s · energy: 0.8} (40–52 s)
+## whoa {shot: the diagram, two Venus years under a speed note; each sunrise drops a teal tick on the orbit; a small dial of the pin's sky shows where the Sun is (behind the clouds: a diagram, not a view) · spine "sunrise to sunrise: 117 days", then "where the Sun rises on Venus: west" · picture-only 3 s · energy: 0.8} (40–52 s)
 vo: Stand there, and the spin and the orbit team up. {c11} The Sun comes back every hundred and seventeen days, rising in the *west*. {c12,c13}
 
-## takeaway {shot: hold on the diagram, the ticks · picture-only 0.2 s · energy: 0.3} (52–59 s)
+## takeaway {shot: hold on the diagram, the ticks · spine "243 > 225" (yes), then "117 < 225" (no) · picture-only 0.2 s · energy: 0.3} (52–59 s)
 vo: So yes: one turn outlasts a year. {c9} But the day you'd live by is the Sun coming *back*. {c14}
 
 ## readout {segment: readout · the closing light-time readout: ring "6 min" Sun to Venus, then the radar's round trip "4 min" Earth–Venus–Earth at its closest · a ping per ring · picture-only 0.2 s · energy: 0.45} (59–65.5 s)

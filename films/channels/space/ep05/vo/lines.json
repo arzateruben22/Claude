@@ -53,30 +53,30 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about eight thousand.",
+   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. Bigger, yes. By a factor of about seven thousand.",
    "stars": [
     "Greece",
     "thousand"
    ],
-   "phonemes": "nˌɪɹli twˈɛntifˈaɪv sˈɛntʃɚɹiz ɐɡˈoʊ, ɪn ˈæθᵻnz, ˌænəksˈæɡəɹəs sˈɛd ðə sˈʌn wʌzɐ fˈaɪɚɹi stˈoʊn, bˈɪɡɚ ðɐn sˈʌðɚn ɡɹˈiːs. kˈɔːlɪŋ ɪɾ ɐ stˈoʊn, nˌɑːɾə ɡˈɑːd, ɡɑːt hˌɪm tʃˈɑːɹdʒd wɪð ɪmpˈaɪəɾi. hiː wʌz ɹˈaɪt. baɪ ɐ fˈæktɚɹ ʌv ɐbˌaʊt ˈeɪt θˈaʊzənd.",
+   "phonemes": "nˌɪɹli twˈɛntifˈaɪv sˈɛntʃɚɹiz ɐɡˈoʊ, ɪn ˈæθᵻnz, ˌænəksˈæɡəɹəs sˈɛd ðə sˈʌn wʌzɐ fˈaɪɚɹi stˈoʊn, bˈɪɡɚ ðɐn sˈʌðɚn ɡɹˈiːs. kˈɔːlɪŋ ɪɾ ɐ stˈoʊn, nˌɑːɾə ɡˈɑːd, ɡɑːt hˌɪm tʃˈɑːɹdʒd wɪð ɪmpˈaɪəɾi. bˈɪɡɚ, jˈɛs. baɪ ɐ fˈæktɚɹ ʌv ɐbˌaʊt sˈɛvən θˈaʊzənd.",
    "speed": 1.05,
    "file": "04.wav",
-   "dur": 15.172,
-   "sha256": "7ee0d3aa2af9dfc4152ad75c00c7e2c4549b5f7a1754a894f44e17eab9c511bf"
+   "dur": 15.546,
+   "sha256": "fcd627792fa96998b2fec3f86c0a95cb759fd8d5682d6fa0ce5c43cbe5bc5820"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
+   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's no giant. Some are more than a thousand times wider.",
    "stars": [
     "fill",
     "wider"
    ],
-   "phonemes": "mˈɛlt dˌaʊn wˈʌn pˈɔɪnt θɹˈiː mˈɪliən ˈɜːθs, ænd ðeɪd fˈɪl ɪt. jˈɛt ɐmˌʌŋ ðə stˈɑːɹz, ɪts ˈɔːɹdɪnˌɛɹi. sˌʌm ɑːɹ mˈɔːɹ ðˌænə θˈaʊzənd tˈaɪmz wˈaɪdɚ.",
+   "phonemes": "mˈɛlt dˌaʊn wˈʌn pˈɔɪnt θɹˈiː mˈɪliən ˈɜːθs, ænd ðeɪd fˈɪl ɪt. jˈɛt ɐmˌʌŋ ðə stˈɑːɹz, ɪts nˈoʊ dʒˈaɪənt. sˌʌm ɑːɹ mˈɔːɹ ðˌænə θˈaʊzənd tˈaɪmz wˈaɪdɚ.",
    "speed": 0.95,
    "file": "05.wav",
-   "dur": 9.439,
-   "sha256": "69fcf881b4420ac4d2f9c86a4cb6c63667938be945f84420cd6ffbae4e3f89bf"
+   "dur": 9.461,
+   "sha256": "1d6923d317ab318e850ddc2c591b207b8f701893c7e5ba5e78f4703b10da37f0"
   },
   {
    "id": "vo06",

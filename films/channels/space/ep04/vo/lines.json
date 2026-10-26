@@ -39,29 +39,30 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now switch gravity off. The Moon would fly off in a straight line. Gravity bends it back toward us. Every moment, all the way round.",
+   "text": "Now switch gravity off. The Moon would fly off in a straight line. Gravity bends it back toward us. So it falls, and always misses.",
    "stars": [
-    "straight line"
+    "straight line",
+    "misses"
    ],
-   "phonemes": "nˈaʊ swˈɪtʃ ɡɹˈævᵻɾi ˈɔf. ðə mˈuːn wʊd flˈaɪ ˈɔf ɪn ɐ stɹˈeɪt lˈaɪn. ɡɹˈævᵻɾi bˈɛndz ɪt bˈæk təwˈɔːɹd ˌʌs. ˈɛvɹi mˈoʊmənt, ˈɔːl ðə wˈeɪ ɹˈaʊnd.",
+   "phonemes": "nˈaʊ swˈɪtʃ ɡɹˈævᵻɾi ˈɔf. ðə mˈuːn wʊd flˈaɪ ˈɔf ɪn ɐ stɹˈeɪt lˈaɪn. ɡɹˈævᵻɾi bˈɛndz ɪt bˈæk təwˈɔːɹd ˌʌs. sˌoʊ ɪt fˈɔːlz, ænd ˈɔːlweɪz mˈɪsɪz.",
    "speed": 1.0,
    "file": "03.wav",
-   "dur": 8.907,
-   "sha256": "e7fc4a2e83ee524bae5cd24b37d4bedb8b6294d480bd4155b0d5d8f7ed1705f3"
+   "dur": 8.941,
+   "sha256": "c023edfe66b32832ae62b724ccadb7c6b64c0fb7581e0685c29617324c9df846"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "The heavens, people believed, had their own rules. Isaac Newton, the story goes, wondered if the pull that drops an apple reaches the Moon. The Moon is sixty times farther from Earth's center than the apple. So the pull there is thirty-six hundred times weaker.",
+   "text": "The heavens, people believed, had their own rules. Newton, the story goes, wondered if the pull that drops an apple reaches the Moon. The Moon is sixty times farther from Earth's center than the apple. Gravity fades with distance squared: thirty-six hundred times weaker.",
    "stars": [
     "apple",
     "weaker"
    ],
-   "phonemes": "ðə hˈɛvənz, pˈiːpəl bᵻlˈiːvd, hæd ðɛɹ ˈoʊn ɹˈuːlz. ˈaɪsək nˈuːtən, ðə stˈɔːɹi ɡˈoʊz, wˈʌndɚd ɪf ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɹˈiːtʃᵻz ðə mˈuːn. ðə mˈuːn ɪz sˈɪksti tˈaɪmz fˈɑːɹðɚ fɹʌm ˈɜːθz sˈɛntɚ ðɐn ðɪ ˈæpəl. sˌoʊ ðə pˈʊl ðɛɹ ɪz θˈɜːɾisˈɪks hˈʌndɹɪd tˈaɪmz wˈiːkɚ.",
+   "phonemes": "ðə hˈɛvənz, pˈiːpəl bᵻlˈiːvd, hæd ðɛɹ ˈoʊn ɹˈuːlz. nˈuːtən, ðə stˈɔːɹi ɡˈoʊz, wˈʌndɚd ɪf ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɹˈiːtʃᵻz ðə mˈuːn. ðə mˈuːn ɪz sˈɪksti tˈaɪmz fˈɑːɹðɚ fɹʌm ˈɜːθz sˈɛntɚ ðɐn ðɪ ˈæpəl. ɡɹˈævᵻɾi fˈeɪdz wɪð dˈɪstəns skwˈɛɹd: θˈɜːɾisˈɪks hˈʌndɹɪd tˈaɪmz wˈiːkɚ.",
    "speed": 1.1,
    "file": "04.wav",
-   "dur": 16.237,
-   "sha256": "ddf09582052cc7fa8a0fb981c594e558dc1c7a10257e9e4daf98be21ed46a2d8"
+   "dur": 17.179,
+   "sha256": "5212b971c911795efe0242493f41fb64da69b87a82d494f53bd8e4ebaad32959"
   },
   {
    "id": "vo05",
@@ -80,15 +81,15 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So the pull that drops an apple is the very same pull that holds the Moon.",
+   "text": "So the pull that drops an apple is the same pull that keeps the Moon falling.",
    "stars": [
-    "Moon"
+    "falling"
    ],
-   "phonemes": "sˌoʊ ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɪz ðə vˈɛɹi sˈeɪm pˈʊl ðæt hˈoʊldz ðə mˈuːn.",
+   "phonemes": "sˌoʊ ðə pˈʊl ðæt dɹˈɑːps ɐn ˈæpəl ɪz ðə sˈeɪm pˈʊl ðæt kˈiːps ðə mˈuːn fˈɔːlɪŋ.",
    "speed": 0.8,
    "file": "06.wav",
-   "dur": 5.749,
-   "sha256": "b8862b243090b4cf74a0bc5e6e92646c55f1917e424d9096370a8cf7cbbea9cc"
+   "dur": 5.795,
+   "sha256": "eb55d20c19e2e56393c3dc12fe35853ece085b4e4c8093e561b277bd03eeb494"
   },
   {
    "id": "vo07",

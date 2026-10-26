@@ -7,7 +7,7 @@ arrive?") and sets up episode 3 (Venus day).
 
 The story: the farthest thing we have ever sent crosses one light-day this month. That sounds far.
 It is one day of light on a road about fifteen hundred light-days long, and the trip at its speed
-would take longer than our species has lived in Europe. The person is the Voyager team (every command
+would take longer than our species has been in Europe. The person is the Voyager team (every command
 now waits a day, and the answer another day); the wrong idea is that a craft in "interstellar
 space" is nearly there: it has not even reached the Sun's comet cloud.
 
@@ -25,26 +25,26 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: How long to the nearest *star*? Say we leave *today*. {-}
 
 ## normal {shot: cut to the solar view, the planets' orbits; Voyager 1 flies out of the plane, 1977 → 2026 under a speed note, a year counter · labels: Earth, Voyager 1, "about 17 km/s" · pill: "Earth → Moon in about 6 h" · picture-only 0.2 s · energy: 0.45} (4–15 s)
-vo: Our ride is *Voyager 1*, the farthest thing we've sent. {c1} It left in nineteen seventy-seven. {c2} It coasts at about seventeen kilometers a second: Earth to the Moon in *six hours*. {c3,c4}
+vo: Our ride is *Voyager 1*, the farthest thing we've sent. {c1} It left in nineteen seventy-seven. {c2} It coasts at about seventeen kilometers a second. {c3} Earth to the Moon in *six hours*. {c4}
 
 ## change {events: light.front from Earth, a counter 0 → 24 h; the reply comes back, 48 h · ring "1 light-day" · picture-only 0.2 s · energy: 0.55} (15–26 s)
 vo: On November eighteenth, it crosses a line. {c5} Its signal now needs a full *day* to reach us. {c6} The team sends a command today. {-} The answer comes the day after *tomorrow*. {c7}
 
 ## why {shot: the heliopause as a faint bubble, labelled "2012"; then a gentle pull-back (×12) until the inner edge of the comet cloud (theory, badged) shows far beyond Voyager; a ghost path to it, "300 years" · picture-only 2 s · energy: 0.62} (26–42 s)
-vo: In twenty twelve, it crossed into interstellar space. {c8} Nearly there, then? {-} It hasn't even reached the Sun's cloud of *comets*. {c9} That's three hundred years away. {c10} Getting through it: thirty thousand more. {c19}
+vo: In twenty twelve, it crossed into interstellar space. {c8} Nearly there, then? {-} It hasn't even reached the Sun's cloud of *comets*. {c9} That's about three hundred years away. {c10} Through it: maybe thirty thousand more. {c19}
 
 ## whoa {shot: the episode's one scale jump: the solar view shrinks until the light-day ring is a speck beside the Sun, and Proxima Centauri arrives · events: scale.jump, arrive · counter "at Voyager's speed: about 75,000 years" · tag "at today's distance" · picture-only 3 s · energy: 0.8} (42–56 s)
-vo: The nearest star, Proxima Centauri, is about fifteen hundred light-days out. {c11} At Voyager's speed: about *seventy-five thousand years*. {c12} Count back that far, and our species hadn't reached *Europe*. {c13}
+vo: The nearest star, Proxima Centauri, is about fifteen hundred light-days out. {c11} At Voyager's speed: about *seventy-five thousand years*. {c12} Count back that far, and our species wasn't in *Europe*. {c13}
 
 ## takeaway {shot: hold on the local view; the speck labelled "day 1", the lane to Proxima "of about 1,550" · picture-only 0.2 s · energy: 0.3} (56–62 s)
-vo: So we haven't left for the stars. {-} Voyager has crossed day one of *fifteen hundred*. {c14}
+vo: So we've barely left for the stars. {-} Voyager has crossed day one of *fifteen hundred*. {c14}
 
 ## readout {segment: readout · the closing light-time readout: ring "1 day" (the speck), then a wide ring "4 years, 3 months" through Proxima · a ping per ring · picture-only 0.2 s · energy: 0.45} (62–68.5 s)
 vo: *Light time*, Earth to Voyager: one day. {c15} To Proxima Centauri: four years and three months. {c16}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (68.5–74 s)
 vo: Next: a world that turns slower than it orbits. {c17} And *backwards*. {c18}
-end card: "Next light: the planet that turns *backwards*" · "Light Minute · No. 003"
+end card: "Next light: a planet that turns *backwards*" · "Light Minute · No. 003"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

@@ -6,11 +6,11 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | No. | Title | Bible | State |
 |---|---|---|---|
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
-| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | **re-delivered 26 Oct** after the recheck: 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.2 LU over music, sync PASS, 0 flashes, qa.py PASS, 1.7 Mbps; render 30 min |
-| 003 | Venus day | §7 #2 | **re-delivered 26 Oct** after the recheck: 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.3 LU over music, sync PASS, 0 flashes, qa.py PASS, 2.0 Mbps; render 34 min |
-| 004 | Falling Moon | §7 #3 | delivered 26 Oct; **rechecked**: a real bug fixed (the gravity-off beat never played: its cue matched the first "gravity"), side-view and takeaway labels, captions; re-render queued |
-| 005 | Sun size | §7 #4 | reviewed, voiced (74.13 s, 17 claims), built; picture fixed 26 Oct (side view, the row, the sunspot close-up, the melt); final queued |
-| 006 | Your speed | §7 #5 | reviewed, voiced (74.67 s, 15 claims), built; picture being reworked (the orbit and the galaxy were framed off screen); final queued |
+| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | re-delivered 26 Oct after the recheck (74.67 s, −14.1 LUFS, QA PASS); **script audit applied** (4 lines re-voiced, end card); fresh final queued |
+| 003 | Venus day | §7 #2 | re-delivered 26 Oct after the recheck (74.67 s, −14.1 LUFS, QA PASS); **script audit applied** (vo03 re-voiced, dial label, day counter, sources); fresh final queued |
+| 004 | Falling Moon | §7 #3 | rechecked (gravity-off bug fixed, labels, captions); **script audit applied** (3 lines re-voiced, Conduitt source); fresh final queued |
+| 005 | Sun size | §7 #4 | rechecked (side view, row, sunspot, melt, ×7,000 ring); **script audit applied** ("Bigger, yes", "seven thousand", "no giant"; 19 claims); fresh final queued |
+| 006 | Your speed | §7 #5 | rechecked (Earth return, pin on the equator, framing); **script audit applied** (spine heading, Ptolemy re-sourced; no re-voice); fresh final queued |
 
 ## Recheck and re-render (26 Oct): how it runs
 The owner asked for every episode to be rechecked and re-rendered for subtitle and label placement, motion and
@@ -21,12 +21,18 @@ stills at the key moments looked at 390 px wide, fixes, then `compile.py` → `r
 one line (`set/capglue.py`). One Chromium job at a time; to resume after a restart, re-run the episode's final with
 `render.mjs --film <dir> --tier final --resume` (it keeps every verified frame), then assemble and QA.
 
+## Script audit (26 Oct): what was applied
+The coordinating session's audit (`films/audits/2026-10-26/space-ep0N.md` on `claude/made-with-claude-film`) was checked
+finding by finding. Fixes that change narration, on-screen text or picture went in before each episode's final (the
+episode re-voiced where needed, recompiled and rendered fresh); citation-only fixes went into `claims.json`, and every
+`CLAIMS-REVIEW.md` was regenerated. Every claim still rests on search excerpts: a person opens each link before posting.
+
 ## Picture rules (WRITING.md "The picture", merged 25 Oct from a0adc1a) and how each episode applies them
 - **002:** one world (the hook's local view, then one continuous shot: flight → signal → heliopause → ×12 pull to the
   comet cloud → the jump to Proxima → readout; the end card sits on the hook's composition, so a replay loops);
   spine readout at the left (4.24 → year 1977–2026 → signal hours 24/48 → 2012 → 300 → 30,000 → 1,550 → 75,000 → 1,550),
-  then the readout segment; human scale: "Earth to the Moon in 6 hours", the team's two-day wait, "our species hadn't
-  reached Europe"; end-card footnote: "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)";
+  then the readout segment; human scale: "Earth to the Moon in 6 hours", the team's two-day wait, "our species wasn't
+  in Europe"; end-card footnote: "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)";
   energies build to the whoa (0.8) and drop for the takeaway (0.3).
 
 - **003:** one shot that alternates a close view following Venus (hook, the guesses, the radar, the true turn) with the
@@ -44,7 +50,7 @@ one line (`set/capglue.py`). One Chromium job at a time; to resume after a resta
   on "But" to the same line seen square-on from far out (Earth and the Moon at one end, the Sun 400 times farther at the
   other), then the Sun at true scale (the row of 109 Earths, a sunspot with an Earth in it, the Peloponnese as a dot, the
   melt into 6,500 beads, the one scale jump to the giants' outline); the end card cuts back to the sky (a loop). Spine:
-  ? → 400× · 400× → 1 → 109 → southern Greece → 8,000 → 1,300,000 → 1,000×+ → G2V · dwarf. Human scale: your whole world
+  ? → 400× · 400× → 1 → 109 → southern Greece → 7,000 → 1,300,000 → 1,000×+ → G2V · dwarf. Human scale: your whole world
   inside one sunspot; a Greek peninsula against the Sun. Footnote: the Sun holds about 99.8% of the solar system's mass.
 
 - **006:** one world on three rungs of the ladder: Earth at the equator ("you"), a pull-back to Earth's orbit, the one

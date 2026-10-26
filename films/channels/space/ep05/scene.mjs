@@ -85,7 +85,7 @@ const pelo = new THREE.Mesh(new THREE.CircleGeometry(1.0, 24), peloMat);   // a 
 pelo.position.fromArray(PD.map((v) => v * 100.4));
 pelo.quaternion.copy(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(...PD)));
 const peloRing = ring({ color: C.ice, width: 2.4, opacity: 0 });
-// "by a factor of about eight thousand": southern Greece's true size grown to the Sun's; drawn dark (a line of light
+// "by a factor of about seven thousand": southern Greece's width grown to the Sun's; drawn dark (a line of light
 // would vanish on the white face), over the face, a constant 4 px thick
 const xMat = new THREE.MeshBasicMaterial({ color: 0x04050b, transparent: true, opacity: 0, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
 const xRing = new THREE.Mesh(new THREE.RingGeometry(0.9, 1, 160), xMat);
@@ -195,8 +195,8 @@ window.seek = function (t) {
   peloMat.opacity = po; pelo.visible = po > 0.01;
   peloRing.arc({ center: PD.map((v) => v * 100.6), r: 4.5, e1: [1, 0, 0], e2: [0, 1, 0] }).set({ opacity: po });
   S.pelo = PD.map((v) => v * 100.4 * k);
-  // ×8,000: a ring from southern Greece's true size out to the Sun's limb, log-eased, between "By" and "thousand"
-  const ux = E.inout2(seg(t, CUE.x0, CUE.x1)), rx = Math.exp(Math.log(PH.pelo_km / 2 / PH.u) + (Math.log(100) - Math.log(PH.pelo_km / 2 / PH.u)) * ux);
+  // ×7,000: a ring from southern Greece's width (about 200 km) out to the Sun's limb, log-eased, between "By" and "thousand"
+  const r0x = PH.pelo_across / 2 / PH.u, ux = E.inout2(seg(t, CUE.x0, CUE.x1)), rx = Math.exp(Math.log(r0x) + (Math.log(100) - Math.log(r0x)) * ux);
   const cx = PD.map((v) => v * 100.4 * (1 - ux));
   const xo = winOp(t, CUE.x0, CUE.melt0 - 0.4, 0.3);
   xMat.opacity = 0.9 * xo; xRing.visible = xo > 0.01;
@@ -206,7 +206,7 @@ window.seek = function (t) {
     xRing.position.fromArray(cx); xRing.quaternion.copy(camera.quaternion);
   }
   const cbx = cb();
-  S.x8000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.5) + cbx.e2[j] * Math.sin(0.5))) * k);
+  S.x7000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.5) + cbx.e2[j] * Math.sin(0.5))) * k);
   dotMat.uniforms.uLevel.value = -1.05 + 2.1 * E.inout2(seg(t, CUE.melt0 + 0.4, CUE.melt1));
   dotMat.uniforms.uOp.value = molten * (1 - back);
   sunDot.set({ center: [0, 0, 0], camera, opacity: fadeIn(t, CUE.j0 + 1.6, 0.8) });

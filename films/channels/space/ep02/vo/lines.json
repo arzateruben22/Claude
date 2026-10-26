@@ -26,16 +26,16 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second: Earth to the Moon in six hours.",
+   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second. Earth to the Moon in six hours.",
    "stars": [
     "Voyager 1",
     "six hours"
    ],
-   "phonemes": "ˌaʊɚ ɹˈaɪd ɪz vˈɔɪɪdʒɚ wˈʌn, ðə fˈɑːɹðɪst θˈɪŋ wiːv sˈɛnt. ɪt lˈɛft ɪn nˈaɪntiːn sˈɛvəntisˈɛvən. ɪt kˈoʊsts æɾ ɐbˌaʊt sˈɛvəntˌiːn kˈɪləmˌiːɾɚz ɐ sˈɛkənd: ˈɜːθ tə ðə mˈuːn ɪn sˈɪks ˈaʊɚz.",
+   "phonemes": "ˌaʊɚ ɹˈaɪd ɪz vˈɔɪɪdʒɚ wˈʌn, ðə fˈɑːɹðɪst θˈɪŋ wiːv sˈɛnt. ɪt lˈɛft ɪn nˈaɪntiːn sˈɛvəntisˈɛvən. ɪt kˈoʊsts æɾ ɐbˌaʊt sˈɛvəntˌiːn kˈɪləmˌiːɾɚz ɐ sˈɛkənd. ˈɜːθ tə ðə mˈuːn ɪn sˈɪks ˈaʊɚz.",
    "speed": 1.16,
    "file": "02.wav",
-   "dur": 11.023,
-   "sha256": "2310f1e38cec86562bed54b68e8a667a28d5a673ceab3273c82b3bb77e248b9d"
+   "dur": 10.897,
+   "sha256": "d40c4951cd3d1bb68fcad8477a2ddd5dabe20d3b14e2ba6ee7d4983925719b0e"
   },
   {
    "id": "vo03",
@@ -54,42 +54,42 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's three hundred years away. Getting through it: thirty thousand more.",
+   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's about three hundred years away. Through it: maybe thirty thousand more.",
    "stars": [
     "comets"
    ],
-   "phonemes": "ɪn twˈɛnti twˈɛlv, ɪt kɹˈɔst ˌɪntʊ ˌɪntɚstˈɛlɚ spˈeɪs. nˌɪɹli ðˈɛɹ, ðˈɛn? ɪt hˈæzənt ˈiːvən ɹˈiːtʃt ðə sˈʌnz klˈaʊd ʌv kˈɑːmɪts. ðæts θɹˈiː hˈʌndɹɪd jˈɪɹz ɐwˈeɪ. ɡˌɛɾɪŋ θɹˈuː ɪt: θˈɜːɾi θˈaʊzənd mˈɔːɹ.",
+   "phonemes": "ɪn twˈɛnti twˈɛlv, ɪt kɹˈɔst ˌɪntʊ ˌɪntɚstˈɛlɚ spˈeɪs. nˌɪɹli ðˈɛɹ, ðˈɛn? ɪt hˈæzənt ˈiːvən ɹˈiːtʃt ðə sˈʌnz klˈaʊd ʌv kˈɑːmɪts. ðæts ɐbˌaʊt θɹˈiː hˈʌndɹɪd jˈɪɹz ɐwˈeɪ. θɹˈuː ɪt: mˈeɪbiː θˈɜːɾi θˈaʊzənd mˈɔːɹ.",
    "speed": 1.15,
    "file": "04.wav",
-   "dur": 11.296,
-   "sha256": "bc1a101f37901cfdb2bfb5eff72bf00db7d26fe5218b8182d4a8ca510fc73c82"
+   "dur": 11.922,
+   "sha256": "d0cd4a36f1e70d68579da4273b3344c2e00cdcf6adf576a96d6e5f35daa37c8d"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species hadn't reached Europe.",
+   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species wasn't in Europe.",
    "stars": [
     "seventy-five thousand years",
     "Europe"
    ],
-   "phonemes": "ðə nˌɪɹɪst stˈɑːɹ, pɹˈɑːksɪmə sɛntˈɔːɹi, ɪz ɐbˌaʊt fˈɪftiːn hˈʌndɹɪd lˈaɪtdˈeɪz ˈaʊt. æt vˈɔɪɪdʒɚz spˈiːd: ɐbˌaʊt sˈɛvəntifˈaɪv θˈaʊzənd jˈɪɹz. kˈaʊnt bˈæk ðæt fˈɑːɹ, ænd ˌaʊɚ spˈiːsiːz hˈædənt ɹˈiːtʃt jˈʊɹɹəp.",
+   "phonemes": "ðə nˌɪɹɪst stˈɑːɹ, pɹˈɑːksɪmə sɛntˈɔːɹi, ɪz ɐbˌaʊt fˈɪftiːn hˈʌndɹɪd lˈaɪtdˈeɪz ˈaʊt. æt vˈɔɪɪdʒɚz spˈiːd: ɐbˌaʊt sˈɛvəntifˈaɪv θˈaʊzənd jˈɪɹz. kˈaʊnt bˈæk ðæt fˈɑːɹ, ænd ˌaʊɚ spˈiːsiːz wˈʌznt ɪn jˈʊɹɹəp.",
    "speed": 1.16,
    "file": "05.wav",
-   "dur": 11.637,
-   "sha256": "c50559c083a705b624de96a227cd4fb44b24f990e3d64e6963b65292c9553a93"
+   "dur": 11.553,
+   "sha256": "28fa83846ccd212d3e583c17f5581940dd635300357f769a2af62bd415f71553"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So we haven't left for the stars. Voyager has crossed day one of fifteen hundred.",
+   "text": "So we've barely left for the stars. Voyager has crossed day one of fifteen hundred.",
    "stars": [
     "fifteen hundred"
    ],
-   "phonemes": "sˌoʊ wiː hˈævənt lˈɛft fɚðə stˈɑːɹz. vˈɔɪɪdʒɚ hɐz kɹˈɔst dˈeɪ wˈʌn ʌv fˈɪftiːn hˈʌndɹɪd.",
+   "phonemes": "sˌoʊ wiːv bˈɛɹli lˈɛft fɚðə stˈɑːɹz. vˈɔɪɪdʒɚ hɐz kɹˈɔst dˈeɪ wˈʌn ʌv fˈɪftiːn hˈʌndɹɪd.",
    "speed": 0.97,
    "file": "06.wav",
-   "dur": 5.025,
-   "sha256": "9b57dc2d0e2533bf78321ae22111abdccc2d1dc516329b8abe45dc9c5d456bef"
+   "dur": 5.228,
+   "sha256": "f177619ba21a43c39a96ac1c8cfdc2bf78e0347f0c6cf6a4b951f3eb2e0d4fc2"
   },
   {
    "id": "vo07",

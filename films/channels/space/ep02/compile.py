@@ -187,8 +187,8 @@ COUNTERS = [
     {"id": "c-sig1", "label": "signal travel · hours", "fmt": "hours", "off": 0, "t0": t_sig, "t1": t_cmd, "at": SPINE, "lit": 24},
     {"id": "c-sig2", "label": "command → answer", "fmt": "hours", "off": 24, "t0": t_cmd, "t1": A("vo04:twenty"), "at": SPINE, "lit": 48},
     {"id": "c-hp", "label": "into interstellar space", "fmt": "text", "text": "2012", "t0": A("vo04:twenty"), "t1": A("vo04:three"), "at": SPINE},
-    {"id": "c-oort0", "label": "years to the comet cloud", "fmt": "text", "text": "300", "t0": A("vo04:three"), "t1": A("vo04:thirty"), "at": SPINE},
-    {"id": "c-oort1", "label": "years more to cross it", "fmt": "text", "text": "30,000", "t0": A("vo04:thirty"), "t1": t_j0, "at": SPINE},
+    {"id": "c-oort0", "label": "years to the comet cloud, about", "fmt": "text", "text": "300", "t0": A("vo04:three"), "t1": A("vo04:thirty"), "at": SPINE},
+    {"id": "c-oort1", "label": "years more to cross it, maybe", "fmt": "text", "text": "30,000", "t0": A("vo04:thirty"), "t1": t_j0, "at": SPINE},
     {"id": "c-ld0", "label": "light-days to Proxima", "fmt": "text", "text": "1,550", "t0": A("vo05:fifteen"), "t1": A("vo05:seventy-five"), "at": SPINE},
     {"id": "c-trip", "label": "years at Voyager's speed", "fmt": "text", "text": "75,000", "t0": A("vo05:seventy-five"), "t1": t_tk, "at": SPINE},
     {"id": "c-days", "label": "light-days to Proxima", "fmt": "text", "text": "1,550", "t0": t_tk, "t1": B["readout"]["t0"], "at": SPINE},
@@ -208,7 +208,7 @@ PILLS = [
 ]
 
 TITLE = {"series": "Light Minute · No. 002", "title": "The *nearest star*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the planet that turns *backwards*", "follow": "Light Minute · No. 003",
+END = {"title": "Next light: a planet that turns *backwards*", "follow": "Light Minute · No. 003",
        "next": "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)."}   # the true-fact footnote (c5)
 
 CUE = {"launch": t_launch, "stop": t_stop, "line": A("vo03:line"), "sig": t_sig, "arr1": t_arr1, "cmd": t_cmd, "ans": t_ans, "arr2": t_arr2, "takeaway": t_tk,
@@ -217,9 +217,9 @@ CUE = {"launch": t_launch, "stop": t_stop, "line": A("vo03:line"), "sig": t_sig,
 
 POSTER = A("vo05:years", 0.4)               # Proxima, the speck and "about 75,000 years"
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["nineteen seventy-seven", "kilometers a second:", "Earth to the Moon", "in six hours."],
-         "vo04": ["twenty twelve,", "into interstellar space.", "three hundred", "thirty thousand", "cloud of comets."],
-         "vo05": ["Proxima Centauri,", "fifteen hundred", "about seventy-five", "thousand years.", "hadn't reached"],
+glue(f, {"vo02": ["nineteen seventy-seven", "kilometers a second.", "Earth to the Moon", "in six hours."],
+         "vo04": ["twenty twelve,", "into interstellar space.", "hundred years away.", "thirty thousand", "cloud of comets."],
+         "vo05": ["Proxima Centauri,", "fifteen hundred", "about seventy-five", "thousand years.", "wasn't in Europe."],
          "vo06": ["day one", "of fifteen hundred."], "vo07": ["four years", "three months."]})
 
 film = {

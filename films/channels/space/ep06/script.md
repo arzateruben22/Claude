@@ -7,7 +7,7 @@ two thousand kilometers. How?") and sets up episode 7 (trees or stars).
 The story: sitting still, you ride Earth's spin, faster than sound at the equator; Earth's orbit adds
 thirty kilometers a second; the Sun carries us round the galaxy at about two hundred thirty a second, one
 lap in about 230 million years: the last time we were here, the first dinosaurs were just appearing. Why
-don't we feel any of it? Galileo's ship's cabin: a steady speed can't be felt, only a change in it. The
+don't we feel any of it? Galileo's ship's cabin: smooth motion can't be felt, only a jolt. The
 person: Ptolemy, then Galileo; the wrong idea: that if Earth moved, we would feel it (birds and clouds left
 behind). The answer it lands on: speed is always compared to something.
 
@@ -29,7 +29,7 @@ vo: Earth spins: at the equator, the ground moves about sixteen hundred seventy 
 ## change {shot: pull back to Earth's orbit · spine "Earth around the Sun: 30 km/s" · picture-only 0.2 s · energy: 0.55} (12.5–21.5 s)
 vo: And Earth circles the Sun at about thirty kilometers every second. {c3} Since this began, you've gone farther than New York to *Boston*. {c4}
 
-## why {shot: Galileo's cabin, below deck: a bowl, a butterfly, drops falling straight; the ship moving on calm water · spine "what you can feel: a change in speed" · picture-only 2 s · energy: 0.62} (21.5–40 s)
+## why {shot: Galileo's cabin, below deck: a bowl, a butterfly, drops falling straight; the ship moving on calm water · spine "what you can feel: a jolt, not speed" · picture-only 2 s · energy: 0.62} (21.5–40 s)
 vo: Ptolemy argued that if Earth moved, birds and clouds would be left *behind*. {c5} In sixteen thirty-two, Galileo answered with a ship's cabin. {c6} Below deck on calm water, nothing tells you the ship is *moving*. {c13} You feel a jolt, never a smooth *ride*. {c7}
 
 ## whoa {shot: the one scale jump: from Earth's orbit out to the galaxy, the Sun on its lap · spine "the Sun around the galaxy: 230 km/s", then "one lap: 230 million years" · picture-only 3 s · energy: 0.8} (40–55 s)

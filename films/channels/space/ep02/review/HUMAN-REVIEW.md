@@ -2,20 +2,24 @@
 
 ## This episode
 - **The date.** It posts on 18 November 2026, the day NASA gives for Voyager 1 reaching one light-day
-  (12:16:07 a.m. CST; c5). "On November eighteenth, it crosses a line" is in the present tense. If the post
-  slips, the line still reads as a dated fact, but the end card's footnote and the caption should be checked.
+  (2:16:07 a.m. PST, 10:16:07 UTC; c5; an earlier ledger entry had EarthSky's "12:16:07 a.m. CST", which doesn't
+  match NASA). Post at or after 10:16 UTC if possible. "On November eighteenth, it crosses a line" is in the present
+  tense. If the post slips, the line still reads as a dated fact, but the end card's footnote and the caption should
+  be checked.
 - **"Our ride is Voyager 1, the farthest thing we've sent."** True today (c1). "Coasts at about seventeen
-  kilometers a second" uses NASA's 38,000 mph (c3); the Goddard page (73,000 years) implies 17.3 km/s. The
+  kilometers a second. Earth to the Moon in six hours." uses NASA's 38,000 mph (c3, c4); the Goddard page (73,000 years) implies 17.3 km/s. The
   spoken trip time is our own arithmetic at 17 km/s: about 75,000 years (c12). NASA says "over 73,000".
 - **"In twenty twelve, it crossed into interstellar space."** In NASA's plasma sense
   (the heliopause, c8), not beyond the Sun's gravity. The next line ("it hasn't even reached the Sun's cloud
   of comets") says exactly that.
-- **The comet cloud is a theory** (badged). The 300 and 30,000 years are NASA's (c10, c19); the drawn cloud's
+- **The comet cloud is a theory** (badged). "About three hundred years" and "maybe thirty thousand more" are NASA's
+  hedged figures (c10, c19); the drawn cloud's
   inner edge (1,240 AU) follows from them, not from NASA's 2,000–5,000 AU inner-edge estimate on the same page.
   An astronomer may prefer to draw it from 2,000 AU.
-- **"Count back that far, and our species hadn't reached Europe."** 75,000 years ago; the earliest known
-  Homo sapiens in Europe are a little over 45,000 years old (c13), and the most contested early claim
-  (Grotte Mandrin) about 54,000. A palaeoanthropologist may want a primary source.
+- **"Count back that far, and our species wasn't in Europe."** 75,000 years ago; no Homo sapiens are known in
+  Europe then. Our lasting presence starts a little over 45,000 years ago (c13); the earlier claims are disputed or
+  short-lived (Apidima 1 in Greece, at least 210,000 years; Grotte Mandrin, about 54,000). "Wasn't in" (not "hadn't
+  reached") leaves Apidima open. A palaeoanthropologist may want a primary source.
 - **Proxima's direction and colour** are drawn for the picture (badged "Voyager isn't headed there").
 - **Readout:** "To Proxima Centauri: four years and three months" is light time from Proxima to us (4.24 years).
 - **The light, after the 26 Oct recheck.** The change now shows Voyager's signal travelling home (a day), then
@@ -24,6 +28,11 @@
   drawing convention: the real sphere is seen at an angle). Check that an astronomer is happy with that.
 - **The speck** (one light-day around the Sun) is drawn at least 14 px in radius in the local view; at true scale
   it would be under a pixel. It sits under the "not to scale · illustration" note.
+- **After the 26 Oct script audit:** vo02 and vo04–vo06 were re-voiced ("It coasts at about seventeen kilometers a
+  second. Earth to the Moon in six hours."; "about three hundred"; "maybe thirty thousand"; "wasn't in Europe"; "So
+  we've barely left for the stars."), and the end card now teases "a planet that turns backwards" (Uranus does too;
+  c18). The film was rendered again from scratch after these changes.
+
 
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt

@@ -44,7 +44,8 @@ SPOT_DIR = [v / math.sqrt(0.25**2 + 0.8**2 + 0.545**2) for v in (0.25, -0.8, 0.5
 BASE = 0.25                                # the "sun" place is drawn at a quarter size (the Sun 25 units in radius), so the camera stays inside the sky
 SPOT_P = [100.0 * BASE * v for v in SPOT_DIR]
 SPOT_R = 2.6 * R_E                         # a big sunspot, 2.6 Earth radii (about 33,000 km across; c14: up to 50,000 km)
-PELO_KM = 2 * math.sqrt(21550 / math.pi)   # c15: 166 km
+PELO_KM = 2 * math.sqrt(21550 / math.pi)   # c15: 166 km (the dot: a circle of the peninsula's area)
+PELO_ACROSS = 200.0                        # c15: the ring's start, about 200 km: the Sun is about 7,000 times wider
 GIANT = 1000.0                             # c8: the largest known stars, over 1,000 × the Sun's radius
 SKY_K = 1.0 / 150000.0                     # "sky" place: km → units (the Moon 2.56 units out, the Sun 997)
 SEP = 0.0080                               # the pair's angular offset either side of the line of sight (rad): both discs whole in the frame
@@ -118,8 +119,8 @@ LABELS = [
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "spotearth", "t0": round(t_spot + 0.1, 4), "t1": B["why"]["t0"] + 1.0, "side": 1, "shot": "sun"},
     {"id": "l-spot", "text": "a big sunspot", "kind": "star", "anchor": "spot", "t0": t_spot, "t1": B["why"]["t0"] + 1.0, "side": -1, "shot": "sun"},
     {"id": "l-pelo", "text": "southern Greece", "kind": "body", "anchor": "pelo", "t0": t_pelo, "t1": A("vo04:By"), "side": 1, "shot": "sun"},
-    {"id": "l-x8000", "text": "×8,000", "kind": "light", "anchor": "x8000", "t0": A("vo04:thousand"), "t1": t_melt0, "side": 1, "shot": "sun"},
-    {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:ordinary"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
+    {"id": "l-x7000", "text": "×7,000", "kind": "light", "anchor": "x7000", "t0": A("vo04:thousand"), "t1": t_melt0, "side": 1, "shot": "sun"},
+    {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:giant"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
     {"id": "l-giant", "text": "largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": B["readout"]["t0"], "side": 1, "shot": "sun"},
     # the readout: Earth's orbit drawn to the same scale (1 AU = about 215 Sun radii), inside the giants' outline
     {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": t_end, "side": -1, "shot": "sun"},
@@ -139,7 +140,7 @@ COUNTERS = [
     {"id": "c-400", "label": "wider · farther", "text": "400× · 400×", "t0": A("vo02:four"), "t1": t_cut},
     {"id": "c-row", "label": "Earths across", "fmt": "count", "from": 1, "to": N_ACROSS, "c0": t_row0, "c1": t_row1, "t0": t_row0, "t1": t_spot - 0.2},   # the spine rests over the bright close-up
     {"id": "c-guess", "label": "Anaxagoras · the Sun is bigger than", "text": "southern Greece", "t0": A("vo04:bigger"), "t1": A("vo04:By")},
-    {"id": "c-8000", "label": "he was right · by a factor of", "text": "8,000", "t0": A("vo04:By"), "t1": t_melt0},
+    {"id": "c-7000", "label": "bigger, yes · wider by a factor of", "text": "7,000", "t0": A("vo04:By"), "t1": t_melt0},
     {"id": "c-melt", "label": "Earths inside, by volume", "fmt": "count", "from": 0, "to": round(VOL, -5), "c0": t_melt0, "c1": t_melt1, "t0": t_melt0, "t1": A("vo05:Some")},
     {"id": "c-giant", "label": "wider than the Sun", "text": ">1,000×", "t0": A("vo05:Some"), "t1": B["takeaway"]["t0"]},
     {"id": "c-dwarf", "label": "the Sun's class", "text": "G2V · dwarf", "t0": A("vo06:dwarf"), "t1": B["readout"]["t0"]},
@@ -155,7 +156,7 @@ for a, b in zip(spine, spine[1:]):
 
 TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
-       "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c8 note; NASA)
+       "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c18; NASA)
 
 CUE = {"side": A("vo02:But"), "orbit": A("vo07:Sun#2"), "x0": A("vo04:By"), "x1": A("vo04:thousand"), "cut": t_cut, "row0": t_row0, "row1": t_row1, "spot": t_spot, "pelo": t_pelo, "melt0": t_melt0, "melt1": t_melt1, "j0": t_j0, "j1": t_j1, "giant": A("vo05:Some")}
 POSTER = A("vo05:wider", 0.8)
@@ -169,7 +170,7 @@ glue(f, {"vo02": ["the Sun", "the full Moon", "look the same size."],
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS,
-    "phys": {"u": U, "r_e": R_E, "n_across": N_ACROSS, "vol": VOL, "dots": DOTS, "per_dot": PER_DOT, "spot_r": SPOT_R, "spot_dir": SPOT_DIR, "pelo_km": PELO_KM,
+    "phys": {"u": U, "r_e": R_E, "n_across": N_ACROSS, "vol": VOL, "dots": DOTS, "per_dot": PER_DOT, "spot_r": SPOT_R, "spot_dir": SPOT_DIR, "pelo_km": PELO_KM, "pelo_across": PELO_ACROSS,
              "giant": GIANT, "au_r": D_SUN_KM / R_SUN_KM, "sky_k": SKY_K, "sep": SEP, "r_sun_km": R_SUN_KM, "r_moon_km": R_MOON_KM, "d_moon_km": D_MOON_KM, "d_sun_km": D_SUN_KM, "shrink": SHRINK, "base": BASE},
     "cam": CAM, "cue": CUE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,

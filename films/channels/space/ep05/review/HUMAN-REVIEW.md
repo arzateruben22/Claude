@@ -6,9 +6,16 @@
 - **Anaxagoras.** From Clazomenae, working in Athens; c. 450–430 BCE ("nearly twenty-five centuries"); the impiety
   charge was for calling the Sun a red-hot mass, not a god (Diogenes Laertius; accounts differ; c4, c5). A classicist
   may want the primary source.
-- **"By a factor of about eight thousand."** Equal-area width of the Peloponnese (166 km) against the Sun's diameter;
-  6,000–8,000 depending on how you measure the peninsula (c15).
-- **"Melt down one point three million Earths."** By volume (c7).
+- **"Bigger, yes. By a factor of about seven thousand."** "Bigger, yes" endorses Anaxagoras's size, not his stone
+  (the Sun is plasma; c6). The Sun is about 5,600× the Peloponnese's longest diagonal (about 250 km), about 6,300×
+  its width (about 220 km) and about 8,400× a circle of its area (166 km): 7,000 sits inside the range (c15). The
+  widths are computed from coordinates, not quoted from a source: a person checks them.
+- **"Melt down one point three million Earths."** By volume (c7). Whole Earths would pack fewer: about 830,000 at
+  random, 960,000 at the densest packing. The hook ("Which holds a million Earths?") now cites it (c19).
+- **The end card's footnote** (99.8% of the solar system's mass) has its own claim (c18, NASA), but it isn't spoken,
+  so lint's source list (`--sources`) leaves it out: add the NASA link to the post by hand.
+- **"Yet among the stars, it's no giant."** Not "ordinary": by count the Sun is bigger and heavier than about 90% of
+  the Milky Way's stars (most are red dwarfs; c9).
 - **"Some are more than a thousand times wider."** True for the largest few red supergiants; their sizes are
   uncertain (c8).
 - **"Astronomers even file the Sun under dwarf stars."** G2V; "dwarf" is a luminosity class, not "small" (c10).
@@ -16,12 +23,17 @@
 - **Pronunciation at T0:** Anaxagoras, impiety, sunspot.
 
 - **After the 26 Oct recheck:** the hook pair is badged "true sizes, shown side by side" (a composition, not a
-  moment); the side view's dots are badged "dots enlarged"; a ring grows from southern Greece's true size to the Sun's
-  limb on "by a factor of about eight thousand" (the ratio of 166 km to 1.39 million km is about 8,400); the readout
+  moment); the side view's dots are badged "dots enlarged"; a ring grows from southern Greece's width (200 km) to the Sun's
+  limb on "by a factor of about seven thousand" (200 km × 7,000 ≈ 1.39 million km); the readout
   draws Earth's orbit to the outline's scale (1 AU ≈ 215 Sun radii, computed).
+- **After the 26 Oct script audit:** vo04 and vo05 were re-voiced ("Bigger, yes", "seven thousand", "it's no
+  giant"); the counter reads "bigger, yes · wider by a factor of 7,000" and the ring's label "×7,000". The film was
+  rendered again from scratch after these changes.
+
 
 ## Every episode
-1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md` (every claim from a search excerpt).
+1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt only,
+   so a person opens each source link and ticks it. The episode does not post until every row is ticked.
 2. **Pictures.** The README's honesty table.
 3. **Units.** Kilometers only; decide on miles for US viewers.
 4. **The channel.** TODO: the handle (@lightminute), trademark and handle checks.

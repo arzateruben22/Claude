@@ -5,10 +5,10 @@ score. Bible §7 #3. It pays off episode 3's tease ("Next: the Moon never stops 
 So why doesn't it land?") and sets up episode 5 (the size of the Sun).
 
 The story: the Moon is falling, every second. Without gravity it would fly off in a straight line;
-gravity bends the line into a circle. Isaac Newton's test: the Moon is sixty times farther from
-Earth's centre than an apple, so gravity there should be thirty-six hundred times weaker. An apple
-drops about five meters in its first second; divided by thirty-six hundred that is one point four
-millimeters, which is exactly how far the Moon drops below its straight line each second. The person:
+gravity bends the line into a circle: it falls, and always misses. Newton's test: the Moon is sixty
+times farther from Earth's center than an apple, and gravity fades with distance squared, so there it
+should be thirty-six hundred times weaker. Then in one minute the Moon should fall as far as an apple
+falls in one second, about five meters (one point four millimeters a second), and it does. The person:
 Newton; the wrong idea: that the heavens run on their own rules (Aristotle's two realms).
 
 Honesty, on screen: "not to scale" (sizes), the clock's speed note, "gap ×1,000,000" (the drop is
@@ -27,16 +27,16 @@ vo: What's holding the Moon *up*? {-} Nothing. {c1} It's *falling*. {c17}
 vo: Look up tonight: it's about thirty Earths away. {c2} And it moves sideways at about a kilometer every second. {c3} That's New York to Boston in five *minutes*. {c4}
 
 ## change {shot: thought experiment: gravity cut, the Moon leaves on its straight line; then gravity back, the line bends · badge: thought experiment · energy: 0.55} (14–23.5 s)
-vo: Now switch gravity off. {-} The Moon would fly off in a *straight line*. {c5} Gravity bends it back toward us. {c6} Every moment, all the way round. {c18}
+vo: Now switch gravity off. {-} The Moon would fly off in a *straight line*. {c5} Gravity bends it back toward us. {c6} So it falls, and always *misses*. {c18}
 
 ## why {shot: an apple and the Moon on one line from Earth's centre; the ruler "60 Earth radii"; the pull shrinks by 3,600 · spine "gravity there: 1/3,600" · picture-only 2 s · energy: 0.62} (23.5–41.5 s)
-vo: The heavens, people believed, had their own rules. {c19} Isaac Newton, the story goes, wondered if the pull that drops an *apple* reaches the Moon. {c7} The Moon is sixty times farther from Earth's center than the apple. {c8} So the pull there is thirty-six hundred times *weaker*. {c9}
+vo: The heavens, people believed, had their own rules. {c19} Newton, the story goes, wondered if the pull that drops an *apple* reaches the Moon. {c7} The Moon is sixty times farther from Earth's center than the apple. {c8} Gravity fades with distance squared: thirty-six hundred times *weaker*. {c9}
 
-## whoa {shot: the apple drops its first second, 4.9 m; then the Moon's second, the gap magnified a million times · spine "apple, 1 second: 4.9 m", then "Moon, 1 minute: 4.9 m" (1.4 mm a second) · picture-only 3 s · energy: 0.8} (41.5–53 s)
+## whoa {shot: the Moon's minute: its 4.9 m drop below its straight line beside the apple's first second, both drawn ×1,000,000 on one scale (the path at true scale) · badge: falls drawn ×1,000,000 · spine "apple, 1 second: 4.9 m", then "Moon, 1 minute: 4.9 m" (1.4 mm a second) · picture-only 3 s · energy: 0.8} (41.5–53 s)
 vo: Then in one *minute*, the Moon should fall as far as an apple falls in one second. {c10} About five meters. {c11} And it *does*. {c12}
 
 ## takeaway {shot: pull back, the whole orbit, the ghost lines of a dozen seconds · picture-only 0.2 s · energy: 0.3} (53–59.5 s)
-vo: So the pull that drops an apple is the very same pull that holds the *Moon*. {c13}
+vo: So the pull that drops an apple is the same pull that keeps the Moon *falling*. {c13}
 
 ## readout {segment: readout · the closing light-time readout: ring "1.3 s" Earth to Moon · a ping · picture-only 0.2 s · energy: 0.45} (59.5–66 s)
 vo: *Light time*, Earth to Moon: one point three seconds. {c14} You always see the Moon that late. {c15}

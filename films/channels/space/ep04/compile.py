@@ -149,8 +149,8 @@ COUNTERS = [
     # the thought experiment: with gravity off it falls nothing below its straight line; with gravity, 1.4 mm each second
     {"id": "c-off", "label": "below its straight line · each second", "text": "0 mm", "t0": t_off, "t1": t_back},
     {"id": "c-on", "label": "below its straight line · each second", "text": "1.4 mm", "t0": t_back, "t1": B["why"]["t0"]},
-    {"id": "c-dist", "label": "from Earth's center · Earth radii", "text": "60", "t0": A("vo04:sixty"), "t1": A("vo04:So")},
-    {"id": "c-pull", "label": "gravity at the Moon · vs. at the apple", "text": "1/3,600", "t0": A("vo04:So"), "t1": t_w},
+    {"id": "c-dist", "label": "from Earth's center · Earth radii", "text": "60", "t0": A("vo04:sixty"), "t1": A("vo04:thirty-six")},
+    {"id": "c-pull", "label": "gravity at the Moon · vs. at the apple", "text": "1/3,600", "t0": A("vo04:thirty-six"), "t1": t_w},
     # one number, two falls: the value holds and only its label steps from the apple to the Moon
     {"id": "c-49", "label": [[0.0, "an apple · its first second"], [A("vo05:About"), "the Moon · one minute"]], "text": "4.9 m",
      "t0": A("vo05:apple"), "t1": A("vo06:same")},   # holds, lit, through the payoff
@@ -175,7 +175,7 @@ POSTER = A("vo05:does", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["thirty Earths away.", "every second.", "New York", "to Boston", "in five minutes."],
          "vo04": ["sixty times", "Earth's center", "thirty-six hundred", "times weaker."],
-         "vo05": ["one minute,", "the Moon", "as far as an apple", "falls in one second."], "vo06": ["drops an apple", "is the very same pull", "that holds the Moon."],
+         "vo05": ["one minute,", "the Moon", "as far as an apple", "falls in one second."], "vo06": ["drops an apple", "is the same pull", "keeps the Moon falling."],
          "vo07": ["one point three seconds.", "the Moon"]})
 
 film = {

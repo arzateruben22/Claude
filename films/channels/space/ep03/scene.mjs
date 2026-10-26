@@ -125,7 +125,7 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
 const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
-// "your sky on Venus": a small horizon dial under the captions for the whoa, the Sun crossing it from the west
+// a small horizon dial under the captions for the whoa: the Sun's place in the pin's sky (a diagram: the clouds hide it), crossing from the west
 const dial = document.createElement("div");
 const DW = 620 * S1, DH = 128 * S1, RX = 190 * S1, RY = 78 * S1, DCX = DW / 2, DCY = DH - 30 * S1;
 Object.assign(dial.style, { position: "absolute", left: `${(W - DW) / 2}px`, top: `${0.678 * H}px`, width: `${DW}px`, height: `${DH}px`, opacity: 0, zIndex: 3, pointerEvents: "none" });
@@ -134,7 +134,7 @@ dial.innerHTML = `<svg width="${DW}" height="${DH}" viewBox="0 0 ${DW} ${DH}" st
   <path d="M ${DCX - RX} ${DCY} A ${RX} ${RY} 0 0 1 ${DCX + RX} ${DCY}" fill="none" style="stroke:var(--text-2)" stroke-width="${1.8 * S1}" stroke-dasharray="${5 * S1} ${6 * S1}" opacity="0.6"/>
   <line x1="${DCX - RX - 24 * S1}" y1="${DCY}" x2="${DCX + RX + 24 * S1}" y2="${DCY}" style="stroke:var(--text-2)" stroke-width="${2.6 * S1}"/>
   ${tx(DCX - RX - 34 * S1, DCY + 9 * S1, "end", "W")}${tx(DCX + RX + 34 * S1, DCY + 9 * S1, "start", "E")}
-  ${tx(DCX, DCY + 26 * S1, "middle", "your sky on Venus", 550, 21)}
+  ${tx(DCX, DCY + 26 * S1, "middle", "the Sun's place, behind the clouds", 550, 21)}
   <circle id="dial-sun" r="${15 * S1}" style="fill:var(--lemon)"/></svg>`;
 document.getElementById("hud").appendChild(dial);
 const dialSun = dial.querySelector("#dial-sun");
