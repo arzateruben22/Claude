@@ -13,6 +13,15 @@ Built from the bible's episode-1 script (`../bible.md`, §8) with every fix from
   glyph and ring.
 - Added the channel's recurring segment, the "Meanwhile" tally (DECISIONS.md).
 
+The 26 Oct audit's fixes (`../../../audits/2026-10-26/body-ep01.md`) are applied too:
+
+- "You'd guess it stretches" is now "its surface stretches": a red cell does lengthen, but its
+  membrane's area can't grow (c7).
+- The takeaway says what sickle cells lose, the disc shape, so "That dimple isn't decoration"
+  follows from it, and that sentence now carries its own claim (c17: the surface-to-volume ratio).
+- "The tightest vessels are": the noun is back. "About seven and a half micrometers" now matches
+  the 7.5 µm pill on screen.
+
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
 direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and
 `{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
