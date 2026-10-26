@@ -38,7 +38,7 @@
   "7,000" waits for "seven" and "109 Earths" for the count to finish being said. After the stills check the Sun sits a
   little lower in the why beat (clear of the card), the readout is framed wider (the outline clear of the top notes) and
   the outline fades out on "Sun to Earth". No number or claim changed.
-- **After the round-2 draft review (26 Oct):** southern Greece is now a map: the Peloponnese's outline, traced by hand
+- **After the second draft review (26 Oct):** southern Greece is now a map: the Peloponnese's outline, traced by hand
   from about 40 coastal coordinates (21,700 km² against the true 21,550), arrives about 3,000 times enlarged and
   shrinks to a dot about 380 times enlarged, badged "map enlarged" throughout: a person checks that the outline reads
   as the Peloponnese. The 1,000× outline now leaves as the takeaway starts and the camera pushes in on the Sun, so the

@@ -37,7 +37,8 @@
   the spine strikes out the two guesses ("23 h, 225 d") on "Both guesses were wrong"; the dial's note is shortened to
   "the Sun's place, behind clouds" so it can be set larger. The cloud deck now carries one broad darker marking that
   turns with the planet, so the turn can be seen: check it reads as an illustration (it is badged "clouds: drawn"; the
-  real cloud features circle Venus in about four days, unrelated to its spin, c4's note). Not yet rendered.
+  real cloud features circle Venus in about four days, unrelated to its spin, c4's note). The poster is now 49.73 s
+  (the dial's Sun up in the west). Not yet rendered.
 
 
 ## Every episode

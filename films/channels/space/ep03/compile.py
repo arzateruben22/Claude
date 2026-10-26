@@ -137,7 +137,7 @@ th_why = math.degrees(th_v(B["why"]["t0"]))
 AZ2 = min((th_why + k * 180.0 for k in range(-8, 9)), key=lambda a: abs(a - AZ))
 CLOSE2 = dict(CLOSE, az=AZ2, el=24.0)   # higher, so the "backwards" arrow round the equator reads as a ring
 AZ3 = AZ2 + 10.0                           # the change beat's slow orbit (0.7° a second), held through the why
-FY2 = 0.365                                # from the guesses on, Venus a little higher: its limb clears the spine's label by ≥ 12 px at 540
+FY2 = 0.365                                # from the guesses on, Venus a little higher: its limb clears the spine's label by ≥ 15 px at 540
 # Earth's orbit (y 176–482 of 960 at 225) clears the top notes and the spine's label
 DIAG = {"target": [0, 0, 0], "dist": 225.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.34}
 # the readout's push: onto Venus and Earth, lined up at the conjunction, so the round trip between them can be seen

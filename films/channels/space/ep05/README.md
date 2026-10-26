@@ -1,6 +1,6 @@
 # Light Minute No. 005: "How big is the Sun"
 
-74.1 s, 9:16. The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset
+74.7 s, 9:16. The narrator is synthetic (Kokoro am_michael) and the score is original (studio preset
 `lightminute-vacuum`). It pays off episode 4's tease ("Next: pour Earths into the Sun. How many to fill it up?") and
 sets up episode 6 ("Next: since this started, you've flown at least two thousand kilometers. How?").
 

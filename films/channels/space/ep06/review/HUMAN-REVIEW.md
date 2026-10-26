@@ -36,7 +36,8 @@
   ship lurches. The jump holds for a moment on the Sun among its neighbours (a drawn cloud of nearby stars, noted
   "illustration"). The equator is drawn on "at the equator"; the orbit's note reads "1,000,000× faster"; the spine
   reads "230 million" for the lap. In the readout light's front moves at one speed and the camera drifts in; the end
-  card's words arrive over a quieter galaxy. No line was re-voiced and no claim changed.
+  card's words arrive over a quieter galaxy. No line was re-voiced and no claim changed. The final (26 Oct, QA PASS) is
+  `out/lightminute-006-9x16.mp4`.
 
 
 ## Every episode

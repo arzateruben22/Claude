@@ -4,7 +4,8 @@
 `lightminute-vacuum`). It pays off episode 5's tease ("Next: since this started, you've flown at least two thousand
 kilometers. How?") and sets up episode 7 ("Next: more trees on Earth, or stars in our galaxy?").
 
-STATUS: see `review/scorecard.md` (filled in on delivery).
+STATUS: **delivered 26 Oct** (`out/lightminute-006-9x16.mp4`): 74.67 s, −14.1 LUFS / −1.9 dBTP, voice 12.3 LU over music,
+sync PASS, 0 flashes, qa.py PASS. Details in `review/scorecard.md`; a person still checks `review/HUMAN-REVIEW.md` before posting.
 
 ## The story
 How fast are you moving now, sitting perfectly still? Earth spins: at the equator the ground moves about 1,670 km/h,

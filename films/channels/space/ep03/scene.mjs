@@ -218,21 +218,22 @@ window.seek = function (t) {
   S.limb = vp.map((v, j) => v + camX[j] * VR * 1.06);                        // Venus's right limb, as seen
   // the orbits fade in the close view (they would cut through Venus)
   orbV.set({ opacity: (1 - wf) * eK * pK }); orbE.set({ opacity: (1 - wf) * eK * pK });
-  // the sunrise ticks: one across the orbit wherever Venus was at each sunrise; the label names the first after "you"
+  // the sunrise ticks: one across the orbit wherever Venus was at each sunrise; the label names the one on "rising in the west"
   S.rise = onOrbit(PH.r_v + 0.9, FILM.sunrises[CUE.rise_i].th);
   FILM.sunrises.forEach((s, i) => {
     const a = onOrbit(PH.r_v - 0.9, s.th), b = onOrbit(PH.r_v + 0.9, s.th);
     ticks[i].seg(a, b).set({ opacity: (t >= s.t ? fadeIn(t, s.t, 0.25) : 0) * (1 - wf) * eK * pK });
   });
   // the radar (1962): a dashed beam from Earth (off frame), and a ping that comes in on the beam from the frame's edge on
-  // "radar" at a steady speed, sinks into the clouds just before "pierced" and is gone on it; its echo heads home, out of frame
+  // "radar" at a steady speed, sinks into the clouds just before "pierced" and is gone on it; its echo comes back out of the
+  // clouds (no pop at the limb) and heads home, out of frame
   beam.seg(ep, vp).set({ opacity: winOp(t, CUE.radar, CUE.true, 0.35) });
   const toE = norm(ep.map((v, j) => v - vp[j])), hit = vp.map((v, j) => v + toE[j] * VR);
   const along = (k) => vp.map((v, j) => v + toE[j] * VR * k);                // on the beam, k radii from Venus's centre
   const uo = seg(t, CUE.radar, CUE.pierce), ub = E.inout2(seg(t, CUE.pierce, CUE.pierce + (CUE.pierce - CUE.radar)));
   const pr = t < CUE.pierce ? along(2.4 - 1.55 * uo) : hit.map((v, j) => v + (along(3.6)[j] - v) * ub);
   const live = (t > CUE.radar && t < CUE.pierce) || (t >= CUE.pierce && ub < 1);
-  const sinkK = t < CUE.pierce ? fadeIn(t, CUE.radar, 0.15) * (1 - E.in2(seg(t, CUE.pierce - 0.25, CUE.pierce))) : 1;
+  const sinkK = t < CUE.pierce ? fadeIn(t, CUE.radar, 0.15) * (1 - E.in2(seg(t, CUE.pierce - 0.25, CUE.pierce))) : fadeIn(t, CUE.pierce, 0.15);
   S.beam = vp.map((v, j) => v + toE[j] * VR * 1.45);                         // just off the limb, in frame (no label: the spine names the beam)
   // "backwards": an arc arrow around Venus's equator on the side facing the camera (it stays put while the pin turns
   // under it), pointing the way Venus turns (clockwise seen from north); a big head, so the direction reads on a phone

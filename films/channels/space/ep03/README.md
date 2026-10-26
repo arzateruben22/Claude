@@ -14,7 +14,8 @@ check comes before the final.
 
 **After the second draft review (26 Oct):** the round-2 fixes are in `compile.py` and `scene.mjs` (the whoa's clocks,
 the "you" label, "a sunrise", the radar ping, the readout's push, Earth in the pulls, the deck's marking; described
-below). Not rendered yet: a stills check comes first.
+below). The poster moves to 49.73 s (the dial's Sun up in the west, the spine on "west"). Not rendered yet: a stills
+check comes first.
 
 ## The story
 Can one day outlast a year? On Venus: yes, and no. For three hundred years astronomers chased faint smudges in
@@ -63,7 +64,8 @@ Rebuild: as episode 2's README (`E=films/channels/space/ep03`; lint with `--segm
 - **Spine readout** (above the captions, centred): ? → 365 → 300 → 23 hours → 225 days → 1962 → 23 h, 225 d (struck
   out) → 243 → 243 > 225 → 117 → west → 243 > 225 → 117 < 225. Then the readout segment in the same place (6 min,
   then 4 min with "round").
-- **Loop:** the end card pushes back into the hook's close view; Earth shrinks away under the card. Footnote:
+- **Loop:** the end card pushes back into the hook's close view; Earth shrinks away just before the card, so its title
+  never fades in over it. Footnote:
   "Radar first timed Venus's turn in 1962: about 243 days, backwards."
 
 ## Honesty notes (badges on screen)
