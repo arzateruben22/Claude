@@ -250,7 +250,7 @@ body { background: var(--void); color: var(--ink); font: 500 15px/1.45 var(--f-u
 button, input { font: inherit; color: inherit; }
 button { -webkit-tap-highlight-color: var(--clear); }
 :focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
-.app { --st: 40px; position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }   /* --st: the HUD's status row (compass, clock); the controls start under it */
+.app { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
 .stage { position: absolute; inset: 0; }
 .game-canvas { display: block; width: 100%; height: 100%; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -398,6 +398,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .oc-watermark .wm-trunk, .oc-watermark .wm-frond { fill: none; stroke: var(--night); stroke-linecap: round; }
 .oc-watermark .wm-lights { fill: none; stroke: var(--cyan); stroke-width: 3; stroke-dasharray: 14 30; }
 .panel.paused .oc-watermark i { width: 112%; bottom: -3%; }
+/* what left the phone's driving HUD (HUD_POV_SPEC 1): the time the sky shows, the temperature and where it comes from,
+   the handling chips, the run's numbers. --dim on the panel's glass: 9:1 and up */
+.panel.paused :is(.pause-clock, .pause-chips, .pause-run) { position: relative; margin: 0; font: 500 12.5px/1.35 var(--f-mono); letter-spacing: 0.02em; color: var(--dim); font-variant-numeric: tabular-nums; }
+.panel.paused .pause-clock { margin-top: -6px; color: var(--ink); }
+.panel.paused .pause-chips { text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; }
+.panel.paused .pause-run { margin-bottom: 4px; }
 
 /* ------------------------------------------------------------------ the main menu */
 /* The owner's 2026-10-21 reference, in our tokens: a glass rail down the left (brand, Drive, the loadout, the rest of
@@ -670,11 +676,24 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .ach span { font-size: 12.5px; color: var(--dim); }
 
 /* ------------------------------------------------------------------ the HUD: small, sharp and out of the way */
-/* The owner's 2026-10-21 reference: the mode and its numbers top left, the road as a guide sign top centre, a rail of
-   icons on the right, the speed block bottom right with the revs as a slanted ice bar and chips under the number,
-   and the round map bottom left (the corner rules). Nothing sits over the road ahead. */
+/* The owner's 2026-10-21 reference on a desktop: the mode and its numbers top left, the road as a guide sign top
+   centre, a rail of labelled icons on the right, the speed block bottom right with the revs as a slanted ice bar and
+   chips under the number, and the round map bottom left with the compass as its rim and the time over it.
+   The condensed HUD (owner, 2026-10-22: "way too much going on on the hud interface, condense everything seamlessly";
+   HUD_POV_SPEC 2) on a phone: one compact cluster across the top (the plate, three icons, the round map) and the
+   controls at the bottom, with the open view between them. App.tsx names the layout on .app[data-hud]: 'pp' a phone
+   upright, 'pl' a phone on its side, 'desk' a desktop; and sets --map, the round map's size. Every HUD rule reads the
+   safe areas through the custom properties below (never env() directly), so the suite can emulate the claude.ai
+   app's insets by setting them on .app. Nothing sits over the road ahead. */
+.app { --sa-t: env(safe-area-inset-top, 0px); --sa-r: env(safe-area-inset-right, 0px); --sa-b: env(safe-area-inset-bottom, 0px); --sa-l: env(safe-area-inset-left, 0px);
+  --edge: 14px; --map: 150px; --ctl-b: max(14px, var(--sa-b)); }
+.app[data-hud="pp"] { --edge: 10px; }
+.app[data-hud="pl"] { --edge: 12px; }
 .hud { position: absolute; inset: 0; pointer-events: none; }
-.hud-stats { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 3px; padding: 8px 14px 9px 14px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
+.hud-read { display: contents; }
+.hud-plate { display: contents; }      /* a desktop lays its parts out where the reference has them; a phone makes it the plate */
+.hud-stats { position: absolute; top: calc(var(--sa-t) + 14px); left: calc(var(--sa-l) + 14px); display: grid; gap: 3px; padding: 8px 14px 9px 14px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer);
+  transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
 .hud-stats .oc-mark { width: 44px; margin-bottom: 2px; }
 .hud-mode { margin-bottom: 3px; font: 600 12.5px/1.2 var(--f-ui); font-style: normal; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
 .hud-stats div:has(b:empty) { display: none; }
@@ -682,10 +701,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-stats b { min-width: 92px; font: 500 10px/1.2 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud-stats span { font: 600 18px/1.15 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .hud-stats.warn div:first-of-type span { color: var(--bad); }
-.hud-fps { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); right: 390px; padding: 2px 6px; background: var(--hud); font: 500 11px/1.3 var(--f-mono); color: var(--dim); font-variant-numeric: tabular-nums; }
+.hud-fps { position: absolute; bottom: calc(var(--ctl-b) + 4px); right: 390px; padding: 2px 6px; background: var(--hud); font: 500 11px/1.3 var(--f-mono); color: var(--dim); font-variant-numeric: tabular-nums; }
 
 /* the speed block */
-.hud-speed { position: absolute; right: 18px; bottom: max(16px, env(safe-area-inset-bottom)); display: flex; gap: 16px; align-items: stretch; padding: 10px 16px 10px 14px;
+.hud-speed { position: absolute; right: calc(var(--sa-r) + 18px); bottom: max(16px, var(--sa-b)); display: flex; gap: 16px; align-items: stretch; padding: 10px 16px 10px 14px;
   background: var(--scan), linear-gradient(90deg, var(--scrim-0), var(--hud) 26%); }
 /* brackets lock onto the speed */
 .hud-speed::after { content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -693,8 +712,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
     linear-gradient(var(--ice) 0 0) right top / 14px 2px no-repeat, linear-gradient(var(--ice) 0 0) right top / 2px 14px no-repeat,
     linear-gradient(var(--ice) 0 0) right bottom / 14px 2px no-repeat, linear-gradient(var(--ice) 0 0) right bottom / 2px 14px no-repeat,
     linear-gradient(var(--line-3) 0 0) left bottom / 14px 2px no-repeat, linear-gradient(var(--line-3) 0 0) left bottom / 2px 14px no-repeat; }
+/* the revs (HUD.tsx sets --r, 0..1): a vertical slanted bar beside the number here, a thin one under it on a phone */
 .hud-rpm { flex: none; width: 14px; margin: 2px 4px 2px 0; transform: skewX(var(--skew)); background: var(--line-2); overflow: hidden; }
-.hud-rpm div { height: 100%; background: linear-gradient(0deg, var(--ice-deep), var(--ice) 60%, var(--cyan)); transform-origin: center bottom; transform: scaleY(0); }
+.hud-rpm div { height: 100%; background: linear-gradient(0deg, var(--ice-deep), var(--ice) 60%, var(--cyan)); transform-origin: center bottom; transform: scaleY(var(--r, 0)); }
 .hud-rpm div.red { background: var(--ember); }
 .hud-main { display: grid; gap: 7px; justify-items: end; }
 .hud-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; }
@@ -706,8 +726,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-chips i { padding: 4px 7px 3px; font: 600 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); box-shadow: inset 0 0 0 1px var(--line-2); }
 .hud-chips i:first-child { color: var(--ice-text); box-shadow: inset 0 0 0 1px var(--ice-line); }
 .hud-chips i.hot { color: var(--night); background: var(--cyan); box-shadow: none; }
-.hud-cam { display: block; font: 500 10px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+.hud-cam { display: block; font: 500 10px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud [hidden] { display: none !important; }
+/* the seat view of a car whose own display shows the live speed and gear (the hypercar): the HUD drops its duplicate */
+.hud[data-live-cluster]:is([data-view="cockpit"], [data-view="free"]) .hud-speed { display: none; }
 
 /* rev lights over the gear: chrome, then cyan, then tail-light ember; all of them flash on the limiter */
 .hud-revs { display: flex; justify-content: flex-end; gap: 3px; margin: 0 2px 2px 0; }
@@ -720,7 +742,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* the race HUD (replaces the numbers top left): position of N with the race clock beside it, then the standings with
    the gap in seconds (your row in ice). Nothing of it sits over the road; the corner window stays the track map. */
-.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
+.hud-race { position: absolute; top: calc(var(--sa-t) + 14px); left: calc(var(--sa-l) + 14px); display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
 .hud-pos { display: grid; grid-template-columns: auto 1fr auto; column-gap: 10px; align-items: end; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
 .hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--ice-text); }
 .hud-pos > span { display: flex; flex-direction: column; gap: 3px; }
@@ -742,7 +764,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-standings li.done b { color: var(--good); }
 /* your row's tag reads "OC": the chrome letterform sits there instead (the same mask as the mark) */
 .hud-standings li.me em.oc { color: var(--clear); box-shadow: none; background: var(--g-chrome); -webkit-mask: var(--oc-mask) center / 80% auto no-repeat; mask: var(--oc-mask) center / 80% auto no-repeat; }
-.hud-race-note { font: 500 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.hud-race-note { font: 500 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
 
 .toasts { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; pointer-events: none; width: max-content; max-width: min(92vw, 560px); }
 .toast { position: relative; isolation: isolate; padding: 8px 20px; font: 600 13px/1.3 var(--f-mono); letter-spacing: 0.06em; text-align: center; color: var(--ink); animation: pop 0.28s var(--ease); }
@@ -753,28 +775,29 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .toast.bad::before { box-shadow: inset 0 0 0 1px var(--line-2), inset 3px 0 0 var(--bad); }
 @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
 
-/* where you are and what's next: the road as a green guide sign (the shield, then the direction), the manoeuvre under it */
-.hud-road { position: absolute; top: calc(max(14px, env(safe-area-inset-top)) + 34px); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; max-width: min(46vw, 520px); }
-.hud-roadname { display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 5px 14px 5px 8px; font: 600 14px/1.2 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase;
+/* where you are: the road as a green guide sign (the shield, then the direction), top centre; the errand's exit under it */
+.hud-road { position: absolute; top: calc(var(--sa-t) + 14px); left: 50%; transform: translateX(-50%); display: grid; justify-items: center; max-width: min(46vw, 520px);
+  transition: opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.hud-roadname { display: flex; align-items: center; gap: 10px; max-width: 100%; height: 30px; padding: 0 12px 0 4px; font: 600 13px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 6px; box-shadow: 0 6px 18px var(--shadow); }
 .hud-roadname:has(> span:last-child:empty) { display: none; }
 .hud-roadname > span:last-child { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hud-roadname .shield { min-width: 34px; height: 26px; font-size: 14px; }
-.hud-next { padding: 5px 12px; font: 600 15px/1.25 var(--f-ui); text-align: center; color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 6px; box-shadow: 0 6px 18px var(--shadow); }
+.hud-roadname .shield { min-width: 30px; height: 22px; font-size: 13px; }
+.hud-next { position: absolute; top: calc(var(--sa-t) + 52px); left: 50%; transform: translateX(-50%); max-width: min(46vw, 520px); padding: 5px 12px; font: 600 15px/1.25 var(--f-ui); text-align: center; color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 6px; box-shadow: 0 6px 18px var(--shadow); }
 .hud-wrong { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) skewX(var(--skew)); padding: 12px 26px; font: 900 34px/1 var(--f-display); letter-spacing: 0.16em; color: var(--ink); background: var(--alarm); box-shadow: 0 0 0 1px var(--ember), 0 12px 34px var(--ember-glow); }
 
-/* the controls: a rail of icons down the right (a strip along the top on phones) */
-.tbar { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); display: grid; gap: 4px; }
-.tbtn { pointer-events: auto; display: flex; align-items: center; gap: 10px; min-height: 40px; min-width: 44px; padding: 0 14px 0 10px; font: 600 11.5px/1 var(--f-ui); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); text-align: left; }
+/* the controls: a rail of labelled icons down the right (three bare icons beside the plate on a phone) */
+.tbar { position: absolute; top: 50%; right: calc(var(--sa-r) + 14px); transform: translateY(-50%); display: grid; gap: 4px; }
+.tbtn { pointer-events: auto; display: flex; align-items: center; gap: 10px; min-height: 44px; min-width: 44px; padding: 0 14px 0 10px; font: 600 11.5px/1 var(--f-ui); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); text-align: left; }
 .tbtn::before { background: var(--hud); box-shadow: inset 0 0 0 1px var(--line-2); }
 .tbtn .ico { flex: none; width: 20px; height: 20px; color: var(--dim); }
 .tbtn.on { color: var(--ice-text); }
 .tbtn.on::before { box-shadow: inset 0 0 0 1px var(--ice-line), inset 2px 0 0 var(--ice); }
 .tbtn.on .ico { color: var(--ice-text); }
 
-/* the corner window: the sky camera keeps its square frame top right (the game draws inside its box); with a mouse the
-   road map is a round dial bottom left, as on the reference. On phones both stay top right, clear of the thumb. */
-.corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
+/* the corner window: the road map is a round dial (bottom left on a desktop, top right on a phone) with the compass as
+   its rim; the sky camera keeps a square frame top right (the game draws inside its box) and says it is a live view */
+.corner { position: absolute; top: calc(var(--sa-t) + 14px); right: calc(var(--sa-r) + 14px); padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
 .corner::after { content: ""; position: absolute; inset: -4px; pointer-events: none;
   background:
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
@@ -784,15 +807,37 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .corner canvas { display: block; width: 100%; height: 100%; }
 .corner.sky { border-color: var(--line-3); }
 .corner-tag { position: absolute; left: 0; bottom: 0; padding: 3px 7px; font: 500 9.5px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); background: var(--hud); pointer-events: none; }
-@media (pointer: fine) {
-  .corner.map { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); left: 14px; right: auto; overflow: hidden; border-radius: 50%; border-color: var(--ice-line);
-    box-shadow: 0 0 0 3px var(--night-1), 0 0 0 4px var(--line-2), 0 0 24px var(--ice-glow), 0 10px 28px var(--shadow); }
-  .corner.map::after { display: none; }
-  .corner.map .corner-tag { left: 50%; bottom: 8px; transform: translateX(-50%); border-radius: 3px; }
-}
+.corner.map { overflow: hidden; border-radius: 50%; border-color: var(--ice-line); box-shadow: 0 0 22px var(--ice-glow), 0 10px 28px var(--shadow); }
+.corner.map::after { display: none; }
+.app[data-hud="desk"] .corner.map { top: auto; bottom: max(16px, var(--sa-b)); left: calc(var(--sa-l) + 14px); right: auto; }
+
+/* the compass: a ring round the round map. The N tick orbits as the car turns (HUD.tsx sets --h, the heading in degrees;
+   the map is heading-up, so north lies at -h), the letter kept upright; the heading's cardinal sits at twelve o'clock
+   on an ice index. Only with the road map. */
+.hud-compass { position: absolute; width: calc(var(--map) + 10px); height: calc(var(--map) + 10px); border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--line-2); pointer-events: none;
+  top: calc(var(--sa-t) + 14px - 5px); right: calc(var(--sa-r) + 14px - 5px);
+  transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.app[data-hud="desk"] .hud-compass { top: auto; right: auto; bottom: calc(max(16px, var(--sa-b)) - 5px); left: calc(var(--sa-l) + 14px - 5px); }
+.app:not(:has(.corner.map)) .hud-compass { display: none; }
+.hud-tape { --h: 0; position: absolute; inset: 0; transform: rotate(calc(var(--h) * -1deg)); }
+.hud-n { position: absolute; left: 50%; top: 0; width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px; border-radius: 50%; display: grid; place-items: center;
+  font: 700 9.5px/1 var(--f-ui); font-style: normal; color: var(--ice-text); background: var(--night-1); box-shadow: inset 0 0 0 1px var(--line-2); transform: rotate(calc(var(--h) * 1deg)); }
+.hud-compass[data-north] .hud-n { opacity: 0; }
+.hud-card { position: absolute; left: 50%; top: 0; transform: translateX(-50%); padding: 2px 5px 3px; font: 600 10px/1 var(--f-mono); letter-spacing: 0.06em; color: var(--ink); background: var(--night-1); box-shadow: inset 0 0 0 1px var(--line-2), inset 0 -2px 0 var(--ice); }
+
+/* the time the sky shows and the temperature, with where it comes from: one line over the map dial on a desktop (on a
+   phone they are in the pause screen) */
+.hud-clock { position: absolute; left: calc(var(--sa-l) + 14px); bottom: calc(max(16px, var(--sa-b)) + var(--map) + 12px); display: none; padding: 3px 8px; white-space: nowrap;
+  font: 500 11px/1.3 var(--f-ui); letter-spacing: 0.04em; color: var(--dim); background: var(--hud); box-shadow: inset 0 0 0 1px var(--line);
+  transition: opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.hud-clock b, .hud-clock em, .hud-clock i { font: inherit; font-style: normal; }
+.hud-clock b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.hud-clock b::after { content: " · "; color: var(--dim); }
+.app[data-hud="desk"] .hud-clock { display: block; }
+.app[data-hud="desk"]:not(:has(.corner.map)) .hud-clock { bottom: max(16px, var(--sa-b)); }
 
 /* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
-.hud-ability { --p: 1; position: absolute; right: 300px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
+.hud-ability { --p: 1; position: absolute; right: 300px; bottom: max(18px, var(--sa-b)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
   display: grid; place-items: center; color: var(--ink); font: 600 10.5px/1.1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
   clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--drv) calc(var(--p) * 1turn), var(--line-2) 0); }
 .hud-ability::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
@@ -800,70 +845,43 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-ability.cool { color: var(--dim); background: conic-gradient(var(--chrome) calc(var(--p) * 1turn), var(--line) 0); }
 .hud-ability.on { color: var(--drv); }
 .hud-ability.on::before { background: radial-gradient(circle, var(--drv-wash), var(--clear) 70%), var(--glass-2); }
-.hud-ability:focus-visible { outline: none; }
-.hud-ability:focus-visible::before { background: var(--night-3); }
-
-/* ------------------------------------------------------------------ the status row (U1): a compass and a clock chip */
-/* the compass, top centre: a tape of ticks and letters slides under a fixed index in the accent as the car turns
-   (HUD.tsx sets --h, the heading in degrees; --ppd is the tape's scale, px per degree). The band fades out at both
-   ends. The road's guide sign sits under it. */
-.hud-compass { --ppd: 2.2px; position: absolute; top: max(14px, env(safe-area-inset-top)); left: 50%; width: clamp(140px, 30vw, 340px); height: 26px; overflow: hidden; transform: translateX(-50%);
-  background: var(--scan), var(--hud); box-shadow: inset 0 -1px 0 var(--line-2);
-  -webkit-mask: linear-gradient(90deg, var(--clear), var(--opaque) 22%, var(--opaque) 78%, var(--clear)); mask: linear-gradient(90deg, var(--clear), var(--opaque) 22%, var(--opaque) 78%, var(--clear)); }
-.hud-tape { --h: 0; position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(calc((var(--h) + 180) * var(--ppd) * -1)); }
-.hud-tape i { position: absolute; bottom: 0; left: calc((var(--a) + 180) * var(--ppd)); width: 1px; height: 4px; background: var(--line-3); font-style: normal; }
-.hud-tape i.ic { height: 6px; }
-.hud-tape i.c { height: 7px; background: var(--ink); }
-.hud-tape b { position: absolute; bottom: 10px; left: 0; transform: translateX(-50%); font: 600 12.5px/1 var(--f-ui); letter-spacing: 0.04em; color: var(--ink); }
-.hud-tape i.ic b { font-size: 10px; font-weight: 500; color: var(--dim); }
-.hud-tape i.n b { color: var(--ice-text); }
-.hud-compass::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 2px; height: 9px; margin-left: -1px; background: var(--ice); box-shadow: 0 0 6px var(--ice-glow); }
-/* the clock chip, top right: this device's clock, and the temperature the game is simulating (it says so) */
-.hud-clock { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; display: flex; align-items: center; gap: 10px; height: 28px; padding: 0 12px; white-space: nowrap;
-  background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice); }
-.hud-clock b, .hud-clock em { font: 600 14px/1 var(--f-mono); font-style: normal; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
-.hud-clock span { padding-left: 10px; border-left: 1px solid var(--line-2); font: 500 11px/14px var(--f-ui); letter-spacing: 0.08em; color: var(--dim); }
+.hud-ability.ready { animation: abil-ready 0.3s var(--ease-out); }
+@keyframes abil-ready { 50% { transform: scale(1.12); } }
+/* focus: the clip-path would cut an outline, so the ring turns solid ink and the fill steps in (a 3:1 visible change) */
+.hud-ability:focus-visible { outline: none; background: var(--ink); }
+.hud-ability:focus-visible::before { inset: 5px 6px; background: var(--night-3); }
 
 /* ------------------------------------------------------------------ the Minimal HUD, tucked away (U1; App.tsx: useIdle) */
-/* after 4 s of just driving the rail of controls slides off the right edge (off the top on a phone, where it is a strip)
-   and the corner window off its edge (the game stops drawing it there); the pause button stays as a round chip, and
-   with a route the nav bubble takes the window's place. Hidden controls are `visibility: hidden` once gone, so they
-   leave the tab order and the accessibility tree. */
+/* after 4 s of just driving the icons other than Pause, the map with its compass ring, the road and (in a plain Free
+   Drive) the plate's second line fade out; speed, Pause, the guidance, the race box, FOCUS TIME and the controls stay.
+   data-wake (HUD.tsx: an exit coming up, a hard stop, a new race position, Time Trial's last 10 s) brings the map and
+   the road back. Hidden things are `visibility: hidden` once gone, so they leave the tab order. */
 .tbar .tbtn, .corner { transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
-.app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle .corner { opacity: 0; visibility: hidden; pointer-events: none;
-  transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
-.app.hud-idle .tbar .tbtn:not(.menu) { transform: translateX(calc(100% + 32px)); }
-.app.hud-idle .corner { transform: translateX(calc(100% + 32px)); }
-.app.hud-idle .tbtn.menu { justify-self: end; justify-content: center; width: 44px; min-width: 44px; min-height: 44px; padding: 0; }
-.app.hud-idle .tbtn.menu > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.app.hud-idle .tbtn.menu .ico { color: var(--ink); animation: fade-in var(--t-fade) var(--ease-out); }
-.app.hud-idle .tbtn.menu::before { transform: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line-2), 0 6px 18px var(--shadow); }
-.app.hud-idle .tbtn.menu:active::before { transform: scale(0.94); }
-/* the nav bubble: where the corner window was, the next manoeuvre's arrow and how far it is (HUD.tsx) */
-.hud-bubble { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 14px; width: 84px; height: 84px; display: grid; place-content: center; justify-items: center; gap: 5px;
-  border-radius: 50%; background: var(--hud); box-shadow: inset 0 0 0 1.5px var(--ice-line), 0 10px 28px var(--shadow);
-  opacity: 0; visibility: hidden; transform: scale(0.82); transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out), visibility 0s linear 240ms; }
-.hud-bubble.on { opacity: 1; visibility: visible; transform: none; transition: opacity 300ms var(--ease-out) 180ms, transform 360ms var(--ease-out) 180ms, visibility 0s linear 0s; }
-.hud-bubble svg { display: block; overflow: visible; }
-.hud-bubble path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.hud-bubble path.thru { stroke: var(--line-2); stroke-width: 2.5; }
-.hud-bubble:not([data-turn="ahead"]) .ahead, .hud-bubble[data-turn="ahead"] .thru, .hud-bubble[data-turn="ahead"] .fork { display: none; }
-.hud-bubble[data-turn="left"] svg { transform: scaleX(-1); }
-.hud-bubble b { font: 600 13px/1 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-/* with a mouse the road map is the round dial bottom left: the bubble takes its place there, and the dial tucks away left */
-@media (pointer: fine) {
-  .app:has(.corner.map) .hud-bubble { top: auto; right: auto; left: 14px; bottom: max(16px, env(safe-area-inset-bottom)); }
-  .app.hud-idle .corner.map { transform: translateX(calc(-100% - 32px)); }
-}
+.app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle:not(:has(.hud[data-wake])) :is(.corner, .hud-compass, .hud-clock, .livechip),
+.app.hud-idle:not(:has(.hud[data-wake])) .hud:not([data-road-new]) .hud-road,
+.app.hud-idle:not(:has(.hud[data-wake])) .hud:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"]) .hud-stats[data-mode="free"]:not([data-errand]) {
+  opacity: 0; visibility: hidden; pointer-events: none; transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
+/* the sky camera is drawn by the game inside the window's box: it slides off the edge, where the game stops drawing it */
+.app.hud-idle:not(:has(.hud[data-wake])) .corner { transform: translateX(calc(100% + 32px)); }
+.app.hud-idle:not(:has(.hud[data-wake])) .hud-compass { transform: scale(0.9); }
+/* a desktop: the rail slides off the right edge and Pause stays as a round chip; the map dial tucks away left */
+.app[data-hud="desk"].hud-idle .tbar .tbtn:not(.menu) { transform: translateX(calc(100% + 32px)); }
+.app[data-hud="desk"].hud-idle:not(:has(.hud[data-wake])) .corner.map { transform: translateX(calc(-100% - 32px)); }
+.app[data-hud="desk"].hud-idle:not(:has(.hud[data-wake])) .hud-stats[data-mode="free"]:not([data-errand]) { transform: translateX(calc(-100% - 32px)); }
+.app[data-hud="desk"].hud-idle .tbtn.menu { justify-self: end; justify-content: center; width: 44px; min-width: 44px; min-height: 44px; padding: 0; }
+.app[data-hud="desk"].hud-idle .tbtn.menu > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.app[data-hud="desk"].hud-idle .tbtn.menu .ico { color: var(--ink); animation: fade-in var(--t-fade) var(--ease-out); }
+.app[data-hud="desk"].hud-idle .tbtn.menu::before { transform: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line-2), 0 6px 18px var(--shadow); }
+.app[data-hud="desk"].hud-idle .tbtn.menu:active::before { transform: scale(0.94); }
 
 /* ------------------------------------------------------------------ navigation (U2): the manoeuvre card and the destination card */
 /* top left, the next manoeuvre: its arrow in the route's blue (the chevrons on the road are its deeper twin, #2f8cff,
    lit up by their glow), how far, what to do, the road it leads to as a guide sign, and under a hairline the next
-   exit's real sign text (or the road you're on). Fixed height, so the stats plate can sit under it. Top right, under
-   the corner window (App.tsx sets --cw to its size), the destination: the road, how far along the route, the time at
-   your pace, the traffic setting (simulated). */
+   exit's real sign text (or the road you're on). Fixed height, so the stats plate can sit under it. Top right, the
+   destination: the road, how far along the route, the time at your pace, the traffic setting (simulated). On a phone
+   both are lines of the plate (below). */
 .hud-navs { display: contents; }
-.hud-nav { --navh: 116px; position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; width: 316px; height: var(--navh); display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto 1fr;
+.hud-nav { --navh: 116px; position: absolute; top: calc(var(--sa-t) + 14px); left: calc(var(--sa-l) + 14px); width: 316px; height: var(--navh); display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto 1fr;
   column-gap: 12px; row-gap: 6px; padding: 10px 14px 0 12px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--nav); clip-path: var(--chamfer); }
 .hud-nav-arrow { grid-row: 1 / 3; align-self: center; overflow: visible; }
 .hud-nav-arrow path { fill: none; stroke: var(--nav); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -878,14 +896,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-nav-exit span { min-width: 0; font: 500 13px/1.22 var(--f-ui); color: var(--ink); overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }   /* long signs take two lines */
 .hud-nav:not([data-turn="ahead"]) .ahead, .hud-nav[data-turn="ahead"] .thru, .hud-nav[data-turn="ahead"] .fork { display: none; }
 .hud-nav[data-turn="left"] .hud-nav-arrow { transform: scaleX(-1); }
-@media not all and (pointer: coarse) {
-  .hud:has(.hud-nav:not([hidden])) .hud-stats { top: calc(max(14px, env(safe-area-inset-top)) + 126px); }
-}
-.hud-dest { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 64px + var(--st) + var(--cw, 0px)); right: 12px; width: 240px; display: grid; gap: 5px; padding: 8px 12px 9px;
+.app[data-hud="desk"] .hud:has(.hud-nav:not([hidden])) .hud-stats { top: calc(var(--sa-t) + 140px); }
+.hud-dest { position: absolute; top: calc(var(--sa-t) + 14px); right: calc(var(--sa-r) + 14px); width: 240px; display: grid; gap: 5px; padding: 8px 12px 9px;
   background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--nav);
   transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
-/* with a mouse the road map is the dial bottom left, so the destination comes up under the clock chip */
-@media (pointer: fine) { .app:has(.corner.map) .hud-dest { top: calc(max(12px, env(safe-area-inset-top)) + 8px + var(--st)); } }
+/* the sky camera has the top right: the destination comes up under it */
+.app:has(.corner.sky) .hud-dest { top: calc(var(--sa-t) + 14px + var(--map) + 16px); }
 .hud-dest small { font: 500 9.5px/1.2 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud-dest div { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 8px; }
 .hud-dest svg { display: block; }
@@ -893,9 +909,143 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-dest b { min-width: 0; font: 500 13.5px/1.25 var(--f-ui); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud-dest .dest-road b { font-weight: 600; }
 .hud-dest em { font: 500 11px/1.2 var(--f-mono); font-style: normal; color: var(--dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
-/* the Minimal HUD tucks the destination away with the corner window; the manoeuvre card stays */
-.app.hud-idle .hud-dest { opacity: 0; visibility: hidden; transform: translateX(calc(100% + 32px));
+/* a desktop's Minimal HUD tucks the destination card away with the map; the manoeuvre card stays */
+.app[data-hud="desk"].hud-idle:not(:has(.hud[data-wake])) .hud-dest { opacity: 0; visibility: hidden; transform: translateX(calc(100% + 32px));
   transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
+
+/* ------------------------------------------------------------------ the phone, upright ('pp'): one compact cluster on top */
+/* Left the plate, right the round map with the compass on its rim and the road as a chip under it, between them a
+   column of three 44 px icons (Pause on top, it never tucks; then View and Go to). At 390 px: plate x 10..208, icons
+   216..260, map 268..380, all within y 8..150; the open view runs from there to FOCUS TIME above BRAKE. */
+.app[data-hud="pp"] .hud-plate { position: absolute; top: calc(var(--sa-t) + 8px); left: calc(var(--sa-l) + var(--edge)); display: grid; gap: 3px;
+  width: calc(100% - var(--sa-l) - var(--sa-r) - 2 * var(--edge) - var(--map) - 60px); padding: 5px 10px 6px 12px;
+  background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
+.app[data-hud="pl"] .hud-plate { position: absolute; top: calc(var(--sa-t) + 8px); left: calc(var(--sa-l) + var(--edge)); display: grid; gap: 3px; width: 232px; padding: 5px 10px 6px 12px;
+  background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-plate > *, .app:is([data-hud="pp"], [data-hud="pl"]) .hud-navs > * {
+  position: static; inset: auto; transform: none; clip-path: none; width: auto; height: auto; margin: 0; padding: 0; background: none; box-shadow: none; min-width: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-navs { display: contents; }
+/* line 1: the speed, its unit, the gear at the right; the revs a thin slanted bar under them (ember near the limiter) */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-speed { display: flex; flex-direction: column; gap: 3px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-speed::after, .app:is([data-hud="pp"], [data-hud="pl"]) :is(.hud-revs, .hud-chips, .hud-cam) { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-main { display: contents; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-row { justify-content: flex-start; align-items: baseline; gap: 5px; height: 30px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-mph { min-width: 0; font: 500 32px/30px var(--f-ui); text-align: left; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-unit { font-size: 10px; letter-spacing: 0.16em; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-gear { min-width: 24px; height: 26px; margin-left: auto; padding: 5px 4px 0; font: 600 18px/1 var(--f-mono); align-self: center; box-shadow: inset 0 0 0 1px var(--line-2), inset 0 2px 0 var(--ice); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-rpm { order: 2; width: 100%; height: 3px; margin: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-rpm div { width: 100%; height: 100%; transform-origin: left center; transform: scaleX(var(--r, 0)); background: linear-gradient(90deg, var(--ice-deep), var(--ice) 60%, var(--cyan)); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-rpm div.red { background: var(--ember); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-rpm div.flash { animation: rev-flash 0.18s steps(1) infinite alternate; }
+/* line 2: the mode's numbers on one line, short keys (HUD.tsx data-s), a dot between; the third slot in landscape, or
+   the errand's clock in place of Top */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats { display: flex; align-items: baseline; max-height: 18px; overflow: hidden; white-space: nowrap; transition: max-height 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats :is(.oc-mark, .hud-mode) { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats div { gap: 4px; flex: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats div:nth-of-type(n+2)::before, .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(1)::before { content: "·"; margin: 0 3px 0 2px; font: 600 12px/16px var(--f-mono); color: var(--dim); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b { min-width: 0; font-size: 0; letter-spacing: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b::before { content: attr(data-s); font: 500 10px/16px var(--f-mono); letter-spacing: 0.1em; color: var(--dim); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s=""] { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats span { font: 600 12px/16px var(--f-mono); letter-spacing: -0.01em; color: var(--ink); }
+/* Time Trial's last 10 s: ink on the wrong-way red (5.2:1), where red text on the plate over a white sky would be 3.4:1 */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats.warn div:first-of-type span { padding: 0 3px; color: var(--ink); background: var(--alarm); }
+.app[data-hud="pp"] .hud-stats div:nth-of-type(3) { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(3) { display: flex; order: -1; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(3)::before { content: none; }
+.app[data-hud="pp"] .hud-stats[data-errand] div:nth-of-type(2) { display: none; }
+.app.hud-idle:not(:has(.hud[data-wake])) .hud:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"]) .hud-stats[data-mode="free"]:not([data-errand]) { max-height: 0; }
+/* a route in Free Drive: the guidance and destination take the numbers' place, on every layout (they are in the pause
+   screen) */
+.hud:has(.hud-nav:not([hidden])) .hud-stats[data-mode="free"]:not([data-errand]) { display: none; }
+/* the race: "P2 of 4  1:02.3  1.2 mi to go" on one line, then the car ahead and the car behind, then the note */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-race { gap: 2px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos { display: flex; align-items: baseline; gap: 6px; padding-bottom: 3px; white-space: nowrap; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > b { min-width: 0; font: 700 18px/18px var(--f-display); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > b::before { content: "P"; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span { display: block; flex: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span i { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span em { font-size: 11px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > .hud-timer em { font-size: 13px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > small { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; text-align: right; font-size: 9.5px; letter-spacing: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings { gap: 1px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings li { grid-template-columns: 12px 28px minmax(0, 1fr) auto; gap: 5px; min-height: 15px; padding: 0 2px; font-size: 11.5px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings li:not(.near) { display: none; }
+.app[data-hud="pp"] .hud-standings li.me { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-race-note { font-size: 8.5px; letter-spacing: 0.1em; }
+/* the guidance: the errand's exit (green, like the sign it points to), the route's manoeuvre with its sign, the
+   destination as one quiet line under it */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-next { justify-self: start; max-width: 100%; padding: 2px 6px; font: 600 11.5px/1.3 var(--f-ui); text-align: left; color: var(--sign-white); background: var(--sign-green); border: 1.5px solid var(--sign-white); border-radius: 4px;
+  overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-nav { display: flex; align-items: center; gap: 6px; height: 22px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-nav-arrow { width: 20px; height: 20px; flex: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) :is(.hud-nav-dist span, .hud-nav-exit) { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-nav-dist { flex: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-nav-dist b { font-size: 14px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-nav-sign { min-width: 0; padding: 1px 6px 0; font-size: 12px; border-width: 1.5px; border-radius: 4px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest { display: block; font: 500 11px/14px var(--f-ui); color: var(--dim); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest :is(small, svg, .dest-road em) { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest div { display: inline; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest[data-same] .dest-road { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest div + div::before { content: " · "; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest[data-same] .dest-eta::before { content: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest b { display: inline; font: 600 11px/14px var(--f-ui); color: var(--ink); white-space: normal; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest em { font: 500 11px/14px var(--f-ui); color: var(--dim); white-space: normal; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest em::before { content: " "; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest .dest-traffic em::before { content: " · "; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-fps { font: 500 10px/1.2 var(--f-mono); }
+/* the icons: 44 px, the glyph in ink, the name kept for assistive tech; Radio is in the quick menu and the pause screen */
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar { top: calc(var(--sa-t) + 8px); right: calc(var(--sa-r) + var(--edge) + var(--map) + 8px); left: auto; transform: none; display: flex; flex-direction: column; gap: 4px; }
+.app[data-hud="pl"] .tbar { flex-direction: row; gap: 6px; right: calc(var(--sa-r) + var(--edge) + var(--map) + 10px); }
+.app[data-hud="pp"] .tbtn.menu { order: -1; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn { justify-content: center; width: 44px; height: 44px; padding: 0; gap: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn::before { transform: none; clip-path: var(--chamfer); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn:active::before { transform: scale(0.94); }
+/* the chamfer would clip the focus outline: a focused icon drops it for a plain 2 px ice ring */
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn:focus-visible::before { clip-path: none; outline: 2px solid var(--ice); outline-offset: 2px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn .ico { color: var(--ink); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.on .ico { color: var(--ice-text); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.on::before { box-shadow: inset 0 0 0 1px var(--ice-line); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tlabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.radio { display: none; }
+/* with the window off, Map stands where the map was */
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.mapbtn { position: fixed; top: calc(var(--sa-t) + 8px); right: calc(var(--sa-r) + var(--edge)); }
+/* the map: round, var(--map) across, the compass ring 5 px out; the sky camera a square with soft corners */
+.app:is([data-hud="pp"], [data-hud="pl"]) .corner { top: calc(var(--sa-t) + 8px); right: calc(var(--sa-r) + var(--edge)); box-shadow: 0 6px 18px var(--shadow); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .corner.map { box-shadow: 0 0 14px var(--ice-glow), 0 6px 18px var(--shadow); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .corner.sky { overflow: hidden; border-radius: 14px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .corner::after { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-compass { top: calc(var(--sa-t) + 8px - 5px); right: calc(var(--sa-r) + var(--edge) - 5px); }
+.app[data-hud="pl"] .hud-compass { width: calc(var(--map) + 8px); height: calc(var(--map) + 8px); top: calc(var(--sa-t) + 8px - 4px); right: calc(var(--sa-r) + var(--edge) - 4px); }
+/* the road: a 22 px chip under the map (under the icons in landscape), shown for 8 s after the road changes, when
+   something wakes the HUD, and while a Minimal HUD is up; never in a race */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-road { top: calc(var(--sa-t) + 8px + var(--map) + 8px); left: auto; right: calc(var(--sa-r) + var(--edge)); width: var(--map); max-width: none; transform: none;
+  opacity: 0; visibility: hidden; transition: opacity 360ms var(--ease-in), visibility 0s linear 360ms; }
+.app[data-hud="pl"] .hud-road { top: calc(var(--sa-t) + 58px); right: calc(var(--sa-r) + var(--edge) + var(--map) + 10px); width: 144px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud:is([data-road-new], [data-wake]) .hud-road, .app.hud-min:not(.hud-idle):is([data-hud="pp"], [data-hud="pl"]) .hud-road {
+  opacity: 1; visibility: visible; transition: opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.app .hud:has(.hud-race:not([hidden])) .hud-road { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname { justify-content: center; width: 100%; height: 22px; gap: 6px; padding: 0 6px 0 3px; font-size: 11px; letter-spacing: 0.1em; border-width: 1.5px; border-radius: 5px; box-shadow: 0 4px 12px var(--shadow); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname .shield { min-width: 20px; height: 16px; font-size: 11px; }
+/* FOCUS TIME: a 52 px hexagon in the control row, 8 px above BRAKE (left of BRAKE in landscape) */
+.app[data-hud="pp"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px); bottom: calc(var(--ctl-b) + 96px + 8px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
+.app[data-hud="pl"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px); bottom: calc(var(--ctl-b) + 22px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-ability span { max-width: 42px; }
+/* transient things: toasts under the cluster, the radio card docked under it */
+.app[data-hud="pp"] .toasts { top: calc(var(--sa-t) + 168px); }
+.app[data-hud="pl"] .toasts { top: 30%; }
+.app[data-hud="pp"] .radio-card { top: calc(var(--sa-t) + 164px); left: calc(var(--sa-l) + var(--edge)); right: calc(var(--sa-r) + var(--edge)); width: auto; transform: none; }
+.app[data-hud="pl"] .radio-card { top: calc(var(--sa-t) + 104px); left: auto; right: calc(var(--sa-r) + var(--edge)); width: 300px; transform: none; }
+
+/* ------------------------------------------------------------------ slots for the live readouts (HUD_POV_SPEC 7)
+   integrate/live brings these elements; their places are set here so they land in the condensed HUD: the live chip
+   ("Live 3/25") in the top-left corner of the map's box, its 44 px button with transparent padding around a 22 px
+   pill, tucking with the map; the roster under it; the horn in the control row left of FOCUS TIME; on a desktop the
+   chip tops the rail and the horn is a fifth row. Live dots are drawn inside the round map by the game. */
+.app:is([data-hud="pp"], [data-hud="pl"]) .livechip { position: fixed; top: calc(var(--sa-t) + 8px); right: calc(var(--sa-r) + var(--edge) + var(--map) - 44px); width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .livewho { position: fixed; top: calc(var(--sa-t) + 56px); right: calc(var(--sa-r) + var(--edge)); max-height: 50vh; overflow-y: auto; }
+.app[data-hud="pp"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 96px + 8px); right: calc(var(--sa-r) + 20px + 74px + 16px + 11px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
+.app[data-hud="pl"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 22px); right: calc(var(--sa-r) + 200px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
+.app[data-hud="desk"] .tbar .livechip { order: -1; }
 
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 
@@ -905,7 +1055,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .panel h3 { margin: 4px 0 0; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
 .report { width: 100%; font: 500 12.5px/1.45 var(--f-mono, ui-monospace, Menlo, Consolas, monospace); background: var(--glass); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; resize: none; user-select: text; -webkit-user-select: text; }
 .touch { position: absolute; inset: 0; pointer-events: none; }
-.touch-steer { position: absolute; left: 14px; bottom: max(14px, env(safe-area-inset-bottom)); width: min(46vw, 230px); height: 96px; display: grid; place-items: center; pointer-events: auto; touch-action: none;
+.touch-steer { position: absolute; left: calc(var(--sa-l) + 14px); bottom: var(--ctl-b); width: min(46vw, 230px); height: 96px; display: grid; place-items: center; pointer-events: auto; touch-action: none;
   background:
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
     linear-gradient(var(--chrome) 0 0) right top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) right top / 2px 12px no-repeat,
@@ -917,7 +1067,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .touch-hint { position: absolute; top: 9px; font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 .touch-knob { width: 38px; height: 58px; margin-top: 12px; clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
   background: linear-gradient(90deg, var(--clear) 45%, var(--ice) 45% 55%, var(--clear) 55%), var(--g-chrome); }
-.touch-pedals { position: absolute; right: 20px; bottom: max(14px, env(safe-area-inset-bottom)); display: flex; gap: 16px; align-items: flex-end; pointer-events: auto; }
+.touch-pedals { position: absolute; right: calc(var(--sa-r) + 20px); bottom: var(--ctl-b); display: flex; gap: 16px; align-items: flex-end; pointer-events: auto; }
 .pedal { position: relative; isolation: isolate; width: 74px; display: grid; place-items: center; font: 800 17px/1 var(--f-display); letter-spacing: 0.16em; touch-action: none; }
 .pedal::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(-8deg); background: var(--hud); box-shadow: inset 0 0 0 1px var(--line-2); }
 .pedal.gas { height: 132px; color: var(--ice-text); }
@@ -930,6 +1080,13 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .pedal.brake.down::before { background: var(--ember); }
 .touch-shift { display: grid; gap: 10px; }
 .touch-shift .tbtn { min-height: 46px; min-width: 50px; padding: 0; font: 600 22px/1 var(--f-mono); }
+/* manual on a narrow phone: the shift buttons need room beside the pedals, so the pedals slim to 66 px and the steering
+   rail ends 8 px short of them (at 390 px: steer 14..160, shift 168..218, brake 228..294, gas 304..370) */
+@media (max-width: 419px) {
+  .touch:has(.touch-shift) .touch-pedals { gap: 10px; }
+  .touch:has(.touch-shift) .pedal { width: 66px; }
+  .touch:has(.touch-shift) .touch-steer { width: min(46vw, 230px, calc(100vw - 14px - 20px - 202px - 8px - var(--sa-l) - var(--sa-r))); }
+}
 
 /* Ultra Realism: tunnel vision closes in from the edges as the speed builds */
 .tunnel { --t: 0; position: absolute; inset: 0; pointer-events: none; opacity: min(1, calc(var(--t) * 1.7));
@@ -1010,87 +1167,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .grid { grid-template-columns: 1fr 1fr; }
   .grid.nav { grid-template-columns: 1fr 1fr; }
   .result .big { font-size: 64px; }
-  .hud-mph { font-size: 38px; }
-  .hud-gear { font-size: 21px; margin-left: 4px; }
 }
 @media (pointer: coarse) {
-  /* phones: the status row on top (compass, clock), the controls along the top under it, the speed block top left with
-     the numbers under it, pedals and steering at the bottom */
-  .app { --st: 44px; }
-  .hud-compass { --ppd: 1.6px; top: calc(max(10px, env(safe-area-inset-top)) + 8px); width: 156px; }   /* centred on the two-line clock chip */
-  .hud-clock { top: max(10px, env(safe-area-inset-top)); right: 8px; }
-  .hud-bubble { right: 8px; width: 76px; height: 76px; gap: 4px; }
-  .tbar { top: calc(max(12px, env(safe-area-inset-top)) + var(--st)); right: 8px; left: 8px; transform: none; display: flex; gap: 6px; justify-content: flex-end; }
-  .tbar .tbtn { min-height: 44px; padding: 0 10px 0 8px; font-size: 11px; letter-spacing: 0.08em; gap: 6px; }
-  .tbar .tbtn .ico { width: 18px; height: 18px; }
-  .app.hud-idle .tbar .tbtn:not(.menu) { transform: translateY(calc(-100% - 64px)); }   /* a strip here: it goes up */
-  .hud-speed { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 58px + var(--st)); right: auto; left: 10px; gap: 10px; padding: 7px 12px 7px 8px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line); }
-  .hud-rpm { width: 10px; }
-  .hud-main { gap: 5px; justify-items: start; }
-  .hud-row { justify-content: flex-start; gap: 7px; }
-  .hud-mph { font-size: 40px; }
-  .hud-chips { gap: 4px; }
-  .hud-chips i { padding: 3px 5px 2px; font-size: 8.5px; letter-spacing: 0.12em; }
-  .hud-cam { display: none; }
-  .hud-revs { justify-content: flex-start; margin: 0 0 2px 1px; }
-  .hud-revs i { width: 12px; height: 4px; }
-  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 160px + var(--st)); left: 10px; }
-  .hud-stats .oc-mark { display: none; }
-  .hud-mode { font-size: 11px; }
-  .hud-stats span { font-size: 15px; }
-  .hud-stats b { min-width: 78px; }
-  .hud-race { top: calc(max(10px, env(safe-area-inset-top)) + 160px + var(--st)); left: 10px; width: 208px; gap: 4px; padding: 6px 8px 5px 10px; }
-  .hud-pos { column-gap: 8px; padding-bottom: 5px; }
-  .hud-pos > b { font-size: 32px; }
-  .hud-pos > span em { font-size: 13px; }
-  .hud-pos > .hud-timer em { font-size: 14px; }
-  .hud-pos > small { margin-top: 3px; font-size: 9px; }
-  .hud-standings li { grid-template-columns: 14px 30px minmax(0, 1fr) auto; gap: 5px; min-height: 18px; font-size: 12px; }
-  .hud-standings li:not(.near) { display: none; }
-  .hud-race-note { font-size: 8px; }
-  .hud-fps { bottom: auto; right: auto; top: calc(max(10px, env(safe-area-inset-top)) + 248px + var(--st)); left: 12px; }
-  .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 290px + var(--st)); max-width: 92vw; }
-  /* navigation (U2): both cards fold into one line each. The manoeuvre goes under the road chip, where the green prompt
-     was; the destination goes above the chip, in the gap under the stats plate, so neither covers more of the road
-     than the prompt did (the chevrons are down there). The destination drops its road when the manoeuvre's sign
-     already names it, and its icons but the clock. */
-  .hud-nav, .hud-dest { left: 50%; right: auto; width: max-content; max-width: calc(100vw - 20px); transform: translateX(-50%); clip-path: none; }
-  .hud-nav { top: calc(max(10px, env(safe-area-inset-top)) + 330px + var(--st)); height: auto; display: flex; align-items: center; gap: 10px; padding: 5px 12px 5px 9px; }
-  .hud-nav-arrow { width: 24px; height: 24px; flex: none; }
-  .hud-nav-dist span, .hud-nav-exit { display: none; }
-  .hud-nav-dist { flex: none; }
-  .hud-nav-dist b { font-size: 17px; }
-  .hud-nav-sign { min-width: 0; padding: 2px 8px 1px; font-size: 13.5px; }
-  .hud-dest { top: calc(max(10px, env(safe-area-inset-top)) + 254px + var(--st)); display: flex; align-items: center; gap: 0; padding: 5px 12px 5px 10px; font: 500 12px/1.25 var(--f-ui); box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--nav); }
-  .hud-dest small, .hud-dest .dest-road em, .hud-dest .dest-road svg, .hud-dest .dest-traffic svg, .hud-dest[data-same] .dest-road { display: none; }
-  .hud-dest div { display: flex; align-items: center; gap: 5px; flex: none; }
-  .hud-dest .dest-road { flex: 0 1 auto; min-width: 0; }
-  .hud-dest div + div::before { content: "·"; margin-left: 6px; color: var(--dim); }
-  .hud-dest[data-same] .dest-eta::before { content: none; }
-  .hud-dest b { font-size: 12px; }
-  .hud-dest em { font: 500 12px/1.2 var(--f-ui); }
-  .hud-dest .dest-traffic em::before { content: "· "; }
-  .app.hud-idle .hud-dest { transform: translateX(-50%); }
-  .app:has(.hud-nav:not([hidden])) .toasts { top: 52%; }
-  /* in a race the position box is taller than the numbers it replaces: the plate (and the frame rate) go under it */
-  .hud:has(.hud-race:not([hidden])) .hud-fps { top: calc(max(10px, env(safe-area-inset-top)) + 296px + var(--st)); }
-  .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 306px + var(--st)); }
-  .toasts { top: 40%; }
   .seg button { min-height: 44px; }
   .back { min-height: 44px; }
-  .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
-}
-/* a narrow window with a mouse: the desktop HUD, with the compass and the road's sign under the corner window and the
-   clock chip on two lines (as on a phone) so the stats plate keeps the left of the status row */
-@media (max-width: 700px) and (pointer: fine) {
-  .hud-compass { top: max(calc(222px + var(--st)), calc(env(safe-area-inset-top) + 212px + var(--st))); }
-  .hud-road { top: max(calc(256px + var(--st)), calc(env(safe-area-inset-top) + 246px + var(--st))); max-width: 92vw; }
-}
-@media (max-width: 700px), (pointer: coarse) {
-  .hud-clock { flex-direction: column; align-items: flex-end; gap: 4px; height: auto; padding: 6px 10px; }
-  .hud-clock b { font-size: 13px; }
-  .hud-clock em { font-size: 11.5px; }
-  .hud-clock span { padding-left: 0; border-left: 0; font-size: 10.5px; line-height: 12px; }
 }
 
 /* motion is a garnish: off when asked */
@@ -1100,7 +1180,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .brand.hero .word span::after, .sheet.sub, .sheet.home .dock, .sheet-body, .sheet-ghost > * { animation: none !important; }
   .overlay.loading-screen.leaving { animation: none !important; visibility: hidden; }
   .back, .toggle input { transition: none !important; }
-  .tbar .tbtn, .corner, .hud-bubble, .hud-dest { transition: none !important; animation: none !important; }
+  /* the Minimal HUD shows and hides at once (the sky camera still steps off the edge, so the game stops drawing it);
+     no rev-bar flash, no ability pulse; the compass ring follows the data without easing */
+  .tbar .tbtn, .tbar .tbtn .ico, .corner, .hud-dest, .hud-stats, .hud-road, .hud-compass, .hud-clock, .livechip { transition: none !important; animation: none !important; }
+  .hud-rpm div.flash, .hud-ability.ready { animation: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }
 }
@@ -1322,7 +1405,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .rc-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .rc-foot .btn { min-height: 40px; }
 .radio-card .fine { font-size: 11px; }
-@media (pointer: coarse), (max-width: 760px) { .radio-card { right: 8px; left: 8px; top: calc(max(12px, env(safe-area-inset-top)) + 58px); transform: none; width: auto; } }
+@media (max-width: 760px) { .radio-card { right: 8px; left: 8px; top: calc(max(12px, env(safe-area-inset-top)) + 58px); transform: none; width: auto; } }
 @media (prefers-reduced-motion: reduce) { .rc-eq em, .radio-card { animation: none !important; } }
 
 /* ------------------------------------------------------------------ the phone (U6, Phone.tsx): a handset over the pause screen */

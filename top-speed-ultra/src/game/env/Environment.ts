@@ -222,6 +222,19 @@ export class Environment {
     return Math.round(66 + 8 * Math.cos(((hour - 15) / 24) * Math.PI * 2) + TEMP_WX[this.currentWeather(now)]);
   }
 
+  // the time the sky shows, for the HUD: a preset's own hour (Day is 12:30 PM), or in Live this device's clock in Orange
+  // County's time zone (the sun follows the real time there)
+  private clockMin = -1; private clockLive = '';
+  clockText(now = new Date()): string {
+    if (this.time === 'live') {
+      const m = Math.floor(now.getTime() / 60000);
+      if (this.clockMin !== m) { this.clockMin = m; this.clockLive = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }); }
+      return this.clockLive;
+    }
+    const h = TEMP_HOUR[this.time], hh = Math.floor(h), mm = Math.round((h - hh) * 60);
+    return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${hh < 12 ? 'AM' : 'PM'}`;
+  }
+
   private targetFor(now: Date): State {
     const w = WX[this.currentWeather(now)];
     let alt: number, az: number;

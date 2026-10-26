@@ -1,7 +1,7 @@
 // The in-game phone (U6 in PROJECT_OC_UI_TARGET.md; the style library's 09_PHONE_UI): a phone-shaped overlay that
 // slides in from the right of the pause screen. Its apps open only what exists (the map, the garage, the races, the
 // radio, your bests, your profile, settings, feedback, your homes, your credits, and since 2026-10-21 the story's
-// Messages and Contacts, story.ts). The clock is this device's. Credits are earned by driving; nothing on the phone
+// Messages and Contacts, story.ts). The clock is the game's (the time the sky shows). Credits are earned by driving; nothing on the phone
 // costs real money, and no message is sent or received over a network: the characters are the game's own.
 import { useEffect, useState } from 'react';
 import { Ico } from './Icons';
@@ -17,8 +17,8 @@ const APPS: App[] = [
   { id: 'homes', name: 'Homes', icon: 'home' }, { id: 'messages', name: 'Messages', icon: 'chat' }, { id: 'contacts', name: 'Contacts', icon: 'driver' },
 ];
 
-interface PhoneProps { name: string; credits: number; level: number; book: ProfileBook; onOpen: (a: PhoneApp) => void; onJob: (j: Job) => void; onClose: () => void }
-export function Phone({ name, credits, level, book, onOpen, onJob, onClose }: PhoneProps) {
+interface PhoneProps { clock?: () => string; name: string; credits: number; level: number; book: ProfileBook; onOpen: (a: PhoneApp) => void; onJob: (j: Job) => void; onClose: () => void }
+export function Phone({ clock, name, credits, level, book, onOpen, onJob, onClose }: PhoneProps) {
   const [now, setNow] = useState(() => new Date());
   const [app, setApp] = useState<'home' | 'credits' | 'messages' | 'contacts'>('home');
   const [thread, setThread] = useState<string | null>(null);
@@ -30,7 +30,8 @@ export function Phone({ name, credits, level, book, onOpen, onJob, onClose }: Ph
     if (ids.length) { p.story.read.push(...ids); book.save(); }
   };
   useEffect(() => { const t = setInterval(() => setNow(new Date()), 15000); return () => clearInterval(t); }, []);
-  const time = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  // the game's clock (the time the sky shows), the same as the pause screen's; this device's without a game
+  const time = clock?.() || now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   return (
     <div className="overlay phone-wrap" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <section className="phone" role="dialog" aria-label="Phone">

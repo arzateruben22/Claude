@@ -81,6 +81,9 @@ export interface Hud {
   // the camera in use ('back' while looking back) and whether the car's own cluster shows the live speed and gear (the
   // hypercar's display): together they let the HUD drop its duplicate speed in the seat view
   view: CamMode | 'back'; liveCluster: boolean;
+  // the condensed HUD: the brake pedal (0..1; a hard stop wakes the tucked map), the time the sky shows ('12:30 PM') and
+  // where the temperature comes from ('simulated'), for the pause screen, the phone and the desktop map caption
+  brake: number; clock: string; tempNote: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -1427,6 +1430,7 @@ export class Game {
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
+      brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
