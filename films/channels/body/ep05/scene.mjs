@@ -4,13 +4,13 @@
 //   lung  (arbitrary units, generations compressed; badged "not to scale") an airway tree branching 7 times from
 //         a windpipe; at every tip a cluster of air sacs (one InstancedMesh). The tree is moved so the hero tip's
 //         cluster sits at the origin; there the hero sac is cut open (hollow: no cap, both faces drawn) with a net
-//         of capillaries over the cluster. In the change an "airy flesh" envelope (the old idea, an illustration)
-//         is drawn over the cluster and dissolves on "bubbles".
+//         of capillaries over the cluster. In the change a "clotted blood" envelope (the old idea, an illustration:
+//         dense, solid flesh) is drawn over the cluster and dissolves on "bubbles".
 //   wall  (µm, true scale for the wall and the cell; badged "wall and cell to scale · O₂ enlarged") air on the left,
-//         the 0.5 µm barrier (its lining included), a capillary with a red cell (set/rbc.js) on the right; O₂ slips
+//         a 0.4 µm barrier (its lining included; under 0.5 µm, c7), a capillary with a red cell (set/rbc.js) on the right; O₂ slips
 //         across and the cell flushes; the wall thickens toward the air, O₂ piles up against it and the cell dulls.
 //   room  (metres) a person 1.75 m tall; the sacs unfold from the chest into a 70 m² floor (8.37 m square of tiles),
-//         a singles tennis court's lines (23.77 × 8.23 m) around it; the tiles fold back for the takeaway; the person
+//         a full doubles tennis court's lines (23.77 × 10.97 m = 260.8 m²) around it; the tiles fold back for the takeaway; the person
 //         breathes through the tally.
 //   exit  a white blood cell pressed into a seam between two lining cells of a vessel wall (the tease).
 import * as THREE from "three";
@@ -117,10 +117,12 @@ HERO.forEach((C, k) => { const r = rng(300 + k); for (let n = 0; n < 30; n++) {
     pts.push(d.multiplyScalar(C.r(d.toArray()) * 1.02).toArray());
   }
   const P = path(pts), m = new THREE.Mesh(tube(P, { radius: HC[k].r * 0.03, radial: 8, segments: 96 }), capMat); C.group.add(m); CAPS.push(m); } });
-// the old idea, drawn over the cluster: airy flesh (pale, finely spongy, not a clot), opaque while held, so "bubbles"
-// is a reveal; it fades by alpha hashing (no sorting: depth and focus stay right)
-const fleshMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#D9AFA6"), roughness: 0.9, alphaHash: true, opacity: 0, emissive: lin("#6B4A3A"), emissiveIntensity: 0.05 }), { fresnel: 0.2, key: "flesh" });
-const FLESHM = cutaway({ radius: HS.r * 2.9, noise: { amp: 0.08, freq: 5, seed: 7 }, segments: [128, 96], material: fleshMat });
+// the old idea, drawn over the cluster: the lung as clotted blood, dense, solid flesh (a dark liver red, smooth and
+// gently lumpy, no pores: not foam, so the pale bubbles under it are the break), opaque while held, so "bubbles" is a
+// reveal; it fades by alpha hashing (no sorting: depth and focus stay right). 26 Oct audit: was pale #D9AFA6, matte
+// (roughness 0.9) and finely pitted (noise amp 0.08, freq 5), which read as airy foam
+const fleshMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8A3A34"), roughness: 0.45, alphaHash: true, opacity: 0, emissive: lin("#3A1512"), emissiveIntensity: 0.06 }), { fresnel: 0.3, key: "flesh" });
+const FLESHM = cutaway({ radius: HS.r * 2.9, noise: { amp: 0.035, freq: 1.3, seed: 7 }, segments: [128, 96], material: fleshMat });
 FLESHM.group.position.copy(HC.reduce((a, s) => a.add(s.c), new THREE.Vector3()).multiplyScalar(1 / HC.length)); G.lung.add(FLESHM.group);
 const writeLung = (t) => {
   const F = FILM.flesh, o = Math.min(seg(t, F[0], F[0] + 0.6), 1 - seg(t, F[1], F[2]));
@@ -133,7 +135,7 @@ const writeLung = (t) => {
 };
 
 // ════ the wall, at true scale (µm) ═══════════════════════════════════════════════════════════════
-const WS = { x: 0, wall: 0.35, endo: 0.15 };   // 0.35 + 0.15 = the 0.5 µm barrier
+const WS = { x: 0, wall: 0.28, endo: 0.12 };   // 0.28 + 0.12 = a 0.4 µm barrier: under 0.5 µm, as over much of the lung (c7; was 0.35 + 0.15 = 0.5)
 const wallMat = mat("#E7C2B8", "wall", { fres: 0.35 });
 const WALLC = [lin("#E7C2B8"), lin("#BFA294")];
 const wallGeo = (() => { const g = new THREE.BoxGeometry(1, 30, 8, 1, 160, 40), q = g.attributes.position;
@@ -182,11 +184,15 @@ TILE.forEach((T, i) => tiles.setColorAt(i, new THREE.Color(1, 1, 1).multiplyScal
 const ground = new THREE.Mesh(new THREE.CircleGeometry(400, 128), mat("#0F302A", "ground", { fres: 0, ei: 0, r: 0.95 })); ground.rotation.x = -Math.PI / 2; G.room.add(ground);
 const lineMat = mat("#EFF6F2", "lines", { fres: 0, ei: 0.5, emi: "#EFF6F2" });
 const COURT = new THREE.Group(); G.room.add(COURT);
-{ const Lc = 23.77, Wd = 10.97, Ws = 8.23, w = 0.05;
+{ const Lc = 23.77, Wd = 10.97, Ws = 8.23, Sv = 6.4, post = 0.914, w = 0.05;
   const bar = (x, z, sx, sz) => { const m = new THREE.Mesh(new THREE.BoxGeometry(sx, 0.01, sz), lineMat); m.position.set(x, 0.045, z); COURT.add(m); };
-  // a singles court (23.77 × 8.23 m, c10): its own lines only, so the floor's share of it reads
-  bar(0, -Lc / 2, Ws, w); bar(0, Lc / 2, Ws, w); bar(-Ws / 2, 0, w, Lc); bar(Ws / 2, 0, w, Lc);
-  bar(0, -6.4, Ws, w); bar(0, 6.4, Ws, w); bar(0, 0, w, 12.8); bar(0, 0, Ws + 0.9, 0.06); }
+  // a full doubles court (23.77 × 10.97 m = 260.8 m², c10), its lines as a real court has them, drawn whole: the 70 m²
+  // floor fills about a quarter of it (26 Oct audit: was a singles court, 23.77 × 8.23 m)
+  bar(0, -Lc / 2, Wd, w); bar(0, Lc / 2, Wd, w);                                          // baselines, the doubles width
+  for (const s of [-1, 1]) { bar(s * Wd / 2, 0, w, Lc); bar(s * Ws / 2, 0, w, Lc); }      // doubles and singles sidelines
+  bar(0, -Sv, Ws, w); bar(0, Sv, Ws, w); bar(0, 0, w, 2 * Sv);                            // service lines 6.40 m from the net, between the singles sidelines; the centre service line
+  bar(0, -Lc / 2 + 0.05, w, 0.1); bar(0, Lc / 2 - 0.05, w, 0.1);                          // the centre marks on the baselines
+  bar(0, 0, Wd + 2 * post, 0.06); }                                                      // the net, to its posts 0.914 m outside the doubles sidelines
 COURT.position.set(1.6, 0, 0); COURT.rotation.y = 0;
 // the person: a simple standing figure, 1.75 m
 const skinMat = mat("#D9B8A8", "person", { fres: 0.2 });
@@ -221,7 +227,8 @@ const writeRoom = (t) => {
     tiles.setMatrixAt(i, mT.compose(vP.set(...p), qT, vS.set(s2, 0.3 + 0.7 * u, s2)));
   }
   tiles.instanceMatrix.needsUpdate = true;
-  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.6)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; COURT.scale.setScalar(1);
+  // gone 0.45 s into the fold: the camera dives to the person and the doubles court's near corner leaves the frame ~0.75 s in
+  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.45)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; COURT.scale.setScalar(1);
   COURT.children.forEach((m) => { m.scale.y = 1; m.visible = co > 0.01; });
   const br = FILM.breaths.reduce((a, b) => Math.max(a, t >= b && t < b + 4 ? Math.sin(Math.PI * Math.min(1, (t - b) / 2.4)) : 0), 0);
   torso.scale.set(1 + 0.08 * br, 1, 0.62 * (1 + 0.08 * br));
@@ -285,10 +292,10 @@ const ANCH = {
   flesh: () => FLESHM.group.position.clone().add(new THREE.Vector3(HS.r * 1.5, HS.r * 1.3, HS.r * 1.2)).toArray(),   // on the envelope's near face
   cap: () => HS.c.clone().add(new THREE.Vector3(-0.45, 0.45, 0.77).normalize().multiplyScalar(HS.r)).toArray(),       // the hero sac's near face
   air: () => wp("wall", [-1.6, 4.5, 0]),
-  wallf: () => wp("wall", [0.25, -4, 0]),
+  wallf: () => wp("wall", [0.2, -4, 0]),                      // the middle of the 0.4 µm barrier
   rbc: () => wp("wall", [4.6, 2.8, 0]),
   head: () => wp("room", [0.15, 2.1, 0]),                     // just above the head: the dot never hides the person
-  court: () => wp("room", [1.6 - 8.23 / 2, 0.05, -8]),        // the singles sideline, off the floor
+  court: () => wp("room", [1.6 - 10.97 / 2, 0.05, -8]),       // the doubles sideline, off the floor
   wbc: () => { G.exit.updateMatrixWorld(true); return WBC.group.localToWorld(new THREE.Vector3(4.3, 4.2, 0)).toArray(); },   // its shoulder
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });

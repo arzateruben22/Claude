@@ -50,6 +50,10 @@ NARRATOR = "bf_emma"             # DECISIONS.md: Meanwhile, Inside's narrator (B
 LANG = "en-gb"
 # Kokoro speed per sentence of each line, chosen from measured durations (README.md, "Voice"). The
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
+# vo08's "Next: the spark." is at 1.0 (26 Oct audit): at 0.84-0.98 bf_emma releases the final /k/ into
+# 40-90 ms of voiced schwa ("spark-uh"; the recognizer heard "spark eh" / "sparky"); at 1.0 only a faint
+# ~45 ms creaky decay remains (periodicity <= 0.52, below the 0.55 voiced cut-off; 0.88 had ~100 ms at
+# 0.64-0.72), and the recognizer hears "spark".
 SPEEDS = {
     "vo01": [1.0, 0.8],
     "vo02": [0.92, 0.9],
@@ -58,7 +62,7 @@ SPEEDS = {
     "vo05": [0.9, 0.88, 0.86],
     "vo06": [0.86, 0.84],
     "vo07": [0.88, 0.82],
-    "vo08": [0.88, 0.86],
+    "vo08": [1.0, 0.86],
 }
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question
 # per-line pauses where a line wants more air (episode 2: the whoa breathes before its number)

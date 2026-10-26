@@ -91,15 +91,15 @@
   },
   {
    "t": 14.950000000000001,
-   "kind": "swell",
-   "tag": "panels",
-   "t1": 16.950000000000003
-  },
-  {
-   "t": 15.0,
    "kind": "badge",
    "tag": "ill",
    "text": "illustration: one stained tissue, two readings"
+  },
+  {
+   "t": 14.950000000000001,
+   "kind": "swell",
+   "tag": "panels",
+   "t1": 16.950000000000003
   },
   {
    "t": 26.0,
@@ -183,12 +183,6 @@
    "tag": "post"
   },
   {
-   "t": 40.9333,
-   "kind": "badge",
-   "tag": "nts2",
-   "text": "not to scale"
-  },
-  {
    "t": 42.0,
    "kind": "section",
    "id": "whoa",
@@ -215,6 +209,12 @@
    "kind": "spike",
    "tag": "use0",
    "gain": -6.0
+  },
+  {
+   "t": 45.53333333333333,
+   "kind": "badge",
+   "tag": "nts2",
+   "text": "not to scale"
   },
   {
    "t": 45.53333333333333,

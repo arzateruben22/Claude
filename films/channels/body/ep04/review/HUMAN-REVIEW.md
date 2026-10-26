@@ -5,9 +5,11 @@ Meanwhile, Inside No. 04, "The gap". Nothing has been posted.
 ## This episode
 - **History.** Golgi's continuous web, Cajal's separate cells, the shared 1906 Nobel (c4–c6, Scientifica), and the
   1954–55 electron micrographs (c7, a JCB retrospective). "Who made the stain" (c4): Golgi's black reaction, 1873
-  (Scientifica; cross-check PMC9776620). "With it" (c5): Cajal used Golgi's stain (a Pfizer article, from the search
-  tool's summary, not a verbatim quote: check the page). "For decades, no microscope could show it" (c1) is about
-  seeing the gap, not about who believed what: by about 1900 most anatomists accepted Cajal on other evidence.
+  (Scientifica; cross-check PMC9776620). "With it" (c5): Cajal used Golgi's stain (NobelPrize.org, "Life and
+  discoveries of Santiago Ramón y Cajal": in 1887 Simarro showed him material impregnated with the Golgi stain;
+  cross-check a Pfizer article, from the search tool's summary, not a verbatim quote). "For decades, no microscope
+  could show it" (c1) is about seeing the gap, not about who believed what: by about 1900 most anatomists accepted
+  Cajal on other evidence.
 - **"Through a lens, they look joined"** (c17): a light microscope resolves about 200 nm and the cleft is about
   20–50 nm, so under a lens the contact looks continuous; the electron microscope (c7) shows the gap.
 - **The why's view** is a model drawn in an electron micrograph's style, not a micrograph and not footage (an
@@ -16,7 +18,8 @@ Meanwhile, Inside No. 04, "The gap". Nothing has been posted.
   why's handoff, with "slowed" top left.
 - **"At most junctions"** (c8): electrical synapses exist. The picture is a chemical synapse.
 - **The panels** are illustrations: one seeded drawing, joined (Golgi) or stopped short (Cajal). They are not
-  either man's drawings. Badged "illustration: one stained tissue, two readings".
+  either man's drawings. Badged "illustration: one stained tissue, two readings" from their first frame; the plain
+  stain shows first, Golgi's reading arrives on "saw one continuous web", Cajal's with his name.
 - **"Use a junction, and it can grow stronger: likely part of how you learn"** (c12): hedged as the source is
   (Martin, Grimwood & Morris 2000: plasticity is necessary for learning and memory, but little data supports
   sufficiency).

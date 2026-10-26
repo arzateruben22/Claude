@@ -18,15 +18,27 @@ Meanwhile, Inside No. 06, "The exit". Nothing has been posted.
 - **The tally** (c23): "more than ten million" holds at the floor of every estimate in the note (a 19 h half-life
   gives 1.6–4.2 × 10¹⁰ a day; the tally runs at 1.5 × 10¹⁰), badged "low estimate".
 - **The fingertip** is stylised: a swelling and a soft glow, the same on any skin; no wound, blood or pus drawn.
+- **The tease:** "Next: the spark. What sets off nearly every heartbeat you have?" (`{-}`; the SA-node patch is
+  picture only, its sources belong to episode 7). Episode 7's answer must say 'nearly every' / 'each normal beat' to
+  match.
+- **The 26 Oct audit** (an independent fact check): the tease's "What sets off every heartbeat you've ever had?"
+  became "…nearly every heartbeat you have?" (ectopic beats start outside the SA node, and the embryo's first beats
+  come before the node is visible as a structure); "past" is pinned in pron.json (the take was heard as "paste");
+  lines 4 and 8 re-voiced, the other six byte-identical; "Next: the spark." now at speed 1.0 (at 0.88 a short "uh"
+  followed "spark").
 
 ## Every episode
-1. **Claims.** A physiologist works through `CLAIMS-REVIEW.md` (every row from a search excerpt only).
+1. **Claims.** A physiologist works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt only,
+   so a person opens each link before posting and ticks it. The episode does not post until every row is ticked.
 2. **The pictures.** The README's "For a human to review" lists everything shown but not claimed, and every badge.
 3. **The channel.** The handle (@meanwhileinside (TODO: not yet chosen)) and a trademark search before the first post.
 4. **AI labelling.** TikTok's AI-generated label; "Voice: synthetic" in the post text; the same on Reels and Shorts.
 5. **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/body/ep06 --sources`.
-6. **A listen.** Virchow (FEER-koh) and Cohnheim (KOHN-hime), fixed in pron.json; "eighteen sixty-seven"; "past" and
-   "million" (the recognizer heard neither: check them by ear).
+6. **A listen.** Virchow (FEER-koh), Cohnheim (KOHN-hime) and "past" (PAHST), fixed in pron.json; "eighteen
+   sixty-seven"; "Cells roll on past" (the recognizer now hears "past", not "paste"; since the pin "on" takes a full
+   stress, and the final /t/ ends in a short voiced release: check it does not sound like "roll ON past" or
+   "past-uh"); "spark" in the tease (check that no "uh" is heard: a faint tail remains, much weaker
+   than at 0.88); "million" (the recognizer did not hear it: check it by ear).
 7. **Cover frame.** Frame 0: the cell halfway through the wall and "The exit".
 8. **Upload** the MP4 directly; auto-captions off.
 

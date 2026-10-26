@@ -174,7 +174,7 @@ CAPTION_KEEP = [
     "bone marrow",
     "new neutrophils",
     "ten million",
-    "every heartbeat",
+    "nearly every heartbeat",   # 26 Oct audit: was "every heartbeat"; the hedge stays with its noun
     "the spark",
     "pile up",
     "as you watched",

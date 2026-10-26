@@ -50,11 +50,13 @@ NARRATOR = "bf_emma"             # DECISIONS.md: Meanwhile, Inside's narrator (B
 LANG = "en-gb"
 # Kokoro speed per sentence of each line, chosen from measured durations (README.md, "Voice"). The
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
+# 26 Oct audit: only the re-worded sentences changed speed, a little faster, so the change and why
+# beats still end on 28.0 s and 44.0 s and the film stays 74.4 s (at the old speeds it ran 75.2 s).
 SPEEDS = {
     "vo01": [1.0, 0.92, 0.85],
     "vo02": [0.88, 0.88, 0.88],
-    "vo03": [0.92, 0.9],
-    "vo04": [0.92, 0.94, 0.9, 0.88],
+    "vo03": [0.93, 0.91],              # 26 Oct audit: "clotted blood", "an animal's lung" (was 0.92, 0.9)
+    "vo04": [0.92, 0.96, 0.9, 0.88],   # 26 Oct audit: "Over much of it … under half" (was 0.94)
     "vo05": [0.9, 0.88],
     "vo06": [0.84, 0.84],
     "vo07": [0.8, 0.8],

@@ -122,7 +122,7 @@
    "text": "illustration: the old idea"
   },
   {
-   "t": 19.6,
+   "t": 19.633333333333333,
    "kind": "label",
    "tag": "flesh"
   },
@@ -132,10 +132,10 @@
    "tag": "year"
   },
   {
-   "t": 26.6,
+   "t": 26.866666666666667,
    "kind": "dissolve",
    "tag": "bubbles",
-   "t1": 27.2
+   "t1": 27.466666666666665
   },
   {
    "t": 28.0,
@@ -155,48 +155,48 @@
    "text": "wall and cell to scale · O₂ enlarged"
   },
   {
-   "t": 31.6,
+   "t": 31.566666666666666,
    "kind": "label",
    "tag": "wall"
   },
   {
-   "t": 32.266666666666666,
+   "t": 32.233333333333334,
    "kind": "label",
    "tag": "air"
   },
   {
-   "t": 33.2,
+   "t": 33.166666666666664,
    "kind": "counter.show",
    "tag": "wallt"
   },
   {
-   "t": 35.833333333333336,
+   "t": 35.733333333333334,
    "kind": "label",
    "tag": "rbc"
   },
   {
-   "t": 36.166666666666664,
+   "t": 36.1,
    "kind": "badge",
    "tag": "slow",
    "text": "slowed"
   },
   {
-   "t": 36.666666666666664,
+   "t": 36.6,
    "kind": "diffuse",
    "tag": "slip",
-   "t1": 39.233333333333334
+   "t1": 39.166666666666664
   },
   {
-   "t": 39.53333333333333,
+   "t": 39.43333333333333,
    "kind": "swell",
    "tag": "thicken",
-   "t1": 41.266666666666666
+   "t1": 41.199999999999996
   },
   {
    "t": 43.983333,
    "kind": "badge",
    "tag": "ill2",
-   "text": "illustration · area to scale"
+   "text": "area to scale · estimates 50–140 m²"
   },
   {
    "t": 44.0,
@@ -226,13 +226,13 @@
    "tag": "area-end"
   },
   {
-   "t": 49.9,
+   "t": 49.86666666666667,
    "kind": "impact",
    "tag": "court",
    "gain": -6.0
   },
   {
-   "t": 50.0,
+   "t": 49.96666666666667,
    "kind": "label",
    "tag": "court"
   },

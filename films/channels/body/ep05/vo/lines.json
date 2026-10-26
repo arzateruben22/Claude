@@ -84,21 +84,21 @@
    ],
    "phonemes": "fɔː sˈɛntʃəɹiz, fɪzˈɪʃənz tˈɔːt ðə lˈʌŋ wɒz klˈɒtɪd blˈʌd, ðeə tə kˈuːl ðə hˈɑːt. ɪn sˈɪkstiːn sˈɪkstiwˌɒn, mɑːtʃˈɛləʊ malpˈiːɡi pˌʊt ɐn ˈanɪməlz lˈʌŋ ˌʌndəɹ ɐ mˈaɪkɹəskˌəʊp: bˈʌbəlz.",
    "speeds": [
-    0.92,
-    0.9
+    0.93,
+    0.91
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.5767,
-     4.8767
+     4.5739,
+     4.8739
     ]
    ],
    "file": "03.wav",
-   "dur": 10.522,
-   "sha256": "cc0c8eba96a862cd7b3ade8240e32a5b324aa0d5a64c422db7a89bf2427caca5"
+   "dur": 10.484,
+   "sha256": "bcfe212091001c5c1ea10ce554784e21b391b1e5df5a0b24442d605050628abf"
   },
   {
    "id": "vo04",
@@ -110,7 +110,7 @@
    "phonemes": "ˈiːtʃ sˈak ɪz ɹˈapt ɪn kˈapɪləɹiz. ˌəʊvə mˈʌtʃ ɒv ɪt, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz ˌʌndə hˈɑːf ɐ mˈaɪkɹəʊmˌiːtə: fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
    "speeds": [
     0.92,
-    0.94,
+    0.96,
     0.9,
     0.88
    ],
@@ -125,17 +125,17 @@
      2.4097
     ],
     [
-     8.2031,
-     8.5031
+     8.053,
+     8.353
     ],
     [
-     11.0219,
-     11.3219
+     10.8718,
+     11.1718
     ]
    ],
    "file": "04.wav",
-   "dur": 13.741,
-   "sha256": "00175a6b41a6301c0523670accfbe4f25cf6ee4291c49ff968f2caa2fca88c71"
+   "dur": 13.591,
+   "sha256": "540888bf93d3e71deec9b58c2fbaabd385aa642e5cd255e709fa8544846d633b"
   },
   {
    "id": "vo05",

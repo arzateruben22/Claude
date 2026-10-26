@@ -32,8 +32,17 @@ pictures first.
 - **Meanwhile:** the readout lights on its pulse line: more than ten million new neutrophils while you watched (a low
   estimate, badged); the locator marks the bone marrow.
 - **Tease:** out of the fingertip, up the arm, to the heart; a small patch high in its right upper chamber flickers
-  on each beat. The end card irises back to frame 0 and carries a fact: Augustus Waller saw blood cells cross
-  capillary walls in 1846, 21 years before Cohnheim.
+  on each beat. "Next: the spark. What sets off nearly every heartbeat you have?" The end card irises back to
+  frame 0 and carries a fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before
+  Cohnheim.
+
+The 26 Oct audit (an independent fact check, also listed in `script.md`) changed the tease's question from "What
+sets off every heartbeat you've ever had?" to "What sets off nearly every heartbeat you have?" (not every beat of a
+life starts at the SA node: ectopic beats start elsewhere, and the embryo's heart beats before the node exists as a
+structure; episode 7's answer must say "nearly every" / "each normal beat" to match). It pinned "past" in
+`pron.json` (the take was heard as "paste") and voiced the tease's "Next: the spark." at speed 1.0 (at 0.88 the
+final /k/ released into a short "uh"). Lines 4 and 8 were re-voiced; the other six came back byte-identical, and
+every beat still holds its line.
 
 ## The picture
 
@@ -48,13 +57,13 @@ through a waist held to the gap), with a lobed nucleus that goes first.
 | File | What it is |
 |---|---|
 | `script.md`, `claims.json` | 8 lines, 168 words; 25 claims, all from search excerpts |
-| `pron.json` | `Virchow` (FEER-koh), `Cohnheim` (KOHN-hime) |
-| `voice.py` | Episode 1's wrapper, one speed per sentence; per-line pauses in the hook, the meanwhile and the tease |
+| `pron.json` | `Virchow` (FEER-koh), `Cohnheim` (KOHN-hime), `past` (PAHST, since the 26 Oct audit) |
+| `voice.py` | Episode 1's wrapper, one speed per sentence; per-line pauses in the hook, the meanwhile and the tease; "Next: the spark." at 1.0 |
 | `compile.py`, `scene.mjs` | The direction and the picture |
 | `qa/` | Episode 1's tools (unchanged copies) |
 | `../set/wanderer.js` | New: the neutrophil (B8, the wanderer) |
 
-No kit file was changed.
+One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
 
 ## For a human to review
 
@@ -65,4 +74,10 @@ No kit file was changed.
   figure and the heart.
 - **The readout:** new neutrophils at 1.5 × 10¹⁰ a day (c23's floor; 173,611 a second, computed), passing ten
   million at 57.6 s.
-- **Listen at T0:** Virchow, Cohnheim, "eighteen sixty-seven", neutrophil, micrometres.
+- **The tease:** "What sets off nearly every heartbeat you have?" Episode 7's hook and answer must say "nearly
+  every" / "each normal beat" to match (the 26 Oct audit).
+- **Sources:** every claim was checked from a search excerpt only; a person opens each link before posting
+  (`review/CLAIMS-REVIEW.md`).
+- **Listen at T0:** Virchow, Cohnheim, "eighteen sixty-seven", neutrophil, micrometres; "past" (pinned PAHST; "on"
+  before it now takes a full stress, and the /t/ has a short voiced release) and "spark" (check that no "uh" is
+  heard: a faint tail remains, much weaker than at 0.88).

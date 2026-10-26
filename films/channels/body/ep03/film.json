@@ -404,12 +404,12 @@
    {
     "t": 35.53333333333333,
     "pos": [
-     236.0,
+     246.0,
      -4.0,
      150.0
     ],
     "look": [
-     236.0,
+     246.0,
      -22.0,
      0.0
     ],
@@ -434,13 +434,13 @@
    {
     "t": 42.6,
     "pos": [
-     66.0,
-     12.0,
+     58.0,
+     10.0,
      260.0
     ],
     "look": [
-     66.0,
-     12.0,
+     58.0,
+     10.0,
      0.0
     ],
     "fov": 34,
@@ -449,13 +449,13 @@
    {
     "t": 54.4,
     "pos": [
-     70.0,
-     12.0,
+     62.0,
+     10.0,
      280.0
     ],
     "look": [
-     70.0,
-     12.0,
+     62.0,
+     10.0,
      0.0
     ],
     "fov": 34,
@@ -667,7 +667,7 @@
    "mark": "dot",
    "at": "sheath",
    "t0": 31.466666666666665,
-   "t1": 33.36666666666667,
+   "t1": 32.43333333333333,
    "shot": "fibres",
    "side": 1
   },
@@ -678,7 +678,7 @@
    "mark": "dot",
    "at": "node",
    "t0": 33.46666666666667,
-   "t1": 35.03333333333333,
+   "t1": 34.5,
    "shot": "fibres",
    "side": 1
   },
@@ -689,7 +689,7 @@
    "mark": "dashed",
    "at": "damaged",
    "t0": 36.8333,
-   "t1": 42.199999999999996,
+   "t1": 40.833333333333336,
    "shot": "fibres",
    "side": 1
   },
@@ -758,7 +758,7 @@
    "t1": 20.733333333333334,
    "value": 300000000,
    "unit": "m/s",
-   "label": "Müller wondered: as fast as light?"
+   "label": "Müller: as fast as light?"
   },
   {
    "id": "frog",
@@ -782,7 +782,7 @@
     ],
     [
      24.233333333333334,
-     "Helmholtz, 1850, frog: about · cheetah speed"
+     "Helmholtz 1850 · cheetah speed"
     ]
    ]
   },
@@ -834,7 +834,7 @@
    "t1": 54.199999999999996,
    "value": 540,
    "unit": "km/h",
-   "label": "in km/h · fastest F1 race speed: 373"
+   "label": "F1's fastest race speed: 373"
   },
   {
    "id": "toe",
@@ -914,7 +914,7 @@
   "t1": 67.8,
   "rate": 1.25,
   "unit": "beats",
-  "label": "a resting heart, while you watched"
+  "label": "heartbeats while you watched"
  },
  "segBeats": [
   60.8,

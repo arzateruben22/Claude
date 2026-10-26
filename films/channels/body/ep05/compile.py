@@ -6,10 +6,10 @@ Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
 Places (scene.mjs), joined by the membrane iris on a section's sound:
   lung   an airway tree (generations compressed, badged) whose chosen tip, a cluster of air sacs, sits at the origin;
          the hero sac cut open (hollow), a net of capillaries over it. The change draws the old idea over the same
-         cluster (an "airy flesh" envelope, an illustration) and dissolves it on "bubbles".
-  wall   the air–blood wall at true scale (µm): air, a 0.5 µm wall, a capillary with a red cell; O₂ slipping across;
+         cluster (a "clotted blood" envelope: dense, solid flesh, an illustration) and dissolves it on "bubbles".
+  wall   the air–blood wall at true scale (µm): air, a 0.4 µm wall (under 0.5 µm, c7), a capillary with a red cell; O₂ slipping across;
          then the wall thickens and the O₂ slows (the stakes).
-  room   metres: a person, the sacs unfolding from their chest into a 70 m² floor, a tennis court's lines around it;
+  room   metres: a person, the sacs unfolding from their chest into a 70 m² floor, a full doubles tennis court's lines around it;
          they fold back for the takeaway; the person breathes through the tally.
   exit   a white blood cell pressed into a seam in a vessel wall (the tease); at the end card the iris returns to
          frame 0's cluster (a seamless replay).
@@ -45,11 +45,11 @@ def cut(t):
 
 
 # the hook holds on the cluster through "Into these."; the iris then cuts (on the section's sound) to the windpipe
-CUT = {"lung": cut(B["normal"]["t0"]), "wall": cut(A("vo04:At", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
+CUT = {"lung": cut(B["normal"]["t0"]), "wall": cut(A("vo04:Over", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
 SHOTS = [{"at": 0.0, "name": "hook"}] + [{"at": t, "name": n} for n, t in CUT.items()]
 IRIS = [{"t": t, "cx": 0.5, "cy": 0.42} for t in CUT.values()]
 
-FLESH = [A("vo03:airy", -0.2), A("vo03:bubbles", -0.15), A("vo03:bubbles", 0.45)]    # the old idea drawn over the cluster; dissolves on "bubbles"
+FLESH = [A("vo03:clotted", -0.2), A("vo03:bubbles", -0.15), A("vo03:bubbles", 0.45)]    # the old idea drawn over the cluster; dissolves on "bubbles"
 WALL = {"slip": [A("vo04:Oxygen", -0.1), A("vo04:needed", 0.3)], "thick": [A("vo04:Thicken", -0.05), A("vo04:wall#2", 0.3)], "slow": A("vo04:harder")}
 ROOM = {"unfold": [A("vo05:Unfold"), A("vo05:metres", 0.2)], "court": A("vo05:tennis", -0.1), "chest": A("vo05:chest"),
         "fold": [A("vo06:So", 0.0), A("vo06:bag", 0.3)], "sponge": A("vo06:sponge", -0.1), "breath0": B["meanwhile"]["t0"] - 3.2}
@@ -73,19 +73,22 @@ CAM = {
         {"t": B["why"]["t0"] + 0.2, "pos": [2.6, 1.8, 9.0], "look": "HERO", "fov": 34, "ease": "p2"},           # the open sac, its capillaries
         {"t": CUT["wall"], "pos": [2.2, 1.5, 7.8], "look": "HERO", "fov": 34, "ease": "sine"},
     ],
-    # the camera sits between the wall's faces (no side face adds to its width: the wall reads at its true 0.5 µm),
-    # the cell and the crossing band above the caption plate
+    # the camera sits between the wall's faces (no side face adds to its width: the wall reads at its true 0.4 µm),
+    # the cell and the crossing band above the caption plate. 26 Oct audit: x 0.4 → 0.32 with the barrier now 0.4 µm
+    # (scene.mjs WS), the same 0.8 of the way across it, so the camera stays between its faces
     "wall": [
-        {"t": CUT["wall"], "pos": [0.4, 1.0, 30.0], "look": [2.2, -1.1, 0.0], "fov": 34},
-        {"t": WALL["slip"][0], "pos": [0.4, 0.6, 27.0], "look": [2.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": WALL["thick"][0], "pos": [0.4, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["room"], "pos": [0.4, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["wall"], "pos": [0.32, 1.0, 30.0], "look": [2.2, -1.1, 0.0], "fov": 34},
+        {"t": WALL["slip"][0], "pos": [0.32, 0.6, 27.0], "look": [2.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": WALL["thick"][0], "pos": [0.32, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["room"], "pos": [0.32, 0.2, 31.0], "look": [1.2, -1.2, 0.0], "fov": 34, "ease": "sine"},
     ],
     "room": [
         {"t": CUT["room"], "pos": [3.0, 2.35, 5.0], "look": [0.0, 1.35, 0.0], "fov": 34},                # the person, close (the head below the readout)
         {"t": A("vo05:metres", -0.4), "pos": [7.0, 9.0, 16.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2"},   # the floor spreads
-        {"t": A("vo05:tennis", 0.2), "pos": [6.0, 46.0, 34.0], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "p2"},   # the whole court around it
-        {"t": B["takeaway"]["t0"], "pos": [5.0, 44.0, 32.0], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "sine"},
+        # the whole doubles court around it, inside the 9:16 safe box (x 90–900, y 250–1420): 26 Oct audit, these two keys
+        # pulled back 1.2× about their look point (were [6, 46, 34] and [5, 44, 32]; the near baseline sat in the bottom UI band)
+        {"t": A("vo05:tennis", 0.2), "pos": [6.88, 55.2, 40.3], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "p2"},
+        {"t": B["takeaway"]["t0"], "pos": [5.68, 52.8, 37.9], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "sine"},
         {"t": A("vo06:They're"), "pos": [3.4, 2.4, 6.6], "look": [0.0, 1.45, 0.0], "fov": 34, "ease": "p2"},         # back to the person: it's in there
         {"t": CUT["exit"], "pos": [3.4, 2.4, 6.6], "look": [0.0, 1.45, 0.0], "fov": 34, "ease": "sine"},
     ],
@@ -107,13 +110,13 @@ FOC = {
 
 LABELS = [
     {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo02:half"), "t1": A("vo02:Each", -0.1), "shot": "lung", "side": 1},
-    {"id": "flesh", "text": "the old idea: airy flesh", "color": "text", "mark": "dashed", "at": "flesh", "t0": A("vo03:flesh", -0.1), "t1": A("vo03:sixteen", -0.2), "shot": "lung", "side": 1},
+    {"id": "flesh", "text": "the old idea: clotted blood", "color": "text", "mark": "dashed", "at": "flesh", "t0": A("vo03:blood", -0.1), "t1": A("vo03:sixteen", -0.2), "shot": "lung", "side": 1},
     {"id": "cap", "text": "capillaries", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:Each", -0.1), "t1": CUT["wall"] - 0.25, "shot": "lung", "side": -1},
     {"id": "air", "text": "air", "color": "o2", "mark": "ring", "glyph": "O₂", "at": "air", "t0": A("vo04:air", 0.0), "t1": WALL["thick"][0] - 0.1, "shot": "wall", "side": -1},
     {"id": "wall", "text": "the wall", "color": "text", "mark": "bar", "at": "wallf", "t0": A("vo04:wall"), "t1": A("vo04:red", -0.3), "shot": "wall", "side": -1},
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "rbc", "t0": A("vo04:red", 0.0), "t1": CUT["room"] - 0.3, "shot": "wall", "side": 1},
     {"id": "person", "text": "you, to scale", "color": "text", "mark": "dot", "at": "head", "t0": A("vo05:metres", 0.1), "t1": B["takeaway"]["t0"], "shot": "room", "side": 1},
-    {"id": "court", "text": "a singles tennis court", "color": "lining", "mark": "bar", "at": "court", "t0": A("vo05:tennis"), "t1": B["takeaway"]["t0"], "shot": "room", "side": -1},
+    {"id": "court", "text": "a doubles tennis court", "color": "lining", "mark": "bar", "at": "court", "t0": A("vo05:tennis"), "t1": B["takeaway"]["t0"], "shot": "room", "side": -1},
     {"id": "wbc", "text": "white blood cell", "color": "immune", "mark": "dashed", "at": "wbc", "t0": A("vo08:cell", 0.0), "t1": EC, "shot": "exit", "side": 1, "v": "above"},
 ]
 SPINE = [
@@ -122,18 +125,18 @@ SPINE = [
     {"id": "sacs", "t0": A("vo02:half", -0.2), "t1": A("vo02:Each", -0.2), "text": "480", "unit": "million", "label": "air sacs, about"},   # c1 (a mean: 274–790 million)
     {"id": "size", "t0": A("vo02:Each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each, about"},   # c3
     {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": A("vo03:bubbles", 0.7), "text": "1661", "unit": "", "label": "Malpighi's microscope"},   # c5
-    {"id": "wallt", "t0": A("vo04:half", -0.2), "t1": A("vo04:red", -0.15), "text": "0.5", "unit": "µm", "label": "the wall at its thinnest, about", "at": [0.5, 0.24]},   # c7
-    {"id": "area", "t0": A("vo05:Unfold"), "t1": B["takeaway"]["t0"] - 0.2, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": "unfolded, at least"},   # c9
+    {"id": "wallt", "t0": A("vo04:half", -0.2), "t1": A("vo04:red", -0.15), "text": "0.5", "unit": "µm", "label": "air–blood wall, under", "at": [0.5, 0.24]},   # c7 (the thin half; as thin as about 0.2 µm)
+    {"id": "area", "t0": A("vo05:Unfold"), "t1": B["takeaway"]["t0"] - 0.2, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": "unfolded, about"},   # c9 (estimates 50–140 m²: the whoa's badge)
 ]
 # 5.5 L a minute (c13: 5–8 at rest): the tally reads 6.0 L as "six" is said
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["exit"] - 0.25, "rate": 5.5 / 60.0, "unit": "L", "label": "air in and out while you watched, about", "fmt": 1}   # c13
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["exit"] - 0.25, "rate": 5.5 / 60.0, "unit": "L", "label": "air while you watched, about", "fmt": 1}   # c13 (26 Oct: was 39 characters, over the 30 a centred counter's label fits)
 BADGES = [
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": CUT["wall"] - 0.3},
     {"id": "few", "text": "simplified: 7 of ~23 forks drawn", "t0": A("vo02:fork", -0.2), "t1": A("vo02:millimetre", 0.6)},
     {"id": "ill", "text": "illustration: the old idea", "t0": FLESH[0], "t1": FLESH[2]},
     {"id": "scale", "text": "wall and cell to scale · O₂ enlarged", "t0": CUT["wall"], "t1": CUT["room"] - 0.3},
     {"id": "slow", "text": "slowed", "slot": "tl", "t0": WALL["slip"][0] - 0.5, "t1": CUT["room"] - 0.3},
-    {"id": "ill2", "text": "illustration · area to scale", "t0": CUT["room"], "t1": ROOM["fold"][1] + 0.3},
+    {"id": "ill2", "text": "area to scale · estimates 50–140 m²", "t0": CUT["room"], "t1": ROOM["fold"][1] + 0.3},
     {"id": "ill3", "text": "illustration", "t0": ROOM["fold"][1] + 0.3, "t1": CUT["exit"] - 0.3},
     {"id": "nts2", "text": "not to scale", "t0": CUT["exit"], "t1": DUR},
     {"id": "fast", "text": "sped up", "slot": "tl", "t0": EXIT["push"][0] - 0.2, "t1": EC},
@@ -152,17 +155,18 @@ CAPTION_KEEP = [
     "twenty-three times",
     "half a billion",
     "a fifth of a millimetre",
-    "airy flesh",
+    "clotted blood",
     "sixteen sixty-one",
     "Marcello Malpighi",
-    "a frog's lung",
-    "half a micrometre",
+    "an animal's lung",
+    "under half a micrometre",
     "a red cell",
     "no pump",
     "breathing gets harder",
     "every sac",
     "they'd cover",
-    "seventy square metres",
+    "about seventy",
+    "square metres",
     "a tennis court",
     "your chest",
     "six litres",

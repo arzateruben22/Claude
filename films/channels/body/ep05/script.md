@@ -20,13 +20,13 @@ all that air go?") and sets up episode 6 ("The exit").
   episode 1's beat order (takeaway, then the segment).
 - **The 26 Oct audit (an independent fact check) changed:** "airy flesh" → "clotted blood" (the sources
   say the Galenic lung was fleshy, made of coagulated blood; "airy flesh" then "bubbles" sounded like the
-  same idea); "a frog's lung" → "an animal's lung" (the bubbles are the first letter's, a mammal's lung;
-  the frogs are the second letter's, where he found the capillaries); "At its thinnest … about half a
-  micrometre" → "Over much of it … under half a micrometre" (the thinnest parts are about 0.2–0.3 µm;
-  about half the barrier is under 0.5 µm); "at least seventy" → "about seventy" (a textbook gives
-  50–100 m²; the screen now shows "estimates 50–140 m²"); "At least a third" → "About a quarter" of a
-  tennis court (a full doubles court is 260.8 m², and the shot now draws one); the tally's 5.5 L/min
-  (already applied) checked.
+  same idea); the lung under Malpighi's microscope → "an animal's lung" (the bubbles are his first
+  letter's finding; the frog lungs are the second letter's, where he found the capillaries); "At its
+  thinnest … about half a micrometre" → "Over much of it … under half a micrometre" (the thinnest parts
+  are about 0.2–0.3 µm; about half the barrier is under 0.5 µm); "at least seventy" → "about seventy" (a
+  textbook gives 50–100 m²; the screen now shows "estimates 50–140 m²"); "At least a third" → "About a
+  quarter" of a tennis court (a full doubles court is 260.8 m², and the shot now draws one); the tally's
+  5.5 L/min (already applied) checked.
 - **Spine readout:** air sacs → airway splits → sac size → wall thickness → floor area → the tally.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is

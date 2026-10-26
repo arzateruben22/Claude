@@ -52,6 +52,14 @@ cell that leaves your blood. It squeezes through a wall.") and sets up episode 7
   the tally's rate matches it; "white cell(s)" is said three times, "own" once; the picture is
   simpler (one fingertip, one engraving, one faulty cell, two labels in the whoa); c4 left with its
   line, and c6 now cites the page its excerpt came from.
+- **The 26 Oct audit (an independent fact check) changed:** the tease's "What sets off every
+  *heartbeat* you've ever had?" → "What sets off nearly every *heartbeat* you have?" (the picture and
+  episode 7 answer "the SA node", and over a lifetime that is not every beat: ectopic beats start
+  outside it, and the embryo's heart beats before the node exists as a structure; still 11 words, star
+  kept); "past" is pinned in pron.json ("pˈɑːst": the voice's short vowel was heard as "paste"), words
+  unchanged; the tease's "Next: the spark." is voiced at speed 1.0, not 0.88 (at 0.88 the final /k/
+  released into a short voiced "uh", heard as "spark eh"). Lines 4 and 8 were re-voiced; the other six
+  came back byte-identical, and every beat holds its line.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
 direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.json`; `{-}` marks a
@@ -128,7 +136,13 @@ end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
   fortune to attract attention to his discovery".
 - The tease's flickering patch (the SA node, upper right atrium) is picture only; its sources belong
   in episode 7's ledger, so both tease sentences are `{-}`. The question hands off to episode 7's own
-  hook ("What starts every heartbeat?").
+  hook (the bible's "What starts every heartbeat?"). Since the 26 Oct audit it says "nearly every
+  heartbeat you have", not "every heartbeat you've ever had": the patch drawn is the SA node, and not
+  every beat of a life starts there. Ectopic beats start elsewhere (the audit's excerpts: 40–75% of
+  apparently healthy people show some ventricular ones on a 24–48 h recording), and the embryo's heart
+  beats from about day 22, before the SA node is visible as a structure (about Carnegie stage 14). Those
+  are a tiny share of a lifetime's beats, so "nearly every" holds; their sources belong in episode 7's
+  ledger. Episode 7's hook and answer must say "nearly every" / "each normal beat" to match.
 - Cut for length, kept for the post: Cohnheim's 1867 essay ran in Virchow's own journal (c7);
   Cohnheim tagged white cells with dye and found them as the pus in an inflamed frog cornea
   (PMC10022970; the dye's name varies between sources, so leave it out); Metchnikoff's rose thorn in
@@ -137,10 +151,15 @@ end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
   cell (mostly cultured cells) is left out of the picture and the voice.
 - Listen at T0: Virchow (FEER-koh: the voice's own reading is "VUR-chow", so pron.json sets
   "fˈɪəkəʊ"), Cohnheim (KOHN-hime, "kˈəʊnhaɪm", the voice's default, pinned), neutrophil
-  (NYOO-truh-fil), micrometres, eighteen sixty-seven. The hook's question is estimated to end at
-  about 1.94 s, close to the 2.0 s limit: check it in the voice. Every starred word but "Meanwhile"
-  sits inside a phrase, so its landing gets the by-eye-and-ear check at T0 (voice README, "How
-  accurate").
+  (NYOO-truh-fil), micrometres, eighteen sixty-seven, "past" (PAHST, "pˈɑːst", pinned since the
+  26 Oct audit: the voice's own "pˈast" was heard as "paste"; with the pin the recognizer hears "past",
+  and "on" before it now takes a full stress, "ˈɒn" for "ˌɒn"; the final /t/ ends in a short voiced
+  release, about 60 ms: check that it does not sound like "roll ON past" or "past-uh") and "spark" in
+  the tease, at speed 1.0 (check that no "uh" is heard: a faint tail remains, much weaker than at
+  0.88). The hook's question is
+  estimated at about 1.94 s; the voiced take ends it at 1.70 s, inside the 2.0 s limit. Every starred
+  word but "Meanwhile" sits inside a phrase, so its landing gets the by-eye-and-ear check at T0
+  (voice README, "How accurate").
 - Imagery and palette (bible §9, theme.json): stylised cells only; the fingertip spot is a swelling
   and a soft glow, never an open wound, splinter, blood, needle or pus. The hero is immune cream
   (#F3EEE4), never amber (another client's accent). No circles anywhere (theme.json `no_circle`).

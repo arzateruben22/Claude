@@ -272,7 +272,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 .mi-spine { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 .mi-spine .v { color: var(--nerve); } .mi-spine .lb { color: var(--text); }   /* nerve numbers in the nerve colour: pink is for blood only */
-#hud-ms { white-space: normal; max-width: 46vmin; }
+#hud-ms { white-space: normal; max-width: 46vmin; border-radius: 3vmin; }
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-tally .lb { color: var(--text); }
 .mi-fig { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
@@ -280,7 +280,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 const hud = createHud({ camera });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
-const tPulse = pulseLine({ width: Math.round(330 * S1), height: Math.round(70 * S1), at: 0.3 });   // the title's width: clear of the readout
+const tPulse = pulseLine({ width: Math.round(200 * S1), height: Math.round(70 * S1), at: 0.3 });   // the title's width: clear of the readout
 titleEl.appendChild(tPulse.el);
 const vW = new THREE.Vector3();
 const ANCH = {
@@ -288,12 +288,12 @@ const ANCH = {
   muscle: () => [MUSC[0] + 6, MUSC[1] - 2, 6],   // its right flank: the pill sits in the gap toward the drum
   frognerve: () => { const p = nerveP.at(nerveP.length * 0.6); return [p[0] + 1, p[1], p[2] + 1]; },
   traces: () => traceAnchor(),
-  bare: () => [110, 25, 0],
-  sheath: () => [NODES[3] + 20, MY.r, 1.5],
+  bare: (t) => { const b = FILM.bare, d = Math.max(0, b.v * (t - b.t0)); return [b.x0 + b.step * Math.floor(d / b.step) - 3, 25, 0]; },   // the glow's head, as it steps
+  sheath: () => [NODES[3] + 30, MY.r, 1.5],
   node: () => [NODES[FILM.whyJump.k0 + 4], MY.r + 0.3, 1.2],   // the gap the leap lands in on "gaps": the top of its notch
   damaged: () => MSF.group.localToWorld(vW.set(MNODES[BAD] + 8, 1.8, 1.0)).toArray(),
   barefront: (t) => [FILM.race.x0 + Math.max(0, FILM.race.vbare * (t - FILM.race.bare0)), 24, 0],
-  wrapfront: (t) => [100, MY.r * raceThick(t), 1],   // the wrapped fibre's top, in frame (its pulses streak past), drawn thicker in the race
+  wrapfront: (t) => [80, MY.r * raceThick(t), 1],   // the wrapped fibre's top, in frame (its pulses streak past), drawn thicker in the race
   terminal: () => [TX + 4, 6, 2],
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
@@ -342,7 +342,7 @@ figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns
     <rect class="fast" x="-4" y="-4" width="8" height="8" rx="2" fill="var(--signal)" opacity="0"/>
     <rect class="slow" x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="var(--text)" opacity="0"/>
     <polyline class="heart" fill="none" stroke="var(--pulse)" stroke-width="${(6 / FS * S1).toFixed(3)}" stroke-linejoin="round" points=""/>
-    <circle class="pace" cx="52.5" cy="58" r="1.8" fill="var(--signal)" opacity="0"/>
+    <rect class="pace" x="-1.8" y="-1.8" width="3.6" height="3.6" rx="0.9" transform="translate(52.5 58)" fill="var(--signal)" opacity="0"/>
   </g></svg>`;
 document.getElementById("hud").prepend(figEl);
 const figQ = (c) => figEl.querySelector("." + c);
@@ -376,7 +376,7 @@ const writeFig = (t) => {
   // the pacemaker: a spark at the top of the heart just before each kick, brightest on "spark"
   let pc = 0; if (t >= FILM.tally.t0 - 0.3) for (const b of FILM.segBeats) pc = Math.max(pc, seg(t, b - 0.09, b - 0.04) * (1 - seg(t, b - 0.02, b + 0.22)));
   const big = 1 + 0.8 * seg(t, F.spark - 0.05, F.spark + 0.1) * (1 - seg(t, F.spark + 0.3, F.spark + 1.0));
-  figQ("pace").setAttribute("opacity", Math.min(1, pc * big).toFixed(3)); figQ("pace").setAttribute("r", (1.8 * big).toFixed(2));
+  figQ("pace").setAttribute("opacity", Math.min(1, pc * big).toFixed(3)); figQ("pace").setAttribute("transform", `translate(52.5 58) scale(${big.toFixed(3)})`);
 };
 
 // ── focus ───────────────────────────────────────────────────────────────────────────────────────

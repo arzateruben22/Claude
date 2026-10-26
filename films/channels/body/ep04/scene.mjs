@@ -97,7 +97,7 @@ const R0 = FILM.rel;
 const MAIN = { sig: R0.sig, ca: R0.ca, sp: R0.spill, dr: R0.drift, post: R0.post };
 const scaled = (t0, d) => { const P = MAIN, a = P.sig[0], z = P.post + 0.4, k = d / (z - a), m = (x) => t0 + (x - a) * k; return { sig: P.sig.map(m), ca: P.ca.map(m), sp: P.sp.map(m), dr: P.dr.map(m), post: m(P.post) }; };
 const SCHED = [MAIN, scaled(FILM.replay[0], FILM.replay[1] - FILM.replay[0]), scaled(FILM.talk, 2.2),
-  ...FILM.breaths.flatMap((b) => [0, 0.55, 1.1].map((d, part) => ({ ...scaled(b - 0.4 + d, 0.5), part })))];
+  ...FILM.breaths.map((b) => scaled(b - 0.4, 1.8))];   // one handoff per breath (slowed, badged)
 const schedAt = (t) => { let s = null; for (const S of SCHED) if (t >= S.sig[0] - 0.3) s = S; return s; };
 // which docked vesicles a handoff fuses: all of them, or (a burst) one third
 const fuses = (S, i) => S.part == null || i % 3 === S.part;
@@ -208,7 +208,7 @@ let USED = null;
 const sacMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B98580"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.03, roughness: 0.5, side: THREE.DoubleSide }), { fresnel: 0.85, fresnelPower: 1.8, key: "sac" });
 const SAC = cutaway({ radius: 50, noise: { amp: 0.06, freq: 1.4, seed: 8 }, segments: [80, 60], material: sacMat });
 SAC.group.position.set(3000, 0, 0); sacG.add(SAC.group);
-SAC.set({ cut: { n: [0, 0, 1], d: 0 } }); sacG.updateMatrixWorld(true); SAC.update();   // cut open: hollow, an air space
+SAC.set({ cut: { n: [0, 0, 1], d: 0 } }); sacG.updateMatrixWorld(true); SAC.update(); SAC.cap.visible = false;   // cut open: hollow, an air space (no cap disc)
 const SAC2 = [[3, 2, -1.6, 36], [-2.6, -2.2, -1.2, 40], [1.7, -3.0, -2.6, 30], [-1.7, 2.7, -2.4, 34]].map(([x, y, z, r], k) => {
   const d = Math.hypot(x, y, z), c = [x, y, z].map((v) => (v / d) * (50 + r - 4));   // each touches the main sac
   const C = cutaway({ radius: r, noise: { amp: 0.07, freq: 1.4, seed: 12 + k }, segments: [48, 36], material: sacMat }); C.group.position.set(3000 + c[0], c[1], c[2]); sacG.add(C.group); return C;
@@ -294,7 +294,7 @@ document.getElementById("hud").prepend(panels);
 const writePanels = (t) => {
   const P = FILM.panels, o = presence(t, P.t0, P.t1 - 0.35, { d: 0.4, out: 0.35 }).o;
   panels.style.opacity = o.toFixed(3);
-  // one stained tissue in both frames from the start; each reading's own drawing and name arrive with its name
+  // one stained tissue in both frames from the start; each reading's own drawing and name arrive at its key (FILM.panels: Golgi's on "saw", Cajal's on his name)
   for (const [cls, at] of [["golgi", P.golgi], ["cajal", P.cajal]]) {
     const g = panels.querySelector("." + cls), r = seg(t, at - 0.4, at);
     g.querySelector(".raw").setAttribute("opacity", (0.35 * (1 - r)).toFixed(3));

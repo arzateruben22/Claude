@@ -234,7 +234,7 @@
    ],
    "phonemes": "nˈɛkst: ðə spˈɑːk. wˌɒt sˈɛts ˈɒf nˌiəli ˈɛvɹɪ hˈɑːtbiːt juː hˈav?",
    "speeds": [
-    0.88,
+    1.0,
     0.86
    ],
    "gaps": [
@@ -242,13 +242,13 @@
    ],
    "silences": [
     [
-     1.4135,
-     1.8135
+     1.2113,
+     1.6113
     ]
    ],
    "file": "08.wav",
-   "dur": 4.414,
-   "sha256": "0188a20445264a0f3e3ed5a0dbe428184b265f68b388d2bfd64b7abfa1b4d258"
+   "dur": 4.212,
+   "sha256": "8bf7aa8978f6a52364762cde27d473e7617fd558fd7582be6e6d13c3221119a2"
   }
  ]
 }

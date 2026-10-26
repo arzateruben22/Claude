@@ -17,7 +17,8 @@ voice, labelled as AI). It pays off episode 3's tease ("A gap most signals can't
 - **Normal:** a typical nerve cell reaches thousands of others; over a hundred trillion junctions in your brain
   (the camera pulls back over a small network); through a lens they look joined.
 - **Change (the people and the wrong idea):** Golgi, who made the stain, saw one continuous web; with it, Ramón y
-  Cajal saw separate cells; they shared the 1906 Nobel, still arguing (two illustrated panels).
+  Cajal saw separate cells; they shared the 1906 Nobel, still arguing (two illustrated panels: the plain stain
+  first, under "who made the stain"; Golgi's web arrives on "saw one continuous web", Cajal's cells with his name).
 - **Why:** in the 1950s electron microscopes showed it: a gap (the blur snaps sharp into an electron-microscope-style
   view, badged "illustration · not to scale"; readout 20–50 nm). At most junctions electricity can't jump it: the
   signal glows down the axon and stops at the tip; calcium floods in; the docked sacs spill their messenger; it
@@ -26,7 +27,8 @@ voice, labelled as AI). It pays off episode 3's tease ("A gap most signals can't
   again and again grows stronger: likely part of how you learn.
 - **Takeaway:** your nerve cells mostly don't touch; they talk, across gaps, in chemicals (the answer to the hook).
 - **Meanwhile:** about fifteen breaths (15 a minute from frame 0), each begun in the brainstem and carried across
-  gaps like these to the diaphragm; the junction hands off again on each breath; the locator marks the diaphragm.
+  gaps like these to the diaphragm; the junction hands off again on each breath; the locator marks the brainstem,
+  where each breath begins.
 - **Tease:** an air sac breathing in the dark. The end card irises back to frame 0's blurred contact and carries a
   fact: Golgi and Cajal shared the 1906 Nobel, and argued in their lectures.
 

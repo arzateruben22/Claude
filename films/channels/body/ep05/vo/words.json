@@ -275,60 +275,60 @@
   },
   {
    "id": "vo03",
-   "text": "For centuries, physicians taught the lung was airy flesh, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put a frog's lung under a microscope: bubbles.",
-   "heard": "For centuries physicians taught the lung was airy flesh, there to cool the heart. In 1661, Marcello Malpighi put a frog's lung under a microscope. Bubbles.",
+   "text": "For centuries, physicians taught the lung was clotted blood, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put an animal's lung under a microscope: bubbles.",
+   "heard": "For centuries physicians taught the lung was clotted blood, there to cool the heart. In 1661, Marcello Malpighi put an animal's lung under a microscope. Bubbles.",
    "words": [
     {
      "w": "For",
-     "start": 0.03,
+     "start": 0.025,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "centuries,",
-     "start": 0.215,
+     "start": 0.22,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "physicians",
-     "start": 0.82,
+     "start": 0.81,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "taught",
-     "start": 1.375,
+     "start": 1.38,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.635,
+     "start": 1.655,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "lung",
-     "start": 1.665,
-     "end": 2.0,
+     "start": 1.685,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "was",
-     "start": 2.04,
-     "end": 2.16,
+     "start": 2.175,
+     "end": 2.225,
      "heard": true
     },
     {
-     "w": "airy",
-     "start": 2.23,
-     "end": 2.64,
+     "w": "clotted",
+     "start": 2.235,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "flesh,",
-     "start": 2.61,
+     "w": "blood,",
+     "start": 2.62,
      "end": 3.28,
      "heard": true
     },
@@ -340,7 +340,7 @@
     },
     {
      "w": "to",
-     "start": 3.56,
+     "start": 3.565,
      "end": 3.68,
      "heard": true
     },
@@ -352,93 +352,93 @@
     },
     {
      "w": "the",
-     "start": 3.945,
+     "start": 3.965,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "heart.",
-     "start": 4.05,
-     "end": 4.53,
+     "start": 4.085,
+     "end": 4.574,
      "heard": true,
      "end_asr": 4.8
     },
     {
      "w": "In",
-     "start": 4.85,
+     "start": 4.895,
      "end": 5.04,
      "heard": true
     },
     {
      "w": "sixteen",
-     "start": 5.135,
-     "end": 6.08,
+     "start": 5.125,
+     "end": 6.24,
      "heard": false
     },
     {
      "w": "sixty-one,",
-     "start": 5.165,
-     "end": 6.08,
+     "start": 5.155,
+     "end": 6.24,
      "heard": false
     },
     {
      "w": "Marcello",
-     "start": 6.23,
-     "end": 6.8,
+     "start": 6.38,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "Malpighi",
-     "start": 6.8,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "put",
-     "start": 7.34,
+     "start": 6.88,
      "end": 7.52,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 7.415,
-     "end": 7.6,
+     "w": "put",
+     "start": 7.485,
+     "end": 7.68,
      "heard": true
     },
     {
-     "w": "frog's",
-     "start": 7.595,
-     "end": 7.92,
+     "w": "an",
+     "start": 7.57,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "animal's",
+     "start": 7.715,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "lung",
-     "start": 7.815,
-     "end": 8.24,
-     "heard": true
-    },
-    {
-     "w": "under",
-     "start": 8.26,
-     "end": 8.4,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.29,
+     "start": 8.13,
      "end": 8.48,
      "heard": true
     },
     {
+     "w": "under",
+     "start": 8.525,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.555,
+     "end": 8.72,
+     "heard": true
+    },
+    {
      "w": "microscope:",
-     "start": 8.575,
-     "end": 9.52,
+     "start": 8.65,
+     "end": 9.76,
      "heard": true
     },
     {
      "w": "bubbles.",
-     "start": 9.635,
-     "end": 10.16,
+     "start": 9.905,
+     "end": 10.4,
      "heard": true
     }
    ],
@@ -446,8 +446,8 @@
   },
   {
    "id": "vo04",
-   "text": "Each sac is wrapped in capillaries. At its thinnest, the wall between air and blood is about half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
-   "heard": "Each sac is wrapped in capillaries. At its thinnest the wall between air and blood is about half a micrometer. Far thinner than a red cell. Oxygen slips across no pump needed. Sicken that wall and breathing gets harder.",
+   "text": "Each sac is wrapped in capillaries. Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
+   "heard": "Each sac is wrapped in capillaries. Over much of it the wall between air and blood is under half a micrometer. Far thinner than a red cell. Oxygen slips across no pump needed. Sicken that wall and breathing gets harder.",
    "words": [
     {
      "w": "Each",
@@ -484,206 +484,212 @@
      "start": 1.315,
      "end": 2.11,
      "heard": true,
-     "end_asr": 2.32
+     "end_asr": 2.4
     },
     {
-     "w": "At",
+     "w": "Over",
      "start": 2.445,
-     "end": 2.56,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "its",
-     "start": 2.475,
-     "end": 2.72,
+     "w": "much",
+     "start": 2.58,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "thinnest,",
-     "start": 2.815,
-     "end": 3.2,
+     "w": "of",
+     "start": 2.82,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 2.85,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.285,
+     "start": 3.25,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "wall",
-     "start": 3.315,
+     "start": 3.28,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "between",
-     "start": 3.65,
+     "start": 3.625,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "air",
-     "start": 3.97,
+     "start": 3.925,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.245,
+     "start": 4.22,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "blood",
-     "start": 4.42,
-     "end": 4.72,
+     "start": 4.39,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "is",
-     "start": 4.725,
-     "end": 4.88,
+     "start": 4.625,
+     "end": 4.8,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 4.92,
-     "end": 5.12,
+     "w": "under",
+     "start": 4.69,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "half",
-     "start": 5.115,
+     "start": 5.07,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.28,
      "end": 5.36,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 5.38,
-     "end": 5.44,
-     "heard": true
-    },
-    {
      "w": "micrometre:",
-     "start": 5.41,
-     "end": 6.64,
+     "start": 5.31,
+     "end": 6.56,
      "heard": false
     },
     {
      "w": "far",
-     "start": 6.66,
-     "end": 6.96,
+     "start": 6.56,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "thinner",
-     "start": 6.99,
-     "end": 7.28,
+     "start": 6.895,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "than",
-     "start": 7.3,
-     "end": 7.44,
+     "start": 7.225,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.5,
-     "end": 7.55,
+     "start": 7.255,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "red",
-     "start": 7.53,
-     "end": 7.76,
+     "start": 7.43,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "cell.",
-     "start": 7.685,
-     "end": 8.13,
+     "start": 7.61,
+     "end": 8.053,
      "heard": true,
-     "end_asr": 8.4
+     "end_asr": 8.32
     },
     {
      "w": "Oxygen",
-     "start": 8.46,
-     "end": 8.96,
+     "start": 8.385,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "slips",
-     "start": 8.99,
-     "end": 9.36,
+     "start": 8.91,
+     "end": 9.28,
      "heard": true
     },
     {
      "w": "across,",
-     "start": 9.43,
-     "end": 9.76,
+     "start": 9.35,
+     "end": 9.68,
      "heard": true
     },
     {
      "w": "no",
-     "start": 9.88,
-     "end": 10.16,
+     "start": 9.8,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "pump",
-     "start": 10.18,
-     "end": 10.56,
+     "start": 10.1,
+     "end": 10.48,
      "heard": true
     },
     {
      "w": "needed.",
-     "start": 10.64,
-     "end": 10.949,
+     "start": 10.565,
+     "end": 10.872,
      "heard": true,
      "end_asr": 11.2
     },
     {
      "w": "Thicken",
-     "start": 11.27,
-     "end": 11.76,
+     "start": 11.195,
+     "end": 11.68,
      "heard": false
     },
     {
      "w": "that",
-     "start": 11.85,
-     "end": 11.92,
+     "start": 11.77,
+     "end": 11.84,
      "heard": true
     },
     {
      "w": "wall,",
-     "start": 11.88,
-     "end": 12.24,
+     "start": 11.8,
+     "end": 12.16,
      "heard": true
     },
     {
      "w": "and",
-     "start": 12.33,
-     "end": 12.48,
+     "start": 12.25,
+     "end": 12.4,
      "heard": true
     },
     {
      "w": "breathing",
-     "start": 12.5,
-     "end": 12.88,
+     "start": 12.42,
+     "end": 12.8,
      "heard": true
     },
     {
      "w": "gets",
-     "start": 12.89,
-     "end": 13.12,
+     "start": 12.815,
+     "end": 13.04,
      "heard": true
     },
     {
      "w": "harder.",
-     "start": 13.05,
-     "end": 13.6,
+     "start": 12.975,
+     "end": 13.52,
      "heard": true
     }
    ],
@@ -691,8 +697,8 @@
   },
   {
    "id": "vo05",
-   "text": "Unfold every sac flat, and they'd cover at least seventy square metres. At least a third of a tennis court, folded inside your chest.",
-   "heard": "Unfold every sack flat, and they'd cover at least 70 square meters, at least a third of a tennis court, folded inside your chest.",
+   "text": "Unfold every sac flat, and they'd cover about seventy square metres. About a quarter of a tennis court, folded inside your chest.",
+   "heard": "Unfold every sack flat, and they'd cover about 70 square meters. About a quarter of a tennis court, folded inside your chest.",
    "words": [
     {
      "w": "Unfold",
@@ -714,43 +720,37 @@
     },
     {
      "w": "flat,",
-     "start": 1.375,
+     "start": 1.325,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.075,
+     "start": 2.1,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "they'd",
-     "start": 2.105,
+     "start": 2.13,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "cover",
-     "start": 2.405,
-     "end": 2.72,
+     "start": 2.43,
+     "end": 2.8,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 2.77,
-     "end": 2.82,
-     "heard": true
-    },
-    {
-     "w": "least",
-     "start": 2.8,
+     "w": "about",
+     "start": 2.81,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "seventy",
-     "start": 3.03,
+     "start": 3.025,
      "end": 3.52,
      "heard": true
     },
@@ -763,79 +763,73 @@
     {
      "w": "metres.",
      "start": 3.84,
-     "end": 4.401,
+     "end": 4.407,
      "heard": false,
      "end_asr": 4.72
     },
     {
-     "w": "At",
+     "w": "About",
      "start": 4.725,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "least",
-     "start": 4.84,
-     "end": 5.04,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.08,
-     "end": 5.2,
+     "start": 4.995,
+     "end": 5.12,
      "heard": true
     },
     {
-     "w": "third",
-     "start": 5.235,
+     "w": "quarter",
+     "start": 5.125,
      "end": 5.44,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.475,
-     "end": 5.6,
+     "start": 5.32,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.675,
-     "end": 5.725,
+     "start": 5.635,
+     "end": 5.685,
      "heard": true
     },
     {
      "w": "tennis",
-     "start": 5.705,
-     "end": 6.16,
+     "start": 5.665,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "court,",
-     "start": 6.065,
-     "end": 6.64,
+     "start": 6.02,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "folded",
-     "start": 6.61,
-     "end": 7.12,
+     "start": 6.545,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "inside",
-     "start": 7.03,
-     "end": 7.52,
+     "start": 6.97,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "your",
-     "start": 7.485,
-     "end": 7.68,
+     "start": 7.44,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "chest.",
-     "start": 7.68,
+     "start": 7.635,
      "end": 8.16,
      "heard": true
     }

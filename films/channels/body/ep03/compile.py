@@ -86,10 +86,12 @@ CAM = {
         # down to the hero, wrapped: the view travels with the leaps (two internodes wide), so each landing is in frame
         {"t": A("vo04:Many", 0.3), "pos": [100.0, 14.0, 220.0], "look": [100.0, -4.0, 0.0], "fov": 34, "ease": "p2"},
         {"t": A("vo04:leaps", 0.4), "pos": [312.0, 14.0, 220.0], "look": [312.0, -4.0, 0.0], "fov": 34, "ease": "lin"},
-        {"t": A("vo04:Where", 0.3), "pos": [236.0, -4.0, 150.0], "look": [236.0, -22.0, 0.0], "fov": 34, "ease": "p2"},  # the damaged fibre: the last good gap and the damaged sheath
+        {"t": A("vo04:Where", 0.3), "pos": [246.0, -4.0, 150.0], "look": [246.0, -22.0, 0.0], "fov": 34, "ease": "p2"},  # the damaged fibre: the last good gap and the damaged sheath
         {"t": MS["stall"] + 1.0, "pos": [268.0, -8.0, 120.0], "look": [268.0, -22.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["whoa"]["t0"] + 0.2, "pos": [66.0, 12.0, 260.0], "look": [66.0, 12.0, 0.0], "fov": 34, "ease": "p2"},  # the race, from one start line: bare above, wrapped below
-        {"t": B["takeaway"]["t0"], "pos": [70.0, 12.0, 280.0], "look": [70.0, 12.0, 0.0], "fov": 34, "ease": "sine"},
+        # the race, from one start line: bare above, wrapped below. y 10 (was 12, 26 Oct): the thick wrapped racer's
+        # lower edge (r 5.4) then clears the caption plate's top (0.61 H) by about 25 px, as the thin one did at y 12
+        {"t": B["whoa"]["t0"] + 0.2, "pos": [58.0, 10.0, 260.0], "look": [58.0, 10.0, 0.0], "fov": 34, "ease": "p2"},
+        {"t": B["takeaway"]["t0"], "pos": [62.0, 10.0, 280.0], "look": [62.0, 10.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["tease"]["t0"], "pos": [430.0, 8.0, 400.0], "look": [430.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo08:A", 0.0), "pos": [652.0, 16.0, 120.0], "look": [666.0, -8.0, 0.0], "fov": 34, "ease": "p2"},   # the terminal and the gap (centre right)
         {"t": CUT["loop"], "pos": [658.0, 14.0, 110.0], "look": [668.0, -8.0, 0.0], "fov": 34, "ease": "sine"},
@@ -112,9 +114,9 @@ LABELS = [
     {"id": "nerve", "text": "its nerve", "color": "nerve", "mark": "dot", "at": "frognerve", "t0": A("vo03:fifty", 0.2), "t1": A("vo03:Helmholtz"), "shot": "drum", "side": 1},
     {"id": "trace", "text": "far stimulus: its twitch starts later", "color": "text", "mark": "dot", "at": "traces", "t0": A("vo03:metres", 0.15) + 0.7, "t1": CUT["fibres"] - 0.3, "shot": "drum", "side": 1},
     {"id": "bare", "text": "bare fibre", "color": "nerve", "mark": "dot", "at": "bare", "t0": B["why"]["t0"] + 0.5, "t1": A("vo04:Many", -0.2), "shot": "fibres", "side": 1},
-    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin"), "t1": A("vo04:gaps", -0.1), "shot": "fibres", "side": 1},
-    {"id": "gap", "text": "bare gap", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo04:gaps"), "t1": A("vo04:Where", -0.2), "shot": "fibres", "side": 1},
-    {"id": "ms", "text": "damaged myelin · brain and spinal cord", "color": "bone", "mark": "dashed", "at": "damaged", "t0": round(MS["t0"] + 2 * MS["hop"] - 0.2, 4), "t1": B["whoa"]["t0"] - 0.2, "shot": "fibres", "side": 1},
+    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin"), "t1": A("vo04:re-firing", 0.0), "shot": "fibres", "side": 1},
+    {"id": "gap", "text": "bare gap", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo04:gaps"), "t1": A("vo04:leaps", 0.0), "shot": "fibres", "side": 1},
+    {"id": "ms", "text": "damaged myelin · brain and spinal cord", "color": "bone", "mark": "dashed", "at": "damaged", "t0": round(MS["t0"] + 2 * MS["hop"] - 0.2, 4), "t1": MS["stall"] + 1.0, "shot": "fibres", "side": 1},
     {"id": "racebare", "text": "thinnest bare fibre", "color": "nerve", "mark": "dot", "at": "barefront", "t0": A("vo05:crawl"), "t1": B["takeaway"]["t0"] - 0.3, "shot": "fibres", "side": -1},
     {"id": "racewrap", "text": "thick wrapped fibre", "color": "bone", "mark": "dot", "at": "wrapfront", "t0": A("vo05:Thick", 0.3), "t1": B["takeaway"]["t0"] - 0.3, "shot": "fibres", "side": 1},
     {"id": "terminal", "text": "the end of the line", "color": "nerve", "mark": "dot", "at": "terminal", "t0": A("vo08:line"), "t1": EC, "shot": "fibres", "side": -1},
@@ -124,18 +126,18 @@ SPINE = [
     {"id": "q", "t0": 0.0, "t1": A("vo02:Some", -0.3), "text": "?", "unit": "m/s", "label": "how fast is this spark?"},
     {"id": "len", "t0": A("vo02:fibres"), "t1": A("vo02:How", -0.45), "value": 1, "unit": "m", "label": "spine to toe: about"},   # c3
     {"id": "take", "t0": A("vo02:How"), "t1": CUT["drum"] - 0.3, "text": "?", "unit": "s", "label": "spine to toe: how long?"},
-    {"id": "light", "t0": A("vo03:light"), "t1": A("vo03:Helmholtz", -0.1), "value": 300_000_000, "unit": "m/s", "label": "Müller wondered: as fast as light?"},   # c4, c20
+    {"id": "light", "t0": A("vo03:light"), "t1": A("vo03:Helmholtz", -0.1), "value": 300_000_000, "unit": "m/s", "label": "Müller: as fast as light?"},   # c4, c20
     {"id": "frog", "t0": A("vo03:About"), "t1": CUT["fibres"] - 0.3, "keys": [[A("vo03:About"), 0], [A("vo03:second", 0.2), 27]], "unit": "m/s",
-     "label": [[A("vo03:About"), "Helmholtz, 1850, frog: about"], [A("vo03:cheetah"), "Helmholtz, 1850, frog: about · cheetah speed"]]},   # c6, c17
+     "label": [[A("vo03:About"), "Helmholtz, 1850, frog: about"], [A("vo03:cheetah"), "Helmholtz 1850 · cheetah speed"]]},   # c6, c17
     {"id": "patch", "t0": A("vo04:re-fires", 0.0), "t1": A("vo04:Many", -0.25), "text": "every step", "unit": "", "label": "bare fibre: re-fired at"},
     {"id": "fired", "t0": WHY_JUMP["t0"], "t1": A("vo04:Where", -0.2), "count": "fired", "unit": "", "label": "wrapped: re-fired only at gaps"},
     # one readout for the race, its label stepping from the crawl to the wrapped (no two plates crossfading in one slot)
     {"id": "race", "t0": A("vo05:crawl"), "t1": A("vo05:Faster", -0.45), "keys": [[A("vo05:Thick"), 1], [A("vo05:fifty", 0.3), 150]], "unit": "m/s",
      "label": [[A("vo05:crawl"), "thinnest bare fibres, about"], [A("vo05:Thick"), "thick wrapped fibres, up to"]]},   # c10, c11
-    {"id": "kmh", "t0": A("vo05:Faster"), "t1": B["takeaway"]["t0"] - 0.2, "value": 540, "unit": "km/h", "label": "in km/h · fastest F1 race speed: 373"},   # c12
+    {"id": "kmh", "t0": A("vo05:Faster"), "t1": B["takeaway"]["t0"] - 0.2, "value": 540, "unit": "km/h", "label": "F1's fastest race speed: 373"},   # c12
     {"id": "toe", "t0": TOE["stub"] - 0.4, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[TOE["stub"], 0.0], [TOE["slow"], round(TOE["slow"] - TOE["stub"], 2)]], "unit": "s", "label": "since the stub, real time", "fmt": 1},   # c13, c19
 ]
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": B["tease"]["t0"] - 0.2, "rate": 75.0 / 60.0, "unit": "beats", "label": "a resting heart, while you watched"}   # c14
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": B["tease"]["t0"] - 0.2, "rate": 75.0 / 60.0, "unit": "beats", "label": "heartbeats while you watched"}   # c14
 FIG = {"t0": B["takeaway"]["t0"] + 0.15, "t1": B["tease"]["t0"] + 0.2,      # the body silhouette over the dimmed fibres
        "route": [A("vo06:toe"), A("vo06:twice")],                         # the toe-to-brain route draws on before the stub
        "zoom": [B["meanwhile"]["t0"] + 0.3, B["meanwhile"]["t0"] + 1.1],   # the meanwhile: in to the heart

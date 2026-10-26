@@ -20,9 +20,10 @@ Meanwhile, Inside No. 03, "The jump". Nothing has been posted.
   are longer, about 1.5 m) and the readout "spine to toe: about 1 m" (c3); "Thick wrapped ones, up to a hundred and
   fifty" (c11: the 150 m/s fibres are the thickest; at equal thickness myelin gives about 20–30 times), with the readout
   "thick wrapped fibres, up to", the pin "thick wrapped fibre" and the race's wrapped fibre drawn 1.5× thicker (check it
-  by eye: it thickens during the camera's move into the race); "Many of your fibres wear fatty myelin" (c7, c8);
+  by eye: it thickens during the camera's move into the race, and its lower edge clears the caption plate, the race
+  camera sitting 2 µm lower for it); "Many of your fibres wear fatty myelin" (c7, c8);
   "The jolt rides faster fibres; the ache, bare ones" (c19).
-- **The readout shows 299,792,458 m/s** labelled "Müller's guess: as fast as light?" — check the wording is fair to him.
+- **The readout shows 300,000,000 m/s** (light, rounded) labelled "Müller: as fast as light?" — check the wording is fair to him.
 
 ## Every episode
 1. **Claims.** A physiologist works through `CLAIMS-REVIEW.md` (every row from a search excerpt only, so a person opens

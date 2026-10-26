@@ -1014,75 +1014,77 @@
   {
    "id": "vo08",
    "text": "Next: the spark. What sets off nearly every heartbeat you have?",
-   "heard": "Next the spark eh. What sets off nearly every heartbeat you have.",
+   "heard": "Next the spark. What sets off nearly every heartbeat you have.",
    "words": [
     {
      "w": "Next:",
-     "start": 0.03,
+     "start": 0.02,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.49,
-     "end": 0.64,
+     "start": 0.42,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "spark.",
-     "start": 0.735,
-     "end": 1.04,
-     "heard": true
+     "start": 0.66,
+     "end": 1.211,
+     "heard": true,
+     "end_asr": 1.6
     },
     {
      "w": "What",
-     "start": 1.835,
-     "end": 2.08,
+     "start": 1.63,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "sets",
-     "start": 2.02,
-     "end": 2.4,
+     "start": 1.82,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "off",
-     "start": 2.35,
-     "end": 2.64,
+     "start": 2.07,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "nearly",
-     "start": 2.63,
-     "end": 3.04,
+     "start": 2.425,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "every",
-     "start": 3.025,
-     "end": 3.28,
+     "start": 2.825,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "heartbeat",
-     "start": 3.185,
-     "end": 3.92,
+     "start": 2.95,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "you",
-     "start": 3.85,
-     "end": 4.08,
+     "start": 3.58,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "have?",
-     "start": 3.96,
-     "end": 4.4,
+     "start": 3.735,
+     "end": 4.16,
      "heard": true
     }
-   ]
+   ],
+   "clamped": true
   }
  ],
  "clamped_by": "films/channels/body/ep06/voice.py --clamp: word ends cut back to the start of an inserted pause"

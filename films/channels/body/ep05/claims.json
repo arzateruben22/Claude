@@ -34,25 +34,25 @@
  },
  {
   "id": "c4",
-  "sentence": "For centuries, physicians taught the lung was airy flesh, there to cool the heart.",
-  "claim": "In the Galenic tradition the lungs were thought to be fleshy (made of coagulated blood), and their function was held to be cooling the heart; Malpighi overturned both views.",
-  "source_url": "https://www.encyclopedia.com/doc/1G2-2830902791.html",
-  "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
-  "accessed": "2026-10-25",
+  "sentence": "For centuries, physicians taught the lung was clotted blood, there to cool the heart.",
+  "claim": "In the Galenic tradition the lungs were thought to be fleshy, made of coagulated (clotted) blood, and their function was held to be cooling the heart; Malpighi overturned both views.",
+  "source_url": "https://scienzagiovane.unibo.it/English/scientists/malpighi-2.html",
+  "source_title": "Malpighi (continued) (Scienza Giovane, University of Bologna)",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: in Galenic medicine the lungs were considered to be made up of coagulated blood; Malpighi held that the lungs did not cool the heart, 'as had previously been supposed'. 'Physicians' is the plain reading of the tradition he overturned. Review fix: 'airy flesh', not 'fleshy': Galen described the lung's tissue as light and foam-like; the shot is an illustration, not a solid lung."
+  "note": "Excerpts: Scienza Giovane (Bologna): 'In Galenic medicine, the lungs were considered to be made up of coagulated blood.' Encyclopedia.com (Complete Dictionary of Scientific Biography, https://www.encyclopedia.com/doc/1G2-2830902791.html): 'According to the traditional quaternary system, the lungs were fleshy viscera, endowed with a sanguine nature and hot-humid temperament.' Tonetti 2015, 'Frogs' lungs and Malpighi's discovery of pulmonary capillaries', Acta Phlebologica 16:41–51 (https://research.unipd.it/retrieve/b68024ba-4b93-489b-b9a4-5e160f4a796b/Tonetti_Frogs_lungs_2015.pdf): in the first letter Malpighi 'proved that the lungs were not fleshy, but that they had a vesicular structure', and that the 'lungs do not cool the heart, as was previously supposed, but mix the blood'. 'Physicians' is the plain reading of the tradition he overturned; 'clotted' is 'coagulated' said plainly. The shot is an illustration (a dense, dark, smooth mass over the cluster), badged. 26 Oct audit: 'airy flesh' became 'clotted blood': no source says 'airy' (the 25 Oct note's 'light and foam-like' had no excerpt behind it), and 'airy flesh' followed by 'bubbles' was heard as one idea; the coagulated-blood excerpt is the Bologna page's, not encyclopedia.com's, so the source moved there and the other two are named here."
  },
  {
   "id": "c5",
-  "sentence": "In sixteen sixty-one, Marcello Malpighi put a frog's lung under a microscope: bubbles.",
-  "claim": "In 1661, in De pulmonibus (letters to Borelli), Malpighi showed with a microscope that the lungs have a vesicular (bubble-like) structure, not a fleshy one, and described the capillaries in frog lungs.",
+  "sentence": "In sixteen sixty-one, Marcello Malpighi put an animal's lung under a microscope: bubbles.",
+  "claim": "In 1661, in De pulmonibus (two letters to Borelli), Malpighi showed with a microscope that the lungs have a vesicular (bubble-like) structure, not a fleshy one; in a second letter, studying frog lungs, he described the capillaries.",
   "source_url": "https://www.encyclopedia.com/doc/1G2-2830902791.html",
   "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: using a microscope he showed that the lungs had a vesicular structure rather than being fleshy; the trachea's branches end in the vesicles; in the second letter, frog lungs, he described the capillaries. 'Bubbles' = vesicles (alveoli). Review fix: he worked mainly on frog lungs (the excerpt's second letter), hence 'a frog's lung'."
+  "note": "Excerpt: using a microscope he showed that the lungs had a vesicular structure rather than being fleshy; the trachea's branches end in the vesicles; in the second letter, frog lungs, he described the capillaries. Tonetti 2015, Acta Phlebologica 16:41–51 (https://research.unipd.it/retrieve/b68024ba-4b93-489b-b9a4-5e160f4a796b/Tonetti_Frogs_lungs_2015.pdf): 'In the first letter, thanks to the help of the microscope, Malpighi proved that the lungs were not fleshy, but that they had a vesicular structure'; 'In the second letter, Malpighi decided to perform dissections of frogs', where, with Carlo Fracassati, 'he observed the arteriovenous anastomoses in the pulmonary circulation'. 'Bubbles' = vesicles (alveoli). 'An animal's lung': not a human one, and not named as a frog's (the audit's excerpt describes the first letter's plate as a cut through a mammal's lung; not seen in this run's search results). 26 Oct audit: 'a frog's lung' became 'an animal's lung': the bubbles are the first letter's finding, the frogs the second letter's (the capillaries), and a frog's lung is a thin sac with a honeycombed wall, the nearest thing to the 'bag' the episode corrects."
  },
  {
   "id": "c6",
@@ -67,14 +67,14 @@
  },
  {
   "id": "c7",
-  "sentence": "At its thinnest, the wall between air and blood is about half a micrometre: far thinner than a red cell.",
-  "claim": "The blood–air barrier is about 0.3–0.5 µm thick (averaging about 0.6 µm in some measurements), against a red cell about 7.5 µm across (episode 1).",
-  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
-  "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
-  "accessed": "2026-10-25",
+  "sentence": "Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell.",
+  "claim": "The thin portion of the air–blood barrier, about half of its surface, is under 0.5 µm thick, as thin as about 0.2 µm in places, against a red cell about 7.5 µm across (episode 1).",
+  "source_url": "https://www.frontiersin.org/journals/network-physiology/articles/10.3389/fnetp.2023.1142245/full",
+  "source_title": "Miserocchi 2023, The impact of heterogeneity of the air-blood barrier on control of lung extravascular water and alveolar gas exchange, Front Netw Physiol (doi 10.3389/fnetp.2023.1142245)",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Bible S19; excerpts: barrier 0.3–0.5 µm; a physiology lecture gives an average about 0.6 µm, as thin as 0.2 µm. 'About half a micrometre' sits in that span. A red cell is 7–8 µm across (episode 1, c2): over ten times wider (computed). Review fix: 'at its thinnest' (Weibel's harmonic-mean thickness is about 0.6 µm, the arithmetic mean about 2 µm)."
+  "note": "Excerpt: 'Its thin portion, accounting for almost 50% of the whole surface, is <0.5 μm thick.' Bible S19 (StatPearls, Physiology, Lung, https://www.ncbi.nlm.nih.gov/books/NBK493219/): barrier 0.3–0.5 µm; a physiology lecture gives an average about 0.6 µm, as thin as 0.2 µm. 'It' is the sac the sentence before names. A red cell is 7–8 µm across (episode 1, c2): at 0.5 µm the wall is 15 times thinner (computed). The drawn barrier is 0.4 µm (the 0.28 µm wall plus its 0.12 µm lining), so the 'to scale' badge holds. 26 Oct audit: 'At its thinnest … about half a micrometre' became 'Over much of it … under half a micrometre': the thinnest parts are about 0.2–0.3 µm, so half a micrometre is the thin side's upper edge, not its minimum (Weibel's harmonic-mean thickness is about 0.6 µm); the readout says 'under 0.5 µm' and the drawn barrier went from 0.5 to 0.4 µm."
  },
  {
   "id": "c8",
@@ -100,25 +100,25 @@
  },
  {
   "id": "c9",
-  "sentence": "Unfold every sac flat, and they'd cover at least seventy square metres.",
-  "claim": "The alveolar (gas-exchange) surface of adult lungs is about 70–100 m²; morphometric estimates run to 120–140 m².",
+  "sentence": "Unfold every sac flat, and they'd cover about seventy square metres.",
+  "claim": "The alveolar (gas-exchange) surface of adult lungs is commonly given as about 70 m²; estimates run from about 50–100 m² (a standard physiology text) to 120–140 m² by morphometry.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
   "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Bible S19 (70–100 m²) and S20 (120–140 m² by morphometry). 'About seventy' is the low, commonly cited figure (a lecture: about 70 m² in a healthy adult male). The readout says about 70 m². Review fix: 'at least', since morphometric figures run to about 130 m²."
+  "note": "Bible S19 (70–100 m²) and S20 (120–140 m² by morphometry). West JB, Respiratory Physiology: The Essentials, 9th ed., Lippincott Williams & Wilkins 2012, ch. 1 (Structure and Function), search excerpt: the blood–gas barrier 'is thin and has an area of between 50 and 100 square meters' (the excerpt came from an online copy of the chapter that looks unauthorised, so it is not linked here: check the wording against a library copy). 'About seventy' is the commonly cited figure (a lecture: about 70 m² in a healthy adult male); the area varies with lung size. The readout says 'about 70 m²' and the whoa's badge 'estimates 50–140 m²' (bible §9: ranges on screen). 26 Oct audit: 'at least seventy' became 'about seventy': with a textbook giving 50–100 m², 70 m² is not a floor for every viewer; West ch. 1 added. 26 Oct audit (second check): West is cited as the book, not the online copy."
  },
  {
   "id": "c10",
-  "sentence": "At least a third of a tennis court, folded inside your chest.",
-  "claim": "A singles tennis court is 23.77 m × 8.23 m = 195.6 m² (ITF); 70 m² is about 36% of it.",
-  "source_url": "https://en.wikipedia.org/wiki/Tennis_court",
-  "source_title": "Tennis court (Wikipedia, citing the ITF Rules of Tennis)",
-  "accessed": "2026-10-25",
+  "sentence": "About a quarter of a tennis court, folded inside your chest.",
+  "claim": "A full (doubles) tennis court is 23.77 m × 10.97 m = 260.8 m² (ITF); 70 m² is about 27% of it, about a quarter.",
+  "source_url": "https://www.itftennis.com/media/7221/2026-rules-of-tennis-english.pdf",
+  "source_title": "ITF Rules of Tennis 2026, Rule 1: The Court (International Tennis Federation)",
+  "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 78 ft (23.77 m) long, 27 ft (8.23 m) wide for singles (ITF Rules of Tennis). Computed: 23.77 × 8.23 = 195.6 m²; 70 / 195.6 = 0.36, 'about a third'. (At 100 m² it is about half: the comparison is for the 70 m² figure said.) Review fix: 'at least a third' (it holds for 70 m² and grows with the larger estimates); the whoa's shot draws the court's lines."
+  "note": "Excerpt, ITF Rules of Tennis 2026, Rule 1: 'The court is a rectangle, 78 feet (23.77 m) long and, for singles matches, 27 feet (8.23 m) wide. For doubles matches, the court is 36 feet (10.97 m) wide.' Secondary excerpts: the ITF's tennis glossary (https://itftennis.com/en/about-us/organisation/tennis-glossary): the service lines 21 ft (6.40 m) from the net; Wikipedia, 'Tennis court' (https://en.wikipedia.org/wiki/Tennis_court, citing the ITF rules): 78 ft (23.77 m) by 27 ft (8.23 m) for singles, the net posts 3 ft (0.914 m) outside the doubles court; ASICS, 'Tennis court dimensions' (https://www.asics.com/ie/en-ie/asics-advice/tennis-court-dimensions/): the net posts 3 ft (0.914 m) outside the court. Computed: 23.77 × 10.97 = 260.8 m²; 70 / 260.8 = 0.27, 'about a quarter' (at 50 m² about a fifth, at 130 m² about half: the comparison is for the 70 m² said). The whoa's shot draws the full doubles court whole, with its singles sidelines, service lines and centre line, at the floor's scale. 26 Oct audit: 'At least a third' (true only of a singles court, 195.6 m²) became 'About a quarter' of the full court, the court a viewer pictures and the one the shot now draws; on the second check the source moved from Wikipedia to the ITF rules themselves (seen in a search result)."
  },
  {
   "id": "c11",
@@ -156,13 +156,13 @@
  {
   "id": "c13",
   "sentence": "About six litres of it.",
-  "claim": "At rest an adult moves roughly 5–8 L of air a minute (about 500 mL a breath, 12–20 breaths a minute); the tally uses 6 L a minute.",
+  "claim": "At rest an adult moves roughly 5–8 L of air a minute (about 500 mL a breath, 12–20 breaths a minute); the tally uses 5.5 L a minute.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK482502/",
   "source_title": "Physiology, Tidal Volume (StatPearls, NCBI Bookshelf NBK482502)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. The tally runs at 5.5 L/min (inside 5–8), so it reads 6.0 L as 'six' is said at 65.3 s (5.5 / 60 × 65.3 = 5.99, computed) and about 6.2 L when it leaves: 'about six'."
+  "note": "Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. The tally runs at 5.5 L/min (inside 5–8), so it reads 6.0 L as 'six' is said at 65.3 s (5.5 / 60 × 65.3 = 5.99, computed) and about 6.2 L when it leaves: 'about six'. 26 Oct audit: the claim still said the tally uses 6 L a minute; it uses 5.5 (compile.py, this note and the script's heading already did)."
  },
  {
   "id": "c14",

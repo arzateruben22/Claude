@@ -122,28 +122,30 @@ LABELS = [
 # the handoff readout counts from the signal's arrival at the terminal to the receptors lighting, in the replay's time
 _k = (REPLAY[1] - REPLAY[0]) / (REL["post"] + 0.4 - REL["sig"][0])
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": A("vo02:Your", -0.3), "text": "?", "unit": "", "label": "touching"},
-    {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Through", 0.0), "text": "100+ trillion", "unit": "", "label": "junctions in your brain, estimated"},   # c3
+    {"id": "q", "t0": 0.0, "t1": B["normal"]["t0"], "text": "?", "unit": "", "label": "touching"},
+    {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Through", 0.0), "text": "100+ trillion", "unit": "", "label": "brain junctions, estimated"},   # c3
     {"id": "width", "t0": A("vo04:gap", 0.15), "t1": A("vo04:jump", 0.2), "text": "20–50", "unit": "nm", "label": "the gap, about"},   # c10
     {"id": "hand", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3), "keys": [[round(REPLAY[0] + (REL["sig"][1] - REL["sig"][0]) * _k, 4), 0.0], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), 0.001]],
      "unit": "s", "label": "the handoff, about", "fmt": 4},   # c11
 ]
-PANELS = {"t0": B["change"]["t0"] + 0.15, "golgi": A("vo03:Golgi", -0.2), "cajal": A("vo03:Santiago", -0.1), "t1": B["why"]["t0"] - 0.1, "nobel": A("vo03:nineteen", 0.0)}
+# each panel shows the plain stain first; Golgi's reading arrives as he "saw one continuous web" (after "who made the
+# stain"), Cajal's with his name
+PANELS = {"t0": B["change"]["t0"] + 0.15, "golgi": A("vo03:saw", -0.2), "cajal": A("vo03:Santiago", -0.1), "t1": B["why"]["t0"] - 0.1, "nobel": A("vo03:nineteen", 0.0)}
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["sac"] - 0.25, "rate": 15.0 / 60.0, "unit": "breaths", "label": "while you watched, at rest, about", "beats": BREATHS}   # c14
 BADGES = [
     # one note in the top-right corner at a time: "not to scale", then "illustration · not to scale" over the
     # electron-microscope-style view (it is a model, not a micrograph or footage), then "not to scale" again
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": round(EM[0] - 0.3, 4)},
-    {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": EM[1]},
-    {"id": "nts2", "text": "not to scale", "t0": round(EM[1] + 0.3, 4), "t1": CUT["sac"]},
+    {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": A("vo05:Use", -0.3)},   # through the whoa's slowed replay of the same picture
+    {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
     {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:Through", -0.2)},
-    {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["golgi"] - 0.4, "t1": PANELS["t1"] - 0.35},
+    {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
     {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": EM[1]},
     {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
     {"id": "fast", "text": "sped up", "slot": "tl", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
     {"id": "slow-talk", "text": "slowed", "slot": "tl", "t0": TALK, "t1": TALK + 2.4},
     *[{"id": f"slow-b{i}", "text": "slowed", "slot": "tl", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
-    {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": DUR},
+    {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": CUT["loop"]},   # gone under the end card; frame 0 carries "not to scale"
 ]
 TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Meanwhile, Inside · No. 05", "follow": "Follow Meanwhile, Inside",
@@ -177,6 +179,7 @@ CAPTION_KEEP = [
     "tiny sacs",
     "reaches thousands",
     "in your brainstem",
+    "and crossed",
 ]
 
 film = {
