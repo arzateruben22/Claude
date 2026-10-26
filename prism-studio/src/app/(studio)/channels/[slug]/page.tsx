@@ -16,6 +16,7 @@ import { availableForLesson } from "@/domain/lessons";
 import { demoFilter } from "@/domain/demo";
 import { canUsePaidGeneration, costTotals } from "@/domain/costs";
 import { localMonth } from "@/domain/time";
+import { ScrollTabs } from "@/components/ScrollTabs";
 
 const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
 
@@ -51,9 +52,9 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
       <div className="kicker" style={{ color: "var(--topic-ink)" }}>{c.label}{c.nameProvisional ? " · working name" : ""}</div>
       <h1>{name}</h1>
       <p className="lede">{c.tagline}</p>
-      <nav className="tabs" aria-label="Channel sections">
+      <ScrollTabs label="Channel sections" current={tab}>
         {TABS.map(([k, label]) => <Link key={k} href={`/channels/${slug}?tab=${k}`} aria-current={tab === k ? "page" : undefined}>{label}</Link>)}
-      </nav>
+      </ScrollTabs>
 
       {tab === "overview" ? (
         <div className="grid2">

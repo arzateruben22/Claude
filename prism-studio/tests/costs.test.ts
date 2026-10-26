@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { channel, freshDb, sql, S } from "./helpers";
 import type { DB } from "../src/db/client";
 import {
-  addCost, anyChannelBudget, canUsePaidGeneration, costTotals, editCost, monthsBack, parseMoney, setBudget, voidCost, type CostInput,
+  addCost, anyChannelBudget, canUsePaidGeneration, costTotals, editCost, monthsBack, paidSwitch, parseMoney, setBudget, voidCost, type CostInput,
 } from "../src/domain/costs";
 import { addFunding, rewardBalances, setMonthlyCap } from "../src/domain/rewards";
 import { createEpisode } from "../src/domain/episodes";
@@ -172,6 +172,24 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     expect(await canUsePaidGeneration(db, c.id, 100, OCT)).toMatchObject({ ok: false, code: "switch_off", remainingCents: 2000 });
     await db.update(S.studioSettings).set({ paidGenerationEnabled: true, stopExternalActions: true });
     expect(await canUsePaidGeneration(db, c.id, 100, OCT)).toMatchObject({ ok: false, code: "stopped" });
+  });
+
+  it("the Settings switch: turning it on needs a channel budget; keeping it on never blocks the rest of the save", async () => {
+    const { c } = await channel(db);
+    const NOV = new Date("2026-11-01T17:00:00Z");   // Nov 1, 10:00 in Los Angeles
+    await setBudget(db, { channelId: c.id, month: "2026-10", capCents: 2000 });
+    await setBudget(db, { channelId: c.id, month: "2026-11", capCents: null });   // the owner ended the budget from November
+    expect(await anyChannelBudget(db, NOV)).toBe(false);
+    // stored on (beforeEach): the owner presses Save on Nov 1 to stop external actions; the switch stays as it was
+    const kept = await paidSwitch(db, true, NOV);
+    expect(kept.on).toBe(true);
+    expect(kept.notice).toMatch(/no channel has a production budget this month/);
+    expect(await canUsePaidGeneration(db, c.id, 100, NOV)).toMatchObject({ ok: false, code: "no_budget" });   // and the gate still refuses
+    // stored off: turning it on without a budget leaves it off, with a notice (the rest is still saved by the action)
+    await db.update(S.studioSettings).set({ paidGenerationEnabled: false });
+    expect(await paidSwitch(db, true, NOV)).toEqual({ on: false, notice: expect.stringMatching(/stays off until a channel has a production budget/) });
+    expect(await paidSwitch(db, true, OCT)).toEqual({ on: true, notice: "" });
+    expect(await paidSwitch(db, false, OCT)).toEqual({ on: false, notice: "" });
   });
 
   it("refuses amounts that aren't whole cents above zero", async () => {

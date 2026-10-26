@@ -358,7 +358,9 @@ export async function pushCandidates(c: Conn, now = new Date()): Promise<PushCan
 
 /**
  * The worker's minute tick: claim each new event (insert its dedupe key; a conflict means it was already notified)
- * and send it to every device. Nothing happens while no device is registered or the key can't be used.
+ * and send it to every device. Nothing happens while no device is registered or the key can't be used. When no device
+ * took it and at least one failed for a passing reason (the push service down, a timeout), the claim is released so
+ * the next tick tries again while the event is still inside its window; once any device has it, it's never resent.
  */
 export async function notifyDue(d: DB, deps: PushDeps = {}) {
   const now = deps.now ?? new Date(), env = deps.env ?? process.env;
@@ -373,7 +375,8 @@ export async function notifyDue(d: DB, deps: PushDeps = {}) {
       .onConflictDoNothing({ target: pushEvents.dedupeKey }).returning({ id: pushEvents.id });
     if (!claimed) continue;
     const r = await sendToDevices(d, ev, { sender, vapid, env, now });
-    await d.update(pushEvents).set({ sent: r.sent, failed: r.failed }).where(eq(pushEvents.id, claimed.id));
+    if (r.sent === 0 && r.failed > 0) await d.delete(pushEvents).where(eq(pushEvents.id, claimed.id));   // retry next tick
+    else await d.update(pushEvents).set({ sent: r.sent, failed: r.failed }).where(eq(pushEvents.id, claimed.id));
     out.events++; out.sent += r.sent; out.failed += r.failed; out.removed += r.removed;
   }
   return out;

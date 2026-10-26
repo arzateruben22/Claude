@@ -1,7 +1,8 @@
 // Sign-in protection: backoff, lockouts, the studio-wide ceiling, parallel requests, and audit entries without the
 // passphrase. The throttle is pure (injected clock); one test writes through the real audit_log.
 import { afterAll, describe, expect, it } from "vitest";
-import { attemptSignIn, clientKey, SIGNIN, SignInThrottle, type SignInDeps } from "../src/domain/signin";
+import { attemptSignIn, clientKey, safeNextPath, SIGNIN, SignInThrottle, type SignInDeps } from "../src/domain/signin";
+import { makeDeviceMark, makeSession, verifyDeviceMark, verifySession } from "../src/lib/session";
 import { checkPassword, checkPasswordAsync, hashPassword } from "../src/lib/auth";
 import { audit } from "../src/domain/core";
 import { freshDb, eq, S } from "./helpers";
@@ -96,6 +97,22 @@ describe("sign-in throttle", () => {
     expect(burst.filter((g) => !g.ok && g.reason === "ceiling")).toHaveLength(48);
   });
 
+  it("a device the owner signed in on before gets past a full ceiling, but not past its own backoff or lockout", () => {
+    const t = new SignInThrottle();
+    for (let i = 0; i < SIGNIN.globalMaxFailures; i++) { t.begin(`10.0.0.${i}`, T0 + i); t.fail(`10.0.0.${i}`, T0 + i); }
+    expect(t.begin("owner-phone", T0 + 100)).toMatchObject({ ok: false, reason: "ceiling" });
+    expect(t.begin("owner-phone", T0 + 100, { knownDevice: true }).ok).toBe(true);
+    t.succeed("owner-phone");
+    // the mark doesn't excuse its own wrong tries: backoff, then the lockout, as for anyone
+    const at = T0 + 200;
+    expect(t.begin("thief", at, { knownDevice: true }).ok).toBe(true);
+    t.fail("thief", at);
+    expect(t.begin("thief", at + 10, { knownDevice: true })).toMatchObject({ ok: false, reason: "wait" });
+    let now = at + SEC;
+    for (let i = 0; i < 4; i++) { expect(t.begin("thief", now, { knownDevice: true }).ok).toBe(true); now += t.fail("thief", now).waitMs; }
+    expect(t.begin("thief", now - 1, { knownDevice: true })).toMatchObject({ ok: false, reason: "locked" });
+  });
+
   it("keeps memory bounded when the client key is spoofed, without dropping a live lockout", () => {
     const t = new SignInThrottle({ ...SIGNIN, maxClients: 10, globalMaxFailures: 1_000 });
     fails(t, "locked", 5, T0);
@@ -144,7 +161,7 @@ describe("attemptSignIn", () => {
   it("signs in with the right passphrase and audits it", async () => {
     const t = new SignInThrottle(), entries: { action: string; detail: Record<string, unknown> }[] = [];
     expect(await attemptSignIn(deps(t, entries, { passphrase: PASS }))).toEqual({ ok: true });
-    expect(entries).toEqual([{ action: "auth.sign_in", detail: { client: "203.0.113.9" } }]);
+    expect(entries).toEqual([{ action: "auth.sign_in", detail: { client: "203.0.113.9", knownDevice: false } }]);
   });
 
   it("parallel requests from one client get one check between them", async () => {
@@ -166,10 +183,45 @@ describe("attemptSignIn", () => {
     expect(waits[0]).toBeGreaterThan(SIGNIN.minFailMs - 50);
   });
 
+  it("a full ceiling turns strangers away but lets the owner's known device check its passphrase", async () => {
+    const t = new SignInThrottle();
+    for (let i = 0; i < SIGNIN.globalMaxFailures; i++) { t.begin(`10.0.0.${i}`, T0 + i); t.fail(`10.0.0.${i}`, T0 + i); }
+    const now = () => T0 + 100;
+    const stranger = await attemptSignIn(deps(t, [], { now, client: "198.51.100.1", passphrase: PASS }));
+    expect(!stranger.ok && stranger.message).toMatch(/Too many wrong tries on this studio lately.*device you've signed in on before/);
+    expect(await attemptSignIn(deps(t, [], { now, client: "198.51.100.1", passphrase: PASS, knownDevice: true }))).toEqual({ ok: true });
+  });
+
   it("a broken audit store doesn't break sign-in", async () => {
     const t = new SignInThrottle();
     const r = await attemptSignIn({ ...deps(t, [], { passphrase: PASS }), audit: async () => { throw new Error("db down"); } });
     expect(r).toEqual({ ok: true });
+  });
+});
+
+describe("after sign-in", () => {
+  it("goes only to a path on this site", () => {
+    for (const ok of ["/", "/costs", "/costs?channel=space", "/episodes/abc#notes", "/m/instagram"]) expect(safeNextPath(ok), ok).toBe(ok);
+    for (const bad of ["/\t/evil.example", "/\n/evil.example", "/\r\n/evil.example", "//evil.example", "/\\evil.example", "/\\/evil.example", "https://evil.example/",
+      "evil.example", " /costs", "/ /evil.example", "/\u0000/evil.example", "", undefined, null]) {
+      expect(safeNextPath(bad), JSON.stringify(bad)).toBe("/");
+    }
+    // what a browser would do with the refused ones: leave the site
+    expect(new URL("/\t/evil.example", "https://studio.example/login").host).toBe("evil.example");
+    expect(safeNextPath("/%09/evil.example")).toBe("/%09/evil.example");   // still encoded: a path here, never a host
+    expect(new URL(safeNextPath("/%09/evil.example"), "https://studio.example/login").host).toBe("studio.example");
+  });
+
+  it("the device mark is signed, lasts longer than the session, and is never a session", async () => {
+    process.env.SESSION_SECRET ??= "s".repeat(40);
+    const m = await makeDeviceMark(), s = await makeSession();
+    expect(await verifyDeviceMark(m.value)).toBe(true);
+    expect(m.maxAge).toBeGreaterThan(s.maxAge);
+    expect(await verifySession(m.value)).toBe(false);       // a device mark doesn't sign anyone in
+    expect(await verifyDeviceMark(s.value)).toBe(false);
+    const [p, sig] = m.value.split(".");
+    expect(await verifyDeviceMark(`${p}x.${sig}`)).toBe(false);
+    expect(await verifyDeviceMark(m.value, Date.now() + 401 * 86_400_000)).toBe(false);
   });
 });
 

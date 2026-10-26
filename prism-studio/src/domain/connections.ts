@@ -7,7 +7,7 @@ import { connections, destinations } from "../db/schema";
 import { audit, type Conn, DomainError } from "./core";
 import { seal, unseal } from "../lib/crypto";
 import { connectorFor } from "../integrations";
-import type { AccountInfo, Fetch, Platform, PlatformConnector, TokenSet } from "../integrations/types";
+import { ConnectorError, type AccountInfo, type Fetch, type Platform, type PlatformConnector, type TokenSet } from "../integrations/types";
 
 export type ConnectionRow = typeof connections.$inferSelect;
 
@@ -46,7 +46,14 @@ export async function connectionFor(c: Conn, destinationId: string): Promise<Con
   return row ?? null;
 }
 
-/** Unsealed tokens, refreshed when within five minutes of expiry. Marks the connection expired on an auth failure. */
+/** Whether a failed refresh means the grant itself is gone (refused, revoked, invalid_grant), not a passing problem. */
+export function refreshRefused(e: unknown): boolean {
+  return e instanceof ConnectorError && !e.retryable && (e.code === "auth" || e.code === "rejected");
+}
+
+/** Unsealed tokens, refreshed when within five minutes of expiry. Marks the connection expired only when the platform
+ *  refused the refresh; network trouble, rate limits and anything else are thrown as they are (the connection stays
+ *  connected, and the queue retries with backoff). */
 export async function freshTokens(d: DB, destinationId: string, f?: Fetch): Promise<{ conn: ConnectionRow; tokens: TokenSet; connector: PlatformConnector }> {
   const conn = await connectionFor(d, destinationId);
   if (!conn || !conn.tokenCipher || conn.status === "revoked") throw new DomainError("not_connected", "this destination is not connected");
@@ -58,6 +65,7 @@ export async function freshTokens(d: DB, destinationId: string, f?: Fetch): Prom
       tokens = await connector.refresh(tokens, undefined, f);
       await d.update(connections).set({ tokenCipher: seal(JSON.stringify(tokens)), expiresAt: new Date(tokens.expiresAt), status: "connected", updatedAt: new Date() }).where(eq(connections.id, conn.id));
     } catch (e) {
+      if (!refreshRefused(e)) throw e;
       await d.update(connections).set({ status: "expired", updatedAt: new Date() }).where(eq(connections.id, conn.id));
       await audit(d, "system", "connection.expired", "connection", conn.id, { error: (e as Error).message });
       throw new DomainError("expired", `the ${dest.platform} connection expired: reconnect it in Accounts`);

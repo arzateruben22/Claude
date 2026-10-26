@@ -318,6 +318,26 @@ describe("delivery", () => {
     expect(fake.sent.filter((s) => JSON.parse(s.payload).url === `/upload#task-${r.pub.id}`)).toHaveLength(4);
   });
 
+  it("an event no device got, because the push service was down, is tried again on the next tick; once sent, never again", async () => {
+    const r = await dueEpisode({ inMin: 25 });
+    const phone = browserSub();
+    await saveSubscription(db, phone, "Phone");
+    const key = `upload_due:${r.pub.id}:${r.at.toISOString()}`;
+    const mine = (f: ReturnType<typeof fakeSender>) => f.sent.filter((x) => JSON.parse(x.payload).url === `/upload#task-${r.pub.id}`);
+    const down = fakeSender({ [phone.endpoint]: 503 });
+    await notifyDue(db, { env: ENV, sender: down.send, now: NOW });
+    expect(await db.select().from(S.pushEvents).where(eq(S.pushEvents.dedupeKey, key))).toHaveLength(0);   // claim released
+    const [dev] = await db.select().from(S.pushSubscriptions);
+    expect(dev.failureCount).toBeGreaterThan(0);
+    const up = fakeSender();
+    await notifyDue(db, { env: ENV, sender: up.send, now: new Date(+NOW + MIN) });   // the next minute: still inside the window
+    expect(mine(up)).toHaveLength(1);
+    const [ev] = await db.select().from(S.pushEvents).where(eq(S.pushEvents.dedupeKey, key));
+    expect(ev).toMatchObject({ sent: 1, failed: 0 });
+    await notifyDue(db, { env: ENV, sender: up.send, now: new Date(+NOW + 2 * MIN) });
+    expect(mine(up)).toHaveLength(1);
+  });
+
   it("sends only title, body, screen and tag, signed with the studio's key", async () => {
     await dueEpisode();
     await saveSubscription(db, browserSub(), "Phone");

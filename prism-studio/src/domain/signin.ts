@@ -5,8 +5,10 @@
 //   - per client, exponential backoff (1, 2, 4, 8 s) and on the 5th failure a lockout of 15 min that doubles with
 //     each further lockout (up to 24 h); a success, or a quiet day after its last lockout, starts that client again;
 //   - studio-wide, at most 20 failures an hour, counting checks in flight, so many addresses can't add up to many
-//     guesses.
+//     guesses. A device the owner signed in on before (its signed `prism_device` mark) is let past this ceiling, so
+//     strangers keeping it full can't lock the owner out; its own address is still held to the backoff and lockouts.
 // `attemptSignIn` runs one try and writes the audit entries: the client, counts and times, never the passphrase.
+// `safeNextPath` keeps the redirect after sign-in on this site.
 
 export const SIGNIN = {
   baseDelayMs: 1_000,             // failure n (1–4) waits 2^(n-1) s before that client may try again
@@ -32,15 +34,16 @@ export class SignInThrottle {
   private inFlight = 0;
   constructor(readonly limits: SignInLimits = SIGNIN) {}
 
-  /** Reserve one check for this client, or say why not and for how long. Synchronous on purpose. */
-  begin(client: string, now: number): { ok: true } | Refusal {
+  /** Reserve one check for this client, or say why not and for how long. Synchronous on purpose. A known device (one
+   *  the owner signed in on before) skips the studio-wide ceiling, never the per-client limits. */
+  begin(client: string, now: number, o: { knownDevice?: boolean } = {}): { ok: true } | Refusal {
     const L = this.limits;
     let c = this.clients.get(client);
     if (c && !c.busy && now - c.notBefore >= L.forgetMs) { this.clients.delete(client); c = undefined; }   // a quiet day after its last wait
     if (c?.busy) return { ok: false, reason: "busy", retryAfterMs: 1_000 };
     if (c && c.notBefore > now) return { ok: false, reason: c.locked ? "locked" : "wait", retryAfterMs: c.notBefore - now };
     this.expire(now);
-    if (this.recent.length + this.inFlight >= L.globalMaxFailures) {
+    if (!o.knownDevice && this.recent.length + this.inFlight >= L.globalMaxFailures) {
       const retryAfterMs = this.recent.length >= L.globalMaxFailures ? this.recent[this.recent.length - L.globalMaxFailures] + L.globalWindowMs - now : 1_000;
       return { ok: false, reason: "ceiling", retryAfterMs: Math.max(1_000, retryAfterMs) };
     }
@@ -120,7 +123,7 @@ export function refusalMessage(r: Refusal): string {
     case "busy": return "Still checking the last try. Wait a moment.";
     case "wait": return `Wait ${waitText(r.retryAfterMs)} before trying again.`;
     case "locked": return `Too many wrong tries. Sign-in is locked for ${waitText(r.retryAfterMs)}.`;
-    case "ceiling": return `Too many wrong tries on this studio lately. Try again in ${waitText(r.retryAfterMs)}.`;
+    case "ceiling": return `Too many wrong tries on this studio lately. Try again in ${waitText(r.retryAfterMs)}, or from a device you've signed in on before.`;
   }
 }
 
@@ -134,6 +137,8 @@ export function clientKey(forwardedFor: string | null | undefined, realIp?: stri
 export type SignInDeps = {
   throttle: SignInThrottle;
   client: string;
+  /** the request carries a valid device mark from an earlier sign-in */
+  knownDevice?: boolean;
   passphrase: string;
   check: (passphrase: string) => Promise<boolean>;
   audit: (action: string, detail: Record<string, unknown>) => Promise<void>;
@@ -145,7 +150,7 @@ export type SignInDeps = {
 export async function attemptSignIn(d: SignInDeps): Promise<{ ok: true } | { ok: false; message: string }> {
   const now = d.now ?? Date.now, sleep = d.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
   const L = d.throttle.limits, started = now();
-  const gate = d.throttle.begin(d.client, started);
+  const gate = d.throttle.begin(d.client, started, { knownDevice: d.knownDevice });
   if (!gate.ok) return { ok: false, message: refusalMessage(gate) };
   let good = false;
   try {
@@ -158,11 +163,11 @@ export async function attemptSignIn(d: SignInDeps): Promise<{ ok: true } | { ok:
   };
   if (good) {
     d.throttle.succeed(d.client);
-    await quietly("auth.sign_in", { client: d.client });
+    await quietly("auth.sign_in", { client: d.client, knownDevice: !!d.knownDevice });
     return { ok: true };
   }
   const t = now(), f = d.throttle.fail(d.client, t);
-  await quietly("auth.sign_in_failed", { client: d.client, failures: f.failures, waitSeconds: Math.ceil(f.waitMs / 1000) });
+  await quietly("auth.sign_in_failed", { client: d.client, knownDevice: !!d.knownDevice, failures: f.failures, waitSeconds: Math.ceil(f.waitMs / 1000) });
   if (f.locked) await quietly("auth.locked", { client: d.client, lockouts: f.lockouts, minutes: Math.ceil(f.waitMs / 60_000), until: new Date(t + f.waitMs).toISOString() });
   if (f.ceilingReached) await quietly("auth.ceiling", { client: d.client, failuresLastHour: L.globalMaxFailures });
   const rest = L.minFailMs - (now() - started);
@@ -173,4 +178,18 @@ export async function attemptSignIn(d: SignInDeps): Promise<{ ok: true } | { ok:
       ? `That passphrase didn't match. Too many wrong tries: sign-in is locked for ${waitText(f.waitMs)}.`
       : "That passphrase didn't match.",
   };
+}
+
+/** Where to go after signing in: a path on this site, else "/". Parsed the way a browser will (which drops tabs and
+ *  newlines and reads "\" as "/"), and refused when it would leave the site: "//host", "/\host", "/\t/host". */
+export function safeNextPath(next: string | null | undefined): string {
+  const raw = String(next ?? "");
+  if (!raw.startsWith("/") || /[\s\x00-\x1f\x7f\\]/.test(raw)) return "/";
+  const base = "http://studio.invalid";
+  try {
+    const u = new URL(raw, base);
+    return u.origin === base ? u.pathname + u.search + u.hash : "/";
+  } catch {
+    return "/";
+  }
 }

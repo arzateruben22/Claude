@@ -17,8 +17,14 @@ const CENTURY = map({ thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seve
 /** A spoken year is turned into digits only after one of these words ("In twenty seventeen", "since nineteen ninety"). */
 const YEAR_CONTEXT = new Set(["in", "since", "from", "during", "circa", "year", "until", "till", "before", "after", "by", "around",
   "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]);
-/** Words that make a "year" a count instead ("in twenty fifteen minutes" is not 2015). */
+/** Words that make a "year" a count instead ("in twenty fifteen minutes" is not 2015). "and" too, unless another year
+ *  follows it ("during nineteen eighteen and nineteen nineteen"). */
 const NOT_AFTER_YEAR = /^(years?|days?|weeks?|months?|hours?|minutes?|seconds?|times|percent|per|hundred|thousand|million|billion|trillion|and)$/;
+/** A spoken pair ("nineteen twelve") followed by a word is a year only before one of these, or a name ("In nineteen
+ *  sixty-nine Apollo…"); before any other word it may be a count ("in nineteen twelve patients") and stays in words. */
+const YEAR_FOLLOW = new Set(["the", "a", "an", "when", "while", "where", "we", "it", "its", "they", "he", "she", "i", "you", "this", "that", "these", "those",
+  "there", "his", "her", "their", "our", "as", "at", "on", "in", "into", "to", "for", "with", "by", "from", "after", "before", "during", "until", "but", "or",
+  "so", "then", "alone", "too", "also", "already", "still", "only"]);
 const ORDINAL = /(^|-)(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|[a-z]+teenth|[a-z]+tieth|hundredth|thousandth|millionth|billionth|trillionth)$/;
 
 type Tok = { w: string; start: number; end: number };
@@ -42,13 +48,16 @@ export function writtenForms(text: string): string {
   const sentenceStart = (k: number) => /(^|[.!?:]\s+)$/.test(text.slice(0, toks[k].start));
   /** nothing after token k but punctuation (or the end of the text) */
   const stops = (k: number) => /^([,.;:!?…)]|\s*$)/.test(text.slice(toks[k].end));
+  /** token k starts with a capital and doesn't open a sentence: a name */
+  const name = (k: number) => k < toks.length && /^[A-Z]/.test(text[toks[k].start]) && !sentenceStart(k);
 
   // "In twenty seventeen" → 2017, "in nineteen sixty-nine" → 1969, "in nineteen oh five" → 1905, "in sixteen hundred," → 1600,
-  // "in two thousand and eight," → 2008. Returns the index after the year's last token.
-  const year = (i: number): { end: number; out: string } | null => {
-    const ctx = YEAR_CONTEXT.has(prev(i));
+  // "in two thousand and eight," → 2008. Returns the index after the year's last token. `chained`: the year right after
+  // "and" in "nineteen eighteen and nineteen nineteen", which takes the first one's year word.
+  const year = (i: number, chained = false): { end: number; out: string } | null => {
+    const ctx = chained || YEAR_CONTEXT.has(prev(i));
     const c = CENTURY.get(toks[i].w);
-    let y: number | null = null, end = i + 1, strict = false;
+    let y: number | null = null, end = i + 1, strict = false, pair = false;
     if (c !== undefined && next(i)) {
       const w1 = next(i), n1 = small(w1);
       if (w1 === "hundred" && c < 20) {
@@ -57,14 +66,17 @@ export function writtenForms(text: string): string {
       } else if ((w1 === "oh" || w1 === "o") && (UNIT.get(next(i + 1)) ?? 0) >= 1 && UNIT.get(next(i + 1))! <= 9) {
         y = UNIT.get(next(i + 1))!; end = i + 3;
       } else if (n1 !== null && n1 >= 10) {
-        y = n1; end = i + 2;
+        y = n1; end = i + 2; pair = true;
         const o = UNIT.get(next(i + 1));
         if (TENS.has(w1) && o !== undefined && o >= 1 && o <= 9) { y += o; end = i + 3; }   // "nineteen sixty nine"
       }
       if (y === null) return null;
-      if (NOT_AFTER_YEAR.test(next(end - 1)) || ORDINAL.test(next(end - 1))) return null;
+      const after = next(end - 1);
+      const andYear = after === "and" && next(end) !== "" && year(end + 1, true) !== null;
+      if (!andYear && (NOT_AFTER_YEAR.test(after) || ORDINAL.test(after))) return null;
       if (!ctx && !(sentenceStart(i) && /^[,:]/.test(text.slice(toks[end - 1].end)))) return null;
       if (strict && !stops(end - 1)) return null;
+      if (pair && after && !andYear && !YEAR_FOLLOW.has(after) && !name(end)) return null;   // "in nineteen twelve patients"
       return { end, out: String(c! * 100 + y) };
     }
     if (toks[i].w === "two" && next(i) === "thousand" && ctx) {   // 2000–2099, only when nothing but punctuation follows
@@ -143,9 +155,11 @@ export function writtenForms(text: string): string {
   };
 
   const edits: { start: number; end: number; out: string }[] = [];
+  let yearEnd = -1;   // the token after the last year written ("and" in "nineteen eighteen and nineteen nineteen")
   for (let i = 0; i < toks.length;) {
-    const r = decade(i) ?? year(i);
-    if (r) { edits.push({ start: toks[i].start, end: toks[r.end - 1].end, out: r.out }); i = r.end; continue; }
+    const y = year(i, i === yearEnd + 1 && toks[yearEnd]?.w === "and" && joined(i));
+    const r = decade(i) ?? y;
+    if (r) { edits.push({ start: toks[i].start, end: toks[r.end - 1].end, out: r.out }); if (r === y) yearEnd = r.end; i = r.end; continue; }
     const c = cardinal(i);
     if (c?.out) edits.push({ start: toks[i].start, end: toks[c.end - 1].end, out: c.out });
     i = c ? c.end : i + 1;

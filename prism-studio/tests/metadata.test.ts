@@ -82,7 +82,14 @@ describe("metadata", () => {
   it("missing hook or sources are warned about", () => {
     const m = buildMetadata({ ...input, beats: [], sources: [] });
     expect(m.youtube.warnings).toEqual(expect.arrayContaining(["no hook line found in the script", "no sources recorded"]));
-    for (const p of ["youtube", "tiktok", "instagram"] as const) expect([m[p].pinnedComment, m[p].replies], p).toEqual(["", []]);   // no "Sources: ." comment
+    for (const p of ["tiktok", "instagram"] as const) expect(m[p].warnings, p).toContain("no sources recorded");
+    for (const p of ["youtube", "instagram"] as const) expect([m[p].pinnedComment, m[p].replies], p).toEqual(["", []]);   // no "Sources: ." comment
+    // TikTok's pinned comment still carries the production note, as it always did
+    expect([m.tiktok.pinnedComment, m.tiktok.replies]).toEqual(["Synthetic (AI) voice; code-rendered animation.", []]);
+    expect(buildMetadata({ ...input, sources: [], disclosures: { aiVoice: false, aiVisuals: false } }).tiktok.pinnedComment).toBe("Code-rendered animation.");
+    // and Instagram's caption doesn't point at a sources comment that isn't there
+    expect(m.instagram.caption).not.toContain("Sources in the first comment");
+    expect(m.instagram.caption).toContain("Synthetic (AI) narration; code-rendered animation.");
   });
   it("the posting sheet carries every platform's text", () => {
     const s = postingSheet(input);

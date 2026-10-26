@@ -9,6 +9,7 @@ import { dayLabel, monthLabel, moneyIn, PAID_GEN as GATE, topicStyle } from "@/l
 import { addCostEntry, editCostEntry, saveBudget, voidCostEntry } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { CostFields } from "@/components/CostFields";
+import { ScrollTabs } from "@/components/ScrollTabs";
 
 export const metadata: Metadata = { title: "Costs" };
 
@@ -100,13 +101,13 @@ export default async function Costs({ searchParams }: { searchParams: Promise<{ 
   const scopeName = focus ? plain(focus.name) : "Studio-wide";
   return (
     <div style={focus ? topicStyle(focus) : undefined}>
-      <div className="kicker">Production · {monthLabel(v.month)}</div>
+      <div className="kicker">Production · {focus ? `${scopeName} · ` : ""}{monthLabel(v.month)}</div>
       <h1>Costs</h1>
       <p className="lede">What making the films costs, against the budgets you set. Prism only records costs: it never pays, charges or moves money. Production budgets are separate from your personal <Link href="/rewards">rewards</Link>.</p>
-      <nav className="tabs" aria-label="Whose costs">
+      <ScrollTabs label="Whose costs" current={focus?.id ?? "all"}>
         <Link href="/costs" aria-current={!focus ? "page" : undefined}>All channels</Link>
         {v.channels.map((c) => <Link key={c.id} href={`/costs?channel=${c.slug}`} aria-current={focus?.id === c.id ? "page" : undefined}>{plain(c.name)}</Link>)}
-      </nav>
+      </ScrollTabs>
       {focusRow ? (
         <p className="row cost-gate">
           <span className={`chip ${GATE[focusRow.gate.code].tone}`}>{GATE[focusRow.gate.code].label}</span>

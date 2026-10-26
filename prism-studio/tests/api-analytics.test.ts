@@ -10,7 +10,8 @@ import { cadenceDays, duePulls, enqueueDuePulls, isPullDue, pullMetrics, pullSta
 import { analyticsTotals } from "../src/domain/analytics";
 import { enqueue } from "../src/domain/jobs";
 import { CONNECTORS } from "../src/integrations";
-import { ConnectorError, type Metrics, type PlatformConnector } from "../src/integrations/types";
+import { ConnectorError, type Fetch, type Metrics, type PlatformConnector } from "../src/integrations/types";
+import { instagram } from "../src/integrations/instagram";
 import { NON_RETRYABLE, runHandler } from "../worker/handlers";
 
 let db: DB, end: () => Promise<void>;
@@ -182,6 +183,24 @@ describe("pulling", () => {
     expect(evs[0].evidence).toMatchObject({ source: "api" });
   });
 
+  it("a same-day re-pull that lowers the views below an unlock flags its evidence, as a lower later row does", async () => {
+    const r = await verifiedPost("space");
+    const t0 = new Date();
+    const events = () => db.select().from(S.achievementEvents).where(eq(S.achievementEvents.publicationId, r.pub.id));
+    numbers = { views: 1_200_000, retrievedAt: "" };   // the channel's first million: an unlock of its own
+    expect((await pullMetrics(db, r.pub.id, { now: t0 })).unlocked).toBeGreaterThanOrEqual(1);
+    const unlocked = await events();
+    expect(unlocked.map((e) => e.evidenceStatus)).not.toContain("flagged");
+    numbers = { views: 900_000, retrievedAt: "" };
+    await pullMetrics(db, r.pub.id, { now: new Date(t0.getTime() + 60_000) });
+    const views = (await apiRows(r.pub.id)).filter((x) => x.metric === "views");
+    expect(views).toHaveLength(1);
+    expect(views[0]).toMatchObject({ value: 900_000, status: "revised" });
+    const after = await events();
+    expect(after).toHaveLength(unlocked.length);   // never a second unlock
+    expect(after.every((e) => e.evidenceStatus === "flagged")).toBe(true);
+  });
+
   it("an empty answer writes nothing and counts as the day's attempt", async () => {
     const r = await verifiedPost("body");
     numbers = { retrievedAt: "" };
@@ -244,6 +263,38 @@ describe("expired and failing connections", () => {
     expect(yt.asked).toEqual([]);
   });
 
+  it("a refresh that fails on the network leaves the connection connected and is retried by the queue", async () => {
+    const r = await verifiedPost("body");
+    yt.refresh = async () => { throw new ConnectorError("network", "token refresh: Google answered 503.", true); };
+    await db.update(S.connections).set({ tokenCipher: seal(JSON.stringify(tokens(60_000))), expiresAt: new Date(Date.now() + 60_000) }).where(eq(S.connections.destinationId, r.yt.id));
+    const e = await pullMetrics(db, r.pub.id).catch((x) => x);
+    expect(e).toBeInstanceOf(ConnectorError);   // thrown as is: the worker backs off and tries again
+    expect(NON_RETRYABLE.has(e.code)).toBe(false);
+    expect((await connectionFor(db, r.yt.id))?.status).toBe("connected");
+    expect(yt.asked).toEqual([]);
+    const [pull] = await db.select().from(S.metricPulls).where(eq(S.metricPulls.publicationId, r.pub.id));
+    expect(pull).toMatchObject({ lastOutcome: "failed" });
+    expect(pull.lastError).toMatch(/503/);
+    // a rate limit at the token endpoint is no reason to reconnect either
+    yt.refresh = async () => { throw new ConnectorError("quota", "token refresh: rate limit", true); };
+    await expect(pullMetrics(db, r.pub.id)).rejects.toMatchObject({ code: "quota" });
+    expect((await connectionFor(db, r.yt.id))?.status).toBe("connected");
+    // and once the refresh works again, the pull goes through
+    yt.refresh = async (t) => ({ ...t, accessToken: "refreshed", expiresAt: Date.now() + 3_600_000 });
+    expect((await pullMetrics(db, r.pub.id)).outcome).toBe("ok");
+  });
+
+  it("Instagram's (#10) not enough viewers fails that post's pull only; the connection stays connected", async () => {
+    const r = await verifiedPost("physics");
+    const f = (async () => new Response(JSON.stringify({ error: { message: "(#10) Not enough viewers for the media to show insights", type: "OAuthException", code: 10 } }), { status: 400 })) as unknown as Fetch;
+    const e = await pullMetrics(db, r.pub.id, { connector: instagram, fetch: f }).catch((x) => x);
+    expect(e.code).toBe("pull_failed");
+    expect((await connectionFor(db, r.yt.id))?.status).toBe("connected");
+    const [pull] = await db.select().from(S.metricPulls).where(eq(S.metricPulls.publicationId, r.pub.id));
+    expect(pull).toMatchObject({ lastOutcome: "failed" });
+    expect(pull.lastError).toMatch(/no insights for this post yet/);
+  });
+
   it("network trouble is retried by the queue; a rejected post is not", async () => {
     const r = await verifiedPost("skincare");
     CONNECTORS.youtube = fake("youtube", async () => { throw new ConnectorError("network", "YouTube 503", true); });
@@ -264,15 +315,21 @@ describe("refresh now and the worker job", () => {
   it("queues one pull for the post, not two, and the job writes API rows", async () => {
     await clearPullJobs();
     const r = await verifiedPost("body");
-    const first = await requestPull(db, r.pub.id);
+    const at = new Date();
+    const first = { ...(await requestPull(db, r.pub.id, at)), at };
     expect(first.created).toBe(true);
-    expect((await requestPull(db, r.pub.id)).created).toBe(false);   // already queued
+    expect(await requestPull(db, r.pub.id)).toMatchObject({ created: false, status: "queued" });   // already queued
     const [job] = await pullJobs(r.pub.id);
     expect(job.payload).toMatchObject({ publicationId: r.pub.id, manual: true });
     expect((await pullStates(db, [r.pub.id])).get(r.pub.id)).toMatchObject({ queued: true, blocked: null, cadenceDays: 1 });
     const result = await runHandler("pull_metrics", job, async () => true, db);
     expect(result).toMatchObject({ outcome: "ok", written: ["views", "likes", "comments"] });
     expect(await apiRows(r.pub.id)).toHaveLength(3);
+    // pressed again within the same minute, after that job finished: nothing is queued, and it says so
+    await db.update(S.jobs).set({ status: "succeeded" }).where(eq(S.jobs.id, job.id));
+    const again = await requestPull(db, r.pub.id, first.at);
+    expect(again).toMatchObject({ created: false, status: "just_pulled" });
+    expect(await pullJobs(r.pub.id)).toHaveLength(1);
     await expect(requestPull(db, r.pubs.tiktok.id)).rejects.toThrow(/verified/);
   });
 

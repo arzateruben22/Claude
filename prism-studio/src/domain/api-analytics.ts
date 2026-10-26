@@ -6,8 +6,10 @@
 //   row, never adds a second one. A metric the platform doesn't give gets no row (never 0).
 // - Cadence: daily for the first 30 days after publication, then weekly, counted in UTC days from the last attempt
 //   (success or not), so a failing post waits for its next period instead of retrying in a loop.
-// - An auth failure (expired or revoked grant, failed refresh) marks the connection expired: it needs reconnecting,
-//   nothing pulls from it until then, and the job is not retried.
+// - An auth failure (expired or revoked grant, a refresh the platform refused) marks the connection expired: it needs
+//   reconnecting, nothing pulls from it until then, and the job is not retried. A refresh that fails on the network
+//   leaves the connection as it is and is retried. A refusal about one post (Instagram's "(#10) not enough viewers")
+//   fails that post's pull only.
 // - "Stop external actions" pauses pulls too: while it's on, Prism doesn't call the platforms at all.
 // Tokens are unsealed only for the call (connections.freshTokens) and never logged or stored anywhere else.
 import { and, eq, inArray, sql } from "drizzle-orm";
@@ -121,19 +123,24 @@ export async function requestPull(d: DB, publicationId: string, now = new Date()
   const s = await settings(d);
   const block = pullBlocker(t, { stopped: s.stopExternalActions, connector: resolve(t.platform) });
   if (block) throw new DomainError(block.code, block.message);
-  if ((await pullsInFlight(d)).has(t.id)) return { created: false, platform: t.platform };
+  if ((await pullsInFlight(d)).has(t.id)) return { created: false, platform: t.platform, status: "queued" as const };
+  // one Refresh now per post per minute: a second press that minute finds this job, queued or already finished
   const q = await enqueue(d, { type: "pull_metrics", channelId: t.channelId, payload: { publicationId: t.id, manual: true }, idempotencyKey: `pull_metrics:${t.id}:now:${now.toISOString().slice(0, 16)}`, priority: 3, maxAttempts: 3 });
   if (q.created) await audit(d, "owner", "metrics.refresh", "publication", t.id, { platform: t.platform });
-  return { created: q.created, platform: t.platform };
+  const status = q.created || q.job.status === "queued" || q.job.status === "running" ? "queued" as const : q.job.status === "succeeded" ? "just_pulled" as const : "just_failed" as const;
+  return { created: q.created, platform: t.platform, status };
 }
 
-async function notePull(c: Conn, publicationId: string, at: Date, outcome: "ok" | "empty" | "needs_reconnect" | "failed", error = "") {
+async function notePull(c: Conn, publicationId: string, at: Date, outcome: "ok" | "empty" | "needs_reconnect" | "failed", text = "") {
   const ok = outcome === "ok" || outcome === "empty";
+  const error = text.replace(/((?:access|refresh)_token|code)=[^&\s"']+/gi, "$1=[redacted]");   // never a token, even inside a URL in an error
   await c.insert(metricPulls).values({ publicationId, lastAttemptAt: at, lastSuccessAt: ok ? at : null, lastOutcome: outcome, lastError: error.slice(0, 300), pulls: 1 })
     .onConflictDoUpdate({ target: metricPulls.publicationId, set: { lastAttemptAt: at, ...(ok ? { lastSuccessAt: at } : {}), lastOutcome: outcome, lastError: error.slice(0, 300), pulls: sql`${metricPulls.pulls} + 1`, updatedAt: new Date() } });
 }
 
-/** Write one API answer: one row per reported metric for this UTC day (updated on a re-pull), then milestones. */
+/** Write one API answer: one row per reported metric for this UTC day (updated on a re-pull), then milestones. A
+ *  re-pull that lowers the day's views is a downward revision like any other: the row is marked revised and the
+ *  unlocks of that post are flagged. */
 export async function recordApiMetrics(d: DB, t: { id: string; platform: Platform; publishedAt: Date }, m: Metrics, now = new Date()) {
   const written: string[] = [];
   const unlocked: string[] = [];
@@ -144,11 +151,14 @@ export async function recordApiMetrics(d: DB, t: { id: string; platform: Platfor
     const value = Number(raw);
     if (!Number.isFinite(value) || value < 0) continue;   // a nonsense answer is dropped, never written as 0
     const fields = { value, unit: UNIT[metric] ?? "count", definition: DEFINITION[t.platform], periodStart: t.publishedAt, periodEnd: now, ageHours, retrievedAt: now, status: "ok" };
+    // the value this pull replaces, if the day's row exists: a lower number must still flag an unlock it backed
+    const [before] = metric === "views" ? await d.select({ value: metricSnapshots.value }).from(metricSnapshots)
+      .where(and(eq(metricSnapshots.publicationId, t.id), eq(metricSnapshots.metric, metric), eq(metricSnapshots.source, "api"), eq(metricSnapshots.utcDay, utcDay(now)))) : [];
     const [snap] = await d.insert(metricSnapshots).values({ publicationId: t.id, metric, source: "api", utcDay: utcDay(now), ...fields })
       .onConflictDoUpdate({ target: [metricSnapshots.publicationId, metricSnapshots.metric, metricSnapshots.utcDay], targetWhere: sql`source = 'api'`, set: fields })
       .returning();
     written.push(metric);
-    if (metric === "views") unlocked.push(...(await evaluateSnapshot(d, snap.id)).map((e) => e.id));
+    if (metric === "views") unlocked.push(...(await evaluateSnapshot(d, snap.id, { replaced: before?.value })).map((e) => e.id));
   }
   return { written, unlocked };
 }
@@ -176,6 +186,8 @@ export async function pullMetrics(d: DB, publicationId: string, deps: { connecto
       await notePull(d, t.id, now, "needs_reconnect", e.message);
       throw new DomainError("needs_reconnect", e.message);
     }
+    // the refresh didn't get through (network, rate limit): the grant is fine; the queue retries with backoff
+    await notePull(d, t.id, now, "failed", `token refresh: ${(e as Error).message ?? String(e)}`);
     throw e;
   }
   const { tokens } = fresh, connector = deps.connector ?? fresh.connector;

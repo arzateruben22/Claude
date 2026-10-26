@@ -16,11 +16,11 @@ import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } f
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
 import { planDays, unschedule } from "@/domain/schedule";
 import { enqueue, requestCancel, retry } from "@/domain/jobs";
-import { addCost, anyChannelBudget, editCost, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
+import { addCost, editCost, paidSwitch, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
 import { localDate, zonedTimeToUtc } from "@/domain/time";
-import { attemptSignIn, clientKey, SignInThrottle } from "@/domain/signin";
+import { attemptSignIn, clientKey, safeNextPath, SignInThrottle } from "@/domain/signin";
 import { checkPasswordAsync } from "@/lib/auth";
-import { COOKIE, makeSession } from "@/lib/session";
+import { COOKIE, DEVICE_COOKIE, makeDeviceMark, makeSession, verifyDeviceMark } from "@/lib/session";
 import { requireOwner } from "@/lib/owner";
 import { PLATFORM_LABEL } from "@/lib/format";
 
@@ -39,19 +39,21 @@ const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 const g = globalThis as unknown as { __prismSignIn?: SignInThrottle };
 const throttle = () => (g.__prismSignIn ??= new SignInThrottle());
 export async function signIn(_: Result, fd: FormData): Promise<Result> {
-  const h = await headers();
+  const h = await headers(), jar = await cookies();
   const r = await attemptSignIn({
     throttle: throttle(),
     client: clientKey(h.get("x-forwarded-for"), h.get("x-real-ip")),
+    knownDevice: await verifyDeviceMark(jar.get(DEVICE_COOKIE)?.value).catch(() => false),   // signed in here before: past the studio-wide ceiling
     passphrase: str(fd, "passphrase"),   // trimmed, as before (phone keyboards add a trailing space)
     check: (p) => checkPasswordAsync(p),
     audit: (action, detail) => audit(db(), action === "auth.sign_in" ? "owner" : "system", action, "owner", "", detail),
   });
   if (!r.ok) return { ok: false, message: r.message };
-  const s = await makeSession();
-  (await cookies()).set(COOKIE, s.value, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: s.maxAge });
-  const next = str(fd, "next");
-  redirect(/^\/(?![\/\\])/.test(next) ? next : "/");   // same-site paths only: no //host or /\host
+  const secure = process.env.NODE_ENV === "production";
+  const s = await makeSession(), m = await makeDeviceMark();
+  jar.set(COOKIE, s.value, { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: s.maxAge });
+  jar.set(DEVICE_COOKIE, m.value, { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: m.maxAge });
+  redirect(safeNextPath(str(fd, "next")));   // a path on this site only: no //host, /\host or /<tab>/host
 }
 
 export async function signOut() {
@@ -270,7 +272,11 @@ export async function refreshMetrics(_: Result, fd: FormData) {
     const r = await requestPull(db(), publicationId);
     const [p] = await db().select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.id, publicationId));
     refresh("/analytics", "/queue", ...(p ? [`/episodes/${p.episodeId}`] : []));
-    return ok(r.created ? `Queued: the worker asks ${PLATFORM_LABEL[r.platform]} now. The numbers appear here once it answers.` : "Already queued.");
+    const name = PLATFORM_LABEL[r.platform];
+    return ok(r.created ? `Queued: the worker asks ${name} now. The numbers appear here once it answers.`
+      : r.status === "queued" ? "Already queued."
+      : r.status === "just_pulled" ? `Just refreshed: ${name} answered less than a minute ago. Press again in a minute for another pull.`
+      : `A refresh less than a minute ago didn't get numbers (see the pull status). Press again in a minute.`);
   });
 }
 
@@ -406,12 +412,13 @@ export async function saveSettings(_: Result, fd: FormData) {
       timezone: z.string().refine((tz) => { try { new Intl.DateTimeFormat("en-US", { timeZone: tz }); return true; } catch { return false; } }, "Unknown timezone"),
       instagramDaily: z.coerce.number().int().min(0).max(3), shortsPerChannelDaily: z.coerce.number().int().min(0).max(3), bufferDays: z.coerce.number().int().min(0).max(30),
     }).parse({ timezone: str(fd, "timezone"), instagramDaily: str(fd, "instagramDaily"), shortsPerChannelDaily: str(fd, "shortsPerChannelDaily"), bufferDays: str(fd, "bufferDays") });
-    const paid = fd.get("paidGenerationEnabled") === "on", showDemo = fd.get("showDemo") === "on";
-    if (paid && !(await anyChannelBudget(db()))) throw new DomainError("budget", "Paid generation stays off until a channel has a production budget this month (Costs).");
+    const showDemo = fd.get("showDemo") === "on";
+    // the switch never blocks the rest of the form: a refused turn-on just stays off, with a notice
+    const { on: paid, notice } = await paidSwitch(db(), fd.get("paidGenerationEnabled") === "on");
     await db().update(S.studioSettings).set({ ...v, globalPause: fd.get("globalPause") === "on", stopExternalActions: fd.get("stopExternalActions") === "on", celebrationSound: fd.get("celebrationSound") === "on", lowPowerArt: fd.get("lowPowerArt") === "on", paidGenerationEnabled: paid, showDemo, updatedAt: new Date() }).where(eq(S.studioSettings.id, 1));
     await audit(db(), "owner", "settings.save", "studio_settings", "1", { ...v, paidGenerationEnabled: paid, showDemo });
     revalidatePath("/", "layout");   // the demo switch changes what every list shows
-    return ok("Settings saved.");
+    return ok(notice ? `Settings saved. ${notice}` : "Settings saved.");
   });
 }
 
@@ -576,9 +583,11 @@ export async function publishNow(_: Result, fd: FormData) {
 
 // ── costs and production budgets (records only: Prism never pays or moves money) ──
 const optionalId = z.union([z.literal(""), z.string().uuid()]).transform((v) => v || null);
-const costPaths = async (channelId: string | null) => {
-  const [ch] = channelId ? await db().select({ slug: S.channels.slug }).from(S.channels).where(eq(S.channels.id, channelId)) : [];
-  refresh("/costs", "/settings", ...(ch ? [`/channels/${ch.slug}`] : []));
+/** Revalidate Costs, Settings and each channel page the change touches (an edit can move a cost between channels). */
+const costPaths = async (...channelIds: (string | null)[]) => {
+  const ids = [...new Set(channelIds.filter((id): id is string => !!id))];
+  const chs = ids.length ? await db().select({ slug: S.channels.slug }).from(S.channels).where(inArray(S.channels.id, ids)) : [];
+  refresh("/costs", "/settings", ...chs.map((ch) => `/channels/${ch.slug}`));
 };
 function costInput(fd: FormData): CostInput {
   return {
@@ -607,8 +616,10 @@ export async function addCostEntry(_: Result, fd: FormData) {
 }
 export async function editCostEntry(_: Result, fd: FormData) {
   return run(async () => {
-    const e = await editCost(db(), z.string().uuid().parse(fd.get("costId")), costInput(fd));
-    await costPaths(e.channelId);
+    const id = z.string().uuid().parse(fd.get("costId"));
+    const [was] = await db().select({ channelId: S.costLedger.channelId }).from(S.costLedger).where(eq(S.costLedger.id, id));
+    const e = await editCost(db(), id, costInput(fd));
+    await costPaths(was?.channelId ?? null, e.channelId);   // the channel it left, and the one it joined
     return ok("Saved.");
   });
 }

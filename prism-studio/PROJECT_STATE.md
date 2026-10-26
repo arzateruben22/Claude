@@ -3,7 +3,7 @@
 _Updated 2026-10-26._ The code for stages A to E is built and tested. What's left needs the owner: a domain and a
 server, developer apps at Google, TikTok and Meta, the 11 accounts, and a first private test upload.
 
-**Checks today:** `tsc` clean; `next build` clean; 269 Vitest tests pass (one more, the real lesson build, runs only
+**Checks today:** `tsc` clean; `next build` clean; 279 Vitest tests pass (one more, the real lesson build, runs only
 when asked: `LESSON_E2E=1`). The screens were checked in Chromium at 390 px and 1440 px: no sideways scroll,
 no page errors, no failed requests. `npm run preview` retakes the gallery in `docs/preview-gallery/`.
 

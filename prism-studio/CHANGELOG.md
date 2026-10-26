@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.2 — 2026-10-26 (review fixes)
+- Sign-in: the redirect after signing in stays on the site (`/<tab>/evil.example` used to leave it); a device you've signed in on before gets past the studio-wide ceiling, so strangers filling it can't lock you out (`prism_device` cookie; DEPLOY.md section 8).
+- Analytics: a token refresh that fails on the network no longer marks the connection expired (the job retries); Instagram's "(#10) not enough viewers" fails that post's pull only, instead of stopping the account's publishing; a same-day re-pull that lowers the views flags the unlocks it backed; Refresh now pressed twice in a minute says "Just refreshed" instead of "Already queued".
+- Settings: Paid generation no longer blocks the save (Stop external actions included) in a month without a channel budget; turning it on without one leaves it off with a notice.
+- Forms keep what you typed when a submit is refused (they clear only after a success).
+- Costs and channel pages: the selected tab is scrolled into view on a phone; the Costs heading names the channel.
+- Moving a cost to another channel refreshes both channels' pages.
+- Notifications: when every device failed for a passing reason (the push service down), the next minute tries again.
+- Posting text: TikTok's pinned comment keeps the production note when no sources are recorded, and TikTok and Instagram warn; Instagram's caption no longer points at a sources comment that isn't there. Spoken pairs before a noun ("in nineteen twelve patients") stay in words; "nineteen eighteen and nineteen nineteen" becomes "1918 and 1919".
+
 ## 0.6.1 — 2026-10-26 (docs and preview)
 - `npm run preview`: builds if needed, starts the production server on a free port against the dev database, signs in, screenshots the wall (desktop and phone), the Instagram screen, a channel screen, Costs and Settings → Notifications into `docs/preview-gallery/`, rewrites the gallery's figures and date, and stops the server.
 - The gallery gains Costs and Notifications.

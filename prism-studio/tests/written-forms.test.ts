@@ -101,12 +101,24 @@ describe("written forms (the rules)", () => {
     expect(writtenForms("In sixteen hundred, Kepler arrived.")).toBe("In 1600, Kepler arrived.");
     expect(writtenForms("In two thousand and eight, the probe woke.")).toBe("In 2008, the probe woke.");
     expect(writtenForms("In the nineteen sixties, and in the twenty-twenties.")).toBe("In the 1960s, and in the 2020s.");
+    // two years joined by "and": the second takes the first one's year word
+    expect(writtenForms("During nineteen eighteen and nineteen nineteen, flu spread.")).toBe("During 1918 and 1919, flu spread.");
+    expect(writtenForms("In twenty twenty and twenty twenty-one, nothing.")).toBe("In 2020 and 2021, nothing.");
+    expect(writtenForms("We saw nineteen eighteen and nineteen nineteen.")).toBe("We saw nineteen eighteen and nineteen nineteen.");   // no year word
   });
   it("spoken pairs that aren't years stay in words", () => {
     for (const s of ["We saw twenty seventeen times.", "at eleven fifteen", "at sixteen thirty", "in twenty minutes", "in twenty fifteen-minute blocks", "in twenty fifteen years", "in the twenties", "Nineteen sixty-nine was the year."]) {
       expect(writtenForms(s), s).toBe(s);
     }
     expect(writtenForms("in fifteen hundred years")).toBe("in 1,500 years");   // a count, not the year 1500
+    // a pair followed by a noun may be a count: words stay, unless a name or a small word follows
+    for (const s of ["In nineteen twelve patients, the drug failed.", "From fourteen eleven runners, three finished.", "In nineteen eighteen and twenty patients"]) {
+      expect(writtenForms(s), s).toBe(s);
+    }
+    expect(writtenForms("In nineteen twelve the ship sank.")).toBe("In 1912 the ship sank.");
+    expect(writtenForms("In nineteen sixty-nine Apollo landed.")).toBe("In 1969 Apollo landed.");
+    expect(writtenForms("In twenty seventeen we caught it.")).toBe("In 2017 we caught it.");
+    expect(writtenForms("Since nineteen ninety — a long time.")).toBe("Since 1990 — a long time.");
     expect(writtenForms("in two thousand years")).toBe("in 2,000 years");
   });
   it("percentages", () => {

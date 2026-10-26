@@ -140,6 +140,13 @@ get around this (each one reserves its place before the check), and the check is
 lockout and sign-in is in the audit log with the address (never the passphrase). Restarting the web container
 clears the counters. A device that is already signed in stays signed in (30 days).
 
+Strangers can fill that hourly ceiling on purpose. So every successful sign-in also leaves a signed `prism_device`
+cookie on that browser (400 days, separate from the session and never a session itself): a device you've signed in
+on before can sign in even while the ceiling is full, still held to its own address's waits and lockouts. A new
+phone or laptop has no such cookie: if the ceiling is full when you first sign in on it, wait for the hour to pass,
+sign in from a device you've used before, or restart the web container (`docker compose restart app`). Changing
+`SESSION_SECRET` signs every device out and forgets every device mark.
+
 ## What was tested, and what wasn't
 
 Tested in the build container on 26 Oct 2026, with the slim image: built from a clean copy of the committed code

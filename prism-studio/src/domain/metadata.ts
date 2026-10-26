@@ -165,16 +165,21 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   // the publishers, "; "-separated; the first comment also carries the production note. Too many for 150 characters: a
   // thread ("Sources 1/2: OpenStax; NASA. Synthetic (AI) voice; …" then "Sources 2/2: ESA; IAU.")
   const ttNote = input.disclosures.aiVoice ? "Synthetic (AI) voice; code-rendered animation." : "Code-rendered animation.";
-  const tt = sourcesThread(sourceShort, { limit: LIMITS.tiktok.comment, sep: "; ", head: (i, n) => (n === 1 ? "Sources: " : `Sources ${i}/${n}: `), tail: (i) => (i === 1 ? `. ${ttNote}` : ".") });
+  const tt = sourceShort.length
+    ? sourcesThread(sourceShort, { limit: LIMITS.tiktok.comment, sep: "; ", head: (i, n) => (n === 1 ? "Sources: " : `Sources ${i}/${n}: `), tail: (i) => (i === 1 ? `. ${ttNote}` : ".") })
+    : { comments: [ttNote], oversize: [] as number[] };   // no sources: the production note is still the pinned comment
   for (const k of tt.oversize) tw.push(`the source name "${sourceShort[k].replace(/;/g, ",")}" alone is longer than TikTok's 150-character comment: shortened`);
+  if (!srcs.length) tw.push("no sources recorded");
 
   // ── Instagram: caption with line breaks, hashtags after a gap; sources in the first comment ─
   const iw: string[] = [];
   const igTags = HASHTAG_SETS[topic].instagram.slice(0, LIMITS.instagram.hashtags);
-  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", "Sources in the first comment. " + (input.disclosures.aiVoice ? "Synthetic (AI) narration; code-rendered animation." : "Code-rendered animation.")].filter(Boolean).join("\n\n");
+  const igNote = input.disclosures.aiVoice ? "Synthetic (AI) narration; code-rendered animation." : "Code-rendered animation.";
+  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote].filter(Boolean).join("\n\n");
   let igCaption = `${igText}\n\n${igTags.join(" ")}`;
   if (igCaption.length > LIMITS.instagram.caption) { igCaption = `${cut(igText, LIMITS.instagram.caption - igTags.join(" ").length - 2)}\n\n${igTags.join(" ")}`; iw.push("caption cut to 2,200 characters"); }
   const igThread = listThread(LIMITS.instagram.comment, "Instagram", iw);
+  if (!srcs.length) iw.push("no sources recorded");
 
   const [ytFirst = "", ...ytReplies] = ytThread, [ttFirst = "", ...ttReplies] = tt.comments, [igFirst = "", ...igReplies] = igThread;
   return {

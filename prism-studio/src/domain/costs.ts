@@ -246,6 +246,17 @@ export async function anyChannelBudget(c: Conn, at = new Date()) {
   return chans.some((ch) => effectiveBudget(rows, ch.id, month));
 }
 
+/** What a Settings save does with the Paid generation switch. Turning it on needs a channel budget this month; keeping
+ *  it on doesn't (canUsePaidGeneration refuses at run time while no budget has room), so a month without a budget
+ *  never blocks the rest of the form, Stop external actions included. A refused turn-on leaves it off with a notice. */
+export async function paidSwitch(c: Conn, wanted: boolean, at = new Date()): Promise<{ on: boolean; notice: string }> {
+  if (!wanted) return { on: false, notice: "" };
+  const was = (await settings(c)).paidGenerationEnabled, budget = await anyChannelBudget(c, at);
+  if (budget) return { on: true, notice: "" };
+  if (was) return { on: true, notice: "Paid generation is on, but no channel has a production budget this month, so paid jobs are refused until one does (Costs)." };
+  return { on: false, notice: "Paid generation stays off until a channel has a production budget this month (Costs)." };
+}
+
 /** Entries for the Costs screen, newest first (voided ones included, marked). */
 export async function costEntries(c: Conn, o: { channelId?: string | null; limit?: number } = {}) {
   return c.select().from(costLedger).where(o.channelId ? eq(costLedger.channelId, o.channelId) : undefined)
