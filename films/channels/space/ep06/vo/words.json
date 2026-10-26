@@ -1,0 +1,1093 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How fast are you moving now? Sitting perfectly still.",
+   "heard": "How fast are you moving now, sitting perfectly still?",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 0.33,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.6,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.63,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 0.785,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "now?",
+     "start": 1.195,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Sitting",
+     "start": 1.865,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "perfectly",
+     "start": 2.245,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "still.",
+     "start": 2.61,
+     "end": 3.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Earth spins: at the equator, the ground moves about sixteen hundred seventy kilometers an hour. That beats the speed of sound.",
+   "heard": "Earth spins. At the equator, the ground moves about 1670 kilometers an hour. That beats the speed of sound.",
+   "words": [
+    {
+     "w": "Earth",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "spins:",
+     "start": 0.415,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.24,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.37,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 1.4,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.185,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 2.295,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 2.685,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.02,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 3.41,
+     "end": 4.72,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 3.44,
+     "end": 4.72,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 3.47,
+     "end": 4.72,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 4.725,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.535,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 5.565,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 6.415,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "beats",
+     "start": 6.575,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.95,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 7.2,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.315,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 7.615,
+     "end": 8.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "And Earth circles the Sun at about thirty kilometers every second. Since this began, you've gone farther than New York to Boston.",
+   "heard": "and Earth circles the Sun at about 30 kilometers every second. Since this began, you've gone farther than New York to Boston.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.18,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "circles",
+     "start": 0.59,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.94,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.185,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.455,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.605,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "thirty",
+     "start": 1.87,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 2.34,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 3.03,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 3.39,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "Since",
+     "start": 4.255,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 4.525,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "began,",
+     "start": 4.74,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "you've",
+     "start": 5.59,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "gone",
+     "start": 5.785,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "farther",
+     "start": 6.145,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 6.525,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "New",
+     "start": 6.655,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "York",
+     "start": 6.905,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.235,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "Boston.",
+     "start": 7.265,
+     "end": 7.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Ptolemy argued that if Earth moved, birds and clouds would be left behind. In sixteen thirty-two, Galileo answered with a ship's cabin. Below deck on calm water, nothing tells you the ship is moving. You feel a jolt, never a smooth ride.",
+   "heard": "Ptolemy argued that if Earth moved, birds and clouds would be left behind. In 1632, Galileo answered with a ship's cabin. Below deck on calm water, nothing tells you the ship is moving. You feel a jolt, never a smooth ride.",
+   "words": [
+    {
+     "w": "Ptolemy",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "argued",
+     "start": 0.49,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.955,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 1.0,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 1.335,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "moved,",
+     "start": 1.59,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "birds",
+     "start": 2.26,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.66,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "clouds",
+     "start": 2.865,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 3.35,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 3.445,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 3.695,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "behind.",
+     "start": 3.845,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 4.875,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 4.905,
+     "end": 6.24,
+     "heard": false
+    },
+    {
+     "w": "thirty-two,",
+     "start": 4.965,
+     "end": 6.24,
+     "heard": false
+    },
+    {
+     "w": "Galileo",
+     "start": 6.4,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "answered",
+     "start": 7.14,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 7.415,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.67,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "ship's",
+     "start": 7.91,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "cabin.",
+     "start": 8.15,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "Below",
+     "start": 8.925,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "deck",
+     "start": 9.345,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 9.55,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "calm",
+     "start": 9.785,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 10.125,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 10.425,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "tells",
+     "start": 10.85,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 11.15,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.265,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "ship",
+     "start": 11.45,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 11.58,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "moving.",
+     "start": 11.72,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 12.605,
+     "end": 12.72,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 12.635,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 13.04,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "jolt,",
+     "start": 13.115,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 13.87,
+     "end": 14.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 14.04,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "smooth",
+     "start": 14.425,
+     "end": 14.72,
+     "heard": true
+    },
+    {
+     "w": "ride.",
+     "start": 14.72,
+     "end": 15.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Zoom out. The Sun drags us round the galaxy at about two hundred thirty kilometers a second. One lap: about two hundred thirty million years. Last time round, the first dinosaurs had just appeared.",
+   "heard": "Zoom out. The sun drags us round the galaxy at about 230 kilometers a second. One lap, about 230 million years. Last time round, the first dinosaurs had just appeared.",
+   "words": [
+    {
+     "w": "Zoom",
+     "start": 0.03,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 1.06,
+     "end": 1.11,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.09,
+     "end": 1.14,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.19,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "drags",
+     "start": 1.5,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "us",
+     "start": 1.83,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "round",
+     "start": 2.095,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.37,
+     "end": 2.42,
+     "heard": true
+    },
+    {
+     "w": "galaxy",
+     "start": 2.4,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.92,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.105,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 3.415,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 3.445,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "thirty",
+     "start": 3.475,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 4.29,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.055,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 5.21,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 5.78,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "lap:",
+     "start": 6.035,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.665,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 7.025,
+     "end": 7.92,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 7.055,
+     "end": 7.92,
+     "heard": false
+    },
+    {
+     "w": "thirty",
+     "start": 7.085,
+     "end": 7.92,
+     "heard": false
+    },
+    {
+     "w": "million",
+     "start": 7.805,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 8.575,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "Last",
+     "start": 9.26,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "time",
+     "start": 9.56,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "round,",
+     "start": 9.845,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.325,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 10.435,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "dinosaurs",
+     "start": 10.67,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 11.51,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 11.725,
+     "end": 11.775,
+     "heard": true
+    },
+    {
+     "w": "appeared.",
+     "start": 11.855,
+     "end": 12.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So your speed has no single answer. First ask: compared to what?",
+   "heard": "so your speed has no single answer. First ask, compared to what.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.275,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 0.47,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.69,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 0.905,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 1.13,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "answer.",
+     "start": 1.53,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "First",
+     "start": 2.44,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "ask:",
+     "start": 2.77,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "compared",
+     "start": 3.44,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.85,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "what?",
+     "start": 3.88,
+     "end": 4.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time, across your galactic trip so far: about a twentieth of a second. To the galaxy's center: about twenty-seven thousand years.",
+   "heard": "light time across your galactic trip so far, about a 20th of a second, to the galaxy's center, about 27,000 years.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time,",
+     "start": 0.285,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 0.74,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.045,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "galactic",
+     "start": 1.075,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "trip",
+     "start": 1.695,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 2.03,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "far:",
+     "start": 2.28,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.895,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.1,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "twentieth",
+     "start": 3.23,
+     "end": 3.76,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 3.65,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.955,
+     "end": 4.005,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 4.11,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "To",
+     "start": 4.76,
+     "end": 4.81,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.79,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "galaxy's",
+     "start": 4.935,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "center:",
+     "start": 5.61,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.195,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "twenty-seven",
+     "start": 6.525,
+     "end": 7.68,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 6.555,
+     "end": 7.68,
+     "heard": false
+    },
+    {
+     "w": "years.",
+     "start": 7.69,
+     "end": 8.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: more trees on Earth, or stars in our galaxy?",
+   "heard": "Next, more trees on Earth or stars in our galaxy.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.64,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "trees",
+     "start": 0.895,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.375,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 1.43,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 2.04,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "stars",
+     "start": 2.36,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.75,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "our",
+     "start": 2.975,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "galaxy?",
+     "start": 3.005,
+     "end": 3.68,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

@@ -1,5 +1,9 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 20:35 UTC:** collected Light Minute 006 "Your speed" (QA PASS, 74.7 s; its 002–004 renders predate the
+> audit and stay on the branch). Meanwhile, Inside 004 final due ~22:00, 005 ~01:00, 006 ~04:00 UTC; Light Minute 002–005
+> in review fixes. Prism Studio: each channel screen now shows its long video; the wall counts ones waiting on approval.
+>
 > **26 Oct, 19:30 UTC:** collected here (QA PASS): Rest Frame 001–006 + vol01 "Forces you can see" (lesson,
 > ready for review), Meanwhile, Inside 001–003, Light Minute 001. Rendering in the channel sessions: Light Minute
 > 002–006, Meanwhile, Inside 004–006. The 2-hourly check-in collects them as they land, builds the other two vol01s,

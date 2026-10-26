@@ -1,0 +1,121 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/space/ep06/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How fast are you moving now? Sitting perfectly still.",
+   "stars": [
+    "now",
+    "still"
+   ],
+   "phonemes": "hˌaʊ fˈæst ɑːɹ juː mˈuːvɪŋ nˈaʊ? sˈɪɾɪŋ pˈɜːfɛktli stˈɪl.",
+   "speed": 1.0,
+   "file": "01.wav",
+   "dur": 3.204,
+   "sha256": "8dba9320ae992fc968642fc7f41be40ce1a5276e8f9dea73d21b4220b3b268e5"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Earth spins: at the equator, the ground moves about sixteen hundred seventy kilometers an hour. That beats the speed of sound.",
+   "stars": [
+    "sound"
+   ],
+   "phonemes": "ˈɜːθ spˈɪnz: æt ðɪ ɪkwˈeɪɾɚ, ðə ɡɹˈaʊnd mˈuːvz ɐbˌaʊt sˈɪkstiːn hˈʌndɹɪd sˈɛvənti kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. ðæt bˈiːts ðə spˈiːd ʌv sˈaʊnd.",
+   "speed": 1.08,
+   "file": "02.wav",
+   "dur": 8.066,
+   "sha256": "2752fa53d3455d4aa28a064d2897f0139695e294f14991d28bd1f367dc32b4b2"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "And Earth circles the Sun at about thirty kilometers every second. Since this began, you've gone farther than New York to Boston.",
+   "stars": [
+    "Boston"
+   ],
+   "phonemes": "ænd ˈɜːθ sˈɜːkəlz ðə sˈʌn æɾ ɐbˌaʊt θˈɜːɾi kɪlˈɑːmɪɾɚz ˈɛvɹi sˈɛkənd. sˈɪns ðɪs bɪɡˈæn, juːv ɡɔn fˈɑːɹðɚ ðɐn nˈuː jˈɔːɹk tə bˈɔstən.",
+   "speed": 1.08,
+   "file": "03.wav",
+   "dur": 7.896,
+   "sha256": "8981d90776de5676ec1952829ac76adb21e0ee030cabf739f33af1ffce3cff1e"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Ptolemy argued that if Earth moved, birds and clouds would be left behind. In sixteen thirty-two, Galileo answered with a ship's cabin. Below deck on calm water, nothing tells you the ship is moving. You feel a jolt, never a smooth ride.",
+   "stars": [
+    "behind",
+    "moving",
+    "ride"
+   ],
+   "phonemes": "tˈɑːləmi ˈɑːɹɡjuːd ðæt ɪf ˈɜːθ mˈuːvd, bˈɜːdz ænd klˈaʊdz wʊd biː lˈɛft bᵻhˈaɪnd. ɪn sˈɪkstiːn θˈɜːɾitˈuː, ɡˌæləlˈeɪoʊ ˈænsɚd wɪð ɐ ʃˈɪps kˈæbɪn. bᵻlˌoʊ dˈɛk ˌɔn kˈɑːm wˈɔːɾɚ, nˈʌθɪŋ tˈɛlz juː ðə ʃˈɪp ɪz mˈuːvɪŋ. juː fˈiːl ɐ dʒˈoʊlt, nˈɛvɚɹ ɐ smˈuːð ɹˈaɪd.",
+   "speed": 1.15,
+   "file": "04.wav",
+   "dur": 15.197,
+   "sha256": "aeca43a2a66403b91d608f355fa8d082495fedaa413b890a473ede53c9885783"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Zoom out. The Sun drags us round the galaxy at about two hundred thirty kilometers a second. One lap: about two hundred thirty million years. Last time round, the first dinosaurs had just appeared.",
+   "stars": [
+    "second",
+    "appeared"
+   ],
+   "phonemes": "zˈuːm ˈaʊt. ðə sˈʌn dɹˈæɡz ˌʌs ɹˈaʊnd ðə ɡˈælɐksi æɾ ɐbˌaʊt tˈuː hˈʌndɹɪd θˈɜːɾi kɪlˈɑːmɪɾɚz ɐ sˈɛkənd. wˈʌn lˈæp: ɐbˌaʊt tˈuː hˈʌndɹɪd θˈɜːɾi mˈɪliən jˈɪɹz. lˈæst tˈaɪm ɹˈaʊnd, ðə fˈɜːst dˈaɪnəsˌɔːɹz hæd dʒˈʌst ɐpˈɪɹd.",
+   "speed": 1.15,
+   "file": "05.wav",
+   "dur": 12.284,
+   "sha256": "a252355fc7b2efeeaa99bd9d572027dace87cb710b4f98ecffe4b65c42bcc3cc"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So your speed has no single answer. First ask: compared to what?",
+   "stars": [
+    "what"
+   ],
+   "phonemes": "sˌoʊ jʊɹ spˈiːd hɐz nˈoʊ sˈɪŋɡəl ˈænsɚ. fˈɜːst ˈæsk: kəmpˈɛɹd tə wˈʌt?",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 4.266,
+   "sha256": "a9b60018cee50d48d9984ac7ff537a3ef98bb02001ea722433291ade86a8ecc1"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time, across your galactic trip so far: about a twentieth of a second. To the galaxy's center: about twenty-seven thousand years.",
+   "stars": [
+    "Light time"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm, əkɹˌɑːs jʊɹ ɡɐlˈæktɪk tɹˈɪp sˈoʊ fˌɑːɹ: ɐbˌaʊt ɐ twˈɛntiəθ əvə sˈɛkənd. tə ðə ɡˈælɐksiz sˈɛntɚ: ɐbˌaʊt twˈɛntisˈɛvən θˈaʊzənd jˈɪɹz.",
+   "speed": 1.15,
+   "file": "07.wav",
+   "dur": 8.14,
+   "sha256": "298babd8c8ae0068cc0670b89ab837b857974da9f6cfb026a7c7ba9e528f9061"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: more trees on Earth, or stars in our galaxy?",
+   "stars": [
+    "galaxy"
+   ],
+   "phonemes": "nˈɛkst: mˈɔːɹ tɹˈiːz ˌɔn ˈɜːθ, ɔːɹ stˈɑːɹz ɪn ˌaʊɚ ɡˈælɐksi?",
+   "speed": 0.9,
+   "file": "08.wav",
+   "dur": 3.705,
+   "sha256": "b22fbe672b334a85667695fe42b5a0c0514ca907d07546c5e3731fac55a8f3ae"
+  }
+ ]
+}
