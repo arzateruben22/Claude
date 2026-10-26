@@ -6758,12 +6758,12 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 /* ── the app page (v3): the website on the home screen ── */
 .section-app { background: var(--linen); border-top: 1px solid var(--ink-15); }
 .app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 2.5rem; align-items: center; }
-.app-steps { margin: 1.2rem 0 0; padding: 0; list-style: none; counter-reset: app; display: grid; gap: 0.7rem; max-width: 34rem; }
-.app-steps li { position: relative; padding-left: 2.6rem; color: var(--ink-60); line-height: 1.5; }
-.app-steps li::before { counter-increment: app; content: counter(app); position: absolute; left: 0; top: 0.05rem; width: 1.8rem; height: 1.8rem; border-radius: 50%;
-  display: grid; place-items: center; font-size: 0.85rem; font-weight: 700; color: var(--cocoa); background: rgba(125, 90, 68, 0.12); }
-.app-steps strong { color: var(--ink); font-weight: 600; }
-.app-ctas { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.4rem; }
+/* coming soon: two store badges, text only (no store logos until the app is listed) */
+.app-stores { list-style: none; margin: 1.4rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.app-store { display: inline-flex; flex-direction: column; justify-content: center; min-width: 10rem; padding: 0.55rem 1.1rem 0.6rem;
+  border-radius: 12px; background: var(--ink); color: #fff; line-height: 1.15; }
+.app-store small { font-size: 0.7rem; letter-spacing: 0.02em; opacity: 0.75; }
+.app-store b { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
 .app-phone { margin: 0; justify-self: center; width: min(18rem, 100%); }
 .app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(74, 52, 42, 0.28)); }
 @media (max-width: 800px) { .app-grid { grid-template-columns: 1fr; gap: 2rem; } .app-phone { width: min(14rem, 100%); } }
