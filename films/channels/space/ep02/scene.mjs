@@ -64,7 +64,7 @@ const voyAt = (y) => {
 // line colours (look.js: the light each line adds so the finish shows the token at that strength)
 // the ice and teal tokens' linear solves have a negative red channel: clamped, a glow doesn't subtract red
 const pos = (c) => c.map((v) => Math.max(0, v));
-const C = { orbit: line("lilac", 0.55), trail: line("ice", 0.8), ghost: line("ice", 0.9), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3),
+const C = { orbit: line("lilac", 0.55), trail: line("ice", 0.8), ghost: line("ice", 0.82), teal: line("teal", 0.9), tealHi: line("teal", 1, 1.3),
   dim: line("text-2", 0.8), hp: line("text-2", 0.55) };
 
 // ── the set ─────────────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ const trail = Array.from({ length: NTRAIL }, (_, i) => segment({ color: C.trail,
 const VOY = { color: [1.2, 1.65, 2.9], px: 24 * PXS, core: 0.32 };   // pale ice, and big enough to win its frames (the ice solve halos ultramarine)
 const voy = createBeacon(VOY);
 const hpShell = shell({ color: C.hp, opacity: 0, power: 3.2 });
-const hpTick = segment({ color: line("ice", 0.85), width: 5, opacity: 0 });   // under the bloom knee: pale ice, not a royal-blue halo
+const hpTick = segment({ color: line("ice", 0.82), width: 5, opacity: 0 });   // under the bloom knee: pale ice, not a royal-blue halo
 const hpRim = ring({ color: line("ice", 0.6), width: 2.6, opacity: 0 });   // ice, not teal: a boundary, not light
 const front1 = ring({ color: C.tealHi, width: 4, opacity: 0 }), frontC = ring({ color: C.tealHi, width: 4, opacity: 0 }), front2 = ring({ color: C.tealHi, width: 4, opacity: 0 });
 const ldRing = ring({ color: C.teal, width: 2.6, opacity: 0 });
