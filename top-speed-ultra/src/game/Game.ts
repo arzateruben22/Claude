@@ -58,6 +58,8 @@ const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts count
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NO_STANDINGS: Standing[] = [];
+// the seat view on a portrait screen: its horizontal field of view (degrees) and where the horizon sits (from the top)
+const SEAT_HFOV_P = 50, SEAT_HORIZON_P = 0.37, DEG = Math.PI / 180;
 
 export interface Hud {
   speed: number; gear: string; rpm: number; rpmFrac: number; distance: number; score: number; combo: number;
@@ -76,6 +78,9 @@ export interface Hud {
   // setting (simulated, and labelled so). All '' with no route.
   navAct: string; navTo: string; exitText: string; exitMine: boolean; onSign: string; dest: string; destDist: number; eta: number; traffic: string;
   errand: { exit: string; left: number; dist: number } | null;   // a story errand: its exit, seconds left, metres to its sign (-1 off its road)
+  // the camera in use ('back' while looking back) and whether the car's own cluster shows the live speed and gear (the
+  // hypercar's display): together they let the HUD drop its duplicate speed in the seat view
+  view: CamMode | 'back'; liveCluster: boolean;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -953,8 +958,9 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    const view = this.view3();
-    this.car.setOutsideView(view !== 'cockpit' && view !== 'free');
+    const view = this.view3(), seat = view === 'cockpit' || view === 'free';
+    this.car.setOutsideView(!seat);
+    if (seat) this.car.setCabinLight(this.env.daylight);
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
@@ -1175,11 +1181,16 @@ export class Game {
       this.car.eye.getWorldPosition(this.wantP);
       this.car.body.getWorldQuaternion(this.wantQ);
       this.tmpV.set(this.head.x, 0, this.head.z).applyQuaternion(this.wantQ); this.wantP.add(this.tmpV);
-      const basePitch = portrait ? -0.27 : -0.085;
+      // portrait: aim for a 50-degree horizontal view (Three's fov is vertical, so it follows the aspect, 62..84
+      // degrees) with the horizon 37% from the top. The old 96 degrees took in a 62-degree width at the owner's phone
+      // aspect, with the door filling the left third, and drew the cluster small in the middle of the screen; this one
+      // draws it 1.3x larger under the road and leaves the door as a strip at the edge. Landscape is unchanged.
+      const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, 84) : 58;
+      const basePitch = portrait ? -Math.atan((0.5 - SEAT_HORIZON_P) * 2 * Math.tan((vBase / 2) * DEG)) : -0.085;
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
-      fov = (portrait ? 96 : 58) + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
+      fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
     } else if (view === 'hood') {
       this.car.hood.getWorldPosition(this.wantP); this.car.root.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.04 + c.lookPitch, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
@@ -1414,6 +1425,7 @@ export class Game {
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
+      view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }

@@ -53,7 +53,9 @@ const THEMES: Record<string, Theme> = {
   // centre stripe on the rim, deep blue harnesses, an ice-blue ambient line along the dash and the door cards, the OC
   // badge on the wheel's boss (the car's brand), a gauge pod on the dash kept for M5's Cold Thrust tank gauge, and
   // its own driver display (the Vela's display geometry, centred on its driver, with car-gauges hyperScreenTex)
-  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'screen', door: 'carbon', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66 },
+  // Its door card is black Nappa, not carbon: in the narrow canopy the card sits a hand's width from the eye, where
+  // a clear coat at that grazing angle mirrored the bright sky as a grey slab across the left of the seat view.
+  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'screen', door: 'nappa', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66 },
 };
 export interface Cockpit {
   group: THREE.Group;
@@ -164,7 +166,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     carbon: M.carbon(q), alu: M.brushed(q, 0xc6cace), anod: M.brushed(q, 0x3c3f45, { rough: 1.25, aniso: 0.6, key: 'anod' }),
     chrome: M.chrome(0.08), plastic: M.softPlastic(q), gloss: M.gloss(), carpet: M.carpet(q),
     stitch: M.stitch(stitchC), stitchDark: M.stitch(0x2b1a10),
-    glass: M.glass('cabin', 0.04, { env: 0.3 }), sideGlass: M.glass('cabinSide', 0.1, { env: 0.45 }), gaugeGlass: M.glass('gauge', 0.0, { env: 0.9 }),
+    glass: M.glass('cabin', 0.04, { env: 0.3 }), // the hypercar's side windows are smoked: its front fenders crest level with the low eye, and through clear
+    // glass their silver paint and the sky's reflection filled the left of the seat view as a bright wall
+    sideGlass: hyper ? M.glass('cabinSideHyper', 0.35, { env: 0.25, color: 0x05080c }) : M.glass('cabinSide', 0.1, { env: 0.45 }), gaugeGlass: M.glass('gauge', 0.0, { env: 0.9 }),
     roofGlass: M.glass('roofIn', 0.72, { env: 0.35, color: 0x05080c }),
     belt: once('m.belt' + (T.belt ?? 0x8a1216), () => new THREE.MeshStandardMaterial({ color: T.belt ?? 0x8a1216, roughness: 0.82 })),
     hoop: once('m.hoop', () => new THREE.MeshPhysicalMaterial({ color: 0x1c1c1e, roughness: 0.55, metalness: 0.2, clearcoat: 0.3 })),
@@ -184,6 +188,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
   // the screen binnacle's display: the Vela's atlas, or the hypercar's own
   const scrK = hyper ? 'screenH' : 'screenV';
+  mats.cluster = mats[scrK];   // the driver's display, built as its own mesh (one draw call more) so it can be found by name
   mats.badgeHub = once('m.badgehub' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));
   // the dash top and the fascia band, per car
   mats.dashTop = T.dash === 'alc' ? mats.alc : mats.nappa;
@@ -328,7 +333,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
-    scr.translate(0, 0, -0.0018); kit.add(scrK, scr, vM);
+    scr.translate(0, 0, -0.0018); kit.add('cluster', scr, vM);   // the driver's display: its own mesh, named 'cluster'
     const plinth = new RoundedBoxGeometry(0.34 * ds, 0.07, 0.1, 3, 0.02); plinth.translate((hyper ? -0.37 : -0.17) + sX, 0.81 + dy + sY, -0.68 + sZ); kit.add(hyper ? 'carbon' : 'nappa', plinth);
     ghost.push(bez.clone().applyMatrix4(vM));
   } else {
@@ -738,6 +743,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const outside = new THREE.Group(); outside.name = 'body'; group.add(outside);
   bk.build(mats, outside, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'dark' });
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
+  // names the HUD and the suite look for: the cluster (the driver's display, or the tach's face) and the windscreen
+  { const t = T.binnacle === 'tach' ? group.getObjectByName('tach') : null; if (t) t.name = 'cluster'; const w = group.getObjectByName('glass'); if (w) w.name = 'windscreen'; }
 
   // ---------------------------------------------------------------- mirrors with reflections
   let rearView: Cockpit['rearView'];
