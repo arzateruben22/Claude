@@ -21,6 +21,8 @@ const args = process.argv.slice(2);
 const force = args.includes("--force"), debug = args.includes("--debug"), dry = args.includes("--dry");
 const dirs = args.filter((a) => !a.startsWith("--")).length ? args.filter((a) => !a.startsWith("--")).map((d) => path.resolve(ROOT, d))
   : CHANNELS.filter((c) => c.filmsPath).flatMap((c) => fs.existsSync(path.join(ROOT, c.filmsPath!)) ? fs.readdirSync(path.join(ROOT, c.filmsPath!)).filter((e) => /^ep\d+$/.test(e)).sort().map((e) => path.join(ROOT, c.filmsPath!, e)) : []);
+const missing = dirs.filter((d) => !fs.existsSync(d));   // paths are relative to the films repo root (FILMS_REPO_ROOT), e.g. films/channels/space/ep01
+if (missing.length) { console.error(`no such episode folder: ${missing.join(", ")} (give paths from the repo root, e.g. films/channels/space/ep01)`); process.exit(1); }
 
 type Font = { family: string; file: string; weight?: string; style?: string };
 type Theme = { id?: string; tokens: Record<string, string>; roles?: Record<string, string>; type?: Record<string, string>; fonts?: Font[]; cssText?: string;
