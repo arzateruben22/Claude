@@ -111,10 +111,10 @@ CAM["end"] = CAM["space"][-3:]
 # ── the overlay ─────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    # the hook's text is gone before the cut (the note carries the ×1,000,000)
+    # the hook's text is gone before the cut (the label carries the ×1,000,000: a note would sit on the title)
     {"id": "l-moon-h", "text": "Moon", "kind": "body", "anchor": "moon", "t0": 0.0, "t1": round(B["normal"]["t0"] - 0.45, 4), "side": -1},
     {"id": "l-line-h", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": 0.0, "t1": round(B["normal"]["t0"] - 0.45, 4), "side": 1},
-    {"id": "l-fall-h", "text": "a minute's fall", "kind": "gravity", "anchor": "gap", "t0": 0.0, "t1": round(B["normal"]["t0"] - 0.45, 4), "side": -1, "v": "middle", "fixed": True},
+    {"id": "l-fall-h", "text": "a minute's fall ×1,000,000", "kind": "gravity", "anchor": "gap", "t0": 0.0, "t1": round(B["normal"]["t0"] - 0.45, 4), "side": -1, "v": "middle", "fixed": True},
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Look"), "t1": B["change"]["t0"], "side": 1},
     {"id": "l-moon", "text": "Moon", "kind": "body", "anchor": "moon", "t0": A("vo02:Look", 0.3), "t1": B["why"]["t0"], "side": -1},
     {"id": "l-30", "text": "30 Earths", "kind": "body", "anchor": "row", "t0": A("vo02:thirty"), "t1": A("vo02:And"), "side": -1},
@@ -126,15 +126,14 @@ LABELS = [
     {"id": "l-earth-w", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(B["why"]["t0"] + 2.6, 4), "t1": A("vo04:apple"), "side": 1},
     {"id": "l-moon-w", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(B["why"]["t0"] + 2.6, 4), "t1": A("vo04:weaker", 0.5), "side": -1},
     {"id": "l-line", "text": "its straight line", "kind": "light", "anchor": "ghost", "t0": round(t_min0 + 0.6, 4), "t1": round(t_tk - 0.3, 4), "side": 1},
-    {"id": "l-drop", "text": "an apple, in 1 second", "kind": "body", "anchor": "apple2", "t0": A("vo05:apple"), "t1": A("vo05:About", -0.2), "side": -1, "v": "middle"},
-    {"id": "l-fall", "text": "the Moon, in 1 minute", "kind": "gravity", "anchor": "gap", "t0": A("vo05:About"), "t1": round(t_tk - 0.3, 4), "side": -1, "v": "middle", "fixed": True},
+    {"id": "l-drop", "text": "apple, 1 second", "kind": "body", "anchor": "apple2", "t0": A("vo05:apple"), "t1": A("vo05:About", -0.2), "side": -1, "fixed": True},
+    {"id": "l-fall", "text": "Moon, 1 minute", "kind": "gravity", "anchor": "gap", "t0": A("vo05:About"), "t1": round(t_tk - 0.3, 4), "side": -1, "v": "middle", "fixed": True},
     # the takeaway: the same two, the pull between them, the straight lines it bends all the way round
     {"id": "l-earth-t", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": 1},
     {"id": "l-moon-t", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": -1},
     {"id": "l-ring", "text": "how far light gets in 1.3 s", "kind": "light", "anchor": "ring", "t0": A("vo07:one"), "t1": round(t_end - 0.35, 4), "side": 1},
 ]
 BADGES = [
-    {"id": "b-mag-h", "text": "fall drawn ×1,000,000", "t0": 0.0, "t1": round(B["normal"]["t0"] - 0.45, 4), "slot": "tr"},
     {"id": "b-true", "text": "true scale", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},
     {"id": "b-time", "clock": "moon", "t0": B["normal"]["t0"], "t1": t_end, "slot": "tl"},
     {"id": "b-thought", "text": "thought experiment", "t0": t_off, "t1": t_back, "slot": "tr"},

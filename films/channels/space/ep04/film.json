@@ -427,7 +427,7 @@
   },
   {
    "id": "l-fall-h",
-   "text": "a minute's fall",
+   "text": "a minute's fall ×1,000,000",
    "kind": "gravity",
    "anchor": "gap",
    "t0": 0.0,
@@ -528,17 +528,17 @@
   },
   {
    "id": "l-drop",
-   "text": "an apple, in 1 second",
+   "text": "apple, 1 second",
    "kind": "body",
    "anchor": "apple2",
    "t0": 45.86666666666667,
    "t1": 48.0,
    "side": -1,
-   "v": "middle"
+   "fixed": true
   },
   {
    "id": "l-fall",
-   "text": "the Moon, in 1 minute",
+   "text": "Moon, 1 minute",
    "kind": "gravity",
    "anchor": "gap",
    "t0": 48.2,
@@ -576,13 +576,6 @@
   }
  ],
  "badges": [
-  {
-   "id": "b-mag-h",
-   "text": "fall drawn ×1,000,000",
-   "t0": 0.0,
-   "t1": 3.2833,
-   "slot": "tr"
-  },
   {
    "id": "b-true",
    "text": "true scale",

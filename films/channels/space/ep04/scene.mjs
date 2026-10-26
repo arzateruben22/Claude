@@ -175,7 +175,7 @@ window.seek = function (t) {
   S.ghost = add(F.p0, tanAt(F.th0), 0.85); S.gap = F.g.map((v, i) => (v + gEnd[i]) / 2);
   // the apple beside it: 4.9 m in its first second, drawn at the same ×1,000,000 (the same length as the gap)
   const fdir = norm(F.drawn.map((v, i) => v - F.g[i]));
-  const a0p = add(F.g, tanAt(F.th0), -1.2), ud = E.in2(seg(t, CUE.drop, CUE.drop + 1.0)), oa = isHook ? 0 : winOp(t, CUE.drop, B.takeaway.t0 - 0.3, 0.3);
+  const a0p = add(F.g, tanAt(F.th0), 0.5), ud = E.in2(seg(t, CUE.drop, CUE.drop + 1.0)), oa = isHook ? 0 : winOp(t, CUE.drop, B.takeaway.t0 - 0.3, 0.3);
   const aNow = add(a0p, fdir, (PH.drop_1m * PH.mag) / 1000 / PH.u * ud);   // 4.9 m × 1,000,000 = 0.49 units
   apple2.set({ center: aNow, camera, opacity: oa });
   dropLine.seg(a0p, aNow).set({ opacity: oa * (ud > 0.02 ? 0.8 : 0) });
