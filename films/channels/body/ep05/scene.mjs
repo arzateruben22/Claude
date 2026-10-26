@@ -78,21 +78,28 @@ const ALL = []; TIPS.forEach((tp, i) => { if (tp !== HT) for (const s of CL(tp, 
 const sacs = new THREE.InstancedMesh(SACG, sacMat, ALL.length);
 ALL.forEach((s, i) => instance(sacs, i, s.c.toArray(), null, s.r)); tree.add(sacs);
 const HC = CL(HT, TIPS.indexOf(HT)).map((s) => ({ c: s.c.clone().add(SHIFT), r: s.r }));
+// the hero sac is the one facing the lens (largest z), moved to the front of the list
+const TOCAM = new THREE.Vector3(4, 3, 15).normalize();   // frame 0's camera direction (compile.py, lung key 0)
+{ let k = 0; HC.forEach((s, i) => { if (s.c.dot(TOCAM) > HC[k].c.dot(TOCAM)) k = i; }); HC.unshift(HC.splice(k, 1)[0]); }
 // the hero cluster: cutaway sacs; the front one cut open, hollow (no cap, both faces), its inside a darker lining
-const insideMat = mat("#C98F8C", "sacin", { side: THREE.DoubleSide, fres: 0.2 });
-const HERO = HC.map((s, k) => { const C = cutaway({ radius: s.r, noise: { amp: 0.06, freq: 1.5, seed: 40 + k }, segments: [64, 48], material: k === 0 ? insideMat : sacMat }); C.group.position.copy(s.c); G.lung.add(C.group); return C; });
+const insideMat = mat("#B0706E", "sacin", { side: THREE.DoubleSide, fres: 0.25 });
+const HERO = HC.map((s, k) => { const C = cutaway({ radius: s.r, noise: { amp: 0.06, freq: 1.5, seed: 40 + k }, segments: [64, 48], material: sacMat }); C.group.position.copy(s.c); G.lung.add(C.group); return C; });
 const HS = HC[0];
-HERO[0].set({ cut: { n: [0.35, 0.25, 0.9].map((x, i, a) => x / Math.hypot(...a)), d: HS.r * 0.15 } }); G.lung.updateMatrixWorld(true); HERO[0].update(); HERO[0].cap.visible = false;
+// camera keys written with look "HERO" are offsets from the hero sac (compile.py cannot know where the tree puts it)
+for (const k of FILM.cam.lung) if (k.look === "HERO") { k.look = HS.c.toArray(); k.pos = k.pos.map((x, i) => x + k.look[i]); }
+// (no cut: a cut-open sac read as a stray sliver behind its neighbours; the cluster itself carries the hook)
 // a net of capillaries over the cluster's sacs (thin red tubes wandering over each surface)
 const capMat = mat("#B8344F", "capil", { fres: 0.3, ei: 0.08, emi: "#E5334F" });
 const CAPS = [];
-HC.forEach((s, k) => { const r = rng(300 + k); for (let n = 0; n < 7; n++) {
+const CUTN = TOCAM;
+HC.forEach((s, k) => { const r = rng(300 + k); for (let n = 0; n < 12; n++) {
   const a0 = r() * 6.28, b0 = (r() - 0.5) * 2.6, pts = [];
-  for (let i = 0; i <= 14; i++) { const a = a0 + i * 0.16, b = b0 + 0.35 * Math.sin(i * 0.7 + n); const d = new THREE.Vector3(Math.cos(a) * Math.cos(b), Math.sin(b), Math.sin(a) * Math.cos(b)); pts.push(s.c.clone().addScaledVector(d, s.r * 1.035).toArray()); }
-  const P = path(pts), m = new THREE.Mesh(tube(P, { radius: s.r * 0.035, radial: 6, segments: 40 }), capMat); G.lung.add(m); CAPS.push(m); } });
+  for (let i = 0; i <= 14; i++) { const a = a0 + i * 0.13, b = b0 + 0.22 * Math.sin(i * 1.1 + n * 1.7); const d = new THREE.Vector3(Math.cos(a) * Math.cos(b), Math.sin(b), Math.sin(a) * Math.cos(b)); pts.push(s.c.clone().addScaledVector(d, s.r * 1.035).toArray()); }
+  if (pts.length < 3) continue;
+  const P = path(pts), m = new THREE.Mesh(tube(P, { radius: s.r * 0.016, radial: 6, segments: 40 }), capMat); G.lung.add(m); CAPS.push(m); } });
 // the old idea, drawn over the cluster: a soft lumpy envelope, dissolving on "bubbles"
 const fleshMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B85A64"), roughness: 0.85, transparent: true, opacity: 0, emissive: lin("#8E2A3F"), emissiveIntensity: 0.12 }), { fresnel: 0.3, key: "flesh" });
-const FLESHM = cutaway({ radius: HS.r * 3.4, noise: { amp: 0.14, freq: 1.4, seed: 7 }, segments: [64, 48], material: fleshMat });
+const FLESHM = cutaway({ radius: HS.r * 2.5, noise: { amp: 0.14, freq: 1.4, seed: 7 }, segments: [64, 48], material: fleshMat });
 FLESHM.group.position.copy(HC.reduce((a, s) => a.add(s.c), new THREE.Vector3()).multiplyScalar(1 / HC.length)); G.lung.add(FLESHM.group);
 const writeLung = (t) => {
   const F = FILM.flesh, o = Math.min(seg(t, F[0], F[0] + 0.6), 1 - seg(t, F[1], F[2]));
@@ -108,7 +115,7 @@ const wallM = new THREE.Mesh(new THREE.BoxGeometry(1, 30, 8), wallMat); G.wall.a
 const lumenMat = mat("#F0D7CF", "lumen", { fres: 0.2, ei: 0.02 });
 const endo = new THREE.Mesh(new THREE.BoxGeometry(0.3, 30, 8), lumenMat); G.wall.add(endo);
 const rbcM = new THREE.Mesh(rbcGeometry(THREE, { around: 48, along: 32 }), cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: FILM.look["rbc-deep"], instanced: false }));
-rbcM.rotation.z = Math.PI / 2; rbcM.position.set(5.6, -1, 0); G.wall.add(rbcM);
+rbcM.rotation.z = Math.PI / 2; rbcM.position.set(4.4, -1, 0); G.wall.add(rbcM);
 const o2Mat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.4, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
 const WO = swarm({ n: 70, seed: 9, home: { box: [[-12, -12, -2], [-1.5, 12, 2]] }, waves: [{ amp: [0.9, 0.9, 0.3], omega: 1.2 }] });
 const woM = WO.mesh(new THREE.IcosahedronGeometry(0.12, 1), o2Mat); G.wall.add(woM);
@@ -199,7 +206,7 @@ const ANCH = {
   flesh: () => FLESHM.group.position.clone().add(new THREE.Vector3(HS.r * 2.4, HS.r * 1.6, 0)).toArray(),
   cap: () => { const s = HC[2]; return s.c.clone().add(new THREE.Vector3(-s.r, s.r * 0.3, 0.3)).toArray(); },
   air: () => wp("wall", [-6, 4, 0]),
-  rbc: () => wp("wall", [6.4, 2.6, 0]),
+  rbc: () => wp("wall", [4.6, 2.8, 0]),
   head: () => wp("room", [0.15, 1.7, 0]),
   court: () => wp("room", [1.6 - 10.97 / 2, 0.05, 8]),
   wbc: () => wp("exit", [3, 4, 2]),

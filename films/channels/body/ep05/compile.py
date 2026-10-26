@@ -57,22 +57,22 @@ EXIT = {"t0": B["tease"]["t0"], "push": [A("vo08:squeezes", -0.3), A("vo08:wall"
 # camera keys; the lung's are offsets from the hero cluster at the origin (the tree's root is far above it)
 CAM = {
     "lung": [
-        {"t": 0.0, "pos": [2.2, 1.6, 9.5], "look": [0.0, 0.0, 0.0], "fov": 34},                       # the cluster, the hero sac open
-        {"t": A("vo01:these"), "pos": [1.6, 1.2, 8.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": 0.0, "pos": [4.0, 3.0, 15.0], "look": [0.0, 0.2, 0.0], "fov": 34},                       # the cluster, the hero sac open
+        {"t": A("vo01:these"), "pos": [3.2, 2.4, 12.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["normal"]["t0"] + 0.1, "pos": [60.0, 330.0, 330.0], "look": [0.0, 170.0, 0.0], "fov": 34, "ease": "p3"},   # the whole tree from the windpipe
         {"t": A("vo02:times"), "pos": [40.0, 140.0, 170.0], "look": [0.0, 60.0, 0.0], "fov": 34, "ease": "p2"},            # down the forks
         {"t": A("vo02:sacs"), "pos": [8.0, 14.0, 34.0], "look": [0.0, 2.0, 0.0], "fov": 34, "ease": "p2"},                 # the tips: clusters
-        {"t": A("vo02:millimetre"), "pos": [2.6, 2.0, 10.5], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2"},
-        {"t": B["change"]["t0"], "pos": [3.2, 2.0, 12.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": FLESH[1], "pos": [2.4, 1.6, 10.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["why"]["t0"] + 0.2, "pos": [1.2, 0.8, 5.6], "look": [0.0, -0.1, 0.0], "fov": 34, "ease": "p2"},           # into the open sac, its capillaries
-        {"t": CUT["wall"], "pos": [0.8, 0.5, 4.4], "look": [0.0, -0.1, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo02:millimetre"), "pos": [4.2, 3.0, 15.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "p2"},
+        {"t": B["change"]["t0"], "pos": [6.0, 4.0, 22.0], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": FLESH[1], "pos": [5.0, 3.4, 18.5], "look": [0.0, 0.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": B["why"]["t0"] + 0.2, "pos": [2.6, 1.8, 9.0], "look": "HERO", "fov": 34, "ease": "p2"},           # the open sac, its capillaries
+        {"t": CUT["wall"], "pos": [2.2, 1.5, 7.8], "look": "HERO", "fov": 34, "ease": "sine"},
     ],
     "wall": [
-        {"t": CUT["wall"], "pos": [2.0, 2.0, 30.0], "look": [1.0, 0.0, 0.0], "fov": 34},
-        {"t": WALL["slip"][0], "pos": [1.0, 1.5, 26.0], "look": [1.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": WALL["thick"][0], "pos": [0.5, 1.2, 25.0], "look": [1.2, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["room"], "pos": [0.0, 1.0, 24.0], "look": [1.2, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["wall"], "pos": [2.6, 2.0, 30.0], "look": [2.0, 0.0, 0.0], "fov": 34},
+        {"t": WALL["slip"][0], "pos": [2.0, 1.5, 27.0], "look": [2.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": WALL["thick"][0], "pos": [2.2, 1.2, 26.0], "look": [2.4, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["room"], "pos": [2.0, 1.0, 25.0], "look": [2.4, 0.0, 0.0], "fov": 34, "ease": "sine"},
     ],
     "room": [
         {"t": CUT["room"], "pos": [3.0, 2.2, 5.0], "look": [0.0, 1.2, 0.0], "fov": 34},                  # the person, close
@@ -123,7 +123,7 @@ BADGES = [
     {"id": "ill2", "text": "illustration · area to scale", "t0": CUT["room"], "t1": CUT["exit"] - 0.3},
     {"id": "nts2", "text": "not to scale", "t0": CUT["exit"], "t1": EC},
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.15}
+TITLE = {"series": "Meanwhile, Inside · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the exit*", "next": "Meanwhile, Inside · No. 06", "follow": "Follow Meanwhile, Inside",
        "fact": "Your lungs hold about 480 million air sacs (Ochs and colleagues, 2004)."}   # c1
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["exit"] - 0.3, "region": [0.47, 0.3]}

@@ -65,28 +65,28 @@ BREATHS = [round(4.0 * n, 4) for n in range(int(B["meanwhile"]["t0"] / 4.0) + 1,
 
 CAM = {
     "syn": [
-        {"t": 0.0, "pos": [2.0, 4.0, 46.0], "look": [7.0, 0.0, 0.0], "fov": 34},                     # the contact, blurred
-        {"t": A("vo01:show"), "pos": [1.0, 3.0, 42.0], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": 0.0, "pos": [-1.8, 7.0, 80.5], "look": [7.0, 0.0, 0.0], "fov": 34},                     # the contact, blurred
+        {"t": A("vo01:show"), "pos": [-3.5, 5.2, 73.5], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:reaches", 0.2), "pos": [-120.0, 80.0, 420.0], "look": [-60.0, 30.0, 0.0], "fov": 34, "ease": "p2"},   # one cell's reach
         {"t": A("vo02:trillion", 0.2), "pos": [-40.0, 60.0, 980.0], "look": [-20.0, 20.0, 0.0], "fov": 34, "ease": "p2"},   # the network
         {"t": A("vo02:Up", 0.0), "pos": [-30.0, 50.0, 940.0], "look": [-20.0, 20.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo02:joined", 0.1), "pos": [2.0, 4.0, 50.0], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "p3"},           # back to the contact
-        {"t": SHARP[0], "pos": [3.0, 3.0, 44.0], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": SHARP[1] + 0.4, "pos": [4.0, 2.0, 36.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p2"},
-        {"t": REL["sig"][0], "pos": [-14.0, 6.0, 52.0], "look": [-6.0, 0.0, 0.0], "fov": 34, "ease": "p2"},               # the signal comes down the axon
-        {"t": REL["ca"][0], "pos": [4.0, 3.0, 34.0], "look": [6.0, 0.0, 0.0], "fov": 34, "ease": "p2"},                    # the tip, close
-        {"t": REL["drift"][1], "pos": [7.0, 2.0, 30.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["whoa"]["t0"], "pos": [8.0, 1.5, 28.0], "look": [10.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo05:Use", -0.2), "pos": [6.0, 4.0, 40.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo02:joined", 0.1), "pos": [-1.8, 7.0, 87.5], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "p3"},           # back to the contact
+        {"t": SHARP[0], "pos": [0.0, 5.2, 77.0], "look": [7.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": SHARP[1] + 0.4, "pos": [1.0, 3.5, 63.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p2"},
+        {"t": REL["sig"][0], "pos": [-20.0, 10.5, 91.0], "look": [-6.0, 0.0, 0.0], "fov": 34, "ease": "p2"},               # the signal comes down the axon
+        {"t": REL["ca"][0], "pos": [2.5, 5.2, 59.5], "look": [6.0, 0.0, 0.0], "fov": 34, "ease": "p2"},                    # the tip, close
+        {"t": REL["drift"][1], "pos": [5.5, 3.5, 52.5], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "pos": [6.5, 2.6, 49.0], "look": [10.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo05:Use", -0.2), "pos": [3.8, 7.0, 70.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo05:stronger", 0.0), "pos": [80.0, 60.0, 700.0], "look": [60.0, 20.0, 0.0], "fov": 34, "ease": "p2"},     # the field; one junction pulsing
         {"t": B["takeaway"]["t0"], "pos": [70.0, 50.0, 660.0], "look": [60.0, 20.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo06:touch", 0.0), "pos": [2.0, 3.0, 40.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p3"},             # back to the gap, lit
-        {"t": B["meanwhile"]["t0"], "pos": [3.0, 6.0, 52.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": CUT["sac"], "pos": [4.0, 8.0, 60.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo06:touch", 0.0), "pos": [-2.5, 5.2, 70.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "p3"},             # back to the gap, lit
+        {"t": B["meanwhile"]["t0"], "pos": [-0.8, 10.5, 91.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["sac"], "pos": [1.0, 14.0, 105.0], "look": [8.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
     ],
     "sac": [
-        {"t": CUT["sac"], "pos": [3000.0, 20.0, 200.0], "look": [3000.0, 0.0, 0.0], "fov": 34},
-        {"t": CUT["loop"], "pos": [3000.0, 14.0, 160.0], "look": [3000.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["sac"], "pos": [3010.0, 40.0, 420.0], "look": [3000.0, -10.0, 0.0], "fov": 34},
+        {"t": CUT["loop"], "pos": [3006.0, 30.0, 360.0], "look": [3000.0, -10.0, 0.0], "fov": 34, "ease": "sine"},
     ],
 }
 CAM["loop"] = [dict(CAM["syn"][0], t=CUT["loop"])]
@@ -122,7 +122,7 @@ BADGES = [
     {"id": "slow", "text": "slowed", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
     {"id": "nts-sac", "text": "not to scale", "t0": CUT["sac"], "t1": EC},
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.15}
+TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Meanwhile, Inside · No. 05", "follow": "Follow Meanwhile, Inside",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.3, "region": [0.5, 0.36]}

@@ -67,13 +67,14 @@ const GAPX = [9.1, 50.5 - POST.r([-1, 0, 0])];         // the gap: the terminal'
 // the vesicles inside the cut terminal (in the cut's plane); the eight docked ones sit at the face by the gap
 const VN = 42, DOCK = 8;
 const vesMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#CFE8C6"), emissive: lin("#A8D89A"), emissiveIntensity: 0.18, roughness: 0.35 }), { fresnel: 0.3, key: "ves" });
-const ves = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), vesMat, VN); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
 const VH = [];
 {
   const r = rng(21);
   for (let i = 0; i < DOCK; i++) { const y = -5.6 + (11.2 * i) / (DOCK - 1); VH.push([Math.sqrt(Math.max(0, 7.6 * 7.6 - y * y)) - 0.4, y, 0.6]); }
   for (let tries = 0; VH.length < VN && tries < 5000; tries++) { const x = (r() * 2 - 1) * 7, y = (r() * 2 - 1) * 7; if (x * x + y * y > 6.6 * 6.6 || x > 4.8) continue; if (VH.some((p) => Math.hypot(p[0] - x, p[1] - y) < 2.05)) continue; VH.push([x, y, 0.6 + 0.4 * r()]); }
 }
+const NV = VH.length;   // as many as fit (the rejection loop stops early on a crowded section)
+const ves = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
 // calcium, outside the terminal's face, moving in; messengers, from the docked vesicles across the gap
 const CAN = 26, MSN = 96;
 const caMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
@@ -104,7 +105,7 @@ const writeJunction = (t) => {
   for (let i = 0; i < CAN; i++) { const h = CAH[i], u = Math.min(1, Math.max(0, caU * 1.2 - hash(i + 43) * 0.2)); instance(caM, i, h.from.map((x, k) => x + (h.to[k] - x) * u), null, caOn); }
   caM.instanceMatrix.needsUpdate = true;
   // vesicles: the docked ones move to the face and fuse (shrink into it); they re-form before the next handoff
-  for (let i = 0; i < VN; i++) {
+  for (let i = 0; i < NV; i++) {
     let p = VH[i], sc = 1;
     if (i < DOCK && S) {
       const d0 = S.sp[0] + (S.sp[1] - S.sp[0]) * hash(i + 70) * 0.6, u = E.in2(seg(t, d0, d0 + (S.sp[1] - S.sp[0]) * 0.5));
@@ -160,6 +161,9 @@ let USED = null;
     const near = SOMAS.map((b, j) => [j, Math.hypot(b.c[0] - a.c[0], b.c[1] - a.c[1], b.c[2] - a.c[2])]).filter(([j]) => j !== i).sort((x, y) => x[1] - y[1]).slice(0, 3);
     for (const [j] of near.slice(0, 2 + (r() < 0.5 ? 1 : 0))) {
       const b = SOMAS[j], d = [b.c[0] - a.c[0], b.c[1] - a.c[1], b.c[2] - a.c[2]], l = Math.hypot(...d), u = d.map((x) => x / l);
+      // keep the hero junction clear: no branch into the hero's next cell, none passing near the origin
+      if (b.post || a.post) continue;
+      { const tt = Math.max(0, Math.min(1, -(a.c[0] * d[0] + a.c[1] * d[1] + a.c[2] * d[2]) / (l * l))), q = a.c.map((x, k) => x + d[k] * tt); if (Math.hypot(...q) < 90) continue; }
       const s = a.c.map((x, k) => x + u[k] * a.rad * 0.95), e = b.c.map((x, k) => x - u[k] * (b.rad + 4.5));
       const m = s.map((x, k) => (x + e[k]) / 2 + (r() - 0.5) * l * 0.25);
       const P = path([s, m, e]); const g = tube(P, { radius: (q) => 2.4 - 1.3 * (q / P.length), radial: 10, step: 6 });
@@ -192,8 +196,8 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-tally .lb { color: var(--text); }
 .mi-panels { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
-.mi-panels .cap { font: 650 3.4vmin/1.2 var(--font-text); fill: var(--text); }
-.mi-panels .who { font: 600 7vmin/1 var(--font-display); fill: var(--text); }
+.mi-panels .cap { font: 650 30px/1.2 var(--font-text); fill: var(--text); }
+.mi-panels .who { font: 600 58px/1 var(--font-display); fill: var(--text); }
 `; document.head.appendChild(css);
 const hud = createHud({ camera });
 hud.captions(FILM.captions);

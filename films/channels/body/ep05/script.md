@@ -22,7 +22,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}
 direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.json`; `{-}` marks a
 sentence that states nothing outside the film.
 
-## hook {shot: frame 0: a cluster of air sacs at the end of a fine airway, one cut open, a breath filling it; readout "air sacs in your lungs: ?" · title: "Where breath goes" · pre: 0.1 · energy: 0.7} (0–4.6 s)
+## hook {shot: frame 0: a cluster of air sacs at the end of a fine airway, wrapped in capillaries, breathing; readout "air sacs in your lungs: ?" · title: "Where breath goes" · pre: 0.1 · energy: 0.7} (0–4.6 s)
 vo: Where does your breath *go*? Not into a bag. {c11} Into *these*. {-}
 
 ## normal {shot: up the airway tree from the windpipe, forking again and again; at the tips, clusters of sacs; the readout counts the forks, then the sacs · energy: 0.45} (4.6–16 s)
