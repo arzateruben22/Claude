@@ -57,3 +57,25 @@ def hold(film, pages, linger=0.3):
             t1 = min(t1, pages[k + 1]["t0"])
         pg["t1"] = round(t1, 3)
     return pages
+
+
+UNITS = ("kilometers", "kilometer", "meters", "years", "days", "hours", "minutes", "seconds", "light-days", "light-years")
+
+
+def keep_units(pages, units=UNITS, max_chars=24):
+    """pages: film.captions()'s output, changed in place and returned. Where a sentence's page break falls between a
+    number and its unit (a two-row page, then a one-row page starting with the unit: "about thirty" / "kilometers every
+    second."), the number's row moves onto the next page, so the number and its unit are read together."""
+    for a, b in zip(pages, pages[1:]):
+        if len(a["lines"]) != 2 or len(b["lines"]) != 1:
+            continue
+        first = b["lines"][0][0][0].replace(NBSP, " ").split(" ")[0].lower()
+        last = a["lines"][-1][-1][0]
+        if first not in units or last.rstrip()[-1:] in ".?!":
+            continue
+        if len(" ".join(w for w, _ in a["lines"][-1])) > max_chars:
+            continue
+        row = a["lines"].pop()
+        b["lines"].insert(0, row)
+        a["t1"] = b["t0"] = row[0][1]
+    return pages

@@ -14,7 +14,7 @@ import { createLadder, logDolly } from "cinema/sci/ladder.js";
 import { createSky } from "../set/sky.js";
 import { createStar } from "../set/star.js";
 import { createPlanet, earthSurface } from "../set/planet.js";
-import { createGalaxy, SUN_LY } from "../set/galaxy.js";
+import { createGalaxy, createCloud, SUN_LY } from "../set/galaxy.js";
 import { createBeacon } from "../set/beacon.js";
 import { createRig } from "../set/rig.js";
 import { hdr, line } from "../set/look.js";
@@ -43,7 +43,7 @@ const earthAbs = (t) => [AU * Math.cos(thE(t)), 0, -AU * Math.sin(thE(t))];     
 // ── the set ─────────────────────────────────────────────────────────────────
 const sky = createSky({ stars: 6000, seed: 61 });
 scene.add(sky.group);
-const G = { earth: new THREE.Group(), solar: new THREE.Group(), galaxy: new THREE.Group() };
+const G = { earth: new THREE.Group(), solar: new THREE.Group(), local: new THREE.Group(), galaxy: new THREE.Group() };
 Object.values(G).forEach((g) => scene.add(g));
 // earth rung (1 unit = 1,000 km): Earth at true size, a meridian pin, "you" on the equator
 const earth = createPlanet({ radius: 6.371, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 128 });
@@ -55,15 +55,20 @@ const orbitR = ring({ color: line("lilac", 0.7), width: 2, opacity: 1 }).arc({ r
 const trail = ring({ color: line("teal", 1, 1.2), width: 4, opacity: 0 });
 const earthDot = createBeacon({ color: hdr("ice", 1.1), px: 14, core: 0.5 });
 G.solar.add(sun.group, orbitR.mesh, trail.mesh, earthDot.mesh);
+// local rung (1 unit = 1 light-year): the Sun's neighbourhood, a cloud of nearby stars the jump passes through
+const cloud = createCloud({ n: 1800, radius: 60, seed: 5 });
+G.local.add(cloud.group);
 // galaxy rung (1 unit = 1,000 light-years): the Milky Way (illustration), the Sun's lap, the Sun
 const galaxy = createGalaxy({ n: 40000, radius: 50, seed: 27, sunAngle: Math.PI * 0.75 });
-const lap = ring({ color: line("lilac", 0.8), width: 2.4, opacity: 0, dash: 90, duty: 0.55 }).arc({ r: SUN_LY / 1000, ...XZ });
+const lap = ring({ color: line("lilac", 1, 1.5), width: 6, opacity: 0, dash: 40, duty: 0.6 }).arc({ r: SUN_LY / 1000, ...XZ });   // reads over the arms' grain
 const gcRing = ring({ color: line("teal", 0.9), width: 2.8, opacity: 0 }).arc({ r: SUN_LY / 1000 + 0.4, ...XZ });
-const gcPath = segment({ color: line("teal", 1, 1.2), width: 3.2, opacity: 0 });
-const sunG = createBeacon({ color: hdr("text", 1.6), px: 12, core: 0.4 });
-const sunJ = createBeacon({ color: hdr("text", 1.6), px: 12, core: 0.4 });   // the Sun through the jump (between the rungs)
+const gcPath = segment({ color: line("teal", 1, 1.8), width: 7, opacity: 0 });
+const gcHead = createBeacon({ color: hdr("teal", 1.4), px: 16, core: 0.5 });    // the light's front, riding the path's drawn end
+// the Sun as a point (in the jump and in the galaxy): pale lemon-white like its ✦ label, not Earth's ice-blue marker
+const sunG = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });
+const sunJ = createBeacon({ color: hdr("lemon", 1.3), px: 18, core: 0.5 });   // the Sun through the jump (between the rungs)
 scene.add(sunJ.mesh);
-G.galaxy.add(galaxy.group, lap.mesh, gcRing.mesh, gcPath.mesh, sunG.mesh);
+G.galaxy.add(galaxy.group, lap.mesh, gcRing.mesh, gcPath.mesh, gcHead.mesh, sunG.mesh);
 galaxy.set({ angle: 0 });
 const SUN0 = galaxy.sunAt();
 const GC_ABS = SUN0.map((v) => -v * 1000 * LY);                                    // the galactic centre, km from the Sun at t = 0
@@ -74,6 +79,7 @@ const ladder = createLadder({
   rungs: [
     { id: "earth", group: G.earth, unit: FILM.ladder.units.earth, origin: ORIGIN.earth, show: FILM.ladder.show.earth, fade: FILM.ladder.fade.earth },
     { id: "solar", group: G.solar, unit: FILM.ladder.units.solar, origin: [0, 0, 0], show: FILM.ladder.show.solar, fade: FILM.ladder.fade.solar },
+    { id: "local", group: G.local, unit: FILM.ladder.units.local, origin: [0, 0, 0], show: FILM.ladder.show.local, fade: FILM.ladder.fade.local },
     { id: "galaxy", group: G.galaxy, unit: FILM.ladder.units.galaxy, origin: GC_ABS, show: FILM.ladder.show.galaxy, fade: FILM.ladder.fade.galaxy },
   ],
 });
@@ -97,6 +103,9 @@ for (const c of FILM.counters) {
   else Object.assign(o, { value: () => 0, fmt: () => c.text });
   const el = hud.counter(c.id, o);
   el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (c.fmt === "since") { const v = el.querySelector(".v"); if (v) v.style.textAlign = "center"; }   // 3 digits sit under the label's centre
+  const lb = el.querySelector(".lb");                                          // the small label stays readable on the galaxy's grain
+  if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   if (c.text && c.text.length > 12) { const v = el.querySelector(".v"); if (v) v.style.fontSize = "5.5vmin"; }
 }
 for (const L of FILM.labels) {
@@ -106,12 +115,55 @@ for (const L of FILM.labels) {
 for (const p of FILM.pills || []) hud.scale(p.id, { text: p.text, bar: null, t0: p.t0, t1: p.t1, at: p.at });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0", textWrap: "balance" });
 const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";                                   // the title stays inside the end ring
 const fo = endEl.querySelector(".fo");
 if (fo) fo.style.marginTop = "1.8vmin";                                      // the pill sits inside the ring
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
+
+// Galileo's cabin (an illustration, as an inset over Earth): a ship on calm water, the hull cut away below deck. The
+// water slides past (the ship is moving); inside nothing shows it: the drops fall straight down (lilac: gravity), the
+// fish swims, the butterflies flutter in place. On "jolt" the ship lurches once; then the smooth ride again.
+const cab = document.createElement("div");
+const CW = 0.8 * W, CH = 0.3 * H;
+Object.assign(cab.style, { position: "absolute", left: `${(W - CW) / 2}px`, top: `${0.165 * H}px`, width: `${CW}px`, height: `${CH}px`, opacity: 0, zIndex: 3,
+  pointerEvents: "none", background: "rgba(8,10,28,.9)", borderRadius: "3vmin", boxShadow: "0 0 0 1px rgba(170,185,230,.18)" });
+const wave = (y, a, ph) => { let d = `M -100 ${y}`; for (let x = -100; x <= 900; x += 20) d += ` L ${x} ${(y + a * Math.sin((x / 100) * Math.PI + ph)).toFixed(1)}`; return d; };
+cab.innerHTML = `<svg width="${CW}" height="${CH}" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" style="overflow:hidden;border-radius:3vmin">
+  <g id="cab-water" style="stroke:var(--ice)" fill="none" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <path d="${wave(450, 6, 0)}"/><path d="${wave(478, 5, 1.3)}" opacity="0.7"/><path d="${wave(504, 4, 2.4)}" opacity="0.45"/></g>
+  <g id="cab-ship" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 400 168 L 400 34" style="stroke:var(--text-2)" stroke-width="4"/>
+    <path d="M 408 44 L 408 150 L 560 150 Z" style="stroke:var(--text-2)" stroke-width="3"/>
+    <path d="M 40 168 L 760 168 L 700 432 Q 400 462 100 432 Z" style="stroke:var(--ice)" stroke-width="4"/>
+    <rect x="130" y="192" width="540" height="214" rx="10" style="stroke:var(--text-2);fill:rgba(143,208,255,.05)" stroke-width="2.5"/>
+    <path d="M 430 352 L 640 352 M 450 352 L 450 404 M 620 352 L 620 404" style="stroke:var(--text-2)" stroke-width="3"/>
+    <circle cx="535" cy="322" r="30" style="stroke:var(--ice)" stroke-width="3"/>
+    <path id="cab-fish" d="M -12 0 Q 0 -8 10 0 Q 0 8 -12 0 M 10 0 L 17 -6 L 17 6 Z" style="stroke:var(--ice)" stroke-width="2.5"/>
+    <path d="M 238 192 L 238 206 M 224 206 L 252 206 L 247 232 L 229 232 Z" style="stroke:var(--text-2)" stroke-width="3"/>
+    <path d="M 226 372 L 226 400 L 250 400 L 250 372 M 222 372 L 254 372" style="stroke:var(--text-2)" stroke-width="3"/>
+    <g id="cab-drops" style="fill:var(--lilac)"><circle r="4.5"/><circle r="4.5"/><circle r="4.5"/></g>
+    <g id="cab-b1" style="stroke:var(--text)" stroke-width="2.5"><path d="M 0 0 Q -14 -14 -18 0 Q -14 12 0 0 Q 14 -14 18 0 Q 14 12 0 0"/></g>
+    <g id="cab-b2" style="stroke:var(--text)" stroke-width="2.5"><path d="M 0 0 Q -12 -12 -15 0 Q -12 10 0 0 Q 12 -12 15 0 Q 12 10 0 0"/></g>
+  </g></svg>`;
+document.getElementById("hud").appendChild(cab);
+const CAB = { water: cab.querySelector("#cab-water"), ship: cab.querySelector("#cab-ship"), fish: cab.querySelector("#cab-fish"),
+  drops: [...cab.querySelectorAll("#cab-drops circle")], b1: cab.querySelector("#cab-b1"), b2: cab.querySelector("#cab-b2") };
+const cabin = (t) => {
+  const op = Math.min(E.out3(seg(t, CUE.cab0, CUE.cab0 + 0.45)), 1 - E.in3(seg(t, CUE.cab1 - 0.45, CUE.cab1)));
+  cab.style.opacity = op.toFixed(3);
+  if (op <= 0.001) return;
+  const u = t - CUE.cab0;
+  CAB.water.setAttribute("transform", `translate(${(-(u * 60) % 200).toFixed(1)} 0)`);   // the water slides past: the ship moves
+  const j = t - CUE.jolt, lurch = j > 0 && j < 0.7 ? 16 * Math.sin(j * 2 * Math.PI * 5) * Math.exp(-j / 0.18) : 0;
+  CAB.ship.setAttribute("transform", `translate(${lurch.toFixed(2)} ${(lurch * 0.25).toFixed(2)})`);
+  CAB.fish.setAttribute("transform", `translate(${(535 + 12 * Math.sin(u * 1.3)).toFixed(1)} 324) scale(${Math.cos(u * 1.3) >= 0 ? 1 : -1} 1)`);
+  CAB.drops.forEach((d, k) => { const q = ((u / 0.9) + k / 3) % 1; d.setAttribute("cx", "238"); d.setAttribute("cy", (236 + q * 132).toFixed(1)); d.setAttribute("opacity", q < 0.94 ? "1" : "0"); });
+  const flap = (ph) => (0.35 + 0.65 * Math.abs(Math.cos(u * 9 + ph))).toFixed(3);
+  CAB.b1.setAttribute("transform", `translate(${(330 + 6 * Math.sin(u * 0.8)).toFixed(1)} ${(262 + 4 * Math.sin(u * 1.7)).toFixed(1)}) scale(${flap(0)} 1)`);
+  CAB.b2.setAttribute("transform", `translate(${(610 + 5 * Math.sin(u * 0.9 + 1)).toFixed(1)} ${(236 + 4 * Math.sin(u * 1.5 + 2)).toFixed(1)}) scale(${flap(1.7)} 1)`);
+};
 
 window.seek = function (t) {
   const st = stage(t), shot = st.name, tr = Math.round(t * FPS) / FPS;
@@ -123,6 +175,8 @@ window.seek = function (t) {
   // the spine, so the jump shows Earth shrinking, the Sun as a point, then the galaxy
   const inJump = t > CUE.j0 && t < CUE.j1;
   if (inJump) G.solar.visible = false;
+  // the push back in to Earth (e0 → e1): the orbit and its trail would pass the lens as huge arcs; they leave first
+  const kPush = t > CUE.e0 && t < CUE.j0 ? 1 - E.out3(seg(t, CUE.e0, CUE.e0 + 0.35)) : 1;
   const toS = (id, p) => ladder.toScene(id, p, view);
   const sunDirE = (() => { const l = Math.hypot(...ea); return ea.map((v) => -v / l); })();
 
@@ -138,30 +192,42 @@ window.seek = function (t) {
   sun.set({ tau: t * 300, on: view.alpha.solar > 0.001, camera, center: [0, 0, 0] });
   const eS = ea.map((v) => v / 1e6);
   earthDot.set({ center: eS, camera, opacity: view.alpha.solar });
-  trail.arc({ r: AU / 1e6, a0: -0.6, a1: Math.max(-0.6 + 1e-4, thE(t)), ...XZ }).set({ opacity: thE(t) > -0.6 + 1e-3 ? view.alpha.solar : 0 });
+  trail.arc({ r: AU / 1e6, a0: -0.6, a1: Math.max(-0.6 + 1e-4, thE(t)), ...XZ }).set({ opacity: thE(t) > -0.6 + 1e-3 ? view.alpha.solar * kPush : 0 });
+  orbitR.set({ opacity: view.alpha.solar * kPush });
   S.earthS = toS("solar", eS.map((v, i) => v + (i === 1 ? 3 : 0)));
   S.sun = toS("solar", [0, 5, 0]);
 
-  // the galaxy: the Sun on its lap
+  // the galaxy: the Sun on its lap. The disc turns so its arms trail (as real spiral arms do); it steps down while the
+  // lap is drawn and again for the readout, so the lap, the Sun and light's path win over the bulge
   const ga = (2 * Math.PI * CLK.gal.tau(t)) / (PH.lap_y * PH.year);
-  galaxy.set({ angle: ga, gain: 1.5 });
+  galaxy.set({ angle: -ga, gain: (1.5 - 0.5 * fadeIn(t, CUE.lap - 0.6, 0.6)) * (1 - 0.35 * fadeIn(t, CUE.rd, 0.5)) });
   const sp = galaxy.sunAt();
   sunG.set({ center: sp, camera, opacity: view.alpha.galaxy });
-  lap.set({ opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) });
+  lap.set({ opacity: view.alpha.galaxy * fadeIn(t, CUE.lap, 0.6) * (1 - 0.6 * fadeIn(t, CUE.gcring, 0.5)) });
   gcRing.set({ opacity: 0 });
   // the readout: light's path from the Sun to the galaxy's centre, drawn out on "To the galaxy's center"
-  const ug = E.inout2(seg(t, CUE.gcring, CUE.gcring + 0.8));
-  gcPath.seg(sp, sp.map((v) => v * (1 - ug))).set({ opacity: view.alpha.galaxy * (ug > 0.002 ? 1 : 0) });
+  const ug = E.inout2(seg(t, CUE.gcring, CUE.gcring + 0.8)), gEnd = sp.map((v) => v * (1 - ug));
+  gcPath.seg(sp, gEnd).set({ opacity: view.alpha.galaxy * (ug > 0.002 ? 1 : 0) });
+  gcHead.set({ center: gEnd, camera, opacity: view.alpha.galaxy * (ug > 0.002 && ug < 0.999 ? 1 : 0) });
   // through the jump the Sun stays a point: in when the orbit fades, out when the galaxy's own Sun has come in;
   // "the Sun, and you" rides that point and hands over to the galaxy's Sun as it comes in
   const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4), sJ = toS("solar", [0, 0, 0]), sG = toS("galaxy", sp);
   S.sunG = t > CUE.j0 && t < CUE.j1 + 0.1 ? sG.map((v, i) => sJ[i] + (v - sJ[i]) * jOut) : sG;
   S.gc = toS("galaxy", [0, 0, 0]);
-  const la = Math.atan2(sp[2], sp[0]) + Math.PI, rl = SUN_LY / 1000;   // the lap's label sits across the ring from the Sun's
-  S.lap = toS("galaxy", [rl * Math.cos(la), 0, rl * Math.sin(la)]);
+  // the lap's label: on the ring's lowest point on screen (its near side), with the pill hanging below the ring
+  camera.updateMatrixWorld();
+  const rl = SUN_LY / 1000;
+  let best = null, by = -Infinity;
+  for (let k = 0; k < 72; k++) {
+    const a = (k / 72) * 2 * Math.PI, pL = new THREE.Vector3(rl * Math.cos(a), 0, rl * Math.sin(a)), pS = toS("galaxy", pL.toArray());
+    const sy = -new THREE.Vector3(...pS).project(camera).y;
+    if (sy > by) { by = sy; best = pS; }
+  }
+  S.lap = best;
 
   sunJ.set({ center: sJ, camera, opacity: jIn * (1 - jOut) * (inJump ? 1 : 1 - view.alpha.solar) });
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1 - clamp01((view.s - 12) / 2), bandGain: 1 - clamp01((view.s - 12) / 2) });
+  cabin(t);
   hud.update(t);
   tRing.update(t);
   eRing.update(t);

@@ -18,7 +18,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
 sys.path.insert(0, str(HERE.parent / "set"))
-from capglue import glue, hold    # noqa: E402
+from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 56.25
 ID = "lightminute-006"
@@ -49,36 +49,43 @@ t_zoom = A("vo05:Zoom")
 t_p0, t_p1 = A("vo03:And"), A("vo03:Sun", 0.6)          # the pull-back from Earth to its orbit
 t_e0 = A("vo04:Ptolemy")                                 # back in to Earth for the argument (the clouds ride along) ...
 t_e1 = round(t_e0 + 1.8, 4)                              # ... the orbit clock stops there, so Earth holds still for the push
+t_cab0, t_cab1 = A("vo04:cabin"), round(A("vo04:ride") + 0.9, 4)   # Galileo's cabin, drawn as an inset over Earth (an illustration)
+t_jolt = A("vo04:jolt")
 CLK = {
     # still on "Sitting perfectly still"; one turn in 86 s. The spin waits while Earth is a dot in the orbit view (t_p1 to t_e1),
     # so "you" stay on the face toward the camera in both Earth views (about 55° left of centre to 65° right)
     "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_n, "rate": 1000.0}, {"t": t_p1, "rate": 0.0, "badge": None},
              {"t": t_e1, "rate": 1000.0}, {"t": t_zoom, "rate": 0.0, "badge": None}],
     "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_p1, "rate": 1e6}, {"t": t_e0, "rate": 0.0, "badge": None}],     # 11.6 days a second
-    "gal": [{"t": 0.0, "rate": 0.0}, {"t": t_zoom, "rate": 1e14}],                              # one lap in 73 s
+    # one lap in 73 s, from the end of the jump (so the jump has one Sun), stopped for the readout ("so far")
+    "gal": [{"t": 0.0, "rate": 0.0}, {"t": A("vo05:galaxy", 0.4), "rate": 1e14}, {"t": A("vo07:Light"), "rate": 0.0, "badge": None}],
 }
 
 # ── the ladder ─────────────────────────────────────────────────────────────
 # km per scene unit in each view: Earth about 0.6 of the frame's width (above the spine); Earth's orbit about 0.75
 # of it (so the orbit and Earth stay in frame); the galaxy's 100,000 light-years about 0.95 of it
-S_E, S_S, S_G = 600.0, 1.1e7, 1e5 * LY / 34.0
+S_E, S_S, S_G = 600.0, 1.1e7, 1e5 * LY / 30.0
 t_j0, t_j1 = t_zoom, A("vo05:galaxy", 0.4)
+t_jm, S_JM = A("vo05:Sun"), 10 ** 12.4     # the jump slows through the Sun's neighbourhood (a cloud of nearby stars)
 assert t_p1 - t_p0 <= 3.0 and 1.0 < t_j1 - t_j0 <= 3.0, (t_p0, t_p1, t_j0, t_j1)
 LADDER = {
-    "units": {"earth": 1000.0, "solar": 1e6, "galaxy": 1000 * LY},
+    "units": {"earth": 1000.0, "solar": 1e6, "local": LY, "galaxy": 1000 * LY},
     "keys": [{"t": t_p0, "scale": S_E, "focus": "earth"}, {"t": t_p1, "scale": S_S, "focus": "sun", "ease": "inout3"},
              {"t": t_e0, "scale": S_S, "focus": "sun"}, {"t": t_e1, "scale": S_E, "focus": "earthW", "ease": "inout3"},
-             {"t": t_j0, "scale": S_E, "focus": "earthW"}, {"t": t_j1, "scale": S_G, "focus": "gc", "ease": "inout3"}],
-    # the rungs overlap, so a pull-back never passes through an empty frame (the sphere hands off to Earth's marker)
-    "show": {"earth": [1.5, 4.3], "solar": [4.0, 7.5], "galaxy": [13.5, 17.0]},
-    "fade": {"earth": 0.6, "solar": 0.7, "galaxy": 1.0},
+             {"t": t_j0, "scale": S_E, "focus": "earthW"}, {"t": t_jm, "scale": S_JM, "focus": "sun", "ease": "inout2"},
+             {"t": t_j1, "scale": S_G, "focus": "gc", "ease": "inout2"}],
+    # the rungs overlap, so a pull-back never passes through an empty frame (the sphere hands off to Earth's marker);
+    # the jump passes through the Sun's neighbourhood (1 unit = 1 light-year), so its middle is never empty
+    "show": {"earth": [1.5, 4.3], "solar": [4.0, 7.5], "local": [10.6, 13.6], "galaxy": [13.5, 17.0]},
+    "fade": {"earth": 0.6, "solar": 0.7, "local": 0.8, "galaxy": 1.0},
 }
 
 # ── camera: one pose (a telescope mount); the world moves under it ──────────
 POSE = {"target": [0, 0, 0], "el": 28.0, "fov": 24, "fx": 0.5, "fy": 0.34}
 key = lambda t, **k: {"t": round(t, 4), **POSE, **k}
 t_end = A("vo08:Next", -0.25)
-CAM = {"space": [key(0.0, dist=150.0, az=0.0), key(t_c, dist=146.0, az=4.0, ease="sine"),
+# frame 0: Earth a little smaller and lower, clear of the title band; it eases in through the hook and the normal
+CAM = {"space": [key(0.0, dist=176.0, az=0.0, fy=0.36), key(t_c, dist=146.0, az=4.0, ease="sine"),
                  key(t_why, dist=150.0, az=8.0, el=34.0, ease="sine"), key(t_w, dist=146.0, az=12.0, el=36.0, ease="sine"),
                  key(t_j1, dist=150.0, az=14.0, el=48.0, ease="inout3"), key(t_end + 3, dist=156.0, az=18.0, el=50.0, ease="sine")]}
 CAM["end"] = CAM["space"]
@@ -90,39 +97,42 @@ SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
 # ── overlay ─────────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-you", "text": "you, at the equator", "kind": "light", "anchor": "pin", "t0": 0.0, "t1": t_p0, "side": 1},
+    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": 0.0, "t1": round(t_p0 - 0.45, 4), "side": 1},
     {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earthS", "t0": round(t_p1 - 0.3, 4), "t1": t_e0, "side": 1, "fixed": True},   # rides with Earth
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": t_p1, "t1": t_e0, "side": -1},
-    {"id": "l-you-w", "text": "you, and the clouds with you", "kind": "light", "anchor": "pin", "t0": round(t_e1 + 0.2, 4), "t1": round(t_j0 - 0.2, 4), "side": 1},
-    {"id": "l-here", "text": "the Sun, and you", "kind": "star", "anchor": "sunG", "t0": A("vo05:drags"), "t1": t_end, "side": 1, "fixed": True},
-    {"id": "l-gc", "text": "galactic center", "kind": "star", "anchor": "gc", "t0": A("vo05:galaxy"), "t1": t_end, "side": -1},
-    {"id": "l-lap", "text": "the Sun's lap", "kind": "gravity", "anchor": "lap", "t0": A("vo05:One"), "t1": t_tk, "side": -1},
+    # Ptolemy's objection over Earth with "you" on it; Galileo's answer as the cabin inset; then the clouds ride along
+    {"id": "l-you-w", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_e1 + 0.2, 4), "t1": round(t_cab0 - 0.1, 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-you-c", "text": "you, and the clouds", "kind": "light", "anchor": "pin", "t0": round(t_cab1 - 0.3, 4), "t1": round(t_j0 - 0.2, 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-here", "text": "the Sun, and you", "kind": "star", "anchor": "sunG", "t0": A("vo05:drags"), "t1": round(t_end - 0.45, 4), "side": 1, "fixed": True},
+    {"id": "l-lap", "text": "the Sun's lap", "kind": "gravity", "anchor": "lap", "t0": A("vo05:One"), "t1": t_tk, "side": 1, "v": "below", "fixed": True},
+    {"id": "l-gc", "text": "galactic center", "kind": "star", "anchor": "gc", "t0": A("vo07:To"), "t1": round(t_end - 0.45, 4), "side": -1, "v": "middle", "fixed": True},
 ]
 # the argument, as two notes under the captions (the picture stays on the orbit)
 PILLS = [
-    {"id": "p-pto", "text": "Ptolemy: birds left behind?", "t0": A("vo04:birds"), "t1": A("vo04:In", -0.2), "at": [90 / 1080, 0.705]},
+    {"id": "p-pto", "text": "Ptolemy, Almagest", "t0": A("vo04:birds"), "t1": A("vo04:In", -0.2), "at": [90 / 1080, 0.705]},
     {"id": "p-gal", "text": "Galileo, 1632: a ship's cabin", "t0": A("vo04:Galileo"), "t1": t_w, "at": [90 / 1080, 0.705]},
 ]
 BADGES = [
-    {"id": "b-spin", "clock": "spin", "t0": t_n, "t1": t_c, "slot": "tl"},
+    {"id": "b-spin", "clock": "spin", "t0": t_n, "t1": round(t_p0 + 0.5, 4), "slot": "tl"},
     {"id": "b-orbit", "clock": "orbit", "t0": t_p1, "t1": t_e0, "slot": "tl"},
     {"id": "b-spin2", "clock": "spin", "t0": t_e1, "t1": t_zoom, "slot": "tl"},
-    {"id": "b-gal", "clock": "gal", "t0": t_j1, "t1": t_end, "slot": "tl"},
-    {"id": "b-nts", "text": "not to scale", "t0": t_p1, "t1": t_e0, "slot": "tr"},
-    {"id": "b-illus", "text": "galaxy: illustration", "t0": t_j1, "t1": t_end, "slot": "tr"},
+    {"id": "b-gal", "clock": "gal", "t0": t_j1, "t1": t_rd, "slot": "tl"},
+    {"id": "b-nts", "text": "not to scale", "t0": round(t_p0 + 0.9, 4), "t1": round(t_e0 + 0.5, 4), "slot": "tr"},   # while the enlarged Sun is in frame
+    {"id": "b-cabin", "text": "illustration", "t0": t_cab0, "t1": t_cab1, "slot": "tr"},
+    {"id": "b-illus", "text": "galaxy: illustration", "t0": round(t_j1 - 0.8, 4), "t1": t_end, "slot": "tr"},
 ]
 COUNTERS = [
     {"id": "c-hook", "label": "your speed right now", "text": "?", "t0": 0.0, "t1": t_n},
     {"id": "c-eq", "label": "the ground at the equator · km/h", "text": "1,670", "t0": A("vo02:sixteen"), "t1": A("vo02:That")},
-    {"id": "c-sound", "label": "the speed of sound · km/h", "text": "1,225", "t0": A("vo02:That"), "t1": A("vo03:thirty")},
+    {"id": "c-sound", "label": "the speed of sound · km/h", "text": "1,225", "t0": A("vo02:That"), "t1": A("vo03:And")},
     {"id": "c-orb", "label": "Earth around the Sun · km a second", "text": "30", "t0": A("vo03:thirty"), "t1": t_since},
-    {"id": "c-since", "label": "km round the Sun since this began", "fmt": "since", "t0": t_since, "t1": A("vo05:two")},
+    {"id": "c-since", "label": "km round the Sun since this began", "fmt": "since", "t0": t_since, "t1": t_zoom},   # gone with the orbit's rung
     {"id": "c-gal", "label": "Sun round the galaxy · km a second", "text": "230", "t0": A("vo05:two"), "t1": A("vo05:One")},
     {"id": "c-lap", "label": "one lap · million years", "text": "230", "t0": A("vo05:One"), "t1": A("vo05:Last")},
     {"id": "c-dino", "label": "last time round", "text": "first dinosaurs", "t0": A("vo05:Last"), "t1": t_tk},
-    {"id": "c-what", "label": "your speed · compared to what", "text": "?", "t0": A("vo06:So"), "t1": t_rd},
+    {"id": "c-what", "label": [[0.0, "your speed"], [A("vo06:compared"), "your speed · compared to what"]], "text": "?", "t0": A("vo06:So"), "t1": t_rd},
     {"id": "c-read-trip", "label": "light time · your galactic trip", "text": "1/20 s", "read": True, "t0": t_rd, "t1": round(A("vo07:To") - 0.05, 4)},
-    {"id": "c-read-gc", "label": "light time · galaxy's center", "text": "27,000 years", "read": True, "t0": A("vo07:To"), "t1": t_end},
+    {"id": "c-read-gc", "label": "light time · galaxy's center", "text": "27,000 years", "read": True, "t0": A("vo07:To"), "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
@@ -133,8 +143,8 @@ for a, b in zip(spine, spine[1:]):
 
 TITLE = {"series": "Light Minute · No. 006", "title": "Your *speed*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next light: trees or *stars*", "follow": "Light Minute · No. 007",
-       "next": "One lap of the galaxy takes the Sun about 230 million years."}   # footnote (c9)
-CUE = {"zoom": t_zoom, "p0": t_p0, "p1": t_p1, "e0": t_e0, "e1": t_e1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To")}
+       "next": "One lap of the galaxy takes the Sun about\u00a0230 million years."}   # footnote (c9); "about" stays with its number
+CUE = {"cab0": t_cab0, "cab1": t_cab1, "jolt": t_jolt, "ride": A("vo04:ride"), "jm": t_jm, "rd": t_rd, "zoom": t_zoom, "p0": t_p0, "p1": t_p1, "e0": t_e0, "e1": t_e1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To")}
 POSTER = A("vo05:appeared", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["sixteen hundred seventy", "kilometers an hour."],
@@ -149,7 +159,7 @@ film = {
     "clk": CLK, "ladder": LADDER, "cam": CAM, "cue": CUE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": hold(f, f.captions(max_chars=24)),   # each page stays until its last phrase has been spoken
+    "captions": hold(f, keep_units(f.captions(max_chars=24))),   # each page stays until its last phrase has been spoken
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
