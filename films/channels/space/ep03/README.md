@@ -4,7 +4,9 @@
 `lightminute-vacuum`). It pays off episode 2's tease ("Next: a world that turns slower than it orbits. And
 backwards.") and sets up episode 4 ("Next: the Moon never stops falling toward us. So why doesn't it land?").
 
-STATUS: see `review/scorecard.md` (filled in on delivery).
+**Delivered (26 Oct):** `out/lightminute-003-9x16.mp4` (74.67 s, −14.1 LUFS / −1.7 dBTP, voice 12.3 LU over the music,
+sync PASS, 0 flashes: `qa.py` PASS), with its poster (50.4 s), contact sheet and `review/`. It has not been posted.
+Chunk 001 was re-rendered after the first assembly (see `review/scorecard.md`).
 
 ## The story
 Can one day outlast a year? On Venus: yes, and no. For three hundred years astronomers chased faint smudges in

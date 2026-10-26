@@ -127,6 +127,7 @@ t_push2, t_back, t_end = B["change"]["t0"], B["whoa"]["t0"], A("vo08:Next", -0.2
 CAM = {"space": [
     key(0.0, CLOSE, dist=23.4), key(t_cut, CLOSE, dist=24.0, ease="sine"),
     key(t_pull + 2.2, DIAG, ease="inout3"), key(t_push1, DIAG, dist=161.0, ease="sine"),
+    key(t_push2, DIAG, dist=159.0, ease="sine"),   # hold the diagram until the push starts with the follow (else it dollies at the Sun)
     key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, dist=23.0, ease="sine"),
     key(t_w - 0.2, CLOSE2, dist=22.0, ease="sine"), key(t_w + 2.2, DIAG, ease="inout3"),
     key(t_end, DIAG, dist=159.0, ease="sine"), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"),
