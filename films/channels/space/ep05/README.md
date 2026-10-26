@@ -49,8 +49,8 @@ some are more than a thousand times wider. Astronomers even file the Sun under d
   brighten through the jump; a field streams in at its end, then a slow orbit through it, 12° → 30°, for parallax)
   inside the dashed outline of the largest known stars (1,000 × its radius), which comes in once it has shrunk to
   size. The outline leaves as the takeaway starts and the camera pushes in on the Sun (its dot swells once on
-  "dwarf") at the drift limit, 4.8% a second (dist 440 → 240), so Earth's orbit is about twice as wide by the
-  readout. The readout: a teal ping on the Sun on "Light time", then a ring of light grows out to Earth's orbit (same
+  "dwarf") at the drift limit, 4.8% a second (dist 440 → 240), so Earth's orbit is about 1.6 times as wide by "Sun
+  to Earth" (1.8 by the end card). The readout: a teal ping on the Sun on "Light time", then a ring of light grows out to Earth's orbit (same
   scale: 1 AU, about 215 Sun radii, Earth on it) by "twenty seconds", eased so the trip reads; the light is gone
   before the end card. No field star sits in the spine's band after the jump.
 - **Spine readout:** ? → 400× → 400× · 400× → 1–109 → southern Greece (his guess) → 7,000 → 0–1,300,000 → >1,000× →

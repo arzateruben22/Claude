@@ -44,6 +44,14 @@
   Two caption breaks remain ("reached the Sun's" | "cloud of comets."; "three" / "hundred years away."). The first
   can't be mended within 24 characters a line; the second only by a 0.47 s page ("That's about" | "three hundred /
   years away."), too short to read, so it stays.
+- **After the second draft review (26 Oct):** the first of those breaks is mended after all, by paging the sentence
+  again ("It hasn't even reached" | "the Sun's / cloud of comets."), and so is "Voyager has / crossed day one" | "of
+  fifteen hundred." (now "Voyager has crossed" | "day one / of fifteen hundred."). "three" / "hundred years away."
+  stays (the one-line form is 25 characters, over the 24-character rule). The spine's ≈75,000 now reads "years at 17
+  km/s" (was "years at Voyager's speed", too wide beside the lane); a "Voyager 1" label marks the speck while the trip
+  time is told. The scale jump shows the comet cloud's rim shrinking into the speck, and the road on through the cloud
+  now runs off the frame (30,000 years is 100× the 300; it was drawn about as long as the first road). The end card
+  no longer shows the Sun and Proxima behind its title.
 
 
 ## Every episode

@@ -133,7 +133,7 @@ CAM = {
             # the top notes and the spine (dist 425–440 at fy 0.35)
             key(t_take, **PUSH0, ease="sine"),
             # the takeaway and the readout: the outline gone, a push in on the Sun at the drift limit, so Earth's orbit
-            # is about twice as wide by "Sun to Earth"
+            # is about 1.6 times as wide by "Sun to Earth" (1.8 by the end card)
             push(t_take + 1.2, 0.6, "in2"), push(t_end - 1.2, N_PUSH - 0.6, "lin"), push(t_end, N_PUSH, "out2")],
 }
 for shot, keys in CAM.items():           # the bible's arc limit: ≤ 1.5° a second, in azimuth and in elevation

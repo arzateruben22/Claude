@@ -216,7 +216,7 @@ COUNTERS = [
     {"id": "c-g1", "label": "guess · one turn", "text": "23 hours", "t0": A("vo03:clocked"), "t1": t_g2},
     {"id": "c-g2", "label": "guess · one turn = one year", "text": "225 days", "t0": t_g2, "t1": A("vo04:nineteen")},
     {"id": "c-1962", "label": "radar sees through the clouds", "text": "1962", "t0": A("vo04:nineteen"), "t1": A("vo04:two")},
-    # "Both guesses were wrong": the two guesses, struck out (11 characters, the spine's widest); gone before "Venus turns"
+    # "Both guesses were wrong": the two guesses, struck out (11 characters, the spine's widest: scene.mjs sets it a little smaller); gone before "Venus turns"
     {"id": "c-wrong", "label": "both guesses", "text": "23 h, 225 d", "strike": True, "t0": A("vo04:Both"), "t1": A("vo04:Venus")},
     {"id": "c-radar", "label": "radar · one turn, days", "text": "243", "t0": A("vo04:two"), "t1": A("vo04:longer")},
     {"id": "c-vs", "label": "one turn · one year (days)", "text": "243 > 225", "t0": A("vo04:longer"), "t1": t_w},

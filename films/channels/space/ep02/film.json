@@ -218,7 +218,7 @@
     "fov": 24,
     "fx": 0.62,
     "fy": 0.55,
-    "dist": 1184,
+    "dist": 1060,
     "az": 0.0,
     "ease": "sine"
    }
@@ -572,7 +572,8 @@
    1.0
   ],
   "pxring": 64.83333333333333,
-  "speck": 60.1
+  "speck": 60.1,
+  "day": 64.33333333333333
  },
  "labels": [
   {
@@ -640,7 +641,7 @@
    "t1": 26.6667,
    "shot": "space",
    "side": -1,
-   "v": "middle",
+   "v": "above",
    "fixed": true
   },
   {
@@ -671,7 +672,7 @@
    "kind": "light",
    "anchor": "frontc",
    "t0": 22.1607,
-   "t1": 22.7607,
+   "t1": 22.5107,
    "shot": "space",
    "side": 1,
    "v": "above",
@@ -706,7 +707,20 @@
    "kind": "star",
    "anchor": "prox",
    "t0": 42.7333,
-   "t1": 64.83333333333333,
+   "t1": 61.8667,
+   "shot": "space",
+   "side": -1,
+   "v": "middle",
+   "fixed": true
+  },
+  {
+   "id": "l-voy-l",
+   "quiet": true,
+   "text": "Voyager 1",
+   "kind": "body",
+   "anchor": "speck",
+   "t0": 46.166666666666664,
+   "t1": 55.6,
    "shot": "space",
    "side": -1,
    "v": "middle",
@@ -749,7 +763,7 @@
    "id": "b-head-h",
    "text": "Voyager isn't headed there",
    "t0": 0.0,
-   "t1": 3.1833,
+   "t1": 2.8833,
    "slot": "bl"
   },
   {
@@ -763,7 +777,7 @@
    "id": "b-path",
    "text": "path simplified",
    "t0": 8.766666666666667,
-   "t1": 33.96666666666667,
+   "t1": 32.6833,
    "slot": "tr"
   },
   {
@@ -784,21 +798,21 @@
    "id": "b-theory",
    "text": "comet cloud: theory",
    "t0": 33.03333333333333,
-   "t1": 42.1667,
+   "t1": 42.5167,
    "slot": "tr"
   },
   {
    "id": "b-head",
    "text": "Voyager isn't headed there",
    "t0": 43.13333333333333,
-   "t1": 67.8167,
+   "t1": 67.5167,
    "slot": "tr"
   },
   {
    "id": "b-today",
    "text": "at today's distance",
    "t0": 48.03333333333333,
-   "t1": 56.0,
+   "t1": 55.6,
    "slot": "bl"
   },
   {
@@ -916,13 +930,14 @@
   },
   {
    "id": "c-trip",
-   "label": "years at Voyager's speed",
+   "label": "years at 17 km/s",
    "fmt": "text",
    "text": "≈75,000",
+   "size": "9vmin",
    "t0": 48.03333333333333,
    "t1": 55.6,
    "at": [
-    0.31,
+    0.3,
     0.47
    ]
   },
@@ -974,7 +989,7 @@
  },
  "endCard": 68.36666666666666,
  "end": {
-  "title": "Next light: a planet that turns *backwards*",
+  "title": "Next light: a planet that turns *backwards*",
   "follow": "Light Minute · No. 003",
   "next": "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)."
  },
@@ -1373,7 +1388,7 @@
   },
   {
    "t0": 31.592,
-   "t1": 33.037,
+   "t1": 32.537,
    "lines": [
     [
      [
@@ -1387,13 +1402,19 @@
      [
       "even",
       32.052
-     ]
-    ],
-    [
+     ],
      [
       "reached",
       32.232
-     ],
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.537,
+   "t1": 34.507,
+   "lines": [
+    [
      [
       "the",
       32.537
@@ -1402,13 +1423,7 @@
       "Sun's",
       32.567
      ]
-    ]
-   ]
-  },
-  {
-   "t0": 33.037,
-   "t1": 34.507,
-   "lines": [
+    ],
     [
      [
       "cloud of comets.",
@@ -1438,7 +1453,7 @@
     [
      [
       "hundred years away.",
-      35.002
+      35.27
      ]
     ]
    ]
@@ -1520,7 +1535,7 @@
     [
      [
       "light-days",
-      44.132
+      44.921
      ],
      [
       "out.",
@@ -1562,7 +1577,7 @@
     [
      [
       "thousand years.",
-      48.057
+      48.879
      ]
     ]
    ]
@@ -1657,7 +1672,7 @@
   },
   {
    "t0": 58.835,
-   "t1": 60.625,
+   "t1": 60.085,
    "lines": [
     [
      [
@@ -1667,24 +1682,24 @@
      [
       "has",
       59.42
-     ]
-    ],
-    [
+     ],
      [
       "crossed",
       59.69
-     ],
-     [
-      "day one",
-      60.085
      ]
     ]
    ]
   },
   {
-   "t0": 60.625,
+   "t0": 60.085,
    "t1": 61.828,
    "lines": [
+    [
+     [
+      "day one",
+      60.085
+     ]
+    ],
     [
      [
       "of fifteen hundred.",

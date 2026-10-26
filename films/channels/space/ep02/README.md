@@ -9,6 +9,11 @@ episode 3 ("Next: a world that turns slower than it orbits. And backwards.").
 see `review/scorecard.md`). The flight now climbs to the right, so the signal, the 2012 crossing and the roads to the
 comet cloud run clear of the spine on the left. **After the draft review (26 Oct)** the picture was fixed again (see
 "The direction" and `review/HUMAN-REVIEW.md`); it needs a fresh `--cues` pass, audio mix and final. It has not been posted.
+**After the second draft review (26 Oct):** the scale jump now shows the comet cloud's rim shrinking into the speck, the
+road on through the cloud runs off the frame (30,000 years against 300), the light-day ring passes through Voyager,
+Voyager is a bigger pale-ice light and the Sun a white one (beacon sizes now hold at every resolution), nothing of the
+picture sits under the end card, notes leave one at a time, and some labels and caption pages were re-timed. It needs a
+new draft check, `--cues` pass, audio mix and final.
 
 ## The story
 Our farthest traveller, Voyager 1 (1977, about 17 km/s), crosses one light-day on 18 November 2026: its signal takes a
@@ -57,30 +62,39 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 - The recognizer writes numbers as digits ("1977", "300", "75,000"), which align.py maps to words only up to
   100, so the times of "nineteen seventy-seven", "twenty twelve", "three hundred", "thirty thousand", "fifteen
   hundred" and "seventy-five thousand" are interpolated inside their lines (lint warns). Nothing lands on them
-  closer than the word before: the spine readout changes on the first word of each number phrase.
+  closer than the word before: the spine readout changes on the first word of each number phrase. For the caption
+  highlight only, `compile.py` spreads such a run's word starts by character share ("light-days" lights at 44.9 s).
 - "Voyager 1" is written with the digit (as NASA writes it); the voice says "one" (lines.json phonemes).
 
 ## The direction
-- **Shots:** the hook (frame 0: the local view, the speck that holds everything we've sent, Proxima far off), then
+- **Shots:** the hook (frame 0: the local view, the speck that holds everything we've sent, Proxima far off; a slow
+  push-in), then
   **one continuous shot**: a slow push-in to the launch spot (Voyager starts just right of the Sun, clear of its glow),
   Voyager's flight (1977 → 2026 under a 250,000,000× speed note, from just after "nineteen seventy-seven" is said,
   climbing to the right of the Sun; the camera's distance grows with Voyager's, so it climbs to the same height in
   frame), the signal out to Voyager and the answer back (50,000×), the heliopause, a ×12 pull-back to the comet cloud
-  (the cloud steps back while the road to it is told), the episode's one scale jump to Proxima (2.0 s; the cloud
-  collapses away in its first 0.9 s, Proxima fades in below the top-right notes, then the Sun steps back so Proxima
-  wins the whoa), a push in through the whoa (Proxima rises about 135 px at 1080 × 1920) and back out for the readout, a pulse of
-  light down the lane on "fifteen hundred" (2.4 s) and a quicker one on the takeaway's "of fifteen hundred" (1 s, its
-  lit lane gone before the readout), the readout. The end card sits on the hook's composition, so a replay loops:
-  Proxima steps back behind the end title and returns over the last 1.2 s.
+  (the cloud steps back while the road to it is told; the road on through it grows in log scale off the frame, so
+  30,000 years reads 100× the 300), the episode's one scale jump to Proxima (2.0 s; the cloud's points go in its
+  first 0.9 s while its rim shrinks with the zoom into the speck, gone by 1.25 s; Proxima fades in below the
+  top-right notes, then the Sun steps back so Proxima wins the whoa), a push in through the whoa (Proxima rises about
+  135 px at 1080 × 1920) and back out for the readout, a pulse of light down the lane on "fifteen hundred" (2.4 s;
+  Proxima flares as it arrives) and a quicker one on the takeaway's "of fifteen hundred" (1 s, its lit lane gone
+  before the readout), the readout (the speck pings on "one day"). The Sun also steps back while Voyager is the
+  subject (from its name until its signal leaves, and the 2012 crossing). The end card's camera returns to the hook's
+  pose, so a replay continues the move; the Sun, Proxima and the speck step back just before the card (nothing sits
+  under its title), and the loop's first frame brings the picture back with the hook.
 - **Labels** on moving anchors keep one placement each (fixed: no hopping): Voyager's name on its right
   (clear of the spine), the fronts' names ("signal", "command", "answer") riding their fronts once clear of Voyager,
-  "1 light-day" inside the ring's right edge, "comet cloud" up-left of the road, the speck's labels on its rim's left.
+  "1 light-day" over the ring's top, left of Voyager's name, "comet cloud" up-left of the road, the speck's labels on
+  its rim's left ("Voyager 1" while the trip at its speed is told, "day 1", then "Voyager 1" for the readout).
   The 2012 crossing is named by the spine and its tick only, and the speed only by the caption. "Proxima Centauri"
-  leaves as the readout's ring arrives (the ring passes through the star). Labels that run to a cut fade out before
-  it, so nothing pops off.
+  leaves with "day 1", as the readout arrives (the readout's "1 day" plate sits just above the pill; its own label
+  names Proxima from "To Proxima"). Labels that run to a cut fade out before it, so nothing pops off. Notes that
+  share a corner leave one at a time (the corner reflows with a leaving note's fade).
 - **Spine readout** (WRITING.md "The picture", rule 2), one place at the left, its small label naming the beat:
   4.24 light-years to Proxima → year 1977–2026 → signal travel 24 h → command to answer 48 h → 2012 (out of the Sun's
-  wind) → ≈300 years to the comet cloud → ≈30,000 more → ≈1,500 light-days → ≈75,000 years → ≈1,500 (as the voice
+  wind) → ≈300 years to the comet cloud → ≈30,000 more → ≈1,500 light-days → ≈75,000 years at 17 km/s (its value a size
+  smaller, so the lane to Proxima passes clear of the plate) → ≈1,500 (as the voice
   says them: "about fifteen hundred", "about seventy-five thousand"; 1,549 and 74,800 computed). Then the readout
   segment, here above Proxima (y 0.27) so it doesn't sit on the star or its lane.
 - **Ladder rungs**, all centred on the Sun: solar (1 unit = 1 AU), oort (1 AU), local (0.01 light-year).
@@ -93,16 +107,17 @@ python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py
 | Badge | Where | Why |
 |---|---|---|
 | `not to scale` | Throughout | The Sun's and Voyager's glows are sizes in pixels; Proxima's too |
-| `path simplified` | The flight | Voyager's 1979–80 Jupiter and Saturn flybys are drawn as one smooth curve; the straight part runs at 3.556 AU/yr (16.9 km/s), so the drawn heliopause crossing is at 122.5 AU (the real one: 121.7 AU, 18.2 billion km) |
+| `path simplified` | The flight, until the pull-back has shrunk the path to a few pixels | Voyager's 1979–80 Jupiter and Saturn flybys are drawn as one smooth curve; the straight part runs at 3.556 AU/yr (16.9 km/s), so the drawn heliopause crossing is at 122.5 AU (the real one: 121.7 AU, 18.2 billion km) |
 | `250,000,000× faster`, `50,000× faster` | The flight; the signal | From the clocks |
 | `light sped up` | While each pulse runs the lane to Proxima (top left) | The pulses cover 4.24 light-years in 2.4 s and 1 s |
-| `comet cloud: theory` | From "cloud" until the cloud has collapsed away in the jump's first second | No object in the distant Oort cloud has been seen. Drawn from 1,240 AU (Voyager's position plus 300 years) to 108,000 AU (plus 30,000 years), NASA's two figures |
+| `comet cloud: theory` | From "cloud" until the cloud's rim has shrunk away in the jump (1.35 s in) | No object in the distant Oort cloud has been seen. Drawn from 1,240 AU (Voyager's position plus 300 years) to 108,000 AU (plus 30,000 years), NASA's two figures |
 | `Voyager isn't headed there` | In the hook (which draws the lane), and from Proxima's arrival | Voyager 1 heads for Ophiuchus; Proxima is drawn up-right for the composition |
 | `at today's distance` | With the 75,000 years | Proxima is approaching (about −22 km/s), so the trip time holds it still |
 
 Other drawing conventions, for the reviewer:
 - The light-day ring and the readout ring are drawn as great circles through Voyager (and Proxima) in the
-  plane nearest the screen: the sphere of that radius, seen.
+  plane nearest the screen: the sphere of that radius, seen. The light-day ring, the command's front and the
+  heliopause circle are scaled by the point's depth, so they pass through Voyager and the 2012 tick as seen.
 - At the solar scale "Earth" is labelled at the Sun (1 AU is under a pixel there).
 - Proxima is a red dwarf; the channel has no warm hues, so it is drawn pale lemon-white, like every star label.
 - The heliopause is drawn as one circle on the screen through the 2012 crossing (in ice: a boundary, not light);
@@ -120,6 +135,9 @@ Other drawing conventions, for the reviewer:
   set to 5.5 vmin in `scene.mjs`.
 - The end card's follow pill straddled the end ring; the footnote's margin (2.5 vmin) and the pill's (1.8 vmin) are
   set in `scene.mjs`, as in episodes 3–6.
-- The ice token's linear solve has a negative red channel, so a bloomed ice halo subtracted red (ultramarine);
-  `scene.mjs` clamps it at zero for Voyager's two beacons and the 2012 tick (as episode 4 does). The halo can still
-  lean blue: `set/beacon.js` has no separate halo colour (a shared change, not made here).
+- The ice and text tokens' linear solves have huge blue channels (and ice a negative red), so a beacon fed a token
+  haloed royal blue; `set/beacon.js` has no separate halo colour (a shared change, not made here), so `scene.mjs` gives
+  Voyager a pale ice light ([1.2, 1.65, 2.9]) and the Sun a white one ([2.3, 2.45, 3.0]), and clamps the teal glows'
+  negative red at zero.
+- `set/beacon.js` sizes a beacon in render pixels, so `scene.mjs` scales every beacon by the short side over 540
+  (as episode 5 does): the final keeps the reviewed draft's proportions.

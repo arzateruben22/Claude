@@ -42,10 +42,10 @@
   from about 40 coastal coordinates (21,700 km² against the true 21,550), arrives about 3,000 times enlarged and
   shrinks to a dot about 380 times enlarged, badged "map enlarged" throughout: a person checks that the outline reads
   as the Peloponnese. The 1,000× outline now leaves as the takeaway starts and the camera pushes in on the Sun, so the
-  readout's orbit (still drawn to the outline's scale) is about twice as wide. In the hook the twins drift a little closer
-  through "look the same size" (true sizes; their separation is the composition, still badged). The spine's
-  "farther 400×" now waits for the side view, and its why-beat label reads "his guess · bigger than". No number,
-  claim or word of the narration changed.
+  readout's orbit (still drawn to the outline's scale) is about 1.6 to 1.8 times as wide. In the hook the twins drift a
+  little closer through "look the same size" (true sizes; their separation is the composition, still badged). The
+  spine's "farther 400×" now waits for the side view, and its why-beat label reads "his guess · bigger than". No
+  number, claim or word of the narration changed.
 
 
 ## Every episode

@@ -137,6 +137,8 @@ for (const c of FILM.counters) {
   el.classList.add(c.read ? "lm-read" : "lm-clock");
   // the struck-out guesses: unlit and crossed through
   if (c.strike) Object.assign(el.querySelector(".v").style, { color: "var(--text-2)", textDecoration: "line-through", textDecorationThickness: ".08em" });
+  // "23 h, 225 d" at full size is 11 × 0.68 em = 748 px round x 540, past the safe box's right edge (900): a little smaller
+  if (c.text.length > 10 && !c.read) el.querySelector(".v").style.fontSize = "8.5vmin";
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];

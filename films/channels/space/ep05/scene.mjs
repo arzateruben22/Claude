@@ -161,7 +161,8 @@ const rig = createRig(FILM.cam);
 
 // one star among many: a field around the Sun in the jump's own units, so it streams in as everything shrinks. It stays
 // clear of the giants' outline (1,000 Sun radii = 100,000 units) from every view the camera takes after the jump, inside
-// the last frame's width, each star smaller and dimmer than the Sun's dot (badged: star spacing not to scale)
+// the frame's width until the push (which carries the outer ones out of it), each star smaller and dimmer than the
+// Sun's dot (badged: star spacing not to scale)
 const R5 = rng(31), D2R = Math.PI / 180, VIEWS = [], field = [];
 for (let tv = CUE.j0 + 2.0; tv <= FILM.endCard + 0.3; tv += 0.5) { const q = rig.pose("sun", tv), e = q.el * D2R, a = q.az * D2R; VIEWS.push([Math.cos(e) * Math.sin(a), Math.sin(e), Math.cos(e) * Math.cos(a)]); }
 const offAxis = (p, d) => { const s = p[0] * d[0] + p[1] * d[1] + p[2] * d[2]; return Math.hypot(p[0] - s * d[0], p[1] - s * d[1], p[2] - s * d[2]); };
