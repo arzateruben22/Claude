@@ -30,9 +30,9 @@ cell that leaves your blood. It squeezes through a wall.") and sets up episode 7
 - **Sizes, honestly:** the bible's 12–15 µm is a smear value (a cell flattened on glass). The voice
   uses the round cell in blood, about 8 µm (BioNumbers), badged "round, in blood", shown once, in the
   normal. No red-cell comparison: 8.3 against 7.5–8 µm is within scatter.
-- **Spine readout:** the meanwhile tally itself, from frame 0, with one label ("while you watched:
+- **Spine readout:** the meanwhile tally itself, counting from frame 0 (shown from the title's exit), with one label ("while you watched:
   new neutrophils"), badged "low estimate", counting at 173,611 a second. It sits dimmed to a third
-  in the empty upper third, clear of the cell and its path, through every beat; it lights for the
+  in the upper third, clear of the cell, through every beat but the engraving and the whoa (it steps away there); it lights for the
   meanwhile, drops onto the pulse line, and holds its last value under the end card. It always shows
   digits. Every other number is a note a tier below, never a second readout.
 - **Three judges (26 Oct) fixed:** the hook's second line no longer describes frame 0; "door" is
@@ -76,7 +76,7 @@ a sore fingertip, they pile up *outside* the wall. {c5}
 vo: Rudolf Virchow taught that pus grew from the inflamed *tissue*. {c6} In eighteen sixty-seven, his
 assistant Julius Cohnheim watched a living frog's vessels. {c7,c24,c8} White cells climbed *out*. {c9,c10}
 
-## why {shot: on a sound, back in the live venule, the hero in the same place on screen, slowed; on "sticky" fine threads light on the lining, snag it, and it tumbles (no note); on "stops" its grips light and the stream parts around it; it crawls across the lining to a seam between two wall cells, which glows; on the stakes line one faulty cell, its grips dark (badge "illustration: a rare inherited condition"), rolls along the lining and on past the seam without stopping, and nothing else comes in · picture-only 2 s, before the whoa: back on the hero at the seam, its lobed nucleus pressed to the join · energy: 0.55} (24.9–42.5 s)
+## why {shot: on a sound, back in the live venule, the hero in the same place on screen, slowed; on "sticky" fine threads light on the lining, snag it, and it tumbles (no note); on "stops" its grips light and the stream parts around it; it crawls across the lining to a seam between two wall cells, which glows; on the stakes line one faulty cell, its grips dark (badge "illustration: rare inherited condition"), rolls along the lining and on past the seam without stopping, and nothing else comes in · picture-only 2 s, before the whoa: back on the hero at the seam, its lobed nucleus pressed to the join · energy: 0.55} (24.9–42.5 s)
 vo: Where tissue is inflamed, the wall turns sticky, and the cell *rolls*. {c27,c11} Then its grips
 switch on, and it *stops*. {c12} It crawls to a *seam* between two wall cells. {c13,c14} In a rare
 inherited condition, those grips are faulty. {c15} Cells roll on *past*. {c25}

@@ -12,7 +12,8 @@ Places (scene.mjs), joined by the membrane iris on a section's sound:
   finger  a stylised fingertip with one sore spot (a swelling and a soft glow), its white cells ghosted beneath.
 The change is an engraving in the overlay (one 19th-century plate, badged "illustrated"); the tease is the body
 figure in the overlay, the heart's pacemaker patch flickering on each beat. The spine readout is the meanwhile's
-tally itself, from frame 0, dimmed until the meanwhile. At the end card the iris returns to frame 0 (a seamless
+tally itself, counting from frame 0 (shown from the title's exit), dimmed until the meanwhile and away during the
+engraving and the whoa. At the end card the iris returns to frame 0 (a seamless
 replay; the tally starts again from 0).
 """
 import json
@@ -55,7 +56,8 @@ HOOK = {"pass": [0.46, 0.54]}                                       # frame 0: h
 NORMAL = {"x": [-80.0, -18.0], "out": [A("vo02:outside", -0.2), B["normal"]["t1"]]}   # riding the stream; then down through the lining
 WHY = {
     "sticky": [A("vo04:sticky", -0.2), A("vo04:rolls", 0.3)],       # threads light on the lining; it snags and rolls
-    "roll": [A("vo04:sticky", 0.1), A("vo04:stops", 0.05)],          # rolling from x −62 to −24
+    "roll": [A("vo04:sticky", 0.1), A("vo04:stops", 0.05)],          # rolling from x −62 to −12
+    "grip": A("vo04:switch", -0.05),                                 # its grips light on "switch on"; it stops on "stops"
     "stop": A("vo04:stops"),                                         # its grips light; the stream parts around it
     "crawl": [A("vo04:crawls", -0.1), A("vo04:seam", 0.2)],         # it crawls to the seam (x = 0)
     "seam": [A("vo04:seam"), A("vo04:cells", 0.4)],                  # the seam glows
@@ -87,9 +89,10 @@ CAM = {
         {"t": CUT["why"], "pos": [16.0, -12.0, 50.0], "look": [16.0, -15.0, 0.0], "fov": 34, "ease": "sine"},
     ],
     "why": [
-        {"t": CUT["why"], "pos": [-46.0, 20.0, 50.0], "look": [-52.0, 2.0, 0.0], "fov": 34},
-        {"t": WHY["stop"], "pos": [-22.0, 16.0, 44.0], "look": [-26.0, 2.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": WHY["crawl"][1], "pos": [-2.0, 16.0, 44.0], "look": [-2.0, 1.5, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["why"], "pos": [7.0, 20.0, 58.0], "look": [0.0, -1.5, 0.0], "fov": 34, "rel": True},                    # riding with the hero
+        {"t": WHY["stop"], "pos": [5.0, 14.0, 50.0], "look": [0.0, -1.5, 0.0], "fov": 34, "ease": "sine", "rel": True},
+        {"t": WHY["crawl"][0], "pos": [5.0, 14.0, 50.0], "look": [0.0, -1.5, 0.0], "fov": 34, "ease": "sine", "rel": True},
+        {"t": WHY["crawl"][1], "pos": [-2.0, 12.6, 44.0], "look": [-2.0, -1.9, 0.0], "fov": 34, "ease": "sine", "rel": True},   # the old absolute view at the seam
         # the stakes: wider, so one faulty cell rolls on past the seam along the floor
         {"t": WHY["faulty"][0] + 0.3, "pos": [4.0, 26.0, 76.0], "look": [0.0, 1.0, -6.0], "fov": 34, "ease": "p2"},
         {"t": WHY["press"][0], "pos": [4.0, 24.0, 72.0], "look": [0.0, 1.0, -6.0], "fov": 34, "ease": "sine"},
@@ -102,13 +105,13 @@ CAM = {
         {"t": CUT["finger"], "pos": [1.0, -3.0, 44.0], "look": [0.0, -5.5, 0.0], "fov": 34, "ease": "sine"},
     ],
     "finger": [
-        {"t": CUT["finger"], "pos": [0.0, 7.5, 6.0], "look": [0.0, 4.6, 0.0], "fov": 34},                   # the sore spot, close (mm)
-        {"t": FINGER["pull"][1], "pos": [26.0, 30.0, 70.0], "look": [-6.0, 2.0, 0.0], "fov": 34, "ease": "p2"},   # the fingertip
-        {"t": CUT["tease"], "pos": [28.0, 32.0, 76.0], "look": [-6.0, 2.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["finger"], "pos": [4.2, 17.75, 24.4], "look": [4.2, 7.6, 3.4], "fov": 34},                # the swelling at the sore spot, whole
+        {"t": FINGER["pull"][1], "pos": [36.0, 31.0, 70.0], "look": [4.0, 3.0, 0.0], "fov": 34, "ease": "p2"},   # the fingertip, the spot near centre
+        {"t": CUT["tease"], "pos": [38.0, 33.0, 76.0], "look": [4.0, 3.0, 0.0], "fov": 34, "ease": "sine"},
     ],
     "tease": [
-        {"t": CUT["tease"], "pos": [28.0, 32.0, 76.0], "look": [-6.0, 2.0, 0.0], "fov": 34},
-        {"t": DUR, "pos": [30.0, 34.0, 82.0], "look": [-6.0, 2.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": CUT["tease"], "pos": [38.0, 33.0, 76.0], "look": [4.0, 3.0, 0.0], "fov": 34},
+        {"t": DUR, "pos": [40.0, 35.0, 82.0], "look": [4.0, 3.0, 0.0], "fov": 34, "ease": "sine"},
     ],
 }
 CAM["loop"] = [dict(CAM["hook"][0], t=CUT["loop"])]
@@ -126,17 +129,18 @@ FOC = {
 LABELS = [
     {"id": "neut", "text": "neutrophil", "color": "immune", "mark": "dot", "at": "hero", "t0": A("vo02:neutrophil", 0.0), "t1": A("vo02:about", -0.2), "shot": "normal", "side": 1},
     {"id": "piled", "text": "white cells, outside the wall", "color": "immune", "mark": "dot", "at": "piled", "t0": A("vo02:outside", 0.3), "t1": B["normal"]["t1"] - 0.3, "shot": "normal", "side": -1},
-    {"id": "grips", "text": "grips", "color": "signal", "mark": "dot", "at": "grips", "t0": A("vo04:grips"), "t1": A("vo04:It", -0.2), "shot": "why", "side": 1},
+    {"id": "grips", "text": "grips", "color": "signal", "mark": "dot", "at": "grips", "t0": A("vo04:grips"), "t1": A("vo04:It#2", -0.2), "shot": "why", "side": 1},
     {"id": "seam", "text": "a seam between two wall cells", "color": "lining", "mark": "dot", "at": "seam", "t0": A("vo04:seam"), "t1": A("vo04:In", -0.2), "shot": "why", "side": -1},
 ]
 SCALE = {"t0": A("vo02:eight", -0.1), "t1": A("vo02:Yet", -0.2), "text": "about 8 µm · round, in blood"}   # c3
-TALLY = {"t0": 0.0, "t1": B["tease"]["t0"] - 0.2, "lit": [B["meanwhile"]["t0"], B["tease"]["t0"] - 0.2], "rate": 1.5e10 / 86400.0,
+TALLY = {"t0": round(A("vo01:This", 0.3) + 0.45, 4),   # after the title has gone (the poster is the cell alone)
+          "t1": B["tease"]["t0"] - 0.2, "lit": [B["meanwhile"]["t0"], B["tease"]["t0"] - 0.2], "rate": 1.5e10 / 86400.0,
          "label": "while you watched: new neutrophils"}   # c23: 1.5 × 10¹⁰ a day ÷ 86,400 s (computed), a low estimate
 BADGES = [
     {"id": "slow0", "text": "slowed", "slot": "tl", "t0": 0.0, "t1": B["change"]["t0"] - 0.3},
     {"id": "ill-plate", "text": "illustrated", "t0": B["change"]["t0"] + 0.2, "t1": CUT["why"] - 0.3},
     {"id": "slow1", "text": "slowed", "slot": "tl", "t0": CUT["why"], "t1": CUT["whoa"] - 0.3},
-    {"id": "lad", "text": "illustration: a rare inherited condition", "t0": WHY["faulty"][0] - 0.2, "t1": WHY["faulty"][1] + 0.3},
+    {"id": "lad", "text": "illustration: rare inherited condition", "t0": WHY["faulty"][0] - 0.2, "t1": WHY["faulty"][1] + 0.3},
     {"id": "fast", "text": "sped up", "slot": "tl", "t0": CUT["whoa"], "t1": CUT["finger"] - 0.3},
     {"id": "ill-finger", "text": "illustration", "t0": CUT["finger"], "t1": DUR},
     {"id": "low", "text": "low estimate", "slot": "tl", "t0": B["meanwhile"]["t0"], "t1": B["tease"]["t0"] - 0.3},
