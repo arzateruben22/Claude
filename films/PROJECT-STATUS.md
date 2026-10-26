@@ -1,5 +1,10 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 19:30 UTC:** collected here (QA PASS): Rest Frame 001–006 + vol01 "Forces you can see" (lesson,
+> ready for review), Meanwhile, Inside 001–003, Light Minute 001. Rendering in the channel sessions: Light Minute
+> 002–006, Meanwhile, Inside 004–006. The 2-hourly check-in collects them as they land, builds the other two vol01s,
+> and refreshes the clickable preview.
+>
 > **26 Oct, 18:10 UTC:** Rest Frame 001 v3.1 delivered here (QA PASS; fact-audit fixes + label polish, independently
 > checked). At the new standard now: Rest Frame 001–006 (002–006 on claude/rest-frame-ep02-06, not yet merged here),
 > Meanwhile, Inside 001–003 (on its branch), Light Minute 001. Prism Studio complete except what needs the owner.
