@@ -338,6 +338,11 @@
    ]
   },
   {
+   "t": 64.3,
+   "kind": "badge",
+   "tag": "b-light"
+  },
+  {
    "t": 67.2,
    "kind": "section",
    "id": "tease",

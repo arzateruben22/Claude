@@ -832,6 +832,13 @@
    "slot": "tr"
   },
   {
+   "id": "b-light",
+   "text": "light sped up",
+   "t0": 64.3,
+   "t1": 66.5167,
+   "slot": "tr"
+  },
+  {
    "id": "b-anax",
    "text": "Anaxagoras\nAthens, 5th century BCE",
    "t0": 24.766666666666666,

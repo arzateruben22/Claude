@@ -154,7 +154,7 @@ LABELS = [
     {"id": "l-pelo", "text": "southern Greece", "kind": "body", "anchor": "pelo", "t0": t_pelo, "t1": A("vo04:thousand"), "side": 1, "shot": "sun"},
     {"id": "l-x7000", "text": "×7,000", "kind": "star", "anchor": "x7000", "t0": A("vo04:thousand"), "t1": round(t_melt0 - 0.45, 4), "side": 1, "shot": "sun"},
     {"id": "l-sun-d", "text": "the Sun", "kind": "star", "anchor": "sundot", "t0": A("vo05:giant"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
-    # inside the outline, below and left of its lower-right arc (the pill never lies across the line it names)
+    # anchored on the outline's lower-right arc, the pill to its left, inside the outline (never across the line it names)
     {"id": "l-giant", "text": "largest known stars", "kind": "star", "anchor": "giant", "t0": A("vo05:Some"), "t1": B["readout"]["t0"], "side": -1, "shot": "sun"},
     # the readout: Earth's orbit drawn to the same scale (1 AU = about 215 Sun radii), inside the giants' outline
     {"id": "l-orbit", "text": "Earth's orbit", "kind": "gravity", "anchor": "orbit", "t0": A("vo07:Sun#2"), "t1": round(t_end - 0.45, 4), "side": -1, "shot": "sun"},
@@ -170,6 +170,8 @@ BADGES = [
     {"id": "b-dot", "text": "dot enlarged", "t0": t_pelo, "t1": A("vo04:thousand"), "slot": "tr"},   # until the ring has grown from the dot
     {"id": "b-melt", "text": "1 dot = 200 Earths, by volume", "t0": t_melt0, "t1": round(t_j0 + 0.1, 4), "slot": "tr"},
     {"id": "b-illus", "text": "illustration · star spacing not to scale", "t0": A("vo05:giant"), "t1": round(t_end - 0.45, 4), "slot": "tr"},
+    # the readout's ring of light reaches Earth's orbit in 1.7 s, not 8 min 20 s; it leaves with the light, before the note above it
+    {"id": "b-light", "text": "light sped up", "t0": A("vo07:Sun#2"), "t1": round(t_end - 0.75, 4), "slot": "tr"},
     # the why beat's card (narrow, so it never meets the right-hand notes: no stacking, no hop)
     {"id": "b-anax", "text": "Anaxagoras\nAthens, 5th century BCE", "t0": A("vo04:Athens"), "t1": A("vo04:impiety"), "slot": "tl", "maxW": 0.6},
 ]

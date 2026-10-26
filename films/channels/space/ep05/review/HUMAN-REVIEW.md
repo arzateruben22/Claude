@@ -29,6 +29,13 @@
 - **After the 26 Oct script audit:** vo04 and vo05 were re-voiced ("Bigger, yes", "seven thousand", "it's no
   giant"); the counter reads "bigger, yes · wider by a factor of 7,000" and the ring's label "×7,000". The film was
   rendered again from scratch after these changes.
+- **After the draft review (26 Oct):** two new picture cheats, each badged while it shows: a "wide" shot on "wider"
+  moves the true-size Moon (about 1 px, ringed) beside the Sun ("true sizes, not distances"), and a star field around
+  the Sun after the jump is placed for the picture ("illustration · star spacing not to scale"). The readout now draws
+  light: a ring from the Sun to Earth's orbit in 1.7 s of film for the real 8 min 20 s ("light sped up"). The why beat
+  has a card, "Anaxagoras" / "Athens, 5th century BCE" (c4: mid-5th century BCE). The ×7,000 ring now starts on
+  "Bigger, yes" and grows out of the southern Greece dot (drawn larger, still badged "dot enlarged"). The spine's
+  "7,000" waits for "seven" and "109 Earths" for the count to finish being said. No number or claim changed.
 
 
 ## Every episode

@@ -5,7 +5,7 @@ import * as THREE from "three";
 // from Earth through a long lens: twins. Then "wide": beside the Sun, the Moon moved next to it at its true size (one
 // is 400 times wider), and "side": the line seen square-on (400 times farther). "sun": the Sun at true scale against
 // Earths (109 across its face), a big sunspot with an Earth in it, the Peloponnese as a dot, the Sun melted into beads
-// (1 dot = 200 Earths), and the one scale jump: everything shrinks ×3,400 until the Sun is a dot among stars, inside
+// (1 dot = 200 Earths), and the one scale jump: everything shrinks ×850 until the Sun is a dot among stars, inside
 // the outline of the largest known stars; the readout sends its light out to Earth's orbit. The end card cuts back to
 // the sky view, so a replay loops.
 // Set: ../set (sky, star, planet with earthSurface, moon.js, beacon, rig, look, motif). Kit: hud, front.
@@ -137,7 +137,7 @@ const rig = createRig(FILM.cam);
 // clear of the giants' outline (1,000 Sun radii = 100,000 units) from every view the camera takes after the jump, inside
 // the last frame's width, each star smaller and dimmer than the Sun's dot (badged: star spacing not to scale)
 const R5 = rng(31), D2R = Math.PI / 180, VIEWS = [], field = [];
-for (let tv = CUE.j0 + 2.0; tv <= FILM.endCard + 0.3; tv += 0.5) { const P = rig.pose("sun", tv), e = P.el * D2R, a = P.az * D2R; VIEWS.push([Math.cos(e) * Math.sin(a), Math.sin(e), Math.cos(e) * Math.cos(a)]); }
+for (let tv = CUE.j0 + 2.0; tv <= FILM.endCard + 0.3; tv += 0.5) { const q = rig.pose("sun", tv), e = q.el * D2R, a = q.az * D2R; VIEWS.push([Math.cos(e) * Math.sin(a), Math.sin(e), Math.cos(e) * Math.cos(a)]); }
 const offAxis = (p, d) => { const s = p[0] * d[0] + p[1] * d[1] + p[2] * d[2]; return Math.hypot(p[0] - s * d[0], p[1] - s * d[1], p[2] - s * d[2]); };
 while (field.length < 72) {
   const p = [(R5() * 2 - 1) * 150000, -200000 + 380000 * R5(), (R5() * 2 - 1) * 100000];
@@ -186,16 +186,21 @@ window.seek = function (t) {
   const st = stage(t), shot = st.name, tr = Math.round(t * FPS) / FPS;
   camera.near = shot === "sun" ? 2 : 0.01;                                 // depth precision for the spot close-up (the sky needs the near plane close)
   rig.place(camera, shot, t);
-  G.sky.visible = shot === "sky" || shot === "side"; G.sun.visible = shot === "sun";
+  G.sky.visible = shot === "sky" || shot === "wide" || shot === "side"; G.sun.visible = shot === "sun";
+  const cbx = cb();                                                          // the camera's right and up: rings and anchors face it
 
-  // sky: full Moon lit from behind the viewer; the depth shows as the camera swings out
-  skyMoon.set({ center: MOON_AT, sunDir: [0.05, 0.05, 1], sun: 1, spin: -Math.PI / 2 });   // the near side (longitude 0) toward Earth
+  // sky: full Moon lit from behind the viewer; "wide" moves it beside the Sun at its true size (about 1 px: ringed)
+  const wide = shot === "wide" ? 1 : 0;
+  skyMoon.set({ center: wide ? MOON_W : MOON_AT, sunDir: [0.05, 0.05, 1], sun: 1, spin: -Math.PI / 2 });   // the near side (longitude 0) toward Earth
   skySun.set({ tau: t * 600, on: true, camera, center: SUN_AT });
+  const mR = (18 * S1 * 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.distanceTo(new THREE.Vector3(...MOON_W))) / H;   // 18 px at the Moon
+  moonRing.arc({ center: MOON_W, r: mR, ...cbx }).set({ opacity: wide * fadeIn(t, CUE.wide + 0.15, 0.35) });
+  S.wmoon = MOON_W.map((v, j) => v + mR * (cbx.e1[j] * Math.cos(1.05) + cbx.e2[j] * Math.sin(1.05)));   // on the ring: the anchor dot never hides the Moon
   // side: Earth and the Moon one dot (2,560 km apart at this scale, 2 px), the sight lines drawn out to the Sun's limbs
   const side = shot === "side" ? 1 : 0, reach = E.inout2(seg(t, CUE.side + 0.3, CUE.side + 1.9));
   moonDot.set({ center: MOON_AT, camera, opacity: 0 }); earthDot.set({ center: [0, 0, 0], camera, opacity: side });
   sunMark.set({ center: SUN_AT, camera, opacity: side });
-  const rS = PH.r_sun_km * K, oc = side * (reach > 0.002 ? 1 : 0), far = (v) => v * reach;
+  const oc = side * (reach > 0.002 ? 1 : 0), far = (v) => v * reach;
   cone[0].seg([0, 0, 0], [SUN_AT[0], rS, SUN_AT[2]].map(far)).set({ opacity: oc }); cone[1].seg([0, 0, 0], [SUN_AT[0], -rS, SUN_AT[2]].map(far)).set({ opacity: oc });
   S.skysun = [SUN_AT[0], rS * 1.1, SUN_AT[2]]; S.skymoon = [MOON_AT[0], PH.r_moon_km * K * 1.1, MOON_AT[2]]; S.you = [0, 0, 0];
 
@@ -203,13 +208,16 @@ window.seek = function (t) {
   const k = PH.base * Math.exp(Math.log(PH.shrink) * E.inout3(seg(t, CUE.j0, CUE.j1)));
   world.scale.setScalar(k);
   const molten = fadeIn(t, CUE.melt0, 1.5);                                  // ≥ 1.5 s: no sudden large change in brightness
-  // the melt dims the Sun (it stays faintly there behind the dots); in the jump it comes back as the dots fade, so they
-  // never pile into one over-bright point
+  // the melt dims the Sun (all but dark behind the dots: its limb line keeps the edge); in the jump it comes back as the
+  // dots fade, so they never pile into one over-bright point
   const back = fadeIn(t, CUE.j0, 0.7);
-  const dim = 1 - 0.96 * molten * (1 - back);
-  sun.set({ tau: t * 300, on: true, camera, center: [0, 0, 0], intensity: SUN_I * dim });
-  sun.corona.material.uniforms.uI.value = CORONA_I * dim;
-  rim.set({ center: [0, 0, 0], r: 101, opacity: 0.9 * molten * (1 - back) });
+  const dim = 1 - 0.99 * molten * (1 - back);
+  // the face a little dimmer in the long-lens close-up (no near-white frame held for 5 s) and under the row (the
+  // silhouettes keep their edges against the bloom); the corona dims with the close-up only
+  const gClose = 1 - 0.35 * clamp01((8 - camera.fov) / 6), gRow = 1 - 0.25 * winOp(t, CUE.row0 - 0.6, B.why.t0 + 0.6, 0.6);
+  sun.set({ tau: t * 300, on: true, camera, center: [0, 0, 0], intensity: SUN_I * dim * Math.min(gClose, gRow) });
+  sun.corona.material.uniforms.uI.value = CORONA_I * dim * gClose;
+  limb.arc({ center: [0, 0, 0], r: 100.5 * k, ...cbx }).set({ opacity: 0.9 * fadeIn(t, CUE.melt0 + 1.0, 0.6) * (1 - back) });   // just outside the silhouette (the sphere would hide half the line)
   const nOn = Math.round(N * E.inout2(seg(t, CUE.row0, CUE.row1))), rowOp = 1 - fadeIn(t, B.why.t0 + 0.6, 0.6);
   for (let i = 0; i < N; i++) {
     const x = -100 + RE + 2 * RE * i, on = i < nOn && rowOp > 0.01 ? 1 : 0;
@@ -217,38 +225,49 @@ window.seek = function (t) {
   }
   row.instanceMatrix.needsUpdate = true;
   S.row = [40, 3, 0].map((v) => v * k);
-  const so = winOp(t, CUE.spot - 0.4, CUE.melt0 - 0.6, 0.5) * (1 - molten);
-  spotMat.opacity = so; penMat.opacity = so * 0.85; spot.visible = pen.visible = so > 0.01;
+  const so = winOp(t, CUE.spot - 0.4, CUE.pelo - 0.8, 0.5) * (1 - molten);   // gone under "true scale", before southern Greece is named
+  spotMat.uniforms.uOp.value = so; spot.visible = so > 0.01;
   spotEarth.set({ center: SE_AT, sunDir: SD, sun: 1, spin: t * 0.2 });
   spotEarth.group.visible = so > 0.01;
-  S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.25 * k, PH.spot_r * 0.55 * k, 0][i]);
-  S.spotearth = SE_AT.map((v) => v * k).map((v, i) => v + [RE * k, RE * k, 0][i]);
-  const po = winOp(t, CUE.pelo, CUE.melt0, 0.4);
+  // the anchors: inside the (foreshortened) penumbra, clear of the umbra; and on Earth's disc
+  S.spot = SD.map((v) => v * 100 * k).map((v, i) => v + [-PH.spot_r * 1.1 * k, PH.spot_r * 0.3 * k, 0][i]);
+  S.spotearth = SE_AT.map((v) => v * k).map((v, i) => v + [0.6 * RE * k, 0.6 * RE * k, 0][i]);
+  const po = winOp(t, CUE.pelo, CUE.x1, 0.4);                                // until the ring has grown from it
   peloMat.opacity = po; pelo.visible = po > 0.01;
-  peloRing.arc({ center: PD.map((v) => v * 100.6), r: 4.5, e1: [1, 0, 0], e2: [0, 1, 0] }).set({ opacity: po });
-  S.pelo = PD.map((v) => v * 100.4 * k);
-  // ×7,000: a ring from southern Greece's width (about 200 km) out to the Sun's limb, log-eased, between "By" and "thousand"
+  S.pelo = PD.map((v, j) => (v * 100.4 + cbx.e1[j] * 13) * k);               // beside the dot: the anchor dot never covers it
+  // ×7,000: a ring from southern Greece's width (about 200 km) out to the Sun's limb, log-eased, between "Bigger, yes"
+  // and "thousand"; it grows from the dot, then centres on the disc as it reaches the limb
   const r0x = PH.pelo_across / 2 / PH.u, ux = E.inout2(seg(t, CUE.x0, CUE.x1)), rx = Math.exp(Math.log(r0x) + (Math.log(100) - Math.log(r0x)) * ux);
-  const cx = PD.map((v) => v * 100.4 * (1 - ux));
+  const cx = PD.map((v) => v * 100.4 * (1 - E.inout2(seg(ux, 0.7, 1))));
   const xo = winOp(t, CUE.x0, CUE.melt0 - 0.4, 0.3);
   xMat.opacity = 0.9 * xo; xRing.visible = xo > 0.01;
   if (xRing.visible) {
     const pxw = (2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.length()) / H / k;   // world units per pixel at the Sun
-    xRing.geometry.dispose(); xRing.geometry = new THREE.RingGeometry(Math.max(0, rx - 4 * S1 * pxw), rx, 160);
+    xRing.geometry.dispose(); xRing.geometry = new THREE.RingGeometry(Math.max(0, rx - 7 * S1 * pxw), rx, 160);
     xRing.position.fromArray(cx); xRing.quaternion.copy(camera.quaternion);
   }
-  const cbx = cb();
-  S.x7000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.5) + cbx.e2[j] * Math.sin(0.5))) * k);
-  dotMat.uniforms.uLevel.value = -1.05 + 2.1 * E.inout2(seg(t, CUE.melt0 + 0.4, CUE.melt1));
+  S.x7000 = [0, 1, 2].map((j) => (cx[j] + rx * (cbx.e1[j] * Math.cos(0.9) + cbx.e2[j] * Math.sin(0.9))) * k);
+  // the melt: the dots fill from the bottom, the level set so the filled volume keeps pace with the counter
+  dotMat.uniforms.uLevel.value = 0.985 * levelFor(E.inout2(seg(t, CUE.melt0, CUE.melt1)));
   dotMat.uniforms.uOp.value = molten * (1 - back);
-  sunDot.set({ center: [0, 0, 0], camera, opacity: fadeIn(t, CUE.j0 + 1.6, 0.8) });
+  sunDot.set({ center: [0, 0, 0], camera, opacity: fadeIn(t, CUE.j0 + 1.1, 0.4) });   // takes over as the disc shrinks under its size
   S.sundot = [0, 0, 0];
-  const gr = PH.giant * 100 * k;
-  giant.arc({ center: [0, 0, 0], r: gr, ...cb() }).set({ opacity: shot === "sun" ? fadeIn(t, CUE.j0 + 0.9, 0.6) : 0 });   // in with the zoom-out, not after it
-  S.giant = [gr * Math.cos(2.5), gr * Math.sin(2.5), 0];
-  const orr = PH.au_r * 100 * k, oo = shot === "sun" ? fadeIn(t, CUE.orbit, 0.8) : 0;
-  orbitE.arc({ center: [0, 0, 0], r: orr, ...cb() }).set({ opacity: oo });
-  S.orbit = [orr * Math.cos(-2.4), orr * Math.sin(-2.4), 0];
+  const fs = fadeIn(t, CUE.j0 + 1.4, 0.6);                                  // the stars: off (and unprobed) until the jump nears them
+  for (const f of field) f.b.set(fs > 0 ? { center: f.p, camera, opacity: fs } : { opacity: 0 });
+  const gr = PH.giant * 100 * k, onSun = shot === "sun" ? 1 : 0;
+  // in once it is inside the frame (it never sweeps through the spine or the caption); quieter under the readout
+  giant.arc({ center: [0, 0, 0], r: gr, ...cbx }).set({ opacity: onSun * fadeIn(t, CUE.j0 + 2.45, 0.5) * (1 - 0.65 * fadeIn(t, B.readout.t0, 0.8)) });
+  S.giant = [0, 1, 2].map((j) => gr * (cbx.e1[j] * Math.cos(-0.45) + cbx.e2[j] * Math.sin(-0.45)));
+  // the readout: a teal ping on the Sun on "Light", then the light's ring out to Earth's orbit by "twenty" (Earth
+  // brightens as it arrives); the light is gone before the end card, the orbit leaves with its label
+  const orr = PH.au_r * 100 * k, onOrbit = (a) => [0, 1, 2].map((j) => orr * (cbx.e1[j] * Math.cos(a) + cbx.e2[j] * Math.sin(a)));
+  const goneL = 1 - E.in3(seg(t, FILM.endCard - 0.75, FILM.endCard - 0.45)), oo = onSun * fadeIn(t, CUE.orbit, 0.8) * (1 - E.in3(seg(t, FILM.endCard - 0.45, FILM.endCard)));
+  orbitE.arc({ center: [0, 0, 0], r: orr, ...cbx }).set({ opacity: oo });
+  S.orbit = onOrbit(-2.4);
+  const up = seg(t, CUE.light, CUE.light + 1.2);
+  ping.set({ center: [0, 0, 0], camera, px: 14 + 30 * E.out3(up), opacity: onSun * (up > 0 && up < 1 ? Math.min(1, up / 0.08) * (1 - E.in2(up)) : 0) });
+  lightRing.arc({ center: [0, 0, 0], r: orr * E.out3(seg(t, CUE.orbit, CUE.twenty)), ...cbx }).set({ opacity: onSun * (t >= CUE.orbit ? 1 : 0) * goneL });
+  earthO.set({ center: onOrbit(0.75), camera, px: 12 + 8 * Math.exp(-(((t - CUE.twenty) / 0.25) ** 2)), opacity: onSun * fadeIn(t, CUE.orbit, 0.8) * goneL });
   sunProbe(shot === "sun" && t > CUE.j0 && t < CUE.j1 + 0.2 ? [[60 * k, 0, 0], [0, 60 * k, 0]] : [null, null]);
 
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1, bandGain: 1 });
