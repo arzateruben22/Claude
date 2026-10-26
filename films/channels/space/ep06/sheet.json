@@ -78,12 +78,20 @@
   {
    "t": 7.433333333333334,
    "kind": "counter.show",
-   "tag": "c-eq"
+   "tag": "c-eq",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 10.433333333333334,
    "kind": "counter.show",
-   "tag": "c-sound"
+   "tag": "c-sound",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 12.8,
@@ -100,12 +108,20 @@
   {
    "t": 14.6,
    "kind": "label",
-   "tag": "l-earth"
+   "tag": "l-earth",
+   "pos": [
+    0.734,
+    0.373
+   ]
   },
   {
    "t": 14.9,
    "kind": "label",
-   "tag": "l-sun"
+   "tag": "l-sun",
+   "pos": [
+    0.403,
+    0.307
+   ]
   },
   {
    "t": 14.9,
@@ -120,12 +136,20 @@
   {
    "t": 14.966666666666667,
    "kind": "counter.show",
-   "tag": "c-orb"
+   "tag": "c-orb",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 17.366666666666667,
    "kind": "counter.show",
-   "tag": "c-since"
+   "tag": "c-since",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 21.3333,
@@ -141,7 +165,11 @@
   {
    "t": 23.6667,
    "kind": "label",
-   "tag": "l-you-w"
+   "tag": "l-you-w",
+   "pos": [
+    0.514,
+    0.421
+   ]
   },
   {
    "t": 38.9333,
@@ -158,12 +186,20 @@
   {
    "t": 40.733333333333334,
    "kind": "label",
-   "tag": "l-here"
+   "tag": "l-here",
+   "pos": [
+    0.504,
+    0.367
+   ]
   },
   {
    "t": 41.63333333333333,
    "kind": "label",
-   "tag": "l-gc"
+   "tag": "l-gc",
+   "pos": [
+    0.5,
+    0.261
+   ]
   },
   {
    "t": 42.03333333333333,
@@ -178,22 +214,38 @@
   {
    "t": 42.63333333333333,
    "kind": "counter.show",
-   "tag": "c-gal"
+   "tag": "c-gal",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 45.0,
    "kind": "label",
-   "tag": "l-lap"
+   "tag": "l-lap",
+   "pos": [
+    0.673,
+    0.263
+   ]
   },
   {
    "t": 45.0,
    "kind": "counter.show",
-   "tag": "c-lap"
+   "tag": "c-lap",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 48.5,
    "kind": "counter.show",
-   "tag": "c-dino"
+   "tag": "c-dino",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 54.9333,
@@ -204,7 +256,11 @@
   {
    "t": 55.266666666666666,
    "kind": "counter.show",
-   "tag": "c-what"
+   "tag": "c-what",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 59.7333,
@@ -215,12 +271,20 @@
   {
    "t": 60.06666666666667,
    "kind": "counter.show",
-   "tag": "c-read-trip"
+   "tag": "c-read-trip",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 64.8,
    "kind": "counter.show",
-   "tag": "c-read-gc"
+   "tag": "c-read-gc",
+   "pos": [
+    0.5,
+    0.555
+   ]
   },
   {
    "t": 68.8,
@@ -275,5 +339,13 @@
    "t": 69.1,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "l-earth": 14.6333,
+  "l-sun": 14.9333,
+  "l-you-w": 23.7,
+  "l-here": 40.7667,
+  "l-gc": 41.6667,
+  "l-lap": 45.0333
+ }
 }
