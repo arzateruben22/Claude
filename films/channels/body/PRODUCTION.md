@@ -6,8 +6,9 @@ These five feed the first long-form compilation (with episode 1).
 
 | # | Title | State |
 |---|---|---|
-| 02 | A billion passengers | reviewed · voiced (72.8 s, lint 0/0) · visual review fixes applied · the 26 Oct fact-check audit applied (vo04 re-voiced: "Veins often look blue") · balanced captions · soundtrack −14.05 LUFS / −2.0 dBTP, sync PASS, voice 15.8 LU over music · **rendering** final (started 26 Oct 08:19 UTC, ≈3 h) |
-| 03 | The jump | reviewed · voiced (74.8 s, lint 0/0) · visual review fixes applied in code · the 26 Oct audit applied (vo02, vo04, vo05, vo06 re-voiced; the race's wrapped fibre drawn thicker) · first looks, cues, soundtrack, stills next (after ep02's final frees Chromium) |
+| 01 | Single file | v3 for the owner's review: the 26 Oct audit's five fixes (re-voiced), a stylised sickle cell lodged on screen, balanced captions · first looks done · soundtrack −14.1 LUFS, sync PASS · **first full-resolution final next** (it only had a draft preview) |
+| 02 | A billion passengers | **final rendered** (72.8 s, 2,184 frames, 2.5 h) · QA PASS (−14.1 LUFS, −1.8 dBTP, 0 text warnings) · one fix after the stills (the air-sac label under the badge at 43.6–44.9 s): its 40–50 s chunk re-rendered, then re-assembled |
+| 03 | The jump | reviewed · voiced (74.8 s, lint 0/0) · the 26 Oct audit applied · first looks done (36 frames): the title's pulse line fixed (it was scaled into a thick bar behind the hook's readout; ep04–06 had the same bug) · cues, soundtrack, final next |
 | 04 | The gap | reviewed · voiced (lint 0/0) · visual review fixes applied in code · the 26 Oct audit applied (vo02, vo03 re-voiced; the electron-microscope-style view badged "illustration · not to scale" through its replay; c17 added) · first looks next |
 | 05 | Where breath goes | reviewed · voiced (lint 0 errors) · visual review fixes applied in code · the 26 Oct audit applied (four lines re-voiced; the court redrawn as a full doubles court; "about seventy", "about a quarter", "under half a micrometre", "clotted blood") · first looks next |
 | 06 | The exit | scripted · independently reviewed · the 26 Oct audit applied (the tease says "nearly every heartbeat"; "past" pinned in pron.json, re-voiced) · direction + scene written with a new set block (`set/wanderer.js`) · first looks next |

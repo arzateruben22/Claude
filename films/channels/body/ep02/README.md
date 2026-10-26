@@ -8,6 +8,7 @@ script and the pictures before it posts.
 | | |
 |---|---|
 | Delivery | `out/meanwhile-inside-002-9x16.mp4`, poster `out/meanwhile-inside-002-9x16.jpg`, contact sheet `out/meanwhile-inside-002-9x16-contact.jpg` |
+| Ten final-tier stills | `review/stills-ep02.jpg` (taken from the delivered file at 0, 3.5, 12.5, 20.4, 27, 36.5, 44, 58.5, 62 and 71.3 s) |
 | Measured gates | `review/scorecard.md` (from `kits/cinema/film/qa.py` and `scorecard.py`) |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (19 claims), `review/HUMAN-REVIEW.md` |
 
