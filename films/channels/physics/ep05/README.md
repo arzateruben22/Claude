@@ -7,9 +7,9 @@ script before it posts.
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish; not rendered yet: it renders on the current direction) | `out/rest-frame-005-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
+| **Final** (26 Oct 15:12: 1080×1920, 30 fps, full finish, −14.1 LUFS / −2.0 dBTP; `qa.py` PASS) | `out/rest-frame-005-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
-| Ten final-tier stills | `review/stills-ep05.jpg` (made from the final) |
+| Sixteen final-tier stills | `review/stills-ep05.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
 
 ## The story
 
