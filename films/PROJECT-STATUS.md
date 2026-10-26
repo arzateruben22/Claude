@@ -1,5 +1,9 @@
 # Project status: four science-video formulas to 100%
 
+> **26 Oct, 18:10 UTC:** Rest Frame 001 v3.1 delivered here (QA PASS; fact-audit fixes + label polish, independently
+> checked). At the new standard now: Rest Frame 001–006 (002–006 on claude/rest-frame-ep02-06, not yet merged here),
+> Meanwhile, Inside 001–003 (on its branch), Light Minute 001. Prism Studio complete except what needs the owner.
+>
 > **26 Oct, 09:50 UTC: PAUSED by the owner.** Final at the new standard (readability kit + 26 Oct fact audit): Light
 > Minute 001 and Rest Frame 003 (2 of 18 shorts; 0 of 3 compilations). Light Minute 004's 08:54 render predates a
 > caption-timing fix and 38 review fixes, so it is not final. All 18 scripts are written, audited and fixed. The

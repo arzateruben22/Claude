@@ -36,7 +36,8 @@ Rest Frame: Everyday things, slowed down until the physics shows.
 **Tags**: Rest Frame, physics, science, thrown, dropped, explainer, education
 
 **Captions**: upload the .srt (English).
-**Pinned comment**
+
+**Pinned comment** (10,000-character limit)
 
 ```
 Sources
@@ -78,7 +79,7 @@ Sources in the first comment. Synthetic (AI) narration; code-rendered animation.
 #physics #science #stem #sciencefacts #learnsomethingnew #slowmotion #education #physicsfun
 ```
 
-**First comment**
+**First comment** (2,200-character limit)
 
 ```
 Sources
