@@ -18,6 +18,10 @@ Start with the strength I give you, usually the lowest, a few nights a week, and
 
 _(How to read this: her answers differ on when the mandelic serums go on. Her routines by skin type and "What not to mix" put them in the morning; "Starting the mandelic serums" says nights. Until she settles it, tell a client to use theirs when Evelyn told them to, and hand a morning-or-night question about it to her.)_
 
+## The mandelic serums: morning or night?
+
+_(not answered yet)_
+
 ## Starting the Advanced Acne Med
 
 _(not answered yet)_

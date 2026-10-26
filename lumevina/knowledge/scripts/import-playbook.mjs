@@ -82,14 +82,14 @@ const render = (f, v, extra) => {
 // another question (her routines "for morning" typed in the Night box), a
 // note under it tells the assistant how to read it, and that the other
 // question is still open.
-const noteFor = (f, v, extra) => {
+const noteFor = (f, v, extra, settled = false) => {
   const t = [v, extra].filter(has).map((x) => Array.isArray(x) ? x.join(" ") : String(x)).join(" ");
   if (f.key === "night" && /\bmorning\b/i.test(t) && !/\b(night|evening|pm|bed(time)?)\b/i.test(t))
     return "\n\n_(How to read this: she wrote her morning routines by skin type in this box. Her night routine isn't answered yet: hand night-routine questions to her.)_";
   if (f.key === "mistakes" && /\bnight routines?\b/i.test(t))
     return "\n\n_(How to read this: she wrote her night routines by skin type in this box, so it answers \"what's your night routine\" for this concern. The common mistakes question isn't answered yet: hand that one to her.)_";
   // her routines put the mandelic serums in the morning; the drafted "starting" answer she confirmed says nights
-  if ((f.key === "dont_mix" && /mandelic[^.]*\bmorning\b/i.test(t)) || (f.key === "mandelic" && /\bnights?\b/i.test(t)))
+  if (!settled && ((f.key === "dont_mix" && /mandelic[^.]*\bmorning\b/i.test(t)) || (f.key === "mandelic" && /\bnights?\b/i.test(t))))
     return "\n\n_(How to read this: her answers differ on when the mandelic serums go on. Her routines by skin type and \"What not to mix\" put them in the morning; \"Starting the mandelic serums\" says nights. Until she settles it, tell a client to use theirs when Evelyn told them to, and hand a morning-or-night question about it to her.)_";
   return "";
 };
@@ -97,7 +97,7 @@ let unread = 0;
 const file = (rel, front, title, lead, fields, answers, itemId) => {
   let body = fields.map((f) => {
     const v = answers[itemId + "." + f.key], extra = answers[itemId + "." + f.key + ".text"];
-    return `## ${f.q}\n\n${render(f, v, extra)}${noteFor(f, v, extra)}\n`;
+    return `## ${f.q}\n\n${render(f, v, extra)}${noteFor(f, v, extra, has(answers[itemId + ".mandelic_when"]))}\n`;
   }).join("\n");
   // her screenshots, as read by read-screenshots.mjs (the files stay in the questionnaire's asset store)
   const shots = Array.isArray(answers[itemId + ".shots"]) ? answers[itemId + ".shots"] : [];

@@ -166,6 +166,8 @@ export const MATERIALS_FIELDS = [
 export const ROUTINE_FIELDS = [
   { key: "order", kind: "text", q: "The order of steps, morning and night", hint: "Cleanser, toner, serum, treatment, moisturizer, SPF: in your words, with anything that changes it." },
   { key: "mandelic", kind: "text", q: "Starting the mandelic serums", hint: "Which strength first (5%, 8%, 11%, 15%), how often, and when to move up." },
+  { key: "mandelic_when", kind: "one", q: "The mandelic serums: morning or night?", options: ["Morning", "Night", "Either: it depends on the client"], text: "Anything to add?",
+    hint: "Your routines and \"what not to mix\" put them in the morning; \"Starting the mandelic serums\" says a few nights a week. Your answer settles it for the chat, the course and the product guide." },
   { key: "acne_med", kind: "text", q: "Starting the Advanced Acne Med", hint: "2.5% vs. 5%, how much, how often, and how to build up." },
   { key: "retinal_vs_retinol", kind: "text", q: "Retinal B3 Serum vs. Retinol Peptide Serum", hint: "Who gets which, and how to start." },
   { key: "dont_mix", kind: "text", q: "What not to mix, or not on the same night" },

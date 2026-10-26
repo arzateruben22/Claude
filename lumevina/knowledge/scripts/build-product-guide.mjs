@@ -86,7 +86,7 @@ const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 const isActive = (p) => /retin|glycolic|lactic|salicylic|mandelic/i.test(p.name + " " + (p.about || ""));
 const isAcneMed = (p) => /advanced acne med/i.test(p.name);
 // the mandelic serums: her routines and "what not to mix" put them in the morning, her "starting" answer says nights
-const mandelicClash = /mandelic[^.]*\bmorning\b/i.test(routine.dont_mix || "") && /\bnights?\b/i.test(routine.mandelic || "");
+const mandelicClash = !routine.mandelic_when && /mandelic[^.]*\bmorning\b/i.test(routine.dont_mix || "") && /\bnights?\b/i.test(routine.mandelic || "");
 const CLASH = "Morning or night? Your routines and \"what not to mix\" put the mandelic serums in the morning; your answer on starting them says a few nights a week.";
 
 // her routines by skin type, written as sentences in her breakouts answers: each step matched to the products on her shelf
@@ -157,6 +157,7 @@ const derive = (p) => {
     if (routine.stop_signs) d.stop = routine.stop_signs;
   }
   if (/mandelic serum/i.test(p.name)) {
+    if (routine.mandelic_when) d.when = routine.mandelic_when;
     if (routine.mandelic && !(mandelicClash && final)) d.how = routine.mandelic;
     if (mandelicClash && !final) d.confirm = CLASH;
     if (tolerance && where.length) d.who = "Which strength depends on your tolerance: start with the one Evelyn gives you.";

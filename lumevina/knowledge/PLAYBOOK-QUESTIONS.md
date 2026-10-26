@@ -123,6 +123,7 @@ How a routine fits together, and how clients start the stronger products.
 
 - **The order of steps, morning and night** Cleanser, toner, serum, treatment, moisturizer, SPF: in your words, with anything that changes it.
 - **Starting the mandelic serums** Which strength first (5%, 8%, 11%, 15%), how often, and when to move up.
+- **The mandelic serums: morning or night?** Your routines and "what not to mix" put them in the morning; "Starting the mandelic serums" says a few nights a week. Your answer settles it for the chat, the course and the product guide. Pick one: Morning · Night · Either: it depends on the client. Plus a box: "Anything to add?".
 - **Starting the Advanced Acne Med** 2.5% vs. 5%, how much, how often, and how to build up.
 - **Retinal B3 Serum vs. Retinol Peptide Serum** Who gets which, and how to start.
 - **What not to mix, or not on the same night**
