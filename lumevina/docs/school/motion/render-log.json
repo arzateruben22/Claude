@@ -1990,8 +1990,8 @@
    "dur": 24,
    "w": 1280,
    "h": 720,
-   "bytes": 1272913,
-   "hash": "5cdd5105df57766defe09189d9d7e340a10ff305",
+   "bytes": 1274438,
+   "hash": "aa2b99a2bd752f79afdc396c5b875025b382b637",
    "samples": [
     [
      0,
@@ -2063,31 +2063,31 @@
     ],
     [
      255,
-     "9eb94fd62bbe679162696e61459a7617f007c535"
+     "8e58d8171b37bfe967f23995af5c940dda6ae71c"
     ],
     [
      270,
-     "dc42db3701a53497bbeb7ee61de6d987cb627045"
+     "33d31143ccf7c15102c7420ae7c0bd28439687ab"
     ],
     [
      285,
-     "6c976e8e159882b7eedce2d76d4618e5bab9c9cc"
+     "4ba83a7ba155960c2cadfaf3fd5bff81ce6fb7a2"
     ],
     [
      300,
-     "314d8d821d9d4d067edd2969bde64985686e2e20"
+     "16ac0c8820aa1f9921ba505435f81403450769a5"
     ],
     [
      315,
-     "ddf0daf6cf3f9dd7479890118513bfd50b11f95e"
+     "1195023d971caa19d692341d99ca069908ae13f3"
     ],
     [
      330,
-     "4999b1543ba77a876b26000047a5ea38214adb36"
+     "15fdc601c7c100a5896454e147c3ea4e6c4835c5"
     ],
     [
      345,
-     "0387369da64f086e9cdc72af610a2f228f53bd9c"
+     "221d3c72551dca087adc08f9bb155698c7f90196"
     ],
     [
      360,
@@ -2187,8 +2187,8 @@
     ]
    ],
    "warnings": [],
-   "renderSec": 147.2,
-   "renderedAt": "2026-10-22",
+   "renderSec": 159.3,
+   "renderedAt": "2026-10-26",
    "quick": false
   },
   "9x16": {
@@ -2197,8 +2197,8 @@
    "dur": 24,
    "w": 720,
    "h": 1280,
-   "bytes": 1194118,
-   "hash": "266a042b1e62d5db72f803622aa51cd98c6277d3",
+   "bytes": 1196398,
+   "hash": "6061666aac5c3da113cfe53fc6fc34e99f3d1104",
    "samples": [
     [
      0,
@@ -2270,31 +2270,31 @@
     ],
     [
      255,
-     "e1cee99f510e0ad50f64535ea89d4adcc0f94e73"
+     "e97cb63d831b60d9aabcc6158ebae2a585f69354"
     ],
     [
      270,
-     "93843abacbc262db32efc13560ad4df1388878b2"
+     "452432ac33dfca5f2714518d66d2ab41bfe02c73"
     ],
     [
      285,
-     "b93641bcf9dceae6a72f7350f8bfafbf08565a7c"
+     "8806527961e9ff914c576e8a08b7ce264aa43ad3"
     ],
     [
      300,
-     "b84893c488de71c6de61993c66eccb69cc2c53ae"
+     "130e79ab9654b89858321edbab3f007f86e1bc65"
     ],
     [
      315,
-     "e240e1b55e00a3145f9944f147d63a93cea275b1"
+     "d2eec7d71c4b24865fbc27a0b439a34aa31b69b2"
     ],
     [
      330,
-     "4f22c84db4a1e6b04d3b1085e7a505f6e05806d0"
+     "517d2daf8fe47fd6568e00eb117970d4307ddd59"
     ],
     [
      345,
-     "2c4bcd6366284c89fd476ddf646986db36c981a2"
+     "8c264350902bf23be63090bff00bcbc2e6a79706"
     ],
     [
      360,
@@ -2394,8 +2394,8 @@
     ]
    ],
    "warnings": [],
-   "renderSec": 122.1,
-   "renderedAt": "2026-10-22",
+   "renderSec": 130.6,
+   "renderedAt": "2026-10-26",
    "quick": false
   }
  },
