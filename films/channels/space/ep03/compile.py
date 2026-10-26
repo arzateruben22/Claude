@@ -136,7 +136,7 @@ AZ3 = AZ2 + 10.0                           # the change beat's slow orbit (0.7°
 DIAG = {"target": [0, 0, 0], "dist": 225.0, "el": 70.0, "az": AZ, "fov": 24, "fx": 0.5, "fy": 0.34}
 # the readout's push: onto Venus and Earth, lined up at the conjunction, so the round trip between them can be seen
 r_mid = (R_V + R_E) / 2
-PAIR = dict(DIAG, target=[round(r_mid * math.cos(TH_C), 4), 0.0, round(-r_mid * math.sin(TH_C), 4)], dist=45.0, el=66.0, az=AZ + 3.0, fx=0.55, fy=0.35)
+PAIR = dict(DIAG, target=[round(r_mid * math.cos(TH_C), 4), 0.0, round(-r_mid * math.sin(TH_C), 4)], dist=45.0, el=66.0, az=AZ + 3.0, fx=0.57, fy=0.35)
 key = lambda t, P, **k: {"t": round(t, 4), **P, **k}
 t_pull = A("vo02:On", 0.0)
 t_push2, t_back, t_end = A("vo02:hides"), B["whoa"]["t0"], A("vo08:Next", -0.25)   # the push lands on the clouds on "lid of cloud"
@@ -170,29 +170,34 @@ for shot, keys in CAM.items():                    # the bible's arc limit: ≤ 1
 # ── the overlay ─────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": A("vo02:Earth"), "t1": t_push2, "side": 1},
-    {"id": "l-venus", "text": "Venus", "kind": "body", "anchor": "venus", "t0": A("vo02:Venus"), "t1": t_push2, "side": -1},
+    {"id": "l-earth", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_pull + 2.0, 4), "t1": t_push2, "side": 1},   # once Earth has settled in frame
+    {"id": "l-venus", "text": "Venus", "kind": "body", "anchor": "venus", "t0": A("vo02:Next"), "t1": round(t_push2 + 0.3, 4), "side": -1},   # takes over from the Sun's
     {"id": "l-sun", "text": "Sun", "kind": "star", "anchor": "sun", "t0": A("vo02:Sun"), "t1": A("vo02:Next"), "side": 1},
-    # (the guesses are the spine's to say: "guess · one turn"; a label on Venus would cover the turning meridian)
-    {"id": "l-radar", "text": "radar", "kind": "light", "anchor": "beam", "t0": A("vo04:radar"), "t1": A("vo04:Venus"), "side": 1, "v": "middle"},
-    {"id": "l-back", "text": "turns backwards", "kind": "body", "anchor": "arrow", "t0": A("vo04:backwards"), "t1": t_w, "side": -1, "fixed": True},
-    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": A("vo05:Stand"), "t1": A("vo05:hundred"), "side": 1},
-    {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": SUNRISES[0]["t"], "t1": round(SUNRISES[0]["t"] + 3.5, 4), "side": 1},
-    {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": round(A("vo07:round") - 0.3, 4), "side": -1},
-    {"id": "l-echo", "text": "4 min round trip", "kind": "light", "anchor": "echo", "t0": A("vo07:round"), "t1": round(t_end - 0.3, 4), "side": -1, "fixed": True},
+    # (the guesses, the radar and "backwards" are the spine's and the caption's to say: a label on Venus would cover the
+    # turning meridian, the beam or the arrow)
+    # on the diagram, from just above Venus's disc (fixed: Venus laps every 4.9 s, so the pill rides above it, never jumps onto it)
+    {"id": "l-you", "text": "you", "kind": "light", "anchor": "pin", "t0": round(t_w + 2.2, 4), "t1": A("vo05:hundred"), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-rise", "text": "a sunrise", "kind": "light", "anchor": "rise", "t0": SUNRISES[RISE_I]["t"], "t1": round(SUNRISES[RISE_I]["t"] + 3.5, 4), "side": 1},
+    # from the ring's foot, under it (outside the ring); it leaves with the spine's 6 min
+    {"id": "l-ring", "text": "6 min", "kind": "light", "anchor": "ring", "t0": A("vo07:six"), "t1": round(t_echo - 0.4, 4), "side": 1, "v": "below"},
+    {"id": "l-echo", "text": "4 min round trip", "kind": "light", "anchor": "echo", "t0": t_echo, "t1": round(t_end - 0.6, 4), "side": -1, "v": "below", "fixed": True},
 ]
-BADGES = [
+BADGES = [   # a slot stacks in this order: a note arrives under the ones already up, never on top of them
     {"id": "b-nts", "text": "not to scale", "t0": t_cut, "t1": t_end, "slot": "tr"},
-    {"id": "b-illus-h", "text": "clouds: illustration", "t0": 0.0, "t1": t_cut, "slot": "bl"},
-    {"id": "b-illus", "text": "clouds: illustration", "t0": t_push2, "t1": round(t_w + 1.4, 4), "slot": "tr"},
-    {"id": "b-orbit", "clock": "orbit", "t0": t_cut, "t1": t_rd, "slot": "tl"},
-    {"id": "b-spin", "clock": "spin", "t0": t_true, "t1": t_w, "slot": "tl"},
+    # the hook's note stays bottom left (top right it would run into the title's series line) until the pull has taken
+    # the cloud deck out of frame
+    {"id": "b-illus-h", "text": "clouds: drawn", "t0": 0.0, "t1": round(t_pull + 1.4, 4), "slot": "bl"},
+    {"id": "b-illus", "text": "clouds: drawn", "t0": t_push2, "t1": round(t_w + 1.4, 4), "slot": "tr"},   # narrow: the speed note keeps row 1 beside it
+    {"id": "b-orbit", "clock": "orbit", "t0": t_cut, "t1": t_true, "slot": "tl"},
+    {"id": "b-spin", "clock": "spin", "t0": t_true, "t1": t_rd, "slot": "tl"},   # rolls 1,000,000× → 4,000,000× in place (both clocks run at R4 in the whoa)
     {"id": "b-guess", "clock": "guess", "t0": t_g1, "t1": t_g2, "slot": "tl"},
-    {"id": "b-paused", "text": "orbit paused", "t0": t_true, "t1": t_w, "slot": "tl"},
+    {"id": "b-paused", "text": "orbit paused", "t0": round(t_true + 0.4, 4), "t1": t_w, "slot": "tl"},   # under the spin's note, once it is in
+    {"id": "b-light", "text": "light sped up", "t0": A("vo07:Light"), "t1": round(t_end - 0.5, 4), "slot": "tr"},   # the ring and the ping run far faster than light
 ]
 COUNTERS = [
     {"id": "c-turn-h", "label": "one turn on Venus · days", "text": "?", "t0": 0.0, "t1": t_cut},
-    {"id": "c-earth", "label": "sunrises a year · Earth", "text": "365", "t0": A("vo02:Sun"), "t1": A("vo02:Next", -0.2)},
+    {"id": "c-earth", "label": "sunrises a year · Earth", "text": "365", "t0": A("vo02:three"), "t1": A("vo02:Next", -0.2)},   # with the number, once the camera has landed
+    {"id": "c-300", "label": "years of guessing", "text": "300", "t0": A("vo03:three"), "t1": A("vo03:clocked")},
     {"id": "c-g1", "label": "guess · one turn", "text": "23 hours", "t0": A("vo03:clocked"), "t1": t_g2},
     {"id": "c-g2", "label": "guess · one turn = one year", "text": "225 days", "t0": t_g2, "t1": A("vo04:nineteen")},
     {"id": "c-1962", "label": "radar sees through the clouds", "text": "1962", "t0": A("vo04:nineteen"), "t1": A("vo04:two")},
@@ -202,8 +207,9 @@ COUNTERS = [
     {"id": "c-west", "label": "where the Sun rises on Venus", "text": "west", "t0": A("vo05:rising"), "t1": t_tk},
     {"id": "c-vs2", "label": "one turn · one year (days)", "text": "243 > 225", "t0": t_tk, "t1": A("vo06:But")},   # the payoff holds, lit
     {"id": "c-live", "label": "the day you'd live by · one year (days)", "text": "117 < 225", "t0": A("vo06:But"), "t1": t_rd},   # closes the hook's "no"
-    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": A("vo07:The")},
-    {"id": "c-read-echo", "label": "radar round trip, at its closest", "text": "4 min", "read": True, "t0": A("vo07:The"), "t1": round(t_end - 0.3, 4)},
+    {"id": "c-read-sun", "label": "light time · Sun to Venus", "text": "6 min", "read": True, "t0": A("vo07:Light"), "t1": t_echo},
+    # the 4 min arrives with its label on "round" and leaves before the end card fades in over it
+    {"id": "c-read-echo", "label": "radar round trip, at its closest", "text": "4 min", "read": True, "t0": t_echo, "t1": round(t_end - 0.6, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
@@ -212,18 +218,21 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):          # two values never share the s
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the Moon that never *lands*", "follow": "Light Minute · No. 004",
+END = {"title": "Next light: the Moon that never *lands*", "follow": "Light Minute · No. 004",   # breaks after "Next light:"
        "next": "Radar first timed Venus's turn in 1962: about 243 days, backwards."}   # the true-fact footnote (c7)
 
-CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": A("vo04:radar"), "pierce": A("vo04:pierced"), "back": A("vo04:backwards"), "whoa": t_w, "tk": t_tk,
-       "ring": A("vo07:six"), "echo": A("vo07:round"), "you": A("vo05:Stand"), "sun_lbl": A("vo02:Sun"),
-       "dial0": A("vo05:Sun"), "dial1": t_tk}
+# "close": the push has landed (the pin's blip on the far pole fades until the guesses play on it); "ring": the
+# light-time ring grows with "Light time, Sun to Venus" and has landed before "six"; "ping": the round trip's ping
+# runs once the readout's push has (nearly) landed
+CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": t_radar, "pierce": A("vo04:pierced"), "back": A("vo04:backwards"), "whoa": t_w, "tk": t_tk,
+       "close": round(t_push2 + 1.6, 4), "ring": A("vo07:Light"), "echo": t_echo, "ping": round(t_echo + 1.0, 4), "you": A("vo05:Stand"),
+       "sun_lbl": A("vo02:Sun"), "rise_i": RISE_I, "dial0": A("vo05:Sun"), "dial1": t_tk}
 POSTER = A("vo05:west", 0.5)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["three hundred sixty-five"], "vo03": ["one side", "faced the Sun."],
+glue(f, {"vo02": ["three hundred sixty-five", "a permanent"], "vo03": ["one side", "faced the Sun."],
          "vo04": ["nineteen sixty-two,", "in California", "two hundred forty-three"],
          "vo05": ["Stand there,", "the spin", "and the orbit team up.", "hundred and seventeen", "rising in the west."],
-         "vo06": ["live by", "the Sun coming back."]})
+         "vo06": ["live by", "is the Sun coming back."]})
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,

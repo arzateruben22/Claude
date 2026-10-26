@@ -17,7 +17,7 @@
 - **Pronunciation at T0:** Schiaparelli (skya-pa-REL-li), Cassinis, "two hundred forty-three".
 
 - **After the 26 Oct recheck (drawing conventions to check):** a small "your sky on Venus" dial under the captions
-  shows the Sun's place in the pin's sky (west on the left) as the clocks run; the light-time ring grows from the Sun
+  shows the Sun's place in the pin's sky as the clocks run (now mirrored: see below); the light-time ring grows from the Sun
   and the radar round trip runs as a ping (both faster than light, illustrations of the readout's numbers); the bodies
   are drawn about 25% larger on the diagram (not to scale, badged); the Sun shrinks away as the camera follows Venus.
 - **After the 26 Oct script audit:** the hook's "yes" and "no" now cite claims (c19, c20); "one side always faced
@@ -25,6 +25,12 @@
   technical reports server (https://ntrs.nasa.gov/api/citations/19630003286/downloads/19630003286.pdf). On screen,
   the dial under the captions is labelled "the Sun's place, behind the clouds" (nobody on the ground could see it),
   and the day counter reads "117 < 225". vo03 was re-voiced and the film rendered again from scratch.
+- **After the draft review (26 Oct):** the "your sky" dial is mirrored (east on the left, west on the right, as a sky
+  seen facing south on Earth), so the Sun visibly rises on the right, in the west; check that reading. The true turn
+  now plays at 1,000,000× (was 2,000,000×) so the pin crosses the face on "backwards". A dashed pointer from the pin
+  toward the Sun stands for Schiaparelli's "one side always faced the Sun"; the readout carries a new note, "light sped
+  up", and pushes in on Venus and Earth for the round trip; the cloud note now reads "clouds: drawn"; a spine readout
+  "300 · years of guessing" joins the change beat. Not yet rendered: a stills check comes first.
 
 
 ## Every episode
