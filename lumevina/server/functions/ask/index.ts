@@ -202,7 +202,7 @@ const HANDOFF_TOOL = {
     properties: {
       kind: { type: "string", enum: ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "personal", "request", "other"] },
       why: { type: "string", description: "One short line for Evelyn: what the client is asking for." },
-      note: { type: "string", description: "One or two short sentences the client sees while the question goes to Evelyn: the general rule that applies and why it's her call (for example, how long waxing usually waits after Accutane, or that a flare of a named condition is a doctor's). General only: nothing about this client's own skin, no diagnosis, never \"that's normal\", nothing they could take as the answer. \"\" when there's nothing useful to add." },
+      note: { type: "string", description: "One or two short sentences the client sees while the question goes to Evelyn: the general rule that applies (for example, how long waxing usually waits after Accutane, or that a flare of a named condition is a doctor's). Don't say it's Evelyn's to answer or when she'll reply: the website says both. General only: nothing about this client's own skin, no diagnosis, never \"that's normal\", nothing they could take as the answer. \"\" when there's nothing useful to add." },
     },
     required: ["kind", "why", "note"],
     additionalProperties: false,

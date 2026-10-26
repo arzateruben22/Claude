@@ -493,7 +493,7 @@
   var routineText = function (k) {
     var r = SG && SG.routines[k];
     if (!r || !r.morning.length) return "";
-    return "Evelyn’s routine for " + typeLabel(k) + ":\nMorning: " + r.morning.map(stepName).join(", ") + ".\nNight: " + r.night.map(stepName).join(", ") + "." +
+    return "Evelyn’s routine for " + typeLabel(k) + (k === "dry" ? " 💧" : " 🌿") + "\nMorning: " + r.morning.map(stepName).join(", ") + ".\nNight: " + r.night.map(stepName).join(", ") + "." +
       (SG.tolerance && r.morning.concat(r.night).some(function (a) { return a.length > 1 && /mandelic|acne med/.test(a[0]); }) ? "\nWhich strength depends on your tolerance: start with the one Evelyn gives you." : "");
   };
   /* her essentials ("cleanser, hydrator, moisturizer, and SPF") from the routine for their type, the ones that need no consult */
@@ -625,7 +625,7 @@
     if (concern === "purge") return { answer: said(H.purge + (H.purgeEscalate ? " " + H.purgeEscalate : "")), acts: [] };
     if (concern === "ingrown") return { answer: lines(said(H.ingrownHabits), H.ingrownAvoid ? "What to avoid: " + H.ingrownAvoid : "", H.ingrownEscalate), acts: [] };
     if (concern === "spots") return { answer: lines(said(H.spotsHabits), H.spotsAvoid ? "What to avoid: " + H.spotsAvoid : "", H.spotsEscalate), acts: [] };
-    if (concern === "aging") return { answer: lines(said(H.retinal), H.sun ? "And the sun: " + H.sun : "") + fitText, acts: [] };
+    if (concern === "aging") return { answer: lines(said(H.retinal), H.sun ? "And the sun ☀️ " + H.sun : "") + fitText, acts: [] };
     if (concern === "sensitive") {
       var sens = lines(said([H.barrier, H.irritation].filter(Boolean).join(" ")), H.exfoliation ? "Her rule: " + H.exfoliation : "");
       return k ? { answer: lines(sens, routineText(k)) + fitText, acts: essentialsAct(k) }
@@ -695,8 +695,19 @@
     var d = new Date(iso);
     return d.toLocaleDateString("en-US", { weekday: "long" }) + " at " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   };
-  var promise = function (member) {
-    return member ? "As a member, you’ll hear from Evelyn within 24 hours." : "Evelyn replies within 2 days. Members hear back within 24 hours.";
+  /* when she replies, said once: her own hand-off line already says "a day or two", so the line under it only adds
+     what it doesn't (a member's 24 hours) */
+  var promise = function (member, lead) {
+    if (member) return "As a member, you’ll hear from Evelyn within 24 hours.";
+    return /day or two/.test(lead || "") ? "" : "Evelyn replies within 2 days. Members hear back within 24 hours.";
+  };
+  /* the AI's note under a hand-off is the general rule only: the lead says it's hers and when she'll reply, so any
+     "that's Evelyn's to answer" or "she'll get back to you" in the note goes, and the message says each thing once */
+  var cleanNote = function (note) {
+    var n = String(note || "").replace(/[,;:]?\s*(so|and|which is why|that'?s why)?\s*(that'?s|this is|it'?s|this one'?s|that one'?s)\s+(evelyn'?s|for evelyn|hers|her call|something evelyn)[^.!?]*[.!?]/ig, ".");
+    var parts = n.match(/[^.!?]+[.!?]+/g) || (n.trim() ? [n] : []);
+    return parts.filter(function (x) { return !/get back to you|reply|respond|within (a|one|1|2|two|24)|answer (it|this|that)? ?(for you )?personally|evelyn (will|can) (answer|look|check)/i.test(x); })
+      .join(" ").replace(/\s+\./g, ".").replace(/\.\./g, ".").trim();
   };
 
   /* ══════════════════ UI ══════════════════ */
@@ -755,9 +766,9 @@
   var save = function () { /* kept in memory only: a new visit starts over */ };
   /* new here, or been in before: asked first, kept for this browser, and told to the assistant */
   var STATUS = {
-    "new": { label: "I’m new here", say: "Welcome! For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
+    "new": { label: "I’m new here", say: "Welcome! ✨ For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
       acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["What happens at a first visit", "t:What happens at a first visit?"], ["What should I bring?", "t:What should I wear or bring to my appointment?"], ["Prices", "n:prices"], ["Book", "n:book"]] },
-    existing: { label: "I’ve been in before", say: "Welcome back! Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
+    existing: { label: "I’ve been in before", say: "Welcome back! ✨ Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
       acts: [["Book", "n:book"], ["Move or cancel", "n:cancel"], ["Before my facial", "n:before"], ["After my facial", "n:after"], ["Where’s my order?", "t:Where is my order?"], ["Buy again", "account"]] }
   };
   var status = function () { return state.status === "new" || state.status === "existing" ? state.status : (myPlan() ? "existing" : ""); };
@@ -885,7 +896,8 @@
     var pending = state.pending;
     if (pending) {
       /* the general rule behind the hand-off, when the assistant had one, then the lead */
-      var box = bubble("bot", esc(pending.note ? pending.note + "\n\n" + pending.lead : pending.lead) + '<span class="ask-promise">' + esc(promise(pending.member)) + "</span>");
+      var note = cleanNote(pending.note), prom = promise(pending.member, pending.lead);
+      var box = bubble("bot", esc(note ? note + "\n\n" + pending.lead : pending.lead) + (prom ? '<span class="ask-promise">' + esc(prom) + "</span>" : ""));
       var who2 = me();
       var f = document.createElement("div");
       f.className = "ask-handoff";
