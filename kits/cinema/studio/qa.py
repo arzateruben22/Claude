@@ -43,6 +43,24 @@ def _xcorr(A, B):
     return np.fft.irfft(np.fft.rfft(A, n) * np.conj(np.fft.rfft(B, n)), n)[: len(A) - len(B) + 1]
 
 
+def _heard_as(seg, tpl):
+    """Both signals without what lies more than an octave below the template's own lowest energy (a zero-phase
+    high-pass with a one-octave cosine edge, so nothing moves in time): a loud low swell under a 2.4 kHz tick
+    can't steal its attack, and the template's own band, transient and all, passes untouched."""
+    n = 1 << (len(seg) + len(tpl)).bit_length()
+    P = np.abs(np.fft.rfft(tpl, n)) ** 2
+    if not P.any():
+        return seg, tpl
+    f = np.fft.rfftfreq(n, 1 / SR)
+    lo = f[np.searchsorted(np.cumsum(P) / P.sum(), 0.01)] / 2       # an octave under the bottom 1 % of its energy
+    if lo < 40:
+        return seg, tpl                    # nothing below a low template to remove
+    H = np.clip(np.log2(np.maximum(f, 1e-9) / (lo / 2)), 0, 1)       # 0 below lo/2, rising over one octave to 1 at lo
+    H = 0.5 - 0.5 * np.cos(np.pi * H)
+    g = lambda x: np.fft.irfft(np.fft.rfft(x, n) * H, n)[: len(x)].astype(np.float32)
+    return g(seg), g(tpl)
+
+
 def _locate(stem, sig, place, anchor, method, search=0.06):
     """Where sig's anchor actually sits in the stem, as an offset (s) from where it was placed.
 
@@ -60,7 +78,8 @@ def _locate(stem, sig, place, anchor, method, search=0.06):
         t = t[: b - a - int(2 * search * SR) + 1] if b - a < len(t) + 2 * search * SR else t
         pad = 5 * HOP                    # silence before the template, so an instant attack is still a rise
         a = max(0, a - pad)
-        Es, Et = _env(stem[a:b]), _env(np.concatenate([np.zeros(pad, np.float32), t]))
+        seg, tp = _heard_as(stem[a:b], np.concatenate([np.zeros(pad, np.float32), t]))
+        Es, Et = _env(seg), _env(tp)
         A, B = (np.maximum(np.diff(Es), 0), np.maximum(np.diff(Et), 0)) if method == "rise" else (Es - Es.mean(), Et - Et.mean())
         if len(A) < len(B) or not np.any(B):
             return None
