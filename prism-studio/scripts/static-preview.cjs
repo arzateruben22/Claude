@@ -79,9 +79,10 @@ const assetName = (u) => {
       css = css.replace(/url\((['"]?)([^'")]+)\1\)/g, (m, q, x) => (local.has(x) ? `url(${q}${local.get(x)}${q})` : m));   // one pass: no URL rewritten twice
       body = Buffer.from(css);
     }
-    if (/\.mp4$/i.test(name)) {   // a light preview copy: 540 px wide, ~0.8 Mbps
+    if (/\.mp4$/i.test(name)) {   // a light preview copy, ~0.8 Mbps: 540 px wide, or 854 px for a 16:9 long video
       const tmp = file + ".src.mp4"; fs.writeFileSync(tmp, body);
-      execFileSync("ffmpeg", ["-v", "error", "-y", "-i", tmp, "-vf", "scale=540:-2", "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-maxrate", "850k", "-bufsize", "1700k", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", file]);
+      const [w, h] = execFileSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", tmp]).toString().trim().split(",").map(Number);
+      execFileSync("ffmpeg", ["-v", "error", "-y", "-i", tmp, "-vf", `scale=${w > h ? 854 : 540}:-2`, "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-maxrate", "850k", "-bufsize", "1700k", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", file]);
       fs.rmSync(tmp);
     } else fs.writeFileSync(file, body);
     return name;

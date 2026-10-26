@@ -110,7 +110,7 @@ The owner's preview link is a static copy of every screen, so the studio can be 
 Make a throwaway copy of the database (`su postgres -c "createdb -O prism -T prism prism_static"`), run
 `npm run build`, start the app on it (`DATABASE_URL=…/prism_static npm start -- -p 3111 -H 127.0.0.1`), then
 `BASE=http://127.0.0.1:3111 node scripts/static-preview.cjs <out dir>`. It saves each page reachable from the wall with
-its CSS, fonts, wallpaper, covers and 540 px preview copies of the videos; scripts are removed, copy buttons work
+its CSS, fonts, wallpaper, covers and light preview copies of the videos (540 px wide; 854 px for long videos); scripts are removed, copy buttons work
 (their text is in `data-copy`), and buttons that change things do nothing. Publish `<out dir>/index.html` with the rest
 of `<out dir>` as supporting files, then stop the server and drop the copy.
 

@@ -8,7 +8,10 @@ import { channelBySlug, channelExtension, coverOf, instagramExtension, rigView, 
 import { INSTAGRAM_SLUG } from "@/lib/rig";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { PLATFORM_LABEL, PUB_LABEL, pubTone, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, PUB_LABEL, pubTone, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { approveLessonAction } from "@/app/actions";
+import { ActionForm } from "@/components/ActionForm";
+import { CopyButton } from "@/components/CopyButton";
 import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
 import { Icon } from "@/components/Icon";
@@ -101,6 +104,15 @@ async function ChannelScreen({ slug }: { slug: string }) {
               </div>
             ))}
         </div>
+      </section>
+
+      <section className="section" id="long-video">
+        <div className="section-head"><h2>Long video</h2><span className="faint num">YouTube · regular video, not Shorts</span></div>
+        {v.longVideos.length ? (
+          <div className="posts">
+            {v.longVideos.map((x) => <LongVideo key={x.lesson.id} x={x} slug={c.slug} />)}
+          </div>
+        ) : <p className="muted">No long video yet. Once 4–6 shorts are rendered, build one from <Link href={`/channels/${c.slug}?tab=lessons`}>Lessons</Link>: they play back to back in one 16:9 video with chapters.</p>}
       </section>
 
       <section className="section">
@@ -230,5 +242,44 @@ async function InstagramScreen() {
         <p className="faint small-note">Rendered: episodes with an Instagram export, out of all episodes. Planning never schedules an episode on Instagram twice; posted ones stay posted.</p>
       </section>
     </div>
+  );
+}
+
+/** A long video (a lesson): the 16:9 compilation of the channel's shorts, for YouTube as a regular video. Approve it
+ *  here or on the channel's Lessons tab; editing the title or description lives there. */
+function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean }; approved: boolean; episodes: string[] }; slug: string }) {
+  const l = x.lesson;
+  if (!l.videoPath) {
+    return <div className="card post-empty"><span className="label">{l.name} · {x.episodes.length} episodes{l.isDemo ? <> · <span className="demo-tag">DEMO</span></> : null}</span><h3 style={{ margin: 0 }}>{l.title}</h3><p className="muted">{l.state === "render" ? "Building in the worker (see Queue)." : "Not built yet."}</p></div>;
+  }
+  const qa = l.qa as { dur?: number } | null, fails = qaFails(l.qa as Record<string, unknown> | null);
+  const len = qa?.dur ? `${Math.floor(qa.dur / 60)}:${String(Math.round(qa.dur % 60)).padStart(2, "0")}` : "";
+  return (
+    <article className="card stack-sm">
+      <div className="post-state">
+        <span className="label">{l.name} · {x.episodes.length} episodes{len ? ` · ${len}` : ""}</span>
+        {l.isDemo ? <span className="demo-tag">DEMO</span> : null}
+        {fails ? <span className="chip bad">QA: {fails} failed</span> : fails === 0 ? <span className="chip good">QA passed</span> : null}
+        {l.state === "published" ? <span className="chip good">Uploaded</span> : x.approved ? <span className="chip good">Approved</span> : <span className="chip warn">Needs approval</span>}
+      </div>
+      <h3 style={{ margin: 0 }}>{l.title}</h3>
+      <div style={{ background: "#000", borderRadius: 8, overflow: "hidden" }}>
+        <video controls preload="none" playsInline poster={l.thumbnailPath ? mediaUrl(l.thumbnailPath) : undefined} src={mediaUrl(l.videoPath)} style={{ width: "100%", aspectRatio: "16 / 9", display: "block" }} />
+      </div>
+      {l.chapters ? (
+        <details>
+          <summary className="label" style={{ cursor: "pointer" }}>Chapters</summary>
+          <pre className="copy-text tags" style={{ whiteSpace: "pre-wrap", margin: "8px 0 0" }}>{l.chapters.trim()}</pre>
+        </details>
+      ) : null}
+      <div className="row">
+        {!x.approved && l.state !== "published" ? <ActionForm action={approveLessonAction} submit="Approve for YouTube" submitClass="btn small"><input type="hidden" name="lessonId" value={l.id} /></ActionForm> : null}
+        <CopyButton text={l.title} label="Copy title" />
+        <CopyButton text={l.description} label="Copy description" />
+        <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
+        {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
+        <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Edit or mark uploaded</Link>
+      </div>
+    </article>
   );
 }

@@ -77,7 +77,7 @@ describe("written forms (real narration)", () => {
         .map((block) => /^vo: ([\s\S]*)$/m.exec(block)?.[1].replace(/\s+/g, " ").trim() ?? "").filter(Boolean)));
     expect(lines.length).toBeGreaterThan(50);
     expect(lines.some((l) => l.includes("a hundred and thirty million light-years"))).toBe(true);   // whole lines, not their first row
-    const NUMBER_WORD = /^(a|and|point|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|trillion|percent|forties)$|-/;
+    const NUMBER_WORD = /^(a|and|point|zero|oh|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|trillion|percent|twenties|thirties|forties|fifties|sixties|seventies|eighties|nineties)$|-/;
     for (const vo of lines) {
       const before = clean(vo), after = writtenForms(before);
       expect(writtenForms(after)).toBe(after);

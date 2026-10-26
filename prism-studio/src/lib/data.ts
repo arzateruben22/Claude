@@ -13,6 +13,7 @@ import { rewardBalances } from "@/domain/rewards";
 import { pullStates } from "@/domain/api-analytics";
 import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
+import { lessonHash } from "@/domain/lessons";
 import { CHANNELS, OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
@@ -437,12 +438,17 @@ export async function rigView() {
     ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs approval" : "nothing queued today", slots,
   });
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
+  // built long videos (lessons) still waiting for their YouTube approval: they aren't episodes, so Review doesn't list them
+  const longToApprove = (await d.select().from(S.lessons)
+    .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), ne(S.lessons.state, "published"))))
+    .filter((l) => !l.approvedHash || l.approvedHash !== lessonHash(l))
+    .map((l) => chans.find((c) => c.id === l.channelId)).filter((c): c is Channel => !!c);
   const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
     .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
   const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
   return {
-    tz, today, monitors, reviewCount, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
+    tz, today, monitors, reviewCount, longToApprove, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
     instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
   };
 }
@@ -463,8 +469,18 @@ export async function channelExtension(slug: string) {
   const ser = await d.select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort));
   const series = ser.map((x) => ({ series: x, episodes: eps.filter((e) => e.seriesId === x.id).sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number)) }));
   const loose = eps.filter((e) => !e.seriesId || !ser.some((x) => x.id === e.seriesId));
+  // the channel's long videos (lessons) for YouTube: built ones first, newest first; one being built shows as such
+  const lessonRows = await d.select().from(S.lessons)
+    .where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo)))
+    .orderBy(desc(S.lessons.createdAt));
+  const parts = lessonRows.length ? await d.select({ lessonId: S.lessonEpisodes.lessonId, title: S.episodes.title, position: S.lessonEpisodes.position })
+    .from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
+    .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id))).orderBy(asc(S.lessonEpisodes.position)) : [];
+  const longVideos = lessonRows.map((l) => ({
+    lesson: l, approved: !!l.approvedHash && l.approvedHash === lessonHash(l), episodes: parts.filter((x) => x.lessonId === l.id).map((x) => x.title),
+  }));
   return {
-    tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts,
+    tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts, longVideos,
     upcoming: tasks.filter((t) => !accounts.some((a) => a.next?.p?.id === t.p.id)).slice(0, 16), igAccount: ig ?? null,
     series, loose, reviewCount: eps.filter((e) => !e.isDemo && ["ready_for_review", "correction_needed"].includes(e.state)).length,
   };
