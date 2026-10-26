@@ -151,6 +151,7 @@ const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 const cb = () => ({ e1: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).toArray(), e2: new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).toArray() });
 
 window.seek = function (t) {
+  if (stage(t).name !== stage(Math.round(t * FPS) / FPS).name) t = Math.round(t * FPS) / FPS;   // motion blur never blends two shots across a cut
   const st = stage(t), shot = st.name, tr = Math.round(t * FPS) / FPS;
   camera.near = shot === "sun" ? 2 : 0.01;                                 // depth precision for the spot close-up (the sky needs the near plane close)
   rig.place(camera, shot, t);
