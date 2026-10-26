@@ -52,7 +52,7 @@ Everything the website's assistant may say lives here: Evelyn's words, the studi
 | `voice.md` | Real replies she has sent, words she uses and avoids, how she opens and signs off. |
 | `general/*.md` | Not hers: standard esthetics knowledge for the assistant (how skin works, ingredients, routines, treatments, aftercare, waxing, common concerns, red flags and scope). It explains and fills gaps; her playbook wins where they differ; it is never used to diagnose, to call something normal, to change a routine or to decide a contraindication. Edit freely; rebuild the bundle after. |
 | `scripts/playbook-drafts.mjs` | The drafted common answers Quick confirm and Talk it through offer her. Nothing in it reaches the assistant until she confirms it. |
-| `eval/questions.json` | 50 client questions with what a good answer must and must not say. `eval/run-eval.mjs` runs them. |
+| `eval/questions.json` | 50 client questions: whether each goes to Evelyn (and as which hand-off) or to the chat, and for the chat, her words that must be in what it's given. `node knowledge/eval/run-eval.mjs` checks both offline after `build-bundle.mjs` and writes `eval/results.md`; how Claude words an answer is for the preview chat. |
 
 ## Her voice memos
 

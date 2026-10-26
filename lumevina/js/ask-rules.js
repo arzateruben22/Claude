@@ -22,10 +22,10 @@
 (function () {
   "use strict";
 
-  var URGENT = /(can'?t|cannot|hard to|trouble|struggling to) breathe|throat (is )?(closing|swelling|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out/i;
+  var URGENT = /(can'?t|cannot|hard to|trouble|struggling to) breathe|throat.{0,24}(closing|swell|swollen|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out/i;
 
   var KINDS = [
-    { kind: "reaction", any: [/react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\bpus\b|ooz|scab|stinging|irritat|red(ness)? (won'?t|isn'?t|still)|peeling/i] },
+    { kind: "reaction", any: [/react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\bpus\b|ooz|scab|stinging|stings\b|stung\b|irritat|red(ness)? (won'?t|isn'?t|still)/i] },
     { kind: "pregnancy", any: [/pregnan|expecting|breastfeed|nursing|trying to conceive/i] },
     { kind: "medication", any: [/accutane|isotretinoin|tretinoin|retin-?a\b|prescri|medicat|antibiotic|spironolactone|birth control|chemo|radiation|laser|surgery|botox|filler/i] },
     { kind: "condition", any: [/eczema|psoriasis|rosacea|dermatitis|lupus|cold sore|herpes|melasma|mole\b|lump|cyst|fungal|perioral/i] },
@@ -35,7 +35,7 @@
       /discount|coupon|promo( code)?|cheaper|price (match|exception|break)|lower (the |your )?price|special price|sliding scale|any deals?\b/i,
       /\bunder ?18\b|\bminors?\b|\b(1[0-7]) ?(years? old|yrs? old|yo|y\/o)\b|\bi'?m (1[0-7])\b|\bmy (daughter|son|kid|child|teen|teenager)\b|\bteen(ager)?s?\b/i] },
     { kind: "skin",
-      any: [/\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\b|for my skin|purging|(breaking|broke|break) ?out after/i,
+      any: [/(?<!\b(?:wash|washing|cleanse|cleansing|touch|touching) )\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\b|for my skin|purging|(breaking|broke|break) ?out after/i,
             /what('?s| is) (wrong|going on|this|that) (with|on) (my|this|her|his)|(look at|see) (this|my|the) (photo|pic|picture|selfie)|from (a|this|my|the) (photo|pic|picture)/i],
       both: [/\bi (have|got|keep getting|am getting|'m getting)\b|is (it|this) normal|should i\b|what should i use|right for me|recommend/i,
              /skin|face|acne|break ?out|breaking out|pimple|pore|spots?\b|scar|pigment|wrinkle|\bdry\b|oily|sensitive|redness|texture|serum|routine|product/i] }

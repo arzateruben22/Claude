@@ -2280,7 +2280,7 @@ export type Rule = { source: string; flags: string };
 export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
 export const RULES: { urgent: Rule; kinds: RuleKind[] } = {
  "urgent": {
-  "source": "(can'?t|cannot|hard to|trouble|struggling to) breathe|throat (is )?(closing|swelling|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out",
+  "source": "(can'?t|cannot|hard to|trouble|struggling to) breathe|throat.{0,24}(closing|swell|swollen|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out",
   "flags": "i"
  },
  "kinds": [
@@ -2288,7 +2288,7 @@ export const RULES: { urgent: Rule; kinds: RuleKind[] } = {
    "kind": "reaction",
    "any": [
     {
-     "source": "react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\\bpus\\b|ooz|scab|stinging|irritat|red(ness)? (won'?t|isn'?t|still)|peeling",
+     "source": "react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\\bpus\\b|ooz|scab|stinging|stings\\b|stung\\b|irritat|red(ness)? (won'?t|isn'?t|still)",
      "flags": "i"
     }
    ]
@@ -2345,7 +2345,7 @@ export const RULES: { urgent: Rule; kinds: RuleKind[] } = {
    "kind": "skin",
    "any": [
     {
-     "source": "\\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\\b|for my skin|purging|(breaking|broke|break) ?out after",
+     "source": "(?<!\\b(?:wash|washing|cleanse|cleansing|touch|touching) )\\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\\b|for my skin|purging|(breaking|broke|break) ?out after",
      "flags": "i"
     },
     {
