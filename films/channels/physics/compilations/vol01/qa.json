@@ -1,0 +1,16 @@
+{
+ "file": "films/channels/physics/compilations/vol01/vol01-16x9.mp4",
+ "w": 1920,
+ "h": 1080,
+ "fps": "30/1",
+ "dur": 366.422,
+ "video_s": 366.401,
+ "audio_s": 366.422,
+ "size_mb": 58.3,
+ "lufs": -14.2,
+ "true_peak_db": -1.8,
+ "lra": 4.7,
+ "chapters": 5,
+ "chapters_under_10s": 0,
+ "fails": []
+}
