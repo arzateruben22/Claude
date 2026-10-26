@@ -4,18 +4,18 @@ Measured on the delivered file `out/rest-frame-006-9x16.mp4` by `kits/cinema/fil
 
 | Gate | Target | Result |
 |---|---|---|
-| Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2064 frames, H.264 High BT709, AAC 48 kHz stereo 258k, 2.75 Mbps video, 25.9 MB |
-| Length | 60–75 s; picture = sound | 68.800 s / 68.800 s |
-| Hook | Payoff image at frame 0; question by 2 s | Frame 0: the top of the three-story straw, its water stopped well under the pump on the roof, the title in the air. "What lifts a drink up a straw?" is spoken by 1.86 s |
-| Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.1 LUFS, −1.9 dBTP**, LRA 4.3 LU |
-| Voice over music | ≥ 10 LU | 21.0 LU (dialogue −13.7, music −34.7 LUFS while speaking) |
-| Phone speaker | mono-safe | Correlation 0.96; mono loss −0.19 dB (dialogue 0.06 dB) |
-| Sound sync | transients within a frame | 13 kinds, 37 events, all PASS: transients worst 0 ms; slow swells (energy.loss, reveal, section, swell, time.slow) worst 10 ms |
-| Labels vs picture | sound on the first visible frame | 8/8 exact (DOM-measured first visible frame) |
-| Text in the safe box | x 90–900, y 250–1420 | Render audit: 0 warnings over 2064 frames |
-| Flashing | ≤ 3 flashes a second | 2 large-area luminance changes (frames 1480, 1728), 0 flash pairs, worst 0/s |
-| Determinism | resumable, byte-stable | 7 chunks, every frame's sha256 checked against its log before encoding |
-| Render cost | ≤ 4 h | 0.5 h for 2064 frames (0.92 s/frame, K avg 5.5, max 12) |
+| Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2200 frames, H.264 High BT709, AAC 48 kHz stereo 258k, 2.7 Mbps video, 27.2 MB |
+| Length | 60–75 s; picture = sound | 73.333 s / 73.333 s |
+| Hook | Payoff image at frame 0; question by 2 s | Frame 0: the top of the three-story straw, its water stopped well under the pump on the roof, boiling, the title in the air. "What lifts a drink up a straw?" is spoken by 1.94 s |
+| Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.0 LUFS, −1.9 dBTP**, LRA 4.1 LU |
+| Voice over music | ≥ 10 LU | 21.0 LU (dialogue −13.7, music −34.6 LUFS while speaking) |
+| Phone speaker | mono-safe | Correlation 0.96; mono loss −0.18 dB (dialogue 0.06 dB) |
+| Sound sync | transients within a frame | 13 kinds, 41 events, all PASS: transients worst 0 ms; slow swells (energy.loss, reveal, section, swell, time.slow) worst 10 ms |
+| Labels vs picture | sound on the first visible frame | 9/9 exact (DOM-measured first visible frame) |
+| Text in the safe box | x 90–900, y 250–1420 | Render audit: 0 warnings over 2200 frames |
+| Flashing | ≤ 3 flashes a second | 2 large-area luminance changes (frames 1592, 1840), 0 flash pairs, worst 0/s |
+| Determinism | resumable, byte-stable | 8 chunks, every frame's sha256 checked against its log before encoding |
+| Render cost | ≤ 4 h | 0.5 h for 2200 frames (0.89 s/frame, K avg 5.3, max 12) |
 
 ## Review rounds
 1. **Script review** (independent, before voicing): not ready, six must-fixes, all taken. The change beat's jar,
@@ -40,7 +40,21 @@ Measured on the delivered file `out/rest-frame-006-9x16.mp4` by `kits/cinema/fil
    HUD audit (every 0.25 s): 0 overlaps.
 5. **Final-tier stills** (`stills-ep06.jpg`, eleven), looked at 390 px wide: the boiling froth was too small to read
    on "boils"; the bubbles were enlarged (still only in the top 1.4 cm).
-6. **Final**: one run, 33 min, no restarts.
+6. **The first final**: one run, 33 min, no restarts (05:09, QA PASS).
+7. **The first final** (26 Oct 05:09, 339bc41, QA PASS) was superseded by the coordinating session's audit (08:15):
+   the hook's "Surprisingly, not suction" overclaimed (now "Something invisible, pushing."); "as hard as possible"
+   implied a seal-breaking maximum (now "however hard you like": a hard sip, 98 hPa); the lungs went straight to the
+   perfect pump (now "Your lungs alone? About one meter." then "Pumping with cheeks and tongue, one stunt reached
+   seven.", c15, then the pump to near ten meters); the takeaway says the push "runs out near ten meters". Re-voiced
+   (175 words, 73.3 s; lint 0 errors before and after). On screen the column climbs 1 m → 7 m → 10.11 m, with a tick
+   and a pill at 1 m and at 7 m; the spine reads "lungs alone" → "one stunt, mouth-pumped" → "with a perfect pump".
+8. **A third on screen**: the first final's step-backs used opacity 1/3, which keeps about 1/11 of a mark's contrast
+   after the finish's curve (Torricelli's tube nearly vanished). Every ink mark and the climb's ghosts now go through
+   `set/aces.js` `screenAlpha`. The house's ink outline competed with the sip at the bench; it steps back to a third
+   there, full from "tall." through the measure, and full again a second into the tease.
+9. **HUD audit and stills** (every 0.25 s, the whole film: 0 issues; seventeen final-tier stills looked at 390 px
+   wide): the tease's camera flight crossed a blank page while the house was still at a third; fixed as above.
+10. **Final** (26 Oct 15:49): one run from scratch on the audited direction, 34 min, no restarts.
 
 ## Noted, not fixed
 - The open paper floor meets the paper sky at a soft horizon behind the bench; it reads as ground and sky.

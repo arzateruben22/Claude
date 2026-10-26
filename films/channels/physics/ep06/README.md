@@ -7,9 +7,9 @@ physicist signs off the script before it posts.
 
 | | |
 |---|---|
-| **Final** (1080×1920, 30 fps, full finish) | `out/rest-frame-006-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
+| **Final** (26 Oct 15:49: 1080×1920, 30 fps, full finish, −14.0 LUFS / −1.9 dBTP; `qa.py` PASS; the 05:09 final, 339bc41, is superseded) | `out/rest-frame-006-9x16.mp4`, poster `.jpg`, contact sheet `-contact.jpg` (`review/scorecard.md` has every measured gate) |
 | Review | `review/scorecard.md`, `HUMAN-REVIEW.md`, `CLAIMS-REVIEW.md`; `assets.md` |
-| Final-tier stills | `review/stills-ep06.jpg` |
+| Seventeen final-tier stills | `review/stills-ep06.jpg` (PNGs in `build/stills/final/9x16/frames/`, not committed) |
 
 ## The story
 
