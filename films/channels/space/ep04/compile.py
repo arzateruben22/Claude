@@ -90,6 +90,7 @@ key = lambda t, P, **k: {"t": round(t, 4), **P, **k}
 # the normal's diagram turns so the Moon passes over the top of the frame while it is talked about (away from the spine)
 th_cut = TH0 + 2 * math.pi * tau(CLK["moon"], B["normal"]["t0"]) / P_ORB
 TOPN = dict(TOP, az=math.degrees(th_cut) + 50.0)   # the Moon enters 50° below the frame's right (inside the safe box), leaves about 10° above it
+TOPT = dict(TOP, fy=0.30)   # the takeaway and readout: the orbit sits a little higher, so its rim clears the spine's label
 t_end = A("vo08:Next", -0.25)
 t_weak = A("vo04:weaker")
 CAM = {
@@ -101,7 +102,7 @@ CAM = {
         key(B["why"]["t0"] + 2.6, SIDE, ease="inout3"), key(t_weak + 0.6, SIDE, dist=SIDE["dist"] - 4.0, ease="sine"),
         # into the whoa over 2.7 s (not a whip), then the payoff held close before a two-stage pull back
         key(t_min0, CLOSE, dist=7.4, ease="inout3"), key(t_min1, CLOSE, dist=7.0, ease="sine"), key(t_tk - 0.1, CLOSE, dist=6.9, ease="sine"),
-        key(t_tk + 0.9, dict(CLOSE, dist=90.0, el=70.0), ease="inout3"), key(t_tk + 2.4, TOP, ease="inout3"), key(t_end, TOP, dist=462.0, ease="sine"),
+        key(t_tk + 0.9, dict(CLOSE, dist=90.0, el=70.0), ease="inout3"), key(t_tk + 2.4, TOPT, ease="inout3"), key(t_end, TOPT, dist=462.0, ease="sine"),
         key(t_end + 2.6, CLOSE, dist=7.0, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=7.2, ease="sine"),   # ends on frame 0's pose
     ],
 }
@@ -129,8 +130,8 @@ LABELS = [
     {"id": "l-drop", "text": "apple, 1 second", "kind": "body", "anchor": "apple2", "t0": A("vo05:apple"), "t1": A("vo05:About", -0.2), "side": -1, "fixed": True},
     {"id": "l-fall", "text": "Moon, 1 minute", "kind": "gravity", "anchor": "gap", "t0": A("vo05:About"), "t1": round(t_tk - 0.3, 4), "side": -1, "v": "middle", "fixed": True},
     # the takeaway: the same two, the pull between them, the straight lines it bends all the way round
-    {"id": "l-earth-t", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": 1},
-    {"id": "l-moon-t", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(t_tk + 1.4, 4), "t1": t_rd, "side": -1},
+    {"id": "l-earth-t", "text": "Earth", "kind": "body", "anchor": "earth", "t0": round(t_tk + 2.0, 4), "t1": t_rd, "side": 1},   # once the pull-back has settled
+    {"id": "l-moon-t", "text": "Moon", "kind": "body", "anchor": "moon", "t0": round(t_tk + 2.0, 4), "t1": t_rd, "side": -1},
     {"id": "l-ring", "text": "how far light gets in 1.3 s", "kind": "light", "anchor": "ring", "t0": A("vo07:one"), "t1": round(t_end - 0.35, 4), "side": 1},
 ]
 BADGES = [

@@ -50,7 +50,10 @@ t_p0, t_p1 = A("vo03:And"), A("vo03:Sun", 0.6)          # the pull-back from Ear
 t_e0 = A("vo04:Ptolemy")                                 # back in to Earth for the argument (the clouds ride along) ...
 t_e1 = round(t_e0 + 1.8, 4)                              # ... the orbit clock stops there, so Earth holds still for the push
 CLK = {
-    "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_n, "rate": 2000.0}, {"t": t_zoom, "rate": 0.0, "badge": None}],   # still on "Sitting perfectly still"; one turn in 43 s
+    # still on "Sitting perfectly still"; one turn in 86 s. The spin waits while Earth is a dot in the orbit view (t_p1 to t_e1),
+    # so "you" stay on the face toward the camera in both Earth views (about 55° left of centre to 65° right)
+    "spin": [{"t": 0.0, "rate": 0.0}, {"t": t_n, "rate": 1000.0}, {"t": t_p1, "rate": 0.0, "badge": None},
+             {"t": t_e1, "rate": 1000.0}, {"t": t_zoom, "rate": 0.0, "badge": None}],
     "orbit": [{"t": 0.0, "rate": 0.0}, {"t": t_p1, "rate": 1e6}, {"t": t_e0, "rate": 0.0, "badge": None}],     # 11.6 days a second
     "gal": [{"t": 0.0, "rate": 0.0}, {"t": t_zoom, "rate": 1e14}],                              # one lap in 73 s
 }

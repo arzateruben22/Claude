@@ -19,9 +19,10 @@
 - **Pronunciation at T0:** Ptolemy, Galileo, "sixteen hundred seventy", "two hundred thirty million".
 
 - **After the 26 Oct recheck:** "you" stand on the equator in Ecuador (78.5° W), drawn on the side facing the
-  camera; Earth holds still on "Sitting perfectly still" and starts turning (badged 2,000×) on "Earth spins". For
-  Ptolemy and Galileo the picture returns to Earth (the orbit clock stops; the spin plays on) with the label "you,
-  and the clouds with you"; the one zoom then goes from Earth to the galaxy. The Sun is drawn larger than true (not to
+  camera; Earth holds still on "Sitting perfectly still" and starts turning (badged 1,000×) on "Earth spins"; the spin waits
+  while Earth is a dot in the orbit view, so "you" stay on the side facing the camera in both Earth views. For
+  Ptolemy and Galileo the picture returns to Earth (the orbit clock stops; the spin picks up again) with the label "you,
+  and the clouds with you"; the one zoom then goes from Earth, through the Sun as a point, to the galaxy. The Sun is drawn larger than true (not to
   scale, badged). The readout draws light's path from the Sun to the galaxy's centre.
 - **After the 26 Oct script audit:** the why beat's spine heading in the script now reads "what you can feel: a
   jolt, not speed" (Earth's orbital speed itself changes by about 3,600 km/h over a year, unfelt). That heading is

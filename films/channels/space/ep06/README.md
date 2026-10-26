@@ -20,7 +20,7 @@ first dinosaurs had just appeared. So your speed has no single answer. First ask
 |---|---|
 | `script.md`, `claims.json`, `pron.json` | The words, the claims ledger (15 claims), pronunciations (Ptolemy, Galileo) |
 | `voice.py`, `vo/` | Voiced one Kokoro speed per line (hook 1.0, normal 1.08, change 1.08, why 1.15, whoa 1.15, takeaway 0.95, readout 1.15, tease 0.9) |
-| `compile.py` | The direction: three ladder rungs (earth 1,000 km, solar 1 million km, galaxy 1,000 ly), a pull-back and the one jump, three clocks (spin ×2,000, orbit ×10⁶, the Sun's lap ×10¹⁴) |
+| `compile.py` | The direction: three ladder rungs (earth 1,000 km, solar 1 million km, galaxy 1,000 ly), a pull-back and the one jump, three clocks (spin ×1,000, orbit ×10⁶, the Sun's lap ×10¹⁴) |
 | `scene.mjs` | The picture: one camera pose, the world moving under it |
 
 ## The direction
@@ -35,7 +35,7 @@ first dinosaurs had just appeared. So your speed has no single answer. First ask
 
 | Badge | Where | Why |
 |---|---|---|
-| `2,000× faster`, `10⁶× faster`, `10¹⁴× faster` | From the clocks | |
+| `1,000× faster`, `10⁶× faster`, `10¹⁴× faster` | From the clocks | The spin waits while Earth is a dot in the orbit view (it is not drawn turning there); the jump hides the orbit's rung (it would only flash past) |
 | `not to scale` | The orbit | The Sun and Earth's marker are enlarged |
 | `galaxy: illustration` | The galaxy | Drawn, not imaged; the Sun 27,000 light-years from the centre (the channel's figure) |
 

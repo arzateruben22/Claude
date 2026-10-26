@@ -119,12 +119,16 @@ window.seek = function (t) {
   const ea = earthAbs(t);
   ORIGIN.earth[0] = ea[0]; ORIGIN.earth[1] = ea[1]; ORIGIN.earth[2] = ea[2];
   const view = ladder.apply(dolly(t));
+  // the jump passes the orbit's rung in about half a second: drawn, its ring and trail only slash across the frame and
+  // the spine, so the jump shows Earth shrinking, the Sun as a point, then the galaxy
+  const inJump = t > CUE.j0 && t < CUE.j1;
+  if (inJump) G.solar.visible = false;
   const toS = (id, p) => ladder.toScene(id, p, view);
   const sunDirE = (() => { const l = Math.hypot(...ea); return ea.map((v) => -v / l); })();
 
   // Earth: spinning at the clock's rate (counterclockwise seen from the north); "you" stand on the equator in Ecuador
   // (longitude 78.5° W), which crosses the side facing the camera from left to right while the spin plays
-  const psi = 3.78 + (2 * Math.PI * CLK.spin.tau(t)) / PH.sidereal;
+  const psi = 3.955 + (2 * Math.PI * CLK.spin.tau(t)) / PH.sidereal;
   earth.set({ center: [0, 0, 0], sunDir: norm([sunDirE[0] + 0.35, 0.25, sunDirE[2] + 0.6]), sun: 1, spin: psi + (78.5 * Math.PI) / 180 });
   const pinL = [6.371 * 1.01 * Math.cos(psi), 0, -6.371 * 1.01 * Math.sin(psi)];
   you.set({ center: pinL, camera, opacity: view.alpha.earth });
@@ -148,13 +152,15 @@ window.seek = function (t) {
   // the readout: light's path from the Sun to the galaxy's centre, drawn out on "To the galaxy's center"
   const ug = E.inout2(seg(t, CUE.gcring, CUE.gcring + 0.8));
   gcPath.seg(sp, sp.map((v) => v * (1 - ug))).set({ opacity: view.alpha.galaxy * (ug > 0.002 ? 1 : 0) });
-  S.sunG = toS("galaxy", sp); S.gc = toS("galaxy", [0, 0, 0]);
-  const la = Math.atan2(sp[2], sp[0]) + 2.2, rl = SUN_LY / 1000;
+  // through the jump the Sun stays a point: in when the orbit fades, out when the galaxy's own Sun has come in;
+  // "the Sun, and you" rides that point and hands over to the galaxy's Sun as it comes in
+  const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4), sJ = toS("solar", [0, 0, 0]), sG = toS("galaxy", sp);
+  S.sunG = t > CUE.j0 && t < CUE.j1 + 0.1 ? sG.map((v, i) => sJ[i] + (v - sJ[i]) * jOut) : sG;
+  S.gc = toS("galaxy", [0, 0, 0]);
+  const la = Math.atan2(sp[2], sp[0]) + Math.PI, rl = SUN_LY / 1000;   // the lap's label sits across the ring from the Sun's
   S.lap = toS("galaxy", [rl * Math.cos(la), 0, rl * Math.sin(la)]);
 
-  // through the jump the Sun stays a point: in when the orbit fades, out when the galaxy's own Sun has come in
-  const jIn = fadeIn(t, CUE.j0 + 0.2, 0.4), jOut = fadeIn(t, CUE.j1 - 0.3, 0.4);
-  sunJ.set({ center: toS("solar", [0, 0, 0]), camera, opacity: jIn * (1 - jOut) * (1 - view.alpha.solar) });
+  sunJ.set({ center: sJ, camera, opacity: jIn * (1 - jOut) * (inJump ? 1 : 1 - view.alpha.solar) });
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 1 - clamp01((view.s - 12) / 2), bandGain: 1 - clamp01((view.s - 12) / 2) });
   hud.update(t);
   tRing.update(t);

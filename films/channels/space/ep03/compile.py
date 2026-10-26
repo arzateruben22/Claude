@@ -133,15 +133,15 @@ CAM = {"space": [
     key(t_push2 + 1.6, CLOSE2, ease="inout3"), key(B["why"]["t0"], CLOSE2, dist=23.0, ease="sine"),
     key(t_w - 0.2, CLOSE2, dist=22.0, ease="sine"), key(t_w + 2.2, DIAG, ease="inout3"),
     # the whoa and the takeaway: a slow turn and push on the diagram (≤ 1.5° a second), so the sunrises don't sit still
-    key(t_tk, DIAG, dist=188.0, el=64.0, az=AZ + 12.0, ease="sine"),
-    key(t_end, DIAG, dist=184.0, el=66.0, az=AZ + 3.0, ease="sine"), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"),
+    key(t_tk, DIAG, dist=198.0, el=64.0, az=AZ + 12.0, fy=0.32, ease="sine"),   # Earth's orbit and the planets clear the spine's label
+    key(t_end, DIAG, dist=194.0, el=66.0, az=AZ + 3.0, fy=0.32, ease="sine"), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"),
     key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine"),
 ]}
 # how much the target follows Venus (1 in the close view, 0 on the diagram), eased with the same moves
 FOLLOW = [[0.0, 1], [t_cut, 1], [t_pull + 2.2, 0], [t_push2, 0], [t_push2 + 1.6, 1], [t_w - 0.2, 1], [t_w + 2.2, 0],
           [t_end, 0], [t_end + 2.4, 1]]
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
-CAM["end"] = [key(t_end, DIAG, dist=184.0, el=66.0, az=AZ + 3.0), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine")]
+CAM["end"] = [key(t_end, DIAG, dist=194.0, el=66.0, az=AZ + 3.0, fy=0.32), key(t_end + 2.4, CLOSE, dist=23.4, ease="inout3"), key(B["tease"]["t1"], CLOSE, dist=24.0, ease="sine")]
 for shot, keys in CAM.items():                    # the bible's arc limit: ≤ 1.5° a second (the follow-pushes excepted: they cut across)
     for a, b in zip(keys, keys[1:]):
         if a.get("az") is not None and abs(a["az"] - b["az"]) < 30:
