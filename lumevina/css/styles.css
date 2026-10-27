@@ -5941,6 +5941,12 @@ html:not(.book-site) .bk-move { display: none; }
 .ask-msg.bot, .ask-msg.evelyn { white-space: pre-line; }   /* Claude's paragraphs and short lists */
 .ask-msg .ask-acts, .ask-msg .ask-handoff { white-space: normal; }
 .ask-msg.you { align-self: flex-end; color: var(--on-accent); background: var(--grad-rose); border-bottom-right-radius: 6px; }
+/* a new message flows into the conversation: up from the field, settling into place (js/ask.js marks new ones) */
+.ask-msg.is-new { animation: ask-msg-in 340ms cubic-bezier(.2, .8, .2, 1) both; }
+.ask-msg.you.is-new { transform-origin: bottom right; }
+.ask-msg.bot.is-new { transform-origin: bottom left; animation-delay: 60ms; }
+@keyframes ask-msg-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ask-msg.is-new { animation: none; } }
 .ask-msg.evelyn { align-self: flex-start; background: var(--blush); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.255); border-bottom-left-radius: 6px; }
 .ask-msg.note { align-self: flex-start; max-width: 88%; padding: 0.45rem 0.7rem; font-size: 0.8rem; color: var(--ink-60);
   background: transparent; border: 1px dashed var(--panel-edge); border-radius: 12px; }

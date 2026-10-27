@@ -818,7 +818,7 @@
     push({ who: "bot", text: STATUS[which].say, acts: STATUS[which].acts });
     render();
   };
-  var push = function (m) { state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
+  var push = function (m) { if (m.who === "bot") m.fresh = true; state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
 
   /* answers Evelyn has sent for this browser's questions (live: fetched for a signed-in client, below) */
   var liveReplies = {};
@@ -941,8 +941,8 @@
     state.log.forEach(function (m, i) { if (m.who === "bot") lastBot = i; });
     if (lastBot >= 0 && state.log.slice(lastBot + 1).some(function (m) { return m.who === "you"; })) lastBot = -1;
     state.log.forEach(function (m, i) {
-      if (m.who === "you") bubble("you", esc(m.text));
-      else if (m.who === "bot") bubble("bot", esc(m.text) + (i === lastBot ? actsHtml(m.acts, !state.pending) : ""), m.warn ? "warn" : "");   /* only the latest answer keeps its buttons */
+      if (m.who === "you") bubble("you", esc(m.text), m.fresh ? "is-new" : "");
+      else if (m.who === "bot") bubble("bot", esc(m.text) + (i === lastBot ? actsHtml(m.acts, !state.pending) : ""), (m.warn ? "warn" : "") + (m.fresh ? " is-new" : ""));   /* only the latest answer keeps its buttons */
       else if (m.who === "note") bubble("note", '<span class="ask-tag">Noted in your skin profile</span>' + esc(m.text) +
         ' <button type="button" class="ask-note-see" data-act="account">See or change it</button>');
       else if (m.who === "sent") {
@@ -951,6 +951,7 @@
         if (q) bubble("evelyn", '<span class="ask-tag">Evelyn replied</span>' + esc(q.reply));
       }
     });
+    state.log.forEach(function (m) { delete m.fresh; });   /* each message flows in once */
     var pending = state.pending;
     if (pending) {
       /* the general rule behind the hand-off, when the assistant had one, then the lead */
@@ -1020,8 +1021,13 @@
       .finally(function () { if (timer) clearTimeout(timer); });
   };
   var history = function () {
-    return state.log.filter(function (m) { return (m.who === "you" || m.who === "bot") && m.text; }).slice(-8)
-      .map(function (m) { return { role: m.who === "you" ? "user" : "assistant", content: m.text }; });
+    var out = [];
+    state.log.filter(function (m) { return (m.who === "you" || m.who === "bot") && m.text; }).slice(-10).forEach(function (m) {
+      var role = m.who === "you" ? "user" : "assistant", last = out[out.length - 1];
+      if (last && last.role === role) last.content += "\n" + m.text;   /* messages sent in a row are one thought */
+      else out.push({ role: role, content: m.text });
+    });
+    return out;
   };
   var nextActs = function (answer, hasProducts) {
     var acts = [];
@@ -1035,10 +1041,13 @@
     /* hand-offs stay here; a "my skin" question goes to the server, which answers it from her playbook */
     var rk = RULES ? (RULES.route ? RULES.route(raw, t) : RULES.kind(raw, t)) : null;
     if (rk) return false;
-    var who = me();
+    var who = me(), my = ++turn;
+    inflight = { text: text };
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
     post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "", client: status() }).then(function (r) {
+      if (my !== turn) return;                 // set aside: they kept writing
+      inflight = null;
       if (r && r.answer) {
         var answer = String(r.answer), ids = Array.isArray(r.products) ? r.products.map(String) : [];
         var links = (Array.isArray(r.links) ? r.links : []).filter(function (l) { return l && /^https:\/\//.test(l.url); })
@@ -1049,7 +1058,7 @@
       } else if (r && r.offtopic) settle(text, { offtopic: String(r.offtopic), quiet: !!r.quiet });
       else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "", note: r.note ? String(r.note) : "" });
       else settle(text, classify(text));
-    }, function () { settle(text, classify(text)); });
+    }, function () { if (my !== turn) return; inflight = null; settle(text, classify(text)); });
     return true;
   };
 
@@ -1156,7 +1165,7 @@
     if (rk) return false;
     /* her plan, order look-ups and small talk answer here, instantly */
     if (fromPlan(t) || ORDER_ASK.test(t) || ORDER_NO.test(text) || GIFT_LEFT.test(t) || CHITCHAT.test(t)) return false;
-    var who = me(), live = bubble("bot", "…", "thinking");
+    var who = me(), live = bubble("bot", "…", "thinking"), my = ++turn, flight = inflight = { text: text };
     logEl.scrollTop = logEl.scrollHeight;
     if (asking) asking.abort();
     var ctl = asking = new AbortController();
@@ -1165,12 +1174,15 @@
       onText: function (u) {
         var now = shown(u.text);
         if (!now || !live.isConnected) return;
+        flight.shown = true;
         live.classList.remove("thinking");
         live.textContent = now;
         logEl.scrollTop = logEl.scrollHeight;
       }
     }).then(function (r) {
       if (asking === ctl) asking = null;
+      if (my !== turn) return;                 // set aside: they kept writing
+      inflight = null;
       var mk = marks(r.text), answer = shown(r.text);
       if (mk.offtopic) return settle(text, { offtopic: mk.offtopic });
       /* a hand-off has to come from this message (js/ask-rules.js → handOffOk); otherwise what Claude wrote stands,
@@ -1183,6 +1195,8 @@
     }, function (e) {
       if (asking === ctl) asking = null;
       if (e && e.code === "cancelled") return;
+      if (my !== turn) return;
+      inflight = null;
       if (e && GONE[e.code]) sampler = null;
       settle(text, local(text));
     });
@@ -1247,10 +1261,45 @@
     return RULES.offTopic(raw, t);
   };
 
-  var ask = function (text) {
+  /* ── sending: each message lands in the conversation at once (and flows in). The answer waits a moment,
+     and longer while they're still typing, so a thought sent as two or three messages gets one complete
+     answer. If they start typing while an answer is still being worked out (not yet showing), it's set
+     aside and everything they've sent is answered together. A tapped button answers straight away. ── */
+  var WAIT_SENT = 1300, WAIT_TYPING = 7000;
+  var queued = [], waitT = 0, turn = 0, inflight = null;
+  var answerNow = function () {
+    clearTimeout(waitT); waitT = 0;
+    if (!queued.length) return;
+    var text = queued.join("\n");
+    queued = [];
+    respond(text);
+  };
+  var answerSoon = function () {
+    clearTimeout(waitT);
+    if (queued.length) waitT = setTimeout(answerNow, input.value.trim() ? WAIT_TYPING : WAIT_SENT);
+  };
+  var holdAnswer = function () {
+    if (!inflight || inflight.shown) return;   // already reading out: let it finish
+    turn++;
+    if (asking) { asking.abort(); asking = null; }
+    queued = inflight.text.split("\n").concat(queued);
+    inflight = null;
+    render();                                  // the thinking dots go
+  };
+  var ask = function (text, now) {
     text = String(text || "").trim();
     if (!text) return;
-    push({ who: "you", text: text });
+    holdAnswer();
+    push({ who: "you", text: text, fresh: true });
+    render();
+    queued.push(text);
+    if (now) answerNow(); else answerSoon();
+  };
+  input.addEventListener("input", function () {
+    if (input.value.trim()) holdAnswer();
+    if (queued.length) answerSoon();
+  });
+  var respond = function (text) {
     if (quietUntil()) {
       state.pending = null;
       push({ who: "bot", text: "Let’s pick this up in a few minutes. The topic buttons still work in the meantime.", acts: UNCLEAR_ACTS });
@@ -1390,7 +1439,7 @@
     render();
     fetchReplies();
     requestAnimationFrame(function () { panel.classList.add("show"); });
-    if (prefill) ask(prefill);
+    if (prefill) ask(prefill, true);
     setTimeout(function () { input.focus({ preventScroll: true }); }, calm ? 0 : 120);
   };
   var close = function () {
@@ -1412,8 +1461,8 @@
       input.focus();
       return;
     }
-    if (target.indexOf("t:") === 0) return ask(target.slice(2));
-    if (target === "n:member" && off("membership")) return ask("memberships");
+    if (target.indexOf("t:") === 0) return ask(target.slice(2), true);
+    if (target === "n:member" && off("membership")) return ask("memberships", true);
     var out = target.indexOf("n:") === 0 ? node(target.slice(2)) : target.indexOf("s:") === 0 ? serviceAnswer(target.slice(2)) : null;
     if (!out) return;
     state.pending = null;
