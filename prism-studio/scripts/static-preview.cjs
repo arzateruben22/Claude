@@ -24,7 +24,9 @@ const pageFile = (u) => {
 const assetName = (u) => {
   if (u.pathname === "/api/media") {
     const key = u.searchParams.get("k") || "";
-    return "media/" + path.basename(key.split("?")[0]).replace(/[^a-zA-Z0-9._-]/g, "_");
+    // the path under films/channels (or the storage root), flattened: two channels' vol01-16x9.mp4 must not collide
+    const rel = key.split("?")[0].replace(/^(films|media):/, "").replace(/^films\//, "").replace(/^channels\//, "").replace(/\/out\//, "/");
+    return "media/" + rel.replace(/\//g, "--").replace(/[^a-zA-Z0-9._-]/g, "_");
   }
   return u.pathname.replace(/^\/+/, "").replace(/^_next\/static\//, "next/").replace(/[^a-zA-Z0-9._/-]/g, "_");
 };
