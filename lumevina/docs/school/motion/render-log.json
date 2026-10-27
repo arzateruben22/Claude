@@ -4472,8 +4472,8 @@
    "dur": 28.5,
    "w": 1600,
    "h": 900,
-   "bytes": 7533772,
-   "hash": "1f7ebe5299799c006ea50c22f1552c4e874b25a8",
+   "bytes": 7458398,
+   "hash": "a356c7858ee012fc6094aed2228a8a7bcf73dc95",
    "samples": [
     [
      0,
@@ -4641,71 +4641,71 @@
     ],
     [
      615,
-     "ed99f42a9b1a28faaf53fd6d87729ace7d70edab"
+     "0208597e04cd34c9983e60c3e5f951c4e5c0b097"
     ],
     [
      630,
-     "a1aed309cc02d8008c0043ec9e8847a97dc49c59"
+     "1fd3a45279cf2449a4a1ffe3ae79845a2e1d6760"
     ],
     [
      645,
-     "cd489df9dccea7f77506476a2636478a293763c5"
+     "57b601420a2c9fcaf383344e5bd2aa0700c1f001"
     ],
     [
      660,
-     "060eb822520b9237c25ab1ee4a0a06df416c8753"
+     "b9e3c42897bbd644a5e7471b266094926845d4b8"
     ],
     [
      675,
-     "8f70b0d5cdcece943957271c9c886f892d40c14c"
+     "7d1704ac347e395f054fe8df4465d8a40a83b558"
     ],
     [
      690,
-     "2d59cd9a6c8dc3b33aa07dac5e6a471598a647ab"
+     "7cf2469845da9e892757300cb0a55f4102e062ae"
     ],
     [
      705,
-     "7ee9af4da38fe8ce9d430bae87018955c596b478"
+     "bc5f449ffba64e4802404f014b5b926b298c2bff"
     ],
     [
      720,
-     "a61c183809d1a2f1a0f1c180131bb6bfd2f634fd"
+     "9a2d5c17015ba5fb43f2f262f0c507804cdc2810"
     ],
     [
      735,
-     "737563807b1cec0bc2a96b91e6a473259b514298"
+     "1f9fb2ed9f5e75b4e9d5067795e53e14faac2e6c"
     ],
     [
      750,
-     "59bbca705fa28a1e7a2453c065e1fd8092187436"
+     "cc4806b446d0fa2b7a603523b7ce23d7a65d534b"
     ],
     [
      765,
-     "7a9c63ff0ea948ab1772af98d2959d94d45b4529"
+     "8577b9fa11530b0235e60d2e46af6349cbd718a7"
     ],
     [
      780,
-     "37ebe21006136a19147b2606c67353d9c474abe4"
+     "4c2490616cff79874ba4b8d903b05cefd73a6874"
     ],
     [
      795,
-     "7f83753d5b6e231d9eff9120397e25bb643dc880"
+     "0c9397d772a3f3156fd52891e362acc96cdba8f4"
     ],
     [
      810,
-     "8afda8bd69e53a7b6099931c18ba1a94480e75f7"
+     "51a9e6ff6611988ec603994f2a90211859bb9e34"
     ],
     [
      825,
-     "78b8b27f2323f4b1459eebe1e9f61007b559ef17"
+     "a7a26e439ea7ee6f7204e53605d7aa94d163e73a"
     ],
     [
      840,
-     "8f3ff01124b1d285b44c21de1343b6b2f405e3cf"
+     "77e581c0f5ab076038a8fb919d57785b731aead0"
     ]
    ],
    "warnings": [],
-   "renderSec": 2357.8,
+   "renderSec": 2479.3,
    "renderedAt": "2026-10-27",
    "quick": false
   },
