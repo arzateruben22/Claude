@@ -42,7 +42,7 @@ Set apart from the studio's other identities:
   Outer Layer is the only cool *light* ground, and its accent is a red-violet (`uv`), not a blue: `contrast.py` keeps it ≥ ΔE76 20 from Rest Frame's cobalt and wave violet and from Lumevina's rose.
 - **Lumevina:** black, rose and gold. Outer Layer has no black ground, no rose, no gold, no pink.
   (The catalogue's placeholder swatch for this channel, `#D99A92`, is a dusty rose: too close to
-  Lumevina. The channel colour proposed for Prism Studio is `uv` `#9135A8`; the coordinator decides.)
+  Lumevina. The coordinator set Outer Layer's studio colour to `water` `#00685F`; `uv` red-violet stays the in-film accent.)
 - **Los Güeros** (espresso `#100C09`, amber `#E8A356`, Cormorant Garamond + Jost) and **Claude coral**:
   no browns, ambers or corals anywhere in the UI.
 
@@ -110,9 +110,9 @@ panel with "Next layer: …" and one true-fact footnote with its source.
 | Key | **F major** (ionian). Taken: E♭ major (body), E dorian (space), G mixolydian (physics), D lydian (Lumevina) |
 | Tempo | **64.2857 BPM**: a 16th note is exactly **7 frames** at 30 fps, a beat 28 frames (0.933 s). Taken: 75 (6 frames), 56.25 (8), 112.5 (4), 90 (Lumevina, 5) |
 | Bed | A soft, low-passed pad (F–C–A–E voicings, slow attack) and a sub that enters only for the whoa |
-| Lead | A **nylon pluck** (Karplus–Strong string; new `pluck` voice, see KIT-CHANGES), sparse, on the off-beats |
-| Foley | Labels on soft plucks up the F major pentatonic; layer changes on a felt *thup* (`knock` filtered low); UV rays on a short airy `zap` filtered dark; water on `plop`; no bells of any kind, no fizz (Lumevina's dew), no ping (space), no mallet (body), no blip (physics) |
-| Signature | **Plucks F5 → C6 → A5**, 7 frames apart (root, fifth, then the third settling under it: an answer, not a question). On the title, the gauge's final value and the end card |
+| Lead | A **soft breathy reed** (new `reed` voice, see KIT-CHANGES), sparse long tones on the off-beats. Not plucks (Back of the Envelope), mallets, pings, blips or bells |
+| Foley | Labels on short reed notes up the F major scale; layer changes on a felt *thup* (`knock` filtered low); UV rays on a short airy `zap` filtered dark; water on `plop`; no bells of any kind, no fizz (Lumevina's dew), no ping (space), no mallet (body), no blip (physics) |
+| Signature | **Reed F5 → C6 → A5**, 7 frames apart (root, fifth, then the third settling under it: an answer, not a question). On the title, the gauge's final value and the end card |
 | Mix | Voice dry and close; music in a small warm room; voice ≥ 12 LU over music; −14 LUFS, ≤ −1 dBTP on the delivered AAC |
 
 Preset: `kits/cinema/studio/vibes/outerlayer-slide.json` (added with episode 1).

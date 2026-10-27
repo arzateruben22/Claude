@@ -391,3 +391,21 @@ def pluck(note, dur=1.4, vel=0.8, tag="pluck", bright=0.5, damp=0.996):
     x = out * env(n, 0.002, 0, 1, min(0.25, dur * 0.3))
     x = x / (np.max(np.abs(x)) + 1e-9) * 0.5 * (0.4 + 0.6 * vel)
     return filt(x.astype(np.float32), lo=60, hi=6500, order=2)
+
+
+def reed(note, dur=1.6, vel=0.8, tag="reed", breath=0.35, attack=0.12, bright=2600.0):
+    """A soft, breathy reed (a low-blown clarinet or shakuhachi colour): odd harmonics falling off fast, a slow
+    seeded vibrato that grows in, band-passed breath noise riding the envelope, a gentle attack and a long release.
+    Outer Layer's melodic, label and signature voice (sustained and blown; not plucked, struck, pinged or blipped)."""
+    f = _f(note)
+    t = tvec(dur)
+    r = rng(tag)
+    vib = 1 + 0.004 * np.minimum(1.0, t / 0.5) * np.sin(TAU * (4.6 + 0.4 * r.random()) * t + r.random() * 6.28)
+    ph = TAU * np.cumsum(f * vib, dtype=np.float64) / SR
+    x = np.sin(ph) + 0.32 * np.sin(3 * ph + 0.4) + 0.12 * np.sin(5 * ph + 1.1) + 0.06 * np.sin(2 * ph + 0.2)
+    e = env(len(t), attack, 0, 1, min(0.6, dur * 0.45))
+    noise = filt(r.normal(0, 1, len(t)).astype(np.float32), lo=f * 1.5, hi=min(9000.0, f * 7), order=2)
+    y = x * e * 0.42 + noise * e * breath * 0.12
+    k = min(len(t), int(0.03 * SR))                 # the chiff: a 30 ms breath at the tongue's release, so the onset is exact
+    y[:k] += noise[:k] * np.exp(-np.arange(k) / (0.008 * SR)) * 0.5 * (0.5 + breath)
+    return filt((y * (0.4 + 0.6 * vel)).astype(np.float32), lo=70, hi=bright, order=2)

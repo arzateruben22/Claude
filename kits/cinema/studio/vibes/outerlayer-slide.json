@@ -1,5 +1,5 @@
 {
-  "_doc": "Outer Layer (skin), 'skin warmth, slide light': F major at 64.2857 BPM (a beat is 28 frames, a 16th exactly 7 frames at 30 fps). A soft, low-passed pad in a small warm room and sparse nylon plucks (Karplus-Strong 'pluck', new for this channel) on the off-beats; a sub only for the whoa. Foley is soft and tonal: plucks for labels, a low felt knock for layers, plops for water. No bells (Lumevina), no fizz (Lumevina's dew), no ping (Light Minute), no mallet (Meanwhile, Inside), no blip (Rest Frame). Signature: plucks F5, C6, A5, 7 frames apart (root, fifth, then the third settling under it: an answer). It plays on the title, at the end of counters and on the end card.",
+  "_doc": "Outer Layer (skin), 'skin warmth, slide light': F major at 64.2857 BPM (a beat is 28 frames, a 16th exactly 7 frames at 30 fps). A soft, low-passed pad in a small warm room and a sparse breathy reed (the 'reed' voice, new for this channel) holding long tones on the off-beats; a sub only for the whoa. Foley is soft and tonal: short reed notes for labels, a low felt knock for layers, plops for water. No plucks (Back of the Envelope), no bells (Lumevina), no fizz (Lumevina's dew), no ping (Light Minute), no mallet (Meanwhile, Inside), no blip (Rest Frame). Signature: reed F5, C6, A5, 7 frames apart, each held into the next (root, fifth, then the third settling under it: an answer). It plays on the title, at the end of counters and on the end card.",
   "name": "outerlayer-slide",
   "bpm": 64.2857,
   "key": "F",
@@ -52,7 +52,7 @@
     }
   ],
   "signature": {
-    "voice": "pluck",
+    "voice": "reed",
     "notes": [
       "F5",
       "C6",
@@ -66,25 +66,30 @@
     "gains": [
       0,
       -1.5,
-      -3
+      -2.5
     ],
-    "bright": 0.55,
-    "dur": 1.6
+    "dur": 1.5,
+    "breath": 0.4,
+    "attack": 0.012
   },
   "layers": {
     "pad": {
-      "gain": -17,
+      "gain": -12,
       "bright": 1700,
       "attack": 1.8,
       "release": 2.2
     },
     "melody": {
-      "voice": "pluck",
+      "voice": "reed",
       "pattern": [
         null,
         0,
         null,
+        null,
+        null,
         2,
+        null,
+        null,
         null,
         1,
         null,
@@ -92,21 +97,19 @@
         null,
         3,
         null,
-        1,
-        null,
-        2,
-        null,
         null
       ],
       "step": 0.5,
-      "double_above": 0.7,
+      "double_above": 0.75,
       "octave": 1,
-      "gain": -14,
-      "dur": 1.4,
-      "pluck_bright": 0.45
+      "gain": -12,
+      "dur": 2.2,
+      "bright": 2400,
+      "breath": 0.35,
+      "attack": 0.25
     },
     "sub": {
-      "gain": -26,
+      "gain": -22,
       "above": 0.7
     },
     "air": {
@@ -134,10 +137,11 @@
   },
   "foley": {
     "label": {
-      "voice": "pluck",
-      "gain": -18,
-      "dur": 1.0,
-      "bright": 0.6,
+      "voice": "reed",
+      "gain": -19,
+      "dur": 0.7,
+      "attack": 0.012,
+      "breath": 0.3,
       "notes": [
         "C5",
         "D5",
@@ -152,10 +156,10 @@
       ]
     },
     "counter.show": {
-      "voice": "pluck",
-      "gain": -20,
-      "dur": 0.9,
-      "bright": 0.7,
+      "voice": "reed",
+      "gain": -21,
+      "dur": 0.6,
+      "attack": 0.012,
       "notes": [
         "F6"
       ]
@@ -185,7 +189,8 @@
     "swell": {
       "voice": "swell",
       "gain": -17,
-      "note": "F2"
+      "note": "F2",
+      "anchor": "peak"
     },
     "cell.land": {
       "voice": "knock",
@@ -203,21 +208,16 @@
       "f0": 380
     },
     "reveal": {
-      "voice": "sparkle",
-      "gain": -24,
-      "notes": [
-        "F6",
-        "C7",
-        "A6",
-        "G6"
-      ],
-      "grain": "blip",
-      "dur": 0.7
+      "voice": "swell",
+      "gain": -20,
+      "note": "F3",
+      "anchor": "peak"
     },
     "scale": {
-      "voice": "pluck",
+      "voice": "reed",
       "gain": -21,
       "dur": 0.8,
+      "attack": 0.012,
       "notes": [
         "C6"
       ]

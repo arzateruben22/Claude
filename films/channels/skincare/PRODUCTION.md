@@ -17,7 +17,7 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 - **27 Oct, block 1.** Bible, fonts (Newsreader, Red Hat Text, Red Hat Mono; OFL), theme.json (contrast.py: 0 fails;
   the first accent, `#6A2FD0`, sat ΔE00 3.2 from Rest Frame's wave violet and was moved to `#9135A8`; water moved to
   `#00685F`), narrator auditions (af_nicole, bf_isabella, am_fenrir; recommended bf_isabella), episode 1 script, claims
-  (14, all search excerpts) and voice; the `pluck` voice and the `outerlayer-slide` preset (KIT-CHANGES.md).
+  (14, all search excerpts) and voice; the `pluck` voice (later replaced for this channel by `reed`) and the `outerlayer-slide` preset (KIT-CHANGES.md).
 
 - **27 Oct, block 1 (cont.).** Episode 1 compile.py (shots hook · section · walls · gauge · close; the climb at 300,000×;
   10 labels, 8 notes, 6 spine values; 30 caption pages, numbers glued to their units) and the first scene: the procedural
@@ -28,4 +28,4 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 
 ## Questions (for the owner, through the coordinator)
 - Narrator: bf_isabella recommended (auditions/README.md); carrying on with it until told otherwise.
-- Channel colour in Prism Studio: the catalogue's placeholder `#D99A92` is a dusty rose close to Lumevina; proposed `uv` `#9135A8`.
+- Channel colour in Prism Studio: the catalogue's placeholder `#D99A92` is a dusty rose close to Lumevina; set by the coordinator to `water` `#00685F`.

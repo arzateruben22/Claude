@@ -120,7 +120,7 @@
   "recurring_segment": "To scale: the gauge lifts to centre and the episode's subject fills in beside the paper mark.",
   "tease": "Next layer: …",
   "colour_rules": "uv violet is ultraviolet and the spoken word; water is water and the barrier. Skin colours come only from skin. No black ground, rose, gold, amber or coral.",
-  "sound": "F major at 64.2857 BPM (a 16th is 7 frames); soft pad and nylon plucks; signature plucks F5, C6, A5, 7 frames apart."
+  "sound": "F major at 64.2857 BPM (a 16th is 7 frames); soft pad and a breathy reed; signature reed F5, C6, A5, 7 frames apart."
  },
 
  "cssText": ".stage { background: linear-gradient(180deg, var(--slide) 0%, var(--slide) 46%, var(--slide-low) 100%); }\n.hud-h, .hud-end .t { font-variation-settings: \"opsz\" 72; }\n.hud-series { font-family: var(--font-text); text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }\n.hud-counter .v, .hud-scale, .hud-badge { font-feature-settings: \"tnum\" 1; }\n.hud-badge { letter-spacing: .01em; }"
