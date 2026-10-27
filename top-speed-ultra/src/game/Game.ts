@@ -1195,7 +1195,10 @@ export class Game {
       // cluster was drawn small mid-screen; this one draws it about 1.25x larger under the road, the door at the edge.
       // Landscape is unchanged.
       const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, 84) : 58;
-      const basePitch = portrait ? -Math.atan((0.5 - SEAT_HORIZON_P) * 2 * Math.tan((vBase / 2) * DEG)) : -0.085;
+      // the horizon sits 37% of the way down the part of the screen below the top safe area (the notch or Dynamic
+      // Island when the page runs edge to edge): with a 59 px inset the HUD comes down 59 px and the windscreen with it
+      const hz = SEAT_HORIZON_P + (1 - SEAT_HORIZON_P) * this.topInsetFrac();
+      const basePitch = portrait ? -Math.atan((0.5 - hz) * 2 * Math.tan((vBase / 2) * DEG)) : -0.085;
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
@@ -1250,6 +1253,20 @@ export class Game {
     } else { this.camera.position.copy(this.wantP); this.camera.quaternion.copy(this.wantQ); }
     if (Math.abs(this.camera.fov - fov) > 0.05) { this.camera.fov = lerp(this.camera.fov, fov, 1 - Math.exp(-dt * 6)); this.camera.updateProjectionMatrix(); }
     this.camera.near = (view === 'chase' || view === 'cinematic') && !lookBack ? 0.15 : 0.05;
+  }
+
+  // the top safe area as a fraction of the stage's height, from the --sa-t the HUD lays itself out by (styles.css; the
+  // suite sets it to emulate an inset), read twice a second rather than every frame
+  private insetAt = -1e9; private insetFrac = 0;
+  private topInsetFrac() {
+    const now = performance.now();
+    if (now - this.insetAt > 500) {
+      this.insetAt = now;
+      const app = this.host.closest('.app') as HTMLElement | null, h = this.host.clientHeight || innerHeight;
+      const v = app ? parseFloat(getComputedStyle(app).getPropertyValue('--sa-t')) : 0;
+      this.insetFrac = Number.isFinite(v) && h > 0 ? clamp(v / h, 0, 0.15) : 0;
+    }
+    return this.insetFrac;
   }
 
   // ----------------------------------------------------------------------------------------- the corner window

@@ -1032,7 +1032,7 @@ await group('phone', async (use) => {
       const nav = q('.hud-nav'), dest = q('.hud-dest'), m = window.__game.chevrons.mesh;
       return { nav: box(nav), dest: box(dest), chip: box(q('.hud-roadname')), navText: nav.hidden ? '' : nav.innerText.replace(/\s+/g, ' '), destText: dest.hidden ? '' : dest.innerText.replace(/\s+/g, ' '),
         count: m.count, shown: m.visible, w: innerWidth, side: document.documentElement.scrollWidth > innerWidth,
-        clipped: [nav, dest].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };
+        clipped: [nav, dest, q('.hud-nav-sign')].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };   // the sign too: it was cut to "CA-55 NORT..."
     });
     const r = await look();
     await page.screenshot({ path: path.join(OUT, 'phone-nav.png') });
