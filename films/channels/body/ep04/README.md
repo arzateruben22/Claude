@@ -7,6 +7,7 @@ voice, labelled as AI). It pays off episode 3's tease ("A gap most signals can't
 | | |
 |---|---|
 | Delivery | `out/meanwhile-inside-004-9x16.mp4`, poster `out/meanwhile-inside-004-9x16.jpg`, contact sheet `out/meanwhile-inside-004-9x16-contact.jpg` |
+| Ten final-tier stills | `review/stills-ep04.jpg` (from the delivered file at 0, 8, 18, 24, 32, 38.6, 45.4, 48, 58.4 and 73.5 s) |
 | Measured gates | `review/scorecard.md` |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (17 claims), `review/HUMAN-REVIEW.md` |
 

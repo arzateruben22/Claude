@@ -82,12 +82,20 @@
    "t": 6.933333333333334,
    "kind": "badge",
    "tag": "few",
-   "text": "simplified: 7 of ~23 forks drawn"
+   "text": "simplified: 7 of ~23 forks drawn",
+   "pos": [
+    0.573,
+    0.185
+   ]
   },
   {
    "t": 6.933333333333334,
    "kind": "counter.show",
-   "tag": "forks"
+   "tag": "forks",
+   "pos": [
+    0.5,
+    0.31
+   ]
   },
   {
    "t": 9.7,
@@ -97,17 +105,29 @@
   {
    "t": 11.7,
    "kind": "counter.show",
-   "tag": "sacs"
+   "tag": "sacs",
+   "pos": [
+    0.5,
+    0.26
+   ]
   },
   {
    "t": 12.566666666666666,
    "kind": "label",
-   "tag": "sac"
+   "tag": "sac",
+   "pos": [
+    0.575,
+    0.312
+   ]
   },
   {
    "t": 13.666666666666666,
    "kind": "counter.show",
-   "tag": "size"
+   "tag": "size",
+   "pos": [
+    0.5,
+    0.26
+   ]
   },
   {
    "t": 16.8,
@@ -119,17 +139,29 @@
    "t": 19.133333333333333,
    "kind": "badge",
    "tag": "ill",
-   "text": "illustration: the old idea"
+   "text": "illustration: the old idea",
+   "pos": [
+    0.631,
+    0.185
+   ]
   },
   {
    "t": 19.633333333333333,
    "kind": "label",
-   "tag": "flesh"
+   "tag": "flesh",
+   "pos": [
+    0.565,
+    0.364
+   ]
   },
   {
    "t": 22.133333333333333,
    "kind": "counter.show",
-   "tag": "year"
+   "tag": "year",
+   "pos": [
+    0.5,
+    0.31
+   ]
   },
   {
    "t": 26.866666666666667,
@@ -146,34 +178,58 @@
   {
    "t": 28.233333333333334,
    "kind": "label",
-   "tag": "cap"
+   "tag": "cap",
+   "pos": [
+    0.458,
+    0.654
+   ]
   },
   {
    "t": 30.516666,
    "kind": "badge",
    "tag": "scale",
-   "text": "wall and cell to scale · O₂ enlarged"
+   "text": "wall and cell to scale · O₂ enlarged",
+   "pos": [
+    0.551,
+    0.146
+   ]
   },
   {
    "t": 31.566666666666666,
    "kind": "label",
-   "tag": "wall"
+   "tag": "wall",
+   "pos": [
+    0.185,
+    0.467
+   ]
   },
   {
    "t": 33.166666666666664,
    "kind": "counter.show",
-   "tag": "wallt"
+   "tag": "wallt",
+   "pos": [
+    0.5,
+    0.24
+   ]
   },
   {
    "t": 35.733333333333334,
    "kind": "label",
-   "tag": "rbc"
+   "tag": "rbc",
+   "pos": [
+    0.669,
+    0.231
+   ]
   },
   {
    "t": 36.1,
    "kind": "badge",
    "tag": "slow",
-   "text": "slowed"
+   "text": "slowed",
+   "pos": [
+    0.163,
+    0.146
+   ]
   },
   {
    "t": 36.6,
@@ -184,13 +240,21 @@
   {
    "t": 36.6,
    "kind": "label",
-   "tag": "air"
+   "tag": "air",
+   "pos": [
+    0.217,
+    0.342
+   ]
   },
   {
    "t": 39.43333333333333,
    "kind": "badge",
    "tag": "thick",
-   "text": "illustration: a thickened wall"
+   "text": "illustration: a thickened wall",
+   "pos": [
+    0.6,
+    0.185
+   ]
   },
   {
    "t": 39.43333333333333,
@@ -202,7 +266,11 @@
    "t": 43.983333,
    "kind": "badge",
    "tag": "ill2",
-   "text": "area to scale · estimates 50–140 m²"
+   "text": "area to scale · estimates 50–140 m²",
+   "pos": [
+    0.54,
+    0.146
+   ]
   },
   {
    "t": 44.0,
@@ -213,7 +281,11 @@
   {
    "t": 44.333333333333336,
    "kind": "counter.show",
-   "tag": "area"
+   "tag": "area",
+   "pos": [
+    0.5,
+    0.31
+   ]
   },
   {
    "t": 44.333333333333336,
@@ -229,7 +301,11 @@
   {
    "t": 48.233333333333334,
    "kind": "label",
-   "tag": "person"
+   "tag": "person",
+   "pos": [
+    0.26,
+    0.414
+   ]
   },
   {
    "t": 49.86666666666667,
@@ -240,7 +316,11 @@
   {
    "t": 49.96666666666667,
    "kind": "label",
-   "tag": "court"
+   "tag": "court",
+   "pos": [
+    0.314,
+    0.205
+   ]
   },
   {
    "t": 55.6,
@@ -258,13 +338,21 @@
    "t": 57.83333333333333,
    "kind": "badge",
    "tag": "ill3",
-   "text": "illustration · estimates 50–140 m²"
+   "text": "illustration · estimates 50–140 m²",
+   "pos": [
+    0.555,
+    0.146
+   ]
   },
   {
    "t": 60.5,
    "kind": "badge",
    "tag": "ill4",
-   "text": "illustration"
+   "text": "illustration",
+   "pos": [
+    0.725,
+    0.146
+   ]
   },
   {
    "t": 60.8,
@@ -280,7 +368,11 @@
   {
    "t": 61.099999999999994,
    "kind": "counter.show",
-   "tag": "tally"
+   "tag": "tally",
+   "pos": [
+    0.5,
+    0.27
+   ]
   },
   {
    "t": 61.6,
@@ -338,13 +430,21 @@
    "t": 67.583333,
    "kind": "badge",
    "tag": "nts2",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.719,
+    0.146
+   ]
   },
   {
    "t": 67.583333,
    "kind": "badge",
    "tag": "flow",
-   "text": "blood flow slowed"
+   "text": "blood flow slowed",
+   "pos": [
+    0.242,
+    0.146
+   ]
   },
   {
    "t": 67.6,
@@ -355,13 +455,21 @@
   {
    "t": 68.66666666666667,
    "kind": "label",
-   "tag": "wbc"
+   "tag": "wbc",
+   "pos": [
+    0.504,
+    0.207
+   ]
   },
   {
    "t": 70.1,
    "kind": "badge",
    "tag": "fast",
-   "text": "squeeze sped up"
+   "text": "squeeze sped up",
+   "pos": [
+    0.235,
+    0.185
+   ]
   },
   {
    "t": 70.3,
@@ -416,5 +524,23 @@
    "t": 67.9,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "sac": 12.6,
+  "flesh": 19.6667,
+  "cap": 28.3333,
+  "air": 36.6333,
+  "wall": 31.6,
+  "rbc": 35.7667,
+  "person": 48.2667,
+  "court": 50,
+  "wbc": 68.7,
+  "forks": 6.9667,
+  "sacs": 11.7333,
+  "size": 13.7,
+  "year": 22.1667,
+  "wallt": 33.2,
+  "area": 44.3667,
+  "tally": 61.1333
+ }
 }
