@@ -184,19 +184,19 @@
   /* ── everyday answers, in Evelyn's voice ── */
   var KB = [
     { id: "hi", k: /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|what'?s up|good (morning|afternoon|evening))[\s!.,]*(there|evelyn|lumevina)?[\s!.?]*$/, a: function () {
-      return "Hi! I can help with your skin, your products, prices, booking, prep and aftercare, any time, from Evelyn’s own playbook. She’s a tap away for anything personal."; } },
-    { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "Anytime. Anything else I can help with?"; } },
+      return "Hello, and welcome to Lumevina. I can help with your skin, your products, prices, booking, preparation and aftercare at any time, from Evelyn’s own guidance. For anything personal, she is always available."; } },
+    { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "You’re very welcome. Is there anything else I can help you with?"; } },
     { id: "bye", k: /^(bye+|see you|see ya|talk (later|soon)|talk to you later|good ?night|have a good (one|day|night)|ttyl|later)[\s!.]*$/, a: function () {
-      return "See you at the studio. Evelyn’s here whenever you need her."; } },
+      return "Thank you for visiting. We look forward to seeing you at the studio."; } },
     { id: "ack", k: /^(ok|okay|cool|great|got it|sounds good|perfect|nice|alright|all right|yes|yeah|no|sure|fine|bet|word|awesome|amazing|love it|same|true)[\s!.]*$/, a: function () {
-      return "Anything else I can help with?"; } },
+      return "Is there anything else I can help you with?"; } },
     /* "wdym?" after an answer: say it again, shorter, rather than start over */
     { id: "clarify", k: /^(what do you mean|what does that mean|huh|what|wait what|i don'?t (get|understand|follow)( it| that)?|i'?m (confused|lost)|say that again|come again|explain( that)?|in english|simpler|can you (explain|clarify)|meaning)[\s!?.]*$/, a: function () {
       var last = null;
       for (var i = state.log.length - 1; i >= 0; i--) if (state.log[i].who === "bot" && state.log[i].text) { last = state.log[i].text; break; }
-      if (!last) return "Ask me anything about prices, booking, prep, aftercare or products, and I’ll keep it simple.";
+      if (!last) return "Ask me about prices, booking, preparation, aftercare or products, and I’ll keep it simple.";
       var first = (/^[\s\S]*?[.!?](?=\s|$)/.exec(last) || [last])[0];
-      return "Let me put that more simply: " + (first.length > 170 ? first.slice(0, 168).replace(/\s\S*$/, "") + "…" : first) + " Want the rest? Just say so."; },
+      return "Put more simply: " + (first.length > 170 ? first.slice(0, 168).replace(/\s\S*$/, "") + "…" : first) + " Would you like the rest?"; },
       acts: [] },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
     { id: "live", k: /in[- ]person|group class|workshop|glow party|\bpart(y|ies)\b|girls'? night|bachelorette|pro night|skin school live|live class/, a: function () {
@@ -870,11 +870,11 @@
     logEl.innerHTML = "";
     var who = me();
     var st = status();
-    bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
+    bubble("bot", esc((who ? "Hello " + who.name.split(" ")[0] + ". " : "Hello, and welcome to Lumevina. ") + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
       : myProfile() ? "I have your skin profile, so ask me about prep, aftercare, products or booking and I’ll keep your routine in mind. Changes to your routine, I’ll pass to Evelyn."
       : st ? "Ask me about your skin, your products, prices, booking, prep or aftercare. I answer from Evelyn’s own playbook, and she’s a tap away."
-      : "Welcome to Lumevina. Are you new here, or have you been in before?")) +
+      : "Are you new to the studio, or have you visited before?")) +
       (st ? '<span class="ask-status">' + (st === "new" ? "New client" : "Been in before") + ' · <button type="button" class="ask-status-x" data-act="status:' + (st === "new" ? "existing" : "new") + '">' + (st === "new" ? "I’ve been in before" : "I’m new here") + '</button></span>'
         : '<div class="ask-acts"><button type="button" class="ask-act is-primary" data-act="status:new">' + esc(STATUS["new"].label) + '</button><button type="button" class="ask-act is-primary" data-act="status:existing">' + esc(STATUS.existing.label) + '</button></div>'));
     var answered = {};
@@ -1169,14 +1169,14 @@
   };
 
   /* ── staying in its lane (js/ask-rules.js → offTopic): flirting, abuse, "ignore your instructions",
-     homework. One light line and the topic buttons; never Evelyn's inbox, never a lecture. A few in a
+     homework. One courteous line and the topic buttons; never Evelyn's inbox, never a lecture, never a joke. A few in a
      row and it offers the buttons only; a few more and it goes quiet for ten minutes. ── */
   var OFF_LINES = {
-    flirt: ["Ha, I’m flattered, but I’m strictly the skin-and-booking type. What can I help you with?", "Still just here for your skin. Prices, booking, products?", "I’ll leave the romance to the rom-coms. Anything about a visit?"],
-    abuse: ["I’ll keep it kind on my end. Anything about your skin or a visit I can help with?", "Happy to help with Lumevina things whenever you’re ready.", "Here when you want a hand with prices, booking or aftercare."],
-    jailbreak: ["Nice try. I’m Lumevina’s front desk and that’s the whole job. Prices, booking, aftercare?", "Still the front desk, still only skin and studio things. What do you need?", "That one doesn’t work on me. Anything about a visit?"],
-    identity: ["I’m Lumevina’s assistant, not a person, and I’m good at exactly one thing: Evelyn’s studio, her products and your skin. Anything there?", "Just the studio’s assistant, no feelings, lots of skincare. What can I help with?", "A bot with good skin advice. Prices, booking, products?"],
-    unrelated: ["That one’s outside my lane; I only know Lumevina, Evelyn’s treatments, her products and skin. Want any of that?", "Not my department, but your skin is. Prices, booking, aftercare?", "I’ll stick to skin and studio things. Here’s what I can help with:"]
+    flirt: ["Thank you, but I’m here only for Lumevina: your skin, Evelyn’s treatments and booking. How may I help?", "I can help with treatments, products and booking. What would you like to know?", "I’m here for your skin and your visit. Would prices, booking or aftercare help?"],
+    abuse: ["I’m here whenever you’d like help with your skin or a visit.", "I’m happy to help with treatments, products or booking whenever you’re ready.", "I’m here when you’d like help with prices, booking or aftercare."],
+    jailbreak: ["I’m Lumevina’s assistant, here for Evelyn’s treatments, her products and your skin. How may I help?", "I can help only with the studio: treatments, products, booking and skin care. What would you like to know?", "I’m here for questions about your skin and your visit. Would prices, booking or aftercare help?"],
+    identity: ["I’m Lumevina’s virtual assistant, not a person. I answer from Evelyn’s own guidance on her treatments, her products and your skin. How may I help?", "I’m the studio’s virtual assistant, here for skin care, treatments and booking. What would you like to know?", "I’m a virtual assistant, here for your skin and your visit. Would prices, booking or products help?"],
+    unrelated: ["I can help only with Lumevina: Evelyn’s treatments, her products, booking and your skin. Would any of those help?", "That’s outside what I can help with here. I’d be glad to help with treatments, products or booking.", "I’ll keep to skin care and the studio. Here’s what I can help with:"]
   };
   var QUIET_MIN = 10;
   var offLine = function (kind, n) { var L = OFF_LINES[kind] || OFF_LINES.unrelated; return L[Math.min(L.length - 1, Math.max(0, n - 1))]; };
