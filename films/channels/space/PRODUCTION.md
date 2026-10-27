@@ -1,21 +1,29 @@
 # Light Minute: production log (episodes 2–6)
 
-> **Paused 26 Oct, 21:21 UTC (the owner, through the coordinating session).** Nothing is running. Delivered on this
-> branch: No. 004 (7e4e3f8) and No. 006 (3ed56a4), both QA PASS (No. 001 was delivered earlier). The other three
-> have every review fix applied, code-checked and stills-checked at 1080 (two draft-review rounds each), and their
-> finals were rendering, 10 s chunks one at a time, when the pause came:
+> **Final summary (27 Oct): episodes 2–6 are delivered.** Each is a fresh final on this branch, `qa.py` PASS, with its
+> poster, contact sheet and `review/` (scorecard, HUMAN-REVIEW, CLAIMS-REVIEW). Nothing has been posted.
 >
-> | No. | Final so far (in `epNN/build/final/9x16`, kept) | To resume |
-> |---|---|---|
-> | 003 | chunks 000–002 encoded; soundtrack built | `render.mjs --film films/channels/space/ep03 --tier final --resume` |
-> | 005 | chunk 000 encoded, 126 frames of 001 on disk; soundtrack built | the same with `ep05` |
-> | 002 | soundtrack built, no frames yet | the same with `ep02` (or compile → `--cues` → compile → studio → `--fresh`) |
+> | No. | Title | Length | Loudness | Voice over music | File | Delivered in |
+> |---|---|---|---|---|---|---|
+> | 002 | The nearest star | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.1 LU | 17.0 MB | this commit |
+> | 003 | Venus day | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.3 LU | 26.1 MB | 477a341 |
+> | 004 | The falling Moon | 74.13 s | −14.1 LUFS / −1.8 dBTP | 12.5 LU | 15.0 MB | 7e4e3f8 |
+> | 005 | How big is the Sun | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.4 LU | 26.6 MB | 469c0f2 |
+> | 006 | Your speed | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.3 LU | 64.7 MB | 3ed56a4 |
 >
-> Then for each: `render.mjs ... --tier final --assemble --audio films/channels/space/epNN/build/audio/mix.wav`,
-> `python3 -I kits/cinema/film/qa.py films/channels/space/epNN`, the scorecard (`scorecard.py`; No. 005's is new), the
-> README status, HUMAN-REVIEW's last paragraph and this table's row; commit and push each final as it lands and send
-> the coordinating session one line (length, LUFS/dBTP, QA). `build/` is not in git: if the container was replaced,
-> each final starts again from its compile (about 50 min each on 4 CPUs). One Chromium job at a time.
+> Every one: sound sync PASS, 0 flashes, 0 text warnings in the render's audit, and every label, counter, note and
+> caption page checked at its middle and ends (156–175 moments each): none outside the safe box, none on other text.
+> How they got here: the coordinating session's script audit applied; then draft-tier review rounds (an independent
+> two-lens review of each draft cut, text/layout and picture, every finding verified by a second agent; 32 + 28, 41 + 27,
+> 38 + 33, 41 + 37 and 30 + 26 confirmed findings), the fixes code-checked and stills-checked at 1080; finals rendered
+> in 10 s chunks, one Chromium job at a time (003 and 005 resumed from kept frames after the owner's pause on 26 Oct).
+> No. 006 runs at 6.7 Mbps (star fields, the galaxy, Earth's texture): over GitHub's recommended 50 MB, under its limit.
+>
+> **Before posting, a person (TODO):** works through each episode's `review/HUMAN-REVIEW.md` and `CLAIMS-REVIEW.md`
+> (every claim rests on search excerpts: open each source link and tick it); decides kilometers vs miles for US
+> viewers; sets the channel handle (TODO, provisionally @lightminute), the posting accounts and a pinned sources page
+> (TODO); applies the platforms' AI label ("Voice: synthetic"). Covers, thumbnails and `out/POSTING.md` are regenerated
+> by the coordinating session from these finals (No. 002's still show its 25 Oct cut).
 
 Branch `claude/light-minute-ep02-06`. One line per episode, updated as it moves:
 scripted → reviewed → voiced → built → stills OK → rendering → delivered (+ QA numbers).
@@ -23,7 +31,7 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | No. | Title | Bible | State |
 |---|---|---|---|
 | 001 | If the Sun vanished | §8 | delivered (earlier branch): 74.7 s, −14.1 LUFS / −1.9 dBTP, QA PASS |
-| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | two draft-review rounds applied (32 + 28 confirmed findings), code- and stills-checked; **final paused part-way** (see the note above) |
+| 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | **delivered 27 Oct after the recheck, the script audit and two draft-review rounds (32 + 28):** 74.67 s, −14.1 LUFS / −1.9 dBTP, voice 12.1 LU over music, sync PASS, 0 flashes, qa.py PASS, 17.0 MB; render 30 min |
 | 003 | Venus day | §7 #2 | **delivered 27 Oct after two draft-review rounds (41 + 27):** 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.3 LU over music, sync PASS, 0 flashes, qa.py PASS, 26.1 MB; rendered in 10 s chunks either side of the 26 Oct pause |
 | 004 | Falling Moon | §7 #3 | **delivered 26 Oct after the cut review (38) and a draft-review round (33):** 74.13 s, −14.1 LUFS / −1.8 dBTP, voice 12.5 LU over music, sync PASS, 0 flashes, qa.py PASS, 15.0 MB; render 42 min |
 | 005 | Sun size | §7 #4 | **delivered 27 Oct after two draft-review rounds (41 + 37):** 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.4 LU over music, sync PASS, 0 flashes, qa.py PASS, 26.6 MB; rendered in 10 s chunks either side of the 26 Oct pause |

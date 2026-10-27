@@ -51,7 +51,8 @@
   km/s" (was "years at Voyager's speed", too wide beside the lane); a "Voyager 1" label marks the speck while the trip
   time is told. The scale jump shows the comet cloud's rim shrinking into the speck, and the road on through the cloud
   now runs off the frame (30,000 years is 100× the 300; it was drawn about as long as the first road). The end card
-  no longer shows the Sun and Proxima behind its title.
+  no longer shows the Sun and Proxima behind its title. The final (27 Oct, QA PASS) is `out/lightminute-002-9x16.mp4`;
+  the cover, thumbnail and `out/POSTING.md` still show the 25 Oct cut until the coordinating session regenerates them.
 
 
 ## Every episode
