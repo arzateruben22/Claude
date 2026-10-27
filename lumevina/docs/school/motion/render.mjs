@@ -60,10 +60,12 @@ const quick = opt("quick", false) === true;
 const stills = opt("at", "") ? String(opt("at")).split(",").map(Number) : null;   // --at 4,9.5: those moments as PNGs in review/, nothing else
 const verify = opt("verify", false) === true;
 const fps = quick ? 6 : Number(opt("fps", 30));
-// --hd renders at 1080p (1920×1080, and 1080×1920 for the 9:16 cut): sharper on a phone, where the
-// course page crops the clip to 4:3 and a retina screen shows every pixel; it takes about twice as long
-const hd = opt("hd", false) === true;
-const SIZES = hd ? { "16x9": [1920, 1080], "9x16": [1080, 1920] } : { "16x9": [1280, 720], "9x16": [720, 1280] };
+// --res <short side> renders larger than 720p: --res 900 is 1600×900 (900×1600 for the 9:16 cut), --hd is
+// --res 1080. The hero plays at 1080p (the course page crops it to 4:3 on a phone, and a retina screen shows
+// every pixel); the lessons at 900p. A frame costs about its pixel count: 1080p takes twice as long as 720p.
+const short = opt("hd", false) === true ? 1080 : Number(opt("res", 720));
+const long = Math.round(short * 16 / 9 / 2) * 2;
+const SIZES = { "16x9": [long, short], "9x16": [short, long] };
 const OUT = { "16x9": path.join(root, "img/school/video"), "9x16": path.join(root, "marketing/ads/out/video") };
 const review = path.join(here, "review"), logFile = path.join(here, "render-log.json");
 fs.mkdirSync(review, { recursive: true });
@@ -225,7 +227,9 @@ for (const scene of Object.values(SCENES)) {
     }
     if (stills) {
       for (const t of stills) {
-        await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [t, Number(opt("fps", 30))]);
+        const t1 = Date.now();
+        const fin = await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [t, Number(opt("fps", 30))]);
+        if (fin) console.log(`  ${t}s: ${fin.K} samples (${fin.px} px of motion), ${Date.now() - t1} ms`);   // what the film finish did, and what it cost
         const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
         fs.writeFileSync(path.join(review, `${scene.id}-${aspect}-${t}.png`), Buffer.from(data, "base64"));
       }

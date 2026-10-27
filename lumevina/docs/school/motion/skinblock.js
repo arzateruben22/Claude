@@ -22,6 +22,8 @@
 const SKINBLOCK = (window.SKINBLOCK = Object.assign({ lines: 1, pores: 1, bump: 1, rim: 1, dew: 1, focus: 0.5 }, window.SKINBLOCK_OPTS || {}));
 // the blocks are meant to be read, so the lens keeps more of them sharp: half the film finish's focus blur
 if (window.CINEMA) window.CINEMA.dofScale = SKINBLOCK.focus;
+// and a frame where nothing moves more than a sample's worth is drawn once (with multisampling), not twice
+if (window.CINEMA) window.CINEMA.kMin = 1;
 
 const skinBlockSize = (geo) => {
   if (!geo.boundingBox) geo.computeBoundingBox();
@@ -36,6 +38,18 @@ function skinOrInstanced(geo, mat, count) {
   return new THREE.InstancedMesh(geo, mat, count);
 }
 
+// the noise both shaders share: hashes built from fract and dot only (no sin: far cheaper where the
+// renderer is software, as in the frame engine), smooth value noise, and a cellular pattern
+const SB_NOISE = `
+  float sbH1(float p) { p = fract(p * 0.1031); p *= p + 33.33; p *= p + p; return fract(p); }
+  vec2 sbH2(vec2 p) { vec3 q = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973)); q += dot(q, q.yzx + 33.33); return fract((q.xx + q.yz) * q.zy); }
+  float sbN(vec3 p) {
+    vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    float n = dot(i, vec3(1.0, 57.0, 113.0));
+    return mix(mix(mix(sbH1(n), sbH1(n + 1.0), f.x), mix(sbH1(n + 57.0), sbH1(n + 58.0), f.x), f.y),
+               mix(mix(sbH1(n + 113.0), sbH1(n + 114.0), f.x), mix(sbH1(n + 170.0), sbH1(n + 171.0), f.x), f.y), f.z);
+  }`;
+
 function skinBlockMaterial(mat) {
   if (mat.userData.skinBlock) return;
   mat.userData.skinBlock = true;
@@ -45,27 +59,21 @@ function skinBlockMaterial(mat) {
     sh.uniforms.sbK = { value: new THREE.Vector4(SKINBLOCK.lines, SKINBLOCK.pores, SKINBLOCK.bump, SKINBLOCK.rim) };
     sh.uniforms.sbDew = { value: SKINBLOCK.dew };
     sh.vertexShader = sh.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying vec3 vSbLocal; varying vec3 vSbNormal; flat varying float vSbId;")
+      .replace("#include <common>", "#include <common>\nvarying vec3 vSbLocal; varying vec3 vSbNormal; varying vec2 vSbTone; flat varying float vSbId;\n" + SB_NOISE)
       .replace("#include <begin_vertex>", `#include <begin_vertex>
         vSbLocal = transformed; vSbNormal = objectNormal;
         #ifdef USE_INSTANCING
           vSbId = float(gl_InstanceID);
         #else
           vSbId = 0.0;
-        #endif`);
+        #endif
+        vec3 sbVp = transformed * 1.6 + vec3(sbH1(vSbId + 1.7), sbH1(vSbId + 9.3), sbH1(vSbId + 4.1)) * 40.0;
+        vSbTone = vec2(sbN(sbVp) - 0.5, sbN(sbVp * 0.6 + 31.0) - 0.5);`);
     sh.fragmentShader = sh.fragmentShader
       .replace("#include <common>", `#include <common>
-        varying vec3 vSbLocal; varying vec3 vSbNormal; flat varying float vSbId;
+        varying vec3 vSbLocal; varying vec3 vSbNormal; varying vec2 vSbTone; flat varying float vSbId;
         uniform vec4 sbK; uniform float sbDew;
-        float sbH1(float n) { return fract(sin(n * 12.9898) * 43758.5453); }
-        vec2 sbH2(vec2 p) { p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))); return fract(sin(p) * 43758.5453); }
-        float sbN(vec3 p) {   // value noise, smooth
-          vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-          float n = dot(i, vec3(1.0, 57.0, 113.0));
-          return mix(mix(mix(sbH1(n), sbH1(n + 1.0), f.x), mix(sbH1(n + 57.0), sbH1(n + 58.0), f.x), f.y),
-                     mix(mix(sbH1(n + 113.0), sbH1(n + 114.0), f.x), mix(sbH1(n + 170.0), sbH1(n + 171.0), f.x), f.y), f.z);
-        }
-        float sbF(vec3 p) { return 0.55 * sbN(p) + 0.3 * sbN(p * 2.03 + 11.0) + 0.15 * sbN(p * 4.1 + 23.0); }
+        ${SB_NOISE}
         // cellular: the distance to the nearest point (x) and how far from the edge between two cells (y)
         vec2 sbVor(vec2 p) {
           vec2 i = floor(p), f = fract(p); float d1 = 8.0, d2 = 8.0;
@@ -89,23 +97,27 @@ function skinBlockMaterial(mat) {
         float sbTop = smoothstep(0.55, 0.9, vSbNormal.y);
         vec2 sbUv = sbAn.y > max(sbAn.x, sbAn.z) ? vSbLocal.xz : (sbAn.x > sbAn.z ? vSbLocal.zy : vSbLocal.xy);
         vec2 sbO = vec2(sbH1(vSbId + 1.7), sbH1(vSbId + 9.3)) * 40.0;
-        vec3 sbP = vSbLocal + vec3(sbO, sbH1(vSbId + 4.1) * 40.0);
-        // skin lines: a polygonal network, finer and deeper on the surface
-        vec2 sbV = sbVor(sbUv * mix(3.6, 5.0, sbTop) + sbO);
-        float sbLine = (1.0 - smoothstep(0.01, 0.05, sbV.y)) * sbK.x * sbEpi * mix(0.3, 1.0, sbTop);
-        // pores: a few, on the faces that point up
-        vec2 sbPv = sbVor(sbUv * 2.3 + sbO.yx);
-        float sbHasPore = step(0.72, sbH1(dot(floor(sbUv * 2.3 + sbO.yx), vec2(7.0, 113.0)) + vSbId));
-        float sbPore = (1.0 - smoothstep(0.035, 0.07, sbPv.x)) * sbHasPore * sbTop * sbEpi * sbK.y;
-        // dermis grain: soft, crossing fibres; fat: round lobules
-        float sbFib = sbF(vec3(sbUv.x * 3.2 + 0.8 * sbN(sbP * 3.0), sbUv.y * 5.5, 0.0) + sbP * 0.7) - 0.5;
-        vec2 sbLv = sbVor(sbUv * 3.1 + sbO);
-        float sbLob = smoothstep(0.0, 0.55, sbLv.x);
-        // tone: blotchy, warm and cool
-        float sbMot = sbF(sbP * 2.2) - 0.5, sbWarm = sbF(sbP * 1.3 + 31.0) - 0.5, sbGrain = sbN(sbP * 38.0) - 0.5;
-        diffuseColor.rgb *= 1.0 + 0.2 * sbMot - 0.075 * sbLine - 0.38 * sbPore + 0.09 * sbFib * sbDerm - 0.09 * sbLob * sbFat + 0.05 * sbGrain;
+        float sbLine = 0.0, sbPore = 0.0, sbFib = 0.0, sbLob = 0.0;
+        if (sbEpi > 0.02) {
+          // skin lines: a polygonal network, finer and deeper on the surface
+          vec2 sbV = sbVor(sbUv * mix(3.6, 5.0, sbTop) + sbO);
+          sbLine = (1.0 - smoothstep(0.01, 0.05, sbV.y)) * sbK.x * sbEpi * mix(0.3, 1.0, sbTop);
+          // pores: a few, on the faces that point up
+          if (sbTop > 0.02) {
+            vec2 sbPq = sbUv * 2.3 + sbO.yx;
+            float sbHasPore = step(0.72, sbH1(dot(floor(sbPq), vec2(7.0, 113.0)) + vSbId));
+            sbPore = (1.0 - smoothstep(0.035, 0.07, sbVor(sbPq).x)) * sbHasPore * sbTop * sbEpi * sbK.y;
+          }
+        }
+        // dermis grain: soft, crossing fibres
+        if (sbDerm > 0.02) sbFib = sbN(vec3(sbUv.x * 3.2 + 0.8 * sbN(vSbLocal * 3.0 + sbO.x), sbUv.y * 5.5, sbO.y)) - 0.5;
+        // fat: round lobules
+        if (sbFat > 0.02) sbLob = smoothstep(0.0, 0.55, sbVor(sbUv * 3.1 + sbO).x);
+        // tone: blotchy, warm and cool (from the corners), and a fine grain
+        float sbMot = vSbTone.x, sbWarm = vSbTone.y, sbGrain = sbN(vSbLocal * 38.0 + sbO.xyx) - 0.5;
+        diffuseColor.rgb *= 1.0 + 0.32 * sbMot - 0.075 * sbLine - 0.38 * sbPore + 0.09 * sbFib * sbDerm - 0.09 * sbLob * sbFat + 0.05 * sbGrain;
         diffuseColor.rgb *= mix(vec3(1.0), vec3(1.035, 0.975, 0.96), sbWarm * 2.0);
-        float sbHt = -0.6 * sbLine - 1.6 * sbPore + 0.35 * sbMot + 0.45 * sbFib * sbDerm - 0.4 * sbLob * sbFat + 0.12 * sbGrain;`)
+        float sbHt = -0.6 * sbLine - 1.6 * sbPore + 0.45 * sbFib * sbDerm - 0.4 * sbLob * sbFat + 0.12 * sbGrain;`)
       .replace("#include <roughnessmap_fragment>", `#include <roughnessmap_fragment>
         roughnessFactor = clamp(mix(roughnessFactor, 0.4, 0.55 * sbEpi * sbTop * sbDew) + 0.12 * sbLine + 0.2 * sbPore, 0.05, 1.0);`)
       .replace("#include <normal_fragment_maps>", `#include <normal_fragment_maps>
@@ -115,6 +127,6 @@ function skinBlockMaterial(mat) {
         outgoingLight += vec3(1.0, 0.78, 0.72) * sbFr * 0.075 * sbK.w * (0.6 + 0.4 * sbEpi);
         #include <opaque_fragment>`);
   };
-  mat.customProgramCacheKey = () => "skinblock1";
+  mat.customProgramCacheKey = () => "skinblock2";
   mat.needsUpdate = true;
 }

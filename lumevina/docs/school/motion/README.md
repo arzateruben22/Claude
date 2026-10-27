@@ -59,12 +59,21 @@ PLAYWRIGHT_DIR=<folder with node_modules/playwright> CHROMIUM=/opt/pw-browsers/c
   node docs/school/motion/render.mjs --aspect 9x16        # the Reels/TikTok cut, into marketing/ads/out/video/
   node docs/school/motion/render.mjs --verify             # the determinism check
   node docs/school/motion/render.mjs --list
-  node docs/school/motion/render.mjs --only hero --hd       # 1080p (1920×1080, 1080×1920 for 9:16), about twice as long
+  node docs/school/motion/render.mjs --only hero --hd       # 1080p (1920×1080), about twice as long as 720p
+  node docs/school/motion/render.mjs --only 8-2 --res 900   # 1600×900 (900×1600 for 9:16)
 python3 docs/school/build.py                              # the player picks up docs/school/videos.js
 ```
 
-The hero and the free lessons in the blocks look (8-2, 11-1, 10-1, 9-3) are rendered with `--hd`: the course
-page crops its clip to 4:3 on a phone, and a retina screen shows every pixel.
+The hero is rendered at 1080p (`--hd`): the course page crops it to 4:3 on a phone, and a retina screen
+shows every pixel. The free lessons in the blocks look (8-2, 11-1, 10-1, 9-3) are rendered at 900p
+(`--res 900`): the lesson player shows the whole frame, so 1600×900 is sharper than any phone needs.
+
+A frame costs about its pixel count (on this machine, a 1080p frame of the hero in the blocks look takes
+about 6 s, so the hero takes some 75 minutes; renders don't go faster side by side). The blocks look keeps
+it down: the skin shader computes only the pattern of the cell's own layer and takes the blotchy tone from
+the cube's corners; the film finish takes as many motion samples as it would at 720p, draws a frame where
+nothing moves once (with multisampling) instead of twice, and doesn't redraw the shadows for its depth
+pass. `--at` prints, for each still, the samples it took and what it cost.
 
 Sizes are in `vmin`, so a scene renders the same at 1280×720 and 720×1280;
 portrait gets its own layout rules in each scene's CSS where it needs them.

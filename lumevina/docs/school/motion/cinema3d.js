@@ -145,7 +145,9 @@ const CINEMA = (window.CINEMA = {
       // depth at the frame's moment, then the whole finish
       scene.overrideMaterial = T.depthMat;
       r.setRenderTarget(T.depth); r.setClearColor(0xffffff, 1); r.state.buffers.depth.setMask(true); r.clear(true, true, true);
+      const sh = r.shadowMap.autoUpdate; r.shadowMap.autoUpdate = false;   // depth only: the shadow maps from the exposure stand
       _render.call(r, scene, camera);
+      r.shadowMap.autoUpdate = sh;
       scene.overrideMaterial = null;
       const F = (window.CINEMA_FOCUS && window.CINEMA_FOCUS(window.M ? window.M.t : 0)) || {};
       // no focus from the scene: where the camera looks (a camera that travels keeps its subject sharp), else the set's middle
@@ -191,7 +193,10 @@ const CINEMA = (window.CINEMA = {
     CINEMA.mode = "probe"; CINEMA.probe = new Map(); window.seek(at(t - sh / 2)); const a = CINEMA.probe;
     CINEMA.probe = new Map(); window.seek(at(t + sh / 2)); const b = CINEMA.probe;
     const px = dist2(a, b);
-    CINEMA.K = Math.max(CINEMA.kMin, Math.min(CINEMA.kMax, Math.ceil(px / CINEMA.pxPerSample)));
+    // the motion is measured in pixels; above 720p (--hd) a sample covers proportionally more of them, so a
+    // frame takes as many samples as it would at 720p (the blur looks the same; the frame costs a third)
+    const res = Math.max(1, Math.min(T.W, T.H) / 720);
+    CINEMA.K = Math.max(CINEMA.kMin, Math.min(CINEMA.kMax, Math.ceil(px / (CINEMA.pxPerSample * res))));
     CINEMA.mode = "accum";
     clear(T.r, T.accum);
     for (let s = 0; s < CINEMA.K; s++) { CINEMA.s = s; window.seek(at(t + (CINEMA.K > 1 ? ((s + 0.5) / CINEMA.K - 0.5) * sh : 0))); }
