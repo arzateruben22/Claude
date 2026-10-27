@@ -132,9 +132,9 @@ const heroAt = (t, shot) => {
     const t0 = SHOTS.find((s) => s.name === "why").at, touch = W1.sticky[0], xTouch = -62, xStop = -12;
     let x, y = 0, roll = 0, settle = 0, grips = 0, lead = 0, pass = 0;
     if (t < touch) { x = -80 + (xTouch + 80) * seg(t, t0, touch); y = 3.2 * (1 - E.inout2(seg(t, t0 + 0.6, touch))); }
-    else if (t < W1.stop) { const u = E.out2(seg(t, W1.roll[0], W1.stop)); x = xTouch + (xStop - xTouch) * u; roll = -(x - xTouch) / R; }
-    else if (t < W1.crawl[0]) { x = xStop; roll = -(xStop - xTouch) / R; settle = E.inout2(seg(t, W1.stop, W1.stop + 0.5)); grips = seg(t, W1.stop - 0.05, W1.stop + 0.25); }
-    else { const u = E.inout2(seg(t, W1.crawl[0], W1.crawl[1])); x = xStop * (1 - u); roll = -(xStop - xTouch) / R; settle = 1; grips = 1; }
+    else if (t < W1.stop) { const u = E.out2(seg(t, W1.roll[0], W1.stop)); x = xTouch + (xStop - xTouch) * u; roll = -(x - xTouch) / R; grips = seg(t, W1.grip, W1.grip + 0.3); }
+    else if (t < W1.crawl[0]) { x = xStop; roll = -(xStop - xTouch) / R; settle = E.inout2(seg(t, W1.stop, W1.stop + 0.5)); grips = seg(t, W1.grip, W1.grip + 0.3); }
+    else { const u = E.inout2(seg(t, W1.crawl[0], W1.crawl[1])); x = xStop * (1 - u); roll = -(xStop - xTouch) / R; settle = 1; grips = 1 - 0.67 * seg(t, W1.faulty[0], W1.faulty[0] + 0.4) * (1 - seg(t, W1.press[0], W1.press[0] + 0.6)); }   // its own grips step back while the faulty cell is the subject
     if (t >= W1.press[0]) { lead = E.inout2(seg(t, W1.press[0], W1.press[1])); pass = 0.03 * lead; }
     return { x, y, z: 0, pass, settle, grips, roll, lead, open: 0.15 * lead };
   }
@@ -152,7 +152,7 @@ const writeVein = (t, shot) => {
   // the faulty cell: grips dark, it rolls along the floor and on past the seam (the stakes)
   const F = FILM.why.faulty, fo = shot === "why" ? presence(t, F[0], F[1], { d: 0.3, out: 0.4 }).o : 0;
   FAULT.group.visible = fo > 0.01;
-  if (FAULT.group.visible) { const x = -70 + 130 * seg(t, F[0], F[1]); FAULT.group.position.set(x, 0, -13); FAULT.set({ pass: 0, roll: -(x + 70) / FAULT.R, grips: 0 }); FAULT.bodyMat.opacity = 0.62 * fo; }
+  if (FAULT.group.visible) { const x = -22 + 34 * (t - F[0]) / (F[1] - F[0]); FAULT.group.position.set(x, 0, -13); FAULT.set({ pass: 0, roll: -(x + 22) / FAULT.R, grips: 0 }); FAULT.bodyMat.opacity = 0.62 * fo; }   // rolls on past the seam on "past", never stopping on screen
   // the floor: cut open in section for the hook, the whoa and the loop; the hero pair part around the cell
   const cutOn = CUTSHOT(shot);
   for (const P of FLOOR) {
@@ -208,6 +208,7 @@ const writeFinger = (t) => {
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
+#hud-title { width: max-content !important; padding: 1.6vmin 2.6vmin 2vmin; background: var(--hud-plate); border-radius: var(--hud-cap-radius, 3vmin); }   /* the title on its plate: 4.5:1 over the bright venule */
 .mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); transition: none; }
 #hud-tally .lb { color: var(--text); }
@@ -216,7 +217,10 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-tally.mi-dim > * { opacity: .34; }
 #hud-tally.mi-dim { background: rgba(7, 21, 19, .45); }
 .mi-plate, .mi-fig { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
-.hud-scrim { background: rgba(7, 21, 19, .6); }
+/* the loop: frame 0's cell reads through the end card, dark enough that text-2 (fact, Follow pill) keeps 4.5:1 on it */
+.hud-scrim { background: rgba(7, 21, 19, .75); }
+/* the size pill: bar over text, so it fits the safe box */
+#hud-size { flex-direction: column; align-items: flex-start; gap: .8vmin; padding: .9vmin 2.1vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 `; document.head.appendChild(css);
 const hud = createHud({ camera });
 hud.captions(FILM.captions);
@@ -227,18 +231,18 @@ titleEl.appendChild(tPulse.el);
 const wp = (k, p) => [p[0] + PLACE[k][0], p[1] + PLACE[k][1], p[2] + PLACE[k][2]];
 const ANCH = {
   hero: (t) => { const c = heroWorld(t); return [c[0], c[1] + HERO.R * 0.9, c[2] + 1]; },
-  piled: () => { const g = PILED[0].group; return [g.position.x, g.position.y + 7.5, g.position.z + 2]; },
+  piled: () => { const g = PILED[2].group; return [g.position.x, g.position.y + 0.3, g.position.z]; },   // the top of the cell fully in frame
   grips: (t) => { const s = heroAt(t, shotOf(t)); return [s.x + 1.5, 0.3, s.z + HERO.R * 0.7]; },
-  seam: () => [0, 0.3, 12],
+  seam: () => [0, 0.3, 4.5],   // on the seam in front of the hero's foot, above the caption
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
 // the size: a scale bar as long as the cell is across, at its depth
 hud.scale("size", { text: FILM.scale.text, t0: FILM.scale.t0, t1: FILM.scale.t1, bar: (t) => { const c = heroWorld(t), a = hud.project([c[0] - HERO.R, c[1], c[2]]), b = hud.project([c[0] + HERO.R, c[1], c[2]]); return Math.hypot(b.x - a.x, b.y - a.y); } });
-// the spine readout: the meanwhile's tally itself, from frame 0, dimmed to a third until the meanwhile
+// the spine readout: the meanwhile's tally itself, counting from frame 0 (shown from the title's exit), dimmed to a third until the meanwhile
 const commas = (n) => String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: commas, unit: "", label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.5, 0.362], minCh: 10 });   // its plate clears the title's pulse line
+const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: commas, unit: "", label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [[0, [0.458, 0.2180]], [FILM.tally.lit[0], [0.458, 0.2392]]], minCh: 9 });   // its plate clears the title's pulse line
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
@@ -246,13 +250,13 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
-const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
+const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 612 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 const NS = "http://www.w3.org/2000/svg";
 
 // the change: one engraved plate (light lines on the dark plate; hatching for shade); its vessel and tissue, the
 // tissue's cells glowing on "tissue", the blood inside starting to move on "Julius Cohnheim", and three white cells
 // climbing out through the lower wall on "out"
-const PL = { w: 600, h: 480 }, PS2 = (W * 0.75) / PL.w, PX = (W - PL.w * PS2) / 2, PY = H * 0.215;
+const PL = { w: 600, h: 480 }, PS2 = (W * 0.75) / PL.w, PX = 90 * S1, PY = H * 0.215;   // the plate x 90–900: the safe box
 const blob = (cx, cy, rx, ry, seed, wob = 0.12) => { const r = rng(seed), n = 10, pts = []; for (let i = 0; i < n; i++) { const a = (i / n) * 6.2832, k = 1 + wob * (r() - 0.5) * 2; pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]); }
   let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`; for (let i = 0; i < n; i++) { const p0 = pts[i], p1 = pts[(i + 1) % n], m = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2]; d += ` Q${p0[0].toFixed(1)} ${p0[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}`; } return d + " Z"; };
 const plate = document.createElement("div"); plate.className = "mi-plate";
@@ -262,7 +266,7 @@ const plate = document.createElement("div"); plate.className = "mi-plate";
   for (let i = 0; i < 12; i++) { const x = 30 + 50 * i + 20 * r(), y = 205 + 70 * r(); blood.push(`<path d="${blob(x, y, 15, 9, 300 + i, 0.06)}" transform="rotate(${(r() - 0.5) * 70} ${x.toFixed(1)} ${y.toFixed(1)})"/>`); }
   for (let i = 0; i < 3; i++) { const x = 150 + 150 * i, y = 268; white.push(`<g class="wc" data-x="${x}"><path d="${blob(0, 0, 19, 17, 400 + i, 0.1)}" class="wb"/><path d="M-9 -2 q4 -6 8 0 q4 6 9 -1" class="wn"/></g>`); }
   plate.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
-  <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--bone)" stroke-width="1.2" opacity="0.55"/></pattern></defs>
+  <defs><clipPath id="pl-clip"><rect x="12" y="12" width="${PL.w - 24}" height="${PL.h - 24}" rx="10"/></clipPath><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--bone)" stroke-width="1.2" opacity="0.55"/></pattern></defs>
   <rect width="${W}" height="${H}" fill="var(--bg)" opacity="0.9"/>
   <g transform="translate(${PX.toFixed(1)} ${PY.toFixed(1)}) scale(${PS2.toFixed(4)})">
     <rect width="${PL.w}" height="${PL.h}" rx="18" fill="var(--surface)"/>
@@ -271,8 +275,8 @@ const plate = document.createElement("div"); plate.className = "mi-plate";
     <g class="glow" fill="var(--bone)" opacity="0">${tissue.join("")}</g>
     <path d="M0 180 C150 168 300 194 600 178 L600 192 C300 208 150 182 0 194 Z" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2"/>
     <path d="M0 300 C150 312 300 290 600 304 L600 318 C300 304 150 326 0 314 Z" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2"/>
-    <g class="blood" fill="none" stroke="var(--bone)" stroke-width="2">${blood.join("")}</g>
-    <g class="white" fill="var(--surface)" stroke="var(--bone)" stroke-width="2.6">${white.join("")}</g>
+    <g clip-path="url(#pl-clip)"><g class="blood" fill="none" stroke="var(--bone)" stroke-width="2">${blood.join("")}</g>
+    <g class="white" fill="var(--surface)" stroke="var(--bone)" stroke-width="2.6">${white.join("")}</g></g>
   </g></svg>`;
   document.getElementById("hud").prepend(plate);
 }
@@ -317,7 +321,7 @@ const writeFig = (t) => {
 };
 
 // ── focus ───────────────────────────────────────────────────────────────────────────────────────
-const TARGETS = { hero: (t) => heroWorld(t), piled: () => PILED[0].group.position.toArray(), seam: () => [0, 0, 0], spot: () => SPOT };
+const TARGETS = { hero: (t) => heroWorld(t), piled: () => { const g = PILED[2].group; return [g.position.x, g.position.y - 4.15, g.position.z]; }, seam: () => [0, 0, 0], spot: () => SPOT };
 window.CINEMA_FOCUS = (t) => {
   const shot = shotOf(t), F = focusAt(FILM.foc[shot] || FILM.foc.hook, t, { targets: TARGETS }), o = PLACE[placeOf(shot)];
   return { ...F, point: [F.point[0] + o[0], F.point[1] + o[1], F.point[2] + o[2]] };
@@ -350,7 +354,12 @@ window.seek = function (t) {
   L.place(camera, F.point);
   L.uniforms.uFogStart.value = fd;
   scene.fog.density = 1.0 / Math.max(6, fd);
+  yPulse.el.style.display = t < FILM.tally.lit[0] ? "none" : "";   // parked: no pulse line in the layout (a shorter plate)
   hud.update(t);
+  // parked, the tally steps away for the engraving and the whoa (it would sit on them)
+  { const WH = FILM.shots.find((s) => s.name === "whoa").at, FI = FILM.shots.find((s) => s.name === "finger").at;
+    const away = Math.max(presence(t, FILM.panel.t0, FILM.panel.t1, { d: 0.4, out: 0.35 }).o, presence(t, WH, FI - 0.3, { d: 0.3, out: 0.3 }).o);
+    if (away > 0.001) { const o = (parseFloat(tallyEl.style.opacity) || 0) * (1 - away); tallyEl.style.opacity = o.toFixed(4); tallyEl.style.visibility = o > 0.001 ? "visible" : "hidden"; } }
   // the tally: dimmed (parked) until the meanwhile, then lit, on its pulse line
   const lit = t >= FILM.tally.lit[0] && t < FILM.tally.lit[1];
   tallyEl.classList.toggle("mi-dim", !lit);

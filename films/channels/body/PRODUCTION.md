@@ -4,14 +4,31 @@ Branch `claude/meanwhile-inside-ep02-06`. One line per episode, updated as it mo
 scripted → reviewed → voiced → built → stills OK → rendering → delivered (+ QA numbers).
 These five feed the first long-form compilation (with episode 1).
 
+## Summary (27 Oct)
+All six episodes are delivered on this branch: each passed QA on its delivered file (−14.1 LUFS, −1.9 to −2.4 dBTP,
+sound sync PASS, the voice 15.8–16.0 LU over the music, flashing at most 2 a second) and each has a scorecard, ten
+stills from the delivered file, and a CLAIMS-REVIEW and HUMAN-REVIEW for a physiologist. **Nothing has been posted.**
+- **Captions as numerals (27 Oct, the owner's request through the coordinating session).** ep02 and ep06 here carry
+  them ("In 1867", "270 million copies"): only their changed 10 s chunks were rendered again, with each film's sound
+  unchanged. ep01, ep03, ep04 and ep05 here keep the captions they were delivered with: the coordinating session is
+  re-rendering those four in full with the new captions on `claude/made-with-claude-film`, and those are the versions
+  to collect. The caption code came over as six files, not a merge (`KIT-CHANGES.md`).
+- **For a person before posting:** a physiologist's sign-off on every claim and picture; open each source link (all
+  were checked from search excerpts only); a listen on a phone and on headphones (each README's "Listen at T0"); the
+  look-at notes in each README.
+- **TODO placeholders (all episodes):** the channel handle (@meanwhileinside, not yet chosen) and a trademark search,
+  the posting accounts, a pinned sources page, a disclaimer line if wanted, the AI-voice label in each post, the
+  "ask a clinician" reply wording, and the Kokoro voice grades (`bible.md`).
+- **Paused by the owner** after ep02's caption fix; nothing else is queued.
+
 | # | Title | State |
 |---|---|---|
 | 01 | Single file | **delivered** (v3 final, 71.6 s, −14.1 LUFS, QA PASS): the 26 Oct audit's fixes, a sickle cell on screen, balanced captions |
-| 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) |
+| 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) with the written-number captions (27 Oct: chunks 0 and 1 rendered again, the sound copied untouched) |
 | 03 | The jump | **delivered** (74.8 s, −14.1 LUFS, QA PASS, 0 flashes) after a three-lens frame review (drum mirrored so time reads left to right, labels, readouts) |
 | 04 | The gap | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the messenger mist, readouts, labels) |
 | 05 | Where breath goes | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the thickened wall slows the oxygen's crossing, labels, readouts) |
-| 06 | The exit | verified frame-review fixes applied and re-checked · soundtrack −14.1 LUFS, sync PASS · **final rendering** (27 Oct from 04:58 UTC) |
+| 06 | The exit | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings, worst 2 flashes/s) with the written-number captions, after a verified frame review (the tally parked and lit for the meanwhile, the engraving plate, the grips) |
 
 ## Visual review (26 Oct)
 A multi-agent review (motion, layout, graphics, honesty lenses per episode; raw findings in the session's
@@ -51,11 +68,13 @@ excerpts: a person opens each link before posting (each HUMAN-REVIEW).
 - **ep06:** the tease asks "What sets off nearly every heartbeat you have?" (the embryo's first beats and ectopic
   beats are not the SA node's; the bible's row 7 now says so for episode 7); "past" pinned in `pron.json`.
 
-## Running order from here
-One Chromium job at a time: ep02's final (≈3 h) → ep03 looks, cues, soundtrack, stills → ep03 final → ep04 → ep05 →
-ep06. Each final: `kits/cinema/film/run.sh <ep> --tier final` (detached; a bare `run.sh <ep>` resumes it), then
-assemble with `--audio build/audio/mix.wav`, the contact sheet to `out/`, `qa.py`, `scorecard.py`, the review
-docs, commit and push.
+## How the finals ran
+One Chromium job at a time: ep02 → ep03 → ep01 (v3) → ep04 (paused by the owner, resumed from its kept frames) →
+ep05 → ep06. Each final: `kits/cinema/film/run.sh <ep> --tier final` (detached; a bare `run.sh <ep>` resumes it),
+assembled with `--audio build/audio/mix.wav`, the contact sheet to `out/`, `qa.py`, `scorecard.py`, ten stills, the
+review docs, commit and push. The caption fix (ep02, ep06): recompile (captions only), `caption_chunks.py` against
+the delivered state, `render.mjs --from --to --fresh --force-mixed` per changed chunk, assemble (ep02 with its
+delivered master's sound copied untouched), `qa.py`, `youtube1440.py`.
 
 ## Picture rules (WRITING.md "The picture", merged 25 Oct from the coordinating session)
 Applied from episode 2 on: a spine readout through each episode (its label names the beat); the body
@@ -67,5 +86,5 @@ standing cheats top right, at most two per corner. Body's no-circles rule and id
 ## Questions (for Ruben; the bible's recommendation is taken provisionally)
 - **Beat order.** WRITING.md's table puts the segment before the takeaway; episode 1 (and so the channel) runs
   takeaway → meanwhile → tease. Two reviewers flagged it. Provisional: keep episode 1's order for the series.
-- **Episode 1's backdrop.** Its delivered render carries the old backdrop bug (a darker, colder centre). Re-render it
-  so the series matches? Provisional: leave it as delivered; the difference is subtle.
+- **Episode 1's backdrop.** Resolved: its v3 final (26 Oct) was rendered with the fixed `set/look.js`, so the series
+  matches.

@@ -75,17 +75,29 @@
   {
    "t": 5.633333333333334,
    "kind": "label",
-   "tag": "neut"
+   "tag": "neut",
+   "pos": [
+    0.544,
+    0.314
+   ]
   },
   {
    "t": 8.4,
    "kind": "scale",
-   "tag": "size"
+   "tag": "size",
+   "pos": [
+    0.329,
+    0.583
+   ]
   },
   {
    "t": 12.766666666666667,
    "kind": "label",
-   "tag": "piled"
+   "tag": "piled",
+   "pos": [
+    0.374,
+    0.472
+   ]
   },
   {
    "t": 14.0,
@@ -97,7 +109,11 @@
    "t": 14.2,
    "kind": "badge",
    "tag": "ill-plate",
-   "text": "illustrated"
+   "text": "illustrated",
+   "pos": [
+    0.73,
+    0.146
+   ]
   },
   {
    "t": 24.1,
@@ -109,7 +125,11 @@
    "t": 25.583333,
    "kind": "badge",
    "tag": "slow1",
-   "text": "slowed"
+   "text": "slowed",
+   "pos": [
+    0.163,
+    0.146
+   ]
   },
   {
    "t": 25.6,
@@ -126,7 +146,11 @@
   {
    "t": 30.333333333333332,
    "kind": "label",
-   "tag": "grips"
+   "tag": "grips",
+   "pos": [
+    0.671,
+    0.575
+   ]
   },
   {
    "t": 31.466666666666665,
@@ -142,19 +166,31 @@
   {
    "t": 33.06666666666667,
    "kind": "label",
-   "tag": "seam"
+   "tag": "seam",
+   "pos": [
+    0.397,
+    0.57
+   ]
   },
   {
    "t": 35.766666666666666,
    "kind": "badge",
    "tag": "lad",
-   "text": "illustration: a rare inherited condition"
+   "text": "illustration: rare inherited condition",
+   "pos": [
+    0.549,
+    0.146
+   ]
   },
   {
    "t": 42.383333,
    "kind": "badge",
    "tag": "fast",
-   "text": "sped up"
+   "text": "sped up",
+   "pos": [
+    0.171,
+    0.146
+   ]
   },
   {
    "t": 42.4,
@@ -184,7 +220,11 @@
    "t": 54.783333,
    "kind": "badge",
    "tag": "ill-finger",
-   "text": "illustration"
+   "text": "illustration",
+   "pos": [
+    0.725,
+    0.146
+   ]
   },
   {
    "t": 54.783333,
@@ -202,7 +242,11 @@
    "t": 60.8,
    "kind": "badge",
    "tag": "low",
-   "text": "low estimate"
+   "text": "low estimate",
+   "pos": [
+    0.207,
+    0.146
+   ]
   },
   {
    "t": 60.8,
@@ -212,7 +256,11 @@
   {
    "t": 60.8,
    "kind": "counter.show",
-   "tag": "tally"
+   "tag": "tally",
+   "pos": [
+    0.458,
+    0.218
+   ]
   },
   {
    "t": 60.8,
@@ -343,5 +391,12 @@
    "t": 67.9,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "neut": 5.6667,
+  "piled": 12.8,
+  "grips": 30.3667,
+  "seam": 33.1,
+  "tally": 1.2333
+ }
 }

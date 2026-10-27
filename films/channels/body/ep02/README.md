@@ -7,8 +7,8 @@ script and the pictures before it posts.
 
 | | |
 |---|---|
-| Delivery | `out/meanwhile-inside-002-9x16.mp4`, poster `out/meanwhile-inside-002-9x16.jpg`, contact sheet `out/meanwhile-inside-002-9x16-contact.jpg` |
-| Ten final-tier stills | `review/stills-ep02.jpg` (taken from the delivered file at 0, 3.5, 12.5, 20.4, 27, 36.5, 44, 58.5, 62 and 71.3 s) |
+| Delivery | `out/meanwhile-inside-002-9x16.mp4`, poster `out/meanwhile-inside-002-9x16.jpg`, contact sheet `out/meanwhile-inside-002-9x16-contact.jpg`, YouTube 1440p `out/meanwhile-inside-002-9x16-youtube.mp4` |
+| Ten final-tier stills | `review/stills-ep02.jpg` (taken from the caption-fixed delivered file at 0, 3.5, 12.5, 20.4, 27, 36.5, 44, 58.5, 62 and 71.3 s) |
 | Measured gates | `review/scorecard.md` (from `kits/cinema/film/qa.py` and `scorecard.py`) |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (19 claims), `review/HUMAN-REVIEW.md` |
 
@@ -78,7 +78,9 @@ fastest fibres; the whoa no longer repeats the hook's billion but escalates to t
   gaps, and the signal as a chartreuse glow, continuous ("flow") or node by node ("jump"), with a glowing band at
   each lit node. Episode 3 builds on it; episode 4 adds the terminal.
 
-One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
+Kit changes (`../KIT-CHANGES.md`): the balanced caption pager (opt-in), and on 27 Oct the written-number captions
+("Room for about / 1 billion passengers.", "hemoglobin: about / 270 million copies."; the voice still says the words).
+Chunks 0 and 1 of the final were rendered again with them, assembled with the previous master's sound copied untouched.
 
 ## Rebuild
 
@@ -95,6 +97,7 @@ cd ../../../.. && kits/cinema/film/run.sh $E --tier final      # detached, resum
 node kits/cinema/film/render.mjs --film $E --tier final --assemble --audio $E/build/audio/mix.wav
 cp $E/build/final/9x16/contact-sheet.jpg $E/out/meanwhile-inside-002-9x16-contact.jpg
 python3 -I kits/cinema/film/qa.py $E && python3 -I kits/cinema/film/scorecard.py $E --log $E/build/final/9x16/render.log
+python3 -I kits/cinema/film/youtube1440.py $E          # the 1440×2560 YouTube version, sound copied
 ```
 
 ## For a human to review
