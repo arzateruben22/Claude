@@ -116,7 +116,9 @@ the main video when it exists.
 For a solid scene, build the set once at module load (geometry, lights, the
 camera), and in `seek` set every position, rotation, color and the camera from
 `t`, then `renderer.render`. Labels that name a part of the set project the
-part's 3D point to the screen each frame, so they follow the camera.
+part's 3D point to the screen each frame, so they follow the camera. A label
+whose point carries it into the title band (a push in, a tall 9:16 frame) is
+hidden until it comes back out, so it never sits on the title.
 
 The look the solid scenes chase is the one in the reference Ruben sent: a toy
 set under studio light, blocks and dominoes with real shadows, a camera that
