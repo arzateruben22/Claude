@@ -217,7 +217,7 @@ POSTER = A("vo05:does", 0.4)
 glue(f, {"vo02": ["thirty Earths away.", "every second.", "New York", "to Boston", "in five minutes."],
          "vo04": ["sixty times", "from Earth's center", "thirty-six hundred", "times weaker."],
          "vo05": ["one minute,", "the Moon", "as far as an apple", "falls in one second."], "vo06": ["drops an apple", "is the same pull", "keeps the Moon falling."],
-         "vo07": ["one point three seconds.", "the Moon"]})
+         "vo07": ["Earth to Moon:", "one point three seconds.", "the Moon"]})
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
