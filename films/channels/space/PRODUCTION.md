@@ -19,6 +19,16 @@
 > in 10 s chunks, one Chromium job at a time (003 and 005 resumed from kept frames after the owner's pause on 26 Oct).
 > No. 006 runs at 6.7 Mbps (star fields, the galaxy, Earth's texture): over GitHub's recommended 50 MB, under its limit.
 >
+> **Captions with numerals (27 Oct, the owner's ask through the coordinating session):** the burned-in captions now
+> show numbers as people read them ("It left in 1977.", "about 17 kilometers a second", "every 117 days,"); small
+> counts stay words ("day one", "one day"). The coordinator's `numerals.py`, `caption_chunks.py` and `capglue.hold()`
+> were merged (13afda4, then 1cdf9d3's `numerals.py`); a few glues here were re-cut so years keep their lead word and
+> a number stays with its unit, and three breaks the numerals created were mended. Only the 10 s chunks whose
+> captions changed were rendered again (002: 0–6; 003: 0–4, 6; 004: 0, 1, 3–6; 005: all; 006: 0–2, 4, 6) and each
+> master reassembled with its delivered sound stream-copied, so loudness and peaks are unchanged; QA PASS on each,
+> and at every changed caption the new master matches the old one outside the caption band to encoding noise. Each
+> episode also has a 1440×2560 YouTube version (`out/*-9x16-youtube.mp4`). Commits: 002 c0c2fc0, 003 97c15dc, 004 be4d62a, 006 9b928ba; 005 rendering.
+>
 > **Before posting, a person (TODO):** works through each episode's `review/HUMAN-REVIEW.md` and `CLAIMS-REVIEW.md`
 > (every claim rests on search excerpts: open each source link and tick it); decides kilometers vs miles for US
 > viewers; sets the channel handle (TODO, provisionally @lightminute), the posting accounts and a pinned sources page
