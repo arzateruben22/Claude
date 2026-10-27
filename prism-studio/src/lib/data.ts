@@ -513,3 +513,39 @@ export async function instagramExtension() {
     totals: { episodes: sum("episodes"), ready: sum("ready"), posted: sum("posted"), planned: sum("planned"), never: sum("never") },
   };
 }
+
+/** The library: every finished video, per channel, to download at full quality. An episode's current (not superseded)
+ *  render with its covers and file size; a channel's built long videos. Demo rows only when demo data is shown. */
+export async function libraryView() {
+  const d = db();
+  const s = await settings(d);
+  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
+    .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.number));
+  const covers = rows.length ? await d.select({ versionId: S.platformExports.versionId, coverPath: S.platformExports.coverPath }).from(S.platformExports)
+    .where(and(inArray(S.platformExports.versionId, rows.map((r) => r.v.id)), ne(S.platformExports.coverPath, ""))) : [];
+  const lessons = await d.select().from(S.lessons)
+    .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(asc(S.lessons.createdAt));
+  const bytes = (key: string) => { const f = mediaFile(key); return f ? fs.statSync(f).size : 0; };
+  const sibling = (cover: string | null, suffix: string) => {
+    if (!cover || !/-cover\.jpg$/.test(cover)) return null;
+    const k = cover.replace(/-cover\.jpg$/, suffix);
+    return mediaFile(k) ? k : null;
+  };
+  const channels = chans.map((c) => {
+    const episodes = rows.filter((r) => r.e.channelId === c.id).map(({ e, v }) => {
+      const cover = covers.find((x) => x.versionId === v.id)?.coverPath || v.posterPath || null;
+      return {
+        id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: path.basename(v.videoPath),
+        durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover), thumb: sibling(cover, "-thumb.jpg"),
+      };
+    });
+    const longs = lessons.filter((l) => l.channelId === c.id).map((l) => ({
+      id: l.id, name: l.name, title: l.title, isDemo: l.isDemo, videoPath: l.videoPath, thumbnailPath: l.thumbnailPath, bytes: bytes(l.videoPath),
+      durationS: (l.qa as { dur?: number } | null)?.dur ?? null,
+    }));
+    return { channel: c, episodes, longs };
+  });
+  const all = channels.flatMap((c) => [...c.episodes, ...c.longs]);
+  return { channels, count: all.length, bytes: all.reduce((a, x) => a + x.bytes, 0) };
+}

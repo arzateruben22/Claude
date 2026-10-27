@@ -13,6 +13,11 @@
    inside the platform instead, give that time.
 6. Leaving for the app and coming back returns you to the same task.
 
+## Library
+More → **Library** lists every finished video per channel at full quality: Download (the MP4), Cover, Thumbnail,
+Captions, and the episode page for each platform's text. Long videos sit at the top of their channel. Downloading
+never marks anything posted.
+
 ## Weekly
 - **Review** new renders: watch each one, check the sources, then approve each account's video and text.
 - **Calendar → Plan the next 7 days**. Add blackout days for travel. Instagram takes two posts a day, rotating
@@ -111,7 +116,9 @@ Make a throwaway copy of the database (`su postgres -c "createdb -O prism -T pri
 `npm run build`, start the app on it (`DATABASE_URL=…/prism_static npm start -- -p 3111 -H 127.0.0.1`), then
 `BASE=http://127.0.0.1:3111 node scripts/static-preview.cjs <out dir>`. It saves each page reachable from the wall with
 its CSS, fonts, wallpaper, covers and light preview copies of the videos (540 px wide; 854 px for long videos); scripts are removed, copy buttons work
-(their text is in `data-copy`), and buttons that change things do nothing. Publish `<out dir>/index.html` with the rest
+(their text is in `data-copy`), and buttons that change things do nothing. With `FILES_BASE` set to where the
+films repo's files can be downloaded (a public repo's `https://github.com/<owner>/<repo>/raw/<branch>/`), the Download
+buttons fetch the full-quality files from there; without it they do nothing. Publish `<out dir>/index.html` with the rest
 of `<out dir>` as supporting files, then stop the server and drop the copy.
 
 ## Problems

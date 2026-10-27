@@ -473,6 +473,17 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .small-note { font-size: 13px; margin: 10px 0 0; }
 
 .posts { display: grid; gap: var(--s4); }
+/* the library: 9:16 covers in a wrapping grid, the long video as one wide card above them */
+.lib-channel { display: grid; gap: var(--s4); }
+.lib-grid { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.lib-card { padding: 0; overflow: hidden; display: grid; align-content: start; min-width: 0; }
+.lib-card img { display: block; width: 100%; max-width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #000; }
+.lib-card.wide { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+.lib-card.wide img { aspect-ratio: 16 / 9; height: 100%; }
+@media (max-width: 700px) { .lib-card.wide { grid-template-columns: 1fr; } }
+.lib-body { padding: var(--s3) var(--s4) var(--s4); display: grid; gap: var(--s2); align-content: start; min-width: 0; }
+.lib-body h3 { margin: 0; }
+.lib-body p { margin: 0; }
 @media (min-width: 1240px) { .posts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
 .post { display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-areas: "cover head" "fields fields" "actions actions"; gap: var(--s4); align-content: start; padding: var(--s4);
   background: var(--glass); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: var(--blur); min-width: 0; }

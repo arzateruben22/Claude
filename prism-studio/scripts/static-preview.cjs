@@ -2,6 +2,7 @@
 // fonts, wallpaper, covers and light preview copies of the videos. Links point at the saved pages; forms are off.
 //   npm run build, then start the app on a throwaway copy of the database (npm start -- -p 3111), then:
 //   BASE=http://127.0.0.1:3111 node scripts/static-preview.cjs <out dir>   (publish <out dir>/index.html with the rest as files)
+//   FILES_BASE=https://github.com/<owner>/<repo>/raw/<branch>/ makes the download buttons fetch the full-quality files from there
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
@@ -11,6 +12,7 @@ const BASE = process.env.BASE || "http://127.0.0.1:3111";
 const OUT = path.resolve(process.argv[2]);
 const PASS = fs.readFileSync(path.join(__dirname, "../data/DEV-PASSWORD.txt"), "utf8").trim();
 const MAX_PAGES = 160;
+const FILES_BASE = (process.env.FILES_BASE || "").replace(/\/?$/, "/").replace(/^\/$/, "");   // see the download buttons below
 const SKIP = /^\/(api|login|logout|_next|offline)(\/|$)|\.(webmanifest|js|png|jpg|svg|ico|mp4|zip|srt)$/;
 
 const pageFile = (u) => {
@@ -120,7 +122,12 @@ document.addEventListener("click", function (e) {
       if (u.origin !== here.origin) return m;
       const k = u.pathname + u.search;
       if (pages.has(k)) return a + pageFile(u) + (u.hash || "") + z;
-      if (u.pathname.startsWith("/api/media")) return m;   // handled with the assets below
+      if (u.pathname.startsWith("/api/media")) {
+        // a download button: with FILES_BASE (where the films repo's files can be fetched, e.g. a public repo's raw
+        // URL), point it at the full-quality file there; otherwise leave it (it is handled with the assets below)
+        const f = /^films:(?:films\/)?(.+)$/.exec(u.searchParams.get("k") || "");
+        return FILES_BASE && f && u.searchParams.has("dl") ? a + FILES_BASE + "films/" + f[1] + z : m;
+      }
       return a + "#" + z;
     });
     // assets: src, poster, href of stylesheets/icons, srcset, url() in style attributes and <style> blocks
