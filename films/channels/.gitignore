@@ -4,3 +4,4 @@ finals.log
 rerender.log
 # compilation.mjs's intermediates (cards, the episode cuts before the join)
 */compilations/*/work/
+*.part.mp4

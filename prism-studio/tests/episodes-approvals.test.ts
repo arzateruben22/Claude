@@ -67,6 +67,19 @@ describe("approvals are bound to the exact export and account", () => {
     const x2 = await upsertExport(db, { versionId: v2.id, platform: "youtube", filePath: "films:v2.mp4", fileSha256: "v2" });
     expect(await approve(db, { exportId: x2.id, destinationId: yt.id })).toBeTruthy();
   });
+  it("a new file for an export (the YouTube 1440p version) withdraws its approval; other platforms keep theirs", async () => {
+    const { yt, tt, exports, ver: version } = await renderedEpisode(db);
+    await approve(db, { exportId: exports.youtube.id, destinationId: yt.id });
+    await approve(db, { exportId: exports.tiktok.id, destinationId: tt.id });
+    const same = await upsertExport(db, { versionId: version.id, platform: "youtube", filePath: exports.youtube.filePath, fileSha256: exports.youtube.fileSha256 });
+    expect(same.id).toBe(exports.youtube.id);
+    expect(await currentApproval(db, exports.youtube.id, yt.id)).not.toBeNull();       // the same file again changes nothing
+    await upsertExport(db, { versionId: version.id, platform: "youtube", filePath: "films:ep-9x16-youtube.mp4", fileSha256: "yt1440" });
+    expect(await currentApproval(db, exports.youtube.id, yt.id)).toBeNull();
+    const [a] = await db.select().from(S.approvals).where(eq(S.approvals.exportId, exports.youtube.id));
+    expect(a.revokedAt).not.toBeNull();
+    expect(await currentApproval(db, exports.tiktok.id, tt.id)).not.toBeNull();
+  });
   it("a TikTok export can't be approved for YouTube", async () => {
     const { yt, exports } = await renderedEpisode(db);
     await expect(approve(db, { exportId: exports.tiktok.id, destinationId: yt.id })).rejects.toThrow(/cannot be approved/);

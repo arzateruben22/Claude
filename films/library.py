@@ -35,6 +35,12 @@ def probe(f):
     return float(j["duration"]), int(j["size"])
 
 
+def probe_wh(f):
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", str(f)],
+                         check=True, capture_output=True, text=True).stdout.strip().split(",")
+    return int(out[0]), int(out[1])
+
+
 def length(s):
     return f"{int(s // 60)}:{int(round(s % 60)):02d}" if s >= 60 else f"{s:.0f} s"
 
@@ -76,7 +82,7 @@ def main(out):
                 if (d / f).exists():
                     btns.append(link(BLOB + rel(d / f), lab))
             img = f'<img src="covers/{folder}-{d.name}-thumb.jpg" alt="" loading="lazy" width="640" height="360">' if thumb.exists() else ""
-            longs.append(f'''<article class="long">{img}<div class="body"><span class="kicker">Long video · YouTube · 16:9</span>
+            longs.append(f'''<article class="long">{img}<div class="body"><span class="kicker">Long video · YouTube · 16:9 · {"1440p" if probe_wh(vid)[1] >= 1440 else "1080p"}</span>
 <h3>{html.escape(t)}</h3><p class="meta">{d.name} · {length(dur)} · {size / 1e6:.0f} MB</p><div class="btns">{"".join(btns)}</div></div></article>''')
         for n in range(1, EPISODES + 1):
             ep = base / f"ep{n:02d}"
@@ -95,6 +101,9 @@ def main(out):
                 shutil.copyfile(cover480, out / "covers" / cover480.name)
                 img = f'<img src="covers/{cover480.name}" alt="" loading="lazy" width="480" height="853">'
             btns = [link(RAW + rel(vid), "Download video", True)]
+            yt = vid.with_name(vid.name.replace("-9x16.mp4", "-9x16-youtube.mp4"))
+            if yt.exists():
+                btns.append(link(RAW + rel(yt), "YouTube 1440p"))
             if cover.exists():
                 btns.append(link(RAW + rel(cover), "Cover"))
             if thumb.exists():
@@ -172,7 +181,7 @@ article img { display: block; width: 100%; height: auto; max-width: 100%; backgr
   <header class="intro">
     <span class="label">Prism Studio · library</span>
     <h1>Video Library</h1>
-    <p><b>{{COUNT}} videos ready, {{SIZE}} MB.</b> Every button gets the full-quality file. <b>Download video</b> saves the MP4: on iPhone, Safari asks to download it, then it's in Files → Downloads, and Share → Save Video puts it in Photos. <b>Posting text</b> opens the titles, captions, hashtags and sources for each platform.</p>
+    <p><b>{{COUNT}} videos ready, {{SIZE}} MB.</b> Every button gets the full-quality file. <b>Download video</b> is the 1080×1920 master (TikTok and Instagram); <b>YouTube 1440p</b> is the same video upscaled for YouTube, which gives 1440p uploads its sharper encoding. Downloads save the MP4: on iPhone, Safari asks to download it, then it's in Files → Downloads, and Share → Save Video puts it in Photos. <b>Posting text</b> opens the titles, captions, hashtags and sources for each platform.</p>
     <p>Before an episode goes up, its specialist check is still open (each script is marked draft until a physicist, physiologist or fact-checker signs off).</p>
   </header>
 {{SECTIONS}}

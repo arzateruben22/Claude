@@ -20,7 +20,7 @@ export default async function Library() {
     <div>
       <div className="kicker">Every finished video</div>
       <h1>Library</h1>
-      <p className="lede">{v.count} video{v.count === 1 ? "" : "s"}, {mb(v.bytes)}. <b>Download</b> gets the full-quality file (on iPhone: Files → Downloads, then Share → Save Video). The episode page has each platform&apos;s title, caption and sources. Downloading never marks anything as posted.</p>
+      <p className="lede">{v.count} video{v.count === 1 ? "" : "s"}, {mb(v.bytes)}. <b>Download</b> gets the full-quality file (1080×1920, for TikTok and Instagram; on iPhone: Files → Downloads, then Share → Save Video). <b>YouTube 1440p</b> is the same video upscaled for YouTube, which gives 1440p uploads its sharper encoding; the upload tasks hand it to YouTube on their own. The episode page has each platform&apos;s title, caption and sources. Downloading never marks anything as posted.</p>
       {shown.length ? shown.map(({ channel: c, episodes, longs }) => (
         <section key={c.id} className="section lib-channel" style={topicStyle(c)}>
           <div className="section-head"><h2>{plain(c.name)}</h2><span className="faint num">{episodes.length} short{episodes.length === 1 ? "" : "s"}{longs.length ? ` · ${longs.length} long` : ""}</span></div>
@@ -48,6 +48,7 @@ export default async function Library() {
                   <h3>{e.title}</h3>
                   <div className="row">
                     <a className="btn small" href={mediaUrl(e.videoPath, e.fileName)} download><Icon name="download" size={16} /> Download</a>
+                    {e.youtube ? <a className="btn ghost small" href={mediaUrl(e.youtube.path, e.youtube.fileName)} download title={`1440×2560, ${mb(e.youtube.bytes)}`}>YouTube 1440p</a> : null}
                     {e.cover ? <a className="btn ghost small" href={mediaUrl(e.cover, e.fileName.replace(/-9x16\.mp4$/, "-cover.jpg"))} download>Cover</a> : null}
                     {e.thumb ? <a className="btn ghost small" href={mediaUrl(e.thumb, e.fileName.replace(/-9x16\.mp4$/, "-thumb.jpg"))} download>Thumbnail</a> : null}
                     {e.hasSrt ? <a className="btn ghost small" href={`/api/srt/${e.id}`} download>Captions</a> : null}

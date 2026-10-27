@@ -522,8 +522,9 @@ export async function libraryView() {
   const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
   const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
     .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.number));
-  const covers = rows.length ? await d.select({ versionId: S.platformExports.versionId, coverPath: S.platformExports.coverPath }).from(S.platformExports)
-    .where(and(inArray(S.platformExports.versionId, rows.map((r) => r.v.id)), ne(S.platformExports.coverPath, ""))) : [];
+  const xs = rows.length ? await d.select({ versionId: S.platformExports.versionId, platform: S.platformExports.platform, coverPath: S.platformExports.coverPath, filePath: S.platformExports.filePath })
+    .from(S.platformExports).where(inArray(S.platformExports.versionId, rows.map((r) => r.v.id))) : [];
+  const covers = xs.filter((x) => x.coverPath);
   const lessons = await d.select().from(S.lessons)
     .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(asc(S.lessons.createdAt));
   const bytes = (key: string) => { const f = mediaFile(key); return f ? fs.statSync(f).size : 0; };
@@ -535,7 +536,9 @@ export async function libraryView() {
   const channels = chans.map((c) => {
     const episodes = rows.filter((r) => r.e.channelId === c.id).map(({ e, v }) => {
       const cover = covers.find((x) => x.versionId === v.id)?.coverPath || v.posterPath || null;
-      return {
+      const ytFile = xs.find((x) => x.versionId === v.id && x.platform === "youtube")?.filePath;
+      const youtube = ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: path.basename(ytFile), bytes: bytes(ytFile) } : null;   // the 1440p version
+      return { youtube,
         id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: path.basename(v.videoPath),
         durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover), thumb: sibling(cover, "-thumb.jpg"),
       };

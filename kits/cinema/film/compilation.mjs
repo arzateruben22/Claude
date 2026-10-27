@@ -3,12 +3,17 @@
 //   node kits/cinema/film/compilation.mjs --channel films/channels/physics --episodes ep01,ep02,ep03,ep04 \
 //        [--title "Everyday physics, slowed down"] [--thumb "Short thumbnail text"] [--name vol01]
 //        [--out <channel>/compilations] [--cards-only]   (draws the cards and the thumbnail, then stops)
+//        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
 // Each episode's delivered 9:16 file (<episode>/out/*-9x16.mp4) plays whole, full height, in the middle
-// of a 1920×1080 frame drawn in the channel's own theme: the channel and the episode's title on the left,
+// of a 16:9 frame drawn in the channel's own theme (2560×1440 by default: YouTube is widely reported to give
+// 1440p uploads its better encoder; the cards are drawn at that size, the episodes upscaled into the slot): the channel and the episode's title on the left,
 // the chapter list on the right (the current one lit). A 4 s intro card (the channel's name, promise and
 // the episodes' posters, over its sonic signature) opens it; an 8 s outro card closes it, with the right
 // half left clear for YouTube's end-screen elements. Nothing is re-rendered: the episodes are the finals.
+//
+// The encode matches the episodes' delivery (x264 slow, CRF 15, aq-mode 3), its rate capped so the file stays
+// under --max-mb (GitHub refuses files over 100 MB).
 //
 // Writes <out>/<name>/: <name>-16x9.mp4, thumbnail.jpg (1280×720), chapters.txt (YouTube chapters: the
 // first at 0:00, each ≥ 10 s, so the intro belongs to chapter one and the outro to the last),
@@ -26,7 +31,11 @@ for (let i = 0; i < argv.length; i++) if (argv[i].startsWith("--")) A[argv[i].sl
 const die = (m) => { console.error("compilation: " + m); process.exit(2); };
 if (!A.channel || !A.episodes) die("usage: --channel <dir> --episodes ep01,ep02,… [--title T] [--name vol01] [--out DIR]");
 const chan = path.resolve(A.channel), theme = JSON.parse(fs.readFileSync(path.join(chan, "theme.json"), "utf8"));
-const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, INTRO = 4.0, OUTRO = 8.0;
+const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, INTRO = 4.0, OUTRO = 8.0;     // the layout, in CSS px at 1080
+const OH = Number(A.height || 1440), S = OH / H, OW = Math.round(W * S);                      // the delivered frame
+if (![1080, 1440].includes(OH)) die("--height is 1080 or 1440");
+const CRF = Number(A.crf ?? 15), MAX_MB = Number(A["max-mb"] || 90);
+const SLOT_PX = { x: Math.round(SLOT.x * S), w: 2 * Math.round((OH * 9) / 16 / 2) };            // the episode, full height, 9:16
 const run = (cmd, args, o = {}) => { const r = spawnSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 26, ...o }); if (r.status !== 0) die(`${cmd} failed: ${(r.stderr || "").slice(-800)}`); return r.stdout; };
 const probe = (f) => JSON.parse(run("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", f]));
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -100,7 +109,7 @@ const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(run("npm", ["root", "-g
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined) });
 for (const [k, body] of Object.entries(pages)) {
-  const thumb = k === "thumb", page = await browser.newPage({ viewport: { width: W, height: H } });
+  const thumb = k === "thumb", page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: S });   // drawn at the delivered size
   const html = path.join(work, `${k}.html`);
   fs.writeFileSync(html, `<!doctype html><meta charset="utf-8"><style>${css}</style><body>${body}</body>`);
   await page.goto(pathToFileURL(html).href);
@@ -124,7 +133,10 @@ const cardSound = (k, dur, energy, sigAt) => {
 const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
 
 // ── the segments, encoded alike, then joined without re-encoding ───────────────
-const V = ["-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709"];
+const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
+const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 300);                                 // kbps for the picture, room left for sound
+const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
+  "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
 const AU = ["-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2"];
 const card = (k, dur, wav) => {
   const o = path.join(work, `seg-${k}.mp4`);
@@ -139,7 +151,7 @@ const segs = [card("intro", INTRO, introWav)];
 eps.forEach((e, k) => {
   const o = path.join(work, `seg-ep${k}.mp4`);
   run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-i", path.join(work, `ep${k}.png`), "-i", e.file, "-filter_complex",
-    `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT.w}:${H}:flags=lanczos[ep];[bg][ep]overlay=${SLOT.x}:0:shortest=1,format=yuv420p[v]`,
+    `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-map", "1:a:0", "-t", e.dur.toFixed(3), ...V, ...AU, o]);
   segs.push(o);
 });
@@ -179,9 +191,9 @@ const loud = JSON.parse(run("python3", ["-I", "-c", `import sys, json; sys.path.
 const dur = Number(pj.format.duration), short = eps.map((e, k) => (k + 1 < eps.length ? starts[k + 1] : dur) - starts[k]).filter((d) => d < 10);
 const qa = { file: path.relative(repo, final), w: vv.width, h: vv.height, fps: vv.r_frame_rate, dur: +dur.toFixed(3), video_s: +Number(vv.duration).toFixed(3), audio_s: +Number(aa.duration).toFixed(3),
   size_mb: +(fs.statSync(final).size / 1e6).toFixed(1), ...loud, chapters: eps.length, chapters_under_10s: short.length,
-  fails: [vv.width !== W || vv.height !== H ? "not 1920x1080" : null, dur < 300 || dur > 660 ? `length ${ts(dur)} outside 5–11 min` : null,
+  fails: [vv.width !== OW || vv.height !== OH ? `not ${OW}x${OH}` : null, fs.statSync(final).size > 95e6 ? "over 95 MB" : null, dur < 300 || dur > 660 ? `length ${ts(dur)} outside 5–11 min` : null,
     Math.abs(loud.lufs + 14) > 1.5 ? `loudness ${loud.lufs} LUFS` : null, loud.true_peak_db > -1 ? `true peak ${loud.true_peak_db} dBTP` : null,
     short.length ? "a chapter under 10 s" : null, Math.abs(Number(vv.duration) - Number(aa.duration)) > 0.1 ? "picture and sound lengths differ" : null].filter(Boolean) };
 fs.writeFileSync(path.join(outDir, "qa.json"), JSON.stringify(qa, null, 1));
-console.log(`${qa.file}: ${W}×${H}, ${ts(dur)} (${eps.length} episodes), ${qa.size_mb} MB · ${loud.lufs} LUFS, ${loud.true_peak_db} dBTP · ${qa.fails.length ? "FAIL: " + qa.fails.join("; ") : "PASS"}`);
+console.log(`${qa.file}: ${OW}×${OH}, ${ts(dur)} (${eps.length} episodes), ${qa.size_mb} MB · ${loud.lufs} LUFS, ${loud.true_peak_db} dBTP · ${qa.fails.length ? "FAIL: " + qa.fails.join("; ") : "PASS"}`);
 console.log(chapters);
