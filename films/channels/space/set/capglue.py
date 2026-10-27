@@ -43,15 +43,16 @@ def glue(film, runs):
 def hold(film, pages, linger=0.3):
     """pages: film.captions()'s output, changed in place and returned. Each page's t1 becomes at least the spoken end
     of its last token plus `linger`, and never later than the next page's t0."""
-    ends = {}
-    for ln in film.lines:
-        for w in ln["words"]:
-            ends[(w["w"], round(ln["t"] + w["start"], 3))] = ln["t"] + w.get("end", w["start"] + 0.45)
+    spoken = sorted((round(ln["t"] + w["start"], 3), ln["t"] + w.get("end", w["start"] + 0.45)) for ln in film.lines for w in ln["words"])
     for k, pg in enumerate(pages):
         w, t = pg["lines"][-1][-1]
-        end = ends.get((w, round(t, 3)))
-        if end is None:
+        # the words spoken from this token until the next page: one word, or the run a written number stands for
+        # ("109." is "one hundred and nine."), so the page holds until the last of them has been said
+        bound = pages[k + 1]["t0"] if k + 1 < len(pages) else float("inf")
+        ends = [e for s, e in spoken if t - 1e-3 <= s < bound - 1e-3]
+        if not ends:
             raise ValueError(f"capglue.hold: no spoken end for {w!r} at {t}")
+        end = max(ends)
         t1 = max(pg["t1"], end + linger)
         if k + 1 < len(pages):
             t1 = min(t1, pages[k + 1]["t0"])

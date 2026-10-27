@@ -20,6 +20,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "voice"))
 from scriptfile import direction_plan, norm, script_beats, script_lines   # noqa: E402  (the same parsing and word matching as the voice tools)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from numerals import numerals   # noqa: E402  (captions show "1906" where the voice says "nineteen oh six")
 
 
 # words a caption page or row should not end on (a reader waits for what they introduce)
@@ -116,7 +118,7 @@ class Film:
         return next(ln for ln in self.lines if ln["id"] == lid)
 
     # ── captions ──────────────────────────────────────────────────────
-    def captions(self, max_chars=32, linger=0.3, balance=False, keep=()):
+    def captions(self, max_chars=32, linger=0.3, balance=False, keep=(), written=True):
         """One page per sentence, at most two balanced lines of at most max_chars characters
         (a longer sentence takes several pages, broken after punctuation where it can be). Every
         word keeps its spoken time for the highlight. A page shows from its first word until the
@@ -127,7 +129,12 @@ class Film:
         head: the fewest pages, then no page or row ending on a weak word (the, a, of, your, …), no
         page under 10 characters (no one-word tails flashing past), cuts after a comma preferred, and
         pages of even length. keep: phrases ("Formula One", "white cells") never split across rows or
-        pages in balance mode."""
+        pages in balance mode.
+
+        written=True (the default): numbers read as people read them, not as the voice says them: "nineteen oh six"
+        shows as "1906", "point four five seconds" as "0.45 seconds", "twenty times" as "20 times" (numerals.py: years,
+        decimals, 10 and over, and any number before a unit of measure; small counts stay words). A merged number
+        lights from its first spoken word."""
         def width(ws):
             return len(" ".join(w["w"] for w in ws))
 
@@ -200,6 +207,8 @@ class Film:
         pages = []
         for ln in self.lines:
             words = [{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]]
+            if written:
+                words = numerals(words)
             if balance:
                 mark_keep(words)
             sent, sentences = [], []

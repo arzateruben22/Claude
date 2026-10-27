@@ -15,6 +15,10 @@ for a page break. Every fix must match a spoken sentence (or the compile fails),
 fix behind silently.
 """
 import re
+import sys
+from pathlib import Path as _Path
+
+sys.path.insert(0, str(_Path(__file__).resolve().parents[4] / "kits/cinema/script"))   # numerals.py
 
 # words that lean on the next one: a row or page should not end on them
 LEAN = set("""a an the of at to in on by for from with into onto than as and or but nor so if is are was were be been
@@ -114,10 +118,35 @@ def _fixed(sent, fixes, used):
     return None
 
 
-def phrase_captions(f, max_chars=24, linger=0.3, fix=(), until=None):
+def _written_fix(fx, numerals):
+    """A page fix ("Starting in/twenty sixteen,|a satellite…") with its numbers written as the sentence's will be: the
+    words are converted exactly as the spoken words are (a row or page mark never hides the "in" that makes a year),
+    then the marks go back after the words they followed; a mark inside a number ("nineteen / oh six") drops."""
+    words, marks = [], {}
+    for tok in re.sub(r"\s*([|/])\s*", r" \1 ", fx).split():
+        if tok in ("|", "/"):
+            marks[len(words) - 1] = tok
+        else:
+            words.append(tok)
+    merged = numerals([{"w": w, "t": i} for i, w in enumerate(words)])
+    out = []
+    for k, tok in enumerate(merged):
+        last = (merged[k + 1]["t"] if k + 1 < len(merged) else len(words)) - 1     # the last source word it covers
+        out.append(tok["w"] + marks.get(last, " "))
+    return "".join(out).strip()
+
+
+def phrase_captions(f, max_chars=24, linger=0.3, fix=(), until=None, written=True):
     """Caption pages for the Film `f` (kits/cinema/script/timeline.py, after f.layout), broken at phrases.
-    until: no page shows past this time (pass the end card's arrival, so the last line never sits on the card)."""
-    return paginate([[{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]] for ln in f.lines], max_chars, linger, fix, until)
+    until: no page shows past this time (pass the end card's arrival, so the last line never sits on the card).
+    written=True: numbers as people read them ("20 times", "0.45 seconds"; kits/cinema/script/numerals.py), in the
+    words and in the fixes alike, so a fix written with the spoken words still matches its sentence."""
+    lines = [[{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]] for ln in f.lines]
+    if written:
+        from numerals import numerals
+        lines = [numerals(ws) for ws in lines]
+        fix = [_written_fix(fx, numerals) for fx in fix]
+    return paginate(lines, max_chars, linger, fix, until)
 
 
 def paginate(lines, max_chars=24, linger=0.3, fix=(), until=None):

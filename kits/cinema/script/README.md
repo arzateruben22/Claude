@@ -9,6 +9,7 @@ measured words. Nothing in `film.json` is a hand-typed time.
 |---|---|
 | `lint.py` | Checks a script against the beat template and its claims ledger, before voicing and again after |
 | `timeline.py` | `Film`: the script and the voice → beat layout, word anchors (`f.at("vo02:hair")`), captions, and `script_plan()` |
+| `numerals.py` | Numbers in captions as people read them: the voice says "nineteen oh six", the caption shows "1906" (`test_numerals.py`) |
 | `../voice/scriptfile.py` | The one parser everyone shares: beats, vo lines, stars, claim tags, directions |
 | `<episode>/compile.py` | The episode's direction: shots, cues, camera and focus keys → `film.json` (+ `sheet.json` for the score) |
 
@@ -146,6 +147,14 @@ shrink the face to fit the plate. `Film` refuses a stale voice (the script's spo
 run in real time, such as body's "while you watched" tally, take their rate from the claim
 (2,000,000 × t) and start at frame 0, so the spoken figure and the counter agree wherever the
 line lands. The keys the film runtime reads are in `kits/cinema/film/README.md`.
+
+The narration spells numbers out so the voice says them right; the captions write them the way a
+reader expects. `captions()` runs `numerals.py` over the words (`written=False` turns it off): years
+and decades, decimals, numbers of 10 and over, and any number before a unit of measure become
+numerals (1906, the 1950s, 0.45 seconds, 20 times, 130 million, a 1-meter fall); small counts stay
+words ("nine gaps", "day one", "Formula One", "one day", "half a billion"). A merged number keeps
+its first word's time, so the highlight lands when the number starts. Episodes with their own
+caption builder (space `capglue.py`, physics `captions_py.py`) apply the same rule.
 
 ## Tested (2026-10-22)
 
