@@ -366,33 +366,6 @@ def ramp(note="G3", dur=0.5, direction="down", tag="ramp"):
     return filt((x * 0.18).astype(np.float32), lo=40, hi=3500)
 
 
-def pluck(note, dur=1.4, vel=0.8, tag="pluck", bright=0.5, damp=0.996):
-    """A nylon-string pluck (Karplus-Strong): a seeded noise burst, low-passed by `bright` (0 dark, 1 bright),
-    recirculated through a delay one period long with a two-tap average and loss `damp`. Outer Layer's
-    melodic and label voice: warm, short, no bell partials."""
-    f = _f(note)
-    n = int(dur * SR)
-    P = max(2, int(round(SR / f)))
-    r = rng(tag)
-    buf = r.uniform(-1, 1, P).astype(np.float64)
-    a = 0.15 + 0.8 * min(1.0, max(0.0, bright))
-    for i in range(1, P):                       # soften the excitation (a thumb, not a pick)
-        buf[i] = a * buf[i] + (1 - a) * buf[i - 1]
-    buf -= buf.mean()
-    out = np.empty(n, np.float64)
-    k = 0
-    prev = buf[-1]
-    for i in range(n):
-        cur = buf[k]
-        out[i] = cur
-        buf[k] = damp * 0.5 * (cur + prev)
-        prev = cur
-        k = k + 1 if k + 1 < P else 0
-    x = out * env(n, 0.002, 0, 1, min(0.25, dur * 0.3))
-    x = x / (np.max(np.abs(x)) + 1e-9) * 0.5 * (0.4 + 0.6 * vel)
-    return filt(x.astype(np.float32), lo=60, hi=6500, order=2)
-
-
 def reed(note, dur=1.6, vel=0.8, tag="reed", breath=0.35, attack=0.12, bright=2600.0):
     """A soft, breathy reed (a low-blown clarinet or shakuhachi colour): odd harmonics falling off fast, a slow
     seeded vibrato that grows in, band-passed breath noise riding the envelope, a gentle attack and a long release.

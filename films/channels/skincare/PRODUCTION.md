@@ -26,6 +26,12 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
   stills: the camera sat inside the block (distances ×2.6), clipping planes ignored a block's offset (the two walls
   were cut to one window), the gauge read the safe box as fractions.
 
+- **27 Oct, end of block 1 (PAUSE).** The coordinator's notes applied: studio colour `water` `#00685F`; the channel's
+  voice is now a breathy `reed` (plucks are Back of the Envelope's); my `pluck` reverted from the kit so the branches
+  merge cleanly; `qa.py` measures the reed by its rise. Ep01 mix: AAC −14.1 LUFS / −1.7 dBTP, music 15 LU under the
+  voice; sync passes on every kind but one label whose picture time was stale (cues being re-measured).
+  **Next:** re-run `--cues` → compile → mix until sync PASS; fix the open still items; draft render; independent review.
+
 ## Questions (for the owner, through the coordinator)
 - Narrator: bf_isabella recommended (auditions/README.md); carrying on with it until told otherwise.
 - Channel colour in Prism Studio: the catalogue's placeholder `#D99A92` is a dusty rose close to Lumevina; set by the coordinator to `water` `#00685F`.
