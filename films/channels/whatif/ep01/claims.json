@@ -1,0 +1,145 @@
+[
+ {
+  "id": "c1",
+  "sentence": "It's about twelve thousand seven hundred kilometers.",
+  "claim": "A tunnel through Earth's centre is one diameter long: 2 × 6,371 km = 12,742 km, said as about 12,700 km.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA Goddard, NSSDC)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Volumetric mean radius 6,371.000 km (fact sheet, bulk parameters). Computed in calc.py: diameter_m = 12742000 m, rounded to 3 figures."
+ },
+ {
+  "id": "c2",
+  "sentence": "Driving it nonstop at highway speed takes about five days.",
+  "claim": "At 100 km/h without stopping, 12,742 km takes about 127 hours: about 5 days.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA Goddard, NSSDC)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py (drive_h = 127.4 h = 5.31 days) from the radius above and an assumed highway speed of 100 km/h, a round figure; at 110 km/h it is 4.8 days, at 90 km/h 5.9: 'about five days' holds for 100 ± 10 km/h."
+ },
+ {
+  "id": "c3",
+  "sentence": "By the center: about ten kilometers a second.",
+  "claim": "Falling from rest at the surface with no air, the speed at Earth's centre is about 10 km/s (PREM density: 9.92 km/s; a uniform Earth gives 7.91 km/s).",
+  "source_url": "https://doi.org/10.1016/0031-9201(81)90046-7",
+  "source_title": "A. M. Dziewonski & D. L. Anderson, \"Preliminary reference Earth model\", Phys. Earth Planet. Inter. 25, 297–356 (1981)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py: v^2 = 2 × integral of g(r) from the centre to the surface, g(r) = G·M(<r)/r^2 with PREM's density polynomials (table 1 of the paper). Klotz (2015) gives the same physics; his paper is the cross-check."
+ },
+ {
+  "id": "c4",
+  "sentence": "Then it slows you, and you reach the far side just as you stop.",
+  "claim": "In the idealised tunnel (no air or friction, no rotation) the faller decelerates past the centre and comes to rest exactly at the far surface: energy is conserved and the potential is symmetric.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The paper's model is frictionless and treats the trip as an oscillation through the centre; the badges on screen say 'no air', 'no heat', 'no spin'."
+ },
+ {
+  "id": "c5",
+  "sentence": "The textbook answer was forty-two minutes.",
+  "claim": "The classic textbook answer for a fall through a uniform-density Earth is about 42 minutes (42 min 12 s), from P. W. Cooper, Am. J. Phys. 34, 68 (1966).",
+  "source_url": "https://www.livescience.com/50312-how-long-to-fall-through-earth.html",
+  "source_title": "How Long Would It Take to Fall Through the Earth? (Live Science, 2015)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Cooper's 1966 paper in the American Journal of Physics showed a tube along the diameter would take 42 minutes; Klotz quotes 42 min 12 s. calc.py: pi·sqrt(R^3/GM) = 2530 s = 42.17 min."
+ },
+ {
+  "id": "c6",
+  "sentence": "It assumed Earth is equally dense all the way down.",
+  "claim": "The 42-minute result assumes Earth's density is the same at every depth.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Klotz used seismic-based Earth structure instead of assuming uniform density. 'Equally dense all the way down' is the uniform-density assumption in plain words."
+ },
+ {
+  "id": "c7",
+  "sentence": "Then a graduate student, Alexander Klotz, used the real Earth.",
+  "claim": "Alexander Klotz, then a McGill University graduate student, recomputed the fall using Earth's real density profile, from seismic data (PREM); the 'PREM density (seismology)' badge is on screen as this is said.",
+  "source_url": "https://www.livescience.com/50312-how-long-to-fall-through-earth.html",
+  "source_title": "How Long Would It Take to Fall Through the Earth? (Live Science, 2015)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: a McGill University grad student; seismic-based density data. Also KL (the paper)."
+ },
+ {
+  "id": "c8",
+  "sentence": "The core is so dense that gravity gets stronger before it fades.",
+  "claim": "With PREM's density, gravity inside the tunnel rises from 9.8 m/s^2 at the surface to a maximum of about 10.7 m/s^2 at the core–mantle boundary (3480 km from the centre), then falls to zero at the centre; Earth's core averages about 2.5 times the density of the mantle and crust above it.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py (g_max, r_gmax_km, rho_core_mean 10987 kg/m^3 vs rho_crust_mantle_mean 4449 kg/m^3). Klotz's paper shows the same rise of g through the mantle (that is why constant g is a good approximation)."
+ },
+ {
+  "id": "c9",
+  "sentence": "His answer: about thirty-eight minutes.",
+  "claim": "With the real (PREM) density, the fall through the centre takes about 38 minutes: 38 min 11 s in the paper; calc.py gets 2291 s = 38.18 min.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: Solving the problem numerically, Klotz found that an object should fall through Earth in 38 minutes and 11 seconds. calc.py reproduces it to within a second, which also checks the density table (its mass comes out within 0.02% of NASA's)."
+ },
+ {
+  "id": "c10",
+  "sentence": "With nothing to stop you, you'd fall back and forth, a round trip every seventy-six minutes, forever.",
+  "claim": "Without friction the fall repeats: there and back takes twice the one-way time, 2 × 38.2 min ≈ 76 minutes.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 2 × t_prem = 76.4 min, said as seventy-six. 'Forever' holds only in the idealised, frictionless tunnel (badged)."
+ },
+ {
+  "id": "c11",
+  "sentence": "Make the core ten percent lighter: about thirty-nine.",
+  "claim": "Sensitivity: with the core's density 10% lower (mantle unchanged), the fall takes about 39 minutes (39.2 min); 10% higher, about 37 (37.3 min).",
+  "source_url": "https://doi.org/10.1016/0031-9201(81)90046-7",
+  "source_title": "A. M. Dziewonski & D. L. Anderson, \"Preliminary reference Earth model\", Phys. Earth Planet. Inter. 25, 297–356 (1981)",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py by scaling PREM's core polynomials; a sensitivity check, not a claim about the real core (PREM's core density is known far better than ±10%)."
+ },
+ {
+  "id": "c12",
+  "sentence": "Make Earth uniform: forty-two.",
+  "claim": "With a uniform-density Earth, the fall takes about 42 minutes.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The paper's uniform case (42 min 12 s); calc.py 42.17 min."
+ },
+ {
+  "id": "c13",
+  "sentence": "They're the pull of Earth's heavy core.",
+  "claim": "The difference between the uniform and real-Earth answers is about 4 minutes (4.0 min), and it comes from mass concentrated toward the centre: the core is about 16% of Earth's volume but about 32% of its mass.",
+  "source_url": "https://arxiv.org/abs/1308.1342",
+  "source_title": "A. R. Klotz, \"The gravity tunnel in a non-uniform Earth\", Am. J. Phys. 83, 231 (2015); arXiv:1308.1342",
+  "accessed": "2026-10-27",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py (core_mass_frac, core_vol_frac). 'The pull of Earth's heavy core' is the plain-words version: with the mass spread evenly the trip would take the uniform 42 minutes."
+ }
+]
