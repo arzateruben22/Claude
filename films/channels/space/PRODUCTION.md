@@ -5,11 +5,11 @@
 >
 > | No. | Title | Length | Loudness | Voice over music | File | Delivered in |
 > |---|---|---|---|---|---|---|
-> | 002 | The nearest star | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.1 LU | 17.0 MB | this commit |
-> | 003 | Venus day | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.3 LU | 26.1 MB | 477a341 |
-> | 004 | The falling Moon | 74.13 s | −14.1 LUFS / −1.8 dBTP | 12.5 LU | 15.0 MB | 7e4e3f8 |
-> | 005 | How big is the Sun | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.4 LU | 26.6 MB | 469c0f2 |
-> | 006 | Your speed | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.3 LU | 64.7 MB | 3ed56a4 |
+> | 002 | The nearest star | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.1 LU | 16.9 MB | c302258 (captions c0c2fc0) |
+> | 003 | Venus day | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.3 LU | 26.0 MB | 477a341 (captions 97c15dc) |
+> | 004 | The falling Moon | 74.13 s | −14.1 LUFS / −1.8 dBTP | 12.5 LU | 15.0 MB | 7e4e3f8 (captions be4d62a) |
+> | 005 | How big is the Sun | 74.67 s | −14.1 LUFS / −1.8 dBTP | 12.4 LU | 26.5 MB | 469c0f2 (captions b8ac3af) |
+> | 006 | Your speed | 74.67 s | −14.1 LUFS / −1.9 dBTP | 12.3 LU | 64.3 MB | 3ed56a4 (captions 9b928ba) |
 >
 > Every one: sound sync PASS, 0 flashes, 0 text warnings in the render's audit, and every label, counter, note and
 > caption page checked at its middle and ends (156–175 moments each): none outside the safe box, none on other text.
@@ -27,7 +27,7 @@
 > captions changed were rendered again (002: 0–6; 003: 0–4, 6; 004: 0, 1, 3–6; 005: all; 006: 0–2, 4, 6) and each
 > master reassembled with its delivered sound stream-copied, so loudness and peaks are unchanged; QA PASS on each,
 > and at every changed caption the new master matches the old one outside the caption band to encoding noise. Each
-> episode also has a 1440×2560 YouTube version (`out/*-9x16-youtube.mp4`). Commits: 002 c0c2fc0, 003 97c15dc, 004 be4d62a, 006 9b928ba; 005 rendering.
+> episode also has a 1440×2560 YouTube version (`out/*-9x16-youtube.mp4`). Commits: 002 c0c2fc0, 003 97c15dc, 004 be4d62a, 005 b8ac3af, 006 9b928ba.
 >
 > **Before posting, a person (TODO):** works through each episode's `review/HUMAN-REVIEW.md` and `CLAIMS-REVIEW.md`
 > (every claim rests on search excerpts: open each source link and tick it); decides kilometers vs miles for US
