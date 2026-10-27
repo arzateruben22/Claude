@@ -24,7 +24,7 @@ stills from the delivered file, and a CLAIMS-REVIEW and HUMAN-REVIEW for a physi
 | # | Title | State |
 |---|---|---|
 | 01 | Single file | **delivered** (v3 final, 71.6 s, −14.1 LUFS, QA PASS): the 26 Oct audit's fixes, a sickle cell on screen, balanced captions |
-| 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) |
+| 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) with the written-number captions (27 Oct: chunks 0 and 1 rendered again, the sound copied untouched) |
 | 03 | The jump | **delivered** (74.8 s, −14.1 LUFS, QA PASS, 0 flashes) after a three-lens frame review (drum mirrored so time reads left to right, labels, readouts) |
 | 04 | The gap | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the messenger mist, readouts, labels) |
 | 05 | Where breath goes | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the thickened wall slows the oxygen's crossing, labels, readouts) |
