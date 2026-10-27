@@ -41,5 +41,8 @@
   "energy.loss":   {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null},
   "reveal":        {"lead": 0.0, "prio": 1, "span": false, "after": true, "kFloor": null},
   "badge":         {"lead": 0.0, "prio": 3, "span": false, "after": true, "kFloor": null},
-  "scale":         {"lead": 0.0, "prio": 2, "span": false, "after": true, "kFloor": null}
+  "scale":         {"lead": 0.0, "prio": 2, "span": false, "after": true, "kFloor": null},
+  "term.write":    {"lead": 0.0, "prio": 2, "span": false, "after": true, "kFloor": null},
+  "answer.box":    {"lead": 0.0, "prio": 1, "span": true,  "after": true, "kFloor": null},
+  "fall":          {"lead": 0.0, "prio": 2, "span": true,  "kFloor": null}
 }

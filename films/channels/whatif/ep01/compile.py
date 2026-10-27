@@ -243,7 +243,6 @@ ev += [
     {"t": t_jump, "kind": "fall", "tag": "jump", "t1": t_stop},
     {"t": t_stop, "kind": "arrive", "tag": "far-rim"},
     {"t": t_box, "kind": "answer.box", "tag": "box-38", "t1": round(t_box + 0.5, 4)},
-    {"t": t_core, "kind": "swell", "tag": "core"},
 ]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],

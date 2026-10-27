@@ -364,3 +364,40 @@ def ramp(note="G3", dur=0.5, direction="down", tag="ramp"):
     x = sum(a * (np.sin(h * ph) + 0.6 * np.sin(1.5 * h * ph)) for h, a in ((1, 1.0), (2, 0.4), (3, 0.2)))
     x = x * np.sqrt(speed) * env(len(t), 0.004, 0, 1, 0.03 if direction == "up" else 0.0)
     return filt((x * 0.18).astype(np.float32), lo=40, hi=3500)
+
+
+# ── Back of the Envelope (films/channels/whatif): a plucked string and pencil on paper ──
+def pluck(note, dur=0.9, vel=0.8, tag="pluck", bright=3200.0):
+    """A pizzicato string: Karplus–Strong on a seeded noise burst (one period long, low-passed by
+    `bright`), its loop filter a two-point average with a decay set so the note dies in about `dur`.
+    Mono. The attack is the burst itself, so the onset is sample-sharp (QA finds it as "rise")."""
+    f = _f(note)
+    n = int(dur * SR)
+    N = max(2, int(round(SR / f)))
+    burst = filt(rng(tag).uniform(-1, 1, N + 1).astype(np.float32), hi=bright)
+    y = np.zeros(n + N + 1, np.float32)
+    y[: N + 1] = burst
+    g = np.float32(10 ** (-3.0 / (f * dur)))                 # -60 dB over dur, per round trip of the loop
+    i = N + 1
+    while i < len(y):                                       # one period at a time: y[k] depends on y[k-N], y[k-N-1]
+        j = min(len(y), i + N)
+        y[i:j] = 0.5 * (y[i - N:j - N] + y[i - N - 1:j - N - 1]) * g
+        i = j
+    x = y[N + 1:N + 1 + n] if n > 0 else y[:0]
+    x = x * env(len(x), 0.001, 0, 1, 0.04)
+    return (x / (np.max(np.abs(x)) + 1e-9) * 0.5 * (0.45 + 0.55 * vel)).astype(np.float32)
+
+
+def scratch(dur=0.35, tag="scratch", lo=1800.0, hi=7000.0, rise=False):
+    """Pencil on paper: band-passed noise with a seeded, grainy amplitude (the lead skipping over the
+    tooth of the paper), a quick attack and a soft tail. rise=True swells toward its end instead (a box
+    being drawn: anchor "end"). Mono."""
+    n = int(dur * SR)
+    r = rng(tag)
+    x = filt(r.normal(0, 1, n).astype(np.float32), lo=lo, hi=hi)
+    grain = np.repeat(r.uniform(0.35, 1.0, n // 240 + 1), 240)[:n].astype(np.float32)
+    grain = filt(grain, hi=180.0)
+    t = np.linspace(0, 1, n, dtype=np.float32)
+    shape = (0.35 + 0.65 * t) if rise else (1.0 - 0.55 * t)
+    x = x * grain * shape * env(n, 0.006, 0, 1, 0.06)
+    return (x / (np.max(np.abs(x)) + 1e-9) * 0.4).astype(np.float32)
