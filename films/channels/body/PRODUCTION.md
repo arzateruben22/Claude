@@ -11,7 +11,7 @@ These five feed the first long-form compilation (with episode 1).
 | 03 | The jump | **delivered** (74.8 s, −14.1 LUFS, QA PASS, 0 flashes) after a three-lens frame review (drum mirrored so time reads left to right, labels, readouts) |
 | 04 | The gap | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the messenger mist, readouts, labels) |
 | 05 | Where breath goes | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the thickened wall slows the oxygen's crossing, labels, readouts) |
-| 06 | The exit | verified frame-review fixes applied and re-checked · soundtrack −14.1 LUFS, sync PASS · **final rendering** (27 Oct from 04:58 UTC) |
+| 06 | The exit | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings, worst 2 flashes/s) with the written-number captions, after a verified frame review (the tally parked and lit for the meanwhile, the engraving plate, the grips) |
 
 ## Visual review (26 Oct)
 A multi-agent review (motion, layout, graphics, honesty lenses per episode; raw findings in the session's

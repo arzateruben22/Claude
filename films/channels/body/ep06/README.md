@@ -7,7 +7,8 @@ pictures first.
 
 | | |
 |---|---|
-| Delivery | `out/meanwhile-inside-006-9x16.mp4`, poster `out/meanwhile-inside-006-9x16.jpg`, contact sheet `out/meanwhile-inside-006-9x16-contact.jpg` |
+| Delivery | `out/meanwhile-inside-006-9x16.mp4`, poster `out/meanwhile-inside-006-9x16.jpg`, contact sheet `out/meanwhile-inside-006-9x16-contact.jpg`, YouTube 1440p `out/meanwhile-inside-006-9x16-youtube.mp4` |
+| Ten final-tier stills | `review/stills-ep06.jpg` (from the delivered file at 0, 9.5, 19.5, 22.5, 32, 42, 50, 58, 66 and 72 s) |
 | Measured gates | `review/scorecard.md` |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (25 claims), `review/HUMAN-REVIEW.md` |
 
@@ -65,7 +66,9 @@ through a waist held to the gap), with a lobed nucleus that goes first.
 | `qa/` | Episode 1's tools (unchanged copies) |
 | `../set/wanderer.js` | New: the neutrophil (B8, the wanderer) |
 
-One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
+Kit changes (`../KIT-CHANGES.md`): the balanced caption pager (opt-in), and on 27 Oct the written-number captions
+("In 1867, his assistant / Julius Cohnheim", "about 8 micrometres", "More than 10 million"; the voice still says
+the words). Chunks 0, 1, 2 and 6 of the final were rendered again with them; the sound is the soundtrack's mix.
 
 ## Frame review (26–27 Oct)
 A three-lens frame review (each finding verified by a second agent) led to: the why camera riding with the hero (it
@@ -91,3 +94,4 @@ the safe box with its cells clipped to the frame.
 - **Listen at T0:** Virchow, Cohnheim, "eighteen sixty-seven", neutrophil, micrometres; "past" (pinned PAHST; "on"
   before it now takes a full stress, and the /t/ has a short voiced release) and "spark" (check that no "uh" is
   heard: a faint tail remains, much weaker than at 0.88).
+- **Look at 9.5 s and 32 s:** a red cell drifts behind the dimmed tally readout and shows through its panel.
