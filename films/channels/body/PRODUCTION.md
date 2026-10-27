@@ -10,8 +10,8 @@ These five feed the first long-form compilation (with episode 1).
 | 02 | A billion passengers | **delivered** (72.8 s, −14.1 LUFS, QA PASS) |
 | 03 | The jump | **delivered** (74.8 s, −14.1 LUFS, QA PASS, 0 flashes) after a three-lens frame review (drum mirrored so time reads left to right, labels, readouts) |
 | 04 | The gap | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the messenger mist, readouts, labels) |
-| 05 | Where breath goes | verified frame-review fixes applied and re-checked · soundtrack −14.1 LUFS, sync PASS · **final rendering** (27 Oct from 02:28 UTC) |
-| 06 | The exit | **paused** · verified frame-review fixes applied (not yet re-checked in a browser) · next: re-peek, cues, soundtrack, final |
+| 05 | Where breath goes | **delivered** (74.4 s, −14.1 LUFS, QA PASS, 0 text warnings) after a verified frame review (the thickened wall slows the oxygen's crossing, labels, readouts) |
+| 06 | The exit | verified frame-review fixes applied and re-checked · soundtrack −14.1 LUFS, sync PASS · **final rendering** (27 Oct from 04:58 UTC) |
 
 ## Visual review (26 Oct)
 A multi-agent review (motion, layout, graphics, honesty lenses per episode; raw findings in the session's

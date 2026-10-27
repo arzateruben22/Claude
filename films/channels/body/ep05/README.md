@@ -7,6 +7,7 @@ voice, labelled as AI). It pays off episode 4's tease ("Where does all that air 
 | | |
 |---|---|
 | Delivery | `out/meanwhile-inside-005-9x16.mp4`, poster `out/meanwhile-inside-005-9x16.jpg`, contact sheet `out/meanwhile-inside-005-9x16-contact.jpg` |
+| Ten final-tier stills | `review/stills-ep05.jpg` (from the delivered file at 0, 6, 12, 21, 34, 40.5, 50, 58, 66 and 71.3 s) |
 | Measured gates | `review/scorecard.md` |
 | Sign-off sheets | `review/CLAIMS-REVIEW.md` (16 claims), `review/HUMAN-REVIEW.md` |
 
