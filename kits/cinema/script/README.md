@@ -10,6 +10,7 @@ measured words. Nothing in `film.json` is a hand-typed time.
 | `lint.py` | Checks a script against the beat template and its claims ledger, before voicing and again after |
 | `timeline.py` | `Film`: the script and the voice → beat layout, word anchors (`f.at("vo02:hair")`), captions, and `script_plan()` |
 | `numerals.py` | Numbers in captions as people read them: the voice says "nineteen oh six", the caption shows "1906" (`test_numerals.py`) |
+| `caption_chunks.py` | After a caption change: which 10 s render chunks show different captions (`caption_chunks.py <rev> <episode>`), so only those render again |
 | `../voice/scriptfile.py` | The one parser everyone shares: beats, vo lines, stars, claim tags, directions |
 | `<episode>/compile.py` | The episode's direction: shots, cues, camera and focus keys → `film.json` (+ `sheet.json` for the score) |
 
