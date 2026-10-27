@@ -225,7 +225,8 @@ window.CINEMA_FOCUS = (t) => {
 const ANCHOR = { "l-hair": [0.4, 16.6, PZ], "l-gland": [3, 6.6, PZ + 0.5], "l-oil": [-0.6, 12, PZ + 0.5], "l-plug": [0.8, 11.2, PZ + 0.5], "l-black": [-0.6, 14.4, PZ + 0.5], "l-bact": [0.9, 10.6, PZ + 0.5], "l-red": [-2.8, 14.2, PZ + 0.5], "l-mand": [-1.2, 17.5, PZ], "l-bp": [1.4, 17.3, PZ] };
 const OFF = { "l-hair": [1, -1], "l-gland": [1, 0], "l-oil": [-1, 0], "l-plug": [1, 0], "l-black": [-1, -1], "l-bact": [1, 0], "l-red": [-1, -1], "l-mand": [-1, -1], "l-bp": [1, -1] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; const pw = el.offsetParent ? el.offsetParent.clientWidth : W; el.style.left = Math.min(pw - w - 6, Math.max(6, x + (ox > 0 ? 14 : -w - 14))) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };   // directed: labels stay inside the frame
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; const pw = el.offsetParent ? el.offsetParent.clientWidth : W; el.style.left = Math.min(pw - w - 6, Math.max(6, x + (ox > 0 ? 14 : -w - 14))) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // directed: labels stay inside the frame, and out of the title (the push in at the end carries the top ones up past it)
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -465,7 +466,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, 0.42, ANCHOR, p
 const ANCHOR = { "l-spf": [7.5, 12.6, 1.5], "l-oil": [-4, 12.6, 3.5], "l-city": [2, 12.6, -3], "l-balm": [-1, 16, 0], "l-melt": [7.5, 12.8, 1.5], "l-warm": [-5, 13, 4], "l-gel": [7.5, 13.2, 1.5], "l-clean": [-4.5, 12.4, 4] };
 const OFF = { "l-spf": [-1, -1], "l-oil": [-1, -1], "l-city": portrait ? [-1, -1] : [1, -1], "l-balm": [1, -1], "l-melt": [-1, -1], "l-warm": [-1, -1], "l-gel": [-1, -1], "l-clean": [-1, -1] };   // on a phone the block fills the width: "what the air left" goes to the left of its point, clear of "sunscreen, makeup"
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -606,7 +608,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, -0.45, ANCHOR, 
 const ANCHOR = { "l-dry": [-5, 12.6, 4.5], "l-hum": [8, 12.6, 1.5], "l-water": [-2.5, 7.5, 4.6], "l-emo": [8, 12.8, 1.5], "l-gap": [-4, 12.3, 3], "l-occ": [8, 13.3, 1.5], "l-stay": [-3.5, 10.4, 4.6] };
 const OFF = { "l-dry": [-1, -1], "l-hum": [-1, -1], "l-water": [-1, 0], "l-emo": [-1, -1], "l-gap": [-1, -1], "l-occ": [-1, -1], "l-stay": [-1, 0] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -729,7 +732,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, po
 const ANCHOR = { "l-dead": [-7.5, 12.4, 3.5], "l-acid": [2.5, 14.5, 1], "l-fresh": [-3.5, 11.6, 4.2], "l-shine": [-6.5, 12.6, 3.5], "l-sting": [3, 12.8, 4], "l-cream": [7.5, 13.6, 1.5], "l-grow": [-5, 12.4, 4] };
 const OFF = { "l-dead": [1, -1], "l-acid": [1, -1], "l-fresh": [-1, -1], "l-shine": [1, -1], "l-sting": [1, -1], "l-cream": [-1, -1], "l-grow": [-1, -1] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -866,7 +870,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, po
 const ANCHOR = { "l-rad": [-7, 15.5, 3], "l-col": [-2, 5.5, 4.6], "l-spf": [7.5, 12.8, 1.5], "l-c": [7.5, 13.2, 1.5], "l-catch": [-3, 13.4, 4.2], "l-fresh": [7.5, 12.8, 1.5], "l-old": [7.5, 12.8, 1.5] };
 const OFF = { "l-rad": [1, -1], "l-col": [1, 0], "l-spf": [-1, -1], "l-c": [-1, -1], "l-catch": [-1, -1], "l-fresh": [-1, -1], "l-old": [-1, -1] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -1024,7 +1029,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, po
 const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-mel": [-1.2, 9, 4.6], "l-gran": [0.6, 10.6, 4.6], "l-spot": [-1.5, 12.3, 2.4], "l-shed": [5, 13.2, 0], "l-less": [-2.5, 12.4, 4.2], "l-spf": [6.5, 12.7, 4.5], "l-heat": [-7, 14.8, 3], "l-bright": [0.5, 15.6, 1.5] };
 const OFF = { "l-uv": [1, -1], "l-mel": [1, 0], "l-gran": [1, -1], "l-spot": [-1, -1], "l-shed": [1, -1], "l-less": [-1, 0], "l-spf": [1, 0], "l-heat": [1, -1], "l-bright": [1, -1] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -1159,7 +1165,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, po
 const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-col": [5.5, 6, 4.5], "l-spot": [-4.5, 12.4, 3], "l-spf": [6.5, 12.6, 4.5], "l-bounce": [-3, 15.5, 4], "l-thin": [6.5, 12.6, 4.5], "l-re": [-5, 13.2, 4.5] };
 const OFF = { "l-uv": [1, -1], "l-col": [-1, 0], "l-spot": [1, -1], "l-spf": [-1, 0], "l-bounce": [1, -1], "l-thin": [-1, 0], "l-re": [1, -1] };   // directed: the right-hand labels sit left of their points, clear of the edge and the clock
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
@@ -1298,7 +1305,8 @@ const place = (t) => (place.d || (place.d = direct(camera, look, -0.45, ANCHOR, 
 const ANCHOR = { "l-brick": [-6, 12.4, 4.5], "l-mortar": [3, 10.6, 4.6], "l-water": [-3, 9.2, 4.5], "l-scrub": [-5, 13.6, 4], "l-hot": [2, 16, 2], "l-acid": [-1, 15.5, 4], "l-leak": [5.5, 14.5, 3], "l-red": [-4, 12.3, 4.5], "l-cream": [6.5, 12.6, 4.5], "l-pause": [-6, 13.4, 4] };
 const OFF = { "l-brick": [1, -1], "l-mortar": [1, 0], "l-water": [1, 0], "l-scrub": [-1, -1], "l-hot": [1, -1], "l-acid": [-1, -1], "l-leak": [1, -1], "l-red": [-1, -1], "l-cream": [-1, 0], "l-pause": [-1, -1] };   // directed: "one active too many" left of its point, clear of "water leaking out"; the lipids label clear of the day counter
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
+const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
