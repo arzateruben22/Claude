@@ -45,7 +45,7 @@
   readout's orbit (still drawn to the outline's scale) is about 1.6 to 1.8 times as wide. In the hook the twins drift a
   little closer through "look the same size" (true sizes; their separation is the composition, still badged). The
   spine's "farther 400×" now waits for the side view, and its why-beat label reads "his guess · bigger than". No
-  number, claim or word of the narration changed.
+  number, claim or word of the narration changed. The final (27 Oct, QA PASS) is `out/lightminute-005-9x16.mp4`.
 
 
 ## Every episode

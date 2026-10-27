@@ -4,7 +4,8 @@
 `lightminute-vacuum`). It pays off episode 4's tease ("Next: pour Earths into the Sun. How many to fill it up?") and
 sets up episode 6 ("Next: since this started, you've flown at least two thousand kilometers. How?").
 
-STATUS: see `review/scorecard.md` (filled in on delivery).
+STATUS: **delivered 27 Oct** (`out/lightminute-005-9x16.mp4`): 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.4 LU over music,
+sync PASS, 0 flashes, qa.py PASS. Details in `review/scorecard.md`; a person still checks `review/HUMAN-REVIEW.md` before posting.
 
 ## The story
 Which holds a million Earths? The Sun and the full Moon look like twins in your sky, but one is about four hundred
