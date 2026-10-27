@@ -877,8 +877,55 @@ await group('render', async (use) => {
   });
 });
 
+// The condensed HUD (HUD_POV_SPEC 5): what the driving HUD covers and where, in the page. HUD_SEL are the readouts and
+// the top cluster, CONTROL_SEL the control row; rects that are hidden, faded out or empty don't count. Area is the union
+// on a 2 px grid (nested boxes count once). `band` is the open view, 22% to 70% of the height; the chase car's and the
+// seat cluster's boxes are the projected boxes of their meshes.
+function hudLayoutInPage() {
+  const g = window.__game, cam = g.camera, W = innerWidth, H = innerHeight;
+  const HUD_SEL = ['.hud-plate', '.hud-speed', '.hud-stats', '.hud-race', '.hud-road', '.hud-compass', '.hud-clock', '.corner', '.tbar .tbtn', '.livechip', '.hud-nav', '.hud-dest', '.hud-next', '.hud-fps'];
+  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.tbtn.honk'];
+  const shown = (e) => {
+    const cs = getComputedStyle(e), r = e.getBoundingClientRect();
+    if (cs.display === 'none' || cs.visibility === 'hidden' || r.width <= 0 || r.height <= 0) return false;
+    for (let a = e; a && a !== document.body; a = a.parentElement) if (Number(getComputedStyle(a).opacity) <= 0.05) return false;
+    return true;
+  };
+  const rects = (sels, skip) => sels.flatMap((q) => [...document.querySelectorAll(q)]).filter((e) => !(skip && e.matches(skip)) && shown(e))
+    .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className.baseVal ?? e.className).split(' ')[0] }; });
+  const hud = rects(HUD_SEL, '.tbtn.honk'), ctl = rects(CONTROL_SEL);
+  let n = 0; for (let y = 1; y < H; y += 2) for (let x = 1; x < W; x += 2) if (hud.some((q) => x >= q.l && x < q.r && y >= q.t && y < q.b)) n++;
+  const hit = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
+  const cv = document.querySelector('.stage canvas'), R = cv.getBoundingClientRect();
+  const toScreen = (v) => { v.project(cam); return { x: R.left + (v.x + 1) / 2 * R.width, y: R.top + (1 - v.y) / 2 * R.height }; };
+  const box = (obj) => {
+    if (!obj) return null;
+    let l = 1e9, t = 1e9, r = -1e9, b = -1e9; obj.updateMatrixWorld(true);
+    obj.traverse((m) => { if (!m.isMesh || !m.visible) return; const gb = m.geometry; gb.boundingBox || gb.computeBoundingBox(); const { min, max } = gb.boundingBox;
+      for (const cx of [min.x, max.x]) for (const cy of [min.y, max.y]) for (const cz of [min.z, max.z]) { const p = toScreen(m.localToWorld(cam.position.clone().set(cx, cy, cz))); l = Math.min(l, p.x); r = Math.max(r, p.x); t = Math.min(t, p.y); b = Math.max(b, p.y); } });
+    return { l, t, r, b };
+  };
+  const d = cam.getWorldDirection(cam.position.clone()); d.y = 0; d.normalize().multiplyScalar(2000).add(cam.position);
+  const horizon = toScreen(d).y;
+  const view = document.querySelector('.hud')?.dataset.view, seat = view === 'cockpit';
+  const cluster = seat ? box(g.car.interior.group.getObjectByName('cluster')) : null, glass = seat ? box(g.car.interior.group.getObjectByName('windscreen')) : null;
+  const car = seat ? null : box(g.car.exterior), band = { l: 0, r: W, t: 0.22 * H, b: 0.7 * H };
+  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .tbtn.honk, .touch-steer, .pedal, .touch-shift .tbtn')].filter(shown)
+    .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className).split(' ').slice(0, 2).join('.') }; });
+  const overlaps = []; for (let i = 0; i < taps.length; i++) for (let j = i + 1; j < taps.length; j++) if (hit(taps[i], taps[j])) overlaps.push(taps[i].sel + ' / ' + taps[j].sel);
+  const sp = document.querySelector('.hud-speed');
+  return { W, H, view, area: (n * 4) / (W * H), top: Math.max(0, ...hud.map((q) => q.b)) / H, ctlTop: Math.min(H, ...ctl.map((q) => q.t)) / H,
+    band: hud.filter((q) => hit(q, band)).map((q) => q.sel), onCar: car ? hud.filter((q) => hit(q, car)).map((q) => q.sel) : [],
+    horizon: horizon / H, cluster: cluster && { mid: (cluster.t + cluster.b) / 2 / H, bottom: cluster.b / H, hits: [...hud, ...ctl].filter((q) => hit(q, cluster)).map((q) => q.sel) },
+    onGlass: glass ? hud.filter((q) => hit(q, { l: glass.l, r: glass.r, t: Math.max(glass.t, horizon), b: glass.b })).map((q) => q.sel) : [],
+    speed: sp ? getComputedStyle(sp).display !== 'none' : false, small: taps.filter((q) => q.w < 43.5 || q.h < 43.5).map((q) => `${q.sel} ${Math.round(q.w)}x${Math.round(q.h)}`), overlaps };
+}
+const pct = (f) => (f * 100).toFixed(1) + '%';
+
 await group('phone', async (use) => {
-  const { page } = await use({ phone: true });
+  // Modern, so the controls stay put while the checks press them (a phone's first run is Minimal; the last check here
+  // covers its tuck and wake)
+  const { page } = await use({ phone: true, settings: { hudStyle: 'modern' } });
   const noSideScroll = () => game(page, () => document.documentElement.scrollWidth <= innerWidth);
   await check('menu fits a 390 × 844 phone', async () => {
     await page.screenshot({ path: path.join(OUT, 'phone-menu.png') });
@@ -909,8 +956,14 @@ await group('phone', async (use) => {
     expect(/level/i.test(text), 'no level shown');
     await page.keyboard.press('Escape');
   });
-  await check('driving HUD: top bar clear of the gear readout, touch controls shown', async () => {
+  // the condensed HUD (owner, 2026-10-22: "way too much going on on the hud interface"; HUD_POV_SPEC 5.1, 5.2, 5.4):
+  // in Free Drive the HUD outside the controls covers at most 12.5% of a 390-wide phone, nothing of it lies in the open
+  // view (22% to 70% of the height) or on the chase car, the control row starts below 70%, every control is 44 px or
+  // more and none overlaps another; the same in the claude.ai app's 390 x 715 (a 34 px home-indicator inset) and on its
+  // side (12% at 844 x 390). FOCUS TIME is a named button a screen reader reaches.
+  await check('driving HUD: condensed, inside its budget, controls reachable', async () => {
     await drive(page, 'Free Drive');
+    await game(page, () => { const g = window.__game; g.fastForward(6, {}, 40); g.setCam('chase'); });
     await frames(page, 10);
     await page.screenshot({ path: path.join(OUT, 'phone-driving.png') });
     const r = await game(page, () => {
@@ -919,8 +972,50 @@ await group('phone', async (use) => {
     });
     expect(r.gear && r.tbar && r.steer && r.gas, `missing: ${Object.entries(r).filter(([, v]) => !v).map(([k]) => k).join(', ')}`);
     const overlap = !(r.gear.r <= r.tbar.l || r.tbar.r <= r.gear.l || r.gear.b <= r.tbar.t || r.tbar.b <= r.gear.t);
-    expect(!overlap, `gear ${JSON.stringify(r.gear)} under top bar ${JSON.stringify(r.tbar)}`);
-    expect(r.tbar.r <= r.w + 0.5 && (await noSideScroll()), 'the top bar runs off the screen');
+    expect(!overlap, `gear ${JSON.stringify(r.gear)} under the icons ${JSON.stringify(r.tbar)}`);
+    expect(r.tbar.r <= r.w + 0.5 && (await noSideScroll()), 'the icons run off the screen');
+    expect(await page.getByRole('button', { name: /Focus Time|Clear Path|Locked In/ }).count() === 1, 'the ability is not a named button');
+    const sizes = [];
+    const at = async (w, h, inset, limit, label) => {
+      await page.setViewportSize({ width: w, height: h });
+      await game(page, (i) => { const a = document.querySelector('.app'); for (const [k, v] of Object.entries(i)) a.style.setProperty(k, v); }, inset);
+      await frames(page, 3);
+      const m = await game(page, hudLayoutInPage);
+      expect(m.area <= limit, `${label}: the HUD covers ${pct(m.area)} (limit ${pct(limit)})`);
+      expect(m.small.length === 0 && m.overlaps.length === 0, `${label}: small ${m.small.join(', ')}; overlapping ${m.overlaps.join(', ')}`);
+      expect(m.onCar.length === 0, `${label}: over the car: ${m.onCar.join(', ')}`);
+      if (h > w) expect(m.band.length === 0 && m.ctlTop >= 0.7, `${label}: in the open view: ${m.band.join(', ')}; controls from ${pct(m.ctlTop)}`);
+      else expect(m.top <= 0.26, `${label}: the top cluster runs to ${pct(m.top)}`);
+      sizes.push(`${label} ${pct(m.area)}, cluster to ${pct(m.top)}, controls from ${pct(m.ctlTop)}`);
+    };
+    await at(390, 844, {}, 0.125, '390x844');
+    await at(390, 715, { '--sa-b': '34px' }, 0.125, '390x715 in the app');
+    await at(844, 390, { '--sa-b': '0px', '--sa-l': '47px', '--sa-r': '47px' }, 0.12, '844x390');
+    await game(page, () => { const a = document.querySelector('.app'); for (const k of ['--sa-b', '--sa-l', '--sa-r']) a.style.removeProperty(k); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    return sizes.join('; ');
+  });
+  // the seat view (HUD_POV_SPEC 5.2): the horizon at 35-40% at 60 mph on I-405 North, the car's own display under the
+  // road and above the controls with nothing over it, nothing of the HUD on the windscreen below the horizon; the
+  // hypercar's display shows the speed, so the HUD drops its own; the Rossini GT's gauges don't, so it keeps it
+  await check('seat view: horizon, cluster and windscreen clear; the duplicate speed only where the car shows none', async () => {
+    const out = [];
+    for (const car of ['oc-hyper', 'rossini-gt']) {
+      await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); g.setCam('cockpit'); g.fastForward(3, {}, 27); }, car);
+      await frames(page, 6);
+      // and the camera in the seat: the half-second blend from the chase camera runs on frame time and starts where the
+      // camera was before those 3 s (some 80 m back), so 6 quick frames can leave it a metre or more behind the eye
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+      const m = await game(page, hudLayoutInPage);
+      expect(m.horizon >= 0.35 && m.horizon <= 0.4, `${car}: the horizon at ${pct(m.horizon)}`);
+      expect(m.cluster && m.cluster.mid >= 0.53 && m.cluster.bottom <= m.ctlTop && m.cluster.hits.length === 0, `${car}: the cluster ${JSON.stringify(m.cluster)}, controls from ${pct(m.ctlTop)}`);
+      expect(m.onGlass.length === 0, `${car}: on the windscreen: ${m.onGlass.join(', ')}`);
+      expect(m.speed === (car !== 'oc-hyper'), `${car}: the HUD's speed ${m.speed ? 'shown' : 'hidden'}`);
+      out.push(`${car}: horizon ${pct(m.horizon)}, cluster centre ${pct(m.cluster.mid)}, HUD speed ${m.speed ? 'shown' : 'hidden'}, ${pct(m.area)}`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    return out.join('; ');
   });
   await check('Go to lists all twenty carriageways', async () => {
     await page.getByRole('button', { name: 'Go to' }).click();
@@ -940,7 +1035,7 @@ await group('phone', async (use) => {
       const nav = q('.hud-nav'), dest = q('.hud-dest'), m = window.__game.chevrons.mesh;
       return { nav: box(nav), dest: box(dest), chip: box(q('.hud-roadname')), navText: nav.hidden ? '' : nav.innerText.replace(/\s+/g, ' '), destText: dest.hidden ? '' : dest.innerText.replace(/\s+/g, ' '),
         count: m.count, shown: m.visible, w: innerWidth, side: document.documentElement.scrollWidth > innerWidth,
-        clipped: [nav, dest].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };
+        clipped: [nav, dest, q('.hud-nav-sign')].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };   // the sign too: it was cut to "CA-55 NORT..."
     });
     const r = await look();
     await page.screenshot({ path: path.join(OUT, 'phone-nav.png') });
@@ -960,16 +1055,40 @@ await group('phone', async (use) => {
     await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it
     return `"${r.navText}" / "${r.destText}"; ${r.count} chevrons; cleared`;
   });
-  // the adaptive HUD (U1): every style has a status row, a compass and a clock chip whose temperature says it's
-  // simulated. Minimal tucks the top bar and the corner window away after 4 s of just driving, keeps Pause in reach as
-  // a round chip, and a tap on the road brings the rest back.
-  await check('HUD: compass and clock chip; Minimal tucks the bar away after 4 s, Pause stays, a tap brings it back', async () => {
+  // what left the driving HUD stays a tap or two away (HUD_POV_SPEC 5.5): hold Pause for the quick menu's six wedges,
+  // Pause > Radio for the radio card
+  await check('reach: hold Pause for the six-wedge quick menu; Pause > Radio opens the radio card', async () => {
     await page.keyboard.press('Escape');                                         // close Go to
-    const row = await game(page, () => ({ h: Number(document.querySelector('.hud-tape')?.style.getPropertyValue('--h')), clock: document.querySelector('.hud-clock')?.textContent ?? '' }));
+    await page.waitForTimeout(300);
+    if (await page.locator('.panel.paused').count()) await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    const pause = page.getByRole('button', { name: 'Pause', exact: true });
+    await pause.dispatchEvent('pointerdown', { pointerType: 'touch', isPrimary: true });
+    await page.waitForSelector('.radial', { state: 'attached', timeout: 30000 });
+    const wedges = await page.locator('.radial-w').count();
+    // let go in the middle: nothing picked
+    await game(page, () => dispatchEvent(new PointerEvent('pointerup', { clientX: innerWidth / 2, clientY: innerHeight / 2 })));
+    await page.waitForSelector('.radial', { state: 'detached', timeout: 30000 });
+    expect(wedges === 6, `${wedges} wedges`);
+    await pause.tap();
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Radio', exact: true }).click();
+    await page.waitForSelector('.radio-card', { timeout: 30000 });
+    const card = await page.locator('.radio-card').boundingBox();
+    expect(card && card.y >= 150, `the radio card at ${JSON.stringify(card)}`);
+    await page.locator('.radio-card').getByRole('button', { name: 'Close', exact: true }).click();
+    return `${wedges} wedges; radio card at y ${Math.round(card.y)}`;
+  });
+  // the adaptive HUD (U1): the compass is the ring round the map; the time and the temperature, which says it's
+  // simulated, are in the pause screen. Minimal tucks the icons and the map away after 4 s of just driving, keeps Pause
+  // in reach, and a tap on the road brings the rest back.
+  await check('HUD: compass ring; clock in the pause screen; Minimal tucks the icons away after 4 s, Pause stays, a tap brings them back', async () => {
+    const h = await game(page, () => Number(document.querySelector('.hud-tape')?.style.getPropertyValue('--h')));
     // the drive starts on I-405 North through Irvine, which runs northwest
-    expect(row.h > 270 && row.h < 340, `the compass reads ${row.h}° on I-405 North in Irvine`);
-    expect(/\d+° · simulated/.test(row.clock), `the clock chip says "${row.clock}"`);
+    expect(h > 270 && h < 340, `the compass reads ${h}° on I-405 North in Irvine`);
     await game(page, () => window.__game.setPaused(true));
+    const clock = await page.locator('.pause-clock').innerText();
+    expect(/\d:\d\d [AP]M · \d+° · (simulated|NWS KSNA)/.test(clock), `the pause screen says "${clock}"`);
+    const row = { h, clock };
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await page.getByRole('group', { name: 'HUD style' }).getByRole('button', { name: 'Minimal' }).click();
     await page.getByRole('button', { name: 'Done', exact: true }).click();
@@ -990,6 +1109,67 @@ await group('phone', async (use) => {
     await pause.tap();                                                             // the round chip pauses
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
+  });
+  // the sky camera (owner, 2026-10-27: "Sky view camera still doesn't show correctly on mobile view"): it draws into
+  // the window's own canvas at the screen's pixel ratio (it used to land at pr times its place and size, and at 1 pixel
+  // per CSS pixel on a phone), a live picture inside its frame, and it stays up when the Minimal HUD tucks the rest
+  await check('sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map', async () => {
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); });
+    await page.waitForFunction(() => document.querySelector('.app.hud-idle') && document.querySelector('.corner.sky canvas'), null, { timeout: 60000, polling: 250 });
+    await frames(page, 4);
+    const r = await game(page, () => {
+      const c = document.querySelector('.corner.sky'), cv = c.querySelector('canvas'), cs = getComputedStyle(c);
+      const a = c.getBoundingClientRect(), b = cv.getBoundingClientRect(), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      let s = 0, s2 = 0, n = 0;
+      for (let i = 0; i < d.length; i += 16) { const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; s += l; s2 += l * l; n++; }
+      return { inside: b.left >= a.left - 0.5 && b.right <= a.right + 0.5 && b.top >= a.top - 0.5 && b.bottom <= a.bottom + 0.5, css: b.width, px: cv.width, sq: cv.width === cv.height,
+        dpr: devicePixelRatio, cap: window.__game.settings.quality === 'low' ? 2 : 3, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), up: cs.visibility !== 'hidden' && Number(cs.opacity) > 0.5 && a.right <= innerWidth + 0.5,
+        mode: window.__game.skyMode, self: window.__game.skyCheck };
+    });
+    expect(r.up, 'the sky camera tucked away with the Minimal HUD');
+    // the screen's pixel ratio, up to 3, and up to 2 at Low (a phone's default)
+    expect(r.inside && r.sq && Math.abs(r.px - Math.round(r.css * Math.min(r.cap, r.dpr))) <= 1, `a ${r.px} px canvas for ${fmt(r.css)} CSS px at ${r.dpr}x, cap ${r.cap} (inside the frame: ${r.inside})`);
+    expect(r.mean > 20 && r.sd > 8, `no picture: mean ${fmt(r.mean)}, sd ${fmt(r.sd)}`);
+    // the copy checks itself once against the drawing buffer (it falls back to the direct way if WebKit hands it back empty)
+    expect(r.mode === 'copy' && r.self.startsWith('copy ok'), `self-check: ${r.mode}, "${r.self}"`);
+    return `${r.px} px for ${fmt(r.css)} CSS px at ${r.dpr}x, mean ${fmt(r.mean)}, sd ${fmt(r.sd)}, up while the HUD is tucked; self-check "${r.self}"`;
+  });
+  // the fallback (Game.renderSkyDirect, what the self-check switches to): the view drawn into the main canvas under the
+  // see-through frame. With the world held still, what the screen shows inside the frame matches the copy's picture,
+  // and not the road behind the frame (the same frame with its canvas hidden and no fallback)
+  await check('sky camera fallback: drawn into the main canvas, inside its see-through frame', async () => {
+    const cssBox = () => game(page, () => { const b = document.querySelector('.corner.sky canvas').getBoundingClientRect(); return { x: b.left + 2, y: b.top + 2, width: b.width - 4, height: Math.round((b.height - 4) * 0.7) }; });
+    // 6 x 4 block means of a PNG (decoded in the page) or of the window's own canvas, over the same top 70% (the tag sits below)
+    const blocks = (png) => game(page, async (src) => {
+      let w, h, d;
+      if (src) { const im = await createImageBitmap(new Blob([Uint8Array.from(atob(src), (ch) => ch.charCodeAt(0))], { type: 'image/png' })); const c = new OffscreenCanvas(im.width, im.height), x = c.getContext('2d'); x.drawImage(im, 0, 0); w = im.width; h = im.height; d = x.getImageData(0, 0, w, h).data; }
+      else { const cv = document.querySelector('.corner.sky canvas'), k = cv.width / cv.getBoundingClientRect().width, x0 = Math.round(2 * k), y0 = Math.round(2 * k); w = cv.width - 2 * x0; h = Math.round((cv.height - 2 * y0) * 0.7); d = cv.getContext('2d').getImageData(x0, y0, w, h).data; }
+      const out = [];
+      for (let by = 0; by < 4; by++) for (let bx = 0; bx < 6; bx++) {
+        const s = [0, 0, 0]; let n = 0;
+        for (let y = Math.floor((by * h) / 4); y < Math.floor(((by + 1) * h) / 4); y++) for (let x = Math.floor((bx * w) / 6); x < Math.floor(((bx + 1) * w) / 6); x++) { const i = (y * w + x) * 4; s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; n++; }
+        out.push(s.map((v) => v / Math.max(1, n)));
+      }
+      return out;
+    }, png ? png.toString('base64') : null);
+    const diff = (a, b) => a.reduce((t, p, i) => t + (Math.abs(p[0] - b[i][0]) + Math.abs(p[1] - b[i][1]) + Math.abs(p[2] - b[i][2])) / 3, 0) / a.length;
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); g.paused = true; });   // still, without the pause screen
+    await frames(page, 4);
+    const copy = await blocks(null);
+    await game(page, () => { document.querySelector('.corner.sky canvas').style.visibility = 'hidden'; });
+    await frames(page, 2);
+    const behind = await blocks(await page.screenshot({ clip: await cssBox() }));
+    await game(page, () => { document.querySelector('.corner.sky canvas').style.visibility = ''; window.__game.setSkyFallback(true); });
+    await frames(page, 4);
+    const direct = await blocks(await page.screenshot({ clip: await cssBox() }));
+    const st = await game(page, () => { const c = document.querySelector('.corner.sky'), cs = getComputedStyle(c);
+      return { mode: window.__game.skyMode, bg: cs.backgroundColor, radius: cs.borderTopLeftRadius, canvas: getComputedStyle(c.querySelector('canvas')).visibility }; });
+    await game(page, () => { const g = window.__game; g.setSkyFallback(false); g.paused = false; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
+    const dDirect = diff(direct, copy), dBehind = diff(behind, copy);
+    expect(st.mode === 'direct' && st.canvas === 'hidden' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.bg) && st.radius === '0px', `the frame in the fallback: ${JSON.stringify(st)}`);
+    expect(dDirect < 14 && dDirect < dBehind / 2, `inside the frame the screen is ${fmt(dDirect)} levels from the sky view (the road behind: ${fmt(dBehind)})`);
+    return `the screen inside the frame is ${fmt(dDirect)} levels from the copy's picture (the road behind it: ${fmt(dBehind)}); frame ${st.bg}, radius ${st.radius}`;
   });
 });
 

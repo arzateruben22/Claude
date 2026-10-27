@@ -146,6 +146,7 @@ export class PlayerCar {
 
   private buildCarAndCockpit(c: CarConfig) {
     if (this.exterior) disposeGeometry(this.exterior);
+    this.restoreCabinLight();
     if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
     let t = performance.now();
     // the hypercar's roof (1.07 m over the shared eye point) is lower than the shared driver's frame: until the full seat
@@ -240,8 +241,41 @@ export class PlayerCar {
   // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way.
   // The live mirrors only render from the seat: from outside they are a few pixels behind the glass.
   setOutsideView(v: boolean) {
+    if (v) this.restoreCabinLight();
     for (const o of this.outsideParts) o.visible = v;
     if (this.interior) for (const m of this.interior.mirrors) m.active = !v;
+  }
+
+  // The hypercar's display shows the live speed and gear (cockpit.ts setInstruments), so from the seat the HUD needn't
+  // repeat them; the other cars' clusters have static digital windows (car-gauges.ts) and keep the HUD's speed.
+  get liveCluster() { return !!this.cfg && shapeFor(this.cfg.car).interior === 'hyper'; }
+
+  // The hypercar's cabin by day and night, with no new lights: Game calls this every frame from the seat with the sky's
+  // daylight (0 night .. 1 day). The ambient line glows harder at night and still reads by day, the display is a touch
+  // brighter by day, and the rough trim takes less of the bright sky's reflection by day (the grey veil) while
+  // keeping all of it at night so it doesn't go black. The cockpit's materials are cached and shared (the garage
+  // builds its own cockpit from the same ones, the carbon is also on the body), so the values are restored whenever
+  // the view leaves the seat (setOutsideView(true), also for the sky camera) and before a rebuild.
+  private cabinBase = new Map<THREE.MeshStandardMaterial, { e: number; env: number }>();
+  setCabinLight(day: number) {
+    const mats = this.interior?.group.userData.materials as Record<string, THREE.Material> | undefined;
+    if (!mats || !this.liveCluster) return;
+    const k = clamp(day, 0, 1), high = this.cfg!.quality === 'high';
+    const set = (key: string, e: number | null, env: number | null) => {
+      const m = mats[key] as THREE.MeshStandardMaterial | undefined;
+      if (!m || !('emissiveIntensity' in m)) return;
+      if (!this.cabinBase.has(m)) this.cabinBase.set(m, { e: m.emissiveIntensity, env: m.envMapIntensity });
+      const b = this.cabinBase.get(m)!;
+      if (e !== null) m.emissiveIntensity = e;
+      if (env !== null) m.envMapIntensity = b.env * env;
+    };
+    set('amb', high ? lerp(2.6, 1.8, k) : lerp(2.0, 1.4, k), null);
+    set('screenH', lerp(1.0, 1.25, k), null);
+    for (const key of ['alc', 'alcW', 'nappa', 'carbon', 'plastic', 'head']) set(key, null, lerp(1.0, 0.6, k));
+  }
+  private restoreCabinLight() {
+    for (const [m, b] of this.cabinBase) { m.emissiveIntensity = b.e; m.envMapIntensity = b.env; }
+    this.cabinBase.clear();
   }
 
   // The cabin as the sun's lens flare sees it: a box with the glass as openings (the windscreen under its header

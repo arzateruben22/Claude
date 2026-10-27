@@ -8,6 +8,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
+import type { Hud as HudData } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
 import { Settings, loadSettings, saveSettings, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest } from '../game/settings';
@@ -48,14 +49,21 @@ const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
 const GHOST_MS = 260;      // how long the outgoing content of the sheet lingers while it fades (styles.css: sheet-out)
-const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the corner window away after this long without input
+const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the road map away after this long without input (the sky camera stays)
 // keys that only drive (throttle, brake, steering, handbrake, look back, shifts): pressing them isn't asking for the HUD
 const DRIVING_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyV', 'KeyQ', 'KeyE']);
+// the condensed HUD's three layouts (HUD_POV_SPEC 2): a phone upright ('pp': one compact cluster across the top), a
+// phone on its side ('pl') and a desktop ('desk', the reference layout). A narrow window with a mouse takes the phone's.
+type HudLayout = 'pp' | 'pl' | 'desk';
+// the round map's size for each, by the Corner size setting (Small, Medium, Large)
+const MAP_PX: Record<HudLayout, number[]> = { pp: [96, 112, 128], pl: [80, 88, 104], desk: CORNER_PX };
+const HINT_RADIAL = 'tsu.hint.radial';   // the one-time "Hold Pause for the quick menu" toast on a touch screen
 
 export function App() {
   const host = useRef<HTMLDivElement>(null);
   const game = useRef<Game | null>(null);
   const hud = useRef<HudHandle>(null);
+  const lastHud = useRef<HudData | null>(null);                        // the latest readouts, for the pause screen
   const mapRef = useRef<HTMLCanvasElement>(null);
   const [screen, setScreen] = useState<Screen>('loading');
   const [panel, setPanelState] = useState<Panel>(() => (storeReturnPending() ? 'store' : null));   // back from Stripe or a sign-in link
@@ -119,7 +127,7 @@ export function App() {
     let g: Game;
     try {
       g = new Game(host.current, settings, {
-        hud: (h) => hud.current?.set(h),
+        hud: (h) => { lastHud.current = h; hud.current?.set(h); },
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
@@ -174,6 +182,12 @@ export function App() {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
     setScreen('playing');
     void game.current?.start(m, settings.start, settings.course);
+    // the quick menu is the way to the radio and the garage on a phone: say once how to open it
+    if (coarse) {
+      let seen = true;
+      try { seen = localStorage.getItem(HINT_RADIAL) === '1'; if (!seen) localStorage.setItem(HINT_RADIAL, '1'); } catch { /* storage off: no hint */ }
+      if (!seen) setTimeout(() => toast('Hold Pause for the quick menu'), 2600);
+    }
   };
   const resume = () => { setPanel(null); game.current?.setPaused(false); setScreen('playing'); };
   const openFeedback = () => { if (game.current) setReport(formatReport(game.current.report())); setPanel('feedback'); };
@@ -194,7 +208,13 @@ export function App() {
       // hold Tab while driving for the quick menu (released, the menu picks or cancels)
       if (e.code === 'Tab' && screen === 'playing' && !panel && !e.repeat && !radial) { e.preventDefault(); clearTimeout(holdT.current); holdT.current = window.setTimeout(() => setRadial({ x: innerWidth / 2, y: innerHeight / 2 }), 300); }
     };
-    const ku = (e: KeyboardEvent) => { if (e.code === 'Tab') clearTimeout(holdT.current); };
+    // a quick Tab (let go before the quick menu opens) still moves focus, through the HUD's controls while driving
+    const ku = (e: KeyboardEvent) => {
+      if (e.code !== 'Tab') return;
+      const pending = holdT.current && !radial && screen === 'playing' && !panel;
+      clearTimeout(holdT.current); holdT.current = 0;
+      if (pending) focusHudControl(e.shiftKey ? -1 : 1);
+    };
     addEventListener('keyup', ku, true);
     addEventListener('keydown', k, true);
     return () => { removeEventListener('keydown', k, true); removeEventListener('keyup', ku, true); };
@@ -215,7 +235,8 @@ export function App() {
   const playing = screen === 'playing';
   // the adaptive HUD (U1): in Minimal, true once a drive has gone IDLE_MS without a tap, mouse move, key or pad button
   const idle = useIdle(playing && settings.hudStyle === 'minimal', () => game.current?.input.padAt ?? 0);
-  const cornerPx = CORNER_PX[settings.cornerSize] ?? CORNER_PX[1];
+  const layout = useHudLayout();
+  const cornerPx = MAP_PX[layout][settings.cornerSize] ?? MAP_PX[layout][1];
   const start = STARTS.find((s) => s.label === settings.start) ?? STARTS[0];
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
   const exitRoadOf = settings.exit.split(' @ ')[0];
@@ -370,8 +391,8 @@ export function App() {
                   <h3 className="sect">HUD and map</h3>
                   <div className="field"><label>HUD style</label><Seg label="HUD style" value={settings.hudStyle} options={['modern', 'minimal'] as HudStyle[]} labels={(v) => (v === 'modern' ? 'Modern' : 'Minimal')} onChange={(v) => update({ hudStyle: v })} /></div>
                   <p className="fine">{settings.hudStyle === 'minimal'
-                    ? 'Minimal tucks the top bar and the corner window away after 4 s of just driving; a tap, a mouse move, a key or a pad button brings them back. Speed, the route prompt and Pause stay.'
-                    : 'Modern keeps every control on screen.'}</p>
+                    ? 'Minimal tucks the icons, the map and the road away after 4 s of just driving; a tap, a mouse move, a key or a pad button brings them back, and so do an exit coming up and a hard stop. Speed, the guidance and Pause stay.'
+                    : 'Modern keeps every control on screen; on a phone the road chip shows for 8 s after the road changes.'}</p>
                   <div className="field"><label>Corner window</label><Seg label="Corner window" value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
                   <div className="field"><label>Corner size</label><Seg label="Corner size" value={String(settings.cornerSize)} options={['0', '1', '2']} labels={(v) => ['Small', 'Medium', 'Large'][Number(v)]} onChange={(v) => update({ cornerSize: Number(v) })} /></div>
                   {!coarse && <Toggle label="On-screen pedals (for touch screens)" value={settings.showTouch} onChange={(v) => update({ showTouch: v })} />}
@@ -498,30 +519,33 @@ export function App() {
   );
 
   return (
-    <div className={'app' + (idle ? ' hud-idle' : '')} style={{ '--cw': settings.corner === 'off' ? '0px' : `${cornerPx + 6}px` } as CSSProperties}>
+    <div className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout} style={{ '--map': `${cornerPx}px` } as CSSProperties}>
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} bubble={idle && settings.corner !== 'off'} chips={chips} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} />
+      {/* the corner window: the road map is a round dial (the compass is its rim, HUD.tsx); the sky camera keeps its
+          square frame and says it is a live view. Tap cycles map, sky camera, off. */}
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
-          {settings.corner === 'map' && <canvas ref={mapRef} />}
-          <span className="corner-tag">{settings.corner === 'map' ? 'Map' : 'Sky cam'}</span>
+          {/* the road map and the sky camera both draw into this canvas (Game.drawMap, Game.renderSky) */}
+          <canvas ref={mapRef} />
+          {settings.corner === 'sky' && <span className="corner-tag">Sky cam</span>}
         </button>
       )}
+      {/* the controls: on a phone three 44 px icons beside the plate (View, Go to, Pause; Map stands where the map was
+          while the window is off), each named by its hidden label; on a desktop a labelled rail with Radio too */}
       {playing && (
         <div className="tbar">
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" />View</button>
-          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
-          <button type="button" className={'tbtn' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" />Radio</button>
-          {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
-              pause button in the corner (styles.css). Its name stays "Pause" either way. Tap to pause; hold for the
-              radial quick menu (U3). */}
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
+          {settings.corner === 'off' && <button type="button" className="tbtn mapbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" /><span className="tlabel">Map</span></button>}
+          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
+          <button type="button" className={'tbtn radio' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" /><span className="tlabel">Radio</span></button>
+          {/* Pause never tucks away. Its name stays "Pause". Tap to pause; hold for the radial quick menu (U3). */}
           <button type="button" className="tbtn menu" aria-haspopup="menu" title="Tap to pause; hold for the quick menu"
             onPointerDown={() => { held.current = false; clearTimeout(holdT.current); holdT.current = window.setTimeout(() => { held.current = true; setRadial({ x: innerWidth / 2, y: innerHeight / 2 }); }, 300); }}
             onPointerUp={() => clearTimeout(holdT.current)} onPointerLeave={() => { if (!held.current) clearTimeout(holdT.current); }}
             onClick={() => { if (!held.current) game.current?.setPaused(true); held.current = false; }}>
-            <Ico name="pause" /><span>Pause</span>
+            <Ico name="pause" /><span className="tlabel">Pause</span>
           </button>
         </div>
       )}
@@ -575,9 +599,15 @@ export function App() {
             <OcWatermark />
             <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
             <h2>Paused</h2>
+            {/* what left the driving HUD: the time the sky shows, the temperature and where it comes from, the handling
+                chips, the run's numbers */}
+            {lastHud.current && <p className="pause-clock">{`${lastHud.current.clock} · ${lastHud.current.tempF}° · ${lastHud.current.tempNote}`}</p>}
+            <p className="pause-chips">{chips.join(' · ')}</p>
+            {lastHud.current && <p className="pause-run">{runLine(lastHud.current)}</p>}
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
               <button className="btn" onClick={() => setPanel('phone')}>Phone</button>
+              <button className="btn" onClick={() => { resume(); setRadioOpen(true); }}>Radio</button>
               <button className="btn" onClick={() => setPanel('map')}>World map</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
@@ -636,7 +666,7 @@ export function App() {
       {/* the World Map fills the screen over the menu or the paused drive (WorldMap.tsx) */}
       {/* the in-game phone (U6), from the pause screen: a screen of its own over the paused drive (Phone.tsx) */}
       {panel === 'phone' && game.current && (
-        <Phone name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
+        <Phone clock={() => lastHud.current?.clock ?? ''} name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
           onJob={(j) => {
             // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
             if (j.kind === 'race') update({ course: j.course });
@@ -712,7 +742,7 @@ function useIdle(active: boolean, padAt: () => number) {
     let timer = 0, pad = padRef.current();
     const sleep = () => {
       const a = document.activeElement;
-      if (a instanceof HTMLElement && a.closest('.tbar, .corner') && a.matches(':focus-visible')) { arm(); return; }
+      if (a instanceof HTMLElement && a.closest('.tbar, .corner, .hud-ability') && a.matches(':focus-visible')) { arm(); return; }
       setIdle(true);
     };
     const arm = () => { clearTimeout(timer); timer = window.setTimeout(sleep, IDLE_MS); };
@@ -733,6 +763,49 @@ function useIdle(active: boolean, padAt: () => number) {
     };
   }, [active]);
   return active && idle;
+}
+
+// the next (or previous) visible HUD control after the focused one: the icons, the map, the ability
+function focusHudControl(step: 1 | -1) {
+  const els = [...document.querySelectorAll<HTMLElement>('.tbar .tbtn, .corner, .hud-ability')].filter((e) => e.getBoundingClientRect().width > 0 && getComputedStyle(e).visibility !== 'hidden');
+  if (!els.length) return;
+  const i = els.indexOf(document.activeElement as HTMLElement);
+  els[(i < 0 ? (step > 0 ? 0 : els.length - 1) : (i + step + els.length) % els.length)].focus({ focusVisible: true } as FocusOptions);
+}
+
+// the HUD's layout for this window: a phone upright or on its side, or a desktop (a narrow window with a mouse takes the
+// upright phone's); it follows a resize or a turn of the phone
+function hudLayout(): HudLayout {
+  if (typeof matchMedia !== 'function') return 'desk';
+  const w = innerWidth, h = innerHeight;
+  if (matchMedia('(pointer: coarse)').matches) return w < h ? 'pp' : 'pl';
+  return w <= 560 ? 'pp' : 'desk';
+}
+function useHudLayout(): HudLayout {
+  const [l, setL] = useState<HudLayout>(hudLayout);
+  useEffect(() => {
+    // iOS fires orientationchange (and sometimes resize) before the new size is laid out: look again a frame and a
+    // moment later, and on the visual viewport's own resize
+    let t = 0, later: ReturnType<typeof setTimeout> | undefined;
+    const f = () => {
+      setL(hudLayout());
+      cancelAnimationFrame(t); t = requestAnimationFrame(() => setL(hudLayout()));
+      clearTimeout(later); later = setTimeout(() => setL(hudLayout()), 350);   // one pending look, not one per event
+    };
+    const vv = typeof visualViewport === 'object' ? visualViewport : null;
+    addEventListener('resize', f); addEventListener('orientationchange', f); vv?.addEventListener('resize', f);
+    return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); vv?.removeEventListener('resize', f); cancelAnimationFrame(t); clearTimeout(later); };
+  }, []);
+  return l;
+}
+
+// the run's numbers for the pause screen (the phone's plate shows two of them; here they all are)
+function runLine(h: HudData): string {
+  const mi = (m: number) => (m / 1609.344).toFixed(2) + ' mi';
+  if (h.mode === 'race') return `P${h.racePos || '–'} of ${h.raceOf} · ${h.raceTime} · ${mi(Math.max(0, h.raceLeft))} to go`;
+  if (h.mode === 'survival') return `${h.score.toLocaleString()} points · ${h.streak.toFixed(1)} s over 100 · ${h.nearMisses} near misses`;
+  if (h.mode === 'time') return `${h.timeLeft.toFixed(1)} s left · ${mi(h.distance)}`;
+  return `${mi(h.distance)} · Top ${h.top} mph` + (h.errand ? ` · Errand ${Math.floor(Math.ceil(h.errand.left) / 60)}:${String(Math.ceil(h.errand.left) % 60).padStart(2, '0')} left` : '');
 }
 
 function qualityNote(q: Quality) {
