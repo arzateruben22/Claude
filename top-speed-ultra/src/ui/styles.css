@@ -1023,6 +1023,11 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app:is([data-hud="pp"], [data-hud="pl"]) .corner.map { box-shadow: 0 0 14px var(--ice-glow), 0 6px 18px var(--shadow); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .corner.sky { overflow: hidden; border-radius: 14px; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .corner::after { display: none; }
+/* the sky camera's fallback (Game.renderSkyDirect: the copy into the window's canvas came back empty, or ?skyfallback=1):
+   the game draws the view into the page's canvas under the window, so the window is see-through with its own canvas
+   hidden, and square, as a picture drawn under the page can't follow rounded corners */
+.app > .stage[data-sky="direct"] ~ .corner.sky { background: transparent; border-radius: 0; }
+.app > .stage[data-sky="direct"] ~ .corner.sky canvas { visibility: hidden; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-compass { top: calc(var(--sa-t) + 8px - 5px); right: calc(var(--sa-r) + var(--edge) - 5px); }
 .app[data-hud="pl"] .hud-compass { width: calc(var(--map) + 8px); height: calc(var(--map) + 8px); top: calc(var(--sa-t) + 8px - 4px); right: calc(var(--sa-r) + var(--edge) - 4px); }
 /* the road: a 22 px chip under the map (under the icons in landscape), shown for 8 s after the road changes, when

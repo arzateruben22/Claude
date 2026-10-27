@@ -230,8 +230,10 @@ export class Game {
     addEventListener('resize', this.onResize);
     // the stage's own size, too: iOS can lay out a turned phone or a resized viewer's iframe after its resize event has
     // fired (the handler reads the old size), which left the drawing buffer at the old shape, stretched to the new one
-    if (typeof ResizeObserver === 'function') { this.resizeObs = new ResizeObserver(() => this.onResize()); this.resizeObs.observe(host); }
+    if (typeof ResizeObserver === 'function') { this.resizeObs = new ResizeObserver(this.onStageResize); this.resizeObs.observe(host); }
     document.addEventListener('visibilitychange', this.onVisibility);
+    // test hook: the sky camera's fallback from the start (renderSkyDirect); window.__game.setSkyFallback does it live
+    try { if (new URLSearchParams(location.search).get('skyfallback') === '1') { this.setSkyFallback(true); this.skyCheck = 'forced (?skyfallback=1)'; } } catch { /* no query */ }
   }
   private resizeObs: ResizeObserver | null = null;
 
@@ -689,19 +691,34 @@ export class Game {
       c.addPass(out); this.outputSat = sat;
       this.composer = c;
     }
-    this.onResize();
+    this.resize(true);                     // a new composer (and grade pass) takes the size even when the canvas kept it
   }
 
-  private onResize = () => {
+  // Fit the drawing buffer to the stage. setPixelRatio and setSize reassign canvas.width and height, which clears the
+  // buffer even at the same values, so nothing is touched when the size, the pixel ratio and the canvas already agree:
+  // the ResizeObserver runs after the frame's render, and a buffer cleared there was presented as a blank frame (once per
+  // turn of an iPhone, every frame of a window or viewer-panel drag). Returns whether it changed (and so cleared) it.
+  private applied = { w: 0, h: 0, pr: 0 };
+  private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
     const q = QUALITY[this.settings.quality];
     const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
-    this.renderer.setPixelRatio(pr);
+    const cv = this.renderer.domElement, a = this.applied;
+    if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
+    a.w = w; a.h = h; a.pr = pr;
+    if (this.renderer.getPixelRatio() !== pr) this.renderer.setPixelRatio(pr);   // it calls setSize too: one reallocation, not two
     this.renderer.setSize(w, h, false);
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
     if (this.grade) (this.grade.uniforms.resolution.value as THREE.Vector2).set(w * pr, h * pr);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    return true;
+  }
+  private onResize = () => { this.resize(); };
+  // the stage's ResizeObserver: its callbacks run after the frame's render and before the paint, so a buffer it resized
+  // (and cleared) is drawn again at once, from the state the frame left, or that empty buffer is what the screen shows
+  private onStageResize = () => {
+    if (this.resize() && this.raf && !this.ctxLost) this.draw(performance.now(), 0);
   };
   private onVisibility = () => { if (document.hidden && !this.attract) this.setPaused(true); };
 
@@ -965,14 +982,7 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    this.renderSky(now);                                // into the corner's own canvas, before the main view (see renderSky)
-    const view = this.view3(), seat = view === 'cockpit' || view === 'free';
-    this.car.setOutsideView(!seat);
-    if (seat) this.car.setCabinLight(this.env.daylight);
-    if (this.outputSat) this.outputSat.value = this.env.saturation;
-    if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
-    this.env.renderFlare();
+    this.draw(now, dt);
     this.renderCorner(dt);
     if (!this.attract) {
       this.audio.update(dt, { rpm: this.phys.rpm, throttle: this.phys.throttleOut, speed: Math.abs(this.phys.vx), slip: Math.max(this.phys.slipR, this.phys.slipF) + (this.input.c.handbrake ? 0.2 : 0), limiter: this.phys.limiter, scrape: this.scrape, cockpit: this.cam === 'cockpit' || this.cam === 'free' });
@@ -981,6 +991,20 @@ export class Game {
     this.hudT -= dt;
     if (this.hudT <= 0) { this.hudT = 0.1; this.sendHud(); }
   };
+
+  // the frame's pictures, from the state the frame has set up: the loop's, and once more at once after the stage's
+  // ResizeObserver resized (and so cleared) the drawing buffer (onStageResize)
+  private draw(now: number, dt: number) {
+    this.renderSky(now);                                // into the corner's own canvas, before the main view (see renderSky)
+    const view = this.view3(), seat = view === 'cockpit' || view === 'free';
+    this.car.setOutsideView(!seat);
+    if (seat) this.car.setCabinLight(this.env.daylight);
+    if (this.outputSat) this.outputSat.value = this.env.saturation;
+    if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
+    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    this.env.renderFlare();
+    this.renderSkyDirect();                             // the sky camera's fallback, over the finished frame
+  }
 
   // Ultra Realism: the edges close in and the world goes quiet as the speed builds, and the car buzzes at speed
   private realism(dt: number) {
@@ -1286,23 +1310,53 @@ export class Game {
   // so the old `* pr` put the picture at pr times its place and size (Low on a desktop: 0.75; a phone on Medium or up:
   // 1.5 to 2, mostly off the window); a square drawn under the page can't follow the frame's rounded corners; and it
   // had the main view's resolution, 1 pixel per CSS pixel on a phone at Low, so a blur of 3x3 blocks on an iPhone. Now
-  // it is rendered at the window's size times the screen's pixel ratio (up to 3) into the bottom-left of the drawing
-  // buffer before the main view, and copied out with drawImage while that buffer is still this frame's (the main view
-  // then clears and covers it). The window's canvas sits inside the frame, so it is clipped, moved and tucked with it.
+  // it is rendered at the window's size times the screen's pixel ratio (up to 3; up to 2 at Low, a phone's default) into
+  // the bottom-left of the drawing buffer before the main view, and copied out with drawImage while that buffer is still
+  // this frame's (the main view then clears and covers it). The window's canvas sits inside the frame, so it is clipped,
+  // moved and tucked with it. That copy has not been tried on WebKit (no WebKit here), so it checks itself once
+  // (checkSkyCopy) and falls back to drawing straight into the main canvas (renderSkyDirect).
   private skyAt = -1e9;
+  private skyDirect = false;           // the fallback is on, for the rest of the session
+  private skyCopies = 0;
+  skyCheck = '';                       // what checkSkyCopy found ('' before the third copy), for tests
+  get skyMode(): 'copy' | 'direct' { return this.skyDirect ? 'direct' : 'copy'; }
+  // the fallback on or off; also the test hook (window.__game.setSkyFallback(true), or ?skyfallback=1 at load). The stage
+  // carries data-sky="direct" so the frame turns see-through and square for it (styles.css)
+  setSkyFallback(on: boolean) {
+    this.skyDirect = on;
+    if (on) this.host.dataset.sky = 'direct'; else delete this.host.dataset.sky;
+  }
   private renderSky(now: number) {
     const cv = this.mapCanvas;
-    if (this.attract || this.settings.corner !== 'sky' || !cv) return;
+    if (this.skyDirect || this.attract || this.settings.corner !== 'sky' || !cv) return;
     if (now - this.skyAt < 1000 / 30 - 2) return;          // 30 a second is plenty for a map view; the copy stays up between
     const css = cv.clientWidth;
     if (css <= 0 || this.cornerAway(this.cornerRect())) return;
-    const gl = this.renderer.domElement, pr = this.renderer.getPixelRatio();
-    const want = Math.min(Math.round(css * Math.min(3, window.devicePixelRatio || 1)), gl.width, gl.height);
+    const gl = this.renderer.domElement, pr = this.renderer.getPixelRatio(), cap = this.settings.quality === 'low' ? 2 : 3;
+    const want = Math.min(Math.round(css * Math.min(cap, window.devicePixelRatio || 1)), gl.width, gl.height);
     const v = want / pr, px = Math.floor(v * pr);          // three.js sets floor(v * pr) device pixels: copy exactly those
     if (px < 8) return;
     const g = cv.getContext('2d'); if (!g) return;
     if (cv.width !== px || cv.height !== px) { cv.width = px; cv.height = px; }
     this.skyAt = now;
+    this.drawSky(0, 0, v);
+    const check = ++this.skyCopies === 3, view = check ? this.readSkyView(px) : null;   // read before the copy touches it
+    g.drawImage(gl, 0, gl.height - px, px, px, 0, 0, px, px);
+    if (check) this.checkSkyCopy(g, px, view);
+  }
+  // the drawing buffer's bottom-left px x px, the sky view just rendered (null if it can't be read)
+  private readSkyView(px: number): Uint8Array | null {
+    try {
+      const r = this.renderer, gl = r.getContext(), buf = new Uint8Array(px * px * 4);
+      r.setRenderTarget(null);
+      gl.readPixels(0, 0, px, px, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      return buf;
+    } catch { return null; }
+  }
+  // One render of the sky camera into the square at (x, y) from the drawing buffer's bottom left, s on a side. The units
+  // are CSS pixels: three's setScissor and setViewport multiply by the renderer's pixel ratio themselves (the old bug
+  // multiplied by it again).
+  private drawSky(x: number, y: number, s: number) {
     const p = this.car.root.position;
     const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
     this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
@@ -1313,9 +1367,9 @@ export class Game {
     this.scene.fog = null;
     this.car.setOutsideView(true);
     this.chevrons.mesh.visible = false;                    // the chevrons are for the road ahead, not the sky camera
-    r.shadowMap.autoUpdate = false;                        // last frame's shadows will do; the main view updates them
+    r.shadowMap.autoUpdate = false;                        // the shadows already made will do; the main view updates them
     r.setRenderTarget(null);
-    r.setScissorTest(true); r.setScissor(0, 0, v, v); r.setViewport(0, 0, v, v);
+    r.setScissorTest(true); r.setScissor(x, y, s, s); r.setViewport(x, y, s, s);
     r.render(this.scene, this.skyCam);
     r.setScissorTest(false);
     const size = r.getSize(this.tmpSize);
@@ -1323,7 +1377,44 @@ export class Game {
     r.shadowMap.autoUpdate = shadows;
     this.chevrons.mesh.visible = chev;
     this.scene.fog = fog;
-    g.drawImage(gl, 0, gl.height - px, px, px, 0, 0, px, px);
+  }
+  // Once, at the third copy: a 7 x 7 grid of the copy's pixels against the drawing buffer's own (readSkyView, read just
+  // before the copy, while the buffer held the sky view). drawImage from a WebGL canvas without preserveDrawingBuffer is
+  // not verified on WebKit (iOS Safari, the Claude iOS app); if the copy came back empty (all transparent, black where
+  // the view is not, or not the view at all), or the check itself fails, the sky camera is drawn the direct way for the
+  // rest of the session.
+  private checkSkyCopy(g: CanvasRenderingContext2D, px: number, buf: Uint8Array | null) {
+    let ok = false, why = '';
+    try {
+      if (!buf) throw new Error('readPixels failed');
+      const img = g.getImageData(0, 0, px, px).data, N = 7;
+      let opaque = 0, lit = 0, litCopy = 0, same = 0;
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+        const x = Math.floor(((i + 0.5) / N) * px), y = Math.floor(((j + 0.5) / N) * px);
+        const c = (y * px + x) * 4, b = ((px - 1 - y) * px + x) * 4;          // the copy runs top down, the buffer bottom up
+        if (img[c + 3] > 0) opaque++;
+        if (buf[b] + buf[b + 1] + buf[b + 2] > 48) lit++;
+        if (img[c] + img[c + 1] + img[c + 2] > 48) litCopy++;
+        if (Math.max(Math.abs(img[c] - buf[b]), Math.abs(img[c + 1] - buf[b + 1]), Math.abs(img[c + 2] - buf[b + 2])) <= 40) same++;
+      }
+      const n = N * N;
+      ok = opaque > 0 && !(lit >= n / 4 && litCopy === 0) && same >= n / 2;
+      why = `${opaque}/${n} opaque, ${litCopy} lit (the view: ${lit}), ${same}/${n} match the view`;
+    } catch (e) { why = 'the check failed: ' + String((e as Error)?.message ?? e); }
+    this.skyCheck = (ok ? 'copy ok: ' : 'copy empty, direct: ') + why;
+    if (!ok) this.setSkyFallback(true);
+  }
+  // The fallback: the sky camera drawn straight into the main canvas over the window's box (its own canvas hidden, the
+  // frame see-through and square, styles.css), every frame after the main view, which clears the whole buffer. It has
+  // the main view's resolution, not the screen's. A pixel wider each side, under the frame's 1 px border, so the floor()
+  // three applies to each of x, y and size can't leave a sliver of the road showing at an edge.
+  private renderSkyDirect() {
+    const cv = this.mapCanvas;
+    if (!this.skyDirect || this.attract || this.settings.corner !== 'sky' || !cv) return;
+    const a = cv.getBoundingClientRect(), h = this.host.getBoundingClientRect(), s = Math.min(a.width, a.height) + 2;
+    const x = a.left - h.left - 1, top = a.top - h.top - 1;
+    if (s < 10 || this.cornerAway({ x: x + 1, size: s - 2 })) return;
+    this.drawSky(x, this.renderer.getSize(this.tmpSize).y - top - s, s);
   }
   private tmpSize = new THREE.Vector2();
   // the road map, ten times a second (the sky camera is renderSky)
@@ -1510,7 +1601,7 @@ export class Game {
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,
       x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches,
-      visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
+      visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay, sky: this.skyMode };
   }
 
   dispose() {

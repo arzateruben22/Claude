@@ -1004,6 +1004,9 @@ await group('phone', async (use) => {
     for (const car of ['oc-hyper', 'rossini-gt']) {
       await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); g.setCam('cockpit'); g.fastForward(3, {}, 27); }, car);
       await frames(page, 6);
+      // and the camera in the seat: the half-second blend from the chase camera runs on frame time and starts where the
+      // camera was before those 3 s (some 80 m back), so 6 quick frames can leave it a metre or more behind the eye
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
       const m = await game(page, hudLayoutInPage);
       expect(m.horizon >= 0.35 && m.horizon <= 0.4, `${car}: the horizon at ${pct(m.horizon)}`);
       expect(m.cluster && m.cluster.mid >= 0.53 && m.cluster.bottom <= m.ctlTop && m.cluster.hits.length === 0, `${car}: the cluster ${JSON.stringify(m.cluster)}, controls from ${pct(m.ctlTop)}`);
@@ -1121,13 +1124,52 @@ await group('phone', async (use) => {
       let s = 0, s2 = 0, n = 0;
       for (let i = 0; i < d.length; i += 16) { const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; s += l; s2 += l * l; n++; }
       return { inside: b.left >= a.left - 0.5 && b.right <= a.right + 0.5 && b.top >= a.top - 0.5 && b.bottom <= a.bottom + 0.5, css: b.width, px: cv.width, sq: cv.width === cv.height,
-        dpr: devicePixelRatio, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), up: cs.visibility !== 'hidden' && Number(cs.opacity) > 0.5 && a.right <= innerWidth + 0.5 };
+        dpr: devicePixelRatio, cap: window.__game.settings.quality === 'low' ? 2 : 3, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), up: cs.visibility !== 'hidden' && Number(cs.opacity) > 0.5 && a.right <= innerWidth + 0.5,
+        mode: window.__game.skyMode, self: window.__game.skyCheck };
     });
     expect(r.up, 'the sky camera tucked away with the Minimal HUD');
-    expect(r.inside && r.sq && Math.abs(r.px - Math.round(r.css * Math.min(3, r.dpr))) <= 1, `a ${r.px} px canvas for ${fmt(r.css)} CSS px at ${r.dpr}x (inside the frame: ${r.inside})`);
+    // the screen's pixel ratio, up to 3, and up to 2 at Low (a phone's default)
+    expect(r.inside && r.sq && Math.abs(r.px - Math.round(r.css * Math.min(r.cap, r.dpr))) <= 1, `a ${r.px} px canvas for ${fmt(r.css)} CSS px at ${r.dpr}x, cap ${r.cap} (inside the frame: ${r.inside})`);
     expect(r.mean > 20 && r.sd > 8, `no picture: mean ${fmt(r.mean)}, sd ${fmt(r.sd)}`);
-    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
-    return `${r.px} px for ${fmt(r.css)} CSS px at ${r.dpr}x, mean ${fmt(r.mean)}, sd ${fmt(r.sd)}, up while the HUD is tucked`;
+    // the copy checks itself once against the drawing buffer (it falls back to the direct way if WebKit hands it back empty)
+    expect(r.mode === 'copy' && r.self.startsWith('copy ok'), `self-check: ${r.mode}, "${r.self}"`);
+    return `${r.px} px for ${fmt(r.css)} CSS px at ${r.dpr}x, mean ${fmt(r.mean)}, sd ${fmt(r.sd)}, up while the HUD is tucked; self-check "${r.self}"`;
+  });
+  // the fallback (Game.renderSkyDirect, what the self-check switches to): the view drawn into the main canvas under the
+  // see-through frame. With the world held still, what the screen shows inside the frame matches the copy's picture,
+  // and not the road behind the frame (the same frame with its canvas hidden and no fallback)
+  await check('sky camera fallback: drawn into the main canvas, inside its see-through frame', async () => {
+    const cssBox = () => game(page, () => { const b = document.querySelector('.corner.sky canvas').getBoundingClientRect(); return { x: b.left + 2, y: b.top + 2, width: b.width - 4, height: Math.round((b.height - 4) * 0.7) }; });
+    // 6 x 4 block means of a PNG (decoded in the page) or of the window's own canvas, over the same top 70% (the tag sits below)
+    const blocks = (png) => game(page, async (src) => {
+      let w, h, d;
+      if (src) { const im = await createImageBitmap(new Blob([Uint8Array.from(atob(src), (ch) => ch.charCodeAt(0))], { type: 'image/png' })); const c = new OffscreenCanvas(im.width, im.height), x = c.getContext('2d'); x.drawImage(im, 0, 0); w = im.width; h = im.height; d = x.getImageData(0, 0, w, h).data; }
+      else { const cv = document.querySelector('.corner.sky canvas'), k = cv.width / cv.getBoundingClientRect().width, x0 = Math.round(2 * k), y0 = Math.round(2 * k); w = cv.width - 2 * x0; h = Math.round((cv.height - 2 * y0) * 0.7); d = cv.getContext('2d').getImageData(x0, y0, w, h).data; }
+      const out = [];
+      for (let by = 0; by < 4; by++) for (let bx = 0; bx < 6; bx++) {
+        const s = [0, 0, 0]; let n = 0;
+        for (let y = Math.floor((by * h) / 4); y < Math.floor(((by + 1) * h) / 4); y++) for (let x = Math.floor((bx * w) / 6); x < Math.floor(((bx + 1) * w) / 6); x++) { const i = (y * w + x) * 4; s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; n++; }
+        out.push(s.map((v) => v / Math.max(1, n)));
+      }
+      return out;
+    }, png ? png.toString('base64') : null);
+    const diff = (a, b) => a.reduce((t, p, i) => t + (Math.abs(p[0] - b[i][0]) + Math.abs(p[1] - b[i][1]) + Math.abs(p[2] - b[i][2])) / 3, 0) / a.length;
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); g.paused = true; });   // still, without the pause screen
+    await frames(page, 4);
+    const copy = await blocks(null);
+    await game(page, () => { document.querySelector('.corner.sky canvas').style.visibility = 'hidden'; });
+    await frames(page, 2);
+    const behind = await blocks(await page.screenshot({ clip: await cssBox() }));
+    await game(page, () => { document.querySelector('.corner.sky canvas').style.visibility = ''; window.__game.setSkyFallback(true); });
+    await frames(page, 4);
+    const direct = await blocks(await page.screenshot({ clip: await cssBox() }));
+    const st = await game(page, () => { const c = document.querySelector('.corner.sky'), cs = getComputedStyle(c);
+      return { mode: window.__game.skyMode, bg: cs.backgroundColor, radius: cs.borderTopLeftRadius, canvas: getComputedStyle(c.querySelector('canvas')).visibility }; });
+    await game(page, () => { const g = window.__game; g.setSkyFallback(false); g.paused = false; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
+    const dDirect = diff(direct, copy), dBehind = diff(behind, copy);
+    expect(st.mode === 'direct' && st.canvas === 'hidden' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.bg) && st.radius === '0px', `the frame in the fallback: ${JSON.stringify(st)}`);
+    expect(dDirect < 14 && dDirect < dBehind / 2, `inside the frame the screen is ${fmt(dDirect)} levels from the sky view (the road behind: ${fmt(dBehind)})`);
+    return `the screen inside the frame is ${fmt(dDirect)} levels from the copy's picture (the road behind it: ${fmt(dBehind)}); frame ${st.bg}, radius ${st.radius}`;
   });
 });
 

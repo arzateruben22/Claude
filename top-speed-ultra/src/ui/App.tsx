@@ -786,11 +786,15 @@ function useHudLayout(): HudLayout {
   useEffect(() => {
     // iOS fires orientationchange (and sometimes resize) before the new size is laid out: look again a frame and a
     // moment later, and on the visual viewport's own resize
-    let t = 0;
-    const f = () => { setL(hudLayout()); cancelAnimationFrame(t); t = requestAnimationFrame(() => setL(hudLayout())); setTimeout(() => setL(hudLayout()), 350); };
+    let t = 0, later: ReturnType<typeof setTimeout> | undefined;
+    const f = () => {
+      setL(hudLayout());
+      cancelAnimationFrame(t); t = requestAnimationFrame(() => setL(hudLayout()));
+      clearTimeout(later); later = setTimeout(() => setL(hudLayout()), 350);   // one pending look, not one per event
+    };
     const vv = typeof visualViewport === 'object' ? visualViewport : null;
     addEventListener('resize', f); addEventListener('orientationchange', f); vv?.addEventListener('resize', f);
-    return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); vv?.removeEventListener('resize', f); cancelAnimationFrame(t); };
+    return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); vv?.removeEventListener('resize', f); cancelAnimationFrame(t); clearTimeout(later); };
   }, []);
   return l;
 }
