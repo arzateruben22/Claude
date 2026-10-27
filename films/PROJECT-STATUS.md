@@ -1,5 +1,8 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 01:57 UTC: RESUMED by the owner.** Check-in re-enabled (every 2 h from 02:04); both channel sessions told to
+> resume their finals from the kept frames (Meanwhile, Inside 004 then 005–006; Light Minute 003, 005, 002).
+>
 > **26 Oct, 21:20 UTC: PAUSED by the owner** ("pause on everything now"). Final and collected: Rest Frame 001–006 + vol01,
 > Meanwhile, Inside 001–003, Light Minute 001, 004, 006. Still to do on resume: Meanwhile, Inside 004 (final was
 > rendering, frames kept), 005–006; Light Minute 002, 003, 005 (review fixes, then finals); vol01 for both. The 2-hourly
