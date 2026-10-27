@@ -68,6 +68,9 @@ export class Roads {
   }
 
   get count() { return this.built.size; }
+  // a new graphics preset: a chunk's geometry doesn't depend on it, only how far ahead chunks are built, so nothing is
+  // rebuilt; update() drops what is now beyond the draw distance and streams in what is newly within it
+  setQuality(q: QualityPreset) { this.q = q; }
 
   // rain darkens the asphalt and makes it glossy (it picks up the sky and the lights)
   setWet(w: number) {

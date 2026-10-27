@@ -633,6 +633,7 @@ export class Game {
   get mainsLabels() { return this.net.mains.map((m) => m.label); }
 
   // ----------------------------------------------------------------------------------------- graphics quality
+  private postKey = '';
   private applyQuality(rebuild = false) {
     const q = QUALITY[this.settings.quality];
     this.renderScale = q.renderScale;
@@ -641,12 +642,20 @@ export class Game {
     this.camera.far = far; this.camera.updateProjectionMatrix();
     this.env.setQuality(q.shadows, far);
     if (this.traffic) this.traffic.viewAhead = q.drawDistance * 0.95;
+    // A new preset in Settings. The world is kept: the road chunks don't depend on the preset (only how far ahead they
+    // are built), and the terrain's ground doesn't either; the streaming already running every frame drops what is now
+    // beyond the draw distance, builds what is newly within it, and rebuilds the near tiles' scenery at the new
+    // density one tile a frame, nearest first (Terrain.setQuality). This used to throw the world away and rebuild all
+    // of it in view inside the tap (several seconds on a phone, with the screen frozen). The car, cockpit and hands are
+    // rebuilt only when the car's own tier changes (Medium to High), as before.
     if (rebuild && this.net) {
-      this.configureCar();                 // the car's own quality tier may have changed
-      this.buildWorld();
-      const p = this.phys;
-      for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
+      this.configureCar();
+      this.roads.setQuality(q); this.terrain.setQuality(q);
     }
+    // the composer (High and Ultra) is kept when the passes it needs are the same; a new one compiles its passes' shaders
+    const postKey = q.post ? `${q.bloom}|${q.ao}|${q.msaa}|${q.grade}` : '';
+    if (this.composer && postKey === this.postKey) { this.resize(true); return; }
+    this.postKey = postKey;
     this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.grade = null;
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
@@ -982,6 +991,7 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
+    this.car.updateSunShade(this.env.sunDir, dt);     // the sun on the driver's arms through the cabin's glass (hands-sun.ts)
     this.draw(now, dt);
     this.renderCorner(dt);
     if (!this.attract) {
@@ -1597,6 +1607,12 @@ export class Game {
       this.simulate(DT);
       if (this.steps % 24 === 0) this.stream(1);
     }
+  }
+  // test hook: finish now what the frames' streaming would build a piece at a time (after a preset change, the near
+  // tiles' scenery at the new density and the roads newly in range)
+  settleWorld(max = 400) {
+    const p = this.phys;
+    for (let i = 0; i < max && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* build what's in view */ }
   }
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,

@@ -18,6 +18,9 @@
 //     stats           { buildMs, tris, calls, meshMs, accMs } (calls: draw calls in the colour pass, without shadows;
 //                     meshMs: the cached-per-presentation skin mesh, accMs: sleeves, watch, ring, bangle)
 //     grip            { right, left }: the middle of each grip (knuckles to fingertips), car frame, wheel straight
+//     sunPoints       where the sun is sampled this frame (hands-sun.ts): right knuckles, wrist, elbow, then the
+//                     left's, in the group's frame; setSunVisibility(v) gives the sun's visibility (0..1) at each.
+//                     The arms take no shadow map (its texels are wider than a finger): this is their sun shade
 //
 // Each hand is one smooth surface meshed once from an anatomical distance field (hands-sdf.ts, hands-mesh.ts): four
 // fingers curled round the rim's far side with their tips and nails coming back round its inner edge, the thumb lying
@@ -32,6 +35,7 @@ import { buildArmGeometry, ArmGeometry } from './hands-geo';
 import { skinMaterial, nailMaterial, Quality } from './hands-skin';
 import { buildNails, NailGeometry } from './hands-nails';
 import { buildAccessories, accentOf } from './hands-acc';
+import { sunUniform, withSunShade, SUN_PTS } from './hands-sun';
 
 export interface HandsOptions {
   look: DriverLook;
@@ -55,6 +59,10 @@ export interface DriverArms {
   stats: { buildMs: number; tris: number; calls: number; meshMs: number; accMs: number };
   /** the middle of each grip (between the knuckles and the fingertips), car frame, wheel straight */
   grip: { right: THREE.Vector3; left: THREE.Vector3 };
+  /** the sun's sample points this frame (group frame): right knuckles, wrist, elbow, then the left's */
+  sunPoints: THREE.Vector3[];
+  /** the sun's visibility (0 shade .. 1 full sun) at each of sunPoints */
+  setSunVisibility(v: ArrayLike<number>): void;
 }
 
 const CT = Math.cos(WHEEL_TILT), ST = Math.sin(WHEEL_TILT);
@@ -197,6 +205,11 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   const wristV = new THREE.Vector3(), Sv = new THREE.Vector3(), Ev = new THREE.Vector3();
   const wristA: V3 = [0, 0, 0], ik = { shoulder: [0, 0, 0] as V3, elbow: [0, 0, 0] as V3 };
   const curlK = new THREE.Quaternion(), curlL = new THREE.Quaternion(), curlV = new THREE.Vector3();
+  // the sun's sample points (hands-sun.ts): per side the middle of the grip carried by the hand bone, the wrist, the elbow
+  const gripG: V3 = [0, 0, 0];
+  for (let i = 0; i < 3; i++) gripG[i] = (A.mcp[1][i] + A.digits[1].joints[3][i]) / 2;
+  const gripRel = [0, 1].map((side) => new THREE.Vector3(...toCar(gripG, side)).sub(WHEEL_AT).applyQuaternion(qTiltInv));
+  const sunPts = Array.from({ length: SUN_PTS }, () => new THREE.Vector3());
   const pose = (angle: number, bind: boolean, dtIn?: number) => {
     const now = performance.now();
     const dt = bind ? 0 : dtIn !== undefined ? (Number.isFinite(dtIn) ? Math.min(0.1, Math.max(0, dtIn)) : 0) : Math.min(0.1, (now - lastT) / 1000);
@@ -233,6 +246,9 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
       const twist = twistQ.setFromAxisAngle(fdir, tw * 0.5);
       s.fore.position.copy(E); s.fore.quaternion.copy(twist).multiply(swing).multiply(s.bindFore);
       s.upper.position.copy(S); s.upper.quaternion.setFromUnitVectors(s.bindUpperDir, udir).multiply(s.bindUpper);
+      const o3 = s.side * 3;
+      sunPts[o3].copy(gripRel[s.side]).applyQuaternion(s.hand.quaternion).add(s.hand.position);
+      sunPts[o3 + 1].copy(wrist); sunPts[o3 + 2].copy(E);
     }
   };
   pose(0, true);
@@ -312,17 +328,18 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     meshes.push(nm);
   }
   for (const a of acc.meshes) meshes.push(a);
+  // the sun on the arms: their own shade (hands-sun.ts), not the shadow map; they still cast into it (onto the lap)
+  const sunU = sunUniform();
   for (const m of meshes) {
     m.bind(skeleton, bindIdentity);
     m.frustumCulled = false;
     m.castShadow = m.name !== 'crystal' && m.name !== 'dial';
-    m.receiveShadow = true;
+    m.receiveShadow = false;
+    for (const mm of Array.isArray(m.material) ? m.material : [m.material]) withSunShade(mm, sunU);
     group.add(m);
   }
   let tris = 0;
   for (const m of meshes) tris += (m.geometry.index ? m.geometry.index.count : m.geometry.attributes.position.count) / 3;
-  const gripG: V3 = [0, 0, 0];
-  for (let i = 0; i < 3; i++) gripG[i] = (A.mcp[1][i] + A.digits[1].joints[3][i]) / 2;
   const buildMs = performance.now() - t0;
   return {
     group,
@@ -344,5 +361,9 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     },
     stats: { buildMs, tris, calls: meshes.length, meshMs: tMesh, accMs: tAcc },
     grip: { right: new THREE.Vector3(...toCar(gripG, 0)), left: new THREE.Vector3(...toCar(gripG, 1)) },
+    sunPoints: sunPts,
+    setSunVisibility(v: ArrayLike<number>) {
+      for (let i = 0; i < SUN_PTS; i++) { const p = sunPts[i]; sunU.value[i].set(p.x, p.y, p.z, Math.min(1, Math.max(0, Number.isFinite(v[i]) ? v[i] : 1))); }
+    },
   };
 }

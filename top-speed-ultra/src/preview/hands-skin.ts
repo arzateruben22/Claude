@@ -296,7 +296,9 @@ if (uDbg > 1.5 && uDbg < 2.5) ao = 1.0;
 if (uDbg > 2.5) diffuseColor.rgb = vec3(0.6, 0.45, 0.35);
 gThin = thin * (1.0 - uDark * 0.5);
 gSss = mix(vec3(1.0, 0.34, 0.22), vec3(0.75, 0.32, 0.22), uDark);
-gAoD = mix(1.0, ao, 0.45);
+// the baked occlusion is mostly the sky's (indirect, below); on direct sun a strong share painted fixed dark patches
+// over a sunlit hand that did not move with the light (0.25: the cabin kit's own share, car-kit.ts withAO)
+gAoD = mix(1.0, ao, 0.25);
 `)
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = clamp(rough, 0.25, 0.85);')
       .replace('#include <normal_fragment_maps>', /* glsl */ `#include <normal_fragment_maps>

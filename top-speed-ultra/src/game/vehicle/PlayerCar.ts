@@ -312,6 +312,35 @@ export class PlayerCar {
     return true;
   }
 
+  // The sun on the driver's arms (hands-sun.ts): they take no shadow map, its texels being wider than a finger. At each
+  // of the arms' sample points (knuckles, wrist, elbow per side) five rays toward the sun (the point and four round it,
+  // 3.5 cm out, across the sun's direction) go through the cabin test above; the share that leaves through the glass
+  // is the sun's visibility there, eased over about a sixth of a second so a pillar's edge sweeps across rather than
+  // switching. 30 ray-cabin tests a frame, against a handful of quads. sunDir: toward the sun, world space.
+  private sunVis = new Float32Array(6).fill(1);
+  private sunTmp = { p: new THREE.Vector3(), q: new THREE.Vector3(), a: new THREE.Vector3(), b: new THREE.Vector3() };
+  updateSunShade(sunDir: THREE.Vector3, dt: number, instant = false) {
+    const arms = this.arms;
+    if (!arms) return;
+    const t = this.sunTmp, R = 0.035;
+    t.a.set(0, 1, 0).cross(sunDir); if (t.a.lengthSq() < 1e-6) t.a.set(1, 0, 0); t.a.normalize();
+    t.b.copy(sunDir).cross(t.a).normalize();
+    arms.group.updateWorldMatrix(true, false);
+    const k = instant ? 1 : 1 - Math.exp(-Math.max(0, dt) * 6);
+    for (let i = 0; i < 6; i++) {
+      t.p.copy(arms.sunPoints[i]).applyMatrix4(arms.group.matrixWorld);
+      let lit = 0;
+      for (let j = 0; j < 5; j++) {
+        t.q.copy(t.p);
+        if (j) { const ang = (j - 1) * Math.PI * 0.5; t.q.addScaledVector(t.a, Math.cos(ang) * R).addScaledVector(t.b, Math.sin(ang) * R); }
+        if (!this.sunBlocked(t.q, sunDir)) lit++;
+      }
+      this.sunVis[i] += (lit / 5 - this.sunVis[i]) * k;
+    }
+    arms.setSunVisibility(this.sunVis);
+  }
+  get sunShade() { return Array.from(this.sunVis, (v) => Math.round(v * 100) / 100); }
+
   // on: the beams' level (0 by day, 1 at night); dark: how dark it is, so the painted pool keeps a lower level when
   // the lamps come on for rain or fog by day
   setHeadlights(on: number, dark = 1) {

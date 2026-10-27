@@ -855,6 +855,7 @@ await group('render', async (use) => {
       const t0 = Date.now();
       const s = await game(page, (qq) => {
         const g = window.__game; g.updateSettings({ ...g.settings, quality: qq });
+        g.settleWorld();   // the near tiles' scenery is rebuilt at the new density over the next frames; here at once
         // the live rear-view (a render target on the glass) comes with High and Ultra on a desktop; Low keeps the environment map
         let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
         // the palm crowns' triangles at this tier (alpha-tested frond cards; fewer fronds below High)
@@ -1170,6 +1171,53 @@ await group('phone', async (use) => {
     expect(st.mode === 'direct' && st.canvas === 'hidden' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.bg) && st.radius === '0px', `the frame in the fallback: ${JSON.stringify(st)}`);
     expect(dDirect < 14 && dDirect < dBehind / 2, `inside the frame the screen is ${fmt(dDirect)} levels from the sky view (the road behind: ${fmt(dBehind)})`);
     return `the screen inside the frame is ${fmt(dDirect)} levels from the copy's picture (the road behind it: ${fmt(dBehind)}); frame ${st.bg}, radius ${st.radius}`;
+  });
+  // the driver's arms in the seat view (owner, 2026-10-27: "the hands look weird in the shadows overlayed"): they take
+  // no shadow map (its texels are wider than a finger; Low has none, which lit them in full sun under the roof) but the
+  // cabin's own sun shade (hands-sun.ts): a sun straight overhead is behind the roof, a low sun ahead comes in through
+  // the windscreen onto the knuckles
+  await check('seat view: the arms take the cabin\'s sun shade, not the shadow map', async () => {
+    await game(page, () => window.__game.setCam('cockpit'));
+    await frames(page, 2);
+    const r = await game(page, () => {
+      const g = window.__game, c = g.car, V = g.env.sunDir.constructor;
+      let meshes = 0, receive = 0, patched = 0;
+      c.arms.group.traverse((o) => { if (o.isMesh) { meshes++; if (o.receiveShadow) receive++; if (/sunvis/.test(o.material.customProgramCacheKey())) patched++; } });
+      c.body.updateMatrixWorld(true);
+      const toWorld = (x, y, z) => new V(x, y, z).normalize().transformDirection(c.body.matrixWorld);
+      c.updateSunShade(toWorld(0, 1, 0), 1, true); const over = c.sunShade;
+      c.updateSunShade(toWorld(0, 0.35, -1), 1, true); const ahead = c.sunShade;
+      c.updateSunShade(g.env.sunDir, 1, true);
+      return { meshes, receive, patched, over, ahead };
+    });
+    expect(r.meshes > 0 && r.receive === 0 && r.patched === r.meshes, `${r.meshes} arm meshes, ${r.receive} take the shadow map, ${r.patched} take the sun shade`);
+    expect(Math.max(r.over[0], r.over[3]) <= 0.2, `sun overhead, the knuckles' sun: ${r.over.join(', ')}`);
+    expect(Math.min(r.ahead[0], r.ahead[3]) >= 0.6, `a low sun ahead, the knuckles' sun: ${r.ahead.join(', ')}`);
+    return `${r.meshes} arm meshes on the sun shade; knuckles R/L: sun overhead ${r.over[0]}/${r.over[3]}, low ahead ${r.ahead[0]}/${r.ahead[3]}`;
+  });
+  // the graphics presets (owner, 2026-10-27: "make it quicker to load the graphics settings"): a change keeps the
+  // world (the road chunks built stay; the near tiles' scenery is rebuilt over the next frames) and the tap's own work
+  // is short. A generous bound for SwiftShader on shared cores: before this it took 4 to 20 s here
+  await check('graphics preset: a change keeps the world and returns quickly', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, before = new Set(g.roads.group.children), out = [];
+      for (const q of ['medium', 'low']) {
+        const t0 = performance.now();
+        g.updateSettings({ ...g.settings, quality: q });
+        const ms = performance.now() - t0;
+        const kept = [...before].filter((o) => o.parent === g.roads.group).length;
+        out.push({ q, ms: Math.round(ms), kept, of: before.size, stale: g.terrain.stale });
+      }
+      g.settleWorld();
+      return { out, stale: g.terrain.stale, quality: g.settings.quality };
+    });
+    for (const o of r.out) {
+      expect(o.ms < 2500, `${o.q}: the change took ${o.ms} ms`);
+      expect(o.kept >= Math.min(o.of, 1) && o.kept >= o.of * 0.8, `${o.q}: ${o.kept} of ${o.of} road chunks kept`);
+    }
+    expect(r.stale === 0 && r.quality === 'low', `after settling: ${r.stale} stale tiles, quality ${r.quality}`);
+    await frames(page, 2);
+    return r.out.map((o) => `${o.q} in ${o.ms} ms, ${o.kept}/${o.of} chunks kept, ${o.stale} tiles to refresh`).join('; ');
   });
 });
 

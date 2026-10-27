@@ -31,7 +31,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between } from './car-kit';
+import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, roundPoly, mat, clamp, sstep, lerp, between } from './car-kit';
 import * as M from './car-mats';
 import { bodyFor } from './car-body';
 import { carMaterials, aoFor } from './car';
@@ -433,15 +433,69 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       led.rotateZ(a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add('led', led, null, 0.02);
     }
-    // hub: a Nappa airbag cover with the badge, three carbon spokes with aluminium inlays and button pods
-    const hub = ws === 'vela' ? extrude(roundRect(0.13, 0.13, 0.065, 0, -0.004), 0.034, 0.012) : extrude(roundRect(0.19, 0.122, 0.04, 0, -0.004), 0.034, 0.012);
+    // hub: a sculpted Nappa airbag cover with the badge inset in a machined bezel, three spokes with aluminium inlays
+    // and button pods. Each car's centre in its own character, built from the materials the wheel already has (no
+    // draw call or material of its own): the OC Hypercar a faceted shield with a raised plateau, a dark anodised bezel,
+    // a fine ice-blue ring and two ice-blue blades either side of the badge (its LED blades), a carbon insert between
+    // the start button and the mode dial; the Corsa the same shield in track trim (brushed bezel, its yellow ring); the
+    // GT and the Brio their rounded pad with the plateau, a brushed bezel, a ring in the car's stitch colour and a
+    // carbon (GT) or anodised (Brio) insert; the Vela its round hub with a brushed bezel and its stitch-colour ring.
+    // The rim, the grips and the spokes' ends are as before (the hands' grip is unchanged).
+    const BC = v3(0, 0.004, 0);                                   // the badge's centre (hub frame; +z toward the driver)
+    const shield = ws === 'corsa';
+    const accentK = ws === 'corsa' ? 'stripe' : 'stitch', bezelK = hyper ? 'anod' : 'alu';   // (the Vela's wheel has no 'anod')
+    const insertK = ws === 'gt' || ws === 'corsa' ? 'carbon' : ws === 'brio' ? 'anod' : null;
+    const circle = (r: number, cx: number, cy: number, n = 28) => { const c = new THREE.Path(); c.absarc(cx, cy, r, 0, Math.PI * 2, true); c.getPoints(n); return c; };
+    // the cover: its outline (the bevel adds 12 mm round it), 34 mm deep, its face at z -0.002
+    const coverShape = ws === 'vela' ? roundRect(0.13, 0.13, 0.065, 0, -0.004)
+      : shield ? roundPoly([[-0.07, 0.048], [0.07, 0.048], [0.086, 0.028], [0.086, -0.044], [0.074, -0.06], [-0.074, -0.06], [-0.086, -0.044], [-0.086, 0.028]], 0.008)
+      : roundRect(0.19, 0.122, 0.04, 0, -0.004);
+    const hub = extrude(coverShape, 0.034, 0.012, shield ? 3 : 12);
     hub.translate(0, 0, -0.036);
     wk.add('wheelNappa', hub);
-    const seam = new THREE.TorusGeometry(1, 0.012, 4, 64); if (ws === 'vela') seam.scale(0.05, 0.05, 1); else seam.scale(0.071, 0.046, 1); seam.translate(0, -0.004, -0.001);
-    wk.add('gloss', seam, null, 0.05);
-    const badge = new THREE.CircleGeometry(0.022, 40); badge.translate(0, 0.004, -0.0005);
-    wk.add('badgeHub', badge);
-    const bring = new THREE.TorusGeometry(0.0228, 0.0016, 8, 48); bring.translate(0, 0.004, -0.0005); wk.add('chrome', bring, null, 0.02);
+    // the plateau: a raised, stitched-edge panel over the cover's upper middle (clear of the start button and the
+    // dial), with the badge's well cut through it; its walls are the well's sides, so the badge sits 3.5 mm in
+    const wellR = 0.0245;
+    if (ws !== 'vela') {
+      const plat = shield ? roundPoly([[-0.056, 0.036], [0.056, 0.036], [0.07, 0.02], [0.07, -0.016], [0.05, -0.031], [-0.05, -0.031], [-0.07, -0.016], [-0.07, 0.02]], 0.006)
+        : roundRect(0.15, 0.066, 0.03, 0, 0.004);
+      plat.holes.push(circle(wellR, BC.x, BC.y));
+      const pg = extrude(plat, 0.0052, 0.0022, 10); pg.translate(0, 0, -0.0032); wk.add('wheelNappa', pg);
+    }
+    const face = ws === 'vela' ? -0.002 : 0.002;                  // the surface the bezel sits on
+    // the badge: at the bottom of its well (3.5 mm in), or on the Vela's round cover on a low gloss collar; its chrome
+    // ring, the machined bezel round it and the accent ring (the Corsa's and the hypercar's in their stripe colour, the
+    // others a ring of contrast stitching in the car's stitch colour)
+    const badgeZ = ws === 'vela' ? face + 0.0016 : face - 0.0035;
+    const badge = new THREE.CircleGeometry(0.022, 40); badge.translate(BC.x, BC.y, badgeZ); wk.add('badgeHub', badge);
+    const bring = new THREE.TorusGeometry(0.0228, 0.0013, 6, 48); bring.translate(BC.x, BC.y, badgeZ + 0.0003); wk.add('chrome', bring, null, 0.02);
+    if (ws === 'vela') { const collar = new THREE.CylinderGeometry(wellR, wellR, 0.0018, 40, 1, true); collar.rotateX(Math.PI / 2); collar.translate(BC.x, BC.y, face + 0.0007); wk.add('gloss', collar, null, 0.05); }
+    const bez = new THREE.RingGeometry(wellR, wellR + 0.0045, 48, 1); bez.translate(BC.x, BC.y, face + 0.0003); wk.add(bezelK, bez, null, 0.03);
+    const ringStitch = (r: number, cy: number, z: number) => {
+      const path: V3[] = [], across: V3[] = [], lift: V3[] = [];
+      for (let k = 0; k <= 72; k++) { const a = (k / 72) * Math.PI * 2; path.push(v3(Math.cos(a) * r, cy + Math.sin(a) * r, z)); across.push(v3(Math.cos(a), Math.sin(a), 0)); lift.push(v3(0, 0, 1)); }
+      wk.add('stitch', stitchRow(path, across, lift, 0.0013));
+    };
+    if (accentK === 'stripe') { const acc = new THREE.TorusGeometry(wellR + 0.0052, 0.0009, 5, 56); acc.translate(BC.x, BC.y, face + 0.0006); wk.add('stripe', acc, null, 0.03); }
+    else ringStitch(wellR + 0.0068, BC.y, face);
+    // the Vela: a brushed ring round the round cover's face, a ring of stitching just inside it
+    if (ws === 'vela') {
+      const r0 = 0.064, vr = new THREE.RingGeometry(r0 - 0.005, r0, 64, 1); vr.translate(0, -0.004, face + 0.0003); wk.add('alu', vr, null, 0.03);
+      ringStitch(r0 - 0.0085, -0.004, face);
+    }
+    // the hypercar's blades: a short ice-blue bar either side of the bezel, tapering outward (its front lamps' blades)
+    if (hyper) for (const sd of [-1, 1]) {
+      const x0 = sd * (wellR + 0.009), x1 = sd * (wellR + 0.034);
+      const pts: [number, number][] = [[x0, BC.y - 0.0013], [x1, BC.y - 0.0004], [x1, BC.y + 0.0004], [x0, BC.y + 0.0013]];
+      if (sd < 0) pts.reverse();                                  // counter-clockwise either side: faces the driver
+      const bl = new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y)));
+      const bg = new THREE.ShapeGeometry(bl); bg.translate(0, 0, face + 0.0004); wk.add('stripe', bg, null, 0.03);
+    }
+    // the insert between the start button and the mode dial, 1.5 mm proud of the cover
+    if (insertK) {
+      const ins = roundPoly([[-0.034, -0.036], [0.034, -0.036], [0.027, -0.058], [-0.027, -0.058]], 0.004);
+      const ig = extrude(ins, 0.002, 0.0006, 3); ig.translate(0, 0, -0.0025); wk.add(insertK, ig, null, 0.05);
+    }
     for (const sd of [-1, 1]) {
       const sp = ws === 'vela' ? new RoundedBoxGeometry(0.11, 0.03, 0.016, 3, 0.007) : new RoundedBoxGeometry(0.082, 0.052, 0.02, 3, 0.008);
       sp.translate(sd * (ws === 'vela' ? 0.12 : 0.13), -0.006, -0.012); wk.add(spokeK, sp);
@@ -585,7 +639,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the glass; the sill cap is built in place)
     const kw = kit.warp;
     if (hyper) kit.warp = (p) => { p.x = Math.sign(p.x) * (Math.abs(p.x) - 0.866 + wallX(p.z)); p.y = 0.2 + (p.y - 0.2) * (sill(p.z) - 0.012 - 0.2) / 0.61; return true; };
-    const arm = (z: number) => sstep(-0.62, -0.42, z) * (1 - sstep(0.22, 0.4, z));
+    // (the hypercar's door card is flat, a race canopy's: its wall stands about 2 cm outside the driver's left sleeve,
+    // and the armrest's 6.8 cm bulge ran through the elbow and forearm, cutting the sleeve off in a ragged edge)
+    const arm = (z: number) => hyper ? 0 : sstep(-0.62, -0.42, z) * (1 - sstep(0.22, 0.4, z));
     const X = (x: number) => sd * x;
     const flip = sd > 0;
     // lower panel up to the armrest, the armrest (cognac), the Alcantara insert, the sill cap to the glass

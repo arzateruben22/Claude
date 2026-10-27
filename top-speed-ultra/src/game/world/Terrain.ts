@@ -13,7 +13,7 @@ import { fbm2, rng, smoothstep, clamp, lerp } from '../util';
 import type { QualityPreset } from '../settings';
 
 export const TILE = 480;
-interface Tile { key: number; tx: number; tz: number; lod: number; group: THREE.Group }
+interface Tile { key: number; tx: number; tz: number; lod: number; group: THREE.Group; gen: number }
 const tKey = (tx: number, tz: number) => (tx + 512) * 1024 + (tz + 512);
 
 export class Terrain {
@@ -33,6 +33,12 @@ export class Terrain {
   }
 
   get count() { return this.tiles.size; }
+  // A new graphics preset. The ground doesn't depend on it; the scenery's density and detail do (q.props), so when
+  // that changes the tiles already built are marked stale and update() rebuilds them, nearest first, within its
+  // budget, each replacing the old one only once its new one is built (the world never empties while it happens)
+  private gen = 0;
+  setQuality(q: QualityPreset) { const props = this.q.props; this.q = q; if (q.props !== props) this.gen++; }
+  get stale() { let n = 0; for (const t of this.tiles.values()) if (t.gen !== this.gen && t.lod === 0) n++; return n; }
 
   update(x: number, z: number, budget = 1) {
     const R = this.q.drawDistance + 300;
@@ -47,7 +53,7 @@ export class Terrain {
       if (d > R) continue;
       const lod = d < 520 ? 0 : 1;
       const have = this.tiles.get(tKey(tx, tz));
-      if (have && have.lod <= lod) continue;
+      if (have && have.lod <= lod && (have.gen === this.gen || have.lod > 0)) continue;   // (only near tiles carry scenery)
       want.push([d, tx, tz, lod]);
     }
     want.sort((a, b) => a[0] - b[0]);
@@ -163,7 +169,7 @@ export class Terrain {
       return lerp(lerp(H[j * n + i], H[j * n + i + 1], a), lerp(H[(j + 1) * n + i], H[(j + 1) * n + i + 1], a), b);
     });
     this.group.add(group);
-    return { key: tKey(tx, tz), tx, tz, lod, group };
+    return { key: tKey(tx, tz), tx, tz, lod, group, gen: this.gen };
   }
 
   // houses, offices, palms, trees, shrubs: clear of every road
