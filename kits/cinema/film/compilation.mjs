@@ -152,7 +152,7 @@ eps.forEach((e, k) => {
   const o = path.join(work, `seg-ep${k}.mp4`);
   run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-i", path.join(work, `ep${k}.png`), "-i", e.file, "-filter_complex",
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
-    "-map", "[v]", "-map", "1:a:0", "-t", e.dur.toFixed(3), ...V, ...AU, o]);
+    "-map", "[v]", "-map", "1:a:0", "-t", e.dur.toFixed(3), ...V, "-c:a", "copy", o]);   // the mastered sound, untouched: a re-encode can push its true peak over −1 dBTP
   segs.push(o);
 });
 segs.push(card("outro", OUTRO, outroWav));
