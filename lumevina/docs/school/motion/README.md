@@ -61,6 +61,7 @@ PLAYWRIGHT_DIR=<folder with node_modules/playwright> CHROMIUM=/opt/pw-browsers/c
   node docs/school/motion/render.mjs --list
   node docs/school/motion/render.mjs --only hero --hd       # 1080p (1920×1080), about twice as long as 720p
   node docs/school/motion/render.mjs --only 8-2 --res 900   # 1600×900 (900×1600 for 9:16)
+  node docs/school/motion/render.mjs --only hero --from 8 --to 14   # a preview of that stretch, into review/
 python3 docs/school/build.py                              # the player picks up docs/school/videos.js
 ```
 

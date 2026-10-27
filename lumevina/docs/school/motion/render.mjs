@@ -59,6 +59,7 @@ const aspects = String(opt("aspect", "16x9")).split(",");
 const quick = opt("quick", false) === true;
 const stills = opt("at", "") ? String(opt("at")).split(",").map(Number) : null;   // --at 4,9.5: those moments as PNGs in review/, nothing else
 const verify = opt("verify", false) === true;
+const preview = opt("from", "") !== "" || opt("to", "") !== "";
 const fps = quick ? 6 : Number(opt("fps", 30));
 // --res <short side> renders larger than 720p: --res 900 is 1600×900 (900×1600 for the 9:16 cut), --hd is
 // --res 1080. The hero plays at 1080p (the course page crops it to 4:3 on a phone, and a retina screen shows
@@ -239,6 +240,18 @@ for (const scene of Object.values(SCENES)) {
       console.log(`${scene.id} ${aspect}: ${stills.length} stills in review/${skin ? "  skin " + JSON.stringify(skin) : ""}${errors.length ? "\n  ! " + errors.join("\n  ! ") : ""}`);
       await pg.close(); continue;
     }
+    // --from 8 --to 14: a preview of that stretch, into review/<id>-<aspect>-preview.mp4, nothing else touched
+    if (preview) {
+      const out = path.join(review, `${scene.id}-${aspect}-preview.mp4`), pf = encode(out, fps), a = Math.round(Number(opt("from", 0)) * fps), b = Math.round(Number(opt("to", scene.dur)) * fps);
+      for (let i = a; i < b; i++) {
+        await pg.evaluate(([t, f]) => { if (window.cinemaFrame) { window.CINEMA.fps = f; return window.cinemaFrame(t); } window.seek(t); return null; }, [i / fps, fps]);
+        const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
+        if (!pf.stdin.write(Buffer.from(data, "base64"))) await new Promise((r) => pf.stdin.once("drain", r));
+      }
+      pf.stdin.end(); await new Promise((r) => pf.on("close", r));
+      console.log(`${scene.id} ${aspect}: preview ${a / fps}–${b / fps} s, ${b - a} frames, ${Math.round((Date.now() - t0) / 1000)} s → review/${path.basename(out)}`);
+      await pg.close(); continue;
+    }
     if (!quick) ff = encode(mp4, fps);
     const sheetEvery = Math.max(1, Math.round(1.5 * fps));
     for (let i = 0; i < frames; i++) {
@@ -291,12 +304,12 @@ if (!opt("keep", false)) fs.rmSync(tmp, { recursive: true, force: true });   // 
 // two renders can run side by side (one per scene): each re-reads the log and the clip list just before
 // writing and puts back only the scenes it rendered, so neither drops the other's
 const ran = new Set(Object.values(SCENES).filter((s) => !only || only.includes(s.id)).map((s) => s.id));
-if (!stills) {
+if (!stills && !preview) {
   const now = fs.existsSync(logFile) ? JSON.parse(fs.readFileSync(logFile, "utf8")) : {};
   for (const id of ran) if (log[id]) now[id] = { ...(now[id] || {}), ...log[id] };
   fs.writeFileSync(logFile, JSON.stringify(now, null, 1));
 }
-if (!quick && !verify && !stills) {
+if (!quick && !verify && !stills && !preview) {
   const w = {}; if (fs.existsSync(videosFile)) new Function("window", fs.readFileSync(videosFile, "utf8"))(w);
   const now = w.SCHOOL_VIDEOS || {};
   for (const id of ran) if (videos[id]) now[id] = videos[id];
