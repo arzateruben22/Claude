@@ -598,8 +598,23 @@
     }
     return { answer: [out, said(H.order)].filter(Boolean).join("\n\n") || said(H.order), acts: [] };
   };
+  /* a skin answer closes, once a conversation, with a quiet invitation to let Evelyn confirm it in person
+     (knowledge/prompt.md says the same to the assistant): an invitation, never a push */
+  var VISIT_INVITE = { "new": "Evelyn can confirm all of this with a closer look at your skin during your first visit.",
+    existing: "Evelyn can confirm this with a closer look at your skin at your next facial." };
+  var invite = function (r) {
+    if (!r || !r.answer || state.invited) return r;
+    state.invited = true;
+    r.answer += "\n\n" + VISIT_INVITE[status() === "existing" || myPlan() ? "existing" : "new"];
+    if ((r.acts || []).length < 2 && !(r.acts || []).some(function (a) { return a[1] === "book"; })) r.acts = (r.acts || []).concat([["Book", "book"]]);
+    return r;
+  };
+  /* a general goal ("I just want good skin", "where do I start?"): the two things her routine depends on, asked once */
+  var SKIN_GOAL = /\b(good|better|clear|clearer|healthy|healthier|glowing|nice|great|best|smooth|smoother)\s+skin\b|\bskin ?care routine\b|\bwhere (do|should) i (start|begin)\b|\b(help|improve|fix) (me with )?my skin\b/;
   var skinGuide = function (t, sure) {
     if (!SG) return null;
+    if (SKIN_GOAL.test(t) && !CONCERNS.some(function (c) { return c[1].test(t); }) && !namedIn(t).length)
+      return { answer: "I’d be glad to help. So I can share Evelyn’s routine for your skin, does it lean more dry or more oily, and are breakouts a concern? And what are you using on it now?", acts: TYPE_ACTS("") };
     var namedO = namedIn(t);
     if (ORDER_Q.test(t) && SG.her.order && (namedO.length || /products|routine|skin ?care|steps/.test(t) || STEP_WORDS.some(function (w) { return w[1].test(t); }))) return orderAnswer(t, namedO, skinTypeFor(t));
     var concern = null;
@@ -665,13 +680,13 @@
     /* "my routine" from a client with a plan: her plan answers it; anything else the rules catch goes to her */
     if ((!rk || rk === "skin") && fromPlan(t)) return fromPlan(t);
     /* a skin question is answered from her playbook first; reading a photo is hers */
-    if (rk === "skin" && !(RULES.PHOTO && RULES.PHOTO.test(t))) { var sg = skinGuide(t, true); if (sg) return sg; }
+    if (rk === "skin" && !(RULES.PHOTO && RULES.PHOTO.test(t))) { var sg = skinGuide(t, true); if (sg) return invite(sg); }
     if (rk) return { handoff: rk };
     /* changing their plan ("can I add vitamin C to my routine?") is Evelyn's call */
     if (myPlan() && /\bmy (routine|regimen|plan|products|skin ?care)\b/.test(t)) return { handoff: "skin" };
     if (ORDER_ASK.test(t) || ORDER_NO.test(text)) return orderAnswer(text);
     var sg2 = skinGuide(t, false);
-    if (sg2) return sg2;
+    if (sg2) return invite(sg2);
     if (GIFT_LEFT.test(t)) return { answer: NODES["g-left"].say, acts: [["Gift certificates", "n:gift"]] };
     if (off("membership") && /member|monthly plan|subscri|\bglow plan|join\b|\bbank/.test(t)) return { answer: "Memberships are paused right now. Facials book one at a time on the calendar here, and Evelyn’s shelf is open on this site.", acts: [["Book", "book"], ["See the shop", "#shop"]] };
     if (off("school") && /\bcourses?\b|\bclass(es)?\b|skin school|\blessons?\b|glow party|pro night|workshop/.test(t)) return { answer: "Skin School and classes are paused right now. Evelyn is happy to answer questions one on one.", acts: [["Ask Evelyn", "skin"]] };
