@@ -26,7 +26,7 @@ scripted → reviewed → voiced → built → stills OK → rendering → deliv
 | 002 | The nearest star | §7 #6 (posts 18 Nov 2026) | two draft-review rounds applied (32 + 28 confirmed findings), code- and stills-checked; **final paused part-way** (see the note above) |
 | 003 | Venus day | §7 #2 | **delivered 27 Oct after two draft-review rounds (41 + 27):** 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.3 LU over music, sync PASS, 0 flashes, qa.py PASS, 26.1 MB; rendered in 10 s chunks either side of the 26 Oct pause |
 | 004 | Falling Moon | §7 #3 | **delivered 26 Oct after the cut review (38) and a draft-review round (33):** 74.13 s, −14.1 LUFS / −1.8 dBTP, voice 12.5 LU over music, sync PASS, 0 flashes, qa.py PASS, 15.0 MB; render 42 min |
-| 005 | Sun size | §7 #4 | **delivered 27 Oct after two draft-review rounds (41 + 37):** 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.4 LU over music, sync PASS, 0 flashes, qa.py PASS, 25.3 MB; rendered in 10 s chunks either side of the 26 Oct pause |
+| 005 | Sun size | §7 #4 | **delivered 27 Oct after two draft-review rounds (41 + 37):** 74.67 s, −14.1 LUFS / −1.8 dBTP, voice 12.4 LU over music, sync PASS, 0 flashes, qa.py PASS, 26.6 MB; rendered in 10 s chunks either side of the 26 Oct pause |
 | 006 | Your speed | §7 #5 | **delivered 26 Oct after two draft-review rounds:** 74.67 s, −14.1 LUFS / −1.9 dBTP, voice 12.3 LU over music, sync PASS, 0 flashes, qa.py PASS, 6.7 Mbps; render 47 min |
 
 ## Recheck and re-render (26 Oct): how it runs
