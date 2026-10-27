@@ -1,0 +1,118 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep01/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Is your skin alive? The part you see? Not one cell.",
+   "stars": [
+    "alive"
+   ],
+   "phonemes": "ɪz jɔː skˈɪn ɐlˈaɪv? ðə pˈɑːt juː sˈiː? nˌɒt wˈɒn sˈɛl.",
+   "speed": 0.76,
+   "file": "01.wav",
+   "dur": 4.099,
+   "sha256": "67977cccbcb4313c1e04fee720814e08fbed90048c7aa09470220796d26f6fc7"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Your outermost layer is about fifteen rows of flattened cells. Each one is dead: a flat shell packed with keratin. The living skin starts just beneath them.",
+   "stars": [
+    "keratin"
+   ],
+   "phonemes": "jɔːɹ ˈaʊtəmˌəʊst lˈeɪəɹ ɪz ɐbˌaʊt fˈɪftiːn ɹˈəʊz ɒv flˈatənd sˈɛlz. ˈiːtʃ wˈɒn ɪz dˈɛd: ɐ flˈat ʃˈɛl pˈakt wɪð kˈɛɹətɪn . ðə lˈɪvɪŋ skˈɪn stˈɑːts dʒˈʌst bɪnˈiːθ ðˌɛm.",
+   "speed": 0.92,
+   "file": "02.wav",
+   "dur": 9.474,
+   "sha256": "82f7f93ea84d42222124e51ed5fcdaca6b7be847e295639415c5d07cedec35f0"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Follow one cell from the bottom. It's born alive, at the base. For about two weeks it rises, filling with keratin. Then, near the top, it takes itself apart, on purpose.",
+   "stars": [
+    "on purpose"
+   ],
+   "phonemes": "fˈɒləʊ wˈɒn sˈɛl fɹʌmðə bˈɒtəm. ɪts bˈɔːn ɐlˈaɪv, at ðə bˈeɪs. fɔːɹ ɐbˌaʊt tˈuː wˈiːks ɪt ɹˈaɪzɪz, fˈɪlɪŋ wɪð kˈɛɹətɪn . ðˈɛn, nˌiə ðə tˈɒp, ɪt tˈeɪks ɪtsˈɛlf ɐpˈɑːt, ˌɒn pˈɜːpəs.",
+   "speed": 0.86,
+   "file": "03.wav",
+   "dur": 10.601,
+   "sha256": "a68e579593450559a9d3b0fbdc14c7f3da6324e1e207e32e7f89ac7f96cf8133"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That layer looks like waste, waiting to flake off. Scientists picture it as a brick wall: dead cells for bricks, fats for mortar. And that wall is what keeps your water inside.",
+   "stars": [
+    "brick wall",
+    "inside"
+   ],
+   "phonemes": "ðat lˈeɪə lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ˈɒf. sˈaɪəntɪsts pˈɪktʃəɹ ɪt az ɐ bɹˈɪk wˈɔːl: dˈɛd sˈɛlz fɔː bɹˈɪks, fˈats fɔː mˈɔːtə. and ðat wˈɔːl ɪz wɒt kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
+   "speed": 0.85,
+   "file": "04.wav",
+   "dur": 10.99,
+   "sha256": "89e15568027facb964bc107be33e1bfb6c2b624b5316f18aaea947b1cf1d266a"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns. Babies born before thirty weeks, before that wall is finished, lost about five times as much.",
+   "stars": [
+    "five times"
+   ],
+   "phonemes": "ɪn nˈaɪntiːn sˈɛvəntinˈaɪn, tˈuː dˈɒktəz mˈɛʒəd wˈɔːtə lˈiːvɪŋ ðə skˈɪn ɒv njˈuːbɔːnz. bˈeɪbiz bˈɔːn bɪfˌɔː θˈɜːti wˈiːks, bɪfˌɔː ðat wˈɔːl ɪz fˈɪnɪʃt, lˈɒst ɐbˌaʊt fˈaɪv tˈaɪmz az mˈʌtʃ.",
+   "speed": 0.95,
+   "file": "05.wav",
+   "dur": 10.236,
+   "sha256": "c2b1586940aa63d63e0deec130b506954d0bc9ed45adc29345fae0603ec91fbb"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "To scale: on the cheek, the whole dead layer is about seventeen micrometers. A sheet of paper is about a hundred.",
+   "stars": [
+    "hundred"
+   ],
+   "phonemes": "tə skˈeɪl: ɒnðə tʃˈiːk, ðə hˈəʊl dˈɛd lˈeɪəɹ ɪz ɐbˌaʊt sˈɛvəntˌiːn maɪkɹˈɒmɪtəz . ɐ ʃˈiːt ɒv pˈeɪpəɹ ɪz ɐbˌaʊt ɐ hˈʌndɹɪd.",
+   "speed": 0.84,
+   "file": "06.wav",
+   "dur": 7.113,
+   "sha256": "c9978f64be1a118a4dc39d2f31729fa9f6b299ed3a44062ed49b349dca320a28"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Every day, you're kept alive by cells that already died to build a wall.",
+   "stars": [
+    "died"
+   ],
+   "phonemes": "ˈɛvɹɪ dˈeɪ, jɔː kˈɛpt ɐlˈaɪv baɪ sˈɛlz ðat ɔːlɹˌɛdi dˈaɪd tə bˈɪld ɐ wˈɔːl.",
+   "speed": 0.74,
+   "file": "07.wav",
+   "dur": 5.315,
+   "sha256": "540e09dcb54a9f50ca0b58dcdff27d48be79d8e1635751df49a608354a2dd26a"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: does SPF one hundred block twice as much as fifty?",
+   "stars": [
+    "fifty"
+   ],
+   "phonemes": "nˈɛkst: dˈʌz ˌɛspˌiːˈɛf wˈɒn hˈʌndɹɪd blˈɒk twˈaɪs az mˈʌtʃ az fˈɪfti?",
+   "speed": 0.9,
+   "file": "08.wav",
+   "dur": 3.844,
+   "sha256": "21481779cbf9eefaaee83bf6fa28e87f70234f9a5a6c7a04425af28d7b3ac767"
+  }
+ ]
+}

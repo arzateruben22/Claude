@@ -1,0 +1,127 @@
+{
+ "_doc": "Outer Layer (the skin channel): 'the slide', a cool neutral daylight ground so every skin tone reads true; uv violet for ultraviolet and the spoken word, water for the barrier. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/skincare/bible.md §2). Not Lumevina (black, rose, gold), not Los Güeros (espresso, amber), not Claude coral, not the other three channels. Captions sit on a white card plate. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8).",
+ "id": "outer-layer",
+ "name": "Outer Layer",
+ "channel": "skincare",
+ "promise": "Skin biology, ingredients and routines, with the evidence on the screen.",
+
+ "tokens": {
+  "bg": "#EEF2F1",
+  "slide": "#EEF2F1",
+  "slide-low": "#DCE4E3",
+  "card": "#FFFFFF",
+  "surface": "#FFFFFF",
+  "text": "#13252C",
+  "ink": "#13252C",
+  "text-2": "#4B5F66",
+  "uv": "#9135A8",
+  "water": "#00685F",
+  "uv-glow": "#9C7BFF",
+  "water-glow": "#4FB8BE"
+ },
+
+ "scene": {
+  "_doc": "3D only. A soft key from top-left (the lamp over the slide), a cool fill, a thin rim on the cut face. Skin colours come from the section's melanin parameter, never from a token. Only UV dashes and water beads bloom (threshold 0.92); text never does. The canvas is transparent over the stage gradient.",
+  "uv": "#9C7BFF",
+  "water": "#4FB8BE"
+ },
+
+ "plate": { "color": "card", "opacity": 0.94, "radius_px": 26 },
+ "highlight": { "style": "text", "color": "uv", "_doc": "The word being spoken turns uv violet on the white card; words still to come are text-2, words said are ink." },
+
+ "roles": {
+  "accent": "uv",
+  "plate": "rgba(255, 255, 255, .94)",
+  "cap-next": "text-2",
+  "cap-said": "text",
+  "cap-lit": "uv",
+  "cap-lit-bg": "transparent",
+  "label-bg": "rgba(255, 255, 255, .96)",
+  "label-text": "text",
+  "ring": "card",
+  "badge-bg": "rgba(255, 255, 255, .86)",
+  "badge-text": "text-2",
+  "badge-border": "text-2",
+  "scrim": "rgba(238, 242, 241, .86)",
+  "scale-line": "water",
+  "shadow": "0 .5vmin 2.2vmin rgba(19, 37, 44, .14)",
+  "text-shadow": "none",
+  "cap-size": "5vmin",
+  "cap-weight": "600",
+  "cap-tracking": "-.005em",
+  "cap-radius": "2.4vmin",
+  "label-size": "3.704vmin",
+  "label-weight": "600",
+  "label-radius": "999px",
+  "badge-size": "2.778vmin",
+  "badge-weight": "500",
+  "badge-radius": ".8vmin",
+  "counter-size": "9.259vmin",
+  "series-size": "2.778vmin",
+  "title-size": "8.148vmin",
+  "title-weight": "500",
+  "title-tracking": "-.01em",
+  "end-size": "7.407vmin"
+ },
+
+ "fonts": [
+  { "family": "Newsreader", "file": "fonts/Newsreader-VF.ttf", "weight": "200 800", "style": "normal" },
+  { "family": "Red Hat Text", "file": "fonts/RedHatText-VF.ttf", "weight": "300 700", "style": "normal" },
+  { "family": "Red Hat Mono", "file": "fonts/RedHatMono-VF.ttf", "weight": "300 700", "style": "normal" }
+ ],
+ "type": {
+  "display": "Newsreader",
+  "text": "Red Hat Text",
+  "mono": "Red Hat Mono",
+  "glyph": "Red Hat Text",
+  "_doc": "Display: Newsreader 500 at optical size 72 for titles and the end card. Text: Red Hat Text 600 for captions, 600 for labels. Numbers: Red Hat Mono 500 for the depth gauge, counters and honesty notes (tabular by design). Glyphs ▬ ◆ ◇ ● fall back to DejaVu Sans (the page's system-safe stack), never Inter."
+ },
+
+ "sizes": {
+  "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters; 54 px is set so the widest 24-character row fits the plate's maximum width (0.72 × W = 778 px) without hud.js shrinking it (measured in Chromium with ep01's rows: see PRODUCTION.md). Labels: the pill is at least 0.035 × H = 67 px tall.",
+  "caption": { "px": 54, "weight": 600, "lineHeight": 1.24, "maxLines": 2, "maxChars": 24, "plateMaxWidth": 778 },
+  "label": { "px": 40, "weight": 600, "minPillHeight": 67 },
+  "badge": { "px": 30, "weight": 500, "face": "mono" },
+  "counter": { "px": 100, "weight": 500, "face": "mono" },
+  "series": { "px": 30, "weight": 600, "face": "text, caps" },
+  "title": { "px": 88, "weight": 500, "face": "display" },
+  "end": { "px": 80, "weight": 500, "next_px": 46, "follow_px": 36 }
+ },
+
+ "safe": { "9x16": { "x": [90, 900], "y": [250, 1420], "frame": [1080, 1920] } },
+ "captionY": { "9x16": 0.61 },
+
+ "labels": {
+  "_doc": "White pill, ink text, a coloured glyph so colour is never the only cue.",
+  "layer": { "color": "ink", "mark": "none", "glyph": "▬", "use": "skin layers" },
+  "uv": { "color": "uv", "mark": "none", "glyph": "◆", "use": "ultraviolet, light" },
+  "water": { "color": "water", "mark": "none", "glyph": "◇", "use": "water, lipids, the barrier" },
+  "cell": { "color": "text-2", "mark": "none", "glyph": "●", "use": "cells" }
+ },
+
+ "contrast": {
+  "_doc": "What contrast.py checks besides the automatic pairs. grounds: the flat colours text can sit on. behind: what the plate, pills and badges can sit over (the deepest skin the section draws first, then the ground).",
+  "grounds": ["slide", "slide-low", "card"],
+  "behind": ["#3B2219", "#DCE4E3", "#FFFFFF"],
+  "pairs": [
+   { "fg": "uv", "bg": "card", "kind": "text", "note": "the lit word on the caption card" },
+   { "fg": "water", "bg": "card", "kind": "text", "note": "the gauge's live value on a card" },
+   { "fg": "text-2", "bg": "card", "kind": "text" },
+   { "fg": "ink", "bg": "slide-low", "kind": "line", "note": "the depth gauge" },
+   { "fg": "water", "bg": "slide", "kind": "line", "note": "the gauge's tick" }
+  ]
+ },
+
+ "motif": {
+  "signature_shape": "The depth gauge: a thin µm ruler at the frame's left edge, a water tick for the live depth, a fixed 'paper ≈ 100 µm' mark. Its avatar: three stacked bars of decreasing thickness (the layers). Outer Layer owns the stack of layers; the ring is Light Minute's and the pulse line Meanwhile, Inside's.",
+  "honesty_badges": "Red Hat Mono notes for every cheat: 'not to scale', 'scale ×N', 'time ×N', 'simplified', 'model', 'estimate', 'debated', 'illustration'.",
+  "title_card": "A band at y 250–470 over the hook's section: the three bars draw in on the signature beside OUTER LAYER, the question below in Newsreader.",
+  "end_card": "The hook's composition returns; a white card with 'Next layer: …' and a one-line true-fact footnote with its source. Held ≥ 1.5 s.",
+  "recurring_segment": "To scale: the gauge lifts to centre and the episode's subject fills in beside the paper mark.",
+  "tease": "Next layer: …",
+  "colour_rules": "uv violet is ultraviolet and the spoken word; water is water and the barrier. Skin colours come only from skin. No black ground, rose, gold, amber or coral.",
+  "sound": "F major at 64.2857 BPM (a 16th is 7 frames); soft pad and nylon plucks; signature plucks F5, C6, A5, 7 frames apart."
+ },
+
+ "cssText": ".stage { background: linear-gradient(180deg, var(--slide) 0%, var(--slide) 46%, var(--slide-low) 100%); }\n.hud-h, .hud-end .t { font-variation-settings: \"opsz\" 72; }\n.hud-series { font-family: var(--font-text); text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }\n.hud-counter .v, .hud-scale, .hud-badge { font-feature-settings: \"tnum\" 1; }\n.hud-badge { letter-spacing: .01em; }"
+}

@@ -1,0 +1,1111 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Is your skin alive? The part you see? Not one cell.",
+   "heard": "Is your skin alive, the part you see not one cell,",
+   "words": [
+    {
+     "w": "Is",
+     "start": 0.23,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.26,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.695,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "alive?",
+     "start": 0.96,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.76,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "part",
+     "start": 1.875,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.225,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "see?",
+     "start": 2.56,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "Not",
+     "start": 2.81,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.095,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "cell.",
+     "start": 3.45,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Your outermost layer is about fifteen rows of flattened cells. Each one is dead: a flat shell packed with keratin. The living skin starts just beneath them.",
+   "heard": "Your outermost layer is about fifteen rows of flattened cells. Each one is dead. A flat shell packed with keratin. The living skin starts just beneath them.",
+   "words": [
+    {
+     "w": "Your",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "outermost",
+     "start": 0.2,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 0.79,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.165,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.36,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "fifteen",
+     "start": 1.53,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "rows",
+     "start": 2.07,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.405,
+     "end": 2.455,
+     "heard": true
+    },
+    {
+     "w": "flattened",
+     "start": 2.47,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "cells.",
+     "start": 2.955,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 3.845,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.115,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.335,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "dead:",
+     "start": 4.405,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.155,
+     "end": 5.205,
+     "heard": true
+    },
+    {
+     "w": "flat",
+     "start": 5.28,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "shell",
+     "start": 5.505,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 5.915,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 6.16,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "keratin.",
+     "start": 6.35,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 7.335,
+     "end": 7.385,
+     "heard": true
+    },
+    {
+     "w": "living",
+     "start": 7.365,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 7.88,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 8.245,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 8.595,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "beneath",
+     "start": 8.87,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "them.",
+     "start": 9.225,
+     "end": 9.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Follow one cell from the bottom. It's born alive, at the base. For about two weeks it rises, filling with keratin. Then, near the top, it takes itself apart, on purpose.",
+   "heard": "Follow one cell from the bottom. It's born alive at the base. For about two weeks it rises, filling with keratin. Then, near the top, it takes itself apart on purpose.",
+   "words": [
+    {
+     "w": "Follow",
+     "start": 0.03,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.435,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 0.725,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 0.975,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.2,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "bottom.",
+     "start": 1.365,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 2.075,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "born",
+     "start": 2.305,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "alive,",
+     "start": 2.575,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.1,
+     "end": 3.15,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.205,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "base.",
+     "start": 3.235,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "For",
+     "start": 4.2,
+     "end": 4.25,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.23,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 4.59,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "weeks",
+     "start": 4.665,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.195,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "rises,",
+     "start": 5.225,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "filling",
+     "start": 5.97,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 6.335,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "keratin.",
+     "start": 6.43,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "Then,",
+     "start": 7.465,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 7.86,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.29,
+     "end": 8.34,
+     "heard": true
+    },
+    {
+     "w": "top,",
+     "start": 8.33,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.58,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 8.735,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "itself",
+     "start": 8.935,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "apart,",
+     "start": 9.515,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 9.76,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "purpose.",
+     "start": 9.985,
+     "end": 10.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "That layer looks like waste, waiting to flake off. Scientists picture it as a brick wall: dead cells for bricks, fats for mortar. And that wall is what keeps your water inside.",
+   "heard": "That layer looks like waste waiting to flake off. Scientists picture it as a brick wall, dead cells for bricks, fats for mortar, and that wall is what keeps your water inside.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 0.165,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "looks",
+     "start": 0.65,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.895,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "waste,",
+     "start": 0.97,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "waiting",
+     "start": 1.44,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.96,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "flake",
+     "start": 2.06,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "off.",
+     "start": 2.575,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "Scientists",
+     "start": 3.315,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "picture",
+     "start": 4.065,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.335,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.545,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.825,
+     "end": 4.875,
+     "heard": true
+    },
+    {
+     "w": "brick",
+     "start": 4.855,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "wall:",
+     "start": 5.06,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 5.835,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 6.005,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 6.495,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "bricks,",
+     "start": 6.615,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "fats",
+     "start": 7.045,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 7.37,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "mortar.",
+     "start": 7.615,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 8.435,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 8.465,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 8.73,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.14,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 9.285,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 9.5,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 9.705,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 9.815,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "inside.",
+     "start": 10.21,
+     "end": 10.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns. Babies born before thirty weeks, before that wall is finished, lost about five times as much.",
+   "heard": "In 1979, two doctors measured water leaving the skin of newborns. Babies born before 30 weeks, before that wall is finished, lost about five times as much.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nineteen",
+     "start": 0.335,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "seventy-nine,",
+     "start": 0.365,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "two",
+     "start": 1.665,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "doctors",
+     "start": 1.85,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "measured",
+     "start": 2.265,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 2.545,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "leaving",
+     "start": 2.86,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.335,
+     "end": 3.385,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 3.485,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.765,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "newborns.",
+     "start": 3.795,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "Babies",
+     "start": 4.965,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "born",
+     "start": 5.425,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 5.74,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "thirty",
+     "start": 6.09,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "weeks,",
+     "start": 6.575,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 6.95,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 7.215,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 7.41,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.775,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "finished,",
+     "start": 7.805,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "lost",
+     "start": 8.44,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 8.74,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 8.93,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 9.34,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 9.705,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "much.",
+     "start": 9.85,
+     "end": 10.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "To scale: on the cheek, the whole dead layer is about seventeen micrometers. A sheet of paper is about a hundred.",
+   "heard": "To scale, on the cheek the whole dead layer is about seventeen micrometers. A sheet of paper is about a hundred.",
+   "words": [
+    {
+     "w": "To",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "scale:",
+     "start": 0.295,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.925,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.955,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "cheek,",
+     "start": 1.2,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.64,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 1.67,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 2.065,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 2.245,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.595,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.795,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 2.995,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "micrometers.",
+     "start": 3.485,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 5.115,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sheet",
+     "start": 5.145,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.455,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "paper",
+     "start": 5.635,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.9,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.295,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.465,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "hundred.",
+     "start": 6.495,
+     "end": 7.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Every day, you're kept alive by cells that already died to build a wall.",
+   "heard": "Every day you're kept alive by cells that already died to build a wall.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.54,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 1.105,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "kept",
+     "start": 1.3,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "alive",
+     "start": 1.675,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 2.315,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 2.505,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.135,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 3.325,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "died",
+     "start": 3.855,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.33,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "build",
+     "start": 4.46,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.685,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "wall.",
+     "start": 4.715,
+     "end": 5.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: does SPF one hundred block twice as much as fifty?",
+   "heard": "Next, does SPF 100 block twice as much as 50?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.67,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "SPF",
+     "start": 0.87,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.475,
+     "end": 1.525,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.505,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "block",
+     "start": 2.075,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 2.42,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.83,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 2.96,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.16,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "fifty?",
+     "start": 3.39,
+     "end": 3.76,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

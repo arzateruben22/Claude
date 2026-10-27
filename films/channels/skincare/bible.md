@@ -39,10 +39,10 @@ channel's two signal colours are the two things skin science is mostly about: **
 Set apart from the studio's other identities:
 - **Light Minute** is dark indigo with neon teal and lilac; **Meanwhile, Inside** is dark surgical
   green with chartreuse and a blood pink; **Rest Frame** is warm paper with cobalt and marker yellow.
-  Outer Layer is the only cool *light* ground, and its accent is a deep violet, not a blue.
+  Outer Layer is the only cool *light* ground, and its accent is a red-violet (`uv`), not a blue: `contrast.py` keeps it ≥ ΔE76 20 from Rest Frame's cobalt and wave violet and from Lumevina's rose.
 - **Lumevina:** black, rose and gold. Outer Layer has no black ground, no rose, no gold, no pink.
   (The catalogue's placeholder swatch for this channel, `#D99A92`, is a dusty rose: too close to
-  Lumevina. The channel colour proposed for Prism Studio is `uv` `#6A2FD0`; the coordinator decides.)
+  Lumevina. The channel colour proposed for Prism Studio is `uv` `#9135A8`; the coordinator decides.)
 - **Los Güeros** (espresso `#100C09`, amber `#E8A356`, Cormorant Garamond + Jost) and **Claude coral**:
   no browns, ambers or corals anywhere in the UI.
 
@@ -53,8 +53,8 @@ Set apart from the studio's other identities:
 | `card` | `#FFFFFF` | Caption plate (92%), label pills, end card |
 | `ink` | `#13252C` | Captions, titles, label text, the depth gauge |
 | `ink-2` | `#4B5F66` | Words still to come, units, honesty notes |
-| `uv` (accent 1) | `#6A2FD0` | **Ultraviolet and light:** UV rays, filters, the spoken word |
-| `water` (accent 2) | `#00666D` | **Water and the barrier:** lipids, moisture, sweat, the gauge's live tick |
+| `uv` (accent 1) | `#9135A8` | **Ultraviolet and light:** UV rays, filters, the spoken word |
+| `water` (accent 2) | `#00685F` | **Water and the barrier:** lipids, moisture, sweat, the gauge's live tick |
 | `uv-glow` (scene only) | `#9C7BFF` | UV rays drawn in 3D (additive, never under text) |
 | `water-glow` (scene only) | `#4FB8BE` | Water molecules and lipid sheets in 3D |
 
@@ -68,10 +68,10 @@ skin.
 |---|---|---|---|
 | `ink` | 14.0 | 12.2 | 15.8 |
 | `ink-2` | 5.95 | 5.2 | 6.7 |
-| `uv` | 6.35 | 5.55 | 7.2 |
-| `water` | 5.96 | 5.2 | 6.7 |
+| `uv` | 5.7 | 5.0 | 6.4 |
+| `water` | 5.9 | 5.2 | 6.7 |
 
-Captions always sit on the `card` plate (ink 15.8:1, the lit word in `uv` 7.2:1), so they hold
+Captions always sit on the `card` plate (ink 14.1:1 or better, the lit word in `uv` 5.7:1 or better, over the deepest skin drawn), so they hold
 ≥ 4.5:1 over any picture. `contrast.py` re-checks against the theme.
 
 **Type** (all SIL OFL 1.1, self-hosted, from `google/fonts` at a pinned commit; `fonts/SOURCES.md`):

@@ -18,7 +18,7 @@ ties a sentence to `claims.json` and `{-}` marks a sentence that states nothing 
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep01 --segment toscale`.
 
 ## hook {shot: frame 0, the payoff: a fingertip at the mm rung cut open into the section, the top rows of dead flat cells lit, gauge at 0 µm · badge: simplified · title: "The dead layer" · pre: 0.05 · picture-only 0.3 s · energy: 0.6} (0–4.5 s)
-vo: Is the skin you see *alive*? Not one cell of it. {c1}
+vo: Is your skin *alive*? The part you see? Not one cell. {c1}
 
 ## normal {shot: dive into the section; label the stratum corneum's rows, a corneocyte, the living layers below · gauge 0 → 17 µm · picture-only 0.3 s · energy: 0.4} (4.5–15 s)
 vo: Your outermost layer is about fifteen rows of flattened cells. {c2} Each one is dead: a flat shell packed with *keratin*. {c3} The living skin starts just beneath them. {c4}
