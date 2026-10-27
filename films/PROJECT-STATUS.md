@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 08:15 UTC:** caption numbers: 8 of 18 shorts collected with written numbers and QA PASS (Rest Frame 001-004, Light Minute 001-004); Rest Frame 005 (hand-laid record caption) and 006, Light Minute 005-006, Meanwhile, Inside 001-006 rendering (~09:15-10:30). Then the 3 long videos, studio, preview, library; then pause (owner).
+>
 > **27 Oct, 06:00 UTC:** the owner's caption fix: numbers now read as written ("In 1906", "0.45 seconds", "1,500"), not as spoken. kits/cinema/script/numerals.py feeds all three caption builders; a numeral keeps its unit on its row; all 18 film.json recompiled (captions only). Re-rendering the 93 changed 10 s chunks (caption_chunks.py): ep01s here, 002-006 in the three channel sessions; then masters, 1440p versions, the 3 long videos and the studio again.
 >
 > **27 Oct, 05:20 UTC:** collected Meanwhile, Inside 005 "Where breath goes" (QA PASS, 74.4 s) + its 1440p YouTube version; vol01 "The traffic inside you" built (2560x1440, 6:20, QA PASS); studio check 20/20. Only 006 left (rendering, ~09:00).
