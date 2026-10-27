@@ -134,7 +134,8 @@ class Film:
         written=True (the default): numbers read as people read them, not as the voice says them: "nineteen oh six"
         shows as "1906", "point four five seconds" as "0.45 seconds", "twenty times" as "20 times" (numerals.py: years,
         decimals, 10 and over, and any number before a unit of measure; small counts stay words). A merged number
-        lights from its first spoken word."""
+        lights from its first spoken word, a page ending on one holds until its last word is said, and a numeral never
+        ends a row its unit starts ("20 / centimeters")."""
         def width(ws):
             return len(" ".join(w["w"] for w in ws))
 
@@ -167,7 +168,7 @@ class Film:
             best = None
             for k in range(1, len(ws)):
                 a, b = ws[:k], ws[k:]
-                score = max(width(a), width(b)) - (8 if re.search(r"[,:;]$", a[-1]["w"]) else 0) + (weak(a[-1]) + (60 if b[0].get("nb") else 0) if balance else 0)
+                score = max(width(a), width(b)) - (8 if re.search(r"[,:;]$", a[-1]["w"]) else 0) + (weak(a[-1]) if balance else 0) + (60 if b[0].get("nb") else 0)
                 if width(a) <= max_chars and width(b) <= max_chars and (best is None or score < best[0]):
                     best = (score, [a, b])
             return best[1] if best else None
@@ -207,10 +208,10 @@ class Film:
         pages = []
         for ln in self.lines:
             words = [{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]]
-            if written:
-                words = numerals(words)
             if balance:
-                mark_keep(words)
+                mark_keep(words)                             # on the spoken words: a merged number keeps its first word's mark
+            if written:
+                words = numerals(words)                      # (and marks a unit after a numeral nb: "20 / centimeters" never splits)
             sent, sentences = [], []
             for w in words:
                 sent.append(w)
@@ -231,6 +232,8 @@ class Film:
                         break
                     # too long for one page: take the longest head that fits two rows, preferring a comma
                     cut = max(k for k in range(1, len(rest)) if two_rows(rest[:k]))
+                    while cut > 1 and rest[cut].get("nb"):
+                        cut -= 1
                     for k in range(cut, max(1, cut // 2), -1):
                         if re.search(r"[,:;]$", rest[k - 1]["w"]):
                             cut = k
@@ -241,6 +244,6 @@ class Film:
         for k, p in enumerate(pages):
             t0 = p[0][0]["t"]
             nxt = pages[k + 1][0][0]["t"] if k + 1 < len(pages) else None
-            t1 = p[-1][-1]["t"] + 0.45 + linger
+            t1 = p[-1][-1].get("tl", p[-1][-1]["t"]) + 0.45 + linger   # tl: a written number's last spoken word
             out.append({"t0": round(t0, 3), "t1": round(min(t1, nxt) if nxt else t1, 3), "lines": [[[w["w"], w["t"]] for w in r] for r in p]})
         return out

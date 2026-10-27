@@ -47,11 +47,13 @@ def _break_cost(x, y):
     if re.search(r"[,:;]$|—$|…$", x["w"]):
         return 1.0
     bx, by = _bare(x), _bare(y)
+    if y.get("nb"):
+        return 40.0                                     # "20 / centimeters": a numeral and its unit (numerals.py marks it)
     if bx in ARTICLE:
         return 50.0
     if bx in LEAN:
         return 30.0
-    if bx.split("-")[0] in NUM and by not in LEAN and by not in START:
+    if (bx.split("-")[0] in NUM or re.match(r"[\d.,]+$", x["w"])) and by not in LEAN and by not in START:
         return 20.0                                     # "two / thousandths": a number leans on its noun
     if by in START:
         return 2.0
@@ -169,7 +171,7 @@ def paginate(lines, max_chars=24, linger=0.3, fix=(), until=None):
     for k, p in enumerate(pages):
         t0 = p[0][0]["t"]
         nxt = pages[k + 1][0][0]["t"] if k + 1 < len(pages) else None
-        t1 = p[-1][-1]["t"] + 0.45 + linger
+        t1 = p[-1][-1].get("tl", p[-1][-1]["t"]) + 0.45 + linger   # tl: a written number's last spoken word
         if until is not None:
             t1 = min(t1, max(until, p[-1][-1]["t"] + 0.3))
         out.append({"t0": round(t0, 3), "t1": round(min(t1, nxt) if nxt else t1, 3), "lines": [[[w["w"], w["t"]] for w in r] for r in p]})

@@ -9,7 +9,9 @@ gaps", "one thrown sideways", "day one", "Formula One", "one day", "half a billi
 
 numerals(tokens) takes caption tokens ({"w": word with its punctuation, "t": its spoken start, ...}) and merges each
 converted run of number words into one token timed from the run's first word, so the word-by-word highlight still
-lands when the number begins. numerals_text(text) does the same to a plain sentence (for checks and tests).
+lands when the number begins; "tl" is its last spoken word's start (a page ending on "150." holds until "fifty" is
+said). The unit after a numeral ("20 centimeters", "1 square centimeter", "80 times") gets "nb" (no break before it),
+which the caption pagers honour. numerals_text(text) does the same to a plain sentence (for checks and tests).
 """
 import re
 
@@ -159,7 +161,7 @@ def convert(tokens, i, j):
         return None
     if before in YEAR_LEAD and len(cs) == 2 and all(small(c) is not None for c in cs) and 10 <= small(cs[0]) <= 20 and small(cs[1]) >= 10:
         return str(small(cs[0]) * 100 + small(cs[1]))        # "in sixteen forty-four" → 1644
-    if len(cs) >= 2 and cs[-1] in ("million", "billion", "trillion") and cs[-2] in SCALE:
+    if len(cs) >= 2 and cs[-1] in ("million", "billion", "trillion") and cs[-2] in SCALE and cs[-2] != "hundred":
         return None                                           # "a million billion": an idiom, not a figure
     if cs[0] == "a" and before == "half":
         return None                                           # "half a billion" reads as written
@@ -201,8 +203,21 @@ def numerals(tokens):
         tail = re.search(r"[^\w]*$", toks[j - 1]["w"]).group(0)
         merged = {**toks[i], "w": lead + written + tail + toks[j - 1].get("_glue", "")}
         merged.pop("_glue", None)
+        if j - i > 1:
+            merged["tl"] = toks[j - 1].get("tl", toks[j - 1]["t"])   # its last spoken word: the page holds until it is said
         out.append(merged)
         last = j
+        if not tail and not merged.get("_glue") and "-" not in merged["w"][len(lead):]:
+            k = j                                             # "20 / centimeters": a numeral and its unit share a row
+            while k < len(toks) and k - j < 2:
+                c = core(toks[k]["w"].split(GLUE)[0])
+                if c in ("square", "cubic") and k == j:
+                    toks[k]["nb"] = True
+                    k += 1
+                    continue
+                if c in UNITS or c.split("-")[0] in UNITS or (c == "times" and k == j):
+                    toks[k]["nb"] = True
+                break
     out += toks[last:]
     for t in out:
         if "_glue" in t:

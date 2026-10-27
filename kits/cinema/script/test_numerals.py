@@ -36,6 +36,8 @@ CASES = [
     ("Can one day outlast a year?", "Can one day outlast a year?"),
     ("To Proxima Centauri: four years and three months.", "To Proxima Centauri: four years and three months."),
     ("Light time, Sun to Earth: eight minutes, twenty seconds.", "Light time, Sun to Earth: 8 minutes, 20 seconds."),
+    ("and a hundred trillion meeting points", "and 100 trillion meeting points"),
+    ("About a hundred million new ones", "About 100 million new ones"),
 ]
 
 
@@ -50,7 +52,14 @@ def main():
     if [(t["w"], t["t"]) for t in toks] != [("In", 1.0), ("1906", 1.2), ("they", 2.0)]:
         bad += 1
         print(f"FAIL timing: {toks}")
-    print(f"{len(CASES) + 1 - bad} of {len(CASES) + 1} pass")
+    toks = numerals([{"w": w, "t": k} for k, w in enumerate("up to one hundred and fifty. the air above one square centimeter, slowed twenty times".split())])
+    got = [(t["w"], t.get("tl"), bool(t.get("nb"))) for t in toks]
+    want = [("up", None, False), ("to", None, False), ("150.", 5, False), ("the", None, False), ("air", None, False), ("above", None, False),
+            ("1", None, False), ("square", None, True), ("centimeter,", None, True), ("slowed", None, False), ("20", None, False), ("times", None, True)]
+    if got != want:
+        bad += 1
+        print(f"FAIL tl/nb:\n   got  {got}\n   want {want}")
+    print(f"{len(CASES) + 2 - bad} of {len(CASES) + 2} pass")
     return 1 if bad else 0
 
 
