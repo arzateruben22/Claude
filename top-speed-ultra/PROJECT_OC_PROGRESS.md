@@ -4,6 +4,50 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-27 (05:30 UTC): the sky camera fixed on iPhone and desktop; a roomier phone HUD and seat view (branch `ui/phone-space`)
+
+- **The owner:** "Sky view camera still doesn't show correctly on mobile view and I'm not too sure on desktop so let's fix
+  that. Also we need more space on the phone when navigating as well as the pov driver, everything is too clunky." Their
+  iPhone, through the OC Freeway shared link (the main link).
+- **Built on the always-on session's claude/hud-pov** (597c495 seat view, 2258dfc HUD condense; stopped, never reviewed).
+  The new commits are on `ui/phone-space`:
+  - 1f28fc9: the sky camera has its own canvas inside the frame.
+  - 4adcf42: the guidance is shown whole and with its lane; the seat view is framed below the notch.
+  - 0ddee6e: no blank frame on a resize; a self-checked copy with a direct fallback.
+- **The sky camera's causes**, all present in main link v9 (local/live-preview ef9f1b1):
+  - three r160's setScissor/setViewport already multiply by the pixel ratio, and renderCorner multiplied again. So the
+    picture landed at pr times its place and size: an empty frame at Medium on an iPhone (pr 1.5) and on desktop at Low
+    (pr 0.75).
+  - The square painted under the DOM frame poked past its rounded corners.
+  - At Low it rendered at 1 px per CSS px (blocky at dpr 3).
+  - The Minimal HUD slid the window away 4 s after every tap.
+  - Now the view renders at the window's size times the device pixel ratio (capped at 2 on Low, 3 above) and is copied
+    into a canvas inside the frame.
+  - A self-check on the third copy compares 49 sample points with the WebGL buffer. If the copy is blank (a WebKit
+    risk), it falls back for the session to drawing directly into the main canvas inside the frame's box, in CSS pixels.
+    Forced with `?skyfallback=1` or `__game.setSkyFallback(true)`.
+  - A ResizeObserver handles iOS's late layout; resizes that change nothing return early, so no cleared frame is ever
+    shown.
+- **Room on the phone:** one compact plate at the top holds the speed, the gear, the next manoeuvre with its distance and
+  lane ("4.9 mi KEEP RIGHT"), the whole road sign and the ETA. Radio, phone and clock are a tap away. The road ahead is
+  clear. The portrait seat view puts the horizon below the top safe area.
+- **Judged:** an independent judge (Opus) said keep. Its two severity-2 notes, the resize flicker and the WebKit copy
+  risk, were then fixed in a repair round.
+- **Verified** (headless Chromium, SwiftShader, an iPhone UA at dsf 3 for 393x852 and 430x932, plain, with the safe-area
+  insets forced, and inside an iframe like the claude.ai viewer; plus 852x393, 1280x720 and 1440x900):
+  - tsc clean; render 15/15; phone 12/12. The phone group includes the sky picture checks, the copy self-check (49/49)
+    and the forced fallback (0.68 levels from the copy against 71 for the road).
+  - 42 after shots with no page errors.
+  - Earlier on 4adcf42: boot 6/6, launch 11/11.
+  - **Seat-view test changed:** the "seat view: horizon, cluster and windscreen clear" check now waits for the 0.5 s
+    camera blend to finish. It had raced the frame rate on the repair build.
+- **Not verified:**
+  - **Real iPhone:** not tested on a real iPhone or in WebKit (none installed here). The self-check and fallback exist
+    for that.
+  - **Seat view:** in portrait the cockpit, windscreen, top band and touch controls take about 95% of the height. More
+    road there needs a cockpit or touch-control redesign: an owner decision.
+  - **Desktop seat view:** the destination card still overlaps the windscreen's right edge, as before.
+
 ## 2026-10-25 (23:35 UTC): the thumbs, wheels and physics in the main game (main link v9); paused by the owner
 
 - **The main game.** The owner asked for this branch's graphics in the game itself. claude/hypercar is merged into
