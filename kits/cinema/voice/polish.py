@@ -2,7 +2,7 @@
 line files, so a person can voice a film instead of tts.py.
 
   python3 -I kits/cinema/voice/polish.py RECORDING --out DIR                       # a voice check: DIR/before.wav, after.wav
-  python3 -I kits/cinema/voice/polish.py RECORDING --film films/channels/<ch>/epNN [--out DIR] [--fix 05=retake.m4a]
+  python3 -I kits/cinema/voice/polish.py RECORDING --film films/channels/<ch>/epNN [--out DIR] [--fix 05=retake.m4a] [--style whisper]
   then: $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py DIR
 
 RECORDING is any file ffmpeg reads (a phone's .m4a is fine). It starts with ~3 s of silence (the room
@@ -13,7 +13,7 @@ script's line count. A line that went wrong is re-recorded on its own and passed
 The chain, measured from the recording itself (ffmpeg filters, then numpy):
   level      the speech brought to a known level first, so every threshold below means the same thing
   clean      80 Hz high-pass (rumble, mic thumps); spectral noise reduction that learns the room's own
-             noise from the room tone and the pauses (hiss, fan, hum), at most −15 dB (−20 extra) per band
+             noise from the room tone and the pauses (hiss, fan, hum), at most −15 dB (−20 extra, −12 whisper) per band
   smooth     a slow leveler (2:1) and a fast peak catcher (4:1), so loud and soft words sit together (about
              6 dB of squeeze on the loudest words, not more); then, because compressors lift the room with
              the quiet words, a gentle downward expander (2.5:1, at most −18 dB, never a hard gate) so the
@@ -23,10 +23,10 @@ The chain, measured from the recording itself (ffmpeg filters, then numpy):
   de-ess     a split-band de-esser: only the 5–10 kHz band of an "s" that sticks out above the rest of the
              voice is turned down, so the air boost doesn't make s, sh and t hiss
   deliver    −21 LUFS (where tts.py's lines sit, so the soundtrack mixer needs no change), peaks ≤ −2 dBFS,
-             48 kHz 24-bit mono, each line trimmed to the voice with 30 ms of air (as tts.py does)
+             48 kHz 24-bit mono, each line trimmed to the voice with 60 ms of air (soft word ends kept)
 
---strength extra adds 1 dB more presence and air, a little harmonic exciter at 7 kHz, and more noise
-reduction; normal is the default. The report compares before and after: noise floor, how much the
+--style extra adds 1 dB more presence and air, a little harmonic exciter at 7 kHz, and more noise
+reduction; --style whisper is for a whispered read (less noise reduction, warmth instead of air); normal is the default. The report compares before and after: noise floor, how much the
 voice stands above it, sibilance and presence balance, loudness, and each line's pace against
 lint.py's 2.2–3.0 words a second.
 
@@ -54,13 +54,18 @@ from studio.meter import lufs          # noqa: E402  (the kit's own BS.1770 mete
 SR = 48000
 TARGET_LUFS, PEAK_DB = -21.0, -2.0
 GAP_S, MIN_LINE_S = 1.6, 0.35
-STRENGTH = {
-    "normal": {"nr": 15, "presence": 2.5, "air": 3.0, "exciter": None,
+STYLE = {
+    # nr: most a band is turned down; body/mud/presence/air: EQ in dB; deess: (threshold over the voice, most cut)
+    "normal": {"nr": 15, "body": 1.5, "mud": -3, "presence": 2.5, "air": 3.0, "deess": (-6.0, 8.0), "exciter": None,
                "leveler": "acompressor=threshold=-24dB:ratio=2:attack=15:release=200:knee=6"},
-    "extra": {"nr": 20, "presence": 3.5, "air": 4.0, "exciter": "aexciter=amount=0.6:drive=5:freq=7000:blend=0:ceil=16000",
+    "extra": {"nr": 20, "body": 1.5, "mud": -3, "presence": 3.5, "air": 4.0, "deess": (-6.0, 8.0),
+              "exciter": "aexciter=amount=0.6:drive=5:freq=7000:blend=0:ceil=16000",
               "leveler": "acompressor=threshold=-26dB:ratio=2:attack=15:release=200:knee=6"},
+    # a whisper has no pitch and is already airy and full of s: less noise reduction (it is noise-like, so a
+    # deep cut turns it watery), warmth instead of air, and no air boost for the de-esser to fight
+    "whisper": {"nr": 12, "body": 3.0, "mud": -2, "presence": 1.5, "air": 0.5, "deess": (-5.0, 8.0), "exciter": None,
+                "leveler": "acompressor=threshold=-26dB:ratio=2:attack=15:release=200:knee=6"},
 }
-
 
 # ── audio in and out ───────────────────────────────────────────────────
 def decode(path):
@@ -176,15 +181,15 @@ def denoise(x, reduce_db, noise=None, n=2048, hop=512):
     return (y / 2.0)[n:n + len(x)], noise                                           # sqrt-Hann² at hop n/4 sums to 2
 
 
-def polish(x, ref, strength, noise=None):
+def polish(x, ref, style, noise=None):
     """ref: measure() of the raw recording. → (polished, the chain as text, the noise spectrum it removed)."""
-    S = STRENGTH[strength]
+    S = STYLE[style]
     pre = -18.0 - ref["speech_dbfs"]                                               # speech peaks at about −18 dBFS
     y = ffchain(x, f"volume={pre:.2f}dB,highpass=f=80:p=2")
     y, noise = denoise(y, S["nr"], noise)
     tone = [
-        "bass=g=1.5:f=140:w=0.7",
-        "equalizer=f=320:t=q:w=1.1:g=-3",
+        f"bass=g={S['body']}:f=140:w=0.7",
+        f"equalizer=f=320:t=q:w=1.1:g={S['mud']}",
         f"equalizer=f=3200:t=q:w=0.9:g={S['presence']}",
         f"highshelf=f=9000:g={S['air']}",
         S["leveler"],
@@ -197,9 +202,9 @@ def polish(x, ref, strength, noise=None):
     # max(room + 12 dB, speech − 32 dB), at most −18 dB, so pauses go quiet without chopping word ends
     finish = [f"agate=threshold={10 ** (max(floor + 12, speech - 32) / 20):.6f}:ratio=2.5:range=0.125:attack=5:release=200:knee=3"] \
         + ([S["exciter"]] if S["exciter"] else [])
-    y = deess(ffchain(y, ",".join(finish)))
+    y = deess(ffchain(y, ",".join(finish)), *S["deess"])
     chain = [f"volume={pre:.2f}dB", "highpass=f=80:p=2", f"denoise(room tone profile, at most -{S['nr']} dB per bin)"] + tone + finish \
-        + ["deess(5-10 kHz, -6 dB, max 8 dB)"]
+        + [f"deess(5-10 kHz, {S['deess'][0]} dB, max {S['deess'][1]} dB)"]
     return y, chain, noise
 
 
@@ -211,12 +216,32 @@ def deliver(y):
 
 
 # ── cutting into lines ─────────────────────────────────────────────────
+def split(d):
+    """Otsu's threshold on frame levels (dB): the level that best separates the take's two groups,
+    the room (pauses, room tone) and the voice, whatever the take's loudness or noise."""
+    h, e = np.histogram(d, bins=120)
+    c = (e[:-1] + e[1:]) / 2
+    w0, m0 = np.cumsum(h), np.cumsum(h * c)
+    w1, m1 = w0[-1] - w0, m0[-1] - m0
+    with np.errstate(divide="ignore", invalid="ignore"):
+        between = w0 * w1 * (m0 / w0 - m1 / w1) ** 2
+    return float(e[1:][np.nanargmax(between)])
+
+
+def room_gap(x):
+    """How far the voice stands above the room: speech (95th pct of 100 ms levels) minus the median of the
+    frames under the room/voice split. Under ~20 dB no polish makes a clean take."""
+    d = frames_db(x, 0.1)
+    t = split(d)
+    return float(np.percentile(d, 95) - np.median(d[d <= t])) if (d <= t).any() else 99.0
+
+
 def cut(y, gap_s=GAP_S):
     """Voiced stretches separated by pauses of gap_s or more → [(start, end)] in samples."""
     d = frames_db(y, 0.02)
     d = 10 * np.log10(np.convolve(10 ** (d / 10), np.ones(5) / 5, mode="same"))    # over 100 ms: a lone blip isn't a word
-    floor, speech = np.percentile(d, 10), np.percentile(d, 95)
-    on = d > max(floor + 15, speech - 30)
+    room = split(d)
+    on = d > room                                                                 # room vs voice, from this take's own levels
     n = int(0.02 * SR)
     segs, start, quiet = [], None, 0
     for i, v in enumerate(on):
@@ -231,15 +256,16 @@ def cut(y, gap_s=GAP_S):
     if start is not None:
         segs.append((start * n, (len(on) - quiet) * n))
     pad = int(0.4 * SR)                       # a soft last word can sit under the threshold: keep 0.4 s each side, trim() finds the voice
-    return [(max(0, a - pad), min(len(y), b + pad)) for a, b in segs if (b - a) / SR >= MIN_LINE_S]
+    return [(max(0, a - pad), min(len(y), b + pad)) for a, b in segs if (b - a) / SR >= MIN_LINE_S], room
 
 
-def trim(a, below=30.0, pad=0.03):
+def trim(a, room=None, below=35.0, pad=0.06):
     """To the voice, as tts.py's lines are: from the first to the last 30 ms that stay within `below` dB of
-    the line's loud words (10 ms frames), keeping pad seconds, with 10 ms fades so a cut never clicks."""
+    the line's loud words and above the take's room/voice split (room, dBFS; see split()), in 10 ms
+    frames, keeping pad seconds, with 10 ms fades so a cut never clicks."""
     n = int(0.01 * SR)
     d = frames_db(a, 0.01)
-    on = d > np.percentile(d, 95) - below
+    on = d > max(np.percentile(d, 95) - below, room if room is not None else -200)
     run = np.convolve(on, np.ones(3), mode="valid") == 3                            # 3 frames in a row: a word, not a click
     if run.any():
         i, j = int(np.argmax(run)) * n, (len(run) - int(np.argmax(run[::-1])) + 2) * n
@@ -263,7 +289,7 @@ def main():
     ap.add_argument("--film", help="the episode folder (its script.md says what the lines are)")
     ap.add_argument("--out", help="where to write (default <film>/vo-recorded, or ./voice-check without --film)")
     ap.add_argument("--fix", action="append", default=[], metavar="NN=FILE", help="a line re-recorded on its own")
-    ap.add_argument("--strength", choices=list(STRENGTH), default="normal")
+    ap.add_argument("--style", choices=list(STYLE), default="normal", help="normal, extra (brighter, cleaner) or whisper")
     ap.add_argument("--speaker", default="", help="who is speaking (recorded in lines.json)")
     a = ap.parse_args()
     out = Path(a.out or (Path(a.film) / "vo-recorded" if a.film else "voice-check"))
@@ -271,17 +297,21 @@ def main():
 
     raw = decode(a.recording)
     ref, _ = measure(raw)
-    y, graph, noise = polish(raw, ref, a.strength)
+    y, graph, noise = polish(raw, ref, a.style)
     pre_main = -18.0 - ref["speech_dbfs"]
     y = deliver(y)
     after, _ = measure(y)
-    print(f"{Path(a.recording).name}: {len(raw) / SR:.1f} s, strength {a.strength}")
+    print(f"{Path(a.recording).name}: {len(raw) / SR:.1f} s, style {a.style}")
     print(f"  {'':22}{'before':>9}{'after':>9}")
     for k, label in [("floor_dbfs", "noise floor (dBFS)"), ("snr_db", "voice over floor (dB)"), ("mud_vs_body_db", "mud 200-500 Hz"),
                      ("presence_vs_body_db", "presence 2-5 kHz"), ("sibilance_vs_body_db", "sibilance 5-10 kHz"), ("lufs", "loudness (LUFS)"),
                      ("peak_dbfs", "peak (dBFS)")]:
         print(f"  {label:22}{ref.get(k, '-'):>9}{after.get(k, '-'):>9}")
 
+    gap = room_gap(raw)
+    if gap < 20:
+        print(f"  ! the voice is only {gap:.0f} dB above the room: the polish can't clean that well. Record closer "
+              "(a hand-span; a whisper half that), in a quieter, softer room, with fans and AC off")
     if not a.film:
         write_wav(out / "after.wav", y)
         write_wav(out / "before.wav", np.clip(raw * 10 ** ((TARGET_LUFS - ref["lufs"]) / 20), -1, 1))   # same loudness, a fair A/B
@@ -290,27 +320,27 @@ def main():
 
     film = Path(a.film)
     lines = list(script_lines(film / "script.md"))
-    segs = cut(y)
+    segs, room = cut(y)
     fixes = {}
     for f in a.fix:
         k, _, p = f.partition("=")
         fx = decode(p)
         m = measure(fx)[0]               # a short retake may have no room tone: remove the main take's room, at its level
-        fixes[int(k)] = deliver(polish(fx, m, a.strength, noise * 10 ** ((-18.0 - m["speech_dbfs"] - pre_main) / 10))[0])
+        fixes[int(k)] = deliver(polish(fx, m, a.style, noise * 10 ** ((-18.0 - m["speech_dbfs"] - pre_main) / 10))[0])
     if len(segs) != len(lines):
         for i, (s, e) in enumerate(segs, 1):
-            write_wav(out / f"cut-{i:02d}.wav", trim(y[s:e]))
+            write_wav(out / f"cut-{i:02d}.wav", trim(y[s:e], room))
         print(f"  cut into {len(segs)} pieces at pauses of {GAP_S} s or more, but the script has {len(lines)} lines:")
         print("   " + " · ".join(f"{i}: {(e - s) / SR:.1f} s" for i, (s, e) in enumerate(segs, 1)))
         print(f"  listen to {out}/cut-NN.wav: a pause inside a line splits it (record it again with shorter pauses), "
               "a missing gap joins two (leave 2-3 s between lines), a false start is its own piece (re-record that line and pass --fix NN=FILE)")
         return 3
-    meta = {"voice": "recorded", "speaker": a.speaker, "speed": None, "lang": "en-us", "strength": a.strength,
+    meta = {"voice": "recorded", "speaker": a.speaker, "speed": None, "lang": "en-us", "style": a.style,
             "source": Path(a.recording).name, "source_sha256": sha256(a.recording), "chain": graph,
             "made_by": "kits/cinema/voice/polish.py", "lines": []}
     print(f"  {len(lines)} lines:")
     for i, ((beat, text, stars), (s, e)) in enumerate(zip(lines, segs), 1):
-        x = trim(fixes.get(i, y[s:e]))
+        x = trim(fixes[i] if i in fixes else y[s:e], room)             # both at −21 LUFS, so the take's split holds for a retake
         f = out / f"{i:02d}.wav"
         write_wav(f, x)
         dur, n = len(x) / SR, words(text)

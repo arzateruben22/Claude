@@ -1,5 +1,10 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 02:30 UTC:** download library for the owner (every finished video, full quality, straight from this public
+> repo): `films/library.py` → https://claude.ai/artifact/DaztNXWu1gmbH8BkXyj4rC, refreshed by the check-in. Own-voice
+> narration: `kits/cinema/voice/polish.py` (normal, extra, whisper) and the recording script at
+> https://claude.ai/artifact/CJ1jBzjJoXDb5snabSQCzK; recordings go to films/voice-inbox.
+>
 > **27 Oct, 01:57 UTC: RESUMED by the owner.** Check-in re-enabled (every 2 h from 02:04); both channel sessions told to
 > resume their finals from the kept frames (Meanwhile, Inside 004 then 005–006; Light Minute 003, 005, 002).
 >
