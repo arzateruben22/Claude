@@ -275,8 +275,21 @@ const OFF_TOOL = {
   },
 } as const;
 
-const TOOLS = [HANDOFF_TOOL, ORDER_TOOL, GIFT_TOOL, SHOW_TOOL, REMEMBER_TOOL, OFF_TOOL];
-const QUIET = new Set(["show_products", "remember", "off_topic"]);   // calls that need no second round once the answer is written
+/* the buttons under an answer: what this client is most likely to ask next (the website shows two or three) */
+const NEXT_TOOL = {
+  name: "suggest_replies",
+  description: "Put two or three buttons under your answer: the questions this client is most likely to ask next, each under five words, written as they would ask it, about Lumevina (her treatments, her products, booking, their skin), specific to what you just said (after a routine, for example: \"Which serum strength?\", \"Book a first visit\"). Call it with every answer you write, alongside any other tool; never with a hand-off.",
+  strict: true,
+  input_schema: {
+    type: "object",
+    properties: { replies: { type: "array", items: { type: "string" } } },
+    required: ["replies"],
+    additionalProperties: false,
+  },
+} as const;
+
+const TOOLS = [HANDOFF_TOOL, ORDER_TOOL, GIFT_TOOL, SHOW_TOOL, REMEMBER_TOOL, OFF_TOOL, NEXT_TOOL];
+const QUIET = new Set(["show_products", "remember", "off_topic", "suggest_replies"]);   // calls that need no second round once the answer is written
 
 const draftFor = (site: Site) => [
   "Draft a reply from Evelyn, a licensed esthetician, to a client's question. Evelyn reads and edits every draft before it's sent; nothing goes out automatically.",
@@ -462,6 +475,7 @@ Deno.serve(async (req) => {
     const products: string[] = [];
     const remembered: string[] = [];
     const links: { label: string; url: string }[] = [];
+    let next: string[] = [];
     /* what they told the chat, kept for next time (signed in only; never health or medicine) */
     const keep = async (c: Anthropic.Beta.Messages.BetaToolUseBlock) => {
       const input = c.input as { fact?: string; kind?: string };
@@ -516,20 +530,21 @@ Deno.serve(async (req) => {
       }
       for (const c of calls) {
         if (c.name === "remember") kept[c.id] = await keep(c);
+        if (c.name === "suggest_replies") next = ((c.input as { replies?: string[] }).replies ?? []).map((x) => String(x).trim().slice(0, 48)).filter(Boolean).slice(0, 3);
         if (c.name !== "show_products") continue;
         for (const id of (c.input as { ids?: string[] }).ids ?? []) if (!products.includes(id)) products.push(id);
       }
       const answer = textOf(reply);
-      if (declined && answer) return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}) });
+      if (declined && answer) return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}), ...(next.length ? { next } : {}) });
       // done: no look-ups pending (Add to bag buttons and remembering need no second round once the answer is written)
       if (!declined && (reply.stop_reason !== "tool_use" || (answer && calls.every((c) => QUIET.has(c.name))))) {
         if (!answer) break;
         return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}),
-          ...(remembered.length ? { remembered } : {}) });
+          ...(remembered.length ? { remembered } : {}), ...(next.length ? { next } : {}) });
       }
       messages.push({ role: "assistant", content: reply.content });
       const results = [];
-      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: c.id === declined ? NOT_HANDED : kept[c.id] ?? await runLookup(db, signedIn, c, links) });
+      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: c.id === declined ? NOT_HANDED : c.name === "suggest_replies" ? "Shown." : kept[c.id] ?? await runLookup(db, signedIn, c, links) });
       messages.push({ role: "user", content: results });
     }
     return json({ handoff: kind ?? "other", ...(why ? { why } : {}), ...(note ? { note } : {}), urgent: kind === "urgent" });   // nothing usable came back: Evelyn answers
