@@ -4,9 +4,10 @@
 `lightminute-vacuum`). It pays off episode 2's tease ("Next: a world that turns slower than it orbits. And
 backwards.") and sets up episode 4 ("Next: the Moon never stops falling toward us. So why doesn't it land?").
 
-**Delivered (26 Oct), rechecked and re-rendered (26 Oct):** `out/lightminute-003-9x16.mp4` (74.67 s, −14.1 LUFS /
-−1.8 dBTP, voice 12.3 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS; 2.0 Mbps at CRF 15), with
-its poster (50.4 s), contact sheet and `review/` (scorecard round 4 lists the recheck's fixes). It has not been posted.
+**Delivered (27 Oct), after two draft-review rounds:** `out/lightminute-003-9x16.mp4` (74.67 s, −14.1 LUFS /
+−1.8 dBTP, voice 12.3 LU over the music, sync PASS, 0 flashes, 0 text warnings: `qa.py` PASS; 2.5 Mbps at CRF 15), with
+its poster (49.7 s), contact sheet and `review/` (the scorecard's last round lists the review rounds). It has not been
+posted.
 
 **After the draft review (26 Oct):** `compile.py` and `scene.mjs` carry the review's confirmed fixes (the direction and
 the honesty notes below describe them). That cut has not been rendered yet: the MP4 above predates it, and a stills

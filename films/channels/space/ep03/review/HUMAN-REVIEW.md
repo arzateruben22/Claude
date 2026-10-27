@@ -38,7 +38,7 @@
   "the Sun's place, behind clouds" so it can be set larger. The cloud deck now carries one broad darker marking that
   turns with the planet, so the turn can be seen: check it reads as an illustration (it is badged "clouds: drawn"; the
   real cloud features circle Venus in about four days, unrelated to its spin, c4's note). The poster is now 49.73 s
-  (the dial's Sun up in the west). Not yet rendered.
+  (the dial's Sun up in the west). The final (27 Oct, QA PASS) is `out/lightminute-003-9x16.mp4`.
 
 
 ## Every episode
