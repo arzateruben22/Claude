@@ -1,0 +1,230 @@
+{
+  "_doc": "Outer Layer (skin), 'skin warmth, slide light': F major at 64.2857 BPM (a beat is 28 frames, a 16th exactly 7 frames at 30 fps). A soft, low-passed pad in a small warm room and sparse nylon plucks (Karplus-Strong 'pluck', new for this channel) on the off-beats; a sub only for the whoa. Foley is soft and tonal: plucks for labels, a low felt knock for layers, plops for water. No bells (Lumevina), no fizz (Lumevina's dew), no ping (Light Minute), no mallet (Meanwhile, Inside), no blip (Rest Frame). Signature: plucks F5, C6, A5, 7 frames apart (root, fifth, then the third settling under it: an answer). It plays on the title, at the end of counters and on the end card.",
+  "name": "outerlayer-slide",
+  "bpm": 64.2857,
+  "key": "F",
+  "mode": "ionian",
+  "scale": [
+    "F",
+    "G",
+    "A",
+    "Bb",
+    "C",
+    "D",
+    "E"
+  ],
+  "progression": [
+    {
+      "pad": [
+        "F3",
+        "C4",
+        "E4",
+        "A4"
+      ],
+      "root": "F2"
+    },
+    {
+      "pad": [
+        "D3",
+        "A3",
+        "C4",
+        "F4"
+      ],
+      "root": "D2"
+    },
+    {
+      "pad": [
+        "Bb2",
+        "F3",
+        "A3",
+        "D4"
+      ],
+      "root": "Bb1"
+    },
+    {
+      "pad": [
+        "C3",
+        "G3",
+        "Bb3",
+        "E4"
+      ],
+      "root": "C2"
+    }
+  ],
+  "signature": {
+    "voice": "pluck",
+    "notes": [
+      "F5",
+      "C6",
+      "A5"
+    ],
+    "frames": [
+      0,
+      7,
+      14
+    ],
+    "gains": [
+      0,
+      -1.5,
+      -3
+    ],
+    "bright": 0.55,
+    "dur": 1.6
+  },
+  "layers": {
+    "pad": {
+      "gain": -17,
+      "bright": 1700,
+      "attack": 1.8,
+      "release": 2.2
+    },
+    "melody": {
+      "voice": "pluck",
+      "pattern": [
+        null,
+        0,
+        null,
+        2,
+        null,
+        1,
+        null,
+        null,
+        null,
+        3,
+        null,
+        1,
+        null,
+        2,
+        null,
+        null
+      ],
+      "step": 0.5,
+      "double_above": 0.7,
+      "octave": 1,
+      "gain": -14,
+      "dur": 1.4,
+      "pluck_bright": 0.45
+    },
+    "sub": {
+      "gain": -26,
+      "above": 0.7
+    },
+    "air": {
+      "gain": -40
+    }
+  },
+  "space": {
+    "music": [
+      1.4,
+      0.26
+    ],
+    "foley": [
+      0.8,
+      0.18
+    ],
+    "dialog": [
+      0.3,
+      0.04
+    ]
+  },
+  "drive": {
+    "music": 0.7,
+    "effects": 0.8,
+    "dialog": 0.0
+  },
+  "foley": {
+    "label": {
+      "voice": "pluck",
+      "gain": -18,
+      "dur": 1.0,
+      "bright": 0.6,
+      "notes": [
+        "C5",
+        "D5",
+        "F5",
+        "G5",
+        "A5",
+        "C6",
+        "D6",
+        "F6",
+        "G6",
+        "A6"
+      ]
+    },
+    "counter.show": {
+      "voice": "pluck",
+      "gain": -20,
+      "dur": 0.9,
+      "bright": 0.7,
+      "notes": [
+        "F6"
+      ]
+    },
+    "counter.tick": {
+      "voice": "tick",
+      "gain": -26
+    },
+    "counter.end": {
+      "voice": "seq",
+      "gain": -13,
+      "seq": "signature"
+    },
+    "signature": {
+      "voice": "seq",
+      "gain": -12,
+      "seq": "signature"
+    },
+    "section": {
+      "voice": "whoosh",
+      "gain": -33,
+      "dur": 0.9,
+      "lo": 160,
+      "hi": 1400,
+      "anchor": "peak"
+    },
+    "swell": {
+      "voice": "swell",
+      "gain": -17,
+      "note": "F2"
+    },
+    "cell.land": {
+      "voice": "knock",
+      "gain": -19,
+      "f0": 150
+    },
+    "dissolve": {
+      "voice": "dim",
+      "gain": -20,
+      "note": "C3"
+    },
+    "diffuse": {
+      "voice": "plop",
+      "gain": -20,
+      "f0": 380
+    },
+    "reveal": {
+      "voice": "sparkle",
+      "gain": -24,
+      "notes": [
+        "F6",
+        "C7",
+        "A6",
+        "G6"
+      ],
+      "grain": "blip",
+      "dur": 0.7
+    },
+    "scale": {
+      "voice": "pluck",
+      "gain": -21,
+      "dur": 0.8,
+      "notes": [
+        "C6"
+      ]
+    }
+  },
+  "master": {
+    "lufs": -14.0,
+    "tilt": 0.0
+  }
+}

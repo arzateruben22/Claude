@@ -78,6 +78,8 @@ def _melodic(M, tone, prev, vel, tag):
         return I.mallet(tone, M["dur"], vel, tag, M["bright"], M.get("harmonic", False))
     if v == "blip":
         return I.blip(tone, M["dur"], vel, tag)
+    if v == "pluck":
+        return I.pluck(tone, M["dur"], vel, tag, M.get("pluck_bright", 0.5))
     if v == "glide":            # slides from the pattern's previous tone into this one, then swells away
         return I.glide(M["dur"], prev, _semis(prev, tone), tag, M.get("slide", 0.35), M.get("fifth", 0.0), M["bright"]) * np.float32(vel)
     raise ValueError(f"unknown melodic voice {v}")
@@ -245,6 +247,8 @@ def _voice(spec, e, idx, fps):
         return I.ramp(spec.get("note", "G3"), spec.get("dur", 0.5), spec.get("dir", "down"), tag)
     if v == "hum":
         return I.hum(spec.get("note", "D4"), spec.get("dur", span), tag, spec.get("beat", 0.5))
+    if v == "pluck":
+        return I.pluck(_note(spec, idx), spec.get("dur", 1.2), spec.get("vel", 0.8), tag, spec.get("bright", 0.5))
     raise ValueError(f"unknown voice {v} for {kind}")
 
 
