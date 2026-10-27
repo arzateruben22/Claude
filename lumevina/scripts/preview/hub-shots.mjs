@@ -40,8 +40,8 @@ for (const [name, page, opt, at, wait] of shots) {
   console.log(name, fs.statSync(path.join(out, name + ".jpg")).size);
 }
 
-// the library: three of the vertical clips' first frames, side by side
-const posters = ["8-2", "11-1", "2-1"].map((id) => path.join(root, "marketing/ads/out/video", id + "-9x16.jpg")).filter((f) => fs.existsSync(f));
+// the library: three of the vertical clips' first frames, side by side (the three re-cut in the block look)
+const posters = ["8-2", "11-1", "10-1"].map((id) => path.join(root, "marketing/ads/out/video", id + "-9x16.jpg")).filter((f) => fs.existsSync(f));
 const tmp = path.join(hub, ".library-shot.html"), lib = await browser.newPage(DESK);
 fs.writeFileSync(tmp, '<body style="margin:0;height:800px;display:flex;gap:28px;justify-content:center;align-items:center;background:#EDE5DA">' +
   posters.map((f, i) => '<img src="file://' + f + '" style="height:' + (i === 1 ? 700 : 620) + 'px;border-radius:26px;box-shadow:0 30px 60px rgba(74,52,42,.25)">').join("") + "</body>");
