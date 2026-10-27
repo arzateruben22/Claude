@@ -72,12 +72,17 @@
   {
    "t": 0.0,
    "kind": "badge",
-   "tag": "b-nts"
+   "tag": "b-nts-h"
   },
   {
    "t": 5.3,
    "kind": "signature",
    "tag": "title"
+  },
+  {
+   "t": 5.4666999999999994,
+   "kind": "badge",
+   "tag": "b-nts"
   },
   {
    "t": 5.6667,
@@ -184,14 +189,19 @@
    "tag": "spine-3"
   },
   {
-   "t": 31.666666666666668,
+   "t": 31.0,
    "kind": "label",
-   "tag": "l-mantle"
+   "tag": "l-uni"
   },
   {
    "t": 37.6,
    "kind": "term.write",
    "tag": "spine-4"
+  },
+  {
+   "t": 37.666666666666664,
+   "kind": "label",
+   "tag": "l-mantle"
   },
   {
    "t": 37.666666666666664,

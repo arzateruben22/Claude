@@ -8,7 +8,8 @@
 //   scene.add(G.group);
 //   G.set({ light: [lx, ly, lz] (toward the lamp), hi: [h0, h1, ...] (0–1 per layer: lifts it toward chalk
 //          and draws its boundary in marker), glow: 0–1 (the innermost two layers turn marker and bloom),
-//          tunnel: 0–1 (the bore's strength) })
+//          tunnel: 0–1 (the bore's strength), flat: 0–1 (every layer below the crust one grey: the
+//          uniform, textbook Earth) })
 //   const S = strip(points, { width, color: [r,g,b] linear, dash, opacity }); G.face.add(S.mesh); S.set({ upto, opacity })
 //
 // Colours are display colours (tokens, plus greys between chalk and graphite for depth), output through the
@@ -51,19 +52,20 @@ const FS_FACE = `
 precision highp float;
 #define NL 6
 uniform vec3 uCol[NL]; uniform float uRad[NL]; uniform float uHi[NL];
-uniform vec3 uChalk, uMarker, uBore; uniform float uExposure, uGlow, uTunnel, uTw, uR;
+uniform vec3 uChalk, uMarker, uBore, uFlatC; uniform float uExposure, uGlow, uTunnel, uTw, uR, uFlat;
 varying vec3 vP; varying vec3 vN;
 ${ACES_INV_GLSL}
 void main() {
   float r = length(vP.xy), fw = max(fwidth(r), 1e-5);
   vec3 col = uCol[NL - 1]; float hi = 0.0; int k = NL - 1;
   for (int i = NL - 1; i >= 0; i--) { if (r <= uRad[i]) { col = uCol[i]; hi = uHi[i]; k = i; } }
+  col = mix(col, uFlatC, uFlat * step(r, uRad[NL - 2]));                // the textbook model: one density all the way down
   col = mix(col, uChalk, 0.28 * hi);
   if (k <= 1) col = mix(col, uMarker, uGlow);                          // the core, lit at the payoff
   // layer boundaries: thin chalk lines, marker when that layer is lit
   for (int i = 0; i < NL - 1; i++) {
     float d = abs(r - uRad[i]) / fw;
-    float a = 1.0 - smoothstep(0.6, 1.8, d);
+    float a = (1.0 - smoothstep(0.6, 1.8, d)) * (1.0 - uFlat);
     vec3 lc = mix(uChalk, uMarker, max(uHi[i], (i <= 1 ? uGlow : 0.0)));
     col = mix(col, lc, a * (0.35 + 0.55 * uHi[i]));
   }
@@ -99,7 +101,7 @@ export const createGlobe = (o = {}) => {
     uLight: { value: new THREE.Vector3(-0.5, 0.7, 0.5) }, uExposure: exposure, uR: { value: R } };
   const faceU = { uCol: { value: cols.map(v3) }, uRad: { value: radii }, uHi: { value: new Array(6).fill(0) },
     uChalk: { value: v3(chalk) }, uMarker: { value: v3(rgb("marker", "#EB63FF")) }, uBore: { value: v3(mixHex(graphite, [0, 0, 0], 0.35)) },
-    uExposure: exposure, uGlow: { value: 0 }, uTunnel: { value: 1 }, uTw: { value: o.tunnelHalfWidth ?? 0.16 }, uR: { value: R } };
+    uExposure: exposure, uGlow: { value: 0 }, uTunnel: { value: 1 }, uFlat: { value: 0 }, uFlatC: { value: v3(mixHex(model, graphite, 0.58)) }, uTw: { value: o.tunnelHalfWidth ?? 0.16 }, uR: { value: R } };
   const shellG = new THREE.SphereGeometry(R, 128, 96, Math.PI, Math.PI);   // the back half (z ≤ 0)
   const shell = new THREE.Mesh(shellG, new THREE.ShaderMaterial({ uniforms: shellU, vertexShader: VS, fragmentShader: FS_SHELL, extensions: { derivatives: true } }));
   const faceG = new THREE.CircleGeometry(R, 256);
@@ -111,6 +113,7 @@ export const createGlobe = (o = {}) => {
     if (s.hi) for (let i = 0; i < 6; i++) faceU.uHi.value[i] = s.hi[i] ?? 0;
     if (s.glow !== undefined) faceU.uGlow.value = s.glow;
     if (s.tunnel !== undefined) faceU.uTunnel.value = s.tunnel;
+    if (s.flat !== undefined) faceU.uFlat.value = s.flat;
   };
   return { group, shell, face, R, radii: radii.slice(0, 5), set };
 };

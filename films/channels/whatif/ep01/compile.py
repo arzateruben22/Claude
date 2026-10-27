@@ -97,40 +97,40 @@ def depth_at(tau):
 
 
 # ── the camera (rig.js keys: target, dist, el, az, fov, fx, fy; the model is 12.74 units across) ──
-FRONT = {"target": [0, 0, 0], "dist": 70, "el": 7, "az": 0, "fov": 24, "fy": 0.37}
+FRONT = {"target": [0, 0, 0], "dist": 83, "el": 7, "az": 24, "fov": 24, "fy": 0.43}   # hook and the last frame: the model under the title card
 CAM = {
-    "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 69, "az": 1.5, "ease": "sine"}],
+    "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5, "ease": "sine"}],
     "drive": [
-        {"t": B["normal"]["t0"], **FRONT, "dist": 69, "az": 1.5},
-        {"t": t_drive0 - 0.4, "target": [0, -5.2, 3.0], "dist": 62, "el": 13, "az": 3, "fov": 24, "fy": 0.4, "ease": "inout3"},
-        {"t": B["change"]["t0"], "target": [0, -4.8, 2.6], "dist": 62, "el": 12, "az": 4, "fov": 24, "fy": 0.4, "ease": "sine"},
+        {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5},
+        {"t": t_drive0 - 0.4, "target": [0, -5.6, 5.0], "dist": 66, "el": 19, "az": 27, "fov": 24, "fy": 0.47, "ease": "inout3"},
+        {"t": B["change"]["t0"], "target": [0, -5.4, 4.8], "dist": 68, "el": 18, "az": 28, "fov": 24, "fy": 0.4, "ease": "sine"},
     ],
     "fall": [
-        {"t": B["change"]["t0"], "target": [0, -4.8, 2.6], "dist": 62, "el": 12, "az": 4, "fov": 24, "fy": 0.4},
-        {"t": t_jump + 1.2, "target": [0, 0, 0], "dist": 66, "el": 6, "az": 2, "fov": 24, "fy": 0.37, "ease": "inout3"},
-        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 64, "el": 5, "az": 0, "fov": 24, "fy": 0.37, "ease": "sine"},
+        {"t": B["change"]["t0"], "target": [0, -5.4, 4.8], "dist": 68, "el": 18, "az": 28, "fov": 24, "fy": 0.47},
+        {"t": t_jump + 2.6, "target": [0, 0, 0], "dist": 80, "el": 6, "az": 26, "fov": 24, "fy": 0.35, "ease": "inout3"},
+        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 5, "az": 24, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "layers": [
-        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 64, "el": 5, "az": 0, "fov": 24, "fy": 0.37},
-        {"t": A("vo04:core"), "target": [1.2, -0.6, 0], "dist": 52, "el": 4, "az": -4, "fov": 24, "fy": 0.38, "ease": "inout3"},
-        {"t": B["whoa"]["t0"], "target": [1.0, -0.4, 0], "dist": 50, "el": 4, "az": -6, "fov": 24, "fy": 0.38, "ease": "sine"},
+        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 5, "az": 24, "fov": 24, "fy": 0.35},
+        {"t": A("vo04:assumed"), "target": [4.6, 0, 0], "dist": 74, "el": 4, "az": 17, "fov": 24, "fy": 0.35, "ease": "inout3"},
+        {"t": B["whoa"]["t0"], "target": [4.8, -0.3, 0], "dist": 70, "el": 4, "az": 16, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "answer": [
-        {"t": B["whoa"]["t0"], "target": [1.0, -0.4, 0], "dist": 50, "el": 4, "az": -6, "fov": 24, "fy": 0.38},
-        {"t": A("vo05:With", -0.2), "target": [0, 0, 0], "dist": 74, "el": 8, "az": -2, "fov": 24, "fy": 0.39, "ease": "inout3"},
-        {"t": B["work"]["t0"], "target": [0, 0, 0], "dist": 76, "el": 9, "az": 0, "fov": 24, "fy": 0.39, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "target": [4.8, -0.3, 0], "dist": 70, "el": 4, "az": 16, "fov": 24, "fy": 0.35},
+        {"t": A("vo05:With", -0.2), "target": [0, 0, 0], "dist": 86, "el": 8, "az": 22, "fov": 24, "fy": 0.35, "ease": "inout3"},
+        {"t": B["work"]["t0"], "target": [0, 0, 0], "dist": 88, "el": 9, "az": 24, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "work": [
-        {"t": t_work0, "target": [0, 0, 0], "dist": 76, "el": 9, "az": 0, "fov": 24, "fy": 0.39},
-        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 9, "az": 2, "fov": 24, "fy": 0.39, "ease": "sine"},
+        {"t": t_work0, "target": [0, 0, 0], "dist": 88, "el": 9, "az": 24, "fov": 24, "fy": 0.35},
+        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 90, "el": 9, "az": 26, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "core": [
-        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 9, "az": 2, "fov": 24, "fy": 0.39},
-        {"t": t_core, "target": [0, -0.3, 0], "dist": 56, "el": 6, "az": 0.5, "fov": 24, "fy": 0.4, "ease": "inout3"},
-        {"t": t_end, "target": [0, -0.2, 0], "dist": 60, "el": 6.5, "az": 0.2, "fov": 24, "fy": 0.39, "ease": "sine"},
+        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 90, "el": 9, "az": 26, "fov": 24, "fy": 0.35},
+        {"t": t_core, "target": [0, -0.3, 0], "dist": 68, "el": 6, "az": 24.5, "fov": 24, "fy": 0.35, "ease": "inout3"},
+        {"t": t_end, "target": [0, -0.2, 0], "dist": 72, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "end": [
-        {"t": t_end, "target": [0, -0.2, 0], "dist": 60, "el": 6.5, "az": 0.2, "fov": 24, "fy": 0.39},
+        {"t": t_end, "target": [0, -0.2, 0], "dist": 72, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.35},
         {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"},          # the last frame is frame 0's composition: the loop
     ],
 }
@@ -171,15 +171,17 @@ WORK = {
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "figure", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
     {"id": "l-tunnel", "text": "tunnel", "kind": "part", "anchor": "tunnel", "t0": A("vo02:tunnel"), "t1": t_drive0 - 0.3, "shot": "drive", "side": 1},
-    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:highway"), "t1": B["change"]["t0"], "shot": "drive", "side": 1},
-    {"id": "l-mantle", "text": "mantle", "kind": "part", "anchor": "mantle", "t0": A("vo04:assumed"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
+    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:highway"), "t1": B["change"]["t0"], "shot": "drive", "side": -1, "v": "above"},
+    {"id": "l-mantle", "text": "mantle", "kind": "part", "anchor": "mantle", "t0": A("vo04:real"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
     {"id": "l-core", "text": "core", "kind": "part", "anchor": "core", "t0": A("vo04:core"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
-    {"id": "l-peak", "text": "gravity peaks here", "kind": "calc", "anchor": "peak", "t0": A("vo04:stronger"), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
+    {"id": "l-uni", "text": "textbook gravity", "kind": "part", "anchor": "uni", "t0": A("vo04:fortytwo", 0.6), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
+    {"id": "l-peak", "text": "real gravity peaks here", "kind": "calc", "anchor": "peak", "t0": A("vo04:stronger"), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
     {"id": "l-core-t", "text": "core", "kind": "calc", "anchor": "core", "t0": t_core, "t1": t_end, "shot": "core", "side": 1},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": 4.0, "slot": "tr"},
-    {"id": "b-nts", "text": "figure not to scale", "t0": 0.0, "t1": t_end, "slot": "tr"},
+    {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
+    {"id": "b-nts-h", "text": "figure not to scale", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
+    {"id": "b-nts", "text": "figure not to scale", "t0": t_title_out, "t1": t_end, "slot": "tr"},
     {"id": "b-air", "text": "∵ no air · no heat · no spin", "t0": A("vo02:no"), "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-time-f", "clock": "fall", "t0": t_jump - 0.3, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-prem", "text": "∵ density from earthquake data (PREM)", "t0": A("vo04:real"), "t1": B["whoa"]["t0"], "slot": "tl"},
@@ -195,7 +197,7 @@ COUNTERS = [
     {"id": "c-days", "label": "driving nonstop", "fmt": "days", "t0": t_drive0, "t1": B["change"]["t0"] - 0.3,
      "at": [0.5, 0.6 - 0.08], "drive": [t_drive0, t_drive1], "end": RESULTS["drive_days"]},
     # the faller's speed (true, from the PREM trajectory): it peaks at about 10 km/s at the centre
-    {"id": "c-speed", "label": "your speed", "fmt": "kms", "clock": "fall", "t0": t_jump + 0.2, "t1": B["why"]["t0"] - 0.3, "at": [0.76, 0.37]},
+    {"id": "c-speed", "label": "your speed", "fmt": "kms", "clock": "fall", "t0": t_jump + 0.2, "t1": round(t_stop + 0.8, 4), "at": [0.76, 0.37]},
     # the round trip, in true minutes, once the faller is back where they started
     {"id": "c-round", "label": "round trip", "fmt": "text", "text": f"{round(2 * T_TRIP / 60)} min", "t0": A("vo05:seventysix", -0.05), "t1": t_work0 - 0.3, "at": [0.76, 0.37]},
 ]
