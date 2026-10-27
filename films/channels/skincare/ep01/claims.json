@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Not one cell of it.",
+  "claim": "The outermost layer of the epidermis, the stratum corneum, is made of corneocytes: flattened, dead (cornified) keratinocytes. It is the skin's visible surface.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
+  "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: the stratum corneum is about 15 layers of flattened corneocytes. 'The skin you see' is taken as the stratum corneum (hair and nails are also dead keratin, so the line holds for them too). Mucous membranes are not 'skin you see' here.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "Your outermost layer is about fifteen rows of flattened cells.",
+  "claim": "The stratum corneum is about 15 layers of flattened corneocytes in typical skin (about 6 on genital skin, many more on palms and soles).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
+  "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: 'about 15 layers of flattened corneocytes'. Body-site range from a 301-person study seen in the same search (6 ± 2 genital, 47 ± 24 palms and soles, 86 ± 36 heel): 'about' carries it.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "Each one is dead: a flat shell packed with keratin.",
+  "claim": "Corneocytes are dead, anucleate cells filled with keratin filaments inside a cross-linked protein shell (the cornified envelope).",
+  "source_url": "https://www.nature.com/articles/nrm1619",
+  "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: the cornified envelope replaces the plasma membrane of differentiating keratinocytes; keratins cross-linked by transglutaminases, surrounded by a lipid envelope.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "The living skin starts just beneath them.",
+  "claim": "Below the stratum corneum lie the living layers of the epidermis (granular, spinous, basal).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
+  "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
+  "accessed": "2026-10-27",
+  "note": "Standard histology; StatPearls describes the stratum corneum as the outermost epidermal layer above the living strata.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "It's born alive, at the base.",
+  "claim": "Keratinocytes are produced by cell division in the basal layer (stratum basale) of the epidermis.",
+  "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
+  "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: keratinocytes differentiate on their trip from the basal layer to the surface.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "For about two weeks it rises, filling with keratin.",
+  "claim": "A keratinocyte takes about 14 days to move from the basal layer to the stratum corneum, differentiating (making keratin) on the way; it then spends roughly another two weeks in the stratum corneum before shedding.",
+  "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
+  "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: a 14-day trip to the surface. Varies with age, body site and disease (shorter in psoriasis); 'about two weeks' is the hedge. Whole turnover is often given as ~28 days in young adults, longer with age.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "Then, near the top, it takes itself apart, on purpose.",
+  "claim": "Cornification is a programmed form of cell death, distinct from apoptosis: the cell loses its nucleus and organelles and becomes a corneocyte.",
+  "source_url": "https://www.nature.com/articles/nrm1619",
+  "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: cornification described as a 'unique form of programmed cell death' (Candi 2005); Lippens 2005 (Cell Death Differ) says it is distinct from apoptosis.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "Scientists picture it as a brick wall: dead cells for bricks, fats for mortar.",
+  "claim": "The stratum corneum is commonly modelled as 'bricks and mortar': corneocytes (bricks) in a matrix of intercellular lipids (mortar).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
+  "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: brick and mortar model first proposed by Michaels et al. (1975) and later supported/named by Elias; reviews call it incomplete but a reasonable basis. Badged 'model' on screen. No person is credited in the voice because the sources disagree on who.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "And that wall is what keeps your water inside.",
+  "claim": "The stratum corneum is the skin's main permeability barrier, limiting water loss through the skin (transepidermal water loss).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
+  "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: the stratum corneum's barrier function; corroborated by Rutter & Hull 1979 attributing high water loss to a thin, poorly keratinised stratum corneum.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns.",
+  "claim": "Rutter and Hull (1979) measured skin water loss in 78 babies of 26–41 weeks' gestation (199 measurements) in incubators.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1545609/",
+  "source_title": "Rutter N, Hull D (1979). Water loss from the skin of term and preterm babies. Archives of Disease in Childhood 54(11):858–868",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: 199 measurements on 78 babies aged 26 to 41 weeks' gestation, over the first four weeks of life.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "Babies born before thirty weeks, before that wall is finished, lost about five times as much.",
+  "claim": "Babies under 30 weeks' gestation lost on average about 32 g/m² per hour through the skin over their first four days, against about 6 g/m² per hour once losses settled in babies born at 34–41 weeks; the authors linked this to a thin, poorly keratinised stratum corneum.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1545609/",
+  "source_title": "Rutter N, Hull D (1979). Water loss from the skin of term and preterm babies. Archives of Disease in Childhood 54(11):858–868",
+  "accessed": "2026-10-27",
+  "note": "Computed: 32 ÷ 6 ≈ 5.3, said as 'about five times'. The comparison is the study's own two averages (first four days under 30 weeks vs the settled value near term); the barrier matures within weeks after birth (patent literature: ~2 weeks postnatal; not voiced).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "To scale: on the cheek, the whole dead layer is about seventeen micrometers.",
+  "claim": "Mean apparent stratum corneum thickness on the cheek: 16.8 µm (confocal Raman, 15 healthy Japanese adults); volar forearm 22.6 µm, back of hand 29.3 µm, palm 173 µm.",
+  "source_url": "https://medicaljournals.se/acta/content/abstract/10.2340/00015555-0183",
+  "source_title": "Egawa M, Hirao T, Takahashi M (2007). In vivo estimation of stratum corneum thickness from water concentration profiles obtained with Raman spectroscopy. Acta Dermato-Venereologica 87:4–8",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: cheek 16.8 µm. Small sample, one population, one method; 'about' carries it. The gauge shows 17 µm with a 'cheek' tag.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "A sheet of paper is about a hundred.",
+  "claim": "Standard 80 gsm copy paper is about 100 µm (0.1 mm) thick (typically about 70–105 µm).",
+  "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
+  "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
+  "accessed": "2026-10-27",
+  "note": "Excerpt: copying paper 80 gsm, 100 microns. Everyday reference; not a skin claim.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "Every day, you're kept alive by cells that already died to build a wall.",
+  "claim": "The stratum corneum, made of dead corneocytes, is the skin's main barrier against water loss (restates c7–c9).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
+  "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
+  "accessed": "2026-10-27",
+  "note": "A reframe of c7–c9; 'kept alive' rests on the barrier's role in water balance (c11 shows the stakes). Dermatologist to confirm the wording.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
