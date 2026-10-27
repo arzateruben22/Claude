@@ -38,6 +38,14 @@ CASES = [
     ("Light time, Sun to Earth: eight minutes, twenty seconds.", "Light time, Sun to Earth: 8 minutes, 20 seconds."),
     ("and a hundred trillion meeting points", "and 100 trillion meeting points"),
     ("About a hundred million new ones", "About 100 million new ones"),
+    ("Venus turns once every hundred and seventeen days.", "Venus turns once every 117 days."),
+]
+G = "\u2007"
+GLUED = [   # capglue phrases: converted with the words around them, then glued again
+    (["It", "left", "in", f"nineteen{G}seventy-seven."], ["It", "left", "in", "1977."]),
+    (["At", "Voyager's", "speed:", f"about{G}seventy-five", f"thousand{G}years."], ["At", "Voyager's", "speed:", f"about{G}75,000{G}years."]),
+    (["That's", f"about{G}three", "hundred", "years", "away."], ["That's", f"about{G}300", "years", "away."]),
+    ([f"a{G}full{G}day", "lasts"], [f"a{G}full{G}day", "lasts"]),
 ]
 
 
@@ -48,6 +56,11 @@ def main():
         if got != want:
             bad += 1
             print(f"FAIL {text!r}\n   got  {got!r}\n   want {want!r}")
+    for words, want in GLUED:
+        got = [t["w"] for t in numerals([{"w": w, "t": k} for k, w in enumerate(words)])]
+        if got != want:
+            bad += 1
+            print(f"FAIL glued {words!r}\n   got  {got!r}\n   want {want!r}")
     toks = numerals([{"w": "In", "t": 1.0}, {"w": "nineteen", "t": 1.2}, {"w": "oh", "t": 1.5}, {"w": "six", "t": 1.7}, {"w": "they", "t": 2.0}])
     if [(t["w"], t["t"]) for t in toks] != [("In", 1.0), ("1906", 1.2), ("they", 2.0)]:
         bad += 1
@@ -59,7 +72,7 @@ def main():
     if got != want:
         bad += 1
         print(f"FAIL tl/nb:\n   got  {got}\n   want {want}")
-    print(f"{len(CASES) + 2 - bad} of {len(CASES) + 2} pass")
+    print(f"{len(CASES) + len(GLUED) + 2 - bad} of {len(CASES) + len(GLUED) + 2} pass")
     return 1 if bad else 0
 
 
