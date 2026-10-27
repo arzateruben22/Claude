@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 17:45 UTC: RESUMED by the owner — two more channels.** "Start building the rest of the videos for the other channels, integrating maximum quality." The owner named them **Outer Layer** (skin; Prism slug `skincare`) and **Back of the Envelope** (what if; `whatif`), narrators by audition, both in parallel. Season 1 each (6 shorts + vol01, 1080 masters + 1440p YouTube versions, long video 2560x1440) in two sessions: claude/outer-layer-s1, claude/back-of-the-envelope-s1. Studio catalogue renamed (fbb25be). Check-in re-enabled for relaying auditions and collecting episodes.
+>
 > **27 Oct, 11:45 UTC — complete, paused (owner: "Pause once complete").** Caption numbers read as written in all 18 shorts ("In 1906", "0.45 seconds", "every 117 days"), each with QA PASS, its original sound and a 1440p YouTube version; the 3 long videos rebuilt (QA PASS). Prism Studio: 21 ready, 0 problems. Preview v15 https://claude.ai/artifact/WBGPX93rZhTPXeB9jvKaiu, library v7 https://claude.ai/artifact/DaztNXWu1gmbH8BkXyj4rC. Channel sessions idle, helpers archived, check-in disabled. Say "Resume" to restart.
 >
 > **27 Oct, 10:10 UTC:** caption numbers: 17 of 18 shorts collected with written numbers, QA PASS and 1440p versions (Rest Frame 001-006, Light Minute 001-006, Meanwhile, Inside 001, 002, 004, 005, 006 incl. 006's first delivery); Rest Frame and Light Minute vol01 rebuilt (QA PASS). Left: Meanwhile, Inside 003 (helper, ~10:55), its vol01, the studio, then pause.
