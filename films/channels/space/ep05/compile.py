@@ -231,7 +231,7 @@ for ln in f.lines:
 # number phrases and fixed phrases stay on one line
 glue(f, {"vo01": ["a million"], "vo02": ["the Sun", "the full Moon", "look the same size."],
          "vo03": ["would fit inside", "one big sunspot."],
-         "vo04": ["a fiery stone,", "than southern Greece."],
+         "vo04": ["a fiery stone,", "bigger than", "southern Greece."],
          "vo05": ["a thousand"], "vo06": ["the Sun", "dwarf stars."],
          "vo07": ["the Sun:", "about five seconds.", "Sun to Earth:", "eight minutes,", "twenty seconds."]})
 
