@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 11:45 UTC — complete, paused (owner: "Pause once complete").** Caption numbers read as written in all 18 shorts ("In 1906", "0.45 seconds", "every 117 days"), each with QA PASS, its original sound and a 1440p YouTube version; the 3 long videos rebuilt (QA PASS). Prism Studio: 21 ready, 0 problems. Preview v15 https://claude.ai/artifact/WBGPX93rZhTPXeB9jvKaiu, library v7 https://claude.ai/artifact/DaztNXWu1gmbH8BkXyj4rC. Channel sessions idle, helpers archived, check-in disabled. Say "Resume" to restart.
+>
 > **27 Oct, 10:10 UTC:** caption numbers: 17 of 18 shorts collected with written numbers, QA PASS and 1440p versions (Rest Frame 001-006, Light Minute 001-006, Meanwhile, Inside 001, 002, 004, 005, 006 incl. 006's first delivery); Rest Frame and Light Minute vol01 rebuilt (QA PASS). Left: Meanwhile, Inside 003 (helper, ~10:55), its vol01, the studio, then pause.
 >
 > **27 Oct, 08:15 UTC:** caption numbers: 8 of 18 shorts collected with written numbers and QA PASS (Rest Frame 001-004, Light Minute 001-004); Rest Frame 005 (hand-laid record caption) and 006, Light Minute 005-006, Meanwhile, Inside 001-006 rendering (~09:15-10:30). Then the 3 long videos, studio, preview, library; then pause (owner).
