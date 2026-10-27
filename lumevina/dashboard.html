@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Studio">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#F5F1EA">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
   <style>
@@ -32,28 +32,110 @@
       font-weight: 400; line-height: 1.5; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
     .wrap { max-width: 76rem; margin: 0 auto; padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 4rem; }
 
-    header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
-      gap: 1rem; margin-bottom: 0.4rem; }
-    .brand { font-family: var(--font-d); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.03em; color: var(--plum);
-      line-height: 1; }
-    .brand small { display: block; font-family: var(--font-b); font-weight: 400; font-size: 0.62rem;
-      letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-45); margin-top: 0.35rem; }
-    .period { font-size: 0.8rem; color: var(--ink-45); text-align: right; }
-    .period strong { color: var(--ink-70); font-weight: 500; }
-    /* the quick bar (under the demo tag): sticks to the top, scrolls sideways on a phone */
-    .jump { position: sticky; top: 0; z-index: 20; display: flex; gap: 0.45rem; overflow-x: auto; scrollbar-width: none;
-      margin: -1rem calc(-1 * clamp(1rem, 4vw, 2.5rem)) 1.6rem; padding: 0.65rem clamp(1rem, 4vw, 2.5rem);
-      background: var(--ground); background: color-mix(in srgb, var(--ground) 90%, transparent);
-      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--edge); }
-    .jump::-webkit-scrollbar { display: none; }
-    .jump a { flex: none; font-size: 0.84rem; font-weight: 500; color: var(--ink-70); text-decoration: none;
-      padding: 0.5rem 0.95rem; border-radius: 999px; border: 1px solid var(--edge); background: var(--card); }
-    .jump a.go { background: var(--plum); border-color: var(--plum); color: #fff; }
-    .jump a:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
-    .card[id], #priorities { scroll-margin-top: 4.4rem; }
+
+    /* ── the website's frame (css/styles.css): the same header with its links and solid button, the
+       same phone menu (numbered sections, the main action, two quick tiles), the same section heads
+       (a numbered eyebrow and a headline whose second clause steps back) and the same footer, so her
+       side is the same place as the shop, with the owner's sections in the menu. The menu runs from
+       the script at the end of the page, as js/main.js runs it on the site. ── */
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(110% 80% at 15% 0%, rgba(178,150,125,.102), transparent 55%),
+        radial-gradient(110% 80% at 85% 10%, rgba(178,150,125,.076), transparent 55%),
+        radial-gradient(140% 100% at 50% 110%, rgba(178,150,125,.068), transparent 60%); }
+    main, .footer { position: relative; z-index: 1; }
+    svg[hidden] { display: none; }   /* the EV symbol sheet: an svg with hidden still takes its 150px box */
+    .btn { display: inline-block; font: inherit; font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; text-decoration: none;
+      text-align: center; padding: 0.8rem 1.45rem; border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+      transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease; }
+    .btn-solid { background: #161412; color: #FFFFFF; }
+    .btn-solid:hover { background: #4A342A; box-shadow: 0 8px 30px rgba(74,52,42,.16); transform: translateY(-1px); }
+    .btn-ghost { border-color: #161412; color: #161412; background: transparent; }
+    .btn-ghost:hover { background: rgba(22,20,18,.07); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.1rem clamp(1.25rem, 4vw, 3rem); border-bottom: 1px solid transparent;
+      transition: background-color 300ms ease, border-color 300ms ease, padding 300ms ease; }
+    .nav.scrolled { background: rgba(255,255,255,.82); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+      border-bottom-color: rgba(74,52,42,.16); padding-top: 0.8rem; padding-bottom: 0.8rem; }
+    .nav-brand { font-size: 1.28rem; font-weight: 700; color: #0E0D0C; text-decoration: none; line-height: 1;
+      display: flex; flex-direction: column; gap: 0.2rem; letter-spacing: -0.022em; }
+    .nav-ev { font-style: normal; color: #7D5A44; }
+    .nav-brand-sub { font-size: 0.6rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: #7D5A44; }
+    .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+    .nav-links a { font-size: 0.875rem; letter-spacing: -0.01em; text-decoration: none; color: #4A342A; padding: 0.4rem 0;
+      white-space: nowrap; transition: color 200ms ease; }
+    .nav-links a:hover, .nav-links a[aria-current="true"] { color: #0E0D0C; }
+    .nav-links a[aria-current="true"] { box-shadow: inset 0 -1.5px 0 #0E0D0C; }
+    .nav-book, .nav-site { padding: 0.7rem 1.4rem; white-space: nowrap; }
+    .nav-toggle { display: none; flex-direction: column; gap: 6px; background: none; border: 0; padding: 0.75rem 0.5rem; cursor: pointer; }
+    .nav-toggle span { display: block; width: 26px; height: 1.5px; background: #161412; transition: transform 250ms ease; }
+    .nav-toggle[aria-expanded="true"] span:first-child { transform: translateY(3.75px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+    .mobile-menu[hidden], .mm-scrim[hidden] { display: none; }
+    .mm-scrim { position: fixed; inset: 0; z-index: 44; background: rgba(74,52,42,.16); -webkit-tap-highlight-color: transparent; animation: mm-fade 200ms ease both; }
+    .mobile-menu { position: fixed; z-index: 45; top: calc(var(--nav-bottom, 4.6rem) + 0.5rem); right: clamp(1rem, 4vw, 3rem);
+      width: min(22rem, calc(100vw - 2rem)); max-height: calc(100dvh - var(--nav-bottom, 4.6rem) - 1.25rem); overflow-y: auto;
+      overscroll-behavior: contain; display: flex; flex-direction: column; padding: 0.5rem 0.5rem 0.6rem; background: #FFFFFF;
+      border: 1px solid rgba(74,52,42,.16); border-radius: 20px; transform-origin: top right;
+      box-shadow: 0 18px 50px rgba(74,52,42,.18), 0 2px 8px rgba(74,52,42,.06); animation: mm-drop 220ms cubic-bezier(.2,.8,.2,1) both; }
+    .mm-links { display: flex; flex-direction: column; }
+    .mm-links a { display: flex; align-items: baseline; gap: 0.8rem; padding: 0.7rem 0.75rem; border-radius: 12px; font-size: 1.08rem;
+      font-weight: 600; letter-spacing: -0.018em; color: #161412; text-decoration: none; -webkit-tap-highlight-color: transparent;
+      transition: background-color 160ms ease; animation: mm-in 300ms cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 22ms + 30ms); }
+    .mm-links a:hover, .mm-links a:active { background: rgba(178,150,125,.12); }
+    .mm-links a:focus-visible { outline: 2px solid #161412; outline-offset: -2px; }
+    .mm-num { width: 1.3rem; flex: none; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; color: #7D5A44; }
+    .mm-actions { margin-top: 0.4rem; padding: 0.7rem 0.25rem 0; border-top: 1px solid rgba(74,52,42,.09); display: grid; gap: 0.55rem;
+      animation: mm-in 300ms cubic-bezier(.2,.8,.2,1) 150ms both; }
+    .mm-book { width: 100%; padding: 0.85rem 1rem; font-size: 0.98rem; }
+    .mm-quick { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: #FFFFFF; border: 1px solid rgba(74,52,42,.09); border-radius: 14px; overflow: hidden; }
+    .mm-tile { display: flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.75rem 0.5rem; background: none; border: 0;
+      color: #161412; font: inherit; font-size: 0.82rem; font-weight: 500; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .mm-tile + .mm-tile { border-left: 1px solid rgba(74,52,42,.09); }
+    .mm-tile:active, .mm-tile:hover { background: rgba(178,150,125,.1); }
+    .mm-icon { width: 19px; height: 19px; color: #7D5A44; flex: none; }
+    @keyframes mm-drop { from { opacity: 0; transform: translateY(-8px) scale(0.97); } to { opacity: 1; transform: none; } }
+    @keyframes mm-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    @keyframes mm-fade { from { opacity: 0; } to { opacity: 1; } }
+    /* her sections: the site's section rhythm, a little tighter (this is a page she works in) */
+    .dsec { padding: 4.5rem clamp(1rem, 4vw, 2.5rem) 0.5rem; scroll-margin-top: 1rem; }
+    .dsec:first-child { padding-top: 7.2rem; }
+    .dsec .section-inner { max-width: 76rem; margin: 0 auto; }
+    .dsec-head { margin-bottom: 1.8rem; }
+    .eyebrow { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em; color: #161412; margin-bottom: 0.6rem; }
+    .eyebrow[data-idx]::before { content: attr(data-idx); font-weight: 600; font-size: 1.01em; color: #4A342A; margin-right: 0.7em;
+      letter-spacing: -0.022em; font-variant-numeric: tabular-nums; }
+    .display { font-size: clamp(2rem, 4.4vw, 3.3rem); font-weight: 700; line-height: 1.04; letter-spacing: -0.038em; color: #0E0D0C;
+      text-wrap: balance; margin: 0 0 0.7rem; }
+    .display em { color: #7D5A44; font-style: normal; }
+    .section-sub { color: #4A342A; max-width: 40rem; font-size: 1rem; }
+    .section-sub strong { color: #161412; font-weight: 600; }
+    .footer { margin-top: 3rem; border-top: 1px solid rgba(74,52,42,.16); padding: 4rem clamp(1.25rem, 5vw, 3rem) 2.5rem; text-align: center; }
+    .footer-brand { font-size: 1.32rem; font-weight: 700; color: #0E0D0C; margin-bottom: 0.25rem; letter-spacing: -0.022em; }
+    .footer-line { color: #161412; margin-bottom: 1.5rem; font-weight: 600; letter-spacing: -0.022em; }
+    .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-bottom: 1.5rem; }
+    .footer-nav a { font-size: 0.8125rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: #4A342A; }
+    .footer-nav a:hover { color: #0E0D0C; }
+    .footer-fine { font-size: 0.8125rem; color: #7D5A44; }
+    .footer-fine a { color: #0E0D0C; text-underline-offset: 3px; }
+    @media (max-width: 1180px) { .nav-links { gap: 1rem; } .nav-site { display: none; } .nav-book { padding: 0.65rem 1.1rem; } }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav { gap: 0.8rem; }
+      .nav-book { margin-left: auto; }
+      .nav-toggle { display: flex; }
+      .dsec { padding-top: 3.4rem; }
+      .dsec:first-child { padding-top: 6.2rem; }
+    }
+    @media (max-width: 600px) {
+      .nav { gap: 0.55rem; padding-left: 1rem; padding-right: 1rem; }
+      .nav-book { padding: 0.55rem 0.95rem; font-size: 0.82rem; }
+      .mobile-menu { left: 1rem; right: 1rem; width: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { .mobile-menu, .mm-links a, .mm-actions, .mm-scrim { animation: none; } }
+    .card[id], #priorities { scroll-margin-top: 5.6rem; }   /* clear of the fixed header */
     .crm-hint { font-size: 0.85rem; color: var(--plum); background: var(--data-soft); border-radius: 12px; padding: 0.55rem 0.8rem; margin: -0.4rem 0 1rem; }
     .crm-hint[hidden] { display: none; }
-    .demo-tag { display: inline-block; margin: 0.9rem 0 2rem; font-size: 0.72rem; letter-spacing: 0.06em;
+    .demo-tag { display: inline-block; margin: 0.4rem 0 0; font-size: 0.72rem; letter-spacing: 0.06em;
       color: var(--plum); background: var(--data-soft); border: 1px dashed rgba(74, 52, 42, 0.4);
       border-radius: 999px; padding: 0.35rem 0.9rem; }
 
@@ -657,376 +739,482 @@
 </head>
 <body data-palette="#4A342A,#B2967D">
   <svg hidden aria-hidden="true" focusable="false"><symbol id="ev-mark" viewBox="665.7 787.7 342.3 185.4"><path fill="currentColor" d="M669.6 965.8Q679.3 965.8 683.7 964.4Q688.2 963.0 689.7 958.8Q691.3 954.7 691.3 946.1V813.9Q691.3 805.3 689.7 801.3Q688.2 797.3 683.6 795.7Q679.0 794.2 669.6 794.2Q668.7 794.2 668.7 792.4Q668.7 790.7 669.6 790.7H788.4Q791.3 790.7 791.3 793.3L791.9 830.4Q791.9 831.0 790.3 831.2Q788.7 831.3 788.4 830.4Q781.6 798.2 749.0 798.2H737.3Q726.7 798.2 722.6 801.9Q718.4 805.6 718.4 814.4V945.0Q718.4 954.4 722.0 958.1Q725.6 961.8 734.7 961.8H748.7Q787.0 961.8 797.3 925.0Q797.3 924.4 798.7 924.4Q800.7 924.4 800.7 925.3Q797.9 947.0 797.9 965.0Q797.9 967.3 797.0 968.3Q796.1 969.3 793.6 969.3H669.6Q668.7 969.3 668.7 967.6Q668.7 965.8 669.6 965.8ZM745.6 880.1H705.6V872.7H745.9Q777.3 872.7 777.3 851.6Q777.3 850.7 778.9 850.7Q780.4 850.7 780.4 851.6L780.1 876.4L780.4 889.9Q781.0 899.0 781.0 904.7Q781.0 905.3 779.3 905.3Q777.6 905.3 777.6 904.7Q777.6 880.1 745.6 880.1Z M1004.1 794.2Q994.1 794.2 985.5 801.9Q977.0 809.6 971.5 824.2L915.8 969.0Q915.5 970.1 912.7 970.1Q909.8 970.1 909.5 969.0L837.3 814.4Q832.1 803.9 827.0 799.0Q821.9 794.2 814.7 794.2Q813.9 794.2 813.9 792.4Q813.9 790.7 814.7 790.7L822.1 791.0Q829.0 791.6 836.4 791.6Q856.4 791.6 872.4 791.0Q877.0 790.7 883.8 790.7Q884.7 790.7 884.7 792.4Q884.7 794.2 883.8 794.2Q875.3 794.2 870.7 797.3Q866.1 800.4 866.1 806.4Q866.1 811.6 869.0 817.3L924.1 936.7L912.4 956.4L963.8 823.0Q966.4 816.2 966.4 810.7Q966.4 802.7 961.1 798.4Q955.8 794.2 945.5 794.2Q944.7 794.2 944.7 792.4Q944.7 790.7 945.5 790.7L958.7 791.0Q970.1 791.6 979.0 791.6Q984.4 791.6 992.4 791.0L1004.1 790.7Q1005.0 790.7 1005.0 792.4Q1005.0 794.2 1004.1 794.2Z"/></symbol></svg>
-  <div class="wrap">
-    <header>
-      <div class="brand">Lumevina<small>Owner Dashboard</small></div>
-      <div class="period">Reporting period<br><strong id="period-range">Jan – Sep 2026</strong></div>
-    </header>
-    <span class="demo-tag">Sample data — a preview of your live command center once bookings run through the site &amp; app</span>
-
-    <!-- ── the quick bar: her everyday tools one tap away, held at the top on a long scroll ── -->
-    <nav class="jump" aria-label="Go to">
-      <a class="go" href="#checkout">Check out a client</a>
-      <a href="#priorities">Today</a>
+  <!-- ── the website's header (index.html), with the owner's sections: the same brand, link row and solid
+       button (Check out, where the site has Book now), and the same menu on a phone ── -->
+  <header class="nav" id="top">
+    <a class="nav-brand" href="#top"><span class="nav-word">Lum<em class="nav-ev">ev</em>ina</span><span class="nav-brand-sub">Owner Studio</span></a>
+    <nav class="nav-links" aria-label="Your studio">
+      <a href="#today">Today</a>
       <a href="#clients">Clients</a>
-      <a href="#client-questions">Questions</a>
-      <a href="#inventory">Inventory</a>
+      <a href="#questions">Questions</a>
+      <a href="#shelf">Shelf</a>
       <a href="#books">Books</a>
+      <a href="#growth">Members</a>
+      <a href="#settings">Settings</a>
     </nav>
+    <a class="btn btn-ghost nav-site" data-site-link href="index.html">Your website</a>
+    <a class="btn btn-solid nav-book" href="#checkout">Check out</a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
 
-    <!-- ── Today: her priorities, ranked (js/studio-priorities.js; PRIORITIES.md) ── -->
-    <div class="card pr-card" id="priorities"></div>
-
-    <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
-         client, waitlist (js/studio-appointments.js). In v2 it stays hidden
-         and Settle visits below does the after-visit job. ── -->
-    <div class="card ap-card" id="appointments" hidden></div>
-
-    <!-- ── Client CRM ── -->
-    <div class="card crm-card" id="clients">
-      <div class="crm-head">
-        <div>
-          <h2>Clients</h2>
-          <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
-          <p class="crm-hint" id="crm-hint" hidden>Tap <b>Check out</b> on the client to add what they're taking and charge them, or <b>New sale</b> for someone who isn't listed.</p>
-        </div>
-        <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
-        <button type="button" class="bk-export" id="crm-sale-new">New sale</button>
-      </div>
-      <!-- a sale to someone not in the list yet (js/studio-sale.js) -->
-      <div class="crm-sale-top" id="crm-sale-top" hidden></div>
-      <form class="crm-new" id="crm-new" autocomplete="off">
-        <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
-        <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
-        <button class="bk-export" type="submit">Write a skin plan</button>
-        <p class="crm-new-status" id="crm-new-status" role="status"></p>
-      </form>
-      <ul class="crm-list" id="crm-list"></ul>
-      <div class="ap-import" id="clients-import" hidden></div>
-    </div>
-
-    <!-- ── Consults: the gate on the actives, and the online Skin Consult (js/studio-consults.js) ── -->
-    <div class="card cs-card" id="consults"></div>
-
-    <!-- ── Lumevina Studio: this dashboard as an app on her phone ── -->
-    <div class="card studio-card" id="studio">
-      <h2>Lumevina Studio</h2>
-      <p class="sub" id="st-sub">This dashboard, as an app on your phone: new orders, client questions and low stock arrive as notifications, your priorities for the day every morning, and a short email comes each morning with what's waiting.</p>
-      <ol class="st-steps" id="st-steps">
-        <li>On your iPhone, open this page in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
-        <li>Open <strong>Studio</strong> from your home screen.</li>
-        <li>Add your studio key below once, then tap <strong>Turn on notifications</strong> and allow them.</li>
-      </ol>
-      <div class="st-row">
-        <label>Studio key (once, on this device)<input id="st-key" type="password" autocomplete="off" placeholder="the long phrase only you know"></label>
-        <button class="bk-export" id="st-key-save" type="button">Save key</button>
-      </div>
-      <div class="st-row">
-        <button class="bk-export" id="st-push" type="button">Turn on notifications</button>
-        <button class="crm-plan-btn" id="st-test" type="button">Send a test</button>
-        <p class="st-status" id="st-status" role="status"></p>
-      </div>
-      <h3 style="font-size:0.95rem;margin:0.6rem 0 0.2rem">Recent</h3>
-      <ul class="st-feed" id="st-feed"></ul>
-    </div>
-
-    <h2>This month at a glance</h2>
-    <p class="sub">September 2026, compared with the month before.</p>
-    <div class="kpis" id="kpis"></div>
-
-    <div class="grid2">
-      <div class="card">
-        <h2>Revenue, month by month</h2>
-        <p class="sub">Deposits + product sales. The dashed line marks your website launch.</p>
-        <div id="chart-revenue"></div>
-      </div>
-      <div class="card">
-        <h2>Rebooking rate</h2>
-        <p class="sub">Share of clients who return — before vs after Glow Rewards.</p>
-        <div id="chart-retention"></div>
+  <div class="mm-scrim" hidden></div>
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Menu" hidden>
+    <!-- her sections, in page order (numbers match each section's eyebrow) -->
+    <nav class="mm-links" aria-label="Menu">
+      <a href="#today" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Today</a>
+      <a href="#clients" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Clients</a>
+      <a href="#questions" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>Client questions</a>
+      <a href="#shelf" style="--i:3"><span class="mm-num" aria-hidden="true">04</span>Shelf &amp; shipping</a>
+      <a href="#books" style="--i:4"><span class="mm-num" aria-hidden="true">05</span>Books</a>
+      <a href="#growth" style="--i:5"><span class="mm-num" aria-hidden="true">06</span>Members &amp; gifts</a>
+      <a href="#settings" style="--i:6"><span class="mm-num" aria-hidden="true">07</span>Settings</a>
+    </nav>
+    <div class="mm-actions">
+      <a class="btn btn-solid mm-book" href="#checkout">Check out a client</a>
+      <div class="mm-quick">
+        <button class="mm-tile" type="button" data-new-sale><svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="mm-label">New sale</span></button>
+        <a class="mm-tile" data-site-link href="index.html"><svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg><span class="mm-label">Your website</span></a>
       </div>
     </div>
-
-    <div class="grid2">
-      <div class="card">
-        <h2>Where bookings come from</h2>
-        <p class="sub">Website vs app, since the app launched.</p>
-        <div class="legend">
-          <span><i class="swatch" style="background:#4A342A"></i> App</span>
-          <span><i class="swatch" style="background:#B2967D"></i> Website</span>
-        </div>
-        <div id="chart-source"></div>
-      </div>
-      <div class="card">
-        <h2>Glow Rewards engagement</h2>
-        <p class="sub">Loyalty is what turns first visits into regulars.</p>
-        <div class="mini" id="rewards"></div>
-        <p class="sub" style="margin:1rem 0 0">No-shows fell to <strong style="color:var(--good)">6%</strong>
-        (from 18%) — deposits at booking are doing the work.</p>
-      </div>
-    </div>
-
-    <!-- ── Most-booked services + top products ── -->
-    <div class="grid2">
-      <div class="card">
-        <h2>Most-booked services</h2>
-        <p class="sub">What's carrying the calendar — by number of bookings.</p>
-        <div id="top-services"></div>
-      </div>
-      <div class="card">
-        <h2>Top-selling products</h2>
-        <p class="sub">Best sellers — lights up when you add products to the shop.</p>
-        <div id="top-products"></div>
-      </div>
-    </div>
-
-    <!-- ── New-member retention + product sales ── -->
-    <div class="grid2">
-      <div class="card">
-        <h2>New-member retention</h2>
-        <p class="sub">Of clients whose first visit was recent, how many came back.</p>
-        <div class="retention" id="retention"></div>
-      </div>
-      <div class="card">
-        <h2>Product sales</h2>
-        <p class="sub">Retail revenue — lights up when you add products to the shop.</p>
-        <div id="product-sales"></div>
-      </div>
-    </div>
-
-    <!-- ── Client questions (handed over by Ask Lumevina, js/ask.js) ── -->
-    <div class="card" id="client-questions">
-      <div class="crm-head">
-        <div>
-          <h2>Client questions</h2>
-          <p class="sub">Ask Lumevina answers the everyday questions on the website and app, any time. Anything
-          personal lands here with a drafted reply: check it, change anything, and send. Members are promised
-          an answer within 24 hours, everyone else within 2 days.</p>
-        </div>
-      </div>
-      <div class="bk-tiles" id="cq-tiles"></div>
-      <ul class="cq-list" id="cq-list"></ul>
-      <details class="cq-done" id="cq-done" hidden><summary></summary><ul class="cq-list" id="cq-done-list"></ul></details>
-    </div>
-
-    <!-- ── Teach the chat: her replies become answers for everyone, once she approves (js/studio-learn.js) ── -->
-    <div class="card" id="teach"></div>
-
-    <!-- ── Settle visits (collect the in-person balance). v2 only: in v3,
-         Appointments above checks out each visit. ── -->
-    <div class="card" id="settle">
-      <div class="crm-head">
-        <div>
-          <h2>Settle visits</h2>
-          <p class="sub">After each appointment, record the balance paid in person — cash or
-          card — or mark a no-show. This is what closes the invoice.</p>
-        </div>
-      </div>
-      <div class="bk-tiles" id="settle-tiles"></div>
-      <ul class="settle-list" id="settle-list"></ul>
-    </div>
-
-    <!-- ── Shipping: what's going out by mail (js/shipping.js) ── -->
-    <div class="card" id="shipping">
-      <div class="crm-head">
-        <div>
-          <h2>Shipping</h2>
-          <p class="sub">Shelf orders, Glow Routine boxes and Skin School kits going out by mail. Pack each one
-          in the package shown, make the labels in Pirate Ship from the download, then mark it shipped with
-          the tracking number and what the label cost. The books then use the real postage.</p>
-        </div>
-        <div class="bk-actions">
-          <button class="bk-export bk-export--ghost" id="sh-slips" type="button">Packing slips</button>
-          <button class="bk-export" id="sh-csv" type="button">Download for Pirate Ship</button>
-        </div>
-      </div>
-      <p class="sh-status" id="sh-status" role="status" aria-live="polite"></p>
-      <div class="bk-tiles" id="sh-tiles"></div>
-      <ul class="sh-list" id="sh-list"></ul>
-      <details class="cq-done" id="sh-soon" hidden><summary></summary><ul class="sh-list" id="sh-soon-list"></ul></details>
-      <details class="cq-done" id="sh-done" hidden><summary></summary><ul class="sh-list" id="sh-done-list"></ul></details>
-      <p class="sub sh-key"><strong>Bubble mailer</strong>, 6 × 10 in: one plastic bottle or tube.
-      <strong>Small box</strong>, 6 × 6 × 4 in: two or three items, or anything glass, with a pump or a dropper.
-      <strong>Medium box</strong>, 10 × 8 × 4 in: sets and kits. Every bottle goes in a zip bag with a folded paper towel.
-      Postage shown is an estimate from USPS's 2026 prices; Pirate Ship shows the exact price before you buy.</p>
-    </div>
-
-    <!-- ── Bookkeeping & profit ── -->
-    <div class="card" id="books">
-      <div class="crm-head">
-        <div>
-          <h2>Bookkeeping &amp; profit</h2>
-          <p class="sub">Everything that came in, what it cost you, and what you keep: services, membership
-          dues, retail, gift certificates, card fees, product cost and the Founding Five kits.</p>
-        </div>
-        <div class="bk-actions">
-          <button class="bk-export bk-export--ghost" id="bk-exp-toggle">+ Log expense</button>
-          <button class="bk-export" id="bk-csv">Download tax CSV</button>
-        </div>
-      </div>
-      <form class="inv-form bk-exp-form" id="bk-exp-form" hidden>
-        <input type="date" id="bk-exp-date" aria-label="Date">
-        <input type="text" id="bk-exp-what" placeholder="What (e.g. Le Mieux backbar order)" required>
-        <select id="bk-exp-cat" aria-label="Category"></select>
-        <input type="number" id="bk-exp-amt" placeholder="Amount $" min="0" step="0.01" required>
-        <button type="submit" class="bk-export">Add</button>
-      </form>
-      <div class="bk-tiles" id="bk-tiles"></div>
-      <div class="bk-split" id="bk-split"></div>
-      <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
-      <p class="sub" style="margin-top:0.9rem">Card fees are estimated at 2.9% + 30¢ a charge (Stripe).
-      A balance counts once you mark the visit paid under Settle visits. Buying retail stock isn't an
-      expense here: its cost counts when a product sells or goes out in a Founding Five kit, so nothing
-      is counted twice. Log the product you use in treatments as <strong>Treatment supplies</strong>.</p>
-    </div>
-
-    <!-- ── Glow Membership ── -->
-    <div class="card" id="members">
-      <div class="crm-head">
-        <div>
-          <h2>Glow Membership</h2>
-          <p class="sub"><strong>Monthly recurring revenue</strong> is what memberships bring in
-          before the month starts. <strong>Facials owed</strong> are banked visits members have
-          paid for and not yet used. With two waiting, a member isn't billed until they book one.</p>
-        </div>
-      </div>
-      <div class="bk-tiles" id="mem-tiles"></div>
-      <p class="sub mem-owed-note" id="mem-owed-note"></p>
-      <div class="xm">
-        <span class="xm-k">Extra Mondays on the website</span>
-        <div class="xm-sw" role="radiogroup" aria-label="Extra Mondays on the website">
-          <button type="button" role="radio" data-every="0">Off</button>
-          <button type="button" role="radio" data-every="2">Every other week</button>
-          <button type="button" role="radio" data-every="1">Every week</button>
-        </div>
-        <p class="xm-next" id="xm-next"></p>
-      </div>
-      <div class="mem-mix" id="mem-mix"></div>
-      <div class="mem-five" id="mem-five"></div>
-      <div class="mem-launch" id="mem-launch"></div>
-      <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
-      <div id="members-live" hidden></div>
-    </div>
-
-    <!-- ── Gift certificates ── -->
-    <div class="card">
-      <div class="crm-head">
-        <div>
-          <h2>Gift certificates</h2>
-          <p class="sub"><strong>Outstanding</strong> is money you've collected but not yet
-          redeemed — a liability (service you still owe) until the code is used.</p>
-        </div>
-        <button class="bk-export" id="gc-csv">Download CSV</button>
-      </div>
-
-      <!-- at the visit: spend a certificate against the bill (js/giftcards.js → spend) -->
-      <div class="gc-use">
-        <h3 class="gc-use-title">Use a gift certificate</h3>
-        <p class="sub">At the visit, enter the code and what the visit comes to. The certificate
-        covers what it can: if it's worth more, the rest stays on it for next time; if the visit
-        costs more, the client pays only the difference.</p>
-        <form class="goal-form gc-use-form" id="gc-use-form" autocomplete="off">
-          <label>Code<input type="text" id="gc-code" placeholder="LUM-XXXX-XXXX" autocapitalize="characters" spellcheck="false" required></label>
-          <label>Visit total ($)<input type="number" id="gc-bill" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label>
-          <label>Note (optional)<input type="text" id="gc-note" placeholder="e.g. Custom facial" maxlength="200"></label>
-          <label class="gc-key" id="gc-key-row" hidden>Studio key<input type="password" id="gc-key" placeholder="From the setup guide"></label>
-          <button type="submit" class="bk-export" id="gc-apply" disabled>Use certificate</button>
-        </form>
-        <p class="gc-use-preview" id="gc-preview" aria-live="polite"></p>
-        <p class="gc-use-result" id="gc-result" role="status"></p>
-      </div>
-
-      <div class="bk-tiles" id="gc-tiles"></div>
-      <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
-      <p class="sub" style="margin-top:0.9rem"><strong>For your accountant:</strong> gift-card
-      sales are a liability, not income, until redeemed. Bookkeeping above shows them as money in
-      when sold (cash basis) on their own line, so your accountant can move them if Lumevina books
-      them as a liability instead. Gifts members send from their plan aren't counted: those were
-      paid for through dues.</p>
-    </div>
-
-    <!-- ── Skin School Live ── -->
-    <div class="card">
-      <div class="crm-head">
-        <div>
-          <h2>Skin School Live</h2>
-          <p class="sub">Classes booked on the Skin School page. They run on Sundays and Monday
-          evenings, when the studio is closed, so they never take a facial slot. <strong>Kept</strong>
-          is what's left after card fees and each guest's kit, journal and drinks.</p>
-        </div>
-      </div>
-      <div class="bk-tiles" id="cls-tiles"></div>
-      <div class="bk-table-wrap"><table class="bk-table" id="cls-table"></table></div>
-    </div>
-
-    <!-- ── Goals ── -->
-    <div class="card">
-      <div class="crm-head">
-        <div>
-          <h2>Goals</h2>
-          <p class="sub">Set monthly targets — progress pulls from your real numbers this month.</p>
-        </div>
-        <button class="bk-export" id="goals-edit">Edit targets</button>
-      </div>
-      <div class="goal-list" id="goal-list"></div>
-      <form class="goal-form" id="goal-form" hidden>
-        <div class="goal-form-grid">
-          <label>Revenue target ($)<input type="number" id="g-revenue" min="0" step="50"></label>
-          <label>Bookings target<input type="number" id="g-bookings" min="0" step="1"></label>
-          <label>New clients target<input type="number" id="g-newclients" min="0" step="1"></label>
-          <label>Rebooking rate target (%)<input type="number" id="g-rebook" min="0" max="100" step="1"></label>
-        </div>
-        <button type="submit" class="bk-export">Save targets</button>
-      </form>
-    </div>
-
-    <!-- ── Inventory ── -->
-    <div class="card" id="inventory">
-      <div class="crm-head">
-        <div>
-          <h2>Inventory</h2>
-          <p class="sub">Your shelf: the same count the website shows. Online orders take stock off by themselves; tap Sell for an in-person sale, or − / + after a recount.</p>
-        </div>
-        <button class="bk-export" id="inv-add-toggle">+ Add product</button>
-      </div>
-      <form class="inv-form" id="inv-form" hidden>
-        <input type="text" id="inv-name" placeholder="Product name" required>
-        <input type="number" id="inv-stock" placeholder="Stock" min="0" step="1" required>
-        <input type="number" id="inv-cost" placeholder="Cost $" min="0" step="0.01">
-        <input type="number" id="inv-price" placeholder="Retail $" min="0" step="0.01" required>
-        <button type="submit" class="bk-export">Add</button>
-      </form>
-      <p class="sub" id="inv-msg" role="status" style="color:var(--bad)"></p>
-      <div class="bk-tiles" id="inv-tiles"></div>
-      <div class="bk-table-wrap"><table class="bk-table" id="inv-table"></table></div>
-      <p class="sub" id="inv-sold" style="margin-top:0.9rem"></p>
-      <p class="sub" style="margin-top:0.4rem">Online sales decrement stock automatically; tap
-      <strong>Sell</strong> to record an in-person sale. Low-stock is flagged at 3 or fewer.</p>
-    </div>
-
-    <!-- ── Calendar sync ── -->
-    <div class="card">
-      <div class="crm-head">
-        <div>
-          <h2>Calendar sync</h2>
-          <p class="sub">Keep every appointment in your own Google or Apple calendar.</p>
-        </div>
-        <button class="bk-export" id="cal-ics">Download calendar (.ics)</button>
-      </div>
-      <p class="cal-note" id="cal-note"></p>
-    </div>
-
-    <div class="proof">
-      <h2>Why this sells</h2>
-      <p>These are the numbers other beauty pros will pay to reproduce: <strong>rebooking
-      nearly doubled</strong>, <strong>no-shows cut by two-thirds</strong>, and a growing share
-      of bookings coming through an app you own outright. When these are your <em>real</em>
-      figures over a few months, this screen becomes the whole pitch — proof beats promises.</p>
-    </div>
-
-    <p class="foot">Lumevina Aesthetics Spa · figures shown are illustrative sample data ·
-    the live version reads from your bookings, Stripe, and Glow Rewards.</p>
   </div>
+
+
+  <main>
+    <section class="dsec" id="today" aria-labelledby="today-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="01">Today</p>
+          <h2 class="display" id="today-h">What needs you, <em>in order.</em></h2>
+          <span class="demo-tag">Sample data — a preview of your live command center once bookings run through the site &amp; app</span>
+        </div>
+
+        <!-- ── Today: her priorities, ranked (js/studio-priorities.js; PRIORITIES.md) ── -->
+        <div class="card pr-card" id="priorities"></div>
+
+        <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
+             client, waitlist (js/studio-appointments.js). In v2 it stays hidden
+             and Settle visits below does the after-visit job. ── -->
+        <div class="card ap-card" id="appointments" hidden></div>
+
+        <!-- ── Settle visits (collect the in-person balance). v2 only: in v3,
+             Appointments above checks out each visit. ── -->
+        <div class="card" id="settle">
+          <div class="crm-head">
+            <div>
+              <h2>Settle visits</h2>
+              <p class="sub">After each appointment, record the balance paid in person — cash or
+              card — or mark a no-show. This is what closes the invoice.</p>
+            </div>
+          </div>
+          <div class="bk-tiles" id="settle-tiles"></div>
+          <ul class="settle-list" id="settle-list"></ul>
+        </div>
+
+        <!-- ── Consults: the gate on the actives, and the online Skin Consult (js/studio-consults.js) ── -->
+        <div class="card cs-card" id="consults"></div>
+      </div>
+    </section>
+
+    <section class="dsec" id="clients" aria-labelledby="clients-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="02">Clients</p>
+          <h2 class="display" id="clients-h">Every client, <em>one tap from checkout.</em></h2>
+        </div>
+
+        <!-- ── Client CRM ── -->
+        <div class="card crm-card">
+          <div class="crm-head">
+            <div>
+              <h2>Clients</h2>
+              <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
+              <p class="crm-hint" id="crm-hint" hidden>Tap <b>Check out</b> on the client to add what they're taking and charge them, or <b>New sale</b> for someone who isn't listed.</p>
+            </div>
+            <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
+            <button type="button" class="bk-export" id="crm-sale-new">New sale</button>
+          </div>
+          <!-- a sale to someone not in the list yet (js/studio-sale.js) -->
+          <div class="crm-sale-top" id="crm-sale-top" hidden></div>
+          <form class="crm-new" id="crm-new" autocomplete="off">
+            <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
+            <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
+            <button class="bk-export" type="submit">Write a skin plan</button>
+            <p class="crm-new-status" id="crm-new-status" role="status"></p>
+          </form>
+          <ul class="crm-list" id="crm-list"></ul>
+          <div class="ap-import" id="clients-import" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dsec" id="questions" aria-labelledby="questions-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="03">Client questions</p>
+          <h2 class="display" id="questions-h">Their questions, <em>your answers.</em></h2>
+        </div>
+
+        <!-- ── Client questions (handed over by Ask Lumevina, js/ask.js) ── -->
+        <div class="card" id="client-questions">
+          <div class="crm-head">
+            <div>
+              <h2>Client questions</h2>
+              <p class="sub">Ask Lumevina answers the everyday questions on the website and app, any time. Anything
+              personal lands here with a drafted reply: check it, change anything, and send. Members are promised
+              an answer within 24 hours, everyone else within 2 days.</p>
+            </div>
+          </div>
+          <div class="bk-tiles" id="cq-tiles"></div>
+          <ul class="cq-list" id="cq-list"></ul>
+          <details class="cq-done" id="cq-done" hidden><summary></summary><ul class="cq-list" id="cq-done-list"></ul></details>
+        </div>
+
+        <!-- ── Teach the chat: her replies become answers for everyone, once she approves (js/studio-learn.js) ── -->
+        <div class="card" id="teach"></div>
+      </div>
+    </section>
+
+    <section class="dsec" id="shelf" aria-labelledby="shelf-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="04">Shelf &amp; shipping</p>
+          <h2 class="display" id="shelf-h">Your shelf, <em>always counted.</em></h2>
+        </div>
+
+        <!-- ── Inventory ── -->
+        <div class="card" id="inventory">
+          <div class="crm-head">
+            <div>
+              <h2>Inventory</h2>
+              <p class="sub">Your shelf: the same count the website shows. Online orders take stock off by themselves; tap Sell for an in-person sale, or − / + after a recount.</p>
+            </div>
+            <button class="bk-export" id="inv-add-toggle">+ Add product</button>
+          </div>
+          <form class="inv-form" id="inv-form" hidden>
+            <input type="text" id="inv-name" placeholder="Product name" required>
+            <input type="number" id="inv-stock" placeholder="Stock" min="0" step="1" required>
+            <input type="number" id="inv-cost" placeholder="Cost $" min="0" step="0.01">
+            <input type="number" id="inv-price" placeholder="Retail $" min="0" step="0.01" required>
+            <button type="submit" class="bk-export">Add</button>
+          </form>
+          <p class="sub" id="inv-msg" role="status" style="color:var(--bad)"></p>
+          <div class="bk-tiles" id="inv-tiles"></div>
+          <div class="bk-table-wrap"><table class="bk-table" id="inv-table"></table></div>
+          <p class="sub" id="inv-sold" style="margin-top:0.9rem"></p>
+          <p class="sub" style="margin-top:0.4rem">Online sales decrement stock automatically; tap
+          <strong>Sell</strong> to record an in-person sale. Low-stock is flagged at 3 or fewer.</p>
+        </div>
+
+        <!-- ── Shipping: what's going out by mail (js/shipping.js) ── -->
+        <div class="card" id="shipping">
+          <div class="crm-head">
+            <div>
+              <h2>Shipping</h2>
+              <p class="sub">Shelf orders, Glow Routine boxes and Skin School kits going out by mail. Pack each one
+              in the package shown, make the labels in Pirate Ship from the download, then mark it shipped with
+              the tracking number and what the label cost. The books then use the real postage.</p>
+            </div>
+            <div class="bk-actions">
+              <button class="bk-export bk-export--ghost" id="sh-slips" type="button">Packing slips</button>
+              <button class="bk-export" id="sh-csv" type="button">Download for Pirate Ship</button>
+            </div>
+          </div>
+          <p class="sh-status" id="sh-status" role="status" aria-live="polite"></p>
+          <div class="bk-tiles" id="sh-tiles"></div>
+          <ul class="sh-list" id="sh-list"></ul>
+          <details class="cq-done" id="sh-soon" hidden><summary></summary><ul class="sh-list" id="sh-soon-list"></ul></details>
+          <details class="cq-done" id="sh-done" hidden><summary></summary><ul class="sh-list" id="sh-done-list"></ul></details>
+          <p class="sub sh-key"><strong>Bubble mailer</strong>, 6 × 10 in: one plastic bottle or tube.
+          <strong>Small box</strong>, 6 × 6 × 4 in: two or three items, or anything glass, with a pump or a dropper.
+          <strong>Medium box</strong>, 10 × 8 × 4 in: sets and kits. Every bottle goes in a zip bag with a folded paper towel.
+          Postage shown is an estimate from USPS's 2026 prices; Pirate Ship shows the exact price before you buy.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dsec" id="books" aria-labelledby="books-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="05">Books</p>
+          <h2 class="display" id="books-h">The month, <em>in numbers.</em></h2>
+          <p class="section-sub">Reporting period <strong id="period-range">Jan – Sep 2026</strong></p>
+        </div>
+
+        <h2>This month at a glance</h2>
+        <p class="sub">September 2026, compared with the month before.</p>
+        <div class="kpis" id="kpis"></div>
+
+        <div class="grid2">
+          <div class="card">
+            <h2>Revenue, month by month</h2>
+            <p class="sub">Deposits + product sales. The dashed line marks your website launch.</p>
+            <div id="chart-revenue"></div>
+          </div>
+          <div class="card">
+            <h2>Rebooking rate</h2>
+            <p class="sub">Share of clients who return — before vs after Glow Rewards.</p>
+            <div id="chart-retention"></div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h2>Where bookings come from</h2>
+            <p class="sub">Website vs app, since the app launched.</p>
+            <div class="legend">
+              <span><i class="swatch" style="background:#4A342A"></i> App</span>
+              <span><i class="swatch" style="background:#B2967D"></i> Website</span>
+            </div>
+            <div id="chart-source"></div>
+          </div>
+          <div class="card">
+            <h2>Glow Rewards engagement</h2>
+            <p class="sub">Loyalty is what turns first visits into regulars.</p>
+            <div class="mini" id="rewards"></div>
+            <p class="sub" style="margin:1rem 0 0">No-shows fell to <strong style="color:var(--good)">6%</strong>
+            (from 18%) — deposits at booking are doing the work.</p>
+          </div>
+        </div>
+
+        <!-- ── Most-booked services + top products ── -->
+        <div class="grid2">
+          <div class="card">
+            <h2>Most-booked services</h2>
+            <p class="sub">What's carrying the calendar — by number of bookings.</p>
+            <div id="top-services"></div>
+          </div>
+          <div class="card">
+            <h2>Top-selling products</h2>
+            <p class="sub">Best sellers — lights up when you add products to the shop.</p>
+            <div id="top-products"></div>
+          </div>
+        </div>
+
+        <!-- ── New-member retention + product sales ── -->
+        <div class="grid2">
+          <div class="card">
+            <h2>New-member retention</h2>
+            <p class="sub">Of clients whose first visit was recent, how many came back.</p>
+            <div class="retention" id="retention"></div>
+          </div>
+          <div class="card">
+            <h2>Product sales</h2>
+            <p class="sub">Retail revenue — lights up when you add products to the shop.</p>
+            <div id="product-sales"></div>
+          </div>
+        </div>
+
+        <!-- ── Bookkeeping & profit ── -->
+        <div class="card">
+          <div class="crm-head">
+            <div>
+              <h2>Bookkeeping &amp; profit</h2>
+              <p class="sub">Everything that came in, what it cost you, and what you keep: services, membership
+              dues, retail, gift certificates, card fees, product cost and the Founding Five kits.</p>
+            </div>
+            <div class="bk-actions">
+              <button class="bk-export bk-export--ghost" id="bk-exp-toggle">+ Log expense</button>
+              <button class="bk-export" id="bk-csv">Download tax CSV</button>
+            </div>
+          </div>
+          <form class="inv-form bk-exp-form" id="bk-exp-form" hidden>
+            <input type="date" id="bk-exp-date" aria-label="Date">
+            <input type="text" id="bk-exp-what" placeholder="What (e.g. Le Mieux backbar order)" required>
+            <select id="bk-exp-cat" aria-label="Category"></select>
+            <input type="number" id="bk-exp-amt" placeholder="Amount $" min="0" step="0.01" required>
+            <button type="submit" class="bk-export">Add</button>
+          </form>
+          <div class="bk-tiles" id="bk-tiles"></div>
+          <div class="bk-split" id="bk-split"></div>
+          <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
+          <p class="sub" style="margin-top:0.9rem">Card fees are estimated at 2.9% + 30¢ a charge (Stripe).
+          A balance counts once you mark the visit paid under Settle visits. Buying retail stock isn't an
+          expense here: its cost counts when a product sells or goes out in a Founding Five kit, so nothing
+          is counted twice. Log the product you use in treatments as <strong>Treatment supplies</strong>.</p>
+        </div>
+
+        <div class="proof">
+          <h2>Why this sells</h2>
+          <p>These are the numbers other beauty pros will pay to reproduce: <strong>rebooking
+          nearly doubled</strong>, <strong>no-shows cut by two-thirds</strong>, and a growing share
+          of bookings coming through an app you own outright. When these are your <em>real</em>
+          figures over a few months, this screen becomes the whole pitch — proof beats promises.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dsec" id="growth" aria-labelledby="growth-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="06">Members &amp; gifts</p>
+          <h2 class="display" id="growth-h">Members, gifts <em>and goals.</em></h2>
+        </div>
+
+        <!-- ── Glow Membership ── -->
+        <div class="card" id="members">
+          <div class="crm-head">
+            <div>
+              <h2>Glow Membership</h2>
+              <p class="sub"><strong>Monthly recurring revenue</strong> is what memberships bring in
+              before the month starts. <strong>Facials owed</strong> are banked visits members have
+              paid for and not yet used. With two waiting, a member isn't billed until they book one.</p>
+            </div>
+          </div>
+          <div class="bk-tiles" id="mem-tiles"></div>
+          <p class="sub mem-owed-note" id="mem-owed-note"></p>
+          <div class="xm">
+            <span class="xm-k">Extra Mondays on the website</span>
+            <div class="xm-sw" role="radiogroup" aria-label="Extra Mondays on the website">
+              <button type="button" role="radio" data-every="0">Off</button>
+              <button type="button" role="radio" data-every="2">Every other week</button>
+              <button type="button" role="radio" data-every="1">Every week</button>
+            </div>
+            <p class="xm-next" id="xm-next"></p>
+          </div>
+          <div class="mem-mix" id="mem-mix"></div>
+          <div class="mem-five" id="mem-five"></div>
+          <div class="mem-launch" id="mem-launch"></div>
+          <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
+          <div id="members-live" hidden></div>
+        </div>
+
+        <!-- ── Gift certificates ── -->
+        <div class="card">
+          <div class="crm-head">
+            <div>
+              <h2>Gift certificates</h2>
+              <p class="sub"><strong>Outstanding</strong> is money you've collected but not yet
+              redeemed — a liability (service you still owe) until the code is used.</p>
+            </div>
+            <button class="bk-export" id="gc-csv">Download CSV</button>
+          </div>
+
+          <!-- at the visit: spend a certificate against the bill (js/giftcards.js → spend) -->
+          <div class="gc-use">
+            <h3 class="gc-use-title">Use a gift certificate</h3>
+            <p class="sub">At the visit, enter the code and what the visit comes to. The certificate
+            covers what it can: if it's worth more, the rest stays on it for next time; if the visit
+            costs more, the client pays only the difference.</p>
+            <form class="goal-form gc-use-form" id="gc-use-form" autocomplete="off">
+              <label>Code<input type="text" id="gc-code" placeholder="LUM-XXXX-XXXX" autocapitalize="characters" spellcheck="false" required></label>
+              <label>Visit total ($)<input type="number" id="gc-bill" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label>
+              <label>Note (optional)<input type="text" id="gc-note" placeholder="e.g. Custom facial" maxlength="200"></label>
+              <label class="gc-key" id="gc-key-row" hidden>Studio key<input type="password" id="gc-key" placeholder="From the setup guide"></label>
+              <button type="submit" class="bk-export" id="gc-apply" disabled>Use certificate</button>
+            </form>
+            <p class="gc-use-preview" id="gc-preview" aria-live="polite"></p>
+            <p class="gc-use-result" id="gc-result" role="status"></p>
+          </div>
+
+          <div class="bk-tiles" id="gc-tiles"></div>
+          <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
+          <p class="sub" style="margin-top:0.9rem"><strong>For your accountant:</strong> gift-card
+          sales are a liability, not income, until redeemed. Bookkeeping above shows them as money in
+          when sold (cash basis) on their own line, so your accountant can move them if Lumevina books
+          them as a liability instead. Gifts members send from their plan aren't counted: those were
+          paid for through dues.</p>
+        </div>
+
+        <!-- ── Skin School Live ── -->
+        <div class="card">
+          <div class="crm-head">
+            <div>
+              <h2>Skin School Live</h2>
+              <p class="sub">Classes booked on the Skin School page. They run on Sundays and Monday
+              evenings, when the studio is closed, so they never take a facial slot. <strong>Kept</strong>
+              is what's left after card fees and each guest's kit, journal and drinks.</p>
+            </div>
+          </div>
+          <div class="bk-tiles" id="cls-tiles"></div>
+          <div class="bk-table-wrap"><table class="bk-table" id="cls-table"></table></div>
+        </div>
+
+        <!-- ── Goals ── -->
+        <div class="card">
+          <div class="crm-head">
+            <div>
+              <h2>Goals</h2>
+              <p class="sub">Set monthly targets — progress pulls from your real numbers this month.</p>
+            </div>
+            <button class="bk-export" id="goals-edit">Edit targets</button>
+          </div>
+          <div class="goal-list" id="goal-list"></div>
+          <form class="goal-form" id="goal-form" hidden>
+            <div class="goal-form-grid">
+              <label>Revenue target ($)<input type="number" id="g-revenue" min="0" step="50"></label>
+              <label>Bookings target<input type="number" id="g-bookings" min="0" step="1"></label>
+              <label>New clients target<input type="number" id="g-newclients" min="0" step="1"></label>
+              <label>Rebooking rate target (%)<input type="number" id="g-rebook" min="0" max="100" step="1"></label>
+            </div>
+            <button type="submit" class="bk-export">Save targets</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="dsec" id="settings" aria-labelledby="settings-h">
+      <div class="section-inner">
+        <div class="dsec-head">
+          <p class="eyebrow" data-idx="07">Settings</p>
+          <h2 class="display" id="settings-h">Your phone <em>and your calendar.</em></h2>
+        </div>
+
+        <!-- ── Lumevina Studio: this dashboard as an app on her phone ── -->
+        <div class="card studio-card" id="studio">
+          <h2>Lumevina Studio</h2>
+          <p class="sub" id="st-sub">This dashboard, as an app on your phone: new orders, client questions and low stock arrive as notifications, your priorities for the day every morning, and a short email comes each morning with what's waiting.</p>
+          <ol class="st-steps" id="st-steps">
+            <li>On your iPhone, open this page in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
+            <li>Open <strong>Studio</strong> from your home screen.</li>
+            <li>Add your studio key below once, then tap <strong>Turn on notifications</strong> and allow them.</li>
+          </ol>
+          <div class="st-row">
+            <label>Studio key (once, on this device)<input id="st-key" type="password" autocomplete="off" placeholder="the long phrase only you know"></label>
+            <button class="bk-export" id="st-key-save" type="button">Save key</button>
+          </div>
+          <div class="st-row">
+            <button class="bk-export" id="st-push" type="button">Turn on notifications</button>
+            <button class="crm-plan-btn" id="st-test" type="button">Send a test</button>
+            <p class="st-status" id="st-status" role="status"></p>
+          </div>
+          <h3 style="font-size:0.95rem;margin:0.6rem 0 0.2rem">Recent</h3>
+          <ul class="st-feed" id="st-feed"></ul>
+        </div>
+
+        <!-- ── Calendar sync ── -->
+        <div class="card">
+          <div class="crm-head">
+            <div>
+              <h2>Calendar sync</h2>
+              <p class="sub">Keep every appointment in your own Google or Apple calendar.</p>
+            </div>
+            <button class="bk-export" id="cal-ics">Download calendar (.ics)</button>
+          </div>
+          <p class="cal-note" id="cal-note"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-brand">Lum<em class="nav-ev">ev</em>ina</p>
+      <p class="footer-line">Owner Studio · Only you can open this page.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#today">Today</a>
+        <a href="#clients">Clients</a>
+        <a href="#questions">Client questions</a>
+        <a href="#shelf">Shelf &amp; shipping</a>
+        <a href="#books">Books</a>
+        <a href="#growth">Members &amp; gifts</a>
+        <a href="#settings">Settings</a>
+      </nav>
+      <p class="footer-fine">Figures shown are sample data; the live version reads from your bookings, Stripe and Glow Rewards ·
+        <a data-site-link href="index.html">Your website</a></p>
+    </div>
+  </footer>
 
   <div class="tip" id="tip"></div>
 
@@ -3310,6 +3498,66 @@
     feed();
     setInterval(function () { if (!document.hidden) feed(); }, 60000);
     document.addEventListener("visibilitychange", function () { if (!document.hidden) feed(); });
+  })();
+  </script>
+  <script>
+  /* the website's header and menu (js/main.js), for her side: the header goes glassy once the page
+     scrolls, the menu drops from the two-line button (tap outside, a link, or Escape to close), the
+     brand glides back to the top, and the link for the section on screen is marked */
+  (function () {
+    "use strict";
+    var nav = document.querySelector(".nav"), toggle = document.querySelector(".nav-toggle");
+    var menu = document.getElementById("mobile-menu"), scrim = document.querySelector(".mm-scrim");
+    var navBottom = -1;
+    var measureNav = function () {
+      var b = Math.round(nav.getBoundingClientRect().bottom);
+      if (b !== navBottom && b > 0) { navBottom = b; document.documentElement.style.setProperty("--nav-bottom", b + "px"); }
+    };
+    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 24); measureNav(); };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measureNav);
+    nav.addEventListener("transitionend", measureNav);
+    document.querySelector(".nav-brand").addEventListener("click", function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+    var setMenu = function (open) {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      menu.hidden = !open; scrim.hidden = !open;
+      if (open) measureNav();
+    };
+    /* a finger lifting on the button opens it at once (some in-app viewers lose the click after a tap) */
+    var touchedAt = 0;
+    var flip = function () { setMenu(toggle.getAttribute("aria-expanded") !== "true"); };
+    toggle.addEventListener("pointerup", function (e) { if (e.pointerType === "mouse") return; touchedAt = Date.now(); flip(); });
+    toggle.addEventListener("touchend", function (e) { if (Date.now() - touchedAt < 700) return; touchedAt = Date.now(); e.preventDefault(); flip(); }, { passive: false });
+    toggle.addEventListener("click", function () { if (Date.now() - touchedAt < 700) return; flip(); });
+    menu.addEventListener("click", function (e) { if (e.target.closest("a, button")) setMenu(false); });
+    scrim.addEventListener("click", function () { setMenu(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !menu.hidden) { setMenu(false); toggle.focus(); } });
+    window.addEventListener("resize", function () { if (!menu.hidden && getComputedStyle(toggle).display === "none") setMenu(false); }, { passive: true });
+    /* New sale (the menu's tile): to the client list with the sale for someone new already open */
+    Array.prototype.forEach.call(document.querySelectorAll("[data-new-sale]"), function (b) {
+      b.addEventListener("click", function () {
+        document.getElementById("clients").scrollIntoView({ block: "start" });
+        if (document.getElementById("crm-sale-top").hidden) document.getElementById("crm-sale-new").click();
+      });
+    });
+    /* the section on screen: its link in the header is marked */
+    var links = {};
+    Array.prototype.forEach.call(document.querySelectorAll(".nav-links a"), function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || !links[en.target.id]) return;
+          Object.keys(links).forEach(function (k) { links[k].removeAttribute("aria-current"); });
+          links[en.target.id].setAttribute("aria-current", "true");
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      Array.prototype.forEach.call(document.querySelectorAll("main > .dsec"), function (sec) { io.observe(sec); });
+    }
   })();
   </script>
 </body>

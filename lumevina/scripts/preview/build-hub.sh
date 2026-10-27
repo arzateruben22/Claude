@@ -23,6 +23,8 @@ python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site.html" "Lumevina" v
 python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site-simple.html" "Lumevina" v2 file v4
 python3 scripts/preview/fold-school.py school.html "$OUT/school.html" v4 hub
 cp dist/dashboard.html "$OUT/dashboard.html"; cp dist/privacy.html "$OUT/privacy.html"
+# the dashboard's "Your website" links go to the hub's copy of the site
+sed -i 's/data-site-link href="index.html"/data-site-link href="site.html"/g' "$OUT/dashboard.html"
 python3 docs/blueprint/build.py "$OUT/.bp" >/dev/null && cp "$OUT/.bp/web.html" "$OUT/blueprint.html"
 python3 docs/launch-plan/build.py "$OUT/.plan" >/dev/null && cp "$OUT/.plan/web.html" "$OUT/plan.html"
 # these two were written as artifact pages (the viewer added the document around them); beside the hub they need their own
