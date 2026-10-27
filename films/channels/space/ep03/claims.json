@@ -45,7 +45,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Schiaparelli said one face always faced the Sun.",
+  "sentence": "Schiaparelli said one side always faced the Sun.",
   "claim": "Giovanni Schiaparelli (1890) proposed that Venus is tidally locked to the Sun, keeping one face toward it (a rotation equal to its 225-day year).",
   "source_url": "https://en.wikipedia.org/wiki/Observations_and_explorations_of_Venus",
   "source_title": "Observations and explorations of Venus (Wikipedia)",
@@ -57,11 +57,11 @@
  {
   "id": "c7",
   "sentence": "In nineteen sixty-two, radar from a dish in California pierced the clouds.",
-  "claim": "In 1962, radar observations from JPL's Goldstone dish in California penetrated Venus's clouds and showed it rotates retrograde with a period near 243 days (Goldstein & Carpenter, Science, 1963; Carpenter 1964).",
-  "source_url": "https://en.wikipedia.org/wiki/Observations_and_explorations_of_Venus",
-  "source_title": "Observations and explorations of Venus (Wikipedia, citing Goldstein 1964 and Carpenter 1964)",
-  "accessed": "2026-10-25",
-  "note": "Excerpt (Wikipedia, 'Observations and explorations of Venus'): the true rotation period was found in 1962 through JPL radar observations that cut through the cloud cover, showing retrograde rotation with a period of 243 days. Radar first echoed off Venus in 1961; the reviewer notes the primary paper is Goldstein & Carpenter, Science 139, 1963. Haystack and Arecibo followed.",
+  "claim": "Radar first measured Venus's spin at the 1961 conjunction (Goldstone, Jodrell Bank, Yevpatoria); Goldstone's 1962 run in California indicated a slow backward spin (about 230 ± 40–50 days), confirmed as retrograde in 1964 and refined to about 243 days by 1966.",
+  "source_url": "https://ntrs.nasa.gov/api/citations/19630003286/downloads/19630003286.pdf",
+  "source_title": "NASA NTRS 19630003286 (JPL, the 1962 Goldstone Venus radar experiment)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): re-sourced. Search excerpts this session: the NTRS report ('the 1962 experiment concentrated on the rotation rate which is now given as 230 plus or minus 40 to 50 days, retrograde'); Wikipedia, Observations and explorations of Venus ('first measured during the 1961 conjunction' … 'retrograde was not confirmed until 1964'). The line says only that 1962 radar pierced the clouds, which holds. The earlier note's quote ('found in 1962 … 243 days') was not found and is removed.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -178,11 +178,33 @@
  {
   "id": "c18",
   "sentence": "Both guesses were wrong.",
-  "claim": "Radar observations from JPL's Goldstone station in California, beginning at the 1962 inferior conjunction (Goldstein 1964; Carpenter 1964), cut through the clouds and showed Venus rotates retrograde with a period near 243 days: neither about 23 hours nor 225 days.",
-  "source_url": "https://en.wikipedia.org/wiki/Observations_and_explorations_of_Venus",
-  "source_title": "Observations and explorations of Venus (Wikipedia, citing Goldstein 1964 and Carpenter 1964)",
-  "accessed": "2026-10-25",
-  "note": "The same radar result as c7, said as its verdict: neither about 23 hours (c5) nor one face to the Sun (c6).",
+  "claim": "The 1962 radar result ruled out both guesses: about 23 hours (far too fast a spin) and a forward 225-day lock (wrong direction: the spin is backward).",
+  "source_url": "https://ntrs.nasa.gov/api/citations/19630003286/downloads/19630003286.pdf",
+  "source_title": "NASA NTRS 19630003286 (JPL, the 1962 Goldstone Venus radar experiment)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): re-sourced and reworded around direction. 230 ± 45 d alone would not exclude 225 d; the backward direction does. Search excerpt (NTRS): 'rotation rate … 230 plus or minus 40 to 50 days, retrograde'. Goldstein's 1962 thesis (from 1961 data) had read the opposite (one hemisphere toward the Sun); the 1962 run overturned it.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c19",
+  "sentence": "On Venus: yes.",
+  "claim": "On Venus one rotation (243.0 days) is longer than the year (224.7 days): the hook's 'yes' (c9 says it in full).",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html",
+  "source_title": "Venus Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): was tagged {-}; it answers the hook with a fact. NSSDC: sidereal rotation −5832.6 h = 243.0 d; orbital period 224.7 d.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c20",
+  "sentence": "And no.",
+  "claim": "On Venus the solar day (sunrise to sunrise, 116.75 days) is shorter than the year (224.7 days): the hook's 'no' (c12 says it in full).",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html",
+  "source_title": "Venus Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-10-26",
+  "note": "26 Oct (script audit): was tagged {-}. NSSDC: length of day 2802.0 h = 116.75 d; orbital period 224.7 d.",
   "verified_via": "search excerpt",
   "status": "ok"
  }

@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 02:45 UTC:** collected Light Minute 003 "Venus day" (QA PASS, 74.7 s); 005 and 002 still rendering.
+>
 > **27 Oct, 02:35 UTC:** collected Meanwhile, Inside 004 "The gap" (QA PASS, 74.4 s); 005 rendering (~05:15), 006 next.
 >
 > **27 Oct, 02:30 UTC:** download library for the owner (every finished video, full quality, straight from this public

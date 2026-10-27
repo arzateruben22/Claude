@@ -39,15 +39,15 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one face always faced the Sun.",
+   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one side always faced the Sun.",
    "stars": [
     "Sun"
    ],
-   "phonemes": "fɔːɹ θɹˈiː hˈʌndɹɪd jˈɪɹz, ɐstɹˈɑːnəmɚz tʃˈeɪst fˈeɪnt smˈʌdʒᵻz ɪn ðoʊz klˈaʊdz. ðə kəsˈiːniz , fˈɑːðɚɹ ænd sˈʌn, klˈɑːkt ɐbˌaʊt twˈɛntiθɹˈiː ˈaʊɚz. skjˌɑːpəɹˈɛli sˈɛd wˈʌn fˈeɪs ˈɔːlweɪz fˈeɪsd ðə sˈʌn.",
+   "phonemes": "fɔːɹ θɹˈiː hˈʌndɹɪd jˈɪɹz, ɐstɹˈɑːnəmɚz tʃˈeɪst fˈeɪnt smˈʌdʒᵻz ɪn ðoʊz klˈaʊdz. ðə kəsˈiːniz , fˈɑːðɚɹ ænd sˈʌn, klˈɑːkt ɐbˌaʊt twˈɛntiθɹˈiː ˈaʊɚz. skjˌɑːpəɹˈɛli sˈɛd wˈʌn sˈaɪd ˈɔːlweɪz fˈeɪsd ðə sˈʌn.",
    "speed": 1.15,
    "file": "03.wav",
-   "dur": 11.633,
-   "sha256": "3796b2cc8438ec6cfb9d962441230fe315aa8fce0d1520e7884edecec0ab31f3"
+   "dur": 11.733,
+   "sha256": "bb44ed0f0ac6d07efcaa2ea3c8b0c264b6b352e611a00c43019fb9827731e7a1"
   },
   {
    "id": "vo04",
