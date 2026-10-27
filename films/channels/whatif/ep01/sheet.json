@@ -1,0 +1,339 @@
+{
+ "duration": 74.0,
+ "fps": 30,
+ "preset": "envelope-working",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6667,
+   "energy": 0.65
+  },
+  {
+   "id": "normal",
+   "t0": 5.6667,
+   "t1": 17.0,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 17.0,
+   "t1": 29.0,
+   "energy": 0.6
+  },
+  {
+   "id": "why",
+   "t0": 29.0,
+   "t1": 44.6667,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 44.6667,
+   "t1": 55.6667,
+   "energy": 0.75
+  },
+  {
+   "id": "work",
+   "t0": 55.6667,
+   "t1": 62.6667,
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 62.6667,
+   "t1": 67.6667,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 67.6667,
+   "t1": 74.0,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6667
+  },
+  {
+   "t": 0.0,
+   "kind": "label",
+   "tag": "l-you"
+  },
+  {
+   "t": 0.0,
+   "kind": "badge",
+   "tag": "b-thought"
+  },
+  {
+   "t": 0.0,
+   "kind": "badge",
+   "tag": "b-nts"
+  },
+  {
+   "t": 5.3,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 5.6667,
+   "kind": "section",
+   "id": "normal",
+   "t1": 17.0
+  },
+  {
+   "t": 6.4,
+   "kind": "label",
+   "tag": "l-tunnel"
+  },
+  {
+   "t": 7.433333333333334,
+   "kind": "badge",
+   "tag": "b-air"
+  },
+  {
+   "t": 9.266666666666667,
+   "kind": "term.write",
+   "tag": "spine-0"
+  },
+  {
+   "t": 11.533333333333333,
+   "kind": "counter.show",
+   "tag": "c-days"
+  },
+  {
+   "t": 11.633333333333333,
+   "kind": "term.write",
+   "tag": "spine-1"
+  },
+  {
+   "t": 12.3333,
+   "kind": "counter.tick",
+   "tag": "day-1"
+  },
+  {
+   "t": 12.966666666666667,
+   "kind": "label",
+   "tag": "l-car"
+  },
+  {
+   "t": 13.1333,
+   "kind": "counter.tick",
+   "tag": "day-2"
+  },
+  {
+   "t": 13.9333,
+   "kind": "counter.tick",
+   "tag": "day-3"
+  },
+  {
+   "t": 14.7333,
+   "kind": "counter.tick",
+   "tag": "day-4"
+  },
+  {
+   "t": 15.5333,
+   "kind": "counter.tick",
+   "tag": "day-5"
+  },
+  {
+   "t": 15.833333333333334,
+   "kind": "term.write",
+   "tag": "spine-2"
+  },
+  {
+   "t": 17.0,
+   "kind": "section",
+   "id": "change",
+   "t1": 29.0
+  },
+  {
+   "t": 18.2709,
+   "kind": "badge",
+   "tag": "b-time-f"
+  },
+  {
+   "t": 18.5709,
+   "kind": "fall",
+   "tag": "jump",
+   "t1": 27.733333333333334
+  },
+  {
+   "t": 18.7709,
+   "kind": "counter.show",
+   "tag": "c-speed"
+  },
+  {
+   "t": 27.733333333333334,
+   "kind": "arrive",
+   "tag": "far-rim"
+  },
+  {
+   "t": 29.0,
+   "kind": "section",
+   "id": "why",
+   "t1": 44.6667
+  },
+  {
+   "t": 30.366666666666667,
+   "kind": "term.write",
+   "tag": "spine-3"
+  },
+  {
+   "t": 31.666666666666668,
+   "kind": "label",
+   "tag": "l-mantle"
+  },
+  {
+   "t": 37.6,
+   "kind": "term.write",
+   "tag": "spine-4"
+  },
+  {
+   "t": 37.666666666666664,
+   "kind": "badge",
+   "tag": "b-prem"
+  },
+  {
+   "t": 38.9,
+   "kind": "label",
+   "tag": "l-core"
+  },
+  {
+   "t": 40.93333333333333,
+   "kind": "label",
+   "tag": "l-peak"
+  },
+  {
+   "t": 44.6667,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 55.6667
+  },
+  {
+   "t": 44.6667,
+   "kind": "badge",
+   "tag": "b-time-w"
+  },
+  {
+   "t": 45.8,
+   "kind": "term.write",
+   "tag": "spine-5"
+  },
+  {
+   "t": 45.8,
+   "kind": "answer.box",
+   "tag": "box-38",
+   "t1": 46.3
+  },
+  {
+   "t": 50.96666666666667,
+   "kind": "counter.show",
+   "tag": "c-round"
+  },
+  {
+   "t": 51.7,
+   "kind": "badge",
+   "tag": "b-ideal"
+  },
+  {
+   "t": 55.6667,
+   "kind": "section",
+   "id": "work",
+   "t1": 62.6667
+  },
+  {
+   "t": 55.8167,
+   "kind": "term.write",
+   "tag": "work-real Earth (seismic density)"
+  },
+  {
+   "t": 57.06666666666667,
+   "kind": "term.write",
+   "tag": "work-core 10% lighter"
+  },
+  {
+   "t": 60.03333333333333,
+   "kind": "term.write",
+   "tag": "work-uniform Earth"
+  },
+  {
+   "t": 62.6667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 67.6667
+  },
+  {
+   "t": 62.93333333333333,
+   "kind": "term.write",
+   "tag": "spine-6"
+  },
+  {
+   "t": 66.63333333333334,
+   "kind": "label",
+   "tag": "l-core-t"
+  },
+  {
+   "t": 66.63333333333334,
+   "kind": "swell",
+   "tag": "core"
+  },
+  {
+   "t": 67.6667,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.0
+  },
+  {
+   "t": 67.73333333333333,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.966666666666667,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 17.3,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 29.3,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 44.96666666666667,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 55.96666666666667,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 62.96666666666667,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 67.96666666666667,
+   "file": "vo/08.wav"
+  }
+ ]
+}

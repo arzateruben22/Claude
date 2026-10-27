@@ -135,6 +135,46 @@ RESULTS = {
     "sens_core_plus10_min": round(V["sensitivity_s"]["core density x1.1"] / 60),
 }
 
+
+def picture(n=96):
+    """What the scene draws, in 1 unit = 1,000 km and seconds of fall: the PREM trajectory (depth from the
+    entry rim at n+1 evenly spaced times from the jump to the centre; the far half mirrors it), speed at
+    those times, and gravity against radius for both models (for the graph on the paper)."""
+    rs, ms, gs = prem_profile(20_000)
+    m = len(rs) - 1
+    pot = [0.0] * (m + 1)
+    for i in range(m - 1, -1, -1):
+        pot[i] = pot[i + 1] + 0.5 * (gs[i] + gs[i + 1]) * (rs[i + 1] - rs[i])
+    # time to reach radius r from the surface: integral from r to R of dr/v (the last cell from rest)
+    tr = [0.0] * (m + 1)
+    dr_last = rs[m] - rs[m - 1]
+    tr[m - 1] = math.sqrt(2 * dr_last / gs[m])
+    for i in range(m - 2, -1, -1):
+        v = math.sqrt(2 * 0.5 * (pot[i] + pot[i + 1]))
+        tr[i] = tr[i + 1] + (rs[i + 1] - rs[i]) / v
+    half = tr[0]
+    depth, speed = [], []
+    j = m
+    for k in range(n + 1):
+        tk = half * k / n
+        while j > 0 and tr[j - 1] <= tk:
+            j -= 1
+        # between rs[j-1] (time tr[j-1] >= tk) and rs[j] (tr[j] <= tk)
+        if j == 0:
+            r = 0.0
+        else:
+            u = (tk - tr[j]) / (tr[j - 1] - tr[j]) if tr[j - 1] > tr[j] else 0.0
+            r = rs[j] + (rs[j - 1] - rs[j]) * u
+        depth.append(round((R - r) / 1e6, 5))
+        i = min(m, int(r / R * m))
+        speed.append(round(math.sqrt(max(0.0, 2 * pot[i])), 1))
+    g_prem = [round(gs[int(m * k / 64)], 4) for k in range(65)]               # at r = R*k/64
+    g_unif = [round(gs[-1] * k / 64, 4) for k in range(65)]                   # uniform: g grows linearly with r
+    return {"unit_km": 1000, "R": R / 1e6, "half_s": round(half, 2), "depth": depth, "speed_ms": speed,
+            "g_r": [round(R / 1e6 * k / 64, 4) for k in range(65)], "g_prem": g_prem, "g_uniform": g_unif,
+            "layers_km": [1221.5, 3480.0, 5701.0, 6346.6, 6371.0], "g_surface": round(gs[-1], 3)}
+
+
 if __name__ == "__main__":
     for k, v in V.items():
         if isinstance(v, dict):
