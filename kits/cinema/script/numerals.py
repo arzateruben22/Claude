@@ -88,8 +88,9 @@ def value(cs):
             cur += s
             seen = True
         elif c in SCALE:
-            if not seen:
-                return None
+            if not seen and c != "hundred":
+                return None                                   # (a bare "hundred and seventeen" is 117)
+            seen = True
             if c == "hundred":
                 cur = (cur or 1) * 100
             else:
@@ -183,8 +184,40 @@ GLUE = "\u2007"   # a figure space: films/channels/space/set/capglue.py joins a 
 
 def numerals(tokens):
     """Caption tokens with number runs merged into their written form (see the module notes). A glued token
-    ("three hundred sixty-five", joined by figure spaces) is converted inside and stays one token."""
-    tokens = [_inside(t) if GLUE in t["w"] else t for t in tokens]
+    ("in nineteen seventy-seven.", words joined by figure spaces so the pager keeps them on one row) is converted
+    word by word together with the words around it, then glued again; a number that runs across two glued phrases
+    ("about seventy-five" + "thousand years.") joins them into one."""
+    flat = []
+    for k, t in enumerate(tokens):
+        for p, w in enumerate(t["w"].split(GLUE)):
+            flat.append({**t, "w": w, "_g": k} if p == 0 else {"w": w, "t": t["t"], "_g": k})
+    merged = _merge(flat)
+    root = list(range(len(tokens)))                            # the glued groups a written number joined
+    def find(g):
+        while root[g] != g:
+            g = root[g]
+        return g
+    for t in merged:
+        for g in t.pop("_gs", ()):
+            root[find(g)] = find(t["_g"])
+    out = []
+    for t in merged:
+        g = find(t.pop("_g"))
+        if out and out[-1][0] == g:
+            prev = out[-1][1]
+            prev["w"] += GLUE + t["w"]
+            if "tl" in t or "tl" in prev:
+                prev["tl"] = max(prev.get("tl", prev["t"]), t.get("tl", t["t"]))
+        else:
+            out.append((g, t))
+    for g, t in out:
+        if GLUE in t["w"]:
+            t["w"] = t["w"].replace(" ", GLUE)                   # "75 thousand" inside a glued phrase stays unbroken
+    return [t for g, t in out]
+
+
+def _merge(tokens):
+    """numerals() on single words: each converted run becomes one token (with "_gs", the glued groups it covers)."""
     out, last = [], 0
     toks = []
     for t in tokens:                                          # "one-meter": the number part of a number-unit compound
@@ -205,12 +238,15 @@ def numerals(tokens):
         merged.pop("_glue", None)
         if j - i > 1:
             merged["tl"] = toks[j - 1].get("tl", toks[j - 1]["t"])   # its last spoken word: the page holds until it is said
+        gs = {x["_g"] for x in toks[i:j] if "_g" in x}
+        if len(gs) > 1:
+            merged["_gs"] = gs
         out.append(merged)
         last = j
-        if not tail and not merged.get("_glue") and "-" not in merged["w"][len(lead):]:
+        if not tail and "-" not in merged["w"][len(lead):]:
             k = j                                             # "20 / centimeters": a numeral and its unit share a row
             while k < len(toks) and k - j < 2:
-                c = core(toks[k]["w"].split(GLUE)[0])
+                c = core(toks[k]["w"])
                 if c in ("square", "cubic") and k == j:
                     toks[k]["nb"] = True
                     k += 1
@@ -223,11 +259,6 @@ def numerals(tokens):
         if "_glue" in t:
             t["w"] += t.pop("_glue")
     return out
-
-
-def _inside(t):
-    parts = numerals([{"w": w, "t": t["t"]} for w in t["w"].split(GLUE)])
-    return {**t, "w": GLUE.join(x["w"] for x in parts)}
 
 
 def numerals_text(text):

@@ -167,7 +167,7 @@ END = {"title": "Next light: trees or *stars*", "follow": "Light Minute · No. 0
 CUE = {"last": A("vo05:Last"), "cab0": t_cab0, "cab1": t_cab1, "jolt": t_jolt, "ride": A("vo04:ride"), "jm": t_jm, "rd": t_rd, "zoom": t_zoom, "p0": t_p0, "p1": t_p1, "e0": t_e0, "e1": t_e1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To"), "eq": A("vo02:equator")}
 POSTER = A("vo05:appeared", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
-glue(f, {"vo02": ["sixteen hundred seventy", "kilometers an hour.", "the speed of sound."],
+glue(f, {"vo02": ["about sixteen hundred seventy", "kilometers an hour.", "the speed of sound."],
          "vo03": ["the Sun", "about thirty", "New York", "to Boston."],
          "vo04": ["In sixteen thirty-two,", "a ship's cabin."],
          "vo05": ["the galaxy", "about two hundred thirty", "kilometers a second.", "about two hundred thirty", "million years.", "the first dinosaurs", "had just appeared."]})
