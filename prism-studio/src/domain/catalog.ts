@@ -21,10 +21,10 @@ export const CHANNELS: {
   voice: { narrator: string; provider: string }; editorial: Editorial; filmsPath: string | null; creation: { key: string; name: string };
 }[] = [
   {
-    topic: "skincare", slug: "skincare", name: "Skincare (name TBD)", provisional: true,
+    topic: "skincare", slug: "skincare", name: "Outer Layer", provisional: true,
     tagline: "Skin biology, ingredients and routines, with the evidence on the screen.",
     color: "#D99A92", colorInk: "#8A4A44", label: "SKIN",
-    voice: { narrator: "TBD (not af_heart: that voice is Lumevina's)", provider: "kokoro" },
+    voice: { narrator: "TBD: auditioning (not af_heart: that voice is Lumevina's)", provider: "kokoro" },
     editorial: {
       audience: "Curious adults who want to understand their skin, not be sold to.",
       tone: "Calm, precise, kind. Myths are corrected without mocking anyone.",
@@ -81,10 +81,10 @@ export const CHANNELS: {
     filmsPath: "films/channels/space", creation: { key: "pocket_universe", name: "The Pocket Universe" },
   },
   {
-    topic: "whatif", slug: "whatif", name: "What If? (name TBD)", provisional: true,
+    topic: "whatif", slug: "whatif", name: "Back of the Envelope", provisional: true,
     tagline: "Impossible questions, honest assumptions, real calculations.",
     color: "#F2A93B", colorInk: "#8A5A00", label: "WHAT IF?",
-    voice: { narrator: "TBD", provider: "kokoro" },
+    voice: { narrator: "TBD: auditioning", provider: "kokoro" },
     editorial: {
       audience: "Curious adults and teens who like a thought experiment done properly.",
       tone: "Playful premise, rigorous middle, satisfying number at the end.",
