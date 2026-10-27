@@ -22,7 +22,8 @@
     "test": "vitest run",
     "owner:password": "tsx scripts/owner-password.ts",
     "wallpaper": "node scripts/wallpaper/render.mjs",
-    "lesson:register": "tsx scripts/register-lesson.ts"
+    "lesson:register": "tsx scripts/register-lesson.ts",
+    "media:check": "tsx scripts/check-media.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.4",
