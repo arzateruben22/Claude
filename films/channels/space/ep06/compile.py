@@ -169,7 +169,7 @@ POSTER = A("vo05:appeared", 0.4)
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["sixteen hundred seventy", "kilometers an hour.", "the speed of sound."],
          "vo03": ["the Sun", "about thirty", "New York", "to Boston."],
-         "vo04": ["sixteen thirty-two,", "a ship's cabin."],
+         "vo04": ["In sixteen thirty-two,", "a ship's cabin."],
          "vo05": ["the galaxy", "about two hundred thirty", "kilometers a second.", "about two hundred thirty", "million years.", "the first dinosaurs", "had just appeared."]})
 
 film = {

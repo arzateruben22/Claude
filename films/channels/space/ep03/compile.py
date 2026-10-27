@@ -250,7 +250,7 @@ CUE = {"g1": t_g1, "g2": t_g2, "true": t_true, "radar": t_radar, "pierce": A("vo
 POSTER = round(SUNRISES[RISE_I]["t"] + 0.25, 4)   # the dial's Sun about 40° up in the west, the spine on "west"
 # captions: number phrases and fixed phrases stay on one line (after the last anchor lookup)
 glue(f, {"vo02": ["the Sun", "three hundred sixty-five times", "under a permanent"], "vo03": ["one side", "always faced the Sun."],
-         "vo04": ["nineteen sixty-two,", "in California", "two hundred forty-three"],
+         "vo04": ["In nineteen sixty-two,", "in California", "two hundred forty-three"],
          "vo05": ["Stand there,", "the spin", "and the orbit team up.", "hundred and seventeen", "rising in the west."],
          "vo06": ["live by", "is the Sun coming back."]})
 
