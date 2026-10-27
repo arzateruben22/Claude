@@ -70,7 +70,7 @@
   },
   {
    "id": "vo02",
-   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second: Earth to the Moon in six hours.",
+   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second. Earth to the Moon in six hours.",
    "heard": "Our ride is Voyager 1, the farthest thing we've sent. It left in 1977. It coasts at about 17 kilometers a second, Earth to the moon in six hours.",
    "words": [
     {
@@ -81,176 +81,176 @@
     },
     {
      "w": "ride",
-     "start": 0.195,
-     "end": 0.56,
+     "start": 0.2,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.54,
-     "end": 0.72,
+     "start": 0.515,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "Voyager",
-     "start": 0.75,
+     "start": 0.545,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "1,",
-     "start": 1.31,
-     "end": 1.76,
+     "start": 1.28,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.725,
-     "end": 1.92,
+     "start": 1.77,
+     "end": 1.82,
      "heard": true
     },
     {
      "w": "farthest",
-     "start": 1.93,
-     "end": 2.4,
+     "start": 1.815,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "thing",
-     "start": 2.315,
-     "end": 2.56,
+     "start": 2.19,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "we've",
-     "start": 2.655,
-     "end": 2.8,
+     "start": 2.28,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "sent.",
-     "start": 2.825,
+     "start": 2.7,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 3.365,
      "end": 3.44,
      "heard": true
     },
     {
-     "w": "It",
-     "start": 3.515,
-     "end": 3.6,
-     "heard": true
-    },
-    {
      "w": "left",
-     "start": 3.545,
-     "end": 3.92,
+     "start": 3.475,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "in",
-     "start": 3.905,
-     "end": 4.08,
+     "start": 3.755,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "nineteen",
-     "start": 4.07,
-     "end": 5.76,
+     "start": 4.09,
+     "end": 5.52,
      "heard": false
     },
     {
      "w": "seventy-seven.",
-     "start": 4.1,
-     "end": 5.76,
+     "start": 4.12,
+     "end": 5.52,
      "heard": false
     },
     {
      "w": "It",
-     "start": 5.84,
-     "end": 5.92,
+     "start": 5.64,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "coasts",
-     "start": 5.995,
-     "end": 6.48,
+     "start": 5.795,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "at",
-     "start": 6.505,
-     "end": 6.72,
+     "start": 6.34,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "about",
-     "start": 6.74,
-     "end": 6.96,
+     "start": 6.615,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "seventeen",
-     "start": 6.955,
-     "end": 7.6,
+     "start": 6.83,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "kilometers",
-     "start": 7.715,
-     "end": 8.32,
+     "start": 7.555,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.415,
-     "end": 8.48,
+     "start": 8.245,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "second:",
-     "start": 8.58,
-     "end": 9.04,
+     "w": "second.",
+     "start": 8.405,
+     "end": 8.96,
      "heard": true
     },
     {
      "w": "Earth",
-     "start": 9.135,
-     "end": 9.44,
+     "start": 9.015,
+     "end": 9.28,
      "heard": true
     },
     {
      "w": "to",
-     "start": 9.435,
-     "end": 9.6,
+     "start": 9.31,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 9.48,
-     "end": 9.68,
+     "start": 9.34,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "Moon",
-     "start": 9.56,
-     "end": 10.08,
+     "start": 9.54,
+     "end": 9.92,
      "heard": true
     },
     {
      "w": "in",
-     "start": 10.165,
-     "end": 10.24,
+     "start": 9.9,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "six",
-     "start": 10.335,
-     "end": 10.48,
+     "start": 10.14,
+     "end": 10.4,
      "heard": true
     },
     {
      "w": "hours.",
-     "start": 10.49,
-     "end": 10.96,
+     "start": 10.365,
+     "end": 10.88,
      "heard": true
     }
    ]
@@ -444,8 +444,8 @@
   },
   {
    "id": "vo04",
-   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's three hundred years away. Getting through it: thirty thousand more.",
-   "heard": "In 2012, it crossed into interstellar space. Nearly there then, it hasn't even reached the sun's cloud of comets. That's 300 years away. Getting through it, 30,000 more.",
+   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's about three hundred years away. Through it: maybe thirty thousand more.",
+   "heard": "In 2012, it crossed into interstellar space. Nearly there then, it hasn't even reached the sun's cloud of comets. That's about 300 years away. Through it, maybe 30,000 more.",
    "words": [
     {
      "w": "In",
@@ -455,19 +455,19 @@
     },
     {
      "w": "twenty",
-     "start": 0.2,
+     "start": 0.125,
      "end": 0.88,
      "heard": false
     },
     {
      "w": "twelve,",
-     "start": 0.23,
+     "start": 0.155,
      "end": 0.88,
      "heard": false
     },
     {
      "w": "it",
-     "start": 0.88,
+     "start": 0.875,
      "end": 1.04,
      "heard": true
     },
@@ -479,166 +479,172 @@
     },
     {
      "w": "into",
-     "start": 1.39,
+     "start": 1.415,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "interstellar",
-     "start": 1.675,
-     "end": 2.4,
+     "start": 1.705,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "space.",
-     "start": 2.495,
-     "end": 3.2,
+     "start": 2.525,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "Nearly",
-     "start": 3.24,
-     "end": 3.6,
+     "start": 3.34,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "there,",
-     "start": 3.595,
-     "end": 3.84,
+     "start": 3.72,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "then?",
-     "start": 3.9,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "It",
-     "start": 4.395,
+     "start": 4.03,
      "end": 4.56,
      "heard": true
     },
     {
+     "w": "It",
+     "start": 4.625,
+     "end": 4.72,
+     "heard": true
+    },
+    {
      "w": "hasn't",
-     "start": 4.525,
-     "end": 4.96,
+     "start": 4.655,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "even",
-     "start": 4.975,
-     "end": 5.12,
+     "start": 5.085,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "reached",
-     "start": 5.17,
-     "end": 5.44,
+     "start": 5.265,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.47,
-     "end": 5.6,
+     "start": 5.57,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "Sun's",
-     "start": 5.5,
-     "end": 6.0,
+     "start": 5.6,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "cloud",
-     "start": 5.97,
-     "end": 6.4,
+     "start": 6.07,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "of",
-     "start": 6.495,
-     "end": 6.56,
+     "start": 6.62,
+     "end": 6.67,
      "heard": true
     },
     {
      "w": "comets.",
-     "start": 6.57,
-     "end": 7.28,
+     "start": 6.695,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "That's",
-     "start": 7.355,
-     "end": 7.6,
+     "start": 7.54,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.67,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "three",
-     "start": 7.52,
-     "end": 8.24,
+     "start": 8.005,
+     "end": 8.72,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 7.66,
-     "end": 8.24,
+     "start": 8.035,
+     "end": 8.72,
      "heard": false
     },
     {
      "w": "years",
-     "start": 8.18,
-     "end": 8.48,
+     "start": 8.68,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "away.",
-     "start": 8.575,
-     "end": 9.28,
+     "start": 9.085,
+     "end": 9.68,
      "heard": true
     },
     {
-     "w": "Getting",
-     "start": 9.325,
-     "end": 9.6,
-     "heard": true
-    },
-    {
-     "w": "through",
-     "start": 9.655,
-     "end": 9.84,
+     "w": "Through",
+     "start": 9.73,
+     "end": 10.0,
      "heard": true
     },
     {
      "w": "it:",
-     "start": 9.935,
-     "end": 10.16,
+     "start": 10.095,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "maybe",
+     "start": 10.485,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "thirty",
-     "start": 10.145,
-     "end": 10.88,
+     "start": 10.515,
+     "end": 11.52,
      "heard": false
     },
     {
      "w": "thousand",
-     "start": 10.175,
-     "end": 10.88,
+     "start": 10.64,
+     "end": 11.52,
      "heard": false
     },
     {
      "w": "more.",
-     "start": 10.805,
-     "end": 11.28,
+     "start": 11.455,
+     "end": 11.84,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species hadn't reached Europe.",
-   "heard": "The nearest star, Proxima Centauri, is about 1500 light days out. At Voyager's speed, about 75,000 years. Count back that far and our species hadn't reached Europe.",
+   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species wasn't in Europe.",
+   "heard": "The nearest star, Proxima Centauri, is about 1500 light days out, at Voyager's speed, about 75,000 years. Count back that far and our species wasn't in Europe.",
    "words": [
     {
      "w": "The",
@@ -648,172 +654,172 @@
     },
     {
      "w": "nearest",
-     "start": 0.05,
+     "start": 0.07,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "star,",
-     "start": 0.555,
-     "end": 0.88,
+     "start": 0.575,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "Proxima",
-     "start": 0.99,
+     "start": 1.01,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "Centauri,",
-     "start": 1.545,
+     "start": 1.57,
      "end": 2.32,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.285,
+     "start": 2.31,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "about",
-     "start": 2.485,
+     "start": 2.505,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "fifteen",
-     "start": 2.685,
-     "end": 4.08,
+     "start": 2.705,
+     "end": 4.16,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 2.715,
-     "end": 4.08,
+     "start": 2.735,
+     "end": 4.16,
      "heard": false
     },
     {
      "w": "light-days",
-     "start": 2.745,
-     "end": 4.08,
+     "start": 2.765,
+     "end": 4.16,
      "heard": false
     },
     {
      "w": "out.",
-     "start": 4.17,
-     "end": 4.64,
+     "start": 4.26,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "At",
-     "start": 4.68,
+     "start": 4.78,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "Voyager's",
-     "start": 4.775,
-     "end": 5.6,
+     "start": 4.81,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "speed:",
-     "start": 5.67,
-     "end": 6.32,
+     "start": 5.695,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "about",
-     "start": 6.36,
+     "start": 6.38,
      "end": 6.64,
      "heard": true
     },
     {
      "w": "seventy-five",
-     "start": 6.635,
-     "end": 8.0,
+     "start": 6.66,
+     "end": 8.08,
      "heard": false
     },
     {
      "w": "thousand",
-     "start": 6.665,
-     "end": 8.0,
+     "start": 6.69,
+     "end": 8.08,
      "heard": false
     },
     {
      "w": "years.",
-     "start": 8.085,
-     "end": 8.64,
+     "start": 8.19,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "Count",
-     "start": 8.735,
+     "start": 8.78,
      "end": 9.04,
      "heard": true
     },
     {
      "w": "back",
-     "start": 8.98,
+     "start": 9.065,
      "end": 9.28,
      "heard": true
     },
     {
      "w": "that",
-     "start": 9.305,
+     "start": 9.325,
      "end": 9.52,
      "heard": true
     },
     {
      "w": "far,",
-     "start": 9.445,
+     "start": 9.46,
      "end": 9.84,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.86,
+     "start": 9.875,
      "end": 10.08,
      "heard": true
     },
     {
      "w": "our",
-     "start": 10.135,
+     "start": 10.13,
      "end": 10.24,
      "heard": true
     },
     {
      "w": "species",
-     "start": 10.3,
-     "end": 10.72,
+     "start": 10.28,
+     "end": 10.64,
      "heard": true
     },
     {
-     "w": "hadn't",
-     "start": 10.725,
-     "end": 11.04,
+     "w": "wasn't",
+     "start": 10.685,
+     "end": 10.96,
      "heard": true
     },
     {
-     "w": "reached",
-     "start": 11.035,
-     "end": 11.28,
+     "w": "in",
+     "start": 10.87,
+     "end": 11.12,
      "heard": true
     },
     {
      "w": "Europe.",
-     "start": 11.32,
-     "end": 11.6,
+     "start": 11.195,
+     "end": 11.52,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "So we haven't left for the stars. Voyager has crossed day one of fifteen hundred.",
-   "heard": "So we haven't left for the stars. Voyager has crossed day one of 1500.",
+   "text": "So we've barely left for the stars. Voyager has crossed day one of fifteen hundred.",
+   "heard": "So we've barely left for the stars. Voyager has crossed day one of 1500.",
    "words": [
     {
      "w": "So",
@@ -822,87 +828,87 @@
      "heard": true
     },
     {
-     "w": "we",
-     "start": 0.155,
-     "end": 0.4,
+     "w": "we've",
+     "start": 0.335,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "haven't",
-     "start": 0.44,
-     "end": 0.64,
+     "w": "barely",
+     "start": 0.445,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "left",
-     "start": 0.56,
-     "end": 0.96,
+     "start": 0.785,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "for",
-     "start": 0.86,
-     "end": 1.12,
+     "start": 1.115,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.255,
-     "end": 1.305,
+     "start": 1.28,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "stars.",
-     "start": 1.285,
-     "end": 2.16,
+     "start": 1.505,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "Voyager",
-     "start": 2.28,
-     "end": 2.96,
+     "start": 2.535,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "has",
-     "start": 2.87,
-     "end": 3.12,
+     "start": 3.12,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "crossed",
-     "start": 3.135,
-     "end": 3.52,
-     "heard": true
-    },
-    {
-     "w": "day",
-     "start": 3.525,
+     "start": 3.39,
      "end": 3.76,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 3.85,
-     "end": 3.92,
+     "w": "day",
+     "start": 3.785,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 4.09,
+     "w": "one",
+     "start": 4.07,
      "end": 4.16,
      "heard": true
     },
     {
+     "w": "of",
+     "start": 4.325,
+     "end": 4.4,
+     "heard": true
+    },
+    {
      "w": "fifteen",
-     "start": 4.18,
-     "end": 4.46,
+     "start": 4.495,
+     "end": 4.7,
      "heard": false
     },
     {
      "w": "hundred.",
-     "start": 4.21,
-     "end": 4.46,
+     "start": 4.525,
+     "end": 4.7,
      "heard": false
     }
    ]

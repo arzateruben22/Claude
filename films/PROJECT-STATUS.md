@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 03:35 UTC:** collected Light Minute 002 "The nearest star" (QA PASS, 74.7 s; replaces the 25 Oct cut). Light Minute 001–006 are all final; its vol01 "How far, how fast" is building.
+>
 > **27 Oct, 03:05 UTC:** collected Light Minute 005 "How big is the Sun" (QA PASS, 74.7 s). Light Minute 002 rendering (~03:50), then its vol01.
 >
 > **27 Oct, 02:45 UTC:** collected Light Minute 003 "Venus day" (QA PASS, 74.7 s); 005 and 002 still rendering.

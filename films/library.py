@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO, BRANCH = "arzateruben22/Claude", "claude/made-with-claude-film"
 RAW = f"https://github.com/{REPO}/raw/{BRANCH}/"
 BLOB = f"https://github.com/{REPO}/blob/{BRANCH}/"
-HOLD = {"films/channels/space/ep02"}          # Light Minute 002: the committed render predates the fact audit
+HOLD: set[str] = set()                        # e.g. {"films/channels/space/ep02"} while a committed render predates an audit
 CHANNELS = [  # (folder, name, label, colour) in the studio's own colours (prism-studio/src/domain/catalog.ts)
     ("physics", "Rest Frame", "PHYSICS", "#2F5BFF"),
     ("space", "Light Minute", "SPACE", "#7D63F0"),
