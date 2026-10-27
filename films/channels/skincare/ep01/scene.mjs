@@ -125,7 +125,7 @@ window.seek = function (t) {
   A.corneo = S.at.corneo(4, 0.62);
   A.living = S.at.living(0.74);
   A.brick = S.at.corneo(9, 0.7);
-  A.mortar = S.at.corneo(6, 0.28);
+  A.mortar = S.at.corneo(6, 0.42);
 
   // ── the climbing cell ──
   if (shot === "section" && t >= CUE.born - 0.4 && t < B0.why + 0.6) {

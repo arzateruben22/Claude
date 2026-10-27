@@ -94,7 +94,7 @@ LABELS = [
     {"id": "l-living", "text": "living layers", "kind": "layer", "anchor": "living", "t0": A("vo02:living"), "t1": B["change"]["t0"], "shot": "section", "side": 1},
     {"id": "l-cell", "text": "a new cell", "kind": "cell", "anchor": "climber", "t0": t_born, "t1": t_rise1, "shot": "section", "side": 1, "fixed": True},
     {"id": "l-brick", "text": "bricks: dead cells", "kind": "cell", "anchor": "brick", "t0": A("vo04:bricks,"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
-    {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": -1},
+    {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
     {"id": "l-term", "text": "near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
     {"id": "l-early", "text": "before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
     {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:lost"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
