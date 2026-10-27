@@ -1027,7 +1027,7 @@ const paint = (amt, rise, ph, shedK) => {
 const look = new THREE.Vector3(0, 8, 0);
 const place = (t) => (place.d || (place.d = direct(camera, look, 0.5, ANCHOR, portrait)))(t);   // directed: see direct() in studio3d.js
 const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-mel": [-1.2, 9, 4.6], "l-gran": [0.6, 10.6, 4.6], "l-spot": [-1.5, 12.3, 2.4], "l-shed": [5, 13.2, 0], "l-less": [-2.5, 12.4, 4.2], "l-spf": [6.5, 12.7, 4.5], "l-heat": [-7, 14.8, 3], "l-bright": [0.5, 15.6, 1.5] };
-const OFF = { "l-uv": [1, -1], "l-mel": [1, 0], "l-gran": [1, -1], "l-spot": [-1, -1], "l-shed": [1, -1], "l-less": [-1, 0], "l-spf": [1, 0], "l-heat": [1, -1], "l-bright": [1, -1] };
+const OFF = { "l-uv": [1, -1], "l-mel": [1, 0], "l-gran": [1, -1], "l-spot": [-1, -1], "l-shed": [1, -1], "l-less": [-1, 0], "l-spf": [1, 0], "l-heat": [1, -1], "l-bright": [1, portrait ? 0 : -1] };   // upright, the two heat-and-brightening labels meet: the second sits level with its point instead
 const v3 = new THREE.Vector3();
 const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; el.style.visibility = el.getBoundingClientRect().top < titleBottom() + 6 ? "hidden" : ""; } };   // a label never sits on the title
 const titleBottom = () => { const hd = document.querySelector("header"); return hd ? hd.getBoundingClientRect().bottom : 0; };
