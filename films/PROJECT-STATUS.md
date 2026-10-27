@@ -1,6 +1,6 @@
 # Project status: four science-video formulas to 100%
 
-> **27 Oct, 05:20 UTC:** collected Meanwhile, Inside 005 "Where breath goes" (QA PASS, 74.4 s) + its 1440p YouTube version; vol01 "The traffic inside you" building; 006 rendering (~09:00).
+> **27 Oct, 05:20 UTC:** collected Meanwhile, Inside 005 "Where breath goes" (QA PASS, 74.4 s) + its 1440p YouTube version; vol01 "The traffic inside you" built (2560x1440, 6:20, QA PASS); studio check 20/20. Only 006 left (rendering, ~09:00).
 >
 > **27 Oct, 05:10 UTC:** every finished video at its best for each platform: all 16 shorts have a 1440x2560 YouTube
 > version (youtube1440.py, checked frame for frame); both long videos rebuilt at 2560x1440 with one continuous soundtrack
