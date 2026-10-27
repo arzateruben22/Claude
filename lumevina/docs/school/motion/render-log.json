@@ -3401,8 +3401,8 @@
    "dur": 30.5,
    "w": 720,
    "h": 1280,
-   "bytes": 7463703,
-   "hash": "fc6aa08bf121c7463ab0cf615b86e5ed5aaff7c3",
+   "bytes": 7459496,
+   "hash": "830cb7cef920bbc81ce608ec6527cd93129d85fb",
    "samples": [
     [
      0,
@@ -3570,11 +3570,11 @@
     ],
     [
      615,
-     "d1cf96a86119a83f2c5939d7cbb4e106a6866a72"
+     "30dfc67ae919960926f1544e377828ab1421f9a9"
     ],
     [
      630,
-     "1ba55a407312c0943459d9e86fdbe5475c964490"
+     "38a774d1f7c1b786109c1d9dc1c72791023bc411"
     ],
     [
      645,
@@ -3649,10 +3649,8 @@
      "d36282f99d7e2b823201d59fa254b9460e73be65"
     ]
    ],
-   "warnings": [
-    "clear @21.0s overlap: Free lesson 1 of 5 · Wha / mandelic acid"
-   ],
-   "renderSec": 2749,
+   "warnings": [],
+   "renderSec": 2792.3,
    "renderedAt": "2026-10-27",
    "quick": false
   }
