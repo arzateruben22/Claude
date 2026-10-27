@@ -1,0 +1,344 @@
+{
+ "duration": 74.2,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.6667,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.6667,
+   "t1": 14.9333,
+   "energy": 0.4
+  },
+  {
+   "id": "change",
+   "t0": 14.9333,
+   "t1": 26.6,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.6,
+   "t1": 40.1333,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 40.1333,
+   "t1": 54.1333,
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 54.1333,
+   "t1": 62.0667,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 62.0667,
+   "t1": 68.1333,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 68.1333,
+   "t1": 74.2,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.6667
+  },
+  {
+   "t": 1.3666666666666667,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 2.7666666666666666,
+   "kind": "label",
+   "tag": "l-dead-h"
+  },
+  {
+   "t": 4.6667,
+   "kind": "section",
+   "id": "normal",
+   "t1": 14.9333
+  },
+  {
+   "t": 4.6667,
+   "kind": "badge",
+   "tag": "b-simp"
+  },
+  {
+   "t": 5.166666666666667,
+   "kind": "label",
+   "tag": "l-sc"
+  },
+  {
+   "t": 6.5,
+   "kind": "counter.show",
+   "tag": "c-rows"
+  },
+  {
+   "t": 8.8,
+   "kind": "label",
+   "tag": "l-corneo"
+  },
+  {
+   "t": 12.333333333333334,
+   "kind": "label",
+   "tag": "l-living"
+  },
+  {
+   "t": 14.9333,
+   "kind": "section",
+   "id": "change",
+   "t1": 26.6
+  },
+  {
+   "t": 17.533333333333335,
+   "kind": "label",
+   "tag": "l-cell"
+  },
+  {
+   "t": 17.733333333333334,
+   "kind": "counter.show",
+   "tag": "c-days"
+  },
+  {
+   "t": 19.866666666666667,
+   "kind": "badge",
+   "tag": "b-time"
+  },
+  {
+   "t": 20.4095,
+   "kind": "counter.tick",
+   "tag": "c-days-2"
+  },
+  {
+   "t": 20.9524,
+   "kind": "counter.tick",
+   "tag": "c-days-4"
+  },
+  {
+   "t": 21.4952,
+   "kind": "counter.tick",
+   "tag": "c-days-6"
+  },
+  {
+   "t": 22.0381,
+   "kind": "counter.tick",
+   "tag": "c-days-8"
+  },
+  {
+   "t": 22.581,
+   "kind": "counter.tick",
+   "tag": "c-days-10"
+  },
+  {
+   "t": 23.1238,
+   "kind": "counter.tick",
+   "tag": "c-days-12"
+  },
+  {
+   "t": 23.666666666666668,
+   "kind": "cell.land",
+   "tag": "top"
+  },
+  {
+   "t": 23.6667,
+   "kind": "counter.tick",
+   "tag": "c-days-14"
+  },
+  {
+   "t": 24.533333333333335,
+   "kind": "dissolve",
+   "tag": "cornify",
+   "t1": 25.733333333333334
+  },
+  {
+   "t": 24.733333333333334,
+   "kind": "counter.show",
+   "tag": "c-dead"
+  },
+  {
+   "t": 26.6,
+   "kind": "section",
+   "id": "why",
+   "t1": 40.1333
+  },
+  {
+   "t": 30.2,
+   "kind": "counter.show",
+   "tag": "c-wall"
+  },
+  {
+   "t": 30.2,
+   "kind": "badge",
+   "tag": "b-model"
+  },
+  {
+   "t": 33.5,
+   "kind": "label",
+   "tag": "l-brick"
+  },
+  {
+   "t": 34.5,
+   "kind": "label",
+   "tag": "l-mortar"
+  },
+  {
+   "t": 36.7,
+   "kind": "diffuse",
+   "tag": "water-in"
+  },
+  {
+   "t": 40.1333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.1333
+  },
+  {
+   "t": 40.1333,
+   "kind": "badge",
+   "tag": "b-illus"
+  },
+  {
+   "t": 40.1333,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 54.1333
+  },
+  {
+   "t": 42.1,
+   "kind": "badge",
+   "tag": "b-1979"
+  },
+  {
+   "t": 43.93333333333333,
+   "kind": "label",
+   "tag": "l-term"
+  },
+  {
+   "t": 45.4,
+   "kind": "label",
+   "tag": "l-early"
+  },
+  {
+   "t": 48.86666666666667,
+   "kind": "label",
+   "tag": "l-water"
+  },
+  {
+   "t": 48.86666666666667,
+   "kind": "diffuse",
+   "tag": "water-out"
+  },
+  {
+   "t": 49.36666666666667,
+   "kind": "counter.show",
+   "tag": "c-loss"
+  },
+  {
+   "t": 54.1333,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 62.0667
+  },
+  {
+   "t": 55.63333333333333,
+   "kind": "badge",
+   "tag": "b-cheek"
+  },
+  {
+   "t": 57.43333333333333,
+   "kind": "counter.show",
+   "tag": "c-sc"
+  },
+  {
+   "t": 57.43333333333333,
+   "kind": "scale",
+   "tag": "g-sc"
+  },
+  {
+   "t": 59.56666666666667,
+   "kind": "reveal",
+   "tag": "g-paper"
+  },
+  {
+   "t": 62.0667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 68.1333
+  },
+  {
+   "t": 62.0667,
+   "kind": "badge",
+   "tag": "b-simp-c"
+  },
+  {
+   "t": 68.1333,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.2
+  },
+  {
+   "t": 68.2,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.966666666666667,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 15.233333333333333,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 26.9,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 40.43333333333333,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 54.43333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 62.36666666666667,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 68.43333333333334,
+   "file": "vo/08.wav"
+  }
+ ]
+}

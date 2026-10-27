@@ -1,0 +1,1604 @@
+{
+ "id": "outerlayer-001",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 74.2,
+ "poster": 35.1,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 4.6667,
+   "name": "section"
+  },
+  {
+   "at": 40.1333,
+   "name": "walls"
+  },
+  {
+   "at": 54.1333,
+   "name": "gauge"
+  },
+  {
+   "at": 62.0667,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.6667,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.6667,
+   "t1": 14.9333,
+   "line": "vo02",
+   "energy": 0.4
+  },
+  {
+   "id": "change",
+   "t0": 14.9333,
+   "t1": 26.6,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.6,
+   "t1": 40.1333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 40.1333,
+   "t1": 54.1333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 54.1333,
+   "t1": 62.0667,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 62.0667,
+   "t1": 68.1333,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 68.1333,
+   "t1": 74.2,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": {
+  "hook": 0.15,
+  "section": 0.85,
+  "walls": 0.5,
+  "gauge": 0.85,
+  "close": 0.15
+ },
+ "bio": {
+  "sc_um": 17.0,
+  "rows": 15,
+  "gran_um": 10.0,
+  "spin_um": 48.0,
+  "basal_um": 10.0,
+  "paper_um": 100.0,
+  "loss_x": 5.333333333333333
+ },
+ "clk": {
+  "climb": {
+   "keys": [
+    {
+     "t": 19.866666666666667,
+     "rate": 318315.78947368416
+    },
+    {
+     "t": 23.666666666666668,
+     "rate": 0.0,
+     "badge": null
+    }
+   ],
+   "anchor": [
+    19.866666666666667,
+    0.0
+   ]
+  }
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -14,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 300,
+    "az": -26
+   },
+   {
+    "t": 4.6667,
+    "target": [
+     0,
+     -14,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 270,
+    "az": -22,
+    "ease": "sine"
+   }
+  ],
+  "section": [
+   {
+    "t": 4.6667,
+    "target": [
+     0,
+     -10,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 210,
+    "az": -14
+   },
+   {
+    "t": 9.366666666666667,
+    "target": [
+     0,
+     -9,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 120,
+    "az": -9,
+    "ease": "inout2"
+   },
+   {
+    "t": 12.333333333333334,
+    "target": [
+     0,
+     -30,
+     0
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 170,
+    "az": -7,
+    "ease": "inout2"
+   },
+   {
+    "t": 17.533333333333335,
+    "target": [
+     0,
+     -80.0,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 150,
+    "az": -4,
+    "ease": "inout2"
+   },
+   {
+    "t": 23.666666666666668,
+    "target": [
+     0,
+     -21.0,
+     0
+    ],
+    "el": 7,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 130,
+    "az": -2,
+    "ease": "inout2"
+   },
+   {
+    "t": 25.733333333333334,
+    "target": [
+     0,
+     -10,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 120,
+    "az": -1,
+    "ease": "sine"
+   },
+   {
+    "t": 30.2,
+    "target": [
+     0,
+     -26,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 210,
+    "az": 0,
+    "ease": "inout2"
+   },
+   {
+    "t": 40.1333,
+    "target": [
+     0,
+     -26,
+     0
+    ],
+    "el": 11,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 225,
+    "az": 2,
+    "ease": "sine"
+   }
+  ],
+  "walls": [
+   {
+    "t": 40.1333,
+    "target": [
+     0,
+     -18,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.43,
+    "dist": 330,
+    "az": 0
+   },
+   {
+    "t": 54.1333,
+    "target": [
+     0,
+     -18,
+     0
+    ],
+    "el": 13,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.43,
+    "dist": 300,
+    "az": 2,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 54.1333,
+    "target": [
+     0,
+     -30,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 240,
+    "az": -6
+   },
+   {
+    "t": 62.0667,
+    "target": [
+     0,
+     -30,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 225,
+    "az": -8,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 62.0667,
+    "target": [
+     0,
+     -14,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 250,
+    "az": -18
+   },
+   {
+    "t": 74.2,
+    "target": [
+     0,
+     -14,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 300,
+    "az": -26,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "born": 17.533333333333335,
+  "rise": [
+   19.866666666666667,
+   23.666666666666668
+  ],
+  "apart": [
+   24.533333333333335,
+   25.733333333333334
+  ],
+  "lipid": 34.5,
+  "bricks": 33.5,
+  "water": 36.7,
+  "inside": 37.1,
+  "early": 45.4,
+  "loss": 48.86666666666667,
+  "five": 49.36666666666667,
+  "dead_lit": 2.8666666666666667,
+  "rows": 6.5,
+  "dead": 9.366666666666667,
+  "living": 12.333333333333334,
+  "died": 66.23333333333333
+ },
+ "gauge": {
+  "rise": [
+   54.1333,
+   55.0333
+  ],
+  "sc": 57.43333333333333,
+  "paper": 59.56666666666667,
+  "back": [
+   61.5667,
+   62.466699999999996
+  ],
+  "sc_um": 17.0,
+  "paper_um": 100.0
+ },
+ "labels": [
+  {
+   "id": "l-dead-h",
+   "text": "dead layer",
+   "kind": "layer",
+   "anchor": "sc_top",
+   "t0": 2.7666666666666666,
+   "t1": 4.2167,
+   "shot": "hook",
+   "side": 1
+  },
+  {
+   "id": "l-sc",
+   "text": "stratum corneum",
+   "kind": "layer",
+   "anchor": "sc_mid",
+   "t0": 5.166666666666667,
+   "t1": 8.6,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-corneo",
+   "text": "one dead cell",
+   "kind": "cell",
+   "anchor": "corneo",
+   "t0": 8.8,
+   "t1": 12.033333333333333,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-living",
+   "text": "living layers",
+   "kind": "layer",
+   "anchor": "living",
+   "t0": 12.333333333333334,
+   "t1": 14.9333,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-cell",
+   "text": "a new cell",
+   "kind": "cell",
+   "anchor": "climber",
+   "t0": 17.533333333333335,
+   "t1": 23.666666666666668,
+   "shot": "section",
+   "side": 1,
+   "fixed": true
+  },
+  {
+   "id": "l-brick",
+   "text": "bricks: dead cells",
+   "kind": "cell",
+   "anchor": "brick",
+   "t0": 33.5,
+   "t1": 39.6833,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-mortar",
+   "text": "mortar: fats",
+   "kind": "water",
+   "anchor": "mortar",
+   "t0": 34.5,
+   "t1": 39.6833,
+   "shot": "section",
+   "side": -1
+  },
+  {
+   "id": "l-term",
+   "text": "born near term",
+   "kind": "layer",
+   "anchor": "wall_l",
+   "t0": 43.93333333333333,
+   "t1": 53.6833,
+   "shot": "walls",
+   "side": -1,
+   "fixed": true
+  },
+  {
+   "id": "l-early",
+   "text": "born before 30 weeks",
+   "kind": "layer",
+   "anchor": "wall_r",
+   "t0": 45.4,
+   "t1": 53.6833,
+   "shot": "walls",
+   "side": 1,
+   "fixed": true
+  },
+  {
+   "id": "l-water",
+   "text": "water",
+   "kind": "water",
+   "anchor": "beads",
+   "t0": 48.86666666666667,
+   "t1": 53.6833,
+   "shot": "walls",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-simp-h",
+   "text": "simplified",
+   "t0": 0.0,
+   "t1": 4.2167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified",
+   "t0": 4.6667,
+   "t1": 39.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time",
+   "clock": "climb",
+   "t0": 19.866666666666667,
+   "t1": 24.0667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model",
+   "text": "model",
+   "t0": 30.2,
+   "t1": 39.6833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 40.1333,
+   "t1": 53.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-1979",
+   "text": "Rutter & Hull, 1979",
+   "t0": 42.1,
+   "t1": 53.6833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-cheek",
+   "text": "cheek; varies by site",
+   "t0": 55.63333333333333,
+   "t1": 61.6167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp-c",
+   "text": "simplified",
+   "t0": 62.0667,
+   "t1": 68.2,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-rows",
+   "label": "rows of dead cells",
+   "fmt": "text",
+   "text": "≈15",
+   "t0": 6.5,
+   "t1": 17.133333333333333,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-days",
+   "label": "days climbing",
+   "fmt": "days",
+   "t0": 17.733333333333334,
+   "t1": 24.3333,
+   "at": [
+    0.3,
+    0.215
+   ],
+   "lit": 14.0
+  },
+  {
+   "id": "c-dead",
+   "label": "then it dies",
+   "fmt": "text",
+   "text": "day 14",
+   "t0": 24.733333333333334,
+   "t1": 29.8,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-wall",
+   "label": "rows in the wall",
+   "fmt": "text",
+   "text": "≈15",
+   "t0": 30.2,
+   "t1": 39.6833,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-loss",
+   "label": "water lost, under 30 weeks",
+   "fmt": "text",
+   "text": "≈5×",
+   "t0": 49.36666666666667,
+   "t1": 53.6833,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-sc",
+   "label": "dead layer · cheek",
+   "fmt": "text",
+   "text": "17 µm",
+   "t0": 57.43333333333333,
+   "t1": 68.2,
+   "at": [
+    0.3,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 001",
+  "title": "The *dead layer*",
+  "t1": 4.1667,
+  "sig": 1.3666666666666667
+ },
+ "endCard": 68.2,
+ "end": {
+  "title": "Next layer: does SPF 100 block twice as much as *50*?",
+  "follow": "Outer Layer · No. 002",
+  "next": "Your outermost layer is about 15 rows of dead cells, about 17 µm on the cheek (StatPearls; Egawa et al. 2007)."
+ },
+ "captions": [
+  {
+   "t0": 0.297,
+   "t1": 1.827,
+   "lines": [
+    [
+     [
+      "Is",
+      0.297
+     ],
+     [
+      "your",
+      0.327
+     ],
+     [
+      "skin",
+      0.762
+     ],
+     [
+      "alive?",
+      1.027
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.827,
+   "t1": 2.877,
+   "lines": [
+    [
+     [
+      "The",
+      1.827
+     ],
+     [
+      "part",
+      1.942
+     ],
+     [
+      "you",
+      2.292
+     ],
+     [
+      "see?",
+      2.627
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.877,
+   "t1": 4.267,
+   "lines": [
+    [
+     [
+      "Not",
+      2.877
+     ],
+     [
+      "one",
+      3.162
+     ],
+     [
+      "cell.",
+      3.517
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.987,
+   "t1": 7.372,
+   "lines": [
+    [
+     [
+      "Your",
+      4.987
+     ],
+     [
+      "outermost",
+      5.167
+     ],
+     [
+      "layer",
+      5.757
+     ]
+    ],
+    [
+     [
+      "is",
+      6.132
+     ],
+     [
+      "about",
+      6.327
+     ],
+     [
+      "15 rows",
+      6.497
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.372,
+   "t1": 8.812,
+   "lines": [
+    [
+     [
+      "of flattened cells.",
+      7.372
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.812,
+   "t1": 10.122,
+   "lines": [
+    [
+     [
+      "Each",
+      8.812
+     ],
+     [
+      "one",
+      9.082
+     ],
+     [
+      "is",
+      9.302
+     ],
+     [
+      "dead:",
+      9.372
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.122,
+   "t1": 12.302,
+   "lines": [
+    [
+     [
+      "a",
+      10.122
+     ],
+     [
+      "flat",
+      10.247
+     ],
+     [
+      "shell",
+      10.472
+     ]
+    ],
+    [
+     [
+      "packed with keratin.",
+      10.882
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.302,
+   "t1": 14.942,
+   "lines": [
+    [
+     [
+      "The",
+      12.302
+     ],
+     [
+      "living",
+      12.332
+     ],
+     [
+      "skin",
+      12.847
+     ],
+     [
+      "starts",
+      13.212
+     ]
+    ],
+    [
+     [
+      "just",
+      13.562
+     ],
+     [
+      "beneath",
+      13.837
+     ],
+     [
+      "them.",
+      14.192
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.263,
+   "t1": 17.308,
+   "lines": [
+    [
+     [
+      "Follow",
+      15.263
+     ],
+     [
+      "one",
+      15.668
+     ],
+     [
+      "cell",
+      15.958
+     ]
+    ],
+    [
+     [
+      "from",
+      16.208
+     ],
+     [
+      "the",
+      16.433
+     ],
+     [
+      "bottom.",
+      16.598
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.308,
+   "t1": 19.433,
+   "lines": [
+    [
+     [
+      "It's",
+      17.308
+     ],
+     [
+      "born",
+      17.538
+     ],
+     [
+      "alive,",
+      17.808
+     ]
+    ],
+    [
+     [
+      "at",
+      18.333
+     ],
+     [
+      "the",
+      18.438
+     ],
+     [
+      "base.",
+      18.468
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.433,
+   "t1": 21.203,
+   "lines": [
+    [
+     [
+      "For",
+      19.433
+     ],
+     [
+      "about two weeks",
+      19.463
+     ]
+    ],
+    [
+     [
+      "it",
+      20.428
+     ],
+     [
+      "rises,",
+      20.458
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.203,
+   "t1": 22.698,
+   "lines": [
+    [
+     [
+      "filling",
+      21.203
+     ],
+     [
+      "with keratin.",
+      21.568
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.698,
+   "t1": 24.993,
+   "lines": [
+    [
+     [
+      "Then,",
+      22.698
+     ],
+     [
+      "near",
+      23.093
+     ],
+     [
+      "the",
+      23.523
+     ],
+     [
+      "top,",
+      23.563
+     ]
+    ],
+    [
+     [
+      "it",
+      23.813
+     ],
+     [
+      "takes",
+      23.968
+     ],
+     [
+      "itself",
+      24.168
+     ],
+     [
+      "apart,",
+      24.748
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.993,
+   "t1": 26.093,
+   "lines": [
+    [
+     [
+      "on",
+      24.993
+     ],
+     [
+      "purpose.",
+      25.218
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.92,
+   "t1": 28.34,
+   "lines": [
+    [
+     [
+      "That",
+      26.92
+     ],
+     [
+      "layer",
+      27.065
+     ],
+     [
+      "looks",
+      27.55
+     ]
+    ],
+    [
+     [
+      "like",
+      27.795
+     ],
+     [
+      "waste,",
+      27.87
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.34,
+   "t1": 30.215,
+   "lines": [
+    [
+     [
+      "waiting",
+      28.34
+     ],
+     [
+      "to",
+      28.86
+     ],
+     [
+      "flake",
+      28.96
+     ],
+     [
+      "off.",
+      29.475
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.215,
+   "t1": 32.735,
+   "lines": [
+    [
+     [
+      "Scientists",
+      30.215
+     ],
+     [
+      "picture",
+      30.965
+     ]
+    ],
+    [
+     [
+      "it",
+      31.235
+     ],
+     [
+      "as",
+      31.445
+     ],
+     [
+      "a",
+      31.725
+     ],
+     [
+      "brick",
+      31.755
+     ],
+     [
+      "wall:",
+      31.96
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.735,
+   "t1": 35.335,
+   "lines": [
+    [
+     [
+      "dead",
+      32.735
+     ],
+     [
+      "cells",
+      32.905
+     ],
+     [
+      "for",
+      33.395
+     ],
+     [
+      "bricks,",
+      33.515
+     ]
+    ],
+    [
+     [
+      "fats",
+      33.945
+     ],
+     [
+      "for",
+      34.27
+     ],
+     [
+      "mortar.",
+      34.515
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.335,
+   "t1": 38.16,
+   "lines": [
+    [
+     [
+      "And",
+      35.335
+     ],
+     [
+      "that",
+      35.365
+     ],
+     [
+      "wall",
+      35.63
+     ],
+     [
+      "is",
+      36.04
+     ],
+     [
+      "what",
+      36.185
+     ]
+    ],
+    [
+     [
+      "keeps",
+      36.4
+     ],
+     [
+      "your",
+      36.605
+     ],
+     [
+      "water",
+      36.715
+     ],
+     [
+      "inside.",
+      37.11
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.453,
+   "t1": 43.768,
+   "lines": [
+    [
+     [
+      "In 1979,",
+      40.453
+     ],
+     [
+      "two",
+      42.098
+     ],
+     [
+      "doctors",
+      42.283
+     ]
+    ],
+    [
+     [
+      "measured",
+      42.698
+     ],
+     [
+      "water",
+      42.978
+     ],
+     [
+      "leaving",
+      43.293
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.768,
+   "t1": 45.398,
+   "lines": [
+    [
+     [
+      "the",
+      43.768
+     ],
+     [
+      "skin",
+      43.918
+     ],
+     [
+      "of",
+      44.198
+     ],
+     [
+      "newborns.",
+      44.228
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.398,
+   "t1": 47.383,
+   "lines": [
+    [
+     [
+      "Babies",
+      45.398
+     ],
+     [
+      "born",
+      45.858
+     ]
+    ],
+    [
+     [
+      "before",
+      46.173
+     ],
+     [
+      "30 weeks,",
+      46.523
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.383,
+   "t1": 48.873,
+   "lines": [
+    [
+     [
+      "before",
+      47.383
+     ],
+     [
+      "that",
+      47.648
+     ],
+     [
+      "wall",
+      47.843
+     ]
+    ],
+    [
+     [
+      "is",
+      48.208
+     ],
+     [
+      "finished,",
+      48.238
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.873,
+   "t1": 51.033,
+   "lines": [
+    [
+     [
+      "lost",
+      48.873
+     ],
+     [
+      "about",
+      49.173
+     ]
+    ],
+    [
+     [
+      "five times",
+      49.363
+     ],
+     [
+      "as",
+      50.138
+     ],
+     [
+      "much.",
+      50.283
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.453,
+   "t1": 56.073,
+   "lines": [
+    [
+     [
+      "To",
+      54.453
+     ],
+     [
+      "scale:",
+      54.728
+     ],
+     [
+      "on",
+      55.358
+     ],
+     [
+      "the",
+      55.388
+     ],
+     [
+      "cheek,",
+      55.633
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.073,
+   "t1": 59.548,
+   "lines": [
+    [
+     [
+      "the whole dead layer",
+      56.073
+     ],
+     [
+      "is",
+      57.028
+     ]
+    ],
+    [
+     [
+      "about 17 micrometers.",
+      57.228
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.548,
+   "t1": 61.773,
+   "lines": [
+    [
+     [
+      "A",
+      59.548
+     ],
+     [
+      "sheet",
+      59.578
+     ],
+     [
+      "of",
+      59.888
+     ],
+     [
+      "paper",
+      60.068
+     ]
+    ],
+    [
+     [
+      "is",
+      60.333
+     ],
+     [
+      "about",
+      60.728
+     ],
+     [
+      "100.",
+      60.898
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.387,
+   "t1": 65.692,
+   "lines": [
+    [
+     [
+      "Every",
+      62.387
+     ],
+     [
+      "day,",
+      62.907
+     ],
+     [
+      "you're",
+      63.472
+     ]
+    ],
+    [
+     [
+      "kept alive",
+      63.667
+     ],
+     [
+      "by",
+      64.682
+     ],
+     [
+      "cells",
+      64.872
+     ],
+     [
+      "that",
+      65.502
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.692,
+   "t1": 67.947,
+   "lines": [
+    [
+     [
+      "already",
+      65.692
+     ],
+     [
+      "died",
+      66.222
+     ],
+     [
+      "to",
+      66.697
+     ]
+    ],
+    [
+     [
+      "build",
+      66.827
+     ],
+     [
+      "a wall.",
+      67.052
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.453,
+   "t1": 72.493,
+   "lines": [
+    [
+     [
+      "Next:",
+      68.453
+     ],
+     [
+      "does",
+      69.103
+     ],
+     [
+      "SPF 100",
+      69.303
+     ],
+     [
+      "block",
+      70.508
+     ]
+    ],
+    [
+     [
+      "twice",
+      70.853
+     ],
+     [
+      "as",
+      71.263
+     ],
+     [
+      "much",
+      71.393
+     ],
+     [
+      "as 50?",
+      71.593
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.099,
+   "file": "vo/01.wav",
+   "text": "Is your skin alive? The part you see? Not one cell."
+  },
+  {
+   "id": "vo02",
+   "t": 4.966666666666667,
+   "dur": 9.474,
+   "file": "vo/02.wav",
+   "text": "Your outermost layer is about fifteen rows of flattened cells. Each one is dead: a flat shell packed with keratin. The living skin starts just beneath them."
+  },
+  {
+   "id": "vo03",
+   "t": 15.233333333333333,
+   "dur": 10.601,
+   "file": "vo/03.wav",
+   "text": "Follow one cell from the bottom. It's born alive, at the base. For about two weeks it rises, filling with keratin. Then, near the top, it takes itself apart, on purpose."
+  },
+  {
+   "id": "vo04",
+   "t": 26.9,
+   "dur": 10.99,
+   "file": "vo/04.wav",
+   "text": "That layer looks like waste, waiting to flake off. Scientists picture it as a brick wall: dead cells for bricks, fats for mortar. And that wall is what keeps your water inside."
+  },
+  {
+   "id": "vo05",
+   "t": 40.43333333333333,
+   "dur": 10.236,
+   "file": "vo/05.wav",
+   "text": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns. Babies born before thirty weeks, before that wall is finished, lost about five times as much."
+  },
+  {
+   "id": "vo06",
+   "t": 54.43333333333333,
+   "dur": 7.113,
+   "file": "vo/06.wav",
+   "text": "To scale: on the cheek, the whole dead layer is about seventeen micrometers. A sheet of paper is about a hundred."
+  },
+  {
+   "id": "vo07",
+   "t": 62.36666666666667,
+   "dur": 5.315,
+   "file": "vo/07.wav",
+   "text": "Every day, you're kept alive by cells that already died to build a wall."
+  },
+  {
+   "id": "vo08",
+   "t": 68.43333333333334,
+   "dur": 3.844,
+   "file": "vo/08.wav",
+   "text": "Next: does SPF one hundred block twice as much as fifty?"
+  }
+ ]
+}
