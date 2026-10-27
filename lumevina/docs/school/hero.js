@@ -1,6 +1,6 @@
 /* Lumevina Skin School — the opening picture.
  *
- * A rendered loop of living skin (docs/school/motion/scenes3d.mjs → "hero", written to
+ * A rendered loop of the skin block (docs/school/motion/scenes3d.mjs → "hero", written to
  * img/school/video/hero.mp4, .webm and .jpg by render.mjs), in the same look as the lesson
  * clips: a cross-section cut through skin, told in the course's three levels over 24 s:
  *   Level 1  Know your skin   the cells swell and rise; the sun leaves two dark spots
