@@ -36,11 +36,12 @@ export const toneColor = (name, m) => {
 
 export const createSection = (o = {}) => {
   const W = o.width ?? 180, D = o.depth ?? 60, ROWS = o.rows ?? 15, SC = o.sc ?? 17, GR = o.gran ?? 10, SP = o.spin ?? 48, BA = o.basal ?? 10;
-  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2;
+  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2, OX = o.x ?? 0;   // OX: the block's x in the world (clipping planes are world-space)
   const yG = -SC, yS = -SC - GR, yB = -SC - GR - SP, yDJ = yB - BA;           // tops of granular, spinous, basal; the junction
   const junction = (x) => yDJ + 3.2 * Math.sin(x / 17 + 0.6) + 1.4 * Math.sin(x / 7.3 + 1.9);
   const group = new THREE.Group();
-  const clip = [new THREE.Plane(new THREE.Vector3(-1, 0, 0), x1), new THREE.Plane(new THREE.Vector3(1, 0, 0), -x0),
+  group.position.x = OX;
+  const clip = [new THREE.Plane(new THREE.Vector3(-1, 0, 0), x1 + OX), new THREE.Plane(new THREE.Vector3(1, 0, 0), -x0 - OX),
     new THREE.Plane(new THREE.Vector3(0, 0, -1), z1), new THREE.Plane(new THREE.Vector3(0, 0, 1), -z0)];
   const mat = (o2 = {}) => new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0, side: THREE.DoubleSide, clippingPlanes: clip, ...o2 });
   const M = { corneo: mat({ roughness: 0.5 }), living: mat(), basal: mat(), melanin: mat({ roughness: 0.4 }), nucleus: mat({ roughness: 0.45 }),

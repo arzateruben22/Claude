@@ -73,7 +73,7 @@ CAM = {
         {"t": A("vo04:Scientists"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 0, "ease": "inout2"},
         {"t": B["whoa"]["t0"], "target": [0, -26, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 580, "az": 2, "ease": "sine"},
     ],
-    "walls": [{"t": B["whoa"]["t0"], "target": [0, -18, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 800, "az": 0},
+    "walls": [{"t": B["whoa"]["t0"], "target": [0, -22, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 640, "az": 0},
               {"t": B["toscale"]["t0"], "target": [0, -18, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 780, "az": 2, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6},
               {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8, "ease": "sine"}],
@@ -95,8 +95,8 @@ LABELS = [
     {"id": "l-cell", "text": "a new cell", "kind": "cell", "anchor": "climber", "t0": t_born, "t1": t_rise1, "shot": "section", "side": 1, "fixed": True},
     {"id": "l-brick", "text": "bricks: dead cells", "kind": "cell", "anchor": "brick", "t0": A("vo04:bricks,"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
     {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": -1},
-    {"id": "l-term", "text": "born near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-early", "text": "born before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-term", "text": "near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-early", "text": "before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
     {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:lost"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
 ]
 BADGES = [

@@ -277,14 +277,14 @@
     "t": 40.1333,
     "target": [
      0,
-     -18,
+     -22,
      0
     ],
     "el": 12,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.43,
-    "dist": 800,
+    "dist": 640,
     "az": 0
    },
    {
@@ -477,7 +477,7 @@
   },
   {
    "id": "l-term",
-   "text": "born near term",
+   "text": "near term",
    "kind": "layer",
    "anchor": "wall_l",
    "t0": 43.93333333333333,
@@ -489,7 +489,7 @@
   },
   {
    "id": "l-early",
-   "text": "born before 30 weeks",
+   "text": "before 30 weeks",
    "kind": "layer",
    "anchor": "wall_r",
    "t0": 45.4,

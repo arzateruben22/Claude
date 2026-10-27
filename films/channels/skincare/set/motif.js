@@ -97,7 +97,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe }) =>
   scTxt.textContent = "dead layer ≈ 17 µm"; paperTxt2.textContent = "paper ≈ 100 µm";
   const card = mk("rect", { fill: "var(--card)", opacity: 0.94, rx: 22 * S1 }, g);
   g.insertBefore(card, spine);
-  const xL = (safe ? safe.l : 0.083) * W + 18 * S1;
+  const xL = (safe ? safe.l : 0.083 * W) + 18 * S1;   // hud.safe is in px
   return {
     // top/bottom: the surface and the `um`-deep point on screen (px), or null when the section is off; op: 0 … 1;
     // lift: 0 (attached) … 1 (to scale); sc: µm of the dead layer; fillSc, fillPaper: 0 … 1 (the bars' fill)
@@ -106,7 +106,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe }) =>
       if (op <= 0.001 || top == null) { svg.style.visibility = "hidden"; return; }
       svg.style.visibility = "visible";
       // attached geometry (px per µm from the projection) blended to the lifted geometry
-      const pxA = (bottom - top) / um, liftPx = 0.30 * H / 100, yA = top, yL = 0.30 * H, xLift = 0.30 * W;
+      const pxA = (bottom - top) / um, liftPx = 0.22 * H / 100, yA = top, yL = 0.33 * H, xLift = 0.36 * W;   // lifted: below the spine counter, above the captions
       const u = E.inout2(Math.min(1, Math.max(0, lift)));
       const px = pxA + (liftPx - pxA) * u, y0 = yA + (yL - yA) * u, x = xL + (xLift - xL) * u;
       const len = 120 * px;

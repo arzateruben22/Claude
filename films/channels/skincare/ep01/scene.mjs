@@ -44,10 +44,9 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um };
 const S = createSection({ width: 180, depth: 60, rows: BIO.rows, ...LAY, seed: 3 });
 scene.add(S.group);
-const WL = createSection({ width: 82, depth: 50, rows: BIO.rows, ...LAY, seed: 11 });   // born near term: the finished wall
+const WL = createSection({ width: 82, depth: 50, rows: BIO.rows, ...LAY, seed: 11, x: -47 });   // born near term: the finished wall
 const thin = 4, scThin = BIO.sc_um * thin / BIO.rows;                                   // born before 30 weeks: a thin wall (illustration)
-const WR = createSection({ width: 82, depth: 50, rows: thin, ...LAY, sc: scThin, seed: 12 });
-WL.group.position.x = -47; WR.group.position.x = 47;
+const WR = createSection({ width: 82, depth: 50, rows: thin, ...LAY, sc: scThin, seed: 12, x: 47 });
 scene.add(WL.group, WR.group);
 const climber = createClimber();
 scene.add(climber.group);
@@ -146,8 +145,8 @@ window.seek = function (t) {
   WL.set({ tone, mortar: 0.5, mortarColor: WATER, dimLiving: 0.3 }); WR.set({ tone, mortar: 0.5, mortarColor: WATER, dimLiving: 0.3 });
   beadsL.set(t, { gain: wb, color: WATER });
   const passR = beadsR.set(t, { gain: wb, color: WATER });
-  A.wall_l = [WL.group.position.x - 22, 0, 25];
-  A.wall_r = [WR.group.position.x + 22, 0, 25];
+  A.wall_l = [WL.group.position.x + 22, 0, 25];
+  A.wall_r = [WR.group.position.x - 22, 0, 25];
   A.beads = passR ? [passR[0] + WR.group.position.x * 0, passR[1], passR[2]] : [60, 6, 10];
 
   // ── the depth gauge: attached to the section's left cut edge, lifted to centre for the to-scale beat ──
