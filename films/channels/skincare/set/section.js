@@ -160,16 +160,20 @@ export const createClimber = ({ clip } = {}) => {
     fil.add(s);
   }
   cell.material.transparent = true; cell.material.opacity = 0.9; cell.material.depthWrite = false;
-  g.add(nuc, fil, cell);
+  // an ink outline (the back faces of a slightly larger shell), so the followed cell reads against its neighbours in
+  // every tone
+  const line = new THREE.Mesh(cell.geometry, new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0.85, toneMapped: false }));
+  g.add(nuc, fil, line, cell);
   return {
     group: g,
     set({ pos, u, k, tone, glow = 1, bodyColor, nucColor }) {
       const sx = 6.6 + 6.4 * u * u + 2 * k, sy = 6.2 - 3.4 * u - 2.2 * k;
       g.position.set(...pos);
       cell.scale.set(sx, Math.max(0.7, sy), sx);
-      cell.material.color.setRGB(...bodyColor);
+      line.scale.set(sx + 0.9, Math.max(0.7, sy) + 0.9, sx + 0.9);
+      cell.material.color.setRGB(...bodyColor.map((v) => v + (1 - v) * 0.35));   // paler than its neighbours
       cell.material.emissive.setRGB(...bodyColor.map((v) => v * 0.5 * glow));
-      cell.material.opacity = 0.62 + 0.3 * k;
+      cell.material.opacity = 0.8 + 0.15 * k;
       nuc.scale.setScalar(2.4 * (1 - k));
       nuc.visible = k < 0.98;
       nuc.material.color.setRGB(...nucColor); nuc.material.opacity = 1 - k;
