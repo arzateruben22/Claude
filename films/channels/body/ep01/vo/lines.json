@@ -6,7 +6,7 @@
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
- "python": "3.13.16",
+ "python": "3.13.17",
  "made_by": "films/channels/body/ep01/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
  "gap": 0.3,
  "gap_question": 0.45,
@@ -47,9 +47,9 @@
    ],
    "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪmpəld dˈɪsk, ɐbˌaʊt sˈɛvən and ɐ hˈɑːf mˈaɪkɹəʊmˌiːtəz . ɪt ˈiːvən pˈʊʃt ˈaʊt ɪts ˈəʊn njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
    "speeds": [
-    0.88,
-    0.95,
-    0.95
+    0.92,
+    0.94,
+    0.96
    ],
    "gaps": [
     0.3,
@@ -57,17 +57,17 @@
    ],
    "silences": [
     [
-     4.7918,
-     5.0918
+     4.6158,
+     4.9158
     ],
     [
-     7.1624,
-     7.4624
+     7.0351,
+     7.3351
     ]
    ],
    "file": "02.wav",
-   "dur": 11.196,
-   "sha256": "e01026854aae98a7fac0679e86930d1be1e91e26fccfee959b3358bf2bedb3ae"
+   "dur": 11.049,
+   "sha256": "badcd8332fac9dd6dda28f1d5fce9980f3679fee01f6fa9deef5f25cba63409f"
   },
   {
    "id": "vo03",
@@ -105,7 +105,7 @@
    ],
    "phonemes": "juːd ɡˈɛs ɪts sˈɜːfɪs stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt fˈəʊldz ˌɪntʊ ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
-    0.92,
+    0.95,
     0.94,
     0.92
    ],
@@ -115,17 +115,17 @@
    ],
    "silences": [
     [
-     2.2492,
-     2.5492
+     2.16,
+     2.46
     ],
     [
-     3.4718,
-     3.7718
+     3.3827,
+     3.6827
     ]
    ],
    "file": "04.wav",
-   "dur": 8.482,
-   "sha256": "92930fa3b023252cc292e8f7cf8746e59eba8fc8afbcbb7287a16ad7aa44f723"
+   "dur": 8.393,
+   "sha256": "3e0240b2a9666cab13141879bee751c1e7a680b7a5c04132e2413a7479ee3779"
   },
   {
    "id": "vo05",

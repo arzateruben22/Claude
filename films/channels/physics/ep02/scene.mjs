@@ -8,7 +8,7 @@
 // large-angle motion through Jacobi's elliptic functions, no air, no friction (badged). Ghosts are stamped at the
 // true positions every 1/10 s of scene time. The whoa's fifteen are Harvard's 51 … 65 swings a minute.
 import * as THREE from "three";
-import { stage, seg, E, ease, shotAt } from "cinema/film/runtime.js";
+import { stage, seg, E, ease, shotAt, keyed } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
 import { strobe } from "cinema/sci/strobe.js";
@@ -18,6 +18,7 @@ import { createProps } from "../set/props.js";
 import { createGantry, brassGhost } from "../set/pendulum.js";
 import { pendulum } from "../set/swing.js";
 import { dropTitle } from "../set/title.js";
+import { SPINE_CSS, placeSpine } from "../set/spine.js";
 import { unlit, acesInv } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
@@ -47,6 +48,27 @@ const WPIV = WV.L.map((_, n) => [0, WV.y, WV.z0 + n * WV.dz]);
 const WAVE = createGantry({ pivots: WPIV, L: WV.L, r: WV.r, beamX: 0, post: [40, WV.z0 + (WV.n - 1) * WV.dz / 2], string: 0.1, beamPad: 5, beamW: 2 });
 const WP = WV.L.map((L, n) => pendulum({ L, theta0: WV.theta, pivot: WPIV[n] }));
 scene.add(RIG.group, WAVE.group);
+// "One line wins" (WRITING.md, the picture 8): each lane's bob and string get their own brass and ink, so the lane
+// the caption is not about can drop to a third (film.json "dim", keyed on cuts and words; the opacities are chosen
+// for how they read through the finish's ACES, see compile.py). They stay in the transparent pass at every opacity
+// (no program change between frames); at 1 they draw exactly as opaque.
+const DIMK = FILM.dim, dimAt = (k, t) => keyed(DIMK[k], t, E.inout2);
+const LANE_MAT = LANES.map((_, i) => {
+  const brass = RIG.materials.brass.clone(), ink = RIG.materials.ink.clone();
+  for (const m of [brass, ink]) m.transparent = true;
+  RIG.bobs[i].traverse((o) => { if (o.isMesh) o.material = brass; });
+  RIG.strings[i].material = ink;
+  return [brass, ink];
+});
+// The transparent pass draws in scene-graph order (sortObjects is off), so put the lanes back to front: the far lane
+// (the big one, z −20; the camera is always on the +z side) before the near one. A dimmed near lane then blends over
+// the far one where they cross, instead of writing depth first and cutting a cyc-pale gap through it. Each lane
+// keeps its depth writes (its hook stays hidden inside its own bob). At full opacity the pixels are unchanged.
+{ const ch = RIG.group.children, byDepth = LANES.map((_, i) => i).sort((a, b) => PIV[a][2] - PIV[b][2]);
+  const lanes = byDepth.flatMap((i) => [RIG.strings[i], RIG.bobs[i]]);
+  const at = Math.min(...lanes.map((o) => ch.indexOf(o)));
+  lanes.forEach((o) => ch.splice(ch.indexOf(o), 1));
+  ch.splice(at, 0, ...lanes); }
 
 // "as in a grandfather clock": a 2 m long-case clock drawn as ink lines beside the rig (an illustration, the
 // human-scale anchor), its 99.4 cm pendulum swinging with the small one; it draws on and off with the line
@@ -110,7 +132,7 @@ LANES.forEach((lane, i) => {
   AR.add(`wy-f-${lane}`, { tail: (t) => bobPos("why", lane, t), vec: [F * Math.cos(th), F * Math.sin(th), 0], color: FORCE,
     t0: CUE.why.pull + 0.15 * i, t1: CUE.why.R, slot: i, hold: HOLD });
   AR.add(`wy-v-${lane}`, { tail: (t) => bobPos("why", lane, t), vec: (t) => { const v = PEND[lane].vel(local("why", t)); return [v[0] * 0.12, v[1] * 0.12, 0]; },
-    color: MOTION, t0: CUE.why.speed + 0.15 * i, t1: CUE.why.rungs - 0.15, slot: 2 + i, hold: HOLD });
+    color: MOTION, t0: CUE.why.speed + 0.15 * i, t1: CUE.why.speedOut, slot: 2 + i, hold: HOLD });   // out as "nearly the same time." begins
 });
 
 // ── camera: orbit keys per shot (film.json "cam"); pitch > 0 looks down ──
@@ -138,11 +160,12 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
-hud.badge("warp", { from: clk, slot: "tr" });
-// the hook's speed note: bottom-right, so the poster's title has the top of the frame to itself
+// notes (rule 8): the speed column top-left, the standing cheats and cards top-right (film.json noteSlots, badges)
+hud.badge("warp", { from: clk, slot: FILM.noteSlots.speed });
+// the hook's speed note: bottom-left, the speed column's side, while the title drop owns the top band (frame 0)
 { const HN = FILM.hookNote;
-  hud.badge("hook-speed", { kind: "speed", slot: "br", t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "10× slower" : "paused") }); }
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
+  hud.badge("hook-speed", { kind: "speed", slot: FILM.noteSlots.hook, t0: 0, t1: HN.paused[1], text: (t) => (t < HN.paused[0] ? "10× slower" : "paused") }); }
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot, maxW: b.maxW });
 const waveBob = (n, t) => WAVE.bobAt(n, WP[n].theta(local("wave", t)));
 const anchorFn = (an) => {
   if (an.bob) return (t) => bobPos(an.bob[0], an.bob[1], t);
@@ -163,13 +186,17 @@ const spineVal = (t) => {
   if (s.kind === "count") return nSw(t);
   return Math.min(s.cap, Math.max(0, local(s.take, t)));
 };
-const counterEl = hud.counter("spine", { value: spineVal, fmt: (v) => v.toFixed(2), unit: "s", label: "one swing",
-  t0: SP[0].t0, t1: SP[SP.length - 1].t1, at: [0.25, 0.235], minCh: 4 });
-const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u"), counterV = counterEl.querySelector(".v");
+// The plate's text (label, digits, unit, lit) is all in place before hud.update measures and places it, so where it
+// sits is a function of t alone; placeSpine steps it on cuts (film.json spineAt: the shot's empty region).
+let spNow = SP[0];
+const spineOpts = { value: spineVal, fmt: (v) => v.toFixed(spNow.dp), unit: "s", label: "one swing", lit: () => !!spNow.lit,
+  t0: SP[0].t0, t1: SP[SP.length - 1].t1, minCh: 4 }, counterEl = hud.counter("spine", spineOpts);
+placeSpine(spineOpts, counterEl, hud, W, H, FILM.spineAt);
+const counterLb = counterEl.querySelector(".lb"), counterU = counterEl.querySelector(".u");
 const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
 const foot = document.createElement("div"); foot.className = "rf-foot"; foot.textContent = FILM.end.foot; endEl.appendChild(foot);
 { const st = document.createElement("style");
-  st.textContent = ".hud-badge.card { max-width: 44vmin; } #hud .hud-counter { padding: .9vmin 2.2vmin 1.2vmin; border-radius: .8vmin; background: rgba(255, 253, 247, .95); } .rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
+  st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 
@@ -187,7 +214,8 @@ window.seek = function (t) {
     WP.forEach((pd, n) => { const th = pd.theta(local("wave", t)); WAVE.set(n, th); if (n % 2 === 0) { const p = WAVE.bobAt(n, th); casters.push([p[0], p[1], p[2], WV.r]); } });
     casters.length = Math.min(casters.length, 7); casters.push([40, 3, WV.z0 + (WV.n - 1) * WV.dz / 2, 5]);
   }
-  const gk = Math.min(E.out3(seg(t, GC.t0, GC.t0 + 0.6)), 1 - E.in3(seg(t, GC.t1, GC.t1 + 0.5)));
+  LANE_MAT.forEach(([brass, ink], i) => { brass.opacity = ink.opacity = dimAt(LANES[i], t); });
+  const gk = Math.min(E.out3(seg(t, GC.t0, GC.t0 + 0.6)), 1 - E.in3(seg(t, GC.t1, GC.t1 + 0.5))) * dimAt("gclock", t);
   gclock.visible = gk > 0.001; gcMat.opacity = gk; gcPend.rotation.z = take === "normal" ? thetaOf("normal", "small", t) : 0;
   S.update(t); AR.update(t);
   cyc.update({ grid: 1, casters });
@@ -198,8 +226,7 @@ window.seek = function (t) {
     });
   }
   dropT(t); dropE(t);
-  { const s = spineAt(t); counterLb.textContent = s.label; }   // before the HUD measures it
+  spNow = spineAt(t); counterLb.textContent = spNow.label; counterU.textContent = spNow.unit;   // before the HUD measures it
   hud.update(t);
-  { const s = spineAt(t); counterU.textContent = s.unit; counterV.textContent = spineVal(t).toFixed(s.dp); counterEl.classList.toggle("lit", !!s.lit); }
   renderer.render(scene, camera);
 };

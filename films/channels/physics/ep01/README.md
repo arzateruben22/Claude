@@ -14,6 +14,20 @@ delivered** (24 Oct). **Nothing has been posted.** A physicist signs off the scr
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` |
 
 
+## v3.1 (26 Oct): the reviewer's polish notes, before the final
+
+The text audit checks text against text, so label, badge and caption plates could still touch. A plate sweep (every label, badge and caption plate, leader and dot, every 0.1 s, and every frame around each fix) found the reviewer's four and four more; seven are fixed. An independent check then caught one the polish caused (below, fixed). What still comes close is listed under "Known, left as is":
+
+- "1/20 s apart" sits beside its gap (`v: middle`), 25 px under the speed badge (it tucked 18–27 px under it, 7.6–14.1 s). "thrown · 0.44 m/s" stays above its ball and now arrives 0.3 s after "sideways" (15.4 s), once the speed badge has gone (it touched it at 14.6–15.2 s). Putting it beside the ball (`v: middle`) had clamped its plate over the ball from 17.4 s to the cut, landing included; the independent check caught that, and it was undone.
+- "steady glide" ends on "only" (33.2 s), faded out before the ball drops to where its plate clamped over it (33.9–35.6 s, already in v2).
+- "level" names row 5, not row 4: 80 px under "3 throws overlaid" (it sat ~5 px under it).
+- "steady glide" leaves on "both" and "gravity" on "tick", each gone (fade included) before the turn carries its arrow tip and dot under the caption plate. "same height" is gone before the whoa cut: fading across it, it jumped to the new camera's projection of a rung no longer drawn, its dot in the caption plate.
+- The speed badge's last exit (the measure cut) fades in 0.15 s, not hud.js's 0.3 s (`CUE.measure.warpOut`, applied in `scene.mjs`): hud.js slides "3 throws overlaid" up as the leaving note fades, and over 0.3 s the plates overlapped (51.4 s). Kit finding 6 below.
+- Left as is: the "Air ignored" card comes within 6–11 px of the "1 m" label for 0.1 s as it slides in (61.3 s); they never touch, and it settles 13 px clear.
+- The end card's footnote keeps the book's title on one line ("Two New Sciences" joined with no-break spaces): "Two motions at once: Galileo, / Two New Sciences, 1638".
+- c14's claim no longer names the internal script or reads as NASA's computation; `review/CLAIMS-REVIEW.md` and `out/POSTING.md` / `posting.json` are regenerated. `assets.md` gives the voice speed as 1.0.
+- Three label pans moved, so the soundtrack was re-rendered: sync PASS on every kind, labels 0.0 ms against the page, −14.1 LUFS AAC. No word, voice line or event time changed.
+
 ## v3 (26 Oct): an independent audit's fixes
 
 Applied from the script audit (`F1`–`F8`; F4 and F9 were refuted and left alone). **The final in `out/` is the v2 cut until it is re-rendered from these files**; everything up to it (voice, lint, film.json, sheet.json, soundtrack, stills) is rebuilt.
@@ -198,7 +212,9 @@ Nothing protected was edited. Each workaround lives in this episode or the chann
 5. **hud.js `fixed` labels.** A fixed label near the safe box's right edge is clamped back over its
    own anchor. Shots are framed so the subject keeps to the left and the labels to the right.
 6. **hud.js badge stack.** A clock badge that is fading out still holds its stack slot, which pushes
-   the next badge down for 0.3 s. Retimed.
+   the next badge down for 0.3 s. Retimed. The reverse too: the stack reflows faster than a leaving
+   note fades, so the note under it slides up into its plate. Worked around in `scene.mjs` (v3.1) by
+   fading the speed badge's last exit in 0.15 s; the kit could hold the reflow until the note has gone.
 7. **hud.js caption plate.** Between pages the hidden caption plate keeps the last page's `left`.
    It is invisible, so pixels stay pure, but the DOM depends on the seek order.
 8. **render.mjs audit** checks only two moments per shot. A 0.1–0.25 s sweep found 11 problems it missed.
@@ -211,3 +227,8 @@ Nothing protected was edited. Each workaround lives in this episode or the chann
     pan and first-shown times.
 11. **Voiced length.** At af_bella 0.95 the voiced layout came to 76.0 s, over the lint's 75 s. Fixed
     with four `pre:` lead-ins in the script headings; the words are unchanged.
+
+### Known, left as is (v3.1)
+- The floor readout plates (0/20 cm, the whoa and takeaway rows) come within 1–2 px of the caption plate and slide 3–6 px into it for a few frames as they fade in; the takeaway's three readouts close to about −1 px at 72.6–73.2 s.
+- "1500s drawing" sits over its own dot at 24.4–31.5 s (kit finding 5: a plate clamped at the safe box's edge goes back over its anchor).
+- c14's note in claims.json names the bible's drag.py model on purpose: it is the reviewer's provenance. The public posting text doesn't mention it.

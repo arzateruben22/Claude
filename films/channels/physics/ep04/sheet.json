@@ -1,5 +1,5 @@
 {
- "duration": 72.0,
+ "duration": 72.2667,
  "fps": 30,
  "preset": "restframe-bench",
  "duck_db": -9.0,
@@ -43,13 +43,13 @@
   {
    "id": "takeaway",
    "t0": 61.0667,
-   "t1": 65.3333,
+   "t1": 65.6,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 65.3333,
-   "t1": 72.0,
+   "t0": 65.6,
+   "t1": 72.2667,
    "energy": 0.4
   }
  ],
@@ -74,7 +74,11 @@
   {
    "t": 2.2,
    "kind": "label",
-   "tag": "hk-hammer"
+   "tag": "hk-hammer",
+   "pos": [
+    0.664,
+    0.394
+   ]
   },
   {
    "t": 3.3333,
@@ -84,7 +88,11 @@
   {
    "t": 3.3333333333333335,
    "kind": "label",
-   "tag": "hk-feather"
+   "tag": "hk-feather",
+   "pos": [
+    0.346,
+    0.426
+   ]
   },
   {
    "t": 4.2667,
@@ -95,68 +103,80 @@
   {
    "t": 4.550033,
    "kind": "counter.show",
-   "tag": "spine"
+   "tag": "spine",
+   "pos": [
+    0.25,
+    0.245
+   ]
   },
   {
-   "t": 4.85,
-   "kind": "badge",
-   "tag": "drift",
-   "text": "Illustration: the feather's drift"
-  },
-  {
-   "t": 7.1155,
+   "t": 6.5821,
    "kind": "contact",
    "tag": "earth:release"
   },
   {
-   "t": 7.1155,
+   "t": 6.5821,
    "kind": "strobe",
    "tag": "earth:g0"
   },
   {
-   "t": 7.5155,
+   "t": 6.9821,
    "kind": "strobe",
    "tag": "earth:g2"
   },
   {
-   "t": 7.9155,
+   "t": 7.3821,
    "kind": "strobe",
    "tag": "earth:g4"
   },
   {
-   "t": 8.3155,
+   "t": 7.7821,
    "kind": "strobe",
    "tag": "earth:g6"
   },
   {
-   "t": 8.7155,
+   "t": 8.1821,
    "kind": "strobe",
    "tag": "earth:g8"
   },
   {
-   "t": 9.1155,
+   "t": 8.5821,
    "kind": "strobe",
    "tag": "earth:g10"
   },
   {
-   "t": 9.4,
+   "t": 8.866666666666667,
+   "kind": "label",
+   "tag": "nm-land",
+   "pos": [
+    0.65,
+    0.523
+   ]
+  },
+  {
+   "t": 8.8667,
+   "kind": "badge",
+   "tag": "drift",
+   "text": "Illustration"
+  },
+  {
+   "t": 8.8667,
    "kind": "impact",
    "tag": "earth:hammer"
   },
   {
-   "t": 9.4,
-   "kind": "label",
-   "tag": "nm-land"
-  },
-  {
-   "t": 9.77,
+   "t": 9.2367,
    "kind": "time.slow",
    "tag": "earth:freeze"
   },
   {
-   "t": 11.1,
+   "t": 10.4,
    "kind": "label",
-   "tag": "nm-half"
+   "tag": "nm-half",
+   "pos": [
+    0.3,
+    0.379
+   ]
   },
   {
    "t": 12.250033,
@@ -218,7 +238,11 @@
   {
    "t": 19.6,
    "kind": "label",
-   "tag": "ch-together"
+   "tag": "ch-together",
+   "pos": [
+    0.623,
+    0.567
+   ]
   },
   {
    "t": 19.6,
@@ -234,7 +258,7 @@
   {
    "t": 24.250033,
    "kind": "counter.tick",
-   "tag": "spine:each one's acceleration"
+   "tag": "spine:each one's acceleration (m/s2)"
   },
   {
    "t": 24.2667,
@@ -246,12 +270,25 @@
    "t": 30.7333,
    "kind": "badge",
    "tag": "notscale",
-   "text": "Arrows not to scale between the two"
+   "text": "Not to scale"
   },
   {
-   "t": 30.733333333333334,
+   "t": 31.033333333333335,
    "kind": "label",
-   "tag": "wy-pull"
+   "tag": "wy-pull",
+   "pos": [
+    0.352,
+    0.387
+   ]
+  },
+  {
+   "t": 34.46666666666667,
+   "kind": "label",
+   "tag": "wy-acc",
+   "pos": [
+    0.265,
+    0.356
+   ]
   },
   {
    "t": 35.4224,
@@ -262,11 +299,6 @@
    "t": 35.4224,
    "kind": "strobe",
    "tag": "why:g0"
-  },
-  {
-   "t": 35.56666666666667,
-   "kind": "label",
-   "tag": "wy-acc"
   },
   {
    "t": 35.8224,
@@ -311,12 +343,16 @@
   {
    "t": 38.233333333333334,
    "kind": "label",
-   "tag": "wy-tie"
+   "tag": "wy-tie",
+   "pos": [
+    0.57,
+    0.567
+   ]
   },
   {
    "t": 40.783333,
    "kind": "counter.tick",
-   "tag": "spine:difference, titanium vs platinum"
+   "tag": "spine:parts in a million billion"
   },
   {
    "t": 40.8,
@@ -328,12 +364,22 @@
    "t": 41.2833,
    "kind": "badge",
    "tag": "orbit",
-   "text": "Illustration: Earth and the orbit"
+   "text": "Illustration"
   },
   {
-   "t": 44.766666666666666,
+   "t": 44.7667,
+   "kind": "badge",
+   "tag": "microscope",
+   "text": "Satellite test, 2016–2018."
+  },
+  {
+   "t": 46.93333333333333,
    "kind": "label",
-   "tag": "wo-sat"
+   "tag": "wo-earth",
+   "pos": [
+    0.595,
+    0.454
+   ]
   },
   {
    "t": 50.53333333333333,
@@ -400,61 +446,61 @@
    "t": 61.0667,
    "kind": "section",
    "id": "takeaway",
-   "t1": 65.3333
+   "t1": 65.6
   },
   {
-   "t": 65.3333,
+   "t": 65.6,
    "kind": "section",
    "id": "tease",
-   "t1": 72.0
+   "t1": 72.2667
   },
   {
-   "t": 65.6222,
+   "t": 65.8889,
    "kind": "contact",
    "tag": "loop:release"
   },
   {
-   "t": 65.6222,
+   "t": 65.8889,
    "kind": "strobe",
    "tag": "loop:g0"
   },
   {
-   "t": 67.6333,
+   "t": 67.9,
    "kind": "strobe",
    "tag": "loop:g2"
   },
   {
-   "t": 69.6333,
+   "t": 69.9,
    "kind": "strobe",
    "tag": "loop:g4"
   },
   {
-   "t": 70.5,
+   "t": 70.7667,
    "kind": "signature",
    "tag": "end"
   },
   {
-   "t": 71.6333,
+   "t": 71.9,
    "kind": "strobe",
    "tag": "loop:g6"
   },
   {
-   "t": 73.6333,
+   "t": 73.9,
    "kind": "strobe",
    "tag": "loop:g8"
   },
   {
-   "t": 75.6333,
+   "t": 75.9,
    "kind": "strobe",
    "tag": "loop:g10"
   },
   {
-   "t": 77.6333,
+   "t": 77.9,
    "kind": "strobe",
    "tag": "loop:g12"
   },
   {
-   "t": 79.6333,
+   "t": 79.9,
    "kind": "strobe",
    "tag": "loop:g14"
   }
@@ -463,7 +509,8 @@
   {
    "id": "vo01",
    "t": 0.1,
-   "file": "vo/01.wav"
+   "file": "vo/01.wav",
+   "gain": -0.5
   },
   {
    "id": "vo02",
@@ -497,8 +544,20 @@
   },
   {
    "id": "vo08",
-   "t": 65.63333333333334,
+   "t": 65.9,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "hk-hammer": 2.2333,
+  "hk-feather": 3.3667,
+  "nm-land": 8.9,
+  "nm-half": 10.4333,
+  "ch-together": 19.6333,
+  "wy-pull": 31.0667,
+  "wy-acc": 34.5,
+  "wy-tie": 38.2667,
+  "wo-earth": 46.9667,
+  "spine": 4.5667
+ }
 }

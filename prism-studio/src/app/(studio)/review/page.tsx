@@ -30,7 +30,7 @@ export default async function Review() {
               <div className="row spread top">
                 <div>
                   <div className="kicker topic-text">{f.channel.label} · No. {String(f.ep.number).padStart(3, "0")}</div>
-                  <h2 style={{ margin: "4px 0 0" }}><Link href={`/episodes/${f.ep.id}`} style={{ textDecoration: "none" }}>{f.ep.title}</Link></h2>
+                  <h2 style={{ margin: "4px 0 0" }}><Link href={`/episodes/${f.ep.id}`} style={{ textDecoration: "none" }}>{f.ep.title}</Link>{f.ep.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h2>
                 </div>
                 {f.ep.state !== "ready_for_review" ? <span className={`chip ${stateTone(f.ep.state)}`}>{STATE_LABEL[f.ep.state]}</span> : null}
               </div>

@@ -52,9 +52,9 @@ LANG = "en-gb"
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
 SPEEDS = {
     "vo01": [1.0, 0.85],
-    "vo02": [0.88, 0.95, 0.95],      # audit 26 Oct: "about seven and a half micrometers" is two words longer; the number is said slower
+    "vo02": [0.92, 0.94, 0.96],
     "vo03": [0.86, 0.86],
-    "vo04": [0.92, 0.94, 0.92],      # audit 26 Oct: "its surface stretches" (one word longer)
+    "vo04": [0.95, 0.94, 0.92],
     "vo05": [0.88, 0.88],
     "vo06": [0.97, 0.98],
     "vo07": [0.85],

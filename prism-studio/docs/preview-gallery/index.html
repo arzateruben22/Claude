@@ -58,8 +58,9 @@ a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-ra
     <p class="lede">The publishing desk for the five channels and the shared Instagram. Pick a monitor: each one holds the next post for every account it feeds, with the title, caption, hashtags, sources comment and cover ready to copy.</p>
   </header>
 
+  <!-- figures: written by npm run preview (scripts/preview.ts); edit them there -->
   <figure>
-    <img class="shot" src="wall-desktop.jpg" width="1440" height="900" alt="The home screen: six monitors over a dark New York skyline at night. Instagram is the large screen in the middle with today's two posts; What If? sits above it; Meanwhile, Inside and Rest Frame are on the left; Light Minute and Skincare are on the right.">
+    <img class="shot" src="wall-desktop.jpg" width="1440" height="900" alt="The home screen: six monitors over a dark New York skyline at night. Instagram is the large screen in the middle with today's posts; What If? sits above it; Meanwhile, Inside and Rest Frame are on the left; Light Minute and Skincare are on the right.">
     <figcaption>
       <p><b>The wall.</b> Instagram in the middle: two posts a day from any series, and no episode goes up twice. What If? sits above it. Meanwhile, Inside and Rest Frame are on the left, Light Minute and Skincare on the right. A screen stays dark until its channel has a finished episode.</p>
       <p>The skyline is original code-rendered art (Manhattan at 2 a.m.), not a photo.</p>
@@ -68,11 +69,11 @@ a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-ra
 
   <section class="pair" aria-label="Phone and Instagram screen">
     <figure>
-      <img class="shot" src="wall-phone.jpg" width="780" height="1688" alt="The same wall on a phone: Instagram first, then Rest Frame and Light Minute side by side, with a tab bar at the bottom.">
+      <img class="shot" src="wall-phone.jpg" width="780" height="1688" alt="The same wall on a phone: Instagram first, then the channels with episodes, with a tab bar at the bottom.">
       <figcaption><p><b>On a phone,</b> Instagram comes first, then the channels with episodes.</p></figcaption>
     </figure>
     <figure>
-      <img class="shot" src="instagram.jpg" width="1200" height="1300" alt="The Instagram screen: today's 11:30 AM and 6:30 PM slots, each with a cover, the caption, hashtags, a first comment with sources, and a Review and approve button.">
+      <img class="shot" src="instagram.jpg" width="1200" height="1300" alt="The Instagram screen: today's slots, each with a cover, the caption, hashtags and a first comment with the sources.">
       <figcaption>
         <p><b>The Instagram screen.</b> Today's two slots with the episode the rotation picked for each, its caption and hashtags, and the sources for the first comment. A slot whose time passes with nothing planned shows as missed and keeps its episode for later.</p>
       </figcaption>
@@ -86,13 +87,27 @@ a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-ra
     </figcaption>
   </figure>
 
+  <section class="pair" aria-label="Notifications and Costs">
+    <figure>
+      <img class="shot" src="settings-phone.jpg" width="780" height="1688" alt="Settings on a phone, at the Notifications card: what Prism notifies about, and the button to turn notifications on for this device.">
+      <figcaption><p><b>Notifications,</b> in Settings. Turn them on for each phone or computer. Prism tells you when an upload is due, when a scheduled publish needs you, and when an Instagram slot passes with nothing planned. Each event once.</p></figcaption>
+    </figure>
+    <figure>
+      <img class="shot" src="costs.jpg" width="1200" height="1100" alt="The Costs screen: this month's spending against the production budget, a month-by-month view, the budgets and the cost entries.">
+      <figcaption>
+        <p><b>Costs.</b> A monthly production budget per channel, and an optional ceiling for the whole studio. Each entry is something you paid for, or an estimate; estimates and voided entries never count as spent. Prism records costs and never pays anything. Paid generation stays off until a channel's budget has room.</p>
+      </figcaption>
+    </figure>
+  </section>
+  <!-- /figures -->
+
   <section class="text" aria-labelledby="where">
     <h2 id="where">Where it stands</h2>
     <dl class="status">
-      <div class="row"><dt><span class="dot good"></span>Built and tested</dt><dd>The wall, a screen per channel, the Upload Desk, review and approval, the Instagram rotation, the posting-text engine and covers. 148 automated tests pass; every screen loads cleanly on phone and desktop.</dd></div>
-      <div class="row"><dt><span class="dot info"></span>Videos</dt><dd>Four episodes are in the studio now. The episode 1s are being re-rendered with fact-check fixes, and the channel sessions are rendering episodes 2–6.</dd></div>
-      <div class="row"><dt><span class="dot warn"></span>Hosting</dt><dd>A one-server setup with automatic HTTPS is ready and tested. It needs a domain and a small server to go live.</dd></div>
-      <div class="row"><dt><span class="dot warn"></span>Accounts</dt><dd>Connecting YouTube, TikTok and Instagram needs your developer apps from Google, TikTok and Meta. Nothing posts until you approve each video.</dd></div>
+      <div class="row"><dt><span class="dot good"></span>Built and tested</dt><dd>The wall, a screen per channel, the Upload Desk, review and approval, the Instagram rotation, posting text with sources threads, covers, costs, notifications and platform analytics. 283 automated tests pass; every screen loads cleanly on phone and desktop.</dd></div>
+      <div class="row"><dt><span class="dot info"></span>Videos</dt><dd>Five episodes are in the studio. Two are at the final standard (Light Minute 001, Rest Frame 003); the other three are earlier versions that new renders will replace.</dd></div>
+      <div class="row"><dt><span class="dot warn"></span>Hosting</dt><dd>A one-server setup with automatic HTTPS, nightly backups and sign-in protection is ready and tested. It needs a domain and a small server to go live.</dd></div>
+      <div class="row"><dt><span class="dot warn"></span>Accounts</dt><dd>Connecting YouTube, TikTok and Instagram needs your developer apps from Google, TikTok and Meta, and the 11 accounts. Then one private test upload per platform. Nothing posts until you approve each video.</dd></div>
     </dl>
   </section>
 

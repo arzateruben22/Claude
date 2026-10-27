@@ -1,5 +1,58 @@
 # Project status: four science-video formulas to 100%
 
+> **27 Oct, 05:20 UTC:** collected Meanwhile, Inside 005 "Where breath goes" (QA PASS, 74.4 s) + its 1440p YouTube version; vol01 "The traffic inside you" built (2560x1440, 6:20, QA PASS); studio check 20/20. Only 006 left (rendering, ~09:00).
+>
+> **27 Oct, 05:10 UTC:** every finished video at its best for each platform: all 16 shorts have a 1440x2560 YouTube
+> version (youtube1440.py, checked frame for frame); both long videos rebuilt at 2560x1440 with one continuous soundtrack
+> (Rest Frame vol01 6:06, Light Minute vol01 6:23, QA PASS). Prism Studio: YouTube posts use the 1440p files, TikTok and
+> Instagram the masters; `npm run media:check`: 18 ready, 0 problems. Meanwhile, Inside 005-006 still rendering.
+>
+> **27 Oct, 03:35 UTC:** collected Light Minute 002 "The nearest star" (QA PASS, 74.7 s; replaces the 25 Oct cut). Light Minute 001–006 are all final; its vol01 "How far, how fast" is building.
+>
+> **27 Oct, 03:05 UTC:** collected Light Minute 005 "How big is the Sun" (QA PASS, 74.7 s). Light Minute 002 rendering (~03:50), then its vol01.
+>
+> **27 Oct, 02:45 UTC:** collected Light Minute 003 "Venus day" (QA PASS, 74.7 s); 005 and 002 still rendering.
+>
+> **27 Oct, 02:35 UTC:** collected Meanwhile, Inside 004 "The gap" (QA PASS, 74.4 s); 005 rendering (~05:15), 006 next.
+>
+> **27 Oct, 02:30 UTC:** download library for the owner (every finished video, full quality, straight from this public
+> repo): `films/library.py` → https://claude.ai/artifact/DaztNXWu1gmbH8BkXyj4rC, refreshed by the check-in. Own-voice
+> narration: `kits/cinema/voice/polish.py` (normal, extra, whisper) and the recording script at
+> https://claude.ai/artifact/CJ1jBzjJoXDb5snabSQCzK; recordings go to films/voice-inbox.
+>
+> **27 Oct, 01:57 UTC: RESUMED by the owner.** Check-in re-enabled (every 2 h from 02:04); both channel sessions told to
+> resume their finals from the kept frames (Meanwhile, Inside 004 then 005–006; Light Minute 003, 005, 002).
+>
+> **26 Oct, 21:20 UTC: PAUSED by the owner** ("pause on everything now"). Final and collected: Rest Frame 001–006 + vol01,
+> Meanwhile, Inside 001–003, Light Minute 001, 004, 006. Still to do on resume: Meanwhile, Inside 004 (final was
+> rendering, frames kept), 005–006; Light Minute 002, 003, 005 (review fixes, then finals); vol01 for both. The 2-hourly
+> check-in (trig_01RobrDAZpWDmvW9a3s2U5Xb) is disabled; both channel sessions were told to stop, keep frames, push resume
+> notes and go idle. To resume: re-enable the check-in and send each channel session "resume".
+>
+> **26 Oct, 20:35 UTC:** collected Light Minute 006 "Your speed" (QA PASS, 74.7 s), then at 20:55 004 "The falling
+> Moon" (QA PASS, 74.1 s); the branch's 002–003 renders predate the audit and stay there. Meanwhile, Inside 004 final due ~22:00, 005 ~01:00, 006 ~04:00 UTC; Light Minute 002–005
+> in review fixes. Prism Studio: each channel screen now shows its long video; the wall counts ones waiting on approval.
+>
+> **26 Oct, 19:30 UTC:** collected here (QA PASS): Rest Frame 001–006 + vol01 "Forces you can see" (lesson,
+> ready for review), Meanwhile, Inside 001–003, Light Minute 001. Rendering in the channel sessions: Light Minute
+> 002–006, Meanwhile, Inside 004–006. The 2-hourly check-in collects them as they land, builds the other two vol01s,
+> and refreshes the clickable preview.
+>
+> **26 Oct, 18:10 UTC:** Rest Frame 001 v3.1 delivered here (QA PASS; fact-audit fixes + label polish, independently
+> checked). At the new standard now: Rest Frame 001–006 (002–006 on claude/rest-frame-ep02-06, not yet merged here),
+> Meanwhile, Inside 001–003 (on its branch), Light Minute 001. Prism Studio complete except what needs the owner.
+>
+> **26 Oct, 09:50 UTC: PAUSED by the owner.** Final at the new standard (readability kit + 26 Oct fact audit): Light
+> Minute 001 and Rest Frame 003 (2 of 18 shorts; 0 of 3 compilations). Light Minute 004's 08:54 render predates a
+> caption-timing fix and 38 review fixes, so it is not final. All 18 scripts are written, audited and fixed. The
+> channel sessions stopped their in-flight finals with frames kept: Rest Frame 002 at 2070/2184 (~2 min to finish),
+> Meanwhile, Inside 002 at 1290/2184 (~35 min); Light Minute has resume notes atop its PRODUCTION.md. At 09:55 the owner
+> asked for everything but Prism Studio to stay paused: Meanwhile, Inside 001's final was stopped too (frames kept; resume
+> with films/channels/rerender-finals.sh films/channels/body/ep01). Only the Prism Studio completion workflow runs; after
+> it, nothing continues until the owner says so. Stopped: the Rest Frame 001
+> polish workflow (resume run wf_4be75c8c-873; edits so far committed) and the 2-hourly check-in
+> (trig_01RobrDAZpWDmvW9a3s2U5Xb, disabled). Rest Frame 001's final stays held (scratchpad RERENDER-HOLD).
+>
 > **26 Oct, 08:15 UTC:** independent script audit of every episode done (`films/audits/2026-10-26/`: ep02–06 ×3,
 > ep01 ×3, ep06 physics/body; each finding adversarially verified). Space and physics sessions applied theirs; body
 > working. Here: Light Minute 001 fixed (label fits the safe box, c15, small footnote; sound QA no longer misreads a

@@ -22,7 +22,7 @@ export function TaskRow({ t, tz }: { t: UploadTask; tz: string }) {
   return (
     <li className="q-row" style={topicStyle(channel)}>
       <span className="q-cover" aria-hidden>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" /> : null}</span>
-      <Link href={`/episodes/${e.id}`} className="q-title">{e.title}</Link>
+      <Link href={`/episodes/${e.id}`} className="q-title">{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
       <span className="q-where">{channel.label} · {PLATFORM_LABEL[dest.platform]}{dest.handle ? ` · ${dest.handle}` : ""}</span>
       <span className="q-when num">{when(t, tz)}</span>
       <span className="q-chips">
@@ -48,7 +48,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
       <div className="row spread top">
         <div>
           <div className="kicker topic-text">{channel.label} · {platform} · {when(t, tz)}</div>
-          <h3 className="h2" style={{ margin: "4px 0 0" }}>{e.title}</h3>
+          <h3 className="h2" style={{ margin: "4px 0 0" }}>{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3>
           <div className="faint" style={{ fontSize: 14 }}>No. {no}{version ? ` · render v${version.versionNo}` : ""}</div>
         </div>
         {p.status !== "planned" ? <span className={`chip ${pubTone(p.status)}`}>{PUB_LABEL[p.status]}</span> : null}
@@ -59,16 +59,17 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
         <div>
           <div className="handle">{handle || accountName}</div>
           <div className="faint" style={{ fontSize: 13 }}>
-            {handle ? <>{accountName} · {platform}. Check the app is signed in as {handle}.</> : <>{platform} · not set up: <Link href="/connections">add its handle</Link> so the desk shows who to post as.</>}
+            {handle ? <>{accountName} · {platform}. Check the app is signed in as {handle}.</> : <>{platform} · not set up yet: add its handle so the desk shows who to post as.</>}
           </div>
         </div>
+        {!handle ? <Link href="/connections" className="btn ghost small acct-action">Add its handle</Link> : null}
       </div>
 
       {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Mark uploaded once it is live, or wait for the worker to confirm.</div> : null}
 
       {x && !done && ready ? (
         <>
-          <div className="grid2">
+          <div className="grid2 desk-media">
             {version ? (
               <div className="player-wrap">
                 <video className="player" controls preload="none" playsInline poster={cover ? mediaUrl(cover) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 420 }} />

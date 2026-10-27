@@ -10,10 +10,10 @@ import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
 import { albedo } from "./aces.js";
 
-const regolith = () => {
+const regolith = (o = {}) => {
   const c = document.createElement("canvas"); c.width = 1024; c.height = 1024;
   const g = c.getContext("2d"), r = rng(19710802);
-  g.fillStyle = "#8E8B85"; g.fillRect(0, 0, 1024, 1024);
+  g.fillStyle = "#A8A49B"; g.fillRect(0, 0, 1024, 1024);
   for (let i = 0; i < 26000; i++) { const l = r(); g.fillStyle = l < 0.5 ? `rgba(60, 58, 55, ${0.08 + r() * 0.1})` : `rgba(200, 196, 188, ${0.06 + r() * 0.1})`; g.fillRect(r() * 1024, r() * 1024, 1 + r() * 2.5, 1 + r() * 2.5); }
   for (let i = 0; i < 70; i++) {                                    // small craters: a dark rim on one side, light on the other
     const x = r() * 1024, y = r() * 1024, rad = 4 + r() ** 2 * 34;
@@ -21,12 +21,12 @@ const regolith = () => {
     g.strokeStyle = "rgba(55, 53, 50, .35)"; g.beginPath(); g.arc(x, y, rad, Math.PI * 0.95, Math.PI * 1.95); g.stroke();
     g.strokeStyle = "rgba(215, 210, 200, .35)"; g.beginPath(); g.arc(x, y, rad, Math.PI * -0.05, Math.PI * 0.95); g.stroke();
   }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 1; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 1; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(o.repeat ?? 3, o.repeat ?? 3);
   return t;
 };
 
 export const createMoonFloor = (o = {}) => {
-  const size = o.size ?? 400, mat = new THREE.MeshStandardMaterial({ map: regolith(), color: albedo("#FFFFFF"), roughness: 1, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
+  const size = o.size ?? 400, mat = new THREE.MeshStandardMaterial({ map: regolith({ repeat: Math.max(3, Math.round(size / 140)) }), color: albedo("#FFFFFF"), roughness: 1, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
   const m = new THREE.Mesh(new THREE.CircleGeometry(size / 2, 64), mat);
   m.rotation.x = -Math.PI / 2; m.position.set(o.x ?? 0, 0.05, o.z ?? -10);
   const group = new THREE.Group(); group.add(m);

@@ -6,7 +6,10 @@ import { useEffect } from "react";
 const KEY = "prism.desk.position";
 export function DeskPosition() {
   useEffect(() => {
-    try {
+    // a link to one task (a notification opens /upload#task-<id>) wins over the remembered position
+    const linked = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    if (linked) linked.scrollIntoView({ block: "start" });
+    else try {
       const saved = JSON.parse(sessionStorage.getItem(KEY) || "null") as { id?: string; y?: number } | null;
       const el = saved?.id ? document.getElementById(saved.id) : null;
       if (el) el.scrollIntoView({ block: "start" }); else if (saved?.y) window.scrollTo(0, saved.y);

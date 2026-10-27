@@ -70,13 +70,13 @@
   },
   {
    "id": "vo02",
-   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
-   "heard": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather is barely halfway.",
+   "text": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather? Still drifting down.",
+   "heard": "On Earth, it's no contest. From shoulder height, the hammer lands in about half a second. The feather, still drifting down.",
    "words": [
     {
      "w": "On",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.24,
      "heard": true
     },
     {
@@ -87,115 +87,115 @@
     },
     {
      "w": "it's",
-     "start": 0.655,
-     "end": 0.96,
+     "start": 0.585,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "no",
-     "start": 1.055,
-     "end": 1.2,
+     "start": 0.965,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "contest.",
-     "start": 1.085,
-     "end": 2.08,
+     "start": 1.035,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "From",
-     "start": 2.235,
-     "end": 2.4,
+     "start": 2.005,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "shoulder",
-     "start": 2.485,
-     "end": 2.8,
+     "start": 2.035,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "height,",
-     "start": 2.79,
-     "end": 3.2,
+     "start": 2.52,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.305,
-     "end": 3.36,
+     "start": 2.805,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "hammer",
-     "start": 3.335,
-     "end": 3.76,
+     "start": 2.875,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "lands",
-     "start": 3.735,
-     "end": 4.08,
+     "start": 3.35,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "in",
-     "start": 4.145,
-     "end": 4.32,
+     "start": 3.615,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "about",
-     "start": 4.315,
-     "end": 4.48,
+     "start": 3.915,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "half",
-     "start": 4.445,
-     "end": 4.72,
+     "start": 3.945,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.625,
-     "end": 4.88,
+     "start": 4.135,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 4.985,
-     "end": 5.52,
+     "start": 4.465,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "The",
-     "start": 5.645,
-     "end": 5.695,
+     "start": 5.175,
+     "end": 5.28,
      "heard": true
     },
     {
-     "w": "feather",
-     "start": 5.675,
-     "end": 6.16,
+     "w": "feather?",
+     "start": 5.335,
+     "end": 6.0,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 6.115,
-     "end": 6.32,
+     "w": "Still",
+     "start": 6.005,
+     "end": 6.24,
      "heard": true
     },
     {
-     "w": "barely",
-     "start": 6.335,
-     "end": 6.64,
+     "w": "drifting",
+     "start": 6.32,
+     "end": 6.8,
      "heard": true
     },
     {
-     "w": "halfway.",
-     "start": 6.715,
+     "w": "down.",
+     "start": 6.765,
      "end": 7.2,
      "heard": true
     }
@@ -903,152 +903,164 @@
   },
   {
    "id": "vo07",
-   "text": "Gravity treats them equally. Only the air tells them apart.",
-   "heard": "Gravity treats them equally. Only the air tells them apart.",
+   "text": "Gravity speeds them up equally. Only the air tells them apart.",
+   "heard": "Gravity speeds them up equally. Only the air tells them apart.",
    "words": [
     {
      "w": "Gravity",
      "start": 0.02,
-     "end": 0.48,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "treats",
-     "start": 0.44,
-     "end": 0.88,
+     "w": "speeds",
+     "start": 0.665,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "them",
-     "start": 0.775,
-     "end": 1.04,
+     "start": 0.94,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 1.195,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "equally.",
-     "start": 1.09,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "Only",
-     "start": 1.845,
+     "start": 1.25,
      "end": 2.08,
      "heard": true
     },
     {
+     "w": "Only",
+     "start": 2.145,
+     "end": 2.32,
+     "heard": true
+    },
+    {
      "w": "the",
-     "start": 2.16,
-     "end": 2.24,
+     "start": 2.36,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "air",
-     "start": 2.305,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "tells",
-     "start": 2.565,
+     "start": 2.57,
      "end": 2.8,
      "heard": true
     },
     {
+     "w": "tells",
+     "start": 2.865,
+     "end": 3.12,
+     "heard": true
+    },
+    {
      "w": "them",
-     "start": 2.87,
-     "end": 2.96,
+     "start": 3.17,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "apart.",
-     "start": 3.08,
-     "end": 3.44,
+     "start": 3.38,
+     "end": 3.76,
      "heard": true
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "Next: a spinning office chair. Pull in your arms, and you accelerate. Why?",
-   "heard": "Next, a spinning office chair. Pull in your arms and you accelerate. Why?",
+   "text": "Next: a spinning office chair. Pull in your arms, and it spins faster. Why?",
+   "heard": "Next, a spinning office chair. Pull in your arms and it spins faster. Why?",
    "words": [
     {
      "w": "Next:",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.61,
-     "end": 0.66,
+     "start": 0.58,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "spinning",
-     "start": 0.735,
+     "start": 0.755,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "office",
-     "start": 1.12,
+     "start": 1.115,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "chair.",
-     "start": 1.335,
-     "end": 1.92,
+     "start": 1.305,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "Pull",
-     "start": 2.075,
-     "end": 2.24,
+     "start": 2.005,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.12,
-     "end": 2.4,
+     "start": 2.04,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "your",
-     "start": 2.46,
-     "end": 2.56,
+     "start": 2.355,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "arms,",
-     "start": 2.49,
-     "end": 2.88,
+     "start": 2.385,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.915,
-     "end": 3.04,
+     "start": 2.805,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "you",
-     "start": 2.945,
-     "end": 3.2,
+     "w": "it",
+     "start": 2.99,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "accelerate.",
-     "start": 3.22,
-     "end": 4.08,
+     "w": "spins",
+     "start": 3.145,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "faster.",
+     "start": 3.445,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "Why?",
-     "start": 4.15,
-     "end": 4.48,
+     "start": 4.325,
+     "end": 4.72,
      "heard": true
     }
    ]

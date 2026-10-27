@@ -1,0 +1,735 @@
+{
+ "duration": 74.8,
+ "fps": 30,
+ "preset": "meanwhile-pulse",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 15.2,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 15.2,
+   "t1": 25.6,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6,
+   "t1": 42.4,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 42.4,
+   "t1": 54.4,
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.4,
+   "t1": 61.2,
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 61.2,
+   "t1": 68.0,
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 68.0,
+   "t1": 74.8,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -3.0
+  },
+  {
+   "t": 0.5525,
+   "kind": "spike",
+   "tag": "hook0"
+  },
+  {
+   "t": 1.4025,
+   "kind": "spike",
+   "tag": "hook1"
+  },
+  {
+   "t": 2.2525,
+   "kind": "spike",
+   "tag": "hook2"
+  },
+  {
+   "t": 3.1025,
+   "kind": "spike",
+   "tag": "hook3"
+  },
+  {
+   "t": 3.9525,
+   "kind": "spike",
+   "tag": "hook4"
+  },
+  {
+   "t": 4.8025,
+   "kind": "spike",
+   "tag": "hook5"
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 15.2
+  },
+  {
+   "t": 5.6525,
+   "kind": "spike",
+   "tag": "hook6"
+  },
+  {
+   "t": 6.5025,
+   "kind": "spike",
+   "tag": "hook7"
+  },
+  {
+   "t": 7.3525,
+   "kind": "spike",
+   "tag": "hook8"
+  },
+  {
+   "t": 7.8667,
+   "kind": "spike",
+   "tag": "run0"
+  },
+  {
+   "t": 8.133333333333333,
+   "kind": "label",
+   "tag": "soma",
+   "pos": [
+    0.421,
+    0.515
+   ]
+  },
+  {
+   "t": 8.7167,
+   "kind": "spike",
+   "tag": "run1"
+  },
+  {
+   "t": 9.5667,
+   "kind": "spike",
+   "tag": "run2"
+  },
+  {
+   "t": 9.833333333333334,
+   "kind": "counter.show",
+   "tag": "len",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 10.4167,
+   "kind": "spike",
+   "tag": "run3"
+  },
+  {
+   "t": 11.2667,
+   "kind": "spike",
+   "tag": "run4"
+  },
+  {
+   "t": 12.1167,
+   "kind": "spike",
+   "tag": "run5"
+  },
+  {
+   "t": 12.9667,
+   "kind": "spike",
+   "tag": "run6"
+  },
+  {
+   "t": 13.166666666666666,
+   "kind": "counter.show",
+   "tag": "take",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 13.8167,
+   "kind": "spike",
+   "tag": "run7"
+  },
+  {
+   "t": 14.6667,
+   "kind": "spike",
+   "tag": "run8"
+  },
+  {
+   "t": 15.183333,
+   "kind": "badge",
+   "tag": "ill-drum",
+   "text": "illustration · delay exaggerated",
+   "pos": [
+    0.58,
+    0.146
+   ]
+  },
+  {
+   "t": 15.2,
+   "kind": "section",
+   "id": "change",
+   "t1": 25.6
+  },
+  {
+   "t": 15.3333,
+   "kind": "badge",
+   "tag": "slow-drum",
+   "text": "slowed",
+   "pos": [
+    0.163,
+    0.146
+   ]
+  },
+  {
+   "t": 17.733333333333334,
+   "kind": "counter.show",
+   "tag": "light",
+   "pos": [
+    0.55,
+    0.31
+   ]
+  },
+  {
+   "t": 18.566666666666666,
+   "kind": "label",
+   "tag": "muscle",
+   "pos": [
+    0.476,
+    0.504
+   ]
+  },
+  {
+   "t": 18.966666666666665,
+   "kind": "label",
+   "tag": "nerve",
+   "pos": [
+    0.657,
+    0.221
+   ]
+  },
+  {
+   "t": 21.366666666666667,
+   "kind": "impact",
+   "tag": "twitch1",
+   "gain": -6.0
+  },
+  {
+   "t": 22.433333333333334,
+   "kind": "counter.show",
+   "tag": "frog",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 23.166666666666668,
+   "kind": "impact",
+   "tag": "twitch2",
+   "gain": -6.0
+  },
+  {
+   "t": 23.866666666666667,
+   "kind": "label",
+   "tag": "trace",
+   "pos": [
+    0.488,
+    0.404
+   ]
+  },
+  {
+   "t": 23.9,
+   "kind": "counter.end",
+   "tag": "frog-end"
+  },
+  {
+   "t": 25.583333,
+   "kind": "badge",
+   "tag": "nts-fib",
+   "text": "not to scale",
+   "pos": [
+    0.719,
+    0.146
+   ]
+  },
+  {
+   "t": 25.583333,
+   "kind": "badge",
+   "tag": "slow",
+   "text": "slowed · distances compressed",
+   "pos": [
+    0.337,
+    0.146
+   ]
+  },
+  {
+   "t": 25.6,
+   "kind": "section",
+   "id": "why",
+   "t1": 42.4
+  },
+  {
+   "t": 26.1,
+   "kind": "label",
+   "tag": "bare",
+   "pos": [
+    0.572,
+    0.374
+   ]
+  },
+  {
+   "t": 27.9,
+   "kind": "counter.show",
+   "tag": "patch",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 30.1,
+   "kind": "counter.show",
+   "tag": "fired",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 30.1,
+   "kind": "spike",
+   "tag": "why0"
+  },
+  {
+   "t": 30.9,
+   "kind": "spike",
+   "tag": "why1"
+  },
+  {
+   "t": 31.7,
+   "kind": "spike",
+   "tag": "why2"
+  },
+  {
+   "t": 31.733333333333334,
+   "kind": "label",
+   "tag": "myelin",
+   "pos": [
+    0.184,
+    0.417
+   ]
+  },
+  {
+   "t": 32.5,
+   "kind": "spike",
+   "tag": "why3"
+  },
+  {
+   "t": 33.3,
+   "kind": "spike",
+   "tag": "why4"
+  },
+  {
+   "t": 33.46666666666667,
+   "kind": "label",
+   "tag": "gap",
+   "pos": [
+    0.326,
+    0.473
+   ]
+  },
+  {
+   "t": 34.1,
+   "kind": "spike",
+   "tag": "why5"
+  },
+  {
+   "t": 34.9,
+   "kind": "spike",
+   "tag": "why6"
+  },
+  {
+   "t": 35.2333,
+   "kind": "spike",
+   "tag": "ms0"
+  },
+  {
+   "t": 36.1333,
+   "kind": "spike",
+   "tag": "ms1"
+  },
+  {
+   "t": 36.8333,
+   "kind": "label",
+   "tag": "ms",
+   "pos": [
+    0.603,
+    0.465
+   ]
+  },
+  {
+   "t": 37.0333,
+   "kind": "spike",
+   "tag": "ms2"
+  },
+  {
+   "t": 39.833333333333336,
+   "kind": "impact",
+   "tag": "stall",
+   "gain": -8.0
+  },
+  {
+   "t": 42.4,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.4
+  },
+  {
+   "t": 42.96666666666667,
+   "kind": "label",
+   "tag": "racebare",
+   "pos": [
+    0.291,
+    0.385
+   ]
+  },
+  {
+   "t": 44.3,
+   "kind": "counter.show",
+   "tag": "race",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 46.5,
+   "kind": "spike",
+   "tag": "race0"
+  },
+  {
+   "t": 46.8,
+   "kind": "label",
+   "tag": "racewrap",
+   "pos": [
+    0.618,
+    0.47
+   ]
+  },
+  {
+   "t": 47.7,
+   "kind": "spike",
+   "tag": "race1"
+  },
+  {
+   "t": 48.3,
+   "kind": "counter.end",
+   "tag": "wrap-end"
+  },
+  {
+   "t": 48.9,
+   "kind": "spike",
+   "tag": "race2"
+  },
+  {
+   "t": 49.36666666666667,
+   "kind": "counter.show",
+   "tag": "kmh",
+   "pos": [
+    0.5,
+    0.31
+   ]
+  },
+  {
+   "t": 50.1,
+   "kind": "spike",
+   "tag": "race3"
+  },
+  {
+   "t": 51.3,
+   "kind": "spike",
+   "tag": "race4"
+  },
+  {
+   "t": 52.5,
+   "kind": "spike",
+   "tag": "race5"
+  },
+  {
+   "t": 53.7,
+   "kind": "spike",
+   "tag": "race6"
+  },
+  {
+   "t": 54.4,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 61.2
+  },
+  {
+   "t": 56.5,
+   "kind": "badge",
+   "tag": "real",
+   "text": "real time",
+   "pos": [
+    0.181,
+    0.146
+   ]
+  },
+  {
+   "t": 56.7,
+   "kind": "counter.show",
+   "tag": "toe",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 57.1,
+   "kind": "impact",
+   "tag": "stub"
+  },
+  {
+   "t": 57.2,
+   "kind": "spike",
+   "tag": "jolt"
+  },
+  {
+   "t": 59.333333333333336,
+   "kind": "swell",
+   "tag": "ache",
+   "t1": 60.93333333333334
+  },
+  {
+   "t": 60.8,
+   "kind": "beat",
+   "tag": "beat0"
+  },
+  {
+   "t": 61.2,
+   "kind": "section",
+   "id": "meanwhile",
+   "t1": 68.0
+  },
+  {
+   "t": 61.5,
+   "kind": "counter.show",
+   "tag": "tally",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 61.6,
+   "kind": "beat",
+   "tag": "beat1"
+  },
+  {
+   "t": 62.4,
+   "kind": "beat",
+   "tag": "beat2"
+  },
+  {
+   "t": 63.2,
+   "kind": "beat",
+   "tag": "beat3"
+  },
+  {
+   "t": 64.0,
+   "kind": "beat",
+   "tag": "beat4"
+  },
+  {
+   "t": 64.8,
+   "kind": "beat",
+   "tag": "beat5"
+  },
+  {
+   "t": 65.6,
+   "kind": "beat",
+   "tag": "beat6"
+  },
+  {
+   "t": 66.4,
+   "kind": "beat",
+   "tag": "beat7"
+  },
+  {
+   "t": 66.83333333333333,
+   "kind": "spike",
+   "tag": "pacemaker"
+  },
+  {
+   "t": 67.2,
+   "kind": "beat",
+   "tag": "beat8"
+  },
+  {
+   "t": 67.9,
+   "kind": "badge",
+   "tag": "nts-tease",
+   "text": "not to scale",
+   "pos": [
+    0.719,
+    0.146
+   ]
+  },
+  {
+   "t": 68.0,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.8
+  },
+  {
+   "t": 69.56666666666666,
+   "kind": "label",
+   "tag": "terminal",
+   "pos": [
+    0.29,
+    0.284
+   ]
+  },
+  {
+   "t": 69.7333,
+   "kind": "badge",
+   "tag": "slow-tease",
+   "text": "slowed",
+   "pos": [
+    0.163,
+    0.146
+   ]
+  },
+  {
+   "t": 70.0333,
+   "kind": "spike",
+   "tag": "tease0"
+  },
+  {
+   "t": 70.5333,
+   "kind": "spike",
+   "tag": "tease1"
+  },
+  {
+   "t": 71.0333,
+   "kind": "spike",
+   "tag": "tease2"
+  },
+  {
+   "t": 71.5333,
+   "kind": "spike",
+   "tag": "tease3"
+  },
+  {
+   "t": 72.0333,
+   "kind": "spike",
+   "tag": "tease4"
+  },
+  {
+   "t": 72.8,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 15.5,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 25.9,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 42.7,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 54.7,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.5,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 68.3,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "soma": 8.1667,
+  "muscle": 18.6,
+  "nerve": 19,
+  "trace": 23.9,
+  "bare": 26.1333,
+  "myelin": 31.7667,
+  "gap": 33.5,
+  "ms": 36.8667,
+  "racebare": 43,
+  "racewrap": 46.8333,
+  "terminal": 69.6,
+  "len": 9.8667,
+  "take": 13.2,
+  "light": 17.7667,
+  "frog": 22.4667,
+  "patch": 27.9333,
+  "fired": 30.1333,
+  "race": 44.3333,
+  "kmh": 49.4,
+  "toe": 56.7333,
+  "tally": 61.5333
+ }
+}

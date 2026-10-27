@@ -3,7 +3,7 @@
 // Money is integer cents. Demo rows carry is_demo = true and never reserve real rewards or count as real progress.
 import { sql } from "drizzle-orm";
 import {
-  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, uniqueIndex, index, primaryKey, bigint,
+  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, uniqueIndex, index, primaryKey, bigint, date, check,
 } from "drizzle-orm/pg-core";
 
 const id = () => uuid("id").primaryKey().defaultRandom();
@@ -45,6 +45,7 @@ export const studioSettings = pgTable("studio_settings", {
   celebrationSound: boolean("celebration_sound").notNull().default(false),
   lowPowerArt: boolean("low_power_art").notNull().default(false),
   paidGenerationEnabled: boolean("paid_generation_enabled").notNull().default(false),
+  showDemo: boolean("show_demo").notNull().default(false),    // off: demo rows are hidden; on: shown, labelled DEMO, never counted
   updatedAt: updated(),
 });
 
@@ -340,7 +341,26 @@ export const metricSnapshots = pgTable("metric_snapshots", {
   source: metricSourceEnum("source").notNull(),
   status: text("status").notNull().default("ok"),        // ok, revised, flagged
   supersedes: uuid("supersedes"),
-}, (t) => [index("metrics_pub_metric").on(t.publicationId, t.metric)]);
+  // Set by the API analytics pull: the UTC day it ran. One pulled row per (publication, metric, UTC day); a re-pull
+  // that day updates it. Null on CSV, manual, estimate and demo rows.
+  utcDay: date("utc_day", { mode: "string" }),
+}, (t) => [
+  index("metrics_pub_metric").on(t.publicationId, t.metric),
+  uniqueIndex("metrics_api_daily").on(t.publicationId, t.metric, t.utcDay).where(sql`${t.source} = 'api'`),
+]);
+
+// API analytics pull state, one row per publication: when Prism last asked the platform (success or not) and what
+// happened. The cadence (daily for 30 days after publication, then weekly) counts from the last attempt, so a
+// failure waits for the next period instead of retrying in a loop. Holds no tokens and no numbers.
+export const metricPulls = pgTable("metric_pulls", {
+  publicationId: uuid("publication_id").primaryKey().references(() => publications.id, { onDelete: "cascade" }),
+  lastAttemptAt: timestamp("last_attempt_at", { withTimezone: true }),
+  lastSuccessAt: timestamp("last_success_at", { withTimezone: true }),
+  lastOutcome: text("last_outcome").notNull().default(""),   // ok, empty, needs_reconnect, failed
+  lastError: text("last_error").notNull().default(""),
+  pulls: integer("pulls").notNull().default(0),
+  updatedAt: updated(),
+});
 
 export const experiments = pgTable("experiments", {
   id: id(),
@@ -479,26 +499,93 @@ export const onboarding = pgTable("onboarding", {
   doneAt: timestamp("done_at", { withTimezone: true }),
 }, (t) => [uniqueIndex("onboarding_item").on(t.channelId, t.item)]);
 
-// ── costs ──────────────────────────────────────────────────────────────────
+// ── costs (production budgets: separate from personal rewards; Prism records costs, it never pays or moves money) ──
+// A production budget is monthly, studio-wide or for one channel. A row applies from its month on, until a later row
+// for the same scope replaces it (cap null = no budget from that month).
 export const budgets = pgTable("budgets", {
   id: id(),
-  scope: text("scope").notNull(),           // job, channel_daily, daily, monthly
+  scope: text("scope").notNull(),           // studio, channel
+  scopeKey: text("scope_key").notNull().default("studio"),   // "studio" or the channel id: one row per scope per month
   channelId: uuid("channel_id").references(() => channels.id, { onDelete: "cascade" }),
-  capCents: integer("cap_cents").notNull(),
+  month: text("month").notNull().default(""),   // "YYYY-MM" in the studio timezone
+  capCents: integer("cap_cents"),           // null = no budget from this month on
+  currency: text("currency").notNull().default("USD"),
   concurrency: integer("concurrency"),
-});
+  note: text("note").notNull().default(""),
+  createdAt: created(),
+  updatedAt: updated(),
+}, (t) => [
+  uniqueIndex("budgets_scope_month").on(t.scopeKey, t.month),
+  check("budgets_scope_ok", sql`(${t.scope} = 'studio' and ${t.channelId} is null and ${t.scopeKey} = 'studio') or (${t.scope} = 'channel' and ${t.channelId} is not null and ${t.scopeKey} = ${t.channelId}::text)`),
+  check("budgets_cap_ok", sql`${t.capCents} is null or ${t.capCents} >= 0`),
+]);
+// One cost entry. An estimate (source "estimate") keeps its amount in estimate_cents and never counts as spent; an
+// actual cost keeps it in actual_cents. Voided entries stay for the record and count for nothing.
 export const costLedger = pgTable("cost_ledger", {
   id: id(),
   jobId: uuid("job_id").references(() => jobs.id, { onDelete: "set null" }),
   channelId: uuid("channel_id").references(() => channels.id, { onDelete: "set null" }),
-  category: text("category").notNull(),     // research, voice, visuals, render, storage, publishing, retry
-  provider: text("provider").notNull().default("local"),
+  episodeId: uuid("episode_id").references(() => episodes.id, { onDelete: "set null" }),
+  category: text("category").notNull(),     // voice, visuals, music, research, render, storage, software, publishing, other
+  description: text("description").notNull().default(""),   // what it was
+  provider: text("provider").notNull().default("local"),     // who was paid (owner-entered), or the job's provider
+  source: text("source").notNull().default("manual"),        // manual (owner-recorded actual), estimate
+  currency: text("currency").notNull().default("USD"),
   estimateCents: integer("estimate_cents").notNull().default(0),
   actualCents: integer("actual_cents"),
+  incurredOn: date("incurred_on", { mode: "string" }).notNull().default(sql`CURRENT_DATE`),   // a calendar day in the studio timezone
   reserved: boolean("reserved").notNull().default(false),
   note: text("note").notNull().default(""),
+  voidedAt: timestamp("voided_at", { withTimezone: true }),
+  voidReason: text("void_reason").notNull().default(""),
   createdAt: created(),
+  updatedAt: updated(),
+}, (t) => [
+  index("cost_ledger_incurred").on(t.incurredOn),
+  check("cost_ledger_amount_ok", sql`(${t.source} = 'estimate' and ${t.actualCents} is null and ${t.estimateCents} >= 0) or (${t.source} <> 'estimate' and ${t.actualCents} is not null and ${t.actualCents} >= 0)`),
+]);
+
+// ── push notifications (Stage E): upload reminders and "needs you" alerts on the owner's devices ──────────────
+// The studio's VAPID key pair: one row, made the first time it's needed. The private key is sealed (lib/crypto:
+// INTEGRATIONS_KEY, or a key derived from SESSION_SECRET when that isn't set; sealed_with says which) and never leaves
+// the server. Only the public key reaches a browser.
+export const pushKeys = pgTable("push_keys", {
+  id: integer("id").primaryKey().default(1),
+  publicKey: text("public_key").notNull(),
+  privateKeySealed: text("private_key_sealed").notNull(),
+  sealedWith: text("sealed_with").notNull(),   // integrations, session
+  createdAt: created(),
+  updatedAt: updated(),
+}, (t) => [check("push_keys_one_row", sql`${t.id} = 1`), check("push_keys_sealed_with", sql`${t.sealedWith} in ('integrations', 'session')`)]);
+
+// One browser that asked to be notified. The endpoint and keys are the browser's own and stay server-side; screens
+// get the label, the dates and a hash of the endpoint (to say "this device"). A 404/410 from the push service deletes it.
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: id(),
+  endpoint: text("endpoint").notNull().unique(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  label: text("label").notNull().default(""),
+  createdAt: created(),
+  lastSuccessAt: timestamp("last_success_at", { withTimezone: true }),
+  lastFailureAt: timestamp("last_failure_at", { withTimezone: true }),
+  failureCount: integer("failure_count").notNull().default(0),   // since the last success
+  lastError: text("last_error").notNull().default(""),
 });
+
+// One row per event Prism notified about: the dedupe guard (each event notifies at most once, even with two workers).
+export const pushEvents = pgTable("push_events", {
+  id: id(),
+  dedupeKey: text("dedupe_key").notNull().unique(),   // "upload_due:<publication>:<slot>", "publish_failed:<job>:<at>", …
+  kind: text("kind").notNull(),                       // upload_due, publish_failed, publish_handed_off, instagram_unplanned
+  title: text("title").notNull(),
+  body: text("body").notNull().default(""),
+  url: text("url").notNull().default("/"),
+  publicationId: uuid("publication_id").references(() => publications.id, { onDelete: "set null" }),
+  sent: integer("sent").notNull().default(0),
+  failed: integer("failed").notNull().default(0),
+  createdAt: created(),
+}, (t) => [index("push_events_created").on(t.createdAt)]);
 
 // ── audit ──────────────────────────────────────────────────────────────────
 export const auditLog = pgTable("audit_log", {

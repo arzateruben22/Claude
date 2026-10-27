@@ -107,8 +107,11 @@ node kits/cinema/film/compilation.mjs --channel films/channels/physics --episode
      --title "Everyday physics, slowed down" --thumb "Which lands first?" --name vol01
 ```
 
-The episodes are the delivered finals, played whole at full height in the middle of a 1920×1080 frame drawn
-in the channel's theme. On the left are the channel and the episode's title. On the right is the chapter list,
+The episodes are the delivered finals, played whole at full height in the middle of a 16:9 frame drawn in the
+channel's theme: 2560×1440 by default (`--height 1080` for 1920×1080), because YouTube is widely reported to give
+1440p uploads its better encoder. The cards are drawn at that size; the episodes are upscaled into the slot
+(Lanczos). The encode matches the episodes' delivery (x264 slow, CRF 15, aq-mode 3; `--crf`), its rate capped so
+the file stays under 90 MB (`--max-mb`; GitHub refuses files over 100 MB). On the left are the channel and the episode's title. On the right is the chapter list,
 with the current episode lit, and "Narration: synthetic voice (AI)" sits along the bottom. A 4 s intro card
 (the name, the promise and the posters, over the channel's sonic signature from the studio) opens the video. An
 8 s outro card closes it ("A new one every day", Subscribe), with the right half clear for YouTube's end screen.
@@ -123,6 +126,19 @@ Output in `<channel>/compilations/<name>/`:
 
 `--cards-only` draws the cards and the thumbnail and stops, for design passes. Tested 24 Oct on two copies of
 Rest Frame No. 001 (the v1 file): −14.3 LUFS, −2.0 dBTP, 3 min 20 s to build on this box.
+
+## YouTube versions of the shorts (`youtube1440.py`)
+
+```
+python3 -I kits/cinema/film/youtube1440.py films/channels/<ch>/epNN     # or a channel, or films/channels for all
+```
+
+Writes `out/<name>-9x16-youtube.mp4` beside each delivered final: the 1080×1920 master upscaled to 1440×2560
+(Lanczos, accurate rounding, full-chroma), x264 slow CRF 15 aq-mode 3, BT.709, sound copied (loudness and sync are
+the master's), under 90 MB. It checks the size, the frame count and the length against the master, and skips an
+episode whose YouTube version is newer than its master (`--force` redoes it). TikTok and Instagram stop at
+1080×1920 and keep the master; Prism Studio's import gives YouTube this file. Measured 27 Oct on this 4-core box:
+about 2.5 min an episode; Meanwhile, Inside 001 came to 7.1 Mbps, 63 MB.
 
 ## The scene contract
 

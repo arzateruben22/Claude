@@ -65,6 +65,18 @@ function mapGraphError(status: number, err: Json | undefined, raw: unknown): Con
   return new ConnectorError("rejected", detail, false, raw);
 }
 
+/** On an insights call, Graph's code 10 ("(#10) Not enough viewers for the media to show insights") and the 200–299
+ *  permission family are about that one post, not the token: a refusal for this post only (never "reconnect", which
+ *  would stop publishing too). Code 190 and an OAuthException without a code stay auth failures. */
+function insightsRefusal(err: unknown): ConnectorError | null {
+  if (!(err instanceof ConnectorError) || err.code !== "auth") return null;
+  const code = Number(((err.raw as Json | undefined)?.error as Json | undefined)?.code ?? NaN);
+  if (code !== 10 && !(code >= 200 && code <= 299)) return null;
+  const why = code === 10 ? "Instagram has no insights for this post yet (too few viewers, or too new)"
+    : "Instagram refused this post's insights; if every post says this, reconnect to grant the insights permission";
+  return new ConnectorError("rejected", err.message.replace(/; reconnect the Instagram account$/, `; ${why}`), false, err.raw);
+}
+
 /** One Graph API request; returns the parsed JSON (throws a ConnectorError for `error` bodies and non-2xx). */
 async function graph<T = Json>(f: Fetch, url: string, init: RequestInit): Promise<T> {
   let res: Response;
@@ -284,11 +296,15 @@ export function createInstagram(options: InstagramOptions = {}): PlatformConnect
       const url = (metric: string) => `${GRAPH}/${postId}/insights?metric=${metric}`;
       let j: Json;
       try {
-        j = await graph(f, url("views,reach,likes,comments,shares,saved"), { method: "GET", headers: bearer(t) });
+        try {
+          j = await graph(f, url("views,reach,likes,comments,shares,saved"), { method: "GET", headers: bearer(t) });
+        } catch (err) {
+          // older media / API versions know `plays` instead of `views`
+          if (!(err instanceof ConnectorError) || err.code !== "rejected") throw err;
+          j = await graph(f, url("plays,reach,likes,comments,shares,saved"), { method: "GET", headers: bearer(t) });
+        }
       } catch (err) {
-        // older media / API versions know `plays` instead of `views`
-        if (!(err instanceof ConnectorError) || err.code !== "rejected") throw err;
-        j = await graph(f, url("plays,reach,likes,comments,shares,saved"), { method: "GET", headers: bearer(t) });
+        throw insightsRefusal(err) ?? err;
       }
       const rows = (Array.isArray(j.data) ? j.data : []) as Json[];
       const pick = (name: string): number | undefined => {

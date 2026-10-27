@@ -53,7 +53,8 @@ export const joule = (I, o = {}) => {
   for (let k = 0; k < 3; k++) { const b = I.bar(-9, 0, 9, 0, 1.1); b.position.y = (k - 1) * 6; paddles.add(b); }
   g.add(paddles);
   const pulleys = [-1, 1].map((sd) => { const r = I.ring(4, 0.8); r.position.set(sd * 30, py, 0); g.add(r); return r; });
-  const cordTop = [-1, 1].map((sd) => I.bar(sd * 3, py - 22, sd * 30, py + 4, 0.35));   // drum → over the pulley cordTop.forEach((c) => g.add(c));
+  const cordTop = [-1, 1].map((sd) => I.bar(sd * 3, py - 22, sd * 30, py + 4, 0.35));   // drum → over the pulley
+  cordTop.forEach((c) => g.add(c));
   const cords = [-1, 1].map(() => { const c = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1, 0.4), I.mat); g.add(c); return c; });
   const weights = [-1, 1].map(() => { const w = I.poly([[-4, -6], [4, -6], [4, 6], [-4, 6]], 0.8, true); g.add(w); return w; });
   const therm = I.poly([[W / 2 + 6, 6], [W / 2 + 9, 6], [W / 2 + 9, 44], [W / 2 + 6, 44]], 0.5, true); g.add(therm);

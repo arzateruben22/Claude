@@ -1,0 +1,1075 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What's this cell carrying? Room for about a billion passengers.",
+   "heard": "What's this cell carrying? Room for about a billion passengers.",
+   "words": [
+    {
+     "w": "What's",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 0.355,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 0.61,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "carrying?",
+     "start": 0.845,
+     "end": 1.399,
+     "heard": true,
+     "end_asr": 1.84
+    },
+    {
+     "w": "Room",
+     "start": 1.87,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 2.23,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.44,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.625,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "billion",
+     "start": 2.81,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "passengers.",
+     "start": 3.22,
+     "end": 4.0,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies. Each one has four iron atoms, and each can hold an oxygen.",
+   "heard": "It's packed with one protein hemoglobin, about 270 million coppers. Each one has four iron atoms, and each can hold an oxygen.",
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 0.245,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 0.485,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.62,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "protein,",
+     "start": 0.945,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "hemoglobin:",
+     "start": 1.49,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.75,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 3.085,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 3.115,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 3.145,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 3.175,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "million",
+     "start": 4.07,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "copies.",
+     "start": 4.555,
+     "end": 5.138,
+     "heard": false,
+     "end_asr": 5.44
+    },
+    {
+     "w": "Each",
+     "start": 5.46,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 5.725,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 5.935,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 6.15,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "iron",
+     "start": 6.42,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "atoms,",
+     "start": 6.87,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.58,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 7.61,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 7.985,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "hold",
+     "start": 8.015,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 8.35,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "oxygen.",
+     "start": 8.615,
+     "end": 9.04,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start; full, it's bright red.",
+   "heard": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start, full it's bright red.",
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.345,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "fill.",
+     "start": 0.675,
+     "end": 1.208,
+     "heard": true,
+     "end_asr": 1.52
+    },
+    {
+     "w": "The",
+     "start": 1.53,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 1.695,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "oxygen",
+     "start": 1.98,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "struggles",
+     "start": 2.625,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.02,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "board,",
+     "start": 3.165,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 3.975,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 4.045,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.245,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 4.56,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.895,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 5.155,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 5.24,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "easier.",
+     "start": 5.5,
+     "end": 5.974,
+     "heard": true,
+     "end_asr": 6.24
+    },
+    {
+     "w": "Dark",
+     "start": 6.295,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "red",
+     "start": 6.595,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 6.915,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.085,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "start;",
+     "start": 7.115,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "full,",
+     "start": 7.63,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 8.045,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "bright",
+     "start": 8.19,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "red.",
+     "start": 8.42,
+     "end": 8.88,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back.",
+   "heard": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in and the vein swallows it, so less red comes back.",
+   "words": [
+    {
+     "w": "Veins",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "often",
+     "start": 0.51,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 1.0,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "blue,",
+     "start": 1.1,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 1.71,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 1.92,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "easy",
+     "start": 2.03,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.35,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "guess",
+     "start": 2.47,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.725,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 2.83,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 3.285,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 3.53,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 3.855,
+     "end": 4.07,
+     "heard": true,
+     "end_asr": 4.4
+    },
+    {
+     "w": "It",
+     "start": 4.405,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 4.565,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 4.84,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "Returning",
+     "start": 5.895,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 6.555,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.99,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "darker",
+     "start": 7.17,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "red.",
+     "start": 7.55,
+     "end": 8.015,
+     "heard": true,
+     "end_asr": 8.24
+    },
+    {
+     "w": "Red",
+     "start": 8.335,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 8.55,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "sinks",
+     "start": 8.835,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 9.455,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.55,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.58,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "vein",
+     "start": 9.76,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "swallows",
+     "start": 10.235,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 10.76,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 10.9,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 10.98,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "red",
+     "start": 11.345,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "comes",
+     "start": 11.615,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 11.935,
+     "end": 12.24,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "Your heart sends your blood back through your lungs about once a minute. There, the empty seats fill. In about a quarter of a second.",
+   "heard": "Your heart sends your blood back through your lungs about once a minute. There, the empty seats fill. In about a quarter of a second,",
+   "words": [
+    {
+     "w": "Your",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "heart",
+     "start": 0.315,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "sends",
+     "start": 0.675,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.06,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 1.24,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 1.635,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 1.875,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.04,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "lungs",
+     "start": 2.4,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.96,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 3.21,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.42,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "minute.",
+     "start": 3.855,
+     "end": 4.063,
+     "heard": true,
+     "end_asr": 4.56
+    },
+    {
+     "w": "There,",
+     "start": 4.545,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.025,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "empty",
+     "start": 5.215,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "seats",
+     "start": 5.75,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "fill.",
+     "start": 6.16,
+     "end": 6.772,
+     "heard": true,
+     "end_asr": 7.36
+    },
+    {
+     "w": "In",
+     "start": 7.355,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.695,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.96,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "quarter",
+     "start": 8.12,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.735,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.765,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 9.02,
+     "end": 9.68,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "The blue is your skin's trick. The red is a passenger count: brighter means fuller seats.",
+   "heard": "The blue is your skin's trick. The red is a passenger count, brighter means fuller seats.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "blue",
+     "start": 0.205,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.555,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.625,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "skin's",
+     "start": 0.895,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "trick.",
+     "start": 1.245,
+     "end": 1.766,
+     "heard": true,
+     "end_asr": 2.08
+    },
+    {
+     "w": "The",
+     "start": 2.09,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "red",
+     "start": 2.125,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.465,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.725,
+     "end": 2.775,
+     "heard": true
+    },
+    {
+     "w": "passenger",
+     "start": 2.755,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "count:",
+     "start": 3.275,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "brighter",
+     "start": 3.995,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "means",
+     "start": 4.28,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "fuller",
+     "start": 4.685,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "seats.",
+     "start": 5.015,
+     "end": 5.44,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo07",
+   "text": "Meanwhile, as you watched, your blood handed your body about a cup of oxygen.",
+   "heard": "Meanwhile as you watched, your blood handed your body about a cup of oxygen.",
+   "words": [
+    {
+     "w": "Meanwhile,",
+     "start": 0.02,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.845,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.025,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "watched,",
+     "start": 1.15,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 2.23,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "handed",
+     "start": 2.405,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.79,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 3.03,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.41,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.69,
+     "end": 3.74,
+     "heard": true
+    },
+    {
+     "w": "cup",
+     "start": 3.72,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.855,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "oxygen.",
+     "start": 4.09,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: the signal in your nerves. In the fastest, it doesn't crawl; it jumps.",
+   "heard": "Next the signal in your nerves. In the fastest it doesn't crawl, it jumps.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.46,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 0.52,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.04,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.28,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "nerves.",
+     "start": 1.44,
+     "end": 1.923,
+     "heard": true,
+     "end_asr": 2.16
+    },
+    {
+     "w": "In",
+     "start": 2.24,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.485,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "fastest,",
+     "start": 2.53,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.04,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 3.185,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "crawl;",
+     "start": 3.48,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.01,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "jumps.",
+     "start": 4.16,
+     "end": 4.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  }
+ ],
+ "clamped_by": "films/channels/body/ep02/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

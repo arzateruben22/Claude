@@ -25,6 +25,7 @@ export default async function Home() {
           <span><span className="day-long">{day}</span><span className="day-short">{dayShort}</span></span>
           {first}
           {v.reviewCount ? <span><Link href="/review">{v.reviewCount} to review</Link></span> : null}
+          {v.longToApprove.length ? <span><Link href={`/m/${v.longToApprove[0].slug}#long-video`}>{v.longToApprove.length} long video{v.longToApprove.length === 1 ? "" : "s"} to approve</Link></span> : null}
           {v.paused ? <span>Publishing paused</span> : null}
         </p>
       </header>

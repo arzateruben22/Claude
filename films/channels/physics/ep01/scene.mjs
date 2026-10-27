@@ -153,7 +153,7 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
-hud.badge("warp", { from: clk, slot: "tr" });
+const warpEl = hud.badge("warp", { from: clk, slot: "tr" });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, t0: b.t0, t1: b.t1 ?? null, slot: b.slot, maxW: b.maxW });
 const anchorFn = (an) => {
   if (an.ball) return (t) => ballPos(an.ball[0], an.ball[1], t);
@@ -208,6 +208,14 @@ window.seek = function (t) {
   dropT(t); dropE(t);
   if (foot) foot.style.opacity = E.out3(seg(t, EC, EC + 0.3)).toFixed(4);
   hud.update(t);
+  // the speed badge's last exit, at the record's cut, is faster than hud.js's 0.3 s (compile.py, CUE.measure.warpOut):
+  // the stack slides "3 throws overlaid" up as the leaving note fades, so a slower fade let the two plates overlap
+  const [wo0, wo1] = CUE.measure.warpOut;
+  if (t >= wo0 && warpEl.style.visibility !== "hidden") {
+    const o = Math.min(+warpEl.style.opacity, 1 - E.out3(seg(t, wo0, wo1)));
+    warpEl.style.opacity = o <= 0.001 ? "0" : o >= 0.999 ? "1" : o.toFixed(4);
+    if (o <= 0.001) warpEl.style.visibility = "hidden";
+  }
   counterEl.classList.toggle("lit", CUE.measure.lit.some(([a, b]) => t >= a && t < b));
   RD.update(t, 1 - E.out3(seg(t, EC - 0.3, EC)));
   renderer.render(scene, camera);

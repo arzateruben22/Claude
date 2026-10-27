@@ -30,16 +30,16 @@ export default async function UploadDesk() {
       <p className="lede">Each task is one exact, approved video and text for one account. Share or download it, post it in the app, then mark it uploaded. Opening, downloading or sharing never counts as posted.</p>
       {v.paused ? <div className="notice">Publishing is paused in Settings: nothing new is planned.</div> : null}
       {!due.length && !later.length && !backlog.length && !v.done.length
-        ? <p className="faint">{waiting.length ? "Nothing approved to post yet." : "Nothing due today or coming up."} <Link href="/calendar">Plan the week</Link> once episodes are approved.</p> : null}
+        ? <div className="note-row spaced"><p className="faint">{waiting.length ? "Nothing approved to post yet." : "Nothing due today or coming up."} Plan the week once episodes are approved.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
       {section("Due today", due)}
       {section("Done today", v.done)}
       {section("Coming up", later)}
-      {section("Not scheduled", backlog, <p className="muted">These have no slot yet. <Link href="/calendar">Plan the week</Link> to give them one, or post one now.</p>)}
+      {section("Not scheduled", backlog, <div className="note-row spaced"><p className="muted">These have no slot yet: plan the week to give them one, or post one now.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div>)}
       {waiting.length ? (
         <section className="section">
           <details className="waiting" open={waitingDue || undefined}>
             <summary><span className="h2">Waiting for approval</span> <span className="faint">{waiting.length} post{waiting.length === 1 ? "" : "s"}{waitingDue ? " · some due today" : ""}</span></summary>
-            <p className="muted">Approve each account&apos;s exact video and text on <Link href="/review">Review</Link>; the full upload card appears here once it&apos;s approved.</p>
+            <div className="note-row"><p className="muted">Approve each account&apos;s exact video and text on Review; the full upload card appears here once it&apos;s approved.</p><Link href="/review" className="btn ghost small">Review</Link></div>
             <div className="card flush"><ul className="q">{waiting.map((t) => <TaskRow key={t.p.id} t={t} tz={v.tz} />)}</ul></div>
           </details>
         </section>

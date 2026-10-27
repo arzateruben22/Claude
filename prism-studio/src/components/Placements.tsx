@@ -24,7 +24,7 @@ export function Placements({ full, tz }: { full: Full; tz: string }) {
           <div className="row spread">
             <div className="acct-line">
               <span className="label">{PLATFORM_LABEL[dest.platform]}{dest.shared ? " · shared" : ""}</span>
-              {dest.handle || dest.displayName ? <b>{dest.handle || dest.displayName}</b> : <Link href="/connections" className="faint">account not set up</Link>}
+              {dest.handle || dest.displayName ? <b>{dest.handle || dest.displayName}</b> : <Link href="/connections" className="chip warn">Account not set up</Link>}
             </div>
             <div className="row">
               {publication && publication.status !== "planned" ? <span className={`chip ${pubTone(publication.status)}`}>{PUB_LABEL[publication.status]}</span> : null}

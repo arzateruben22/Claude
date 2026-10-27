@@ -233,109 +233,115 @@
   },
   {
    "id": "vo03",
-   "text": "Pull one three times farther. Let both go. Three times the path… and still, neck and neck.",
-   "heard": "Pull one three times farther. Let both go. Three times the path and still neck and neck.",
+   "text": "Pull its twin three times farther. Let both go. Three times the distance… and still, neck and neck.",
+   "heard": "Pull its twin three times farther. Let both go. Three times the distance, and still, neck and neck.",
    "words": [
     {
      "w": "Pull",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 0.32,
-     "end": 0.56,
+     "w": "its",
+     "start": 0.25,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "three",
-     "start": 0.55,
+     "w": "twin",
+     "start": 0.365,
      "end": 0.8,
      "heard": true
     },
     {
+     "w": "three",
+     "start": 0.73,
+     "end": 1.04,
+     "heard": true
+    },
+    {
      "w": "times",
-     "start": 0.69,
-     "end": 1.12,
+     "start": 0.955,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "farther.",
-     "start": 1.1,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "Let",
-     "start": 1.87,
+     "start": 1.365,
      "end": 2.08,
      "heard": true
     },
     {
+     "w": "Let",
+     "start": 2.165,
+     "end": 2.32,
+     "heard": true
+    },
+    {
      "w": "both",
-     "start": 2.045,
-     "end": 2.4,
+     "start": 2.335,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "go.",
-     "start": 2.335,
-     "end": 3.04,
+     "start": 2.6,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "Three",
-     "start": 3.125,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "times",
-     "start": 3.31,
+     "start": 3.43,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 3.69,
-     "end": 3.84,
+     "w": "times",
+     "start": 3.65,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "path…",
-     "start": 3.785,
+     "w": "the",
+     "start": 4.03,
      "end": 4.16,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 4.165,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "still,",
-     "start": 4.49,
+     "w": "distance…",
+     "start": 4.11,
      "end": 4.64,
      "heard": true
     },
     {
-     "w": "neck",
-     "start": 4.79,
-     "end": 5.12,
+     "w": "and",
+     "start": 4.645,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 5.145,
+     "w": "still,",
+     "start": 4.96,
      "end": 5.28,
      "heard": true
     },
     {
+     "w": "neck",
+     "start": 5.335,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.69,
+     "end": 5.84,
+     "heard": true
+    },
+    {
      "w": "neck.",
-     "start": 5.175,
-     "end": 5.6,
+     "start": 5.735,
+     "end": 6.16,
      "heard": true
     }
    ]
@@ -613,151 +619,151 @@
   },
   {
    "id": "vo05",
-   "text": "So hang fifteen, each a little shorter. Only length changes. For about a minute, they drift apart. Then, all at once… back in line.",
-   "heard": "So hang fifteen, each a little shorter. Only length changes. For about a minute they drift apart, then all at once back in line.",
+   "text": "Now hang fifteen, each a little shorter. Only length changes. For half a minute, they drift apart. Then, just as gradually… back in line.",
+   "heard": "Now hang fifteen, each a little shorter. Only length changes. For half a minute they drift apart, then just as gradually back in line.",
    "words": [
     {
-     "w": "So",
+     "w": "Now",
      "start": 0.02,
      "end": 0.16,
      "heard": true
     },
     {
      "w": "hang",
-     "start": 0.23,
-     "end": 0.56,
+     "start": 0.355,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "fifteen,",
-     "start": 0.53,
-     "end": 1.12,
+     "start": 0.59,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "each",
-     "start": 1.125,
-     "end": 1.36,
+     "start": 1.28,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.27,
-     "end": 1.44,
+     "start": 1.425,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "little",
-     "start": 1.48,
-     "end": 1.68,
+     "start": 1.64,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "shorter.",
-     "start": 1.7,
-     "end": 2.48,
+     "start": 1.855,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "Only",
-     "start": 2.52,
+     "start": 2.62,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "length",
-     "start": 2.8,
-     "end": 3.2,
+     "start": 2.88,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "changes.",
-     "start": 3.12,
-     "end": 4.0,
+     "start": 3.275,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "For",
-     "start": 4.195,
-     "end": 4.245,
+     "start": 4.425,
+     "end": 4.475,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 4.225,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 4.47,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "minute,",
-     "start": 4.5,
+     "w": "half",
+     "start": 4.455,
      "end": 4.72,
      "heard": true
     },
     {
-     "w": "they",
-     "start": 4.815,
+     "w": "a",
+     "start": 4.745,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "minute,",
+     "start": 4.775,
      "end": 4.96,
      "heard": true
     },
     {
+     "w": "they",
+     "start": 5.06,
+     "end": 5.2,
+     "heard": true
+    },
+    {
      "w": "drift",
-     "start": 4.98,
-     "end": 5.36,
+     "start": 5.21,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "apart.",
-     "start": 5.36,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "Then,",
-     "start": 6.21,
+     "start": 5.61,
      "end": 6.4,
      "heard": true
     },
     {
-     "w": "all",
-     "start": 6.57,
-     "end": 6.72,
+     "w": "Then,",
+     "start": 6.465,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 6.81,
-     "end": 6.88,
+     "w": "just",
+     "start": 6.79,
+     "end": 6.96,
      "heard": true
     },
     {
-     "w": "once…",
-     "start": 6.865,
-     "end": 7.12,
+     "w": "as",
+     "start": 7.01,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "gradually…",
+     "start": 7.23,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "back",
-     "start": 7.325,
-     "end": 7.52,
+     "start": 7.9,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "in",
-     "start": 7.52,
-     "end": 7.68,
+     "start": 8.095,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "line.",
-     "start": 7.585,
-     "end": 8.08,
+     "start": 8.125,
+     "end": 8.64,
      "heard": true
     }
    ]

@@ -34,14 +34,14 @@
  },
  {
   "id": "c4",
-  "sentence": "Three times the path… and still, neck and neck.",
+  "sentence": "Three times the distance… and still, neck and neck.",
   "claim": "Released together from 30° and 10°, two identical 0.994 m pendulums reach the bottom 7.8 ms apart (quarter periods 0.5087 s and 0.5010 s): the 30° swing's arc is exactly three times longer.",
   "source_url": "https://arxiv.org/abs/physics/0510206",
-  "source_title": "Exact and approximate period of a simple pendulum (arXiv:physics/0510206)",
+  "source_title": "F. M. S. Lima & P. Arun, An accurate formula for the period of a simple pendulum oscillating beyond the small-angle regime, Am. J. Phys. 74(10), 892 (2006) (arXiv:physics/0510206)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed from the exact period: T0·(1.01741 − 1.00191)/4 = 2.0000 × 0.0155 / 4 = 7.75 ms. Arc length = L·θ0, so 30° against 10° is exactly 3×. 'Neck and neck' (close, not tied) on purpose: the measure segment shows the gap growing."
+  "note": "Computed from the exact period: T0·(1.01741 − 1.00191)/4 = 2.0000 × 0.0155 / 4 = 7.75 ms. Arc length = L·θ0, so 30° against 10° is exactly 3×. 'Neck and neck' (close, not tied) on purpose: the measure segment shows the gap growing. Source title corrected on 26 Oct (the audit found the earlier title was not the paper's): search excerpt of the arXiv record gives Lima & Arun's title and Am. J. Phys. 2006; its formula is checked against the exact elliptic-integral period these numbers come from."
  },
  {
   "id": "c5",
@@ -58,12 +58,12 @@
   "id": "c6",
   "sentence": "For small swings, he was nearly right.",
   "claim": "For small swings (especially below about 15°) the period is nearly independent of amplitude, so Galileo's claim is nearly right there; larger swings take measurably longer (13.7% at 80°).",
-  "source_url": "https://arxiv.org/pdf/1805.00002",
-  "source_title": "Finding the period of a simple pendulum (arXiv:1805.00002)",
+  "source_url": "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums",
+  "source_title": "OpenStax University Physics Volume 1, 15.5 Pendulums (LibreTexts copy)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'Galileo actually was wrong: the maximum angular displacement of the pendulum does affect its oscillatory period'; the error 'increases with the angle'. OpenStax 15.5: 'nearly independent of amplitude, especially if θ is less than about 15°'."
+  "note": "OpenStax University Physics 15.5 (15.4 on openstax.org; the LibreTexts copy, as c2): the period 'is nearly independent of amplitude, especially if θ is less than about 15°'. The 13.7% at 80° is computed from the exact period: 2K(sin 40°)/π = 1.1375 (Lima & Arun, c11's source). Repointed on 26 Oct (audit): the earlier main link was an IB student paper (arXiv:1805.00002)."
  },
  {
   "id": "c7",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "So hang fifteen, each a little shorter.",
+  "sentence": "Now hang fifteen, each a little shorter.",
   "claim": "A simple pendulum's period depends only on its length and g, not on its mass, so fifteen pendulums of different lengths (and the same start angle) swing at fifteen different rates.",
   "source_url": "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums",
   "source_title": "OpenStax University Physics Volume 1, 15.5 Pendulums (LibreTexts copy)",
@@ -101,57 +101,57 @@
  {
   "id": "c16",
   "sentence": "Only length changes.",
-  "claim": "The fifteen pendulums differ only in length (same bobs, same 12° start), and length is what sets a pendulum's period, so each swings at its own rate.",
+  "claim": "The fifteen pendulums differ only in length (same bobs, same 15° start), and length is what sets a pendulum's period, so each swings at its own rate.",
   "source_url": "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/15:_Oscillations/15.05:_Pendulums",
   "source_title": "OpenStax University Physics Volume 1, 15.5 Pendulums (LibreTexts copy)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Same excerpt as c9 ('the only things that affect the period of a simple pendulum are its length and the acceleration due to gravity'). The bench's fifteen share bob, start angle and g."
+  "note": "Same excerpt as c9 ('the only things that affect the period of a simple pendulum are its length and the acceleration due to gravity'). The bench's fifteen share bob, start angle and g. The bench's fifteen start at 15°."
  },
  {
   "id": "c10",
-  "sentence": "For about a minute, they drift apart.",
-  "claim": "Fifteen uncoupled pendulums tuned so the longest makes 51 back-and-forth swings in 60 s and each shorter one makes one more, up to 65, fall out of phase over the 60 s cycle.",
+  "sentence": "For half a minute, they drift apart.",
+  "claim": "Fifteen uncoupled pendulums tuned so the longest makes 51 back-and-forth swings in 60 s and each shorter one makes one more, up to 65, fall out of step for the first 30 s (neighbours swing on opposite sides at 30 s).",
   "source_url": "https://sciencedemonstrations.fas.harvard.edu/presentations/pendulum-waves",
   "source_title": "Harvard Natural Sciences Lecture Demonstrations, Pendulum Waves",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'The length of the longest pendulum has been adjusted so that it executes 51 oscillations in this 60 second period. Thus, the 15th pendulum (shortest) undergoes 65 oscillations.' Computed lengths L = g(T/2π)², T = 60/(51 + n): 34.39 cm … 21.17 cm. "
+  "note": "Excerpt: 'The length of the longest pendulum has been adjusted so that it executes 51 oscillations in this 60 second period. Thus, the 15th pendulum (shortest) undergoes 65 oscillations.' Computed lengths L = g(T/2π)², T = 60/(51 + n): 34.39 cm … 21.17 cm.  Corrected on 26 Oct (audit): the pattern is symmetric about the half-minute: each pendulum's x_n(60 − t) = x_n(t), so the drift apart lasts 30 s and the second half retraces it. Harvard excerpt: 'at 30 seconds, half of the pendulums are at one amplitude maximum and the other half are at the opposite amplitude maximum'."
  },
  {
   "id": "c17",
-  "sentence": "Then, all at once… back in line.",
-  "claim": "After the 60 s cycle all fifteen are back in phase together: in 60 s each has made a whole number of back-and-forth swings (51 … 65).",
+  "sentence": "Then, just as gradually… back in line.",
+  "claim": "Over the second half they retrace the first half in reverse and are back in line at the end of the 60 s cycle: in 60 s each has made a whole number of back-and-forth swings (51 … 65).",
   "source_url": "https://sciencedemonstrations.fas.harvard.edu/presentations/pendulum-waves",
   "source_title": "Harvard Natural Sciences Lecture Demonstrations, Pendulum Waves",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Same Harvard excerpt as c10. Computed: the bench's fifteen start at 12°, which lengthens every period by the same 0.275% (exact ratio 1.00275), so they realign at 60 × 1.00275 = 60.17 s. Shown fast, with the speed note."
+  "note": "Same Harvard excerpt as c10. Computed: the bench's fifteen start at 15°, which lengthens every period by the same 0.43% (exact ratio 1.00430), so they realign at 60 × 1.00430 = 60.26 s (compile.py WAVE_TH, film.json wave.align 60.258). Shown fast, with the speed note. 'Just as gradually': x_n(60 − t) = x_n(t) (corrected on 26 Oct; the line had said 'all at once')."
  },
  {
   "id": "c11",
   "sentence": "Measure it: twenty swings, and the big one is three tenths of a second behind.",
   "claim": "Twenty swings (ten periods) take 20.35 s at 30° and 20.04 s at 10° for a 0.994 m pendulum: the big swing falls 0.31 s behind.",
   "source_url": "https://arxiv.org/abs/physics/0510206",
-  "source_title": "Exact and approximate period of a simple pendulum (arXiv:physics/0510206)",
+  "source_title": "F. M. S. Lima & P. Arun, An accurate formula for the period of a simple pendulum oscillating beyond the small-angle regime, Am. J. Phys. 74(10), 892 (2006) (arXiv:physics/0510206)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed from the exact period T = T0 · 2K(sin(θ0/2))/π, T0 = 2.0000 s: 10 × 2.0000 × (1.01741 − 1.00191) = 0.310 s. A 'swing' is one way across, as a clock counts it."
+  "note": "Computed from the exact period T = T0 · 2K(sin(θ0/2))/π, T0 = 2.0000 s: 10 × 2.0000 × (1.01741 − 1.00191) = 0.310 s. A 'swing' is one way across, as a clock counts it. Source title corrected on 26 Oct (the audit found the earlier title was not the paper's): search excerpt of the arXiv record gives Lima & Arun's title and Am. J. Phys. 2006; its formula is checked against the exact elliptic-integral period these numbers come from."
  },
  {
   "id": "c12",
   "sentence": "At thirty degrees, Galileo is off by about one part in sixty.",
   "claim": "A 30° swing's period is 1.74% longer than the small-swing value 2π√(L/g), about one part in 57, so at 30° the claim of equal times is off by about one part in sixty.",
   "source_url": "https://arxiv.org/abs/physics/0510206",
-  "source_title": "Exact and approximate period of a simple pendulum (arXiv:physics/0510206)",
+  "source_title": "F. M. S. Lima & P. Arun, An accurate formula for the period of a simple pendulum oscillating beyond the small-angle regime, Am. J. Phys. 74(10), 892 (2006) (arXiv:physics/0510206)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed: exact ratio 1.01741 (the arithmetic-geometric mean form of K; the bible's figure, 1.7% at 30°). 1/0.01741 = 57.4: 'one part in sixty' rounds it. Galileo's claim covered every arc under 180°; the line limits itself to this swing."
+  "note": "Computed: exact ratio 1.01741 (the arithmetic-geometric mean form of K; the bible's figure, 1.7% at 30°). 1/0.01741 = 57.4: 'one part in sixty' rounds it. Galileo's claim covered every arc under 180°; the line limits itself to this swing. Source title corrected on 26 Oct (the audit found the earlier title was not the paper's): search excerpt of the arXiv record gives Lima & Arun's title and Am. J. Phys. 2006; its formula is checked against the exact elliptic-integral period these numbers come from."
  },
  {
   "id": "c13",
@@ -178,12 +178,12 @@
  {
   "id": "c15",
   "sentence": "It never reaches your hand.",
-  "claim": "A dropped ball's rebound speed is less than its impact speed (coefficient of restitution below 1), because the bounce turns some motion into sound, vibration and heat, so it never rebounds to the hand it was dropped from.",
-  "source_url": "https://ecampusontario.pressbooks.pub/physics1a03/?p=299",
-  "source_title": "McMaster Physics 1A03 (eCampusOntario Pressbooks), collisions and restitution",
+  "claim": "A dropped tennis ball comes back well under the height it fell from (the ITF test: from 254 cm onto concrete, a rebound of 135–147 cm), so it never returns to the hand that dropped it.",
+  "source_url": "https://twu.tennis-warehouse.com/learning_center/balltesting.php",
+  "source_title": "Tennis Warehouse University, ball testing (ITF rebound range)",
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "The bible's source for episode 3 (§7 #3). Excerpt from a related search: collisions where some kinetic energy is 'dissipated as heat, sound or vibration are called inelastic'. Episode 3 sources it in full."
+  "note": "Excerpt: dropped from 100 in (254 cm) onto concrete, an approved ball rebounds 53–58 in (135–147 cm), 53–58% of the drop. Repointed on 26 Oct (audit): the earlier McMaster citation's excerpt came from a related search, not that page. Episode 3's c1 uses the same source."
  }
 ]

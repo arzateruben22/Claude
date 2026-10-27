@@ -1,0 +1,211 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Room for about a billion passengers.",
+  "claim": "A red blood cell holds about 270 million hemoglobin molecules.",
+  "source_url": "https://www.merckmillipore.com/BD/en/technical-documents/technical-article/clinical-testing-and-diagnostics-manufacturing/hematology/hemoglobin-heme-products",
+  "source_title": "Hemoglobin and heme products (Merck technical article)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: '~270 million hemoglobin molecules' per cell (episode 1, c14). Sources range 250–300 million, so the product below is 1.0–1.2 billion. 'Passengers' are oxygen molecules, the capacity, not a count of what is aboard at every moment. The readout shows 270,000,000 ('about') while the number is spoken."
+ },
+ {
+  "id": "c2",
+  "sentence": "Room for about a billion passengers.",
+  "claim": "Each hemoglobin carries up to four O₂ (one per heme): 270 million × 4 ≈ 1.08 billion O₂ per cell.",
+  "source_url": "https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids",
+  "source_title": "OpenStax Biology 2e, 39.4 Transport of Gases in Human Bodily Fluids",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: hemoglobin is 'made of four subunits'; 'each heme group that contains iron binds one oxygen molecule'. 270,000,000 × 4 = 1,080,000,000 (computed): 'about a billion'. The on-screen readout rounds to 1,000,000,000 with 'about', matching the narration."
+ },
+ {
+  "id": "c3",
+  "sentence": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies.",
+  "claim": "A red blood cell holds about 270 million hemoglobin molecules; hemoglobin is the protein that fills it.",
+  "source_url": "https://www.merckmillipore.com/BD/en/technical-documents/technical-article/clinical-testing-and-diagnostics-manufacturing/hematology/hemoglobin-heme-products",
+  "source_title": "Hemoglobin and heme products (Merck technical article)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same excerpt as c1. 'Packed with one protein' is the plain reading: hemoglobin makes up most of a red cell's protein (no nucleus, no organelles; episode 1, c2/c3)."
+ },
+ {
+  "id": "c4",
+  "sentence": "Each one has four iron atoms, and each can hold an oxygen.",
+  "claim": "Hemoglobin has four subunits, each with a heme group whose iron can bind one O₂.",
+  "source_url": "https://chem.libretexts.org/Courses/Saint_Marys_College_Notre_Dame_IN/CHEM_342%3A_Bio-inorganic_Chemistry/Readings/Metals_in_Biological_Systems_(Saint_Mary%27s_College)/Oxygen_transport_and_Storage/Red_Blood_(Mammals)/Hemoglobin%3A_Oxygen_transport_in_mammals",
+  "source_title": "Hemoglobin: Oxygen transport in mammals (LibreTexts Chemistry, Saint Mary's College CHEM 342)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: two α and two β subunits, 'each carries a heme group with an inorganic iron ion'; oxygen is bound at the iron of each heme. OpenStax Biology 2e 39.4 says the same (c2). Review fix: 'each can hold', not 'every iron grips' (an iron holds O₂ only when bound, and only as Fe²⁺)."
+ },
+ {
+  "id": "c5",
+  "sentence": "The first oxygen struggles to board, but each one makes the next one easier.",
+  "claim": "Hemoglobin binds O₂ cooperatively: binding of the first O₂ changes the protein's shape so the remaining sites bind more readily (a sigmoidal binding curve).",
+  "source_url": "https://biosci.mcdb.ucsb.edu/biochemistry/tw-hbn/hba-overview.htm",
+  "source_title": "Overview of Hemoglobin's Structure/Function Relationships (UC Santa Barbara, MCDB biochemistry)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Search excerpts (UCSB overview; Berg, Biochemistry 8e §7.2 'Hemoglobin binds oxygen cooperatively'): 'the more oxygen is bound to hemoglobin, the easier it is for more oxygen to bind'; the first binds with difficulty, then a conformational change makes the next easier. 'Easier' = higher affinity (review fix: not 'faster'). The film shows it as a failed first docking (the first O₂ slips off its seat once) and then three dockings on first contact, all at the same speed; badged 'illustration · slowed'."
+ },
+ {
+  "id": "c6",
+  "sentence": "Dark red at the start; full, it's bright red.",
+  "claim": "Oxygenated hemoglobin (blood) is bright red; deoxygenated is darker red, because the two absorb light differently.",
+  "source_url": "https://chem.libretexts.org/Courses/Saint_Marys_College_Notre_Dame_IN/CHEM_342%3A_Bio-inorganic_Chemistry/Readings/Metals_in_Biological_Systems_(Saint_Mary%27s_College)/Oxygen_transport_and_Storage/Red_Blood_(Mammals)/Hemoglobin%3A_Oxygen_transport_in_mammals",
+  "source_title": "Hemoglobin: Oxygen transport in mammals (LibreTexts Chemistry, Saint Mary's College CHEM 342)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: oxygenated blood appears bright red, deoxygenated darker; absorption near 540–542 nm vs 554 nm. Live Science: 'bright cherry red' leaving the lungs, 'much darker red' in veins."
+ },
+ {
+  "id": "c7",
+  "sentence": "Veins often look blue, so it's easy to guess the blood inside them is.",
+  "claim": "Veins under the skin often look blue, and a common belief is that the blood in them is blue.",
+  "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
+  "source_title": "If blood is red, why do veins look bluish? (Live Science)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: the blue look 'is an illusion' caused by the skin layer over the vein; blood is always red. The line states the appearance and the wrong guess, then corrects it (WRITING.md: a wrong idea). Bible §9: how blue a vein looks depends on its depth and on skin tone; under darker skin veins often look green (Live Science). 26 Oct audit: the line said 'Your veins look blue', which tells every viewer theirs do; it now says 'Veins often look blue' (the claim's own wording), same 14 words."
+ },
+ {
+  "id": "c8",
+  "sentence": "It never is.",
+  "claim": "Human blood is never blue: it is bright red when oxygenated and darker red when not.",
+  "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
+  "source_title": "If blood is red, why do veins look bluish? (Live Science)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'blood is never blue'; leaving the lungs bright cherry red, returning through veins much darker red."
+ },
+ {
+  "id": "c9",
+  "sentence": "Returning blood is darker red.",
+  "claim": "Blood returning in the veins is a darker red than oxygen-rich arterial blood.",
+  "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
+  "source_title": "If blood is red, why do veins look bluish? (Live Science)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: blood leaving the lungs is bright cherry red; returning through veins it is much darker red."
+ },
+ {
+  "id": "c10",
+  "sentence": "Red light sinks in, and the vein swallows it, so less red comes back.",
+  "claim": "Red light penetrates skin more deeply (to where veins lie) and is absorbed by the blood in the vein, while blue light is scattered back near the surface; so less red light returns from above the vein than from the tissue around it, and the vein looks bluish by contrast.",
+  "source_url": "https://uwaterloo.ca/computer-science/news/computer-science-researchers-help-answer-age-old-medical",
+  "source_title": "Computer science researchers help answer age-old medical question (University of Waterloo)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "University of Waterloo (bible S11; Kienle et al. 1996 modelled it) and Live Science excerpt: red light reaches roughly 5–10 mm, 'where many veins are'; blue is mostly scattered and absorbed near the surface; the surrounding tissue reflects more red than the vein, so the brain reads the vein as blue. 'Swallows' = absorbs. The skin picture is an illustration and is badged so. How blue a vein looks depends on its depth and on skin tone (bible §9)."
+ },
+ {
+  "id": "c11",
+  "sentence": "Your heart sends your blood back through your lungs about once a minute.",
+  "claim": "At rest the heart pumps about 5 L a minute, about equal to the body's whole blood volume, so on average the blood makes a full loop (through the lungs) about once a minute.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK54473/",
+  "source_title": "David B. Young, Control of Cardiac Output (Morgan & Claypool, 2010), ch. 1, Introduction (NCBI Bookshelf NBK54473)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NCBI Bookshelf NBK54473): normal blood volume is about equal to the amount of blood pumped from the heart each minute. Cardiac output ≈ 5 L/min, blood volume ≈ 5 L: 5 / 5 = about once a minute (computed). An average: not every drop takes the same route or time (the source's caveat); 'about' keeps it there."
+ },
+ {
+  "id": "c12",
+  "sentence": "There, the empty seats fill.",
+  "claim": "Each pass through the lungs, oxygen moves into the blood and fills hemoglobin's empty sites.",
+  "source_url": "https://www.lumen.luc.edu/lumen/meded/medicine/pulmonar/physio/pf3.htm",
+  "source_title": "Pulmonary physiology: diffusion (Loyola University Chicago, Stritch School of Medicine, Lumen)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Same source as c17 (Loyola Lumen): gas equilibrates across the alveolocapillary membrane during the capillary transit. 'The empty seats': returning blood at rest still carries most of its oxygen (venous saturation commonly about 75%), so only the empty sites fill (review fix)."
+ },
+ {
+  "id": "c13",
+  "sentence": "The blue is your skin's trick.",
+  "claim": "The blue look of veins is an optical effect of light in skin and tissue, not the colour of the blood.",
+  "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
+  "source_title": "If blood is red, why do veins look bluish? (Live Science)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: the blue look 'is an illusion' caused by the skin layer over the vein. Same mechanism as c10."
+ },
+ {
+  "id": "c14",
+  "sentence": "The red is a passenger count: brighter means fuller seats.",
+  "claim": "The more of its hemoglobin carries O₂, the brighter red blood is; less O₂, darker red.",
+  "source_url": "https://chem.libretexts.org/Courses/Saint_Marys_College_Notre_Dame_IN/CHEM_342%3A_Bio-inorganic_Chemistry/Readings/Metals_in_Biological_Systems_(Saint_Mary%27s_College)/Oxygen_transport_and_Storage/Red_Blood_(Mammals)/Hemoglobin%3A_Oxygen_transport_in_mammals",
+  "source_title": "Hemoglobin: Oxygen transport in mammals (LibreTexts Chemistry, Saint Mary's College CHEM 342)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "As c6: the more of its hemoglobin carries O₂, the brighter red. A metaphor for the colour change (review fix: not 'fuel'), not a measuring method; no talk of pulse oximeters (bible §9)."
+ },
+ {
+  "id": "c15",
+  "sentence": "Meanwhile, as you watched, your blood handed your body about a cup of oxygen.",
+  "claim": "An average adult at rest uses about 250 mL of O₂ a minute, delivered by the blood.",
+  "source_url": "https://e-safe-anaesthesia.org/sessions/15_03/d/ELFH_Session/521/tab_741.html",
+  "source_title": "Oxygen flux (e-Learning Anaesthesia, Royal College of Anaesthetists / NHS e-Learning for Healthcare)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (e-Learning Anaesthesia, 'Oxygen flux'): delivery about 1000 mL/min, 'resting consumption only 25% of this (250 mL/min)'. Vernier and others: 200–250 mL/min. The tally is 250/60 × t mL from frame 0; the line starts near 62 s, about 258 mL; a US cup is about 237 mL (computed: 'about a cup' holds from 50 s to 70 s, 208–292 mL, within ±25%)."
+ },
+ {
+  "id": "c16",
+  "sentence": "In the fastest, it doesn't crawl; it jumps.",
+  "claim": "In myelinated axons the action potential is regenerated only at the nodes of Ranvier and so appears to jump from node to node (saltatory conduction), reaching up to about 150 m/s, against 0.5–10 m/s in unmyelinated axons.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
+  "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (NBK10921): action potentials are generated only at the nodes; current flows passively to the next node, where the cycle repeats; unmyelinated 0.5–10 m/s, myelinated up to 150 m/s. 'Jumps' is the textbook word (saltatory). Episode 3 tells it. Review fix: hedged to the fastest (myelinated) fibres; unmyelinated fibres do conduct continuously."
+ },
+ {
+  "id": "c17",
+  "sentence": "In about a quarter of a second.",
+  "claim": "At rest a red cell spends about 0.75 s in a lung capillary, and O₂ exchange across the alveolar wall is normally complete in about the first 0.25 s.",
+  "source_url": "https://www.lumen.luc.edu/lumen/meded/medicine/pulmonar/physio/pf3.htm",
+  "source_title": "Pulmonary physiology: diffusion (Loyola University Chicago, Stritch School of Medicine, Lumen)",
+  "accessed": "2026-10-24",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (Loyola Lumen): transit = 75 mL × 60 / 6000 mL/min = 0.75 s; 'Normally, gas equilibrations across the alveolocapillary membrane are complete in 0.25 sec. The safety factor ... is 0.5 sec or 2/3 of the cap length.' BioNumbers 101731 gives 0.75 s (Nunn). 'Board' = the blood's O₂ reaches equilibrium with the air in the alveoli; venous blood arrives partly loaded, so not every seat is empty on arrival. Review fix: 'the empty seats fill', not 'they board': returning blood at rest still carries most of its oxygen (venous saturation is commonly about 75%)."
+ },
+ {
+  "id": "c18",
+  "sentence": "Returning blood is darker red.",
+  "claim": "At rest, blood returning in the veins (PO₂ about 40 mmHg) still has about 75% of hemoglobin's O₂ sites filled. Shown on screen: 'seats still full in returning blood: about 75%'.",
+  "source_url": "https://cvphysiology.com/microcirculation/m002",
+  "source_title": "Oxygen transport and the oxyhemoglobin dissociation curve (R. E. Klabunde, Cardiovascular Physiology Concepts)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'at a venous PO2 of 40 mmHg, approximately 75% of the binding sites are occupied by O2'. A lecture source agrees (still about 75 percent saturated). An at-rest average; it differs by organ (StatPearls gives 37% for heart muscle, 92% for kidney). The on-screen readout says 'about'."
+ },
+ {
+  "id": "c19",
+  "sentence": "The red is a passenger count: brighter means fuller seats.",
+  "claim": "Arterial blood leaving the lungs has about 97% of hemoglobin's O₂ sites filled, against about 75% in returning venous blood at rest. Shown on screen: seats full 75% → 97%.",
+  "source_url": "https://cvphysiology.com/microcirculation/m002",
+  "source_title": "Oxygen transport and the oxyhemoglobin dissociation curve (R. E. Klabunde, Cardiovascular Physiology Concepts)",
+  "accessed": "2026-10-25",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: arterial saturation 'roughly 97%' at a PO2 of about 100 mmHg; other sources round to 98%. The readout runs 75 → 97 % as the cells cross the air sac (computed span: about 22 points of the seats refill per pass at rest)."
+ }
+]

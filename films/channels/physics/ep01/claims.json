@@ -145,7 +145,7 @@
  {
   "id": "c14",
   "sentence": "In air, the throws land a sliver after the drop.",
-  "claim": "In air, drag delays the thrown tennis balls by 0.04, 0.15 and 0.30 ms behind the drop, under the 1.67 ms frame at ×1/20 (drag.py).",
+  "claim": "Computed with NASA Glenn's drag equation (tennis ball, 1 m drop): the throws land 0.04, 0.15 and 0.30 ms after the drop, under the 1.67 ms frame at ×1/20.",
   "source_url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
   "source_title": "NASA Glenn, Beginner's Guide to Aeronautics: the drag equation",
   "accessed": "2026-10-25",

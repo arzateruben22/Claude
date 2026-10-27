@@ -14,7 +14,7 @@ If the Sun vanished | Light Minute No. 001
 ```
 What if the Sun vanished? How soon would you know?
 
-Gravity is no faster: changes in it travel at the speed of light. In twenty seventeen, we caught two neutron stars colliding. Their light and gravitational waves crossed a hundred and thirty million light-years, and arrived under two seconds apart. Light and gravity share one speed limit. Everything you see in the sky is old news.
+Gravity is no faster: changes in it travel at the speed of light. In 2017, we caught two neutron stars colliding. Their light and gravitational waves crossed 130 million light-years, and arrived under two seconds apart. Light and gravity share one speed limit. Everything you see in the sky is old news.
 
 Series: Season 1: How far, how fast, part 1 of 6.
 
@@ -39,7 +39,8 @@ Light Minute: One minute, one 'whoa' about the universe, every number sourced.
 **Tags**: Light Minute, space, astronomy, vanished, science, explainer, education
 
 **Captions**: upload the .srt (English).
-**Pinned comment**
+
+**Pinned comment** (10,000-character limit)
 
 ```
 Sources
@@ -84,7 +85,7 @@ Sources in the first comment. Synthetic (AI) narration; code-rendered animation.
 #space #astronomy #cosmos #science #universe #sciencefacts #stem #spacefacts
 ```
 
-**First comment**
+**First comment** (2,200-character limit)
 
 ```
 Sources

@@ -1,0 +1,1114 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Where does your breath go? Not into a bag. Into these.",
+   "heard": "Where does your breath go? Not into a bag. Into these uh.",
+   "words": [
+    {
+     "w": "Where",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.28,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.475,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "breath",
+     "start": 0.665,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "go?",
+     "start": 1.295,
+     "end": 1.394,
+     "heard": true,
+     "end_asr": 1.84
+    },
+    {
+     "w": "Not",
+     "start": 1.88,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 2.14,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.32,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "bag.",
+     "start": 2.565,
+     "end": 3.139,
+     "heard": true,
+     "end_asr": 3.52
+    },
+    {
+     "w": "Into",
+     "start": 3.46,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "these.",
+     "start": 3.935,
+     "end": 4.08,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "Below your windpipe, the airways fork, again and again, up to about twenty-three times. At the tips hang about half a billion sacs. Each is about a fifth of a millimetre.",
+   "heard": "Below your windpipe the airways fork, again and again, up to about 23 times. At the tips hang about half a billion sacks. Each is about a fifth of a millimeter.",
+   "words": [
+    {
+     "w": "Below",
+     "start": 0.025,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.485,
+     "end": 0.535,
+     "heard": true
+    },
+    {
+     "w": "windpipe,",
+     "start": 0.515,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.98,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "airways",
+     "start": 1.02,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "fork,",
+     "start": 1.62,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "again",
+     "start": 2.08,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.435,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "again,",
+     "start": 2.62,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.23,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.37,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.645,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "twenty-three",
+     "start": 3.9,
+     "end": 4.48,
+     "heard": false
+    },
+    {
+     "w": "times.",
+     "start": 4.39,
+     "end": 5.014,
+     "heard": true,
+     "end_asr": 5.28
+    },
+    {
+     "w": "At",
+     "start": 5.335,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.365,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "tips",
+     "start": 5.6,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "hang",
+     "start": 5.875,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.22,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 6.395,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.84,
+     "end": 6.89,
+     "heard": true
+    },
+    {
+     "w": "billion",
+     "start": 6.87,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "sacs.",
+     "start": 7.315,
+     "end": 7.825,
+     "heard": false,
+     "end_asr": 8.16
+    },
+    {
+     "w": "Each",
+     "start": 8.17,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.41,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 8.775,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.945,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "fifth",
+     "start": 9.135,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.47,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.545,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "millimetre.",
+     "start": 9.625,
+     "end": 9.98,
+     "heard": false
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "For centuries, physicians taught the lung was clotted blood, there to cool the heart. In sixteen sixty-one, Marcello Malpighi put an animal's lung under a microscope: bubbles.",
+   "heard": "For centuries physicians taught the lung was clotted blood, there to cool the heart. In 1661, Marcello Malpighi put an animal's lung under a microscope. Bubbles.",
+   "words": [
+    {
+     "w": "For",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "centuries,",
+     "start": 0.22,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "physicians",
+     "start": 0.81,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "taught",
+     "start": 1.38,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.655,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "lung",
+     "start": 1.685,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 2.175,
+     "end": 2.225,
+     "heard": true
+    },
+    {
+     "w": "clotted",
+     "start": 2.235,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "blood,",
+     "start": 2.62,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 3.39,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.565,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "cool",
+     "start": 3.695,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.965,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "heart.",
+     "start": 4.085,
+     "end": 4.574,
+     "heard": true,
+     "end_asr": 4.8
+    },
+    {
+     "w": "In",
+     "start": 4.895,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 5.125,
+     "end": 6.24,
+     "heard": false
+    },
+    {
+     "w": "sixty-one,",
+     "start": 5.155,
+     "end": 6.24,
+     "heard": false
+    },
+    {
+     "w": "Marcello",
+     "start": 6.38,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "Malpighi",
+     "start": 6.88,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "put",
+     "start": 7.485,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 7.57,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "animal's",
+     "start": 7.715,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "lung",
+     "start": 8.13,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 8.525,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.555,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "microscope:",
+     "start": 8.65,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "bubbles.",
+     "start": 9.905,
+     "end": 10.4,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "Each sac is wrapped in capillaries. Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
+   "heard": "Each sac is wrapped in capillaries. Over much of it the wall between air and blood is under half a micrometer. Far thinner than a red cell. Oxygen slips across no pump needed. Sicken that wall and breathing gets harder.",
+   "words": [
+    {
+     "w": "Each",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "sac",
+     "start": 0.375,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.635,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "wrapped",
+     "start": 0.68,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.12,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "capillaries.",
+     "start": 1.315,
+     "end": 2.11,
+     "heard": true,
+     "end_asr": 2.4
+    },
+    {
+     "w": "Over",
+     "start": 2.445,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 2.58,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.82,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 2.85,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.25,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 3.28,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "between",
+     "start": 3.625,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 3.925,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.22,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 4.39,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.625,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 4.69,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 5.07,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.28,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "micrometre:",
+     "start": 5.31,
+     "end": 6.56,
+     "heard": false
+    },
+    {
+     "w": "far",
+     "start": 6.56,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "thinner",
+     "start": 6.895,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 7.225,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.255,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "red",
+     "start": 7.43,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "cell.",
+     "start": 7.61,
+     "end": 8.053,
+     "heard": true,
+     "end_asr": 8.32
+    },
+    {
+     "w": "Oxygen",
+     "start": 8.385,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "slips",
+     "start": 8.91,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "across,",
+     "start": 9.35,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 9.8,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "pump",
+     "start": 10.1,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "needed.",
+     "start": 10.565,
+     "end": 10.872,
+     "heard": true,
+     "end_asr": 11.2
+    },
+    {
+     "w": "Thicken",
+     "start": 11.195,
+     "end": 11.68,
+     "heard": false
+    },
+    {
+     "w": "that",
+     "start": 11.77,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "wall,",
+     "start": 11.8,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 12.25,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "breathing",
+     "start": 12.42,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 12.815,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "harder.",
+     "start": 12.975,
+     "end": 13.52,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "Unfold every sac flat, and they'd cover about seventy square metres. About a quarter of a tennis court, folded inside your chest.",
+   "heard": "Unfold every sack flat, and they'd cover about 70 square meters. About a quarter of a tennis court, folded inside your chest.",
+   "words": [
+    {
+     "w": "Unfold",
+     "start": 0.035,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 0.71,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "sac",
+     "start": 0.855,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "flat,",
+     "start": 1.325,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.1,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "they'd",
+     "start": 2.13,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "cover",
+     "start": 2.43,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.81,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "seventy",
+     "start": 3.025,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "square",
+     "start": 3.59,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "metres.",
+     "start": 3.84,
+     "end": 4.407,
+     "heard": false,
+     "end_asr": 4.72
+    },
+    {
+     "w": "About",
+     "start": 4.725,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.995,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "quarter",
+     "start": 5.125,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.32,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.635,
+     "end": 5.685,
+     "heard": true
+    },
+    {
+     "w": "tennis",
+     "start": 5.665,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "court,",
+     "start": 6.02,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "folded",
+     "start": 6.545,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 6.97,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 7.44,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "chest.",
+     "start": 7.635,
+     "end": 8.16,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "So your lungs aren't a bag. They're a sponge that spreads air thin.",
+   "heard": "So your lungs aren't a bag. They're a sponge that spreads air thin.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "lungs",
+     "start": 0.51,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "aren't",
+     "start": 1.015,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.31,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "bag.",
+     "start": 1.34,
+     "end": 1.903,
+     "heard": true,
+     "end_asr": 2.16
+    },
+    {
+     "w": "They're",
+     "start": 2.22,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.53,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "sponge",
+     "start": 2.72,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.195,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "spreads",
+     "start": 3.31,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 3.675,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "thin.",
+     "start": 4.01,
+     "end": 4.48,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo07",
+   "text": "Meanwhile, as you watched, air went in and out of you. About six litres of it.",
+   "heard": "Meanwhile as you watched air went in and out of you. About six liters of it.",
+   "words": [
+    {
+     "w": "Meanwhile,",
+     "start": 0.02,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.79,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.96,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "watched,",
+     "start": 1.09,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 1.705,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "went",
+     "start": 1.955,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.29,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.565,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 2.595,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.805,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 2.955,
+     "end": 3.366,
+     "heard": true,
+     "end_asr": 3.84
+    },
+    {
+     "w": "About",
+     "start": 3.785,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 4.205,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "litres",
+     "start": 4.53,
+     "end": 5.04,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 4.925,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 5.195,
+     "end": 5.44,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next: a cell that leaves your blood. It squeezes through a wall.",
+   "heard": "Next a cell that leaves your blood. It squeezes through a wall.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.515,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 0.775,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 1.13,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 1.16,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.615,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "blood.",
+     "start": 1.655,
+     "end": 2.145,
+     "heard": true,
+     "end_asr": 2.48
+    },
+    {
+     "w": "It",
+     "start": 2.565,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "squeezes",
+     "start": 2.71,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 3.41,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.48,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "wall.",
+     "start": 3.75,
+     "end": 4.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  }
+ ],
+ "clamped_by": "films/channels/body/ep05/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

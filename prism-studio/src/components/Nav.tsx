@@ -15,10 +15,12 @@ const MAIN: { href: string; label: string; icon: IconName }[] = [
   { href: "/rewards", label: "Rewards", icon: "trophy" },
 ];
 const MORE: { href: string; label: string; icon: IconName }[] = [
+  { href: "/library", label: "Library", icon: "download" },
   { href: "/analytics", label: "Analytics", icon: "chart" },
   { href: "/learn", label: "Learn", icon: "spark" },
   { href: "/connections", label: "Accounts", icon: "link" },
   { href: "/queue", label: "Queue", icon: "queue" },
+  { href: "/costs", label: "Costs", icon: "coin" },
   { href: "/settings", label: "Settings", icon: "settings" },
 ];
 
