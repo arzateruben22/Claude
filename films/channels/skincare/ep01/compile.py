@@ -49,9 +49,10 @@ TONE = {"hook": 0.15, "section": 0.85, "walls": 0.5, "gauge": 0.85, "close": 0.1
 
 # ── the cell's climb (change): born at the base, rises for about two weeks, takes itself apart near the top ──
 t_born = A("vo03:born")
-t_rise0, t_rise1 = A("vo03:rises,", -0.6), A("vo03:top,", 0.1)
+RATE = 300000.0                         # the climb runs 300,000× faster: 14 days in 4.03 s
+t_rise0 = A("vo03:rises,", -0.6)
+t_rise1 = round(t_rise0 + CLIMB_DAYS * 86400 / RATE, 4)
 t_apart0, t_apart1 = A("vo03:apart,", -0.2), A("vo03:purpose.", 0.5)
-RATE = CLIMB_DAYS * 86400 / (t_rise1 - t_rise0)
 assert 2.5 < t_rise1 - t_rise0 < 6.0, (t_rise0, t_rise1)
 CLK = {"climb": {"keys": [{"t": t_rise0, "rate": RATE}, {"t": t_rise1, "rate": 0.0, "badge": None}], "anchor": [t_rise0, 0.0]}}
 
@@ -59,26 +60,26 @@ CLK = {"climb": {"keys": [{"t": t_rise0, "rate": RATE}, {"t": t_rise1, "rate": 0
 Y_BASAL = -(SC_UM + GRAN_UM + SPIN_UM + BASAL_UM / 2)
 HOOK = {"target": [0, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "hook": [{"t": 0.0, **HOOK, "dist": 300, "az": -26}, {"t": B["normal"]["t0"], **HOOK, "dist": 270, "az": -22, "ease": "sine"}],
+    "hook": [{"t": 0.0, **HOOK, "dist": 780, "az": -26}, {"t": B["normal"]["t0"], **HOOK, "dist": 720, "az": -22, "ease": "sine"}],
     "section": [
-        {"t": B["normal"]["t0"], "target": [0, -10, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 210, "az": -14},
-        {"t": A("vo02:dead:"), "target": [0, -9, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 120, "az": -9, "ease": "inout2"},
-        {"t": A("vo02:living"), "target": [0, -30, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 170, "az": -7, "ease": "inout2"},
+        {"t": B["normal"]["t0"], "target": [0, -10, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": -14},
+        {"t": A("vo02:dead:"), "target": [0, -9, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -9, "ease": "inout2"},
+        {"t": A("vo02:living"), "target": [0, -30, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 440, "az": -7, "ease": "inout2"},
         # the climb: the camera rides up with the cell (its target follows the cell's height, see scene.mjs)
-        {"t": t_born, "target": [0, Y_BASAL, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 150, "az": -4, "ease": "inout2"},
-        {"t": t_rise1, "target": [0, -SC_UM - 4, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 130, "az": -2, "ease": "inout2"},
-        {"t": t_apart1, "target": [0, -10, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 120, "az": -1, "ease": "sine"},
+        {"t": t_born, "target": [0, Y_BASAL, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 360, "az": -4, "ease": "inout2"},
+        {"t": t_rise1, "target": [0, -SC_UM - 4, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 320, "az": -2, "ease": "inout2"},
+        {"t": t_apart1, "target": [0, -10, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -1, "ease": "sine"},
         # why: pull back until the wall and the water under it fill the frame
-        {"t": A("vo04:Scientists"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 210, "az": 0, "ease": "inout2"},
-        {"t": B["whoa"]["t0"], "target": [0, -26, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 225, "az": 2, "ease": "sine"},
+        {"t": A("vo04:Scientists"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 0, "ease": "inout2"},
+        {"t": B["whoa"]["t0"], "target": [0, -26, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 580, "az": 2, "ease": "sine"},
     ],
-    "walls": [{"t": B["whoa"]["t0"], "target": [0, -18, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 330, "az": 0},
-              {"t": B["toscale"]["t0"], "target": [0, -18, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 300, "az": 2, "ease": "sine"}],
-    "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 240, "az": -6},
-              {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 225, "az": -8, "ease": "sine"}],
+    "walls": [{"t": B["whoa"]["t0"], "target": [0, -18, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 800, "az": 0},
+              {"t": B["toscale"]["t0"], "target": [0, -18, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 780, "az": 2, "ease": "sine"}],
+    "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6},
+              {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8, "ease": "sine"}],
     # the close: the hook's pose, reached by the end, so the last frame hands back to frame 0
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 250, "az": -18},
-              {"t": B["tease"]["t1"], **HOOK, "dist": 300, "az": -26, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 700, "az": -18},
+              {"t": B["tease"]["t1"], **HOOK, "dist": 780, "az": -26, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second) and drifts
     for a, b in zip(keys, keys[1:]):
@@ -94,8 +95,8 @@ LABELS = [
     {"id": "l-cell", "text": "a new cell", "kind": "cell", "anchor": "climber", "t0": t_born, "t1": t_rise1, "shot": "section", "side": 1, "fixed": True},
     {"id": "l-brick", "text": "bricks: dead cells", "kind": "cell", "anchor": "brick", "t0": A("vo04:bricks,"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
     {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": -1},
-    {"id": "l-term", "text": "born near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "fixed": True},
-    {"id": "l-early", "text": "born before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "fixed": True},
+    {"id": "l-term", "text": "born near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-early", "text": "born before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
     {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:lost"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
 ]
 BADGES = [

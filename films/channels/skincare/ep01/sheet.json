@@ -122,44 +122,44 @@
    "tag": "b-time"
   },
   {
-   "t": 20.4095,
+   "t": 20.4427,
    "kind": "counter.tick",
    "tag": "c-days-2"
   },
   {
-   "t": 20.9524,
+   "t": 21.0187,
    "kind": "counter.tick",
    "tag": "c-days-4"
   },
   {
-   "t": 21.4952,
+   "t": 21.5947,
    "kind": "counter.tick",
    "tag": "c-days-6"
   },
   {
-   "t": 22.0381,
+   "t": 22.1707,
    "kind": "counter.tick",
    "tag": "c-days-8"
   },
   {
-   "t": 22.581,
+   "t": 22.7467,
    "kind": "counter.tick",
    "tag": "c-days-10"
   },
   {
-   "t": 23.1238,
+   "t": 23.3227,
    "kind": "counter.tick",
    "tag": "c-days-12"
   },
   {
-   "t": 23.666666666666668,
-   "kind": "cell.land",
-   "tag": "top"
-  },
-  {
-   "t": 23.6667,
+   "t": 23.8987,
    "kind": "counter.tick",
    "tag": "c-days-14"
+  },
+  {
+   "t": 23.8987,
+   "kind": "cell.land",
+   "tag": "top"
   },
   {
    "t": 24.533333333333335,
