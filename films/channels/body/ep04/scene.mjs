@@ -32,6 +32,15 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
 renderer.localClippingEnabled = true;
+// the finish's depth target is packed RGBA bytes read with a linear filter: at a silhouette the half-res bokeh decodes a
+// blend near the "behind" focus and leaves dotted rings on the rims. Read it texel by texel (set before the target's
+// first bind; three applies texture parameters only then)
+{ const setRT = renderer.setRenderTarget;
+  renderer.setRenderTarget = function (rt, ...a) {
+    if (rt && window.CINEMA && window.CINEMA.mode === "depth" && rt.texture && rt.texture.type === THREE.UnsignedByteType) rt.texture.minFilter = rt.texture.magFilter = THREE.NearestFilter;
+    return setRT.call(this, rt, ...a);
+  };
+}
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(34, W / H, 1, 6000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 4500 });
@@ -80,7 +89,8 @@ const CAN = 26, MSN = 192;
 const caMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
 const msMat = L.patch(new THREE.MeshStandardMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0.6, roughness: 0.4 }), { fresnel: 0, key: "msg" });
 const caM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.42, 1), caMat, CAN); caM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); caM.frustumCulled = false; world.add(caM);
-const msM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.2, 1), msMat, MSN);   // a fine mist of molecules msM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); msM.frustumCulled = false; world.add(msM);
+const msM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.2, 1), msMat, MSN);   // a fine mist of molecules
+msM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); msM.frustumCulled = false; world.add(msM);
 const CAH = Array.from({ length: CAN }, (_, i) => { const a = (hash(i + 40) - 0.5) * 2.2, rr = 12 + 4 * hash(i + 41); return { from: [Math.cos(a) * rr, Math.sin(a) * rr, 0.5 + 3 * hash(i + 42)], to: [Math.cos(a) * 6.8, Math.sin(a) * 6.8, 0.8] }; });
 // receptors on the next cell's face
 const RN = 14, recMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8C9670"), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.4 }), { fresnel: 0.2, key: "rec" });   // dark at rest, so lit reads as the signal
@@ -107,7 +117,8 @@ const writeJunction = (t) => {
   const S = schedAt(t);
   const sigU = S ? seg(t, S.sig[0], S.sig[1]) : 0, held = S ? (t >= S.sig[1] ? 1 - seg(t, S.post, S.post + 0.8) : 0) : 0;
   // the glow runs down the last, visible stretch of the axon and slams into the terminal's face on "jump", then dies there
-  AX.set({ front: S && t >= S.sig[0] && t < S.post + 0.8 ? 228.2 * (0.82 + 0.18 * sigU) : -1, mode: "flow", tail: 60, glow: 0.55 });
+  AX.set({ front: S && t >= S.sig[0] && t < S.post + 0.8 ? 228.2 * (0.82 + 0.18 * sigU) : -1, mode: "flow", tail: 60,
+    glow: S ? 0.55 * (1 - 0.67 * seg(t, S.sig[1] + 0.1, S.sig[1] + 0.6)) * (1 - seg(t, S.post + 0.2, S.post + 0.8)) : 0.55 });   // dims to a third once it has arrived, then fades
   tipMat.emissiveIntensity = S ? (0.35 + 0.9 * Math.max(0, 1 - (t - S.sig[1]) / 0.5)) * held : 0;
   // calcium
   const caU = S ? E.inout2(seg(t, S.ca[0], S.ca[1])) : 0, caOn = S ? seg(t, S.ca[0] - 0.25, S.ca[0]) * (1 - seg(t, S.sp[1] + 0.2, S.sp[1] + 0.7)) : 0;
@@ -222,7 +233,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .mi-spine { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 .mi-spine .v { color: var(--nerve); } .mi-spine .lb { color: var(--text); }   /* nerve numbers in the nerve colour: pink is for blood only */
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
-#hud-tally .lb { color: var(--text); }
+#hud-tally .lb { color: var(--text); font-size: 3vmin; }
 .mi-panels { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
 .mi-panels .cap { font: 650 30px/1.2 var(--font-text); fill: var(--text); }
 .mi-panels .who { font: 600 58px/1 var(--font-display); fill: var(--text); }
@@ -242,16 +253,16 @@ const ANCH = {
   rec: () => RH[RN - 1],                                               // the top receptor: the pill rises above the column
   used: () => USED.e,
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v, lift: lb.lift });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
 for (const sp of FILM.spine) {
-  const fmt = sp.text ? () => sp.text : (v) => v.toFixed(sp.fmt ?? 0);
+  const fmt = sp.text ? () => sp.text : (v) => v.toFixed(sp.fmt ?? 0).replace(/(\.\d*?[1-9])0+$/, "$1");   // 0.001, not 0.0010
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: () => 0 };
   // the readout sits above the subject (clear of the terminal's rim and the receptors); frame 0's "touching: ?" beside the title
-  hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: sp.id === "q" ? [0.735, 0.215] : [0.5, 0.235], minCh: 1 }).classList.add("mi-spine");
+  hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: sp.id === "q" ? [0.735, 0.215] : sp.id === "width" ? [0.38, 0.222] : [0.5, 0.235], minCh: 1 }).classList.add("mi-spine");   // the gap's width left, so "the gap" keeps its spot
 }
-const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.floor(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.54, 0.235], minCh: 2 });
+const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.floor(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.566, 0.235], minCh: 2 });
 const yPulse = pulseLine({ width: Math.round(500 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
@@ -288,8 +299,8 @@ panels.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmln
   <rect width="${W}" height="${H}" fill="var(--bg)" opacity="0.88"/>
   ${panel("golgi", W * 0.0833, "Golgi", "one continuous web", false)}
   ${panel("cajal", W * 0.477, "Cajal", "separate cells", true)}
-  <g class="nobel" opacity="0"><rect x="${(W * 0.12).toFixed(1)}" y="${(NBY - 52 * S1).toFixed(1)}" width="${(W * 0.76).toFixed(1)}" height="${(104 * S1).toFixed(1)}" rx="${(48 * S1).toFixed(1)}" fill="var(--plate)" stroke="var(--signal)" stroke-width="${(3 * S1).toFixed(1)}"/>
-    <text class="cap" x="${(W / 2).toFixed(1)}" y="${(NBY + 11 * S1).toFixed(1)}" text-anchor="middle">1906 · one Nobel Prize, shared</text></g>
+  <g class="nobel" opacity="0"><rect x="${(W * 0.0833).toFixed(1)}" y="${(NBY - 52 * S1).toFixed(1)}" width="${(W * 0.75).toFixed(1)}" height="${(104 * S1).toFixed(1)}" rx="${(48 * S1).toFixed(1)}" fill="var(--plate)" stroke="var(--signal)" stroke-width="${(3 * S1).toFixed(1)}"/>
+    <text class="cap" x="${(W * 0.4583).toFixed(1)}" y="${(NBY + 15 * S1).toFixed(1)}" text-anchor="middle" style="font-size:${(42 * S1).toFixed(1)}px">1906 · one Nobel Prize, shared</text></g>
 </svg>`;
 document.getElementById("hud").prepend(panels);
 const writePanels = (t) => {
@@ -298,9 +309,12 @@ const writePanels = (t) => {
   // one stained tissue in both frames from the start; each reading's own drawing and name arrive at its key (FILM.panels: Golgi's on "saw", Cajal's on his name)
   for (const [cls, at] of [["golgi", P.golgi], ["cajal", P.cajal]]) {
     const g = panels.querySelector("." + cls), r = seg(t, at - 0.4, at);
+    // rule 8: Golgi's web steps back to a third as Cajal's reading arrives; both step back under the Nobel pill
+    const nb = seg(t, P.nobel - 0.2, P.nobel + 0.25), cj = seg(t, P.cajal - 0.4, P.cajal);
+    const k = cls === "golgi" ? 1 - 0.65 * Math.max(cj, nb) : 1 - 0.65 * nb;
     g.querySelector(".raw").setAttribute("opacity", (0.35 * (1 - r)).toFixed(3));
-    g.querySelector(".read").setAttribute("opacity", (0.95 * r).toFixed(3));
-    g.querySelector(".name").setAttribute("opacity", r.toFixed(3));
+    g.querySelector(".read").setAttribute("opacity", (0.95 * r * k).toFixed(3));
+    g.querySelector(".name").setAttribute("opacity", (r * (0.5 + 0.5 * k)).toFixed(3));
   }
   panels.querySelector(".nobel").setAttribute("opacity", seg(t, P.nobel - 0.2, P.nobel + 0.25).toFixed(3));
 };
