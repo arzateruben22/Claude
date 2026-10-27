@@ -132,33 +132,55 @@ const cardSound = (k, dur, energy, sigAt) => {
 };
 const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
 
-// ── the segments, encoded alike, then joined without re-encoding ───────────────
+// ── the picture: segments encoded alike (picture only), then joined without re-encoding ──
 const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
-const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 300);                                 // kbps for the picture, room left for sound
+const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 400);                                 // kbps for the picture, room left for sound
 const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
   "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
-const AU = ["-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2"];
-const card = (k, dur, wav) => {
+const card = (k, dur) => {
   const o = path.join(work, `seg-${k}.mp4`);
-  const audio = wav ? ["-i", wav] : ["-f", "lavfi", "-t", String(dur), "-i", "anullsrc=r=48000:cl=stereo"];
-  // the cards' music sits 4 dB under the episodes' mastered level: it is a frame around speech, not the programme
-  run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-t", String(dur), "-i", path.join(work, `${k}.png`), ...audio, "-filter_complex",
-    `[0:v]fps=${FPS},format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v];[1:a]volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5,apad=whole_dur=${dur}[a]`,
-    "-map", "[v]", "-map", "[a]", "-t", String(dur), ...V, ...AU, o]);
+  run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-t", String(dur), "-i", path.join(work, `${k}.png`), "-filter_complex",
+    `[0:v]fps=${FPS},format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
   return o;
 };
-const segs = [card("intro", INTRO, introWav)];
+const segs = [card("intro", INTRO)];
 eps.forEach((e, k) => {
   const o = path.join(work, `seg-ep${k}.mp4`);
   run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-i", path.join(work, `ep${k}.png`), "-i", e.file, "-filter_complex",
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
-    "-map", "[v]", "-map", "1:a:0", "-t", e.dur.toFixed(3), ...V, "-c:a", "copy", o]);   // the mastered sound, untouched: a re-encode can push its true peak over −1 dBTP
+    "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
 });
-segs.push(card("outro", OUTRO, outroWav));
+segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
 fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n") + "\n");
-run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-c", "copy", "-movflags", "+faststart", final]);
+
+// ── the sound: one continuous track, encoded once ──────────────────────────────
+// Joining separately encoded AAC segments leaves a jump at every seam (a +0.3 dBTP spike in one build); one track, the
+// cards' music 4 dB under the episodes' mastered sound (a frame around speech, not the programme) and each episode's
+// master decoded once, has no seams. One AAC encode can still overshoot a peak, so it is measured and trimmed under −1.
+const inputs = [], parts = [];
+const part = (src, dur, card) => {                     // src: a file, or a lavfi source for a card without music
+  const i = parts.length;
+  inputs.push(...(src.startsWith("anullsrc") ? ["-f", "lavfi", "-i", src] : ["-i", src]));
+  parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
+};
+part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
+eps.forEach((e) => part(e.file, +e.dur.toFixed(3), false));
+part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
+const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
+run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
+  "-map", "[a]", "-c:a", "pcm_f32le", wavAll]);
+const truePeak = (f) => {
+  const r = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-i", f, "-af", "ebur128=peak=true", "-f", "null", "-"], { encoding: "utf8", maxBuffer: 1 << 26 });
+  const m = /Peak:\s+(-?[\d.]+|-inf) dBFS\s*$/m.exec(r.stderr.split("Summary:").pop() || "");
+  return m ? Number(m[1]) : -99;
+};
+const encodeSound = (gainDb) => run("ffmpeg", ["-v", "error", "-y", "-i", wavAll, "-af", `volume=${gainDb.toFixed(2)}dB`, "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-ac", "2", m4a]);
+encodeSound(0);
+let tp = truePeak(m4a);
+if (tp > -1.2) { encodeSound(-1.2 - tp); tp = truePeak(m4a); }
+run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-i", m4a, "-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-movflags", "+faststart", final]);
 
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
