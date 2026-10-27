@@ -16,6 +16,38 @@ $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/<film>/vo
 - **Commit the outputs.** Commit the WAVs, `lines.json`, `words.json` and `pron.json` with the
   film. Rendering and mixing never need the voice venv; only re-voicing a line does.
 
+## A real voice instead (`polish.py`)
+
+```
+python3 -I kits/cinema/voice/polish.py "voice check.m4a" --out voice-check                 # before.wav / after.wav, level-matched
+python3 -I kits/cinema/voice/polish.py "Rest Frame 001.m4a" --film films/channels/physics/ep01 [--fix 04="line 04.m4a"] [--strength extra]
+$CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/channels/physics/ep01/vo-recorded
+```
+
+A phone recording (3 s of room tone, then every vo line once, 2–3 s apart) becomes one polished WAV per
+line plus `lines.json` with tts.py's fields (`"voice": "recorded"`, `"phonemes": null`), in
+`<film>/vo-recorded` (the film's `vo/` is never touched). align.py, lint.py and timeline.py read it as
+they read a synthetic voice, so the film re-times itself to the reading; swap it in for `vo/` to use it.
+System Python, numpy and ffmpeg only.
+
+The chain, in order: speech to a known level · 80 Hz high-pass · spectral noise reduction learned
+from the room tone and pauses (at most −15 dB a band; −20 with `--strength extra`) · body +1.5 dB at
+140 Hz, mud −3 dB at 320 Hz, presence +2.5 dB at 3.2 kHz, air +3 dB from 9 kHz · a 2:1 leveler and a
+4:1 peak catcher (about 6 dB on the loudest words) · a gentle 2.5:1 expander under the quiet words
+(at most −18 dB; compressors lift the room) · a split-band de-esser (5–10 kHz) · −21 LUFS per take
+(where Kokoro's lines sit, so the mixer needs no change), peaks at −2 dBFS · cut at pauses of 1.6 s
+or more, each line trimmed to the voice (30 ms of air, 10 ms fades). It reports, before and after:
+noise floor, voice over floor, mud, presence and sibilance balance, loudness, peak, and each line's
+pace against the 2.2–3.0 words/s gate.
+
+Measured on a stand-in (Rest Frame 001's synthetic lines made muddy, roomy, hissy and humming, recorded
+quietly, as a cheap phone would): the room went from 29 dB to 50 dB under the voice, presence +5 dB
+with sibilance held level with it, all 8 lines cut, each within 0.06 s of the source (the long "why"
+line 0.25 s), −21 LUFS ±0.4. A real voice is the test that matters: tune presence, air and
+`--strength` on the owner's voice check before voicing a film.
+
+A film voiced by a person doesn't need the synthetic-voice label; its `lines.json` says `recorded`.
+
 ## How accurate the word times are (measured 2026-10-22)
 
 Two tests, because Kokoro audio has no ground truth of its own.
