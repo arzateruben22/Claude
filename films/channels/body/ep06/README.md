@@ -15,7 +15,9 @@ pictures first.
 
 - **Hook:** inside a venule under a fingertip's skin, one neutrophil caught halfway through a seam between two wall
   cells, its nucleus pinched at the waist, red cells streaming behind it. "How does this cell leave your blood? This
-  wall has no open door." The spine readout, new neutrophils made while you watch, is already counting, dimmed.
+  wall has no open door." The title sits on its own plate (4.5:1 over the bright venule). The spine readout, new
+  neutrophils made while you watch, counts from frame 0 and appears dimmed as the title leaves; it steps away for the
+  engraving and the whoa, and lights for the meanwhile.
 - **Normal:** the same cell a minute earlier, round, riding the stream (a scale bar: about 8 µm, round, in blood);
   "Yet under a sore fingertip, they pile up outside the wall": down through the lining to the white cells beyond it.
 - **Change (the person and the wrong idea):** one engraved plate (badged "illustrated"): Virchow taught that pus grew
@@ -64,6 +66,14 @@ through a waist held to the gap), with a lobed nucleus that goes first.
 | `../set/wanderer.js` | New: the neutrophil (B8, the wanderer) |
 
 One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
+
+## Frame review (26–27 Oct)
+A three-lens frame review (each finding verified by a second agent) led to: the why camera riding with the hero (it
+had left it off frame), the grips lighting on "switch on", the faulty cell rolling on past on "past" while the hero's
+own grips step back, labels on what they name ("white cells, outside the wall", the seam, the size pill on two lines),
+the parked readout and the locator kept off the cell and each other, "illustration: rare inherited condition" fitting
+the top-right row, a darker end-card scrim for the loop, the fingertip framed on the sore spot, and the engraving inside
+the safe box with its cells clipped to the frame.
 
 ## For a human to review
 
