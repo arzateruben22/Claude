@@ -294,6 +294,7 @@ TITLE = {"series": "Rest Frame · No. 005", "title": "The spinning *chair*", "t1
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'Measure it: | ghosts a tenth / of a second apart.',
+    'The record, set by / a young Canadian skater: | three hundred forty-two turns a minute.',
 ]
 
 film = {
