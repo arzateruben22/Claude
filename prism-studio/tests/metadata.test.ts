@@ -79,6 +79,22 @@ describe("metadata", () => {
     expect(m.instagram.replies.length).toBeGreaterThan(0);
     expect(m.youtube.replies.length).toBeGreaterThan(0);   // 80 long source lines pass even YouTube's 10,000 characters
   });
+  it("a YouTube description too long for its sources keeps whole sources and points to the pinned list", () => {
+    const many = { ...input, sources: Array.from({ length: 30 }, (_, k) => ({ key: `c${k}`, claim: `Claim ${k} `.repeat(25).trim(), publisher: `Publisher ${k}`, url: `https://pub${k}.example.org/${k}` })) };
+    const m = buildMetadata(many);
+    const d = m.youtube.caption;
+    expect(d.length).toBeLessThanOrEqual(5000);
+    const listed = d.split("\n").filter((l) => /^\d+\. /.test(l));
+    expect(listed.length).toBeGreaterThan(0);
+    expect(listed.length).toBeLessThan(30);
+    listed.forEach((l, k) => expect(l).toBe(`${k + 1}. ${`Claim ${k} `.repeat(25).trim()} — pub${k}.example.org: https://pub${k}.example.org/${k}`));
+    expect(d).toContain(`…and ${30 - listed.length} more in the pinned comment.`);
+    expect(d.trim().endsWith("#Shorts #physics #science")).toBe(true);
+    expect(m.youtube.warnings).toContain(`description lists ${listed.length} of 30 sources to stay within 5,000 characters; the full list is pinned under the video`);
+    expect(m.youtube.warnings.some((w) => w.startsWith("description cut"))).toBe(false);
+    expect(m.youtube.pinnedComment).toContain("30. Claim 29");
+  });
+
   it("missing hook or sources are warned about", () => {
     const m = buildMetadata({ ...input, beats: [], sources: [] });
     expect(m.youtube.warnings).toEqual(expect.arrayContaining(["no hook line found in the script", "no sources recorded"]));

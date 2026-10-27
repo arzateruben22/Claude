@@ -36,6 +36,10 @@ On the films machine (it needs Chromium, ffmpeg and the cinema kit):
 3. **Queue → Import rendered episodes**, or `npm run import:episodes`. A new render becomes a new version: older
    approvals end and the episode comes back to Review. A cover older than the render is not used (the film's poster
    is, until covers run again). A changed cover withdraws that post's approval.
+   "Newer" is the file's modified time, and `git checkout` of finals from another branch writes files in any order:
+   after one, check that each `-9x16-youtube.mp4` has the master's frame count and set it (and the covers) a second
+   after the master (`touch -d @$(( $(stat -c %Y master) + 1 )) file`), or the import falls back to the 1080 master
+   and the poster. `npm run media:check` flags it ("youtube has no 1440p version").
 4. `npm run text:pack` writes `out/POSTING.md` and `posting.json` next to each delivered episode, so the text is at
    hand without the studio.
 

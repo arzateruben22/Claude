@@ -139,13 +139,16 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   if (title.length > LIMITS.youtube.title) title = `${ep.title} | ${ch}`;
   if (title.length > LIMITS.youtube.title) { title = cut(ep.title, LIMITS.youtube.title); yw.push("title cut to 100 characters"); }
   const ytTags = HASHTAG_SETS[topic].youtube;
-  const ytParts = [
+  /** the description with the first k sources (the rest are named as being in the pinned comment, which holds them all) */
+  const ytDescription = (k: number) => [
     hook, [why, takeaway].filter(Boolean).join(" "),
     [series ? `Series: ${series}.` : "", next ? `Next: ${next}` : ""].filter(Boolean).join(" "),
-    sourceLines.length ? `Sources\n${sourceLines.join("\n")}` : "",
+    sourceLines.length ? `Sources\n${[...sourceLines.slice(0, k), ...(k < sourceLines.length ? [`…and ${sourceLines.length - k} more in the pinned comment.`] : [])].join("\n")}` : "",
     ai, `${ch}: ${input.channel.tagline}`.replace(/:\s*$/, ""), ytTags.join(" "),
-  ].filter(Boolean);
-  let description = ytParts.join("\n\n");
+  ].filter(Boolean).join("\n\n");
+  let shown = sourceLines.length, description = ytDescription(shown);
+  while (description.length > LIMITS.youtube.description && shown > 0) description = ytDescription(--shown);   // whole sources, never half of one
+  if (shown < sourceLines.length) yw.push(`description lists ${shown} of ${sourceLines.length} sources to stay within 5,000 characters; the full list is pinned under the video`);
   if (description.length > LIMITS.youtube.description) { description = cut(description, LIMITS.youtube.description - ytTags.join(" ").length - 2) + "\n\n" + ytTags.join(" "); yw.push("description cut to 5,000 characters"); }
   const tags: string[] = [];
   for (const t of [ch, ...ytTags.map((h) => h.slice(1).toLowerCase()).filter((h) => h !== "shorts"), ...ep.title.toLowerCase().replace(/[^a-z0-9 ]/g, "").split(" ").filter((w) => w.length > 3), "science", "explainer", "education"]) {
