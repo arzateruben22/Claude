@@ -68,7 +68,7 @@
       -1.5,
       -2.5
     ],
-    "dur": 1.5,
+    "dur": 0.8,
     "breath": 0.4,
     "attack": 0.012
   },
@@ -189,8 +189,7 @@
     "swell": {
       "voice": "swell",
       "gain": -17,
-      "note": "F2",
-      "anchor": "peak"
+      "note": "F2"
     },
     "cell.land": {
       "voice": "knock",
@@ -210,8 +209,7 @@
     "reveal": {
       "voice": "swell",
       "gain": -20,
-      "note": "F3",
-      "anchor": "peak"
+      "note": "F3"
     },
     "scale": {
       "voice": "reed",

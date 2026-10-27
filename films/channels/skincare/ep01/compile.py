@@ -97,7 +97,7 @@ LABELS = [
     {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
     {"id": "l-term", "text": "near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
     {"id": "l-early", "text": "before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:lost"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
+    {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:Babies", 0.6), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
 ]
 BADGES = [
     {"id": "b-simp-h", "text": "simplified", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
@@ -195,7 +195,7 @@ if cues_file.exists():
         p = pic.get(e.get("tag"))
         if p and p.get("pos") and e["kind"] in ("label", "counter.show"):
             e["pos"] = p["pos"]
-    shown = {k: v for k, v in (cj.get("shown") or {}).items() if k.startswith(("l-", "c-")) and v > 0}
+    shown = {k: v for k, v in (cj.get("shown") or {}).items() if k.startswith("l-") and v > 0}
 sheet = {"duration": f.duration, "fps": FPS, "preset": "outerlayer-slide",
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),
