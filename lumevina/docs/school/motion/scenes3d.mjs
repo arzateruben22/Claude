@@ -1215,7 +1215,8 @@ window.seek = function (t) {
 .lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
 .dayc { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
 .dayc b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
-.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 70vmin; font-size: 2.5vmin; line-height: 1.4; color: #ff7a6b; opacity: 0; }`,
+.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 70vmin; font-size: 2.5vmin; line-height: 1.4; color: #ffa092; opacity: 0;
+  background: rgba(24,17,16,.9); padding: 1.3vmin 2.2vmin; border-radius: 2.4vmin; box-shadow: 0 1.2vmin 3vmin rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,160,146,.18); }   /* on a card: it sits over the block, where bare text was hard to read */`,
     html: `
 <section class="shot"><span class="lab3" id="l-brick"><i style="background:#e9c4b4"></i>bricks: skin cells</span><span class="lab3" id="l-mortar"><i style="background:#eab9c8"></i>mortar: your oils</span><span class="lab3" id="l-water"><i style="background:#8fd3ff"></i>water, kept in</span></section>
 <section class="shot"><span class="lab3" id="l-scrub"><i style="background:#9a9a9f"></i>scrubbing</span><span class="lab3" id="l-hot"><i style="background:#ffb067"></i>hot water</span><span class="lab3" id="l-acid"><i style="background:#8fe38f"></i>one active too many</span><span class="lab3" id="l-leak"><i style="background:#8fd3ff"></i>water leaking out</span><span class="lab3" id="l-red"><i style="background:#e0574a"></i>red, stinging</span></section>
