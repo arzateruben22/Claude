@@ -107,7 +107,7 @@ export const createSection = (o = {}) => {
   dermis.position.y = yDJ;
   group.add(dermis);
   const fib = [];
-  for (let i = 0; i < 90; i++) fib.push({ pos: [x0 + R() * W, yDJ - 8 - R() * 58, z1 - 0.6 - R() * 3], scl: [0.9, 10 + R() * 22, 0.9], rot: 0, tilt: (R() - 0.5) * 2.6 });
+  for (let i = 0; i < Math.round(W / 4); i++) fib.push({ pos: [x0 + R() * W, yDJ - 8 - R() * 58, z1 - 1.6 - R() * 2], scl: [1.5, 10 + R() * 22, 1.5], rot: 0, tilt: (R() - 0.5) * 2.6 });
   const fibMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 6), M.fibre, fib.length);
   fib.forEach((p, i) => { dummy.position.set(...p.pos); dummy.scale.set(...p.scl); dummy.rotation.set(0, 0, Math.PI / 2 + p.tilt * 0.4); dummy.updateMatrix(); fibMesh.setMatrixAt(i, dummy.matrix); });
   group.add(fibMesh);

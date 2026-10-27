@@ -118,7 +118,7 @@ window.seek = function (t) {
     glowDead = 0.5 * fadeIn(t, CUE.bricks - 0.15, 0.5) * (1 - 0.6 * fadeIn(t, CUE.lipid, 0.5));
     if (t >= CUE.water - 0.3) dimLiving = Math.max(dimLiving, 0.4 * fadeIn(t, CUE.water - 0.3, 0.6));   // the water is the subject
   }
-  if (shot === "gauge") { dimDead = 0.6; dimLiving = 0.75; }
+  if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.85; }
   S.set({ tone, dimDead, dimLiving, mortar, glowDead, mortarColor: WATER });
   A.sc_top = add(S.at.scTop(0.66), [0, 0, 0]);
   A.sc_mid = S.at.scMid(0.7);
@@ -142,7 +142,7 @@ window.seek = function (t) {
   // ── water: kept inside by the wall (why), and leaving through the thin wall (whoa) ──
   beadsS.set(t, { gain: shot === "section" ? fadeIn(t, CUE.water - 0.4, 0.6) : 0, color: WATER });
   const wb = shot === "walls" ? fadeIn(t, B0.whoa + 0.3, 0.8) : 0;
-  WL.set({ tone, mortar: 0.5, mortarColor: WATER, dimLiving: 0.3 }); WR.set({ tone, mortar: 0.5, mortarColor: WATER, dimLiving: 0.3 });
+  WL.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 }); WR.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 });   // the walls are the subject
   beadsL.set(t, { gain: wb, color: WATER });
   const passR = beadsR.set(t, { gain: wb, color: WATER });
   A.wall_l = [WL.group.position.x + 22, 0, 25];
