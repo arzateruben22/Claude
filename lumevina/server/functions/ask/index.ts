@@ -278,7 +278,7 @@ const OFF_TOOL = {
 /* the buttons under an answer: what this client is most likely to ask next (the website shows two or three) */
 const NEXT_TOOL = {
   name: "suggest_replies",
-  description: "Put two or three buttons under your answer: the questions this client is most likely to ask next, each under five words, written as they would ask it, about Lumevina (her treatments, her products, booking, their skin), specific to what you just said (after a routine, for example: \"Which serum strength?\", \"Book a first visit\"). Call it with every answer you write, alongside any other tool; never with a hand-off.",
+  description: "Put two or three buttons under your answer: the questions this client is most likely to ask next, each under five words, written as they would ask it, about Lumevina (her treatments, her products, booking, their skin), specific to what you just said (after a routine, for example: \"Which serum strength?\", \"Book a first visit\"); when your answer ends with a question, they are their likely answers to it (\"My skin is oily\", \"My skin is dry\", \"Breakouts\"). Call it with every answer you write, alongside any other tool; never with a hand-off.",
   strict: true,
   input_schema: {
     type: "object",
