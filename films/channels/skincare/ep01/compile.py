@@ -66,14 +66,14 @@ CAM = {
         {"t": A("vo02:dead:"), "target": [0, -9, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -9, "ease": "inout2"},
         {"t": A("vo02:living"), "target": [0, -30, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 440, "az": -7, "ease": "inout2"},
         # the climb: the camera rides up with the cell (its target follows the cell's height, see scene.mjs)
-        {"t": t_born, "target": [0, Y_BASAL, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 360, "az": -4, "ease": "inout2"},
-        {"t": t_rise1, "target": [0, -SC_UM - 4, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 320, "az": -2, "ease": "inout2"},
+        {"t": t_born, "target": [0, Y_BASAL, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 280, "az": -4, "ease": "inout2"},
+        {"t": t_rise1, "target": [0, -SC_UM - 4, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 260, "az": -2, "ease": "inout2"},
         {"t": t_apart1, "target": [0, -10, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -1, "ease": "sine"},
         # why: pull back until the wall and the water under it fill the frame
         {"t": A("vo04:Scientists"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 0, "ease": "inout2"},
         {"t": B["whoa"]["t0"], "target": [0, -26, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 580, "az": 2, "ease": "sine"},
     ],
-    "walls": [{"t": B["whoa"]["t0"], "target": [0, -22, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 640, "az": 0},
+    "walls": [{"t": B["whoa"]["t0"], "target": [0, -16, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 500, "az": 0},
               {"t": B["toscale"]["t0"], "target": [0, -18, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 780, "az": 2, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6},
               {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8, "ease": "sine"}],

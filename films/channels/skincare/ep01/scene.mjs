@@ -44,17 +44,17 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um };
 const S = createSection({ width: 180, depth: 60, rows: BIO.rows, ...LAY, seed: 3 });
 scene.add(S.group);
-const WL = createSection({ width: 82, depth: 50, rows: BIO.rows, ...LAY, seed: 11, x: -47 });   // born near term: the finished wall
+const WL = createSection({ width: 60, depth: 46, rows: BIO.rows, ...LAY, seed: 11, x: -36 });   // born near term: the finished wall
 const thin = 4, scThin = BIO.sc_um * thin / BIO.rows;                                   // born before 30 weeks: a thin wall (illustration)
-const WR = createSection({ width: 82, depth: 50, rows: thin, ...LAY, sc: scThin, seed: 12, x: 47 });
+const WR = createSection({ width: 60, depth: 46, rows: thin, ...LAY, sc: scThin, seed: 12, x: 36 });
 scene.add(WL.group, WR.group);
 const climber = createClimber();
 scene.add(climber.group);
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
 const beadsS = createBeads({ n: 70, x: [-80, 80], z: [-24, 27], y0: -72, wallY: -BIO.sc_um, seed: 5 });
 // the walls' beads: the same rising water under both; a share passes (left 12%, right 64%: ≈ 5.3×, claims c11)
-const beadsL = createBeads({ n: 60, x: [-86, -8], z: [-20, 23], y0: -72, wallY: -BIO.sc_um, seed: 6, pass: (i, R) => R() < 0.12 });
-const beadsR = createBeads({ n: 60, x: [8, 86], z: [-20, 23], y0: -72, wallY: -scThin, seed: 7, pass: (i, R) => R() < 0.64 });
+const beadsL = createBeads({ n: 50, x: [-64, -8], z: [-20, 23], y0: -72, wallY: -BIO.sc_um, seed: 6, pass: (i, R) => R() < 0.12 });
+const beadsR = createBeads({ n: 50, x: [8, 64], z: [-20, 23], y0: -72, wallY: -scThin, seed: 7, pass: (i, R) => R() < 0.64 });
 scene.add(beadsS.mesh, beadsL.mesh, beadsR.mesh);
 
 const rig = createRig(FILM.cam);
@@ -135,7 +135,7 @@ window.seek = function (t) {
     const pos = [0, y, D.D / 2 - 5];
     const body = toneColor("living", tone).map((v, i) => v + (toneColor("corneo", tone)[i] - v) * Math.max(u * 0.5, k));
     climber.set({ pos, u, k, tone, glow: 1 - 0.7 * fadeIn(t, B0.why, 0.5), bodyColor: body, nucColor: toneColor("nucleus", tone) });
-    climber.group.scale.setScalar(fadeIn(t, CUE.born - 0.4, 0.4) * (1 - fadeIn(t, B0.why, 0.6)) + 1e-4);
+    climber.group.scale.setScalar(1.35 * fadeIn(t, CUE.born - 0.4, 0.4) * (1 - fadeIn(t, B0.why, 0.6)) + 1e-4);   // drawn a little larger than its neighbours: it wins its frames
     A.climber = add(pos, [6, 0, 0]);
   } else climber.hide();
 
@@ -145,8 +145,8 @@ window.seek = function (t) {
   WL.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 }); WR.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 });   // the walls are the subject
   beadsL.set(t, { gain: wb, color: WATER });
   const passR = beadsR.set(t, { gain: wb, color: WATER });
-  A.wall_l = [WL.group.position.x + 22, 0, 25];
-  A.wall_r = [WR.group.position.x - 22, 0, 25];
+  A.wall_l = [WL.group.position.x + 16, 0, 23];
+  A.wall_r = [WR.group.position.x - 16, 0, 23];
   A.beads = passR ? [passR[0] + WR.group.position.x * 0, passR[1], passR[2]] : [60, 6, 10];
 
   // ── the depth gauge: attached to the section's left cut edge, lifted to centre for the to-scale beat ──

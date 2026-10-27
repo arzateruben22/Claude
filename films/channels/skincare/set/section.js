@@ -168,7 +168,7 @@ export const createClimber = ({ clip } = {}) => {
       g.position.set(...pos);
       cell.scale.set(sx, Math.max(0.7, sy), sx);
       cell.material.color.setRGB(...bodyColor);
-      cell.material.emissive.setRGB(...bodyColor.map((v) => v * 0.18 * glow));
+      cell.material.emissive.setRGB(...bodyColor.map((v) => v * 0.5 * glow));
       cell.material.opacity = 0.62 + 0.3 * k;
       nuc.scale.setScalar(2.4 * (1 - k));
       nuc.visible = k < 0.98;
