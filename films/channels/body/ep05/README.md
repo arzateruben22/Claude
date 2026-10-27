@@ -66,12 +66,16 @@ One kit change, opt-in: the balanced caption pager (`../KIT-CHANGES.md`).
   speed of diffusion (slowed, badged), the thickened wall (a picture of "harder", not a measured disease), the
   person's figure, the tile floor and its fold, the court (a full doubles court, 260.8 m², its real lines, drawn
   whole at the floor's scale), the sponge drawn inside the chest, the exit's cell and wall.
-- **The readouts:** 23 forks (c2), 480 million sacs (c1), 0.2 mm (c3), 1661 (c5), "air–blood wall, under" 0.5 µm
-  (c7), "unfolded, about" 70 m² (c9), the tally at 5.5 L a minute (c13).
+- **The readouts:** "counting the forks" to 23, then "forks, up to about" (c2), 480 million sacs (c1), 0.2 mm (c3),
+  1661 (c5), "air–blood wall, under" 0.5 µm (c7), "unfolded, about" 70 m², reached as "seventy" is said and held
+  through the takeaway as "folded in your chest, about" (c9), the tally at 5.5 L a minute (c13).
 - **The badges:** "not to scale" (top right, to the wall's cut); "simplified: 7 of ~23 forks drawn"; "illustration:
-  the old idea" (the envelope); "wall and cell to scale · O₂ enlarged"; "slowed" (top left); "area to scale ·
-  estimates 50–140 m²" (the whoa, to the fold); "illustration" (the takeaway and the meanwhile); "not to scale" and
-  "sped up" (the tease).
+  the old idea" (the envelope); "wall and cell to scale · O₂ enlarged"; "illustration: a thickened wall" (the ×6
+  swelling is a picture of "harder"); "slowed" (top left); "area to scale · estimates 50–140 m²" (the whoa, to the
+  fold); "illustration · estimates 50–140 m²" then "illustration" (the takeaway and the meanwhile); "not to scale",
+  "blood flow slowed" and "squeeze sped up" (the tease).
+- **The thickened wall** slows the oxygen's crossing to a fifth (Fick: flux falls as thickness grows); it does not
+  pile the oxygen up (a frame review's fix). The O₂ are labelled "oxygen", as in episodes 1 and 2.
 - **Sources:** every claim was checked from a search excerpt only; a person opens each link before posting
   (`review/CLAIMS-REVIEW.md`).
 - **Listen at T0:** Malpighi, "sixteen sixty-one", micrometre.
