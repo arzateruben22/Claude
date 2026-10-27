@@ -1107,6 +1107,28 @@ await group('phone', async (use) => {
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
   });
+  // the sky camera (owner, 2026-10-27: "Sky view camera still doesn't show correctly on mobile view"): it draws into
+  // the window's own canvas at the screen's pixel ratio (it used to land at pr times its place and size, and at 1 pixel
+  // per CSS pixel on a phone), a live picture inside its frame, and it stays up when the Minimal HUD tucks the rest
+  await check('sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map', async () => {
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); });
+    await page.waitForFunction(() => document.querySelector('.app.hud-idle') && document.querySelector('.corner.sky canvas'), null, { timeout: 60000, polling: 250 });
+    await frames(page, 4);
+    const r = await game(page, () => {
+      const c = document.querySelector('.corner.sky'), cv = c.querySelector('canvas'), cs = getComputedStyle(c);
+      const a = c.getBoundingClientRect(), b = cv.getBoundingClientRect(), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      let s = 0, s2 = 0, n = 0;
+      for (let i = 0; i < d.length; i += 16) { const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; s += l; s2 += l * l; n++; }
+      return { inside: b.left >= a.left - 0.5 && b.right <= a.right + 0.5 && b.top >= a.top - 0.5 && b.bottom <= a.bottom + 0.5, css: b.width, px: cv.width, sq: cv.width === cv.height,
+        dpr: devicePixelRatio, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), up: cs.visibility !== 'hidden' && Number(cs.opacity) > 0.5 && a.right <= innerWidth + 0.5 };
+    });
+    expect(r.up, 'the sky camera tucked away with the Minimal HUD');
+    expect(r.inside && r.sq && Math.abs(r.px - Math.round(r.css * Math.min(3, r.dpr))) <= 1, `a ${r.px} px canvas for ${fmt(r.css)} CSS px at ${r.dpr}x (inside the frame: ${r.inside})`);
+    expect(r.mean > 20 && r.sd > 8, `no picture: mean ${fmt(r.mean)}, sd ${fmt(r.sd)}`);
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
+    return `${r.px} px for ${fmt(r.css)} CSS px at ${r.dpr}x, mean ${fmt(r.mean)}, sd ${fmt(r.sd)}, up while the HUD is tucked`;
+  });
 });
 
 // the local-launch features: start at your own exit, and the run card you can share

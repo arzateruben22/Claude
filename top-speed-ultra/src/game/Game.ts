@@ -228,8 +228,12 @@ export class Game {
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
     addEventListener('resize', this.onResize);
+    // the stage's own size, too: iOS can lay out a turned phone or a resized viewer's iframe after its resize event has
+    // fired (the handler reads the old size), which left the drawing buffer at the old shape, stretched to the new one
+    if (typeof ResizeObserver === 'function') { this.resizeObs = new ResizeObserver(() => this.onResize()); this.resizeObs.observe(host); }
     document.addEventListener('visibilitychange', this.onVisibility);
   }
+  private resizeObs: ResizeObserver | null = null;
 
   // ----------------------------------------------------------------------------------------- set up
   async init() {
@@ -961,6 +965,7 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
+    this.renderSky(now);                                // into the corner's own canvas, before the main view (see renderSky)
     const view = this.view3(), seat = view === 'cockpit' || view === 'free';
     this.car.setOutsideView(!seat);
     if (seat) this.car.setCabinLight(this.env.daylight);
@@ -1258,33 +1263,55 @@ export class Game {
     const size = CORNER_PX[this.settings.cornerSize] ?? CORNER_PX[1];
     return { x: (this.host.clientWidth || innerWidth) - size - 12, y: 64, size };
   }
+  // The sky camera: a live camera 150 m up, heading-up, looking down just ahead of the car, shown in the corner
+  // window's own canvas. It used to be drawn into the full-screen WebGL canvas behind the window with a scissor, which
+  // went wrong three ways: setScissor/setViewport take CSS pixels and three.js multiplies them by the pixel ratio itself,
+  // so the old `* pr` put the picture at pr times its place and size (Low on a desktop: 0.75; a phone on Medium or up:
+  // 1.5 to 2, mostly off the window); a square drawn under the page can't follow the frame's rounded corners; and it
+  // had the main view's resolution, 1 pixel per CSS pixel on a phone at Low, so a blur of 3x3 blocks on an iPhone. Now
+  // it is rendered at the window's size times the screen's pixel ratio (up to 3) into the bottom-left of the drawing
+  // buffer before the main view, and copied out with drawImage while that buffer is still this frame's (the main view
+  // then clears and covers it). The window's canvas sits inside the frame, so it is clipped, moved and tucked with it.
+  private skyAt = -1e9;
+  private renderSky(now: number) {
+    const cv = this.mapCanvas;
+    if (this.attract || this.settings.corner !== 'sky' || !cv) return;
+    if (now - this.skyAt < 1000 / 30 - 2) return;          // 30 a second is plenty for a map view; the copy stays up between
+    const css = cv.clientWidth;
+    if (css <= 0 || this.cornerAway(this.cornerRect())) return;
+    const gl = this.renderer.domElement, pr = this.renderer.getPixelRatio();
+    const want = Math.min(Math.round(css * Math.min(3, window.devicePixelRatio || 1)), gl.width, gl.height);
+    const v = want / pr, px = Math.floor(v * pr);          // three.js sets floor(v * pr) device pixels: copy exactly those
+    if (px < 8) return;
+    const g = cv.getContext('2d'); if (!g) return;
+    if (cv.width !== px || cv.height !== px) { cv.width = px; cv.height = px; }
+    this.skyAt = now;
+    const p = this.car.root.position;
+    const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
+    this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
+    this.skyCam.up.set(fx, 0, fz);
+    this.skyCam.lookAt(p.x + fx * 40, p.y, p.z + fz * 40);
+    this.skyCam.aspect = 1; this.skyCam.updateProjectionMatrix();
+    const r = this.renderer, fog = this.scene.fog, chev = this.chevrons.mesh.visible, shadows = r.shadowMap.autoUpdate;
+    this.scene.fog = null;
+    this.car.setOutsideView(true);
+    this.chevrons.mesh.visible = false;                    // the chevrons are for the road ahead, not the sky camera
+    r.shadowMap.autoUpdate = false;                        // last frame's shadows will do; the main view updates them
+    r.setRenderTarget(null);
+    r.setScissorTest(true); r.setScissor(0, 0, v, v); r.setViewport(0, 0, v, v);
+    r.render(this.scene, this.skyCam);
+    r.setScissorTest(false);
+    const size = r.getSize(this.tmpSize);
+    r.setViewport(0, 0, size.x, size.y);
+    r.shadowMap.autoUpdate = shadows;
+    this.chevrons.mesh.visible = chev;
+    this.scene.fog = fog;
+    g.drawImage(gl, 0, gl.height - px, px, px, 0, 0, px, px);
+  }
+  private tmpSize = new THREE.Vector2();
+  // the road map, ten times a second (the sky camera is renderSky)
   private renderCorner(dt: number) {
-    const mode = this.settings.corner;
-    if (this.attract || mode === 'off') return;
-    if (mode === 'sky') {
-      // a live camera 150 m up, heading-up, looking down just ahead of the car
-      const r = this.cornerRect(), pr = this.renderer.getPixelRatio(), H = this.host.clientHeight || innerHeight;
-      if (this.cornerAway(r)) return;
-      const p = this.car.root.position;
-      const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
-      this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
-      this.skyCam.up.set(fx, 0, fz);
-      this.skyCam.lookAt(p.x + fx * 40, p.y, p.z + fz * 40);
-      this.skyCam.aspect = 1; this.skyCam.updateProjectionMatrix();
-      const x = Math.round(r.x * pr), y = Math.round((H - r.y - r.size) * pr), s = Math.round(r.size * pr);
-      this.renderer.setScissorTest(true);
-      this.renderer.setScissor(x, y, s, s); this.renderer.setViewport(x, y, s, s);
-      const fog = this.scene.fog, chev = this.chevrons.mesh.visible; this.scene.fog = null;
-      this.car.setOutsideView(true);
-      this.chevrons.mesh.visible = false;              // the chevrons are for the road ahead, not the sky camera
-      this.renderer.render(this.scene, this.skyCam);
-      this.chevrons.mesh.visible = chev;
-      this.scene.fog = fog;
-      this.renderer.setScissorTest(false);
-      const size = this.renderer.getSize(new THREE.Vector2());
-      this.renderer.setViewport(0, 0, size.x, size.y);
-      return;
-    }
+    if (this.attract || this.settings.corner !== 'map') return;
     this.mapT -= dt;
     if (this.mapT > 0 || !this.mapCanvas) return;
     this.mapT = 0.1;
@@ -1473,6 +1500,7 @@ export class Game {
     cancelAnimationFrame(this.raf);
     this.offStore();
     removeEventListener('resize', this.onResize);
+    this.resizeObs?.disconnect();
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
     this.renderer.dispose();

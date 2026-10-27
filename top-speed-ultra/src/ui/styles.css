@@ -857,12 +857,14 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
    data-wake (HUD.tsx: an exit coming up, a hard stop, a new race position, Time Trial's last 10 s) brings the map and
    the road back. Hidden things are `visibility: hidden` once gone, so they leave the tab order. */
 .tbar .tbtn, .corner { transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
-.app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle:not(:has(.hud[data-wake])) :is(.corner, .hud-compass, .hud-clock, .livechip),
+.app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle:not(:has(.hud[data-wake])) :is(.corner:not(.sky), .hud-compass, .hud-clock, .livechip),
 .app.hud-idle:not(:has(.hud[data-wake])) .hud:not([data-road-new]) .hud-road,
 .app.hud-idle:not(:has(.hud[data-wake])) .hud:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"]) .hud-stats[data-mode="free"]:not([data-errand]) {
   opacity: 0; visibility: hidden; pointer-events: none; transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
 /* the sky camera is drawn by the game inside the window's box: it slides off the edge, where the game stops drawing it */
-.app.hud-idle:not(:has(.hud[data-wake])) .corner { transform: translateX(calc(100% + 32px)); }
+/* the sky camera stays: it is a live view the driver turned on to watch, not chrome (Minimal used to slide it away 4 s
+   after every tap, so on a phone's first-run Minimal HUD it was mostly not there) */
+.app.hud-idle:not(:has(.hud[data-wake])) .corner:not(.sky) { transform: translateX(calc(100% + 32px)); }
 .app.hud-idle:not(:has(.hud[data-wake])) .hud-compass { transform: scale(0.9); }
 /* a desktop: the rail slides off the right edge and Pause stays as a round chip; the map dial tucks away left */
 .app[data-hud="desk"].hud-idle .tbar .tbtn:not(.menu) { transform: translateX(calc(100% + 32px)); }

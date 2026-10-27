@@ -49,7 +49,7 @@ const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
 const GHOST_MS = 260;      // how long the outgoing content of the sheet lingers while it fades (styles.css: sheet-out)
-const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the corner window away after this long without input
+const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the road map away after this long without input (the sky camera stays)
 // keys that only drive (throttle, brake, steering, handbrake, look back, shifts): pressing them isn't asking for the HUD
 const DRIVING_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyV', 'KeyQ', 'KeyE']);
 // the condensed HUD's three layouts (HUD_POV_SPEC 2): a phone upright ('pp': one compact cluster across the top), a
@@ -527,7 +527,8 @@ export function App() {
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
-          {settings.corner === 'map' && <canvas ref={mapRef} />}
+          {/* the road map and the sky camera both draw into this canvas (Game.drawMap, Game.renderSky) */}
+          <canvas ref={mapRef} />
           {settings.corner === 'sky' && <span className="corner-tag">Sky cam</span>}
         </button>
       )}
@@ -783,9 +784,13 @@ function hudLayout(): HudLayout {
 function useHudLayout(): HudLayout {
   const [l, setL] = useState<HudLayout>(hudLayout);
   useEffect(() => {
-    const f = () => setL(hudLayout());
-    addEventListener('resize', f); addEventListener('orientationchange', f);
-    return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); };
+    // iOS fires orientationchange (and sometimes resize) before the new size is laid out: look again a frame and a
+    // moment later, and on the visual viewport's own resize
+    let t = 0;
+    const f = () => { setL(hudLayout()); cancelAnimationFrame(t); t = requestAnimationFrame(() => setL(hudLayout())); setTimeout(() => setL(hudLayout()), 350); };
+    const vv = typeof visualViewport === 'object' ? visualViewport : null;
+    addEventListener('resize', f); addEventListener('orientationchange', f); vv?.addEventListener('resize', f);
+    return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); vv?.removeEventListener('resize', f); cancelAnimationFrame(t); };
   }, []);
   return l;
 }
