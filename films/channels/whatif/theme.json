@@ -1,0 +1,135 @@
+{
+ "_doc": "Back of the Envelope (the what-if channel): graphite and marker. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/whatif/bible.md §1). Marker (violet-magenta) is the calculation and the spoken word; assume (tally green) is assumptions only; anchor (ballpoint blue) is the human-scale anchor only. 'bg' is an alias of 'graphite' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and none of the sibling channels' hues: contrast.py checks the distances.",
+ "id": "back-of-the-envelope",
+ "name": "Back of the Envelope",
+ "channel": "whatif",
+ "promise": "Impossible questions, honest assumptions, real calculations.",
+
+ "tokens": {
+  "bg": "#171A1E",
+  "graphite": "#171A1E",
+  "graphite-hi": "#21242A",
+  "surface": "#25282E",
+  "chalk": "#F4F2EC",
+  "chalk-2": "#A7AAB2",
+  "text": "#F4F2EC",
+  "text-2": "#A7AAB2",
+  "marker": "#EB63FF",
+  "assume": "#3DDC84",
+  "anchor": "#4DA3FF"
+ },
+
+ "scene": {
+  "_doc": "3D only. The world is drawn as a chalk-and-graphite model on graph paper under one warm-white desk light, plus a 6% graphite hemisphere fill. Line work is chalk; the calculation's own marks (the graph, the boxed answer, the core at the payoff) are marker; the falling figure is anchor blue. Nothing blooms except the marker core at the payoff (threshold 0.9); text never does.",
+  "lamp": "#FFF6E8",
+  "grid-line": "#F4F2EC",
+  "model": "#E6E2D8",
+  "light-hemi": "#171A1E"
+ },
+
+ "plate": { "color": "surface", "opacity": 0.95, "radius_px": 14 },
+ "highlight": { "style": "text", "color": "marker", "_doc": "The word being spoken turns marker (the colour of the calculation) on the plate; words still to come are chalk-2, words said are chalk." },
+
+ "roles": {
+  "accent": "marker",
+  "plate": "rgba(37, 40, 46, .95)",
+  "cap-next": "chalk-2",
+  "cap-said": "chalk",
+  "cap-lit": "marker",
+  "cap-lit-bg": "transparent",
+  "label-bg": "rgba(37, 40, 46, .94)",
+  "label-text": "chalk",
+  "ring": "graphite",
+  "badge-bg": "rgba(23, 26, 30, .82)",
+  "badge-text": "assume",
+  "badge-border": "assume",
+  "scrim": "rgba(23, 26, 30, .84)",
+  "scale-line": "chalk",
+  "shadow": "0 .3vmin 1.4vmin rgba(0, 0, 0, .35)",
+  "text-shadow": "none",
+  "cap-size": "5.185vmin",
+  "cap-weight": "700",
+  "cap-tracking": "-.005em",
+  "cap-radius": "1.296vmin",
+  "label-size": "3.704vmin",
+  "label-weight": "600",
+  "label-radius": ".7vmin",
+  "badge-size": "2.778vmin",
+  "badge-weight": "600",
+  "badge-radius": ".5vmin",
+  "counter-size": "9.259vmin",
+  "series-size": "2.778vmin",
+  "title-size": "7.407vmin",
+  "title-weight": "700",
+  "title-tracking": "-.015em",
+  "end-size": "7.407vmin"
+ },
+
+ "fonts": [
+  { "family": "Bricolage Grotesque", "file": "fonts/BricolageGrotesque-VF.ttf", "weight": "200 800", "style": "normal" },
+  { "family": "Figtree", "file": "fonts/Figtree-VF.ttf", "weight": "300 900", "style": "normal" },
+  { "family": "JetBrains Mono", "file": "fonts/JetBrainsMono-VF.ttf", "weight": "100 800", "style": "normal" },
+  { "family": "Caveat", "file": "fonts/Caveat-VF.ttf", "weight": "400 700", "style": "normal" }
+ ],
+ "type": {
+  "display": "Bricolage Grotesque",
+  "text": "Figtree",
+  "mono": "JetBrains Mono",
+  "glyph": "Figtree",
+  "hand": "Caveat",
+  "_doc": "Display: Bricolage Grotesque 700 at its narrow width (wdth 80, opsz 96; set in cssText) for titles and the boxed answer. Text: Figtree 700 captions, 600 labels. Mono: JetBrains Mono for the spine readout, badges and counters (monospaced, so figures never jitter; code ligatures off). Hand: Caveat, only for scribbles on the envelope (never captions, never a number the viewer must read). The label glyphs ≈ ∵ ◆ are drawn from JetBrains Mono (it has all three), never from Inter."
+ },
+
+ "sizes": {
+  "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters (kits/cinema/script pages them with max_chars = 24); 56 px is the largest whole px at which the widest 24-character row of episode 1 fits the plate's maximum width (0.72 × W = 778 px) in Figtree 700 without hud.js shrinking it (measured in Chromium, see PRODUCTION.md). Labels: the pill is at least 0.035 × H = 67 px tall.",
+  "caption": { "px": 56, "weight": 700, "lineHeight": 1.24, "maxLines": 2, "maxChars": 24, "plateMaxWidth": 778 },
+  "label": { "px": 40, "weight": 600, "minPillHeight": 67 },
+  "badge": { "px": 30, "weight": 600, "face": "mono" },
+  "counter": { "px": 100, "weight": 700, "face": "mono" },
+  "series": { "px": 30, "weight": 600, "face": "display, caps" },
+  "title": { "px": 80, "weight": 700, "face": "display, wdth 80" },
+  "end": { "px": 80, "weight": 700, "next_px": 50, "follow_px": 37 }
+ },
+
+ "safe": { "9x16": { "x": [90, 900], "y": [250, 1420], "frame": [1080, 1920] } },
+ "captionY": { "9x16": 0.61 },
+
+ "labels": {
+  "_doc": "Each pill carries a glyph as well as its colour, so colour is never the only cue: ◆ anchor (the human-scale thing), ∵ assumption, ≈ estimate; plain chalk pills (no glyph, bar mark) name parts of the world.",
+  "part": { "color": "chalk", "mark": "bar", "glyph": "", "use": "parts of the world: crust, mantle, core, tunnel" },
+  "anchor": { "color": "anchor", "mark": "dot", "glyph": "◆", "use": "the human-scale anchor: you, a car, a city" },
+  "assume": { "color": "assume", "mark": "dashed", "glyph": "∵", "use": "an assumption the number depends on" },
+  "calc": { "color": "marker", "mark": "dot", "glyph": "≈", "use": "a computed value in the world (a speed, a peak)" }
+ },
+
+ "contrast": {
+  "_doc": "What contrast.py checks besides the automatic pairs. grounds: the flat colours text can sit on. behind: what the plate, pills and badges can sit over (worst case first: the chalk model at full lamp, then the lamp pool, then the ground).",
+  "grounds": ["graphite", "graphite-hi", "surface"],
+  "behind": ["#F4F2EC", "graphite-hi", "graphite"],
+  "pairs": [
+   { "fg": "graphite", "bg": "marker", "kind": "text", "note": "dark text on a marker chip (the boxed answer's tag)" },
+   { "fg": "graphite", "bg": "assume", "kind": "text" },
+   { "fg": "graphite", "bg": "anchor", "kind": "text" },
+   { "fg": "marker", "bg": "surface", "kind": "text", "note": "the spine readout's live term on its bar" },
+   { "fg": "assume", "bg": "surface", "kind": "text" },
+   { "fg": "anchor", "bg": "surface", "kind": "text" },
+   { "fg": "marker", "bg": "graphite", "kind": "line", "note": "the graph on the paper, the box" },
+   { "fg": "anchor", "bg": "graphite", "kind": "line", "note": "the figure and its leader" },
+   { "fg": "chalk-2", "bg": "graphite", "kind": "line", "note": "the model's line work" }
+  ]
+ },
+
+ "motif": {
+  "signature_shape": "The boxed answer: the final number boxed with a hand-drawn marker rectangle, as a student boxes an answer. One per episode; a box around '≈' is the avatar. Space owns the ring, body the pulse line, physics the strobe ladder; this channel owns the box.",
+  "spine": "The running sum: a bar at y 250–330 that writes the calculation term by term in JetBrains Mono. The live term is marker, finished terms chalk, assumptions carry a green ∵ tag. It holds its answer, lit and boxed, through the whoa and the takeaway, and its label says what the number means.",
+  "honesty_badges": "JetBrains Mono, assume green: '∵ no air', '∵ uniform Earth', '≈ estimate', 'thought experiment', 'not to scale', 'time ×N', 'rounded', 'idealised'. One tier below labels.",
+  "title_card": "A band at y 250–470: an envelope flap folds down on the first pluck, BACK OF THE ENVELOPE in Bricolage caps, the question in Figtree below.",
+  "end_card": "The boxed answer, large, 'Next envelope: …' below, the episode's footnote fact. Held ≥ 1.5 s.",
+  "recurring_segment": "Show your work: the whole sum on one line with its assumptions and the sensitivity row.",
+  "tease": "Next envelope: …",
+  "colour_rules": "Marker is the calculation (the spoken word, the live term, the box). Green is an assumption, only. Blue is the human-scale anchor, only. The world itself is chalk and graphite.",
+  "sound": "D lydian at 90 BPM (a 16th is 5 frames); pizzicato plucks and pencil foley; signature plucks D5, A5, G♯5, 5 frames apart."
+ },
+
+ "cssText": ".stage { background: radial-gradient(80vmax 60vmax at 50% 40%, var(--graphite-hi) 0%, var(--graphite) 70%); }\n.hud-h, .hud-end .t { font-weight: 700; font-variation-settings: \"wdth\" 80, \"opsz\" 96; }\n.hud-series { font-family: var(--font-display); letter-spacing: .12em; text-transform: uppercase; font-variation-settings: \"wdth\" 100, \"opsz\" 12; }\n.hud-counter .v, .hud-scale, .hud-badge { font-variant-ligatures: none; font-feature-settings: \"calt\" 0, \"liga\" 0; }\n.hud-cap { box-shadow: var(--hud-shadow); }"
+}

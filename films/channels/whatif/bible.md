@@ -30,9 +30,9 @@ theme, which is the coordinator's call.)
 
 | Token | Hex | Role |
 |---|---|---|
-| `graphite` | `#131417` | Background (neutral, C* < 12) |
-| `graphite-hi` | `#1D1F24` | Gradient top, the desk under the lamp |
-| `surface` | `#25282E` | Caption plate (88%), pills, the spine bar |
+| `graphite` | `#171A1E` | Background (neutral, C* < 12) |
+| `graphite-hi` | `#21242A` | Gradient top, the desk under the lamp |
+| `surface` | `#25282E` | Caption plate (95%), pills, the spine bar |
 | `chalk` | `#F4F2EC` | Captions, titles, the world's line work |
 | `chalk-2` | `#A7AAB2` | Secondary text, units, words still to come |
 | `marker` (accent) | `#EB63FF` | **The calculation:** the spine readout's live term, the spoken word, the boxed answer |
@@ -47,17 +47,16 @@ cue.
 
 | Text | on graphite | on graphite-hi | on surface |
 |---|---|---|---|
-| chalk | 16.5 | 14.7 | 13.2 |
-| chalk-2 | 7.9 | 7.1 | 6.4 |
-| marker | 6.8 | — | 5.5 |
-| assume / anchor | 10.3 / 7.0 | 9.2 / 6.3 | 8.3 / 5.6 |
-
-`graphite` text on a marker, assume or anchor chip: 6.8 / 10.3 / 7.0.
+All pairs, including the plate composited over the chalk model at full lamp (the worst case), are
+checked by `python3 -I kits/cinema/sci/contrast.py whatif`: 0 fails, 0 warnings (27 Oct). The
+ground was first `#131417`; it sat ΔE76 4.7 from Los Güeros' espresso (the checker fails grounds
+under 5), so it moved to `#171A1E` (7.5), and the plate went from 88% to 95% so the spoken word in
+marker keeps 4.5:1 over the brightest part of the model.
 
 **Distance (ΔE76) to every other identity's chromatic colours,** nearest first: marker 35 (Rest
 Frame's wave `#6D3FC8`); assume 33 (Light Minute's teal); anchor 26 (Light Minute's lilac). All
-above the checker's warn line of 20. The ground is neutral and differs from the dark channels' grounds
-and from Los Güeros' espresso and Lumevina's black (`contrast.py` gates this when `theme.json` lands).
+above the checker's warn line of 20. The ground is neutral: ΔE76 7.5 from Los Güeros' espresso, 9.7 from Lumevina's black, 10.2 from
+Light Minute's void.
 
 **Type** (all SIL OFL 1.1, self-hosted, unmodified, no family shared with any channel or client):
 - **Display: Bricolage Grotesque** (Mathieu Triay), variable wght/wdth/opsz, at 700 condensed for
