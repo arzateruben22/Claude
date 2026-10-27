@@ -41,14 +41,14 @@ const W = {
   fogA: 0.00052, fogB: 1 / 330,         // exponential height haze
   hero: { x: 262, z: -1150 },           // the spire tower
 };
-const BRIDGE_X = -1650;
+const BRIDGE_X = -2050;                 // in the left third, where the wall leaves a gap between monitors
 const riverZ = (x) => W.riverZ + 0.16 * x + 110 * Math.sin(x / 1300 + 0.7);
 
 // Two compositions. Landmarks are placed in camera terms (ndcX = horizontal screen position,
 // fwd = distance ahead) so each frame keeps towers rising at both edges.
 const COMPOSITIONS = {
   landscape: {
-    cam: [0, 255, 160], pitch: -6.0, vfov: 50,
+    cam: [0, 255, 160], pitch: -4.2, vfov: 50,
     calm: [0.5, 0.52, 0.30, 0.26],      // centre (uv) + radii of the quiet zone behind the monitor rig
     beam: { src: { ndcX: -0.60, fwd: 1700, y: 128 }, hit: { ndcX: -0.43, ndcY: 0.70 }, gain: 1.0 },
     landmarks: [
@@ -58,6 +58,7 @@ const COMPOSITIONS = {
       { ndcX: 1.12, fwd: 265, w: 72, d: 60, h: 470, style: 'deco', flood: 0, occ: 0.28, spire: false },
       { ndcX: 0.92, fwd: 540, w: 48, d: 46, h: 360, style: 'deco', flood: 0.5, occ: 0.24, spire: true },
       { ndcX: 0.70, fwd: 980, w: 38, d: 38, h: 265, style: 'gothic', flood: 0.4, occ: 0.2 },
+      { ndcX: -0.20, fwd: 1200, w: 50, d: 50, h: 400, style: 'crown', flood: 1.0, occ: 0.2 },   // in the open sky between the inner-left and top monitors
     ],
   },
   portrait: {
@@ -260,7 +261,20 @@ void main(){
     em = mix(em, emE, smoothstep(1.6, 4.0, px));
     float fres = pow(1.0 - max(dot(n, V), 0.0), 4.0);
     vec3 glass = vec3(0.0035, 0.0045, 0.0065) + hazeCol(reflect(-V, n)) * (0.10 + 0.55 * fres);
+    // stone piers between the window bays and a spandrel line under each floor: they read at 1x on
+    // the near blocks and fade out once a bay is smaller than a couple of pixels
+    float detail = 1.0 - smoothstep(0.25, 0.7, px);
+    float pier = aaBand(f.x, -0.08, 0.08, fw.x) + aaBand(f.x, 0.92, 1.08, fw.x);
+    float span = aaBand(f.y, 0.0, 0.07, fw.y);
+    col += stoneCol * (amb + street) * (0.55 * pier + 0.35 * span) * detail * (1.0 - mask);
     col = mix(col, glass, mask) + em * mask;
+  }
+  if (abs(n.y) < 0.5){
+    // the cornice: the top course of every block catches a little warm light from the street and the roof lamps
+    float topD = vMin.y + vSize.y - p.y;
+    float fy = fwidth(p.y);
+    float corn = 1.0 - smoothstep(0.35, 0.35 + fy * 1.5 + 0.35, topD);
+    col += vec3(0.90, 0.64, 0.40) * 0.020 * corn * (kind > 1.5 ? 0.6 : 1.0);
   }
   if (n.y > 0.5){
     // tar and gravel roofs: per-building tone, a little grain, a parapet that catches the glow
@@ -270,7 +284,7 @@ void main(){
     vec2 e2 = min(p.xz - vMin.xz, vMin.xz + vSize.xz - p.xz);
     float edge = min(e2.x, e2.y);
     float parapet = 1.0 - smoothstep(0.6, 0.6 + fpx * 1.5 + 0.3, edge);
-    col = stoneCol * skyAmb * (0.62 * rt * grain + 0.55 * parapet);
+    col = stoneCol * skyAmb * (0.62 * rt * grain + 0.55 * parapet) + vec3(0.90, 0.64, 0.40) * 0.012 * parapet;
     if (flood > 0.0) col += vec3(0.9, 0.66, 0.38) * flood * uFloodGain * 0.08;
   }
   gl_FragColor = vec4(applyFog(col, p), 1.0);
@@ -646,6 +660,29 @@ function lowBuilding(B, cx, cz, w, d, H, r, occMul, waterTowers) {
   }
 }
 
+function crownTower(B, cx, cz, w, d, H, r, o) {
+  // A Chrysler-style top: a plain shaft, setbacks with corner eagles, then a crown of diminishing lit
+  // arches (stacked floodlit pyramids, each one's peak inside the next one's base: the sunburst
+  // triangles) and a long needle.
+  const seed = Math.floor(r() * 60000), occ = o.occ ?? 0.2;
+  const win = [1.6, 3.8, 0.42, 0.6];
+  const tone = [0.55, 0.85, 0.28, 0];
+  const I = (kind, fl) => [seed, occ, kind, fl];
+  const shaft = H * 0.72;
+  B.box(cx, 0, cz, w * 1.2, H * 0.18, d * 1.2, I(0, 0), win, tone);
+  B.box(cx, H * 0.18, cz, w * 1.08, H * 0.2, d * 1.08, I(0, 0), win, tone);
+  B.box(cx, H * 0.38, cz, w, shaft - H * 0.38, d, I(0, 0.1), win, tone);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) B.cone(cx + sx * w * 0.46, shaft, cz + sz * d * 0.46, 2.4, 6, 2.4, I(1, 0.7), tone);
+  let y = shaft, cw = w * 0.86, cd = d * 0.86;
+  for (let k = 0; k < 5; k++) {
+    const ch = cw * 0.95;
+    B.box(cx, y, cz, cw, ch * 0.28, cd, I(1, o.flood ?? 1), win, tone);
+    B.cone(cx, y + ch * 0.28, cz, cw * 1.02, ch * 0.62, cd * 1.02, I(1, o.flood ?? 1), tone);
+    y += ch * 0.5; cw *= 0.78; cd *= 0.78;
+  }
+  B.cone(cx, y, cz, Math.max(1.4, cw * 0.7), H * 0.2, Math.max(1.4, cd * 0.7), I(1, 0.6), tone);
+}
+
 function heroTower(B, cx, cz) {
   // The spire tower: limestone setbacks, a stepped crown washed in muted gold, a mast.
   const seed = 4242, occ = 0.17;
@@ -789,6 +826,7 @@ function buildCity(comp, cam, aspect) {
   for (const m of marks) {
     const r = mulberry32(hashInts(CITY_SEED, Math.round(m.x), Math.round(m.z)));
     if (m.beamHouse) { lowBuilding(B, m.x, m.z, m.w, m.d, m.h, r, 0.6, false); continue; }
+    if (m.style === 'crown') { crownTower(B, m.x, m.z, m.w, m.d, m.h, r, { occ: m.occ, flood: m.flood }); continue; }
     tower(B, m.x, m.z, m.w, m.d, m.h, m.style, r, { occ: m.occ, flood: m.flood, spire: m.spire });
   }
   return { B, marks };

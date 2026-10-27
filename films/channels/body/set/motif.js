@@ -18,9 +18,11 @@
 //   stroke = "var(--signal)" }) → { el, update(t), covered(t) } — a full-frame SVG between the 3D canvas and
 //   the HUD: the frame closes down to a soft membrane-shaped hole and opens again on the other side of a
 //   cut. Fully closed exactly at each event's t (put the cut there). Its edge is the pulse line's colour.
-// locator(root, { x, y, h, region: [u, v] (0..1 inside the figure's box), label = "you are here" }) →
-//   { el, update(t, presence, amp) } — a front-view body silhouette (text-2 outline, faint fill), the region
-//   marked by a small pulse-line squiggle that kicks on the beat.
+// locator(root, { x, y, h, region: [u, v] (0..1 inside the figure's box), label = "you are here", plate,
+//   loop }) → { el, update(t, presence, amp, loop = 0) } — a front-view body silhouette (text-2 outline, faint
+//   fill), the region marked by a small pulse-line squiggle that kicks on the beat. plate: true sets it on the
+//   caption plate with the text colour (for bright grounds). loop: true adds the blood's round trip, drawn on
+//   in pulse as update's loop runs 0 → 1: heart → lungs → heart → down the body → heart.
 
 const gauss = (x, s) => Math.exp(-(x * x) / (2 * s * s));
 export const beatAmp = (t, lubs, o = {}) => {
@@ -126,24 +128,36 @@ const FIGURE = "M50 6 C59 6 64 13 64 22 C64 32 58 40 50 40 C42 40 36 32 36 22 C3
 export const locator = (root, o = {}) => {
   const NS = "http://www.w3.org/2000/svg", h = o.h ?? 260, w = (h * 100) / 230;
   const el = document.createElement("div");
-  el.className = "mi-locator"; el.id = "mi-locator";
+  el.className = "mi-locator" + (o.plate ? " mi-locator-plate" : ""); el.id = "mi-locator";
   el.style.left = (o.x ?? 0).toFixed(2) + "px"; el.style.top = (o.y ?? 0).toFixed(2) + "px";
   const svg = document.createElementNS(NS, "svg");
   svg.setAttribute("viewBox", "0 0 100 230"); svg.setAttribute("width", w.toFixed(2)); svg.setAttribute("height", h.toFixed(2)); svg.setAttribute("aria-hidden", "true");
   const fig = document.createElementNS(NS, "path");
   fig.setAttribute("d", FIGURE); fig.setAttribute("fill", "var(--text-2)"); fig.setAttribute("fill-opacity", "0.16");
-  fig.setAttribute("stroke", "var(--text-2)"); fig.setAttribute("stroke-width", "1.6"); fig.setAttribute("stroke-linejoin", "round"); fig.setAttribute("fill-rule", "nonzero");
+  if (o.plate) { fig.setAttribute("fill", "var(--text)"); fig.setAttribute("fill-opacity", "0.22"); }
+  fig.setAttribute("stroke", o.plate ? "var(--text)" : "var(--text-2)"); fig.setAttribute("stroke-width", "1.6"); fig.setAttribute("stroke-linejoin", "round"); fig.setAttribute("fill-rule", "nonzero");
   const mark = document.createElementNS(NS, "path");
   mark.setAttribute("fill", "none"); mark.setAttribute("stroke", "var(--signal)"); mark.setAttribute("stroke-width", "2.6"); mark.setAttribute("stroke-linecap", "round"); mark.setAttribute("stroke-linejoin", "round");
   svg.append(fig, mark);
+  // the round trip: from the heart up through both lungs and back, then down the trunk and a leg and back up
+  const loop = o.loop ? document.createElementNS(NS, "path") : null;
+  if (loop) {
+    loop.setAttribute("d", "M54 74 C49 64 40 60 38 70 C36 80 47 82 54 74 C58 64 67 60 66 70 C65 79 58 80 54 74 " +
+      "C60 96 61 128 60 160 C60 186 62 206 62 214 C62 220 56 220 56 212 C55 196 52 172 50 150 C48 120 49 96 54 74 Z");
+    loop.setAttribute("pathLength", "1"); loop.setAttribute("fill", "none"); loop.setAttribute("stroke", "var(--pulse)");
+    loop.setAttribute("stroke-width", "3"); loop.setAttribute("stroke-linecap", "round"); loop.setAttribute("stroke-linejoin", "round");
+    loop.setAttribute("stroke-dasharray", "1 1"); loop.setAttribute("stroke-dashoffset", "1");
+    svg.insertBefore(loop, mark);
+  }
   const cap = document.createElement("span");
   cap.className = "mi-locator-tx"; cap.textContent = o.label ?? "you are here";
   el.append(svg, cap);
   root.appendChild(el);
   const [u, v] = o.region || [0.86, 0.5], mx = u * 100, my = v * 230;
   let last = null;
-  const update = (t, pr, amp) => {
+  const update = (t, pr, amp, lp = 0) => {
     el.style.opacity = pr.toFixed(4); el.style.visibility = pr > 0.001 ? "visible" : "hidden";
+    if (loop) { loop.setAttribute("stroke-dashoffset", (1 - Math.min(1, Math.max(0, lp))).toFixed(4)); loop.style.visibility = lp > 0.001 ? "visible" : "hidden"; }
     const a = Math.round(amp * 1000) / 1000;
     if (a === last) return;
     last = a;
@@ -161,4 +175,6 @@ export const MOTIF_CSS = `
 .mi-locator { position: absolute; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: .8vmin; opacity: 0; visibility: hidden; }
 .mi-locator svg { display: block; overflow: visible; }
 .mi-locator-tx { font: 600 2.6vmin/1.1 var(--font-text); color: var(--text-2); white-space: nowrap; }
+.mi-locator-plate { background: var(--hud-plate); padding: 1.2vmin 1.6vmin 1vmin; border-radius: var(--hud-cap-radius, 3vmin); }
+.mi-locator-plate .mi-locator-tx { font-size: 2.963vmin; color: var(--text); }
 `;

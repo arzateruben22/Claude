@@ -3,7 +3,7 @@
  "fps": 30,
  "bpm": 56.25,
  "dur": 74.6667,
- "poster": 49.333333333333336,
+ "poster": 49.96666666666667,
  "shots": [
   {
    "at": 0.0,
@@ -43,13 +43,13 @@
   {
    "id": "why",
    "t0": 26.6667,
-   "t1": 40.5333,
+   "t1": 41.0667,
    "line": "vo04",
    "energy": 0.62
   },
   {
    "id": "whoa",
-   "t0": 40.5333,
+   "t0": 41.0667,
    "t1": 56.0,
    "line": "vo05",
    "energy": 0.8
@@ -94,7 +94,7 @@
   "prox_au": 268141.3031636152,
   "prox_scene": 131.0,
   "voy_dir": 35.0,
-  "voy_az": 25.0,
+  "voy_az": -25.0,
   "ys": [
    1977.677,
    1977.8766,
@@ -149,18 +149,18 @@
   "flight": {
    "keys": [
     {
-     "t": 4.8,
-     "rate": 200000000.0
+     "t": 8.766666666666667,
+     "rate": 250000000.0
     },
     {
-     "t": 12.2635,
+     "t": 14.6775,
      "rate": 0.0,
      "ramp": 0.6,
      "badge": null
     }
    ],
    "anchor": [
-    4.8,
+    8.766666666666667,
     0.0
    ]
   },
@@ -176,7 +176,7 @@
      "badge": null
     },
     {
-     "t": 23.6387,
+     "t": 21.9107,
      "rate": 50000.0
     },
     {
@@ -218,7 +218,7 @@
     "fov": 24,
     "fx": 0.62,
     "fy": 0.55,
-    "dist": 1184,
+    "dist": 1060,
     "az": 0.0,
     "ease": "sine"
    }
@@ -233,13 +233,13 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 70,
-    "az": 0.0
+    "dist": 80,
+    "az": -0.8
    },
    {
-    "t": 4.8,
+    "t": 8.766666666666667,
     "target": [
      0,
      0,
@@ -247,14 +247,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
     "dist": 70,
     "az": 0.0,
     "ease": "sine"
    },
    {
-    "t": 5.6399,
+    "t": 9.4386,
     "target": [
      0,
      0,
@@ -262,14 +262,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 119.1,
+    "dist": 183.3,
     "az": 0.108,
     "ease": "lin"
    },
    {
-    "t": 6.7444,
+    "t": 10.3222,
     "target": [
      0,
      0,
@@ -277,14 +277,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 292.3,
+    "dist": 407.5,
     "az": 0.25,
     "ease": "lin"
    },
    {
-    "t": 8.3223,
+    "t": 11.5845,
     "target": [
      0,
      0,
@@ -292,14 +292,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 539.8,
+    "dist": 657.7,
     "az": 0.454,
     "ease": "lin"
    },
    {
-    "t": 9.9002,
+    "t": 12.8468,
     "target": [
      0,
      0,
@@ -307,14 +307,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 787.3,
+    "dist": 875.6,
     "az": 0.657,
     "ease": "lin"
    },
    {
-    "t": 11.4781,
+    "t": 14.1091,
     "target": [
      0,
      0,
@@ -322,14 +322,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1034.8,
+    "dist": 1075.2,
     "az": 0.86,
     "ease": "lin"
    },
    {
-    "t": 12.8635,
+    "t": 15.2775,
     "target": [
      0,
      0,
@@ -337,11 +337,41 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
     "dist": 1205,
     "az": 1.0,
     "ease": "sine"
+   },
+   {
+    "t": 15.4667,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 24,
+    "fx": 0.53,
+    "fy": 0.55,
+    "dist": 1205,
+    "az": 1.0,
+    "ease": "sine"
+   },
+   {
+    "t": 18.0,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 24,
+    "fx": 0.53,
+    "fy": 0.55,
+    "dist": 1600,
+    "az": 2.0,
+    "ease": "inout2"
    },
    {
     "t": 26.6667,
@@ -352,14 +382,14 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1193,
-    "az": 2.0,
+    "dist": 1590,
+    "az": 2.6,
     "ease": "sine"
    },
    {
-    "t": 40.6333,
+    "t": 41.1667,
     "target": [
      0,
      0,
@@ -367,10 +397,25 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1184,
+    "dist": 1580,
     "az": 4.0,
+    "ease": "sine"
+   },
+   {
+    "t": 43.13333333333333,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 24,
+    "fx": 0.53,
+    "fy": 0.55,
+    "dist": 1580,
+    "az": 3.8,
     "ease": "sine"
    },
    {
@@ -382,10 +427,25 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1184,
-    "az": 3.0,
+    "dist": 1150,
+    "az": 2.6,
+    "ease": "sine"
+   },
+   {
+    "t": 62.833333333333336,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 24,
+    "fx": 0.53,
+    "fy": 0.55,
+    "dist": 1420,
+    "az": 2.0,
     "ease": "sine"
    },
    {
@@ -397,9 +457,9 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1169,
+    "dist": 1420,
     "az": 1.5,
     "ease": "sine"
    }
@@ -414,10 +474,10 @@
     ],
     "el": 8,
     "fov": 24,
-    "fx": 0.62,
+    "fx": 0.53,
     "fy": 0.55,
-    "dist": 1169,
-    "az": 1.5
+    "dist": 1428,
+    "az": 1.6
    },
    {
     "t": 74.6667,
@@ -430,8 +490,8 @@
     "fov": 24,
     "fx": 0.62,
     "fy": 0.55,
-    "dist": 1184,
-    "az": 0.5,
+    "dist": 1169,
+    "az": -1.2,
     "ease": "sine"
    }
   ]
@@ -444,20 +504,20 @@
   },
   "keys": [
    {
-    "t": 31.933333333333334,
+    "t": 32.06666666666667,
     "scale": 149597870.7
    },
    {
-    "t": 33.833333333333336,
+    "t": 33.96666666666667,
     "scale": 1795174448.3999999,
     "ease": "inout2"
    },
    {
-    "t": 40.6333,
+    "t": 41.1667,
     "scale": 1795174448.3999999
    },
    {
-    "t": 42.56666666666667,
+    "t": 43.13333333333333,
     "scale": 306208916030.53436,
     "ease": "inout3"
    }
@@ -484,26 +544,36 @@
   }
  },
  "cue": {
-  "launch": 4.8,
-  "stop": 12.2635,
+  "voy": 4.566666666666666,
+  "launch": 8.766666666666667,
+  "stop": 14.6775,
+  "line": 18.0,
   "sig": 18.5387,
   "arr1": 20.266666666666666,
+  "cmd": 21.9107,
   "ans": 23.6387,
   "arr2": 25.366666666666667,
-  "hp": 27.166666666666668,
-  "ghost": 34.5,
-  "deep": 37.1,
+  "takeaway": 56.0,
+  "hp": 27.1,
+  "ghost": 34.96666666666667,
+  "deep": 37.46666666666667,
   "jump": [
-   40.6333,
-   42.56666666666667
+   41.1667,
+   43.13333333333333
   ],
   "pull": [
-   31.933333333333334,
-   33.833333333333336
+   32.06666666666667,
+   33.96666666666667
   ],
-  "lane": 43.53333333333333,
+  "lane": 44.06666666666667,
+  "lane2": 60.8,
+  "run": [
+   2.4,
+   1.0
+  ],
   "pxring": 64.83333333333333,
-  "speck": 59.833333333333336
+  "speck": 60.1,
+  "day": 64.33333333333333
  },
  "labels": [
   {
@@ -512,9 +582,10 @@
    "kind": "star",
    "anchor": "prox",
    "t0": 0.0,
-   "t1": 3.7333,
+   "t1": 3.2833,
    "shot": "hook",
-   "side": -1
+   "side": -1,
+   "v": "middle"
   },
   {
    "id": "l-in-h",
@@ -522,57 +593,64 @@
    "kind": "light",
    "anchor": "speck",
    "t0": 0.0,
-   "t1": 3.7333,
+   "t1": 3.2833,
    "shot": "hook",
-   "side": -1
-  },
-  {
-   "id": "l-sun",
-   "text": "Sun",
-   "kind": "star",
-   "anchor": "sun",
-   "t0": 4.233333333333333,
-   "t1": 7.566666666666666,
-   "shot": "space",
-   "side": 1
-  },
-  {
-   "id": "l-voy",
-   "text": "Voyager 1",
-   "kind": "body",
-   "anchor": "voy",
-   "t0": 5.0,
-   "t1": 31.933333333333334,
-   "shot": "space",
-   "side": -1
+   "side": -1,
+   "fixed": true
   },
   {
    "id": "l-nep",
    "text": "Neptune's orbit",
    "kind": "gravity",
    "anchor": "neptune",
-   "t0": 5.966666666666667,
-   "t1": 10.033333333333333,
+   "t0": 5.833333333333333,
+   "t1": 7.5,
    "shot": "space",
-   "side": 1
+   "side": -1
   },
   {
-   "id": "l-v",
-   "text": "about 17 km/s",
-   "kind": "gravity",
-   "anchor": "voy-v",
-   "t0": 11.0,
-   "t1": 15.4667,
+   "id": "l-voy",
+   "text": "Voyager 1",
+   "kind": "body",
+   "anchor": "voy",
+   "t0": 4.566666666666666,
+   "t1": 31.9667,
    "shot": "space",
-   "side": 1
+   "side": 1,
+   "fixed": true
+  },
+  {
+   "id": "l-voy-o",
+   "quiet": true,
+   "text": "Voyager 1",
+   "kind": "body",
+   "anchor": "voy",
+   "t0": 34.1667,
+   "t1": 41.1667,
+   "shot": "space",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-ld",
+   "text": "1 light-day",
+   "kind": "light",
+   "anchor": "ldring",
+   "t0": 18.0,
+   "t1": 26.6667,
+   "shot": "space",
+   "side": -1,
+   "v": "above",
+   "fixed": true
   },
   {
    "id": "l-earth",
-   "text": "Earth",
+   "text": "Earth, by the Sun",
    "kind": "body",
    "anchor": "sun",
-   "t0": 18.5387,
-   "t1": 21.066666666666666,
+   "t0": 18.7387,
+   "t1": 21.466666666666665,
    "shot": "space",
    "side": 1
   },
@@ -581,40 +659,35 @@
    "text": "signal",
    "kind": "light",
    "anchor": "front1",
-   "t0": 18.7887,
-   "t1": 20.7667,
+   "t0": 19.0387,
+   "t1": 20.0667,
    "shot": "space",
-   "side": 1
+   "side": 1,
+   "v": "above",
+   "fixed": true
   },
   {
-   "id": "l-ld",
-   "text": "1 light-day",
+   "id": "l-cmd",
+   "text": "command",
    "kind": "light",
-   "anchor": "ldring",
-   "t0": 20.7667,
-   "t1": 26.6667,
+   "anchor": "frontc",
+   "t0": 22.1607,
+   "t1": 22.5107,
    "shot": "space",
-   "side": 1
+   "side": 1,
+   "v": "above",
+   "fixed": true
   },
   {
    "id": "l-ans",
    "text": "answer",
    "kind": "light",
    "anchor": "front2",
-   "t0": 23.8887,
-   "t1": 25.7667,
-   "shot": "space",
-   "side": 1
-  },
-  {
-   "id": "l-hp",
-   "text": "edge of the Sun's wind",
-   "kind": "light",
-   "anchor": "hp",
-   "t0": 27.166666666666668,
-   "t1": 31.933333333333334,
+   "t0": 24.1387,
+   "t1": 25.1667,
    "shot": "space",
    "side": 1,
+   "v": "above",
    "fixed": true
   },
   {
@@ -622,109 +695,96 @@
    "text": "comet cloud",
    "kind": "body",
    "anchor": "oort",
-   "t0": 32.93333333333333,
-   "t1": 40.6333,
+   "t0": 33.96666666666667,
+   "t1": 41.1667,
    "shot": "space",
-   "side": 1
-  },
-  {
-   "id": "l-300",
-   "text": "300 years",
-   "kind": "body",
-   "anchor": "ghost",
-   "t0": 34.5,
-   "t1": 40.6333,
-   "shot": "space",
-   "side": -1
-  },
-  {
-   "id": "l-30k",
-   "text": "30,000 more to cross",
-   "kind": "body",
-   "anchor": "oort-deep",
-   "t0": 37.1,
-   "t1": 40.6333,
-   "shot": "space",
-   "side": -1
+   "side": -1,
+   "fixed": true
   },
   {
    "id": "l-prox",
    "text": "Proxima Centauri",
    "kind": "star",
    "anchor": "prox",
-   "t0": 42.56666666666667,
-   "t1": 68.36666666666666,
+   "t0": 42.7333,
+   "t1": 61.8667,
    "shot": "space",
-   "side": -1
+   "side": -1,
+   "v": "middle",
+   "fixed": true
+  },
+  {
+   "id": "l-voy-l",
+   "quiet": true,
+   "text": "Voyager 1",
+   "kind": "body",
+   "anchor": "speck",
+   "t0": 46.166666666666664,
+   "t1": 55.6,
+   "shot": "space",
+   "side": -1,
+   "v": "middle",
+   "fixed": true
   },
   {
    "id": "l-day1",
    "text": "day 1",
    "kind": "light",
    "anchor": "speck",
-   "t0": 59.833333333333336,
+   "t0": 60.1,
    "t1": 61.8667,
    "shot": "space",
-   "side": -1
-  },
-  {
-   "id": "l-1500",
-   "text": "of about 1,550",
-   "kind": "light",
-   "anchor": "lane",
-   "t0": 60.46666666666667,
-   "t1": 61.8667,
-   "shot": "space",
-   "side": 1
+   "side": -1,
+   "v": "middle",
+   "fixed": true
   },
   {
    "id": "l-ring-ld",
-   "text": "1 day",
+   "text": "Voyager 1",
    "kind": "light",
    "anchor": "speck",
    "t0": 62.833333333333336,
-   "t1": 68.36666666666666,
+   "t1": 67.9167,
    "shot": "space",
-   "side": -1
-  },
-  {
-   "id": "l-ring-px",
-   "text": "4 years, 3 months",
-   "kind": "light",
-   "anchor": "pxring",
-   "t0": 65.56666666666666,
-   "t1": 68.36666666666666,
-   "shot": "space",
-   "side": 1
+   "side": -1,
+   "v": "middle",
+   "fixed": true
   }
  ],
  "badges": [
   {
    "id": "b-nts-h",
-   "text": "not to scale",
+   "text": "not to scale · illustration",
    "t0": 0.0,
-   "t1": 3.4333,
+   "t1": 3.1833,
+   "slot": "bl"
+  },
+  {
+   "id": "b-head-h",
+   "text": "Voyager isn't headed there",
+   "t0": 0.0,
+   "t1": 2.8833,
    "slot": "bl"
   },
   {
    "id": "b-nts",
-   "text": "not to scale",
+   "text": "not to scale · illustration",
    "t0": 3.7333,
-   "t1": 68.0667,
+   "t1": 67.8167,
    "slot": "tr"
   },
   {
    "id": "b-path",
    "text": "path simplified",
-   "t0": 4.8,
-   "t1": 15.4667,
+   "t0": 8.766666666666667,
+   "t1": 32.6833,
    "slot": "tr"
   },
   {
    "id": "b-time-f",
    "clock": "flight",
-   "t0": 4.8,
-   "t1": 13.2635,
+   "t0": 8.766666666666667,
+   "t1": 15.6775,
    "slot": "tl"
   },
   {
@@ -737,22 +797,36 @@
   {
    "id": "b-theory",
    "text": "comet cloud: theory",
-   "t0": 32.93333333333333,
-   "t1": 56.0,
+   "t0": 33.03333333333333,
+   "t1": 42.5167,
    "slot": "tr"
   },
   {
    "id": "b-head",
    "text": "Voyager isn't headed there",
-   "t0": 42.56666666666667,
-   "t1": 68.0667,
+   "t0": 43.13333333333333,
+   "t1": 67.5167,
    "slot": "tr"
   },
   {
    "id": "b-today",
    "text": "at today's distance",
-   "t0": 47.46666666666667,
-   "t1": 56.0,
+   "t0": 48.03333333333333,
+   "t1": 55.6,
+   "slot": "bl"
+  },
+  {
+   "id": "b-light",
+   "text": "light sped up",
+   "t0": 43.8667,
+   "t1": 46.6667,
+   "slot": "tl"
+  },
+  {
+   "id": "b-light2",
+   "text": "light sped up",
+   "t0": 60.6,
+   "t1": 62.0,
    "slot": "tl"
   }
  ],
@@ -763,20 +837,20 @@
    "fmt": "text",
    "text": "4.24",
    "t0": 0.0,
-   "t1": 3.4333,
+   "t1": 3.1833,
    "at": [
-    0.26,
-    0.47
+    0.29,
+    0.4
    ]
   },
   {
    "id": "c-year",
    "label": "Voyager 1 · year",
    "fmt": "year",
-   "t0": 4.8,
-   "t1": 18.5387,
+   "t0": 8.133333333333333,
+   "t1": 18.1387,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
@@ -784,35 +858,37 @@
    "id": "c-sig1",
    "label": "signal travel · hours",
    "fmt": "hours",
+   "off": 0,
    "t0": 18.5387,
-   "t1": 23.6387,
+   "t1": 21.5107,
    "at": [
-    0.26,
+    0.31,
     0.47
    ],
    "lit": 24
   },
   {
    "id": "c-sig2",
-   "label": "command → answer · hours",
+   "label": "command → answer",
    "fmt": "hours",
-   "t0": 23.6387,
-   "t1": 27.166666666666668,
+   "off": 24,
+   "t0": 21.9107,
+   "t1": 26.7,
    "at": [
-    0.26,
+    0.31,
     0.47
    ],
    "lit": 48
   },
   {
    "id": "c-hp",
-   "label": "into interstellar space · year",
+   "label": "out of the Sun's wind",
    "fmt": "text",
    "text": "2012",
-   "t0": 27.166666666666668,
-   "t1": 31.5,
+   "t0": 27.1,
+   "t1": 34.5667,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
@@ -820,11 +896,11 @@
    "id": "c-oort0",
    "label": "years to the comet cloud",
    "fmt": "text",
-   "text": "300",
-   "t0": 31.5,
-   "t1": 37.1,
+   "text": "≈300",
+   "t0": 34.96666666666667,
+   "t1": 37.0667,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
@@ -832,35 +908,36 @@
    "id": "c-oort1",
    "label": "years more to cross it",
    "fmt": "text",
-   "text": "30,000",
-   "t0": 37.1,
-   "t1": 43.53333333333333,
+   "text": "≈30,000",
+   "t0": 37.46666666666667,
+   "t1": 41.1667,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
   {
    "id": "c-ld0",
-   "label": "light-days to Proxima, about",
+   "label": "light-days to Proxima",
    "fmt": "text",
-   "text": "1,550",
-   "t0": 43.53333333333333,
-   "t1": 47.46666666666667,
+   "text": "≈1,500",
+   "t0": 44.06666666666667,
+   "t1": 47.6333,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
   {
    "id": "c-trip",
-   "label": "years to Proxima, at Voyager's speed",
+   "label": "years at 17 km/s",
    "fmt": "text",
-   "text": "75,000",
-   "t0": 47.46666666666667,
-   "t1": 56.0,
+   "text": "≈75,000",
+   "size": "9vmin",
+   "t0": 48.03333333333333,
+   "t1": 55.6,
    "at": [
-    0.26,
+    0.3,
     0.47
    ]
   },
@@ -868,11 +945,11 @@
    "id": "c-days",
    "label": "light-days to Proxima",
    "fmt": "text",
-   "text": "1,550",
+   "text": "≈1,500",
    "t0": 56.0,
-   "t1": 61.8667,
+   "t1": 61.8,
    "at": [
-    0.26,
+    0.31,
     0.47
    ]
   },
@@ -883,66 +960,43 @@
    "text": "1 day",
    "read": true,
    "t0": 62.2,
-   "t1": 63.0167,
+   "t1": 64.4,
    "at": [
     0.5,
-    0.43
+    0.27
    ]
   },
   {
    "id": "c-read-px",
-   "label": "light time · Proxima to Sun",
+   "label": "light time · Earth to Proxima",
    "fmt": "text",
    "text": "4 years, 3 months",
    "read": true,
-   "t0": 63.06666666666667,
-   "t1": 68.0667,
+   "t0": 64.8,
+   "t1": 67.8167,
    "at": [
     0.5,
-    0.43
+    0.27
    ]
   }
  ],
- "pills": [
-  {
-   "id": "p-moon",
-   "text": "Earth to the Moon: 6 hours",
-   "t0": 13.166666666666666,
-   "t1": 15.4667,
-   "shot": "space",
-   "at": [
-    0.08333333333333333,
-    0.53
-   ]
-  },
-  {
-   "id": "p-europe",
-   "text": "75,000 years ago: no Homo sapiens in Europe",
-   "t0": 49.56666666666667,
-   "t1": 56.0,
-   "shot": "space",
-   "at": [
-    0.08333333333333333,
-    0.53
-   ]
-  }
- ],
+ "pills": [],
  "title": {
   "series": "Light Minute · No. 002",
   "title": "The *nearest star*",
-  "t1": 3.4833,
+  "t1": 3.2333,
   "sig": 3.466666666666667
  },
  "endCard": 68.36666666666666,
  "end": {
-  "title": "Next light: the planet that turns *backwards*",
+  "title": "Next light: a planet that turns *backwards*",
   "follow": "Light Minute · No. 003",
   "next": "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)."
  },
  "captions": [
   {
    "t0": 0.098,
-   "t1": 2.148,
+   "t1": 2.173,
    "lines": [
     [
      [
@@ -956,27 +1010,19 @@
      [
       "to",
       0.698
-     ],
-     [
-      "the",
-      0.743
      ]
     ],
     [
      [
-      "nearest",
-      0.798
-     ],
-     [
-      "star?",
-      1.398
+      "the nearest star?",
+      0.743
      ]
     ]
    ]
   },
   {
    "t0": 2.223,
-   "t1": 3.613,
+   "t1": 3.712,
    "lines": [
     [
      [
@@ -1000,7 +1046,7 @@
   },
   {
    "t0": 4.053,
-   "t1": 5.758,
+   "t1": 5.803,
    "lines": [
     [
      [
@@ -1009,159 +1055,127 @@
      ],
      [
       "ride",
-      4.228
+      4.233
      ],
      [
       "is",
-      4.573
+      4.548
      ],
      [
       "Voyager",
-      4.783
+      4.578
      ],
      [
       "1,",
-      5.343
+      5.313
      ]
     ]
    ]
   },
   {
-   "t0": 5.758,
-   "t1": 7.548,
+   "t0": 5.803,
+   "t1": 7.398,
    "lines": [
     [
      [
       "the",
-      5.758
+      5.803
      ],
      [
       "farthest",
-      5.963
+      5.848
      ]
     ],
     [
      [
       "thing",
-      6.348
+      6.223
      ],
      [
       "we've",
-      6.688
+      6.313
      ],
      [
       "sent.",
-      6.858
+      6.733
      ]
     ]
    ]
   },
   {
-   "t0": 7.548,
-   "t1": 8.883,
+   "t0": 7.398,
+   "t1": 9.673,
    "lines": [
     [
      [
       "It",
-      7.548
+      7.398
      ],
      [
       "left",
-      7.578
+      7.508
      ],
      [
       "in",
-      7.938
-     ],
-     [
-      "nineteen",
-      8.103
+      7.788
      ]
     ],
     [
      [
-      "seventy-seven.",
-      8.133
+      "nineteen seventy-seven.",
+      8.123
      ]
     ]
    ]
   },
   {
-   "t0": 9.873,
-   "t1": 12.613,
+   "t0": 9.673,
+   "t1": 13.048,
    "lines": [
     [
      [
       "It",
-      9.873
+      9.673
      ],
      [
       "coasts",
-      10.028
+      9.828
      ],
      [
       "at",
-      10.538
+      10.373
      ],
      [
       "about",
-      10.773
+      10.648
      ]
     ],
     [
      [
-      "seventeen",
-      10.988
+      "17",
+      10.863
      ],
      [
-      "kilometers",
-      11.748
-     ],
-     [
-      "a",
-      12.448
+      "kilometers a second.",
+      11.588
      ]
     ]
    ]
   },
   {
-   "t0": 12.613,
-   "t1": 15.273,
+   "t0": 13.048,
+   "t1": 15.23,
    "lines": [
     [
      [
-      "second:",
-      12.613
-     ],
-     [
-      "Earth",
-      13.168
-     ],
-     [
-      "to",
-      13.468
-     ],
-     [
-      "the",
-      13.513
+      "Earth to the Moon",
+      13.048
      ]
     ],
     [
      [
-      "Moon",
-      13.593
-     ],
-     [
-      "in",
-      14.198
-     ],
-     [
-      "six",
-      14.368
-     ],
-     [
-      "hours.",
-      14.523
+      "in 6 hours.",
+      13.933
      ]
     ]
    ]
@@ -1224,20 +1238,12 @@
      [
       "needs",
       19.512
-     ],
-     [
-      "a",
-      19.727
      ]
     ],
     [
      [
-      "full",
-      20.002
-     ],
-     [
-      "day",
-      20.267
+      "a full day",
+      19.727
      ],
      [
       "to",
@@ -1290,7 +1296,7 @@
   },
   {
    "t0": 23.902,
-   "t1": 26.127,
+   "t1": 26.359,
    "lines": [
     [
      [
@@ -1304,31 +1310,19 @@
      [
       "comes",
       24.472
-     ],
-     [
-      "the",
-      24.777
      ]
     ],
     [
      [
-      "day",
-      24.937
-     ],
-     [
-      "after",
-      25.302
-     ],
-     [
-      "tomorrow.",
-      25.377
+      "the day after tomorrow.",
+      24.777
      ]
     ]
    ]
   },
   {
    "t0": 26.987,
-   "t1": 28.642,
+   "t1": 28.382,
    "lines": [
     [
      [
@@ -1336,355 +1330,295 @@
       26.987
      ],
      [
-      "twenty",
-      27.167
-     ],
-     [
-      "twelve,",
-      27.197
+      "twenty twelve,",
+      27.092
      ]
     ],
     [
      [
       "it",
-      27.847
+      27.842
      ],
      [
       "crossed",
       28.022
-     ],
-     [
-      "into",
-      28.357
      ]
     ]
    ]
   },
   {
-   "t0": 28.642,
-   "t1": 30.207,
+   "t0": 28.382,
+   "t1": 30.307,
    "lines": [
     [
      [
-      "interstellar",
-      28.642
-     ],
-     [
-      "space.",
-      29.462
+      "into interstellar space.",
+      28.382
      ]
     ]
    ]
   },
   {
-   "t0": 30.207,
-   "t1": 31.362,
+   "t0": 30.307,
+   "t1": 31.592,
    "lines": [
     [
      [
       "Nearly",
-      30.207
+      30.307
      ],
      [
       "there,",
-      30.562
+      30.687
      ],
      [
       "then?",
-      30.867
+      30.997
      ]
     ]
    ]
   },
   {
-   "t0": 31.362,
-   "t1": 33.537,
+   "t0": 31.592,
+   "t1": 32.537,
    "lines": [
     [
      [
       "It",
-      31.362
+      31.592
      ],
      [
       "hasn't",
-      31.492
+      31.622
      ],
      [
       "even",
-      31.942
+      32.052
      ],
      [
       "reached",
-      32.137
+      32.232
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.537,
+   "t1": 34.507,
+   "lines": [
+    [
+     [
+      "the",
+      32.537
+     ],
+     [
+      "Sun's",
+      32.567
      ]
     ],
     [
      [
-      "the",
-      32.437
-     ],
-     [
-      "Sun's",
-      32.467
-     ],
-     [
-      "cloud",
-      32.937
-     ],
-     [
-      "of",
-      33.462
+      "cloud of comets.",
+      33.037
      ]
     ]
    ]
   },
   {
-   "t0": 33.537,
-   "t1": 34.287,
-   "lines": [
-    [
-     [
-      "comets.",
-      33.537
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 34.322,
-   "t1": 36.292,
+   "t0": 34.507,
+   "t1": 36.697,
    "lines": [
     [
      [
       "That's",
-      34.322
+      34.507
+     ],
+     [
+      "about",
+      34.637
      ],
      [
       "three",
-      34.487
+      34.972
      ]
     ],
     [
      [
-      "hundred",
-      34.627
-     ],
-     [
-      "years",
-      35.147
-     ],
-     [
-      "away.",
-      35.542
+      "hundred years away.",
+      35.27
      ]
     ]
    ]
   },
   {
-   "t0": 36.292,
-   "t1": 38.522,
+   "t0": 36.697,
+   "t1": 39.189,
    "lines": [
     [
      [
-      "Getting",
-      36.292
-     ],
-     [
-      "through",
-      36.622
+      "Through",
+      36.697
      ],
      [
       "it:",
-      36.902
+      37.062
      ]
     ],
     [
      [
-      "thirty",
-      37.112
+      "maybe",
+      37.452
      ],
      [
-      "thousand",
-      37.142
+      "30,000",
+      37.482
      ],
      [
       "more.",
-      37.772
+      38.422
      ]
     ]
    ]
   },
   {
-   "t0": 40.853,
-   "t1": 43.118,
+   "t0": 41.387,
+   "t1": 43.677,
    "lines": [
     [
      [
       "The",
-      40.853
+      41.387
      ],
      [
       "nearest",
-      40.883
+      41.437
      ],
      [
       "star,",
-      41.388
+      41.942
      ]
     ],
     [
      [
-      "Proxima",
-      41.823
-     ],
-     [
-      "Centauri,",
-      42.378
+      "Proxima Centauri,",
+      42.377
      ]
     ]
    ]
   },
   {
-   "t0": 43.118,
-   "t1": 45.513,
+   "t0": 43.677,
+   "t1": 46.147,
    "lines": [
     [
      [
       "is",
-      43.118
+      43.677
      ],
      [
       "about",
-      43.318
+      43.872
      ],
      [
-      "fifteen",
-      43.518
+      "1,500",
+      44.072
      ]
     ],
     [
      [
-      "hundred",
-      43.548
-     ],
-     [
       "light-days",
-      43.578
+      44.921
      ],
      [
       "out.",
-      45.003
+      45.627
      ]
     ]
    ]
   },
   {
-   "t0": 45.513,
-   "t1": 47.193,
+   "t0": 46.147,
+   "t1": 50.147,
    "lines": [
     [
      [
       "At",
-      45.513
+      46.147
      ],
      [
       "Voyager's",
-      45.608
+      46.177
      ],
      [
       "speed:",
-      46.503
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 47.193,
-   "t1": 49.568,
-   "lines": [
-    [
-     [
-      "about",
-      47.193
-     ],
-     [
-      "seventy-five",
-      47.468
+      47.062
      ]
     ],
     [
      [
-      "thousand",
-      47.498
+      "about 75",
+      47.747
      ],
      [
-      "years.",
-      48.918
+      "thousand years.",
+      48.879
      ]
     ]
    ]
   },
   {
-   "t0": 49.568,
-   "t1": 51.868,
+   "t0": 50.147,
+   "t1": 51.242,
    "lines": [
     [
      [
       "Count",
-      49.568
+      50.147
      ],
      [
       "back",
-      49.813
+      50.432
      ],
      [
       "that",
-      50.138
+      50.692
      ],
      [
       "far,",
-      50.278
-     ]
-    ],
-    [
-     [
-      "and",
-      50.693
-     ],
-     [
-      "our",
-      50.968
-     ],
-     [
-      "species",
-      51.133
-     ],
-     [
-      "hadn't",
-      51.558
+      50.827
      ]
     ]
    ]
   },
   {
-   "t0": 51.868,
-   "t1": 52.903,
+   "t0": 51.242,
+   "t1": 53.22,
    "lines": [
     [
      [
-      "reached",
-      51.868
+      "and",
+      51.242
      ],
      [
-      "Europe.",
-      52.153
+      "our",
+      51.497
+     ],
+     [
+      "species",
+      51.647
+     ]
+    ],
+    [
+     [
+      "wasn't in Europe.",
+      52.052
      ]
     ]
    ]
   },
   {
    "t0": 56.32,
-   "t1": 58.335,
+   "t1": 58.835,
    "lines": [
     [
      [
@@ -1692,72 +1626,66 @@
       56.32
      ],
      [
-      "we",
-      56.455
+      "we've",
+      56.635
      ],
      [
-      "haven't",
-      56.74
-     ],
-     [
-      "left",
-      56.86
+      "barely",
+      56.745
      ]
     ],
     [
      [
+      "left",
+      57.085
+     ],
+     [
       "for",
-      57.16
+      57.415
      ],
      [
       "the",
-      57.555
+      57.58
      ],
      [
       "stars.",
-      57.585
+      57.805
      ]
     ]
    ]
   },
   {
-   "t0": 58.58,
-   "t1": 61.26,
+   "t0": 58.835,
+   "t1": 60.085,
    "lines": [
     [
      [
       "Voyager",
-      58.58
+      58.835
      ],
      [
       "has",
-      59.17
+      59.42
      ],
      [
       "crossed",
-      59.435
-     ],
-     [
-      "day",
-      59.825
+      59.69
      ]
-    ],
+    ]
+   ]
+  },
+  {
+   "t0": 60.085,
+   "t1": 61.828,
+   "lines": [
     [
      [
-      "one",
-      60.15
+      "day one",
+      60.085
      ],
      [
-      "of",
-      60.39
-     ],
-     [
-      "fifteen",
-      60.48
-     ],
-     [
-      "hundred.",
-      60.51
+      "of 1,500.",
+      60.625
      ]
     ]
    ]
@@ -1802,7 +1730,7 @@
   },
   {
    "t0": 64.787,
-   "t1": 67.372,
+   "t1": 66.317,
    "lines": [
     [
      [
@@ -1817,42 +1745,34 @@
       "Centauri:",
       65.552
      ]
-    ],
+    ]
+   ]
+  },
+  {
+   "t0": 66.317,
+   "t1": 68.246,
+   "lines": [
     [
      [
-      "four",
+      "four years",
       66.317
-     ],
-     [
-      "years",
-      66.702
      ],
      [
       "and",
       67.037
-     ],
+     ]
+    ],
+    [
      [
-      "three",
+      "three months.",
       67.197
      ]
     ]
    ]
   },
   {
-   "t0": 67.372,
-   "t1": 68.122,
-   "lines": [
-    [
-     [
-      "months.",
-      67.372
-     ]
-    ]
-   ]
-  },
-  {
    "t0": 68.607,
-   "t1": 71.572,
+   "t1": 71.717,
    "lines": [
     [
      [
@@ -1898,7 +1818,7 @@
   },
   {
    "t0": 71.717,
-   "t1": 72.647,
+   "t1": 72.982,
    "lines": [
     [
      [
@@ -1924,9 +1844,9 @@
   {
    "id": "vo02",
    "t": 4.033333333333333,
-   "dur": 11.023,
+   "dur": 10.897,
    "file": "vo/02.wav",
-   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second: Earth to the Moon in six hours."
+   "text": "Our ride is Voyager 1, the farthest thing we've sent. It left in nineteen seventy-seven. It coasts at about seventeen kilometers a second. Earth to the Moon in six hours."
   },
   {
    "id": "vo03",
@@ -1938,23 +1858,23 @@
   {
    "id": "vo04",
    "t": 26.966666666666665,
-   "dur": 11.296,
+   "dur": 11.922,
    "file": "vo/04.wav",
-   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's three hundred years away. Getting through it: thirty thousand more."
+   "text": "In twenty twelve, it crossed into interstellar space. Nearly there, then? It hasn't even reached the Sun's cloud of comets. That's about three hundred years away. Through it: maybe thirty thousand more."
   },
   {
    "id": "vo05",
-   "t": 40.833333333333336,
-   "dur": 11.637,
+   "t": 41.36666666666667,
+   "dur": 11.553,
    "file": "vo/05.wav",
-   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species hadn't reached Europe."
+   "text": "The nearest star, Proxima Centauri, is about fifteen hundred light-days out. At Voyager's speed: about seventy-five thousand years. Count back that far, and our species wasn't in Europe."
   },
   {
    "id": "vo06",
    "t": 56.3,
-   "dur": 5.025,
+   "dur": 5.228,
    "file": "vo/06.wav",
-   "text": "So we haven't left for the stars. Voyager has crossed day one of fifteen hundred."
+   "text": "So we've barely left for the stars. Voyager has crossed day one of fifteen hundred."
   },
   {
    "id": "vo07",

@@ -259,7 +259,8 @@ PILLS = [
 # ── the title card and the end card ───────────────────────────────────────
 TITLE = {"series": "Light Minute · No. 001", "title": "If the Sun *vanished*", "t1": B["normal"]["t0"] - 0.25,
          "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002"}   # the channel's own tease form (theme.json)
+END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002",   # the channel's own tease form (theme.json)
+       "next": "Measured in 2017: gravity travels at light speed (LIGO, Fermi)."}   # the true-fact footnote (c5)
 
 CUE = {
     "off": t_off, "rewind": [t_rw0, t_rw1], "arrive": t_arr, "race": {"arrive": A("vo04:arrived"), "merge": t_of("race", 0.0)},

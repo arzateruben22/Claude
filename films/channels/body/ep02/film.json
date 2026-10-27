@@ -1,0 +1,2025 @@
+{
+ "id": "meanwhile-inside-002",
+ "fps": 30,
+ "bpm": 75,
+ "dur": 72.8,
+ "poster": 0.0,
+ "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "cell"
+  },
+  {
+   "at": 10.35,
+   "name": "hb"
+  },
+  {
+   "at": 24.783333,
+   "name": "skin"
+  },
+  {
+   "at": 39.983333,
+   "name": "lung"
+  },
+  {
+   "at": 65.583333,
+   "name": "nerve"
+  },
+  {
+   "at": 70.783333,
+   "name": "loop"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.8,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 4.8,
+   "t1": 14.8,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.8,
+   "t1": 24.8,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 24.8,
+   "t1": 40.0,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 40.0,
+   "t1": 53.6,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.6,
+   "t1": 60.0,
+   "line": "vo06",
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 60.0,
+   "t1": 65.6,
+   "line": "vo07",
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 65.6,
+   "t1": 72.8,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "iris": [
+  {
+   "t": 10.35,
+   "cx": 0.5,
+   "cy": 0.4
+  },
+  {
+   "t": 24.783333,
+   "cx": 0.5,
+   "cy": 0.4
+  },
+  {
+   "t": 39.983333,
+   "cx": 0.5,
+   "cy": 0.4
+  },
+  {
+   "t": 65.583333,
+   "cx": 0.5,
+   "cy": 0.4
+  },
+  {
+   "t": 70.783333,
+   "cx": 0.5,
+   "cy": 0.4
+  }
+ ],
+ "clock": [
+  {
+   "t": 0.0,
+   "rate": 1.0
+  },
+  {
+   "t": 39.983333,
+   "rate": 0.08333333333333333
+  },
+  {
+   "t": 60.0,
+   "rate": 1.0
+  }
+ ],
+ "cell": {
+  "o2": [
+   [
+    0.0,
+    0.62
+   ],
+   [
+    1.9666666666666666,
+    1.0
+   ]
+  ],
+  "sparkle": [
+   2.9,
+   4.3
+  ],
+  "hbLit": 6.5
+ },
+ "hb": {
+  "board": [
+   18.4,
+   19.7,
+   20.3,
+   20.7
+  ],
+  "approach": [
+   0.6,
+   0.6,
+   0.6,
+   0.6
+  ],
+  "glint": [
+   11.266666666666667,
+   12.833333333333334
+  ],
+  "free": 13.3,
+  "struggle": [
+   16.433333333333334,
+   17.666666666666668,
+   18.033333333333335
+  ],
+  "flush": [
+   22.633333333333333,
+   23.633333333333333
+  ],
+  "shift": [
+   18.4,
+   19.299999999999997
+  ]
+ },
+ "skin": {
+  "blue": [
+   33.43333333333333,
+   34.8
+  ],
+  "red": [
+   33.43333333333333,
+   35.5
+  ],
+  "swallow": 35.5,
+  "back": [
+   36.0,
+   37.333333333333336
+  ],
+  "section": [
+   29.3,
+   30.9
+  ]
+ },
+ "lung": {
+  "flush": [
+   47.066667,
+   50.06666666666667
+  ],
+  "o2": [
+   46.466667,
+   50.46666666666667
+  ],
+  "loop": [
+   40.96666666666667,
+   44.36666666666667
+  ]
+ },
+ "nerve": {
+  "t0": 66.43333333333334,
+  "jump": 70.06666666666666,
+  "hop": 1.211111
+ },
+ "quarter": {
+  "t0": 46.066667,
+  "keys": [
+   [
+    47.066667,
+    0.0
+   ],
+   [
+    50.06666666666667,
+    0.25
+   ]
+  ],
+  "t1": 53.300000000000004,
+  "unit": "s",
+  "label": "seats filling, in lung time, about"
+ },
+ "cam": {
+  "cell": [
+   {
+    "t": 0.0,
+    "pos": [
+     2.0,
+     1.2,
+     21.0
+    ],
+    "look": [
+     0.0,
+     -0.4,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 2.9,
+    "pos": [
+     1.6,
+     1.0,
+     18.5
+    ],
+    "look": [
+     0.0,
+     -0.3,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 6.3,
+    "pos": [
+     0.9,
+     0.6,
+     13.0
+    ],
+    "look": [
+     0.2,
+     -0.2,
+     0.0
+    ],
+    "fov": 33,
+    "ease": "p2"
+   },
+   {
+    "t": 10.35,
+    "pos": [
+     0.5,
+     0.3,
+     7.5
+    ],
+    "look": [
+     0.3,
+     -0.1,
+     0.0
+    ],
+    "fov": 32,
+    "ease": "p2"
+   }
+  ],
+  "hb": [
+   {
+    "t": 10.35,
+    "pos": [
+     14.0,
+     10.0,
+     62.0
+    ],
+    "look": [
+     0.0,
+     -2.4,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 13.7,
+    "pos": [
+     8.0,
+     9.0,
+     58.0
+    ],
+    "look": [
+     1.0,
+     -1.9,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 18.4,
+    "pos": [
+     -3.0,
+     7.0,
+     52.0
+    ],
+    "look": [
+     2.0,
+     -1.6,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 21.099999999999998,
+    "pos": [
+     -12.0,
+     5.0,
+     54.0
+    ],
+    "look": [
+     0.0,
+     -2.4,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 23.633333333333333,
+    "pos": [
+     -15.0,
+     3.0,
+     58.0
+    ],
+    "look": [
+     0.0,
+     -2.4,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 24.783333,
+    "pos": [
+     -16.0,
+     2.5,
+     61.0
+    ],
+    "look": [
+     0.0,
+     -2.4,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "skin": [
+   {
+    "t": 24.783333,
+    "pos": [
+     40.0,
+     80.0,
+     118.0
+    ],
+    "look": [
+     0.0,
+     -12.0,
+     18.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 29.3,
+    "pos": [
+     34.0,
+     72.0,
+     130.0
+    ],
+    "look": [
+     0.0,
+     -12.0,
+     22.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 30.9,
+    "pos": [
+     11.0,
+     -13.0,
+     184.0
+    ],
+    "look": [
+     2.0,
+     -24.0,
+     40.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 35.5,
+    "pos": [
+     8.0,
+     -13.0,
+     178.0
+    ],
+    "look": [
+     2.0,
+     -24.0,
+     40.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 37.63333333333333,
+    "pos": [
+     7.0,
+     -13.0,
+     180.0
+    ],
+    "look": [
+     2.0,
+     -24.0,
+     40.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 39.983333,
+    "pos": [
+     30.0,
+     52.0,
+     150.0
+    ],
+    "look": [
+     0.0,
+     -14.0,
+     26.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "lung": [
+   {
+    "t": 39.983333,
+    "pos": [
+     40.0,
+     30.0,
+     260.0
+    ],
+    "look": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 43.0,
+    "pos": [
+     30.0,
+     20.0,
+     220.0
+    ],
+    "look": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 44.733333333333334,
+    "pos": [
+     6.0,
+     10.0,
+     34.0
+    ],
+    "look": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2",
+    "rel": true
+   },
+   {
+    "t": 50.56666666666667,
+    "pos": [
+     4.0,
+     9.0,
+     30.0
+    ],
+    "look": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine",
+    "rel": true
+   },
+   {
+    "t": 51.26666666666667,
+    "pos": [
+     5.0,
+     10.0,
+     40.0
+    ],
+    "look": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine",
+    "rel": true
+   },
+   {
+    "t": 53.9,
+    "pos": [
+     -9.0,
+     -24.0,
+     240.0
+    ],
+    "look": [
+     -19.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "p2"
+   },
+   {
+    "t": 60.3,
+    "pos": [
+     -9.0,
+     -24.0,
+     240.0
+    ],
+    "look": [
+     -19.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 62.6,
+    "pos": [
+     -9.0,
+     -24.0,
+     340.0
+    ],
+    "look": [
+     -19.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 65.583333,
+    "pos": [
+     -10.0,
+     -26.0,
+     360.0
+    ],
+    "look": [
+     -19.0,
+     -30.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "nerve": [
+   {
+    "t": 65.583333,
+    "pos": [
+     72.0,
+     16.0,
+     110.0
+    ],
+    "look": [
+     84.0,
+     -3.0,
+     0.0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 66.43333333333334,
+    "pos": [
+     76.0,
+     16.0,
+     108.0
+    ],
+    "look": [
+     88.0,
+     -3.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 70.06666666666666,
+    "pos": [
+     114.0,
+     14.0,
+     104.0
+    ],
+    "look": [
+     126.0,
+     -3.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   },
+   {
+    "t": 72.8,
+    "pos": [
+     122.0,
+     13.0,
+     102.0
+    ],
+    "look": [
+     134.0,
+     -3.0,
+     0.0
+    ],
+    "fov": 34,
+    "ease": "sine"
+   }
+  ],
+  "loop": [
+   {
+    "t": 70.783333,
+    "pos": [
+     2.0,
+     1.2,
+     21.0
+    ],
+    "look": [
+     0.0,
+     -0.4,
+     0.0
+    ],
+    "fov": 34
+   }
+  ]
+ },
+ "foc": {
+  "cell": [
+   {
+    "t": 0.0,
+    "at": "cap",
+    "f": 0.5
+   },
+   {
+    "t": 6.3,
+    "at": "hblit",
+    "f": 0.5
+   }
+  ],
+  "hb": [
+   {
+    "t": 10.35,
+    "at": "hb",
+    "f": 0.45
+   },
+   {
+    "t": 17.599999999999998,
+    "at": "seat0",
+    "f": 0.5
+   },
+   {
+    "t": 21.0,
+    "at": "hb",
+    "f": 0.45
+   }
+  ],
+  "skin": [
+   {
+    "t": 24.783333,
+    "at": "surface",
+    "f": 0.3
+   },
+   {
+    "t": 30.5,
+    "at": "vein",
+    "f": 0.3
+   }
+  ],
+  "lung": [
+   {
+    "t": 39.983333,
+    "at": "sac",
+    "f": 0.25
+   },
+   {
+    "t": 44.53333333333333,
+    "at": "hero",
+    "f": 0.5
+   },
+   {
+    "t": 53.9,
+    "at": "sac",
+    "f": 0.25
+   }
+  ],
+  "nerve": [
+   {
+    "t": 65.583333,
+    "at": "front",
+    "f": 0.35
+   }
+  ],
+  "loop": [
+   {
+    "t": 70.783333,
+    "at": "cap",
+    "f": 0.5
+   }
+  ]
+ },
+ "labels": [
+  {
+   "id": "o2hook",
+   "text": "oxygen",
+   "glyph": "O₂",
+   "color": "o2",
+   "mark": "ring",
+   "at": "o2hook",
+   "t0": 0.0,
+   "t1": 5.533333333333333,
+   "shot": "cell",
+   "side": 1
+  },
+  {
+   "id": "hb",
+   "text": "hemoglobin",
+   "color": "oxy",
+   "mark": "dot",
+   "at": "hblit",
+   "t0": 6.6,
+   "t1": 10.049999999999999,
+   "shot": "cell",
+   "side": -1
+  },
+  {
+   "id": "iron",
+   "text": "iron",
+   "color": "bone",
+   "mark": "dot",
+   "at": "iron0",
+   "t0": 11.533333333333333,
+   "t1": 15.333333333333334,
+   "shot": "hb",
+   "side": 1
+  },
+  {
+   "id": "o2",
+   "text": "oxygen",
+   "glyph": "O₂",
+   "color": "o2",
+   "mark": "ring",
+   "at": "o2first",
+   "t0": 13.7,
+   "t1": 18.799999999999997,
+   "shot": "hb",
+   "side": -1
+  },
+  {
+   "id": "vein",
+   "text": "vein, seen through skin",
+   "color": "deoxy",
+   "mark": "dot",
+   "at": "veintop",
+   "t0": 25.133333333333333,
+   "t1": 29.3,
+   "shot": "skin",
+   "side": 1
+  },
+  {
+   "id": "venous",
+   "text": "returning blood",
+   "color": "deoxy",
+   "mark": "dot",
+   "at": "vein",
+   "t0": 31.0,
+   "t1": 33.33333333333333,
+   "shot": "skin",
+   "side": 1,
+   "fixed": true
+  },
+  {
+   "id": "redlight",
+   "text": "red light",
+   "color": "#FF6A3D",
+   "mark": "bar",
+   "at": "redray",
+   "t0": 33.6,
+   "t1": 38.783333,
+   "shot": "skin",
+   "side": -1
+  },
+  {
+   "id": "bluelight",
+   "text": "blue light",
+   "color": "#8EB8FF",
+   "mark": "bar",
+   "at": "blueray",
+   "t0": 33.86666666666667,
+   "t1": 38.783333,
+   "shot": "skin",
+   "side": -1,
+   "fixed": true
+  },
+  {
+   "id": "sac",
+   "text": "air sac",
+   "color": "lining",
+   "mark": "dot",
+   "at": "sac",
+   "t0": 41.53333333333333,
+   "t1": 43.1,
+   "shot": "lung",
+   "side": 1
+  },
+  {
+   "id": "arrive",
+   "text": "arriving: darker",
+   "color": "deoxy",
+   "mark": "dot",
+   "at": "incoming",
+   "t0": 53.93333333333333,
+   "t1": 60.4,
+   "shot": "lung",
+   "side": 1
+  },
+  {
+   "id": "leave",
+   "text": "leaving: brighter",
+   "color": "oxy",
+   "mark": "dot",
+   "at": "outgoing",
+   "t0": 57.166666666666664,
+   "t1": 60.4,
+   "shot": "lung",
+   "side": -1
+  },
+  {
+   "id": "node",
+   "text": "gap in the insulation",
+   "color": "nerve",
+   "mark": "dot",
+   "at": "node",
+   "t0": 69.36666666666666,
+   "t1": 70.8,
+   "shot": "nerve",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "nts-cell",
+   "text": "not to scale",
+   "t0": 0.0,
+   "t1": 10.049999999999999
+  },
+  {
+   "id": "ill-hb",
+   "text": "illustration · slowed",
+   "t0": 10.35,
+   "t1": 24.483333
+  },
+  {
+   "id": "ill-skin",
+   "text": "illustration · not to scale",
+   "t0": 24.783333,
+   "t1": 39.683333000000005
+  },
+  {
+   "id": "nts-lung",
+   "text": "not to scale",
+   "t0": 39.983333,
+   "t1": 65.283333
+  },
+  {
+   "id": "nts-nerve",
+   "text": "not to scale · slowed",
+   "t0": 65.583333,
+   "t1": 70.8
+  }
+ ],
+ "tally": {
+  "t0": 60.3,
+  "t1": 65.333333,
+  "rate": 4.166666666666667,
+  "unit": "mL",
+  "label": "O₂ handed out as you watched, about"
+ },
+ "spine": [
+  {
+   "id": "seats",
+   "t0": 2.3167,
+   "t1": 7.633333333333334,
+   "value": 1000000000,
+   "label": "O₂ seats in this one cell, about"
+  },
+  {
+   "id": "copies",
+   "t0": 7.866666666666666,
+   "t1": 10.049999999999999,
+   "value": 270000000,
+   "label": "hemoglobins in this one cell, about"
+  },
+  {
+   "id": "aboard",
+   "t0": 10.75,
+   "t1": 24.483333,
+   "steps": [
+    18.4,
+    19.7,
+    20.3,
+    20.7
+   ],
+   "unit": "of 4",
+   "label": "O₂ aboard this hemoglobin"
+  },
+  {
+   "id": "venous",
+   "t0": 31.0,
+   "t1": 33.333333333333336,
+   "value": 75,
+   "unit": "%",
+   "label": "seats still full in returning blood, about"
+  },
+  {
+   "id": "full",
+   "t0": 53.800000000000004,
+   "t1": 60.1,
+   "keys": [
+    [
+     56.03333333333333,
+     75
+    ],
+    [
+     57.56666666666667,
+     97
+    ]
+   ],
+   "unit": "%",
+   "label": "seats full: arriving → leaving, about"
+  }
+ ],
+ "segBeats": [
+  60.0,
+  60.8,
+  61.6,
+  62.4,
+  63.2,
+  64.0,
+  64.8
+ ],
+ "title": {
+  "series": "Meanwhile, Inside · No. 02",
+  "title": "A billion *passengers*",
+  "t1": 2.3167,
+  "sig": 0.0,
+  "y": 0.17
+ },
+ "endCard": 70.8,
+ "end": {
+  "t0": 70.8,
+  "y": 0.258,
+  "title": "Next, inside: *the jump*",
+  "next": "Meanwhile, Inside · No. 03",
+  "follow": "Follow Meanwhile, Inside",
+  "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."
+ },
+ "look": {
+  "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
+  "rbc": "#E5334F",
+  "rbc-deep": "#8E2A3F",
+  "tissue": "#F0C9B8",
+  "vessel": "#E9B3A8",
+  "light-hemi-sky": "#DDF3EC",
+  "light-hemi-ground": "#33524A",
+  "light-key": "#FFF1E6",
+  "light-rim": "#CFF5E6",
+  "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+ },
+ "captions": [
+  {
+   "t0": 0.12,
+   "t1": 1.695,
+   "lines": [
+    [
+     [
+      "What's",
+      0.12
+     ],
+     [
+      "this",
+      0.455
+     ],
+     [
+      "cell",
+      0.71
+     ]
+    ],
+    [
+     [
+      "carrying?",
+      0.945
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.97,
+   "t1": 4.07,
+   "lines": [
+    [
+     [
+      "Room",
+      1.97
+     ],
+     [
+      "for",
+      2.33
+     ],
+     [
+      "about",
+      2.54
+     ]
+    ],
+    [
+     [
+      "1 billion",
+      2.725
+     ],
+     [
+      "passengers.",
+      3.32
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.12,
+   "t1": 6.59,
+   "lines": [
+    [
+     [
+      "It's",
+      5.12
+     ],
+     [
+      "packed",
+      5.345
+     ]
+    ],
+    [
+     [
+      "with",
+      5.585
+     ],
+     [
+      "one",
+      5.72
+     ],
+     [
+      "protein,",
+      6.045
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.59,
+   "t1": 10.405,
+   "lines": [
+    [
+     [
+      "hemoglobin:",
+      6.59
+     ],
+     [
+      "about",
+      7.85
+     ]
+    ],
+    [
+     [
+      "270 million",
+      8.185
+     ],
+     [
+      "copies.",
+      9.655
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.56,
+   "t1": 12.68,
+   "lines": [
+    [
+     [
+      "Each",
+      10.56
+     ],
+     [
+      "one",
+      10.825
+     ],
+     [
+      "has",
+      11.035
+     ]
+    ],
+    [
+     [
+      "four",
+      11.25
+     ],
+     [
+      "iron",
+      11.52
+     ],
+     [
+      "atoms,",
+      11.97
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.68,
+   "t1": 14.465,
+   "lines": [
+    [
+     [
+      "and",
+      12.68
+     ],
+     [
+      "each",
+      12.71
+     ],
+     [
+      "can",
+      13.085
+     ],
+     [
+      "hold",
+      13.115
+     ]
+    ],
+    [
+     [
+      "an",
+      13.45
+     ],
+     [
+      "oxygen.",
+      13.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.12,
+   "t1": 16.525,
+   "lines": [
+    [
+     [
+      "Watch",
+      15.12
+     ],
+     [
+      "one",
+      15.445
+     ],
+     [
+      "fill.",
+      15.775
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.63,
+   "t1": 19.015,
+   "lines": [
+    [
+     [
+      "The",
+      16.63
+     ],
+     [
+      "first",
+      16.795
+     ],
+     [
+      "oxygen",
+      17.08
+     ]
+    ],
+    [
+     [
+      "struggles",
+      17.725
+     ],
+     [
+      "to",
+      18.12
+     ],
+     [
+      "board,",
+      18.265
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.075,
+   "t1": 21.35,
+   "lines": [
+    [
+     [
+      "but",
+      19.075
+     ],
+     [
+      "each",
+      19.145
+     ],
+     [
+      "one",
+      19.345
+     ],
+     [
+      "makes",
+      19.66
+     ]
+    ],
+    [
+     [
+      "the",
+      19.995
+     ],
+     [
+      "next",
+      20.255
+     ],
+     [
+      "one",
+      20.34
+     ],
+     [
+      "easier.",
+      20.6
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.395,
+   "t1": 24.27,
+   "lines": [
+    [
+     [
+      "Dark",
+      21.395
+     ],
+     [
+      "red",
+      21.695
+     ],
+     [
+      "at",
+      22.015
+     ],
+     [
+      "the",
+      22.185
+     ],
+     [
+      "start;",
+      22.215
+     ]
+    ],
+    [
+     [
+      "full,",
+      22.73
+     ],
+     [
+      "it's",
+      23.145
+     ],
+     [
+      "bright",
+      23.29
+     ],
+     [
+      "red.",
+      23.52
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.12,
+   "t1": 27.45,
+   "lines": [
+    [
+     [
+      "Veins",
+      25.12
+     ],
+     [
+      "often",
+      25.61
+     ],
+     [
+      "look",
+      26.1
+     ],
+     [
+      "blue,",
+      26.2
+     ]
+    ],
+    [
+     [
+      "so",
+      26.81
+     ],
+     [
+      "it's",
+      27.02
+     ],
+     [
+      "easy",
+      27.13
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.45,
+   "t1": 29.505,
+   "lines": [
+    [
+     [
+      "to",
+      27.45
+     ],
+     [
+      "guess",
+      27.57
+     ],
+     [
+      "the",
+      27.825
+     ],
+     [
+      "blood",
+      27.93
+     ]
+    ],
+    [
+     [
+      "inside",
+      28.385
+     ],
+     [
+      "them",
+      28.63
+     ],
+     [
+      "is.",
+      28.955
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.505,
+   "t1": 30.69,
+   "lines": [
+    [
+     [
+      "It",
+      29.505
+     ],
+     [
+      "never",
+      29.665
+     ],
+     [
+      "is.",
+      29.94
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.995,
+   "t1": 33.4,
+   "lines": [
+    [
+     [
+      "Returning",
+      30.995
+     ],
+     [
+      "blood",
+      31.655
+     ]
+    ],
+    [
+     [
+      "is",
+      32.09
+     ],
+     [
+      "darker",
+      32.27
+     ],
+     [
+      "red.",
+      32.65
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.435,
+   "t1": 35.335,
+   "lines": [
+    [
+     [
+      "Red",
+      33.435
+     ],
+     [
+      "light",
+      33.65
+     ],
+     [
+      "sinks",
+      33.935
+     ],
+     [
+      "in,",
+      34.555
+     ]
+    ],
+    [
+     [
+      "and",
+      34.65
+     ],
+     [
+      "the",
+      34.68
+     ],
+     [
+      "vein",
+      34.86
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.335,
+   "t1": 37.785,
+   "lines": [
+    [
+     [
+      "swallows",
+      35.335
+     ],
+     [
+      "it,",
+      35.86
+     ]
+    ],
+    [
+     [
+      "so",
+      36.0
+     ],
+     [
+      "less",
+      36.08
+     ],
+     [
+      "red",
+      36.445
+     ],
+     [
+      "comes",
+      36.715
+     ],
+     [
+      "back.",
+      37.035
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.32,
+   "t1": 42.175,
+   "lines": [
+    [
+     [
+      "Your",
+      40.32
+     ],
+     [
+      "heart",
+      40.615
+     ],
+     [
+      "sends",
+      40.975
+     ]
+    ],
+    [
+     [
+      "your",
+      41.36
+     ],
+     [
+      "blood",
+      41.54
+     ],
+     [
+      "back",
+      41.935
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.175,
+   "t1": 44.845,
+   "lines": [
+    [
+     [
+      "through",
+      42.175
+     ],
+     [
+      "your",
+      42.34
+     ],
+     [
+      "lungs",
+      42.7
+     ]
+    ],
+    [
+     [
+      "about",
+      43.26
+     ],
+     [
+      "once",
+      43.51
+     ],
+     [
+      "a",
+      43.72
+     ],
+     [
+      "minute.",
+      44.155
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.845,
+   "t1": 47.21,
+   "lines": [
+    [
+     [
+      "There,",
+      44.845
+     ]
+    ],
+    [
+     [
+      "the",
+      45.325
+     ],
+     [
+      "empty",
+      45.515
+     ],
+     [
+      "seats",
+      46.05
+     ],
+     [
+      "fill.",
+      46.46
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.655,
+   "t1": 50.07,
+   "lines": [
+    [
+     [
+      "In",
+      47.655
+     ],
+     [
+      "about",
+      47.995
+     ]
+    ],
+    [
+     [
+      "a",
+      48.26
+     ],
+     [
+      "quarter",
+      48.42
+     ],
+     [
+      "of",
+      49.035
+     ],
+     [
+      "a",
+      49.065
+     ],
+     [
+      "second.",
+      49.32
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.92,
+   "t1": 55.895,
+   "lines": [
+    [
+     [
+      "The",
+      53.92
+     ],
+     [
+      "blue",
+      54.105
+     ]
+    ],
+    [
+     [
+      "is",
+      54.455
+     ],
+     [
+      "your",
+      54.525
+     ],
+     [
+      "skin's",
+      54.795
+     ],
+     [
+      "trick.",
+      55.145
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.99,
+   "t1": 57.895,
+   "lines": [
+    [
+     [
+      "The",
+      55.99
+     ],
+     [
+      "red",
+      56.025
+     ]
+    ],
+    [
+     [
+      "is",
+      56.365
+     ],
+     [
+      "a",
+      56.625
+     ],
+     [
+      "passenger",
+      56.655
+     ],
+     [
+      "count:",
+      57.175
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.895,
+   "t1": 59.665,
+   "lines": [
+    [
+     [
+      "brighter",
+      57.895
+     ],
+     [
+      "means",
+      58.18
+     ]
+    ],
+    [
+     [
+      "fuller",
+      58.585
+     ],
+     [
+      "seats.",
+      58.915
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.32,
+   "t1": 62.2,
+   "lines": [
+    [
+     [
+      "Meanwhile,",
+      60.32
+     ]
+    ],
+    [
+     [
+      "as",
+      61.145
+     ],
+     [
+      "you",
+      61.325
+     ],
+     [
+      "watched,",
+      61.45
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.335,
+   "t1": 63.71,
+   "lines": [
+    [
+     [
+      "your",
+      62.335
+     ],
+     [
+      "blood",
+      62.53
+     ]
+    ],
+    [
+     [
+      "handed",
+      62.705
+     ],
+     [
+      "your",
+      63.09
+     ],
+     [
+      "body",
+      63.33
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.71,
+   "t1": 65.14,
+   "lines": [
+    [
+     [
+      "about",
+      63.71
+     ],
+     [
+      "a",
+      63.99
+     ],
+     [
+      "cup",
+      64.02
+     ],
+     [
+      "of",
+      64.155
+     ],
+     [
+      "oxygen.",
+      64.39
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.92,
+   "t1": 68.09,
+   "lines": [
+    [
+     [
+      "Next:",
+      65.92
+     ],
+     [
+      "the",
+      66.36
+     ],
+     [
+      "signal",
+      66.42
+     ]
+    ],
+    [
+     [
+      "in",
+      66.94
+     ],
+     [
+      "your",
+      67.18
+     ],
+     [
+      "nerves.",
+      67.34
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.14,
+   "t1": 68.94,
+   "lines": [
+    [
+     [
+      "In",
+      68.14
+     ],
+     [
+      "the",
+      68.385
+     ],
+     [
+      "fastest,",
+      68.43
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.94,
+   "t1": 70.81,
+   "lines": [
+    [
+     [
+      "it",
+      68.94
+     ],
+     [
+      "doesn't",
+      69.085
+     ],
+     [
+      "crawl;",
+      69.38
+     ]
+    ],
+    [
+     [
+      "it",
+      69.91
+     ],
+     [
+      "jumps.",
+      70.06
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.061,
+   "file": "vo/01.wav",
+   "text": "What's this cell carrying? Room for about a billion passengers."
+  },
+  {
+   "id": "vo02",
+   "t": 5.1,
+   "dur": 9.107,
+   "file": "vo/02.wav",
+   "text": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies. Each one has four iron atoms, and each can hold an oxygen."
+  },
+  {
+   "id": "vo03",
+   "t": 15.1,
+   "dur": 8.919,
+   "file": "vo/03.wav",
+   "text": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start; full, it's bright red."
+  },
+  {
+   "id": "vo04",
+   "t": 25.1,
+   "dur": 12.309,
+   "file": "vo/04.wav",
+   "text": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back."
+  },
+  {
+   "id": "vo05",
+   "t": 40.3,
+   "dur": 9.731,
+   "file": "vo/05.wav",
+   "text": "Your heart sends your blood back through your lungs about once a minute. There, the empty seats fill. In about a quarter of a second."
+  },
+  {
+   "id": "vo06",
+   "t": 53.9,
+   "dur": 5.489,
+   "file": "vo/06.wav",
+   "text": "The blue is your skin's trick. The red is a passenger count: brighter means fuller seats."
+  },
+  {
+   "id": "vo07",
+   "t": 60.3,
+   "dur": 4.684,
+   "file": "vo/07.wav",
+   "text": "Meanwhile, as you watched, your blood handed your body about a cup of oxygen."
+  },
+  {
+   "id": "vo08",
+   "t": 65.9,
+   "dur": 4.733,
+   "file": "vo/08.wav",
+   "text": "Next: the signal in your nerves. In the fastest, it doesn't crawl; it jumps."
+  }
+ ]
+}

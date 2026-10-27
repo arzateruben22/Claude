@@ -20,6 +20,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "voice"))
 from scriptfile import direction_plan, norm, script_beats, script_lines   # noqa: E402  (the same parsing and word matching as the voice tools)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from numerals import numerals   # noqa: E402  (captions show "1906" where the voice says "nineteen oh six")
+
+
+# words a caption page or row should not end on (a reader waits for what they introduce)
+WEAK_ENDS = {"the", "a", "an", "of", "to", "and", "or", "in", "on", "at", "by", "as", "so", "your", "his", "her", "its",
+             "their", "my", "our", "than", "that", "it", "it's", "they'd", "you've", "about", "from", "with", "for", "is", "are", "was", "were", "be",
+             "can", "can't", "doesn't", "might", "could", "would", "will", "should", "must", "may", "into", "through", "this", "these", "those", "one", "what", "where", "how"}
 
 
 class Film:
@@ -110,13 +118,48 @@ class Film:
         return next(ln for ln in self.lines if ln["id"] == lid)
 
     # ── captions ──────────────────────────────────────────────────────
-    def captions(self, max_chars=32, linger=0.3):
+    def captions(self, max_chars=32, linger=0.3, balance=False, keep=(), written=True):
         """One page per sentence, at most two balanced lines of at most max_chars characters
         (a longer sentence takes several pages, broken after punctuation where it can be). Every
         word keeps its spoken time for the highlight. A page shows from its first word until the
-        next page starts, or `linger` after its last word."""
+        next page starts, or `linger` after its last word.
+
+        balance=True (opt-in; the default keeps every existing film's pages exactly): a sentence that
+        needs several pages is split by a search over every set of cut points, not the greedy longest
+        head: the fewest pages, then no page or row ending on a weak word (the, a, of, your, …), no
+        page under 10 characters (no one-word tails flashing past), cuts after a comma preferred, and
+        pages of even length. keep: phrases ("Formula One", "white cells") never split across rows or
+        pages in balance mode.
+
+        written=True (the default): numbers read as people read them, not as the voice says them: "nineteen oh six"
+        shows as "1906", "point four five seconds" as "0.45 seconds", "twenty times" as "20 times" (numerals.py: years,
+        decimals, 10 and over, and any number before a unit of measure; small counts stay words). A merged number
+        lights from its first spoken word, a page ending on one holds until its last word is said, and a numeral never
+        ends a row its unit starts ("20 / centimeters")."""
         def width(ws):
             return len(" ".join(w["w"] for w in ws))
+
+        def weak(w):
+            """What ending a row or page on this word costs: an article most, other weak words less."""
+            if re.search(r"[,:;.?!]$", w["w"]):
+                return 0                                         # punctuation closes the phrase ("re-fires it,")
+            x = re.sub(r"[^a-z']", "", w["w"].lower())
+            return 30 if x in ("a", "an", "the") else 20 if x in WEAK_ENDS else 0
+
+        def norm_w(x):
+            return re.sub(r"[^a-z0-9'-]", "", x.lower())
+
+        KEEP = [[norm_w(x) for x in ph.split()] for ph in keep]
+
+        def mark_keep(ws):
+            """Flag each word that a break before would split a keep phrase (nb)."""
+            n = [norm_w(w["w"]) for w in ws]
+            for ph in KEEP:
+                for i in range(len(n) - len(ph) + 1):
+                    if n[i:i + len(ph)] == ph:
+                        for j in range(i + 1, i + len(ph)):
+                            ws[j]["nb"] = True
+            return ws
 
         def two_rows(ws):
             """The split into ≤ 2 rows with the shortest longest row; ties go to punctuation."""
@@ -125,14 +168,50 @@ class Film:
             best = None
             for k in range(1, len(ws)):
                 a, b = ws[:k], ws[k:]
-                score = max(width(a), width(b)) - (8 if re.search(r"[,:;]$", a[-1]["w"]) else 0)
+                score = max(width(a), width(b)) - (8 if re.search(r"[,:;]$", a[-1]["w"]) else 0) + (weak(a[-1]) if balance else 0) + (60 if b[0].get("nb") else 0)
                 if width(a) <= max_chars and width(b) <= max_chars and (best is None or score < best[0]):
                     best = (score, [a, b])
             return best[1] if best else None
 
+        def page_cost(ws, last, nxt):
+            c = 0.006 * (2 * max_chars - width(ws)) ** 2
+            rows = two_rows(ws)
+            if len(rows) == 2:                                      # the rows' own break
+                c += weak(rows[0][-1]) + (60 if rows[1][0].get("nb") else 0)
+            if not last:
+                c += weak(ws[-1]) + (60 if nxt.get("nb") else 0)
+            if not last and re.search(r"[,:;]$", ws[-1]["w"]):
+                c -= 8
+            if width(ws) < 10:
+                c += 40
+            return c
+
+        def split_balanced(sent):
+            """The pages for one sentence: the lowest summed page cost, each page after the first costing 25 (a
+            third page is worth it to keep a phrase whole, not to shave a little imbalance)."""
+            n, best = len(sent), {len(sent): (0, 0.0, None)}
+            for i in range(n - 1, -1, -1):
+                for j in range(i + 1, n + 1):
+                    if j not in best or not two_rows(sent[i:j]):
+                        continue
+                    np_, cost, _ = best[j]
+                    cand = (np_ + 1, cost + page_cost(sent[i:j], j == n, sent[j] if j < n else {}) + (25 if j < n else 0), j)
+                    if i not in best or cand[1] < best[i][1]:
+                        best[i] = cand
+            out, i = [], 0
+            while i < n:
+                j = best[i][2]
+                out.append(two_rows(sent[i:j]))
+                i = j
+            return out
+
         pages = []
         for ln in self.lines:
             words = [{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]]
+            if balance:
+                mark_keep(words)                             # on the spoken words: a merged number keeps its first word's mark
+            if written:
+                words = numerals(words)                      # (and marks a unit after a numeral nb: "20 / centimeters" never splits)
             sent, sentences = [], []
             for w in words:
                 sent.append(w)
@@ -142,6 +221,9 @@ class Film:
             if sent:
                 sentences.append(sent)
             for sent in sentences:
+                if balance:
+                    pages += split_balanced(sent)
+                    continue
                 rest = sent
                 while rest:
                     rows = two_rows(rest)
@@ -150,6 +232,8 @@ class Film:
                         break
                     # too long for one page: take the longest head that fits two rows, preferring a comma
                     cut = max(k for k in range(1, len(rest)) if two_rows(rest[:k]))
+                    while cut > 1 and rest[cut].get("nb"):
+                        cut -= 1
                     for k in range(cut, max(1, cut // 2), -1):
                         if re.search(r"[,:;]$", rest[k - 1]["w"]):
                             cut = k
@@ -160,6 +244,6 @@ class Film:
         for k, p in enumerate(pages):
             t0 = p[0][0]["t"]
             nxt = pages[k + 1][0][0]["t"] if k + 1 < len(pages) else None
-            t1 = p[-1][-1]["t"] + 0.45 + linger
+            t1 = p[-1][-1].get("tl", p[-1][-1]["t"]) + 0.45 + linger   # tl: a written number's last spoken word
             out.append({"t0": round(t0, 3), "t1": round(min(t1, nxt) if nxt else t1, 3), "lines": [[[w["w"], w["t"]] for w in r] for r in p]})
         return out

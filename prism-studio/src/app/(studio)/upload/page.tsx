@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { uploadTasks } from "@/lib/data";
-import { TaskCard } from "@/components/TaskCard";
+import { isReady, uploadTasks } from "@/lib/data";
+import { TaskCard, TaskRow } from "@/components/TaskCard";
 import { DeskPosition } from "@/components/DeskPosition";
 
 export const metadata: Metadata = { title: "Upload Desk" };
 
+// Approved tasks get full cards, by when they are due; tasks still waiting for an approval are compact rows under one
+// "Waiting for approval" list (open when one of them is due today).
 export default async function UploadDesk() {
   const v = await uploadTasks();
-  const section = (title: string, list: typeof v.due, empty?: string) => (
+  const card = (t: (typeof v.due)[number]) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />;
+  const due = v.due.filter(isReady), later = v.later.filter(isReady), backlog = v.backlog.filter(isReady);
+  const waiting = [...v.due, ...v.later, ...v.backlog].filter((t) => !isReady(t));
+  const waitingDue = v.due.some((t) => !isReady(t));
+  const section = (title: string, list: typeof v.due, note?: ReactNode) => list.length ? (
     <section className="section">
-      <div className="section-head"><h2 style={{ margin: 0 }}>{title}</h2><span className="num faint">{list.length}</span></div>
-      {list.length ? <div className="stack">{list.map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />)}</div> : empty ? <p className="muted">{empty}</p> : null}
+      <div className="section-head"><h2>{title}</h2></div>
+      {note}
+      <div className="stack">{list.map(card)}</div>
     </section>
-  );
+  ) : null;
   return (
     <div>
       <DeskPosition />
@@ -21,14 +29,19 @@ export default async function UploadDesk() {
       <h1>Upload Desk</h1>
       <p className="lede">Each task is one exact, approved video and text for one account. Share or download it, post it in the app, then mark it uploaded. Opening, downloading or sharing never counts as posted.</p>
       {v.paused ? <div className="notice">Publishing is paused in Settings: nothing new is planned.</div> : null}
-      {section("Due today", v.due, "Nothing due today. Approved episodes can be planned from the calendar.")}
-      {v.done.length ? section("Done today", v.done) : null}
-      {section("Coming up", v.later)}
-      {v.backlog.length ? (
+      {!due.length && !later.length && !backlog.length && !v.done.length
+        ? <div className="note-row spaced"><p className="faint">{waiting.length ? "Nothing approved to post yet." : "Nothing due today or coming up."} Plan the week once episodes are approved.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
+      {section("Due today", due)}
+      {section("Done today", v.done)}
+      {section("Coming up", later)}
+      {section("Not scheduled", backlog, <div className="note-row spaced"><p className="muted">These have no slot yet: plan the week to give them one, or post one now.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div>)}
+      {waiting.length ? (
         <section className="section">
-          <div className="section-head"><h2 style={{ margin: 0 }}>Not scheduled</h2><span className="num faint">{v.backlog.length}</span></div>
-          <p className="muted">These have no slot yet. <Link href="/calendar">Plan the week</Link> to give them one, or post one now.</p>
-          <div className="stack">{v.backlog.slice(0, 6).map((t) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />)}</div>
+          <details className="waiting" open={waitingDue || undefined}>
+            <summary><span className="h2">Waiting for approval</span> <span className="faint">{waiting.length} post{waiting.length === 1 ? "" : "s"}{waitingDue ? " · some due today" : ""}</span></summary>
+            <div className="note-row"><p className="muted">Approve each account&apos;s exact video and text on Review; the full upload card appears here once it&apos;s approved.</p><Link href="/review" className="btn ghost small">Review</Link></div>
+            <div className="card flush"><ul className="q">{waiting.map((t) => <TaskRow key={t.p.id} t={t} tz={v.tz} />)}</ul></div>
+          </details>
         </section>
       ) : null}
     </div>

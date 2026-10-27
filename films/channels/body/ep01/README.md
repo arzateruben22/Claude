@@ -1,16 +1,41 @@
 # Meanwhile, Inside No. 01, "Single file"
 
-Episode 1 of Meanwhile, Inside, the human-body channel (`films/channels/body`). It runs 70.8 s at 9:16 and
+Episode 1 of Meanwhile, Inside, the human-body channel (`films/channels/body`). It runs 71.6 s at 9:16 and
 is narrated by bf_emma, a synthetic voice that must be labelled as AI. It was built end to end on the
 studio's brand-neutral pipeline (`kits/cinema/voice`, `script`, `studio`, `film` and `sci`) as far as a
 preview. **Nothing has been posted.** A physiologist signs off the script and the pictures before it posts.
 
 | | |
 |---|---|
-| Preview: draft tier (540×960, 15 fps, finish with K ≤ 6), final mix as AAC 44.1 kHz 192k | `review/preview-ep01.mp4` |
-| Ten final-tier stills (1080×1920, full finish) | `review/stills-ep01.jpg`; the PNGs are in `build/stills/final/9x16/frames/` |
+| **Delivery (v3, final tier)** | `out/meanwhile-inside-001-9x16.mp4` (1080×1920, 30 fps, 71.6 s, −14.1 LUFS, QA PASS), poster `out/meanwhile-inside-001-9x16.jpg`, contact sheet `out/meanwhile-inside-001-9x16-contact.jpg` |
+| Measured gates | `review/scorecard.md` |
+| Ten final-tier stills | `review/stills-ep01.jpg` (from the delivered file at 0, 9.6, 20.5, 23.8, 30.9, 40.6, 47, 54.9, 61.5 and 70.6 s) |
+| v2 preview (history) | draft tier (540×960, 15 fps), `review/preview-ep01.mp4` |
 | Soundtrack | `build/audio/mix.wav`, `mix.m4a`, `qa.json`, `spectrogram.png` |
 
+
+## v3 (26 Oct): the script audit's fixes, a sickle cell on screen, and the first full-resolution final
+
+An independent script audit (`films/audits/2026-10-26/body-ep01.md` on the coordinating session's branch) found two
+misleading lines and three wording notes. All five are applied, re-voiced (vo02, vo04, vo05, vo06; the other four takes
+came back byte-identical), re-directed and re-mixed (lint 0 errors; sync PASS):
+
+| | Before | Now |
+|---|---|---|
+| F1 (why) | "You'd guess it stretches to fit. It can't." | "You'd guess its **surface** stretches to fit. It can't." A red cell does lengthen; its membrane's area can't grow (c7) |
+| F2 (takeaway) | "Stiff sickle cells can jam the *smallest vessels*, where oxygen is handed out. That dimple isn't decoration. {-}" | "Sickle cells lose the *disc shape*, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration. {c17}" The button now follows from the line before it, and the dimple sentence carries its own claim (Namvar et al., the peer-reviewed version of c8's preprint) |
+| F3 (story) | No sickle cell on screen | **A stylised crescent sickle cell** follows the hero out and lodges across the capillary; the cells behind it queue. Labelled, badged "illustration · not to scale" |
+| F4 (whoa) | "The tightest are about three micrometers" | "The tightest **vessels** are about three micrometers" |
+| F5 (normal) | "about seven micrometers across" | "about seven and a half micrometers", which matches the "7.5 µm" pill on screen |
+
+- **From the coordinating session's own pass on the same audit:** the hero springs back to a disc on "disc shape"; the
+  O₂ label lands on "out" (its molecule climbs ~1,100 px in the second after "oxygen"); scale pills show text alone where
+  the HUD would clamp their bar (the meet close-up's true 7.5 µm is 690–860 px), and are gone by each cut; c3 no longer
+  calls the actin ring general to mammals.
+- **Captions** use the balanced pager (`../KIT-CHANGES.md`), so no page is a one-word tail.
+- **Timing.** The film is 0.8 s longer (71.6 s). Every anchor hangs on a word, so nothing was retimed by hand; the
+  headings' windows match the voiced beats.
+- **The deliverable is now the final** (`out/`), not the v2 draft preview in `review/`, which is kept for history.
 
 ## v2 (24 Oct): new narration and notes
 
@@ -20,7 +45,7 @@ The script was rewritten to the studio story standard (`kits/cinema/script/WRITI
 
 | File | What it is |
 |---|---|
-| `script.md`, `claims.json` | The words and the claims ledger. Both are unchanged |
+| `script.md`, `claims.json` | The words and the claims ledger (v3: the 26 Oct audit's fixes; 17 claims) |
 | `pron.json` | `micrometers`, `nucleus`, and the phrase `a capillary` (see the tts.py finding below) |
 | `voice.py` | The voice. Each sentence is a separate Kokoro call with its own speed, and a measured pause is inserted between sentences. It uses tts.py's own `phonemes()` and `trim()`. `--clamp` runs after align.py |
 | `vo/` | 8 WAVs, `lines.json` (per-sentence speeds, gaps and silences) and `words.json` (align.py output; 7 word ends clamped) |
@@ -103,13 +128,13 @@ node ../../../../kits/cinema/film/render.mjs --film . --tier final --assemble --
 | Beat | Film s | What lands on what |
 |---|---|---|
 | hook | 0–5.6 | Frame 0 is the payoff: the hero folded into a parachute in a 4.6 µm capillary, with the title "Single *file*" and its pulse line kicking on the signature (0, +0.4 s). On "narrower" the camera looks up the road ahead |
-| normal | 5.6–16.8 | Iris to an artery's crowd, with the locator. Label on "red"; "7.5 µm" pill on "seven". The cell turns edge-on on "dimpled" and is cut open on "no" ("no nucleus" points at the waist of the section). Crane back on "trillion" |
-| change | 16.8–26.8 | Iris to the vessel tree ("not to scale"). The hero reaches the first branch point on "branches", the second on "branches" again, and the capillary on "capillary" (label). Iris at 21.85 into the **ride-along, slowed ×10, 21.85–24.85 (3.0 s)**: the vessel narrows under it on "slimmer" and it folds. Then the cells coming up behind it in single file |
-| why | 26.8–38.4 | A wider stretch: the hero has relaxed to a disc and is cut along its axis on "dimples", showing the biconcave profile (label "dimple"). It cups as the vessel narrows on "fold into a parachute". On "Squeeze" its nose enters a 3.8 µm pinch, and it springs back to a disc with a damped overshoot as its rear clears (~35.3 s). Picture-only: the next cell follows |
-| whoa | 38.4–51.2 | The tightest vessel, 3 µm, from "tightest". "3 µm" pill on "three". On "half" a ghost outline of the undeformed cell appears across the vessel, labelled "its width: 7.5 µm". Iris at 42.98, then the reveal pull to the capillary net ("50 µm" pill). The counter runs 0 → 120 days from "about" to "days" (counter.end plays the signature) |
-| takeaway | 51.2–58.4 | Iris; the hero pops out into a venule on "dimple" and springs back. The camera hands over to the capillary it left on "smallest vessels". O₂ diffuses out through the wall on "oxygen" (label, "not to scale") |
-| meanwhile | 58.4–64.4 | **The tally**: "new red cells while you watched", 2,000,000 × t from frame 0, so it reads 116.8 million when it appears and 117.4 million as the line starts. It sits on a pulse line that kicks on each lub, and a lub-dub thump plays on each beat |
-| tease | 64.4–70.8 | Iris; the hero is cut open on "carrying", showing its "passengers" (not to scale), which sparkle on "billion". The end card arrives at 68.8 s: the pulse line flat-lines into "Next, inside: *a billion passengers*" and holds 2.0 s |
+| normal | 5.6–17.6 | Iris to an artery's crowd, with the locator. Label on "red"; "7.5 µm" pill on "seven" ("about seven and a half micrometers"; text only, since a true 7.5 µm bar in this close-up is wider than the HUD allows). The cell turns edge-on after "dimpled" and is cut open on "nucleus" ("no nucleus" points at the waist of the section). Crane back on "trillion" |
+| change | 17.6–26.8 | Iris to the vessel tree ("not to scale"). The hero reaches the first branch point on "branches", the second on "branches" again, and the capillary on "capillary" (label). Iris at 22.32 into the **ride-along, slowed ×10, 22.32–25.32 (3.0 s)**: the capillary narrows below the cell's width and it folds. Then, on "single", the cells coming up behind it in single file |
+| why | 26.8–38 | A wider stretch: the hero has relaxed to a disc by "guess" ("You'd guess its surface stretches to fit"). It is cut along its axis on "dimples", showing the biconcave profile (label "dimple"), and seen three-quarter on "parachute" as it cups. Picture-only after "instead": its nose enters a 3.8 µm pinch (a squish) and it springs back to a disc with a damped overshoot (a thump). The next cell squeezes too |
+| whoa | 38–51.2 | The tightest vessel, 3 µm, from "tightest" ("The tightest vessels are about three micrometers"). "3 µm" pill on "three". On "half" a ghost outline of the undeformed cell appears across the vessel, labelled "its width: 7.5 µm". Iris at 43.05, then the reveal pull to the capillary net ("50 µm" pill from 45.95 s, once its bar fits). The counter runs 0 → 120 days from "about" to "days" (counter.end plays the signature) |
+| takeaway | 51.2–58.8 | Iris to the hero, still cupped at the mouth of its capillary. It pops out into a venule and springs back to a disc on "disc shape" (52.63 s). The cell right behind it is a **sickle cell** (a stylised crescent, 8.6 µm tip to tip): it lodges across the capillary, and the cells behind it queue against it. From 53.37 s the camera hands over to that capillary, landing on the jam on "jam" (54.8 s; label "sickle cell" 54.6–55.67, badge "illustration · not to scale"). O₂ diffuses out through the wall from "oxygen"; its label lands on "out" (56.07 s) |
+| meanwhile | 58.8–64.8 | **The tally**: "new red cells while you watched", 2,000,000 × t from frame 0, so it reads 118.2 million when it appears (59.1 s) and as the line starts. It sits on a pulse line that kicks on each lub, and a lub-dub thump plays on each beat |
+| tease | 64.8–71.6 | Iris; the hero is cut open on "carries", showing its "passengers" (not to scale), which sparkle on "billion". The end card arrives at 69.6 s: the pulse line flat-lines into "Next, inside: *a billion passengers*" and holds 2.0 s |
 
 How the hero's path is solved: the vessel's widths are laid out so that the flow carries the hero to each
 feature on its word. Feature by feature, a bisection finds the place where the hero stands at that word,

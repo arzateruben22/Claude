@@ -1,10 +1,12 @@
 // Designed covers and thumbnails for every delivered episode, each in its channel's own theme (films/channels/<ch>/theme.json):
 //   out/<name>-cover.jpg  1080×1920, the 9:16 cover for TikTok, Instagram Reels and YouTube Shorts
 //   out/<name>-thumb.jpg  1280×720, the 16:9 YouTube thumbnail (short title, legible at 160 px wide)
+//   out/<name>-cover-480.jpg  480 px wide copy of the cover, for the studio's small pictures (monitor strip, queue rows)
 // The picture is one frame of the final: a moment between two caption pages (the burned-in captions are fully gone there),
 // away from the title card, the end card and shot cuts, scored for a clear, colourful subject (see pickFrame). If the final
 // can't be read, the poster (*-9x16.jpg) is used. Colours are the theme's tokens only; faces are its own font files.
-// Idempotent: an episode whose cover and thumbnail are both newer than its mp4 is skipped (--force redoes it).
+// Idempotent: an episode whose cover and thumbnail are both newer than its mp4 is skipped (--force redoes it); only its
+// small copy is (re)made when missing or older than the cover.
 //   npm run covers [-- films/channels/physics/ep01 …] [--force] [--debug: print every candidate's score] [--dry: pick, don't draw]
 import fs from "node:fs";
 import os from "node:os";
@@ -19,6 +21,8 @@ const args = process.argv.slice(2);
 const force = args.includes("--force"), debug = args.includes("--debug"), dry = args.includes("--dry");
 const dirs = args.filter((a) => !a.startsWith("--")).length ? args.filter((a) => !a.startsWith("--")).map((d) => path.resolve(ROOT, d))
   : CHANNELS.filter((c) => c.filmsPath).flatMap((c) => fs.existsSync(path.join(ROOT, c.filmsPath!)) ? fs.readdirSync(path.join(ROOT, c.filmsPath!)).filter((e) => /^ep\d+$/.test(e)).sort().map((e) => path.join(ROOT, c.filmsPath!, e)) : []);
+const missing = dirs.filter((d) => !fs.existsSync(d));   // paths are relative to the films repo root (FILMS_REPO_ROOT), e.g. films/channels/space/ep01
+if (missing.length) { console.error(`no such episode folder: ${missing.join(", ")} (give paths from the repo root, e.g. films/channels/space/ep01)`); process.exit(1); }
 
 type Font = { family: string; file: string; weight?: string; style?: string };
 type Theme = { id?: string; tokens: Record<string, string>; roles?: Record<string, string>; type?: Record<string, string>; fonts?: Font[]; cssText?: string;
@@ -276,8 +280,19 @@ try {
     if (!mp4) continue;
     const name = mp4.replace(/-9x16\.mp4$/, ""), rel = path.relative(ROOT, dir);
     const cover = path.join(outDir, `${name}-cover.jpg`), thumb = path.join(outDir, `${name}-thumb.jpg`), video = path.join(outDir, mp4);
+    const small = path.join(outDir, `${name}-cover-480.jpg`);
+    const makeSmall = () => {                        // via tmp, so only a finished image lands in out/
+      const t = path.join(tmp, path.basename(small));
+      execFileSync("ffmpeg", ["-v", "error", "-y", "-i", cover, "-vf", "scale=480:-2:flags=lanczos", "-q:v", "4", t]);
+      fs.copyFileSync(t, small);
+    };
     const vt = fs.statSync(video).mtimeMs;
-    if (!force && [cover, thumb].every((f) => fs.existsSync(f) && fs.statSync(f).mtimeMs > vt)) { console.log(`${rel}: ${name}-cover.jpg, ${name}-thumb.jpg up to date`); continue; }
+    if (!force && [cover, thumb].every((f) => fs.existsSync(f) && fs.statSync(f).mtimeMs > vt)) {
+      const fresh = fs.existsSync(small) && fs.statSync(small).mtimeMs >= fs.statSync(cover).mtimeMs;
+      if (!fresh && !dry) makeSmall();
+      console.log(`${rel}: ${name}-cover.jpg, ${name}-thumb.jpg up to date${fresh || dry ? "" : `; wrote ${name}-cover-480.jpg`}`);
+      continue;
+    }
     const themeFile = path.join(path.dirname(dir), "theme.json");
     if (!fs.existsSync(themeFile)) { console.log(`${rel}: no theme.json, skipped`); continue; }
     const theme = JSON.parse(fs.readFileSync(themeFile, "utf8")) as Theme;
@@ -292,6 +307,7 @@ try {
     const safe = theme.safe?.["9x16"] ?? { x: [90, 900] as [number, number], y: [250, 1420] as [number, number] };
     await shoot(coverHtml({ css, frame: src, content: pick.content, box: pick.box, series, title, safe }), { width: 1080, height: 1920 }, cover, tmp);
     await shoot(thumbHtml({ css, frame: src, content: pick.content, series, title: shortTitle(title) }), { width: 1280, height: 720 }, thumb, tmp);
+    makeSmall();
     console.log(`${rel}: ${name}-cover.jpg, ${name}-thumb.jpg · ${pick.t != null ? `frame ${pick.t.toFixed(2)} s (${pick.why})` : "from the poster"} · "${plain(title)}"`);
   }
 } finally {

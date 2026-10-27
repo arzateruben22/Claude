@@ -55,7 +55,7 @@ export default async function Connections({ searchParams }: { searchParams: Prom
                   ))}
                 </div>
                 {ds.map((d) => (
-                  <ActionForm key={d.id} action={saveDestination} className="card stack-sm" submit="Save" submitClass="btn small">
+                  <div key={d.id} className="card stack-sm">
                     <div id={`dest-${d.id}`} className="row spread">
                       <h3 style={{ margin: 0 }}>{PLATFORM_LABEL[d.platform]}{d.shared ? " (shared)" : ""}</h3>
                       <span className={`chip ${d.provenance === "owner_confirmed" ? "good" : d.provenance === "unset" ? "warn" : ""}`}>{PROVENANCE_LABEL[d.provenance]}</span>
@@ -68,8 +68,10 @@ export default async function Connections({ searchParams }: { searchParams: Prom
                         <div className="card flat stack-sm" style={{ padding: 12 }}>
                           <div className="row spread">
                             <b>Connection</b>
-                            {conn ? <span className={`chip ${conn.status === "connected" ? "good" : "bad"}`}>{conn.status}{conn.expiresAt ? ` · token to ${formatLocal(conn.expiresAt, s.timezone, { dateStyle: "medium" })}` : ""}</span> : <span className="chip">not connected</span>}
+                            {conn ? <span className={`chip ${conn.status === "connected" ? "good" : "bad"}`}>{conn.status === "connected" ? `connected${conn.expiresAt ? ` · token to ${formatLocal(conn.expiresAt, s.timezone, { dateStyle: "medium" })}` : ""}` : `${conn.status} · needs reconnecting`}</span> : <span className="chip">not connected</span>}
                           </div>
+                          {conn && conn.status !== "connected" ? <p className="muted" style={{ margin: 0, fontSize: 13 }}>Publishing and analytics pulls through this account are stopped until you reconnect it.</p> : null}
+                          {conn?.status === "connected" && connector.capabilities.metrics ? <p className="faint" style={{ margin: 0, fontSize: 13 }}>Analytics: verified posts are read daily for their first 30 days, then weekly (Analytics → Refresh now for one post).</p> : null}
                           <p className="faint" style={{ margin: 0, fontSize: 13 }}>{connector.capabilities.conditions}</p>
                           <div className="row">
                             {keyOk && connector.configured() ? <a className="btn topic small" href={`/api/auth/${d.platform}/start?destination=${d.id}`}>{conn ? "Reconnect" : "Connect"} {PLATFORM_LABEL[d.platform]}</a>
@@ -86,25 +88,28 @@ export default async function Connections({ searchParams }: { searchParams: Prom
                         </div>
                       );
                     })()}
-                    <input type="hidden" name="destinationId" value={d.id} />
-                    <div className="grid2" style={{ gap: 10 }}>
-                      <label className="field">Display name <input name="displayName" defaultValue={d.displayName} /></label>
-                      <label className="field">Handle <input name="handle" defaultValue={d.handle} placeholder="@name" autoCapitalize="none" /></label>
-                    </div>
-                    {d.platform === "youtube" ? <label className="field">Channel ID <span className="hint">Starts with UC; from YouTube Studio → Settings → Channel → Advanced. Enables the channel-specific Studio link.</span><input name="platformAccountId" defaultValue={d.platformAccountId} autoCapitalize="none" /></label> : <input type="hidden" name="platformAccountId" value={d.platformAccountId} />}
-                    <label className="field">Profile link <input name="profileUrl" type="url" defaultValue={d.profileUrl} placeholder={d.platform === "youtube" ? "https://www.youtube.com/@…" : d.platform === "tiktok" ? "https://www.tiktok.com/@…" : "https://www.instagram.com/…"} /></label>
-                    <details>
-                      <summary style={{ cursor: "pointer" }}>More links and notes</summary>
-                      <div className="stack-sm" style={{ marginTop: 8 }}>
-                        <label className="field">Studio link <span className="hint">Default: {OFFICIAL[d.platform].studio}</span><input name="studioUrl" type="url" defaultValue={d.studioUrl} /></label>
-                        <label className="field">Upload link <span className="hint">Default: {OFFICIAL[d.platform].upload}</span><input name="uploadUrl" type="url" defaultValue={d.uploadUrl} /></label>
-                        <label className="field">Account email <span className="hint">Private; shown only to you.</span><input name="email" type="email" defaultValue={d.email} autoCapitalize="none" /></label>
-                        <label className="field">Note <input name="selectionNote" defaultValue={d.selectionNote} /></label>
-                        <a href={OFFICIAL[d.platform].help} target="_blank" rel="noopener noreferrer" className="faint" style={{ fontSize: 13 }}>{PLATFORM_LABEL[d.platform]} help ↗</a>
+                    {/* the account details are their own form: the connection's forms above must not nest inside it */}
+                    <ActionForm action={saveDestination} className="stack-sm" submit="Save" submitClass="btn small">
+                      <input type="hidden" name="destinationId" value={d.id} />
+                      <div className="grid2" style={{ gap: 10 }}>
+                        <label className="field">Display name <input name="displayName" defaultValue={d.displayName} /></label>
+                        <label className="field">Handle <input name="handle" defaultValue={d.handle} placeholder="@name" autoCapitalize="none" /></label>
                       </div>
-                    </details>
-                    <label className="check"><input type="checkbox" name="confirm" /> <span>I checked this is the right account</span></label>
-                  </ActionForm>
+                      {d.platform === "youtube" ? <label className="field">Channel ID <span className="hint">Starts with UC; from YouTube Studio → Settings → Channel → Advanced. Enables the channel-specific Studio link.</span><input name="platformAccountId" defaultValue={d.platformAccountId} autoCapitalize="none" /></label> : <input type="hidden" name="platformAccountId" value={d.platformAccountId} />}
+                      <label className="field">Profile link <input name="profileUrl" type="url" defaultValue={d.profileUrl} placeholder={d.platform === "youtube" ? "https://www.youtube.com/@…" : d.platform === "tiktok" ? "https://www.tiktok.com/@…" : "https://www.instagram.com/…"} /></label>
+                      <details>
+                        <summary style={{ cursor: "pointer" }}>More links and notes</summary>
+                        <div className="stack-sm" style={{ marginTop: 8 }}>
+                          <label className="field">Studio link <span className="hint">Default: {OFFICIAL[d.platform].studio}</span><input name="studioUrl" type="url" defaultValue={d.studioUrl} /></label>
+                          <label className="field">Upload link <span className="hint">Default: {OFFICIAL[d.platform].upload}</span><input name="uploadUrl" type="url" defaultValue={d.uploadUrl} /></label>
+                          <label className="field">Account email <span className="hint">Private; shown only to you.</span><input name="email" type="email" defaultValue={d.email} autoCapitalize="none" /></label>
+                          <label className="field">Note <input name="selectionNote" defaultValue={d.selectionNote} /></label>
+                          <a href={OFFICIAL[d.platform].help} target="_blank" rel="noopener noreferrer" className="faint" style={{ fontSize: 13 }}>{PLATFORM_LABEL[d.platform]} help ↗</a>
+                        </div>
+                      </details>
+                      <label className="check"><input type="checkbox" name="confirm" /> <span>I checked this is the right account</span></label>
+                    </ActionForm>
+                  </div>
                 ))}
               </div>
             </section>

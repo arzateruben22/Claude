@@ -589,126 +589,126 @@
   },
   {
    "id": "vo05",
-   "text": "Throw twice as hard, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
-   "heard": "Throw twice as hard, then three times. Forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "text": "Throw twice as fast, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "heard": "Throw twice as fast, then three times. Forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
    "words": [
     {
      "w": "Throw",
-     "start": 0.03,
+     "start": 0.035,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "twice",
-     "start": 0.38,
+     "start": 0.4,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "as",
-     "start": 0.76,
+     "start": 0.815,
      "end": 0.88,
      "heard": true
     },
     {
-     "w": "hard,",
-     "start": 0.835,
-     "end": 1.36,
+     "w": "fast,",
+     "start": 0.845,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "then",
-     "start": 1.385,
-     "end": 1.6,
+     "start": 1.5,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "three",
-     "start": 1.605,
-     "end": 1.92,
+     "start": 1.73,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "times:",
-     "start": 1.815,
-     "end": 2.64,
+     "start": 1.97,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "forty",
-     "start": 2.78,
+     "start": 2.93,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "centimeters,",
-     "start": 3.11,
-     "end": 3.84,
+     "start": 3.26,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "then",
-     "start": 3.775,
-     "end": 4.08,
+     "start": 3.84,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "sixty.",
-     "start": 4.16,
-     "end": 5.12,
+     "start": 4.235,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "Every",
-     "start": 5.24,
-     "end": 5.44,
+     "start": 5.315,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "row",
-     "start": 5.365,
-     "end": 5.68,
+     "start": 5.44,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.775,
-     "end": 5.84,
+     "start": 5.85,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "ghosts",
-     "start": 5.895,
+     "start": 5.97,
      "end": 6.4,
      "heard": true
     },
     {
      "w": "stays",
-     "start": 6.42,
-     "end": 6.64,
+     "start": 6.355,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "level,",
-     "start": 6.65,
-     "end": 7.2,
+     "start": 6.725,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.255,
-     "end": 7.36,
+     "start": 7.305,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "all",
-     "start": 7.285,
-     "end": 7.6,
+     "start": 7.425,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "four",
-     "start": 7.665,
+     "start": 7.72,
      "end": 7.92,
      "heard": true
     },
@@ -720,25 +720,25 @@
     },
     {
      "w": "on",
-     "start": 8.225,
-     "end": 8.4,
+     "start": 8.255,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.48,
-     "end": 8.56,
+     "start": 8.565,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "same",
-     "start": 8.575,
+     "start": 8.6,
      "end": 8.8,
      "heard": true
     },
     {
      "w": "frame.",
-     "start": 8.84,
+     "start": 8.865,
      "end": 9.36,
      "heard": true
     }
@@ -885,115 +885,127 @@
   },
   {
    "id": "vo07",
-   "text": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet fired level.",
-   "heard": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet-fired level.",
+   "text": "Sideways speed decides where it lands. Height alone decides when. In air, the throws land a sliver after the drop.",
+   "heard": "Sideways speed decides where it lands. Height alone decides when. In air, the throws land a sliver after the drop.",
    "words": [
     {
-     "w": "Speed",
+     "w": "Sideways",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 0.755,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "decides",
-     "start": 0.475,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "where",
-     "start": 1.04,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 1.24,
-     "end": 1.29,
-     "heard": true
-    },
-    {
-     "w": "ball",
-     "start": 1.27,
+     "start": 1.06,
      "end": 1.6,
      "heard": true
     },
     {
+     "w": "where",
+     "start": 1.59,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.77,
+     "end": 1.92,
+     "heard": true
+    },
+    {
      "w": "lands.",
-     "start": 1.51,
-     "end": 2.4,
+     "start": 2.01,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "Height",
-     "start": 2.49,
-     "end": 2.8,
+     "start": 2.795,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "alone",
-     "start": 2.68,
-     "end": 3.2,
+     "start": 3.0,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "decides",
-     "start": 3.19,
-     "end": 3.76,
+     "start": 3.48,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "when.",
-     "start": 3.76,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "That",
-     "start": 4.495,
+     "start": 4.01,
      "end": 4.64,
      "heard": true
     },
     {
-     "w": "holds",
-     "start": 4.725,
-     "end": 5.04,
+     "w": "In",
+     "start": 4.81,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "even",
-     "start": 5.04,
-     "end": 5.2,
+     "w": "air,",
+     "start": 4.97,
+     "end": 5.36,
      "heard": true
     },
     {
-     "w": "for",
-     "start": 5.185,
-     "end": 5.44,
+     "w": "the",
+     "start": 5.475,
+     "end": 5.525,
+     "heard": true
+    },
+    {
+     "w": "throws",
+     "start": 5.605,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "land",
+     "start": 5.985,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.405,
-     "end": 5.52,
+     "start": 6.24,
+     "end": 6.32,
      "heard": true
     },
     {
-     "w": "bullet",
-     "start": 5.66,
-     "end": 6.4,
-     "heard": false
+     "w": "sliver",
+     "start": 6.27,
+     "end": 6.88,
+     "heard": true
     },
     {
-     "w": "fired",
-     "start": 5.69,
-     "end": 6.4,
-     "heard": false
+     "w": "after",
+     "start": 6.97,
+     "end": 7.04,
+     "heard": true
     },
     {
-     "w": "level.",
-     "start": 6.365,
-     "end": 6.72,
+     "w": "the",
+     "start": 7.145,
+     "end": 7.195,
+     "heard": true
+    },
+    {
+     "w": "drop.",
+     "start": 7.18,
+     "end": 7.52,
      "heard": true
     }
    ]

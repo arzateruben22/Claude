@@ -9,17 +9,25 @@ import { Wallpaper } from "@/components/Wallpaper";
 export default async function Home() {
   const v = await rigView();
   const day = formatLocal(new Date(), v.tz, { weekday: "long", month: "long", day: "numeric" });
-  const bits = [
-    v.dueToday ? `${v.dueToday} to upload today` : "Nothing due today",
-    v.reviewCount ? `${v.reviewCount} to review` : null,
-    v.paused ? "Publishing paused" : null,
-  ].filter(Boolean);
+  const dayShort = formatLocal(new Date(), v.tz, { month: "short", day: "numeric" });
+  // the day's one line, from the same data as the monitors: uploads due, then Instagram slots still to plan (the two
+  // a day), and "Nothing due today" only when neither is waiting
+  const ig = v.instagram, slots = `${ig.toPlan} Instagram slot${ig.toPlan === 1 ? "" : "s"} to plan${ig.day === "tomorrow" ? " for tomorrow" : ""}`;
+  const first = v.dueToday ? <span>{v.dueToday} to upload today</span>
+    : ig.toPlan ? <span><Link href="/calendar">{slots}</Link></span>
+    : <span className="quiet-bit">Nothing due today</span>;
   return (
     <div className="home">
       <Wallpaper variant="crisp" />
       <header className="home-head">
         <h1 className="home-brand">Prism <span>Studio</span></h1>
-        <p className="home-meta"><span>{day}</span><span>{bits.join(" · ")}</span></p>
+        <p className="home-meta">
+          <span><span className="day-long">{day}</span><span className="day-short">{dayShort}</span></span>
+          {first}
+          {v.reviewCount ? <span><Link href="/review">{v.reviewCount} to review</Link></span> : null}
+          {v.longToApprove.length ? <span><Link href={`/m/${v.longToApprove[0].slug}#long-video`}>{v.longToApprove.length} long video{v.longToApprove.length === 1 ? "" : "s"} to approve</Link></span> : null}
+          {v.paused ? <span>Publishing paused</span> : null}
+        </p>
       </header>
       {v.unseenEvolutions.length || v.unseenAchievements.length ? (
         <p className="home-note">

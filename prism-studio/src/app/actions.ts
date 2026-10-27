@@ -2,7 +2,7 @@
 // Every mutation the screens can make. Each action re-checks the owner's session (the proxy already did), validates
 // its input with zod, calls the domain layer, and revalidates the screens that show the result.
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
@@ -16,10 +16,13 @@ import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } f
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
 import { planDays, unschedule } from "@/domain/schedule";
 import { enqueue, requestCancel, retry } from "@/domain/jobs";
+import { addCost, editCost, paidSwitch, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
 import { localDate, zonedTimeToUtc } from "@/domain/time";
-import { checkPassword } from "@/lib/auth";
-import { COOKIE, makeSession } from "@/lib/session";
+import { attemptSignIn, clientKey, safeNextPath, SignInThrottle } from "@/domain/signin";
+import { checkPasswordAsync } from "@/lib/auth";
+import { COOKIE, DEVICE_COOKIE, makeDeviceMark, makeSession, verifyDeviceMark } from "@/lib/session";
 import { requireOwner } from "@/lib/owner";
+import { PLATFORM_LABEL } from "@/lib/format";
 
 export type Result = { ok: boolean; message: string; data?: Record<string, unknown> } | null;
 const ok = (message: string, data?: Record<string, unknown>): Result => ({ ok: true, message, data });
@@ -32,22 +35,25 @@ const refresh = (...paths: string[]) => { for (const p of ["/", ...paths]) reval
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 
 // ── sign in / out ──────────────────────────────────────────────────────────
-const attempts = new Map<string, { n: number; until: number }>();   // per process: slows guessing
+// one throttle per web process (globalThis: survives dev reloads); the rules and the audit entries are in the domain
+const g = globalThis as unknown as { __prismSignIn?: SignInThrottle };
+const throttle = () => (g.__prismSignIn ??= new SignInThrottle());
 export async function signIn(_: Result, fd: FormData): Promise<Result> {
-  const key = "owner", a = attempts.get(key) ?? { n: 0, until: 0 };
-  if (a.until > Date.now()) return { ok: false, message: `Too many tries. Wait ${Math.ceil((a.until - Date.now()) / 60000)} min.` };
-  const pass = str(fd, "passphrase");
-  if (!pass || !checkPassword(pass)) {
-    a.n++; if (a.n >= 5) { a.until = Date.now() + 15 * 60_000; a.n = 0; }
-    attempts.set(key, a);
-    await new Promise((r) => setTimeout(r, 400));
-    return { ok: false, message: "That passphrase didn't match." };
-  }
-  attempts.delete(key);
-  const s = await makeSession();
-  (await cookies()).set(COOKIE, s.value, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: s.maxAge });
-  const next = str(fd, "next");
-  redirect(/^\/(?![\/\\])/.test(next) ? next : "/");   // same-site paths only: no //host or /\host
+  const h = await headers(), jar = await cookies();
+  const r = await attemptSignIn({
+    throttle: throttle(),
+    client: clientKey(h.get("x-forwarded-for"), h.get("x-real-ip")),
+    knownDevice: await verifyDeviceMark(jar.get(DEVICE_COOKIE)?.value).catch(() => false),   // signed in here before: past the studio-wide ceiling
+    passphrase: str(fd, "passphrase"),   // trimmed, as before (phone keyboards add a trailing space)
+    check: (p) => checkPasswordAsync(p),
+    audit: (action, detail) => audit(db(), action === "auth.sign_in" ? "owner" : "system", action, "owner", "", detail),
+  });
+  if (!r.ok) return { ok: false, message: r.message };
+  const secure = process.env.NODE_ENV === "production";
+  const s = await makeSession(), m = await makeDeviceMark();
+  jar.set(COOKIE, s.value, { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: s.maxAge });
+  jar.set(DEVICE_COOKIE, m.value, { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: m.maxAge });
+  redirect(safeNextPath(str(fd, "next")));   // a path on this site only: no //host, /\host or /<tab>/host
 }
 
 export async function signOut() {
@@ -70,7 +76,7 @@ const exportSchema = z.object({
   title: z.string().max(100, "YouTube titles are at most 100 characters"),
   caption: z.string().max(2200, "Captions are at most 2,200 characters"),
   hashtags: z.string().max(400),
-  postingNotes: z.string().max(2000),
+  postingNotes: z.string().max(20000, "Posting notes are at most 20,000 characters"),   // the sources thread can run to several 2,200-character comments
 });
 export async function saveExport(_: Result, fd: FormData) {
   return run(async () => {
@@ -248,13 +254,29 @@ export async function toggleOnboarding(fd: FormData) {
 export async function addMetric(_: Result, fd: FormData) {
   return run(async () => {
     const publicationId = z.string().uuid().parse(fd.get("publicationId"));
-    const metric = z.enum(["views", "avg_view_duration_s", "likes", "shares", "followers_gained"]).parse(fd.get("metric"));
+    const metric = z.enum(["views", "avg_view_duration_s", "likes", "comments", "shares", "followers_gained"]).parse(fd.get("metric"));
     const value = z.coerce.number({ message: "Enter a number" }).min(0).parse(str(fd, "value").replace(/[, ]/g, ""));
     const source = z.enum(["manual", "estimate", "demo"]).parse(fd.get("source") ?? "manual");
     const r = await recordMetric(db(), { publicationId, metric, value, source, definition: source === "manual" ? "owner-confirmed from the platform's analytics" : source });
     const titles = r.unlocked.length ? (await db().select().from(S.milestoneRules)).filter((m) => r.unlocked.some((u) => u.ruleId === m.id)).map((m) => m.title) : [];
     refresh("/analytics", "/rewards");
     return ok(titles.length ? `Logged. Unlocked: ${titles.join(", ")}${source === "demo" ? " (demo)" : ""}.` : "Logged.");
+  });
+}
+
+/** "Refresh now": queue an API pull of this post's numbers (verified posts on a connected account only). */
+export async function refreshMetrics(_: Result, fd: FormData) {
+  return run(async () => {
+    const publicationId = z.string().uuid().parse(fd.get("publicationId"));
+    const { requestPull } = await import("@/domain/api-analytics");
+    const r = await requestPull(db(), publicationId);
+    const [p] = await db().select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.id, publicationId));
+    refresh("/analytics", "/queue", ...(p ? [`/episodes/${p.episodeId}`] : []));
+    const name = PLATFORM_LABEL[r.platform];
+    return ok(r.created ? `Queued: the worker asks ${name} now. The numbers appear here once it answers.`
+      : r.status === "queued" ? "Already queued."
+      : r.status === "just_pulled" ? `Just refreshed: ${name} answered less than a minute ago. Press again in a minute for another pull.`
+      : `A refresh less than a minute ago didn't get numbers (see the pull status). Press again in a minute.`);
   });
 }
 
@@ -390,13 +412,13 @@ export async function saveSettings(_: Result, fd: FormData) {
       timezone: z.string().refine((tz) => { try { new Intl.DateTimeFormat("en-US", { timeZone: tz }); return true; } catch { return false; } }, "Unknown timezone"),
       instagramDaily: z.coerce.number().int().min(0).max(3), shortsPerChannelDaily: z.coerce.number().int().min(0).max(3), bufferDays: z.coerce.number().int().min(0).max(30),
     }).parse({ timezone: str(fd, "timezone"), instagramDaily: str(fd, "instagramDaily"), shortsPerChannelDaily: str(fd, "shortsPerChannelDaily"), bufferDays: str(fd, "bufferDays") });
-    const budgets = await db().select().from(S.budgets);
-    const paid = fd.get("paidGenerationEnabled") === "on";
-    if (paid && !budgets.length) throw new DomainError("budget", "Paid generation stays off until a production budget exists.");
-    await db().update(S.studioSettings).set({ ...v, globalPause: fd.get("globalPause") === "on", stopExternalActions: fd.get("stopExternalActions") === "on", celebrationSound: fd.get("celebrationSound") === "on", lowPowerArt: fd.get("lowPowerArt") === "on", paidGenerationEnabled: paid, updatedAt: new Date() }).where(eq(S.studioSettings.id, 1));
-    await audit(db(), "owner", "settings.save", "studio_settings", "1", v);
-    refresh("/settings", "/calendar", "/upload");
-    return ok("Settings saved.");
+    const showDemo = fd.get("showDemo") === "on";
+    // the switch never blocks the rest of the form: a refused turn-on just stays off, with a notice
+    const { on: paid, notice } = await paidSwitch(db(), fd.get("paidGenerationEnabled") === "on");
+    await db().update(S.studioSettings).set({ ...v, globalPause: fd.get("globalPause") === "on", stopExternalActions: fd.get("stopExternalActions") === "on", celebrationSound: fd.get("celebrationSound") === "on", lowPowerArt: fd.get("lowPowerArt") === "on", paidGenerationEnabled: paid, showDemo, updatedAt: new Date() }).where(eq(S.studioSettings.id, 1));
+    await audit(db(), "owner", "settings.save", "studio_settings", "1", { ...v, paidGenerationEnabled: paid, showDemo });
+    revalidatePath("/", "layout");   // the demo switch changes what every list shows
+    return ok(notice ? `Settings saved. ${notice}` : "Settings saved.");
   });
 }
 
@@ -556,5 +578,115 @@ export async function publishNow(_: Result, fd: FormData) {
     const r = await enqueue(db(), { type: "publish", channelId: e.channelId, payload: { publicationId: id, manual: true }, idempotencyKey: `publish:${id}`, priority: 10, maxAttempts: 3 });
     refresh("/upload", "/queue");
     return ok(r.created ? "Queued: the worker uploads it now. Watch the Queue; the task updates itself when the platform answers." : "Already queued.");
+  });
+}
+
+// ── costs and production budgets (records only: Prism never pays or moves money) ──
+const optionalId = z.union([z.literal(""), z.string().uuid()]).transform((v) => v || null);
+/** Revalidate Costs, Settings and each channel page the change touches (an edit can move a cost between channels). */
+const costPaths = async (...channelIds: (string | null)[]) => {
+  const ids = [...new Set(channelIds.filter((id): id is string => !!id))];
+  const chs = ids.length ? await db().select({ slug: S.channels.slug }).from(S.channels).where(inArray(S.channels.id, ids)) : [];
+  refresh("/costs", "/settings", ...chs.map((ch) => `/channels/${ch.slug}`));
+};
+function costInput(fd: FormData): CostInput {
+  return {
+    description: str(fd, "description"), amountCents: parseMoney(str(fd, "amount")), currency: str(fd, "currency") || "USD",
+    incurredOn: str(fd, "incurredOn"), source: fd.get("estimate") === "on" ? "estimate" : "manual", category: str(fd, "category"),
+    channelId: optionalId.parse(str(fd, "channelId")), episodeId: optionalId.parse(str(fd, "episodeId")), provider: str(fd, "provider"), note: str(fd, "note"),
+  };
+}
+export async function saveBudget(_: Result, fd: FormData) {
+  return run(async () => {
+    const scope = str(fd, "scope");
+    const channelId = scope === "studio" ? null : z.string().uuid("Pick who the budget is for").parse(scope);
+    const raw = str(fd, "amount");
+    const capCents = raw === "" ? null : parseMoney(raw);
+    await setBudget(db(), { channelId, month: str(fd, "month"), capCents, currency: str(fd, "currency") || "USD" });
+    await costPaths(channelId);
+    return ok(capCents == null ? "Budget ended from that month: paid generation stays off without one." : "Budget saved. It applies from that month on until you change it.");
+  });
+}
+export async function addCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const e = await addCost(db(), costInput(fd));
+    await costPaths(e.channelId);
+    return ok(e.source === "estimate" ? "Estimate recorded. It's labelled ESTIMATE and doesn't count as spent." : "Cost recorded. Prism only writes it down; it never pays anything.");
+  });
+}
+export async function editCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("costId"));
+    const [was] = await db().select({ channelId: S.costLedger.channelId }).from(S.costLedger).where(eq(S.costLedger.id, id));
+    const e = await editCost(db(), id, costInput(fd));
+    await costPaths(was?.channelId ?? null, e.channelId);   // the channel it left, and the one it joined
+    return ok("Saved.");
+  });
+}
+export async function voidCostEntry(_: Result, fd: FormData) {
+  return run(async () => {
+    const e = await voidCost(db(), z.string().uuid().parse(fd.get("costId")), str(fd, "reason"));
+    await costPaths(e.channelId);
+    return ok("Void: it stays on the record and no longer counts.");
+  });
+}
+
+// ── push notifications (the owner's devices) ───────────────────────────────
+/** The VAPID public key a browser subscribes with (made on first need). The only key that ever leaves the server. */
+export async function pushPublicKey(): Promise<Result> {
+  return run(async () => {
+    const { vapidPublicKey } = await import("@/domain/push");
+    return ok("", { publicKey: await vapidPublicKey(db()) });
+  });
+}
+const pushDevice = z.object({
+  endpoint: z.string().max(2048),
+  keys: z.object({ p256dh: z.string().max(200), auth: z.string().max(100) }),
+  label: z.string().max(120).default(""),
+});
+/** "Notify this device": save the subscription this browser just made. */
+export async function savePushDevice(input: unknown): Promise<Result> {
+  return run(async () => {
+    const v = pushDevice.parse(input);
+    const { saveSubscription } = await import("@/domain/push");
+    const r = await saveSubscription(db(), { endpoint: v.endpoint, keys: v.keys }, v.label);
+    revalidatePath("/settings");
+    return ok(`On: ${r.label} gets notifications. Send a test to check.`);
+  });
+}
+/** "Turn off on this device": the browser unsubscribed; forget its endpoint. */
+export async function forgetPushEndpoint(endpoint: string): Promise<Result> {
+  return run(async () => {
+    const { removeEndpoint } = await import("@/domain/push");
+    await removeEndpoint(db(), z.string().max(2048).parse(endpoint));
+    revalidatePath("/settings");
+    return ok("Off on this device.");
+  });
+}
+export async function removePushDevice(_: Result, fd: FormData) {
+  return run(async () => {
+    const { removeSubscription } = await import("@/domain/push");
+    const gone = await removeSubscription(db(), z.string().uuid().parse(fd.get("deviceId")));
+    revalidatePath("/settings");
+    return ok(gone ? "Removed. That device gets nothing more." : "Already removed.");
+  });
+}
+export async function sendTestPush(_: Result, _fd: FormData) {
+  return run(async () => {
+    const { sendTestNotification } = await import("@/domain/push");
+    const r = await sendTestNotification(db());
+    revalidatePath("/settings");
+    const gone = r.removed ? ` ${r.removed} device${r.removed === 1 ? " had" : "s had"} dropped notifications and ${r.removed === 1 ? "was" : "were"} removed.` : "";
+    if (!r.sent) return { ok: false, message: `Not delivered: ${r.failed ? "the push service refused it (see the device list)" : "no device is left"}.${gone}` };
+    return ok(`Sent to ${r.sent} of ${r.devices} device${r.devices === 1 ? "" : "s"}${r.failed ? `; ${r.failed} failed (see the device list)` : ""}.${gone}`);
+  });
+}
+/** Start over when the signing key can't be opened (its secret changed): every device turns notifications on again. */
+export async function resetPushKeys(_: Result, _fd: FormData) {
+  return run(async () => {
+    const { resetPush } = await import("@/domain/push");
+    const n = await resetPush(db());
+    revalidatePath("/settings");
+    return ok(`Reset. ${n ? `${n} device${n === 1 ? " was" : "s were"} removed: ` : ""}press Notify this device on each one again.`);
   });
 }

@@ -41,8 +41,28 @@ export async function seed(d = db()) {
   for (const m of MILESTONES) await d.insert(S.milestoneRules).values({ ...m, threshold: m.threshold ?? null, rewardCents: m.rewardCents ?? null }).onConflictDoNothing();
 }
 
+/**
+ * DEMO data for previews (`npm run db:seed -- --demo`): one series of three episodes on Rest Frame, every row
+ * is_demo and labelled DEMO. Hidden unless Settings → "Show demo data" is on, and never counted. Idempotent.
+ * Numbered from 901 without touching the channel's counter, so real episode numbers are never spent on demo.
+ */
+export async function seedDemo(d = db()) {
+  const [ch] = await d.select().from(S.channels).where(eq(S.channels.slug, "physics"));
+  if (!ch) return 0;
+  const title = "Things that fall";
+  const [had] = await d.select().from(S.series).where(and(eq(S.series.channelId, ch.id), eq(S.series.isDemo, true), eq(S.series.title, title)));
+  if (had) return 0;
+  const [ser] = await d.insert(S.series).values({ channelId: ch.id, title, objective: "Preview data: never published, never counted.", isDemo: true, sort: 99 }).returning();
+  const eps = [["Why does a feather float?", "script"], ["Do heavy things fall faster?", "storyboard"], ["How does a cat land on its feet?", "idea"]] as const;
+  for (const [i, [t, state]] of eps.entries()) {
+    await d.insert(S.episodes).values({ channelId: ch.id, seriesId: ser.id, seriesOrder: i + 1, number: 901 + i, title: t, state, isDemo: true }).onConflictDoNothing();
+  }
+  return eps.length;
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   await seed();
   console.log("seeded");
+  if (process.argv.includes("--demo")) console.log(`demo: ${await seedDemo()} DEMO episodes added (hidden until Settings → Show demo data)`);
   await pool().end();
 }

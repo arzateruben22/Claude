@@ -60,15 +60,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Throw twice as hard, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
+   "text": "Throw twice as fast, then three times: forty centimeters, then sixty. Every row of ghosts stays level, and all four land on the same frame.",
    "stars": [
     "level",
     "same frame"
    ],
-   "phonemes": "θɹˈoʊ twˈaɪs æz hˈɑːɹd, ðˈɛn θɹˈiː tˈaɪmz: fˈɔːɹɾi sˈɛntɪmˌiːɾɚz , ðˈɛn sˈɪksti. ˈɛvɹi ɹˈoʊ ʌv ɡˈoʊsts stˈeɪz lˈɛvəl, ænd ˈɔːl fˈɔːɹ lˈænd ɔnðə sˈeɪm fɹˈeɪm.",
+   "phonemes": "θɹˈoʊ twˈaɪs æz fˈæst, ðˈɛn θɹˈiː tˈaɪmz: fˈɔːɹɾi sˈɛntɪmˌiːɾɚz , ðˈɛn sˈɪksti. ˈɛvɹi ɹˈoʊ ʌv ɡˈoʊsts stˈeɪz lˈɛvəl, ænd ˈɔːl fˈɔːɹ lˈænd ɔnðə sˈeɪm fɹˈeɪm.",
    "file": "05.wav",
-   "dur": 9.372,
-   "sha256": "8a1337785d0b28f9ed9424197da325f1a580ace8f8cf499100a22c4deef289d3"
+   "dur": 9.397,
+   "sha256": "10c9ffd441673ade82f5caa674fb9fc10dfceba0afd9ec43ded7cfd47906fcad"
   },
   {
    "id": "vo06",
@@ -86,15 +86,15 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Speed decides where a ball lands. Height alone decides when. That holds even for a bullet fired level.",
+   "text": "Sideways speed decides where it lands. Height alone decides when. In air, the throws land a sliver after the drop.",
    "stars": [
     "where",
     "when"
    ],
-   "phonemes": "spˈiːd dᵻsˈaɪdz wˌɛɹ ɐ bˈɔːl lˈændz. hˈaɪt ɐlˈoʊn dᵻsˈaɪdz wˈɛn. ðæt hˈoʊldz ˈiːvən fɚɹə bˈʊlɪt fˈaɪɚd lˈɛvəl.",
+   "phonemes": "sˈaɪdweɪz spˈiːd dᵻsˈaɪdz wˌɛɹ ɪt lˈændz. hˈaɪt ɐlˈoʊn dᵻsˈaɪdz wˈɛn. ɪn ˈɛɹ, ðə θɹˈoʊz lˈænd ɐ slˈɪvɚɹ ˈæftɚ ðə dɹˈɑːp.",
    "file": "07.wav",
-   "dur": 6.758,
-   "sha256": "704e2c0891e226a20a68730a6e3dcc7ebca642977454222103e57063ecc0cd58"
+   "dur": 7.572,
+   "sha256": "68d6dc5054987d99cc85e6c74270e32466f2973875ce8b03f0a722466206c6f2"
   },
   {
    "id": "vo08",

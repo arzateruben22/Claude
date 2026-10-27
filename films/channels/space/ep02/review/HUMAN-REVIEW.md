@@ -2,22 +2,58 @@
 
 ## This episode
 - **The date.** It posts on 18 November 2026, the day NASA gives for Voyager 1 reaching one light-day
-  (12:16:07 a.m. CST; c5). "On November eighteenth, it crosses a line" is in the present tense. If the post
-  slips, the line still reads as a dated fact, but the end card's footnote and the caption should be checked.
+  (2:16:07 a.m. PST, 10:16:07 UTC; c5; an earlier ledger entry had EarthSky's "12:16:07 a.m. CST", which doesn't
+  match NASA). Post at or after 10:16 UTC if possible. "On November eighteenth, it crosses a line" is in the present
+  tense. If the post slips, the line still reads as a dated fact, but the end card's footnote and the caption should
+  be checked.
 - **"Our ride is Voyager 1, the farthest thing we've sent."** True today (c1). "Coasts at about seventeen
-  kilometers a second" uses NASA's 38,000 mph (c3); the Goddard page (73,000 years) implies 17.3 km/s. The
+  kilometers a second. Earth to the Moon in six hours." uses NASA's 38,000 mph (c3, c4); the Goddard page (73,000 years) implies 17.3 km/s. The
   spoken trip time is our own arithmetic at 17 km/s: about 75,000 years (c12). NASA says "over 73,000".
 - **"In twenty twelve, it crossed into interstellar space."** In NASA's plasma sense
   (the heliopause, c8), not beyond the Sun's gravity. The next line ("it hasn't even reached the Sun's cloud
   of comets") says exactly that.
-- **The comet cloud is a theory** (badged). The 300 and 30,000 years are NASA's (c10, c19); the drawn cloud's
+- **The comet cloud is a theory** (badged). "About three hundred years" and "maybe thirty thousand more" are NASA's
+  hedged figures (c10, c19); the drawn cloud's
   inner edge (1,240 AU) follows from them, not from NASA's 2,000–5,000 AU inner-edge estimate on the same page.
   An astronomer may prefer to draw it from 2,000 AU.
-- **"Count back that far, and our species hadn't reached Europe."** 75,000 years ago; the earliest known
-  Homo sapiens in Europe are a little over 45,000 years old (c13), and the most contested early claim
-  (Grotte Mandrin) about 54,000. A palaeoanthropologist may want a primary source.
+- **"Count back that far, and our species wasn't in Europe."** 75,000 years ago; no Homo sapiens are known in
+  Europe then. Our lasting presence starts a little over 45,000 years ago (c13); the earlier claims are disputed or
+  short-lived (Apidima 1 in Greece, at least 210,000 years; Grotte Mandrin, about 54,000). "Wasn't in" (not "hadn't
+  reached") leaves Apidima open. A palaeoanthropologist may want a primary source.
 - **Proxima's direction and colour** are drawn for the picture (badged "Voyager isn't headed there").
 - **Readout:** "To Proxima Centauri: four years and three months" is light time from Proxima to us (4.24 years).
+- **The light, after the 26 Oct recheck.** The change now shows Voyager's signal travelling home (a day), then
+  the team's command going out (a day) and the answer coming back (a day), in step with the voice. The fronts,
+  the light-day circle and the heliopause rim are drawn as circles on the screen through Voyager *as seen* (a
+  drawing convention: the real sphere is seen at an angle). Check that an astronomer is happy with that.
+- **The speck** (one light-day around the Sun) is drawn at least 30 px in radius in the local view (at a 1080-px
+  short side); at true scale it would be under a pixel. It sits under the "not to scale · illustration" note.
+- **The re-layout (26 Oct, after the audit):** Voyager's path now climbs to the right of the Sun (it was drawn up-left,
+  under the spine); the direction is a drawing choice either way (Voyager 1 heads for Ophiuchus, north of the
+  ecliptic). The spine's hedged numbers carry "≈" (≈300, ≈30,000, ≈1,500, ≈75,000), matching "about" and "maybe" in
+  the voice.
+- **After the 26 Oct script audit:** vo02 and vo04–vo06 were re-voiced ("It coasts at about seventeen kilometers a
+  second. Earth to the Moon in six hours."; "about three hundred"; "maybe thirty thousand"; "wasn't in Europe"; "So
+  we've barely left for the stars."), and the end card now teases "a planet that turns backwards" (Uranus does too;
+  c18). The film was rendered again from scratch after these changes.
+- **After the draft review (26 Oct):** the speck now shows (a 30 px ring; its floor was in the wrong units), Voyager
+  starts right of the Sun and the flight starts after "nineteen seventy-seven" is said, the speed and "Sun's wind
+  ends" labels are gone (the caption and the spine say them), labels no longer hop or pop, the comet cloud collapses
+  early in the jump, and the whoa pushes in. New notes: "Voyager isn't headed there" in the hook and "light sped up"
+  on each lane pulse. The spine now reads ≈1,500 light-days ("about fifteen hundred"; 1,549 computed) and ≈75,000.
+  Two caption breaks remain ("reached the Sun's" | "cloud of comets."; "three" / "hundred years away."). The first
+  can't be mended within 24 characters a line; the second only by a 0.47 s page ("That's about" | "three hundred /
+  years away."), too short to read, so it stays.
+- **After the second draft review (26 Oct):** the first of those breaks is mended after all, by paging the sentence
+  again ("It hasn't even reached" | "the Sun's / cloud of comets."), and so is "Voyager has / crossed day one" | "of
+  fifteen hundred." (now "Voyager has crossed" | "day one / of fifteen hundred."). "three" / "hundred years away."
+  stays (the one-line form is 25 characters, over the 24-character rule). The spine's ≈75,000 now reads "years at 17
+  km/s" (was "years at Voyager's speed", too wide beside the lane); a "Voyager 1" label marks the speck while the trip
+  time is told. The scale jump shows the comet cloud's rim shrinking into the speck, and the road on through the cloud
+  now runs off the frame (30,000 years is 100× the 300; it was drawn about as long as the first road). The end card
+  no longer shows the Sun and Proxima behind its title. The final (27 Oct, QA PASS) is `out/lightminute-002-9x16.mp4`;
+  the cover, thumbnail and `out/POSTING.md` still show the 25 Oct cut until the coordinating session regenerates them.
+
 
 ## Every episode
 1. **Claims.** An astronomer works through `CLAIMS-REVIEW.md`: every claim was checked from a search excerpt
@@ -33,7 +69,7 @@
 6. **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/space/ep02 --sources`.
 7. **A listen.** Phone speaker and headphones. Names to check: Voyager, Proxima Centauri, interstellar,
    "nineteen seventy-seven", "seventy-five thousand".
-8. **Cover frame.** The poster (`out/lightminute-002-9x16.jpg`) is at about 49 s: Proxima, the speck and "75,000".
+8. **Cover frame.** The poster (`out/lightminute-002-9x16.jpg`) is at about 50 s: Proxima, the speck and "≈75,000".
 9. **Upload.** Upload the MP4 as delivered; leave auto-captions off (captions are burned in).
 
 TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted.

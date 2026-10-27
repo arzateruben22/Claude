@@ -237,7 +237,10 @@ CUE = {
     "why": {"R": R_w, "contact": C_w, "gravity": A("vo04:Gravity"), "gTip": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "two": A("vo04:two"), "glide": A("vo04:glide"),
             "rungs": A("vo04:every"), "turn": [A("vo04:So"), A("vo04:same")], "old": {"pts": OLD_PTS, "drew": A("vo04:drew"), "out": A("vo04:Gravity", -0.3)}},
     "whoa": {"R": R_o, "L": L_o, "rungs": A("vo05:Every")},
-    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:holds")]]},
+    # warpOut: the speed badge fades out over 0.15 s at the record's cut, not hud.js's 0.3 s: the stack reflows
+    # "3 throws overlaid" up as the leaving note fades, and over 0.3 s the two plates overlapped (51.4 s)
+    "measure": {"gaps": GAPS, "counter": [cut("measure") + 0.35, cut("takeaway")], "lit": [[A("vo06:point"), A("vo06:thrown")], [A("vo07:when"), A("vo07:In")]],
+                "warpOut": [cut("measure"), cut("measure") + 0.15]},
     "tease": {"out": A("vo08:Next")},
     "cuts": CUTS,
 }
@@ -248,21 +251,30 @@ CUE = {
 LABELS = [
     {"id": "hk-thrown", "text": "thrown", "color": "ghost", "t0": A("vo01:thrown"), "t1": cut("normal") - 0.45, "anchor": {"ball": ["hook", "t89"]}, "side": 1, "fixed": True},
     {"id": "hk-dropped", "text": "dropped", "color": "ghost", "t0": A("vo01:dropped"), "t1": cut("normal") - 0.45, "anchor": {"ball": ["hook", "drop"]}, "side": -1, "fixed": True},
-    {"id": "nm-apart", "text": "1/20 s apart", "color": "ghost", "t0": A("vo02:Ghosts"), "t1": cut("change"), "anchor": {"gap": ["normal", 2], "dx": 4.4}, "side": 1, "fixed": True},
+    # beside its gap, not above it: above, its plate tucked under the speed badge's (gap 3 would point past the live ball)
+    {"id": "nm-apart", "text": "1/20 s apart", "color": "ghost", "t0": A("vo02:Ghosts"), "t1": cut("change"), "anchor": {"gap": ["normal", 2], "dx": 4.4}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "nm-gravity", "text": "gravity", "color": "force", "t0": A("vo02:falling"), "t1": clk.tOf(TAKES["normal"]["tauR"] + TAU_TIP), "anchor": {"arrow": "nm-g"}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "ch-dropped", "text": "dropped", "color": "ghost", "t0": A("vo03:Now"), "t1": cut("why"), "anchor": {"ball": ["change", "drop"]}, "side": -1, "fixed": True},
-    {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:throw"), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},
-    {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": clk.tOf(TAKES["why"]["tauR"] + TAU_TIP), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
-    {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": C_w, "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:Gravity", -0.3), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
-    {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same"), "t1": cut("whoa"), "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
-    {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 4], "u": 1.0}, "side": 1, "fixed": True},
+    # beside the ball, not above it: above, its plate ran into the speed badge's as the throw left the rail (14.6–15.2 s)
+    {"id": "ch-thrown", "text": "thrown · 0.44 m/s", "color": "motion", "t0": A("vo03:sideways", 0.3), "t1": cut("why"), "anchor": {"ball": ["change", "t44"]}, "side": 1, "fixed": True},   # above its ball; it arrives once the speed badge has gone (it touched it at 14.6–15.2 s); "middle" clamped it over the ball
+    # leaves on "tick", before the turn carries the arrow's tip (and the label's dot) under the caption plate (35.3 s)
+    {"id": "wy-gravity", "text": "gravity", "color": "force", "t0": A("vo04:Gravity"), "t1": A("vo04:tick"), "anchor": {"arrow": "wy-g-drop"}, "side": -1, "fixed": True, "v": "middle"},
+    # gone (its 0.4 s fade included) before the turn carries the ball, the arrow tip and the label's dot under the caption plate
+    {"id": "wy-glide", "text": "steady glide", "color": "motion", "t0": A("vo04:steady"), "t1": A("vo04:only"),   # gone (0.4 s fade) before the ball drops to where the plate clamps over it (33.9 s)
+     "anchor": {"arrow": "wy-v"}, "side": 1, "fixed": True, "v": "middle"},
+    # the drawing's label leaves on "plus a fall", before the falling glide label reaches it (the dots stay until "Gravity")
+    {"id": "wy-old", "text": "1500s drawing", "color": "ghost", "t0": A("vo04:drew", 0.5), "t1": A("vo04:plus"), "anchor": {"point": OLD_PTS[len(OLD_PTS) // 2]}, "side": 1, "fixed": True, "v": "middle"},
+    # gone by the cut: fading across it, it jumped to the whoa camera's projection of a rung no longer drawn, its dot in the caption plate
+    {"id": "wy-same", "text": "same height", "color": "ghost", "t0": A("vo04:same"), "t1": cut("whoa") - 0.45, "anchor": {"rung": ["why", 5], "u": 0.5}, "side": 1, "fixed": True},
+    # on row 5, not 4: from row 4 its plate sat under "3 throws overlaid"
+    {"id": "wo-level", "text": "level", "color": "ghost", "t0": A("vo05:level"), "t1": cut("measure") - 0.45, "anchor": {"rung": ["whoa", 5], "u": 1.0}, "side": 1, "fixed": True},
     {"id": "ms-1m", "text": "1 m", "color": "ghost", "t0": A("vo06:one-meter"), "t1": None, "anchor": {"point": [STICK_X, 100.0, 0.0]}, "side": 1, "fixed": True, "v": "middle"},
     {"id": "tk-when", "text": "all 0.45 s", "color": "ghost", "t0": A("vo07:when"), "t1": None, "anchor": {"rung": ["whoa", 9], "u": 0.0}, "side": -1, "fixed": True, "v": "above"},
 ]
 BADGES = [
     {"id": "overlaid", "text": "3 throws overlaid", "t0": R_o, "t1": cut("takeaway") - 0.3, "slot": "tr"},
-    {"id": "air", "title": "Air ignored", "text": "The fastest throw would land 0.3 ms late. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr"},
+    {"id": "air", "title": "Air ignored", "text": "With air, the fastest throw lands 0.3 ms after the drop. One frame here is 1.7 ms.", "t0": cut("takeaway") + 1.0, "t1": None, "slot": "tr",
+     "maxW": 1.0},   # the card's widest (760 px): the text keeps two lines, so the card clears the "1 m" label under it
 ]
 READOUTS = [
     {"id": "ch-0", "text": "0", "at": [0.0, 0.0, 0.0], "t0": A("vo03:twenty"), "t1": cut("why")},     # the throw point: distances are measured from here
@@ -332,7 +344,8 @@ film = {
     "labels": LABELS, "badges": BADGES, "readouts": READOUTS, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": f.captions(max_chars=24), "endCard": EC,
-    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Rest Frame"},
+    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Rest Frame",
+            "foot": "Two motions at once: Galileo, Two New Sciences, 1638"},   # the book's title never breaks
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

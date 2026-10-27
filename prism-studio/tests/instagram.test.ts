@@ -261,6 +261,20 @@ describe("instagram: metrics", () => {
     expect(oldCalls[1].url).toBe(`${GRAPH}/media-9/insights?metric=plays,reach,likes,comments,shares,saved`);
     expect(m2).toMatchObject({ views: 300, likes: 2 });
   });
+
+  it("(#10) not enough viewers is a refusal for that post, not a reason to reconnect; 190 still is", async () => {
+    const few = mockFetch(() => graphError(10, 400, { message: "(#10) Not enough viewers for the media to show insights" }));
+    const e = await instagram.metrics!(token, "media-9", few.f).catch((x) => x);
+    expect(e).toBeInstanceOf(ConnectorError);
+    expect(e).toMatchObject({ code: "rejected", retryable: false });
+    expect(e.message).toMatch(/no insights for this post yet/);
+    expect(e.message).not.toMatch(/reconnect the Instagram account/);
+    const perm = await instagram.metrics!(token, "media-9", mockFetch(() => graphError(200, 403)).f).catch((x) => x);
+    expect(perm).toMatchObject({ code: "rejected" });
+    const dead = await instagram.metrics!(token, "media-9", mockFetch(() => graphError(190, 401)).f).catch((x) => x);
+    expect(dead).toMatchObject({ code: "auth" });
+    // publishing keeps reading (#10) as a missing permission: that one does need a reconnect
+  });
 });
 
 describe("instagram: capabilities", () => {

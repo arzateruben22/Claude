@@ -15,6 +15,27 @@
       "when": 1792968256434,
       "tag": "0001_lesson_compilations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793008862725,
+      "tag": "0002_costs_demo_toggle",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793010597905,
+      "tag": "0003_api_analytics",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793011557834,
+      "tag": "0004_push_notifications",
+      "breakpoints": true
     }
   ]
 }

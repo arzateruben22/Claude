@@ -360,8 +360,8 @@
   },
   {
    "id": "vo04",
-   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about eight thousand.",
-   "heard": "Nearly 25 centuries ago in Athens, Anaxagoras said the sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. He was right. By a factor of about 8,000.",
+   "text": "Nearly twenty-five centuries ago, in Athens, Anaxagoras said the Sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. Bigger, yes. By a factor of about seven thousand.",
+   "heard": "Nearly 25 centuries ago in Athens, Anaxagoras said the sun was a fiery stone, bigger than southern Greece. Calling it a stone, not a god, got him charged with impiety. Bigger, yes, by a factor of about 7,000.",
    "words": [
     {
      "w": "Nearly",
@@ -372,90 +372,90 @@
     {
      "w": "twenty-five",
      "start": 0.35,
-     "end": 1.04,
+     "end": 0.96,
      "heard": false
     },
     {
      "w": "centuries",
-     "start": 1.11,
+     "start": 0.94,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "ago,",
-     "start": 1.6,
-     "end": 1.76,
+     "start": 1.57,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.875,
+     "start": 1.855,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "Athens,",
-     "start": 2.085,
-     "end": 2.64,
+     "start": 2.06,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "Anaxagoras",
-     "start": 2.79,
-     "end": 3.6,
+     "start": 2.73,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "said",
-     "start": 3.6,
-     "end": 3.76,
+     "start": 3.65,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.72,
-     "end": 3.92,
+     "start": 3.775,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "Sun",
-     "start": 3.955,
+     "start": 4.005,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "was",
-     "start": 4.335,
+     "start": 4.24,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.48,
+     "start": 4.49,
      "end": 4.56,
      "heard": true
     },
     {
      "w": "fiery",
-     "start": 4.56,
-     "end": 5.12,
+     "start": 4.61,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "stone,",
-     "start": 5.215,
-     "end": 5.84,
+     "start": 5.24,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "bigger",
-     "start": 5.935,
+     "start": 5.965,
      "end": 6.24,
      "heard": true
     },
     {
      "w": "than",
-     "start": 6.125,
+     "start": 6.27,
      "end": 6.48,
      "heard": true
     },
@@ -479,136 +479,130 @@
     },
     {
      "w": "it",
-     "start": 8.245,
-     "end": 8.4,
+     "start": 8.24,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.335,
+     "start": 8.305,
      "end": 8.56,
      "heard": true
     },
     {
      "w": "stone,",
-     "start": 8.64,
-     "end": 9.12,
+     "start": 8.615,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "not",
-     "start": 9.01,
+     "start": 8.97,
      "end": 9.28,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.37,
+     "start": 9.375,
      "end": 9.44,
      "heard": true
     },
     {
      "w": "god,",
-     "start": 9.43,
-     "end": 9.92,
+     "start": 9.405,
+     "end": 9.84,
      "heard": true
     },
     {
      "w": "got",
-     "start": 9.9,
+     "start": 9.88,
      "end": 10.08,
      "heard": true
     },
     {
      "w": "him",
-     "start": 10.065,
+     "start": 10.04,
      "end": 10.32,
      "heard": true
     },
     {
      "w": "charged",
-     "start": 10.25,
+     "start": 10.225,
      "end": 10.72,
      "heard": true
     },
     {
      "w": "with",
-     "start": 10.765,
+     "start": 10.74,
      "end": 10.88,
      "heard": true
     },
     {
      "w": "impiety.",
-     "start": 10.795,
-     "end": 11.92,
+     "start": 10.835,
+     "end": 12.0,
      "heard": true
     },
     {
-     "w": "He",
-     "start": 12.04,
-     "end": 12.16,
+     "w": "Bigger,",
+     "start": 12.055,
+     "end": 12.64,
      "heard": true
     },
     {
-     "w": "was",
-     "start": 12.07,
-     "end": 12.4,
-     "heard": true
-    },
-    {
-     "w": "right.",
-     "start": 12.325,
-     "end": 13.04,
-     "heard": true
-    },
-    {
-     "w": "By",
-     "start": 13.195,
+     "w": "yes.",
+     "start": 12.52,
      "end": 13.28,
      "heard": true
     },
     {
+     "w": "By",
+     "start": 13.45,
+     "end": 13.52,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 13.335,
-     "end": 13.44,
+     "start": 13.615,
+     "end": 13.68,
      "heard": true
     },
     {
      "w": "factor",
-     "start": 13.45,
-     "end": 13.76,
+     "start": 13.7,
+     "end": 14.0,
      "heard": true
     },
     {
      "w": "of",
-     "start": 13.69,
-     "end": 13.92,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 14.005,
+     "start": 13.94,
      "end": 14.24,
      "heard": true
     },
     {
-     "w": "eight",
-     "start": 14.32,
-     "end": 14.54,
+     "w": "about",
+     "start": 14.125,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 14.475,
+     "end": 14.78,
      "heard": false
     },
     {
      "w": "thousand.",
-     "start": 14.35,
-     "end": 14.54,
+     "start": 14.505,
+     "end": 14.78,
      "heard": false
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
-   "heard": "Melt down 1.3 million Earths and they'd fill it. Yet among the stars, it's ordinary. Some are more than a thousand times wider.",
+   "text": "Melt down one point three million Earths, and they'd fill it. Yet among the stars, it's no giant. Some are more than a thousand times wider.",
+   "heard": "Melt down 1.3 million Earths and they'd fill it. Yet among the stars, it's no giant. Some are more than a thousand times wider.",
    "words": [
     {
      "w": "Melt",
@@ -618,31 +612,31 @@
     },
     {
      "w": "down",
-     "start": 0.365,
+     "start": 0.36,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.71,
+     "start": 0.705,
      "end": 1.6,
      "heard": false
     },
     {
      "w": "point",
-     "start": 0.74,
+     "start": 0.735,
      "end": 1.6,
      "heard": false
     },
     {
      "w": "three",
-     "start": 0.785,
+     "start": 0.805,
      "end": 1.6,
      "heard": false
     },
     {
      "w": "million",
-     "start": 1.48,
+     "start": 1.61,
      "end": 2.08,
      "heard": true
     },
@@ -654,110 +648,116 @@
     },
     {
      "w": "and",
-     "start": 2.815,
-     "end": 2.96,
+     "start": 2.655,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "they'd",
-     "start": 2.955,
-     "end": 3.2,
+     "start": 2.685,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "fill",
-     "start": 3.295,
-     "end": 3.6,
+     "start": 3.17,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "it.",
-     "start": 3.8,
-     "end": 4.08,
+     "start": 4.1,
+     "end": 4.15,
      "heard": true
     },
     {
      "w": "Yet",
-     "start": 4.205,
-     "end": 4.4,
+     "start": 4.13,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "among",
-     "start": 4.31,
-     "end": 4.64,
+     "start": 4.2,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.655,
-     "end": 4.8,
+     "start": 4.56,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "stars,",
-     "start": 4.875,
-     "end": 5.36,
+     "start": 4.77,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "it's",
-     "start": 5.45,
-     "end": 5.68,
+     "start": 5.395,
+     "end": 5.6,
      "heard": true
     },
     {
-     "w": "ordinary.",
-     "start": 5.685,
-     "end": 6.8,
+     "w": "no",
+     "start": 5.58,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "giant.",
+     "start": 5.86,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "Some",
-     "start": 6.835,
+     "start": 6.875,
      "end": 7.12,
      "heard": true
     },
     {
      "w": "are",
-     "start": 7.11,
-     "end": 7.28,
+     "start": 7.21,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "more",
-     "start": 7.16,
-     "end": 7.52,
+     "start": 7.25,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "than",
-     "start": 7.615,
-     "end": 7.76,
+     "start": 7.695,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.83,
+     "start": 7.9,
      "end": 8.0,
      "heard": true
     },
     {
      "w": "thousand",
-     "start": 7.965,
-     "end": 8.48,
+     "start": 8.01,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "times",
-     "start": 8.485,
-     "end": 8.8,
+     "start": 8.525,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "wider.",
-     "start": 8.68,
-     "end": 9.36,
+     "start": 8.95,
+     "end": 9.44,
      "heard": true
     }
    ]

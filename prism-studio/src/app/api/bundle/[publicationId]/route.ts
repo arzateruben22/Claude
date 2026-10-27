@@ -1,4 +1,5 @@
-// Everything one upload task needs, in one ZIP: the exact export's video, cover, caption, captions and notes.
+// Everything one upload task needs, in one ZIP: the exact export's video, cover, captions (.srt) and one text file with
+// the title, caption, account, the first/pinned comment and each reply in posting order, and the notes (handOffText).
 import fs from "node:fs";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
@@ -7,6 +8,7 @@ import { isOwner } from "@/lib/owner";
 import { resolveMedia } from "@/lib/media";
 import { zipStream, type ZipEntry } from "@/lib/zip";
 import { markHandedOff } from "@/domain/publications";
+import { handOffText } from "@/domain/metadata";
 
 export const runtime = "nodejs";
 
@@ -26,7 +28,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ publicatio
   if (!video || !fs.existsSync(video)) return new Response("video missing", { status: 404 });
   const entries: ZipEntry[] = [{ name: `${base}.mp4`, path: video }];
   if (cover && fs.existsSync(cover)) entries.push({ name: `${base}-cover.jpg`, path: cover });
-  const text = [dest.platform === "youtube" ? `TITLE\n${x.title}\n` : "", `CAPTION\n${x.caption}\n\n${x.hashtags}\n`, `POST TO\n${dest.handle || dest.displayName || "(account not set up)"} on ${dest.platform}\n`, x.postingNotes ? `NOTES\n${x.postingNotes}\n` : ""].filter(Boolean).join("\n");
+  const text = handOffText(x, dest.platform, `${dest.handle || dest.displayName || "(account not set up)"} on ${dest.platform}`);
   entries.push({ name: `${base}-caption.txt`, data: Buffer.from(text, "utf8") });
   if (e.captionsSrt) entries.push({ name: `${base}.srt`, data: Buffer.from(e.captionsSrt, "utf8") });
   await markHandedOff(d, p.id);

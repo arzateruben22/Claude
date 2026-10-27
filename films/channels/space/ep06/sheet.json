@@ -1,0 +1,376 @@
+{
+ "duration": 74.6667,
+ "fps": 30,
+ "preset": "lightminute-vacuum",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.7333,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.7333,
+   "t1": 12.8,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 12.8,
+   "t1": 21.3333,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 21.3333,
+   "t1": 38.9333,
+   "energy": 0.62
+  },
+  {
+   "id": "whoa",
+   "t0": 38.9333,
+   "t1": 54.9333,
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.9333,
+   "t1": 59.7333,
+   "energy": 0.3
+  },
+  {
+   "id": "readout",
+   "t0": 59.7333,
+   "t1": 68.8,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 68.8,
+   "t1": 74.6667,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 3.7333
+  },
+  {
+   "t": 3.3,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 3.7333,
+   "kind": "section",
+   "id": "normal",
+   "t1": 12.8
+  },
+  {
+   "t": 3.7333,
+   "kind": "badge",
+   "tag": "b-spin"
+  },
+  {
+   "t": 7.433333333333334,
+   "kind": "counter.show",
+   "tag": "c-eq",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 10.433333333333334,
+   "kind": "counter.show",
+   "tag": "c-sound",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 12.8,
+   "kind": "section",
+   "id": "change",
+   "t1": 21.3333
+  },
+  {
+   "t": 13.133333333333333,
+   "kind": "scale.jump",
+   "tag": "to-orbit",
+   "t1": 14.9
+  },
+  {
+   "t": 14.0333,
+   "kind": "badge",
+   "tag": "b-nts"
+  },
+  {
+   "t": 14.6,
+   "kind": "label",
+   "tag": "l-earth",
+   "pos": [
+    0.734,
+    0.373
+   ]
+  },
+  {
+   "t": 14.9,
+   "kind": "label",
+   "tag": "l-sun",
+   "pos": [
+    0.403,
+    0.307
+   ]
+  },
+  {
+   "t": 14.9,
+   "kind": "badge",
+   "tag": "b-orbit"
+  },
+  {
+   "t": 14.966666666666667,
+   "kind": "counter.show",
+   "tag": "c-orb",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 17.366666666666667,
+   "kind": "counter.show",
+   "tag": "c-since",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 21.3333,
+   "kind": "section",
+   "id": "why",
+   "t1": 38.9333
+  },
+  {
+   "t": 23.4667,
+   "kind": "badge",
+   "tag": "b-spin2"
+  },
+  {
+   "t": 23.6667,
+   "kind": "label",
+   "tag": "l-you-w",
+   "pos": [
+    0.595,
+    0.467
+   ]
+  },
+  {
+   "t": 29.8,
+   "kind": "badge",
+   "tag": "b-cabin"
+  },
+  {
+   "t": 37.2667,
+   "kind": "badge",
+   "tag": "b-spin3"
+  },
+  {
+   "t": 37.3167,
+   "kind": "label",
+   "tag": "l-you-c",
+   "pos": [
+    0.598,
+    0.467
+   ]
+  },
+  {
+   "t": 38.9333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.9333
+  },
+  {
+   "t": 39.266666666666666,
+   "kind": "scale.jump",
+   "tag": "to-galaxy",
+   "t1": 42.03333333333333
+  },
+  {
+   "t": 40.0333,
+   "kind": "badge",
+   "tag": "b-cloud"
+  },
+  {
+   "t": 40.733333333333334,
+   "kind": "label",
+   "tag": "l-here",
+   "pos": [
+    0.629,
+    0.389
+   ]
+  },
+  {
+   "t": 41.6333,
+   "kind": "badge",
+   "tag": "b-illus"
+  },
+  {
+   "t": 42.03333333333333,
+   "kind": "badge",
+   "tag": "b-gal"
+  },
+  {
+   "t": 42.63333333333333,
+   "kind": "counter.show",
+   "tag": "c-gal",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 45.0,
+   "kind": "label",
+   "tag": "l-lap",
+   "pos": [
+    0.322,
+    0.222
+   ]
+  },
+  {
+   "t": 46.166666666666664,
+   "kind": "counter.show",
+   "tag": "c-lap",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 48.5,
+   "kind": "counter.show",
+   "tag": "c-dino",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 54.9333,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 59.7333
+  },
+  {
+   "t": 55.266666666666666,
+   "kind": "counter.show",
+   "tag": "c-what",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 59.7333,
+   "kind": "section",
+   "id": "readout",
+   "t1": 68.8
+  },
+  {
+   "t": 60.06666666666667,
+   "kind": "counter.show",
+   "tag": "c-read-trip",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 64.8,
+   "kind": "label",
+   "tag": "l-gc",
+   "pos": [
+    0.299,
+    0.34
+   ]
+  },
+  {
+   "t": 64.8,
+   "kind": "counter.show",
+   "tag": "c-read-gc",
+   "pos": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "t": 68.8,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.6667
+  },
+  {
+   "t": 68.86666666666666,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.033333333333333,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 13.1,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 21.633333333333333,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 39.233333333333334,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 55.233333333333334,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 60.03333333333333,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 69.1,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "l-earth": 14.6333,
+  "l-sun": 14.9333,
+  "l-you-w": 23.7,
+  "l-you-c": 37.3333,
+  "l-here": 40.7667,
+  "l-lap": 45.0333,
+  "l-gc": 64.8333
+ }
+}

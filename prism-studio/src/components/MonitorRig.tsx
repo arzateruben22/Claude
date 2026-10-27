@@ -1,6 +1,6 @@
 // The six-monitor rig: Instagram in the middle (landscape, the largest), one channel above it, two portrait screens
-// on each side on steel arms from a central pole. Under 900 px it becomes a calm stack: Instagram, the top screen,
-// then the four portraits two by two. The mapping lives in src/lib/rig.ts.
+// on each side on steel arms from a central pole. Under 900 px it becomes a calm stack: Instagram, then the channels
+// with something to show two by two, then the switched-off screens in one compact row. The mapping lives in src/lib/rig.ts.
 import type { RigView } from "@/lib/data";
 import { INSTAGRAM_SLUG, PHONE_ORDER, RIG, type RigPosition } from "@/lib/rig";
 import { Monitor } from "./Monitor";

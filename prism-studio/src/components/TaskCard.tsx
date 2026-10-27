@@ -1,90 +1,102 @@
-// One upload task on the desk: the account it must go to, the exact approved video and text, the hand-off
-// buttons, and the owner's confirmation.
+// The Upload Desk's tasks. An approved (or already posted) task gets the full card: the account it must go to, the
+// exact video and words (PostFields), the files, the hand-off buttons and the owner's confirmation. A task still waiting
+// for its approval is one compact row (TaskRow) that links to the approval: nothing on it could be posted yet.
 import Link from "next/link";
-import type { UploadTask } from "@/lib/data";
+import { coverOf, isReady, smallCover, thumbOf, uploadUrlFor, type UploadTask } from "@/lib/data";
 import { publishNow, reportUploaded, undoReport } from "@/app/actions";
-import { OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
+import { composePostText } from "@/domain/metadata";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { PLATFORM_LABEL, PUB_LABEL, pubTone, topicStyle } from "@/lib/format";
 import { ActionForm } from "./ActionForm";
-import { CopyButton } from "./CopyButton";
 import { HandOff } from "./HandOff";
+import { Icon } from "./Icon";
+import { PostFields } from "./PostFields";
+
+const when = (t: UploadTask, tz: string) => (t.p.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled");
+
+/** A task waiting for its approval: cover, when, account, title and the link to approve it. */
+export function TaskRow({ t, tz }: { t: UploadTask; tz: string }) {
+  const { e, dest, x, version, channel } = t;
+  const cover = smallCover(coverOf(t));
+  return (
+    <li className="q-row" style={topicStyle(channel)}>
+      <span className="q-cover" aria-hidden>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" /> : null}</span>
+      <Link href={`/episodes/${e.id}`} className="q-title">{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
+      <span className="q-where">{channel.label} · {PLATFORM_LABEL[dest.platform]}{dest.handle ? ` · ${dest.handle}` : ""}</span>
+      <span className="q-when num">{when(t, tz)}</span>
+      <span className="q-chips">
+        {!x ? <span className="chip">No export yet</span>
+          : <Link href={`/episodes/${e.id}#placements`} className="chip warn">{version?.superseded ? "Newer render: approve again" : "Needs approval"}</Link>}
+      </span>
+    </li>
+  );
+}
 
 export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz: string; stopExternal: boolean; connected?: boolean }) {
-  const { p, e, dest, x, approval, version, channel } = t;
+  const { p, e, dest, x, version, channel } = t;
   const platform = PLATFORM_LABEL[dest.platform];
   const done = ["owner_reported", "scheduled_on_platform"].includes(p.status);
   const handle = dest.handle || "";
   const accountName = dest.displayName || (dest.shared ? "Shared Instagram" : `${channel.name.replace(/ \(name TBD\)$/, "")} ${platform}`);
-  const uploadUrl = dest.uploadUrl || (dest.platform === "youtube" && dest.platformAccountId ? youtubeStudioFor(dest.platformAccountId) : OFFICIAL[dest.platform].upload);
-  const fullCaption = x ? [x.caption, x.hashtags].filter(Boolean).join("\n\n") : "";
-  const fileName = `${channel.slug}-${String(e.number).padStart(3, "0")}-${dest.platform}.mp4`;
-  const ready = !!approval && !!x && !version?.superseded;
+  const no = String(e.number).padStart(3, "0");
+  const base = `${channel.slug}-${no}-${dest.platform}`;
+  const ready = isReady(t);
+  const cover = coverOf(t), thumb = dest.platform === "youtube" ? thumbOf(t) : null;
   return (
-    <article id={`task-${p.id}`} data-task className="card topic stack" style={topicStyle(channel)}>
+    <article id={`task-${p.id}`} data-task className="card stack" style={topicStyle(channel)}>
       <div className="row spread top">
         <div>
-          <div className="kicker" style={{ color: "var(--topic-ink)" }}>{channel.label} · {platform}{p.scheduledFor ? ` · ${formatLocal(p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" })}` : " · not scheduled"}</div>
-          <h3 className="h2" style={{ margin: "4px 0 0" }}>{e.title}</h3>
-          <div className="muted" style={{ fontSize: 14 }}>No. {String(e.number).padStart(3, "0")}{version ? ` · render v${version.versionNo}` : ""}</div>
+          <div className="kicker topic-text">{channel.label} · {platform} · {when(t, tz)}</div>
+          <h3 className="h2" style={{ margin: "4px 0 0" }}>{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3>
+          <div className="faint" style={{ fontSize: 14 }}>No. {no}{version ? ` · render v${version.versionNo}` : ""}</div>
         </div>
-        <span className={`chip ${pubTone(p.status)}`}>{PUB_LABEL[p.status]}</span>
+        {p.status !== "planned" ? <span className={`chip ${pubTone(p.status)}`}>{PUB_LABEL[p.status]}</span> : null}
       </div>
 
-      <div className="acct card flat" style={{ padding: 12 }}>
-        <div className="who">
-          <span className="avatar" style={{ background: "var(--topic-ink)" }}>{(handle.replace("@", "") || platform).slice(0, 2).toUpperCase()}</span>
-          <div>
-            <div className="handle">{handle || accountName}</div>
-            <div className="muted" style={{ fontSize: 13 }}>{handle ? accountName : "Account not set up yet"} · {platform}</div>
+      <div className="acct">
+        <span className="avatar" aria-hidden>{handle ? handle.replace("@", "").slice(0, 2).toUpperCase() : <Icon name={dest.platform} size={20} />}</span>
+        <div>
+          <div className="handle">{handle || accountName}</div>
+          <div className="faint" style={{ fontSize: 13 }}>
+            {handle ? <>{accountName} · {platform}. Check the app is signed in as {handle}.</> : <>{platform} · not set up yet: add its handle so the desk shows who to post as.</>}
           </div>
         </div>
-        {handle
-          ? <div className="confirm">Before posting, check the {platform} app is signed in as {handle}.</div>
-          : <div className="confirm">Add this account&apos;s handle in <Link href="/connections">Accounts</Link> so the desk can show who to post as.</div>}
+        {!handle ? <Link href="/connections" className="btn ghost small acct-action">Add its handle</Link> : null}
       </div>
 
       {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Mark uploaded once it is live, or wait for the worker to confirm.</div> : null}
-      {!x ? <div className="notice">No export for {platform} yet: this episode has no rendered version.</div>
-        : version?.superseded ? <div className="notice">A newer render exists. Open the episode and approve the new version.</div>
-        : !approval ? <div className="notice">Not approved for this account yet. <Link href={`/episodes/${e.id}#placements`}>Review and approve</Link></div> : null}
 
-      {x && !done ? (
+      {x && !done && ready ? (
         <>
-          <div className="grid2">
+          <div className="grid2 desk-media">
             {version ? (
               <div className="player-wrap">
-                <video className="player" controls preload="none" playsInline poster={version.posterPath ? mediaUrl(version.posterPath) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 360 }} />
+                <video className="player" controls preload="none" playsInline poster={cover ? mediaUrl(cover) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 420 }} />
               </div>
             ) : null}
             <div className="stack-sm">
-              {dest.platform === "youtube" ? (
-                <div className="stack-sm"><div className="kicker">Title</div><div style={{ fontWeight: 650 }}>{x.title}</div><div><CopyButton text={x.title} label="Copy title" /></div></div>
-              ) : null}
-              <div className="kicker">Caption</div>
-              <div style={{ whiteSpace: "pre-wrap", fontSize: 14.5, background: "var(--ivory)", borderRadius: 12, padding: 12, maxHeight: 180, overflow: "auto" }}>{fullCaption}</div>
-              <div className="row"><CopyButton text={fullCaption} label="Copy caption" />
-                {x.coverPath ? <a className="btn ghost small" href={mediaUrl(x.coverPath, fileName.replace(/\.mp4$/, "-cover.jpg"))} download={fileName.replace(/\.mp4$/, "-cover.jpg")}>Cover .jpg</a> : null}
-                {dest.platform === "youtube" && e.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${e.id}`} download>Captions .srt</a> : null}
-                <a className="btn ghost small" href={`/api/bundle/${p.id}`} download>Bundle .zip</a></div>
-              {x.postingNotes ? <p className="faint" style={{ fontSize: 13, margin: 0 }}>{x.postingNotes}</p> : null}
-              {x.disclosures?.aiVoice || x.disclosures?.aiVisuals ? <p className="chip info" style={{ justifySelf: "start", margin: 0 }}>Turn on the AI / synthetic content label</p> : null}
+              <PostFields x={x} platform={dest.platform} />
+              <div className="row files">
+                {cover ? <a className="btn quiet small" href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`}><Icon name="download" size={16} /> Cover .jpg</a> : null}
+                {thumb ? <a className="btn quiet small" href={mediaUrl(thumb, `${base}-thumb.jpg`)} download={`${base}-thumb.jpg`}><Icon name="download" size={16} /> Thumbnail 16:9</a> : null}
+                {dest.platform === "youtube" && e.captionsSrt ? <a className="btn quiet small" href={`/api/srt/${e.id}`} download><Icon name="download" size={16} /> Captions .srt</a> : null}
+                <a className="btn quiet small" href={`/api/bundle/${p.id}`} download><Icon name="download" size={16} /> Bundle .zip</a>
+              </div>
             </div>
           </div>
           {stopExternal ? <div className="notice bad">External actions are stopped in Settings.</div> : (
             <>
               {connected ? (
-                <ActionForm action={publishNow} className="row" submit={`Publish now to ${handle || platform}`} submitClass="btn topic" confirm={`Upload this exact video and text to ${handle || platform} now?`}>
+                <ActionForm action={publishNow} className="row" submit={`Publish now to ${handle || platform}`} submitClass="btn" confirm={`Upload this exact video and text to ${handle || platform} now?`}>
                   <input type="hidden" name="publicationId" value={p.id} />
-                  {!ready ? <span className="faint" style={{ fontSize: 13 }}>Needs the approval first.</span> : null}
                 </ActionForm>
               ) : null}
-              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={fileName} uploadUrl={uploadUrl} platformLabel={platform} shareText={fullCaption} disabled={!ready} />
+              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}.mp4`} uploadUrl={uploadUrlFor(dest)} platformLabel={platform} shareText={composePostText(x)} />
             </>
           )}
-          <details>
-            <summary style={{ cursor: "pointer", fontWeight: 650 }}>I&apos;ve posted it: mark uploaded</summary>
+          <details className="post-report">
+            <summary>I&apos;ve posted it: mark uploaded</summary>
             <ActionForm action={reportUploaded} className="stack-sm" submit="Mark uploaded" submitClass="btn">
               <input type="hidden" name="publicationId" value={p.id} />
               <label className="field">Post link <span className="hint">Optional, from the platform&apos;s share button. Checked against {platform}{dest.platform === "tiktok" && handle ? ` and ${handle}` : ""}.</span>
@@ -97,6 +109,8 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
             </ActionForm>
           </details>
         </>
+      ) : !done ? (
+        <div className="notice">{!x ? `No export for ${platform} yet.` : version?.superseded ? "A newer render exists." : "Not approved for this account yet."} <Link href={`/episodes/${e.id}#placements`}>Review and approve</Link></div>
       ) : null}
 
       {done ? (

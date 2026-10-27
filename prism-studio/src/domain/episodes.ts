@@ -75,9 +75,14 @@ export async function addVersion(c: Conn, v: { episodeId: string; videoPath: str
   return row;
 }
 
+/** Create a version's export for a platform, or point it at a new file (e.g. the YouTube 1440p version). A new file
+ *  withdraws that export's approvals: an approval binds the exact file. */
 export async function upsertExport(c: Conn, v: { versionId: string; platform: "youtube" | "tiktok" | "instagram"; filePath: string; fileSha256: string; title?: string; caption?: string; hashtags?: string; coverPath?: string; disclosures?: Record<string, unknown>; postingNotes?: string }) {
+  const [before] = await c.select({ sha: platformExports.fileSha256 }).from(platformExports)
+    .where(and(eq(platformExports.versionId, v.versionId), eq(platformExports.platform, v.platform)));
   const [row] = await c.insert(platformExports).values({ ...v, title: v.title ?? "", caption: v.caption ?? "", hashtags: v.hashtags ?? "", coverPath: v.coverPath ?? "", disclosures: v.disclosures ?? {}, postingNotes: v.postingNotes ?? "" })
     .onConflictDoUpdate({ target: [platformExports.versionId, platformExports.platform], set: { filePath: v.filePath, fileSha256: v.fileSha256, updatedAt: new Date() } }).returning();
+  if (before && before.sha !== v.fileSha256) await revokeStaleApprovals(c, { exportId: row.id, reason: "file replaced" });
   return row;
 }
 

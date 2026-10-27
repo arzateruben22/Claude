@@ -1,0 +1,347 @@
+{
+ "duration": 74.4,
+ "fps": 30,
+ "preset": "meanwhile-pulse",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.2,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 5.2,
+   "t1": 14.0,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.0,
+   "t1": 25.6,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6,
+   "t1": 42.4,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 42.4,
+   "t1": 54.8,
+   "energy": 0.75
+  },
+  {
+   "id": "takeaway",
+   "t0": 54.8,
+   "t1": 60.8,
+   "energy": 0.3
+  },
+  {
+   "id": "meanwhile",
+   "t0": 60.8,
+   "t1": 67.6,
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 67.6,
+   "t1": 74.4,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.2
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -3.0
+  },
+  {
+   "t": 5.2,
+   "kind": "section",
+   "id": "normal",
+   "t1": 14.0
+  },
+  {
+   "t": 5.633333333333334,
+   "kind": "label",
+   "tag": "neut"
+  },
+  {
+   "t": 8.4,
+   "kind": "scale",
+   "tag": "size"
+  },
+  {
+   "t": 12.766666666666667,
+   "kind": "label",
+   "tag": "piled"
+  },
+  {
+   "t": 14.0,
+   "kind": "section",
+   "id": "change",
+   "t1": 25.6
+  },
+  {
+   "t": 14.2,
+   "kind": "badge",
+   "tag": "ill-plate",
+   "text": "illustrated"
+  },
+  {
+   "t": 24.1,
+   "kind": "diffuse",
+   "tag": "climb",
+   "t1": 25.2
+  },
+  {
+   "t": 25.583333,
+   "kind": "badge",
+   "tag": "slow1",
+   "text": "slowed"
+  },
+  {
+   "t": 25.6,
+   "kind": "section",
+   "id": "why",
+   "t1": 42.4
+  },
+  {
+   "t": 28.033333333333335,
+   "kind": "dissolve",
+   "tag": "sticky",
+   "t1": 29.366666666666667
+  },
+  {
+   "t": 30.333333333333332,
+   "kind": "label",
+   "tag": "grips"
+  },
+  {
+   "t": 31.466666666666665,
+   "kind": "impact",
+   "tag": "stop",
+   "gain": -6.0
+  },
+  {
+   "t": 33.06666666666667,
+   "kind": "bind",
+   "tag": "seam"
+  },
+  {
+   "t": 33.06666666666667,
+   "kind": "label",
+   "tag": "seam"
+  },
+  {
+   "t": 35.766666666666666,
+   "kind": "badge",
+   "tag": "lad",
+   "text": "illustration: a rare inherited condition"
+  },
+  {
+   "t": 42.383333,
+   "kind": "badge",
+   "tag": "fast",
+   "text": "sped up"
+  },
+  {
+   "t": 42.4,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 54.8
+  },
+  {
+   "t": 43.1,
+   "kind": "swell",
+   "tag": "wedge",
+   "t1": 45.5
+  },
+  {
+   "t": 46.8,
+   "kind": "cell.pass",
+   "tag": "pour",
+   "t1": 48.93333333333333
+  },
+  {
+   "t": 51.36666666666667,
+   "kind": "impact",
+   "tag": "shut",
+   "gain": -4.0
+  },
+  {
+   "t": 54.783333,
+   "kind": "badge",
+   "tag": "ill-finger",
+   "text": "illustration"
+  },
+  {
+   "t": 54.783333,
+   "kind": "breath",
+   "tag": "pull",
+   "t1": 56.583332999999996
+  },
+  {
+   "t": 54.8,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.8
+  },
+  {
+   "t": 60.8,
+   "kind": "badge",
+   "tag": "low",
+   "text": "low estimate"
+  },
+  {
+   "t": 60.8,
+   "kind": "beat",
+   "tag": "beat0"
+  },
+  {
+   "t": 60.8,
+   "kind": "counter.show",
+   "tag": "tally"
+  },
+  {
+   "t": 60.8,
+   "kind": "section",
+   "id": "meanwhile",
+   "t1": 67.6
+  },
+  {
+   "t": 61.6,
+   "kind": "beat",
+   "tag": "beat1"
+  },
+  {
+   "t": 62.4,
+   "kind": "beat",
+   "tag": "beat2"
+  },
+  {
+   "t": 63.2,
+   "kind": "beat",
+   "tag": "beat3"
+  },
+  {
+   "t": 64.0,
+   "kind": "beat",
+   "tag": "beat4"
+  },
+  {
+   "t": 64.8,
+   "kind": "beat",
+   "tag": "beat5"
+  },
+  {
+   "t": 65.6,
+   "kind": "beat",
+   "tag": "beat6"
+  },
+  {
+   "t": 66.4,
+   "kind": "beat",
+   "tag": "beat7"
+  },
+  {
+   "t": 67.2,
+   "kind": "beat",
+   "tag": "beat8"
+  },
+  {
+   "t": 67.6,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.4
+  },
+  {
+   "t": 68.0,
+   "kind": "beat",
+   "tag": "beat9"
+  },
+  {
+   "t": 68.8,
+   "kind": "beat",
+   "tag": "beat10"
+  },
+  {
+   "t": 69.6,
+   "kind": "beat",
+   "tag": "beat11"
+  },
+  {
+   "t": 70.4,
+   "kind": "beat",
+   "tag": "beat12"
+  },
+  {
+   "t": 71.2,
+   "kind": "beat",
+   "tag": "beat13"
+  },
+  {
+   "t": 72.0,
+   "kind": "beat",
+   "tag": "beat14"
+  },
+  {
+   "t": 72.4,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.5,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 14.3,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 25.9,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 42.7,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 55.1,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.1,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 67.9,
+   "file": "vo/08.wav"
+  }
+ ]
+}

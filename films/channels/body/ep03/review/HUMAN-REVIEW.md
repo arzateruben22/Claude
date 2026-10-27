@@ -1,0 +1,41 @@
+# What a person must check before this posts
+
+Meanwhile, Inside No. 03, "The jump". Nothing has been posted.
+
+## This episode
+- **History.** Müller, Helmholtz and the 1850 frog measurement (c1, c4, c5, c6) come from a 2019 University of Georgia
+  manuscript and Schmidgen's account, as excerpts. A historian of science or the physiologist confirms "doubted it
+  could ever be timed", "might be as fast as light" and "his former student".
+- **Multiple sclerosis (c9).** "Where myelin is damaged, as in multiple sclerosis, signals can slow or stall." Factual,
+  hedged, no advice; the fibre on screen is labelled brain and spinal cord. The physiologist decides whether to keep
+  naming the disease. If it stays, consider pinning a NINDS link.
+- **"A stubbed toe can hurt twice" (c13, c19).** First and second pain; real-time arrival on the silhouette (about 0.1 s
+  and 2.2 s; C fibres at about 0.7 m/s, inside the 0.5–2 m/s range). The jolt now rides "faster fibres", not
+  "wires".
+- **"A heart at rest beat about eighty times" (c14)** is an example at 75 a minute, not the viewer's own rate; heart-rate
+  ranges are not a verdict on anyone's heart (bible §9).
+- **Formula One (c12).** 372.6 km/h is Guinness's fastest speed in a Grand Prix (Montoya, Monza, 2005).
+- **The 26 Oct audit** (an independent fact check; every number checked out) changed four lines, re-voiced: "Some
+  fibres reach from spine to toe: about a metre" (was "Your longest run…": the toe's sensory fibres up to the brainstem
+  are longer, about 1.5 m) and the readout "spine to toe: about 1 m" (c3); "Thick wrapped ones, up to a hundred and
+  fifty" (c11: the 150 m/s fibres are the thickest; at equal thickness myelin gives about 20–30 times), with the readout
+  "thick wrapped fibres, up to", the pin "thick wrapped fibre" and the race's wrapped fibre drawn 1.5× thicker (check it
+  by eye: it thickens during the camera's move into the race, and its lower edge clears the caption plate, the race
+  camera sitting 2 µm lower for it); "Many of your fibres wear fatty myelin" (c7, c8);
+  "The jolt rides faster fibres; the ache, bare ones" (c19).
+- **The readout shows 300,000,000 m/s** (light, rounded) labelled "Müller: as fast as light?" — check the wording is fair to him.
+
+## Every episode
+1. **Claims.** A physiologist works through `CLAIMS-REVIEW.md` (every row from a search excerpt only, so a person opens
+   each link before posting); the episode does not post until every row is ticked.
+2. **The pictures.** The README's "For a human to review" lists everything shown but not claimed, and every badge.
+3. **End-card wording.** "Next, inside: the gap".
+4. **The channel.** The handle (@meanwhileinside (TODO: not yet chosen)) and a trademark search before the first post.
+5. **AI labelling.** TikTok's AI-generated label; "Voice: synthetic" in the post text; the same on Reels and Shorts.
+6. **Sources in the post.** `python3 -I kits/cinema/script/lint.py films/channels/body/ep03 --sources`.
+7. **A listen.** Johannes, Müller, Helmholtz, myelin, sclerosis; the race's spikes; "bare ones" at the end of the
+   takeaway (re-voiced 26 Oct; the recognizer heard "bare wands").
+8. **Cover frame.** Frame 0: the spark mid-leap, the title and the "? m/s" readout.
+9. **Upload** the MP4 directly; auto-captions off.
+
+TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted.

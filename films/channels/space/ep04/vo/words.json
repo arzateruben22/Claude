@@ -221,84 +221,84 @@
   },
   {
    "id": "vo03",
-   "text": "Now switch gravity off. The Moon would fly off in a straight line. Gravity bends it back toward us. Every moment, all the way round.",
-   "heard": "Now switch gravity off. The moon would fly off in a straight line. Gravity bends it back toward us. Every moment all the way round.",
+   "text": "Now switch gravity off. The Moon would fly off in a straight line. Gravity bends it back toward us. So it falls, and always misses.",
+   "heard": "Now switch gravity off. The moon would fly off in a straight line. Gravity bends it back toward us, so it falls and always misses.",
    "words": [
     {
      "w": "Now",
      "start": 0.02,
-     "end": 0.24,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "switch",
-     "start": 0.48,
+     "start": 0.415,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "gravity",
-     "start": 0.745,
+     "start": 0.74,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "off.",
-     "start": 1.375,
+     "start": 1.37,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "The",
-     "start": 1.925,
+     "start": 1.92,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "Moon",
-     "start": 1.955,
+     "start": 1.95,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "would",
-     "start": 2.495,
+     "start": 2.49,
      "end": 2.64,
      "heard": true
     },
     {
      "w": "fly",
-     "start": 2.655,
+     "start": 2.65,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "off",
-     "start": 2.92,
+     "start": 2.93,
      "end": 3.2,
      "heard": true
     },
     {
      "w": "in",
-     "start": 3.225,
+     "start": 3.22,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.455,
-     "end": 3.505,
+     "start": 3.48,
+     "end": 3.53,
      "heard": true
     },
     {
      "w": "straight",
-     "start": 3.49,
+     "start": 3.51,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "line.",
-     "start": 3.765,
+     "start": 3.735,
      "end": 4.56,
      "heard": true
     },
@@ -310,67 +310,67 @@
     },
     {
      "w": "bends",
-     "start": 5.215,
+     "start": 5.185,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.63,
+     "start": 5.615,
      "end": 5.68,
      "heard": true
     },
     {
      "w": "back",
-     "start": 5.775,
+     "start": 5.655,
      "end": 5.92,
      "heard": true
     },
     {
      "w": "toward",
-     "start": 5.87,
-     "end": 6.24,
+     "start": 5.895,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "us.",
-     "start": 6.33,
-     "end": 6.88,
+     "start": 6.355,
+     "end": 6.8,
      "heard": true
     },
     {
-     "w": "Every",
-     "start": 6.915,
+     "w": "So",
+     "start": 6.85,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.88,
      "end": 7.2,
      "heard": true
     },
     {
-     "w": "moment,",
-     "start": 7.085,
+     "w": "falls,",
+     "start": 7.08,
      "end": 7.68,
      "heard": true
     },
     {
-     "w": "all",
-     "start": 7.79,
-     "end": 8.0,
+     "w": "and",
+     "start": 7.7,
+     "end": 7.92,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 8.045,
-     "end": 8.16,
+     "w": "always",
+     "start": 7.935,
+     "end": 8.24,
      "heard": true
     },
     {
-     "w": "way",
-     "start": 8.075,
-     "end": 8.4,
-     "heard": true
-    },
-    {
-     "w": "round.",
-     "start": 8.4,
+     "w": "misses.",
+     "start": 8.335,
      "end": 8.88,
      "heard": true
     }
@@ -378,8 +378,8 @@
   },
   {
    "id": "vo04",
-   "text": "The heavens, people believed, had their own rules. Isaac Newton, the story goes, wondered if the pull that drops an apple reaches the Moon. The Moon is sixty times farther from Earth's center than the apple. So the pull there is thirty-six hundred times weaker.",
-   "heard": "The heavens, people believed, had their own rules. Isaac Newton, the story goes, wondered if the pole that drops an apple reaches the moon. The moon is 60 times farther from Earth's center than the apple, so the pole there is 3,600 times weaker.",
+   "text": "The heavens, people believed, had their own rules. Newton, the story goes, wondered if the pull that drops an apple reaches the Moon. The Moon is sixty times farther from Earth's center than the apple. Gravity fades with distance squared: thirty-six hundred times weaker.",
+   "heard": "The heavens, people believed, had their own rules. Newton, the story goes, wondered if the pole that drops an apple reaches the moon. The moon is 60 times farther from Earth's center than the apple. Gravity fades with distance squared, 3,600 times weaker.",
    "words": [
     {
      "w": "The",
@@ -401,254 +401,248 @@
     },
     {
      "w": "believed,",
-     "start": 0.97,
+     "start": 0.98,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "had",
-     "start": 1.51,
+     "start": 1.5,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "their",
-     "start": 1.735,
+     "start": 1.72,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "own",
-     "start": 1.945,
+     "start": 1.92,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "rules.",
-     "start": 2.28,
+     "start": 2.23,
      "end": 3.12,
      "heard": true
     },
     {
-     "w": "Isaac",
-     "start": 3.28,
-     "end": 3.68,
-     "heard": true
-    },
-    {
      "w": "Newton,",
-     "start": 3.645,
-     "end": 4.32,
+     "start": 3.22,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.33,
-     "end": 4.48,
+     "start": 3.805,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "story",
-     "start": 4.535,
-     "end": 4.96,
+     "start": 4.01,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "goes,",
-     "start": 4.91,
-     "end": 5.68,
+     "start": 4.385,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "wondered",
-     "start": 5.79,
-     "end": 6.16,
+     "start": 5.165,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "if",
-     "start": 6.205,
-     "end": 6.32,
+     "start": 5.535,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "the",
-     "start": 6.38,
-     "end": 6.48,
+     "start": 5.73,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "pull",
-     "start": 6.545,
-     "end": 6.88,
+     "start": 5.895,
+     "end": 6.24,
      "heard": false
     },
     {
      "w": "that",
-     "start": 6.95,
-     "end": 7.0,
+     "start": 6.33,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "drops",
-     "start": 6.98,
-     "end": 7.36,
+     "start": 6.36,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "an",
-     "start": 7.285,
-     "end": 7.52,
+     "start": 6.935,
+     "end": 6.985,
      "heard": true
     },
     {
      "w": "apple",
-     "start": 7.545,
-     "end": 7.92,
+     "start": 6.965,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "reaches",
-     "start": 7.92,
-     "end": 8.32,
+     "start": 7.46,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.305,
-     "end": 8.48,
+     "start": 7.68,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "Moon.",
-     "start": 8.465,
-     "end": 9.28,
+     "start": 7.755,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "The",
-     "start": 9.37,
-     "end": 9.44,
+     "start": 8.72,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "Moon",
-     "start": 9.4,
-     "end": 9.84,
+     "start": 8.75,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "is",
-     "start": 9.855,
-     "end": 10.0,
+     "start": 9.2,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "sixty",
-     "start": 10.06,
-     "end": 10.4,
+     "start": 9.455,
+     "end": 9.84,
      "heard": true
     },
     {
      "w": "times",
-     "start": 10.38,
-     "end": 10.8,
+     "start": 9.78,
+     "end": 10.16,
      "heard": true
     },
     {
      "w": "farther",
-     "start": 10.895,
-     "end": 11.2,
+     "start": 10.255,
+     "end": 10.64,
      "heard": true
     },
     {
      "w": "from",
-     "start": 11.135,
-     "end": 11.44,
+     "start": 10.735,
+     "end": 10.88,
      "heard": true
     },
     {
      "w": "Earth's",
-     "start": 11.51,
-     "end": 11.84,
+     "start": 10.935,
+     "end": 11.28,
      "heard": true
     },
     {
      "w": "center",
-     "start": 11.895,
-     "end": 12.24,
+     "start": 11.32,
+     "end": 11.6,
      "heard": true
     },
     {
      "w": "than",
-     "start": 12.205,
-     "end": 12.4,
+     "start": 11.49,
+     "end": 11.76,
      "heard": true
     },
     {
      "w": "the",
-     "start": 12.41,
-     "end": 12.56,
+     "start": 11.645,
+     "end": 11.92,
      "heard": true
     },
     {
      "w": "apple.",
-     "start": 12.69,
+     "start": 12.015,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "Gravity",
+     "start": 12.735,
      "end": 13.2,
      "heard": true
     },
     {
-     "w": "So",
-     "start": 13.25,
-     "end": 13.36,
+     "w": "fades",
+     "start": 13.295,
+     "end": 13.68,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 13.28,
-     "end": 13.52,
+     "w": "with",
+     "start": 13.675,
+     "end": 13.92,
      "heard": true
     },
     {
-     "w": "pull",
-     "start": 13.55,
-     "end": 13.84,
-     "heard": false
-    },
-    {
-     "w": "there",
-     "start": 13.805,
-     "end": 14.08,
+     "w": "distance",
+     "start": 13.925,
+     "end": 14.4,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 14.025,
-     "end": 14.24,
+     "w": "squared:",
+     "start": 14.495,
+     "end": 15.2,
      "heard": true
     },
     {
      "w": "thirty-six",
-     "start": 14.25,
-     "end": 15.36,
+     "start": 15.27,
+     "end": 16.32,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 14.28,
-     "end": 15.36,
+     "start": 15.3,
+     "end": 16.32,
      "heard": false
     },
     {
      "w": "times",
-     "start": 15.395,
-     "end": 15.68,
+     "start": 16.305,
+     "end": 16.64,
      "heard": true
     },
     {
      "w": "weaker.",
-     "start": 15.775,
-     "end": 16.16,
+     "start": 16.715,
+     "end": 17.12,
      "heard": true
     }
    ]
@@ -800,103 +794,103 @@
   },
   {
    "id": "vo06",
-   "text": "So the pull that drops an apple is the very same pull that holds the Moon.",
-   "heard": "So the pull that drops an apple is the very same pull that holds the moon.",
+   "text": "So the pull that drops an apple is the same pull that keeps the Moon falling.",
+   "heard": "So the pull that drops an apple is the same pull that keeps the moon falling.",
    "words": [
     {
      "w": "So",
-     "start": 0.02,
+     "start": 0.025,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.365,
-     "end": 0.415,
+     "start": 0.335,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "pull",
-     "start": 0.45,
+     "start": 0.405,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "that",
-     "start": 0.87,
+     "start": 0.765,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "drops",
-     "start": 0.9,
-     "end": 1.44,
+     "start": 1.0,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "an",
-     "start": 1.61,
-     "end": 1.68,
+     "start": 1.7,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "apple",
-     "start": 1.655,
-     "end": 2.16,
+     "start": 1.99,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.56,
-     "end": 2.72,
+     "start": 2.655,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.71,
+     "start": 2.805,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "very",
-     "start": 2.92,
-     "end": 3.36,
-     "heard": true
-    },
-    {
      "w": "same",
-     "start": 3.42,
-     "end": 3.68,
+     "start": 3.065,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "pull",
-     "start": 3.775,
-     "end": 4.16,
+     "start": 3.375,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "that",
-     "start": 4.36,
-     "end": 4.56,
+     "start": 4.015,
+     "end": 4.08,
      "heard": true
     },
     {
-     "w": "holds",
-     "start": 4.64,
-     "end": 5.04,
+     "w": "keeps",
+     "start": 4.13,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.095,
-     "end": 5.2,
+     "start": 4.525,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "Moon.",
-     "start": 5.125,
-     "end": 5.68,
+     "w": "Moon",
+     "start": 4.555,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "falling.",
+     "start": 5.195,
+     "end": 5.76,
      "heard": true
     }
    ]

@@ -11,7 +11,7 @@ export function LoginForm({ next }: { next: string }) {
         <input name="passphrase" type="password" autoComplete="current-password" required autoFocus />
       </label>
       <button className="btn block" disabled={pending}>{pending ? "Checking…" : "Sign in"}</button>
-      <p role="status" aria-live="polite" style={{ color: "var(--bad)", fontWeight: 600, margin: 0, minHeight: "1.5em" }}>{state && !state.ok ? state.message : ""}</p>
+      <p role="status" aria-live="polite" className="status-line" style={{ color: "var(--bad)", fontWeight: 600 }}>{state && !state.ok ? state.message : ""}</p>
     </form>
   );
 }

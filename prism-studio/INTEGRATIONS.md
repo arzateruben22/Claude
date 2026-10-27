@@ -17,6 +17,24 @@ OAuth grant, sealed with `INTEGRATIONS_KEY`, and switches that destination to **
 - Posting text (title, description/caption, hashtags, tags, the sources comment) comes from the metadata
   engine (`src/domain/metadata.ts`), the same text the owner approved.
 
+## API analytics (`src/domain/api-analytics.ts`)
+
+- The worker's housekeeping (every 15 minutes) queues a `pull_metrics` job for each verified publication on a
+  connected destination whose connector reads metrics (YouTube, TikTok, Instagram): **daily** for a post's first 30
+  days after publication, then **weekly**, counted in UTC days from the last attempt. **Refresh now** on Analytics or
+  the episode page queues one at once.
+- The job asks the platform with the sealed token (refreshed when near expiry) and writes `metric_snapshots` rows
+  with source `api`: views, likes, comments, shares, average view duration and watch time, whichever the platform
+  reports (a metric it doesn't give gets no row, never 0). One row per post, metric and UTC day: re-pulling that day
+  updates it. Views run the milestone rules like any qualifying number.
+- An auth failure or a refused refresh marks the connection **expired** (Accounts shows "needs reconnecting"); nothing
+  pulls from it until it's reconnected and the job is not retried. Network trouble retries with backoff; any other
+  refusal (a deleted video, quota) waits for the post's next period. Simulated publications and demo episodes are
+  never pulled. **Stop external actions** pauses pulls too.
+- What each connector reads today: YouTube `videos.list` statistics (views, likes, comments; watch time needs the
+  YouTube Analytics API and its own scope, not requested yet); TikTok `video/query` (views, likes, comments, shares);
+  Instagram media insights (views or plays, likes, comments, shares).
+
 Setup (`.env.local`): `INTEGRATIONS_KEY` (openssl rand -hex 32), `PUBLIC_ORIGIN` (the https origin the platforms
 redirect back to; callbacks are `/api/auth/<platform>/callback`), and each platform's app credentials below.
 Secrets never reach the browser; tokens are never logged.
@@ -47,4 +65,4 @@ Instagram content publishing — https://developers.facebook.com/docs/instagram-
 - A saved URL or handle is never a connection; only an OAuth grant makes a destination `api`.
 - The same platform account cannot be connected to two destinations.
 - `mayAutoPublish` refuses when the owner already posted by hand, when the record is simulated, or when external actions are stopped.
-- Metrics from the APIs are written as `metric_snapshots` with source `api`; until then, values are owner-confirmed or CSV.
+- Metrics from the APIs are written as `metric_snapshots` with source `api` (one row per post, metric and UTC day); posts on unconnected accounts stay owner-confirmed or CSV.

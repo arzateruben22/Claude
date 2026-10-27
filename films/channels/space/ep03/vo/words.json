@@ -239,8 +239,8 @@
   },
   {
    "id": "vo03",
-   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one face always faced the Sun.",
-   "heard": "For 300 years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about 23 hours. Schaparelli said one face always faced the sun.",
+   "text": "For three hundred years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about twenty-three hours. Schiaparelli said one side always faced the Sun.",
+   "heard": "For 300 years, astronomers chased faint smudges in those clouds. The Cassinis, father and son, clocked about 23 hours. Schaparelli said one side always faced the sun.",
    "words": [
     {
      "w": "For",
@@ -250,19 +250,19 @@
     },
     {
      "w": "three",
-     "start": 0.17,
+     "start": 0.175,
      "end": 0.8,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 0.2,
+     "start": 0.205,
      "end": 0.8,
      "heard": false
     },
     {
      "w": "years,",
-     "start": 0.7,
+     "start": 0.695,
      "end": 1.28,
      "heard": true
     },
@@ -286,49 +286,49 @@
     },
     {
      "w": "smudges",
-     "start": 2.695,
-     "end": 3.28,
+     "start": 2.705,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "in",
-     "start": 3.24,
+     "start": 3.245,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "those",
-     "start": 3.565,
-     "end": 3.615,
+     "start": 3.515,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "clouds.",
-     "start": 3.595,
+     "start": 3.61,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "The",
-     "start": 4.57,
-     "end": 4.62,
+     "start": 4.595,
+     "end": 4.645,
      "heard": true
     },
     {
      "w": "Cassinis,",
-     "start": 4.6,
-     "end": 5.44,
+     "start": 4.625,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "father",
-     "start": 5.44,
+     "start": 5.445,
      "end": 5.76,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.665,
+     "start": 5.67,
      "end": 6.0,
      "heard": true
     },
@@ -358,7 +358,7 @@
     },
     {
      "w": "hours.",
-     "start": 7.81,
+     "start": 7.805,
      "end": 8.64,
      "heard": true
     },
@@ -371,43 +371,43 @@
     {
      "w": "said",
      "start": 9.555,
-     "end": 9.76,
+     "end": 9.84,
      "heard": true
     },
     {
      "w": "one",
-     "start": 9.68,
-     "end": 10.0,
+     "start": 9.72,
+     "end": 10.08,
      "heard": true
     },
     {
-     "w": "face",
-     "start": 10.065,
-     "end": 10.4,
+     "w": "side",
+     "start": 10.095,
+     "end": 10.48,
      "heard": true
     },
     {
      "w": "always",
-     "start": 10.385,
-     "end": 10.72,
+     "start": 10.485,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "faced",
-     "start": 10.815,
-     "end": 11.12,
+     "start": 10.69,
+     "end": 11.2,
      "heard": true
     },
     {
      "w": "the",
-     "start": 11.185,
-     "end": 11.28,
+     "start": 11.285,
+     "end": 11.36,
      "heard": true
     },
     {
      "w": "Sun.",
-     "start": 11.215,
-     "end": 11.6,
+     "start": 11.315,
+     "end": 11.68,
      "heard": true
     }
    ]

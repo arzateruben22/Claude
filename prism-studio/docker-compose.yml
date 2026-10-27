@@ -1,4 +1,5 @@
-# Prism Studio on one small server: Postgres, the web app, the worker, and Caddy for automatic HTTPS.
+# Prism Studio on one small server: Postgres, the web app, the worker, nightly database backups, and Caddy for
+# automatic HTTPS.
 #   cp deploy/env.example .env.production && edit it, then: docker compose --env-file .env.production up -d --build
 services:
   db:
@@ -44,6 +45,31 @@ services:
     volumes:
       - media:/data/media
       - ./films-mirror:/films:ro
+
+  backup:
+    # pg_dump every night at BACKUP_AT (03:15, in BACKUP_TZ: UTC unless set) into ./backups: the newest 14 daily and
+    # 8 weekly are kept. On start it backs up at once if the newest is over a day old. deploy/backup.sh; restore: DEPLOY.md
+    image: postgres:16-alpine
+    restart: unless-stopped
+    init: true
+    entrypoint: ["sh", "/backup.sh"]
+    command: ["loop"]                   # docker compose run --rm backup once   (a backup right now)
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      PGHOST: db
+      PGUSER: prism
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: prism
+      TZ: ${BACKUP_TZ:-UTC}
+      BACKUP_AT: ${BACKUP_AT:-03:15}
+      BACKUP_DIR: /backups
+      KEEP_DAILY: 14
+      KEEP_WEEKLY: 8
+    volumes:
+      - ./backups:/backups
+      - ./deploy/backup.sh:/backup.sh:ro
+    # "unhealthy" in docker compose ps when the newest backup is over 26 hours old
+    healthcheck: { test: ["CMD-SHELL", "test -n \"$$(find /backups/daily -name 'prism-*.sql.gz' -mmin -1560)\""], interval: 30m, timeout: 10s, start_period: 10m, retries: 1 }
 
   caddy:
     image: caddy:2-alpine

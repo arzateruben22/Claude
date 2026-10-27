@@ -4,11 +4,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { channelBySlug, channelExtension, coverOf, instagramExtension, rigView, type PostItem } from "@/lib/data";
+import { channelBySlug, channelExtension, coverOf, instagramExtension, rigView, smallCover, type PostItem } from "@/lib/data";
 import { INSTAGRAM_SLUG } from "@/lib/rig";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { PLATFORM_LABEL, PUB_LABEL, pubTone, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, PUB_LABEL, pubTone, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { approveLessonAction } from "@/app/actions";
+import { ActionForm } from "@/components/ActionForm";
+import { CopyButton } from "@/components/CopyButton";
 import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
 import { Icon } from "@/components/Icon";
@@ -32,16 +35,19 @@ export default async function Extension({ params }: { params: Promise<{ slug: st
   );
 }
 
+/** One queued post: cover, title, where, when, and only the states the row doesn't already say. On the Instagram screen
+ *  the account is implied, so "where" is the channel. */
 function QueueRow({ t, tz }: { t: PostItem; tz: string }) {
+  const cover = smallCover(coverOf(t));
   return (
     <li className="q-row" style={topicStyle(t.channel)}>
-      <span className="q-cover" aria-hidden>{coverOf(t) ? <img src={mediaUrl(coverOf(t)!)} alt="" decoding="async" loading="lazy" /> : null}</span>
-      <span className="q-when num">{t.p?.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled"}</span>
-      <span className="q-where">{t.dest.shared ? `Instagram · ${t.channel.label}` : PLATFORM_LABEL[t.dest.platform]}</span>
+      <span className="q-cover" aria-hidden>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" /> : null}</span>
       <Link href={`/episodes/${t.e.id}`} className="q-title">{t.e.title}</Link>
+      <span className="q-where">{t.dest.shared ? t.channel.label : PLATFORM_LABEL[t.dest.platform]}</span>
+      <span className="q-when num">{t.p?.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : t.p ? "Not scheduled" : "In rotation"}</span>
       <span className="q-chips">
-        {t.p ? <span className={`chip ${pubTone(t.p.status)}`}>{PUB_LABEL[t.p.status]}</span> : <span className="chip">Up next</span>}
-        {t.approval ? <span className="chip good">Approved</span> : <span className="chip warn">Needs approval</span>}
+        {t.p && t.p.status !== "planned" ? <span className={`chip ${pubTone(t.p.status)}`}>{PUB_LABEL[t.p.status]}</span> : null}
+        {t.approval ? <span className="chip good">Approved</span> : <Link href={`/episodes/${t.e.id}#placements`} className="chip warn">Needs approval</Link>}
       </span>
     </li>
   );
@@ -53,6 +59,8 @@ async function ChannelScreen({ slug }: { slug: string }) {
   const c = v.channel;
   const name = c.name.replace(/ \(name TBD\)$/, "");
   const scheduled = v.upcoming.filter((t) => t.p?.scheduledFor), unscheduled = v.upcoming.filter((t) => !t.p?.scheduledFor);
+  const noEpisodes = !v.series.length && !v.loose.length;
+  const unset = v.accounts.filter((a) => !a.dest.handle);
   return (
     <div style={topicStyle(c)}>
       <header className="ext-head">
@@ -67,6 +75,19 @@ async function ChannelScreen({ slug }: { slug: string }) {
         {v.paused ? <div className="notice">{c.paused ? "This channel is paused" : "Publishing is paused"}: nothing new is planned.</div> : null}
       </header>
 
+      {noEpisodes ? (
+        <section className="section">
+          <div className="card empty-state">
+            <h2>No episodes yet</h2>
+            <p className="muted">{name} joins the wall when its first film is imported. Before that:</p>
+            <ul className="todo">
+              {unset.map((a) => <li key={a.dest.id}><Link href="/connections" className="chip warn">Add the {PLATFORM_LABEL[a.dest.platform]} handle</Link></li>)}
+              <li><Link href={`/channels/${c.slug}?tab=editorial`} className="chip warn">Write the series bible</Link></li>
+            </ul>
+          </div>
+        </section>
+      ) : (
+      <>
       <section className="section">
         <div className="section-head"><h2>Ready to post</h2><span className="faint num">next per account</span></div>
         <div className="posts">
@@ -74,7 +95,10 @@ async function ChannelScreen({ slug }: { slug: string }) {
             ? <PostCard key={a.dest.id} t={a.next} tz={v.tz} stopExternal={v.stopExternal} />
             : (
               <div key={a.dest.id} className="card post-empty">
-                <div className="kicker">{PLATFORM_LABEL[a.dest.platform]} · {a.dest.handle || "account not set up"}</div>
+                <div className="post-state">
+                  <span className="label">{PLATFORM_LABEL[a.dest.platform]}{a.dest.handle ? ` · ${a.dest.handle}` : ""}</span>
+                  {!a.dest.handle ? <Link href="/connections" className="chip warn">Account not set up</Link> : null}
+                </div>
                 <p className="muted">Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</p>
                 <a className="btn ghost small" href={a.uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> {PLATFORM_LABEL[a.dest.platform]} upload page</a>
               </div>
@@ -82,8 +106,17 @@ async function ChannelScreen({ slug }: { slug: string }) {
         </div>
       </section>
 
+      <section className="section" id="long-video">
+        <div className="section-head"><h2>Long video</h2><span className="faint num">YouTube · regular video, not Shorts</span></div>
+        {v.longVideos.length ? (
+          <div className="posts">
+            {v.longVideos.map((x) => <LongVideo key={x.lesson.id} x={x} slug={c.slug} />)}
+          </div>
+        ) : <p className="muted">No long video yet. Once 4–6 shorts are rendered, build one from <Link href={`/channels/${c.slug}?tab=lessons`}>Lessons</Link>: they play back to back in one 16:9 video with chapters.</p>}
+      </section>
+
       <section className="section">
-        <div className="section-head"><h2>Queue</h2><span className="faint num">{v.upcoming.length}</span></div>
+        <div className="section-head"><h2>Queue</h2></div>
         {v.upcoming.length ? (
           <div className="card flush">
             <ul className="q">
@@ -92,11 +125,11 @@ async function ChannelScreen({ slug }: { slug: string }) {
             </ul>
           </div>
         ) : <p className="muted">Nothing else queued. {v.accounts.some((a) => a.next) ? "The next posts are above." : "New renders appear here once they pass review."}</p>}
-        {unscheduled.length ? <p className="faint small-note"><Link href="/calendar">Plan the week</Link> to give unscheduled posts a slot.</p> : null}
+        {unscheduled.length ? <div className="note-row small-note"><p className="faint">Plan the week to give unscheduled posts a slot.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
       </section>
 
       <section className="section">
-        <div className="section-head"><h2>Series</h2><span className="faint num">{v.series.length}</span></div>
+        <div className="section-head"><h2>Series</h2></div>
         {v.series.length || v.loose.length ? (
           <div className="series-grid">
             {v.series.map(({ series: x, episodes }) => (
@@ -127,20 +160,16 @@ async function ChannelScreen({ slug }: { slug: string }) {
               </div>
             ) : null}
           </div>
-        ) : (
-          <div className="card empty-state">
-            <h3>No episodes yet</h3>
-            <p className="muted">{name} has no series or episodes yet. When the first film is imported it appears here, and on this monitor.</p>
-            <Link href={`/channels/${c.slug}?tab=editorial`} className="btn ghost small">Editorial and voice</Link>
-          </div>
-        )}
+        ) : null}
       </section>
+      </>
+      )}
     </div>
   );
 }
 
-const SLOT_LABEL = { posted: "Posted", ready: "Ready to post", needs_approval: "Needs approval", unplanned: "Up next · not planned yet", empty: "Nothing in rotation" } as const;
-const SLOT_TONE = { posted: "good", ready: "good", needs_approval: "warn", unplanned: "", empty: "" } as const;
+const SLOT_LABEL = { posted: "Posted", ready: "Ready to post", needs_approval: "Needs approval", unplanned: "Next in rotation · not planned", missed: "Missed · nothing was planned", empty: "Nothing in rotation" } as const;
+const SLOT_TONE = { posted: "good", ready: "good", needs_approval: "warn", unplanned: "", missed: "", empty: "" } as const;
 
 async function InstagramScreen() {
   const v = await instagramExtension();
@@ -160,22 +189,22 @@ async function InstagramScreen() {
       </header>
 
       <section className="section">
-        <div className="section-head"><h2>Today</h2><span className="faint num">{v.slots.length} slot{v.slots.length === 1 ? "" : "s"}</span></div>
+        <div className="section-head"><h2>{v.day === "tomorrow" ? "Tomorrow" : "Today"}</h2>{v.day === "tomorrow" ? <span className="faint num">today&apos;s slots are over</span> : null}</div>
         {v.slots.length ? (
           <div className="slots">
             {v.slots.map((x, i) => (
               <div key={i} className="slot">
                 <div className="slot-head">
-                  <span className="slot-time num">{formatLocal(x.at, v.tz, { hour: "numeric", minute: "2-digit" })}</span>
+                  <span className="slot-time num">{v.day === "tomorrow" ? "Tomorrow " : ""}{formatLocal(x.at, v.tz, { hour: "numeric", minute: "2-digit" })}</span>
                   <span className={`chip ${SLOT_TONE[x.state]}`}>{SLOT_LABEL[x.state]}</span>
                 </div>
                 {x.item ? <PostCard t={x.item} tz={v.tz} stopExternal={v.stopExternal} heading={x.item.channel.label} />
-                  : <div className="card post-empty"><p className="muted">No episode is waiting for Instagram. New renders join the rotation automatically.</p></div>}
+                  : <div className="card post-empty"><p className="muted">{x.state === "missed" ? "This slot passed with nothing planned for it." : "No episode is waiting for Instagram. New renders join the rotation automatically."}</p></div>}
               </div>
             ))}
           </div>
         ) : <div className="card"><p className="muted">{v.paused ? "Publishing is paused, so there are no slots today." : "No Instagram slots today (blackout)."}</p></div>}
-        {v.slots.some((x) => x.state === "unplanned") ? <p className="faint small-note">These are the next episodes in rotation. <Link href="/calendar">Plan the week</Link> to put them in today&apos;s slots; each still needs its approval.</p> : null}
+        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
       </section>
 
       <section className="section">
@@ -195,23 +224,62 @@ async function InstagramScreen() {
         <div className="card flush">
           <table className="t ledger">
             <caption className="sr-only">Instagram ledger by channel</caption>
-            <thead><tr><th scope="col">Channel</th><th scope="col">Rendered</th><th scope="col">Posted</th><th scope="col">Planned</th><th scope="col">Not yet</th></tr></thead>
+            <thead><tr><th scope="col">Channel</th><th scope="col">Rendered</th><th scope="col">Posted</th><th scope="col" className="hide-sm">Planned</th><th scope="col">Not yet</th></tr></thead>
             <tbody>
               {v.ledger.map((r) => (
                 <tr key={r.channel.id} style={topicStyle(r.channel)}>
                   <th scope="row"><Link href={`/m/${r.channel.slug}`}><span className="dot" aria-hidden /> {r.name}</Link></th>
                   <td className="num">{r.ready}<span className="faint"> / {r.episodes}</span></td>
                   <td className="num">{r.posted}</td>
-                  <td className="num">{r.planned}</td>
+                  <td className="num hide-sm">{r.planned}</td>
                   <td className="num">{r.never}</td>
                 </tr>
               ))}
             </tbody>
-            <tfoot><tr><th scope="row">All series</th><td className="num">{v.totals.ready}<span className="faint"> / {v.totals.episodes}</span></td><td className="num">{v.totals.posted}</td><td className="num">{v.totals.planned}</td><td className="num">{v.totals.never}</td></tr></tfoot>
+            <tfoot><tr><th scope="row">All series</th><td className="num">{v.totals.ready}<span className="faint"> / {v.totals.episodes}</span></td><td className="num">{v.totals.posted}</td><td className="num hide-sm">{v.totals.planned}</td><td className="num">{v.totals.never}</td></tr></tfoot>
           </table>
         </div>
         <p className="faint small-note">Rendered: episodes with an Instagram export, out of all episodes. Planning never schedules an episode on Instagram twice; posted ones stay posted.</p>
       </section>
     </div>
+  );
+}
+
+/** A long video (a lesson): the 16:9 compilation of the channel's shorts, for YouTube as a regular video. Approve it
+ *  here or on the channel's Lessons tab; editing the title or description lives there. */
+function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean }; approved: boolean; episodes: string[] }; slug: string }) {
+  const l = x.lesson;
+  if (!l.videoPath) {
+    return <div className="card post-empty"><span className="label">{l.name} · {x.episodes.length} episodes{l.isDemo ? <> · <span className="demo-tag">DEMO</span></> : null}</span><h3 style={{ margin: 0 }}>{l.title}</h3><p className="muted">{l.state === "render" ? "Building in the worker (see Queue)." : "Not built yet."}</p></div>;
+  }
+  const qa = l.qa as { dur?: number } | null, fails = qaFails(l.qa as Record<string, unknown> | null);
+  const len = qa?.dur ? `${Math.floor(qa.dur / 60)}:${String(Math.round(qa.dur % 60)).padStart(2, "0")}` : "";
+  return (
+    <article className="card stack-sm">
+      <div className="post-state">
+        <span className="label">{l.name} · {x.episodes.length} episodes{len ? ` · ${len}` : ""}</span>
+        {l.isDemo ? <span className="demo-tag">DEMO</span> : null}
+        {fails ? <span className="chip bad">QA: {fails} failed</span> : fails === 0 ? <span className="chip good">QA passed</span> : null}
+        {l.state === "published" ? <span className="chip good">Uploaded</span> : x.approved ? <span className="chip good">Approved</span> : <span className="chip warn">Needs approval</span>}
+      </div>
+      <h3 style={{ margin: 0 }}>{l.title}</h3>
+      <div style={{ background: "#000", borderRadius: 8, overflow: "hidden" }}>
+        <video controls preload="none" playsInline poster={l.thumbnailPath ? mediaUrl(l.thumbnailPath) : undefined} src={mediaUrl(l.videoPath)} style={{ width: "100%", aspectRatio: "16 / 9", display: "block" }} />
+      </div>
+      {l.chapters ? (
+        <details>
+          <summary className="label" style={{ cursor: "pointer" }}>Chapters</summary>
+          <pre className="copy-text tags" style={{ whiteSpace: "pre-wrap", margin: "8px 0 0" }}>{l.chapters.trim()}</pre>
+        </details>
+      ) : null}
+      <div className="row">
+        {!x.approved && l.state !== "published" ? <ActionForm action={approveLessonAction} submit="Approve for YouTube" submitClass="btn small"><input type="hidden" name="lessonId" value={l.id} /></ActionForm> : null}
+        <CopyButton text={l.title} label="Copy title" />
+        <CopyButton text={l.description} label="Copy description" />
+        <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
+        {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
+        <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Edit or mark uploaded</Link>
+      </div>
+    </article>
   );
 }

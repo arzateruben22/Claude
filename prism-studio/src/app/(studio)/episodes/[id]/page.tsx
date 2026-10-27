@@ -1,26 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { episodeFull, studio } from "@/lib/data";
+import { analyticsRows, episodeFull, studio } from "@/lib/data";
 import { canTransition, PIPELINE, SIDE_STATES, type EpisodeState } from "@/domain/episodes";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { addNote, moveEpisode, resolveNote, toggleSource } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { Placements } from "@/components/Placements";
+import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const f = /^[0-9a-f-]{36}$/.test((await params).id) ? await episodeFull((await params).id) : null;
-  return { title: f?.ep.title ?? "Episode" };
+  return { title: f ? (f.ep.isDemo ? "Demo episode" : f.ep.title) : "Episode" };
 }
 
 export default async function Episode({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
-  const [f, s] = await Promise.all([episodeFull(id), studio()]);
+  const [f, s, numbers] = await Promise.all([episodeFull(id), studio(), analyticsRows({ episodeId: id })]);
   if (!f) notFound();
   const { ep, channel, current } = f;
+  if (ep.isDemo && !s.showDemo) return (
+    <div style={topicStyle(channel)}>
+      <Link href={`/channels/${channel.slug}?tab=episodes`} className="kicker" style={{ color: "var(--topic-ink)", textDecoration: "none" }}>← {channel.name.replace(/ \(name TBD\)$/, "")}</Link>
+      <h1>Demo episode hidden</h1>
+      <p className="lede"><span className="demo-tag">DEMO</span> This is demo data. Demo data is hidden; turn on <Link href="/settings">Settings → Show demo data</Link> to see it. It never counts toward progress either way.</p>
+    </div>
+  );
   const moves = ([...PIPELINE, ...SIDE_STATES] as EpisodeState[]).filter((to) => canTransition(ep.state as EpisodeState, to));
   const step = PIPELINE.indexOf(ep.state as (typeof PIPELINE)[number]);
   const fails = current ? qaFails(current.qa) : null;
@@ -45,9 +53,9 @@ export default async function Episode({ params }: { params: Promise<{ id: string
             <div className="player-wrap"><video className="player" controls preload="metadata" playsInline poster={current.posterPath ? mediaUrl(current.posterPath) : undefined} src={mediaUrl(current.videoPath)} /></div>
           ) : <div className="card"><p className="muted" style={{ margin: 0 }}>No render yet{ep.filmsPath ? `: the film lives in ${ep.filmsPath}` : ""}.</p></div>}
           {current ? (
-            <div className="row">
+            <div className="row" id="qa">
               <span className="chip">render v{current.versionNo}</span>
-              {fails === null ? <span className="chip">QA not attached</span> : fails ? <span className="chip bad">QA: {fails} failed</span> : <span className="chip good">QA passed</span>}
+              {fails === null ? <span className="chip">QA not attached</span> : fails ? <span className="chip bad">QA: {fails} failed · {((current.qa as { fails?: unknown[] }).fails ?? []).map(String).join("; ")}</span> : <span className="chip good">QA passed</span>}
               <span className="chip mono" title={current.sha256}>{current.sha256.slice(0, 10)}</span>
               {ep.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${ep.id}`} download>Captions .srt</a> : null}
             </div>
@@ -69,6 +77,28 @@ export default async function Episode({ params }: { params: Promise<{ id: string
           <Placements full={f} tz={s.timezone} />
         </section>
       </div>
+
+      {numbers.length ? (
+        <section className="section" id="numbers">
+          <div className="section-head"><h2 style={{ margin: 0 }}>Numbers</h2><Link href="/analytics" className="btn ghost small">All analytics</Link></div>
+          <div className="grid2">
+            {numbers.map((r) => (
+              <article key={r.p.id} className="card flat stack-sm">
+                <div className="row spread top">
+                  <div>
+                    <div className="label">{PLATFORM_LABEL[r.dest.platform]}{r.dest.shared ? " · shared" : ""}{r.p.simulated ? <> · <span className="sim-tag">SIMULATED</span></> : null}</div>
+                    <div className="faint" style={{ fontSize: 13 }}>Posted {formatLocal(r.p.reportedAt, s.timezone)}{r.p.postUrl ? <> · <a href={r.p.postUrl} target="_blank" rel="noopener noreferrer">open post</a></> : null}</div>
+                  </div>
+                  <ViewsFigure snap={r.latest.views} tz={s.timezone} />
+                </div>
+                <MetricChips latest={r.latest} />
+                <PullLine publicationId={r.p.id} platform={r.dest.platform} pull={r.pull} tz={s.timezone} />
+                <MetricHistory history={r.history} tz={s.timezone} />
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="section-head"><h2 style={{ margin: 0 }}>Sources</h2><span className="num faint">{f.sources.filter((x) => x.reviewerOk).length}/{f.sources.length} checked by you</span></div>

@@ -1,5 +1,5 @@
 // A small, consistent line-icon set (24px grid, 1.8 stroke), drawn here so the app has no icon dependency.
-export type IconName = "home" | "upload" | "review" | "calendar" | "trophy" | "chart" | "link" | "queue" | "settings" | "copy" | "share" | "download" | "external" | "check" | "spark" | "lock" | "wall" | "more" | "back" | "youtube" | "tiktok" | "instagram";
+export type IconName = "home" | "upload" | "review" | "calendar" | "trophy" | "chart" | "link" | "queue" | "settings" | "copy" | "share" | "download" | "external" | "check" | "spark" | "lock" | "wall" | "more" | "back" | "coin" | "youtube" | "tiktok" | "instagram";
 const P: Record<IconName, string> = {
   home: "M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5.5h-5V21H5a1 1 0 0 1-1-1z",
   upload: "M12 16V5m0 0-4.5 4.5M12 5l4.5 4.5M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15",
@@ -20,6 +20,7 @@ const P: Record<IconName, string> = {
   wall: "M3.5 7h4.5v10H3.5zM16 7h4.5v10H16zM9.5 4.5h5v4h-5zM9.5 10.5h5v5h-5zM12 15.5V20m-2.5 0h5",
   more: "M6 10.6a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm6 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm6 0a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Z",
   back: "M14.5 6 8.5 12l6 6",
+  coin: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM14.6 9.3c-.4-.8-1.3-1.3-2.6-1.3-1.5 0-2.5.7-2.5 1.8 0 2.4 5.2 1.3 5.2 4 0 1.1-1 1.9-2.7 1.9-1.4 0-2.4-.5-2.8-1.4M12 6.3V8m0 8v1.7",
   youtube: "M3.5 8.5c0-1.7 1.3-3 3-3h11c1.7 0 3 1.3 3 3v7c0 1.7-1.3 3-3 3h-11c-1.7 0-3-1.3-3-3zM10.2 9.4v5.2l4.4-2.6z",
   tiktok: "M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5M14 4c.4 2.4 2 4 4.5 4.2",
   instagram: "M7.5 4h9A3.5 3.5 0 0 1 20 7.5v9a3.5 3.5 0 0 1-3.5 3.5h-9A3.5 3.5 0 0 1 4 16.5v-9A3.5 3.5 0 0 1 7.5 4ZM12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM16.8 7.2h.01",

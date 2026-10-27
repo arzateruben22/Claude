@@ -1,6 +1,7 @@
 // Import the real episodes produced by the films pipeline (films/channels/<channel>/epNN) into the studio:
 // series with the bibles' planned slate, episodes with their scripts and claims (as sources), and for every
-// delivered final (out/*-9x16.mp4) a version, three platform exports and planned publications.
+// delivered final (out/*-9x16.mp4) a version, three platform exports (YouTube's from out/*-9x16-youtube.mp4 when
+// there is one) and planned publications.
 // Idempotent: re-running updates in place and never duplicates episodes, versions or publications.
 import fs from "node:fs";
 import path from "node:path";
@@ -11,7 +12,7 @@ import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
 import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
-import { buildMetadata, type MetaInput } from "../src/domain/metadata";
+import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -106,13 +107,17 @@ export async function importEpisodes(d = db()) {
       const coverFile = file.replace(/-9x16\.mp4$/, "-cover.jpg");
       const coverFresh = fs.existsSync(coverFile) && fs.statSync(coverFile).mtimeMs > fs.statSync(file).mtimeMs;
       const coverPath = `films:${rel(coverFresh ? coverFile : file.replace(/\.mp4$/, ".jpg"))}`;
+      // YouTube gets the 1440p version (kits/cinema/film/youtube1440.py) when it is at least as new as this render;
+      // TikTok and Instagram stop at 1080×1920, so they get the master
+      const ytFile = file.replace(/-9x16\.mp4$/, "-9x16-youtube.mp4");
+      const yt = fs.existsSync(ytFile) && fs.statSync(ytFile).mtimeMs >= fs.statSync(file).mtimeMs ? { file: ytFile, hash: sha256File(ytFile) } : null;
       for (const platform of ["youtube", "tiktok", "instagram"] as const) {
         const m = meta[platform];
-        const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(file)}`, fileSha256: hash,
+        const use = platform === "youtube" && yt ? yt : { file, hash };
+        const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(use.file)}`, fileSha256: use.hash,
           title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath,
           disclosures: { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
-          postingNotes: ["Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.",
-            m.pinnedComment ? `Pinned/first comment:\n${m.pinnedComment}` : "", m.tags.length ? `Tags: ${m.tags.join(", ")}` : "", m.warnings.length ? `Check: ${m.warnings.join("; ")}` : ""].filter(Boolean).join("\n\n") });
+          postingNotes: postingNotesFor(m) });
         if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
       }
       // planned publications for this channel's YouTube and TikTok (Instagram picks from the backlog separately)
@@ -122,7 +127,7 @@ export async function importEpisodes(d = db()) {
         await d.insert(S.publications).values({ episodeId: ep.id, destinationId: dest.id, exportId: x.id, kind: "short", status: "planned" })
           .onConflictDoUpdate({ target: [S.publications.episodeId, S.publications.destinationId], set: { exportId: x.id, updatedAt: new Date() } });
       }
-      report.push(`${slug} ep${n}: version ${ver.versionNo} (${(fs.statSync(file).size / 1e6).toFixed(1)} MB), 3 exports`);
+      report.push(`${slug} ep${n}: version ${ver.versionNo} (${(fs.statSync(file).size / 1e6).toFixed(1)} MB), 3 exports${yt ? ", YouTube 1440p" : ""}`);
     }
   }
   return report;

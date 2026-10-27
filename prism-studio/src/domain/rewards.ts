@@ -104,7 +104,7 @@ export async function releaseReward(d: DB, rewardId: string, note = "released") 
  * Evaluate the milestone rules against one metric snapshot. Idempotent: a rule unlocks at most once per scope,
  * whatever number of snapshots, retries or cross-posts arrive. Returns the achievements created by this call.
  */
-export async function evaluateSnapshot(d: DB, snapshotId: string) {
+export async function evaluateSnapshot(d: DB, snapshotId: string, o: { replaced?: number | null } = {}) {
   const [snap] = await d.select().from(metricSnapshots).where(eq(metricSnapshots.id, snapshotId));
   if (!snap || snap.metric !== "views") return [];
   const isDemo = snap.source === "demo";
@@ -114,11 +114,12 @@ export async function evaluateSnapshot(d: DB, snapshotId: string) {
   const [ep] = await d.select().from(episodes).where(eq(episodes.id, pub.episodeId));
   if (ep.isDemo && !isDemo) return [];
 
-  // a metric revised below an earlier unlock flags that unlock's evidence for review (never a second unlock)
+  // a metric revised below an earlier unlock flags that unlock's evidence for review (never a second unlock). The
+  // earlier number is the latest other row, or the value this row held before a same-day re-pull overwrote it.
   const [prev] = await d.select().from(metricSnapshots)
     .where(and(eq(metricSnapshots.publicationId, snap.publicationId), eq(metricSnapshots.metric, "views"), sql`${metricSnapshots.id} <> ${snap.id}`))
     .orderBy(desc(metricSnapshots.retrievedAt)).limit(1);
-  if (prev && prev.value > snap.value) {
+  if ((prev && prev.value > snap.value) || (o.replaced != null && o.replaced > snap.value)) {
     await d.update(metricSnapshots).set({ status: "revised" }).where(eq(metricSnapshots.id, snap.id));
     await d.update(achievementEvents).set({ evidenceStatus: "flagged" }).where(eq(achievementEvents.publicationId, snap.publicationId));
   }

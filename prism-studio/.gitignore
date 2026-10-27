@@ -2,6 +2,8 @@ node_modules/
 .next/
 .env
 .env.local
+.env.production
+.env.*.local
 .pgdata/
 data/media/
 data/backups/
@@ -10,3 +12,9 @@ next-env.d.ts
 playwright-report/
 data/DEV-PASSWORD.txt
 data/preview/
+# the server's own folders (docker-compose.yml): database backups and the synced episodes
+backups/
+films-mirror/
+# a sandbox-only build variant (deploy/DEPLOY.md, "What was tested"): never committed
+Dockerfile.sandbox
+sandbox-ca.crt
