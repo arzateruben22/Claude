@@ -183,6 +183,10 @@
 
   /* ── everyday answers, in Evelyn's voice ── */
   var KB = [
+    /* budget: Evelyn's own answer (knowledge/client-questions/cq-routine.md), first, so "start with a couple of products" isn't a booking question */
+    { id: "budget", k: /\bbudget\b|\bafford\b|(too|so|very|kind of|a bit|really) (expensive|pricey)|expensive for me|out of my (budget|price range)|costs? (too much|a lot)|\bcheap(er)?\b|do i (really )?(need|have to (buy|get)) (everything|all (of )?(it|that|them|those))|(start|begin) (small|simple|with (just )?(a few|a couple|the basics|the essentials|one|two))|(just|only) (a few|a couple( of)?) products|fewer products|not everything at once/, a: function () {
+      return "Evelyn works with a budget in mind. In her words: “If you’re working with a budget, we can absolutely start with the essentials: cleanser, hydrator, moisturizer, and SPF, then gradually introduce additional products as you’re ready.” Starting with the essentials can mean slower progress, since not every concern is addressed right away. Her goal is a routine that’s both effective and realistic for you, and she’s happy to talk through your priorities and budget together.";
+    }, acts: [["Essentials for dry skin", "t:My skin is dry or normal. What are the essentials?"], ["Essentials for oily skin", "t:My skin is oily or combination. What are the essentials?"]] },
     { id: "hi", k: /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|what'?s up|good (morning|afternoon|evening))[\s!.,]*(there|evelyn|lumevina)?[\s!.?]*$/, a: function () {
       return "Hello, and welcome to Lumevina. I can help with your skin, your products, prices, booking, preparation and aftercare at any time, from Evelyn’s own guidance. For anything personal, she is always available."; } },
     { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "You’re very welcome. Is there anything else I can help you with?"; } },
@@ -504,8 +508,8 @@
     list.forEach(function (alts) { var w = stepWord(alts); if (w && out[out.length - 1] !== w) out.push(w); });
     return out.length > 1 ? out.slice(0, -1).join(", ") + ", then " + out[out.length - 1] : out.join("");
   };
-  var PLAN_LINE = { "new": "The treatment steps (which serum, its strength and how many mornings or nights a week) are part of the plan Evelyn writes for you at your first visit.",
-    existing: "The treatment steps (which serum, its strength and how many mornings or nights a week) are part of the plan Evelyn writes for you at your next facial." };
+  var PLAN_LINE = { "new": "The treatment steps (which serum, its strength and how often) are something Evelyn tailors to you at your first visit, around your skin, your goals and your budget.",
+    existing: "The treatment steps (which serum, its strength and how often) are something Evelyn tailors to you at your next facial, around your skin, your goals and your budget." };
   var outlineText = function (k) {
     var r = SG && SG.routines[k];
     if (!r || !r.morning.length) return "";
@@ -513,7 +517,7 @@
     var list = ess.length > 1 ? ess.slice(0, -1).join(", ") + " and " + ess[ess.length - 1] : ess.join("");
     return "Evelyn’s routine for " + typeLabel(k) + " follows this order" + (k === "dry" ? " 💧" : " 🌿") +
       "\nMorning: " + stepsOf(r.morning) + ".\nNight: " + stepsOf(r.night) + "." +
-      (list ? "\nHer everyday essentials, which anyone can start with: " + list + "." : "") +
+      (list ? "\nYou don’t need everything at once: if you’d like to start simply, her everyday essentials are " + list + "." : "") +
       "\n" + PLAN_LINE[status() === "existing" ? "existing" : "new"];
   };
   /* her essentials ("cleanser, hydrator, moisturizer, and SPF") from the routine for their type, the ones that need no consult */
@@ -622,12 +626,12 @@
   };
   /* a skin answer closes, once a conversation, with a quiet invitation to let Evelyn confirm it in person
      (knowledge/prompt.md says the same to the assistant): an invitation, never a push */
-  var VISIT_INVITE = { "new": "Evelyn can confirm all of this with a closer look at your skin during your first visit.",
-    existing: "Evelyn can confirm this with a closer look at your skin at your next facial." };
+  var VISIT_INVITE = { "new": "Whenever you’re ready, Evelyn can take a closer look at your skin at your first visit and build a routine around your goals and your budget.",
+    existing: "At your next facial, Evelyn can take a closer look and adjust your routine around your goals and your budget." };
   var invite = function (r) {
     if (!r || !r.answer || state.invited) return r;
     state.invited = true;
-    if (/plan Evelyn writes for you/.test(r.answer)) return r;   // an outline already says it
+    if (/Evelyn tailors to you/.test(r.answer)) return r;   // an outline already says it
     r.answer += "\n\n" + VISIT_INVITE[status() === "existing" || myPlan() ? "existing" : "new"];
     if ((r.acts || []).length < 2 && !(r.acts || []).some(function (a) { return a[1] === "book"; })) r.acts = (r.acts || []).concat([["Book", "book"]]);
     return r;
@@ -804,9 +808,9 @@
   var save = function () { /* kept in memory only: a new visit starts over */ };
   /* new here, or been in before: asked first, kept for this browser, and told to the assistant */
   var STATUS = {
-    "new": { label: "I’m new here", say: "Welcome! ✨ For a first visit you’d book New Clients Start Here, or the Acne Bootcamp consultation if acne is the concern. Ask me what a first visit is like, what to bring, or which facial fits; prices and booking too. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
+    "new": { label: "I’m new here", say: "Welcome! ✨ We’re glad you’re here. Tell me what you’d like for your skin and I’ll share how Evelyn approaches it, from her own playbook. Whenever you’d like to come in, a first visit is New Clients Start Here (or the Acne Bootcamp consultation if acne is the concern), where she takes a closer look and builds a routine around your goals and your budget.",
       acts: [["Which facial is for me?", "t:I'm new. Which facial should I book?"], ["What happens at a first visit", "t:What happens at a first visit?"], ["Prices", "n:prices"]] },
-    existing: { label: "I’ve been in before", say: "Welcome back! ✨ Ask me about booking, moving an appointment, prep or aftercare, your products, or where your order is. Ask about your skin too: I answer from Evelyn’s playbook, and she’s a tap away.",
+    existing: { label: "I’ve been in before", say: "Welcome back! ✨ How can I help today? I can help with booking or moving a visit, prep and aftercare, your products or an order, and your skin, from Evelyn’s own playbook.",
       acts: [["Book", "n:book"], ["Before my facial", "n:before"], ["Move or cancel", "n:cancel"]] }
   };
   var status = function () { return state.status === "new" || state.status === "existing" ? state.status : (myPlan() ? "existing" : ""); };
