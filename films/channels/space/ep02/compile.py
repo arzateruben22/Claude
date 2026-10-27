@@ -282,9 +282,9 @@ def repage(pages, breaks, max_chars=24):
 
 # captions: number phrases and fixed phrases stay on one line
 glue(f, {"vo01": ["the nearest star?"], "vo03": ["a full day", "the day after tomorrow."],
-         "vo02": ["nineteen seventy-seven", "kilometers a second.", "Earth to the Moon", "in six hours."],
-         "vo04": ["twenty twelve,", "into interstellar space.", "hundred years away.", "thirty thousand", "cloud of comets."],
-         "vo05": ["Proxima Centauri,", "fifteen hundred", "about seventy-five", "thousand years.", "wasn't in Europe."],
+         "vo02": ["in nineteen seventy-seven.", "kilometers a second.", "Earth to the Moon", "in six hours."],
+         "vo04": ["In twenty twelve,", "into interstellar space.", "three hundred years away.", "thirty thousand", "cloud of comets."],
+         "vo05": ["Proxima Centauri,", "fifteen hundred", "about seventy-five thousand years.", "wasn't in Europe."],
          "vo06": ["day one", "of fifteen hundred."], "vo07": ["four years", "three months."]})
 # "It hasn't even reached" | "the Sun's / cloud of comets."; "Voyager has crossed" | "day one / of fifteen hundred."
 CAPS = hold(f, repage(keep_units(f.captions(max_chars=24)), {"vo04": "the", "vo06": "day one"}))   # each page stays until its last phrase has been spoken
