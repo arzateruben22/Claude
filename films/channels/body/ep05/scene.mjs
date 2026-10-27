@@ -8,7 +8,7 @@
 //         dense, solid flesh) is drawn over the cluster and dissolves on "bubbles".
 //   wall  (µm, true scale for the wall and the cell; badged "wall and cell to scale · O₂ enlarged") air on the left,
 //         a 0.4 µm barrier (its lining included; under 0.5 µm, c7), a capillary with a red cell (set/rbc.js) on the right; O₂ slips
-//         across and the cell flushes; the wall thickens toward the air, O₂ piles up against it and the cell dulls.
+//         across and the cell flushes; the wall thickens toward the air, the O₂ crosses at a fifth of the rate and the cell dulls.
 //   room  (metres) a person 1.75 m tall; the sacs unfold from the chest into a 70 m² floor (8.37 m square of tiles),
 //         a full doubles tennis court's lines (23.77 × 10.97 m = 260.8 m²) around it; the tiles fold back for the takeaway; the person
 //         breathes through the tally.
@@ -108,7 +108,7 @@ for (const k of FILM.cam.lung) if (k.look === "HERO") { k.look = HS.c.toArray();
 // a dense net of capillaries over each sac (about 6 µm across on a 0.2 mm sac), built in the sac's own space so it
 // sits on the surface and breathes with it
 const capMat = mat("#B8344F", "capil", { fres: 0.3, ei: 0.08, emi: "#E5334F" });
-const CAPS = [];
+const CAPS = [], CAPP = [];
 HERO.forEach((C, k) => { const r = rng(300 + k); for (let n = 0; n < 30; n++) {
   const a0 = r() * 6.28, b0 = (r() - 0.5) * 2.6, pts = [];
   for (let i = 0; i <= 36; i++) {
@@ -116,6 +116,7 @@ HERO.forEach((C, k) => { const r = rng(300 + k); for (let n = 0; n < 30; n++) {
     const d = new THREE.Vector3(Math.cos(a) * Math.cos(b), Math.sin(b), Math.sin(a) * Math.cos(b));
     pts.push(d.multiplyScalar(C.r(d.toArray()) * 1.02).toArray());
   }
+  if (k === 0) for (const q of pts) CAPP.push(new THREE.Vector3(...q));
   const P = path(pts), m = new THREE.Mesh(tube(P, { radius: HC[k].r * 0.03, radial: 8, segments: 96 }), capMat); C.group.add(m); CAPS.push(m); } });
 // the old idea, drawn over the cluster: the lung as clotted blood, dense, solid flesh (a dark liver red, smooth and
 // gently lumpy, no pores: not foam, so the pale bubbles under it are the break), opaque while held, so "bubbles" is a
@@ -130,7 +131,8 @@ const writeLung = (t) => {
   const br = 1 + 0.035 * Math.sin(t * 1.4);                    // the cluster breathes gently
   HERO.forEach((C, k) => C.group.scale.setScalar(k ? br : 1));
   // the route lights generation by generation as the forks are counted, then settles
-  const fk = FILM.spine.find((x) => x.id === "forks").keys, off = 1 - seg(t, FILM.spine.find((x) => x.id === "sacs").t1, FILM.spine.find((x) => x.id === "sacs").t1 + 1.0);
+  // the route steps back to a third as "At the tips" begins, then fades with the sacs readout
+  const SPN = (id) => FILM.spine.find((x) => x.id === id), fk = SPN("forks").keys, rF = SPN("forks").t1, rS = SPN("sacs").t1, off = (1 - 0.67 * seg(t, rF, rF + 0.6)) * (1 - seg(t, rS, rS + 1.0));
   for (const { m, gen } of routeMats) m.emissiveIntensity = 0.5 * seg(t, fk[0][0] + (fk[1][0] - fk[0][0]) * gen / 7 - 0.1, fk[0][0] + (fk[1][0] - fk[0][0]) * gen / 7 + 0.2) * off;
 };
 
@@ -146,7 +148,7 @@ const lumenMat = mat("#D99C8E", "lumen", { fres: 0.2, ei: 0.02, r: 0.5 });
 const endo = new THREE.Mesh(new THREE.BoxGeometry(WS.endo, 30, 8), lumenMat); endo.position.x = WS.wall + WS.endo / 2; G.wall.add(endo);
 const plasma = new THREE.Mesh(new THREE.PlaneGeometry(14, 30), mat("#3A2427", "plasma", { fres: 0, ei: 0, r: 0.9 })); plasma.position.set(WS.wall + WS.endo + 7, 0, -4); G.wall.add(plasma);
 const rbcM = new THREE.Mesh(rbcGeometry(THREE, { around: 48, along: 32 }), cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: "#B8445A", instanced: false, roughness: 0.55, fresnel: 0.18 }));
-rbcM.rotation.set(0, -0.55, Math.PI / 2); rbcM.position.set(4.4, -1, 0); G.wall.add(rbcM);   // turned a little: the dimple shows
+rbcM.rotation.set(0, -0.55, Math.PI / 2); rbcM.position.set(3.8, -1, 0); G.wall.add(rbcM);   // turned a little: the dimple shows
 const o2Mat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.4, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
 const WO = swarm({ n: 70, seed: 9, home: { box: [[-12, -12, -2], [-1.5, 12, 2]] }, waves: [{ amp: [0.9, 0.9, 0.3], omega: 1.2 }] });
 const woM = WO.mesh(new THREE.IcosahedronGeometry(0.12, 1), o2Mat); G.wall.add(woM);
@@ -155,16 +157,17 @@ const writeWall = (t) => {
   const k = thickAt(t), wth = WS.wall * k, air = WS.wall - wth;            // the blood side stays put; the wall grows into the air
   wallM.scale.set(wth, 1, 1); wallM.position.x = WS.wall - wth / 2;
   wallMat.color.copy(WALLC[0]).lerp(WALLC[1], (k - 1) / 5); wallMat.roughness = 0.6 + 0.25 * (k - 1) / 5;   // thick: dull, fibrous
-  const S = FILM.wall.slip, thick = seg(t, FILM.wall.thick[0], FILM.wall.slow);
+  const S = FILM.wall.slip, T0 = FILM.wall.thick[0], T1 = FILM.wall.slow;
+  // the crossing rate falls from 1 to 0.2 over T0..T1 (Fick: flux ∝ 1 / thickness); integrated, so the phase never runs back
+  const run = (t - S[0]) - 0.8 * (t <= T0 ? 0 : t <= T1 ? (t - T0) ** 2 / (2 * (T1 - T0)) : (T1 - T0) / 2 + (t - T1));
   for (let i = 0; i < WO.n; i++) {
-    const h = WO.at(i, t), rate = 1 - 0.8 * thick, ph = (hash(i + 3) + (t - S[0]) * 0.45 * rate) % 1;
+    const h = WO.at(i, t), ph = (hash(i + 3) + run * 0.45) % 1;
     let p = h, sc = 0.9;
     if (t >= S[0] - 0.5) {
       let u = E.inout2(Math.min(1, Math.max(0, ph * 1.4 - 0.2)));
       const from = [air - 2.5 - 3 * hash(i + 5), h[1] * 0.6, h[2]], to = [WS.wall + WS.endo + 1.4 + 2.2 * hash(i + 6), -1 + (hash(i + 7) - 0.5) * 3.5, (hash(i + 8) - 0.5) * 2];
       p = from.map((x, j) => x + (to[j] - x) * u); sc = 0.9 * (1 - seg(ph, 0.85, 1)) * seg(ph, 0, 0.08);
-      // a thick wall: most of them pile up against its air face, only a trickle gets through
-      if (thick > 0 && hash(i + 9) > 0.25) { const pile = [air - 0.2 - 0.6 * hash(i + 10), h[1] * 0.6, h[2]]; p = p.map((x, j) => x + (pile[j] - x) * thick); sc = 0.9 * Math.max(sc, thick); }
+      // a thick wall: the same O₂ on the air side, crossing at a fifth of the rate (Fick)
     }
     instance(woM, i, p, null, sc);
   }
@@ -241,10 +244,10 @@ const writeRoom = (t) => {
   // each breath: air in through the mouth over 1.6 s, then out
   let ab = -1; for (const b of FILM.breaths) if (t >= b && t < b + 3.6) ab = b;
   for (let i = 0; i < AIRN; i++) {
-    let sc = 0, pp = [0, 1.6, 0.6];
+    let sc = 0, pp = [0, 1.72, 0.6];
     if (ab >= 0 && t >= R.fold[1]) {
       const x = t - ab, d = hash(i + 31) * 0.5, inU = E.inout2(seg(x, d, d + 1.1)), outU = E.inout2(seg(x, 1.8 + d, 2.9 + d));
-      const far = [0.25 * (hash(i + 32) - 0.5), 1.6 + 0.12 * (hash(i + 33) - 0.5), 0.6 + 0.2 * hash(i + 34)], mouth = [0, 1.6, 0.12];
+      const far = [0.25 * (hash(i + 32) - 0.5), 1.72 + 0.12 * (hash(i + 33) - 0.5), 0.6 + 0.2 * hash(i + 34)], mouth = [0, 1.63, 0.12];   // at the face, not the shoulder
       const u = inU * (1 - outU); pp = far.map((v, k) => v + (mouth[k] - v) * u);
       sc = seg(x, d, d + 0.2) * (1 - seg(x, 2.7 + d, 3.1 + d)) * (1 - 0.6 * seg(u, 0.85, 1));
     }
@@ -280,6 +283,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .mi-spine .v { color: var(--text); } .mi-spine .lb { color: var(--text); }   /* not blood: the readouts match the tally (pink is for blood only) */
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-tally .lb { color: var(--text); }
+.hud-label.mk-dashed .mk { border: 0; background: repeating-conic-gradient(from 12deg, var(--c) 0 36deg, transparent 36deg 60deg); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - .45vmin), #000 calc(100% - .45vmin + .5px)); mask: radial-gradient(closest-side, transparent calc(100% - .45vmin), #000 calc(100% - .45vmin + .5px)); }   /* six even dashes: the kit's dashed border fitted 2-3 and read as a "c" */
 `; document.head.appendChild(css);
 const hud = createHud({ camera });
 hud.captions(FILM.captions);
@@ -288,15 +292,17 @@ const tPulse = pulseLine({ width: Math.round(330 * S1), height: Math.round(70 * 
 tPulse.el.style.width = `${Math.round(330 * S1)}px`;   // its own width: .mi-pulse is width 100% of the title box (~840 px), which scaled a narrow line ×2.5–4 into a thick bar below the title
 titleEl.appendChild(tPulse.el);
 const wp = (k, p) => [p[0] + PLACE[k][0], p[1] + PLACE[k][1], p[2] + PLACE[k][2]];
+const CAPW = new THREE.Vector3(-0.45, 0.45, 0.77).normalize().multiplyScalar(HS.r);
+const CAPA = HS.c.clone().add(CAPP.reduce((b, q) => (q.distanceToSquared(CAPW) < b.distanceToSquared(CAPW) ? q : b))).toArray();   // on a strand
 const ANCH = {
   sac: () => HC[3].c.clone().add(new THREE.Vector3(0, HC[3].r, 0)).toArray(),
   flesh: () => FLESHM.group.position.clone().add(new THREE.Vector3(HS.r * 1.5, HS.r * 1.3, HS.r * 1.2)).toArray(),   // on the envelope's near face
-  cap: () => HS.c.clone().add(new THREE.Vector3(-0.45, 0.45, 0.77).normalize().multiplyScalar(HS.r)).toArray(),       // the hero sac's near face
-  air: () => wp("wall", [-1.6, 4.5, 0]),
-  wallf: () => wp("wall", [0.2, -4, 0]),                      // the middle of the 0.4 µm barrier
-  rbc: () => wp("wall", [4.6, 2.8, 0]),
-  head: () => wp("room", [0.15, 2.1, 0]),                     // just above the head: the dot never hides the person
-  court: () => wp("room", [1.6 - 10.97 / 2, 0.05, -8]),       // the doubles sideline, off the floor
+  cap: () => CAPA,   // the hero sac's capillary strand nearest its near face
+  air: () => wp("wall", [-1.0, 1.0, 0]),   // mid-left in the air, clear of the top-left speed note
+  wallf: () => wp("wall", [0.2, -1, 0]),                      // the middle of the 0.4 µm barrier, level with the cell (above the caption)
+  rbc: () => wp("wall", [4.0, 2.8, 0]),
+  head: () => wp("room", [-0.55, 1.6, 0]),                    // beside the head: the dot never hides the person
+  court: () => wp("room", [1.6 - 10.97 / 2, 0.05, -23.77 / 2]),   // the doubles court's far-left corner
   wbc: () => { G.exit.updateMatrixWorld(true); return WBC.group.localToWorld(new THREE.Vector3(4.3, 4.2, 0)).toArray(); },   // its shoulder
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
@@ -330,7 +336,7 @@ const NEAR = { lung: 0.6, wall: 3, room: 0.6, exit: 4 };
 const PRB = Object.fromEntries(Object.keys(NEAR).map((k) => [k, probe(THREE, { W, H, near: NEAR[k], ndc: 1.15 })]));
 const STATIC = {
   lung: [...HC.map((s) => s.c.toArray()), [0, 40, 0], [0, 120, 0], [30, 80, -20], [-30, 60, 10]],
-  wall: [[0, 0, 0], [0, 8, 0], [0, -8, 0], [5.6, -1, 0], [-6, 3, 0], [-6, -3, 0]].map((p) => wp("wall", p)),
+  wall: [[0, 0, 0], [0, 8, 0], [0, -8, 0], [5.0, -1, 0], [-6, 3, 0], [-6, -3, 0]].map((p) => wp("wall", p)),
   room: [[0, 1.2, 0], [0, 0, 0], [4, 0, 4], [-4, 0, -4], [5, 0, -6], [-3, 0, 7]].map((p) => wp("room", p)),
   exit: [[0, 0, 0], [8, -6, 0], [-8, -6, 0]].map((p) => wp("exit", p)),
 };
