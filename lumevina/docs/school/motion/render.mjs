@@ -211,7 +211,9 @@ for (const scene of Object.values(SCENES)) {
     const frames = Math.round(scene.dur * fps), hashes = [], samples = [], warnings = [];
     const outDir = OUT[aspect]; fs.mkdirSync(outDir, { recursive: true });
     const base = aspect === "16x9" ? scene.id : `${scene.id}-${aspect}`;
-    const mp4 = path.join(outDir, `${base}.mp4`), poster = path.join(outDir, `${base}.jpg`);
+    // written beside the old clip as <base>.rendering.*, and moved over it only when finished: a render that
+    // stops halfway leaves the old clip (and the repository) as they were
+    const mp4 = path.join(outDir, `${base}.rendering.mp4`), poster = path.join(outDir, `${base}.rendering.jpg`);
     let ff = null;
     if (verify) {
       const prev = ((log[scene.id] || {})[aspect] || {}).samples || [];
@@ -267,7 +269,8 @@ for (const scene of Object.values(SCENES)) {
     }
     if (ff) { ff.stdin.end(); await new Promise((r) => ff.on("close", r)); }
     if (ff && !scene.bare) addMusic(mp4, scene.id);   // the music bed (add-music.mjs); the hero stays silent
-    if (ff && aspect === "16x9") await new Promise((r) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", mp4, "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-cpu-used", "4", ...(scene.bare ? ["-an"] : ["-c:a", "libopus", "-b:a", "96k"]), path.join(outDir, `${base}.webm`)], { stdio: "inherit" }).on("close", r));
+    if (ff && aspect === "16x9") await new Promise((r) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-i", mp4, "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-cpu-used", "4", ...(scene.bare ? ["-an"] : ["-c:a", "libopus", "-b:a", "96k"]), path.join(outDir, `${base}.rendering.webm`)], { stdio: "inherit" }).on("close", r));
+    if (ff) for (const ext of ["mp4", "jpg", "webm"]) { const f = path.join(outDir, `${base}.rendering.${ext}`); if (fs.existsSync(f)) fs.renameSync(f, path.join(outDir, `${base}.${ext}`)); }
     // the contact sheet
     const sheet = await browser.newPage({ viewport: { width: 1600, height: 900 } });
     const cols = aspect === "16x9" ? 4 : 6, cw = Math.floor(1584 / cols);
@@ -276,7 +279,7 @@ for (const scene of Object.values(SCENES)) {
     await sheet.close();
     sheetFrames.length = 0;
     await pg.close();
-    const bytes = !quick && fs.existsSync(mp4) ? fs.statSync(mp4).size : 0;
+    const done = path.join(outDir, `${base}.mp4`), bytes = !quick && fs.existsSync(done) ? fs.statSync(done).size : 0;
     const entry = { frames, fps, dur: scene.dur, w: W, h: H, bytes, hash: sha(Buffer.from(hashes.join(""))), samples, warnings, renderSec: Math.round((Date.now() - t0) / 100) / 10, renderedAt: new Date().toISOString().slice(0, 10), quick };
     (log[scene.id] ||= {})[aspect] = entry;
     if (!quick && aspect === "16x9" && !scene.bare) videos[scene.id] = { dur: scene.dur, w: W, h: H, bytes };   // a bare scene (the page's hero) isn't a lesson

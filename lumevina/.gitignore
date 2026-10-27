@@ -2,3 +2,5 @@ dist/
 docs/school/motion/review/
 docs/school/motion/.tmp*/
 docs/school/visuals/.tmp/
+img/school/video/*.rendering.*
+marketing/ads/out/video/*.rendering.*
