@@ -117,7 +117,7 @@ const titleEl = hud.title(FILM.title);
 const tFlap = titleFlap(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, b.clock ? { from: CLK[b.clock], t0: b.t0, t1: b.t1, slot: b.slot } : { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 // a counter that rides its anchor, kept clear of the top notes and of the running sum under the model
-const ride = (anchor, dx, dy) => (t) => { const p = hud.project(S[anchor]); return [p.x / W + dx, Math.min(0.47, Math.max(0.25, p.y / H + dy))]; };
+const ride = (anchor, dx, dy) => (t) => { const p = hud.project(S[anchor]); return [Math.min(0.74, Math.max(0.26, p.x / W + dx)), Math.min(0.47, Math.max(0.25, p.y / H + dy))]; };
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1 };
   if (c.fmt === "days") Object.assign(o, { value: (t) => c.end * clamp01((t - c.drive[0]) / (c.drive[1] - c.drive[0])), fmt: (v) => String(Math.floor(v + 1e-6)), unit: "days", at: ride("car", 0, -0.085), minCh: 1, lit: (v) => v >= c.end - 1e-6 });

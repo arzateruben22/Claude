@@ -21,7 +21,7 @@ sys.path.insert(0, str(HERE))
 from timeline import Film   # noqa: E402
 from calc import V, RESULTS, picture   # noqa: E402
 
-FPS, BPM = 30, 90                         # bible §3: D lydian at 90 BPM (a 16th = 5 frames)
+FPS, BPM = 30, 50                         # bible §3: A lydian at 50 BPM (a 16th = 9 frames)
 ID = "envelope-001"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
@@ -43,12 +43,12 @@ def nice(x):
 
 # ── shots: one world, the camera moves through it; a cut only to the card and back ──
 t_title_out = B["normal"]["t0"] - 0.2
-t_drive0, t_drive1 = A("vo02:Driving", -0.1), A("vo02:days:end", 0.3)
+t_drive0, t_drive1 = A("vo02:driving", -0.1), A("vo02:days:end", 0.3)
 t_jump = None                             # set below from the fall clock
 t_stop = A("vo03:stop")                   # the faller comes to rest at the far rim on "stop"
 t_box = A("vo05:thirtyeight", -0.05)     # the box closes as "thirty-eight" starts
 t_work0 = B["work"]["t0"]
-t_core = A("vo07:core", -0.1)
+t_core = A("vo07:heart", -0.1)
 t_end = A("vo08:Next", -0.25)
 SHOTS = [
     {"at": 0.0, "name": "front"},                     # hook: the payoff world at frame 0 (and the loop point)
@@ -102,7 +102,7 @@ CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5, "ease": "sine"}],
     "drive": [
         {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5},
-        {"t": t_drive0 - 0.4, "target": [0, -5.6, 5.0], "dist": 66, "el": 19, "az": 27, "fov": 24, "fy": 0.47, "ease": "inout3"},
+        {"t": t_drive0 - 0.4, "target": [0, -5.6, 5.0], "dist": 66, "el": 17.5, "az": 27, "fov": 24, "fy": 0.47, "ease": "inout3"},
         {"t": B["change"]["t0"], "target": [0, -5.4, 4.8], "dist": 68, "el": 18, "az": 28, "fov": 24, "fy": 0.4, "ease": "sine"},
     ],
     "fall": [
@@ -112,7 +112,7 @@ CAM = {
     ],
     "layers": [
         {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 5, "az": 24, "fov": 24, "fy": 0.35},
-        {"t": A("vo04:assumed"), "target": [4.6, 0, 0], "dist": 74, "el": 4, "az": 17, "fov": 24, "fy": 0.35, "ease": "inout3"},
+        {"t": A("vo04:pictured"), "target": [4.6, 0, 0], "dist": 74, "el": 4, "az": 17, "fov": 24, "fy": 0.35, "ease": "inout3"},
         {"t": B["whoa"]["t0"], "target": [4.8, -0.3, 0], "dist": 70, "el": 4, "az": 16, "fov": 24, "fy": 0.35, "ease": "sine"},
     ],
     "answer": [
@@ -145,13 +145,13 @@ for shot, keys in CAM.items():           # slow, telescope-like moves: ≤ 3° a
 #    marker for a beat, assumptions carry a green ∵, and the answer is boxed on "thirty-eight" ──
 D_KM = f"{RESULTS['diameter_km']:,.0f} km"
 SPINE = [
-    {"t": A("vo02:twelve", -0.05), "label": "the tunnel", "terms": [["in", D_KM]]},
-    {"t": A("vo02:Driving"), "label": "driving it", "terms": [["in", D_KM], ["op", "÷"], ["in", "100 km/h"], ["op", "≈"], ["ans", f"{RESULTS['drive_days']} days"]]},
+    {"t": A("vo02:tunnel", -0.05), "label": "the tunnel", "terms": [["in", D_KM]]},
+    {"t": A("vo02:driving"), "label": "driving it", "terms": [["in", D_KM], ["op", "÷"], ["in", "100 km/h"], ["op", "≈"], ["ans", f"{RESULTS['drive_days']} days"]]},
     {"t": A("vo02:falling", -0.05), "label": "falling it", "terms": [["in", D_KM], ["op", "falling"], ["op", "≈"], ["ans", "? min"]]},
     {"t": A("vo04:fortytwo", -0.05), "label": "the textbook answer", "terms": [["assume", "uniform Earth"], ["op", "→"], ["ans", f"{RESULTS['t_uniform_min']} min"]]},
-    {"t": A("vo04:real", -0.05), "label": "with the real Earth", "terms": [["assume", "real Earth"], ["op", "→"], ["ans", "? min"]]},
+    {"t": A("vo04:real", -0.05), "label": "Klotz, 2015: the real Earth", "terms": [["assume", "real Earth"], ["op", "→"], ["ans", "? min"]]},
     {"t": t_box, "label": "through the Earth", "terms": [["assume", "real Earth"], ["op", "→"], ["ans", f"≈ {RESULTS['t_prem_min']} min"]], "box": True},
-    {"t": A("vo07:So", -0.05), "label": f"{RESULTS['t_uniform_min'] - RESULTS['t_prem_min']} min sooner: the core", "terms": [["assume", "real Earth"], ["op", "→"], ["ans", f"≈ {RESULTS['t_prem_min']} min"]], "box": True, "keep": True},
+    {"t": A("vo07:So", -0.05), "label": f"{RESULTS['t_uniform_min'] - RESULTS['t_prem_min']} min sooner: the weight of the core", "terms": [["assume", "real Earth"], ["op", "→"], ["ans", f"≈ {RESULTS['t_prem_min']} min"]], "box": True, "keep": True},
 ]
 SPINE_OUT = t_end
 
@@ -161,8 +161,8 @@ WORK = {
     "title": "Show your work",
     "rows": [
         {"t": t_work0 + 0.15, "k": "real Earth (seismic density)", "v": f"≈ {RESULTS['t_prem_min']} min", "lit": False},
-        {"t": A("vo06:Make", -0.05), "k": "core 10% lighter", "v": f"≈ {RESULTS['sens_core_minus10_min']} min", "lit": True},
-        {"t": A("vo06:Make#2", -0.05), "k": "uniform Earth", "v": f"{RESULTS['t_uniform_min']} min", "lit": True},
+        {"t": A("vo06:core", -0.05), "k": "core 10% lighter", "v": f"≈ {RESULTS['sens_core_minus10_min']} min", "lit": True},
+        {"t": A("vo06:drifts", -0.05), "k": "uniform Earth", "v": f"{RESULTS['t_uniform_min']} min", "lit": True},
     ],
     "assume": ["no air", "no heat", "no spin", "straight through the centre"],
 }
@@ -171,7 +171,7 @@ WORK = {
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "figure", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
     {"id": "l-tunnel", "text": "tunnel", "kind": "part", "anchor": "tunnel", "t0": A("vo02:tunnel"), "t1": t_drive0 - 0.3, "shot": "drive", "side": 1},
-    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:highway"), "t1": B["change"]["t0"], "shot": "drive", "side": -1, "v": "above"},
+    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:driving", 0.4), "t1": B["change"]["t0"], "shot": "drive", "side": -1, "v": "above"},
     {"id": "l-mantle", "text": "mantle", "kind": "part", "anchor": "mantle", "t0": A("vo04:real"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
     {"id": "l-core", "text": "core", "kind": "part", "anchor": "core", "t0": A("vo04:core"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
     {"id": "l-uni", "text": "textbook gravity", "kind": "part", "anchor": "uni", "t0": A("vo04:fortytwo", 0.6), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
@@ -182,7 +182,7 @@ BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
     {"id": "b-nts-h", "text": "figure not to scale", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
     {"id": "b-nts", "text": "figure not to scale", "t0": t_title_out, "t1": t_end, "slot": "tr"},
-    {"id": "b-air", "text": "∵ no air · no heat · no spin", "t0": A("vo02:no"), "t1": B["why"]["t0"], "slot": "tl"},
+    {"id": "b-air", "text": "∵ no air · no heat · no spin", "t0": A("vo02:middle"), "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-time-f", "clock": "fall", "t0": t_jump - 0.3, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-prem", "text": "∵ density from earthquake data (PREM)", "t0": A("vo04:real"), "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-time-w", "clock": "whoa", "t0": t_w0, "t1": t_park + 0.4, "slot": "tl"},
@@ -199,7 +199,7 @@ COUNTERS = [
     # the faller's speed (true, from the PREM trajectory): it peaks at about 10 km/s at the centre
     {"id": "c-speed", "label": "your speed", "fmt": "kms", "clock": "fall", "t0": t_jump + 0.2, "t1": round(t_stop + 0.8, 4), "at": [0.76, 0.37]},
     # the round trip, in true minutes, once the faller is back where they started
-    {"id": "c-round", "label": "round trip", "fmt": "text", "text": f"{round(2 * T_TRIP / 60)} min", "t0": A("vo05:seventysix", -0.05), "t1": t_work0 - 0.3, "at": [0.76, 0.37]},
+    {"id": "c-round", "label": "round trip", "fmt": "text", "text": f"{round(2 * T_TRIP / 60)} min", "t0": A("vo05:swing", -0.05), "t1": t_work0 - 0.3, "at": [0.76, 0.37]},
 ]
 
 # ── the title card and the end card ───────────────────────────────────────
@@ -208,7 +208,7 @@ END = {"title": "Next envelope: *everyone, one place*", "follow": "Back of the E
        "next": "Klotz, Am. J. Phys. 83, 231 (2015): 38 min 11 s with the real Earth; 42 min 12 s uniform."}
 
 CUE = {"jump": t_jump, "stop": t_stop, "box": t_box, "park": t_park, "core": t_core, "drive": [t_drive0, t_drive1],
-       "layers": {"crust": A("vo04:assumed"), "mantle": A("vo04:dense", -0.1), "core": A("vo04:core"), "graph": A("vo04:stronger", -0.4)}}
+       "layers": {"crust": A("vo04:pictured"), "mantle": A("vo04:same", -0.1), "core": A("vo04:core"), "graph": A("vo04:stronger", -0.4)}}
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_box + 1.2, 4),
@@ -224,7 +224,7 @@ film = {
 }
 
 # ── the studio's cue sheet: the same moments as sound events ──────────────
-ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
+ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]   # the tease opens on the end card's signature
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title"})
 ev.append({"t": t_end, "kind": "signature", "tag": "end"})
 for L in LABELS:
