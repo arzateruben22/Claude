@@ -1,1 +1,101 @@
-[]
+[
+ {
+  "id": "c1",
+  "sentence": "All eight billion, with room to breathe.",
+  "claim": "About 8.2 billion people were alive in mid-2024.",
+  "source_url": "https://www.un.org/development/desa/pd/world-population-prospects-2024",
+  "source_title": "World Population Prospects 2024 (UN DESA Population Division); news.un.org/en/story/2024/07/1151971",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Said as 'eight billion' (the spine shows 8.2 billion)."
+ },
+ {
+  "id": "c2",
+  "sentence": "So give each person half a square meter, the room a calm crowd keeps without trying.",
+  "claim": "A crowd moves comfortably below about 2 people per square metre, i.e. about half a square metre each.",
+  "source_url": "https://www.sciencealert.com/?p=28749",
+  "source_title": "Crowd-density thresholds (ScienceAlert; also Waseda University WIAS and NPR on crowd safety), summarising Fruin's levels of service and G. K. Still's crowd science",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: 'below approximately two people per square meter, people can generally walk comfortably' (Waseda WIAS); flow breaks down around 2–3 per m² (Still, summarising Fruin). 'Half a square meter' = 1/2 per m², computed."
+ },
+ {
+  "id": "c3",
+  "sentence": "Now bring everyone in, and the crowd keeps spreading, street after street, until it settles into a square you could drive across in under an hour.",
+  "claim": "8.2 billion people at 2 per m² cover about 4,100 km², a square about 64 km on a side; at 100 km/h that is about 38 minutes across.",
+  "source_url": "https://www.un.org/development/desa/pd/world-population-prospects-2024",
+  "source_title": "World Population Prospects 2024 (UN DESA Population Division); news.un.org/en/story/2024/07/1151971",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py: area_safe_km2 = 4100, side_safe_km = 64.0; 'under an hour' at a highway speed of 100 km/h (a round figure)."
+ },
+ {
+  "id": "c4",
+  "sentence": "You could squeeze us tighter, but packed twice as close, a crowd stops moving like people and starts moving like a fluid, and that's when it turns dangerous.",
+  "claim": "Standing crowds become dangerous at about 4–5 people per m² (twice 2 per m²), when individuals can no longer control their movement and the crowd behaves like a fluid.",
+  "source_url": "https://www.sciencealert.com/?p=28749",
+  "source_title": "Crowd-density thresholds (ScienceAlert; also Waseda University WIAS and NPR on crowd safety), summarising Fruin's levels of service and G. K. Still's crowd science",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: the transition to dangerous is 'generally when the crowd density hits about four people for every square metre' (ScienceAlert); static redline 'more than five people per square metre'. 'Twice as close' = 4 per m². The fluid description is the crowd-science framing (Still); the film never shows a crush."
+ },
+ {
+  "id": "c5",
+  "sentence": "So we keep the room, and all of humanity still covers just two or three Londons.",
+  "claim": "At 2 per m², everyone covers about 2.6 times Greater London's 1,572 km².",
+  "source_url": "https://www.britannica.com/place/Greater-London",
+  "source_title": "Greater London (Encyclopaedia Britannica): 1,572 km²",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 4100 / 1,572 = 2.61; said as 'two or three Londons' (the spine shows ≈ 2.6 × Greater London)."
+ },
+ {
+  "id": "c6",
+  "sentence": "From orbit, you'd struggle to find us.",
+  "claim": "That area is about 0.003% of Earth's land (148.9 million km²).",
+  "source_url": "https://Nationsonline.org/oneworld/countries_by_area.htm",
+  "source_title": "Countries by area (Nations Online): Earth's land 148,940,000 km²",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 0.0028%. 'You'd struggle to find us from orbit' is the plain-words version of that fraction (a square 64 km across is visible from orbit, but it is a speck against the land)."
+ },
+ {
+  "id": "c7",
+  "sentence": "And packed like water, every body would fit in a cube a little shorter than the world's tallest tower.",
+  "claim": "8.2 billion bodies at an average of 62 kg and about the density of water make about 0.5 km³: a cube about 800 m on a side, a little shorter than the 828 m Burj Khalifa.",
+  "source_url": "https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-12-439",
+  "source_title": "Walpole et al., 'The weight of nations: an estimation of adult human biomass', BMC Public Health 12, 439 (2012)",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py: vol_m3 = 5.08e+08, cube_m = 798 (Burj Khalifa 828 m: Guinness World Records). 62 kg is the world's average ADULT mass (Walpole 2012); children weigh less, so this is an upper bound."
+ },
+ {
+  "id": "c8",
+  "sentence": "Nudge how dense we are either way, and that cube barely changes size.",
+  "claim": "Across the body densities sources give (0.97–1.06 g/cm³), the cube's side changes only from about 783 m to 806 m.",
+  "source_url": "https://biologyinsights.com/do-some-people-not-float-the-science-of-buoyancy/",
+  "source_title": "Do some people not float? (Biology Insights): the body is close to the density of water",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py (cube_lo_m, cube_hi_m): the sensitivity line; the card shows the range. Sources for body density are weak (0.97–1.06 across popular science pages); a person should confirm against a physiology text."
+ },
+ {
+  "id": "c9",
+  "sentence": "It only feels that way from inside a city.",
+  "claim": "Everyone alive could stand comfortably in about 4,100 km², about 0.003% of the land: space is not what the world is short of.",
+  "source_url": "https://Nationsonline.org/oneworld/countries_by_area.htm",
+  "source_title": "Countries by area (Nations Online): Earth's land 148,940,000 km²",
+  "accessed": "2026-10-30",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The takeaway concerns standing room only: it makes no claim about resources, food or housing (a person should check the wording reads that way)."
+ }
+]
