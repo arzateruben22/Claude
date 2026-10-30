@@ -6,7 +6,7 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 
 | No. | Title | State |
 |---|---|---|
-| 001 | Through the Earth | built; animatic stills OK; draft rendering (27 Oct) |
+| 001 | Through the Earth | rewritten in the Flow style, re-voiced, re-scored (A lydian 50); draft rendering (30 Oct) |
 | 002 | Everyone, one place | bible |
 | 003 | All the ants | bible |
 | 004 | Count to a billion | bible |
@@ -40,3 +40,17 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
   face onto its own panel beside the model, counters on plates, the ruler square to the camera).
 - Sound: sync PASS on every kind; −14.1 LUFS / −1.6 dBTP on the AAC; music 12.9 LU under the voice (raised from
   26 LU, which left the bed nearly inaudible; the siblings sit at 12.1–12.5).
+
+**30 Oct — the Flow standard and the re-score.**
+- The coordinator flagged that D lydian at 90 BPM is exactly Lumevina's Skin School score (its 18:02 message on
+  27 Oct reached this session only at the pause). Re-scored to **A lydian at 50 BPM** (a 16th = 9 frames; no
+  channel or Lumevina uses it; the slow pulse suits the new tone): preset, bible §3, theme motif, signature plucks
+  A4, E5, D♯5 at 0, +9, +18 frames. Sync PASS; music 13.6 LU under the voice.
+- The owner's new standard (`WRITING.md` "Flow", `lint.py` from 663408e): ep01 rewritten as one thread. The voice
+  says four figures (days, ten kilometers a second, forty-two and thirty-eight minutes); the running sum, labels,
+  the show-your-work card and the end-card footnote carry 12,700 km, 100 km/h, Klotz 2015, 76 min, 39 and 42.
+  The segment is woven in ("Lighten that core in the sum…"), and the last line calls back to the hook ("a fall
+  through the Earth … a way of weighing its heart"). Lint: 0 errors, no flow warnings.
+- Re-voiced slower (am_puck, Kokoro 0.6–0.86 per sentence, 0.38 s pauses, 0.6 s after a question): 74.4 s on the
+  50 BPM grid, every line 2.4–2.9 words/s, hook question at 1.69 s. Claims ledger re-pointed to the new sentences
+  (same 13 claims; notes say where each figure now appears on screen).
