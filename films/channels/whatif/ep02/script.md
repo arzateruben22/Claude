@@ -10,13 +10,13 @@ grows outward from them in rings.
 vo: Could we fit in one *city*? All eight billion, with room to breathe. {c1}
 
 ## normal {shot: the square meter splits in two; a second figure joins · spine "8.2 billion × ½ m²" · picture-only 0.3 s · energy: 0.45} (5.5–17 s)
-vo: There are a lot of us, and it can feel like the world is *full*. {-} So give each person half a square meter, the room a calm crowd keeps without trying. {c2}
+vo: There are a lot of us, and it can feel like the world is *full*. {-} So give each person half a square meter, the room a calm crowd keeps. {c2}
 
 ## change {shot: the crowd spreads outward ring by ring, the camera rising with it; a city outline drawn under it · energy: 0.6} (17–27.5 s)
 vo: Now bring everyone in, and the crowd keeps spreading, street after street, until it settles into a square you could drive across in under an *hour*. {c3}
 
 ## why {shot: the same square shrinks by half as density doubles, then shows chalk warning hatching and springs back · badge: ∵ 2 per m² (safe) · picture-only 2 s · energy: 0.5} (27.5–46 s)
-vo: You could squeeze us tighter, but packed twice as close, a crowd stops moving like people and starts moving like a fluid, and that's when it turns *dangerous*. {c4} So we keep the room, and all of humanity still covers just two or three *Londons*. {c5}
+vo: You could squeeze us tighter, but packed twice as close, a crowd starts to move like a fluid, and that's when it turns *dangerous*. {c4} So we keep the room, and all of humanity still covers just two or three *Londons*. {c5}
 
 ## whoa {shot: pull back to the whole planet's land, the square a single marker dot; then the crowd folds into a cube beside a tower · picture-only 3 s · energy: 0.75} (46–58 s)
 vo: From orbit, you'd struggle to find us. {c6} And packed like water, every body would fit in a cube a little shorter than the world's *tallest tower*. {c7}
