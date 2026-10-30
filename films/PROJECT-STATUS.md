@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **30 Oct, 05:27 UTC — the owner: "stop now".** All nine sessions sent PAUSE: commit WIP, kill renders by PID (`--resume` later), cancel check-ins. The hourly usage report is disabled. Resume with CONTINUE to each session in the roster (scratchpad `fleet.json`); the render workers then re-take their jobs.
+
 > **30 Oct, 05:00 UTC — the owner: "full speed on the remaining channels".** Outer Layer and Back of the Envelope run at full speed, eight sessions in all:
 >
 > - **Builders.** Each channel now has two. The first builder keeps ep01–ep03, vol01 and the shared files; the second builds ep04–ep06 on a `-b` branch.
