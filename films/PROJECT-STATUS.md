@@ -1,5 +1,13 @@
 # Project status: four science-video formulas to 100%
 
+> **30 Oct, 05:00 UTC — the owner: "full speed on the remaining channels".** Outer Layer and Back of the Envelope run at full speed, eight sessions in all:
+>
+> - **Builders.** Each channel now has two. The first builder keeps ep01–ep03, vol01 and the shared files; the second builds ep04–ep06 on a `-b` branch.
+> - **Render workers.** Each builder has one on a cheaper model. It renders finals on its own branch (`-render-a` / `-render-b`), and the builder merges them back.
+> - **Briefs and roster.** Briefs are in `films/channels/briefs/`; the session roster is in the coordinator's scratchpad, `fleet.json`.
+> - **Owner approvals.** "Full speed" counts as approval of the Flow style and of the narrators they heard: bf_isabella and am_puck.
+> - **Hourly rule.** It is now a non-blocking usage report (`trig_014exNbZfBYHMrsaVaeh3L7k`, re-armed each hour). Everything pauses automatically if the weekly limit leaves "allowed_warning" or overage starts.
+
 > **29 Oct — the owner's writing note: make the films flow ("hypnotized by how smooth everything transitions").** WRITING.md gains a Flow section and lint.py two warnings (663408e). Scope chosen: the two new channels now (both episode-1 scripts rewritten before their renders; queued for the next block), the 18 finished shorts decided after the owner sees a new one. Preview videos now play from the artifact's media store (3b0fd2f, v17). Channels paused under the hourly rule.
 >
 > **27 Oct, 17:47 UTC — owner's rule: "stop every hour and let me see my usage before we continue."** Work runs in one-hour blocks: at each hourly stop (send_later, first 18:40 UTC) the coordinator sends PAUSE to both channel sessions, reports usage (per-session cost and tokens vs scratchpad usage-baseline.json; the 7-day limit is at warning, resets Sun 1 Nov 22:00 UTC) and waits for the owner's "continue". The 2-hourly check-in is disabled; nothing runs on its own between blocks.
