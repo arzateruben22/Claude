@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "Not one cell.",
+  "sentence": "The part you can see isn't: not one cell.",
   "claim": "The outermost layer of the epidermis, the stratum corneum, is made of corneocytes: flattened, dead (cornified) keratinocytes. It is the skin's visible surface.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
   "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
@@ -12,8 +12,8 @@
  },
  {
   "id": "c2",
-  "sentence": "Your outermost layer is about fifteen rows of flattened cells.",
-  "claim": "The stratum corneum is about 15 layers of flattened corneocytes in typical skin (about 6 on genital skin, many more on palms and soles).",
+  "sentence": "Look closer: the surface is a stack of flattened cells, more than a dozen deep, each an empty shell packed with keratin.",
+  "claim": "The stratum corneum is about 15 layers of flattened corneocytes in typical skin ('more than a dozen deep'; the spine shows ≈15).",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
   "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
   "accessed": "2026-10-27",
@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Each one is dead: a flat shell packed with keratin.",
+  "sentence": "Look closer: the surface is a stack of flattened cells, more than a dozen deep, each an empty shell packed with keratin.",
   "claim": "Corneocytes are dead, anucleate cells filled with keratin filaments inside a cross-linked protein shell (the cornified envelope).",
   "source_url": "https://www.nature.com/articles/nrm1619",
   "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "The living skin starts just beneath them.",
+  "sentence": "The living ones start just underneath.",
   "claim": "Below the stratum corneum lie the living layers of the epidermis (granular, spinous, basal).",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299/",
   "source_title": "Histology, Stratum Corneum (StatPearls, NCBI Bookshelf, NIH)",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c5",
-  "sentence": "It's born alive, at the base.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
   "claim": "Keratinocytes are produced by cell division in the basal layer (stratum basale) of the epidermis.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
   "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "For about two weeks it rises, filling with keratin.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
   "claim": "A keratinocyte takes about 14 days to move from the basal layer to the stratum corneum, differentiating (making keratin) on the way; it then spends roughly another two weeks in the stratum corneum before shedding.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
   "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Then, near the top, it takes itself apart, on purpose.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
   "claim": "Cornification is a programmed form of cell death, distinct from apoptosis: the cell loses its nucleus and organelles and becomes a corneocyte.",
   "source_url": "https://www.nature.com/articles/nrm1619",
   "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
@@ -78,7 +78,7 @@
  },
  {
   "id": "c8",
-  "sentence": "Scientists picture it as a brick wall: dead cells for bricks, fats for mortar.",
+  "sentence": "But sealed together with fats, those shells build a kind of brick wall, and the wall keeps your water inside.",
   "claim": "The stratum corneum is commonly modelled as 'bricks and mortar': corneocytes (bricks) in a matrix of intercellular lipids (mortar).",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
   "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "And that wall is what keeps your water inside.",
+  "sentence": "But sealed together with fats, those shells build a kind of brick wall, and the wall keeps your water inside.",
   "claim": "The stratum corneum is the skin's main permeability barrier, limiting water loss through the skin (transepidermal water loss).",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
   "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
@@ -100,8 +100,8 @@
  },
  {
   "id": "c10",
-  "sentence": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns.",
-  "claim": "Rutter and Hull (1979) measured skin water loss in 78 babies of 26–41 weeks' gestation (199 measurements) in incubators.",
+  "sentence": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast.",
+  "claim": "Rutter and Hull (1979) measured skin water loss in 78 babies of 26–41 weeks' gestation; they linked the high losses of the most preterm babies to a thin, poorly keratinised stratum corneum (shown on screen: 'Rutter & Hull, 1979').",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1545609/",
   "source_title": "Rutter N, Hull D (1979). Water loss from the skin of term and preterm babies. Archives of Disease in Childhood 54(11):858–868",
   "accessed": "2026-10-27",
@@ -111,8 +111,8 @@
  },
  {
   "id": "c11",
-  "sentence": "Babies born before thirty weeks, before that wall is finished, lost about five times as much.",
-  "claim": "Babies under 30 weeks' gestation lost on average about 32 g/m² per hour through the skin over their first four days, against about 6 g/m² per hour once losses settled in babies born at 34–41 weeks; the authors linked this to a thin, poorly keratinised stratum corneum.",
+  "sentence": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast.",
+  "claim": "Babies under 30 weeks' gestation lost on average about 32 g/m² per hour through the skin over their first four days, against about 6 g/m² per hour once losses settled in babies born at 34–41 weeks; the authors linked this to a thin, poorly keratinised stratum corneum. Said as 'about five times as fast' (a rate per area per hour).",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1545609/",
   "source_title": "Rutter N, Hull D (1979). Water loss from the skin of term and preterm babies. Archives of Disease in Childhood 54(11):858–868",
   "accessed": "2026-10-27",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c12",
-  "sentence": "To scale: on the cheek, the whole dead layer is about seventeen micrometers.",
+  "sentence": "And that whole wall, on a cheek, is thinner than a fifth of a sheet of paper.",
   "claim": "Mean apparent stratum corneum thickness on the cheek: 16.8 µm (confocal Raman, 15 healthy Japanese adults); volar forearm 22.6 µm, back of hand 29.3 µm, palm 173 µm.",
   "source_url": "https://medicaljournals.se/acta/content/abstract/10.2340/00015555-0183",
   "source_title": "Egawa M, Hirao T, Takahashi M (2007). In vivo estimation of stratum corneum thickness from water concentration profiles obtained with Raman spectroscopy. Acta Dermato-Venereologica 87:4–8",
@@ -133,8 +133,8 @@
  },
  {
   "id": "c13",
-  "sentence": "A sheet of paper is about a hundred.",
-  "claim": "Standard 80 gsm copy paper is about 100 µm (0.1 mm) thick (typically about 70–105 µm).",
+  "sentence": "And that whole wall, on a cheek, is thinner than a fifth of a sheet of paper.",
+  "claim": "Standard 80 gsm copy paper is about 100 µm thick; 17 µm is about 0.17 of it ('thinner than a fifth', computed).",
   "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
   "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
   "accessed": "2026-10-27",
@@ -144,8 +144,8 @@
  },
  {
   "id": "c14",
-  "sentence": "Every day, you're kept alive by cells that already died to build a wall.",
-  "claim": "The stratum corneum, made of dead corneocytes, is the skin's main barrier against water loss (restates c7–c9).",
+  "sentence": "On top, it wears a layer that died for it.",
+  "claim": "The stratum corneum, made of dead corneocytes, is the skin's main barrier against water loss (restates c7–c9); 'underneath, yes' restates c4.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940/",
   "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
   "accessed": "2026-10-27",

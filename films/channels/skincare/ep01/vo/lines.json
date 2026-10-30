@@ -12,94 +12,93 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Is your skin alive? The part you see? Not one cell.",
+   "text": "Is your skin alive? The part you can see isn't: not one cell.",
    "stars": [
     "alive"
    ],
-   "phonemes": "ɪz jɔː skˈɪn ɐlˈaɪv? ðə pˈɑːt juː sˈiː? nˌɒt wˈɒn sˈɛl.",
-   "speed": 0.76,
+   "phonemes": "ɪz jɔː skˈɪn ɐlˈaɪv? ðə pˈɑːt juː kan sˈiː ˈɪzənt: nˌɒt wˈɒn sˈɛl.",
+   "speed": 0.78,
    "file": "01.wav",
-   "dur": 4.099,
-   "sha256": "67977cccbcb4313c1e04fee720814e08fbed90048c7aa09470220796d26f6fc7"
+   "dur": 4.668,
+   "sha256": "e9f3a301853017d141f804ff18a23160227ce645dc6edb6cfae540b6e2a5699b"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Your outermost layer is about fifteen rows of flattened cells. Each one is dead: a flat shell packed with keratin. The living skin starts just beneath them.",
+   "text": "Look closer: the surface is a stack of flattened cells, more than a dozen deep, each an empty shell packed with keratin. The living ones start just underneath.",
    "stars": [
     "keratin"
    ],
-   "phonemes": "jɔːɹ ˈaʊtəmˌəʊst lˈeɪəɹ ɪz ɐbˌaʊt fˈɪftiːn ɹˈəʊz ɒv flˈatənd sˈɛlz. ˈiːtʃ wˈɒn ɪz dˈɛd: ɐ flˈat ʃˈɛl pˈakt wɪð kˈɛɹətɪn . ðə lˈɪvɪŋ skˈɪn stˈɑːts dʒˈʌst bɪnˈiːθ ðˌɛm.",
-   "speed": 0.92,
+   "phonemes": "lˈʊk klˈəʊsə: ðə sˈɜːfɪs ɪz ɐ stˈak ɒv flˈatənd sˈɛlz, mˈɔː ðˌanə dˈʌzən dˈiːp, ˈiːtʃ ɐn ˈɛmpti ʃˈɛl pˈakt wɪð kˈɛɹətɪn . ðə lˈɪvɪŋ wˈɒnz stˈɑːt dʒˈʌst ˌʌndənˈiːθ.",
+   "speed": 0.86,
    "file": "02.wav",
-   "dur": 9.474,
-   "sha256": "82f7f93ea84d42222124e51ed5fcdaca6b7be847e295639415c5d07cedec35f0"
+   "dur": 9.636,
+   "sha256": "1cb632c52057a7801ba18d43068129f7320fe8912cee23eedb8e6eb4ca98f8ba"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Follow one cell from the bottom. It's born alive, at the base. For about two weeks it rises, filling with keratin. Then, near the top, it takes itself apart, on purpose.",
+   "text": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
    "stars": [
     "on purpose"
    ],
-   "phonemes": "fˈɒləʊ wˈɒn sˈɛl fɹʌmðə bˈɒtəm. ɪts bˈɔːn ɐlˈaɪv, at ðə bˈeɪs. fɔːɹ ɐbˌaʊt tˈuː wˈiːks ɪt ɹˈaɪzɪz, fˈɪlɪŋ wɪð kˈɛɹətɪn . ðˈɛn, nˌiə ðə tˈɒp, ɪt tˈeɪks ɪtsˈɛlf ɐpˈɑːt, ˌɒn pˈɜːpəs.",
+   "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt, ˌɒn pˈɜːpəs.",
    "speed": 0.86,
    "file": "03.wav",
-   "dur": 10.601,
-   "sha256": "a68e579593450559a9d3b0fbdc14c7f3da6324e1e207e32e7f89ac7f96cf8133"
+   "dur": 8.786,
+   "sha256": "03a7eadadf492e35fbfa15175fb48482a4da690a30288112bf8e808479e6a420"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "That layer looks like waste, waiting to flake off. Scientists picture it as a brick wall: dead cells for bricks, fats for mortar. And that wall is what keeps your water inside.",
+   "text": "It looks like waste, waiting to flake away. But sealed together with fats, those shells build a kind of brick wall, and the wall keeps your water inside.",
    "stars": [
-    "brick wall",
-    "inside"
+    "brick wall"
    ],
-   "phonemes": "ðat lˈeɪə lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ˈɒf. sˈaɪəntɪsts pˈɪktʃəɹ ɪt az ɐ bɹˈɪk wˈɔːl: dˈɛd sˈɛlz fɔː bɹˈɪks, fˈats fɔː mˈɔːtə. and ðat wˈɔːl ɪz wɒt kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
-   "speed": 0.85,
+   "phonemes": "ɪt lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ɐwˈeɪ. bˌʌt sˈiːld təɡˌɛðə wɪð fˈats, ðəʊz ʃˈɛlz bˈɪld ɐ kˈaɪnd ɒv bɹˈɪk wˈɔːl, and ðə wˈɔːl kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
+   "speed": 0.84,
    "file": "04.wav",
-   "dur": 10.99,
-   "sha256": "89e15568027facb964bc107be33e1bfb6c2b624b5316f18aaea947b1cf1d266a"
+   "dur": 9.246,
+   "sha256": "35dc8d655ecfd8fce19850f5c2426ff3e835e4123f0fc2c6980a9982c96af240"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "In nineteen seventy-nine, two doctors measured water leaving the skin of newborns. Babies born before thirty weeks, before that wall is finished, lost about five times as much.",
+   "text": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast.",
    "stars": [
     "five times"
    ],
-   "phonemes": "ɪn nˈaɪntiːn sˈɛvəntinˈaɪn, tˈuː dˈɒktəz mˈɛʒəd wˈɔːtə lˈiːvɪŋ ðə skˈɪn ɒv njˈuːbɔːnz. bˈeɪbiz bˈɔːn bɪfˌɔː θˈɜːti wˈiːks, bɪfˌɔː ðat wˈɔːl ɪz fˈɪnɪʃt, lˈɒst ɐbˌaʊt fˈaɪv tˈaɪmz az mˈʌtʃ.",
-   "speed": 0.95,
+   "phonemes": "bˈeɪbiz bˈɔːn tˈuː ˈɜːlɪ hˈavənt fˈɪnɪʃt ðˈeəz, and dˈɒktəz mˈɛʒəɹɪŋ ðeə skˈɪn fˈaʊnd ɪt lˈuːzɪŋ wˈɔːtəɹ ɐbˌaʊt fˈaɪv tˈaɪmz az fˈast.",
+   "speed": 0.86,
    "file": "05.wav",
-   "dur": 10.236,
-   "sha256": "c2b1586940aa63d63e0deec130b506954d0bc9ed45adc29345fae0603ec91fbb"
+   "dur": 8.083,
+   "sha256": "25b4a64b344972fe81bb9cd04f14d6f23a8897e293d567204ce82abe48c5272c"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "To scale: on the cheek, the whole dead layer is about seventeen micrometers. A sheet of paper is about a hundred.",
+   "text": "And that whole wall, on a cheek, is thinner than a fifth of a sheet of paper.",
    "stars": [
-    "hundred"
+    "paper"
    ],
-   "phonemes": "tə skˈeɪl: ɒnðə tʃˈiːk, ðə hˈəʊl dˈɛd lˈeɪəɹ ɪz ɐbˌaʊt sˈɛvəntˌiːn maɪkɹˈɒmɪtəz . ɐ ʃˈiːt ɒv pˈeɪpəɹ ɪz ɐbˌaʊt ɐ hˈʌndɹɪd.",
-   "speed": 0.84,
+   "phonemes": "and ðat hˈəʊl wˈɔːl, ˌɒn ɐ tʃˈiːk, ɪz θˈɪnə ðˌanə fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
+   "speed": 0.82,
    "file": "06.wav",
-   "dur": 7.113,
-   "sha256": "c9978f64be1a118a4dc39d2f31729fa9f6b299ed3a44062ed49b349dca320a28"
+   "dur": 4.777,
+   "sha256": "e56ac3fdd4e510250af6023addf0b1c385cc5e7ef2d5c862e06acc241da056be"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Every day, you're kept alive by cells that already died to build a wall.",
+   "text": "So, is your skin alive? Underneath, yes. On top, it wears a layer that died for it.",
    "stars": [
     "died"
    ],
-   "phonemes": "ˈɛvɹɪ dˈeɪ, jɔː kˈɛpt ɐlˈaɪv baɪ sˈɛlz ðat ɔːlɹˌɛdi dˈaɪd tə bˈɪld ɐ wˈɔːl.",
-   "speed": 0.74,
+   "phonemes": "sˈəʊ, ɪz jɔː skˈɪn ɐlˈaɪv? ˌʌndənˈiːθ, jˈɛs. ˌɒn tˈɒp, ɪt wˈeəz ɐ lˈeɪə ðat dˈaɪd fɔːɹ ɪt.",
+   "speed": 0.8,
    "file": "07.wav",
-   "dur": 5.315,
-   "sha256": "540e09dcb54a9f50ca0b58dcdff27d48be79d8e1635751df49a608354a2dd26a"
+   "dur": 5.946,
+   "sha256": "92482ee35f14f307a55c8a607aa2428ae0b77e5eb7d240367f2f94d9bd2f08c0"
   },
   {
    "id": "vo08",
@@ -109,10 +108,10 @@
     "fifty"
    ],
    "phonemes": "nˈɛkst: dˈʌz ˌɛspˌiːˈɛf wˈɒn hˈʌndɹɪd blˈɒk twˈaɪs az mˈʌtʃ az fˈɪfti?",
-   "speed": 0.9,
+   "speed": 0.8,
    "file": "08.wav",
-   "dur": 3.844,
-   "sha256": "21481779cbf9eefaaee83bf6fa28e87f70234f9a5a6c7a04425af28d7b3ac767"
+   "dur": 4.537,
+   "sha256": "022797531d6a50919c330639d8489feee464997d8a488b88d52f663efa8ee5e8"
   }
  ]
 }
