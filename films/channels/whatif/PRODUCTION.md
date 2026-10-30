@@ -6,7 +6,7 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 
 | No. | Title | State |
 |---|---|---|
-| 001 | Through the Earth | rewritten in the Flow style, re-voiced, re-scored (A lydian 50); draft rendering (30 Oct) |
+| 001 | Through the Earth | draft reviewed (round 1: 10 confirmed findings, all fixed); final rendering (30 Oct) |
 | 002 | Everyone, one place | bible |
 | 003 | All the ants | bible |
 | 004 | Count to a billion | bible |
@@ -54,3 +54,6 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 - Re-voiced slower (am_puck, Kokoro 0.6–0.86 per sentence, 0.38 s pauses, 0.6 s after a question): 74.4 s on the
   50 BPM grid, every line 2.4–2.9 words/s, hook question at 1.69 s. Claims ledger re-pointed to the new sentences
   (same 13 claims; notes say where each figure now appears on screen).
+- Draft review round 1 (`ep01/review/REVIEW-ROUND1.md`): 10 confirmed findings (framing, notes and labels over the
+  model, a camera pop, orphan caption pages, picture/voice timing, clipped voice files); all fixed and checked in
+  stills. Sound re-rendered: sync PASS. Final render started 05:02 (detached, chunked, resumable).

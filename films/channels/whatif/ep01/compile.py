@@ -62,20 +62,20 @@ SHOTS = [
 ]
 
 # ── the fall clock (τ = seconds of fall since the jump; the scene draws P's trajectory) ──
-RATE_F = nice(T_TRIP / (t_stop - A("vo03:Gravity", -0.3)))       # the trip fits between "Gravity" and "stop"
+RATE_F = 200.0                                                     # the trip starts on "falling" and ends on "stop" (asserted below)
 t_jump = round(t_stop - T_TRIP / RATE_F, 4)
 # the whoa: back and forth faster; it parks at the top rim (at rest: the loop's start) before the work card
 RATE_W = nice(2 * T_TRIP / 4.8)                                   # a round trip in about 4.6 s of film
-t_w0 = B["whoa"]["t0"]
-k = math.floor((t_work0 - 0.4 - t_w0) * RATE_W / (2 * T_TRIP) + 0.5)   # round trips that fit (+ the first half)
+t_w0 = A("vo05:swing", -0.1)          # the swing starts on its word (review 30 Oct: it began 5 s early)
+k = math.floor((t_work0 - 0.2 - t_w0) * RATE_W / (2 * T_TRIP) + 0.5)   # round trips that fit (+ the first half)
 tau_park = 2 * T_TRIP * max(1, k)        # at the top rim again: an even number of one-way trips
 t_park = round(t_w0 + (tau_park - T_TRIP) / RATE_W, 4)
 assert t_w0 < t_park <= t_work0, (t_w0, t_park)
 CLK = {
     "fall": {"keys": [{"t": 0.0, "rate": RATE_F}], "anchor": [t_jump, 0.0], "rest": [[-1e9, 0.0], [t_stop, T_TRIP]]},
-    "whoa": {"keys": [{"t": t_w0, "rate": RATE_W}, {"t": t_park, "rate": 0.0, "badge": None}], "anchor": [t_w0, T_TRIP]},
+    "whoa": {"keys": [{"t": 0.0, "rate": 0.0, "badge": None}, {"t": t_w0, "rate": RATE_W}, {"t": t_park, "rate": 0.0, "badge": None}], "anchor": [t_w0, T_TRIP]},
 }
-assert t_jump > B["change"]["t0"] - 0.2, (t_jump, B["change"]["t0"])
+assert A("vo02:falling") - 0.2 <= t_jump <= A("line:vo03"), (t_jump, A("vo02:falling"))
 
 
 def depth_at(tau):
@@ -102,35 +102,35 @@ CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5, "ease": "sine"}],
     "drive": [
         {"t": B["normal"]["t0"], **FRONT, "dist": 82, "az": 25.5},
-        {"t": t_drive0 - 0.4, "target": [0, -5.6, 5.0], "dist": 66, "el": 17.5, "az": 27, "fov": 24, "fy": 0.47, "ease": "inout3"},
-        {"t": B["change"]["t0"], "target": [0, -5.4, 4.8], "dist": 68, "el": 18, "az": 28, "fov": 24, "fy": 0.4, "ease": "sine"},
+        {"t": t_drive0 - 0.4, "target": [0, -3.4, 3.4], "dist": 100, "el": 14, "az": 27, "fov": 24, "fy": 0.44, "ease": "inout3"},
+        {"t": B["change"]["t0"], "target": [0, -3.2, 3.2], "dist": 100, "el": 13, "az": 28, "fov": 24, "fy": 0.44, "ease": "sine"},
     ],
     "fall": [
-        {"t": B["change"]["t0"], "target": [0, -5.4, 4.8], "dist": 68, "el": 18, "az": 28, "fov": 24, "fy": 0.47},
-        {"t": t_jump + 2.6, "target": [0, 0, 0], "dist": 80, "el": 6, "az": 26, "fov": 24, "fy": 0.35, "ease": "inout3"},
-        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 5, "az": 24, "fov": 24, "fy": 0.35, "ease": "sine"},
+        {"t": B["change"]["t0"], "target": [0, -3.2, 3.2], "dist": 100, "el": 13, "az": 28, "fov": 24, "fy": 0.44},   # = the drive shot's last key: no pop
+        {"t": t_jump + 2.6, "target": [0, 0, 0], "dist": 88, "el": 6, "az": 26, "fov": 24, "fy": 0.38, "ease": "inout3"},
+        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 86, "el": 5, "az": 24, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "layers": [
-        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 78, "el": 5, "az": 24, "fov": 24, "fy": 0.35},
-        {"t": A("vo04:pictured"), "target": [4.6, 0, 0], "dist": 74, "el": 4, "az": 17, "fov": 24, "fy": 0.35, "ease": "inout3"},
-        {"t": B["whoa"]["t0"], "target": [4.8, -0.3, 0], "dist": 70, "el": 4, "az": 16, "fov": 24, "fy": 0.35, "ease": "sine"},
+        {"t": B["why"]["t0"], "target": [0, 0, 0], "dist": 86, "el": 5, "az": 24, "fov": 24, "fy": 0.38},
+        {"t": A("vo04:pictured"), "target": [3.0, 0, 0], "dist": 92, "el": 4, "az": 17, "fov": 24, "fy": 0.38, "ease": "inout3"},
+        {"t": B["whoa"]["t0"], "target": [3.0, -0.3, 0], "dist": 92, "el": 4, "az": 16, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "answer": [
-        {"t": B["whoa"]["t0"], "target": [4.8, -0.3, 0], "dist": 70, "el": 4, "az": 16, "fov": 24, "fy": 0.35},
-        {"t": A("vo05:With", -0.2), "target": [0, 0, 0], "dist": 86, "el": 8, "az": 22, "fov": 24, "fy": 0.35, "ease": "inout3"},
-        {"t": B["work"]["t0"], "target": [0, 0, 0], "dist": 88, "el": 9, "az": 24, "fov": 24, "fy": 0.35, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "target": [3.0, -0.3, 0], "dist": 92, "el": 4, "az": 16, "fov": 24, "fy": 0.38},
+        {"t": A("vo05:With", -0.2), "target": [0, 0, 0], "dist": 95, "el": 8, "az": 22, "fov": 24, "fy": 0.38, "ease": "inout3"},
+        {"t": B["work"]["t0"], "target": [0, 0, 0], "dist": 97, "el": 9, "az": 24, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "work": [
-        {"t": t_work0, "target": [0, 0, 0], "dist": 88, "el": 9, "az": 24, "fov": 24, "fy": 0.35},
-        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 90, "el": 9, "az": 26, "fov": 24, "fy": 0.35, "ease": "sine"},
+        {"t": t_work0, "target": [0, 0, 0], "dist": 97, "el": 9, "az": 24, "fov": 24, "fy": 0.38},
+        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 99, "el": 9, "az": 26, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "core": [
-        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 90, "el": 9, "az": 26, "fov": 24, "fy": 0.35},
-        {"t": t_core, "target": [0, -0.3, 0], "dist": 68, "el": 6, "az": 24.5, "fov": 24, "fy": 0.35, "ease": "inout3"},
-        {"t": t_end, "target": [0, -0.2, 0], "dist": 72, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.35, "ease": "sine"},
+        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": 99, "el": 9, "az": 26, "fov": 24, "fy": 0.38},
+        {"t": t_core, "target": [0, 0.8, 0], "dist": 81, "el": 6, "az": 24.5, "fov": 24, "fy": 0.38, "ease": "inout3"},
+        {"t": t_end, "target": [0, 0.6, 0], "dist": 84, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.38, "ease": "sine"},
     ],
     "end": [
-        {"t": t_end, "target": [0, -0.2, 0], "dist": 72, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.35},
+        {"t": t_end, "target": [0, 0.6, 0], "dist": 84, "el": 6.5, "az": 24.2, "fov": 24, "fy": 0.38},
         {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"},          # the last frame is frame 0's composition: the loop
     ],
 }
@@ -171,12 +171,12 @@ WORK = {
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "figure", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
     {"id": "l-tunnel", "text": "tunnel", "kind": "part", "anchor": "tunnel", "t0": A("vo02:tunnel"), "t1": t_drive0 - 0.3, "shot": "drive", "side": 1},
-    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:driving", 0.4), "t1": B["change"]["t0"], "shot": "drive", "side": -1, "v": "above"},
+    {"id": "l-car", "text": "100 km/h", "kind": "anchor", "anchor": "car", "t0": A("vo02:driving", 0.4), "t1": A("vo02:But", -0.2), "shot": "drive", "side": -1, "v": "below"},
     {"id": "l-mantle", "text": "mantle", "kind": "part", "anchor": "mantle", "t0": A("vo04:real"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
     {"id": "l-core", "text": "core", "kind": "part", "anchor": "core", "t0": A("vo04:core"), "t1": B["whoa"]["t0"], "shot": "layers", "side": -1},
     {"id": "l-uni", "text": "textbook gravity", "kind": "part", "anchor": "uni", "t0": A("vo04:fortytwo", 0.6), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
     {"id": "l-peak", "text": "real gravity peaks here", "kind": "calc", "anchor": "peak", "t0": A("vo04:stronger"), "t1": B["whoa"]["t0"], "shot": "layers", "side": 1},
-    {"id": "l-core-t", "text": "core", "kind": "calc", "anchor": "core", "t0": t_core, "t1": t_end, "shot": "core", "side": 1},
+    {"id": "l-core-t", "text": "core", "kind": "part", "anchor": "core", "t0": t_core, "t1": t_end, "shot": "core", "side": 1},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
@@ -219,7 +219,7 @@ film = {
     "clk": CLK, "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24),
+    "captions": f.captions(max_chars=24, balance=True, keep=("real Earth", "the textbook's")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

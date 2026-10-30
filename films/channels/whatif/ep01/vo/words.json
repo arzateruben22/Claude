@@ -191,7 +191,7 @@
     },
     {
      "w": "days.",
-     "start": 5.525,
+     "start": 5.52,
      "end": 6.204,
      "heard": true,
      "end_asr": 6.56
@@ -225,8 +225,8 @@
   },
   {
    "id": "vo03",
-   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way up, and you arrive just as you stop.",
-   "heard": "And gravity keeps pulling, until at the center you're moving about 10 kilometers a second. Then that pull slows you on the way up and you arrive just as you stop.",
+   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way out, and you arrive just as you stop.",
+   "heard": "and gravity keeps pulling until at the center you're moving about 10 kilometers a second. Then that pull slows you on the way out and you arrive just as you stop.",
    "words": [
     {
      "w": "And",
@@ -248,8 +248,8 @@
     },
     {
      "w": "pulling,",
-     "start": 1.205,
-     "end": 1.92,
+     "start": 1.235,
+     "end": 1.76,
      "heard": true
     },
     {
@@ -261,7 +261,7 @@
     {
      "w": "at",
      "start": 2.205,
-     "end": 2.56,
+     "end": 2.48,
      "heard": true
     },
     {
@@ -327,13 +327,13 @@
     },
     {
      "w": "that",
-     "start": 6.8,
+     "start": 6.83,
      "end": 7.04,
      "heard": true
     },
     {
      "w": "pull",
-     "start": 7.125,
+     "start": 7.105,
      "end": 7.52,
      "heard": true
     },
@@ -351,68 +351,68 @@
     },
     {
      "w": "on",
-     "start": 8.145,
+     "start": 8.15,
      "end": 8.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.46,
-     "end": 8.56,
+     "start": 8.47,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "way",
-     "start": 8.49,
-     "end": 8.8,
+     "start": 8.725,
+     "end": 8.88,
      "heard": true
     },
     {
-     "w": "up,",
-     "start": 8.755,
-     "end": 8.96,
+     "w": "out,",
+     "start": 8.775,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.205,
-     "end": 9.36,
-     "heard": true
-    },
-    {
-     "w": "you",
-     "start": 9.33,
+     "start": 9.355,
      "end": 9.52,
      "heard": true
     },
     {
+     "w": "you",
+     "start": 9.48,
+     "end": 9.68,
+     "heard": true
+    },
+    {
      "w": "arrive",
-     "start": 9.615,
-     "end": 10.16,
+     "start": 9.765,
+     "end": 10.32,
      "heard": true
     },
     {
      "w": "just",
-     "start": 10.165,
-     "end": 10.4,
+     "start": 10.28,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "as",
-     "start": 10.5,
-     "end": 10.64,
+     "start": 10.625,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "you",
-     "start": 10.53,
-     "end": 10.88,
+     "start": 10.875,
+     "end": 11.04,
      "heard": true
     },
     {
      "w": "stop.",
-     "start": 10.96,
-     "end": 11.44,
+     "start": 11.135,
+     "end": 11.6,
      "heard": true
     }
    ],
@@ -456,7 +456,7 @@
     {
      "w": "said,",
      "start": 1.41,
-     "end": 1.76,
+     "end": 1.84,
      "heard": true
     },
     {
@@ -541,25 +541,25 @@
     },
     {
      "w": "A",
-     "start": 6.69,
+     "start": 6.695,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "graduate",
-     "start": 6.845,
+     "start": 6.85,
      "end": 7.44,
      "heard": true
     },
     {
      "w": "student",
-     "start": 7.49,
+     "start": 7.495,
      "end": 7.76,
      "heard": true
     },
     {
      "w": "redid",
-     "start": 7.83,
+     "start": 7.835,
      "end": 8.32,
      "heard": true
     },
@@ -583,7 +583,7 @@
     },
     {
      "w": "the",
-     "start": 8.99,
+     "start": 8.995,
      "end": 9.2,
      "heard": true
     },
@@ -607,7 +607,7 @@
     },
     {
      "w": "its",
-     "start": 10.17,
+     "start": 10.19,
      "end": 10.4,
      "heard": true
     },
@@ -631,7 +631,7 @@
     },
     {
      "w": "gravity",
-     "start": 11.435,
+     "start": 11.44,
      "end": 12.0,
      "heard": true
     },
@@ -643,7 +643,7 @@
     },
     {
      "w": "stronger",
-     "start": 12.395,
+     "start": 12.4,
      "end": 12.88,
      "heard": true
     },
@@ -711,7 +711,7 @@
     },
     {
      "w": "come",
-     "start": 1.94,
+     "start": 1.935,
      "end": 2.16,
      "heard": true
     },

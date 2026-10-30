@@ -112,7 +112,9 @@ def main():
         for j, (s, sp) in enumerate(zip(sents, speeds)):
             ph = tts.phonemes(tok, s, lex, LANG)
             audio, sr = k.create(ph, voice=NARRATOR, speed=sp, lang=LANG, is_phonemes=True)
-            parts.append(tts.trim(np.asarray(audio, np.float32), sr))
+            x = tts.trim(np.asarray(audio, np.float32), sr)
+            x = x * np.float32(10 ** (-1 / 20) / max(1e-9, float(np.max(np.abs(x)))))   # peak at −1 dBFS: Kokoro's raw output can clip (review 30 Oct)
+            parts.append(x)
             phs.append(ph)
             if j < len(sents) - 1:
                 g = GAP_Q if s.endswith("?") else GAP

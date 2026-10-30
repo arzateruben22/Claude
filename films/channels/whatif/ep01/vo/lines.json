@@ -34,7 +34,7 @@
    ],
    "file": "01.wav",
    "dur": 4.261,
-   "sha256": "e662d8384575557940a6c160fcec5820b460a893ceb457f61683bf9266644079"
+   "sha256": "f152b28377052e4403eb0d6e51fdcd18d1e1d2e0b75e72d7f8ecabf5374cde2d"
   },
   {
    "id": "vo02",
@@ -60,17 +60,17 @@
    ],
    "file": "02.wav",
    "dur": 7.922,
-   "sha256": "34a549f9f6d8495ae81defd29ec65a512002677a53eb772b0e2538ab8484ff64"
+   "sha256": "6b2292e90e2a165f9cbe8657399edd718a0fa051065e0449ed29cb74b1db058e"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way up, and you arrive just as you stop.",
+   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way out, and you arrive just as you stop.",
    "stars": [
     "ten kilometers a second",
     "stop"
    ],
-   "phonemes": "ænd ɡɹˈævᵻɾi kˈiːps pˈʊlɪŋ, ʌntˈɪl æt ðə sˈɛntɚ jʊɹ mˈuːvɪŋ ɐbˌaʊt tˈɛn kˈɪləmˌiːɾɚz ɐ sˈɛkənd. ðˈɛn ðæt pˈʊl slˈoʊz juː ɔnðə wˈeɪ ˈʌp, ænd juː ɚɹˈaɪv dʒˈʌst æz juː stˈɑːp.",
+   "phonemes": "ænd ɡɹˈævᵻɾi kˈiːps pˈʊlɪŋ, ʌntˈɪl æt ðə sˈɛntɚ jʊɹ mˈuːvɪŋ ɐbˌaʊt tˈɛn kˈɪləmˌiːɾɚz ɐ sˈɛkənd. ðˈɛn ðæt pˈʊl slˈoʊz juː ɔnðə wˈeɪ ˈaʊt, ænd juː ɚɹˈaɪv dʒˈʌst æz juː stˈɑːp.",
    "speeds": [
     0.8,
     0.78
@@ -85,8 +85,8 @@
     ]
    ],
    "file": "03.wav",
-   "dur": 11.504,
-   "sha256": "c9ad35a996ff7b2238bd5625548d3eec5c07b2cf1fe786f712e150f5c62c6e11"
+   "dur": 11.681,
+   "sha256": "0cdd3b93b42c090954cec707b02af99a401887ac6651f4ba765d3c1ccc94851c"
   },
   {
    "id": "vo04",
@@ -118,7 +118,7 @@
    ],
    "file": "04.wav",
    "dur": 13.676,
-   "sha256": "4055200048e88c61bd73bcf35a0fbf1777369690bac990ad9b4f2a8f64f293c0"
+   "sha256": "cd86d38abce8b68c22df6fa520c1501a60fd5d543252cc96d89c0cf8ac53a3ec"
   },
   {
    "id": "vo05",
@@ -144,7 +144,7 @@
    ],
    "file": "05.wav",
    "dur": 8.767,
-   "sha256": "6fc3b62b4778483fd6a93e1436d2c986cf6e1a715c7f1951d711b938a90010f5"
+   "sha256": "5bce5a37ce95690e8db34f4f971bd8d2414811c3a76cac6219d54c55a666ba3d"
   },
   {
    "id": "vo06",
@@ -161,7 +161,7 @@
    "silences": [],
    "file": "06.wav",
    "dur": 4.757,
-   "sha256": "857cadb2e26a6420f390e0f55ebb6f18414bca467384c01c612fd842aa02cec2"
+   "sha256": "10e8d2c5d54f296a8c99ab6c2f0d4c28fabf21ee0268b36d94b8b57a1736a90a"
   },
   {
    "id": "vo07",
@@ -186,7 +186,7 @@
    ],
    "file": "07.wav",
    "dur": 6.354,
-   "sha256": "86aa50d8c5dfac3be03d073b8665bd104bd4db187c15dc060fafd8be040a9096"
+   "sha256": "5ca55cfe1485415ca3e137d562c00d2bd172abe30189e79a04962fc9d6150623"
   },
   {
    "id": "vo08",
@@ -203,7 +203,7 @@
    "silences": [],
    "file": "08.wav",
    "dur": 3.721,
-   "sha256": "914f3b94e5fe5432ca856a332f4648c3dc82f61cf30ca0ed537405f9b6fdca2d"
+   "sha256": "f07a7568578b765c695dc1eb7c7722119503b80846b3b44764adf8b67fc5877e"
   }
  ]
 }

@@ -17,7 +17,7 @@ vo: How long to fall *through the Earth*? Step in, and let go. {-}
 vo: The tunnel runs straight through the middle of the planet, so long that driving it would take *days*. {c1,c2} But you'll be *falling*. {-}
 
 ## change {shot: the figure drops; a speed readout climbs, peaks at the centre, falls to zero at the far rim · events: term.write · energy: 0.6} (14–27 s)
-vo: And gravity keeps pulling, until at the center you're moving about *ten kilometers a second*. {c3} Then that pull slows you on the way up, and you arrive just as you *stop*. {c4}
+vo: And gravity keeps pulling, until at the center you're moving about *ten kilometers a second*. {c3} Then that pull slows you on the way out, and you arrive just as you *stop*. {c4}
 
 ## why {shot: the cutaway's layers light one by one; a gravity graph rises through the mantle and peaks at the core's edge · badge: ∵ PREM density (seismology) · picture-only 2 s · energy: 0.55} (27–44.5 s)
 vo: That whole trip, the textbooks said, takes *forty-two minutes*. {c5} But they pictured the same stuff all the way down. {c6} A graduate student redid the sum with the real Earth, and its heavy core makes gravity grow *stronger* as you fall. {c7,c8}

@@ -151,29 +151,29 @@
    "tag": "spine-2"
   },
   {
+   "t": 13.4803,
+   "kind": "badge",
+   "tag": "b-time-f"
+  },
+  {
+   "t": 13.7803,
+   "kind": "fall",
+   "tag": "jump",
+   "t1": 25.233333333333334
+  },
+  {
    "t": 13.8,
    "kind": "section",
    "id": "change",
    "t1": 26.4
   },
   {
-   "t": 15.604299999999999,
-   "kind": "badge",
-   "tag": "b-time-f"
-  },
-  {
-   "t": 15.9043,
-   "kind": "fall",
-   "tag": "jump",
-   "t1": 25.066666666666666
-  },
-  {
-   "t": 16.1043,
+   "t": 13.9803,
    "kind": "counter.show",
    "tag": "c-speed"
   },
   {
-   "t": 25.066666666666666,
+   "t": 25.233333333333334,
    "kind": "arrive",
    "tag": "far-rim"
   },
@@ -225,11 +225,6 @@
    "t1": 55.2
   },
   {
-   "t": 42.6,
-   "kind": "badge",
-   "tag": "b-time-w"
-  },
-  {
    "t": 46.56666666666667,
    "kind": "term.write",
    "tag": "spine-5"
@@ -239,6 +234,11 @@
    "kind": "answer.box",
    "tag": "box-38",
    "t1": 47.0667
+  },
+  {
+   "t": 49.733333333333334,
+   "kind": "badge",
+   "tag": "b-time-w"
   },
   {
    "t": 49.8,

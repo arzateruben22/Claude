@@ -89,7 +89,7 @@ scene.add(ruler.mesh, done.mesh, ...ticks.map((k) => k.mesh));
 
 // the gravity profiles, drawn beside the model in its plane (a graph whose vertical axis is the tunnel itself:
 // each height on the graph is the same height in the bore): x = the axis + g scaled, y = height
-const GMAX = Math.max(...PH.g_prem), X0 = R + 1.1, XS = 3.4 / GMAX;
+const GMAX = Math.max(...PH.g_prem), X0 = R + 0.7, XS = 2.3 / GMAX;          // narrow enough to stay inside the safe box (review 30 Oct)
 const profile = (g) => {
   const pts = [];
   for (let k = 64; k >= 0; k--) pts.push([X0 + g[k] * XS, PH.g_r[k]]);

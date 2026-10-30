@@ -17,7 +17,7 @@ import { seg, E, presence, apply } from "cinema/film/runtime.js";
 
 const CSS = `
 .bv-spine { position: absolute; left: 0; top: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
-.bv-spine .lb { font: 600 2.8vmin/1.2 var(--font-text); color: var(--text-2); margin-bottom: .7vmin; letter-spacing: .01em; }
+.bv-spine .lb { font: 600 2.8vmin/1.2 var(--font-text); color: var(--text-2); margin-bottom: .6vmin; letter-spacing: .01em; padding: .4vmin 1.4vmin; border-radius: .6vmin; background: rgba(37, 40, 46, .95); }
 .bv-spine .bar { position: relative; display: flex; align-items: baseline; gap: 1.5vmin; padding: 1.2vmin 2.4vmin; border-radius: .9vmin;
   background: rgba(37, 40, 46, .95); box-shadow: var(--hud-shadow); white-space: nowrap;
   font: 600 3.9vmin/1.15 var(--font-mono); font-variant-numeric: tabular-nums lining-nums; font-variant-ligatures: none; font-feature-settings: "calt" 0, "liga" 0; }
