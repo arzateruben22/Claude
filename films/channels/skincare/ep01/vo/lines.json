@@ -43,10 +43,10 @@
     "on purpose"
    ],
    "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt, ˌɒn pˈɜːpəs.",
-   "speed": 0.86,
+   "speed": 0.8,
    "file": "03.wav",
-   "dur": 8.786,
-   "sha256": "03a7eadadf492e35fbfa15175fb48482a4da690a30288112bf8e808479e6a420"
+   "dur": 9.899,
+   "sha256": "40204c7a708e222ef8470e9f553f78d02b4e951993508b53a4ff89ef2a6dfe2e"
   },
   {
    "id": "vo04",
@@ -56,10 +56,10 @@
     "brick wall"
    ],
    "phonemes": "ɪt lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ɐwˈeɪ. bˌʌt sˈiːld təɡˌɛðə wɪð fˈats, ðəʊz ʃˈɛlz bˈɪld ɐ kˈaɪnd ɒv bɹˈɪk wˈɔːl, and ðə wˈɔːl kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
-   "speed": 0.84,
+   "speed": 0.79,
    "file": "04.wav",
-   "dur": 9.246,
-   "sha256": "35dc8d655ecfd8fce19850f5c2426ff3e835e4123f0fc2c6980a9982c96af240"
+   "dur": 10.399,
+   "sha256": "32f4bed73bdb66caa2fc33ec9b7f57ddac46b08be1bae595392e4ec2f05138e9"
   },
   {
    "id": "vo05",
@@ -82,10 +82,10 @@
     "paper"
    ],
    "phonemes": "and ðat hˈəʊl wˈɔːl, ˌɒn ɐ tʃˈiːk, ɪz θˈɪnə ðˌanə fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
-   "speed": 0.82,
+   "speed": 0.7,
    "file": "06.wav",
-   "dur": 4.777,
-   "sha256": "e56ac3fdd4e510250af6023addf0b1c385cc5e7ef2d5c862e06acc241da056be"
+   "dur": 5.782,
+   "sha256": "06b55d025e3057a9fd891d6c49fa8861fe68b8b3eafe4ca7c9b78640ec318ac8"
   },
   {
    "id": "vo07",

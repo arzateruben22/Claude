@@ -40,7 +40,7 @@ vo: And that whole wall, on a cheek, is thinner than a fifth of a sheet of *pape
 ## takeaway {shot: back to the hook's composition, the dead rows glowing faintly · picture-only 0.5 s · energy: 0.3} (61–68.5 s)
 vo: So, is your skin alive? Underneath, yes. On top, it wears a layer that *died* for it. {c14}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74 s)
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–75 s)
 vo: Next: does SPF one hundred block twice as much as *fifty*? {-}
 end card: "Next layer: does SPF 100 block twice as much as 50?" · "Outer Layer · No. 002"
 

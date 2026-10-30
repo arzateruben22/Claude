@@ -48,9 +48,9 @@ SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "section
 TONE = {"hook": 0.15, "section": 0.85, "walls": 0.5, "gauge": 0.85, "close": 0.15}   # melanin 0–1 (bible §1: three tones)
 
 # ── the cell's climb (change): born at the base, rises for about two weeks, takes itself apart near the top ──
-t_born = A("vo03:born")
+t_born = A("vo03:began")
 RATE = 300000.0                         # the climb runs 300,000× faster: 14 days in 4.03 s
-t_rise0 = A("vo03:rises,", -0.6)
+t_rise0 = A("vo03:rose", -0.6)
 t_rise1 = round(t_rise0 + CLIMB_DAYS * 86400 / RATE, 4)
 t_apart0, t_apart1 = A("vo03:apart,", -0.2), A("vo03:purpose.", 0.5)
 assert 2.5 < t_rise1 - t_rise0 < 6.0, (t_rise0, t_rise1)
@@ -63,14 +63,14 @@ CAM = {
     "hook": [{"t": 0.0, **HOOK, "dist": 780, "az": -26}, {"t": B["normal"]["t0"], **HOOK, "dist": 720, "az": -22, "ease": "sine"}],
     "section": [
         {"t": B["normal"]["t0"], "target": [0, -10, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": -14},
-        {"t": A("vo02:dead:"), "target": [0, -9, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -9, "ease": "inout2"},
+        {"t": A("vo02:empty"), "target": [0, -9, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -9, "ease": "inout2"},
         {"t": A("vo02:living"), "target": [0, -30, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 440, "az": -7, "ease": "inout2"},
         # the climb: the camera rides up with the cell (its target follows the cell's height, see scene.mjs)
         {"t": t_born, "target": [0, Y_BASAL, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 280, "az": -4, "ease": "inout2"},
         {"t": t_rise1, "target": [0, -SC_UM - 4, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 260, "az": -2, "ease": "inout2"},
         {"t": t_apart1, "target": [0, -10, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -1, "ease": "sine"},
         # why: pull back until the wall and the water under it fill the frame
-        {"t": A("vo04:Scientists"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 0, "ease": "inout2"},
+        {"t": A("vo04:But"), "target": [0, -26, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 0, "ease": "inout2"},
         {"t": B["whoa"]["t0"], "target": [0, -26, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 580, "az": 2, "ease": "sine"},
     ],
     "walls": [{"t": B["whoa"]["t0"], "target": [0, -16, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 500, "az": 0},
@@ -88,14 +88,14 @@ for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4�
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-dead-h", "text": "dead layer", "kind": "layer", "anchor": "sc_top", "t0": A("vo01:Not", -0.1), "t1": B["normal"]["t0"], "shot": "hook", "side": 1},
-    {"id": "l-sc", "text": "stratum corneum", "kind": "layer", "anchor": "sc_mid", "t0": A("vo02:outermost"), "t1": A("vo02:Each", -0.2), "shot": "section", "side": 1},
-    {"id": "l-corneo", "text": "one dead cell", "kind": "cell", "anchor": "corneo", "t0": A("vo02:Each"), "t1": A("vo02:living", -0.3), "shot": "section", "side": 1},
+    {"id": "l-dead-h", "text": "dead layer", "kind": "layer", "anchor": "sc_top", "t0": A("vo01:not", -0.1), "t1": B["normal"]["t0"], "shot": "hook", "side": 1},
+    {"id": "l-sc", "text": "stratum corneum", "kind": "layer", "anchor": "sc_mid", "t0": A("vo02:surface"), "t1": A("vo02:each", -0.2), "shot": "section", "side": 1},
+    {"id": "l-corneo", "text": "one dead cell", "kind": "cell", "anchor": "corneo", "t0": A("vo02:each"), "t1": A("vo02:living", -0.3), "shot": "section", "side": 1},
     {"id": "l-living", "text": "living layers", "kind": "layer", "anchor": "living", "t0": A("vo02:living"), "t1": B["change"]["t0"], "shot": "section", "side": 1},
     {"id": "l-cell", "text": "a new cell", "kind": "cell", "anchor": "climber", "t0": t_born, "t1": t_rise1, "shot": "section", "side": 1, "fixed": True},
-    {"id": "l-brick", "text": "bricks: dead cells", "kind": "cell", "anchor": "brick", "t0": A("vo04:bricks,"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
-    {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:mortar."), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
-    {"id": "l-term", "text": "near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:newborns.", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-brick", "text": "bricks: dead cells", "kind": "cell", "anchor": "brick", "t0": A("vo04:brick"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
+    {"id": "l-mortar", "text": "mortar: fats", "kind": "water", "anchor": "mortar", "t0": A("vo04:fats,"), "t1": B["whoa"]["t0"], "shot": "section", "side": 1},
+    {"id": "l-term", "text": "near term", "kind": "layer", "anchor": "wall_l", "t0": A("vo05:finished", -0.3), "t1": B["toscale"]["t0"], "shot": "walls", "side": -1, "v": "above", "fixed": True},
     {"id": "l-early", "text": "before 30 weeks", "kind": "layer", "anchor": "wall_r", "t0": A("vo05:Babies"), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1, "v": "above", "fixed": True},
     {"id": "l-water", "text": "water", "kind": "water", "anchor": "beads", "t0": A("vo05:Babies", 0.6), "t1": B["toscale"]["t0"], "shot": "walls", "side": 1},
 ]
@@ -103,20 +103,20 @@ BADGES = [
     {"id": "b-simp-h", "text": "simplified", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
     {"id": "b-simp", "text": "simplified", "t0": B["normal"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-time", "clock": "climb", "t0": t_rise0, "t1": round(t_rise1 + 0.4, 4), "slot": "tl"},
-    {"id": "b-model", "text": "model", "t0": A("vo04:Scientists"), "t1": B["whoa"]["t0"], "slot": "tl"},
+    {"id": "b-model", "text": "model", "t0": A("vo04:But"), "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tr"},
-    {"id": "b-1979", "text": "Rutter & Hull, 1979", "t0": A("vo05:two"), "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-1979", "text": "Rutter & Hull, 1979", "t0": A("vo05:doctors"), "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-cheek", "text": "cheek; varies by site", "t0": A("vo06:cheek,"), "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-simp-c", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
 ]
 SPINE = [0.30, 0.215]                     # top left, under the notes, clear of the section and the captions
 COUNTERS = [
-    {"id": "c-rows", "label": "rows of dead cells", "fmt": "text", "text": "≈15", "t0": A("vo02:fifteen"), "t1": A("vo03:born", -0.4), "at": SPINE},
-    {"id": "c-days", "label": "days climbing", "fmt": "days", "t0": A("vo03:born", 0.2), "t1": A("vo03:apart,", -0.3), "at": SPINE, "lit": CLIMB_DAYS},
-    {"id": "c-dead", "label": "then it dies", "fmt": "text", "text": "day 14", "t0": A("vo03:apart,"), "t1": A("vo04:Scientists", -0.4), "at": SPINE},
-    {"id": "c-wall", "label": "rows in the wall", "fmt": "text", "text": "≈15", "t0": A("vo04:Scientists"), "t1": B["whoa"]["t0"], "at": SPINE},
+    {"id": "c-rows", "label": "rows of dead cells", "fmt": "text", "text": "≈15", "t0": A("vo02:dozen"), "t1": A("vo03:began", -0.4), "at": SPINE},
+    {"id": "c-days", "label": "days climbing", "fmt": "days", "t0": A("vo03:began", 0.2), "t1": A("vo03:apart,", -0.3), "at": SPINE, "lit": CLIMB_DAYS},
+    {"id": "c-dead", "label": "then it dies", "fmt": "text", "text": "day 14", "t0": A("vo03:apart,"), "t1": A("vo04:But", -0.4), "at": SPINE},
+    {"id": "c-wall", "label": "rows in the wall", "fmt": "text", "text": "≈15", "t0": A("vo04:But"), "t1": B["whoa"]["t0"], "at": SPINE},
     {"id": "c-loss", "label": "water lost, under 30 weeks", "fmt": "text", "text": "≈5×", "t0": A("vo05:five"), "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-sc", "label": "dead layer · cheek", "fmt": "text", "text": "17 µm", "t0": A("vo06:seventeen"), "t1": t_end, "at": SPINE},
+    {"id": "c-sc", "label": "dead layer · cheek", "fmt": "text", "text": "17 µm", "t0": A("vo06:thinner"), "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
@@ -132,24 +132,22 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):  # two values never share the screen
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 # the to-scale segment: the gauge lifts to centre; the dead layer's 17 µm fills in, then the paper's 100 µm beside it
-GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": A("vo06:seventeen"), "paper": A("vo06:sheet"),
+GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": A("vo06:thinner"), "paper": A("vo06:sheet"),
          "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": SC_UM, "paper_um": PAPER_UM}
 
 TITLE = {"series": "Outer Layer · No. 001", "title": "The *dead layer*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:alive?", 0.35)}
 END = {"title": "Next layer: does SPF 100 block twice as much as *50*?", "follow": "Outer Layer · No. 002",
        "next": "Your outermost layer is about 15 rows of dead cells, about 17 µm on the cheek (StatPearls; Egawa et al. 2007)."}
 
-CUE = {"born": t_born, "rise": [t_rise0, t_rise1], "apart": [t_apart0, t_apart1], "lipid": A("vo04:mortar."), "bricks": A("vo04:bricks,"),
-       "water": A("vo04:water"), "inside": A("vo04:inside."), "early": A("vo05:Babies"), "loss": A("vo05:lost"), "five": A("vo05:five"),
-       "dead_lit": A("vo01:Not"), "rows": A("vo02:fifteen"), "dead": A("vo02:dead:"), "living": A("vo02:living"), "died": A("vo07:died")}
-POSTER = A("vo04:mortar.", 0.6)           # the wall, its mortar lit
+CUE = {"born": t_born, "rise": [t_rise0, t_rise1], "apart": [t_apart0, t_apart1], "lipid": A("vo04:fats,"), "bricks": A("vo04:brick"),
+       "water": A("vo04:water"), "inside": A("vo04:inside."), "early": A("vo05:Babies"), "loss": A("vo05:losing"), "five": A("vo05:five"),
+       "dead_lit": A("vo01:not"), "rows": A("vo02:dozen"), "dead": A("vo02:empty"), "living": A("vo02:living"), "died": A("vo07:died")}
+POSTER = A("vo04:fats,", 0.6)           # the wall, its mortar lit
 
 # captions: number phrases and fixed phrases stay on one line
-glue(f, {"vo02": ["fifteen rows", "of flattened cells.", "packed with keratin."],
-         "vo03": ["about two weeks", "with keratin."],
-         "vo05": ["In nineteen seventy-nine,", "thirty weeks,", "five times"],
-         "vo06": ["the whole dead layer", "about seventeen micrometers.", "a hundred."],
-         "vo07": ["kept alive", "a wall."], "vo08": ["SPF one hundred", "as fifty?"]})
+glue(f, {"vo02": ["the surface", "flattened cells,", "a dozen deep,"], "vo03": ["about two weeks,", "it took itself apart,", "on purpose."], "vo04": ["a kind of brick wall,"], "vo07": ["a layer"],
+         "vo05": ["five times as fast."], "vo06": ["a fifth", "of a sheet of paper."],
+         "vo08": ["SPF one hundred", "as fifty?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
@@ -181,7 +179,7 @@ ev += [
     {"t": t_rise1, "kind": "cell.land", "tag": "top"},
     {"t": t_apart0, "kind": "dissolve", "tag": "cornify", "t1": t_apart1},
     {"t": A("vo04:water"), "kind": "diffuse", "tag": "water-in"},
-    {"t": A("vo05:lost"), "kind": "diffuse", "tag": "water-out"},
+    {"t": A("vo05:losing"), "kind": "diffuse", "tag": "water-out"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-sc"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
