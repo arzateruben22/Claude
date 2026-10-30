@@ -48,16 +48,16 @@ LANG = "en-us"
 # Kokoro speed per sentence of each line, chosen from measured durations. The hook's question stays
 # brisk so it is spoken by 2.0 s; its answer slows.
 SPEEDS = {
-    "vo01": [0.82, 0.6],
-    "vo02": [0.98, 0.95, 0.98, 0.85],
-    "vo03": [0.79, 0.79, 0.79],
-    "vo04": [0.91, 0.91, 0.86, 0.88],
-    "vo05": [0.9, 0.98],
-    "vo06": [0.9, 0.92, 0.88],
-    "vo07": [0.78, 0.78],
+    "vo01": [0.86, 0.6],
+    "vo02": [0.8, 0.72],
+    "vo03": [0.8, 0.78],
+    "vo04": [0.84, 0.82, 0.86],
+    "vo05": [0.84, 0.8],
+    "vo06": [0.8],
+    "vo07": [0.66, 0.62],
     "vo08": [0.8],
 }
-GAP, GAP_Q = 0.25, 0.50          # seconds of silence after a sentence, after a question
+GAP, GAP_Q = 0.38, 0.60          # real pauses at the turns (WRITING.md, Flow 7)          # seconds of silence after a sentence, after a question
 
 
 def split(text):

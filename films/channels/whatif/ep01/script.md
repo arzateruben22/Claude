@@ -11,28 +11,28 @@ sentence ties it to `claims.json`; `{-}` marks a sentence that states nothing ou
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep01 --segment work`.
 
 ## hook {shot: the cutaway Earth, the tunnel lit, the figure at the rim; spine "12,700 km ÷ ? = ? min" · badge: thought experiment · title: "Through the Earth" · pre: 0.1 · picture-only 0.3 s · energy: 0.65} (0–5.5 s)
-vo: How long to fall *through the Earth*? Down, down, and out the other side. {-}
+vo: How long to fall *through the Earth*? Step in, and let go. {-}
 
-## normal {shot: push along the tunnel; the anchor figure beside a car for scale · badges: ∵ no air, ∵ no heat, ∵ no spin · spine term "12,700 km" · picture-only 0.3 s · energy: 0.45} (5.5–16.5 s)
-vo: Picture a tunnel through the middle: no air, no heat. {-} It's about twelve thousand seven hundred kilometers. {c1} Driving it nonstop at highway speed takes about *five days*. {c2} You'll be *falling*. {-}
+## normal {shot: push along the tunnel; the anchor figure beside a car for scale · badges: ∵ no air, ∵ no heat, ∵ no spin · spine term "12,700 km" · picture-only 0.3 s · energy: 0.45} (5.5–14 s)
+vo: The tunnel runs straight through the middle of the planet, so long that driving it would take *days*. {c1,c2} But you'll be *falling*. {-}
 
-## change {shot: the figure drops; a speed readout climbs, peaks at the centre, falls to zero at the far rim · events: term.write · energy: 0.6} (16.5–28 s)
-vo: Gravity pulls you down, faster and faster. {-} By the center: about *ten kilometers a second*. {c3} Then it slows you, and you reach the far side just as you *stop*. {c4}
+## change {shot: the figure drops; a speed readout climbs, peaks at the centre, falls to zero at the far rim · events: term.write · energy: 0.6} (14–27 s)
+vo: And gravity keeps pulling, until at the center you're moving about *ten kilometers a second*. {c3} Then that pull slows you on the way up, and you arrive just as you *stop*. {c4}
 
-## why {shot: the cutaway's layers light one by one; a gravity graph rises through the mantle and peaks at the core's edge · badge: ∵ PREM density (seismology) · picture-only 2 s · energy: 0.55} (28–45 s)
-vo: The textbook answer was *forty-two minutes*. {c5} It assumed Earth is equally dense all the way down. {c6} Then a graduate student, Alexander Klotz, used the real Earth. {c7} The core is so dense that gravity gets *stronger* before it fades. {c8}
+## why {shot: the cutaway's layers light one by one; a gravity graph rises through the mantle and peaks at the core's edge · badge: ∵ PREM density (seismology) · picture-only 2 s · energy: 0.55} (27–44.5 s)
+vo: That whole trip, the textbooks said, takes *forty-two minutes*. {c5} But they pictured the same stuff all the way down. {c6} A graduate student redid the sum with the real Earth, and its heavy core makes gravity grow *stronger* as you fall. {c7,c8}
 
-## whoa {shot: the spine resolves and the box closes around "≈ 38 min"; pull back as the figure falls back and forth, a round-trip counter ticking · events: answer.box · picture-only 3 s · energy: 0.75} (45–56 s)
-vo: His answer: about *thirty-eight minutes*. {c9} With nothing to stop you, you'd fall back and forth, a round trip every *seventy-six minutes*, forever. {c10}
+## whoa {shot: the spine resolves and the box closes around "≈ 38 min"; pull back as the figure falls back and forth, a round-trip counter ticking · events: answer.box · picture-only 3 s · energy: 0.75} (44.5–57 s)
+vo: So you fall faster, sooner, and come out the other side in about *thirty-eight minutes*. {c9} With nobody to catch you, you'd swing back through, *forever*. {c10}
 
-## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity row below · energy: 0.5} (56–62 s)
-vo: Show your work. {-} Make the core ten percent lighter: about *thirty-nine*. {c11} Make Earth uniform: forty-two. {c12}
+## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity row below · energy: 0.5} (57–62.5 s)
+vo: Lighten that core in the sum, and the answer drifts back toward the *textbook's*. {c11,c12}
 
-## takeaway {shot: the box holds; the cutaway's core glows marker · picture-only 0.3 s · energy: 0.45} (62–67 s)
-vo: So those four missing minutes? They're the pull of Earth's heavy *core*. {c13}
+## takeaway {shot: the box holds; the cutaway's core glows marker · picture-only 0.3 s · energy: 0.45} (62.5–69.5 s)
+vo: So a fall through the Earth is more than a ride. {-} It's a way of weighing its *heart*. {c13}
 
-## tease {end card held ≥ 1.5 s · signature: plucks D5, A5, G♯5 · energy: 0.4} (67–73 s)
-vo: Next envelope: could all eight billion of us stand in one *city*? {-}
+## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69.5–74.5 s)
+vo: Next envelope: could everyone alive stand in one *city*? {-}
 end card: "Next envelope: *everyone, one place*" · "Back of the Envelope · No. 001" · footnote: "Klotz, Am. J. Phys. 83, 231 (2015): 38 min 11 s with the real Earth; 42 min 12 s uniform." (c9)
 
 ## Notes

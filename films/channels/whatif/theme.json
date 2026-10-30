@@ -128,7 +128,7 @@
   "recurring_segment": "Show your work: the whole sum on one line with its assumptions and the sensitivity row.",
   "tease": "Next envelope: …",
   "colour_rules": "Marker is the calculation (the spoken word, the live term, the box). Green is an assumption, only. Blue is the human-scale anchor, only. The world itself is chalk and graphite.",
-  "sound": "D lydian at 90 BPM (a 16th is 5 frames); pizzicato plucks and pencil foley; signature plucks D5, A5, G♯5, 5 frames apart."
+  "sound": "A lydian at 50 BPM (a 16th is 9 frames); pizzicato plucks and pencil foley; signature plucks A4, E5, D♯5, 9 frames apart."
  },
 
  "cssText": ".stage { background: radial-gradient(80vmax 60vmax at 50% 40%, var(--graphite-hi) 0%, var(--graphite) 70%); }\n.hud-h, .hud-end .t { font-weight: 700; font-variation-settings: \"wdth\" 80, \"opsz\" 96; }\n.hud-series { font-family: var(--font-display); letter-spacing: .12em; text-transform: uppercase; font-variation-settings: \"wdth\" 100, \"opsz\" 12; }\n.hud-counter .v, .hud-scale, .hud-badge { font-variant-ligatures: none; font-feature-settings: \"calt\" 0, \"liga\" 0; }\n.hud-cap { box-shadow: var(--hud-shadow); }"

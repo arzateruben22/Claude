@@ -1,17 +1,17 @@
 {
- "_doc": "Back of the Envelope (the what-if channel), 'pizzicato working': D lydian at 90 BPM (a beat is 20 frames, a 16th exactly 5 frames at 30 fps). A small dry study: a soft low pad, a plucked string (Karplus–Strong) walking the chord tones in eighths that turn to 16ths once the energy rises past 0.6, a bowed-bass sub only then. No felt piano or glass bells (Lumevina), no pings (Light Minute), no mallets or thumps (Meanwhile, Inside), no knocks, blips or shutters (Rest Frame). Foley is pencil on paper: a scratch as each term of the running sum is written, a short scratch for each tally tick, plucks for labels. Signature, 'carry the one': plucks D5, A5, G#5 at 0, +5, +10 frames (root, fifth, then the lydian raised fourth just under it: a raised eyebrow, not a full stop); it plays on the title card, when the box closes round the answer, and on the end card.",
+ "_doc": "Back of the Envelope (the what-if channel), 'pizzicato working': A lydian at 50 BPM (a beat is 36 frames, a 16th exactly 9 frames at 30 fps; re-scored 30 Oct off D lydian 90, which is Lumevina's Skin School score). A small dry study: a soft low pad, a plucked string (Karplus–Strong) walking the chord tones in eighths that turn to 16ths once the energy rises past 0.6, a bowed-bass sub only then. No felt piano or glass bells (Lumevina), no pings (Light Minute), no mallets or thumps (Meanwhile, Inside), no knocks, blips or shutters (Rest Frame). Foley is pencil on paper: a scratch as each term of the running sum is written, a short scratch for each tally tick, plucks for labels. Signature, 'carry the one': plucks A4, E5, D#5 at 0, +9, +18 frames (root, fifth, then the lydian raised fourth just under it: a raised eyebrow, not a full stop); it plays on the title card, when the box closes round the answer, and on the end card.",
  "name": "envelope-working",
- "bpm": 90,
- "key": "D",
+ "bpm": 50,
+ "key": "A",
  "mode": "lydian",
- "scale": ["D", "E", "F#", "G#", "A", "B", "C#"],
+ "scale": ["A", "B", "C#", "D#", "E", "F#", "G#"],
  "progression": [
-  {"pad": ["D3", "A3", "C#4", "E4"], "root": "D2"},
-  {"pad": ["E3", "B3", "D4", "G#4"], "root": "E2"},
-  {"pad": ["B2", "F#3", "A3", "D4"], "root": "B1"},
-  {"pad": ["F#2", "C#3", "E3", "A3"], "root": "F#1"}
+  {"pad": ["A2", "E3", "G#3", "B3"], "root": "A1"},
+  {"pad": ["B2", "F#3", "A3", "D#4"], "root": "B1"},
+  {"pad": ["F#2", "C#3", "E3", "A3"], "root": "F#1"},
+  {"pad": ["C#3", "G#3", "B3", "E4"], "root": "C#2"}
  ],
- "signature": {"voice": "pluck", "notes": ["D5", "A5", "G#5"], "frames": [0, 5, 10], "gains": [0, -2, -4], "dur": 1.1, "bright": 3600},
+ "signature": {"voice": "pluck", "notes": ["A4", "E5", "D#5"], "frames": [0, 9, 18], "gains": [0, -2, -4], "dur": 1.1, "bright": 3600},
  "layers": {
   "pad": {"gain": -8, "bright": 2200, "attack": 0.9, "release": 1.4},
   "melody": {"voice": "pluck", "pattern": [0, 2, 1, null, 3, 1, 2, null, 0, 3, 2, null, 1, 3, null, 2], "step": 0.5, "double_above": 0.6, "octave": 1, "gain": 0, "dur": 0.75, "bright": 2800},
@@ -21,16 +21,16 @@
  "space": {"music": [0.8, 0.18], "foley": [0.4, 0.1], "dialog": [0.3, 0.04]},
  "drive": {"music": 1.0, "effects": 1.0, "dialog": 0.0},
  "foley": {
-  "label": {"voice": "pluck", "gain": -18, "notes": ["A5", "B5", "C#6", "D6", "E6", "F#6", "G#6", "A6"], "dur": 0.6, "bright": 3400},
-  "counter.show": {"voice": "pluck", "gain": -19, "notes": ["A5"], "dur": 0.6},
+  "label": {"voice": "pluck", "gain": -18, "notes": ["E5", "F#5", "G#5", "A5", "B5", "C#6", "D#6", "E6"], "dur": 0.6, "bright": 3400},
+  "counter.show": {"voice": "pluck", "gain": -19, "notes": ["E5"], "dur": 0.6},
   "counter.tick": {"voice": "scratch", "gain": -22, "dur": 0.07, "lo": 2400, "hi": 8000},
   "counter.end": {"voice": "seq", "gain": -12, "seq": "signature"},
   "signature": {"voice": "seq", "gain": -11, "seq": "signature"},
   "section": {"voice": "scratch", "gain": -31, "dur": 0.45, "lo": 500, "hi": 3000},
   "term.write": {"voice": "scratch", "gain": -21, "dur": 0.28},
   "answer.box": {"voice": "seq", "gain": -11, "seq": "signature", "at": "t1"},
-  "arrive": {"voice": "pluck", "gain": -13, "notes": ["D4"], "dur": 1.2, "bright": 2200},
-  "swell": {"voice": "swell", "gain": -15, "note": "D2"}
+  "arrive": {"voice": "pluck", "gain": -13, "notes": ["A3"], "dur": 1.2, "bright": 2200},
+  "swell": {"voice": "swell", "gain": -15, "note": "A1"}
  },
  "master": {"lufs": -14.0, "tilt": 0.0}
 }

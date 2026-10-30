@@ -103,9 +103,10 @@ frame.
 
 ## 3. Sound: "pizzicato working"
 
-**D lydian at 90 BPM:** a beat is 20 frames, a 16th exactly **5 frames** (Meanwhile is 6, Light
-Minute 8, Rest Frame 4). Lydian's raised fourth (G♯) is the sound of a question that is enjoying
-itself; no other channel uses lydian (E♭ major, E dorian, G mixolydian).
+**A lydian at 50 BPM:** a beat is 36 frames, a 16th exactly **9 frames** (Rest Frame 4, Meanwhile 6,
+Outer Layer 7, Light Minute 8). Lydian's raised fourth (D♯) is the sound of a question that is enjoying
+itself, and the slow pulse suits the unhurried Flow tone. Re-scored 30 Oct: the first choice, D lydian
+at 90 BPM, is exactly Lumevina's Skin School score, and Lumevina's sound is off limits.
 
 - **Instruments:** a plucked string (new `pluck` voice: Karplus–Strong, a pizzicato that walks the
   sum in eighths and turns to 16ths when the energy rises), a soft low pad, a bowed-bass sub only
@@ -115,7 +116,7 @@ itself; no other channel uses lydian (E♭ major, E dorian, G mixolydian).
   tick for counters, a soft `stamp` (a damped low pluck, not a thump) when an assumption badge lands,
   the box `draw` (a rising scratch whose end lands on the frame the box closes).
 - **Room:** a small, dry study; the voice close and dry.
-- **Sonic signature, "carry the one":** plucks **D5 → A5 → G♯5** at 0, +5, +10 frames. Root,
+- **Sonic signature, "carry the one":** plucks **A4 → E5 → D♯5** at 0, +9, +18 frames. Root,
   fifth, then the lydian ♯4 just under it: it ends on a raised eyebrow, not a full stop. It plays on
   the title card, on the box closing around the answer, and on the end card.
 

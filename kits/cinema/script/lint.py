@@ -37,6 +37,11 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from numerals import numerals_text  # noqa: E402
+
+FLOW_FIGURES = 4   # figures the voice says in one episode, at most (WRITING.md, Flow)
+
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "voice"))
 sys.path.insert(0, str(HERE))
@@ -250,6 +255,19 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                             "and align.py maps digits to words only up to 100)")
         rows.append({"id": b["id"], "window": b["window"], "words": n, "template": lo_hi, "pace": pace and round(pace, 2),
                      "pre": pre, "hold": hold, "stars": b["stars"], "segment": p.get("segment")})
+
+    # ── flow (WRITING.md, "Flow") ──────────────────────────────────
+    figures = [w for bb in beats for w in numerals_text(bb["text"]).split() if re.search(r"\d", w)]
+    if len(figures) > FLOW_FIGURES:
+        r.warn("flow", f"{len(figures)} figures spoken ({', '.join(f.strip(',.;:?') for f in figures)}); the voice carries about "
+                       f"{FLOW_FIGURES} at most: put the rest on screen, or say what they mean (WRITING.md, Flow)")
+    for bb in beats:
+        run = 0
+        for sent in re.split(r"(?<=[.?!…])\s+", bb["text"]):
+            run = run + 1 if 0 < word_count(sent) <= 6 else 0
+            if run == 3:
+                r.warn(bb["id"], "three short sentences in a row: join two with the thought that links them (WRITING.md, Flow)")
+                break
 
     # ── length ──────────────────────────────────────────────────────
     if not WORDS[0] <= total_words <= WORDS[1]:
