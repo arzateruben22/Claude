@@ -32,6 +32,11 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
   voice; sync passes on every kind but one label whose picture time was stale (cues being re-measured).
   **Next:** re-run `--cues` → compile → mix until sync PASS; fix the open still items; draft render; independent review.
 
+- **30 Oct (WIP at PAUSE).** Ep01 rewritten to Flow, voiced (bf_isabella, 0.70–0.86), lint clean, sync PASS
+  (−14.1 LUFS / −1.9 dBTP); draft cut assembled (out/outerlayer-001-9x16-draft.mp4, not committed). **Next:** independent
+  review of the draft → fixes → send the final to the render worker. Ep02 script + claims lint clean, not yet voiced.
+  Second builder (ep04–06, `claude/outer-layer-s1-b`) and render worker (`claude/outer-layer-s1-render-a`) are set up.
+
 ## Questions (for the owner, through the coordinator)
 - Narrator: bf_isabella recommended (auditions/README.md); carrying on with it until told otherwise.
 - Channel colour in Prism Studio: the catalogue's placeholder `#D99A92` is a dusty rose close to Lumevina; set by the coordinator to `water` `#00685F`.
