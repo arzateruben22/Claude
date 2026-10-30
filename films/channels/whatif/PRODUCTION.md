@@ -7,7 +7,7 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 | No. | Title | State |
 |---|---|---|
 | 001 | Through the Earth | draft reviewed (round 1: 10 confirmed findings, all fixed); final rendering (30 Oct) |
-| 002 | Everyone, one place | bible |
+| 002 | Everyone, one place | calc.py + Flow script + claims, lint clean; set pieces (crowd.js, tower.js) written, untested; voicing waits for ep01's final render |
 | 003 | All the ants | bible |
 | 004 | Count to a billion | bible |
 | 005 | Everybody jump | bible |
