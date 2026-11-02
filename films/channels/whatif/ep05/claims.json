@@ -1,0 +1,101 @@
+[
+ {
+  "id": "c1",
+  "sentence": "When you jump, you push the ground away, and the ground is the whole planet.",
+  "claim": "A jump is a push against the ground; by Newton's third law the ground (the Earth) is pushed the other way with an equal force.",
+  "source_url": "http://hyperphysics.phy-astr.gsu.edu/hbase/conmo.html",
+  "source_title": "Conservation of Momentum (HyperPhysics, Georgia State University)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Momentum conservation for an isolated system (people + Earth). 'The whole planet': the ground is attached to the Earth, which recoils as one body (rigid-Earth idealisation; badge 'idealised')."
+ },
+ {
+  "id": "c2",
+  "sentence": "So gather everyone into one crowd, all eight billion, and jump together.",
+  "claim": "About 8.2 billion people were alive in mid-2024.",
+  "source_url": "https://www.un.org/development/desa/pd/world-population-prospects-2024",
+  "source_title": "World Population Prospects 2024 (UN DESA Population Division)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Said as 'eight billion' (the spine shows 8.2 billion). Gathering everyone in one place is the thought experiment's assumption (badge): spread round the globe, the pushes point in different directions and largely cancel."
+ },
+ {
+  "id": "c3",
+  "sentence": "For about half a second we're all in the air, and the planet, pushed the other way, drops away beneath our feet.",
+  "claim": "A standing jump that raises the body 0.40 m keeps it in the air 0.57 s (t = 2·sqrt(2h/g)); while the people rise, the Earth moves the opposite way so the shared centre of mass stays put.",
+  "source_url": "https://www.topendsports.com/testing/norms/vertical-jump.htm",
+  "source_title": "Vertical Jump Height Norms (Topend Sports)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Adult standing-jump norms run about 30-50 cm (Topend Sports' norms: men about 41-50 cm, women 31-40 cm; a study of 116 mostly college-aged adults averaged 45 cm for men and 30 cm for women). calc.py uses 40 cm; 30-50 cm gives 0.49-0.64 s in the air: 'about half a second'. The motion direction: HyperPhysics, conservation of momentum."
+ },
+ {
+  "id": "c4",
+  "sentence": "It sounds like it should knock the planet off course.",
+  "claim": "It does not: the jump is internal to the Earth-plus-people system, so their shared centre of mass, which is what orbits the Sun, does not change course.",
+  "source_url": "http://hyperphysics.phy-astr.gsu.edu/hbase/conmo.html",
+  "source_title": "Conservation of Momentum (HyperPhysics, Georgia State University)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The sentence states a common intuition; the claim is its correction (the next sentence carries the size). No external force acts, so the centre of mass keeps its orbit; the Earth's body moves only relative to it, by the shift in c6."
+ },
+ {
+  "id": "c5",
+  "sentence": "But the push is shared out by weight, and the Earth outweighs all of us ten trillion times over.",
+  "claim": "8.2 billion people at 62 kg is 5.1e+11 kg; the Earth is 5.97 × 10^24 kg, 1.2e+13 times more: about ten trillion (10^13) times.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA Goddard, NSSDC)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Earth's mass 5.9722 × 10^24 kg (NASA fact sheet). 62 kg: the world's average adult mass (Walpole et al. 2012, https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-12-439); children weigh less, so all of us weigh less than 5.1 × 10^11 kg and the ratio is, if anything, larger. 'Shared out by weight': equal and opposite momenta, so each side's velocity is inversely proportional to its mass."
+ },
+ {
+  "id": "c6",
+  "sentence": "So the whole planet moves a distance three thousand times smaller than a single atom.",
+  "claim": "The Earth's shift is N·m·h/M = 3.4e-14 m (shown '≈ 3 × 10^-14 m'); a hydrogen atom is about 2 Bohr radii, 1.06e-10 m, across: 3,108 times wider, said as three thousand.",
+  "source_url": "https://physics.nist.gov/cgi-bin/cuu/Value?bohrrada0",
+  "source_title": "Bohr radius, CODATA 2022 (NIST)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Bohr radius 5.29177210544 × 10^-11 m (CODATA 2022). Hydrogen is the smallest atom, so 'a single atom' is the conservative comparison: larger atoms make the ratio bigger. Computed in calc.py."
+ },
+ {
+  "id": "c7",
+  "sentence": "And when we land, it settles right back where it was.",
+  "claim": "Landing reverses the jump: the people's momentum returns to the Earth, and with the centre of mass fixed the Earth ends where it began.",
+  "source_url": "http://hyperphysics.phy-astr.gsu.edu/hbase/conmo.html",
+  "source_title": "Conservation of Momentum (HyperPhysics, Georgia State University)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Idealised (rigid Earth, no energy lost to sound or heat changes nothing about the positions). The scene shows the Earth back at its mark."
+ },
+ {
+  "id": "c8",
+  "sentence": "Jump higher, or count us lighter, and it stays thousands of times smaller than an atom.",
+  "claim": "Sensitivity: jump 0.30-0.50 m: an atom is 2,487-4,144 times wider than the shift; everyone at half the mass: 6,216 times; 10 billion people jumping 0.5 m: 2,039 times. Every case: thousands.",
+  "source_url": "https://physics.nist.gov/cgi-bin/cuu/Value?bohrrada0",
+  "source_title": "Bohr radius, CODATA 2022 (NIST)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "calc.py sensitivity table; the show-your-work card shows the rows."
+ },
+ {
+  "id": "c9",
+  "sentence": "So yes, the Earth moves when we jump.",
+  "claim": "The shift is not zero: about 3e-14 m while we are in the air.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA Goddard, NSSDC)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Restates c6 in words; 'never notices' (the next sentence, no claim) is figurative."
+ }
+]
