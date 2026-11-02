@@ -51,7 +51,7 @@ t_layer = [A("vo05:Spread", -0.1), A("vo05:deep", 0.2)]          # the layer fil
 t_box = A("vo05:three", -0.05)
 t_coins = A("vo05:two", -0.1)
 t_work0, t_home, t_end = B["work"]["t0"], B["takeaway"]["t0"], A("vo08:Next", -0.25)
-t_film = A("vo07:thin", -0.1)
+t_film = B["takeaway"]["t0"]                                     # the film is there from the cut
 t_storm = [A("vo07:storm", -0.1), A("vo07:up", 0.5)]             # the record storm day rises beside you
 
 # ── the rain's fall (metres fallen in the scene's clock; any frame is a pure function of t) ──
@@ -98,21 +98,20 @@ CAM = {
     ],
     "where": [
         {"t": B["why"]["t0"], **k([0, 1.7, 0], 13.5, 12, 0.38)},
-        {"t": t_flood + 1.0, **k([WAFFLE["at"][0] - 0.6, 0.2, WAFFLE["at"][1]], 16, 21, 0.40, -8), "ease": "inout3"},      # up and over: the waffle beside you
-        {"t": B["whoa"]["t0"], **k([WAFFLE["at"][0] - 0.6, 0.2, WAFFLE["at"][1]], 15, 8, 0.40, -4), "ease": "sine"},
+        {"t": t_flood + 1.0, **k([WAFFLE["at"][0] - 0.5, 0.2, WAFFLE["at"][1]], 21, 21, 0.44, -8), "ease": "inout3"},      # up and over: the waffle beside you
+        {"t": B["whoa"]["t0"], **k([WAFFLE["at"][0] - 0.5, 0.2, WAFFLE["at"][1]], 20, 8, 0.44, -4), "ease": "sine"},
     ],
-    "macro": [
-        {"t": B["whoa"]["t0"], **k([WAFFLE["at"][0] - 0.6, 0.2, WAFFLE["at"][1]], 15, 8, 0.40, -4)},
-        {"t": B["whoa"]["t0"] + 1.4, **MACRO, "ease": "inout3"},                            # down to the card at your feet (it fills on the line)
-        {"t": t_work0, **{**MACRO, "dist": 0.074}, "ease": "sine"},
+    "macro": [                                                                                   # a match cut on "Spread": the squares to the card
+        {"t": B["whoa"]["t0"], **{**MACRO, "dist": 0.082, "az": -3}},
+        {"t": t_work0, **{**MACRO, "dist": 0.064, "az": 3}, "ease": "sine"},                # a slow drift in through the line and the hold
     ],
-    "work": [{"t": t_work0, **{**MACRO, "dist": 0.074}}, {"t": t_home, **{**MACRO, "dist": 0.073}, "ease": "sine"}],
+    "work": [{"t": t_work0, **{**MACRO, "dist": 0.064, "az": 3}}, {"t": t_home, **{**MACRO, "dist": 0.062, "az": 4}, "ease": "sine"}],
     "home": [                                                                                    # a clean cut on "So" (review round 1): you, standing in a thin film
-        {"t": t_home, **k([0.4, 0.9, 0.3], 9.6, 8, 0.42, -4)},
-        {"t": t_storm[0], **k([-0.4, 1.1, 0.2], 11.5, 10, 0.40, -6), "ease": "inout2"},
-        {"t": t_end, **k([-0.4, 1.2, 0.2], 12.5, 9, 0.40, -4), "ease": "sine"},
+        {"t": t_home, **k([0.4, 0.9, 0.3], 9.6, 8, 0.34, -4)},
+        {"t": t_storm[0], **k([-0.4, 1.1, 0.2], 11.5, 10, 0.36, -6), "ease": "inout2"},
+        {"t": t_end, **k([-0.4, 1.2, 0.2], 12.5, 9, 0.38, -4), "ease": "sine"},
     ],
-    "end": [{"t": t_end, **k([-0.4, 1.2, 0.2], 12.5, 9, 0.40, -4)}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
+    "end": [{"t": t_end, **k([-0.4, 1.2, 0.2], 12.5, 9, 0.38, -4)}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -121,8 +120,8 @@ for shot, keys in CAM.items():
         for kk in ("az", "el"):
             assert abs(b[kk] - a[kk]) / dt <= 3.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
 for x, y in zip(SHOTS[:-1], SHOTS[1:]):
-    if y["name"] == "home":
-        continue                                 # the one cut
+    if y["name"] in ("home", "macro"):
+        continue                                 # the two cuts
     assert CAM[x["name"]][-1]["target"] == CAM[y["name"]][0]["target"] and CAM[x["name"]][-1]["dist"] == CAM[y["name"]][0]["dist"], (x, y)
 
 # ── the spine readout ──
@@ -137,6 +136,7 @@ SPINE = [
     {"t": A("vo05:layer", -0.05), "label": f"{R['day_km3']:,} km³ ÷ 510 million km²", "terms": [["op", "spread over the planet"], ["op", "≈"], ["ans", f"{R['depth_mm']} mm"]]},
     {"t": t_box, "label": "a day's rain, everywhere", "terms": [["op", "a layer"], ["ans", "≈ 3 mm"]], "box": True},
     {"t": t_coins, "label": "about two coins, stacked", "terms": [["op", "a layer"], ["ans", "≈ 3 mm"]], "box": True, "keep": True},
+    {"t": t_home, "label": "a day's rain, everywhere", "terms": [["op", "a layer"], ["ans", "≈ 3 mm"]], "box": True, "keep": True},
 ]
 SPINE_OUT = t_end
 
@@ -145,8 +145,8 @@ WORK = {
     "t0": t_work0, "t1": t_home - 0.3, "title": "Show your work",
     "rows": [
         {"t": t_work0 + 0.15, "k": "1,400\u00a0km³ ÷ 510\u00a0million\u00a0km²", "v": f"≈ {sd[1]} mm", "lit": False},
-        {"t": A("vo06:wetter", -0.05), "k": "upper bound: 577,000\u00a0km³ a\u00a0year", "v": f"≈ {sd[2]} mm", "lit": True},
-        {"t": A("vo06:depth", -0.05), "k": "drier: 486,000\u00a0km³ a\u00a0year", "v": f"≈ {sd[0]} mm", "lit": True},
+        {"t": A("vo06:wetter", -0.05), "k": "upper bound: 577,000\u00a0km³/yr", "v": f"≈ {sd[2]} mm", "lit": True},
+        {"t": A("vo06:depth", -0.05), "k": "drier: 486,000\u00a0km³/yr", "v": f"≈ {sd[0]} mm", "lit": True},
     ],
     "assume": ["the same places", "one second", "planet-wide average"],
 }
@@ -154,14 +154,12 @@ WORK = {
 # ── labels, badges, counters ──
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
-    {"id": "l-ocean", "text": f"{WAFFLE['ocean']} in 100 drops: the ocean (hatched: land)", "kind": "part", "anchor": "waffle", "t0": t_ocean, "t1": B["whoa"]["t0"] - 0.2, "shot": "where", "side": 1},
-    {"id": "l-film", "text": "3 mm, everywhere", "kind": "calc", "anchor": "film", "t0": t_film + 0.5, "t1": t_storm[0], "shot": "home", "side": 1},
+    {"id": "l-ocean", "text": f"{WAFFLE['ocean']} in 100 drops: the ocean (hatched: land)", "kind": "part", "anchor": "waffle", "t0": t_ocean, "t1": B["whoa"]["t0"] - 0.6, "shot": "where", "side": 1, "v": "above"},
     {"id": "l-storm", "text": "a record storm day: 1.8 m", "kind": "part", "anchor": "storm", "t0": A("vo07:piles", -0.2), "t1": t_end, "shot": "home", "side": -1},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
     {"id": "b-day", "text": "a day in 6 seconds", "t0": t_day[0], "t1": B["change"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-second", "text": "the whole day in 1 s", "t0": t_sq[0], "t1": B["why"]["t0"] - 0.3, "slot": "tr"},
     {"id": "b-same", "text": "∵ same places", "t0": t_sq[0], "t1": B["whoa"]["t0"] - 0.3, "slot": "tl"},
     {"id": "b-avg", "text": "∵ a planet-wide average", "t0": t_layer[0], "t1": t_work0 - 0.3, "slot": "tl"},
     {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.3, "slot": "tr"},
@@ -217,7 +215,7 @@ for hh in range(1, 25, 3):                                       # a tick every 
     ev.append({"t": round(t_day[0] + (t_day[1] - t_day[0]) * hh / 24, 4), "kind": "counter.tick", "tag": f"hour-{hh}"})
 ev += [
     {"t": t_sq[0], "kind": "swell", "tag": "squeeze", "t1": t_seven},
-    {"t": B["whoa"]["t0"] + 1.4, "kind": "arrive", "tag": "macro"},
+    {"t": B["whoa"]["t0"], "kind": "arrive", "tag": "macro"},
     {"t": t_storm[0], "kind": "swell", "tag": "storm", "t1": t_storm[1]},
 ]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",

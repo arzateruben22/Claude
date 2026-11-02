@@ -184,7 +184,7 @@
    "tag": "spine-6"
   },
   {
-   "t": 40.4,
+   "t": 39.0,
    "kind": "arrive",
    "tag": "macro"
   },
@@ -218,12 +218,12 @@
   {
    "t": 53.63333333333333,
    "kind": "term.write",
-   "tag": "work-upper bound: 577,000 km³ a year"
+   "tag": "work-upper bound: 577,000 km³/yr"
   },
   {
    "t": 57.93333333333333,
    "kind": "term.write",
-   "tag": "work-drier: 486,000 km³ a year"
+   "tag": "work-drier: 486,000 km³/yr"
   },
   {
    "t": 59.4,
@@ -232,9 +232,9 @@
    "t1": 67.2
   },
   {
-   "t": 62.1,
-   "kind": "label",
-   "tag": "l-film"
+   "t": 59.4,
+   "kind": "term.write",
+   "tag": "spine-10"
   },
   {
    "t": 64.23333333333333,

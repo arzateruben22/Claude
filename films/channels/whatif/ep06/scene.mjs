@@ -53,10 +53,10 @@ const waffle = createSheet({ w: WS, d: WS, ppu: 110, at: [WF.at[0], 0, WF.at[1]]
   rrect(ctx, 2, 2, cw - 4, ch - 4, 0.1 * ppu); ctx.fillStyle = "rgba(37, 40, 46, 0.92)"; ctx.fill();
   for (let i = 0; i < 100; i++) {
     const r = Math.floor(i / 10), col = i % 10, x = m + col * c, y = m + (9 - r) * c;
-    const ocean = i < WF.ocean, on = i < st.k;
+    const ocean = i >= 100 - WF.ocean, on = i < st.k;                       // the 22 land squares first, nearest the camera
     rrect(ctx, x + 0.08 * c, y + 0.08 * c, 0.84 * c, 0.84 * c, 0.12 * c);
-    ctx.fillStyle = on ? (ocean ? CHALK : CHALK2) : "rgba(244, 242, 236, 0.08)"; ctx.fill();
-    if (on && !ocean) { ctx.strokeStyle = INK; ctx.lineWidth = 0.06 * c; ctx.beginPath(); ctx.moveTo(x + 0.25 * c, y + 0.75 * c); ctx.lineTo(x + 0.75 * c, y + 0.25 * c); ctx.stroke(); }
+    ctx.fillStyle = on ? (ocean ? "#CFCCC5" : INK) : "rgba(244, 242, 236, 0.08)"; ctx.fill();   // a little under chalk: no bloom
+    if (on && !ocean) { ctx.strokeStyle = CHALK2; ctx.lineWidth = 0.07 * c; ctx.stroke(); for (let h = 0.3; h < 0.9; h += 0.3) { ctx.beginPath(); ctx.moveTo(x + h * c, y + 0.85 * c); ctx.lineTo(x + 0.85 * c, y + h * c); ctx.stroke(); } }
   }
 } });
 scene.add(waffle.mesh);
@@ -109,7 +109,7 @@ const rig = createRig(FILM.cam);
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
 const AN = {
-  you: () => [0, WD.fig, 0], waffle: () => [WF.at[0] + WS / 2, 0, WF.at[1] - WS * 0.2], layer: () => [WD.coins[0] - CW_M / 2 + 0.0034, WD.depth, WD.coins[1]],
+  you: () => [0, WD.fig, 0], waffle: () => [WF.at[0], 0, WF.at[1] - WS / 2], layer: () => [WD.coins[0] - CW_M / 2 + 0.0034, WD.depth, WD.coins[1]],
   coins: () => [WD.coins[0] + CW_M / 2 - 0.002, 0.0031, WD.coins[1]], film: () => [1.8, 0.003, -1.8], storm: () => [-1.1 - 0.3, WD.storm * 0.85, 0.2],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
@@ -133,6 +133,13 @@ const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 })
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+// the tease's picture: a dotted trail of footprints walking up to a small moon, under the next-envelope line
+const trail = document.createElement("div");
+trail.innerHTML = '<svg viewBox="0 0 220 40" width="30vmin" style="display:block;margin:1.2vmin auto 0;overflow:visible" aria-hidden="true">'
+  + [0, 1, 2, 3, 4, 5, 6].map((i) => `<ellipse cx="${10 + i * 24}" cy="${i % 2 ? 26 : 32}" rx="5" ry="3" fill="var(--chalk-2)" opacity="${0.45 + i * 0.07}"/>`).join("")
+  + '<circle cx="200" cy="16" r="13" fill="none" stroke="var(--chalk)" stroke-width="2.4"/><circle cx="196" cy="12" r="2.4" fill="var(--chalk-2)"/><circle cx="204" cy="20" r="1.8" fill="var(--chalk-2)"/></svg>';
+const titleP = endEl.querySelector(".t");
+if (titleP) titleP.after(trail);
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
 
 // ── staging ─────────────────────────────────────────────────────────────────
@@ -159,17 +166,17 @@ window.seek = function (t) {
 
   // where it lands: the squares light from "ocean", 78 chalk, then the 22 hatched
   const k = Math.round(100 * clamp01((t - CUE.ocean + 0.2) / 1.6));
-  waffle.set({ opacity: shot === "where" ? E.out3(seg(t, beat("why").t0 + 1.0, beat("why").t0 + 2.0)) : shot === "macro" ? 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 1.0) : 0, state: { k: Math.max(0, k) } });
+  waffle.set({ opacity: shot === "where" ? E.out3(seg(t, beat("why").t0 + 1.0, beat("why").t0 + 2.0)) * (1 - seg(t, beat("whoa").t0 - 0.6, beat("whoa").t0 - 0.1)) : 0, state: { k: Math.max(0, k) } });   // gone before the push dives past it
 
   // the layer fills to 2.8 mm on the line; the coins and the mm ruler beside it
   const macro = shot === "macro" || shot === "work";
   const fill = E.inout2(seg(t, CUE.layer[0] + 1.6, CUE.layer[1]));
   layer.set({ opacity: 0 }); coins.set({ opacity: 0 });
-  const cardO = shot === "macro" ? E.out3(seg(t, beat("whoa").t0 + 0.3, beat("whoa").t0 + 1.1)) : 0;   // gone under the work card and before the push home
+  const cardO = shot === "macro" ? 1 : 0;   // gone under the work card and before the push home
   card.set({ opacity: cardO, state: { f: Math.round(fill * 50) / 50, c: Math.round(clamp01((t - CUE.coins + 0.3) / 0.8) * 20) / 20, w: Math.round(t * 8) / 8 } });
 
   // the takeaway: a thin film round you; the storm column rises beside you on "storm … piles up"
-  film.set({ opacity: shot === "home" ? E.out3(seg(t, CUE.film, CUE.film + 0.8)) : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [0, 0] });
+  film.set({ opacity: shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [0, 0] });
   const sh = E.inout2(seg(t, CUE.storm[0], CUE.storm[1]));
   storm.set({ h: Math.max(1e-5, WD.storm * sh), opacity: sh < 0.01 ? 0 : shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [-1.1, 0.2] });
 
