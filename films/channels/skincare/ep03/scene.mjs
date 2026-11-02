@@ -12,6 +12,8 @@ import { createUVSkin, createViewfinder, createDaylight } from "../set/uvcam.js"
 import { createTerrain, goldenHour } from "../set/terrain.js";
 import { createWeave } from "../set/weave03.js";
 import { toneColor } from "../set/section.js";
+import { createStudio, skinMaterial, strandMaterial, cellMaterial, createGrain } from "../set/studio.js";
+import { DERMIS } from "../set/ref/textures.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -19,11 +21,12 @@ const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.88, bloom: 0.32, exposure: 1.05 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, threshold: 0.88, bloom: 0.34, exposure: 1.0 });
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.5, 30000);
 injectCss();
 const lights = goldenHour(scene);
+const studio = createStudio(renderer, scene, {});   // the studio look: softbox environment, three-point rig
 const FOG = scene.fog; scene.fog = null;
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const SH = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
@@ -32,22 +35,30 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const tone = FILM.tone, SKIN = toneColor("living", tone);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const terrain = createTerrain({ seed: 17, spots: 0 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 17, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+{ const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 9, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
+  terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const SCAR = [0.5, 1.6];
 const EPI = 100;
 const mkBlock = (x, scale) => {
   const g = new THREE.Group(); g.position.x = x; g.scale.setScalar(scale);
   const weave = createWeave({ w: 600, h: 260, d: 300, seed: 31 + x });
   weave.group.position.y = -EPI; g.add(weave.group);
+  weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshStandardMaterial) { o.material.envMapIntensity = 0.5; o.material.roughness = Math.min(o.material.roughness, 0.42); } });   // a little studio sheen on the threads
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(1500, 900), new THREE.MeshStandardMaterial({ roughness: 0.9, color: 0x4a3040 })); back.position.set(0, -EPI - 130, -420); g.add(back);   // the micrograph behind the section
   const epiMat = new THREE.MeshStandardMaterial({ roughness: 0.6, transparent: true, opacity: 0.94 });
   const epi = new THREE.Mesh(new THREE.BoxGeometry(600, EPI, 300), epiMat); epi.position.y = -EPI / 2; g.add(epi);
   const floor = new THREE.Mesh(new THREE.BoxGeometry(600, 12, 300), new THREE.MeshStandardMaterial({ roughness: 0.8 })); floor.position.y = -EPI - 266; g.add(floor);
   scene.add(g);
-  return { g, weave, epiMat, floor };
+  return { g, weave, epiMat, floor, back };
 };
 const FS = 0.62;   // fetal skin: a smaller block
 const adult = mkBlock(PL.wx, 1), fetal = mkBlock(PL.fx, FS);
 const uv = createUVSkin({ seed: 7.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
+// the defence: germ-fighting cells gathering at the seam (the mouse study, a model)
+const imm = new THREE.Group(); uv.mesh.add(imm);
+const immMat = cellMaterial({ tint: [0.86, 0.9, 1.0], opacity: 0.8 }); immMat.transmission = 0;
+const IMM = Array.from({ length: 22 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075 + 0.03 * ((i * 7) % 5) / 4, 2), immMat); imm.add(m); const a = i * 2.39996, r = 1.4 + 0.9 * ((i * 13) % 7) / 7; return { m, a, r, v: ((i * 5) % 11) / 11 - 0.5 }; });
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
 
@@ -55,7 +66,18 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 const hudRoot = document.getElementById("hud");
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.3 });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
-const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
+const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.6vmin";
+const grain = createGrain(hudRoot, { amount: 0.007 });
+// atmosphere: dust the depth of field turns to bokeh
+const SR = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const dotTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const x = cv.getContext("2d"), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
+const dustN = 260, dustPos = new Float32Array(dustN * 3), dustBase = Array.from({ length: dustN }, () => [SR() - 0.5, SR() - 0.5, SR() - 0.5, SR() * 6.28]);
+const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
+const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * Math.sin(t * 0.21 + ph); dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(3, 2); tx.needsUpdate = true;
+  for (const b of [adult, fetal]) { b.back.material.map = tx; b.back.material.color.setRGB(0.38, 0.3, 0.4); b.back.material.needsUpdate = true; } res(); }; img.onerror = () => res(); img.src = DERMIS; });
 const dip = document.createElement("div");
 Object.assign(dip.style, { position: "absolute", inset: "0", background: "var(--bg, #2C1660)", opacity: "0", zIndex: 1, pointerEvents: "none" });
 hudRoot.appendChild(dip);
@@ -132,7 +154,11 @@ window.seek = function (t) {
   const isM = shot === "macro" || shot === "macro2";
   terrain.group.visible = isM; adult.g.visible = isA; fetal.g.visible = shot === "fetal"; uv.mesh.visible = shot === "uv";
   scene.fog = isM ? FOG : null;
-  lights.sun.intensity = isM ? 4.2 : 2.4; lights.key.intensity = isM ? 0.9 : 1.7;
+  lights.sun.intensity = isM ? 3.0 : 1.8; lights.key.intensity = isM ? 0.45 : 1.3;
+  studio.set({ key: isM ? 0.5 : 1.1, rim: isM ? 1.6 : 2.2, fill: 0.3, env: shot === "uv" ? 0 : 0.45, warm: isM ? 0.6 : 0.3 });
+  if (isM) placeDust(t, [PL.tx, 2, 0], [30, 8, 24], 0.1);
+  else if (isA || shot === "fetal") { const bx = shot === "fetal" ? PL.fx : PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
+  else dust.visible = false;
   fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
 
   // ── the macro flight: the scar across the knee ──
@@ -183,12 +209,16 @@ window.seek = function (t) {
   // ── the UV camera on the scar: a seam with no pores and no pattern ──
   // the knee again, in daylight, then the UV camera switches on: the seam with no pores and no pattern
   if (shot === "uv") uv.set({ damage: 0.35, scar: 1, glow: 1, opacity: 1 });
+  imm.visible = shot === "uv";
+  if (shot === "uv") { const c = uv.at(0.66, 0.5), g = E.inout2(seg(t, CUE.repair - 0.2, CUE.repair + 2.6));
+    IMM.forEach(({ m, a, r, v }, i) => { const rr = r * (1 - 0.82 * g) + 0.1, aa = a + 0.25 * t; m.position.set(c[0] + 0.25 * rr * Math.cos(aa), c[1] + rr * Math.sin(aa) * 0.9 + v * 0.3 * g, c[2] + 0.12 + 0.03 * Math.sin(t * 2 + i)); m.scale.setScalar(0.4 + 0.6 * E.out3(seg(t, CUE.repair - 0.3 + 0.03 * i, CUE.repair + 0.3 + 0.03 * i))); }); }
   day.set({ op: shot === "uv" ? fadeIn(t, SH.uv + 0.6, 0.5) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
   dip.style.opacity = Math.max(dz(SH.weave), dz(SH.fetal), dz(SH.gauge), dz(SH.uv)).toFixed(3);   // macro2 rises out of the skin instead
   A.uvscar = uvAt(0.66, 0.5);
   vf.set({ op: shot === "uv" ? fadeIn(t, SH.uv, 0.4) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
+  grain.set(t);
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

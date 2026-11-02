@@ -13,6 +13,8 @@ import { createUVSkin, createViewfinder, createDaylight } from "../set/uvcam.js"
 import { createTerrain, goldenHour } from "../set/terrain.js";
 import { createSection, createVessels, toneColor } from "../set/section.js";
 import { createBeam, createGlint, createPaths } from "../set/light02.js";
+import { createStudio, skinMaterial, strandMaterial, createGrain } from "../set/studio.js";
+import { DERMIS } from "../set/ref/textures.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, PL = FILM.place, FPS = FILM.fps || 30, D = FILM.depth;
 const canvas = document.getElementById("gl");
@@ -20,11 +22,12 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
 renderer.localClippingEnabled = true;
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.86, bloom: 0.4, exposure: 1.05 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, threshold: 0.88, bloom: 0.36, exposure: 1.0 });
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.5, 30000);
 injectCss();
 const lights = goldenHour(scene);
+const studio = createStudio(renderer, scene, {});
 const FOG = scene.fog; scene.fog = null;
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const SH = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
@@ -33,7 +36,9 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const tone = FILM.tone, SKIN = toneColor("living", tone);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const terrain = createTerrain({ seed: 13, spots: 0 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 13, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+{ const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.1, hydration: 0.35, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.56; terrain.mesh.material = m;
+  terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const beam = createBeam({ from: [PL.tx - 9, 16, -6], to: [PL.tx, 0.25, 0], radius: 0.1 }); scene.add(beam.group);
 const glint = createGlint({ at: [PL.tx, 0.3, 0], dir: [0.55, 1, 0.45], len: 7 }); scene.add(glint.group);
 const beamL = createBeam({ from: [PL.tx - 11, 16, -6], to: [PL.tx - 3, 0.25, 0], radius: 0.09 }), beamR = createBeam({ from: [PL.tx - 6, 16, -6], to: [PL.tx + 2, 0.25, 0], radius: 0.09 });
@@ -69,7 +74,8 @@ vf.el.querySelector(".rec").textContent = "● REC  DAYLIGHT"; vf.el.style.fontS
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
 // the slider (whoa): "blood colour", nudged up
 const slider = document.createElement("div");
-slider.innerHTML = `<span class="k">blood colour</span><span class="sl-tr"><i></i><b></b></span>`;
+slider.innerHTML = `<span class="k">pulse, from colour</span><svg width="38vmin" height="6vmin" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline fill="none" stroke="#5FF2E8" stroke-width="3" stroke-linejoin="round"/></svg>`;
+const trace = slider.querySelector("polyline");
 Object.assign(slider.style, { position: "absolute", left: "50%", top: `${0.535 * H}px`, transform: "translateX(-50%)", display: "flex", alignItems: "center", gap: "2.4vmin", padding: "1.2vmin 2.6vmin",
   borderRadius: "2.4vmin", background: "var(--hud-plate)", boxShadow: "var(--hud-shadow)", fontFamily: "var(--font-mono)", fontSize: "3.2vmin", color: "var(--text)", zIndex: 4, opacity: "0" });
 const css = document.createElement("style");
@@ -79,6 +85,13 @@ css.textContent = `.sl-tr{position:relative;display:block;width:36vmin;height:1.
 .dc .ax{position:relative;width:9vmin;white-space:nowrap;border-left:.35vmin solid var(--text-2)}.dc .ax span{position:absolute;left:1vmin;font-size:2.3vmin;color:var(--text-2);transform:translateY(-50%)}`;
 document.head.appendChild(css);
 hudRoot.appendChild(slider);
+let cgBuilt = false;
+const buildCg = () => { if (cgBuilt) return; cgBuilt = true;
+  [0, 1].forEach((i) => { const f = fsvg.cloneNode(true); Object.assign(f.style, { position: "static", width: "100%", height: "85%", opacity: "1", transform: "none" });
+    if (i === 0) { f.querySelectorAll("ellipse, path").forEach((e) => { const fl = e.getAttribute("fill"); if (fl && fl !== "none" && fl !== "#2a1a14" && fl !== "#a8555a") e.setAttribute("fill", "#cdbab4"); }); f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0"); });
+      const hl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"); [["cx", 455], ["cy", 380], ["rx", 46], ["ry", 22], ["fill", "#ffffff"], ["opacity", "0.85"]].forEach(([k, v]) => hl.setAttribute(k, v)); f.appendChild(hl); f.style.filter = "saturate(.6)"; }
+    else { f.style.filter = "drop-shadow(0 0 2.4vmin rgba(255,120,90,.55))"; f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0.65"); }); }
+    cgCols[i].appendChild(f); cgCols[i].appendChild(cgTag(i === 0 ? "light stays on top" : "light goes inside")); }); };
 // the model face (whoa): a stylised face drawn in the viewfinder (labelled "model face, not a photo"): its skin and
 // cheeks take on blood colour as the slider rises
 const NS = "http://www.w3.org/2000/svg", mk = (tag, at, p) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; };
@@ -98,6 +111,11 @@ mk("path", { d: "M400 455 Q430 440 460 455", ...ink }, fsvg); mk("path", { d: "M
 mk("path", { d: "M395 415 Q430 395 468 410", ...ink, "stroke-width": 9 }, fsvg); mk("path", { d: "M532 410 Q570 395 605 415", ...ink, "stroke-width": 9 }, fsvg);   // brows
 mk("path", { d: "M500 470 Q492 545 478 575 Q500 590 522 575", ...ink, "stroke-width": 6 }, fsvg);   // nose
 const lips = mk("path", { d: "M455 640 Q500 668 545 640 Q500 652 455 640 Z", fill: "#a8555a" }, fsvg);
+const cgWrap = document.createElement("div");
+Object.assign(cgWrap.style, { position: "absolute", left: `${0.12 * W}px`, top: `${0.27 * H}px`, width: `${0.76 * W}px`, height: `${0.3 * H}px`, display: "flex", gap: `${0.04 * W}px`, zIndex: 1, opacity: "0", pointerEvents: "none" });
+hudRoot.appendChild(cgWrap);
+const cgTag = (txt) => { const d = document.createElement("div"); d.textContent = txt; Object.assign(d.style, { fontFamily: "var(--font-mono)", fontSize: "2.4vmin", letterSpacing: ".02em", textTransform: "uppercase", color: "var(--text)", textAlign: "center", marginTop: "1vmin", whiteSpace: "nowrap" }); return d; };
+const cgCols = [0, 1].map(() => { const col = document.createElement("div"); Object.assign(col.style, { flex: "1", display: "flex", flexDirection: "column", alignItems: "center" }); cgWrap.appendChild(col); return col; });
 const skinHex = (k) => { const c = SKIN.map((v) => v * 1.2), r = [Math.min(1, c[0] * (1 + 0.1 * k)), c[1] * (1 - 0.13 * k), c[2] * (1 - 0.1 * k)]; return `rgb(${r.map((v) => Math.round(Math.min(1, v) * 255)).join(",")})`; };
 // the depth chart (toscale): a full-width card, mm down the left; blue to ≈ 1 mm beside ten 100 µm sheets; red on to ≈ 4–5 mm
 const PXMM = 0.058 * H;                                               // 1 mm on the chart
@@ -112,7 +130,7 @@ const barB = chart.querySelector(".bar.b"), barR = chart.querySelector(".bar.r")
 const vB = chart.querySelector(".vb"), vS = chart.querySelector(".vs"), vR = chart.querySelector(".vr"), hR = chart.querySelector(".hr");
 sheets.forEach((s) => { s.style.height = `${0.1 * PXMM * 0.62}px`; s.style.marginBottom = `${0.1 * PXMM * 0.38}px`; });
 const dcss = document.createElement("style");
-dcss.textContent = `.dc{justify-content:center;gap:4vmin;background:var(--card);font-size:3.6vmin;padding:3vmin 4vmin}.dc .ax{margin-right:7vmin}.dc .ax span{font-size:3.2vmin;color:var(--text)}.dc .col{gap:1.4vmin}.dc .bar,.dc .sh i{width:10vmin}.dc .sh{gap:0}.dc .h{font-weight:600}.dc .v{font-size:3.8vmin;color:var(--water);font-weight:600;white-space:nowrap}`;
+dcss.textContent = `.dc{justify-content:center;gap:3vmin;background:var(--card);font-size:3.6vmin;padding:3vmin 4vmin}.dc .ax{margin-right:7vmin}.dc .ax span{font-size:3.2vmin;color:var(--text)}.dc .col{gap:1.4vmin}.dc .bar,.dc .sh i{width:10vmin}.dc .sh{gap:0}.dc .h{font-weight:600}.dc .v{font-size:3.3vmin;color:var(--water);font-weight:600;white-space:nowrap}`;
 document.head.appendChild(dcss);
 
 const hud = createHud({ camera, shots: FILM.shots });
@@ -134,6 +152,9 @@ if (foot) Object.assign(foot.style, { fontSize: "3.5vmin", color: "var(--text-2)
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
 
+const grain = createGrain(hudRoot, { amount: 0.007 });
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(6, 6); tx.needsUpdate = true; deep.material.map = tx; deep.material.color.setRGB(1, 0.92, 0.95); deep.material.needsUpdate = true; res(); }; img.src = DERMIS; });
+
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
@@ -142,7 +163,8 @@ window.seek = function (t) {
   const isT = ["macro", "split", "rise", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS; face.mesh.visible = shot === "face";
   scene.fog = isT ? FOG : null;
-  lights.sun.intensity = isT ? 4.2 : 2.0; lights.key.intensity = isT ? 0.9 : 1.6;
+  lights.sun.intensity = isT ? 3.0 : 1.6; lights.key.intensity = isT ? 0.4 : 1.2;
+  studio.set({ key: isT ? 0.5 : 1.0, rim: isT ? 1.6 : 2.0, fill: 0.3, env: 0.45, warm: 0.6 });
   fstop = isT ? 0.45 : 0; focusPt = [PL.tx, 0, 0];
 
   // ── the terrain: one beam and its glint; then two halves, smooth (one ray) and dry (a haze) ──
@@ -177,9 +199,11 @@ window.seek = function (t) {
   A.melanin = [PL.sx - 40, -80, 32]; A.cap = [PL.sx + 30, -118, 34]; A.sheen = [PL.sx + 30, 5, 32];
 
   // ── the viewfinder cheek: daylight, the slider nudged up, the cheek flushing ──
-  const flush = shot === "face" ? E.inout2(seg(t, K.flush[0], K.flush[1])) : 0;
-  const pulse = shot === "face" ? Math.sin(Math.PI * seg(t, K.pulse[0], K.pulse[1])) : 0;   // the hold after "skin": one slow flush, held
-  const fk = 0.1 + 0.9 * flush + 0.15 * pulse;
+  // the colour rises and falls with each heartbeat (amplified, as Eulerian video magnification shows it)
+  const beat = (x) => Math.pow(0.5 + 0.5 * Math.sin(2 * Math.PI * x / 0.85), 5);
+  const amp = shot === "face" ? E.inout2(seg(t, K.pulse[0], K.pulse[0] + 1.2)) : 0;
+  const flush = 0.35 * amp * beat(t), pulse = 0;
+  const fk = 0.15 + flush;
   const skc = skinHex(fk); [head, earL, earR, neck].forEach((e) => e !== head && e.setAttribute("fill", skc)); sh0.setAttribute("stop-color", skc);
   sh1.setAttribute("stop-color", (() => { const c = SKIN.map((v) => v * 0.95); return `rgb(${c.map((v) => Math.round(v * 255)).join(",")})`; })());
   blL.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3)); blR.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3));
@@ -189,7 +213,14 @@ window.seek = function (t) {
   fsvg.style.transform = `scale(${(1 + 0.18 * push).toFixed(4)})`; fsvg.style.transformOrigin = "57% 78%";
   vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "model face", right: "" });
   slider.style.opacity = (shot === "face" ? fadeIn(t, SH.face + 0.6, 0.5) : 0).toFixed(3);
-  slider.querySelector("i").style.left = `${(15 + 75 * flush + 8 * pulse).toFixed(1)}%`;
+  // the pulse trace, read from the face's colour: the last three seconds, drawn as a line
+  const pts = []; for (let k = 0; k <= 90; k++) { const x = t - 3 + k / 30; pts.push(`${(k / 90 * 300).toFixed(1)},${(40 - 32 * beat(x) * (x > K.cam[0] ? 1 : 0.15)).toFixed(1)}`); }
+  trace.setAttribute("points", pts.join(" "));
+
+  // ── the model faces: computer faces before subsurface scattering beside a face whose light goes inside ──
+  if (shot === "cg") buildCg();
+  cgWrap.style.opacity = (shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0).toFixed(3);
+  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0, left: shot === "cg" ? "" : "model face", right: "" });
 
   // ── the depth chart ──
   const cOp = shot === "depth" ? fadeIn(t, SH.depth - 0.05, 0.3) * (1 - fadeIn(t, SH.macro2 - 0.5, 0.45)) : 0;
@@ -201,6 +232,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
+  grain.set(t);
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

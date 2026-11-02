@@ -35,16 +35,16 @@ TX, WX, FX = 1000.0, 5000.0, 7000.0
 
 # ── shots ─────────────────────────────────────────────────────────────────
 t_weave, t_end = A("vo02:Under", -0.3), A("vo08:Next:", -0.25)
-t_uv = A("vo07:repair:", -1.2)   # the takeaway opens on the hook's frame, then the UV camera switches on
+t_uv = A("vo07:Mice", -1.2)   # the takeaway opens on the hook's frame, then the UV camera switches on
 SHOTS = [{"at": 0.0, "name": "macro"}, {"at": t_weave, "name": "weave"}, {"at": B["why"]["t0"], "name": "test"},
          {"at": B["whoa"]["t0"], "name": "fetal"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "macro2"}, {"at": t_uv, "name": "uv"}]
 CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:one."), "strength": A("vo02:strength"), "collagen": A("vo02:collagen,"),
        "woven": A("vo02:woven"), "basket": A("vo02:basket,"), "gives": A("vo02:gives"), "pulled": A("vo02:pulled."), "cut": A("vo03:Cut"),
-       "reweave": A("vo03:reweave."), "patches": A("vo03:patches,"), "laying": A("vo03:laying"), "side": A("vo03:side"), "leaves": A("vo03:leaves"),
-       "glands": A("vo03:glands."), "healed": A("vo04:healed,"), "pulled4": A("vo04:pulled"), "tears": A("vo04:tears,"), "four": A("vo04:four-fifths"),
-       "strength4": A("vo04:strength."), "until": A("vo05:until"), "sixth": A("vo05:sixth"), "regrows": A("vo05:regrows"), "follicles": A("vo05:follicles"),
-       "after": A("vo05:After"), "patches5": A("vo05:patches."), "top": A("vo06:top"), "paper": A("vo06:paper's"), "seam": A("vo06:seam."),
-       "repair": A("vo07:repair:"), "cut5": A("vo05:cut"), "reweave3": A("vo03:reweave."), "close": A("vo07:close,"), "never": A("vo07:never"), "weave7": A("vo07:weave.")}
+       "reweave": A("vo03:reweave."), "patches": A("vo03:patches:"), "laying": A("vo03:new"), "side": A("vo03:side"), "leaves": A("vo03:no"),
+       "glands": A("vo03:glands."), "healed": A("vo04:healed,"), "pulled4": A("vo04:pulled"), "tears": A("vo04:tears,"), "four": A("vo04:strand"),
+       "strength4": A("vo04:five."), "until": A("vo05:Until"), "sixth": A("vo05:sixth"), "regrows": A("vo05:regrows"), "follicles": A("vo05:follicles"),
+       "after": A("vo05:place"), "patches5": A("vo05:mouth."), "top": A("vo06:top"), "paper": A("vo06:paper's"), "seam": A("vo06:seam."),
+       "repair": A("vo07:Mice"), "cut5": A("vo05:baby's"), "reweave3": A("vo03:reweave."), "close": A("vo07:one:"), "never": A("vo07:price"), "weave7": A("vo07:defence.")}
 
 # ── the camera ─────────────────────────────────────────────────────────────
 MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
@@ -87,7 +87,7 @@ LABELS = [
     {"id": "l-app", "text": "follicles, glands: none inside", "kind": "cell", "anchor": "app", "t0": CUE["leaves"], "t1": B["why"]["t0"], "shot": "weave", "side": 1, "v": "below", "fixed": True},
     {"id": "l-fetal", "text": "fetal skin", "kind": "layer", "anchor": "fside", "t0": B["whoa"]["t0"] + 0.3, "t1": B["toscale"]["t0"], "shot": "fetal", "side": -1, "v": "above", "fixed": True},
     {"id": "l-fol", "text": "follicles regrow", "kind": "cell", "anchor": "fgap", "t0": CUE["follicles"] - 0.2, "t1": CUE["after"] - 0.3, "shot": "fetal", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-fpatch", "text": "later: a patch", "kind": "water", "anchor": "fgap", "t0": CUE["patches5"] - 0.2, "t1": B["toscale"]["t0"], "shot": "fetal", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-fpatch", "text": "your mouth: nearly the same", "kind": "water", "anchor": "fgap", "t0": CUE["patches5"] - 0.2, "t1": B["toscale"]["t0"], "shot": "fetal", "side": 1, "v": "above", "fixed": True},
     {"id": "l-top", "text": "the top layer", "kind": "water", "anchor": "top", "t0": CUE["top"] - 0.2, "t1": B["takeaway"]["t0"], "shot": "gauge", "side": 1, "v": "below", "fixed": True},
     {"id": "l-scar2", "text": "the same old scar", "kind": "cell", "anchor": "scar", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_uv, "shot": "macro2", "side": 1, "v": "above", "fixed": True},
     {"id": "l-seam", "text": "a seam: no pores", "kind": "water", "anchor": "uvscar", "t0": t_uv + 0.3, "t1": t_end, "shot": "uv", "side": 1, "v": "above", "fixed": True},
@@ -100,6 +100,7 @@ BADGES = [
     {"id": "b-body", "text": "most of the body", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-simp2", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_uv, "slot": "br"},
     {"id": "b-model", "text": "model, not a photo", "t0": t_uv, "t1": t_end, "slot": "br"},
+    {"id": "b-mouse", "text": "mouse study · Martin et al., 2003", "t0": A("vo07:Mice", -0.1), "t1": t_end, "slot": "tr"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
@@ -108,8 +109,8 @@ COUNTERS = [
     {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": CUE["four"] - 0.3},
     {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
     {"id": "c-wk", "label": "scarless before", "text": "≈ 22–24 wk", "t0": CUE["sixth"] - 0.2, "t1": CUE["after"] - 0.2},
-    {"id": "c-after", "label": "after that", "text": "patched", "t0": CUE["patches5"] - 0.1, "t1": B["toscale"]["t0"]},
-    {"id": "c-final", "label": "a scar", "text": "a repair", "t0": CUE["repair"] + 0.2, "t1": t_end - 0.5},
+    {"id": "c-after", "label": "still, inside", "text": "your mouth", "t0": CUE["patches5"] - 0.1, "t1": B["toscale"]["t0"]},
+    {"id": "c-final", "label": "a scar may be", "text": "the price of defence", "t0": CUE["repair"] + 0.2, "t1": t_end - 0.5},
 ]
 for c in COUNTERS:
     c.update({"fmt": "text", "at": SPINE})
@@ -126,11 +127,11 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-# the scar story's keys (scene.mjs reads them)
+# the scar story's keys (scene.mjs reads them); fpatch is off in facts pass 2 (the fetal weave stays regrown; the mouth line follows)
 KEYS = {"tug1": [CUE["gives"] - 0.2, CUE["gives"] + 0.6], "tug2": [CUE["pulled"] - 0.3, CUE["pulled"] + 0.6], "cut": [CUE["cut"] - 0.1, CUE["cut"] + 0.7],
         "patch": [CUE["laying"] - 0.2, CUE["glands"] - 0.4], "glow": [CUE["side"] - 0.4, CUE["side"] + 0.4], "meter": [CUE["healed"] - 0.2, CUE["pulled4"]],
         "stretch": [CUE["pulled4"] - 0.3, CUE["tears"] + 0.3], "fcut": [CUE["cut5"] - 0.1, CUE["cut5"] + 0.5], "regrow": [CUE["regrows"] - 0.3, CUE["follicles"] + 0.6],
-        "fpatch": [CUE["after"] - 0.1, CUE["patches5"] + 1.2], "tear": [CUE["tears"] - 0.2, CUE["tears"] + 0.5], "day": [B["takeaway"]["t0"] + 0.3, CUE["repair"] - 0.2], "scar": [CUE["repair"] - 0.6, CUE["repair"] + 0.4]}
+        "fpatch": [1e9, 1e9 + 1], "tear": [CUE["tears"] - 0.2, CUE["tears"] + 0.5], "day": [B["takeaway"]["t0"] + 0.3, CUE["repair"] - 0.2], "scar": [CUE["repair"] - 0.6, CUE["repair"] + 0.4]}
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["top"] - 0.3, "paper": CUE["paper"] - 0.2,
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "epi_um": EPI_UM, "paper_um": PAPER_UM}
 STR = {"pct": STRENGTH}
@@ -140,11 +141,11 @@ END = {"title": "Next layer: a poison in a *frown*", "follow": "Outer Layer · N
        "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."}
 POSTER = A("vo03:side", 0.4)
 
-glue(f, {"vo01": ["Why do you", "scar now?", "Before birth,", "a cut healed", "without one."], "vo02": ["Under the surface,", "your skin's strength", "is collagen,", "over and under", "every direction", "like a basket,", "a little", "it's pulled."],
-         "vo03": ["Cut through it,", "the body", "doesn't reweave.", "It patches,", "new threads", "side by side,", "one direction,", "leaves out", "the hair", "the sweat glands."],
-         "vo04": ["a closed wound", "as good as new.", "until it tears,", "an old scar", "about four-fifths", "the original strength."],
-         "vo05": ["about the sixth month", "of pregnancy,", "a baby's skin", "the weave,", "follicles and all.", "After that,", "it patches."],
-         "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["So, why", "the scar?", "quick repair:", "strong enough", "to close,", "the weave."],
+glue(f, {"vo01": ["Why do you", "scar now?", "Before birth,", "a cut healed", "without one."], "vo02": ["Under the surface,", "your skin's strength", "is collagen,", "every which way", "like a basket,", "whichever way", "it's pulled."],
+         "vo03": ["Cut through it,", "the body", "doesn't reweave.", "It patches:", "new threads", "side by side,", "all one way,", "no hair", "or sweat glands."],
+         "vo04": ["We call that healed,", "as good as new.", "until it tears,", "an old scar", "a rope", "one strand in five."],
+         "vo05": ["about the sixth month", "of pregnancy,", "a baby's skin", "the weave,", "follicles and all.", "one place in you", "your mouth."],
+         "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["So, why", "the scar?", "germ-fighting cells", "without one:", "the price of defence."],
          "vo08": ["a deadly poison,", "a frown.", "goes in?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
