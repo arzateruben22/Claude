@@ -53,7 +53,7 @@ CUE = {
     "dozen": A("vo02:dozen"), "count": A("vo02:Across"), "same": A("vo02:same."), "work": A("vo03:work"), "deeper": A("vo03:deeper"),
     "larger": A("vo03:larger"), "one": A("vo03:one#2"), "why": A("vo04:why"), "nina": A("vo04:Nina"),
     "colour": A("vo04:colour"), "sunlight": A("vo04:sunlight,"), "matched": A("vo04:matched."),
-    "idea": A("vo05:idea:"), "fierce": A("vo05:fierce"), "folate": A("vo05:folate."), "weak": A("vo05:weak"), "vitd": A("vo05:vitamin"),
+    "idea": A("vo05:idea:"), "fierce": A("vo05:fierce"), "folate": A("vo05:folate."), "weak": A("vo05:weak"), "vitd": A("vo05:vitamin#2"),
     "apart": A("vo06:apart."), "third": A("vo06:third"), "paper": A("vo06:paper's"), "none": A("vo07:None"), "sky": A("vo07:sky."),
 }
 
@@ -83,9 +83,9 @@ CAM = {
               {"t": B["toscale"]["t0"], **WIDE, "dist": 640, "az": 6, "ease": "sine"}],
     # to scale: the cards lift into the empty upper left; the camera drops the sections lower in frame
     "gauge": [{"t": B["toscale"]["t0"], **WIDE, "dist": 640, "az": 6},
-              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 780, "az": 3, "ease": "inout2"},
-              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 760, "az": 0, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 760, "az": 0},
+              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.72, "fy": 0.34, "dist": 1000, "az": 3, "ease": "inout2"},
+              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.72, "fy": 0.34, "dist": 980, "az": 0, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.72, "fy": 0.34, "dist": 980, "az": 0},
               {"t": B["takeaway"]["t0"] + 1.6, **HOOK, "dist": 640, "az": -6, "ease": "inout2"},
               {"t": B["tease"]["t1"], **HOOK, "dist": 680, "az": -10, "ease": "sine"}],
 }
@@ -125,8 +125,8 @@ COUNTERS = [
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 # the three scale jumps are irises (into a pigment cell; out of the grains to the globe; from the globe's band back to
 # the sections); the gauge and close shots are the same place, reached by camera moves, not cuts
-TRANS = [{"t": B["change"]["t0"], "kind": "iris", "from": "mel1"}, {"t": B["why"]["t0"], "kind": "iris", "from": "g1"},
-         {"t": B["whoa"]["t0"], "kind": "iris", "from": "band"}]
+TRANS = [{"t": B["change"]["t0"], "kind": "iris", "from": "mel1", "to": "g1"}, {"t": B["why"]["t0"], "kind": "iris", "from": "g1", "to": "globe"},
+         {"t": B["whoa"]["t0"], "kind": "iris", "from": "band", "to": "mid"}]
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next

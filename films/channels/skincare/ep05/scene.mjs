@@ -104,7 +104,7 @@ for (const L of FILM.labels) {
 const tally = BIO.sec_x.map(() => {
   const el = document.createElement("div");
   Object.assign(el.style, { position: "absolute", zIndex: "3", font: "500 3.4vmin/1 var(--font-mono)", color: "var(--text)", background: "var(--hud-plate)",
-    padding: "1vmin 2.2vmin", borderRadius: "999px", boxShadow: "var(--hud-shadow)", opacity: "0", transform: "translate(-50%, 0)", fontFeatureSettings: '"tnum" 1' });
+    padding: "1vmin 2.2vmin", borderRadius: "999px", whiteSpace: "nowrap", boxShadow: "var(--hud-shadow)", opacity: "0", transform: "translate(-50%, 0)", fontFeatureSettings: '"tnum" 1' });
   document.getElementById("hud").appendChild(el); return el;
 });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
@@ -157,7 +157,7 @@ window.seek = function (t) {
     const n = shot === "trio" ? CT.filter((c) => t >= c).length : 0;
     const p = project(camera, [s.x, -150, 23], W, H);
     const el = tally[i];
-    el.textContent = `${["lighter", "medium", "deeper"][i]}: ${n}`;
+    el.textContent = `${["light", "medium", "deep"][i]}: ${n}`;
     el.style.left = `${p.x.toFixed(1)}px`; el.style.top = `${Math.min(p.y, 0.5 * H).toFixed(1)}px`;
     el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
   });
@@ -196,19 +196,22 @@ window.seek = function (t) {
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
-  // ── the irises ──
-  let disc = 0, hole = 0, subj = null;
+  // ── the irises: a slide-coloured disc grows round the outgoing subject (to about a third of the frame), then a disc
+  // of the same size sits on the incoming subject and shrinks away: never an empty frame, always a point to follow ──
+  A.globe = [BIO.wx, 0, 0]; A.mid = [BIO.sec_x[1], -40, 23];
+  let rad = 0, subj = null;
   for (const tr of FILM.trans) {
     const d = t - tr.t;
-    if (d < 0 && d > -0.35) { disc = E.in2(1 + d / 0.35); subj = A[tr.from]; }
-    else if (d >= 0 && d < 0.35) { hole = Math.max(1e-3, E.out2(d / 0.35)); subj = shot === "grains" ? A.g1 : shot === "globe" ? [BIO.wx, 0, 0] : [BIO.sec_x[1], -40, 23]; }
+    if (d < 0 && d > -0.4) { rad = 30 * E.in2(1 + d / 0.4); subj = A[tr.from]; }
+    else if (d >= 0 && d < 0.45) { rad = 30 * (1 - E.out2(d / 0.45)); subj = A[tr.to]; }
   }
-  if (subj && (disc > 0 || hole > 0)) {
-    const p = project(camera, subj, W, H), at = `${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%`;
-    const r = ((disc || hole) * 125).toFixed(2), r2 = (+r + 0.6).toFixed(2);
-    veil.style.background = disc > 0 ? `radial-gradient(circle at ${at}, var(--slide) ${r}vmax, transparent ${r2}vmax)` : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
+  if (subj && rad > 0.05) {
+    const p = project(camera, subj, W, H);
+    veil.style.background = `radial-gradient(circle at ${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%, var(--slide) ${rad.toFixed(2)}vmax, transparent ${(rad + 0.6).toFixed(2)}vmax)`;
     veil.style.opacity = "1";
   } else veil.style.opacity = "0";
+  // the lifted gauge's column headings show only with the lift
+  for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "paper" || el.textContent === G.bar) el.setAttribute("opacity", lift.toFixed(3));
 
   hud.update(t);
   tBars.update(t);
