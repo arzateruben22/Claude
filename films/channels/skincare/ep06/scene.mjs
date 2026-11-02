@@ -83,6 +83,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.2, liftAt: [0.2, 0.2] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
+{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}"; document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.34 });
 const plate = (html, css) => {
   const el = document.createElement("div");

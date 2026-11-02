@@ -11,7 +11,7 @@ import { createHud } from "cinema/sci/hud.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
-import { createUVSkin, createViewfinder, createDaylight, TONES } from "../set/uvcam.js";
+import { createUVSkin, createViewfinder, TONES } from "../set/uvcam.js";
 import { createTown } from "../set/town05.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, BIO = FILM.bio, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, P = FILM.plates, HD = FILM.hands, TW = FILM.town;
@@ -71,7 +71,7 @@ endEl.style.transform = "translateY(-22vmin)";
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.5, liftAt: [0.2, 0.22] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.265 });
-const day = createDaylight({ root: hudRoot, W, H, y: 0.565 });
+{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}"; document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
 const plate = (html, css) => {
   const el = document.createElement("div");
   el.innerHTML = html;
@@ -81,16 +81,16 @@ const plate = (html, css) => {
 };
 const show = (el, op) => { el.style.opacity = op.toFixed(3); el.style.visibility = op > 0.002 ? "visible" : "hidden"; };
 const O = P.odds, M = P.mel;
-const odds = plate(`<div style="font:600 3.4vmin/1.3 var(--font-body, inherit)">${O.text}</div><div style="font:500 2.5vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
+const odds = plate(`<div style="font:600 3.4vmin/1.3 var(--font-body, inherit)">${O.text}</div><div style="font:500 2.9vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
   { left: "50%", top: `${0.44 * H}px`, transform: "translateX(-50%)", width: "78vmin", padding: "2.2vmin 3vmin" });
 const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline-block;width:2.6vmin;height:2.6vmin;border-radius:50%;margin:.35vmin;background:${c};opacity:0"></i>`).join("");
-const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body, inherit);opacity:0">squamous cell cancers, during the trial: <span style="color:var(--water)">lower</span></div>
+const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body, inherit);opacity:0">squamous cell cancers, during the trial: <span style="color:var(--water)">lower</span><div style="font:500 2.6vmin/1.3 var(--font-mono);color:var(--text-2)">counted by tumours</div></div>
   <div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin:2vmin 0 1.2vmin">melanomas, ten years on</div>
-  <div style="display:grid;grid-template-columns:24vmin 1fr;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
+  <div class="rows" style="display:grid;grid-template-columns:24vmin 1fr;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
-  <div class="sub" style="font:500 2.4vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
+  <div class="sub" style="font:500 2.8vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
   { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "2.4vmin 3vmin" });
-const scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
+const rows = mel.querySelector(".rows"), mhead = rows.previousElementSibling, scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
 hudRoot.prepend(veil);
@@ -108,7 +108,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const isHand = ["hand", "cast", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
+  const isHand = ["hand", "cast", "gauge", "hand2", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
   T.group.visible = isHand; TOWN.group.visible = isTown; UVS.mesh.visible = isU;
   scene.fog = isHand ? FOG : isTown ? FOG_TOWN : null;
   focus = isHand ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
@@ -119,7 +119,7 @@ window.seek = function (t) {
     if (shot === "cast") T.set({ tone: CAST, furrows: 0.2 + 0.9 * u01(t, HD.age), spot: 0, sheen: 0 });
     else if (shot === "gauge") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: u01(t, HD.film) });
     else T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0 });
-    seam.material.opacity = shot === "hand" || shot === "close" ? 0.5 : 0.75;
+    seam.material.opacity = shot === "hand" || shot === "hand2" || shot === "close" ? 0.5 : 0.75;
   }
   A.halfL = [-7, 0.4, 9]; A.halfR = [7, 0.4, 9]; A.castL = [-6, 0.4, 3];
 
@@ -129,13 +129,12 @@ window.seek = function (t) {
 
   // ── the UV camera: the damage the eye misses, more on the "as they pleased" half ──
   if (isU) {
-    const d = shot === "uv1" ? u01(t, HD.dmg) : 1;
-    UVS.set({ damage: 0.15 + 0.1 * d, damageR: 0.15 + 0.75 * d, split: 1, glow: 1, opacity: fadeIn(t, SH[shot], 0.25) });
+    const d = shot === "uv1" ? u01(t, HD.dmg) : 1;   // a faint difference from the first frame, blooming on "camera"
+    UVS.set({ damage: 0.18 + 0.07 * d, damageR: 0.35 + 0.55 * d, split: 1, glow: 1, opacity: fadeIn(t, SH[shot], 0.12) });
   }
   A.uvR = uvWorld(0.74, 0.45);
   const vw = shot === "uv1" ? P.viewfinder1 : P.viewfinder2;
-  vf.set({ op: isU ? win(t, vw.t0, vw.t1, 0.25) : 0, left: "daily", right: "as they pleased", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
-  day.set({ op: shot === "uv2" ? win(t, P.daylight.t0, P.daylight.t1) : 0 });
+  vf.set({ op: isU ? win(t, vw.t0, vw.t1, 0.25) : 0, left: "less damage", right: "more damage", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
 
   // ── plates ──
   show(odds, shot === "cast" ? win(t, O.t0, O.t1) : 0);
@@ -144,6 +143,7 @@ window.seek = function (t) {
   d1.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d1.length) * (M.half - M.mel), 0.15).toFixed(3); });
   d2.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d2.length) * (M.half - M.mel), 0.15).toFixed(3); });
   msub.style.opacity = fadeIn(t, M.small - 0.2, 0.4).toFixed(3);
+  rows.style.opacity = mhead.style.opacity = fadeIn(t, M.mel - 0.3, 0.3).toFixed(3);   // the rows arrive with "melanoma", never empty on screen
 
   // ── to scale: the test dose's film beside the paper ──
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;

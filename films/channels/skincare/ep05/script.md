@@ -40,7 +40,7 @@ vo: In the early nineties, in a Queensland town called Nambour, chance decided w
 ## change {shot: a scale jump down to the hand as its grey silicone cast, the seam vertical; on "four and a half years" the lines on the "as they pleased" half deepen, the daily half stays · spine: ageing measured after 4.5 years · plate: about a quarter less likely (relative odds 0.76, 0.59–0.98) · badge: model · Hughes et al., 2013 · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
 vo: Then researchers read the fine lines in silicone *casts* of hands. {c3} After four and a half years, the daily group showed no detectable increase in ageing. {c5}
 
-## why {shot: the UV reveal (shutter): the same hand through the 365 nm viewfinder, split, daily | as they pleased; on "ultraviolet camera" freckles of damage rise, many more on the right · badge: model, not a photo · picture-only 2.2 s · energy: 0.5} (29–42 s)
+## why {shot: the UV reveal (shutter): the same hand through the 365 nm viewfinder, split, daily | as they pleased; a faint difference from the start, blooming on "ultraviolet camera" (more damage, more sun) · badge: illustration · not trial data (the trial graded casts, not UV photos) · picture-only 2.2 s · energy: 0.5} (29–42 s)
 vo: It's easy to think of sun damage as the burn you feel. {-} But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the *surface*. {c6}
 
 ## whoa {shot: a scale jump back up over the town, higher; the plate: squamous cell cancers lower during the trial, then melanomas ten years on as dots, 11 cyan against 22 lilac · spine: melanoma followed to 2006 · plate footnote: hazard ratio 0.50 (0.24–1.02), not quite significant · badge: Green et al., 1999 · 2011 · picture-only 3.2 s · energy: 0.8} (42–55 s)
@@ -49,7 +49,7 @@ vo: Then the town was watched for ten more years. {c7} Squamous cell cancers had
 ## toscale {segment: toscale · a scale jump down to the hand: a satin film settles on the daily half; the gauge lifts: the test dose's film (≈ 20 µm) beside the paper's 100 µm · badge: estimate · picture-only 0.5 s · energy: 0.4} (55–62 s)
 vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thickness*. {c10}
 
-## takeaway {shot: the UV split again (shutter), held: the record the eye can't see · daylight strip · spine holds: the ageing trial, 4.5 years · badge: model, not a photo · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
+## takeaway {shot: back to the hook's hand (the loop) for "which hand aged?"; on "but" the UV split (shutter): the record the eye can't see, badged illustration · not trial data · no daylight strip · spine holds: the ageing trial, 4.5 years · badge: model, not a photo · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
 vo: So, which hand aged? The eye can't say, but the skin was keeping its own *record*. {c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
