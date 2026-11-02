@@ -27,13 +27,13 @@
     {
      "w": "in",
      "start": 0.56,
-     "end": 0.64,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.59,
-     "end": 0.88,
+     "start": 0.755,
+     "end": 0.96,
      "heard": true
     },
     {
@@ -41,48 +41,48 @@
      "start": 0.865,
      "end": 1.312,
      "heard": true,
-     "end_asr": 1.92
+     "end_asr": 1.84
     },
     {
      "w": "All",
-     "start": 1.935,
-     "end": 2.16,
+     "start": 1.885,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "eight",
-     "start": 2.305,
+     "start": 2.255,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "billion,",
-     "start": 2.605,
-     "end": 3.04,
+     "start": 2.555,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "with",
-     "start": 3.215,
-     "end": 3.36,
+     "start": 3.085,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "room",
-     "start": 3.275,
-     "end": 3.6,
+     "start": 3.165,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "to",
-     "start": 3.615,
-     "end": 3.76,
+     "start": 3.565,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "breathe.",
-     "start": 3.775,
-     "end": 4.48,
+     "start": 3.725,
+     "end": 4.4,
      "heard": true
     }
    ],
@@ -91,181 +91,181 @@
   {
    "id": "vo02",
    "text": "There are a lot of us, and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
-   "heard": "There are a lot of us and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
+   "heard": "There are a lot of us, and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
    "words": [
     {
      "w": "There",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "are",
-     "start": 0.32,
-     "end": 0.48,
+     "start": 0.4,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.575,
+     "start": 0.63,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "lot",
-     "start": 0.63,
-     "end": 0.88,
+     "start": 0.66,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "of",
-     "start": 0.955,
-     "end": 1.04,
+     "start": 0.995,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "us,",
-     "start": 0.985,
-     "end": 1.28,
+     "start": 1.025,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "and",
-     "start": 1.465,
-     "end": 1.6,
+     "start": 1.525,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "it",
-     "start": 1.69,
-     "end": 1.76,
+     "start": 1.775,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "can",
-     "start": 1.72,
-     "end": 2.0,
+     "start": 1.825,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "feel",
-     "start": 2.035,
-     "end": 2.24,
+     "start": 2.155,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "like",
-     "start": 2.315,
-     "end": 2.56,
+     "start": 2.46,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.58,
-     "end": 2.8,
+     "start": 2.7,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "world",
-     "start": 2.685,
-     "end": 3.12,
+     "start": 2.825,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "is",
-     "start": 3.125,
-     "end": 3.44,
+     "start": 3.245,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "full.",
-     "start": 3.45,
-     "end": 3.966,
+     "start": 3.565,
+     "end": 4.086,
      "heard": true,
-     "end_asr": 4.4
+     "end_asr": 4.48
     },
     {
      "w": "So",
-     "start": 4.365,
-     "end": 4.56,
+     "start": 4.43,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "give",
-     "start": 4.735,
+     "start": 4.795,
      "end": 4.96,
      "heard": true
     },
     {
      "w": "each",
-     "start": 4.94,
-     "end": 5.44,
+     "start": 5.0,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "person",
-     "start": 5.32,
-     "end": 5.76,
+     "start": 5.55,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "half",
-     "start": 5.82,
-     "end": 6.16,
+     "start": 5.88,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.08,
-     "end": 6.32,
+     "start": 6.21,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "square",
-     "start": 6.4,
+     "start": 6.46,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "meter,",
-     "start": 6.895,
-     "end": 7.44,
+     "start": 6.825,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.52,
-     "end": 7.6,
+     "start": 7.61,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "room",
-     "start": 7.55,
-     "end": 7.84,
+     "start": 7.64,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.07,
-     "end": 8.16,
+     "start": 8.205,
+     "end": 8.255,
      "heard": true
     },
     {
      "w": "calm",
-     "start": 8.165,
-     "end": 8.56,
+     "start": 8.295,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "crowd",
-     "start": 8.54,
-     "end": 9.04,
+     "start": 8.68,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "keeps.",
-     "start": 9.085,
-     "end": 9.68,
+     "start": 9.245,
+     "end": 9.84,
      "heard": true
     }
    ],
@@ -586,98 +586,98 @@
     },
     {
      "w": "So",
-     "start": 8.395,
-     "end": 8.56,
+     "start": 8.335,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "we",
-     "start": 8.5,
-     "end": 8.72,
+     "start": 8.365,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "keep",
-     "start": 8.715,
-     "end": 8.96,
+     "start": 8.655,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.98,
-     "end": 9.12,
+     "start": 8.92,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "room,",
-     "start": 9.01,
-     "end": 9.52,
+     "start": 8.95,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.65,
-     "end": 9.84,
+     "start": 9.59,
+     "end": 9.76,
      "heard": true
     },
     {
      "w": "all",
-     "start": 9.875,
-     "end": 10.08,
+     "start": 9.815,
+     "end": 10.0,
      "heard": true
     },
     {
      "w": "of",
-     "start": 10.175,
-     "end": 10.24,
+     "start": 10.09,
+     "end": 10.16,
      "heard": true
     },
     {
      "w": "humanity",
-     "start": 10.205,
-     "end": 10.96,
+     "start": 10.12,
+     "end": 10.88,
      "heard": true
     },
     {
      "w": "still",
-     "start": 11.025,
-     "end": 11.28,
+     "start": 10.965,
+     "end": 11.2,
      "heard": true
     },
     {
      "w": "covers",
-     "start": 11.28,
+     "start": 11.22,
      "end": 11.76,
      "heard": true
     },
     {
      "w": "just",
-     "start": 11.825,
-     "end": 12.16,
+     "start": 11.765,
+     "end": 12.08,
      "heard": true
     },
     {
      "w": "two",
-     "start": 12.16,
-     "end": 12.48,
+     "start": 12.1,
+     "end": 12.4,
      "heard": true
     },
     {
      "w": "or",
-     "start": 12.575,
-     "end": 12.64,
+     "start": 12.485,
+     "end": 12.56,
      "heard": true
     },
     {
      "w": "three",
-     "start": 12.605,
-     "end": 12.88,
+     "start": 12.525,
+     "end": 12.8,
      "heard": true
     },
     {
      "w": "Londons.",
-     "start": 12.94,
-     "end": 13.76,
+     "start": 12.88,
+     "end": 13.68,
      "heard": true
     }
    ],
@@ -721,128 +721,128 @@
     {
      "w": "find",
      "start": 1.9,
-     "end": 2.24,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "us.",
-     "start": 2.28,
+     "start": 2.24,
      "end": 2.517,
      "heard": true,
-     "end_asr": 2.88
+     "end_asr": 2.8
     },
     {
      "w": "And",
-     "start": 2.92,
+     "start": 2.86,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "packed",
-     "start": 3.165,
-     "end": 3.68,
+     "start": 3.105,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "like",
-     "start": 3.775,
-     "end": 3.92,
+     "start": 3.49,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "water,",
-     "start": 3.82,
-     "end": 4.64,
+     "start": 3.76,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "every",
-     "start": 4.58,
-     "end": 4.96,
+     "start": 4.52,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "body",
-     "start": 5.06,
-     "end": 5.44,
+     "start": 5.0,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "would",
-     "start": 5.435,
-     "end": 5.68,
+     "start": 5.375,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "fit",
-     "start": 5.59,
+     "start": 5.53,
      "end": 5.92,
      "heard": true
     },
     {
      "w": "in",
-     "start": 5.925,
+     "start": 5.865,
      "end": 6.08,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.165,
+     "start": 6.105,
      "end": 6.24,
      "heard": true
     },
     {
      "w": "cube",
-     "start": 6.195,
-     "end": 6.8,
+     "start": 6.135,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.75,
-     "end": 6.96,
+     "start": 6.69,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "little",
-     "start": 6.87,
-     "end": 7.28,
+     "start": 6.81,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "shorter",
-     "start": 7.375,
-     "end": 7.76,
+     "start": 7.13,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "than",
-     "start": 7.87,
-     "end": 8.0,
+     "start": 7.775,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.9,
-     "end": 8.16,
+     "start": 7.81,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "world's",
-     "start": 8.1,
-     "end": 8.64,
+     "start": 8.04,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "tallest",
-     "start": 8.65,
-     "end": 9.28,
+     "start": 8.59,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "tower.",
-     "start": 9.245,
-     "end": 9.92,
+     "start": 9.185,
+     "end": 9.84,
      "heard": true
     }
    ],
@@ -967,60 +967,60 @@
      "start": 0.925,
      "end": 1.606,
      "heard": true,
-     "end_asr": 2.0
+     "end_asr": 1.92
     },
     {
      "w": "It",
-     "start": 2.005,
-     "end": 2.24,
+     "start": 1.945,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "only",
-     "start": 2.25,
-     "end": 2.48,
+     "start": 2.215,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "feels",
-     "start": 2.715,
-     "end": 3.12,
+     "start": 2.655,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "that",
-     "start": 3.13,
-     "end": 3.36,
+     "start": 3.07,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "way",
-     "start": 3.29,
-     "end": 3.6,
+     "start": 3.23,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "from",
-     "start": 3.685,
+     "start": 3.625,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "inside",
-     "start": 3.95,
-     "end": 4.48,
+     "start": 3.89,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.5,
-     "end": 4.64,
+     "start": 4.44,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "city.",
-     "start": 4.735,
-     "end": 5.28,
+     "start": 4.47,
+     "end": 5.2,
      "heard": true
     }
    ],

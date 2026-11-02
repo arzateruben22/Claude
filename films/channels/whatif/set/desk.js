@@ -4,7 +4,8 @@
 //   import { createDesk } from "../set/desk.js";
 //   const desk = createDesk({ tokens: THEME.tokens, y: -7.6, unit: 1 });
 //   scene.add(desk.group);
-//   desk.update({ grid: 1, casters: [[x, y, z, r], ...], pool: [x, z] });   // in seek, before rendering
+//   desk.update({ grid: 1, casters: [[x, y, z, r], ...], pool: [x, z], span });   // in seek; span (optional): the floor's
+//                                                                               // size in units, for shots far above it
 //
 // An unlit floor composed in display colours and output through the finish's inverse (./aces.js), so the
 // screen shows the tokens exactly:
@@ -102,6 +103,8 @@ void main() {
   group.add(dome, floor);
   const update = (s = {}) => {
     uniforms.uGrid.value = s.grid ?? 1;
+    if (s.span) floor.scale.setScalar(Math.max(1, s.span / 800));      // the floor (800 units) grows with the shot's scale
+    dome.scale.setScalar(Math.max(1, (s.span ?? 0) / 800));
     if (s.pool) uniforms.uPool.value.set(s.pool[0], s.pool[1]);
     const cs = s.casters || [];
     for (let i = 0; i < 6; i++) { const c = cs[i]; uniforms.uCast.value[i].set(c ? c[0] : 0, c ? c[1] : 0, c ? c[2] : 0, c ? c[3] : 0); }

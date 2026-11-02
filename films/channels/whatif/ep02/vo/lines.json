@@ -8,8 +8,8 @@
  "onnxruntime": "1.31.0",
  "python": "3.13.17",
  "made_by": "films/channels/whatif/ep02/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
- "gap": 0.38,
- "gap_question": 0.6,
+ "gap": 0.32,
+ "gap_question": 0.55,
  "lines": [
   {
    "id": "vo01",
@@ -24,17 +24,17 @@
     0.7
    ],
    "gaps": [
-    0.6
+    0.55
    ],
    "silences": [
     [
      1.3116,
-     1.9116
+     1.8616
     ]
    ],
    "file": "01.wav",
-   "dur": 4.519,
-   "sha256": "55174a773af0597c3bf26d6ba5a5b88ff727dc8ccc0c061097107c5391ab314b"
+   "dur": 4.469,
+   "sha256": "3424939ab4f4b21e60852f3329a71d9a6f97bc61bf90097a965f9d04a9308f99"
   },
   {
    "id": "vo02",
@@ -45,21 +45,21 @@
    ],
    "phonemes": "ðɛɹˌɑːɹ ɐ lˈɑːt ʌv ˌʌs, ænd ɪt kæn fˈiːl lˈaɪk ðə wˈɜːld ɪz fˈʊl. sˌoʊ ɡˈɪv ˈiːtʃ pˈɜːsən hˈæf ɐ skwˈɛɹ mˈiːɾɚ, ðə ɹˈuːm ɐ kˈɑːm kɹˈaʊd kˈiːps.",
    "speeds": [
-    0.72,
-    0.7
+    0.7,
+    0.68
    ],
    "gaps": [
-    0.38
+    0.32
    ],
    "silences": [
     [
-     3.966,
-     4.346
+     4.0864,
+     4.4064
     ]
    ],
    "file": "02.wav",
-   "dur": 9.704,
-   "sha256": "90b1a5f7bf53a0f7eb74e4a6ef3c2b8e6bc21640418b9d2051e9be6c3bfd28f6"
+   "dur": 9.862,
+   "sha256": "1f2248a72d94cc11dd7eb877be03ae3fdc57eace9375e68e46275c29e90b3817"
   },
   {
    "id": "vo03",
@@ -92,17 +92,17 @@
     0.8
    ],
    "gaps": [
-    0.38
+    0.32
    ],
    "silences": [
     [
      7.9884,
-     8.3684
+     8.3084
     ]
    ],
    "file": "04.wav",
-   "dur": 13.807,
-   "sha256": "1623388992f1bbc89665d50d0e19b564faba0c2dd3ab4fe805f2b49535ebef15"
+   "dur": 13.747,
+   "sha256": "95c3dcc8eb4ba335cb82251bbdbe8ac185c8d2a6425eb831e3e4721f5d6147ab"
   },
   {
    "id": "vo05",
@@ -117,17 +117,17 @@
     0.78
    ],
    "gaps": [
-    0.38
+    0.32
    ],
    "silences": [
     [
      2.5168,
-     2.8968
+     2.8368
     ]
    ],
    "file": "05.wav",
-   "dur": 9.927,
-   "sha256": "f01f31e96aa5728c3eded354f6c612898194f127ad45e6a5b49d32404780ca45"
+   "dur": 9.867,
+   "sha256": "e83364ebb5cfccf87d18d3c16e290be9a042a7172c4bc4ea693830219858c0eb"
   },
   {
    "id": "vo06",
@@ -159,17 +159,17 @@
     0.72
    ],
    "gaps": [
-    0.38
+    0.32
    ],
    "silences": [
     [
      1.6062,
-     1.9862
+     1.9262
     ]
    ],
    "file": "07.wav",
-   "dur": 5.289,
-   "sha256": "dea5f8be2b1347939352b5d12c94cbfcb3bea135babdad2a8961ff20e534aba8"
+   "dur": 5.229,
+   "sha256": "48d47b90c028156a9f26c096669fb9f7b57f1678794b461a39006a594caa3fca"
   },
   {
    "id": "vo08",

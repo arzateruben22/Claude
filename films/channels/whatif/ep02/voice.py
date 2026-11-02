@@ -49,7 +49,7 @@ LANG = "en-us"
 # brisk so it is spoken by 2.0 s; its answer slows.
 SPEEDS = {
     "vo01": [0.88, 0.7],
-    "vo02": [0.72, 0.7],
+    "vo02": [0.7, 0.68],
     "vo03": [0.84],
     "vo04": [0.84, 0.8],
     "vo05": [0.76, 0.78],
@@ -57,7 +57,7 @@ SPEEDS = {
     "vo07": [0.72, 0.72],
     "vo08": [0.74],
 }
-GAP, GAP_Q = 0.38, 0.60          # real pauses at the turns (WRITING.md, Flow 7)          # seconds of silence after a sentence, after a question
+GAP, GAP_Q = 0.32, 0.55          # real pauses at the turns (WRITING.md, Flow 7)          # seconds of silence after a sentence, after a question
 
 
 def split(text):
