@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 006, "Same list as cigarettes" (look 2 rebuild, 2 Nov): script + voice timings + this
+"""Compile Skin Sense No. 006, "Same list as cigarettes" (look 2 rebuild, 2 Nov): script + voice timings + this
 direction → film.json and sheet.json. Every moment hangs on a beat or a spoken word; every number on screen comes
 from claims.json, hedged as the sources are.
 
@@ -21,7 +21,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-006"
+ID = "skin-sense-006"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -122,8 +122,8 @@ for name, c in CAM.items():
 for name in ("bed", "uv", "section"):
     assert min(CAM[name]["from"][1], CAM[name]["to"][1]) > 0.3, f"{name}: the camera stays above the skin"
 
-TITLE = {"series": "Outer Layer · No. 006", "title": "Same list as *cigarettes*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cigarettes?", 0.35)}
-END = {"title": "Next season: why do bath fingers *wrinkle*?", "follow": "Outer Layer · season 2",
+TITLE = {"series": "Skin Sense · No. 006", "title": "Same list as *cigarettes*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cigarettes?", 0.35)}
+END = {"title": "Next season: why do bath fingers *wrinkle*?", "follow": "Skin Sense · season 2",
        "next": "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:certainty.", 0.3)
 

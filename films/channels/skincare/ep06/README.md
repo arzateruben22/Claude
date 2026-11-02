@@ -1,4 +1,4 @@
-# Outer Layer No. 006: "Same list as cigarettes" (look 2 rebuild, first real draft)
+# Skin Sense No. 006: "Same list as cigarettes" (look 2 rebuild, first real draft)
 
 About 76 s, 9:16 (1080×1920, 30 fps), narrated by a synthetic voice (bf_isabella, labelled "Narration: synthetic
 voice (AI)"), with an original score (`outerlayer-slide`). Built in the owner-approved look test 2 (2 Nov,

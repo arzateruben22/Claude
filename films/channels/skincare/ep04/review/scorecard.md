@@ -84,3 +84,22 @@ A fresh reviewer each round, scoring independently. Every finding was checked ag
 - **The 7.17 s cut:** the cut face now opens close on its crease.
 - **Gauge:** the card sits to the left of the nerve ending.
 - **Spine:** relabelled at the payoff ("one frown, of a lethal dose") and cleared before the end card. This removes a stray dash that showed through the end bars.
+
+## Look 2 rebuild (2 Nov, Skin Sense)
+
+The picture was rebuilt in the approved look (look test 2), on the facts-pass-2 script. The voice, the claims and the lint are unchanged (lint: 0 errors, 0 warnings).
+
+**Hero shots** (`storyboard.md`)
+1. **The brow:** a skin macro in studio light (light tone), oblique and low, with a raking warm key; one slow push into the "11".
+2. **The junction:** the neuromuscular junction at cell scale (`../../set/nmj04.js`). A translucent ending holds glowing cyan vesicles on a banded fibre, with violet haze, dust in a shaft and a rack focus from the toxin to SNAP-25.
+3. **The cut face:** the stained micrograph cut face, "below the skin", on "never touches the skin".
+4. **The dose:** the brow; the UV scan sweeps down on "twenty", and the dose plate (20 against ≈ 3,000) carries its notes.
+
+**Retired from this episode:** the macro terrain flight, the UV-camera brow with five injection points, and the schematic slab junction. Five lit points on a brow read as *where* to inject, and the film never says where, so the UV view shows one faint glow, badged "illustration".
+
+**Overlay**
+- At most two labels at once: "nerve ending" and "acetylcholine"; then "SNAP-25".
+- Honesty notes sit small in the top corners.
+- The spine readout ("< 1 %", one frown of a lethal dose) holds from the takeaway to the end card, so it never sits on the lifted gauge.
+- The title, the captions, the gauge and the end card (tease, a follow chip for No. 005, a footnote ending "Narration: synthetic voice (AI)") are kept.
+- The channel is now named Skin Sense (ID `skin-sense-004`).

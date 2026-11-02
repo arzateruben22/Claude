@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 006, "Same list as cigarettes" (films/channels/skincare/ep06), rebuilt in the approved look (look
+// Skin Sense No. 006, "Same list as cigarettes" (films/channels/skincare/ep06), rebuilt in the approved look (look
 // test 2, 2 Nov): four hero shots, one subject filling the frame, one slow move each, dust in light shafts, haze,
 // shallow depth of field. The picture is a pure function of t: window.seek(t) sets the shot, the camera, every object
 // and the overlay from t alone, then makes exactly one renderer.render(). One skin tone: deep.

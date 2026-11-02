@@ -1,4 +1,4 @@
-# Assets: Outer Layer No. 006 (look 2 rebuild)
+# Assets: Skin Sense No. 006 (look 2 rebuild)
 
 | Asset | Source | Licence |
 |---|---|---|
