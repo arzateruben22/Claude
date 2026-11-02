@@ -10,15 +10,15 @@ Draft 1, measured at 15 fps:
 
 ## Compelling pass (one independent reviewer, every round)
 
-| Point | Draft 1 | Draft 2 | Draft 3 |
-|---|---|---|---|
-| (a) First 2 s | 2 | 3 | 3 |
-| (b) One thread | 4 | 4 | 4 |
-| (c) Picture moves with the sentence | 3 | 2 | 3 |
-| (d) Motivated cuts | 2 | 2 | 3 |
-| (e) Voice meaning, screen figures | 4 | 4 | 4 |
-| (f) Rhythm | 3 | 3 | 3 |
-| (g) Ending and tease | 3 | 3 | 4 |
+| Point | Draft 1 | Draft 2 | Draft 3 | Draft 4 |
+|---|---|---|---|---|
+| (a) First 2 s | 2 | 3 | 3 | 3 |
+| (b) One thread | 4 | 4 | 4 | 4 |
+| (c) Picture moves with the sentence | 3 | 2 | 3 | 3 |
+| (d) Motivated cuts | 2 | 2 | 3 | 3 |
+| (e) Voice meaning, screen figures | 4 | 4 | 4 | 4 |
+| (f) Rhythm | 3 | 3 | 3 | 3 |
+| (g) Ending and tease | 3 | 3 | 4 | 4 |
 
 ## Review rounds, in short
 
@@ -89,3 +89,25 @@ A second reviewer, scoring independently.
 - **The morning sunscreen film:** visible in to-scale.
 - **Hook labels:** leave before the camera rises.
 - **No ghosting:** overlays hand straight across the to-scale cut, and the spine clears before the end card.
+
+### Draft 4
+
+Rebuilt structurally from a one-line-per-sentence storyboard (`storyboard.md`), as the coordinator asked.
+
+**Hook and cuts**
+- **Hook:** opens mid-push inside the UV camera on the two halves. On "Both", the signature switch to daylight.
+- **Cuts:** the dips to violet at the rises into and out of the town are gone.
+
+**Honesty**
+- **Spine and the UV illustration:** the spine ("11 vs 22") read as the UV illustration's result. It is now cleared before the illustration.
+
+**Picture**
+- **The cast:**
+  - it has no hairs;
+  - its "as they pleased" half deepens visibly on "four and a half years";
+  - it carries the label "as they pleased: deeper lines".
+- **Melanoma dots:** they sit on one line each, so 11 reads as half of 22.
+- **Gauge:** headings read "film" and "paper".
+
+**Script**
+- **"Then the town was watched" → "And the town was watched":** re-voiced and lint clean, so the whoa no longer restarts.

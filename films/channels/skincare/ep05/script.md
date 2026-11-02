@@ -31,7 +31,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep05 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a macro flight low over the back of a hand at golden hour (medium tone), a thin cyan seam down the middle: two neighbours' skin as two halves of one model, the same to the eye · badge: model, not a photo · title: "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+## hook {shot: frame 0, mid-push inside the UV camera on the two halves of one hand, less and more damage (an illustration); on "Both" the signature switch to daylight: a macro flight low over the back of a hand at golden hour (medium tone), a thin cyan seam down the middle: two neighbours' skin as two halves of one model, the same to the eye · badge: model, not a photo · title: "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Which hand *aged*? Both belong to neighbours, under the same fierce sun. {-}
 
 ## normal {shot: a scale jump up and out: a drone over a model town at golden hour; on "chance" a marker rises over every house, cyan or lilac at random; on "morning" the cyan (daily) group lights · spine: Nambour trial begins 1992 · badge: model, not a map · picture-only 0.5 s · energy: 0.45} (5–17.5 s)
@@ -44,7 +44,7 @@ vo: Then researchers read the fine lines in silicone *casts* of hands. {c3} Afte
 vo: It's easy to think of sun damage as the burn you feel. {-} But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the *surface*. {c6}
 
 ## whoa {shot: a scale jump back up over the town, higher; the plate: squamous cell cancers lower during the trial, then melanomas ten years on as dots, 11 cyan against 22 lilac · spine: melanoma followed to 2006 · plate footnote: hazard ratio 0.50 (0.24–1.02), not quite significant · badge: Green et al., 1999 · 2011 · picture-only 3.2 s · energy: 0.8} (42–55 s)
-vo: Then the town was watched for ten more years. {c7} Squamous cell cancers had already come out lower, and melanoma came out at about *half*, in small numbers. {c8,c9}
+vo: And the town was watched for ten more years. {c7} Squamous cell cancers had already come out lower, and melanoma came out at about *half*, in small numbers. {c8,c9}
 
 ## toscale {segment: toscale · a scale jump down to the hand: a satin film settles on the daily half; the gauge lifts: the test dose's film (≈ 20 µm) beside the paper's 100 µm · badge: estimate · picture-only 0.5 s · energy: 0.4} (55–62 s)
 vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thickness*. {c10}

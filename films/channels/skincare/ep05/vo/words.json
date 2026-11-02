@@ -643,169 +643,169 @@
   },
   {
    "id": "vo05",
-   "text": "Then the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
-   "heard": "Then the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half in small numbers.",
+   "text": "And the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
+   "heard": "And the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half in small numbers.",
    "words": [
     {
-     "w": "Then",
-     "start": 0.02,
+     "w": "And",
+     "start": 0.025,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.34,
-     "end": 0.4,
+     "start": 0.235,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "town",
-     "start": 0.37,
-     "end": 0.64,
+     "start": 0.265,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "was",
-     "start": 0.72,
-     "end": 0.8,
+     "start": 0.655,
+     "end": 0.705,
      "heard": true
     },
     {
      "w": "watched",
-     "start": 0.81,
-     "end": 1.12,
+     "start": 0.705,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "for",
-     "start": 1.075,
-     "end": 1.28,
+     "start": 0.97,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "ten",
-     "start": 1.255,
-     "end": 1.68,
+     "start": 1.155,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "more",
-     "start": 1.74,
+     "start": 1.64,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "years.",
-     "start": 2.01,
-     "end": 2.72,
+     "start": 1.98,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "Squamous",
-     "start": 2.82,
-     "end": 3.36,
+     "start": 2.72,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "cell",
-     "start": 3.43,
-     "end": 3.68,
+     "start": 3.33,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "cancers",
-     "start": 3.645,
-     "end": 4.24,
+     "start": 3.54,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "had",
-     "start": 4.315,
-     "end": 4.4,
+     "start": 4.215,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "already",
-     "start": 4.345,
-     "end": 4.72,
+     "start": 4.245,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "come",
-     "start": 4.715,
-     "end": 4.96,
+     "start": 4.61,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "out",
-     "start": 5.04,
-     "end": 5.2,
+     "start": 4.68,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "lower,",
-     "start": 5.125,
-     "end": 5.76,
+     "start": 5.02,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.945,
-     "end": 5.995,
+     "start": 5.865,
+     "end": 5.915,
      "heard": true
     },
     {
      "w": "melanoma",
-     "start": 5.975,
-     "end": 6.8,
+     "start": 5.895,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "came",
-     "start": 6.7,
-     "end": 6.96,
+     "start": 6.625,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "out",
-     "start": 7.055,
-     "end": 7.12,
+     "start": 6.88,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "at",
-     "start": 7.215,
-     "end": 7.28,
+     "start": 7.14,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "about",
-     "start": 7.325,
-     "end": 7.52,
+     "start": 7.25,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "half,",
-     "start": 7.52,
-     "end": 8.0,
+     "start": 7.445,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "in",
-     "start": 8.045,
-     "end": 8.24,
+     "start": 7.97,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "small",
-     "start": 8.315,
-     "end": 8.56,
+     "start": 8.24,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "numbers.",
-     "start": 8.56,
-     "end": 9.12,
+     "start": 8.48,
+     "end": 9.04,
      "heard": true
     }
    ]
