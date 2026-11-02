@@ -8,7 +8,7 @@
 //   L.screen(i)  → [px, py, rpx]: where item i's right edge sits on screen (for a HUD label), and its radius in px
 //
 //   const P = createPlanet({ tokens, R: 6.371e6 });    // a sphere of radius R resting on the desk at the origin
-//   scene.add(P.mesh);  P.set({ opacity, dot: radius of the marker dot at the top (m), dotOpacity })
+//   scene.add(P.mesh);  P.set({ opacity, dot: radius of the marker dot at the top (m), dotOpacity, grid: graticule 0–1, cam })
 //
 // The ladder is a screen-aligned quad drawn over the 3D world (depth test off), so it cannot lose precision at
 // any scale: every size is compared with 10^z in the fragment shader, decade by decade. It draws graph paper
@@ -104,7 +104,7 @@ varying vec3 vN, vP;
 void main() { vN = normalize(mat3(modelMatrix) * normal); vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`;
 const PFS = `
 precision highp float;
-uniform vec3 uGround, uRule, uDot, uCam; uniform float uOpacity, uExposure, uDotA, uDotR, uR;
+uniform vec3 uGround, uRule, uDot, uCam; uniform float uOpacity, uExposure, uDotA, uDotR, uR, uGrid;
 varying vec3 vN, vP;
 ${ACES_INV_GLSL}
 void main() {
@@ -116,7 +116,7 @@ void main() {
   vec2 q = abs(fract(g + 0.5) - 0.5) / max(fw, 1e-5);
   float grat = 1.0 - smoothstep(0.6, 1.6, min(q.x, q.y));
   float rim = pow(1.0 - abs(dot(n, normalize(uCam - vP))), 3.0);
-  vec3 col = mix(uGround * 1.18, uRule, 0.10 * grat + 0.35 * rim);
+  vec3 col = mix(uGround * 1.18, uRule, 0.10 * grat * uGrid + 0.35 * rim);
   float d = acos(clamp(n.y, -1.0, 1.0)) * uR;                    // distance from the top (north pole), m
   float dw = max(fwidth(d), 1.0);
   col = mix(col, uDot, uDotA * (1.0 - smoothstep(uDotR - dw, uDotR + dw, d)));
@@ -129,7 +129,7 @@ export const createPlanet = (o = {}) => {
   const tk = o.tokens || {}, R = o.R ?? 6.371e6;
   const v3 = (k, d) => new THREE.Vector3(...hexRgb(tk[k] || d));
   const u = { uGround: { value: v3("graphite", "#171A1E") }, uRule: { value: v3("chalk", "#F4F2EC") }, uDot: { value: v3("marker", "#EB63FF") },
-    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uDotA: { value: 0 }, uDotR: { value: 1 }, uR: { value: R } };
+    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uDotA: { value: 0 }, uDotR: { value: 1 }, uR: { value: R }, uGrid: { value: 1 } };
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(R, 128, 64), new THREE.ShaderMaterial({ uniforms: u, vertexShader: PVS, fragmentShader: PFS, transparent: true, extensions: { derivatives: true } }));
   mesh.position.set(0, -R, 0);                                    // resting on the desk at the origin: the crowd stands on its top
   mesh.renderOrder = -8;
@@ -138,6 +138,7 @@ export const createPlanet = (o = {}) => {
     if (s.dot !== undefined) u.uDotR.value = s.dot;
     if (s.dotOpacity !== undefined) u.uDotA.value = s.dotOpacity;
     if (s.cam) u.uCam.value.set(...s.cam);
+    if (s.grid !== undefined) u.uGrid.value = s.grid;                // the graticule (fade it out close up, where its meridians crowd into the pole)
   };
   return { mesh, set, R };
 };

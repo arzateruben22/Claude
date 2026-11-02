@@ -138,11 +138,6 @@
    "t1": 38.4
   },
   {
-   "t": 28.533333333333335,
-   "kind": "label",
-   "tag": "l-dot"
-  },
-  {
    "t": 29.9,
    "kind": "counter.show",
    "tag": "c-you"

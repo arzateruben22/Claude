@@ -110,29 +110,29 @@ SHOTS = [
 ]
 
 # ── the camera ──
-FRONT = {"target": [0, 0.75, 0], "dist": 7.5, "el": 16, "az": 0, "fov": 24, "fy": 0.40}
+FRONT = {"target": [0, 0.85, 0], "dist": 14.0, "el": 16, "az": 0, "fov": 24, "fy": 0.42}
 k = lambda tgt, dist, el, fy=0.40, az=0: {"target": tgt, "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 CAM = {
-    "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 7.2, "ease": "sine"}],
+    "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **FRONT, "dist": 13.4, "ease": "sine"}],
     "gather": [
-        {"t": B["normal"]["t0"], **FRONT, "dist": 7.2},
-        {"t": t_g0, **k([0, 0.6, 0], 8.0, 18), "ease": "sine"},
+        {"t": B["normal"]["t0"], **FRONT, "dist": 13.4},
+        {"t": t_g0, **k([0, 0.7, 0], 13.0, 18, 0.42), "ease": "sine"},
         {"t": t_g1, **k([0, 0, 0], 1.6e5, 30, 0.40), "ease": "inout3"},              # the crowd grows to everyone
         {"t": B["change"]["t0"], **k([0, 0, 0], 1.75e5, 31, 0.40), "ease": "sine"},
     ],
     "air": [
         {"t": B["change"]["t0"], **k([0, 0, 0], 1.75e5, 31, 0.40)},
-        {"t": t_hop2 - 0.1, **k([0, 0.8, 0], 11, 26, 0.42), "ease": "inout3"},       # back down to you, among everyone
-        {"t": B["why"]["t0"], **k([0, 0.8, 0], 10, 25, 0.42), "ease": "sine"},
+        {"t": t_hop2 - 0.1, **k([0, 0.8, 0], 17, 26, 0.42), "ease": "inout3"},       # back down to you, among everyone
+        {"t": B["why"]["t0"], **k([0, 0.8, 0], 16, 25, 0.42), "ease": "sine"},
     ],
     "planet": [
-        {"t": B["why"]["t0"], **k([0, 0.8, 0], 10, 25, 0.42)},
+        {"t": B["why"]["t0"], **k([0, 0.8, 0], 16, 25, 0.42)},
         {"t": A("vo04:planet"), **k([0, 0, 0], 4e5, 30, 0.40), "ease": "in2"},
-        {"t": A("vo04:course", 0.4), **k([0, -R_E, 0], 6.6e7, 34, 0.36), "ease": "out3"},   # the planet the paper was resting on
-        {"t": B["whoa"]["t0"], **k([0, -R_E, 0], 6.9e7, 35, 0.36), "ease": "sine"},
+        {"t": A("vo04:course", 0.4), **k([0, -R_E, 0], 1.35e8, 34, 0.44), "ease": "out3"},   # the planet the paper was resting on
+        {"t": B["whoa"]["t0"], **k([0, -R_E, 0], 1.4e8, 35, 0.44), "ease": "sine"},
     ],
     "dive": [
-        {"t": B["whoa"]["t0"], **k([0, -R_E, 0], 6.9e7, 35, 0.36)},
+        {"t": B["whoa"]["t0"], **k([0, -R_E, 0], 1.4e8, 35, 0.44)},
         {"t": B["whoa"]["t0"] + 0.9, **k([0, 0, 0], 3e5, 35, 0.40), "ease": "in2"},
         {"t": t_dist, **k([0, 0.05, 0], 1.4, 35, 0.40), "ease": "out3"},               # down to your foot: the ladder takes over
         {"t": t_work0, **k([0, 0.05, 0], 1.4, 35, 0.40), "ease": "sine"},
@@ -140,10 +140,10 @@ CAM = {
     "work": [{"t": t_work0, **k([0, 0.05, 0], 1.4, 35, 0.40)}, {"t": t_home, **k([0, 0.05, 0], 1.4, 35, 0.40), "ease": "sine"}],
     "home": [
         {"t": t_home, **k([0, 0.05, 0], 1.4, 35, 0.40)},
-        {"t": LADDER[1], **k([0, 0.75, 0], 9.0, 29, 0.40), "ease": "out3"},
-        {"t": t_end, **k([0, 0.75, 0], 8.0, 21, 0.40), "ease": "sine"},
+        {"t": LADDER[1], **k([0, 0.85, 0], 15.0, 29, 0.42), "ease": "out3"},
+        {"t": t_end, **k([0, 0.85, 0], 14.0, 21, 0.42), "ease": "sine"},
     ],
-    "end": [{"t": t_end, **k([0, 0.75, 0], 8.0, 21, 0.40)}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
+    "end": [{"t": t_end, **k([0, 0.85, 0], 14.0, 21, 0.42)}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -182,11 +182,10 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1, "v": "middle"},
     {"id": "l-push", "text": "pushed down: the whole planet", "kind": "calc", "anchor": "ground", "t0": A("vo02:ground#2"), "t1": t_g0 - 0.2, "shot": "gather", "side": 1, "v": "below"},
     {"id": "l-all", "text": "everyone: 64 km across", "kind": "anchor", "anchor": "crowd", "t0": A("vo02:billion"), "t1": B["change"]["t0"] - 0.2, "shot": "gather", "side": 1},
-    {"id": "l-drop", "text": "the planet drops: too small to see", "kind": "calc", "anchor": "ground", "t0": A("vo03:drops", -0.2), "t1": B["why"]["t0"] - 0.2, "shot": "air", "side": 1, "v": "below"},
-    {"id": "l-dot", "text": "all of us", "kind": "anchor", "anchor": "dot", "t0": A("vo04:course", 0.4), "t1": B["whoa"]["t0"] - 0.2, "shot": "planet", "side": 1},
+    {"id": "l-drop", "text": "the planet drops: too small to see", "kind": "calc", "anchor": "ahead", "t0": A("vo03:drops", -0.2), "t1": B["why"]["t0"] - 0.2, "shot": "air", "side": 1},
 ]
 for i, it in enumerate(ITEMS):
     w = item_window(it["size"])
@@ -208,8 +207,8 @@ for b in BADGES:
         b["t1"] = round(b["t1"] - 0.3, 4)
 ve = __import__("calc").sci(V["v_earth_ms"], 2)
 COUNTERS = [
-    {"id": "c-you", "label": "you, taking off", "text": f"{V['v_off_ms']:.1f}", "unit": "m/s", "t0": A("vo04:shared", -0.1), "t1": B["whoa"]["t0"] - 0.3, "at": [0.5, 0.20]},
-    {"id": "c-earth", "label": "the Earth, pushed back", "text": sci(*ve), "unit": "m/s", "t0": A("vo04:weight", -0.1), "t1": B["whoa"]["t0"] - 0.3, "at": [0.5, 0.33], "lit": True},
+    {"id": "c-you", "label": "you, taking off", "text": f"{V['v_off_ms']:.1f}", "unit": "m/s", "t0": A("vo04:shared", -0.1), "t1": B["whoa"]["t0"] - 0.3, "at": [0.5, 0.205]},
+    {"id": "c-earth", "label": "the Earth, pushed back", "text": sci(*ve), "unit": "m/s", "t0": A("vo04:weight", -0.1), "t1": B["whoa"]["t0"] - 0.3, "at": [0.5, 0.29], "lit": True},
 ]
 
 TITLE = {"series": "Back of the Envelope · No. 005", "title": "Everybody *jump*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}

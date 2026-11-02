@@ -48,6 +48,7 @@ const desk = createDesk({ tokens: TK, y: 0, unit: 1, far: 60 });
 scene.add(desk.group);
 const crowd = createCrowd({ tokens: TK, density: WD.density, dotR: 0.22 });
 crowd.mesh.material.depthTest = false;                           // a flat layer on the paper: no z-fight at any scale
+crowd.mesh.material.transparent = true;                          // drawn after the planet (transparent pass, by renderOrder), which touches the paper at the origin
 scene.add(crowd.group);
 const planet = createPlanet({ tokens: TK, R: WD.R });
 scene.add(planet.mesh);
@@ -62,7 +63,7 @@ const rig = createRig(FILM.cam);
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
-const S = { you: () => S._you, ground: () => [0.0, 0.0, 0.25], crowd: () => [WD.side / 2 * 0.6, 0, 0], dot: () => [0, 0, 0] };
+const S = { you: () => S._you, ground: () => [0.0, 0.0, 0.25], ahead: () => [2.2, 0.0, -4.0], crowd: () => [WD.side / 2 * 0.6, 0, 0], dot: () => [0, 0, 0] };
 S._you = [0, FIG_H, 0];
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -116,7 +117,7 @@ window.seek = function (t) {
   desk.group.visible = plan < 0.999;
   const unit = Math.pow(10, Math.floor(Math.log10(Math.max(1, pose.dist / 12))));   // the paper re-rules by powers of ten (No. 002's way)
   desk.uniforms.uUnit.value = unit; desk.uniforms.uFar.value = Math.max(60, pose.dist * 2.2);
-  planet.set({ opacity: plan, cam: camera.position.toArray(), dot: WD.side * 0.5 * Math.max(1, pose.dist / 2e6), dotOpacity: clamp01((Math.log10(pose.dist) - 5.2) / 0.8) });
+  planet.set({ opacity: plan, cam: camera.position.toArray(), dot: WD.side * 0.5 * Math.max(1, pose.dist / 2e6), dotOpacity: clamp01((Math.log10(pose.dist) - 6.0) / 0.6), grid: clamp01((Math.log10(pose.dist) - 6.6) / 0.6) });
 
   // the ladder: the powers-of-ten overlay, in from the dive's foot, out in the takeaway
   const z = keyedZ(CUE.zkeys, t);
