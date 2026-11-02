@@ -55,7 +55,7 @@ CUE = {
     "silence": A("vo07:silence"), "nerve2": A("vo07:nerve"), "endings": A("vo07:endings."),
 }
 SHOTS = [{"at": 0.0, "name": "brow"}, {"at": CUE["nerve"], "name": "below"}, {"at": B["why"]["t0"], "name": "rise"},
-         {"at": CUE["guessed"] - 0.1, "name": "below2"}, {"at": B["whoa"]["t0"], "name": "uv"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["tease"]["t0"], "name": "close"}]
+         {"at": CUE["guessed"] - 0.1, "name": "below2"}, {"at": B["whoa"]["t0"], "name": "uv"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": CUE["endings"] + 0.5, "name": "close"}]
 
 # ── the camera (orbit keys: target, dist, el, az, fov, fx, fy) ──
 JX, UX = 4000.0, -4000.0
@@ -68,7 +68,7 @@ CAM = {
              {"t": CUE["nerve"], "target": [0, -1.2, 0], "dist": 12, "az": 0, "el": 34, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
     # the junction: the crease where the brow left it (match), then down to the nerve ending and its messenger, back out
     # for the pull, then into the bulb for the change
-    "below": [{"t": CUE["nerve"], "target": CREASE, "dist": 150, "el": 34, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46},
+    "below": [{"t": CUE["nerve"], "target": CREASE, "dist": 95, "el": 40, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46},   # the crease where the brow left it
               {"t": CUE["messenger"] - 0.3, "target": BULB, "dist": 201, "el": 14, "az": -8, "fov": 30, "fx": 0.5, "fy": 0.42, "ease": "inout2"},
               {"t": CUE["pulls"], "target": [JX, 12, 14], "dist": 494, "el": 20, "az": -6, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "inout2"},
               {"t": B["change"]["t0"], "target": [JX, 10, 14], "dist": 471, "el": 19, "az": -4, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "sine"},
@@ -88,11 +88,11 @@ CAM = {
            {"t": CUE["whole"], "target": [UX, 0.5, 0], "dist": 27, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.31, "ease": "inout2"},
            {"t": B["toscale"]["t0"], "target": [UX, 0.1, 0], "dist": 34, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.31, "ease": "inout2"}],
     # back below: the gap under the card (the card lifts into the upper half), then the new endings along the fibre
-    "gauge": [{"t": B["toscale"]["t0"], "target": [JX + 4, -8, 14], "dist": 300, "el": 14, "az": -4, "fov": 30, "fx": 0.5, "fy": 0.6},
+    "gauge": [{"t": B["toscale"]["t0"], "target": [JX + 4, -8, 14], "dist": 300, "el": 14, "az": -4, "fov": 30, "fx": 0.72, "fy": 0.6},   # the ending to the right, the lifted card to its left
               {"t": B["takeaway"]["t0"], "target": [JX + 16, -12, 14], "dist": 170, "el": 14, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"},
               {"t": CUE["endings"] + 0.2, "target": [JX + 16, -12, 14], "dist": 180, "el": 14, "az": 4, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "sine"},
               {"t": B["tease"]["t0"], "target": CREASE, "dist": 230, "el": 34, "az": 4, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"}],   # up to the crease, back
-    "close": [{"t": B["tease"]["t0"], "target": [0, -0.6, 10], "dist": 46, "az": -4, **{**FLY, "el": 34}},
+    "close": [{"t": CUE["endings"] + 0.5, "target": [0, -0.6, 10], "dist": 46, "az": -4, **{**FLY, "el": 34}},
               {"t": B["tease"]["t1"], "target": [0, -0.6, 8], "dist": 42, "az": -3, **{**FLY, "el": 33}, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # slow arcs (≤ 6° a second)
@@ -114,7 +114,7 @@ LABELS = [
 ]
 BADGES = [
     {"id": "b-model-h", "text": "model, not a photo", "t0": TITLE_T1, "t1": CUE["nerve"], "slot": "tr"},
-    {"id": "b-ng", "text": "lethal dose ≈ 1–2 ng/kg (est.)", "t0": CUE["nanogram"], "t1": TITLE_T1 - 0.1, "slot": "tr"},   # with the title up, the one top-right note is the figure the voice names
+    {"id": "b-ng", "text": "≈ 1–2 ng/kg (est.)", "t0": CUE["nanogram"], "t1": TITLE_T1 - 0.1, "slot": "tr"},   # with the title up, the one top-right note is the figure the voice names
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
@@ -125,7 +125,8 @@ BADGES = [
 SPINE = [0.62, 0.215]   # top right, under the notes
 COUNTERS = [
     {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": TITLE_T1, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
-    {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": t_end, "at": SPINE},
+    {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": B["takeaway"]["t0"], "at": SPINE},
+    {"id": "c-end", "label": "one frown, of a lethal dose", "fmt": "text", "text": "< 1 %", "t0": B["takeaway"]["t0"] + 0.4, "t1": t_end - 0.5, "at": SPINE},   # the payoff's label, cleared before the end card
 ]
 # the plates: Kerner's (the why) and the dose (the whoa); the daylight strip before the dose plate replaces it
 PLATES = {

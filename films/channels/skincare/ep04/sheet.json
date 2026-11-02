@@ -273,6 +273,11 @@
    "tag": "b-months"
   },
   {
+   "t": 60.6,
+   "kind": "counter.show",
+   "tag": "c-end"
+  },
+  {
    "t": 64.06666666666668,
    "kind": "cell.land",
    "tag": "sprout"

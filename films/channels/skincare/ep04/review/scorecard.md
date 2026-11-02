@@ -11,15 +11,15 @@ Draft 1 results:
 
 ## Compelling pass (one independent reviewer, every round)
 
-| Point | Draft 1 |
-|---|---|
-| (a) First 2 s | 3 |
-| (b) One thread | 4 |
-| (c) Picture moves with the sentence | 3 |
-| (d) Motivated cuts | 3 |
-| (e) Voice meaning, screen figures | 4 |
-| (f) Rhythm | 3 |
-| (g) Ending and tease | 3 |
+| Point | Draft 1 | Draft 2 | Draft 3 | Draft 4 |
+|---|---|---|---|---|
+| (a) First 2 s | 3 | 2 | 2 | 3 |
+| (b) One thread | 4 | 4 | 4 | 4 |
+| (c) Picture moves with the sentence | 3 | 2 | 3 | 3 |
+| (d) Motivated cuts | 3 | 3 | 3 | 3 |
+| (e) Voice meaning, screen figures | 4 | 4 | 4 | 4 |
+| (f) Rhythm | 3 | 3 | 3 | 4 |
+| (g) Ending and tease | 3 | 3 | 3 | 3 |
 
 ## Review rounds, in short
 
@@ -56,3 +56,31 @@ Each finding below was checked against the frames and `claims.json` before actin
 **Not changed**
 - **The end card's follow chip** (No. 005) is the next episode, as on every end card.
 - **"So how much goes in?"** is kept. The question answers the hook, and the plate's notes now carry the safety context.
+
+### Drafts 2–4
+
+A fresh reviewer each round, scoring independently. Every finding was checked against frames I pulled myself before acting.
+
+**Draft 2**
+- **The spine readout disappeared at 28–48 s:** I had ended it at the why beat by mistake. It now runs continuously.
+- **Fog:** its colour now matches the ground (0x2c1660), which removes a dark notched band at the terrain's edge.
+- **Turn words now have events:**
+  - "never leaves": the vesicles press at the membrane and fall back;
+  - "sausages": "sausage poison" lights up on its word;
+  - "guessed": Kerner's second line arrives.
+
+**Draft 3**
+- **The hook was too close to read as a frown.** I confirmed this in the frames. The hook now has two brow mounds and a crease, a wider and sharper camera, and the ng/kg figure on screen on "by the nanogram".
+- **The dose plate's bars sat under the captions.** The plate moved up, and REC moved to the viewfinder's foot. A CSS override was needed because the shared style loads after the scene's.
+- **Caption breaks:** now fall at phrase boundaries.
+
+**Draft 4**
+- **The brow still didn't read as a face:**
+  - eyebrow hairs on the two mounds;
+  - the frown sets on screen (the relief deepens over the first second);
+  - the UV reveal now carries the same crease and mounds, so "the same brow" is literally true;
+  - the dose points sit lower, clear of the spine.
+- **The loop:** on "endings" the film returns to the brow, with the frown setting again before the end card.
+- **The 7.17 s cut:** the cut face now opens close on its crease.
+- **Gauge:** the card sits to the left of the nerve ending.
+- **Spine:** relabelled at the payoff ("one frown, of a lethal dose") and cleared before the end card. This removes a stray dash that showed through the end bars.
