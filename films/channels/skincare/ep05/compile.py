@@ -79,16 +79,16 @@ CAM = {
               {"t": CUE["matched"], "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": 0, "ease": "inout2"},
               {"t": B["whoa"]["t0"], "target": [WX + 30, -5, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 380, "az": 0, "ease": "in2"}],
     # skies: the eye walks from the fiercest sky (deep, right) to the weakest (light, left); all three stay in frame
-    "skies": [{"t": B["whoa"]["t0"], **WIDE, "dist": 720, "az": -4},
-              {"t": CUE["folate"], "target": [26, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 600, "az": 2, "ease": "inout2"},
-              {"t": CUE["vitd"], "target": [-26, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 600, "az": -2, "ease": "inout2"},
-              {"t": B["toscale"]["t0"], **WIDE, "dist": 700, "az": 0, "ease": "inout2"}],
+    "skies": [{"t": B["whoa"]["t0"], **WIDE, "dist": 790, "az": -4},
+              {"t": CUE["folate"], "target": [26, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 670, "az": 2, "ease": "inout2"},
+              {"t": CUE["vitd"], "target": [-26, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 670, "az": -2, "ease": "inout2"},
+              {"t": B["toscale"]["t0"], **WIDE, "dist": 790, "az": 0, "ease": "inout2"}],
     # to scale: the cards lift into the empty upper left; the camera drops the sections lower in frame
-    "gauge": [{"t": B["toscale"]["t0"], **WIDE, "dist": 700, "az": 0},
-              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.66, "fy": 0.34, "dist": 1000, "az": 2, "ease": "inout2"},
-              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.66, "fy": 0.34, "dist": 980, "az": 0, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.66, "fy": 0.34, "dist": 980, "az": 0},
-              {"t": B["takeaway"]["t0"] + 1.6, **HOOK, "dist": 640, "az": -6, "ease": "inout2"},
+    "gauge": [{"t": B["toscale"]["t0"], **WIDE, "dist": 790, "az": 0},
+              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 1000, "az": 2, "ease": "inout2"},   # under the lifted card, clear of it
+              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 980, "az": 0, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 980, "az": 0},
+              {"t": B["takeaway"]["t0"] + 1.0, **HOOK, "dist": 640, "az": -3, "ease": "inout2"},
               {"t": B["tease"]["t1"], **HOOK, "dist": 680, "az": -10, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
@@ -119,8 +119,8 @@ BADGES = [
 ]
 SPINE = [0.6, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
 COUNTERS = [
-    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] - 0.3, "t1": CUE["dozen"] - 0.4, "at": SPINE},
-    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": SPINE},
+    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] - 0.3, "t1": CUE["dozen"] - 0.4, "at": [0.42, 0.135]},
+    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": [0.42, 0.135]},
     {"id": "c-same", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": CUE["same"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["colour"], "t1": B["toscale"]["t0"], "at": SPINE},
     {"id": "c-end", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": B["takeaway"]["t0"] + 1.2, "t1": t_end, "at": SPINE},

@@ -75,7 +75,7 @@ raysD.group.position.x = BIO.dna_x;
 scene.add(raysS.group, raysP.group, raysD.group);
 const HIDE = { gain: 0 };
 // the DNA ladder (its own place) and the message
-const dna = createDNA({ x: BIO.dna_x, seed: 4 });
+const dna = createDNA({ x: BIO.dna_x, seed: 4, bp: 40, fuseAt: 19 });   // long enough to run past both frame edges
 scene.add(dna.group);
 const sig = createSignal({ from: [HC[0], HC[1] - 2, HC[2] + 2], to: mel.at.body(), n: 16 });
 scene.add(sig.mesh);
@@ -87,7 +87,7 @@ const MATCH = [
   { t: SHOT0.dna, from: "section", out: () => [HC[0], HC[1], HC[2]], in: fusedAt },
   { t: SHOT0.cell, from: "dna", out: fusedAt, in: () => [HC[0], HC[1], HC[2]] },
   { t: SHOT0.pair, from: "cell", out: () => mel.at.body(), in: () => melL.at.body() },
-  { t: SHOT0.dna2, from: "pair", out: () => [-40, -50, 20], in: fusedAt },
+  { t: SHOT0.dna2, from: "pair", out: () => melL.at.body(), in: fusedAt },
   { t: SHOT0.tan, from: "dna2", out: fusedAt, in: () => mel.at.body() },
 ];
 
@@ -222,7 +222,7 @@ window.seek = function (t) {
   // ── the DNA ladder: two bases fuse on "fuse"; in dna2 the fused pair is held, lit ──
   if (isDNA) {
     const fuse = shot === "dna" ? E.out3(seg(t, CUE.fuse - 0.1, CUE.fuse + 0.5)) : 1;
-    const glow = shot === "dna" ? Math.max(0.35 * (1 - fuse), Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse) : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);   // a faint glow on the two bases from the cut, so the eye has a target
+    const glow = shot === "dna" ? Math.max(0.8 * (1 - fuse), Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse) : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);   // a faint glow on the two bases from the cut, so the eye has a target
     dna.set({ fuse, glow, uv: UVC, spin: 0.12 * t, dim: shot === "dna" ? 0.6 * fadeIn(t, CUE.fuse, 0.5) : 0.6 });
     raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();

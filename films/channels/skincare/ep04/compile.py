@@ -81,10 +81,10 @@ CAM = {
     "section": [
         {"t": B["normal"]["t0"], "target": [0, -36, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 560, "az": -14},
         {"t": CUE["living"], "target": [0, -36, 10], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -8, "ease": "inout2"},
-        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 260, "az": -5, "ease": "in2"},
+        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 260, "az": -5, "ease": "in2"},   # the cell rides up above the caption before the cut
     ],
     "dna": [
-        {"t": t_jump, "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 330, "az": 18},   # the fused pair lands where the cell was
+        {"t": t_jump, "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 330, "az": 18},   # the fused pair lands where the cell was
         {"t": CUE["fuse"], "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 210, "az": 14, "ease": "out2"},
         {"t": B["change"]["t0"], "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 170, "az": 11, "ease": "sine"},
     ],
@@ -102,7 +102,7 @@ CAM = {
         {"t": CUE["lacked"], "target": [24, -50, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 560, "az": 3, "ease": "inout2"},
         {"t": CUE["never"] + 0.6, "target": [-6, -54, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 640, "az": 2, "ease": "inout2"},
         # and pushes into one of the tanned cells, whose nucleus the next shot opens (a match cut into the DNA)
-        {"t": t_dna2, "target": [-40, -50, 20], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": 4, "ease": "inout2"},
+        {"t": t_dna2, "target": [-36, -80, 20], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": 4, "ease": "inout2"},
     ],
     "dna2": [
         {"t": t_dna2, "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 230, "az": 12},
