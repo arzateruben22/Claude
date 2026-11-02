@@ -26,8 +26,30 @@ from shapely.ops import unary_union
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SLICE = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '../../src/data/anaheim/sportsbar-slice.json')
-O, A, B = (-6616.5, -9333.8), (-0.9098, -0.4151), (0.4151, -0.9098)
 d = json.load(open(SLICE))
+def frame_from_ring(d):
+    """The building frame as the page computes it at load (engine/frame.ts frameFromRing): the front is the short edge
+    (under 25 m) of building 61 nearest the venue's point, O its southern end, A the mean direction of the two long walls
+    that meet it, B = A turned toward the courtyard. The plan's table rounds these to O (-6616.5, -9333.8),
+    A (-0.9098, -0.4151), B (0.4151, -0.9098); S1 found one point (a gate 126 m out) within 5 mm of the front sector's
+    line, on opposite sides under the rounded and the computed frame, so both scripts use the computed one."""
+    x = z = 0; ring = []
+    for i in range(0, len(d['bld'][d['venue']['bld']]['p']), 2):
+        x += d['bld'][d['venue']['bld']]['p'][i]; z += d['bld'][d['venue']['bld']]['p'][i + 1]; ring.append((x / 10, z / 10))
+    n, vx, vz = len(ring), d['venue']['x'], d['venue']['z']
+    def seg_d(a, b):
+        dx, dz = b[0] - a[0], b[1] - a[1]; t = max(0, min(1, ((vx - a[0]) * dx + (vz - a[1]) * dz) / (dx * dx + dz * dz)))
+        return math.hypot(vx - a[0] - dx * t, vz - a[1] - dz * t)
+    k = min((i for i in range(n) if math.dist(ring[i], ring[(i + 1) % n]) <= 25), key=lambda i: seg_d(ring[i], ring[(i + 1) % n]))
+    i0, i1 = k, (k + 1) % n
+    s, t = (i0, i1) if ring[i0][1] > ring[i1][1] else (i1, i0)
+    sn = (i1 + 1) % n if s == i1 else (i0 - 1) % n; tn = (i1 + 1) % n if t == i1 else (i0 - 1) % n
+    def unit(a, b): l = math.dist(a, b); return ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
+    d1, d2 = unit(ring[s], ring[sn]), unit(ring[t], ring[tn]); ax, az = d1[0] + d2[0], d1[1] + d2[1]; l = math.hypot(ax, az)
+    A = (ax / l, az / l); B = (-A[1], A[0])
+    if (ring[t][0] - ring[s][0]) * B[0] + (ring[t][1] - ring[s][1]) * B[1] < 0: B = (-B[0], -B[1])
+    return ring[s], A, B
+O, A, B = frame_from_ring(d)
 x = z = 0; ring = []
 for i in range(0, len(d['bld'][61]['p']), 2):
     x += d['bld'][61]['p'][i]; z += d['bld'][61]['p'][i + 1]

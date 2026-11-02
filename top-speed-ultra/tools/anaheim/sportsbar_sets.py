@@ -43,8 +43,9 @@ from shapely.geometry import LineString, Point, Polygon, box
 from shapely.ops import unary_union
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SLICE = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '../../src/data/anaheim/sportsbar-slice.json')
-O, A, B = (-6616.5, -9333.8), (-0.9098, -0.4151), (0.4151, -0.9098)    # the plan's building frame
+JSON_OUT = sys.argv[sys.argv.index('--json') + 1] if '--json' in sys.argv else None     # S1: the sets and trees as data
+ARGS = [a for i, a in enumerate(sys.argv[1:], 1) if a != '--json' and (i < 2 or sys.argv[i - 1] != '--json')]
+SLICE = ARGS[0] if ARGS else os.path.join(HERE, '../../src/data/anaheim/sportsbar-slice.json')
 CENTRE, R, DROP_SEGS, HOST_BLD = (18.0, 8.0), 210.0, {416}, 61
 DISC = Point(CENTRE).buffer(R, quad_segs=64)
 S, N = (0.362, 0.932), (-0.932, 0.362)                                 # along the front wall, and out of it
@@ -55,6 +56,29 @@ SECT = unary_union([FRONT, SOUTH]); REGION = DISC.intersection(SECT)
 C = Point(CENTRE)
 
 d = json.load(open(SLICE)); DI = d['dict']
+def frame_from_ring(d):
+    """The building frame as the page computes it at load (engine/frame.ts frameFromRing): the front is the short edge
+    (under 25 m) of building 61 nearest the venue's point, O its southern end, A the mean direction of the two long walls
+    that meet it, B = A turned toward the courtyard. The plan's table rounds these to O (-6616.5, -9333.8),
+    A (-0.9098, -0.4151), B (0.4151, -0.9098); S1 found one point (a gate 126 m out) within 5 mm of the front sector's
+    line, on opposite sides under the rounded and the computed frame, so both scripts use the computed one."""
+    x = z = 0; ring = []
+    for i in range(0, len(d['bld'][d['venue']['bld']]['p']), 2):
+        x += d['bld'][d['venue']['bld']]['p'][i]; z += d['bld'][d['venue']['bld']]['p'][i + 1]; ring.append((x / 10, z / 10))
+    n, vx, vz = len(ring), d['venue']['x'], d['venue']['z']
+    def seg_d(a, b):
+        dx, dz = b[0] - a[0], b[1] - a[1]; t = max(0, min(1, ((vx - a[0]) * dx + (vz - a[1]) * dz) / (dx * dx + dz * dz)))
+        return math.hypot(vx - a[0] - dx * t, vz - a[1] - dz * t)
+    k = min((i for i in range(n) if math.dist(ring[i], ring[(i + 1) % n]) <= 25), key=lambda i: seg_d(ring[i], ring[(i + 1) % n]))
+    i0, i1 = k, (k + 1) % n
+    s, t = (i0, i1) if ring[i0][1] > ring[i1][1] else (i1, i0)
+    sn = (i1 + 1) % n if s == i1 else (i0 - 1) % n; tn = (i1 + 1) % n if t == i1 else (i0 - 1) % n
+    def unit(a, b): l = math.dist(a, b); return ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
+    d1, d2 = unit(ring[s], ring[sn]), unit(ring[t], ring[tn]); ax, az = d1[0] + d2[0], d1[1] + d2[1]; l = math.hypot(ax, az)
+    A = (ax / l, az / l); B = (-A[1], A[0])
+    if (ring[t][0] - ring[s][0]) * B[0] + (ring[t][1] - ring[s][1]) * B[1] < 0: B = (-B[0], -B[1])
+    return ring[s], A, B
+O, A, B = frame_from_ring(d)                                            # the building frame, as the page computes it
 def dec(p):
     x = z = 0; out = []
     for i in range(0, len(p), 2): x += p[i]; z += p[i + 1]; out.append((x / 10, z / 10))
@@ -326,3 +350,11 @@ print('  at ' + ', '.join(f'{n} ({q[0]:.1f}, {q[1]:.1f})' for n, q, w in trees))
 TREE = {'palm': (222 + 108, 382 + 108), 'shade tree': (400 + 28, 1600 + 28)}   # crown + trunk: Low, HD and Ultra
 print('  triangles: Low {:,}, HD and Ultra {:,}, in up to 4 instanced meshes'.format(
     sum(TREE[n][0] for n, q, w in trees), sum(TREE[n][1] for n, q, w in trees)))
+
+if JSON_OUT:                          # the sets, the trees and the pier counts as data, for S1's checks on the built page
+    sets = {}
+    for (ly, i), w in which.items(): sets.setdefault(ly, {'near': [], 'far': []})['near' if w == 'near' else 'far'].append(i)
+    json.dump({'sets': sets, 'trees': [{'kind': n, 'frame': q} for n, q, w in trees],
+               'piers': {'placed': sum(piers.values()), 'near': piers['near'], 'leftOut': sum(left_out.values()), 'leftOutNear': left_out['near']},
+               'tight': tight, 'tunnelled': tunnelled, 'streams': streams}, open(JSON_OUT, 'w'))
+    print('wrote', JSON_OUT)
