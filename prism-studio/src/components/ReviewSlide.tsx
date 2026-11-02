@@ -40,7 +40,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
           ? <Link href={back.href} className="kicker topic-text">← {back.label} · No. {String(ep.number).padStart(3, "0")}</Link>
           : <span className="kicker topic-text">{kicker}</span>}
         <span className="slide-top-title" aria-hidden>{ep.title}</span>
-        {position ? <span className="num slide-count">{position.n} / {position.of}</span> : null}
+        {position ? <span className="num slide-count">{single ? `${position.n} of ${position.of} in review` : `${position.n} / ${position.of}`}</span> : null}
       </div>
 
       <div className="slide-media">
@@ -66,7 +66,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
           </fieldset>
         ) : null}
         <div className="bar-actions">
-          {prev ? <a href={prev.href} className="btn ghost step" data-step="prev" aria-label={`Previous: ${prev.label}`}><Icon name="back" /></a> : <span className="step" aria-hidden />}
+          {prev ? <a href={prev.href} className="btn ghost step" data-step="prev" aria-label={`Previous: ${prev.label}`}><Icon name="back" /></a> : <span className="btn ghost step" data-step="prev" aria-disabled="true" aria-hidden><Icon name="back" /></span>}
           <details className="hold">
             <summary className="btn ghost">Hold</summary>
             <div className="hold-sheet">
@@ -89,7 +89,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
               </div>
             ))}
           </div>
-          {next ? <a href={next.href} className="btn ghost step" data-step="next" aria-label={`Next: ${next.label}`}><Icon name="back" /></a> : <span className="step" aria-hidden />}
+          {next ? <a href={next.href} className="btn ghost step" data-step="next" aria-label={`Next: ${next.label}`}><Icon name="back" /></a> : <span className="btn ghost step" data-step="next" aria-disabled="true" aria-hidden><Icon name="back" /></span>}
         </div>
       </div>
       <div className="slide-info">

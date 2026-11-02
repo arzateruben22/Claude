@@ -31,6 +31,11 @@
   translucent); in the installed app a dark band sits under the status bar and the page doesn't rubber-band past its
   ends; no tap flash or double-tap delay on controls; the tab bar and thumb bar aren't selectable; a calmer lede on
   phones; Accounts' help links are 44 px tall.
+- Phone polish after review: the offline banner sits below the notch; the lede stays at body size (16 px); one
+  kicker-to-title rhythm on every screen, and a page without a lede gives its first panel room; Review's first episode
+  keeps a dimmed Previous so the thumb bar never shifts; the Hold sheet meets the bar; the episode page says "1 of 18
+  in review". A phone on its side (a browser tab; the installed app stays upright) gets a slim tab bar, a wall that
+  fits the screen and Review's buttons above the tab bar.
 
 ## 0.6.4 — 2026-10-26 (final check)
 - Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)
