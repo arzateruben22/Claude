@@ -52,6 +52,8 @@ const RL = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 70, seed: 31, w
 const RB = createRays({ n: 40, x: [-58, -4], z: [-20, 23], top: 70, seed: 33, width: 0.4, len: 7 }), RH = createRays({ n: 40, x: [4, 58], z: [-20, 23], top: 70, seed: 34, width: 0.4, len: 7 });
 const RS = createRays({ n: 100, x: [-56, 56], z: [-20, 23], top: 70, seed: 35, width: 0.4, len: 7 }), RC = createRays({ n: 100, x: [-46, 46], z: [-46, 46], top: 90, seed: 36, width: 0.5, len: 8 });
 [RL, RR, RB, RH, RS, RC].forEach((r) => scene.add(r.group));
+// the rays and their glows draw over the cut face, so what gets in is seen inside the skin (the review)
+[RL, RR, RS].forEach((r) => r.group.children.forEach((m) => { m.material.depthTest = false; m.renderOrder = 20; }));
 // the bare half reddening (an illustration of the endpoint SPF measures: the first redness)
 const redMat = new THREE.MeshBasicMaterial({ color: 0xc8463c, transparent: true, opacity: 0, depthWrite: false });
 const red = new THREE.Mesh(new THREE.BoxGeometry(58, 0.6, 48), redMat); red.position.set(-31, 0.35, 0); scene.add(red);
