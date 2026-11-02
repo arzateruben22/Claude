@@ -1,0 +1,1069 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Where's your glow from? Most light on your face goes inside you.",
+   "heard": "Where's your glow from? Most light on your face goes inside you.",
+   "words": [
+    {
+     "w": "Where's",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.45,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "glow",
+     "start": 0.7,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "from?",
+     "start": 1.11,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Most",
+     "start": 1.765,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 2.075,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.445,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.735,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "face",
+     "start": 2.855,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "goes",
+     "start": 3.275,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 3.55,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 4.15,
+     "end": 4.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Only a few percent bounces off the top as a glint. Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+   "heard": "Only a few per cent bounces off the top as a glint. Smooth, hydrated skin sends it back in one direction, dry skin scatters it into a dull haze.",
+   "words": [
+    {
+     "w": "Only",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.49,
+     "end": 0.54,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 0.52,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 0.705,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "bounces",
+     "start": 1.165,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "off",
+     "start": 1.49,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.835,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 1.95,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.26,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.505,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "glint.",
+     "start": 2.535,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Smooth,",
+     "start": 3.51,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "hydrated",
+     "start": 4.045,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.895,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sends",
+     "start": 5.285,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.685,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 5.855,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.925,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.145,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "direction;",
+     "start": 6.355,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "dry",
+     "start": 7.49,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 7.97,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "scatters",
+     "start": 8.25,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.825,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 8.975,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.01,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "dull",
+     "start": 9.23,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "haze.",
+     "start": 9.495,
+     "end": 10.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
+   "heard": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.28,
+     "end": 0.33,
+     "heard": true
+    },
+    {
+     "w": "glint",
+     "start": 0.31,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 0.665,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.055,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "glow.",
+     "start": 1.085,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 2.08,
+     "end": 2.13,
+     "heard": true
+    },
+    {
+     "w": "rest",
+     "start": 2.11,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "slips",
+     "start": 2.49,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 2.895,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "bounces",
+     "start": 3.37,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "among",
+     "start": 3.88,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 4.305,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.65,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "fibres,",
+     "start": 4.855,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.62,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.685,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "large",
+     "start": 5.84,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "share",
+     "start": 6.125,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "finds",
+     "start": 6.68,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 7.02,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 7.13,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 7.36,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 7.525,
+     "end": 8.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "You might picture a glow sitting on the skin. But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
+   "heard": "you might picture a glow sitting on the skin but it's light that travelled through you tinted by melanin and blood and a rush of blood sends it back redder",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.04,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "might",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "picture",
+     "start": 0.65,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.0,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "glow",
+     "start": 1.27,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "sitting",
+     "start": 1.77,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.135,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.38,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 2.595,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 3.715,
+     "end": 3.765,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 3.79,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.08,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.645,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "travelled",
+     "start": 4.82,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 5.48,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 5.845,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "tinted",
+     "start": 6.36,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 6.905,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "melanin",
+     "start": 7.12,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.03,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "blood,",
+     "start": 8.06,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.995,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.025,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "rush",
+     "start": 9.28,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.81,
+     "end": 9.86,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 9.84,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "sends",
+     "start": 10.17,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 10.655,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 10.785,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "redder.",
+     "start": 11.03,
+     "end": 11.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin.",
+   "heard": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that, the colour of blood shining back through the skin.",
+   "words": [
+    {
+     "w": "Asked",
+     "start": 0.04,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.37,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "make",
+     "start": 0.665,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "strangers'",
+     "start": 0.805,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "faces",
+     "start": 1.32,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 1.96,
+     "end": 2.01,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.99,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "healthy",
+     "start": 2.1,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.655,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 2.895,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "could,",
+     "start": 2.965,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "people",
+     "start": 3.71,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "turned",
+     "start": 3.895,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 4.48,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 4.61,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "that:",
+     "start": 5.165,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.055,
+     "end": 6.105,
+     "heard": true
+    },
+    {
+     "w": "colour",
+     "start": 6.175,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.575,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "blood,",
+     "start": 6.675,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "shining",
+     "start": 7.135,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 7.71,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 7.905,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.96,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 8.36,
+     "end": 8.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+   "heard": "Blue light gets barely a millimeter in, about ten sheets of paper. Red light goes several times deeper.",
+   "words": [
+    {
+     "w": "Blue",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 0.495,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 0.57,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 0.865,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.195,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "millimetre",
+     "start": 1.225,
+     "end": 1.92,
+     "heard": false
+    },
+    {
+     "w": "in,",
+     "start": 1.84,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.35,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 2.735,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "sheets",
+     "start": 3.135,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.48,
+     "end": 3.53,
+     "heard": true
+    },
+    {
+     "w": "paper;",
+     "start": 3.51,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "red",
+     "start": 4.485,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.73,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "goes",
+     "start": 5.075,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "several",
+     "start": 5.405,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 5.75,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "deeper.",
+     "start": 6.195,
+     "end": 6.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So the glow isn't on your face. It's light that went inside you, met your blood, and came back.",
+   "heard": "So the glow isn't on your face. It's light that went inside you, met your blood, and came back.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.235,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.515,
+     "end": 0.565,
+     "heard": true
+    },
+    {
+     "w": "glow",
+     "start": 0.545,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 0.955,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.42,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.68,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "face.",
+     "start": 1.92,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 3.06,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 3.305,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.69,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "went",
+     "start": 3.88,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 4.245,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 4.865,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "met",
+     "start": 5.145,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 5.46,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "blood,",
+     "start": 5.78,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.12,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "came",
+     "start": 6.325,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 6.735,
+     "end": 6.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: skin closes almost any cut. But is a scar still skin?",
+   "heard": "Next skin closes almost any cut, but is a scar still skin.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.51,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "closes",
+     "start": 0.93,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 1.385,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "any",
+     "start": 1.77,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "cut.",
+     "start": 2.005,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 2.885,
+     "end": 2.935,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.915,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.12,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "scar",
+     "start": 3.375,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 3.755,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "skin?",
+     "start": 4.18,
+     "end": 4.4,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

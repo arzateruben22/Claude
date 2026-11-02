@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep02/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Where's your glow from? Most light on your face goes inside you.",
+   "stars": [
+    "glow"
+   ],
+   "phonemes": "wˌeəz jɔː ɡlˈəʊ fɹɒm? mˈəʊst lˈaɪt ˌɒn jɔː fˈeɪs ɡəʊz ɪnsˈaɪd juː.",
+   "speed": 0.79,
+   "file": "01.wav",
+   "dur": 4.587,
+   "sha256": "eaccb04e4d33bd19a526e3e95ec3c0ba94abda77a31c9d6737b8985641ac22b3"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Only a few percent bounces off the top as a glint. Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+   "stars": [
+    "haze"
+   ],
+   "phonemes": "ˈəʊnli ɐ fjˈuː pəsˈɛnt bˈaʊnsɪz ˈɒf ðə tˈɒp az ɐ ɡlˈɪnt. smˈuːð, haɪdɹˈeɪtɪd skˈɪn sˈɛndz ɪt bˈak ɪn wˈɒn daɪɹˈɛkʃən; dɹˈaɪ skˈɪn skˈatəz ɪt ˌɪntʊ ɐ dˈʌl hˈeɪz.",
+   "speed": 0.82,
+   "file": "02.wav",
+   "dur": 10.045,
+   "sha256": "13e882a1c581299b6ccf6d4547991a592494e815ad88b798c151812252d67b88"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
+   "stars": [
+    "out"
+   ],
+   "phonemes": "bˌʌt ðə ɡlˈɪnt ˌɪzənt ðə ɡlˈəʊ. ðə ɹˈɛst slˈɪps ˈɪn, bˈaʊnsɪz ɐmˌʌŋ sˈɛlz and fˈaɪbəz, and ɐ lˈɑːdʒ ʃˈeə fˈaɪndz ɪts wˈeɪ bˈak ˈaʊt.",
+   "speed": 0.82,
+   "file": "03.wav",
+   "dur": 8.03,
+   "sha256": "28ffc6f03d6c071d998d9994f7bbd04820b8d642f551679a2fb43f3c1c45a66f"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "You might picture a glow sitting on the skin. But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
+   "stars": [
+    "redder"
+   ],
+   "phonemes": "juː mˌaɪt pˈɪktʃəɹ ɐ ɡlˈəʊ sˈɪtɪŋ ɒnðə skˈɪn. bˌʌt ɪts lˈaɪt ðat tɹˈavəld θɹˈuː juː, tˈɪntɪd bˈaɪ mˈɛlənɪn and blˈʌd, and ɐ ɹˈʌʃ ɒv blˈʌd sˈɛndz ɪt bˈak ɹˈɛdə.",
+   "speed": 0.7,
+   "file": "04.wav",
+   "dur": 11.736,
+   "sha256": "2c380fccaf840c7fd69dbcd3814d207dd6cf61ce48a0289d17892e145800ad9f"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin.",
+   "stars": [
+    "skin"
+   ],
+   "phonemes": "ˈaskt tə mˌeɪk stɹˈeɪndʒəz fˈeɪsɪz lˈʊk az hˈɛlθi az ðeɪ kˈʊd, pˈiːpəl tˈɜːnd ˌʌp ɛɡzˈaktli ðˈat: ðə kˈʌləɹ ɒv blˈʌd, ʃˈaɪnɪŋ bˈak θɹuː ðə skˈɪn.",
+   "speed": 0.82,
+   "file": "05.wav",
+   "dur": 8.73,
+   "sha256": "9b0132a42757d56ca31e9501da2d37ef5881f2e0b62e7cf948a9819bfe1f597e"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+   "stars": [
+    "deeper"
+   ],
+   "phonemes": "blˈuː lˈaɪt ɡˈɛts bˈeəli ɐ mˈɪlɪmˌiːtəɹ ˈɪn, ɐbˌaʊt tˈɛn ʃˈiːts ɒv pˈeɪpə; ɹˈɛd lˈaɪt ɡəʊz sˈɛvɹəl tˈaɪmz dˈiːpə.",
+   "speed": 0.82,
+   "file": "06.wav",
+   "dur": 6.71,
+   "sha256": "c568289e2218c8c02664ed7d7110ce68a8f38181f8e9a310760aa38b9950504d"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So the glow isn't on your face. It's light that went inside you, met your blood, and came back.",
+   "stars": [
+    "back"
+   ],
+   "phonemes": "sˌəʊ ðə ɡlˈəʊ ˌɪzənt ˌɒn jɔː fˈeɪs. ɪts lˈaɪt ðat wɛnt ɪnsˈaɪd juː, mˈɛt jɔː blˈʌd, and kˈeɪm bˈak.",
+   "speed": 0.68,
+   "file": "07.wav",
+   "dur": 7.36,
+   "sha256": "a74c13d9dffb84b6ad284595fe9ce1b9caadf2a56dd497146611f6bcab803a9a"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: skin closes almost any cut. But is a scar still skin?",
+   "stars": [
+    "skin"
+   ],
+   "phonemes": "nˈɛkst: skˈɪn klˈəʊzɪz ˈɔːlməʊst ˌɛni kˈʌt. bˌʌt ɪz ɐ skˈɑː stˈɪl skˈɪn?",
+   "speed": 0.82,
+   "file": "08.wav",
+   "dur": 4.598,
+   "sha256": "1d6958f081c05ba972a31fa578382bf021ba6cab315e243145ee38bf110f1f1c"
+  }
+ ]
+}

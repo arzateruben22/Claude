@@ -1,0 +1,390 @@
+{
+ "duration": 77.0,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 16.3333,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.3333,
+   "t1": 26.1333,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.1333,
+   "t1": 39.2,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 39.2,
+   "t1": 52.7333,
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 62.5333,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 62.5333,
+   "t1": 70.0,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 70.0,
+   "t1": 77.0,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6
+  },
+  {
+   "t": 1.4,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 3.8000000000000003,
+   "kind": "label",
+   "tag": "l-porph",
+   "pos": [
+    0.334,
+    0.453
+   ]
+  },
+  {
+   "t": 3.8000000000000003,
+   "kind": "badge",
+   "tag": "b-uv"
+  },
+  {
+   "t": 4.2,
+   "kind": "counter.show",
+   "tag": "c-q",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 16.3333
+  },
+  {
+   "t": 7.928,
+   "kind": "cell.land",
+   "tag": "flip1"
+  },
+  {
+   "t": 8.799999999999999,
+   "kind": "badge",
+   "tag": "b-do"
+  },
+  {
+   "t": 8.956,
+   "kind": "cell.land",
+   "tag": "flip2"
+  },
+  {
+   "t": 9.1,
+   "kind": "counter.show",
+   "tag": "c-28",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 9.983,
+   "kind": "cell.land",
+   "tag": "flip3"
+  },
+  {
+   "t": 11.011,
+   "kind": "cell.land",
+   "tag": "flip4"
+  },
+  {
+   "t": 12.039,
+   "kind": "cell.land",
+   "tag": "flip5"
+  },
+  {
+   "t": 13.067,
+   "kind": "cell.land",
+   "tag": "flip6"
+  },
+  {
+   "t": 16.3333,
+   "kind": "section",
+   "id": "change",
+   "t1": 26.1333
+  },
+  {
+   "t": 16.3333,
+   "kind": "badge",
+   "tag": "b-illus"
+  },
+  {
+   "t": 16.3333,
+   "kind": "scale.jump",
+   "tag": "into-skin"
+  },
+  {
+   "t": 18.433333333333334,
+   "kind": "badge",
+   "tag": "b-simp"
+  },
+  {
+   "t": 19.0,
+   "kind": "counter.show",
+   "tag": "c-def",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 20.533333333333335,
+   "kind": "diffuse",
+   "tag": "ring"
+  },
+  {
+   "t": 20.733333333333334,
+   "kind": "badge",
+   "tag": "b-jer"
+  },
+  {
+   "t": 20.933333333333334,
+   "kind": "label",
+   "tag": "l-ring",
+   "pos": [
+    0.673,
+    0.388
+   ]
+  },
+  {
+   "t": 26.1333,
+   "kind": "section",
+   "id": "why",
+   "t1": 39.2
+  },
+  {
+   "t": 29.333333333333332,
+   "kind": "label",
+   "tag": "l-bact",
+   "pos": [
+    0.612,
+    0.426
+   ]
+  },
+  {
+   "t": 32.2,
+   "kind": "counter.show",
+   "tag": "c-both",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 35.666666666666664,
+   "kind": "badge",
+   "tag": "b-deb"
+  },
+  {
+   "t": 35.666666666666664,
+   "kind": "reveal",
+   "tag": "answer"
+  },
+  {
+   "t": 36.166666666666664,
+   "kind": "counter.show",
+   "tag": "c-ans",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 39.2,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 39.2,
+   "kind": "badge",
+   "tag": "b-model2"
+  },
+  {
+   "t": 39.2,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 40.36666666666667,
+   "kind": "label",
+   "tag": "l-white",
+   "pos": [
+    0.223,
+    0.314
+   ]
+  },
+  {
+   "t": 42.266666666666666,
+   "kind": "dissolve",
+   "tag": "rupture",
+   "t1": 44.93333333333333
+  },
+  {
+   "t": 43.93333333333333,
+   "kind": "label",
+   "tag": "l-spill",
+   "pos": [
+    0.716,
+    0.582
+   ]
+  },
+  {
+   "t": 45.733333333333334,
+   "kind": "label",
+   "tag": "l-thumb",
+   "pos": [
+    0.697,
+    0.15
+   ]
+  },
+  {
+   "t": 52.7333,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 62.5333
+  },
+  {
+   "t": 56.900000000000006,
+   "kind": "scale",
+   "tag": "g-cell"
+  },
+  {
+   "t": 60.3,
+   "kind": "reveal",
+   "tag": "g-paper"
+  },
+  {
+   "t": 62.5333,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 70.0
+  },
+  {
+   "t": 62.5333,
+   "kind": "badge",
+   "tag": "b-model3"
+  },
+  {
+   "t": 64.8,
+   "kind": "counter.show",
+   "tag": "c-final",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 65.86666666666666,
+   "kind": "label",
+   "tag": "l-rings",
+   "pos": [
+    0.327,
+    0.411
+   ]
+  },
+  {
+   "t": 70.0,
+   "kind": "section",
+   "id": "tease",
+   "t1": 77.0
+  },
+  {
+   "t": 70.4,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 16.633333333333333,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 26.433333333333334,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 39.5,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 62.833333333333336,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 70.3,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "l-porph": 3.8333,
+  "l-ring": 20.9667,
+  "l-bact": 29.3667,
+  "l-white": 40.4,
+  "l-spill": 43.9667,
+  "l-thumb": 45.7667,
+  "l-rings": 65.9
+ }
+}

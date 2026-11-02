@@ -30,25 +30,25 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/glow --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a cheek in warm side light, seeming lit from within; one thin beam of white light enters frame · badge: illustration · title: "Where a glow comes from" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
+## hook {shot: frame 0, the payoff, the macro flight: skin terrain (medium tone) at golden hour, warm and seeming lit from within; one thin beam of white light already falling into frame · badge: illustration · title: "Where a glow comes from" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
 vo: Where's your *glow* from? {-} Most light on your face goes inside you. {c7}
 
 ## normal {shot: no cut: the camera rides the beam down to the surface; at contact a small bright glint splits off · spine: reflected ≈ 4–7 % · badge: near head-on light · picture-only 0.5 s · energy: 0.45} (4.5–15 s)
 vo: Only a few percent bounces off the top as a glint. {c3} Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull *haze*. {c4,c5,c6}
 
-## change {shot: split surface, same beam: left, flat hydrated corneocytes send the glint back as one tight ray; right, lifted dry flakes spray it into a haze · badges: one study · illustration · picture-only 0.6 s · energy: 0.55} (15–26 s)
+## change {shot: the terrain splits along a seam, the same beam on each half: left, hydrated, satin-smooth, the glint one tight ray; right, dry, the glint sprayed into a haze; on "slips in" a cut below the surface to the section · badges: one study · illustration · picture-only 0.6 s · energy: 0.55} (15–26 s)
 vo: But the glint isn't the glow. {-} The rest slips in, bounces among cells and fibres, and a large share finds its way back *out*. {c8}
 
-## why {shot: an iris through the surface opens on a simplified section; the rest of the beam threads among cells and collagen fibres, zig-zagging, and many paths turn and climb back out · spine: back out ≈ 40 % · badges: simplified · one example (model) · picture-only 2.2 s · energy: 0.5} (26–39 s)
+## why {shot: the section in warm light: the rest of the beam threads among cells and collagen fibres as zig-zag paths, many turning and climbing back out · spine: back out ≈ 40 % · badges: simplified · one example (model) · picture-only 2.2 s · energy: 0.5} (26–39 s)
 vo: You might picture a glow sitting on the skin. {-} But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back *redder*. {c9,c10}
 
-## whoa {shot: the climbing paths pass melanin grains and a capillary; they pick up a warm tint; the capillary widens and the outgoing light reddens; pull back to a model face beside a slider labelled "oxygenated blood colour" nudged up · badges: model face · Stephen et al., 2009 · picture-only 3.2 s · energy: 0.8} (39–52.5 s)
+## whoa {shot: the climbing paths pass melanin and a capillary and take a warm tint; the capillary widens and the outgoing light reddens; then the viewfinder: a model cheek in daylight beside a slider "blood colour", nudged up, the cheek flushing · badges: model face, not a photo · Stephen et al., 2009 · picture-only 3.2 s · energy: 0.8} (39–52.5 s)
 vo: Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the *skin*. {c11}
 
-## toscale {segment: toscale · the gauge lifts to centre beside the section: a blue bar stops at ≈ 1 mm beside a stack of ten 100 µm sheets; a red bar runs on to ≈ 4–5 mm · badge: estimate · picture-only 0.5 s · energy: 0.4} (52.5–59.5 s)
+## toscale {segment: toscale · a depth chart: a blue bar stops at ≈ 1 mm beside a stack of ten 100 µm sheets; a red bar runs on to ≈ 4–5 mm · badge: estimate · picture-only 0.5 s · energy: 0.4} (52.5–59.5 s)
 vo: Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times *deeper*. {c12,c13,c14}
 
-## takeaway {shot: back to the hook's cheek, now with the beam paths faintly traced coming out of it · spine holds: back out ≈ 40 %, glint ≈ 4–7 %, label "from within" · picture-only 0.5 s · energy: 0.3} (59.5–67.5 s)
+## takeaway {shot: back to the hook's terrain, now with the light paths faintly glowing back out of it, warm; the daylight strip of three tones · spine: from within · picture-only 0.5 s · energy: 0.3} (59.5–67.5 s)
 vo: So the glow isn't on your face. It's light that went inside you, met your blood, and came *back*. {c15}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
@@ -56,6 +56,7 @@ vo: Next: skin closes almost any cut. But is a scar still *skin*? {-}
 end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002"
 
 ## Notes
+- Look (reboot, 2 Nov): macro flights and the viewfinder (bible §2); shot directions rewritten for it, the spoken lines unchanged from `s1v2/glow`.
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: ncbi.nlm.nih.gov failed to
   resolve); see `claims.json`. A person opens each link, and a board-certified dermatologist signs off, before
   posting.

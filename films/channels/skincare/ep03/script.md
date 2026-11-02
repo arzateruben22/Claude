@@ -11,8 +11,8 @@ follicles and all, with no scar. "To scale" puts the part of skin that regrows p
 0.07–0.12 mm on most of the body) beside the paper (≈ 100 µm): cut no deeper and it comes back; go into the weave
 and it patches.
 
-Flow (WRITING.md, 29 Oct): one thread from the hook's "Is a scar still skin?" and "thread by thread" to the
-takeaway's "skin's quick repair" and "never the weave"; the voice carries the meaning and the screen the
+Flow (WRITING.md, 29 Oct): one thread from the hook's "Why do you scar now? Before birth, a cut healed without one" (the whoa, led with; coordinator, 2 Nov) to the
+takeaway's "So, why the scar? Skin's quick repair" and "never the weave"; the voice carries the meaning and the screen the
 specifics (basket weave vs parallel bundles, collagen type III → I, ≈ 80% strength, Levenson et al. 1965, rat
 skin, 22–24 weeks, 0.07–0.12 mm, 100 µm paper). The picture changes scale with the ideas: a scar on a knee →
 the dermis, thread by thread → the patch laid in → a pull test, the readout climbing and stalling → a fetal
@@ -28,32 +28,33 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/scar --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a pale old scar across a knee, the camera already easing in until its threads begin to show · badge: simplified · title: "What's in a scar" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: Is a scar still *skin*? Look closer, thread by thread. {-}
+## hook {shot: frame 0, the payoff, the macro flight: a pale old scar crossing the skin of a knee (deep tone) at golden hour, smooth, with no pores and no hairs; the camera already easing in · badge: simplified · title: "What's in a scar" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+vo: Why do you *scar* now? {-} Before birth, a cut healed without one. {c11}
 
-## normal {shot: no cut: the push carries through the surface into the dermis; collagen bundles cross over and under in every direction; a hand off-frame tugs and the weave gives one way, then another · spine: weave · badge: simplified · picture-only 0.5 s · energy: 0.45} (5–17 s)
+## normal {shot: no cut: the push carries down through the surface into the dermis; collagen bundles cross over and under in every direction; on "pulled" the weave gives a little one way, then the other · spine: woven · badge: simplified · picture-only 0.5 s · energy: 0.45} (5–17 s)
 vo: Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's *pulled*. {c1}
 
-## change {shot: a cut opens through the weave; fresh threads arrive and lie down side by side, all one way; around the edge the hair follicles and sweat glands stop at the border and none appear inside · badges: time ×N · illustration · picture-only 0.6 s · energy: 0.55} (17–28 s)
+## change {shot: a cut opens through the weave; fresh threads arrive and lie down side by side, all one way, lit cyan; the follicles and sweat glands stop at the border and none appear inside · badges: time ×N · illustration · picture-only 0.6 s · energy: 0.55} (17–28 s)
 vo: Cut through it, and the body doesn't reweave. {c2} It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat *glands*. {c3,c4}
 
-## why {shot: an iris out to the patch held in a slow pull test beside the untouched skin; the spine readout climbs over weeks and months, then stalls short of the full mark · badges: model · rat skin · classic study · Levenson et al., 1965 · picture-only 2.2 s · energy: 0.5} (28–40.5 s)
+## why {shot: the patch under a slow pull, a strength meter beside it climbing over weeks and months, then stalling short of the full mark · badges: model · rat skin · classic study · Levenson et al., 1965 · picture-only 2.2 s · energy: 0.5} (28–40.5 s)
 vo: We call a closed wound healed, as good as new. {-} But pulled until it tears, even an old scar holds only about four-fifths of the original *strength*. {c5}
 
-## whoa {shot: an iris from the stalled readout opens on a section of fetal skin, badged illustration; a cut closes and the weave knits back over and under, hair follicles budding inside it, no line left · badges: illustration · ≈ 22–24 weeks · picture-only 3.2 s · energy: 0.8} (40.5–53 s)
+## whoa {shot: a smaller, paler block of fetal skin, badged illustration; a cut closes and the weave knits back over and under, follicles budding inside it, no line left · badges: illustration · ≈ 22–24 weeks · picture-only 3.2 s · energy: 0.8} (40.5–53 s)
 vo: Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles and all. {c6} After that, it *patches*. {c7}
 
 ## toscale {segment: toscale · the gauge lifts to centre beside the knee's section: the top layer fills in to its depth, then the paper's 100 µm beside it; below the line, the weave · badge: most of the body · picture-only 0.5 s · energy: 0.4} (53–61 s)
 vo: And on most of your body, only the top layer, about this paper's thickness, grows back without a *seam*. {c8,c9}
 
-## takeaway {shot: back to the hook's knee, its scar lit, the weave faintly showing around it · picture-only 0.5 s · energy: 0.3} (61–67.5 s)
-vo: So, is a scar still skin? Skin's quick repair: strong enough to close, never the *weave*. {c10}
+## takeaway {shot: the UV camera on the knee: the scar a smooth seam with no pores and no pattern, the skin around it textured; the weave faintly showing at its edge · badge: model, not a photo · picture-only 0.5 s · energy: 0.3} (61–67.5 s)
+vo: So, why the scar? Skin's quick repair: strong enough to close, never the *weave*. {c10}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
 vo: Next: a deadly poison, in a frown. {-} How much goes *in*? {-}
 end card: "Next layer: a deadly poison, in a frown. How much goes in?" · "Outer Layer · No. 003"
 
 ## Notes
+- Look (reboot, 2 Nov): macro flight, the weave in section and the UV camera (bible §2); shot directions rewritten for it, the spoken lines unchanged from `s1v2/scar`.
 - Every claim was checked through search excerpts only (the proxy blocks page fetches; pmc.ncbi.nlm.nih.gov
   does not resolve in this session); see `claims.json`. A person opens each link, and a board-certified
   dermatologist signs off, before posting.

@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep03/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do you scar now? Before birth, a cut healed without one.",
+   "stars": [
+    "scar"
+   ],
+   "phonemes": "wˌaɪ dˈuː juː skˈɑː nˈaʊ? bɪfˌɔː bˈɜːθ, ɐ kˈʌt hˈiːld wɪðˈaʊt wˌɒn.",
+   "speed": 0.74,
+   "file": "01.wav",
+   "dur": 4.568,
+   "sha256": "0be8a16dbb14c1925537fd91cd5d6feff0a748db9bf08409539a2f573d2ae788"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's pulled.",
+   "stars": [
+    "pulled"
+   ],
+   "phonemes": "ˌʌndə ðə sˈɜːfɪs, mˈəʊst əv jɔː skˈɪnz stɹˈɛŋθ ɪz kˈɒləʤən , wˈəʊvən ˌəʊvə and ˌʌndəɹ ɪn ˈɛvɹɪ daɪɹˈɛkʃən lˈaɪk ɐ bˈaskɪt, sˌəʊ ɪt ɡˈɪvz ɐ lˈɪtəl wɪtʃˈɛvə wˈeɪ ɪts pˈʊld.",
+   "speed": 0.82,
+   "file": "02.wav",
+   "dur": 9.868,
+   "sha256": "9cca09456f12c6be0eae7cbc0011191b34476ee202456c9b98c003a778224d97"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Cut through it, and the body doesn't reweave. It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat glands.",
+   "stars": [
+    "glands"
+   ],
+   "phonemes": "kˈʌt θɹˈuː ɪt, and ðə bˈɒdi dˈʌzənt ɹɪwˈiːv. ɪt pˈatʃɪz, lˈeɪɪŋ njˈuː θɹˈɛdz sˈaɪd baɪ sˈaɪd, ˈɔːl ɪn wˈɒn daɪɹˈɛkʃən, and lˈiːvz ˈaʊt ðə hˈeə and ðə swˈɛt ɡlˈandz.",
+   "speed": 0.78,
+   "file": "03.wav",
+   "dur": 11.017,
+   "sha256": "0a86072d28c13090c01cf6419d7efc6928507c93e656d8f6b78377f47e2a3c05"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "We call a closed wound healed, as good as new. But pulled until it tears, even an old scar holds only about four-fifths of the original strength.",
+   "stars": [
+    "strength"
+   ],
+   "phonemes": "wiː kˈɔːl ɐ klˈəʊzd wˈuːnd hˈiːld, az ɡˈʊd az njˈuː. bˌʌt pˈʊld ʌntˈɪl ɪt tˈeəz, ˈiːvən ɐn ˈəʊld skˈɑː hˈəʊldz ˈəʊnli ɐbˌaʊt fˈɔːfˈɪfθs ɒvðɪ əɹˈɪdʒɪnəl stɹˈɛŋθ.",
+   "speed": 0.82,
+   "file": "04.wav",
+   "dur": 9.457,
+   "sha256": "7d42213a4cbbe2acb4fac7cea63430b9f7c1f5de73c318c5b267f82d74c754dd"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles and all. After that, it patches.",
+   "stars": [
+    "patches"
+   ],
+   "phonemes": "jˈɛt ʌntˈɪl ɐbˌaʊt ðə sˈɪksθ mˈʌnθ ɒv pɹˈɛɡnənsi, ɐ kˈʌt ɪn ɐ bˈeɪbiz skˈɪn ɹɪɡɹˈəʊz ðə wˈiːv, fˈɒlɪkəlz and ˈɔːl. ˈaftə ðˈat, ɪt pˈatʃɪz.",
+   "speed": 0.82,
+   "file": "05.wav",
+   "dur": 8.932,
+   "sha256": "50ba9a035507b62be4b411e8c3f886b52eaa6f5d3cc3847fc6e26f5d30e72da4"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And on most of your body, only the top layer, about this paper's thickness, grows back without a seam.",
+   "stars": [
+    "seam"
+   ],
+   "phonemes": "and ˌɒn mˈəʊst əv jɔː bˈɒdi, ˈəʊnli ðə tˈɒp lˈeɪə, ɐbˌaʊt ðɪs pˈeɪpəz θˈɪknəs, ɡɹˈəʊz bˈak wɪðˌaʊt ɐ sˈiːm.",
+   "speed": 0.82,
+   "file": "06.wav",
+   "dur": 6.336,
+   "sha256": "8cad8b2dda76afc1f9f3e1155db3843009cd54f3618241c287fbe3372be40456"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So, why the scar? Skin's quick repair: strong enough to close, never the weave.",
+   "stars": [
+    "weave"
+   ],
+   "phonemes": "sˈəʊ, wˌaɪ ðə skˈɑː? skˈɪnz kwˈɪk ɹɪpˈeə: stɹˈɒŋ ɪnˈʌf tə klˈəʊz, nˈɛvə ðə wˈiːv.",
+   "speed": 0.82,
+   "file": "07.wav",
+   "dur": 5.065,
+   "sha256": "c9d6bc1c711c0347e12022bb8f7ab0b69326acdc5124bdfa34f8640171056600"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a deadly poison, in a frown. How much goes in?",
+   "stars": [
+    "in"
+   ],
+   "phonemes": "nˈɛkst: ɐ dˈɛdli pˈɔɪzən, ɪn ɐ fɹˈaʊn. hˌaʊ mˈʌtʃ ɡəʊz ˈɪn?",
+   "speed": 0.82,
+   "file": "08.wav",
+   "dur": 3.765,
+   "sha256": "9de7e5033f4ab33481bcb011f77f3f27c9b7a647558125ece013bb59010ad1a0"
+  }
+ ]
+}

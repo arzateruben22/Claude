@@ -108,5 +108,16 @@
   "note": "Restates c3 and c5 (parallel bundles, not the basket weave; about 80% strength, Ireton et al. 2013 citing Levenson 1965). 'Quick repair': collagen is laid down within weeks while remodelling runs a year or more (teaching sources vary on the timing).",
   "verified_via": "search excerpt",
   "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "Before birth, a cut healed without one.",
+  "claim": "Early in gestation (until about 22–24 weeks in humans) fetal skin wounds heal without a scar; 'one' = a scar.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3362931/",
+  "source_title": "A review of fetal scarless healing (ISRN Dermatology 2012), PMC3362931",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'scarless healing occurs in fetal skin until around 22 to 24 weeks of gestation in the human fetus'; fetal collagen 'is deposited in a fine reticular or basket weave pattern similar to uninjured skin'; 'Scarless healing in early fetal skin is a form of regeneration, with renewal of skin appendages such as hair follicles and sebaceous glands'. Larson, Longaker & Lorenz 2010 (Plast Reconstr Surg 126:1172–80): 'In humans, scarring of wounds begins at approximately 24 weeks of gestation'. Which excerpt sits in which review was read from search summaries: a person checks. 'About the sixth month' = weeks 22–26; screen shows '≈ 22–24 weeks'. Evidence comes from fetal surgery, pathology and animal models.",
+  "verified_via": "search excerpt",
+  "status": "ok"
  }
 ]
