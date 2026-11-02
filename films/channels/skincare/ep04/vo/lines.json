@@ -7,7 +7,7 @@
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
  "python": "3.13.17",
- "made_by": "films/channels/skincare/s1v2/botox/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "made_by": "films/channels/skincare/ep04/voice.py (tts.py's phonemes and trim, one speed per line)",
  "lines": [
   {
    "id": "vo01",

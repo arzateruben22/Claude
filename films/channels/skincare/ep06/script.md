@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "Same list as cigarettes" (draft; dermatologist sign-off before posting)
+# Outer Layer No. 006: "Same list as cigarettes" (draft; dermatologist sign-off before posting)
 
 About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, tanning beds.
 **Tanning episode: a board-certified dermatologist signs off on every line before posting (bible §8, §9).**
@@ -27,7 +27,7 @@ two governments did.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
-Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/tanning-beds --segment toscale`.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
 ## hook {shot: frame 0, the payoff: a long typeset list of cancer agents, two lines lit, "Tobacco smoking" and "UV-emitting tanning devices" · badge: IARC Group 1 · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Same list as *cigarettes*? Most people hear that and think: just as deadly. {-}

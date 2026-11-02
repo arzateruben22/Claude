@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "The deadliest dose" (draft; dermatologist sign-off before posting)
+# Outer Layer No. 004: "The deadliest dose" (draft; dermatologist sign-off before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, topic
 "What Botox does" (mechanism only; the voice says "botulinum toxin", never the brand).
@@ -28,7 +28,7 @@ whom, and never names a product. No advice.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
-Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/botox --segment toscale`.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep04 --segment toscale`.
 
 ## hook {shot: frame 0, the payoff: a section through a brow, the crease above, the muscle below, one nerve ending on the muscle lit, a single message frozen halfway · badge: simplified · title: "The deadliest dose" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Poison, in a *frown*? {-} Among the most poisonous substances known, by the nanogram. {c7}

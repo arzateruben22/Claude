@@ -1,8 +1,8 @@
-"""Voice Outer Layer s1v2 sunscreen-decade with one Kokoro speed per line (an episode-local wrapper around
+"""Voice Outer Layer No. 006 with one Kokoro speed per line (an episode-local wrapper around
 kits/cinema/voice/tts.py, which takes one --speed for the whole script).
 
-  $CINEMA_VOICE/venv/bin/python -I films/channels/skincare/s1v2/sunscreen-decade/voice.py --models $CINEMA_VOICE/models
-  $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/channels/skincare/s1v2/sunscreen-decade/vo $CINEMA_VOICE/models
+  $CINEMA_VOICE/venv/bin/python -I films/channels/skincare/ep06/voice.py --models $CINEMA_VOICE/models
+  $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/channels/skincare/ep06/vo $CINEMA_VOICE/models
 
 Why: at one speed (0.9), bf_isabella read the short lines fast and the long ones slower (hook 3.65,
 takeaway 3.55, to-scale 3.14, why 3.09, change 3.04 words/s against normal 2.79 and whoa 2.63), so
@@ -32,7 +32,7 @@ spec.loader.exec_module(tts)
 
 NARRATOR = "bf_isabella"         # bible §4 / auditions/README.md: Outer Layer's narrator
 # Kokoro speed per line: a touch below the first cut (the Flow standard, 29 Oct), the short lines slower so they land.
-SPEEDS = {"vo01": 0.84, "vo02": 0.84, "vo03": 0.84, "vo04": 0.8, "vo05": 0.78, "vo06": 0.74, "vo07": 0.74, "vo08": 0.79}
+SPEEDS = {"vo01": 0.84, "vo02": 0.84, "vo03": 0.84, "vo04": 0.92, "vo05": 0.9, "vo06": 0.74, "vo07": 0.84, "vo08": 0.84}
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
     lex = {w.lower(): p for w, p in json.loads((HERE / "pron.json").read_text()).items()}
     meta = {"voice": NARRATOR, "speed": "per line", "lang": lang, "model_sha256": tts.sha256(model), "voices_sha256": tts.sha256(voices),
             "kokoro_onnx": "0.6.1", "onnxruntime": onnxruntime.__version__, "python": sys.version.split()[0],
-            "made_by": "films/channels/skincare/s1v2/sunscreen-decade/voice.py (tts.py's phonemes and trim, one speed per line)", "lines": []}
+            "made_by": "films/channels/skincare/ep06/voice.py (tts.py's phonemes and trim, one speed per line)", "lines": []}
     for i, (beat, text, stars) in enumerate(script_lines(HERE / "script.md"), 1):
         lid = f"vo{i:02d}"
         ph = tts.phonemes(tok, text, lex, lang)

@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
+# Outer Layer No. 005: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
 
 About 70–74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
 topic "sunscreen vs no sunscreen, after about ten years". This episode is about sunscreen, so a board-certified
@@ -29,7 +29,7 @@ The film describes the evidence and never tells the viewer what to do or what to
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
-Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/sunscreen-decade --segment toscale`.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep05 --segment toscale`.
 
 ## hook {shot: frame 0, the payoff: two model hands side by side under one warm sky, the same to the eye, gauge at 0 µm · badge: model · title: "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Which hand *aged*? Both belong to neighbours, under the same fierce sun. {-}

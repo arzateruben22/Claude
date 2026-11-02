@@ -12,9 +12,9 @@ each link, and a board-certified dermatologist signs off every episode, before a
 | 001 | `pimples`: "The fight you never saw" | "Is this spot *new*? Its fight began under skin that looked perfectly clear." | The widest audience (almost everyone has had a spot), and a twist in the first 2 s: the spot is the last scene of a fight that began under clear skin. Strongest hook, so it opens the season. |
 | 002 | `glow`: "Where a glow comes from" | "Where's your *glow* from? Most light on your face goes inside you." | The lightest, most visual episode after a battle: pure optics, no warnings. |
 | 003 | `scar`: "What's in a scar" | "Is a scar still *skin*? Look closer, thread by thread." | Turns from light to structure. Its fact (a baby's skin heals without a scar until about the sixth month) is the season's biggest "whoa" in the middle. |
-| 004 | `botox`: "The deadliest dose" | "Poison, in a *frown*? Among the most poisonous substances known, by the nanogram." | The curiosity peak: a famous poison, mechanism only. Follows the scar's collagen with nerve and muscle. |
-| 005 | `sunscreen-decade`: "The sunscreen experiment" (ageing trial 4.5 years, on screen; melanoma followed ~10 more) | "Which hand *aged*? Both belong to neighbours, under the same fierce sun." | A trial story, with ten years of results, that sets up the finale's evidence argument. |
-| 006 | `tanning-beds`: "Same list as cigarettes" | "Same list as *cigarettes*? Most people hear that and think: just as deadly." | The highest stakes and the sharpest reframe ("not the same size of harm, but the same certainty"), so it ends the season. |
+| 004 | `botox` (now `ep04/`): "The deadliest dose" | "Poison, in a *frown*? Among the most poisonous substances known, by the nanogram." | The curiosity peak: a famous poison, mechanism only. Follows the scar's collagen with nerve and muscle. |
+| 005 | `sunscreen-decade` (now `ep05/`): "The sunscreen experiment" (ageing trial 4.5 years, on screen; melanoma followed ~10 more) | "Which hand *aged*? Both belong to neighbours, under the same fierce sun." | A trial story, with ten years of results, that sets up the finale's evidence argument. |
+| 006 | `tanning-beds` (now `ep06/`): "Same list as cigarettes" | "Same list as *cigarettes*? Most people hear that and think: just as deadly." | The highest stakes and the sharpest reframe ("not the same size of harm, but the same certainty"), so it ends the season. |
 
 ## The tease chain
 
