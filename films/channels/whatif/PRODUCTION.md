@@ -84,3 +84,9 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
     square.
   `crowd.js` now centres its square on its group. The output is unchanged at the origin, which is where No. 002
   uses it.
+- 2 Nov, night: No. 001 final merged from the render worker (QA PASS, −14.1 LUFS, −1.6 dBTP, 0 flashes) with its
+  hand-off docs. No. 002 passed review round 5 (a4 b4 c4 d4 e5 f4 g4) after the 828 m rule over the cube; its
+  final is with the worker. No. 003 passed review round 5 (a4 b4 c4 d4 e5 f4 g4) after five rounds. The hook was
+  rebuilt as a broadside balance beyond a walking ant, and the "each" beat as a to-scale ant carpet seen top-down,
+  then rising to you. Its final is queued behind No. 002. Kit: `CINEMA.holdCuts` (opt-in, cinema3d.js).
+  Season title from the coordinator: "Impossible, worked out" (vol01 --title/--thumb).
