@@ -101,10 +101,9 @@ BADGES = [
     {"id": "b-model-h", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
     {"id": "b-town", "text": "model, not a map", "t0": B["normal"]["t0"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": B["change"]["t0"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-hughes", "text": "Hughes et al., 2013", "t0": CUE["four"], "t1": B["why"]["t0"], "slot": "tr"},
     {"id": "b-uv1", "text": "illustration · not trial data", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-green", "text": "Green et al., 1999 · 2011", "t0": B["whoa"]["t0"] + 0.3, "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-sig", "text": "small numbers · not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tr"},
+    {"id": "b-green", "text": "Green et al., 1999 · 2011", "t0": B["whoa"]["t0"] + 0.3, "t1": CUE["half"] - 0.3, "slot": "tl"},
+    {"id": "b-sig", "text": "small numbers · not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"] + 0.3, "t1": CUE["but"] - 0.1, "slot": "tl"},
     {"id": "b-est", "text": "estimate", "t0": CUE["fifth"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["but"] - 0.1, "t1": t_end, "slot": "tl"},
@@ -118,7 +117,7 @@ COUNTERS = [
 ]
 PLATES = {
     "odds": {"t0": CUE["daily"] - 0.2, "t1": B["why"]["t0"] - 0.3, "text": "increased ageing, daily group: about a quarter less likely",
-             "sub": f"relative odds {OR:.2f} (95% CI {OR_CI[0]:.2f}–{OR_CI[1]:.2f})"},
+             "sub": f"relative odds {OR:.2f} (95% CI {OR_CI[0]:.2f}–{OR_CI[1]:.2f}) · Hughes et al., 2013"},
     "mel": {"t0": CUE["squamous"] - 0.3, "t1": B["toscale"]["t0"] - 0.3, "scc": CUE["squamous"], "mel": CUE["melanoma"], "half": CUE["half"], "small": CUE["small"],
             "n": list(MEL), "sub": f"hazard ratio {HR:.2f} (95% CI {HR_CI[0]:.2f}–{HR_CI[1]:.2f}): not quite significant"},
     "viewfinder1": {"t0": B["why"]["t0"], "t1": B["whoa"]["t0"]},

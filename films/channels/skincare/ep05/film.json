@@ -532,7 +532,7 @@
    "t0": 23.866666666666667,
    "t1": 27.7,
    "text": "increased ageing, daily group: about a quarter less likely",
-   "sub": "relative odds 0.76 (95% CI 0.59–0.98)"
+   "sub": "relative odds 0.76 (95% CI 0.59–0.98) · Hughes et al., 2013"
   },
   "mel": {
    "t0": 44.36666666666667,
@@ -671,13 +671,6 @@
    "slot": "tl"
   },
   {
-   "id": "b-hughes",
-   "text": "Hughes et al., 2013",
-   "t0": 22.433333333333334,
-   "t1": 27.65,
-   "slot": "tr"
-  },
-  {
    "id": "b-uv1",
    "text": "illustration · not trial data",
    "t0": 28.0,
@@ -688,7 +681,7 @@
    "id": "b-green",
    "text": "Green et al., 1999 · 2011",
    "t0": 41.833299999999994,
-   "t1": 54.25,
+   "t1": 49.06666666666667,
    "slot": "tl"
   },
   {
@@ -696,7 +689,7 @@
    "text": "small numbers · not quite significant",
    "t0": 49.36666666666667,
    "t1": 54.25,
-   "slot": "tr"
+   "slot": "tl"
   },
   {
    "id": "b-hand",
