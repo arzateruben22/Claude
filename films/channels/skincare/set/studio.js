@@ -95,7 +95,8 @@ export const skinMaterial = ({ tone = [0.62, 0.42, 0.3], oil = 0.25, hydration =
     color: new THREE.Color(...tone), vertexColors, roughness: 0.48 - 0.18 * hydration, metalness: 0,
     sheen: 0.18, sheenRoughness: 0.6, sheenColor: new THREE.Color(1, 0.86, 0.78),
     clearcoat: 0.12 + 0.5 * oil, clearcoatRoughness: 0.35 - 0.2 * hydration,
-    transmission: 0.06, thickness: 1.2, ior: 1.4,
+    // no transmission on skin: a transmissive material costs a second scene pass per motion-blur sample (≈ 2× the frame);
+    // the subsurface look comes from the warm sheen, a soft specular and the scene's warm fill instead
     attenuationColor: new THREE.Color(Math.min(1, tone[0] * 1.6 + 0.25), tone[1] * 0.75, tone[2] * 0.6), attenuationDistance: 0.8,
     normalMap: nm, normalScale: new THREE.Vector2(0.55 * micro, 0.55 * micro),
     specularIntensity: 0.4, specularColor: new THREE.Color(1, 0.97, 0.95),

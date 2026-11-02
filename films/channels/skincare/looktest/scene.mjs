@@ -19,7 +19,7 @@ const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 10, threshold: 0.9, bloom: 0.28, exposure: 1.0, maxCoc: 0.03 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, threshold: 0.9, bloom: 0.28, exposure: 1.0, maxCoc: 0.03 });
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(32, W / H, 0.05, 20000);
 const studio = createStudio(renderer, scene, {});
@@ -32,7 +32,7 @@ const TA = [0, 0, 0];
 const terrain = createTerrain({ seed: 9, spots: 0, segs: 420 });
 const tone = toneColor("living", 0.5);   // medium
 terrain.mesh.material = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.05, hydration: 0.2, repeat: 14, seed: 4, micro: 0.3 }); terrain.mesh.material.roughness = 0.62; terrain.mesh.material.clearcoatRoughness = 0.5;
-terrain.group.traverse((o) => { if (o.isInstancedMesh) o.material = strandMaterial({ tint: [0.28, 0.17, 0.11], gloss: 0.5 }); });
+terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.28, 0.17, 0.11], gloss: 0.5 }); o.material.transmission = 0; } });
 scene.add(terrain.group);
 const shaftA = createShaft({ from: [-14, 30, -18], to: [2, -1, 4], radius: 3.2, color: "#B79BFF" }); scene.add(shaftA.group);
 
@@ -63,7 +63,7 @@ const XC = 800;
 const skinC = skinMaterial({ tone: tone.map((v) => Math.min(1, v * 1.1)), oil: 0.15, hydration: 0.3, micro: 0 }); skinC.normalMap = null;
 const skinS = skinMaterial({ tone: tone.map((v) => Math.min(1, v * 1.1)), oil: 0.9, hydration: 0.9, micro: 0 }); skinS.normalMap = null;   // the screened hand: a glossier film
 const handL = createHand({ material: skinS, side: -1, at: [XC - 4.0, 0, 0] }), handR = createHand({ material: skinC, side: 1, at: [XC + 4.0, 0, 0] });
-handL.set({}); handR.set({}); scene.add(handL.mesh, handR.mesh);
+handL.set({ curl: 0.15 }); handR.set({ curl: 0.12 }); scene.add(handL.mesh, handR.mesh);
 const beadL = liquid(THREE, { material: fluidMaterial({ tint: [1, 0.99, 0.97], k: 0.45 }), center: [XC - 4.0, 1, 0], size: 6, resolution: 64 }); scene.add(beadL.mesh);
 const shaftC = createShaft({ from: [XC - 4, 22, -8], to: [XC + 1, -2, 2], radius: 4.5, color: "#B79BFF" }); scene.add(shaftC.group);
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshPhysicalMaterial({ color: 0x241450, roughness: 0.35, clearcoat: 0.6 })); floor.rotation.x = -Math.PI / 2; floor.position.set(XC, -0.95, 0); scene.add(floor);
@@ -98,7 +98,7 @@ window.seek = function (t) {
     const u = E.inout2(seg(t, 8, 12));
     look(mix3([XC + 1.2, 38, -12], [XC + 0.4, 32, -8], u), [XC, 0, 2.2]);   // high, the hands laid out like a product shot, a slow push   // from behind the wrists: the fingers reach away   // a slow push down onto the hands
     studio.aim([XC, 0, 0], [-0.55, 0.85, -0.5], [0.4, 0.45, 0.85]); studio.set({ key: 1.8, rim: 3.6, fill: 0.4, env: 0.7, warm: 0.4 });
-    handL.set({ curl: 0.15 + 0.1 * Math.sin(t * 0.8) }); handR.set({ curl: 0.12 + 0.1 * Math.sin(t * 0.8 + 1) });
+    // the hands hold still (their surface is built once: a metaball rebuild per motion-blur sample is the frame's biggest cost)
     const b = E.inout2(seg(t, 8.3, 11.8));   // a bead of sunscreen lands and spreads across the back of the hand
     beadL.set([{ p: [XC - 4.0 + 0.6 * b, 1.4 - 0.25 * b, -0.2 + 0.9 * b], r: 0.75 - 0.1 * b }, { p: [XC - 3.7 + 1.1 * b, 0.95 - 0.12 * b, 0.4 + 0.6 * b], r: 0.35 * b }, { p: [XC - 4.4 - 0.4 * b, 0.95 - 0.1 * b, 0.0 + 0.3 * b], r: 0.3 * b }]);
     focusPt = [XC, 0.8, 1.5]; fstop = 0.12;
