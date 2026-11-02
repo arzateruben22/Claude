@@ -684,6 +684,111 @@ a.budget-name:hover { text-decoration: underline; }
 .push-log-title { min-width: 0; overflow-wrap: anywhere; color: var(--text-2); }
 @media (min-width: 720px) { .push-card { margin-top: var(--s7); } }
 
+/* ── Review: the reel (src/components/ReviewSlide.tsx) ─────────────────────
+   Phone: a full-screen vertical player, one episode per screen; swipe sideways (scroll snap) or tap ‹ ›; the thumb
+   bar (platform switches, Hold, Approve) sticks to the bottom; title, text and sources scroll up under the video.
+   Desktop: the same slides as cards, video beside the bar and the text. The switches are radios: :has() shows the
+   chosen platform's panel and Approve button, so no script is needed. */
+.slide { position: relative; min-width: 0; }
+.slide-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 44px; }
+.slide-top .kicker { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; }
+.slide-count { color: var(--text-3); flex: none; }
+.slide-top-title { display: none; }
+.slide-media { background: #000; display: grid; place-items: center; min-height: 0; }
+.slide-video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.slide-empty { margin: 0; padding: var(--s5); }
+.slide-head { display: grid; gap: var(--s2); justify-items: start; }
+.slide-title { margin: 0; }
+.slide-title a { text-decoration: none; }
+.slide-info { display: grid; gap: var(--s4); align-content: start; min-width: 0; }
+.pf-panel { padding-top: var(--s3); border-top: 1px solid var(--line); }
+.slide-title-text { margin: 0; font: 620 16.5px/1.35 var(--ui); }
+.slide-caption { margin: 0; font-size: 15.5px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); max-width: 72ch; }
+.slide-tags { margin: 0; font: 500 12.5px/1.6 var(--mono); color: var(--text-2); overflow-wrap: anywhere; }
+.slide-sources h3 { margin: 0 0 var(--s2); }
+.slide-sources ol { overflow-wrap: anywhere; max-width: 72ch; margin: 0; padding-left: 1.4em; display: grid; gap: var(--s2); font-size: 14.5px; line-height: 1.5; color: var(--text-2); }
+.slide-sources li::marker { font: 500 12px var(--mono); color: var(--text-3); }
+.slide-sources a { color: var(--text); }
+/* the thumb bar */
+.slide-bar { display: grid; gap: 6px; z-index: 3; }
+.pf-switch { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; margin: 0; padding: 0; border: 1px solid var(--line-2); border-radius: var(--r-sm); background: var(--well); min-width: 0; }
+.pf-switch label { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 6px; border-radius: 3px; font: 560 13px/1 var(--ui); color: var(--text-2); cursor: pointer; white-space: nowrap; min-width: 0; }
+.pf-switch label > span:not(.sr-only) { overflow: hidden; text-overflow: ellipsis; }
+.pf-switch input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; padding: 0; opacity: 0; cursor: pointer; }
+.pf-switch label:hover { color: var(--text); }
+.pf-switch label:has(input:checked) { background: #E4E8EE; color: #0A0C10; }
+.pf-switch label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pf-switch label[data-approved]::after { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
+.pf-switch label[data-approved]:has(input:checked)::after { background: #17784A; }
+.bar-actions { display: flex; gap: var(--s2); align-items: stretch; }
+.bar-actions .btn { min-height: 48px; }
+.step { flex: 0 0 48px; padding: 0; }
+.step[data-step="next"] svg { transform: scaleX(-1); }
+.approve { flex: 1 1 auto; min-width: 0; }
+.approve form { display: grid; }
+.approve .btn { width: 100%; }
+.approve-label { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 359px) { .approve-where { display: none; } }
+.approve [role="status"]:not(.sr-only) { margin: 4px 0 0; font-size: 13px; }
+.btn.approved { background: transparent; border-color: color-mix(in srgb, var(--good) 55%, transparent); color: var(--good); }
+.hold { flex: none; }
+.slide .hold > summary { min-height: 48px; padding-inline: 18px; color: var(--text); }
+.slide .hold > summary::before { content: none; }
+.hold-sheet { position: absolute; z-index: 5; left: 0; right: 0; bottom: calc(100% + 8px); padding: var(--s4); background: #0A0C10; border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: 0 24px 48px -24px rgba(0, 0, 0, .9); }
+.hold-sheet [role="status"]:not(.sr-only) { margin: 0; font-size: 13.5px; }
+/* the panel and the Approve button follow the switch */
+.slide:has(input[data-pf="youtube"]:checked) [data-for]:not([data-for="youtube"]),
+.slide:has(input[data-pf="tiktok"]:checked) [data-for]:not([data-for="tiktok"]),
+.slide:has(input[data-pf="instagram"]:checked) [data-for]:not([data-for="instagram"]) { display: none; }
+
+@media (max-width: 719px) {
+  .main:has(> .reel-page) { padding: 0; }
+  .shell:has(.reel-page) { padding-bottom: 0; }
+  .reel-page .reel-intro { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+  .slide { --screen-h: calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom)); --top-h: calc(60px + env(safe-area-inset-top)); --bar-h: 118px;
+    display: flex; flex-direction: column; }
+  .slide-top { order: 0; flex: none; min-height: var(--top-h); padding: env(safe-area-inset-top) 16px 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "kicker count" "title count"; align-content: center; column-gap: var(--s3); row-gap: 2px; }
+  .slide-top > .kicker { grid-area: kicker; }
+  .slide-top > .slide-count { grid-area: count; }
+  .slide-top-title { display: block; grid-area: title; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 16px/1.25 var(--ui); color: var(--text); }
+  .slide-media { order: 1; flex: none; position: relative; overflow: hidden; height: calc(var(--screen-h) - var(--top-h) - var(--bar-h)); }
+  .slide-video { position: absolute; inset: 0; height: 100%; }
+  .slide:not(:has(.pf-switch)) { --bar-h: 66px; }
+  .slide-head { order: 2; padding: var(--s5) 16px 0; }
+  .slide-info { order: 3; padding: var(--s4) 16px var(--s6); }
+  .slide-bar { order: 4; position: sticky; bottom: 0; padding: 8px 12px; background: #07080B; border-top: 1px solid var(--line); }
+  .slide-head .h2, .slide-head h2 { font-size: 30px; }
+  .slide-sources a { display: inline-block; padding-block: 12px; margin-block: -12px; }
+  /* the reel: one slide per screen, each scrolls on its own */
+  .reel { display: flex; height: calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom)); overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .reel::-webkit-scrollbar { display: none; }
+  .reel > .slide { scroll-padding-bottom: calc(var(--bar-h) + 16px); flex: 0 0 100%; height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scroll-snap-align: start; scroll-snap-stop: always; }
+  /* the episode page: one slide at the top of the page, edge to edge; the bar sticks above the tab bar */
+  .slide.single { margin: -22px -16px 0; }
+  html:has(.slide.single) { scroll-padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 134px); }
+  .slide.single .slide-bar { bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
+}
+@media (min-width: 720px) {
+  .reel { display: grid; gap: var(--s5); }
+  .slide { display: grid; grid-template-columns: 300px minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; grid-template-areas: "top top" "media head" "media bar" "media info"; column-gap: var(--s5); }
+  .reel > .slide { background: var(--glass); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s5); backdrop-filter: var(--blur); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035); scroll-margin-top: var(--s5); }
+  .slide.single { grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); column-gap: var(--s6); }
+  .slide-top { grid-area: top; min-height: 0; margin-bottom: var(--s2); }
+  .slide-top > a.kicker { padding-block: 6px; }
+  .slide-media { grid-area: media; align-self: start; background: none; }
+  .slide-video { aspect-ratio: 9 / 16; max-height: 70vh; height: auto; border-radius: var(--r-sm); }
+  .slide-head { grid-area: head; }
+  .slide-bar { grid-area: bar; margin: var(--s4) 0 var(--s5); max-width: 520px; }
+  .slide-info { grid-area: info; }
+  .step { display: none; }
+  .hold { position: relative; }
+  .hold-sheet { left: 0; right: auto; width: min(420px, 80vw); bottom: auto; top: calc(100% + 8px); }
+  .approve { flex: 0 1 300px; }
+}
+@media (min-width: 720px) and (max-width: 899px) { .slide { grid-template-columns: 240px minmax(0, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { .reel { scroll-behavior: smooth; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .confetti { display: none; }
