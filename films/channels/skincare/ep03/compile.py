@@ -26,7 +26,7 @@ B = {b["id"]: b for b in BEATS}
 
 # ── the numbers (claims.json) ──────────────────────────────────────────────
 PALM_UM, CHEEK_UM, PAPER_UM = 173.0, 17.0, 100.0     # c9: palm 173 µm, cheek 16.8 µm (Egawa 2007); paper ≈ 100 µm
-WRINKLE = 8.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
+WRINKLE = 6.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
 NARROW = 0.42                                        # the vessels narrow to this fraction of their width (illustration)
 assert 1.6 < PALM_UM / PAPER_UM < 1.9                # "nearly two sheets of paper"
 
@@ -51,28 +51,30 @@ CUE = {"swell": [A("vo02:swelling,", -0.3), A("vo02:sponge.", 0.2)], "wrong": A(
 PADS = {"target": [0, -20, 0], "el": 20, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 520, "az": -4}
 TIP = {"target": [-40, -16, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "pads": [{"t": 0.0, **PADS, "dist": 560, "az": -8}, {"t": B["normal"]["t0"], **PADS, "dist": 520, "az": -4, "ease": "sine"},
+    "pads": [{"t": 0.0, **PADS, "dist": 620, "az": -8}, {"t": B["normal"]["t0"], **PADS, "dist": 470, "az": -4, "ease": "sine"},   # a push from frame 0
              # the wrong idea: a push to the fingertip as it "swells", then back out to the same framing for the match cut
              {"t": CUE["swell"][1], **TIP, "dist": 300, "az": -6, "ease": "inout2"},
              {"t": CUE["wrong"] + 0.2, **TIP, "dist": 300, "az": -5, "ease": "sine"},
-             {"t": A("vo03:Almost", -0.15), **PADS, "ease": "inout2"}],
+             {"t": A("vo03:Almost", -0.15), **PADS, "dist": 470, "ease": "inout2"}],
     # the nerves: the same framing (a match), then a push into the fingertip's cut face, where the inside shot begins
-    "nerves": [{"t": A("vo03:Almost", -0.15), **PADS}, {"t": CUE["smooth"] + 0.3, **PADS, "dist": 500, "az": -2, "ease": "sine"},
-               {"t": B["why"]["t0"], "target": [-40, -18, 23], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 240, "az": -2, "ease": "inout2"}],
+    "nerves": [{"t": A("vo03:Almost", -0.15), **PADS, "dist": 470}, {"t": CUE["smooth"] + 0.3, **PADS, "dist": 500, "az": -2, "ease": "sine"},
+               {"t": B["why"]["t0"] - 0.7, "target": [-40, -18, 23], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 240, "az": -2, "ease": "inout2"},
+               {"t": B["why"]["t0"], "target": [-40, -18, 23], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 110, "az": -2, "ease": "in2"}],   # through the pad's face: the inside shot opens close on the tissue
     # inside: close on the section's cut face (from the push), down to the vessels, up to the surface as it buckles,
     # then out again on "reflex" (the reflex shot opens on the pad at that distance)
-    "inside": [{"t": B["why"]["t0"], "target": [0, -60, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 260, "az": -2},
-               {"t": CUE["narrow"][0], "target": [0, -96, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 250, "az": -1, "ease": "inout2"},
+    "inside": [{"t": B["why"]["t0"], "target": [0, -60, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 130, "az": -2},
+               {"t": CUE["narrow"][0] - 0.4, "target": [0, -96, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 250, "az": -1, "ease": "inout2"},
+               {"t": CUE["narrow"][1], "target": [0, -96, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 240, "az": -1, "ease": "sine"},   # held on both vessels while they narrow
                {"t": CUE["shrink"][0], "target": [0, -40, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": 0, "ease": "inout2"},
                {"t": CUE["buckle"][1], "target": [0, -10, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 280, "az": 1, "ease": "inout2"},
-               {"t": B["whoa"]["t0"], "target": [0, -10, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 270, "az": 2, "ease": "sine"}],
+               {"t": B["whoa"]["t0"], "target": [0, -10, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 560, "az": -2, "ease": "inout2"}],   # out to the whole buckled block: the reflex opens on the furrowed pad at the same size
     # the reflex: the furrowed pad in its bath, marbles on it; an orbit through the grip study; then the pull-back that
     # lifts the gauge card (the pad lower right, clear of the card and above the captions)
-    "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -14},
-               {"t": CUE["argued"], "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -4, "ease": "inout2"},
+    "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},
+               {"t": CUE["argued"], "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -6, "ease": "inout2"},
                {"t": CUE["none"] + 0.4, "target": [-40, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
-               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 520, "az": 8, "ease": "inout2"},
-               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 510, "az": 9, "ease": "sine"}],
+               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 520, "az": 8, "ease": "inout2"},
+               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 510, "az": 9, "ease": "sine"}],
     "close": [{"t": B["takeaway"]["t0"], **PADS, "dist": 520, "az": -4},
               {"t": B["tease"]["t1"], **PADS, "dist": 560, "az": -8, "ease": "sine"}],
 }
@@ -93,16 +95,14 @@ LABELS = [
     {"id": "l-arm-c", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-simp-h", "text": "simplified", "t0": B["normal"]["t0"] - 0.6, "t1": B["why"]["t0"], "slot": "tr"},
+    {"id": "b-simp-h", "text": "simplified", "t0": B["normal"]["t0"] - 0.6, "t1": t_end, "slot": "tr"},   # the whole film after the title
     {"id": "b-wrong", "text": "not what happens", "t0": CUE["wrong"], "t1": A("vo03:Almost", -0.15), "slot": "tl"},
     {"id": "b-1930", "text": "Lewis & Pickering, 1930s", "t0": A("vo03:doctors"), "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-ws", "text": "Wilder-Smith & Chow, 2003", "t0": A("vo04:narrow"), "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-fast", "text": "minutes, sped up", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "br"},
-    {"id": "b-trigger", "text": "the trigger: still studied", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "bl"},
+    {"id": "b-ws", "text": "Wilder-Smith 2003 · sped up", "t0": A("vo04:narrow"), "t1": B["whoa"]["t0"], "slot": "bl"},   # under the vessels, above the captions
+    {"id": "b-trigger", "text": "the trigger: still studied", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "br"},
     {"id": "b-debated", "text": "debated", "t0": CUE["argued"], "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-studies", "text": "Kareklas 2013 · Haseleu 2014", "t0": CUE["found"] - 0.4, "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-palm", "text": "palm · cheek ≈ 17 µm (No. 001)", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-simp-c", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
+    {"id": "b-palm", "text": "Egawa 2007", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
 ]
 SPINE = [0.34, 0.215]
 COUNTERS = [   # one readout through the film (WRITING.md, The picture, rule 2)
@@ -127,7 +127,7 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["thickest"] - 0.6, "paper": B["toscale"]["t0"] + 1.0,
+GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["thickest"] - 0.6, "paper": B["toscale"]["t0"] + 1.0, "cheek": CUE["thickest"] + 0.6,
          "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": PALM_UM, "paper_um": PAPER_UM}
 
 TITLE = {"series": "Outer Layer · No. 003", "title": "Bath *fingers*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:wrinkle?", 0.35)}
@@ -137,9 +137,9 @@ POSTER = A("vo05:grip,", 0.3)
 
 glue(f, {"vo01": ["wet fingers", "the same bath."], "vo02": ["soaking up water", "and swelling,", "like a sponge.", "grew up with,"],
          "vo03": ["Almost a century ago,", "doctors noticed", "something odd:", "had been cut", "in the bath."],
-         "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad", "shrinks a little,", "the skin", "on top"],
+         "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad shrinks", "a little, and", "the skin", "on top"],
          "vo05": ["a reflex,", "one doctors use", "test a nerve.", "a wet grip,", "found none."],
-         "vo06": ["hairless skin", "of hands and feet,", "the thickest dead layer,", "two sheets of paper."],
+         "vo06": ["hairless skin", "of hands and feet,", "the thickest dead layer,", "nearly two sheets", "of paper."],
          "vo07": ["don't wrinkle", "because they're soaked.", "decide to."], "vo08": ["your skin?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 

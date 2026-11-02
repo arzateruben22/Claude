@@ -122,10 +122,12 @@ export const createSection = (o = {}) => {
   sheet.position.y = -SC / 2; sheet.visible = false;
   group.add(sheet);
   // an opt-in backing behind the cells (gaps between rows show tissue, not the page)
+  let backing = null;
   if (o.backing) {
-    const back = new THREE.Mesh(new THREE.BoxGeometry(W - 1, SC + GR + SP + BA, D - 6), M.living);
-    back.position.set(0, -(SC + GR + SP + BA) / 2, -2);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(W - 1, SC + GR + SP + BA - 2, D - 6), M.living);   // its top 2 µm under the surface: no z-fight with the dead rows
+    back.position.set(0, -(SC + GR + SP + BA) / 2 - 1, -2);
     group.add(back);
+    backing = back;
   }
   const meshes = { corneoMesh, granMesh, spinMesh, basalMesh, nucMesh, capMesh, dermis, fibMesh };
   // wrinkling (No. 003): every cell near the surface rides a fold y += amp · sin(2πx/period) · e^(y/decay); the fold dies
@@ -147,6 +149,7 @@ export const createSection = (o = {}) => {
     sheet.visible = amp > 0.05; corneoMesh.visible = amp <= 0.05;
     pa.needsUpdate = true; dGeo.computeVertexNormals();
     mortarGroup.visible = amp < 0.05;              // flat sheets can't follow a fold
+    if (backing) backing.visible = amp < 0.05;     // a flat slab would poke through the buckled sheet's troughs
   };
   const base = (m, c, k = 1) => m.color.setRGB(c[0] * k, c[1] * k, c[2] * k);
   return {
@@ -342,9 +345,14 @@ export const createPad = ({ width = 70, depth = 46, height = 60, x = 0, seed = 1
         const bx = base[3 * i], by = base[3 * i + 1], bz = base[3 * i + 2];
         const top = (by + height / 2) / height;                       // 0 at the bottom … 1 at the top
         const edge = Math.min(1, (width / 2 - Math.abs(bx)) / 10) * Math.min(1, (depth / 2 - Math.abs(bz)) / 10);
-        const fold = amp * furrows * Math.pow(0.5 - 0.5 * Math.cos(2 * Math.PI * bx / period + ph), 3) * Math.max(0, edge);   // narrow grooves between soft ridges (not spikes)
-        const round = 6 * (1 - Math.max(0, edge));                   // the pad's rounded shoulders
-        pos.setY(i, by + top * (height * 0.12 * swell - fold - round * top));
+        const fold = amp * furrows * (0.5 - 0.5 * Math.cos(2 * Math.PI * bx / period + ph)) * Math.max(0, edge);   // soft, even folds
+        const e2 = Math.min(1, (width / 2 - Math.abs(bx)) / 18) * Math.min(1, (depth / 2 - Math.abs(bz)) / 18);
+        const round = 14 * (1 - Math.sqrt(Math.max(0, e2)));          // the pad's rounded shoulders
+        const crown = 7 * (1 - (2 * bx / width) ** 2) * (1 - (2 * bz / depth) ** 2);   // a domed top, like a fingertip's pulp
+        pos.setY(i, by + top * (height * 0.12 * swell - fold - round * top + crown * top * top));
+        // rounded vertical edges (radius 12 µm): the corner columns pulled onto a quarter circle
+        const rc = 12, dx = Math.abs(bx) - (width / 2 - rc), dz = Math.abs(bz) - (depth / 2 - rc);
+        if (dx > 0 && dz > 0) { const l = Math.hypot(dx, dz), k = Math.min(1, rc / l); pos.setX(i, Math.sign(bx) * (width / 2 - rc + dx * k)); pos.setZ(i, Math.sign(bz) * (depth / 2 - rc + dz * k)); }
       }
       pos.needsUpdate = true;
       geo.computeVertexNormals();

@@ -29,7 +29,7 @@ vo: Almost a century ago, doctors noticed something odd: a finger whose nerve ha
 ## why {shot: cut into the fingertip's section: the vessels under the pad narrow (time ×N), the pad sinks, and the skin on top folds · picture-only 2.0 s · energy: 0.5} (24.5–37.5 s)
 vo: So the wrinkles come from your nerves. {c3} In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top *buckles*. {c4}
 
-## whoa {shot: pull back: the wrinkle as a reflex, a hand gripping wet marbles, a question mark over it · badges: debated · picture-only 3.0 s · energy: 0.8} (37.5–51 s)
+## whoa {shot: pull back: the wrinkle as a reflex, a hand gripping wet marbles, a question mark over it · badges: debated · picture-only 1.0 s · energy: 0.8} (37.5–51 s)
 vo: A wrinkle is a reflex, one doctors use to test a nerve. {c5} Why we have it is *argued*: one study found a wet grip, the next found none. {c6,c7}
 
 ## toscale {segment: toscale · the gauge lifts beside the palm's section: its dead layer fills past the paper mark, the cheek's 17 µm beside it · picture-only 0.3 s · energy: 0.4} (51–59.5 s)

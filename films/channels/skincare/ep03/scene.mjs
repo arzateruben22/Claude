@@ -48,6 +48,8 @@ const WL = createWater({ width: 74, depth: 50, top: 30, x: -40 }), WR = createWa
 scene.add(WL.mesh, WR.mesh);
 // the wrong idea: a ghost of the fingertip, swollen, in the water's colour
 const ghost = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(70, 60, 46)), new THREE.LineBasicMaterial({ color: 0x006d74, transparent: true, opacity: 0 }));   // an outline: the swollen pad that doesn't happen
+const ghostFill = new THREE.Mesh(new THREE.BoxGeometry(70, 60, 46), new THREE.MeshBasicMaterial({ color: 0x4fb8be, transparent: true, opacity: 0, depthWrite: false }));
+ghost.add(ghostFill);   // a translucent body inside the outline, so the swollen ghost reads at phone size
 scene.add(ghost);
 // the nerves, drawn on the pads' front faces (ink): one whole, one cut (a gap under its middle)
 const nerveMat = new THREE.MeshStandardMaterial({ color: 0x1f2d33, roughness: 0.5, metalness: 0 });
@@ -56,7 +58,8 @@ const nL = nerve(-72, -8, -42, 23.5);
 const nR1 = nerve(8, 33, -42, 23.5), nR2 = nerve(47, 72, -42, 23.5);   // the cut: a gap from 33 to 47
 // marbles on the wrinkled pad, in the bath (the grip study, an illustration)
 const marbleMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ea, roughness: 0.12, metalness: 0.05, transparent: true, opacity: 0.92 });
-const marbles = [[-54, 5, 6], [-40, 5, -6], [-28, 5, 10]].map((p) => { const m = new THREE.Mesh(new THREE.SphereGeometry(5, 28, 20), marbleMat); m.position.set(...p); scene.add(m); return m; });
+const MX = [-62, -48, -36];
+const marbles = [[-62, 5, 6], [-48, 5, -6], [-36, 5, 10]].map((p) => { const m = new THREE.Mesh(new THREE.SphereGeometry(5, 28, 20), marbleMat); m.position.set(...p); scene.add(m); return m; });
 
 const rig = createRig(FILM.cam);
 
@@ -83,7 +86,7 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
-const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
+const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe, cheek: true });
 
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
@@ -109,11 +112,15 @@ window.seek = function (t) {
   nL.visible = nR1.visible = nR2.visible = nerves;
   // the wrong idea: a swollen ghost over the fingertip, then it collapses on "wrong"
   const sw = shot === "pads" ? E.inout2(seg(t, CUE.swell[0], CUE.swell[1])) * (1 - E.inout2(seg(t, CUE.wrong - 0.1, CUE.wrong + 0.7))) : 0;
-  ghost.material.opacity = 0.9 * sw; ghost.visible = sw > 0.002;
+  ghost.material.opacity = 0.9 * sw; ghostFill.material.opacity = 0.22 * sw; ghost.visible = sw > 0.002;
+  const sp = document.getElementById("hud-l-sponge");   // struck through as it's called wrong
+  if (sp) sp.style.textDecoration = t >= CUE.wrong - 0.05 ? "line-through" : "none";
   ghost.scale.set(1 + 0.06 * sw, 1 + 0.25 * sw, 1 + 0.06 * sw); ghost.position.set(-40, -30 + 7.5 * sw, 0);
   // marbles in the grip study
   const mOp = reflex ? Math.min(fadeIn(t, B0.whoa + 0.3, 0.6), 1 - fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;
-  marbles.forEach((m, i) => { m.visible = mOp > 0.002; m.position.y = 4 + 1.2 * Math.sin(t * 1.3 + i); });
+  // they slip across the furrows on "a wet grip" and stop dead on "none"
+  const slip = reflex ? E.inout2(seg(t, CUE.grip - 0.5, CUE.none)) : 0;
+  marbles.forEach((m, i) => { m.visible = mOp > 0.002; m.position.x = MX[i] + 16 * slip; m.position.y = 4 + 1.2 * Math.sin(Math.min(t, CUE.none) * 1.3 + i) * (1 - slip); m.rotation.z = -slip * 3.2; });
   marbleMat.opacity = 0.92 * mOp;
   A.tip = [-40, 4, 22]; A.arm = [40, 4, 22]; A.nerve_l = [-40, -38, 24]; A.nerve_r = [40, -38, 24]; A.ghost = [-20, 18, 22];
 
@@ -132,7 +139,7 @@ window.seek = function (t) {
   camera.updateMatrixWorld();
   const p0 = project(camera, [-75, 0, 23], W, H), p1 = project(camera, [-75, -100, 23], W, H);
   const lift = reflex ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: Math.min(1, Math.max(0, (lift - 0.6) / 0.3)), lift, sc: G.sc_um, paperUm: G.paper_um, scName: "palm",
+  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: Math.min(1, Math.max(0, (lift - 0.6) / 0.3)), lift, sc: G.sc_um, paperUm: G.paper_um, scName: "palm", cheekUm: SK.cheek_um, fillCheek: E.out3(seg(t, G.cheek - 0.1, G.cheek + 0.6)),
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 1.4)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 0.7)) });
 
   hud.update(t);
