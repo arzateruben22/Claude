@@ -130,14 +130,15 @@ for (const L of FILM.labels) {
 }
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });
-const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.27 });   // a little higher: room for the trail above the tease caption
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
 // the tease's picture: a dotted trail of footprints walking up to a small moon, under the next-envelope line
 const trail = document.createElement("div");
-trail.innerHTML = '<svg viewBox="0 0 220 40" width="30vmin" style="display:block;margin:1.2vmin auto 0;overflow:visible" aria-hidden="true">'
-  + [0, 1, 2, 3, 4, 5, 6].map((i) => `<ellipse cx="${10 + i * 24}" cy="${i % 2 ? 26 : 32}" rx="5" ry="3" fill="var(--chalk-2)" opacity="${0.45 + i * 0.07}"/>`).join("")
-  + '<circle cx="200" cy="16" r="13" fill="none" stroke="var(--chalk)" stroke-width="2.4"/><circle cx="196" cy="12" r="2.4" fill="var(--chalk-2)"/><circle cx="204" cy="20" r="1.8" fill="var(--chalk-2)"/></svg>';
+trail.innerHTML = '<svg viewBox="0 0 220 46" width="42vmin" style="display:block;margin:0.6vmin auto 0;overflow:visible" aria-hidden="true">'
+  + [0, 1, 2, 3, 4, 5, 6].map((i) => `<ellipse class="fp" cx="${8 + i * 24}" cy="${i % 2 ? 30 : 38}" rx="6" ry="3.6" fill="var(--chalk-2)" opacity="0"/>`).join("")
+  + '<g class="moon" opacity="0"><circle cx="198" cy="18" r="16" fill="none" stroke="var(--chalk)" stroke-width="2.6"/><circle cx="193" cy="13" r="3" fill="var(--chalk-2)"/><circle cx="204" cy="23" r="2.2" fill="var(--chalk-2)"/><circle cx="201" cy="10" r="1.5" fill="var(--chalk-2)"/></g></svg>';
+const prints = [...trail.querySelectorAll(".fp")], moonG = trail.querySelector(".moon");
 const titleP = endEl.querySelector(".t");
 if (titleP) titleP.after(trail);
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
@@ -166,7 +167,7 @@ window.seek = function (t) {
 
   // where it lands: the squares light from "ocean", 78 chalk, then the 22 hatched
   const k = Math.round(100 * clamp01((t - CUE.ocean + 0.2) / 1.6));
-  waffle.set({ opacity: shot === "where" ? E.out3(seg(t, beat("why").t0 + 1.0, beat("why").t0 + 2.0)) * (1 - seg(t, beat("whoa").t0 - 0.6, beat("whoa").t0 - 0.1)) : 0, state: { k: Math.max(0, k) } });   // gone before the push dives past it
+  waffle.set({ opacity: shot === "where" ? E.out3(seg(t, beat("why").t0 + 1.0, beat("why").t0 + 2.0)) : 0, state: { k: Math.max(0, k) } });   // on screen to the cut
 
   // the layer fills to 2.8 mm on the line; the coins and the mm ruler beside it
   const macro = shot === "macro" || shot === "work";
@@ -186,6 +187,9 @@ window.seek = function (t) {
   hud.update(t);
   const tail = E.inout2(seg(t, beat("tease").t1 - 0.6, beat("tease").t1));   // the loop: the card lifts over the last 0.6 s
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
+  const tw = t - (FILM.endCard + 0.5);                                                // the trail walks in, a print every 0.22 s, to the Moon
+  prints.forEach((p, i) => p.setAttribute("opacity", String(clamp01((tw - i * 0.22) / 0.2) * (0.5 + i * 0.07))));
+  moonG.setAttribute("opacity", String(clamp01((tw - 7 * 0.22) / 0.4)));
   tFlap.update(t);
   spine.update(t, gate);
   work.update(t, gate);

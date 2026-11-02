@@ -99,15 +99,15 @@ CAM = {
     "where": [
         {"t": B["why"]["t0"], **k([0, 1.7, 0], 13.5, 12, 0.38)},
         {"t": t_flood + 1.0, **k([WAFFLE["at"][0] - 0.5, 0.2, WAFFLE["at"][1]], 21, 21, 0.44, -8), "ease": "inout3"},      # up and over: the waffle beside you
-        {"t": B["whoa"]["t0"], **k([WAFFLE["at"][0] - 0.5, 0.2, WAFFLE["at"][1]], 20, 8, 0.44, -4), "ease": "sine"},
+        {"t": B["whoa"]["t0"], **k([WAFFLE["at"][0] - 0.3, 0.2, WAFFLE["at"][1]], 21, 8, 0.44, -6), "ease": "sine"},
     ],
     "macro": [                                                                                   # a match cut on "Spread": the squares to the card
-        {"t": B["whoa"]["t0"], **{**MACRO, "dist": 0.082, "az": -3}},
-        {"t": t_work0, **{**MACRO, "dist": 0.064, "az": 3}, "ease": "sine"},                # a slow drift in through the line and the hold
+        {"t": B["whoa"]["t0"], **{**MACRO, "dist": 0.086, "az": -1.5}},
+        {"t": t_work0, **{**MACRO, "dist": 0.078, "az": 1}, "ease": "sine"},                # a slow drift in through the line and the hold (the card stays in the safe box)
     ],
-    "work": [{"t": t_work0, **{**MACRO, "dist": 0.064, "az": 3}}, {"t": t_home, **{**MACRO, "dist": 0.062, "az": 4}, "ease": "sine"}],
+    "work": [{"t": t_work0, **{**MACRO, "dist": 0.078, "az": 1}}, {"t": t_home, **{**MACRO, "dist": 0.077, "az": 1.5}, "ease": "sine"}],
     "home": [                                                                                    # a clean cut on "So" (review round 1): you, standing in a thin film
-        {"t": t_home, **k([0.4, 0.9, 0.3], 9.6, 8, 0.34, -4)},
+        {"t": t_home, **k([0.4, 0.9, 0.3], 9.6, 8, 0.30, -4)},
         {"t": t_storm[0], **k([-0.4, 1.1, 0.2], 11.5, 10, 0.36, -6), "ease": "inout2"},
         {"t": t_end, **k([-0.4, 1.2, 0.2], 12.5, 9, 0.38, -4), "ease": "sine"},
     ],
