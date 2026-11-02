@@ -125,7 +125,7 @@ export const workCard = (W0, o = {}) => {
       R.forEach((rw, i) => {
         const r = W0.rows[i];
         rw.style.opacity = String(E.out3(seg(t, r.t, r.t + 0.3)));
-        rw.classList.toggle("on", r.lit && t >= r.t && t < r.t + 1.6);
+        rw.classList.toggle("on", Boolean(r.lit && t >= r.t && t < r.t + 1.6));
       });
     },
     cues: () => W0.rows.map((r, i) => ({ t: r.t, kind: "term.write", tag: `work-${i}` })),
