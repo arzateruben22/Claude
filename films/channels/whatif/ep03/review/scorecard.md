@@ -55,6 +55,11 @@ at least what the previous one did (No. 002 finished a4 b4 c4 d4 e5 f4 g4).
   `updateProjectionMatrix()` after them inside a comment, so each seek used the previous seek's planes. No visible
   effect was found in the stills. Fixed in the code after delivery (the near/far planes now apply on the same seek);
   a re-render would differ only where the camera's distance changes fast.
+  **Checked (2 Nov):** the first two frames after every cut (5.4, 16.7, 30.3, 34.3, 43.87, 47.8, 55.2, 61.2, 67.27 s)
+  and seven fast-move frames (48.8, 49.2, 49.5, 63.0, 64.5, 65.2, 65.6 s), 25 in all, were re-rendered at the final
+  tier with the fixed code and compared with the same frames of the master: PSNR 40.8–45.0 dB, at most 0.08% of
+  pixels differing by more than 40 levels. Every such pixel sits on the text rows (badges, running sum, captions),
+  none in the 3D picture: no clipping or z-fighting. No re-render needed.
 
 ## Not measured here
 - Render cost and the final's text audit (not in this checkout).
