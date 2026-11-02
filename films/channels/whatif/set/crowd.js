@@ -20,7 +20,7 @@ import { ACES_INV_GLSL, hexRgb } from "./aces.js";
 
 const VS = `
 varying vec2 vP;
-void main() { vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz; gl_Position = projectionMatrix * viewMatrix * w; }`;
+void main() { vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz - modelMatrix[3].xz; gl_Position = projectionMatrix * viewMatrix * w; }`;
 
 const FS = `
 precision highp float;

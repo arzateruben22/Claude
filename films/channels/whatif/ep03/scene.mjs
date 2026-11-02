@@ -49,14 +49,16 @@ const bal = createBalance({ tokens: TK, span: 60, height: 40 });
 const wild = createBalance({ tokens: TK, span: 60, height: 40, rightColor: TK["chalk-2"] || "#A7AAB2" });
 scene.add(bal.group, wild.group);
 const WILD_X = 95;
-const ant = createAnt({ length: 0.5 }), ant2 = createAnt({ length: 0.45 });
+const ant = createAnt({ length: 0.5, color: "#7E8189" }), ant2 = createAnt({ length: 0.45 });
 scene.add(ant.group, ant2.group);
 const tip = new THREE.Mesh(new THREE.CapsuleGeometry(0.75, 1.6, 8, 24), shaded(TK.anchor || "#4DA3FF", 0.6));   // a fingertip, true size beside the ant
-tip.rotation.z = Math.PI / 2 - 0.25; tip.position.set(42.9, 0.75, 31.4); scene.add(tip);
+tip.rotation.z = Math.PI / 2; tip.position.set(40.85 + 1.55, 0.78, 30); scene.add(tip);   // side-on, entering from the right, its tip ~5 mm from the ant
 const you = createFigure({ tokens: TK, height: 170 });          // true height beside ants a few mm long: they are specks
 scene.add(you.group);
-const carpet = createCrowd({ tokens: { ...TK, anchor: "#6E7178" }, density: 0.9, dotR: 0.22 });   // ants, a few mm apart
-carpet.mesh.material.depthTest = false; carpet.group.position.set(-260, 0.05, 160); carpet.set({ side: 640, opacity: 1 }); scene.add(carpet.group);
+const YOU = FILM.you, CP = FILM.carpet;
+const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24 });   // your ants, 5 mm apart: 2.44 million fill this square
+carpet.mesh.material.depthTest = false; carpet.mesh.renderOrder = 1; you.group.traverse((o) => { o.renderOrder = 2; });   // over the paper, under you
+carpet.group.position.set(YOU[0], 0.05, YOU[2]); carpet.set({ side: CP.side, opacity: 1 }); scene.add(carpet.group);
 // the person's ants: a seeded swarm on the paper around them
 const swarmMat = shaded("#5A5D64", 0.45);
 const swarm = new THREE.InstancedMesh(new THREE.SphereGeometry(0.18, 6, 4), swarmMat, 2400);
@@ -94,7 +96,7 @@ const showSites = (u) => {
 // ── camera and overlay ──────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
-const S = { ant: [-60, 0.6, 30], left: [0, 0, 0], right: [0, 0, 0], site: [SITE[3][0], 0, SITE[3][1]], ant2: [40, 0.4, 30], wild: [0, 0, 0], you: [-260, 175, 160] };
+const S = { ant: [-110, 0.6, 60], left: [0, 0, 0], right: [0, 0, 0], site: [SITE[3][0], 0, SITE[3][1]], ant2: [40, 0.4, 30], tip: [40.95, 1.5, 30], wild: [0, 0, 0], you: [YOU[0], 175, YOU[2]] };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" } };
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
@@ -125,15 +127,15 @@ window.seek = function (t) {
   S.left = bal.panAt("left"); S.right = bal.panAt("right");
   // the wild balance swings in on "wild" and leans toward the ants
   const w = E.inout2(seg(t, CUE.wild, CUE.wild + 1.2));
-  wild.group.visible = t >= CUE.wild - 0.1;
+  wild.group.visible = t >= CUE.wild - 0.1 && shot !== "home" && shot !== "end";   // never peeking in at the frame's edge on the way home
   wild.set({ x: WILD_X, tilt: PH.tilt_wild * w, left: 1, right: w });
   S.wild = wild.panAt("right");
 
   // the walking ants: one at the hook (and the loop), one on the millimetre ruling
   const walk = 0.35 * Math.sin(t * 0.7);
-  ant.set({ at: [-60 + 0.894 * walk, 0, 30 - 0.447 * walk], heading: 0.464, step: (t * 2.2) % 1 });   // walking toward the balance
-  ant2.set({ at: [40 + 0.12 * Math.sin(t), 0, 30], heading: 2.2, step: (t * 2.6) % 1 });
-  you.set({ at: [-260, 85, 160] });
+  ant.set({ at: [-110 + 0.878 * walk, 0, 60 - 0.479 * walk], heading: 0.5, step: (t * 2.2) % 1 });   // walking toward the balance
+  ant2.set({ at: [40.1 + 0.08 * Math.sin(t), 0, 30], heading: 2.2, step: (t * 2.6) % 1 });
+  you.set({ at: [YOU[0], 85, YOU[2]] });
   swarm.visible = false;
   carpet.group.visible = you.group.visible = shot === "each";
   showSites(shot === "sites" || shot === "tiny" ? seg(t, CUE.sites, CUE.twice) : 0);

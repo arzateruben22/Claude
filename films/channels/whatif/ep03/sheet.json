@@ -123,6 +123,11 @@
    "tag": "l-mm"
   },
   {
+   "t": 31.2,
+   "kind": "label",
+   "tag": "l-tip"
+  },
+  {
    "t": 34.3,
    "kind": "badge",
    "tag": "b-carbon"
@@ -179,6 +184,11 @@
    "t": 55.35,
    "kind": "term.write",
    "tag": "work-12 Mt C ÷ 60 Mt C"
+  },
+  {
+   "t": 55.5,
+   "kind": "badge",
+   "tag": "b-nts2"
   },
   {
    "t": 56.03333333333333,
