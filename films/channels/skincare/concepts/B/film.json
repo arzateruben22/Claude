@@ -1,0 +1,8 @@
+{
+ "_doc": "Look concept B (macro cinema), one still: 'sunscreen vs none, 10 years' as a low drone flight over skin. Not an episode.",
+ "id": "outerlayer-concept-b", "fps": 30, "dur": 2.0, "poster": 1.0, "theme": "theme.json",
+ "shots": [{ "at": 0.0, "name": "macro" }],
+ "title": { "series": "Outer Layer", "title": "", "t1": -1 },
+ "captions": [{ "t0": 0.2, "t1": 2.0, "lines": [[["Ten", 0.3], ["years", 0.45], ["later,", 0.6]], [["from", 0.9], ["a", 1.0], ["millimetre", 1.05], ["away.", 1.3]]] }],
+ "endCard": 99
+}

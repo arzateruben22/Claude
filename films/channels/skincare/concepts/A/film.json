@@ -1,0 +1,8 @@
+{
+ "_doc": "Look concept A (UV camera), one still: 'sunscreen vs none, 10 years' as a 365 nm camera sees it. Not an episode.",
+ "id": "outerlayer-concept-a", "fps": 30, "dur": 2.0, "poster": 1.0, "theme": "theme.json",
+ "shots": [{ "at": 0.0, "name": "uv" }],
+ "title": { "series": "Outer Layer · UV camera", "title": "", "t1": -1 },
+ "captions": [{ "t0": 0.2, "t1": 2.0, "lines": [[["Ten", 0.3], ["years", 0.45], ["of", 0.6], ["sun,", 0.7], ["in", 1.05], ["UV.", 1.15]]] }],
+ "endCard": 99
+}
