@@ -79,10 +79,6 @@ The grid is 50 BPM (A lydian). Captions: 29 pages, burned in.
 - 13 claims in `claims.json`, all status `ok`, **all checked from a search excerpt only**. A physicist opens each of
   the 4 sources (NASA Earth fact sheet, PREM 1981, Klotz 2015, Live Science 2015) and ticks `review/CLAIMS-REVIEW.md`.
   `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep01 --sources` prints the post's source list.
-- Ledger notes that no longer match the film (wording only; the claims stand): c7's note says a label "Alexander
-  Klotz, 2015" is on screen, but the running sum reads "Klotz, 2015: the real Earth"; c6's and c13's notes quote
-  earlier wordings ("Equally dense all the way down", "The pull of Earth's heavy core"); c10's says "said as
-  seventy-six", but 76 min is shown, not said.
 - TODO: channel handle and trademark checks (bible); the posting accounts; a pinned sources page; the AI-voice label
   and "Voice: synthetic" in the post. No phone numbers, emails, prices or hours appear in this episode.
 
@@ -99,4 +95,4 @@ The grid is 50 BPM (A lydian). Captions: 29 pages, burned in.
 - **Pace of the middle.** The coordinator noted the middle holds one composition (the cutaway) too long; not
   changed for this episode.
 - **Listen:** "ten kilometers a second", "forty-two", "thirty-eight", "textbook's"; the 0.6 s pause after the hook's
-  question. (The script's own listen note names Klotz and seventy-six, which the voice no longer says.)
+  question.

@@ -38,7 +38,6 @@ composition too long; that lesson went into No. 002 and later episodes.
 
 ## Noted, not fixed
 - The middle (26–61 s) holds one composition, the cutaway Earth, through three beats.
-- The end-card chip says "No. 002" (the next episode); the script's end-card line says "No. 001".
 - The end-card footnote is small; read it on a phone.
 - Some ledger notes quote earlier wordings or a label that is no longer on screen (c6, c7, c10, c13; see README).
 
