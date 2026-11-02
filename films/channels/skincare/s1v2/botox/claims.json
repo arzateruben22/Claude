@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Every frown starts at a nerve ending, which lets out a chemical messenger onto the muscle below.",
+  "claim": "At the neuromuscular junction the motor nerve terminal releases acetylcholine into a narrow cleft, where it acts on the muscle to make it contract.",
+  "source_url": "https://www.statpearls.com/point-of-care/25815",
+  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "accessed": "2026-11-02",
+  "note": "Search excerpt (StatPearls NMJ entry, statpearls.com; the NCBI Bookshelf NBK number was not found by search): the junctional cleft is roughly 50 nm across the space between the nerve terminal and the plasma membrane of muscle; acetylcholinesterase in the cleft breaks down released ACh. Cross-check, Nigam & Nigam 2010 (Indian J Dermatol, PMC2856357): botulinum toxin 'acts at the neuromuscular junction to cause muscle paralysis by inhibiting the release of acetylcholine from presynaptic motor neurons'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "The muscle pulls, and the skin above it folds into a crease.",
+  "claim": "Glabellar frown lines form from the pull of the underlying muscles (mainly the corrugator supercilii and procerus) on the skin.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9032255/",
+  "source_title": "Anatomical review of the glabellar muscles for botulinum toxin injection (Toxins, 2022)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'glabellar frown lines are created by three muscles: the corrugator supercilii (CSM), procerus and depressor supercilii muscles; however, the most involved muscle is the CSM.' Cross-check, a glabellar-lines trial protocol (clinicaltrials.gov NCT02677298): lines 'occur as a result of the pull on the skin on the underlying facial musculature, predominantly the procerus muscle and the corrugator supercilii'. Title of the Toxins paper is paraphrased from the search result; confirm on opening.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
+  "claim": "The light chain of botulinum neurotoxin type A, once inside the motor nerve terminal, is a zinc-dependent protease that cleaves SNAP-25, a SNARE protein needed for acetylcholine vesicles to fuse with the membrane.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'The light (L) chain interact with different proteins (synaptosomal associated protein (SNAP) 25, vesicle associated membrane protein and syntaxin) in the nerve terminals to prevent fusion of acetylcholine vesicles with the cell membrane.' Type-specific: 'Serotypes A and E act on SNAP-25 … Cleavage of SNAP-25 by the LC prevents acetylcholine-carrying vesicle fusion' (review excerpt); 'a zinc-dependent protease that selectively cleaves SNAP-25' (Blasi et al. 1993, Nature, record at openagrar.de). 'One small protein': SNAP-25 is ≈ 25 kDa (by its name); on screen only as a label.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "Botulinum toxin never touches the skin.",
+  "claim": "Botulinum toxin blocks the release of acetylcholine at the neuromuscular junction; the nerve terminal does not degenerate, and its effect is on muscle contraction, not on the skin itself.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'acts at the neuromuscular junction to cause muscle paralysis by inhibiting the release of acetylcholine from presynaptic motor neurons'; a second PMC review: 'The affected nerve terminals do not degenerate, but the blockage of neurotransmitter release is irreversible. Function can be recovered by the sprouting of nerve terminals and formation of new synaptic contacts.' Glabellar protocol: the toxin 'weakens the overactive underlying muscle contraction, causing a flattening of the facial skin'. 'Not the skin' = the target is the nerve-muscle junction (dermatologist to confirm the wording).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "Two centuries ago, a German doctor named Justinus Kerner traced a deadly paralysis to spoiled sausages.",
+  "claim": "Justinus Kerner (1786–1862), a Württemberg physician, published the first accurate and complete descriptions of food-borne botulism ('sausage poisoning') in 1817–1822, including monographs in 1820 and 1822.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17458494/",
+  "source_title": "From poison to remedy: the chequered history of botulinum toxin (Erbguth FJ; J Neural Transm, 2008)",
+  "accessed": "2026-11-02",
+  "note": "PubMed excerpt: Kerner gave the first accurate and complete descriptions of food-borne botulism between 1817 and 1822. Erbguth (Cambridge book excerpt): the 1820 monograph on 'sausage poisoning' reviewed 76 case histories; the 1822 monograph 155 cases with autopsies; Kerner proposed the toxin formed in bad sausages under anaerobic conditions and acted on the motor and autonomic nervous systems. 'Two centuries ago' ≈ 1820 (about 206 years). Case counts differ between sources (Scott 2004 gives 230 across both) and are not voiced.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "And he guessed that the same poison might one day become a medicine.",
+  "claim": "Kerner suggested a possible therapeutic use of the sausage poison.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17458494/",
+  "source_title": "From poison to remedy: the chequered history of botulinum toxin (Erbguth FJ; J Neural Transm, 2008)",
+  "accessed": "2026-11-02",
+  "note": "Search summary of the abstract and the Cambridge chapter: Kerner 'also suggested a possible therapeutic use'. 'Guessed' is the hedge: he speculated, he did not test it.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "Among the most poisonous substances known, by the nanogram.",
+  "claim": "Botulinum toxin is among the most potent toxins known; for crystalline type A the estimated lethal dose for a 70 kg human is about 0.09–0.15 µg intravenously or intramuscularly (≈ 1.3–2.1 ng/kg), about 0.7–0.9 µg inhaled and 70 µg by mouth.",
+  "source_url": "https://doi.org/10.1001/jama.285.8.1059",
+  "source_title": "Botulinum toxin as a biological weapon: medical and public health management (Arnon SS et al.; JAMA, 2001)",
+  "accessed": "2026-11-02",
+  "note": "NCJRS abstract of the JAMA paper: 'A lethal dose of the toxin for a 70-kilogram human would be approximately 0.09 to 0.15 micrograms intravenously or intramuscularly.' Inhaled: 'approximately 0.7 to 0.9 mcg' (clintox.org citing Arnon). Another review gives an IV LD50 of 1–2 ng/kg and inhaled 100–120 ng/kg. These are estimates extrapolated from animal data; on screen as '≈ 1–2 ng/kg, estimated'. Voice says only 'among the most potent'. Citation confirmed in search: JAMA 2001;285(8):1059–70, PMID 11209178.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "The whole frown takes well under a hundredth of the amount estimated to kill a person.",
+  "claim": "The labelled dose of onabotulinumtoxinA for glabellar (frown) lines is 20 units in total (4 units into each of 5 sites).",
+  "source_url": "https://www.drugs.com/pro/botox-cosmetic.html",
+  "source_title": "onabotulinumtoxinA (cosmetic) prescribing information, label copy (Drugs.com)",
+  "accessed": "2026-11-02",
+  "note": "Label excerpt: '0.1 mL (4 Units) into each of 5 sites, for a total dose of 20 Units'; 'The duration of effect … for glabellar lines is approximately 3-4 months'. Units differ between products and are not interchangeable (one unit = the mouse intraperitoneal LD50 for that product). A label is used only for the dose; no product is named in the film.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "The whole frown takes well under a hundredth of the amount estimated to kill a person.",
+  "claim": "The human LD50 of onabotulinumtoxinA is estimated at about 3,000 units for a 70 kg adult (extrapolated from primate studies); 20 units is about 0.7 % of that (computed).",
+  "source_url": "https://cdn.clinicaltrials.gov/large-docs/36/NCT03861936/Prot_000.pdf",
+  "source_title": "Study protocol, onabotulinumtoxinA for masseter muscle prominence (ClinicalTrials.gov NCT03861936)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: human LD50 roughly 3,000 units, extrapolated from primate studies; accidental injection of a lethal dose is very unlikely, but serious adverse effects can occur well below it. Cross-check: Hong Kong J Emerg Med 2020 review, minimum systemic toxic and lethal doses about 33 and 38 U/kg (≈ 2,600–2,700 U at 70 kg); Siriraj Med J, LD50 about 40 U/kg. Computed: 20 ÷ 3,000 ≈ 0.7 %; 20 ÷ 2,600 ≈ 0.8 %. By mass (≈ 0.73 ng per 100 units, clintox.org) 20 units ≈ 0.15 ng against Arnon's 90–150 ng, ≈ 0.1–0.2 %. Both under 1 %. Said 'well under a hundredth', badged 'estimate'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
+  "claim": "The synaptic cleft at the neuromuscular junction is about 50 nm wide.",
+  "source_url": "https://www.statpearls.com/point-of-care/25815",
+  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (StatPearls, via statpearls.com): the junctional cleft is 'roughly 50 nm across the space between the nerve terminal and the plasma membrane of muscle'. Other sources: 20–60 nm at the crests of the endplate (Taylor & Francis); about 60 nm primary cleft in mouse. Computed: 100 µm = 100,000 nm; 100,000 ÷ 50 = 2,000. Badged '≈, varies by site'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
+  "claim": "A sheet of ordinary 80 gsm copy paper is about 100 µm thick.",
+  "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
+  "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
+  "accessed": "2026-11-02",
+  "note": "As Outer Layer No. 001 and No. 005's paper claim (same source). Computed with c10: 100 µm ÷ 50 nm = 2,000.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
+  "claim": "The effect of botulinum toxin on frown lines lasts about 3 to 4 months, sometimes longer.",
+  "source_url": "https://www.aad.org/public/cosmetic/wrinkles/botulinum-toxin-overview",
+  "source_title": "Botulinum toxin therapy: overview (American Academy of Dermatology)",
+  "accessed": "2026-11-02",
+  "note": "AAD excerpt: 'The improvements last about 3 to 4 months — and sometimes longer'; 'most people see results within 3 to 7 days'. Label: 'approximately 3-4 months' for glabellar lines. A literature review: duration two to six months, most three to four. Said 'a few months'; on screen '≈ 3–4 months'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
+  "claim": "Recovery comes as the poisoned nerve terminal sprouts new endings that make new contacts with the muscle; later the original terminal resumes release and the sprouts are pruned back.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/10077661/",
+  "source_title": "Functional repair of motor endplates after botulinum neurotoxin type A poisoning: biphasic switch of synaptic activity between nerve sprouts and their parent terminals (de Paiva A et al.; PNAS, 1999)",
+  "accessed": "2026-11-02",
+  "note": "Search excerpts: BoNT/A induces sprouting from intoxicated motor nerve terminals; the original endplate became reactivated as the sprouts regressed (secondary summaries of de Paiva 1999; mouse muscle). Nigam & Nigam 2010: 'Function can be recovered by the sprouting of nerve terminals and formation of new synaptic contacts; this usually takes two to three months.' The voice says only 'the nerve grows new endings'; the picture shows the sprout, then the original ending lighting again. The relative roles of sprouting and SNAP-25 turnover in humans are debated (see research.md).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
+  "claim": "With SNAP-25 cleaved, acetylcholine is still packaged in vesicles in the nerve terminal, but the vesicles cannot fuse with the membrane, so the acetylcholine is not released.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: the light chain acts on SNAP-25 and other SNARE proteins 'in the nerve terminals to prevent fusion of acetylcholine vesicles with the cell membrane'; review excerpt: 'Cleavage of SNAP-25 by the LC prevents acetylcholine-carrying vesicle fusion.' 'Ready' = the vesicles are filled and waiting (an illustration on screen).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
