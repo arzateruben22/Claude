@@ -1,7 +1,6 @@
 # Outer Layer No. 004: "What a tan is"
 
-74.2 s, 9:16. **Status: draft round 2** (review fixes applied, being re-rendered); the final goes to the render worker
-after the re-score. Narration: synthetic voice (Kokoro bf_isabella, one speed per line). Score: original
+74.2 s, 9:16. **Status: review passed (draft 9; the compelling-pass scores are in `review/scorecard.md`); the final is with the render worker.** Narration: synthetic voice (Kokoro bf_isabella, one speed per line). Score: original
 (studio preset `outerlayer-slide`). Nothing has been posted.
 
 - Draft preview: `review/outerlayer-004-9x16-draft-preview.mp4` (540×960, 15 fps)
