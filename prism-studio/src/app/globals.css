@@ -389,6 +389,15 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
   .mon[data-empty] .mon-bezel { height: 100%; }
   .mon[data-empty] .mon-status > span { display: block; }
   .mon[data-empty] .mon-status > span + span::before { content: none; }
+  /* a channel with its own identity has something to show before its first cover (the season's titles): full size, in
+     rig order; the top screen keeps its landscape shape across the width, so the portrait screens pair up */
+  .mon[data-empty][data-identity] { grid-column: span 3; }
+  .mon[data-empty][data-identity][data-pos="top"] { grid-column: 1 / -1; order: 3; }
+  .mon[data-empty][data-identity][data-pos="outerLeft"] { order: 4; }
+  .mon[data-empty][data-identity][data-pos="outerRight"] { order: 5; }
+  .mon[data-empty][data-identity] .mon-screen { aspect-ratio: 9 / 16; }
+  .mon-landscape[data-empty][data-identity] .mon-screen { aspect-ratio: 16 / 9; }
+  .mon[data-empty][data-identity] .mon-name { font-size: clamp(17px, 11cqi, 22px); }
 }
 
 /* ≥ 900 px: the rig itself, on a pole with steel arms */
@@ -706,12 +715,12 @@ a.budget-name:hover { text-decoration: underline; }
 .art-ol { background: var(--ol-ground); filter: brightness(.65) saturate(.95); }
 .art-tag { position: absolute; left: 9cqw; top: 7cqh; font: 700 max(9px, min(6cqw, 4.4cqh))/1 var(--id-text); letter-spacing: .08em; text-transform: uppercase; }
 .art-titles { position: absolute; left: 9cqw; right: 8cqw; top: calc(7cqh + max(9px, min(6cqw, 4.4cqh)) + 3cqh); margin: 0; padding: 0; list-style: none; counter-reset: t;
-  display: grid; gap: .3em; font: 560 max(9px, min(6.4cqw, 4.2cqh))/1.2 var(--id-text); }
+  display: grid; gap: .3em; font: 560 max(11px, min(6.4cqw, 4.2cqh))/1.2 var(--id-text); }
 .art-titles li { counter-increment: t; display: grid; grid-template-columns: 1.4em minmax(0, 1fr); }
 .art-titles li::before { content: counter(t); font-family: var(--mono); font-weight: 500; opacity: .8; }
 .art-ol .art-tag { color: #4A1060; }   /* UV, deepened to stay 4.5:1 on the dimmed slide */
 .art-ol .art-titles { color: var(--ol-ink); }
-.art-ol .art-titles li::before { color: var(--ol-water); opacity: 1; }
+.art-ol .art-titles li::before { color: #00524B; opacity: 1; }
 /* UV arriving at the surface, then the layers of skin in cross-section (the top one, the dead layer, drawn as cells) */
 .ol-uv { position: absolute; left: 0; right: 0; bottom: 26%; height: 12%; }
 .ol-uv i { position: absolute; bottom: 0; width: 1.5px; height: 100%; background: linear-gradient(to bottom, transparent, var(--ol-uv)); rotate: 24deg; transform-origin: bottom; }
@@ -731,7 +740,7 @@ a.budget-name:hover { text-decoration: underline; }
 .art-env .art-titles li::before { color: var(--env-marker); opacity: 1; }
 .env-approx { position: absolute; right: 8cqw; bottom: 9cqh; font: 500 max(10px, min(9cqw, 13cqh))/1 var(--mono); color: var(--env-ballpoint); }
 /* a wide screen (the top monitor) sets the titles in two columns; a small one keeps only the picture */
-@container (min-aspect-ratio: 4 / 3) { .art-titles { grid-template-columns: 1fr 1fr; column-gap: 6cqw; right: 16cqw; } }
+@container (min-aspect-ratio: 4 / 3) and (min-width: 300px) { .art-titles { grid-template-columns: 1fr 1fr; column-gap: 6cqw; right: 16cqw; } }
 @container (max-width: 119px) { .art-titles, .art-tag, .env-approx { display: none; } .art-env .env-svg { opacity: .8; } }
 /* the strip's small thumbs: the picture only, quieter */
 .thumb-screen .art { filter: brightness(.7); }
@@ -749,7 +758,7 @@ a.budget-name:hover { text-decoration: underline; }
 .season-segs i { width: 14px; height: 4px; border-radius: 1px; background: rgba(222, 229, 240, .16); }
 .season-segs i[data-s="ready"] { background: var(--topic-ink); }
 .season-segs i[data-s="posted"] { background: var(--text); }
-.season[data-planned] .season-segs i { background: none; box-shadow: inset 0 0 0 1px rgba(222, 229, 240, .34); }
+.season[data-planned] .season-segs i { background: none; box-shadow: inset 0 0 0 1px rgba(222, 229, 240, .46); }
 .mon-season { justify-items: center; margin-top: 3px; gap: 3px; }
 .mon-season .season-line { font-size: clamp(11px, 6.2cqi, 12.5px); color: var(--text-2); }
 .mon-season .season-segs i { width: clamp(6px, 5cqi, 12px); height: 3px; }

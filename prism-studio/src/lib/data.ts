@@ -15,7 +15,7 @@ import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
 import { lessonHash } from "@/domain/lessons";
 import { CHANNELS, OFFICIAL, PLANNED_SEASONS, youtubeStudioFor } from "@/domain/catalog";
-import { plannedSeason, seasonProgress, type SeasonProgress } from "@/domain/season";
+import { plannedSeason, seasonLine, seasonProgress, type SeasonProgress } from "@/domain/season";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG } from "@/lib/rig";
@@ -283,8 +283,10 @@ async function currentSeasons(d: DB, chans: { id: string; slug: string }[]) {
   return new Map(chans.map((c): [string, SeasonProgress | null] => {
     const mine = ser.filter((x) => x.channelId === c.id);
     const cur = mine.find((x) => x.status === "active") ?? mine.find((x) => x.status !== "complete") ?? mine.at(-1);
-    if (cur) return [c.slug, seasonProgress(cur.title, eps.filter((e) => e.seriesId === cur.id))];
-    return [c.slug, PLANNED_SEASONS[c.slug] ? plannedSeason(PLANNED_SEASONS[c.slug]) : null];
+    const plan = PLANNED_SEASONS[c.slug];
+    const mineEps = cur ? eps.filter((e) => e.seriesId === cur.id) : [];
+    if (cur && (mineEps.length || !plan)) return [c.slug, seasonProgress(cur.title, mineEps)];
+    return [c.slug, plan ? plannedSeason(plan) : null];   // no season yet, or an empty series row: the plan, never counts
   }));
 }
 
@@ -436,13 +438,14 @@ export async function rigView() {
       ideas ? `${ideas} idea${ideas === 1 ? "" : "s"}` : "",
     ].filter(Boolean).join(" · ");
     const status = next ? `Next: ${next.e.title} · ${PLATFORM_NAME[next.dest.platform]} ${when(next.p.scheduledFor!)}`
-      : toReview.length ? `${toReview.length} ready to review`
+      : toReview.length ? `${toReview.length} to review`
       : mine.length ? `${mine.length} to schedule`
       : production || "No episodes yet";
     const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
     return {
       slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
       season: seasons.get(c.slug) ?? null,
+      ...(seasons.get(c.slug)?.planned && status === "No episodes yet" ? { status: seasonLine(seasons.get(c.slug)!) } : {}),
       ledLabel: led === "ready" ? "ready to post today" : led === "review" ? "needs review" : "nothing queued today",
     };
   });

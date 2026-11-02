@@ -85,7 +85,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
         <section className="section">
           <div className="card empty-state">
             {v.season?.planned ? <>
-              <h2>{v.season.label} in production</h2>
+              <h2>Planned titles</h2>
               <ol className="season-titles">{v.season.titles.map((t, i) => <li key={i}>{t}</li>)}</ol>
               <p className="muted">Nothing is imported yet, so there are no counts. {name} fills the wall when its first film is imported. Before that:</p>
             </> : <>

@@ -23,6 +23,14 @@
   once published) with one segment per episode. A channel with nothing imported reads "Season 1 in production" with
   its six planned titles (catalog PLANNED_SEASONS), never numbers (src/domain/season.ts, tested).
 - On a phone, the monitor strip scrolls the current screen's name into view.
+- The wall's status line reads "6 to review" (the season line says how many are ready), and each monitor link has a
+  spoken name in sentences ("Rest Frame. 6 to review. Season 1 · 6 of 6 ready. Status light: needs review.").
+- Phone wall: a channel with its own identity shows full size before its first cover (the top screen across the width,
+  the portrait screens in pairs), so the planned titles are readable on a phone too.
+- Phone polish: pages start below the notch and clear the rounded corners (the installed app's status bar is
+  translucent); in the installed app a dark band sits under the status bar and the page doesn't rubber-band past its
+  ends; no tap flash or double-tap delay on controls; the tab bar and thumb bar aren't selectable; a calmer lede on
+  phones; Accounts' help links are 44 px tall.
 
 ## 0.6.4 — 2026-10-26 (final check)
 - Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)

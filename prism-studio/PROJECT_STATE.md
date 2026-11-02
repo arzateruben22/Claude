@@ -14,9 +14,11 @@ no page errors, no failed requests. `npm run preview` retakes the gallery in `do
 - Goal 2, the two new channels' identities (done): Outer Layer's light slide and Back of the Envelope's graphite and
   marker on the wall, the strip and their screens; final colours and names (migration 0005). Screenshots:
   `identities-wall-*`, `outer-layer-*`, `envelope-*`.
-- Goal 3, season progress (built; review pending): a season line and segments on every monitor and channel screen;
-  planned titles for the two new channels. Screenshots: `season-*`.
-- Goal 4, phone polish: next.
+- Goal 3, season progress (done): "Season 1 · 6 of 6 ready" and a segment per episode on every monitor and channel
+  screen, from the database; "Season 1 in production" with the six planned titles for the two new channels.
+  Screenshots: `season-*`.
+- Goal 4, phone polish (built; review pending): safe areas (checked with an emulated notch), the installed-app look,
+  tap targets, type scale, the phone wall's layout. Screenshots: `phone-notch-*`, `season-wall-phone-*`.
 
 ## Stage A: foundation (done)
 - Schema, migrations and seed: 5 channels, 11 destinations, 5 creations, 40 challenges and quests, 8 milestone
