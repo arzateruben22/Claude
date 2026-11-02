@@ -18,7 +18,7 @@ rating, "broad spectrum", not this film's subject); the thin-film result is "deb
 protection falls); the percentages assume the test's layer.
 
 ## hook {shot: frame 0, the payoff: two films side by side over the section, violet rays falling on both; a few rays slip through each · title: "SPF 100 or 50?" · badge: model · pre: 0.02 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: Twice the number, twice the *shield*? On a sunscreen, not quite. {c1}
+vo: Bigger number, bigger *shield*? On a sunscreen, not the way you'd think. {c1}
 
 ## normal {shot: push in to one film on the section; rays fall, the skin under it reddens slowly on a dose meter · spine: "SPF = burn dose with ÷ without" · picture-only 0.5 s · energy: 0.4} (5–16 s)
 vo: The number isn't a percentage. {c2} It's a ratio: how much more burning light your skin can take under the film before it *reddens*. {c12}
@@ -26,18 +26,18 @@ vo: The number isn't a percentage. {c2} It's a ratio: how much more burning ligh
 ## change {shot: a hundred rays fall on the film; at fifty, two slip through, at a hundred, one · spine 98% → 99% blocked · picture-only 0.6 s · energy: 0.55} (16–26 s)
 vo: Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is *barely* more blocked. {c3}
 
-## why {shot: flip the count: the rays that get in light up, two against one · spine "2% vs 1% gets in" · picture-only 2.2 s · energy: 0.5} (26–39.5 s)
-vo: But look at what gets *in*, and the bigger number lets in half as much, as long as the film is as thick as the lab's. {c4,c5}
+## why {shot: flip the count: the rays that get in light up, two against one · spine "2% vs 1% gets in" · picture-only 2.2 s · energy: 0.5} (26–37 s)
+vo: But look at what actually gets *in*: the bigger number lets in half as much, if the film is as thick as the lab's. {c4,c5}
 
-## whoa {shot: the film thins on the section while the rays thicken through it; spine "test layer → what studies measured" · badge: debated · picture-only 3.2 s · energy: 0.8} (39.5–53 s)
+## whoa {shot: the film thins on the section while the rays thicken through it; spine "test layer → what studies measured" · badge: debated · picture-only 3.2 s · energy: 0.8} (37–51 s)
 vo: Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still *argued* over. {c6,c7}
 
-## toscale {segment: toscale · the gauge lifts beside the section: the test film's ≈20 µm fills in on top of the dead layer's 17 µm, both against the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (53–60.5 s)
+## toscale {segment: toscale · the gauge lifts beside the section: the test film's ≈20 µm fills in on top of the dead layer's 17 µm, both against the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51–59 s)
 vo: That lab layer is about as thick as the dead layer under it, a fifth of a sheet of *paper*. {c8,c9}
 
-## takeaway {shot: back to the hook's two films · picture-only 0.5 s · energy: 0.3} (60.5–68.5 s)
+## takeaway {shot: back to the hook's two films · picture-only 0.5 s · energy: 0.3} (59–67 s)
 vo: So the bigger number doesn't block twice as much. {c10} It lets half as much *in*, when there's enough of it. {c11}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67–73 s)
 vo: Next: why do fingers wrinkle in the bath, but not your *arm*? {-}
 end card: "Next layer: why do fingers wrinkle in the bath?" · "Outer Layer · No. 003"

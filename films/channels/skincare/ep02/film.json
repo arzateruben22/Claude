@@ -1,0 +1,1469 @@
+{
+ "id": "outerlayer-002",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 70.4667,
+ "poster": 28.3,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 4.6667,
+   "name": "ratio"
+  },
+  {
+   "at": 13.8,
+   "name": "count"
+  },
+  {
+   "at": 23.4,
+   "name": "inside"
+  },
+  {
+   "at": 34.0667,
+   "name": "thin"
+  },
+  {
+   "at": 47.1333,
+   "name": "gauge"
+  },
+  {
+   "at": 55.5333,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.6667,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.6667,
+   "t1": 13.5333,
+   "line": "vo02",
+   "energy": 0.4
+  },
+  {
+   "id": "change",
+   "t0": 13.5333,
+   "t1": 22.8667,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 22.8667,
+   "t1": 34.0667,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 34.0667,
+   "t1": 47.1333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 47.1333,
+   "t1": 55.5333,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 55.5333,
+   "t1": 63.9333,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 63.9333,
+   "t1": 70.4667,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": {
+  "hook": 0.62,
+  "ratio": 0.62,
+  "count": 0.3,
+  "inside": 0.62,
+  "thin": 0.92,
+  "gauge": 0.92,
+  "close": 0.62
+ },
+ "uv": {
+  "pass50": 0.02,
+  "pass100": 0.01,
+  "pass_thin": 0.08,
+  "film_um": 20.0,
+  "thin_um": 5.0,
+  "sc_um": 17.0,
+  "paper_um": 100.0
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -4,
+     0
+    ],
+    "el": 24,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 620,
+    "az": -6
+   },
+   {
+    "t": 4.6667,
+    "target": [
+     0,
+     -4,
+     0
+    ],
+    "el": 24,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 560,
+    "az": -2,
+    "ease": "sine"
+   }
+  ],
+  "ratio": [
+   {
+    "t": 4.6667,
+    "target": [
+     0,
+     4,
+     0
+    ],
+    "el": 18,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 560,
+    "az": -14
+   },
+   {
+    "t": 7.433333333333334,
+    "target": [
+     0,
+     4,
+     0
+    ],
+    "el": 16,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 480,
+    "az": -10,
+    "ease": "inout2"
+   },
+   {
+    "t": 12.333333333333334,
+    "target": [
+     -10,
+     2,
+     0
+    ],
+    "el": 15,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 430,
+    "az": -6,
+    "ease": "sine"
+   },
+   {
+    "t": 13.933300000000001,
+    "target": [
+     -10,
+     2,
+     0
+    ],
+    "el": 15,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 420,
+    "az": -5,
+    "ease": "sine"
+   }
+  ],
+  "count": [
+   {
+    "t": 13.8,
+    "target": [
+     0,
+     10,
+     0
+    ],
+    "el": 58,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 520,
+    "az": 0
+   },
+   {
+    "t": 18.666666666666668,
+    "target": [
+     0,
+     10,
+     0
+    ],
+    "el": 62,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 470,
+    "az": 4,
+    "ease": "inout2"
+   },
+   {
+    "t": 23.4,
+    "target": [
+     0,
+     10,
+     0
+    ],
+    "el": 64,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 450,
+    "az": 6,
+    "ease": "sine"
+   }
+  ],
+  "inside": [
+   {
+    "t": 23.4,
+    "target": [
+     0,
+     -6,
+     0
+    ],
+    "el": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 600,
+    "az": 0
+   },
+   {
+    "t": 27.8,
+    "target": [
+     0,
+     -6,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 540,
+    "az": 3,
+    "ease": "inout2"
+   },
+   {
+    "t": 34.0667,
+    "target": [
+     0,
+     -4,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 520,
+    "az": 5,
+    "ease": "sine"
+   }
+  ],
+  "thin": [
+   {
+    "t": 34.0667,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 380,
+    "az": -22
+   },
+   {
+    "t": 38.5,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 340,
+    "az": -6,
+    "ease": "inout2"
+   },
+   {
+    "t": 47.1333,
+    "target": [
+     0,
+     -2,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 290,
+    "az": 2,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 47.1333,
+    "target": [
+     0,
+     -20,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 600,
+    "az": -6
+   },
+   {
+    "t": 55.5333,
+    "target": [
+     0,
+     -20,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 570,
+    "az": -8,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 55.5333,
+    "target": [
+     0,
+     -4,
+     0
+    ],
+    "el": 24,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 540,
+    "az": 2
+   },
+   {
+    "t": 70.4667,
+    "target": [
+     0,
+     -4,
+     0
+    ],
+    "el": 24,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 620,
+    "az": -6,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "ratio": 7.433333333333334,
+  "under": 11.166666666666666,
+  "reddens": 12.333333333333334,
+  "fifty": 14.833333333333334,
+  "hundred": 18.666666666666668,
+  "blocked": 21.7,
+  "in": 26.266666666666666,
+  "half": 27.8,
+  "thin": [
+   36.166666666666664,
+   38.5
+  ],
+  "fall": [
+   39.5,
+   41.3
+  ],
+  "argued": 43.0,
+  "paper": 53.96666666666667,
+  "lets": 60.0
+ },
+ "gauge": {
+  "rise": [
+   47.1333,
+   48.0333
+  ],
+  "sc": 50.36666666666667,
+  "film": 49.63333333333333,
+  "paper": 53.233333333333334,
+  "back": [
+   55.0333,
+   55.933299999999996
+  ],
+  "sc_um": 17.0,
+  "film_um": 20.0,
+  "paper_um": 100.0
+ },
+ "films": {
+  "hook": 20.0,
+  "ratio": 20.0,
+  "count": 20.0,
+  "inside": 20.0,
+  "gauge": 20.0,
+  "close": 20.0
+ },
+ "labels": [
+  {
+   "id": "l-50-h",
+   "text": "SPF 50",
+   "kind": "uv",
+   "anchor": "film_l",
+   "t0": 0.0,
+   "t1": 4.2167,
+   "shot": "hook",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-100-h",
+   "text": "SPF 100",
+   "kind": "uv",
+   "anchor": "film_r",
+   "t0": 0.0,
+   "t1": 4.2167,
+   "shot": "hook",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-bare",
+   "text": "no film",
+   "kind": "layer",
+   "anchor": "bare",
+   "t0": 7.433333333333334,
+   "t1": 13.35,
+   "shot": "ratio",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-film",
+   "text": "sunscreen film",
+   "kind": "water",
+   "anchor": "film",
+   "t0": 11.166666666666666,
+   "t1": 13.35,
+   "shot": "ratio",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-50-i",
+   "text": "SPF 50",
+   "kind": "uv",
+   "anchor": "film_l",
+   "t0": 23.666666666666668,
+   "t1": 33.6167,
+   "shot": "inside",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-100-i",
+   "text": "SPF 100",
+   "kind": "uv",
+   "anchor": "film_r",
+   "t0": 23.666666666666668,
+   "t1": 33.6167,
+   "shot": "inside",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-thin",
+   "text": "a thin film",
+   "kind": "water",
+   "anchor": "film",
+   "t0": 38.5,
+   "t1": 46.6833,
+   "shot": "thin",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-50-c",
+   "text": "SPF 50",
+   "kind": "uv",
+   "anchor": "film_l",
+   "t0": 55.93333333333333,
+   "t1": 64.33333333333333,
+   "shot": "close",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-100-c",
+   "text": "SPF 100",
+   "kind": "uv",
+   "anchor": "film_r",
+   "t0": 55.93333333333333,
+   "t1": 64.33333333333333,
+   "shot": "close",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-model-h",
+   "text": "model: one UVB band",
+   "t0": 4.0667,
+   "t1": 4.2167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-model",
+   "text": "model: one UVB band",
+   "t0": 4.6667,
+   "t1": 33.6167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-test",
+   "text": "at the test layer, 2 mg/cm²",
+   "t0": 28.933333333333334,
+   "t1": 33.6167,
+   "slot": "tl"
+  },
+  {
+   "id": "b-debated",
+   "text": "illustration · debated",
+   "t0": 39.5,
+   "t1": 46.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-studies",
+   "text": "Petersen & Wulf, 2014",
+   "t0": 35.36666666666667,
+   "t1": 46.6833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model-c",
+   "text": "model: one UVB band",
+   "t0": 55.5333,
+   "t1": 64.33333333333333,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-ratio",
+   "label": "burn dose: with ÷ without",
+   "fmt": "text",
+   "text": "ratio",
+   "t0": 7.433333333333334,
+   "t1": 13.333333333333334,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-50",
+   "label": "SPF 50 · blocked",
+   "fmt": "text",
+   "text": "≈98%",
+   "t0": 14.833333333333334,
+   "t1": 18.266666666666666,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-100",
+   "label": "SPF 100 · blocked",
+   "fmt": "text",
+   "text": "≈99%",
+   "t0": 18.666666666666668,
+   "t1": 23.0,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-in",
+   "label": "gets in · SPF 50 vs 100",
+   "fmt": "text",
+   "text": "2% vs 1%",
+   "t0": 26.266666666666666,
+   "t1": 33.6167,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-real",
+   "label": "applied in studies · mg/cm²",
+   "fmt": "text",
+   "text": "0.4–1",
+   "t0": 36.833333333333336,
+   "t1": 46.6833,
+   "at": [
+    0.3,
+    0.215
+   ]
+  },
+  {
+   "id": "c-film",
+   "label": "test film · ≈ 2 mg/cm²",
+   "fmt": "text",
+   "text": "≈20 µm",
+   "t0": 55.5333,
+   "t1": 64.33333333333333,
+   "at": [
+    0.3,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 002",
+  "title": "SPF *100* or *50*?",
+  "t1": 4.1667,
+  "sig": 1.5333333333333334
+ },
+ "endCard": 64.33333333333333,
+ "end": {
+  "title": "Next layer: why do fingers wrinkle in the *bath*?",
+  "follow": "Outer Layer · No. 003",
+  "next": "SPF is measured with 2 mg/cm² of product, a film about 20 µm thick (21 CFR 352.3; computed)."
+ },
+ "captions": [
+  {
+   "t0": 0.123,
+   "t1": 2.023,
+   "lines": [
+    [
+     [
+      "Bigger number,",
+      0.123
+     ]
+    ],
+    [
+     [
+      "bigger shield?",
+      0.813
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.023,
+   "t1": 4.403,
+   "lines": [
+    [
+     [
+      "On",
+      2.023
+     ],
+     [
+      "a",
+      2.203
+     ],
+     [
+      "sunscreen,",
+      2.333
+     ]
+    ],
+    [
+     [
+      "not",
+      3.088
+     ],
+     [
+      "the",
+      3.153
+     ],
+     [
+      "way",
+      3.183
+     ],
+     [
+      "you'd",
+      3.453
+     ],
+     [
+      "think.",
+      3.653
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.987,
+   "t1": 7.132,
+   "lines": [
+    [
+     [
+      "The",
+      4.987
+     ],
+     [
+      "number",
+      5.237
+     ]
+    ],
+    [
+     [
+      "isn't a percentage.",
+      5.497
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.132,
+   "t1": 10.012,
+   "lines": [
+    [
+     [
+      "It's",
+      7.132
+     ],
+     [
+      "a",
+      7.222
+     ],
+     [
+      "ratio:",
+      7.427
+     ],
+     [
+      "how",
+      8.597
+     ],
+     [
+      "much",
+      8.782
+     ]
+    ],
+    [
+     [
+      "more",
+      9.107
+     ],
+     [
+      "burning light",
+      9.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.012,
+   "t1": 11.907,
+   "lines": [
+    [
+     [
+      "your skin",
+      10.012
+     ],
+     [
+      "can",
+      10.742
+     ],
+     [
+      "take",
+      10.932
+     ]
+    ],
+    [
+     [
+      "under the film",
+      11.162
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.907,
+   "t1": 13.267,
+   "lines": [
+    [
+     [
+      "before it reddens.",
+      11.907
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.943,
+   "t1": 17.288,
+   "lines": [
+    [
+     [
+      "Flip",
+      13.943
+     ],
+     [
+      "it,",
+      14.478
+     ],
+     [
+      "and",
+      14.618
+     ],
+     [
+      "50",
+      14.843
+     ],
+     [
+      "lets",
+      15.293
+     ]
+    ],
+    [
+     [
+      "through",
+      15.763
+     ],
+     [
+      "about",
+      16.173
+     ],
+     [
+      "a fiftieth",
+      16.353
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.288,
+   "t1": 20.418,
+   "lines": [
+    [
+     [
+      "of",
+      17.288
+     ],
+     [
+      "that",
+      17.513
+     ],
+     [
+      "light,",
+      17.543
+     ]
+    ],
+    [
+     [
+      "100",
+      18.483
+     ],
+     [
+      "about",
+      19.238
+     ],
+     [
+      "a hundredth,",
+      19.418
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.418,
+   "t1": 22.533,
+   "lines": [
+    [
+     [
+      "which",
+      20.418
+     ],
+     [
+      "is",
+      20.533
+     ]
+    ],
+    [
+     [
+      "barely more blocked.",
+      20.943
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.197,
+   "t1": 26.292,
+   "lines": [
+    [
+     [
+      "But",
+      23.197
+     ],
+     [
+      "look",
+      23.662
+     ],
+     [
+      "at",
+      23.702
+     ],
+     [
+      "what",
+      23.982
+     ]
+    ],
+    [
+     [
+      "actually",
+      24.272
+     ],
+     [
+      "gets",
+      24.912
+     ],
+     [
+      "in:",
+      26.262
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.292,
+   "t1": 28.947,
+   "lines": [
+    [
+     [
+      "the",
+      26.292
+     ],
+     [
+      "bigger",
+      26.437
+     ],
+     [
+      "number",
+      26.767
+     ]
+    ],
+    [
+     [
+      "lets",
+      27.177
+     ],
+     [
+      "in",
+      27.477
+     ],
+     [
+      "half as much,",
+      27.787
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.947,
+   "t1": 31.522,
+   "lines": [
+    [
+     [
+      "if",
+      28.947
+     ],
+     [
+      "the",
+      29.157
+     ],
+     [
+      "film",
+      29.337
+     ],
+     [
+      "is",
+      29.727
+     ],
+     [
+      "as",
+      29.887
+     ]
+    ],
+    [
+     [
+      "thick",
+      30.222
+     ],
+     [
+      "as",
+      30.467
+     ],
+     [
+      "the lab's.",
+      30.772
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.387,
+   "t1": 36.352,
+   "lines": [
+    [
+     [
+      "Real",
+      34.387
+     ],
+     [
+      "people,",
+      34.767
+     ]
+    ],
+    [
+     [
+      "studies",
+      35.377
+     ],
+     [
+      "found,",
+      35.767
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.352,
+   "t1": 39.362,
+   "lines": [
+    [
+     [
+      "spread",
+      36.352
+     ],
+     [
+      "a quarter to half",
+      36.792
+     ]
+    ],
+    [
+     [
+      "as",
+      37.822
+     ],
+     [
+      "much",
+      37.967
+     ],
+     [
+      "as",
+      38.022
+     ],
+     [
+      "the",
+      38.262
+     ],
+     [
+      "lab,",
+      38.292
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.362,
+   "t1": 42.012,
+   "lines": [
+    [
+     [
+      "and",
+      39.362
+     ],
+     [
+      "protection",
+      39.487
+     ],
+     [
+      "falls",
+      40.137
+     ]
+    ],
+    [
+     [
+      "well below the label,",
+      40.427
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.012,
+   "t1": 44.187,
+   "lines": [
+    [
+     [
+      "by",
+      42.012
+     ],
+     [
+      "an",
+      42.042
+     ],
+     [
+      "amount",
+      42.287
+     ]
+    ],
+    [
+     [
+      "still",
+      42.797
+     ],
+     [
+      "argued",
+      43.012
+     ],
+     [
+      "over.",
+      43.397
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.558,
+   "t1": 50.203,
+   "lines": [
+    [
+     [
+      "That",
+      47.558
+     ],
+     [
+      "lab",
+      47.773
+     ],
+     [
+      "layer",
+      48.148
+     ],
+     [
+      "is",
+      48.678
+     ]
+    ],
+    [
+     [
+      "about",
+      48.973
+     ],
+     [
+      "as",
+      49.268
+     ],
+     [
+      "thick",
+      49.638
+     ],
+     [
+      "as",
+      49.913
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.203,
+   "t1": 52.398,
+   "lines": [
+    [
+     [
+      "the dead layer",
+      50.203
+     ],
+     [
+      "under",
+      51.443
+     ],
+     [
+      "it,",
+      51.783
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.398,
+   "t1": 54.933,
+   "lines": [
+    [
+     [
+      "a fifth",
+      52.398
+     ]
+    ],
+    [
+     [
+      "of a sheet of paper.",
+      52.938
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.038,
+   "t1": 58.093,
+   "lines": [
+    [
+     [
+      "So",
+      56.038
+     ],
+     [
+      "the bigger number",
+      56.338
+     ]
+    ],
+    [
+     [
+      "doesn't",
+      57.203
+     ],
+     [
+      "block",
+      57.648
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.093,
+   "t1": 59.868,
+   "lines": [
+    [
+     [
+      "twice as much.",
+      58.093
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.868,
+   "t1": 61.658,
+   "lines": [
+    [
+     [
+      "It",
+      59.868
+     ],
+     [
+      "lets",
+      59.988
+     ],
+     [
+      "half as much in,",
+      60.358
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.658,
+   "t1": 63.333,
+   "lines": [
+    [
+     [
+      "when",
+      61.658
+     ],
+     [
+      "there's",
+      61.728
+     ]
+    ],
+    [
+     [
+      "enough of it.",
+      62.108
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.568,
+   "t1": 67.218,
+   "lines": [
+    [
+     [
+      "Next:",
+      64.568
+     ],
+     [
+      "why",
+      65.063
+     ],
+     [
+      "do",
+      65.323
+     ],
+     [
+      "fingers",
+      65.483
+     ]
+    ],
+    [
+     [
+      "wrinkle",
+      65.998
+     ],
+     [
+      "in",
+      66.448
+     ],
+     [
+      "the",
+      66.743
+     ],
+     [
+      "bath,",
+      66.773
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.218,
+   "t1": 68.773,
+   "lines": [
+    [
+     [
+      "but",
+      67.218
+     ],
+     [
+      "not",
+      67.528
+     ],
+     [
+      "your arm?",
+      67.573
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "dur": 4.083,
+   "file": "vo/01.wav",
+   "text": "Bigger number, bigger shield? On a sunscreen, not the way you'd think."
+  },
+  {
+   "id": "vo02",
+   "t": 4.966666666666667,
+   "dur": 8.007,
+   "file": "vo/02.wav",
+   "text": "The number isn't a percentage. It's a ratio: how much more burning light your skin can take under the film before it reddens."
+  },
+  {
+   "id": "vo03",
+   "t": 13.833333333333334,
+   "dur": 8.414,
+   "file": "vo/03.wav",
+   "text": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked."
+  },
+  {
+   "id": "vo04",
+   "t": 23.166666666666668,
+   "dur": 8.512,
+   "file": "vo/04.wav",
+   "text": "But look at what actually gets in: the bigger number lets in half as much, if the film is as thick as the lab's."
+  },
+  {
+   "id": "vo05",
+   "t": 34.36666666666667,
+   "dur": 9.536,
+   "file": "vo/05.wav",
+   "text": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over."
+  },
+  {
+   "id": "vo06",
+   "t": 47.43333333333333,
+   "dur": 7.246,
+   "file": "vo/06.wav",
+   "text": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper."
+  },
+  {
+   "id": "vo07",
+   "t": 55.833333333333336,
+   "dur": 7.206,
+   "file": "vo/07.wav",
+   "text": "So the bigger number doesn't block twice as much. It lets half as much in, when there's enough of it."
+  },
+  {
+   "id": "vo08",
+   "t": 64.23333333333333,
+   "dur": 4.287,
+   "file": "vo/08.wav",
+   "text": "Next: why do fingers wrinkle in the bath, but not your arm?"
+  }
+ ]
+}

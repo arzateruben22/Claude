@@ -17,7 +17,8 @@ import * as THREE from "three";
 import { stage, seg, E } from "cinema/film/runtime.js";
 import { createHud, project } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
-import { createSection, createClimber, createBeads, toneColor } from "../set/section.js";
+import { createSection, createClimber, createBeads, createFlakes, toneColor } from "../set/section.js";
+import { createRays } from "../set/rays.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
@@ -51,11 +52,22 @@ scene.add(WL.group, WR.group);
 const climber = createClimber();
 scene.add(climber.group);
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
-const beadsS = createBeads({ n: 70, x: [-80, 80], z: [-24, 27], y0: -72, wallY: -BIO.sc_um, seed: 5 });
-// the walls' beads: the same rising water under both; a share passes (left 12%, right 64%: ≈ 5.3×, claims c11)
-const beadsL = createBeads({ n: 50, x: [-64, -8], z: [-20, 23], y0: -72, wallY: -BIO.sc_um, seed: 6, pass: (i, R) => R() < 0.12 });
-const beadsR = createBeads({ n: 50, x: [8, 64], z: [-20, 23], y0: -72, wallY: -scThin, seed: 7, pass: (i, R) => R() < 0.64 });
+// the water is the subject when it's named: large, glowing beads (the review: 3–5 px specks didn't read)
+const beadsS = createBeads({ n: 60, x: [-80, 80], z: [-14, 27], y0: -72, wallY: -BIO.sc_um, seed: 5, size: 3.2 });
+// the walls' beads: the same rising water under both; a share passes (left 12%, right 64%: ≈ 5.3×, claims c11); a dense,
+// fast stream from the thin wall against a trickle from the finished one
+const beadsL = createBeads({ n: 90, x: [-64, -8], z: [-16, 23], y0: -72, wallY: -BIO.sc_um, seed: 6, pass: (i, R) => R() < 0.12, size: 2.6, period: [1.6, 1.0] });
+const beadsR = createBeads({ n: 90, x: [8, 64], z: [-16, 23], y0: -72, wallY: -scThin, seed: 7, pass: (i, R) => R() < 0.64, size: 2.6, period: [1.6, 1.0] });
 scene.add(beadsS.mesh, beadsL.mesh, beadsR.mesh);
+const flakes = createFlakes({ n: 7, x: [-55, 55], z: 26, seed: 9 });                // "waiting to flake away"
+scene.add(flakes.mesh);
+// one dead cell lifted a little out of its row while it's named (rule 8: the named thing wins)
+const one = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.9, 6, 1), new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0 }));
+scene.add(one);
+// the tease's bridge to No. 002: a few UV rays landing on the dead layer
+const rays = createRays({ n: 26, x: [-70, 70], z: [-10, 26], top: 150, seed: 51 });
+scene.add(rays.group);
+const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 1.8);
 
 const rig = createRig(FILM.cam);
 
@@ -75,7 +87,7 @@ const DAYS = (t) => Math.max(0, CLK.climb.tau(t)) / 86400;
 for (const b of FILM.badges) hud.badge(b.id, b.clock ? { from: CLK[b.clock], t0: b.t0, t1: b.t1, slot: b.slot } : { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1, at: c.at };
-  if (c.fmt === "days") Object.assign(o, { value: (t) => Math.min(c.lit, DAYS(t)), fmt: (v) => `day ${Math.floor(v + 1e-6)}`, lit: (v) => v >= c.lit - 1e-6, minCh: 6 });
+  if (c.fmt === "days") Object.assign(o, { value: (t) => Math.min(c.lit, DAYS(t)), fmt: (v) => `day ${Math.round(v)}`, lit: (v) => v >= c.lit - 1e-6, minCh: 6 });
   else Object.assign(o, { value: () => 0, fmt: () => c.text, lit: () => true });
   const el = hud.counter(c.id, o);
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
@@ -88,6 +100,7 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");                                    // the end card's footnote: small and quiet
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
+endEl.style.transform = "translateY(-8vmin)";                                // clear of the tease's caption plate
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
@@ -101,16 +114,22 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;   // a frame's motion blur never blends two shots across a cut
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
-  const inSection = shot === "hook" || shot === "section" || shot === "gauge" || shot === "close";
+  const inSection = shot === "hook" || shot === "section" || shot === "close";
   S.group.visible = inSection; WL.group.visible = WR.group.visible = shot === "walls";
 
   // ── the main section ──
   // rule 8: the beat's subject wins; what delivered the previous beat steps back to about a third
   let dimDead = 0, dimLiving = 0, glowDead = 0, mortar = 0;
-  if (shot === "hook" || shot === "close") { glowDead = shot === "hook" ? fadeIn(t, CUE.dead_lit - 0.2, 0.5) : 0.6; dimLiving = 0.35; }
+  // the hook: the dead rows lit from frame 0 (the brightest thing), then on "isn't" the push down lights the living
+  if (shot === "hook") { const k = E.inout2(seg(t, CUE.dead_lit - 0.6, CUE.dead_lit + 0.6)); glowDead = 1 - 0.5 * k; dimLiving = 0.6 * (1 - k); dimDead = 0.3 * k; }
+  // the close: the living glow on "Underneath", then the dead rows win on "died"
+  if (shot === "close") {
+    const u1 = E.inout2(seg(t, CUE.under - 0.2, CUE.under + 0.5)), u2 = E.inout2(seg(t, CUE.died - 0.2, CUE.died + 0.5));
+    glowDead = 0.3 + 0.7 * u2; dimLiving = 0.6 * (1 - u1) + 0.6 * u2; dimDead = 0.5 * u1 * (1 - u2);
+  }
   if (shot === "section") {
-    dimLiving = 1 - fadeIn(t, CUE.living, 0.5);                              // the rows are the subject until "the living skin"
-    dimDead = fadeIn(t, CUE.living, 0.5) * (1 - fadeIn(t, B0.why, 0.6));     // then the living layers; the climb dims both
+    dimLiving = 0.6 * (1 - fadeIn(t, CUE.living, 1.0));                      // the rows are the subject until "the living ones"
+    dimDead = 0.6 * fadeIn(t, CUE.living, 1.0) * (1 - fadeIn(t, B0.why, 1.0)); // then the living layers (1 s blends: no jump)
     const climbing = winOp(t, CUE.born - 0.3, CUE.apart[1] + 0.3, 0.5);
     dimLiving = Math.max(dimLiving * (1 - fadeIn(t, CUE.born - 0.3, 0.5)), 0.75 * climbing);
     dimDead = Math.max(dimDead, 0.6 * climbing);
@@ -118,7 +137,6 @@ window.seek = function (t) {
     glowDead = 0.5 * fadeIn(t, CUE.bricks - 0.15, 0.5) * (1 - 0.6 * fadeIn(t, CUE.lipid, 0.5));
     if (t >= CUE.water - 0.3) dimLiving = Math.max(dimLiving, 0.4 * fadeIn(t, CUE.water - 0.3, 0.6));   // the water is the subject
   }
-  if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.85; }
   S.set({ tone, dimDead, dimLiving, mortar, glowDead, mortarColor: WATER });
   A.sc_top = add(S.at.scTop(0.66), [0, 0, 0]);
   A.sc_mid = S.at.scMid(0.7);
@@ -126,6 +144,18 @@ window.seek = function (t) {
   A.living = S.at.living(0.74);
   A.brick = S.at.corneo(9, 0.7);
   A.mortar = S.at.corneo(6, 0.42);
+
+  // the named dead cell, lifted out of its row toward the camera
+  const oneOp = shot === "section" ? winOp(t, CUE.dead - 0.3, CUE.living - 0.3, 0.4) : 0;
+  one.visible = oneOp > 0.002;
+  if (one.visible) {
+    const c = S.at.corneo(4, 0.62);
+    one.position.set(c[0], c[1] + 2.2 * oneOp, c[2] + 3 * oneOp);
+    one.material.color.setRGB(...toneColor("corneo", tone).map((v) => v * 1.15)); one.material.emissive.setRGB(...toneColor("corneo", tone).map((v) => v * 0.35 * oneOp));
+    A.corneo = one.position.toArray();
+  }
+  flakes.set(t, { t0: CUE.flake - 0.3, color: toneColor("corneo", tone), gain: shot === "section" ? 1 - fadeIn(t, CUE.flake + 2.4, 0.4) : 0 });
+  rays.set(t, shot === "close" ? { filmTop: 0, filmBottom: 0, pass: 0, gain: fadeIn(t, CUE.rays - 0.3, 0.6), color: UVC } : { gain: 0 });
 
   // ── the climbing cell ──
   if (shot === "section" && t >= CUE.born - 0.4 && t < B0.why + 0.6) {
@@ -141,21 +171,24 @@ window.seek = function (t) {
 
   // ── water: kept inside by the wall (why), and leaving through the thin wall (whoa) ──
   beadsS.set(t, { gain: shot === "section" ? fadeIn(t, CUE.water - 0.4, 0.6) : 0, color: WATER });
-  const wb = shot === "walls" ? fadeIn(t, B0.whoa + 0.3, 0.8) : 0;
-  WL.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 }); WR.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55, glowDead: 0.6 });   // the walls are the subject
+  const wb = shot === "walls" ? fadeIn(t, B0.whoa + 0.3, 0.8) * (1 - 0.7 * fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;
+  const back = shot === "walls" ? fadeIn(t, B0.toscale + 0.3, 0.8) : 0;      // the card is the subject in the to-scale beat
+  WL.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55 + 0.3 * back, glowDead: 0.6 * (1 - back), dimDead: 0.6 * back });
+  WR.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55 + 0.3 * back, glowDead: 0.6 * (1 - back), dimDead: 0.6 * back });
   beadsL.set(t, { gain: wb, color: WATER });
   const passR = beadsR.set(t, { gain: wb, color: WATER });
   A.wall_l = [WL.group.position.x + 16, 0, 23];
   A.wall_r = [WR.group.position.x - 16, 0, 23];
-  A.beads = passR ? [passR[0] + WR.group.position.x * 0, passR[1], passR[2]] : [60, 6, 10];
+  A.beads = [WR.group.position.x + 22, 18, 20];   // a fixed spot in the stream (a passing bead's anchor made the label jump)
 
   // ── the depth gauge: attached to the section's left cut edge, lifted to centre for the to-scale beat ──
   const sec = shot === "walls" ? WL : S, ox = sec.group.position.x;
   const xg = ox - sec.dims.W / 2 + 2, zg = sec.dims.D / 2;
   camera.updateMatrixWorld();
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
-  const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (shot === "walls" ? 0.0 : 1) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
+  // the ruler: attached while the layers are being named (hook, normal), then away; lifted out of the walls shot
+  const lift = shot === "walls" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
+  const gOp = shot === "walls" ? Math.min(1, lift * 4) : (shot === "hook" || shot === "section") ? 1 - fadeIn(t, B0.change - 0.3, 0.6) : 0;
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc: BIO.sc_um, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
