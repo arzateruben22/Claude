@@ -4,6 +4,7 @@
 |---|---|---|
 | Red Hat Text, Red Hat Mono, Newsreader | `../fonts/` (google/fonts; `../fonts/SOURCES.md`) | SIL OFL 1.1 |
 | three.js r160 | `kits/cinema/vendor/three.module.min.js` | MIT |
+| Reference image | stained section of normal human epidermis and dermis (H&E, 10x), Kilbad, Wikimedia Commons, via the scikit-image data mirror (`../set/ref/`): the deep dermis under the section | public domain as stated by the source; **a person confirms the licence on the original page before posting** |
 | Narration | Kokoro-82M, voice bf_isabella, generated here (`voice.py`) | Apache 2.0 (model) |
 | Word timings | Parakeet TDT 0.6B v2 (sherpa-onnx), `kits/cinema/voice/align.py` | CC BY 4.0 (model) |
 | Score and foley | synthesized by `kits/cinema/studio` from `sheet.json` (`outerlayer-slide`) | studio code |
