@@ -58,7 +58,7 @@ SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["known"], "name": "brow"}, {"
          {"at": CUE["guessed"] - 0.1, "name": "below2"}, {"at": B["whoa"]["t0"], "name": "uv"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": CUE["endings"] + 0.5, "name": "close"}]
 
 # ── the camera (orbit keys: target, dist, el, az, fov, fx, fy) ──
-JX, UX = 4000.0, -4000.0
+JX, UX, BX = 4000.0, -4000.0, 8000.0   # BX: the frontal brow (../set/brow04.js)
 TOPY, BULB, SNAP, CREASE = -18.0, [JX + 4, -10.5, 12], [JX + 4, -16.5, 14.2], [JX, 41.5, 30]
 FLY = {"el": 22, "fov": 34, "fx": 0.5, "fy": 0.46}   # high enough that the brow reads: two mounds and the crease between
 CAM = {
@@ -67,8 +67,8 @@ CAM = {
     "uvhook": [{"t": 0.0, "target": [UX, 0.3, 0], "dist": 30, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.41},
                {"t": CUE["known"], "target": [UX, 0.4, 0], "dist": 22, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.41, "ease": "linear"}],
     # on "known", the signature switch to daylight: the same brow, still pushing
-    "brow": [{"t": CUE["known"], "target": [0, -0.6, 8], "dist": 40, "az": -3, **{**FLY, "el": 33}},
-             {"t": CUE["nerve"], "target": [0, -1.2, 0], "dist": 12, "az": 0, "el": 34, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
+    "brow": [{"t": CUE["known"], "target": [BX, 0.3, 0], "dist": 34, "el": 4, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.48},
+             {"t": CUE["nerve"], "target": [BX, 0.35, 0.3], "dist": 8, "el": 4, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "in2"}],   # into the "11"
     # the junction: the crease where the brow left it (match), then down to the nerve ending and its messenger, back out
     # for the pull, then into the bulb for the change
     "below": [{"t": CUE["nerve"], "target": CREASE, "dist": 95, "el": 40, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46},   # the crease where the brow left it
@@ -95,8 +95,8 @@ CAM = {
               {"t": B["takeaway"]["t0"], "target": [JX + 16, -12, 14], "dist": 170, "el": 14, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"},
               {"t": CUE["endings"] + 0.2, "target": [JX + 16, -12, 14], "dist": 180, "el": 14, "az": 4, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "sine"},
               {"t": B["tease"]["t0"], "target": CREASE, "dist": 230, "el": 34, "az": 4, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"}],   # up to the crease, back
-    "close": [{"t": CUE["endings"] + 0.5, "target": [0, -0.6, 10], "dist": 46, "az": -4, **{**FLY, "el": 34}},
-              {"t": B["tease"]["t1"], "target": [0, -0.6, 8], "dist": 42, "az": -3, **{**FLY, "el": 33}, "ease": "sine"}],
+    "close": [{"t": CUE["endings"] + 0.5, "target": [BX, 0.3, 0], "dist": 30, "el": 4, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.48},
+              {"t": B["tease"]["t1"], "target": [BX, 0.3, 0], "dist": 34, "el": 4, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.48, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # slow arcs (≤ 6° a second)
     for a, b in zip(keys, keys[1:]):
@@ -104,7 +104,7 @@ for shot, keys in CAM.items():           # slow arcs (≤ 6° a second)
         assert rate <= 6.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
 
 # ── the overlay ─────────────────────────────────────────────────────────────
-TITLE_T1 = B["normal"]["t0"] - 0.5   # the title card leaves; the spine and the top-right note take its place
+TITLE_T1 = CUE["known"] + 0.25   # the title card leaves; the spine and the top-right note take its place
 LABELS = [
     {"id": "l-nerve", "text": "nerve ending", "kind": "cell", "anchor": "bulb", "t0": CUE["nerve"] + 0.5, "t1": CUE["pulls"] - 0.3, "shot": "below", "side": -1},
     {"id": "l-msg", "text": "messenger", "kind": "water", "anchor": "gap", "t0": CUE["messenger"], "t1": CUE["pulls"] - 0.3, "shot": "below", "side": 1, "v": "below"},
@@ -161,7 +161,7 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 1.0], "sc": CUE
 # the junction's states, on the words
 J = {"puff": [CUE["messenger"], CUE["messenger"] + 1.6], "pull": [CUE["pulls"] - 0.1, CUE["crease"] + 0.4], "open": [B["change"]["t0"] + 0.4, CUE["slips"]],
      "toxin": [CUE["slips"] - 0.2, CUE["cuts"]], "cut": [CUE["cuts"], CUE["cuts"] + 0.5], "release": [CUE["ready"] - 0.1, CUE["leaves"] + 0.6],
-     "sprout": [CUE["nerve2"] - 0.6, CUE["endings"] + 0.6], "relight": [CUE["endings"] - 0.1, CUE["endings"] + 1.7], "bump": [CUE["ready"] - 0.2, CUE["leaves"] + 0.5], "bump2": [CUE["guessed"] + 0.3, B["whoa"]["t0"] - 0.4], "relax": [B["toscale"]["t0"], CUE["endings"]]}
+     "sprout": [CUE["silence"] - 0.2, CUE["endings"] + 0.2], "relight": [CUE["nerve2"], CUE["nerve2"] + 1.6], "bump": [CUE["ready"] - 0.2, CUE["leaves"] + 0.5], "bump2": [CUE["guessed"] + 0.3, B["whoa"]["t0"] - 0.4], "relax": [B["toscale"]["t0"], CUE["endings"]]}
 
 TITLE = {"series": "Outer Layer · No. 004", "title": "The deadliest *dose*", "t1": TITLE_T1, "sig": A("vo01:frown?", 0.35)}
 END = {"title": "Next layer: same sun, one experiment. Which hand *aged*?", "follow": "Outer Layer · No. 005",
@@ -177,7 +177,7 @@ CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "tone": TONE, "trans": [],
-    "bio": {"jx": JX, "ux": UX, "paper_um": PAPER_UM, "gap_um": GAP_UM},
+    "bio": {"jx": JX, "ux": UX, "bx": BX, "paper_um": PAPER_UM, "gap_um": GAP_UM},
     "cam": CAM, "cue": CUE, "gauge": GAUGE, "j": J, "plates": PLATES,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,

@@ -15,6 +15,7 @@ import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
 import { createUVSkin, createViewfinder, TONES } from "../set/uvcam.js";
 import { createJunction } from "../set/junction04.js";
+import { createBrow, browArcs } from "../set/brow04.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, BIO = FILM.bio, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, P = FILM.plates;
 const S1 = Math.min(W, H) / 1080;
@@ -47,19 +48,11 @@ T.set({ tone: LIGHT, furrows: 0.25, spot: 0, sheen: 0 });
   for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), ax = Math.abs(x); pos.setY(i, pos.getY(i) - 2.2 * Math.exp(-(x * x) / (2 * 0.8 * 0.8)) + 1.6 * Math.exp(-((ax - 4.5) ** 2) / (2 * 2.6 * 2.6))); }   // two brow mounds, the crease between
   pos.needsUpdate = true; T.mesh.geometry.computeVertexNormals();
 }
-// eyebrows: dark hairs along the two brow mounds, leaning out from the crease (so the hook reads as a frown)
-{
-  const n = 2600, hg = new THREE.CylinderGeometry(0.02, 0.05, 1, 5, 1).translate(0, 0.5, 0);
-  const brows = new THREE.InstancedMesh(hg, new THREE.MeshStandardMaterial({ color: 0x4a2e1e, roughness: 0.5 }), n);
-  const d = new THREE.Object3D(); let seed = 7; const r = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  for (let i = 0; i < n; i++) {
-    const side = i % 2 ? 1 : -1, x = side * (2.6 + r() * 4.2), z = -34 + r() * 56;
-    const ax = Math.abs(x), y = -2.2 * Math.exp(-(x * x) / 1.28) + 1.6 * Math.exp(-((ax - 4.5) ** 2) / 13.5) + 0.1;
-    d.position.set(x, y - 0.05, z); d.rotation.set(-0.25 + r() * 0.2, 0, -side * (1.05 + r() * 0.25)); d.scale.set(1, 1.3 + r() * 0.9, 1); d.updateMatrix(); brows.setMatrixAt(i, d.matrix);
-  }
-  T.group.add(brows);
-}
 scene.add(T.group);
+// the frontal brow (human scale): the hook's daylight half and the loop at the end
+const BR = createBrow({ x: BIO.bx, tone: LIGHT });
+scene.add(BR.group);
+const browKey = new THREE.DirectionalLight(0xfff0e0, 1.6); browKey.position.set(BIO.bx - 8, 10, 30); browKey.target.position.set(BIO.bx, 0, 0); scene.add(browKey, browKey.target);
 const JN = createJunction({ x: BIO.jx, tone: LIGHT });
 scene.add(JN.group);
 const UVS = createUVSkin({ seed: 4.0 });
@@ -71,6 +64,17 @@ UVS.mesh.position.set(BIO.ux, 0, 0); UVS.mesh.rotation.x = -0.18; scene.add(UVS.
   pos.needsUpdate = true; UVS.mesh.geometry.computeVertexNormals();
 }
 // the frown dose's five points (a glabella pattern) on the UV brow: cyan, the brightest things in the reveal
+// the eyebrows in UV: hair absorbs UV, so they read as two dark arcs over the glowing skin
+{
+  const arcs = browArcs({ w: 7.2, h: 5.0 }), n = arcs.reduce((a, c) => a + c.length * 6, 0);
+  const em = new THREE.InstancedMesh(new THREE.BoxGeometry(0.16, 0.022, 0.01), new THREE.MeshBasicMaterial({ color: 0x1e0c4a, transparent: true, opacity: 0.85 }), n);
+  const d = new THREE.Object3D(); let k = 0, sd = 3; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+  for (const arc of arcs) for (const [ax, ay] of arc) for (let j = 0; j < 6; j++) {
+    const px = ax + (r() - 0.5) * 0.18, py = ay + (r() - 0.5) * 0.1, p = UVS.at(px / 7.2 + 0.5, py / 5.0 + 0.5);
+    d.position.set(p[0], p[1], p[2] + 0.02); d.rotation.set(0, 0, Math.sign(ax) * (0.3 + r() * 0.4)); d.updateMatrix(); em.setMatrixAt(k++, d.matrix);
+  }
+  em.renderOrder = 5; UVS.mesh.add(em);
+}
 const SITE_UV = [[0.5, 0.48], [0.4, 0.52], [0.6, 0.52], [0.31, 0.57], [0.69, 0.57]];   // a glabella pattern, low enough to clear the spine readout
 const siteMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(...hexLin("#5FF2E8")).multiplyScalar(1.5), transparent: true, opacity: 0, depthTest: false, toneMapped: true });
 const sites = SITE_UV.map(([u, v]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), siteMat); const p = UVS.at(u, v); m.position.set(p[0], p[1], p[2] + 0.05); m.renderOrder = 6; UVS.mesh.add(m); return m; });
@@ -83,7 +87,7 @@ const hud = createHud({ camera, shots: FILM.shots });
 const KIND = { cell: { color: "text", glyph: "●", mark: "none" }, water: { color: "water", glyph: "◇", mark: "none" }, uv: { color: "uv", glyph: "◆", mark: "none" } };
 const A = {};
 const at = (k) => () => A[k] || [0, 0, 0];
-hud.captions(FILM.captions);
+hud.captions(FILM.captions, { fade: 0.05 });   // in within two frames: the word is readable as it is said
 const titleEl = hud.title(FILM.title);
 const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
@@ -145,11 +149,11 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const fly = ["brow", "rise", "close"].includes(shot), isJ = ["below", "below2", "gauge"].includes(shot), isU = shot === "uv" || shot === "uvhook";
-  T.group.visible = fly; JN.group.visible = isJ; UVS.mesh.visible = isU;
+  const fly = ["rise"].includes(shot), isB = shot === "brow" || shot === "close", isJ = ["below", "below2", "gauge"].includes(shot), isU = shot === "uv" || shot === "uvhook";
+  T.group.visible = fly; BR.group.visible = isB; JN.group.visible = isJ; UVS.mesh.visible = isU;
   scene.fog = fly ? FOG : null;
-  T.group.scale.y = shot === "brow" ? 0.55 + 0.45 * E.inout2(seg(t, SH.brow, SH.brow + 1.0)) : shot === "close" ? 0.55 + 0.45 * E.inout2(seg(t, SH.close, SH.close + 1.0)) : 1;   // the frown sets (on "frown"; and again as the message returns)
-  focus = fly ? { point: P0.target, fstop: 0.3 } : { point: P0.target, fstop: 0 };
+  if (isB) BR.set({ frown: 0.25 + 0.75 * E.inout2(seg(t, SH[shot] + 0.1, SH[shot] + 1.2)) });   // the frown sets (the hook; and again as the message returns)   // the frown sets (on "frown"; and again as the message returns)
+  focus = fly ? { point: P0.target, fstop: 0.3 } : isB ? { point: P0.target, fstop: 0.15 } : { point: P0.target, fstop: 0 };
 
   // ── the junction: the message crosses and the muscle pulls; the toxin cuts; the message stays; new endings ──
   if (isJ) {
@@ -194,7 +198,7 @@ window.seek = function (t) {
 
   // ── the veil: three frames of the ground on each scale jump; the scene fades toward the ground before the end card ──
   let step = 0;
-  for (const c of [SH.brow, SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
+  for (const c of [SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
   const end = 0.6 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));   // the hook's brow stays readable behind the card (the loop)
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 
