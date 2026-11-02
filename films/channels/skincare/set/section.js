@@ -251,10 +251,10 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
       mesh.visible = gain > 0.002 && t > t0;
       F.forEach((f, i) => {
         const u = Math.max(0, Math.min(1, (t - t0 - f.d) / 2.4)), e = u * u * (3 - 2 * u);
-        d.position.set(f.x + f.drift * e, 0.6 + 12 * e, f.z);   // a short lift: clear of the counters
+        d.position.set(f.x + f.drift * e, 0.6 + 8 * e, f.z);   // a short lift: clear of the counters
         d.rotation.set(f.spin * e * 1.4, f.spin * e * 2, f.spin * e * 0.9);
         const s = (u > 0 ? 1 : 0) * (1 - Math.max(0, (u - 0.7) / 0.3));
-        d.scale.set(13 * s + 1e-4, 0.8, 13 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
+        d.scale.set(8 * s + 1e-4, 0.8, 8 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
       });
       mesh.instanceMatrix.needsUpdate = true;
       mat.opacity = gain;

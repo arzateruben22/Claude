@@ -131,7 +131,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       const yEnd = Math.min(y0 + len, safe ? safe.b - 10 * S1 : y0 + len);
       rcard.setAttribute("x", x - 22 * S1); rcard.setAttribute("y", y0 - 40 * S1); rcard.setAttribute("width", 82 * S1); rcard.setAttribute("height", Math.max(0, yEnd - y0 + 52 * S1)); rcard.setAttribute("opacity", (0.88 * (1 - u)).toFixed(3));
       // lifted: two bars to the right of the ruler, filled from the top, each named above itself (two short lines)
-      const bx = x + 80 * S1, bw = 120 * S1, gap = 46 * S1;
+      const bx = x + 80 * S1, bw = 108 * S1, gap = 40 * S1;
       const yS = filmBar ? y0 + filmUm * px * fillFilm : y0;   // with a film, the dead layer hangs under it
       scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", yS); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
       if (filmBar) {
