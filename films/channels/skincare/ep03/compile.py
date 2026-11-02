@@ -68,11 +68,11 @@ CAM = {
                {"t": B["whoa"]["t0"], "target": [0, -10, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 270, "az": 2, "ease": "sine"}],
     # the reflex: the furrowed pad in its bath, marbles on it; an orbit through the grip study; then the pull-back that
     # lifts the gauge card (the pad lower right, clear of the card and above the captions)
-    "reflex": [{"t": B["whoa"]["t0"], "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -14},
-               {"t": CUE["argued"], "target": [0, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -4, "ease": "inout2"},
-               {"t": CUE["none"] + 0.4, "target": [0, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
-               {"t": B["toscale"]["t0"] + 2.6, "target": [0, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 520, "az": 8, "ease": "inout2"},
-               {"t": B["takeaway"]["t0"], "target": [0, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 510, "az": 9, "ease": "sine"}],
+    "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -14},
+               {"t": CUE["argued"], "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -4, "ease": "inout2"},
+               {"t": CUE["none"] + 0.4, "target": [-40, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
+               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 520, "az": 8, "ease": "inout2"},
+               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 510, "az": 9, "ease": "sine"}],
     "close": [{"t": B["takeaway"]["t0"], **PADS, "dist": 520, "az": -4},
               {"t": B["tease"]["t1"], **PADS, "dist": 560, "az": -8, "ease": "sine"}],
 }
