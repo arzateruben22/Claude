@@ -27,3 +27,8 @@ renamed to `graphite`), `set/aces.js` (Rest Frame's). The originals are untouche
 - set/crowd.js: optional `far: [lo, hi]` (when the dots give way to their average; default [0.12, 0.7], as
   before) and `aniso` (measure the footprint along both screen axes, for slanted views; default off). Unset,
   the output is unchanged.
+- kits/cinema/film/compilation.mjs (shared, additive): an optional theme key `compilation.introPromiseWidth` (CSS
+  px) caps the intro card's promise line, so a long promise wraps beside the posters instead of running under
+  them. Themes without the key render byte-identically. This channel sets 860. Note for the coordinator: the
+  intro lays out at 1920 px with the posters from x ≈ 1036, while the promise may run to 1240, so any promise wider
+  than ~900 px slides under the posters. Space's promise (64 characters) is likely affected in its vol01.

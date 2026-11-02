@@ -4,6 +4,7 @@
  "name": "Back of the Envelope",
  "channel": "whatif",
  "promise": "Impossible questions, honest assumptions, real calculations.",
+ "compilation": { "introPromiseWidth": 860 },
 
  "tokens": {
   "bg": "#171A1E",
