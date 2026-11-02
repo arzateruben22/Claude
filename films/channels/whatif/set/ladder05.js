@@ -64,6 +64,7 @@ void main() {
       float caps = aa(abs(abs(p.y) - 0.5 * s), w) * step(abs(p.x), cap);
       col = mix(col, c, vis * max(stem, caps));
     } else {                                                   // a fuzzy disc: an atom's cloud
+      vis *= 1.0 - smoothstep(0.9, 1.6, s);                    // the cloud leaves before it fills the frame (no grey fog)
       float g = exp(-pow(r / (0.5 * s), 2.0) * 2.2);
       col = mix(col, c, vis * 0.55 * g);
       col = mix(col, c, vis * aa(abs(r - 0.5 * s), 1.5 * pxw) * 0.6);

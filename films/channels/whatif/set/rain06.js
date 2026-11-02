@@ -5,7 +5,7 @@
 //   const rain = createRain({ tokens, count: 6000, half: 12, top: 14 });   // streaks over a square 2·half wide
 //   scene.add(rain.mesh);
 //   rain.set({ fall: metres fallen so far (a pure function of t), len: streak length (m), density: 0–1, opacity })
-//   const w = createWater({ tokens, r: 0.4, h: 0.0028 });                  // a disc of water standing on the paper
+//   const w = createWater({ tokens, r: 0.4, h: 0.0028, a: 0.28 (chalk mix), alpha: 0.45 (from above) });   // a disc of water on the paper
 //   scene.add(w.mesh); w.set({ h, opacity, at: [x, z] })
 //   const c = createCoins({ tokens, n: 2 });  scene.add(c.group);  c.set({ at: [x, z], opacity })
 //
@@ -75,15 +75,15 @@ varying vec3 vN, vP; varying float vY;
 void main() { vN = normalize(mat3(modelMatrix) * normal); vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xyz; vY = position.y + 0.5; gl_Position = projectionMatrix * viewMatrix * w; }`;
 const WFS = `
 precision highp float;
-uniform vec3 uCol, uGround, uCam; uniform float uOpacity, uExposure, uA;
+uniform vec3 uCol, uGround, uCam; uniform float uOpacity, uExposure, uA, uAlpha, uSolid;
 varying vec3 vN, vP; varying float vY;
 ${ACES_INV_GLSL}
 void main() {
   vec3 n = normalize(vN);
   float rim = pow(1.0 - abs(dot(n, normalize(uCam - vP))), 2.0);
   float top = step(0.98, n.y);
-  vec3 col = mix(uGround, uCol, clamp(uA + 0.5 * rim + 0.25 * top, 0.0, 1.0));
-  gl_FragColor = vec4(acesInv(srgbToLinear(col), uExposure), uOpacity);
+  vec3 col = mix(uGround, uCol, clamp(uA + (0.5 * rim + 0.25 * top) * uSolid, 0.0, 1.0));
+  gl_FragColor = vec4(acesInv(srgbToLinear(col), uExposure), uOpacity * mix(uAlpha, 1.0, (0.6 * rim + 0.4 * (1.0 - top)) * uSolid));   // see-through from above, solid at the rim and sides
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
@@ -91,9 +91,9 @@ void main() {
 export const createWater = (o = {}) => {
   const tk = o.tokens || {};
   const u = { uCol: { value: new THREE.Vector3(...hexRgb(tk.chalk || "#F4F2EC")) }, uGround: { value: new THREE.Vector3(...hexRgb(tk["graphite-hi"] || "#21242A")) },
-    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uA: { value: o.a ?? 0.28 } };
+    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uA: { value: o.a ?? 0.28 }, uAlpha: { value: o.alpha ?? 0.45 }, uSolid: { value: o.solid ?? 1 } };
   const g = new THREE.CylinderGeometry(1, 1, 1, 96, 1);
-  const mesh = new THREE.Mesh(g, new THREE.ShaderMaterial({ uniforms: u, vertexShader: WVS, fragmentShader: WFS, transparent: true }));
+  const mesh = new THREE.Mesh(g, new THREE.ShaderMaterial({ uniforms: u, vertexShader: WVS, fragmentShader: WFS, transparent: true, depthWrite: false }));
   mesh.renderOrder = 2;
   let r = o.r ?? 0.4, h = o.h ?? 0.003, at = [0, 0];
   const place = () => { mesh.scale.set(r, Math.max(1e-6, h), r); mesh.position.set(at[0], h / 2 + 0.0005, at[1]); };
