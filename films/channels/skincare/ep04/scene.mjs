@@ -16,7 +16,7 @@ import * as THREE from "three";
 import { stage, seg, E } from "cinema/film/runtime.js";
 import { createHud, project } from "cinema/sci/hud.js";
 import { clock } from "cinema/sci/clock.js";
-import { createSection } from "../set/section.js";
+import { createSection, createVessels } from "../set/section.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
@@ -44,7 +44,9 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 
 // ── the set ─────────────────────────────────────────────────────────────────
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um, rows: BIO.rows };
-const S = createSection({ width: 180, depth: 60, ...LAY, seed: 3 });
+const S = createSection({ width: 180, depth: 60, ...LAY, seed: 3, mortarFloor: 0 });   // the lipid sheets stay hidden (not this episode's subject)
+const V = createVessels({ x: [-86, 86], ys: [-94, -104, -115], z: 29, r: 2.6 });   // a few vessels near the junction, so the dermis isn't a blank slab
+S.group.add(V.group);
 const caps = createCaps(S); S.group.add(caps.mesh);
 const mel = createMelanocyte(S, { x: BIO.mel_x, seed: 21 });
 scene.add(S.group, mel.group);
@@ -57,7 +59,7 @@ const p53 = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBa
 p53.position.set(HC[0], HC[1], HC[2] + 2.5); p53.scale.setScalar(3.4);
 scene.add(p53);
 // the pair (why): two small sections side by side; the left (with p53) tans, the right (without) never does
-const PL = createSection({ width: 60, depth: 46, ...LAY, seed: 11, x: -36 }), PR = createSection({ width: 60, depth: 46, ...LAY, seed: 12, x: 36 });
+const PL = createSection({ width: 60, depth: 46, ...LAY, seed: 11, x: -36, mortarFloor: 0 }), PR = createSection({ width: 60, depth: 46, ...LAY, seed: 12, x: 36, mortarFloor: 0 });
 const capsL = createCaps(PL), capsR = createCaps(PR);
 PL.group.add(capsL.mesh); PR.group.add(capsR.mesh);
 const melL = createMelanocyte(PL, { x: 0, seed: 22, branches: 3, n: 50, spread: 20 }), melR = createMelanocyte(PR, { x: 0, seed: 23, branches: 3, n: 50, spread: 20 });
@@ -153,7 +155,8 @@ window.seek = function (t) {
   if (shot === "field" || shot === "gauge") { tan = 1; fill = 0.4; travel = 1; uvGain = shot === "field" ? 1 : 0.25; pass = BIO.pass; dimDead = 0.2; }
   if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.85; }
   if (inS) {
-    S.set({ tone, dimDead, dimLiving, mortar: 0, glowDead: 0 }); S.mortarGroup.visible = false;
+    S.set({ tone, dimDead, dimLiving, mortar: 0, glowDead: 0 });
+    V.set({ k: 1, opacity: 1 - 0.5 * dimLiving });
     caps.set({ tone, tan, dim: shot === "gauge" ? 0.6 : 0 });
     mel.set({ tone, fill, travel, glow: melGlow, dim: shot === "gauge" ? 0.6 : 0 });
     // in the hook and the close the pigment cell is part of the scene, not a subject: kept quiet
