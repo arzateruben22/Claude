@@ -130,5 +130,16 @@
   "note": "Excerpt: 'vascular endothelial cell activation and the involvement of inflammatory responses are integral to the earliest stages of AV lesion development'. With Fontao 2020 (c1): the microcomedone is 'the earliest phase of comedogenesis', in skin that looks normal. Caveat: Do 2008 found most (54%) inflamed spots were preceded by a visible comedone, so 'out of sight' means the start, not every step. The DOI is from the citation and was not shown in a search excerpt; a person confirms it opens J Invest Dermatol 2003;121(1):20-27.",
   "verified_via": "search excerpt",
   "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "(on screen) Under UV light, follicle bacteria glow orange-red.",
+  "claim": "Under a Wood's lamp (about 365 nm), porphyrins (mainly coproporphyrin III) made by Cutibacterium acnes make pilosebaceous follicles and comedones fluoresce orange-red; follicle extrusions show emission spectra matching cultured C. acnes.",
+  "source_url": "https://jcadonline.com/review-of-woods-lamp-in-dermatology/",
+  "source_title": "Revealing the Unseen: A Review of Wood's Lamp in Dermatology (J Clin Aesthet Dermatol); also Springer 1987 (doi 10.1007/BF00413256), pilosebaceous follicle extrusions under Wood's light",
+  "accessed": "2026-11-02",
+  "note": "On screen only, as the UV reveal's honesty note ('UV: follicle bacteria glow orange-red (porphyrins)'). Shown in follicles across one acne-prone cheek, spot and clear patches alike (c4); no claim that every healthy follicle fluoresces.",
+  "verified_via": "search excerpt",
+  "status": "ok"
  }
 ]

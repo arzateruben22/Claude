@@ -18,13 +18,13 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
   for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), y = pos.getY(i); pos.setZ(i, dome * Math.exp(-(x * x) / (width * 1.4) - (y * y) / (height * 1.2))); }
   geo.computeVertexNormals();
   const U = { uDamage: { value: 0 }, uDamageR: { value: 0 }, uScreen: { value: 0 }, uScreenR: { value: 0 }, uSplit: { value: 0 },
-    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed } };
+    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed }, uPorph: { value: 0 }, uRings: { value: 0 }, uSpot: { value: 0 } };
   const mat = new THREE.ShaderMaterial({
     uniforms: U, transparent: true, depthWrite: false,
     vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vP;
       void main(){ vUv = uv; vN = normalize(normalMatrix * normal); vec4 p = modelViewMatrix * vec4(position,1.); vP = p.xyz; gl_Position = projectionMatrix * p; }`,
     fragmentShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vP;
-      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed; uniform vec4 uFocus;
+      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed, uPorph, uRings, uSpot; uniform vec4 uFocus;
       float h(vec2 p){ return fract(sin(dot(p + uSeed, vec2(127.1,311.7))) * 43758.5453); }
       float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
         return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
@@ -46,6 +46,14 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
         float rim = pow(1.0 - abs(dot(normalize(vN), normalize(-vP))), 2.0);
         vec3 glow = mix(vec3(0.22,0.12,0.62), vec3(0.62,0.48,1.0), lum);
         vec3 col = glow * lum * 0.95 + vec3(0.25,0.85,0.95) * rim * 0.25;
+        // follicles (one in about six pore cells): orange-red porphyrin glow, and faint cyan rings (immune cells)
+        vec2 fc = uv*vec2(26.,18.); vec2 fi = floor(fc); float fsel = step(0.62, h(fi + 3.3));
+        float fdist = length(fract(fc) - 0.5 - (vec2(h(fi+1.1), h(fi+2.2)) - 0.5) * 0.5);
+        col = mix(col, vec3(1.0,0.38,0.2) * 1.25, uPorph * fsel * smoothstep(0.16, 0.05, fdist));
+        col = mix(col, vec3(0.37,0.95,0.91), uRings * fsel * 0.55 * smoothstep(0.03, 0.0, abs(fdist - 0.19)));
+        // the spot: a raised inflamed blob at the focus point, dark under UV (blood absorbs it)
+        float sd = length((uv - uFocus.xy) * vec2(1.44, 1.0));
+        col *= 1.0 - uSpot * 0.75 * smoothstep(uFocus.z * 0.7, 0.0, sd);
         float fd = length((uv - uFocus.xy) * vec2(1.44, 1.0));
         float fo = uFocus.w * (smoothstep(uFocus.z, uFocus.z * 0.55, fd) * 0.55 + smoothstep(uFocus.z * 1.08, uFocus.z, fd) * smoothstep(uFocus.z * 0.9, uFocus.z, fd) * 0.9);
         col = mix(col, vec3(0.37,0.95,0.91), clamp(fo, 0.0, 1.0));
@@ -58,7 +66,9 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
   const mesh = new THREE.Mesh(geo, mat);
   return {
     mesh, uniforms: U,
-    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1 } = {}) {
+    // porph: follicle bacteria glowing orange-red; rings: faint cyan immune rings at the same follicles; spot: the focus point as an inflamed blob
+    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1, porph = 0, rings = 0, spot = 0 } = {}) {
+      U.uPorph.value = porph; U.uRings.value = rings; U.uSpot.value = spot;
       U.uDamage.value = damage; U.uDamageR.value = damageR ?? damage; U.uScreen.value = screen; U.uScreenR.value = screenR ?? screen;
       U.uSplit.value = split; U.uGlow.value = glow; U.uOpacity.value = opacity; mesh.visible = opacity > 0.002;
       if (focus) U.uFocus.value.set(...focus); else U.uFocus.value.w = 0;

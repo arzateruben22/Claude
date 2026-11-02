@@ -15,7 +15,7 @@ const CSS = `
 .ol-bars i { display: block; height: var(--h); background: var(--text); border-radius: .3vmin; transform-origin: 0 50%; }
 .ol-bars i:nth-child(1) { --h: .55vmin; } .ol-bars i:nth-child(2) { --h: .95vmin; } .ol-bars i:nth-child(3) { --h: 1.45vmin; }
 .ol-band { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; opacity: 0;
-  background: linear-gradient(180deg, rgba(238, 242, 241, 0) 0%, rgba(238, 242, 241, .86) 24%, rgba(238, 242, 241, .86) 76%, rgba(238, 242, 241, 0) 100%); }
+  background: linear-gradient(180deg, rgba(44, 22, 96, 0) 0%, rgba(44, 22, 96, .86) 24%, rgba(44, 22, 96, .86) 76%, rgba(44, 22, 96, 0) 100%); }
 .hud-end { text-align: center; }
 .hud-end .ol-bars { margin: 0 auto 3.2vmin; width: 10vmin; gap: 1vmin; }
 .hud-end .ol-bars i:nth-child(1) { --h: 1vmin; } .hud-end .ol-bars i:nth-child(2) { --h: 1.7vmin; } .hud-end .ol-bars i:nth-child(3) { --h: 2.6vmin; }
