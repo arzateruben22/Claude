@@ -70,6 +70,11 @@
    "tag": "title"
   },
   {
+   "t": 1.7,
+   "kind": "cell.land",
+   "tag": "shutter-0"
+  },
+  {
    "t": 3.2666666666666666,
    "kind": "badge",
    "tag": "b-iarc"

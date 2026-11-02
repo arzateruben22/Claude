@@ -136,7 +136,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const fly = ["list", "bed", "list2"].includes(shot), isU = shot === "uv", isS = shot === "section";
+  const fly = ["list", "bed", "list2"].includes(shot), isU = shot === "uv" || shot === "uvhook", isS = shot === "section";
   T.group.visible = fly; tubes.visible = shot === "bed"; UVS.mesh.visible = isU; SEC.group.visible = isS; VES.group.visible = isS; RAYS.group.visible = isS;
   scene.fog = fly ? FOG : null;
   focus = fly ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
@@ -150,10 +150,11 @@ window.seek = function (t) {
 
   // ── the UV camera: under the bed's light the skin glows; the light goes out country by country ──
   if (isU) {
-    const k = 1 - 0.35 * u01(t, FILM.uvd.brazil) - 0.5 * u01(t, FILM.uvd.off);
-    UVS.set({ damage: 0.45, glow: 0.35 + 0.95 * k, opacity: fadeIn(t, SH.uv, 0.25) });
+    const k = shot === "uvhook" ? 1 : 1 - 0.35 * u01(t, FILM.uvd.brazil) - 0.5 * u01(t, FILM.uvd.off);
+    UVS.set({ damage: 0.45, glow: 0.35 + 0.95 * k, opacity: shot === "uvhook" ? 1 : fadeIn(t, SH.uv, 0.25) });
   }
-  vf.set({ op: isU ? win(t, P.viewfinder.t0, P.viewfinder.t1, 0.25) : 0, left: "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
+  const vw = shot === "uvhook" ? P.vfhook : P.viewfinder;
+  vf.set({ op: isU ? (shot === "uvhook" ? 1 - fadeIn(t, vw.t1 - 0.2, 0.2) : win(t, vw.t0, vw.t1, 0.25)) : 0, left: shot === "uvhook" ? "model, not a photo" : "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
   show(bans, isU ? win(t, BN.t0, BN.t1) : 0);
   bn[0].style.opacity = fadeIn(t, BN.brazil - 0.2, 0.4).toFixed(3); bn[1].style.opacity = fadeIn(t, BN.australia - 0.2, 0.4).toFixed(3);
 
@@ -167,7 +168,7 @@ window.seek = function (t) {
   A.epi = [BIO.sx - 60, -50, 30]; A.derm = [BIO.sx + 40, -BIO.epi_um - 40, 30];
 
   // ── plates ──
-  show(list, shot === "list" ? win(t, P.list.t0, P.list.t1) : 0); litList(list, t, P.list, false);
+  show(list, shot === "list" || shot === "uvhook" ? win(t, P.list.t0, P.list.t1) : 0); litList(list, t, P.list, false);
   show(list2, shot === "list2" ? win(t, P.list2.t0, P.list2.t1) : 0); litList(list2, t, P.list2, true);
   show(rr, shot === "bed" ? win(t, R.t0, R.t1) : 0);
 
@@ -178,7 +179,7 @@ window.seek = function (t) {
   for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "paper" || el.textContent === G.bar) el.setAttribute("opacity", lift.toFixed(3));
 
   let step = 0;
-  for (const s of FILM.shots.slice(1)) step = Math.max(step, 1 - Math.min(1, Math.abs(t - s.at) / 0.1));
+  for (const s of FILM.shots.slice(2)) step = Math.max(step, 1 - Math.min(1, Math.abs(t - s.at) / 0.1));
   const end = 0.75 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 

@@ -29,7 +29,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a typeset plate, IARC Group 1 (an excerpt), over a dim macro flight across skin at golden hour (deep tone); on "cigarettes" two lines light, "UV-emitting tanning devices", then "Tobacco smoking" · badge: IARC Monographs, Group 1 · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+## hook {shot: frame 0, mid-push inside the UV camera on skin glowing under a bed's light ("model, not a photo"); the typeset plate, IARC Group 1 (an excerpt), over it; on "Most" the signature switch to daylight: a dim macro flight across the same skin at golden hour (deep tone); on "cigarettes" two lines light, "UV-emitting tanning devices", then "Tobacco smoking" · badge: IARC Monographs, Group 1 · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Same list as *cigarettes*? Most people hear: just as deadly. {-}
 
 ## normal {shot: no cut: the plate holds; on "sure" a line lands under it: ranks how sure the evidence is, not how big the harm · picture-only 0.5 s · energy: 0.45} (5–17 s)

@@ -40,7 +40,7 @@ TONE = "deep"           # bible §1: 006 is drawn in the deep tone
 # ── shots ─────────────────────────────────────────────────────────────────
 t_end = A("vo08:Next", -0.25)
 CUE = {
-    "list": A("vo01:list"), "cigs": A("vo01:cigarettes?"), "deadly": A("vo01:deadly."),
+    "list": A("vo01:list"), "most": A("vo01:Most"), "cigs": A("vo01:cigarettes?"), "deadly": A("vo01:deadly."),
     "who": A("vo02:World"), "top": A("vo02:top"), "tobacco": A("vo02:tobacco"), "ranks": A("vo02:ranks"), "sure": A("vo02:sure"), "harm": A("vo02:harm."),
     "follow": A("vo03:Follow"), "bed": A("vo03:bed:"), "uva": A("vo03:UVA,"), "long": A("vo03:long"), "large": A("vo03:large,"), "ten": A("vo03:ten"), "midday": A("vo03:midday"),
     "weighed": A("vo04:Weighing"), "young": A("vo04:young."), "pooled": A("vo04:pooled"), "before": A("vo04:before"), "melanoma": A("vo04:melanoma"), "half": A("vo04:half."),
@@ -48,7 +48,7 @@ CUE = {
     "rays": A("vo06:rays"), "layer": A("vo06:layer,"), "paper": A("vo06:paper."),
     "same2": A("vo07:Same"), "harm2": A("vo07:harm,"), "certainty": A("vo07:certainty."),
 }
-SHOTS = [{"at": 0.0, "name": "list"}, {"at": B["change"]["t0"], "name": "bed"}, {"at": B["whoa"]["t0"], "name": "uv"},
+SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["most"], "name": "list"}, {"at": B["change"]["t0"], "name": "bed"}, {"at": B["whoa"]["t0"], "name": "uv"},
          {"at": B["toscale"]["t0"], "name": "section"}, {"at": B["takeaway"]["t0"], "name": "list2"}]
 
 UX, SX = 4000.0, -4000.0
@@ -56,8 +56,13 @@ FLY = {"el": 14, "fov": 34, "fx": 0.5, "fy": 0.5}
 UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.4}
 CAM = {
     # the list is an overlay: behind it, a slow, dim flight over the skin (the tubes off)
-    "list": [{"t": 0.0, "target": [0, -0.4, 14], "dist": 26, "az": -6, **FLY},
-             {"t": B["change"]["t0"], "target": [0, -0.4, 6], "dist": 24, "az": 0, **FLY, "ease": "sine"}],
+    # the hook opens mid-push inside the UV camera: skin glowing under a bed's light; the list lights its two lines over it.
+    # On "Most", the signature switch to daylight: the same skin, the flight
+    "uvhook": [{"t": 0.0, **UVK, "dist": 30}, {"t": CUE["most"], **UVK, "dist": 23, "ease": "linear"}],
+    "list": [{"t": CUE["most"], "target": [0, -0.4, 14], "dist": 26, "az": -6, **FLY},
+             {"t": CUE["top"], "target": [-3, -0.4, 10], "dist": 22, "az": -10, **FLY, "ease": "inout2"},
+             {"t": CUE["sure"], "target": [3, -0.4, 6], "dist": 20, "az": -2, **{**FLY, "el": 24}, "ease": "inout2"},
+             {"t": B["change"]["t0"], "target": [0, -0.6, 2], "dist": 12, "az": 0, **{**FLY, "el": 34}, "ease": "in2"}],   # dives toward the skin: into the bed
     # into the bed: the tubes light; the flight runs under them; the camera holds through the why
     "bed": [{"t": B["change"]["t0"], "target": [0, -0.4, 6], "dist": 18, "el": 18, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.56},
             {"t": CUE["ten"], "target": [0, -0.4, 2], "dist": 16, "el": 14, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.56, "ease": "inout2"},
@@ -92,6 +97,7 @@ COUNTERS = [
     {"id": "c-end", "label": "Group 1 ranks", "fmt": "text", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.7, "at": SPINE},
 ]
 PLATES = {
+    "vfhook": {"t0": 0.0, "t1": CUE["most"]},
     "list": {"t0": 0.2, "t1": B["change"]["t0"] - 0.3, "lit": CUE["cigs"] - 0.6, "lit2": CUE["tobacco"] - 0.2, "rank": CUE["sure"] - 0.2},
     "list2": {"t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.3, "rank": CUE["harm2"] - 0.2},
     "rr": {"t0": CUE["pooled"] - 0.3, "t1": B["whoa"]["t0"] - 0.3, "before": CUE["before"], "rr": list(RR)},
@@ -151,6 +157,7 @@ for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
+    {"t": CUE["most"], "kind": "cell.land", "tag": "shutter-0"},
     {"t": PLATES["list"]["lit"], "kind": "reveal", "tag": "list-lit"},
     {"t": PLATES["list"]["rank"], "kind": "cell.land", "tag": "rank"},
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "into-bed"},
