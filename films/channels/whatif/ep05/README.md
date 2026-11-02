@@ -4,7 +4,7 @@
 A lydian at 50 BPM). It pays off No. 004's tease ("if everyone jumped at once, would the Earth move?") and sets up
 No. 006 ("what if a whole day's rain fell in one second?").
 
-STATUS: draft under review (round 2, the rebuild). The measured scorecard follows the final.
+STATUS: delivered. Final in `out/` (qa.py PASS); measured scorecard in `review/scorecard.md`.
 
 ## The story
 When you jump, you push the ground away, and the ground is the whole planet. Gather all 8.2 billion of us in one
