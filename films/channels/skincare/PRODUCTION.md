@@ -40,7 +40,8 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 - **2 Nov.** The owner's compelling pass added to every review (seven scores, a ratchet: each episode at least as good as
   the last). No. 001 through three rounds to all 4s; No. 002's first review fell below and was reworked (fewer spoken
   figures, short landings, the shield callback; countable trails for "2 against 1"; match moves at every cut). Channel
-  rule: one skin tone per episode's world, rotating (bible §1). Kit: `pluck` reverted for Back of the Envelope; `reed`
+  rule: one skin tone per episode's world, rotating (bible §1); the owner approved it ("OK", 2 Nov ~03:10 UTC), with
+  No. 005 the exception that shows all tones together. Kit: `pluck` reverted for Back of the Envelope; `reed`
   voice; `qa.py` measures it by its rise. Shared set: flakes, rays/film/trails, wrinkle/vessels/water, gauge film bar
   and span past 110 µm, opt-in `mortarFloor`. A second builder (ep04–06) and a render worker (finals) joined.
 

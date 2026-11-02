@@ -11,7 +11,7 @@
   - "Nearly two sheets of paper": the palm's 173 µm (Egawa 2007, confocal Raman, 15 adults) against 100 µm paper.
   - "Your nerves decide to": figurative for an involuntary reflex; check it reads that way.
 - **No advice, no diagnosis** (the nerve test is described, not recommended to anyone).
-- **Skin tone:** one deep tone throughout; nothing about it is said or implied.
+- **Skin tone:** one deep tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); nothing about it is said or implied.
 
 ## Every episode
 As No. 001's `review/HUMAN-REVIEW.md`: AI labelling, a flash analyzer, a listen on phone and headphones, the

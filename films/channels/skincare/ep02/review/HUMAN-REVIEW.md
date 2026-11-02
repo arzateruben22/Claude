@@ -14,7 +14,7 @@
     the cheek's 17 µm and paper's 100 µm.
 - **No advice.** The film never tells anyone what to apply or how much; the dermatologist confirms "when there's enough
   of it" reads as how the numbers work, not as an instruction. No product, brand or ingredient is shown or named.
-- **Skin tone:** one light tone throughout, so no tone is tied to "real people spread less".
+- **Skin tone:** one light tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov), so no tone is tied to "real people spread less".
 
 ## Every episode
 As No. 001's `review/HUMAN-REVIEW.md`: AI labelling on every platform, a broadcast flash analyzer, a listen on phone and
