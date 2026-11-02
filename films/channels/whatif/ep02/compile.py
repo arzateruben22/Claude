@@ -66,16 +66,20 @@ SHOTS = [
 
 # ── the crowd's side over time (m), and the density (per m²) ───────────────
 # grows log-linearly from your own square to everyone between "bring" and "hour"; the squeeze halves the area
-CROWD = {"keys": [[0.0, SIDE_ONE], [t_half, SIDE_ONE], [t_half + 1.2, 3.2], [t_grow0, 3.2], [t_grow1, SIDE_ALL],
-                  [t_squeeze, SIDE_ALL], [t_squeeze + 1.2, SIDE_TIGHT], [t_room, SIDE_TIGHT], [t_room + 1.0, SIDE_ALL]],
+CROWD = {"keys": [[0.0, SIDE_ONE], [1.8, 6.0], [t_half - 0.8, 6.0], [t_half, SIDE_ONE],   # people gather round you as the question is asked (motion from frame 0)
+                   [t_half + 1.2, 3.2], [t_grow0, 3.2], [t_grow1, SIDE_ALL],
+                  [t_squeeze, SIDE_ALL], [t_squeeze + 1.2, SIDE_TIGHT], [t_room, SIDE_TIGHT], [t_room + 1.0, SIDE_ALL],
+                  [t_end + 0.6, SIDE_ALL], [B["tease"]["t1"] - 0.3, SIDE_ONE]],      # under the end card the crowd folds back to you: the loop
          "density": [[0.0, 2.0], [t_squeeze, 2.0], [t_squeeze + 1.2, 4.0], [t_room, 4.0], [t_room + 1.0, 2.0]],
          "hatch": [t_danger, t_room + 0.6], "full": [t_full, t_half]}
 
 # ── the camera (rig.js keys; distances in metres, eased in log space) ───────
 YOU = {"target": [0, 0.8, 0], "dist": 9.5, "el": 40, "az": 20, "fov": 30, "fy": 0.4}
+YOU0 = {**YOU, "dist": 13, "az": 8}                 # frame 0 and the last frame: the push-in starts at once (review: first 2 s)
 CAM = {
     "you": [
-        {"t": 0.0, **YOU},
+        {"t": 0.0, **YOU0},
+        {"t": t_title_out, **YOU, "ease": "out2"},
         {"t": t_full, **YOU, "dist": 30, "el": 52, "az": 24, "ease": "inout3"},           # a glimpse of a crowded street
         {"t": t_half, **YOU, "dist": 7, "el": 50, "az": 22, "ease": "inout3"},           # in to your half a square metre
         {"t": t_grow0, **YOU, "dist": 9, "el": 55, "az": 24, "ease": "sine"},
@@ -87,22 +91,22 @@ CAM = {
         {"t": t_orbit, "target": [0, 0, 0], "dist": SIDE_ALL * 4.2, "el": 63, "az": 33, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "orbit": [
-        {"t": t_orbit, "target": [0, R_EARTH * 0.6, 0], "dist": 1.6e7, "el": 62, "az": 30, "fov": 30, "fy": 0.42},
-        {"t": t_water - 0.2, "target": [0, R_EARTH * 0.3, 0], "dist": 3.2e7, "el": 50, "az": 32, "fov": 30, "fy": 0.4, "ease": "inout3"},
+        {"t": t_orbit, "target": [0, R_EARTH * 0.4, 0], "dist": 3.0e7, "el": 62, "az": 30, "fov": 30, "fy": 0.42},
+        {"t": t_water - 0.2, "target": [0, R_EARTH * 0.2, 0], "dist": 4.6e7, "el": 50, "az": 32, "fov": 30, "fy": 0.4, "ease": "inout3"},
     ],
     "cube": [
-        {"t": t_water, "target": [-150, 420, 0], "dist": 7200, "el": 12, "az": 26, "fov": 30, "fy": 0.4},
-        {"t": t_work0, "target": [-150, 420, 0], "dist": 6600, "el": 13, "az": 22, "fov": 30, "fy": 0.47, "ease": "sine"},
-        {"t": B["takeaway"]["t0"], "target": [-150, 420, 0], "dist": 6400, "el": 13, "az": 20, "fov": 30, "fy": 0.47, "ease": "sine"},
+        {"t": t_water, "target": [-150, 420, 0], "dist": 7600, "el": 4, "az": 3, "fov": 30, "fy": 0.4},
+        {"t": t_work0, "target": [-150, 420, 0], "dist": 8200, "el": 4, "az": 2, "fov": 30, "fy": 0.46, "ease": "inout2"},
+        {"t": B["takeaway"]["t0"], "target": [-150, 420, 0], "dist": 8000, "el": 4, "az": 1, "fov": 30, "fy": 0.46, "ease": "sine"},
     ],
     "home": [
-        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": SIDE_ALL * 3.6, "el": 60, "az": 30, "fov": 30, "fy": 0.36},
-        {"t": t_city, **YOU, "dist": 11, "el": 44, "az": 22, "ease": "inout2"},
+        {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": SIDE_ALL * 6, "el": 55, "az": 30, "fov": 30, "fy": 0.36},
+        {"t": t_city, **YOU, "dist": 11, "el": 44, "az": 22, "ease": "in3"},
         {"t": t_end, **YOU, "dist": 10, "el": 40, "az": 21, "ease": "sine"},
     ],
     "end": [
         {"t": t_end, **YOU, "dist": 10, "el": 40, "az": 21},
-        {"t": B["tease"]["t1"], **YOU},                          # the last frame is frame 0: the loop
+        {"t": B["tease"]["t1"], **YOU0},                         # the last frame is frame 0: the loop
     ],
 }
 for shot, keys in CAM.items():
@@ -116,31 +120,32 @@ SPINE = [
     {"t": t_half, "label": "standing comfortably", "terms": [["in", POP], ["op", "×"], ["assume", "½ m² each"]]},
     {"t": A("vo03:square", -0.05), "label": "everyone, side by side", "terms": [["in", POP], ["op", "×"], ["assume", "½ m²"], ["op", "≈"], ["ans", f"{RESULTS['area_safe_km2']:,.0f} km²"]]},
     {"t": t_grow1, "label": f"a square {RESULTS['side_safe_km']} km across", "terms": [["in", f"{RESULTS['area_safe_km2']:,.0f} km²"], ["op", "="], ["ans", f"{RESULTS['side_safe_km']} km × {RESULTS['side_safe_km']} km"]]},
-    {"t": t_squeeze, "label": "twice as close: unsafe", "terms": [["assume", "4 per m²"], ["op", "→"], ["ans", f"{RESULTS['area_tight_km2']:,.0f} km²"]]},
+    {"t": t_squeeze, "label": "twice as close: unsafe", "terms": [["assume", "4 per m²"], ["op", "→"], ["ans", f"≈ {RESULTS['area_tight_km2']:,.0f} km²"]]},
+    {"t": t_room, "label": "back to a calm crowd", "terms": [["assume", "2 per m²"], ["op", "→"], ["ans", f"{RESULTS['area_safe_km2']:,.0f} km²"]]},
     {"t": t_lon, "label": "everyone, in Greater Londons (1,572 km² each)", "terms": [["in", f"{RESULTS['area_safe_km2']:,.0f} km²"], ["op", "≈"], ["ans", f"{RESULTS['londons_safe']} Londons"]], "box": True},
     {"t": t_orbit, "label": "of all Earth's land", "terms": [["ans", f"≈ {RESULTS['land_pct']}%"]]},
-    {"t": A("vo05:cube", -0.05), "label": "every body, packed like water", "terms": [["in", POP], ["op", "×"], ["assume", "62 kg"], ["op", "≈"], ["ans", f"{RESULTS['vol_km3']} km³"]]},
+    {"t": t_water, "label": "every body, packed like water", "terms": [["in", POP], ["op", "×"], ["assume", "62 kg"], ["op", "≈"], ["ans", f"{RESULTS['vol_km3']} km³"]]},
     {"t": t_tower, "label": f"a cube shorter than {int(H_BURJ)} m", "terms": [["in", f"{RESULTS['vol_km3']} km³"], ["op", "="], ["ans", f"≈ {RESULTS['cube_m']:.0f} m cube"]], "box": True},
     {"t": B["takeaway"]["t0"], "label": "everyone, standing comfortably", "terms": [["in", f"{RESULTS['area_safe_km2']:,.0f} km²"], ["op", "≈"], ["ans", f"{RESULTS['londons_safe']} Londons"]], "box": True, "keep": True},
 ]
 WORK = {
-    "t0": t_work0, "t1": B["takeaway"]["t0"] + 0.1, "title": "Show your work",
+    "t0": t_work0, "t1": B["takeaway"]["t0"] - 0.1, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
+        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg (adult avg.) ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
         {"t": A("vo06:either", -0.05), "k": "bodies at 0.97 g/cm³", "v": f"≈ {V['cube_hi_m']:.0f} m", "lit": True},
         {"t": A("vo06:size", -0.6), "k": "bodies at 1.06 g/cm³", "v": f"≈ {V['cube_lo_m']:.0f} m", "lit": True},
     ],
-    "assume": ["62 kg is the adult average", "children weigh less", "packed with no gaps"],
+    "assume": [],                                   # the assumptions are notes (badges) here, so the card stays short and clear of the cube
 }
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_title_out, "t1": t_full - 0.2, "shot": "you", "side": 1},
-    {"id": "l-half", "text": "½ m²", "kind": "assume", "anchor": "half", "t0": t_half + 0.3, "t1": t_grow0, "shot": "you", "side": 1},
+    {"id": "l-half", "text": "½ m²", "kind": "assume", "anchor": "half", "t0": t_half + 0.3, "t1": t_grow0, "shot": "you", "side": -1, "v": "above"},
     {"id": "l-lon", "text": "Greater London, 1,572 km²", "kind": "part", "anchor": "london", "t0": t_lon + 0.3, "t1": t_orbit, "shot": "grow", "side": 1},
     {"id": "l-us", "text": "everyone", "kind": "anchor", "anchor": "dot", "t0": t_orbit + 1.0, "t1": t_water, "shot": "orbit", "side": 1},
     {"id": "l-tower", "text": f"tallest tower, {int(H_BURJ)} m", "kind": "part", "anchor": "tower", "t0": t_tower + 0.2, "t1": t_work0 - 0.1, "shot": "cube", "side": 1},
-    {"id": "l-cube", "text": "every body alive", "kind": "anchor", "anchor": "cube", "t0": A("vo05:cube", 0.1), "t1": t_work0 - 0.1, "shot": "cube", "side": -1},
+    {"id": "l-cube", "text": "every body alive", "kind": "anchor", "anchor": "cube", "t0": A("vo05:cube", 0.1), "t1": t_work0 - 0.1, "shot": "cube", "side": -1, "v": "above"},
 ]
 BADGES = [
     {"id": "b-safe", "text": "∵ 2 people per m² (a calm crowd)", "t0": t_half, "t1": t_orbit, "slot": "tl"},

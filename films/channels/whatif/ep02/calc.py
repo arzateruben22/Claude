@@ -45,10 +45,10 @@ def compute():
 V = compute()
 RESULTS = {
     "population_bn": 8.2,
-    "area_safe_km2": round(V["area_safe_km2"], -2),        # ≈ 4,100
+    "area_safe_km2": int(V["area_safe_km2"] / 100 + 0.5) * 100,   # ≈ 4,100 (half up, not Python's half-to-even)
     "side_safe_km": round(V["side_safe_km"]),              # ≈ 64
     "londons_safe": round(V["londons_safe"], 1),            # ≈ 2.6
-    "area_tight_km2": round(V["area_tight_km2"], -2),      # ≈ 2,100
+    "area_tight_km2": int(V["area_tight_km2"] / 100 + 0.5) * 100,  # ≈ 2,100 (2,050 rounds half up)
     "land_pct": round(100 * V["land_frac"], 3),             # ≈ 0.003 %
     "vol_km3": round(V["vol_km3"], 1),                      # ≈ 0.5
     "cube_m": round(V["cube_m"], -1),                       # ≈ 800

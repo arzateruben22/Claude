@@ -78,7 +78,7 @@ export const createSpine = (o) => {
     const lit = t - s.t < 1.1;
     for (const c of bar.children) {
       if (!c.classList.contains("tm")) continue;
-      const on = (c.dataset.fresh === "1" && lit) || (s.box && c.dataset.ans === "1");
+      const on = Boolean((c.dataset.fresh === "1" && lit) || (s.box && c.dataset.ans === "1"));   // a real boolean: classList.toggle(name, undefined) TOGGLES (a 1-frame flicker, review 2 Nov)
       c.classList.toggle("lit", on);
       c.style.opacity = c.dataset.fresh === "1" ? String(E.out3(seg(t, s.t, s.t + 0.25))) : "1";
     }

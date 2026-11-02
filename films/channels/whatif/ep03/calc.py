@@ -36,7 +36,7 @@ RESULTS = {
     "ants_quadrillion": 20,
     "ratio_pct": round(100 * V["ratio"]),                 # 20 %
     "ratio_fraction": "a fifth",
-    "ants_per_person_m": round(V["ants_per_person"] / 1e6, 1),   # 2.4 million
+    "ants_per_person_m": round(V["ants_per_person"] / 1e6 * 2) / 2,   # 2.44 million, said and shown as "about 2.5 million" (to the nearest half)
     "count_vs_wilson": round(V["count_vs_wilson"]),      # 2×
     "ratio_hi_pct": round(100 * V["ratio_hi"]),           # 83 %: even the highest estimate is under us
     "ratio_lo_pct": round(100 * V["ratio_lo"]),           # 6 %
