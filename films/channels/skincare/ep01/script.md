@@ -1,4 +1,4 @@
-# Outer Layer: "The fight you never saw" (draft; dermatologist sign-off before posting)
+# Skin Sense: "The fight you never saw" (draft; dermatologist sign-off before posting)
 
 About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2,
 topic: how we get pimples. This is a skin condition, so a board-certified dermatologist signs off before posting.
@@ -56,7 +56,7 @@ vo: Is it new? {-} No: a fight begun out of sight, against a germ that even help
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (68–74 s)
 vo: Next: the light on your face, and where it really *goes*. {-}
-end card: "Next layer: where the light on your face goes" · "Outer Layer · No. 001" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
+end card: "Next: where the light on your face goes" · "Skin Sense · No. 001" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
 
 ## Notes
 - Every claim was checked through search excerpts only (page fetches are blocked from this session); see

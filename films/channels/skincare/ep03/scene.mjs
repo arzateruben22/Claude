@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 003 (reboot), "What's in a scar" (films/channels/skincare/ep03). The picture as a pure function of
+// Skin Sense No. 003 (reboot), "What's in a scar" (films/channels/skincare/ep03). The picture as a pure function of
 // t (window.seek). Places (compile.py): the macro terrain with an old scar across it (golden hour, deep tone); the
 // dermis in section, its collagen woven over and under (a tug each way), cut, and patched with parallel threads (lit
 // cyan) while follicles and glands stay out; a strength meter that stalls near 80%; fetal skin whose cut regrows the

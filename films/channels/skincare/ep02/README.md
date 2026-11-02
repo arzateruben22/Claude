@@ -1,4 +1,4 @@
-# Outer Layer No. 002 (reboot): "Where a glow comes from"
+# Skin Sense No. 002 (reboot): "Where a glow comes from"
 
 About 70–77 s, 9:16 (1080×1920, 30 fps), narrated by a synthetic voice (bf_isabella, labelled "Narration: synthetic
 voice (AI)"), with an original score (`outerlayer-slide`). The reboot's look (bible §2): UV-camera reveals and macro

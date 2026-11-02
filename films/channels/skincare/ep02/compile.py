@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 002 (reboot), "Where a glow comes from": script + voice timings + this direction →
+"""Compile Skin Sense No. 002 (reboot), "Where a glow comes from": script + voice timings + this direction →
 film.json (shots, camera keys, the UV and follicle keys, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from
 claims.json.
@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-002"
+ID = "skin-sense-002"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -130,8 +130,8 @@ KEYS = {"beam": [-1.0, 0.0],   # the beam already falling at frame 0
         "sheets": [CUE["ten"] - 0.2, CUE["ten"] + 1.0], "redbar": [CUE["red"] - 0.1, CUE["deeper"] + 0.4], "glowout": [CUE["met"] - 0.6, CUE["back"] + 0.4]}
 DEPTH = {"blue_mm": BLUE_MM, "red_mm": list(RED_MM), "paper_um": PAPER_UM}
 
-TITLE = {"series": "Outer Layer · No. 002", "title": "Where a glow *comes from*", "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
-END = {"title": "Next layer: why do you *scar*?", "follow": "Outer Layer · No. 003",
+TITLE = {"series": "Skin Sense · No. 002", "title": "Where a glow *comes from*", "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
+END = {"title": "Next: why do you *scar*?", "follow": "Skin Sense · No. 003",
        "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."}
 POSTER = A("vo04:blood.", 0.2)
 

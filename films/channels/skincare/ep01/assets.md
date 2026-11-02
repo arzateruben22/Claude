@@ -1,4 +1,4 @@
-# Assets: Outer Layer No. 001 (reboot)
+# Assets: Skin Sense No. 001 (reboot)
 
 | Asset | Source | Licence |
 |---|---|---|

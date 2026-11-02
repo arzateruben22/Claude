@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 001 (reboot), "The fight you never saw" (films/channels/skincare/ep01). The picture as a pure
+// Skin Sense No. 001 (reboot), "The fight you never saw" (films/channels/skincare/ep01). The picture as a pure
 // function of t: window.seek(t) sets the shot, the camera, every object and the overlay, then renders once.
 //
 // Three places (compile.py): the UV cheek in the viewfinder (the signature reveal: the spot ringed in cyan, follicle

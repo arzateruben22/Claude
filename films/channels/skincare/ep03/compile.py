@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 003 (reboot), "What's in a scar": script + voice timings + this direction →
+"""Compile Skin Sense No. 003 (reboot), "What's in a scar": script + voice timings + this direction →
 film.json (shots, camera keys, the UV and follicle keys, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from
 claims.json.
@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-003"
+ID = "skin-sense-003"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -136,8 +136,8 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "epi_um": EPI_UM, "paper_um": PAPER_UM}
 STR = {"pct": STRENGTH}
 
-TITLE = {"series": "Outer Layer · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:now?", 0.35)}
-END = {"title": "Next layer: a poison in a *frown*", "follow": "Outer Layer · No. 004",
+TITLE = {"series": "Skin Sense · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:now?", 0.35)}
+END = {"title": "Next: a poison in a *frown*", "follow": "Skin Sense · No. 004",
        "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."}
 POSTER = A("vo03:side", 0.4)
 

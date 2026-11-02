@@ -1,5 +1,5 @@
 {
- "id": "outerlayer-002",
+ "id": "skin-sense-002",
  "fps": 30,
  "bpm": 64.2857,
  "dur": 76.5334,
@@ -811,15 +811,15 @@
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 002",
+  "series": "Skin Sense · No. 002",
   "title": "Where a glow *comes from*",
   "t1": 2.8,
   "sig": 1.5333333333333334
  },
  "endCard": 68.96666666666667,
  "end": {
-  "title": "Next layer: why do you *scar*?",
-  "follow": "Outer Layer · No. 003",
+  "title": "Next: why do you *scar*?",
+  "follow": "Skin Sense · No. 003",
   "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."
  },
  "captions": [

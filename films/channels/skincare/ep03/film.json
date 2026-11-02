@@ -1,5 +1,5 @@
 {
- "id": "outerlayer-003",
+ "id": "skin-sense-003",
  "fps": 30,
  "bpm": 64.2857,
  "dur": 75.1334,
@@ -829,15 +829,15 @@
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 003",
+  "series": "Skin Sense · No. 003",
   "title": "What's in a *scar*",
   "t1": 1.2333333333333334,
   "sig": 1.6666666666666667
  },
  "endCard": 68.5,
  "end": {
-  "title": "Next layer: a poison in a *frown*",
-  "follow": "Outer Layer · No. 004",
+  "title": "Next: a poison in a *frown*",
+  "follow": "Skin Sense · No. 004",
   "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."
  },
  "captions": [

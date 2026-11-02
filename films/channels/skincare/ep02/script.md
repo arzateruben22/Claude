@@ -1,4 +1,4 @@
-# Outer Layer No. 002: "Where a glow comes from" (draft; a board-certified dermatologist signs off before posting)
+# Skin Sense No. 002: "Where a glow comes from" (draft; a board-certified dermatologist signs off before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2 (BRIEF.md).
 Facts pass 2 (2 Nov, `../s1v2/FACTS-PASS-2.md`): script and facts only; the picture is being redesigned, so the shot
@@ -62,7 +62,7 @@ vo: Film faces made by computer once looked like plastic: their light never went
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (65.5–72.5 s)
 vo: Next: before birth, a cut healed without a trace. {c16} So why do you *scar*? {-}
-end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002" · footnote: "A camera can read a pulse from the colour of a face (Verkruysse et al., 2008)."
+end card: "Next: is a scar still skin?" · "Skin Sense · No. 002" · footnote: "A camera can read a pulse from the colour of a face (Verkruysse et al., 2008)."
 
 ## Notes
 - Facts pass 2 (2 Nov): new facts c17–c19 (heartbeat colour, camera pulse, computer faces); dropped the flush (old

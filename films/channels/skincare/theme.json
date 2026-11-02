@@ -1,7 +1,7 @@
 {
- "_doc": "Outer Layer (reboot, owner's pick 2 Nov 2026): 'UV camera + macro flight'. A clear violet ground (#2C1660, not indigo, not Light Minute's navy/teal), cyan (#5FF2E8) as the UV instrument, lilac for the spoken word. Captions and labels on violet plates (#3A2178). Read by kits/cinema/film/page.mjs and kits/cinema/sci/contrast.py. Not Lumevina (black, rose, gold). Token names kept from season 1 (uv, water = the cyan instrument) so the shared set and motif read them unchanged.",
+ "_doc": "Skin Sense (renamed from Outer Layer by the owner, 2 Nov; reboot, owner's pick 2 Nov 2026): 'UV camera + macro flight'. A clear violet ground (#2C1660, not indigo, not Light Minute's navy/teal), cyan (#5FF2E8) as the UV instrument, lilac for the spoken word. Captions and labels on violet plates (#3A2178). Read by kits/cinema/film/page.mjs and kits/cinema/sci/contrast.py. Not Lumevina (black, rose, gold). Token names kept from season 1 (uv, water = the cyan instrument) so the shared set and motif read them unchanged.",
  "id": "outer-layer",
- "name": "Outer Layer",
+ "name": "Skin Sense",
  "channel": "skincare",
  "promise": "Skin biology, ingredients and routines, with the evidence on the screen.",
  "tokens": {
@@ -227,12 +227,12 @@
   ]
  },
  "motif": {
-  "signature_shape": "The depth gauge: a thin µm ruler at the frame's left edge, a water tick for the live depth, a fixed 'paper ≈ 100 µm' mark. Its avatar: three stacked bars of decreasing thickness (the layers). Outer Layer owns the stack of layers; the ring is Light Minute's and the pulse line Meanwhile, Inside's.",
+  "signature_shape": "The depth gauge: a thin µm ruler at the frame's left edge, a water tick for the live depth, a fixed 'paper ≈ 100 µm' mark. Its avatar: three stacked bars of decreasing thickness (the layers). Skin Sense owns the stack of layers; the ring is Light Minute's and the pulse line Meanwhile, Inside's.",
   "honesty_badges": "Red Hat Mono notes for every cheat: 'not to scale', 'scale ×N', 'time ×N', 'simplified', 'model', 'estimate', 'debated', 'illustration'.",
   "title_card": "A band at y 250–470 over the hook's section: the three bars draw in on the signature beside OUTER LAYER, the question below in Newsreader.",
-  "end_card": "The hook's composition returns; a white card with 'Next layer: …' and a one-line true-fact footnote with its source. Held ≥ 1.5 s.",
+  "end_card": "The hook's composition returns; a white card with 'Next: …' and a one-line true-fact footnote with its source. Held ≥ 1.5 s.",
   "recurring_segment": "To scale: the gauge lifts to centre and the episode's subject fills in beside the paper mark.",
-  "tease": "Next layer: …",
+  "tease": "Next: …",
   "colour_rules": "uv violet is ultraviolet and the spoken word; water is water and the barrier. Skin colours come only from skin. No black ground, rose, gold, amber or coral.",
   "sound": "F major at 64.2857 BPM (a 16th is 7 frames); soft pad and a breathy reed; signature reed F5, C6, A5, 7 frames apart."
  },

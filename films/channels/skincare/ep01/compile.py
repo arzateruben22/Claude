@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 001 (reboot), "The fight you never saw": script + voice timings + this direction →
+"""Compile Skin Sense No. 001 (reboot), "The fight you never saw": script + voice timings + this direction →
 film.json (shots, camera keys, the UV and follicle keys, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from
 claims.json.
@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-001"
+ID = "skin-sense-001"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -150,8 +150,8 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 0.7], "pus": CU
          "paper": CUE["paper"] - 0.2, "back": [B["takeaway"]["t0"] - 0.3, B["takeaway"]["t0"] - 0.02], "cell_um": CELL_UM, "paper_um": PAPER_UM, "n": 10}
 assert GAUGE["n"] * CELL_UM <= PAPER_UM
 
-TITLE = {"series": "Outer Layer · No. 001", "title": "The fight you *never saw*", "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
-END = {"title": "Next layer: where the light on your face *goes*", "follow": "Outer Layer · No. 002",
+TITLE = {"series": "Skin Sense · No. 001", "title": "The fight you *never saw*", "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
+END = {"title": "Next: where the light on your face *goes*", "follow": "Skin Sense · No. 002",
        "next": "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008). Narration: synthetic voice (AI)."}
 POSTER = A("vo05:deeper.", 0.2)
 

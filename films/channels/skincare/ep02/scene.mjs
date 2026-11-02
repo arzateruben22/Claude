@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 002 (reboot), "Where a glow comes from" (films/channels/skincare/ep02). The picture as a pure
+// Skin Sense No. 002 (reboot), "Where a glow comes from" (films/channels/skincare/ep02). The picture as a pure
 // function of t (window.seek). Places (compile.py): the macro terrain at golden hour with a beam of light and its
 // glint (one ray off smooth, hydrated skin; a haze off dry skin), the section where the rest of the light threads among
 // cells and fibres and much of it climbs back out, warmed by melanin and reddened by a widening capillary; the
