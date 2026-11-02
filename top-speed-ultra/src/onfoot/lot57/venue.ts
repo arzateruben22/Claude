@@ -888,7 +888,8 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
       blob(ax, az, hw * 2 + 0.4, foot * 2 + 0.4);
     }
     // planters along the frontage strip (outside, toward the sidewalk)
-    for (const x of [-30, -18, 14, 26, 38]) { rubber.box(x, 0.06, -50.3, 2.6, 0.12, 1.4, HEX.soil); grasses(x, -50.3, 0.9, 0.12, 8); }
+    // (beds you walk round, not through: you, and the guests who come in off the sidewalk)
+    for (const x of [-30, -18, 14, 26, 38]) { rubber.box(x, 0.06, -50.3, 2.6, 0.12, 1.4, HEX.soil); grasses(x, -50.3, 0.9, 0.12, 8); col.push(box(x, -50.3, 2.6, 1.4, 0, 'planter')); }
 
     // ---- our sign: a steel pylon with a lit cabinet at the Orangewood and Dupont corner. The cabinet is turned 45
     // degrees to face the corner (north-east) and Orangewood's westbound side (south-west), so it reads from the

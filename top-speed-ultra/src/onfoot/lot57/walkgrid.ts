@@ -175,7 +175,9 @@ export class WalkGrid {
         if (this.seen[q] !== run || ng < this.g[q]) { this.seen[q] = run; this.g[q] = ng; this.from[q] = k; this.push(q, ng + hfun(q)); }
       }
     }
+    this.lastExpand = expand;
     if (!found) return null;
+    const tp = performance.now();
     const cells: P2[] = [];
     for (let k = t; k >= 0; k = this.from[k]) cells.push([this.cx(k % nx), this.cz((k / nx) | 0)]);
     cells.reverse();
@@ -189,8 +191,11 @@ export class WalkGrid {
       while (b > a + 1 && !this.clear(cells[a][0], cells[a][1], cells[b][0], cells[b][1])) b--;
       out.push(cells[b]); a = b;
     }
+    this.lastPullMs = performance.now() - tp;
     return out;
   }
+  /** the last search's expanded cells and the time its string-pulling took (for the crowd's profile) */
+  lastExpand = 0; lastPullMs = 0;
   private push(k: number, f: number) {
     if (this.hn >= this.heap.length) return;
     let i = this.hn++;

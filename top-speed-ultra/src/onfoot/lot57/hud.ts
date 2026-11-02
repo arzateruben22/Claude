@@ -147,6 +147,12 @@ export class Hud {
     if (text === this.lastToast && this.toastT > 0.5) { this.toastT = seconds; return; }
     this.lastToast = text; this.toastEl.textContent = text; this.toastEl.classList.add('on'); this.toastT = seconds;
   }
+  /** take a toast off the screen now, if it's one that says `what` (the venue's open or closed, after the clock moved) */
+  clearToast(what: RegExp) {
+    if (!this.toastEl.classList.contains('on') || !what.test(this.toastEl.textContent ?? '')) return false;
+    this.toastT = 0; this.toastEl.classList.remove('on'); this.lastToast = '';
+    return true;
+  }
   hint(show: boolean) { this.hintEl.style.opacity = show ? '1' : '0'; this.hintEl.style.display = show ? '' : 'none'; }
   get hintVisible() { return this.hintEl.style.display !== 'none'; }
   fadeHint() { this.hintEl.style.opacity = '0'; setTimeout(() => { this.hintEl.style.display = 'none'; }, document.body.classList.contains('rm') ? 0 : 650); }

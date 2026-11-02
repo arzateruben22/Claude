@@ -2,7 +2,8 @@
 // with `npx vite build --config src/onfoot/vite.config.ts`) in headless Chromium with SwiftShader through the
 // window.__onfoot hooks, and prints PASS or FAIL with the numbers each check saw. Screenshots: tests/out/onfoot/.
 //
-//   node tests/onfoot.mjs                     every group (desktop, landscape, portrait, actions, actions-phone, walks, names)
+//   node tests/onfoot.mjs                     every group (desktop, landscape, portrait, actions, actions-phone, walks, crowd,
+//                                             crowd-phone, names)
 //   node tests/onfoot.mjs --only=walks,names  some groups
 //   node tests/onfoot.mjs --walks=1000        how many random walks (default 1000)
 //   node tests/onfoot.mjs --suffix=-r2        add a suffix to every screenshot's name (a re-shoot beside the old ones)
@@ -199,10 +200,12 @@ if (want('desktop')) {
   });
   await check('desktop: tap to go reaches every seat from the front gate and from the lot walk, and sits you down', async () => {
     await H(page, "window.__onfoot.view('first'); window.__onfoot.setClock('Sat', 21)");
-    const r = await H(page, `(() => { const o = window.__onfoot, seats = o.seats(), out = [];
+    // (P1c: the seats the simulated guests are in are refused, "Someone's sitting there."; every free one is reached)
+    const r = await H(page, `(() => { const o = window.__onfoot, taken = new Set(o.takenSeats()), seats = o.seats(), out = [];
       const starts = [{ name: 'the front gate', x: -5100, z: -8398 }, { name: 'the lot walk', x: -5105, z: -8336.5 }];
       for (const st of starts) for (const s of seats) {
         o.go(st.x, st.z);
+        if (taken.has(s.id)) { out.push({ from: st.name, seat: s.id, taken: true, refused: o.tapSeat(s.id) === null && o.pos().sitting === null, sat: false }); continue; }
         const p = o.tapSeat(s.id);
         if (!p) { out.push({ from: st.name, seat: s.id, at: s.at, nopath: true }); continue; }
         o.sim(p.length / 1.2 + 10, true);
@@ -211,10 +214,10 @@ if (want('desktop')) {
         o.act();
       }
       return out; })()`);
-    const bad = r.filter((x) => !x.sat), lens = r.filter((x) => x.len).map((x) => x.len);
-    summary.seats = { walks: r.length, sat: r.length - bad.length, longest: Math.max(...lens), mean: +(lens.reduce((a, b) => a + b, 0) / lens.length).toFixed(1) };
-    expect(!bad.length, `${bad.length} of ${r.length} didn't end seated: ${bad.slice(0, 6).map((x) => JSON.stringify(x)).join(' | ')}`);
-    return `${r.length} walks (${r.length / 2} seats x 2 starts), all seated; paths ${Math.min(...lens).toFixed(1)} to ${Math.max(...lens).toFixed(1)} m, mean ${summary.seats.mean} m`;
+    const taken = r.filter((x) => x.taken), bad = r.filter((x) => !x.sat && !(x.taken && x.refused)), lens = r.filter((x) => x.len).map((x) => x.len);
+    summary.seats = { walks: r.length - taken.length, taken: taken.length / 2, sat: r.length - taken.length - bad.length, longest: Math.max(...lens), mean: +(lens.reduce((a, b) => a + b, 0) / lens.length).toFixed(1) };
+    expect(!bad.length, `${bad.length} of ${r.length} didn't end seated (or a taken seat wasn't refused): ${bad.slice(0, 6).map((x) => JSON.stringify(x)).join(' | ')}`);
+    return `${r.length - taken.length} walks (${(r.length - taken.length) / 2} free seats x 2 starts), all seated; ${taken.length / 2} seats the simulated guests sit in were refused from both starts; paths ${Math.min(...lens).toFixed(1)} to ${Math.max(...lens).toFixed(1)} m, mean ${summary.seats.mean} m`;
   });
   await check('desktop: reduced motion turns off head bob and transitions', async () => {
     await H(page, 'window.__onfoot.reducedMotion(false); window.__onfoot.go(-5104, -8337)');
@@ -231,10 +234,10 @@ if (want('desktop')) {
     const r = await H(page, `(() => { const o = window.__onfoot, s = o.stats();
       return { fns: ['setClock', 'setQuality', 'stats', 'go', 'tap', 'act', 'view'].filter((k) => typeof o[k] !== 'function'),
         frames: typeof o.frames === 'number' && o.frames > 0 ? o.frames : null,
-        missing: ['npcs', 'groups', 'seated', 'walkers', 'drawCalls', 'triangles', 'simMs', 'frameMs'].filter((k) => typeof s[k] !== 'number'), s }; })()`);
+        missing: ['npcs', 'groups', 'seated', 'walkers', 'drawCalls', 'triangles', 'simMs', 'crowdMs', 'frameMs'].filter((k) => typeof s[k] !== 'number'), s }; })()`);
     expect(!r.fns.length && r.frames && !r.missing.length, `missing hooks ${r.fns.join(', ')}; frames ${r.frames}; missing stats ${r.missing.join(', ')}`);
     const s = r.s;
-    return `frames ${r.frames}; npcs ${s.npcs}, groups ${s.groups}, seated ${s.seated}, walkers ${s.walkers}, draw calls ${s.drawCalls}, triangles ${s.triangles}, sim ${s.simMs} ms, frame ${s.frameMs} ms`;
+    return `frames ${r.frames}; npcs ${s.npcs}, groups ${s.groups}, seated ${s.seated}, walkers ${s.walkers}, draw calls ${s.drawCalls}, triangles ${s.triangles}, sim ${s.simMs} ms, the people ${s.crowdMs} ms, frame ${s.frameMs} ms`;
   });
   await check('desktop: at closing the gate shuts and you are shown out to the lot; the hours say so', async () => {
     await H(page, "window.__onfoot.setClock('Sat', 21); window.__onfoot.go(-5098, -8362)");
@@ -389,7 +392,8 @@ if (want('actions')) {
   const S = 'onfoot-1280x720-act-';
   await check('actions 1280x720: boots with the regulars and the staff, no console errors', async () => {
     const s = await H(page, 'window.__onfoot.stats()'); summary.actStats = s;
-    expect(!errors.length && s.npcs === 9 && s.groups === 2 && s.staff === 3, `${errors.join(' | ')}; npcs ${s.npcs}, groups ${s.groups}, staff ${s.staff}`);
+    // (P1c: the full crowd on a Saturday night; P1b's two groups and three staff are among them)
+    expect(!errors.length && s.npcs >= 30 && s.groups >= 8 && s.staff === 7, `${errors.join(' | ')}; npcs ${s.npcs}, groups ${s.groups}, staff ${s.staff}`);
     return `boot ${bootS} s; npcs ${s.npcs} (groups ${s.groups}, staff ${s.staff}), built in ${s.crowdBuildMs} ms`;
   });
   await check('actions 1280x720: a tap on the ground walks a path round the tables, shown as dots', async () => {
@@ -677,7 +681,7 @@ if (want('actions-phone')) {
   const ov = (a, b) => a.on && b.on && a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   await check('actions 390x844: boots with the regulars and the staff, no console errors (Low)', async () => {
     const s = await H(page, 'window.__onfoot.stats()'); summary.actPhone = s;
-    expect(!errors.length && s.npcs === 9 && s.quality === 'low', `${errors.join(' | ')}; ${JSON.stringify(s).slice(0, 200)}`);
+    expect(!errors.length && s.npcs >= 30 && s.quality === 'low', `${errors.join(' | ')}; ${JSON.stringify(s).slice(0, 200)}`);
     return `boot ${bootS} s; npcs ${s.npcs}, built in ${s.crowdBuildMs} ms; ${s.calls} calls, ${s.triangles} tris`;
   });
   await check('actions 390x844: a finger tap on the ground walks there (dots), then Sit and Stand with the big button', async () => {
@@ -908,6 +912,369 @@ if (want('walks')) {
   });
   await ctx.close().catch(() => {}); await browser?.close().catch(() => {}); browser = null;
 }
+
+// ------------------------------------------------------------------------------------------------ P1c: the crowd
+// Forty people (guests in talking groups standing and seated, staff, walkers), the simulated crowd curve by day and
+// hour, arrivals and departures, the chip, and the budgets with everyone in (PROJECT_OC_ON_FOOT.md, "NPCs",
+// "Simulated crowds", "Phone performance budgets").
+/** wait until every patio body is built (rendering paused meanwhile: the workers share this machine's CPU) */
+async function peopleReady(page) {
+  const t0 = Date.now();
+  await H(page, 'window.__onfoot.freeze(true)');
+  await page.waitForFunction(() => window.__onfoot.peopleReady(), null, { timeout: T, polling: 1000 });
+  await H(page, 'window.__onfoot.freeze(false)');
+  return Math.round((Date.now() - t0) / 1000);
+}
+const CROWD_VIEW = [-5091, -8359, 219, -4];          // the yard from its east side: the barrel table, tables 6 and 11, the Shed
+const S_STATS = `(() => { const s = window.__onfoot.stats(); return { npcs: s.npcs, guests: s.guests, inside: s.inside, staff: s.staff, street: s.street, seated: s.seated, groups: s.groups, walkers: s.walkers, drawn: s.npcsDrawn, bodies: s.bodies, lod1: s.lod1, lod2: s.lod2, impostors: s.impostors, npcCalls: s.npcCalls, npcTris: s.npcTris, calls: s.calls, triangles: s.triangles, venueTris: s.venueTris, level: s.crowd, share: s.share, target: s.crowdTarget, quality: s.quality, crowdMs: s.crowdMs, frameMs: s.frameMs }; })()`;
+async function crowdShot(page, name, view = CROWD_VIEW) {
+  await H(page, `window.__onfoot.view('first'); window.__onfoot.go(${view[0]}, ${view[1]}); window.__onfoot.look(${view[2]}, ${view[3]})`);
+  await frames(page, 3);
+  const n = await shot(page, name); await hudVisible(page);
+  const s = await H(page, S_STATS);
+  return { n, s };
+}
+const groupTalk = (page, samples = 60) => H(page, `(() => { const o = window.__onfoot, per = {}; let multi = 0, faced = 0, looks = 0, n = 0;
+  for (let i = 0; i < ${samples}; i++) { o.sim(0.5, false, true);
+    for (const g of o.groups()) { if (!g.active || !g.ready) continue; n++; const p = per[g.id] ??= { label: g.label, seated: g.seated, samples: 0, multi: 0, faced: 0, looks: 0 }; p.samples++;
+      if (g.members.filter((m) => m.speaking).length > 1) { multi++; p.multi++; }
+      for (const m of g.members) if (m.facesSpeaker !== null) { looks++; p.looks++; if (m.facesSpeaker) { faced++; p.faced++; } } } }
+  return { samples: n, multi, faced, looks, per }; })()`);
+/**
+ * The talk as it's drawn: a listener drawn as a body counts by the head (its bones are posed only while it's a body),
+ * a cut-out by its body's heading (all a cut-out shows: it's painted with the head straight), and someone not drawn
+ * isn't counted. `step` 'view' steps the world 0.5 s between samples as a rendered frame does (only the bodies
+ * animate); 'none' samples once, as the last rendered frame left it.
+ */
+const talkAsDrawn = (page, samples, step) => H(page, `(() => { const o = window.__onfoot, r = { samples: 0, multi: 0, body: [0, 0], cut: [0, 0], groups: 0 }, seen = new Set();
+  for (let i = 0; i < ${samples}; i++) { ${step === 'view' ? "o.sim(0.5, false, 'view');" : ''}
+    for (const g of o.groups()) { if (!g.active || !g.ready) continue; r.samples++; seen.add(g.id); if (g.members.filter((m) => m.speaking).length > 1) r.multi++;
+      for (const m of g.members) { if (m.facesSpeaker === null) continue; if (m.rep === 'imp') { r.cut[1]++; if (m.bodyFaces) r.cut[0]++; } else if (m.rep !== 'off') { r.body[1]++; if (m.facesSpeaker) r.body[0]++; } } } }
+  r.groups = seen.size; return r; })()`);
+const addTalk = (a, b) => ({ samples: a.samples + b.samples, multi: a.multi + b.multi, body: [a.body[0] + b.body[0], a.body[1] + b.body[1]], cut: [a.cut[0] + b.cut[0], a.cut[1] + b.cut[1]], groups: Math.max(a.groups, b.groups) });
+const pc = (p) => (p[1] ? `${p[0]} of ${p[1]} (${(100 * p[0] / p[1]).toFixed(0)}%)` : 'none drawn');
+const talkLine = (r) => `${r.samples} group samples: ${r.multi} with two speakers; bodies faced the speaker with the head in ${pc(r.body)}, cut-outs with the body in ${pc(r.cut)}, together ${pc([r.body[0] + r.cut[0], r.body[1] + r.cut[1]])}`;
+/** the rendered-frames sample: n frames drawn, each sampled once it's drawn, with the world stepped 0.5 s as drawn
+ *  before each (so the samples span n/2 s of talk, not the second or two of n consecutive frames) */
+async function talkFrames(page, n) {
+  let r = { samples: 0, multi: 0, body: [0, 0], cut: [0, 0], groups: 0 };
+  for (let k = 0; k < n; k++) { await H(page, "window.__onfoot.sim(0.5, false, 'view')"); await frames(page, 1); r = addTalk(r, await talkAsDrawn(page, 1, 'none')); }
+  return r;
+}
+/** the people's CPU (stats().crowdMs: their talk, walks, animation and drawing choices) in each of the next n frames,
+ *  read in the page after every frame */
+// (with the split of every frame over 1.5 ms: stats().crowdParts)
+const crowdCpu = (page, n) => page.evaluate((n) => new Promise((res) => {
+  const o = window.__onfoot, xs = [], spikes = []; let last = o.frames;
+  const tick = () => { if (o.frames !== last) { last = o.frames; const s = o.stats(); xs.push(s.crowdMs); if (s.crowdMs > 1.5) spikes.push({ ms: s.crowdMs, ...s.crowdParts }); } if (xs.length >= n) res({ xs, spikes }); else requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}), n);
+/** set the clock and read the people's CPU in the first three frames after it (and the split of the first), and how
+ *  long setting it took */
+const clockFlip = (page, d, h) => page.evaluate(([d, h]) => new Promise((res) => {
+  const o = window.__onfoot, c = o.setClock(d, h), xs = []; let last = o.frames, parts = null;
+  const tick = () => { if (o.frames !== last) { last = o.frames; const s = o.stats(); xs.push(s.crowdMs); parts ??= s.crowdParts; } if (xs.length >= 3) res({ at: `${d} ${h}`, setMs: c.ms, first: xs, parts }); else requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}), [d, h]);
+const pctl = (xs) => { const s = [...xs].sort((a, b) => a - b), q = (k) => s[Math.min(s.length - 1, Math.floor(k * (s.length - 1) + 0.5))]; return { n: s.length, median: +q(0.5).toFixed(2), p90: +q(0.9).toFixed(2), max: +s[s.length - 1].toFixed(2), mean: +(s.reduce((a, b) => a + b, 0) / s.length).toFixed(2) }; };
+/** the people's CPU over 150 frames standing at Saturday 21:00 in `view`, then four clock changes */
+async function cpuCheck(page, view, limit) {
+  await H(page, `window.__onfoot.setClock('Sat', 21); window.__onfoot.view('first'); window.__onfoot.go(${view[0]}, ${view[1]}); window.__onfoot.look(${view[2]}, ${view[3]})`);
+  await frames(page, 4);
+  const cpu = await crowdCpu(page, 150), q = pctl(cpu.xs);
+  const flips = [];
+  for (const [d, h] of [['Tue', 15], ['Sat', 21], ['Tue', 15], ['Sat', 21]]) { flips.push(await clockFlip(page, d, h)); await frames(page, 2); }
+  const firstWorst = Math.max(...flips.map((f) => Math.max(...f.first)));
+  expect(q.median <= limit, `median ${q.median} ms over the plan's ${limit} ms: ${JSON.stringify(q)}`);
+  const part = (p) => Object.entries(p).filter(([k]) => k !== 'ms').map(([k, v]) => `${k} ${v}`).join(' ');
+  return { q, flips, firstWorst, spikes: cpu.spikes, line: `150 frames: median ${q.median} ms, 90th percentile ${q.p90} ms, worst ${q.max} ms (mean ${q.mean}); ${cpu.spikes.length} frames over 1.5 ms, split: ${cpu.spikes.slice(0, 6).map((p) => `${p.ms} ms (${part(p)})`).join('; ') || 'none'}; four clock changes (Tue 15:00 and Sat 21:00 in turn): setting the clock took ${flips.map((f) => f.setMs).join(', ')} ms, the first three frames after each ${flips.map((f) => f.first.map((x) => x.toFixed(2)).join('/')).join(', ')} ms (worst ${firstWorst.toFixed(2)} ms; the first frames split: ${flips.map((f) => part(f.parts)).join('; ')})` };
+}
+
+if (want('crowd')) {
+  console.log('P1c crowd at 1280x720, High');
+  const { ctx, page, errors, bootS } = await open([1280, 720], 'quality=high&day=Tue&hour=15&hint=0', false);
+  const C = 'onfoot-1280x720-crowd-';
+  await check('crowd 1280x720: boots on Tuesday 15:00 with no console errors; forty people built, the patio bodies in workers', async () => {
+    const wait = await peopleReady(page);
+    const s = await H(page, 'window.__onfoot.stats()'); summary.crowdBoot = { bootS, wait, build: s.crowdBuildMs, lod1: s.lod1Built, workers: s.workers, workerMs: s.workerMs };
+    const all = await H(page, 'window.__onfoot.npcs().length');
+    expect(!errors.length && all === 40 && s.lod1Built === 40 && s.workers === 'ok' && !s.workerErrors.length, `${errors.join(' | ')}; ${all} people, ${s.lod1Built} patio bodies, workers ${s.workers} ${JSON.stringify(s.workerErrors)}`);
+    return `boot ${bootS} s; 40 people, far bodies built at load in ${s.crowdBuildMs} ms; 40 patio bodies from the workers within ${wait} s more (last builds ${s.workerMs.join(', ')} ms); impostor atlas ${s.atlas.join('x')}`;
+  });
+  await check('crowd 1280x720: the counts follow the simulated clock (Tuesday 15:00 quieter than Saturday 21:00; closed hours: nobody inside)', async () => {
+    const at = [['Tue', 15], ['Sat', 21], ['Mon', 12], ['Tue', 20], ['Wed', 18.5], ['Fri', 21], ['Fri', 23.5], ['Sat', 0.5], ['Sat', 14], ['Sun', 10.5], ['Sun', 15], ['Sun', 20.5], ['Tue', 9], ['Tue', 23.5], ['Sun', 22], ['Thu', 3]];
+    const rows = [];
+    for (const [d, h] of at) { await H(page, `window.__onfoot.setClock('${d}', ${h})`); const s = await H(page, S_STATS), c = await H(page, 'window.__onfoot.clock()'); rows.push({ at: `${d} ${h}`, open: c.open, ...s }); }
+    summary.crowdCounts = rows;
+    const tue = rows[0], sat = rows[1], closed = rows.filter((r) => !r.open), opened = rows.filter((r) => r.open);
+    expect(tue.guests < sat.guests && tue.npcs < sat.npcs && tue.inside < sat.inside, `Tue 15:00 ${JSON.stringify(tue)} vs Sat 21:00 ${JSON.stringify(sat)}`);
+    expect(closed.length === 4 && closed.every((r) => r.inside === 0 && r.guests === 0 && r.staff === 0), `closed: ${JSON.stringify(closed.map((r) => [r.at, r.inside, r.guests, r.staff]))}`);
+    expect(opened.every((r) => r.guests <= r.target + 1 && r.guests >= r.target - 3), `guests vs the curve's target: ${JSON.stringify(opened.map((r) => [r.at, r.guests, r.target]))}`);
+    const byShare = [...opened].sort((a, b) => a.share - b.share);
+    expect(byShare.every((r, i) => i === 0 || r.guests >= byShare[i - 1].guests), `guests not rising with the share: ${JSON.stringify(byShare.map((r) => [r.at, r.share, r.guests]))}`);
+    await H(page, "window.__onfoot.setClock('Tue', 15)");
+    return rows.map((r) => `${r.at} ${r.open ? `${r.level} ${r.share}: ${r.guests} guests (${r.seated} seated, ${r.groups} groups), ${r.staff} staff, ${r.street} on the sidewalks, ${r.inside} inside` : `closed: ${r.inside} inside, ${r.street} on the sidewalks`}`).join('; ');
+  });
+  await check('crowd 1280x720: Tuesday 15:00 screenshot, the chip on screen', async () => {
+    await H(page, "window.__onfoot.setClock('Tue', 15)");
+    const { n, s } = await crowdShot(page, C + 'tue15.png'); summary.crowdTue = s;
+    return `${n}: ${s.level}, ${s.guests} guests, ${s.npcs} people out; ${s.drawn} drawn (${s.bodies} bodies, ${s.impostors} impostors); ${s.calls} calls, ${s.triangles} tris`;
+  });
+  await check('crowd 1280x720: Saturday 21:00 screenshots (the yard, the Shed, the lawn, the trucks), the chip on screen', async () => {
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    const out = [];
+    for (const [k, v] of [['sat21', CROWD_VIEW], ['sat21-wide', [-5117, -8345, 128, -3]], ['sat21-shed', [-5130, -8365, 218, -6]], ['sat21-lawn', [-5070, -8370, 117, -4]], ['sat21-trucks', [-5070, -8354, 25, -4]]]) {
+      const { n, s } = await crowdShot(page, C + k + '.png', v); summary['crowd-' + k] = s;
+      out.push(`${n}: ${s.drawn} drawn (${s.bodies} bodies: ${s.lod1} patio, ${s.lod2} far; ${s.impostors} impostors), ${s.calls} calls, ${s.triangles} tris`);
+    }
+    return out.join('; ');
+  });
+  await check('crowd 1280x720: in every group (standing and seated) at most one speaker at a time, and listeners face the speaker in at least 70% of samples (unrendered steps: everyone animated, the head from the bones)', async () => {
+    await H(page, "window.__onfoot.setClock('Sat', 21); window.__onfoot.go(-5104, -8337)");
+    const r = await groupTalk(page, 60); summary.crowdTalk = r;
+    const groups = Object.values(r.per), weak = groups.filter((g) => g.looks >= 10 && g.faced / g.looks < 0.7);
+    expect(r.multi === 0 && groups.length >= 8 && r.faced / r.looks >= 0.7 && !weak.length, JSON.stringify(r));
+    return `sim(0.5, false, true) x 60, which animates everyone as if all were bodies: ${r.samples} group samples over 30 s in ${groups.length} groups: ${r.multi} with two speakers; listeners' heads faced the speaker in ${r.faced} of ${r.looks} (${(100 * r.faced / r.looks).toFixed(0)}%); per group ${groups.map((g) => `${g.seated ? 'seated' : 'standing'} ${g.faced}/${g.looks}`).join(', ')}`;
+  });
+  await check('crowd 1280x720: as drawn at High (Saturday 21:00, two views): bodies face the speaker with the head, cut-outs with the body, in at least 70%; in rendered frames and over 30 s stepped as a rendered frame steps', async () => {
+    let fr = { samples: 0, multi: 0, body: [0, 0], cut: [0, 0], groups: 0 }, st = fr;
+    for (const v of [CROWD_VIEW, [-5117, -8345, 128, -3]]) {
+      await H(page, `window.__onfoot.setClock('Sat', 21); window.__onfoot.view('first'); window.__onfoot.go(${v[0]}, ${v[1]}); window.__onfoot.look(${v[2]}, ${v[3]})`);
+      await frames(page, 3);
+      fr = addTalk(fr, await talkFrames(page, 8));
+      st = addTalk(st, await talkAsDrawn(page, 30, 'view'));
+    }
+    summary.crowdTalkDrawnHigh = { frames: fr, stepped: st };
+    const ok = (r) => r.multi === 0 && r.body[1] > 0 && r.body[0] / r.body[1] >= 0.7 && (r.body[0] + r.cut[0]) / (r.body[1] + r.cut[1]) >= 0.7;
+    expect(ok(fr) && ok(st), `frames ${JSON.stringify(fr)}; stepped ${JSON.stringify(st)}`);
+    return `rendered frames (8 per view, 0.5 s apart, each sampled once drawn): ${talkLine(fr)}; stepped as drawn (sim(0.5, false, 'view') x 30 per view): ${talkLine(st)}`;
+  });
+  await check('crowd 1280x720: a "closed" toast goes when the clock opens again (never "closed" under "Open till 01:00" and "Packed")', async () => {
+    await H(page, "window.__onfoot.view('first'); window.__onfoot.setClock('Sat', 21); window.__onfoot.go(-5104, -8370)");
+    const closed = await H(page, "window.__onfoot.setClock('Tue', 23.5), window.__onfoot.toast()");
+    const after = await H(page, "window.__onfoot.setClock('Sat', 21), window.__onfoot.toast()");
+    await H(page, "window.__onfoot.view('third'); window.__onfoot.look(185, -6)");
+    await frames(page, 3);
+    const n = await shot(page, C + 'reopen-third.png'); const h = await hudVisible(page);
+    const later = await H(page, 'window.__onfoot.toast()');
+    await H(page, "window.__onfoot.view('first')");
+    expect(/closed/i.test(closed) && after === '' && later === '' && /Open till/.test(h.place.text) && /Packed/.test(h.crowd.text), `closed "${closed}", reopened "${after}", then "${later}"; ${h.place.text} | ${h.crowd.text}`);
+    return `Tuesday 23:30 from the yard: "${closed}"; set to Saturday 21:00: no toast ("${after}"), ${n}: "${h.place.text}", "${h.crowd.text}", no toast`;
+  });
+  await check('crowd 1280x720: a walker repainted mid-walk walks on (the walk plays again on the next frames)', async () => {
+    await H(page, "window.__onfoot.setClock('Tue', 15)");
+    const w = await H(page, "window.__onfoot.npcs().find((n) => n.role === 'walker' && n.shown && n.walking)");
+    expect(w, 'no walker on the sidewalk');
+    // (the camera 4 m from them, so they're drawn as a body and animated in the frames that follow)
+    await H(page, `window.__onfoot.camera([${w.x + 3}, 1.7, ${w.z + 2.6}, ${w.x}, 0.9, ${w.z}])`);
+    await frames(page, 2);
+    const before = await H(page, `window.__onfoot.legs(${w.id})`);
+    const rp = await H(page, `window.__onfoot.repaint(${w.id})`);
+    const xs = [];
+    for (let k = 0; k < 6; k++) { await frames(page, 1); xs.push(await H(page, `window.__onfoot.legs(${w.id})`)); }
+    // (a guest standing still, for comparison)
+    const g = await H(page, "(() => { const o = window.__onfoot, n = o.npcs().find((k) => k.role === 'regular' && k.shown && !k.walking && k.pose === 'stand' && k.anim === 'idle'); return n ? o.legs(n.id) : null; })()");
+    await H(page, 'window.__onfoot.camera(null)');
+    const max = Math.max(...xs.map((l) => l.deg));
+    expect(xs.every((l) => l.playing === 'walk' && l.walking) && xs.some((l) => l.rep !== 'off' && l.rep !== 'imp') && max > 20, `before ${JSON.stringify(before)}; after ${JSON.stringify(xs)}`);
+    expect(g && g.deg < 15, `a guest standing has a stride of ${JSON.stringify(g)}: the measure doesn't tell walking from standing`);
+    return `${w.name} (#${w.id}) drawn as ${xs[xs.length - 1].rep}: stride (one thigh forward of the other) ${before.deg} degrees before the repaint; repainted (${rp.playing}); the next six frames ${xs.map((l) => l.deg).join(', ')} degrees (widest ${max}), playing ${xs[0].playing}; a guest standing (${g.anim}): ${g.deg} degrees`;
+  });
+  await check('crowd 1280x720: staff at work (two bartenders behind the bar, a cook in each truck, the host at the gate, the busser on rounds, the lot attendant on a busy night only)', async () => {
+    const at = async (d, h) => { await H(page, `window.__onfoot.setClock('${d}', ${h})`); return H(page, 'window.__onfoot.npcs().filter((n) => n.shown && n.role !== "regular" && n.role !== "walker")'); };
+    const tue = await at('Tue', 15), sat = await at('Sat', 21);
+    const b0 = await H(page, 'window.__onfoot.npcs().find((n) => n.role === "busser")');
+    await H(page, 'window.__onfoot.sim(20, false, true)');
+    const b1 = await H(page, 'window.__onfoot.npcs().find((n) => n.role === "busser")');
+    const role = (l, r) => l.filter((n) => n.role === r);
+    const bar = [...role(sat, 'bartender'), ...role(sat, 'barback')], cooks = role(sat, 'cook'), host = role(sat, 'host')[0], att = role(sat, 'attendant')[0];
+    expect(bar.length === 2 && bar.every((n) => n.x < -5143 && n.z > -8384 && n.z < -8366), `bartenders ${JSON.stringify(bar)}`);
+    expect(cooks.length === 2 && cooks.every((n) => n.x > -5056), `cooks ${JSON.stringify(cooks)}`);
+    expect(host && Math.hypot(host.x + 5094.6, host.z + 8395.75) < 1, `host ${JSON.stringify(host)}`);
+    expect(Math.hypot(b1.x - b0.x, b1.z - b0.z) > 1.5 && b1.inside, `busser ${JSON.stringify(b0)} -> ${JSON.stringify(b1)}`);
+    expect(att && att.z > -8333 && !role(tue, 'attendant').length, `attendant Sat ${JSON.stringify(att)}, Tue ${role(tue, 'attendant').length}`);
+    return `Tue 15:00: ${tue.map((n) => n.role).join(', ')}; Sat 21:00: ${sat.map((n) => n.role).join(', ')}; the busser moved ${Math.hypot(b1.x - b0.x, b1.z - b0.z).toFixed(1)} m in 20 s; the attendant at ${att.x}, ${att.z} in the lot`;
+  });
+  await check('crowd 1280x720: walkers on the Orangewood sidewalks by day, none in the small hours', async () => {
+    await H(page, "window.__onfoot.setClock('Tue', 15)");
+    const w0 = await H(page, 'window.__onfoot.npcs().filter((n) => n.role === "walker" && n.shown)');
+    await H(page, 'window.__onfoot.sim(10, false, true)');
+    const w1 = await H(page, 'window.__onfoot.npcs().filter((n) => n.role === "walker")');
+    const night = (await H(page, "window.__onfoot.setClock('Thu', 3); window.__onfoot.npcs().filter((n) => n.role === 'walker' && n.shown).length"));
+    expect(w0.length === 2 && w0.every((n) => (Math.abs(n.z + 8404) < 4 || Math.abs(n.z + 8436) < 4) && !n.inside), `walkers ${JSON.stringify(w0)}`);
+    const moved = w0.map((n) => { const m = w1.find((k) => k.id === n.id); return m.shown ? Math.hypot(m.x - n.x, m.z - n.z) : 99; });
+    expect(moved.every((d) => d > 5) && night === 0, `moved ${moved}, at 03:00 ${night}`);
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    return `two walkers (${w0.map((n) => `${n.name} at z ${n.z}`).join(', ')}) moved ${moved.map((d) => d.toFixed(1)).join(' and ')} m in 10 s; Thursday 03:00: ${night}`;
+  });
+  await check('crowd 1280x720: a party leaves for the lot or the street and another walks in by a path to its places (the seated ones sit down)', async () => {
+    // (by day, so the walk in shows: Saturday 14:00 is lively with a few parties still to come)
+    await H(page, "window.__onfoot.setClock('Sat', 14)");
+    const t = await H(page, 'window.__onfoot.turnover()');
+    expect(t.left !== null && t.arriving !== null, JSON.stringify(t));
+    // a shot of them walking in, from the gate they come through (the lot gate or the front gate), once they're near
+    const from = (await H(page, 'window.__onfoot.crowd()')).log.slice(-1)[0].endsWith('lot') ? 'lot' : 'street';
+    const cam = from === 'lot' ? [-5105, 1.7, -8338.5, -5105, 1.0, -8310] : [-5100, 1.7, -8396.5, -5100, 1.0, -8420];
+    const near = await H(page, `(() => { const o = window.__onfoot; for (let t = 0; t < 90; t += 0.5) { o.sim(0.5, false, true); const g = o.groups()[${t.arriving}]; const d = Math.min(...g.members.map((m) => Math.hypot(m.x - ${cam[0]}, m.z - ${cam[2]}))); if (d < 10) return { t, d: +d.toFixed(1), cx: g.members.reduce((s, m) => s + m.x, 0) / g.members.length, cz: g.members.reduce((s, m) => s + m.z, 0) / g.members.length }; } return null; })()`);
+    expect(near, `the party never came within 10 m of the ${from} gate`);
+    // (the camera on the gate's side of them, at most 7 m off, looking at them: they're in the frame wherever they are)
+    const gx = cam[0] - near.cx, gz = cam[2] - near.cz, k = Math.min(1, 7 / (Math.hypot(gx, gz) || 1));
+    const aim = [+(near.cx + gx * k).toFixed(2), 1.7, +(near.cz + gz * k).toFixed(2), +near.cx.toFixed(2), 1.0, +near.cz.toFixed(2)];
+    await H(page, `window.__onfoot.camera(${JSON.stringify(aim)})`);
+    await frames(page, 3);
+    const n = await shot(page, C + 'arriving.png'); await hudVisible(page);
+    const seen = await H(page, `window.__onfoot.groups()[${t.arriving}].members.filter((m) => m.drawn).length`);
+    expect(seen > 0, `nobody of the arriving party is drawn in ${n}`);
+    await H(page, 'window.__onfoot.camera(null)');
+    const r = await H(page, `(() => { const o = window.__onfoot; let t = ${near.t}; for (; t < 180; t += 1) { o.sim(1, false, true); const g = o.groups(); if (g[${t.arriving}].party === 'here' && g[${t.left}].party === 'away') break; } return { t, g: o.groups(), c: o.crowd(), s: o.stats() }; })()`);
+    const a = r.g[t.arriving], l = r.g[t.left];
+    expect(a.party === 'here' && a.ready && l.party === 'away' && !l.active && r.s.routeFails === 0, `after ${r.t} s: arriving ${JSON.stringify(a).slice(0, 400)}; left ${l.party}; route fails ${r.s.routeFails}`);
+    if (a.seated) expect(a.members.every((m) => m.pose === 'sit'), `not all seated: ${JSON.stringify(a.members)}`);
+    return `${n} (from the ${from} gate, ${near.d} m away after ${near.t} s, ${seen} of them drawn): party ${t.left} (${l.label}) left and party ${t.arriving} (${a.label}, ${a.members.length}) walked in and ${a.seated ? 'sat down' : 'stood in their circle'} within ${r.t} s; log: ${r.c.log.slice(-2).join('; ')}`;
+  });
+  await check('crowd 1280x720: High: the people stay inside what the rest of the scene leaves of 350 draw calls and 700k triangles, and within their own 24 calls, in every view (shadow passes included); views the scene alone takes over 700k are listed', async () => {
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    const views = [[-5104, -8337, 185, 4], [-5104, -8337, 0, -10], [-5150, -8300, 110, 0], [-5100, -8405, 0, 0], [-5098, -8362, 205, -10], CROWD_VIEW, [-5130, -8365, 218, -6], [-5070, -8370, 117, -4], [-5070, -8354, 25, -4], [-5100, -8343, 180, -4], [-5117, -8345, 128, -3]];
+    const seen = [], bad = [], over = []; let worst = { calls: 0, triangles: 0, npcCalls: 0 };
+    for (const third of [false, true]) for (const [x, z, yaw, pitch] of views) {
+      await H(page, `window.__onfoot.view('${third ? 'third' : 'first'}'); window.__onfoot.go(${x}, ${z}); window.__onfoot.look(${yaw}, ${pitch})`);
+      await frames(page, 3);
+      const s = await H(page, S_STATS);
+      // (and the people's calls measured: the frame drawn with them and again without them)
+      const m = await H(page, 'window.__onfoot.peopleCalls()');
+      seen.push(`${third ? '3rd ' : ''}${s.calls}/${Math.round(s.triangles / 1000)}k npc ${s.npcCalls}/${Math.round(s.npcTris / 1000)}k measured ${m.measured} (${s.bodies}+${s.impostors})`);
+      worst = { calls: Math.max(worst.calls, s.calls), triangles: Math.max(worst.triangles, s.triangles), npcCalls: Math.max(worst.npcCalls, s.npcCalls), measured: Math.max(worst.measured ?? 0, m.measured), crowdMs: Math.max(worst.crowdMs ?? 0, s.crowdMs) };
+      // the people's share: inside what's left (with no room left, only the impostors' and shadows' few triangles)
+      if (s.npcCalls > 24 || m.measured > 24 || (s.calls > 350 && s.npcCalls > 2) || (s.triangles > 700000 && s.npcTris > 2000)) bad.push(seen[seen.length - 1]);
+      if (s.triangles - s.npcTris > 700000) over.push(`${third ? 'third person' : 'first person'} at ${x}, ${z} looking ${yaw}: ${s.triangles - s.npcTris} without the people`);
+    }
+    await H(page, "window.__onfoot.view('first')");
+    summary.crowdHighWorst = { ...worst, sceneOver: over };
+    expect(!bad.length, `the people went over: ${bad.join(', ')} (all: ${seen.join(', ')})`);
+    return `people within their share in all ${seen.length} views (worst people ${worst.npcCalls} calls counted, ${worst.measured} measured); whole frame worst ${worst.calls} calls, ${worst.triangles} triangles; the people's CPU at most ${worst.crowdMs} ms a frame (SwiftShader's desktop CPU, not a phone); the scene alone over 700k in ${over.length} view(s): ${over.join('; ') || 'none'} (calls/tris, people's calls/tris, bodies+impostors per view: ${seen.join(', ')})`;
+  });
+  await check('crowd 1280x720: bodies and impostors side by side (the same view drawn all bodies, then all impostors), at night and by day', async () => {
+    // (calibration shots: the impostors' tint and the bodies' lamp fill should read alike at patio distance)
+    const out = [];
+    for (const [d, h, tag] of [['Sat', 21, 'night'], ['Sat', 14, 'day']]) {
+      await H(page, `window.__onfoot.setClock('${d}', ${h}); window.__onfoot.view('first'); window.__onfoot.go(-5093, -8366)`);
+      await H(page, 'window.__onfoot.camera([-5093.5, 1.6, -8366.5, -5103, 0.9, -8369])');
+      for (const mode of ['body', 'imp']) {
+        await H(page, `window.__onfoot.crowdView('${mode}')`); await frames(page, 3);
+        const n = await shot(page, `${C}cal-${tag}-${mode}.png`);
+        const s = await H(page, S_STATS); out.push(`${n}: ${s.bodies} bodies, ${s.impostors} impostors`);
+        expect(mode === 'body' ? s.bodies > 0 : s.impostors > 0, `${mode}: ${JSON.stringify(s)}`);
+      }
+    }
+    await H(page, "window.__onfoot.crowdView('auto'); window.__onfoot.camera(null); window.__onfoot.setClock('Sat', 21)");
+    return out.join('; ');
+  });
+  await check('crowd 1280x720: reduced motion turns off head bob and transitions (with the crowd in)', async () => {
+    await H(page, 'window.__onfoot.reducedMotion(false); window.__onfoot.go(-5104, -8337)');
+    const bob = await H(page, 'window.__onfoot.bobRange()');
+    const rm = await H(page, 'window.__onfoot.reducedMotion(true)');
+    await H(page, 'window.__onfoot.go(-5104, -8337)');
+    const bob2 = await H(page, 'window.__onfoot.bobRange()');
+    const css = await H(page, "getComputedStyle(document.getElementById('toast')).transitionDuration");
+    expect(bob > 0.015 && bob2 === 0 && rm.transitionsOff && /^0s/.test(css), `bob ${bob} -> ${bob2}, transitions ${css}`);
+    await H(page, 'window.__onfoot.reducedMotion(false)');
+    return `head bob ${(bob * 100).toFixed(1)} cm -> ${bob2} cm; toast transition ${css}`;
+  });
+  await check("crowd 1280x720: the people's CPU per frame at High over 150 frames standing at Saturday 21:00 (median within the plan's 3 ms; the 90th percentile and the worst reported), and the first frames after the clock is set", async () => {
+    const r = await cpuCheck(page, CROWD_VIEW, 3);
+    summary.crowdCpuHigh = { ...r.q, flips: r.flips, spikes: r.spikes };
+    return `this machine's desktop CPU under SwiftShader, shared with other jobs, not a phone: ${r.line}`;
+  });
+  await check('crowd 1280x720: Ultra (no budget in the plan) at Saturday 21:00: everyone near is a body, no errors', async () => {
+    await H(page, "window.__onfoot.setQuality('ultra')");
+    // (until the close-ups are built and their toast has gone: toasts count frames, slow here)
+    for (let k = 0; k < 40; k++) { await frames(page, 2); if (k >= 5 && !(await H(page, "document.getElementById('toast').classList.contains('on') || getComputedStyle(document.getElementById('toast')).opacity > 0.05"))) break; }
+    const { n, s } = await crowdShot(page, C + 'sat21-ultra.png');
+    const { n: n2, s: s2 } = await crowdShot(page, C + 'sat21-ultra-tables.png', [-5100, -8343, 180, -4]);
+    await H(page, "window.__onfoot.setQuality('high')");
+    expect(!errors.length, errors.join(' | '));
+    return `${n}: ${s.bodies} bodies (${s.lod1} patio), ${s.impostors} impostors, ${s.calls} calls, ${s.triangles} tris; ${n2}: ${s2.bodies} bodies, ${s2.impostors} impostors`;
+  });
+  await check('crowd 1280x720: after Ultra -> High, in first and third person, the people stay within their 24 calls, counted by the crowd and measured (the frame drawn with them and again without them, every pass)', async () => {
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    const q = await H(page, 'window.__onfoot.stats().quality');
+    expect(q === 'high', `quality ${q}`);
+    const views = [CROWD_VIEW, [-5117, -8345, 128, -3], [-5104, -8337, 185, 4], [-5098, -8362, 205, -10], [-5100, -8343, 180, -4], [-5070, -8354, 25, -4]];
+    const seen = [], bad = []; let worst = 0;
+    for (const third of [false, true]) for (const [x, z, yaw, pitch] of views) {
+      await H(page, `window.__onfoot.view('${third ? 'third' : 'first'}'); window.__onfoot.go(${x}, ${z}); window.__onfoot.look(${yaw}, ${pitch})`);
+      await frames(page, 3);
+      const c = await H(page, 'window.__onfoot.peopleCalls()');
+      seen.push(`${third ? '3rd ' : ''}${c.counted}/${c.measured} (${c.bodies}+${c.impostors}, ${c.shadows} shadows, ${c.held} held)`);
+      worst = Math.max(worst, c.counted, c.measured);
+      if (c.counted > 24 || c.measured > 24 || c.measured !== c.counted) bad.push(seen[seen.length - 1]);
+    }
+    await H(page, "window.__onfoot.view('first')");
+    summary.crowdCallsAfterUltra = { worst, seen };
+    expect(!bad.length, `over 24, or the count wrong: ${bad.join(', ')} (all, counted/measured: ${seen.join(', ')})`);
+    return `worst ${worst} calls for the people in ${seen.length} views; counted/measured (bodies+cut-outs): ${seen.join(', ')}`;
+  });
+  await ctx.close().catch(() => {}); await browser?.close().catch(() => {}); browser = null;
+}
+
+for (const [size, label] of [[[844, 390], '844x390'], [[390, 844], '390x844']]) {
+  if (!want('crowd-phone')) break;
+  console.log(`P1c crowd at ${label}, touch (Low)`);
+  const { ctx, page, errors, bootS } = await open(size, 'day=Tue&hour=15&hint=0', true);
+  const C = `onfoot-${label}-crowd-`;
+  await check(`crowd ${label}: boots on Tuesday 15:00 with no console errors (Low)`, async () => {
+    const wait = await peopleReady(page);
+    const s = await H(page, 'window.__onfoot.stats()');
+    expect(!errors.length && s.quality === 'low' && s.lod1Built === 40, `${errors.join(' | ')}; ${s.quality}, ${s.lod1Built} patio bodies`);
+    return `boot ${bootS} s (+${wait} s for the patio bodies); far bodies in ${s.crowdBuildMs} ms`;
+  });
+  await check(`crowd ${label}: Tuesday 15:00 and Saturday 21:00 screenshots, the chip on screen; fewer people on Tuesday`, async () => {
+    await H(page, "window.__onfoot.setClock('Tue', 15)");
+    const a = await crowdShot(page, C + 'tue15.png');
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    const b = await crowdShot(page, C + 'sat21.png');
+    expect(a.s.guests < b.s.guests && a.s.npcs < b.s.npcs, `Tue ${JSON.stringify(a.s)} vs Sat ${JSON.stringify(b.s)}`);
+    summary[`crowd${label}`] = { tue: a.s, sat: b.s };
+    return `${a.n}: ${a.s.level}, ${a.s.guests} guests (${a.s.npcs} out), ${a.s.calls} calls, ${a.s.triangles} tris; ${b.n}: ${b.s.level}, ${b.s.guests} guests (${b.s.npcs} out), ${b.s.calls} calls, ${b.s.triangles} tris`;
+  });
+  await check(`crowd ${label}: Low within 150 draw calls and 250k triangles, and the people within 16 calls, in every view (Saturday 21:00)`, async () => {
+    await H(page, "window.__onfoot.setClock('Sat', 21)");
+    const views = [[-5104, -8337, 185, 4], [-5104, -8337, 0, -10], [-5150, -8300, 110, 0], [-5040, -8270, 300, -2], [-5100, -8405, 0, 0], [-5098, -8362, 205, -10], CROWD_VIEW, [-5130, -8365, 218, -6], [-5070, -8370, 117, -4], [-5070, -8354, 25, -4], [-5100, -8343, 180, -4], [-5117, -8345, 128, -3]];
+    const seen = []; let worst = { calls: 0, triangles: 0, npcCalls: 0 };
+    for (const third of [false, true]) for (const [x, z, yaw, pitch] of views) {
+      await H(page, `window.__onfoot.view('${third ? 'third' : 'first'}'); window.__onfoot.go(${x}, ${z}); window.__onfoot.look(${yaw}, ${pitch})`);
+      await frames(page, 3);
+      const s = await H(page, S_STATS);
+      const m = await H(page, 'window.__onfoot.peopleCalls()');
+      seen.push(`${third ? '3rd ' : ''}${s.calls}/${Math.round(s.triangles / 1000)}k npc ${s.npcCalls}/${Math.round(s.npcTris / 1000)}k measured ${m.measured} (${s.bodies}+${s.impostors})`);
+      worst = { calls: Math.max(worst.calls, s.calls), triangles: Math.max(worst.triangles, s.triangles), npcCalls: Math.max(worst.npcCalls, s.npcCalls), measured: Math.max(worst.measured ?? 0, m.measured), crowdMs: Math.max(worst.crowdMs ?? 0, s.crowdMs) };
+    }
+    await H(page, "window.__onfoot.view('first')");
+    summary[`crowdLowWorst${label}`] = worst;
+    expect(worst.calls <= 150 && worst.triangles <= 250000 && worst.npcCalls <= 16 && worst.measured <= 16, `worst ${JSON.stringify(worst)}: ${seen.join(', ')}`);
+    return `worst ${worst.calls} calls, ${worst.triangles} triangles, people ${worst.npcCalls} calls counted, ${worst.measured} measured; the people's CPU at most ${worst.crowdMs} ms a frame (desktop CPU) (${seen.join(', ')})`;
+  });
+  await check(`crowd ${label}: as drawn on Low (Saturday 21:00, two views): bodies face the speaker with the head, cut-outs with the body, in at least 70% together; in rendered frames and over 30 s stepped as a rendered frame steps`, async () => {
+    let fr = { samples: 0, multi: 0, body: [0, 0], cut: [0, 0], groups: 0 }, st = fr;
+    for (const v of [CROWD_VIEW, [-5117, -8345, 128, -3]]) {
+      await H(page, `window.__onfoot.setClock('Sat', 21); window.__onfoot.view('first'); window.__onfoot.go(${v[0]}, ${v[1]}); window.__onfoot.look(${v[2]}, ${v[3]})`);
+      await frames(page, 3);
+      fr = addTalk(fr, await talkFrames(page, 12));
+      st = addTalk(st, await talkAsDrawn(page, 30, 'view'));
+    }
+    summary[`crowdTalkDrawn${label}`] = { frames: fr, stepped: st };
+    const ok = (r) => r.multi === 0 && (r.body[0] + r.cut[0]) / Math.max(1, r.body[1] + r.cut[1]) >= 0.7 && (!r.body[1] || r.body[0] / r.body[1] >= 0.7);
+    expect(ok(fr) && ok(st), `frames ${JSON.stringify(fr)}; stepped ${JSON.stringify(st)}`);
+    return `rendered frames (12 per view, 0.5 s apart, each sampled once drawn): ${talkLine(fr)}; stepped as drawn (sim(0.5, false, 'view') x 30 per view): ${talkLine(st)}`;
+  });
+  await check(`crowd ${label}: the people's CPU per frame on Low over 150 frames standing at Saturday 21:00 (median within the plan's 2 ms; the 90th percentile and the worst reported), and the first frames after the clock is set`, async () => {
+    const r = await cpuCheck(page, CROWD_VIEW, 2);
+    summary[`crowdCpuLow${label}`] = { ...r.q, flips: r.flips, spikes: r.spikes };
+    return `this machine's desktop CPU under SwiftShader, shared with other jobs, not a phone: ${r.line}`;
+  });
+  await ctx.close().catch(() => {}); await browser?.close().catch(() => {}); browser = null;
+}
+
 if (browser) await browser.close().catch(() => {});
 
 // ------------------------------------------------------------------------------------------------ names
