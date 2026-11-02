@@ -21,7 +21,8 @@ Two cuts at most, both scale jumps.
 Honesty, on screen: the section is "simplified"; the beam paths are an "illustration"; the reflection share is
 "≈ 4–7 %, near head-on light"; the 40 % back-out is "one example (model)"; the hydration panels are "one study";
 the depth bars are "estimate" (they vary with skin and beam); the face-colour panel uses a "model" face, never a
-real person's before/after. No advice and no product: the film never says how to get a glow, only what one is.
+real person's before/after. The cheek and the section appear in light, medium and deep tones side by side, never one tone
+alone (more melanin absorbs more, so less comes back). No advice and no product: the film never says how to get a glow, only what one is.
 Sign-off: the flush and blood-colour lines touch on skin redness; a dermatologist checks they don't read as a
 claim about any condition.
 
