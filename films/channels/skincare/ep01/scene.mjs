@@ -48,12 +48,18 @@ Gf.group.position.z = -2;   // set back a hair: where the blocks overlap, the ne
 scene.add(F.group, Gf.group);
 // the marrow stream (whoa): a river of new white cells, translucent, each with a glowing nucleus, flowing past
 const SX = PL.sx || 9000, stream = new THREE.Group(); stream.position.x = SX; scene.add(stream);
-const sCell = new THREE.MeshPhysicalMaterial({ color: 0xe9e2ff, roughness: 0.22, clearcoat: 0.9, clearcoatRoughness: 0.1, sheen: 0.5, sheenColor: new THREE.Color(0.85, 0.95, 1), transparent: true, opacity: 0.6, depthWrite: false });
-const sNuc = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color("#9F83FF").multiplyScalar(0.8) });
+const sCell = new THREE.MeshPhysicalMaterial({ color: 0xd2fbf6, roughness: 0.22, clearcoat: 0.9, clearcoatRoughness: 0.1, sheen: 0.5, sheenColor: new THREE.Color(0.85, 0.95, 1), transparent: true, opacity: 0.6, depthWrite: false });
+const sNuc = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color("#5FF2E8").multiplyScalar(0.55) });
 const SR = (() => { let a = 99; return () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; })();
 const sCells = Array.from({ length: 120 }, () => { const g = new THREE.Group(); const r = 0.32 + SR() * 0.18; const m = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 20), sCell); const n = new THREE.Mesh(new THREE.SphereGeometry(r * 0.42, 14, 10), sNuc); n.position.set(r * 0.15, 0, 0); g.add(m, n);
   g.userData = { u: SR(), y: (SR() - 0.5) * 9, z: (SR() - 0.5) * 7, s: 0.8 + SR() * 0.5 }; stream.add(g); return g; });
 const shaftS = createShaft({ from: [SX - 10, 18, -8], to: [SX + 4, -6, 2], radius: 4, color: "#B79BFF" }); scene.add(shaftS.group);
+// the barrier: a sheen of light sweeping over the cheek, the follicles' lipids at work (a model)
+const sheenTex = (() => { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 4; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 256, 0);
+  g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.42, "rgba(190,250,245,0.25)"); g.addColorStop(0.5, "rgba(230,255,252,1)"); g.addColorStop(0.58, "rgba(190,250,245,0.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, 256, 4);
+  const tx = new THREE.CanvasTexture(cv); tx.wrapS = THREE.ClampToEdgeWrapping; return tx; })();
+const sheenMat = new THREE.MeshBasicMaterial({ map: sheenTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xbff7f2 });
+const sheen = new THREE.Mesh(uv.mesh.geometry, sheenMat); sheen.position.z = 0.012; sheen.renderOrder = 2; uv.mesh.add(sheen);
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
 
@@ -146,7 +152,7 @@ const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transpa
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * t % size[1]; dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
 const grain = createGrain(hudRoot, { amount: 0.007 });
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(2.4, 3); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
@@ -174,9 +180,11 @@ window.seek = function (t) {
       day, wipe: wp, skin: toneColor("living", tone).map((v) => Math.min(1, v * 1.15)) });
     vf.el.querySelector(".rec").textContent = day > 0.5 && wp < 0 ? "● REC  DAYLIGHT" : "● REC  UV 365 nm";
   }
+  sheen.visible = shot === "uv2";
+  if (shot === "uv2") { const sk = E.inout2(seg(t, CUE.barrier - 0.5, CUE.barrier + 1.4)); sheenMat.opacity = 0.42 * sk; sheenTex.offset.x = 0.55 - 0.7 * E.inout2(seg(t, CUE.barrier - 0.5, CUE.barrier + 2.2)); }
   A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(SPOT[0] + 0.09, SPOT[1] - 0.05);
   const vfOp = isUV ? (shot === "uv" ? 1 - fadeIn(t, SH.flight - 0.4, 0.35) : fadeIn(t, SH.uv2, 0.4)) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
-  vf.set({ op: vfOp, blink: 1, left: (shot === "uv" && t >= FILM.flips[0] - 0.4) ? "" : "a cheek" });   // not over the photo stack (its own badge sits there)
+  vf.set({ op: vfOp, blink: 1, left: (shot === "uv" && t >= CUE.clear1 - 0.7) ? "" : "a cheek" });   // not over the photo stack (its own badge sits there)
   vf.el.querySelector(".hl").style.visibility = vf.el.querySelector(".hl").textContent ? "inherit" : "hidden";
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
   dip.style.opacity = Math.max(dz(SH.flight), dz(SH.rise), dz(SH.uv2)).toFixed(3);

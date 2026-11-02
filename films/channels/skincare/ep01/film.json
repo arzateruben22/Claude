@@ -1,5 +1,5 @@
 {
- "id": "outerlayer-001",
+ "id": "skin-sense-001",
  "fps": 30,
  "bpm": 64.2857,
  "dur": 76.5334,
@@ -694,7 +694,7 @@
    "text": "the spot",
    "kind": "cell",
    "anchor": "spot",
-   "t0": 0.0,
+   "t0": 2.0,
    "t1": 6.9,
    "shot": "uv",
    "side": 1,
@@ -775,7 +775,7 @@
    "id": "l-barrier",
    "text": "it helps build the barrier",
    "kind": "uv",
-   "anchor": "porph",
+   "anchor": "spot",
    "t0": 68.36666666666666,
    "t1": 70.36666666666666,
    "shot": "uv2",
@@ -789,7 +789,7 @@
    "kind": "water",
    "anchor": "rings",
    "t0": 63.73333333333333,
-   "t1": 70.36666666666666,
+   "t1": 68.16666666666667,
    "shot": "uv2",
    "side": -1,
    "v": "below",
@@ -800,7 +800,7 @@
   {
    "id": "b-model",
    "text": "model, not a photo",
-   "t0": 0.0,
+   "t0": 2.0,
    "t1": 17.35,
    "slot": "br"
   },
@@ -848,7 +848,7 @@
   },
   {
    "id": "b-modp",
-   "text": "model, not a photo",
+   "text": "model on a tissue photo",
    "t0": 25.2,
    "t1": 36.43333333333334,
    "slot": "tl"
@@ -862,9 +862,30 @@
   },
   {
    "id": "b-model2",
-   "text": "model, not a photo",
+   "text": "model on a tissue photo",
    "t0": 39.6667,
+   "t1": 45.15,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model2s",
+   "text": "model, not a photo",
+   "t0": 45.6,
    "t1": 52.2833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-photo",
+   "text": "tissue photo (normal skin)",
+   "t0": 17.8,
+   "t1": 24.75,
+   "slot": "bl"
+  },
+  {
+   "id": "b-alm",
+   "text": "lab + mouse study · Almoughrabie 2023",
+   "t0": 65.96666666666667,
+   "t1": 70.36666666666666,
    "slot": "tl"
   },
   {
@@ -886,7 +907,7 @@
    "text": "model, not a photo",
    "t0": 61.6,
    "t1": 70.36666666666666,
-   "slot": "tl"
+   "slot": "br"
   }
  ],
  "counters": [
@@ -941,15 +962,15 @@
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 001",
+  "series": "Skin Sense · No. 001",
   "title": "The fight you *never saw*",
   "t1": 3.9000000000000004,
   "sig": 1.4
  },
  "endCard": 70.36666666666666,
  "end": {
-  "title": "Next layer: where the light on your face *goes*",
-  "follow": "Outer Layer · No. 002",
+  "title": "Next: where the light on your face *goes*",
+  "follow": "Skin Sense · No. 002",
   "next": "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008). Narration: synthetic voice (AI)."
  },
  "captions": [
