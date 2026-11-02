@@ -9,6 +9,7 @@
 //     pull: 0 … 1 the muscle contracts and the crease above folds   puff: 0 … 1 a cloud of messenger crosses the gap
 //     toxin: 0 … 1 the toxin fragment slips into the bulb            cut: 0 … 1 the docking protein is cut in two
 //     sprout: 0 … 1 new nerve endings grow from the bulb           open: 0 … 1 the bulb's near half fades (see inside)
+//     bump: 0 … 1 the docked vesicles press at the membrane (and, with the protein cut, fall back)
 //   J.at.bulb() · J.at.gap() · J.at.crease() · J.at.snap() · J.at.muscle() · J.at.sprout() → points for labels and keys
 import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
@@ -95,7 +96,7 @@ export const createJunction = ({ x = 4000, tone = [0.78, 0.56, 0.42], seed = 41,
   const dm = new THREE.Object3D();
   return {
     group: g, topY, B,
-    set({ pull = 0, puff: p = 0, cut = 0, toxin = 0, sprout = 0, open = 0, dim = 0 } = {}) {
+    set({ pull = 0, puff: p = 0, cut = 0, toxin = 0, sprout = 0, open = 0, dim = 0, bump = 0 } = {}) {
       // the crease: the skin's top surface folds down at x = 0 as the muscle pulls; the fibres shorten a little
       for (let i = 0; i < sp.count; i++) {
         const x0 = sBase[3 * i], y0 = sBase[3 * i + 1];
@@ -113,7 +114,7 @@ export const createJunction = ({ x = 4000, tone = [0.78, 0.56, 0.42], seed = 41,
         dm.scale.setScalar(on * (1 - 0.4 * k) + 1e-4); dm.updateMatrix(); puff.setMatrixAt(i, dm.matrix);
       });
       puff.instanceMatrix.needsUpdate = true; puffMat.opacity = 0.95;
-      for (const d of docked) d.position.y = B.y - 4.1 - 1.2 * p * (1 - cut);
+      for (const d of docked) d.position.y = B.y - 4.1 - 1.2 * p * (1 - cut) - 0.9 * bump;   // bump: pressed at the membrane, held back
       // the toxin enters through the wall and settles by the docking protein
       tox.visible = toxin > 0.01; toxMat.opacity = Math.min(1, toxin * 3);
       tox.position.set(B.x - 16 + 16 * toxin, B.y + 6 - 10 * toxin, B.z + 3);

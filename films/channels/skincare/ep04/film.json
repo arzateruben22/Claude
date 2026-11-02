@@ -111,7 +111,7 @@
     ],
     "dist": 24,
     "az": -6,
-    "el": 13,
+    "el": 22,
     "fov": 34,
     "fx": 0.5,
     "fy": 0.46
@@ -125,7 +125,7 @@
     ],
     "dist": 21,
     "az": -3,
-    "el": 13,
+    "el": 22,
     "fov": 34,
     "fx": 0.5,
     "fy": 0.46,
@@ -155,8 +155,8 @@
      41.5,
      30
     ],
-    "dist": 210,
-    "el": 22,
+    "dist": 150,
+    "el": 34,
     "az": 0,
     "fov": 30,
     "fx": 0.5,
@@ -174,7 +174,7 @@
     "az": -8,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.5,
+    "fy": 0.42,
     "ease": "inout2"
    },
    {
@@ -232,6 +232,21 @@
     "dist": 98,
     "el": 10,
     "az": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "inout2"
+   },
+   {
+    "t": 25.966666666666665,
+    "target": [
+     4004.0,
+     -16.5,
+     14.2
+    ],
+    "dist": 84,
+    "el": 10,
+    "az": 6,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
@@ -323,12 +338,12 @@
      0.1,
      0
     ],
-    "dist": 28,
+    "dist": 31,
     "el": 2,
     "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.35
+    "fy": 0.37
    },
    {
     "t": 52.7333,
@@ -337,12 +352,12 @@
      0.1,
      0
     ],
-    "dist": 26,
+    "dist": 29,
     "el": 2,
     "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.35,
+    "fy": 0.37,
     "ease": "sine"
    }
   ],
@@ -402,7 +417,7 @@
     ],
     "dist": 26,
     "az": -8,
-    "el": 13,
+    "el": 22,
     "fov": 34,
     "fx": 0.5,
     "fy": 0.46
@@ -416,7 +431,7 @@
     ],
     "dist": 24,
     "az": -6,
-    "el": 13,
+    "el": 22,
     "fov": 34,
     "fx": 0.5,
     "fy": 0.46,
@@ -507,6 +522,10 @@
    65.53333333333335,
    67.33333333333334
   ],
+  "bump": [
+   25.766666666666666,
+   27.433333333333334
+  ],
   "relax": [
    52.7333,
    65.63333333333334
@@ -514,6 +533,7 @@
  },
  "plates": {
   "kerner": {
+   "sausages": 34.56666666666666,
    "t0": 31.033333333333335,
    "t1": 41.2333,
    "med": 38.36666666666667,
@@ -603,6 +623,18 @@
    "v": "below"
   },
   {
+   "id": "l-uvbrow",
+   "text": "the same brow, in UV",
+   "kind": "uv",
+   "anchor": "uvbrow",
+   "t0": 41.833299999999994,
+   "t1": 45.266666666666666,
+   "shot": "uv",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
    "id": "l-sprout",
    "text": "new endings",
    "kind": "cell",
@@ -645,7 +677,7 @@
   },
   {
    "id": "b-gap",
-   "text": "estimate · not to scale",
+   "text": "estimate · sizes vary",
    "t0": 53.0333,
    "t1": 60.2,
    "slot": "tl"
@@ -654,15 +686,15 @@
    "id": "b-months",
    "text": "≈ 3–4 months, compressed",
    "t0": 60.5,
-   "t1": 67.26666666666667,
+   "t1": 64.16666666666667,
    "slot": "tl"
   },
   {
    "id": "b-mice",
    "text": "regrowth studied in mice",
    "t0": 64.36666666666667,
-   "t1": 67.26666666666667,
-   "slot": "tr"
+   "t1": 66.96666666666667,
+   "slot": "tl"
   }
  ],
  "counters": [
@@ -671,8 +703,8 @@
    "label": "one frown's dose",
    "fmt": "text",
    "text": "?",
-   "t0": 1.0666666666666667,
-   "t1": 28.1167,
+   "t0": 5.199999999999999,
+   "t1": 47.71666666666666,
    "at": [
     0.62,
     0.215
@@ -684,7 +716,7 @@
    "fmt": "text",
    "text": "< 1 %",
    "t0": 48.166666666666664,
-   "t1": 66.56666666666666,
+   "t1": 67.26666666666667,
    "at": [
     0.62,
     0.215
@@ -702,7 +734,7 @@
  "end": {
   "title": "Next layer: same sun, one experiment. Which hand *aged*?",
   "follow": "Outer Layer · No. 005",
-  "next": "Alan Scott first injected it to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."
+  "next": "Alan Scott first injected botulinum toxin to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."
  },
  "captions": [
   {

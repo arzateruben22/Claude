@@ -34,7 +34,7 @@ scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));
 const sun = new THREE.DirectionalLight(0xffb870, 4.0); sun.position.set(30, 6, -30); scene.add(sun);
 const key = new THREE.DirectionalLight(0xfff0e0, 1.0); key.position.set(-10, 14, 20); scene.add(key);
 const secKey = new THREE.DirectionalLight(0xfff6ec, 1.6); secKey.position.set(BIO.sx - 120, 220, 160); secKey.target.position.set(BIO.sx, 0, 0); scene.add(secKey, secKey.target);
-const FOG = new THREE.Fog(0x2a1a2e, 16, 52);
+const FOG = new THREE.Fog(0x2c1660, 16, 52);   // the distance sinks into the ground colour
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const hexLin = (h) => { const x = h.replace("#", ""); return [0, 2, 4].map((i) => s2l(parseInt(x.slice(i, i + 2), 16) / 255)); };

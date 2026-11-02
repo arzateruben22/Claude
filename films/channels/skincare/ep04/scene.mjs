@@ -33,7 +33,7 @@ injectCss();
 scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));
 const sun = new THREE.DirectionalLight(0xffb870, 4.0); sun.position.set(30, 6, -30); scene.add(sun);
 const key = new THREE.DirectionalLight(0xfff0e0, 1.0); key.position.set(-10, 14, 20); scene.add(key);
-const FOG = new THREE.Fog(0x2a1a2e, 16, 52);   // the distance sinks toward the violet ground, so the title reads
+const FOG = new THREE.Fog(0x2c1660, 16, 52);   // the distance sinks into the ground colour (no band at the terrain's edge)   // the distance sinks toward the violet ground, so the title reads
 
 // ── the set ──
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
@@ -44,7 +44,7 @@ T.set({ tone: LIGHT, furrows: 0.25, spot: 0, sheen: 0 });
 // the frown crease: one deep furrow running away from the camera along x = 0 (a fixed shape, made once)
 {
   const pos = T.mesh.geometry.attributes.position;
-  for (let i = 0; i < pos.count; i++) { const x = pos.getX(i); pos.setY(i, pos.getY(i) - 2.2 * Math.exp(-(x * x) / (2 * 0.8 * 0.8))); }
+  for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), ax = Math.abs(x); pos.setY(i, pos.getY(i) - 2.2 * Math.exp(-(x * x) / (2 * 0.8 * 0.8)) + 1.6 * Math.exp(-((ax - 4.5) ** 2) / (2 * 2.6 * 2.6))); }   // two brow mounds, the crease between
   pos.needsUpdate = true; T.mesh.geometry.computeVertexNormals();
 }
 scene.add(T.group);
@@ -85,7 +85,7 @@ endEl.style.transform = "translateY(-22vmin)";                              // t
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.18, 0.33] });   // under the spine readout, clear of it
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 { const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}"; document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
-const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.27 });
+const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.265, w: 0.8, h: 0.25 });
 // plates: violet cards in the theme's tokens (text on them ≥ 4.5:1)
 const plate = (html, css) => {
   const el = document.createElement("div");
@@ -98,16 +98,17 @@ const show = (el, op) => { el.style.opacity = op.toFixed(3); el.style.visibility
 const K = P.kerner;
 const kerner = plate(`<div style="font:700 4.2vmin/1.1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase">${K.name}</div>
   <div style="font:500 3vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:.8vmin">${K.role}</div>
-  <div style="font:600 3.9vmin/1.3 var(--font-body, inherit);margin-top:2.2vmin">${K.line1}</div>
+  <div style="font:600 3.9vmin/1.3 var(--font-body, inherit);margin-top:2.2vmin">${K.line1.replace("“sausage poison”", "<span class=\"sp\">“sausage poison”</span>")}</div>
   <div class="k2" style="font:600 3.9vmin/1.3 var(--font-body, inherit);margin-top:1.2vmin;color:var(--water)">${K.line2}</div>`,
   { left: "50%", top: `${0.27 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "3.4vmin 4vmin", textAlign: "left" });
-const k2 = kerner.querySelector(".k2");
+const k2 = kerner.querySelector(".k2"), sp = kerner.querySelector(".sp");
 const D = P.dose, frac = D.frown_u / D.lethal_u;
-const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.6vmin">units of toxin</div>
+const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1vmin">units of toxin</div>
+  <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-bottom:1.8vmin">estimate, 70 kg adult · units differ by product<br>side effects can occur far below this</div>
   <div class="r1" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>one frown</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b1" style="display:block;height:3.2vmin;width:0;background:var(--water);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);color:var(--water)">${D.frown_u}</b></span></div>
   <div class="r2" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;margin-top:1.8vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>estimated lethal</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b2" style="display:block;height:3.2vmin;width:0;background:var(--uv);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);white-space:nowrap">≈ 3,000</b></span></div>
-  <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-top:1.6vmin">estimate, 70 kg adult · units differ by product<br>side effects can occur far below this</div>`,
-  { left: "50%", top: `${0.485 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
+  `,
+  { left: "50%", top: `${0.525 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
 const b1 = dose.querySelector(".b1"), b2 = dose.querySelector(".b2"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
 const BAR = 34;   // vmin: the lethal amount's full bar; the frown's is the same scale (a sliver)
 // a veil in the ground's colour: a three-frame step at the hard scale jumps, and the fade before the end card
@@ -139,9 +140,11 @@ window.seek = function (t) {
       toxin: shot === "below" ? u01(t, J.toxin) : 1,
       cut: shot === "below" ? u01(t, J.cut) : 1,
       sprout: shot === "gauge" ? u01(t, J.sprout) : 0,
+      bump: shot === "below" ? Math.abs(Math.sin(Math.PI * 2 * seg(t, J.bump[0], J.bump[1]))) * (t < J.bump[1] ? 1 : 0) : 0,   // the vesicles press at the membrane and fall back: ready, never released
       dim: shot === "gauge" ? 0.5 * (1 - u01(t, J.sprout)) : 0,
     });
   }
+  if (isU) { const p = new THREE.Vector3(...UVS.at(0.5, 0.62)); UVS.mesh.updateMatrixWorld(); A.uvbrow = UVS.mesh.localToWorld(p).toArray(); }
   A.bulb = JN.at.bulb(); A.gap = JN.at.gap(); A.crease = JN.at.crease(); A.snap = JN.at.snap(); A.tox = JN.at.tox(); A.sprout = JN.at.sprout();
 
   // ── the reveal: the brow in UV; the five points of a frown dose light; the daylight strip, then the dose plate ──
@@ -159,6 +162,7 @@ window.seek = function (t) {
   // ── Kerner ──
   show(kerner, shot === "rise" || shot === "below2" ? win(t, K.t0, K.t1, 0.4) : 0);
   k2.style.opacity = fadeIn(t, K.med, 0.5).toFixed(3);
+  if (sp) sp.style.color = t >= K.sausages ? "var(--water)" : "inherit";   // the turn word lights its words
 
   // ── the gauge: lifted only (the junction is schematic, so no attached ruler): the gap a hairline beside the paper ──
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
@@ -169,7 +173,7 @@ window.seek = function (t) {
   // ── the veil: three frames of the ground on each scale jump; the scene fades toward the ground before the end card ──
   let step = 0;
   for (const c of [SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
-  const end = 0.75 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));
+  const end = 0.6 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));   // the hook's brow stays readable behind the card (the loop)
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 
   hud.update(t);

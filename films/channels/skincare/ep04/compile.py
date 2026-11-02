@@ -60,7 +60,7 @@ SHOTS = [{"at": 0.0, "name": "brow"}, {"at": CUE["nerve"], "name": "below"}, {"a
 # ── the camera (orbit keys: target, dist, el, az, fov, fx, fy) ──
 JX, UX = 4000.0, -4000.0
 TOPY, BULB, SNAP, CREASE = -18.0, [JX + 4, -10.5, 12], [JX + 4, -16.5, 14.2], [JX, 41.5, 30]
-FLY = {"el": 13, "fov": 34, "fx": 0.5, "fy": 0.46}
+FLY = {"el": 22, "fov": 34, "fx": 0.5, "fy": 0.46}   # high enough that the brow reads: two mounds and the crease between
 CAM = {
     # a low drone pass along the crease (it runs along z at x = 0), dipping toward it before the jump below
     "brow": [{"t": 0.0, "target": [0, -0.6, 16], "dist": 24, "az": -6, **FLY},
@@ -68,12 +68,13 @@ CAM = {
              {"t": CUE["nerve"], "target": [0, -1.2, 0], "dist": 12, "az": 0, "el": 34, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
     # the junction: the crease where the brow left it (match), then down to the nerve ending and its messenger, back out
     # for the pull, then into the bulb for the change
-    "below": [{"t": CUE["nerve"], "target": CREASE, "dist": 210, "el": 22, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46},
-              {"t": CUE["messenger"] - 0.3, "target": BULB, "dist": 201, "el": 14, "az": -8, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"},
+    "below": [{"t": CUE["nerve"], "target": CREASE, "dist": 150, "el": 34, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46},
+              {"t": CUE["messenger"] - 0.3, "target": BULB, "dist": 201, "el": 14, "az": -8, "fov": 30, "fx": 0.5, "fy": 0.42, "ease": "inout2"},
               {"t": CUE["pulls"], "target": [JX, 12, 14], "dist": 494, "el": 20, "az": -6, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "inout2"},
               {"t": B["change"]["t0"], "target": [JX, 10, 14], "dist": 471, "el": 19, "az": -4, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "sine"},
               {"t": CUE["slips"], "target": BULB, "dist": 126, "el": 12, "az": 2, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "inout2"},
               {"t": CUE["cuts"] + 0.2, "target": SNAP, "dist": 98, "el": 10, "az": 4, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "inout2"},
+              {"t": CUE["ready"], "target": SNAP, "dist": 84, "el": 10, "az": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "inout2"},
               {"t": B["why"]["t0"], "target": SNAP, "dist": 105, "el": 10, "az": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "ease": "sine"}],
     # up and out: the flight rises high over the brow, the skin falls away into a wide golden view
     "rise": [{"t": B["why"]["t0"], "target": [0, -1, 2], "dist": 16, "el": 30, "az": 6, "fov": 34, "fx": 0.5, "fy": 0.46},
@@ -82,8 +83,8 @@ CAM = {
     "below2": [{"t": CUE["guessed"] - 0.1, "target": BULB, "dist": 230, "el": 12, "az": -6, "fov": 30, "fx": 0.5, "fy": 0.56},
                {"t": B["whoa"]["t0"], "target": BULB, "dist": 170, "el": 12, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.56, "ease": "inout2"}],
     # the reveal: the same brow through the UV camera, held (the plate and the points move, not the camera)
-    "uv": [{"t": B["whoa"]["t0"], "target": [UX, 0.1, 0], "dist": 28, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.35},
-           {"t": B["toscale"]["t0"], "target": [UX, 0.1, 0], "dist": 26, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.35, "ease": "sine"}],
+    "uv": [{"t": B["whoa"]["t0"], "target": [UX, 0.1, 0], "dist": 31, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.37},
+           {"t": B["toscale"]["t0"], "target": [UX, 0.1, 0], "dist": 29, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.37, "ease": "sine"}],
     # back below: the gap under the card (the card lifts into the upper half), then the new endings along the fibre
     "gauge": [{"t": B["toscale"]["t0"], "target": [JX + 4, -8, 14], "dist": 300, "el": 14, "az": -4, "fov": 30, "fx": 0.5, "fy": 0.6},
               {"t": B["takeaway"]["t0"], "target": [JX + 26, -14, 14], "dist": 150, "el": 14, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.5, "ease": "inout2"},
@@ -104,6 +105,7 @@ LABELS = [
     {"id": "l-crease", "text": "the crease", "kind": "cell", "anchor": "crease", "t0": CUE["crease"] - 0.3, "t1": B["change"]["t0"] + 0.4, "shot": "below", "side": 1},
     {"id": "l-tox", "text": "botulinum toxin", "kind": "uv", "anchor": "tox", "t0": CUE["slips"] + 0.2, "t1": CUE["cuts"] + 0.2, "shot": "below", "side": -1, "v": "above"},
     {"id": "l-snap", "text": "SNAP-25, cut", "kind": "water", "anchor": "snap", "t0": CUE["cuts"] + 0.4, "t1": B["why"]["t0"], "shot": "below", "side": 1, "v": "below"},
+    {"id": "l-uvbrow", "text": "the same brow, in UV", "kind": "uv", "anchor": "uvbrow", "t0": B["whoa"]["t0"] + 0.3, "t1": CUE["hundredth"] - 0.6, "shot": "uv", "side": 1, "v": "below", "fixed": True},
     {"id": "l-sprout", "text": "new endings", "kind": "cell", "anchor": "sprout", "t0": CUE["nerve2"], "t1": B["tease"]["t0"], "shot": "gauge", "side": 1, "v": "above"},
 ]
 BADGES = [
@@ -111,18 +113,18 @@ BADGES = [
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-gap", "text": "estimate · not to scale", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
-    {"id": "b-months", "text": "≈ 3–4 months, compressed", "t0": B["takeaway"]["t0"] + 0.3, "t1": t_end, "slot": "tl"},
-    {"id": "b-mice", "text": "regrowth studied in mice", "t0": CUE["nerve2"] - 0.3, "t1": t_end, "slot": "tr"},
+    {"id": "b-gap", "text": "estimate · sizes vary", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
+    {"id": "b-months", "text": "≈ 3–4 months, compressed", "t0": B["takeaway"]["t0"] + 0.3, "t1": CUE["nerve2"] - 0.5, "slot": "tl"},
+    {"id": "b-mice", "text": "regrowth studied in mice", "t0": CUE["nerve2"] - 0.3, "t1": t_end - 0.3, "slot": "tl"},
 ]
 SPINE = [0.62, 0.215]   # top right, under the notes
 COUNTERS = [
-    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": CUE["frown"] + 0.2, "t1": B["why"]["t0"], "at": SPINE},
-    {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": t_end - 0.7, "at": SPINE},
+    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": B["normal"]["t0"] - 0.4, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
+    {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": t_end, "at": SPINE},
 ]
 # the plates: Kerner's (the why) and the dose (the whoa); the daylight strip before the dose plate replaces it
 PLATES = {
-    "kerner": {"t0": CUE["justinus"] - 0.2, "t1": B["whoa"]["t0"] - 0.3, "med": CUE["medicine"] - 0.4,
+    "kerner": {"sausages": CUE["sausages"] - 0.1, "t0": CUE["justinus"] - 0.2, "t1": B["whoa"]["t0"] - 0.3, "med": CUE["medicine"] - 0.4,
                "name": "Justinus Kerner", "role": "physician, Württemberg", "line1": "1817–1822: “sausage poison” described",
                "line2": "proposed it might one day treat illness"},
     "dose": {"t0": CUE["hundredth"] - 0.5, "t1": B["toscale"]["t0"] - 0.3, "frown": CUE["whole"], "kill": CUE["kill"],
@@ -149,11 +151,11 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 1.0], "sc": CUE
 # the junction's states, on the words
 J = {"puff": [CUE["messenger"], CUE["messenger"] + 1.6], "pull": [CUE["pulls"] - 0.1, CUE["crease"] + 0.4], "open": [B["change"]["t0"] + 0.4, CUE["slips"]],
      "toxin": [CUE["slips"] - 0.2, CUE["cuts"]], "cut": [CUE["cuts"], CUE["cuts"] + 0.5], "release": [CUE["ready"] - 0.1, CUE["leaves"] + 0.6],
-     "sprout": [CUE["nerve2"] - 0.6, CUE["endings"] + 0.6], "relight": [CUE["endings"] - 0.1, CUE["endings"] + 1.7], "relax": [B["toscale"]["t0"], CUE["endings"]]}
+     "sprout": [CUE["nerve2"] - 0.6, CUE["endings"] + 0.6], "relight": [CUE["endings"] - 0.1, CUE["endings"] + 1.7], "bump": [CUE["ready"] - 0.2, CUE["leaves"] + 0.5], "relax": [B["toscale"]["t0"], CUE["endings"]]}
 
 TITLE = {"series": "Outer Layer · No. 004", "title": "The deadliest *dose*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:frown?", 0.35)}
 END = {"title": "Next layer: same sun, one experiment. Which hand *aged*?", "follow": "Outer Layer · No. 005",
-       "next": "Alan Scott first injected it to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."}
+       "next": "Alan Scott first injected botulinum toxin to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."}
 POSTER = A("vo05:kill", 0.6)
 
 glue(f, {"vo01": ["in a frown?", "by the nanogram."], "vo02": ["a nerve ending,", "a chemical messenger", "the muscle below."],
