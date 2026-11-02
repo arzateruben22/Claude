@@ -110,7 +110,7 @@ BADGES = [
     {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but4"] - 0.1, "slot": "tl"},
     {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but4"] - 0.1, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-green", "text": "Green et al., 1999 · 2011", "t0": B["whoa"]["t0"] + 0.3, "t1": CUE["half"] - 0.3, "slot": "tl"},
-    {"id": "b-sig", "text": "small numbers · not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-sig", "text": "not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"], "t1": CUE["but"] - 0.1, "slot": "tl"},
     {"id": "b-est", "text": "estimate", "t0": CUE["fifth"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["but"] - 0.1, "t1": t_end, "slot": "tl"},
