@@ -87,7 +87,7 @@ CAM = {
         {"t": B["normal"]["t0"], **MACRO, "target": ant_at(B["normal"]["t0"]), "dist": 2.9, "az": -6, "ease": "lin"},   # following the ant
     ],
     "scale": [
-        {"t": B["normal"]["t0"], **BAL, "dist": 300, "el": 9, "az": 36},
+        {"t": B["normal"]["t0"], **BAL, "dist": 330, "el": 9, "az": 48},
         {"t": t_balance, **BAL, "dist": 325, "el": 12, "az": 22, "ease": "sine"},              # a slow arc round the balance as the heaps fill
         {"t": t_sites, **BAL, "ease": "inout2"},
     ],

@@ -56,7 +56,7 @@ tip.rotation.z = Math.PI / 2; tip.position.set(40.85 + 1.55, 0.78, 30); scene.ad
 const you = createFigure({ tokens: TK, height: 170 });          // true height beside ants a few mm long: they are specks
 scene.add(you.group);
 const YOU = FILM.you, CP = FILM.carpet;
-const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24, far: [0.03, 0.12], aniso: true });   // your ants, 5 mm apart: 2.44 million fill this square
+const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24, far: [0.02, 0.08], aniso: true });   // your ants, 5 mm apart: 2.44 million fill this square
 carpet.mesh.material.depthTest = false; carpet.mesh.renderOrder = 1; you.group.traverse((o) => { o.renderOrder = 2; });   // over the paper, under you
 carpet.group.position.set(YOU[0], 0.05, YOU[2]); carpet.set({ side: CP.side, opacity: 1 }); scene.add(carpet.group);
 // the person's ants: a seeded swarm on the paper around them
