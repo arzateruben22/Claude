@@ -93,16 +93,16 @@
   }
  ],
  "tone": {
-  "hook": 0.25,
-  "sponge": 0.25,
-  "nerves": 0.7,
-  "inside": 0.7,
-  "reflex": 0.95,
-  "palm": 0.95,
-  "close": 0.25
+  "hook": 0.9,
+  "sponge": 0.9,
+  "nerves": 0.9,
+  "inside": 0.9,
+  "reflex": 0.9,
+  "palm": 0.9,
+  "close": 0.9
  },
  "skin": {
-  "wrinkle": 7.0,
+  "wrinkle": 18.0,
   "narrow": 0.42,
   "palm_um": 173.0,
   "cheek_um": 17.0,
@@ -643,9 +643,9 @@
   },
   {
    "id": "c-grip",
-   "label": "a better wet grip?",
+   "label": "a better wet grip? 2013 · 2014",
    "fmt": "text",
-   "text": "2013 ✓ · 2014 ✗",
+   "text": "✓ then ✗",
    "t0": 45.13333333333333,
    "t1": 49.4833,
    "at": [
@@ -655,9 +655,9 @@
   },
   {
    "id": "c-palm",
-   "label": "dead layer · palm vs cheek",
+   "label": "dead layer, palm (cheek: 17)",
    "fmt": "text",
-   "text": "173 vs 17 µm",
+   "text": "173 µm",
    "t0": 58.8,
    "t1": 65.43333333333334,
    "at": [

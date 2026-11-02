@@ -108,7 +108,8 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
   return {
     // top/bottom: the surface and the `um`-deep point on screen (px), or null when the section is off; op: 0 … 1;
     // lift: 0 (attached) … 1 (to scale); sc: µm of the dead layer; fillSc, fillPaper: 0 … 1 (the bars' fill)
-    update(t, { top, bottom, um = 100, op = 1, lift = 0, sc = 17, fillSc = 0, fillPaper = 0, paperUm = 100, filmUm = 0, fillFilm = 0 }) {
+    update(t, { top, bottom, um = 100, op = 1, lift = 0, sc = 17, fillSc = 0, fillPaper = 0, paperUm = 100, filmUm = 0, fillFilm = 0, scName = null }) {
+      if (scName && !filmBar) scTxt.textContent = scName;   // a shorter heading for a tall bar (No. 003: "palm")
       svg.style.opacity = op.toFixed(4);
       if (op <= 0.001 || top == null) { svg.style.visibility = "hidden"; return; }
       svg.style.visibility = "visible";

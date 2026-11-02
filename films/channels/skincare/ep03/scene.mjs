@@ -42,13 +42,13 @@ const S = createSection({ width: 130, depth: 56, ...LAY, seed: 33 });
 scene.add(TL.group, TR.group, S.group);
 const WL = createWater({ width: 70, depth: 46, top: 36, x: -40 }), WR = createWater({ width: 70, depth: 46, top: 36, x: 40 }), WS = createWater({ width: 130, depth: 56, top: 36 });
 scene.add(WL.mesh, WR.mesh, WS.mesh);
-const V = createVessels({ x: [-62, 62], ys: [-92, -101, -111], z: 22, r: 2.6 });
+const V = createVessels({ x: [-62, 62], ys: [-94, -104, -114], z: 28.4, r: 3.0 });   // on the cut face (half out of it), so they are seen
 scene.add(V.group);
 // the nerves of the two fingertips (ink): one whole, one cut (a gap under its middle)
 const nerveMat = new THREE.MeshStandardMaterial({ color: 0x2a3a40, roughness: 0.5, metalness: 0 });
 const nerve = (x0, x1, y, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, x1 - x0, 10), nerveMat); m.rotation.z = Math.PI / 2; m.position.set((x0 + x1) / 2, y, z); scene.add(m); return m; };
-const nL = nerve(-72, -8, -112, 21);
-const nR1 = nerve(8, 33, -112, 21), nR2 = nerve(47, 72, -112, 21);   // the cut: a gap from 33 to 47
+const nL = nerve(-72, -8, -112, 23.4);
+const nR1 = nerve(8, 33, -112, 23.4), nR2 = nerve(47, 72, -112, 23.4);   // on the cut face   // the cut: a gap from 33 to 47
 
 const rig = createRig(FILM.cam);
 
@@ -97,7 +97,7 @@ window.seek = function (t) {
   TL.wrinkle(pair ? wL : 0); TR.wrinkle(0);
   TL.set({ tone, dimLiving: 0.35, glowDead: 0.25 }); TR.set({ tone, dimLiving: 0.35, dimDead: nerves ? 0 : 0.15 });
   nL.visible = nR1.visible = nR2.visible = nerves;
-  A.tip = [-40, 2, 22]; A.arm = [40, 2, 22]; A.nerve_l = [-40, -112, 22]; A.nerve_r = [40, -112, 22];
+  A.tip = [-40, 2, 22]; A.arm = [40, 2, 22]; A.nerve_l = [-40, -112, 24]; A.nerve_r = [40, -112, 24];
 
   // ── one block: the sponge (it swells, then the idea is struck out), inside (vessels, buckle), reflex, palm ──
   const sponge = shot === "sponge";
@@ -114,13 +114,13 @@ window.seek = function (t) {
   S.set({ tone, dimDead: shot === "palm" ? 0.8 : 0.6 * vesselsWin, dimLiving: shot === "palm" ? 0.85 : 0.35 + 0.3 * vesselsWin,
     glowDead: inside ? 0.6 * fadeIn(t, CUE.buckle[0] - 0.2, 0.6) : 0 });
   WS.set({ opacity: one && !inside ? 0.18 + 0.12 * sw : 0 });
-  A.top = [40, 4 + 18 * sw, 26]; A.vessel = [30, -94, 24];
+  A.top = [40, 4 + 18 * sw, 26]; A.vessel = [30, -94, 29];
 
   // ── the gauge: lifted out of the palm shot, the palm's dead layer (173 µm) beside the paper (100 µm) ──
   camera.updateMatrixWorld();
   const p0 = project(camera, [-63, 0, 28], W, H), p1 = project(camera, [-63, -100, 28], W, H);
   const lift = shot === "palm" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: shot === "palm" ? Math.min(1, Math.max(0, (lift - 0.35) / 0.4)) : 0, lift, sc: G.sc_um, paperUm: G.paper_um,
+  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: shot === "palm" ? Math.min(1, Math.max(0, (lift - 0.6) / 0.3)) : 0, lift, sc: G.sc_um, paperUm: G.paper_um, scName: "palm",
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.9)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
   hud.update(t);

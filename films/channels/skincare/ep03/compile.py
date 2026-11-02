@@ -26,7 +26,7 @@ B = {b["id"]: b for b in BEATS}
 
 # ── the numbers (claims.json) ──────────────────────────────────────────────
 PALM_UM, CHEEK_UM, PAPER_UM = 173.0, 17.0, 100.0     # c9: palm 173 µm, cheek 16.8 µm (Egawa 2007); paper ≈ 100 µm
-WRINKLE = 7.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
+WRINKLE = 18.0                                       # drawn fold amplitude, µm (an illustration: badged "simplified")
 NARROW = 0.42                                        # the vessels narrow to this fraction of their width (illustration)
 assert 1.6 < PALM_UM / PAPER_UM < 1.9                # "nearly two sheets of paper"
 
@@ -104,8 +104,8 @@ SPINE = [0.34, 0.215]
 COUNTERS = [
     {"id": "c-1930", "label": "a finger with a cut nerve", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.2, "at": SPINE},
     {"id": "c-reflex", "label": "a nerve reflex", "fmt": "text", "text": "reflex", "t0": CUE["reflex"], "t1": CUE["argued"] - 0.4, "at": SPINE},
-    {"id": "c-grip", "label": "a better wet grip?", "fmt": "text", "text": "2013 ✓ · 2014 ✗", "t0": CUE["grip"], "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-palm", "label": "dead layer · palm vs cheek", "fmt": "text", "text": "173 vs 17 µm", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
+    {"id": "c-grip", "label": "a better wet grip? 2013 · 2014", "fmt": "text", "text": "✓ then ✗", "t0": CUE["grip"], "t1": B["toscale"]["t0"], "at": SPINE},
+    {"id": "c-palm", "label": "dead layer, palm (cheek: 17)", "fmt": "text", "text": "173 µm", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
