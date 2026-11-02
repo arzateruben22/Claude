@@ -47,6 +47,7 @@ const keyedZ = (keys, t) => {
 const desk = createDesk({ tokens: TK, y: 0, unit: 1, far: 60 });
 scene.add(desk.group);
 const crowd = createCrowd({ tokens: TK, density: WD.density, dotR: 0.22 });
+crowd.mesh.material.depthTest = false;                           // a flat layer on the paper: no z-fight at any scale
 scene.add(crowd.group);
 const planet = createPlanet({ tokens: TK, R: WD.R });
 scene.add(planet.mesh);
@@ -113,8 +114,8 @@ window.seek = function (t) {
   // the desk gives way to the planet as the camera leaves the paper's horizon
   const plan = clamp01((Math.log10(pose.dist) - 4.6) / 0.8);
   desk.group.visible = plan < 0.999;
-  const ds = Math.max(1, pose.dist / 18);                                   // the paper reaches as far as the view does (its ruling stays 1 m and fades with distance)
-  desk.group.scale.set(ds, ds, ds); desk.uniforms.uFar.value = 60 * ds;
+  const unit = Math.pow(10, Math.floor(Math.log10(Math.max(1, pose.dist / 12))));   // the paper re-rules by powers of ten (No. 002's way)
+  desk.uniforms.uUnit.value = unit; desk.uniforms.uFar.value = Math.max(60, pose.dist * 2.2);
   planet.set({ opacity: plan, cam: camera.position.toArray(), dot: WD.side * 0.5 * Math.max(1, pose.dist / 2e6), dotOpacity: clamp01((Math.log10(pose.dist) - 5.2) / 0.8) });
 
   // the ladder: the powers-of-ten overlay, in from the dive's foot, out in the takeaway
@@ -123,7 +124,7 @@ window.seek = function (t) {
   const step = 1 - smooth(clamp01((t - CUE.land[0]) / (CUE.land[1] - CUE.land[0])));
   ladder.set({ z, opacity: lo, grow: { [WD.items.length - 1]: Math.max(1e-6, step) } });
 
-  desk.update({ grid: 1, pool: [pose.target[0], pose.target[2]], casters: [[0, FIG_H + y, 0, 0.35]] });
+  desk.update({ grid: 1, span: pose.dist * 8, pool: [pose.target[0], pose.target[2]], casters: [[0, FIG_H + y, 0, 0.35]] });
 
   hud.update(t);
   tFlap.update(t);

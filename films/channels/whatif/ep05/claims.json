@@ -63,7 +63,7 @@
   "accessed": "2026-11-02",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Bohr radius 5.29177210544 × 10^-11 m (CODATA 2022). Hydrogen is the smallest atom, so 'a single atom' is the conservative comparison: larger atoms make the ratio bigger. Computed in calc.py."
+  "note": "Bohr radius 5.29177210544 × 10^-11 m (CODATA 2022). Hydrogen is the smallest atom, so 'a single atom' is the conservative comparison: larger atoms make the ratio bigger. Computed in calc.py. The zoom on screen passes your jump (40 cm), a hair (≈ 0.1 mm: 17–181 µm, Physics Factbook via Wikipedia's 'Micrometre', https://en.wikipedia.org/wiki/Micrometre) and a red blood cell (≈ 7 µm: 6–8 µm, same page) on the way down; they are scale markers, not claims the voice makes."
  },
  {
   "id": "c7",
