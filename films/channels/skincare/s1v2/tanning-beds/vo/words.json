@@ -1,0 +1,1111 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Same list as cigarettes? Most people hear that and think: just as deadly.",
+   "heard": "Same list as cigarettes. Most people hear that and think just as deadly.",
+   "words": [
+    {
+     "w": "Same",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "list",
+     "start": 0.32,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.565,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "cigarettes?",
+     "start": 0.87,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "Most",
+     "start": 1.82,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "people",
+     "start": 2.145,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "hear",
+     "start": 2.33,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 2.715,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.88,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "think:",
+     "start": 3.14,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 3.585,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.84,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "deadly.",
+     "start": 4.09,
+     "end": 4.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
+   "heard": "It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.365,
+     "end": 0.415,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.395,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "World",
+     "start": 0.5,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "Health",
+     "start": 0.745,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Organization's",
+     "start": 1.05,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "cancer",
+     "start": 2.065,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "agency,",
+     "start": 2.685,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.71,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "tanning",
+     "start": 3.835,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "beds",
+     "start": 4.28,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "sit",
+     "start": 4.53,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.86,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.115,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 5.235,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "group,",
+     "start": 5.52,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "beside",
+     "start": 5.99,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "tobacco",
+     "start": 6.425,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "smoke.",
+     "start": 7.02,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 8.06,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "group",
+     "start": 8.295,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "ranks",
+     "start": 8.54,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 8.865,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "sure",
+     "start": 9.215,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.39,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "evidence",
+     "start": 9.5,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "is,",
+     "start": 9.91,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 10.53,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 10.675,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 10.985,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.185,
+     "end": 11.235,
+     "heard": true
+    },
+    {
+     "w": "harm.",
+     "start": 11.215,
+     "end": 11.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Follow the evidence into the bed: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "heard": "Follow the evidence into the bed. Its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "words": [
+    {
+     "w": "Follow",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.41,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "evidence",
+     "start": 0.575,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 1.18,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.285,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "bed:",
+     "start": 1.4,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.28,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 2.37,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.755,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 2.94,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "UVA,",
+     "start": 3.215,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.01,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 4.07,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "rays.",
+     "start": 4.455,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 5.575,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "large,",
+     "start": 5.605,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "powerful",
+     "start": 6.285,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "units,",
+     "start": 6.64,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 7.38,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 7.455,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 7.645,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 7.75,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.995,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "fifteen",
+     "start": 8.13,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 8.53,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 9.01,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "intense",
+     "start": 9.17,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 9.66,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.97,
+     "end": 10.02,
+     "heard": true
+    },
+    {
+     "w": "midday",
+     "start": 10.0,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "sun.",
+     "start": 10.57,
+     "end": 10.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "When the agency's experts weighed the studies, the sharpest signal came from people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half.",
+   "heard": "When the agency's experts weighed the studies, the sharpest signal came from people who started young. In pooled studies, starting before 35 went with a melonoma risk raised by more than half.",
+   "words": [
+    {
+     "w": "When",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.215,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "agency's",
+     "start": 0.405,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "experts",
+     "start": 0.99,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "weighed",
+     "start": 1.415,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.65,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "studies,",
+     "start": 1.805,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.605,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "sharpest",
+     "start": 2.635,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 3.225,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "came",
+     "start": 3.665,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 4.095,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "people",
+     "start": 4.135,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 4.325,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "started",
+     "start": 4.665,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "young.",
+     "start": 4.96,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 6.0,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "pooled",
+     "start": 6.185,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "studies,",
+     "start": 6.63,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "starting",
+     "start": 7.345,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 7.85,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "thirty-five",
+     "start": 8.095,
+     "end": 8.88,
+     "heard": false
+    },
+    {
+     "w": "went",
+     "start": 9.065,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 9.095,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.21,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "melanoma",
+     "start": 9.33,
+     "end": 10.16,
+     "heard": false
+    },
+    {
+     "w": "risk",
+     "start": 10.205,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "raised",
+     "start": 10.39,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 10.885,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 10.96,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 11.26,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "half.",
+     "start": 11.29,
+     "end": 11.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+   "heard": "Then whole countries acted on it. Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+   "words": [
+    {
+     "w": "Then",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.25,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "countries",
+     "start": 0.555,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "acted",
+     "start": 1.095,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.4,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 1.725,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "Brazil",
+     "start": 2.29,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "banned",
+     "start": 2.72,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "commercial",
+     "start": 3.05,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "tanning",
+     "start": 3.535,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "beds",
+     "start": 3.965,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.235,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 4.495,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "year,",
+     "start": 4.885,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.4,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "later",
+     "start": 5.43,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "Australia",
+     "start": 5.73,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "switched",
+     "start": 6.5,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 6.88,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 6.99,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "off.",
+     "start": 7.3,
+     "end": 7.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+   "heard": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.26,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 0.48,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "rays",
+     "start": 0.785,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 1.2,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "past",
+     "start": 1.665,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.125,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 2.3,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 2.62,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "layer,",
+     "start": 2.885,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 3.9,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 4.0,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 4.415,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.58,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.19,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.455,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.7,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 6.005,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.235,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "paper.",
+     "start": 6.5,
+     "end": 7.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Same list as cigarettes, then: not the same size of harm, but the same certainty.",
+   "heard": "Same list as cigarettes, then not the same size of harm, but the same certainty.",
+   "words": [
+    {
+     "w": "Same",
+     "start": 0.025,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "list",
+     "start": 0.495,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.645,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "cigarettes,",
+     "start": 0.975,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "then:",
+     "start": 1.505,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 2.28,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.52,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 2.55,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "size",
+     "start": 2.975,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.345,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "harm,",
+     "start": 3.41,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 3.94,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.07,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 4.26,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "certainty.",
+     "start": 4.475,
+     "end": 5.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?",
+   "heard": "Next season, why do bath fingers wrinkle but never your arm?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.28,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "season:",
+     "start": 0.44,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 1.235,
+     "end": 1.285,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 1.43,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "bath",
+     "start": 1.595,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 1.9,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "wrinkle,",
+     "start": 2.24,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 2.795,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 2.9,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.14,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "arm?",
+     "start": 3.44,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

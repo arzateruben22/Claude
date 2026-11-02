@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/s1v2/tanning-beds/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Same list as cigarettes? Most people hear that and think: just as deadly.",
+   "stars": [
+    "cigarettes"
+   ],
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? mˈəʊst pˈiːpəl hˈiə ðat and θˈɪŋk: dʒˈʌst az dˈɛdli.",
+   "speed": 0.84,
+   "file": "01.wav",
+   "dur": 4.725,
+   "sha256": "71ae9e35cbdd5ccdf19f6a88d1e846052f8382a60db59560128a9e2159849edf"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
+   "stars": [
+    "sure"
+   ],
+   "phonemes": "ɪt ɪz ðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi, and tˈanɪŋ bˈɛdz sˈɪt ɪn ɪts tˈɒp ɡɹˈuːp, bɪsˌaɪd təbˈakəʊ smˈəʊk. ðat ɡɹˈuːp ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz, nˌɒt hˌaʊ bˈɪɡ ðə hˈɑːm.",
+   "speed": 0.84,
+   "file": "02.wav",
+   "dur": 11.725,
+   "sha256": "78c9fc154c2e29a0b33b77c8e3e841e6ef5cda9893a762bd7a857d8a3f35ee47"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Follow the evidence into the bed: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "stars": [
+    "sun"
+   ],
+   "phonemes": "fˈɒləʊ ðɪ ˈɛvɪdəns ˌɪntʊ ðə bˈɛd: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
+   "speed": 0.84,
+   "file": "03.wav",
+   "dur": 10.896,
+   "sha256": "7d751e870673c00292a343984f256cec128a24ec624533546c249d7176039043"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "When the agency's experts weighed the studies, the sharpest signal came from people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half.",
+   "stars": [
+    "half"
+   ],
+   "phonemes": "wˌɛn ðɪ ˈeɪdʒənsiz ˈɛkspɜːts wˈeɪd ðə stˈʌdiz, ðə ʃˈɑːpɪst sˈɪɡnəl kˈeɪm fɹɒm pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, stˈɑːtɪŋ bɪfˌɔː θˈɜːtifˈaɪv wɛnt wɪð ˈeɪ mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
+   "speed": 0.92,
+   "file": "04.wav",
+   "dur": 11.875,
+   "sha256": "5fc015f979ba4c76d8ebd2ee27fb36993941c07f1fdddf8272d1e932f9c12b74"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+   "stars": [
+    "off"
+   ],
+   "phonemes": "ðˈɛn hˈəʊl kˈʌntɹiz ˈaktɪd ˈɒn ɪt: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz ðat sˈeɪm jˈiə, and lˈeɪtəɹ ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
+   "speed": 0.9,
+   "file": "05.wav",
+   "dur": 7.673,
+   "sha256": "fcb1426493b37a00cf00fbdb5379a03498228e4b06cc78dd22423bbdc0a68d48"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "and ðə lˈɒŋ ɹˈeɪz ɹˈiːtʃ pˈast ðə hˈəʊl tˈɒp lˈeɪə, wˌɪtʃ ˌɒn mˈəʊst skˈɪn ɪz ɐbˌaʊt az θˈɪn az pˈeɪpə.",
+   "speed": 0.74,
+   "file": "06.wav",
+   "dur": 7.161,
+   "sha256": "aa16d210cfdb6954140839db470a26449fab9b1431d43c3e048055ab098e448e"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Same list as cigarettes, then: not the same size of harm, but the same certainty.",
+   "stars": [
+    "certainty"
+   ],
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts, ðˈɛn: nˌɒt ðə sˈeɪm sˈaɪz ɒv hˈɑːm, bˌʌt ðə sˈeɪm sˈɜːtənti.",
+   "speed": 0.84,
+   "file": "07.wav",
+   "dur": 5.346,
+   "sha256": "441795f98623910d0573b25dfd0ed9a1eb6831d3a1ea84951a259502a5d16cbf"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?",
+   "stars": [
+    "arm"
+   ],
+   "phonemes": "nˈɛkst sˈiːzən: wˌaɪ dˈuː bˈaθ fˈɪŋɡəz ɹˈɪŋkəl, bˌʌt nˈɛvə jɔːɹ ˈɑːm?",
+   "speed": 0.84,
+   "file": "08.wav",
+   "dur": 3.922,
+   "sha256": "78befc9d98284c445ad6e9cad98800ac11eed7f2ca9f6dfc97e21229e104df72"
+  }
+ ]
+}

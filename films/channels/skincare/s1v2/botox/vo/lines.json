@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/s1v2/botox/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Poison, in a frown? Among the most poisonous substances known, by the nanogram.",
+   "stars": [
+    "frown"
+   ],
+   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɐmˌʌŋ ðə mˈəʊst pˈɔɪzənəs sˈʌbstənsɪz nˈəʊn, baɪ ðə nˌanəʊɡɹˈam.",
+   "speed": 0.92,
+   "file": "01.wav",
+   "dur": 4.727,
+   "sha256": "57a2ea04de666cc681ab64c437283e18ae67c7a5afe88979b1b8728ff3a465d0"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Every frown starts at a nerve ending, which lets out a chemical messenger onto the muscle below. The muscle pulls, and the skin above it folds into a crease.",
+   "stars": [
+    "crease"
+   ],
+   "phonemes": "ˈɛvɹɪ fɹˈaʊn stˈɑːts atə nˈɜːv ˈɛndɪŋ, wˌɪtʃ lˈɛts ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒəɹ ˌɒntʊ ðə mˈʌsəl bɪlˈəʊ. ðə mˈʌsəl pˈʊlz, and ðə skˈɪn əbˌʌv ɪt fˈəʊldz ˌɪntʊ ɐ kɹˈiːs.",
+   "speed": 0.78,
+   "file": "02.wav",
+   "dur": 11.848,
+   "sha256": "709b355ed16bcc303bc04f125467543942a668687b1d96b882b4c72cc823fa16"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
+   "stars": [
+    "leaves"
+   ],
+   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn nˈɛvə tˈʌtʃɪz ðə skˈɪn. ɪt slˈɪps ɪnsˈaɪd ðə nˈɜːv ˈɛndɪŋ and kˈʌts wˈɒn smˈɔːl pɹˈəʊtiːn ðə mˈɛsɪdʒ nˈiːdz, sˌəʊ ðə mˈɛsɪdʒ ɪz ɹˈɛdi, and nˈɛvə lˈiːvz.",
+   "speed": 0.84,
+   "file": "03.wav",
+   "dur": 10.528,
+   "sha256": "bab5b31f0f006e13ffb6090d5af6410be5367d67cf75629e69775c47958c7365"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Two centuries ago, a German doctor named Justinus Kerner traced a deadly paralysis to spoiled sausages. And he guessed that the same poison might one day become a medicine.",
+   "stars": [
+    "medicine"
+   ],
+   "phonemes": "tˈuː sˈɛntʃəɹiz ɐɡˈəʊ, ɐ dʒˈɜːmən dˈɒktə nˈeɪmd jʊstˈiːnʊs kˈɛɐnɐ tɹˈeɪst ɐ dˈɛdli pəɹˈaləsˌɪs tə spˈɔɪld sˈɒsɪdʒɪz. and hiː ɡˈɛst ðatðə sˈeɪm pˈɔɪzən mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
+   "speed": 0.84,
+   "file": "04.wav",
+   "dur": 11.079,
+   "sha256": "b75153d589461f50bb4ede78f5abc1e31627057033b4d3c103025f1bcbe002a7"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "So how much goes in? The whole frown takes well under a hundredth of the amount estimated to kill a person.",
+   "stars": [
+    "person"
+   ],
+   "phonemes": "sˌəʊ hˌaʊ mˈʌtʃ ɡəʊz ˈɪn? ðə hˈəʊl fɹˈaʊn tˈeɪks wˈɛl ˌʌndəɹ ɐ hˈʌndɹədθ ɒvðɪ ɐmˈaʊnt ˈɛstɪmˌeɪtɪd tə kˈɪl ɐ pˈɜːsən.",
+   "speed": 0.74,
+   "file": "05.wav",
+   "dur": 8.409,
+   "sha256": "16ac15b380092ab6e80e0a0460be84dc29fe09a3a0c4e0ade06d7596d811120b"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "and ðə ɡˈap ðat mˈɛsɪdʒ nˈɛvə kɹˈɒsɪz ɪz ɐbˌaʊt tˈuː θˈaʊzənd tˈaɪmz θˈɪnə ðˌanə ʃˈiːt ɒv pˈeɪpə.",
+   "speed": 0.74,
+   "file": "06.wav",
+   "dur": 7.195,
+   "sha256": "b763bd21d527baf63b1e41f83fe410e3c265494fadd7f4745b630f49009001f8"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
+   "stars": [
+    "endings"
+   ],
+   "phonemes": "pˈɔɪzən ɪn ɐ fɹˈaʊn: dʒˈʌst ɪnˈʌf tə sˈaɪləns wˈɒn mˈɛsɪdʒ, ʌntˈɪl ðə nˈɜːv ɡɹˈəʊz njˈuː ˈɛndɪŋz.",
+   "speed": 0.84,
+   "file": "07.wav",
+   "dur": 5.815,
+   "sha256": "4bddc7ecc2b05026d33c6a88010e85d9ea6151b3688e5ccd9fa1eb3ec07abde6"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: two neighbours under the same sun, one experiment. Which hand aged?",
+   "stars": [
+    "aged"
+   ],
+   "phonemes": "nˈɛkst: tˈuː nˈeɪbəz ˌʌndə ðə sˈeɪm sˈʌn, wˈɒn ɛkspˈɛɹɪmənt. wˌɪtʃ hˈand ˈeɪdʒd?",
+   "speed": 0.84,
+   "file": "08.wav",
+   "dur": 4.523,
+   "sha256": "bca0dfd360b2cff9745d142342e115963ae2da415515cd8e645eb799ec7625e8"
+  }
+ ]
+}
