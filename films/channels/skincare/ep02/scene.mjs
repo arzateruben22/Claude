@@ -93,49 +93,45 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
-  const pair = shot === "hook" || shot === "inside" || shot === "close";
-  const one = shot === "ratio" || shot === "thin" || shot === "gauge";
-  WL.group.visible = WR.group.visible = pair; S.group.visible = one; SC.group.visible = shot === "count";
+  const pair = shot === "hook" || shot === "pair" || shot === "close";
+  const one = shot === "ratio" || shot === "thin";
+  WL.group.visible = WR.group.visible = pair; S.group.visible = one; SC.group.visible = false;
   const F = UV.film_um;
 
   // ── the pair: SPF 50 left, SPF 100 right ──
-  const inside = shot === "inside";
-  WL.set({ tone, dimLiving: inside ? 0.2 : 0.35 }); WR.set({ tone, dimLiving: inside ? 0.2 : 0.35 });
-  FL.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.22 : 0.4 }); FR.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.22 : 0.4 });
-  // inside: the rays that are stopped step back (rule 8), what gets in stays lit
-  const rayC = inside ? UVC.map((v) => v * (1 - 0.6 * fadeIn(t, CUE.in, 0.6))) : UVC;
-  const hitL = RL.set(t, pair ? { filmTop: F, filmBottom: 0, pass: UV.pass50, color: rayC, hitColor: HIT, x0: -36 } : HIDE);
-  const hitR = RR.set(t, pair ? { filmTop: F, filmBottom: 0, pass: UV.pass100, color: rayC, hitColor: HIT, x0: 36 } : HIDE);
+  // what gets in is the subject from "what actually gets in" (and again on the takeaway's "in"): the stopped rays step
+  // back to a third, the rays that get in glow down to the basal row
+  const inLit = shot === "pair" ? fadeIn(t, CUE.in - 0.3, 0.6) : shot === "close" ? fadeIn(t, CUE.in2 - 0.4, 0.6) : shot === "hook" ? 0.6 : 0;
+  WL.set({ tone, dimLiving: 0.35 + 0.3 * inLit }); WR.set({ tone, dimLiving: 0.35 + 0.3 * inLit });
+  const fo = 0.42 - 0.2 * inLit;
+  FL.set({ top: 0, thick: pair ? F : 0, opacity: fo, tint: [0.88, 0.96, 0.97] }); FR.set({ top: 0, thick: pair ? F : 0, opacity: fo, tint: [0.88, 0.96, 0.97] });
+  const R = { filmTop: F, filmBottom: 0, color: UVC, hitColor: HIT, stopGain: 1 - 0.67 * inLit, passGain: 1 + 1.6 * inLit, depth: 14 + 56 * inLit };
+  RL.set(t, pair ? { ...R, pass: UV.pass50, x0: -36 } : HIDE);
+  RR.set(t, pair ? { ...R, pass: UV.pass100, x0: 36 } : HIDE);
   A.film_l = [-36, F + 1, 23]; A.film_r = [36, F + 1, 23];
 
-  // ── one block: the ratio (half bare, half filmed), the thin film, the gauge ──
-  S.set({ tone, dimDead: shot === "gauge" ? 0.8 : 0, dimLiving: shot === "gauge" ? 0.85 : 0.35 });
-  const ratio = shot === "ratio";
-  FH.set({ top: 0, thick: ratio ? F : 0, opacity: 0.55 });
+  // ── one block: the ratio (half bare, half filmed; the bare half reddens), then the thin film and the gauge ──
+  const ratio = shot === "ratio", thin = shot === "thin";
+  const back = thin ? fadeIn(t, B0.toscale + 0.3, 0.8) : 0;
+  S.set({ tone, dimDead: 0.7 * back, dimLiving: 0.35 + 0.5 * back });
+  FH.set({ top: 0, thick: ratio ? F : 0, opacity: 0.42, tint: [0.88, 0.96, 0.97] });
   RB.set(t, ratio ? { filmTop: 0, filmBottom: 0, pass: 1, color: UVC, hitColor: HIT, x0: 0 } : HIDE);
   RH.set(t, ratio ? { filmTop: F, filmBottom: 0, pass: UV.pass50, color: UVC, hitColor: HIT, x0: 0 } : HIDE);
-  redMat.opacity = ratio ? 0.38 * E.inout2(seg(t, CUE.reddens - 1.2, CUE.reddens + 0.6)) : 0;
+  redMat.opacity = ratio ? 0.72 * E.inout2(seg(t, CUE.reddens - 1.4, CUE.reddens + 0.4)) : 0;   // the endpoint SPF measures: redness, clearly
   red.visible = redMat.opacity > 0.002;
   A.bare = [-30, 1, 25]; A.film = [30, F + 1, 25];
-  // thin: the film goes from the test layer to the thin one; then more of the light gets through (illustration)
-  const thin = shot === "thin" || shot === "gauge";
-  const fThick = shot === "thin" ? F + (UV.thin_um - F) * E.inout2(seg(t, CUE.thin[0], CUE.thin[1])) : F;
+  // the thin film: from the test layer to a thin one; then more of the light gets through, about four times (illustration)
+  const fThick = thin ? F + (UV.thin_um - F) * E.inout2(seg(t, CUE.thin[0], CUE.thin[1])) : F;
   const pThin = UV.pass50 + (UV.pass_thin - UV.pass50) * E.inout2(seg(t, CUE.fall[0], CUE.fall[1]));
-  FS.set({ top: 0, thick: thin ? fThick : 0, opacity: 0.55 });
-  RS.set(t, shot === "thin" ? { filmTop: fThick, filmBottom: 0, pass: pThin, color: UVC, hitColor: HIT, x0: 0 } : HIDE);
-  if (shot === "thin") A.film = [36, fThick + 1, 25];
+  FS.set({ top: 0, thick: thin ? fThick : 0, opacity: 0.42, tint: [0.88, 0.96, 0.97] });
+  RS.set(t, thin ? { filmTop: fThick, filmBottom: 0, pass: pThin, color: UVC, hitColor: HIT, x0: 0, passGain: 2.2, depth: 50, gain: 1 - back } : HIDE);
+  if (thin) A.film = [36, fThick + 1, 25];
 
-  // ── the count: from above, a hundred rays on one film; fifty's two get through, then a hundred's one ──
-  const count = shot === "count";
-  SC.set({ tone, dimLiving: 0.35 });
-  FC.set({ top: 0, thick: count ? F : 0, opacity: 0.25 });   // see-through from above, so the rays that get in show
-  RC.set(t, count ? { filmTop: F, filmBottom: 0, pass: t < CUE.hundred ? UV.pass50 : UV.pass100, color: UVC, hitColor: HIT, x0: 0, rate: 0.42 } : HIDE);
-
-  // ── the gauge: attached to the single block's left cut edge; lifted for the to-scale beat with the film on top ──
+  // ── the gauge: lifted out of the thin shot, the film on the dead layer beside the paper ──
   camera.updateMatrixWorld();
   const p0 = project(camera, [-58, 0, 25], W, H), p1 = project(camera, [-58, -100, 25], W, H);
-  const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: shot === "gauge" ? 1 : 0, lift, sc: G.sc_um, paperUm: G.paper_um, filmUm: G.film_um,
+  const lift = thin ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
+  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: Math.min(1, Math.max(0, (lift - 0.35) / 0.4)), lift, sc: G.sc_um, paperUm: G.paper_um, filmUm: G.film_um,
     fillFilm: E.out3(seg(t, G.film - 0.1, G.film + 0.7)), fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
   hud.update(t);

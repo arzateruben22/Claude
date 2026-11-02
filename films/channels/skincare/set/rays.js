@@ -27,7 +27,9 @@ export const createRays = ({ n = 100, x: [xa, xb] = [-80, 80], z: [za, zb] = [-2
   return {
     group, RAY,
     // t: film time; rate: falls a second; x0: the block's centre; returns the anchor of a passing ray's glow (or null)
-    set(t, { filmTop = 0, filmBottom = -20, pass = 0.02, gain = 1, color = [0.6, 0.4, 1.4], hitColor = [1.4, 0.6, 1.6], rate = 0.55, x0 = 0, xs = 1 } = {}) {
+    // stopGain / passGain: the strength of the stopped rays and of the ones that get in (rule 8: dim one, light the other);
+    // depth: how far a ray that gets in carries into the skin (µm)
+    set(t, { filmTop = 0, filmBottom = -20, pass = 0.02, gain = 1, color = [0.6, 0.4, 1.4], hitColor = [1.4, 0.6, 1.6], rate = 0.55, x0 = 0, xs = 1, stopGain = 1, passGain = 1, depth = depthIn } = {}) {
       mat.color.setRGB(...color); hitMat.color.setRGB(...hitColor);
       mat.opacity = gain; hitMat.opacity = gain;
       group.visible = gain > 0.002;
@@ -35,17 +37,18 @@ export const createRays = ({ n = 100, x: [xa, xb] = [-80, 80], z: [za, zb] = [-2
       RAY.forEach((r, i) => {
         const u = ((t * rate + r.ph) % 1 + 1) % 1;                       // 0 at the top, 1 at the end of its fall
         const through = r.rank < pass;
-        const yEnd = through ? filmBottom - depthIn : filmTop - (filmTop - filmBottom) * 0.5;
+        const yEnd = through ? filmBottom - depth : filmTop - (filmTop - filmBottom) * 0.5;
         const yHead = top + (yEnd - top) * u, yTail = Math.min(top, yHead + len);
         const fade = through ? 1 : Math.max(0, Math.min(1, (yHead - filmBottom) / Math.max(1, filmTop - filmBottom) * 1.6));
         d.position.set(x0 + r.x * xs, (yHead + yTail) / 2, r.z);
         d.scale.set(1, Math.max(0.01, yTail - yHead), 1);
         d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
-        mesh.setColorAt?.(i, new THREE.Color(fade, fade, fade));
+        const k = through ? passGain : fade * stopGain;
+        mesh.setColorAt?.(i, new THREE.Color(k, k, k));
         // a passing ray leaves a small glow in the skin while it is there
         const s = through && yHead < filmBottom ? 3.2 * Math.min(1, (filmBottom - yHead) / 4) : 0;   // what gets in is the subject: a clear glow
-        d.position.set(x0 + r.x * xs, Math.max(yHead, filmBottom - depthIn), r.z); d.scale.setScalar(Math.max(1e-4, s)); d.updateMatrix(); hits.setMatrixAt(i, d.matrix);
-        if (through && s > 0.5 && !anchor) anchor = [x0 + r.x * xs, filmBottom - depthIn * 0.5, r.z];
+        d.position.set(x0 + r.x * xs, Math.max(yHead, filmBottom - depth), r.z); d.scale.setScalar(Math.max(1e-4, s)); d.updateMatrix(); hits.setMatrixAt(i, d.matrix);
+        if (through && s > 0.5 && !anchor) anchor = [x0 + r.x * xs, filmBottom - depth * 0.5, r.z];
       });
       mesh.instanceMatrix.needsUpdate = true; hits.instanceMatrix.needsUpdate = true;
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
