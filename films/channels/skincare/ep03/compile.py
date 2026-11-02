@@ -107,15 +107,15 @@ BADGES = [
     {"id": "b-studies", "text": "Kareklas 2013 · Haseleu 2014", "t0": CUE["found"] - 0.4, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-palm", "text": "Egawa 2007", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
 ]
-SPINE = [0.27, 0.215]
+SPINE = [0.30, 0.215]
 COUNTERS = [   # one readout through the film (WRITING.md, The picture, rule 2)
-    {"id": "c-q", "label": "wet fingertip vs forearm", "fmt": "text", "text": "why?", "t0": B["normal"]["t0"] + 0.1, "t1": A("vo03:Almost", -0.55), "at": SPINE},
-    {"id": "c-1930", "label": "a finger with a cut nerve", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.45, "at": SPINE},
-    {"id": "c-nerve", "label": "the wrinkle is made by", "fmt": "text", "text": "nerves", "t0": B["why"]["t0"] + 0.4, "t1": CUE["reflex"] - 0.4, "at": SPINE},
+    {"id": "c-q", "label": "fingertip vs forearm", "fmt": "text", "text": "why?", "t0": B["normal"]["t0"] + 0.1, "t1": A("vo03:Almost", -0.55), "at": SPINE},
+    {"id": "c-1930", "label": "a finger, its nerve cut", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.45, "at": SPINE},
+    {"id": "c-nerve", "label": "wrinkled by", "fmt": "text", "text": "nerves", "t0": B["why"]["t0"] + 0.4, "t1": CUE["reflex"] - 0.4, "at": SPINE},
     {"id": "c-reflex", "label": "a nerve reflex", "fmt": "text", "text": "reflex", "t0": CUE["reflex"], "t1": CUE["found"] - 0.4, "at": SPINE},
     {"id": "c-2013", "label": "a better wet grip?", "fmt": "text", "text": "2013 ✓", "t0": CUE["found"], "t1": A("vo05:next") - 0.4, "at": SPINE},
     {"id": "c-2014", "label": "a better wet grip?", "fmt": "text", "text": "2014 ✗", "t0": A("vo05:next"), "t1": B["toscale"]["t0"] + 0.4, "at": SPINE},
-    {"id": "c-final", "label": "the wrinkle is made by", "fmt": "text", "text": "nerves", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.5, "at": SPINE},
+    {"id": "c-final", "label": "wrinkled by", "fmt": "text", "text": "nerves", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.5, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 

@@ -683,37 +683,37 @@
  "counters": [
   {
    "id": "c-q",
-   "label": "wet fingertip vs forearm",
+   "label": "fingertip vs forearm",
    "fmt": "text",
    "text": "why?",
    "t0": 5.2333,
    "t1": 13.766666666666667,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
   {
    "id": "c-1930",
-   "label": "a finger with a cut nerve",
+   "label": "a finger, its nerve cut",
    "fmt": "text",
    "text": "1930s",
    "t0": 14.333333333333334,
    "t1": 22.883300000000002,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
   {
    "id": "c-nerve",
-   "label": "the wrinkle is made by",
+   "label": "wrinkled by",
    "fmt": "text",
    "text": "nerves",
    "t0": 23.7333,
    "t1": 36.8333,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
@@ -725,7 +725,7 @@
    "t0": 37.233333333333334,
    "t1": 43.9667,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
@@ -737,7 +737,7 @@
    "t0": 44.36666666666667,
    "t1": 45.6,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
@@ -749,19 +749,19 @@
    "t0": 46.0,
    "t1": 48.466699999999996,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   },
   {
    "id": "c-final",
-   "label": "the wrinkle is made by",
+   "label": "wrinkled by",
    "fmt": "text",
    "text": "nerves",
    "t0": 57.6,
    "t1": 63.53333333333333,
    "at": [
-    0.27,
+    0.3,
     0.215
    ]
   }
