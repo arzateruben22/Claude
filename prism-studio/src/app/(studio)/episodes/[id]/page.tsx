@@ -10,6 +10,7 @@ import { addNote, moveEpisode, resolveNote, toggleSource } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { Placements } from "@/components/Placements";
 import { ReviewSlide } from "@/components/ReviewSlide";
+import { ReelNav } from "@/components/ReelNav";
 import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -38,6 +39,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   const step = (o: (typeof order)[number] | undefined) => (at >= 0 && o ? { href: `/episodes/${o.id}`, label: o.title } : null);
   return (
     <div style={topicStyle(channel)}>
+      <div id="player">
       <ReviewSlide full={f} tz={s.timezone} single sources={false} prev={step(order[at - 1])} next={step(order[at + 1])}
         position={at >= 0 ? { n: at + 1, of: order.length } : undefined}
         back={{ href: `/channels/${channel.slug}?tab=episodes`, label: channel.name.replace(/ \(name TBD\)$/, "") }}
@@ -54,6 +56,8 @@ export default async function Episode({ params }: { params: Promise<{ id: string
             <div className="bar" aria-label={`Production step ${pipeStep + 1} of ${PIPELINE.length}`} style={{ width: "100%", maxWidth: 520 }}><i style={{ width: `${((pipeStep + 1) / PIPELINE.length) * 100}%` }} /></div>
           ) : null}
         </>} />
+        <ReelNav id="player" />
+      </div>
 
       <div className="grid2 section">
         <section className="stack">

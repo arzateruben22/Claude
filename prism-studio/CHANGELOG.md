@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 — 2026-11-02 (layout round 2)
+- Review, phone-first: on a phone, Review is a full-screen vertical player, one episode per screen. Swipe sideways
+  (scroll snap) or tap ‹ ›; the top line gives the channel, number, title and "3 / 18". A thumb bar at the bottom holds
+  the platform switches (YouTube, TikTok, Instagram; a green dot marks an approved account), Hold and "Approve ·
+  <platform>". Below the video: the chosen platform's title, caption and hashtags (once), and the numbered sources.
+  Hold opens a short "What needs fixing?" box and adds a hold note (the episode is blocked, as before). Desktop keeps
+  the cards: the video beside the same switches, buttons and text. The switches are radio inputs and the panels follow
+  them in CSS, so all of it works without JavaScript and in the static preview; with JavaScript, a video stops when
+  its episode leaves the screen, the address follows the episode (#ep-…), ← → step, and Escape closes Hold.
+- The episode page opens with the same player (full screen on a phone); Previous/Next step through the review queue.
+  The QA line, Move, Accounts and text (editing), Numbers, Sources, Script and Notes follow below.
+- Fonts for Outer Layer (Newsreader, Red Hat Text) and Back of the Envelope (Figtree), as woff2 with their OFL
+  licences (public/fonts/SOURCES.md).
+
 ## 0.6.4 — 2026-10-26 (final check)
 - Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)
   holds back paid generation for every channel, after the "budget used" checks, and the reason names each entry and
