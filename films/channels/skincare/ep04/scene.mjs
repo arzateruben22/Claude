@@ -77,6 +77,9 @@ const HIDE = { gain: 0 };
 // the DNA ladder (its own place) and the message
 const dna = createDNA({ x: BIO.dna_x, seed: 4, bp: 40, fuseAt: 19 });   // long enough to run past both frame edges
 scene.add(dna.group);
+// a soft halo on the two bases for the first moments of each DNA shot: the point the match cut lands on
+const halo = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: true }));
+halo.renderOrder = 6; scene.add(halo);
 const sig = createSignal({ from: [HC[0], HC[1] - 2, HC[2] + 2], to: mel.at.body(), n: 16 });
 scene.add(sig.mesh);
 
@@ -226,7 +229,10 @@ window.seek = function (t) {
     dna.set({ fuse, glow, uv: UVC, spin: 0.12 * t, dim: shot === "dna" ? 0.6 * fadeIn(t, CUE.fuse, 0.5) : 0.6 });
     raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();
-  }
+    const h0 = shot === "dna" ? SH.dna : SH.dna2, ho = 1 - E.in2(seg(t, h0 + 0.3, h0 + 1.0));
+    halo.position.set(...A.dimer); halo.scale.setScalar(9 + 5 * (1 - ho));
+    halo.material.color.setRGB(...UVC.map((v) => v * 1.8)); halo.material.opacity = 0.55 * ho; halo.visible = ho > 0.01;
+  } else halo.visible = false;
   if (!A.pair_c) A.pair_c = [PL.group.position.x, -50, 23];
   if (!isDNA) A.dimer = A.dimer || dna.at.fused();
 
