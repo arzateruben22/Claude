@@ -120,7 +120,7 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["thickest"] - 0.2, "paper": A("vo06:sheets"),
+GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": B["toscale"]["t0"] + 1.0, "paper": A("vo06:sheets"),
          "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": PALM_UM, "paper_um": PAPER_UM}
 
 TITLE = {"series": "Outer Layer · No. 003", "title": "Bath *fingers*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:wrinkle?", 0.35)}
@@ -129,10 +129,10 @@ END = {"title": "Next layer: is a tan a *shield*?", "follow": "Outer Layer · No
 POSTER = A("vo04:buckles.", 0.8)
 
 glue(f, {"vo01": ["wet fingers", "the same bath."], "vo02": ["like a sponge.", "grew up with,"],
-         "vo03": ["Almost a century ago,", "noticed something odd:", "had been cut", "in the bath."],
-         "vo04": ["your nerves.", "tiny vessels", "each fingertip,", "a little,", "on top"],
-         "vo05": ["a reflex,", "test a nerve.", "a wet grip,", "found none."],
-         "vo06": ["hairless skin", "hands and feet,", "the dead layer", "two sheets of paper."],
+         "vo03": ["Almost a century ago,", "doctors noticed", "something odd:", "had been cut", "in the bath."],
+         "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad", "a little,", "the skin", "on top"],
+         "vo05": ["a reflex,", "one doctors use", "test a nerve.", "a wet grip,", "found none."],
+         "vo06": ["hairless skin", "of hands and feet,", "the dead layer", "runs thickest,", "two sheets of paper."],
          "vo07": ["they're soaked.", "decide to."], "vo08": ["your skin?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
