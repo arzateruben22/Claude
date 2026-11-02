@@ -63,7 +63,7 @@ export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 9
         dummy.position.set(f.x, 30 * k, f.z);
         dummy.rotation.set(0, f.yaw, (70 - 52 * k) * D2R);
         const w = (hairW / 2) * (1 + 2.2 * thick);
-        dummy.scale.set(w, f.len * (1 + 0.3 * thick), w);   // fine hairs: thin and pale; a chimp's: thick and dark
+        dummy.scale.set(w, f.len * (1 - 0.35 * thick), w);   // the chimp's hairs shorter, so they stay above the captions   // fine hairs: thin and pale; a chimp's: thick and dark
         dummy.updateMatrix(); hairs.setMatrixAt(i, dummy.matrix);
       });
       hairs.instanceMatrix.needsUpdate = true;
@@ -159,7 +159,7 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       hairOut.position.y = bump(fx);
       hairOut.rotation.z = -(62 - 46 * pull) * D2R;                                // lying downhill → near upright
       // pulses down the nerve: up from the deep end to the muscle and along the branch to the stem cells
-      pulseMat.color.setRGB(...glow.map((v) => v * 0.9)); pulseMat.opacity = Math.min(1, fire) * (0.35 + 0.65 * wire) * pulseK;   // dimmer than the stem cells (they are the subject)
+      pulseMat.color.setRGB(...glow.map((v) => v * 0.9)); pulseMat.opacity = Math.min(1, fire) * (0.15 + 0.85 * wire) * pulseK;   // dimmer than the stem cells (they are the subject)
       pulses.forEach((m, i) => {
         const u = ((t * 0.9 + i / pulses.length) % 1 + 1) % 1, onBranch = i % 2 === 1 && wire > 0.3;
         const p = onBranch ? curveBranch.getPoint(u) : curveMain.getPoint(u);
@@ -174,7 +174,12 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       newHair.position.set(base[0], base[1], 2); newHair.scale.set(1, len, 1); newHair.rotation.z = tilt;   // up the follicle, toward the surface newHair.visible = grow > 0.01;
     },
     at: {
-      hair: () => [x + fx + 120, 240, 20],
+      // the outer shaft at 70% of its length (it rotates with pull)
+      hair: () => { const a = hairOut.rotation.z, l = 0.7 * 700; return [x + fx - Math.sin(a) * l, hairOut.position.y + Math.cos(a) * l, 20]; },
+      // the lit stem cells' centroid; the new hair's climbing tip
+      stemC: () => { let sx = 0, sy = 0, n = 0; for (const m of stems) if (m.visible) { sx += m.position.x; sy += m.position.y; n++; } return n ? [x + sx / n, sy / n, 30] : [x + bulge[0], bulge[1], 30]; },
+      newTip: () => { const b = P(L - 20), l = newHair.visible ? newHair.scale.y : 1; return [x + b[0] - Math.sin(tilt) * l, b[1] + Math.cos(tilt) * l, 30]; },
+      insertion: () => [x + bulge[0] + 20, bulge[1] - 20, 30],
       muscle: () => [x + (bulge[0] + anchor[0]) / 2 + 20, (bulge[1] + anchor[1]) / 2, 30],
       nerve: () => [x + nA[0] - 40, (nA[1] + nB[1]) / 2, 20],
       stem: () => [x + bulge[0] + 50, bulge[1], 30],

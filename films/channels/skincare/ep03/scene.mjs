@@ -39,10 +39,10 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 const LAY = { rows: 15, sc: 17, gran: 10, spin: 48, basal: 10, mortarFloor: 0, backing: true };   // no resting sheets; tissue behind the cells
 const S = createSection({ width: 130, depth: 56, ...LAY, seed: 33 });
 scene.add(S.group);
-const V = createVessels({ x: [-62, 62], ys: [-94, -104, -114], z: 28.4, r: 3.4 });   // on the cut face (half out of it), so they are seen
+const V = createVessels({ x: [-62, 62], ys: [-94, -104, -114], z: 28.4, r: 3.4, dz: 0 });   // on the cut face (half out of it), so they are seen
 scene.add(V.group);
 // the two pads in their bath: a fingertip (left) and a forearm patch, later a second fingertip (right)
-const PL = createPad({ width: 70, depth: 46, height: 60, x: -40, seed: 3, period: 13 }), PR = createPad({ width: 70, depth: 46, height: 60, x: 40, seed: 4, period: 13 });
+const PL = createPad({ width: 70, depth: 46, height: 60, x: -40, seed: 3, period: 16 }), PR = createPad({ width: 70, depth: 46, height: 60, x: 40, seed: 4, period: 16 });
 scene.add(PL.mesh, PR.mesh);
 const WL = createWater({ width: 74, depth: 50, top: 30, x: -40 }), WR = createWater({ width: 74, depth: 50, top: 30, x: 40 });
 scene.add(WL.mesh, WR.mesh);
@@ -107,8 +107,12 @@ window.seek = function (t) {
   const fL = nerves ? E.inout2(seg(t, CUE.cut - 0.6, CUE.smooth + 0.6)) : 1;
   const deadTop = toneColor("corneo", tone);
   PL.set({ visible: padsOn, furrows: fL, amp: SK.wrinkle, color: skin, top: deadTop });
-  PR.set({ visible: padsOn && !reflex, furrows: 0, amp: SK.wrinkle, color: skin, top: deadTop });
+  // in the reflex shot the nerve-cut pad (smooth) comes back beside it on "test a nerve", and leaves on "argued"
+  const cutIn = reflex ? Math.min(E.inout2(seg(t, CUE.test - 0.5, CUE.test + 0.4)), 1 - E.inout2(seg(t, CUE.argued - 0.3, CUE.argued + 0.5))) : 1;
+  PR.mesh.position.x = 40 + (reflex ? 60 * (1 - cutIn) : 0);
+  PR.set({ visible: padsOn && cutIn > 0.01, furrows: 0, amp: SK.wrinkle, color: skin, top: deadTop });
   WL.set({ opacity: padsOn ? 0.2 : 0 }); WR.set({ opacity: padsOn && !reflex ? 0.2 : 0 });
+  A.cutpad = [PR.mesh.position.x, 6, 22];
   nL.visible = nR1.visible = nR2.visible = nerves;
   // the wrong idea: a swollen ghost over the fingertip, then it collapses on "wrong"
   const sw = shot === "pads" ? E.inout2(seg(t, CUE.swell[0], CUE.swell[1])) * (1 - E.inout2(seg(t, CUE.wrong - 0.1, CUE.wrong + 0.7))) : 0;
@@ -117,7 +121,7 @@ window.seek = function (t) {
   if (sp) sp.style.textDecoration = t >= CUE.wrong - 0.05 ? "line-through" : "none";
   ghost.scale.set(1 + 0.06 * sw, 1 + 0.25 * sw, 1 + 0.06 * sw); ghost.position.set(-40, -30 + 7.5 * sw, 0);
   // marbles in the grip study
-  const mOp = reflex ? Math.min(fadeIn(t, B0.whoa + 0.3, 0.6), 1 - fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;
+  const mOp = reflex ? Math.min(fadeIn(t, CUE.argued - 0.2, 0.6), 1 - fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;   // the grip study arrives on "argued"
   // they slip across the furrows on "a wet grip" and stop dead on "none"
   const slip = reflex ? E.inout2(seg(t, CUE.grip - 0.5, CUE.none)) : 0;
   marbles.forEach((m, i) => { m.visible = mOp > 0.002; m.position.x = MX[i] + 16 * slip; m.position.y = 4 + 1.2 * Math.sin(Math.min(t, CUE.none) * 1.3 + i) * (1 - slip); m.rotation.z = -slip * 3.2; });
@@ -130,7 +134,7 @@ window.seek = function (t) {
   const sink = inside ? E.inout2(seg(t, CUE.shrink[0], CUE.shrink[1])) : 0;
   const buckle = inside ? E.inout2(seg(t, CUE.buckle[0], CUE.buckle[1])) : 0;
   S.group.position.y = -3 * sink;
-  S.wrinkle(inside ? 3.5 * buckle : 0, 30, 24);   // a gentle buckle of one sheet
+  S.wrinkle(inside ? Math.max(0.06, 3.5 * buckle) : 0, 30, 24);   // inside, the dead layer is always the one sheet (overlapping plates z-fought)   // a gentle buckle of one sheet
   const vesselsWin = inside ? Math.min(fadeIn(t, B0.why, 0.6), 1 - fadeIn(t, CUE.buckle[0] - 0.3, 0.6)) : 0;
   S.set({ tone, dimDead: 0.6 * vesselsWin, dimLiving: 0.35 + 0.3 * vesselsWin, glowDead: inside ? 0.6 * buckle : 0 });
   A.vessel = [-20, -94, 30];
