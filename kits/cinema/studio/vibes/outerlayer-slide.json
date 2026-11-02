@@ -219,6 +219,15 @@
       "notes": [
         "C6"
       ]
+    },
+    "zap": {
+      "voice": "zap",
+      "gain": -24
+    },
+    "scale.jump": {
+      "voice": "swell",
+      "gain": -19,
+      "note": "F2"
     }
   },
   "master": {
