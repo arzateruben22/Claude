@@ -375,30 +375,30 @@
    {
     "t": 51.6,
     "target": [
-     10,
-     -60,
+     0,
+     -56,
      0
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.56,
-    "fy": 0.3,
-    "dist": 620,
+    "fx": 0.64,
+    "fy": 0.34,
+    "dist": 780,
     "az": 3,
     "ease": "inout2"
    },
    {
     "t": 58.3333,
     "target": [
-     10,
-     -60,
+     0,
+     -56,
      0
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.56,
-    "fy": 0.3,
-    "dist": 600,
+    "fx": 0.64,
+    "fy": 0.34,
+    "dist": 760,
     "az": 0,
     "ease": "sine"
    }
@@ -407,15 +407,15 @@
    {
     "t": 58.3333,
     "target": [
-     10,
-     -60,
+     0,
+     -56,
      0
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.56,
-    "fy": 0.3,
-    "dist": 600,
+    "fx": 0.64,
+    "fy": 0.34,
+    "dist": 760,
     "az": 0
    },
    {
@@ -511,30 +511,6 @@
    "t1": 10.4,
    "shot": "trio",
    "side": 1
-  },
-  {
-   "id": "l-light",
-   "text": "lighter",
-   "kind": "layer",
-   "anchor": "low0",
-   "t0": 13.1,
-   "t1": 16.6667,
-   "shot": "trio",
-   "side": -1,
-   "v": "below",
-   "fixed": true
-  },
-  {
-   "id": "l-deep",
-   "text": "deeper",
-   "kind": "layer",
-   "anchor": "low2",
-   "t0": 13.1,
-   "t1": 16.6667,
-   "shot": "trio",
-   "side": 1,
-   "v": "below",
-   "fixed": true
   },
   {
    "id": "l-g-light",
@@ -695,7 +671,7 @@
   },
   {
    "id": "c-end",
-   "label": "per mm², average, every colour",
+   "label": "per mm², average",
    "fmt": "text",
    "text": "≈ 955",
    "t0": 59.533300000000004,

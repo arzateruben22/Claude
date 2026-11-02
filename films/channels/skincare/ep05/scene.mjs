@@ -68,7 +68,7 @@ scene.add(folate, vitd);
 // the bracket for the to-scale beat: two ink ticks and a bar between the middle section's two pigment cells
 const ink = new THREE.MeshBasicMaterial({ color: 0x13252c, transparent: true, opacity: 0, toneMapped: false, depthTest: false });
 const bracket = new THREE.Group();
-const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 0.7), ink), tick = [0, 1].map(() => new THREE.Mesh(new THREE.BoxGeometry(0.7, 6, 0.7), ink));
+const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 2.2, 1), ink), tick = [0, 1].map(() => new THREE.Mesh(new THREE.BoxGeometry(2.2, 11, 1), ink));
 bracket.add(bar, ...tick); bracket.renderOrder = 10; bar.renderOrder = tick[0].renderOrder = tick[1].renderOrder = 10;
 scene.add(bracket);
 const yBr = SEC[1].S.junction(0) + BIO.basal_um + 8;
@@ -103,7 +103,7 @@ for (const L of FILM.labels) {
 // the tally: under each section, a count that lands on the same number as the pigment cells light in step
 const tally = BIO.sec_x.map(() => {
   const el = document.createElement("div");
-  Object.assign(el.style, { position: "absolute", zIndex: "3", font: "500 4.4vmin/1 var(--font-mono)", color: "var(--text)", background: "var(--hud-plate)",
+  Object.assign(el.style, { position: "absolute", zIndex: "3", font: "500 3.4vmin/1 var(--font-mono)", color: "var(--text)", background: "var(--hud-plate)",
     padding: "1vmin 2.2vmin", borderRadius: "999px", boxShadow: "var(--hud-shadow)", opacity: "0", transform: "translate(-50%, 0)", fontFeatureSettings: '"tnum" 1' });
   document.getElementById("hud").appendChild(el); return el;
 });
@@ -157,8 +157,8 @@ window.seek = function (t) {
     const n = shot === "trio" ? CT.filter((c) => t >= c).length : 0;
     const p = project(camera, [s.x, -150, 23], W, H);
     const el = tally[i];
-    el.textContent = `${n} here`;
-    el.style.left = `${p.x.toFixed(1)}px`; el.style.top = `${Math.min(p.y, 0.56 * H).toFixed(1)}px`;
+    el.textContent = `${["lighter", "medium", "deeper"][i]}: ${n}`;
+    el.style.left = `${p.x.toFixed(1)}px`; el.style.top = `${Math.min(p.y, 0.5 * H).toFixed(1)}px`;
     el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
   });
   A.low0 = [SEC[0].x - 12, -120, 23]; A.low2 = [SEC[2].x + 12, -120, 23];
@@ -191,7 +191,7 @@ window.seek = function (t) {
   camera.updateMatrixWorld();
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (shot === "gauge" || shot === "skies" || shot === "close" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
+  const gOp = (shot === "gauge" || shot === "close" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
   const sc = BIO.sc_um + (G.sc_um - BIO.sc_um) * Math.min(1, lift * 4);
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });

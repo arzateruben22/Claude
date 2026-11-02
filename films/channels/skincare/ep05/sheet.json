@@ -86,16 +86,6 @@
    "tag": "c-unit"
   },
   {
-   "t": 13.1,
-   "kind": "label",
-   "tag": "l-light"
-  },
-  {
-   "t": 13.1,
-   "kind": "label",
-   "tag": "l-deep"
-  },
-  {
    "t": 13.4,
    "kind": "badge",
    "tag": "b-site"
