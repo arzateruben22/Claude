@@ -119,7 +119,7 @@ BADGES = [
 ]
 SPINE = [0.6, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
 COUNTERS = [
-    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": 1.2, "t1": CUE["dozen"] - 0.4, "at": SPINE},
+    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] - 0.3, "t1": CUE["dozen"] - 0.4, "at": SPINE},
     {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": SPINE},
     {"id": "c-same", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": CUE["same"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["colour"], "t1": B["toscale"]["t0"], "at": SPINE},
