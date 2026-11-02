@@ -31,10 +31,10 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 30, H
   g.add(hm);
   const dm = new THREE.Object3D();
   const surf = (X, Y, f) => {
-    const ridge = 0.55 * Math.exp(-((Y - 0.9) ** 2) / 0.9) * (1 - Math.exp(-(X * X) / 2.2));          // the two brow ridges
+    const ridge = 0.75 * Math.exp(-((Y - 0.9) ** 2) / 0.9) * (1 - Math.exp(-(X * X) / 2.2));          // the two brow ridges
     const nose = 0.9 * Math.exp(-(X * X) / 0.9) * (1 / (1 + Math.exp((Y + 1.6) * 2.2)));            // the bridge rising below
-    const sockets = -0.8 * Math.exp(-(((Math.abs(X) - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));  // the eye hollows, out of frame's foot
-    const lines = -0.32 * f * [-0.42, 0.42].reduce((a, lx) => a + Math.exp(-((X - lx) ** 2) / 0.012) * Math.exp(-((Y - 0.35) ** 2) / 1.1), 0);   // the "11"
+    const sockets = -0.5 * Math.exp(-(((Math.abs(X) - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));  // the eye hollows, out of frame's foot
+    const lines = -0.3 * f * [-0.42, 0.42].reduce((a, lx) => a + Math.exp(-((X - lx) ** 2) / 0.01) * Math.exp(-((Y - 0.75) ** 2) / 0.5), 0);   // between the brows, not down the nose   // the "11"
     const draw = -0.12 * f * Math.exp(-(X * X) / 1.6) * Math.exp(-((Y - 0.6) ** 2) / 1.5);         // the glabella bunches
     return ridge + nose + sockets + lines + draw;   // smooth: a sine grain at this mesh density reads as cloth
   };
@@ -52,6 +52,6 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 30, H
       });
       hm.instanceMatrix.needsUpdate = true;
     },
-    at: { lines: () => [x, 0.35, surf(0, 0.35, 1)] },
+    at: { lines: () => [x, 0.75, surf(0, 0.75, 1)] },
   };
 };

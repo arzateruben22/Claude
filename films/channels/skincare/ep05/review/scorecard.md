@@ -111,3 +111,28 @@ Rebuilt structurally from a one-line-per-sentence storyboard (`storyboard.md`), 
 
 **Script**
 - **"Then the town was watched" → "And the town was watched":** re-voiced and lint clean, so the whoa no longer restarts.
+
+## Look 2 rebuild (2 Nov)
+
+Rebuilt in the approved look (looktest2; `../s1v2/BUILD-LOOK2.md`) on the facts-pass-2 script and voice. Coordinator's
+ruling: the protected/bare skin macro with the UV scan, as in looktest2, and no hands.
+
+**Heroes**
+- **The sunscreen macro**: one patch of medium-tone skin, the left half under sunscreen and the right bare. It carries the hook, the crane along the seam for Nambour, and the bare half with sunscreen patches coming and going ("whenever they pleased"). In "why", the cyan scan on "But" turns the screened half dark and the bare half lilac with hidden freckles ("illustration · not trial data"). It returns for to-scale (a satin film, grazing, with the gauge) and for the loop (a second scan on "skin").
+- **The silicone cast**: grey, no hairs, raking light, with the lines deepening. Badge "model · 4.5 years, compressed", spine "ageing trial 4.5 years" and the odds plate.
+- **The micrograph cut face**: the stained section with dust in a shaft and a rack on "Melanoma". The tally is 11 against 22: "small numbers · not quite significant · Green et al., 2011". Badge "micrograph · healthy stained skin": the section shows a benign naevus and is never presented as a melanoma.
+
+**Retired**
+- `../set/hands05.js` and `../set/town05.js` are retired; the files are kept. The town did not reach the hero standard (a model map of houses), and the voice no longer needs it.
+
+**Checks**
+- **Lint:** 0 errors, 0 warnings.
+- **Labels:** at most two at once. The compile asserts that no two sounds land within 0.6 s.
+- **Stills:** the render's "!" safe-box lines (the plates) are fixed.
+- **Sync and mix:** see the coordinator's draft log after the Skin Sense rename.
+
+**Open**
+- **Daylight macro:** it reads warmer and grainier than looktest2's still at draft size. Judge it at final.
+- **The "pleased" shot:** it is the quietest; its sunscreen patches are subtle.
+- **The cast:** it reads as relief more than as fine lines.
+- **To-scale:** the hero is the macro plus the gauge card, not a 3D paper edge.

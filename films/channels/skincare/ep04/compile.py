@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 004, "The deadliest dose", in the approved look (look test 2, 2 Nov): script + voice
+"""Compile Skin Sense No. 004 (the channel formerly Outer Layer), "The deadliest dose", in the approved look (look test 2, 2 Nov): script + voice
 timings + this direction → film.json (the scene's clock: shots, cues, labels, notes, plates, gauge, captions, title
 and end card) and sheet.json (the studio's cue sheet). Nothing here is a hand-typed time: every moment hangs on a
 beat or a spoken word (kits/cinema/script/timeline.py anchors), and every number on screen comes from claims.json.
@@ -23,7 +23,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857                   # bible §5: F major at 64.2857 BPM (a 16th = 7 frames)
-ID = "outerlayer-004"
+ID = "skin-sense-004"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -86,7 +86,7 @@ BROW = {"frown": [CUE["frown"] - 0.1, CUE["frown"] + 0.9], "fold": [CUE["folds"]
 SCAN = {"sweep": [CUE["twenty"] - 0.05, CUE["twenty"] + 0.75]}   # the signature UV switch, on the key fact
 
 # ── the overlay: at most two labels at once; honesty notes small, in a corner ──
-TITLE = {"series": "Outer Layer · No. 004", "title": "The deadliest *dose*", "t1": A("vo01:theory,", -0.2), "sig": A("vo01:frown?", 0.35)}
+TITLE = {"series": "Skin Sense · No. 004", "title": "The deadliest *dose*", "t1": A("vo01:theory,", -0.2), "sig": A("vo01:frown?", 0.35)}
 LABELS = [
     {"id": "l-nerve", "text": "nerve ending", "kind": "cell", "anchor": "bulb", "t0": CUE["nerve"] + 0.4, "t1": CUE["muscle"], "shot": "nmj", "side": -1, "v": "above"},
     {"id": "l-ach", "text": "acetylcholine", "kind": "water", "anchor": "gap", "t0": CUE["messenger"] + 0.15, "t1": CUE["skin"], "shot": "nmj", "side": 1, "v": "below"},
@@ -132,7 +132,7 @@ for row in BADGES + LABELS:
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 1.0], "sc": CUE["gap"], "paper": CUE["paper"] - 0.6,
          "back": [B["takeaway"]["t0"] + 0.1, B["takeaway"]["t0"] + 0.8], "sc_um": GAP_UM, "paper_um": PAPER_UM, "bar": "gap",
          "sc_text": "≈ 50 nm"}
-END = {"title": "Next layer: same sun, one experiment. Which hand *aged*?", "follow": "Outer Layer · No. 005",
+END = {"title": "Next: same sun, one experiment. Which hand *aged*?", "follow": "Skin Sense · No. 005",
        "next": "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."}
 POSTER = A("vo05:kill", 0.8)
 

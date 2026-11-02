@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 004, "The deadliest dose" (films/channels/skincare/ep04), in the approved look (look test 2, 2 Nov):
+// Skin Sense No. 004, "The deadliest dose" (films/channels/skincare/ep04), in the approved look (look test 2, 2 Nov):
 // four hero shots, one subject filling the frame and one slow move each; studio light (../set/studio.js), real
 // reference maps (../set/ref), particles, dust in a shaft, haze between depth layers, shallow depth of field.
 //   brow  the frown as a skin macro: ../set/brow04.js restyled with skinMaterial (light tone, bible §1); the hook,
@@ -67,7 +67,7 @@ BR.group.scale.z = 1.7;   // the relief deepened for the macro (the ridges, the 
 scene.add(BR.group);
 const shaftBrow = createShaft({ from: [-12, 18, 10], to: [3, -4, 2], radius: 2.4, color: "#FFE6D2" }); scene.add(shaftBrow.group);
 const dustBrow = particles(220, [[-7, -5, 2.5], [7, 6, 14]], 0.035, "#FFF1F8", 0.55);
-const doseGlow = glowSprite("#5FF2E8", 1.5); doseGlow.position.set(0, 0.45, 0.9);      // the dose under UV: one faint cyan glow (an illustration)
+const doseGlow = glowSprite("#5FF2E8", 1.5); doseGlow.position.set(0, 0.75, 0.9);      // the dose under UV: one faint cyan glow (an illustration)
 const UVSKIN = new THREE.Color(0.62, 0.48, 1.0), UVHAIR = new THREE.Color(0.06, 0.03, 0.14), HAIR = hairMat.color.clone();
 
 // ── the junction at cell scale ──
@@ -173,18 +173,18 @@ window.seek = function (t) {
   if (isB) {
     const u = span(t, shot);
     let frown = 1, pos, tgt, fp;
-    if (shot === "brow") { frown = 0.15 + 0.85 * u01(t, BW.frown); pos = mix3([4.8, -3.2, 24], [1.7, -1.0, 7.2], u); tgt = mix3([0, 0.9, 0], [0, 0.45, 0], u); }   // one slow push, low and from the right, into the "11"
-    else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.4, -1.2, 6.4], [1.6, -0.7, 5.2], u); tgt = [0, 0.45, 0]; }   // the crease setting, close
+    if (shot === "brow") { frown = 0.15 + 0.85 * u01(t, BW.frown); pos = mix3([5.6, -3.6, 17], [1.9, -1.0, 6.6], u); tgt = mix3([0, 1.0, 0], [0, 0.7, 0], u); }   // one slow push, low and from the right, into the "11"
+    else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.4, -0.9, 6.0], [1.6, -0.4, 4.9], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
     else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0, -1.2, 15], [0, -2.0, 23], u); tgt = mix3([0, 0.2, 0], [0, 0.9, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
     else if (shot === "dose") { frown = 0.9; pos = mix3([0, 0.2, 23], [0, -0.1, 17], u); tgt = mix3([0, -2.1, 0], [0, -1.6, 0], u); uv = uvNow(t, shot); }   // the glabella high in the frame, the plate under it
-    else { frown = 0.15 + 0.85 * u01(t, BW.close); pos = mix3([4.8, -3.2, 24], [5.2, -3.4, 26], u); tgt = [0, 0.9, 0]; }   // the close: frame 0's composition (the loop)
+    else { frown = 0.15 + 0.85 * u01(t, BW.close); pos = mix3([5.6, -3.6, 17], [6.0, -3.8, 18.5], u); tgt = [0, 1.0, 0]; }   // the close: frame 0's composition (the loop)
     BR.set({ frown });
     look(pos, tgt);
-    studio.aim([0, 0.4, 0], [-0.85, 0.42, 0.42], [0.75, 0.3, 0.35]); studio.set({ key: 2.4 * (1 - 0.5 * uv), rim: 0.9, fill: 0.45, env: 0.5, warm: 0.5 * (1 - uv) });   // a raking key from the left: the lines read as grooves
+    studio.aim([0, 0.7, 0], [-0.85, 0.42, 0.42], [0.9, 0.15, 0.3]); studio.set({ key: 2.8 * (1 - 0.5 * uv), rim: 1.6, fill: 0.22, env: 0.35, warm: 0.6 * (1 - uv) });   // a raking key from the left: the lines read as grooves
     browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.05 * uv, 0.035 * uv, 0.14 * uv); hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
     browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.86 - 0.2 * uv, 0.78 + 0.2 * uv);
     doseGlow.material.opacity = 0.75 * uv * (0.85 + 0.15 * Math.sin(t * 3));
-    focusPt = [0, 0.45, 0]; fstop = shot === "brow2" ? 0.26 : 0.2;
+    focusPt = [0, 0.75, 0]; fstop = shot === "brow2" ? 0.26 : 0.2;
   } else doseGlow.material.opacity = 0;
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";
 

@@ -1,4 +1,4 @@
-# Outer Layer No. 004: "The deadliest dose" (draft; dermatologist sign-off before posting)
+# Skin Sense No. 004: "The deadliest dose" (draft; dermatologist sign-off before posting)
 
 About 75 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, topic
 "What Botox does" (mechanism only; the voice says "botulinum toxin", never the brand).
@@ -59,7 +59,7 @@ vo: Poison in a frown: one message silenced, and months later the nerve grows sp
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.9 s)
 vo: Next: two neighbours under the same sun, one experiment. {-} Which hand *aged*? {-}
-end card: "Next layer: same sun, one experiment. Which hand aged?" · "Outer Layer · No. 005" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
+end card: "Next: same sun, one experiment. Which hand aged?" · "Skin Sense · No. 005" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: pmc.ncbi.nlm.nih.gov does

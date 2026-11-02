@@ -1,5 +1,5 @@
 {
- "id": "outerlayer-004",
+ "id": "skin-sense-004",
  "fps": 30,
  "bpm": 64.2857,
  "dur": 74.6667,
@@ -436,15 +436,15 @@
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 004",
+  "series": "Skin Sense · No. 004",
   "title": "The deadliest *dose*",
   "t1": 2.1,
   "sig": 1.4333333333333333
  },
  "endCard": 67.73333333333333,
  "end": {
-  "title": "Next layer: same sun, one experiment. Which hand *aged*?",
-  "follow": "Outer Layer · No. 005",
+  "title": "Next: same sun, one experiment. Which hand *aged*?",
+  "follow": "Skin Sense · No. 005",
   "next": "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."
  },
  "captions": [
