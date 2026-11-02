@@ -1,0 +1,1814 @@
+{
+ "id": "outerlayer-004",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 73.7333,
+ "poster": 43.63333333333333,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 5.1333,
+   "name": "section"
+  },
+  {
+   "at": 11.5,
+   "name": "dna"
+  },
+  {
+   "at": 16.3333,
+   "name": "cell"
+  },
+  {
+   "at": 26.1333,
+   "name": "pair"
+  },
+  {
+   "at": 34.0,
+   "name": "dna2"
+  },
+  {
+   "at": 38.7333,
+   "name": "tan"
+  },
+  {
+   "at": 44.333333333333336,
+   "name": "field"
+  },
+  {
+   "at": 52.2667,
+   "name": "gauge"
+  },
+  {
+   "at": 60.6667,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.1333,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.1333,
+   "t1": 16.3333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.3333,
+   "t1": 26.1333,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.1333,
+   "t1": 38.7333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 38.7333,
+   "t1": 52.2667,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.2667,
+   "t1": 60.6667,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.6667,
+   "t1": 67.2,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 73.7333,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": {
+  "hook": 0.45,
+  "section": 0.45,
+  "dna": 0.45,
+  "cell": 0.85,
+  "pair": 0.5,
+  "dna2": 0.85,
+  "tan": 0.85,
+  "field": 0.12,
+  "gauge": 0.12,
+  "close": 0.45
+ },
+ "bio": {
+  "sc_um": 17.0,
+  "rows": 15,
+  "gran_um": 10.0,
+  "spin_um": 48.0,
+  "basal_um": 10.0,
+  "paper_um": 100.0,
+  "nuc_um": 8.6,
+  "pass": 0.2857142857142857,
+  "mel_x": 6.0,
+  "hcell": [
+   0,
+   -40,
+   30
+  ],
+  "dna_x": 3000.0
+ },
+ "clk": {
+  "tan": {
+   "keys": [
+    {
+     "t": 38.96666666666667,
+     "rate": 60000.0
+    },
+    {
+     "t": 43.2867,
+     "rate": 0.0,
+     "badge": null
+    }
+   ],
+   "anchor": [
+    38.96666666666667,
+    0.0
+   ]
+  }
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 640,
+    "az": -18
+   },
+   {
+    "t": 5.1333,
+    "target": [
+     0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 580,
+    "az": -14,
+    "ease": "sine"
+   }
+  ],
+  "section": [
+   {
+    "t": 5.1333,
+    "target": [
+     0,
+     -36,
+     0
+    ],
+    "el": 18,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 560,
+    "az": -14
+   },
+   {
+    "t": 9.166666666666666,
+    "target": [
+     0,
+     -36,
+     10
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 300,
+    "az": -8,
+    "ease": "inout2"
+   },
+   {
+    "t": 11.5,
+    "target": [
+     0,
+     -40,
+     26
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 120,
+    "az": -5,
+    "ease": "in2"
+   }
+  ],
+  "dna": [
+   {
+    "t": 11.5,
+    "target": [
+     3000.0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 330,
+    "az": 18
+   },
+   {
+    "t": 13.866666666666667,
+    "target": [
+     3000.0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 210,
+    "az": 14,
+    "ease": "out2"
+   },
+   {
+    "t": 16.3333,
+    "target": [
+     3000.0,
+     0,
+     0
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 170,
+    "az": 11,
+    "ease": "sine"
+   }
+  ],
+  "cell": [
+   {
+    "t": 16.3333,
+    "target": [
+     0,
+     -40,
+     26
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 110,
+    "az": -4
+   },
+   {
+    "t": 17.7,
+    "target": [
+     6.0,
+     -58,
+     10
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 420,
+    "az": -2,
+    "ease": "inout2"
+   },
+   {
+    "t": 24.566666666666666,
+    "target": [
+     6.0,
+     -66,
+     14
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 330,
+    "az": 1,
+    "ease": "inout2"
+   },
+   {
+    "t": 26.1333,
+    "target": [
+     6.0,
+     -66,
+     14
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 310,
+    "az": 2,
+    "ease": "sine"
+   }
+  ],
+  "pair": [
+   {
+    "t": 26.1333,
+    "target": [
+     0,
+     -44,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 720,
+    "az": 0
+   },
+   {
+    "t": 29.633333333333333,
+    "target": [
+     0,
+     -50,
+     0
+    ],
+    "el": 11,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 640,
+    "az": 2,
+    "ease": "inout2"
+   },
+   {
+    "t": 34.0,
+    "target": [
+     -8,
+     -52,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 560,
+    "az": 4,
+    "ease": "sine"
+   }
+  ],
+  "dna2": [
+   {
+    "t": 34.0,
+    "target": [
+     3000.0,
+     0,
+     0
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 230,
+    "az": 12
+   },
+   {
+    "t": 38.7333,
+    "target": [
+     3000.0,
+     0,
+     0
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 150,
+    "az": 8,
+    "ease": "sine"
+   }
+  ],
+  "tan": [
+   {
+    "t": 38.7333,
+    "target": [
+     6.0,
+     -62,
+     12
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 330,
+    "az": 2
+   },
+   {
+    "t": 41.8,
+    "target": [
+     6.0,
+     -48,
+     16
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 250,
+    "az": -2,
+    "ease": "inout2"
+   },
+   {
+    "t": 44.333333333333336,
+    "target": [
+     6.0,
+     -46,
+     18
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 220,
+    "az": -4,
+    "ease": "sine"
+   }
+  ],
+  "field": [
+   {
+    "t": 44.333333333333336,
+    "target": [
+     0,
+     -44,
+     10
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 300,
+    "az": -10
+   },
+   {
+    "t": 52.2667,
+    "target": [
+     0,
+     -40,
+     0
+    ],
+    "el": 15,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 520,
+    "az": -6,
+    "ease": "out2"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 52.2667,
+    "target": [
+     0,
+     -30,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 620,
+    "az": -6
+   },
+   {
+    "t": 60.6667,
+    "target": [
+     0,
+     -30,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 580,
+    "az": -8,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 60.6667,
+    "target": [
+     0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 560,
+    "az": -10
+   },
+   {
+    "t": 73.7333,
+    "target": [
+     0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 640,
+    "az": -18,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "uv": 6.433333333333334,
+  "living": 9.166666666666666,
+  "fuse": 13.866666666666667,
+  "dna": 15.133333333333333,
+  "notices": 17.3,
+  "guardian": 18.5,
+  "message": 21.833333333333332,
+  "down": 22.5,
+  "melanin": 24.566666666666666,
+  "mice": 27.3,
+  "lacked": 28.5,
+  "never": 29.633333333333333,
+  "ready": 32.56666666666667,
+  "answering": 34.766666666666666,
+  "days0": 38.96666666666667,
+  "days1": 43.2867,
+  "nucleus": 41.8,
+  "parasol": 43.233333333333334,
+  "spf": 47.833333333333336,
+  "wide": 54.266666666666666,
+  "paper": 58.96666666666667,
+  "remembers": 65.16666666666667,
+  "thin": 2.2666666666666666
+ },
+ "gauge": {
+  "rise": [
+   52.2667,
+   53.1667
+  ],
+  "sc": 54.266666666666666,
+  "paper": 58.96666666666667,
+  "back": [
+   60.1667,
+   61.0667
+  ],
+  "sc_um": 8.6,
+  "paper_um": 100.0,
+  "bar": "parasol"
+ },
+ "labels": [
+  {
+   "id": "l-cap-h",
+   "text": "melanin over each nucleus",
+   "kind": "cell",
+   "anchor": "cap",
+   "t0": 2.2666666666666666,
+   "t1": 4.6833,
+   "shot": "hook",
+   "side": 1
+  },
+  {
+   "id": "l-uv",
+   "text": "ultraviolet",
+   "kind": "uv",
+   "anchor": "ray",
+   "t0": 6.433333333333334,
+   "t1": 8.966666666666667,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-cell",
+   "text": "a living cell",
+   "kind": "cell",
+   "anchor": "hcell",
+   "t0": 9.166666666666666,
+   "t1": 11.05,
+   "shot": "section",
+   "side": 1
+  },
+  {
+   "id": "l-dimer",
+   "text": "two bases, fused",
+   "kind": "uv",
+   "anchor": "dimer",
+   "t0": 13.966666666666667,
+   "t1": 15.8833,
+   "shot": "dna",
+   "side": 1
+  },
+  {
+   "id": "l-p53",
+   "text": "p53 switches on",
+   "kind": "cell",
+   "anchor": "hcell",
+   "t0": 18.5,
+   "t1": 21.633333333333333,
+   "shot": "cell",
+   "side": 1
+  },
+  {
+   "id": "l-msh",
+   "text": "the message: α-MSH",
+   "kind": "water",
+   "anchor": "signal",
+   "t0": 21.833333333333332,
+   "t1": 24.366666666666667,
+   "shot": "cell",
+   "side": 1
+  },
+  {
+   "id": "l-mel",
+   "text": "pigment cell",
+   "kind": "cell",
+   "anchor": "melano",
+   "t0": 22.8,
+   "t1": 25.6833,
+   "shot": "cell",
+   "side": -1
+  },
+  {
+   "id": "l-with",
+   "text": "with p53",
+   "kind": "layer",
+   "anchor": "pair_l",
+   "t0": 27.3,
+   "t1": 33.55,
+   "shot": "pair",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-without",
+   "text": "without p53",
+   "kind": "layer",
+   "anchor": "pair_r",
+   "t0": 28.5,
+   "t1": 33.55,
+   "shot": "pair",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-done",
+   "text": "the damage, already done",
+   "kind": "uv",
+   "anchor": "dimer",
+   "t0": 34.766666666666666,
+   "t1": 38.2833,
+   "shot": "dna2",
+   "side": 1
+  },
+  {
+   "id": "l-cap",
+   "text": "a cap over the nucleus",
+   "kind": "cell",
+   "anchor": "cap",
+   "t0": 41.8,
+   "t1": 43.8833,
+   "shot": "tan",
+   "side": 1
+  },
+  {
+   "id": "l-pass",
+   "text": "UV still getting through",
+   "kind": "uv",
+   "anchor": "pass",
+   "t0": 47.53333333333334,
+   "t1": 51.8167,
+   "shot": "field",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-simp-h",
+   "text": "simplified",
+   "t0": 0.0,
+   "t1": 4.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified",
+   "t0": 5.1333,
+   "t1": 11.05,
+   "slot": "tr"
+  },
+  {
+   "id": "b-model",
+   "text": "model · not to scale",
+   "t0": 11.5,
+   "t1": 15.8833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-lab",
+   "text": "measured in lab DNA",
+   "t0": 12.033333333333333,
+   "t1": 15.8833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-simp-c",
+   "text": "simplified",
+   "t0": 16.3333,
+   "t1": 25.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 21.833333333333332,
+   "t1": 25.6833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-mice",
+   "text": "in mice · Cui et al., 2007",
+   "t0": 27.3,
+   "t1": 33.55,
+   "slot": "tl"
+  },
+  {
+   "id": "b-illus-p",
+   "text": "illustration",
+   "t0": 26.1333,
+   "t1": 33.55,
+   "slot": "tr"
+  },
+  {
+   "id": "b-model2",
+   "text": "model · not to scale",
+   "t0": 34.0,
+   "t1": 38.2833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time",
+   "clock": "tan",
+   "t0": 38.96666666666667,
+   "t1": 43.6867,
+   "slot": "tl"
+  },
+  {
+   "id": "b-simp-t",
+   "text": "simplified",
+   "t0": 38.7333,
+   "t1": 43.8833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-est",
+   "text": "estimate",
+   "t0": 44.333333333333336,
+   "t1": 51.8167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-nuc",
+   "text": "nucleus ≈ 8.6 µm · estimate",
+   "t0": 54.266666666666666,
+   "t1": 60.2167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp-z",
+   "text": "simplified",
+   "t0": 60.6667,
+   "t1": 67.26666666666667,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-uvb",
+   "label": "the shorter ultraviolet",
+   "fmt": "text",
+   "text": "UVB",
+   "t0": 7.866666666666666,
+   "t1": 11.05,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-ps",
+   "label": "to fuse two bases",
+   "fmt": "text",
+   "text": "< 1 ps",
+   "t0": 12.033333333333333,
+   "t1": 15.8833,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-p53",
+   "label": "the guardian protein",
+   "fmt": "text",
+   "text": "p53",
+   "t0": 18.5,
+   "t1": 21.133333333333333,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-msh",
+   "label": "the message",
+   "fmt": "text",
+   "text": "α-MSH",
+   "t0": 21.533333333333335,
+   "t1": 25.6833,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-days",
+   "label": "days after the sun",
+   "fmt": "days",
+   "t0": 39.06666666666667,
+   "t1": 43.93333333333333,
+   "at": [
+    0.6,
+    0.215
+   ],
+   "lit": 3.0
+  },
+  {
+   "id": "c-spf",
+   "label": "about, for a whole tan",
+   "fmt": "text",
+   "text": "SPF 3–4",
+   "t0": 46.86666666666667,
+   "t1": 51.8167,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-nuc",
+   "label": "one parasol",
+   "fmt": "text",
+   "text": "≈ 9 µm",
+   "t0": 54.266666666666666,
+   "t1": 60.2167,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-spf2",
+   "label": "a tan, about: a thin shield",
+   "fmt": "text",
+   "text": "SPF 3–4",
+   "t0": 60.6667,
+   "t1": 67.26666666666667,
+   "at": [
+    0.6,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 004",
+  "title": "What a *tan* is",
+  "t1": 4.6333,
+  "sig": 1.4666666666666666
+ },
+ "endCard": 67.26666666666667,
+ "end": {
+  "title": "Next layer: who has more pigment cells, the darkest skin or the *lightest*?",
+  "follow": "Outer Layer · No. 005",
+  "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007)."
+ },
+ "captions": [
+  {
+   "t0": 0.087,
+   "t1": 2.012,
+   "lines": [
+    [
+     [
+      "Is",
+      0.087
+     ],
+     [
+      "a",
+      0.482
+     ],
+     [
+      "tan",
+      0.517
+     ],
+     [
+      "a",
+      0.897
+     ],
+     [
+      "shield?",
+      1.112
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.012,
+   "t1": 4.367,
+   "lines": [
+    [
+     [
+      "A",
+      2.012
+     ],
+     [
+      "thin",
+      2.282
+     ],
+     [
+      "one,",
+      2.627
+     ]
+    ],
+    [
+     [
+      "built",
+      2.867
+     ],
+     [
+      "after",
+      3.097
+     ],
+     [
+      "the",
+      3.422
+     ],
+     [
+      "harm.",
+      3.542
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.453,
+   "t1": 7.698,
+   "lines": [
+    [
+     [
+      "Sunlight",
+      5.453
+     ],
+     [
+      "carries",
+      6.018
+     ]
+    ],
+    [
+     [
+      "ultraviolet,",
+      6.428
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.698,
+   "t1": 9.958,
+   "lines": [
+    [
+     [
+      "and",
+      7.698
+     ],
+     [
+      "its",
+      7.848
+     ],
+     [
+      "shorter",
+      7.878
+     ],
+     [
+      "rays",
+      8.283
+     ]
+    ],
+    [
+     [
+      "reach",
+      8.768
+     ],
+     [
+      "the",
+      9.133
+     ],
+     [
+      "living",
+      9.163
+     ],
+     [
+      "cells",
+      9.663
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.958,
+   "t1": 11.633,
+   "lines": [
+    [
+     [
+      "under",
+      9.958
+     ],
+     [
+      "the",
+      10.193
+     ],
+     [
+      "dead",
+      10.358
+     ],
+     [
+      "layer.",
+      10.538
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.633,
+   "t1": 13.448,
+   "lines": [
+    [
+     [
+      "In",
+      11.633
+     ],
+     [
+      "under",
+      11.663
+     ],
+     [
+      "a",
+      12.008
+     ]
+    ],
+    [
+     [
+      "trillionth of a second,",
+      12.043
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.448,
+   "t1": 16.053,
+   "lines": [
+    [
+     [
+      "one",
+      13.448
+     ],
+     [
+      "can",
+      13.663
+     ],
+     [
+      "fuse",
+      13.873
+     ],
+     [
+      "two letters",
+      14.183
+     ]
+    ],
+    [
+     [
+      "of",
+      14.633
+     ],
+     [
+      "their",
+      14.923
+     ],
+     [
+      "DNA.",
+      15.148
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.653,
+   "t1": 18.338,
+   "lines": [
+    [
+     [
+      "The",
+      16.653
+     ],
+     [
+      "cell",
+      16.893
+     ],
+     [
+      "notices.",
+      17.288
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.338,
+   "t1": 20.553,
+   "lines": [
+    [
+     [
+      "A guardian protein",
+      18.338
+     ]
+    ],
+    [
+     [
+      "switches",
+      19.538
+     ],
+     [
+      "on,",
+      20.153
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.553,
+   "t1": 22.728,
+   "lines": [
+    [
+     [
+      "and",
+      20.553
+     ],
+     [
+      "the",
+      20.583
+     ],
+     [
+      "cell",
+      20.803
+     ],
+     [
+      "sends",
+      21.173
+     ]
+    ],
+    [
+     [
+      "a chemical message",
+      21.413
+     ],
+     [
+      "down",
+      22.488
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.728,
+   "t1": 25.333,
+   "lines": [
+    [
+     [
+      "to",
+      22.728
+     ],
+     [
+      "the",
+      22.758
+     ],
+     [
+      "pigment",
+      22.953
+     ],
+     [
+      "cells:",
+      23.323
+     ]
+    ],
+    [
+     [
+      "make",
+      24.378
+     ],
+     [
+      "melanin.",
+      24.578
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.453,
+   "t1": 29.058,
+   "lines": [
+    [
+     [
+      "In",
+      26.453
+     ],
+     [
+      "Boston,",
+      26.663
+     ],
+     [
+      "mice",
+      27.298
+     ],
+     [
+      "whose",
+      27.693
+     ]
+    ],
+    [
+     [
+      "skin",
+      27.928
+     ],
+     [
+      "cells",
+      28.228
+     ],
+     [
+      "lacked",
+      28.498
+     ],
+     [
+      "that",
+      28.823
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.058,
+   "t1": 31.143,
+   "lines": [
+    [
+     [
+      "guardian",
+      29.058
+     ],
+     [
+      "never",
+      29.648
+     ]
+    ],
+    [
+     [
+      "tanned",
+      29.808
+     ],
+     [
+      "at",
+      30.188
+     ],
+     [
+      "all.",
+      30.528
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.143,
+   "t1": 32.828,
+   "lines": [
+    [
+     [
+      "So",
+      31.143
+     ],
+     [
+      "a",
+      31.173
+     ],
+     [
+      "tan",
+      31.363
+     ],
+     [
+      "isn't",
+      31.688
+     ]
+    ],
+    [
+     [
+      "skin",
+      32.143
+     ],
+     [
+      "getting ready",
+      32.518
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.828,
+   "t1": 34.143,
+   "lines": [
+    [
+     [
+      "for the sun.",
+      32.828
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.143,
+   "t1": 36.898,
+   "lines": [
+    [
+     [
+      "It's",
+      34.143
+     ],
+     [
+      "skin",
+      34.468
+     ],
+     [
+      "answering",
+      34.778
+     ]
+    ],
+    [
+     [
+      "damage",
+      35.328
+     ],
+     [
+      "already",
+      35.773
+     ],
+     [
+      "done.",
+      36.148
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.053,
+   "t1": 41.618,
+   "lines": [
+    [
+     [
+      "Over",
+      39.053
+     ],
+     [
+      "the next few days,",
+      39.453
+     ]
+    ],
+    [
+     [
+      "the",
+      40.433
+     ],
+     [
+      "melanin",
+      40.463
+     ],
+     [
+      "settles",
+      41.143
+     ],
+     [
+      "over",
+      41.443
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.618,
+   "t1": 44.518,
+   "lines": [
+    [
+     [
+      "each",
+      41.618
+     ],
+     [
+      "nucleus",
+      41.788
+     ],
+     [
+      "like",
+      42.493
+     ]
+    ],
+    [
+     [
+      "a tiny parasol.",
+      42.648
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.518,
+   "t1": 47.153,
+   "lines": [
+    [
+     [
+      "Together,",
+      44.518
+     ],
+     [
+      "a",
+      45.433
+     ],
+     [
+      "whole",
+      45.463
+     ]
+    ],
+    [
+     [
+      "tan",
+      45.843
+     ],
+     [
+      "adds",
+      46.208
+     ],
+     [
+      "up",
+      46.593
+     ],
+     [
+      "to",
+      46.643
+     ],
+     [
+      "about",
+      46.868
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.153,
+   "t1": 48.933,
+   "lines": [
+    [
+     [
+      "SPF 3 or 4.",
+      47.153
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.587,
+   "t1": 56.392,
+   "lines": [
+    [
+     [
+      "Each",
+      52.587
+     ],
+     [
+      "parasol",
+      52.977
+     ],
+     [
+      "is",
+      53.657
+     ],
+     [
+      "about",
+      53.902
+     ]
+    ],
+    [
+     [
+      "as",
+      54.117
+     ],
+     [
+      "wide",
+      54.262
+     ],
+     [
+      "as",
+      54.687
+     ],
+     [
+      "its",
+      54.842
+     ],
+     [
+      "nucleus:",
+      55.062
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.392,
+   "t1": 58.702,
+   "lines": [
+    [
+     [
+      "a dozen",
+      56.392
+     ],
+     [
+      "side by side",
+      57.092
+     ]
+    ],
+    [
+     [
+      "would span",
+      58.162
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.702,
+   "t1": 60.147,
+   "lines": [
+    [
+     [
+      "a sheet of paper.",
+      58.702
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.987,
+   "t1": 63.122,
+   "lines": [
+    [
+     [
+      "So,",
+      60.987
+     ],
+     [
+      "is",
+      61.402
+     ],
+     [
+      "a",
+      61.622
+     ],
+     [
+      "tan",
+      61.692
+     ],
+     [
+      "a",
+      62.097
+     ],
+     [
+      "shield?",
+      62.272
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.122,
+   "t1": 64.067,
+   "lines": [
+    [
+     [
+      "A",
+      63.122
+     ],
+     [
+      "thin",
+      63.342
+     ],
+     [
+      "one.",
+      63.667
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.067,
+   "t1": 66.707,
+   "lines": [
+    [
+     [
+      "It's",
+      64.067
+     ],
+     [
+      "how",
+      64.167
+     ],
+     [
+      "your",
+      64.502
+     ],
+     [
+      "skin",
+      64.687
+     ]
+    ],
+    [
+     [
+      "remembers",
+      65.182
+     ],
+     [
+      "the",
+      65.812
+     ],
+     [
+      "light.",
+      65.842
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.52,
+   "t1": 69.75,
+   "lines": [
+    [
+     [
+      "Next:",
+      67.52
+     ],
+     [
+      "who",
+      68.275
+     ],
+     [
+      "has",
+      68.305
+     ],
+     [
+      "more",
+      68.555
+     ]
+    ],
+    [
+     [
+      "pigment",
+      68.815
+     ],
+     [
+      "cells,",
+      69.185
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.75,
+   "t1": 72.04,
+   "lines": [
+    [
+     [
+      "the darkest skin",
+      69.75
+     ]
+    ],
+    [
+     [
+      "or",
+      70.77
+     ],
+     [
+      "the lightest?",
+      70.915
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.267,
+   "file": "vo/01.wav",
+   "text": "Is a tan a shield? A thin one, built after the harm."
+  },
+  {
+   "id": "vo02",
+   "t": 5.433333333333334,
+   "dur": 10.333,
+   "file": "vo/02.wav",
+   "text": "Sunlight carries ultraviolet, and its shorter rays reach the living cells under the dead layer. In under a trillionth of a second, one can fuse two letters of their DNA."
+  },
+  {
+   "id": "vo03",
+   "t": 16.633333333333333,
+   "dur": 8.543,
+   "file": "vo/03.wav",
+   "text": "The cell notices. A guardian protein switches on, and the cell sends a chemical message down to the pigment cells: make melanin."
+  },
+  {
+   "id": "vo04",
+   "t": 26.433333333333334,
+   "dur": 10.057,
+   "file": "vo/04.wav",
+   "text": "In Boston, mice whose skin cells lacked that guardian never tanned at all. So a tan isn't skin getting ready for the sun. It's skin answering damage already done."
+  },
+  {
+   "id": "vo05",
+   "t": 39.03333333333333,
+   "dur": 9.613,
+   "file": "vo/05.wav",
+   "text": "Over the next few days, the melanin settles over each nucleus like a tiny parasol. Together, a whole tan adds up to about SPF three or four."
+  },
+  {
+   "id": "vo06",
+   "t": 52.56666666666667,
+   "dur": 7.306,
+   "file": "vo/06.wav",
+   "text": "Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of paper."
+  },
+  {
+   "id": "vo07",
+   "t": 60.96666666666667,
+   "dur": 5.446,
+   "file": "vo/07.wav",
+   "text": "So, is a tan a shield? A thin one. It's how your skin remembers the light."
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "dur": 4.254,
+   "file": "vo/08.wav",
+   "text": "Next: who has more pigment cells, the darkest skin or the lightest?"
+  }
+ ]
+}
