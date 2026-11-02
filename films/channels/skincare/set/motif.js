@@ -89,7 +89,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
   const ticks = Array.from({ length: 21 }, (_, i) => mk("line", { stroke: "var(--text)", "stroke-width": (i % 5 === 0 ? 3 : 2) * S1 }, g));   // 0–200 µm; those past the span are hidden
   const lab = [0, 50, 100, 150, 200].map((v) => mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g));
   lab.forEach((e, i) => (e.textContent = `${[0, 50, 100, 150, 200][i]}`));
-  const unit = mk("text", { "font-size": 24 * S1 }, g);   // ink, not text-2: ≥ 4.5:1 over the card's edge unit.textContent = "µm";
+  const unit = mk("text", { "font-size": 24 * S1 }, g); unit.textContent = "µm";   // ink, not text-2: ≥ 4.5:1 over the card's edge
   const paperMark = mk("line", { stroke: "var(--text-2)", "stroke-width": 2 * S1, "stroke-dasharray": `${6 * S1} ${5 * S1}` }, g);
   const paperTxt = mk("text", { "font-size": 24 * S1, class: "sub", "dominant-baseline": "middle" }, g); paperTxt.textContent = "paper ≈ 100 µm";
   // the lifted bars

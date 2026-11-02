@@ -25,3 +25,4 @@ Proof nothing moved (the studio run with each side's pre-merge kit, then with th
 - Outer Layer No. 001: `mix.wav` byte-identical (−14.07 LUFS / −2.0 dBTP; sync PASS).
 - Back of the Envelope No. 001 (`films/channels/whatif/ep01`): `mix.wav` byte-identical (−14.05 LUFS / −1.99 dBTP,
   AAC −1.6 dBTP, as its committed `sound/qa.json`).
+- set/motif.js (2 Nov, reboot): the gauge ruler's "µm" unit was inside a comment (never drawn); moved out. Only the reboot's films use set/ (season 1 renders from shelved-s1/set, unchanged).

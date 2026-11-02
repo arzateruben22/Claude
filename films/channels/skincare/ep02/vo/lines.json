@@ -103,15 +103,15 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: skin closes almost any cut. But is a scar still skin?",
+   "text": "Next: before birth, a cut healed without a trace. So why do you scar?",
    "stars": [
-    "skin"
+    "scar"
    ],
-   "phonemes": "nˈɛkst: skˈɪn klˈəʊzɪz ˈɔːlməʊst ˌɛni kˈʌt. bˌʌt ɪz ɐ skˈɑː stˈɪl skˈɪn?",
-   "speed": 0.82,
+   "phonemes": "nˈɛkst: bɪfˌɔː bˈɜːθ, ɐ kˈʌt hˈiːld wɪðˌaʊt ɐ tɹˈeɪs. sˌəʊ wˌaɪ dˈuː juː skˈɑː?",
+   "speed": 0.76,
    "file": "08.wav",
-   "dur": 4.598,
-   "sha256": "1d6958f081c05ba972a31fa578382bf021ba6cab315e243145ee38bf110f1f1c"
+   "dur": 5.306,
+   "sha256": "f766ef135f26b7721a2b7b5a67a65fb870bb29f8a42e08f97a17d626d69fbbd2"
   }
  ]
 }

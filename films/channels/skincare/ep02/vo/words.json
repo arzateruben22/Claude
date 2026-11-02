@@ -988,79 +988,91 @@
   },
   {
    "id": "vo08",
-   "text": "Next: skin closes almost any cut. But is a scar still skin?",
-   "heard": "Next skin closes almost any cut, but is a scar still skin.",
+   "text": "Next: before birth, a cut healed without a trace. So why do you scar?",
+   "heard": "Next, before birth, a cut healed without a trace, so why do you scar?",
    "words": [
     {
      "w": "Next:",
-     "start": 0.02,
-     "end": 0.4,
+     "start": 0.33,
+     "end": 0.72,
      "heard": true
     },
     {
-     "w": "skin",
-     "start": 0.51,
+     "w": "before",
+     "start": 0.725,
      "end": 0.96,
      "heard": true
     },
     {
-     "w": "closes",
-     "start": 0.93,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "almost",
-     "start": 1.385,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "any",
-     "start": 1.77,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "cut.",
-     "start": 2.005,
-     "end": 2.72,
-     "heard": true
-    },
-    {
-     "w": "But",
-     "start": 2.885,
-     "end": 2.935,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 2.915,
-     "end": 3.12,
+     "w": "birth,",
+     "start": 1.125,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.12,
-     "end": 3.28,
+     "start": 1.52,
+     "end": 1.68,
      "heard": true
     },
     {
-     "w": "scar",
-     "start": 3.375,
-     "end": 3.6,
+     "w": "cut",
+     "start": 1.69,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "still",
-     "start": 3.755,
-     "end": 3.92,
+     "w": "healed",
+     "start": 2.01,
+     "end": 2.48,
      "heard": true
     },
     {
-     "w": "skin?",
-     "start": 4.18,
-     "end": 4.4,
+     "w": "without",
+     "start": 2.375,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.865,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "trace.",
+     "start": 2.955,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 3.905,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 3.985,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 4.41,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.44,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "scar?",
+     "start": 4.635,
+     "end": 5.28,
      "heard": true
     }
    ]

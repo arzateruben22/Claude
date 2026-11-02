@@ -51,8 +51,8 @@ vo: Blue light gets barely a millimetre in, about ten sheets of paper; red light
 ## takeaway {shot: back to the hook's terrain, now with the light paths faintly glowing back out of it, warm; the daylight strip of three tones · spine: from within · picture-only 0.5 s · energy: 0.3} (59.5–67.5 s)
 vo: So the glow isn't on your face. It's light that went inside you, met your blood, and came *back*. {c15}
 
-## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
-vo: Next: skin closes almost any cut. But is a scar still *skin*? {-}
+## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–75 s)
+vo: Next: before birth, a cut healed without a trace. So why do you *scar*? {-}
 end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002"
 
 ## Notes

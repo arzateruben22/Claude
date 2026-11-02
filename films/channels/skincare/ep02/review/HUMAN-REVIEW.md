@@ -10,6 +10,9 @@
 - **Skin tone:** one medium tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); the
   daylight strip shows three tones only where the subject applies to all skin, never beside a risk line.
 
+- **Look:** this episode has no UV-camera reveal (its subject is visible light; the face beat is a daylight
+  viewfinder). The owner confirms that is acceptable under bible §2.
+
 ## Every episode
 AI labelling on the end card; a flash analyzer on the master; a listen on phone and headphones; the description's
 sources; the owner's taste call; handle and trademark checks for "Outer Layer" (TODO).
