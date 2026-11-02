@@ -767,7 +767,7 @@
    "t0": 19.833333333333332,
    "t1": 25.0,
    "shot": "air",
-   "side": 1,
+   "side": -1,
    "v": "above"
   },
   {
@@ -796,7 +796,7 @@
    "kind": "anchor",
    "item": 0,
    "t0": 40.53333333333333,
-   "t1": 41.4333,
+   "t1": 41.4,
    "side": 1,
    "shot": null
   },
@@ -826,7 +826,7 @@
    "kind": "part",
    "item": 3,
    "t0": 43.9,
-   "t1": 45.0666,
+   "t1": 44.9666,
    "side": 1,
    "shot": null
   },
@@ -932,7 +932,7 @@
  "end": {
   "title": "Next envelope: *every raindrop at once*",
   "follow": "Back of the Envelope · No. 006",
-  "next": "Earth 5.97 × 10²⁴ kg (NASA); 8.2 billion people (UN, 2024); 62 kg average adult (Walpole et al., 2012)."
+  "next": "Earth 5.97 × 10²⁴ kg (NASA) · 8.2 bn people (UN 2024) · 62 kg, average adult (Walpole 2012)"
  },
  "captions": [
   {

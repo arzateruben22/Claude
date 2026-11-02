@@ -102,7 +102,7 @@ def z_at(t):
     return ZK[-1][1]
 
 
-def item_window(size, lo=0.1, hi=1.1):
+def item_window(size, lo=0.1, hi=0.8):
     """When the item is between lo and hi of the frame's width, in the dive (the first stretch), for its label."""
     ts = [LADDER[0] + k / FPS for k in range(int((LADDER[1] - LADDER[0]) * FPS))]
     on = [t for t in ts if lo <= size / 10 ** z_at(t) <= hi]
@@ -204,7 +204,7 @@ LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1, "v": "middle"},
     {"id": "l-push", "text": "pushed down: the whole planet", "kind": "calc", "anchor": "arrow", "t0": A("vo02:ground#2"), "t1": t_g0 - 0.2, "shot": "gather", "side": 1},
     {"id": "l-all", "text": "everyone, together", "kind": "anchor", "anchor": "cap", "t0": A("vo02:billion"), "t1": B["change"]["t0"] - 0.2, "shot": "gather", "side": 1},
-    {"id": "l-drop", "text": "the planet drops the other way", "kind": "calc", "anchor": "arrow", "t0": A("vo03:planet", -0.1), "t1": B["why"]["t0"] - 0.2, "shot": "air", "side": 1, "v": "above"},
+    {"id": "l-drop", "text": "the planet drops the other way", "kind": "calc", "anchor": "arrow", "t0": A("vo03:planet", -0.1), "t1": B["why"]["t0"] - 0.2, "shot": "air", "side": -1, "v": "above"},
     {"id": "l-path", "text": "its path round the Sun", "kind": "part", "anchor": "path", "t0": A("vo04:course", -0.3), "t1": A("vo04:weight"), "shot": "path", "side": -1},
     {"id": "l-ghost", "text": "knocked off course?", "kind": "part", "anchor": "ghost", "t0": t_ghost[0] + 0.3, "t1": t_ghost[1], "shot": "path", "side": 1},
 ]
@@ -238,7 +238,7 @@ COUNTERS = [
 
 TITLE = {"series": "Back of the Envelope · No. 005", "title": "Everybody *jump*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next envelope: *every raindrop at once*", "follow": "Back of the Envelope · No. 006",
-       "next": "Earth 5.97 × 10²⁴ kg (NASA); 8.2 billion people (UN, 2024); 62 kg average adult (Walpole et al., 2012)."}
+       "next": "Earth 5.97 × 10²⁴ kg (NASA) · 8.2 bn people (UN 2024) · 62 kg, average adult (Walpole 2012)"}
 
 CUE = {"hop1": t_hop1, "hop2": t_hop2, "slow": SLOW, "gather": [t_g0, t_g1], "ghost": t_ghost, "zkeys": ZK, "ladder": LADDER, "land": t_land, "step": t_step}
 film = {

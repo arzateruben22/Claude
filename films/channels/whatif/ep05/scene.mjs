@@ -93,7 +93,7 @@ const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, saf
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "74vmin", margin: "4vmin auto 0" });
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
 
 // ── staging ─────────────────────────────────────────────────────────────────
@@ -129,13 +129,13 @@ window.seek = function (t) {
   const pushWin = seg(t, CUE.hop1 - 0.1, CUE.hop1 + 0.2) * (1 - seg(t, CUE.gather[0] - 0.6, CUE.gather[0] - 0.1));
   const airWin = seg(t, CUE.hop2 - 0.2, CUE.hop2 + 0.2) * (1 - seg(t, beat("why").t0 - 0.5, beat("why").t0));
   const ao = Math.max(pushWin, airWin);
-  const ax = 1.5, az = RM * 0.85, ay0 = TOP + 0.4 - dip, ay1 = TOP - 1.3 - dip - 0.4 * h;   // in front of the globe's shoulder, right of you, above the text band
+  const ax = 1.1, az = RM * 0.85, ay0 = TOP + 1.7 - dip, ay1 = TOP + 0.45 - dip - 0.2 * h;   // pressing down on the globe's shoulder, clear of the text band   // in front of the globe's shoulder, right of you, above the text band
   arrow.set({ from: [ax, ay0, az], to: [ax, ay1, az], width: 0.08, opacity: ao });
-  S._arrow = [ax + 0.2, ay0 - 0.4, az];
+  S._arrow = [ax + 0.15, ay0, az];
 
   // the path round the Sun, and the ghost globe knocked off it (the wrong idea), out and back
   const why = shot === "path";
-  path.set({ opacity: why ? E.out3(seg(t, beat("why").t0 + 0.2, beat("why").t0 + 1.2)) * (1 - seg(t, beat("whoa").t0 - 0.6, beat("whoa").t0)) : 0 });
+  path.set({ opacity: why ? E.out3(seg(t, beat("why").t0 + 0.2, beat("why").t0 + 1.2)) * (1 - seg(t, CUE.ghost[1] + 0.4, CUE.ghost[1] + 1.2)) : 0 });   // gone with the ghost
   const gk = Math.min(E.inout2(seg(t, CUE.ghost[0], CUE.ghost[0] + 0.8)), 1 - E.inout2(seg(t, CUE.ghost[1] - 0.4, CUE.ghost[1] + 0.4)));
   ghost.mesh.position.set(C0[0] + (WD.ghost[0] - C0[0]) * gk, C0[1] + (WD.ghost[1] - C0[1]) * gk, C0[2] + (WD.ghost[2] - C0[2]) * gk);
   ghost.set({ opacity: why ? 0.45 * gk : 0, cam: camera.position.toArray(), grid: 1, dotOpacity: 0 });
