@@ -4,6 +4,132 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-02: Lot 57 on foot, P1a finished and re-verified on the final build (35 of 35 checks)
+
+The P1a builder of 2026-10-21 (entry below) was cut off mid-run: its last suite runs (17:45 and earlier) lost their
+browser part-way, so nothing after its morning 26-check run had been verified end to end. This pass picked up the
+drafts as they were on disk, finished the venue's dressing and re-ran the whole suite. The game's code, its
+`vite.config.ts` and `package.json`, and the people builder (`src/onfoot/people/`) are unchanged.
+
+- **What changed in this pass** (all in `src/onfoot/`):
+  - The yard reads as a beer garden by day: a market umbrella through every communal table (cream canopy with a
+    crown, a teal or patina valance, ribs and a runner underneath), four barrel standing tables between the tables (no
+    seats; the Shed's barrels share the same code), a steel napkin and salt-and-pepper caddy at both ends of every
+    table, and a chalkboard A-frame on the walk in at the front gate (our tap list).
+  - The palms along Orangewood are now colliders (they had none, so you could walk through a trunk), and none stands
+    in the middle of the walk to our front gate.
+  - A soft pool of light on the ground under every street and lot head after dark (one additive draw call): the
+    asphalt's dark colour swallowed the baked lamp light, so Orangewood read black between the lamps.
+  - Your car is parked with its lamps off (it showed its headlamps lit in the lot at night).
+  - Rounder bar stools and barrel tops on High and Ultra (16 and 24 sides); Low keeps cheaper ones, and on Low the
+    table caddies, the umbrella ribs and four in nine of the bougainvillea leaves aren't drawn, which keeps Low inside
+    its triangle budget (it was 253,577 of 250k after the dressing; now 245,487).
+  - The male driver's build and face are a little broader (shoulders, jaw, brow): at third-person distance the
+    builder's default male frame read narrow and soft in the fitted white shirt.
+  - Toasts name the new obstacles ("A palm", "The chalkboard", the host stand, shelf, generator and propane cage).
+- **Checked** with `node tests/onfoot.mjs` (headless Chromium, `--use-angle=swiftshader --enable-unsafe-swiftshader`,
+  one browser at a time; 27 minutes on this shared machine). **35 of 35 pass** on the final build
+  (`tests/out/onfoot/onfoot-checks.json` and `tests/out/onfoot/logs/onfoot-final-2026-11-02.log`, 2026-11-02 05:09
+  UTC). `npx tsc --noEmit` is clean. Every screenshot below was looked at.
+  - Boots with no console errors at 1280x720 (High), 844x390 and 390x844 (touch, Low by default) and 640x360 (walks).
+  - Day (Sat 14:00) and night (Sat 21:00) screenshots at all three sizes, the "Simulated crowd" chip and the
+    OpenStreetMap/Overture credit on screen and inside the viewport, clear of the action button.
+  - 1,000 random walks (500 tap to go, 500 stick): 1,455,899 positions over 35,006 m, checked in Node against the 491
+    exported colliders and the walkable region by an independent checker (which is shown to catch a made-up path
+    through the Shed's wall, into a bench and onto the road): none ends inside a collider, leaves the area or crosses
+    a wall or fence. All 445 tap-to-go walks with a path arrived; 55 taps had no path (shut or staff-only places).
+  - Tap to go reaches all 172 seats from the front gate and from the lot walk and sits you down (344 walks, 14.0 to
+    67.3 m); tap a bench seat, walk 6.78 m, Sit, Stand.
+  - Touch (thumb pad 1.05 m, look drag 20 degrees, a quick tap starts a walk), keyboard (W 1.03 m) and a stubbed
+    gamepad (left stick 1.11 m, Y to third person).
+  - Reduced motion: head bob 3.0 cm to 0, the toast's transition 0 s. Closing (Tue 09:00) shows you out to the lot
+    walk with "Closed · opens 11:00" and "Simulated crowd · Closed", and a tap into the yard finds no way in.
+  - Budgets (`renderer.info`, shadow passes included): High worst 195 calls and 669,951 triangles over nine views
+    (limit 350 and 700k); Low worst 118 calls and 245,487 triangles over seven views (limit 150 and 250k). Ultra (no
+    budget in the plan): 264 calls and 2.08M triangles in the yard at night; 432 calls and 2.84M in third person with
+    the close-up driver (158,252 triangles, 19 calls).
+  - `stats()` on High in the day: npcs 0, groups 0, seated 0, walkers 0, 195 draw calls, 629,928 triangles, sim
+    0 ms, frame 9.1 ms (the page's CPU time per frame in SwiftShader, not a frame rate). The crowd is P1b, so the
+    people counts are 0 by design.
+  - The real venue's name is in none of the 46 files in `src/onfoot`, `src/data/anaheim` and the built page; our
+    names are on the page, and it never says "real-time" or "people here now".
+- **Screenshots** (`tests/out/onfoot/`): `onfoot-1280x720-{day,third-day,third-front-day,trucks-day,night,
+  third-night,shed-night,trucks-night,park-night,sign-night,sign-crosswalk-night,seated-night}.png`,
+  `onfoot-1280x720-ultra-{night,trucks-night,shed-night,bar-night,sign-night,third-evening,lot-evening}.png`,
+  `onfoot-1280x720-aerial-evening.png`, `onfoot-844x390-{day,night,sign-night}.png`,
+  `onfoot-390x844-{day,night}.png`. (The "evening" shots are at 17:30, which in this week's season is after dark.)
+- **Not done or not measured**: frame rates on a phone or a GPU; the crowd, Order, Join and Leave (P1b). The parked
+  cars are the game's traffic models and read toy-like up close; the driver's look in third person (a dark notch at
+  the fitted shirt's collar, a lumpy back) belongs to the people builder, which another session owns.
+
+## 2026-10-21: Lot 57 on foot, P1a: the venue, your driver, controls, collisions and test hooks (standalone page)
+
+*(Superseded by the 2026-11-02 entry above: the numbers below come from a 26-check run on the morning of
+2026-10-21; later changes that day, such as the close-up driver on High, were never verified end to end.)*
+
+Phase 1a of `PROJECT_OC_ON_FOOT.md`: a standalone page, not yet in the game. `src/onfoot/index.html` with its own
+Vite config (`npx vite build --config src/onfoot/vite.config.ts` writes `dist/onfoot/index.html`, one file that opens
+from disk; `npx vite --config src/onfoot/vite.config.ts` serves it). The game's code, `vite.config.ts` and
+`package.json` are unchanged.
+
+- **The venue, ours, built in code** (`src/onfoot/lot57/`): the Shed (brick-red tilt-up, five-tooth north-light
+  sawtooth roof, four glass roll-up doors, our mural; inside a 16 m bar with 20 stools, a tap wall of plain coloured
+  handles, eight tanks behind glass, six high-tops, barrel tables, a chalkboard of our own items and the game's local
+  leaderboard labelled "this device only"), the yard (12 communal tables, 8 poles plus 4 over the lawn and trucks, 411
+  bulbs on catenaries, 4 heaters), the lawn (three bag-toss lanes, a stacking-block table, lawn chairs), Two Lane
+  Tacos and Night Shift Noodles with picnic tables, the planter wall and gate, our 6.5 m pylon sign with its reader
+  board, the lot (stalls, wheel stops, a planted median, lot lights) with your car in your stall. Night light is baked
+  per vertex; the gates and doors shut after our fictional hours and you are shown out.
+- **Around it, from OpenStreetMap via Overture (ODbL, credited on screen)**: Orangewood and the Dupont loop, mapped
+  sidewalks and crosswalks, the business park's footprints and heights, parking areas, land use, the stadium's light
+  towers as plain massing. Road widths, markings, lamps, palms and the block's turf setbacks are our defaults. The real
+  footprints in our site are dropped.
+- **Your driver** (the people builder) in first and third person; LOD 1 on Low and High, the close-up LOD 0 in third
+  person on Ultra.
+- **Controls**: touch (a floating thumb pad in the left 45%, a look drag on the right, tap to go), keyboard (WASD,
+  Shift, E/Q/V/C, Esc) and gamepad (sticks, A/X/Y/B, Back, Start).
+- **Collisions**: a 0.3 m body pushed out of every wall, fence, table, bench, truck, planter, pole and parked car
+  (polygons, boxes, circles, segments in a 4 m hash), three passes a step; kerbs are walls except at crosswalks; tap to
+  go on a 0.5 m grid with A*.
+- **Test hooks** on `window.__onfoot`: `setClock(day, hour)`, `setQuality('low'|'high'|'ultra')`, `stats()` (npcs,
+  groups, seated, walkers, drawCalls, triangles, simMs, frameMs and more), `go(x, z)`, `tap(x, z)`, `act()`,
+  `view()`, `frames`, plus `look`, `walk`, `sim`, `pos`, `colliders`, `region`, `seats`, `probe`, `breakdown`.
+- **Not in P1a**: the crowd (NPCs, groups, staff) is P1b; `stats()` reports 0 people. The chip already shows the
+  simulated level from the clock ("Simulated crowd · Packed" on a Saturday night).
+
+Checked by `node tests/onfoot.mjs` (headless Chromium, SwiftShader; screenshots in `tests/out/onfoot/`):
+- **26 of 26 checks pass** (`tests/out/onfoot/onfoot-checks.json`, 2026-10-21):
+  - Boots with no console errors at 1280x720 (High), 844x390 and 390x844 (touch, Low: the default for a coarse
+    pointer), and 640x360 (the walk run).
+  - Day and night screenshots at all three sizes with the "Simulated crowd" chip and the OpenStreetMap/Overture credit
+    on screen and readable (their boxes are checked to be inside the viewport and clear of the action button).
+  - 1,000 random walks (500 tap to go, 500 stick, from seeded random free points) never end inside a collider, leave
+    the walkable area or cross a wall or fence: 1,236,553 positions over 17,077 m, each checked in Node against the
+    438 exported colliders and the walkable region by an independent checker. The checker is shown to fail on a made-up
+    path through the Shed's west wall, into a bench and onto the road. 53 taps had no path (targets in staff-only or
+    shut areas such as the tank room); they toast "Can't get there from here".
+  - Touch: the thumb pad walks you 1.45 m in a few frames, a look drag turns you 20°, a quick tap starts a walk.
+    Keyboard: W walks 1.33 m. Gamepad (a stubbed `navigator.getGamepads`): the left stick walks 0.89 m, Y switches to
+    third person.
+  - Tap a bench seat, walk there (6.78 m path), Sit, Stand with the action button.
+  - Reduced motion: the head bob goes from 3.0 cm to 0, the toast's transition to 0 s.
+  - At closing (Tue 09:00) you're shown out to the lot walk, the hours read "Closed · opens 11:00", the chip
+    "Simulated crowd · Closed", and a tap into the yard finds no way in.
+  - Budgets (`renderer.info`, shadow passes included): Low worst 106 calls and 234,067 triangles over seven views
+    (limit 150 and 250k); High worst 178 calls and 677,790 triangles over the day, third-person, night and Shed views
+    (limit 350 and 700k). Ultra (no budget in the plan) draws 213 calls and 1.31M triangles at night; in third person
+    at dusk with the LOD 0 driver (159,850 triangles, 19 calls) it's 368 calls and 2.09M triangles (that view shot with
+    `node tests/onfoot-shots.mjs`, `onfoot-1280x720-ultra-third-evening.png`).
+  - The real venue's name appears in none of the 44 files in `src/onfoot`, `src/data/anaheim` and the built page; our
+    names (LOT 57, Two Lane Tacos, Night Shift) are on the page, and it never says "real-time" or "people here now".
+- **Fixes in this round**: Low was at 243k of its 250k triangles, so Low now draws 8-triangle bulbs and 12 detailed
+  parked cars (16 before); High drew the close-up driver (LOD 0) in third person, 845k triangles with its shadow, so
+  LOD 0 is now Ultra only; on High the bulbs are 36 triangles and the plants don't cast shadows. The idle body turns to
+  face where you look (in third person it used to face the camera). The block's setbacks are turf, not bare dirt.
+  Ultra builds the parked cars from the traffic models' high-quality set.
+- **Not measured**: frame rates on a phone or a GPU. `frameMs` in `stats()` is the page's own CPU time per frame in
+  SwiftShader, not a frame rate.
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set
