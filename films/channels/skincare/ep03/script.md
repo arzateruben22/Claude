@@ -11,8 +11,8 @@ follicles and all, with no scar. "To scale" puts the part of skin that regrows p
 0.07–0.12 mm on most of the body) beside the paper (≈ 100 µm): cut no deeper and it comes back; go into the weave
 and it patches.
 
-Flow (WRITING.md, 29 Oct): one thread from the hook's "Is a scar still skin?" and "thread by thread" to the
-takeaway's "skin's quick repair" and "never the weave"; the voice carries the meaning and the screen the
+Flow (WRITING.md, 29 Oct): one thread from the hook's "Why do you scar now? Before birth, a cut healed without one" (the whoa, led with; coordinator, 2 Nov) to the
+takeaway's "So, why the scar? Skin's quick repair" and "never the weave"; the voice carries the meaning and the screen the
 specifics (basket weave vs parallel bundles, collagen type III → I, ≈ 80% strength, Levenson et al. 1965, rat
 skin, 22–24 weeks, 0.07–0.12 mm, 100 µm paper). The picture changes scale with the ideas: a scar on a knee →
 the dermis, thread by thread → the patch laid in → a pull test, the readout climbing and stalling → a fetal
@@ -29,7 +29,7 @@ to `claims.json` and `{-}` marks a sentence that states nothing outside the film
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/scar --segment toscale`.
 
 ## hook {shot: frame 0, the payoff, the macro flight: a pale old scar crossing the skin of a knee (deep tone) at golden hour, smooth, with no pores and no hairs; the camera already easing in · badge: simplified · title: "What's in a scar" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: Is a scar still *skin*? Look closer, thread by thread. {-}
+vo: Why do you *scar* now? {-} Before birth, a cut healed without one. {c11}
 
 ## normal {shot: no cut: the push carries down through the surface into the dermis; collagen bundles cross over and under in every direction; on "pulled" the weave gives a little one way, then the other · spine: woven · badge: simplified · picture-only 0.5 s · energy: 0.45} (5–17 s)
 vo: Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's *pulled*. {c1}
@@ -47,7 +47,7 @@ vo: Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows
 vo: And on most of your body, only the top layer, about this paper's thickness, grows back without a *seam*. {c8,c9}
 
 ## takeaway {shot: the UV camera on the knee: the scar a smooth seam with no pores and no pattern, the skin around it textured; the weave faintly showing at its edge · badge: model, not a photo · picture-only 0.5 s · energy: 0.3} (61–67.5 s)
-vo: So, is a scar still skin? Skin's quick repair: strong enough to close, never the *weave*. {c10}
+vo: So, why the scar? Skin's quick repair: strong enough to close, never the *weave*. {c10}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
 vo: Next: a deadly poison, in a frown. {-} How much goes *in*? {-}

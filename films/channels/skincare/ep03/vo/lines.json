@@ -12,15 +12,15 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Is a scar still skin? Look closer, thread by thread.",
+   "text": "Why do you scar now? Before birth, a cut healed without one.",
    "stars": [
-    "skin"
+    "scar"
    ],
-   "phonemes": "ɪz ɐ skˈɑː stˈɪl skˈɪn? lˈʊk klˈəʊsə, θɹˈɛd baɪ θɹˈɛd.",
-   "speed": 0.82,
+   "phonemes": "wˌaɪ dˈuː juː skˈɑː nˈaʊ? bɪfˌɔː bˈɜːθ, ɐ kˈʌt hˈiːld wɪðˈaʊt wˌɒn.",
+   "speed": 0.74,
    "file": "01.wav",
-   "dur": 3.819,
-   "sha256": "0060d2f7400a6b7bb3c371170567b99d2dad8bb878b3a7011d540b0124ed24fb"
+   "dur": 4.568,
+   "sha256": "0be8a16dbb14c1925537fd91cd5d6feff0a748db9bf08409539a2f573d2ae788"
   },
   {
    "id": "vo02",
@@ -90,15 +90,15 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, is a scar still skin? Skin's quick repair: strong enough to close, never the weave.",
+   "text": "So, why the scar? Skin's quick repair: strong enough to close, never the weave.",
    "stars": [
     "weave"
    ],
-   "phonemes": "sˈəʊ, ɪz ɐ skˈɑː stˈɪl skˈɪn? skˈɪnz kwˈɪk ɹɪpˈeə: stɹˈɒŋ ɪnˈʌf tə klˈəʊz, nˈɛvə ðə wˈiːv.",
+   "phonemes": "sˈəʊ, wˌaɪ ðə skˈɑː? skˈɪnz kwˈɪk ɹɪpˈeə: stɹˈɒŋ ɪnˈʌf tə klˈəʊz, nˈɛvə ðə wˈiːv.",
    "speed": 0.82,
    "file": "07.wav",
-   "dur": 5.745,
-   "sha256": "fe4d90e7b847559c4a8ba2b5433aae1a2e49a43a640a0046ab93e977ef8d5364"
+   "dur": 5.065,
+   "sha256": "c9d6bc1c711c0347e12022bb8f7ab0b69326acdc5124bdfa34f8640171056600"
   },
   {
    "id": "vo08",

@@ -37,7 +37,7 @@ TX, WX, FX = 1000.0, 5000.0, 7000.0
 t_weave, t_end = A("vo02:Under", -0.3), A("vo08:Next:", -0.25)
 SHOTS = [{"at": 0.0, "name": "macro"}, {"at": t_weave, "name": "weave"}, {"at": B["why"]["t0"], "name": "test"},
          {"at": B["whoa"]["t0"], "name": "fetal"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "uv"}]
-CUE = {"skin1": A("vo01:skin?"), "closer": A("vo01:closer,"), "thread": A("vo01:thread"), "strength": A("vo02:strength"), "collagen": A("vo02:collagen,"),
+CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:one."), "strength": A("vo02:strength"), "collagen": A("vo02:collagen,"),
        "woven": A("vo02:woven"), "basket": A("vo02:basket,"), "gives": A("vo02:gives"), "pulled": A("vo02:pulled."), "cut": A("vo03:Cut"),
        "reweave": A("vo03:reweave."), "patches": A("vo03:patches,"), "laying": A("vo03:laying"), "side": A("vo03:side"), "leaves": A("vo03:leaves"),
        "glands": A("vo03:glands."), "healed": A("vo04:healed,"), "pulled4": A("vo04:pulled"), "tears": A("vo04:tears,"), "four": A("vo04:four-fifths"),
@@ -84,14 +84,14 @@ LABELS = [
 BADGES = [
     {"id": "b-simp", "text": "simplified", "t0": 0.0, "t1": B["change"]["t0"], "slot": "br"},
     {"id": "b-time", "text": "weeks, compressed · illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tr"},
-    {"id": "b-rat", "text": "model · rat skin · Levenson et al., 1965", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "br"},
+    {"id": "b-rat", "text": "model · rats · Levenson 1965", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "br"},
     {"id": "b-fetal", "text": f"illustration · {WEEKS}", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-body", "text": "most of the body", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-model", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "br"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
-    {"id": "c-q", "label": "a scar", "text": "still skin?", "t0": CUE["closer"] - 0.4, "t1": CUE["collagen"] - 0.5},
+    {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] - 0.4, "t1": CUE["collagen"] - 0.5},
     {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["patches"] - 0.4},
     {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": B["why"]["t0"]},
     {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
@@ -122,16 +122,16 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "epi_um": EPI_UM, "paper_um": PAPER_UM}
 STR = {"pct": STRENGTH}
 
-TITLE = {"series": "Outer Layer · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:skin?", 0.35)}
+TITLE = {"series": "Outer Layer · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:now?", 0.35)}
 END = {"title": "Next layer: a deadly poison, in a frown. How much goes *in*?", "follow": "Outer Layer · No. 004",
        "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."}
 POSTER = A("vo03:side", 0.4)
 
-glue(f, {"vo01": ["a scar", "still skin?", "Look closer,", "thread by thread."], "vo02": ["Under the surface,", "your skin's strength", "is collagen,", "over and under", "every direction", "like a basket,", "a little", "it's pulled."],
+glue(f, {"vo01": ["Why do you", "scar now?", "Before birth,", "a cut healed", "without one."], "vo02": ["Under the surface,", "your skin's strength", "is collagen,", "over and under", "every direction", "like a basket,", "a little", "it's pulled."],
          "vo03": ["Cut through it,", "the body", "doesn't reweave.", "It patches,", "new threads", "side by side,", "one direction,", "leaves out", "the hair", "the sweat glands."],
          "vo04": ["a closed wound", "as good as new.", "until it tears,", "an old scar", "about four-fifths", "the original strength."],
          "vo05": ["about the sixth month", "of pregnancy,", "a baby's skin", "the weave,", "follicles and all.", "After that,", "it patches."],
-         "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["a scar", "still skin?", "quick repair:", "strong enough", "to close,", "the weave."],
+         "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["So, why", "the scar?", "quick repair:", "strong enough", "to close,", "the weave."],
          "vo08": ["a deadly poison,", "a frown.", "goes in?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 

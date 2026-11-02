@@ -3,67 +3,79 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Is a scar still skin? Look closer, thread by thread.",
-   "heard": "Is a scar still skin? Look closer, thread by thread.",
+   "text": "Why do you scar now? Before birth, a cut healed without one.",
+   "heard": "Why do you scar now? Before birth a cut healed without one,",
    "words": [
     {
-     "w": "Is",
+     "w": "Why",
      "start": 0.02,
-     "end": 0.16,
+     "end": 0.32,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 0.215,
+     "w": "do",
+     "start": 0.33,
      "end": 0.48,
      "heard": true
     },
     {
+     "w": "you",
+     "start": 0.52,
+     "end": 0.64,
+     "heard": true
+    },
+    {
      "w": "scar",
-     "start": 0.48,
-     "end": 0.8,
+     "start": 0.67,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "still",
-     "start": 0.835,
-     "end": 0.96,
+     "w": "now?",
+     "start": 1.245,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "skin?",
-     "start": 1.21,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "Look",
-     "start": 1.905,
+     "w": "Before",
+     "start": 1.775,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "closer,",
-     "start": 2.165,
-     "end": 2.72,
+     "w": "birth,",
+     "start": 2.24,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "thread",
-     "start": 2.74,
-     "end": 3.04,
+     "w": "a",
+     "start": 2.725,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "by",
-     "start": 3.05,
+     "w": "cut",
+     "start": 2.86,
      "end": 3.2,
      "heard": true
     },
     {
-     "w": "thread.",
-     "start": 3.275,
-     "end": 3.52,
+     "w": "healed",
+     "start": 3.12,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "without",
+     "start": 3.65,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "one.",
+     "start": 4.125,
+     "end": 4.24,
      "heard": true
     }
    ]
@@ -873,8 +885,8 @@
   },
   {
    "id": "vo07",
-   "text": "So, is a scar still skin? Skin's quick repair: strong enough to close, never the weave.",
-   "heard": "So is a scar still skin, skins quick repair, strong enough to close, never the weave.",
+   "text": "So, why the scar? Skin's quick repair: strong enough to close, never the weave.",
+   "heard": "So why the scar? Skins quick repair, strong enough to close never the weave.",
    "words": [
     {
      "w": "So,",
@@ -883,93 +895,81 @@
      "heard": true
     },
     {
-     "w": "is",
-     "start": 0.315,
-     "end": 0.48,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.455,
+     "w": "why",
+     "start": 0.375,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "scar",
-     "start": 0.71,
-     "end": 0.96,
+     "w": "the",
+     "start": 0.59,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "still",
-     "start": 1.065,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "skin?",
-     "start": 1.44,
-     "end": 2.24,
+     "w": "scar?",
+     "start": 0.815,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "Skin's",
-     "start": 2.27,
-     "end": 2.8,
+     "start": 1.52,
+     "end": 2.0,
      "heard": false
     },
     {
      "w": "quick",
-     "start": 2.795,
-     "end": 3.04,
+     "start": 2.045,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "repair:",
-     "start": 2.985,
-     "end": 3.68,
+     "start": 2.22,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "strong",
-     "start": 3.65,
-     "end": 4.0,
+     "start": 2.975,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "enough",
-     "start": 4.065,
-     "end": 4.24,
+     "start": 3.28,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "to",
-     "start": 4.265,
-     "end": 4.4,
+     "start": 3.6,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "close,",
-     "start": 4.395,
-     "end": 4.8,
+     "start": 3.73,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "never",
-     "start": 4.815,
-     "end": 5.04,
+     "start": 4.12,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.13,
-     "end": 5.2,
+     "start": 4.445,
+     "end": 4.495,
      "heard": true
     },
     {
      "w": "weave.",
-     "start": 5.16,
-     "end": 5.6,
+     "start": 4.475,
+     "end": 5.04,
      "heard": true
     }
    ]
