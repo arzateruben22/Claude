@@ -79,7 +79,7 @@ const CUBE_X = -PH.cube / 2 - 160, TOWER_X = 260;
 const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
 const S = { you: [0, 1.9, 0], half: [PH.side_one / 2, 0, 0], london: [PH.side_lon / 2, 0, -PH.side_lon / 2], dot: [0, PH.r_earth, 0],
-  tower: [TOWER_X, PH.tower * 0.8, 0], cube: [CUBE_X - PH.cube * 0.3, PH.cube, 0] };   // the cube's front face stands at z = 0, beside the tower: equal depth, true heights
+  tower: [TOWER_X, PH.tower, 0], cube: [CUBE_X - PH.cube * 0.3, PH.cube, 0] };   // the tower label points at the tip from the right; the cube's front face stands at z = 0 beside it
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
 hud.captions(FILM.captions);
@@ -89,7 +89,7 @@ for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1,
 for (const p of FILM.pills) hud.scale(p.id, { text: p.text, bar: null, t0: p.t0, t1: p.t1, at: p.at });
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
-  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v });
+  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });

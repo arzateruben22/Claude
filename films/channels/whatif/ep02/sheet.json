@@ -91,11 +91,6 @@
    "tag": "spine-1"
   },
   {
-   "t": 11.833333333333334,
-   "kind": "label",
-   "tag": "l-half"
-  },
-  {
    "t": 16.2,
    "kind": "section",
    "id": "change",
@@ -216,7 +211,7 @@
   {
    "t": 56.55,
    "kind": "term.write",
-   "tag": "work-8.2 bn × 62 kg (adult avg.) ÷ water"
+   "tag": "work-8.2 bn × 62 kg ÷ water"
   },
   {
    "t": 58.3,

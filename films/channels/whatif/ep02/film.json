@@ -349,41 +349,41 @@
     "t": 46.46666666666667,
     "target": [
      -150,
-     420,
+     0,
      0
     ],
-    "dist": 7600,
+    "dist": 8000,
     "el": 4,
     "az": 3,
     "fov": 30,
-    "fy": 0.4
+    "fy": 0.5
    },
    {
     "t": 56.4,
     "target": [
      -150,
-     420,
+     0,
      0
     ],
-    "dist": 8200,
+    "dist": 9500,
     "el": 4,
     "az": 2,
     "fov": 30,
-    "fy": 0.46,
+    "fy": 0.52,
     "ease": "inout2"
    },
    {
     "t": 62.4,
     "target": [
      -150,
-     420,
+     0,
      0
     ],
-    "dist": 8000,
+    "dist": 9300,
     "el": 4,
     "az": 1,
     "fov": 30,
-    "fy": 0.46,
+    "fy": 0.52,
     "ease": "sine"
    }
   ],
@@ -402,6 +402,20 @@
     "fy": 0.36
    },
    {
+    "t": 65.26666666666667,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 70,
+    "el": 50,
+    "az": 24,
+    "fov": 30,
+    "fy": 0.4,
+    "ease": "inout2"
+   },
+   {
     "t": 67.06666666666666,
     "target": [
      0,
@@ -413,7 +427,7 @@
     "az": 22,
     "fov": 30,
     "fy": 0.4,
-    "ease": "in3"
+    "ease": "inout2"
    },
    {
     "t": 68.46666666666667,
@@ -695,7 +709,7 @@
   "rows": [
    {
     "t": 56.55,
-    "k": "8.2 bn × 62 kg (adult avg.) ÷ water",
+    "k": "8.2 bn × 62 kg ÷ water",
     "v": "≈ 800 m cube",
     "lit": false
    },
@@ -726,17 +740,6 @@
    "side": 1
   },
   {
-   "id": "l-half",
-   "text": "½ m²",
-   "kind": "assume",
-   "anchor": "half",
-   "t0": 11.833333333333334,
-   "t1": 16.866666666666667,
-   "shot": "you",
-   "side": -1,
-   "v": "above"
-  },
-  {
    "id": "l-lon",
    "text": "Greater London, 1,572 km²",
    "kind": "part",
@@ -764,7 +767,9 @@
    "t0": 52.2,
    "t1": 56.3,
    "shot": "cube",
-   "side": 1
+   "side": 1,
+   "v": "above",
+   "fixed": true
   },
   {
    "id": "l-cube",
@@ -795,7 +800,7 @@
   },
   {
    "id": "b-water",
-   "text": "∵ bodies about as dense as water",
+   "text": "∵ as dense as water · 62 kg adult average",
    "t0": 46.46666666666667,
    "t1": 62.4,
    "slot": "tl"
