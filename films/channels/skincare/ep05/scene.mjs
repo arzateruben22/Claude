@@ -154,7 +154,7 @@ window.seek = function (t) {
   A.g0 = [GR[0].group.position.x, 18, 10]; A.g2 = [GR[2].group.position.x, 18, 10];
 
   // ── the globe: UV band, then the dots fill in and follow it ──
-  if (isW) globe.set({ uv: fadeIn(t, CUE.sunlight - 0.4, 0.8), dots: E.inout2(seg(t, CUE.colour - 0.2, CUE.matched + 0.2)), spin: 0.18 * (t - SH.globe) - 0.6 });
+  if (isW) globe.set({ uv: 0.3 + 0.7 * fadeIn(t, CUE.sunlight - 0.4, 0.8), dots: E.inout2(seg(t, CUE.colour - 0.2, CUE.matched + 0.2)), spin: 0.18 * (t - SH.globe) - 0.6 });
   A.band = globe.at.band();
 
   // ── the depth gauge: on the light section's left cut edge, lifted to centre for the to-scale beat ──

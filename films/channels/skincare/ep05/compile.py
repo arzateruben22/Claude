@@ -64,9 +64,9 @@ HOOK = {"target": [0, -44, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.38}
 CAM = {
     "hook": [{"t": 0.0, **HOOK, "dist": 640, "az": -10}, {"t": B["normal"]["t0"], **HOOK, "dist": 600, "az": -7, "ease": "sine"}],
     "rows": [
-        {"t": B["normal"]["t0"], "target": [0, -60, 10], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 520, "az": -6},
-        {"t": CUE["count"], "target": [0, -74, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 420, "az": -3, "ease": "inout2"},
-        {"t": B["change"]["t0"], "target": [0, -76, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 380, "az": -1, "ease": "sine"},
+        {"t": B["normal"]["t0"], "target": [0, -60, 10], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 600, "az": -5},
+        {"t": CUE["count"], "target": [0, -74, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 560, "az": -3, "ease": "inout2"},
+        {"t": B["change"]["t0"], "target": [0, -76, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 540, "az": -1, "ease": "sine"},
     ],
     "grains": [
         {"t": B["change"]["t0"], "target": [GX, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": -6},
@@ -98,7 +98,7 @@ LABELS = [
     {"id": "l-pig", "text": "one pigment cell", "kind": "cell", "anchor": "mel1", "t0": B["normal"]["t0"] + 0.4, "t1": CUE["feeds"] + 1.4, "shot": "rows", "side": 1},
     {"id": "l-light", "text": "lighter", "kind": "layer", "anchor": "top0", "t0": CUE["count"], "t1": B["change"]["t0"], "shot": "rows", "side": -1, "v": "above", "fixed": True},
     {"id": "l-deep", "text": "deeper", "kind": "layer", "anchor": "top2", "t0": CUE["count"], "t1": B["change"]["t0"], "shot": "rows", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-g-light", "text": "small, in clusters", "kind": "cell", "anchor": "g0", "t0": CUE["work"] + 0.3, "t1": B["why"]["t0"], "shot": "grains", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-g-light", "text": "small, in clusters", "kind": "cell", "anchor": "g0", "t0": CUE["work"] + 0.3, "t1": CUE["larger"] - 0.6, "shot": "grains", "side": -1, "v": "above", "fixed": True},
     {"id": "l-g-deep", "text": "larger, one by one", "kind": "cell", "anchor": "g2", "t0": CUE["larger"], "t1": B["why"]["t0"], "shot": "grains", "side": 1, "v": "above", "fixed": True},
     {"id": "l-more", "text": "more pigment cells? no", "kind": "cell", "anchor": "mel2", "t0": CUE["more"], "t1": t_globe, "shot": "trio", "side": 1},
     {"id": "l-uv", "text": "ultraviolet, strongest here", "kind": "uv", "anchor": "band", "t0": CUE["sunlight"], "t1": B["whoa"]["t0"], "shot": "globe", "side": 1},
