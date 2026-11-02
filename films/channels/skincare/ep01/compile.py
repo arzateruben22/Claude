@@ -46,7 +46,7 @@ t_end = A("vo08:Next", -0.25)
 # (the review: no cut into the dive and no tone change there; the to-scale beat grows out of the walls shot)
 SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "section"}, {"at": A("vo05:Babies", -0.2), "name": "walls"},
          {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.5, "section": 0.5, "walls": 0.88, "close": 0.5}   # melanin 0–1: medium for the dive and the loop, deep for the walls (the light tone leads No. 002)
+TONE = {"hook": 0.5, "section": 0.5, "walls": 0.5, "close": 0.5}   # one tone for the whole world (bible §1, 2 Nov): No. 001 medium, No. 002 light, No. 003 deep
 
 # ── the cell's climb (change): born at the base, rises for about two weeks, takes itself apart near the top ──
 t_born = A("vo03:began")

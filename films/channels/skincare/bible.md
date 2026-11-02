@@ -23,8 +23,10 @@ doing it wrong".
 - Never infers behaviour, health or character from how skin looks.
 - Every treatment-adjacent statement goes to a board-certified dermatologist before posting
   (each episode's `review/HUMAN-REVIEW.md` and `CLAIMS-REVIEW.md`).
-- Skin of every tone in every illustration: each section the film draws is rendered in at least
-  three melanin levels across an episode, and the "default" skin rotates episode to episode.
+- Skin of every tone, across the season: each episode's whole world is drawn in **one** melanin level, and the level
+  rotates episode to episode (No. 001 medium, 002 light, 003 deep, then around again). Never change tone inside an
+  episode's story: a tone change on a line about risk, behaviour or illness reads as linking that tone to it (the
+  No. 002 review caught a switch to deep skin on "real people spread less"; 2 Nov).
 - Nothing of Lumevina (the client's skincare studio, `lumevina/`, `films/skin-school-tiktok/`): not
   its look (black, rose and gold; glass bells), not its narrator (af_heart), products or wording.
   Lumevina's Skin School already covers "why does a pore clog", so this channel does not.

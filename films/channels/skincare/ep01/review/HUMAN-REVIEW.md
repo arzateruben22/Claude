@@ -17,8 +17,8 @@
   - "Kept alive" / "a layer that died for it": a reframe of the barrier's role in water balance; check it reads as
     figurative and not as a medical claim.
 - **No advice, no diagnosis:** the film describes biology only. Confirm nothing reads as telling a viewer what to do.
-- **Skin tones:** medium for the dive and the loop, deep for the two walls; nothing is said or implied about any tone,
-  and the deep tone is not tied to prematurity (both walls share it).
+- **Skin tones:** one medium tone for the whole film (bible §1: one tone per episode, rotating across the season), so
+  no tone is tied to any line about risk or illness. Check it reads that way.
 
 ## Every episode
 1. **AI labelling.** Turn on the platform's AI-content label (TikTok, YouTube, Meta) and keep "Narration: synthetic

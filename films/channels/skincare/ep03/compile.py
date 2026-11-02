@@ -38,7 +38,7 @@ t_end = A("vo08:Next", -0.25)
 SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "sponge"}, {"at": A("vo03:doctors", -0.2), "name": "nerves"},
          {"at": B["why"]["t0"], "name": "inside"}, {"at": B["whoa"]["t0"], "name": "reflex"}, {"at": B["toscale"]["t0"], "name": "palm"},
          {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.25, "sponge": 0.25, "nerves": 0.7, "inside": 0.7, "reflex": 0.95, "palm": 0.95, "close": 0.25}
+TONE = {"hook": 0.9, "sponge": 0.9, "nerves": 0.9, "inside": 0.9, "reflex": 0.9, "palm": 0.9, "close": 0.9}   # one tone for the whole world (bible §1): deep
 
 CUE = {"swell": [A("vo02:swelling,", -0.3), A("vo02:sponge.", 0.2)], "wrong": A("vo02:wrong."),
        "cut": A("vo03:cut"), "smooth": A("vo03:smooth"), "nerves": A("vo04:nerves."), "narrow": [A("vo04:narrow"), A("vo04:fingertip,", 0.2)],

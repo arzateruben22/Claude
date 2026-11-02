@@ -83,7 +83,7 @@
  "tone": {
   "hook": 0.5,
   "section": 0.5,
-  "walls": 0.88,
+  "walls": 0.5,
   "close": 0.5
  },
  "bio": {
