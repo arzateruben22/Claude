@@ -8,6 +8,10 @@ import type { RigPosition } from "@/lib/rig";
 import { formatLocal, localDate } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
+import { identityOf } from "@/lib/identity";
+import { IdentityArt } from "./IdentityArt";
+import { SeasonBar } from "./SeasonBar";
+import { seasonLine } from "@/domain/season";
 
 const shape = (pos: RigPosition) => (pos === "center" || pos === "top" ? "landscape" : "portrait");
 
@@ -15,27 +19,35 @@ export function Monitor({ m, pos, tz }: { m: MonitorCard; pos: RigPosition; tz: 
   const kind = shape(pos);
   const ig = m.kind === "instagram";
   const small = smallCover(m.cover);
+  const identity = ig ? undefined : identityOf(m.slug);
   return (
-    <Link href={m.href} className={`mon mon-${kind}`} data-pos={pos} data-empty={(!ig && !m.cover) || undefined} data-tone={ig ? undefined : m.coverTone} style={topicStyle(m)}>
+    <Link href={m.href} aria-label={label(m)} className={`mon mon-${kind}`} data-pos={pos} data-empty={(!ig && !m.cover) || undefined} data-tone={ig ? undefined : m.coverTone} data-identity={identity} style={topicStyle(m)}>
       <span className="mon-bezel">
         <span className="mon-screen">
           {ig ? <InstagramScreen m={m} tz={tz} />
             : m.cover ? (
               <img className="mon-cover" src={mediaUrl(small ?? m.cover)} srcSet={small && small !== m.cover ? `${mediaUrl(small)} 480w, ${mediaUrl(m.cover)} 1080w` : undefined}
                 sizes="(min-width: 900px) 200px, 50vw" alt="" loading="eager" decoding="async" />
-            ) : m.label.toLowerCase() !== m.name.toLowerCase() ? <span className="mon-standby" aria-hidden>{m.label}</span> : null}
+            ) : identity ? <IdentityArt id={identity} season={m.season} />
+            : m.label.toLowerCase() !== m.name.toLowerCase() ? <span className="mon-standby" aria-hidden>{m.label}</span> : null}
         </span>
         {ig ? null : (
           <span className="mon-chin">
             <span className="mon-name">{m.name}</span>
-            <span className="mon-status">{m.status.split(" · ").map((part, i) => <span key={i}>{part}</span>)}</span>
+            {m.season?.planned ? null : <span className="mon-status">{m.status.split(" · ").map((part, i) => <span key={i}>{part}</span>)}</span>}
+            {m.season ? <SeasonBar season={m.season} className="mon-season" /> : null}
           </span>
         )}
         <span className="mon-led" data-led={m.led} aria-hidden />
       </span>
-      <span className="sr-only">. Status light: {m.ledLabel}.</span>
     </Link>
   );
+}
+
+/** The link's spoken name, in sentences: "Rest Frame. 6 to review. Season 1 · 6 of 6 ready. Status light: needs review." */
+function label(m: MonitorCard) {
+  const parts = m.kind === "instagram" ? ["Instagram, all series", m.status] : [m.name, m.season?.planned ? null : m.status, m.season ? seasonLine(m.season) : null];
+  return [...parts.filter(Boolean), `Status light: ${m.ledLabel}`].join(". ") + ".";
 }
 
 const SLOT_NOTE: Record<IgSlot["state"], string> = { posted: "Posted", ready: "Ready", needs_approval: "Needs approval", unplanned: "Up next", missed: "Missed", empty: "Open" };

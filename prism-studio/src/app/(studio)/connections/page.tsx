@@ -104,7 +104,7 @@ export default async function Connections({ searchParams }: { searchParams: Prom
                           <label className="field">Upload link <span className="hint">Default: {OFFICIAL[d.platform].upload}</span><input name="uploadUrl" type="url" defaultValue={d.uploadUrl} /></label>
                           <label className="field">Account email <span className="hint">Private; shown only to you.</span><input name="email" type="email" defaultValue={d.email} autoCapitalize="none" /></label>
                           <label className="field">Note <input name="selectionNote" defaultValue={d.selectionNote} /></label>
-                          <a href={OFFICIAL[d.platform].help} target="_blank" rel="noopener noreferrer" className="faint" style={{ fontSize: 13 }}>{PLATFORM_LABEL[d.platform]} help ↗</a>
+                          <a href={OFFICIAL[d.platform].help} target="_blank" rel="noopener noreferrer" className="faint help-link" style={{ fontSize: 13 }}>{PLATFORM_LABEL[d.platform]} help ↗</a>
                         </div>
                       </details>
                       <label className="check"><input type="checkbox" name="confirm" /> <span>I checked this is the right account</span></label>

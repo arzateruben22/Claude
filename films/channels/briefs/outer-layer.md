@@ -1,0 +1,41 @@
+You are the production session for **Outer Layer**, a new science channel in the owner's studio. Your coordinator is session_01QoHo6s2RxqYM5nTnh8pa5q (it collects your episodes into Prism Studio and relays to the owner). Build **season 1: six 60–75 s vertical episodes and one long video**, at the same standard as the three channels already finished in this repo (Rest Frame = physics, Light Minute = space, Meanwhile, Inside = body), at maximum quality.
+
+## What the owner decided (27 Oct)
+- Channel name: **Outer Layer** (Prism Studio slug `skincare`; it was "Skincare (name TBD)"). Its brief from the studio catalogue (`prism-studio/src/domain/catalog.ts`, use it as the editorial standard):
+  - Tagline (draft): "Skin biology, ingredients and routines, with the evidence on the screen."
+  - Audience: curious adults who want to understand their skin, not be sold to.
+  - Tone: calm, precise, kind. Myths are corrected without mocking anyone.
+  - Visual grammar: procedural cross-sections of skin, clean labels, honest scale notes.
+  - Claim standards: dermatology bodies, NIH and peer-reviewed sources; treatment statements need a dermatologist's sign-off; no diagnoses, no guarantees, no advice to individuals.
+  - Examples: "Why does a pore clog?", "Does SPF 100 beat SPF 50?"
+  - Avoid: inferring behaviour from appearance, promised results, brand endorsements, Lumevina's look (black, rose and gold; glass bells).
+- Narrator: a synthetic voice (labelled "Narration: synthetic voice (AI)" like the others), **auditioned for the owner**. Already taken, never use: af_bella (Rest Frame), bf_emma (Meanwhile, Inside), am_michael (Light Minute), af_heart (Lumevina, a client). Render 3 candidate kokoro voices reading your episode-1 hook and one explanatory line, polished the same way, put them in `films/channels/skincare/auditions/` (m4a), push, and message the coordinator with your recommendation and why. Then carry on with your recommendation; if the owner picks another before your finals, you re-voice and recompile (cheap before the final render).
+- Built in parallel with the other new channel; you own `films/channels/skincare/` on branch `claude/outer-layer-s1` (create it from `claude/made-with-claude-film`).
+- "Maximum quality": final tier at 1080×1920 30 fps, delivery CRF 15 (render.mjs default), a 1440×2560 YouTube version of every episode (`kits/cinema/film/youtube1440.py`), and the long video at 2560×1440 CRF 15 (`kits/cinema/film/compilation.mjs`, its default). Sound −14 LUFS, ≤ −1 dBTP on the delivered AAC. Captions ≥ 4.5:1, ≤ 3 flashes a second.
+
+## Read first (they are the standard you are matched against)
+1. `.claude/skills/cinema-kit/SKILL.md` and `kits/cinema/README.md`: the film process.
+2. `kits/cinema/script/WRITING.md` (the story standard: a person, a wrong idea or stakes in every episode, open loops, earned wonder, the "Never write" list `lint.py` checks) and `kits/cinema/script/README.md` (script → claims → voice → `compile.py` → film.json; captions with numerals are automatic: `f.captions()` writes "1906", "0.45 seconds", keeps small counts as words, and keeps a numeral on its unit's row).
+3. `films/channels/DECISIONS.md` (how the first three were set apart: look, type, narrator, sound key/tempo, signature, motif, recurring segment; shared rules; platforms) and `films/channels/crosscheck.json`.
+4. One finished channel end to end as your reference: `films/channels/space/` (bible.md, PRODUCTION.md, KIT-CHANGES.md, theme.json, set/, ep01–ep06 with compile.py, scene.mjs, script.md, claims.json, README.md, review/, out/) and its `compilations/vol01`. Rest Frame (`films/channels/physics/`) is the second reference.
+5. `kits/cinema/film/README.md` (render.mjs: chunks, `--resume`, `--assemble --audio`, qa.py, youtube1440.py, compilation.mjs), `kits/cinema/studio/README.md` (soundtrack), `kits/cinema/voice/README.md` (tts.py, align.py, lexicon; `setup.sh` builds the voice venv and models if missing), `kits/cinema/sci/` (hud.js, clock.js: notes, labels, badges, captions).
+
+## Your steps
+1. **Series bible** `films/channels/skincare/bible.md`: promise, audience, look (palette tokens with roles, type pairing, self-hosted fonts with licences), motif, recurring segment, sound (key, tempo locked to the frame grid, instruments, a 3-note signature), honesty badges, end card, and **six episode ideas** ranked, each with its hook, its person/wrong idea/stakes, its "whoa", and the sources it needs. Make the identity clearly its own: not the other three channels' looks, not Lumevina (black, rose and gold; glass bells), not Los Güeros (espresso #100C09 / amber #E8A356, Cormorant Garamond + Jost), not Claude coral. Send the coordinator a short summary (name, look, type, sound, the six titles) when the bible is done.
+2. **Episode 1 first**, then 2–6, each one: script.md (story standard) → `lint.py` → claims.json (every number sourced, hedged as the sources are) → voice + alignment → compile.py → scene.mjs + set/ blocks → soundtrack → draft render and an **independent review** (one review agent per episode as the quality gate: text/layout and picture, every finding verified before you act; Light Minute's PRODUCTION.md shows the bar) → fixes → final render (detached, chunked, one Chromium job at a time, `--resume` after any container restart) → `--assemble --audio` → `qa.py` PASS → `youtube1440.py` → poster and contact sheet in out/, README.md, assets.md, review/HUMAN-REVIEW.md (what code can't check: claims sign-off by the right specialist, AI labelling, taste) and review/scorecard.md. Commit and push each episode as it lands, and message the coordinator one line per episode (title, length, LUFS/dBTP, flashes, sizes, commit).
+3. **Long video** after episode 5: `node kits/cinema/film/compilation.mjs --channel films/channels/skincare --episodes ep01,ep02,ep03,ep04,ep05 --name vol01 --title "<season title>" --thumb "<season title>"`; QA PASS; commit; report.
+4. A `PRODUCTION.md` log at the channel root like Light Minute's, with a final summary table.
+
+## Lessons from the first three channels (build them in from the start)
+- Captions: let `f.captions()` write numbers; if you glue phrases (space's `set/capglue.py` pattern), glue a year with its lead word ("in nineteen seventy-seven.") and never glue part of a number. Check every caption page in a still: no orphan word on a page, no number split from its unit.
+- Captions sit inside the platform safe zones (TikTok/Reels/Shorts UI on the right and bottom); labels never collide with captions or each other (the space and body sessions checked 150+ moments per episode).
+- Keep the YouTube description inside 5,000 characters: about 12–15 sources per episode at most; extra detail goes in claims.json, not more sources.
+- Every number on screen and in the voice agrees with claims.json; "about"/"nearly" as the source hedges; units always.
+- Renders: ~1–3 s/frame on this 4-core box; a 75 s episode is about 1.5–3 h. Use `setsid nohup`, a tracked background wait on the render PID, and a `send_later` safety check-in; never `pkill -f`/`pgrep -f` (kill by PID).
+- Skin-specific: this channel is separate from Lumevina (the client's skincare studio, `films/skin-school-tiktok/`, `lumevina/`): never reuse its look, narrator (af_heart), glass bells, products or wording, and don't feature any brand. Show skin of every tone in illustrations. No before/after, no "you have X", no product recommendations; HUMAN-REVIEW.md names a board-certified dermatologist sign-off for every claim. The "Why does a pore clog?" idea overlaps Lumevina's existing Skin School film: pick a different angle or topic.
+
+## Rules
+- Nothing is posted, uploaded or sent anywhere outside this repo; the owner approves every post in Prism Studio.
+- Don't edit other channels, `prism-studio/`, or shared kit files without telling the coordinator; if you must change a kit file, keep old films byte-identical, log it in your `KIT-CHANGES.md`, and say so in your next message.
+- No model names in commits or files; end commit messages with the attribution lines your session's instructions give. No pull request.
+- If you are blocked more than ~20 minutes, message the coordinator with the exact problem instead of guessing.
