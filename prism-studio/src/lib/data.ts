@@ -93,6 +93,13 @@ export async function reviewQueue() {
   }));
 }
 
+/** The review queue's order (ids and titles only), for Previous / Next on an episode page. */
+export async function reviewOrder() {
+  const d = db();
+  const s = await settings(d);
+  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.updatedAt));
+}
+
 const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
 
 /** Publications with everything a task needs: the episode, account, export, live approval, render and channel. */

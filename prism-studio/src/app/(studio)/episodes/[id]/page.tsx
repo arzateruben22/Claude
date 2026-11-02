@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { analyticsRows, episodeFull, studio } from "@/lib/data";
+import { analyticsRows, episodeFull, reviewOrder, studio } from "@/lib/data";
 import { canTransition, PIPELINE, SIDE_STATES, type EpisodeState } from "@/domain/episodes";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
@@ -9,6 +9,7 @@ import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/l
 import { addNote, moveEpisode, resolveNote, toggleSource } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { Placements } from "@/components/Placements";
+import { ReviewSlide } from "@/components/ReviewSlide";
 import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function Episode({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
-  const [f, s, numbers] = await Promise.all([episodeFull(id), studio(), analyticsRows({ episodeId: id })]);
+  const [f, s, numbers, order] = await Promise.all([episodeFull(id), studio(), analyticsRows({ episodeId: id }), reviewOrder()]);
   if (!f) notFound();
   const { ep, channel, current } = f;
   if (ep.isDemo && !s.showDemo) return (
@@ -30,28 +31,32 @@ export default async function Episode({ params }: { params: Promise<{ id: string
     </div>
   );
   const moves = ([...PIPELINE, ...SIDE_STATES] as EpisodeState[]).filter((to) => canTransition(ep.state as EpisodeState, to));
-  const step = PIPELINE.indexOf(ep.state as (typeof PIPELINE)[number]);
+  const pipeStep = PIPELINE.indexOf(ep.state as (typeof PIPELINE)[number]);
   const fails = current ? qaFails(current.qa) : null;
+  // in review, Previous / Next step through the review queue (the same order as the Review reel)
+  const at = order.findIndex((o) => o.id === ep.id);
+  const step = (o: (typeof order)[number] | undefined) => (at >= 0 && o ? { href: `/episodes/${o.id}`, label: o.title } : null);
   return (
     <div style={topicStyle(channel)}>
-      <Link href={`/channels/${channel.slug}?tab=episodes`} className="kicker" style={{ color: "var(--topic-ink)", textDecoration: "none" }}>← {channel.name.replace(/ \(name TBD\)$/, "")} · No. {String(ep.number).padStart(3, "0")}</Link>
-      <h1>{ep.title}</h1>
-      {ep.question ? <p className="lede">{ep.question}</p> : null}
-      <div className="row" style={{ marginBottom: 18 }}>
-        <span className={`chip ${stateTone(ep.state)}`}>{STATE_LABEL[ep.state]}</span>
-        {f.series ? <span className="chip topic">{f.series.title}{ep.seriesOrder ? ` · part ${ep.seriesOrder}` : ""}</span> : null}
-        {ep.durationS ? <span className="chip">{ep.durationS.toFixed(1)} s</span> : null}
-        {ep.isDemo ? <span className="demo-tag">DEMO</span> : null}
-      </div>
-      {step >= 0 ? (
-        <div className="bar" aria-label={`Production step ${step + 1} of ${PIPELINE.length}`} style={{ marginBottom: 24 }}><i style={{ width: `${((step + 1) / PIPELINE.length) * 100}%` }} /></div>
-      ) : null}
+      <ReviewSlide full={f} tz={s.timezone} single sources={false} prev={step(order[at - 1])} next={step(order[at + 1])}
+        position={at >= 0 ? { n: at + 1, of: order.length } : undefined}
+        back={{ href: `/channels/${channel.slug}?tab=episodes`, label: channel.name.replace(/ \(name TBD\)$/, "") }}
+        head={<>
+          <h1 className="slide-title">{ep.title}</h1>
+          {ep.question ? <p className="lede" style={{ margin: 0 }}>{ep.question}</p> : null}
+          <div className="row">
+            <span className={`chip ${stateTone(ep.state)}`}>{STATE_LABEL[ep.state]}</span>
+            {f.series ? <span className="chip topic">{f.series.title}{ep.seriesOrder ? ` · part ${ep.seriesOrder}` : ""}</span> : null}
+            {ep.durationS ? <span className="chip">{ep.durationS.toFixed(1)} s</span> : null}
+            {ep.isDemo ? <span className="demo-tag">DEMO</span> : null}
+          </div>
+          {pipeStep >= 0 ? (
+            <div className="bar" aria-label={`Production step ${pipeStep + 1} of ${PIPELINE.length}`} style={{ width: "100%", maxWidth: 520 }}><i style={{ width: `${((pipeStep + 1) / PIPELINE.length) * 100}%` }} /></div>
+          ) : null}
+        </>} />
 
-      <div className="grid2">
+      <div className="grid2 section">
         <section className="stack">
-          {current ? (
-            <div className="player-wrap"><video className="player" controls preload="metadata" playsInline poster={current.posterPath ? mediaUrl(current.posterPath) : undefined} src={mediaUrl(current.videoPath)} /></div>
-          ) : <div className="card"><p className="muted" style={{ margin: 0 }}>No render yet{ep.filmsPath ? `: the film lives in ${ep.filmsPath}` : ""}.</p></div>}
           {current ? (
             <div className="row" id="qa">
               <span className="chip">render v{current.versionNo}</span>
@@ -73,7 +78,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
         </section>
 
         <section className="stack">
-          <h2 style={{ margin: 0 }}>Accounts</h2>
+          <h2 style={{ margin: 0 }}>Accounts and text</h2>
           <Placements full={f} tz={s.timezone} />
         </section>
       </div>
