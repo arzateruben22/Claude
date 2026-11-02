@@ -49,16 +49,15 @@ vo: And on most of your body, only the top layer, about this paper's thickness, 
 ## takeaway {shot: back to the hook's knee, its scar lit, the weave faintly showing around it · picture-only 0.5 s · energy: 0.3} (61–67.5 s)
 vo: So, is a scar still skin? Skin's quick repair: strong enough to close, never the *weave*. {c10}
 
-## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–73 s)
-vo: Next: the season's next layer, still to be *chosen*. {-}
-end card: "Next layer: …" · "Outer Layer · s1v2 · topic 6"
+## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
+vo: Next: a poison that smooths a frown. What does it *silence*? {-}
+end card: "Next layer: a poison that smooths a frown. What does it silence?" · "Outer Layer · No. 003"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches; pmc.ncbi.nlm.nih.gov
   does not resolve in this session); see `claims.json`. A person opens each link, and a board-certified
   dermatologist signs off, before posting.
-- The tease line is a placeholder; the season's tease chain is set later. Replace it, and the end card's first
-  line, then re-lint.
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - "About four-fifths of the original strength": Levenson et al. 1965 measured rat skin; the 80% ceiling is the
   standard surgical teaching for human skin, but the voice never says "your" scar is 80%. Badge "rat skin".
 - "About the sixth month": reviews give the switch at about 22–24 weeks of gestation (weeks 22–26 are the sixth

@@ -50,8 +50,8 @@ vo: And each white cell in that fight, the kind that ends up as pus, is about a 
 vo: So, is it new? No. {-} It's the end of a fight that began out of *sight*. {c12}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67–73 s)
-vo: Next: … a placeholder line, until the season's tease chain is *set*. {-}
-end card: "Next layer: …" · "Outer Layer · No. TBD" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
+vo: Next: skin lit from within. Where does that *glow* come from? {-}
+end card: "Next layer: where does a glow come from?" · "Outer Layer · No. 001" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches; www.ncbi.nlm.nih.gov does
@@ -67,5 +67,5 @@ end card: "Next layer: …" · "Outer Layer · No. TBD" · footnote: "In one stu
   sphere ≈ 8.3 µm, computed); spread on a smear 12–15 µm. 8–15 µm ÷ 100 µm ≈ a twelfth to an eighth: "about a tenth".
 - No number of weeks is spoken or shown for how long a spot takes to form: the popular "2–3 weeks" / "8 weeks" /
   "90 days" figures trace to brands and clinics, not to a measured study (research.md).
-- The tease is a placeholder; the season's tease chain is set later. Replace the vo and end card then.
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - Listen at T0: follicle, bacterium, pus.

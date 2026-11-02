@@ -51,8 +51,8 @@ vo: And the long rays reach past the whole top layer, which on most skin is abou
 vo: Same list as cigarettes, then: not the same size of harm, but the same *certainty*. {c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74 s)
-vo: Next: … the next layer's question, set once the season's *order* is. {-}
-end card: "Next layer: … (TODO: set with the season's tease chain)" · "Outer Layer · s1v2" · footnote: "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009."
+vo: Next season: why do bath fingers wrinkle, but never your *arm*? {-}
+end card: "Next season: why do bath fingers wrinkle?" · "Outer Layer · No. 006" · footnote: "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009."
 
 ## Notes
 - Every claim was checked through search excerpts only: the proxy blocks page fetches (www.iarc.who.int does not
@@ -66,5 +66,5 @@ end card: "Next layer: … (TODO: set with the season's tease chain)" · "Outer 
   the midday sun", for UVA from large, powerful units; the figure is old and not universal (measured devices
   range from about 2 to 26 times solar UVA). Dermatologist to confirm it stays.
 - "About as thin as paper": epidermis usually ≈ 0.1 mm (0.07–0.12 mm), thicker on palms and soles.
-- TODO: the tease line and end card are placeholders until the season's tease chain is set.
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - Listen at T0: UVA, melanoma.

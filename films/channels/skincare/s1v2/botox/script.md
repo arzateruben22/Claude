@@ -52,8 +52,8 @@ vo: And the gap that message never crosses is about two thousand times thinner t
 vo: Not the skin, but one message, silenced for a few months, until the nerve grows new *endings*. {c12,c13}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74.5 s)
-vo: Next: a placeholder line, set when the season's tease chain is *written*. {-}
-end card: "Next layer: …" · "Outer Layer · s1v2" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
+vo: Next: two neighbours under one sun for ten years. {-} Which hand *aged*? {-}
+end card: "Next layer: one sun, ten years. Which hand aged?" · "Outer Layer · No. 004" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: pmc.ncbi.nlm.nih.gov does
@@ -68,5 +68,5 @@ end card: "Next layer: …" · "Outer Layer · s1v2" · footnote: "Alan Scott fi
   conservative one.
 - "About two thousand times thinner": cleft ≈ 50 nm (StatPearls; other sources 20–60 nm) and paper ≈ 100 µm;
   100,000 ÷ 50 = 2,000 (computed).
-- Tease is a placeholder ("Next: …"); replace the vo and end card when the season's chain is set.
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - Listen at T0: botulinum, Justinus Kerner, acetylcholine (on screen only), SNAP-25 (on screen only).

@@ -52,8 +52,8 @@ vo: Blue light gets barely a millimetre in, about ten sheets of paper; red light
 vo: So where does a glow come from? Mostly from within: light that went in, met your blood, and came *back*. {c15}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
-vo: Next: … the season's tease chain sets this line, one *question*. {-}
-end card: "Next layer: …" · "Outer Layer · s1v2"
+vo: Next: skin closes almost any cut. But is a scar still *skin*? {-}
+end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: ncbi.nlm.nih.gov failed to
@@ -63,5 +63,5 @@ end card: "Next layer: …" · "Outer Layer · s1v2"
   at head-on incidence, ((1.55 − 1)/(1.55 + 1))² ≈ 4.7 % (computed), inside the measured 4–7 %.
 - "About ten sheets of paper": ≈ 1 mm ÷ ≈ 100 µm per sheet = 10 (computed). Depths depend on skin type, site and
   beam width; on screen as "estimate".
-- The tease is a placeholder; the season's tease chain is set later.
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - Listen at T0: melanin.

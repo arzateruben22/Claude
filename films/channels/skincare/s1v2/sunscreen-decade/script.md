@@ -53,8 +53,8 @@ vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thic
 vo: So, which hand aged? The eye can't say, but the skin was keeping its own *record*. {c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
-vo: Next: … a placeholder, until the season's tease chain is *set*. {-}
-end card: "Next layer: …" · "Outer Layer · No. TODO" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
+vo: Next: tanning beds share a list with cigarettes. What does it *mean*? {-}
+end card: "Next layer: tanning beds, on a list with cigarettes" · "Outer Layer · No. 005" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
 
 ## Notes
 - Every claim was checked through search excerpts only: the proxy blocks page fetches (pubmed.ncbi.nlm.nih.gov
@@ -70,5 +70,5 @@ end card: "Next layer: …" · "Outer Layer · No. TODO" · footnote: "Nambour S
   film about 20 µm thick (computed); 20 ÷ 100 = a fifth. Real-world application is often thinner; the line says
   "at a lab's test dose" so it does not describe what anyone in the trial applied.
 - The daily group's skin ageing was measured on the backs of the hands only, in 903 adults under 55 (Hughes 2013).
-- Placeholders (TODO): the episode number on the end card; the tease line (set later with the season's chain).
+- Tease and end card set with the season's chain (see `../SEASON.md`).
 - Listen at T0: Nambour, Queensland, squamous, melanoma.
