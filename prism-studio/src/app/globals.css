@@ -72,7 +72,9 @@ img, svg, video { max-width: 100%; }
 
 /* ── shell ─────────────────────────────────────────────────────────────── */
 .shell { min-height: 100dvh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); }
-.main { max-width: 1180px; margin: 0 auto; padding: 22px 16px 40px; }
+/* phones: below the notch and clear of the rounded corners (env() is 0 in a browser tab; it matters in the installed app,
+   whose status bar is translucent) */
+.main { max-width: 1180px; margin: 0 auto; padding: calc(22px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left)); }
 
 /* phone: a glass tab bar at the thumb */
 .nav { position: fixed; z-index: 40; left: 0; right: 0; bottom: 0; height: calc(var(--nav-h) + env(safe-area-inset-bottom)); padding: 0 4px env(safe-area-inset-bottom);
@@ -284,7 +286,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .modal { background: rgba(14, 16, 21, .97); border: 1px solid var(--line-2); border-radius: var(--r); padding: 24px; max-width: 480px; width: 100%; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .9); }
 
 /* ── the monitor wall ("/") ────────────────────────────────────────────── */
-.main:has(> .home) { max-width: 1520px; padding-top: 18px; }
+.main:has(> .home) { max-width: 1520px; padding-top: calc(18px + env(safe-area-inset-top)); }
 .home-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 18px; margin: 0 0 18px; }
 .home-brand { margin: 0; font: 400 26px/1 var(--display); letter-spacing: -.005em; }
 .home-brand span { color: var(--steel); font-style: italic; }
@@ -879,7 +881,7 @@ a.budget-name:hover { text-decoration: underline; }
   .reel::-webkit-scrollbar { display: none; }
   .reel > .slide { scroll-padding-bottom: calc(var(--bar-h) + 16px); flex: 0 0 100%; height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scroll-snap-align: start; scroll-snap-stop: always; }
   /* the episode page: one slide at the top of the page, edge to edge; the bar sticks above the tab bar */
-  .slide.single { margin: -22px -16px 0; }
+  .slide.single { margin: calc(-22px - env(safe-area-inset-top)) -16px 0; }
   html:has(.slide.single) { scroll-padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 134px); }
   .slide.single .slide-bar { bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
 }
@@ -902,6 +904,30 @@ a.budget-name:hover { text-decoration: underline; }
 }
 @media (min-width: 720px) and (max-width: 899px) { .slide { grid-template-columns: 240px minmax(0, 1fr); } }
 @media (prefers-reduced-motion: no-preference) { .reel { scroll-behavior: smooth; } }
+
+/* ── phone polish (390 px and the installed app) ──────────────────────── */
+/* taps: no grey flash, no double-tap zoom delay on controls */
+a, button, summary, label, input, select, textarea { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+/* the tab bar and the rail are chrome: no text selection or callouts on a long press */
+.nav, .rail, .slide-bar, .strip { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.nav > a, .nav summary { font-size: 11px; }
+.nav { padding-inline: max(4px, env(safe-area-inset-left)) max(4px, env(safe-area-inset-right)); }
+@media (max-width: 600px) {
+  /* a calmer type scale on a phone: the lede a step down, headings tighter to their text */
+  .lede { font-size: 15.5px; line-height: 1.5; margin-bottom: var(--s4); }
+  h1, .h1 { margin-bottom: 8px; }
+  .section-head { margin-bottom: var(--s3); }
+}
+@media (max-width: 899px), (pointer: coarse) {
+  .help-link { display: inline-flex; align-items: center; min-height: 44px; }
+  .slide-sources a { padding-inline: 2px; margin-inline: -2px; }
+}
+/* the installed app (Home Screen): a dark band under the status bar so scrolled text never runs under the clock; the
+   page doesn't rubber-band past its ends (the fixed skyline would slide away) */
+@media (display-mode: standalone) {
+  html { overscroll-behavior-y: none; }
+  body::before { content: ""; position: fixed; z-index: 45; top: 0; left: 0; right: 0; height: env(safe-area-inset-top); background: rgba(5, 6, 10, .94); pointer-events: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
