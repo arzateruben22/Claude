@@ -117,8 +117,10 @@ window.seek = function (t) {
   A.film_l = [-36, F + 1, 23]; A.film_r = [36, F + 1, 23];
   // the trails: on from frame 0 in the hook, drawn in on "sliver" (2, then 1), lit on "gets in" and on the takeaway's "half"
   const trail = shot === "hook" ? 1 : shot === "pair" ? E.inout2(seg(t, CUE.sliver - 0.2, CUE.sliver + 0.8)) : shot === "close" ? E.inout2(seg(t, CUE.half2 - 0.3, CUE.half2 + 0.6)) : 0;
-  const trailOp = pair ? (0.55 + 0.45 * Math.max(inLit, shot === "hook" ? 1 : 0)) : 0;
-  TL.set({ top: 0, grow: trail, op: trailOp, color: HIT.map((v) => v * 0.55), glow: HIT, x0: -36 });
+  const trailOp = pair ? (0.55 + 0.45 * Math.max(inLit, shot === "hook" ? 1 : 0, shot === "pair" ? fadeIn(t, CUE.both - 0.2, 0.5) : 0)) : 0;   // full strength from "both"
+  // across the pair→thin cut one SPF 50 trail stays alive (same place on the block), fading as the film thins
+  const carry = shot === "thin" ? 1 - fadeIn(t, B0.whoa + 0.4, 0.8) : 0;
+  TL.set({ top: 0, grow: Math.max(trail, carry), op: Math.max(trailOp, carry), color: HIT.map((v) => v * 0.55), glow: HIT, x0: -36 });
   TR.set({ top: 0, grow: trail, op: trailOp, color: HIT.map((v) => v * 0.55), glow: HIT, x0: 36 });
 
   // ── one block: the ratio (half bare, half filmed; the bare half reddens), then the thin film and the gauge ──

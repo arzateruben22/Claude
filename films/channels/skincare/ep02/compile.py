@@ -71,16 +71,18 @@ CAM = {
              {"t": CUE["in"], "target": [0, -30, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 540, "az": 4, "ease": "inout2"},
              {"t": CUE["half"] + 0.6, "target": [0, -34, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": 2, "ease": "inout2"},
              {"t": A("vo04:That's"), "target": [0, -34, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 450, "az": 0, "ease": "sine"},
-             {"t": B["whoa"]["t0"], "target": [-36, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": -6, "ease": "inout2"}],   # into the SPF 50 film
+             {"t": B["whoa"]["t0"] - 0.6, "target": [-36, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -6, "ease": "inout2"},
+             {"t": B["whoa"]["t0"], "target": [-36, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 190, "az": -6, "ease": "in2"}],   # a push into the SPF 50 film: the thin shot opens on the same film, same size
     # thin: an orbit while the film thins, a push as the rays pour through, then the pull-back into the gauge card
-    "thin": [{"t": B["whoa"]["t0"], "target": [0, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": -6},   # the same framing the pair ended on: the film thins there
+    "thin": [{"t": B["whoa"]["t0"], "target": [-36, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 190, "az": -6},   # the same framing the pair ended on (a match): then out to the whole block
              {"t": B["whoa"]["t0"] + 1.4, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 400, "az": -11, "ease": "inout2"},
              {"t": t_thin1, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 350, "az": -8, "ease": "inout2"},
              {"t": B["toscale"]["t0"], "target": [0, -2, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": 0, "ease": "sine"},
              {"t": B["toscale"]["t0"] + 2.6, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 620, "az": 4, "ease": "inout2"},   # the film and the dead layer above the caption plate, right of the card
-             {"t": B["takeaway"]["t0"], "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 600, "az": 5, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 640, "az": -6},
-              {"t": CUE["in2"], **HOOK, "dist": 560, "az": -4, "ease": "inout2"},
+             {"t": B["takeaway"]["t0"] - 0.7, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 610, "az": 5, "ease": "sine"},
+             {"t": B["takeaway"]["t0"], **HOOK, "dist": 680, "az": 4, "ease": "inout2"}],   # the card gone, a pull-back to the pair's framing: the cut is a match
+    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 660, "az": 4},
+              {"t": CUE["in2"], **HOOK, "fy": 0.28, "dist": 560, "az": -4, "ease": "inout2"},   # the glows above the caption plate on "half the light"
               {"t": B["tease"]["t1"], **HOOK, "dist": 640, "az": -6, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # slow arcs (≤ 4° a second)
@@ -100,9 +102,8 @@ LABELS = [
     # (low and close the labels would sit on the spine: from "in" on, the spine names the two)
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model: one UVB band", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "br"},   # bottom right in the hook: the title owns the top
+    {"id": "b-model-h", "text": "model: one UVB band", "t0": A("vo01:shield?", 0.8), "t1": B["normal"]["t0"], "slot": "tr"},   # top right in the hook, beside the title, clear of the SPF 100 trail
     {"id": "b-model", "text": "model: one UVB band", "t0": B["normal"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-test", "text": "test layer · 2 mg/cm²", "t0": A("vo04:as"), "t1": B["whoa"]["t0"], "slot": "bl"},
     {"id": "b-studies", "text": "Petersen & Wulf, 2014", "t0": A("vo05:studies"), "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-debated", "text": "illustration · debated", "t0": t_fall0, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-model-c", "text": "model: one UVB band", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
@@ -113,7 +114,7 @@ COUNTERS = [   # the spine readout, on screen from frame 0 to the end (WRITING.m
      "t1": CUE["ratio"] - 0.4, "at": SPINE},
     {"id": "c-ratio", "label": "burn dose: with ÷ without", "fmt": "text", "text": "ratio", "t0": CUE["ratio"], "t1": A("vo03:sliver") - 0.4, "at": SPINE},
     {"id": "c-blk", "label": "blocked % · SPF 50 · 100", "fmt": "text", "text": "98 · 99", "t0": A("vo03:sliver"), "t1": CUE["in"] - 0.4, "at": SPINE},
-    {"id": "c-in", "label": "gets in · SPF 50 · SPF 100", "fmt": "text", "text": "2% vs 1%", "t0": CUE["in"], "t1": A("vo05:quarter") - 0.4, "at": SPINE},
+    {"id": "c-in", "label": "gets in · test layer, 2 mg/cm²", "fmt": "text", "text": "2% vs 1%", "t0": CUE["in"], "t1": A("vo05:quarter") - 0.4, "at": SPINE},
     {"id": "c-real", "label": "applied in studies · mg/cm²", "fmt": "text", "text": "0.4–1", "t0": A("vo05:quarter"), "t1": t_fall0 + 0.4, "at": SPINE},
     {"id": "c-fall", "label": "protection vs the label", "fmt": "text", "text": "well below", "t0": t_fall0 + 0.8, "t1": B["toscale"]["t0"] + 0.4, "at": SPINE},
     {"id": "c-final", "label": "gets in, at the test layer", "fmt": "text", "text": "2% vs 1%", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
@@ -133,9 +134,9 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
 
 # the to-scale segment grows out of the thin shot: the test film (≈20 µm) on the dead layer (17 µm), beside the paper
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "film": B["toscale"]["t0"] + 1.0, "sc": A("vo06:dead"),
-         "paper": A("vo06:sheet"), "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": SC_UM, "film_um": FILM_UM, "paper_um": PAPER_UM}
+         "paper": A("vo06:sheet"), "back": [B["takeaway"]["t0"] - 0.55, B["takeaway"]["t0"] - 0.05], "sc_um": SC_UM, "film_um": FILM_UM, "paper_um": PAPER_UM}
 
-TITLE = {"series": "Outer Layer · No. 002", "title": "SPF *50* or *100*?", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:shield?", 0.35)}
+TITLE = {"series": "Outer Layer · No. 002", "title": "SPF *50* or *100*?", "t1": A("vo01:shield?", 0.5), "sig": A("vo01:shield?", 0.35)}
 END = {"title": "Next layer: why do fingers wrinkle in the *bath*?", "follow": "Outer Layer · No. 003",
        "next": "SPF is measured with 2 mg/cm² of product, a film about 20 µm thick (21 CFR 352.3; computed). Narration: synthetic voice (AI)."}
 FILMS = {}

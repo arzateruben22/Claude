@@ -65,6 +65,11 @@
    "tag": "title"
   },
   {
+   "t": 2.0,
+   "kind": "badge",
+   "tag": "b-model-h"
+  },
+  {
    "t": 4.6667,
    "kind": "section",
    "id": "normal",
@@ -174,11 +179,6 @@
    "t": 25.633333333333333,
    "kind": "zap",
    "tag": "half"
-  },
-  {
-   "t": 26.2,
-   "kind": "badge",
-   "tag": "b-test"
   },
   {
    "t": 34.5333,
