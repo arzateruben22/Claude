@@ -81,6 +81,15 @@ const sig = createSignal({ from: [HC[0], HC[1] - 2, HC[2] + 2], to: mel.at.body(
 scene.add(sig.mesh);
 
 const rig = createRig(FILM.cam);
+const fusedAt = (tq) => { dna.group.rotation.x = 0.12 * tq; return dna.at.fused(); };
+const SHOT0 = Object.fromEntries(FILM.shots.map((x) => [x.name, x.at]));
+const MATCH = [
+  { t: SHOT0.dna, from: "section", out: () => [HC[0], HC[1], HC[2]], in: fusedAt },
+  { t: SHOT0.cell, from: "dna", out: fusedAt, in: () => [HC[0], HC[1], HC[2]] },
+  { t: SHOT0.pair, from: "cell", out: () => mel.at.body(), in: () => melL.at.body() },
+  { t: SHOT0.dna2, from: "pair", out: () => [-40, -50, 20], in: fusedAt },
+  { t: SHOT0.tan, from: "dna2", out: fusedAt, in: () => mel.at.body() },
+];
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
@@ -133,6 +142,20 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;   // a frame's motion blur never blends two shots across a cut
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
+  // match cuts: for 0.8 s after a cut the camera turns so the incoming subject sits exactly where the outgoing subject
+  // was on screen in the last frame before the cut, then eases back to its keyed pose (WRITING.md: "cut on a sound and
+  // keep the subject in the same part of the screen"). Both points come from t alone.
+  for (const m of MATCH) {
+    const d = t - m.t;
+    if (d < 0 || d >= 0.8) continue;
+    const t0 = m.t - 1 / FPS, cam0 = rig.frameCamera(camera, m.from, t0);
+    const pOut = project(cam0, m.out(t0), W, H);
+    camera.updateMatrixWorld();
+    const pIn = project(camera, m.in(t), W, H);
+    const w = 1 - E.inout2(d / 0.8), tv = Math.tan((camera.fov * Math.PI / 180) / 2), th = tv * camera.aspect;
+    const yaw = Math.atan(((pIn.x - pOut.x) / W) * 2 * th), pitch = Math.atan(((pIn.y - pOut.y) / H) * 2 * tv);
+    camera.rotateY(-yaw * w); camera.rotateX(-pitch * w); camera.updateMatrixWorld();
+  }
   const inS = ["hook", "section", "cell", "tan", "field", "gauge", "close"].includes(shot);
   const isDNA = shot === "dna" || shot === "dna2", isPair = shot === "pair";
   S.group.visible = mel.group.visible = inS;
@@ -199,7 +222,7 @@ window.seek = function (t) {
   // ── the DNA ladder: two bases fuse on "fuse"; in dna2 the fused pair is held, lit ──
   if (isDNA) {
     const fuse = shot === "dna" ? E.out3(seg(t, CUE.fuse - 0.1, CUE.fuse + 0.5)) : 1;
-    const glow = shot === "dna" ? Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);
+    const glow = shot === "dna" ? Math.max(0.35 * (1 - fuse), Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse) : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);   // a faint glow on the two bases from the cut, so the eye has a target
     dna.set({ fuse, glow, uv: UVC, spin: 0.12 * t, dim: shot === "dna" ? 0.6 * fadeIn(t, CUE.fuse, 0.5) : 0.6 });
     raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();
