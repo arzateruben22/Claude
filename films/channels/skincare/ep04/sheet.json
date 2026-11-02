@@ -60,24 +60,29 @@
    "t1": 5.6
   },
   {
-   "t": 1.2,
-   "kind": "signature",
-   "tag": "title"
-  },
-  {
-   "t": 5.6,
-   "kind": "section",
-   "id": "normal",
-   "t1": 16.8
-  },
-  {
-   "t": 5.6,
+   "t": 1.0666666666666667,
    "kind": "counter.show",
    "tag": "c-q",
    "pos": [
     0.62,
     0.2
    ]
+  },
+  {
+   "t": 1.2,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 5.199999999999999,
+   "kind": "badge",
+   "tag": "b-model-h"
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 16.8
   },
   {
    "t": 7.166666666666667,
@@ -228,6 +233,11 @@
    "tag": "back-below"
   },
   {
+   "t": 53.0333,
+   "kind": "badge",
+   "tag": "b-gap"
+  },
+  {
    "t": 55.93333333333334,
    "kind": "scale",
    "tag": "g-gap"
@@ -249,18 +259,14 @@
    "tag": "b-months"
   },
   {
-   "t": 60.6,
-   "kind": "counter.show",
-   "tag": "c-end",
-   "pos": [
-    0.62,
-    0.2
-   ]
-  },
-  {
    "t": 64.06666666666668,
    "kind": "cell.land",
    "tag": "sprout"
+  },
+  {
+   "t": 64.36666666666667,
+   "kind": "badge",
+   "tag": "b-mice"
   },
   {
    "t": 64.66666666666667,

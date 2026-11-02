@@ -79,7 +79,7 @@ export const createJunction = ({ x = 4000, tone = [0.78, 0.56, 0.42], seed = 41,
   const docked = [-4, 0, 4].map((dx) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1.35, 16, 12), vesMat); m.position.set(B.x + dx, B.y - 4.1, B.z + 2); g.add(m); return m; });
   // SNAP-25 under the middle docked vesicle: two short halves of a strand (cut → they drift apart)
   const snapMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(...CY), transparent: true, toneMapped: true });
-  const snap = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 1.9, 8), snapMat); m.rotation.z = Math.PI / 2; g.add(m); return m; });
+  const snap = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 3, 10), snapMat); m.rotation.z = Math.PI / 2; g.add(m); return m; });
   // the toxin: a lilac fragment (two lobes) that slips in through the bulb's wall
   const toxMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(...LI), emissive: new THREE.Color(...LI), emissiveIntensity: 0.35, roughness: 0.35, transparent: true });
   const tox = new THREE.Group(); [[-0.9, 0, 1.3], [1.0, 0.3, 0.95]].forEach(([dx, dy, r]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), toxMat); m.position.set(dx, dy, 0); tox.add(m); }); g.add(tox);
@@ -117,7 +117,7 @@ export const createJunction = ({ x = 4000, tone = [0.78, 0.56, 0.42], seed = 41,
       // the toxin enters through the wall and settles by the docking protein
       tox.visible = toxin > 0.01; toxMat.opacity = Math.min(1, toxin * 3);
       tox.position.set(B.x - 16 + 16 * toxin, B.y + 6 - 10 * toxin, B.z + 3);
-      snap.forEach((m, j) => { m.position.set(B.x + (j ? 1.05 : -1.05) + (j ? 1 : -1) * 1.6 * cut, B.y - 5.9 - 0.8 * cut, B.z + 2.2); m.rotation.z = Math.PI / 2 + (j ? 1 : -1) * 0.5 * cut; });
+      snap.forEach((m, j) => { m.position.set(B.x + (j ? 1.6 : -1.6) + (j ? 1 : -1) * 2.0 * cut, B.y - 5.9 - 0.8 * cut, B.z + 2.2); m.rotation.z = Math.PI / 2 + (j ? 1 : -1) * 0.5 * cut; });
       // the sprouts
       SPR.forEach((s, j) => s.m.geometry.setDrawRange(0, Math.floor(s.n * Math.max(0, Math.min(1, sprout * 1.4 - j * 0.2)) / 3) * 3));
       // dim: the cut face steps back (the gauge's beat), the nerve and its messenger stay bright

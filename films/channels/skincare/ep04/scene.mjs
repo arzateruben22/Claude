@@ -13,7 +13,7 @@ import { createHud, project } from "cinema/sci/hud.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
-import { createUVSkin, createViewfinder, createDaylight, TONES } from "../set/uvcam.js";
+import { createUVSkin, createViewfinder, TONES } from "../set/uvcam.js";
 import { createJunction } from "../set/junction04.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, BIO = FILM.bio, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, P = FILM.plates;
@@ -44,7 +44,7 @@ T.set({ tone: LIGHT, furrows: 0.25, spot: 0, sheen: 0 });
 // the frown crease: one deep furrow running away from the camera along x = 0 (a fixed shape, made once)
 {
   const pos = T.mesh.geometry.attributes.position;
-  for (let i = 0; i < pos.count; i++) { const x = pos.getX(i); pos.setY(i, pos.getY(i) - 1.5 * Math.exp(-(x * x) / (2 * 0.8 * 0.8))); }
+  for (let i = 0; i < pos.count; i++) { const x = pos.getX(i); pos.setY(i, pos.getY(i) - 2.2 * Math.exp(-(x * x) / (2 * 0.8 * 0.8))); }
   pos.needsUpdate = true; T.mesh.geometry.computeVertexNormals();
 }
 scene.add(T.group);
@@ -84,8 +84,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.5, liftAt: [0.2, 0.22] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.34 });
-const day = createDaylight({ root: hudRoot, W, H, y: 0.565 });
+const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.27 });
 // plates: violet cards in the theme's tokens (text on them ≥ 4.5:1)
 const plate = (html, css) => {
   const el = document.createElement("div");
@@ -106,8 +105,8 @@ const D = P.dose, frac = D.frown_u / D.lethal_u;
 const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.6vmin">units of toxin</div>
   <div class="r1" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>one frown</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b1" style="display:block;height:3.2vmin;width:0;background:var(--water);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);color:var(--water)">${D.frown_u}</b></span></div>
   <div class="r2" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;margin-top:1.8vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>estimated lethal</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b2" style="display:block;height:3.2vmin;width:0;background:var(--uv);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);white-space:nowrap">≈ 3,000</b></span></div>
-  <div style="font:500 2.4vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin">estimate, 70 kg adult</div>`,
-  { left: "50%", top: `${0.555 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
+  <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-top:1.6vmin">estimate, 70 kg adult · units differ by product<br>side effects can occur far below this</div>`,
+  { left: "50%", top: `${0.485 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
 const b1 = dose.querySelector(".b1"), b2 = dose.querySelector(".b2"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
 const BAR = 34;   // vmin: the lethal amount's full bar; the frown's is the same scale (a sliver)
 // a veil in the ground's colour: a three-frame step at the hard scale jumps, and the fade before the end card
@@ -125,16 +124,16 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const fly = ["brow", "rise", "close"].includes(shot), isJ = ["below", "gauge"].includes(shot), isU = shot === "uv";
+  const fly = ["brow", "rise", "close"].includes(shot), isJ = ["below", "below2", "gauge"].includes(shot), isU = shot === "uv";
   T.group.visible = fly; JN.group.visible = isJ; UVS.mesh.visible = isU;
   scene.fog = fly ? FOG : null;
-  focus = fly ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
+  focus = fly ? { point: P0.target, fstop: 0.3 } : { point: P0.target, fstop: 0 };
 
   // ── the junction: the message crosses and the muscle pulls; the toxin cuts; the message stays; new endings ──
   if (isJ) {
     JN.set({
       pull: shot === "below" ? u01(t, J.pull) : 0.5 * u01(t, J.sprout),   // after the cut the muscle stays slack; the new endings bring the crease back
-      puff: shot === "below" && t < J.cut[0] ? seg(t, J.puff[0], J.puff[1]) : 0,
+      puff: shot === "below" && t < J.cut[0] ? seg(t, J.puff[0], J.puff[1]) : shot === "gauge" ? seg(t, J.relight[0], J.relight[1]) : 0,   // the original ending sends its message again (c13)
       open: shot === "below" ? u01(t, J.open) : 0,
       toxin: shot === "below" ? u01(t, J.toxin) : 1,
       cut: shot === "below" ? u01(t, J.cut) : 1,
@@ -146,11 +145,10 @@ window.seek = function (t) {
 
   // ── the reveal: the brow in UV; the five points of a frown dose light; the daylight strip, then the dose plate ──
   if (isU) {
-    UVS.set({ damage: 0.25, glow: 1, opacity: fadeIn(t, SH.uv, 0.25) });
+    UVS.set({ damage: 0.25, glow: 1, opacity: fadeIn(t, SH.uv, 0.12) });
     siteMat.opacity = fadeIn(t, P.viewfinder.sites, 0.5) * (0.85 + 0.15 * Math.sin(t * 3));
   }
   vf.set({ op: isU ? win(t, P.viewfinder.t0, P.viewfinder.t1, 0.25) : 0, left: "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
-  day.set({ op: isU ? win(t, P.daylight.t0, P.daylight.t1) : 0 });
   const dOp = isU ? win(t, D.t0, D.t1) : 0;
   show(dose, dOp);
   b1.style.width = `${Math.max(0.35, BAR * frac * fadeIn(t, D.frown, 0.4)).toFixed(3)}vmin`;   // a sliver (drawn ≥ 0.35 vmin so it shows at all)
@@ -158,7 +156,7 @@ window.seek = function (t) {
   r1.style.opacity = fadeIn(t, D.frown - 0.2, 0.3).toFixed(3); r2.style.opacity = fadeIn(t, D.kill - 0.2, 0.3).toFixed(3);
 
   // ── Kerner ──
-  show(kerner, shot === "rise" ? win(t, K.t0, K.t1, 0.4) : 0);
+  show(kerner, shot === "rise" || shot === "below2" ? win(t, K.t0, K.t1, 0.4) : 0);
   k2.style.opacity = fadeIn(t, K.med, 0.5).toFixed(3);
 
   // ── the gauge: lifted only (the junction is schematic, so no attached ruler): the gap a hairline beside the paper ──
@@ -169,7 +167,7 @@ window.seek = function (t) {
 
   // ── the veil: three frames of the ground on each scale jump; the scene fades toward the ground before the end card ──
   let step = 0;
-  for (const c of [SH.below, SH.rise, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
+  for (const c of [SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
   const end = 0.75 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 
