@@ -1,6 +1,6 @@
 # Outer Layer s1v2: "Same list as cigarettes" (draft; dermatologist sign-off before posting)
 
-About 73 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, tanning beds.
+About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, tanning beds.
 **Tanning episode: a board-certified dermatologist signs off on every line before posting (bible §8, §9).**
 
 The story: tanning beds sit on the same cancer list as tobacco smoke (IARC Group 1, 2009), and most people hear
@@ -65,6 +65,6 @@ end card: "Next layer: … (TODO: set with the season's tease chain)" · "Outer 
 - "Ten to fifteen times": AAP technical report (Balk, Pediatrics 2011), "may be 10 to 15 times higher than that of
   the midday sun", for UVA from large, powerful units; the figure is old and not universal (measured devices
   range from about 2 to 26 times solar UVA). Dermatologist to confirm it stays.
-- "About as thin as this paper": epidermis usually ≈ 0.1 mm (0.07–0.12 mm), thicker on palms and soles.
+- "About as thin as paper": epidermis usually ≈ 0.1 mm (0.07–0.12 mm), thicker on palms and soles.
 - TODO: the tease line and end card are placeholders until the season's tease chain is set.
 - Listen at T0: UVA, melanoma.
