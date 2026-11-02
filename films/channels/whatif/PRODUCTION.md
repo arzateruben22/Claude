@@ -90,3 +90,31 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
   rebuilt as a broadside balance beyond a walking ant, and the "each" beat as a to-scale ant carpet seen top-down,
   then rising to you. Its final is queued behind No. 002. Kit: `CINEMA.holdCuts` (opt-in, cinema3d.js).
   Season title from the coordinator: "Impossible, worked out" (vol01 --title/--thumb).
+
+## Season 1 summary: "Impossible, worked out" (2 Nov)
+
+| No. | Title | Builder | Length | Loudness / peak | Flashes | Master | Review rounds | Final compelling scores (a–g) |
+|---|---|---|---|---|---|---|---|---|
+| 001 | Through the Earth | this session | 74.4 s | −14.1 LUFS / −1.6 dBTP | 0 | 25.2 MB | 1 (before the compelling pass existed) | not scored |
+| 002 | Everyone, one place | this session | 74.4 s | −14.1 / −1.5 | 0 | 46.6 MB | 5 | 4 4 4 4 5 4 4 |
+| 003 | All the ants | this session | 73.8 s | −14.1 / −1.8 | 0 | 34.1 MB | 5 | 4 4 4 4 5 4 4 |
+| 004 | Count to a billion | second builder | 73.8 s | −14.1 / −1.8 | 0 | 42.2 MB | 2 | 4 4 4 4 4 4 5 |
+| 005 | Everybody jump | second builder | 73.2 s | −14.1 / −1.8 | 0 (1 large change, no pair) | 38.9 MB | 3 | 4 4 4 4 4 4 5 |
+| 006 | Every raindrop at once | second builder | 73.2 s | −14.1 / −1.5 | 0 | 55.0 MB | 3 | 4 4 4 4 4 4 5 |
+| vol01 | Impossible, worked out (ep01–05) | this session | 6:21 | −14.2 / −1.5 | n/a | 73.1 MB (2560×1440) | n/a | n/a |
+
+- Every episode is 1080×1920 at 30 fps with a 1440×2560 YouTube version, QA PASS, captions burned in, and an AI
+  voice label in its hand-off. vol01 is `compilations/vol01/vol01-16x9.mp4`, with `chapters.txt`, `description.md`
+  (every episode's sources, the AI-voice label), `thumbnail.jpg` and `qa.json` (PASS; 5 chapters, none under 10 s).
+- **Scores:** the lens order is a first 2 s, b one thread, c picture moves with the sentence, d motivated moves,
+  e voice carries meaning, f rhythm, g ending and tease. Each builder's episodes were scored by its own reviewers,
+  so "e5" here and "g5" on 004–006 rate the same bar from two pairs of eyes. Within each builder the ratchet held
+  (no episode below the one before).
+- **Kit changes this season** (all additive, all logged in `KIT-CHANGES.md`): `instruments.py` pluck and scratch;
+  numerals.py "X and a half <scale>"; `cinema3d.js` `CINEMA.holdCuts`; `compilation.mjs`
+  `compilation.introPromiseWidth`. A set bug found mid-season (spine.js flicker) was fixed for every episode
+  before its final.
+- **Open for a person before posting:** every claim was checked from search excerpts only; each episode's
+  `review/HUMAN-REVIEW.md` lists what to open and sign off, plus the TODOs: the channel handle and trademark
+  checks, the posting accounts, and a pinned sources page.
+- **Nothing has been posted.**
