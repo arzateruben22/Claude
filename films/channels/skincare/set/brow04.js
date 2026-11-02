@@ -15,10 +15,10 @@ export const browArcs = ({ w = 7.2, h = 5.0, y = 0.55 } = {}) => [-1, 1].map((s)
   return [x, (y * 0.5 - 0.08 + 0.1 * Math.sin(Math.PI * Math.min(1, u * 1.1)) - 0.06 * u) * h * 0.5];
 }));
 
-export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 16, H = 10 } = {}) => {
+export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 30, H = 26 } = {}) => {
   const R = rng(seed), g = new THREE.Group();
   g.position.x = x;
-  const geo = new THREE.PlaneGeometry(W, H, 260, 170), pos = geo.attributes.position, base = Float32Array.from(pos.array);
+  const geo = new THREE.PlaneGeometry(W, H, 360, 300), pos = geo.attributes.position, base = Float32Array.from(pos.array);
   const mat = new THREE.MeshStandardMaterial({ color: new THREE.Color(...tone), roughness: 0.55, metalness: 0 });
   const mesh = new THREE.Mesh(geo, mat); g.add(mesh);
   // the eyebrows: short dark hairs along two arcs above the ridges, angled outward and up
@@ -36,7 +36,7 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 16, H
     const sockets = -0.8 * Math.exp(-(((Math.abs(X) - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));  // the eye hollows, out of frame's foot
     const lines = -0.32 * f * [-0.42, 0.42].reduce((a, lx) => a + Math.exp(-((X - lx) ** 2) / 0.012) * Math.exp(-((Y - 0.35) ** 2) / 1.1), 0);   // the "11"
     const draw = -0.12 * f * Math.exp(-(X * X) / 1.6) * Math.exp(-((Y - 0.6) ** 2) / 1.5);         // the glabella bunches
-    return ridge + nose + sockets + lines + draw + 0.025 * Math.sin(X * 9 + Y * 3) * Math.sin(Y * 11);
+    return ridge + nose + sockets + lines + draw;   // smooth: a sine grain at this mesh density reads as cloth
   };
   let last = -1;
   return {

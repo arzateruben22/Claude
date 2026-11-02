@@ -116,8 +116,8 @@ LABELS = [
     {"id": "l-sprout", "text": "new endings", "kind": "cell", "anchor": "sprout", "t0": CUE["nerve2"], "t1": B["tease"]["t0"], "shot": "gauge", "side": 1, "v": "above"},
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model, not a photo", "t0": TITLE_T1, "t1": CUE["nerve"], "slot": "tr"},
-    {"id": "b-ng", "text": "≈ 1–2 ng/kg (est.)", "t0": CUE["nanogram"], "t1": TITLE_T1 - 0.1, "slot": "tr"},   # with the title up, the one top-right note is the figure the voice names
+    {"id": "b-model-h", "text": "model, not a photo", "t0": TITLE_T1 + 0.5, "t1": CUE["nerve"], "slot": "tr"},
+    {"id": "b-ng", "text": "lethal ≈ 1–2 ng/kg", "t0": CUE["nanogram"], "t1": CUE["nerve"], "slot": "tl"},   # with the title up, the one top-right note is the figure the voice names
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
@@ -127,7 +127,7 @@ BADGES = [
 ]
 SPINE = [0.62, 0.215]   # top right, under the notes
 COUNTERS = [
-    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": TITLE_T1, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
+    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": TITLE_T1 + 0.5, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
     {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": B["takeaway"]["t0"], "at": SPINE},
     {"id": "c-end", "label": "one frown, of a lethal dose", "fmt": "text", "text": "< 1 %", "t0": B["takeaway"]["t0"] + 0.4, "t1": t_end - 0.5, "at": SPINE},   # the payoff's label, cleared before the end card
 ]
