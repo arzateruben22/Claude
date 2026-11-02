@@ -1,0 +1,372 @@
+{
+ "duration": 74.2,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 16.8,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.8,
+   "t1": 28.4667,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 28.4667,
+   "t1": 41.5333,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 41.5333,
+   "t1": 52.7333,
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 60.2,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.2,
+   "t1": 67.2,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 74.2,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6
+  },
+  {
+   "t": 1.2,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 3.433333333333333,
+   "kind": "cell.land",
+   "tag": "shutter-0"
+  },
+  {
+   "t": 4.033333333333333,
+   "kind": "badge",
+   "tag": "b-ng"
+  },
+  {
+   "t": 4.183333333333334,
+   "kind": "counter.show",
+   "tag": "c-q",
+   "pos": [
+    0.62,
+    0.215
+   ]
+  },
+  {
+   "t": 4.183333333333334,
+   "kind": "badge",
+   "tag": "b-model-h"
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 16.8
+  },
+  {
+   "t": 7.166666666666667,
+   "kind": "scale.jump",
+   "tag": "below"
+  },
+  {
+   "t": 7.466666666666667,
+   "kind": "badge",
+   "tag": "b-simp"
+  },
+  {
+   "t": 7.666666666666667,
+   "kind": "label",
+   "tag": "l-nerve",
+   "pos": [
+    0.342,
+    0.529
+   ]
+  },
+  {
+   "t": 9.633333333333333,
+   "kind": "label",
+   "tag": "l-msg",
+   "pos": [
+    0.67,
+    0.538
+   ]
+  },
+  {
+   "t": 9.633333333333333,
+   "kind": "diffuse",
+   "tag": "messenger"
+  },
+  {
+   "t": 12.8,
+   "kind": "label",
+   "tag": "l-muscle",
+   "pos": [
+    0.193,
+    0.582
+   ]
+  },
+  {
+   "t": 15.133333333333333,
+   "kind": "label",
+   "tag": "l-crease",
+   "pos": [
+    0.663,
+    0.332
+   ]
+  },
+  {
+   "t": 16.8,
+   "kind": "section",
+   "id": "change",
+   "t1": 28.4667
+  },
+  {
+   "t": 16.8,
+   "kind": "badge",
+   "tag": "b-illus"
+  },
+  {
+   "t": 20.633333333333333,
+   "kind": "label",
+   "tag": "l-tox",
+   "pos": [
+    0.267,
+    0.398
+   ]
+  },
+  {
+   "t": 22.233333333333334,
+   "kind": "zap",
+   "tag": "cut"
+  },
+  {
+   "t": 22.633333333333333,
+   "kind": "label",
+   "tag": "l-snap",
+   "pos": [
+    0.668,
+    0.487
+   ]
+  },
+  {
+   "t": 28.4667,
+   "kind": "section",
+   "id": "why",
+   "t1": 41.5333
+  },
+  {
+   "t": 28.4667,
+   "kind": "scale.jump",
+   "tag": "rise"
+  },
+  {
+   "t": 31.033333333333335,
+   "kind": "reveal",
+   "tag": "kerner"
+  },
+  {
+   "t": 41.5333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 41.5333,
+   "kind": "badge",
+   "tag": "b-model-uv"
+  },
+  {
+   "t": 41.5333,
+   "kind": "cell.land",
+   "tag": "shutter"
+  },
+  {
+   "t": 41.5333,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 41.833299999999994,
+   "kind": "label",
+   "tag": "l-uvbrow",
+   "pos": [
+    0.605,
+    0.299
+   ]
+  },
+  {
+   "t": 48.166666666666664,
+   "kind": "counter.show",
+   "tag": "c-dose",
+   "pos": [
+    0.62,
+    0.215
+   ]
+  },
+  {
+   "t": 48.166666666666664,
+   "kind": "reveal",
+   "tag": "dose"
+  },
+  {
+   "t": 52.7333,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 60.2
+  },
+  {
+   "t": 52.7333,
+   "kind": "scale.jump",
+   "tag": "back-below"
+  },
+  {
+   "t": 53.0333,
+   "kind": "badge",
+   "tag": "b-gap"
+  },
+  {
+   "t": 53.4,
+   "kind": "scale",
+   "tag": "g-gap"
+  },
+  {
+   "t": 58.43333333333333,
+   "kind": "reveal",
+   "tag": "g-paper"
+  },
+  {
+   "t": 60.2,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 67.2
+  },
+  {
+   "t": 60.5,
+   "kind": "badge",
+   "tag": "b-months"
+  },
+  {
+   "t": 60.6,
+   "kind": "counter.show",
+   "tag": "c-end",
+   "pos": [
+    0.62,
+    0.215
+   ]
+  },
+  {
+   "t": 62.6,
+   "kind": "cell.land",
+   "tag": "sprout"
+  },
+  {
+   "t": 64.36666666666667,
+   "kind": "badge",
+   "tag": "b-mice"
+  },
+  {
+   "t": 64.66666666666667,
+   "kind": "label",
+   "tag": "l-sprout",
+   "pos": [
+    0.677,
+    0.511
+   ]
+  },
+  {
+   "t": 67.2,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.2
+  },
+  {
+   "t": 67.26666666666667,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 17.1,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 28.766666666666666,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 41.833333333333336,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 60.5,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "l-nerve": 7.7,
+  "l-msg": 9.6667,
+  "l-muscle": 12.8333,
+  "l-crease": 15.1667,
+  "l-tox": 20.6667,
+  "l-snap": 22.6667,
+  "l-uvbrow": 41.8667,
+  "l-sprout": 64.7
+ }
+}
