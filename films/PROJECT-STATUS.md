@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **2 Nov, 05:30 UTC — Back of the Envelope season 1 complete.** Six shorts plus vol01 "Impossible, worked out" (2560x1440, 6:21) are imported into Prism Studio (28 ready, 0 problems) and the preview is v21. Outer Layer: ep01 (re-render after a label collision) and ep02/ep03 finals rendering on 3 machines; ep04/05 with the second builder, ep06 with the first.
+
 > **2 Nov, 00:20 UTC — the owner: "keep going" (after the weekly reset).** All nine sessions were sent CONTINUE. The hourly usage report is re-armed (non-blocking; it pauses only on overage or a live "rejected").
 
 > **30 Oct, 05:27 UTC — the owner: "stop now".** All nine sessions sent PAUSE: commit WIP, kill renders by PID (`--resume` later), cancel check-ins. The hourly usage report is disabled. Resume with CONTINUE to each session in the roster (scratchpad `fleet.json`); the render workers then re-take their jobs.
