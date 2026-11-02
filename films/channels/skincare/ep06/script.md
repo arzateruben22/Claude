@@ -17,14 +17,14 @@ ideas: an arm's skin at the mm rung → one follicle in section, its muscle and 
 our fine hairs → the stem cells at the bulge, lit by the nerve → back out to the bumps.
 
 Honesty, on screen: the follicle section is "simplified"; the fur is an "illustration"; the stem-cell finding is
-"in mice"; the hair width is "vellus: by definition < 30 µm". The skin is drawn in one melanin level (deep) for
-the whole episode (bible §1, 30 Oct). No advice.
+"in mice"; the hair width is "vellus: by definition < 30 µm". The skin is drawn in one melanin level (light) for
+the whole episode (bible §1, owner-approved 2 Nov). No advice.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: skin at the mm rung in a deep tone, bumps raised round each fine hair, gauge at 0 µm · badge: simplified · title: "Goosebumps" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
+## hook {shot: frame 0, the payoff: skin at the mm rung in a light tone, bumps raised round each fine hair, gauge at 0 µm · badge: simplified · title: "Goosebumps" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
 vo: Why do we get *goosebumps*? We hardly have fur. {c1}
 
 ## normal {shot: the skin flattens, then a cut opens through one bump: a follicle, its hair, a tiny muscle running from the follicle to the surface, a nerve beside it; on "cold" the nerve lights, the muscle shortens, the hair stands and the skin around it puckers · spine arrector pili · picture-only 0.5 s · energy: 0.45} (4.5–16 s)

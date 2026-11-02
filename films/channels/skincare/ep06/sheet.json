@@ -65,6 +65,11 @@
    "tag": "title"
   },
   {
+   "t": 2.8333333333333335,
+   "kind": "counter.show",
+   "tag": "c-q"
+  },
+  {
    "t": 4.2,
    "kind": "section",
    "id": "normal",
@@ -251,6 +256,11 @@
    "t": 60.2,
    "kind": "badge",
    "tag": "b-simp-z"
+  },
+  {
+   "t": 60.400000000000006,
+   "kind": "counter.show",
+   "tag": "c-final"
   },
   {
    "t": 68.1333,

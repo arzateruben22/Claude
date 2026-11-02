@@ -34,7 +34,7 @@ window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 
 scene.add(new THREE.HemisphereLight(0xf4f8ff, 0xe8ddd4, 1.25));
-const key = new THREE.DirectionalLight(0xfff6ec, 2.1); key.position.set(-1200, 2200, 1600); scene.add(key);
+const key = new THREE.DirectionalLight(0xfff6ec, 2.1); key.position.set(-2400, 1100, 1400); scene.add(key);
 const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(800, 600, -2000); scene.add(rim);
 
 // ── the set ─────────────────────────────────────────────────────────────────

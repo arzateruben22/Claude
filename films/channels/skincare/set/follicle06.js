@@ -18,7 +18,7 @@ import { toneColor } from "./section.js";
 const D2R = Math.PI / 180;
 const mixc = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
 
-export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 900, hairW = 26, x = 0 } = {}) => {
+export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 900, hairW = 12, x = 0 } = {}) => {
   const R = rng(seed), g = new THREE.Group();
   g.position.x = x;
   const half = size / 2, foll = [];
@@ -52,7 +52,7 @@ export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 9
       hm.color.setRGB(...mixc(toneColor("fibre", tone), toneColor("corneo", tone), 0.4));
       for (let i = 0; i < pos.count; i++) {
         const f = foll[near[i]], k = Math.min(1, Math.max(0, (raise * 1.25 - f.k * 0.25)));
-        const b = 38 * k * Math.exp(-((dx[i] / 70) ** 2));
+        const b = 70 * k * Math.exp(-((dx[i] / 105) ** 2));
         pos.setY(i, y0[i] + b);
       }
       pos.needsUpdate = true; geo.computeVertexNormals();
@@ -60,7 +60,7 @@ export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 9
         const k = Math.min(1, Math.max(0, (raise * 1.25 - f.k * 0.25)));
         dummy.position.set(f.x, 30 * k, f.z);
         dummy.rotation.set(0, f.yaw, (70 - 52 * k) * D2R);
-        dummy.scale.set(hairLen > 0 ? 13 : 13, f.len, 13);
+        dummy.scale.set(hairW / 2, f.len, hairW / 2);   // fine hairs: thin and pale
         dummy.updateMatrix(); hairs.setMatrixAt(i, dummy.matrix);
       });
       hairs.instanceMatrix.needsUpdate = true;
@@ -108,15 +108,15 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
   const mLine = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 14), new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0.6, toneMapped: false, clippingPlanes: clip }));
   g.add(mLine, muscle);
   // the nerve: from deep in the dermis up to the muscle, with a branch to the bulge (the stem cells)
-  const nA = [anchor[0] + 260, -depth - 120], nB = [(bulge[0] + anchor[0]) / 2 + 40, (bulge[1] + anchor[1]) / 2 - 20], nC = [bulge[0] + 40, bulge[1] - 10];
+  const nA = [anchor[0] + 300, -depth * 0.8], nB = [(bulge[0] + anchor[0]) / 2 + 40, (bulge[1] + anchor[1]) / 2 - 20], nC = [bulge[0] + 40, bulge[1] - 10];
   const curveMain = new THREE.CatmullRomCurve3([new THREE.Vector3(nA[0], nA[1], 4), new THREE.Vector3(nA[0] - 60, (nA[1] + nB[1]) / 2, 6), new THREE.Vector3(nB[0], nB[1], 6)]);
   const curveBranch = new THREE.CatmullRomCurve3([new THREE.Vector3(nB[0], nB[1], 6), new THREE.Vector3((nB[0] + nC[0]) / 2, (nB[1] + nC[1]) / 2 - 18, 6), new THREE.Vector3(nC[0], nC[1], 6)]);
-  const nerve = new THREE.Mesh(new THREE.TubeGeometry(curveMain, 60, 5, 8, false), M.nerve);
+  const nerve = new THREE.Mesh(new THREE.TubeGeometry(curveMain, 60, 11, 10, false), M.nerve);
   const branchMat = mat({ roughness: 0.4, transparent: true });
-  const branch = new THREE.Mesh(new THREE.TubeGeometry(curveBranch, 30, 3.6, 8, false), branchMat);
+  const branch = new THREE.Mesh(new THREE.TubeGeometry(curveBranch, 30, 8, 10, false), branchMat);
   g.add(nerve, branch);
   const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, toneMapped: true });
-  const pulses = Array.from({ length: 6 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(7, 12, 8), pulseMat); g.add(m); return m; });
+  const pulses = Array.from({ length: 6 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(15, 14, 10), pulseMat); g.add(m); return m; });
   // stem cells at the bulge: a seeded cluster on the follicle's outer side
   const stems = Array.from({ length: 22 }, (_, i) => {
     const s = bulgeS + (R() - 0.5) * 70, side = R() < 0.6 ? 1 : -1, p = P(s);
@@ -132,7 +132,7 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       const k = 1 - 0.5 * dimSkin;
       M.epi.color.setRGB(...mixc(toneColor("living", tone), [0.92, 0.95, 0.98], 0.2 * frost).map((v) => v * k));
       M.sc.color.setRGB(...toneColor("corneo", tone).map((v) => v * k));
-      M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k));
+      M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.84));   // a step darker than the epidermis, so the two layers read
       M.sheath.color.setRGB(...toneColor("basal", tone).map((v) => (v + (1 - v) * 0.15) * k));
       M.bulb.color.copy(M.sheath.color);
       M.hair.color.setRGB(...mixc(toneColor("fibre", tone), toneColor("corneo", tone), 0.5));
@@ -154,7 +154,7 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       pulses.forEach((m, i) => {
         const u = ((t * 0.9 + i / pulses.length) % 1 + 1) % 1, onBranch = i % 2 === 1 && wire > 0.3;
         const p = onBranch ? curveBranch.getPoint(u) : curveMain.getPoint(u);
-        m.position.set(p.x, p.y, 12); m.visible = fire > 0.02;
+        m.position.set(p.x, p.y, 16); m.visible = fire > 0.02;
       });
       // stem cells: lit and multiplying with wake
       M.stem.color.setRGB(...toneColor("basal", tone).map((v) => v + (1 - v) * 0.4));
@@ -162,7 +162,7 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       stems.forEach((m) => { const s = Math.min(1, Math.max(0, (wake * 1.2 - m.userData.k))); m.scale.setScalar(m.userData.k === 0 ? 1 : s + 1e-4); m.visible = m.userData.k === 0 || s > 0.01; });
       // the new hair: up from the bulb
       const len = Math.max(1, grow * (L - 80)), base = P(L - 20);
-      newHair.position.set(base[0], base[1], 2); newHair.scale.set(1, len, 1); newHair.rotation.z = tilt + Math.PI; newHair.visible = grow > 0.01;
+      newHair.position.set(base[0], base[1], 2); newHair.scale.set(1, len, 1); newHair.rotation.z = tilt;   // up the follicle, toward the surface newHair.visible = grow > 0.01;
     },
     at: {
       hair: () => [x + fx + 120, 240, 20],
