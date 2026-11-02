@@ -4,6 +4,272 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-02: the sports bar, S1: Stoppage Time's venue and your avatar in it (a standalone page, uncommitted)
+
+Phase S1 of `PROJECT_OC_SPORTS_BAR.md`, built on `claude/sports-bar` after merging Lot 57's committed P1a
+(`claude/onfoot` ab9fbe1; merge commit ce67d8f, the only commit of this pass; the build itself is uncommitted, as the
+workflow asked). Stoppage Time is our own fictional sports bar at the real site on South Claudina Way, Anaheim: our
+name, look, interior and menu. The twelve screens show a still test card tagged "SIMULATED"; the crowd chip reads the
+schedule's level ("Simulated crowd · Packed") and no people are built yet (S3a). Nothing on the page is live, nothing
+costs money, and Ultra is an entitlement flag only (test hooks and `?ultra=1`; no price, no purchase path). Lot 57's
+files (`src/onfoot/lot57/`, `main.ts`, `index.html`), `src/onfoot/people/`, the game's code and its configs are
+unchanged.
+
+- **First, the re-measure (open item O1).** Every row of "Lot 57's numbers, as measured" was read again at ab9fbe1.
+  Moved, and updated in the plan with the commit and date: L2 (`ParkedCars` takes a fourth argument, `farDetail`), L3
+  (12, 24 and 40 detailed parked cars), L5 (the far detailed cars don't cast), L7 (your car's lamps off), L9 (Lot 57's
+  avatar LOD 0 now on High and Ultra, built at load), L11 (Lot 57 instances only palms now) and L20 (a slice-trimming
+  plugin). L1 (`PRESET`), L4, L6, L8, L10, L12 to L19 and L21 are unchanged. No contract the bar relies on broke (the
+  changes are additive). The `people/` internals (O2) are unchanged. The Retro module (O15) is still uncommitted on
+  `claude/modes`; its API holds (`RetroWorld` gains an optional `sun`), so the bar's Low draws standard materials at
+  full resolution until it merges. No sum moved. Both scripts re-run: they now compute the frame from building 61 as
+  the page does, which moves one barrier-gate point 126 m out across the front sector's line (39 near points, 497 far;
+  was 38 and 498).
+- **What was built** (all new: `src/onfoot/sportsbar.html`, `src/onfoot/vite.sportsbar.config.ts`,
+  `src/onfoot/engine/`, `src/onfoot/venues/sportsbar/`, `tests/sportsbar.mjs`, `tests/sportsbar-shoot.mjs`; 3,387
+  lines of TypeScript, 141 of HTML):
+  - **The page and its build.** `npx vite build --config src/onfoot/vite.sportsbar.config.ts` writes one file,
+    `dist/sportsbar/sportsbar.html` (1,382 KB, 460 KB gzipped), which opens from disk. Its own config, so the game's
+    and Lot 57's don't change; it trims the bar's slice to the fields the page reads at build time.
+  - **The engine facade** (`src/onfoot/engine/`): re-exports of Lot 57's modules (never its data, coords or main), and
+    the new `frame.ts` (the building frame, computed from building 61's ring: worst 0.065 m against the plan's
+    table), `schedule.ts` (the business day, open and closed hours, the crowd share), `venue-def.ts`, `streets.ts` (the
+    near and far street sets, the I-5's bridges and ramps under the bridge rule, the light streams) and `overhead.ts`
+    (the overhead camera: pan, pinch, twist, 45-degree steps).
+  - **The venue** (`venues/sportsbar/`): the bar and back bar, 12 screens, 2 pool tables, 3 dart boards, the
+    shuffleboard, high-tops, booths, the patio with its pergola, heaters and planters, the front walk, ramp, bike rack
+    and doors; 91 seats and 46 standing, watching, game and staff spots; 83 object colliders; the lot (55 stalls,
+    your car and its 152-triangle stand-in, 7 pole lights, aisle 416 redrawn as ours); 6 palms and 4 shade trees at
+    the script's spots.
+  - **Views and controls**: first person, third person and overhead (the walls facing the camera cut away), tap to go
+    and sit, stick and keyboard, the action button; the hours and closed doors from the schedule.
+  - **Graphics**: Low (full resolution, no shadow map, the far set simple), HD (2048 sun map, bloom, 2 pool spot
+    lights) and Ultra (4096 sun map, GTAO, bloom, rect-area and heater lights, the pool spots casting, the far set in
+    full, the high-quality parked cars, your avatar's LOD 0 in third person). Inside, outside and overhead states set
+    what's drawn (the parked cars near you, your car or its stand-in); your avatar casts through a hidden LOD 1 caster;
+    the shadow maps are drawn once a frame.
+  - **Hooks** on `window.__onfoot` (Lot 57's names and the bar's: `stats`, `breakdown`, `vis`, `pose`, `frame`,
+    `layout`, `streetSets`, `bridges`, `crossings`, `peopleCosts`, `debug` and more).
+- **Found by looking at the screenshots, and fixed in this pass:** white pendant shades, pergola light strips too
+  bright by day, a white-looking oak, a violet facade that read black and a lot too dark at night; then, in the last
+  round (before and after images in `tests/out/sportsbar/probe/`):
+  1. **At Ultra the lot went near black at noon** under the lot lights' pools, and the mountains dark slate. GTAO's
+     normal pass drew the pools and the game's mountain ring, which carry no normals, as surfaces facing nowhere. The
+     AO pass now leaves out every mesh with no normals or no depth write. Before:
+     `before-s1-shadow-ultra-first-lot-noon.png`, `before-s1-door-front-out-ultra-1200.png`; after:
+     `probe-1280x720-ultra-down-a.png`, `probe-1280x720-ultra-a.png`. `stats().ao` now measures that pass as drawn,
+     and the budgets check uses it.
+  2. **At 844x390 on Low the lot drew as bare ground** from the spawn (not at 390x844 or 1280x720 from the same spot):
+     the 3200 m ground quad beat the asphalt 4.2 cm above it on depth at that one view. The ground's material now has
+     a polygon offset pushing it back. Before: `before-s1-844x390-low-spawn-noon.png`; after: `probe-844x390-low-a.png`.
+  3. **The pool tables read black at night on Low.** They're their own meshes (for Ultra's pool spots), outside the
+     kit, so they missed its night-light bake, and Low has no pool spots. The page now bakes them too. Before:
+     `before-s1-844x390-low-door-night.png`; after: `probe-844x390-low-door-night.png`.
+  4. **At 640x360 the hours pill ran under the view button.** Between 521 and 760 px wide it now drops the bar's name
+     (`s1-closed-640x360-tue0930.png`).
+  Lot 57's page shares 1 and 2; the handoff tells its owners (`PROJECT_OC_HANDOFF.md`, "For Lot 57's owners", items 3
+  and 4). Open item O34 records both.
+- **Checked** with `node tests/sportsbar.mjs` (headless Chromium, `--use-angle=swiftshader
+  --enable-unsafe-swiftshader`, one browser at a time, on a shared machine at a load of about 15).
+  Two runs make the record, both on this machine: run 2 (07:53 to 09:18 UTC, the whole suite, 138 of 139: the one
+  failure was the cars check reading drawn triangles, since rewritten to count your car's whole body) and run 3 on the
+  final build (closed, honesty, cars, budgets, shadows and shots again, after the four fixes above: 86 of 86 pass,
+    09:40 to 10:09 UTC). The Ultra door crossings were run again on the final build too (run 4,
+  `s1-run-4-cross-ultra.log`, 9 of 9 pass, 10:01 to
+  10:10 UTC). The groups not run again (data, walks, seats, the Low and HD crossings, rates) test code the fixes don't
+  touch; their numbers are run 2's. Results are merged into `tests/out/sportsbar/sportsbar-checks.json`; the logs are
+  `tests/out/sportsbar/logs/s1-run-2.log` and `s1-run-3.log`. `npx tsc --noEmit` is clean.
+  - **Boots with no console errors** at 1280x720, 844x390 and 390x844 (touch) and 640x360, at Low, HD and Ultra.
+  - **The data** (all pass): the frame matches the building-frame table to 0.065 m over 5 points and the bar's point
+    lands in our unit; the built near set is exactly the script's (streets 60, buildings 8, land use 0, water 0,
+    infrastructure shapes 33, points 39; far 554, 417, 67, 18, 172, 497); 12 near batches plus 2 stream meshes (at most
+    14 calls) and 4 far simple batches; the light streams only on the five near carriageway pieces (northbound 560 into
+    362, 1,035 m; southbound 222, 358, 438, 974 m; lamps 0.6 to 8.2 m up); the I-5 drawn (five carriageway pieces 14 m
+    wide, seven links 8 m); the bridge rule (98 piers built, 64 near; 33 left out, 19 near, as the script prints; 393
+    connectors, worst height spread 0 m; 58 crossings without a junction all clear 5.5 m or lie in the 5 tunnels); the
+    10 trees within 0.000 m of the script's spots in 4 instanced meshes; the front fits (walk 0.40 m, ramp 0.41 m, bikes
+    0.81 m, planters 1.02 and 1.00 m, patio 1.88 m from aisle 416's ribbon; the ribbon 3.72 m from building 61); 12
+    zones and 107 slots inside the walls, 14 patio zones and 30 slots inside the fence; nothing overlaps (26 zones, 137
+    slots, 83 colliders; the shuffleboard's thrower 1.59 m from the first stool); walking on Lot 57's real grid at the
+    page's offset, all 137 stand points within 0.413 m of a reachable cell, H 0.052 m, no reachable cell in the lane or
+    the flap (11,641 cells reached); the lane path 16.32 m with least clearance 0.10 m; 6 walks at the counter's ends,
+    the gate and the flap (1,440 positions) never in the lane; 55 stalls in 4 rows, fill bias 0.834.
+  - **1,000 random walks** (500 tap-to-go, 500 stick; 1,068,196 positions over 25,822 m against 173 colliders): none
+    ends inside a collider or crosses a wall, the patio fence or the party wall; the checker itself catches a path
+    through the front glass, the party wall, the fence and a pool table.
+  - **Seats:** tap to go reaches all 91 seats from just inside the front door and sits you down (paths up to 34.93 m);
+    sit and stand work on a stool, a high-top, a bench and a picnic seat.
+  - **Closed hours** (Tue 09:30): both doors locked, a tap inside from the front walk has no path, the walk to your car
+    arrives; the pill reads "Tue 09:30 · Closed · opens 11:00" and the chip "Simulated crowd · Closed".
+  - **Honesty:** the real name nowhere in `src/` or the built page (150 files); no "live" on any canvas (35 strings) and
+    only inside the allowed negations in the UI (49 strings, every sheet opened); no places file and no part of Lot 57's
+    slice in the page, the bar slice's own description in it; the chip and the credit on screen at 1280x720.
+  - **The door crossings** at Low, HD and Ultra, both doors, first and third person (162 steps each): the state flips
+    on the crossing frame (step 49 first person, 151 third); the 14 near and 4 far (15 at Ultra) street meshes and the
+    4 tree meshes are the same on both sides; the sun's casters are the same (40 at HD, 44 at Ultra); the only swaps are
+    the parked cars near you (0 to 4, 12 and 36) and your car (stand-in to detailed at Low and HD; detailed on both
+    sides at Ultra).
+  - **The budgets without people or items** at the five poses (844x390, and `door` and `overhead` at 390x844), Saturday
+    21:00, all pass: `stats().pass` less your avatar's own body is inside the row at every pose, `breakdown()` agrees
+    with the pass within 1%, and one frame's `renderer.info` is the pass, the AO pass at Ultra, each map once and the
+    post. The worst of each preset (pass less your avatar, of the row): Low 99/136.3k of 119/177.8k outside (`stall`)
+    and 71/67.0k of 74/101.4k inside (`tv-east`); HD 111/223.6k of 139/328.2k (`overhead`) and 71/73.1k of 94/174.4k;
+    Ultra 120/426.2k of 159/611.4k (`overhead`), 117/421.9k (`stall`) and 99/223.4k of 139/415.4k inside. Whole frames:
+    Low 62 to 100 calls and 62.8k to 144.1k; HD 107 to 187 and 128.5k to 446.4k; Ultra 258 to 355 and 405.9k to
+    1,525.4k (the sun's map 33 to 67 calls and 83.3k to 372.4k; each pool spot's map 22 to 27 calls and 228 triangles,
+    frozen outside; the AO pass 59 to 117 calls; post 14 at HD, 18 at Ultra). Your avatar's caster drops the sun's map
+    by 11,762 triangles at every HD and Ultra pose. The street sets come to 18 calls and 38.1k at Low, 18 and 38.5k
+    at HD, 29 and 78.2k at Ultra (allocated 20/35k, 30/60k and 40/120k): the streets run 3.1k over Low's allocation,
+    the venue 33.5k under its own (16.5k of 50k), and no pose's pass leaves its row, so no fallback was taken. (The
+    review held this against S1: the plan's check says all the streets within their row. The repair below moved 5k of
+    Low's venue row to its streets', 45k and 40k, and the suite now checks it.)
+  - **Rates** here (844x390, the `door` pose; SwiftShader on a shared machine at a load of about 15, not a phone):
+    after a switch, 3 warm-up frames took 6.4 s at Low, 8.6 s at HD and 19.0 s at Ultra, then 1.06, 0.55 and 0.30 frames
+    a second, the page's own CPU 1.5, 4.1 and 9.2 ms a frame. Load to walkable: 11.5 to 14.8 s at Low.
+  - **The people builder** (open item O3, `peopleCosts()`): an NPC at phone quality 1,136, 6,651 and 58,541 triangles
+    at LOD 2, 1 and 0 (LOD 0 18 calls, built in 8.2 s), at high quality 1,136, 10,105 and 139,943 (11.5 s); your driver
+    at phone 1,508, 7,810 and 66,693 (19 calls, 6.4 s), at high 1,508, 11,762 and 158,252 (8.7 s).
+  - **Your avatar's shadow** at HD and Ultra, first and third person, in the lot and on the front walk at noon (the
+    sun behind the camera): all pass. The sun's map drops by 11.8k triangles when the caster's `castShadow` is turned
+    off; in first person the avatar draws 1 call and 0 triangles in the pass (the hidden caster); at Ultra in third
+    person the LOD 0 shows (21 calls, 158,372 triangles) and only its hidden LOD 1 casts. The shadow shows in the four
+    first-person shots (`s1-shadow-{high,ultra}-first-{lot,walk}-noon.png`).
+  - **The cars as measured:** your car (the default) 62.2k triangles in 25 meshes at Low and 118.3k at HD and Ultra;
+    the parked cars near you at the `stall` pose 4 detailed and 39 stand-ins, 17.4k in 13 calls at Low (cap 17.4k), 12
+    and 31, 33.5k in 17 calls at HD (cap 39.3k), 36 and 7, 201.1k in 20 calls at Ultra (cap 202.7k); switching between
+    HD and Ultra rebuilds the same 43 cars in the same stalls (13 sedans, 16 SUVs, 2 coupes, 8 pickups, 4 vans, same
+    colours). The other three of your four cars were not measured (the plan's "never over 65.6k and 121.1k").
+  - **Screenshots** (all in `tests/out/sportsbar/`; every one cited here was looked at). The phase's set, from run 3's
+    final build: 1280x720 at HD, noon and Saturday 21:00, `door`, `bar`, `tv`, `pool`, `spawn`, `patio` (third
+    person), `overhead` (walls cut away), `exterior`, `freeway` (from the patio rail) and `katella` (a fixed camera on
+    the I-5 bridge from East Katella) (`s1-1280x720-high-*-{noon,night}.png`, 20); 844x390 at Low, `door`, `spawn`,
+    `patio`, `overhead`, `exterior`, noon and night (`s1-844x390-low-*.png`, 10); 390x844 at Low, `door`, `spawn`,
+    `overhead`, noon and night (`s1-390x844-low-*.png`, 6); 1280x720 at Ultra, `door`, `patio`, `exterior` at night
+    (`s1-1280x720-ultra-*-night.png`, 3); closed hours at 640x360 (`s1-closed-640x360-tue0930.png`); the honesty
+    shot (`s1-1280x720-spawn-night.png`); the 8 shadow shots; and the door crossings, both doors, inside and out, noon
+    and night, at each preset (`s1-door-{front,patio}-{in,out}-{low,high,ultra}-{1200,2100}.png`, 24; the Ultra eight
+    shot again on the final build, below). Run 3's 39 phase shots were compared pixel by pixel with run 2's, which
+    were all looked at: the 13 that changed in more than 0.2% of their pixels were looked at again (the fixes show
+    where expected: the lot's asphalt at 844x390, the pool tables at night, the Ultra night shots); the other 26
+    differ in under 0.2% of their pixels. The Low and HD door-crossing shots are run 2's.
+  - **Does it read as a believable neighbourhood sports bar in a SoCal strip?** S1 said yes, to this eye: a violet
+    unit with a lit wordmark over a glazed front, a long oak bar with a back bar of bottles under a row of screens, two
+    pool tables under long shades, booths and high-tops, a pergola patio with heaters by the I-5, palms and a striped
+    lot. **The review found what that look missed** (in S1's own overhead shots, and by trying to break the page):
+    the brand neon over the restrooms was mirrored and read "ball, backwards 3, plus"; the three dartboards were
+    invisible (each board's face sat inside its black backboard's box, so the darts zone showed three black
+    rectangles); the chalk centre circle wasn't drawn at all (its quads faced down: the frame's (u, v) mirrors
+    three.js's (x, z), so a quad's corner order alone didn't say which way it faced; the oche line was the same); the
+    ceiling was a black void at noon and at night (one cap in near-black paint), reading as a room open to a black
+    sky; and the pool tables were plain boxes with a felt inset (their pockets were tiny boxes buried inside the rails).
+    **All five are fixed in the repair below** and were looked at in the repair's shots: the neon reads "+3" and the
+    ball, the boards show their faces, the circle, its spot and the halfway line are drawn, the room has a pale
+    suspended tile ceiling on a dark T-bar grid with diffusers, and the tables have rails, cushions, six pockets and
+    diamond sights. Still weak, for S3a and S4: no people, the night outside very dark beyond the lamps, and the
+    ceiling's tiles read a little warm under the interior light.
+- **The repair after review (same day, 12:00 to about 14:30 UTC).** Two reviews rejected S1 on defects its checks
+  didn't cover (the play review: the neon, the dartboards, tap to go, the chalk circle, the ceiling and the pool tables;
+  the code review: the light streams, disposal, a never-drawn pool-spot map, per-frame allocations and Low's streets
+  row). Every item was fixed, as asked, keeping the rest:
+  - **The neon** over the restrooms (`venue.ts`): a viewer facing +v has +u on the left, so the glyphs are now laid
+    out mirrored about the board's centre (u 29.06): "+3" then the ball. Before and after, cropped from the overhead
+    shots: `tests/out/sportsbar/probe-r2/before-overhead-neon-crop.png` ("ball, backwards 3, plus") and
+    `after-overhead-neon-crop-r2.png` ("+3", ball); the close-up `s1-1280x720-high-neon-{noon,night}-r2.png`.
+  - **The dartboards:** each face moved 1 cm in front of its backboard (v 15.69; the backboard is v 15.70 to 15.75).
+    New check (data group): a ray from each oche point at bullseye height meets `bar-signs` first, at 2.31 m, before
+    `bar-paint` at 2.32 m, at all three boards. Shot: `s1-1280x720-high-darts-{noon,night}-r2.png`.
+  - **Tap to go from the customer side** (`main.ts`, `tapGo`): a tap whose point or ray lies inside the unit but not on
+    free floor now goes to a free cell that is also inside, the nearest within 4 m on your side of the point, else the
+    first along your line of sight back from it; with neither, the "Can't get there from here" toast. (4 m, not the
+    review's 3 m: the bottle wall's face is 3.25 m from the nearest free cell on the customer side, past the 2.5 m-deep
+    bar and the stools' clearance, so a 3 m rule refused the very tap it was meant to fix; measured.) New check (data
+    group): seven taps from the customer side (the bottle wall at u 18 and 22 and at an angle from u 10, three bar
+    screens, the counter top) all end inside, on the customer side, 0.84 to 1.03 m from the counter's edge (S1 walked
+    the first out of the front door to the courtyard at u 17.7, v 16.9).
+  - **The chalk centre circle and the oche line:** every floor quad in `venue.ts` is now wound to face up whatever the
+    frame's handedness (`fquad` uses `quadTo` with an up vector); the marks' material already had a polygon offset
+    over the floor's (-4 against -2). Shot looking down from 2.75 m at (33.5, 4.75): `s1-1280x720-high-circle-noon-r2.png`
+    (the circle, its spot and the halfway line).
+  - **The ceiling:** a suspended acoustic-tile ceiling, pale violet-grey (`0x8c8698`) subdivided so the baked light
+    reads on it, with a little interior glow of its own (dark when closed), on a dark T-bar grid (2 x 4 ft) with eight
+    square diffusers, all in the existing `unit-ceiling` batch (no new call; hidden overhead as before). Shots:
+    `s1-1280x720-high-ceiling-{noon,night}-r2.png` and every interior shot.
+  - **The pool tables:** oak rails round a night-violet bed, cloth cushions broken at the pockets, six black pocket
+    mouths through the rails' tops and 18 mother-of-pearl sights; 684 triangles a table and lamp (was 228), in the same
+    two meshes. Shots: `s1-1280x720-high-pool-{noon,night}-r2.png`, `door`.
+  - **The light streams** (`engine/streets.ts`): `update()` takes the preset's car count and shares it over both
+    chains by length (Low 100: northbound 52, southbound 48; HD 200: 103 and 97; Ultra 400: 206 and 194); the page's
+    clamp after it is gone. New check (data group) at all three presets; shots `s1-1280x720-high-freeway-night-r2.png`
+    and `s1-844x390-low-freeway-{noon,night}-r2.png`.
+  - **Disposal on a switch** (`main.ts`): the post chain's passes before the composer; the far set's old geometries
+    (`rebuildFar`); the old trees' instanced meshes; your old car's geometries and its own materials; and three leaks
+    the new check found beyond the review's list: Lot 57's `ParkedCars.dispose()` leaves each set's model geometries
+    and stand-in material (25 geometries a rebuild), the people builder's `dispose()` leaves the skeleton's bone
+    texture, and the game's `Environment.rebuildEnv()` frees its PMREM texture but not the render target (one 768 x
+    1024 target every clock change). The page frees all three itself (the files are unchanged; `PROJECT_OC_HANDOFF.md`,
+    "For Lot 57's owners", items 5 to 7). New memory group: Low, HD, Ultra, HD, Low twice with a pose each; before
+    the fixes each round added 6 textures and 50 geometries; now the first round leaves 28 textures and 1 geometry more than the
+    start, which a debugging pass traced to what the game keeps on purpose (the car builder's cached high-quality
+    maps, about 19 data textures; 9 canvas and small data textures made at load and first drawn at HD; the sun's 2048
+    map, which the game's environment keeps allocated at Low), and the second round comes back to exactly the first's
+    50 textures and 97 geometries (the check).
+  - **Ultra's pool-spot maps** (`visibility.ts`): a spot frozen before its map was ever drawn is drawn once on the next
+    frame (`needsUpdate`), so an Ultra page that opens outside doesn't sample an empty map through the glass.
+  - **Per-frame allocations:** `poseDoors` (venue.ts), `setOverheadCut` and `nearPoint` (main.ts),
+    `BarInput.takeOver()` (two tap lists that swap) and your avatar's key (four fields compared) allocate nothing a
+    frame now.
+  - **Low's rows** (the plan, "The allocations"; O4): the fallback (dropping the near set's markings, 2.4k) would have
+    left the streets at about 35.7k, still over 35k, so 5k moved from Low's venue row to its streets' (45k and 40k; the
+    near set's rows at Low and HD to 16k); the sums and the "without people or items" rows don't move.
+    `venues/sportsbar/def.ts` carries the rows (`ALLOC`); the data group checks all the streets as built at every
+    preset (Low 18/38.1k of 20/40k, HD 18/38.5k of 30/60k, Ultra 29/78.2k of 40/120k) and the budgets group the
+    venue, the streets and the trees as drawn at every pose.
+  - **Checked** with `node tests/sportsbar.mjs --only=data,walks,seats,closed,honesty,budgets,cars,memory,shots
+    --tag=r2` on the repaired build (`tests/out/sportsbar/logs/s1-r2-run-1.log`, 12:54 to 13:42 UTC, the machine at
+    a load of 6 to 14): 113 of 113 pass, the four new data checks and the memory group among them; the 1,000 random
+    walks (500 by tap to go, now through the new rule) still never end in a collider or cross a wall (1 tap had no
+    path, 499 arrived); tap to go still seats you at all 91 seats; the closed hours, honesty and cars checks pass as
+    before.
+    `npx tsc --noEmit` is clean. The budgets at every pose and preset pass as before; the venue is now 35 to 39 calls
+    and 17.1k to 19.1k (16.2k to 16.5k before), each pool spot's map 684 triangles; the worst pass less your avatar per
+    preset is Low 99/138.9k of 119/177.8k (`stall`), HD 111/224.5k of 139/328.2k (`overhead`), Ultra 120/427.1k of
+    159/611.4k (`overhead`); whole frames Low 62 to 100 calls and 65.4k to 146.7k, HD 107 to 187 and 132.0k to 448.2k,
+    Ultra 258 to 355 and 413.0k to 1,531.6k; your avatar's caster drops the sun's map by 11,762 at every HD and Ultra
+    pose. Not run again: the door crossings, rates and shadows groups (their code is unchanged but for the per-frame
+    allocations and the pool maps' first draw); their figures are run 2's, 3's and 4's.
+  - **Screenshots**, all with `-r2` names in `tests/out/sportsbar/`, every one looked at (some through contact
+    sheets of nine): 1280x720 at HD, noon and Saturday 21:00, the phase's ten views and the repair's four
+    (`s1-1280x720-high-{door,bar,tv,pool,spawn,patio,overhead,exterior,freeway,katella,darts,neon,circle,ceiling}-{noon,night}-r2.png`,
+    28); 844x390 at Low, now with the freeway view (`s1-844x390-low-{door,spawn,patio,overhead,exterior,freeway}-{noon,night}-r2.png`,
+    12); 390x844 at Low (`s1-390x844-low-{door,spawn,overhead}-{noon,night}-r2.png`, 6); Ultra at night
+    (`s1-1280x720-ultra-{door,patio,exterior}-night-r2.png`, 3); the closed and honesty shots
+    (`s1-closed-640x360-tue0930-r2.png`, `s1-1280x720-spawn-night-r2.png`). Before and after, in
+    `tests/out/sportsbar/probe-r2/`: the neon cropped from the overhead (above), and the I-5 from 90 m over the lot at
+    21:00 on HD (`before-1280x720-high-i5-night.png`, S1's build: one line of lights on the northbound carriageway;
+    `after-1280x720-high-i5-night-r2.png`: both carriageways). In the patio-rail view (`freeway-night`) the trees and
+    the pergola hide most of both carriageways, so the streams read better from above. **Looked at for the brief's
+    question again:** with the ceiling, the boards, the circle, the neon and the tables, the inside now reads as a
+    finished SoCal strip-mall sports bar at noon and at night, and through the glazing from the lot at night (the lit
+    tile ceiling, the screens and the dartboards show from outside). Left for S3a and S4: no people, the night outside
+    the venue very dark beyond the lamps, the doors' leaves caught mid-slide in some shots, and the tiles a little warm
+    under the interior light.
+- **Lot 57 is unaffected.** Its page still builds with its own config (`dist/onfoot/index.html`, 1,069.80 kB), its
+  files are untouched (`git status` shows no change under `src/onfoot/lot57/`, `main.ts`, `index.html` or `people/`),
+  and its own suite passes unchanged: `node tests/onfoot.mjs` on its build, 35 of 35 (10:17 to 10:34 UTC;
+  `tests/out/sportsbar/logs/lot57-suite-s1.log`, details in `tests/out/onfoot/onfoot-checks.json`).
+- **Left open** (each in the plan's Open items table or the handoff):
+  - **Retro** (O15): `claude/modes` hasn't merged, so Low is the standard materials at full resolution; S4 turns the
+    Retro look on.
+  - **Phones** (O30): nothing has run on a phone; every rate here is SwiftShader on a loaded shared machine.
+  - **Low's streets** (O4): closed by the repair below (the rows re-allocated, the venue 45k and the streets 40k at
+    Low, and the suite checking them).
+  - **The night outside** reads very dark beyond the lamps (the front lot, the street, the freeway view); the doors'
+    leaves are caught mid-slide in the door shots (a leaf takes 0.45 s to open and the page steps at most 0.1 s a frame,
+    so a shot taken a few frames after a pose catches it moving). Both are for S4's light and look pass.
+  - **Your car's other three bodies** weren't measured (only the default).
+  - **Lot 57's `PRESET`** (L1) is re-synced again at S4 (O1).
+  - **Lot 57's copies** of the GTAO and ground-depth flaws (O34) and of the two shadow flaws (O28) are its owners'.
+
 ## 2026-11-02: Lot 57 on foot, P1a finished and re-verified on the final build (35 of 35 checks)
 
 The P1a builder of 2026-10-21 (entry below) was cut off mid-run: its last suite runs (17:45 and earlier) lost their
