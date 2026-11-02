@@ -56,10 +56,10 @@
     "surface"
    ],
    "phonemes": "ɪts ˈiːzi tə θˈɪŋk ɒv sˈʌn dˈamɪdʒ az ðə bˈɜːn juː fˈiːl. bˌʌt ɐn ˌʊltɹɐvˈaɪəlɪt kˈamɹə pˈɪks ˌʌp dˈamɪdʒ ðə nˈeɪkɪd ˈaɪ mˈɪsɪz, bˈɪldɪŋ lˈɒŋ bɪfˌɔːɹ ˈɛnɪθˌɪŋ ʃˈəʊz ɒnðə sˈɜːfɪs.",
-   "speed": 0.8,
+   "speed": 0.84,
    "file": "04.wav",
-   "dur": 12.135,
-   "sha256": "0732b0ce2f77c91ff5857e8fd4522509fb549d162dd4ef75c649f81a99e17066"
+   "dur": 10.8,
+   "sha256": "9a2dc33cca95be423c6104b3476965676e7316446ec8e4513e58517a3ca16077"
   },
   {
    "id": "vo05",
@@ -69,10 +69,10 @@
     "half"
    ],
    "phonemes": "ðˈɛn ðə tˈaʊn wɒz wˈɒtʃt fɔː tˈɛn mˈɔː jˈiəz. skwˈeɪməs sˈɛl kˈansəz had ɔːlɹˌɛdi kˈʌm ˈaʊt lˈəʊə, and mˌɛlənˈəʊmə kˈeɪm ˈaʊt at ɐbˌaʊt hˈɑːf, ɪn smˈɔːl nˈʌmbəz.",
-   "speed": 0.78,
+   "speed": 0.84,
    "file": "05.wav",
-   "dur": 10.729,
-   "sha256": "e9b6d94d6e66eb8911649df36005ba5b08bdd1e77ab24f9191101c5badecafdb"
+   "dur": 9.168,
+   "sha256": "0afe0d0c2fa7a0c2aeec324f072f217a660a116f0a2b4b6c02a3ad33eaa4f406"
   },
   {
    "id": "vo06",
@@ -82,10 +82,10 @@
     "thickness"
    ],
    "phonemes": "atə lˈabz tˈɛst dˈəʊs, ðat mˈɔːnɪŋ lˈeɪəɹ ɪz ɐbˌaʊt ɐ fˈɪfθ əvə pˈeɪpəz θˈɪknəs.",
-   "speed": 0.74,
+   "speed": 0.8,
    "file": "06.wav",
-   "dur": 6.037,
-   "sha256": "d18cae3504361cb6376ec8bf4f7a0e6f771aa27d5ccec586ead9b39b54bf5b50"
+   "dur": 5.52,
+   "sha256": "e4560b19418feda82fed1acbbbba41bf44d3ec2b3b466ccb3a6482a0f71feb21"
   },
   {
    "id": "vo07",
@@ -95,10 +95,10 @@
     "record"
    ],
    "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? ðɪ ˈaɪ kˈɑːnt sˈeɪ, bˌʌt ðə skˈɪn wɒz kˈiːpɪŋ ɪts ˈəʊn ɹˈɛkɔːd.",
-   "speed": 0.74,
+   "speed": 0.8,
    "file": "07.wav",
-   "dur": 6.223,
-   "sha256": "e6bab58ffc089052a83514207b559b1ca23ad8f469bcaa32b652b70c0e841e88"
+   "dur": 5.628,
+   "sha256": "fc18e97bd0b5ce3304ce2251f196aa63fbb238b6dfd10576a7dd1d43b4559870"
   },
   {
    "id": "vo08",

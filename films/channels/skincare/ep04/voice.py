@@ -22,7 +22,7 @@ import numpy as np
 import soundfile as sf
 
 HERE = Path(__file__).resolve().parent
-VOICE = HERE.parents[4] / "kits/cinema/voice"
+VOICE = HERE.parents[3] / "kits/cinema/voice"
 sys.path.insert(0, str(VOICE))
 from scriptfile import script_lines   # noqa: E402
 
@@ -32,7 +32,7 @@ spec.loader.exec_module(tts)
 
 NARRATOR = "bf_isabella"         # bible §4 / auditions/README.md: Outer Layer's narrator
 # Kokoro speed per line: a touch below the first cut (the Flow standard, 29 Oct), the short lines slower so they land.
-SPEEDS = {"vo01": 0.92, "vo02": 0.78, "vo03": 0.84, "vo04": 0.84, "vo05": 0.74, "vo06": 0.74, "vo07": 0.84, "vo08": 0.84}
+SPEEDS = {"vo01": 0.92, "vo02": 0.78, "vo03": 0.84, "vo04": 0.84, "vo05": 0.8, "vo06": 0.8, "vo07": 0.84, "vo08": 0.84}
 
 
 def main():

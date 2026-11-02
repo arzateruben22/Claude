@@ -22,7 +22,7 @@ import numpy as np
 import soundfile as sf
 
 HERE = Path(__file__).resolve().parent
-VOICE = HERE.parents[4] / "kits/cinema/voice"
+VOICE = HERE.parents[3] / "kits/cinema/voice"
 sys.path.insert(0, str(VOICE))
 from scriptfile import script_lines   # noqa: E402
 

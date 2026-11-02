@@ -630,128 +630,128 @@
    "words": [
     {
      "w": "So",
-     "start": 0.17,
-     "end": 0.48,
+     "start": 0.155,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "how",
-     "start": 0.36,
-     "end": 0.72,
+     "start": 0.345,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "much",
-     "start": 0.805,
-     "end": 0.96,
+     "start": 0.765,
+     "end": 0.815,
      "heard": true
     },
     {
      "w": "goes",
-     "start": 1.11,
-     "end": 1.6,
+     "start": 0.92,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "in?",
-     "start": 1.595,
-     "end": 2.24,
+     "start": 1.37,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "The",
-     "start": 2.39,
-     "end": 2.48,
+     "start": 2.1,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "whole",
-     "start": 2.42,
-     "end": 2.8,
+     "start": 2.13,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "frown",
-     "start": 2.895,
-     "end": 3.28,
+     "start": 2.53,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 3.46,
-     "end": 3.84,
+     "start": 2.995,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "well",
-     "start": 3.73,
-     "end": 4.08,
+     "start": 3.325,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "under",
-     "start": 4.165,
-     "end": 4.48,
+     "start": 3.625,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.55,
-     "end": 4.64,
+     "start": 3.74,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "hundredth",
-     "start": 4.7,
-     "end": 5.28,
+     "start": 4.03,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.245,
-     "end": 5.44,
+     "start": 4.63,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.42,
-     "end": 5.68,
+     "start": 4.66,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "amount",
-     "start": 5.595,
-     "end": 6.16,
+     "start": 4.775,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "estimated",
-     "start": 6.3,
-     "end": 7.12,
+     "start": 5.35,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "to",
-     "start": 7.185,
-     "end": 7.28,
+     "start": 6.175,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "kill",
-     "start": 7.335,
-     "end": 7.68,
+     "start": 6.32,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.75,
-     "end": 7.92,
+     "start": 6.685,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "person.",
-     "start": 7.805,
-     "end": 8.24,
+     "start": 6.715,
+     "end": 7.12,
      "heard": true
     }
    ]
@@ -759,7 +759,7 @@
   {
    "id": "vo06",
    "text": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
-   "heard": "and the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
+   "heard": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
    "words": [
     {
      "w": "And",
@@ -769,104 +769,104 @@
     },
     {
      "w": "the",
-     "start": 0.37,
-     "end": 0.42,
+     "start": 0.34,
+     "end": 0.39,
      "heard": true
     },
     {
      "w": "gap",
-     "start": 0.4,
-     "end": 0.72,
+     "start": 0.37,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "that",
-     "start": 0.75,
-     "end": 0.96,
+     "start": 0.67,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "message",
-     "start": 0.865,
-     "end": 1.52,
+     "start": 0.795,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "never",
-     "start": 1.77,
-     "end": 1.92,
+     "start": 1.41,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "crosses",
-     "start": 1.955,
-     "end": 2.56,
+     "start": 1.78,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.615,
-     "end": 2.88,
+     "start": 2.415,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "about",
-     "start": 2.88,
-     "end": 3.2,
+     "start": 2.66,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "two",
-     "start": 3.215,
-     "end": 3.52,
+     "start": 2.985,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "thousand",
-     "start": 3.605,
-     "end": 4.16,
+     "start": 3.305,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "times",
-     "start": 4.12,
-     "end": 4.56,
+     "start": 3.815,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "thinner",
-     "start": 4.705,
-     "end": 5.36,
+     "start": 4.38,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "than",
-     "start": 5.56,
-     "end": 5.68,
+     "start": 5.185,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.59,
-     "end": 5.92,
+     "start": 5.215,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "sheet",
-     "start": 6.01,
-     "end": 6.24,
+     "start": 5.375,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "of",
-     "start": 6.23,
-     "end": 6.48,
+     "start": 5.755,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "paper.",
-     "start": 6.495,
-     "end": 7.12,
+     "start": 5.985,
+     "end": 6.48,
      "heard": true
     }
    ]

@@ -69,10 +69,10 @@
     "person"
    ],
    "phonemes": "sˌəʊ hˌaʊ mˈʌtʃ ɡəʊz ˈɪn? ðə hˈəʊl fɹˈaʊn tˈeɪks wˈɛl ˌʌndəɹ ɐ hˈʌndɹədθ ɒvðɪ ɐmˈaʊnt ˈɛstɪmˌeɪtɪd tə kˈɪl ɐ pˈɜːsən.",
-   "speed": 0.74,
+   "speed": 0.8,
    "file": "05.wav",
-   "dur": 8.409,
-   "sha256": "16ac15b380092ab6e80e0a0460be84dc29fe09a3a0c4e0ade06d7596d811120b"
+   "dur": 7.294,
+   "sha256": "7fcab79a6b05f1cd610e84434452a663d7038249830d9f6663ef16fc579be602"
   },
   {
    "id": "vo06",
@@ -82,10 +82,10 @@
     "paper"
    ],
    "phonemes": "and ðə ɡˈap ðat mˈɛsɪdʒ nˈɛvə kɹˈɒsɪz ɪz ɐbˌaʊt tˈuː θˈaʊzənd tˈaɪmz θˈɪnə ðˌanə ʃˈiːt ɒv pˈeɪpə.",
-   "speed": 0.74,
+   "speed": 0.8,
    "file": "06.wav",
-   "dur": 7.195,
-   "sha256": "b763bd21d527baf63b1e41f83fe410e3c265494fadd7f4745b630f49009001f8"
+   "dur": 6.552,
+   "sha256": "f675d6d1cdb56417504d3bfbf7fe2459c4d95bf2ca6c26599159f5c52da82f91"
   },
   {
    "id": "vo07",
