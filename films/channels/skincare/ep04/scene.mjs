@@ -153,7 +153,7 @@ window.seek = function (t) {
   if (shot === "field" || shot === "gauge") { tan = 1; fill = 0.4; travel = 1; uvGain = shot === "field" ? 1 : 0.25; pass = BIO.pass; dimDead = 0.2; }
   if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.85; }
   if (inS) {
-    S.set({ tone, dimDead, dimLiving, mortar: 0, glowDead: 0 });
+    S.set({ tone, dimDead, dimLiving, mortar: 0, glowDead: 0 }); S.mortarGroup.visible = false;
     caps.set({ tone, tan, dim: shot === "gauge" ? 0.6 : 0 });
     mel.set({ tone, fill, travel, glow: melGlow, dim: shot === "gauge" ? 0.6 : 0 });
     // in the hook and the close the pigment cell is part of the scene, not a subject: kept quiet
@@ -165,13 +165,13 @@ window.seek = function (t) {
   const band = tan > 0.5 ? { filmTop: capY + 4, filmBottom: capY - 2 } : { filmTop: -BIO.sc_um - 4, filmBottom: -BIO.sc_um - 22 };
   const got = raysS.set(t, inS ? { ...band, pass: tan > 0.5 ? pass : 0, gain: uvGain, color: UVC, hitColor: HIT } : HIDE);
   A.ray = [HC[0] - 20, 30, 26];
-  A.pass = got || A.pass || [20, capY - 10, 26];
+  A.pass = [16, capY - 10, 29];   // the band under the caps where the rays that get by glow
   // the followed cell: an ink ring as the camera arrives, and again as the cell that "notices"
   const ringOp = shot === "section" ? fadeIn(t, CUE.living - 0.2, 0.5) : shot === "cell" ? 1 - fadeIn(t, CUE.message, 0.6) : 0;
   hcRing.material.opacity = 0.75 * ringOp; hcRing.visible = ringOp > 0.01;
   A.hcell = [HC[0] + 7, HC[1] + 2, HC[2] + 2];
   const pOn = shot === "cell" ? fadeIn(t, CUE.guardian - 0.1, 0.4) * (1 - fadeIn(t, CUE.melanin, 0.8)) : 0;
-  p53.material.color.setRGB(...WATER.map((v) => v * (1.1 + 0.5 * Math.sin((t - CUE.guardian) * 5.2) ** 2)));
+  p53.material.color.setRGB(...[1, 0.98, 0.94].map((v) => v * (1.2 + 0.5 * Math.sin((t - CUE.guardian) * 5.2) ** 2)));   // a neutral light: water is the bible's water/lipid colour
   p53.material.opacity = pOn; p53.visible = pOn > 0.01;
   const capCell = caps.cellNear(shot === "field" ? [24, -44, 30] : [BIO.mel_x + 8, -50, 30]);
   A.cap = [capCell.pos[0] + 3, capCell.pos[1] + 3, capCell.pos[2] + 2];
@@ -179,7 +179,7 @@ window.seek = function (t) {
 
   // ── the message: beads from the cell down to the pigment cell ──
   const su = shot === "cell" ? seg(t, CUE.message - 0.2, CUE.melanin + 0.2) : 0;
-  A.signal = sig.set(su, t, { gain: shot === "cell" ? winOp(t, CUE.message - 0.3, CUE.melanin + 0.6, 0.4) : 0, color: WATER }) || A.signal;
+  A.signal = sig.set(su, t, { gain: shot === "cell" ? winOp(t, CUE.message - 0.3, CUE.melanin + 0.6, 0.4) : 0, color: [1.3, 1.27, 1.2] }) || A.signal;
 
   // ── the pair: both under UV; only the one with p53 fills and tans ──
   if (isPair) {
@@ -211,16 +211,20 @@ window.seek = function (t) {
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
-  // the transitions
-  let iris = 0, dip = 0, ix = 0.5, iy = 0.5;
+  // the transitions. Iris: before the cut a slide-coloured disc grows out of the subject (the followed nucleus, or the
+  // fused bases); after it, a hole opens from the next place's subject, so the eye goes in through one and out of the other
+  let dip = 0, disc = 0, hole = 0;
   for (const tr of FILM.trans) {
     const d = t - tr.t;
     if (tr.kind === "dip") dip = Math.max(dip, 1 - Math.min(1, Math.abs(d) / 0.22));
-    else if (Math.abs(d) < 0.45) { iris = d < 0 ? E.in2(1 + d / 0.45) : 1 - E.out2(d / 0.45); if (d < 0) { const p = project(camera, shot === "section" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), W, H); ix = p.x / W; iy = p.y / H; } }
+    else if (d < 0 && d > -0.35) disc = E.in2(1 + d / 0.35);
+    else if (d >= 0 && d < 0.35) hole = Math.max(1e-3, E.out2(d / 0.35));
   }
-  if (iris > 0) {
-    const r = (iris * 125).toFixed(2);
-    veil.style.background = `radial-gradient(circle at ${(ix * 100).toFixed(2)}% ${(iy * 100).toFixed(2)}%, var(--slide) ${r}vmax, transparent ${(+r + 0.6).toFixed(2)}vmax)`;
+  if (disc > 0 || hole > 0) {
+    const subj = shot === "section" || shot === "cell" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), p = project(camera, subj, W, H);
+    const at = `${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%`, r = ((disc || hole) * 125).toFixed(2), r2 = (+r + 0.6).toFixed(2);
+    veil.style.background = disc > 0 ? `radial-gradient(circle at ${at}, var(--slide) ${r}vmax, transparent ${r2}vmax)`
+      : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
     veil.style.opacity = "1";
   } else { veil.style.background = "var(--slide)"; veil.style.opacity = (0.85 * dip).toFixed(4); }
   // the parasol stack inside the lifted gauge's paper bar (read from motif.js's own bar, so it follows any change there)

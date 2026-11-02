@@ -280,14 +280,14 @@
    "tag": "b-model3"
   },
   {
-   "t": 46.86666666666667,
-   "kind": "counter.show",
-   "tag": "c-spf"
-  },
-  {
    "t": 47.53333333333334,
    "kind": "label",
    "tag": "l-pass"
+  },
+  {
+   "t": 48.733333333333334,
+   "kind": "counter.show",
+   "tag": "c-spf"
   },
   {
    "t": 52.2667,
