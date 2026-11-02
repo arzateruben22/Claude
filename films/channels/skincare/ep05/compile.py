@@ -49,46 +49,52 @@ CUE = {
     "dose": A("vo06:dose,"), "fifth": A("vo06:fifth"), "paper": A("vo06:paper's"),
     "which": A("vo07:which"), "eye": A("vo07:eye"), "but": A("vo07:but"), "record": A("vo07:record."),
 }
-SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["both"], "name": "hand"}, {"at": B["normal"]["t0"], "name": "town"}, {"at": B["change"]["t0"], "name": "cast"},
+SHOTS = [{"at": 0.0, "name": "hands"}, {"at": B["normal"]["t0"], "name": "town"}, {"at": B["change"]["t0"], "name": "cast"},
          {"at": B["why"]["t0"], "name": "burn"}, {"at": CUE["but4"] - 0.1, "name": "uv1"}, {"at": B["whoa"]["t0"], "name": "town2"}, {"at": B["toscale"]["t0"], "name": "gauge"},
-         {"at": CUE["but"] - 0.1, "name": "uv2"}, {"at": B["tease"]["t0"], "name": "close"}]
+         {"at": B["takeaway"]["t0"], "name": "hands2"}, {"at": B["tease"]["t0"], "name": "close"}]
 
 # ── the camera ──
-TX, UX = -4000.0, 4000.0
+TX, UX, HX = -4000.0, 4000.0, 8000.0   # HX: the two hands (../set/hands05.js)
 FLY = {"el": 13, "fov": 34, "fx": 0.5, "fy": 0.46}
 UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.43}
+HK = {"target": [HX, 1.6, 0], "el": 3, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46}   # the hands, frontal
 CAM = {
     # the hook opens mid-push inside the UV camera on the two halves (more and less damage: an illustration); on "Both" the
     # signature switch to daylight: the same to the eye
-    "uvhook": [{"t": 0.0, **UVK, "dist": 30}, {"t": CUE["both"], **UVK, "dist": 23, "ease": "linear"}],
+    "hands": [{"t": 0.0, **HK, "dist": 40}, {"t": CUE["both"], **HK, "dist": 34, "ease": "linear"},
+              {"t": B["normal"]["t0"], **{**HK, "target": [HX, 1.6, 0]}, "dist": 30, "ease": "sine"}],
     "hand": [{"t": CUE["both"], "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY},
              {"t": CUE["sun"], "target": [0, -0.4, 10], "dist": 22, "az": -2, **FLY, "ease": "sine"},
              {"t": B["normal"]["t0"], "target": [0, -0.4, 8], "dist": 40, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
     # up and out over the town; on "chance" the households split, on "morning" the daily group lights
     "town": [{"t": B["normal"]["t0"], "target": [TX, 0, 0], "dist": 34, "el": 80, "az": -10, "fov": 34, "fx": 0.5, "fy": 0.44},   # still rising: close over one roof, pulling up
-             {"t": CUE["chance"], "target": [TX, 0, 0], "dist": 210, "el": 46, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "out3"},
+             {"t": CUE["nambour"], "target": [TX + 10, 0, -6], "dist": 120, "el": 58, "az": -8, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "out3"},
+             {"t": CUE["chance"], "target": [TX, 0, 0], "dist": 210, "el": 46, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "inout2"},
              {"t": CUE["morning"], "target": [TX - 10, 0, 6], "dist": 170, "el": 40, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "inout2"},
-             {"t": B["change"]["t0"], "target": [TX - 10, 0, 6], "dist": 70, "el": 62, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "in2"}],
+             {"t": CUE["pleased"], "target": [TX + 14, 0, 4], "dist": 150, "el": 46, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "inout2"},
+             {"t": B["change"]["t0"], "target": [TX - 10, 0, 6], "dist": 30, "el": 75, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "in2"}],
     # back down to the hand as its silicone cast, both halves in frame, the seam vertical
     "cast": [{"t": B["change"]["t0"], "target": [0, -0.4, 4], "dist": 16, "el": 50, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.44},
              {"t": CUE["casts"], "target": [0, -0.4, 4], "dist": 30, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.44},
+             {"t": CUE["four"], "target": [3, -0.4, 2], "dist": 20, "el": 42, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "inout2"},   # a push on "four": the deepening lines
              {"t": B["why"]["t0"], "target": [0, -0.4, 3], "dist": 26, "el": 44, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "sine"}],
     # the burn you feel: the visible hand, a warm flush rising (the eye's view), then the shutter to UV on "But"
     "burn": [{"t": B["why"]["t0"], "target": [3, -0.4, 6], "dist": 22, "el": 24, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.46},
              {"t": CUE["but4"] - 0.1, "target": [3, -0.4, 4], "dist": 18, "el": 26, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "sine"}],
-    "uv1": [{"t": CUE["but4"] - 0.1, **UVK, "dist": 27}, {"t": CUE["camera"], **UVK, "dist": 25, "ease": "inout2"},
-            {"t": CUE["misses"], **{**UVK, "target": [UX + 0.9, 0.1, 0]}, "dist": 21, "ease": "inout2"},
-            {"t": CUE["surface"], **{**UVK, "target": [UX - 0.4, 0.1, 0]}, "dist": 25, "ease": "inout2"},
-            {"t": B["whoa"]["t0"], **UVK, "dist": 27, "ease": "sine"}],
+    "uv1": [{"t": CUE["but4"] - 0.1, **HK, "dist": 36}, {"t": CUE["camera"], **HK, "dist": 32, "ease": "inout2"},
+            {"t": CUE["misses"], **{**HK, "target": [HX + 3.1, 2.2, 0]}, "dist": 20, "ease": "inout2"},
+            {"t": CUE["surface"], **{**HK, "target": [HX + 3.1, 1.2, 0]}, "dist": 16, "ease": "inout2"},
+            {"t": B["whoa"]["t0"], **HK, "dist": 30, "ease": "inout2"}],
     "town2": [{"t": B["whoa"]["t0"], "target": [TX, 0, 0], "dist": 240, "el": 52, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.3},
               {"t": CUE["ten"], "target": [TX, 0, 0], "dist": 225, "el": 52, "az": 11, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
+              {"t": CUE["squamous"], "target": [TX - 12, 0, 6], "dist": 180, "el": 50, "az": 12, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
               {"t": CUE["half"], "target": [TX, 0, 0], "dist": 150, "el": 48, "az": 14, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
               {"t": B["toscale"]["t0"], "target": [TX, 0, 0], "dist": 215, "el": 54, "az": 20, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [-3, -0.4, 6], "dist": 20, "el": 24, "az": -8, "fov": 34, "fx": 0.5, "fy": 0.7},
               {"t": B["takeaway"]["t0"] - 0.4, "target": [-3, -0.4, 4], "dist": 19, "el": 26, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.7, "ease": "sine"},
               {"t": B["takeaway"]["t0"] + 1.2, "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY, "ease": "inout2"},   # no cut: on to the hook's framing for "which hand aged?"
               {"t": CUE["but"] - 0.1, "target": [0, -0.4, 13], "dist": 23, "az": -3, **FLY, "ease": "sine"}],
-    "uv2": [{"t": CUE["but"] - 0.1, **UVK, "dist": 24}, {"t": B["tease"]["t0"], **UVK, "dist": 22, "ease": "sine"}],
+    "hands2": [{"t": B["takeaway"]["t0"], **HK, "dist": 38}, {"t": CUE["but"], **HK, "dist": 33, "ease": "sine"}, {"t": B["tease"]["t0"], **HK, "dist": 30, "ease": "sine"}],
     "close": [{"t": B["tease"]["t0"], "target": [0, -0.4, 18], "dist": 25, "az": -6, **FLY},
               {"t": B["tease"]["t1"], "target": [0, -0.4, 14], "dist": 24, "az": -4, **FLY, "ease": "sine"}],
 }
@@ -99,25 +105,26 @@ for shot, keys in CAM.items():
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-a", "text": "one neighbour's skin", "kind": "cell", "anchor": "halfL", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-b", "text": "the other's", "kind": "cell", "anchor": "halfR", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-a", "text": "one neighbour", "kind": "cell", "anchor": "handL", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.3, "shot": "hands", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-b", "text": "the other", "kind": "cell", "anchor": "handR", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.3, "shot": "hands", "side": 1, "v": "above", "fixed": True},
     {"id": "l-daily", "text": "daily sunscreen", "kind": "water", "anchor": "daily", "t0": CUE["morning"] - 0.3, "t1": B["change"]["t0"], "shot": "town", "side": -1, "v": "above"},
     {"id": "l-dis", "text": "as they pleased", "kind": "uv", "anchor": "dis", "t0": CUE["pleased"] - 0.5, "t1": B["change"]["t0"], "shot": "town", "side": 1, "v": "below"},
     {"id": "l-cr", "text": "as they pleased: deeper lines", "kind": "uv", "anchor": "castR", "t0": CUE["increase"], "t1": B["why"]["t0"], "shot": "cast", "side": 1, "v": "above"},
     {"id": "l-cd", "text": "daily: no detectable increase", "kind": "water", "anchor": "castL", "t0": CUE["daily"], "t1": B["why"]["t0"], "shot": "cast", "side": -1, "v": "below"},
-    {"id": "l-dmg", "text": "damage the eye misses (more sun)", "kind": "uv", "anchor": "uvR", "t0": CUE["misses"] - 0.3, "t1": B["whoa"]["t0"], "shot": "uv1", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-dmg", "text": "damage the eye misses", "kind": "uv", "anchor": "handR", "t0": CUE["misses"] - 0.3, "t1": B["whoa"]["t0"], "shot": "uv1", "side": 1, "v": "below", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model, not a photo", "t0": CUE["both"], "t1": B["normal"]["t0"], "slot": "tr"},
+    {"id": "b-model-h", "text": "model, not a photo", "t0": B["normal"]["t0"] - 0.6, "t1": B["normal"]["t0"], "slot": "tr"},
     {"id": "b-town", "text": "model, not a map", "t0": B["normal"]["t0"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": B["change"]["t0"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but4"] - 0.1, "slot": "tl"},
     {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but4"] - 0.1, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-green", "text": "Green et al., 1999 · 2011", "t0": B["whoa"]["t0"] + 0.3, "t1": CUE["half"] - 0.3, "slot": "tl"},
     {"id": "b-sig", "text": "not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"], "t1": CUE["but"] - 0.1, "slot": "tl"},
+    {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-est", "text": "estimate", "t0": CUE["fifth"], "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["but"] - 0.1, "t1": t_end, "slot": "tl"},
+    {"id": "b-hands2", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": CUE["but"], "slot": "tl"},
+    {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["but"], "t1": t_end - 0.3, "slot": "tl"},
 ]
 SPINE = [0.5, 0.225]   # centred: the viewfinder's REC owns the top right in the UV shots
 COUNTERS = [
@@ -132,8 +139,9 @@ PLATES = {
     "mel": {"t0": CUE["squamous"] - 0.3, "t1": B["toscale"]["t0"] - 0.3, "scc": CUE["squamous"], "mel": CUE["melanoma"], "half": CUE["half"], "small": CUE["small"],
             "n": list(MEL), "sub": f"hazard ratio {HR:.2f} (95% CI {HR_CI[0]:.2f}–{HR_CI[1]:.2f}): not quite significant"},
     "vfhook": {"t0": 0.0, "t1": CUE["both"]},
+    "hands": {"uv0": [CUE["both"] - 0.08, CUE["both"] + 0.08], "uv2": [CUE["but"] - 0.08, CUE["but"] + 0.08]},
     "viewfinder1": {"t0": B["why"]["t0"], "t1": B["whoa"]["t0"]},
-    "viewfinder2": {"t0": CUE["but"] - 0.1, "t1": t_end},
+    "viewfinder2": {"t0": CUE["but"], "t1": t_end},
     # no daylight strip: the trial's population was one place's adults, and tones under a damage split would pair tones with a risk
 }
 TOWN = {"split": [CUE["chance"] - 0.2, CUE["chance"] + 1.6], "glow": CUE["morning"] - 0.4}
@@ -168,7 +176,7 @@ CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "tone": TONE, "trans": [],
-    "bio": {"tx": TX, "ux": UX, "paper_um": PAPER_UM, "film_um": FILM_UM},
+    "bio": {"tx": TX, "ux": UX, "hx": HX, "paper_um": PAPER_UM, "film_um": FILM_UM},
     "cam": CAM, "cue": CUE, "gauge": GAUGE, "plates": PLATES, "town": TOWN, "hands": HANDS,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
@@ -188,6 +196,7 @@ for b in BADGES:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
     {"t": CUE["both"], "kind": "cell.land", "tag": "shutter-0"},
+    {"t": CUE["but"], "kind": "cell.land", "tag": "shutter-2b"},
     {"t": B["normal"]["t0"], "kind": "scale.jump", "tag": "up-to-town"},
     {"t": TOWN["split"][0], "kind": "diffuse", "tag": "split"},
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "down-to-cast"},

@@ -13,6 +13,7 @@ import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
 import { createUVSkin, createViewfinder, TONES } from "../set/uvcam.js";
 import { createTown } from "../set/town05.js";
+import { createHands } from "../set/hands05.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, BIO = FILM.bio, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, P = FILM.plates, HD = FILM.hands, TW = FILM.town;
 const S1 = Math.min(W, H) / 1080;
@@ -30,7 +31,7 @@ injectCss();
 scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));
 const sun = new THREE.DirectionalLight(0xffb870, 4.0); sun.position.set(30, 6, -30); scene.add(sun);
 const key = new THREE.DirectionalLight(0xfff0e0, 1.0); key.position.set(-10, 14, 20); scene.add(key);
-const FOG = new THREE.Fog(0x2c1660, 16, 52), FOG_TOWN = new THREE.Fog(0x2c1660, 260, 520);   // the distance sinks into the ground colour
+const FOG = new THREE.Fog(0x2c1660, 22, 70), FOG_TOWN = new THREE.Fog(0x2c1660, 260, 520);   // the distance sinks into the ground colour
 
 const s2l = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const hexLin = (h) => { const x = h.replace("#", ""); return [0, 2, 4].map((i) => s2l(parseInt(x.slice(i, i + 2), 16) / 255)); };
@@ -44,6 +45,9 @@ const TOWN = createTown({ x: BIO.tx, n: 120, seed: 5 });
 scene.add(TOWN.group);
 const UVS = createUVSkin({ seed: 7.0 });
 UVS.mesh.position.set(BIO.ux, 0, 0); UVS.mesh.rotation.x = -0.18; scene.add(UVS.mesh);
+const HS = createHands({ x: BIO.hx, tone: MED });
+scene.add(HS.group);
+const handKey = new THREE.DirectionalLight(0xfff0e0, 1.8); handKey.position.set(BIO.hx - 10, 14, 30); handKey.target.position.set(BIO.hx, 0, 0); scene.add(handKey, handKey.target);
 const rig = createRig(FILM.cam);
 
 // ── the overlay ──
@@ -69,7 +73,7 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";
-const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.18, 0.33] });
+const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.5, liftAt: [0.18, 0.3] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.265 });
 { const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}"; document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
@@ -82,15 +86,15 @@ const plate = (html, css) => {
 };
 const show = (el, op) => { el.style.opacity = op.toFixed(3); el.style.visibility = op > 0.002 ? "visible" : "hidden"; };
 const O = P.odds, M = P.mel;
-const odds = plate(`<div style="font:600 3.4vmin/1.3 var(--font-body, inherit)">${O.text}</div><div style="font:500 2.9vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
+const odds = plate(`<div style="font:600 4.1vmin/1.3 var(--font-body, inherit)">${O.text}</div><div style="font:500 3.1vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
   { left: "50%", top: `${0.44 * H}px`, transform: "translateX(-50%)", width: "78vmin", padding: "2.2vmin 3vmin" });
-const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline-block;width:1.8vmin;height:1.8vmin;border-radius:50%;margin:.2vmin;background:${c};opacity:0"></i>`).join("");
+const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline-block;width:1.6vmin;height:1.6vmin;border-radius:50%;margin:.2vmin;background:${c};opacity:0"></i>`).join("");
 const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body, inherit);opacity:0">squamous cell cancers, during the trial: <span style="color:var(--water)">lower</span><div style="font:500 2.6vmin/1.3 var(--font-mono);color:var(--text-2)">counted by tumours</div></div>
   <div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin:2vmin 0 1.2vmin">melanomas, ten years on</div>
   <div class="rows" style="display:grid;grid-template-columns:20vmin 1fr;white-space:nowrap;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
   <div class="sub" style="font:500 2.8vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
-  { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "2.4vmin 3vmin" });
+  { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "80vmin", padding: "2.4vmin 3vmin" });
 const rows = mel.querySelector(".rows"), mhead = rows.previousElementSibling, mfoot = mel.querySelector(".sub"), scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
@@ -109,8 +113,8 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const isHand = ["hand", "cast", "burn", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2" || shot === "uvhook";
-  T.group.visible = isHand; TOWN.group.visible = isTown; UVS.mesh.visible = isU;
+  const isHand = ["hand", "cast", "burn", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isHs = ["hands", "uv1", "hands2"].includes(shot), isU = false;
+  T.group.visible = isHand; HS.group.visible = isHs; TOWN.group.visible = isTown; UVS.mesh.visible = isU;
   scene.fog = isHand ? FOG : isTown ? FOG_TOWN : null;
   focus = isHand ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
 
@@ -121,7 +125,7 @@ window.seek = function (t) {
     else if (shot === "gauge") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: u01(t, HD.film) });
     else if (shot === "burn") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0, redden: [3, 4, 9, 0.55 * u01(t, HD.flush)] });   // the burn you feel: a warm flush, the eye's whole view of sun damage
     else T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0 });
-    { const fm = filmOf(); if (fm) { fm.material.opacity = shot === "gauge" ? 0.5 * u01(t, HD.film) : 0; fm.material.color.setRGB(0.85, 1.0, 1.0); fm.visible = fm.material.opacity > 0.01; } }   // the morning layer, visible
+    { const fm = filmOf(); if (fm) { fm.material.opacity = shot === "gauge" ? 0.75 * u01(t, HD.film) : 0; fm.material.color.setRGB(0.6, 1.0, 0.98); fm.visible = fm.material.opacity > 0.01; } }   // the morning layer, visible
     { const hairs = T.group.children.find((o) => o.isInstancedMesh && o.count === T.pores.length); if (hairs) hairs.visible = shot !== "cast"; }   // a silicone cast carries no hairs
     seam.material.opacity = shot === "hand" || shot === "close" ? 0.5 : 0.75;
   }
@@ -136,9 +140,18 @@ window.seek = function (t) {
     const d = shot === "uv1" ? u01(t, HD.dmg) : 1;   // (the hook shows the end state)   // a faint difference from the first frame, blooming on "camera"
     UVS.set({ damage: 0.18 + 0.07 * d, damageR: 0.35 + 0.55 * d, split: 1, glow: 1, opacity: shot === "uvhook" ? 1 : fadeIn(t, SH[shot], 0.12) });
   }
-  A.uvR = uvWorld(0.74, 0.45);
-  const vw = shot === "uv1" ? P.viewfinder1 : shot === "uvhook" ? P.vfhook : P.viewfinder2;
-  vf.set({ op: isU ? (shot === "uvhook" ? 1 - fadeIn(t, vw.t1 - 0.2, 0.2) : win(t, vw.t0, vw.t1, 0.25)) : 0, left: shot === "uvhook" ? "illustration" : "less damage", right: "more damage", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
+  // the hands: in UV for the hook until "Both", then daylight (the same to the eye); in UV with the damage blooming
+  // (uv1); daylight for the loop, then UV again on "but" (the record)
+  if (isHs) {
+    const PH = P.hands;
+    const uv = shot === "hands" ? 1 - u01(t, PH.uv0) : shot === "uv1" ? 1 : u01(t, PH.uv2);
+    const d = shot === "uv1" ? u01(t, HD.dmg) : 1;
+    HS.set({ uv, dmgL: 0.15 + 0.1 * d, dmgR: 0.3 + 0.7 * d });
+  }
+  A.handL = HS.at.left(); A.handR = HS.at.right(); A.uvR = A.handR;
+  const vw = shot === "uv1" ? P.viewfinder1 : shot === "hands" ? P.vfhook : P.viewfinder2;
+  const vfOn = shot === "hands" ? 1 - fadeIn(t, vw.t1 - 0.1, 0.15) : shot === "uv1" ? win(t, vw.t0, vw.t1, 0.25) : shot === "hands2" ? fadeIn(t, vw.t0, 0.15) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
+  vf.set({ op: vfOn, left: "less damage", right: "more damage", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
 
   // ── plates ──
   show(odds, shot === "cast" ? win(t, O.t0, O.t1) : 0);
