@@ -48,7 +48,7 @@ const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
-const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "3.1vmin";
+const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
 // the photo stack (normal): earlier photos of the same patch pile up behind the viewfinder, each with its date
 const stackRoot = document.createElement("div");
 Object.assign(stackRoot.style, { position: "absolute", left: `${(VF.x + 0.03) * W}px`, top: `${(VF.y + 0.05) * H}px`, width: `${(VF.w - 0.06) * W}px`, height: `${(VF.h - 0.07) * H}px`, zIndex: 1, pointerEvents: "none" });
@@ -128,23 +128,30 @@ window.seek = function (t) {
   const shot = stage(t).name, tone = FILM.tone;
   rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
-  uv.mesh.visible = isUV; terrain.group.visible = shot === "flight"; F.group.visible = isF; Gf.group.visible = shot === "pair";
-  scene.fog = shot === "flight" ? FOG : null;
-  lights.sun.intensity = shot === "flight" ? 4.2 : 2.2; lights.key.intensity = shot === "flight" ? 0.9 : 1.6;
-  fstop = shot === "flight" ? 0.5 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : [0, 0, 0];
+  const isFl = shot === "flight" || shot === "rise";
+  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair";
+  scene.fog = isFl ? FOG : null;
+  lights.sun.intensity = isFl ? 4.2 : 2.2; lights.key.intensity = isFl ? 0.9 : 1.6;
+  fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
   if (isUV) {
     const porph = shot === "uv" ? E.inout2(seg(t, K.porph[0], K.porph[1])) * (1 - fadeIn(t, SH.flight - 0.8, 0.6)) : 0.55;
     const spot = shot === "uv" ? 1 - E.inout2(seg(t, K.spotGone[0], K.spotGone[1])) : 1;
     const rings = shot === "uv2" ? E.inout2(seg(t, K.rings[0], K.rings[1])) : 0;
-    uv.set({ focus: [...SPOT, spot], spot, porph, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, bump: 0.22, spotRed: 1 });
+    // the signature switch: the photos are daylight; on "clear" (and on "No.") the UV camera wipes on from the top
+    const W1 = K.wipe1, W2 = K.wipe2;
+    const day = shot === "uv" ? (t >= K.dayOn && t < W1[1] ? 1 : 0) : (t < W2[1] ? 1 : 0);
+    const wp = shot === "uv" ? (t >= W1[0] && t < W1[1] ? E.inout2(seg(t, W1[0], W1[1])) : -1) : (t >= W2[0] && t < W2[1] ? E.inout2(seg(t, W2[0], W2[1])) : -1);
+    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, bump: 0.22 * spot, spotRed: 1,
+      day, wipe: wp, skin: toneColor("living", tone).map((v) => Math.min(1, v * 1.15)) });
+    vf.el.querySelector(".rec").textContent = day > 0.5 && wp < 0 ? "● REC  DAYLIGHT" : "● REC  UV 365 nm";
   }
   A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(SPOT[0] + 0.09, SPOT[1] - 0.05);
   const vfOp = isUV ? (shot === "uv" ? 1 - fadeIn(t, SH.flight - 0.4, 0.35) : fadeIn(t, SH.uv2, 0.4)) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
   vf.set({ op: vfOp, blink: 1 });
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
-  dip.style.opacity = Math.max(dz(SH.flight), dz(SH.uv2)).toFixed(3);
+  dip.style.opacity = Math.max(dz(SH.flight), dz(SH.rise), dz(SH.uv2)).toFixed(3);
   day.set({ op: shot === "uv2" ? fadeIn(t, K.rings[0], 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
   // the stack: one frame per flip, the date stamped, a shutter flash
   let nFlip = 0; for (const ft of FILM.flips) if (t >= ft) nFlip++;
@@ -155,7 +162,7 @@ window.seek = function (t) {
   flash.style.opacity = (0.35 * fl * stackOn).toFixed(3);
 
   // ── the macro flight ──
-  if (shot === "flight") terrain.set({ tone: toneColor("living", tone).map((v) => v * 1.12), furrows: 0.25, spot: 0, sheen: 0 });
+  if (isFl) terrain.set({ tone: toneColor("living", tone).map((v) => v * 1.12), furrows: 0.25, spot: 0, sheen: 0 });
 
   // ── the follicles ──
   if (isF) {

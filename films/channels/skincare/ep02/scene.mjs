@@ -139,7 +139,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   rig.place(camera, shot, t);
-  const isT = ["macro", "split", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
+  const isT = ["macro", "split", "rise", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS; face.mesh.visible = shot === "face";
   scene.fog = isT ? FOG : null;
   lights.sun.intensity = isT ? 4.2 : 2.0; lights.key.intensity = isT ? 0.9 : 1.6;
@@ -153,7 +153,7 @@ window.seek = function (t) {
   beamL.set({ op: shot === "split" ? 1 : 0 }); beamR.set({ op: shot === "split" ? 1 : 0 });
   glintL.set({ op: shot === "split" ? 1 : 0, spread: 0 });
   glintR.set({ op: shot === "split" ? 1 : 0, spread: shot === "split" ? E.inout2(seg(t, K.spread[0], K.spread[1])) : 0 });
-  const gOut = shot === "macro2" ? E.inout2(seg(t, K.glowout[0], K.glowout[1])) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
+  const gOut = shot === "macro2" ? E.inout2(seg(t, K.glowout[0], K.glowout[1])) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : shot === "rise" ? 0.9 : 0;   // the rise: the reddened light coming out
   // the glow from within: soft at frame 0 (the payoff), fading as the story starts; back on in the takeaway
   const gIn = shot === "macro" ? 0.75 * (1 - E.inout2(seg(t, CUE.inside + 0.4, CUE.inside + 1.6))) : 0;
   glows.forEach((g, i) => { g.material.opacity = Math.max(gIn, 0.85 * gOut) * (0.7 + 0.3 * Math.sin(t * 1.3 + i)); g.visible = g.material.opacity > 0.002; });

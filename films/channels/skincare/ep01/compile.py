@@ -36,9 +36,10 @@ FX, GX, TX = 5000.0, 5700.0, 1000.0   # the two follicle blocks (1000 µm wide e
 # ── shots ─────────────────────────────────────────────────────────────────
 t_flight, t_fol = B["change"]["t0"], A("vo03:defence", -0.35)
 t_end = A("vo08:Next:", -0.25)
+t_uv2 = A("vo07:new?", -0.15)   # the takeaway rises out of the pore over the terrain, then the viewfinder again
 SHOTS = [{"at": 0.0, "name": "uv"}, {"at": t_flight, "name": "flight"}, {"at": t_fol, "name": "follicle"},
          {"at": B["why"]["t0"], "name": "pair"}, {"at": B["whoa"]["t0"], "name": "rupture"},
-         {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "uv2"}]
+         {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "rise"}, {"at": t_uv2, "name": "uv2"}]
 
 CUE = {"new": A("vo01:new?"), "clear1": A("vo01:clear."), "photo": A("vo02:photo"), "quarter": A("vo02:quarter"), "clear2": A("vo02:clear."),
        "underneath": A("vo02:underneath?"), "beneath": A("vo03:beneath"), "defence": A("vo03:defence"), "already": A("vo03:already"), "immune": A("vo03:immune"),
@@ -54,7 +55,8 @@ FLIPS = [round(CUE["photo"] + k * (CUE["clear2"] - CUE["photo"]) / 6, 3) for k i
 UVK = {"target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5}
 SPOTK = {**UVK, "target": [0.72, -0.45, 0]}   # the spot (u .60, v .45) on the cheek
 CAM = {
-    "uv": [{"t": 0.0, **UVK, "dist": 19, "az": -3}, {"t": B["normal"]["t0"], **UVK, "dist": 18, "az": -1, "ease": "sine"},
+    "uv": [{"t": 0.0, **UVK, "dist": 30, "az": -7}, {"t": CUE["new"] + 0.3, **UVK, "dist": 19, "az": -3, "ease": "out3"},   # frame 0 mid-push
+           {"t": B["normal"]["t0"], **UVK, "dist": 18, "az": -1, "ease": "sine"},
            {"t": CUE["clear2"], **UVK, "dist": 17, "az": 0, "ease": "inout2"},
            {"t": t_flight, **SPOTK, "dist": 6, "az": 0, "ease": "in2"}],   # a push into the spot's pore: a dip, and the flight takes over
     "flight": [{"t": t_flight, "target": [TX, 0, 6], "el": 26, "fov": 34, "fx": 0.5, "fy": 0.48, "dist": 34, "az": -6},
@@ -76,7 +78,9 @@ CAM = {
                 {"t": B["toscale"]["t0"], "target": [FX, -380, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.3, "dist": 2600, "az": -2, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [FX, -380, 0], "el": 6, "fov": 30, "fx": 0.66, "fy": 0.46, "dist": 2600, "az": -2},
               {"t": B["takeaway"]["t0"], "target": [FX + 100, -520, 0], "el": 6, "fov": 30, "fx": 0.7, "fy": 0.46, "dist": 1500, "az": -3, "ease": "inout2"}],
-    "uv2": [{"t": B["takeaway"]["t0"], **SPOTK, "dist": 7, "az": 1}, {"t": CUE["no"], **UVK, "dist": 18, "az": 0, "ease": "out3"}, {"t": B["tease"]["t1"], **UVK, "dist": 20, "az": -2, "ease": "sine"}],   # out of the spot, back to the cheek
+    "rise": [{"t": B["takeaway"]["t0"], "target": [TX + 1.5, -0.3, 0.4], "el": 60, "fov": 34, "fx": 0.5, "fy": 0.5, "dist": 6, "az": -1},   # up out of the pore...
+             {"t": t_uv2, "target": [TX + 0.5, 0, 2], "el": 30, "fov": 34, "fx": 0.5, "fy": 0.48, "dist": 24, "az": -6, "ease": "out3"}],   # ...over the clear skin
+    "uv2": [{"t": t_uv2, **SPOTK, "dist": 9, "az": 1}, {"t": CUE["no"] + 0.4, **UVK, "dist": 18, "az": 0, "ease": "out3"}, {"t": B["tease"]["t1"], **UVK, "dist": 20, "az": -2, "ease": "sine"}],   # out of the spot, back to the cheek
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -93,7 +97,7 @@ LABELS = [
     {"id": "l-white", "text": "more white cells", "kind": "cell", "anchor": "cell", "t0": CUE["flood"], "t1": CUE["give"], "shot": "rupture", "side": 1, "fixed": True},
     {"id": "l-spill", "text": "the spill", "kind": "cell", "anchor": "spill", "t0": CUE["deeper"] - 0.5, "t1": CUE["squeeze"] - 0.2, "shot": "rupture", "side": -1, "fixed": True},
     {"id": "l-thumb", "text": "a squeeze", "kind": "layer", "anchor": "thumb", "t0": CUE["squeeze"] + 0.2, "t1": CUE["likely"] + 0.2, "shot": "rupture", "side": 1, "fixed": True},
-    {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["end"] - 0.4, "t1": t_end, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
+    {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["no"] + 0.8, "t1": t_end, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [
     {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": t_fol, "slot": "br"},
@@ -135,7 +139,7 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
 KEYS = {"porph": [-1.0, 0.0], "spotGone": [FLIPS[3], FLIPS[5]], "ring": [CUE["crowding"] - 0.3, CUE["thickly"] + 0.4],
         "ringLit": [CUE["already"] - 0.2, CUE["already"] + 0.5], "bact": [CUE["bacterium"] - 0.4, CUE["bacterium"] + 0.4],
         "answer": [CUE["answers"] - 0.2, CUE["answers"] + 0.6], "flood": [CUE["flood"] - 0.3, CUE["wall"] + 0.3], "rupt": [CUE["give"] - 0.2, CUE["deeper"] + 0.5],
-        "press": [CUE["squeeze"], CUE["further"] + 0.9], "rings": [CUE["end"] - 0.6, CUE["end"] + 0.6], "lift": [CUE["likely"] + 0.3, B["toscale"]["t0"] - 0.3], "mark": [CUE["mark"] - 0.2, CUE["mark"] + 0.8]}
+        "press": [CUE["squeeze"], CUE["further"] + 0.9], "rings": [CUE["no"] + 0.2, CUE["no"] + 1.0], "wipe1": [CUE["clear2"] - 0.1, CUE["clear2"] + 0.6], "wipe2": [CUE["no"] - 0.1, CUE["no"] + 0.6], "dayOn": FLIPS[0] - 0.35, "lift": [CUE["likely"] + 0.3, B["toscale"]["t0"] - 0.3], "mark": [CUE["mark"] - 0.2, CUE["mark"] + 0.8]}
 # the gauge (scene.mjs): a centred card; one white cell drops in on "pus", is named on "small", ten stack on "ten" (10 × 8 = 80 µm),
 # the paper's 100 µm draws beside them on "paper's"
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 0.7], "pus": CUE["pus"] - 0.1, "sc": CUE["small"] - 0.2, "ten": [CUE["small"], CUE["ten"] + 1.0],
@@ -180,6 +184,8 @@ for b in BADGES:
 ev += [{"t": t, "kind": "cell.land", "tag": f"flip{i + 1}"} for i, t in enumerate(FLIPS)]   # the shutter of each photo
 ev += [
     {"t": t_flight, "kind": "scale.jump", "tag": "into-skin"},
+    {"t": CUE["clear2"], "kind": "reveal", "tag": "uv-switch"},
+    {"t": CUE["no"], "kind": "reveal", "tag": "uv-switch2"},
     {"t": B["takeaway"]["t0"], "kind": "scale.jump", "tag": "out-of-spot"},
     {"t": KEYS["ring"][0], "kind": "diffuse", "tag": "ring"},
     {"t": KEYS["answer"][0], "kind": "reveal", "tag": "answer"},

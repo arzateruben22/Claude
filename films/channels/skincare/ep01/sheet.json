@@ -120,6 +120,11 @@
    "tag": "flip5"
   },
   {
+   "t": 13.066666666666666,
+   "kind": "reveal",
+   "tag": "uv-switch"
+  },
+  {
    "t": 13.067,
    "kind": "cell.land",
    "tag": "flip6"
@@ -323,6 +328,11 @@
    "tag": "out-of-spot"
   },
   {
+   "t": 64.6,
+   "kind": "reveal",
+   "tag": "uv-switch2"
+  },
+  {
    "t": 64.8,
    "kind": "counter.show",
    "tag": "c-final",
@@ -332,7 +342,7 @@
    ]
   },
   {
-   "t": 65.86666666666666,
+   "t": 65.39999999999999,
    "kind": "label",
    "tag": "l-rings",
    "pos": [

@@ -50,8 +50,9 @@ CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:on
 MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
 WK = {"fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "macro": [{"t": 0.0, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -8},   # the scar across the frame from frame 0
-              {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -6, "ease": "inout2"},
+    "macro": [{"t": 0.0, "target": [TX - 3, 0, 1.2], "el": 30, **MK, "dist": 30, "az": -14},   # frame 0 mid-glide along the scar
+              {"t": CUE["skin1"] + 0.2, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 21, "az": -9, "ease": "out3"},
+              {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -8, "ease": "inout2"},
               {"t": t_weave, "target": [TX, 0, 0], "el": 70, **MK, "dist": 6, "az": -3, "ease": "in2"}],   # down into the scar
     "weave": [{"t": t_weave, "target": [WX, -60, 0], "el": 55, **WK, "dist": 700, "az": -20},   # from above the surface, through it...
               {"t": CUE["collagen"], "target": [WX, -130, 0], "el": 22, **WK, "dist": 1250, "az": -26, "ease": "inout2"},   # ...to the weave
@@ -67,7 +68,9 @@ CAM = {
               {"t": B["toscale"]["t0"], "target": [FX, -110, 0], "el": 22, **WK, "dist": 1050, "az": -4, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1300, "az": -8},   # the section low in frame, the card above it
               {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1200, "az": -6, "ease": "sine"}],
-    "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -8}, {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
+    "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 0.5], "el": 72, **MK, "dist": 6, "az": -5},   # up out of the skin...
+               {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
+               {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
     "uv": [{"t": t_uv, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 17, "az": 1},
            {"t": B["tease"]["t1"], "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
 }

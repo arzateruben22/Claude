@@ -133,7 +133,7 @@ window.seek = function (t) {
   terrain.group.visible = isM; adult.g.visible = isA; fetal.g.visible = shot === "fetal"; uv.mesh.visible = shot === "uv";
   scene.fog = isM ? FOG : null;
   lights.sun.intensity = isM ? 4.2 : 2.4; lights.key.intensity = isM ? 0.9 : 1.7;
-  fstop = isM ? 0.45 : 0; focusPt = [PL.tx, 0, 0];
+  fstop = shot === "macro" ? 0.45 : shot === "macro2" ? 0.2 : 0; focusPt = [PL.tx, 0, 0];
 
   // ── the macro flight: the scar across the knee ──
   if (isM) terrain.set({ tone: SKIN.map((v) => v * 1.25), furrows: 0.35, scar: SCAR, scarGlow: 0 });
@@ -185,7 +185,7 @@ window.seek = function (t) {
   if (shot === "uv") uv.set({ damage: 0.35, scar: 1, glow: 1, opacity: 1 });
   day.set({ op: shot === "uv" ? fadeIn(t, SH.uv + 0.6, 0.5) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
-  dip.style.opacity = Math.max(dz(SH.weave), dz(SH.fetal), dz(SH.gauge), dz(SH.macro2), dz(SH.uv)).toFixed(3);
+  dip.style.opacity = Math.max(dz(SH.weave), dz(SH.fetal), dz(SH.gauge), dz(SH.uv)).toFixed(3);   // macro2 rises out of the skin instead
   A.uvscar = uvAt(0.66, 0.5);
   vf.set({ op: shot === "uv" ? fadeIn(t, SH.uv, 0.4) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 

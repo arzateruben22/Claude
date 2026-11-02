@@ -36,8 +36,9 @@ TX, SX = 1000.0, 5000.0
 
 # ── shots ─────────────────────────────────────────────────────────────────
 t_split, t_in, t_face, t_end = A("vo02:Smooth,", -0.35), A("vo03:rest", -0.3), A("vo05:Asked", -0.25), A("vo08:Next:", -0.25)
+t_rise = t_face; t_face = t_face + 1.4   # out of the section, up over the glowing skin, then the face
 SHOTS = [{"at": 0.0, "name": "macro"}, {"at": t_split, "name": "split"}, {"at": t_in, "name": "inside"},
-         {"at": t_face, "name": "face"}, {"at": B["toscale"]["t0"], "name": "depth"}, {"at": B["takeaway"]["t0"], "name": "macro2"}]
+         {"at": t_rise, "name": "rise"}, {"at": t_face, "name": "face"}, {"at": B["toscale"]["t0"], "name": "depth"}, {"at": B["takeaway"]["t0"], "name": "macro2"}]
 CUE = {"glow": A("vo01:glow"), "inside": A("vo01:inside"), "glint": A("vo02:glint."), "smooth": A("vo02:Smooth,"), "direction": A("vo02:direction;"),
        "dry": A("vo02:dry"), "haze": A("vo02:haze."), "isnt": A("vo03:isn't"), "slips": A("vo03:slips"), "bounces": A("vo03:bounces"), "out": A("vo03:out."),
        "picture": A("vo04:picture"), "travelled": A("vo04:travelled"), "melanin": A("vo04:melanin"), "rush": A("vo04:rush"), "redder": A("vo04:redder."),
@@ -48,8 +49,9 @@ CUE = {"glow": A("vo01:glow"), "inside": A("vo01:inside"), "glint": A("vo02:glin
 # ── the camera ─────────────────────────────────────────────────────────────
 MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
 CAM = {
-    "macro": [{"t": 0.0, "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10},
-              {"t": B["normal"]["t0"], "target": [TX, 0, 2], "el": 30, **MK, "dist": 26, "az": -6, "ease": "sine"},
+    "macro": [{"t": 0.0, "target": [TX, 0, 4], "el": 22, **MK, "dist": 42, "az": -14},   # frame 0 mid-glide
+              {"t": CUE["inside"] + 0.4, "target": [TX, 0, 2], "el": 30, **MK, "dist": 25, "az": -7, "ease": "out3"},
+              {"t": B["normal"]["t0"], "target": [TX, 0, 2], "el": 31, **MK, "dist": 23, "az": -6, "ease": "sine"},
               {"t": CUE["glint"], "target": [TX, 0.2, 0], "el": 34, **MK, "dist": 13, "az": -3, "ease": "inout2"},   # down the beam to the glint
               {"t": t_split, "target": [TX, 0.2, 0], "el": 30, **MK, "dist": 15, "az": -2, "ease": "sine"}],
     "split": [{"t": t_split, "target": [TX, 1.4, 0], "el": 22, **MK, "fy": 0.46, "dist": 26, "az": 0},   # back and low: both halves and both glints inside the frame
@@ -60,12 +62,14 @@ CAM = {
                {"t": CUE["sitting"], "target": [SX, -15, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 230, "az": 0, "ease": "inout2"},   # up to the surface: the glow "sitting on the skin"
                {"t": CUE["melanin"] - 0.3, "target": [SX - 10, -75, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 280, "az": 0, "ease": "inout2"},   # back down through it
                {"t": CUE["rush"], "target": [SX + 10, -100, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 280, "az": 1, "ease": "inout2"},   # to the capillary
-               {"t": t_face, "target": [SX + 10, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 290, "az": 2, "ease": "sine"}],
+               {"t": t_rise, "target": [SX + 10, -60, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 280, "az": 2, "ease": "sine"}],
+    "rise": [{"t": t_rise, "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -1}, {"t": t_face, "target": [TX, 0, 2], "el": 30, **MK, "dist": 26, "az": -5, "ease": "out3"}],
     "face": [{"t": t_face, "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 28, "az": -2},
              {"t": B["toscale"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 25, "az": 0, "ease": "sine"}],
     "depth": [{"t": B["toscale"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 420, "az": 2},
               {"t": B["takeaway"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 380, "az": 3, "ease": "sine"}],
-    "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 2], "el": 28, **MK, "dist": 22, "az": -4},
+    "macro2": [{"t": B["takeaway"]["t0"], "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -2},   # up out of the skin
+               {"t": B["takeaway"]["t0"] + 1.6, "target": [TX, 0, 2], "el": 28, **MK, "dist": 22, "az": -4, "ease": "out3"},
                {"t": B["tease"]["t1"], "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
