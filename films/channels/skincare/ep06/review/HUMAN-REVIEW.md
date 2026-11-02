@@ -14,6 +14,7 @@
 - **No advice, no diagnosis, no hair-growth product angle** (cold exposure is described in mice, never suggested).
 - **Skin tone:** one light tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); nothing
   about it is said or implied. The fur is an "illustration", not any real animal's coat.
+- **Flashes:** the final's QA counts 4 (passes the per-second limit); run the flash analyzer on the master.
 - **The tease:** "Next season, we go deeper" is a placeholder until season 2's first topic is named (TODO).
 
 ## Every episode
