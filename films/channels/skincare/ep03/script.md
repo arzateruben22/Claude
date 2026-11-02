@@ -39,8 +39,8 @@ vo: It only happens on the hairless skin of hands and feet, where the dead layer
 vo: So your fingers don't wrinkle because they're soaked. {c12} They wrinkle because your nerves *decide* to. {c10}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (66–71.5 s)
-vo: Next: is a tan really your skin *protecting* itself? {-}
-end card: "Next layer: is a tan your skin protecting itself?" · "Outer Layer · No. 004"
+vo: Next: is a tan really a *shield* for your skin? {-}
+end card: "Next layer: is a tan a shield?" · "Outer Layer · No. 004"
 
 ## Notes
 - Every claim was checked through search excerpts only; see `claims.json`. A person opens each link, and a
