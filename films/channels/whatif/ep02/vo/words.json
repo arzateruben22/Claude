@@ -1,0 +1,1098 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Could we fit in one city? All eight billion, with room to breathe.",
+   "heard": "Could we fit in one city? All eight billion with room to breathe.",
+   "words": [
+    {
+     "w": "Could",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 0.285,
+     "end": 0.335,
+     "heard": true
+    },
+    {
+     "w": "fit",
+     "start": 0.315,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.56,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.59,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "city?",
+     "start": 0.865,
+     "end": 1.312,
+     "heard": true,
+     "end_asr": 1.92
+    },
+    {
+     "w": "All",
+     "start": 1.935,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 2.305,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "billion,",
+     "start": 2.605,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 3.215,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "room",
+     "start": 3.275,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.615,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "breathe.",
+     "start": 3.775,
+     "end": 4.48,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "There are a lot of us, and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
+   "heard": "There are a lot of us and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
+   "words": [
+    {
+     "w": "There",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.32,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.575,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "lot",
+     "start": 0.63,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.955,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "us,",
+     "start": 0.985,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.465,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.69,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.72,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 2.035,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.315,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.58,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "world",
+     "start": 2.685,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.125,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "full.",
+     "start": 3.45,
+     "end": 3.966,
+     "heard": true,
+     "end_asr": 4.4
+    },
+    {
+     "w": "So",
+     "start": 4.365,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "give",
+     "start": 4.735,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 4.94,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "person",
+     "start": 5.32,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 5.82,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.08,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "square",
+     "start": 6.4,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "meter,",
+     "start": 6.895,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.52,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "room",
+     "start": 7.55,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.07,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "calm",
+     "start": 8.165,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "crowd",
+     "start": 8.54,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "keeps.",
+     "start": 9.085,
+     "end": 9.68,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Now bring everyone in, and the crowd keeps spreading, street after street, until it settles into a square you could drive across in under an hour.",
+   "heard": "Now bring everyone in and the crowd keeps spreading street after street until it settles into a square you could drive across in under an hour.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "bring",
+     "start": 0.455,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 0.71,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 1.235,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.6,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.825,
+     "end": 1.875,
+     "heard": true
+    },
+    {
+     "w": "crowd",
+     "start": 1.855,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 2.25,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "spreading,",
+     "start": 2.705,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "street",
+     "start": 3.37,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "after",
+     "start": 3.64,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "street,",
+     "start": 4.095,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 4.45,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.88,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "settles",
+     "start": 4.91,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 5.305,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.48,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "square",
+     "start": 5.865,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 6.415,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 6.445,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "drive",
+     "start": 6.615,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 7.085,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.575,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 7.89,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 8.315,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 8.56,
+     "end": 9.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "You could squeeze us tighter, but packed twice as close, a crowd starts to move like a fluid, and that's when it turns dangerous. So we keep the room, and all of humanity still covers just two or three Londons.",
+   "heard": "You could squeeze us tighter but packed twice as close a crowd starts to move like a fluid, and that's when it turns dangerous. So we keep the room and all of humanity still covers just two or three Londons.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 0.245,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "squeeze",
+     "start": 0.525,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "us",
+     "start": 0.975,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "tighter,",
+     "start": 1.02,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 1.505,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 1.665,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 2.07,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.595,
+     "end": 2.645,
+     "heard": true
+    },
+    {
+     "w": "close,",
+     "start": 2.625,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.135,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "crowd",
+     "start": 3.26,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 3.94,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.24,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "move",
+     "start": 4.27,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 4.59,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.82,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "fluid,",
+     "start": 5.05,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.78,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "that's",
+     "start": 5.81,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 6.165,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.5,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 6.58,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "dangerous.",
+     "start": 7.115,
+     "end": 7.988,
+     "heard": true,
+     "end_asr": 8.32
+    },
+    {
+     "w": "So",
+     "start": 8.395,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 8.5,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 8.715,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.98,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "room,",
+     "start": 9.01,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.65,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 9.875,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 10.175,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "humanity",
+     "start": 10.205,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 11.025,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "covers",
+     "start": 11.28,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 11.825,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 12.16,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 12.575,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 12.605,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "Londons.",
+     "start": 12.94,
+     "end": 13.76,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "From orbit, you'd struggle to find us. And packed like water, every body would fit in a cube a little shorter than the world's tallest tower.",
+   "heard": "From orbit you'd struggle to find us. And packed like water, every body would fit in a cube a little shorter than the world's tallest tower.",
+   "words": [
+    {
+     "w": "From",
+     "start": 0.07,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "orbit,",
+     "start": 0.29,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 0.8,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "struggle",
+     "start": 1.14,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.735,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "find",
+     "start": 1.9,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 2.28,
+     "end": 2.517,
+     "heard": true,
+     "end_asr": 2.88
+    },
+    {
+     "w": "And",
+     "start": 2.92,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 3.165,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 3.775,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 3.82,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 4.58,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 5.06,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 5.435,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "fit",
+     "start": 5.59,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.925,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.165,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "cube",
+     "start": 6.195,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.75,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 6.87,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "shorter",
+     "start": 7.375,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 7.87,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.9,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "world's",
+     "start": 8.1,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "tallest",
+     "start": 8.65,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "tower.",
+     "start": 9.245,
+     "end": 9.92,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Nudge how dense we are either way, and that cube barely changes size.",
+   "heard": "Nudge how dense we are either way and that cube barely changes size.",
+   "words": [
+    {
+     "w": "Nudge",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.46,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "dense",
+     "start": 0.805,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 1.27,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.3,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "either",
+     "start": 1.655,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "way,",
+     "start": 2.09,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.425,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 2.455,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "cube",
+     "start": 2.735,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 3.185,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 3.67,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "size.",
+     "start": 4.43,
+     "end": 5.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So the world isn't full. It only feels that way from inside a city.",
+   "heard": "So the world isn't full. It only feels that way from inside a city.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.05,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.355,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "world",
+     "start": 0.385,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 0.605,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "full.",
+     "start": 0.925,
+     "end": 1.606,
+     "heard": true,
+     "end_asr": 2.0
+    },
+    {
+     "w": "It",
+     "start": 2.005,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 2.25,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 2.715,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.13,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 3.29,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.685,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 3.95,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.5,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "city.",
+     "start": 4.735,
+     "end": 5.28,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: who weighs more, all the ants or us?",
+   "heard": "Next envelope, who weighs more, all the ants or us.",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.425,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 1.18,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "weighs",
+     "start": 1.33,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "more,",
+     "start": 1.8,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 2.34,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.655,
+     "end": 2.705,
+     "heard": true
+    },
+    {
+     "w": "ants",
+     "start": 2.685,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 2.935,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "us?",
+     "start": 3.27,
+     "end": 3.68,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep02/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

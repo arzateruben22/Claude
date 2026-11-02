@@ -1,0 +1,192 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep02/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Could we fit in one city? All eight billion, with room to breathe.",
+   "stars": [
+    "city"
+   ],
+   "phonemes": "kʊd wiː fˈɪt ɪn wˈʌn sˈɪɾi? ˈɔːl ˈeɪt bˈɪliən, wɪð ɹˈuːm tə bɹˈiːð.",
+   "speeds": [
+    0.88,
+    0.7
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.3116,
+     1.9116
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.519,
+   "sha256": "55174a773af0597c3bf26d6ba5a5b88ff727dc8ccc0c061097107c5391ab314b"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "There are a lot of us, and it can feel like the world is full. So give each person half a square meter, the room a calm crowd keeps.",
+   "stars": [
+    "full"
+   ],
+   "phonemes": "ðɛɹˌɑːɹ ɐ lˈɑːt ʌv ˌʌs, ænd ɪt kæn fˈiːl lˈaɪk ðə wˈɜːld ɪz fˈʊl. sˌoʊ ɡˈɪv ˈiːtʃ pˈɜːsən hˈæf ɐ skwˈɛɹ mˈiːɾɚ, ðə ɹˈuːm ɐ kˈɑːm kɹˈaʊd kˈiːps.",
+   "speeds": [
+    0.72,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.966,
+     4.346
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 9.704,
+   "sha256": "90b1a5f7bf53a0f7eb74e4a6ef3c2b8e6bc21640418b9d2051e9be6c3bfd28f6"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now bring everyone in, and the crowd keeps spreading, street after street, until it settles into a square you could drive across in under an hour.",
+   "stars": [
+    "hour"
+   ],
+   "phonemes": "nˈaʊ bɹˈɪŋ ˈɛvɹɪwˌʌn ˈɪn, ænd ðə kɹˈaʊd kˈiːps spɹˈɛdɪŋ, stɹˈiːt ˈæftɚ stɹˈiːt, ʌntˈɪl ɪt sˈɛɾəlz ˌɪntʊ ɐ skwˈɛɹ juː kʊd dɹˈaɪv əkɹˌɑːs ɪn ˌʌndɚɹ ɐn ˈaʊɚ.",
+   "speeds": [
+    0.84
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 9.529,
+   "sha256": "03744df027cbb2c28b4c24e13adfa2a2569fdbc8e18d7dc444baebec1d0dfe67"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "You could squeeze us tighter, but packed twice as close, a crowd starts to move like a fluid, and that's when it turns dangerous. So we keep the room, and all of humanity still covers just two or three Londons.",
+   "stars": [
+    "dangerous",
+    "Londons"
+   ],
+   "phonemes": "juː kʊd skwˈiːz ˌʌs tˈaɪɾɚ, bˌʌt pˈækt twˈaɪs æz klˈoʊs, ɐ kɹˈaʊd stˈɑːɹts tə mˈuːv lˈaɪk ɐ flˈuːɪd, ænd ðæts wɛn ɪt tˈɜːnz dˈeɪndʒɚɹəs. sˌoʊ wiː kˈiːp ðə ɹˈuːm, ænd ˈɔːl ʌv hjuːmˈænᵻɾi stˈɪl kˈʌvɚz dʒˈʌst tˈuː ɔːɹ θɹˈiː lˈʌndənz.",
+   "speeds": [
+    0.84,
+    0.8
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.9884,
+     8.3684
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 13.807,
+   "sha256": "1623388992f1bbc89665d50d0e19b564faba0c2dd3ab4fe805f2b49535ebef15"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "From orbit, you'd struggle to find us. And packed like water, every body would fit in a cube a little shorter than the world's tallest tower.",
+   "stars": [
+    "tallest tower"
+   ],
+   "phonemes": "fɹʌm ˈɔːɹbɪt, juːd stɹˈʌɡəl tə fˈaɪnd ˌʌs. ænd pˈækt lˈaɪk wˈɔːɾɚ, ˈɛvɹi bˈɑːdi wʊd fˈɪt ɪn ɐ kjˈuːb ɐ lˈɪɾəl ʃˈɔːɹɾɚ ðɐn ðə wˈɜːldz tˈɔːlɪst tˈaʊɚ.",
+   "speeds": [
+    0.76,
+    0.78
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.5168,
+     2.8968
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 9.927,
+   "sha256": "f01f31e96aa5728c3eded354f6c612898194f127ad45e6a5b49d32404780ca45"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Nudge how dense we are either way, and that cube barely changes size.",
+   "stars": [
+    "size"
+   ],
+   "phonemes": "nˈʌdʒ hˌaʊ dˈɛns wiː ɑːɹ ˈiːðɚ wˈeɪ, ænd ðæt kjˈuːb bˈɛɹli tʃˈeɪndʒᵻz sˈaɪz.",
+   "speeds": [
+    0.78
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 5.06,
+   "sha256": "20d730262e9b68833afec0ea21643b194fa53e81b32921a471cee8605d9b0199"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So the world isn't full. It only feels that way from inside a city.",
+   "stars": [
+    "city"
+   ],
+   "phonemes": "sˌoʊ ðə wˈɜːld ˌɪzənt fˈʊl. ɪɾ ˈoʊnli fˈiːlz ðæt wˈeɪ fɹʌm ɪnsˈaɪd ɐ sˈɪɾi.",
+   "speeds": [
+    0.72,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.6062,
+     1.9862
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.289,
+   "sha256": "dea5f8be2b1347939352b5d12c94cbfcb3bea135babdad2a8961ff20e534aba8"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: who weighs more, all the ants or us?",
+   "stars": [
+    "us"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: hˌuː wˈeɪz mˈɔːɹ, ˈɔːl ðɪ ˈænts ɔːɹ ˌʌs?",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.707,
+   "sha256": "1a6331cef24210f04ea59ade9bfa6251a3c75d028c61fabd1c436317ef5f895f"
+  }
+ ]
+}
