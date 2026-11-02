@@ -109,7 +109,7 @@ for (const L of FILM.labels) {
 const tally = BIO.sec_x.map(() => {
   const el = document.createElement("div");
   Object.assign(el.style, { position: "absolute", zIndex: "3", font: "500 3.4vmin/1 var(--font-mono)", color: "var(--text)", background: "var(--hud-plate)",
-    padding: "1vmin 2.2vmin", borderRadius: "999px", whiteSpace: "nowrap", boxShadow: "var(--hud-shadow)", opacity: "0", transform: "translate(-50%, 0)", fontFeatureSettings: '"tnum" 1' });
+    padding: "1vmin 2.2vmin", borderRadius: "999px", whiteSpace: "nowrap", boxShadow: "var(--hud-shadow)", opacity: "0", fontFeatureSettings: '"tnum" 1' });
   document.getElementById("hud").appendChild(el); return el;
 });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
@@ -168,7 +168,8 @@ window.seek = function (t) {
     const p = project(camera, [s.x, -112, 23], W, H);   // just under the basal row
     const el = tally[i];
     el.textContent = `${["light", "medium", "deep"][i]}: ${n}`;
-    el.style.left = `${Math.min(0.84 * W, Math.max(0.16 * W, p.x)).toFixed(1)}px`;   // inside the safe box el.style.top = `${(0.5 * H).toFixed(1)}px`;   // a fixed band under the basal rows in the count shot
+    el.style.left = `${Math.min(0.84 * W, Math.max(0.16 * W, p.x)).toFixed(1)}px`;   // inside the safe box
+    el.style.top = `${(0.5 * H).toFixed(1)}px`; el.style.transform = "translate(-50%, 0)";   // a fixed band under the basal rows in the count shot
     el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
   });
   A.low0 = [SEC[0].x - 12, -120, 23]; A.low2 = [SEC[2].x + 12, -120, 23];
