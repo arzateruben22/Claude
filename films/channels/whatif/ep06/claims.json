@@ -1,0 +1,123 @@
+[
+ {
+  "id": "c1",
+  "sentence": "On an ordinary day, the sky lets go of nearly a Great Lake, spread so thin across the hours you barely notice.",
+  "claim": "Rain, snow and hail total about 520,000 km³ a year (403,500 over the ocean, 116,500 over land): about 1,424 km³ a day, shown '≈ 1,400 km³'.",
+  "source_url": "https://journals.ametsoc.org/view/journals/clim/28/21/jcli-d-14-00555.1.xml",
+  "source_title": "Rodell et al., 'The observed state of the water cycle in the early twenty-first century', J. Climate 28, 8289-8318 (2015)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "A NASA-led budget of the water cycle (2000s); the SciTechDaily report of the study gives the ocean and land figures. Other budgets range about 486,000-577,000 km³ a year (sensitivity, c9)."
+ },
+ {
+  "id": "c2",
+  "sentence": "On an ordinary day, the sky lets go of nearly a Great Lake, spread so thin across the hours you barely notice.",
+  "claim": "A day's precipitation is about 87% of Lake Ontario's 1,640 km³: 'nearly a Great Lake'.",
+  "source_url": "https://www.epa.gov/greatlakes/physical-features-great-lakes",
+  "source_title": "Physical Features of the Great Lakes (US EPA)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "EPA's table: Lake Ontario 1,640 km³ (the smallest Great Lake by volume is Erie, 484 km³, so 'nearly a Great Lake' is conservative). 'Barely notice' is figurative."
+ },
+ {
+  "id": "c3",
+  "sentence": "It falls like eighty Amazons pouring from the clouds.",
+  "claim": "Spread over 86,400 s, a day's 1,424 km³ falls at 1.65e+07 m³/s, about 80 times the Amazon's mean discharge (about 206,000 m³/s).",
+  "source_url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers17-08/010051056.pdf",
+  "source_title": "Molinier et al., 'Hydrologie du bassin de l'Amazone' (IRD/ORSTOM): mean discharge at the mouth 205,000-208,000 m3/s",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "IRD study: 205,000 m³/s at the mouth by one method, 208,000 by another, ±6%; the widely quoted 209,000 agrees. Computed in calc.py (real_amazons = 80)."
+ },
+ {
+  "id": "c4",
+  "sentence": "Now squeeze that whole day into a single second, and the sky pours like seven million Amazon rivers, all at once.",
+  "claim": "1,424 km³ in one second is 1.42e+12 m³/s, 6.9 million times the Amazon's discharge: about 7 million.",
+  "source_url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers17-08/010051056.pdf",
+  "source_title": "Molinier et al., 'Hydrologie du bassin de l'Amazone' (IRD/ORSTOM): mean discharge at the mouth 205,000-208,000 m3/s",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py. The thought experiment's assumption (badge): the same day's rain on the same places, only squeezed into one second."
+ },
+ {
+  "id": "c5",
+  "sentence": "It sounds like the end of the world, a flood with nowhere to run.",
+  "claim": "A common intuition the next sentences correct: averaged over the planet the day's rain is a layer a few millimetres deep (c7).",
+  "source_url": "https://journals.ametsoc.org/view/journals/clim/28/21/jcli-d-14-00555.1.xml",
+  "source_title": "Rodell et al., 'The observed state of the water cycle in the early twenty-first century', J. Climate 28, 8289-8318 (2015)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "States an intuition, not a fact; kept in the ledger so the correction is sourced."
+ },
+ {
+  "id": "c6",
+  "sentence": "But that rain lands where it always lands, and most of it on the open ocean.",
+  "claim": "About 78% of the world's precipitation falls on the ocean (403,500 of 520,000 km³ a year).",
+  "source_url": "https://journals.ametsoc.org/view/journals/clim/28/21/jcli-d-14-00555.1.xml",
+  "source_title": "Rodell et al., 'The observed state of the water cycle in the early twenty-first century', J. Climate 28, 8289-8318 (2015)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Rodell et al. 2015 (ocean vs land precipitation)."
+ },
+ {
+  "id": "c7",
+  "sentence": "Spread over the whole planet, a day of the world's weather comes down as a layer about three millimeters deep.",
+  "claim": "1,424 km³ over Earth's 5.101e+08 km² (4πR², R = 6,371 km) is 2.79 mm: about 3 mm (shown '≈ 2.8 mm' on the running sum, '≈ 3 mm' boxed).",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA Goddard, NSSDC)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Radius from NASA's fact sheet; the area is computed. It is a planet-wide average (badge): storms get far more, deserts nothing."
+ },
+ {
+  "id": "c8",
+  "sentence": "About two coins, stacked.",
+  "claim": "A US penny is 1.52 mm thick; two stacked are about 3.0 mm, close to the 2.8 mm layer.",
+  "source_url": "https://www.usmint.gov/learn/coins-and-medals/circulating-coins/penny",
+  "source_title": "Penny specifications (United States Mint)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "US Mint specifications: thickness 1.52 mm. 'About' covers the 0.2 mm difference."
+ },
+ {
+  "id": "c9",
+  "sentence": "Use a wetter estimate of the world's rain, and it barely changes the depth.",
+  "claim": "Across published global budgets (about 486,000-577,000 km³ a year) the average layer is 2.6, 2.8, 3.1 mm.",
+  "source_url": "https://journals.ametsoc.org/view/journals/clim/28/21/jcli-d-14-00555.1.xml",
+  "source_title": "Rodell et al., 'The observed state of the water cycle in the early twenty-first century', J. Climate 28, 8289-8318 (2015)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "calc.py SENS. The 486,000 figure is Trenberth et al. 2007 (J. Hydrometeorology 8, 758) as commonly quoted; 577,000 km³ is the GRID-Arendal figure for the water circulating each year, used as an upper bound. The show-your-work card shows the rows."
+ },
+ {
+  "id": "c10",
+  "sentence": "So the whole sky's rain is a thin film, spread wide.",
+  "claim": "Restates c7: the day's rain averages under 3 mm over the planet.",
+  "source_url": "https://journals.ametsoc.org/view/journals/clim/28/21/jcli-d-14-00555.1.xml",
+  "source_title": "Rodell et al., 'The observed state of the water cycle in the early twenty-first century', J. Climate 28, 8289-8318 (2015)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Figurative summary of c7."
+ },
+ {
+  "id": "c11",
+  "sentence": "A storm is where it piles up.",
+  "claim": "Local rainfall is very uneven: the heaviest storms drop far more than the 2.8 mm planetary average in a day (the world record, Foc-Foc on Réunion, 7–8 January 1966: 1,825 mm in 24 hours, during Tropical Cyclone Denise), while deserts get none.",
+  "source_url": "https://public.wmo.int/sites/default/files/2024-07/Table_Extreme_Records_2July2024.pdf",
+  "source_title": "WMO World Weather and Climate Extremes Archive: table of records (July 2024)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The record is the extreme, not the typical storm; the film says only that storms are where the rain piles up. Guinness lists the same 1,825 mm."
+ }
+]
