@@ -1,0 +1,1021 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Bigger number, bigger shield? On a sunscreen, not the way you'd think.",
+   "heard": "Bigger number, bigger shield. On a sunscreen not the way you'd think.",
+   "words": [
+    {
+     "w": "Bigger",
+     "start": 0.09,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "number,",
+     "start": 0.295,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 0.78,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "shield?",
+     "start": 1.155,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 1.99,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.17,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "sunscreen,",
+     "start": 2.3,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 3.055,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.12,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 3.15,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 3.42,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "think.",
+     "start": 3.62,
+     "end": 4.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "The number isn't a percentage. It's a ratio: how much more burning light your skin can take under the film before it reddens.",
+   "heard": "The number isn't a percentage, it's a ratio, how much more burning light your skin can take under the film before it reddens.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 0.27,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 0.53,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.92,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "percentage.",
+     "start": 1.1,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 2.165,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.255,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "ratio:",
+     "start": 2.46,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 3.63,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 3.815,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 4.14,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "burning",
+     "start": 4.4,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.785,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 5.045,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 5.45,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 5.775,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 5.965,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 6.195,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.43,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "film",
+     "start": 6.585,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 6.94,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 7.085,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "reddens.",
+     "start": 7.37,
+     "end": 8.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked.",
+   "heard": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked.",
+   "words": [
+    {
+     "w": "Flip",
+     "start": 0.11,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 0.645,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.785,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "fifty",
+     "start": 1.01,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 1.46,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 1.93,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.34,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.52,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "fiftieth",
+     "start": 2.725,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.455,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.68,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "light,",
+     "start": 3.71,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.65,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 4.82,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.405,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.585,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "hundredth,",
+     "start": 5.77,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 6.585,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.7,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 7.11,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 7.405,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "blocked.",
+     "start": 7.87,
+     "end": 8.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "But look at what actually gets in: the bigger number lets in half as much, if the film is as thick as the lab's.",
+   "heard": "But look at what actually gets in. The bigger number lets in half as much if the film is as thick as the labs.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.03,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 0.495,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 0.815,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "actually",
+     "start": 1.105,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.745,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "in:",
+     "start": 3.095,
+     "end": 3.145,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.125,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 3.27,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 3.6,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 4.01,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.31,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 4.62,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.11,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "much,",
+     "start": 5.37,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 5.78,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.99,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "film",
+     "start": 6.17,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.56,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.72,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "thick",
+     "start": 7.055,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.3,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.605,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "lab's.",
+     "start": 7.635,
+     "end": 7.98,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+   "heard": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+   "words": [
+    {
+     "w": "Real",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "people,",
+     "start": 0.4,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "studies",
+     "start": 1.01,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "found,",
+     "start": 1.4,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 1.985,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.425,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "quarter",
+     "start": 2.455,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.83,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 3.035,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.455,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 3.6,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.655,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.895,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "lab,",
+     "start": 3.925,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.995,
+     "end": 5.045,
+     "heard": true
+    },
+    {
+     "w": "protection",
+     "start": 5.12,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "falls",
+     "start": 5.77,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "well",
+     "start": 6.06,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "below",
+     "start": 6.355,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.57,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "label,",
+     "start": 6.63,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 7.645,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 7.675,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "amount",
+     "start": 7.92,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 8.43,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "argued",
+     "start": 8.645,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "over.",
+     "start": 9.03,
+     "end": 9.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+   "heard": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.125,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "lab",
+     "start": 0.34,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 0.715,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.245,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.54,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.835,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "thick",
+     "start": 2.205,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.48,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.77,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 2.945,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 3.18,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 4.01,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 4.35,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.965,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "fifth",
+     "start": 5.14,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.505,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.675,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "sheet",
+     "start": 5.8,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.255,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "paper.",
+     "start": 6.52,
+     "end": 7.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So the bigger number doesn't block twice as much. It lets half as much in, when there's enough of it.",
+   "heard": "So the bigger number doesn't block twice as much. It lets half as much in when there's enough of it.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.205,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.505,
+     "end": 0.555,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 0.535,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 0.96,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 1.37,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "block",
+     "start": 1.815,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 2.26,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.925,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "much.",
+     "start": 3.285,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 4.035,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 4.155,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 4.525,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.955,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 5.12,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 5.39,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 5.825,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "there's",
+     "start": 5.895,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "enough",
+     "start": 6.275,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.655,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 6.865,
+     "end": 7.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: why do fingers wrinkle in the bath, but not your arm?",
+   "heard": "Next, why do fingers wrinkle in the bath but not your arm?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.335,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 1.09,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 1.25,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "wrinkle",
+     "start": 1.765,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.215,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.51,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "bath,",
+     "start": 2.54,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 2.985,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 3.295,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.34,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "arm?",
+     "start": 3.695,
+     "end": 4.24,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
