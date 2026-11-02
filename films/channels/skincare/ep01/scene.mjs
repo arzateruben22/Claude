@@ -92,7 +92,7 @@ const KIND = { layer: { color: "ink", glyph: "▬" }, cell: { color: "text", gly
 const A = {};
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
-const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
+const tBars = titleBars(titleEl, { t0: FILM.title.t0 || 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
@@ -184,7 +184,7 @@ window.seek = function (t) {
   if (shot === "uv2") { const sk = E.inout2(seg(t, CUE.barrier - 0.5, CUE.barrier + 1.4)); sheenMat.opacity = 0.42 * sk; sheenTex.offset.x = 0.55 - 0.7 * E.inout2(seg(t, CUE.barrier - 0.5, CUE.barrier + 2.2)); }
   A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(SPOT[0] + 0.09, SPOT[1] - 0.05);
   const vfOp = isUV ? (shot === "uv" ? 1 - fadeIn(t, SH.flight - 0.4, 0.35) : fadeIn(t, SH.uv2, 0.4)) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
-  vf.set({ op: vfOp, blink: 1, left: (shot === "uv" && t >= CUE.clear1 - 0.7) ? "" : "a cheek" });   // not over the photo stack (its own badge sits there)
+  vf.set({ op: vfOp, blink: 1, left: shot === "uv" ? "" : "a cheek" });   // the hook: only the spot and the question   // not over the photo stack (its own badge sits there)
   vf.el.querySelector(".hl").style.visibility = vf.el.querySelector(".hl").textContent ? "inherit" : "hidden";
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
   dip.style.opacity = Math.max(dz(SH.flight), dz(SH.rise), dz(SH.uv2)).toFixed(3);

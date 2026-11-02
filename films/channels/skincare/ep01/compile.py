@@ -153,7 +153,7 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 0.7], "pus": CU
          "paper": CUE["paper"] - 0.2, "back": [B["takeaway"]["t0"] - 0.3, B["takeaway"]["t0"] - 0.02], "cell_um": CELL_UM, "paper_um": PAPER_UM, "n": 10}
 assert GAUGE["n"] * CELL_UM <= PAPER_UM
 
-TITLE = {"series": "Skin Sense · No. 001", "title": "The fight you *never saw*", "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
+TITLE = {"series": "Skin Sense · No. 001", "title": "The fight you *never saw*", "t0": 0.6, "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
 END = {"title": "Next: where the light on your face *goes*", "follow": "Skin Sense · No. 002",
        "next": "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008). Narration: synthetic voice (AI)."}
 POSTER = A("vo05:deeper.", 0.2)
