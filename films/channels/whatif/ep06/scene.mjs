@@ -60,29 +60,48 @@ const waffle = createSheet({ w: WS, d: WS, ppu: 110, at: [WF.at[0], 0, WF.at[1]]
   }
 } });
 scene.add(waffle.mesh);
-const layer = createWater({ tokens: TK, r: 0.9, h: 1e-5 });
+const layer = createWater({ tokens: TK, r: 0.5, h: 1e-5, a: 0.22, alpha: 0.35 });
 scene.add(layer.mesh);
-const film = createWater({ tokens: TK, r: 3.2, h: WD.depth, a: 0.18 });
+const film = createWater({ tokens: TK, r: 3.2, h: WD.depth, a: 0.12, alpha: 0.25 });
 scene.add(film.mesh);
-const storm = createWater({ tokens: TK, r: 0.32, h: 1e-5, a: 0.34 });
+const storm = createWater({ tokens: TK, r: 0.32, h: 1e-5, a: 0.34, alpha: 0.6 });
 scene.add(storm.mesh);
 const coins = createCoins({ tokens: TK, n: 2 });
 coins.set({ at: WD.coins });
 scene.add(coins.group);
-// a millimetre ruler standing behind the coins (a canvas sheet stood upright), so the depth reads in mm
-const RH = 0.006, RWd = 0.012;
-const ruler = createSheet({ w: RWd, d: RH, ppu: 60000, at: [0, 0, 0], order: 1, draw: (ctx, cw, ch) => {
-  const ppm = ch / (RH * 1000);
-  ctx.fillStyle = "rgba(37, 40, 46, 0.9)"; ctx.fillRect(0, 0, cw, ch);
-  ctx.fillStyle = CHALK;
-  for (let mm = 0; mm <= 6; mm++) { const y = ch - mm * ppm; ctx.fillRect(0, y - 2, mm % 5 === 0 ? cw * 0.55 : cw * 0.32, 4); }
-  ctx.font = `700 ${ppm * 0.7}px "JetBrains Mono", monospace`; ctx.textBaseline = "middle";
-  for (const mm of [1, 2, 3, 4, 5]) ctx.fillText(`${mm}`, cw * 0.62, ch - mm * ppm);
+// the cross-section card: standing on the paper at your feet, face on to the camera, drawn true to scale in mm: the
+// day's water (a column that fills to 2.8 mm, its top a gentle wave), a millimetre scale, and two stacked coins
+// (1.52 mm each) that land on "two". state: { f: fill 0–1, c: coins 0–1 }
+const CW_M = 0.016, CH_M = 0.0062;
+const card = createSheet({ w: CW_M, d: CH_M, ppu: 70000, at: [0, 0, 0], order: 3, draw: (ctx, cw, ch, st) => {
+  const pmm = ch / (CH_M * 1000), base = ch - 0.25 * pmm, X = (mm) => mm * pmm;
+  ctx.fillStyle = "rgba(23, 26, 30, 0.96)"; rrect(ctx, 0, 0, cw, ch, 0.3 * pmm); ctx.fill();
+  ctx.fillStyle = "rgba(244, 242, 236, 0.35)"; ctx.fillRect(X(0.6), base, cw - X(1.2), 2);              // the paper's surface
+  // the water: 2.8 mm × f, chalk at 55%, a brighter top line with a small wave
+  const hw = WD.depth * 1000 * st.f;
+  if (hw > 0.01) {
+    ctx.fillStyle = "rgba(244, 242, 236, 0.5)"; ctx.fillRect(X(0.8), base - X(hw), X(5.2), X(hw));
+    ctx.strokeStyle = CHALK; ctx.lineWidth = 3; ctx.beginPath();
+    for (let k = 0; k <= 40; k++) { const x = X(0.8) + X(5.2) * k / 40, y = base - X(hw) + Math.sin(k * 0.9) * 0.05 * pmm; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+  }
+  // the scale, between them: a tick a millimetre, numbered
+  ctx.fillStyle = CHALK2; ctx.font = `700 ${0.62 * pmm}px "JetBrains Mono", monospace`; ctx.textBaseline = "middle"; ctx.textAlign = "center";
+  for (let mm = 0; mm <= 5; mm++) { const y = base - X(mm); ctx.fillRect(X(6.6), y - 1.5, X(mm % 5 ? 0.45 : 0.8), 3); if (mm) ctx.fillText(`${mm}`, X(7.9), y); }
+  // two coins, edge on: 19 mm wide is wider than the card, so their edge-on profiles run off its right side
+  const c = st.c;
+  for (let i = 0; i < 2; i++) {
+    const a = Math.min(1, Math.max(0, c * 2 - i));
+    if (a <= 0) continue;
+    const y = base - X(1.52 * (i + 1)) - (1 - a) * X(1.2);
+    ctx.globalAlpha = a; ctx.fillStyle = CHALK2; rrect(ctx, X(9.2), y, cw - X(9.2) + 6, X(1.52) - 2, 0.25 * pmm); ctx.fill();
+    ctx.fillStyle = "rgba(23, 26, 30, 0.35)"; for (let r = 0; r < 14; r++) ctx.fillRect(X(9.5) + r * X(0.48), y + X(0.3), 2, X(0.9));   // the reeded edge
+    ctx.globalAlpha = 1;
+  }
 } });
-ruler.mesh.rotation.x = 0;                                        // createSheet lays it flat; stand it up facing the camera
-ruler.mesh.geometry.rotateX(Math.PI / 2);
-ruler.mesh.position.set(WD.coins[0] + 0.022, RH / 2, WD.coins[1] - 0.012);
-scene.add(ruler.mesh);
+card.mesh.geometry.rotateX(Math.PI / 2);                          // createSheet lays it flat: stand it up, face on to the camera (+z)
+card.mesh.position.set(WD.coins[0], CH_M / 2, WD.coins[1]);
+scene.add(card.mesh);
 
 // ── the camera ──────────────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
@@ -90,8 +109,8 @@ const rig = createRig(FILM.cam);
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
 const AN = {
-  you: () => [0, WD.fig, 0], waffle: () => [WF.at[0] + WS / 2, 0, WF.at[1] - WS * 0.2], layer: () => [WD.coins[0] - 0.05, WD.depth, WD.coins[1] + 0.02],
-  coins: () => [WD.coins[0] + 0.01, 0.003, WD.coins[1]], storm: () => [1.15 + 0.3, WD.storm * 0.8, 0.2],
+  you: () => [0, WD.fig, 0], waffle: () => [WF.at[0] + WS / 2, 0, WF.at[1] - WS * 0.2], layer: () => [WD.coins[0] - CW_M / 2 + 0.0034, WD.depth, WD.coins[1]],
+  coins: () => [WD.coins[0] + CW_M / 2 - 0.002, 0.0031, WD.coins[1]], storm: () => [-1.1 - 0.3, WD.storm * 0.85, 0.2],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -135,7 +154,8 @@ window.seek = function (t) {
   // the rain: frozen in the hook (and the loop), a drizzle through the day, the pour, then it settles into the layer
   const pour = E.inout2(seg(t, CUE.squeeze[0], CUE.squeeze[1])) * (1 - E.inout2(seg(t, beat("why").t0 + 0.5, CUE.ocean + 1.0)));
   const ro = shot === "macro" || shot === "work" ? 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 1.2) : shot === "home" ? 0 : shot === "end" ? seg(t, FILM.endCard + 0.6, beat("tease").t1 - 0.4) : 1;
-  rain.set({ fall: home ? 0 : fallAt(t), len: 0.35 + 2.6 * pour, density: 0.18 + 0.82 * pour, opacity: ro });
+  const frozen = shot === "front" || shot === "end" ? 1 : 1 - seg(t, beat("normal").t0, beat("normal").t0 + 1.2);   // the hook's sky is full, frozen mid-fall
+  rain.set({ fall: home ? 0 : fallAt(t), len: 0.35 + 2.6 * pour, density: Math.max(0.18 + 0.82 * pour, 0.85 * frozen), opacity: ro });
 
   // where it lands: the squares light from "ocean", 78 chalk, then the 22 hatched
   const k = Math.round(100 * clamp01((t - CUE.ocean + 0.2) / 1.6));
@@ -144,15 +164,15 @@ window.seek = function (t) {
   // the layer fills to 2.8 mm on the line; the coins and the mm ruler beside it
   const macro = shot === "macro" || shot === "work" || (shot === "home" && t < CUE.home + 1.5);
   const fill = E.inout2(seg(t, CUE.layer[0] + 1.6, CUE.layer[1]));
-  layer.set({ h: Math.max(1e-5, WD.depth * fill), opacity: macro ? 1 : 0, cam: camera.position.toArray(), at: [WD.coins[0] - 0.15, WD.coins[1] - 0.05] });
-  coins.set({ opacity: macro ? E.out3(seg(t, CUE.coins - 0.4, CUE.coins)) : 0 });
-  ruler.set({ opacity: macro ? E.out3(seg(t, CUE.layer[0] + 1.8, CUE.layer[0] + 2.4)) : 0 });
+  layer.set({ opacity: 0 }); coins.set({ opacity: 0 });
+  card.set({ opacity: macro ? E.out3(seg(t, CUE.layer[0] + 1.4, CUE.layer[0] + 2.2)) : 0, state: { f: Math.round(fill * 50) / 50, c: Math.round(clamp01((t - CUE.coins + 0.3) / 0.8) * 20) / 20 } });
 
   // the takeaway: a thin film round you; the storm column rises beside you on "storm … piles up"
   film.set({ opacity: shot === "home" ? E.out3(seg(t, CUE.film, CUE.film + 0.8)) : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [0, 0] });
   const sh = E.inout2(seg(t, CUE.storm[0], CUE.storm[1]));
-  storm.set({ h: Math.max(1e-5, WD.storm * sh), opacity: shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [1.15, 0.2] });
+  storm.set({ h: Math.max(1e-5, WD.storm * sh), opacity: shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [-1.1, 0.2] });
 
+  desk.group.visible = !(macro && pose.dist < 0.5);                       // at mm scale the 800-unit floor's depth runs out of precision: the card carries its own paper line
   desk.update({ grid: 1, pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]] });
 
   hud.update(t);
