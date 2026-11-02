@@ -70,181 +70,199 @@
   },
   {
    "id": "vo02",
-   "text": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Count them across these skins, and the number comes out about the same.",
-   "heard": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Count them across these skins, and the number comes out about the same.",
+   "text": "Most would guess the darkest. But in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Across all three, the number comes out about the same.",
+   "heard": "Most would guess the darkest, but in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Across all three, the number comes out about the same.",
    "words": [
     {
-     "w": "In",
+     "w": "Most",
      "start": 0.02,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.335,
      "end": 0.4,
      "heard": true
     },
     {
-     "w": "bottom",
-     "start": 0.405,
-     "end": 0.8,
+     "w": "would",
+     "start": 0.365,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "row",
-     "start": 0.83,
-     "end": 1.12,
+     "w": "guess",
+     "start": 0.58,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 1.18,
-     "end": 1.28,
+     "w": "the",
+     "start": 0.895,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "skin,",
-     "start": 1.42,
-     "end": 2.08,
+     "w": "darkest.",
+     "start": 1.015,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "each",
-     "start": 2.18,
+     "w": "But",
+     "start": 2.325,
      "end": 2.4,
      "heard": true
     },
     {
-     "w": "pigment",
-     "start": 2.39,
+     "w": "in",
+     "start": 2.385,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.655,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "bottom",
+     "start": 2.745,
      "end": 3.12,
      "heard": true
     },
     {
-     "w": "cell",
-     "start": 3.075,
-     "end": 3.52,
+     "w": "row",
+     "start": 3.005,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "feeds",
-     "start": 3.59,
-     "end": 3.84,
+     "w": "of",
+     "start": 3.535,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "melanin",
-     "start": 3.805,
-     "end": 4.56,
+     "w": "skin,",
+     "start": 3.795,
+     "end": 4.4,
      "heard": true
     },
     {
-     "w": "to",
-     "start": 4.495,
+     "w": "each",
+     "start": 4.505,
      "end": 4.72,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 4.785,
-     "end": 4.835,
-     "heard": true
-    },
-    {
-     "w": "few",
-     "start": 4.815,
-     "end": 5.04,
-     "heard": true
-    },
-    {
-     "w": "dozen",
-     "start": 5.045,
+     "w": "pigment",
+     "start": 4.71,
      "end": 5.44,
      "heard": true
     },
     {
-     "w": "neighbours.",
-     "start": 5.44,
-     "end": 6.64,
+     "w": "cell",
+     "start": 5.4,
+     "end": 5.84,
      "heard": true
     },
     {
-     "w": "Count",
-     "start": 6.725,
+     "w": "feeds",
+     "start": 5.915,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "melanin",
+     "start": 6.13,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 6.77,
      "end": 6.96,
      "heard": true
     },
     {
-     "w": "them",
-     "start": 7.055,
-     "end": 7.2,
+     "w": "a",
+     "start": 7.065,
+     "end": 7.115,
      "heard": true
     },
     {
-     "w": "across",
-     "start": 7.27,
-     "end": 7.6,
+     "w": "few",
+     "start": 7.095,
+     "end": 7.28,
      "heard": true
     },
     {
-     "w": "these",
-     "start": 7.655,
-     "end": 7.84,
+     "w": "dozen",
+     "start": 7.295,
+     "end": 7.68,
      "heard": true
     },
     {
-     "w": "skins,",
-     "start": 7.935,
-     "end": 8.72,
+     "w": "neighbours.",
+     "start": 7.68,
+     "end": 8.8,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 8.865,
-     "end": 8.96,
+     "w": "Across",
+     "start": 8.915,
+     "end": 9.36,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 8.895,
-     "end": 9.12,
+     "w": "all",
+     "start": 9.36,
+     "end": 9.6,
      "heard": true
     },
     {
-     "w": "number",
-     "start": 9.16,
-     "end": 9.44,
-     "heard": true
-    },
-    {
-     "w": "comes",
-     "start": 9.45,
-     "end": 9.84,
-     "heard": true
-    },
-    {
-     "w": "out",
-     "start": 9.765,
+     "w": "three,",
+     "start": 9.65,
      "end": 10.08,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 10.145,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 10.175,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "comes",
+     "start": 10.565,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 10.94,
+     "end": 11.2,
+     "heard": true
+    },
+    {
      "w": "about",
-     "start": 10.04,
-     "end": 10.4,
+     "start": 11.2,
+     "end": 11.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 10.395,
-     "end": 10.64,
+     "start": 11.495,
+     "end": 11.68,
      "heard": true
     },
     {
      "w": "same.",
-     "start": 10.615,
-     "end": 11.04,
+     "start": 11.715,
+     "end": 12.08,
      "heard": true
     }
    ]
@@ -414,295 +432,271 @@
   },
   {
    "id": "vo04",
-   "text": "It's easy to assume darker skin simply has more of them. Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
-   "heard": "It's easy to assume darker skin simply has more of them. Nina Jablonski and George Chaplin set skin colour besides sunlight, all around the world, and the two matched.",
+   "text": "So why would the work differ? Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
+   "heard": "So why would the work differ? Nina Jablonski and George Chaplin set skin colour beside sunlight all around the world, and the two matched.",
    "words": [
     {
-     "w": "It's",
+     "w": "So",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "easy",
-     "start": 0.225,
-     "end": 0.56,
+     "w": "why",
+     "start": 0.265,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "to",
-     "start": 0.565,
-     "end": 0.72,
+     "w": "would",
+     "start": 0.595,
+     "end": 0.645,
      "heard": true
     },
     {
-     "w": "assume",
-     "start": 0.61,
+     "w": "the",
+     "start": 0.625,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "work",
+     "start": 0.89,
      "end": 1.04,
      "heard": true
     },
     {
-     "w": "darker",
-     "start": 1.1,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 1.6,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "simply",
-     "start": 1.87,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "has",
-     "start": 2.27,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "more",
-     "start": 2.46,
-     "end": 2.72,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 2.795,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "them.",
-     "start": 2.825,
-     "end": 3.52,
+     "w": "differ?",
+     "start": 0.975,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "Nina",
-     "start": 3.675,
-     "end": 3.92,
+     "start": 1.94,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "Jablonski",
-     "start": 3.995,
-     "end": 4.72,
+     "start": 2.29,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.795,
-     "end": 4.845,
+     "start": 3.065,
+     "end": 3.115,
      "heard": true
     },
     {
      "w": "George",
-     "start": 4.825,
-     "end": 5.12,
+     "start": 3.095,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "Chaplin",
-     "start": 5.165,
-     "end": 5.76,
+     "start": 3.43,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "set",
-     "start": 5.785,
-     "end": 6.0,
+     "start": 4.055,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 6.08,
-     "end": 6.32,
+     "start": 4.21,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "colour",
-     "start": 6.29,
-     "end": 6.72,
+     "start": 4.605,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "beside",
-     "start": 6.61,
-     "end": 7.04,
-     "heard": false
+     "start": 4.93,
+     "end": 5.36,
+     "heard": true
     },
     {
      "w": "sunlight,",
-     "start": 6.985,
-     "end": 7.92,
+     "start": 5.28,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "all",
-     "start": 7.965,
-     "end": 8.16,
+     "start": 6.11,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "around",
-     "start": 8.215,
-     "end": 8.32,
+     "start": 6.37,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.53,
-     "end": 8.64,
+     "start": 6.675,
+     "end": 6.725,
      "heard": true
     },
     {
      "w": "world,",
-     "start": 8.56,
-     "end": 9.04,
+     "start": 6.705,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.12,
-     "end": 9.2,
+     "start": 7.21,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 9.295,
-     "end": 9.36,
+     "start": 7.24,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "two",
-     "start": 9.325,
-     "end": 9.6,
+     "start": 7.42,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "matched.",
-     "start": 9.68,
-     "end": 10.08,
+     "start": 7.775,
+     "end": 8.16,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Where sunlight is fierce, darker skin guards folate, which healthy pregnancies need. Where it's weak, lighter skin lets enough through to make vitamin D.",
-   "heard": "Where sunlight is fierce, darker skin guards folate which healthy pregnancies need. Where it's weak, lighter skin lets enough through to make vitamin D.",
+   "text": "Their idea: under fierce sun, more melanin protected a vitamin called folate. Under weak sun, less of it let enough light through to make vitamin D.",
+   "heard": "Their idea, under fierce sun, more melanin protected a vitamin called folate, under weak sun, less of it let enough light through to make vitamin D.",
    "words": [
     {
-     "w": "Where",
+     "w": "Their",
      "start": 0.02,
      "end": 0.32,
      "heard": true
     },
     {
-     "w": "sunlight",
-     "start": 0.37,
-     "end": 0.8,
+     "w": "idea:",
+     "start": 0.415,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 0.76,
-     "end": 0.96,
+     "w": "under",
+     "start": 1.26,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "fierce,",
-     "start": 1.02,
-     "end": 1.6,
+     "w": "fierce",
+     "start": 1.58,
+     "end": 1.92,
      "heard": true
     },
     {
-     "w": "darker",
-     "start": 1.74,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 2.115,
+     "w": "sun,",
+     "start": 2.01,
      "end": 2.32,
      "heard": true
     },
     {
-     "w": "guards",
-     "start": 2.33,
-     "end": 2.64,
+     "w": "more",
+     "start": 2.32,
+     "end": 2.48,
      "heard": true
     },
     {
-     "w": "folate,",
-     "start": 2.59,
-     "end": 3.28,
+     "w": "melanin",
+     "start": 2.48,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "which",
-     "start": 3.245,
-     "end": 3.44,
+     "w": "protected",
+     "start": 3.2,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "healthy",
-     "start": 3.32,
-     "end": 3.76,
+     "w": "a",
+     "start": 3.42,
+     "end": 3.6,
      "heard": true
     },
     {
-     "w": "pregnancies",
-     "start": 3.805,
-     "end": 4.56,
+     "w": "vitamin",
+     "start": 3.51,
+     "end": 4.08,
      "heard": true
     },
     {
-     "w": "need.",
-     "start": 4.635,
-     "end": 5.2,
+     "w": "called",
+     "start": 4.02,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "Where",
-     "start": 5.355,
-     "end": 5.44,
+     "w": "folate.",
+     "start": 4.27,
+     "end": 5.36,
      "heard": true
     },
     {
-     "w": "it's",
-     "start": 5.53,
-     "end": 5.68,
+     "w": "Under",
+     "start": 5.435,
+     "end": 5.52,
      "heard": true
     },
     {
-     "w": "weak,",
-     "start": 5.655,
-     "end": 6.16,
+     "w": "weak",
+     "start": 5.725,
+     "end": 6.0,
      "heard": true
     },
     {
-     "w": "lighter",
-     "start": 6.21,
-     "end": 6.56,
+     "w": "sun,",
+     "start": 5.905,
+     "end": 6.48,
      "heard": true
     },
     {
-     "w": "skin",
-     "start": 6.445,
-     "end": 6.88,
+     "w": "less",
+     "start": 6.535,
+     "end": 6.72,
      "heard": true
     },
     {
-     "w": "lets",
-     "start": 6.88,
+     "w": "of",
+     "start": 6.815,
+     "end": 6.865,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.845,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 6.955,
      "end": 7.2,
      "heard": true
     },
@@ -713,41 +707,47 @@
      "heard": true
     },
     {
-     "w": "through",
-     "start": 7.46,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 7.69,
+     "w": "light",
+     "start": 7.425,
      "end": 7.76,
      "heard": true
     },
     {
-     "w": "make",
-     "start": 7.725,
+     "w": "through",
+     "start": 7.67,
      "end": 7.92,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 7.96,
+     "end": 8.01,
+     "heard": true
+    },
+    {
+     "w": "make",
+     "start": 8.005,
+     "end": 8.16,
+     "heard": true
+    },
+    {
      "w": "vitamin",
-     "start": 7.965,
-     "end": 8.4,
+     "start": 8.215,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "D.",
-     "start": 8.43,
-     "end": 8.64,
+     "start": 8.675,
+     "end": 8.96,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart.",
-   "heard": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart.",
+   "text": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
+   "heard": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
    "words": [
     {
      "w": "And",
@@ -757,55 +757,61 @@
     },
     {
      "w": "on",
-     "start": 0.32,
+     "start": 0.37,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "any",
-     "start": 0.48,
+     "start": 0.4,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.645,
-     "end": 1.04,
+     "start": 0.665,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "patch",
-     "start": 1.025,
-     "end": 1.36,
+     "w": "part",
+     "start": 0.995,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.33,
+     "start": 1.27,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.44,
      "end": 1.6,
      "heard": true
     },
     {
-     "w": "skin,",
-     "start": 1.695,
+     "w": "body,",
+     "start": 1.585,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.54,
-     "end": 2.64,
+     "start": 2.515,
+     "end": 2.565,
      "heard": true
     },
     {
      "w": "pigment",
-     "start": 2.7,
+     "start": 2.675,
      "end": 3.28,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 3.2,
+     "start": 3.17,
      "end": 3.76,
      "heard": true
     },
@@ -817,49 +823,49 @@
     },
     {
      "w": "about",
-     "start": 3.995,
+     "start": 4.01,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.305,
-     "end": 4.48,
+     "start": 4.33,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "third",
-     "start": 4.555,
-     "end": 4.8,
+     "start": 4.58,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "of",
-     "start": 4.855,
+     "start": 4.87,
      "end": 4.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.885,
+     "start": 4.9,
      "end": 5.12,
      "heard": true
     },
     {
      "w": "paper's",
-     "start": 5.145,
+     "start": 5.17,
      "end": 5.84,
      "heard": true
     },
     {
      "w": "thickness",
-     "start": 5.805,
+     "start": 5.83,
      "end": 6.32,
      "heard": true
     },
     {
      "w": "apart.",
-     "start": 6.4,
+     "start": 6.425,
      "end": 6.88,
      "heard": true
     }

@@ -135,7 +135,7 @@ GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["thin
 
 TITLE = {"series": "Outer Layer · No. 006", "title": "*Goosebumps*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:goosebumps?", 0.35)}
 END = {"title": "Next season: *deeper*", "follow": "Outer Layer · Season 1",
-       "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020)."}
+       "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020). Narration: synthetic voice (AI)."}
 POSTER = A("vo04:holds", 0.4)
 
 glue(f, {"vo02": ["tiny muscle,", "into a bump."], "vo03": ["trapped air.", "hair follicles", "a chimpanzee,"], "vo04": ["stem cells", "in place."],

@@ -25,15 +25,15 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Count them across these skins, and the number comes out about the same.",
+   "text": "Most would guess the darkest. But in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Across all three, the number comes out about the same.",
    "stars": [
     "same"
    ],
-   "phonemes": "ɪnðə bˈɒtəm ɹˈəʊ ɒv skˈɪn, ˈiːtʃ pˈɪɡmənt sˈɛl fˈiːdz mˈɛlɐnˌɪn tʊ ɐ fjˈuː dˈʌzən nˈeɪbəz. kˈaʊnt ðˌɛm əkɹˌɒs ðiːz skˈɪnz, and ðə nˈʌmbə kˈʌmz ˈaʊt ɐbˌaʊt ðə sˈeɪm.",
+   "phonemes": "mˈəʊst wʊd ɡˈɛs ðə dˈɑːkɪst. bˌʌt ɪnðə bˈɒtəm ɹˈəʊ ɒv skˈɪn, ˈiːtʃ pˈɪɡmənt sˈɛl fˈiːdz mˈɛlɐnˌɪn tʊ ɐ fjˈuː dˈʌzən nˈeɪbəz. əkɹˌɒs ˈɔːl θɹˈiː, ðə nˈʌmbə kˈʌmz ˈaʊt ɐbˌaʊt ðə sˈeɪm.",
    "speed": 0.8,
    "file": "02.wav",
-   "dur": 11.053,
-   "sha256": "62a6c79756ead3ff4529055e3a59a470afdc7335146ade0579137b9ab657e303"
+   "dur": 12.157,
+   "sha256": "94dc4e19ddef04879147db136d633a1e1ba89616a98d8404394a64301475ab40"
   },
   {
    "id": "vo03",
@@ -51,41 +51,41 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It's easy to assume darker skin simply has more of them. Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
+   "text": "So why would the work differ? Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
    "stars": [
     "matched"
    ],
-   "phonemes": "ɪts ˈiːzi tʊ ɐsjˈuːm dˈɑːkə skˈɪn sˈɪmpli hɐz mˈɔːɹ ɒv ðˌɛm. nˈiːnə ʤəblˈɒnski and dʒˈɔːdʒ tʃˈaplɪn sˈɛt skˈɪn kˈʌlə bɪsˌaɪd sˈʌnlaɪt, ˈɔːl ɐɹˈaʊnd ðə wˈɜːld, and ðə tˈuː mˈatʃt.",
+   "phonemes": "sˌəʊ wˌaɪ wʊd ðə wˈɜːk dˈɪfə? nˈiːnə ʤəblˈɒnski and dʒˈɔːdʒ tʃˈaplɪn sˈɛt skˈɪn kˈʌlə bɪsˌaɪd sˈʌnlaɪt, ˈɔːl ɐɹˈaʊnd ðə wˈɜːld, and ðə tˈuː mˈatʃt.",
    "speed": 0.88,
    "file": "04.wav",
-   "dur": 10.126,
-   "sha256": "3348b3c374b929109df351b99c6ea60bea5a2bb70d8170c546c41914a3b320c6"
+   "dur": 8.223,
+   "sha256": "053743b5654951b492a7f5ff77db0b62159617fe4b755d49a1fa2036b2bf76c7"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Where sunlight is fierce, darker skin guards folate, which healthy pregnancies need. Where it's weak, lighter skin lets enough through to make vitamin D.",
+   "text": "Their idea: under fierce sun, more melanin protected a vitamin called folate. Under weak sun, less of it let enough light through to make vitamin D.",
    "stars": [
     "vitamin D"
    ],
-   "phonemes": "wˌeə sˈʌnlaɪt ɪz fˈiəs, dˈɑːkə skˈɪn ɡˈɑːdz fˈəʊleɪt , wˌɪtʃ hˈɛlθi pɹˈɛɡnənsiz nˈiːd. wˌeəɹ ɪts wˈiːk, lˈaɪtə skˈɪn lˈɛts ɪnˈʌf θɹuː tə mˌeɪk vˈɪtəmɪn dˈiː.",
+   "phonemes": "ðeəɹ aɪdˈiə: ˌʌndə fˈiəs sˈʌn, mˈɔː mˈɛlɐnˌɪn pɹətˈɛktɪd ɐ vˈɪtəmɪn kˈɔːld fˈəʊleɪt . ˌʌndə wˈiːk sˈʌn, lˈɛs ɒv ɪt lˈɛt ɪnˈʌf lˈaɪt θɹuː tə mˌeɪk vˈɪtəmɪn dˈiː.",
    "speed": 0.88,
    "file": "05.wav",
-   "dur": 8.725,
-   "sha256": "3ce51731bdb367c05e6fe1473721b0097b295d4bc33bfcf66c4b7bfa76a40785"
+   "dur": 8.988,
+   "sha256": "c7616134920016147821f51a21da07f9a1290d121bcd15b04f40e4f1b89ddce1"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart.",
+   "text": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
    "stars": [
     "apart"
    ],
-   "phonemes": "and ˌɒn ˌɛni wˈɒn pˈatʃ ɒv skˈɪn, ðə pˈɪɡmənt sˈɛlz sˈɪt ɐbˌaʊt ɐ θˈɜːd əvə pˈeɪpəz θˈɪknəs ɐpˈɑːt.",
+   "phonemes": "and ˌɒn ˌɛni wˈɒn pˈɑːt ɒvðə bˈɒdi, ðə pˈɪɡmənt sˈɛlz sˈɪt ɐbˌaʊt ɐ θˈɜːd əvə pˈeɪpəz θˈɪknəs ɐpˈɑːt.",
    "speed": 0.76,
    "file": "06.wav",
-   "dur": 6.928,
-   "sha256": "e687b8f472ca0d6a59bc2d79c4d1ce28ae2b8d899986e3a36c34ef51d8f580dc"
+   "dur": 6.961,
+   "sha256": "e32a32d1096a677ff47aa619aba9c749db30c305902cd647f8e0d1874e601ec9"
   },
   {
    "id": "vo07",

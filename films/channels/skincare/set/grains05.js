@@ -33,11 +33,16 @@ export const createGrains = ({ tone = 0.5, x = 0, y = 0, z = 0, r = 16, seed = 3
   const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 8), mm, n);
   const G = [];
   let centre = null;
+  const sites = [];
   for (let i = 0; i < n; i++) {
     if (i % cluster === 0 || !centre) {
       // a new site in the cytoplasm, biased above the nucleus (the cap side), never inside the nucleus
-      let p;
-      do { p = [(R() - 0.5) * 1.7 * r, (R() * 0.95 - 0.25) * r, (R() - 0.5) * 1.7 * r]; } while (Math.hypot(...p) > r * 0.86 || Math.hypot(p[0], p[1] + r * 0.12, p[2]) < r * 0.46);
+      // sites keep their distance (a single grain is never drawn touching another, so "one by one" reads)
+      let p, tries = 0;
+      const gap = (cluster > 1 ? 3.6 : 2.9) * size;
+      do { p = [(R() - 0.5) * 1.7 * r, (R() * 0.95 - 0.25) * r, (R() - 0.5) * 1.7 * r]; tries++; }
+      while ((Math.hypot(...p) > r * 0.86 || Math.hypot(p[0], p[1] + r * 0.12, p[2]) < r * 0.46 || sites.some((q) => Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2]) < gap)) && tries < 400);
+      sites.push(p);
       centre = p;
     }
     const o = cluster > 1 ? [(R() - 0.5) * 2.2 * size, (R() - 0.5) * 1.6 * size, (R() - 0.5) * 2.2 * size] : [0, 0, 0];

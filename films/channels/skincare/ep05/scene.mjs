@@ -3,19 +3,21 @@ import * as THREE from "three";
 // for the film kit's page (kits/cinema/film): window.seek(t) sets the shot, the camera, every object and the overlay
 // from t alone, then makes exactly one renderer.render().
 //
-// The set: three of the channel's sections side by side (light, medium, deep: ../set/section.js), each with three
-// pigment cells on its basal row and melanin caps (../set/melanocyte04.js), UV dashes (../set/uv04.js), one cell's
-// grains per tone up close (../set/grains05.js), a globe of UV and skin colour (../set/globe05.js), the depth gauge
-// and layer bars (../set/motif.js) and the microscope-stage rig (../set/rig.js). Everything timed comes from
+// The set: three of the channel's sections side by side (light, medium, deep: ../set/section.js; tone is this
+// episode's subject, the bible's one exception to one tone per episode), each with two pigment cells on its basal row
+// drawn 32 µm apart (the claim's spacing) and melanin caps (../set/melanocyte04.js), UV dashes (../set/rays.js), one
+// cell's grains per tone up close (../set/grains05.js), a globe of UV and skin colour (../set/globe05.js), the depth
+// gauge and layer bars (../set/motif.js) and the microscope-stage rig (../set/rig.js). Everything timed comes from
 // film.json, which compile.py hangs on the voice.
 //
-// Shots: hook (the payoff: three sections, their pigment cells lit) · rows (the basal rows, counted: the same) ·
-// grains (one cell per tone: small and clustered → larger, one by one) · trio ("more of them?": no) · globe (skin
-// colour follows UV) · strong (the deep section under fierce UV; folate below kept safe) · weak (the light one under
-// weak UV; vitamin D made) · gauge (to scale) · close (back to the hook, for the loop).
+// Shots: trio (the payoff, three sections; no cut, the camera pushes down to the basal rows and the pigment cells are
+// counted: the same) · grains (an iris into one pigment cell: one cell per tone, small clustered grains → larger, one
+// by one) · globe (an iris out: skin colour follows UV) · skies (an iris back to the three sections, each under its
+// own sky, never one tone alone) · gauge (the same place: to scale, a bracket across two pigment cells) · close (the
+// hook's composition, for the loop).
 import { stage, seg, E } from "cinema/film/runtime.js";
 import { createHud, project } from "cinema/sci/hud.js";
-import { createSection } from "../set/section.js";
+import { createSection, createVessels } from "../set/section.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
@@ -41,26 +43,37 @@ scene.add(new THREE.HemisphereLight(0xf4f8ff, 0xe8ddd4, 1.25));
 const key = new THREE.DirectionalLight(0xfff6ec, 2.1); key.position.set(-120, 220, 160); scene.add(key);
 const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, -200); scene.add(rim);
 
-// ── the set: three sections, three pigment cells on each basal row, caps over the nuclei ──
+// ── the set: three sections, two pigment cells on each basal row (32 µm apart), caps over the nuclei ──
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um, rows: BIO.rows };
+const HALF = BIO.gap_um / 2;
 const SEC = BIO.sec_x.map((x, i) => {
-  const S = createSection({ width: 50, depth: 46, ...LAY, seed: 31 + i, x });
+  const S = createSection({ width: 50, depth: 46, ...LAY, seed: 31 + i, x, mortarFloor: 0 });
   const caps = createCaps(S); S.group.add(caps.mesh);
-  const mels = [-15, 0, 15].map((mx, j) => createMelanocyte(S, { x: mx, seed: 40 + i * 3 + j, branches: 3, n: 30, spread: 9 }));
+  const V = createVessels({ x: [-24, 24], ys: [-94, -106], z: 22, r: 2.2 }); S.group.add(V.group);
+  const mels = [-HALF, HALF].map((mx, j) => createMelanocyte(S, { x: mx, seed: 40 + i * 3 + j, branches: 3, n: 30, spread: 9 }));
   scene.add(S.group, ...mels.map((m) => m.group));
-  return { S, caps, mels, x, tone: TONES[i] };
+  return { S, caps, V, mels, x, tone: TONES[i] };
 });
-const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 0.9), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 3.0);   // as No. 002
-const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
-const raysStrong = createRays({ n: 80, x: [-24, 22], z: [8, 22], top: 70, seed: 52, width: 0.4, len: 7 });
-const raysWeak = createRays({ n: 16, x: [-24, 22], z: [8, 22], top: 70, seed: 53, width: 0.4, len: 7, depthIn: 30 });
-scene.add(raysStrong.group, raysWeak.group);
-// folate (in a capillary loop under the deep section) and vitamin D (made in the light section's living layers): glows
-const glowBead = (r) => new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, toneMapped: true }));
+const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 0.9), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 1.4);   // as No. 002, the glows kept low here
+// one sky per section: fierce over the deepest, middling over the medium, weak over the lightest (the UV map's three
+// latitudes); the dashes start low enough never to pass behind the notes
+const SKY = [{ n: 14, pass: 0.75, rate: 0.35 }, { n: 40, pass: 0.25, rate: 0.48 }, { n: 80, pass: 0.05, rate: 0.6 }];
+const RAYS = SKY.map((k, i) => { const r = createRays({ n: k.n, x: [-22, 22], z: [6, 22], top: 46, seed: 52 + i, width: 0.4, len: 7, depthIn: 26 }); scene.add(r.group); return r; });
+// folate (in the deepest section's upper dermis, kept safe) and vitamin D (made in the lightest one's living layers)
+const bead = (r) => new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, toneMapped: true }));
 const folate = new THREE.Group(), vitd = new THREE.Group();
-for (let i = 0; i < 7; i++) { const b = glowBead(1.6); b.position.set(BIO.sec_x[2] - 12 + i * 4, -96 + Math.sin(i) * 1.5, 22); folate.add(b); }
-for (let i = 0; i < 9; i++) { const b = glowBead(1.3); b.position.set(BIO.sec_x[0] - 18 + i * 4.5, -60 + Math.cos(i * 1.7) * 6, 22); vitd.add(b); }
+for (let i = 0; i < 6; i++) { const b = bead(1.7); b.position.set(BIO.sec_x[2] - 10 + i * 4, -96 + Math.sin(i) * 1.5, 24); folate.add(b); }
+for (let i = 0; i < 7; i++) { const b = bead(1.5); b.position.set(BIO.sec_x[0] - 14 + i * 4.5, -58 + Math.cos(i * 1.7) * 5, 24); vitd.add(b); }
 scene.add(folate, vitd);
+// the bracket for the to-scale beat: two ink ticks and a bar between the middle section's two pigment cells
+const ink = new THREE.MeshBasicMaterial({ color: 0x13252c, transparent: true, opacity: 0, toneMapped: false, depthTest: false });
+const bracket = new THREE.Group();
+const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 0.7), ink), tick = [0, 1].map(() => new THREE.Mesh(new THREE.BoxGeometry(0.7, 6, 0.7), ink));
+bracket.add(bar, ...tick); bracket.renderOrder = 10; bar.renderOrder = tick[0].renderOrder = tick[1].renderOrder = 10;
+scene.add(bracket);
+const yBr = SEC[1].S.junction(0) + BIO.basal_um + 8;
+bracket.position.set(BIO.sec_x[1], yBr, 25);
+tick[0].position.x = -HALF; tick[1].position.x = HALF;
 // the grains (their own place) and the globe (its own place)
 const GR = TONES.map((tone, i) => createGrains({ tone, x: BIO.gx + (i - 1) * 46, r: 18, seed: 61 + i }));
 scene.add(...GR.map((g) => g.group));
@@ -87,6 +100,13 @@ for (const L of FILM.labels) {
   const k = KIND[L.kind];
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
+// the tally: under each section, a count that lands on the same number as the pigment cells light in step
+const tally = BIO.sec_x.map(() => {
+  const el = document.createElement("div");
+  Object.assign(el.style, { position: "absolute", zIndex: "3", font: "500 4.4vmin/1 var(--font-mono)", color: "var(--text)", background: "var(--hud-plate)",
+    padding: "1vmin 2.2vmin", borderRadius: "999px", boxShadow: "var(--hud-shadow)", opacity: "0", transform: "translate(-50%, 0)", fontFeatureSettings: '"tnum" 1' });
+  document.getElementById("hud").appendChild(el); return el;
+});
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
@@ -94,13 +114,12 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card (a four-line question) sits above the tease's caption plate
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-
-const veil = document.createElement("div");                                // the cuts' dip to the slide colour (film.json "trans")
-Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
+// the irises: a slide-coloured disc grows out of the subject before the cut; a hole opens from the next subject after it
+const veil = document.createElement("div");
+Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0" });
 document.getElementById("hud").prepend(veil);
+
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
-const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d * 0.8)));
-const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
 const SH = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
 const CT = CUE.count_t;
 
@@ -109,67 +128,88 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   rig.place(camera, shot, t);
-  const inS = ["hook", "rows", "trio", "strong", "weak", "gauge", "close"].includes(shot);
-  const isG = shot === "grains", isW = shot === "globe";
+  const inS = ["trio", "skies", "gauge", "close"].includes(shot), isG = shot === "grains", isW = shot === "globe";
   for (const s of SEC) { s.S.group.visible = inS; for (const m of s.mels) m.group.visible = inS; }
   for (const g of GR) g.group.visible = isG;
   globe.group.visible = isW;
 
   // ── the sections ──
+  const rows = shot === "trio" ? fadeIn(t, CUE.feeds - 0.6, 0.8) : 0;          // the push down to the basal rows
   SEC.forEach((s, i) => {
-    let dimLiving = 0, dimDead = 0.35, glow = 0, tan = 0.55, fill = 0.6, travel = 1, dimSec = 0;
-    if (shot === "hook" || shot === "close") glow = shot === "hook" ? fadeIn(t, CUE.pigment - 0.2, 0.5) : 0.7;
-    if (shot === "rows") {
-      dimDead = 0.6; dimLiving = 0.45 * fadeIn(t, SH.rows, 0.6);
-      glow = 0.4 + 0.6 * fadeIn(t, CUE.feeds - 0.2, 0.5);
-      travel = 0.4 + 0.6 * E.inout2(seg(t, CUE.feeds, CUE.feeds + 2.4));
-    }
-    if (shot === "trio") glow = i === 2 ? 1 : 0.4;
-    if (shot === "strong") { dimSec = i === 2 ? 0 : 1; tan = 1; dimDead = 0.5; }
-    if (shot === "weak") { dimSec = i === 0 ? 0 : 1; dimDead = 0.5; dimLiving = 0.2; }
-    if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.8; glow = 0.5; }
-    s.S.set({ tone: s.tone, dimDead: Math.max(dimDead, dimSec), dimLiving: Math.max(dimLiving, dimSec * 0.8), mortar: 0, glowDead: 0 });
+    let dim = 0.3, glow = 0, tan = 0.55;
+    if (shot === "trio") { glow = Math.max(fadeIn(t, CUE.pigment - 0.2, 0.5) * (1 - rows), 0.35 * rows); dim = 0.3 + 0.4 * rows; }
+    if (shot === "close") glow = 0.7;
+    if (shot === "skies") tan = 0.6 + 0.4 * (i / 2);
+    if (shot === "gauge") { dim = 0.75; glow = 0.4; }
+    s.S.set({ tone: s.tone, dimDead: dim, dimLiving: shot === "trio" ? 0.65 * rows : shot === "gauge" ? 0.75 : 0.1, mortar: 0, glowDead: 0 });
+    s.V.set({ k: 1, opacity: 1 });
     s.caps.set({ tone: s.tone, tan, dim: shot === "gauge" ? 0.6 : 0 });
     s.mels.forEach((m, j) => {
-      // in the rows shot each section's pigment cells light one after another, in step across the three (the count)
-      const counted = shot === "rows" ? fadeIn(t, CT[j] - 0.1, 0.25) : 0;
-      m.set({ tone: s.tone, fill, travel, glow: Math.max(glow * (shot === "rows" ? 0.5 : 1), counted), dim: shot === "gauge" ? 0.6 : 0 });
+      // the count: in step across the three sections, each section's two pigment cells light one after the other
+      const counted = shot === "trio" ? fadeIn(t, CT[j] - 0.1, 0.25) : 0;
+      const lit = shot === "gauge" && i === 1 ? fadeIn(t, G.bracket[0] - 0.4, 0.4) : 0;
+      m.set({ tone: s.tone, fill: 0.6, travel: shot === "trio" ? 0.4 + 0.6 * E.inout2(seg(t, CUE.feeds, CUE.feeds + 2.4)) : 1, glow: Math.max(glow, counted, lit), dim: shot === "gauge" ? 0.6 * (1 - lit) : 0 });
     });
   });
-  A.mel1 = SEC[1].mels[1].at.body(); A.mel2 = SEC[2].mels[2].at.body();
-  A.top0 = [SEC[0].x - 14, 0, 23]; A.top2 = [SEC[2].x + 14, 0, 23];
+  A.mel1 = SEC[1].mels[0].at.body();
+  // the tally under each section
+  SEC.forEach((s, i) => {
+    const n = shot === "trio" ? CT.filter((c) => t >= c).length : 0;
+    const p = project(camera, [s.x, -150, 23], W, H);
+    const el = tally[i];
+    el.textContent = `${n} here`;
+    el.style.left = `${p.x.toFixed(1)}px`; el.style.top = `${Math.min(p.y, 0.56 * H).toFixed(1)}px`;
+    el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
+  });
+  A.low0 = [SEC[0].x - 12, -120, 23]; A.low2 = [SEC[2].x + 12, -120, 23];
 
-  // ── UV over the deep section (fierce: stopped at the caps) and the light one (weak: a few reach the living layers) ──
+  // ── skies: each section under its own UV; folate kept safe under the fiercest, vitamin D made under the weakest ──
   const capY = -BIO.sc_um - BIO.gran_um - 6;
-  // fierce UV over the deep section: nearly all of it ends at the caps; weak UV over the light one: most gets into the living layers
-  raysStrong.set(t, { filmTop: capY + 4, filmBottom: capY - 2, pass: 0.05, gain: shot === "strong" ? fadeIn(t, SH.strong, 0.5) : 0, color: UVC, hitColor: HIT, x0: BIO.sec_x[2], rate: 0.6 });
-  raysWeak.set(t, { filmTop: capY + 4, filmBottom: capY - 2, pass: 0.8, gain: shot === "weak" ? fadeIn(t, SH.weak, 0.5) : 0, color: UVC, hitColor: HIT, x0: BIO.sec_x[0], rate: 0.35 });
-  const fo = shot === "strong" ? fadeIn(t, CUE.folate - 0.3, 0.5) : 0, vd = shot === "weak" ? fadeIn(t, CUE.vitd - 0.3, 0.6) : 0;
-  folate.children.forEach((b) => { b.material.color.setRGB(...WATER); b.material.opacity = fo; }); folate.visible = fo > 0.01;
-  vitd.children.forEach((b, i) => { b.material.color.setRGB(...WATER); b.material.opacity = vd * (0.6 + 0.4 * Math.sin(t * 2 + i)); }); vitd.visible = vd > 0.01;
-  A.folate = [BIO.sec_x[2] + 14, -96, 22]; A.vitd = [BIO.sec_x[0] + 20, -60, 22];
+  RAYS.forEach((r, i) => r.set(t, { filmTop: capY + 4, filmBottom: capY - 2, pass: SKY[i].pass, gain: shot === "skies" ? fadeIn(t, SH.skies + 0.2, 0.6) : 0, color: UVC, hitColor: HIT, x0: BIO.sec_x[i], rate: SKY[i].rate }));
+  const fo = shot === "skies" ? fadeIn(t, CUE.folate - 0.6, 0.5) : 0, vd = shot === "skies" ? fadeIn(t, CUE.vitd - 0.3, 0.6) : 0;
+  const neutral = [1.3, 1.27, 1.2];
+  folate.children.forEach((b) => { b.material.color.setRGB(...neutral); b.material.opacity = fo; }); folate.visible = fo > 0.01;
+  vitd.children.forEach((b, i) => { b.material.color.setRGB(...neutral); b.material.opacity = vd * (0.7 + 0.3 * Math.sin(t * 2 + i)); }); vitd.visible = vd > 0.01;
+  A.folate = [BIO.sec_x[2] + 2, -96, 24]; A.vitd = [BIO.sec_x[0] - 4, -58, 24];
+
+  // ── to scale: the bracket across the middle section's two pigment cells ──
+  const bOn = shot === "gauge" ? E.out3(seg(t, G.bracket[0], G.bracket[1])) : 0;
+  ink.opacity = 0.85 * (shot === "gauge" ? fadeIn(t, G.bracket[0] - 0.2, 0.3) : 0);
+  bar.scale.x = Math.max(1e-3, BIO.gap_um * bOn); bar.position.x = -HALF + BIO.gap_um * bOn / 2;
+  bracket.visible = ink.opacity > 0.01;
 
   // ── the grains: the three cells fill with their grains; the deep one's land on "larger" ──
   if (isG) GR.forEach((g, i) => g.set({ show: fadeIn(t, SH.grains + 0.2 + i * 0.5, 1.2), spread: E.out3(seg(t, SH.grains, CUE.larger + 0.6)), dim: i === 1 ? 0.3 * fadeIn(t, CUE.deeper, 0.5) : 0 }));
-  A.g0 = [GR[0].group.position.x, 18, 10]; A.g2 = [GR[2].group.position.x, 18, 10];
+  A.g0 = [GR[0].group.position.x, 18, 10]; A.g2 = [GR[2].group.position.x, 18, 10]; A.g1 = [GR[1].group.position.x, 0, 10];
 
-  // ── the globe: UV band, then the dots fill in and follow it ──
-  if (isW) globe.set({ uv: 0.3 + 0.7 * fadeIn(t, CUE.sunlight - 0.4, 0.8), dots: E.inout2(seg(t, CUE.colour - 0.2, CUE.matched + 0.2)), spin: 0.18 * (t - SH.globe) - 0.6 });
+  // ── the globe: the UV band, then the dots fill in and follow it ──
+  if (isW) globe.set({ uv: 0.35 + 0.65 * fadeIn(t, CUE.sunlight - 0.4, 0.8), dots: E.inout2(seg(t, SH.globe + 0.3, CUE.matched + 0.2)), spin: 0.18 * (t - SH.globe) - 0.6 });
   A.band = globe.at.band();
 
-  // ── the depth gauge: on the light section's left cut edge, lifted to centre for the to-scale beat ──
+  // ── the depth gauge: on the light section's left cut edge in the wide shots, lifted to centre for the to-scale beat ──
   const s0 = SEC[0].S, xg = s0.group.position.x - s0.dims.W / 2 + 2, zg = s0.dims.D / 2;
   camera.updateMatrixWorld();
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (shot === "gauge" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
+  const gOp = (shot === "gauge" || shot === "skies" || shot === "close" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
   const sc = BIO.sc_um + (G.sc_um - BIO.sc_um) * Math.min(1, lift * 4);
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
-  let dip = 0;
-  for (const tr of FILM.trans) dip = Math.max(dip, 1 - Math.min(1, Math.abs(t - tr.t) / 0.22));
-  veil.style.opacity = (0.85 * dip).toFixed(4);
+  // ── the irises ──
+  let disc = 0, hole = 0, subj = null;
+  for (const tr of FILM.trans) {
+    const d = t - tr.t;
+    if (d < 0 && d > -0.35) { disc = E.in2(1 + d / 0.35); subj = A[tr.from]; }
+    else if (d >= 0 && d < 0.35) { hole = Math.max(1e-3, E.out2(d / 0.35)); subj = shot === "grains" ? A.g1 : shot === "globe" ? [BIO.wx, 0, 0] : [BIO.sec_x[1], -40, 23]; }
+  }
+  if (subj && (disc > 0 || hole > 0)) {
+    const p = project(camera, subj, W, H), at = `${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%`;
+    const r = ((disc || hole) * 125).toFixed(2), r2 = (+r + 0.6).toFixed(2);
+    veil.style.background = disc > 0 ? `radial-gradient(circle at ${at}, var(--slide) ${r}vmax, transparent ${r2}vmax)` : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
+    veil.style.opacity = "1";
+  } else veil.style.opacity = "0";
+
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

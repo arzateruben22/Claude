@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours.",
+  "sentence": "But in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours.",
   "claim": "Melanocytes (the pigment cells) sit in the basal (bottom) layer of the epidermis and pass melanin to the keratinocytes around them.",
   "source_url": "https://histology.leeds.ac.uk/skin/pigmentation.php",
   "source_title": "Skin pigmentation (The Histology Guide, Faculty of Biological Sciences, University of Leeds)",
@@ -12,7 +12,7 @@
  },
  {
   "id": "c2",
-  "sentence": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours.",
+  "sentence": "But in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours.",
   "claim": "One melanocyte supplies melanin to about 36 (30–40) keratinocytes through its dendrites: the epidermal melanin unit.",
   "source_url": "https://www.altmeyers.org/en/dermatology/epidermal-melanin-unit-159334",
   "source_title": "Epidermal-melanin unit (Altmeyer's Encyclopedia of Dermatology)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Count them across these skins, and the number comes out about the same.",
+  "sentence": "Across all three, the number comes out about the same.",
   "claim": "On the same body site, people of every skin colour have about the same number of melanocytes per unit area of epidermis.",
   "source_url": "https://library.scconline.org/cdn-1708625391969/Melanocyte-System-Keratinization.pdf",
   "source_title": "The melanocyte system (Society of Cosmetic Chemists symposium paper, 1966; reports Szabó's counts)",
@@ -66,17 +66,6 @@
   "status": "ok"
  },
  {
-  "id": "c7",
-  "sentence": "It's easy to assume darker skin simply has more of them.",
-  "claim": "Darker skin does not have more melanocytes than lighter skin (on the same body site).",
-  "source_url": "https://library.scconline.org/cdn-1708625391969/Melanocyte-System-Keratinization.pdf",
-  "source_title": "The melanocyte system (Society of Cosmetic Chemists symposium paper, 1966; reports Szabó's counts)",
-  "accessed": "2026-11-02",
-  "note": "As c3. The sentence names the wrong idea ('it's easy to assume') and the next lines correct it.",
-  "verified_via": "search excerpt",
-  "status": "ok"
- },
- {
   "id": "c8",
   "sentence": "Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
   "claim": "Jablonski and Chaplin (2000) compared the skin reflectance of indigenous populations with remotely sensed (satellite) UV levels and found skin colour tracks UV radiation and latitude closely.",
@@ -89,45 +78,45 @@
  },
  {
   "id": "c9",
-  "sentence": "Where sunlight is fierce, darker skin guards folate, which healthy pregnancies need.",
-  "claim": "Jablonski and Chaplin proposed that dark pigmentation evolved where UV is strong because it protects folate, which UV breaks down and which matters for reproductive success.",
+  "sentence": "Their idea: under fierce sun, more melanin protected a vitamin called folate.",
+  "claim": "Jablonski and Chaplin (2000) proposed that where UV is strong, dark pigmentation evolved because melanin protects folate (a B vitamin) from UV breakdown.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/10896812/",
   "source_title": "Jablonski NG, Chaplin G. The evolution of human skin coloration. J Hum Evol 2000;39:57–106",
   "accessed": "2026-11-02",
-  "note": "Excerpt: 'highly melanized skin guarded against UV-induced breakdown of folate, a factor with greater bearing on reproductive success.' A hypothesis, widely cited (the 'vitamin D–folate' or dual-cline hypothesis): the screen badges it 'hypothesis'. 'Healthy pregnancies need' folate: folate's role in reproduction is the paper's premise.",
+  "note": "Excerpt: 'highly melanized skin guarded against UV-induced breakdown of folate, a factor with greater bearing on reproductive success.' Said as their idea, in the past tense ('Their idea: … protected'), and badged 'hypothesis'; the voice no longer names a health outcome. Folate is a B vitamin (common knowledge; the dermatologist confirms).",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c10",
-  "sentence": "Where it's weak, lighter skin lets enough through to make vitamin D.",
-  "claim": "They proposed that lighter skin evolved where UV is weak because it lets enough UVB through for the skin to make vitamin D.",
+  "sentence": "Under weak sun, less of it let enough light through to make vitamin D.",
+  "claim": "They proposed that where UV is weak, lighter skin evolved because less melanin lets enough UVB through for the skin to make vitamin D.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/10896812/",
   "source_title": "Jablonski NG, Chaplin G. The evolution of human skin coloration. J Hum Evol 2000;39:57–106",
   "accessed": "2026-11-02",
-  "note": "Excerpt: 'Lighter skin was needed to make vitamin D in low-UV settings … a trade-off between protection from UV and vitamin D synthesis.' Badged 'hypothesis' with c9.",
+  "note": "Excerpt: 'Lighter skin was needed to make vitamin D in low-UV settings … a trade-off between protection from UV and vitamin D synthesis.' Past tense, attributed ('their idea'), badged 'hypothesis'.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c11",
-  "sentence": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart.",
+  "sentence": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
   "claim": "Epidermal melanocyte density averages about 955 per mm² across body sites (meta-analysis); at that density, neighbouring melanocytes are about 32 µm apart.",
   "source_url": "https://vivo.weill.cornell.edu/display/pubid28716435",
   "source_title": "Reference values for skin microanatomy: a systematic review and meta-analysis of ex vivo studies (J Am Acad Dermatol, 2017)",
   "accessed": "2026-11-02",
-  "note": "Excerpt: 'an overall mean of 955.05 cells/mm2 (95% CI 880.89–1029.21) across anatomic sites'; a review gives about 2,000/mm² on the head and forearm and 1,000 elsewhere. Computed: 1 mm² ÷ 955 ≈ 1,047 µm² per cell → ≈ 32 µm apart on a square grid. Badged 'estimate'; on the head and forearm (≈ 2,000/mm²) it would be ≈ 22 µm. 'On any one patch of skin': the density is set by the site, not the colour (c3).",
+  "note": "Excerpt: 'an overall mean of 955.05 cells/mm2 (95% CI 880.89–1029.21) across anatomic sites'; a review gives about 2,000/mm² on the head and forearm and 1,000 elsewhere. Computed: 1 mm² ÷ 955 ≈ 1,047 µm² per cell → ≈ 32 µm apart on a square grid. Badged 'estimate'; on the head and forearm (≈ 2,000/mm²) it would be ≈ 22 µm. 'On any one part of the body': the density is set by the site, not the colour (c3).",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c12",
-  "sentence": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart.",
-  "claim": "Standard 80 gsm copy paper is about 100 µm thick; 17 µm is about 0.17 of it ('thinner than a fifth', computed).",
+  "sentence": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
+  "claim": "A sheet of ordinary 80 gsm copy paper is about 100 µm thick.",
   "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
   "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
   "accessed": "2026-11-02",
-  "note": "As Outer Layer No. 001's paper claim; 32 ÷ 100 ≈ a third (computed). Excerpt: copying paper 80 gsm, 100 microns. Everyday reference; not a skin claim.",
+  "note": "As Outer Layer No. 001's paper claim (its source). Computed: 32 ÷ 100 ≈ a third.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
