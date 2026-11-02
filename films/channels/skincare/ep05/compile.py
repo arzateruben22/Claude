@@ -189,8 +189,6 @@ ev += [
     {"t": B["whoa"]["t0"], "kind": "scale.jump", "tag": "back-to-skin"},
     {"t": CUE["matched"], "kind": "cell.land", "tag": "matched"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
-    {"t": CUE["vitd"], "kind": "diffuse", "tag": "vitd"},
-    {"t": CUE["folate"], "kind": "diffuse", "tag": "folate"},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-gap"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
 ]
