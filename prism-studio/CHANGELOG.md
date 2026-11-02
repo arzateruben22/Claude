@@ -11,8 +11,18 @@
   its episode leaves the screen, the address follows the episode (#ep-…), ← → step, and Escape closes Hold.
 - The episode page opens with the same player (full screen on a phone); Previous/Next step through the review queue.
   The QA line, Move, Accounts and text (editing), Numbers, Sources, Script and Notes follow below.
-- Fonts for Outer Layer (Newsreader, Red Hat Text) and Back of the Envelope (Figtree), as woff2 with their OFL
-  licences (public/fonts/SOURCES.md).
+- Outer Layer and Back of the Envelope have their own look on the wall, in the monitor strip and on their screens.
+  Outer Layer is a light slide (ground, ink, water, UV; Newsreader and Red Hat Text): its standby monitor lists the
+  season over a cross-section of skin under UV, and its screen opens on a light panel. Back of the Envelope is graphite
+  and marker (marker, tally, ballpoint; Bricolage Grotesque, Figtree, JetBrains Mono for figures): its titles sit over
+  a ballpoint envelope with "≈ ?". The rest of the studio keeps the night look. Fonts as woff2 with their OFL licences
+  (public/fonts/SOURCES.md).
+- Their colours are final (Outer Layer #00685F, Back of the Envelope #EB63FF), and so are their names: migration 0005
+  updates both channels where the colour is still the old default and drops "working name".
+- Season progress on every monitor and channel screen, from the database: "Season 1 · 6 of 6 ready" (and "· n posted"
+  once published) with one segment per episode. A channel with nothing imported reads "Season 1 in production" with
+  its six planned titles (catalog PLANNED_SEASONS), never numbers (src/domain/season.ts, tested).
+- On a phone, the monitor strip scrolls the current screen's name into view.
 
 ## 0.6.4 — 2026-10-26 (final check)
 - Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)

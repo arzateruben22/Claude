@@ -11,7 +11,12 @@ no page errors, no failed requests. `npm run preview` retakes the gallery in `do
 - Goal 1, phone-first Review (done): Review and the episode page are a full-screen vertical player on a phone (swipe or
   ‹ ›, switches, Hold and Approve at the thumb, text and sources below); desktop keeps the cards. Works without
   JavaScript. Screenshots: `docs/preview-gallery/review-*` and `episode-*` (before/after).
-- Goal 2, the two new channels' identities; goal 3, season progress on each monitor; goal 4, phone polish: next.
+- Goal 2, the two new channels' identities (done): Outer Layer's light slide and Back of the Envelope's graphite and
+  marker on the wall, the strip and their screens; final colours and names (migration 0005). Screenshots:
+  `identities-wall-*`, `outer-layer-*`, `envelope-*`.
+- Goal 3, season progress (built; review pending): a season line and segments on every monitor and channel screen;
+  planned titles for the two new channels. Screenshots: `season-*`.
+- Goal 4, phone polish: next.
 
 ## Stage A: foundation (done)
 - Schema, migrations and seed: 5 channels, 11 destinations, 5 creations, 40 challenges and quests, 8 milestone

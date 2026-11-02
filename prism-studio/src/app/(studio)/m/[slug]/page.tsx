@@ -16,6 +16,8 @@ import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
 import { Icon } from "@/components/Icon";
 import { identityOf } from "@/lib/identity";
+import { IdentityArt } from "@/components/IdentityArt";
+import { SeasonBar } from "@/components/SeasonBar";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -62,12 +64,15 @@ async function ChannelScreen({ slug }: { slug: string }) {
   const scheduled = v.upcoming.filter((t) => t.p?.scheduledFor), unscheduled = v.upcoming.filter((t) => !t.p?.scheduledFor);
   const noEpisodes = !v.series.length && !v.loose.length;
   const unset = v.accounts.filter((a) => !a.dest.handle);
+  const identity = identityOf(c.slug);
   return (
-    <div style={topicStyle(c)} data-identity={identityOf(c.slug)}>
+    <div style={topicStyle(c)} className={identity ? "ext-id" : undefined} data-identity={identity}>
       <header className="ext-head">
+        {identity ? <span className="ext-motif"><IdentityArt id={identity} small /></span> : null}
         <div className="kicker topic-text">{c.label} · YouTube + TikTok{c.nameProvisional ? " · working name" : ""}</div>
         <h1>{name}</h1>
         <p className="lede">{c.tagline}</p>
+        {v.season ? <SeasonBar season={v.season} className="ext-season" /> : null}
         <div className="ext-links">
           <Link href={`/channels/${c.slug}`} className="btn ghost small">Channel details</Link>
           {v.reviewCount ? <Link href="/review" className="btn ghost small">{v.reviewCount} to review</Link> : null}
@@ -79,8 +84,14 @@ async function ChannelScreen({ slug }: { slug: string }) {
       {noEpisodes ? (
         <section className="section">
           <div className="card empty-state">
-            <h2>No episodes yet</h2>
-            <p className="muted">{name} joins the wall when its first film is imported. Before that:</p>
+            {v.season?.planned ? <>
+              <h2>{v.season.label} in production</h2>
+              <ol className="season-titles">{v.season.titles.map((t, i) => <li key={i}>{t}</li>)}</ol>
+              <p className="muted">Nothing is imported yet, so there are no counts. {name} fills the wall when its first film is imported. Before that:</p>
+            </> : <>
+              <h2>No episodes yet</h2>
+              <p className="muted">{name} joins the wall when its first film is imported. Before that:</p>
+            </>}
             <ul className="todo">
               {unset.map((a) => <li key={a.dest.id}><Link href="/connections" className="chip warn">Add the {PLATFORM_LABEL[a.dest.platform]} handle</Link></li>)}
               <li><Link href={`/channels/${c.slug}?tab=editorial`} className="chip warn">Write the series bible</Link></li>

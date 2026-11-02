@@ -8,6 +8,7 @@ import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
 import { identityOf } from "@/lib/identity";
 import { IdentityArt } from "./IdentityArt";
+import { StripCurrent } from "./StripCurrent";
 import { Icon } from "./Icon";
 
 function Thumb({ m, pos, current }: { m: MonitorCard; pos: RigPosition; current: boolean }) {
@@ -48,6 +49,7 @@ export function MonitorStrip({ monitors, current }: { monitors: MonitorCard[]; c
         {cell(ir.position, ir.slug)}
         {cell(or.position, or.slug)}
       </div>
+      <StripCurrent />
     </nav>
   );
 }
