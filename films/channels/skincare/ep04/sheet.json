@@ -266,6 +266,11 @@
   },
   {
    "t": 34.0,
+   "kind": "scale.jump",
+   "tag": "into-again"
+  },
+  {
+   "t": 34.0,
    "kind": "cell.land",
    "tag": "done"
   },
