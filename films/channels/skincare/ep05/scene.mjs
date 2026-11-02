@@ -162,7 +162,7 @@ window.seek = function (t) {
     const p = project(camera, [s.x, -150, 23], W, H);
     const el = tally[i];
     el.textContent = `${["light", "medium", "deep"][i]}: ${n}`;
-    el.style.left = `${Math.min(0.84 * W, Math.max(0.16 * W, p.x)).toFixed(1)}px`;   // inside the safe box el.style.top = `${Math.min(p.y, 0.5 * H).toFixed(1)}px`;
+    el.style.left = `${Math.min(0.84 * W, Math.max(0.16 * W, p.x)).toFixed(1)}px`;   // inside the safe box el.style.top = `${Math.max(0.3 * H, Math.min(p.y, 0.5 * H)).toFixed(1)}px`;
     el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
   });
   A.low0 = [SEC[0].x - 12, -120, 23]; A.low2 = [SEC[2].x + 12, -120, 23];
