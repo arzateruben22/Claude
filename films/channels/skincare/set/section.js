@@ -114,6 +114,19 @@ export const createSection = (o = {}) => {
   fibMesh.visible = false;   // single fibres read as stray white lines (the No. 001 review)
   group.add(fibMesh);
 
+  // the dead layer as one continuous sheet (No. 003): shown instead of the separate plates while the section is
+  // wrinkled, so a fold reads as one skin buckling, never as plates coming apart
+  // inside the clipping planes, so its cut face is solid
+  const sheetGeo = new THREE.BoxGeometry(W - 0.6, SC, D - 0.6, 160, 2, 1), sPos = sheetGeo.attributes.position, sBase = Float32Array.from(sPos.array);
+  const sheet = new THREE.Mesh(sheetGeo, M.corneo);
+  sheet.position.y = -SC / 2; sheet.visible = false;
+  group.add(sheet);
+  // an opt-in backing behind the cells (gaps between rows show tissue, not the page)
+  if (o.backing) {
+    const back = new THREE.Mesh(new THREE.BoxGeometry(W - 1, SC + GR + SP + BA, D - 6), M.living);
+    back.position.set(0, -(SC + GR + SP + BA) / 2, -2);
+    group.add(back);
+  }
   const meshes = { corneoMesh, granMesh, spinMesh, basalMesh, nucMesh, capMesh, dermis, fibMesh };
   // wrinkling (No. 003): every cell near the surface rides a fold y += amp · sin(2πx/period) · e^(y/decay); the fold dies
   // away with depth, so the dead rows buckle and the dermis barely moves. Matrices are rebuilt only when amp changes.
@@ -129,6 +142,9 @@ export const createSection = (o = {}) => {
       m.instanceMatrix.needsUpdate = true;
     }
     for (let i = 0; i < pa.count; i++) pa.setY(i, dTop[i] + (dTop[i] > -1 ? f(pa.getX(i), yDJ) : 0));
+    for (let i = 0; i < sPos.count; i++) sPos.setY(i, sBase[3 * i + 1] + f(sBase[3 * i], -SC / 2 + sBase[3 * i + 1]));
+    sPos.needsUpdate = true; sheetGeo.computeVertexNormals();
+    sheet.visible = amp > 0.05; corneoMesh.visible = amp <= 0.05;
     pa.needsUpdate = true; dGeo.computeVertexNormals();
     mortarGroup.visible = amp < 0.05;              // flat sheets can't follow a fold
   };
@@ -268,19 +284,22 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
 export const createVessels = ({ x: [xa, xb] = [-80, 80], ys = [-92, -100, -110], z = 20, r = 2.4, ox = 0 } = {}) => {
   const mat = new THREE.MeshStandardMaterial({ color: 0xa8584e, roughness: 0.45, metalness: 0 });
   const group = new THREE.Group();
-  const tubes = ys.map((y, i) => {
+  const curves = ys.map((y, i) => {
     const pts = [];
     for (let k = 0; k <= 24; k++) { const x = xa + (xb - xa) * k / 24; pts.push(new THREE.Vector3(ox + x, y + 2.5 * Math.sin(x / 13 + i * 1.7), z - i * 3)); }
-    const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, r, 10, false), mat);
-    group.add(m);
-    return { m, y, z: z - i * 3 };
+    return new THREE.CatmullRomCurve3(pts);
   });
+  const tubes = curves.map((c) => { const m = new THREE.Mesh(new THREE.TubeGeometry(c, 48, r, 12, false), mat); group.add(m); return m; });
+  let last = -1;
   return {
     group,
-    // k: 1 open … about 0.4 narrowed; each tube is scaled about its own axis (they run along x)
+    // k: 1 open … about 0.4 narrowed (each tube rebuilt at radius r·k about its own centreline)
     set({ k = 1, opacity = 1 } = {}) {
       group.visible = opacity > 0.002;
-      tubes.forEach(({ m, y, z: zz }) => { m.position.set(0, y * (1 - k), zz * (1 - k)); m.scale.set(1, k, k); });
+      const kk = Math.round(k * 200) / 200;
+      if (kk === last) return;
+      last = kk;
+      tubes.forEach((m, i) => { m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(curves[i], 48, r * kk, 12, false); });
     },
   };
 };
@@ -291,4 +310,44 @@ export const createWater = ({ width = 180, depth = 60, top = 40, x = 0 } = {}) =
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, top, depth), mat);
   mesh.position.set(x, top / 2, 0);
   return { mesh, set({ opacity = 0.22 } = {}) { mat.opacity = opacity; mesh.visible = opacity > 0.002; } };
+};
+
+// the pad (No. 003): a fingertip's pad (or a patch of forearm) at the same µm scale as the sections, a rounded block of
+// skin whose top surface can furrow: y_top(x) = h − amp · furrows · (0.5 − 0.5 cos(2π x / period)), so the folds are one
+// continuous skin, lit from the side by the key. Simplified (badged): real fingertip furrows are wider and curve.
+export const createPad = ({ width = 70, depth = 46, height = 60, x = 0, seed = 1, period = 14 } = {}) => {
+  const geo = new THREE.BoxGeometry(width, height, depth, 140, 6, 40);
+  const pos = geo.attributes.position, base = Float32Array.from(pos.array);
+  const mat = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0, vertexColors: true });
+  const cols = new Float32Array(pos.count * 3);
+  geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, -height / 2, 0);
+  const R = rng(seed);
+  const ph = R() * 6.28;
+  let last = -1;
+  return {
+    mesh, width, depth, height,
+    // furrows: 0 smooth … 1 fully wrinkled; amp: fold depth (µm); swell: 0 … 1 (the wrong idea: a puffy, swollen pad)
+    // color: the living skin; top: the dead layer's colour (a paler band over the top 17% of the pad)
+    set({ furrows = 0, amp = 10, color = [0.5, 0.3, 0.2], top: topColor = null, swell = 0, visible = true } = {}) {
+      mesh.visible = visible;
+      const tc = topColor || color;
+      for (let i = 0; i < pos.count; i++) { const h = (base[3 * i + 1] + height / 2) / height, k = h > 0.83 ? 1 : 0; for (let c = 0; c < 3; c++) cols[3 * i + c] = color[c] + (tc[c] - color[c]) * k; }
+      geo.attributes.color.needsUpdate = true;
+      const key = Math.round(furrows * 1000) + 1e4 * Math.round(swell * 1000);
+      if (key === last) return;
+      last = key;
+      for (let i = 0; i < pos.count; i++) {
+        const bx = base[3 * i], by = base[3 * i + 1], bz = base[3 * i + 2];
+        const top = (by + height / 2) / height;                       // 0 at the bottom … 1 at the top
+        const edge = Math.min(1, (width / 2 - Math.abs(bx)) / 10) * Math.min(1, (depth / 2 - Math.abs(bz)) / 10);
+        const fold = amp * furrows * Math.pow(0.5 - 0.5 * Math.cos(2 * Math.PI * bx / period + ph), 3) * Math.max(0, edge);   // narrow grooves between soft ridges (not spikes)
+        const round = 6 * (1 - Math.max(0, edge));                   // the pad's rounded shoulders
+        pos.setY(i, by + top * (height * 0.12 * swell - fold - round * top));
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+    },
+  };
 };

@@ -710,8 +710,8 @@
   },
   {
    "id": "vo06",
-   "text": "It only happens on the hairless skin of hands and feet, where the dead layer runs thickest, nearly two sheets of paper.",
-   "heard": "It only happens on the hairless skin of hands and feet, where the dead layer runs thickest, nearly two sheets of paper.",
+   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
+   "heard": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
    "words": [
     {
      "w": "It",
@@ -722,127 +722,133 @@
     {
      "w": "only",
      "start": 0.215,
-     "end": 0.56,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "happens",
-     "start": 0.6,
+     "start": 0.735,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "on",
-     "start": 1.1,
-     "end": 1.2,
+     "start": 1.12,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.13,
-     "end": 1.36,
+     "start": 1.165,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "hairless",
      "start": 1.435,
-     "end": 2.0,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 2.07,
-     "end": 2.32,
+     "start": 2.12,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "of",
-     "start": 2.335,
-     "end": 2.48,
+     "start": 2.45,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "hands",
-     "start": 2.365,
-     "end": 2.88,
+     "start": 2.555,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.9,
-     "end": 3.12,
+     "start": 3.025,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "feet,",
-     "start": 3.135,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "where",
-     "start": 3.98,
+     "start": 3.25,
      "end": 4.08,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 4.13,
-     "end": 4.24,
+     "w": "which",
+     "start": 4.135,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "dead",
-     "start": 4.305,
-     "end": 4.56,
+     "w": "also",
+     "start": 4.22,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "layer",
-     "start": 4.525,
+     "w": "carry",
+     "start": 4.72,
      "end": 5.04,
      "heard": true
     },
     {
-     "w": "runs",
-     "start": 5.015,
-     "end": 5.44,
+     "w": "the",
+     "start": 5.095,
+     "end": 5.2,
      "heard": true
     },
     {
-     "w": "thickest,",
-     "start": 5.485,
-     "end": 6.32,
+     "w": "thickest",
+     "start": 5.285,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 5.81,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "layer,",
+     "start": 6.025,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "nearly",
-     "start": 6.39,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "two",
-     "start": 6.715,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "sheets",
-     "start": 6.93,
+     "start": 6.935,
      "end": 7.28,
      "heard": true
     },
     {
+     "w": "two",
+     "start": 7.34,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "sheets",
+     "start": 7.695,
+     "end": 7.92,
+     "heard": true
+    },
+    {
      "w": "of",
-     "start": 7.24,
-     "end": 7.44,
+     "start": 7.865,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "paper.",
-     "start": 7.47,
-     "end": 7.76,
+     "start": 8.095,
+     "end": 8.4,
      "heard": true
     }
    ]

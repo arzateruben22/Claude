@@ -2,19 +2,15 @@
  "id": "outerlayer-003",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 71.4,
- "poster": 34.06666666666667,
+ "dur": 71.8667,
+ "poster": 45.43333333333333,
  "shots": [
   {
    "at": 0.0,
-   "name": "hook"
+   "name": "pads"
   },
   {
-   "at": 5.1333,
-   "name": "sponge"
-  },
-  {
-   "at": 15.966666666666667,
+   "at": 14.166666666666666,
    "name": "nerves"
   },
   {
@@ -26,11 +22,7 @@
    "name": "reflex"
   },
   {
-   "at": 49.9333,
-   "name": "palm"
-  },
-  {
-   "at": 58.8,
+   "at": 59.2667,
    "name": "close"
   }
  ],
@@ -73,163 +65,160 @@
   {
    "id": "toscale",
    "t0": 49.9333,
-   "t1": 58.8,
+   "t1": 59.2667,
    "line": "vo06",
    "energy": 0.4
   },
   {
    "id": "takeaway",
-   "t0": 58.8,
-   "t1": 65.3333,
+   "t0": 59.2667,
+   "t1": 65.8,
    "line": "vo07",
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 65.3333,
-   "t1": 71.4,
+   "t0": 65.8,
+   "t1": 71.8667,
    "line": "vo08",
    "energy": 0.35
   }
  ],
  "tone": {
-  "hook": 0.9,
-  "sponge": 0.9,
+  "pads": 0.9,
   "nerves": 0.9,
   "inside": 0.9,
   "reflex": 0.9,
-  "palm": 0.9,
   "close": 0.9
  },
  "skin": {
-  "wrinkle": 18.0,
+  "wrinkle": 8.0,
   "narrow": 0.42,
   "palm_um": 173.0,
   "cheek_um": 17.0,
   "paper_um": 100.0
  },
  "cam": {
-  "hook": [
+  "pads": [
    {
     "t": 0.0,
     "target": [
      0,
-     0,
+     -20,
      0
     ],
-    "el": 22,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 640,
+    "fy": 0.44,
+    "dist": 560,
     "az": -8
    },
    {
     "t": 5.1333,
     "target": [
      0,
-     0,
+     -20,
      0
     ],
-    "el": 22,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 580,
+    "fy": 0.44,
+    "dist": 520,
     "az": -4,
     "ease": "sine"
-   }
-  ],
-  "sponge": [
-   {
-    "t": 5.1333,
-    "target": [
-     0,
-     -6,
-     0
-    ],
-    "el": 16,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 470,
-    "az": -16
    },
    {
     "t": 9.7,
     "target": [
-     0,
-     -6,
+     -40,
+     -16,
      0
     ],
-    "el": 16,
+    "el": 18,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 410,
-    "az": -12,
+    "fy": 0.44,
+    "dist": 300,
+    "az": -6,
     "ease": "inout2"
    },
    {
-    "t": 15.966666666666667,
+    "t": 13.299999999999999,
     "target": [
-     0,
-     -6,
+     -40,
+     -16,
      0
     ],
-    "el": 16,
+    "el": 18,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 450,
-    "az": -8,
+    "fy": 0.44,
+    "dist": 300,
+    "az": -5,
     "ease": "sine"
+   },
+   {
+    "t": 14.166666666666666,
+    "target": [
+     0,
+     -20,
+     0
+    ],
+    "el": 20,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 520,
+    "az": -4,
+    "ease": "inout2"
    }
   ],
   "nerves": [
    {
-    "t": 15.966666666666667,
+    "t": 14.166666666666666,
     "target": [
      0,
      -20,
      0
     ],
-    "el": 14,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.44,
-    "dist": 600,
-    "az": 0
+    "dist": 520,
+    "az": -4
    },
    {
-    "t": 21.633333333333333,
+    "t": 21.933333333333334,
     "target": [
      0,
      -20,
      0
     ],
-    "el": 15,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.44,
-    "dist": 540,
-    "az": 3,
-    "ease": "inout2"
+    "dist": 500,
+    "az": -2,
+    "ease": "sine"
    },
    {
     "t": 23.3333,
     "target": [
-     0,
-     -20,
-     0
+     -40,
+     -18,
+     23
     ],
-    "el": 15,
+    "el": 6,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 530,
-    "az": 4,
-    "ease": "sine"
+    "fy": 0.46,
+    "dist": 240,
+    "az": -2,
+    "ease": "inout2"
    }
   ],
   "inside": [
@@ -237,39 +226,39 @@
     "t": 23.3333,
     "target": [
      0,
-     -95,
+     -60,
      0
     ],
-    "el": 4,
+    "el": 6,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
-    "dist": 300,
-    "az": -6
+    "dist": 260,
+    "az": -2
    },
    {
-    "t": 29.366666666666667,
+    "t": 27.133333333333333,
     "target": [
      0,
-     -90,
+     -96,
      0
     ],
     "el": 5,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
-    "dist": 270,
-    "az": -3,
+    "dist": 250,
+    "az": -1,
     "ease": "inout2"
    },
    {
-    "t": 32.96666666666667,
+    "t": 30.8,
     "target": [
      0,
-     -12,
+     -40,
      0
     ],
-    "el": 9,
+    "el": 7,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
@@ -278,17 +267,32 @@
     "ease": "inout2"
    },
    {
-    "t": 35.9333,
+    "t": 33.766666666666666,
     "target": [
      0,
-     -12,
+     -10,
      0
     ],
     "el": 10,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
-    "dist": 290,
+    "dist": 280,
+    "az": 1,
+    "ease": "inout2"
+   },
+   {
+    "t": 35.9333,
+    "target": [
+     0,
+     -10,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 270,
     "az": 2,
     "ease": "sine"
    }
@@ -298,105 +302,104 @@
     "t": 35.9333,
     "target": [
      0,
-     -10,
-     0
-    ],
-    "el": 20,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 520,
-    "az": -30
-   },
-   {
-    "t": 42.266666666666666,
-    "target": [
-     0,
-     -10,
+     -14,
      0
     ],
     "el": 22,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
-    "dist": 480,
-    "az": -6,
-    "ease": "inout2"
+    "dist": 300,
+    "az": -14
    },
    {
-    "t": 49.9333,
+    "t": 42.266666666666666,
     "target": [
      0,
-     -10,
+     -14,
      0
     ],
     "el": 24,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.46,
-    "dist": 460,
-    "az": 10,
-    "ease": "sine"
-   }
-  ],
-  "palm": [
-   {
-    "t": 49.9333,
-    "target": [
-     0,
-     -30,
-     0
-    ],
-    "el": 12,
-    "fov": 30,
-    "fx": 0.6,
-    "fy": 0.62,
-    "dist": 560,
-    "az": 4
+    "dist": 340,
+    "az": -4,
+    "ease": "inout2"
    },
    {
-    "t": 58.8,
+    "t": 46.8,
     "target": [
      0,
-     -30,
+     -14,
      0
     ],
-    "el": 12,
+    "el": 26,
     "fov": 30,
-    "fx": 0.6,
-    "fy": 0.62,
-    "dist": 540,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 330,
     "az": 6,
+    "ease": "inout2"
+   },
+   {
+    "t": 52.533300000000004,
+    "target": [
+     0,
+     -20,
+     0
+    ],
+    "el": 20,
+    "fov": 30,
+    "fx": 0.72,
+    "fy": 0.36,
+    "dist": 520,
+    "az": 8,
+    "ease": "inout2"
+   },
+   {
+    "t": 59.2667,
+    "target": [
+     0,
+     -20,
+     0
+    ],
+    "el": 20,
+    "fov": 30,
+    "fx": 0.72,
+    "fy": 0.36,
+    "dist": 510,
+    "az": 9,
     "ease": "sine"
    }
   ],
   "close": [
    {
-    "t": 58.8,
+    "t": 59.2667,
     "target": [
      0,
-     0,
+     -20,
      0
     ],
-    "el": 22,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 580,
+    "fy": 0.44,
+    "dist": 520,
     "az": -4
    },
    {
-    "t": 71.4,
+    "t": 71.8667,
     "target": [
      0,
-     0,
+     -20,
      0
     ],
-    "el": 22,
+    "el": 20,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 640,
+    "fy": 0.44,
+    "dist": 560,
     "az": -8,
     "ease": "sine"
    }
@@ -413,36 +416,37 @@
   "nerves": 25.1,
   "narrow": [
    27.133333333333333,
-   29.366666666666667
+   29.133333333333333
   ],
   "shrink": [
    30.8,
    31.866666666666667
   ],
   "buckle": [
-   32.96666666666667,
-   33.86666666666667
+   32.666666666666664,
+   33.766666666666666
   ],
   "reflex": 37.233333333333334,
   "argued": 42.266666666666666,
   "grip": 45.13333333333333,
   "none": 46.4,
   "hairless": 51.666666666666664,
-  "thickest": 55.733333333333334,
-  "paper": 57.7,
-  "soaked": 61.5,
-  "decide": 64.06666666666666
+  "thickest": 55.53333333333333,
+  "paper": 58.333333333333336,
+  "soaked": 61.96666666666667,
+  "decide": 64.53333333333333,
+  "found": 44.36666666666667
  },
  "gauge": {
   "rise": [
    50.2333,
    51.133300000000006
   ],
-  "sc": 50.9333,
-  "paper": 57.166666666666664,
+  "sc": 54.93333333333333,
+  "paper": 50.9333,
   "back": [
-   58.3,
-   59.199999999999996
+   58.7667,
+   59.6667
   ],
   "sc_um": 173.0,
   "paper_um": 100.0
@@ -454,8 +458,8 @@
    "kind": "layer",
    "anchor": "tip",
    "t0": 0.0,
-   "t1": 4.6833,
-   "shot": "hook",
+   "t1": 5.1333,
+   "shot": "pads",
    "side": -1,
    "v": "above",
    "fixed": true
@@ -466,8 +470,8 @@
    "kind": "layer",
    "anchor": "arm",
    "t0": 2.2666666666666666,
-   "t1": 4.6833,
-   "shot": "hook",
+   "t1": 5.1333,
+   "shot": "pads",
    "side": 1,
    "v": "above",
    "fixed": true
@@ -476,12 +480,12 @@
    "id": "l-sponge",
    "text": "swelling like a sponge?",
    "kind": "water",
-   "anchor": "top",
+   "anchor": "ghost",
    "t0": 8.333333333333334,
-   "t1": 15.5167,
-   "shot": "sponge",
+   "t1": 13.1,
+   "shot": "pads",
    "side": 1,
-   "v": "above",
+   "v": "below",
    "fixed": true
   },
   {
@@ -490,10 +494,10 @@
    "kind": "cell",
    "anchor": "nerve_l",
    "t0": 18.733333333333334,
-   "t1": 22.8833,
+   "t1": 22.133300000000002,
    "shot": "nerves",
    "side": -1,
-   "v": "below",
+   "v": "above",
    "fixed": true
   },
   {
@@ -502,10 +506,10 @@
    "kind": "cell",
    "anchor": "nerve_r",
    "t0": 20.133333333333333,
-   "t1": 22.8833,
+   "t1": 22.133300000000002,
    "shot": "nerves",
    "side": 1,
-   "v": "below",
+   "v": "above",
    "fixed": true
   },
   {
@@ -514,9 +518,9 @@
    "kind": "cell",
    "anchor": "vessel",
    "t0": 28.3,
-   "t1": 32.66666666666667,
+   "t1": 30.5,
    "shot": "inside",
-   "side": 1,
+   "side": -1,
    "fixed": true
   },
   {
@@ -524,8 +528,8 @@
    "text": "fingertip",
    "kind": "layer",
    "anchor": "tip",
-   "t0": 59.03333333333333,
-   "t1": 65.43333333333334,
+   "t0": 59.5,
+   "t1": 65.9,
    "shot": "close",
    "side": -1,
    "v": "above",
@@ -536,8 +540,8 @@
    "text": "forearm",
    "kind": "layer",
    "anchor": "arm",
-   "t0": 59.03333333333333,
-   "t1": 65.43333333333334,
+   "t0": 59.5,
+   "t1": 65.9,
    "shot": "close",
    "side": 1,
    "v": "above",
@@ -549,15 +553,15 @@
    "id": "b-simp-h",
    "text": "simplified",
    "t0": 4.5333000000000006,
-   "t1": 4.6833,
+   "t1": 22.8833,
    "slot": "tr"
   },
   {
    "id": "b-wrong",
    "text": "not what happens",
    "t0": 13.1,
-   "t1": 15.5167,
-   "slot": "tr"
+   "t1": 13.7167,
+   "slot": "tl"
   },
   {
    "id": "b-1930",
@@ -567,13 +571,6 @@
    "slot": "tl"
   },
   {
-   "id": "b-simp",
-   "text": "simplified",
-   "t0": 23.3333,
-   "t1": 49.4833,
-   "slot": "tr"
-  },
-  {
    "id": "b-ws",
    "text": "Wilder-Smith & Chow, 2003",
    "t0": 27.133333333333333,
@@ -581,49 +578,80 @@
    "slot": "tl"
   },
   {
+   "id": "b-fast",
+   "text": "minutes, sped up",
+   "t0": 26.333333333333332,
+   "t1": 35.4833,
+   "slot": "br"
+  },
+  {
    "id": "b-trigger",
    "text": "the trigger: still studied",
    "t0": 26.333333333333332,
    "t1": 35.4833,
-   "slot": "tr"
+   "slot": "bl"
   },
   {
    "id": "b-debated",
    "text": "debated",
    "t0": 42.266666666666666,
-   "t1": 49.4833,
+   "t1": 49.9333,
    "slot": "tr"
   },
   {
    "id": "b-studies",
    "text": "Kareklas 2013 · Haseleu 2014",
-   "t0": 44.53333333333333,
-   "t1": 49.4833,
+   "t0": 43.96666666666667,
+   "t1": 49.9333,
    "slot": "tl"
   },
   {
    "id": "b-palm",
-   "text": "palm; Egawa et al. 2007",
-   "t0": 55.733333333333334,
-   "t1": 58.35,
+   "text": "palm · cheek ≈ 17 µm (No. 001)",
+   "t0": 55.53333333333333,
+   "t1": 58.8167,
    "slot": "tr"
   },
   {
    "id": "b-simp-c",
    "text": "simplified",
-   "t0": 58.8,
-   "t1": 65.43333333333334,
+   "t0": 59.2667,
+   "t1": 65.9,
    "slot": "tr"
   }
  ],
  "counters": [
+  {
+   "id": "c-q",
+   "label": "wet fingertip vs forearm",
+   "fmt": "text",
+   "text": "why?",
+   "t0": 5.2333,
+   "t1": 13.766666666666667,
+   "at": [
+    0.34,
+    0.215
+   ]
+  },
   {
    "id": "c-1930",
    "label": "a finger with a cut nerve",
    "fmt": "text",
    "text": "1930s",
    "t0": 14.333333333333334,
-   "t1": 23.133300000000002,
+   "t1": 22.883300000000002,
+   "at": [
+    0.34,
+    0.215
+   ]
+  },
+  {
+   "id": "c-nerve",
+   "label": "the wrinkle is made by",
+   "fmt": "text",
+   "text": "nerves",
+   "t0": 23.7333,
+   "t1": 36.8333,
    "at": [
     0.34,
     0.215
@@ -635,31 +663,43 @@
    "fmt": "text",
    "text": "reflex",
    "t0": 37.233333333333334,
-   "t1": 41.86666666666667,
+   "t1": 43.9667,
    "at": [
     0.34,
     0.215
    ]
   },
   {
-   "id": "c-grip",
-   "label": "a better wet grip? 2013 · 2014",
+   "id": "c-2013",
+   "label": "a better wet grip?",
    "fmt": "text",
-   "text": "✓ then ✗",
-   "t0": 45.13333333333333,
-   "t1": 49.4833,
+   "text": "2013 ✓",
+   "t0": 44.36666666666667,
+   "t1": 45.6,
    "at": [
     0.34,
     0.215
    ]
   },
   {
-   "id": "c-palm",
-   "label": "dead layer, palm (cheek: 17)",
+   "id": "c-2014",
+   "label": "a better wet grip?",
    "fmt": "text",
-   "text": "173 µm",
-   "t0": 58.8,
-   "t1": 65.43333333333334,
+   "text": "2014 ✗",
+   "t0": 46.0,
+   "t1": 50.3333,
+   "at": [
+    0.34,
+    0.215
+   ]
+  },
+  {
+   "id": "c-final",
+   "label": "the wrinkle is made by",
+   "fmt": "text",
+   "text": "nerves",
+   "t0": 59.4667,
+   "t1": 65.4,
    "at": [
     0.34,
     0.215
@@ -673,11 +713,11 @@
   "t1": 4.6333,
   "sig": 1.4333333333333333
  },
- "endCard": 65.43333333333334,
+ "endCard": 65.9,
  "end": {
   "title": "Next layer: is a tan a *shield*?",
   "follow": "Outer Layer · No. 004",
-  "next": "A finger with a cut nerve doesn't wrinkle in water (Lewis & Pickering, 1930s). Narration: synthetic voice (AI)."
+  "next": "A finger with a cut nerve doesn't wrinkle in water (Lewis & Pickering). Narration: synthetic voice (AI)."
  },
  "captions": [
   {
@@ -742,7 +782,7 @@
   },
   {
    "t0": 5.453,
-   "t1": 8.318,
+   "t1": 8.173,
    "lines": [
     [
      [
@@ -764,33 +804,23 @@
     ],
     [
      [
-      "soaking",
+      "soaking up water",
       6.938
-     ],
-     [
-      "up",
-      7.443
-     ],
-     [
-      "water",
-      7.533
-     ],
-     [
-      "and",
-      8.173
      ]
     ]
    ]
   },
   {
-   "t0": 8.318,
+   "t0": 8.173,
    "t1": 10.743,
    "lines": [
     [
      [
-      "swelling,",
-      8.318
-     ],
+      "and swelling,",
+      8.173
+     ]
+    ],
+    [
      [
       "like a sponge.",
       9.013
@@ -996,7 +1026,7 @@
   },
   {
    "t0": 28.768,
-   "t1": 31.518,
+   "t1": 30.803,
    "lines": [
     [
      [
@@ -1008,33 +1038,29 @@
      [
       "the pad",
       30.388
-     ],
-     [
-      "shrinks",
-      30.803
      ]
     ]
    ]
   },
   {
-   "t0": 31.518,
+   "t0": 30.803,
    "t1": 34.173,
    "lines": [
     [
      [
-      "a little,",
-      31.518
+      "shrinks a little,",
+      30.803
      ],
      [
       "and",
       32.123
-     ],
-     [
-      "the skin",
-      32.153
      ]
     ],
     [
+     [
+      "the skin",
+      32.153
+     ],
      [
       "on top",
       32.783
@@ -1174,7 +1200,7 @@
   },
   {
    "t0": 50.253,
-   "t1": 52.568,
+   "t1": 52.683,
    "lines": [
     [
      [
@@ -1187,17 +1213,17 @@
      ],
      [
       "happens",
-      50.833
+      50.968
      ],
      [
       "on",
-      51.333
+      51.353
      ]
     ],
     [
      [
       "the",
-      51.363
+      51.398
      ],
      [
       "hairless skin",
@@ -1207,171 +1233,175 @@
    ]
   },
   {
-   "t0": 52.568,
-   "t1": 55.248,
+   "t0": 52.683,
+   "t1": 55.328,
    "lines": [
     [
      [
       "of hands and feet,",
-      52.568
+      52.683
      ]
     ],
     [
      [
-      "where",
-      54.213
+      "which",
+      54.368
      ],
      [
-      "the dead layer",
-      54.363
+      "also",
+      54.453
+     ],
+     [
+      "carry",
+      54.953
      ]
     ]
    ]
   },
   {
-   "t0": 55.248,
-   "t1": 58.293,
+   "t0": 55.328,
+   "t1": 57.573,
    "lines": [
     [
      [
-      "runs thickest,",
-      55.248
-     ],
-     [
-      "nearly",
-      56.623
+      "the thickest dead layer,",
+      55.328
      ]
     ],
     [
      [
-      "two sheets of paper.",
-      56.948
+      "nearly",
+      57.168
      ]
     ]
    ]
   },
   {
-   "t0": 59.13,
-   "t1": 61.145,
+   "t0": 57.573,
+   "t1": 58.933,
+   "lines": [
+    [
+     [
+      "two sheets of paper.",
+      57.573
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.597,
+   "t1": 61.277,
    "lines": [
     [
      [
       "So",
-      59.13
+      59.597
      ],
      [
       "your",
-      59.505
+      59.972
      ],
      [
       "fingers",
-      59.59
+      60.057
      ]
     ],
     [
      [
-      "don't",
-      60.12
-     ],
-     [
-      "wrinkle",
-      60.295
-     ],
-     [
-      "because",
-      60.81
+      "don't wrinkle",
+      60.587
      ]
     ]
    ]
   },
   {
-   "t0": 61.145,
-   "t1": 62.405,
+   "t0": 61.277,
+   "t1": 62.872,
    "lines": [
     [
      [
-      "they're soaked.",
-      61.145
+      "because they're soaked.",
+      61.277
      ]
     ]
    ]
   },
   {
-   "t0": 62.405,
-   "t1": 65.24,
+   "t0": 62.872,
+   "t1": 65.707,
    "lines": [
     [
      [
       "They",
-      62.405
+      62.872
      ],
      [
       "wrinkle",
-      62.435
+      62.902
      ],
      [
       "because",
-      63.055
+      63.522
      ]
     ],
     [
      [
       "your",
-      63.345
+      63.812
      ],
      [
       "nerves",
-      63.38
+      63.847
      ],
      [
       "decide to.",
-      64.07
+      64.537
      ]
     ]
    ]
   },
   {
-   "t0": 65.673,
-   "t1": 69.773,
+   "t0": 66.14,
+   "t1": 70.24,
    "lines": [
     [
      [
       "Next:",
-      65.673
+      66.14
      ],
      [
       "is",
-      66.478
+      66.945
      ],
      [
       "a",
-      66.508
+      66.975
      ],
      [
       "tan",
-      66.783
+      67.25
      ],
      [
       "really",
-      67.258
+      67.725
      ]
     ],
     [
      [
       "a",
-      67.698
+      68.165
      ],
      [
       "shield",
-      67.783
+      68.25
      ],
      [
       "for",
-      68.308
+      68.775
      ],
      [
       "your skin?",
-      68.393
+      68.86
      ]
     ]
    ]
@@ -1416,20 +1446,20 @@
   {
    "id": "vo06",
    "t": 50.233333333333334,
-   "dur": 8.026,
+   "dur": 8.643,
    "file": "vo/06.wav",
-   "text": "It only happens on the hairless skin of hands and feet, where the dead layer runs thickest, nearly two sheets of paper."
+   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper."
   },
   {
    "id": "vo07",
-   "t": 59.1,
+   "t": 59.56666666666667,
    "dur": 5.885,
    "file": "vo/07.wav",
    "text": "So your fingers don't wrinkle because they're soaked. They wrinkle because your nerves decide to."
   },
   {
    "id": "vo08",
-   "t": 65.63333333333334,
+   "t": 66.1,
    "dur": 3.871,
    "file": "vo/08.wav",
    "text": "Next: is a tan really a shield for your skin?"

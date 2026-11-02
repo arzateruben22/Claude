@@ -32,13 +32,13 @@ vo: So the wrinkles come from your nerves. {c3} In water, they narrow the tiny v
 ## whoa {shot: pull back: the wrinkle as a reflex, a hand gripping wet marbles, a question mark over it · badges: debated · picture-only 3.0 s · energy: 0.8} (37.5–51 s)
 vo: A wrinkle is a reflex, one doctors use to test a nerve. {c5} Why we have it is *argued*: one study found a wet grip, the next found none. {c6,c7}
 
-## toscale {segment: toscale · the gauge lifts beside the palm's section: its dead layer fills past the paper mark, the cheek's 17 µm beside it · picture-only 0.3 s · energy: 0.4} (51–59 s)
-vo: It only happens on the hairless skin of hands and feet, where the dead layer runs thickest, nearly two sheets of *paper*. {c8,c9}
+## toscale {segment: toscale · the gauge lifts beside the palm's section: its dead layer fills past the paper mark, the cheek's 17 µm beside it · picture-only 0.3 s · energy: 0.4} (51–59.5 s)
+vo: It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of *paper*. {c8,c9}
 
-## takeaway {shot: back to the fingertip and the arm · picture-only 0.3 s · energy: 0.3} (59–66 s)
+## takeaway {shot: back to the fingertip and the arm · picture-only 0.3 s · energy: 0.3} (59.5–66.5 s)
 vo: So your fingers don't wrinkle because they're soaked. {c12} They wrinkle because your nerves *decide* to. {c10}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (66–71.5 s)
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (66.5–72 s)
 vo: Next: is a tan really a *shield* for your skin? {-}
 end card: "Next layer: is a tan a shield?" · "Outer Layer · No. 004"
 

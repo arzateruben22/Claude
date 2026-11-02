@@ -14,7 +14,7 @@ import * as THREE from "three";
 // trigger: still studied", "debated".
 import { stage, seg, E } from "cinema/film/runtime.js";
 import { createHud, project } from "cinema/sci/hud.js";
-import { createSection, createVessels, createWater } from "../set/section.js";
+import { createSection, createVessels, createWater, createPad, toneColor } from "../set/section.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 
@@ -36,19 +36,27 @@ const key = new THREE.DirectionalLight(0xfff6ec, 2.1); key.position.set(-120, 22
 const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, -200); scene.add(rim);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const LAY = { rows: 15, sc: 17, gran: 10, spin: 48, basal: 10, mortarFloor: 0 };   // no resting lipid sheets: close-ups stripe otherwise
-const TL = createSection({ width: 70, depth: 46, ...LAY, seed: 31, x: -40 }), TR = createSection({ width: 70, depth: 46, ...LAY, seed: 32, x: 40 });
+const LAY = { rows: 15, sc: 17, gran: 10, spin: 48, basal: 10, mortarFloor: 0, backing: true };   // no resting sheets; tissue behind the cells
 const S = createSection({ width: 130, depth: 56, ...LAY, seed: 33 });
-scene.add(TL.group, TR.group, S.group);
-const WL = createWater({ width: 70, depth: 46, top: 36, x: -40 }), WR = createWater({ width: 70, depth: 46, top: 36, x: 40 }), WS = createWater({ width: 130, depth: 56, top: 36 });
-scene.add(WL.mesh, WR.mesh, WS.mesh);
-const V = createVessels({ x: [-62, 62], ys: [-94, -104, -114], z: 28.4, r: 3.0 });   // on the cut face (half out of it), so they are seen
+scene.add(S.group);
+const V = createVessels({ x: [-62, 62], ys: [-94, -104, -114], z: 28.4, r: 3.4 });   // on the cut face (half out of it), so they are seen
 scene.add(V.group);
-// the nerves of the two fingertips (ink): one whole, one cut (a gap under its middle)
-const nerveMat = new THREE.MeshStandardMaterial({ color: 0x2a3a40, roughness: 0.5, metalness: 0 });
-const nerve = (x0, x1, y, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, x1 - x0, 10), nerveMat); m.rotation.z = Math.PI / 2; m.position.set((x0 + x1) / 2, y, z); scene.add(m); return m; };
-const nL = nerve(-72, -8, -112, 23.4);
-const nR1 = nerve(8, 33, -112, 23.4), nR2 = nerve(47, 72, -112, 23.4);   // on the cut face   // the cut: a gap from 33 to 47
+// the two pads in their bath: a fingertip (left) and a forearm patch, later a second fingertip (right)
+const PL = createPad({ width: 70, depth: 46, height: 60, x: -40, seed: 3, period: 13 }), PR = createPad({ width: 70, depth: 46, height: 60, x: 40, seed: 4, period: 13 });
+scene.add(PL.mesh, PR.mesh);
+const WL = createWater({ width: 74, depth: 50, top: 30, x: -40 }), WR = createWater({ width: 74, depth: 50, top: 30, x: 40 });
+scene.add(WL.mesh, WR.mesh);
+// the wrong idea: a ghost of the fingertip, swollen, in the water's colour
+const ghost = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(70, 60, 46)), new THREE.LineBasicMaterial({ color: 0x006d74, transparent: true, opacity: 0 }));   // an outline: the swollen pad that doesn't happen
+scene.add(ghost);
+// the nerves, drawn on the pads' front faces (ink): one whole, one cut (a gap under its middle)
+const nerveMat = new THREE.MeshStandardMaterial({ color: 0x1f2d33, roughness: 0.5, metalness: 0 });
+const nerve = (x0, x1, y, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, x1 - x0, 10), nerveMat); m.rotation.z = Math.PI / 2; m.position.set((x0 + x1) / 2, y, z); scene.add(m); return m; };
+const nL = nerve(-72, -8, -42, 23.5);
+const nR1 = nerve(8, 33, -42, 23.5), nR2 = nerve(47, 72, -42, 23.5);   // the cut: a gap from 33 to 47
+// marbles on the wrinkled pad, in the bath (the grip study, an illustration)
+const marbleMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ea, roughness: 0.12, metalness: 0.05, transparent: true, opacity: 0.92 });
+const marbles = [[-54, 5, 6], [-40, 5, -6], [-28, 5, 10]].map((p) => { const m = new THREE.Mesh(new THREE.SphereGeometry(5, 28, 20), marbleMat); m.position.set(...p); scene.add(m); return m; });
 
 const rig = createRig(FILM.cam);
 
@@ -85,43 +93,47 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
-  const pair = shot === "hook" || shot === "close" || shot === "nerves";
-  const one = !pair;
-  TL.group.visible = TR.group.visible = pair; S.group.visible = one;
-  WL.set({ opacity: pair ? 0.2 : 0 }); WR.set({ opacity: pair ? 0.2 : 0 });
-
-  // ── the pair: a fingertip and a forearm (hook, close), or two fingertips, one nerve cut (nerves) ──
-  const nerves = shot === "nerves";
-  // the hook and the close: the fingertip wrinkled, the forearm smooth; nerves: both start smooth, the left one wrinkles
-  const wL = nerves ? SK.wrinkle * E.inout2(seg(t, CUE.cut - 0.4, CUE.smooth + 0.4)) : SK.wrinkle;
-  TL.wrinkle(pair ? wL : 0); TR.wrinkle(0);
-  TL.set({ tone, dimLiving: 0.35, glowDead: 0.25 }); TR.set({ tone, dimLiving: 0.35, dimDead: nerves ? 0 : 0.15 });
-  nL.visible = nR1.visible = nR2.visible = nerves;
-  A.tip = [-40, 2, 22]; A.arm = [40, 2, 22]; A.nerve_l = [-40, -112, 24]; A.nerve_r = [40, -112, 24];
-
-  // ── one block: the sponge (it swells, then the idea is struck out), inside (vessels, buckle), reflex, palm ──
-  const sponge = shot === "sponge";
-  const sw = sponge ? E.inout2(seg(t, CUE.swell[0], CUE.swell[1])) * (1 - E.inout2(seg(t, CUE.wrong - 0.1, CUE.wrong + 0.7))) : 0;
-  S.group.scale.set(1, 1 + 0.12 * sw, 1);
-  S.group.position.y = 0;
+  const padsOn = shot === "pads" || shot === "nerves" || shot === "close" || shot === "reflex";
   const inside = shot === "inside";
-  const buckle = inside ? E.inout2(seg(t, CUE.buckle[0] - 0.4, CUE.buckle[1])) : (shot === "reflex" || shot === "palm") ? 1 : 0;
-  S.wrinkle(one ? SK.wrinkle * buckle : 0);
-  const k = inside ? 1 - (1 - SK.narrow) * E.inout2(seg(t, CUE.narrow[0], CUE.narrow[1])) : (shot === "reflex" || shot === "palm") ? SK.narrow : 1;
-  V.set({ k, opacity: one ? 1 : 0 });
-  // rule 8: the vessels win while they narrow; then the surface while it buckles
-  const vesselsWin = inside ? Math.min(fadeIn(t, B0.why, 0.6), 1 - fadeIn(t, CUE.buckle[0] - 0.3, 0.6)) : 0;
-  S.set({ tone, dimDead: shot === "palm" ? 0.8 : 0.6 * vesselsWin, dimLiving: shot === "palm" ? 0.85 : 0.35 + 0.3 * vesselsWin,
-    glowDead: inside ? 0.6 * fadeIn(t, CUE.buckle[0] - 0.2, 0.6) : 0 });
-  WS.set({ opacity: one && !inside ? 0.18 + 0.12 * sw : 0 });
-  A.top = [40, 4 + 18 * sw, 26]; A.vessel = [30, -94, 29];
+  S.group.visible = inside; V.group.visible = inside;
+  const skin = toneColor("living", tone).map((v) => v * 0.95);
 
-  // ── the gauge: lifted out of the palm shot, the palm's dead layer (173 µm) beside the paper (100 µm) ──
+  // ── the pads: the fingertip furrowed (hook, close, reflex), the forearm smooth; in the nerves shot both start smooth and
+  // only the one with its nerve furrows (the cut one stays smooth) ──
+  const nerves = shot === "nerves", reflex = shot === "reflex";
+  const fL = nerves ? E.inout2(seg(t, CUE.cut - 0.6, CUE.smooth + 0.6)) : 1;
+  const deadTop = toneColor("corneo", tone);
+  PL.set({ visible: padsOn, furrows: fL, amp: SK.wrinkle, color: skin, top: deadTop });
+  PR.set({ visible: padsOn && !reflex, furrows: 0, amp: SK.wrinkle, color: skin, top: deadTop });
+  WL.set({ opacity: padsOn ? 0.2 : 0 }); WR.set({ opacity: padsOn && !reflex ? 0.2 : 0 });
+  nL.visible = nR1.visible = nR2.visible = nerves;
+  // the wrong idea: a swollen ghost over the fingertip, then it collapses on "wrong"
+  const sw = shot === "pads" ? E.inout2(seg(t, CUE.swell[0], CUE.swell[1])) * (1 - E.inout2(seg(t, CUE.wrong - 0.1, CUE.wrong + 0.7))) : 0;
+  ghost.material.opacity = 0.9 * sw; ghost.visible = sw > 0.002;
+  ghost.scale.set(1 + 0.06 * sw, 1 + 0.25 * sw, 1 + 0.06 * sw); ghost.position.set(-40, -30 + 7.5 * sw, 0);
+  // marbles in the grip study
+  const mOp = reflex ? Math.min(fadeIn(t, B0.whoa + 0.3, 0.6), 1 - fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;
+  marbles.forEach((m, i) => { m.visible = mOp > 0.002; m.position.y = 4 + 1.2 * Math.sin(t * 1.3 + i); });
+  marbleMat.opacity = 0.92 * mOp;
+  A.tip = [-40, 4, 22]; A.arm = [40, 4, 22]; A.nerve_l = [-40, -38, 24]; A.nerve_r = [40, -38, 24]; A.ghost = [-20, 18, 22];
+
+  // ── inside: the vessels narrow over about 2 s, the pad sinks a little, then the dead layer buckles as one sheet ──
+  const k = inside ? 1 - (1 - SK.narrow) * E.inout2(seg(t, CUE.narrow[0], CUE.narrow[1])) : 1;
+  V.set({ k, opacity: inside ? 1 : 0 });
+  const sink = inside ? E.inout2(seg(t, CUE.shrink[0], CUE.shrink[1])) : 0;
+  const buckle = inside ? E.inout2(seg(t, CUE.buckle[0], CUE.buckle[1])) : 0;
+  S.group.position.y = -3 * sink;
+  S.wrinkle(inside ? 3.5 * buckle : 0, 30, 24);   // a gentle buckle of one sheet
+  const vesselsWin = inside ? Math.min(fadeIn(t, B0.why, 0.6), 1 - fadeIn(t, CUE.buckle[0] - 0.3, 0.6)) : 0;
+  S.set({ tone, dimDead: 0.6 * vesselsWin, dimLiving: 0.35 + 0.3 * vesselsWin, glowDead: inside ? 0.6 * buckle : 0 });
+  A.vessel = [-20, -94, 30];
+
+  // ── the gauge: lifted out of the reflex shot as it pulls back: the palm's dead layer (173 µm) beside the paper ──
   camera.updateMatrixWorld();
-  const p0 = project(camera, [-63, 0, 28], W, H), p1 = project(camera, [-63, -100, 28], W, H);
-  const lift = shot === "palm" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: shot === "palm" ? Math.min(1, Math.max(0, (lift - 0.6) / 0.3)) : 0, lift, sc: G.sc_um, paperUm: G.paper_um, scName: "palm",
-    fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.9)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
+  const p0 = project(camera, [-75, 0, 23], W, H), p1 = project(camera, [-75, -100, 23], W, H);
+  const lift = reflex ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
+  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: Math.min(1, Math.max(0, (lift - 0.6) / 0.3)), lift, sc: G.sc_um, paperUm: G.paper_um, scName: "palm",
+    fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 1.4)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 0.7)) });
 
   hud.update(t);
   tBars.update(t);
