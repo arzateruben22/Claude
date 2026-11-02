@@ -134,9 +134,14 @@
    "tag": "spine-4"
   },
   {
+   "t": 35.86666666666667,
+   "kind": "term.write",
+   "tag": "spine-5"
+  },
+  {
    "t": 39.93333333333333,
    "kind": "answer.box",
-   "tag": "spine-5",
+   "tag": "spine-6",
    "t1": 40.4333
   },
   {
@@ -158,7 +163,7 @@
   {
    "t": 43.43333333333333,
    "kind": "term.write",
-   "tag": "spine-6"
+   "tag": "spine-7"
   },
   {
    "t": 43.43333333333333,
@@ -178,13 +183,13 @@
   },
   {
    "t": 46.46666666666667,
-   "kind": "arrive",
-   "tag": "cube"
+   "kind": "term.write",
+   "tag": "spine-8"
   },
   {
-   "t": 49.6,
-   "kind": "term.write",
-   "tag": "spine-7"
+   "t": 46.46666666666667,
+   "kind": "arrive",
+   "tag": "cube"
   },
   {
    "t": 49.733333333333334,
@@ -194,7 +199,7 @@
   {
    "t": 52.0,
    "kind": "answer.box",
-   "tag": "spine-8",
+   "tag": "spine-9",
    "t1": 52.5
   },
   {

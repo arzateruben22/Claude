@@ -24,7 +24,7 @@ void main() { vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz; gl_Position
 
 const FS = `
 precision highp float;
-uniform vec3 uDot, uGround, uEdge; uniform float uPitch, uHalf, uOpacity, uHatch, uExposure, uDotR;
+uniform vec3 uDot, uGround, uEdge; uniform float uPitch, uHalf, uOpacity, uHatch, uExposure, uDotR, uFlow;
 varying vec2 vP;
 ${ACES_INV_GLSL}
 float h21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -37,12 +37,12 @@ void main() {
   float fw = max(fwidth(q.x), 1e-5);                              // lattice cells per pixel
   float dotA = 1.0 - smoothstep(uDotR - fw, uDotR + fw, d);
   float mean = 3.14159 * uDotR * uDotR;                           // a dot's average coverage of its cell
-  float far = smoothstep(0.18, 0.4, fw);                          // under ~3 px a cell: use the average
+  float far = smoothstep(0.12, 0.7, fw);                          // toward ~2 px a cell: fade to the average (wide, so the swap never pops)
   float cov = mix(dotA, max(mean, 0.42), far);                    // (lifted: a crowd seen from far reads as a lit field)
   vec3 col = mix(uGround, uDot, cov);
   float e = (uHalf - max(a.x, a.y)) / max(fwidth(vP.x), 1e-5);   // px from the square's edge
   col = mix(col, uEdge, (1.0 - smoothstep(0.8, 2.2, e)) * 0.85);
-  float hs = step(0.5, fract((vP.x + vP.y) / (uHalf * 0.08)));    // diagonal hatching, coarse at any scale
+  float hs = step(0.5, fract((vP.x + vP.y) / (uHalf * 0.08) - uFlow * 0.6));   // diagonal hatching that flows (a crowd moving like a fluid)
   col = mix(col, uEdge, uHatch * hs * 0.35);
   gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), 1.0);
   gl_FragColor.rgb = mix(acesInv(srgbToLinear(uGround), uExposure), gl_FragColor.rgb, uOpacity);
@@ -56,7 +56,7 @@ export const createCrowd = (o = {}) => {
   const u = {
     uDot: { value: v3("anchor", "#4DA3FF") }, uGround: { value: v3("graphite", "#171A1E") }, uEdge: { value: v3("chalk", "#F4F2EC") },
     uPitch: { value: 1 / Math.sqrt(o.density ?? 2) }, uHalf: { value: 0.5 }, uOpacity: { value: 1 }, uHatch: { value: 0 },
-    uExposure: { value: o.exposure ?? 1 }, uDotR: { value: o.dotR ?? 0.24 },
+    uExposure: { value: o.exposure ?? 1 }, uDotR: { value: o.dotR ?? 0.24 }, uFlow: { value: 0 },
   };
   const g = new THREE.PlaneGeometry(2, 2, 1, 1);
   g.rotateX(-Math.PI / 2);
@@ -70,6 +70,7 @@ export const createCrowd = (o = {}) => {
     if (s.density !== undefined) u.uPitch.value = 1 / Math.sqrt(s.density);
     if (s.opacity !== undefined) u.uOpacity.value = s.opacity;
     if (s.hatch !== undefined) u.uHatch.value = s.hatch;
+    if (s.flow !== undefined) u.uFlow.value = s.flow;
   };
   return { group, mesh, set, uniforms: u };
 };

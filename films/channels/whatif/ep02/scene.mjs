@@ -65,6 +65,7 @@ const drawSq = (S, side, y, op, dashUnits) => {
 // the planet at true size (two plaster halves, no cut), everyone as one marker ring
 const planet = createGlobe({ R: PH.r_earth, tokens: TK });
 planet.face.visible = false;
+planet.shell.material.uniforms.uModel.value.multiplyScalar(0.62);     // dimmer than the desk-scale plaster: the cut from graphite never flashes (review 2 #5)
 const back = planet.shell.clone(); back.rotation.y = Math.PI; planet.group.add(back);
 planet.group.visible = false; scene.add(planet.group);
 const dot = ring({ color: hdr("marker", 1.4), width: 3.6, opacity: 0 });
@@ -113,10 +114,10 @@ window.seek = function (t) {
   // the crowd: its side and density over time, hatched while it is too tight
   const C = FILM.crowd, side = keyed(C.keys, t, true), dens = keyed(C.density, t);
   const hatch = Math.min(E.out3(seg(t, C.hatch[0], C.hatch[0] + 0.4)), 1 - E.in3(seg(t, C.hatch[1] - 0.4, C.hatch[1])));
-  const full = Math.min(E.out3(seg(t, C.full[0], C.full[0] + 0.5)), 1 - E.in3(seg(t, C.full[1] - 0.5, C.full[1])));   // the packed street glimpse
+  const full = Math.min(E.inout2(seg(t, C.full[0], C.full[0] + 0.8)), 1 - E.inout2(seg(t, C.full[1] - 0.8, C.full[1])));   // the packed street glimpse (ramps, never a pop)
   const glimpse = full > 0 ? Math.max(side, 26 * full) : side;
   crowd.group.visible = onDesk && shot !== "cube";
-  crowd.set({ side: glimpse, density: full > 0 ? 2 + 2 * full : dens, hatch, opacity: 1 });
+  crowd.set({ side: glimpse, density: full > 0 ? 2 + 2 * full : dens, hatch, opacity: 1, flow: t });
   you.group.visible = onDesk && shot !== "cube";
   // your half square metre, drawn on "half"; London's square over the crowd on "Londons"
   drawSq(halfSq, PH.side_one, 0.01, (shot === "you" || shot === "home" || shot === "end") ? E.out3(seg(t, CUE.half, CUE.half + 0.5)) * (1 - full) : 0);
