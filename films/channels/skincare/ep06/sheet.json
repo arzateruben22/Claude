@@ -91,7 +91,7 @@
    "tag": "l-muscle"
   },
   {
-   "t": 7.0,
+   "t": 7.3,
    "kind": "counter.show",
    "tag": "c-apm"
   },
@@ -164,13 +164,13 @@
   },
   {
    "t": 32.43333333333333,
-   "kind": "counter.show",
-   "tag": "c-ne"
-  },
-  {
-   "t": 32.43333333333333,
    "kind": "diffuse",
    "tag": "reach"
+  },
+  {
+   "t": 32.88333333333333,
+   "kind": "counter.show",
+   "tag": "c-ne"
   },
   {
    "t": 33.2,

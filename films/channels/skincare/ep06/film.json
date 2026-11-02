@@ -645,7 +645,7 @@
    "label": "the muscle",
    "fmt": "text",
    "text": "arrector pili",
-   "t0": 7.0,
+   "t0": 7.3,
    "t1": 14.4833,
    "at": [
     0.5,
@@ -669,7 +669,7 @@
    "label": "the nerve's signal",
    "fmt": "text",
    "text": "noradrenaline",
-   "t0": 32.43333333333333,
+   "t0": 32.88333333333333,
    "t1": 45.75,
    "at": [
     0.5,

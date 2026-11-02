@@ -111,9 +111,9 @@ BADGES = [
 SPINE = [0.5, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
 COUNTERS = [
     {"id": "c-q", "label": "goosebumps, with no fur", "fmt": "text", "text": "why?", "t0": CUE["fur"] + 0.1, "t1": CUE["muscle"] - 0.2, "at": SPINE},
-    {"id": "c-apm", "label": "the muscle", "fmt": "text", "text": "arrector pili", "t0": CUE["muscle"] + 0.2, "t1": B["change"]["t0"], "at": SPINE},
+    {"id": "c-apm", "label": "the muscle", "fmt": "text", "text": "arrector pili", "t0": CUE["muscle"] + 0.5, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-chimp", "label": "hair follicles", "fmt": "text", "text": "≈ chimp", "t0": CUE["chimp"], "t1": B["why"]["t0"], "at": SPINE},
-    {"id": "c-ne", "label": "the nerve's signal", "fmt": "text", "text": "noradrenaline", "t0": CUE["reaches"], "t1": t_nom, "at": SPINE},
+    {"id": "c-ne", "label": "the nerve's signal", "fmt": "text", "text": "noradrenaline", "t0": CUE["reaches"] + 0.45, "t1": t_nom, "at": SPINE},
     {"id": "c-hair", "label": "our fine hairs, across", "fmt": "text", "text": "< 30 µm", "t0": CUE["thinner"], "t1": B["takeaway"]["t0"], "at": [0.7, 0.215]},   # right of the lifted gauge card
     {"id": "c-final", "label": "the little muscle", "fmt": "text", "text": "tends hair", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.5, "at": SPINE},
 ]
