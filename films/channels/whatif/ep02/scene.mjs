@@ -95,7 +95,7 @@ const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, saf
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "2.6vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "62vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "70vmin", margin: "4vmin auto 0" });   // readable on a phone (second builder's review, 2 Nov)
 const box = endBox(endEl, { t0: FILM.endCard, answer: "≈ 2.6 Londons", S1 });
 
 window.seek = function (t) {

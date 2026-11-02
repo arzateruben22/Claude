@@ -25,11 +25,11 @@ const CSS = `
   background: rgba(37, 40, 46, .96); box-shadow: var(--hud-shadow); pointer-events: none; }
 .bv-work .hd { font: 700 3.3vmin/1.1 var(--font-display); font-variation-settings: "wdth" 90, "opsz" 24; color: var(--marker); letter-spacing: .01em; margin-bottom: 1.8vmin; }
 .bv-work .rw { display: flex; justify-content: space-between; align-items: baseline; gap: 3vmin; padding: .8vmin 0; border-top: .25vmin solid rgba(167, 170, 178, .25); }
-.bv-work .rw .k { font: 600 3.3vmin/1.2 var(--font-text); color: var(--text-2); }
+.bv-work .rw .k { font: 600 3.4vmin/1.2 var(--font-text); color: var(--chalk); opacity: .82; }
 .bv-work .rw .v { font: 700 3.9vmin/1.1 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--chalk); white-space: nowrap; }
 .bv-work .rw.on .v { color: var(--marker); }
 .bv-work .as { display: flex; flex-wrap: wrap; gap: 1vmin 1.4vmin; margin-top: 1.8vmin; }
-.bv-work .as span { font: 600 2.6vmin/1.2 var(--font-mono); color: var(--assume); border: .25vmin solid var(--assume); border-radius: .5vmin; padding: .5vmin 1vmin; }
+.bv-work .as span { font: 600 3vmin/1.2 var(--font-mono); color: var(--assume); border: .25vmin solid var(--assume); border-radius: .5vmin; padding: .5vmin 1vmin; }
 .bv-work .as span::before { content: "∵ "; }
 .hud-counter { padding: 1vmin 2.2vmin 1.3vmin; border-radius: .9vmin; background: rgba(37, 40, 46, .95); box-shadow: var(--hud-shadow); }
 .hud-counter .v { font-size: 6.4vmin; text-shadow: none; }
