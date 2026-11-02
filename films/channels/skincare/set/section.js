@@ -36,7 +36,8 @@ export const toneColor = (name, m) => {
 
 export const createSection = (o = {}) => {
   const W = o.width ?? 180, D = o.depth ?? 60, ROWS = o.rows ?? 15, SC = o.sc ?? 17, GR = o.gran ?? 10, SP = o.spin ?? 48, BA = o.basal ?? 10;
-  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2, OX = o.x ?? 0;   // OX: the block's x in the world (clipping planes are world-space)
+  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2, OX = o.x ?? 0;
+  const MORTAR0 = o.mortarFloor ?? 0.15;   // the lipid sheets' resting strength; 0 hides them until lit (close-ups stripe otherwise; No. 004's review)   // OX: the block's x in the world (clipping planes are world-space)
   const yG = -SC, yS = -SC - GR, yB = -SC - GR - SP, yDJ = yB - BA;           // tops of granular, spinous, basal; the junction
   const junction = (x) => yDJ + 3.2 * Math.sin(x / 17 + 0.6) + 1.4 * Math.sin(x / 7.3 + 1.9);
   const group = new THREE.Group();
@@ -149,8 +150,8 @@ export const createSection = (o = {}) => {
       // melanin caps grow with tone (more and larger melanosomes; illustrative)
       capMesh.visible = tone > 0.05;
       mortarMat.color.setRGB(...mortarColor);
-      mortarMat.opacity = 0.15 + 0.85 * mortar;
-      mortarGroup.visible = wrinkled < 0.05;
+      mortarMat.opacity = MORTAR0 + (1 - MORTAR0) * mortar;
+      mortarGroup.visible = wrinkled < 0.05 && mortarMat.opacity > 0.01;
     },
     at: {
       scTop: (u = 0.5, zf = 1) => [x0 + W * u, -0.2, z1 * zf],
