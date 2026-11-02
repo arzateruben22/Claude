@@ -126,6 +126,12 @@ its CSS, fonts, wallpaper, covers and light preview copies of the videos (540 px
 films repo's files can be downloaded (a public repo's `https://github.com/<owner>/<repo>/raw/<branch>/`), the Download
 buttons fetch the full-quality files from there; without it they do nothing. Publish `<out dir>/index.html` with the rest
 of `<out dir>` as supporting files, then stop the server and drop the copy.
+Videos: phones play a video only from a server that answers byte-range requests, so the preview's videos also go into
+the artifact's media store. Publish once with `capabilities: {assets: {}}`, upload `<out dir>/assets/media/*.mp4` with the
+Artifact tool (`asset: true`, at most 25 files a call), save `{"assets/media/<name>.mp4": "/_blob/<id>"}` from its answer as
+a JSON map, run `node scripts/static-preview-media.cjs <out dir> <map.json>` (each `<video>` gets the media-store copy as
+its first `<source>` and the published file as its second), and publish the pages it changed. Upload only new or changed
+videos; a store id never changes, so keep the map with the preview's file list.
 
 ## Problems
 | Symptom | Do |

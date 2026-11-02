@@ -14,3 +14,14 @@ Every change is additive: old films render and mix byte-identically.
 | 27 Oct | `kits/cinema/studio/instruments.py`, `compose.py`, `qa.py` | **`pluck` reverted** (the function, its two compose.py branches and its qa.py key) | Back of the Envelope adds its own `pluck` (24a499a on its branch); the coordinator asked for the revert so the branches merge cleanly. Outer Layer uses `reed` only | The kit's `pluck`-free state is restored; `reed` stays |
 | 2 Nov | `kits/cinema/studio/vibes/outerlayer-slide.json` | Foley entries `zap` (the kit's zap, −24 dB: UV rays landing) and `scale.jump` (a swell on F2), at the second builder's request for No. 004 | Outer Layer only; No. 001 uses neither kind, so its mix is unchanged |
 | 2 Nov | `films/channels/skincare/set/section.js` (channel set) | Opt-in `mortarFloor` (default 0.15, as before; 0 hides the lipid sheets until lit) | No. 004's review: close up, the resting sheets stripe the dead layer | No. 001 unchanged (default) |
+
+## 2 Nov, ~06:10 UTC: merged `claude/made-with-claude-film` (coordinator's request)
+
+`kits/cinema/studio/compose.py` and `instruments.py` conflicted: Outer Layer's `reed` against Back of the Envelope's
+`pluck`/`scratch`, all new branches of the same `if v == …` dispatch. Resolved by keeping both sets (no shared line
+changed); `qa.py` auto-merged (Outer Layer's `"reed": "rise"` beside Back of the Envelope's entries).
+
+Proof nothing moved (the studio run with each side's pre-merge kit, then with the merged kit, same sheet and voice):
+- Outer Layer No. 001: `mix.wav` byte-identical (−14.07 LUFS / −2.0 dBTP; sync PASS).
+- Back of the Envelope No. 001 (`films/channels/whatif/ep01`): `mix.wav` byte-identical (−14.05 LUFS / −1.99 dBTP,
+  AAC −1.6 dBTP, as its committed `sound/qa.json`).

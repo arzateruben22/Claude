@@ -1,0 +1,1841 @@
+{
+ "id": "envelope-005",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 73.2,
+ "poster": 46.8333,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "front"
+  },
+  {
+   "at": 4.8,
+   "name": "gather"
+  },
+  {
+   "at": 16.2,
+   "name": "air"
+  },
+  {
+   "at": 25.2,
+   "name": "path"
+  },
+  {
+   "at": 38.4,
+   "name": "dive"
+  },
+  {
+   "at": 52.2,
+   "name": "work"
+  },
+  {
+   "at": 60.0,
+   "name": "home"
+  },
+  {
+   "at": 66.06666666666666,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.8,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.8,
+   "t1": 16.2,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.2,
+   "t1": 25.2,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "why",
+   "t0": 25.2,
+   "t1": 38.4,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 38.4,
+   "t1": 52.2,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "work",
+   "t0": 52.2,
+   "t1": 60.0,
+   "line": "vo06",
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.0,
+   "t1": 66.0,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 66.0,
+   "t1": 73.2,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "RM": 4.0,
+  "centre": [
+   0.0,
+   4.0,
+   0.0
+  ],
+  "fig": 0.55,
+  "cap": 0.5,
+  "hop": 0.6,
+  "dip": 0.2,
+  "orbitR": 70.0,
+  "ghost": [
+   3.2,
+   4.4,
+   -1.5
+  ],
+  "cy": 0.36,
+  "air": 0.5711,
+  "items": [
+   {
+    "kind": "bar",
+    "size": 0.4,
+    "color": "anchor"
+   },
+   {
+    "kind": "ring",
+    "size": 0.0001,
+    "color": "chalk"
+   },
+   {
+    "kind": "ring",
+    "size": 7e-06,
+    "color": "chalk"
+   },
+   {
+    "kind": "fuzz",
+    "size": 1.058354421088e-10,
+    "color": "chalk"
+   },
+   {
+    "kind": "bar",
+    "size": 3.405110344596631e-14,
+    "color": "marker"
+   }
+  ]
+ },
+ "cam": {
+  "front": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     8.2,
+     0
+    ],
+    "dist": 10.5,
+    "el": 10,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 4.8,
+    "target": [
+     0,
+     8.2,
+     0
+    ],
+    "dist": 10.0,
+    "el": 10,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "sine"
+   }
+  ],
+  "gather": [
+   {
+    "t": 4.8,
+    "target": [
+     0,
+     8.2,
+     0
+    ],
+    "dist": 10.0,
+    "el": 10,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 7.566666666666666,
+    "target": [
+     -1.0,
+     4.6,
+     0
+    ],
+    "dist": 30,
+    "el": 12,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "inout3"
+   },
+   {
+    "t": 15.4,
+    "target": [
+     0,
+     7.7,
+     0
+    ],
+    "dist": 15,
+    "el": 20,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "inout3"
+   },
+   {
+    "t": 16.2,
+    "target": [
+     0,
+     7.7,
+     0
+    ],
+    "dist": 14.5,
+    "el": 20,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "sine"
+   }
+  ],
+  "air": [
+   {
+    "t": 16.2,
+    "target": [
+     0,
+     7.7,
+     0
+    ],
+    "dist": 14.5,
+    "el": 20,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.5
+   },
+   {
+    "t": 18.166666666666664,
+    "target": [
+     0.4,
+     7.4,
+     0
+    ],
+    "dist": 17,
+    "el": 16,
+    "az": 4,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "inout3"
+   },
+   {
+    "t": 25.2,
+    "target": [
+     0.4,
+     7.2,
+     0
+    ],
+    "dist": 19,
+    "el": 15,
+    "az": 7,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "sine"
+   }
+  ],
+  "path": [
+   {
+    "t": 25.2,
+    "target": [
+     0.4,
+     7.2,
+     0
+    ],
+    "dist": 19,
+    "el": 15,
+    "az": 7,
+    "fov": 24,
+    "fy": 0.5
+   },
+   {
+    "t": 27.1,
+    "target": [
+     1.2,
+     4.4,
+     -0.5
+    ],
+    "dist": 52,
+    "el": 18,
+    "az": 4,
+    "fov": 24,
+    "fy": 0.5,
+    "ease": "inout3"
+   },
+   {
+    "t": 29.900000000000002,
+    "target": [
+     0.6,
+     4.8,
+     0
+    ],
+    "dist": 50,
+    "el": 18,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.52,
+    "ease": "inout2"
+   },
+   {
+    "t": 38.4,
+    "target": [
+     0,
+     5.0,
+     0
+    ],
+    "dist": 42,
+    "el": 18,
+    "az": -12,
+    "fov": 24,
+    "fy": 0.54,
+    "ease": "sine"
+   }
+  ],
+  "dive": [
+   {
+    "t": 38.4,
+    "target": [
+     0,
+     5.0,
+     0
+    ],
+    "dist": 42,
+    "el": 18,
+    "az": -12,
+    "fov": 24,
+    "fy": 0.54
+   },
+   {
+    "t": 40.63333333333333,
+    "target": [
+     0,
+     8.02,
+     0
+    ],
+    "dist": 3.0,
+    "el": 22,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.36,
+    "ease": "inout3"
+   },
+   {
+    "t": 52.2,
+    "target": [
+     0,
+     8.02,
+     0
+    ],
+    "dist": 2.9,
+    "el": 22,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.36,
+    "ease": "sine"
+   }
+  ],
+  "work": [
+   {
+    "t": 52.2,
+    "target": [
+     0,
+     8.02,
+     0
+    ],
+    "dist": 2.9,
+    "el": 22,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.36
+   },
+   {
+    "t": 60.0,
+    "target": [
+     0,
+     8.02,
+     0
+    ],
+    "dist": 2.9,
+    "el": 22,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.36,
+    "ease": "sine"
+   }
+  ],
+  "home": [
+   {
+    "t": 60.0,
+    "target": [
+     0,
+     8.02,
+     0
+    ],
+    "dist": 2.9,
+    "el": 22,
+    "az": -6,
+    "fov": 24,
+    "fy": 0.36
+   },
+   {
+    "t": 62.5,
+    "target": [
+     0,
+     7.6,
+     0
+    ],
+    "dist": 9.6,
+    "el": 19,
+    "az": -3,
+    "fov": 24,
+    "fy": 0.42,
+    "ease": "out3"
+   },
+   {
+    "t": 66.06666666666666,
+    "target": [
+     0,
+     7.5,
+     0
+    ],
+    "dist": 9.2,
+    "el": 14,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.42,
+    "ease": "sine"
+   }
+  ],
+  "end": [
+   {
+    "t": 66.06666666666666,
+    "target": [
+     0,
+     7.5,
+     0
+    ],
+    "dist": 9.2,
+    "el": 14,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.42
+   },
+   {
+    "t": 73.2,
+    "target": [
+     0,
+     8.2,
+     0
+    ],
+    "dist": 10.5,
+    "el": 10,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "inout2"
+   }
+  ]
+ },
+ "cue": {
+  "hop1": 5.3,
+  "hop2": 18.266666666666666,
+  "slow": 4.0,
+  "gather": [
+   10.433333333333334,
+   15.4
+  ],
+  "ghost": [
+   26.5,
+   29.1
+  ],
+  "zkeys": [
+   [
+    40.4333,
+    -0.1383
+   ],
+   [
+    41.3333,
+    -0.1383
+   ],
+   [
+    41.9789,
+    -3.7404
+   ],
+   [
+    42.2556,
+    -3.7404
+   ],
+   [
+    42.9011,
+    -4.8953
+   ],
+   [
+    43.1778,
+    -4.8953
+   ],
+   [
+    44.1,
+    -9.7157
+   ],
+   [
+    44.9,
+    -9.8157
+   ],
+   [
+    46.0333,
+    -12.945
+   ],
+   [
+    52.0,
+    -12.945
+   ],
+   [
+    53.4,
+    -9.2764
+   ],
+   [
+    60.0,
+    -9.2764
+   ],
+   [
+    62.5,
+    0.4638
+   ]
+  ],
+  "ladder": [
+   39.5333,
+   62.5
+  ],
+  "land": [
+   48.166666666666664,
+   48.96666666666667
+  ],
+  "step": 46.03333333333333
+ },
+ "spine": [
+  {
+   "t": 10.466666666666667,
+   "label": "all of us",
+   "terms": [
+    [
+     "in",
+     "8.2 billion"
+    ],
+    [
+     "op",
+     "×"
+    ],
+    [
+     "in",
+     "62 kg"
+    ]
+   ]
+  },
+  {
+   "t": 14.833333333333334,
+   "label": "all of us",
+   "terms": [
+    [
+     "in",
+     "8.2 bn × 62 kg"
+    ],
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "5 × 10¹¹ kg"
+    ]
+   ]
+  },
+  {
+   "t": 19.033333333333335,
+   "label": "all of us, jumping",
+   "terms": [
+    [
+     "in",
+     "5 × 10¹¹ kg"
+    ],
+    [
+     "op",
+     "×"
+    ],
+    [
+     "in",
+     "40 cm"
+    ]
+   ]
+  },
+  {
+   "t": 31.866666666666667,
+   "label": "6.0 × 10²⁴ kg ÷ 5 × 10¹¹ kg",
+   "terms": [
+    [
+     "in",
+     "the Earth"
+    ],
+    [
+     "op",
+     "÷"
+    ],
+    [
+     "in",
+     "all of us"
+    ],
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "10¹³"
+    ]
+   ]
+  },
+  {
+   "t": 39.93333333333333,
+   "label": "shared out by weight",
+   "terms": [
+    [
+     "op",
+     "…"
+    ],
+    [
+     "op",
+     "÷"
+    ],
+    [
+     "in",
+     "6.0 × 10²⁴ kg"
+    ],
+    [
+     "op",
+     "="
+    ],
+    [
+     "ans",
+     "? m"
+    ]
+   ]
+  },
+  {
+   "t": 46.03333333333333,
+   "label": "the Earth's step",
+   "terms": [
+    [
+     "op",
+     "Earth moves"
+    ],
+    [
+     "ans",
+     "≈ 3 × 10⁻¹⁴ m"
+    ]
+   ],
+   "box": true
+  },
+  {
+   "t": 46.03333333333333,
+   "label": "an atom is ≈ 3,100× wider",
+   "terms": [
+    [
+     "op",
+     "Earth moves"
+    ],
+    [
+     "ans",
+     "≈ 3 × 10⁻¹⁴ m"
+    ]
+   ],
+   "box": true,
+   "keep": true
+  }
+ ],
+ "spineOut": 66.06666666666666,
+ "work": {
+  "t0": 52.2,
+  "t1": 59.7,
+  "title": "Show your work",
+  "rows": [
+   {
+    "t": 52.35,
+    "k": "8.2 bn × 62 kg × 40 cm ÷ 6.0 × 10²⁴ kg",
+    "v": "≈ 3 × 10⁻¹⁴ m",
+    "lit": false
+   },
+   {
+    "t": 52.96666666666667,
+    "k": "jump 50 cm",
+    "v": "≈ 4 × 10⁻¹⁴ m",
+    "lit": true
+   },
+   {
+    "t": 54.56666666666667,
+    "k": "everyone half as heavy",
+    "v": "≈ 2 × 10⁻¹⁴ m",
+    "lit": true
+   },
+   {
+    "t": 58.53333333333333,
+    "k": "one atom (hydrogen)",
+    "v": "≈ 1 × 10⁻¹⁰ m",
+    "lit": true
+   }
+  ],
+  "assume": [
+   "everyone in one place",
+   "rigid Earth",
+   "62 kg each"
+  ]
+ },
+ "labels": [
+  {
+   "id": "l-you",
+   "text": "you",
+   "kind": "anchor",
+   "anchor": "you",
+   "t0": 0.0,
+   "t1": 4.699999999999999,
+   "shot": "front",
+   "side": 1,
+   "v": "middle"
+  },
+  {
+   "id": "l-push",
+   "text": "pushed down: the whole planet",
+   "kind": "calc",
+   "anchor": "arrow",
+   "t0": 7.866666666666666,
+   "t1": 10.233333333333334,
+   "shot": "gather",
+   "side": 1
+  },
+  {
+   "id": "l-all",
+   "text": "everyone, together",
+   "kind": "anchor",
+   "anchor": "cap",
+   "t0": 13.533333333333333,
+   "t1": 16.0,
+   "shot": "gather",
+   "side": 1
+  },
+  {
+   "id": "l-drop",
+   "text": "the planet drops the other way",
+   "kind": "calc",
+   "anchor": "arrow",
+   "t0": 19.833333333333332,
+   "t1": 25.0,
+   "shot": "air",
+   "side": -1,
+   "v": "above"
+  },
+  {
+   "id": "l-path",
+   "text": "its path round the Sun",
+   "kind": "part",
+   "anchor": "path",
+   "t0": 27.833333333333332,
+   "t1": 30.933333333333334,
+   "shot": "path",
+   "side": -1
+  },
+  {
+   "id": "l-ghost",
+   "text": "knocked off course?",
+   "kind": "part",
+   "anchor": "ghost",
+   "t0": 26.8,
+   "t1": 29.1,
+   "shot": "path",
+   "side": 1
+  },
+  {
+   "id": "l-item0",
+   "text": "your jump: 40 cm",
+   "kind": "anchor",
+   "item": 0,
+   "t0": 40.53333333333333,
+   "t1": 41.4,
+   "side": 1,
+   "shot": null
+  },
+  {
+   "id": "l-item1",
+   "text": "a hair ≈ 0.1 mm",
+   "kind": "part",
+   "item": 1,
+   "t0": 41.8,
+   "t1": 42.4833,
+   "side": 1,
+   "shot": null
+  },
+  {
+   "id": "l-item2",
+   "text": "a red blood cell ≈ 7 µm",
+   "kind": "part",
+   "item": 2,
+   "t0": 42.5333,
+   "t1": 43.5333,
+   "side": 1,
+   "shot": null
+  },
+  {
+   "id": "l-item3",
+   "text": "an atom ≈ 0.1 nm",
+   "kind": "part",
+   "item": 3,
+   "t0": 43.9,
+   "t1": 44.9666,
+   "side": 1,
+   "shot": null
+  },
+  {
+   "id": "l-item4",
+   "text": "the Earth's step ≈ 3 × 10⁻¹⁴ m",
+   "kind": "calc",
+   "item": 4,
+   "t0": 45.7666,
+   "t1": 48.166666666666664,
+   "side": 1,
+   "shot": null
+  },
+  {
+   "id": "l-back",
+   "text": "back where it was",
+   "kind": "part",
+   "item": 4,
+   "t0": 48.96666666666667,
+   "t1": 51.5,
+   "side": 1,
+   "shot": null
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "thought experiment",
+   "t0": 0.0,
+   "t1": 4.6,
+   "slot": "bl"
+  },
+  {
+   "id": "b-model",
+   "text": "a model Earth; you not to scale",
+   "t0": 4.8,
+   "t1": 29.7,
+   "slot": "tr"
+  },
+  {
+   "id": "b-one",
+   "text": "∵ everyone in one place",
+   "t0": 10.533333333333333,
+   "t1": 24.9,
+   "slot": "tl"
+  },
+  {
+   "id": "b-slow",
+   "text": "4× slower, dip exaggerated",
+   "t0": 18.066666666666666,
+   "t1": 20.9512,
+   "slot": "tl"
+  },
+  {
+   "id": "b-rigid",
+   "text": "∵ rigid Earth, no air",
+   "t0": 38.4,
+   "t1": 51.900000000000006,
+   "slot": "tl"
+  },
+  {
+   "id": "b-rounded",
+   "text": "rounded",
+   "t0": 46.33333333333333,
+   "t1": 51.900000000000006,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-you",
+   "label": "you, taking off",
+   "text": "2.8",
+   "unit": "m/s",
+   "t0": 29.9,
+   "t1": 38.1,
+   "at": [
+    0.5,
+    0.165
+   ]
+  },
+  {
+   "id": "c-earth",
+   "label": "the Earth, pushed back",
+   "text": "2.4 × 10⁻¹³",
+   "unit": "m/s",
+   "t0": 30.833333333333332,
+   "t1": 38.1,
+   "at": [
+    0.5,
+    0.25
+   ],
+   "lit": true
+  }
+ ],
+ "title": {
+  "series": "Back of the Envelope · No. 005",
+  "title": "Everybody *jump*",
+  "t1": 4.6,
+  "sig": 4.4
+ },
+ "endCard": 66.06666666666666,
+ "end": {
+  "title": "Next envelope: *every raindrop at once*",
+  "follow": "Back of the Envelope · No. 006",
+  "next": "Earth 5.97 × 10²⁴ kg (NASA) · 8.2 bn people (UN 2024) · 62 kg, average adult (Walpole 2012)"
+ },
+ "captions": [
+  {
+   "t0": 0.12,
+   "t1": 1.37,
+   "lines": [
+    [
+     [
+      "Would",
+      0.12
+     ],
+     [
+      "the",
+      0.24
+     ],
+     [
+      "Earth",
+      0.35
+     ],
+     [
+      "move?",
+      0.62
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.775,
+   "t1": 4.205,
+   "lines": [
+    [
+     [
+      "If",
+      1.775
+     ],
+     [
+      "all",
+      2.08
+     ],
+     [
+      "of",
+      2.285
+     ],
+     [
+      "us",
+      2.45
+     ],
+     [
+      "jumped,",
+      2.78
+     ]
+    ],
+    [
+     [
+      "at",
+      3.3
+     ],
+     [
+      "once.",
+      3.455
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.12,
+   "t1": 7.605,
+   "lines": [
+    [
+     [
+      "When",
+      5.12
+     ],
+     [
+      "you",
+      5.435
+     ],
+     [
+      "jump,",
+      5.465
+     ],
+     [
+      "you",
+      5.905
+     ]
+    ],
+    [
+     [
+      "push",
+      6.13
+     ],
+     [
+      "the",
+      6.475
+     ],
+     [
+      "ground",
+      6.595
+     ],
+     [
+      "away,",
+      7.05
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.605,
+   "t1": 9.87,
+   "lines": [
+    [
+     [
+      "and",
+      7.605
+     ],
+     [
+      "the",
+      7.84
+     ],
+     [
+      "ground",
+      7.88
+     ]
+    ],
+    [
+     [
+      "is",
+      8.48
+     ],
+     [
+      "the",
+      8.675
+     ],
+     [
+      "whole",
+      8.86
+     ],
+     [
+      "planet.",
+      9.12
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.235,
+   "t1": 12.88,
+   "lines": [
+    [
+     [
+      "So",
+      10.235
+     ],
+     [
+      "gather",
+      10.52
+     ],
+     [
+      "everyone",
+      11.01
+     ]
+    ],
+    [
+     [
+      "into",
+      11.59
+     ],
+     [
+      "one",
+      11.76
+     ],
+     [
+      "crowd,",
+      12.13
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.92,
+   "t1": 15.64,
+   "lines": [
+    [
+     [
+      "all",
+      12.92
+     ],
+     [
+      "8 billion,",
+      13.26
+     ]
+    ],
+    [
+     [
+      "and",
+      14.295
+     ],
+     [
+      "jump",
+      14.445
+     ],
+     [
+      "together.",
+      14.89
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.525,
+   "t1": 19.665,
+   "lines": [
+    [
+     [
+      "For",
+      16.525
+     ],
+     [
+      "about",
+      16.8
+     ],
+     [
+      "half",
+      17.07
+     ],
+     [
+      "a",
+      17.45
+     ],
+     [
+      "second",
+      17.68
+     ]
+    ],
+    [
+     [
+      "we're",
+      18.115
+     ],
+     [
+      "all",
+      18.37
+     ],
+     [
+      "in",
+      18.755
+     ],
+     [
+      "the",
+      18.99
+     ],
+     [
+      "air,",
+      19.07
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.665,
+   "t1": 22.015,
+   "lines": [
+    [
+     [
+      "and",
+      19.665
+     ],
+     [
+      "the",
+      19.895
+     ],
+     [
+      "planet,",
+      19.925
+     ]
+    ],
+    [
+     [
+      "pushed",
+      20.595
+     ],
+     [
+      "the",
+      20.96
+     ],
+     [
+      "other",
+      21.14
+     ],
+     [
+      "way,",
+      21.505
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.015,
+   "t1": 24.43,
+   "lines": [
+    [
+     [
+      "drops",
+      22.015
+     ],
+     [
+      "away",
+      22.48
+     ]
+    ],
+    [
+     [
+      "beneath",
+      23.065
+     ],
+     [
+      "our",
+      23.355
+     ],
+     [
+      "feet.",
+      23.68
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.52,
+   "t1": 26.585,
+   "lines": [
+    [
+     [
+      "It",
+      25.52
+     ],
+     [
+      "sounds",
+      25.685
+     ],
+     [
+      "like",
+      26.23
+     ],
+     [
+      "it",
+      26.27
+     ],
+     [
+      "should",
+      26.37
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.585,
+   "t1": 28.9,
+   "lines": [
+    [
+     [
+      "knock",
+      26.585
+     ],
+     [
+      "the",
+      26.925
+     ],
+     [
+      "planet",
+      26.99
+     ]
+    ],
+    [
+     [
+      "off",
+      27.515
+     ],
+     [
+      "course.",
+      28.15
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.9,
+   "t1": 31.58,
+   "lines": [
+    [
+     [
+      "But",
+      28.9
+     ],
+     [
+      "the",
+      29.11
+     ],
+     [
+      "push",
+      29.225
+     ]
+    ],
+    [
+     [
+      "is",
+      29.655
+     ],
+     [
+      "shared",
+      29.995
+     ],
+     [
+      "out",
+      30.26
+     ],
+     [
+      "by",
+      30.64
+     ],
+     [
+      "weight,",
+      30.945
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.58,
+   "t1": 33.065,
+   "lines": [
+    [
+     [
+      "and",
+      31.58
+     ],
+     [
+      "the",
+      31.835
+     ],
+     [
+      "Earth",
+      31.91
+     ],
+     [
+      "outweighs",
+      32.375
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.065,
+   "t1": 36.045,
+   "lines": [
+    [
+     [
+      "all",
+      33.065
+     ],
+     [
+      "of",
+      33.43
+     ],
+     [
+      "us",
+      33.46
+     ]
+    ],
+    [
+     [
+      "10 trillion",
+      33.785
+     ],
+     [
+      "times",
+      34.775
+     ],
+     [
+      "over.",
+      35.295
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.725,
+   "t1": 41.375,
+   "lines": [
+    [
+     [
+      "So",
+      38.725
+     ],
+     [
+      "the",
+      39.115
+     ],
+     [
+      "whole",
+      39.145
+     ],
+     [
+      "planet",
+      39.44
+     ]
+    ],
+    [
+     [
+      "moves",
+      39.975
+     ],
+     [
+      "a",
+      40.465
+     ],
+     [
+      "distance",
+      40.625
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.43,
+   "t1": 45.4,
+   "lines": [
+    [
+     [
+      "3,000",
+      41.43
+     ],
+     [
+      "times",
+      42.385
+     ],
+     [
+      "smaller",
+      42.865
+     ]
+    ],
+    [
+     [
+      "than",
+      43.76
+     ],
+     [
+      "a",
+      43.99
+     ],
+     [
+      "single",
+      44.2
+     ],
+     [
+      "atom.",
+      44.65
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.58,
+   "t1": 46.64,
+   "lines": [
+    [
+     [
+      "And",
+      45.58
+     ],
+     [
+      "when",
+      45.625
+     ],
+     [
+      "we",
+      46.065
+     ],
+     [
+      "land,",
+      46.095
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.64,
+   "t1": 49.16,
+   "lines": [
+    [
+     [
+      "it",
+      46.64
+     ],
+     [
+      "settles",
+      46.835
+     ],
+     [
+      "right",
+      47.415
+     ]
+    ],
+    [
+     [
+      "back",
+      47.83
+     ],
+     [
+      "where",
+      48.14
+     ],
+     [
+      "it",
+      48.38
+     ],
+     [
+      "was.",
+      48.41
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.595,
+   "t1": 55.365,
+   "lines": [
+    [
+     [
+      "Jump",
+      52.595
+     ],
+     [
+      "higher,",
+      53.02
+     ]
+    ],
+    [
+     [
+      "or",
+      53.7
+     ],
+     [
+      "count",
+      53.97
+     ],
+     [
+      "us",
+      54.385
+     ],
+     [
+      "lighter,",
+      54.615
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.475,
+   "t1": 57.43,
+   "lines": [
+    [
+     [
+      "and",
+      55.475
+     ],
+     [
+      "it",
+      55.67
+     ],
+     [
+      "stays",
+      55.82
+     ]
+    ],
+    [
+     [
+      "thousands",
+      56.295
+     ],
+     [
+      "of",
+      57.03
+     ],
+     [
+      "times",
+      57.115
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.43,
+   "t1": 59.325,
+   "lines": [
+    [
+     [
+      "smaller",
+      57.43
+     ],
+     [
+      "than",
+      58.225
+     ],
+     [
+      "an",
+      58.495
+     ],
+     [
+      "atom.",
+      58.575
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.32,
+   "t1": 62.94,
+   "lines": [
+    [
+     [
+      "So",
+      60.32
+     ],
+     [
+      "yes,",
+      60.65
+     ],
+     [
+      "the",
+      60.99
+     ],
+     [
+      "Earth",
+      61.145
+     ]
+    ],
+    [
+     [
+      "moves",
+      61.445
+     ],
+     [
+      "when",
+      61.91
+     ],
+     [
+      "we",
+      62.16
+     ],
+     [
+      "jump.",
+      62.19
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.19,
+   "t1": 64.77,
+   "lines": [
+    [
+     [
+      "It",
+      63.19
+     ],
+     [
+      "just",
+      63.43
+     ],
+     [
+      "never",
+      63.75
+     ],
+     [
+      "notices.",
+      64.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 66.32,
+   "t1": 67.535,
+   "lines": [
+    [
+     [
+      "Next",
+      66.32
+     ],
+     [
+      "envelope:",
+      66.785
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.68,
+   "t1": 71.05,
+   "lines": [
+    [
+     [
+      "what",
+      67.68
+     ],
+     [
+      "if",
+      68.05
+     ],
+     [
+      "a",
+      68.08
+     ],
+     [
+      "whole",
+      68.25
+     ],
+     [
+      "day's",
+      68.585
+     ]
+    ],
+    [
+     [
+      "rain",
+      68.91
+     ],
+     [
+      "fell",
+      69.34
+     ],
+     [
+      "in",
+      69.735
+     ],
+     [
+      "one",
+      69.95
+     ],
+     [
+      "second?",
+      70.3
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.234,
+   "file": "vo/01.wav",
+   "text": "Would the Earth move? If all of us jumped, at once."
+  },
+  {
+   "id": "vo02",
+   "t": 5.1,
+   "dur": 10.527,
+   "file": "vo/02.wav",
+   "text": "When you jump, you push the ground away, and the ground is the whole planet. So gather everyone into one crowd, all eight billion, and jump together."
+  },
+  {
+   "id": "vo03",
+   "t": 16.5,
+   "dur": 7.734,
+   "file": "vo/03.wav",
+   "text": "For about half a second we're all in the air, and the planet, pushed the other way, drops away beneath our feet."
+  },
+  {
+   "id": "vo04",
+   "t": 25.5,
+   "dur": 10.392,
+   "file": "vo/04.wav",
+   "text": "It sounds like it should knock the planet off course. But the push is shared out by weight, and the Earth outweighs all of us ten trillion times over."
+  },
+  {
+   "id": "vo05",
+   "t": 38.7,
+   "dur": 10.354,
+   "file": "vo/05.wav",
+   "text": "So the whole planet moves a distance three thousand times smaller than a single atom. And when we land, it settles right back where it was."
+  },
+  {
+   "id": "vo06",
+   "t": 52.5,
+   "dur": 6.664,
+   "file": "vo/06.wav",
+   "text": "Jump higher, or count us lighter, and it stays thousands of times smaller than an atom."
+  },
+  {
+   "id": "vo07",
+   "t": 60.3,
+   "dur": 5.04,
+   "file": "vo/07.wav",
+   "text": "So yes, the Earth moves when we jump. It just never notices."
+  },
+  {
+   "id": "vo08",
+   "t": 66.3,
+   "dur": 4.552,
+   "file": "vo/08.wav",
+   "text": "Next envelope: what if a whole day's rain fell in one second?"
+  }
+ ]
+}

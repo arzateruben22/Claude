@@ -1,0 +1,325 @@
+{
+ "compose_s": 12.3,
+ "master_s": 32.4,
+ "master": {
+  "gain_db": 3.84,
+  "iterations": 4,
+  "lufs": -14.05,
+  "true_peak_db": -1.99,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.79,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.6,
+   "lra": 4.1
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "answer.box": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "arrive": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.show": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.tick": {
+    "n": 4,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 7,
+    "max_ms": 1.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 6,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "term.write": {
+    "n": 10,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 4.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 4.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-0",
+    "show": 5.2667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-tunnel",
+    "show": 5.3333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-1",
+    "show": 9.2667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-car",
+    "show": 9.6667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "day-2",
+    "show": 10.1333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "day-3",
+    "show": 10.6333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "day-4",
+    "show": 11.1333,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "day-5",
+    "show": 11.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-2",
+    "show": 12.3,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 13.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-speed",
+    "show": 14.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "far-rim",
+    "show": 25.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 26.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-3",
+    "show": 28.7333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-uni",
+    "show": 29.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-4",
+    "show": 35.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-mantle",
+    "show": 35.8333,
+    "method": "rise",
+    "err_ms": 1.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-core",
+    "show": 37.4333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-peak",
+    "show": 39.1333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 42.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-5",
+    "show": 46.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "answer.box",
+    "tag": "box-38",
+    "show": 47.1,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-round",
+    "show": 49.8333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 55.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-real Earth (seismic density)",
+    "show": 55.3667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-core 10% lighter",
+    "show": 56.2667,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-uniform Earth",
+    "show": 58.2,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 61.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-6",
+    "show": 61.5,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-core-t",
+    "show": 67.1333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 68.4667,
+    "method": "rise",
+    "err_ms": -0.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -26.7,
+  "dialog_lufs": -13.6,
+  "gap_lu": 13.1,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.88,
+  "mono_loss_db": 0.2,
+  "dialog_mono_loss_db": 0.07,
+  "pass": true
+ }
+}

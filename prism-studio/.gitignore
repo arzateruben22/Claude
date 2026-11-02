@@ -18,3 +18,5 @@ films-mirror/
 # a sandbox-only build variant (deploy/DEPLOY.md, "What was tested"): never committed
 Dockerfile.sandbox
 sandbox-ca.crt
+# written by Next.js tooling on build (agent notes about its docs); not part of the project
+AGENTS.md

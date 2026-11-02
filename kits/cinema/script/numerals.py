@@ -64,6 +64,9 @@ def value(cs):
         c = cs[i]
         if c == "and" and seen:
             if cs[i + 1:i + 3] == ["a", "half"]:
+                if i + 3 < len(cs) and cs[i + 3] in SCALE and cs[i + 3] != "hundred" and dec is None:
+                    dec, i = "5", i + 3                       # "two and a half million" is 2.5 million
+                    continue
                 return (total + cur) + 0.5 if dec is None else None
             i += 1
             continue

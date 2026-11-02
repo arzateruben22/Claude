@@ -1,0 +1,367 @@
+{
+ "compose_s": 10.3,
+ "master_s": 23.3,
+ "master": {
+  "gain_db": 3.23,
+  "iterations": 3,
+  "lufs": -14.08,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.48,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.8,
+   "lra": 3.9
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "answer.box": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "arrive": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.show": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.tick": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 11,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 5,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 2,
+    "max_ms": 37.0,
+    "median_ms": 37.0,
+    "slow": true,
+    "pass": true
+   },
+   "term.write": {
+    "n": 11,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 4.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "you-jump",
+    "show": 5.3,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "you-land",
+    "show": 5.9,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-push",
+    "show": 7.9,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "gather",
+    "show": 10.4333,
+    "method": "shape",
+    "err_ms": 37.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-0",
+    "show": 10.5,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-all",
+    "show": 13.5667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-1",
+    "show": 14.8667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 16.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "all-jump",
+    "show": 18.2667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-2",
+    "show": 19.0667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-drop",
+    "show": 19.8667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "all-land",
+    "show": 20.5667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 25.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-ghost",
+    "show": 26.8333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "ghost",
+    "show": 26.8333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-path",
+    "show": 27.8667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-you",
+    "show": 29.9333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-earth",
+    "show": 30.8667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-3",
+    "show": 31.9,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 38.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "dive",
+    "show": 38.4,
+    "method": "shape",
+    "err_ms": 37.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-4",
+    "show": 39.9667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-item0",
+    "show": 40.5667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-item1",
+    "show": 41.8333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-item2",
+    "show": 42.5333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-item3",
+    "show": 43.9333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-item4",
+    "show": 45.7667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "answer.box",
+    "tag": "spine-5",
+    "show": 46.5333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-6",
+    "show": 46.0667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-back",
+    "show": 49.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 52.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-8.2 bn \u00d7 62\u00a0kg \u00d7 40\u00a0cm \u00f7 6.0\u00a0\u00d7\u00a010\u00b2\u2074\u00a0kg",
+    "show": 52.3667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-jump 50 cm",
+    "show": 53.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-everyone half as heavy",
+    "show": 54.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-one atom (hydrogen)",
+    "show": 58.5667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 60.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 66.0667,
+    "method": "rise",
+    "err_ms": -0.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -27.2,
+  "dialog_lufs": -13.6,
+  "gap_lu": 13.6,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.89,
+  "mono_loss_db": 0.14,
+  "dialog_mono_loss_db": 0.08,
+  "pass": true
+ }
+}

@@ -14,7 +14,8 @@ import { pullStates } from "@/domain/api-analytics";
 import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
 import { lessonHash } from "@/domain/lessons";
-import { CHANNELS, OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
+import { CHANNELS, OFFICIAL, PLANNED_SEASONS, youtubeStudioFor } from "@/domain/catalog";
+import { plannedSeason, seasonLine, seasonProgress, type SeasonProgress } from "@/domain/season";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG } from "@/lib/rig";
@@ -91,6 +92,13 @@ export async function reviewQueue() {
     const full = await episodeFull(e.id);
     return full!;
   }));
+}
+
+/** The review queue's order (ids and titles only), for Previous / Next on an episode page. */
+export async function reviewOrder() {
+  const d = db();
+  const s = await settings(d);
+  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.updatedAt));
 }
 
 const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
@@ -263,8 +271,24 @@ export type CoverTone = "light" | "dark";
 export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "needs_approval" | "unplanned" | "missed" | "empty"; tone?: CoverTone };
 export type MonitorCard = {
   slug: string; kind: "channel" | "instagram"; href: string; name: string; label: string; color: string; colorInk: string;
-  cover: string | null; coverTone?: CoverTone; status: string; led: Led; ledLabel: string; slots?: IgSlot[];
+  cover: string | null; coverTone?: CoverTone; status: string; led: Led; ledLabel: string; slots?: IgSlot[]; season?: SeasonProgress | null;
 };
+
+/** Each channel's current season from the database (real episodes only): the active series, else the first one not
+ *  complete, else the last. A channel with no series yet gets its planned season (titles, no numbers), if it has one. */
+async function currentSeasons(d: DB, chans: { id: string; slug: string }[]) {
+  const ser = await d.select().from(S.series).where(eq(S.series.isDemo, false)).orderBy(asc(S.series.sort), asc(S.series.createdAt));
+  const eps = await d.select({ seriesId: S.episodes.seriesId, state: S.episodes.state, title: S.episodes.title, seriesOrder: S.episodes.seriesOrder, number: S.episodes.number })
+    .from(S.episodes).where(and(eq(S.episodes.isDemo, false), isNotNull(S.episodes.seriesId)));
+  return new Map(chans.map((c): [string, SeasonProgress | null] => {
+    const mine = ser.filter((x) => x.channelId === c.id);
+    const cur = mine.find((x) => x.status === "active") ?? mine.find((x) => x.status !== "complete") ?? mine.at(-1);
+    const plan = PLANNED_SEASONS[c.slug];
+    const mineEps = cur ? eps.filter((e) => e.seriesId === cur.id) : [];
+    if (cur && (mineEps.length || !plan)) return [c.slug, seasonProgress(cur.title, mineEps)];
+    return [c.slug, plan ? plannedSeason(plan) : null];   // no season yet, or an empty series row: the plan, never counts
+  }));
+}
 
 const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 const plainName = (name: string) => name.replace(/ \(name TBD\)$/, "");
@@ -395,6 +419,7 @@ export async function rigView() {
   const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes).where(eq(S.episodes.isDemo, false));
   const renders = [...await currentExports(d, "youtube"), ...await currentExports(d, "tiktok")];
   const when = (at: Date) => formatLocal(at, tz, at < endOfToday ? { hour: "numeric", minute: "2-digit" } : { weekday: "short", hour: "numeric", minute: "2-digit" });
+  const seasons = await currentSeasons(d, chans);
 
   const monitors: MonitorCard[] = chans.map((c) => {
     const mine = tasks.filter((t) => t.channel.id === c.id && !t.dest.shared);
@@ -413,12 +438,14 @@ export async function rigView() {
       ideas ? `${ideas} idea${ideas === 1 ? "" : "s"}` : "",
     ].filter(Boolean).join(" · ");
     const status = next ? `Next: ${next.e.title} · ${PLATFORM_NAME[next.dest.platform]} ${when(next.p.scheduledFor!)}`
-      : toReview.length ? `${toReview.length} ready to review`
+      : toReview.length ? `${toReview.length} to review`
       : mine.length ? `${mine.length} to schedule`
       : production || "No episodes yet";
     const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
     return {
       slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
+      season: seasons.get(c.slug) ?? null,
+      ...(seasons.get(c.slug)?.planned && status === "No episodes yet" ? { status: seasonLine(seasons.get(c.slug)!) } : {}),
       ledLabel: led === "ready" ? "ready to post today" : led === "review" ? "needs review" : "nothing queued today",
     };
   });
@@ -479,8 +506,9 @@ export async function channelExtension(slug: string) {
   const longVideos = lessonRows.map((l) => ({
     lesson: l, approved: !!l.approvedHash && l.approvedHash === lessonHash(l), episodes: parts.filter((x) => x.lessonId === l.id).map((x) => x.title),
   }));
+  const season = (await currentSeasons(d, [c])).get(c.slug) ?? null;
   return {
-    tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts, longVideos,
+    tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts, longVideos, season,
     upcoming: tasks.filter((t) => !accounts.some((a) => a.next?.p?.id === t.p.id)).slice(0, 16), igAccount: ig ?? null,
     series, loose, reviewCount: eps.filter((e) => !e.isDemo && ["ready_for_review", "correction_needed"].includes(e.state)).length,
   };

@@ -1,5 +1,21 @@
 # Project status: four science-video formulas to 100%
 
+> **2 Nov, 05:30 UTC — Back of the Envelope season 1 complete.** Six shorts plus vol01 "Impossible, worked out" (2560x1440, 6:21) are imported into Prism Studio (28 ready, 0 problems) and the preview is v21. Outer Layer: ep01 (re-render after a label collision) and ep02/ep03 finals rendering on 3 machines; ep04/05 with the second builder, ep06 with the first.
+
+> **2 Nov, 00:20 UTC — the owner: "keep going" (after the weekly reset).** All nine sessions were sent CONTINUE. The hourly usage report is re-armed (non-blocking; it pauses only on overage or a live "rejected").
+
+> **30 Oct, 05:27 UTC — the owner: "stop now".** All nine sessions sent PAUSE: commit WIP, kill renders by PID (`--resume` later), cancel check-ins. The hourly usage report is disabled. Resume with CONTINUE to each session in the roster (scratchpad `fleet.json`); the render workers then re-take their jobs.
+
+> **30 Oct, 05:00 UTC — the owner: "full speed on the remaining channels".** Outer Layer and Back of the Envelope run at full speed, eight sessions in all:
+>
+> - **Builders.** Each channel now has two. The first builder keeps ep01–ep03, vol01 and the shared files; the second builds ep04–ep06 on a `-b` branch.
+> - **Render workers.** Each builder has one on a cheaper model. It renders finals on its own branch (`-render-a` / `-render-b`), and the builder merges them back.
+> - **Briefs and roster.** Briefs are in `films/channels/briefs/`; the session roster is in the coordinator's scratchpad, `fleet.json`.
+> - **Owner approvals.** "Full speed" counts as approval of the Flow style and of the narrators they heard: bf_isabella and am_puck.
+> - **Hourly rule.** It is now a non-blocking usage report (`trig_014exNbZfBYHMrsaVaeh3L7k`, re-armed each hour). Everything pauses automatically if the weekly limit leaves "allowed_warning" or overage starts.
+
+> **29 Oct — the owner's writing note: make the films flow ("hypnotized by how smooth everything transitions").** WRITING.md gains a Flow section and lint.py two warnings (663408e). Scope chosen: the two new channels now (both episode-1 scripts rewritten before their renders; queued for the next block), the 18 finished shorts decided after the owner sees a new one. Preview videos now play from the artifact's media store (3b0fd2f, v17). Channels paused under the hourly rule.
+>
 > **27 Oct, 17:47 UTC — owner's rule: "stop every hour and let me see my usage before we continue."** Work runs in one-hour blocks: at each hourly stop (send_later, first 18:40 UTC) the coordinator sends PAUSE to both channel sessions, reports usage (per-session cost and tokens vs scratchpad usage-baseline.json; the 7-day limit is at warning, resets Sun 1 Nov 22:00 UTC) and waits for the owner's "continue". The 2-hourly check-in is disabled; nothing runs on its own between blocks.
 >
 > **27 Oct, 17:45 UTC: RESUMED by the owner — two more channels.** "Start building the rest of the videos for the other channels, integrating maximum quality." The owner named them **Outer Layer** (skin; Prism slug `skincare`) and **Back of the Envelope** (what if; `whatif`), narrators by audition, both in parallel. Season 1 each (6 shorts + vol01, 1080 masters + 1440p YouTube versions, long video 2560x1440) in two sessions: claude/outer-layer-s1, claude/back-of-the-envelope-s1. Studio catalogue renamed (fbb25be). Check-in re-enabled for relaying auditions and collecting episodes.
