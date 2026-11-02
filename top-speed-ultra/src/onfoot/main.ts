@@ -5,7 +5,9 @@
 // table and truck. The sky is the game's (the real sun for the chosen hour); the crowd level is simulated from the
 // time and day and labelled so. P1b adds the things to do: tap to go to a seat, a group or a counter; Sit and
 // Stand; Order at the bar or a truck window and Pick up what's made (held in your hand afterwards); Join a group of
-// regulars and Leave (lot57/doings.ts, lot57/npcs.ts). Test hooks: window.__onfoot (see the bottom of this file).
+// regulars and Leave (lot57/doings.ts, lot57/npcs.ts). P1c fills it: forty people (guests in talking groups, standing
+// and seated, who arrive and leave with the simulated crowd curve; staff; walkers on the sidewalks), drawn inside the
+// phone and desktop budgets (lot57/crowdview.ts). Test hooks: window.__onfoot (see the bottom of this file).
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -33,8 +35,10 @@ import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
 import * as C from './lot57/clock';
 import { ORIGIN, EDGE, PLAN, inVenue, inShed, toLocal, toGame } from './lot57/coords';
 import { Items, ItemId, MENUS, formOf } from './lot57/items';
-import { Crowd, StaffPost } from './lot57/npcs';
+import { Crowd, StaffPost, CrowdCtx } from './lot57/npcs';
 import { Doings, ActLabel } from './lot57/doings';
+import { useWorkers } from './lot57/crowdview';
+import { serveBuilds } from './lot57/crowd-worker';
 
 type Quality = 'low' | 'high' | 'ultra';
 const PRESET: Record<Quality, { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number }> = {
@@ -231,18 +235,33 @@ async function main() {
   // A few groups of regulars talking in circles and the staff at the bar and the trucks (lot57/npcs.ts), built by
   // the people builder at load (about a second each on a desktop CPU), so nothing is built mid-play.
   const items = new Items(quality);
+  // (the clock first: the guests dress for the hour they're built at)
+  let live = !(q.has('day') || q.has('hour'));
+  let clock: C.ClockState = live ? C.liveClock() : { day: C.parseDay(q.get('day') ?? 'Sat'), hour: clamp(Number(q.get('hour') ?? 21), 0, 23.99) };
   const posts: StaffPost[] = venue.counters.map((c) => ({ role: c.id === 'bar' ? 'bartender' : 'cook', counter: c.id, x: c.staff.x, y: c.staff.y, z: c.staff.z, face: c.staff.face, z0: c.staff.z0, z1: c.staff.z1, workFace: c.staff.workFace, workX: c.staff.workX, seeX: c.x + c.side * 0.3 }));
   // (captions and reply chips go to the HUD, which is made below: wireCrowd)
   let wireCrowd: (c: Crowd) => void = () => {};
-  const makeCrowd = (qq: Quality) => { const c = new Crowd(items, PRESET[qq].people, qq === 'ultra'); c.build(posts); c.car = choice.car; scene.add(c.root); wireCrowd(c); return c; };
-  let crowd = makeCrowd(quality);
+  const crowdCtx: CrowdCtx = {
+    seats: venue.seats,
+    plan: (ax, az, bx, bz) => grid.path(ax, az, bx, bz),
+    height: (x, z) => grid.height(x, z),
+    yourSeat: () => player.seat,
+    sidewalks: streets.sidewalks,
+    moved: () => grid.computeFree(set, true, peopleNow()),
+  };
+  /** the crowd for a preset: built here at load (with the progress on the loading screen), or at once on a preset
+   *  switch (the page freezes for it, as before) */
+  const makeCrowd = async (qq: Quality, progress?: (k: number, n: number) => Promise<void>) => {
+    const c = new Crowd(items, PRESET[qq].people, qq === 'ultra', renderer, qq);
+    await c.build(posts, crowdCtx, clock.hour >= 18 || clock.hour < 7, progress);
+    c.car = choice.car; scene.add(c.root); wireCrowd(c); return c;
+  };
+  let crowd = await makeCrowd(quality, async (k, n) => { loading(0.9 + 0.06 * (k / n), `The regulars and the staff (${k} of ${n})…`); await nextFrame(); });
   scene.add(camera);                                   // the first-person held item rides on the camera
   const peopleBlock: { x: number; z: number; r: number }[] = [];
   await stage();
 
   // ------------------------------------------------------------------------------------------ the clock and crowd
-  let live = !(q.has('day') || q.has('hour'));
-  let clock: C.ClockState = live ? C.liveClock() : { day: C.parseDay(q.get('day') ?? 'Sat'), hour: clamp(Number(q.get('hour') ?? 21), 0, 23.99) };
   let simDate = C.anaheimDate(clock.day, clock.hour);
   let open = false, night = 0, share = 0, level: C.CrowdLevel = 'Closed', liveT = 0;
   let composer: EffectComposer | null = null, bloom: UnrealBloomPass | null = null;
@@ -262,23 +281,34 @@ async function main() {
     focusView: () => canvas.focus(), rand: rnd,
   });
   peopleNow = () => crowd.blockers(peopleBlock);
-  // what hides a person from you on Low: something full height (a wall, a building, a truck's body, a tank, a door),
-  // but not glass (the tank room's window), a wall's stretch with a window in it (the storefront, the tank-room window
-  // in the east wall), or the low planter walls, fences and gates you see over. (Acting on something is stricter:
-  // doings.ts blocksSight.)
-  const blocksView = (o: Collider) => o.tall && o.tag !== 'glass' && !o.see && !(o.k === 'circ' && o.r < 0.5);
-  wireCrowd = (c) => { c.onCaption = (who, text, sec) => hud.caption(who, text, sec); c.onReplies = (r) => hud.replies(r); c.occluded = (ax, az, bx, bz) => set.ray(ax, az, bx, bz, blocksView) < 1; };
+  // what hides a person from you: something full height (a wall, a building, a truck's body, a tank, a door), but
+  // not glass (the tank room's window), a wall's stretch with a window in it (the storefront, the tank-room window in
+  // the east wall), the low planter walls, fences and gates you see over, or a parked car (1.4 m: you see a head over
+  // it; cars are 'tall' only to the third-person camera). (Acting on something is stricter: doings.ts blocksSight.)
+  const blocksView = (o: Collider) => o.tall && o.tag !== 'glass' && o.tag !== 'car' && !o.see && !(o.k === 'circ' && o.r < 0.5);
+  wireCrowd = (c) => {
+    c.onCaption = (who, text, sec) => hud.caption(who, text, sec); c.onReplies = (r) => hud.replies(r); c.occluded = (ax, az, bx, bz) => set.ray(ax, az, bx, bz, blocksView) < 1;
+    // the impostors carry no lighting of their own: the day's light, and after dark the string lights in the yard,
+    // the Shed's pendants inside, the street lamps outside (the same levels as the venue's baked night light)
+    c.view.light = (x, z, out) => {
+      const inside = inShed(x, z), yard = inVenue(x, z), d = env.daylight;
+      // (matched by eye against the bodies side by side, by day and at night: tests/out/onfoot/onfoot-1280x720-crowd-cal-*)
+      const lamp = open ? (inside ? 0.4 + 0.26 * night : yard ? 0.66 * night : 0.2 * night) : 0.06 * night;
+      const sky = 0.1 + 1.12 * d * (inside ? 0.5 : 1);
+      return out.setRGB(sky + lamp, sky * 0.98 + lamp * 0.72, sky * 0.95 + lamp * 0.47);
+    };
+  };
   wireCrowd(crowd);
   // Ultra: the first of each group up close (lot57/npcs.ts buildCloseUps), built now rather than mid-play
   let closeUpsPending = false;
   const wantCloseUps = (qq: Quality) => {
-    if (qq !== 'ultra' || crowd.groups.every((g) => g.members[0]?.closeUp) || closeUpsPending) return;
+    if (qq !== 'ultra' || crowd.groups.slice(0, 2).every((g) => g.members[0]?.closeUp) || closeUpsPending) return;
     closeUpsPending = true; hud.toast('Building the regulars up close…', 3);
     requestAnimationFrame(() => requestAnimationFrame(() => { crowd.buildCloseUps(); closeUpsPending = false; }));
   };
   if (quality === 'ultra') crowd.buildCloseUps();
   const stateMeshes = (prefix: string) => world.children.filter((o) => o.name.startsWith(prefix));
-  const applyClock = (firstTime = false) => {
+  const applyClock = (firstTime = false, settle = true) => {
     simDate = live ? new Date() : C.anaheimDate(clock.day, clock.hour);
     if (live) clock = C.liveClock();
     open = C.isOpen(clock.day, clock.hour); share = C.crowdShare(clock.day, clock.hour); level = C.crowdLevel(clock.day, clock.hour);
@@ -290,9 +320,10 @@ async function main() {
     for (const o of stateMeshes('when-closed')) o.visible = !open;
     for (const c of venue.closedOnly) c.on = !open;
     for (const c of venue.openOnly) c.on = open;
-    // the regulars and the staff are here while Lot 57 is open (one group when it's quiet)
+    // the simulated crowd: the parties the hour calls for (settled at once when the clock is set, arriving and leaving
+    // over the minutes on the live clock), the staff, the walkers; nobody inside when it's closed
     if (!open) doings.cancelAll();
-    crowd.setOpen(open, level === 'Quiet'); crowd.night = night > 0.5;
+    crowd.setCrowd(open, share, night > 0.5, clock.hour, settle);
     mats.readerTex.draw(open ? `OPEN TILL ${C.closesAt(clock.day, clock.hour)}` : 'CLOSED', open ? 'Taproom · Yard · Trucks' : `Opens ${C.opensAt(clock.day, clock.hour)}`, open);
     // parked cars: a few overnight, more as the simulated crowd grows (seeded by the day and hour)
     parkedFill = [open ? clamp(0.12 + share * 0.92, 0, 0.96) : 0.05, clock.day * 100 + Math.floor(clock.hour)];
@@ -339,11 +370,13 @@ async function main() {
     // a few real lights near you on High and Ultra (the yard's strings and heaters), so your driver is lit by them
     while (pointLights.length > P.lights) { const l = pointLights.pop()!; scene.remove(l); l.dispose(); }
     while (pointLights.length < P.lights) { const l = new THREE.PointLight(0xffb56a, 0, 15, 2); l.castShadow = false; scene.add(l); pointLights.push(l); }
-    crowd.ultra = qq === 'ultra'; items.setQuality(qq);
+    crowd.ultra = qq === 'ultra'; crowd.view.setTier(qq); items.setQuality(qq);
     if (rebuildPeople) {
       // the regulars and staff from the other set of people (a few seconds: say so first)
       doings.cancelAll();
-      scene.remove(crowd.root); crowd.dispose(); crowd = makeCrowd(qq); crowd.setOpen(open, level === 'Quiet'); refreshDynamic();
+      scene.remove(crowd.root); crowd.dispose();
+      // (no progress callback: the build runs straight through, so the new crowd is in place before the next frame)
+      void makeCrowd(qq).then((c) => { crowd = c; crowd.setCrowd(open, share, night > 0.5, clock.hour, true); if (qq === 'ultra') crowd.buildCloseUps(); refreshDynamic(); });
       buildAvatar(qq); player.person = person;
       for (const o of [...world.children]) if (o.name === 'trees') world.remove(o);
       plantTrees(world, trees, qq);
@@ -460,6 +493,7 @@ async function main() {
     // what the ray hits first (its own stool or bench, at most)
     let seat: Seat | null = null, sd = 0.45, st = Infinity;
     for (const s of venue.seats) {
+      if (crowd.taken.has(s.id)) continue;
       v.set(s.x - o.x, s.y + 0.15 - o.y, s.z - o.z); const t = v.dot(d); if (t < 0.3 || t > 40 || t > tWorld + 0.45) continue;
       const dist = v.addScaledVector(d, -t).length(), k = 1 + t * 0.02;
       const onIt = h ? Math.hypot(h.point.x - s.x, h.point.y - s.y - 0.15, h.point.z - s.z) < 0.7 : false;
@@ -469,13 +503,17 @@ async function main() {
     const who = crowd.hit(ray.ray, Math.min(tWorld + 0.2, 60));
     if (who && (!seat || who.t < st)) {
       const g = who.npc.group;
-      if (g) {
+      if (g && !g.seated && g.ready) {
         lastTap = { kind: 'group', id: g.id };
         const a = Math.atan2(player.x - g.cx, player.z - g.cz), r = g.r + 0.8;
         return tapGo(g.cx + Math.sin(a) * r, g.cz + Math.cos(a) * r, null, true);
       }
       const cs = venue.counters[crowd.staff.indexOf(who.npc)];
       if (cs) return walkToCounter(cs);
+      // anyone else (a seated guest, the host, the busser, a walker): walk up beside them
+      const n = who.npc, a = Math.atan2(player.x - n.x, player.z - n.z);
+      lastTap = { kind: 'ground', id: null };
+      return tapGo(n.x + Math.sin(a) * 1.0, n.z + Math.cos(a) * 1.0, null);
     }
     if (seat) { lastTap = { kind: 'seat', id: seat.id }; return tapGo(seat.ax, seat.az, { seat }); }
     // the bar or a truck's window
@@ -560,11 +598,28 @@ async function main() {
     const third = player.view === 'third', key = (third ? 1 : 0) + (lod0Ready ? 2 : 0) + (quality === 'low' ? 0 : quality === 'high' ? 4 : 8);
     if (key !== avatarKey) { avatarKey = key; applyAvatar(third); }
   };
+  // The background gives way to the people: when a frame comes in over the preset's triangle budget, or people near
+  // you were drawn as impostors for want of triangles, fewer parked cars get their detailed model (the rest keep the
+  // 150-triangle stand-in) from the next frame; they come back slowly once there's plenty of room. (Calls don't
+  // change: the cars are instanced.) Ultra has no budget.
+  const TRI_BUDGET: Record<Quality, number> = { low: 250000, high: 700000, ultra: Infinity };
+  let carRoomT = 0;
+  const makeRoom = () => {
+    const B = TRI_BUDGET[quality]; if (!isFinite(B)) return;
+    const perCar = quality === 'low' ? 2600 : 5000;            // a detailed parked car less its stand-in (High: with its shadow)
+    const need = Math.max(stats.tris - (B - 1500), crowd.view.stats.starved);
+    carRoomT -= 1;
+    if (need > 0 && parked.near > 2) { parked.near = Math.max(2, parked.near - Math.ceil(need / perCar)); parked.update(player.x, player.z, true); carRoomT = 90; }
+    else if (need <= 0 && carRoomT <= 0 && parked.near < nearCars(quality) && stats.tris < B - 20000 - 3 * perCar) { parked.near++; parked.update(player.x, player.z, true); carRoomT = 30; }
+  };
   const render = () => {
+    // how the crowd is drawn this frame, inside what the rest of the scene left of the budget last frame
+    crowd.draw(camera, stats);
     renderer.info.reset();
     if (composer) composer.render(); else renderer.render(scene, camera);
     stats.calls = renderer.info.render.calls; stats.tris = renderer.info.render.triangles;
     env.renderFlare();
+    makeRoom();
   };
   let frozen = false;
   const frame = (now: number) => {
@@ -595,7 +650,7 @@ async function main() {
       if (player.gaveUp) { hud.toast(`${THING[player.gaveUp.by] ?? 'Something'} is in the way. Stopped here.`, 3.5); player.gaveUp = null; showPath(null); }
     }
     if (hintT > 0) { hintT -= dt; if (hintT <= 0 && hud.hintVisible) hud.fadeHint(); }
-    if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(); } }
+    if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(false, false); } }
     if (!hud.paused) worldStep(dt, camera);
     updateAvatar(dt);
     parked.update(player.x, player.z);
@@ -665,16 +720,20 @@ async function main() {
     stats() {
       const cs = crowd.stats();
       return {
-        // the regulars in their groups and the staff (P1b); nobody sits or walks the sidewalks yet (the full crowd is
-        // the next milestone), so those are 0 by design
-        npcs: cs.npcs, groups: cs.groups, seated: 0, walkers: 0, staff: cs.staff, npcsDrawn: cs.drawn, npcTris: cs.tris, npcCalls: cs.calls, crowdBuildMs: cs.buildMs,
+        // the people (P1c): everyone out now, the guests, those inside the fence, the groups, who's sitting, who's
+        // walking (arriving, leaving, the sidewalks, the busser's rounds), the staff; how they're drawn (bodies,
+        // impostors, their triangles and calls, shadow passes included) and what the rest of the scene drew
+        npcs: cs.npcs, guests: cs.guests, inside: cs.inside, groups: cs.groups, talking: cs.talking, seated: cs.seated, walkers: cs.walkers, street: cs.street, staff: cs.staff,
+        npcsDrawn: cs.drawn, bodies: cs.bodies, impostors: cs.impostors, lod0: cs.lod0, lod1: cs.lod1, lod2: cs.lod2, npcShadows: cs.shadows, heldDrawn: cs.heldDrawn,
+        npcTris: cs.tris, npcCalls: cs.calls, venueTris: cs.venueTris, venueCalls: cs.venueCalls,
+        crowdBuildMs: cs.buildMs, workerMs: cs.workerMs, workerErrors: cs.workerErrors, workers: cs.workers, lod1Built: cs.lod1Built, lod1Pending: cs.lod1Pending, paintMs: cs.paintMs, atlas: cs.atlas, crowdTarget: cs.target, routeFails: cs.routeFails, seatsTaken: cs.taken,
         holding: doings.held ? doings.held.id : null,
         drawCalls: stats.calls, calls: stats.calls, triangles: stats.tris, simMs: +simMs.toFixed(3), frameMs: +frameMs.toFixed(1),
         quality, view: player.view, frames, open, crowd: level, share: +share.toFixed(3),
         parkedCars: parked.count, seats: venue.seats.length, colliders: set.all.filter((o) => o.on).length,
         textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs?.length ?? 0,
         avatar: person ? { lod: avatarLod, ...(() => { const s = person!.stats(); return { tris: s.tris, calls: s.calls }; })() } : null,
-        pixelRatio: renderer.getPixelRatio(), rescues: player.rescues,
+        pixelRatio: renderer.getPixelRatio(), rescues: player.rescues, parkedDetailed: parked.near, peopleStarved: crowd.view.stats.starved,
         trees: { tris: quality === 'low' ? treeTris.phone : quality === 'high' ? treeTris.high : treeTris.ultra },
       };
     },
@@ -683,7 +742,7 @@ async function main() {
     /** tap to go to a ground point (game coordinates): the path's waypoints, or null */
     tap(x: number, z: number) { const [lx, lz] = L(x, z); const p = tapGo(lx, lz, null); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((s, c, i) => (i ? s + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     /** tap a seat (by id), through the same code as a finger on it: walks there by a path and sits you down */
-    tapSeat(id: number) { const st = venue.seats[id]; if (!st) return null; const p = tapGo(st.ax, st.az, { seat: st }); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((sum, c, i) => (i ? sum + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
+    tapSeat(id: number) { const st = venue.seats[id]; if (!st) return null; if (crowd.taken.has(id)) { hud.toast("Someone's sitting there.", 2); return null; } const p = tapGo(st.ax, st.az, { seat: st }); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((sum, c, i) => (i ? sum + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     /** a tap on the screen at pixel (x, y), through the same code as a finger */
     tapScreen(x: number, y: number) { const p = tapScreen(x, y); return p ? { waypoints: p.length, goal: player.pathGoal?.seat ? `seat ${player.pathGoal.seat.id}` : 'ground' } : null; },
     /** the action button: returns what it did */
@@ -705,11 +764,21 @@ async function main() {
     talk() { const g = doings.joined; const t = g?.talk; return t ? { group: g!.id, stage: t.stage, n: t.n, caption: t.caption, replies: t.replies, log: t.log } : null; },
     groups() {
       return crowd.groups.map((g) => ({
-        id: g.id, label: g.label, active: g.active, ...G(g.cx, g.cz), r: g.r, you: g.you, speaker: g.speaker,
-        members: g.members.map((m, i) => ({ name: m.name, ...G(m.x, m.z), speaking: m.speaking, anim: m.anim, lod: m.lod, drawn: m.p.group.visible, holds: m.hold, facesSpeaker: g.speaker >= 0 && g.speaker !== i ? faces(m, g.members[g.speaker]) : null })),
+        id: g.id, label: g.label, active: g.active, ready: g.ready, seated: g.seated, party: g.party.state, order: g.party.order, ...G(g.cx, g.cz), r: g.r, you: g.you, speaker: g.speaker,
+        members: g.members.map((m, i) => ({ name: m.name, ...G(m.x, m.z), speaking: m.speaking, anim: m.anim, pose: m.pose, seat: m.seat?.id ?? null, lod: m.lod, rep: m.rep, drawn: m.rep !== 'off', holds: m.hold, facesSpeaker: g.speaker >= 0 && g.speaker !== i ? faces(m, g.members[g.speaker]) : null })),
       }));
     },
-    npcs() { return crowd.npcs.map((n) => ({ id: n.id, name: n.name, role: n.role, ...G(n.x, n.z), y: n.y, shown: n.shown, drawn: n.p.group.visible, lod: n.lod, anim: n.anim, holds: n.hold, group: n.group?.id ?? null })); },
+    npcs() { return crowd.npcs.map((n) => ({ id: n.id, name: n.name, role: n.role, mode: n.mode, ...G(n.x, n.z), y: +n.y.toFixed(3), heading: +n.heading.toFixed(3), shown: n.shown, drawn: n.rep !== 'off', rep: n.rep, lod: n.lod, dist: +n.dist.toFixed(2), anim: n.anim, pose: n.pose, seat: n.seat?.id ?? null, walking: !!n.route, holds: n.hold, group: n.group?.id ?? null, lod1: !!n.m1, inside: inVenue(n.x, n.z) })); },
+    /** the simulated crowd: the level, the guests it calls for, the parties and where they are, what happened */
+    crowd() { const s = crowd.stats(); return { level, share: +share.toFixed(3), open, target: s.target, guests: s.guests, inside: s.inside, parties: crowd.groups.map((g) => ({ id: g.id, label: g.label, size: g.party.size, order: g.party.order, state: g.party.state, seated: g.seated, stayMin: +(g.party.stay / 60).toFixed(1) })), log: crowd.log.slice(-20) }; },
+    /** the next party to go leaves now and the next to come arrives (they walk out and in) */
+    turnover() { return crowd.turnover(); },
+    /** draw everyone in view as impostors ('imp') or bodies ('body', no budget), or as the budget decides ('auto'): for comparison shots */
+    crowdView(mode: 'auto' | 'imp' | 'body') { crowd.view.force = mode; return mode; },
+    /** the seats the guests are in or walking to (nobody else can sit there) */
+    takenSeats() { return [...crowd.taken].sort((a, b) => a - b); },
+    /** every patio body is built (the worker's queue is empty) */
+    peopleReady() { const s = crowd.stats(); return s.lod1Pending === 0; },
     counters() { return venue.counters.map((c) => ({ id: c.id, label: c.label, from: G(c.x, c.z0), to: G(c.x, c.z1), side: c.side, stand: G(c.x + c.side * 1.1, (c.z0 + c.z1) / 2), set: { ...G(c.setX, (c.z0 + c.z1) / 2), y: c.setY } })); },
     /** stretch every action's range by k (1 is normal): for showing that the line test, not only distance, holds */
     reach(k: number) { doings.reach = k; return k; },
@@ -769,10 +838,12 @@ async function main() {
       const [lx, lz] = L(x, z), rc = new THREE.Raycaster(new THREE.Vector3(lx, 60, lz), new THREE.Vector3(0, -1, 0), 0, 70);
       return rc.intersectObjects(world.children, true).slice(0, 6).map((h) => ({ name: h.object.name || h.object.parent?.name || h.object.type, y: +h.point.y.toFixed(3), visible: h.object.visible }));
     },
-    breakdown(n = 40) {
+    breakdown(n = 40, visibleOnly = false) {
       const out: { name: string; tris: number; n: number }[] = [];
+      const shown = (o: THREE.Object3D | null): boolean => !o || (o.visible && shown(o.parent));
       scene.traverse((o) => {
         const m = o as THREE.Mesh; if (!m.isMesh || !m.geometry) return;
+        if (visibleOnly && !shown(m)) return;
         const g = m.geometry, t = (g.index ? g.index.count : g.attributes.position.count) / 3, n = (m as THREE.InstancedMesh).isInstancedMesh ? (m as THREE.InstancedMesh).count : 1;
         out.push({ name: m.name || m.parent?.name || m.type, tris: Math.round(t * n), n });
       });
@@ -854,4 +925,19 @@ function plantTrees(world: THREE.Group, trees: Tree[], quality: Quality) {
   world.add(g);
 }
 
-main().catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
+// The same script runs twice: as the page, and as the worker that builds the people's patio bodies (no document
+// there: lot57/crowd-worker.ts). The worker is this page's own inlined script, started again from a blob, so none of
+// the builder's code ships twice. It starts as a classic worker in strict mode: a page opened from disk can't start a
+// module worker from a blob, and the single-file bundle has no imports or exports. (Served by Vite's dev server the
+// script isn't inline: the bodies are built on the main thread instead, slowly.)
+if (typeof document === 'undefined') serveBuilds();
+else {
+  const src = document.querySelector<HTMLScriptElement>('script[type="module"]:not([src])')?.textContent ?? '';
+  if (src.length > 10000 && typeof Worker === 'function' && !/\bimport\.meta\b/.test(src)) {
+    try {
+      const url = URL.createObjectURL(new Blob(['"use strict";\n', src], { type: 'text/javascript' }));
+      useWorkers(() => new Worker(url, { name: 'lot57-people' }));
+    } catch { useWorkers(null); }
+  }
+  main().catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
+}

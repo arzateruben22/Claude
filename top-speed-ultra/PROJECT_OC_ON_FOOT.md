@@ -302,9 +302,12 @@ Where it falls short (candidly):
   that change; the tee's back shows a dark yoke line across the shoulder blades.
 - Phone LOD 0 is 71k triangles, about 18% over the 60k target.
 - NPCs aren't instanced: each one is its own skinned mesh, so it's one draw call per person (30 for 30), not the 16
-  for every NPC planned below.
+  for every NPC planned below. P1c keeps inside 16 (Low) and 24 (High) by drawing only the nearest people as bodies and
+  the rest as flat impostors painted from their own bodies, all in one instanced call (`src/onfoot/lot57/crowdview.ts`).
 - Building people is slow. 30 people took about 15 s on a desktop CPU, so the game must build them over several frames or
-  in a worker, cache them, and start from far LODs. None of that is built yet.
+  in a worker, cache them, and start from far LODs. P1c (on the standalone page) builds every far body (LOD 2) at load
+  and the patio bodies (LOD 1) in two workers afterwards; the close-up LOD 0 is still built on the main thread (its hair
+  cards need a canvas). Caching is not built.
 
 ### Groups that look like they're talking
 
@@ -486,8 +489,10 @@ Each phase ends with its checks passing in Playwright (headless Chromium, SwiftS
     groups of three regulars, the bartender and two cooks as the first people (see `PROJECT_OC_PROGRESS.md`;
     repaired after review the same day: the cooks drawn on Low, a tap on another group from inside a circle, the
     bar's ends, the regulars' clothes).
-  - [ ] NPCs in talking groups, staff and the crowd curve at full scale (P1b's two groups and three staff are the
-    seed: `src/onfoot/lot57/npcs.ts`).
+  - [x] P1c (2026-11-02, not committed): forty people: ten parties of guests in standing and seated talking groups,
+    seven staff, two sidewalk walkers; the crowd curve by day and hour with arrivals and departures; the chip; the
+    crowd drawn inside the Low budget (bodies near, impostors far, the patio bodies built in workers). See
+    `PROJECT_OC_PROGRESS.md` for what was checked and what isn't built (dogs, mingling, joining a seated group).
 
 - **Deliverables.**
   - Lot 57 built in code: the Shed, the yard, string lights, the lawn, trucks, the lot and the sign. The rest of the

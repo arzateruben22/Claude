@@ -90,8 +90,10 @@ export class Doings {
   nearSeat(at?: { x: number; z: number }) {
     const p = at ?? this.c.player;
     let best: Seat | null = null, bd = RANGE.seat * this.reach;
+    const taken = this.c.crowd().taken;
     for (const s of this.c.venue.seats) {
-      if (this.c.player.seat === s) continue;
+      // (not your own, and not one a guest is in or walking to)
+      if (this.c.player.seat === s || taken.has(s.id)) continue;
       const d = Math.min(Math.hypot(s.ax - p.x, s.az - p.z), Math.hypot(s.x - p.x, s.z - p.z) + 0.2);
       if (d < bd && this.canSee(s.x, s.z, p)) { bd = d; best = s; }
     }
@@ -101,7 +103,8 @@ export class Doings {
     const p = at ?? this.c.player;
     let best: Group | null = null, bd = RANGE.join * this.reach;
     for (const g of this.c.crowd().groups) {
-      if (!g.active) continue;
+      // (standing circles that are all here: a seated group stays at its table, a party walking in isn't one yet)
+      if (!g.active || g.seated || !g.ready) continue;
       const d = Math.hypot(p.x - g.cx, p.z - g.cz) - g.r;
       if (d < bd && this.canSee(g.cx, g.cz, p)) { bd = d; best = g; }
     }
@@ -296,7 +299,7 @@ export class Doings {
       if (n && post && o.t > o.dur - 1.4 && n.tx !== post.x) {
         // back to the counter with it in hand
         n.tx = post.x; n.th = post.face; n.look = this.c.crowd().you;
-        if (o.item && !n.held) { n.hold = o.item; n.held = this.c.items.make(o.item, `staff-held-${n.id}`); this.c.crowd().root.add(n.held); }
+        if (o.item && !n.held) this.c.crowd().hand(n, o.item);
       }
       if (o.t >= o.dur) {
         o.stage = 'ready';
