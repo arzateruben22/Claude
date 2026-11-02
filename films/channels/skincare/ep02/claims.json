@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "On a sunscreen, not quite.",
+  "claim": "A sunscreen's SPF is not a percentage of protection; doubling SPF does not double the share of UVB blocked.",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Follows from the definition (c2) and the AAD's figures (c3). Badge 'model' on the rays.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "The number isn't a percentage.",
+  "claim": "SPF is defined as the ratio of the UV dose needed to produce the minimal erythema dose (first perceptible redness) on protected skin to that on unprotected skin.",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Excerpt: SPF is the ratio of the UV energy needed to cause an MED on protected skin to that on unprotected skin; MED(PS) is measured after applying 2 mg/cm² of the product.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "It's a ratio: how much more burning light your skin can take under the film before it reddens.",
+  "claim": "(the same definition as c2)",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Excerpt as c2.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked.",
+  "claim": "Under the idealised reading of SPF, a product transmits about 1/SPF of sunburning UV: SPF 50 about 2% (≈98% blocked), SPF 100 about 1% (≈99% blocked).",
+  "source_url": "https://aad.org/news/aad-survey-shows-americans-need-sunscreen-education",
+  "source_title": "AAD survey shows Americans need sunscreen education (American Academy of Dermatology)",
+  "accessed": "2026-10-30",
+  "note": "AAD: SPF 30 blocks 97% of UVB; higher SPFs block slightly more, none blocks 100%. SPF 50 ≈ 98% is widely given citing the AAD; 99% for SPF 100 is computed (1 − 1/100). The 1/SPF transmission is an idealisation (the SPF test is a sunburn ratio, not a transmission measurement); badged 'model'. On screen: 98% · 99%, 2% · 1%.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "But look at what gets in, and the bigger number lets in half as much, as long as the film is as thick as the lab's.",
+  "claim": "Under the same idealisation, SPF 100 transmits about half the sunburning UV that SPF 50 does (1/100 vs 1/50), at the test application of 2 mg/cm².",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Computed: (1/100) ÷ (1/50) = 0.5. Valid at the test's 2 mg/cm² layer (c5).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "But look at what gets in, and the bigger number lets in half as much, as long as the film is as thick as the lab's.",
+  "claim": "SPF is measured with 2 mg/cm² of product applied.",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Excerpt: MED(PS) after application of 2 milligrams per square centimeter of the final formulation.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+  "claim": "Studies of real-world use find people apply about 0.39–1.0 mg/cm², roughly a fifth to a half of the 2 mg/cm² test amount.",
+  "source_url": "https://doi.org/10.1111/phpp.12099",
+  "source_title": "Petersen B, Wulf HC (2014). Application of sunscreen: theory and reality. Photodermatol Photoimmunol Photomed 30:96–101",
+  "accessed": "2026-10-30",
+  "note": "Excerpt (secondary, describing the review): real-life application of 0.39 to 1.0 mg/cm². Said as 'a quarter to half', the central range; '0.4–1 mg/cm²' on screen. A 2023 imaging study found 1.04 mg/cm² without guidance (search excerpt).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+  "claim": "Applying less than 2 mg/cm² gives an SPF well below the labelled value; whether the fall is roughly proportional or steeper (exponential) is disputed.",
+  "source_url": "https://doi.org/10.1111/j.1365-2133.2006.07684.x",
+  "source_title": "Faurschou A, Wulf HC (2007). The relation between sun protection factor and amount of sunscreen applied in vivo. Br J Dermatol 156:716–719",
+  "accessed": "2026-10-30",
+  "note": "Faurschou & Wulf 2007 (SPF 4 product): exponential relation, SPF far lower at 0.5 and 1 mg/cm². BASF's commentary cites a German multicenter study: about a quarter of the labelled SPF at 0.5 mg/cm² and about half at 1.0 mg/cm² (closer to linear). Both agree it falls well below the label; badge 'debated'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+  "claim": "2 mg/cm² of a product with a density near 1 g/cm³ is a layer about 20 µm thick.",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Computed: 2 mg/cm² ÷ 1 g/cm³ = 2×10⁻³ cm = 20 µm. The FDA monograph's test spreads 100 mg or 100 µl over 50 cm², assuming a specific gravity of 1 (search excerpt). Real films are uneven; 'about'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+  "claim": "The cheek's stratum corneum is about 17 µm (16.8 µm) and copy paper about 100 µm; 20 µm is about a fifth of the paper.",
+  "source_url": "https://medicaljournals.se/acta/content/abstract/10.2340/00015555-0183",
+  "source_title": "Egawa M, Hirao T, Takahashi M (2007). In vivo estimation of stratum corneum thickness … Acta Derm Venereol 87:4–8",
+  "accessed": "2026-10-30",
+  "note": "Ep01 c12/c13. Computed 20/100 = 0.2 (on screen: ≈20 µm · 17 µm · 100 µm).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "So the bigger number doesn't block twice as much.",
+  "claim": "SPF 100 does not block twice as much UVB as SPF 50 (about 99% vs 98%) (restates c3).",
+  "source_url": "https://aad.org/news/aad-survey-shows-americans-need-sunscreen-education",
+  "source_title": "AAD survey shows Americans need sunscreen education (American Academy of Dermatology)",
+  "accessed": "2026-10-30",
+  "note": "Restates c3.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "It lets half as much in, when there's enough of it.",
+  "claim": "At the test thickness SPF 100 lets about half as much sunburning UV through as SPF 50; with too little product neither reaches its label (restates c4 and c7).",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Restates c4, c7. A dermatologist checks it reads as how the numbers work, not as advice.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
