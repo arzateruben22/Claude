@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "In theory, a banknote's weight of it could kill a million people.",
+  "sentence": "In theory, a banknote's weight could kill a million people.",
   "claim": "Botulinum toxin is among the most potent toxins known: an expert consensus statement estimates that a single gram of crystalline toxin, evenly dispersed and inhaled, would kill more than 1 million people, while noting that technical factors would make such dissemination difficult.",
   "source_url": "https://doi.org/10.1001/jama.285.8.1059",
   "source_title": "Botulinum toxin as a biological weapon: medical and public health management (Arnon SS et al.; JAMA, 2001)",
@@ -166,7 +166,7 @@
  },
  {
   "id": "c16",
-  "sentence": "In theory, a banknote's weight of it could kill a million people.",
+  "sentence": "In theory, a banknote's weight could kill a million people.",
   "claim": "A US banknote weighs approximately 1 gram, whatever its denomination.",
   "source_url": "https://www.uscurrency.gov/currency-facts",
   "source_title": "Currency Facts (US Currency Education Program, Federal Reserve Board and Bureau of Engraving and Printing)",

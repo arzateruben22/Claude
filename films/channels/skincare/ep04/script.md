@@ -37,7 +37,7 @@ that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep04 --segment toscale`.
 
 ## hook {shot: the reveal on one frown crease · labels: title "The deadliest dose" · badge: model, not a photo · note: ≈ 1 g, inhaled and evenly dispersed · theoretical (JAMA 2001) · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5.5 s)
-vo: Poison, in a *frown*? {-} In theory, a banknote's weight of it could kill a million people. {c7,c16}
+vo: Poison, in a *frown*? {-} In theory, a banknote's weight could kill a million people. {c7,c16}
 
 ## normal {shot: the drop below the crease to the muscle, and the one nerve ending on it · labels: acetylcholine · badge: simplified · picture-only 0.5 s · energy: 0.45} (5.5–16.5 s)
 vo: Every frown starts at a nerve ending, letting out a chemical messenger onto the muscle below. {c1} The muscle pulls, and the skin above folds into a *crease*. {c2}

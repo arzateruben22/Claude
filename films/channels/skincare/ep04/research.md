@@ -37,12 +37,15 @@ on them).
 
 | Number | On screen | Voice | Source |
 |---|---|---|---|
-| Estimated lethal dose, type A | ≈ 0.09–0.15 µg for a 70 kg adult IV/IM (≈ 1.3–2.1 ng/kg), estimated | "among the most potent poisons known" | Arnon et al. 2001, JAMA (c7) |
+| One gram, inhaled | ≈ 1 g, evenly dispersed and inhaled · theoretical | "in theory, a banknote's weight could kill a million people" (hook) | Arnon et al. 2001, JAMA (c7); banknote ≈ 1 g, US Currency Education Program (c16) |
+| How a dose is counted | 1 unit = the dose that kills half a group of mice (mouse LD50) · units differ by product | "a dose of this medicine isn't weighed; it's counted in mouse deaths" (whoa) | NCT01591746 protocol; NCT02677298 (non-interchangeability); mouse-unit variability, USPTO patent text (c15) |
+| Estimated lethal dose, type A | ≈ 0.09–0.15 µg for a 70 kg adult IV/IM (≈ 1.3–2.1 ng/kg), estimated | not voiced as a figure (the gram estimate carries the potency) | Arnon et al. 2001, JAMA (c7) |
 | Frown-line dose vs estimated lethal dose | 20 units vs ≈ 3,000 units (70 kg, extrapolated from monkeys) ≈ 0.7 % | "well under a hundredth" | label, 20 U (c8); NCT03861936 protocol, ≈ 3,000 U; HK J Emerg Med 2020, ≈ 38 U/kg (c9) |
 | How long it lasts | ≈ 3–4 months, sometimes longer | "a few months" | AAD (c12); label "approximately 3–4 months" |
 | To scale: the gap | cleft ≈ 50 nm vs paper ≈ 100 µm → ≈ 1/2,000 | "about two thousand times thinner" | StatPearls NMJ (c10); WJEC paper (c11); computed |
 
-Spoken figures: "two centuries", "a hundredth", "two thousand", "a few months" (four).
+Spoken figures (facts pass 2): "a million", "twenty", "a hundredth", "two thousand" (four); "two centuries" and
+"months later" are said as time, not as figures.
 
 ## Disputed or uncertain points
 
@@ -85,6 +88,17 @@ Spoken figures: "two centuries", "a hundredth", "two thousand", "a few months" (
 5. The lethal-dose badge and the on-screen figures (route, estimate, source).
 6. Kerner's role and the end-card footnote (Scott 1980, Carruthers 1992).
 7. Platform health-information rules (bible §9) for an injectable-treatment topic.
+8. **The hook's one-gram estimate** (facts pass 2): that "in theory, a banknote's weight could kill a million
+   people" fairly states Arnon et al. 2001 (one gram of crystalline toxin, evenly dispersed and inhaled, would
+   kill more than a million; technical factors make such dispersal difficult), reads as potency rather than as a
+   threat scenario, and is adequately badged on screen with the route and the dispersal assumption.
+9. **"Counted in mouse deaths"** (facts pass 2): that describing the unit as the dose that kills half a group of
+   mice (the mouse intraperitoneal LD50, product-specific and not interchangeable) is accurate and does not read
+   as alarm; and that pairing it with "under a hundredth of what could kill a person" cannot be heard as a safety
+   reassurance (the plate keeps "side effects can occur far below this").
+10. **The takeaway's pruning** (facts pass 2): that "months later the nerve grows spare endings, then prunes them
+   away" is fair for mouse work (de Paiva et al. 1999) with the on-screen badge "mouse studies; in people,
+   debated", given the human study that found little collateral sprouting.
 
 ## Sources (all accessed 2026-11-02, via search excerpts)
 
@@ -101,3 +115,10 @@ Spoken figures: "two centuries", "a hundredth", "two thousand", "a few months" (
 - Carruthers JD, Carruthers JA. J Dermatol Surg Oncol 1992: https://pubmed.ncbi.nlm.nih.gov/1740562/
 - Scott AB 1980 (strabismus): https://www.ski.org/publication/botulinum-toxin-injection-of-eye-muscles-to-correct-strabismus/
 - WJEC, Papers and boards (paper ≈ 100 µm): see c11
+- NCT01591746 protocol (one unit = the calculated median intraperitoneal LD50 in mice):
+  https://cdn.clinicaltrials.gov/large-docs/46/NCT01591746/Prot_SAP_000.pdf
+- NCT02677298 protocol (units are preparation- and assay-specific, not interchangeable):
+  https://cdn.clinicaltrials.gov/large-docs/98/NCT02677298/Prot_000.pdf
+- BOTOX Cosmetic prescribing information, label reproduction (20 units for glabellar lines, ≈ 3–4 months):
+  https://www.asds.net/Portals/0/PDF/Resident-Kit-Allergan-BOTOX-Cosmetic-Prescribing-Information.pdf
+- US Currency Education Program, Currency Facts (a banknote ≈ 1 g): https://www.uscurrency.gov/currency-facts
