@@ -6,22 +6,25 @@ import { coverOf, smallCover, type MonitorCard } from "@/lib/data";
 import { RIG_ORDER, type RigPosition } from "@/lib/rig";
 import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
+import { identityOf } from "@/lib/identity";
+import { IdentityArt } from "./IdentityArt";
 import { Icon } from "./Icon";
 
 function Thumb({ m, pos, current }: { m: MonitorCard; pos: RigPosition; current: boolean }) {
   const tiles = m.kind === "instagram" ? [0, 1].map((i) => m.slots?.[i] ?? null) : null;
   const cover = smallCover(m.cover);
+  const identity = tiles ? undefined : identityOf(m.slug);
   return (
     <Link href={m.href} className={`thumb thumb-${pos === "center" || pos === "top" ? "landscape" : "portrait"}`} data-pos={pos}
       data-tone={tiles ? undefined : m.coverTone} data-cover={(tiles ? tiles.some((x) => x?.item) : !!cover) || undefined}
-      aria-current={current ? "page" : undefined} style={topicStyle(m)}>
+      aria-current={current ? "page" : undefined} data-identity={identity} style={topicStyle(m)}>
       <span className="thumb-mon" aria-hidden>
         <span className="thumb-screen">
           {tiles ? (
             <span className="thumb-tiles">
               {tiles.map((x, i) => { const c = x?.item ? smallCover(coverOf(x.item)) : null; return <span key={i} className="thumb-tile" data-tone={c ? x?.tone : undefined}>{c ? <img src={mediaUrl(c)} alt="" decoding="async" /> : null}</span>; })}
             </span>
-          ) : cover ? <img src={mediaUrl(cover)} alt="" decoding="async" /> : null}
+          ) : cover ? <img src={mediaUrl(cover)} alt="" decoding="async" /> : identity ? <IdentityArt id={identity} small /> : null}
         </span>
         <span className="mon-led" data-led={m.led} />
       </span>

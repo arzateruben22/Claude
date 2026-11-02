@@ -5,6 +5,10 @@
 @font-face { font-family: "Instrument Serif"; src: url("/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
 @font-face { font-family: "Bricolage Grotesque"; src: url("/fonts/BricolageGrotesque-VF.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
 @font-face { font-family: "JetBrains Mono"; src: url("/fonts/JetBrainsMono-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+/* the two new channels' own faces (used only on their monitors and screens, so they load only there) */
+@font-face { font-family: "Newsreader"; src: url("/fonts/Newsreader-VF.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Red Hat Text"; src: url("/fonts/RedHatText-VF.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url("/fonts/Figtree-VF.woff2") format("woff2"); font-weight: 300 900; font-style: normal; font-display: swap; }
 
 :root {
   color-scheme: dark;
@@ -683,6 +687,78 @@ a.budget-name:hover { text-decoration: underline; }
 .push-log li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .push-log-title { min-width: 0; overflow-wrap: anywhere; color: var(--text-2); }
 @media (min-width: 720px) { .push-card { margin-top: var(--s7); } }
+
+/* ── channel identities (src/lib/identity.ts) ─────────────────────────────
+   Two channels bring their films' look onto the wall and their screen; the studio around them stays night glass.
+   Outer Layer: a light "slide" (ground, ink, water, UV; Newsreader + Red Hat Text). Back of the Envelope: graphite and
+   marker (marker, tally, ballpoint; Bricolage Grotesque + Figtree, JetBrains Mono for figures). */
+[data-identity="outer-layer"] { --ol-ground: #EEF2F1; --ol-ink: #13252C; --ol-ink-2: #3A4E56; --ol-water: #00685F; --ol-uv: #9135A8;
+  --id-display: "Newsreader", "Iowan Old Style", Georgia, serif; --id-text: "Red Hat Text", var(--ui); }
+[data-identity="envelope"] { --env-graphite: #131417; --env-marker: #EB63FF; --env-tally: #3DDC84; --env-ballpoint: #4DA3FF;
+  --id-display: "Bricolage Grotesque", var(--ui); --id-text: "Figtree", var(--ui); }
+
+/* the standby picture on a monitor (IdentityArt): sized by the screen itself */
+.art { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; container-type: size; }
+.art i, .art b { display: block; }
+.art-ol { background: var(--ol-ground); filter: brightness(.8) saturate(.95); }   /* a lit slide, held down for the night like the light covers */
+.ol-tag { position: absolute; left: 9cqw; top: 8cqh; font: 650 max(7px, min(6.4cqw, 4.6cqh))/1 var(--id-text); letter-spacing: .08em; text-transform: uppercase; color: #6A2180; }   /* UV, deepened to stay 4.5:1 on the dimmed slide */
+.ol-word { position: absolute; left: 9cqw; top: calc(8cqh + max(7px, min(6.4cqw, 4.6cqh)) + 4cqh); font: 500 min(20cqw, 13cqh)/.92 var(--id-display); letter-spacing: -.015em; color: var(--ol-ink); }
+/* UV arriving at the surface, then the layers of skin in cross-section (the top one, the dead layer, drawn as cells) */
+.ol-uv { position: absolute; left: 0; right: 0; bottom: 34%; height: 14%; }
+.ol-uv i { position: absolute; bottom: 0; width: 1.5px; height: 100%; background: linear-gradient(to bottom, transparent, var(--ol-uv)); rotate: 24deg; transform-origin: bottom; }
+.ol-uv i:nth-child(1) { left: 30%; } .ol-uv i:nth-child(2) { left: 50%; height: 80%; } .ol-uv i:nth-child(3) { left: 70%; }
+.ol-layers { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; display: grid; grid-template-rows: 14% 22% 28% 1fr; border-top: 1.5px solid var(--ol-water); }
+.ol-layers i:nth-child(1) { background: repeating-linear-gradient(90deg, #D6E4E1 0 9%, #B9D2CD 9% 9.8%); }
+.ol-layers i:nth-child(2) { background: #C5DCD8; }
+.ol-layers i:nth-child(3) { background: #8DBDB6; }
+.ol-layers i:nth-child(4) { background: var(--ol-water); }
+.art-env { background-color: var(--env-graphite);
+  background-image: linear-gradient(rgba(222, 229, 240, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(222, 229, 240, .045) 1px, transparent 1px); background-size: 7cqmin 7cqmin; }
+.env-svg { position: absolute; left: 7%; top: 12%; width: 86%; height: 76%; fill: none; stroke: var(--env-ballpoint); stroke-width: 1.3; stroke-linejoin: round; stroke-linecap: round; opacity: .8; rotate: -2.5deg; }
+.env-svg path { vector-effect: non-scaling-stroke; }
+.env-word { position: absolute; left: 11cqw; top: 20cqh; font: 800 min(11cqw, 17cqh)/.9 var(--id-display); letter-spacing: -.02em; color: var(--env-marker); rotate: -4deg; }
+.env-tally { position: absolute; left: 12cqw; bottom: 16cqh; width: min(16cqw, 22cqh); height: min(10cqw, 14cqh); display: flex; justify-content: space-between; }
+.env-tally i { width: 2px; height: 100%; border-radius: 1px; background: var(--env-tally); }
+.env-tally b { position: absolute; left: -12%; right: -12%; top: 46%; height: 2px; border-radius: 1px; background: var(--env-tally); rotate: -24deg; }
+.env-approx { position: absolute; right: 11cqw; bottom: 14cqh; font: 500 min(9cqw, 14cqh)/1 var(--mono); color: var(--env-ballpoint); }
+/* the strip's small thumbs: the picture only, quieter */
+.thumb-screen .art { filter: brightness(.7); }
+.thumb-screen .art-ol { filter: brightness(.62) saturate(.9); }
+/* the monitor's chin speaks in the channel's own display face */
+.mon[data-identity="outer-layer"] .mon-name { font-family: var(--id-display); font-weight: 500; letter-spacing: -.012em; }
+.mon[data-identity="envelope"] .mon-name { font-family: var(--id-display); font-weight: 720; letter-spacing: -.02em; font-size: clamp(15px, 9cqi, 21px); }
+.mon-landscape[data-identity="envelope"] .mon-chin .mon-name { font-size: clamp(15px, 4.1cqi, 21px); }
+.mon[data-identity][data-empty] .mon-screen::before { background: none; }
+
+/* their screens (/m/<slug>): the header is the channel's own panel; the rest keeps the night glass in its text face */
+[data-identity] { font-family: var(--id-text); }
+[data-identity] h2 { font-family: var(--id-display); }
+[data-identity="envelope"] h2 { font-weight: 720; letter-spacing: -.02em; font-size: clamp(22px, 3vw, 28px); }
+[data-identity] .ext-head { position: relative; overflow: hidden; margin-top: var(--s4); padding: var(--s5) var(--s4) var(--s6); border-radius: var(--r); }
+@media (min-width: 720px) { [data-identity] .ext-head { padding: var(--s6) var(--s6) var(--s7); } }
+[data-identity] .ext-head > * { position: relative; z-index: 1; }
+[data-identity="outer-layer"] .ext-head { background: var(--ol-ground); color: var(--ol-ink); }
+[data-identity="outer-layer"] .ext-head .kicker { color: var(--ol-water) !important; }
+[data-identity="outer-layer"] .ext-head h1 { font-family: var(--id-display); font-weight: 500; letter-spacing: -.02em; color: var(--ol-ink); }
+[data-identity="outer-layer"] .ext-head .lede { color: var(--ol-ink-2); }
+[data-identity="outer-layer"] .ext-head .btn.ghost { background: transparent; color: var(--ol-ink); border-color: rgba(19, 37, 44, .45); }
+[data-identity="outer-layer"] .ext-head .btn.ghost:hover { background: rgba(19, 37, 44, .07); border-color: var(--ol-ink); }
+[data-identity="outer-layer"] .ext-head :focus-visible { outline-color: var(--ol-ink); }
+[data-identity="outer-layer"] .ext-head .notice { color: var(--ol-ink); background: rgba(145, 53, 168, .08); border-color: var(--ol-uv); }
+/* the slide's foot: the same cross-section as the monitor, under the text */
+[data-identity="outer-layer"] .ext-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14px; border-top: 1.5px solid var(--ol-water);
+  background: linear-gradient(to bottom, #D6E4E1 0 30%, #B9D2CD 30% 55%, #8DBDB6 55% 80%, var(--ol-water) 80%); }
+[data-identity="envelope"] .ext-head { background-color: var(--env-graphite); border: 1px solid rgba(77, 163, 255, .28);
+  background-image: linear-gradient(rgba(222, 229, 240, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(222, 229, 240, .04) 1px, transparent 1px); background-size: 22px 22px; }
+[data-identity="envelope"] .ext-head .kicker { color: var(--env-tally) !important; }
+[data-identity="envelope"] .ext-head h1 { font-family: var(--id-display); font-weight: 800; letter-spacing: -.03em; color: var(--env-marker); font-size: clamp(36px, 6vw, 58px); line-height: .95; }
+[data-identity="envelope"] .ext-head .lede { color: #C7CAD1; }
+[data-identity="envelope"] .ext-head .btn.ghost { border-color: rgba(77, 163, 255, .55); color: #EDEFF2; }
+[data-identity="envelope"] .ext-head .btn.ghost:hover { background: rgba(77, 163, 255, .1); border-color: var(--env-ballpoint); }
+/* a ballpoint envelope sketched in the corner */
+[data-identity="envelope"] .ext-head::after { content: ""; position: absolute; right: -18px; bottom: -14px; width: 190px; height: 120px; rotate: -6deg; opacity: .55; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100'%3E%3Cg fill='none' stroke='%234DA3FF' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M8 14 L152 10 L154 90 L6 92 Z'/%3E%3Cpath d='M8 15 L80 58 L152 11'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain; }
+@media (max-width: 599px) { [data-identity="envelope"] .ext-head::after { content: none; } }
 
 /* ── Review: the reel (src/components/ReviewSlide.tsx) ─────────────────────
    Phone: a full-screen vertical player, one episode per screen; swipe sideways (scroll snap) or tap ‹ ›; the thumb

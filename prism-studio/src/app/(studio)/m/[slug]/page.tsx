@@ -15,6 +15,7 @@ import { CopyButton } from "@/components/CopyButton";
 import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
 import { Icon } from "@/components/Icon";
+import { identityOf } from "@/lib/identity";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -62,7 +63,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
   const noEpisodes = !v.series.length && !v.loose.length;
   const unset = v.accounts.filter((a) => !a.dest.handle);
   return (
-    <div style={topicStyle(c)}>
+    <div style={topicStyle(c)} data-identity={identityOf(c.slug)}>
       <header className="ext-head">
         <div className="kicker topic-text">{c.label} · YouTube + TikTok{c.nameProvisional ? " · working name" : ""}</div>
         <h1>{name}</h1>
