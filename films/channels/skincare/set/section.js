@@ -36,7 +36,8 @@ export const toneColor = (name, m) => {
 
 export const createSection = (o = {}) => {
   const W = o.width ?? 180, D = o.depth ?? 60, ROWS = o.rows ?? 15, SC = o.sc ?? 17, GR = o.gran ?? 10, SP = o.spin ?? 48, BA = o.basal ?? 10;
-  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2, OX = o.x ?? 0;   // OX: the block's x in the world (clipping planes are world-space)
+  const R = rng(o.seed ?? 3), x0 = -W / 2, x1 = W / 2, z0 = -D / 2, z1 = D / 2, OX = o.x ?? 0;
+  const MORTAR0 = o.mortarFloor ?? 0.15;   // the lipid sheets' resting strength; 0 hides them until lit (close-ups stripe otherwise; No. 004's review)   // OX: the block's x in the world (clipping planes are world-space)
   const yG = -SC, yS = -SC - GR, yB = -SC - GR - SP, yDJ = yB - BA;           // tops of granular, spinous, basal; the junction
   const junction = (x) => yDJ + 3.2 * Math.sin(x / 17 + 0.6) + 1.4 * Math.sin(x / 7.3 + 1.9);
   const group = new THREE.Group();
@@ -74,7 +75,7 @@ export const createSection = (o = {}) => {
   // granular layer: two rows of flattened cells
   const gran = [];
   for (let r = 0; r < 2; r++) for (let x = x0 - 8; x < x1 + 12; x += 15) for (let z = z0 - 6; z < z1 + 10; z += 14)
-    gran.push({ pos: [x + (r % 2) * 7 + (R() - 0.5) * 3, yG - GR * (0.27 + 0.5 * r), z + (R() - 0.5) * 4], scl: [8.2, 2.6 + r * 0.6, 7.6], rot: R() * 3 });
+    gran.push({ pos: [x + (r % 2) * 7 + (R() - 0.5) * 3, yG - GR * (0.27 + 0.5 * r), z + (R() - 0.5) * 4], scl: [9.4, 3.3 + r * 0.6, 8.6], rot: R() * 3 });   // overlapping: no light gaps between the rows
   const granMesh = inst(new THREE.SphereGeometry(1, 14, 10), M.living, gran);
   // spinous layer: rounder cells, flatter toward the top
   const spin = [], nuclei = [];
@@ -149,8 +150,8 @@ export const createSection = (o = {}) => {
       // melanin caps grow with tone (more and larger melanosomes; illustrative)
       capMesh.visible = tone > 0.05;
       mortarMat.color.setRGB(...mortarColor);
-      mortarMat.opacity = 0.15 + 0.85 * mortar;
-      mortarGroup.visible = wrinkled < 0.05;
+      mortarMat.opacity = MORTAR0 + (1 - MORTAR0) * mortar;
+      mortarGroup.visible = wrinkled < 0.05 && mortarMat.opacity > 0.01;
     },
     at: {
       scTop: (u = 0.5, zf = 1) => [x0 + W * u, -0.2, z1 * zf],
@@ -251,10 +252,10 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
       mesh.visible = gain > 0.002 && t > t0;
       F.forEach((f, i) => {
         const u = Math.max(0, Math.min(1, (t - t0 - f.d) / 2.4)), e = u * u * (3 - 2 * u);
-        d.position.set(f.x + f.drift * e, 0.6 + 22 * e, f.z);   // a short lift: clear of the counters
+        d.position.set(f.x + f.drift * e, 0.6 + 8 * e, f.z);   // a short lift: clear of the counters
         d.rotation.set(f.spin * e * 1.4, f.spin * e * 2, f.spin * e * 0.9);
         const s = (u > 0 ? 1 : 0) * (1 - Math.max(0, (u - 0.7) / 0.3));
-        d.scale.set(13 * s + 1e-4, 0.8, 13 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
+        d.scale.set(8 * s + 1e-4, 0.8, 8 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
       });
       mesh.instanceMatrix.needsUpdate = true;
       mat.opacity = gain;

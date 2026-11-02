@@ -94,14 +94,15 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
   const paperTxt = mk("text", { "font-size": 24 * S1, class: "sub", "dominant-baseline": "middle" }, g); paperTxt.textContent = "paper ≈ 100 µm";
   // the lifted bars
   const scBar = mk("rect", { fill: "var(--water)", rx: 3 * S1 }, g), paperBar = mk("rect", { fill: "var(--slide-low)", stroke: "var(--text)", "stroke-width": 2.5 * S1, rx: 3 * S1 }, g);
-  const scTxt = mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g), paperTxt2 = mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g);
+  const scTxt = mk("text", { "font-size": 30 * S1, "dominant-baseline": "middle" }, g), paperTxt2 = mk("text", { "font-size": 30 * S1, "dominant-baseline": "middle" }, g);
   scTxt.textContent = "dead layer"; paperTxt2.textContent = "paper";
   const scVal = mk("text", { "font-size": 30 * S1, "dominant-baseline": "middle" }, g), paperVal = mk("text", { "font-size": 30 * S1, "dominant-baseline": "hanging" }, g);
   const card = mk("rect", { fill: "var(--card)", opacity: 0.94, rx: 22 * S1 }, g);
   // the film's bar and the dead layer's name inside its own bar, made only when asked for (No. 001 has neither)
   const filmBar = film ? mk("rect", { fill: "var(--uv)", opacity: 0, rx: 3 * S1 }, g) : null;
   const scIn = film ? mk("text", { "font-size": 22 * S1, "dominant-baseline": "middle", fill: "var(--card)" }, g) : null;
-  if (scIn) { scIn.textContent = "dead layer"; scTxt.textContent = "film"; }
+  if (scIn) { scIn.textContent = ""; scTxt.textContent = "film"; }   // (the dead layer is named by its value under the bar)
+  const filmVal = film ? mk("text", { "font-size": 30 * S1, "dominant-baseline": "middle" }, g) : null;
   g.insertBefore(card, spine);
   const xL = (safe ? safe.l : 0.083 * W) + 18 * S1;   // hud.safe is in px
   return {
@@ -124,22 +125,23 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       lab.forEach((e, i) => { const yy = y0 + i * 50 * px, ok = (yy + 20 * S1 < (safe ? safe.b : H) && i * 50 <= span) ? 1 : 0; e.setAttribute("x", x + 30 * S1); e.setAttribute("y", yy); e.setAttribute("opacity", (ok * Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1)))).toFixed(3)); });
       unit.setAttribute("x", x - 8 * S1); unit.setAttribute("y", y0 - 18 * S1);
       const yP = y0 + paperUm * px;
-      paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
+      paperMark.setAttribute("opacity", Math.pow(1 - u, 3).toFixed(3)); paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
       const inSafe = yP + 40 * S1 < (safe ? safe.b : 0.74 * H) ? 1 : 0;   // never below the safe box
       paperTxt.setAttribute("x", x + 76 * S1); paperTxt.setAttribute("y", yP + 22 * S1); paperTxt.setAttribute("opacity", (inSafe * (1 - u) * Math.min(1, Math.max(0, (yP - y0 - 120 * S1) / (40 * S1)))).toFixed(3));
       const yEnd = Math.min(y0 + len, safe ? safe.b - 10 * S1 : y0 + len);
       rcard.setAttribute("x", x - 22 * S1); rcard.setAttribute("y", y0 - 40 * S1); rcard.setAttribute("width", 82 * S1); rcard.setAttribute("height", Math.max(0, yEnd - y0 + 52 * S1)); rcard.setAttribute("opacity", (0.88 * (1 - u)).toFixed(3));
       // lifted: two bars to the right of the ruler, filled from the top, each named above itself (two short lines)
-      const bx = x + 80 * S1, bw = 120 * S1, gap = 56 * S1;
+      const bx = x + 80 * S1, bw = 108 * S1, gap = 40 * S1;
       const yS = filmBar ? y0 + filmUm * px * fillFilm : y0;   // with a film, the dead layer hangs under it
       scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", yS); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
       if (filmBar) {
         filmBar.setAttribute("x", bx); filmBar.setAttribute("width", bw); filmBar.setAttribute("y", y0); filmBar.setAttribute("height", Math.max(0, filmUm * px * fillFilm)); filmBar.setAttribute("opacity", (0.85 * u).toFixed(3));
-        scIn.setAttribute("x", bx + 12 * S1); scIn.setAttribute("y", yS + sc * px * 0.5); scIn.setAttribute("opacity", (u * fillSc).toFixed(3));
+        scIn.setAttribute("x", bx + 12 * S1); scIn.setAttribute("y", yS + sc * px * 0.5); scIn.setAttribute("opacity", "0");
+        filmVal.textContent = `≈${Math.round(filmUm)} µm`; filmVal.setAttribute("fill", "var(--card)"); filmVal.setAttribute("font-size", 26 * S1); filmVal.setAttribute("x", bx + 10 * S1); filmVal.setAttribute("y", y0 + filmUm * px * fillFilm * 0.5); filmVal.setAttribute("opacity", (u * fillFilm).toFixed(3));
       }
       paperBar.setAttribute("x", bx + bw + gap); paperBar.setAttribute("width", bw); paperBar.setAttribute("y", y0); paperBar.setAttribute("height", Math.max(0, paperUm * px * fillPaper)); paperBar.setAttribute("opacity", u.toFixed(3));
       scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * (filmBar ? fillFilm : fillSc)).toFixed(3));
-      paperTxt2.setAttribute("x", bx + bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1); paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
+      paperTxt2.setAttribute("text-anchor", "end"); paperTxt2.setAttribute("x", bx + 2 * bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1);   // right-aligned over its bar: the two headings never run together paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
       card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", span * px + 150 * S1);
       card.setAttribute("opacity", (0.94 * u).toFixed(3));
       scVal.textContent = `${Math.round(sc)} µm`; paperVal.textContent = `${Math.round(paperUm)} µm`;
