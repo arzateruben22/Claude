@@ -1,6 +1,6 @@
 # Outer Layer: "The fight you never saw" (draft; dermatologist sign-off before posting)
 
-About 73 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2,
+About 77 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2,
 topic: how we get pimples. This is a skin condition, so a board-certified dermatologist signs off before posting.
 
 The story: a red spot looks as if it arrived overnight, but it is the last visible scene of an immune fight that
@@ -31,7 +31,7 @@ Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v
 ## hook {shot: frame 0, the payoff, the UV camera: a cheek (light tone) in the viewfinder, one spot ringed in cyan; across the clear skin around it, follicles glow orange-red (the bacterium, under UV) · badge: model, not a photo · title: "The fight you never saw" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Is this spot *new*? Its fight began under skin that looked perfectly clear. {c1}
 
-## normal {shot: no cut: the viewfinder becomes a stack of photos of the same patch, flipping back two weeks at a time (a −2 wk … −12 wk readout); on "clear" the spot is gone from the earlier frames · spine: 28% of new red spots · badge: one study · Do et al., 2008 · picture-only 0.5 s · energy: 0.45} (5–15.5 s)
+## normal {shot: no cut: the viewfinder becomes a stack of photos of the same patch, flipping back to earlier photos ("earlier photo n / 6", no interval implied); on "clear" the spot is gone from the earlier frames · spine: 28% of new red spots · badge: one study · Do et al., 2008 · picture-only 0.5 s · energy: 0.45} (5–15.5 s)
 vo: Follow faces photo by photo, and more than a quarter of new red spots rise from skin that looked perfectly *clear*. {c2} So what was happening underneath? {-}
 
 ## change {shot: the macro flight: the UV view gives way to daylight terrain, a low glide over the clear patch to one pore, then a cut below the surface to one follicle in section: no spot, but immune cells already ringing it, lit one by one · badge: biopsy study · Jeremy et al., 2003 · picture-only 0.6 s · energy: 0.55} (15.5–25.5 s)
@@ -43,8 +43,8 @@ vo: It's easy to picture an infection. {-} But this bacterium lives in skin with
 ## whoa {shot: push into the ringed follicle: white cells pour in, the wall thins and gives way, the contents spill into the dermis; then a thumb's pressure from above drives the spill deeper and the red spreads · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (38–51.5 s)
 vo: White cells flood in until the follicle's wall can give way, spilling the fight *deeper*. {c6,c7} A squeeze often pushes it further, where a *mark* is more likely. {c8,c9}
 
-## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one white cell from the spill fills in, round then spread, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51.5–60 s)
-vo: And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's *thickness*. {c10,c11}
+## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one white cell rises out of the spill (≈ 8 µm), ten stack (≈ 80 µm), then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51.5–60 s)
+vo: And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's *thickness*. {c10,c11}
 
 ## takeaway {shot: back to the hook's UV cheek, the one spot lit, the clear skin around it now showing its own ringed follicles in faint cyan · picture-only 0.5 s · energy: 0.3} (60–67 s)
 vo: So, is it new? No. {-} It's the end of a fight that began out of *sight*. {c12}

@@ -37,7 +37,8 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const uv = createUVSkin({ seed: 3.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 const SPOT = [0.6, 0.45, 0.055];
 const terrain = createTerrain({ seed: 9, spots: 0 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
-const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 1000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, width: 1000, depth: 2300 });
+const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 4000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, block: false });   // one wide strip of skin holds both follicles
+Gf.group.position.z = -2;   // set back a hair: where the blocks overlap, the near one's face wins (no seam)
 scene.add(F.group, Gf.group);
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
@@ -47,13 +48,13 @@ const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
-const day = createDaylight({ root: hudRoot, W, H, y: 0.715 });
+const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
 // the photo stack (normal): earlier photos of the same patch pile up behind the viewfinder, each with its date
 const stackRoot = document.createElement("div");
-Object.assign(stackRoot.style, { position: "absolute", left: `${(VF.x + 0.03) * W}px`, top: `${(VF.y + 0.02) * H}px`, width: `${(VF.w - 0.06) * W}px`, height: `${(VF.h - 0.04) * H}px`, zIndex: 1, pointerEvents: "none" });
+Object.assign(stackRoot.style, { position: "absolute", left: `${(VF.x + 0.03) * W}px`, top: `${(VF.y + 0.05) * H}px`, width: `${(VF.w - 0.06) * W}px`, height: `${(VF.h - 0.07) * H}px`, zIndex: 1, pointerEvents: "none" });
 const frames = FILM.flips.map((_, i) => { const d = document.createElement("div"); Object.assign(d.style, { position: "absolute", inset: "0", border: `${0.35 * 10.8 * S1}px solid var(--uv)`, borderRadius: "1vmin", opacity: "0", transform: `translate(${(i + 1) * 0.7}vmin, ${-(i + 1) * 0.7}vmin)` }); stackRoot.appendChild(d); return d; });
 const stamp = document.createElement("div");
-Object.assign(stamp.style, { position: "absolute", left: "6.5vmin", top: "1.6vmin", fontFamily: "var(--font-mono)", fontSize: "2.6vmin", color: "var(--text)", letterSpacing: ".06em" });
+Object.assign(stamp.style, { position: "absolute", left: "4vmin", top: "1.6vmin", fontFamily: "var(--font-mono)", fontSize: "3vmin", fontWeight: "600", color: "var(--text)", letterSpacing: ".06em", background: "var(--hud-plate)", padding: ".6vmin 1.6vmin", borderRadius: "1.4vmin" });
 stackRoot.appendChild(stamp);
 const flash = document.createElement("div");
 Object.assign(flash.style, { position: "absolute", inset: "0", background: "#F7F3FF", opacity: "0", borderRadius: "1vmin" });
@@ -90,10 +91,10 @@ function createCellGauge() {
   const NS = "http://www.w3.org/2000/svg", mk = (tag, a, p) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
   const svg = mk("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}` }); Object.assign(svg.style, { position: "absolute", left: 0, top: 0, zIndex: 2, pointerEvents: "none" });
   hudRoot.appendChild(svg);
-  const cx = 0.1 * W, cw = 0.8 * W, cy = 0.19 * H, ch = 0.44 * H, GH = 0.28 * H, base = cy + ch - 0.06 * H, um = GH / G.paper_um;
+  const cx = 0.1 * W, cw = 0.8 * W, cy = 0.17 * H, ch = 0.41 * H, GH = 0.27 * H, base = cy + ch - 0.06 * H, um = GH / G.paper_um;
   const g = mk("g", {}, svg);
   mk("rect", { x: cx, y: cy, width: cw, height: ch, rx: 24 * S1, fill: "var(--card)", opacity: 0.97 }, g);
-  const head = mk("text", { x: cx + 40 * S1, y: cy + 62 * S1, "font-size": 34 * S1, fill: "var(--text-2)", "font-family": "var(--font-mono)", "letter-spacing": "0.12em" }, g); head.textContent = "TO SCALE";
+  const head = mk("text", { x: cx + 40 * S1, y: cy + 62 * S1, opacity: 0, "font-size": 34 * S1, fill: "var(--text-2)", "font-family": "var(--font-mono)", "letter-spacing": "0.12em" }, g); head.textContent = "TO SCALE";
   const colX = cx + 0.5 * cw, papX = cx + 0.68 * cw, r = (G.cell_um / 2) * um;
   mk("line", { x1: cx + 40 * S1, x2: cx + cw - 40 * S1, y1: base, y2: base, stroke: "var(--text-2)", "stroke-width": 2 * S1 }, g);
   const cells = Array.from({ length: G.n }, (_, i) => mk("circle", { cx: colX, cy: base - r - 2 * r * i, r: r * 0.96, fill: "var(--water)", stroke: "var(--slide-low)", "stroke-width": 2 * S1 }, g));
@@ -110,8 +111,8 @@ function createCellGauge() {
     update(t, op, lift) {
       svg.style.opacity = op.toFixed(3); svg.style.visibility = op > 0.002 ? "visible" : "hidden"; if (op <= 0.002) return;
       g.setAttribute("transform", `translate(0 ${((1 - lift) * 0.04 * H).toFixed(1)})`);
-      const one = E.out3(seg(t, G.pus, G.pus + 0.5)), name = E.out3(seg(t, G.sc, G.sc + 0.4));
-      cells.forEach((c, i) => { const a = i === 0 ? one : E.out3(seg(t, G.ten[0] + (i - 1) * (G.ten[1] - G.ten[0]) / (G.n - 1), G.ten[0] + i * (G.ten[1] - G.ten[0]) / (G.n - 1))); c.setAttribute("opacity", a.toFixed(3)); c.setAttribute("transform", `translate(0 ${(-(1 - a) * 40 * S1).toFixed(1)})`); });
+      const one = E.out3(seg(t, G.pus + 0.3, G.pus + 1.2)), name = E.out3(seg(t, G.sc, G.sc + 0.4));
+      cells.forEach((c, i) => { const a = i === 0 ? one : E.out3(seg(t, G.ten[0] + (i - 1) * (G.ten[1] - G.ten[0]) / (G.n - 1), G.ten[0] + i * (G.ten[1] - G.ten[0]) / (G.n - 1))); c.setAttribute("opacity", a.toFixed(3)); c.setAttribute("transform", `translate(0 ${((i === 0 ? 1 : -1) * (1 - a) * (i === 0 ? 0.2 * H : 40 * S1)).toFixed(1)})`); });   // the first rises out of the spill below
       cName.setAttribute("opacity", name.toFixed(3)); cVal.setAttribute("opacity", name.toFixed(3));
       tenTxt.setAttribute("opacity", E.out3(seg(t, G.ten[1] - 0.3, G.ten[1] + 0.2)).toFixed(3));
       const pp = E.inout2(seg(t, G.paper, G.paper + 0.9)), ph = GH * pp;
@@ -127,34 +128,41 @@ window.seek = function (t) {
   const shot = stage(t).name, tone = FILM.tone;
   rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
-  uv.mesh.visible = isUV; terrain.group.visible = shot === "flight"; F.group.visible = isF; Gf.group.visible = shot === "pair";
-  scene.fog = shot === "flight" ? FOG : null;
-  lights.sun.intensity = shot === "flight" ? 4.2 : 2.2; lights.key.intensity = shot === "flight" ? 0.9 : 1.6;
-  fstop = shot === "flight" ? 0.5 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : [0, 0, 0];
+  const isFl = shot === "flight" || shot === "rise";
+  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair";
+  scene.fog = isFl ? FOG : null;
+  lights.sun.intensity = isFl ? 4.2 : 2.2; lights.key.intensity = isFl ? 0.9 : 1.6;
+  fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
   if (isUV) {
     const porph = shot === "uv" ? E.inout2(seg(t, K.porph[0], K.porph[1])) * (1 - fadeIn(t, SH.flight - 0.8, 0.6)) : 0.55;
     const spot = shot === "uv" ? 1 - E.inout2(seg(t, K.spotGone[0], K.spotGone[1])) : 1;
     const rings = shot === "uv2" ? E.inout2(seg(t, K.rings[0], K.rings[1])) : 0;
-    uv.set({ focus: [...SPOT, spot], spot, porph, rings: 1.8 * rings, glow: 1, opacity: 1, bump: 0.16, spotRed: 1 });
+    // the signature switch: the photos are daylight; on "clear" (and on "No.") the UV camera wipes on from the top
+    const W1 = K.wipe1, W2 = K.wipe2;
+    const day = shot === "uv" ? (t >= K.dayOn && t < W1[1] ? 1 : 0) : (t < W2[1] ? 1 : 0);
+    const wp = shot === "uv" ? (t >= W1[0] && t < W1[1] ? E.inout2(seg(t, W1[0], W1[1])) : -1) : (t >= W2[0] && t < W2[1] ? E.inout2(seg(t, W2[0], W2[1])) : -1);
+    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, bump: 0.22 * spot, spotRed: 1,
+      day, wipe: wp, skin: toneColor("living", tone).map((v) => Math.min(1, v * 1.15)) });
+    vf.el.querySelector(".rec").textContent = day > 0.5 && wp < 0 ? "● REC  DAYLIGHT" : "● REC  UV 365 nm";
   }
-  A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(0.36, 0.44);
+  A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(SPOT[0] + 0.09, SPOT[1] - 0.05);
   const vfOp = isUV ? (shot === "uv" ? 1 - fadeIn(t, SH.flight - 0.4, 0.35) : fadeIn(t, SH.uv2, 0.4)) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
-  vf.set({ op: vfOp, blink: 0.55 + 0.45 * Math.round((Math.sin(t * 4) + 1) / 2) });
-  const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.22);
-  dip.style.opacity = Math.max(dz(SH.flight), dz(SH.uv2)).toFixed(3);
+  vf.set({ op: vfOp, blink: 1 });
+  const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
+  dip.style.opacity = Math.max(dz(SH.flight), dz(SH.rise), dz(SH.uv2)).toFixed(3);
   day.set({ op: shot === "uv2" ? fadeIn(t, K.rings[0], 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
   // the stack: one frame per flip, the date stamped, a shutter flash
   let nFlip = 0; for (const ft of FILM.flips) if (t >= ft) nFlip++;
   const stackOn = shot === "uv" && t >= FILM.flips[0] - 0.1 ? 1 - fadeIn(t, CUE.underneath - 0.2, 0.5) : 0;
   frames.forEach((d, i) => { d.style.opacity = (stackOn * (i < nFlip ? 0.75 : 0)).toFixed(3); });
-  stamp.textContent = nFlip ? `PHOTO  −${2 * nFlip} WK` : ""; stamp.style.opacity = stackOn.toFixed(3);
+  stamp.textContent = nFlip ? `EARLIER PHOTO  ${nFlip} / ${FILM.flips.length}` : "";; stamp.style.opacity = stackOn.toFixed(3); stamp.style.visibility = stackOn > 0.002 ? "visible" : "hidden";   // no interval implied
   let fl = 0; for (const ft of FILM.flips) fl = Math.max(fl, Math.max(0, 1 - Math.abs(t - ft) / 0.08) * (t >= ft ? 1 : 0));
   flash.style.opacity = (0.35 * fl * stackOn).toFixed(3);
 
   // ── the macro flight ──
-  if (shot === "flight") terrain.set({ tone: toneColor("living", tone).map((v) => v * 1.12), furrows: 0.25, spot: 0, sheen: 0 });
+  if (isFl) terrain.set({ tone: toneColor("living", tone).map((v) => v * 1.12), furrows: 0.25, spot: 0, sheen: 0 });
 
   // ── the follicles ──
   if (isF) {
@@ -165,18 +173,19 @@ window.seek = function (t) {
     if (shot === "rupture" || shot === "gauge") {
       const rupt = E.inout2(seg(t, K.rupt[0], K.rupt[1])), press = E.inout2(seg(t, K.press[0], K.press[1]));
       p = { ...p, ring: 1, ringLit: 1, bact: 0.6, flood: E.inout2(seg(t, K.flood[0], K.flood[1])), rupt, press, red: Math.min(1, 0.35 * rupt + 0.8 * press), dim: shot === "gauge" ? 0.5 * fadeIn(t, SH.gauge, 0.8) : 0,
-        thumb: shot === "gauge" ? 0 : 1 - E.inout2(seg(t, K.lift[0], K.lift[1])) };
+        thumb: shot === "gauge" ? 0 : 1 - E.inout2(seg(t, K.lift[0], K.lift[1])), mark: E.inout2(seg(t, K.mark[0], K.mark[1])) };
     }
     F.set(p);
     Gf.set({ tone, ring: 0, bact: p.bact, ringLit: 0 });
   }
+  A.fWith = [PL.fx, 40, 40]; A.fWo = [PL.gx, 40, 40]; A.bactMid = [(PL.fx + PL.gx) / 2, -540, 40];
   A.ring = F.at.ring(); A.bactG = Gf.at.bact(); A.cell = F.at.cell(); A.spill = F.at.spill(); A.thumb = [PL.fx + 160, 120, 120];
 
   // ── the gauge: a centred card, to scale: white cells (8 µm) beside the paper (100 µm) ──
   const lift = shot === "gauge" ? E.inout2(seg(t, G.rise[0], G.rise[1])) : 0;
   const gOp = shot === "gauge" ? lift * (1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
   gauge.update(t, gOp, lift);
-  F.group.visible = F.group.visible && gOp < 0.98;   // the follicle stays behind the card only while it rises and goes
+  F.group.visible = F.group.visible && !(shot === "gauge" && lift > 0.98);   // the follicle stays behind the card only while it rises and goes
 
   hud.update(t);
   tBars.update(t);

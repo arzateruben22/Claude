@@ -11,7 +11,7 @@ import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
 
 export const goldenHour = (scene, { fog = [55, 110] } = {}) => {
-  scene.fog = new THREE.Fog(0x3a2a20, fog[0], fog[1]);
+  scene.fog = new THREE.Fog(0x2c1660, fog[0], fog[1]);   // the theme's violet: the far edge melts into the ground colour
   scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.55));
   const sun = new THREE.DirectionalLight(0xffb870, 4.2); sun.position.set(30, 6, -30); scene.add(sun);
   const key = new THREE.DirectionalLight(0xfff0e0, 0.9); key.position.set(-10, 14, 20); scene.add(key);

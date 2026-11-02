@@ -141,5 +141,16 @@
   "note": "As c8 (≈ 40% backscattered after multiple scattering vs ≈ 5% glare) and c9 (melanin, haemoglobin). 'Mostly from within' rests on that one example; the ratio changes with wavelength and skin tone (more melanin absorbs more), so the reviewer should confirm the wording holds for deeply pigmented skin.",
   "verified_via": "search excerpt",
   "status": "ok"
+ },
+ {
+  "id": "c16",
+  "sentence": "Next: before birth, a cut healed without a trace.",
+  "claim": "Early in gestation (until about 22–24 weeks in humans) fetal skin wounds heal without a scar (the tease for No. 003; the same source as No. 003's c11).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3362931/",
+  "source_title": "A review of fetal scarless healing (ISRN Dermatology 2012), PMC3362931",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'scarless healing occurs in fetal skin until around 22 to 24 weeks of gestation in the human fetus'; fetal collagen 'is deposited in a fine reticular or basket weave pattern similar to uninjured skin'; 'Scarless healing in early fetal skin is a form of regeneration, with renewal of skin appendages such as hair follicles and sebaceous glands'. Larson, Longaker & Lorenz 2010 (Plast Reconstr Surg 126:1172–80): 'In humans, scarring of wounds begins at approximately 24 weeks of gestation'. Which excerpt sits in which review was read from search summaries: a person checks. 'About the sixth month' = weeks 22–26; screen shows '≈ 22–24 weeks'. Evidence comes from fetal surgery, pathology and animal models.",
+  "verified_via": "search excerpt",
+  "status": "ok"
  }
 ]

@@ -40,9 +40,9 @@ const beamL = createBeam({ from: [PL.tx - 11, 16, -6], to: [PL.tx - 3, 0.25, 0],
 const glintL = createGlint({ at: [PL.tx - 3, 0.3, 0], dir: [0.55, 1, 0.45], len: 4, seed: 5 }), glintR = createGlint({ at: [PL.tx + 2, 0.3, 0], dir: [0.55, 1, 0.45], len: 4, seed: 6 });
 scene.add(beamL.group, beamR.group, glintL.group, glintR.group);
 // the glow from within (takeaway): warm rays rising out of the surface around the beam
-// soft warm blooms over the pores (additive sprites, under the bloom knee), not rays: light coming back out from under the surface
+// soft warm blooms over the pores (blood-tinted: light that met the blood) (additive sprites, under the bloom knee), not rays: light coming back out from under the surface
 const glowTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const x = c.getContext("2d"); const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-  gr.addColorStop(0, "rgba(255,200,150,1)"); gr.addColorStop(0.35, "rgba(255,150,100,.45)"); gr.addColorStop(1, "rgba(255,120,80,0)"); x.fillStyle = gr; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+  gr.addColorStop(0, "rgba(255,176,140,1)"); gr.addColorStop(0.35, "rgba(240,104,92,.5)"); gr.addColorStop(1, "rgba(220,70,70,0)"); x.fillStyle = gr; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
 const glowAt = (p, size) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 })); sp.position.set(...p); sp.scale.set(size, size, 1); scene.add(sp); return sp; };
 const glows = terrain.pores.filter(([x, z]) => Math.abs(x) < 9 && z > -10 && z < 7).map(([x, z], i) => glowAt([PL.tx + x, 0.15, z], 1.6 + ((i * 37) % 10) / 10));
 const bloom = glowAt([PL.tx, 0.2, 0], 5.5);   // the beam's foot: the light sinking in
@@ -55,6 +55,9 @@ const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radi
 // the wrong idea (why): a glow sitting on the skin, a warm film on its top, shown and then let go
 const sheen = new THREE.Mesh(new THREE.BoxGeometry(200, 5, 2), new THREE.MeshBasicMaterial({ color: 0xffc48a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
 sheen.position.set(PL.sx, 3, 32); scene.add(sheen);
+// below the section: the deep dermis continues (no clear colour under the slab)
+const deep = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) }));
+deep.position.set(PL.sx, -140 - 1500, 0); scene.add(deep);
 
 const face = createUVSkin({ seed: 5.0 }); face.mesh.rotation.x = -0.18; scene.add(face.mesh);
 const rig = createRig(FILM.cam);
@@ -62,13 +65,13 @@ const rig = createRig(FILM.cam);
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.29 });
-vf.el.querySelector(".rec").textContent = "● REC  DAYLIGHT"; vf.el.style.setProperty("--ol-rec-size", "3.2vmin");
-const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" });
+vf.el.querySelector(".rec").textContent = "● REC  DAYLIGHT"; vf.el.style.fontSize = "3.1vmin"; vf.el.style.setProperty("--ol-rec-size", "3.2vmin");
+const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
 // the slider (whoa): "blood colour", nudged up
 const slider = document.createElement("div");
 slider.innerHTML = `<span class="k">blood colour</span><span class="sl-tr"><i></i><b></b></span>`;
-Object.assign(slider.style, { position: "absolute", left: "50%", top: `${0.555 * H}px`, transform: "translateX(-50%)", display: "flex", alignItems: "center", gap: "2.4vmin", padding: "1.2vmin 2.6vmin",
-  borderRadius: "2.4vmin", background: "var(--hud-plate)", boxShadow: "var(--hud-shadow)", fontFamily: "var(--font-mono)", fontSize: "2.8vmin", color: "var(--text)", zIndex: 4, opacity: "0" });
+Object.assign(slider.style, { position: "absolute", left: "50%", top: `${0.535 * H}px`, transform: "translateX(-50%)", display: "flex", alignItems: "center", gap: "2.4vmin", padding: "1.2vmin 2.6vmin",
+  borderRadius: "2.4vmin", background: "var(--hud-plate)", boxShadow: "var(--hud-shadow)", fontFamily: "var(--font-mono)", fontSize: "3.2vmin", color: "var(--text)", zIndex: 4, opacity: "0" });
 const css = document.createElement("style");
 css.textContent = `.sl-tr{position:relative;display:block;width:36vmin;height:1.2vmin;border-radius:1vmin;background:linear-gradient(90deg,#d9b49a,#c8504a)}.sl-tr i{position:absolute;top:50%;width:3.4vmin;height:3.4vmin;margin:-1.7vmin 0 0 -1.7vmin;border-radius:50%;background:#F7F3FF;border:.5vmin solid var(--water)}.sl-tr b{display:none}
 .dc{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:5vmin;align-items:flex-start;padding:2.4vmin 3.4vmin;border-radius:2.4vmin;background:var(--hud-plate);box-shadow:var(--hud-shadow);font-family:var(--font-mono);color:var(--text);font-size:2.8vmin;z-index:4}
@@ -80,7 +83,7 @@ hudRoot.appendChild(slider);
 // cheeks take on blood colour as the slider rises
 const NS = "http://www.w3.org/2000/svg", mk = (tag, at, p) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; };
 const fsvg = mk("svg", { width: W, height: H, viewBox: "250 170 500 760", preserveAspectRatio: "xMidYMid meet" });
-Object.assign(fsvg.style, { position: "absolute", left: `${0.1 * W}px`, top: `${0.262 * H}px`, width: `${0.8 * W}px`, height: `${0.27 * H}px`, zIndex: 1, pointerEvents: "none", opacity: "0" });
+Object.assign(fsvg.style, { position: "absolute", left: `${0.1 * W}px`, top: `${0.3 * H}px`, width: `${0.8 * W}px`, height: `${0.245 * H}px`, zIndex: 1, pointerEvents: "none", opacity: "0" });
 hudRoot.appendChild(fsvg);
 const defs = mk("defs", {}, fsvg);
 const blushG = mk("radialGradient", { id: "blush" }, defs); mk("stop", { offset: "0", "stop-color": "#d23c3c", "stop-opacity": "0.9" }, blushG); mk("stop", { offset: "1", "stop-color": "#d23c3c", "stop-opacity": "0" }, blushG);
@@ -97,19 +100,19 @@ mk("path", { d: "M500 470 Q492 545 478 575 Q500 590 522 575", ...ink, "stroke-wi
 const lips = mk("path", { d: "M455 640 Q500 668 545 640 Q500 652 455 640 Z", fill: "#a8555a" }, fsvg);
 const skinHex = (k) => { const c = SKIN.map((v) => v * 1.2), r = [Math.min(1, c[0] * (1 + 0.1 * k)), c[1] * (1 - 0.13 * k), c[2] * (1 - 0.1 * k)]; return `rgb(${r.map((v) => Math.round(Math.min(1, v) * 255)).join(",")})`; };
 // the depth chart (toscale): a full-width card, mm down the left; blue to ≈ 1 mm beside ten 100 µm sheets; red on to ≈ 4–5 mm
-const PXMM = 0.068 * H;                                               // 1 mm on the chart
+const PXMM = 0.058 * H;                                               // 1 mm on the chart
 const chart = document.createElement("div"); chart.className = "dc";
 chart.innerHTML = `<div class="ax" style="height:${5 * PXMM}px">${[0, 1, 2, 3, 4, 5].map((m) => `<span style="top:${m * PXMM}px">${m} mm</span>`).join("")}</div>
   <div class="col"><div class="bar b" style="--c:#7C98FF;height:0px"></div><span class="v vb">≈ 1 mm</span><span class="h">blue</span></div>
   <div class="col"><div class="sh">${Array.from({ length: 10 }, () => "<i></i>").join("")}</div><span class="v vs">10 × 100 µm</span><span class="h">paper</span></div>
   <div class="col"><div class="bar r" style="--c:#FF5A4E;height:0px"></div><span class="v vr">≈ 4–5 mm</span><span class="h hr">red</span></div>`;
-Object.assign(chart.style, { top: `${0.165 * H}px`, width: `${0.8 * W}px`, height: `${5 * PXMM + 0.075 * H}px`, boxSizing: "border-box", opacity: "0" });
+Object.assign(chart.style, { top: `${0.165 * H}px`, width: `${0.8 * W}px`, height: `${5 * PXMM + 0.115 * H}px`, boxSizing: "border-box", opacity: "0" });
 hudRoot.appendChild(chart);
 const barB = chart.querySelector(".bar.b"), barR = chart.querySelector(".bar.r"), sheets = [...chart.querySelectorAll(".sh i")];
 const vB = chart.querySelector(".vb"), vS = chart.querySelector(".vs"), vR = chart.querySelector(".vr"), hR = chart.querySelector(".hr");
 sheets.forEach((s) => { s.style.height = `${0.1 * PXMM * 0.62}px`; s.style.marginBottom = `${0.1 * PXMM * 0.38}px`; });
 const dcss = document.createElement("style");
-dcss.textContent = `.dc{justify-content:center;gap:7vmin;background:var(--card);font-size:3.6vmin;padding:3vmin 4vmin}.dc .ax{margin-right:5vmin}.dc .ax span{font-size:3.1vmin}.dc .col{gap:1.4vmin}.dc .bar,.dc .sh i{width:12vmin}.dc .sh{gap:0}.dc .h{font-weight:600}.dc .v{font-size:3.8vmin;color:var(--water);font-weight:600;white-space:nowrap}`;
+dcss.textContent = `.dc{justify-content:center;gap:4vmin;background:var(--card);font-size:3.6vmin;padding:3vmin 4vmin}.dc .ax{margin-right:7vmin}.dc .ax span{font-size:3.2vmin;color:var(--text)}.dc .col{gap:1.4vmin}.dc .bar,.dc .sh i{width:10vmin}.dc .sh{gap:0}.dc .h{font-weight:600}.dc .v{font-size:3.8vmin;color:var(--water);font-weight:600;white-space:nowrap}`;
 document.head.appendChild(dcss);
 
 const hud = createHud({ camera, shots: FILM.shots });
@@ -127,7 +130,7 @@ for (const c of FILM.counters) {
 for (const L of FILM.labels) { const k = KIND[L.kind]; hud.label(L.id, { text: L.text, glyph: k.glyph, mark: "none", color: k.color, at: () => A[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed }); }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "80vmin", margin: "2.6vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.5vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "80vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
 
@@ -136,8 +139,8 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   rig.place(camera, shot, t);
-  const isT = ["macro", "split", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
-  terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = isS; face.mesh.visible = shot === "face";
+  const isT = ["macro", "split", "rise", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
+  terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS; face.mesh.visible = shot === "face";
   scene.fog = isT ? FOG : null;
   lights.sun.intensity = isT ? 4.2 : 2.0; lights.key.intensity = isT ? 0.9 : 1.6;
   fstop = isT ? 0.45 : 0; focusPt = [PL.tx, 0, 0];
@@ -150,13 +153,13 @@ window.seek = function (t) {
   beamL.set({ op: shot === "split" ? 1 : 0 }); beamR.set({ op: shot === "split" ? 1 : 0 });
   glintL.set({ op: shot === "split" ? 1 : 0, spread: 0 });
   glintR.set({ op: shot === "split" ? 1 : 0, spread: shot === "split" ? E.inout2(seg(t, K.spread[0], K.spread[1])) : 0 });
-  const gOut = shot === "macro2" ? E.inout2(seg(t, K.glowout[0], K.glowout[1])) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
+  const gOut = shot === "macro2" ? E.inout2(seg(t, K.glowout[0], K.glowout[1])) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : shot === "rise" ? 0.9 : 0;   // the rise: the reddened light coming out
   // the glow from within: soft at frame 0 (the payoff), fading as the story starts; back on in the takeaway
   const gIn = shot === "macro" ? 0.75 * (1 - E.inout2(seg(t, CUE.inside + 0.4, CUE.inside + 1.6))) : 0;
   glows.forEach((g, i) => { g.material.opacity = Math.max(gIn, 0.85 * gOut) * (0.7 + 0.3 * Math.sin(t * 1.3 + i)); g.visible = g.material.opacity > 0.002; });
   const bl = shot === "macro" ? E.out3(seg(t, K.bloom[0], K.bloom[1])) * (1 - fadeIn(t, SH.split - 0.6, 0.5)) : 0;
   bloom.material.opacity = 0.7 * bl; bloom.visible = bl > 0.002;
-  A.glint = [PL.tx + 1.5, 2.2, 1]; A.glintL = [PL.tx - 3, 0.3, 0.5]; A.glintR = [PL.tx + 2, 0.3, 0.5];
+  A.glint = [PL.tx, 0.4, 0]; A.glintL = [PL.tx - 3, 0.3, 0.5]; A.glintR = [PL.tx + 2, 0.3, 0.5];
 
   // ── the section: the rest of the light threads in; much of it climbs back out, warmed, then reddened ──
   if (isS) {
@@ -181,6 +184,9 @@ window.seek = function (t) {
   sh1.setAttribute("stop-color", (() => { const c = SKIN.map((v) => v * 0.95); return `rgb(${c.map((v) => Math.round(v * 255)).join(",")})`; })());
   blL.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3)); blR.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3));
   fsvg.style.opacity = (shot === "face" ? fadeIn(t, SH.face, 0.4) : 0).toFixed(3); face.mesh.visible = false;
+  // a slow push in on the cheek across the whole beat (no locked frame)
+  const push = shot === "face" ? E.inout2(seg(t, SH.face, SH.depth)) : 0;
+  fsvg.style.transform = `scale(${(1 + 0.18 * push).toFixed(4)})`; fsvg.style.transformOrigin = "57% 78%";
   vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "model face", right: "" });
   slider.style.opacity = (shot === "face" ? fadeIn(t, SH.face + 0.6, 0.5) : 0).toFixed(3);
   slider.querySelector("i").style.left = `${(15 + 75 * flush + 8 * pulse).toFixed(1)}%`;
