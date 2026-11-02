@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "We hardly have fur.",
+  "claim": "Humans look nearly hairless compared with other apes: most human body hair is fine, short vellus hair rather than visible fur.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3367735",
+  "source_title": "Peer-reviewed article on human body-hair density and its evolution (PMC3367735; a person confirms its title when opening the link)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: humans have about the same follicle density as an ape of the same size 'despite our hairless appearance'; most follicles produce 'small, unpigmented vellus hairs'. 'Hardly have fur' is the appearance, which c5–c6 then explain.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin around it into a bump.",
+  "claim": "Most body hair follicles have an arrector pili, a tiny smooth muscle attached to the follicle; when it contracts the hair stands up and the skin around it is pulled into a bump (piloerection, goosebumps).",
+  "source_url": "https://www.encyclopedia.com/medicine/diseases-and-conditions/pathology/gooseflesh",
+  "source_title": "Gooseflesh (The Columbia Encyclopedia, via Encyclopedia.com)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (search summary of the encyclopedia entry and the arrector pili literature): the arrector pili muscles are 'small muscles attached to hair follicles in mammals'; contraction erects the hair. 'Nearly every hair': some hairs (eyelashes, for example) have none.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin around it into a bump.",
+  "claim": "Piloerection is an involuntary reflex driven by the sympathetic nervous system, triggered by cold or by fear (strong emotion).",
+  "source_url": "https://www.nih.gov/news-events/nih-research-matters/what-goosebumps-are",
+  "source_title": "What goosebumps are for (NIH Research Matters, National Institutes of Health)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (NIH, Shwartz 2020 coverage): cold exposure elevates sympathetic nerve activity, triggering goosebumps; other summaries: 'triggered by sympathetic nervous activity from cold or fear'. Screen: 'sympathetic nerve'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "In a furry animal, that fluffs the coat into a blanket of trapped air.",
+  "claim": "In furred mammals, erected hair traps a layer of air near the skin, which insulates and helps keep the animal warm.",
+  "source_url": "https://livescience.com/32349-what-causes-goose-bumps.html",
+  "source_title": "Why do we get goosebumps? (Live Science)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: air 'becoming trapped between the erect hairs, helping the animal retain heat'; air is a poor conductor of heat. The fur drawing is badged 'illustration'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+  "claim": "Humans have about the same density of hair follicles as an ape of similar body size (roughly as many as a chimpanzee).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3367735",
+  "source_title": "Peer-reviewed article on human body-hair density and its evolution (PMC3367735; a person confirms its title when opening the link)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'the human body has about the same follicle density as an ape of the same size'; a separate summary: 'roughly as many follicles as chimpanzees … the difference is in hair type rather than number'. Hedged 'about'; the evidence base is small (the paper notes a systematic cross-species study is still needed).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+  "claim": "Most human body follicles grow vellus hairs: fine, short, unpigmented and barely visible.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3367735",
+  "source_title": "Peer-reviewed article on human body-hair density and its evolution (PMC3367735; a person confirms its title when opening the link)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'most of which produce small, unpigmented vellus hairs'; vellus hair 'virtually invisible to the naked eye'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "So the bumps look like a leftover.",
+  "claim": "Goosebumps in humans are commonly described as a vestigial reflex: with sparse hair they no longer insulate or make us look bigger.",
+  "source_url": "https://livescience.com/32349-what-causes-goose-bumps.html",
+  "source_title": "Why do we get goosebumps? (Live Science)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: the reflex 'has largely lost its practical utility in humans … the insulating layer created is negligible'. The line states the common view, which the next sentence complicates.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "But a team at Harvard found the same nerve also reaches the stem cells that grow the hair, and the little muscle holds it in place.",
+  "claim": "Shwartz et al. (2020, Hsu lab, Harvard) found that the sympathetic nerves that drive the arrector pili also form synapse-like contacts with hair follicle stem cells and regulate them through norepinephrine (noradrenaline).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32679029/",
+  "source_title": "Shwartz Y, Gonzalez-Celeiro M, Chen CL, et al., Hsu YC. Cell types promoting goosebumps form a niche to regulate hair follicle stem cells. Cell 2020;182(3):578–593.e19",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Sympathetic nerves form synapse-like structures with HFSCs and regulate HFSCs through norepinephrine'. In mice; the screen says 'in mice · Shwartz et al., 2020'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "But a team at Harvard found the same nerve also reaches the stem cells that grow the hair, and the little muscle holds it in place.",
+  "claim": "In the same study, the arrector pili muscle maintains the sympathetic nerve's connection to the hair follicle stem cells.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32679029/",
+  "source_title": "Shwartz Y, Gonzalez-Celeiro M, Chen CL, et al., Hsu YC. Cell types promoting goosebumps form a niche to regulate hair follicle stem cells. Cell 2020;182(3):578–593.e19",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'APMs maintain sympathetic innervation to HFSCs'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner.",
+  "claim": "In mice, cold exposure raised sympathetic nerve activity, which both triggered goosebumps and accelerated hair follicle stem cell activation and new hair growth.",
+  "source_url": "https://www.nih.gov/news-events/nih-research-matters/what-goosebumps-are",
+  "source_title": "What goosebumps are for (NIH Research Matters, National Institutes of Health)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Cold exposure elevates sympathetic nerve activity, triggering both goosebumps and accelerating stem cell activation and hair growth.' The voice says 'the mice'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "Take the little muscle away, and the wiring fades.",
+  "claim": "When the arrector pili muscle cells were removed, the nerve–stem cell connections were lost, and stem cell activation and new hair growth were delayed (mice).",
+  "source_url": "https://www.sciencenews.org/article/goose-bumps-could-boost-hair-growth",
+  "source_title": "Getting goose bumps could boost hair growth (Science News)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Without the muscle cells, connections between the nerves and stem cells were lost, and the mice showed a delay in both stem cell activation and production of new hair.' 'The wiring fades'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
+  "claim": "Vellus hairs are by definition less than 30 µm in diameter (terminal hairs are typically about 60–80 µm).",
+  "source_url": "https://donovanmedical.com/hair-blog/2017/8/28/vellus-hairs-on-the-scalp",
+  "source_title": "Vellus hairs on the scalp (Donovan Hair Clinic, a dermatology practice's article)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: vellus hairs are 'always less than 30 micrometers in diameter'; terminal hairs 'typically 60 to 80 micrometers'. A clinic's article: a person checks it against a dermatology text before posting. 'Most of the hairs it tends' = most body follicles grow vellus hair (c6). Computed: 30 ÷ 100 = 0.3, 'thinner than a third'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
+  "claim": "Standard 80 gsm copy paper is about 100 µm thick; 17 µm is about 0.17 of it ('thinner than a fifth', computed).",
+  "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
+  "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
+  "accessed": "2026-11-02",
+  "note": "As Outer Layer No. 001's paper claim. Excerpt: copying paper 80 gsm, 100 microns. Everyday reference; not a skin claim.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "Because the muscle that raises a hair still looks after it.",
+  "claim": "The arrector pili muscle and its nerve, besides raising the hair, help regulate the stem cells that regenerate it (in mice).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32679029/",
+  "source_title": "Shwartz Y, Gonzalez-Celeiro M, Chen CL, et al., Hsu YC. Cell types promoting goosebumps form a niche to regulate hair follicle stem cells. Cell 2020;182(3):578–593.e19",
+  "accessed": "2026-11-02",
+  "note": "As c8–c11 (NIH: 'what goosebumps are for'). 'Looks after it' is the image.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
