@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 003, "Venus day": script + voice timings + this direction → film.json and sheet.json.
+"""Compile One More Orbit No. 003, "Venus day": script + voice timings + this direction → film.json and sheet.json.
 Every moment hangs on a beat or a spoken word; every physical number comes from claims.json.
 
   python3 -I films/channels/space/ep03/compile.py
@@ -237,8 +237,8 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):          # two values never share the s
 for x in LABELS + BADGES + COUNTERS:
     assert x["t1"] - x["t0"] >= (1.0 if x in LABELS else 0.0) + 1e-9, (x["id"], x["t0"], x["t1"])
 
-TITLE = {"series": "Light Minute · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the\u00a0Moon that never *lands*", "follow": "Light Minute · No. 004",   # breaks after "Next light:"
+TITLE = {"series": "One More Orbit · No. 003", "title": "Venus *day*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next orbit: the\u00a0Moon that never *lands*", "follow": "One More Orbit · No. 004",   # breaks after "Next orbit:"
        "next": "Radar first timed Venus's turn in 1962: about 243 days, backwards."}   # the true-fact footnote (c7)
 
 # "close": the push is landing (the pin's blip on the far pole fades until the guesses play on it); "ring": the

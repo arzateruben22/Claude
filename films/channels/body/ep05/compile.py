@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 05, "Where breath goes": script + voice timings + this direction → film.json, sheet.json.
+"""Compile Body Backstage No. 05, "Where breath goes": script + voice timings + this direction → film.json, sheet.json.
 Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo05:metres")).
 
   python3 -I films/channels/body/ep05/compile.py
@@ -146,8 +146,8 @@ BADGES = [
     {"id": "flow", "text": "blood flow slowed", "slot": "tl", "t0": CUT["exit"], "t1": EC},
     {"id": "fast", "text": "squeeze sped up", "slot": "tl", "t0": EXIT["push"][0] - 0.2, "t1": EC},
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *the exit*", "next": "Meanwhile, Inside · No. 06", "follow": "Follow Meanwhile, Inside",
+TITLE = {"series": "Body Backstage · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "title": "Next, inside: *the exit*", "next": "Body Backstage · No. 06", "follow": "Follow Body Backstage",
        "fact": "Your lungs hold about 480 million air sacs (Ochs and colleagues, 2004)."}   # c1
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["exit"] - 0.3, "region": [0.47, 0.3]}
 BREATHS = [round(ROOM["breath0"] + 4.0 * n, 4) for n in range(0, 6) if ROOM["breath0"] + 4.0 * n < CUT["exit"]]

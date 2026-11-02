@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 01, "Single file": script + voice timings + this direction → film.json (the
+"""Compile Body Backstage No. 01, "Single file": script + voice timings + this direction → film.json (the
 scene's clock: shots, irises, the blood-flow clock, the hero's anchors, camera and focus keys, labels, badges,
 scale pills, counters, title and end card, captions) and sheet.json (the studio's cue sheet). Nothing here is
 a hand-typed time: every moment hangs on a beat or a spoken word.
@@ -210,8 +210,8 @@ BADGES = [
     {"id": "nts-o2", "text": "not to scale", "t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.3},
     {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 01", "title": "Single *file*", "t1": round(A("vo01:Because") + 0.35, 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *a billion passengers*", "next": "Meanwhile, Inside · No. 02", "follow": "Follow Meanwhile, Inside"}
+TITLE = {"series": "Body Backstage · No. 01", "title": "Single *file*", "t1": round(A("vo01:Because") + 0.35, 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "title": "Next, inside: *a billion passengers*", "next": "Body Backstage · No. 02", "follow": "Follow Body Backstage"}
 
 # the lub-dub: beats on the 75 BPM grid (a beat is 0.8 s); the pulse line kicks on each lub
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]

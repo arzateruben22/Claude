@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 02, "A billion passengers": script + voice timings + this direction → film.json
+"""Compile Body Backstage No. 02, "A billion passengers": script + voice timings + this direction → film.json
 (the scene's clock: shots, irises, the lung clock, the boarding and flush keys, camera and focus keys, labels,
 badges, counters, title and end card, captions) and sheet.json (the studio's cue sheet). Nothing here is a
 hand-typed time: every moment hangs on a beat or a spoken word.
@@ -203,8 +203,8 @@ SPINE = [
     {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
-TITLE = {"series": "Meanwhile, Inside · No. 02", "title": "A billion *passengers*", "t1": round(A("vo01:Room") + 0.35, 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Meanwhile, Inside · No. 03", "follow": "Follow Meanwhile, Inside",
+TITLE = {"series": "Body Backstage · No. 02", "title": "A billion *passengers*", "t1": round(A("vo01:Room") + 0.35, 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Body Backstage · No. 03", "follow": "Follow Body Backstage",
        "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."}   # c1, c2
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 

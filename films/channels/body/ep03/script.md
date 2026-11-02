@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 03: "The jump" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 03: "The jump" (draft; a physiologist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-3 row (`../bible.md`, §7) to the story standard
@@ -63,7 +63,7 @@ vo: *Meanwhile*, as you watched, a heart at rest beat about eighty times. {c14} 
 
 ## tease {shot: the fibre's end: a terminal, and a dark gap beyond it · end card held ≥ 2 s; under it the iris returns to frame 0's spark (a seamless replay); the card's fact: Helmholtz, 1850, about 27 m/s in a frog · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.7–75 s)
 vo: Next: the end of the line. {-} A gap most signals can't *jump*. {c16}
-end card: "Next: The gap" · "Meanwhile, Inside · No. 04"
+end card: "Next: The gap" · "Body Backstage · No. 04"
 
 ## Notes
 - The tally counts heartbeats at 75 a minute (the channel's tempo, inside the 60–100 resting range)

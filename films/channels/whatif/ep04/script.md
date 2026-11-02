@@ -1,4 +1,4 @@
-# Back of the Envelope No. 004: "Count to a billion" (draft; fact-check before posting)
+# Possibility Lab No. 004: "Count to a billion" (draft; fact-check before posting)
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 Every number comes from `calc.py` (exact syllables of every number word to a billion, timed at the measured
@@ -35,7 +35,7 @@ vo: So the word is easy to say once, and the number is out of reach one by *one*
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66–72 s)
 vo: Next envelope: if everyone jumped at once, would the Earth *move*? {-}
-end card: "Next envelope: *everybody jump*" · "Back of the Envelope · No. 004" · footnote: "Jeremy Harper counted aloud from 1 to 1,000,000 in 89 days, 18 June to 14 September 2007, about 16 hours a day." (c4)
+end card: "Next envelope: *everybody jump*" · "Possibility Lab · No. 004" · footnote: "Jeremy Harper counted aloud from 1 to 1,000,000 in 89 days, 18 June to 14 September 2007, about 16 hours a day." (c4)
 
 ## Notes
 - Every number is `calc.py`'s; answers are shown to two significant figures ("≈ 380 yr").

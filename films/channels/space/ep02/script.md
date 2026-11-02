@@ -1,4 +1,4 @@
-# Light Minute No. 002: "The nearest star" (draft; fact-check before posting)
+# One More Orbit No. 002: "The nearest star" (draft; fact-check before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Bible §7 #6, posted on **18 Nov 2026**, the day Voyager 1 reaches one light-day from Earth
@@ -44,7 +44,7 @@ vo: *Light time*, Earth to Voyager: one day. {c15} To Proxima Centauri: four yea
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (68.5–74 s)
 vo: Next: a world that turns slower than it orbits. {c17} And *backwards*. {c18}
-end card: "Next light: a planet that turns *backwards*" · "Light Minute · No. 003"
+end card: "Next orbit: a planet that turns *backwards*" · "One More Orbit · No. 003"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

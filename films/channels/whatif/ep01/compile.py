@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 001, "Through the Earth": script + voice timings + this direction →
+"""Compile Possibility Lab No. 001, "Through the Earth": script + voice timings + this direction →
 film.json (the scene's clock: shots, the fall clock, camera keys, the spine readout's states, the show-your-
 work card, labels, badges, counters, captions, title and end card) and sheet.json (the studio's cue sheet).
 Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (kits/cinema/script/
@@ -203,8 +203,8 @@ COUNTERS = [
 ]
 
 # ── the title card and the end card ───────────────────────────────────────
-TITLE = {"series": "Back of the Envelope · No. 001", "title": "Through the *Earth*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *everyone, one place*", "follow": "Back of the Envelope · No. 002",
+TITLE = {"series": "Possibility Lab · No. 001", "title": "Through the *Earth*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *everyone, one place*", "follow": "Possibility Lab · No. 002",
        "next": "Klotz, Am. J. Phys. 83, 231 (2015): 38 min 11 s with the real Earth; 42 min 12 s uniform."}
 
 CUE = {"jump": t_jump, "stop": t_stop, "box": t_box, "park": t_park, "core": t_core, "drive": [t_drive0, t_drive1],

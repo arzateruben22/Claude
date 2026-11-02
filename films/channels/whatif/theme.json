@@ -1,7 +1,7 @@
 {
- "_doc": "Back of the Envelope (the what-if channel): graphite and marker. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/whatif/bible.md §1). Marker (violet-magenta) is the calculation and the spoken word; assume (tally green) is assumptions only; anchor (ballpoint blue) is the human-scale anchor only. 'bg' is an alias of 'graphite' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and none of the sibling channels' hues: contrast.py checks the distances.",
+ "_doc": "Possibility Lab (the what-if channel): graphite and marker. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/whatif/bible.md §1). Marker (violet-magenta) is the calculation and the spoken word; assume (tally green) is assumptions only; anchor (ballpoint blue) is the human-scale anchor only. 'bg' is an alias of 'graphite' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and none of the sibling channels' hues: contrast.py checks the distances.",
  "id": "back-of-the-envelope",
- "name": "Back of the Envelope",
+ "name": "Possibility Lab",
  "channel": "whatif",
  "promise": "Impossible questions, honest assumptions, real calculations.",
  "compilation": { "introPromiseWidth": 860 },

@@ -1,4 +1,4 @@
-# Back of the Envelope No. 002: "Everyone, one place" (final, 74.4 s; fact-check before posting)
+# Possibility Lab No. 002: "Everyone, one place" (final, 74.4 s; fact-check before posting)
 
 74.4 s, 9:16, narrated by a synthetic voice (labelled as AI), original score (A lydian, 50 BPM). Every
 number comes from `calc.py`; the voice carries what the numbers mean (WRITING.md "Flow"), the running sum and
@@ -29,4 +29,4 @@ vo: So the world isn't full. It only feels that way from inside a *city*. {c9}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: who weighs more, all the ants or *us*? {-}
-end card: "Next envelope: *all the ants*" · "Back of the Envelope · No. 003" (the next episode's number) · footnote: "UN World Population Prospects 2024: about 8.2 billion people in mid-2024." (c1)
+end card: "Next envelope: *all the ants*" · "Possibility Lab · No. 003" (the next episode's number) · footnote: "UN World Population Prospects 2024: about 8.2 billion people in mid-2024." (c1)

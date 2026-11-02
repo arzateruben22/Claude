@@ -1,4 +1,4 @@
-# Light Minute No. 006: "Your speed" (draft; fact-check before posting)
+# One More Orbit No. 006: "Your speed" (draft; fact-check before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Bible §7 #5. It pays off episode 5's tease ("Next: since this started, you've flown at least
@@ -43,7 +43,7 @@ vo: *Light time*, across your galactic trip so far: about a twentieth of a secon
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (68.5–74.5 s)
 vo: Next: more trees on Earth, or stars in our *galaxy*? {-}
-end card: "Next light: trees or *stars*" · "Light Minute · No. 007"
+end card: "Next orbit: trees or *stars*" · "One More Orbit · No. 007"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

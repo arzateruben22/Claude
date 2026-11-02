@@ -1,4 +1,4 @@
-# Light Minute No. 004: "The falling Moon" (draft; fact-check before posting)
+# One More Orbit No. 004: "The falling Moon" (draft; fact-check before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Bible §7 #3. It pays off episode 3's tease ("Next: the Moon never stops falling toward us.
@@ -43,7 +43,7 @@ vo: *Light time*, Earth to Moon: one point three seconds. {c14} You always see t
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (66–72 s)
 vo: Next: pour Earths into the Sun. {-} How many to fill it *up*? {-}
-end card: "Next light: how many Earths fill the *Sun*" · "Light Minute · No. 005"
+end card: "Next orbit: how many Earths fill the *Sun*" · "One More Orbit · No. 005"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

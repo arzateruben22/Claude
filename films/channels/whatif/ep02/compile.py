@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 002, "Everyone, one place": script + voice timings + this direction →
+"""Compile Possibility Lab No. 002, "Everyone, one place": script + voice timings + this direction →
 film.json and sheet.json. Every moment hangs on a beat or a spoken word (kits/cinema/script/timeline.py), and
 every number comes from calc.py, the module claims.json was written from.
 
@@ -158,8 +158,8 @@ PILLS = [
     {"id": "p-side", "text": f"{RESULTS['side_safe_km']} km · about {round(V['side_safe_km'] / 100 * 60)} min at 100 km/h", "t0": t_grow1, "t1": t_squeeze, "at": [90 / 1080, 0.205]},
 ]
 
-TITLE = {"series": "Back of the Envelope · No. 002", "title": "Everyone, *one place*", "sub": "a thought experiment", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *all the ants*", "follow": "Back of the Envelope · No. 003",
+TITLE = {"series": "Possibility Lab · No. 002", "title": "Everyone, *one place*", "sub": "a thought experiment", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *all the ants*", "follow": "Possibility Lab · No. 003",
        "next": "UN World Population Prospects 2024: about 8.2 billion people in mid-2024."}
 
 CUE = {"full": t_full, "half": t_half, "grow": [t_grow0, t_grow1], "squeeze": t_squeeze, "danger": t_danger, "room": t_room,

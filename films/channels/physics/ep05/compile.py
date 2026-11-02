@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 005, "The spinning chair": script + voice timings + this direction → film.json and sheet.json,
+"""Compile Reality Rulebook No. 005, "The spinning chair": script + voice timings + this direction → film.json and sheet.json,
 as in episodes 1–4. Every moment hangs on a beat or a spoken word.
 
   python3 -I films/channels/physics/ep05/compile.py
@@ -290,7 +290,7 @@ CAM = {
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
-TITLE = {"series": "Rest Frame · No. 005", "title": "The spinning *chair*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 005", "title": "The spinning *chair*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'Measure it: | ghosts a tenth / of a second apart.',
@@ -307,7 +307,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE, "hookNote": {"text": "2× slower", "t1": cut("normal")},
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: the ten-meter *straw*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: the ten-meter *straw*", "follow": "Follow Reality Rulebook",
             "foot": "Olivia Oliver, 342 rpm, Warsaw 2015: the Guinness record for the fastest spin on ice skates (as of 2026)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

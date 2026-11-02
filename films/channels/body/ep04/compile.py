@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 04, "The gap": script + voice timings + this direction → film.json and sheet.json.
+"""Compile Body Backstage No. 04, "The gap": script + voice timings + this direction → film.json and sheet.json.
 Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo04:gap")).
 
   python3 -I films/channels/body/ep04/compile.py
@@ -148,8 +148,8 @@ BADGES = [
     *[{"id": f"slow-b{i}", "text": "slowed", "slot": "tl", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
     {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": CUT["loop"]},   # gone under the end card; frame 0 carries "not to scale"
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Meanwhile, Inside · No. 05", "follow": "Follow Meanwhile, Inside",
+TITLE = {"series": "Body Backstage · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Body Backstage · No. 05", "follow": "Follow Body Backstage",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.4, "region": [0.5, 0.16]}   # the brainstem, where each breath begins
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]

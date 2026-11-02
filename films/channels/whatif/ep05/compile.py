@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 005, "Everybody jump": script + voice timings + this direction → film.json
+"""Compile Possibility Lab No. 005, "Everybody jump": script + voice timings + this direction → film.json
 (the scene's clock: shots, camera keys, the jumps, the crowd's growth, the zoom of the powers-of-ten ladder, the
 spine readout's states, the show-your-work card, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number comes from
@@ -236,8 +236,8 @@ COUNTERS = [
     {"id": "c-earth", "label": "the Earth, pushed back", "text": sci(*ve), "unit": "m/s", "t0": A("vo04:weight", -0.1), "t1": B["whoa"]["t0"] - 0.3, "at": [0.5, 0.25], "lit": True},
 ]
 
-TITLE = {"series": "Back of the Envelope · No. 005", "title": "Everybody *jump*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *every raindrop at once*", "follow": "Back of the Envelope · No. 006",
+TITLE = {"series": "Possibility Lab · No. 005", "title": "Everybody *jump*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *every raindrop at once*", "follow": "Possibility Lab · No. 006",
        "next": "Earth 5.97 × 10²⁴ kg (NASA) · 8.2 bn people (UN 2024) · 62 kg, average adult (Walpole 2012)"}
 
 CUE = {"hop1": t_hop1, "hop2": t_hop2, "slow": SLOW, "gather": [t_g0, t_g1], "ghost": t_ghost, "zkeys": ZK, "ladder": LADDER, "land": t_land, "step": t_step}

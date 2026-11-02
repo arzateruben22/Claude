@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 001: script + voice timings + this direction → film.json (the scene's
+"""Compile One More Orbit No. 001: script + voice timings + this direction → film.json (the scene's
 clock: shots, scene clocks, camera keys, labels, badges, counters, the ladder, captions, title and end
 card) and sheet.json (the studio's cue sheet: sections, every overlay and scene event as a sound
 event, the voice). Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
@@ -19,7 +19,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[3] / "kits/cinema/script"))
 from timeline import Film   # noqa: E402
 
-FPS, BPM = 30, 56.25                     # DECISIONS.md: Light Minute is E dorian at 56.25 BPM (a 16th = 8 frames)
+FPS, BPM = 30, 56.25                     # DECISIONS.md: One More Orbit is E dorian at 56.25 BPM (a 16th = 8 frames)
 ID = "lightminute-001"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()         # pre, picture-only holds and energy, from the script's headings
@@ -257,9 +257,9 @@ PILLS = [
 ]
 
 # ── the title card and the end card ───────────────────────────────────────
-TITLE = {"series": "Light Minute · No. 001", "title": "If the Sun *vanished*", "t1": B["normal"]["t0"] - 0.25,
+TITLE = {"series": "One More Orbit · No. 001", "title": "If the Sun *vanished*", "t1": B["normal"]["t0"] - 0.25,
          "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: the *nearest star*", "follow": "Light Minute · No. 002",   # the channel's own tease form (theme.json)
+END = {"title": "Next orbit: the *nearest star*", "follow": "One More Orbit · No. 002",   # the channel's own tease form (theme.json)
        "next": "Measured in 2017: gravity travels at light speed (LIGO, Fermi)."}   # the true-fact footnote (c5)
 
 CUE = {

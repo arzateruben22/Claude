@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 004, "The hammer and the feather": script + voice timings + this direction → film.json and
+"""Compile Reality Rulebook No. 004, "The hammer and the feather": script + voice timings + this direction → film.json and
 sheet.json, as in episodes 1–3. Every moment hangs on a beat or a spoken word; every landing is solved back through
 the closed-form fall and the clock.
 
@@ -252,7 +252,7 @@ for lb in LABELS:
     beat = next(b for b in BEATS if b["t0"] - HALF <= lb["t0"] < b["t1"] - HALF)
     assert lb["t0"] < lb["t1"] and lb["t1"] + LABEL_OUT <= NEXT_CUT.get(beat["id"], DUR) + 1e-9, (lb["id"], "a label is gone by its beat's cut")
 
-# ── notes (rule 8's layout for Rest Frame) ─────────────────────────────────────────────────────
+# ── notes (rule 8's layout for Reality Rulebook) ─────────────────────────────────────────────────────
 # The speed column top-left (the clock's note), the standing cheats top-right (model cards, "Not to scale",
 # "Illustration"), at most two notes in a top corner at once; a framing tag (a note that names the picture, "framing")
 # visits for 4 s at most; the spine readout sits between and below the corners. The hook's speed note is the one
@@ -353,7 +353,7 @@ CAM = {
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
-TITLE = {"series": "Rest Frame · No. 004", "title": "The hammer and the *feather*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 004", "title": "The hammer and the *feather*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'On the Moon, / in nineteen seventy-one, | astronaut David Scott / dropped both.',
@@ -372,7 +372,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: the spinning *chair*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: the spinning *chair*", "follow": "Follow Reality Rulebook",
             "foot": "The feather was a falcon's. Apollo 15's lunar module was named Falcon."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

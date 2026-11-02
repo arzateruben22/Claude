@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 004, "The falling Moon": script + voice timings + this direction → film.json and
+"""Compile One More Orbit No. 004, "The falling Moon": script + voice timings + this direction → film.json and
 sheet.json. Every moment hangs on a beat or a spoken word; every physical number comes from claims.json.
 
   python3 -I films/channels/space/ep04/compile.py
@@ -206,8 +206,8 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 004", "title": "The falling *Moon*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: how\u00a0many Earths fill the *Sun*?", "follow": "Light Minute · No. 005",   # breaks after "Next light:"
+TITLE = {"series": "One More Orbit · No. 004", "title": "The falling *Moon*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next orbit: how\u00a0many Earths fill the *Sun*?", "follow": "One More Orbit · No. 005",   # breaks after "Next orbit:"
        "next": "Each second the Moon falls about 1.4 mm below a straight line."}   # footnote (c17), two lines inside the ring
 
 CUE = {"tk": t_tk, "home0": t_home0, "home1": t_home1, "settle": t_set, "speed0": A("vo02:sideways"), "speed1": B["change"]["t0"], "off": t_off, "back": t_back, "row": A("vo02:thirty"), "min0": t_min0, "min1": t_min1, "ring": A("vo07:one"),

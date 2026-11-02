@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 004, "Count to a billion": script + voice timings + this direction →
+"""Compile Possibility Lab No. 004, "Count to a billion": script + voice timings + this direction →
 film.json (the scene's clock: shots, camera keys, the tape's slips, the calendar and the ruler, the spine
 readout's states, the show-your-work card, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Nothing here is a hand-typed time: every moment hangs on a beat or a
@@ -212,8 +212,8 @@ COUNTERS = [
 ]
 
 # ── the title card and the end card ──
-TITLE = {"series": "Back of the Envelope · No. 004", "title": "Count to a *billion*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *everybody jump*", "follow": "Back of the Envelope · No. 005",
+TITLE = {"series": "Possibility Lab · No. 004", "title": "Count to a *billion*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *everybody jump*", "follow": "Possibility Lab · No. 005",
        "next": "Jeremy Harper counted aloud from 1 to 1,000,000 in 89 days, 18 June to 14 September 2007, about 16 hours a day."}
 
 CUE = {"ticks": TICKS, "short": t_short, "fly": [t_fly0, t_fly1], "say": [t_say0, t_say1], "cal": [t_cal0, t_cal1], "summer": t_summer,

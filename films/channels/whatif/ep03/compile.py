@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 003, "All the ants": script + voice timings + this direction → film.json
+"""Compile Possibility Lab No. 003, "All the ants": script + voice timings + this direction → film.json
 and sheet.json. Every moment hangs on a beat or a spoken word; every number comes from calc.py.
 
   python3 -I films/channels/whatif/ep03/compile.py
@@ -171,8 +171,8 @@ BADGES = [
     {"id": "b-nts", "text": "heaps not to scale", "t0": B["normal"]["t0"] + 0.5, "t1": t_each - 0.3, "slot": "tr"},   # the carpet in "each" is to scale
     {"id": "b-nts2", "text": "heaps not to scale", "t0": t_work0 + 0.3, "t1": t_end, "slot": "tr"},
 ]
-TITLE = {"series": "Back of the Envelope · No. 003", "title": "All the *ants*", "sub": "a thought experiment", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *count to a billion*", "follow": "Back of the Envelope · No. 004",
+TITLE = {"series": "Possibility Lab · No. 003", "title": "All the *ants*", "sub": "a thought experiment", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *count to a billion*", "follow": "Possibility Lab · No. 004",
        "next": "Schultheiss et al., PNAS 2022: about 20 quadrillion ants, 12 megatonnes of carbon."}
 CUE = {"fill": t_fill, "balance": t_balance, "sites": t_sites, "twice": t_twice, "tiny": t_tiny, "weigh": t_weigh, "fifth": t_fifth,
        "wild": t_wild, "each": t_each, "count": t_count}

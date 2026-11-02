@@ -1,4 +1,4 @@
-# Back of the Envelope No. 005: "Everybody jump" (draft; fact-check before posting)
+# Possibility Lab No. 005: "Everybody jump" (draft; fact-check before posting)
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 Every number comes from `calc.py` (the Earth's shift d = N·m·h / M, momentum conserved); `compile.py` reads
@@ -35,7 +35,7 @@ vo: So yes, the Earth moves when we jump. {c9} It just never *notices*. {-}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (64–71 s)
 vo: Next envelope: what if a whole day's rain fell in one *second*? {-}
-end card: "Next envelope: *every raindrop at once*" · "Back of the Envelope · No. 005" · footnote: "Earth 5.97 × 10²⁴ kg (NASA); 8.2 billion people (UN, 2024); 62 kg average adult (Walpole et al., 2012)." (c5)
+end card: "Next envelope: *every raindrop at once*" · "Possibility Lab · No. 005" · footnote: "Earth 5.97 × 10²⁴ kg (NASA); 8.2 billion people (UN, 2024); 62 kg average adult (Walpole et al., 2012)." (c5)
 
 ## Notes
 - Every number is `calc.py`'s; the answer is shown to one significant figure ("≈ 3 × 10⁻¹⁴ m").

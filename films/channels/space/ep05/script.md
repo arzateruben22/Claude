@@ -1,4 +1,4 @@
-# Light Minute No. 005: "How big is the Sun" (draft; fact-check before posting)
+# One More Orbit No. 005: "How big is the Sun" (draft; fact-check before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Bible §7 #4. It pays off episode 4's tease ("Next: pour Earths into the Sun. How many before
@@ -41,7 +41,7 @@ vo: *Light time*, across the Sun: about five seconds. {c12} Sun to Earth: eight 
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (66–72 s)
 vo: Next: since this started, you've flown at least two thousand kilometers. {c16} *How*? {-}
-end card: "Next light: how fast are you *moving*" · "Light Minute · No. 006" · footnote "The Sun holds about 99.8% of all the mass in the solar system." (c18)
+end card: "Next orbit: how fast are you *moving*" · "One More Orbit · No. 006" · footnote "The Sun holds about 99.8% of all the mass in the solar system." (c18)
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

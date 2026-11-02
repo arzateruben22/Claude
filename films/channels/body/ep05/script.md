@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 05: "Where breath goes" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 05: "Where breath goes" (draft; a physiologist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-5 row (`../bible.md`, §7) to the story standard
@@ -61,7 +61,7 @@ vo: *Meanwhile*, as you watched, air went in and out of you. {-} About six litre
 
 ## tease {shot: a white blood cell pressed against a vessel wall, a seam opening · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: about 480 million air sacs (Ochs, 2004) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)
 vo: Next: a cell that leaves your blood. {-} It squeezes *through* a wall. {c14}
-end card: "Next: The exit" · "Meanwhile, Inside · No. 06"
+end card: "Next: The exit" · "Body Backstage · No. 06"
 
 ## Notes
 - The tally counts litres at 5.5 a minute (inside the 5–8 L/min resting range) from frame 0; "six" is

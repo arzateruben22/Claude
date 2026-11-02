@@ -1,4 +1,4 @@
-# Light Minute No. 003: "Venus day" (draft; fact-check before posting)
+# One More Orbit No. 003: "Venus day" (draft; fact-check before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Bible §7 #2. It pays off episode 2's tease ("Next: a world that turns slower than it orbits.
@@ -41,7 +41,7 @@ vo: *Light time*, Sun to Venus: six minutes. {c15} The radar's round trip, at it
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–72.5 s)
 vo: Next: the Moon never stops falling toward us. {c17} So why doesn't it *land*? {-}
-end card: "Next light: the Moon that never *lands*" · "Light Minute · No. 004"
+end card: "Next orbit: the Moon that never *lands*" · "One More Orbit · No. 004"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

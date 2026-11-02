@@ -1,4 +1,4 @@
-# Back of the Envelope No. 006: "Every raindrop at once" (draft; fact-check before posting)
+# Possibility Lab No. 006: "Every raindrop at once" (draft; fact-check before posting)
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The bible's backup for idea 6 ("Every cat at once" has no measured meow loudness to stand on). Every number
@@ -34,7 +34,7 @@ vo: So the whole sky's rain is a thin film, spread wide. {c10} A storm is where 
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66–71.5 s)
 vo: Next envelope: how long to walk to the *Moon*? {-}
-end card: "Next envelope: *walking to the Moon*" · "Back of the Envelope · No. 006" · footnote: "Rodell et al., J. Climate 28, 8289 (2015): about 520,000 km³ of rain, snow and hail a year." (c1)
+end card: "Next envelope: *walking to the Moon*" · "Possibility Lab · No. 006" · footnote: "Rodell et al., J. Climate 28, 8289 (2015): about 520,000 km³ of rain, snow and hail a year." (c1)
 
 ## Notes
 - Every number is `calc.py`'s; the answer is an average ("≈ 3 mm"), badged: storms get far more, deserts none.

@@ -1,4 +1,4 @@
-# Rest Frame No. 005: "The spinning chair" (draft; a physicist signs off before it posts)
+# Reality Rulebook No. 005: "The spinning chair" (draft; a physicist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 5 (`../bible.md`, §7 #5) and episode 4's tease ("Next: a
@@ -47,7 +47,7 @@ vo: One push set your total spin. {c10} Your arms just decide how *fast*. {c11}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (62.5–69 s)
 vo: Next: a drinking straw, three stories tall. {-} Could you still *drink* through it? {-}
-end card: "Next drop: the ten-meter straw" · "Follow Rest Frame" · footnote: "Olivia Oliver, 342 rpm, Warsaw 2015: the Guinness record for the fastest spin on ice skates (as of 2026)."
+end card: "Next drop: the ten-meter straw" · "Follow Reality Rulebook" · footnote: "Olivia Oliver, 342 rpm, Warsaw 2015: the Guinness record for the fastest spin on ice skates (as of 2026)."
 
 ## Notes
 - The spin is computed from angular momentum (no simulation); friction is ignored (badged).

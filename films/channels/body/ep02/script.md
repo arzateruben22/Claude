@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 02: "A billion passengers" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 02: "A billion passengers" (draft; a physiologist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-2 row (`../bible.md`, §7) to the story standard
@@ -55,7 +55,7 @@ vo: *Meanwhile*, as you watched, your blood handed your body about a cup of oxyg
 
 ## tease {shot: a nerve fibre in the dark, a spark at one end · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)
 vo: Next: the signal in your nerves. {-} In the fastest, it doesn't crawl; it *jumps*. {c16}
-end card: "Next: The jump" · "Meanwhile, Inside · No. 03"
+end card: "Next: The jump" · "Body Backstage · No. 03"
 
 ## Notes
 - The tally counts from frame 0 at 250 mL a minute (a resting adult). The line lands near 62 s,

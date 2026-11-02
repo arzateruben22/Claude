@@ -1,4 +1,4 @@
-# Rest Frame No. 001: "Thrown or dropped?" (draft; a physicist signs off before it posts)
+# Reality Rulebook No. 001: "Thrown or dropped?" (draft; a physicist signs off before it posts)
 
 About 75 s as voiced (74.9 s laid out on the 112.5 BPM grid), 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labelled as AI), with an
 original score. Built from the bible's episode-1 script (`../bible.md`, §8) with every fix from
@@ -49,7 +49,7 @@ throws land a sliver after the drop. {c14}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (68.5–74.9 s)
 vo: Next: one pendulum, big swing against small. {-} It's *almost* a tie. {c12}
-end card: "Next: the swing's secret" · "Follow Rest Frame" · footnote: "Two motions at once: Galileo, Two New Sciences, 1638"
+end card: "Next: the swing's secret" · "Follow Reality Rulebook" · footnote: "Two motions at once: Galileo, Two New Sciences, 1638"
 
 ## Notes
 - The scene runs the fall in closed form without air (B3 Props), so "the same frame" is exact on

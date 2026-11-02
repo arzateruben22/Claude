@@ -1,4 +1,4 @@
-# Back of the Envelope No. 001: "Through the Earth" (draft; fact-check before posting)
+# Possibility Lab No. 001: "Through the Earth" (draft; fact-check before posting)
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Every
 number comes from `calc.py` (PREM density, a uniform Earth, constant gravity); `compile.py` reads
@@ -33,7 +33,7 @@ vo: So a fall through the Earth is more than a ride. {-} It's a way of weighing 
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69.5–74.5 s)
 vo: Next envelope: could everyone alive stand in one *city*? {-}
-end card: "Next envelope: *everyone, one place*" · "Back of the Envelope · No. 002" (the next episode's number) · footnote: "Klotz, Am. J. Phys. 83, 231 (2015): 38 min 11 s with the real Earth; 42 min 12 s uniform." (c9)
+end card: "Next envelope: *everyone, one place*" · "Possibility Lab · No. 002" (the next episode's number) · footnote: "Klotz, Am. J. Phys. 83, 231 (2015): 38 min 11 s with the real Earth; 42 min 12 s uniform." (c9)
 
 ## Notes
 - Every number is `calc.py`'s; the film never shows more than two significant figures of an

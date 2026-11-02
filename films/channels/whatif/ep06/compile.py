@@ -1,4 +1,4 @@
-"""Compile Back of the Envelope No. 006, "Every raindrop at once": script + voice timings + this direction →
+"""Compile Possibility Lab No. 006, "Every raindrop at once": script + voice timings + this direction →
 film.json (the scene's clock: shots, camera keys, the rain's fall, the waffle of where it lands, the water layer,
 the coins and the storm column, the spine readout's states, the show-your-work card, labels, badges, counters,
 captions, title and end card) and sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken
@@ -176,8 +176,8 @@ COUNTERS = [
      "keys": [[t_amz, R["real_amazons"]], [t_sq[1], R["real_amazons"]], [t_seven + 0.4, V["amazons"]]], "end": V["amazons"]},
 ]
 
-TITLE = {"series": "Back of the Envelope · No. 006", "title": "Every raindrop *at once*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *walking to the Moon*", "follow": "Back of the Envelope · No. 007",
+TITLE = {"series": "Possibility Lab · No. 006", "title": "Every raindrop *at once*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *walking to the Moon*", "follow": "Possibility Lab · No. 007",
        "next": "Rodell et al., J. Climate 28, 8289 (2015): about 520,000 km³ of rain, snow and hail a year."}
 
 CUE = {"fall": FALLK, "day": t_day, "squeeze": t_sq, "pour": t_pour, "ocean": t_ocean, "layer": t_layer, "box": t_box, "coins": t_coins,

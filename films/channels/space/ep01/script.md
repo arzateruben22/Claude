@@ -1,4 +1,4 @@
-# Light Minute No. 001: "If the Sun vanished" (draft; fact-check before posting)
+# One More Orbit No. 001: "If the Sun vanished" (draft; fact-check before posting)
 
 About 71 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original
 score. Built from the bible's episode-1 script (`../bible.md`, §8) with every fix from the
@@ -50,7 +50,7 @@ the last *Ice Age*. {c12,c14}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: leave for the nearest star today. {-} When do we *arrive*?
-end card: "Next light: the *nearest star*" · "Light Minute · No. 002" · footnote: "Measured in 2017: gravity travels at light speed (LIGO, Fermi)." (c5)
+end card: "Next orbit: the *nearest star*" · "One More Orbit · No. 002" · footnote: "Measured in 2017: gravity travels at light speed (LIGO, Fermi)." (c5)
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see

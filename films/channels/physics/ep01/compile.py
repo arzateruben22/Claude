@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 001, "Thrown or dropped?": script + voice timings + this direction → film.json (the
+"""Compile Reality Rulebook No. 001, "Thrown or dropped?": script + voice timings + this direction → film.json (the
 scene's clock: shots, the time warp, the takes, the cue table, camera keys, labels, badges, readouts,
 captions, end card) and sheet.json (the studio's cue sheet). Nothing here is a hand-typed time: every
 moment hangs on a beat or a spoken word, and every physical moment (a release, a ghost, a landing) is
@@ -335,7 +335,7 @@ def screen_x(shot, x):
     return round(min(1.0, max(0.0, (540 + (x - k["look"][0]) * ppc) / 1080)), 3)
 
 
-TITLE = {"series": "Rest Frame · No. 001", "title": "Thrown or *dropped*?", "t1": round(cut("normal") - 0.55, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 001", "title": "Thrown or *dropped*?", "t1": round(cut("normal") - 0.55, 4), "y": 0.183, "sig": 0.3}
 film = {
     "id": "rest-frame-001", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
@@ -344,7 +344,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "readouts": READOUTS, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": f.captions(max_chars=24), "endCard": EC,
-    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: the swing's *secret*", "follow": "Follow Reality Rulebook",
             "foot": "Two motions at once: Galileo, Two New Sciences, 1638"},   # the book's title never breaks
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

@@ -1,7 +1,7 @@
 {
- "_doc": "Rest Frame (the everyday-physics channel): 'daylight lab', the only light-background channel. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/physics/bible.md §2); 'bg' and 'text' are aliases of 'cyc' and 'ink' for the page. Every hud.js default is dark-on-light inverted here: light plates, ink text, the spoken word on a marker band. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral: contrast.py checks the distances.",
+ "_doc": "Reality Rulebook (the everyday-physics channel): 'daylight lab', the only light-background channel. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/physics/bible.md §2); 'bg' and 'text' are aliases of 'cyc' and 'ink' for the page. Every hud.js default is dark-on-light inverted here: light plates, ink text, the spoken word on a marker band. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral: contrast.py checks the distances.",
  "id": "rest-frame",
- "name": "Rest Frame",
+ "name": "Reality Rulebook",
  "channel": "physics",
  "promise": "Everyday things, slowed down until the physics shows.",
 

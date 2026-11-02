@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 006, "The ten-meter straw": script + voice timings + this direction → film.json and sheet.json,
+"""Compile Reality Rulebook No. 006, "The ten-meter straw": script + voice timings + this direction → film.json and sheet.json,
 as in episodes 1–5. Every moment hangs on a beat or a spoken word.
 
   python3 -I films/channels/physics/ep06/compile.py
@@ -207,7 +207,7 @@ CAM = {
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
-TITLE = {"series": "Rest Frame · No. 006", "title": "The ten-meter *straw*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 006", "title": "The ten-meter *straw*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = ["The atmosphere pushes, | and its push runs out / near ten meters."]
 
@@ -221,7 +221,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "cam": CAM,
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: why ice *floats*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: why ice *floats*", "follow": "Follow Reality Rulebook",
             "foot": "Torricelli, 1644: the same air held a column of mercury about 76 cm high."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

@@ -21,7 +21,7 @@ export const CHANNELS: {
   voice: { narrator: string; provider: string }; editorial: Editorial; filmsPath: string | null; creation: { key: string; name: string };
 }[] = [
   {
-    topic: "skincare", slug: "skincare", name: "Outer Layer", provisional: false,
+    topic: "skincare", slug: "skincare", name: "Skin Sense", provisional: false,
     tagline: "Skin biology, ingredients and routines, with the evidence on the screen.",
     color: "#00685F", colorInk: "#00685F", label: "SKIN",
     voice: { narrator: "TBD: auditioning (not af_heart: that voice is Lumevina's)", provider: "kokoro" },
@@ -36,7 +36,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/skincare", creation: { key: "glass_garden", name: "The Glass Garden" },
   },
   {
-    topic: "physics", slug: "physics", name: "Rest Frame", provisional: true,
+    topic: "physics", slug: "physics", name: "Reality Rulebook", provisional: false,
     tagline: "Everyday things, slowed down until the physics shows.",
     color: "#2F5BFF", colorInk: "#1E3FCC", label: "PHYSICS",
     voice: { narrator: "af_bella (speed 1.0)", provider: "kokoro" },
@@ -51,7 +51,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/physics", creation: { key: "gravity_marble", name: "The Gravity Marble" },
   },
   {
-    topic: "body", slug: "body", name: "Meanwhile, Inside", provisional: true,
+    topic: "body", slug: "body", name: "Body Backstage", provisional: false,
     tagline: "What your body is doing right now, while you watch.",
     color: "#FF6F5E", colorInk: "#B23A2C", label: "BODY",
     voice: { narrator: "bf_emma", provider: "kokoro" },
@@ -66,7 +66,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/body", creation: { key: "bioelectric_car", name: "The Bioelectric Car" },
   },
   {
-    topic: "space", slug: "space", name: "Light Minute", provisional: true,
+    topic: "space", slug: "space", name: "One More Orbit", provisional: false,
     tagline: "One minute, one 'whoa' about the universe, every number sourced.",
     color: "#5B3FD0", colorInk: "#46309F", label: "SPACE",
     voice: { narrator: "am_michael", provider: "kokoro" },
@@ -81,7 +81,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/space", creation: { key: "pocket_universe", name: "The Pocket Universe" },
   },
   {
-    topic: "whatif", slug: "whatif", name: "Back of the Envelope", provisional: false,
+    topic: "whatif", slug: "whatif", name: "Possibility Lab", provisional: false,
     tagline: "Impossible questions, honest assumptions, real calculations.",
     color: "#EB63FF", colorInk: "#A21CAF", label: "WHAT IF?",
     voice: { narrator: "TBD: auditioning", provider: "kokoro" },

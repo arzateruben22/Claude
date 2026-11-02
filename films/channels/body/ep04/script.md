@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 04: "The gap" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 04: "The gap" (draft; a physiologist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-4 row (`../bible.md`, §7) to the story standard
@@ -67,7 +67,7 @@ and crossed gaps like these to your diaphragm. {c15}
 
 ## tease {shot: an air sac in the dark, filling · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: Golgi and Cajal shared the 1906 Nobel Prize · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.3–73.5 s)
 vo: Next: those breaths. {-} Where does all that air *go*? {-}
-end card: "Next: Where breath goes" · "Meanwhile, Inside · No. 05"
+end card: "Next: Where breath goes" · "Body Backstage · No. 05"
 
 ## Notes
 - The tally counts breaths at 15 a minute (inside the resting 12–20) from frame 0; the line starts at

@@ -1,4 +1,4 @@
-# Back of the Envelope No. 003: "All the ants" (draft; fact-check before voicing)
+# Possibility Lab No. 003: "All the ants" (draft; fact-check before voicing)
 
 73.8 s, 9:16, synthetic narrator (labelled as AI), original score (A lydian, 50 BPM). Every number from
 `calc.py`; the voice carries what the numbers mean (WRITING.md "Flow"); the running sum carries 20 quadrillion,
@@ -29,4 +29,4 @@ vo: So we win on the scale, by a lot. But they win on the *count*. {c8}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66.5–72.5 s)
 vo: Next envelope: how long would it take to count to a *billion*? {-}
-end card: "Next envelope: *count to a billion*" · "Back of the Envelope · No. 004" · footnote: "Schultheiss et al., PNAS 2022: about 20 quadrillion ants, 12 megatonnes of carbon." (c2)
+end card: "Next envelope: *count to a billion*" · "Possibility Lab · No. 004" · footnote: "Schultheiss et al., PNAS 2022: about 20 quadrillion ants, 12 megatonnes of carbon." (c2)
