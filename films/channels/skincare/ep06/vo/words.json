@@ -1,0 +1,1075 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Why do we get goosebumps? We hardly have fur.",
+   "heard": "Why do we get goosebumps? We hardly have fur.",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.305,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 0.335,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "get",
+     "start": 0.545,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "goosebumps?",
+     "start": 0.83,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "We",
+     "start": 1.83,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "hardly",
+     "start": 2.035,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 2.435,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "fur.",
+     "start": 2.65,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump.",
+   "heard": "Nearly every hair has its own tiny muscle, and when we are cold or frightened a nerve tugs it, pulling the hair upright and the skin into a bump.",
+   "words": [
+    {
+     "w": "Nearly",
+     "start": 0.025,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 0.53,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 0.82,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 1.195,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 1.495,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 1.595,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 1.915,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "muscle,",
+     "start": 2.315,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.475,
+     "end": 3.525,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 3.505,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "we're",
+     "start": 3.82,
+     "end": 4.08,
+     "heard": false
+    },
+    {
+     "w": "cold",
+     "start": 4.015,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 4.52,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "frightened,",
+     "start": 4.815,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.465,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 5.495,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "tugs",
+     "start": 6.05,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 6.575,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "pulling",
+     "start": 7.15,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.535,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 7.58,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "upright",
+     "start": 7.905,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.465,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.525,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 8.815,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 9.215,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.245,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "bump.",
+     "start": 9.515,
+     "end": 9.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+   "heard": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.3,
+     "end": 0.35,
+     "heard": true
+    },
+    {
+     "w": "furry",
+     "start": 0.33,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "animal,",
+     "start": 0.655,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 1.335,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "fluffs",
+     "start": 1.465,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.985,
+     "end": 2.035,
+     "heard": true
+    },
+    {
+     "w": "coat",
+     "start": 2.02,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 2.24,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.4,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "blanket",
+     "start": 2.635,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.01,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "trapped",
+     "start": 3.18,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "air.",
+     "start": 3.76,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "We",
+     "start": 4.51,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 4.54,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.815,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.025,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "many",
+     "start": 5.17,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 5.45,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "follicles",
+     "start": 5.77,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.255,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.39,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "chimpanzee,",
+     "start": 6.575,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 7.62,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "ours",
+     "start": 7.675,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "grow",
+     "start": 8.03,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "fine,",
+     "start": 8.335,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 9.17,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "invisible",
+     "start": 9.55,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "hairs.",
+     "start": 10.17,
+     "end": 10.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
+   "heard": "So the bumps look like a leftover, but a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.445,
+     "end": 0.495,
+     "heard": true
+    },
+    {
+     "w": "bumps",
+     "start": 0.475,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 0.865,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.16,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.41,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "leftover.",
+     "start": 1.44,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 2.965,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.18,
+     "end": 3.23,
+     "heard": true
+    },
+    {
+     "w": "team",
+     "start": 3.275,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.6,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "Harvard",
+     "start": 3.63,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 4.305,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.615,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 4.72,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "also",
+     "start": 5.265,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "reaches",
+     "start": 5.525,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.255,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "stem",
+     "start": 6.285,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 6.89,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 7.32,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "grow",
+     "start": 7.495,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "hair,",
+     "start": 7.87,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.825,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.855,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 8.96,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 9.495,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 10.11,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 10.165,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "place.",
+     "start": 10.39,
+     "end": 10.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades.",
+   "heard": "In the cold that nerve wakes the stem cells, and the mice grew new hair sooner, take the little muscle away and the wiring fades.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.345,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "cold,",
+     "start": 0.375,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.87,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 1.015,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "wakes",
+     "start": 1.515,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.845,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "stem",
+     "start": 2.06,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "cells,",
+     "start": 2.465,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.34,
+     "end": 3.39,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.37,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "mice",
+     "start": 3.485,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "grew",
+     "start": 4.02,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "new",
+     "start": 4.32,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 4.495,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "sooner.",
+     "start": 4.97,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "Take",
+     "start": 5.965,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.195,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 6.27,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 6.485,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "away,",
+     "start": 7.1,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.495,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.525,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "wiring",
+     "start": 7.75,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "fades.",
+     "start": 8.405,
+     "end": 9.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
+   "heard": "and most of the hairs it tends are thinner than a third of a sheet of pa,",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.335,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 0.37,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.815,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "hairs",
+     "start": 1.205,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.745,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "tends",
+     "start": 1.945,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 2.845,
+     "end": 2.895,
+     "heard": true
+    },
+    {
+     "w": "thinner",
+     "start": 3.12,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 3.585,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.94,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "third",
+     "start": 4.045,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.43,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.575,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "sheet",
+     "start": 4.68,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.16,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "paper.",
+     "start": 5.445,
+     "end": 5.74,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it.",
+   "heard": "So why do we still get goosebumps? Because the muscle that raises a hare still looks after it.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.035,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 0.325,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.62,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 0.815,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 0.945,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "get",
+     "start": 1.24,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "goosebumps?",
+     "start": 1.58,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "Because",
+     "start": 2.84,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.215,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 3.245,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.94,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "raises",
+     "start": 3.97,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.565,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 4.715,
+     "end": 5.28,
+     "heard": false
+    },
+    {
+     "w": "still",
+     "start": 5.31,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "looks",
+     "start": 5.52,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "after",
+     "start": 5.915,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 6.26,
+     "end": 6.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "That's the outer layer, for now. Next season, we go deeper.",
+   "heard": "That's the outer layer for now. Next season we go deeper.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.38,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "outer",
+     "start": 0.41,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "layer,",
+     "start": 0.7,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 1.17,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "now.",
+     "start": 1.515,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "Next",
+     "start": 2.105,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "season,",
+     "start": 2.295,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 2.915,
+     "end": 2.965,
+     "heard": true
+    },
+    {
+     "w": "go",
+     "start": 2.945,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "deeper.",
+     "start": 3.145,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

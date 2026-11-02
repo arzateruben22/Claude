@@ -132,7 +132,7 @@ GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["thin
          "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": VELLUS_UM, "paper_um": PAPER_UM, "bar": "fine hair"}
 
 TITLE = {"series": "Outer Layer · No. 006", "title": "*Goosebumps*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:goosebumps?", 0.35)}
-END = {"title": "Next layer: season 2, *deeper*", "follow": "Outer Layer · Season 1",
+END = {"title": "Next season: *deeper*", "follow": "Outer Layer · Season 1",
        "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020)."}
 POSTER = A("vo04:holds", 0.4)
 
