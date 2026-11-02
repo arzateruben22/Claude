@@ -84,7 +84,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.18, 0.33] });   // under the spine readout, clear of it
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}.ol-vf .rec{top:auto;bottom:1.6vmin}";   /* REC at the bottom: the spine readout owns the top right */ document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
+{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}.ol-vf .rec{top:auto!important;bottom:1.6vmin!important}";   /* REC at the bottom: the spine readout owns the top right */ document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.19 });
 // plates: violet cards in the theme's tokens (text on them ≥ 4.5:1)
 const plate = (html, css) => {

@@ -101,6 +101,7 @@ for shot, keys in CAM.items():           # slow arcs (≤ 6° a second)
         assert rate <= 6.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
 
 # ── the overlay ─────────────────────────────────────────────────────────────
+TITLE_T1 = B["normal"]["t0"] - 0.5   # the title card leaves; the spine and the top-right note take its place
 LABELS = [
     {"id": "l-nerve", "text": "nerve ending", "kind": "cell", "anchor": "bulb", "t0": CUE["nerve"] + 0.5, "t1": CUE["pulls"] - 0.3, "shot": "below", "side": -1},
     {"id": "l-msg", "text": "messenger", "kind": "water", "anchor": "gap", "t0": CUE["messenger"], "t1": CUE["pulls"] - 0.3, "shot": "below", "side": 1, "v": "below"},
@@ -112,8 +113,8 @@ LABELS = [
     {"id": "l-sprout", "text": "new endings", "kind": "cell", "anchor": "sprout", "t0": CUE["nerve2"], "t1": B["tease"]["t0"], "shot": "gauge", "side": 1, "v": "above"},
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model, not a photo", "t0": 0.0, "t1": CUE["nanogram"] - 0.2, "slot": "tr"},
-    {"id": "b-ng", "text": "lethal dose ≈ 1–2 ng/kg (est.)", "t0": CUE["nanogram"], "t1": CUE["nerve"], "slot": "tr"},
+    {"id": "b-model-h", "text": "model, not a photo", "t0": TITLE_T1, "t1": CUE["nerve"], "slot": "tr"},
+    {"id": "b-ng", "text": "lethal dose ≈ 1–2 ng/kg (est.)", "t0": CUE["nanogram"], "t1": TITLE_T1 - 0.1, "slot": "tr"},   # with the title up, the one top-right note is the figure the voice names
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
@@ -123,7 +124,7 @@ BADGES = [
 ]
 SPINE = [0.62, 0.215]   # top right, under the notes
 COUNTERS = [
-    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": 0.0, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
+    {"id": "c-q", "label": "one frown's dose", "fmt": "text", "text": "?", "t0": TITLE_T1, "t1": CUE["kill"] - 0.45, "at": SPINE},   # after the title; on through the why (it is the question the whoa answers)
     {"id": "c-dose", "label": "of a lethal dose (est.)", "fmt": "text", "text": "< 1 %", "t0": CUE["kill"], "t1": t_end, "at": SPINE},
 ]
 # the plates: Kerner's (the why) and the dose (the whoa); the daylight strip before the dose plate replaces it
@@ -157,7 +158,7 @@ J = {"puff": [CUE["messenger"], CUE["messenger"] + 1.6], "pull": [CUE["pulls"] -
      "toxin": [CUE["slips"] - 0.2, CUE["cuts"]], "cut": [CUE["cuts"], CUE["cuts"] + 0.5], "release": [CUE["ready"] - 0.1, CUE["leaves"] + 0.6],
      "sprout": [CUE["nerve2"] - 0.6, CUE["endings"] + 0.6], "relight": [CUE["endings"] - 0.1, CUE["endings"] + 1.7], "bump": [CUE["ready"] - 0.2, CUE["leaves"] + 0.5], "bump2": [CUE["guessed"] + 0.3, B["whoa"]["t0"] - 0.4], "relax": [B["toscale"]["t0"], CUE["endings"]]}
 
-TITLE = {"series": "Outer Layer · No. 004", "title": "The deadliest *dose*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:frown?", 0.35)}
+TITLE = {"series": "Outer Layer · No. 004", "title": "The deadliest *dose*", "t1": TITLE_T1, "sig": A("vo01:frown?", 0.35)}
 END = {"title": "Next layer: same sun, one experiment. Which hand *aged*?", "follow": "Outer Layer · No. 005",
        "next": "Alan Scott first injected botulinum toxin to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."}
 POSTER = A("vo05:kill", 0.6)
