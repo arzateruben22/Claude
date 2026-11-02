@@ -1,1 +1,101 @@
-[]
+[
+ {
+  "id": "c1",
+  "sentence": "A number a second sounds fair, and even at that pace you'd be counting for about thirty-two years.",
+  "claim": "10^9 numbers at one a second is 10^9 s = 31.7 years (Julian years of 365.25 days), said as about 32 years.",
+  "source_url": "https://www.mathsisfun.com/activity/count-billion.html",
+  "source_title": "Activity: Count to a Billion (Math is Fun)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Arithmetic in calc.py (naive_yr). Math is Fun's activity page makes the same point (its excerpt: '25 seconds to count to 100, but 100 years to count to a billion', on longer numbers). The running sum shows '1,000,000,000 × 1 s ≈ 32 yr'."
+ },
+ {
+  "id": "c2",
+  "sentence": "But the numbers don't stay short.",
+  "claim": "Said in full, numbers grow longer: an average of 13.2 syllables below a million and 20.8 below a billion; one of the longest, 777,777,777, has 31 syllables.",
+  "source_url": "https://en.wikipedia.org/wiki/English_numerals",
+  "source_title": "English numerals, Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed exactly in calc.py over every number from 1 to 10^9 (no sampling), with American number names (no 'and': 'one hundred one', as the Wikipedia article describes standard American usage). The tape on screen and the spine ('≈ 21 syllables each') carry the figures."
+ },
+ {
+  "id": "c3",
+  "sentence": "Up in the hundreds of millions, every number is a sentence of its own, and you have to say all of it.",
+  "claim": "A number in the hundreds of millions is three groups of words, typically 20–31 syllables; at Harper's pace one takes about 9 seconds to say (987,654,321: 8.9 s).",
+  "source_url": "https://en.wikipedia.org/wiki/English_numerals",
+  "source_title": "English numerals, Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Syllables from calc.py; the time per number uses Harper's measured pace (c4). 'A sentence of its own' is a description of the length, not a claim about grammar. The spine shows '≈ 9 s each'."
+ },
+ {
+  "id": "c4",
+  "sentence": "We know how fast a person really counts, because a man did it, live on the internet, through most of his waking hours, all the way to a million.",
+  "claim": "Jeremy Harper counted aloud from 1 to 1,000,000 on a live webcast, 18 June to 14 September 2007: 89 days, about 16 hours a day.",
+  "source_url": "https://en.wikipedia.org/wiki/Jeremy_Harper_(record_holder)",
+  "source_title": "Jeremy Harper (record holder), Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Wikipedia: 89 days, sixteen hours each day, 18 June to 14 September 2007; NPR (https://www.npr.org/sections/bryantpark/2007/09/jeremy_harper_counts_to_a_mill_1.html) covered the finish and the charity he counted for; Guinness lists the record as the highest number counted out loud (its record page shows a January date that disagrees with every other source, so the dates come from Wikipedia and NPR). Wikipedia notes the record was passed in December 2025; the film says only that he did it. calc.py: 89 × 16 h = 5126400 s, 5.1 s a number on average, 2.57 syllables a second over the 13,198,003 syllables from 1 to 1,000,000. 'Most of his waking hours': 16 of 24 hours, with about 8 left for sleep."
+ },
+ {
+  "id": "c5",
+  "sentence": "It took him most of a summer.",
+  "claim": "Harper's count ran 18 June to 14 September 2007, 89 days: almost exactly the Northern Hemisphere's summer (21 June to 23 September 2007).",
+  "source_url": "https://en.wikipedia.org/wiki/Jeremy_Harper_(record_holder)",
+  "source_title": "Jeremy Harper (record holder), Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Dates as c4. The label shows '89 days'."
+ },
+ {
+  "id": "c6",
+  "sentence": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four hundred years.",
+  "claim": "All 2.08e+10 syllables from 1 to 10^9 at Harper's 2.57 syllables a second take 8.08e+09 s of speaking; at 16 hours a day that is 384 years, said as nearly 400 (shown '≈ 380 yr').",
+  "source_url": "https://en.wikipedia.org/wiki/Jeremy_Harper_(record_holder)",
+  "source_title": "Jeremy Harper (record holder), Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed in calc.py (real_yr). Assumptions on screen: his pace, his hours (16 h a day), every number said in full, American names. It assumes his average pace (set by numbers below a million) holds for longer numbers, in syllables a second."
+ },
+ {
+  "id": "c7",
+  "sentence": "That's about five whole lifetimes of nothing but numbers.",
+  "claim": "384 years is 5.2 times the world's life expectancy at birth in 2024 (73.3 years).",
+  "source_url": "https://www.un.org/sustainabledevelopment/blog/2024/07/press-release-wpp2024/",
+  "source_title": "UN DESA, World Population Prospects 2024 (press release, 11 July 2024)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The release: global life expectancy at birth reached 73.3 years in 2024. Ratio in calc.py (lifetimes = 5.2), said as about five."
+ },
+ {
+  "id": "c8",
+  "sentence": "Never sleep, or talk twice as fast, and you'd still need centuries.",
+  "claim": "Sensitivity: nonstop at Harper's pace about 260 years; twice his pace at 16 h a day about 190 years; with British 'hundred and' about 430 years. Every variant is more than a century.",
+  "source_url": "https://en.wikipedia.org/wiki/Jeremy_Harper_(record_holder)",
+  "source_title": "Jeremy Harper (record holder), Wikipedia",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "calc.py sensitivity table (also 8 h a day: 770 years). The show-your-work card shows the rows. Twice his pace is 5.1 syllables a second, near ordinary conversational speech; the film does not claim anyone could sustain it."
+ },
+ {
+  "id": "c9",
+  "sentence": "So the word is easy to say once, and the number is out of reach one by one.",
+  "claim": "'One billion' is 3 syllables; counting up to it takes centuries (c6, c8), longer than the longest documented human life (122 years).",
+  "source_url": "https://www.guinnessworldrecords.com/world-records/oldest-person",
+  "source_title": "Oldest person ever (Guinness World Records)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Jeanne Calment, 122 years 164 days (Guinness). Even the fastest variant (190 years) exceeds it, so no one could count to a billion in a lifetime under these assumptions."
+ }
+]

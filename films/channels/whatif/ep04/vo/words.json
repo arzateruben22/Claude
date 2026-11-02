@@ -1,0 +1,1036 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Can you count to a billion? Out loud, every single number.",
+   "heard": "Can you count to a billion? Out loud every single number.",
+   "words": [
+    {
+     "w": "Can",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.26,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 0.29,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.49,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.695,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "billion?",
+     "start": 0.725,
+     "end": 1.314,
+     "heard": true,
+     "end_asr": 1.6
+    },
+    {
+     "w": "Out",
+     "start": 1.945,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "loud,",
+     "start": 2.225,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 2.675,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 3.01,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "number.",
+     "start": 3.33,
+     "end": 4.08,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "A number a second sounds fair, and even at that pace you'd be counting for about thirty-two years. But the numbers don't stay short.",
+   "heard": "A number a second sounds fair, and even at that pace you'd be counting for about thirty-two years. But the numbers don't stay short.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 0.24,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.59,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "second",
+     "start": 0.745,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "sounds",
+     "start": 1.255,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "fair,",
+     "start": 1.76,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.395,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "even",
+     "start": 2.545,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.7,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.0,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "pace",
+     "start": 3.27,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 3.695,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 3.925,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "counting",
+     "start": 3.96,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 4.595,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.885,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "thirty-two",
+     "start": 5.325,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 6.325,
+     "end": 6.683,
+     "heard": true,
+     "end_asr": 6.96
+    },
+    {
+     "w": "But",
+     "start": 7.085,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.24,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "numbers",
+     "start": 7.27,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "don't",
+     "start": 7.815,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "stay",
+     "start": 8.11,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "short.",
+     "start": 8.495,
+     "end": 9.04,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Up in the hundreds of millions, every number is a sentence of its own, and you have to say all of it.",
+   "heard": "Up in the hundreds of millions, every number is a sentence of its own, and you have to say all of it.",
+   "words": [
+    {
+     "w": "Up",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.29,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.625,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "hundreds",
+     "start": 0.725,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.22,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "millions,",
+     "start": 1.415,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 2.445,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 2.94,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.21,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.48,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "sentence",
+     "start": 3.935,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.5,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 4.9,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "own,",
+     "start": 5.1,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.62,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 5.835,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 5.995,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 6.28,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "say",
+     "start": 6.595,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 6.93,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.23,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 7.415,
+     "end": 7.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "We know how fast a person really counts, because a man did it, live on the internet, through most of his waking hours, all the way to a million. It took him most of a summer.",
+   "heard": "We know how fast a person really counts because a man did it, live on the internet through most of his waking hours all the way to a million. It took him most of a summer.",
+   "words": [
+    {
+     "w": "We",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "know",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 0.95,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.315,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "person",
+     "start": 1.48,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 2.19,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "counts,",
+     "start": 2.555,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 3.255,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.535,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "man",
+     "start": 3.68,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "did",
+     "start": 4.21,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 4.36,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "live",
+     "start": 4.81,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 5.49,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.725,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "internet,",
+     "start": 5.905,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 6.675,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 6.925,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.355,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "his",
+     "start": 7.465,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "waking",
+     "start": 7.705,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 8.21,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 9.04,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.365,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 9.525,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 9.84,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.975,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "million.",
+     "start": 10.12,
+     "end": 10.901,
+     "heard": true,
+     "end_asr": 11.2
+    },
+    {
+     "w": "It",
+     "start": 11.3,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "took",
+     "start": 11.515,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "him",
+     "start": 11.725,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 11.87,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 12.2,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 12.23,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "summer.",
+     "start": 12.53,
+     "end": 13.12,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four hundred years. That's about five whole lifetimes of nothing but numbers.",
+   "heard": "Keep going at his pace sleeping when he slept, and the whole count takes nearly four hundred years. That's about five whole lifetimes of nothing but numbers.",
+   "words": [
+    {
+     "w": "Keep",
+     "start": 0.07,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "going",
+     "start": 0.365,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.765,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "his",
+     "start": 1.01,
+     "end": 1.06,
+     "heard": true
+    },
+    {
+     "w": "pace,",
+     "start": 1.04,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "sleeping",
+     "start": 1.495,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 2.105,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "he",
+     "start": 2.345,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "slept,",
+     "start": 2.515,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.865,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.01,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 3.235,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 3.51,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 4.045,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 4.405,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 4.87,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 5.215,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 5.665,
+     "end": 6.255,
+     "heard": true,
+     "end_asr": 6.64
+    },
+    {
+     "w": "That's",
+     "start": 6.655,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.02,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 7.225,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 7.73,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "lifetimes",
+     "start": 8.07,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.9,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 9.0,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 9.62,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "numbers.",
+     "start": 9.8,
+     "end": 10.56,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Never sleep, or talk twice as fast, and you'd still need centuries.",
+   "heard": "Never sleep or talk twice as fast and you'd still need centuries.",
+   "words": [
+    {
+     "w": "Never",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "sleep,",
+     "start": 0.465,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 1.135,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "talk",
+     "start": 1.165,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 1.56,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.95,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "fast,",
+     "start": 2.235,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.745,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 2.88,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 3.32,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "need",
+     "start": 3.575,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "centuries.",
+     "start": 3.795,
+     "end": 4.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So the word is easy to say once, and the number is out of reach one by one.",
+   "heard": "So the word is easy to say once and the number is out of reach one by one.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.075,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.415,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "word",
+     "start": 0.58,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.885,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "easy",
+     "start": 1.205,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.655,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "say",
+     "start": 2.0,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "once,",
+     "start": 2.315,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.075,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.29,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 3.32,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.02,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 4.285,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.5,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 4.705,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 5.22,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 5.62,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "one.",
+     "start": 5.995,
+     "end": 6.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: if everyone jumped at once, would the Earth move?",
+   "heard": "Next envelope if everyone jumped at once would the earth move.",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.455,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 1.395,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 1.625,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "jumped",
+     "start": 2.205,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.545,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "once,",
+     "start": 2.725,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 3.255,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.42,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.6,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "move?",
+     "start": 3.92,
+     "end": 4.48,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep04/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

@@ -1,0 +1,186 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep04/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Can you count to a billion? Out loud, every single number.",
+   "stars": [
+    "billion"
+   ],
+   "phonemes": "kæn juː kˈaʊnt tʊ ɐ bˈɪliən? ˈaʊt lˈaʊd, ˈɛvɹi sˈɪŋɡəl nˈʌmbɚ.",
+   "speeds": [
+    0.86,
+    0.72
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.3136,
+     1.9136
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.123,
+   "sha256": "d04770841ec3be18a6ce6656d9d338395ec302845f866f573874d06c11ea5e2b"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "A number a second sounds fair, and even at that pace you'd be counting for about thirty-two years. But the numbers don't stay short.",
+   "stars": [
+    "thirty-two years",
+    "short"
+   ],
+   "phonemes": "ɐ nˈʌmbɚɹ ɐ sˈɛkənd sˈaʊndz fˈɛɹ, ænd ˈiːvən æt ðæt pˈeɪs juːd biː kˈaʊntɪŋ fɔːɹ ɐbˌaʊt θˈɜːɾitˈuː jˈɪɹz. bˌʌt ðə nˈʌmbɚz dˈoʊnt stˈeɪ ʃˈɔːɹt.",
+   "speeds": [
+    0.8,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.6833,
+     7.0633
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 9.123,
+   "sha256": "bcec12a92f885df08af11f11c9e6b13c3e8a1c4316ce26d4c4a1b844e402fb0b"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Up in the hundreds of millions, every number is a sentence of its own, and you have to say all of it.",
+   "stars": [
+    "all"
+   ],
+   "phonemes": "ˌʌp ɪnðə hˈʌndɹɪdz ʌv mˈɪliənz, ˈɛvɹi nˈʌmbɚɹ ɪz ɐ sˈɛntəns ʌv ɪts ˈoʊn, ænd juː hæv tə sˈeɪ ˈɔːl ʌv ɪt.",
+   "speeds": [
+    0.68
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 7.747,
+   "sha256": "75b839777bb52c3e8d0ecd2f3ae89dcc0a1a5c03e2366500f0795c3f3b692088"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "We know how fast a person really counts, because a man did it, live on the internet, through most of his waking hours, all the way to a million. It took him most of a summer.",
+   "stars": [
+    "million",
+    "summer"
+   ],
+   "phonemes": "wiː nˈoʊ hˌaʊ fˈæst ɐ pˈɜːsən ɹˈiəli kˈaʊnts, bɪkˈʌz ɐ mˈæn dˈɪd ɪt, lˈaɪv ɔnðɪ ˈɪntɚnˌɛt, θɹuː mˈoʊst əv hɪz wˈeɪkɪŋ ˈaʊɚz, ˈɔːl ðə wˈeɪ tʊ ɐ mˈɪliən. ɪt tˈʊk hˌɪm mˈoʊst əv ɐ sˈʌmɚ.",
+   "speeds": [
+    0.74,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     10.9009,
+     11.2809
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 13.175,
+   "sha256": "5ab26fd298524dc39de92917b7cc45401997027cb8799d0228a8dbe833ea3060"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four hundred years. That's about five whole lifetimes of nothing but numbers.",
+   "stars": [
+    "four hundred years",
+    "numbers"
+   ],
+   "phonemes": "kˈiːp ɡˌoʊɪŋ æt hɪz pˈeɪs, slˈiːpɪŋ wɛn hiː slˈɛpt, ænd ðə hˈoʊl kˈaʊnt tˈeɪks nˌɪɹli fˈɔːɹ hˈʌndɹɪd jˈɪɹz. ðæts ɐbˌaʊt fˈaɪv hˈoʊl lˈaɪftaɪmz ʌv nˈʌθɪŋ bˌʌt nˈʌmbɚz.",
+   "speeds": [
+    0.8,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.2548,
+     6.6348
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 10.606,
+   "sha256": "f12029047c6d9a319cbde849050da803bdb73e41aa78e597d0c37ddffeb59d39"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Never sleep, or talk twice as fast, and you'd still need centuries.",
+   "stars": [
+    "centuries"
+   ],
+   "phonemes": "nˈɛvɚ slˈiːp, ɔːɹ tˈɔːk twˈaɪs æz fˈæst, ænd juːd stˈɪl nˈiːd sˈɛntʃɚɹiz.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 4.736,
+   "sha256": "5d8d9e7286aa81c21e767143e5857d2cb52f2df1259245593ce3d431dc02e6be"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So the word is easy to say once, and the number is out of reach one by one.",
+   "stars": [
+    "one"
+   ],
+   "phonemes": "sˌoʊ ðə wˈɜːd ɪz ˈiːzi tə sˈeɪ wˈʌns, ænd ðə nˈʌmbɚɹ ɪz ˌaʊɾəv ɹˈiːtʃ wˈʌn baɪ wˌʌn.",
+   "speeds": [
+    0.62
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "07.wav",
+   "dur": 6.522,
+   "sha256": "ca1419f06def80817a5bc6c45fd76ea9ebdeb4b7ecde6f84fb91f3f36c0879cd"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: if everyone jumped at once, would the Earth move?",
+   "stars": [
+    "move"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: ɪf ˈɛvɹɪwˌʌn dʒˈʌmpt ɐtwˈʌns, wʊd ðɪ ˈɜːθ mˈuːv?",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 4.512,
+   "sha256": "ac3f89117f2845994d2bd18470b31455a0cfdaff013af16c302ce57e3aad7b6f"
+  }
+ ]
+}

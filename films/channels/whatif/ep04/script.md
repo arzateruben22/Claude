@@ -19,7 +19,7 @@ vo: Can you count to a *billion*? Out loud, every single number. {-}
 vo: A number a second sounds fair, and even at that pace you'd be counting for about *thirty-two years*. {c1} But the numbers don't stay *short*. {c2}
 
 ## change {shot: push down the tape: each number's strip grows with its syllables, from "one" to "seven hundred seventy-seven million…" · events: term.write · energy: 0.6} (15–25 s)
-vo: Up in the hundreds of millions, every number is a sentence of its own, and you have to say *all* of it. {c2,c3}
+vo: Up in the hundreds of millions, every number is a sentence of its own, and you have to say *all* of it. {c3}
 
 ## why {shot: a second, shorter tape beside it: one million, a webcam light, a calendar strip of days filling · badge: ∵ his pace, his hours · picture-only 2 s · energy: 0.55} (25–40 s)
 vo: We know how fast a person really counts, because a man did it, live on the internet, through most of his waking hours, all the way to a *million*. {c4} It took him most of a *summer*. {c5}

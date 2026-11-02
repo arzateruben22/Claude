@@ -56,6 +56,11 @@ T3 = sum(S3)                                                       # one group o
 NZ = 999                                                           # nonzero groups
 
 
+# British and Commonwealth English say "one hundred and one": one more syllable in every group of three
+# digits with both hundreds and a remainder (9 x 99 of the 1,000 values), in each of the three groups
+AND_EXTRA = 3 * 10 ** 6 * sum(1 for x in range(1000) if x >= 100 and x % 100)
+
+
 def total_to_billion():
     """Exact syllables from 1 to 10^9: each group (millions, thousands, units) takes every value 10^6
     times; a nonzero millions or thousands group adds its scale word."""
@@ -79,6 +84,7 @@ def compute():
         "nonstop (no sleep), Harper's pace": talk_s / YEAR_S,
         "twice Harper's pace, 16 h a day": real_yr / 2,
         "8 h a day (a working day)": talk_s / (8 * 3600) / 365.25,
+        "British 'hundred and', Harper's pace, 16 h a day": real_yr * (tb + AND_EXTRA) / tb,
     }
     return {
         "syl_total_billion": tb, "syl_total_million": tm,
@@ -108,6 +114,7 @@ RESULTS = {
     "life_yr": round(LIFE_YR),
     "sens_nonstop_yr": int(round(V["sensitivity_yr"]["nonstop (no sleep), Harper's pace"], -1)),
     "sens_double_yr": int(round(V["sensitivity_yr"]["twice Harper's pace, 16 h a day"], -1)),
+    "sens_british_yr": int(round(V["sensitivity_yr"]["British 'hundred and', Harper's pace, 16 h a day"], -1)),
 }
 
 if __name__ == "__main__":
