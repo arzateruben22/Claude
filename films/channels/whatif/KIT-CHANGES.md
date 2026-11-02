@@ -18,3 +18,6 @@ Every change is additive: nothing an existing film calls behaves differently.
 
 Copied, not changed: `set/rig.js` (Light Minute's), `set/look.js` (Light Minute's; default ground
 renamed to `graphite`), `set/aces.js` (Rest Frame's). The originals are untouched.
+- set/tower.js: optional `tip` (the needle's top radius in m; default unchanged). set/crowd.js: the square is
+  centred on its group (`vP` minus the model translation; identical output at the origin, which is where No. 002
+  uses it). Both are channel set pieces, not shared kit files.

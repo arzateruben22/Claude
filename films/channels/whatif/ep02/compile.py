@@ -96,11 +96,13 @@ CAM = {
     ],
     "cube": [
         {"t": t_water, "target": [-150, 0, 0], "dist": 8000, "el": 4, "az": 3, "fov": 30, "fy": 0.5},
-        {"t": t_work0, "target": [-150, 0, 0], "dist": 9500, "el": 4, "az": 2, "fov": 30, "fy": 0.52, "ease": "inout2"},
-        {"t": B["takeaway"]["t0"], "target": [-150, 0, 0], "dist": 9300, "el": 4, "az": 1, "fov": 30, "fy": 0.52, "ease": "sine"},
+        {"t": t_tower + 1.2, "target": [-150, 0, 0], "dist": 7000, "el": 3, "az": 3, "fov": 30, "fy": 0.52, "ease": "sine"},   # closer while the two stand side by side
+        {"t": t_work0, "target": [-150, 0, 0], "dist": 10800, "el": 3, "az": 2, "fov": 30, "fy": 0.525, "ease": "inout2"},   # the card sits clear above the tip
+        {"t": B["takeaway"]["t0"], "target": [-150, 0, 0], "dist": 10600, "el": 3, "az": 1, "fov": 30, "fy": 0.525, "ease": "sine"},
     ],
     "home": [
         {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": SIDE_ALL * 6, "el": 55, "az": 30, "fov": 30, "fy": 0.36},
+        {"t": t_city - 2.7, "target": [0, 0, 0], "dist": SIDE_ALL * 3.4, "el": 52, "az": 27, "fov": 30, "fy": 0.38, "ease": "sine"},   # the square's edges stay in view, then one dive
         {"t": t_city - 1.8, "target": [0, 0, 0], "dist": 70, "el": 50, "az": 24, "fov": 30, "fy": 0.4, "ease": "inout2"},   # low enough to see people by "It only feels"
         {"t": t_city, **YOU, "dist": 11, "el": 44, "az": 22, "ease": "inout2"},
         {"t": t_end, **YOU, "dist": 10, "el": 40, "az": 21, "ease": "sine"},

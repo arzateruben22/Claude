@@ -3,7 +3,7 @@
 // reusable for any "how big would it be" sum. World units are metres; both stand on the desk at y = 0.
 //
 //   import { createTower, createCube } from "../set/tower.js";
-//   const T = createTower({ tokens, height: 828, widen: 2 });   scene.add(T.group);   T.set({ x, z, opacity, grow: 0–1 })
+//   const T = createTower({ tokens, height: 828, widen: 2, tip: m (optional) });   scene.add(T.group);   T.set({ x, z, opacity, grow: 0–1 })
 //   const K = createCube({ tokens, side: 800 });      scene.add(K.group);   K.set({ x, z, opacity, grow: 0–1 })
 //
 // The tower is a generic stepped spire (stacked, narrowing setbacks and a needle), drawn in chalk plaster like
@@ -45,7 +45,7 @@ export const createTower = (o = {}) => {
     const h = f * H - y0, b = new THREE.Mesh(new THREE.CylinderGeometry(w * wk * 0.82, w * wk, h, 6, 1), m);
     b.position.y = y0 + h / 2; inner.add(b); y0 = f * H;
   }
-  const needle = new THREE.Mesh(new THREE.CylinderGeometry(1.2 * wk * wk, 6 * wk * wk, H - y0, 8, 1), m);   // the spire widens twice over, so the full height reads from far off
+  const needle = new THREE.Mesh(new THREE.CylinderGeometry(o.tip ?? 1.2 * wk * wk, 6 * wk * wk, H - y0, 8, 1), m);   // o.tip: the needle's top radius in m (a blunter tip stays visible at phone size)   // the spire widens twice over, so the full height reads from far off
   needle.position.y = y0 + (H - y0) / 2; inner.add(needle);
   const group = new THREE.Group(); group.add(inner);
   const set = (s = {}) => {

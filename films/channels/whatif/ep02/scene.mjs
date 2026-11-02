@@ -71,8 +71,11 @@ planet.group.visible = false; scene.add(planet.group);
 const dot = ring({ color: hdr("marker", 1.4), width: 3.6, opacity: 0 });
 dot.mesh.material.depthTest = false; dot.mesh.renderOrder = 4; scene.add(dot.mesh);
 // the cube of every body, and the tower
-const cube = createCube({ tokens: TK, side: PH.cube }), tower = createTower({ tokens: TK, height: PH.tower, widen: 2.2 });
+const cube = createCube({ tokens: TK, side: PH.cube }), tower = createTower({ tokens: TK, height: PH.tower, widen: 2.2, tip: 16 });   // the tip readable at phone size, so the 828 m reads clearly above the cube
 scene.add(cube.group, tower.group);
+// the 828 m line: a thin chalk rule from the tower's tip across over the cube, so "a little shorter" reads at a glance
+const TIP_LINE = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: TK["chalk-2"] || "#A7AAB2", toneMapped: false, transparent: true, opacity: 0 }));
+scene.add(TIP_LINE);
 const CUBE_X = -PH.cube / 2 - 160, TOWER_X = 260;
 
 // ── camera and overlay ──────────────────────────────────────────────────────
@@ -142,7 +145,11 @@ window.seek = function (t) {
     cube.set({ x: CUBE_X, z: -PH.cube / 2, grow: E.inout2(seg(t, CUE.water, CUE.water + 1.4)) * kk, opacity: 1 });
     cube.group.scale.set(kk, 1, kk);
     tower.set({ x: TOWER_X, z: 0, grow: E.inout2(seg(t, CUE.tower - 0.3, CUE.tower + 1.0)), opacity: 1 });
+    const x0 = CUBE_X - PH.cube * kk / 2 - 40, x1 = TOWER_X, u = E.out3(seg(t, CUE.tower + 1.0, CUE.tower + 1.8));
+    TIP_LINE.scale.set((x1 - x0) * u, 7, 2); TIP_LINE.position.set(x1 - (x1 - x0) * u / 2, PH.tower, 0);   // drawn from the tip toward the cube
+    TIP_LINE.material.opacity = 0.9 * u;
   }
+  TIP_LINE.visible = shot === "cube";
 
   hud.update(t);
   tFlap.update(t);
