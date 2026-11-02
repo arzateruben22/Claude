@@ -75,15 +75,15 @@ varying vec3 vN, vP; varying float vY;
 void main() { vN = normalize(mat3(modelMatrix) * normal); vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xyz; vY = position.y + 0.5; gl_Position = projectionMatrix * viewMatrix * w; }`;
 const WFS = `
 precision highp float;
-uniform vec3 uCol, uGround, uCam; uniform float uOpacity, uExposure, uA, uAlpha;
+uniform vec3 uCol, uGround, uCam; uniform float uOpacity, uExposure, uA, uAlpha, uSolid;
 varying vec3 vN, vP; varying float vY;
 ${ACES_INV_GLSL}
 void main() {
   vec3 n = normalize(vN);
   float rim = pow(1.0 - abs(dot(n, normalize(uCam - vP))), 2.0);
   float top = step(0.98, n.y);
-  vec3 col = mix(uGround, uCol, clamp(uA + 0.5 * rim + 0.25 * top, 0.0, 1.0));
-  gl_FragColor = vec4(acesInv(srgbToLinear(col), uExposure), uOpacity * mix(uAlpha, 1.0, 0.6 * rim + 0.4 * (1.0 - top)));   // see-through from above, solid at the rim and sides
+  vec3 col = mix(uGround, uCol, clamp(uA + (0.5 * rim + 0.25 * top) * uSolid, 0.0, 1.0));
+  gl_FragColor = vec4(acesInv(srgbToLinear(col), uExposure), uOpacity * mix(uAlpha, 1.0, (0.6 * rim + 0.4 * (1.0 - top)) * uSolid));   // see-through from above, solid at the rim and sides
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
@@ -91,7 +91,7 @@ void main() {
 export const createWater = (o = {}) => {
   const tk = o.tokens || {};
   const u = { uCol: { value: new THREE.Vector3(...hexRgb(tk.chalk || "#F4F2EC")) }, uGround: { value: new THREE.Vector3(...hexRgb(tk["graphite-hi"] || "#21242A")) },
-    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uA: { value: o.a ?? 0.28 }, uAlpha: { value: o.alpha ?? 0.45 } };
+    uCam: { value: new THREE.Vector3() }, uOpacity: { value: 1 }, uExposure: { value: o.exposure ?? 1 }, uA: { value: o.a ?? 0.28 }, uAlpha: { value: o.alpha ?? 0.45 }, uSolid: { value: o.solid ?? 1 } };
   const g = new THREE.CylinderGeometry(1, 1, 1, 96, 1);
   const mesh = new THREE.Mesh(g, new THREE.ShaderMaterial({ uniforms: u, vertexShader: WVS, fragmentShader: WFS, transparent: true, depthWrite: false }));
   mesh.renderOrder = 2;

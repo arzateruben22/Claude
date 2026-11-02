@@ -62,7 +62,7 @@ const waffle = createSheet({ w: WS, d: WS, ppu: 110, at: [WF.at[0], 0, WF.at[1]]
 scene.add(waffle.mesh);
 const layer = createWater({ tokens: TK, r: 0.5, h: 1e-5, a: 0.22, alpha: 0.35 });
 scene.add(layer.mesh);
-const film = createWater({ tokens: TK, r: 3.2, h: WD.depth, a: 0.12, alpha: 0.25 });
+const film = createWater({ tokens: TK, r: 3.2, h: WD.depth, a: 0.1, alpha: 0.3, solid: 0.15 });   // a faint sheen, not a floor
 scene.add(film.mesh);
 const storm = createWater({ tokens: TK, r: 0.32, h: 1e-5, a: 0.34, alpha: 0.6 });
 scene.add(storm.mesh);
@@ -82,20 +82,20 @@ const card = createSheet({ w: CW_M, d: CH_M, ppu: 70000, at: [0, 0, 0], order: 3
   if (hw > 0.01) {
     ctx.fillStyle = "rgba(244, 242, 236, 0.5)"; ctx.fillRect(X(0.8), base - X(hw), X(5.2), X(hw));
     ctx.strokeStyle = CHALK; ctx.lineWidth = 3; ctx.beginPath();
-    for (let k = 0; k <= 40; k++) { const x = X(0.8) + X(5.2) * k / 40, y = base - X(hw) + Math.sin(k * 0.9) * 0.05 * pmm; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    for (let k = 0; k <= 40; k++) { const x = X(0.8) + X(5.2) * k / 40, y = base - X(hw) + Math.sin(k * 0.9 + st.w * 3) * 0.05 * pmm; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
     ctx.stroke();
   }
   // the scale, between them: a tick a millimetre, numbered
   ctx.fillStyle = CHALK2; ctx.font = `700 ${0.62 * pmm}px "JetBrains Mono", monospace`; ctx.textBaseline = "middle"; ctx.textAlign = "center";
-  for (let mm = 0; mm <= 5; mm++) { const y = base - X(mm); ctx.fillRect(X(6.6), y - 1.5, X(mm % 5 ? 0.45 : 0.8), 3); if (mm) ctx.fillText(`${mm}`, X(7.9), y); }
+  for (let mm = 0; mm <= 5; mm++) { const y = base - X(mm); ctx.fillRect(X(6.6), y - 1.5, X(mm % 5 ? 0.45 : 0.8), 3); if (mm) ctx.fillText(mm === 5 ? "5 mm" : `${mm}`, X(mm === 5 ? 8.3 : 7.9), y); }
   // two coins, edge on: 19 mm wide is wider than the card, so their edge-on profiles run off its right side
   const c = st.c;
   for (let i = 0; i < 2; i++) {
     const a = Math.min(1, Math.max(0, c * 2 - i));
     if (a <= 0) continue;
-    const y = base - X(1.52 * (i + 1)) - (1 - a) * X(1.2);
-    ctx.globalAlpha = a; ctx.fillStyle = CHALK2; rrect(ctx, X(9.2), y, cw - X(9.2) + 6, X(1.52) - 2, 0.25 * pmm); ctx.fill();
-    ctx.fillStyle = "rgba(23, 26, 30, 0.35)"; for (let r = 0; r < 14; r++) ctx.fillRect(X(9.5) + r * X(0.48), y + X(0.3), 2, X(0.9));   // the reeded edge
+    const y = base - X(1.52 * (i + 1)) - (1 - a) * X(1.6), x0 = X(9.4) + (1 - a) * X(2.0);
+    ctx.globalAlpha = a; ctx.fillStyle = CHALK2; rrect(ctx, x0, y + 1, X(6.2), X(1.52) - 2, 0.7 * pmm); ctx.fill();          // a coin, edge on: rounded ends
+    ctx.fillStyle = CHALK; ctx.fillRect(x0 + X(0.4), y + X(0.3), X(5.4), 2);                                                 // the rim catching the lamp
     ctx.globalAlpha = 1;
   }
 } });
@@ -110,7 +110,7 @@ const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
 const AN = {
   you: () => [0, WD.fig, 0], waffle: () => [WF.at[0] + WS / 2, 0, WF.at[1] - WS * 0.2], layer: () => [WD.coins[0] - CW_M / 2 + 0.0034, WD.depth, WD.coins[1]],
-  coins: () => [WD.coins[0] + CW_M / 2 - 0.002, 0.0031, WD.coins[1]], storm: () => [-1.1 - 0.3, WD.storm * 0.85, 0.2],
+  coins: () => [WD.coins[0] + CW_M / 2 - 0.002, 0.0031, WD.coins[1]], film: () => [1.8, 0.003, -1.8], storm: () => [-1.1 - 0.3, WD.storm * 0.85, 0.2],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -120,8 +120,8 @@ const tFlap = titleFlap(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1, at: c.at, keys: c.keys, ease: "linear" };
-  if (c.fmt === "hours") Object.assign(o, { fmt: (v) => `${String(Math.floor(v + 1e-6)).padStart(2, "0")}:00`, minCh: 5 });
-  else Object.assign(o, { fmt: (v) => commas(Math.round(v)), minCh: 9, lit: (v) => Boolean(c.end && v >= c.end - 1) });
+  if (c.fmt === "hours") Object.assign(o, { fmt: (v) => (v > 24.5 ? "1 second" : `${String(Math.floor(v + 1e-6)).padStart(2, "0")}:00`), minCh: 8, lit: (v) => v > 24.5 });
+  else Object.assign(o, { fmt: (v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)} million` : commas(Math.round(v))), minCh: 11, lit: (v) => Boolean(c.end && v >= c.end - 1) });   // millions to one decimal: no fake precision
   hud.counter(c.id, o);
 }
 for (const L of FILM.labels) {
@@ -152,7 +152,7 @@ window.seek = function (t) {
   const home = shot === "front" || shot === "end";
 
   // the rain: frozen in the hook (and the loop), a drizzle through the day, the pour, then it settles into the layer
-  const pour = E.inout2(seg(t, CUE.squeeze[0], CUE.squeeze[1])) * (1 - E.inout2(seg(t, beat("why").t0 + 0.5, CUE.ocean + 1.0)));
+  const pour = E.inout2(seg(t, CUE.squeeze[1] - 0.3, CUE.squeeze[1] + 0.6)) * (1 - E.inout2(seg(t, beat("why").t0 + 0.5, CUE.ocean + 1.0)));   // the downpour starts on "second"
   const ro = shot === "macro" || shot === "work" ? 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 1.2) : shot === "home" ? 0 : shot === "end" ? seg(t, FILM.endCard + 0.6, beat("tease").t1 - 0.4) : 1;
   const frozen = shot === "front" || shot === "end" ? 1 : 1 - seg(t, beat("normal").t0, beat("normal").t0 + 1.2);   // the hook's sky is full, frozen mid-fall
   rain.set({ fall: home ? 0 : fallAt(t), len: 0.35 + 2.6 * pour, density: Math.max(0.18 + 0.82 * pour, 0.85 * frozen), opacity: ro });
@@ -162,15 +162,16 @@ window.seek = function (t) {
   waffle.set({ opacity: shot === "where" ? E.out3(seg(t, beat("why").t0 + 1.0, beat("why").t0 + 2.0)) : shot === "macro" ? 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 1.0) : 0, state: { k: Math.max(0, k) } });
 
   // the layer fills to 2.8 mm on the line; the coins and the mm ruler beside it
-  const macro = shot === "macro" || shot === "work" || (shot === "home" && t < CUE.home + 1.5);
+  const macro = shot === "macro" || shot === "work";
   const fill = E.inout2(seg(t, CUE.layer[0] + 1.6, CUE.layer[1]));
   layer.set({ opacity: 0 }); coins.set({ opacity: 0 });
-  card.set({ opacity: macro ? E.out3(seg(t, CUE.layer[0] + 1.4, CUE.layer[0] + 2.2)) : 0, state: { f: Math.round(fill * 50) / 50, c: Math.round(clamp01((t - CUE.coins + 0.3) / 0.8) * 20) / 20 } });
+  const cardO = shot === "macro" ? E.out3(seg(t, beat("whoa").t0 + 0.3, beat("whoa").t0 + 1.1)) : 0;   // gone under the work card and before the push home
+  card.set({ opacity: cardO, state: { f: Math.round(fill * 50) / 50, c: Math.round(clamp01((t - CUE.coins + 0.3) / 0.8) * 20) / 20, w: Math.round(t * 8) / 8 } });
 
   // the takeaway: a thin film round you; the storm column rises beside you on "storm … piles up"
   film.set({ opacity: shot === "home" ? E.out3(seg(t, CUE.film, CUE.film + 0.8)) : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [0, 0] });
   const sh = E.inout2(seg(t, CUE.storm[0], CUE.storm[1]));
-  storm.set({ h: Math.max(1e-5, WD.storm * sh), opacity: shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [-1.1, 0.2] });
+  storm.set({ h: Math.max(1e-5, WD.storm * sh), opacity: sh < 0.01 ? 0 : shot === "home" ? 1 : shot === "end" ? 1 - seg(t, FILM.endCard, FILM.endCard + 1.2) : 0, cam: camera.position.toArray(), at: [-1.1, 0.2] });
 
   desk.group.visible = !(macro && pose.dist < 0.5);                       // at mm scale the 800-unit floor's depth runs out of precision: the card carries its own paper line
   desk.update({ grid: 1, pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]] });
