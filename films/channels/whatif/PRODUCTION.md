@@ -6,12 +6,12 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 
 | No. | Title | State |
 |---|---|---|
-| 001 | Through the Earth | draft reviewed (round 1: 10 confirmed findings, all fixed); final rendering (30 Oct) |
-| 002 | Everyone, one place | calc.py + Flow script + claims, lint clean; set pieces (crowd.js, tower.js) written, untested; voicing waits for ep01's final render |
-| 003 | All the ants | bible |
-| 004 | Count to a billion | bible |
-| 005 | Everybody jump | bible |
-| 006 | Every cat at once (backup: every raindrop at once) | bible |
+| 001 | Through the Earth | final sent to the render worker; its QA flagged one counter outside the safe box at 13.6 s → fixed (3074965), re-render job sent (2 Nov) |
+| 002 | Everyone, one place | voiced (74.4 s); two review rounds (10 findings, then 5 open + 1 new), all fixed; draft round 3 rendering for re-review |
+| 003 | All the ants | calc + Flow script + claims (lint clean); voiced 73.8 s; scene built; draft under review (round 1) |
+| 004 | Count to a billion | second builder (branch `-b`), in progress |
+| 005 | Everybody jump | second builder (branch `-b`) |
+| 006 | Every cat at once (backup: every raindrop at once) | second builder (branch `-b`) |
 
 ## Log
 
@@ -57,3 +57,21 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 - Draft review round 1 (`ep01/review/REVIEW-ROUND1.md`): 10 confirmed findings (framing, notes and labels over the
   model, a camera pop, orphan caption pages, picture/voice timing, clipped voice files); all fixed and checked in
   stills. Sound re-rendered: sync PASS. Final render started 05:02 (detached, chunked, resumable).
+
+**30 Oct – 2 Nov — full speed; the compelling pass.**
+- The owner approved the Flow style and am_puck. A second builder (branch `claude/back-of-the-envelope-s1-b`) took
+  episodes 4–6; a render worker (`-render-a`) renders finals from committed jobs. Paused 30 Oct–2 Nov by the owner.
+- Every review now adds a compelling pass (seven lenses scored 1–5; anything under 4 is fixed before the final;
+  each episode must score at least as well as the last). Ep01's middle stayed on one composition too long (the
+  coordinator's note); the lesson, applied from No. 002: change scale or framing with every new idea.
+- No. 002 (you → the crowd at true scale → Greater London → the planet → the cube beside the tower → you): two
+  review rounds. Round 1, 10 findings (the cube read taller than the tower through perspective, a stale running sum,
+  the work card over the cube, three pops, a flash cutting to the globe, a flat field, label collisions); round 2,
+  5 left plus the cube too small; the fixes include people gathering round you from frame 0 (the hook's motion),
+  a textured crowd field, a short work card, and the cube's front face beside the tower. Scores after round 2:
+  a3 b4 c3 d4 e5 f4 g4 (round 3 pending).
+- No. 003: Wilson & Hölldobler's 1994 "ants weigh as much as us" against Schultheiss et al. 2022 (twice the ants,
+  a fifth of our carbon); a pan balance whose beam leans with the story. A kit bug surfaced here: `numerals.py`
+  turned "two and a half million" into "2.5" (fixed additively, see KIT-CHANGES.md).
+- New shared set pieces (additive; ep01 renders identically): `crowd.js`, `tower.js`, `balance.js`; `desk.js`
+  takes an optional `span` (the floor and dome grow for shots far above the paper).
