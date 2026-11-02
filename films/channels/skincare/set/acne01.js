@@ -7,6 +7,7 @@
 //     flood 0 … 1  white cells pour in from the dermis into the canal
 //     rupt 0 … 1   the canal's lower wall gives way; the contents spill into the dermis
 //     press 0 … 1  a thumb's pressure from above: the surface dents, the spill is driven deeper, the red spreads
+//     thumb 0 … 1  the thumb present (1) or lifted away (0) while the press holds
 //     red 0 … 1    inflammation: a red haze around the follicle (grows with rupt and press)
 //   at.{canal, ring, bact, spill, surface, gland, cell}() → world points for labels and the gauge
 import * as THREE from "three";
@@ -37,7 +38,7 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const cellGeo = new THREE.SphereGeometry(20, 18, 14);
   const ringMat = new THREE.MeshStandardMaterial({ color: 0xd8cff5, emissive: 0x000000, roughness: 0.45 });
   const ringC = Array.from({ length: 46 }, (_, i) => { const m = new THREE.Mesh(cellGeo, ringMat); const yy = -60 - R() * 430, side = i % 2 ? 1 : -1, r0 = 95 + 40 * Math.sin(-yy / 140) + R() * 35; m.position.set(side * r0, yy, -4 - R() * 40); m.userData.k = R(); g.add(m); return m; });
-  const floodMat = new THREE.MeshStandardMaterial({ color: 0xf4f1ff, emissive: 0x2a2a30, roughness: 0.4 });
+  const floodMat = new THREE.MeshStandardMaterial({ color: 0xd8cff5, emissive: 0x000000, roughness: 0.45 });   // the same white cells as the ring (one family)
   const floodC = Array.from({ length: 60 }, () => { const m = new THREE.Mesh(cellGeo, floodMat); const yy = -140 - R() * 330; const from = [(R() < 0.5 ? -1 : 1) * (160 + R() * 220), yy - 60 - R() * 120], to = [(R() - 0.5) * 70, yy]; m.userData = { from, to, k: R() }; g.add(m); return m; });
   // the spill: the canal's contents (oil, keratin, bacteria, cells) pushed out through the breach into the dermis
   const spillMat = new THREE.MeshStandardMaterial({ color: 0xf2dc9a, emissive: 0x201808, roughness: 0.4 });
@@ -47,10 +48,13 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const redHaze = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), redMat); redHaze.position.set(0, -360, -60); g.add(redHaze);
   const thumbMat = new THREE.MeshStandardMaterial({ roughness: 0.55, transparent: true, opacity: 0 });
   const thumb = new THREE.Mesh(new THREE.SphereGeometry(330, 40, 28), thumbMat); thumb.scale.set(1, 0.5, 0.8); g.add(thumb);
+  // its nail, on top toward the back: the pad reads as a fingertip
+  const nailMat = new THREE.MeshStandardMaterial({ color: 0xf3d6cf, roughness: 0.18, transparent: true, opacity: 0 });
+  const nail = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), nailMat); nail.scale.set(190, 34, 150); g.add(nail);
   const breachY = -400;
   return {
     group: g, dims: { width, depth, epi, breachY },
-    set({ tone = 0.18, bact: bk = 0, ring = 0, ringLit = 0, flood = 0, rupt = 0, press = 0, red = 0, dim = 0 } = {}) {
+    set({ tone = 0.18, bact: bk = 0, ring = 0, ringLit = 0, flood = 0, rupt = 0, press = 0, red = 0, dim = 0, thumb: thumbK = 1 } = {}) {
       const k = 1 - 0.45 * dim;
       M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.9));
       M.epi.color.setRGB(...toneColor("living", tone).map((v) => v * k));
@@ -59,22 +63,23 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
       glands.forEach((m) => m.material.color.setRGB(0.95 * k, 0.88 * k, 0.62 * k));
       bactMat.emissive.setRGB(1.0 * bk, 0.32 * bk, 0.16 * bk);
       bact.forEach((m) => { m.visible = bk > 0.01; });
-      ringMat.emissive.setRGB(0.15 * ringLit, 0.75 * ringLit, 0.72 * ringLit);
+      ringMat.emissive.setRGB(0.15 * ringLit, 0.75 * ringLit, 0.72 * ringLit); floodMat.emissive.copy(ringMat.emissive);
       ringC.forEach((m) => { m.visible = m.userData.k < ring; });
       floodC.forEach((m) => { const u = Math.min(1, Math.max(0, flood * 1.4 - m.userData.k * 0.4)); const { from, to } = m.userData; m.position.set(from[0] + (to[0] - from[0]) * u, from[1] + (to[1] - from[1]) * u, -20); m.visible = flood > 0.01 && u > 0.001; });
       // the breach: the lower wall and plug open (scaled thin) as the wall gives way
       wall.scale.set(1, 1 - 0.0 * rupt, 1); plug.visible = rupt < 0.98; plug.material.opacity = 1;
-      spill.forEach((m) => { const { a, d, k: kk, z } = m.userData; const u = Math.min(1, Math.max(0, rupt * 1.3 - kk * 0.3)); const dd = d * u + 240 * press * u; m.position.set(Math.cos(a) * dd * 1.2, breachY + Math.sin(a) * dd - 120 * press * u, z); m.visible = u > 0.01; });
+      spill.forEach((m) => { const { a, d, k: kk, z } = m.userData; const u = Math.min(1, Math.max(0, rupt * 1.3 - kk * 0.3)); const dd = d * u + 150 * press * u; m.position.set(Math.cos(a) * dd * 1.2, breachY + Math.sin(a) * dd - 60 * press * u, z); m.visible = u > 0.01; });
       redMat.opacity = 0.32 * red; redHaze.visible = red > 0.01; const rs = 160 + 160 * rupt + 240 * press; redHaze.scale.set(rs * 1.3, rs, rs * 0.5); redHaze.position.y = -340 - 160 * press; redHaze.position.z = -60;
       // the thumb from above, denting the surface
-      thumbMat.color.setRGB(...toneColor("living", tone)); thumbMat.opacity = Math.min(1, press * 3) * 0.95; thumb.visible = press > 0.01;
-      thumb.position.set(0, 165 - 90 * press, 120);
+      thumbMat.color.setRGB(...toneColor("living", tone)); thumbMat.opacity = Math.min(1, press * 3) * 0.95 * thumbK; thumb.visible = press > 0.01 && thumbK > 0.01; thumb.position.y += 0;
+      thumb.position.set(0, 165 - 90 * press + 260 * (1 - thumbK), 120);
+      nail.position.set(40, thumb.position.y + 150, 40); nail.rotation.z = -0.12; nailMat.opacity = thumbMat.opacity; nail.visible = thumb.visible;
       for (let i = 0; i < ep.count; i++) { const by = epY[3 * i + 1], bx = epY[3 * i]; if (by > 0) ep.setY(i, by - 70 * press * Math.exp(-(bx * bx) / 60000)); }
       ep.needsUpdate = true; epiGeo.computeVertexNormals();
     },
     at: {
       canal: () => [x, -150, 40], bact: () => [x + 20, -330, 40], ring: () => [x + 120, -250, 50], gland: () => [x - 110, -300, 60],
-      spill: () => [x + 120, breachY - 120, 40], surface: () => [x - width / 2 + 20, 0, 0], cell: () => [x - 150, -260, 40],
+      spill: () => [x - 150, breachY - 90, 40], surface: () => [x - width / 2 + 20, 0, 0], cell: () => [x - 150, -260, 40],
     },
   };
 };
