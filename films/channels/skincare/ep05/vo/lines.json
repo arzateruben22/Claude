@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep05/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Which has more pigment cells? Count them, row by row.",
+   "stars": [
+    "pigment cells"
+   ],
+   "phonemes": "wˌɪtʃ hɐz mˈɔː pˈɪɡmənt sˈɛlz? kˈaʊnt ðˌɛm, ɹˈəʊ baɪ ɹˈəʊ.",
+   "speed": 0.9,
+   "file": "01.wav",
+   "dur": 3.439,
+   "sha256": "5bac301a5bf91d5b0d9b0e0357a40372d1b692a0d1a2c632ca854f7ca806b543"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Most would guess the darkest. But in the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Across all three, the number comes out about the same.",
+   "stars": [
+    "same"
+   ],
+   "phonemes": "mˈəʊst wʊd ɡˈɛs ðə dˈɑːkɪst. bˌʌt ɪnðə bˈɒtəm ɹˈəʊ ɒv skˈɪn, ˈiːtʃ pˈɪɡmənt sˈɛl fˈiːdz mˈɛlɐnˌɪn tʊ ɐ fjˈuː dˈʌzən nˈeɪbəz. əkɹˌɒs ˈɔːl θɹˈiː, ðə nˈʌmbə kˈʌmz ˈaʊt ɐbˌaʊt ðə sˈeɪm.",
+   "speed": 0.8,
+   "file": "02.wav",
+   "dur": 12.157,
+   "sha256": "94dc4e19ddef04879147db136d633a1e1ba89616a98d8404394a64301475ab40"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "What changes is the work each one does. In deeper skin, they make more of the dark melanin, in larger grains, handed out one by one.",
+   "stars": [
+    "one"
+   ],
+   "phonemes": "wˌɒt tʃˈeɪndʒɪz ɪz ðə wˈɜːk ˈiːtʃ wˈɒn dˈʌz. ɪn dˈiːpə skˈɪn, ðeɪ mˌeɪk mˈɔːɹ ɒvðə dˈɑːk mˈɛlɐnˌɪn, ɪn lˈɑːdʒə ɡɹˈeɪnz, hˈandɪd ˈaʊt wˈɒn baɪ wˌɒn.",
+   "speed": 0.84,
+   "file": "03.wav",
+   "dur": 8.688,
+   "sha256": "2d5510d319a7d5b5244fd36008665928946587a97a07b7009a87bf4103f37357"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "So why would the work differ? Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched.",
+   "stars": [
+    "matched"
+   ],
+   "phonemes": "sˌəʊ wˌaɪ wʊd ðə wˈɜːk dˈɪfə? nˈiːnə ʤəblˈɒnski and dʒˈɔːdʒ tʃˈaplɪn sˈɛt skˈɪn kˈʌlə bɪsˌaɪd sˈʌnlaɪt, ˈɔːl ɐɹˈaʊnd ðə wˈɜːld, and ðə tˈuː mˈatʃt.",
+   "speed": 0.88,
+   "file": "04.wav",
+   "dur": 8.223,
+   "sha256": "053743b5654951b492a7f5ff77db0b62159617fe4b755d49a1fa2036b2bf76c7"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Their idea: under fierce sun, more melanin protected a vitamin called folate. Under weak sun, less of it let enough light through to make vitamin D.",
+   "stars": [
+    "vitamin D"
+   ],
+   "phonemes": "ðeəɹ aɪdˈiə: ˌʌndə fˈiəs sˈʌn, mˈɔː mˈɛlɐnˌɪn pɹətˈɛktɪd ɐ vˈɪtəmɪn kˈɔːld fˈəʊleɪt . ˌʌndə wˈiːk sˈʌn, lˈɛs ɒv ɪt lˈɛt ɪnˈʌf lˈaɪt θɹuː tə mˌeɪk vˈɪtəmɪn dˈiː.",
+   "speed": 0.88,
+   "file": "05.wav",
+   "dur": 8.988,
+   "sha256": "c7616134920016147821f51a21da07f9a1290d121bcd15b04f40e4f1b89ddce1"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And on any one part of the body, the pigment cells sit about a third of a paper's thickness apart.",
+   "stars": [
+    "apart"
+   ],
+   "phonemes": "and ˌɒn ˌɛni wˈɒn pˈɑːt ɒvðə bˈɒdi, ðə pˈɪɡmənt sˈɛlz sˈɪt ɐbˌaʊt ɐ θˈɜːd əvə pˈeɪpəz θˈɪknəs ɐpˈɑːt.",
+   "speed": 0.76,
+   "file": "06.wav",
+   "dur": 6.961,
+   "sha256": "e32a32d1096a677ff47aa619aba9c749db30c305902cd647f8e0d1874e601ec9"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So, which has more? None of them. Same cells, every colour, each answering its own sky.",
+   "stars": [
+    "sky"
+   ],
+   "phonemes": "sˈəʊ, wˌɪtʃ hɐz mˈɔː? nˈɒn ɒv ðˌɛm. sˈeɪm sˈɛlz, ˈɛvɹɪ kˈʌlə, ˈiːtʃ ˈansəɹɪŋ ɪts ˈəʊn skˈaɪ.",
+   "speed": 0.84,
+   "file": "07.wav",
+   "dur": 5.738,
+   "sha256": "76e6e652933506e60bcdfa8bedb80412bb179872af41cf93bcdfbbd1a1e172d0"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: why do we still get goosebumps, with almost no fur?",
+   "stars": [
+    "fur"
+   ],
+   "phonemes": "nˈɛkst: wˌaɪ dˈuː wiː stˈɪl ɡɛt ɡˈuːsbʌmps, wɪð ˈɔːlməʊst nˈəʊ fˈɜː?",
+   "speed": 0.8,
+   "file": "08.wav",
+   "dur": 3.754,
+   "sha256": "bf31e287f853e196a400b29cba2bf87e073a780f1dc526e5afbcccce8ad05774"
+  }
+ ]
+}

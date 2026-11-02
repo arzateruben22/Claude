@@ -1,0 +1,1642 @@
+{
+ "id": "outerlayer-006",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 74.2,
+ "poster": 36.8,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 4.2,
+   "name": "follicle"
+  },
+  {
+   "at": 14.9333,
+   "name": "fur"
+  },
+  {
+   "at": 19.533333333333335,
+   "name": "ours"
+  },
+  {
+   "at": 26.6,
+   "name": "bulge"
+  },
+  {
+   "at": 40.1333,
+   "name": "cold"
+  },
+  {
+   "at": 46.2,
+   "name": "nomuscle"
+  },
+  {
+   "at": 52.7333,
+   "name": "gauge"
+  },
+  {
+   "at": 60.2,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.2,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.2,
+   "t1": 14.9333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.9333,
+   "t1": 26.6,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.6,
+   "t1": 40.1333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 40.1333,
+   "t1": 52.7333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 60.2,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.2,
+   "t1": 68.1333,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 68.1333,
+   "t1": 74.2,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": {
+  "hook": 0.9,
+  "follicle": 0.9,
+  "fur": 0.9,
+  "ours": 0.9,
+  "bulge": 0.9,
+  "cold": 0.9,
+  "nomuscle": 0.9,
+  "gauge": 0.9,
+  "close": 0.9
+ },
+ "bio": {
+  "vellus_um": 30.0,
+  "paper_um": 100.0,
+  "fx": 6000.0,
+  "px": -6000.0
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     60,
+     0
+    ],
+    "el": 34,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 3600,
+    "az": -14
+   },
+   {
+    "t": 4.2,
+    "target": [
+     0,
+     60,
+     0
+    ],
+    "el": 34,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 3200,
+    "az": -10,
+    "ease": "sine"
+   }
+  ],
+  "follicle": [
+   {
+    "t": 4.2,
+    "target": [
+     6040.0,
+     -150,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2300,
+    "az": -4
+   },
+   {
+    "t": 10.533333333333333,
+    "target": [
+     6060.0,
+     -200,
+     0
+    ],
+    "el": 5,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1900,
+    "az": -2,
+    "ease": "inout2"
+   },
+   {
+    "t": 14.9333,
+    "target": [
+     6040.0,
+     -120,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1800,
+    "az": 0,
+    "ease": "sine"
+   }
+  ],
+  "fur": [
+   {
+    "t": 14.9333,
+    "target": [
+     -6000.0,
+     200,
+     0
+    ],
+    "el": 16,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2400,
+    "az": -8
+   },
+   {
+    "t": 19.533333333333335,
+    "target": [
+     -6000.0,
+     240,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2000,
+    "az": -4,
+    "ease": "sine"
+   }
+  ],
+  "ours": [
+   {
+    "t": 19.533333333333335,
+    "target": [
+     0,
+     40,
+     0
+    ],
+    "el": 30,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2600,
+    "az": 6
+   },
+   {
+    "t": 26.6,
+    "target": [
+     0,
+     40,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2100,
+    "az": 4,
+    "ease": "sine"
+   }
+  ],
+  "bulge": [
+   {
+    "t": 26.6,
+    "target": [
+     6040.0,
+     -150,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2100,
+    "az": 0
+   },
+   {
+    "t": 32.43333333333333,
+    "target": [
+     6160.0,
+     -330,
+     0
+    ],
+    "el": 5,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1150,
+    "az": 2,
+    "ease": "inout2"
+   },
+   {
+    "t": 40.1333,
+    "target": [
+     6160.0,
+     -330,
+     0
+    ],
+    "el": 5,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1050,
+    "az": 3,
+    "ease": "sine"
+   }
+  ],
+  "cold": [
+   {
+    "t": 40.1333,
+    "target": [
+     6060.0,
+     -260,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1800,
+    "az": 0
+   },
+   {
+    "t": 46.2,
+    "target": [
+     6060.0,
+     -300,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1600,
+    "az": -2,
+    "ease": "sine"
+   }
+  ],
+  "nomuscle": [
+   {
+    "t": 46.2,
+    "target": [
+     7360.0,
+     -300,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1600,
+    "az": 2
+   },
+   {
+    "t": 52.7333,
+    "target": [
+     7400.0,
+     -320,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 1400,
+    "az": 3,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 52.7333,
+    "target": [
+     5900.0,
+     -60,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 900,
+    "az": -2
+   },
+   {
+    "t": 60.2,
+    "target": [
+     5900.0,
+     -60,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 860,
+    "az": -3,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 60.2,
+    "target": [
+     0,
+     60,
+     0
+    ],
+    "el": 34,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 3000,
+    "az": -6
+   },
+   {
+    "t": 74.2,
+    "target": [
+     0,
+     60,
+     0
+    ],
+    "el": 34,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 3600,
+    "az": -14,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "goose": 0.9,
+  "fur": 2.7333333333333334,
+  "muscle": 6.8,
+  "cold": 8.5,
+  "tugs": 10.533333333333333,
+  "upright": 12.4,
+  "bump": 14.0,
+  "fluffs": 16.7,
+  "air": 19.0,
+  "chimp": 21.8,
+  "fine": 23.566666666666666,
+  "leftover": 28.333333333333332,
+  "harvard": 30.533333333333335,
+  "reaches": 32.43333333333333,
+  "stem": 33.2,
+  "holds": 36.4,
+  "wakes": 41.93333333333333,
+  "sooner": 45.4,
+  "take": 46.4,
+  "fades": 48.833333333333336,
+  "thinner": 56.166666666666664,
+  "paper": 57.7,
+  "raises": 64.46666666666667,
+  "looks": 66.03333333333333
+ },
+ "gauge": {
+  "rise": [
+   52.7333,
+   53.6333
+  ],
+  "sc": 56.166666666666664,
+  "paper": 57.7,
+  "back": [
+   59.7,
+   60.6
+  ],
+  "sc_um": 30.0,
+  "paper_um": 100.0,
+  "bar": "fine hair"
+ },
+ "trans": [
+  {
+   "t": 4.2,
+   "kind": "dip"
+  },
+  {
+   "t": 14.9333,
+   "kind": "dip"
+  },
+  {
+   "t": 19.533333333333335,
+   "kind": "dip"
+  },
+  {
+   "t": 26.6,
+   "kind": "dip"
+  },
+  {
+   "t": 40.1333,
+   "kind": "dip"
+  },
+  {
+   "t": 46.2,
+   "kind": "dip"
+  },
+  {
+   "t": 52.7333,
+   "kind": "dip"
+  },
+  {
+   "t": 60.2,
+   "kind": "dip"
+  }
+ ],
+ "labels": [
+  {
+   "id": "l-muscle",
+   "text": "a tiny muscle",
+   "kind": "cell",
+   "anchor": "muscle",
+   "t0": 6.8,
+   "t1": 10.333333333333334,
+   "shot": "follicle",
+   "side": 1
+  },
+  {
+   "id": "l-nerve",
+   "text": "a nerve",
+   "kind": "layer",
+   "anchor": "nerve",
+   "t0": 10.533333333333333,
+   "t1": 14.4833,
+   "shot": "follicle",
+   "side": 1
+  },
+  {
+   "id": "l-hair",
+   "text": "the hair stands",
+   "kind": "cell",
+   "anchor": "hair",
+   "t0": 12.4,
+   "t1": 14.4833,
+   "shot": "follicle",
+   "side": -1
+  },
+  {
+   "id": "l-air",
+   "text": "trapped air",
+   "kind": "water",
+   "anchor": "air",
+   "t0": 18.8,
+   "t1": 19.0833,
+   "shot": "fur",
+   "side": 1
+  },
+  {
+   "id": "l-fine",
+   "text": "fine hairs",
+   "kind": "cell",
+   "anchor": "finehair",
+   "t0": 23.566666666666666,
+   "t1": 26.15,
+   "shot": "ours",
+   "side": 1
+  },
+  {
+   "id": "l-stem",
+   "text": "stem cells",
+   "kind": "water",
+   "anchor": "stem",
+   "t0": 33.2,
+   "t1": 39.6833,
+   "shot": "bulge",
+   "side": 1
+  },
+  {
+   "id": "l-hold",
+   "text": "the muscle holds the nerve",
+   "kind": "cell",
+   "anchor": "muscle",
+   "t0": 36.4,
+   "t1": 39.6833,
+   "shot": "bulge",
+   "side": -1
+  },
+  {
+   "id": "l-new",
+   "text": "a new hair",
+   "kind": "cell",
+   "anchor": "bulb",
+   "t0": 45.1,
+   "t1": 45.75,
+   "shot": "cold",
+   "side": 1
+  },
+  {
+   "id": "l-nomus",
+   "text": "no muscle",
+   "kind": "cell",
+   "anchor": "nomus",
+   "t0": 46.699999999999996,
+   "t1": 52.2833,
+   "shot": "nomuscle",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-simp-h",
+   "text": "simplified",
+   "t0": 0.0,
+   "t1": 3.75,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified",
+   "t0": 4.2,
+   "t1": 14.4833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 14.9333,
+   "t1": 19.0833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp-o",
+   "text": "simplified",
+   "t0": 19.533333333333335,
+   "t1": 26.15,
+   "slot": "tr"
+  },
+  {
+   "id": "b-mice",
+   "text": "in mice · Shwartz et al., 2020",
+   "t0": 30.533333333333335,
+   "t1": 52.2833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-simp-b",
+   "text": "simplified",
+   "t0": 26.6,
+   "t1": 39.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-time",
+   "text": "weeks, compressed",
+   "t0": 40.1333,
+   "t1": 52.2833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-vel",
+   "text": "vellus: < 30 µm by definition",
+   "t0": 56.166666666666664,
+   "t1": 59.75,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp-z",
+   "text": "simplified",
+   "t0": 60.2,
+   "t1": 68.2,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-apm",
+   "label": "the muscle",
+   "fmt": "text",
+   "text": "arrector pili",
+   "t0": 7.0,
+   "t1": 14.4833,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-chimp",
+   "label": "hair follicles",
+   "fmt": "text",
+   "text": "≈ chimp",
+   "t0": 21.8,
+   "t1": 26.15,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-ne",
+   "label": "the nerve's signal",
+   "fmt": "text",
+   "text": "noradrenaline",
+   "t0": 32.43333333333333,
+   "t1": 45.75,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-hair",
+   "label": "our fine hairs, across",
+   "fmt": "text",
+   "text": "< 30 µm",
+   "t0": 56.166666666666664,
+   "t1": 68.2,
+   "at": [
+    0.6,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 006",
+  "title": "*Goosebumps*",
+  "t1": 3.7,
+  "sig": 1.2333333333333334
+ },
+ "endCard": 68.2,
+ "end": {
+  "title": "Next season: *deeper*",
+  "follow": "Outer Layer · Season 1",
+  "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020). Narration: synthetic voice (AI)."
+ },
+ "captions": [
+  {
+   "t0": 0.087,
+   "t1": 1.897,
+   "lines": [
+    [
+     [
+      "Why",
+      0.087
+     ],
+     [
+      "do",
+      0.372
+     ],
+     [
+      "we",
+      0.402
+     ],
+     [
+      "get",
+      0.612
+     ]
+    ],
+    [
+     [
+      "goosebumps?",
+      0.897
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.897,
+   "t1": 3.467,
+   "lines": [
+    [
+     [
+      "We",
+      1.897
+     ],
+     [
+      "hardly",
+      2.102
+     ],
+     [
+      "have",
+      2.502
+     ],
+     [
+      "fur.",
+      2.717
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.525,
+   "t1": 7.975,
+   "lines": [
+    [
+     [
+      "Nearly",
+      4.525
+     ],
+     [
+      "every",
+      5.03
+     ],
+     [
+      "hair",
+      5.32
+     ],
+     [
+      "has",
+      5.695
+     ]
+    ],
+    [
+     [
+      "its",
+      5.995
+     ],
+     [
+      "own",
+      6.095
+     ],
+     [
+      "tiny muscle,",
+      6.415
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.975,
+   "t1": 9.965,
+   "lines": [
+    [
+     [
+      "and",
+      7.975
+     ],
+     [
+      "when",
+      8.005
+     ],
+     [
+      "we're",
+      8.32
+     ]
+    ],
+    [
+     [
+      "cold",
+      8.515
+     ],
+     [
+      "or",
+      9.02
+     ],
+     [
+      "frightened,",
+      9.315
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.965,
+   "t1": 13.315,
+   "lines": [
+    [
+     [
+      "a",
+      9.965
+     ],
+     [
+      "nerve",
+      9.995
+     ],
+     [
+      "tugs",
+      10.55
+     ],
+     [
+      "it,",
+      11.075
+     ],
+     [
+      "pulling",
+      11.65
+     ]
+    ],
+    [
+     [
+      "the",
+      12.035
+     ],
+     [
+      "hair",
+      12.08
+     ],
+     [
+      "upright",
+      12.405
+     ],
+     [
+      "and",
+      12.965
+     ],
+     [
+      "the",
+      13.025
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.315,
+   "t1": 14.64,
+   "lines": [
+    [
+     [
+      "skin",
+      13.315
+     ],
+     [
+      "into a bump.",
+      13.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.253,
+   "t1": 17.868,
+   "lines": [
+    [
+     [
+      "In",
+      15.253
+     ],
+     [
+      "a",
+      15.533
+     ],
+     [
+      "furry",
+      15.563
+     ],
+     [
+      "animal,",
+      15.888
+     ],
+     [
+      "that",
+      16.568
+     ]
+    ],
+    [
+     [
+      "fluffs",
+      16.698
+     ],
+     [
+      "the",
+      17.218
+     ],
+     [
+      "coat",
+      17.253
+     ],
+     [
+      "into",
+      17.473
+     ],
+     [
+      "a",
+      17.633
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.868,
+   "t1": 19.743,
+   "lines": [
+    [
+     [
+      "blanket",
+      17.868
+     ],
+     [
+      "of",
+      18.243
+     ],
+     [
+      "trapped air.",
+      18.413
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.743,
+   "t1": 21.623,
+   "lines": [
+    [
+     [
+      "We",
+      19.743
+     ],
+     [
+      "have",
+      19.773
+     ],
+     [
+      "about",
+      20.048
+     ],
+     [
+      "as",
+      20.258
+     ],
+     [
+      "many",
+      20.403
+     ]
+    ],
+    [
+     [
+      "hair follicles",
+      20.683
+     ],
+     [
+      "as",
+      21.488
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.623,
+   "t1": 24.403,
+   "lines": [
+    [
+     [
+      "a chimpanzee,",
+      21.623
+     ]
+    ],
+    [
+     [
+      "but",
+      22.853
+     ],
+     [
+      "ours",
+      22.908
+     ],
+     [
+      "grow",
+      23.263
+     ],
+     [
+      "fine,",
+      23.568
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.403,
+   "t1": 26.173,
+   "lines": [
+    [
+     [
+      "almost",
+      24.403
+     ],
+     [
+      "invisible",
+      24.783
+     ],
+     [
+      "hairs.",
+      25.403
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.92,
+   "t1": 29.865,
+   "lines": [
+    [
+     [
+      "So",
+      26.92
+     ],
+     [
+      "the",
+      27.345
+     ],
+     [
+      "bumps",
+      27.375
+     ],
+     [
+      "look",
+      27.765
+     ]
+    ],
+    [
+     [
+      "like",
+      28.06
+     ],
+     [
+      "a",
+      28.31
+     ],
+     [
+      "leftover.",
+      28.34
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.865,
+   "t1": 32.425,
+   "lines": [
+    [
+     [
+      "But",
+      29.865
+     ],
+     [
+      "a",
+      30.08
+     ],
+     [
+      "team",
+      30.175
+     ],
+     [
+      "at",
+      30.5
+     ],
+     [
+      "Harvard",
+      30.53
+     ]
+    ],
+    [
+     [
+      "found",
+      31.205
+     ],
+     [
+      "that",
+      31.515
+     ],
+     [
+      "nerve",
+      31.62
+     ],
+     [
+      "also",
+      32.165
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.425,
+   "t1": 35.725,
+   "lines": [
+    [
+     [
+      "reaches",
+      32.425
+     ],
+     [
+      "the",
+      33.155
+     ],
+     [
+      "stem cells",
+      33.185
+     ]
+    ],
+    [
+     [
+      "that",
+      34.22
+     ],
+     [
+      "grow",
+      34.395
+     ],
+     [
+      "hair,",
+      34.77
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.725,
+   "t1": 38.08,
+   "lines": [
+    [
+     [
+      "and",
+      35.725
+     ],
+     [
+      "the",
+      35.755
+     ],
+     [
+      "muscle",
+      35.86
+     ]
+    ],
+    [
+     [
+      "holds",
+      36.395
+     ],
+     [
+      "it",
+      37.01
+     ],
+     [
+      "in place.",
+      37.065
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.453,
+   "t1": 43.773,
+   "lines": [
+    [
+     [
+      "In",
+      40.453
+     ],
+     [
+      "the",
+      40.778
+     ],
+     [
+      "cold,",
+      40.808
+     ],
+     [
+      "that",
+      41.303
+     ],
+     [
+      "nerve",
+      41.448
+     ]
+    ],
+    [
+     [
+      "wakes",
+      41.948
+     ],
+     [
+      "the",
+      42.278
+     ],
+     [
+      "stem cells,",
+      42.493
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.773,
+   "t1": 46.398,
+   "lines": [
+    [
+     [
+      "and",
+      43.773
+     ],
+     [
+      "the",
+      43.803
+     ],
+     [
+      "mice",
+      43.918
+     ],
+     [
+      "grew",
+      44.453
+     ]
+    ],
+    [
+     [
+      "new hair sooner.",
+      44.753
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.398,
+   "t1": 47.928,
+   "lines": [
+    [
+     [
+      "Take",
+      46.398
+     ],
+     [
+      "the",
+      46.628
+     ],
+     [
+      "little",
+      46.703
+     ]
+    ],
+    [
+     [
+      "muscle",
+      46.918
+     ],
+     [
+      "away,",
+      47.533
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.928,
+   "t1": 49.773,
+   "lines": [
+    [
+     [
+      "and",
+      47.928
+     ],
+     [
+      "the",
+      47.958
+     ],
+     [
+      "wiring",
+      48.183
+     ],
+     [
+      "fades.",
+      48.838
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.368,
+   "t1": 56.973,
+   "lines": [
+    [
+     [
+      "And",
+      53.368
+     ],
+     [
+      "most",
+      53.403
+     ],
+     [
+      "of",
+      53.848
+     ],
+     [
+      "the",
+      54.078
+     ],
+     [
+      "hairs",
+      54.238
+     ],
+     [
+      "it",
+      54.778
+     ]
+    ],
+    [
+     [
+      "tends",
+      54.978
+     ],
+     [
+      "are",
+      55.878
+     ],
+     [
+      "thinner",
+      56.153
+     ],
+     [
+      "than",
+      56.618
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.973,
+   "t1": 59.073,
+   "lines": [
+    [
+     [
+      "a third",
+      56.973
+     ],
+     [
+      "of",
+      57.463
+     ]
+    ],
+    [
+     [
+      "a sheet of paper.",
+      57.608
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.535,
+   "t1": 63.34,
+   "lines": [
+    [
+     [
+      "So",
+      60.535
+     ],
+     [
+      "why",
+      60.825
+     ],
+     [
+      "do",
+      61.12
+     ],
+     [
+      "we",
+      61.315
+     ],
+     [
+      "still",
+      61.445
+     ]
+    ],
+    [
+     [
+      "get",
+      61.74
+     ],
+     [
+      "goosebumps?",
+      62.08
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.34,
+   "t1": 66.02,
+   "lines": [
+    [
+     [
+      "Because",
+      63.34
+     ],
+     [
+      "the",
+      63.715
+     ],
+     [
+      "muscle",
+      63.745
+     ],
+     [
+      "that",
+      64.44
+     ]
+    ],
+    [
+     [
+      "raises",
+      64.47
+     ],
+     [
+      "a",
+      65.065
+     ],
+     [
+      "hair",
+      65.215
+     ],
+     [
+      "still",
+      65.81
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 66.02,
+   "t1": 67.44,
+   "lines": [
+    [
+     [
+      "looks after it.",
+      66.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.463,
+   "t1": 70.538,
+   "lines": [
+    [
+     [
+      "That's",
+      68.463
+     ],
+     [
+      "the",
+      68.813
+     ],
+     [
+      "outer",
+      68.843
+     ],
+     [
+      "layer,",
+      69.133
+     ]
+    ],
+    [
+     [
+      "for",
+      69.603
+     ],
+     [
+      "now.",
+      69.948
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 70.538,
+   "t1": 72.328,
+   "lines": [
+    [
+     [
+      "Next",
+      70.538
+     ],
+     [
+      "season,",
+      70.728
+     ]
+    ],
+    [
+     [
+      "we",
+      71.348
+     ],
+     [
+      "go",
+      71.378
+     ],
+     [
+      "deeper.",
+      71.578
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 3.273,
+   "file": "vo/01.wav",
+   "text": "Why do we get goosebumps? We hardly have fur."
+  },
+  {
+   "id": "vo02",
+   "t": 4.5,
+   "dur": 9.921,
+   "file": "vo/02.wav",
+   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump."
+  },
+  {
+   "id": "vo03",
+   "t": 15.233333333333333,
+   "dur": 10.709,
+   "file": "vo/03.wav",
+   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs."
+  },
+  {
+   "id": "vo04",
+   "t": 26.9,
+   "dur": 10.946,
+   "file": "vo/04.wav",
+   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place."
+  },
+  {
+   "id": "vo05",
+   "t": 40.43333333333333,
+   "dur": 9.053,
+   "file": "vo/05.wav",
+   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades."
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "dur": 6.244,
+   "file": "vo/06.wav",
+   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper."
+  },
+  {
+   "id": "vo07",
+   "t": 60.5,
+   "dur": 6.695,
+   "file": "vo/07.wav",
+   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it."
+  },
+  {
+   "id": "vo08",
+   "t": 68.43333333333334,
+   "dur": 3.696,
+   "file": "vo/08.wav",
+   "text": "That's the outer layer, for now. Next season, we go deeper."
+  }
+ ]
+}
