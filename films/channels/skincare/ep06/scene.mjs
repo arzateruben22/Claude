@@ -69,7 +69,7 @@ for (const L of FILM.labels) {
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.3vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.3vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "80vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card (a four-line question) sits above the tease's caption plate
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe, liftK: 1.6, liftAt: [0.16, 0.24] });
@@ -87,8 +87,8 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
-  const isP = ["hook", "ours", "close"].includes(shot), isF = ["follicle", "bulge", "cold", "nomuscle", "gauge"].includes(shot);
-  patch.group.visible = isP; F1.group.visible = F2.group.visible = isF; fur.group.visible = shot === "fur";
+  const isP = ["hook", "ours", "close"].includes(shot), isF = ["follicle", "bulge", "cold", "nomuscle", "gauge", "payoff"].includes(shot);
+  patch.group.visible = isP; F1.group.visible = isF && shot !== "nomuscle"; F2.group.visible = shot === "nomuscle";   // one block in frame at a time: no seams fur.group.visible = shot === "fur";
 
   // ── the patch: bumps up in the hook, flat then rising in "ours", rising again in the close ──
   if (isP) {
@@ -110,6 +110,7 @@ window.seek = function (t) {
       wake = 0.6 + 0.4 * E.inout2(seg(t, CUE.wakes - 0.2, CUE.wakes + 0.6)); grow = E.inout2(seg(t, CUE.wakes, CUE.sooner)); dimSkin = 0.3;   // the new hair reaches the surface on "sooner"
     }
     if (shot === "gauge") { pull = 0.2; dimSkin = 0.55; }
+    if (shot === "payoff") { pull = 0.3 + 0.6 * E.inout2(seg(t, CUE.raises - 0.3, CUE.raises + 0.6)); fire = 1; wake = 0.4 + 0.5 * fadeIn(t, CUE.looks - 0.3, 0.8); grow = 1; }
     F1.set({ tone, pull, fire, t, wake, grow, frost, dimSkin, glow: WATER, pulseK: shot === "follicle" ? 1 : 0.5 });
     // the second follicle (no muscle): the same cold, its branch to the stem cells fading, its stem cells asleep
     // the muscle is taken away on "Take", then the wiring (branch and pulses) fades on "fades"; its hair waits
@@ -118,7 +119,7 @@ window.seek = function (t) {
     F2.set({ tone, pull: 0.8 * mu, fire: shot === "nomuscle" || shot === "cold" ? wire : 0, t, wake: 0.5 * wire, grow: 0, frost, dimSkin: 0.3, muscle: mu, wire, glow: WATER, pulseK: 0.5 });
   }
   A.muscle = F1.at.muscle(); A.nerve = F1.at.nerve(); A.hair = F1.at.hair(); A.stem = F1.at.stemC(); A.bulb = F1.at.newTip(); A.insertion = F1.at.insertion();
-  A.nomus = F2.at.muscle();
+  A.nomus = F2.at.muscle(); A.nomnerve = F2.at.nerve();
 
   // ── the fur: raised on "fluffs", air thickening ──
   if (shot === "fur") fur.set({ raise: E.inout2(seg(t, CUE.fluffs - 0.1, CUE.fluffs + 0.9)), glow: WATER });   // up on "fluffs"
