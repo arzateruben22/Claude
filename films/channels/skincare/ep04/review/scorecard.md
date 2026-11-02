@@ -2,9 +2,18 @@
 
 ## Measured gates (final)
 
-To be filled from `kits/cinema/film/qa.py` and `scorecard.py` on the delivered file once the render worker reports.
-The draft mix measured −14.1 LUFS / −1.9 dBTP, music 15 LU under the voice, and sync PASS on every kind (cues
-re-measured from the picture). The render audit was clean (no text outside the safe box, no overlaps).
+From `kits/cinema/film/qa.py` (PASS) and `scorecard.py` on `out/outerlayer-004-9x16.mp4`, rendered at the final tier (1080×1920, CRF 15) by the render worker at 74499b6 and re-checked here. The text-in-safe-box audit is written on the rendering box, so it is not in this table; the draft audit at the same code was clean.
+
+| Gate | Target | Result |
+|---|---|---|
+| Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2226 frames, H.264 High BT709, AAC 48 kHz stereo 260k, 6.41 Mbps video, 62.0 MB |
+| Length | 60–75 s; picture = sound | 74.200 s / 74.200 s |
+| Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.1 LUFS, −1.9 dBTP**, LRA 3.5 LU |
+| Voice over music | ≥ 10 LU | 15.2 LU (dialogue −13.5, music −28.7 LUFS while speaking) |
+| Phone speaker | mono-safe | Correlation 0.89; mono loss 0.11 dB (dialogue 0.08 dB) |
+| Sound sync | transients within a frame | 12 kinds, 38 events, all PASS: transients worst 13 ms; slow swells (reveal, scale.jump, section, swell) worst 51 ms |
+| Labels vs picture | sound on the first visible frame | 11/11 exact (DOM-measured first visible frame) |
+| Flashing | ≤ 3 flashes a second | 6 large-area luminance changes (frames 154, 345, 490, 784, 1020, 1162), 3 flash pairs, worst 1/s |
 
 ## Compelling pass (the owner's 30 Oct standard; one independent reviewer, every round)
 
