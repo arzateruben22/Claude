@@ -193,7 +193,7 @@ ev += [
     {"t": t_rise1, "kind": "cell.land", "tag": "top"},
     {"t": t_apart0, "kind": "dissolve", "tag": "cornify", "t1": t_apart1},
     {"t": A("vo04:water"), "kind": "diffuse", "tag": "water-in"},
-    {"t": A("vo05:losing"), "kind": "diffuse", "tag": "water-out"},
+    {"t": A("vo05:water"), "kind": "diffuse", "tag": "water-out"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-sc"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
