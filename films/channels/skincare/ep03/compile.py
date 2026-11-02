@@ -71,7 +71,8 @@ CAM = {
     # the reflex: the furrowed pad in its bath, marbles on it; an orbit through the grip study; then the pull-back that
     # lifts the gauge card (the pad lower right, clear of the card and above the captions)
     "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},
-               {"t": CUE["test"] + 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 480, "az": -4, "ease": "inout2"},   # the nerve-cut pad beside it: the test
+               {"t": CUE["test"] + 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 640, "az": -4, "ease": "inout2"},   # the nerve-cut pad beside it: the test
+               {"t": CUE["argued"] - 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 620, "az": -5, "ease": "sine"},   # held on both pads
                {"t": CUE["argued"] + 0.4, "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -6, "ease": "inout2"},
                {"t": CUE["none"] + 0.4, "target": [-40, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
                {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.78, "fy": 0.36, "dist": 580, "az": 8, "ease": "inout2"},
@@ -106,7 +107,7 @@ BADGES = [
     {"id": "b-studies", "text": "Kareklas 2013 · Haseleu 2014", "t0": CUE["found"] - 0.4, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-palm", "text": "Egawa 2007", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
 ]
-SPINE = [0.31, 0.215]
+SPINE = [0.27, 0.215]
 COUNTERS = [   # one readout through the film (WRITING.md, The picture, rule 2)
     {"id": "c-q", "label": "wet fingertip vs forearm", "fmt": "text", "text": "why?", "t0": B["normal"]["t0"] + 0.1, "t1": A("vo03:Almost", -0.55), "at": SPINE},
     {"id": "c-1930", "label": "a finger with a cut nerve", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.45, "at": SPINE},
@@ -141,7 +142,7 @@ glue(f, {"vo01": ["wet fingers", "the same bath."], "vo02": ["soaking up water",
          "vo03": ["Almost a century ago,", "doctors noticed", "something odd:", "had been cut", "in the bath."],
          "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad shrinks", "a little, and", "the skin", "on top"],
          "vo05": ["a reflex,", "one doctors use", "test a nerve.", "a wet grip,", "found none."],
-         "vo06": ["hairless skin", "of hands and feet,", "the thickest", "dead layer, nearly", "two sheets of paper."],
+         "vo06": ["hairless skin", "of hands and feet,", "which also carry", "the thickest", "dead layer, nearly", "two sheets of paper."],
          "vo07": ["don't wrinkle", "because they're soaked.", "decide to."], "vo08": ["your skin?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 

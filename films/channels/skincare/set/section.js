@@ -149,7 +149,7 @@ export const createSection = (o = {}) => {
     sheet.visible = amp > 0.05; corneoMesh.visible = amp <= 0.05;
     pa.needsUpdate = true; dGeo.computeVertexNormals();
     mortarGroup.visible = amp < 0.05;              // flat sheets can't follow a fold
-    if (backing) backing.visible = amp < 0.05;     // a flat slab would poke through the buckled sheet's troughs
+    if (backing) backing.visible = amp < 0.5;      // a flat slab would poke through the buckled sheet's troughs (a flat sheet keeps it)
   };
   const base = (m, c, k = 1) => m.color.setRGB(c[0] * k, c[1] * k, c[2] * k);
   return {
