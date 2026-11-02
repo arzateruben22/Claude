@@ -5,12 +5,12 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 
 | No. | Title | Bible | State |
 |---|---|---|---|
-| 001 | The dead layer | §7 #1 | scripted, lint clean (175 words); voiced (bf_isabella, per-line speed 0.76–0.95), 74.2 s on the grid, lint clean; compile.py + scene built; draft stills under way (to fix: the thin wall must read thinner in the whoa, the to-scale card sits over the section and its paper label under the captions, dermis fibres alias, the climber needs to win its frames) |
-| 002 | Does SPF 100 beat SPF 50? | §7 #2 | planned |
-| 003 | Bath fingers | §7 #3 | planned |
-| 004 | What a tan is | §7 #4 | planned |
-| 005 | Same cells, every colour | §7 #5 | planned |
-| 006 | Goosebumps | §7 #6 | planned |
+| 001 | The dead layer | §7 #1 | **Flow rewrite reviewed in 3 rounds** (compelling a2 b4 c2 d2 e3 f3 g3 → a4 b4 c4 d4 e4 f4 g4); final sent to the render worker at 2ed0d60 |
+| 002 | Does SPF 100 beat SPF 50? | §7 #2 | Flow script, re-voiced after review 1 (a3 b4 c2 d3 e3 f3 g3) and reworked; review 2 a3 b4 c3 d3 e4 f4 g4; round-3 draft rendering |
+| 003 | Bath fingers | §7 #3 | built, voiced, first draft (sync PASS, −14.1 LUFS / −2.0 dBTP) in review |
+| 004 | What a tan is | §7 #4 | second builder (`claude/outer-layer-s1-b`): drafts in review |
+| 005 | Same cells, every colour | §7 #5 | second builder: voiced, built |
+| 006 | Goosebumps | §7 #6 | second builder: voiced, built |
 | vol01 | Long video (episodes 1–5) | | planned |
 
 ## Log
@@ -36,6 +36,13 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
   (−14.1 LUFS / −1.9 dBTP); draft cut assembled (out/outerlayer-001-9x16-draft.mp4, not committed). **Next:** independent
   review of the draft → fixes → send the final to the render worker. Ep02 script + claims lint clean, not yet voiced.
   Second builder (ep04–06, `claude/outer-layer-s1-b`) and render worker (`claude/outer-layer-s1-render-a`) are set up.
+
+- **2 Nov.** The owner's compelling pass added to every review (seven scores, a ratchet: each episode at least as good as
+  the last). No. 001 through three rounds to all 4s; No. 002's first review fell below and was reworked (fewer spoken
+  figures, short landings, the shield callback; countable trails for "2 against 1"; match moves at every cut). Channel
+  rule: one skin tone per episode's world, rotating (bible §1). Kit: `pluck` reverted for Back of the Envelope; `reed`
+  voice; `qa.py` measures it by its rise. Shared set: flakes, rays/film/trails, wrinkle/vessels/water, gauge film bar
+  and span past 110 µm, opt-in `mortarFloor`. A second builder (ep04–06) and a render worker (finals) joined.
 
 ## Questions (for the owner, through the coordinator)
 - Narrator: bf_isabella recommended (auditions/README.md); carrying on with it until told otherwise.
