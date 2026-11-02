@@ -138,7 +138,10 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       const yEnd = Math.min(y0 + len, safe ? safe.b - 10 * S1 : y0 + len);
       rcard.setAttribute("x", x - 22 * S1); rcard.setAttribute("y", y0 - 40 * S1); rcard.setAttribute("width", 82 * S1); rcard.setAttribute("height", Math.max(0, yEnd - y0 + 52 * S1)); rcard.setAttribute("opacity", (0.88 * (1 - u)).toFixed(3));
       // lifted: two bars to the right of the ruler, filled from the top, each named above itself (two short lines)
-      const bx = x + 80 * S1, bw = (filmBar ? 132 : 108) * S1, gap = (filmBar ? 84 : 40) * S1;   // with a film: room for "≈20 µm" in its bar and "dead layer" under it
+      const bx = x + 80 * S1, bw = (filmBar ? 132 : 108) * S1, gap0 = (filmBar ? 84 : 40) * S1;   // with a film: room for "≈20 µm" in its bar and "dead layer" under it
+      // the gap grows until the two headings (the teal bar's, left-aligned; the paper's, right-aligned) never touch
+      let gap = gap0;
+      if (!cheekBar) { const wS = scTxt.getComputedTextLength ? scTxt.getComputedTextLength() : 0, wP = paperTxt2.getComputedTextLength ? paperTxt2.getComputedTextLength() : 0; gap = Math.max(gap0, wS + wP + 14 * S1 - 2 * bw); }
       const yS = filmBar ? y0 + filmUm * px * fillFilm : y0;   // with a film, the dead layer hangs under it
       scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", yS); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
       if (filmBar) {
