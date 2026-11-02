@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **2 Nov, 10:15 UTC — all five channels' season 1 complete.** Outer Layer is in Prism Studio: six shorts plus vol01 "The organ you live inside" (6:12, 2560x1440). Studio total: 30 shorts and 5 long videos, 35 ready, 0 problems; the preview is v22. All production sessions are idle. Owner TODOs: a dermatologist and a person sign Outer Layer's CLAIMS-REVIEW; handle and trademark checks for both new names; Outer Layer 006's tease ("Next season: deeper") until a season-2 topic is named; optionally record Rest Frame 001 (voice page v3). The weekly limit is at "allowed_warning" (resets Sun 8 Nov 22:00 UTC).
+
 > **2 Nov, 05:30 UTC — Back of the Envelope season 1 complete.** Six shorts plus vol01 "Impossible, worked out" (2560x1440, 6:21) are imported into Prism Studio (28 ready, 0 problems) and the preview is v21. Outer Layer: ep01 (re-render after a label collision) and ep02/ep03 finals rendering on 3 machines; ep04/05 with the second builder, ep06 with the first.
 
 > **2 Nov, 00:20 UTC — the owner: "keep going" (after the weekly reset).** All nine sessions were sent CONTINUE. The hourly usage report is re-armed (non-blocking; it pauses only on overage or a live "rejected").
