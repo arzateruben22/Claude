@@ -215,7 +215,7 @@ for i, it in enumerate(ITEMS):
     if i + 1 < len(ITEMS) and i < 3:                             # one label at a time: each leaves before the next arrives
         nw = item_window(ITEMS[i + 1]["size"])
         t1 = min(t1, nw[0] - 0.05)
-    LABELS.append({"id": f"l-item{i}", "text": it["label"], "kind": it["lk"], "item": i, "t0": w[0], "t1": t1,
+    LABELS.append({"id": f"l-item{i}", "text": it["label"], "kind": it["lk"], "item": i, "t0": max(w[0], t_dist - 0.1), "t1": t1,   # not before the dissolve has landed
                    "side": 1, "shot": None})
 LABELS.append({"id": "l-back", "text": "back where it was", "kind": "part", "item": len(ITEMS) - 1, "t0": t_land[1], "t1": t_work0 - 0.7, "side": 1, "shot": None})
 BADGES = [
