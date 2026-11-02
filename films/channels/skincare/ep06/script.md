@@ -41,7 +41,7 @@ vo: Follow the evidence into the bed: its light is mostly UVA, the long rays. {c
 ## why {shot: no cut, under the tubes; the plate: first use before 35, melanoma risk ×1.75 (pooled, 2007) and ×1.59 (pooled, 2012, corrected) · spine: ×1.6–1.75 · badge: pooled studies (meta-analyses) · picture-only 2.2 s · energy: 0.5} (28.5–42 s)
 vo: Weighing the studies, the agency's experts found the sharpest signal in people who started young. {c5} In pooled studies, starting before thirty-five went with a melanoma risk raised by more than *half*. {c6}
 
-## whoa {shot: the UV reveal (shutter): the skin through the 365 nm viewfinder, glowing under the bed's light; on "Brazil" it dims, on "switched its own off" it goes nearly dark · plate: commercial tanning beds banned, Brazil 2009, Australia 2015 · daylight strip first · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (42–53.5 s)
+## whoa {shot: the UV reveal (shutter): the skin through the 365 nm viewfinder, glowing under the bed's light; on "Brazil" it dims, on "switched its own off" it goes nearly dark · plate: commercial tanning beds banned, Brazil 2009, Australia 2015 · no daylight strip (a risk story) · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (42–53.5 s)
 vo: Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own *off*. {c7,c8}
 
 ## toscale {segment: toscale · a scale jump into a cut-face section (deep tone): violet dashes of UVA fall through the top layer into the dermis; the gauge lifts: the top layer (≈ 100 µm) beside the paper's 100 µm · badge: simplified · picture-only 0.5 s · energy: 0.4} (53.5–61.5 s)

@@ -97,7 +97,7 @@ PLATES = {
     "rr": {"t0": CUE["pooled"] - 0.3, "t1": B["whoa"]["t0"] - 0.3, "before": CUE["before"], "rr": list(RR)},
     "bans": {"t0": CUE["countries"] - 0.2, "t1": B["toscale"]["t0"] - 0.3, "brazil": CUE["brazil"], "australia": CUE["australia"], "off": CUE["off"], "bans": BANS},
     "viewfinder": {"t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"]},
-    "daylight": {"t0": B["whoa"]["t0"] + 0.5, "t1": CUE["countries"] - 0.4},
+    # no daylight strip: tones under a tanning-bed risk story would pair tones with a risk (bible §1)
 }
 BED = {"on": [B["change"]["t0"] + 0.2, CUE["bed"] + 0.3], "glow": [CUE["ten"] - 0.3, CUE["ten"] + 0.9]}
 UVD = {"brazil": [CUE["brazil"], CUE["brazil"] + 1.0], "off": [CUE["australia"], CUE["off"] + 0.5]}

@@ -12,7 +12,7 @@ import { createHud } from "cinema/sci/hud.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
-import { createUVSkin, createViewfinder, createDaylight, TONES } from "../set/uvcam.js";
+import { createUVSkin, createViewfinder, TONES } from "../set/uvcam.js";
 import { createSection, createVessels } from "../set/section.js";
 import { createRays } from "../set/rays.js";
 
@@ -84,7 +84,6 @@ endEl.style.transform = "translateY(-22vmin)";
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.2, liftAt: [0.2, 0.2] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.34 });
-const day = createDaylight({ root: hudRoot, W, H, y: 0.565 });
 const plate = (html, css) => {
   const el = document.createElement("div");
   el.innerHTML = html;
@@ -154,7 +153,6 @@ window.seek = function (t) {
     UVS.set({ damage: 0.45, glow: 0.35 + 0.95 * k, opacity: fadeIn(t, SH.uv, 0.25) });
   }
   vf.set({ op: isU ? win(t, P.viewfinder.t0, P.viewfinder.t1, 0.25) : 0, left: "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
-  day.set({ op: isU ? win(t, P.daylight.t0, P.daylight.t1) : 0 });
   show(bans, isU ? win(t, BN.t0, BN.t1) : 0);
   bn[0].style.opacity = fadeIn(t, BN.brazil - 0.2, 0.4).toFixed(3); bn[1].style.opacity = fadeIn(t, BN.australia - 0.2, 0.4).toFixed(3);
 
