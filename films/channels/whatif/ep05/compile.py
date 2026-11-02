@@ -47,7 +47,7 @@ GC = [0.0, RM, 0.0]                                              # its centre: i
 TOP = 2 * RM
 FIG = 0.55                                                       # you, on top
 CAP = 0.5                                                        # the crowd's cap half-angle (rad) once everyone has gathered
-HOP_V, DIP_V = 0.28, 0.16                                        # drawn jump and the globe's drawn dip (both exaggerated, badged)
+HOP_V, DIP_V = 0.6, 0.2                                          # drawn jump and the globe's drawn dip (both exaggerated, badged)
 ORBIT_R = 70.0                                                   # the dashed path round the Sun: passes through the globe's centre
 GHOST = [3.2, RM + 0.4, -1.5]                                    # where "off course" would put it (the wrong idea, dashed)
 
@@ -88,7 +88,7 @@ ZK = [
     [t_home, zof(ATOM, 0.2)], [A("vo07:jump", 0.3), zof(H_JUMP * 4)],               # and out to you for the takeaway
 ]
 ZK = [[round(a, 4), b] for a, b in ZK]
-LADDER = [round(d0 - 0.35, 4), A("vo07:jump", 0.3)]
+LADDER = [round(d0 - 1.1, 4), A("vo07:jump", 0.3)]
 assert all(b[0] > a[0] for a, b in zip(ZK, ZK[1:])), ZK
 
 
@@ -135,30 +135,30 @@ CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **k([0, TOP + 0.2, 0], 10.0, 10, 0.40), "ease": "sine"}],
     "gather": [
         {"t": B["normal"]["t0"], **k([0, TOP + 0.2, 0], 10.0, 10, 0.40)},
-        {"t": A("vo02:ground#2", -0.3), **k([-1.0, RM + 0.6, 0], 30, 12, 0.40), "ease": "inout3"},     # the whole planet, pushed
-        {"t": t_g1, **k([0, TOP - 0.3, 0], 14, 20, 0.42), "ease": "inout3"},                        # back up to the cap as everyone gathers
-        {"t": B["change"]["t0"], **k([0, TOP - 0.3, 0], 13.5, 20, 0.42), "ease": "sine"},
+        {"t": A("vo02:ground#2", -0.3), **k([-1.0, RM + 0.6, 0], 30, 12, 0.50), "ease": "inout3"},     # the whole planet, pushed
+        {"t": t_g1, **k([0, TOP - 0.3, 0], 15, 20, 0.50), "ease": "inout3"},                        # back up to the cap as everyone gathers
+        {"t": B["change"]["t0"], **k([0, TOP - 0.3, 0], 14.5, 20, 0.50), "ease": "sine"},
     ],
     "air": [
-        {"t": B["change"]["t0"], **k([0, TOP - 0.3, 0], 13.5, 20, 0.42)},
-        {"t": t_hop2 - 0.1, **k([-0.8, TOP - 1.2, 0], 18, 15, 0.38), "ease": "inout3"},
-        {"t": B["why"]["t0"], **k([-0.8, TOP - 1.4, 0], 19, 15, 0.38), "ease": "sine"},
+        {"t": B["change"]["t0"], **k([0, TOP - 0.3, 0], 14.5, 20, 0.50)},
+        {"t": t_hop2 - 0.1, **k([0.4, TOP - 0.6, 0], 17, 16, 0.50, 4), "ease": "inout3"},
+        {"t": B["why"]["t0"], **k([0.4, TOP - 0.8, 0], 19, 15, 0.50, 7), "ease": "sine"},
     ],
     "path": [
-        {"t": B["why"]["t0"], **k([-0.8, TOP - 1.4, 0], 19, 15, 0.38)},
-        {"t": t_ghost[0] + 0.6, **k([1.2, RM + 0.4, -0.5], 52, 18, 0.50), "ease": "inout3"},           # out to the path round the Sun
-        {"t": t_ghost[1] + 0.8, **k([0.6, RM + 0.8, 0], 50, 18, 0.52), "ease": "inout2"},
-        {"t": B["whoa"]["t0"], **k([0, RM + 1.0, 0], 42, 18, 0.54), "ease": "sine"},                   # a slow push in through "ten trillion times over"
+        {"t": B["why"]["t0"], **k([0.4, TOP - 0.8, 0], 19, 15, 0.50, 7)},
+        {"t": t_ghost[0] + 0.6, **k([1.2, RM + 0.4, -0.5], 52, 18, 0.50, 4), "ease": "inout3"},           # out to the path round the Sun
+        {"t": t_ghost[1] + 0.8, **k([0.6, RM + 0.8, 0], 50, 18, 0.52, 0), "ease": "inout2"},
+        {"t": B["whoa"]["t0"], **k([0, RM + 1.0, 0], 42, 18, 0.54, -12), "ease": "sine"},   # a slow turn while the counters speak                   # a slow push in through "ten trillion times over"
     ],
     "dive": [
-        {"t": B["whoa"]["t0"], **k([0, RM + 1.0, 0], 42, 18, 0.54)},
-        {"t": t_dist, **k([0, TOP + 0.02, 0], 0.35, 22, CY), "ease": "inout3"},                        # down to your foot: the ladder takes over
-        {"t": t_work0, **k([0, TOP + 0.02, 0], 0.35, 22, CY), "ease": "sine"},
+        {"t": B["whoa"]["t0"], **k([0, RM + 1.0, 0], 42, 18, 0.54, -12)},
+        {"t": t_dist, **k([0, TOP + 0.02, 0], 3.0, 22, CY, -6), "ease": "inout3"},   # it stops short of your foot: the ladder dissolves in over it                        # down to your foot: the ladder takes over
+        {"t": t_work0, **k([0, TOP + 0.02, 0], 2.9, 22, CY, -6), "ease": "sine"},
     ],
-    "work": [{"t": t_work0, **k([0, TOP + 0.02, 0], 0.35, 22, CY)}, {"t": t_home, **k([0, TOP + 0.02, 0], 0.35, 22, CY), "ease": "sine"}],
+    "work": [{"t": t_work0, **k([0, TOP + 0.02, 0], 2.9, 22, CY, -6)}, {"t": t_home, **k([0, TOP + 0.02, 0], 2.9, 22, CY, -6), "ease": "sine"}],
     "home": [
-        {"t": t_home, **k([0, TOP + 0.02, 0], 0.35, 22, CY)},
-        {"t": LADDER[1], **k([0, TOP - 0.4, 0], 9.6, 19, 0.42), "ease": "out3"},
+        {"t": t_home, **k([0, TOP + 0.02, 0], 2.9, 22, CY, -6)},
+        {"t": LADDER[1], **k([0, TOP - 0.4, 0], 9.6, 19, 0.42, -3), "ease": "out3"},
         {"t": t_end, **k([0, TOP - 0.5, 0], 9.2, 14, 0.42), "ease": "sine"},
     ],
     "end": [{"t": t_end, **k([0, TOP - 0.5, 0], 9.2, 14, 0.42)}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
@@ -191,7 +191,7 @@ fm = lambda x: sci(*__import__("calc").sci(x, 1)) + " m"
 WORK = {
     "t0": t_work0, "t1": t_home - 0.3, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": f"8.2 bn × 62 kg × 40 cm ÷ {EK}", "v": f"≈ {SH}", "lit": False},
+        {"t": t_work0 + 0.15, "k": f"8.2 bn × 62\u00a0kg × 40\u00a0cm ÷ {EK.replace(' ', '\u00a0')}", "v": f"≈ {SH}", "lit": False},   # no number parted from its unit
         {"t": A("vo06:higher", -0.05), "k": "jump 50 cm", "v": f"≈ {fm(s['jump 0.50 m'])}", "lit": True},
         {"t": A("vo06:lighter", -0.05), "k": "everyone half as heavy", "v": f"≈ {fm(s['everyone 31 kg (half)'])}", "lit": True},
         {"t": A("vo06:atom", -0.05), "k": "one atom (hydrogen)", "v": f"≈ {fm(ATOM)}", "lit": True},
@@ -217,7 +217,7 @@ for i, it in enumerate(ITEMS):
         t1 = min(t1, nw[0] - 0.05)
     LABELS.append({"id": f"l-item{i}", "text": it["label"], "kind": it["lk"], "item": i, "t0": w[0], "t1": t1,
                    "side": 1, "shot": None})
-LABELS.append({"id": "l-back", "text": "back where it was", "kind": "part", "item": len(ITEMS) - 1, "t0": t_land[1], "t1": t_work0 - 0.2, "side": 1, "shot": None})
+LABELS.append({"id": "l-back", "text": "back where it was", "kind": "part", "item": len(ITEMS) - 1, "t0": t_land[1], "t1": t_work0 - 0.7, "side": 1, "shot": None})
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
     {"id": "b-model", "text": "a model Earth; you not to scale", "t0": B["normal"]["t0"], "t1": A("vo04:shared", -0.3), "slot": "tr"},
@@ -254,8 +254,10 @@ film = {
 }
 for pg in film["captions"]:                      # numerals.py writes "one second" as "1 second"; the voice says one
     for ln in pg["lines"]:
-        for w in ln:
+        for i, w in enumerate(ln):
             w[0] = w[0].replace("1 second", "one second")
+            if w[0] == "1" and i + 1 < len(ln) and ln[i + 1][0].startswith("second"):
+                w[0] = "one"
 
 # ── the cue sheet ──
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] not in ("tease", "normal")]

@@ -180,32 +180,32 @@
    "t1": 40.63333333333333
   },
   {
+   "t": 39.5333,
+   "kind": "label",
+   "tag": "l-item0"
+  },
+  {
    "t": 39.93333333333333,
    "kind": "term.write",
    "tag": "spine-4"
   },
   {
-   "t": 40.2833,
-   "kind": "label",
-   "tag": "l-item0"
-  },
-  {
-   "t": 41.8166,
+   "t": 41.8,
    "kind": "label",
    "tag": "l-item1"
   },
   {
-   "t": 42.55,
+   "t": 42.5333,
    "kind": "label",
    "tag": "l-item2"
   },
   {
-   "t": 43.8833,
+   "t": 43.9,
    "kind": "label",
    "tag": "l-item3"
   },
   {
-   "t": 45.7833,
+   "t": 45.7666,
    "kind": "label",
    "tag": "l-item4"
   },
@@ -234,7 +234,7 @@
   {
    "t": 52.35,
    "kind": "term.write",
-   "tag": "work-8.2 bn × 62 kg × 40 cm ÷ 6.0 × 10²⁴ kg"
+   "tag": "work-8.2 bn × 62 kg × 40 cm ÷ 6.0 × 10²⁴ kg"
   },
   {
    "t": 52.96666666666667,

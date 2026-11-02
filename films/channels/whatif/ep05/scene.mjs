@@ -60,7 +60,7 @@ const arrow = createArrow({ tokens: TK, color: "marker" });
 scene.add(arrow.group);
 // the path round the Sun: a dashed chalk arc through the globe's centre, the Sun far off to −x
 const path = ring({ color: hdr("chalk", 0.8), width: 2.2, dash: 90, opacity: 0 });
-path.arc({ center: [C0[0] - WD.orbitR, C0[1], C0[2]], r: WD.orbitR, a0: -0.35, a1: 0.35 });
+path.arc({ center: [C0[0] - WD.orbitR, C0[1], C0[2]], r: WD.orbitR, a0: -0.13, a1: 0.13 });
 scene.add(path.mesh);
 const ladder = createLadder({ tokens: TK, items: WD.items, cy: WD.cy });
 scene.add(ladder.mesh);
@@ -70,7 +70,7 @@ const rig = createRig(FILM.cam);
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
-const S = { _you: [0, TOP + WD.fig, 0], _arrow: [-1.7, RM + 2.6, RM + 0.4] };
+const S = { _you: [0, TOP + WD.fig, 0], _arrow: [1.7, TOP, RM * 0.85] };
 const AN = {
   you: () => S._you, arrow: () => S._arrow, cap: () => [RM * Math.sin(WD.cap) + 0.1, C0[1] + RM * Math.cos(WD.cap), 0],
   path: () => [C0[0] - WD.orbitR + WD.orbitR * Math.cos(-0.25), C0[1], WD.orbitR * Math.sin(-0.25)], ghost: () => [WD.ghost[0] + RM * 0.7, WD.ghost[1] + RM * 0.4, WD.ghost[2]],
@@ -114,7 +114,8 @@ window.seek = function (t) {
   globe.mesh.position.set(...gc);
   globe.set({ opacity: 1, cam: camera.position.toArray(), grid: 1, dotOpacity: 0 });
   const crouch = Math.max(1 - seg(t, CUE.hop1 - 0.35, CUE.hop1), seg(t, FILM.endCard + 0.6, FILM.endCard + 1.4));
-  const fy = TOP - dip + WD.fig / 2 + WD.hop * h - 0.18 * WD.fig * crouch;
+  const bob = 0.02 * Math.sin(Math.max(0, t - 0.3) * 5.0) * (1 - seg(t, CUE.hop1 - 0.6, CUE.hop1 - 0.3));   // a small bob while crouched: the hook moves
+  const fy = TOP - dip + WD.fig / 2 + WD.hop * h - 0.18 * WD.fig * crouch + bob;
   you.set({ at: [0, fy, 0], arms: h > 0.02 ? 1 : 0 });
   you.group.scale.set(1, 1 - 0.18 * crouch, 1);
   S._you = [0, fy + WD.fig / 2, 0];
@@ -128,7 +129,7 @@ window.seek = function (t) {
   const pushWin = seg(t, CUE.hop1 - 0.1, CUE.hop1 + 0.2) * (1 - seg(t, CUE.gather[0] - 0.6, CUE.gather[0] - 0.1));
   const airWin = seg(t, CUE.hop2 - 0.2, CUE.hop2 + 0.2) * (1 - seg(t, beat("why").t0 - 0.5, beat("why").t0));
   const ao = Math.max(pushWin, airWin);
-  const ax = -1.9, az = RM + 0.4, ay0 = C0[1] + 3.4 - dip, ay1 = C0[1] + 1.6 - dip - 1.0 * h;   // in front of the globe's face, left of you
+  const ax = 1.5, az = RM * 0.85, ay0 = TOP + 0.4 - dip, ay1 = TOP - 1.3 - dip - 0.4 * h;   // in front of the globe's shoulder, right of you, above the text band
   arrow.set({ from: [ax, ay0, az], to: [ax, ay1, az], width: 0.08, opacity: ao });
   S._arrow = [ax + 0.2, ay0 - 0.4, az];
 
@@ -141,14 +142,16 @@ window.seek = function (t) {
 
   // the ladder: in from the dive's foot, out in the takeaway; dimmer under the work card
   const z = keyedZ(CUE.zkeys, t);
-  const lo = Math.min(seg(t, CUE.ladder[0], CUE.ladder[0] + 0.5), 1 - seg(t, CUE.ladder[1] - 0.5, CUE.ladder[1]));
+  const lo = Math.min(E.inout2(seg(t, CUE.ladder[0], CUE.ladder[0] + 1.0)), 1 - seg(t, CUE.ladder[1] - 0.5, CUE.ladder[1]));   // a cross-dissolve over the dive's last second
   const under = 1;                                                       // the work card zooms out to a small atom instead of dimming (review round 1)
   const step = 1 - smooth(clamp01((t - CUE.land[0]) / (CUE.land[1] - CUE.land[0])));
-  ladder.set({ z, opacity: lo * under, grow: { [WD.items.length - 1]: Math.max(1e-6, step) } });
+  ladder.set({ z, opacity: lo * under, grow: { [WD.items.length - 1]: Math.max(0.05, step) } });   // a faint tick stays: back where it was
 
   desk.update({ grid: 1, pool: [pose.target[0], pose.target[2]], casters: [[gc[0], gc[1], gc[2], RM * 0.9]], span: Math.max(800, pose.dist * 8) });
 
   hud.update(t);
+  const tail = E.inout2(seg(t, beat("tease").t1 - 0.6, beat("tease").t1));   // the loop: the card lifts over the last 0.6 s
+  if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   spine.update(t, gate);
   work.update(t, gate);
