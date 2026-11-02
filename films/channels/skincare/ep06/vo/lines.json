@@ -12,28 +12,28 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Same list as cigarettes? Most people hear that and think: just as deadly.",
+   "text": "Same list as cigarettes? Most people hear: just as deadly.",
    "stars": [
     "cigarettes"
    ],
-   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? mˈəʊst pˈiːpəl hˈiə ðat and θˈɪŋk: dʒˈʌst az dˈɛdli.",
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? mˈəʊst pˈiːpəl hˈiə: dʒˈʌst az dˈɛdli.",
    "speed": 0.84,
    "file": "01.wav",
-   "dur": 4.725,
-   "sha256": "71ae9e35cbdd5ccdf19f6a88d1e846052f8382a60db59560128a9e2159849edf"
+   "dur": 3.825,
+   "sha256": "0e508c3a7f74f5fb5195f4cb8e3d433d905ca421015771ecfa46b0444466a25e"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
+   "text": "It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
    "stars": [
     "sure"
    ],
-   "phonemes": "ɪt ɪz ðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi, and tˈanɪŋ bˈɛdz sˈɪt ɪn ɪts tˈɒp ɡɹˈuːp, bɪsˌaɪd təbˈakəʊ smˈəʊk. ðat ɡɹˈuːp ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz, nˌɒt hˌaʊ bˈɪɡ ðə hˈɑːm.",
+   "phonemes": "ɪts ðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi: tˈanɪŋ bˈɛdz sˈɪt ɪn ɪts tˈɒp ɡɹˈuːp, bɪsˌaɪd təbˈakəʊ smˈəʊk. ðat ɡɹˈuːp ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz, nˌɒt hˌaʊ bˈɪɡ ðə hˈɑːm.",
    "speed": 0.84,
    "file": "02.wav",
-   "dur": 11.725,
-   "sha256": "78c9fc154c2e29a0b33b77c8e3e841e6ef5cda9893a762bd7a857d8a3f35ee47"
+   "dur": 11.304,
+   "sha256": "6c2f335c647b60782024284ebce50b828d61cf32039b96d1f4ce3d4425cfc76d"
   },
   {
    "id": "vo03",
@@ -51,41 +51,41 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "When the agency's experts weighed the studies, the sharpest signal came from people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half.",
+   "text": "Weighing the studies, the agency's experts found the sharpest signal in people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half.",
    "stars": [
     "half"
    ],
-   "phonemes": "wˌɛn ðɪ ˈeɪdʒənsiz ˈɛkspɜːts wˈeɪd ðə stˈʌdiz, ðə ʃˈɑːpɪst sˈɪɡnəl kˈeɪm fɹɒm pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, stˈɑːtɪŋ bɪfˌɔː θˈɜːtifˈaɪv wɛnt wɪð ˈeɪ mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
+   "phonemes": "wˈeɪɪŋ ðə stˈʌdiz, ðɪ ˈeɪdʒənsiz ˈɛkspɜːts fˈaʊnd ðə ʃˈɑːpɪst sˈɪɡnəl ɪn pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, stˈɑːtɪŋ bɪfˌɔː θˈɜːtifˈaɪv wɛnt wɪð ˈeɪ mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
    "speed": 0.92,
    "file": "04.wav",
-   "dur": 11.875,
-   "sha256": "5fc015f979ba4c76d8ebd2ee27fb36993941c07f1fdddf8272d1e932f9c12b74"
+   "dur": 11.632,
+   "sha256": "4e58e520d168a177227b680a408e117133773e6e009717c2b7c7971da265d07d"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+   "text": "Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own off.",
    "stars": [
     "off"
    ],
-   "phonemes": "ðˈɛn hˈəʊl kˈʌntɹiz ˈaktɪd ˈɒn ɪt: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz ðat sˈeɪm jˈiə, and lˈeɪtəɹ ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
-   "speed": 0.9,
+   "phonemes": "ðˈɛn hˈəʊl kˈʌntɹiz ˈaktɪd: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz ðat sˈeɪm jˈiə; lˈeɪtə, ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
+   "speed": 0.96,
    "file": "05.wav",
-   "dur": 7.673,
-   "sha256": "fcb1426493b37a00cf00fbdb5379a03498228e4b06cc78dd22423bbdc0a68d48"
+   "dur": 7.087,
+   "sha256": "437bb838925a5ec7765f642bcdd8ee37318737c0b017d45a8eebc20e4e6c8cda"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+   "text": "And the long rays reach right through the top layer, on most skin about as thin as paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "and ðə lˈɒŋ ɹˈeɪz ɹˈiːtʃ pˈast ðə hˈəʊl tˈɒp lˈeɪə, wˌɪtʃ ˌɒn mˈəʊst skˈɪn ɪz ɐbˌaʊt az θˈɪn az pˈeɪpə.",
-   "speed": 0.74,
+   "phonemes": "and ðə lˈɒŋ ɹˈeɪz ɹˈiːtʃ ɹˈaɪt θɹuː ðə tˈɒp lˈeɪə, ˌɒn mˈəʊst skˈɪn ɐbˌaʊt az θˈɪn az pˈeɪpə.",
+   "speed": 0.76,
    "file": "06.wav",
-   "dur": 7.161,
-   "sha256": "aa16d210cfdb6954140839db470a26449fab9b1431d43c3e048055ab098e448e"
+   "dur": 6.31,
+   "sha256": "f7065ef867ce5ee220746689deebfae45db5345d4c35f6649ffe52bb1d1f1fab"
   },
   {
    "id": "vo07",

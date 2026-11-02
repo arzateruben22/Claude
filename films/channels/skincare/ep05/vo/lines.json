@@ -17,10 +17,10 @@
     "aged"
    ],
    "phonemes": "wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ bɪlˈɒŋ tə nˈeɪbəz, ˌʌndə ðə sˈeɪm fˈiəs sˈʌn.",
-   "speed": 0.84,
+   "speed": 0.9,
    "file": "01.wav",
-   "dur": 4.426,
-   "sha256": "42a29827a2a7c05622d79af5f06f71e3df520263f9843fb79f434c544c2c3a5e"
+   "dur": 4.039,
+   "sha256": "f526ddac620fe2a55401717ad528b811a70bab35ae4ce8c96e745ad07b023c9e"
   },
   {
    "id": "vo02",
@@ -43,10 +43,10 @@
     "casts"
    ],
    "phonemes": "ðˈɛn ɹɪsˈɜːtʃəz ɹˈiːd ðə fˈaɪn lˈaɪnz ɪn sˈɪlɪkˌəʊn kˈasts ɒv hˈandz. ˈaftə fˈɔː and ɐ hˈɑːf jˈiəz, ðə dˈeɪli ɡɹˈuːp ʃˈəʊd nˈəʊ dɪtˈɛktəbəl ˈɪŋkɹiːs ɪn ˈeɪdʒɪŋ.",
-   "speed": 0.84,
+   "speed": 0.9,
    "file": "03.wav",
-   "dur": 9.59,
-   "sha256": "6016c9bd5a348f5cfe7e9c4ec3ef18b2536bed73006834c42baf5d1fd1f012ee"
+   "dur": 8.969,
+   "sha256": "f1f66eb6e577fdde7444905d17d1ce78dbae1d4961eff963b067a4e86aa0d1b9"
   },
   {
    "id": "vo04",
@@ -108,10 +108,10 @@
     "mean"
    ],
    "phonemes": "nˈɛkst: tˈanɪŋ bˈɛdz ʃˈeəɹ ɐ lˈɪst wɪð sˌɪɡəɹˈɛts. wˌɒt dˈʌz ɪt mˈiːn?",
-   "speed": 0.79,
+   "speed": 0.84,
    "file": "08.wav",
-   "dur": 4.721,
-   "sha256": "b21b44b061dccb6b504e90cc8968f604f17693ee06396356bbbece91b8c49bd9"
+   "dur": 4.174,
+   "sha256": "7d0351ebcbe1abbfb54f1262164d2903f07428d1979c6444be11d2652d6c6791"
   }
  ]
 }

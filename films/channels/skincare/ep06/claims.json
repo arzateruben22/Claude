@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke.",
+  "sentence": "It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke.",
   "claim": "In 2009 the International Agency for Research on Cancer (IARC, the WHO's cancer agency) classified UV-emitting tanning devices in Group 1, 'carcinogenic to humans', the group that also holds tobacco smoking and tobacco smoke.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/19655431/",
   "source_title": "El Ghissassi F, et al. (WHO IARC Monograph Working Group). A review of human carcinogens, Part D: radiation. Lancet Oncol 2009;10:751–752",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c5",
-  "sentence": "When the agency's experts weighed the studies, the sharpest signal came from people who started young.",
+  "sentence": "Weighing the studies, the agency's experts found the sharpest signal in people who started young.",
   "claim": "In the IARC evaluation, the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use.",
   "source_url": "https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category",
   "source_title": "IARC moves sunbeds to highest cancer risk category (ecancer, reporting the IARC / Lancet Oncology special report, July 2009)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+  "sentence": "Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own off.",
   "claim": "In 2009 Brazil's health regulator ANVISA banned sunbeds for cosmetic tanning (RDC 56/2009), citing the IARC classification; it was the first country to do so.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/",
   "source_title": "Review of sunbed regulation (PMC5710080), on national bans in Brazil and Australia",
@@ -78,7 +78,7 @@
  },
  {
   "id": "c8",
-  "sentence": "Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own off.",
+  "sentence": "Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own off.",
   "claim": "Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016.",
   "source_url": "https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums",
   "source_title": "Solariums (Cancer Council Australia, policy and advocacy)",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+  "sentence": "And the long rays reach right through the top layer, on most skin about as thin as paper.",
   "claim": "Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/",
   "source_title": "D'Orazio J, Jarrett S, Amaro-Ortiz A, Scott T. UV radiation and the skin. Int J Mol Sci 2013;14:12222–12248",
@@ -100,7 +100,7 @@
  },
  {
   "id": "c10",
-  "sentence": "And the long rays reach past the whole top layer, which on most skin is about as thin as paper.",
+  "sentence": "And the long rays reach right through the top layer, on most skin about as thin as paper.",
   "claim": "The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm.",
   "source_url": "https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml",
   "source_title": "Atlas of Microscopic Anatomy, Section 7: Integument (Anatomy Atlases, Bergman, Afifi & Heidger)",

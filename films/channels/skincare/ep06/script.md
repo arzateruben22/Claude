@@ -29,25 +29,25 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a long typeset list of cancer agents, two lines lit, "Tobacco smoking" and "UV-emitting tanning devices" · badge: IARC Group 1 · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: Same list as *cigarettes*? Most people hear that and think: just as deadly. {-}
+## hook {shot: frame 0, the payoff: a typeset plate, IARC Group 1 (an excerpt), over a dim macro flight across skin at golden hour (deep tone); on "cigarettes" two lines light, "UV-emitting tanning devices", then "Tobacco smoking" · badge: IARC Monographs, Group 1 · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+vo: Same list as *cigarettes*? Most people hear: just as deadly. {-}
 
-## normal {shot: no cut: the camera pushes along the list to its header; the group's name lands on "sure", and a second label slides under it: "strength of evidence, not size of risk" · spine: Group 1 · 2009 · picture-only 0.5 s · energy: 0.45} (5–17 s)
-vo: It is the World Health Organization's cancer agency, and tanning beds sit in its top group, beside tobacco smoke. {c1} That group ranks how *sure* the evidence is, not how big the harm. {c2}
+## normal {shot: no cut: the plate holds; on "sure" a line lands under it: ranks how sure the evidence is, not how big the harm · picture-only 0.5 s · energy: 0.45} (5–17 s)
+vo: It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke. {c1} That group ranks how *sure* the evidence is, not how big the harm. {c2}
 
-## change {shot: a scale jump through the lit line into an open tanning bed, its tubes glowing violet; the spine becomes "UVA ×10–15 (may be)" · badges: UVA · large, powerful units · picture-only 0.6 s · energy: 0.55} (17–28.5 s)
+## change {shot: a scale jump into the bed: the flight runs low under a canopy of tubes that light violet; the skin takes the light; on "ten to fifteen" the tubes flare · spine: UVA vs midday sun ×10–15 (may be) · badge: model · large, powerful units · picture-only 0.6 s · energy: 0.55} (17–28.5 s)
 vo: Follow the evidence into the bed: its light is mostly UVA, the long rays. {c3} In large, powerful units, it may be ten to fifteen times as intense as the midday *sun*. {c4}
 
-## why {shot: a pull out of the glow into a crowd of small figures, each one a first session, sorted along an age line; the ones left of 35 light up · badges: pooled studies · relative risk · picture-only 2.2 s · energy: 0.5} (28.5–42 s)
-vo: When the agency's experts weighed the studies, the sharpest signal came from people who started young. {c5} In pooled studies, starting before thirty-five went with a melanoma risk raised by more than *half*. {c6}
+## why {shot: no cut, under the tubes; the plate: first use before 35, melanoma risk ×1.75 (pooled, 2007) and ×1.59 (pooled, 2012, corrected) · spine: ×1.6–1.75 · badge: pooled studies (meta-analyses) · picture-only 2.2 s · energy: 0.5} (28.5–42 s)
+vo: Weighing the studies, the agency's experts found the sharpest signal in people who started young. {c5} In pooled studies, starting before thirty-five went with a melanoma risk raised by more than *half*. {c6}
 
-## whoa {shot: the crowd's light flows out into a world map; two countries dim to dark, Brazil, then Australia, each with its year · badge: commercial beds · picture-only 3.2 s · energy: 0.8} (42–53.5 s)
-vo: Then whole countries acted on it: Brazil banned commercial tanning beds that same year, and later Australia switched its own *off*. {c7,c8}
+## whoa {shot: the UV reveal (shutter): the skin through the 365 nm viewfinder, glowing under the bed's light; on "Brazil" it dims, on "switched its own off" it goes nearly dark · plate: commercial tanning beds banned, Brazil 2009, Australia 2015 · daylight strip first · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (42–53.5 s)
+vo: Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own *off*. {c7,c8}
 
-## toscale {segment: toscale · a scale jump from the dark map down into a skin section; the gauge lifts to centre: the top layer fills in, ≈ 100 µm, beside the paper's 100 µm, and the long rays pass both · badge: simplified · picture-only 0.5 s · energy: 0.4} (53.5–61.5 s)
-vo: And the long rays reach past the whole top layer, which on most skin is about as thin as *paper*. {c9,c10}
+## toscale {segment: toscale · a scale jump into a cut-face section (deep tone): violet dashes of UVA fall through the top layer into the dermis; the gauge lifts: the top layer (≈ 100 µm) beside the paper's 100 µm · badge: simplified · picture-only 0.5 s · energy: 0.4} (53.5–61.5 s)
+vo: And the long rays reach right through the top layer, on most skin about as thin as *paper*. {c9,c10}
 
-## takeaway {shot: back to the hook's list, the two lines lit · picture-only 0.5 s · energy: 0.3} (61.5–68 s)
+## takeaway {shot: back to the hook's plate over the flight, both lines lit and the ranking line under them · spine: Group 1 ranks certainty · picture-only 0.5 s · energy: 0.3} (61.5–68 s)
 vo: Same list as cigarettes, then: not the same size of harm, but the same *certainty*. {c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74 s)

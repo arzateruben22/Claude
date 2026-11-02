@@ -1,0 +1,1516 @@
+{
+ "id": "outerlayer-005",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 74.2,
+ "poster": 66.7,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hand"
+  },
+  {
+   "at": 4.6667,
+   "name": "town"
+  },
+  {
+   "at": 17.7333,
+   "name": "cast"
+  },
+  {
+   "at": 28.0,
+   "name": "uv1"
+  },
+  {
+   "at": 41.5333,
+   "name": "town2"
+  },
+  {
+   "at": 54.6,
+   "name": "gauge"
+  },
+  {
+   "at": 61.1333,
+   "name": "uv2"
+  },
+  {
+   "at": 67.6667,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.6667,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.6667,
+   "t1": 17.7333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 17.7333,
+   "t1": 28.0,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 28.0,
+   "t1": 41.5333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 41.5333,
+   "t1": 54.6,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 54.6,
+   "t1": 61.1333,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 61.1333,
+   "t1": 67.6667,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 67.6667,
+   "t1": 74.2,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": "medium",
+ "trans": [],
+ "bio": {
+  "tx": -4000.0,
+  "ux": 4000.0,
+  "paper_um": 100.0,
+  "film_um": 20.0
+ },
+ "cam": {
+  "hand": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -0.4,
+     16
+    ],
+    "dist": 24,
+    "az": -4,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 4.6667,
+    "target": [
+     0,
+     -0.4,
+     9
+    ],
+    "dist": 22,
+    "az": -1,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   }
+  ],
+  "town": [
+   {
+    "t": 4.6667,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "dist": 150,
+    "el": 30,
+    "az": -10,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.44
+   },
+   {
+    "t": 8.6,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "dist": 210,
+    "el": 46,
+    "az": -4,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.44,
+    "ease": "out3"
+   },
+   {
+    "t": 17.7333,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "dist": 225,
+    "el": 50,
+    "az": 4,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.44,
+    "ease": "sine"
+   }
+  ],
+  "cast": [
+   {
+    "t": 17.7333,
+    "target": [
+     0,
+     -0.4,
+     4
+    ],
+    "dist": 30,
+    "el": 40,
+    "az": 0,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.44
+   },
+   {
+    "t": 28.0,
+    "target": [
+     0,
+     -0.4,
+     3
+    ],
+    "dist": 26,
+    "el": 44,
+    "az": 2,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.44,
+    "ease": "sine"
+   }
+  ],
+  "uv1": [
+   {
+    "t": 28.0,
+    "target": [
+     4000.0,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 26
+   },
+   {
+    "t": 41.5333,
+    "target": [
+     4000.0,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 24,
+    "ease": "sine"
+   }
+  ],
+  "town2": [
+   {
+    "t": 41.5333,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "dist": 240,
+    "el": 52,
+    "az": 8,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.3
+   },
+   {
+    "t": 54.6,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "dist": 255,
+    "el": 56,
+    "az": 20,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.3,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 54.6,
+    "target": [
+     -3,
+     -0.4,
+     6
+    ],
+    "dist": 20,
+    "el": 24,
+    "az": -8,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.7
+   },
+   {
+    "t": 61.1333,
+    "target": [
+     -3,
+     -0.4,
+     4
+    ],
+    "dist": 19,
+    "el": 26,
+    "az": -4,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.7,
+    "ease": "sine"
+   }
+  ],
+  "uv2": [
+   {
+    "t": 61.1333,
+    "target": [
+     4000.0,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 24
+   },
+   {
+    "t": 67.6667,
+    "target": [
+     4000.0,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 23,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 67.6667,
+    "target": [
+     0,
+     -0.4,
+     18
+    ],
+    "dist": 25,
+    "az": -6,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 74.2,
+    "target": [
+     0,
+     -0.4,
+     14
+    ],
+    "dist": 24,
+    "az": -4,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "aged": 0.6333333333333333,
+  "both": 1.5333333333333334,
+  "sun": 3.8,
+  "nineties": 5.533333333333333,
+  "nambour": 7.533333333333333,
+  "chance": 8.6,
+  "morning": 10.966666666666667,
+  "head": 12.666666666666666,
+  "pleased": 16.233333333333334,
+  "casts": 20.766666666666666,
+  "four": 22.433333333333334,
+  "daily": 24.066666666666666,
+  "increase": 25.9,
+  "burn": 30.5,
+  "camera": 33.03333333333333,
+  "misses": 35.3,
+  "surface": 38.5,
+  "watched": 42.63333333333333,
+  "ten": 43.1,
+  "squamous": 44.666666666666664,
+  "lower": 46.96666666666667,
+  "melanoma": 47.8,
+  "half": 49.36666666666667,
+  "small": 50.13333333333333,
+  "dose": 56.166666666666664,
+  "fifth": 58.56666666666667,
+  "paper": 59.233333333333334,
+  "which": 62.0,
+  "eye": 63.63333333333333,
+  "record": 66.4
+ },
+ "gauge": {
+  "rise": [
+   55.0,
+   55.9
+  ],
+  "sc": 58.26666666666667,
+  "paper": 59.233333333333334,
+  "back": [
+   60.6333,
+   61.5333
+  ],
+  "sc_um": 20.0,
+  "paper_um": 100.0,
+  "bar": "test dose",
+  "sc_text": "≈ 20 µm"
+ },
+ "plates": {
+  "odds": {
+   "t0": 23.866666666666667,
+   "t1": 27.7,
+   "text": "increased ageing, daily group: about a quarter less likely",
+   "sub": "relative odds 0.76 (95% CI 0.59–0.98)"
+  },
+  "mel": {
+   "t0": 44.36666666666667,
+   "t1": 54.300000000000004,
+   "scc": 44.666666666666664,
+   "mel": 47.8,
+   "half": 49.36666666666667,
+   "small": 50.13333333333333,
+   "n": [
+    11,
+    22
+   ],
+   "sub": "hazard ratio 0.50 (95% CI 0.24–1.02): not quite significant"
+  },
+  "viewfinder1": {
+   "t0": 28.0,
+   "t1": 41.5333
+  },
+  "viewfinder2": {
+   "t0": 61.1333,
+   "t1": 67.73333333333333
+  },
+  "daylight": {
+   "t0": 61.7333,
+   "t1": 67.73333333333333
+  }
+ },
+ "town": {
+  "split": [
+   8.4,
+   10.2
+  ],
+  "glow": 10.566666666666666
+ },
+ "hands": {
+  "age": [
+   22.433333333333334,
+   26.299999999999997
+  ],
+  "dmg": [
+   32.83333333333333,
+   35.699999999999996
+  ],
+  "film": [
+   54.9,
+   56.766666666666666
+  ]
+ },
+ "labels": [
+  {
+   "id": "l-a",
+   "text": "one neighbour",
+   "kind": "cell",
+   "anchor": "halfL",
+   "t0": 1.5333333333333334,
+   "t1": 4.3167,
+   "shot": "hand",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-b",
+   "text": "the other",
+   "kind": "cell",
+   "anchor": "halfR",
+   "t0": 1.9333333333333336,
+   "t1": 4.3167,
+   "shot": "hand",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-daily",
+   "text": "daily sunscreen",
+   "kind": "water",
+   "anchor": "daily",
+   "t0": 10.666666666666666,
+   "t1": 17.3833,
+   "shot": "town",
+   "side": -1,
+   "v": "above"
+  },
+  {
+   "id": "l-dis",
+   "text": "as they pleased",
+   "kind": "uv",
+   "anchor": "dis",
+   "t0": 15.733333333333334,
+   "t1": 17.3833,
+   "shot": "town",
+   "side": 1,
+   "v": "below"
+  },
+  {
+   "id": "l-cd",
+   "text": "daily: no detectable increase",
+   "kind": "water",
+   "anchor": "castL",
+   "t0": 24.066666666666666,
+   "t1": 27.65,
+   "shot": "cast",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-dmg",
+   "text": "damage the eye misses",
+   "kind": "uv",
+   "anchor": "uvR",
+   "t0": 35.0,
+   "t1": 41.1833,
+   "shot": "uv1",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-model-h",
+   "text": "model, not a photo",
+   "t0": 0.0,
+   "t1": 4.3167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-town",
+   "text": "model, not a map",
+   "t0": 4.9666999999999994,
+   "t1": 17.3833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-cast",
+   "text": "model · Hughes et al., 2013",
+   "t0": 18.0333,
+   "t1": 27.65,
+   "slot": "tl"
+  },
+  {
+   "id": "b-uv1",
+   "text": "model, not a photo",
+   "t0": 28.0,
+   "t1": 41.1833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-green",
+   "text": "Green et al., 1999 · 2011",
+   "t0": 41.833299999999994,
+   "t1": 54.25,
+   "slot": "tl"
+  },
+  {
+   "id": "b-est",
+   "text": "estimate",
+   "t0": 58.56666666666667,
+   "t1": 60.7833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-uv2",
+   "text": "model, not a photo",
+   "t0": 61.1333,
+   "t1": 67.73333333333333,
+   "slot": "tl"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-start",
+   "label": "Nambour trial begins",
+   "fmt": "text",
+   "text": "1992",
+   "t0": 7.233333333333333,
+   "t1": 17.3833,
+   "at": [
+    0.62,
+    0.2
+   ]
+  },
+  {
+   "id": "c-age",
+   "label": "ageing measured after",
+   "fmt": "text",
+   "text": "4.5 years",
+   "t0": 22.233333333333334,
+   "t1": 41.1833,
+   "at": [
+    0.62,
+    0.2
+   ]
+  },
+  {
+   "id": "c-follow",
+   "label": "melanoma followed to",
+   "fmt": "text",
+   "text": "2006",
+   "t0": 42.9,
+   "t1": 54.25,
+   "at": [
+    0.62,
+    0.2
+   ]
+  },
+  {
+   "id": "c-end",
+   "label": "the ageing trial",
+   "fmt": "text",
+   "text": "4.5 years",
+   "t0": 61.5333,
+   "t1": 67.03333333333333,
+   "at": [
+    0.62,
+    0.2
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 005",
+  "title": "The sunscreen *experiment*",
+  "t1": 4.1667,
+  "sig": 0.9666666666666667
+ },
+ "endCard": 67.73333333333333,
+ "end": {
+  "title": "Next layer: tanning beds, on a list with *cigarettes*",
+  "follow": "Outer Layer · No. 006",
+  "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."
+ },
+ "captions": [
+  {
+   "t0": 0.087,
+   "t1": 1.532,
+   "lines": [
+    [
+     [
+      "Which hand aged?",
+      0.087
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.532,
+   "t1": 2.767,
+   "lines": [
+    [
+     [
+      "Both",
+      1.532
+     ],
+     [
+      "belong",
+      1.847
+     ]
+    ],
+    [
+     [
+      "to",
+      2.157
+     ],
+     [
+      "neighbours,",
+      2.202
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.767,
+   "t1": 4.367,
+   "lines": [
+    [
+     [
+      "under",
+      2.767
+     ]
+    ],
+    [
+     [
+      "the same fierce sun.",
+      2.957
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.992,
+   "t1": 7.287,
+   "lines": [
+    [
+     [
+      "In the early nineties,",
+      4.992
+     ]
+    ],
+    [
+     [
+      "in",
+      6.112
+     ],
+     [
+      "a Queensland town",
+      6.392
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.287,
+   "t1": 10.192,
+   "lines": [
+    [
+     [
+      "called Nambour,",
+      7.287
+     ],
+     [
+      "chance",
+      8.592
+     ]
+    ],
+    [
+     [
+      "decided",
+      9.002
+     ],
+     [
+      "who",
+      9.562
+     ],
+     [
+      "would",
+      9.617
+     ],
+     [
+      "wear",
+      9.797
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.192,
+   "t1": 12.092,
+   "lines": [
+    [
+     [
+      "sunscreen",
+      10.192
+     ],
+     [
+      "every morning.",
+      10.827
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.092,
+   "t1": 14.962,
+   "lines": [
+    [
+     [
+      "They",
+      12.092
+     ],
+     [
+      "put",
+      12.252
+     ],
+     [
+      "it",
+      12.352
+     ],
+     [
+      "on",
+      12.457
+     ],
+     [
+      "head,",
+      12.662
+     ]
+    ],
+    [
+     [
+      "neck,",
+      13.052
+     ],
+     [
+      "arms",
+      13.527
+     ],
+     [
+      "and",
+      13.992
+     ],
+     [
+      "hands;",
+      14.062
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.962,
+   "t1": 17.027,
+   "lines": [
+    [
+     [
+      "neighbours",
+      14.962
+     ],
+     [
+      "used",
+      15.442
+     ],
+     [
+      "it",
+      15.717
+     ]
+    ],
+    [
+     [
+      "as",
+      16.057
+     ],
+     [
+      "they",
+      16.087
+     ],
+     [
+      "pleased.",
+      16.232
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.053,
+   "t1": 20.048,
+   "lines": [
+    [
+     [
+      "Then",
+      18.053
+     ],
+     [
+      "researchers",
+      18.448
+     ],
+     [
+      "read",
+      18.903
+     ]
+    ],
+    [
+     [
+      "the",
+      19.143
+     ],
+     [
+      "fine",
+      19.233
+     ],
+     [
+      "lines",
+      19.553
+     ],
+     [
+      "in",
+      20.018
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.048,
+   "t1": 22.258,
+   "lines": [
+    [
+     [
+      "silicone casts",
+      20.048
+     ],
+     [
+      "of",
+      21.063
+     ],
+     [
+      "hands.",
+      21.428
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.258,
+   "t1": 24.988,
+   "lines": [
+    [
+     [
+      "After",
+      22.258
+     ],
+     [
+      "4.5 years,",
+      22.438
+     ]
+    ],
+    [
+     [
+      "the",
+      24.043
+     ],
+     [
+      "daily",
+      24.073
+     ],
+     [
+      "group",
+      24.463
+     ],
+     [
+      "showed",
+      24.688
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.988,
+   "t1": 27.243,
+   "lines": [
+    [
+     [
+      "no detectable increase",
+      24.988
+     ]
+    ],
+    [
+     [
+      "in",
+      26.358
+     ],
+     [
+      "ageing.",
+      26.493
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.32,
+   "t1": 30.355,
+   "lines": [
+    [
+     [
+      "It's",
+      28.32
+     ],
+     [
+      "easy",
+      28.53
+     ],
+     [
+      "to",
+      28.86
+     ],
+     [
+      "think",
+      29.005
+     ]
+    ],
+    [
+     [
+      "of",
+      29.035
+     ],
+     [
+      "sun",
+      29.155
+     ],
+     [
+      "damage",
+      29.6
+     ],
+     [
+      "as",
+      30.005
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.355,
+   "t1": 31.975,
+   "lines": [
+    [
+     [
+      "the burn you feel.",
+      30.355
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.975,
+   "t1": 33.54,
+   "lines": [
+    [
+     [
+      "But",
+      31.975
+     ]
+    ],
+    [
+     [
+      "an ultraviolet camera",
+      32.005
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.54,
+   "t1": 36.195,
+   "lines": [
+    [
+     [
+      "picks",
+      33.54
+     ],
+     [
+      "up",
+      33.935
+     ],
+     [
+      "damage",
+      33.99
+     ]
+    ],
+    [
+     [
+      "the naked eye",
+      34.395
+     ],
+     [
+      "misses,",
+      35.3
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.195,
+   "t1": 38.485,
+   "lines": [
+    [
+     [
+      "building",
+      36.195
+     ],
+     [
+      "long",
+      36.7
+     ],
+     [
+      "before",
+      36.955
+     ]
+    ],
+    [
+     [
+      "anything",
+      37.315
+     ],
+     [
+      "shows",
+      37.755
+     ],
+     [
+      "on",
+      38.15
+     ],
+     [
+      "the",
+      38.355
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.485,
+   "t1": 39.32,
+   "lines": [
+    [
+     [
+      "surface.",
+      38.485
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.853,
+   "t1": 43.088,
+   "lines": [
+    [
+     [
+      "Then",
+      41.853
+     ],
+     [
+      "the",
+      42.173
+     ],
+     [
+      "town",
+      42.203
+     ]
+    ],
+    [
+     [
+      "was",
+      42.553
+     ],
+     [
+      "watched",
+      42.643
+     ],
+     [
+      "for",
+      42.908
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.088,
+   "t1": 44.653,
+   "lines": [
+    [
+     [
+      "10 more years.",
+      43.088
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.653,
+   "t1": 46.958,
+   "lines": [
+    [
+     [
+      "Squamous cell cancers",
+      44.653
+     ]
+    ],
+    [
+     [
+      "had",
+      46.148
+     ],
+     [
+      "already",
+      46.178
+     ],
+     [
+      "come",
+      46.548
+     ],
+     [
+      "out",
+      46.873
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.958,
+   "t1": 49.878,
+   "lines": [
+    [
+     [
+      "lower,",
+      46.958
+     ],
+     [
+      "and",
+      47.778
+     ],
+     [
+      "melanoma",
+      47.808
+     ]
+    ],
+    [
+     [
+      "came",
+      48.533
+     ],
+     [
+      "out",
+      48.888
+     ],
+     [
+      "at",
+      49.048
+     ],
+     [
+      "about half,",
+      49.158
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.878,
+   "t1": 51.253,
+   "lines": [
+    [
+     [
+      "in small numbers.",
+      49.878
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.92,
+   "t1": 58.19,
+   "lines": [
+    [
+     [
+      "At",
+      54.92
+     ],
+     [
+      "a lab's test dose,",
+      55.075
+     ]
+    ],
+    [
+     [
+      "that",
+      56.885
+     ],
+     [
+      "morning",
+      57.01
+     ],
+     [
+      "layer",
+      57.62
+     ],
+     [
+      "is",
+      57.985
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.19,
+   "t1": 59.805,
+   "lines": [
+    [
+     [
+      "about",
+      58.19
+     ]
+    ],
+    [
+     [
+      "a fifth of a paper's",
+      58.36
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.805,
+   "t1": 60.64,
+   "lines": [
+    [
+     [
+      "thickness.",
+      59.805
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.608,
+   "t1": 63.603,
+   "lines": [
+    [
+     [
+      "So,",
+      61.608
+     ],
+     [
+      "which hand aged?",
+      61.998
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.603,
+   "t1": 65.798,
+   "lines": [
+    [
+     [
+      "The",
+      63.603
+     ],
+     [
+      "eye",
+      63.633
+     ],
+     [
+      "can't",
+      64.008
+     ],
+     [
+      "say,",
+      64.303
+     ]
+    ],
+    [
+     [
+      "but",
+      64.698
+     ],
+     [
+      "the",
+      64.813
+     ],
+     [
+      "skin",
+      65.078
+     ],
+     [
+      "was",
+      65.418
+     ],
+     [
+      "keeping",
+      65.548
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.798,
+   "t1": 67.173,
+   "lines": [
+    [
+     [
+      "its own record.",
+      65.798
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.987,
+   "t1": 71.152,
+   "lines": [
+    [
+     [
+      "Next:",
+      67.987
+     ],
+     [
+      "tanning beds",
+      68.587
+     ],
+     [
+      "share",
+      69.207
+     ]
+    ],
+    [
+     [
+      "a",
+      69.567
+     ],
+     [
+      "list",
+      69.627
+     ],
+     [
+      "with cigarettes.",
+      69.877
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 71.152,
+   "t1": 72.427,
+   "lines": [
+    [
+     [
+      "What",
+      71.152
+     ],
+     [
+      "does",
+      71.377
+     ],
+     [
+      "it",
+      71.582
+     ],
+     [
+      "mean?",
+      71.612
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.039,
+   "file": "vo/01.wav",
+   "text": "Which hand aged? Both belong to neighbours, under the same fierce sun."
+  },
+  {
+   "id": "vo02",
+   "t": 4.966666666666667,
+   "dur": 11.811,
+   "file": "vo/02.wav",
+   "text": "In the early nineties, in a Queensland town called Nambour, chance decided who would wear sunscreen every morning. They put it on head, neck, arms and hands; neighbours used it as they pleased."
+  },
+  {
+   "id": "vo03",
+   "t": 18.033333333333335,
+   "dur": 8.969,
+   "file": "vo/03.wav",
+   "text": "Then researchers read the fine lines in silicone casts of hands. After four and a half years, the daily group showed no detectable increase in ageing."
+  },
+  {
+   "id": "vo04",
+   "t": 28.3,
+   "dur": 10.8,
+   "file": "vo/04.wav",
+   "text": "It's easy to think of sun damage as the burn you feel. But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the surface."
+  },
+  {
+   "id": "vo05",
+   "t": 41.833333333333336,
+   "dur": 9.168,
+   "file": "vo/05.wav",
+   "text": "Then the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers."
+  },
+  {
+   "id": "vo06",
+   "t": 54.9,
+   "dur": 5.52,
+   "file": "vo/06.wav",
+   "text": "At a lab's test dose, that morning layer is about a fifth of a paper's thickness."
+  },
+  {
+   "id": "vo07",
+   "t": 61.43333333333333,
+   "dur": 5.628,
+   "file": "vo/07.wav",
+   "text": "So, which hand aged? The eye can't say, but the skin was keeping its own record."
+  },
+  {
+   "id": "vo08",
+   "t": 67.96666666666667,
+   "dur": 4.174,
+   "file": "vo/08.wav",
+   "text": "Next: tanning beds share a list with cigarettes. What does it mean?"
+  }
+ ]
+}
