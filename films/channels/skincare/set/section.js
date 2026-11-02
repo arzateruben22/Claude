@@ -83,7 +83,7 @@ export const createSection = (o = {}) => {
     const y = yS - SP * (r + 0.5) / NSR, flat = 0.75 + 0.25 * (r / Math.max(1, NSR - 1));
     for (let x = x0 - 6; x < x1 + 10; x += 11.5) for (let z = z0 - 6; z < z1 + 10; z += 11.5) {
       const p = [x + (r % 2) * 5.5 + (R() - 0.5) * 2.5, y + (R() - 0.5) * 2, z + (R() - 0.5) * 2.5];
-      spin.push({ pos: p, scl: [6.4, 6.0 * flat, 6.4], rot: R() * 3 });
+      spin.push({ pos: p, scl: [7.0, 6.6 * flat, 7.0], rot: R() * 3 });   // overlapping a little: no light gaps between rows
       nuclei.push({ pos: p, scl: [2.3, 2.1 * flat, 2.3] });
     }
   }
@@ -100,7 +100,7 @@ export const createSection = (o = {}) => {
   const nucMesh = inst(new THREE.SphereGeometry(1, 10, 8), M.nucleus, nuclei);
   const capMesh = inst(new THREE.SphereGeometry(1, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), M.melanin, caps);
   // dermis: a solid block under the wavy junction, with collagen fibres on its cut face
-  const dGeo = new THREE.BoxGeometry(W, 140, D, 64, 1, 1), pa = dGeo.attributes.position;
+  const dGeo = new THREE.BoxGeometry(W - 0.6, 140, D - 0.6, 64, 1, 1), pa = dGeo.attributes.position;   // inside the clipping planes: a face exactly on a plane z-fights (the review's shimmer)
   for (let i = 0; i < pa.count; i++) { const x = pa.getX(i); pa.setY(i, pa.getY(i) > 0 ? junction(x) - yDJ : pa.getY(i)); }   // top on the junction, bottom 70 µm down
   dGeo.computeVertexNormals();
   const dermis = new THREE.Mesh(dGeo, M.dermis);
@@ -120,8 +120,8 @@ export const createSection = (o = {}) => {
     // mortar: 0 … 1, the lipid sheets lit in the theme's water colour (lin, as [r, g, b] linear)
     set({ tone = 0.5, dimDead = 0, dimLiving = 0, mortar = 0, mortarColor = [0.3, 0.7, 0.75], glowDead = 0 } = {}) {
       const kd = 1 - 0.62 * dimDead, kl = 1 - 0.62 * dimLiving;
-      base(M.corneo, toneColor("corneo", tone), kd * (1 + 0.35 * glowDead));
-      M.corneo.emissive.setRGB(...toneColor("corneo", tone).map((v) => v * 0.25 * glowDead));
+      base(M.corneo, toneColor("corneo", tone), kd * (1 + 0.12 * glowDead));   // lit, not washed out: the rows keep their edges
+      M.corneo.emissive.setRGB(...toneColor("corneo", tone).map((v) => v * 0.1 * glowDead));
       base(M.living, toneColor("living", tone), kl);
       base(M.basal, toneColor("basal", tone), kl);
       base(M.melanin, toneColor("melanin", tone), kl);
@@ -164,6 +164,11 @@ export const createClimber = ({ clip } = {}) => {
   // every tone
   const line = new THREE.Mesh(cell.geometry, new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0.85, toneMapped: false }));
   g.add(nuc, fil, line, cell);
+  g.renderOrder = 10;   // drawn after the section and over it, so the followed cell never cuts through its neighbours
+  // painted in order with no depth test: outline, then the nucleus and filaments, then the translucent body over them
+  line.renderOrder = 10; nuc.renderOrder = 11; cell.renderOrder = 12;
+  [cell, nuc, line].forEach((m) => { m.material.depthTest = false; });
+  fil.children.forEach((m) => { m.renderOrder = 11; }); fm.depthTest = false;
   return {
     group: g,
     set({ pos, u, k, tone, glow = 1, bodyColor, nucColor }) {
@@ -187,11 +192,11 @@ export const createClimber = ({ clip } = {}) => {
 
 // water beads: instanced small spheres, emissive; each one rises from deep in the living layers toward the surface.
 // pass(i) decides whether it gets through the wall at y = wallY (and leaves the skin, fading) or turns back under it.
-export const createBeads = ({ n = 120, x: [xa, xb] = [-80, 80], z: [za, zb] = [-20, 28], y0 = -70, wallY = -17, top = 30, seed = 5, pass = () => false, size = 1.6 } = {}) => {
+export const createBeads = ({ n = 120, x: [xa, xb] = [-80, 80], z: [za, zb] = [-20, 28], y0 = -70, wallY = -17, top = 30, seed = 5, pass = () => false, size = 1.6, period = [2.6, 2.2] } = {}) => {
   const R = rng(seed);
   const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthWrite: false });
   const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), mat, n);
-  const B = Array.from({ length: n }, (_, i) => ({ x: xa + R() * (xb - xa), z: za + R() * (zb - za), P: 2.6 + R() * 2.2, ph: R(), pass: pass(i, R), wob: R() * 6.28 }));
+  const B = Array.from({ length: n }, (_, i) => ({ x: xa + R() * (xb - xa), z: za + R() * (zb - za), P: period[0] + R() * period[1], ph: R(), pass: pass(i, R), wob: R() * 6.28 }));
   const dummy = new THREE.Object3D();
   return {
     mesh, B,
@@ -210,6 +215,31 @@ export const createBeads = ({ n = 120, x: [xa, xb] = [-80, 80], z: [za, zb] = [-
       });
       mesh.instanceMatrix.needsUpdate = true;
       return any;
+    },
+  };
+};
+
+// flakes: a few dead plates lifting off the surface and drifting up, tumbling and fading (No. 001's "flake away")
+export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 } = {}) => {
+  const R = rng(seed);
+  const mat = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0, transparent: true, opacity: 1 });
+  const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 6, 1), mat, n);
+  const F = Array.from({ length: n }, () => ({ x: xa + R() * (xb - xa), z: z - R() * 20, d: R() * 0.6, spin: (R() - 0.5) * 2, drift: (R() - 0.5) * 18 }));
+  const d = new THREE.Object3D();
+  return {
+    mesh,
+    set(t, { t0, color = [0.9, 0.85, 0.8], gain = 1 }) {
+      mat.color.setRGB(...color);
+      mesh.visible = gain > 0.002 && t > t0;
+      F.forEach((f, i) => {
+        const u = Math.max(0, Math.min(1, (t - t0 - f.d) / 2.4)), e = u * u * (3 - 2 * u);
+        d.position.set(f.x + f.drift * e, 0.6 + 46 * e, f.z);
+        d.rotation.set(f.spin * e * 1.4, f.spin * e * 2, f.spin * e * 0.9);
+        const s = (u > 0 ? 1 : 0) * (1 - Math.max(0, (u - 0.7) / 0.3));
+        d.scale.set(13 * s + 1e-4, 0.8, 13 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+      mat.opacity = gain;
     },
   };
 };

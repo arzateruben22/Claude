@@ -45,7 +45,7 @@
  },
  {
   "id": "c5",
-  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart.",
   "claim": "Keratinocytes are produced by cell division in the basal layer (stratum basale) of the epidermis.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
   "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart.",
   "claim": "A keratinocyte takes about 14 days to move from the basal layer to the stratum corneum, differentiating (making keratin) on the way; it then spends roughly another two weeks in the stratum corneum before shedding.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=111965",
   "source_title": "Time for keratinocytes of the epidermis to differentiate and reach skin surface (BioNumbers, Harvard Medical School; cites a Trends in Biochemical Sciences review)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
+  "sentence": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart.",
   "claim": "Cornification is a programmed form of cell death, distinct from apoptosis: the cell loses its nucleus and organelles and becomes a corneocyte.",
   "source_url": "https://www.nature.com/articles/nrm1619",
   "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
@@ -150,6 +150,28 @@
   "source_title": "Review of the stratum corneum's structure and barrier (PMC7592940), describing the 'brick and mortar' model",
   "accessed": "2026-10-27",
   "note": "A reframe of c7–c9; 'kept alive' rests on the barrier's role in water balance (c11 shows the stakes). Dermatologist to confirm the wording.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c15",
+  "sentence": "That's how much the wall holds back.",
+  "claim": "The difference in water loss between very preterm and term babies is attributed to the immature stratum corneum (restates c9–c11).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1545609/",
+  "source_title": "Rutter N, Hull D (1979). Water loss from the skin of term and preterm babies. Archives of Disease in Childhood 54(11):858–868",
+  "accessed": "2026-10-27",
+  "note": "Rutter & Hull 1979 linked the high losses to a thin, poorly keratinised stratum corneum (search excerpt).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c16",
+  "sentence": "On purpose.",
+  "claim": "Cornification is a programmed form of cell death, distinct from apoptosis: the cell loses its nucleus and organelles and becomes a corneocyte.",
+  "source_url": "https://www.nature.com/articles/nrm1619",
+  "source_title": "Candi E, Schmidt R, Melino G (2005). The cornified envelope: a model of cell death in the skin. Nature Reviews Molecular Cell Biology 6:328–340",
+  "accessed": "2026-10-27",
+  "note": "Restates c7: cornification is programmed cell death.",
   "verified_via": "search excerpt",
   "status": "ok"
  }

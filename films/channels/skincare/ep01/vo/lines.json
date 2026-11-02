@@ -38,15 +38,15 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart, on purpose.",
+   "text": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart. On purpose.",
    "stars": [
-    "on purpose"
+    "On purpose."
    ],
-   "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt, ˌɒn pˈɜːpəs.",
+   "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt. ˌɒn pˈɜːpəs.",
    "speed": 0.8,
    "file": "03.wav",
-   "dur": 9.899,
-   "sha256": "40204c7a708e222ef8470e9f553f78d02b4e951993508b53a4ff89ef2a6dfe2e"
+   "dur": 10.13,
+   "sha256": "0d256ba90d315a74f31ac2a0ad89b905259177a436d9c79ae513c0c4796b716a"
   },
   {
    "id": "vo04",
@@ -64,15 +64,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast.",
+   "text": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast. That's how much the wall holds back.",
    "stars": [
     "five times"
    ],
-   "phonemes": "bˈeɪbiz bˈɔːn tˈuː ˈɜːlɪ hˈavənt fˈɪnɪʃt ðˈeəz, and dˈɒktəz mˈɛʒəɹɪŋ ðeə skˈɪn fˈaʊnd ɪt lˈuːzɪŋ wˈɔːtəɹ ɐbˌaʊt fˈaɪv tˈaɪmz az fˈast.",
+   "phonemes": "bˈeɪbiz bˈɔːn tˈuː ˈɜːlɪ hˈavənt fˈɪnɪʃt ðˈeəz, and dˈɒktəz mˈɛʒəɹɪŋ ðeə skˈɪn fˈaʊnd ɪt lˈuːzɪŋ wˈɔːtəɹ ɐbˌaʊt fˈaɪv tˈaɪmz az fˈast. ðats hˌaʊ mˈʌtʃ ðə wˈɔːl hˈəʊldz bˈak.",
    "speed": 0.86,
    "file": "05.wav",
-   "dur": 8.083,
-   "sha256": "25b4a64b344972fe81bb9cd04f14d6f23a8897e293d567204ce82abe48c5272c"
+   "dur": 10.294,
+   "sha256": "0687c5eeff7986abbcfafe59eac68508ebd5fc1b5b24545a8f066f5d0d3b8e51"
   },
   {
    "id": "vo06",

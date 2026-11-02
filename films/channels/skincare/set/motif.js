@@ -78,11 +78,12 @@ export const endBars = (el, { t0, d = 0.8 } = {}) => {
 // the centre-left, 100 µm = `liftPx`, with two bars beside it: the dead layer's thickness and a sheet of paper's.
 const NS = "http://www.w3.org/2000/svg";
 const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
-export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe }) => {
+export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film = false }) => {   // film: a third, opt-in bar (a layer on top of the dead layer; No. 002)
   injectCss();
   const svg = mk("svg", { class: "ol-gauge", width: W, height: H, viewBox: `0 0 ${W} ${H}`, "aria-hidden": "true" });
   root.appendChild(svg);
   const g = mk("g", {}, svg);
+  const rcard = mk("rect", { fill: "var(--card)", rx: 12 * S1 }, g);   // a white backing for the attached ruler: its text stays ≥ 4.5:1 over any skin
   const spine = mk("line", { stroke: "var(--text)", "stroke-width": 3 * S1, "stroke-linecap": "round" }, g);
   const band = mk("rect", { fill: "var(--water)", opacity: 0.9, rx: 2 * S1 }, g);
   const ticks = Array.from({ length: 12 }, (_, i) => mk("line", { stroke: "var(--text)", "stroke-width": (i % 5 === 0 ? 3 : 2) * S1 }, g));
@@ -92,21 +93,26 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe }) =>
   const paperMark = mk("line", { stroke: "var(--text-2)", "stroke-width": 2 * S1, "stroke-dasharray": `${6 * S1} ${5 * S1}` }, g);
   const paperTxt = mk("text", { "font-size": 24 * S1, class: "sub", "dominant-baseline": "middle" }, g); paperTxt.textContent = "paper ≈ 100 µm";
   // the lifted bars
-  const scBar = mk("rect", { fill: "var(--water)", rx: 3 * S1 }, g), paperBar = mk("rect", { fill: "var(--card)", stroke: "var(--text-2)", "stroke-width": 2 * S1, rx: 3 * S1 }, g);
-  const scTxt = mk("text", { "font-size": 34 * S1, "dominant-baseline": "middle" }, g), paperTxt2 = mk("text", { "font-size": 34 * S1, "dominant-baseline": "middle" }, g);
+  const scBar = mk("rect", { fill: "var(--water)", rx: 3 * S1 }, g), paperBar = mk("rect", { fill: "var(--slide-low)", stroke: "var(--text)", "stroke-width": 2.5 * S1, rx: 3 * S1 }, g);
+  const scTxt = mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g), paperTxt2 = mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g);
   scTxt.textContent = "dead layer"; paperTxt2.textContent = "paper";
+  const scVal = mk("text", { "font-size": 30 * S1, "dominant-baseline": "middle" }, g), paperVal = mk("text", { "font-size": 30 * S1, "dominant-baseline": "hanging" }, g);
   const card = mk("rect", { fill: "var(--card)", opacity: 0.94, rx: 22 * S1 }, g);
+  // the film's bar and the dead layer's name inside its own bar, made only when asked for (No. 001 has neither)
+  const filmBar = film ? mk("rect", { fill: "var(--uv)", opacity: 0, rx: 3 * S1 }, g) : null;
+  const scIn = film ? mk("text", { "font-size": 22 * S1, "dominant-baseline": "middle", fill: "var(--card)" }, g) : null;
+  if (scIn) { scIn.textContent = "dead layer"; scTxt.textContent = "film"; }
   g.insertBefore(card, spine);
   const xL = (safe ? safe.l : 0.083 * W) + 18 * S1;   // hud.safe is in px
   return {
     // top/bottom: the surface and the `um`-deep point on screen (px), or null when the section is off; op: 0 … 1;
     // lift: 0 (attached) … 1 (to scale); sc: µm of the dead layer; fillSc, fillPaper: 0 … 1 (the bars' fill)
-    update(t, { top, bottom, um = 100, op = 1, lift = 0, sc = 17, fillSc = 0, fillPaper = 0, paperUm = 100 }) {
+    update(t, { top, bottom, um = 100, op = 1, lift = 0, sc = 17, fillSc = 0, fillPaper = 0, paperUm = 100, filmUm = 0, fillFilm = 0 }) {
       svg.style.opacity = op.toFixed(4);
       if (op <= 0.001 || top == null) { svg.style.visibility = "hidden"; return; }
       svg.style.visibility = "visible";
       // attached geometry (px per µm from the projection) blended to the lifted geometry
-      const pxA = (bottom - top) / um, liftPx = 0.2 * H / 100, yA = top, yL = 0.35 * H, xLift = 0.22 * W;   // lifted: below the spine counter, above the captions
+      const pxA = (bottom - top) / um, liftPx = 0.15 * H / 100, yA = top, yL = 0.17 * H, xLift = 0.145 * W;   // lifted: the empty upper left (the spine counter steps aside), clear of the section
       const u = E.inout2(Math.min(1, Math.max(0, lift)));
       const px = pxA + (liftPx - pxA) * u, y0 = yA + (yL - yA) * u, x = xL + (xLift - xL) * u;
       const len = 110 * px;
@@ -114,19 +120,30 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe }) =>
       band.setAttribute("x", x - 7 * S1); band.setAttribute("width", 7 * S1); band.setAttribute("y", y0); band.setAttribute("height", Math.max(0, sc * px));
       band.setAttribute("opacity", (0.9 * (1 - u)).toFixed(3));
       ticks.forEach((e, i) => { const y = y0 + i * 10 * px, w = (i % 5 === 0 ? 22 : 12) * S1; e.setAttribute("x1", x); e.setAttribute("x2", x + w); e.setAttribute("y1", y); e.setAttribute("y2", y); });
-      lab.forEach((e, i) => { e.setAttribute("x", x + 30 * S1); e.setAttribute("y", y0 + i * 50 * px); e.setAttribute("opacity", Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1))).toFixed(3)); });
+      lab.forEach((e, i) => { const yy = y0 + i * 50 * px, ok = yy + 20 * S1 < (safe ? safe.b : H) ? 1 : 0; e.setAttribute("x", x + 30 * S1); e.setAttribute("y", yy); e.setAttribute("opacity", (ok * Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1)))).toFixed(3)); });
       unit.setAttribute("x", x - 8 * S1); unit.setAttribute("y", y0 - 18 * S1);
       const yP = y0 + paperUm * px;
       paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
-      paperTxt.setAttribute("x", x + 76 * S1); paperTxt.setAttribute("y", yP + 22 * S1); paperTxt.setAttribute("opacity", ((1 - u) * Math.min(1, Math.max(0, (yP - y0 - 120 * S1) / (40 * S1)))).toFixed(3));
+      const inSafe = yP + 40 * S1 < (safe ? safe.b : 0.74 * H) ? 1 : 0;   // never below the safe box
+      paperTxt.setAttribute("x", x + 76 * S1); paperTxt.setAttribute("y", yP + 22 * S1); paperTxt.setAttribute("opacity", (inSafe * (1 - u) * Math.min(1, Math.max(0, (yP - y0 - 120 * S1) / (40 * S1)))).toFixed(3));
+      const yEnd = Math.min(y0 + len, safe ? safe.b - 10 * S1 : y0 + len);
+      rcard.setAttribute("x", x - 22 * S1); rcard.setAttribute("y", y0 - 40 * S1); rcard.setAttribute("width", 82 * S1); rcard.setAttribute("height", Math.max(0, yEnd - y0 + 52 * S1)); rcard.setAttribute("opacity", (0.88 * (1 - u)).toFixed(3));
       // lifted: two bars to the right of the ruler, filled from the top, each named above itself (two short lines)
-      const bx = x + 80 * S1, bw = 150 * S1, gap = 70 * S1;
-      scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", y0); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
+      const bx = x + 80 * S1, bw = 120 * S1, gap = 56 * S1;
+      const yS = filmBar ? y0 + filmUm * px * fillFilm : y0;   // with a film, the dead layer hangs under it
+      scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", yS); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
+      if (filmBar) {
+        filmBar.setAttribute("x", bx); filmBar.setAttribute("width", bw); filmBar.setAttribute("y", y0); filmBar.setAttribute("height", Math.max(0, filmUm * px * fillFilm)); filmBar.setAttribute("opacity", (0.85 * u).toFixed(3));
+        scIn.setAttribute("x", bx + 12 * S1); scIn.setAttribute("y", yS + sc * px * 0.5); scIn.setAttribute("opacity", (u * fillSc).toFixed(3));
+      }
       paperBar.setAttribute("x", bx + bw + gap); paperBar.setAttribute("width", bw); paperBar.setAttribute("y", y0); paperBar.setAttribute("height", Math.max(0, paperUm * px * fillPaper)); paperBar.setAttribute("opacity", u.toFixed(3));
-      scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * fillSc).toFixed(3));
+      scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * (filmBar ? fillFilm : fillSc)).toFixed(3));
       paperTxt2.setAttribute("x", bx + bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1); paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
-      card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 40 * S1) - (x - 50 * S1)); card.setAttribute("height", 110 * px + 130 * S1);
+      card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", 110 * px + 150 * S1);
       card.setAttribute("opacity", (0.94 * u).toFixed(3));
+      scVal.textContent = `${Math.round(sc)} µm`; paperVal.textContent = `${Math.round(paperUm)} µm`;
+      scVal.setAttribute("dominant-baseline", "hanging"); scVal.setAttribute("x", bx); scVal.setAttribute("y", yS + sc * px + 8 * S1); scVal.setAttribute("opacity", (u * fillSc).toFixed(3));
+      paperVal.setAttribute("x", bx + bw + gap); paperVal.setAttribute("y", y0 + paperUm * px + 8 * S1); paperVal.setAttribute("opacity", (u * fillPaper).toFixed(3));
     },
   };
 };
