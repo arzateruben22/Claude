@@ -101,15 +101,15 @@
   }
  ],
  "tone": {
-  "hook": 0.85,
-  "follicle": 0.15,
-  "fur": 0.15,
-  "ours": 0.5,
-  "bulge": 0.15,
-  "cold": 0.15,
-  "nomuscle": 0.15,
-  "gauge": 0.15,
-  "close": 0.85
+  "hook": 0.9,
+  "follicle": 0.9,
+  "fur": 0.9,
+  "ours": 0.9,
+  "bulge": 0.9,
+  "cold": 0.9,
+  "nomuscle": 0.9,
+  "gauge": 0.9,
+  "close": 0.9
  },
  "bio": {
   "vellus_um": 30.0,

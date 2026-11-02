@@ -105,16 +105,16 @@
   }
  ],
  "tone": {
-  "hook": 0.45,
-  "section": 0.45,
-  "dna": 0.45,
-  "cell": 0.95,
-  "pair": 0.15,
-  "dna2": 0.95,
-  "tan": 0.95,
-  "field": 0.45,
-  "gauge": 0.45,
-  "close": 0.45
+  "hook": 0.5,
+  "section": 0.5,
+  "dna": 0.5,
+  "cell": 0.5,
+  "pair": 0.5,
+  "dna2": 0.5,
+  "tan": 0.5,
+  "field": 0.5,
+  "gauge": 0.5,
+  "close": 0.5
  },
  "bio": {
   "sc_um": 17.0,
