@@ -1,0 +1,1494 @@
+{
+ "id": "outerlayer-004",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 74.2,
+ "poster": 48.766666666666666,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "brow"
+  },
+  {
+   "at": 7.166666666666667,
+   "name": "below"
+  },
+  {
+   "at": 28.4667,
+   "name": "rise"
+  },
+  {
+   "at": 41.5333,
+   "name": "uv"
+  },
+  {
+   "at": 52.7333,
+   "name": "gauge"
+  },
+  {
+   "at": 67.2,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 16.8,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.8,
+   "t1": 28.4667,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 28.4667,
+   "t1": 41.5333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 41.5333,
+   "t1": 52.7333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 60.2,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.2,
+   "t1": 67.2,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 74.2,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": "light",
+ "trans": [],
+ "bio": {
+  "jx": 4000.0,
+  "ux": -4000.0,
+  "paper_um": 100.0,
+  "gap_um": 0.05
+ },
+ "cam": {
+  "brow": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -0.6,
+     16
+    ],
+    "dist": 24,
+    "az": -6,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 3.433333333333333,
+    "target": [
+     0,
+     -0.6,
+     8
+    ],
+    "dist": 21,
+    "az": -3,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   },
+   {
+    "t": 7.166666666666667,
+    "target": [
+     0,
+     -1.2,
+     0
+    ],
+    "dist": 12,
+    "az": 0,
+    "el": 34,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "in2"
+   }
+  ],
+  "below": [
+   {
+    "t": 7.166666666666667,
+    "target": [
+     4000.0,
+     41.5,
+     30
+    ],
+    "dist": 210,
+    "el": 22,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 9.333333333333332,
+    "target": [
+     4004.0,
+     -10.5,
+     12
+    ],
+    "dist": 201,
+    "el": 14,
+    "az": -8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "ease": "inout2"
+   },
+   {
+    "t": 12.8,
+    "target": [
+     4000.0,
+     12,
+     14
+    ],
+    "dist": 494,
+    "el": 20,
+    "az": -6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "inout2"
+   },
+   {
+    "t": 16.8,
+    "target": [
+     4000.0,
+     10,
+     14
+    ],
+    "dist": 471,
+    "el": 19,
+    "az": -4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   },
+   {
+    "t": 20.433333333333334,
+    "target": [
+     4004.0,
+     -10.5,
+     12
+    ],
+    "dist": 126,
+    "el": 12,
+    "az": 2,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "inout2"
+   },
+   {
+    "t": 22.433333333333334,
+    "target": [
+     4004.0,
+     -16.5,
+     14.2
+    ],
+    "dist": 98,
+    "el": 10,
+    "az": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "inout2"
+   },
+   {
+    "t": 28.4667,
+    "target": [
+     4004.0,
+     -16.5,
+     14.2
+    ],
+    "dist": 105,
+    "el": 10,
+    "az": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   }
+  ],
+  "rise": [
+   {
+    "t": 28.4667,
+    "target": [
+     0,
+     -1,
+     2
+    ],
+    "dist": 16,
+    "el": 30,
+    "az": 6,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 41.5333,
+    "target": [
+     0,
+     -1,
+     -6
+    ],
+    "dist": 44,
+    "el": 20,
+    "az": 14,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.62,
+    "ease": "out3"
+   }
+  ],
+  "uv": [
+   {
+    "t": 41.5333,
+    "target": [
+     -4000.0,
+     0.1,
+     0
+    ],
+    "dist": 25,
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4
+   },
+   {
+    "t": 52.7333,
+    "target": [
+     -4000.0,
+     0.1,
+     0
+    ],
+    "dist": 23,
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 52.7333,
+    "target": [
+     4004.0,
+     -8,
+     14
+    ],
+    "dist": 384,
+    "el": 14,
+    "az": -4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.66
+   },
+   {
+    "t": 60.2,
+    "target": [
+     4016.0,
+     -8,
+     14
+    ],
+    "dist": 260,
+    "el": 14,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "ease": "inout2"
+   },
+   {
+    "t": 67.2,
+    "target": [
+     4020.0,
+     -8,
+     14
+    ],
+    "dist": 280,
+    "el": 14,
+    "az": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 67.2,
+    "target": [
+     0,
+     -0.6,
+     20
+    ],
+    "dist": 26,
+    "az": -8,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46
+   },
+   {
+    "t": 74.2,
+    "target": [
+     0,
+     -0.6,
+     15
+    ],
+    "dist": 24,
+    "az": -6,
+    "el": 13,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.46,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "poison": 0.1,
+  "frown": 0.8666666666666667,
+  "known": 3.433333333333333,
+  "nanogram": 4.033333333333333,
+  "every": 5.933333333333334,
+  "nerve": 7.166666666666667,
+  "messenger": 9.633333333333333,
+  "below": 11.266666666666667,
+  "pulls": 12.8,
+  "crease": 15.433333333333334,
+  "never": 18.533333333333335,
+  "slips": 20.433333333333334,
+  "cuts": 22.233333333333334,
+  "protein": 23.166666666666668,
+  "ready": 25.966666666666665,
+  "leaves": 26.933333333333334,
+  "two": 28.8,
+  "justinus": 31.233333333333334,
+  "sausages": 34.666666666666664,
+  "guessed": 36.233333333333334,
+  "medicine": 38.766666666666666,
+  "howmuch": 42.6,
+  "whole": 43.96666666666667,
+  "hundredth": 45.86666666666667,
+  "kill": 48.166666666666664,
+  "person": 48.53333333333333,
+  "gap": 53.4,
+  "thousand": 56.333333333333336,
+  "paper": 59.03333333333333,
+  "silence": 62.9,
+  "nerve2": 64.66666666666667,
+  "endings": 65.63333333333334
+ },
+ "gauge": {
+  "rise": [
+   53.1333,
+   54.0333
+  ],
+  "sc": 55.93333333333334,
+  "paper": 59.03333333333333,
+  "back": [
+   59.7,
+   60.6
+  ],
+  "sc_um": 0.05,
+  "paper_um": 100.0,
+  "bar": "gap",
+  "sc_text": "≈ 0.05 µm"
+ },
+ "j": {
+  "puff": [
+   9.633333333333333,
+   11.233333333333333
+  ],
+  "pull": [
+   12.700000000000001,
+   15.833333333333334
+  ],
+  "open": [
+   17.2,
+   20.433333333333334
+  ],
+  "toxin": [
+   20.233333333333334,
+   22.233333333333334
+  ],
+  "cut": [
+   22.233333333333334,
+   22.733333333333334
+  ],
+  "release": [
+   25.866666666666664,
+   27.533333333333335
+  ],
+  "sprout": [
+   64.06666666666668,
+   66.23333333333333
+  ],
+  "relax": [
+   52.7333,
+   65.63333333333334
+  ]
+ },
+ "plates": {
+  "kerner": {
+   "t0": 31.033333333333335,
+   "t1": 41.2333,
+   "med": 38.36666666666667,
+   "name": "Justinus Kerner",
+   "role": "physician, Württemberg",
+   "line1": "1817–1822: “sausage poison” described",
+   "line2": "proposed it might one day treat illness"
+  },
+  "dose": {
+   "t0": 45.36666666666667,
+   "t1": 52.4333,
+   "frown": 43.96666666666667,
+   "kill": 48.166666666666664,
+   "frown_u": 20,
+   "lethal_u": 3000,
+   "sites": 5
+  },
+  "daylight": {
+   "t0": 42.1333,
+   "t1": 45.266666666666666
+  },
+  "viewfinder": {
+   "t0": 41.5333,
+   "t1": 52.7333,
+   "sites": 42.4
+  }
+ },
+ "labels": [
+  {
+   "id": "l-nerve",
+   "text": "nerve ending",
+   "kind": "cell",
+   "anchor": "bulb",
+   "t0": 7.666666666666667,
+   "t1": 12.5,
+   "shot": "below",
+   "side": -1
+  },
+  {
+   "id": "l-msg",
+   "text": "messenger",
+   "kind": "water",
+   "anchor": "gap",
+   "t0": 9.633333333333333,
+   "t1": 12.5,
+   "shot": "below",
+   "side": 1,
+   "v": "below"
+  },
+  {
+   "id": "l-muscle",
+   "text": "muscle",
+   "kind": "cell",
+   "anchor": "muscle",
+   "t0": 12.8,
+   "t1": 17.2,
+   "shot": "below",
+   "side": -1,
+   "v": "below"
+  },
+  {
+   "id": "l-crease",
+   "text": "the crease",
+   "kind": "cell",
+   "anchor": "crease",
+   "t0": 15.133333333333333,
+   "t1": 17.2,
+   "shot": "below",
+   "side": 1
+  },
+  {
+   "id": "l-tox",
+   "text": "botulinum toxin",
+   "kind": "uv",
+   "anchor": "tox",
+   "t0": 20.633333333333333,
+   "t1": 22.433333333333334,
+   "shot": "below",
+   "side": -1,
+   "v": "above"
+  },
+  {
+   "id": "l-snap",
+   "text": "SNAP-25, cut",
+   "kind": "water",
+   "anchor": "snap",
+   "t0": 22.633333333333333,
+   "t1": 28.1167,
+   "shot": "below",
+   "side": 1,
+   "v": "below"
+  },
+  {
+   "id": "l-sprout",
+   "text": "new endings",
+   "kind": "cell",
+   "anchor": "sprout",
+   "t0": 64.66666666666667,
+   "t1": 66.85,
+   "shot": "gauge",
+   "side": 1,
+   "v": "above"
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-model-h",
+   "text": "model, not a photo",
+   "t0": 0.0,
+   "t1": 6.8167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified · not to scale",
+   "t0": 7.466666666666667,
+   "t1": 16.8,
+   "slot": "tl"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 16.8,
+   "t1": 28.1167,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model-uv",
+   "text": "model, not a photo",
+   "t0": 41.5333,
+   "t1": 52.3833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-months",
+   "text": "months, compressed",
+   "t0": 60.5,
+   "t1": 67.26666666666667,
+   "slot": "tl"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-q",
+   "label": "one frown's dose",
+   "fmt": "text",
+   "text": "?",
+   "t0": 5.6,
+   "t1": 28.1167,
+   "at": [
+    0.62,
+    0.2
+   ]
+  },
+  {
+   "id": "c-dose",
+   "label": "of a lethal dose (est.)",
+   "fmt": "text",
+   "text": "< 1 %",
+   "t0": 48.166666666666664,
+   "t1": 52.3833,
+   "at": [
+    0.62,
+    0.2
+   ]
+  },
+  {
+   "id": "c-end",
+   "label": "a frown, of a lethal dose",
+   "fmt": "text",
+   "text": "< 1 %",
+   "t0": 60.6,
+   "t1": 66.56666666666666,
+   "at": [
+    0.62,
+    0.2
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 004",
+  "title": "The deadliest *dose*",
+  "t1": 5.1,
+  "sig": 1.2
+ },
+ "endCard": 67.26666666666667,
+ "end": {
+  "title": "Next layer: same sun, one experiment. Which hand *aged*?",
+  "follow": "Outer Layer · No. 005",
+  "next": "Alan Scott first injected it to treat crossed eyes (1980); Jean and Alastair Carruthers reported frown lines in 1992. Narration: synthetic voice (AI)."
+ },
+ "captions": [
+  {
+   "t0": 0.107,
+   "t1": 1.742,
+   "lines": [
+    [
+     [
+      "Poison,",
+      0.107
+     ],
+     [
+      "in a frown?",
+      0.602
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.742,
+   "t1": 3.767,
+   "lines": [
+    [
+     [
+      "Among",
+      1.742
+     ],
+     [
+      "the",
+      1.972
+     ],
+     [
+      "most",
+      2.122
+     ],
+     [
+      "poisonous",
+      2.312
+     ]
+    ],
+    [
+     [
+      "substances",
+      2.977
+     ],
+     [
+      "known,",
+      3.447
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.767,
+   "t1": 5.087,
+   "lines": [
+    [
+     [
+      "by the nanogram.",
+      3.767
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.92,
+   "t1": 8.475,
+   "lines": [
+    [
+     [
+      "Every",
+      5.92
+     ],
+     [
+      "frown",
+      6.285
+     ],
+     [
+      "starts",
+      6.735
+     ]
+    ],
+    [
+     [
+      "at",
+      7.01
+     ],
+     [
+      "a nerve ending,",
+      7.145
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.475,
+   "t1": 10.365,
+   "lines": [
+    [
+     [
+      "which",
+      8.475
+     ],
+     [
+      "lets",
+      8.56
+     ],
+     [
+      "out",
+      8.85
+     ]
+    ],
+    [
+     [
+      "a chemical messenger",
+      9.195
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.365,
+   "t1": 12.255,
+   "lines": [
+    [
+     [
+      "onto",
+      10.365
+     ],
+     [
+      "the muscle below.",
+      10.51
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.255,
+   "t1": 15.0,
+   "lines": [
+    [
+     [
+      "The",
+      12.255
+     ],
+     [
+      "muscle",
+      12.285
+     ],
+     [
+      "pulls,",
+      12.785
+     ],
+     [
+      "and",
+      13.66
+     ]
+    ],
+    [
+     [
+      "the",
+      13.69
+     ],
+     [
+      "skin",
+      13.825
+     ],
+     [
+      "above",
+      14.315
+     ],
+     [
+      "it",
+      14.61
+     ],
+     [
+      "folds",
+      14.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.0,
+   "t1": 16.2,
+   "lines": [
+    [
+     [
+      "into",
+      15.0
+     ],
+     [
+      "a",
+      15.18
+     ],
+     [
+      "crease.",
+      15.435
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.12,
+   "t1": 20.335,
+   "lines": [
+    [
+     [
+      "Botulinum toxin",
+      17.12
+     ],
+     [
+      "never",
+      18.545
+     ]
+    ],
+    [
+     [
+      "touches",
+      18.68
+     ],
+     [
+      "the",
+      19.14
+     ],
+     [
+      "skin.",
+      19.38
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.335,
+   "t1": 22.225,
+   "lines": [
+    [
+     [
+      "It",
+      20.335
+     ],
+     [
+      "slips",
+      20.435
+     ],
+     [
+      "inside",
+      20.775
+     ]
+    ],
+    [
+     [
+      "the nerve ending",
+      21.265
+     ],
+     [
+      "and",
+      22.055
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.225,
+   "t1": 25.105,
+   "lines": [
+    [
+     [
+      "cuts",
+      22.225
+     ],
+     [
+      "one small protein",
+      22.54
+     ]
+    ],
+    [
+     [
+      "the",
+      23.73
+     ],
+     [
+      "message",
+      23.9
+     ],
+     [
+      "needs,",
+      24.21
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.105,
+   "t1": 27.88,
+   "lines": [
+    [
+     [
+      "so",
+      25.105
+     ],
+     [
+      "the",
+      25.135
+     ],
+     [
+      "message",
+      25.265
+     ],
+     [
+      "is",
+      25.74
+     ],
+     [
+      "ready,",
+      25.965
+     ]
+    ],
+    [
+     [
+      "and",
+      26.635
+     ],
+     [
+      "never leaves.",
+      26.68
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.787,
+   "t1": 31.237,
+   "lines": [
+    [
+     [
+      "Two centuries ago,",
+      28.787
+     ]
+    ],
+    [
+     [
+      "a",
+      30.112
+     ],
+     [
+      "German",
+      30.217
+     ],
+     [
+      "doctor",
+      30.622
+     ],
+     [
+      "named",
+      30.877
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.237,
+   "t1": 34.377,
+   "lines": [
+    [
+     [
+      "Justinus Kerner",
+      31.237
+     ],
+     [
+      "traced",
+      32.672
+     ]
+    ],
+    [
+     [
+      "a",
+      32.952
+     ],
+     [
+      "deadly",
+      33.137
+     ],
+     [
+      "paralysis",
+      33.502
+     ],
+     [
+      "to",
+      34.137
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.377,
+   "t1": 36.027,
+   "lines": [
+    [
+     [
+      "spoiled sausages.",
+      34.377
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.027,
+   "t1": 38.192,
+   "lines": [
+    [
+     [
+      "And",
+      36.027
+     ],
+     [
+      "he",
+      36.057
+     ],
+     [
+      "guessed",
+      36.247
+     ],
+     [
+      "that",
+      36.592
+     ],
+     [
+      "the",
+      36.727
+     ]
+    ],
+    [
+     [
+      "same",
+      36.912
+     ],
+     [
+      "poison",
+      37.172
+     ],
+     [
+      "might",
+      37.552
+     ],
+     [
+      "one",
+      37.897
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.192,
+   "t1": 39.547,
+   "lines": [
+    [
+     [
+      "day",
+      38.192
+     ],
+     [
+      "become",
+      38.457
+     ],
+     [
+      "a",
+      38.552
+     ],
+     [
+      "medicine.",
+      38.752
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.988,
+   "t1": 43.933,
+   "lines": [
+    [
+     [
+      "So",
+      41.988
+     ],
+     [
+      "how",
+      42.178
+     ],
+     [
+      "much",
+      42.598
+     ],
+     [
+      "goes",
+      42.753
+     ],
+     [
+      "in?",
+      43.203
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.933,
+   "t1": 46.463,
+   "lines": [
+    [
+     [
+      "The",
+      43.933
+     ],
+     [
+      "whole",
+      43.963
+     ],
+     [
+      "frown",
+      44.363
+     ],
+     [
+      "takes",
+      44.828
+     ]
+    ],
+    [
+     [
+      "well under a hundredth",
+      45.158
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.463,
+   "t1": 49.253,
+   "lines": [
+    [
+     [
+      "of",
+      46.463
+     ],
+     [
+      "the",
+      46.493
+     ],
+     [
+      "amount",
+      46.608
+     ],
+     [
+      "estimated",
+      47.183
+     ]
+    ],
+    [
+     [
+      "to kill a person.",
+      48.008
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.053,
+   "t1": 56.018,
+   "lines": [
+    [
+     [
+      "And",
+      53.053
+     ],
+     [
+      "the",
+      53.373
+     ],
+     [
+      "gap",
+      53.403
+     ],
+     [
+      "that",
+      53.703
+     ],
+     [
+      "message",
+      53.828
+     ]
+    ],
+    [
+     [
+      "never",
+      54.443
+     ],
+     [
+      "crosses",
+      54.813
+     ],
+     [
+      "is",
+      55.448
+     ],
+     [
+      "about",
+      55.693
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.018,
+   "t1": 59.813,
+   "lines": [
+    [
+     [
+      "2,000 times",
+      56.018
+     ],
+     [
+      "thinner",
+      57.413
+     ]
+    ],
+    [
+     [
+      "than",
+      58.218
+     ],
+     [
+      "a sheet of paper.",
+      58.248
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.55,
+   "t1": 63.7,
+   "lines": [
+    [
+     [
+      "Poison in a frown:",
+      60.55
+     ],
+     [
+      "just",
+      62.31
+     ]
+    ],
+    [
+     [
+      "enough",
+      62.56
+     ],
+     [
+      "to",
+      62.885
+     ],
+     [
+      "silence",
+      62.915
+     ],
+     [
+      "one",
+      63.53
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.7,
+   "t1": 66.56,
+   "lines": [
+    [
+     [
+      "message,",
+      63.7
+     ],
+     [
+      "until",
+      64.355
+     ],
+     [
+      "the",
+      64.645
+     ]
+    ],
+    [
+     [
+      "nerve",
+      64.675
+     ],
+     [
+      "grows",
+      65.13
+     ],
+     [
+      "new endings.",
+      65.455
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.52,
+   "t1": 69.635,
+   "lines": [
+    [
+     [
+      "Next:",
+      67.52
+     ],
+     [
+      "two",
+      68.135
+     ],
+     [
+      "neighbours",
+      68.205
+     ]
+    ],
+    [
+     [
+      "under",
+      68.86
+     ],
+     [
+      "the",
+      68.89
+     ],
+     [
+      "same",
+      69.04
+     ],
+     [
+      "sun,",
+      69.355
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.635,
+   "t1": 70.92,
+   "lines": [
+    [
+     [
+      "one experiment.",
+      69.635
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 70.92,
+   "t1": 72.28,
+   "lines": [
+    [
+     [
+      "Which hand aged?",
+      70.92
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.727,
+   "file": "vo/01.wav",
+   "text": "Poison, in a frown? Among the most poisonous substances known, by the nanogram."
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "dur": 10.054,
+   "file": "vo/02.wav",
+   "text": "Every frown starts at a nerve ending, which lets out a chemical messenger onto the muscle below. The muscle pulls, and the skin above it folds into a crease."
+  },
+  {
+   "id": "vo03",
+   "t": 17.1,
+   "dur": 10.528,
+   "file": "vo/03.wav",
+   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves."
+  },
+  {
+   "id": "vo04",
+   "t": 28.766666666666666,
+   "dur": 10.555,
+   "file": "vo/04.wav",
+   "text": "Two centuries ago, a German doctor named Justinus Kerner traced a deadly paralysis to spoiled sausages. And he guessed that the same poison might one day become a medicine."
+  },
+  {
+   "id": "vo05",
+   "t": 41.833333333333336,
+   "dur": 7.294,
+   "file": "vo/05.wav",
+   "text": "So how much goes in? The whole frown takes well under a hundredth of the amount estimated to kill a person."
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "dur": 6.552,
+   "file": "vo/06.wav",
+   "text": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper."
+  },
+  {
+   "id": "vo07",
+   "t": 60.5,
+   "dur": 5.815,
+   "file": "vo/07.wav",
+   "text": "Poison in a frown: just enough to silence one message, until the nerve grows new endings."
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "dur": 4.523,
+   "file": "vo/08.wav",
+   "text": "Next: two neighbours under the same sun, one experiment. Which hand aged?"
+  }
+ ]
+}

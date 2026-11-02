@@ -30,10 +30,10 @@
     "crease"
    ],
    "phonemes": "ˈɛvɹɪ fɹˈaʊn stˈɑːts atə nˈɜːv ˈɛndɪŋ, wˌɪtʃ lˈɛts ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒəɹ ˌɒntʊ ðə mˈʌsəl bɪlˈəʊ. ðə mˈʌsəl pˈʊlz, and ðə skˈɪn əbˌʌv ɪt fˈəʊldz ˌɪntʊ ɐ kɹˈiːs.",
-   "speed": 0.78,
+   "speed": 0.82,
    "file": "02.wav",
-   "dur": 11.848,
-   "sha256": "709b355ed16bcc303bc04f125467543942a668687b1d96b882b4c72cc823fa16"
+   "dur": 10.054,
+   "sha256": "20e123e6c454991ef7f0b00eb34b16b5754e8df8c753bb9c194ffe9aa51b22cb"
   },
   {
    "id": "vo03",
@@ -56,10 +56,10 @@
     "medicine"
    ],
    "phonemes": "tˈuː sˈɛntʃəɹiz ɐɡˈəʊ, ɐ dʒˈɜːmən dˈɒktə nˈeɪmd jʊstˈiːnʊs kˈɛɐnɐ tɹˈeɪst ɐ dˈɛdli pəɹˈaləsˌɪs tə spˈɔɪld sˈɒsɪdʒɪz. and hiː ɡˈɛst ðatðə sˈeɪm pˈɔɪzən mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
-   "speed": 0.84,
+   "speed": 0.88,
    "file": "04.wav",
-   "dur": 11.079,
-   "sha256": "b75153d589461f50bb4ede78f5abc1e31627057033b4d3c103025f1bcbe002a7"
+   "dur": 10.555,
+   "sha256": "945519768cdf4c885e235a59c723c34704a31902595b412148b9f7db533b130f"
   },
   {
    "id": "vo05",
