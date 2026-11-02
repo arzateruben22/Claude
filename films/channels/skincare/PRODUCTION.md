@@ -5,12 +5,12 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 
 | No. | Title | Bible | State |
 |---|---|---|---|
-| 001 | The dead layer | §7 #1 | **Flow rewrite reviewed in 3 rounds** (compelling a2 b4 c2 d2 e3 f3 g3 → a4 b4 c4 d4 e4 f4 g4); final sent to the render worker at 2ed0d60 |
-| 002 | Does SPF 100 beat SPF 50? | §7 #2 | Flow script, re-voiced after review 1 (a3 b4 c2 d3 e3 f3 g3) and reworked; review 2 a3 b4 c3 d3 e4 f4 g4; round-3 draft rendering |
-| 003 | Bath fingers | §7 #3 | built, voiced, first draft (sync PASS, −14.1 LUFS / −2.0 dBTP) in review |
+| 001 | The dead layer | §7 #1 | **Final** (render worker A, 00a50fc): 73.73 s, −14.1 LUFS / −1.8 dBTP, 1 flash, QA PASS; master 62.6 MB, YouTube 1440 84 MB. Compelling 3 rounds → all 4s. First final (57f42c4) withdrawn: gauge headings ran together |
+| 002 | Does SPF 100 beat SPF 50? | §7 #2 | Compelling 4 rounds → all 4s; final rendering on render worker B (3a511d1) |
+| 003 | Bath fingers | §7 #3 | Compelling 4 rounds → all 4s; first final failed the delivery text audit (spine labels past the safe box), fixed at b02282b, re-rendering on Back of the Envelope worker A |
 | 004 | What a tan is | §7 #4 | second builder (`claude/outer-layer-s1-b`): drafts in review |
 | 005 | Same cells, every colour | §7 #5 | second builder: voiced, built |
-| 006 | Goosebumps | §7 #6 | second builder: voiced, built |
+| 006 | Goosebumps | §7 #6 | Taken over from the second builder; compelling 4 rounds → all 4s; final queued on render worker A (00e7cd8) |
 | vol01 | Long video (episodes 1–5) | | planned |
 
 ## Log
