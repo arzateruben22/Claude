@@ -82,8 +82,8 @@
   },
   {
    "id": "vo02",
-   "text": "Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's pulled.",
-   "heard": "Under the surface most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's pulled.",
+   "text": "Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
+   "heard": "Under the surface most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
    "words": [
     {
      "w": "Under",
@@ -93,713 +93,677 @@
     },
     {
      "w": "the",
-     "start": 0.295,
+     "start": 0.305,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "surface,",
-     "start": 0.525,
-     "end": 0.96,
+     "start": 0.53,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "most",
-     "start": 1.17,
+     "start": 1.1,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.45,
+     "start": 1.405,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.48,
+     "start": 1.435,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "skin's",
-     "start": 1.66,
+     "start": 1.795,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "strength",
-     "start": 2.255,
-     "end": 2.56,
+     "start": 2.185,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.565,
-     "end": 2.72,
+     "start": 2.485,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "collagen,",
-     "start": 2.75,
-     "end": 3.76,
+     "start": 2.685,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "woven",
-     "start": 3.875,
-     "end": 4.32,
-     "heard": true
-    },
-    {
-     "w": "over",
-     "start": 4.26,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 4.47,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "under",
-     "start": 4.705,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 5.255,
-     "end": 5.305,
+     "start": 3.72,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "every",
-     "start": 5.375,
-     "end": 5.52,
+     "start": 4.2,
+     "end": 4.48,
      "heard": true
     },
     {
-     "w": "direction",
-     "start": 5.555,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 6.255,
-     "end": 6.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 6.305,
-     "end": 6.48,
-     "heard": true
-    },
-    {
-     "w": "basket,",
-     "start": 6.435,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "so",
-     "start": 7.655,
-     "end": 7.705,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 7.685,
-     "end": 7.84,
-     "heard": true
-    },
-    {
-     "w": "gives",
-     "start": 7.92,
-     "end": 8.08,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.03,
-     "end": 8.24,
-     "heard": true
-    },
-    {
-     "w": "little",
-     "start": 8.305,
-     "end": 8.48,
-     "heard": true
-    },
-    {
-     "w": "whichever",
-     "start": 8.575,
-     "end": 8.96,
+     "w": "which",
+     "start": 4.36,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "way",
-     "start": 8.86,
-     "end": 9.12,
+     "start": 4.795,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 5.16,
+     "end": 5.21,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.29,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "basket,",
+     "start": 5.435,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 6.46,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.49,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "gives",
+     "start": 6.725,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "whichever",
+     "start": 6.99,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 7.33,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "it's",
-     "start": 9.215,
-     "end": 9.44,
+     "start": 7.695,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "pulled.",
-     "start": 9.425,
-     "end": 9.84,
+     "start": 7.905,
+     "end": 8.32,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Cut through it, and the body doesn't reweave. It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat glands.",
-   "heard": "Cut through it and the body doesn't re-weave. It patches, laying new threads side by side, all in one direction and leaves out the hair and the sweat glands.",
+   "text": "Cut through it, and the body doesn't reweave. It patches: new threads side by side, all one way, with no hair or sweat glands.",
+   "heard": "Cut through it and the body doesn't reweave. It patches. New threads side by side, all one way with no hair or sweat glands.",
    "words": [
     {
      "w": "Cut",
-     "start": 0.27,
-     "end": 0.48,
+     "start": 0.26,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "through",
-     "start": 0.405,
+     "start": 0.39,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "it,",
-     "start": 0.735,
-     "end": 0.8,
+     "start": 0.775,
+     "end": 0.825,
      "heard": true
     },
     {
      "w": "and",
-     "start": 0.81,
-     "end": 1.04,
+     "start": 0.84,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.1,
-     "end": 1.15,
+     "start": 1.065,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "body",
-     "start": 1.215,
-     "end": 1.44,
+     "start": 1.095,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "doesn't",
-     "start": 1.44,
+     "start": 1.4,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "reweave.",
-     "start": 1.765,
-     "end": 2.96,
+     "start": 1.73,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "It",
-     "start": 3.06,
-     "end": 3.2,
+     "start": 2.92,
+     "end": 3.04,
      "heard": true
     },
     {
-     "w": "patches,",
-     "start": 3.26,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "laying",
-     "start": 4.01,
-     "end": 4.4,
+     "w": "patches:",
+     "start": 3.095,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "new",
-     "start": 4.4,
-     "end": 4.72,
+     "start": 4.27,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "threads",
-     "start": 4.685,
-     "end": 5.28,
+     "start": 4.525,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "side",
-     "start": 5.255,
-     "end": 5.6,
+     "start": 5.07,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "by",
-     "start": 5.655,
-     "end": 5.84,
+     "start": 5.47,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "side,",
-     "start": 6.005,
-     "end": 6.72,
+     "start": 5.795,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "all",
-     "start": 6.77,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 6.995,
-     "end": 7.2,
+     "start": 6.185,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "one",
-     "start": 7.26,
-     "end": 7.52,
+     "start": 6.38,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "direction,",
-     "start": 7.525,
-     "end": 8.16,
+     "w": "way,",
+     "start": 6.665,
+     "end": 6.88,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 8.505,
-     "end": 8.56,
+     "w": "with",
+     "start": 7.05,
+     "end": 7.12,
      "heard": true
     },
     {
-     "w": "leaves",
-     "start": 8.535,
-     "end": 8.96,
-     "heard": true
-    },
-    {
-     "w": "out",
-     "start": 8.875,
-     "end": 9.2,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 9.24,
-     "end": 9.36,
+     "w": "no",
+     "start": 7.085,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 9.27,
-     "end": 9.68,
+     "start": 7.33,
+     "end": 7.76,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 9.74,
-     "end": 9.84,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 9.77,
-     "end": 9.92,
+     "w": "or",
+     "start": 7.805,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "sweat",
-     "start": 9.92,
-     "end": 10.4,
+     "start": 7.965,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "glands.",
-     "start": 10.4,
-     "end": 10.96,
+     "start": 8.46,
+     "end": 9.04,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "We call a closed wound healed, as good as new. But pulled until it tears, even an old scar holds only about four-fifths of the original strength.",
-   "heard": "We call a closed wound healed, as good as new, but pulled until it tears, even an old scar holds only about four-fifths of the original strength.",
+   "text": "We call that healed, as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
+   "heard": "We call that healed as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
    "words": [
     {
      "w": "We",
-     "start": 0.02,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "call",
-     "start": 0.185,
+     "start": 0.285,
      "end": 0.4,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 0.51,
-     "end": 0.56,
+     "w": "call",
+     "start": 0.37,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "closed",
-     "start": 0.565,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "wound",
-     "start": 0.89,
-     "end": 1.36,
+     "w": "that",
+     "start": 0.68,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "healed,",
-     "start": 1.3,
+     "start": 0.895,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.595,
      "end": 1.84,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 1.88,
+     "w": "good",
+     "start": 1.845,
      "end": 2.08,
      "heard": true
     },
     {
-     "w": "good",
-     "start": 2.06,
-     "end": 2.24,
-     "heard": true
-    },
-    {
      "w": "as",
-     "start": 2.33,
-     "end": 2.48,
+     "start": 2.01,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "new.",
      "start": 2.575,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "But",
-     "start": 3.34,
      "end": 3.44,
      "heard": true
     },
     {
+     "w": "But",
+     "start": 3.54,
+     "end": 3.6,
+     "heard": true
+    },
+    {
      "w": "pulled",
-     "start": 3.49,
-     "end": 3.92,
+     "start": 3.785,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "until",
-     "start": 3.82,
-     "end": 4.16,
+     "start": 4.41,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "it",
-     "start": 4.31,
-     "end": 4.36,
+     "start": 4.735,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "tears,",
-     "start": 4.34,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "even",
-     "start": 5.25,
-     "end": 5.44,
-     "heard": true
-    },
-    {
-     "w": "an",
-     "start": 5.405,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "old",
-     "start": 5.62,
+     "start": 4.865,
      "end": 5.92,
      "heard": true
     },
     {
-     "w": "scar",
-     "start": 6.015,
-     "end": 6.32,
+     "w": "even",
+     "start": 5.925,
+     "end": 6.16,
      "heard": true
     },
     {
-     "w": "holds",
-     "start": 6.325,
-     "end": 6.72,
+     "w": "an",
+     "start": 6.33,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "old",
+     "start": 6.51,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "scar",
+     "start": 6.81,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.47,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "only",
-     "start": 6.715,
-     "end": 7.04,
+     "start": 7.68,
+     "end": 8.0,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 7.14,
-     "end": 7.28,
+     "w": "as",
+     "start": 8.06,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "four-fifths",
-     "start": 7.345,
-     "end": 8.16,
+     "w": "strong",
+     "start": 8.385,
+     "end": 8.64,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 8.23,
-     "end": 8.28,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 8.26,
-     "end": 8.4,
-     "heard": true
-    },
-    {
-     "w": "original",
-     "start": 8.45,
+     "w": "as",
+     "start": 8.74,
      "end": 8.88,
      "heard": true
     },
     {
-     "w": "strength.",
-     "start": 8.865,
+     "w": "a",
+     "start": 8.77,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "rope",
+     "start": 9.04,
      "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "missing",
+     "start": 9.545,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 10.085,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "strand",
+     "start": 10.495,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 10.935,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "five.",
+     "start": 11.255,
+     "end": 11.84,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles and all. After that, it patches.",
-   "heard": "Yet, until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles, and all. After that, it patches.",
+   "text": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. And one place in you still nearly can: your mouth.",
+   "heard": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles, and all, and one place in you still nearly can, your mouth.",
    "words": [
     {
-     "w": "Yet",
+     "w": "Until",
      "start": 0.02,
-     "end": 0.4,
-     "heard": true
-    },
-    {
-     "w": "until",
-     "start": 0.455,
-     "end": 0.72,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "about",
-     "start": 0.735,
-     "end": 0.88,
+     "start": 0.505,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.905,
-     "end": 1.04,
+     "start": 0.68,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "sixth",
-     "start": 1.12,
-     "end": 1.36,
+     "start": 0.895,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "month",
-     "start": 1.385,
-     "end": 1.68,
+     "start": 1.16,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.795,
-     "end": 1.845,
+     "start": 1.57,
+     "end": 1.62,
      "heard": true
     },
     {
      "w": "pregnancy,",
-     "start": 1.825,
-     "end": 2.8,
+     "start": 1.6,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.915,
-     "end": 2.965,
-     "heard": true
-    },
-    {
-     "w": "cut",
-     "start": 3.05,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 3.29,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.545,
-     "end": 3.595,
+     "start": 2.655,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "baby's",
-     "start": 3.575,
-     "end": 4.08,
+     "start": 2.785,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 4.165,
-     "end": 4.4,
+     "start": 3.39,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "regrows",
-     "start": 4.47,
-     "end": 4.96,
+     "start": 3.67,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.005,
-     "end": 5.12,
+     "start": 4.15,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "weave,",
-     "start": 5.035,
-     "end": 5.68,
+     "start": 4.18,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "follicles",
-     "start": 5.715,
-     "end": 6.4,
+     "start": 4.865,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "and",
-     "start": 6.435,
-     "end": 6.56,
+     "start": 5.585,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "all.",
-     "start": 6.465,
-     "end": 7.36,
+     "start": 5.85,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "After",
-     "start": 7.46,
+     "w": "And",
+     "start": 6.63,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.66,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 7.025,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.315,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 7.345,
      "end": 7.68,
      "heard": true
     },
     {
-     "w": "that,",
-     "start": 7.67,
-     "end": 8.0,
+     "w": "still",
+     "start": 7.71,
+     "end": 7.92,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 8.045,
-     "end": 8.24,
+     "w": "nearly",
+     "start": 7.92,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "patches.",
-     "start": 8.25,
-     "end": 8.88,
+     "w": "can:",
+     "start": 8.215,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 9.005,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "mouth.",
+     "start": 9.035,
+     "end": 9.68,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "And on most of your body, only the top layer, about this paper's thickness, grows back without a seam.",
-   "heard": "And on most of your body, only the top layer about this paper's thickness grows back without a seam.",
+   "text": "But on most of your body, only the top layer, about this paper's thickness, regrows without a seam.",
+   "heard": "But on most of your body, only the top layer about this paper's thickness regrows without a seam.",
    "words": [
     {
-     "w": "And",
+     "w": "But",
      "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "on",
-     "start": 0.21,
-     "end": 0.48,
+     "start": 0.125,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "most",
-     "start": 0.575,
+     "start": 0.4,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "of",
-     "start": 0.685,
+     "start": 0.65,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "your",
-     "start": 0.77,
-     "end": 1.04,
+     "start": 0.74,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "body,",
-     "start": 1.005,
+     "start": 0.96,
      "end": 1.68,
      "heard": true
     },
@@ -817,76 +781,70 @@
     },
     {
      "w": "top",
-     "start": 2.255,
+     "start": 2.25,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "layer,",
-     "start": 2.505,
-     "end": 2.96,
+     "start": 2.5,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "about",
-     "start": 3.06,
-     "end": 3.2,
+     "start": 3.085,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "this",
-     "start": 3.225,
-     "end": 3.36,
+     "start": 3.295,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "paper's",
-     "start": 3.46,
+     "start": 3.505,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "thickness,",
-     "start": 3.935,
+     "start": 4.005,
      "end": 4.56,
      "heard": true
     },
     {
-     "w": "grows",
+     "w": "regrows",
      "start": 4.86,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "back",
-     "start": 5.215,
      "end": 5.44,
      "heard": true
     },
     {
      "w": "without",
-     "start": 5.46,
+     "start": 5.445,
      "end": 5.68,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.735,
+     "start": 5.7,
      "end": 5.84,
      "heard": true
     },
     {
      "w": "seam.",
-     "start": 5.765,
-     "end": 6.32,
+     "start": 5.935,
+     "end": 6.24,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "So, why the scar? Skin's quick repair: strong enough to close, never the weave.",
-   "heard": "So why the scar? Skins quick repair, strong enough to close never the weave.",
+   "text": "So, why the scar? Mice born without germ-fighting cells heal without one: a scar may be the price of defence.",
+   "heard": "So why the scar? Mice born without germ-fighting cells heal without one. A scar may be the price of defence.",
    "words": [
     {
      "w": "So,",
@@ -896,80 +854,116 @@
     },
     {
      "w": "why",
-     "start": 0.375,
+     "start": 0.395,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.59,
+     "start": 0.615,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "scar?",
-     "start": 0.815,
-     "end": 1.52,
+     "start": 0.86,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "Skin's",
-     "start": 1.52,
+     "w": "Mice",
+     "start": 1.77,
      "end": 2.0,
-     "heard": false
-    },
-    {
-     "w": "quick",
-     "start": 2.045,
-     "end": 2.32,
      "heard": true
     },
     {
-     "w": "repair:",
-     "start": 2.22,
-     "end": 2.96,
+     "w": "born",
+     "start": 2.095,
+     "end": 2.4,
      "heard": true
     },
     {
-     "w": "strong",
-     "start": 2.975,
-     "end": 3.28,
+     "w": "without",
+     "start": 2.48,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "enough",
-     "start": 3.28,
-     "end": 3.6,
+     "w": "germ-fighting",
+     "start": 2.75,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "to",
-     "start": 3.6,
-     "end": 3.68,
+     "w": "cells",
+     "start": 3.61,
+     "end": 3.92,
      "heard": true
     },
     {
-     "w": "close,",
-     "start": 3.73,
-     "end": 4.08,
-     "heard": true
-    },
-    {
-     "w": "never",
-     "start": 4.12,
+     "w": "heal",
+     "start": 3.94,
      "end": 4.32,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 4.445,
-     "end": 4.495,
+     "w": "without",
+     "start": 4.305,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "weave.",
-     "start": 4.475,
-     "end": 5.04,
+     "w": "one:",
+     "start": 4.625,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.33,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "scar",
+     "start": 5.535,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 5.93,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 6.035,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.265,
+     "end": 6.315,
+     "heard": true
+    },
+    {
+     "w": "price",
+     "start": 6.295,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.555,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "defence.",
+     "start": 6.68,
+     "end": 7.28,
      "heard": true
     }
    ]
@@ -977,72 +971,72 @@
   {
    "id": "vo08",
    "text": "Next: a deadly poison, in a frown. How much goes in?",
-   "heard": "Next, a deadly poison in a frown. How much goes in?",
+   "heard": "Next a deadly poison in a frown, how much goes in?",
    "words": [
     {
      "w": "Next:",
-     "start": 0.02,
+     "start": 0.33,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.53,
-     "end": 0.72,
+     "start": 0.6,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "deadly",
-     "start": 0.77,
-     "end": 1.12,
+     "start": 0.89,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "poison,",
-     "start": 1.155,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 1.71,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 1.925,
+     "start": 1.405,
      "end": 2.0,
      "heard": true
     },
     {
+     "w": "in",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.245,
+     "end": 2.32,
+     "heard": true
+    },
+    {
      "w": "frown.",
-     "start": 1.955,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "How",
-     "start": 2.7,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "much",
-     "start": 2.975,
+     "start": 2.275,
      "end": 3.12,
      "heard": true
     },
     {
+     "w": "How",
+     "start": 3.135,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 3.58,
+     "end": 3.68,
+     "heard": true
+    },
+    {
      "w": "goes",
-     "start": 3.16,
-     "end": 3.36,
+     "start": 3.78,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "in?",
-     "start": 3.335,
-     "end": 3.76,
+     "start": 3.81,
+     "end": 4.24,
      "heard": true
     }
    ]

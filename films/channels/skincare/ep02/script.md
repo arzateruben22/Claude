@@ -1,68 +1,81 @@
-# Outer Layer s1v2: "Where a glow comes from" (draft; dermatologist sign-off before posting)
+# Outer Layer No. 002: "Where a glow comes from" (draft; a board-certified dermatologist signs off before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2 (BRIEF.md).
+Facts pass 2 (2 Nov, `../s1v2/FACTS-PASS-2.md`): script and facts only; the picture is being redesigned, so the shot
+descriptions below are deliberately short and look-agnostic.
 
-The story: follow one beam of light onto a cheek. Only a few percent bounces off the top as a glint, because the
-outer layer (stratum corneum) bends light about as strongly as glass; smooth and well-watered, that glint comes
-back in one direction like a mirror, dry and rough, it scatters. The wrong idea is "a glow is a surface shine";
-the turn is that the glint is the small part: most light goes in, scatters among cells and fibres, and a large
-share comes back out, tinted on the way by melanin and blood. The whoa: a rush of blood sends it back redder, and
-people asked to make faces look healthy (Stephen, Coetzee, Law Smith & Perrett, 2009) turned exactly that blood
-colour up. "To scale" puts how far light gets in (blue about a millimetre, red several times deeper) beside a
-stack of paper.
+The story: follow one beam of light onto a cheek. Only about one ray in twenty bounces off the top as a glint;
+smooth, hydrated skin sends that glint back in one direction, dry skin scatters it. The turn: the glint isn't the
+glow. Most light goes in, scatters among cells and fibres, and several times more than the glint comes back out,
+having passed melanin and blood on the way. The whoa: because it passes your blood, your face changes colour with
+every heartbeat, too faint to see, but an ordinary camera can count your pulse in it (Verkruysse, Svaasand &
+Nelson, 2008; Wu et al., 2012). "To scale" weighs how deep it goes (blue about a millimetre, ten sheets of paper;
+red several times deeper). The closing twist: film faces made by computer once looked like plastic because their
+light never went inside, until a model of light travelling under the skin (Jensen et al., 2001) earned an Academy
+technical award; yours does go inside, and that's your glow.
 
-Flow (WRITING.md, 29 Oct): one thread from the hook's "Where does a glow come from?" to the takeaway's "Mostly
-from within"; the voice carries the meaning and the screen the specifics (n ≈ 1.55 vs air 1.0, ≈ 4–7 % glare,
-≈ 40 % back out in one example, the 2011 hydration study, the 2009 face study, ≈ 1 mm vs ≈ 4–5 mm, 100 µm
-paper). The picture is one beam the camera follows: the cheek's surface → the glint (mirror vs scattered) → down
-through a simplified section among cells, fibres and vessels → back out, tinted → the cheek again, lit from within.
-Two cuts at most, both scale jumps.
+Three "I didn't know that" beats, ranked:
+1. **Hook:** most of the light on your face goes inside you (≈ 93–96 %; only ≈ 4–7 % glints off). Lister 2012; Jacques (OMLC).
+2. **Whoa:** your face changes colour with every heartbeat; a consumer camera can read your pulse from it. Verkruysse 2008; Wu 2012.
+3. **Closing twist:** computer faces looked like plastic until light was let inside them (Jensen, Marschner, Levoy & Hanrahan, SIGGRAPH 2001; Academy Technical Achievement Award, 2004).
 
-Honesty, on screen: the section is "simplified"; the beam paths are an "illustration"; the reflection share is
-"≈ 4–7 %, near head-on light"; the 40 % back-out is "one example (model)"; the hydration panels are "one study";
-the depth bars are "estimate" (they vary with skin and beam); the face-colour panel uses a "model" face, never a
-real person's before/after. The film keeps one medium tone throughout (bible §1, owner-approved one tone per episode) and shows
-the daylight strip of three tones in the takeaway (more melanin absorbs more, so less comes back). No advice and no product: the film never says how to get a glow, only what one is.
-Sign-off: the flush and blood-colour lines touch on skin redness; a dermatologist checks they don't read as a
-claim about any condition.
+Counter-intuitive turn (why): you'd picture a glow as shine sitting on the skin, but the shine is the small part;
+the glow is light that has travelled through you.
+
+Flow (WRITING.md): one thread from the hook's "Where's your glow from? … goes inside you" to the takeaway's "their
+light never went inside. Yours does"; the voice carries the meaning ("one ray in twenty", "several times more",
+"ten sheets of paper", "several times deeper") and the screen the figures (≈ 4–7 %, ≈ 40 % back out in one example,
+≈ 1 mm vs ≈ 4–5 mm, 100 µm paper, the 2008 / 2012 / 2001 studies in the end-card footnote).
+
+Honesty, on screen: the section is "simplified"; the reflection share is "≈ 4–7 %, head-on"; the 40 % is "one
+example (model)"; the hydration contrast is "one study"; the depth bars are "estimate"; every face is a "model, not
+a photo", never a real person's before/after. At most two labels at a time; captions carry the words. One medium
+tone throughout (bible §1) with the three-tone daylight strip in the takeaway (more melanin absorbs more, so less
+comes back). No advice and no product: the film never says how to get a glow, only what one is.
+Sign-off: a dermatologist checks that the heartbeat colour line reads as optics, not as a health test or a claim
+about any condition, and that "that's your glow" is fair across skin tones.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
-Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/glow --segment toscale`.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep02 --segment toscale`.
 
-## hook {shot: frame 0, the payoff, the macro flight: skin terrain (medium tone) at golden hour, warm and seeming lit from within; one thin beam of white light already falling into frame · badge: illustration · title: "Where a glow comes from" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
+## hook {shot: frame 0, the payoff: the cheek, seeming lit from within; one beam enters · labels (2): title "Where a glow comes from" · badge: illustration · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
 vo: Where's your *glow* from? {-} Most light on your face goes inside you. {c7}
 
-## normal {shot: no cut: the camera rides the beam down to the surface; at contact a small bright glint splits off · spine: reflected ≈ 4–7 % · badge: near head-on light · picture-only 0.5 s · energy: 0.45} (4.5–15 s)
-vo: Only a few percent bounces off the top as a glint. {c3} Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull *haze*. {c4,c5,c6}
+## normal {shot: the beam reaches the surface; a small glint splits off, tight on one side, hazy on the other · labels (2): spine: glint ≈ 4–7 %, head-on · badge: one study · picture-only 0.5 s · energy: 0.45} (4.5–14.5 s)
+vo: Only about one ray in twenty bounces off as a glint. {c3} Smooth, hydrated skin sends it back one way; dry skin scatters it into a *haze*. {c4,c5,c6}
 
-## change {shot: the terrain splits along a seam, the same beam on each half: left, hydrated, satin-smooth, the glint one tight ray; right, dry, the glint sprayed into a haze; on "slips in" a cut below the surface to the section · badges: one study · illustration · picture-only 0.6 s · energy: 0.55} (15–26 s)
-vo: But the glint isn't the glow. {-} The rest slips in, bounces among cells and fibres, and a large share finds its way back *out*. {c8}
+## change {shot: the reveal below the surface: the rest of the beam scatters and climbs back out · labels (2): spine: back out ≈ 40 % · badge: one example (model) · picture-only 0.6 s · energy: 0.55} (14.5–24.5 s)
+vo: But the glint isn't the glow. {-} The rest slips in, bounces among cells and fibres, and several times more finds its way back *out*. {c8}
 
-## why {shot: the section in warm light: the rest of the beam threads among cells and collagen fibres as zig-zag paths, many turning and climbing back out · spine: back out ≈ 40 % · badges: simplified · one example (model) · picture-only 2.2 s · energy: 0.5} (26–39 s)
-vo: You might picture a glow sitting on the skin. {-} But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back *redder*. {c9,c10}
+## why {shot: the returning paths pass melanin and a vessel and warm in tint · labels (2): spine: back out ≈ 40 % · badge: simplified · picture-only 2.2 s · energy: 0.5} (24.5–35.5 s)
+vo: You'd picture a glow as shine sitting on the skin. {-} But it's light that has travelled through you, past your melanin and your *blood*. {c9}
 
-## whoa {shot: the climbing paths pass melanin and a capillary and take a warm tint; the capillary widens and the outgoing light reddens; then the viewfinder: a model cheek in daylight beside a slider "blood colour", nudged up, the cheek flushing · badges: model face, not a photo · Stephen et al., 2009 · picture-only 3.2 s · energy: 0.8} (39–52.5 s)
-vo: Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the *skin*. {c11}
+## whoa {shot: the reveal of the pulse: the cheek's colour rising and falling with each beat, amplified · labels (2): spine: back out ≈ 40 % · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (35.5–49 s)
+vo: Blood moves with your heart, so your face changes colour with every beat: too faint to see, but an ordinary camera can count your *pulse* in it. {c17,c18}
 
-## toscale {segment: toscale · a depth chart: a blue bar stops at ≈ 1 mm beside a stack of ten 100 µm sheets; a red bar runs on to ≈ 4–5 mm · badge: estimate · picture-only 0.5 s · energy: 0.4} (52.5–59.5 s)
-vo: Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times *deeper*. {c12,c13,c14}
+## toscale {segment: toscale · depth bars beside a stack of paper · labels (2): blue ≈ 1 mm · red ≈ 4–5 mm (estimate) · picture-only 0.5 s · energy: 0.4} (49–57.5 s)
+vo: And it goes deep: blue light barely a millimetre, about ten sheets of paper; red several times further, through the *skin*. {c12,c13,c14}
 
-## takeaway {shot: back to the hook's terrain, now with the light paths faintly glowing back out of it, warm; the daylight strip of three tones · spine: from within · picture-only 0.5 s · energy: 0.3} (59.5–67.5 s)
-vo: So the glow isn't on your face. It's light that went inside you, met your blood, and came *back*. {c15}
+## takeaway {shot: a hard, surface-only face beside the hook's cheek, lit from within · labels (2): spine: from within · badge: model, not a photo · picture-only 0.5 s · energy: 0.3} (57.5–65.5 s)
+vo: Film faces made by computer once looked like plastic: their light never went *inside*. {c19} Yours does; that's your *glow*. {c15}
 
-## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–75 s)
+## tease {end card held ≥ 1.6 s · energy: 0.35} (65.5–72.5 s)
 vo: Next: before birth, a cut healed without a trace. {c16} So why do you *scar*? {-}
-end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002"
+end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002" · footnote: "A camera can read a pulse from the colour of a face (Verkruysse et al., 2008)."
 
 ## Notes
-- Look (reboot, 2 Nov): macro flights and the viewfinder (bible §2); shot directions rewritten for it, the spoken lines unchanged from `s1v2/glow`.
-- Every claim was checked through search excerpts only (the proxy blocks page fetches: ncbi.nlm.nih.gov failed to
-  resolve); see `claims.json`. A person opens each link, and a board-certified dermatologist signs off, before
-  posting.
-- "Bends light about as strongly as glass": stratum corneum n ≈ 1.55 (dry) against window glass ≈ 1.5. Fresnel
-  at head-on incidence, ((1.55 − 1)/(1.55 + 1))² ≈ 4.7 % (computed), inside the measured 4–7 %.
-- "About ten sheets of paper": ≈ 1 mm ÷ ≈ 100 µm per sheet = 10 (computed). Depths depend on skin type, site and
-  beam width; on screen as "estimate".
-- Tease and end card set with the season's chain (see `../SEASON.md`).
+- Facts pass 2 (2 Nov): new facts c17–c19 (heartbeat colour, camera pulse, computer faces); dropped the flush (old
+  c10) and the healthy-face study (old c11, Stephen et al. 2009) to make room. The tease line is unchanged, word for word.
+- Every claim was checked through search excerpts only (page fetches are blocked by the proxy); see `claims.json`.
+  A person opens each link, and a board-certified dermatologist signs off, before posting.
+- "About one ray in twenty": 1/20 = 5 %, inside the measured 4–7 % (computed; 4–7 % is one in 14 to one in 25).
+- "Several times more than the glint": ≈ 40 % back out vs ≈ 5 % glare in Jacques's example = about 8× (computed);
+  one example, badged.
+- "About ten sheets of paper": ≈ 1 mm ÷ ≈ 100 µm per sheet = 10 (computed). "Several times further": 4–5 mm vs
+  1 mm (computed). Depths depend on skin type, site and beam width; on screen as "estimate".
+- "Looked like plastic": the 2001 paper itself says surface-only shading gives "a hard computer generated look";
+  "plastic" is from Cornell's and Optica's accounts of the work. The award was a Technical Achievement Award (a
+  certificate, not an Oscar statuette), so the voice doesn't say "Oscar".
+- Tease and end card set with the season's chain (see `../s1v2/SEASON.md`).
 - Listen at T0: melanin.

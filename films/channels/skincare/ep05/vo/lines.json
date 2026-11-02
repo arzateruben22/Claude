@@ -12,67 +12,67 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Which hand aged? Both belong to neighbours, under the same fierce sun.",
+   "text": "Which hand aged? In four and a half years, one showed no detectable ageing.",
    "stars": [
     "aged"
    ],
-   "phonemes": "wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ bɪlˈɒŋ tə nˈeɪbəz, ˌʌndə ðə sˈeɪm fˈiəs sˈʌn.",
-   "speed": 0.9,
+   "phonemes": "wˌɪtʃ hˈand ˈeɪdʒd? ɪn fˈɔː and ɐ hˈɑːf jˈiəz, wˈɒn ʃˈəʊd nˈəʊ dɪtˈɛktəbəl ˈeɪdʒɪŋ.",
+   "speed": 0.81,
    "file": "01.wav",
-   "dur": 4.039,
-   "sha256": "f526ddac620fe2a55401717ad528b811a70bab35ae4ce8c96e745ad07b023c9e"
+   "dur": 5.317,
+   "sha256": "d84f19e52b9e34fb62e407ede279ea77954a11d58d1d6bb002913f9bf671e659"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "In the early nineties, in a Queensland town called Nambour, chance decided who would wear sunscreen every morning. They put it on head, neck, arms and hands; neighbours used it as they pleased.",
+   "text": "They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
    "stars": [
     "morning"
    ],
-   "phonemes": "ɪnðɪ ˈɜːlɪ nˈaɪntiz, ɪn ˈeɪ kwˈiːnzlənd tˈaʊn kˈɔːld nˈæmbɔː , tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. ðeɪ pˌʊt ɪt ˌɒn hˈɛd, nˈɛk, ˈɑːmz and hˈandz; nˈeɪbəz jˈuːzd ɪt az ðeɪ plˈiːzd.",
+   "phonemes": "ðeɪ bɪlˈɒŋ tə tˈuː nˈeɪbəz ˈɪn nˈæmbɔː , ˈeɪ kwˈiːnzlənd tˈaʊn wˌeə pjˈʊə tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. hˈɛd, nˈɛk, ˈɑːmz and hˈandz, bɪfˌɔː ðə dˈeɪ bɪɡˈan.",
    "speed": 0.84,
    "file": "02.wav",
-   "dur": 11.811,
-   "sha256": "70c98d957ab46ba0af8aeafda86121394a0f68952c2575f61a83c76c1ef36d99"
+   "dur": 10.944,
+   "sha256": "5a36c3127d889fc52b7919cf9634dde69e0850c7ff7518aae640094178fa35d7"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Then researchers read the fine lines in silicone casts of hands. After four and a half years, the daily group showed no detectable increase in ageing.",
+   "text": "It was never sunscreen against none: the others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
    "stars": [
-    "casts"
+    "none"
    ],
-   "phonemes": "ðˈɛn ɹɪsˈɜːtʃəz ɹˈiːd ðə fˈaɪn lˈaɪnz ɪn sˈɪlɪkˌəʊn kˈasts ɒv hˈandz. ˈaftə fˈɔː and ɐ hˈɑːf jˈiəz, ðə dˈeɪli ɡɹˈuːp ʃˈəʊd nˈəʊ dɪtˈɛktəbəl ˈɪŋkɹiːs ɪn ˈeɪdʒɪŋ.",
-   "speed": 0.9,
+   "phonemes": "ɪt wɒz nˈɛvə sˈʌnskɹiːn ɐɡˈɛnst nˈɒn: ðɪ ˈʌðəz kʊd jˈuːz ɪt wɛnˌɛvə ðeɪ plˈiːzd, ɔː nˌɒt at ˈɔːl. ɹɪsˈɜːtʃəz ɹˈiːd ðə fˈaɪn lˈaɪnz ɪn sˈɪlɪkˌəʊn kˈasts ɒv hˈandz.",
+   "speed": 0.81,
    "file": "03.wav",
-   "dur": 8.969,
-   "sha256": "f1f66eb6e577fdde7444905d17d1ce78dbae1d4961eff963b067a4e86aa0d1b9"
+   "dur": 10.291,
+   "sha256": "1771fa32ef9b26bb523aea94a5a9c8e0dc60892d7b11cc0674fb339ba72ba4f8"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It's easy to think of sun damage as the burn you feel. But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the surface.",
+   "text": "It's easy to think sun damage is the burn you feel. But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the surface.",
    "stars": [
     "surface"
    ],
-   "phonemes": "ɪts ˈiːzi tə θˈɪŋk ɒv sˈʌn dˈamɪdʒ az ðə bˈɜːn juː fˈiːl. bˌʌt ɐn ˌʊltɹɐvˈaɪəlɪt kˈamɹə pˈɪks ˌʌp dˈamɪdʒ ðə nˈeɪkɪd ˈaɪ mˈɪsɪz, bˈɪldɪŋ lˈɒŋ bɪfˌɔːɹ ˈɛnɪθˌɪŋ ʃˈəʊz ɒnðə sˈɜːfɪs.",
+   "phonemes": "ɪts ˈiːzi tə θˈɪŋk sˈʌn dˈamɪdʒ ɪz ðə bˈɜːn juː fˈiːl. bˌʌt ɐn ˌʊltɹɐvˈaɪəlɪt kˈamɹə ɹɪvˈiːlz dˈamɪdʒ ðə nˈeɪkɪd ˈaɪ mˈɪsɪz, lˈɒŋ bɪfˌɔːɹ ɪt ʃˈəʊz ɒnðə sˈɜːfɪs.",
    "speed": 0.84,
    "file": "04.wav",
-   "dur": 10.8,
-   "sha256": "9a2dc33cca95be423c6104b3476965676e7316446ec8e4513e58517a3ca16077"
+   "dur": 10.076,
+   "sha256": "11bdd384821ea30220f1e10f948f1f2c7c595b10c11c66e4619845e1aacc06fb"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "And the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
+   "text": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half, in numbers too small to be sure.",
    "stars": [
     "half"
    ],
-   "phonemes": "and ðə tˈaʊn wɒz wˈɒtʃt fɔː tˈɛn mˈɔː jˈiəz. skwˈeɪməs sˈɛl kˈansəz had ɔːlɹˌɛdi kˈʌm ˈaʊt lˈəʊə, and mˌɛlənˈəʊmə kˈeɪm ˈaʊt at ɐbˌaʊt hˈɑːf, ɪn smˈɔːl nˈʌmbəz.",
-   "speed": 0.84,
+   "phonemes": "and ðeɪ wɜː fˈɒləʊd fɔː tˈɛn mˈɔː jˈiəz. mˌɛlənˈəʊmə , ðə mˈəʊst sˈiəɹiəs skˈɪn kˈansə, kˈeɪm ˈaʊt at ɐbˌaʊt hˈɑːf, ɪn nˈʌmbəz tˈuː smˈɔːl təbi ʃˈʊə.",
+   "speed": 0.8,
    "file": "05.wav",
-   "dur": 9.091,
-   "sha256": "5cfd668ddce83778e0822c34ed6653204bb65028dcbde5a2bbbb1e1b74c9f82e"
+   "dur": 9.589,
+   "sha256": "449d60a9d922800734383f93d0b0edd6a7c97853d683f32a646026c21fc16531"
   },
   {
    "id": "vo06",
@@ -82,23 +82,23 @@
     "thickness"
    ],
    "phonemes": "atə lˈabz tˈɛst dˈəʊs, ðat mˈɔːnɪŋ lˈeɪəɹ ɪz ɐbˌaʊt ɐ fˈɪfθ əvə pˈeɪpəz θˈɪknəs.",
-   "speed": 0.8,
+   "speed": 0.79,
    "file": "06.wav",
-   "dur": 5.52,
-   "sha256": "e4560b19418feda82fed1acbbbba41bf44d3ec2b3b466ccb3a6482a0f71feb21"
+   "dur": 5.809,
+   "sha256": "e039ac9558e4af8d792a2ce68379ffd3f3fca585ed17daf0a9d4e67720136060"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, which hand aged? The eye can't say, but the skin was keeping its own record.",
+   "text": "So, which hand aged? Both missed mornings; one had more, and the skin kept count.",
    "stars": [
-    "record"
+    "count"
    ],
-   "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? ðɪ ˈaɪ kˈɑːnt sˈeɪ, bˌʌt ðə skˈɪn wɒz kˈiːpɪŋ ɪts ˈəʊn ɹˈɛkɔːd.",
+   "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ mˈɪst mˈɔːnɪŋz; wˈɒn had mˈɔː, and ðə skˈɪn kˈɛpt kˈaʊnt.",
    "speed": 0.8,
    "file": "07.wav",
-   "dur": 5.628,
-   "sha256": "fc18e97bd0b5ce3304ce2251f196aa63fbb238b6dfd10576a7dd1d43b4559870"
+   "dur": 5.856,
+   "sha256": "e6cc0bd2ad8dabfbdffb51f3087e9ac560018cf591d5590185a3b812e38ed8cb"
   },
   {
    "id": "vo08",

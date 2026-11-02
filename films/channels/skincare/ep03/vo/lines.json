@@ -25,80 +25,80 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's pulled.",
+   "text": "Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
    "stars": [
     "pulled"
    ],
-   "phonemes": "ˌʌndə ðə sˈɜːfɪs, mˈəʊst əv jɔː skˈɪnz stɹˈɛŋθ ɪz kˈɒləʤən , wˈəʊvən ˌəʊvə and ˌʌndəɹ ɪn ˈɛvɹɪ daɪɹˈɛkʃən lˈaɪk ɐ bˈaskɪt, sˌəʊ ɪt ɡˈɪvz ɐ lˈɪtəl wɪtʃˈɛvə wˈeɪ ɪts pˈʊld.",
+   "phonemes": "ˌʌndə ðə sˈɜːfɪs, mˈəʊst əv jɔː skˈɪnz stɹˈɛŋθ ɪz kˈɒləʤən , wˈəʊvən ˈɛvɹɪ wˌɪtʃ wˈeɪ lˈaɪk ɐ bˈaskɪt, sˌəʊ ɪt ɡˈɪvz wɪtʃˈɛvə wˈeɪ ɪts pˈʊld.",
    "speed": 0.82,
    "file": "02.wav",
-   "dur": 9.868,
-   "sha256": "9cca09456f12c6be0eae7cbc0011191b34476ee202456c9b98c003a778224d97"
+   "dur": 8.34,
+   "sha256": "8ec7261768fe6060b14790c0cb184a1dfec03d8fb7535e2df3e843aa90d8f64c"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Cut through it, and the body doesn't reweave. It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat glands.",
+   "text": "Cut through it, and the body doesn't reweave. It patches: new threads side by side, all one way, with no hair or sweat glands.",
    "stars": [
     "glands"
    ],
-   "phonemes": "kˈʌt θɹˈuː ɪt, and ðə bˈɒdi dˈʌzənt ɹɪwˈiːv. ɪt pˈatʃɪz, lˈeɪɪŋ njˈuː θɹˈɛdz sˈaɪd baɪ sˈaɪd, ˈɔːl ɪn wˈɒn daɪɹˈɛkʃən, and lˈiːvz ˈaʊt ðə hˈeə and ðə swˈɛt ɡlˈandz.",
+   "phonemes": "kˈʌt θɹˈuː ɪt, and ðə bˈɒdi dˈʌzənt ɹɪwˈiːv. ɪt pˈatʃɪz: njˈuː θɹˈɛdz sˈaɪd baɪ sˈaɪd, ˈɔːl wˈɒn wˈeɪ, wɪð nˈəʊ hˈeə ɔː swˈɛt ɡlˈandz.",
    "speed": 0.78,
    "file": "03.wav",
-   "dur": 11.017,
-   "sha256": "0a86072d28c13090c01cf6419d7efc6928507c93e656d8f6b78377f47e2a3c05"
+   "dur": 9.087,
+   "sha256": "350375ca455c944a0f361dac80b7741fb37a7077e7e51335c660e5f4c36ef8fb"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "We call a closed wound healed, as good as new. But pulled until it tears, even an old scar holds only about four-fifths of the original strength.",
+   "text": "We call that healed, as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
    "stars": [
-    "strength"
+    "five"
    ],
-   "phonemes": "wiː kˈɔːl ɐ klˈəʊzd wˈuːnd hˈiːld, az ɡˈʊd az njˈuː. bˌʌt pˈʊld ʌntˈɪl ɪt tˈeəz, ˈiːvən ɐn ˈəʊld skˈɑː hˈəʊldz ˈəʊnli ɐbˌaʊt fˈɔːfˈɪfθs ɒvðɪ əɹˈɪdʒɪnəl stɹˈɛŋθ.",
-   "speed": 0.82,
+   "phonemes": "wiː kˈɔːl ðat hˈiːld, az ɡˈʊd az njˈuː. bˌʌt pˈʊld ʌntˈɪl ɪt tˈeəz, ˈiːvən ɐn ˈəʊld skˈɑːɹ ɪz ˈəʊnli az stɹˈɒŋ az ɐ ɹˈəʊp mˈɪsɪŋ wˈɒn stɹˈand ɪn fˈaɪv.",
+   "speed": 0.67,
    "file": "04.wav",
-   "dur": 9.457,
-   "sha256": "7d42213a4cbbe2acb4fac7cea63430b9f7c1f5de73c318c5b267f82d74c754dd"
+   "dur": 11.886,
+   "sha256": "196307decd21fe8a14e906e1f26761aa54e68b59f2f500b2da14d677e5d68abe"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles and all. After that, it patches.",
+   "text": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. And one place in you still nearly can: your mouth.",
    "stars": [
-    "patches"
+    "mouth"
    ],
-   "phonemes": "jˈɛt ʌntˈɪl ɐbˌaʊt ðə sˈɪksθ mˈʌnθ ɒv pɹˈɛɡnənsi, ɐ kˈʌt ɪn ɐ bˈeɪbiz skˈɪn ɹɪɡɹˈəʊz ðə wˈiːv, fˈɒlɪkəlz and ˈɔːl. ˈaftə ðˈat, ɪt pˈatʃɪz.",
+   "phonemes": "ʌntˈɪl ɐbˌaʊt ðə sˈɪksθ mˈʌnθ ɒv pɹˈɛɡnənsi, ɐ bˈeɪbiz skˈɪn ɹɪɡɹˈəʊz ðə wˈiːv, fˈɒlɪkəlz and ˈɔːl. and wˈɒn plˈeɪs ɪn juː stˈɪl nˌiəli kˈan: jɔː mˈaʊθ.",
    "speed": 0.82,
    "file": "05.wav",
-   "dur": 8.932,
-   "sha256": "50ba9a035507b62be4b411e8c3f886b52eaa6f5d3cc3847fc6e26f5d30e72da4"
+   "dur": 9.749,
+   "sha256": "c6ef3e6780765c13bc212a569e4b9b7fde520c86e5abcda1754b8f249cc37d8a"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And on most of your body, only the top layer, about this paper's thickness, grows back without a seam.",
+   "text": "But on most of your body, only the top layer, about this paper's thickness, regrows without a seam.",
    "stars": [
     "seam"
    ],
-   "phonemes": "and ˌɒn mˈəʊst əv jɔː bˈɒdi, ˈəʊnli ðə tˈɒp lˈeɪə, ɐbˌaʊt ðɪs pˈeɪpəz θˈɪknəs, ɡɹˈəʊz bˈak wɪðˌaʊt ɐ sˈiːm.",
+   "phonemes": "bˌʌt ˌɒn mˈəʊst əv jɔː bˈɒdi, ˈəʊnli ðə tˈɒp lˈeɪə, ɐbˌaʊt ðɪs pˈeɪpəz θˈɪknəs, ɹɪɡɹˈəʊz wɪðˌaʊt ɐ sˈiːm.",
    "speed": 0.82,
    "file": "06.wav",
-   "dur": 6.336,
-   "sha256": "8cad8b2dda76afc1f9f3e1155db3843009cd54f3618241c287fbe3372be40456"
+   "dur": 6.316,
+   "sha256": "01fe5ffb23bdca20c3928cc861fefce60fa0f9f54e6dfe44c7f542b508de13f5"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, why the scar? Skin's quick repair: strong enough to close, never the weave.",
+   "text": "So, why the scar? Mice born without germ-fighting cells heal without one: a scar may be the price of defence.",
    "stars": [
-    "weave"
+    "defence"
    ],
-   "phonemes": "sˈəʊ, wˌaɪ ðə skˈɑː? skˈɪnz kwˈɪk ɹɪpˈeə: stɹˈɒŋ ɪnˈʌf tə klˈəʊz, nˈɛvə ðə wˈiːv.",
+   "phonemes": "sˈəʊ, wˌaɪ ðə skˈɑː? mˈaɪs bˈɔːn wɪðˌaʊt dʒˈɜːmfˈaɪtɪŋ sˈɛlz hˈiːl wɪðˈaʊt wˌɒn: ɐ skˈɑː mˈeɪ biː ðə pɹˈaɪs ɒv dɪfˈɛns.",
    "speed": 0.82,
    "file": "07.wav",
-   "dur": 5.065,
-   "sha256": "c9d6bc1c711c0347e12022bb8f7ab0b69326acdc5124bdfa34f8640171056600"
+   "dur": 7.359,
+   "sha256": "3aef46b9508752609270e1409ee6bf5fe6c3c665e7414f1f7368534ff70d57a5"
   },
   {
    "id": "vo08",
@@ -108,10 +108,10 @@
     "in"
    ],
    "phonemes": "nˈɛkst: ɐ dˈɛdli pˈɔɪzən, ɪn ɐ fɹˈaʊn. hˌaʊ mˈʌtʃ ɡəʊz ˈɪn?",
-   "speed": 0.82,
+   "speed": 0.76,
    "file": "08.wav",
-   "dur": 3.765,
-   "sha256": "9de7e5033f4ab33481bcb011f77f3f27c9b7a647558125ece013bb59010ad1a0"
+   "dur": 4.461,
+   "sha256": "e03ca0f3fec909b184c1ef0357a0c372a7bf3e30ab6af50fb4ff3cfa4da8cef7"
   }
  ]
 }

@@ -3,455 +3,455 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Which hand aged? Both belong to neighbours, under the same fierce sun.",
-   "heard": "Which hand aged, both belonged to neighbours under the same fierce sun.",
+   "text": "Which hand aged? In four and a half years, one showed no detectable ageing.",
+   "heard": "Which hand aged? In four and a half years, one showed no detectable aging.",
    "words": [
     {
      "w": "Which",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 0.255,
-     "end": 0.64,
+     "start": 0.285,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 0.555,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "Both",
-     "start": 1.465,
+     "start": 0.68,
      "end": 1.68,
      "heard": true
     },
     {
-     "w": "belong",
-     "start": 1.78,
-     "end": 2.08,
-     "heard": false
-    },
-    {
-     "w": "to",
-     "start": 2.09,
-     "end": 2.24,
+     "w": "In",
+     "start": 1.775,
+     "end": 1.92,
      "heard": true
     },
     {
-     "w": "neighbours,",
-     "start": 2.135,
+     "w": "four",
+     "start": 1.99,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.04,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.39,
+     "end": 2.44,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 2.42,
      "end": 2.72,
      "heard": true
     },
     {
-     "w": "under",
-     "start": 2.7,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 2.89,
+     "w": "years,",
+     "start": 2.64,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "same",
-     "start": 3.075,
+     "w": "one",
+     "start": 3.1,
      "end": 3.28,
      "heard": true
     },
     {
-     "w": "fierce",
-     "start": 3.36,
+     "w": "showed",
+     "start": 3.415,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "sun.",
-     "start": 3.74,
-     "end": 4.0,
+     "w": "no",
+     "start": 3.615,
+     "end": 3.84,
      "heard": true
+    },
+    {
+     "w": "detectable",
+     "start": 3.925,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "ageing.",
+     "start": 4.6,
+     "end": 4.86,
+     "heard": false
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "In the early nineties, in a Queensland town called Nambour, chance decided who would wear sunscreen every morning. They put it on head, neck, arms and hands; neighbours used it as they pleased.",
-   "heard": "In the early nineties, in a Queensland town called Nambore, chance decided who would wear sunscreen every morning. They put it on head, neck, arms and hands. Neighbours used it as they pleased.",
+   "text": "They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
+   "heard": "They belonged to two neighbours in Nambore, a Queensland town where pure chance decided who would wear sunscreen every morning, head, neck, arms and hands, before the day began.",
    "words": [
     {
-     "w": "In",
-     "start": 0.025,
+     "w": "They",
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.275,
-     "end": 0.325,
-     "heard": true
-    },
-    {
-     "w": "early",
-     "start": 0.305,
+     "w": "belong",
+     "start": 0.2,
      "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 0.66,
+     "end": 0.71,
      "heard": true
     },
     {
-     "w": "nineties,",
-     "start": 0.56,
-     "end": 1.12,
+     "w": "two",
+     "start": 0.69,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 1.145,
+     "w": "neighbours",
+     "start": 0.745,
      "end": 1.28,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 1.425,
-     "end": 1.475,
-     "heard": true
-    },
-    {
-     "w": "Queensland",
-     "start": 1.455,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "town",
-     "start": 1.935,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "called",
-     "start": 2.32,
-     "end": 2.48,
+     "w": "in",
+     "start": 1.29,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "Nambour,",
-     "start": 2.565,
-     "end": 3.52,
+     "start": 1.32,
+     "end": 2.48,
      "heard": false
     },
     {
-     "w": "chance",
-     "start": 3.625,
-     "end": 3.92,
+     "w": "a",
+     "start": 2.56,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "decided",
-     "start": 4.035,
+     "w": "Queensland",
+     "start": 2.705,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "town",
+     "start": 3.245,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 3.66,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "pure",
+     "start": 3.865,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "chance",
+     "start": 4.12,
      "end": 4.56,
      "heard": true
     },
     {
+     "w": "decided",
+     "start": 4.565,
+     "end": 5.12,
+     "heard": true
+    },
+    {
      "w": "who",
-     "start": 4.595,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 4.65,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "wear",
-     "start": 4.83,
+     "start": 5.095,
      "end": 5.2,
      "heard": true
     },
     {
+     "w": "would",
+     "start": 5.125,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "wear",
+     "start": 5.335,
+     "end": 5.68,
+     "heard": true
+    },
+    {
      "w": "sunscreen",
-     "start": 5.225,
-     "end": 5.92,
+     "start": 5.705,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "every",
-     "start": 5.86,
-     "end": 6.08,
+     "start": 6.285,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "morning.",
-     "start": 5.99,
-     "end": 6.96,
+     "start": 6.52,
+     "end": 7.6,
      "heard": true
     },
     {
-     "w": "They",
-     "start": 7.125,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "put",
-     "start": 7.285,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 7.385,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "on",
-     "start": 7.49,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "head,",
-     "start": 7.695,
+     "w": "Head,",
+     "start": 7.645,
      "end": 8.16,
      "heard": true
     },
     {
      "w": "neck,",
-     "start": 8.085,
-     "end": 8.56,
+     "start": 8.21,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "arms",
-     "start": 8.56,
-     "end": 8.88,
+     "start": 8.71,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.025,
-     "end": 9.2,
+     "start": 9.18,
+     "end": 9.28,
      "heard": true
     },
     {
-     "w": "hands;",
-     "start": 9.095,
-     "end": 9.92,
+     "w": "hands,",
+     "start": 9.21,
+     "end": 9.84,
      "heard": true
     },
     {
-     "w": "neighbours",
-     "start": 9.995,
-     "end": 10.56,
+     "w": "before",
+     "start": 9.855,
+     "end": 10.08,
      "heard": true
     },
     {
-     "w": "used",
-     "start": 10.475,
-     "end": 10.72,
+     "w": "the",
+     "start": 9.96,
+     "end": 10.24,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 10.75,
-     "end": 10.96,
+     "w": "day",
+     "start": 10.21,
+     "end": 10.4,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 11.09,
-     "end": 11.14,
-     "heard": true
-    },
-    {
-     "w": "they",
-     "start": 11.12,
-     "end": 11.2,
-     "heard": true
-    },
-    {
-     "w": "pleased.",
-     "start": 11.265,
-     "end": 11.76,
+     "w": "began.",
+     "start": 10.45,
+     "end": 10.88,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Then researchers read the fine lines in silicone casts of hands. After four and a half years, the daily group showed no detectable increase in ageing.",
-   "heard": "Then researchers read the fine lines in silicone casts of hands. After four and a half years, the daily group showed no detectable increase in aging.",
+   "text": "It was never sunscreen against none: the others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
+   "heard": "It was never sunscreen against none. The others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
    "words": [
     {
-     "w": "Then",
+     "w": "It",
      "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
-     "w": "researchers",
-     "start": 0.415,
-     "end": 0.88,
+     "w": "was",
+     "start": 0.28,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "read",
-     "start": 0.87,
-     "end": 1.12,
+     "w": "never",
+     "start": 0.485,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sunscreen",
+     "start": 0.705,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "against",
+     "start": 1.355,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "none:",
+     "start": 1.7,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.11,
-     "end": 1.2,
+     "start": 2.585,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "fine",
-     "start": 1.2,
-     "end": 1.52,
+     "w": "others",
+     "start": 2.615,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "lines",
-     "start": 1.52,
-     "end": 1.92,
+     "w": "could",
+     "start": 3.015,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 1.985,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "silicone",
-     "start": 2.015,
-     "end": 2.72,
-     "heard": true
-    },
-    {
-     "w": "casts",
-     "start": 2.72,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 3.03,
+     "w": "use",
+     "start": 3.13,
      "end": 3.36,
      "heard": true
     },
     {
-     "w": "hands.",
-     "start": 3.395,
-     "end": 4.08,
+     "w": "it",
+     "start": 3.39,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "After",
-     "start": 4.225,
-     "end": 4.48,
+     "w": "whenever",
+     "start": 3.59,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "four",
-     "start": 4.405,
-     "end": 4.72,
+     "w": "they",
+     "start": 3.96,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 4.72,
-     "end": 4.88,
+     "w": "pleased,",
+     "start": 4.19,
+     "end": 4.8,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 4.945,
-     "end": 4.995,
+     "w": "or",
+     "start": 4.845,
+     "end": 5.04,
      "heard": true
     },
     {
-     "w": "half",
-     "start": 4.975,
-     "end": 5.36,
+     "w": "not",
+     "start": 5.14,
+     "end": 5.28,
      "heard": true
     },
     {
-     "w": "years,",
-     "start": 5.445,
-     "end": 5.84,
+     "w": "at",
+     "start": 5.28,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "all.",
+     "start": 6.33,
+     "end": 6.38,
+     "heard": true
+    },
+    {
+     "w": "Researchers",
+     "start": 6.36,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "read",
+     "start": 7.045,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 6.01,
-     "end": 6.06,
+     "start": 7.345,
+     "end": 7.44,
      "heard": true
     },
     {
-     "w": "daily",
-     "start": 6.04,
-     "end": 6.4,
-     "heard": true
-    },
-    {
-     "w": "group",
-     "start": 6.43,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "showed",
-     "start": 6.655,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "no",
-     "start": 6.955,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "detectable",
-     "start": 7.255,
+     "w": "fine",
+     "start": 7.495,
      "end": 7.84,
      "heard": true
     },
     {
-     "w": "increase",
-     "start": 7.86,
+     "w": "lines",
+     "start": 7.84,
      "end": 8.24,
      "heard": true
     },
     {
      "w": "in",
-     "start": 8.325,
-     "end": 8.4,
+     "start": 8.285,
+     "end": 8.48,
      "heard": true
     },
     {
-     "w": "ageing.",
-     "start": 8.46,
-     "end": 8.7,
-     "heard": false
+     "w": "silicone",
+     "start": 8.49,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "casts",
+     "start": 9.135,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.54,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "hands.",
+     "start": 9.645,
+     "end": 10.24,
+     "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "It's easy to think of sun damage as the burn you feel. But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the surface.",
-   "heard": "It's easy to think of sun damage as the burn you feel, but an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the surface.",
+   "text": "It's easy to think sun damage is the burn you feel. But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the surface.",
+   "heard": "It's easy to think sun damage is the burn you feel, but an ultraviolet camera reveals damage the naked eye misses long before it shows on the surface.",
    "words": [
     {
      "w": "It's",
@@ -461,351 +461,327 @@
     },
     {
      "w": "easy",
-     "start": 0.23,
+     "start": 0.235,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "to",
      "start": 0.56,
-     "end": 0.64,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "think",
-     "start": 0.705,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 0.735,
+     "start": 0.71,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "sun",
-     "start": 0.855,
-     "end": 1.36,
+     "start": 0.9,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "damage",
-     "start": 1.3,
+     "start": 1.255,
      "end": 1.76,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 1.705,
+     "w": "is",
+     "start": 1.825,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.055,
+     "start": 2.005,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "burn",
-     "start": 2.215,
-     "end": 2.64,
+     "start": 2.165,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "you",
-     "start": 2.66,
-     "end": 2.88,
+     "start": 2.655,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "feel.",
-     "start": 2.975,
+     "start": 2.7,
      "end": 3.52,
      "heard": true
     },
     {
      "w": "But",
-     "start": 3.675,
-     "end": 3.725,
+     "start": 3.705,
+     "end": 3.755,
      "heard": true
     },
     {
      "w": "an",
-     "start": 3.705,
+     "start": 3.735,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "ultraviolet",
-     "start": 3.895,
-     "end": 4.72,
+     "start": 3.95,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "camera",
-     "start": 4.74,
+     "start": 4.79,
      "end": 5.2,
      "heard": true
     },
     {
-     "w": "picks",
-     "start": 5.24,
-     "end": 5.52,
-     "heard": true
-    },
-    {
-     "w": "up",
-     "start": 5.635,
-     "end": 5.685,
+     "w": "reveals",
+     "start": 5.195,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "damage",
-     "start": 5.69,
-     "end": 6.08,
+     "start": 5.755,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 6.095,
-     "end": 6.24,
+     "start": 6.17,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "naked",
-     "start": 6.15,
+     "start": 6.225,
      "end": 6.64,
      "heard": true
     },
     {
      "w": "eye",
-     "start": 6.65,
-     "end": 6.96,
+     "start": 6.73,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "misses,",
-     "start": 7.0,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "building",
-     "start": 7.895,
-     "end": 8.4,
+     "start": 7.07,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "long",
-     "start": 8.4,
-     "end": 8.64,
+     "start": 7.92,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "before",
-     "start": 8.655,
-     "end": 8.96,
+     "start": 8.275,
+     "end": 8.56,
      "heard": true
     },
     {
-     "w": "anything",
-     "start": 9.015,
-     "end": 9.44,
+     "w": "it",
+     "start": 8.44,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "shows",
-     "start": 9.455,
-     "end": 9.84,
+     "start": 8.72,
+     "end": 9.12,
      "heard": true
     },
     {
      "w": "on",
-     "start": 9.85,
-     "end": 10.0,
+     "start": 9.1,
+     "end": 9.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 10.055,
-     "end": 10.16,
+     "start": 9.31,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "surface.",
-     "start": 10.185,
-     "end": 10.72,
+     "start": 9.435,
+     "end": 10.0,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "And the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
-   "heard": "And the town was watched for ten more years. Squamous cell cancers had already come out lower, and melanoma came out at about half in small numbers.",
+   "text": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half, in numbers too small to be sure.",
+   "heard": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half in numbers too small to be sure.",
    "words": [
     {
      "w": "And",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.235,
-     "end": 0.32,
+     "w": "they",
+     "start": 0.29,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "town",
-     "start": 0.265,
+     "w": "were",
+     "start": 0.475,
      "end": 0.56,
      "heard": true
     },
     {
-     "w": "was",
-     "start": 0.655,
-     "end": 0.705,
-     "heard": true
-    },
-    {
-     "w": "watched",
-     "start": 0.705,
-     "end": 1.04,
+     "w": "followed",
+     "start": 0.505,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "for",
-     "start": 0.97,
-     "end": 1.2,
+     "start": 1.075,
+     "end": 1.125,
      "heard": true
     },
     {
      "w": "ten",
-     "start": 1.155,
-     "end": 1.6,
+     "start": 1.11,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "more",
-     "start": 1.64,
-     "end": 1.92,
+     "start": 1.65,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "years.",
-     "start": 1.98,
-     "end": 2.56,
+     "start": 2.0,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "Squamous",
-     "start": 2.72,
-     "end": 3.28,
+     "w": "Melanoma,",
+     "start": 2.8,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "cell",
-     "start": 3.33,
-     "end": 3.6,
+     "w": "the",
+     "start": 3.57,
+     "end": 3.76,
      "heard": true
     },
     {
-     "w": "cancers",
-     "start": 3.54,
-     "end": 4.16,
+     "w": "most",
+     "start": 3.855,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "had",
-     "start": 4.215,
-     "end": 4.32,
+     "w": "serious",
+     "start": 3.91,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "already",
-     "start": 4.245,
-     "end": 4.64,
+     "w": "skin",
+     "start": 4.67,
+     "end": 4.96,
      "heard": true
     },
     {
-     "w": "come",
-     "start": 4.61,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "out",
-     "start": 4.68,
-     "end": 5.04,
-     "heard": true
-    },
-    {
-     "w": "lower,",
-     "start": 5.02,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 5.865,
-     "end": 5.915,
-     "heard": true
-    },
-    {
-     "w": "melanoma",
-     "start": 5.895,
-     "end": 6.72,
+     "w": "cancer,",
+     "start": 4.95,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "came",
-     "start": 6.625,
-     "end": 6.88,
+     "start": 5.89,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "out",
-     "start": 6.88,
-     "end": 7.04,
+     "start": 6.16,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "at",
-     "start": 7.14,
-     "end": 7.2,
+     "start": 6.335,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "about",
-     "start": 7.25,
-     "end": 7.44,
+     "start": 6.57,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "half,",
-     "start": 7.445,
-     "end": 7.92,
+     "start": 6.785,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "in",
-     "start": 7.97,
-     "end": 8.16,
+     "start": 7.47,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "numbers",
+     "start": 7.5,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 8.095,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "small",
-     "start": 8.24,
-     "end": 8.48,
+     "start": 8.46,
+     "end": 8.72,
      "heard": true
     },
     {
-     "w": "numbers.",
-     "start": 8.48,
-     "end": 9.04,
+     "w": "to",
+     "start": 8.845,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 8.97,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "sure.",
+     "start": 9.075,
+     "end": 9.52,
      "heard": true
     }
    ]
@@ -818,105 +794,105 @@
     {
      "w": "At",
      "start": 0.02,
-     "end": 0.24,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.175,
+     "start": 0.22,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "lab's",
-     "start": 0.4,
-     "end": 0.88,
+     "start": 0.28,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "test",
-     "start": 0.875,
-     "end": 1.28,
+     "start": 0.93,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "dose,",
-     "start": 1.27,
-     "end": 1.92,
+     "start": 1.375,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "that",
-     "start": 1.985,
-     "end": 2.16,
+     "start": 2.135,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "morning",
-     "start": 2.11,
-     "end": 2.72,
+     "start": 2.26,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "layer",
-     "start": 2.72,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 3.085,
+     "start": 2.88,
      "end": 3.28,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 3.29,
+     "w": "is",
+     "start": 3.26,
      "end": 3.44,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 3.46,
+     "w": "about",
+     "start": 3.48,
      "end": 3.68,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 3.66,
+     "end": 3.84,
+     "heard": true
+    },
+    {
      "w": "fifth",
-     "start": 3.675,
-     "end": 4.0,
+     "start": 3.9,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "of",
-     "start": 4.015,
-     "end": 4.16,
+     "start": 4.24,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.29,
-     "end": 4.34,
+     "start": 4.545,
+     "end": 4.595,
      "heard": true
     },
     {
      "w": "paper's",
-     "start": 4.32,
-     "end": 4.88,
+     "start": 4.575,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "thickness.",
-     "start": 4.905,
-     "end": 5.44,
+     "start": 5.205,
+     "end": 5.76,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "So, which hand aged? The eye can't say, but the skin was keeping its own record.",
-   "heard": "So which hand aged? The eye can't say but the skin was keeping its own record.",
+   "text": "So, which hand aged? Both missed mornings; one had more, and the skin kept count.",
+   "heard": "So which hand aged? Both missed mornings, one had more, and the skin kept count.",
    "words": [
     {
      "w": "So,",
@@ -927,91 +903,85 @@
     {
      "w": "which",
      "start": 0.565,
-     "end": 0.72,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 0.655,
-     "end": 1.12,
+     "start": 0.64,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 1.07,
-     "end": 2.08,
+     "start": 0.995,
+     "end": 2.0,
      "heard": true
     },
     {
-     "w": "The",
-     "start": 2.17,
-     "end": 2.24,
+     "w": "Both",
+     "start": 2.115,
+     "end": 2.32,
      "heard": true
     },
     {
-     "w": "eye",
-     "start": 2.2,
-     "end": 2.64,
+     "w": "missed",
+     "start": 2.41,
+     "end": 2.8,
      "heard": true
     },
     {
-     "w": "can't",
-     "start": 2.575,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "say,",
-     "start": 2.87,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "but",
-     "start": 3.265,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.38,
+     "w": "mornings;",
+     "start": 2.715,
      "end": 3.52,
      "heard": true
     },
     {
+     "w": "one",
+     "start": 3.59,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 3.79,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "more,",
+     "start": 3.945,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.27,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.3,
+     "end": 4.56,
+     "heard": true
+    },
+    {
      "w": "skin",
-     "start": 3.645,
-     "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "was",
-     "start": 3.985,
-     "end": 4.08,
-     "heard": true
-    },
-    {
-     "w": "keeping",
-     "start": 4.115,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 4.365,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "own",
-     "start": 4.63,
+     "start": 4.625,
      "end": 4.96,
      "heard": true
     },
     {
-     "w": "record.",
-     "start": 4.98,
-     "end": 5.44,
+     "w": "kept",
+     "start": 4.925,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "count.",
+     "start": 5.31,
+     "end": 5.68,
      "heard": true
     }
    ]
