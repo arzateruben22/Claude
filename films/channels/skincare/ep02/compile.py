@@ -52,11 +52,11 @@ CAM = {
               {"t": B["normal"]["t0"], "target": [TX, 0, 2], "el": 30, **MK, "dist": 26, "az": -6, "ease": "sine"},
               {"t": CUE["glint"], "target": [TX, 0.2, 0], "el": 34, **MK, "dist": 13, "az": -3, "ease": "inout2"},   # down the beam to the glint
               {"t": t_split, "target": [TX, 0.2, 0], "el": 30, **MK, "dist": 15, "az": -2, "ease": "sine"}],
-    "split": [{"t": t_split, "target": [TX, 1.6, 0], "el": 16, **MK, "fy": 0.46, "dist": 27, "az": 0},   # back and low: both halves and both glints inside the frame
-              {"t": B["change"]["t0"], "target": [TX, 1.4, 0], "el": 20, **MK, "fy": 0.46, "dist": 24, "az": 0, "ease": "sine"},
+    "split": [{"t": t_split, "target": [TX, 1.4, 0], "el": 22, **MK, "fy": 0.46, "dist": 26, "az": 0},   # back and low: both halves and both glints inside the frame
+              {"t": B["change"]["t0"], "target": [TX, 1.3, 0], "el": 25, **MK, "fy": 0.46, "dist": 23, "az": 0, "ease": "sine"},
               {"t": CUE["slips"] - 0.3, "target": [TX, -0.4, 0], "el": 50, **MK, "dist": 9, "az": 0, "ease": "in2"}],   # down into the surface
     "inside": [{"t": t_in, "target": [SX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 260, "az": -3},
-               {"t": CUE["out"], "target": [SX, -70, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -1, "ease": "inout2"},
+               {"t": CUE["out"], "target": [SX, -50, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 300, "az": -1, "ease": "inout2"},   # the surface in frame: where the light leaves
                {"t": CUE["sitting"], "target": [SX, -15, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 230, "az": 0, "ease": "inout2"},   # up to the surface: the glow "sitting on the skin"
                {"t": CUE["melanin"] - 0.3, "target": [SX - 10, -75, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 280, "az": 0, "ease": "inout2"},   # back down through it
                {"t": CUE["rush"], "target": [SX + 10, -100, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 280, "az": 1, "ease": "inout2"},   # to the capillary
@@ -76,9 +76,9 @@ for shot, keys in CAM.items():
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-glint", "text": "the glint", "kind": "cell", "anchor": "glint", "t0": CUE["glint"] - 0.6, "t1": t_split, "shot": "macro", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-hyd", "text": "hydrated: one ray", "kind": "water", "anchor": "glintL", "t0": CUE["smooth"] + 0.2, "t1": CUE["isnt"], "shot": "split", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-hyd", "text": "hydrated: one ray", "kind": "water", "anchor": "glintL", "t0": CUE["smooth"] + 0.2, "t1": CUE["isnt"], "shot": "split", "side": 1, "v": "above", "fixed": True},
     {"id": "l-dry", "text": "dry: a haze", "kind": "cell", "anchor": "glintR", "t0": CUE["dry"], "t1": CUE["isnt"], "shot": "split", "side": -1, "v": "below", "fixed": True},
-    {"id": "l-sheen", "text": "a glow on the skin?", "kind": "uv", "anchor": "sheen", "t0": CUE["sitting"] - 0.2, "t1": CUE["but4"] + 0.3, "shot": "inside", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-sheen", "text": "a glow on the skin?", "kind": "uv", "anchor": "sheen", "t0": CUE["sitting"] - 0.2, "t1": CUE["but4"] - 0.1, "shot": "inside", "side": 1, "v": "below", "fixed": True},
     {"id": "l-mel", "text": "melanin", "kind": "uv", "anchor": "melanin", "t0": CUE["melanin"] - 0.2, "t1": CUE["rush"], "shot": "inside", "side": -1, "fixed": True},
     {"id": "l-cap", "text": "a capillary", "kind": "cell", "anchor": "cap", "t0": CUE["rush"] - 0.2, "t1": t_face, "shot": "inside", "side": 1, "fixed": True},
 ]
@@ -95,7 +95,7 @@ BADGES = [
 SPINE = [0.5, 0.215]
 COUNTERS = [
     {"id": "c-refl", "label": "bounces off the top", "text": REFL, "t0": B["normal"]["t0"] + 1.4, "t1": t_split},
-    {"id": "c-back", "label": "comes back out", "text": BACK, "t0": CUE["out"] - 0.4, "t1": CUE["rush"] - 0.4},
+    {"id": "c-back", "label": "comes back out", "text": BACK, "t0": CUE["out"] - 0.4, "t1": CUE["sitting"] - 0.5},
     {"id": "c-red", "label": "the light comes back", "text": "redder", "t0": CUE["redder"] - 0.2, "t1": t_face},
     {"id": "c-final", "label": "the glow comes", "text": "from within", "t0": CUE["isnt2"] + 0.2, "t1": t_end - 0.5},
 ]
@@ -126,9 +126,9 @@ END = {"title": "Next layer: why do you *scar*?", "follow": "Outer Layer · No. 
        "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."}
 POSTER = A("vo04:redder.", 0.2)
 
-glue(f, {"vo01": ["your glow", "on your face", "inside you."], "vo02": ["a few percent", "a glint.", "Smooth, hydrated skin", "one direction;", "dry skin", "a dull haze."],
+glue(f, {"vo01": ["your glow", "on your face", "inside you."], "vo02": ["a few percent", "as a glint.", "Smooth, hydrated skin", "in one direction;", "dry skin", "into a dull haze."],
          "vo03": ["the glint", "the glow.", "slips in,", "cells and fibres,", "a large share", "back out."], "vo04": ["a glow", "the skin.", "travelled through you,", "melanin and blood,", "a rush of blood", "back redder."],
-         "vo05": ["strangers' faces", "as healthy", "they could,", "turned up", "exactly that:", "the colour of blood,", "the skin."],
+         "vo05": ["strangers' faces", "as healthy", "they could,", "turned up", "exactly that:", "the colour of blood,", "through the skin."],
          "vo06": ["Blue light", "a millimetre in,", "ten sheets of paper;", "red light", "several times deeper."], "vo07": ["your face.", "inside you,", "your blood,", "came back."],
          "vo08": ["before birth,", "a cut healed", "without a trace.", "why do you scar?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))

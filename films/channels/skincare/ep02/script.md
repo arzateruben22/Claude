@@ -21,8 +21,8 @@ Two cuts at most, both scale jumps.
 Honesty, on screen: the section is "simplified"; the beam paths are an "illustration"; the reflection share is
 "≈ 4–7 %, near head-on light"; the 40 % back-out is "one example (model)"; the hydration panels are "one study";
 the depth bars are "estimate" (they vary with skin and beam); the face-colour panel uses a "model" face, never a
-real person's before/after. The cheek and the section appear in light, medium and deep tones side by side, never one tone
-alone (more melanin absorbs more, so less comes back). No advice and no product: the film never says how to get a glow, only what one is.
+real person's before/after. The film keeps one medium tone throughout (bible §1, owner-approved one tone per episode) and shows
+the daylight strip of three tones in the takeaway (more melanin absorbs more, so less comes back). No advice and no product: the film never says how to get a glow, only what one is.
 Sign-off: the flush and blood-colour lines touch on skin redness; a dermatologist checks they don't read as a
 claim about any condition.
 
@@ -52,7 +52,7 @@ vo: Blue light gets barely a millimetre in, about ten sheets of paper; red light
 vo: So the glow isn't on your face. It's light that went inside you, met your blood, and came *back*. {c15}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–75 s)
-vo: Next: before birth, a cut healed without a trace. So why do you *scar*? {-}
+vo: Next: before birth, a cut healed without a trace. {c16} So why do you *scar*? {-}
 end card: "Next layer: is a scar still skin?" · "Outer Layer · No. 002"
 
 ## Notes
