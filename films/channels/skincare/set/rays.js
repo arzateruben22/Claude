@@ -43,7 +43,7 @@ export const createRays = ({ n = 100, x: [xa, xb] = [-80, 80], z: [za, zb] = [-2
         d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
         mesh.setColorAt?.(i, new THREE.Color(fade, fade, fade));
         // a passing ray leaves a small glow in the skin while it is there
-        const s = through && yHead < filmBottom ? 1.6 * Math.min(1, (filmBottom - yHead) / 4) : 0;
+        const s = through && yHead < filmBottom ? 3.2 * Math.min(1, (filmBottom - yHead) / 4) : 0;   // what gets in is the subject: a clear glow
         d.position.set(x0 + r.x * xs, Math.max(yHead, filmBottom - depthIn), r.z); d.scale.setScalar(Math.max(1e-4, s)); d.updateMatrix(); hits.setMatrixAt(i, d.matrix);
         if (through && s > 0.5 && !anchor) anchor = [x0 + r.x * xs, filmBottom - depthIn * 0.5, r.z];
       });

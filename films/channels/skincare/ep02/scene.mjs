@@ -47,14 +47,15 @@ const FL = createFilm({ width: 60, depth: 46, x: -36 }), FR = createFilm({ width
 const FH = createFilm({ width: 60, depth: 50, x: 30 });                           // the ratio's filmed half
 const FS = createFilm({ width: 120, depth: 50 }), FC = createFilm({ width: 100, depth: 100 });
 scene.add(FL.mesh, FR.mesh, FH.mesh, FS.mesh, FC.mesh);
-const RL = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 150, seed: 31 }), RR = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 150, seed: 32 });
-const RB = createRays({ n: 60, x: [-58, -4], z: [-20, 23], top: 150, seed: 33 }), RH = createRays({ n: 60, x: [4, 58], z: [-20, 23], top: 150, seed: 34 });
-const RS = createRays({ n: 120, x: [-56, 56], z: [-20, 23], top: 150, seed: 35 }), RC = createRays({ n: 100, x: [-46, 46], z: [-46, 46], top: 170, seed: 36 });
+// rays start a short way above the films (not up through the title band) and are drawn thin and crisp
+const RL = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 70, seed: 31, width: 0.4, len: 7 }), RR = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 70, seed: 32, width: 0.4, len: 7 });
+const RB = createRays({ n: 40, x: [-58, -4], z: [-20, 23], top: 70, seed: 33, width: 0.4, len: 7 }), RH = createRays({ n: 40, x: [4, 58], z: [-20, 23], top: 70, seed: 34, width: 0.4, len: 7 });
+const RS = createRays({ n: 100, x: [-56, 56], z: [-20, 23], top: 70, seed: 35, width: 0.4, len: 7 }), RC = createRays({ n: 100, x: [-46, 46], z: [-46, 46], top: 90, seed: 36, width: 0.5, len: 8 });
 [RL, RR, RB, RH, RS, RC].forEach((r) => scene.add(r.group));
 // the bare half reddening (an illustration of the endpoint SPF measures: the first redness)
 const redMat = new THREE.MeshBasicMaterial({ color: 0xc8463c, transparent: true, opacity: 0, depthWrite: false });
 const red = new THREE.Mesh(new THREE.BoxGeometry(58, 0.6, 48), redMat); red.position.set(-31, 0.35, 0); scene.add(red);
-const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 1.8), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 3.2);
+const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 0.9), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 3.0);   // rays under the bloom knee; what gets in glows
 
 const rig = createRig(FILM.cam);
 
@@ -99,7 +100,7 @@ window.seek = function (t) {
   // ── the pair: SPF 50 left, SPF 100 right ──
   const inside = shot === "inside";
   WL.set({ tone, dimLiving: inside ? 0.2 : 0.35 }); WR.set({ tone, dimLiving: inside ? 0.2 : 0.35 });
-  FL.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.3 : 0.55 }); FR.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.3 : 0.55 });
+  FL.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.22 : 0.4 }); FR.set({ top: 0, thick: pair ? F : 0, opacity: inside ? 0.22 : 0.4 });
   // inside: the rays that are stopped step back (rule 8), what gets in stays lit
   const rayC = inside ? UVC.map((v) => v * (1 - 0.6 * fadeIn(t, CUE.in, 0.6))) : UVC;
   const hitL = RL.set(t, pair ? { filmTop: F, filmBottom: 0, pass: UV.pass50, color: rayC, hitColor: HIT, x0: -36 } : HIDE);
@@ -126,7 +127,7 @@ window.seek = function (t) {
   // ── the count: from above, a hundred rays on one film; fifty's two get through, then a hundred's one ──
   const count = shot === "count";
   SC.set({ tone, dimLiving: 0.35 });
-  FC.set({ top: 0, thick: count ? F : 0, opacity: 0.5 });
+  FC.set({ top: 0, thick: count ? F : 0, opacity: 0.25 });   // see-through from above, so the rays that get in show
   RC.set(t, count ? { filmTop: F, filmBottom: 0, pass: t < CUE.hundred ? UV.pass50 : UV.pass100, color: UVC, hitColor: HIT, x0: 0, rate: 0.42 } : HIDE);
 
   // ── the gauge: attached to the single block's left cut edge; lifted for the to-scale beat with the film on top ──

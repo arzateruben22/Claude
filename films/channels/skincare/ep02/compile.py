@@ -59,10 +59,10 @@ HOOK = {"target": [0, -4, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46}
 CAM = {
     "hook": [{"t": 0.0, **HOOK, "dist": 620, "az": -6}, {"t": B["normal"]["t0"], **HOOK, "dist": 560, "az": -2, "ease": "sine"}],
     # the ratio: close on one block; a push on "ratio" to the film's edge, where bare skin meets filmed skin
-    "ratio": [{"t": B["normal"]["t0"], "target": [0, 0, 0], "el": 16, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 380, "az": -14},
-              {"t": A("vo02:ratio:"), "target": [0, 2, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -10, "ease": "inout2"},
-              {"t": A("vo02:reddens."), "target": [0, 2, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 270, "az": -6, "ease": "sine"},
-              {"t": B["change"]["t0"] + 0.4, "target": [0, 2, 0], "el": 13, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 262, "az": -5, "ease": "sine"}],
+    "ratio": [{"t": B["normal"]["t0"], "target": [0, 4, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 560, "az": -14},
+              {"t": A("vo02:ratio:"), "target": [0, 4, 0], "el": 16, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 480, "az": -10, "ease": "inout2"},
+              {"t": A("vo02:reddens."), "target": [-10, 2, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 430, "az": -6, "ease": "sine"},
+              {"t": B["change"]["t0"] + 0.4, "target": [-10, 2, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 420, "az": -5, "ease": "sine"}],
     # the count: high and looking down (a new angle), drifting in as the hundred lands
     "count": [{"t": A("vo03:Flip", -0.15), "target": [0, 10, 0], "el": 58, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 520, "az": 0},
               {"t": t_100, "target": [0, 10, 0], "el": 62, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 470, "az": 4, "ease": "inout2"},
@@ -98,7 +98,7 @@ LABELS = [
     {"id": "l-100-c", "text": "SPF 100", "kind": "uv", "anchor": "film_r", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model: one UVB band", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
+    {"id": "b-model-h", "text": "model: one UVB band", "t0": B["normal"]["t0"] - 0.6, "t1": B["normal"]["t0"], "slot": "tr"},   # after the title (they share the top band)
     {"id": "b-model", "text": "model: one UVB band", "t0": B["normal"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-test", "text": "at the test layer, 2 mg/cm²", "t0": A("vo04:if"), "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-debated", "text": "illustration · debated", "t0": A("vo05:protection"), "t1": B["toscale"]["t0"], "slot": "tr"},
@@ -107,12 +107,12 @@ BADGES = [
 ]
 SPINE = [0.30, 0.215]
 COUNTERS = [
-    {"id": "c-ratio", "label": "SPF = burn dose with ÷ without", "fmt": "text", "text": "ratio", "t0": A("vo02:ratio:"), "t1": A("vo03:Flip", -0.6), "at": SPINE},
+    {"id": "c-ratio", "label": "burn dose: with ÷ without", "fmt": "text", "text": "ratio", "t0": A("vo02:ratio:"), "t1": A("vo03:Flip", -0.6), "at": SPINE},
     {"id": "c-50", "label": "SPF 50 · blocked", "fmt": "text", "text": "≈98%", "t0": A("vo03:fifty"), "t1": A("vo03:hundred", -0.4), "at": SPINE},
     {"id": "c-100", "label": "SPF 100 · blocked", "fmt": "text", "text": "≈99%", "t0": A("vo03:hundred"), "t1": A("vo04:look", -0.65), "at": SPINE},
     {"id": "c-in", "label": "gets in · SPF 50 vs 100", "fmt": "text", "text": "2% vs 1%", "t0": A("vo04:in:"), "t1": B["whoa"]["t0"], "at": SPINE},
     {"id": "c-real", "label": "applied in studies · mg/cm²", "fmt": "text", "text": "0.4–1", "t0": A("vo05:quarter"), "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-film", "label": "test film · ≈ 2 mg/cm²", "fmt": "text", "text": "≈20 µm", "t0": A("vo06:thick"), "t1": t_end, "at": SPINE},
+    {"id": "c-film", "label": "test film · ≈ 2 mg/cm²", "fmt": "text", "text": "≈20 µm", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},   # the card carries it in the to-scale beat
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 

@@ -65,6 +65,11 @@
    "tag": "title"
   },
   {
+   "t": 4.0667,
+   "kind": "badge",
+   "tag": "b-model-h"
+  },
+  {
    "t": 4.6667,
    "kind": "section",
    "id": "normal",
@@ -189,11 +194,6 @@
   },
   {
    "t": 49.63333333333333,
-   "kind": "counter.show",
-   "tag": "c-film"
-  },
-  {
-   "t": 49.63333333333333,
    "kind": "scale",
    "tag": "g-film"
   },
@@ -207,6 +207,11 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 63.9333
+  },
+  {
+   "t": 55.5333,
+   "kind": "counter.show",
+   "tag": "c-film"
   },
   {
    "t": 55.5333,
