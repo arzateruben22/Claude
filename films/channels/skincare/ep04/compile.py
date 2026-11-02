@@ -110,14 +110,17 @@ CAM = {
         {"t": CUE["nucleus"], "target": [MEL_X, -48, 16], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 310, "az": -2, "ease": "inout2"},
         {"t": t_field, "target": [MEL_X, -46, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": -4, "ease": "sine"},
     ],
+    # field, gauge and close are the same section as the tan shot: one continuous camera move, no cuts
     "field": [
-        {"t": t_field, "target": [0, -44, 10], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 330, "az": -10},
-        {"t": B["toscale"]["t0"], "target": [0, -40, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.36, "dist": 520, "az": -6, "ease": "out2"},
+        {"t": t_field, "target": [MEL_X, -46, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": -4},
+        {"t": B["toscale"]["t0"], "target": [0, -40, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.36, "dist": 520, "az": -6, "ease": "inout2"},
     ],
-    "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6},
+    "gauge": [{"t": B["toscale"]["t0"], "target": [0, -40, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.36, "dist": 520, "az": -6},
+              {"t": B["toscale"]["t0"] + 1.0, "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6, "ease": "inout2"},
               {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8, "ease": "sine"}],
     # the close: the hook's pose, reached by the end, so the last frame hands back to frame 0
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 410, "az": -10},
+    "close": [{"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8},
+              {"t": B["takeaway"]["t0"] + 1.6, **HOOK, "dist": 410, "az": -10, "ease": "inout2"},
               {"t": B["tease"]["t1"], **HOOK, "dist": 470, "az": -18, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
@@ -167,12 +170,11 @@ COUNTERS = [
     {"id": "c-spf", "label": "about, for a whole tan", "fmt": "text", "text": "SPF 3–4", "t0": A("vo05:four.", 0.5), "t1": B["toscale"]["t0"], "at": SPINE},
     {"id": "c-spf2", "label": "a whole tan, about", "fmt": "text", "text": "SPF 3–4", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
-CUTS = [sh["at"] for sh in SHOTS[1:]]
+CUTS = [sh["at"] for sh in SHOTS[1:] if sh["name"] not in ("field", "gauge", "close")]   # those three are camera moves, not cuts
 # how each cut is made: an iris on the two scale jumps (into the nucleus and back out to its cell), a short dip to
 # the slide colour on the others, so no cut jumps the picture's brightness in one frame
 TRANS = [{"t": t_jump, "kind": "iris"}, {"t": B["change"]["t0"], "kind": "iris"}, {"t": B["why"]["t0"], "kind": "dip"},
-         {"t": t_dna2, "kind": "dip"}, {"t": B["whoa"]["t0"], "kind": "dip"}, {"t": t_field, "kind": "dip"},
-         {"t": B["toscale"]["t0"], "kind": "dip"}, {"t": B["takeaway"]["t0"], "kind": "dip"}]
+         {"t": t_dna2, "kind": "dip"}, {"t": B["whoa"]["t0"], "kind": "dip"}]
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -198,7 +200,7 @@ POSTER = A("vo05:parasol.", 0.4)          # the caps over the nuclei, the melano
 
 # captions: number phrases and fixed phrases stay on one line
 glue(f, {"vo02": ["In under a trillionth", "of a second,", "one can fuse", "two letters"], "vo03": ["a guardian protein", "a chemical message"],
-         "vo04": ["lacked that guardian", "getting ready for", "the sun."], "vo05": ["the next few days,", "a tiny parasol.", "about SPF three or four."],
+         "vo04": ["lacked that guardian", "isn't skin", "getting ready", "for the sun."], "vo05": ["the next few days,", "a tiny parasol.", "about SPF three or four."],
          "vo06": ["a dozen stacked", "would be as thick", "as a sheet of paper."],
          "vo08": ["the darkest skin", "the lightest?"]})
 for ln in f.lines:                        # the SPF is read as a figure on screen ("SPF 3 or 4"), as the counter shows it

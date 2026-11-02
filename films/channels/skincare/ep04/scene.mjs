@@ -45,7 +45,7 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 // ── the set ─────────────────────────────────────────────────────────────────
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um, rows: BIO.rows };
 const S = createSection({ width: 180, depth: 60, ...LAY, seed: 3, mortarFloor: 0 });   // the lipid sheets stay hidden (not this episode's subject)
-const V = createVessels({ x: [-86, 86], ys: [-94, -104, -115], z: 29, r: 2.6 });   // a few vessels near the junction, so the dermis isn't a blank slab
+const V = createVessels({ x: [-86, 86], ys: [-96, -122], z: 33, r: 1.7 });   // a few vessels near the junction, so the dermis isn't a blank slab
 S.group.add(V.group);
 const caps = createCaps(S); S.group.add(caps.mesh);
 const mel = createMelanocyte(S, { x: BIO.mel_x, seed: 21 });
@@ -152,8 +152,9 @@ window.seek = function (t) {
     const u = Math.min(1, DAYS(t) / 3);
     fill = 1 - 0.5 * u; travel = E.inout2(u); tan = E.inout2(seg(u, 0.35, 1)); melGlow = 1 - 0.7 * u; dimDead = 0.6;
   }
-  if (shot === "field" || shot === "gauge") { tan = 1; fill = 0.4; travel = 1; uvGain = shot === "field" ? 1 : 0.25; pass = BIO.pass; dimDead = 0.2; }
-  if (shot === "gauge") { dimDead = 0.8; dimLiving = 0.85; }
+  if (shot === "field" || shot === "gauge") { tan = 1; fill = 0.5 - 0.1 * fadeIn(t, SH.field, 0.8); travel = 1; pass = BIO.pass; uvGain = shot === "field" ? fadeIn(t, SH.field, 0.8) : 1 - 0.75 * fadeIn(t, SH.gauge, 0.8); dimDead = 0.6 - 0.4 * fadeIn(t, SH.field, 0.8); }
+  if (shot === "gauge") { dimDead = 0.2 + 0.6 * fadeIn(t, SH.gauge, 0.8); dimLiving = 0.85 * fadeIn(t, SH.gauge, 0.8); }
+  if (shot === "close") { const k = fadeIn(t, SH.close, 1.0); dimDead = 0.8 - 0.6 * k; dimLiving = 0.85 * (1 - k); uvGain = 0.25 + 0.6 * k; }   // continuous from the to-scale shot
   if (inS) {
     S.set({ tone, dimDead, dimLiving, mortar: 0, glowDead: 0 });
     V.set({ k: 1, opacity: 1 - 0.5 * dimLiving });
@@ -220,8 +221,8 @@ window.seek = function (t) {
   for (const tr of FILM.trans) {
     const d = t - tr.t;
     if (tr.kind === "dip") dip = Math.max(dip, 1 - Math.min(1, Math.abs(d) / 0.22));
-    else if (d < 0 && d > -0.35) disc = E.in2(1 + d / 0.35);
-    else if (d >= 0 && d < 0.35) hole = Math.max(1e-3, E.out2(d / 0.35));
+    else if (d < 0 && d > -0.35) disc = 0.62 * E.in2(1 + d / 0.35);                 // the disc never quite fills the frame,
+    else if (d >= 0 && d < 0.4) hole = 0.28 + 0.72 * E.out2(d / 0.4);               // and the next place shows at once: no empty frame
   }
   if (disc > 0 || hole > 0) {
     const subj = shot === "section" || shot === "cell" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), p = project(camera, subj, W, H);
@@ -230,6 +231,7 @@ window.seek = function (t) {
       : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
     veil.style.opacity = "1";
   } else { veil.style.background = "var(--slide)"; veil.style.opacity = (0.85 * dip).toFixed(4); }
+  for (const el of gsvg.querySelectorAll("text")) if (el.textContent === "paper") el.setAttribute("opacity", (lift * E.out3(seg(t, G.stack[0] - 0.2, G.stack[0] + 0.3))).toFixed(3));
   // the parasol stack inside the lifted gauge's paper bar (read from motif.js's own bar, so it follows any change there)
   const pb = gsvg.querySelector('rect[stroke]');
   const bxP = +pb.getAttribute("x"), bwP = +pb.getAttribute("width"), y0L = +pb.getAttribute("y"), pxL = 0.15 * H / 100;
