@@ -18,7 +18,7 @@ import { toneColor } from "./section.js";
 const D2R = Math.PI / 180;
 const mixc = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
 
-export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 900, hairW = 26, x = 0 } = {}) => {
+export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 900, hairW = 12, x = 0 } = {}) => {
   const R = rng(seed), g = new THREE.Group();
   g.position.x = x;
   const half = size / 2, foll = [];
@@ -46,13 +46,15 @@ export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 9
   return {
     group: g, foll,
     // raise: 0 (flat, hairs lying at ~70° from upright) … 1 (bumps up, hairs near upright); tone: melanin 0–1
-    set({ raise = 0, tone = 0.5, frost = 0 } = {}) {
+    // thick: 0 (our fine, pale hairs) … 1 (a chimpanzee's: the same follicles, thick dark hairs)
+    set({ raise = 0, tone = 0.5, frost = 0, thick = 0 } = {}) {
       const c = toneColor("living", tone);
       mat.color.setRGB(...mixc(c, [0.92, 0.95, 0.98], 0.25 * frost));
-      hm.color.setRGB(...mixc(toneColor("fibre", tone), toneColor("corneo", tone), 0.4));
+      hm.color.setRGB(...mixc(mixc(toneColor("fibre", tone), toneColor("corneo", tone), 0.4), [0.12, 0.08, 0.06], thick));
+      hm.opacity = 0.85 + 0.15 * thick;
       for (let i = 0; i < pos.count; i++) {
         const f = foll[near[i]], k = Math.min(1, Math.max(0, (raise * 1.25 - f.k * 0.25)));
-        const b = 38 * k * Math.exp(-((dx[i] / 70) ** 2));
+        const b = 70 * k * Math.exp(-((dx[i] / 105) ** 2));
         pos.setY(i, y0[i] + b);
       }
       pos.needsUpdate = true; geo.computeVertexNormals();
@@ -60,7 +62,8 @@ export const createPatch = ({ size = 3000, spacing = 260, seed = 61, hairLen = 9
         const k = Math.min(1, Math.max(0, (raise * 1.25 - f.k * 0.25)));
         dummy.position.set(f.x, 30 * k, f.z);
         dummy.rotation.set(0, f.yaw, (70 - 52 * k) * D2R);
-        dummy.scale.set(hairLen > 0 ? 13 : 13, f.len, 13);
+        const w = (hairW / 2) * (1 + 2.2 * thick);
+        dummy.scale.set(w, f.len * (1 - 0.35 * thick), w);   // the chimp's hairs shorter, so they stay above the captions   // fine hairs: thin and pale; a chimp's: thick and dark
         dummy.updateMatrix(); hairs.setMatrixAt(i, dummy.matrix);
       });
       hairs.instanceMatrix.needsUpdate = true;
@@ -100,7 +103,11 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
   hairOut.add(shaft); hairOut.position.set(fx, 0, 0);
   g.add(hairIn, hairOut);
   // a new hair, grown up from the bulb (whoa): its tip at s = L − grow·(L − 60)
-  const newHair = new THREE.Mesh(new THREE.CylinderGeometry(9, 12, 1, 12).translate(0, 0.5, 0), M.hair);
+  const newMat = mat({ roughness: 0.4 });
+  const newHair = new THREE.Mesh(new THREE.CylinderGeometry(11, 14, 1, 12).translate(0, 0.5, 0), newMat);   // dark: the new hair reads against the pale canal
+  // frost: a bright line along the surface (the cold arriving)
+  const frostLine = new THREE.Mesh(new THREE.BoxGeometry(width, 6, thick + 4), new THREE.MeshBasicMaterial({ color: 0xb8ecf5, transparent: true, opacity: 0, depthWrite: false }));
+  frostLine.position.y = 4; g.add(frostLine);
   newHair.rotation.z = tilt; g.add(newHair);
   // the muscle: from the bulge (s = 0.42 L, on the downhill side) up to just under the surface, downhill of the hair
   const bulgeS = 0.42 * L, bulge = P(bulgeS), anchor = [fx + 260, -epi - 6];
@@ -108,15 +115,15 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
   const mLine = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 14), new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0.6, toneMapped: false, clippingPlanes: clip }));
   g.add(mLine, muscle);
   // the nerve: from deep in the dermis up to the muscle, with a branch to the bulge (the stem cells)
-  const nA = [anchor[0] + 260, -depth - 120], nB = [(bulge[0] + anchor[0]) / 2 + 40, (bulge[1] + anchor[1]) / 2 - 20], nC = [bulge[0] + 40, bulge[1] - 10];
+  const nA = [anchor[0] + 300, -depth * 0.8], nB = [(bulge[0] + anchor[0]) / 2 + 40, (bulge[1] + anchor[1]) / 2 - 20], nC = [bulge[0] + 40, bulge[1] - 10];
   const curveMain = new THREE.CatmullRomCurve3([new THREE.Vector3(nA[0], nA[1], 4), new THREE.Vector3(nA[0] - 60, (nA[1] + nB[1]) / 2, 6), new THREE.Vector3(nB[0], nB[1], 6)]);
   const curveBranch = new THREE.CatmullRomCurve3([new THREE.Vector3(nB[0], nB[1], 6), new THREE.Vector3((nB[0] + nC[0]) / 2, (nB[1] + nC[1]) / 2 - 18, 6), new THREE.Vector3(nC[0], nC[1], 6)]);
-  const nerve = new THREE.Mesh(new THREE.TubeGeometry(curveMain, 60, 5, 8, false), M.nerve);
+  const nerve = new THREE.Mesh(new THREE.TubeGeometry(curveMain, 60, 11, 10, false), M.nerve);
   const branchMat = mat({ roughness: 0.4, transparent: true });
-  const branch = new THREE.Mesh(new THREE.TubeGeometry(curveBranch, 30, 3.6, 8, false), branchMat);
+  const branch = new THREE.Mesh(new THREE.TubeGeometry(curveBranch, 30, 8, 10, false), branchMat);
   g.add(nerve, branch);
   const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, toneMapped: true });
-  const pulses = Array.from({ length: 6 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(7, 12, 8), pulseMat); g.add(m); return m; });
+  const pulses = Array.from({ length: 6 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(15, 14, 10), pulseMat); g.add(m); return m; });
   // stem cells at the bulge: a seeded cluster on the follicle's outer side
   const stems = Array.from({ length: 22 }, (_, i) => {
     const s = bulgeS + (R() - 0.5) * 70, side = R() < 0.6 ? 1 : -1, p = P(s);
@@ -128,20 +135,22 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
   const place = (m, a, b, r) => { const v = new THREE.Vector3(b[0] - a[0], b[1] - a[1], 0), l = v.length(); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0); m.scale.set(r, l, r); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), v.normalize()); };
   return {
     group: g, dims: { W: width, D: thick, epi, depth, fx, tilt, bulge, anchor },
-    set({ tone = 0.2, pull = 0, fire = 0, t = 0, wake = 0, grow = 0, muscle: mu = 1, wire = 1, dimSkin = 0, glow = [0.3, 0.7, 0.75], frost = 0 } = {}) {
+    set({ tone = 0.2, pull = 0, fire = 0, t = 0, wake = 0, grow = 0, muscle: mu = 1, wire = 1, dimSkin = 0, glow = [0.3, 0.7, 0.75], frost = 0, pulseK = 1 } = {}) {
+      frostLine.material.opacity = 0.9 * frost; frostLine.visible = frost > 0.01;
       const k = 1 - 0.5 * dimSkin;
       M.epi.color.setRGB(...mixc(toneColor("living", tone), [0.92, 0.95, 0.98], 0.2 * frost).map((v) => v * k));
       M.sc.color.setRGB(...toneColor("corneo", tone).map((v) => v * k));
-      M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k));
+      M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.84));   // a step darker than the epidermis, so the two layers read
       M.sheath.color.setRGB(...toneColor("basal", tone).map((v) => (v + (1 - v) * 0.15) * k));
       M.bulb.color.copy(M.sheath.color);
       M.hair.color.setRGB(...mixc(toneColor("fibre", tone), toneColor("corneo", tone), 0.5));
+      newMat.color.setRGB(0.22, 0.13, 0.09);
       M.muscle.color.setRGB(0.42, 0.16, 0.13);
       M.nerve.color.setRGB(0.05, 0.1, 0.12); branchMat.color.copy(M.nerve.color); branchMat.opacity = wire; branch.visible = wire > 0.02;
       // the muscle shortens toward the bulge; its top end pulls the surface down (the dimple that makes the bump read)
-      const sh = 0.22 * pull, top = [anchor[0] - (anchor[0] - bulge[0]) * sh, anchor[1] - (anchor[1] - bulge[1]) * sh * 0.5];
-      place(muscle, bulge, top, 16 + 6 * pull); place(mLine, bulge, top, 19 + 6 * pull);
-      muscle.visible = mLine.visible = mu > 0.02; muscle.material.opacity = mu;
+      const sh = 0.3 * pull, top = [anchor[0] - (anchor[0] - bulge[0]) * sh, anchor[1] - (anchor[1] - bulge[1]) * sh * 0.5];
+      place(muscle, bulge, top, 18 + 8 * pull); place(mLine, bulge, top, 21 + 8 * pull);
+      muscle.visible = mLine.visible = mu > 0.02; muscle.material.transparent = mu < 1; muscle.material.opacity = mu; mLine.material.opacity = 0.6 * mu;
       // the surface: lifted round the hair, dipped where the muscle pulls (simplified)
       const bump = (px) => 46 * pull * Math.exp(-(((px - fx - 80) / 120) ** 2)) - 18 * pull * Math.exp(-(((px - anchor[0]) / 60) ** 2));
       for (let i = 0; i < epiPos.count; i++) if (epiY[i] > 0) epiPos.setY(i, epiY[i] + bump(epiPos.getX(i)));
@@ -150,22 +159,27 @@ export const createFollicle = ({ x = 0, seed = 63, epi = 90, depth = 700, width 
       hairOut.position.y = bump(fx);
       hairOut.rotation.z = -(62 - 46 * pull) * D2R;                                // lying downhill → near upright
       // pulses down the nerve: up from the deep end to the muscle and along the branch to the stem cells
-      pulseMat.color.setRGB(...glow.map((v) => v * 1.6)); pulseMat.opacity = Math.min(1, fire);
+      pulseMat.color.setRGB(...glow.map((v) => v * 0.9)); pulseMat.opacity = Math.min(1, fire) * (0.15 + 0.85 * wire) * pulseK;   // dimmer than the stem cells (they are the subject)
       pulses.forEach((m, i) => {
         const u = ((t * 0.9 + i / pulses.length) % 1 + 1) % 1, onBranch = i % 2 === 1 && wire > 0.3;
         const p = onBranch ? curveBranch.getPoint(u) : curveMain.getPoint(u);
-        m.position.set(p.x, p.y, 12); m.visible = fire > 0.02;
+        m.position.set(p.x, p.y, 16); m.visible = fire > 0.02;
       });
       // stem cells: lit and multiplying with wake
       M.stem.color.setRGB(...toneColor("basal", tone).map((v) => v + (1 - v) * 0.4));
-      M.stem.emissive.setRGB(...glow.map((v) => v * 0.6 * wake));
+      M.stem.emissive.setRGB(...glow.map((v) => v * 2.2 * wake));   // lit cyan: the brightest thing when they wake
       stems.forEach((m) => { const s = Math.min(1, Math.max(0, (wake * 1.2 - m.userData.k))); m.scale.setScalar(m.userData.k === 0 ? 1 : s + 1e-4); m.visible = m.userData.k === 0 || s > 0.01; });
       // the new hair: up from the bulb
       const len = Math.max(1, grow * (L - 80)), base = P(L - 20);
-      newHair.position.set(base[0], base[1], 2); newHair.scale.set(1, len, 1); newHair.rotation.z = tilt + Math.PI; newHair.visible = grow > 0.01;
+      newHair.position.set(base[0], base[1], 2); newHair.scale.set(1, len, 1); newHair.rotation.z = tilt;   // up the follicle, toward the surface newHair.visible = grow > 0.01;
     },
     at: {
-      hair: () => [x + fx + 120, 240, 20],
+      // the outer shaft at 70% of its length (it rotates with pull)
+      hair: () => { const a = hairOut.rotation.z, l = 0.7 * 700; return [x + fx - Math.sin(a) * l, hairOut.position.y + Math.cos(a) * l, 20]; },
+      // the lit stem cells' centroid; the new hair's climbing tip
+      stemC: () => { let sx = 0, sy = 0, n = 0; for (const m of stems) if (m.visible) { sx += m.position.x; sy += m.position.y; n++; } return n ? [x + sx / n, sy / n, 30] : [x + bulge[0], bulge[1], 30]; },
+      newTip: () => { const b = P(L - 20), l = newHair.visible ? newHair.scale.y : 1; return [x + b[0] - Math.sin(tilt) * l, b[1] + Math.cos(tilt) * l, 30]; },
+      insertion: () => [x + bulge[0] + 20, bulge[1] - 20, 30],
       muscle: () => [x + (bulge[0] + anchor[0]) / 2 + 20, (bulge[1] + anchor[1]) / 2, 30],
       nerve: () => [x + nA[0] - 40, (nA[1] + nB[1]) / 2, 20],
       stem: () => [x + bulge[0] + 50, bulge[1], 30],
@@ -197,7 +211,7 @@ export const createFur = ({ x = 0, size = 1400, n = 900, seed = 65, len = 520 } 
       });
       hairs.instanceMatrix.needsUpdate = true;
       const hgt = len * (0.32 + 0.5 * raise);
-      air.scale.y = hgt; air.material.color.setRGB(...glow); air.material.opacity = 0.1 + 0.22 * raise;
+      air.scale.y = hgt; air.material.color.setRGB(0.97, 0.98, 1.0); air.material.opacity = 0.05 + 0.16 * raise;   // air: a pale haze, never the water colour
     },
     at: { air: () => [x + size * 0.25, len * 0.45, size * 0.25], top: () => [x, len * 0.8, 0] },
   };

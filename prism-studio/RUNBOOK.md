@@ -32,7 +32,7 @@ On the films machine (it needs Chromium, ffmpeg and the cinema kit):
    (`out/<name>-cover.jpg`, `-thumb.jpg`). It skips episodes whose cover is newer than the video; `--force` redoes
    them; pass `films/channels/<ch>/epNN` to do just one.
    Then `python3 -I kits/cinema/film/youtube1440.py films/channels/<ch>/epNN` makes the 1440×2560 YouTube version
-   (`out/<name>-9x16-youtube.mp4`); the import gives it to the YouTube posts. TikTok and Instagram keep the master.
+   (`out/<name>-9x16-youtube.mp4`); the import gives it to the YouTube posts. TikTok and Instagram keep the master. If the automatic pick clips a label or misses the best image, look at `--force --dry --debug` for one episode and redraw it from a chosen frame: `npm run covers -- films/channels/<ch>/epNN --force --at=<seconds>` (Outer Layer 003 uses 34.3 s).
 3. **Queue → Import rendered episodes**, or `npm run import:episodes`. A new render becomes a new version: older
    approvals end and the episode comes back to Review. A cover older than the render is not used (the film's poster
    is, until covers run again). A changed cover withdraws that post's approval.
@@ -126,6 +126,12 @@ its CSS, fonts, wallpaper, covers and light preview copies of the videos (540 px
 films repo's files can be downloaded (a public repo's `https://github.com/<owner>/<repo>/raw/<branch>/`), the Download
 buttons fetch the full-quality files from there; without it they do nothing. Publish `<out dir>/index.html` with the rest
 of `<out dir>` as supporting files, then stop the server and drop the copy.
+Videos: phones play a video only from a server that answers byte-range requests, so the preview's videos also go into
+the artifact's media store. Publish once with `capabilities: {assets: {}}`, upload `<out dir>/assets/media/*.mp4` with the
+Artifact tool (`asset: true`, at most 25 files a call), save `{"assets/media/<name>.mp4": "/_blob/<id>"}` from its answer as
+a JSON map, run `node scripts/static-preview-media.cjs <out dir> <map.json>` (each `<video>` gets the media-store copy as
+its first `<source>` and the published file as its second), and publish the pages it changed. Upload only new or changed
+videos; a store id never changes, so keep the map with the preview's file list.
 
 ## Problems
 | Symptom | Do |

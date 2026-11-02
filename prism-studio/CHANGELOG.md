@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.7.0 — 2026-11-02 (layout round 2)
+- Review, phone-first: on a phone, Review is a full-screen vertical player, one episode per screen. Swipe sideways
+  (scroll snap) or tap ‹ ›; the top line gives the channel, number, title and "3 / 18". A thumb bar at the bottom holds
+  the platform switches (YouTube, TikTok, Instagram; a green dot marks an approved account), Hold and "Approve ·
+  <platform>". Below the video: the chosen platform's title, caption and hashtags (once), and the numbered sources.
+  Hold opens a short "What needs fixing?" box and adds a hold note (the episode is blocked, as before). Desktop keeps
+  the cards: the video beside the same switches, buttons and text. The switches are radio inputs and the panels follow
+  them in CSS, so all of it works without JavaScript and in the static preview; with JavaScript, a video stops when
+  its episode leaves the screen, the address follows the episode (#ep-…), ← → step, and Escape closes Hold.
+- The episode page opens with the same player (full screen on a phone); Previous/Next step through the review queue.
+  The QA line, Move, Accounts and text (editing), Numbers, Sources, Script and Notes follow below.
+- Outer Layer and Back of the Envelope have their own look on the wall, in the monitor strip and on their screens.
+  Outer Layer is a light slide (ground, ink, water, UV; Newsreader and Red Hat Text): its standby monitor lists the
+  season over a cross-section of skin under UV, and its screen opens on a light panel. Back of the Envelope is graphite
+  and marker (marker, tally, ballpoint; Bricolage Grotesque, Figtree, JetBrains Mono for figures): its titles sit over
+  a ballpoint envelope with "≈ ?". The rest of the studio keeps the night look. Fonts as woff2 with their OFL licences
+  (public/fonts/SOURCES.md).
+- Their colours are final (Outer Layer #00685F, Back of the Envelope #EB63FF), and so are their names: migration 0005
+  updates both channels where the colour is still the old default and drops "working name". On a local database run
+  `npm run db:migrate` (`npm start` doesn't migrate); the Docker server applies it on start.
+- Season progress on every monitor and channel screen, from the database: "Season 1 · 6 of 6 ready" (and "· n posted"
+  once published) with one segment per episode. A channel with nothing imported reads "Season 1 in production" with
+  its six planned titles (catalog PLANNED_SEASONS), never numbers (src/domain/season.ts, tested).
+- On a phone, the monitor strip scrolls the current screen's name into view.
+- The wall's status line reads "6 to review" (the season line says how many are ready), and each monitor link has a
+  spoken name in sentences ("Rest Frame. 6 to review. Season 1 · 6 of 6 ready. Status light: needs review.").
+- Phone wall: a channel with its own identity shows full size before its first cover (the top screen across the width,
+  the portrait screens in pairs), so the planned titles are readable on a phone too.
+- Phone polish: pages start below the notch and clear the rounded corners (the installed app's status bar is
+  translucent); in the installed app a dark band sits under the status bar and the page doesn't rubber-band past its
+  ends; no tap flash or double-tap delay on controls; the tab bar and thumb bar aren't selectable; a calmer lede on
+  phones; Accounts' help links are 44 px tall.
+- Phone polish after review: the offline banner sits below the notch; the lede stays at body size (16 px); one
+  kicker-to-title rhythm on every screen, and a page without a lede gives its first panel room; Review's first episode
+  keeps a dimmed Previous so the thumb bar never shifts; the Hold sheet meets the bar; the episode page says "1 of 18
+  in review". A phone on its side (a browser tab; the installed app stays upright) gets a slim tab bar, a wall that
+  fits the screen and Review's buttons above the tab bar.
+
 ## 0.6.4 — 2026-10-26 (final check)
 - Costs: while a studio budget is set, an entry in another currency anywhere that month (studio-wide or any channel's)
   holds back paid generation for every channel, after the "budget used" checks, and the reason names each entry and

@@ -9,7 +9,7 @@ import type { Result } from "@/app/actions";
 
 export function ActionForm({ action, children, className, submit, submitClass = "btn", confirm }: {
   action: (prev: Result, fd: FormData) => Promise<Result>;
-  children?: ReactNode; className?: string; submit?: string; submitClass?: string; confirm?: string;
+  children?: ReactNode; className?: string; submit?: ReactNode; submitClass?: string; confirm?: string;
 }) {
   const [state, act, pending] = useActionState(action, null);
   const form = useRef<HTMLFormElement>(null);

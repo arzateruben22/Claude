@@ -1,0 +1,192 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep05/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Would the Earth move? If all of us jumped, at once.",
+   "stars": [
+    "move"
+   ],
+   "phonemes": "wʊd ðɪ ˈɜːθ mˈuːv? ɪf ˈɔːl ʌv ˌʌs dʒˈʌmpt, ɐtwˈʌns.",
+   "speeds": [
+    0.86,
+    0.62
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.0558,
+     1.6558
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.234,
+   "sha256": "8e31fee4a3b56667155d82c250d9c6449d5a4e7c279f30b5a686fdfcffcd6cf2"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "When you jump, you push the ground away, and the ground is the whole planet. So gather everyone into one crowd, all eight billion, and jump together.",
+   "stars": [
+    "together"
+   ],
+   "phonemes": "wˌɛn juː dʒˈʌmp, juː pˈʊʃ ðə ɡɹˈaʊnd ɐwˈeɪ, ænd ðə ɡɹˈaʊnd ɪz ðə hˈoʊl plˈænɪt. sˌoʊ ɡˈæðɚɹ ˈɛvɹɪwˌʌn ˌɪntʊ wˈʌn kɹˈaʊd, ˈɔːl ˈeɪt bˈɪliən, ænd dʒˈʌmp təɡˈɛðɚ.",
+   "speeds": [
+    0.78,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.7325,
+     5.1125
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 10.527,
+   "sha256": "6e50e85d5daa175f11bfbb5ca5264b30668b63027716013115067b170903fc08"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "For about half a second we're all in the air, and the planet, pushed the other way, drops away beneath our feet.",
+   "stars": [
+    "feet"
+   ],
+   "phonemes": "fɔːɹ ɐbˌaʊt hˈæf ɐ sˈɛkənd wɪɹ ˈɔːl ɪnðɪ ˈɛɹ, ænd ðə plˈænɪt, pˈʊʃt ðɪ ˈʌðɚ wˈeɪ, dɹˈɑːps ɐwˈeɪ bᵻnˌiːθ ˌaʊɚ fˈiːt.",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 7.734,
+   "sha256": "eebd48378c96eabbd8b9610b96b9e269efc915d123be6f18950fef3677007843"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It sounds like it should knock the planet off course. But the push is shared out by weight, and the Earth outweighs all of us ten trillion times over.",
+   "stars": [
+    "over"
+   ],
+   "phonemes": "ɪt sˈaʊndz lˈaɪk ɪt ʃˌʊd nˈɑːk ðə plˈænɪt ˈɔf kˈɔːɹs. bˌʌt ðə pˈʊʃ ɪz ʃˈɛɹd ˈaʊt baɪ wˈeɪt, ænd ðɪ ˈɜːθ aʊtwˈeɪz ˈɔːl ʌv ˌʌs tˈɛn tɹˈɪliən tˈaɪmz ˈoʊvɚ.",
+   "speeds": [
+    0.78,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.0025,
+     3.3825
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 10.392,
+   "sha256": "5f51faf021cc8be8d3d2cf91c608b3f2aa082e7607e44d0b167a2324389f0cb9"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "So the whole planet moves a distance three thousand times smaller than a single atom. And when we land, it settles right back where it was.",
+   "stars": [
+    "atom",
+    "was"
+   ],
+   "phonemes": "sˌoʊ ðə hˈoʊl plˈænɪt mˈuːvz ɐ dˈɪstəns θɹˈiː θˈaʊzənd tˈaɪmz smˈɔːlɚ ðˌænə sˈɪŋɡəl ˈæɾəm. ænd wɛn wiː lˈænd, ɪt sˈɛɾəlz ɹˈaɪt bˈæk wˌɛɹ ɪt wˈʌz.",
+   "speeds": [
+    0.72,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.4821,
+     6.8621
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 10.354,
+   "sha256": "de0a256c6e4807aeb2bb3ae885c7bf81fc86ac212b1bccbe691d1555c9f724c0"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Jump higher, or count us lighter, and it stays thousands of times smaller than an atom.",
+   "stars": [
+    "atom"
+   ],
+   "phonemes": "dʒˈʌmp hˈaɪɚ, ɔːɹ kˈaʊnt ˌʌs lˈaɪɾɚ, ænd ɪt stˈeɪz θˈaʊzəndz ʌv tˈaɪmz smˈɔːlɚ ðˌænən ˈæɾəm.",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 6.664,
+   "sha256": "144122d07485f665a8b6978cda32b76afc36d606e0b997a0cd097078e46d8a56"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So yes, the Earth moves when we jump. It just never notices.",
+   "stars": [
+    "notices"
+   ],
+   "phonemes": "sˌoʊ jˈɛs, ðɪ ˈɜːθ mˈuːvz wɛn wiː dʒˈʌmp. ɪt dʒˈʌst nˈɛvɚ nˈoʊɾɪsᵻz.",
+   "speeds": [
+    0.74,
+    0.62
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.4927,
+     2.8727
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.04,
+   "sha256": "52d3d284f2620426c16020bec483215b36f5a7c2f935e02c42a1f71442acf2f5"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: what if a whole day's rain fell in one second?",
+   "stars": [
+    "second"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: wˌʌt ɪf ɐ hˈoʊl dˈeɪz ɹˈeɪn fˈɛl ɪn wˈʌn sˈɛkənd?",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 4.552,
+   "sha256": "7b32c8773e3bf2c77fefe47543b59e66abbbcdd1ab85c18492b159e40c991ea4"
+  }
+ ]
+}

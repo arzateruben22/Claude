@@ -1,0 +1,8 @@
+{
+ "_doc": "Look concept C (bold editorial), one still: 'sunscreen vs none, 10 years' as a beauty-magazine spread with a 3D skin moment. Not an episode.",
+ "id": "outerlayer-concept-c", "fps": 30, "dur": 2.0, "poster": 1.0, "theme": "theme.json",
+ "shots": [{ "at": 0.0, "name": "spread" }],
+ "title": { "series": "Outer Layer", "title": "", "t1": -1 },
+ "captions": [{ "t0": 0.2, "t1": 2.0, "lines": [[["Same", 0.3], ["skin.", 0.45]], [["One", 0.8], ["habit", 0.95], ["apart.", 1.15]]] }],
+ "endCard": 99
+}

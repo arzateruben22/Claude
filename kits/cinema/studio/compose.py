@@ -80,6 +80,8 @@ def _melodic(M, tone, prev, vel, tag):
         return I.blip(tone, M["dur"], vel, tag)
     if v == "reed":
         return I.reed(tone, M["dur"], vel, tag, M.get("breath", 0.35), M.get("attack", 0.12), M["bright"])
+    if v == "pluck":
+        return I.pluck(tone, M["dur"], vel, tag, M["bright"])
     if v == "glide":            # slides from the pattern's previous tone into this one, then swells away
         return I.glide(M["dur"], prev, _semis(prev, tone), tag, M.get("slide", 0.35), M.get("fifth", 0.0), M["bright"]) * np.float32(vel)
     raise ValueError(f"unknown melodic voice {v}")
@@ -249,6 +251,10 @@ def _voice(spec, e, idx, fps):
         return I.hum(spec.get("note", "D4"), spec.get("dur", span), tag, spec.get("beat", 0.5))
     if v == "reed":
         return I.reed(_note(spec, idx), spec.get("dur", 1.0), spec.get("vel", 0.8), tag, spec.get("breath", 0.35), spec.get("attack", 0.06), spec.get("bright", 2600.0))
+    if v == "pluck":
+        return I.pluck(_note(spec, idx), spec.get("dur", 0.9), spec.get("vel", 0.8), tag, spec.get("bright", 3200.0))
+    if v == "scratch":
+        return I.scratch(spec.get("dur", span if spec.get("rise") else 0.3), tag, spec.get("lo", 1800.0), spec.get("hi", 7000.0), spec.get("rise", False))
     raise ValueError(f"unknown voice {v} for {kind}")
 
 

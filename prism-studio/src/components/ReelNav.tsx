@@ -1,0 +1,54 @@
+"use client";
+// The Review reel's small helpers; without them it still swipes (scroll snap) and steps (anchor links). With them:
+// a video stops when its episode leaves the screen, the address keeps the episode in view (#ep-…), ← and → step,
+// Previous/Next scroll the reel sideways instead of jumping the page, and the Hold sheet closes on Escape and puts
+// the cursor in its box when it opens. The episode page uses it for the Hold sheet only (its steps are page links).
+import { useEffect } from "react";
+
+export function ReelNav({ id }: { id: string }) {
+  useEffect(() => {
+    const reel = document.getElementById(id);
+    if (!reel) return;
+    const slides = [...reel.querySelectorAll<HTMLElement>(".slide")];
+    const smooth = () => (matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
+    const show = (el: Element | null) => el && (el as HTMLElement).scrollIntoView({ behavior: smooth(), block: "start", inline: "start" });
+    const sideways = reel.scrollWidth > reel.clientWidth;
+    // pause as soon as a slide is fully off screen; the address follows the slide across the middle of the view
+    // (desktop cards are taller than the window, so a share of the card can't be the test)
+    const gone = new IntersectionObserver((entries) => {
+      for (const e of entries) if (!e.isIntersecting) e.target.querySelector("video")?.pause();
+    }, { root: sideways ? reel : null, threshold: 0 });
+    const here = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting && location.hash !== `#${e.target.id}`) history.replaceState(null, "", `#${e.target.id}`);
+    }, sideways ? { root: reel, threshold: 0.6 } : { rootMargin: "-50% 0px -50% 0px" });
+    if (slides.length > 1) slides.forEach((s) => { gone.observe(s); here.observe(s); });
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as Element).closest<HTMLAnchorElement>("a[data-step]");
+      const to = a && reel.contains(a) && a.hash ? document.getElementById(a.hash.slice(1)) : null;
+      if (!to) return;
+      e.preventDefault();
+      show(to);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        const open = reel.querySelector<HTMLDetailsElement>("details.hold[open]");
+        if (open) { open.open = false; open.querySelector("summary")?.focus(); }
+        return;
+      }
+      if (slides.length < 2 || e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey || (e.target as Element).closest("input, textarea, select, video, [contenteditable]")) return;
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const i = slides.findIndex((s) => `#${s.id}` === location.hash);
+      const to = slides[Math.min(slides.length - 1, Math.max(0, (i < 0 ? 0 : i) + (e.key === "ArrowRight" ? 1 : -1)))];
+      if (to) { e.preventDefault(); show(to); }
+    };
+    const onToggle = (e: Event) => {
+      const d = e.target as HTMLDetailsElement;
+      if (d.matches?.("details.hold") && d.open) d.querySelector("textarea")?.focus({ preventScroll: true });
+    };
+    reel.addEventListener("click", onClick);
+    reel.addEventListener("toggle", onToggle, true);
+    document.addEventListener("keydown", onKey);
+    return () => { gone.disconnect(); here.disconnect(); reel.removeEventListener("click", onClick); reel.removeEventListener("toggle", onToggle, true); document.removeEventListener("keydown", onKey); };
+  }, [id]);
+  return null;
+}

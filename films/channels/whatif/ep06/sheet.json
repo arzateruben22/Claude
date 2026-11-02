@@ -1,0 +1,298 @@
+{
+ "duration": 73.2,
+ "fps": 30,
+ "preset": "envelope-working",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.8,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.8,
+   "t1": 16.8,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.8,
+   "t1": 25.8,
+   "energy": 0.65
+  },
+  {
+   "id": "why",
+   "t0": 25.8,
+   "t1": 39.0,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 39.0,
+   "t1": 52.8,
+   "energy": 0.75
+  },
+  {
+   "id": "work",
+   "t0": 52.8,
+   "t1": 59.4,
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 59.4,
+   "t1": 67.2,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 73.2,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.8
+  },
+  {
+   "t": 0.0,
+   "kind": "label",
+   "tag": "l-you"
+  },
+  {
+   "t": 4.3,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 5.333333333333333,
+   "kind": "counter.show",
+   "tag": "c-clock"
+  },
+  {
+   "t": 5.366666666666666,
+   "kind": "term.write",
+   "tag": "spine-0"
+  },
+  {
+   "t": 5.6194,
+   "kind": "counter.tick",
+   "tag": "hour-1"
+  },
+  {
+   "t": 6.4778,
+   "kind": "counter.tick",
+   "tag": "hour-4"
+  },
+  {
+   "t": 7.3361,
+   "kind": "counter.tick",
+   "tag": "hour-7"
+  },
+  {
+   "t": 8.0,
+   "kind": "term.write",
+   "tag": "spine-1"
+  },
+  {
+   "t": 8.1944,
+   "kind": "counter.tick",
+   "tag": "hour-10"
+  },
+  {
+   "t": 9.0528,
+   "kind": "counter.tick",
+   "tag": "hour-13"
+  },
+  {
+   "t": 9.9111,
+   "kind": "counter.tick",
+   "tag": "hour-16"
+  },
+  {
+   "t": 10.7694,
+   "kind": "counter.tick",
+   "tag": "hour-19"
+  },
+  {
+   "t": 11.6278,
+   "kind": "counter.tick",
+   "tag": "hour-22"
+  },
+  {
+   "t": 13.633333333333333,
+   "kind": "counter.show",
+   "tag": "c-amz"
+  },
+  {
+   "t": 13.633333333333333,
+   "kind": "term.write",
+   "tag": "spine-2"
+  },
+  {
+   "t": 16.8,
+   "kind": "section",
+   "id": "change",
+   "t1": 25.8
+  },
+  {
+   "t": 17.5,
+   "kind": "swell",
+   "tag": "squeeze",
+   "t1": 21.433333333333334
+  },
+  {
+   "t": 19.633333333333333,
+   "kind": "term.write",
+   "tag": "spine-3"
+  },
+  {
+   "t": 21.433333333333334,
+   "kind": "term.write",
+   "tag": "spine-4"
+  },
+  {
+   "t": 25.8,
+   "kind": "section",
+   "id": "why",
+   "t1": 39.0
+  },
+  {
+   "t": 31.766666666666666,
+   "kind": "label",
+   "tag": "l-ocean"
+  },
+  {
+   "t": 31.766666666666666,
+   "kind": "term.write",
+   "tag": "spine-5"
+  },
+  {
+   "t": 39.0,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 52.8
+  },
+  {
+   "t": 39.0,
+   "kind": "term.write",
+   "tag": "spine-6"
+  },
+  {
+   "t": 39.0,
+   "kind": "arrive",
+   "tag": "macro"
+  },
+  {
+   "t": 44.2,
+   "kind": "term.write",
+   "tag": "spine-7"
+  },
+  {
+   "t": 45.2,
+   "kind": "answer.box",
+   "tag": "spine-8",
+   "t1": 45.7
+  },
+  {
+   "t": 47.733333333333334,
+   "kind": "term.write",
+   "tag": "spine-9"
+  },
+  {
+   "t": 52.8,
+   "kind": "section",
+   "id": "work",
+   "t1": 59.4
+  },
+  {
+   "t": 52.949999999999996,
+   "kind": "term.write",
+   "tag": "work-1,400 km³ ÷ 510 million km²"
+  },
+  {
+   "t": 53.63333333333333,
+   "kind": "term.write",
+   "tag": "work-upper bound: 577,000 km³/yr"
+  },
+  {
+   "t": 57.93333333333333,
+   "kind": "term.write",
+   "tag": "work-drier: 486,000 km³/yr"
+  },
+  {
+   "t": 59.4,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 67.2
+  },
+  {
+   "t": 59.4,
+   "kind": "term.write",
+   "tag": "spine-10"
+  },
+  {
+   "t": 64.23333333333333,
+   "kind": "swell",
+   "tag": "storm",
+   "t1": 66.3
+  },
+  {
+   "t": 65.06666666666666,
+   "kind": "label",
+   "tag": "l-storm"
+  },
+  {
+   "t": 67.3,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.1,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 17.1,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 26.1,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 39.3,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.1,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 59.7,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "file": "vo/08.wav"
+  }
+ ]
+}

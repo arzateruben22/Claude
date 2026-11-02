@@ -1,0 +1,1002 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Would the Earth move? If all of us jumped, at once.",
+   "heard": "Would the earth move? If all of us jumped at once.",
+   "words": [
+    {
+     "w": "Would",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.14,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.25,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "move?",
+     "start": 0.52,
+     "end": 1.056,
+     "heard": true,
+     "end_asr": 1.36
+    },
+    {
+     "w": "If",
+     "start": 1.675,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 1.98,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.185,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "us",
+     "start": 2.35,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "jumped,",
+     "start": 2.68,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.2,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 3.355,
+     "end": 4.16,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "When you jump, you push the ground away, and the ground is the whole planet. So gather everyone into one crowd, all eight billion, and jump together.",
+   "heard": "When you jump you push the ground away and the ground is the whole planet. So gather everyone into one crowd, all eight billion, and jump together.",
+   "words": [
+    {
+     "w": "When",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.335,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "jump,",
+     "start": 0.365,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.805,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 1.03,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.375,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 1.495,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "away,",
+     "start": 1.95,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.505,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.74,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 2.78,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.38,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.575,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 3.76,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "planet.",
+     "start": 4.02,
+     "end": 4.732,
+     "heard": true,
+     "end_asr": 5.12
+    },
+    {
+     "w": "So",
+     "start": 5.135,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "gather",
+     "start": 5.42,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 5.91,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 6.49,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.66,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "crowd,",
+     "start": 7.03,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 7.82,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 8.16,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "billion,",
+     "start": 8.43,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.195,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "jump",
+     "start": 9.345,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 9.79,
+     "end": 10.48,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "For about half a second we're all in the air, and the planet, pushed the other way, drops away beneath our feet.",
+   "heard": "For about half a second we're all in the air and the planet, pushed the other way, drops away beneath our feet.",
+   "words": [
+    {
+     "w": "For",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.3,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 0.57,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.95,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "second",
+     "start": 1.18,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "we're",
+     "start": 1.615,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 1.87,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.255,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.49,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "air,",
+     "start": 2.57,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.165,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.395,
+     "end": 3.445,
+     "heard": true
+    },
+    {
+     "w": "planet,",
+     "start": 3.425,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "pushed",
+     "start": 4.095,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.46,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "other",
+     "start": 4.64,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "way,",
+     "start": 5.005,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "drops",
+     "start": 5.515,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "away",
+     "start": 5.98,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "beneath",
+     "start": 6.565,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "our",
+     "start": 6.855,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "feet.",
+     "start": 7.18,
+     "end": 7.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "It sounds like it should knock the planet off course. But the push is shared out by weight, and the Earth outweighs all of us ten trillion times over.",
+   "heard": "It sounds like it should knock the planet off course. But the push is shared out by weight and the earth outweighs all of us ten trillion times over.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "sounds",
+     "start": 0.185,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.73,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.77,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "should",
+     "start": 0.87,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "knock",
+     "start": 1.085,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.425,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 1.49,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "off",
+     "start": 2.015,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "course.",
+     "start": 2.65,
+     "end": 3.002,
+     "heard": true,
+     "end_asr": 3.36
+    },
+    {
+     "w": "But",
+     "start": 3.4,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.61,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 3.725,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.155,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "shared",
+     "start": 4.495,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 4.76,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 5.14,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "weight,",
+     "start": 5.445,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.08,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.335,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 6.41,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "outweighs",
+     "start": 6.875,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 7.565,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.93,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "us",
+     "start": 7.96,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 8.285,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "trillion",
+     "start": 8.645,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 9.275,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "over.",
+     "start": 9.795,
+     "end": 10.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "So the whole planet moves a distance three thousand times smaller than a single atom. And when we land, it settles right back where it was.",
+   "heard": "So the whole planet moves a distance three thousand times smaller than a single atom. And when we land, it settles right back where it was.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.415,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.445,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 0.74,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 1.275,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.765,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "distance",
+     "start": 1.925,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 2.73,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 3.08,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 3.685,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "smaller",
+     "start": 4.165,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 5.06,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.29,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 5.5,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "atom.",
+     "start": 5.95,
+     "end": 6.482,
+     "heard": true,
+     "end_asr": 6.88
+    },
+    {
+     "w": "And",
+     "start": 6.88,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 6.925,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 7.365,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "land,",
+     "start": 7.395,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 7.94,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "settles",
+     "start": 8.135,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "right",
+     "start": 8.715,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 9.13,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 9.44,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 9.68,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "was.",
+     "start": 9.71,
+     "end": 10.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Jump higher, or count us lighter, and it stays thousands of times smaller than an atom.",
+   "heard": "Jump higher or count us lighter, and it stays thousands of times smaller than an atom.",
+   "words": [
+    {
+     "w": "Jump",
+     "start": 0.095,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "higher,",
+     "start": 0.52,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 1.2,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 1.47,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "us",
+     "start": 1.885,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "lighter,",
+     "start": 2.115,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.975,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.17,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 3.32,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "thousands",
+     "start": 3.795,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.53,
+     "end": 4.58,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 4.615,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "smaller",
+     "start": 4.93,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 5.725,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.995,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "atom.",
+     "start": 6.075,
+     "end": 6.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So yes, the Earth moves when we jump. It just never notices.",
+   "heard": "So yes the earth moves when we jump. It just never notices.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "yes,",
+     "start": 0.35,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.69,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.845,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 1.145,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 1.61,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 1.86,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "jump.",
+     "start": 1.89,
+     "end": 2.493,
+     "heard": true,
+     "end_asr": 2.88
+    },
+    {
+     "w": "It",
+     "start": 2.89,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 3.13,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 3.45,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "notices.",
+     "start": 3.72,
+     "end": 4.96,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: what if a whole day's rain fell in one second?",
+   "heard": "Next envelope, what if a whole day's rain fell in one second?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.485,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 1.38,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 1.75,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.78,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 1.95,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "day's",
+     "start": 2.285,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "rain",
+     "start": 2.61,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "fell",
+     "start": 3.04,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.435,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.65,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "second?",
+     "start": 4.0,
+     "end": 4.48,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep05/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

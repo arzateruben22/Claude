@@ -17,7 +17,7 @@
   - "Kept alive" / "a layer that died for it": a reframe of the barrier's role in water balance; check it reads as
     figurative and not as a medical claim.
 - **No advice, no diagnosis:** the film describes biology only. Confirm nothing reads as telling a viewer what to do.
-- **Skin tones:** one medium tone for the whole film (bible §1: one tone per episode, rotating across the season), so
+- **Skin tones:** one medium tone for the whole film (bible §1: one tone per episode, rotating across the season; owner-approved 2 Nov), so
   no tone is tied to any line about risk or illness. Check it reads that way.
 
 ## Every episode

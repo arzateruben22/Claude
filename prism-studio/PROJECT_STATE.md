@@ -1,11 +1,27 @@
 # Project state
 
-_Updated 2026-10-26._ The code for stages A to E is built and tested. What's left needs the owner: a domain and a
+_Updated 2026-11-02._ The code for stages A to E is built and tested. What's left needs the owner: a domain and a
 server, developer apps at Google, TikTok and Meta, the 11 accounts, and a first private test upload.
 
 **Checks today:** `tsc` clean; `next build` clean; 279 Vitest tests pass (one more, the real lesson build, runs only
 when asked: `LESSON_E2E=1`). The screens were checked in Chromium at 390 px and 1440 px: no sideways scroll,
 no page errors, no failed requests. `npm run preview` retakes the gallery in `docs/preview-gallery/`.
+
+## Layout round 2 (done, `docs/LAYOUT-BRIEF.md`)
+- Goal 1, phone-first Review (done): Review and the episode page are a full-screen vertical player on a phone (swipe or
+  ‹ ›, switches, Hold and Approve at the thumb, text and sources below); desktop keeps the cards. Works without
+  JavaScript. Screenshots: `docs/preview-gallery/review-*` and `episode-*` (before/after).
+- Goal 2, the two new channels' identities (done): Outer Layer's light slide and Back of the Envelope's graphite and
+  marker on the wall, the strip and their screens; final colours and names (migration 0005). Screenshots:
+  `identities-wall-*`, `outer-layer-*`, `envelope-*`.
+- Goal 3, season progress (done): "Season 1 · 6 of 6 ready" and a segment per episode on every monitor and channel
+  screen, from the database; "Season 1 in production" with the six planned titles for the two new channels.
+  Screenshots: `season-*`.
+- Goal 4, phone polish (done): safe areas (checked with an emulated notch and home bar), the installed-app look, tap
+  targets (none under 44 px on the screens checked), type scale and rhythm, the phone wall's layout, a phone on its
+  side. Screenshots: `phone-notch-*`, `phone-landscape-*`, `season-wall-phone-*`.
+- Left as they are: long ledes on some screens (Library, Analytics) push content down on a phone; the owner may want
+  them shortened. Settings titles its panels in the sans, unlike the serif section titles elsewhere.
 
 ## Stage A: foundation (done)
 - Schema, migrations and seed: 5 channels, 11 destinations, 5 creations, 40 challenges and quests, 8 milestone

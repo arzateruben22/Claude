@@ -1,0 +1,500 @@
+{
+ "compose_s": 9.6,
+ "master_s": 23.0,
+ "master": {
+  "gain_db": 3.35,
+  "iterations": 3,
+  "lufs": -14.08,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.07,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.8,
+   "lra": 4.7
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "answer.box": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "arrive": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.show": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.tick": {
+    "n": 22,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 11,
+    "max_ms": 1.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 5,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 1,
+    "max_ms": 36.0,
+    "median_ms": 36.0,
+    "slow": true,
+    "pass": true
+   },
+   "term.write": {
+    "n": 12,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 4.2667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-4",
+    "show": 5.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-tick",
+    "show": 5.0667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-slip",
+    "show": 5.5333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-0",
+    "show": 5.8333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-5",
+    "show": 6.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-6",
+    "show": 7.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-7",
+    "show": 8.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-8",
+    "show": 9.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-9",
+    "show": 10.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-1",
+    "show": 10.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-10",
+    "show": 11.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-11",
+    "show": 12.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "slip-12",
+    "show": 13.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 15.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "fly",
+    "show": 15.1667,
+    "method": "shape",
+    "err_ms": -36.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "long-slip",
+    "show": 19.1333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-dots",
+    "show": 19.5667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-3",
+    "show": 21.8667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 24.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-4",
+    "show": 27.9667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-harper",
+    "show": 28.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-1",
+    "show": 28.5,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-2",
+    "show": 29.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-3",
+    "show": 29.5333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-4",
+    "show": 30.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-5",
+    "show": 30.5333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-6",
+    "show": 31.0667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-7",
+    "show": 31.5667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-8",
+    "show": 32.1,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-9",
+    "show": 32.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-10",
+    "show": 33.1,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-11",
+    "show": 33.6333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-12",
+    "show": 34.1333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "week-13",
+    "show": 34.6333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-summer",
+    "show": 36.8,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-5",
+    "show": 36.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 39.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-6",
+    "show": 40.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "c-years",
+    "show": 40.2,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "answer.box",
+    "tag": "spine-7",
+    "show": 45.3,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-naive",
+    "show": 45.4,
+    "method": "rise",
+    "err_ms": 1.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-life",
+    "show": 46.9,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "life-1",
+    "show": 46.9,
+    "method": "rise",
+    "err_ms": -1.0
+   },
+   {
+    "kind": "label",
+    "tag": "life-2",
+    "show": 47.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "life-3",
+    "show": 47.6,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-8",
+    "show": 47.7333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "life-4",
+    "show": 47.9333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "life-5",
+    "show": 48.3,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 53.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-10\u2079 numbers \u00d7 \u2248 21 syllables \u00f7 2.6 a second, 16 h a day",
+    "show": 53.5667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-never sleep",
+    "show": 53.7,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-count twice as fast",
+    "show": 55.2333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-British \u201chundred and\u201d",
+    "show": 57.4667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 59.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-9",
+    "show": 61.9333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 66.6667,
+    "method": "rise",
+    "err_ms": -0.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -27.1,
+  "dialog_lufs": -13.7,
+  "gap_lu": 13.4,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.88,
+  "mono_loss_db": 0.17,
+  "dialog_mono_loss_db": 0.07,
+  "pass": true
+ }
+}

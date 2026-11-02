@@ -26,7 +26,8 @@ doing it wrong".
 - Skin of every tone, across the season: each episode's whole world is drawn in **one** melanin level, and the level
   rotates episode to episode (No. 001 medium, 002 light, 003 deep, then around again). Never change tone inside an
   episode's story: a tone change on a line about risk, behaviour or illness reads as linking that tone to it (the
-  No. 002 review caught a switch to deep skin on "real people spread less"; 2 Nov).
+  No. 002 review caught a switch to deep skin on "real people spread less"; 2 Nov). **Owner's decision:** approved
+  ("OK", 2 Nov ~03:10 UTC). The one exception is No. 005, whose subject is tone: it shows several tones side by side.
 - Nothing of Lumevina (the client's skincare studio, `lumevina/`, `films/skin-school-tiktok/`): not
   its look (black, rose and gold; glass bells), not its narrator (af_heart), products or wording.
   Lumevina's Skin School already covers "why does a pore clog", so this channel does not.

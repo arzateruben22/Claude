@@ -8,6 +8,7 @@
 // Idempotent: an episode whose cover and thumbnail are both newer than its mp4 is skipped (--force redoes it); only its
 // small copy is (re)made when missing or older than the cover.
 //   npm run covers [-- films/channels/physics/ep01 …] [--force] [--debug: print every candidate's score] [--dry: pick, don't draw]
+//     [--at=<seconds>: with one episode, use that frame instead of the automatic pick (e.g. when the best-scoring frame clips a label)]
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -19,8 +20,10 @@ import { CHANNELS } from "../src/domain/catalog";
 const ROOT = path.resolve(process.env.FILMS_REPO_ROOT || "..");
 const args = process.argv.slice(2);
 const force = args.includes("--force"), debug = args.includes("--debug"), dry = args.includes("--dry");
+const atArg = args.find((a) => a.startsWith("--at=")), at = atArg ? Number(atArg.slice(5)) : null;
 const dirs = args.filter((a) => !a.startsWith("--")).length ? args.filter((a) => !a.startsWith("--")).map((d) => path.resolve(ROOT, d))
   : CHANNELS.filter((c) => c.filmsPath).flatMap((c) => fs.existsSync(path.join(ROOT, c.filmsPath!)) ? fs.readdirSync(path.join(ROOT, c.filmsPath!)).filter((e) => /^ep\d+$/.test(e)).sort().map((e) => path.join(ROOT, c.filmsPath!, e)) : []);
+if (at != null && (!Number.isFinite(at) || dirs.length !== 1)) { console.error("--at=<seconds> takes one episode folder"); process.exit(2); }
 const missing = dirs.filter((d) => !fs.existsSync(d));   // paths are relative to the films repo root (FILMS_REPO_ROOT), e.g. films/channels/space/ep01
 if (missing.length) { console.error(`no such episode folder: ${missing.join(", ")} (give paths from the repo root, e.g. films/channels/space/ep01)`); process.exit(1); }
 
@@ -126,6 +129,12 @@ function analyse(px: Buffer, bg: number[], hud: number[]) {
   return { score, box, content, parts };
 }
 const DEFAULT_BOX: Box = { x0: 108, x1: 972, y0: 300, y1: 1100 };
+
+/** A frame chosen by hand (--at): analysed like a candidate, so the title still sits clear of the picture. */
+function pickAt(mp4: string, theme: Theme, t: number): Pick {
+  const a = analyse(grab(mp4, t) as Buffer, rgb(theme.tokens.bg ?? "#000000"), hudHues(theme));
+  return { t, why: "chosen by hand", score: a.score, box: a.box, content: a.content };
+}
 
 function pickFrame(mp4: string, film: Film, theme: Theme, label: string): Pick {
   const bg = rgb(theme.tokens.bg ?? "#000000"), hud = hudHues(theme);
@@ -298,7 +307,7 @@ try {
     const theme = JSON.parse(fs.readFileSync(themeFile, "utf8")) as Theme;
     const film = (fs.existsSync(path.join(dir, "film.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "film.json"), "utf8")) : {}) as Film;
     const title = film.title?.title ?? name, series = film.title?.series ?? theme.id ?? "";
-    const pick = pickFrame(video, film, theme, name);
+    const pick = at != null ? pickAt(video, theme, at) : pickFrame(video, film, theme, name);
     if (dry) { console.log(`${rel}: would use ${pick.t != null ? `frame ${pick.t.toFixed(2)} s (${pick.why})` : "the poster"}`); continue; }
     let frame = path.join(outDir, `${name}-9x16.jpg`);
     if (pick.t != null) { frame = path.join(tmp, `${name}-frame.png`); grab(video, pick.t, frame); }

@@ -21,9 +21,9 @@ export const CHANNELS: {
   voice: { narrator: string; provider: string }; editorial: Editorial; filmsPath: string | null; creation: { key: string; name: string };
 }[] = [
   {
-    topic: "skincare", slug: "skincare", name: "Outer Layer", provisional: true,
+    topic: "skincare", slug: "skincare", name: "Outer Layer", provisional: false,
     tagline: "Skin biology, ingredients and routines, with the evidence on the screen.",
-    color: "#D99A92", colorInk: "#8A4A44", label: "SKIN",
+    color: "#00685F", colorInk: "#00685F", label: "SKIN",
     voice: { narrator: "TBD: auditioning (not af_heart: that voice is Lumevina's)", provider: "kokoro" },
     editorial: {
       audience: "Curious adults who want to understand their skin, not be sold to.",
@@ -33,7 +33,7 @@ export const CHANNELS: {
       examples: ["Why does a pore clog?", "Does SPF 100 beat SPF 50?"],
       avoid: ["inferring behaviour from appearance", "promised results", "brand endorsements without disclosure", "Lumevina's look (black, rose and gold; glass bells)"],
     },
-    filmsPath: null, creation: { key: "glass_garden", name: "The Glass Garden" },
+    filmsPath: "films/channels/skincare", creation: { key: "glass_garden", name: "The Glass Garden" },
   },
   {
     topic: "physics", slug: "physics", name: "Rest Frame", provisional: true,
@@ -81,9 +81,9 @@ export const CHANNELS: {
     filmsPath: "films/channels/space", creation: { key: "pocket_universe", name: "The Pocket Universe" },
   },
   {
-    topic: "whatif", slug: "whatif", name: "Back of the Envelope", provisional: true,
+    topic: "whatif", slug: "whatif", name: "Back of the Envelope", provisional: false,
     tagline: "Impossible questions, honest assumptions, real calculations.",
-    color: "#F2A93B", colorInk: "#8A5A00", label: "WHAT IF?",
+    color: "#EB63FF", colorInk: "#A21CAF", label: "WHAT IF?",
     voice: { narrator: "TBD: auditioning", provider: "kokoro" },
     editorial: {
       audience: "Curious adults and teens who like a thought experiment done properly.",
@@ -93,9 +93,16 @@ export const CHANNELS: {
       examples: ["What if every cat meowed at the same time?"],
       avoid: ["presenting a scenario as a prediction", "hidden assumptions", "fake precision"],
     },
-    filmsPath: null, creation: { key: "rift_dragon", name: "The Rift Dragon" },
+    filmsPath: "films/channels/whatif", creation: { key: "rift_dragon", name: "The Rift Dragon" },
   },
 ];
+
+/** The planned first season of a channel that has nothing imported yet: shown as "Season 1 in production" with these
+ *  titles until its series is in the database (the import's slate then takes over). Titles only, never counts. */
+export const PLANNED_SEASONS: Record<string, { label: string; titles: string[] }> = {
+  skincare: { label: "Season 1", titles: ["The dead layer", "Does SPF 100 beat SPF 50?", "Bath fingers", "What a tan is", "Same cells, every colour", "Goosebumps"] },
+  whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
+};
 
 export const CHALLENGES: Record<Topic, { tier: "intro" | "series" | "advanced" | "masterwork"; key: string; title: string; description: string; check: string }[]> = {
   skincare: [

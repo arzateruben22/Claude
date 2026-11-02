@@ -1,0 +1,191 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep06/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A day's rain, all at once? Every drop, in one second.",
+   "stars": [
+    "once"
+   ],
+   "phonemes": "ɐ dˈeɪz ɹˈeɪn, ˈɔːl ɐtwˈʌns? ˈɛvɹi dɹˈɑːp, ɪn wˈʌn sˈɛkənd.",
+   "speeds": [
+    0.84,
+    0.7
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.4543,
+     2.0543
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.142,
+   "sha256": "6c7706d7bed071f8892bf46ce78e1a9822f7b3bd618cc98b0bf8797929eb606a"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "On an ordinary day, the sky lets go of nearly a Great Lake, spread so thin across the hours you barely notice. It falls like eighty Amazons pouring from the clouds.",
+   "stars": [
+    "clouds"
+   ],
+   "phonemes": "ˌɔn ɐn ˈɔːɹdɪnˌɛɹi dˈeɪ, ðə skˈaɪ lˈɛts ɡˌoʊ ʌv nˌɪɹli ɐ ɡɹˈeɪt lˈeɪk, spɹˈɛd sˌoʊ θˈɪn əkɹˌɑːs ðɪ ˈaʊɚz juː bˈɛɹli nˈoʊɾɪs. ɪt fˈɔːlz lˈaɪk ˈeɪɾi ˈæmɐzˌɑːnz pˈɔːɹɪŋ fɹʌmðə klˈaʊdz.",
+   "speeds": [
+    0.82,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.3018,
+     7.6818
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 11.275,
+   "sha256": "776bfac492560dc95cdd9cecfb36a3cd54cea86f4817f8d1f0b815efe8b06983"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now squeeze that whole day into a single second, and the sky pours like seven million Amazon rivers, all at once.",
+   "stars": [
+    "once"
+   ],
+   "phonemes": "nˈaʊ skwˈiːz ðæt hˈoʊl dˈeɪ ˌɪntʊ ɐ sˈɪŋɡəl sˈɛkənd, ænd ðə skˈaɪ pˈɔːɹz lˈaɪk sˈɛvən mˈɪliən ˈæmɐzˌɑːn ɹˈɪvɚz, ˈɔːl ɐtwˈʌns.",
+   "speeds": [
+    0.84
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 7.701,
+   "sha256": "d67addc46d113d8e7a3ad741055e174146234c0a3d6d2e1b7706021ecabddda2"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It sounds like the end of the world, a flood with nowhere to run. But that rain lands where it always lands, and most of it on the open ocean.",
+   "stars": [
+    "ocean"
+   ],
+   "phonemes": "ɪt sˈaʊndz lˈaɪk ðɪ ˈɛnd ʌvðə wˈɜːld, ɐ flˈʌd wɪð nˈoʊwɛɹ tə ɹˈʌn. bˌʌt ðæt ɹˈeɪn lˈændz wˌɛɹ ɪɾ ˈɔːlweɪz lˈændz, ænd mˈoʊst əv ɪɾ ɔnðɪ ˈoʊpən ˈoʊʃən.",
+   "speeds": [
+    0.74,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.3156,
+     4.6956
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 10.792,
+   "sha256": "c668dbf6c56a29621e4d3f714a445117d863c008519a27f9a480f6dafab19993"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Spread over the whole planet, a day of the world's weather comes down as a layer about three millimeters deep. About two coins, stacked.",
+   "stars": [
+    "deep"
+   ],
+   "phonemes": "spɹˈɛd ˌoʊvɚ ðə hˈoʊl plˈænɪt, ɐ dˈeɪ ʌvðə wˈɜːldz wˈɛðɚ kˈʌmz dˌaʊn æz ɐ lˈeɪɚɹ ɐbˌaʊt θɹˈiː mˈɪlɪmˌiːɾɚz dˈiːp. ɐbˌaʊt tˈuː kˈɔɪnz, stˈækt.",
+   "speeds": [
+    0.78,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.7699,
+     8.1499
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 9.94,
+   "sha256": "0a9509763e81a48a08706365d4e91aa40e1367baa8cb089e4350abe8b752121b"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Use a wetter estimate of the world's rain, and it barely changes the depth.",
+   "stars": [
+    "depth"
+   ],
+   "phonemes": "jˈuːs ɐ wˈɛɾɚɹ ˈɛstᵻmət ʌvðə wˈɜːldz ɹˈeɪn, ænd ɪt bˈɛɹli tʃˈeɪndʒᵻz ðə dˈɛpθ.",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 5.452,
+   "sha256": "623aed74597acd7146999e473a7c97e607073abec4e6f8f102e2f65ebd37375f"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So the whole sky's rain is a thin film, spread wide. A storm is where it piles up.",
+   "stars": [
+    "up"
+   ],
+   "phonemes": "sˌoʊ ðə hˈoʊl skˈaɪz ɹˈeɪn ɪz ɐ θˈɪn fˈɪlm, spɹˈɛd wˈaɪd. ɐ stˈɔːɹm ɪz wˌɛɹ ɪt pˈaɪlz ˈʌp.",
+   "speeds": [
+    0.74,
+    0.66
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.8782,
+     4.2582
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 6.602,
+   "sha256": "b51e27c7ef103fc73b8b2a72f58f4c0d3d0eb3a56d9800c1be29ad9c4fd81ca2"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: how long to walk to the Moon?",
+   "stars": [
+    "Moon"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: hˌaʊ lˈɔŋ tə wˈɔːk tə ðə mˈuːn?",
+   "speeds": [
+    0.66
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.659,
+   "sha256": "e3147f453530adb5144fa9f20039a0a308f9764f60264f16ce04eabe89aa5044"
+  }
+ ]
+}
