@@ -41,13 +41,13 @@ SHOTS = [{"at": 0.0, "name": "uv"}, {"at": t_flight, "name": "flight"}, {"at": t
          {"at": B["why"]["t0"], "name": "pair"}, {"at": B["whoa"]["t0"], "name": "rupture"},
          {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "rise"}, {"at": t_uv2, "name": "uv2"}]
 
-CUE = {"new": A("vo01:new?"), "clear1": A("vo01:clear."), "photo": A("vo02:photo"), "quarter": A("vo02:quarter"), "clear2": A("vo02:clear."),
-       "underneath": A("vo02:underneath?"), "beneath": A("vo03:beneath"), "defence": A("vo03:defence"), "already": A("vo03:already"), "immune": A("vo03:immune"),
+CUE = {"new": A("vo01:new?"), "clear1": A("vo01:clear."), "photo": A("vo02:photo"), "quarter": A("vo02:four"), "clear2": A("vo02:clear."),
+       "underneath": A("vo02:underneath?"), "beneath": A("vo03:Beneath"), "defence": A("vo03:defence"), "already": A("vo03:already"), "immune": A("vo03:immune"),
        "crowding": A("vo03:crowding"), "thickly": A("vo03:thickly"), "spot3": A("vo03:spot."), "infection": A("vo04:infection."),
-       "bacterium": A("vo04:bacterium"), "without": A("vo04:without."), "answers": A("vo04:answers"), "flood": A("vo05:flood"),
-       "wall": A("vo05:wall"), "give": A("vo05:give"), "deeper": A("vo05:deeper."), "squeeze": A("vo05:squeeze"), "further": A("vo05:further,"),
-       "mark": A("vo05:mark"), "pus": A("vo06:pus"), "small": A("vo06:small"), "ten": A("vo06:ten"), "paper": A("vo06:paper's"),
-       "no": A("vo07:No."), "end": A("vo07:end"), "sight": A("vo07:sight."), "spots4": A("vo04:spots"), "likely": A("vo05:likely.")}
+       "bacterium": A("vo04:bacterium"), "without": A("vo04:more."), "answers": A("vo04:answer."), "flood": A("vo05:flood"),
+       "wall": A("vo05:wall"), "give": A("vo05:give"), "deeper": A("vo05:deeper."), "squeeze": A("vo05:Each"), "further": A("vo05:marrow"),
+       "mark": A("vo05:several"), "pus": A("vo06:pus"), "small": A("vo06:small"), "ten": A("vo06:ten"), "paper": A("vo06:paper's"),
+       "no": A("vo07:No:"), "end": A("vo07:fight"), "sight": A("vo07:sight,"), "spots4": A("vo04:acne"), "likely": A("vo05:Earth.")}
 # the photo stack: one flip back every ~0.9 s from "photo" to "clear", six photos (−2 … −12 weeks)
 FLIPS = [round(CUE["photo"] + k * (CUE["clear2"] - CUE["photo"]) / 6, 3) for k in range(1, 7)]
 
