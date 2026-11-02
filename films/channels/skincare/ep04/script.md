@@ -16,8 +16,8 @@ ladder → back out to the basal row and a melanocyte → the parasols across a 
 
 Honesty, on screen: the section is "simplified"; the DNA ladder is a "model" at "scale ×N"; the chemical
 message is an "illustration"; the days of tanning run under "time ×N"; SPF 3–4 is an "estimate". The skin is
-drawn in three melanin levels (medium in the hook and the whoa, deep at the pigment cell, light in the mice pair) and every tone
-tans in the picture; nothing about any one tone is said or implied. No advice: the film says what a tan is,
+drawn in one melanin level (medium) for the whole episode (bible §1, 30 Oct); nothing about any tone is
+said or implied. No advice: the film says what a tan is,
 never what to do.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence

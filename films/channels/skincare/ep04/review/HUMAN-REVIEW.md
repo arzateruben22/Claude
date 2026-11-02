@@ -14,8 +14,8 @@
      confirm the titles when opening the links.
 2. **Health-information rules.** TikTok and YouTube medical-misinformation policies: the film says what a tan is and
    never tells anyone what to do; no product, brand or ingredient is shown or named.
-3. **Skin tones.** Medium (hook, whoa, close), deep (the pigment cell, the tan forming) and light (the mice pair,
-   where the light skin tans). Check that nothing reads as a statement about any one tone.
+3. **Skin tone.** One melanin level (medium) for the whole episode, as the channel rotates tones across the season
+   (bible §1, 30 Oct). Check that nothing reads as a statement about any tone.
 4. **AI labelling.** The narrator is synthetic (Kokoro bf_isabella): turn on TikTok's AI-generated label and put
    "Narration: synthetic voice (AI)" in each post; the same on Reels and Shorts.
 5. **A listen.** Phone speaker and headphones. Words to check: ultraviolet, melanin, nucleus, parasol, "SPF three

@@ -17,8 +17,8 @@ ideas: an arm's skin at the mm rung → one follicle in section, its muscle and 
 our fine hairs → the stem cells at the bulge, lit by the nerve → back out to the bumps.
 
 Honesty, on screen: the follicle section is "simplified"; the fur is an "illustration"; the stem-cell finding is
-"in mice"; the hair width is "vellus: by definition < 30 µm". The skin is drawn in three melanin levels (deep in
-the hook, light in the follicle, medium in the close). No advice.
+"in mice"; the hair width is "vellus: by definition < 30 µm". The skin is drawn in one melanin level (deep) for
+the whole episode (bible §1, 30 Oct). No advice.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.

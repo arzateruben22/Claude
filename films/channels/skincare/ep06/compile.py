@@ -45,7 +45,7 @@ t_ours, t_nom, t_end = A("vo03:We", -0.2), A("vo05:Take", -0.2), A("vo08:That's"
 SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "follicle"}, {"at": B["change"]["t0"], "name": "fur"},
          {"at": t_ours, "name": "ours"}, {"at": B["why"]["t0"], "name": "bulge"}, {"at": B["whoa"]["t0"], "name": "cold"},
          {"at": t_nom, "name": "nomuscle"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.85, "follicle": 0.15, "fur": 0.15, "ours": 0.5, "bulge": 0.15, "cold": 0.15, "nomuscle": 0.15, "gauge": 0.15, "close": 0.85}
+TONE = {k: 0.9 for k in ("hook", "follicle", "fur", "ours", "bulge", "cold", "nomuscle", "gauge", "close")}   # bible §1 (30 Oct): one melanin level for the whole episode (006: deep)
 
 CUE = {
     "goose": A("vo01:goosebumps?"), "fur": A("vo01:fur."), "muscle": A("vo02:muscle,"), "cold": A("vo02:cold"),

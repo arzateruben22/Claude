@@ -51,8 +51,7 @@ SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "section
          {"at": B["change"]["t0"], "name": "cell"}, {"at": B["why"]["t0"], "name": "pair"}, {"at": t_dna2, "name": "dna2"},
          {"at": B["whoa"]["t0"], "name": "tan"}, {"at": t_field, "name": "field"}, {"at": B["toscale"]["t0"], "name": "gauge"},
          {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.45, "section": 0.45, "dna": 0.45, "cell": 0.95, "pair": 0.15, "dna2": 0.95, "tan": 0.95, "field": 0.45,
-        "gauge": 0.45, "close": 0.45}   # melanin 0–1 (bible §1: three tones; every tone tans: medium, deep, and light in the mice pair)
+TONE = {k: 0.5 for k in ("hook", "section", "dna", "cell", "pair", "dna2", "tan", "field", "gauge", "close")}   # bible §1 (30 Oct): one melanin level for the whole episode (004: medium)
 
 # ── the tanning clock (whoa): melanin climbs the branches into caps over about three days ──
 RATE = 60000.0                           # 3 days in 4.32 s

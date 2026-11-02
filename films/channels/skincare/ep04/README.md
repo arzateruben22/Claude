@@ -54,5 +54,5 @@ node kits/cinema/film/render.mjs --film $E --tier draft --assemble --audio $E/bu
 - The named subject wasn't the brightest thing → darker, larger caps; a p53 glow; rays fall at the cut face and what gets in glows (the channel's `rays.js`, as No. 002).
 - The mice pair didn't read → light tone, the one with p53 floods with melanin.
 - Caption breaks (hedge split from its number, "lacked that | guardian", "In under a", "would span |") → glued.
-- Tone implication (only light skin shown "letting UV through") → the field is the hook's medium tone; light skin appears only in the mice pair, where it tans.
+- Tone implication (only light skin shown "letting UV through") → and then the channel rule of 30 Oct: the whole episode is drawn in one melanin level (medium).
 - Badges: "model" on the field, "illustration" while caps form, one number for the nucleus (≈ 9 µm, estimate); duplicated counter/label text removed.
