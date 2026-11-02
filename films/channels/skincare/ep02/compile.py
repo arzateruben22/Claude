@@ -46,7 +46,7 @@ t_end = A("vo08:Next", -0.25)
 SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "ratio"}, {"at": A("vo03:Flip", -0.15), "name": "count"},
          {"at": A("vo04:look", -0.25), "name": "inside"}, {"at": B["whoa"]["t0"], "name": "thin"},
          {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.62, "ratio": 0.62, "count": 0.3, "inside": 0.62, "thin": 0.92, "gauge": 0.92, "close": 0.62}   # three tones (bible §1)
+TONE = {"hook": 0.18, "ratio": 0.18, "count": 0.18, "inside": 0.18, "thin": 0.18, "gauge": 0.18, "close": 0.18}   # one tone for the whole world (bible §1): light
 
 # the count: SPF 50 first, then 100 as the voice says it
 t_100 = A("vo03:hundred")

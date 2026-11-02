@@ -34,7 +34,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked.",
+  "sentence": "Flip it around, and both let only a thin sliver of that light through, so the bigger number blocks barely more.",
   "claim": "Under the idealised reading of SPF, a product transmits about 1/SPF of sunburning UV: SPF 50 about 2% (≈98% blocked), SPF 100 about 1% (≈99% blocked).",
   "source_url": "https://aad.org/news/aad-survey-shows-americans-need-sunscreen-education",
   "source_title": "AAD survey shows Americans need sunscreen education (American Academy of Dermatology)",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c4",
-  "sentence": "But look at what actually gets in: the bigger number lets in half as much, if the film is as thick as the lab's.",
+  "sentence": "But look at what actually gets in.",
   "claim": "Under the same idealisation, SPF 100 transmits about half the sunburning UV that SPF 50 does (1/100 vs 1/50), at the test application of 2 mg/cm².",
   "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
   "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c5",
-  "sentence": "But look at what actually gets in: the bigger number lets in half as much, if the film is as thick as the lab's.",
+  "sentence": "That's the real difference, as long as the film is as thick as the lab's.",
   "claim": "SPF is measured with 2 mg/cm² of product applied.",
   "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
   "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+  "sentence": "But real people, studies found, spread a quarter to half as much, and protection falls well below the label.",
   "claim": "Studies of real-world use find people apply about 0.39–1.0 mg/cm², roughly a fifth to a half of the 2 mg/cm² test amount.",
   "source_url": "https://doi.org/10.1111/phpp.12099",
   "source_title": "Petersen B, Wulf HC (2014). Application of sunscreen: theory and reality. Photodermatol Photoimmunol Photomed 30:96–101",
@@ -78,7 +78,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+  "sentence": "How far is still argued.",
   "claim": "Applying less than 2 mg/cm² gives an SPF well below the labelled value; whether the fall is roughly proportional or steeper (exponential) is disputed.",
   "source_url": "https://doi.org/10.1111/j.1365-2133.2006.07684.x",
   "source_title": "Faurschou A, Wulf HC (2007). The relation between sun protection factor and amount of sunscreen applied in vivo. Br J Dermatol 156:716–719",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c8",
-  "sentence": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+  "sentence": "That lab layer is about as thick as the dead layer under it.",
   "claim": "2 mg/cm² of a product with a density near 1 g/cm³ is a layer about 20 µm thick.",
   "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
   "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
@@ -100,7 +100,7 @@
  },
  {
   "id": "c9",
-  "sentence": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+  "sentence": "A fifth of a sheet of paper.",
   "claim": "The cheek's stratum corneum is about 17 µm (16.8 µm) and copy paper about 100 µm; 20 µm is about a fifth of the paper.",
   "source_url": "https://medicaljournals.se/acta/content/abstract/10.2340/00015555-0183",
   "source_title": "Egawa M, Hirao T, Takahashi M (2007). In vivo estimation of stratum corneum thickness … Acta Derm Venereol 87:4–8",
@@ -111,8 +111,8 @@
  },
  {
   "id": "c10",
-  "sentence": "So the bigger number doesn't block twice as much.",
-  "claim": "SPF 100 does not block twice as much UVB as SPF 50 (about 99% vs 98%) (restates c3).",
+  "sentence": "So the bigger number isn't twice the shield.",
+  "claim": "SPF 100 is not twice the protection of SPF 50 in share of UVB blocked (about 99% vs 98%) (restates c3).",
   "source_url": "https://aad.org/news/aad-survey-shows-americans-need-sunscreen-education",
   "source_title": "AAD survey shows Americans need sunscreen education (American Academy of Dermatology)",
   "accessed": "2026-10-30",
@@ -122,12 +122,23 @@
  },
  {
   "id": "c11",
-  "sentence": "It lets half as much in, when there's enough of it.",
+  "sentence": "It's half the light getting in, when there's enough of it.",
   "claim": "At the test thickness SPF 100 lets about half as much sunburning UV through as SPF 50; with too little product neither reaches its label (restates c4 and c7).",
   "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
   "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
   "accessed": "2026-10-30",
   "note": "Restates c4, c7. A dermatologist checks it reads as how the numbers work, not as advice.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "Half as much.",
+  "claim": "Under the same idealisation, SPF 100 transmits about half the sunburning UV that SPF 50 does (1/100 vs 1/50), at the test application of 2 mg/cm².",
+  "source_url": "https://federal-regs.com/title/21/part-352/352.3/",
+  "source_title": "21 CFR 352.3, Definitions (US sunscreen monograph): SPF, MED, 2 mg/cm² test application",
+  "accessed": "2026-10-30",
+  "note": "Restates c4 (computed: 1/100 ÷ 1/50 = 0.5).",
   "verified_via": "search excerpt",
   "status": "ok"
  }

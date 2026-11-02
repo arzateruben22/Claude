@@ -38,67 +38,67 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Flip it, and fifty lets through about a fiftieth of that light, a hundred about a hundredth, which is barely more blocked.",
+   "text": "Flip it around, and both let only a thin sliver of that light through, so the bigger number blocks barely more.",
    "stars": [
     "barely"
    ],
-   "phonemes": "flˈɪp ɪt, and fˈɪfti lˈɛts θɹuː ɐbˌaʊt ɐ fˈɪftiəθ ɒv ðat lˈaɪt, ɐ hˈʌndɹɪd ɐbˌaʊt ɐ hˈʌndɹədθ, wˌɪtʃ ɪz bˈeəli mˈɔː blˈɒkt.",
+   "phonemes": "flˈɪp ɪt ɐɹˈaʊnd, and bˈəʊθ lˈɛt ˈəʊnli ɐ θˈɪn slˈɪvəɹ ɒv ðat lˈaɪt θɹˈuː, sˌəʊ ðə bˈɪɡə nˈʌmbə blˈɒks bˈeəli mˈɔː.",
    "speed": 0.76,
    "file": "03.wav",
-   "dur": 8.414,
-   "sha256": "73d8b1f7cff89e59c8328bb21df549e3cb59118b4f2aedc207e2efa6c1917b6b"
+   "dur": 7.735,
+   "sha256": "72920d6bef49adbdc32d6dba08f00da6d5dd3f19dd35f1c813c8923eb4927fc9"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "But look at what actually gets in: the bigger number lets in half as much, if the film is as thick as the lab's.",
+   "text": "But look at what actually gets in. Half as much. That's the real difference, as long as the film is as thick as the lab's.",
    "stars": [
     "in"
    ],
-   "phonemes": "bˌʌt lˈʊk at wɒt ˈaktʃuːəli ɡˈɛts ˈɪn: ðə bˈɪɡə nˈʌmbə lˈɛts ɪn hˈɑːf az mˈʌtʃ, ɪf ðə fˈɪlm ɪz az θˈɪk az ðə lˈabz.",
+   "phonemes": "bˌʌt lˈʊk at wɒt ˈaktʃuːəli ɡˈɛts ˈɪn. hˈɑːf az mˈʌtʃ. ðats ðə ɹˈiəl dˈɪfɹəns, az lˈɒŋ az ðə fˈɪlm ɪz az θˈɪk az ðə lˈabz.",
    "speed": 0.72,
    "file": "04.wav",
-   "dur": 8.512,
-   "sha256": "59269959e83d7f7faad52e789e2e82d6a1917eba960954b647bbbcd516d4e07e"
+   "dur": 9.362,
+   "sha256": "a8df600c4645c9b0d326409faa142e45f53e9add97ac0113b00636aeffc89e21"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Real people, studies found, spread a quarter to half as much as the lab, and protection falls well below the label, by an amount still argued over.",
+   "text": "But real people, studies found, spread a quarter to half as much, and protection falls well below the label. How far is still argued.",
    "stars": [
     "argued"
    ],
-   "phonemes": "ɹˈiəl pˈiːpəl, stˈʌdiz fˈaʊnd, spɹˈɛd ɐ kwˈɔːtə tə hˈɑːf az mˈʌtʃ az ðə lˈab, and pɹətˈɛkʃən fˈɔːlz wˈɛl bɪlˌəʊ ðə lˈeɪbəl, baɪ ɐn ɐmˈaʊnt stˈɪl ˈɑːɡjuːd ˈəʊvə.",
+   "phonemes": "bˌʌt ɹˈiəl pˈiːpəl, stˈʌdiz fˈaʊnd, spɹˈɛd ɐ kwˈɔːtə tə hˈɑːf az mˈʌtʃ, and pɹətˈɛkʃən fˈɔːlz wˈɛl bɪlˌəʊ ðə lˈeɪbəl. hˌaʊ fˈɑːɹ ɪz stˈɪl ˈɑːɡjuːd.",
    "speed": 0.82,
    "file": "05.wav",
-   "dur": 9.536,
-   "sha256": "475b510d71cbc8196cfe8a3badf1daa860260bd686c44ae0df9a6a3259325941"
+   "dur": 8.643,
+   "sha256": "b88f152860dda9cbd2453dfc52f92ffdd6bfc09d79ec2afbab6eca493a3d163f"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "That lab layer is about as thick as the dead layer under it, a fifth of a sheet of paper.",
+   "text": "That lab layer is about as thick as the dead layer under it. A fifth of a sheet of paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "ðat lˈab lˈeɪəɹ ɪz ɐbˌaʊt az θˈɪk az ðə dˈɛd lˈeɪəɹ ˈʌndəɹ ɪt, ɐ fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
+   "phonemes": "ðat lˈab lˈeɪəɹ ɪz ɐbˌaʊt az θˈɪk az ðə dˈɛd lˈeɪəɹ ˈʌndəɹ ɪt. ɐ fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
    "speed": 0.72,
    "file": "06.wav",
-   "dur": 7.246,
-   "sha256": "1f75d4674b5656276b674645d96c4154404990d827ff193a19b3ae6d304b9a4e"
+   "dur": 7.313,
+   "sha256": "b93977f06924f58a8bc23e5de504e808a603fb672f7ae49bf7b43320b94d5a0e"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So the bigger number doesn't block twice as much. It lets half as much in, when there's enough of it.",
+   "text": "So the bigger number isn't twice the shield. It's half the light getting in, when there's enough of it.",
    "stars": [
     "in"
    ],
-   "phonemes": "sˌəʊ ðə bˈɪɡə nˈʌmbə dˈʌzənt blˈɒk twˈaɪs az mˈʌtʃ. ɪt lˈɛts hˈɑːf az mˈʌtʃ ˈɪn, wˌɛn ðeəz ɪnˈʌf ɒv ɪt.",
+   "phonemes": "sˌəʊ ðə bˈɪɡə nˈʌmbəɹ ˌɪzənt twˈaɪs ðə ʃˈiːld. ɪts hˈɑːf ðə lˈaɪt ɡˌɛtɪŋ ˈɪn, wˌɛn ðeəz ɪnˈʌf ɒv ɪt.",
    "speed": 0.72,
    "file": "07.wav",
-   "dur": 7.206,
-   "sha256": "6ee642b74b1291fa1690f6a5b54243af5810743257363f181318ec5d4e0b1b8f"
+   "dur": 6.961,
+   "sha256": "ebf77b9e78e9ac520fdfb2d11e94d2311474897967947206837902b95d289e86"
   },
   {
    "id": "vo08",
