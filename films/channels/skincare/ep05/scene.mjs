@@ -37,6 +37,7 @@ const hexLin = (h) => { const x = h.replace("#", ""); return [0, 2, 4].map((i) =
 const MED = hexLin(TONES[1][0]).map((v) => v * 0.95), CAST = [0.5, 0.52, 0.56];   // bible §1: 005 is the medium tone; the cast is grey silicone
 const T = createTerrain({ size: 80, segs: 320, seed: 23, spots: 60, half: "right" });
 scene.add(T.group);
+const filmOf = () => T.group.children.find((o) => o.material && o.material.clearcoat === 1);
 const seam = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.03, 80), new THREE.MeshBasicMaterial({ color: new THREE.Color(...hexLin("#5FF2E8")), transparent: true, opacity: 0.7 }));
 seam.position.y = 0.42; T.group.add(seam);
 const TOWN = createTown({ x: BIO.tx, n: 120, seed: 5 });
@@ -56,7 +57,7 @@ const titleEl = hud.title(FILM.title);
 const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
-  const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
+  const roll = c.roll, el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: (t) => (roll ? roll[0] + (roll[1] - roll[0]) * E.inout2(seg(t, roll[2], roll[3])) : 0), fmt: (v) => (roll ? `${Math.round(v)}` : c.text), lit: () => true });   // "roll": the year counts up through the ten more years
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
 }
 for (const L of FILM.labels) {
@@ -90,7 +91,7 @@ const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body,
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
   <div class="sub" style="font:500 2.8vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
   { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "2.4vmin 3vmin" });
-const rows = mel.querySelector(".rows"), mhead = rows.previousElementSibling, scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
+const rows = mel.querySelector(".rows"), mhead = rows.previousElementSibling, mfoot = mel.querySelector(".sub"), scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
 hudRoot.prepend(veil);
@@ -108,7 +109,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const isHand = ["hand", "cast", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
+  const isHand = ["hand", "cast", "burn", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
   T.group.visible = isHand; TOWN.group.visible = isTown; UVS.mesh.visible = isU;
   scene.fog = isHand ? FOG : isTown ? FOG_TOWN : null;
   focus = isHand ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
@@ -118,7 +119,9 @@ window.seek = function (t) {
   if (isHand) {
     if (shot === "cast") T.set({ tone: CAST, furrows: 0.2 + 0.9 * u01(t, HD.age), spot: 0, sheen: 0 });
     else if (shot === "gauge") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: u01(t, HD.film) });
+    else if (shot === "burn") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0, redden: [3, 4, 9, 0.55 * u01(t, HD.flush)] });   // the burn you feel: a warm flush, the eye's whole view of sun damage
     else T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0 });
+    { const fm = filmOf(); if (fm) { fm.material.opacity = shot === "gauge" ? 0.5 * u01(t, HD.film) : 0; fm.material.color.setRGB(0.85, 1.0, 1.0); fm.visible = fm.material.opacity > 0.01; } }   // the morning layer, visible
     seam.material.opacity = shot === "hand" || shot === "close" ? 0.5 : 0.75;
   }
   A.halfL = [-7, 0.4, 9]; A.halfR = [7, 0.4, 9]; A.castL = [-6, 0.4, 3];
@@ -143,7 +146,8 @@ window.seek = function (t) {
   d1.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d1.length) * (M.half - M.mel), 0.15).toFixed(3); });
   d2.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d2.length) * (M.half - M.mel), 0.15).toFixed(3); });
   msub.style.opacity = fadeIn(t, M.small - 0.2, 0.4).toFixed(3);
-  rows.style.opacity = mhead.style.opacity = fadeIn(t, M.mel - 0.3, 0.3).toFixed(3);   // the rows arrive with "melanoma", never empty on screen
+  rows.style.opacity = mhead.style.opacity = fadeIn(t, M.mel - 0.3, 0.3).toFixed(3);
+  rows.style.display = mhead.style.display = t >= M.mel - 0.3 ? "" : "none"; mfoot.style.display = t >= M.mel - 0.3 ? "" : "none";   // the plate grows as its rows arrive, never an empty box   // the rows arrive with "melanoma", never empty on screen
 
   // ── to scale: the test dose's film beside the paper ──
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
@@ -152,7 +156,7 @@ window.seek = function (t) {
   for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "paper" || el.textContent === G.bar) el.setAttribute("opacity", lift.toFixed(3));
 
   let step = 0;
-  for (const s of FILM.shots.slice(1, -1)) step = Math.max(step, 1 - Math.min(1, Math.abs(t - s.at) / 0.1));
+  for (const s of FILM.shots.slice(2, -1)) step = Math.max(step, 1 - Math.min(1, Math.abs(t - s.at) / 0.1));
   const end = 0.75 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 

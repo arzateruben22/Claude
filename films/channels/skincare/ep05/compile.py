@@ -43,14 +43,14 @@ CUE = {
     "nineties": A("vo02:nineties,"), "nambour": A("vo02:Nambour,"), "chance": A("vo02:chance"), "morning": A("vo02:morning."),
     "head": A("vo02:head,"), "pleased": A("vo02:pleased."),
     "casts": A("vo03:casts"), "four": A("vo03:four"), "daily": A("vo03:daily"), "increase": A("vo03:increase"),
-    "burn": A("vo04:burn"), "camera": A("vo04:camera"), "misses": A("vo04:misses,"), "surface": A("vo04:surface."),
+    "burn": A("vo04:burn"), "but4": A("vo04:But"), "camera": A("vo04:camera"), "misses": A("vo04:misses,"), "surface": A("vo04:surface."),
     "watched": A("vo05:watched"), "ten": A("vo05:ten"), "squamous": A("vo05:Squamous"), "lower": A("vo05:lower,"), "melanoma": A("vo05:melanoma"),
     "half": A("vo05:half,"), "small": A("vo05:small"),
     "dose": A("vo06:dose,"), "fifth": A("vo06:fifth"), "paper": A("vo06:paper's"),
     "which": A("vo07:which"), "eye": A("vo07:eye"), "but": A("vo07:but"), "record": A("vo07:record."),
 }
 SHOTS = [{"at": 0.0, "name": "hand"}, {"at": B["normal"]["t0"], "name": "town"}, {"at": B["change"]["t0"], "name": "cast"},
-         {"at": B["why"]["t0"], "name": "uv1"}, {"at": B["whoa"]["t0"], "name": "town2"}, {"at": B["toscale"]["t0"], "name": "gauge"},
+         {"at": B["why"]["t0"], "name": "burn"}, {"at": CUE["but4"] - 0.1, "name": "uv1"}, {"at": B["whoa"]["t0"], "name": "town2"}, {"at": B["toscale"]["t0"], "name": "gauge"},
          {"at": CUE["but"] - 0.1, "name": "uv2"}, {"at": B["tease"]["t0"], "name": "close"}]
 
 # ── the camera ──
@@ -62,7 +62,7 @@ CAM = {
              {"t": CUE["sun"], "target": [0, -0.4, 10], "dist": 22, "az": -2, **FLY, "ease": "sine"},
              {"t": B["normal"]["t0"], "target": [0, -0.4, 8], "dist": 40, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
     # up and out over the town; on "chance" the households split, on "morning" the daily group lights
-    "town": [{"t": B["normal"]["t0"], "target": [TX, 0, 0], "dist": 60, "el": 60, "az": -10, "fov": 34, "fx": 0.5, "fy": 0.44},
+    "town": [{"t": B["normal"]["t0"], "target": [TX, 0, 0], "dist": 34, "el": 80, "az": -10, "fov": 34, "fx": 0.5, "fy": 0.44},   # still rising: close over one roof, pulling up
              {"t": CUE["chance"], "target": [TX, 0, 0], "dist": 210, "el": 46, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "out3"},
              {"t": CUE["morning"], "target": [TX - 10, 0, 6], "dist": 170, "el": 40, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "inout2"},
              {"t": B["change"]["t0"], "target": [TX - 10, 0, 6], "dist": 70, "el": 62, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "in2"}],
@@ -70,12 +70,16 @@ CAM = {
     "cast": [{"t": B["change"]["t0"], "target": [0, -0.4, 4], "dist": 16, "el": 50, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.44},
              {"t": CUE["casts"], "target": [0, -0.4, 4], "dist": 30, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.44},
              {"t": B["why"]["t0"], "target": [0, -0.4, 3], "dist": 26, "el": 44, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "sine"}],
-    "uv1": [{"t": B["why"]["t0"], **UVK, "dist": 27}, {"t": CUE["camera"], **UVK, "dist": 25, "ease": "inout2"},
+    # the burn you feel: the visible hand, a warm flush rising (the eye's view), then the shutter to UV on "But"
+    "burn": [{"t": B["why"]["t0"], "target": [3, -0.4, 6], "dist": 22, "el": 24, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.46},
+             {"t": CUE["but4"] - 0.1, "target": [3, -0.4, 4], "dist": 18, "el": 26, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "sine"}],
+    "uv1": [{"t": CUE["but4"] - 0.1, **UVK, "dist": 27}, {"t": CUE["camera"], **UVK, "dist": 25, "ease": "inout2"},
             {"t": CUE["misses"], **{**UVK, "target": [UX + 0.9, 0.1, 0]}, "dist": 21, "ease": "inout2"},
             {"t": CUE["surface"], **{**UVK, "target": [UX - 0.4, 0.1, 0]}, "dist": 25, "ease": "inout2"},
             {"t": B["whoa"]["t0"], **UVK, "dist": 27, "ease": "sine"}],
     "town2": [{"t": B["whoa"]["t0"], "target": [TX, 0, 0], "dist": 240, "el": 52, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.3},
-              {"t": CUE["half"], "target": [TX, 0, 0], "dist": 200, "el": 50, "az": 14, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
+              {"t": CUE["ten"], "target": [TX, 0, 0], "dist": 225, "el": 52, "az": 11, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
+              {"t": CUE["half"], "target": [TX, 0, 0], "dist": 150, "el": 48, "az": 14, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
               {"t": B["toscale"]["t0"], "target": [TX, 0, 0], "dist": 215, "el": 54, "az": 20, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [-3, -0.4, 6], "dist": 20, "el": 24, "az": -8, "fov": 34, "fx": 0.5, "fy": 0.7},
               {"t": B["takeaway"]["t0"] - 0.4, "target": [-3, -0.4, 4], "dist": 19, "el": 26, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.7, "ease": "sine"},
@@ -92,8 +96,8 @@ for shot, keys in CAM.items():
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-a", "text": "one neighbour's skin", "kind": "cell", "anchor": "halfL", "t0": 0.3, "t1": B["normal"]["t0"], "shot": "hand", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-b", "text": "the other's", "kind": "cell", "anchor": "halfR", "t0": 0.3, "t1": B["normal"]["t0"], "shot": "hand", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-a", "text": "one neighbour's skin", "kind": "cell", "anchor": "halfL", "t0": 0.3, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-b", "text": "the other's", "kind": "cell", "anchor": "halfR", "t0": 0.3, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": 1, "v": "above", "fixed": True},
     {"id": "l-daily", "text": "daily sunscreen", "kind": "water", "anchor": "daily", "t0": CUE["morning"] - 0.3, "t1": B["change"]["t0"], "shot": "town", "side": -1, "v": "above"},
     {"id": "l-dis", "text": "as they pleased", "kind": "uv", "anchor": "dis", "t0": CUE["pleased"] - 0.5, "t1": B["change"]["t0"], "shot": "town", "side": 1, "v": "below"},
     {"id": "l-cd", "text": "daily: no detectable increase", "kind": "water", "anchor": "castL", "t0": CUE["daily"], "t1": B["why"]["t0"], "shot": "cast", "side": -1, "v": "below"},
@@ -103,10 +107,11 @@ BADGES = [
     {"id": "b-model-h", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
     {"id": "b-town", "text": "model, not a map", "t0": B["normal"]["t0"] + 0.3, "t1": B["change"]["t0"], "slot": "tl"},
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": B["change"]["t0"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-uv1", "text": "illustration · not trial data", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "tl"},
+    {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but4"] - 0.1, "slot": "tl"},
+    {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but4"] - 0.1, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-green", "text": "Green et al., 1999 · 2011", "t0": B["whoa"]["t0"] + 0.3, "t1": CUE["half"] - 0.3, "slot": "tl"},
     {"id": "b-sig", "text": "small numbers · not quite significant", "t0": CUE["half"], "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"] + 0.3, "t1": CUE["but"] - 0.1, "slot": "tl"},
+    {"id": "b-hand", "text": "model, not a photo", "t0": B["toscale"]["t0"], "t1": CUE["but"] - 0.1, "slot": "tl"},
     {"id": "b-est", "text": "estimate", "t0": CUE["fifth"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["but"] - 0.1, "t1": t_end, "slot": "tl"},
 ]
@@ -114,8 +119,8 @@ SPINE = [0.5, 0.225]   # centred: the viewfinder's REC owns the top right in the
 COUNTERS = [
     {"id": "c-start", "label": "Nambour trial begins", "fmt": "text", "text": f"{START}", "t0": CUE["nambour"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-age", "label": "the casts were graded after", "fmt": "text", "text": "4.5 years", "t0": B["change"]["t0"] + 0.2, "t1": B["whoa"]["t0"] - 0.2, "at": SPINE},
-    {"id": "c-follow", "label": "melanoma followed, to", "fmt": "text", "text": f"{FOLLOW_END}", "t0": B["whoa"]["t0"] + 0.2, "t1": B["toscale"]["t0"] - 0.2, "at": SPINE},
-    {"id": "c-end", "label": "the casts' record, after", "fmt": "text", "text": "4.5 years", "t0": B["toscale"]["t0"] + 0.2, "t1": t_end, "at": SPINE},
+    {"id": "c-follow", "label": "melanoma followed, to", "fmt": "roll", "text": f"{FOLLOW_END}", "roll": [AGE_END, FOLLOW_END, B["whoa"]["t0"] + 0.2, CUE["ten"] + 1.2], "t0": B["whoa"]["t0"] + 0.2, "t1": CUE["half"] - 0.3, "at": SPINE},
+    {"id": "c-end", "label": "melanomas: daily vs as pleased", "fmt": "text", "text": f"{MEL[0]} vs {MEL[1]}", "t0": CUE["half"], "t1": t_end - 0.5, "at": SPINE},   # the whoa's value, held lit to the end (never a cast label over the UV illustration)
 ]
 PLATES = {
     "odds": {"t0": CUE["daily"] - 0.2, "t1": B["why"]["t0"] - 0.3, "text": "increased ageing, daily group: about a quarter less likely",
@@ -127,7 +132,7 @@ PLATES = {
     # no daylight strip: the trial's population was one place's adults, and tones under a damage split would pair tones with a risk
 }
 TOWN = {"split": [CUE["chance"] - 0.2, CUE["chance"] + 1.6], "glow": CUE["morning"] - 0.4}
-HANDS = {"age": [CUE["four"], CUE["increase"] + 0.4], "dmg": [B["why"]["t0"] + 0.3, CUE["misses"] + 0.4], "film": [B["toscale"]["t0"] + 0.3, CUE["dose"] + 0.6]}
+HANDS = {"flush": [B["why"]["t0"] + 0.3, CUE["burn"] + 0.8], "age": [CUE["four"], CUE["increase"] + 0.4], "dmg": [B["why"]["t0"] + 0.3, CUE["misses"] + 0.4], "film": [B["toscale"]["t0"] + 0.3, CUE["dose"] + 0.6]}
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
 
@@ -180,8 +185,8 @@ ev += [
     {"t": B["normal"]["t0"], "kind": "scale.jump", "tag": "up-to-town"},
     {"t": TOWN["split"][0], "kind": "diffuse", "tag": "split"},
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "down-to-cast"},
-    {"t": B["why"]["t0"], "kind": "cell.land", "tag": "shutter-1"},
-    {"t": B["why"]["t0"], "kind": "scale.jump", "tag": "uv-1"},
+    {"t": CUE["but4"] - 0.1, "kind": "cell.land", "tag": "shutter-1"},
+    {"t": CUE["but4"] - 0.1, "kind": "scale.jump", "tag": "uv-1"},
     {"t": B["whoa"]["t0"], "kind": "scale.jump", "tag": "up-to-town-2"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": PLATES["mel"]["half"], "kind": "reveal", "tag": "half"},

@@ -173,15 +173,20 @@
   {
    "t": 28.0,
    "kind": "badge",
+   "tag": "b-burn"
+  },
+  {
+   "t": 31.866666666666664,
+   "kind": "badge",
    "tag": "b-uv1"
   },
   {
-   "t": 28.0,
+   "t": 31.866666666666664,
    "kind": "cell.land",
    "tag": "shutter-1"
   },
   {
-   "t": 28.0,
+   "t": 31.866666666666664,
    "kind": "scale.jump",
    "tag": "uv-1"
   },
@@ -227,6 +232,15 @@
   },
   {
    "t": 49.36666666666667,
+   "kind": "counter.show",
+   "tag": "c-end",
+   "pos": [
+    0.5,
+    0.225
+   ]
+  },
+  {
+   "t": 49.36666666666667,
    "kind": "badge",
    "tag": "b-sig"
   },
@@ -243,22 +257,13 @@
   },
   {
    "t": 54.6,
-   "kind": "scale.jump",
-   "tag": "down-to-hand"
-  },
-  {
-   "t": 54.800000000000004,
-   "kind": "counter.show",
-   "tag": "c-end",
-   "pos": [
-    0.5,
-    0.225
-   ]
-  },
-  {
-   "t": 54.9,
    "kind": "badge",
    "tag": "b-hand"
+  },
+  {
+   "t": 54.6,
+   "kind": "scale.jump",
+   "tag": "down-to-hand"
   },
   {
    "t": 58.26666666666667,

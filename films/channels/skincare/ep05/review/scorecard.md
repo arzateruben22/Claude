@@ -10,15 +10,15 @@ Draft 1, measured at 15 fps:
 
 ## Compelling pass (one independent reviewer, every round)
 
-| Point | Draft 1 | Draft 2 |
-|---|---|---|
-| (a) First 2 s | 2 | 3 |
-| (b) One thread | 4 | 4 |
-| (c) Picture moves with the sentence | 3 | 2 |
-| (d) Motivated cuts | 2 | 2 |
-| (e) Voice meaning, screen figures | 4 | 4 |
-| (f) Rhythm | 3 | 3 |
-| (g) Ending and tease | 3 | 3 |
+| Point | Draft 1 | Draft 2 | Draft 3 |
+|---|---|---|---|
+| (a) First 2 s | 2 | 3 | 3 |
+| (b) One thread | 4 | 4 | 4 |
+| (c) Picture moves with the sentence | 3 | 2 | 3 |
+| (d) Motivated cuts | 2 | 2 | 3 |
+| (e) Voice meaning, screen figures | 4 | 4 | 4 |
+| (f) Rhythm | 3 | 3 | 3 |
+| (g) Ending and tease | 3 | 3 | 4 |
 
 ## Review rounds, in short
 
@@ -73,3 +73,19 @@ A second reviewer, scoring independently.
 **Not changed**
 - **The takeaway's answer:** "the eye can't say, but the skin was keeping its own record" stays. The trial measured groups, so naming one neighbour's hand as the one that aged would overclaim.
 - **The caption that repeats the end-card title:** this is the channel's tease convention.
+
+### Draft 3
+
+**Picture and cuts**
+- **The burn:** the visible hand flushes warm for "the burn you feel", then the shutter cuts to the UV view on "But". This splits the 13.5 s UV hold and puts the reveal on its turning word.
+- **Ten more years:** the spine's year rolls from 1996 to 2006, and there is a stronger push-in on "half".
+- **Hand to town:** one continuous rise, starting close over a roof, with no dip to violet.
+
+**Spine and honesty**
+- **Spine's last third:** from "half" to the end it holds the whoa's value, "11 vs 22" melanomas. It no longer drops back to a cast label over the UV illustration. This closes the honesty gap the reviewer found.
+
+**Smaller fixes**
+- **Melanoma plate:** grows as its rows arrive, so it never shows an empty box.
+- **The morning sunscreen film:** visible in to-scale.
+- **Hook labels:** leave before the camera rises.
+- **No ghosting:** overlays hand straight across the to-scale cut, and the spine clears before the end card.
