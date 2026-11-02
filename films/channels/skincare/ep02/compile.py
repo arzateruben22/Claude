@@ -100,7 +100,7 @@ SPINE = [0.5, 0.215]
 COUNTERS = [
     {"id": "c-refl", "label": "bounces off the top", "text": REFL, "t0": B["normal"]["t0"] + 1.4, "t1": t_split},
     {"id": "c-back", "label": "comes back out", "text": BACK, "t0": CUE["out"] - 0.4, "t1": CUE["sitting"] - 0.5},
-    {"id": "c-red", "label": "the light comes back", "text": "redder", "t0": CUE["redder"] - 0.2, "t1": t_face},
+    {"id": "c-red", "label": "the light comes back", "text": "redder", "t0": CUE["redder"] - 0.2, "t1": t_rise},
     {"id": "c-final", "label": "the glow comes", "text": "from within", "t0": CUE["isnt2"] + 0.2, "t1": t_end - 0.5},
 ]
 for c in COUNTERS:
@@ -119,7 +119,8 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 # the light story's keys (scene.mjs reads them)
-KEYS = {"beam": [0.0, 0.6], "glint": [CUE["glint"] - 0.5, CUE["glint"] + 0.2], "spread": [CUE["dry"] - 0.3, CUE["haze"] + 0.3],
+KEYS = {"beam": [-1.0, 0.0],   # the beam already falling at frame 0
+        "glint": [CUE["glint"] - 0.5, CUE["glint"] + 0.2], "spread": [CUE["dry"] - 0.3, CUE["haze"] + 0.3],
         "paths": [t_in + 0.2, CUE["bounces"] + 1.0], "out": [CUE["out"] - 0.8, CUE["out"] + 0.6], "warm": [CUE["melanin"] - 0.3, CUE["redder"] - 0.5],
         "widen": [CUE["rush"] - 0.1, CUE["redder"] + 0.3], "flush": [CUE["turned"] - 0.3, CUE["colour"] + 0.6], "pulse": [CUE["skin5"], B["toscale"]["t0"] - 0.3], "sheen": [CUE["sitting"] - 0.4, CUE["sitting"] + 0.3, CUE["but4"] - 0.1, CUE["but4"] + 0.5], "bloom": [CUE["inside"] - 0.2, CUE["inside"] + 0.6], "blue": [CUE["blue"] - 0.1, CUE["millimetre"] + 0.5],
         "sheets": [CUE["ten"] - 0.2, CUE["ten"] + 1.0], "redbar": [CUE["red"] - 0.1, CUE["deeper"] + 0.4], "glowout": [CUE["met"] - 0.6, CUE["back"] + 0.4]}
