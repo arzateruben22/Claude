@@ -52,7 +52,7 @@ vo: Into the bed, then: its light is mostly UVA, the long rays. {c4} In large, p
 vo: When the beds joined that group, the sharpest signal came from people who started young. {c6} In pooled studies, first use before thirty-five went with melanoma risk raised by more than *half*. {c7}
 
 ## whoa {shot: the reveal on the map: on "Brazil" one country goes dark, on "off" a second · labels that stay: "commercial beds banned: Brazil 2009 · Australia 2015" + "model, not a photo" · picture-only 3.0 s · energy: 0.8} (41.6–51.3 s)
-vo: Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own *off*. {c8,c9}
+vo: Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them *too*. {c8,c9}
 
 ## toscale {segment: toscale · the reveal on the skin's section: long rays pass the top layer; the gauge sets it beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "simplified" · picture-only 0.5 s · energy: 0.4} (51.3–58.9 s)
 vo: And those long rays reach right through the top layer, on most skin about as thin as *paper*. {c10,c11}

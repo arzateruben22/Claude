@@ -12,15 +12,15 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million people.",
+   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million.",
    "stars": [
     "frown"
    ],
-   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɪn θˈiəɹi, ɐ bˈaŋknəʊtz wˈeɪt kʊd kˈɪl ɐ mˈɪliən pˈiːpəl.",
-   "speed": 0.83,
+   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɪn θˈiəɹi, ɐ bˈaŋknəʊtz wˈeɪt kʊd kˈɪl ɐ mˈɪliən.",
+   "speed": 0.8,
    "file": "01.wav",
-   "dur": 5.155,
-   "sha256": "bb4a32cc3d9ee2f1ff1c44aee1f527be7e945e4e02f3de0205a06a61167e3e2d"
+   "dur": 5.065,
+   "sha256": "4db4341b2267ad2aca8df4d91db0ec7ec16cc6c5871b6c61cadb26cd8ae3db9a"
   },
   {
    "id": "vo02",
@@ -64,15 +64,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "A dose of this medicine isn't weighed; it's counted in mouse deaths. One frown takes twenty of those, still under a hundredth of what could kill a person.",
+   "text": "Its dose is counted in units, measured by their effect on mice. One frown takes twenty, under a hundredth of what could kill a person.",
    "stars": [
     "person"
    ],
-   "phonemes": "ɐ dˈəʊs ɒv ðɪs mˈɛdsən ˌɪzənt wˈeɪd; ɪts kˈaʊntɪd ɪn mˈaʊs dˈɛθs. wˈɒn fɹˈaʊn tˈeɪks twˈɛnti ɒv ðˈəʊz, stˈɪl ˌʌndəɹ ɐ hˈʌndɹədθ ɒv wɒt kʊd kˈɪl ɐ pˈɜːsən.",
+   "phonemes": "ɪts dˈəʊs ɪz kˈaʊntɪd ɪn jˈuːnɪts, mˈɛʒəd baɪ ðeəɹ ɪfˈɛkt ˌɒn mˈaɪs. wˈɒn fɹˈaʊn tˈeɪks twˈɛnti, ˌʌndəɹ ɐ hˈʌndɹədθ ɒv wɒt kʊd kˈɪl ɐ pˈɜːsən.",
    "speed": 0.82,
    "file": "05.wav",
-   "dur": 9.585,
-   "sha256": "f6c167f76f25d00a4e1c0d3b541503308f4c0c8b92ec4463b3249761c188f894"
+   "dur": 8.629,
+   "sha256": "1f9d3d3f1701c80ca2654e5190e6841ea5eddf23656113116bff663d2116354a"
   },
   {
    "id": "vo06",

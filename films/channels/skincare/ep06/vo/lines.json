@@ -43,10 +43,10 @@
     "sun"
    ],
    "phonemes": "ˌɪntʊ ðə bˈɛd, ðˈɛn: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
-   "speed": 0.84,
+   "speed": 0.79,
    "file": "03.wav",
-   "dur": 10.061,
-   "sha256": "72ff754f3d221d2027b0f1ecfb2ae5017acad5da73353c4b9e7fd92fa960178e"
+   "dur": 11.758,
+   "sha256": "55b1a20e981a2093ceee5a5d2293a40bd1330d1605b50150ed84e0c7122b4631"
   },
   {
    "id": "vo04",
@@ -64,15 +64,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own off.",
+   "text": "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too.",
    "stars": [
-    "off"
+    "too"
    ],
-   "phonemes": "wɪðˌɪn mˈʌnθs, hˈəʊl kˈʌntɹiz ˈaktɪd: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz, and lˈeɪtəɹ ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
+   "phonemes": "hˈəʊl kˈʌntɹiz ˈaktɪd: ɒstɹˈeɪliə swˈɪtʃt ˈɒf ˈɛvɹɪ kəmˈɜːʃəl bˈɛd ɪnðə lˈand, and bɹɐzˈɪl bˈand ðˌɛm tˈuː.",
    "speed": 0.96,
    "file": "05.wav",
-   "dur": 6.768,
-   "sha256": "fde32e4021697bf693e5d9131ce1183f0a6acdc58dbbbbed1021f65677ec1d82"
+   "dur": 6.191,
+   "sha256": "ad76e8e7f0f40692cb32724b0bff969eea57c09ec8f56368f32bffd7dcbfe32a"
   },
   {
    "id": "vo06",
@@ -95,10 +95,10 @@
     "certainty"
    ],
    "phonemes": "ðə sˈʌn mˌeɪd ðat lˈɪst jˈiəz bɪfˌɔː ðə bˈɛdz. sˈeɪm lˈɪst az sˌɪɡəɹˈɛts: nˌɒt ðə sˈeɪm hˈɑːm, ðə sˈeɪm sˈɜːtənti.",
-   "speed": 0.84,
+   "speed": 0.77,
    "file": "07.wav",
-   "dur": 6.807,
-   "sha256": "d34255c650ef92bf125a32d0dacea7e7f247a0b360f41ec29f48a7b79cacc84b"
+   "dur": 8.096,
+   "sha256": "f7f53a89fe5facc9e4f3855e91ae6b5933560ca8c3fea07114c1fdb48a29eab0"
   },
   {
    "id": "vo08",

@@ -57,8 +57,8 @@ vo: And they were followed for ten more years. {c7} Melanoma, the most serious s
 ## toscale {segment: toscale · the reveal on a thin film beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (55–62 s)
 vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thickness*. {c10}
 
-## takeaway {shot: back to the hook's two hands (the loop) · labels: plate "used ≥ 3–4 days a week: 77% vs 33%" · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
-vo: So, which hand aged? Both missed mornings; one had more, and the skin kept *count*. {c12,c11}
+## takeaway {shot: back to the hook's two hands (the loop) · labels: none beyond the badge (the adherence figures stay off screen until confirmed from the paper itself) · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
+vo: So, which hand aged? Both groups missed mornings; one missed far fewer, and the skin kept *count*. {c12,c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
 vo: Next: tanning beds share a list with cigarettes. Same list, same *risk*? {-}

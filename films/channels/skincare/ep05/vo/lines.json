@@ -90,15 +90,15 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, which hand aged? Both missed mornings; one had more, and the skin kept count.",
+   "text": "So, which hand aged? Both groups missed mornings; one missed far fewer, and the skin kept count.",
    "stars": [
     "count"
    ],
-   "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ mˈɪst mˈɔːnɪŋz; wˈɒn had mˈɔː, and ðə skˈɪn kˈɛpt kˈaʊnt.",
+   "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ ɡɹˈuːps mˈɪst mˈɔːnɪŋz; wˈɒn mˈɪst fˈɑː fjˈuːə, and ðə skˈɪn kˈɛpt kˈaʊnt.",
    "speed": 0.8,
    "file": "07.wav",
-   "dur": 5.856,
-   "sha256": "e6cc0bd2ad8dabfbdffb51f3087e9ac560018cf591d5590185a3b812e38ed8cb"
+   "dur": 6.727,
+   "sha256": "8c9d80d95e12a1ae075685c33bcbee893f8052ce439ee0d6a73537f99a5d91bc"
   },
   {
    "id": "vo08",

@@ -3,91 +3,85 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million people.",
-   "heard": "Poison in a frown. In theory, a banknote's weight could kill a million people.",
+   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million.",
+   "heard": "Poison in a frown. In theory, a banknote's weight could kill a million.",
    "words": [
     {
      "w": "Poison,",
-     "start": 0.02,
-     "end": 0.64,
+     "start": 0.045,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "in",
-     "start": 0.6,
-     "end": 0.8,
+     "start": 0.67,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.845,
-     "end": 0.96,
+     "start": 0.91,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "frown?",
-     "start": 0.92,
-     "end": 1.76,
+     "start": 1.01,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "In",
-     "start": 1.875,
-     "end": 2.0,
+     "start": 1.97,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "theory,",
-     "start": 2.11,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.555,
+     "start": 2.235,
      "end": 2.64,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 2.71,
+     "end": 2.8,
+     "heard": true
+    },
+    {
      "w": "banknote's",
-     "start": 2.725,
-     "end": 3.28,
+     "start": 2.895,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "weight",
-     "start": 3.29,
-     "end": 3.6,
+     "start": 3.495,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "could",
-     "start": 3.575,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "kill",
-     "start": 3.745,
+     "start": 3.845,
      "end": 4.0,
      "heard": true
     },
     {
+     "w": "kill",
+     "start": 4.02,
+     "end": 4.24,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 3.98,
-     "end": 4.16,
+     "start": 4.3,
+     "end": 4.4,
      "heard": true
     },
     {
-     "w": "million",
-     "start": 4.255,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "people.",
-     "start": 4.555,
-     "end": 5.12,
+     "w": "million.",
+     "start": 4.33,
+     "end": 5.04,
      "heard": true
     }
    ]
@@ -589,175 +583,157 @@
   },
   {
    "id": "vo05",
-   "text": "A dose of this medicine isn't weighed; it's counted in mouse deaths. One frown takes twenty of those, still under a hundredth of what could kill a person.",
-   "heard": "A dose of this medicine isn't weighed. It's counted in mouse deaths. One frown takes twenty of those, still under a hundredth of what could kill a person.",
+   "text": "Its dose is counted in units, measured by their effect on mice. One frown takes twenty, under a hundredth of what could kill a person.",
+   "heard": "Its dose is counted in units, measured by their effect on mice. One frown takes twenty, under a hundredth of what could kill a person.",
    "words": [
     {
-     "w": "A",
-     "start": 0.02,
-     "end": 0.24,
+     "w": "Its",
+     "start": 0.04,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "dose",
-     "start": 0.205,
-     "end": 0.48,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 0.525,
+     "start": 0.29,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "this",
-     "start": 0.64,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "medicine",
-     "start": 0.835,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "isn't",
-     "start": 1.31,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "weighed;",
-     "start": 1.675,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "it's",
-     "start": 2.57,
-     "end": 2.8,
+     "w": "is",
+     "start": 0.76,
+     "end": 0.81,
      "heard": true
     },
     {
      "w": "counted",
-     "start": 2.79,
-     "end": 3.2,
+     "start": 0.79,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "in",
-     "start": 3.295,
-     "end": 3.44,
+     "start": 1.17,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "mouse",
-     "start": 3.325,
-     "end": 3.92,
+     "w": "units,",
+     "start": 1.255,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "deaths.",
-     "start": 3.875,
-     "end": 4.8,
+     "w": "measured",
+     "start": 2.22,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 2.675,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "their",
+     "start": 2.855,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "effect",
+     "start": 3.115,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.475,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "mice.",
+     "start": 3.57,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "One",
-     "start": 4.93,
-     "end": 5.12,
+     "start": 4.775,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "frown",
-     "start": 5.21,
-     "end": 5.6,
+     "start": 5.04,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 5.655,
-     "end": 5.92,
+     "start": 5.425,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "twenty",
-     "start": 5.99,
-     "end": 6.4,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 6.445,
-     "end": 6.56,
-     "heard": true
-    },
-    {
-     "w": "those,",
-     "start": 6.475,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "still",
-     "start": 7.17,
-     "end": 7.44,
+     "w": "twenty,",
+     "start": 5.785,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "under",
-     "start": 7.32,
-     "end": 7.68,
+     "start": 6.57,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.765,
-     "end": 7.84,
+     "start": 6.675,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "hundredth",
-     "start": 7.825,
-     "end": 8.24,
+     "start": 6.92,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "of",
-     "start": 8.23,
-     "end": 8.4,
+     "start": 7.305,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "what",
-     "start": 8.355,
-     "end": 8.56,
+     "start": 7.425,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "could",
-     "start": 8.56,
-     "end": 8.72,
+     "start": 7.61,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "kill",
-     "start": 8.74,
-     "end": 8.96,
+     "start": 7.785,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.045,
-     "end": 9.12,
+     "start": 8.09,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "person.",
-     "start": 9.075,
-     "end": 9.52,
+     "start": 8.12,
+     "end": 8.56,
      "heard": true
     }
    ]

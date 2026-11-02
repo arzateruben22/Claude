@@ -891,97 +891,109 @@
   },
   {
    "id": "vo07",
-   "text": "So, which hand aged? Both missed mornings; one had more, and the skin kept count.",
-   "heard": "So which hand aged? Both missed mornings, one had more, and the skin kept count.",
+   "text": "So, which hand aged? Both groups missed mornings; one missed far fewer, and the skin kept count.",
+   "heard": "So which hand aged? Both groups missed mornings, one missed far fewer and the skin kept count.",
    "words": [
     {
      "w": "So,",
-     "start": 0.175,
+     "start": 0.165,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "which",
-     "start": 0.565,
-     "end": 0.64,
+     "start": 0.555,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 0.64,
+     "start": 0.635,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 0.995,
+     "start": 0.99,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "Both",
-     "start": 2.115,
+     "start": 2.14,
      "end": 2.32,
      "heard": true
     },
     {
+     "w": "groups",
+     "start": 2.43,
+     "end": 2.72,
+     "heard": true
+    },
+    {
      "w": "missed",
-     "start": 2.41,
-     "end": 2.8,
+     "start": 2.655,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "mornings;",
-     "start": 2.715,
-     "end": 3.52,
+     "start": 3.035,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "one",
-     "start": 3.59,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "had",
-     "start": 3.79,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "more,",
      "start": 3.945,
-     "end": 4.24,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "missed",
+     "start": 3.975,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 4.445,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "fewer,",
+     "start": 4.78,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.27,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 4.3,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 4.625,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "kept",
-     "start": 4.925,
+     "start": 5.135,
      "end": 5.28,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 5.165,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 5.49,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "kept",
+     "start": 5.795,
+     "end": 6.16,
+     "heard": true
+    },
+    {
      "w": "count.",
-     "start": 5.31,
-     "end": 5.68,
+     "start": 6.18,
+     "end": 6.72,
      "heard": true
     }
    ]

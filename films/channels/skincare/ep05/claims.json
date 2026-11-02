@@ -111,18 +111,18 @@
  },
  {
   "id": "c12",
-  "sentence": "Both missed mornings; one had more, and the skin kept count.",
-  "claim": "Adherence was imperfect: by the end of the trial, 77% of the daily sunscreen group applied sunscreen at least 3–4 days a week, against 33% of the discretionary group.",
+  "sentence": "Both groups missed mornings; one missed far fewer, and the skin kept count.",
+  "claim": "In the Nambour trial, the daily group applied sunscreen far more often than the discretionary group, though neither group used it every day.",
   "source_url": "https://mdedge.com/familymedicine/article/59024/dermatology/daily-sunscreen-slowed-skin-aging-middle-aged-adults",
   "source_title": "Daily sunscreen slowed skin aging in middle-aged adults (MDedge Family Medicine, 2013, on Hughes et al., Ann Intern Med 2013;158:781-790)",
   "accessed": "2026-11-02",
-  "note": "Excerpts (via search): 'By the end of the study, 77% of the daily sunscreen users applied sunscreen at least 3-4 days per week, vs. 33% of the discretionary users.' WBUR (4 Jun 2013) gives the same figures. 'Both' = the two model hands, standing for the two groups; 'missed mornings' follows from fewer than all of the daily group applying it even 3–4 days a week; 'one had more' = 77% vs 33%. The figures go on screen; confirm them in the paper's results.",
+  "note": "Excerpts (via search): 'By the end of the study, 77% of the daily sunscreen users applied sunscreen at least 3-4 days per week, vs. 33% of the discretionary users.' WBUR (4 Jun 2013) gives the same figures. 'Both' = the two model hands, standing for the two groups; 'missed mornings' follows from fewer than all of the daily group applying it even 3–4 days a week; 'one had more' = 77% vs 33%. The figures go on screen; confirm them in the paper's results. | Coordinator ruling (2 Nov): the 77% vs 33% figures came from coverage of Hughes 2013, not the paper itself; dropped from voice and screen until confirmed from the paper.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c11",
-  "sentence": "Both missed mornings; one had more, and the skin kept count.",
+  "sentence": "Both groups missed mornings; one missed far fewer, and the skin kept count.",
   "claim": "The daily group had more sunscreen mornings than the discretionary group (adherence 77% vs 33% at least 3–4 days a week), and sun damage accumulates in skin over time, much of it before it can be seen.",
   "source_url": "https://www.aad.org/public/everyday-care/sun-protection/sun-damage-skin/hidden-sun-damage",
   "source_title": "See how the sun damages your skin (American Academy of Dermatology)",
