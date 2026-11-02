@@ -1,0 +1,1705 @@
+{
+ "id": "outerlayer-005",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 72.8,
+ "poster": 65.56666666666666,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 4.2,
+   "name": "rows"
+  },
+  {
+   "at": 16.3333,
+   "name": "grains"
+  },
+  {
+   "at": 26.1333,
+   "name": "trio"
+  },
+  {
+   "at": 29.9,
+   "name": "globe"
+  },
+  {
+   "at": 39.2,
+   "name": "strong"
+  },
+  {
+   "at": 44.666666666666664,
+   "name": "weak"
+  },
+  {
+   "at": 51.8,
+   "name": "gauge"
+  },
+  {
+   "at": 59.7333,
+   "name": "close"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.2,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.2,
+   "t1": 16.3333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.3333,
+   "t1": 26.1333,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 26.1333,
+   "t1": 39.2,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 39.2,
+   "t1": 51.8,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 51.8,
+   "t1": 59.7333,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 59.7333,
+   "t1": 66.7333,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 66.7333,
+   "t1": 72.8,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tones": [
+  0.12,
+  0.5,
+  0.9
+ ],
+ "bio": {
+  "sc_um": 17.0,
+  "rows": 15,
+  "gran_um": 10.0,
+  "spin_um": 48.0,
+  "basal_um": 10.0,
+  "paper_um": 100.0,
+  "gap_um": 32,
+  "unit": 36,
+  "sec_x": [
+   -56.0,
+   0.0,
+   56.0
+  ],
+  "gx": -4000.0,
+  "wx": 5000.0
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -44,
+     0
+    ],
+    "el": 13,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 640,
+    "az": -10
+   },
+   {
+    "t": 4.2,
+    "target": [
+     0,
+     -44,
+     0
+    ],
+    "el": 13,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 600,
+    "az": -7,
+    "ease": "sine"
+   }
+  ],
+  "rows": [
+   {
+    "t": 4.2,
+    "target": [
+     0,
+     -60,
+     10
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 520,
+    "az": -6
+   },
+   {
+    "t": 11.233333333333333,
+    "target": [
+     0,
+     -74,
+     14
+    ],
+    "el": 7,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 420,
+    "az": -3,
+    "ease": "inout2"
+   },
+   {
+    "t": 16.3333,
+    "target": [
+     0,
+     -76,
+     14
+    ],
+    "el": 7,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 380,
+    "az": -1,
+    "ease": "sine"
+   }
+  ],
+  "grains": [
+   {
+    "t": 16.3333,
+    "target": [
+     -4000.0,
+     0,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 470,
+    "az": -6
+   },
+   {
+    "t": 19.633333333333333,
+    "target": [
+     -3990.0,
+     0,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 440,
+    "az": -3,
+    "ease": "inout2"
+   },
+   {
+    "t": 22.633333333333333,
+    "target": [
+     -3960.0,
+     0,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 230,
+    "az": -1,
+    "ease": "inout2"
+   },
+   {
+    "t": 26.1333,
+    "target": [
+     -3956.0,
+     0,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 210,
+    "az": 0,
+    "ease": "sine"
+   }
+  ],
+  "trio": [
+   {
+    "t": 26.1333,
+    "target": [
+     0,
+     -60,
+     0
+    ],
+    "el": 11,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 560,
+    "az": 4
+   },
+   {
+    "t": 29.9,
+    "target": [
+     0,
+     -54,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 640,
+    "az": 6,
+    "ease": "sine"
+   }
+  ],
+  "globe": [
+   {
+    "t": 29.9,
+    "target": [
+     5000.0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 620,
+    "az": 0
+   },
+   {
+    "t": 39.2,
+    "target": [
+     5000.0,
+     0,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 520,
+    "az": 0,
+    "ease": "sine"
+   }
+  ],
+  "strong": [
+   {
+    "t": 39.2,
+    "target": [
+     56.0,
+     -30,
+     6
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 300,
+    "az": 6
+   },
+   {
+    "t": 44.666666666666664,
+    "target": [
+     56.0,
+     -44,
+     10
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 250,
+    "az": 4,
+    "ease": "sine"
+   }
+  ],
+  "weak": [
+   {
+    "t": 44.666666666666664,
+    "target": [
+     -56.0,
+     -30,
+     6
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 300,
+    "az": -6
+   },
+   {
+    "t": 51.8,
+    "target": [
+     -56.0,
+     -50,
+     10
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 250,
+    "az": -4,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 51.8,
+    "target": [
+     0,
+     -50,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 620,
+    "az": -4
+   },
+   {
+    "t": 59.7333,
+    "target": [
+     0,
+     -50,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.62,
+    "fy": 0.4,
+    "dist": 580,
+    "az": -6,
+    "ease": "sine"
+   }
+  ],
+  "close": [
+   {
+    "t": 59.7333,
+    "target": [
+     0,
+     -44,
+     0
+    ],
+    "el": 13,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 560,
+    "az": -4
+   },
+   {
+    "t": 72.8,
+    "target": [
+     0,
+     -44,
+     0
+    ],
+    "el": 13,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 640,
+    "az": -10,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "pigment": 0.7333333333333333,
+  "count0": 2.0,
+  "feeds": 8.1,
+  "dozen": 9.533333333333333,
+  "count": 11.233333333333333,
+  "same": 15.1,
+  "work": 17.666666666666668,
+  "deeper": 19.633333333333333,
+  "larger": 22.633333333333333,
+  "one": 24.466666666666665,
+  "assume": 27.033333333333335,
+  "more": 28.9,
+  "colour": 32.733333333333334,
+  "sunlight": 33.43333333333333,
+  "matched": 36.1,
+  "fierce": 40.53333333333333,
+  "folate": 42.1,
+  "weak": 45.166666666666664,
+  "vitd": 47.46666666666667,
+  "apart": 58.5,
+  "third": 56.666666666666664,
+  "paper": 57.233333333333334,
+  "none": 61.2,
+  "sky": 65.26666666666667,
+  "count_t": [
+   11.2333,
+   11.5833,
+   11.9333
+  ]
+ },
+ "gauge": {
+  "rise": [
+   51.8,
+   52.699999999999996
+  ],
+  "sc": 56.666666666666664,
+  "paper": 57.233333333333334,
+  "back": [
+   59.2333,
+   60.1333
+  ],
+  "sc_um": 32,
+  "paper_um": 100.0,
+  "bar": "gap"
+ },
+ "trans": [
+  {
+   "t": 4.2,
+   "kind": "dip"
+  },
+  {
+   "t": 16.3333,
+   "kind": "dip"
+  },
+  {
+   "t": 26.1333,
+   "kind": "dip"
+  },
+  {
+   "t": 29.9,
+   "kind": "dip"
+  },
+  {
+   "t": 39.2,
+   "kind": "dip"
+  },
+  {
+   "t": 44.666666666666664,
+   "kind": "dip"
+  },
+  {
+   "t": 51.8,
+   "kind": "dip"
+  },
+  {
+   "t": 59.7333,
+   "kind": "dip"
+  }
+ ],
+ "labels": [
+  {
+   "id": "l-pig-h",
+   "text": "pigment cells",
+   "kind": "cell",
+   "anchor": "mel1",
+   "t0": 0.9333333333333333,
+   "t1": 3.75,
+   "shot": "hook",
+   "side": 1
+  },
+  {
+   "id": "l-pig",
+   "text": "one pigment cell",
+   "kind": "cell",
+   "anchor": "mel1",
+   "t0": 4.6000000000000005,
+   "t1": 9.5,
+   "shot": "rows",
+   "side": 1
+  },
+  {
+   "id": "l-light",
+   "text": "lighter",
+   "kind": "layer",
+   "anchor": "top0",
+   "t0": 11.233333333333333,
+   "t1": 15.8833,
+   "shot": "rows",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-deep",
+   "text": "deeper",
+   "kind": "layer",
+   "anchor": "top2",
+   "t0": 11.233333333333333,
+   "t1": 15.8833,
+   "shot": "rows",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-g-light",
+   "text": "small, in clusters",
+   "kind": "cell",
+   "anchor": "g0",
+   "t0": 17.96666666666667,
+   "t1": 25.6833,
+   "shot": "grains",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-g-deep",
+   "text": "larger, one by one",
+   "kind": "cell",
+   "anchor": "g2",
+   "t0": 22.633333333333333,
+   "t1": 25.6833,
+   "shot": "grains",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-more",
+   "text": "more pigment cells? no",
+   "kind": "cell",
+   "anchor": "mel2",
+   "t0": 28.9,
+   "t1": 29.45,
+   "shot": "trio",
+   "side": 1
+  },
+  {
+   "id": "l-uv",
+   "text": "ultraviolet, strongest here",
+   "kind": "uv",
+   "anchor": "band",
+   "t0": 33.43333333333333,
+   "t1": 38.75,
+   "shot": "globe",
+   "side": 1
+  },
+  {
+   "id": "l-folate",
+   "text": "folate, kept safe",
+   "kind": "water",
+   "anchor": "folate",
+   "t0": 42.1,
+   "t1": 44.2167,
+   "shot": "strong",
+   "side": 1
+  },
+  {
+   "id": "l-vitd",
+   "text": "vitamin D made",
+   "kind": "water",
+   "anchor": "vitd",
+   "t0": 47.46666666666667,
+   "t1": 51.35,
+   "shot": "weak",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-simp-h",
+   "text": "simplified",
+   "t0": 0.0,
+   "t1": 3.75,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified",
+   "t0": 4.2,
+   "t1": 15.8833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-site",
+   "text": "same body site",
+   "t0": 11.233333333333333,
+   "t1": 15.8833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 16.3333,
+   "t1": 25.6833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-thong",
+   "text": "Thong et al., 2003",
+   "t0": 22.633333333333333,
+   "t1": 25.6833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-simp-t",
+   "text": "simplified",
+   "t0": 26.1333,
+   "t1": 29.45,
+   "slot": "tr"
+  },
+  {
+   "id": "b-model",
+   "text": "model",
+   "t0": 29.9,
+   "t1": 38.75,
+   "slot": "tr"
+  },
+  {
+   "id": "b-jc",
+   "text": "Jablonski & Chaplin, 2000",
+   "t0": 32.733333333333334,
+   "t1": 51.35,
+   "slot": "tl"
+  },
+  {
+   "id": "b-hyp",
+   "text": "hypothesis",
+   "t0": 39.2,
+   "t1": 51.35,
+   "slot": "tr"
+  },
+  {
+   "id": "b-est",
+   "text": "≈ 32 µm apart · estimate",
+   "t0": 56.666666666666664,
+   "t1": 59.2833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp-z",
+   "text": "simplified",
+   "t0": 59.7333,
+   "t1": 66.83333333333333,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-unit",
+   "label": "pigment cell : skin cells",
+   "fmt": "text",
+   "text": "≈ 1 : 36",
+   "t0": 9.533333333333333,
+   "t1": 10.833333333333332,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-same",
+   "label": "per mm², in each skin",
+   "fmt": "text",
+   "text": "≈ 955",
+   "t0": 14.799999999999999,
+   "t1": 15.8833,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-uv",
+   "label": "skin colour follows",
+   "fmt": "text",
+   "text": "UV",
+   "t0": 35.7,
+   "t1": 38.75,
+   "at": [
+    0.6,
+    0.215
+   ]
+  },
+  {
+   "id": "c-end",
+   "label": "per mm², every colour",
+   "fmt": "text",
+   "text": "≈ 955",
+   "t0": 59.7333,
+   "t1": 66.83333333333333,
+   "at": [
+    0.6,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 005",
+  "title": "Same cells, every *colour*",
+  "t1": 3.7,
+  "sig": 1.4666666666666666
+ },
+ "endCard": 66.83333333333333,
+ "end": {
+  "title": "Next layer: why do we still get goosebumps, with almost no *fur*?",
+  "follow": "Outer Layer · No. 006",
+  "next": "On the same patch of skin, light and dark skin have about the same number of pigment cells (≈ 955 per mm² on average)."
+ },
+ "captions": [
+  {
+   "t0": 0.217,
+   "t1": 1.992,
+   "lines": [
+    [
+     [
+      "Which",
+      0.217
+     ],
+     [
+      "has",
+      0.452
+     ],
+     [
+      "more",
+      0.482
+     ]
+    ],
+    [
+     [
+      "pigment cells?",
+      0.742
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.992,
+   "t1": 3.487,
+   "lines": [
+    [
+     [
+      "Count",
+      1.992
+     ],
+     [
+      "them,",
+      2.327
+     ],
+     [
+      "row by row.",
+      2.547
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.52,
+   "t1": 6.68,
+   "lines": [
+    [
+     [
+      "In",
+      4.52
+     ],
+     [
+      "the",
+      4.835
+     ],
+     [
+      "bottom",
+      4.905
+     ]
+    ],
+    [
+     [
+      "row",
+      5.33
+     ],
+     [
+      "of",
+      5.68
+     ],
+     [
+      "skin,",
+      5.92
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.68,
+   "t1": 9.285,
+   "lines": [
+    [
+     [
+      "each",
+      6.68
+     ],
+     [
+      "pigment",
+      6.89
+     ],
+     [
+      "cell",
+      7.575
+     ]
+    ],
+    [
+     [
+      "feeds",
+      8.09
+     ],
+     [
+      "melanin",
+      8.305
+     ],
+     [
+      "to",
+      8.995
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.285,
+   "t1": 11.225,
+   "lines": [
+    [
+     [
+      "a few dozen neighbours.",
+      9.285
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.225,
+   "t1": 13.365,
+   "lines": [
+    [
+     [
+      "Count",
+      11.225
+     ],
+     [
+      "them",
+      11.555
+     ],
+     [
+      "across",
+      11.77
+     ]
+    ],
+    [
+     [
+      "these",
+      12.155
+     ],
+     [
+      "skins,",
+      12.435
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.365,
+   "t1": 15.84,
+   "lines": [
+    [
+     [
+      "and",
+      13.365
+     ],
+     [
+      "the",
+      13.395
+     ],
+     [
+      "number",
+      13.66
+     ],
+     [
+      "comes",
+      13.95
+     ]
+    ],
+    [
+     [
+      "out",
+      14.265
+     ],
+     [
+      "about the same.",
+      14.54
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.653,
+   "t1": 19.468,
+   "lines": [
+    [
+     [
+      "What",
+      16.653
+     ],
+     [
+      "changes",
+      16.848
+     ],
+     [
+      "is",
+      17.458
+     ],
+     [
+      "the",
+      17.643
+     ]
+    ],
+    [
+     [
+      "work",
+      17.673
+     ],
+     [
+      "each",
+      17.998
+     ],
+     [
+      "one",
+      18.338
+     ],
+     [
+      "does.",
+      18.723
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.468,
+   "t1": 21.833,
+   "lines": [
+    [
+     [
+      "In",
+      19.468
+     ],
+     [
+      "deeper",
+      19.643
+     ],
+     [
+      "skin,",
+      20.138
+     ],
+     [
+      "they",
+      20.678
+     ]
+    ],
+    [
+     [
+      "make",
+      20.708
+     ],
+     [
+      "more",
+      20.958
+     ],
+     [
+      "of",
+      21.193
+     ],
+     [
+      "the",
+      21.393
+     ],
+     [
+      "dark",
+      21.548
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.833,
+   "t1": 23.913,
+   "lines": [
+    [
+     [
+      "melanin,",
+      21.833
+     ]
+    ],
+    [
+     [
+      "in",
+      22.423
+     ],
+     [
+      "larger",
+      22.633
+     ],
+     [
+      "grains,",
+      23.018
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.913,
+   "t1": 25.573,
+   "lines": [
+    [
+     [
+      "handed",
+      23.913
+     ],
+     [
+      "out",
+      24.223
+     ],
+     [
+      "one by one.",
+      24.473
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.453,
+   "t1": 28.893,
+   "lines": [
+    [
+     [
+      "It's",
+      26.453
+     ],
+     [
+      "easy",
+      26.658
+     ],
+     [
+      "to",
+      26.998
+     ],
+     [
+      "assume",
+      27.043
+     ]
+    ],
+    [
+     [
+      "darker",
+      27.533
+     ],
+     [
+      "skin",
+      28.033
+     ],
+     [
+      "simply",
+      28.303
+     ],
+     [
+      "has",
+      28.703
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.893,
+   "t1": 30.108,
+   "lines": [
+    [
+     [
+      "more",
+      28.893
+     ],
+     [
+      "of",
+      29.228
+     ],
+     [
+      "them.",
+      29.258
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.108,
+   "t1": 32.723,
+   "lines": [
+    [
+     [
+      "Nina Jablonski",
+      30.108
+     ],
+     [
+      "and",
+      31.228
+     ]
+    ],
+    [
+     [
+      "George Chaplin",
+      31.258
+     ],
+     [
+      "set",
+      32.218
+     ],
+     [
+      "skin",
+      32.513
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.723,
+   "t1": 35.553,
+   "lines": [
+    [
+     [
+      "colour",
+      32.723
+     ],
+     [
+      "beside",
+      33.043
+     ],
+     [
+      "sunlight,",
+      33.418
+     ]
+    ],
+    [
+     [
+      "all",
+      34.398
+     ],
+     [
+      "around",
+      34.648
+     ],
+     [
+      "the",
+      34.963
+     ],
+     [
+      "world,",
+      34.993
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.553,
+   "t1": 36.863,
+   "lines": [
+    [
+     [
+      "and",
+      35.553
+     ],
+     [
+      "the",
+      35.728
+     ],
+     [
+      "two",
+      35.758
+     ],
+     [
+      "matched.",
+      36.113
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.52,
+   "t1": 41.24,
+   "lines": [
+    [
+     [
+      "Where",
+      39.52
+     ],
+     [
+      "sunlight",
+      39.87
+     ]
+    ],
+    [
+     [
+      "is",
+      40.26
+     ],
+     [
+      "fierce,",
+      40.52
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.24,
+   "t1": 42.745,
+   "lines": [
+    [
+     [
+      "darker",
+      41.24
+     ],
+     [
+      "skin",
+      41.615
+     ]
+    ],
+    [
+     [
+      "guards",
+      41.83
+     ],
+     [
+      "folate,",
+      42.09
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.745,
+   "t1": 44.855,
+   "lines": [
+    [
+     [
+      "which",
+      42.745
+     ],
+     [
+      "healthy",
+      42.82
+     ]
+    ],
+    [
+     [
+      "pregnancies",
+      43.305
+     ],
+     [
+      "need.",
+      44.135
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.855,
+   "t1": 47.19,
+   "lines": [
+    [
+     [
+      "Where",
+      44.855
+     ],
+     [
+      "it's",
+      45.03
+     ],
+     [
+      "weak,",
+      45.155
+     ],
+     [
+      "lighter",
+      45.71
+     ]
+    ],
+    [
+     [
+      "skin",
+      45.945
+     ],
+     [
+      "lets",
+      46.38
+     ],
+     [
+      "enough",
+      46.59
+     ],
+     [
+      "through",
+      46.96
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.19,
+   "t1": 48.44,
+   "lines": [
+    [
+     [
+      "to",
+      47.19
+     ],
+     [
+      "make",
+      47.225
+     ],
+     [
+      "vitamin D.",
+      47.465
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.12,
+   "t1": 54.64,
+   "lines": [
+    [
+     [
+      "And",
+      52.12
+     ],
+     [
+      "on",
+      52.42
+     ],
+     [
+      "any",
+      52.58
+     ],
+     [
+      "one",
+      52.745
+     ]
+    ],
+    [
+     [
+      "patch",
+      53.125
+     ],
+     [
+      "of",
+      53.43
+     ],
+     [
+      "skin,",
+      53.795
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.64,
+   "t1": 56.985,
+   "lines": [
+    [
+     [
+      "the",
+      54.64
+     ],
+     [
+      "pigment",
+      54.8
+     ],
+     [
+      "cells",
+      55.3
+     ]
+    ],
+    [
+     [
+      "sit",
+      55.955
+     ],
+     [
+      "about",
+      56.095
+     ],
+     [
+      "a third",
+      56.405
+     ],
+     [
+      "of",
+      56.955
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.985,
+   "t1": 59.28,
+   "lines": [
+    [
+     [
+      "a paper's thickness",
+      56.985
+     ]
+    ],
+    [
+     [
+      "apart.",
+      58.5
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.053,
+   "t1": 61.203,
+   "lines": [
+    [
+     [
+      "So,",
+      60.053
+     ],
+     [
+      "which",
+      60.463
+     ],
+     [
+      "has",
+      60.533
+     ],
+     [
+      "more?",
+      60.748
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.203,
+   "t1": 62.383,
+   "lines": [
+    [
+     [
+      "None",
+      61.203
+     ],
+     [
+      "of",
+      61.638
+     ],
+     [
+      "them.",
+      61.668
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.383,
+   "t1": 63.953,
+   "lines": [
+    [
+     [
+      "Same",
+      62.383
+     ],
+     [
+      "cells,",
+      62.818
+     ]
+    ],
+    [
+     [
+      "every colour,",
+      63.233
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.953,
+   "t1": 66.013,
+   "lines": [
+    [
+     [
+      "each",
+      63.953
+     ],
+     [
+      "answering",
+      64.238
+     ]
+    ],
+    [
+     [
+      "its own sky.",
+      64.818
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.073,
+   "t1": 69.478,
+   "lines": [
+    [
+     [
+      "Next:",
+      67.073
+     ],
+     [
+      "why",
+      67.848
+     ],
+     [
+      "do",
+      67.998
+     ],
+     [
+      "we",
+      68.193
+     ]
+    ],
+    [
+     [
+      "still",
+      68.298
+     ],
+     [
+      "get",
+      68.518
+     ],
+     [
+      "goosebumps,",
+      68.778
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.478,
+   "t1": 71.013,
+   "lines": [
+    [
+     [
+      "with",
+      69.478
+     ],
+     [
+      "almost",
+      69.553
+     ],
+     [
+      "no",
+      69.928
+     ],
+     [
+      "fur?",
+      70.233
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 3.439,
+   "file": "vo/01.wav",
+   "text": "Which has more pigment cells? Count them, row by row."
+  },
+  {
+   "id": "vo02",
+   "t": 4.5,
+   "dur": 11.053,
+   "file": "vo/02.wav",
+   "text": "In the bottom row of skin, each pigment cell feeds melanin to a few dozen neighbours. Count them across these skins, and the number comes out about the same."
+  },
+  {
+   "id": "vo03",
+   "t": 16.633333333333333,
+   "dur": 8.688,
+   "file": "vo/03.wav",
+   "text": "What changes is the work each one does. In deeper skin, they make more of the dark melanin, in larger grains, handed out one by one."
+  },
+  {
+   "id": "vo04",
+   "t": 26.433333333333334,
+   "dur": 10.126,
+   "file": "vo/04.wav",
+   "text": "It's easy to assume darker skin simply has more of them. Nina Jablonski and George Chaplin set skin colour beside sunlight, all around the world, and the two matched."
+  },
+  {
+   "id": "vo05",
+   "t": 39.5,
+   "dur": 8.725,
+   "file": "vo/05.wav",
+   "text": "Where sunlight is fierce, darker skin guards folate, which healthy pregnancies need. Where it's weak, lighter skin lets enough through to make vitamin D."
+  },
+  {
+   "id": "vo06",
+   "t": 52.1,
+   "dur": 6.928,
+   "file": "vo/06.wav",
+   "text": "And on any one patch of skin, the pigment cells sit about a third of a paper's thickness apart."
+  },
+  {
+   "id": "vo07",
+   "t": 60.03333333333333,
+   "dur": 5.738,
+   "file": "vo/07.wav",
+   "text": "So, which has more? None of them. Same cells, every colour, each answering its own sky."
+  },
+  {
+   "id": "vo08",
+   "t": 67.03333333333333,
+   "dur": 3.754,
+   "file": "vo/08.wav",
+   "text": "Next: why do we still get goosebumps, with almost no fur?"
+  }
+ ]
+}

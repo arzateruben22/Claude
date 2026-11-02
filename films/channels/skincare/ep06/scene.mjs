@@ -67,12 +67,16 @@ for (const L of FILM.labels) {
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+endEl.style.marginTop = "-30vmin";                                          // the card sits above the tease's caption plate
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 
+const veil = document.createElement("div");                                // the cuts' dip to the slide colour (film.json "trans")
+Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
+document.getElementById("hud").prepend(veil);
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
 const SH = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
@@ -124,6 +128,9 @@ window.seek = function (t) {
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
+  let dip = 0;
+  for (const tr of FILM.trans) dip = Math.max(dip, 1 - Math.min(1, Math.abs(t - tr.t) / 0.22));
+  veil.style.opacity = (0.85 * dip).toFixed(4);
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

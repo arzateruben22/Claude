@@ -7,7 +7,7 @@
 //   const G = createGrains({ tone: 0.12, x: -40, seed: 31 });   scene.add(G.group);
 //   G.set({ show, spread, dim })   G.at.cell() → [x, y, z]   G.at.grain() → a grain near the front
 //
-// The cell is a translucent pale sphere with an ink outline and a violet-grey nucleus; the grains are lit,
+// The cell is a translucent pale sphere with a thin ink ring and a violet-grey nucleus; the grains are lit,
 // opaque ellipsoids in the section's melanin colour for that tone (toneColor), never a token.
 import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
@@ -20,8 +20,8 @@ export const createGrains = ({ tone = 0.5, x = 0, y = 0, z = 0, r = 16, seed = 3
   const living = toneColor("living", tone);
   cellMat.color.setRGB(...living.map((v) => v + (1 - v) * 0.45));
   const cell = new THREE.Mesh(new THREE.SphereGeometry(r, 40, 28), cellMat);
-  const line = new THREE.Mesh(cell.geometry, new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0.7, toneMapped: false }));
-  line.scale.setScalar(1.035);
+  // the cell's edge: a thin ink ring facing the camera (a full back-face shell would darken the whole translucent cell)
+  const line = new THREE.Mesh(new THREE.RingGeometry(r * 1.0, r * 1.05, 64), new THREE.MeshBasicMaterial({ color: 0x13252c, transparent: true, opacity: 0.7, toneMapped: false, side: THREE.DoubleSide }));
   const nuc = new THREE.Mesh(new THREE.SphereGeometry(r * 0.36, 28, 20), new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0 }));
   nuc.material.color.setRGB(...toneColor("nucleus", tone));
   nuc.position.set(0, -r * 0.12, 0);

@@ -37,7 +37,7 @@ UNIT = 36               # c2: one melanocyte supplies about 36 keratinocytes
 SC_UM, ROWS, GRAN_UM, SPIN_UM, BASAL_UM = 17.0, 15, 10.0, 48.0, 10.0    # the section as No. 001 draws it
 assert GAP_UM == 32 and 0.28 < GAP_UM / PAPER_UM < 0.36, "about a third"
 TONES = [0.12, 0.5, 0.9]                # light, medium, deep: side by side the whole film
-SEC_X = [-64.0, 0.0, 64.0]              # the three sections' centres (each 58 µm wide)
+SEC_X = [-56.0, 0.0, 56.0]              # the three sections' centres (each 50 µm wide)
 
 # ── shots ─────────────────────────────────────────────────────────────────
 # hook: the payoff, three sections, their pigment cells lit · rows: push down to the basal rows, count them · grains:
@@ -69,14 +69,15 @@ CAM = {
         {"t": B["change"]["t0"], "target": [0, -76, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 380, "az": -1, "ease": "sine"},
     ],
     "grains": [
-        {"t": B["change"]["t0"], "target": [GX, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 330, "az": -6},
-        {"t": CUE["larger"], "target": [GX + 22, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 250, "az": -2, "ease": "inout2"},
-        {"t": B["why"]["t0"], "target": [GX + 30, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 230, "az": 0, "ease": "sine"},
+        {"t": B["change"]["t0"], "target": [GX, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": -6},
+        {"t": CUE["deeper"], "target": [GX + 10, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 440, "az": -3, "ease": "inout2"},
+        {"t": CUE["larger"], "target": [GX + 40, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 230, "az": -1, "ease": "inout2"},
+        {"t": B["why"]["t0"], "target": [GX + 44, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 210, "az": 0, "ease": "sine"},
     ],
     "trio": [{"t": B["why"]["t0"], "target": [0, -60, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 560, "az": 4},
              {"t": t_globe, "target": [0, -54, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 640, "az": 6, "ease": "sine"}],
-    "globe": [{"t": t_globe, "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 340, "az": 0},
-              {"t": B["whoa"]["t0"], "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 290, "az": 0, "ease": "sine"}],
+    "globe": [{"t": t_globe, "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 620, "az": 0},
+              {"t": B["whoa"]["t0"], "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 520, "az": 0, "ease": "sine"}],
     "strong": [{"t": B["whoa"]["t0"], "target": [SEC_X[2], -30, 6], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": 6},
                {"t": t_weak, "target": [SEC_X[2], -44, 10], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 250, "az": 4, "ease": "sine"}],
     "weak": [{"t": t_weak, "target": [SEC_X[0], -30, 6], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": -6},
@@ -99,6 +100,7 @@ LABELS = [
     {"id": "l-deep", "text": "deeper", "kind": "layer", "anchor": "top2", "t0": CUE["count"], "t1": B["change"]["t0"], "shot": "rows", "side": 1, "v": "above", "fixed": True},
     {"id": "l-g-light", "text": "small, in clusters", "kind": "cell", "anchor": "g0", "t0": CUE["work"] + 0.3, "t1": B["why"]["t0"], "shot": "grains", "side": -1, "v": "above", "fixed": True},
     {"id": "l-g-deep", "text": "larger, one by one", "kind": "cell", "anchor": "g2", "t0": CUE["larger"], "t1": B["why"]["t0"], "shot": "grains", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-more", "text": "more pigment cells? no", "kind": "cell", "anchor": "mel2", "t0": CUE["more"], "t1": t_globe, "shot": "trio", "side": 1},
     {"id": "l-uv", "text": "ultraviolet, strongest here", "kind": "uv", "anchor": "band", "t0": CUE["sunlight"], "t1": B["whoa"]["t0"], "shot": "globe", "side": 1},
     {"id": "l-folate", "text": "folate, kept safe", "kind": "water", "anchor": "folate", "t0": CUE["folate"], "t1": t_weak, "shot": "strong", "side": 1},
     {"id": "l-vitd", "text": "vitamin D made", "kind": "water", "anchor": "vitd", "t0": CUE["vitd"], "t1": B["toscale"]["t0"], "shot": "weak", "side": 1},
@@ -113,7 +115,7 @@ BADGES = [
     {"id": "b-model", "text": "model", "t0": t_globe, "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-jc", "text": "Jablonski & Chaplin, 2000", "t0": CUE["colour"], "t1": t_end, "slot": "tl"},
     {"id": "b-hyp", "text": "hypothesis", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tr"},
-    {"id": "b-est", "text": "estimate", "t0": CUE["third"], "t1": B["takeaway"]["t0"], "slot": "tr"},
+    {"id": "b-est", "text": f"≈ {GAP_UM} µm apart · estimate", "t0": CUE["third"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-simp-z", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
 ]
 # the Jablonski & Chaplin note stays only through the whoa
@@ -123,10 +125,11 @@ COUNTERS = [
     {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": SPINE},
     {"id": "c-same", "label": "per mm², in each skin", "fmt": "text", "text": "≈ 955", "t0": CUE["same"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["matched"] - 0.4, "t1": B["whoa"]["t0"], "at": SPINE},
-    {"id": "c-gap", "label": "between pigment cells", "fmt": "text", "text": f"≈ {GAP_UM} µm", "t0": CUE["third"], "t1": B["takeaway"]["t0"], "at": SPINE},
     {"id": "c-end", "label": "per mm², every colour", "fmt": "text", "text": "≈ 955", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
+# every cut is a short dip to the slide colour (as No. 004), so no cut jumps the picture's brightness in one frame
+TRANS = [{"t": c, "kind": "dip"} for c in CUTS]
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -147,7 +150,7 @@ END = {"title": "Next layer: why do we still get goosebumps, with almost no *fur
        "next": "On the same patch of skin, light and dark skin have about the same number of pigment cells (≈ 955 per mm² on average)."}
 POSTER = A("vo07:sky.", 0.3)
 
-glue(f, {"vo01": ["pigment cells?", "row by row."], "vo02": ["a few dozen", "about the same."], "vo03": ["one by one."],
+glue(f, {"vo01": ["pigment cells?", "row by row."], "vo02": ["a few dozen neighbours.", "about the same."], "vo03": ["one by one."],
          "vo04": ["Nina Jablonski", "George Chaplin"], "vo05": ["vitamin D."], "vo06": ["a third", "a paper's thickness"],
          "vo07": ["every colour,", "its own sky."]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
@@ -157,7 +160,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "tones": TONES,
     "bio": {"sc_um": SC_UM, "rows": ROWS, "gran_um": GRAN_UM, "spin_um": SPIN_UM, "basal_um": BASAL_UM, "paper_um": PAPER_UM,
             "gap_um": GAP_UM, "unit": UNIT, "sec_x": SEC_X, "gx": GX, "wx": WX},
-    "cam": CAM, "cue": CUE, "gauge": GAUGE,
+    "cam": CAM, "cue": CUE, "gauge": GAUGE, "trans": TRANS,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": CAPS,
@@ -182,6 +185,8 @@ for k, tk in enumerate(COUNT_T):
 ev += [
     {"t": CUE["feeds"], "kind": "diffuse", "tag": "feeds"},
     {"t": CUE["larger"], "kind": "reveal", "tag": "grains"},
+    {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "into-cells"},
+    {"t": t_globe, "kind": "scale.jump", "tag": "out-to-world"},
     {"t": CUE["matched"], "kind": "cell.land", "tag": "matched"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": CUE["vitd"], "kind": "diffuse", "tag": "vitd"},

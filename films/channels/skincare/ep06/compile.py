@@ -116,6 +116,8 @@ COUNTERS = [
     {"id": "c-hair", "label": "our fine hairs, across", "fmt": "text", "text": "< 30 µm", "t0": CUE["thinner"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
+# every cut is a short dip to the slide colour (as No. 004), so no cut jumps the picture's brightness in one frame
+TRANS = [{"t": c, "kind": "dip"} for c in CUTS]
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -144,7 +146,7 @@ film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "tone": TONE,
     "bio": {"vellus_um": VELLUS_UM, "paper_um": PAPER_UM, "fx": FX, "px": PX},
-    "cam": CAM, "cue": CUE, "gauge": GAUGE,
+    "cam": CAM, "cue": CUE, "gauge": GAUGE, "trans": TRANS,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": CAPS,
@@ -165,6 +167,7 @@ for b in BADGES:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
     {"t": CUE["tugs"], "kind": "cell.land", "tag": "tug"},
+    {"t": B["normal"]["t0"], "kind": "scale.jump", "tag": "into-follicle"},
     {"t": CUE["fluffs"], "kind": "reveal", "tag": "fluff"},
     {"t": CUE["reaches"], "kind": "diffuse", "tag": "reach"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},

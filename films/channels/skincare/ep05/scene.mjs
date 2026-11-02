@@ -19,7 +19,7 @@ import { createSection } from "../set/section.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
-import { createRays } from "../set/uv04.js";
+import { createRays } from "../set/rays.js";
 import { createMelanocyte, createCaps } from "../set/melanocyte04.js";
 import { createGrains } from "../set/grains05.js";
 import { createGlobe } from "../set/globe05.js";
@@ -44,17 +44,17 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, 
 // ── the set: three sections, three pigment cells on each basal row, caps over the nuclei ──
 const LAY = { sc: BIO.sc_um, gran: BIO.gran_um, spin: BIO.spin_um, basal: BIO.basal_um, rows: BIO.rows };
 const SEC = BIO.sec_x.map((x, i) => {
-  const S = createSection({ width: 58, depth: 46, ...LAY, seed: 31 + i, x });
+  const S = createSection({ width: 50, depth: 46, ...LAY, seed: 31 + i, x });
   const caps = createCaps(S); S.group.add(caps.mesh);
-  const mels = [-17, 0, 17].map((mx, j) => createMelanocyte(S, { x: mx, seed: 40 + i * 3 + j, branches: 3, n: 30 }));
+  const mels = [-15, 0, 15].map((mx, j) => createMelanocyte(S, { x: mx, seed: 40 + i * 3 + j, branches: 3, n: 30, spread: 9 }));
   scene.add(S.group, ...mels.map((m) => m.group));
   return { S, caps, mels, x, tone: TONES[i] };
 });
-const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 1.5);
+const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 0.9), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 3.0);   // as No. 002
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
-const raysStrong = createRays({ n: 70, x: [BIO.sec_x[2] - 28, BIO.sec_x[2] + 26], z: [-16, 22], top: 70, floor: -80, seed: 52, speed: 80 });
-const raysWeak = createRays({ n: 14, x: [BIO.sec_x[0] - 28, BIO.sec_x[0] + 26], z: [-16, 22], top: 70, floor: -80, seed: 53, speed: 60 });
-scene.add(raysStrong.mesh, raysWeak.mesh);
+const raysStrong = createRays({ n: 80, x: [-24, 22], z: [8, 22], top: 70, seed: 52, width: 0.4, len: 7 });
+const raysWeak = createRays({ n: 16, x: [-24, 22], z: [8, 22], top: 70, seed: 53, width: 0.4, len: 7, depthIn: 30 });
+scene.add(raysStrong.group, raysWeak.group);
 // folate (in a capillary loop under the deep section) and vitamin D (made in the light section's living layers): glows
 const glowBead = (r) => new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, toneMapped: true }));
 const folate = new THREE.Group(), vitd = new THREE.Group();
@@ -88,12 +88,16 @@ for (const L of FILM.labels) {
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+endEl.style.marginTop = "-30vmin";                                          // the card sits above the tease's caption plate
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 
+const veil = document.createElement("div");                                // the cuts' dip to the slide colour (film.json "trans")
+Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
+document.getElementById("hud").prepend(veil);
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d * 0.8)));
 const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
@@ -132,13 +136,14 @@ window.seek = function (t) {
       m.set({ tone: s.tone, fill, travel, glow: Math.max(glow * (shot === "rows" ? 0.5 : 1), counted), dim: shot === "gauge" ? 0.6 : 0 });
     });
   });
-  A.mel1 = SEC[1].mels[1].at.body();
+  A.mel1 = SEC[1].mels[1].at.body(); A.mel2 = SEC[2].mels[2].at.body();
   A.top0 = [SEC[0].x - 14, 0, 23]; A.top2 = [SEC[2].x + 14, 0, 23];
 
   // ── UV over the deep section (fierce: stopped at the caps) and the light one (weak: a few reach the living layers) ──
   const capY = -BIO.sc_um - BIO.gran_um - 6;
-  raysStrong.set(t, { gain: shot === "strong" ? fadeIn(t, SH.strong, 0.5) : 0, color: UVC, pass: 0.06, stopAt: () => capY });
-  raysWeak.set(t, { gain: shot === "weak" ? fadeIn(t, SH.weak, 0.5) : 0, color: UVC, pass: 0.8, stopAt: () => -62 });
+  // fierce UV over the deep section: nearly all of it ends at the caps; weak UV over the light one: most gets into the living layers
+  raysStrong.set(t, { filmTop: capY + 4, filmBottom: capY - 2, pass: 0.05, gain: shot === "strong" ? fadeIn(t, SH.strong, 0.5) : 0, color: UVC, hitColor: HIT, x0: BIO.sec_x[2], rate: 0.6 });
+  raysWeak.set(t, { filmTop: capY + 4, filmBottom: capY - 2, pass: 0.8, gain: shot === "weak" ? fadeIn(t, SH.weak, 0.5) : 0, color: UVC, hitColor: HIT, x0: BIO.sec_x[0], rate: 0.35 });
   const fo = shot === "strong" ? fadeIn(t, CUE.folate - 0.3, 0.5) : 0, vd = shot === "weak" ? fadeIn(t, CUE.vitd - 0.3, 0.6) : 0;
   folate.children.forEach((b) => { b.material.color.setRGB(...WATER); b.material.opacity = fo; }); folate.visible = fo > 0.01;
   vitd.children.forEach((b, i) => { b.material.color.setRGB(...WATER); b.material.opacity = vd * (0.6 + 0.4 * Math.sin(t * 2 + i)); }); vitd.visible = vd > 0.01;
@@ -157,11 +162,14 @@ window.seek = function (t) {
   camera.updateMatrixWorld();
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (["hook", "trio", "gauge", "close"].includes(shot) ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
+  const gOp = (shot === "gauge" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
   const sc = BIO.sc_um + (G.sc_um - BIO.sc_um) * Math.min(1, lift * 4);
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
+  let dip = 0;
+  for (const tr of FILM.trans) dip = Math.max(dip, 1 - Math.min(1, Math.abs(t - tr.t) / 0.22));
+  veil.style.opacity = (0.85 * dip).toFixed(4);
   hud.update(t);
   tBars.update(t);
   eBars.update(t);
