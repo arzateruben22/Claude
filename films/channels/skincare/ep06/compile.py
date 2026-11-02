@@ -54,7 +54,7 @@ CUE = {
     "air": A("vo03:air."), "chimp": A("vo03:chimpanzee,"), "ours": A("vo03:ours"), "but": A("vo04:But"), "hairs": A("vo06:hairs"), "fine": A("vo03:fine,"), "leftover": A("vo04:leftover."),
     "harvard": A("vo04:Harvard"), "reaches": A("vo04:reaches"), "stem": A("vo04:stem"), "holds": A("vo04:holds"),
     "wakes": A("vo05:wakes"), "sooner": A("vo05:sooner."), "take": A("vo05:Take"), "fades": A("vo05:fades."),
-    "thinner": A("vo06:thinner"), "paper": A("vo06:sheet"), "raises": A("vo07:raises"), "because": A("vo07:Because"), "deeper": A("vo08:deeper."), "looks": A("vo07:looks"),
+    "thinner": A("vo06:thinner"), "paper": A("vo06:sheet"), "raises": A("vo07:raises"), "because": A("vo07:Because"), "goose2": A("vo07:goosebumps?"), "deeper": A("vo08:deeper."), "looks": A("vo07:looks"),
 }
 
 # ── the camera (the microscope-stage rig: target, dist, el, az, fov, fx, fy) ──
@@ -81,15 +81,15 @@ CAM = {
     # the twin follicle at the cold shot's framing (a match cut): the same follicle, its muscle about to be taken away
     "nomuscle": [{"t": t_nom, "target": [FX + 1100 + 300, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2700, "az": -1},
                  {"t": B["toscale"]["t0"], "target": [FX + 1100 + 220, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2500, "az": 0, "ease": "sine"}],
-    "gauge": [{"t": B["toscale"]["t0"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.66, "fy": 0.47, "dist": 3600, "az": -2},
+    "gauge": [{"t": B["toscale"]["t0"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.66, "fy": 0.47, "dist": 2800, "az": -2},
               {"t": CUE["paper"], "target": [FX - 40, 120, 0], "el": 6, "fov": 30, "fx": 0.70, "fy": 0.46, "dist": 1700, "az": -3, "ease": "inout2"},   # a push to the real hair at the surface, beside its bar
               {"t": B["takeaway"]["t0"], "target": [FX - 40, 120, 0], "el": 6, "fov": 30, "fx": 0.70, "fy": 0.46, "dist": 1600, "az": -3, "ease": "sine"}],
     "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 2600, "az": -6}, {"t": A("vo07:Because", -0.15), **HOOK, "dist": 2100, "az": -8, "ease": "inout2"}],   # a push into the bumps...
     "payoff": [{"t": A("vo07:Because", -0.15), "target": [FX + 130, -220, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 3000, "az": -4},   # ...that lands inside one: the muscle, its hair, the stem cells
                {"t": CUE["looks"], "target": [FX + 130, -220, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2500, "az": -2, "ease": "inout2"},
                {"t": CUE["deeper"] - 0.3, "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2400, "az": -1, "ease": "sine"},
-               {"t": CUE["deeper"] + 1.0, "target": [FX + 200, -700, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1500, "az": 1, "ease": "inout2"},   # "deeper": down into the dermis under the card
-               {"t": B["tease"]["t1"], "target": [FX + 200, -720, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1450, "az": 1, "ease": "sine"}],
+               {"t": CUE["deeper"] + 1.0, "target": [FX + 200, -460, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1800, "az": 1, "ease": "inout2"},   # "deeper": down into the dermis under the card
+               {"t": B["tease"]["t1"], "target": [FX + 200, -470, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1750, "az": 1, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
     for a, b in zip(keys, keys[1:]):
@@ -99,13 +99,14 @@ for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4�
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-muscle", "text": "a tiny muscle", "kind": "cell", "anchor": "muscle", "t0": CUE["muscle"], "t1": CUE["tugs"] - 0.2, "shot": "follicle", "side": 1},
-    {"id": "l-nerve", "text": "a nerve", "kind": "layer", "anchor": "nerve", "t0": CUE["tugs"], "t1": B["change"]["t0"], "shot": "follicle", "side": 1},
+    {"id": "l-nerve", "text": "a nerve", "kind": "layer", "anchor": "nerve", "t0": CUE["tugs"], "t1": B["change"]["t0"], "shot": "follicle", "side": 1, "v": "below"},
     {"id": "l-hair", "text": "the hair stands", "kind": "cell", "anchor": "hair", "t0": CUE["upright"], "t1": B["change"]["t0"], "shot": "follicle", "side": -1},
     {"id": "l-air", "text": "trapped air", "kind": "layer", "anchor": "air", "t0": CUE["air"] - 0.9, "t1": t_ours - 0.05, "shot": "fur", "side": 1},
     {"id": "l-fine", "text": "fine hairs", "kind": "cell", "anchor": "finehair", "t0": CUE["fine"], "t1": B["why"]["t0"], "shot": "ours", "side": 1},
     {"id": "l-stem", "text": "stem cells", "kind": "water", "anchor": "stem", "t0": CUE["stem"], "t1": B["whoa"]["t0"], "shot": "bulge", "side": -1},
     {"id": "l-hold", "text": "the muscle holds the nerve", "kind": "cell", "anchor": "insertion", "t0": CUE["holds"], "t1": B["whoa"]["t0"], "shot": "bulge", "side": 1},
     {"id": "l-new", "text": "a new hair", "kind": "cell", "anchor": "bulb", "t0": CUE["wakes"] + 0.8, "t1": t_nom, "shot": "cold", "side": 1},
+    {"id": "l-twin", "text": "a second follicle", "kind": "cell", "anchor": "nomhair", "t0": t_nom + 0.1, "t1": CUE["take"] + 0.7, "shot": "nomuscle", "side": -1},
     {"id": "l-nomus", "text": "no muscle", "kind": "cell", "anchor": "nomus", "t0": CUE["take"] + 0.8, "t1": CUE["fades"] - 0.3, "shot": "nomuscle", "side": 1},
     {"id": "l-fade", "text": "its wiring fades", "kind": "layer", "anchor": "nomnerve", "t0": CUE["fades"] - 0.1, "t1": B["toscale"]["t0"], "shot": "nomuscle", "side": 1},
 ]
@@ -146,7 +147,7 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):  # two values never share the screen
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["hairs"], "paper": CUE["paper"],
-         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": VELLUS_UM, "paper_um": PAPER_UM, "bar": "hair"}
+         "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "sc_um": VELLUS_UM, "paper_um": PAPER_UM, "bar": "hair"}
 
 TITLE = {"series": "Outer Layer · No. 006", "title": "*Goosebumps*", "t1": CUE["fur"] - 0.3, "sig": A("vo01:goosebumps?", 0.35)}
 END = {"title": "Next season: *deeper*", "follow": "Outer Layer · Season 1",

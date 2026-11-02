@@ -4,13 +4,13 @@
 
 | | Round 1 | Round 2 | Round 3 | Round 4 |
 |---|---|---|---|---|
-| a. First 2 seconds | 3 | 4 | 4 | |
-| b. One thread | 4 | 4 | 4 | |
-| c. Picture moves with the sentence | 2 | 3 | 4 | |
-| d. Every cut or move motivated | 2 | 3 | 3 | |
-| e. Voice carries meaning, screen the figures | 3 | 3 | 4 | |
-| f. Rhythm: long line, short landing | 3 | 4 | 4 | |
-| g. Ending calls back, tease lands | 3 | 3 | 3 | |
+| a. First 2 seconds | 3 | 4 | 4 | 4 |
+| b. One thread | 4 | 4 | 4 | 4 |
+| c. Picture moves with the sentence | 2 | 3 | 4 | 4 |
+| d. Every cut or move motivated | 2 | 3 | 3 | 4 |
+| e. Voice carries meaning, screen the figures | 3 | 3 | 4 | 4 |
+| f. Rhythm: long line, short landing | 3 | 4 | 4 | 4 |
+| g. Ending calls back, tease lands | 3 | 3 | 3 | 4 |
 
 Round 1 (10 findings): the bump hidden under the spine and the muscle not shortening; the niche under the counter and
 the stem cells not the brightest; no frost, no visible new hair; the wiring not fading; the fur shot unreadable, air in
@@ -29,3 +29,10 @@ is the twin follicle at the cold shot's framing (a match cut), muscle dissolving
 block in frame at a time (no seams); a payoff shot on "Because": the close pushes into the bumps and lands inside one,
 the muscle raising its hair and the stem cells lit; on "deeper" the camera sinks into the dermis under the end card;
 the gauge push keeps the hair in frame; wider footnote.
+Round 4 (final candidate): all 4s. Leftovers fixed before the final: the close's bumps rise again on "goosebumps?"
+(the hook's picture) before the push inside one; the sink on "deeper" stays inside the block; the gauge card fades
+out instead of shrinking back, and appears only as it lifts; the to-scale beat opens closer (no void); "a second
+follicle" chip at the twin's cut; the nerve label below its junction. Accepted: the shaft's kink at the surface
+(simplified), no match cut into the fur. The tease stays a placeholder until season 2's first topic is named.
+
+Draft preview (round 4): `review/draft-preview-r4.mp4`.
