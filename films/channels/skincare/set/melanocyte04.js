@@ -35,14 +35,14 @@ export const createCaps = (S, { scale = 1 } = {}) => {
     mesh, cells,
     // tan: 0 (none) … 1 (a full cap over every nucleus); tone: the section's melanin level; dim: 0 … 1
     set({ tone = 0.5, tan = 0, dim = 0 } = {}) {
-      const c = toneColor("melanin", Math.min(1, tone + 0.25)), k = (1 - 0.5 * dim) * 0.85;
+      const c = toneColor("melanin", Math.min(1, tone + 0.45)), k = (1 - 0.5 * dim) * 0.62;   // darker than the cell around it, in every tone
       mat.color.setRGB(c[0] * k, c[1] * k, c[2] * k);
       mesh.visible = tan > 0.01;
       cells.forEach((cl, i) => {
         const g = Math.min(1, Math.max(0, tan * 1.15 - 0.15 * jit[i] + 0.05));
         const flat = cl.sy / 6.0;
         dummy.position.set(cl.pos[0] - ox, cl.pos[1] + 1.1 * flat, cl.pos[2]);   // a dome over the nucleus, cut open with it
-        dummy.scale.set(3.1 * scale * g * jit[i] + 1e-4, (2.3 * flat * g + 1e-4) * scale, 3.1 * scale * g * jit[i] + 1e-4);
+        dummy.scale.set(3.5 * scale * g * jit[i] + 1e-4, (2.6 * flat * g + 1e-4) * scale, 3.5 * scale * g * jit[i] + 1e-4);
         dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
       });
       mesh.instanceMatrix.needsUpdate = true;
@@ -56,7 +56,7 @@ export const createCaps = (S, { scale = 1 } = {}) => {
   };
 };
 
-export const createMelanocyte = (S, { x = 6, seed = 21, n = 90, branches = 5 } = {}) => {
+export const createMelanocyte = (S, { x = 6, seed = 21, n = 90, branches = 5, spread = 34 } = {}) => {
   const D = S.dims, z1 = D.D / 2, ox = S.group.position.x, R = rng(seed);
   const yb = S.junction(x) + D.BA * 0.45, zc = z1 - 3.2;
   const g = new THREE.Group();
@@ -74,9 +74,9 @@ export const createMelanocyte = (S, { x = 6, seed = 21, n = 90, branches = 5 } =
   const tubeLine = new THREE.MeshBasicMaterial({ color: 0x13252c, transparent: true, opacity: 0.8, toneMapped: false, side: THREE.BackSide });
   for (let b = 0; b < branches; b++) {
     const a = (b / (branches - 1) - 0.5) * 2;                          // −1 … 1 across
-    const tipX = x + a * 34 + (R() - 0.5) * 6, tipY = D.yS - D.SP * (0.25 + 0.45 * R());
-    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(x + a * 3, yb + 2, zc), new THREE.Vector3(x + a * 14, yb + 9 + R() * 4, zc + 0.6),
-      new THREE.Vector3(x + a * 25, (yb + tipY) / 2 + 6, zc + 0.3), new THREE.Vector3(tipX, tipY, zc)]);
+    const tipX = x + a * spread + (R() - 0.5) * 6 * spread / 34, tipY = D.yS - D.SP * (0.25 + 0.45 * R());
+    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(x + a * 3, yb + 2, zc), new THREE.Vector3(x + a * spread * 0.41, yb + 9 + R() * 4, zc + 0.6),
+      new THREE.Vector3(x + a * spread * 0.74, (yb + tipY) / 2 + 6, zc + 0.3), new THREE.Vector3(tipX, tipY, zc)]);
     curves.push(c);
     const geo = new THREE.TubeGeometry(c, 40, 1.05, 8, false);
     g.add(new THREE.Mesh(geo, tubeLine), new THREE.Mesh(geo, tubeMat));

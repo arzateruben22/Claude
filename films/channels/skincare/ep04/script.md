@@ -16,7 +16,7 @@ ladder → back out to the basal row and a melanocyte → the parasols across a 
 
 Honesty, on screen: the section is "simplified"; the DNA ladder is a "model" at "scale ×N"; the chemical
 message is an "illustration"; the days of tanning run under "time ×N"; SPF 3–4 is an "estimate". The skin is
-drawn in three melanin levels (medium in the hook, deep at the pigment cell, light in the whoa) and every tone
+drawn in three melanin levels (medium in the hook and the whoa, deep at the pigment cell, light in the mice pair) and every tone
 tans in the picture; nothing about any one tone is said or implied. No advice: the film says what a tan is,
 never what to do.
 
@@ -39,21 +39,21 @@ vo: In Boston, mice whose skin cells lacked that guardian never tanned at all. {
 ## whoa {shot: time runs on (time ×N, day 0 → 3): melanin climbs the branches into the cells above and settles over each nucleus as a cap; pull back on "Together" across a wide field of capped cells in a light tone under UV dashes, about a third of the dashes still getting through · spine 48–72 h → SPF ≈ 3–4 · badge: estimate · picture-only 3.2 s · energy: 0.8} (40.5–53 s)
 vo: Over the next few days, the melanin settles over each nucleus like a tiny *parasol*. {c10,c11} Together, a whole tan adds up to about SPF *three or four*. {c12}
 
-## toscale {segment: toscale · the gauge lifts to centre beside the section: one parasol's width fills in, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (53–60.5 s)
-vo: Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of *paper*. {c13,c14}
+## toscale {segment: toscale · the gauge lifts to centre beside the section: a dozen parasols stack up inside the paper's 100 µm · picture-only 1.2 s · energy: 0.4} (53–62 s)
+vo: Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of *paper*. {c13,c14}
 
-## takeaway {shot: back to the hook's composition, UV dashes again, the parasols lit · picture-only 0.5 s · energy: 0.3} (60.5–67 s)
+## takeaway {shot: back to the hook's composition, UV dashes again, the parasols lit · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
 vo: So, is a tan a shield? A thin one. {c15} It's how your skin *remembers* the light. {c16}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67–73 s)
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
 vo: Next: who has more pigment cells, the darkest skin or the *lightest*? {-}
 end card: "Next layer: who has more pigment cells, the darkest skin or the lightest?" · "Outer Layer · No. 005"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see `claims.json`.
 - "About SPF three or four" is Harvard Health's figure for a base tan; other summaries say "SPF 4 at most".
-- "A dozen side by side would span a sheet of paper": a keratinocyte nucleus ≈ 8.6 µm (Gareau 2011) against
-  100 µm; 100 ÷ 8.6 ≈ 11.6, "about a dozen". Both are on the gauge.
+- "A dozen stacked would be as thick as a sheet of paper": a keratinocyte nucleus ≈ 8.6 µm (Gareau 2011)
+  against 100 µm; 100 ÷ 8.6 ≈ 11.6, "about a dozen". The gauge stacks twelve parasols inside the paper's thickness.
 - A person opens each link, and a board-certified dermatologist signs off, before posting.
 - Listen at T0: ultraviolet, melanin, nucleus, parasol.
 - vo05: the recognizer heard "SPF3", so "SPF" and "three" were placed by hand from the line's energy envelope (S 8.12 s, θ 8.80 s); note in words.json. Re-check at T0.

@@ -760,19 +760,19 @@
   },
   {
    "id": "vo06",
-   "text": "Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of paper.",
-   "heard": "Each parasol is about as wide as its nucleus. A dozen side by side would span a sheet of paper.",
+   "text": "Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of paper.",
+   "heard": "Each parasol is about as wide as its nucleus. A dozen stacked would be as thick as a sheet of paper.",
    "words": [
     {
      "w": "Each",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "parasol",
-     "start": 0.41,
-     "end": 1.12,
+     "start": 0.435,
+     "end": 1.04,
      "heard": true
     },
     {
@@ -784,103 +784,109 @@
     {
      "w": "about",
      "start": 1.335,
-     "end": 1.52,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "as",
-     "start": 1.55,
+     "start": 1.56,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "wide",
-     "start": 1.695,
+     "start": 1.715,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "as",
-     "start": 2.12,
-     "end": 2.24,
+     "start": 2.17,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "its",
-     "start": 2.275,
+     "start": 2.45,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "nucleus:",
-     "start": 2.495,
+     "start": 2.54,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.825,
-     "end": 3.92,
+     "start": 3.875,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "dozen",
-     "start": 3.985,
-     "end": 4.48,
+     "start": 4.035,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "side",
-     "start": 4.525,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "by",
-     "start": 4.885,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "side",
-     "start": 5.215,
-     "end": 5.52,
+     "w": "stacked",
+     "start": 4.615,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "would",
-     "start": 5.595,
-     "end": 5.76,
+     "start": 5.05,
+     "end": 5.2,
      "heard": true
     },
     {
-     "w": "span",
-     "start": 5.895,
-     "end": 6.08,
+     "w": "be",
+     "start": 5.19,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.455,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "thick",
+     "start": 5.56,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.85,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.135,
-     "end": 6.32,
+     "start": 5.89,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "sheet",
-     "start": 6.39,
-     "end": 6.56,
+     "start": 6.11,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "of",
-     "start": 6.56,
-     "end": 6.72,
+     "start": 6.46,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "paper.",
-     "start": 6.765,
-     "end": 7.28,
+     "start": 6.665,
+     "end": 7.2,
      "heard": true
     }
    ]

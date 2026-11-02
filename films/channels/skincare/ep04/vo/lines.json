@@ -78,15 +78,15 @@
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of paper.",
+   "text": "Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "ˈiːtʃ pˈæɹəsɒl ɪz ɐbˌaʊt az wˈaɪd az ɪts njˈuːklɪəs: ɐ dˈʌzən sˈaɪd baɪ sˈaɪd wʊd spˈan ɐ ʃˈiːt ɒv pˈeɪpə.",
+   "phonemes": "ˈiːtʃ pˈæɹəsɒl ɪz ɐbˌaʊt az wˈaɪd az ɪts njˈuːklɪəs: ɐ dˈʌzən stˈakt wʊd biː az θˈɪk az ɐ ʃˈiːt ɒv pˈeɪpə.",
    "speed": 0.8,
    "file": "06.wav",
-   "dur": 7.306,
-   "sha256": "50687822c9a42db2a50ae0db87dc094e28aa18e8446d5d448ff3bf1b2c9b29f9"
+   "dur": 7.225,
+   "sha256": "71fdbea38a4c3e5071f983381bbf16dac81cf49e29a245cf4c65aa17dc4602df"
   },
   {
    "id": "vo07",

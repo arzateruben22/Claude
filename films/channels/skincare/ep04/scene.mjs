@@ -20,7 +20,7 @@ import { createSection } from "../set/section.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
-import { createRays } from "../set/uv04.js";
+import { createRays } from "../set/rays.js";
 import { createDNA } from "../set/dna04.js";
 import { createMelanocyte, createCaps, createSignal } from "../set/melanocyte04.js";
 
@@ -53,20 +53,25 @@ const hc = caps.cellNear(BIO.hcell), HC = hc.pos;
 const hcRing = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({ color: 0x13252c, side: THREE.BackSide, transparent: true, opacity: 0, toneMapped: false }));
 hcRing.position.set(HC[0], HC[1], HC[2]); hcRing.scale.set(7.4, 6.8 * hc.sy / 6, 7.4);
 scene.add(hcRing);
+const p53 = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, toneMapped: true }));
+p53.position.set(HC[0], HC[1], HC[2] + 2.5); p53.scale.setScalar(3.4);
+scene.add(p53);
 // the pair (why): two small sections side by side; the left (with p53) tans, the right (without) never does
 const PL = createSection({ width: 60, depth: 46, ...LAY, seed: 11, x: -36 }), PR = createSection({ width: 60, depth: 46, ...LAY, seed: 12, x: 36 });
 const capsL = createCaps(PL), capsR = createCaps(PR);
 PL.group.add(capsL.mesh); PR.group.add(capsR.mesh);
-const melL = createMelanocyte(PL, { x: 0, seed: 22, branches: 3, n: 50 }), melR = createMelanocyte(PR, { x: 0, seed: 23, branches: 3, n: 50 });
+const melL = createMelanocyte(PL, { x: 0, seed: 22, branches: 3, n: 50, spread: 20 }), melR = createMelanocyte(PR, { x: 0, seed: 23, branches: 3, n: 50, spread: 20 });
 scene.add(PL.group, PR.group, melL.group, melR.group);
 // UV dashes over each place
-const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 1.5);
+const UVC = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 0.9), HIT = lin(window.THEME.tokens["uv-glow"]).map((v) => v * 3.0);   // as No. 002: rays under the bloom knee; what gets in glows
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
-const raysS = createRays({ n: 70, x: [-80, 70], z: [-20, 28], top: 80, floor: -60, seed: 9 });
-const raysP = createRays({ n: 50, x: [-64, 60], z: [-18, 22], top: 70, floor: -60, seed: 10 });
-const raysD = createRays({ n: 10, x: [-40, 40], z: [-6, 6], top: 80, floor: -60, seed: 13, len: 16, width: 1.4, speed: 90 });
-raysD.mesh.position.x = BIO.dna_x;
-scene.add(raysS.mesh, raysP.mesh, raysD.mesh);
+// the rays fall in front of the cut face's first cells (z near the face), so the ones that get in can be seen
+const raysS = createRays({ n: 90, x: [-80, 70], z: [14, 29], top: 70, seed: 9, width: 0.4, len: 7 });
+const raysP = createRays({ n: 60, x: [-64, 60], z: [8, 22], top: 70, seed: 10, width: 0.4, len: 7 });
+const raysD = createRays({ n: 10, x: [-40, 40], z: [-6, 6], top: 80, seed: 13, width: 0.6, len: 12, depthIn: 0 });
+raysD.group.position.x = BIO.dna_x;
+scene.add(raysS.group, raysP.group, raysD.group);
+const HIDE = { gain: 0 };
 // the DNA ladder (its own place) and the message
 const dna = createDNA({ x: BIO.dna_x, seed: 4 });
 scene.add(dna.group);
@@ -101,12 +106,21 @@ for (const L of FILM.labels) {
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: at(L.anchor), t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+endEl.style.marginTop = "-30vmin";                                          // the card sits above the tease's caption plate
 const foot = endEl.querySelector(".nx");                                    // the end card's footnote: small and quiet
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;   // the lifted bar names this episode's subject
 
+// cuts: an iris (a slide-coloured disc that grows from the followed cell's nucleus, then opens on the next place)
+// on the scale jumps, a short dip to the slide colour on the others (film.json "trans")
+const veil = document.createElement("div");
+Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0" });
+document.getElementById("hud").prepend(veil);
+// "to scale": a dozen parasols stacked inside the paper's bar, one by one, so "a dozen stacked" is on screen
+const gsvg = document.querySelector(".ol-gauge"), NS = "http://www.w3.org/2000/svg";
+const stack = Array.from({ length: G.n }, () => { const r = document.createElementNS(NS, "rect"); r.setAttribute("fill", "var(--water)"); r.setAttribute("rx", 2 * S1); gsvg.appendChild(r); return r; });
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const winOp = (t, t0, t1, d = 0.4) => Math.min(fadeIn(t, t0, d), 1 - E.in3(seg(t, t1, t1 + d * 0.8)));
 const B0 = Object.fromEntries(FILM.beats.map((b) => [b.id, b.t0]));
@@ -121,7 +135,7 @@ window.seek = function (t) {
   const isDNA = shot === "dna" || shot === "dna2", isPair = shot === "pair";
   S.group.visible = mel.group.visible = inS;
   PL.group.visible = PR.group.visible = melL.group.visible = melR.group.visible = isPair;
-  dna.group.visible = raysD.mesh.visible = isDNA;
+  dna.group.visible = raysD.group.visible = isDNA;
 
   // ── the main section: the tan (caps) and the pigment cell, per shot ──
   // rule 8: the beat's subject wins; what delivered the previous beat steps back to about a third
@@ -146,15 +160,19 @@ window.seek = function (t) {
     if (shot === "hook" || shot === "close" || shot === "field") mel.group.visible = true;
   }
   // the dashes stop at the caps when there is a tan (all but `pass` of them), else at their own depth in the living layers
+  // untanned: the rays end in the living layers (the damage); tanned: most end at the caps, `pass` of them get by
   const capY = -BIO.sc_um - BIO.gran_um - 6;
-  const passing = [];
-  A.ray = inS ? raysS.set(t, { gain: inS ? uvGain : 0, color: UVC, pass, stopAt: tan > 0.5 ? () => capY : null, hit: passing }) : null;
-  if (!inS) raysS.set(t, { gain: 0 });
-  A.pass = passing.length ? passing[0] : [40, -50, 26];
+  const band = tan > 0.5 ? { filmTop: capY + 4, filmBottom: capY - 2 } : { filmTop: -BIO.sc_um - 4, filmBottom: -BIO.sc_um - 22 };
+  const got = raysS.set(t, inS ? { ...band, pass: tan > 0.5 ? pass : 0, gain: uvGain, color: UVC, hitColor: HIT } : HIDE);
+  A.ray = [HC[0] - 20, 30, 26];
+  A.pass = got || A.pass || [20, capY - 10, 26];
   // the followed cell: an ink ring as the camera arrives, and again as the cell that "notices"
   const ringOp = shot === "section" ? fadeIn(t, CUE.living - 0.2, 0.5) : shot === "cell" ? 1 - fadeIn(t, CUE.message, 0.6) : 0;
   hcRing.material.opacity = 0.75 * ringOp; hcRing.visible = ringOp > 0.01;
   A.hcell = [HC[0] + 7, HC[1] + 2, HC[2] + 2];
+  const pOn = shot === "cell" ? fadeIn(t, CUE.guardian - 0.1, 0.4) * (1 - fadeIn(t, CUE.melanin, 0.8)) : 0;
+  p53.material.color.setRGB(...WATER.map((v) => v * (1.1 + 0.5 * Math.sin((t - CUE.guardian) * 5.2) ** 2)));
+  p53.material.opacity = pOn; p53.visible = pOn > 0.01;
   const capCell = caps.cellNear(shot === "field" ? [24, -44, 30] : [BIO.mel_x + 8, -50, 30]);
   A.cap = [capCell.pos[0] + 3, capCell.pos[1] + 3, capCell.pos[2] + 2];
   A.melano = mel.at.body();
@@ -165,21 +183,21 @@ window.seek = function (t) {
 
   // ── the pair: both under UV; only the one with p53 fills and tans ──
   if (isPair) {
-    const k = E.inout2(seg(t, CUE.mice, CUE.never + 2.2));
-    PL.set({ tone: tone + 0.16 * E.inout2(seg(k, 0.3, 1)), dimDead: 0.5 }); PR.set({ tone, dimDead: 0.5 });   // the one that tans darkens (illustration)
-    capsL.set({ tone: tone + 0.16 * E.inout2(seg(k, 0.3, 1)), tan: E.inout2(seg(k, 0.4, 1)) }); capsR.set({ tone, tan: 0 });
-    melL.set({ tone, fill: Math.min(1, k * 1.6), travel: E.inout2(seg(k, 0.3, 1)), glow: 0.4 });
+    const k = E.inout2(seg(t, CUE.mice, CUE.never + 1.6));
+    PL.set({ tone: tone + 0.4 * E.inout2(seg(k, 0.3, 1)), dimDead: 0.5 }); PR.set({ tone, dimDead: 0.5 });   // the one that tans darkens (illustration)
+    capsL.set({ tone: tone + 0.4 * E.inout2(seg(k, 0.3, 1)), tan: E.inout2(seg(k, 0.4, 1)) }); capsR.set({ tone, tan: 0 });
+    melL.set({ tone: tone + 0.4 * k, fill: Math.min(1, k * 1.6), travel: E.inout2(seg(k, 0.3, 1)), glow: 0.4 });
     melR.set({ tone, fill: 0, travel: 0, glow: 0.4 * (1 - fadeIn(t, CUE.lacked, 0.5)) });
-    raysP.set(t, { gain: fadeIn(t, SH.pair, 0.6) * 0.8, color: UVC, pass: 0.5 });
+    raysP.set(t, { filmTop: -BIO.sc_um - 4, filmBottom: -BIO.sc_um - 22, pass: 0, gain: fadeIn(t, SH.pair, 0.6) * 0.8, color: UVC, hitColor: HIT });
     A.pair_l = [PL.group.position.x - 14, 0, 23]; A.pair_r = [PR.group.position.x + 14, 0, 23];
-  } else raysP.set(t, { gain: 0 });
+  } else raysP.set(t, HIDE);
 
   // ── the DNA ladder: two bases fuse on "fuse"; in dna2 the fused pair is held, lit ──
   if (isDNA) {
     const fuse = shot === "dna" ? E.out3(seg(t, CUE.fuse - 0.1, CUE.fuse + 0.5)) : 1;
     const glow = shot === "dna" ? Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);
     dna.set({ fuse, glow, uv: UVC, spin: 0.12 * t, dim: shot === "dna" ? 0.6 * fadeIn(t, CUE.fuse, 0.5) : 0.6 });
-    raysD.set(t, { gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC, stopAt: () => 0 });
+    raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();
   }
 
@@ -188,11 +206,32 @@ window.seek = function (t) {
   camera.updateMatrixWorld();
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (inS && shot !== "cell" && shot !== "tan" ? 1 : 0) * (shot === "section" ? 1 - fadeIn(t, SH.section + 0.6, 0.6) : 1) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
+  const gOp = (shot === "field" || shot === "gauge" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
   const sc = BIO.sc_um + (G.sc_um - BIO.sc_um) * Math.min(1, lift * 4);   // attached: the dead layer's band; lifted: one parasol
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
+  // the transitions
+  let iris = 0, dip = 0, ix = 0.5, iy = 0.5;
+  for (const tr of FILM.trans) {
+    const d = t - tr.t;
+    if (tr.kind === "dip") dip = Math.max(dip, 1 - Math.min(1, Math.abs(d) / 0.22));
+    else if (Math.abs(d) < 0.45) { iris = d < 0 ? E.in2(1 + d / 0.45) : 1 - E.out2(d / 0.45); if (d < 0) { const p = project(camera, shot === "section" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), W, H); ix = p.x / W; iy = p.y / H; } }
+  }
+  if (iris > 0) {
+    const r = (iris * 125).toFixed(2);
+    veil.style.background = `radial-gradient(circle at ${(ix * 100).toFixed(2)}% ${(iy * 100).toFixed(2)}%, var(--slide) ${r}vmax, transparent ${(+r + 0.6).toFixed(2)}vmax)`;
+    veil.style.opacity = "1";
+  } else { veil.style.background = "var(--slide)"; veil.style.opacity = (0.85 * dip).toFixed(4); }
+  // the parasol stack inside the lifted gauge's paper bar (read from motif.js's own bar, so it follows any change there)
+  const pb = gsvg.querySelector('rect[stroke]');
+  const bxP = +pb.getAttribute("x"), bwP = +pb.getAttribute("width"), y0L = +pb.getAttribute("y"), pxL = 0.15 * H / 100;
+  stack.forEach((r, i) => {
+    const on = lift * E.out3(seg(t, G.stack[0] + (G.stack[1] - G.stack[0]) * i / G.n, G.stack[0] + (G.stack[1] - G.stack[0]) * (i + 1) / G.n));
+    r.setAttribute("x", bxP + 8 * S1); r.setAttribute("width", Math.max(0, bwP - 16 * S1));
+    r.setAttribute("y", y0L + i * G.sc_um * pxL + 1); r.setAttribute("height", Math.max(0, G.sc_um * pxL - 2));
+    r.setAttribute("opacity", on.toFixed(3));
+  });
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

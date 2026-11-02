@@ -51,8 +51,8 @@ SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "section
          {"at": B["change"]["t0"], "name": "cell"}, {"at": B["why"]["t0"], "name": "pair"}, {"at": t_dna2, "name": "dna2"},
          {"at": B["whoa"]["t0"], "name": "tan"}, {"at": t_field, "name": "field"}, {"at": B["toscale"]["t0"], "name": "gauge"},
          {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"hook": 0.45, "section": 0.45, "dna": 0.45, "cell": 0.85, "pair": 0.5, "dna2": 0.85, "tan": 0.85, "field": 0.12,
-        "gauge": 0.12, "close": 0.45}   # melanin 0–1 (bible §1: three tones; every tone tans)
+TONE = {"hook": 0.45, "section": 0.45, "dna": 0.45, "cell": 0.95, "pair": 0.15, "dna2": 0.95, "tan": 0.95, "field": 0.45,
+        "gauge": 0.45, "close": 0.45}   # melanin 0–1 (bible §1: three tones; every tone tans: medium, deep, and light in the mice pair)
 
 # ── the tanning clock (whoa): melanin climbs the branches into caps over about three days ──
 RATE = 60000.0                           # 3 days in 4.32 s
@@ -78,11 +78,11 @@ HOOK = {"target": [0, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.36}
 HCELL = [0, -40, 30]                      # the followed living cell: scene.mjs snaps it to the nearest cut-face cell
 MEL_X = 6.0                               # the pigment cell sits under the followed cell (x in µm)
 CAM = {
-    "hook": [{"t": 0.0, **HOOK, "dist": 640, "az": -18}, {"t": B["normal"]["t0"], **HOOK, "dist": 580, "az": -14, "ease": "sine"}],
+    "hook": [{"t": 0.0, **HOOK, "dist": 470, "az": -18}, {"t": B["normal"]["t0"], **HOOK, "dist": 430, "az": -14, "ease": "sine"}],
     "section": [
         {"t": B["normal"]["t0"], "target": [0, -36, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 560, "az": -14},
         {"t": CUE["living"], "target": [0, -36, 10], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -8, "ease": "inout2"},
-        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 120, "az": -5, "ease": "in2"},
+        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 200, "az": -5, "ease": "in2"},
     ],
     "dna": [
         {"t": t_jump, "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 330, "az": 18},
@@ -90,15 +90,15 @@ CAM = {
         {"t": B["change"]["t0"], "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 170, "az": 11, "ease": "sine"},
     ],
     "cell": [
-        {"t": B["change"]["t0"], "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 110, "az": -4},
+        {"t": B["change"]["t0"], "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 210, "az": -4},
         {"t": CUE["notices"] + 0.4, "target": [MEL_X, -58, 10], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 420, "az": -2, "ease": "inout2"},
         {"t": CUE["melanin"], "target": [MEL_X, -66, 14], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 330, "az": 1, "ease": "inout2"},
         {"t": B["why"]["t0"], "target": [MEL_X, -66, 14], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 310, "az": 2, "ease": "sine"},
     ],
     "pair": [
         {"t": B["why"]["t0"], "target": [0, -44, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 720, "az": 0},
-        {"t": CUE["never"], "target": [0, -50, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 640, "az": 2, "ease": "inout2"},
-        {"t": t_dna2, "target": [-8, -52, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 560, "az": 4, "ease": "sine"},
+        {"t": CUE["never"], "target": [-6, -54, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 640, "az": 2, "ease": "inout2"},
+        {"t": t_dna2, "target": [-18, -58, 8], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 4, "ease": "inout2"},
     ],
     "dna2": [
         {"t": t_dna2, "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 230, "az": 12},
@@ -106,18 +106,18 @@ CAM = {
     ],
     "tan": [
         {"t": B["whoa"]["t0"], "target": [MEL_X, -62, 12], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 330, "az": 2},
-        {"t": CUE["nucleus"], "target": [MEL_X, -48, 16], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 250, "az": -2, "ease": "inout2"},
-        {"t": t_field, "target": [MEL_X, -46, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 220, "az": -4, "ease": "sine"},
+        {"t": CUE["nucleus"], "target": [MEL_X, -48, 16], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 290, "az": -2, "ease": "inout2"},
+        {"t": t_field, "target": [MEL_X, -46, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 270, "az": -4, "ease": "sine"},
     ],
     "field": [
-        {"t": t_field, "target": [0, -44, 10], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 300, "az": -10},
+        {"t": t_field, "target": [0, -44, 10], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 330, "az": -10},
         {"t": B["toscale"]["t0"], "target": [0, -40, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.36, "dist": 520, "az": -6, "ease": "out2"},
     ],
     "gauge": [{"t": B["toscale"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 620, "az": -6},
               {"t": B["takeaway"]["t0"], "target": [0, -30, 0], "el": 10, "fov": 30, "fx": 0.62, "fy": 0.40, "dist": 580, "az": -8, "ease": "sine"}],
     # the close: the hook's pose, reached by the end, so the last frame hands back to frame 0
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 560, "az": -10},
-              {"t": B["tease"]["t1"], **HOOK, "dist": 640, "az": -18, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 410, "az": -10},
+              {"t": B["tease"]["t1"], **HOOK, "dist": 470, "az": -18, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
     for a, b in zip(keys, keys[1:]):
@@ -126,12 +126,12 @@ for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4�
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-cap-h", "text": "melanin over each nucleus", "kind": "cell", "anchor": "cap", "t0": CUE["thin"], "t1": B["normal"]["t0"], "shot": "hook", "side": 1},
+    {"id": "l-cap-h", "text": "melanin over each nucleus", "kind": "cell", "anchor": "cap", "t0": A("vo01:built"), "t1": B["normal"]["t0"], "shot": "hook", "side": 1},
     {"id": "l-uv", "text": "ultraviolet", "kind": "uv", "anchor": "ray", "t0": CUE["uv"], "t1": CUE["living"] - 0.2, "shot": "section", "side": 1},
     {"id": "l-cell", "text": "a living cell", "kind": "cell", "anchor": "hcell", "t0": CUE["living"], "t1": t_jump, "shot": "section", "side": 1},
     {"id": "l-dimer", "text": "two bases, fused", "kind": "uv", "anchor": "dimer", "t0": CUE["fuse"] + 0.1, "t1": B["change"]["t0"], "shot": "dna", "side": 1},
-    {"id": "l-p53", "text": "p53 switches on", "kind": "cell", "anchor": "hcell", "t0": CUE["guardian"], "t1": CUE["message"] - 0.2, "shot": "cell", "side": 1},
-    {"id": "l-msh", "text": "the message: α-MSH", "kind": "water", "anchor": "signal", "t0": CUE["message"], "t1": CUE["melanin"] - 0.2, "shot": "cell", "side": 1},
+    {"id": "l-p53", "text": "this cell", "kind": "cell", "anchor": "hcell", "t0": CUE["guardian"], "t1": CUE["message"] - 0.2, "shot": "cell", "side": 1},
+    {"id": "l-msh", "text": "down to the pigment cell", "kind": "water", "anchor": "signal", "t0": CUE["message"], "t1": CUE["melanin"] - 0.2, "shot": "cell", "side": 1},
     {"id": "l-mel", "text": "pigment cell", "kind": "cell", "anchor": "melano", "t0": CUE["down"] + 0.3, "t1": B["why"]["t0"], "shot": "cell", "side": -1},
     {"id": "l-with", "text": "with p53", "kind": "layer", "anchor": "pair_l", "t0": CUE["mice"], "t1": t_dna2, "shot": "pair", "side": -1, "v": "above", "fixed": True},
     {"id": "l-without", "text": "without p53", "kind": "layer", "anchor": "pair_r", "t0": CUE["lacked"], "t1": t_dna2, "shot": "pair", "side": 1, "v": "above", "fixed": True},
@@ -150,9 +150,10 @@ BADGES = [
     {"id": "b-illus-p", "text": "illustration", "t0": B["why"]["t0"], "t1": t_dna2, "slot": "tr"},
     {"id": "b-model2", "text": "model · not to scale", "t0": t_dna2, "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-time", "clock": "tan", "t0": t_days0, "t1": round(t_days1 + 0.4, 4), "slot": "tl"},
-    {"id": "b-simp-t", "text": "simplified", "t0": B["whoa"]["t0"], "t1": t_field, "slot": "tr"},
+    {"id": "b-simp-t", "text": "illustration", "t0": B["whoa"]["t0"], "t1": t_field, "slot": "tr"},
     {"id": "b-est", "text": "estimate", "t0": t_field, "t1": B["toscale"]["t0"], "slot": "tr"},
-    {"id": "b-nuc", "text": "nucleus ≈ 8.6 µm · estimate", "t0": CUE["wide"], "t1": B["takeaway"]["t0"], "slot": "tr"},
+    {"id": "b-model3", "text": "model", "t0": t_field, "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-nuc", "text": "nucleus ≈ 9 µm · estimate", "t0": CUE["wide"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-simp-z", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
 ]
 SPINE = [0.6, 0.215]                     # top right, under the notes: the depth gauge owns the left edge in this episode's wide shots
@@ -163,10 +164,14 @@ COUNTERS = [
     {"id": "c-msh", "label": "the message", "fmt": "text", "text": "α-MSH", "t0": A("vo03:chemical"), "t1": B["why"]["t0"], "at": SPINE},
     {"id": "c-days", "label": "days after the sun", "fmt": "days", "t0": t_days0 + 0.1, "t1": A("vo05:Together,", -0.6), "at": SPINE, "lit": TAN_DAYS},
     {"id": "c-spf", "label": "about, for a whole tan", "fmt": "text", "text": "SPF 3–4", "t0": A("vo05:about"), "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-nuc", "label": "one parasol", "fmt": "text", "text": "≈ 9 µm", "t0": CUE["wide"], "t1": B["takeaway"]["t0"], "at": SPINE},
-    {"id": "c-spf2", "label": "a tan, about: a thin shield", "fmt": "text", "text": "SPF 3–4", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
+    {"id": "c-spf2", "label": "a whole tan, about", "fmt": "text", "text": "SPF 3–4", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
+# how each cut is made: an iris on the two scale jumps (into the nucleus and back out to its cell), a short dip to
+# the slide colour on the others, so no cut jumps the picture's brightness in one frame
+TRANS = [{"t": t_jump, "kind": "iris"}, {"t": B["change"]["t0"], "kind": "iris"}, {"t": B["why"]["t0"], "kind": "dip"},
+         {"t": t_dna2, "kind": "dip"}, {"t": B["whoa"]["t0"], "kind": "dip"}, {"t": t_field, "kind": "dip"},
+         {"t": B["toscale"]["t0"], "kind": "dip"}, {"t": B["takeaway"]["t0"], "kind": "dip"}]
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -181,7 +186,7 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):  # two values never share the screen
 
 # the to-scale segment: the gauge lifts to centre; one parasol's ≈ 9 µm fills in, then the paper's 100 µm beside it
 GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["wide"], "paper": CUE["paper"],
-         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": NUC_UM, "paper_um": PAPER_UM, "bar": "parasol"}
+         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": NUC_UM, "paper_um": PAPER_UM, "bar": "parasol", "stack": [A("vo06:dozen"), A("vo06:paper.", 0.3)], "n": 12}
 
 TITLE = {"series": "Outer Layer · No. 004", "title": "What a *tan* is", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:shield?", 0.35)}
 END = {"title": "Next layer: who has more pigment cells, the darkest skin or the *lightest*?", "follow": "Outer Layer · No. 005",
@@ -191,14 +196,14 @@ END = {"title": "Next layer: who has more pigment cells, the darkest skin or the
 POSTER = A("vo05:parasol.", 0.4)          # the caps over the nuclei, the melanocyte's branches full
 
 # captions: number phrases and fixed phrases stay on one line
-glue(f, {"vo02": ["trillionth of a second,", "two letters"], "vo03": ["a guardian protein", "a chemical message"],
-         "vo04": ["getting ready", "for the sun."], "vo05": ["the next few days,", "a tiny parasol.", "SPF three or four."],
-         "vo06": ["a dozen", "side by side", "would span", "a sheet of paper."],
+glue(f, {"vo02": ["In under a trillionth", "of a second,", "two letters"], "vo03": ["a guardian protein", "a chemical message"],
+         "vo04": ["lacked that guardian", "ready for the sun."], "vo05": ["the next few days,", "a tiny parasol.", "about SPF three or four."],
+         "vo06": ["a dozen stacked", "as thick as", "a sheet of paper."],
          "vo08": ["the darkest skin", "the lightest?"]})
 for ln in f.lines:                        # the SPF is read as a figure on screen ("SPF 3 or 4"), as the counter shows it
     for w in ln["words"]:
-        if w["w"].replace("\u2007", " ") == "SPF three or four.":
-            w["w"] = "SPF\u20073\u2007or\u20074."
+        if w["w"].replace("\u2007", " ") == "about SPF three or four.":
+            w["w"] = "about\u2007SPF\u20073\u2007or\u20074."
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
@@ -206,7 +211,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "tone": TONE,
     "bio": {"sc_um": SC_UM, "rows": ROWS, "gran_um": GRAN_UM, "spin_um": SPIN_UM, "basal_um": BASAL_UM, "paper_um": PAPER_UM,
             "nuc_um": NUC_UM, "pass": PASS, "mel_x": MEL_X, "hcell": HCELL, "dna_x": DNA_X},
-    "clk": CLK, "cam": CAM, "cue": CUE, "gauge": GAUGE,
+    "clk": CLK, "cam": CAM, "cue": CUE, "gauge": GAUGE, "trans": TRANS,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": CAPS,
@@ -228,7 +233,9 @@ for b in BADGES:
 for d in (1, 2, 3):                                                  # the day counter ticks each day
     ev.append({"t": round(t_days0 + d * 86400 / RATE, 4), "kind": "counter.tick", "tag": f"c-days-{d}"})
 ev += [
-    {"t": CUE["fuse"], "kind": "cell.land", "tag": "fuse"},
+    {"t": CUE["fuse"], "kind": "zap", "tag": "fuse"},
+    {"t": t_jump, "kind": "scale.jump", "tag": "dive"},
+    {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "out"},
     {"t": CUE["message"], "kind": "diffuse", "tag": "message"},
     {"t": CUE["melanin"], "kind": "reveal", "tag": "melanin"},
     {"t": t_dna2, "kind": "cell.land", "tag": "done"},

@@ -116,7 +116,7 @@
   "source_url": "https://www.nms.unl.pt/en-us/research/science-and-society/article-at-a-glance/202307-duarte-barral-en-us",
   "source_title": "The journey of the pigment melanin from one cell to another (NOVA Medical School, Lisbon; Barral lab, 2023)",
   "accessed": "2026-11-02",
-  "note": "Excerpt: pigment 'is transferred to neighboring cells called keratinocytes … These keratinocytes arrange the melanin on the top of their nuclei'. Cross-check (Opsin 3 paper, PMC9984416, search excerpt): the supranuclear cap shields DNA by absorbing and scattering UV. 'Like a tiny parasol' is the image; the drawing is badged 'illustration'.",
+  "note": "Excerpt: pigment 'is transferred to neighboring cells called keratinocytes … These keratinocytes arrange the melanin on the top of their nuclei'. Cross-check (Opsin 3 paper, PMC9984416, search excerpt): the supranuclear cap shields DNA by absorbing and scattering UV. 'Like a tiny parasol' is the image; the caps are badged 'illustration' while they form.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
@@ -133,23 +133,23 @@
  },
  {
   "id": "c13",
-  "sentence": "Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of paper.",
+  "sentence": "Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of paper.",
   "claim": "A keratinocyte nucleus is about 8.6 µm across (estimate from reflectance confocal microscopy; whole cells 15–35 µm); the melanin cap covers the nucleus, so it is about that wide.",
   "source_url": "https://doi.org/10.1117/1.3552639",
   "source_title": "Gareau DS. Automated identification of epidermal keratinocytes in reflectance confocal microscopy. J Biomed Opt 2011;16(3):030502",
   "accessed": "2026-11-02",
-  "note": "Excerpt: 'the mean nuclear diameter (a = 8.6 μm) … compares well to the published diameter for the entire cell: 15 to 35 μm'; a model-fitted estimate (± 2.8 µm). The cap's width as the nucleus's is the cap's definition (it sits over the nucleus); shown 'about 9 µm'. Computed: 100 ÷ 8.6 ≈ 11.6 → 'a dozen side by side' (about).",
+  "note": "Excerpt: 'the mean nuclear diameter (a = 8.6 μm) … compares well to the published diameter for the entire cell: 15 to 35 μm'; a model-fitted estimate (± 2.8 µm). The cap's width as the nucleus's is the cap's definition (it sits over the nucleus); shown 'about 9 µm'. Computed: 100 ÷ 8.6 ≈ 11.6 → 'a dozen, stacked up' (about) match the paper's thickness.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c14",
-  "sentence": "Each parasol is about as wide as its nucleus: a dozen side by side would span a sheet of paper.",
-  "claim": "Standard 80 gsm copy paper is about 100 µm thick; 17 µm is about 0.17 of it ('thinner than a fifth', computed).",
+  "sentence": "Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of paper.",
+  "claim": "A sheet of ordinary 80 gsm copy paper is about 100 µm thick.",
   "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
   "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
   "accessed": "2026-11-02",
-  "note": "As Outer Layer No. 001's paper claim. Excerpt: copying paper 80 gsm, 100 microns. Everyday reference; not a skin claim.",
+  "note": "As Outer Layer No. 001's paper claim (its source). Computed: 12 × 8.6 µm ≈ 103 µm, about the paper's 100 µm thickness.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
