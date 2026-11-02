@@ -6,12 +6,12 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 
 | No. | Title | State |
 |---|---|---|
-| 001 | Through the Earth | final sent to the render worker; its QA flagged one counter outside the safe box at 13.6 s → fixed (3074965), re-render job sent (2 Nov) |
-| 002 | Everyone, one place | voiced (74.4 s); two review rounds (10 findings, then 5 open + 1 new), all fixed; draft round 3 rendering for re-review |
-| 003 | All the ants | calc + Flow script + claims (lint clean); voiced 73.8 s; scene built; draft under review (round 1) |
-| 004 | Count to a billion | second builder (branch `-b`), in progress |
-| 005 | Everybody jump | second builder (branch `-b`) |
-| 006 | Every cat at once (backup: every raindrop at once) | second builder (branch `-b`) |
+| 001 | Through the Earth | **final** (QA PASS, −14.1 LUFS, −1.6 dBTP), hand-off docs written (2 Nov) |
+| 002 | Everyone, one place | **final** (QA PASS, −14.1 LUFS, −1.5 dBTP) after five review rounds; hand-off docs written (2 Nov) |
+| 003 | All the ants | passed review round 5 (a4 b4 c4 d4 e5 f4 g4); final rendering on the render worker (cdad9d3) |
+| 004 | Count to a billion | **final** from the second builder (merged at c2568b6) |
+| 005 | Everybody jump | second builder: final rendering |
+| 006 | Every raindrop at once | second builder: rendering |
 
 ## Log
 
