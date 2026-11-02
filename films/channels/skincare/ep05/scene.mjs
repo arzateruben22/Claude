@@ -108,7 +108,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const isHand = ["hand", "cast", "gauge", "hand2", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
+  const isHand = ["hand", "cast", "gauge", "close"].includes(shot), isTown = shot === "town" || shot === "town2", isU = shot === "uv1" || shot === "uv2";
   T.group.visible = isHand; TOWN.group.visible = isTown; UVS.mesh.visible = isU;
   scene.fog = isHand ? FOG : isTown ? FOG_TOWN : null;
   focus = isHand ? { point: P0.target, fstop: 0.5 } : { point: P0.target, fstop: 0 };
@@ -119,7 +119,7 @@ window.seek = function (t) {
     if (shot === "cast") T.set({ tone: CAST, furrows: 0.2 + 0.9 * u01(t, HD.age), spot: 0, sheen: 0 });
     else if (shot === "gauge") T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: u01(t, HD.film) });
     else T.set({ tone: MED, furrows: 0.2, spot: 0, sheen: 0 });
-    seam.material.opacity = shot === "hand" || shot === "hand2" || shot === "close" ? 0.5 : 0.75;
+    seam.material.opacity = shot === "hand" || shot === "close" ? 0.5 : 0.75;
   }
   A.halfL = [-7, 0.4, 9]; A.halfR = [7, 0.4, 9]; A.castL = [-6, 0.4, 3];
 

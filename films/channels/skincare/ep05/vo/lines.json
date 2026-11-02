@@ -103,15 +103,15 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: tanning beds share a list with cigarettes. What does it mean?",
+   "text": "Next: tanning beds share a list with cigarettes. Same list, same risk?",
    "stars": [
-    "mean"
+    "risk"
    ],
-   "phonemes": "nˈɛkst: tˈanɪŋ bˈɛdz ʃˈeəɹ ɐ lˈɪst wɪð sˌɪɡəɹˈɛts. wˌɒt dˈʌz ɪt mˈiːn?",
+   "phonemes": "nˈɛkst: tˈanɪŋ bˈɛdz ʃˈeəɹ ɐ lˈɪst wɪð sˌɪɡəɹˈɛts. sˈeɪm lˈɪst, sˈeɪm ɹˈɪsk?",
    "speed": 0.84,
    "file": "08.wav",
-   "dur": 4.174,
-   "sha256": "7d0351ebcbe1abbfb54f1262164d2903f07428d1979c6444be11d2652d6c6791"
+   "dur": 4.586,
+   "sha256": "8910b8149bd4fe84f61497dd53e35d7dd97f4b9449d440aeac71289812ea1747"
   }
  ]
 }

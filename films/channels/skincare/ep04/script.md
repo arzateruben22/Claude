@@ -53,7 +53,7 @@ vo: Poison in a frown: just enough to silence one message, until the nerve grows
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74.5 s)
 vo: Next: two neighbours under the same sun, one experiment. {-} Which hand *aged*? {-}
-end card: "Next layer: same sun, one experiment. Which hand aged?" · "Outer Layer · No. 004" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
+end card: "Next layer: same sun, one experiment. Which hand aged?" · "Outer Layer · No. 005" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: pmc.ncbi.nlm.nih.gov does

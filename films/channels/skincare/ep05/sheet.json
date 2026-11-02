@@ -1,5 +1,5 @@
 {
- "duration": 74.2,
+ "duration": 74.6667,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -48,7 +48,7 @@
   {
    "id": "tease",
    "t0": 67.6667,
-   "t1": 74.2,
+   "t1": 74.6667,
    "energy": 0.35
   }
  ],
@@ -142,18 +142,18 @@
    "tag": "down-to-cast"
   },
   {
-   "t": 18.0333,
-   "kind": "badge",
-   "tag": "b-cast"
-  },
-  {
-   "t": 22.233333333333334,
+   "t": 17.9333,
    "kind": "counter.show",
    "tag": "c-age",
    "pos": [
     0.5,
     0.225
    ]
+  },
+  {
+   "t": 18.0333,
+   "kind": "badge",
+   "tag": "b-cast"
   },
   {
    "t": 24.066666666666666,
@@ -212,18 +212,18 @@
    "t1": 54.6
   },
   {
-   "t": 41.833299999999994,
-   "kind": "badge",
-   "tag": "b-green"
-  },
-  {
-   "t": 42.9,
+   "t": 41.7333,
    "kind": "counter.show",
    "tag": "c-follow",
    "pos": [
     0.5,
     0.225
    ]
+  },
+  {
+   "t": 41.833299999999994,
+   "kind": "badge",
+   "tag": "b-green"
   },
   {
    "t": 49.36666666666667,
@@ -245,6 +245,15 @@
    "t": 54.6,
    "kind": "scale.jump",
    "tag": "down-to-hand"
+  },
+  {
+   "t": 54.800000000000004,
+   "kind": "counter.show",
+   "tag": "c-end",
+   "pos": [
+    0.5,
+    0.225
+   ]
   },
   {
    "t": 54.9,
@@ -278,15 +287,6 @@
    "tag": "shutter-2"
   },
   {
-   "t": 61.6333,
-   "kind": "counter.show",
-   "tag": "c-end",
-   "pos": [
-    0.5,
-    0.225
-   ]
-  },
-  {
    "t": 64.60000000000001,
    "kind": "badge",
    "tag": "b-uv2"
@@ -295,7 +295,7 @@
    "t": 67.6667,
    "kind": "section",
    "id": "tease",
-   "t1": 74.2
+   "t1": 74.6667
   },
   {
    "t": 67.73333333333333,

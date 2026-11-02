@@ -51,7 +51,7 @@ CUE = {
 }
 SHOTS = [{"at": 0.0, "name": "hand"}, {"at": B["normal"]["t0"], "name": "town"}, {"at": B["change"]["t0"], "name": "cast"},
          {"at": B["why"]["t0"], "name": "uv1"}, {"at": B["whoa"]["t0"], "name": "town2"}, {"at": B["toscale"]["t0"], "name": "gauge"},
-         {"at": B["takeaway"]["t0"], "name": "hand2"}, {"at": CUE["but"] - 0.1, "name": "uv2"}, {"at": B["tease"]["t0"], "name": "close"}]
+         {"at": CUE["but"] - 0.1, "name": "uv2"}, {"at": B["tease"]["t0"], "name": "close"}]
 
 # ── the camera ──
 TX, UX = -4000.0, 4000.0
@@ -71,13 +71,15 @@ CAM = {
              {"t": CUE["casts"], "target": [0, -0.4, 4], "dist": 30, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.44},
              {"t": B["why"]["t0"], "target": [0, -0.4, 3], "dist": 26, "el": 44, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.44, "ease": "sine"}],
     "uv1": [{"t": B["why"]["t0"], **UVK, "dist": 27}, {"t": CUE["camera"], **UVK, "dist": 25, "ease": "inout2"},
-            {"t": B["whoa"]["t0"], **{**UVK, "target": [UX + 0.9, 0.1, 0]}, "dist": 21, "ease": "inout2"}],
+            {"t": CUE["misses"], **{**UVK, "target": [UX + 0.9, 0.1, 0]}, "dist": 21, "ease": "inout2"},
+            {"t": CUE["surface"], **{**UVK, "target": [UX - 0.4, 0.1, 0]}, "dist": 25, "ease": "inout2"},
+            {"t": B["whoa"]["t0"], **UVK, "dist": 27, "ease": "sine"}],
     "town2": [{"t": B["whoa"]["t0"], "target": [TX, 0, 0], "dist": 240, "el": 52, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.3},
               {"t": CUE["half"], "target": [TX, 0, 0], "dist": 200, "el": 50, "az": 14, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
               {"t": B["toscale"]["t0"], "target": [TX, 0, 0], "dist": 215, "el": 54, "az": 20, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [-3, -0.4, 6], "dist": 20, "el": 24, "az": -8, "fov": 34, "fx": 0.5, "fy": 0.7},
-              {"t": B["takeaway"]["t0"], "target": [-3, -0.4, 4], "dist": 19, "el": 26, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.7, "ease": "sine"}],
-    "hand2": [{"t": B["takeaway"]["t0"], "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY},
+              {"t": B["takeaway"]["t0"] - 0.4, "target": [-3, -0.4, 4], "dist": 19, "el": 26, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.7, "ease": "sine"},
+              {"t": B["takeaway"]["t0"] + 1.2, "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY, "ease": "inout2"},   # no cut: on to the hook's framing for "which hand aged?"
               {"t": CUE["but"] - 0.1, "target": [0, -0.4, 13], "dist": 23, "az": -3, **FLY, "ease": "sine"}],
     "uv2": [{"t": CUE["but"] - 0.1, **UVK, "dist": 24}, {"t": B["tease"]["t0"], **UVK, "dist": 22, "ease": "sine"}],
     "close": [{"t": B["tease"]["t0"], "target": [0, -0.4, 18], "dist": 25, "az": -6, **FLY},
@@ -111,9 +113,9 @@ BADGES = [
 SPINE = [0.5, 0.225]   # centred: the viewfinder's REC owns the top right in the UV shots
 COUNTERS = [
     {"id": "c-start", "label": "Nambour trial begins", "fmt": "text", "text": f"{START}", "t0": CUE["nambour"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
-    {"id": "c-age", "label": "ageing measured after", "fmt": "text", "text": "4.5 years", "t0": CUE["four"] - 0.2, "t1": B["whoa"]["t0"], "at": SPINE},
-    {"id": "c-follow", "label": "melanoma followed, to", "fmt": "text", "text": f"{FOLLOW_END}", "t0": CUE["ten"] - 0.2, "t1": B["takeaway"]["t0"], "at": SPINE},
-    {"id": "c-end", "label": "the ageing trial", "fmt": "text", "text": "4.5 years", "t0": B["takeaway"]["t0"] + 0.5, "t1": t_end - 0.7, "at": SPINE},
+    {"id": "c-age", "label": "the casts were graded after", "fmt": "text", "text": "4.5 years", "t0": B["change"]["t0"] + 0.2, "t1": B["whoa"]["t0"] - 0.2, "at": SPINE},
+    {"id": "c-follow", "label": "melanoma followed, to", "fmt": "text", "text": f"{FOLLOW_END}", "t0": B["whoa"]["t0"] + 0.2, "t1": B["toscale"]["t0"] - 0.2, "at": SPINE},
+    {"id": "c-end", "label": "the casts' record, after", "fmt": "text", "text": "4.5 years", "t0": B["toscale"]["t0"] + 0.2, "t1": t_end, "at": SPINE},
 ]
 PLATES = {
     "odds": {"t0": CUE["daily"] - 0.2, "t1": B["why"]["t0"] - 0.3, "text": "increased ageing, daily group: about a quarter less likely",
@@ -143,14 +145,14 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE
          "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": FILM_UM, "paper_um": PAPER_UM, "bar": "test dose", "sc_text": "≈ 20 µm"}
 
 TITLE = {"series": "Outer Layer · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:aged?", 0.35)}
-END = {"title": "Next layer: tanning beds, on a list with *cigarettes*", "follow": "Outer Layer · No. 006",
+END = {"title": "Next layer: tanning beds and cigarettes. Same list, same *risk*?", "follow": "Outer Layer · No. 006",
        "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:record.", 0.3)
 
 glue(f, {"vo01": ["Which hand aged?", "the same fierce sun."], "vo02": ["In the early nineties,", "a Queensland town", "called Nambour,", "every morning."],
          "vo03": ["silicone casts", "four and a half years,", "no detectable increase"], "vo04": ["the burn you feel.", "an ultraviolet camera", "the naked eye"],
          "vo05": ["ten more years.", "Squamous cell cancers", "about half,", "in small numbers."], "vo06": ["a lab's test dose,", "a fifth of a paper's"],
-         "vo07": ["which hand aged?", "its own record."], "vo08": ["tanning beds", "with cigarettes."]})
+         "vo07": ["which hand aged?", "its own record."], "vo08": ["tanning beds", "with cigarettes.", "same risk?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {

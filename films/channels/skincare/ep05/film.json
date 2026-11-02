@@ -2,7 +2,7 @@
  "id": "outerlayer-005",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 74.2,
+ "dur": 74.6667,
  "poster": 66.7,
  "shots": [
   {
@@ -28,10 +28,6 @@
   {
    "at": 54.6,
    "name": "gauge"
-  },
-  {
-   "at": 61.1333,
-   "name": "hand2"
   },
   {
    "at": 64.60000000000001,
@@ -95,7 +91,7 @@
   {
    "id": "tease",
    "t0": 67.6667,
-   "t1": 74.2,
+   "t1": 74.6667,
    "line": "vo08",
    "energy": 0.35
   }
@@ -292,7 +288,7 @@
     "ease": "inout2"
    },
    {
-    "t": 41.5333,
+    "t": 35.3,
     "target": [
      4000.9,
      0.1,
@@ -305,6 +301,36 @@
     "fy": 0.43,
     "dist": 21,
     "ease": "inout2"
+   },
+   {
+    "t": 38.5,
+    "target": [
+     3999.6,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.43,
+    "dist": 25,
+    "ease": "inout2"
+   },
+   {
+    "t": 41.5333,
+    "target": [
+     4000.0,
+     0.1,
+     0
+    ],
+    "el": 2,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.43,
+    "dist": 27,
+    "ease": "sine"
    }
   ],
   "town2": [
@@ -369,7 +395,7 @@
     "fy": 0.7
    },
    {
-    "t": 61.1333,
+    "t": 60.7333,
     "target": [
      -3,
      -0.4,
@@ -382,11 +408,9 @@
     "fx": 0.5,
     "fy": 0.7,
     "ease": "sine"
-   }
-  ],
-  "hand2": [
+   },
    {
-    "t": 61.1333,
+    "t": 62.3333,
     "target": [
      0,
      -0.4,
@@ -397,7 +421,8 @@
     "el": 13,
     "fov": 34,
     "fx": 0.5,
-    "fy": 0.46
+    "fy": 0.46,
+    "ease": "inout2"
    },
    {
     "t": 64.60000000000001,
@@ -462,7 +487,7 @@
     "fy": 0.46
    },
    {
-    "t": 74.2,
+    "t": 74.6667,
     "target": [
      0,
      -0.4,
@@ -702,7 +727,7 @@
    "id": "b-est",
    "text": "estimate",
    "t0": 58.56666666666667,
-   "t1": 60.7833,
+   "t1": 61.1333,
    "slot": "tr"
   },
   {
@@ -728,11 +753,11 @@
   },
   {
    "id": "c-age",
-   "label": "ageing measured after",
+   "label": "the casts were graded after",
    "fmt": "text",
    "text": "4.5 years",
-   "t0": 22.233333333333334,
-   "t1": 41.1833,
+   "t0": 17.9333,
+   "t1": 41.333299999999994,
    "at": [
     0.5,
     0.225
@@ -743,8 +768,8 @@
    "label": "melanoma followed, to",
    "fmt": "text",
    "text": "2006",
-   "t0": 42.9,
-   "t1": 60.7833,
+   "t0": 41.7333,
+   "t1": 54.4,
    "at": [
     0.5,
     0.225
@@ -752,11 +777,11 @@
   },
   {
    "id": "c-end",
-   "label": "the ageing trial",
+   "label": "the casts' record, after",
    "fmt": "text",
    "text": "4.5 years",
-   "t0": 61.6333,
-   "t1": 67.03333333333333,
+   "t0": 54.800000000000004,
+   "t1": 67.73333333333333,
    "at": [
     0.5,
     0.225
@@ -772,7 +797,7 @@
  },
  "endCard": 67.73333333333333,
  "end": {
-  "title": "Next layer: tanning beds, on a list with *cigarettes*",
+  "title": "Next layer: tanning beds and cigarettes. Same list, same *risk*?",
   "follow": "Outer Layer · No. 006",
   "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."
  },
@@ -1517,7 +1542,7 @@
   },
   {
    "t0": 67.987,
-   "t1": 71.152,
+   "t1": 71.077,
    "lines": [
     [
      [
@@ -1526,49 +1551,45 @@
      ],
      [
       "tanning beds",
-      68.587
+      68.467
      ],
      [
       "share",
-      69.207
+      69.312
      ]
     ],
     [
      [
       "a",
-      69.567
+      69.527
      ],
      [
       "list",
-      69.627
+      69.702
      ],
      [
       "with cigarettes.",
-      69.877
+      69.802
      ]
     ]
    ]
   },
   {
-   "t0": 71.152,
-   "t1": 72.427,
+   "t0": 71.077,
+   "t1": 72.827,
    "lines": [
     [
      [
-      "What",
-      71.152
+      "Same",
+      71.077
      ],
      [
-      "does",
-      71.377
+      "list,",
+      71.327
      ],
      [
-      "it",
-      71.582
-     ],
-     [
-      "mean?",
-      71.612
+      "same risk?",
+      71.697
      ]
     ]
    ]
@@ -1627,9 +1648,9 @@
   {
    "id": "vo08",
    "t": 67.96666666666667,
-   "dur": 4.174,
+   "dur": 4.586,
    "file": "vo/08.wav",
-   "text": "Next: tanning beds share a list with cigarettes. What does it mean?"
+   "text": "Next: tanning beds share a list with cigarettes. Same list, same risk?"
   }
  ]
 }

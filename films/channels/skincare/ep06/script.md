@@ -52,7 +52,7 @@ vo: Same list as cigarettes, then: not the same size of harm, but the same *cert
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74 s)
 vo: Next season: why do bath fingers wrinkle, but never your *arm*? {-}
-end card: "Next season: why do bath fingers wrinkle?" · "Outer Layer · No. 006" · footnote: "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009."
+end card: "Next season: why do bath fingers wrinkle?" · "Outer Layer · season 2" · footnote: "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009."
 
 ## Notes
 - Every claim was checked through search excerpts only: the proxy blocks page fetches (www.iarc.who.int does not

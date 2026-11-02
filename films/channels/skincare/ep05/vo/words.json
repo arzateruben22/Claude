@@ -1018,79 +1018,79 @@
   },
   {
    "id": "vo08",
-   "text": "Next: tanning beds share a list with cigarettes. What does it mean?",
-   "heard": "Next, tanning beds share a list with cigarettes. What does it mean?",
+   "text": "Next: tanning beds share a list with cigarettes. Same list, same risk?",
+   "heard": "Next, tanning beds share a list with cigarettes. Same list, same risk.",
    "words": [
     {
      "w": "Next:",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "tanning",
-     "start": 0.62,
-     "end": 1.04,
+     "start": 0.5,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "beds",
-     "start": 1.025,
+     "start": 0.975,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "share",
-     "start": 1.24,
+     "start": 1.345,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.6,
+     "start": 1.56,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "list",
-     "start": 1.66,
-     "end": 1.92,
+     "start": 1.735,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "with",
-     "start": 1.91,
-     "end": 2.08,
+     "start": 1.835,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "cigarettes.",
-     "start": 1.975,
+     "start": 1.9,
      "end": 3.12,
      "heard": true
     },
     {
-     "w": "What",
-     "start": 3.185,
+     "w": "Same",
+     "start": 3.11,
      "end": 3.36,
      "heard": true
     },
     {
-     "w": "does",
-     "start": 3.41,
-     "end": 3.52,
+     "w": "list,",
+     "start": 3.36,
+     "end": 3.84,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 3.615,
-     "end": 3.68,
+     "w": "same",
+     "start": 3.73,
+     "end": 4.08,
      "heard": true
     },
     {
-     "w": "mean?",
-     "start": 3.645,
-     "end": 4.16,
+     "w": "risk?",
+     "start": 4.11,
+     "end": 4.56,
      "heard": true
     }
    ]

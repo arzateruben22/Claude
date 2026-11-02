@@ -53,8 +53,8 @@ vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thic
 vo: So, which hand aged? The eye can't say, but the skin was keeping its own *record*. {c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
-vo: Next: tanning beds share a list with cigarettes. What does it *mean*? {-}
-end card: "Next layer: tanning beds, on a list with cigarettes" · "Outer Layer · No. 005" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
+vo: Next: tanning beds share a list with cigarettes. Same list, same *risk*? {-}
+end card: "Next layer: tanning beds and cigarettes. Same list, same risk?" · "Outer Layer · No. 006" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
 
 ## Notes
 - Every claim was checked through search excerpts only: the proxy blocks page fetches (pubmed.ncbi.nlm.nih.gov
