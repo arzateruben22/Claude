@@ -594,6 +594,47 @@ await group('progression', async (use) => {
     expect(r.at === 'CA-55 North' && !r.target && !r.auto, `after ${r.t} s: on ${r.at}, target ${r.target}, auto ${r.auto}`);
     return `guidance rerouted ${r.guide.t} s after the miss; Auto-drive replanned on engaging and arrived on ${r.at} in ${r.t} s sim (${r.later} more reroutes, ${r.coll} collisions), handed back`;
   });
+  // the desktop guidance card with the lane hint up (review r4): the turn word stays whole beside a distance in feet,
+  // the whole final approach. The lanes' room was 64 px for 37 px of marks, which cut "Keep right" to "KEEP RIG...";
+  // every word the card can say, with 5 lanes and with all 7, fits clear of the marks
+  await check('desktop 1440 × 900: the guidance card keeps the turn word whole beside the lane hint, in feet', async () => {
+    try {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await game(page, () => {
+        const g = window.__game, m = g.findMain('I-405 North');
+        g.setPaused(true); g.placeCar(m, m.len * 0.12, 1, 28); g.traffic.reseed(3); g.traffic.fill(g.view()); g.navigateTo('CA-55 North');
+        g.fastForward(Math.max(0, (g.route[0].s - g.phys.s - 1000) / 28), {}, 28); g.setPaused(false);   // 1 km (3280 ft) before the hand-off
+      });
+      await page.waitForFunction(() => document.querySelector('.app')?.dataset.hud === 'desk' && !!document.querySelector('.hud-nav:not([hidden]) .hud-nav-lanes:not([hidden]) i.on')
+        && / ft$/.test(document.querySelector('.hud-nav-dist b')?.textContent ?? ''), null, { timeout: FRAMES_MS, polling: 50 });
+      // measured running: paused, the pause screen takes the HUD away and every width reads 0
+      await frames(page, 2);
+      await page.screenshot({ path: path.join(OUT, 'desk-nav-lanes.png'), clip: { x: 0, y: 0, width: 360, height: 150 } });
+      const r = await game(page, () => {
+        const q = (s) => document.querySelector(s), sp = q('.hud-nav-dist span'), ln = q('.hud-nav-lanes'), kids = [...ln.children];
+        const look = () => ({ sw: sp.scrollWidth, cw: sp.clientWidth, lw: Math.round(ln.getBoundingClientRect().width), gap: Math.round(ln.getBoundingClientRect().left - sp.getBoundingClientRect().right) });
+        const now = { act: sp.textContent, dist: q('.hud-nav-dist b').textContent, lanes: kids.filter((k) => !k.hidden).length, ...look() };
+        // every word, beside the longest distance in feet, with 5 lanes and with all 7 (restored after)
+        const act = sp.textContent, dist = q('.hud-nav-dist b').textContent, was = kids.map((k) => k.hidden), words = [];
+        q('.hud-nav-dist b').textContent = '5280 ft';
+        for (const n of [5, 7]) {
+          kids.forEach((k, i) => { k.hidden = i >= n; });
+          for (const w of ['Keep right', 'Keep left', 'Continue']) { sp.textContent = w; words.push({ n, w, ...look() }); }
+        }
+        kids.forEach((k, i) => { k.hidden = was[i]; }); sp.textContent = act; q('.hud-nav-dist b').textContent = dist;
+        return { now, words };
+      });
+      expect(r.now.cw > 40 && r.now.lw > 0, `the card is not laid out: ${JSON.stringify(r.now)}`);
+      expect(r.now.sw <= r.now.cw + 1 && r.now.gap >= 0, `"${r.now.dist} ${r.now.act}" with ${r.now.lanes} lanes: the word is cut (${r.now.cw} of ${r.now.sw} px) or under the lanes (gap ${r.now.gap} px)`);
+      const bad = r.words.filter((x) => !x.cw || x.sw > x.cw + 1 || x.gap < 0);
+      expect(bad.length === 0, `cut or under the lanes beside 5280 ft: ${bad.map((x) => `${x.w} (${x.n} lanes, ${x.cw} of ${x.sw} px, gap ${x.gap})`).join('; ')}`);
+      return `"${r.now.dist} ${r.now.act}" with ${r.now.lanes} lanes: ${r.now.sw}/${r.now.cw} px, ${r.now.gap} px clear of the lanes; beside 5280 ft every word whole with 5 and 7 lanes (closest ${Math.min(...r.words.map((x) => x.gap))} px from the lanes)`;
+    } finally {
+      await game(page, () => { const g = window.__game; g.setAutoDrive(false); g.navigateTo(null); g.setPaused(true); }).catch(() => {});
+      await page.setViewportSize({ width: 640, height: 360 }).catch(() => {});
+      await frames(page, 2).catch(() => {});
+    }
+  });
   await check('showroom: refusals, then buy the Brio and drive its numbers', async () => {
     const r = await game(page, () => {
       const g = window.__game, pb = g.profile, lvl = (l) => Math.round(400 * Math.pow(l - 1, 1.5));
@@ -1154,23 +1195,33 @@ await group('phone', async (use) => {
         let n = 0; for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - rgb[0]) + Math.abs(d[i + 1] - rgb[1]) + Math.abs(d[i + 2] - rgb[2]) < 40) n++;
         return { accent: n, drawn: g.routeDrawn };
       });
+      // the map and the HUD tick at 0.1 s of game time: each read below waits on the state it reads, not on frames
+      const until = (fn, arg) => page.waitForFunction(fn, arg, { timeout: FRAMES_MS, polling: 50 }).catch(() => {});
       await game(page, () => { const g = window.__game; g.navigateTo(null); });
-      await frames(page, 3);
+      await until(() => window.__game.routeDrawn === 0 && !document.querySelector('.tbtn.auto'));
+      await frames(page, 2);
       const none = await mapLook();
       await game(page, () => {
         const g = window.__game, m = g.findMain('I-405 North');
         g.setPaused(true); g.placeCar(m, m.len * 0.12, 1, 28); g.traffic.reseed(3); g.traffic.fill(g.view()); g.navigateTo('CA-55 North');
         g.fastForward(Math.max(0, (g.route[0].s - g.phys.s - 1500) / 28), {}, 28); g.setPaused(false);   // 1.5 km before the exit
       });
-      await frames(page, 4);
+      await until(() => window.__game.routeDrawn > 20 && !!document.querySelector('.tbtn.auto') && !!document.querySelector('.hud-nav-lanes:not([hidden]) i.on'));
+      await frames(page, 2);
       const withRoute = await mapLook();
       expect(withRoute.drawn > 20 && withRoute.accent > 4 * none.accent + 30, `the map's accent pixels: ${none.accent} without a route, ${withRoute.accent} with one (${withRoute.drawn} route points)`);
       const hint = await game(page, () => ({ lit: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i.on').length, all: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i:not([hidden])').length, act: document.querySelector('.hud-nav-dist span')?.textContent }));
       expect(hint.lit >= 1 && hint.all > hint.lit && /Keep (left|right)/i.test(hint.act ?? ''), `lane hint ${JSON.stringify(hint)}`);
       const auto = page.getByRole('button', { name: 'Auto-drive' });
       expect(await auto.count() === 1 && await auto.getAttribute('aria-pressed') === 'false', 'no Auto-drive button with a route');
+      // the HUD's DOM (the AUTO tag, the button's aria-pressed) is waited on as state, not counted frames: three frames
+      // hold a HUD send only when frames run 33 ms or more, which a quiet machine beats
+      const autoShown = (on) => page.waitForFunction((want) => {
+        const t = document.querySelector('.hud-auto'), b = document.querySelector('.tbtn.auto');
+        return !!t && t.hidden === !want && !!b && b.getAttribute('aria-pressed') === String(want);
+      }, on, { timeout: FRAMES_MS, polling: 50 }).catch(() => {});
       await auto.tap();
-      await frames(page, 3);
+      await autoShown(true);
       const st = await game(page, () => ({ on: window.__game.autoDriving, tag: !document.querySelector('.hud-auto').hidden, pressed: document.querySelector('.tbtn.auto').getAttribute('aria-pressed') }));
       expect(st.on && st.tag && st.pressed === 'true', `after the tap: ${JSON.stringify(st)}`);
       const sizes = [];
@@ -1179,11 +1230,15 @@ await group('phone', async (use) => {
           await page.setViewportSize({ width: w, height: h });
           // the route's HUD as it was: no lanes, no AUTO, no button; then all three
           await game(page, () => { const g = window.__game; g.setAutoDrive(false); document.querySelector('.hud-nav-lanes').hidden = true; });
-          await frames(page, 3);
+          await autoShown(false);
+          await frames(page, 2);                                                     // the new size laid out
           const was = await game(page, hudLayoutInPage);
           await game(page, () => { const g = window.__game; g.setAutoDrive(true); document.querySelector('.hud-nav-lanes').hidden = false; });
-          await frames(page, 3);
+          await autoShown(true);
+          await frames(page, 2);
           const m = await game(page, hudLayoutInPage);
+          const label0 = `${w}x${h}`, stNow = await game(page, () => ({ on: window.__game.autoDriving, tag: !document.querySelector('.hud-auto').hidden }));
+          expect(stNow.on && stNow.tag, `${label0}: AUTO is not up for the measure: ${JSON.stringify(stNow)}`);
           const label = `${w}x${h}`;
           expect(m.area <= was.area + 0.002, `${label}: the HUD covers ${pct(m.area)}, up from ${pct(was.area)}`);
           expect(m.small.length === 0 && m.overlaps.length === 0, `${label}: small ${m.small.join(', ')}; overlapping ${m.overlaps.join(', ')}`);
@@ -1222,7 +1277,7 @@ await group('phone', async (use) => {
       expect(!bySteer && !byBrake, `still driving after a steer drag ${bySteer}, after BRAKE ${byBrake}`);
       // clear the route: the button, the map's line and the lane hint go
       await game(page, () => window.__game.navigateTo(null));
-      await frames(page, 3);
+      await until(() => window.__game.routeDrawn === 0 && !document.querySelector('.tbtn.auto'));
       const gone = { button: await auto.count(), ...(await mapLook()) };
       expect(gone.button === 0 && gone.drawn === 0, `after clearing: ${JSON.stringify(gone)}`);
       await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it

@@ -907,7 +907,11 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-nav-sign { grid-column: 2; grid-row: 2; }
 .hud-nav-exit { grid-row: 3; }
 .hud-nav-lanes { grid-column: 2; grid-row: 1; justify-self: end; align-self: center; display: flex; align-items: flex-end; gap: 3px; height: 14px; }
-.app[data-hud="desk"] .hud-nav:has(.hud-nav-lanes:not([hidden])) .hud-nav-dist { padding-right: 64px; }   /* the lane word stops short of the lanes */
+/* the lane word stops 7 px short of the lanes, which are 8n - 3 px wide for n lanes (37 px for 5): 64 px cut "Keep
+   right" to "KEEP RIG..." beside a distance in feet */
+.app[data-hud="desk"] .hud-nav:has(.hud-nav-lanes:not([hidden])) .hud-nav-dist { padding-right: 44px; }
+.app[data-hud="desk"] .hud-nav:has(.hud-nav-lanes:not([hidden]) i:nth-child(6):not([hidden])) .hud-nav-dist { padding-right: 52px; }
+.app[data-hud="desk"] .hud-nav:has(.hud-nav-lanes:not([hidden]) i:nth-child(7):not([hidden])) .hud-nav-dist { padding-right: 60px; }
 .hud-nav-lanes[hidden], .hud-nav-lanes i[hidden] { display: none; }
 .hud-nav-lanes i { width: 5px; height: 9px; border-radius: 1px; background: var(--line-2); }
 .hud-nav-lanes i.on { height: 14px; background: var(--nav); box-shadow: 0 0 6px var(--nav); }
@@ -1029,8 +1033,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto .ico { width: 18px; height: 18px; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto .tcap { display: block; font: 700 8.5px/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto.on .tcap { color: var(--ice-text); }
-/* it stays with the controls when the Minimal HUD tucks the icons away */
-.app:is([data-hud="pp"], [data-hud="pl"]).hud-idle .tbar .tbtn.auto { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+/* it stays when the Minimal HUD tucks the icons away: with the controls on a phone; on a desktop at the rail's right
+   edge, above Pause's chip, while the rest of the rail slides off */
+.app:is([data-hud="pp"], [data-hud="pl"], [data-hud="desk"]).hud-idle .tbar .tbtn.auto { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+.app[data-hud="desk"].hud-idle .tbar .tbtn.auto { justify-self: end; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest { display: block; font: 500 11px/14px var(--f-ui); color: var(--dim); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest :is(small, svg, .dest-road em) { display: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest div { display: inline; }

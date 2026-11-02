@@ -4,8 +4,11 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
-## 2026-11-02: GPS "follow it": route on the corner map, lane hints, Auto-drive (claude/gps-follow, WIP, not accepted)
+## 2026-11-02: GPS "follow it": route on the corner map, lane hints, Auto-drive (claude/gps-follow, r4 kept by the play and code reviews)
 
+- **Reviewers' outcome: kept by the play and code reviews.** tsc and build exit 0; a 390x760 drive took a hand-off
+  by hand, Auto-drive engaged in 1 frame, steer and brake handed back (gas did not), and it arrived with 0
+  collisions; Race offers no Auto-drive.
 - **The owner (2026-11-01, about 7:20 PM PT): "Also make it where you put navigation on the gps to follow it"**, and
   chose both: the route drawn to follow by hand, and an Auto-drive button that drives it, with steer or brake handing
   the car back.
@@ -14,7 +17,8 @@ available, so frame rates on real hardware are **not** measured.
     zooms in as the hand-off nears. With no route it still shows the road you are on in yellow, as before.
   - From 2 mi out, the guidance card shows a lane hint, with the lanes the hand-off leaves from lit.
   - The Auto-drive button appears only with a route in Free Drive. Steering or braking (keys, touch or pad) hands
-    the car back; gas alone does not.
+    the car back; gas alone does not. It stays in reach when the Minimal HUD tucks the icons away: with the controls
+    on a phone, and on a desktop at the rail's right edge above Pause's chip (r3; before, the desktop rail tucked it).
 - **Review fixes (r2):**
   - **Desktop guidance card:** every item now has its own grid cell, so the hint no longer pushes the sign into the
     arrow column.
@@ -23,7 +27,63 @@ available, so frame rates on real hardware are **not** measured.
   - **Missed hand-off:** a hand-off missed on the road you are still on now triggers a new plan. This applies to the
     guidance at 4 Hz and to Auto-drive when it is switched on. With no way from here, the destination is kept and
     Auto-drive hands back.
-- **Verified** (headless Chromium, SwiftShader, viewport-meta copy of dist/artifact.html):
+- **Review fixes (r3)**: the second review rejected r2 only because its own new suite check failed on a quiet
+  machine (phone group 12/13):
+  - **Cause:** the AUTO tag waited for the next 0.1 s HUD tick. The check counted 3 frames, which held a tick only when
+    frames ran 33 ms or longer.
+  - **Fix in the game:** `Game.navNow()` sends the HUD and redraws the corner map on the next frame. It runs whenever
+    Auto-drive flips (`setAutoDrive`, the arrival hand-back in `followRoute`) and whenever a route is set or cleared
+    (`navigateTo`, `setRoute(null)`, which start, attract and race entry go through).
+  - **Fix in the check:** "follow the route" now waits on the state it reads: the map's `routeDrawn`, the button, the
+    lit lanes, and the AUTO tag with the button's `aria-pressed`. It no longer counts frames. It also asserts that AUTO
+    is up at each size before measuring.
+  - **One toast:** turning Auto-drive on with no way from here now plans before switching on, so it says "No way to X
+    from here" once. Before, a second "No way from here: Auto-drive off" came first.
+- **Review fix (r4):** the third review passed the phones and found one desktop problem.
+  - **Problem:** at 1440 x 900 with the lane hint up, the turn word was cut to "KEEP RIG..." whenever the distance read
+    in feet, which is the whole final approach.
+  - **Cause:** the distance line kept 64 px clear for the lanes, but 5 lane marks are only 37 px wide.
+  - **Fix (styles.css, desktop only):** the room now follows the lane count. The marks are 8n - 3 px wide for n
+    lanes, and the word stops 7 px short of them: 44 px for up to 5 lanes, 52 px for 6, 60 px for 7.
+  - **New suite check (progression group, desktop):** "desktop 1440 x 900: the guidance card keeps the turn word whole
+    beside the lane hint, in feet". It sets the route, fast-forwards to 1 km before the hand-off and waits for the
+    desktop layout, lit lanes and a distance in feet. It then requires `.hud-nav-dist span` scrollWidth <=
+    clientWidth + 1, the word clear of the lanes, and a laid-out card (a paused game hides the HUD, so every width
+    would read 0). It also sets Keep right, Keep left and Continue beside "5280 ft", with 5 lanes and with all 7, and
+    restores the card afterwards.
+- **Verified in r4** (4 cores; other lanes' Playwright ran between my runs, load 3 to 7):
+
+  | Check | Result |
+  | --- | --- |
+  | `npx tsc --noEmit`, `npm run build` | exit 0, exit 0 |
+  | `npm test -- --only=phone` (started 19:26) | **13/13**, 439 s. "follow the route": map accent pixels 0 to 2332 (656 route points); lanes 2 of 5 lit, "Keep right"; HUD cover unchanged at 390 x 844 (13.6 %), 390 x 760 (15.1 %, controls from 77.6 %) and 844 x 390 (11.8 %, cluster to 28.5 %); steer drag and BRAKE each took over |
+  | `npm test -- --only=race,progression` (started 19:34) | **16/17**, progression 881 s. The new desktop check passed: "3200 ft Keep right" with 5 lanes, 78/78 px, 26 px clear of the lanes; every word whole beside 5280 ft with 5 and 7 lanes. The one failure was race's "racing slowly ends Too far behind", a 10 s wait for the results screen under load. This branch does not touch it |
+  | `npm test -- --only=race` rerun (20:00) | **7/7**, "Too far behind" at P4 after 184 s |
+  | My own drive at 1440 x 900, Free Drive, route to CA-55 North | "Keep right" whole (78/78 px) at 1.7 mi, 4860, 3190, 2640, 1550, 840 and 420 ft; 26 to 38 px clear of the 37 px lanes; the sign whole. With Auto-drive on: HUD cover 12.1 %, no overlaps, no small targets |
+  | The card's words beside "5280 ft" and "10.2 mi", 2 to 7 lanes | 36 of 36 whole: Keep right 78 px, Keep left 70 px, Continue 62 px; the closest is 10 px from the lanes (Keep right with 7) |
+  | Phone 390 x 760 (viewport-meta copy, DPR 3) and 844 x 390, Auto-drive on at 2650 ft | Unchanged, because the fix applies only to the desktop layout. Sign whole; lanes "00011"; no overlaps or small targets; the corner map up at 808 m (the Minimal wake), so the cover reads 16.0 % and 12.7 % with it |
+  | Page errors | None in any context |
+
+- **Frames (r4):** tests/out/gps/ d1-r4-1440x900-auto, d1-r4-card (1490 and 1420 ft, "KEEP RIGHT" whole beside the
+  lanes), d2-r4-1440x900-2600ft, d2-r4-card, d3-r4-card-7lanes-forced (7 marks forced on, still whole),
+  p1-r4-390x760-lanes and l1-r4-844x390-lanes; not committed.
+- **Verified in r3** (4 cores; no other lane's Playwright was running when each suite run started; load 0.5 at the
+  phone run's start and 2.4 at the race/progression run's start, 8 and 4.8 at their ends):
+
+  | Check | Result |
+  | --- | --- |
+  | `npx tsc --noEmit`, `npm run build` | exit 0, exit 0 |
+  | `npm test -- --only=phone` | **13/13**, 473 s. "follow the route" passed in 78.9 s: map accent pixels 0 to 2363 (656 route points); lanes 2 of 5 lit, "Keep right"; AUTO on; HUD cover unchanged at 390 x 844 (13.6 %), 390 x 760 (15.1 %) and 844 x 390 (11.8 %); steer drag and BRAKE each took over; cleared. The budget check read 10.3 %, 12.1 % in the app and 9.2 % |
+  | `npm test -- --only=race,progression` | **16/16** (race 51 s, progression 650 s). "owner test build" passed this time, so the known base timeout did not occur |
+  | HUD tick held 5 s away (`hudT = 5`), then the toggle, at 480 x 320 | AUTO tag and `aria-pressed` agree 2 frames after on and after off (twice each); a cleared route drops the button in 2 frames. Before the fix this waited for the held tick |
+  | No way from here (the network's route stubbed for one call) | `setAutoDrive(true)` returns false with one toast: "No way to CA-55 North from here" |
+  | Desktop 1440 x 900, Minimal, tucked | View, Go to and Radio hidden off the edge; Auto-drive visible at the rail's right edge (x 1286 to 1426) above Pause's chip (x 1382 to 1426) |
+  | 844 x 390 with Auto-drive and the lane hint | Sign "CA-55 North" 97/97 px; no page errors in any context |
+
+- **Frames (r3):** tests/out/gps/ p1-route-map-r3, p2-lane-hint-r3, p3-auto-on-r3, p4-arrived-r3 (390 x 760, DPR 3),
+  d2-r3-1440x900-minimal-tucked and l1-r3-844x390; not committed. Arrival under Auto-drive from 900 m before the
+  exit took 61 s sim: I-405 North, CA-55 South ramp, CA-55 North. It handed back with no button and no AUTO tag.
+- **Verified in r2** (headless Chromium, SwiftShader, viewport-meta copy of dist/artifact.html):
 
   | Check | Result |
   | --- | --- |
@@ -37,12 +97,13 @@ available, so frame rates on real hardware are **not** measured.
   - "owner test build": a 300 s click;
   - "sky camera": a 240 s frame wait.
 
-  The reviewer saw the same failures. **A clean run on a quiet machine is still owed before merging.**
+  The reviewer saw the same failures. The quiet-machine run then failed the new check on timing; r3 fixed that
+  (above).
 - **Frames:** tests/out/gps/ (p1-route-map, p2-lane-hint, p3-auto-on, p4-arrived, p5-auto-mid, p6-takeover,
   d1-1440x900, l1-844x390); not committed.
-- **Not accepted yet.** Code review passed every listed criterion, but the branch's own new suite check fails on a
-  quiet machine, so its proof does not hold and the phone group goes from 12/12 to 12/13. Committed as work in
-  progress; that check must pass before this is kept.
+- **Status:** r2 was not accepted because the new check failed on a quiet machine (phone group 12/13), and r3 fixed
+  that. r3 was not accepted because the desktop card cut the turn word beside the lane hint, and r4 fixed that. The r3
+  and r4 fixes are uncommitted on claude/gps-follow, awaiting review.
 
 ## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
 
