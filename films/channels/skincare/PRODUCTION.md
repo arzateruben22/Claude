@@ -48,3 +48,9 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 ## Questions (for the owner, through the coordinator)
 - Narrator: bf_isabella recommended (auditions/README.md); carrying on with it until told otherwise.
 - Channel colour in Prism Studio: the catalogue's placeholder `#D99A92` is a dusty rose close to Lumevina; set by the coordinator to `water` `#00685F`.
+
+- **2 Nov, ~04:15 UTC.** Rebalance: No. 006 taken over from the second builder (its script, claims, voice and first
+  set merged at a8f4314); light tone (rotation), whole-follicle framing, round-1 review 3/4/2/2/3/3/3, reworked
+  (63217b9). No. 002 round 3: 4/4/3/3/4/4/4 (gauge values had vanished: a statement hidden behind a comment in
+  `set/motif.js`, fixed; cuts matched), round 4 rendering. No. 003 round 2: 3/4/3/3/4/4/4, reworked (domed pads, cheek
+  bar via an opt-in `cheek` in `set/motif.js`, matched cuts), round 3 queued. Owner approved one tone per episode.
