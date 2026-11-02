@@ -31,7 +31,7 @@ const bg = tok("graphite");
 renderer.setClearColor(new THREE.Color(bg[0], bg[1], bg[2]), 1);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(24, W / H, 0.5, 3000);
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 10, threshold: 0.95, bloom: 0.3 });   // nothing should bloom: paper and ink
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 10, threshold: 0.95, bloom: 0.15 });   // nothing should bloom: paper and ink
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 
@@ -146,7 +146,7 @@ const rx = (u) => u - RW / 2;                                              // sh
 const ruler = createSheet({ w: RW, d: RD, ppu: 36, at: [0, 0.002, RU.z0 - RD / 2 + 0.5], order: -6, draw: (ctx, cw, ch, st) => {
   const ppu = cw / RW, yb = ch - 0.5 * ppu, py = (yr) => yb - yr * RU.yu * ppu, xL = RX.xL * ppu, xR = RX.xR * ppu;
   ctx.fillStyle = "rgba(244, 242, 236, 0.10)"; ctx.fillRect(xL, py(RU.years), xR - xL, py(0) - py(RU.years));
-  ctx.fillStyle = MARK; ctx.fillRect(xL, py(st.y), xR - xL, py(0) - py(st.y));
+  ctx.globalAlpha = 0.82; ctx.fillStyle = MARK; ctx.fillRect(xL, py(st.y), xR - xL, py(0) - py(st.y)); ctx.globalAlpha = 1;   // a little under the token: the bloom stays on the edges (review round 2)
   for (let yr = 0; yr <= RU.years; yr += 10) {
     const big = yr % 50 === 0, on = yr <= st.y;
     ctx.fillStyle = on ? "rgba(23, 26, 30, 0.55)" : big ? CHALK : CHALK2;
@@ -165,7 +165,7 @@ const ruler = createSheet({ w: RW, d: RD, ppu: 36, at: [0, 0.002, RU.z0 - RD / 2
   for (let i = 0; i < 5; i++) {
     const a = clamp01(st.l - i);
     if (a <= 0) continue;
-    ctx.globalAlpha = a; ctx.fillStyle = ANCH;
+    ctx.globalAlpha = 0.85 * a; ctx.fillStyle = ANCH;
     rrect(ctx, RX.life * ppu, py((i + 1) * RU.life) + 0.35 * ppu, RX.lifeW * ppu, py(i * RU.life) - py((i + 1) * RU.life) - 0.7 * ppu, 0.8 * ppu); ctx.fill();
     ctx.globalAlpha = 1;
   }
@@ -181,7 +181,7 @@ const hud = createHud({ camera, shots: FILM.shots });
 const SL = Object.fromEntries(slips.map((s) => [s.n, s]));
 const S = {
   you: [WD.figX, 1.5, -0.6], slip4: [SW / 2, 0, (SL[4].z0 + SL[4].z1) / 2], dots: [SW / 2 - 0.4, 0, SL[WD.long].z1 + 0.35],
-  harper: [WD.harper[0], 1.6, WD.harper[2]], cal: [CAL_X + CW / 2, 0, (CAL.z0 + CAL.z1) / 2],
+  harper: [WD.harper[0], 1.6, WD.harper[2]], cal: [-0.4, 0, CAL.z1 + 0.3],
   naive: [rx(RX.xR + 2.0), 0, ZY(RU.naive)], life1: [rx(RX.life), 0, ZY(RU.life * 2.5)], billion: [SW / 2, 0, BIL_Z],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },

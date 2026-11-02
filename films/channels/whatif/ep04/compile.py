@@ -101,7 +101,7 @@ t_once = A("vo07:once", -0.1)                                      # the "one bi
 EL, AZ = 48, -8
 FRONT = {"target": [-0.55, 0, -1.6], "dist": 36, "el": EL, "az": AZ, "fov": 24, "fy": 0.40}
 RUL_T, RUL_D = 230, 430                      # the ruler shot: target at year 95, the far end climbing into the distance
-k_cal = lambda zz, dist, el, az: {"target": [-2.0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.40}
+k_cal = lambda zz, dist, el, az: {"target": [-1.4, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.34}
 k_ruler = lambda zz, dist, el, az: {"target": [-3.0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.30}
 k_count = lambda zz, dist=30, el=EL, az=AZ, fy=0.42: {"target": [0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 z_tick_end = zc(12)
@@ -120,12 +120,12 @@ CAM = {
     ],
     "summer": [
         {"t": B["why"]["t0"], **k_count(zc(LONG) - 0.3, 28, 54, -4, 0.40)},
-        {"t": t_cal0 - 0.2, **k_cal(CAL_C[2] + 0.4, 36, 58, -6), "ease": "inout3"},
-        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] - 0.6, 41, 62, -7), "ease": "sine"},       # a slow drift up the calendar through the hold
+        {"t": t_cal0 - 0.2, **k_cal(CAL_C[2] + 1.6, 38, 58, -6), "ease": "inout3"},
+        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] + 0.6, 46, 62, -7), "ease": "sine"},       # a slow drift up the calendar through the hold
     ],
     "ruler": [
-        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] - 0.6, 41, 62, -7)},
-        {"t": t_box + 0.6, **k_ruler(ZY(RUL_T), RUL_D, 46, -6), "ease": "inout3"},   # the scale jump: the centuries recede up the desk
+        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] + 0.6, 46, 62, -7)},
+        {"t": t_box + 0.6, **k_ruler(ZY(RUL_T), RUL_D, 46, -6), "ease": "out3"},   # the scale jump: the centuries recede up the desk
         {"t": t_work0, **k_ruler(ZY(RUL_T + 12), RUL_D + 30, 44, -5), "ease": "sine"},
     ],
     "work": [
@@ -134,7 +134,7 @@ CAM = {
     ],
     "home": [
         {"t": t_home, **k_ruler(ZY(RUL_T + 20), RUL_D + 50, 44, -5)},
-        {"t": t_home + 1.8, **FRONT, "ease": "inout3"},                                 # back down the whole line to its foot
+        {"t": t_home + 1.8, **FRONT, "ease": "out3"},                                 # back down the whole line to its foot
         {"t": A("vo07:reach", -0.3), **FRONT, "target": [-0.55, 0, -3.2], "dist": 38, "ease": "sine"},
         {"t": t_end, **FRONT, "target": [-0.55, 0, -2.6], "dist": 37, "ease": "sine"},
     ],
@@ -185,8 +185,8 @@ LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": -1, "v": "below"},
     {"id": "l-slip", "text": "one slip a number", "kind": "part", "anchor": "slip4", "t0": TICKS[0] + 0.5, "t1": TICKS[0] + 3.6, "shot": "count", "side": 1},
     {"id": "l-dots", "text": "a dot a syllable", "kind": "calc", "anchor": "dots", "t0": A("vo03:sentence", 0.3), "t1": B["why"]["t0"] - 0.2, "shot": "fly", "side": 1},
-    {"id": "l-harper", "text": "Jeremy Harper", "kind": "anchor", "anchor": "harper", "t0": A("vo04:man"), "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": -1},
-    {"id": "l-summer", "text": "his summer: 89 days", "kind": "part", "anchor": "cal", "t0": t_summer, "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": 1},
+    {"id": "l-harper", "text": "Jeremy Harper", "kind": "anchor", "anchor": "harper", "t0": A("vo04:man"), "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": -1, "v": "above"},
+    {"id": "l-summer", "text": "his summer: 89 days", "kind": "part", "anchor": "cal", "t0": t_summer, "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": 1, "v": "above"},
     {"id": "l-naive", "text": "a number a second: 32 yr", "kind": "part", "anchor": "naive", "t0": t_box + 0.6, "t1": t_work0 - 0.3, "shot": "ruler", "side": 1},
     {"id": "l-life", "text": "a lifetime: 73 yr", "kind": "anchor", "anchor": "life1", "t0": t_life0, "t1": t_work0 - 0.3, "shot": "ruler", "side": -1},
 ]
@@ -227,7 +227,7 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24, balance=True, keep=("waking hours", "a sentence of its own", "five whole lifetimes", "every number", "in the hundreds", "hundreds of millions", "out of reach", "at that pace", "if everyone", "the whole count")),
+    "captions": f.captions(max_chars=24, balance=True, keep=("waking hours", "a sentence of its own", "five whole lifetimes", "every number", "in the hundreds", "hundreds of millions", "out of reach", "at that pace", "if everyone", "the whole count", "you'd be", "jumped at once")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 for pg in film["captions"]:                      # numerals.py writes "a billion" as "1 billion"; the voice says "a"
