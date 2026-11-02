@@ -50,8 +50,8 @@ vo: And on most of your body, only the top layer, about this paper's thickness, 
 vo: So, is a scar still skin? Skin's quick repair: strong enough to close, never the *weave*. {c10}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
-vo: Next: a poison that smooths a frown. What does it *silence*? {-}
-end card: "Next layer: a poison that smooths a frown. What does it silence?" · "Outer Layer · No. 003"
+vo: Next: a deadly poison, in a frown. {-} How much goes *in*? {-}
+end card: "Next layer: a deadly poison, in a frown. How much goes in?" · "Outer Layer · No. 003"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches; pmc.ncbi.nlm.nih.gov

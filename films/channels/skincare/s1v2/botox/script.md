@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "One message, silenced" (draft; dermatologist sign-off before posting)
+# Outer Layer s1v2: "The deadliest dose" (draft; dermatologist sign-off before posting)
 
 About 72 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, topic
 "What Botox does" (mechanism only; the voice says "botulinum toxin", never the brand).
@@ -30,30 +30,30 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/botox --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a section through a brow, the crease above, the muscle below, one nerve ending on the muscle lit, a single message frozen halfway · badge: simplified · title: "One message, silenced" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: What does it switch off? Not the skin, but one *message*. {c4}
+## hook {shot: frame 0, the payoff: a section through a brow, the crease above, the muscle below, one nerve ending on the muscle lit, a single message frozen halfway · badge: simplified · title: "The deadliest dose" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+vo: Poison, in a *frown*? {-} Among the most poisonous substances known, by the nanogram. {c7}
 
 ## normal {shot: no cut: the camera pushes down through the crease to the muscle; on "messenger" the nerve ending releases a puff of acetylcholine and the fibres pull, folding the skin above · spine: message ✓ · badge: simplified · picture-only 0.5 s · energy: 0.45} (5–17 s)
 vo: Every frown starts at a nerve ending, which lets out a chemical messenger onto the muscle below. {c1} The muscle pulls, and the skin above it folds into a *crease*. {c2}
 
 ## change {shot: an iris into the nerve ending: one vesicle waiting at the membrane; a toxin fragment slips in and snips one protein (SNAP-25 labelled); the vesicle stays put · spine: message ✗ · badge: illustration · picture-only 0.6 s · energy: 0.55} (17–28 s)
-vo: Botulinum toxin gets inside that nerve ending and cuts one small protein the message needs to get out. {c3} The message is ready, and it never *leaves*. {c14}
+vo: Botulinum toxin never touches the skin. {c4} It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never *leaves*. {c3,c14}
 
 ## why {shot: an iris out to a candlelit 1820s ledger of sausage-poisoning cases, Kerner's name and dates on a label; the ink of one entry becomes the same molecule · badges: Justinus Kerner, 1820 & 1822 · picture-only 2.2 s · energy: 0.5} (28–41 s)
 vo: Two centuries ago, a German doctor named Justinus Kerner traced a deadly paralysis to spoiled sausages. {c5} And he guessed that the same poison might one day become a *medicine*. {c6}
 
 ## whoa {shot: an iris from the ledger to a balance: on one side the estimated lethal amount, on the other a frown-line dose, a sliver; readouts ≈ 1–2 ng/kg (estimated) and 20 units vs ≈ 3,000 · badges: estimated · estimate · picture-only 3.2 s · energy: 0.8} (41–53 s)
-vo: It is among the most potent poisons known. {c7} The dose used on a frown is well under a hundredth of the amount estimated to *kill*. {c8,c9}
+vo: So how much goes in? {-} The whole frown takes well under a hundredth of the amount estimated to kill a *person*. {c8,c9}
 
 ## toscale {segment: toscale · the gauge lifts to centre beside the junction: the gap between nerve and muscle fills in, a hairline, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (53–61 s)
 vo: And the gap that message never crosses is about two thousand times thinner than a sheet of *paper*. {c10,c11}
 
 ## takeaway {shot: back to the hook's brow, the crease smooth; the nerve ending puts out a new sprout toward the muscle, then the original ending lights again · spine: message ✓ · badges: time ×N · ≈ 3–4 months · picture-only 0.5 s · energy: 0.3} (61–68 s)
-vo: Not the skin, but one message, silenced for a few months, until the nerve grows new *endings*. {c12,c13}
+vo: Poison in a frown: just enough to silence one message, until the nerve grows new *endings*. {c12,c13}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74.5 s)
-vo: Next: two neighbours under one sun for ten years. {-} Which hand *aged*? {-}
-end card: "Next layer: one sun, ten years. Which hand aged?" · "Outer Layer · No. 004" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
+vo: Next: two neighbours under the same sun, one experiment. {-} Which hand *aged*? {-}
+end card: "Next layer: same sun, one experiment. Which hand aged?" · "Outer Layer · No. 004" · footnote: "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches: pmc.ncbi.nlm.nih.gov does

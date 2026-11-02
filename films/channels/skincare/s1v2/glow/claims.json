@@ -1,29 +1,7 @@
 [
  {
-  "id": "c1",
-  "sentence": "It meets your skin's outer layer, which bends light about as strongly as glass.",
-  "claim": "The refractive index of dry stratum corneum is about 1.55 (reported values range about 1.45–1.55; 1.53–1.54 also appear), against 1.0 for air.",
-  "source_url": "https://library.scconline.org/v028n03/29",
-  "source_title": "Journal of the Society of Cosmetic Chemists 28(3), 1977: light transmission through stratum corneum in immersion liquids",
-  "accessed": "2026-11-02",
-  "note": "Excerpt: transmission 'peak at 1.54 is very close to the index of refraction of human stratum corneum'; 'human skin is reported to have an index of refraction number of 1.55'. Cross-checks: an OCT paper uses 'n = 1.55 of the stratum corneum'; a patent: 'air (ηD=1.0) and dry stratum corneum (ηD=1.55)'; a confocal-imaging paper (arXiv physics/0401104) lists 1.53. Screen shows '≈ 1.55'.",
-  "verified_via": "search excerpt",
-  "status": "ok"
- },
- {
-  "id": "c2",
-  "sentence": "It meets your skin's outer layer, which bends light about as strongly as glass.",
-  "claim": "Ordinary glass has a refractive index of about 1.5, reflecting about 4% of light at each surface at normal incidence.",
-  "source_url": "https://en.wikipedia.org/wiki/Fresnel_equations",
-  "source_title": "Fresnel equations (Wikipedia); worked example: Kiel University materials-science exercise 5.2.1",
-  "accessed": "2026-11-02",
-  "note": "Excerpts: 'about 4% for common glass' in air (per surface); Kiel exercise: n = 1.5 gives (0.5/2.5)² = 0.04. Stratum corneum 1.55 vs glass 1.5: 'about as strongly as glass'. Secondary source for a physics fact; swap for a textbook if the reviewer prefers.",
-  "verified_via": "search excerpt",
-  "status": "ok"
- },
- {
   "id": "c3",
-  "sentence": "So only a few percent bounces straight back off the top, as a glint.",
+  "sentence": "Only a few percent bounces off the top as a glint.",
   "claim": "Only about 4–7% of light striking skin near head-on is reflected at the surface (regular/specular reflection at the air–stratum corneum boundary), across 250–3000 nm.",
   "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
   "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
@@ -34,7 +12,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Smooth and full of water, that layer sends the glint back in one clean direction, like a mirror.",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
   "claim": "Hydrating the stratum corneum makes skin measurably smoother (and the stratum corneum thicker), with the fastest water uptake in the upper few micrometres.",
   "source_url": "https://doi.org/10.1116/1.4962547",
   "source_title": "Dąbrowska AK et al. In vivo confirmation of hydration-induced changes in human-skin thickness, roughness and interaction with the environment. Biointerphases 2016;11(3):031015",
@@ -45,7 +23,7 @@
  },
  {
   "id": "c5",
-  "sentence": "Smooth and full of water, that layer sends the glint back in one clean direction, like a mirror.",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
   "claim": "A smoother surface reflects light more specularly (in one direction, mirror-like); skin's perceived gloss falls as its microscale roughness rises.",
   "source_url": "https://library.imaging.org/jpi/articles/8/0/000502",
   "source_title": "Journal of Perceptual Imaging (IS&T): perceived facial gloss vs microscale skin roughness in rendered faces",
@@ -56,7 +34,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Dry it out, and it scatters light every which way.",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
   "claim": "When skin is dehydrated, its surface (stratum corneum) scatters more light; hydration lowers that scattering and makes skin more translucent.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/20923460/",
   "source_title": "Jiang Z-X, DeLaCruz J. Appearance benefits of skin moisturization. Skin Res Technol 2011;17(1):51–55",
@@ -67,7 +45,7 @@
  },
  {
   "id": "c7",
-  "sentence": "But it's the small part: most light slips inside, bounces among cells and fibres, and a large share comes back out.",
+  "sentence": "Most light on your face goes inside you.",
   "claim": "Since only about 4–7% is reflected at the surface, the great majority of light striking skin (about 93–96%) enters it.",
   "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
   "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
@@ -78,7 +56,7 @@
  },
  {
   "id": "c8",
-  "sentence": "But it's the small part: most light slips inside, bounces among cells and fibres, and a large share comes back out.",
+  "sentence": "The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
   "claim": "Light inside skin is scattered many times by cells and fibres; in one worked example about 40% of incident light is backscattered out of the skin after multiple scattering, against about 5% surface glare (the rest, about 53%, absorbed).",
   "source_url": "https://omlc.org/news/oct99/saratov/page3.htm",
   "source_title": "Jacques SL. Skin optics / polarized-light imaging notes (Oregon Medical Laser Center, 1999)",
@@ -89,7 +67,7 @@
  },
  {
   "id": "c9",
-  "sentence": "Melanin and blood tint it on the way, and a rush of blood sends it back redder.",
+  "sentence": "But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
   "claim": "Melanin (in the epidermis) and haemoglobin in blood (in the dermis) are the main absorbers of visible light in skin, and so colour the light that comes back out.",
   "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
   "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
@@ -100,7 +78,7 @@
  },
  {
   "id": "c10",
-  "sentence": "Melanin and blood tint it on the way, and a rush of blood sends it back redder.",
+  "sentence": "But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
   "claim": "Flushing occurs because the blood vessels in the skin dilate; more blood near the surface makes the skin look redder.",
   "source_url": "https://dermnetnz.org/topics/flushing",
   "source_title": "Flushing (DermNet, New Zealand dermatology resource)",
@@ -111,7 +89,7 @@
  },
  {
   "id": "c11",
-  "sentence": "Asked to make a face look healthy, people turned that up.",
+  "sentence": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin.",
   "claim": "When people adjusted colour-calibrated face photos to look as healthy as possible, they increased skin blood colour, particularly oxygenated blood colour, above baseline.",
   "source_url": "https://doi.org/10.1371/journal.pone.0005083",
   "source_title": "Stephen ID, Coetzee V, Law Smith M, Perrett DI. Skin blood perfusion and oxygenation colour affect perceived human health. PLoS ONE 2009;4(4):e5083",
@@ -155,7 +133,7 @@
  },
  {
   "id": "c15",
-  "sentence": "Mostly from within: light that went in, met your blood, and came back.",
+  "sentence": "It's light that went inside you, met your blood, and came back.",
   "claim": "Of the light coming back from skin, much more has travelled inside it and been scattered back out (about 40% of incident light in one example) than is reflected at the surface (about 4–7%); that returning light carries the colour of melanin and blood.",
   "source_url": "https://omlc.org/news/oct99/saratov/page3.htm",
   "source_title": "Jacques SL. Skin optics / polarized-light imaging notes (Oregon Medical Laser Center, 1999)",

@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "The record under the skin" (draft; dermatologist sign-off before posting)
+# Outer Layer s1v2: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
 
 About 70–74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
 topic "sunscreen vs no sunscreen, after about ten years". This episode is about sunscreen, so a board-certified
@@ -31,14 +31,14 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/sunscreen-decade --segment toscale`.
 
-## hook {shot: frame 0, the payoff: two model hands side by side under one warm sky, the same to the eye, gauge at 0 µm · badge: model · title: "The record under the skin" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+## hook {shot: frame 0, the payoff: two model hands side by side under one warm sky, the same to the eye, gauge at 0 µm · badge: model · title: "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Which hand *aged*? Both belong to neighbours, under the same fierce sun. {-}
 
 ## normal {shot: no cut: the camera pulls up from the hands to a small town seen from above; on "chance" its houses split into two colours at random · spine: Nambour, Queensland · 1992 · badge: one trial · picture-only 0.5 s · energy: 0.45} (5–17.5 s)
 vo: In the early nineties, in a Queensland town called Nambour, chance decided who would wear sunscreen every *morning*. {c1} They put it on head, neck, arms and hands; neighbours used it as they pleased. {c2}
 
-## change {shot: a scale jump down into one house, onto the back of a model hand; a silicone cast lifts off it and the fine lines in the cast light up, daily beside discretionary · spine → 4.5 years · 0.76 relative odds (0.59–0.98) · badges: illustration · Hughes et al. 2013 · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
-vo: Then, rather than trust their eyes, researchers read the fine lines in silicone *casts* of hands. {c3} The daily group was about a quarter less likely to show increased ageing. {c5}
+## change {shot: a scale jump down into one house, onto the back of a model hand; a silicone cast lifts off it and the fine lines in the cast light up, daily beside discretionary · spine → 4.5 years · 0.76 relative odds (0.59–0.98) · badges: illustration · Hughes et al. 2013 · readout: ageing trial 4.5 years (1992–96) · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
+vo: Then researchers read the fine lines in silicone *casts* of hands. {c3} After four and a half years, the daily group showed no detectable increase in ageing. {c5}
 
 ## why {shot: the cast dissolves back to the skin of the model hand; the light shifts to an ultraviolet camera's view, and mottled patches show under the surface that the visible view hid · badge: model · picture-only 2.2 s · energy: 0.5} (29–42 s)
 vo: It's easy to think of sun damage as the burn you feel. {-} But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the *surface*. {c6}

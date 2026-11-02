@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Botulinum toxin gets inside that nerve ending and cuts one small protein the message needs to get out.",
+  "sentence": "It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
   "claim": "The light chain of botulinum neurotoxin type A, once inside the motor nerve terminal, is a zinc-dependent protease that cleaves SNAP-25, a SNARE protein needed for acetylcholine vesicles to fuse with the membrane.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Not the skin, but one message.",
+  "sentence": "Botulinum toxin never touches the skin.",
   "claim": "Botulinum toxin blocks the release of acetylcholine at the neuromuscular junction; the nerve terminal does not degenerate, and its effect is on muscle contraction, not on the skin itself.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "It is among the most potent poisons known.",
+  "sentence": "Among the most poisonous substances known, by the nanogram.",
   "claim": "Botulinum toxin is among the most potent toxins known; for crystalline type A the estimated lethal dose for a 70 kg human is about 0.09–0.15 µg intravenously or intramuscularly (≈ 1.3–2.1 ng/kg), about 0.7–0.9 µg inhaled and 70 µg by mouth.",
   "source_url": "https://doi.org/10.1001/jama.285.8.1059",
   "source_title": "Botulinum toxin as a biological weapon: medical and public health management (Arnon SS et al.; JAMA, 2001)",
@@ -78,7 +78,7 @@
  },
  {
   "id": "c8",
-  "sentence": "The dose used on a frown is well under a hundredth of the amount estimated to kill.",
+  "sentence": "The whole frown takes well under a hundredth of the amount estimated to kill a person.",
   "claim": "The labelled dose of onabotulinumtoxinA for glabellar (frown) lines is 20 units in total (4 units into each of 5 sites).",
   "source_url": "https://www.drugs.com/pro/botox-cosmetic.html",
   "source_title": "onabotulinumtoxinA (cosmetic) prescribing information, label copy (Drugs.com)",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "The dose used on a frown is well under a hundredth of the amount estimated to kill.",
+  "sentence": "The whole frown takes well under a hundredth of the amount estimated to kill a person.",
   "claim": "The human LD50 of onabotulinumtoxinA is estimated at about 3,000 units for a 70 kg adult (extrapolated from primate studies); 20 units is about 0.7 % of that (computed).",
   "source_url": "https://cdn.clinicaltrials.gov/large-docs/36/NCT03861936/Prot_000.pdf",
   "source_title": "Study protocol, onabotulinumtoxinA for masseter muscle prominence (ClinicalTrials.gov NCT03861936)",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c12",
-  "sentence": "Not the skin, but one message, silenced for a few months, until the nerve grows new endings.",
+  "sentence": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
   "claim": "The effect of botulinum toxin on frown lines lasts about 3 to 4 months, sometimes longer.",
   "source_url": "https://www.aad.org/public/cosmetic/wrinkles/botulinum-toxin-overview",
   "source_title": "Botulinum toxin therapy: overview (American Academy of Dermatology)",
@@ -133,7 +133,7 @@
  },
  {
   "id": "c13",
-  "sentence": "Not the skin, but one message, silenced for a few months, until the nerve grows new endings.",
+  "sentence": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
   "claim": "Recovery comes as the poisoned nerve terminal sprouts new endings that make new contacts with the muscle; later the original terminal resumes release and the sprouts are pruned back.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/10077661/",
   "source_title": "Functional repair of motor endplates after botulinum neurotoxin type A poisoning: biphasic switch of synaptic activity between nerve sprouts and their parent terminals (de Paiva A et al.; PNAS, 1999)",
@@ -144,7 +144,7 @@
  },
  {
   "id": "c14",
-  "sentence": "The message is ready, and it never leaves.",
+  "sentence": "It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
   "claim": "With SNAP-25 cleaved, acetylcholine is still packaged in vesicles in the nerve terminal, but the vesicles cannot fuse with the membrane, so the acetylcholine is not released.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",

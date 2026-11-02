@@ -29,7 +29,7 @@ to `claims.json` and `{-}` marks a sentence that states nothing outside the film
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/s1v2/pimples --segment toscale`.
 
 ## hook {shot: frame 0, the payoff: a simplified cheek, one red spot lit, the skin around it clear; gauge at 0 µm · badge: simplified · title: "The fight you never saw" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
-vo: Is this spot *new*? {-} It started long before you could see it. {c1}
+vo: Is this spot *new*? Its fight began under skin that looked perfectly clear. {c1}
 
 ## normal {shot: no cut: the cheek becomes a stack of photos of the same patch, flipping back in time; on "clear" the spot vanishes from the earlier frames and the patch is plain skin · spine: 28% of new red spots · badge: illustration · Do et al., 2008 · picture-only 0.5 s · energy: 0.45} (5–15.5 s)
 vo: Follow faces photo by photo, and more than a quarter of new red spots rise from skin that looked perfectly *clear*. {c2} So what was happening underneath? {-}
@@ -44,14 +44,14 @@ vo: It's easy to picture an infection. {-} But this bacterium lives in skin with
 vo: White cells flood in until the follicle's wall can give way, spilling the fight *deeper*. {c6,c7} A squeeze often pushes it further, where a *mark* is more likely. {c8,c9}
 
 ## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one white cell from the spill fills in, round then spread, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51.5–60 s)
-vo: And each white cell in that fight, the kind that ends up as pus, is about a tenth of a paper's *thickness*. {c10,c11}
+vo: And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's *thickness*. {c10,c11}
 
 ## takeaway {shot: back to the hook's cheek, the one red spot lit, the clear skin around it now faintly showing its ringed follicles · picture-only 0.5 s · energy: 0.3} (60–67 s)
 vo: So, is it new? No. {-} It's the end of a fight that began out of *sight*. {c12}
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67–73 s)
-vo: Next: skin lit from within. Where does that *glow* come from? {-}
-end card: "Next layer: where does a glow come from?" · "Outer Layer · No. 001" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
+vo: Next: the light on your face, and where it really *goes*. {-}
+end card: "Next layer: where the light on your face goes" · "Outer Layer · No. 001" · footnote: "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008)."
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches; www.ncbi.nlm.nih.gov does

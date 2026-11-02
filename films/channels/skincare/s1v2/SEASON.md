@@ -9,21 +9,21 @@ each link, and a board-certified dermatologist signs off every episode, before a
 
 | No. | Topic | Hook (spoken by 2 s) | Why it sits here |
 |---|---|---|---|
-| 001 | `pimples`: "The fight you never saw" | "Is this spot *new*? It started long before you could see it." | The widest audience (almost everyone has had a spot), and a twist in the first 2 s: the spot is the last scene of a fight that began under clear skin. Strongest hook, so it opens the season. |
-| 002 | `glow`: "Where a glow comes from" | "Where does a *glow* come from? Follow the light in." | The lightest, most visual episode after a battle: pure optics, no warnings. |
+| 001 | `pimples`: "The fight you never saw" | "Is this spot *new*? Its fight began under skin that looked perfectly clear." | The widest audience (almost everyone has had a spot), and a twist in the first 2 s: the spot is the last scene of a fight that began under clear skin. Strongest hook, so it opens the season. |
+| 002 | `glow`: "Where a glow comes from" | "Where's your *glow* from? Most light on your face goes inside you." | The lightest, most visual episode after a battle: pure optics, no warnings. |
 | 003 | `scar`: "What's in a scar" | "Is a scar still *skin*? Look closer, thread by thread." | Turns from light to structure. Its fact (a baby's skin heals without a scar until about the sixth month) is the season's biggest "whoa" in the middle. |
-| 004 | `botox`: "One message, silenced" | "What does it switch off? Not the skin, but one *message*." | The curiosity peak: a famous poison, mechanism only. Follows the scar's collagen with nerve and muscle. |
-| 005 | `sunscreen-decade`: "The record under the skin" | "Which hand *aged*? Both belong to neighbours, under the same fierce sun." | A trial story, with ten years of results, that sets up the finale's evidence argument. |
+| 004 | `botox`: "The deadliest dose" | "Poison, in a *frown*? Among the most poisonous substances known, by the nanogram." | The curiosity peak: a famous poison, mechanism only. Follows the scar's collagen with nerve and muscle. |
+| 005 | `sunscreen-decade`: "The sunscreen experiment" (ageing trial 4.5 years, on screen; melanoma followed ~10 more) | "Which hand *aged*? Both belong to neighbours, under the same fierce sun." | A trial story, with ten years of results, that sets up the finale's evidence argument. |
 | 006 | `tanning-beds`: "Same list as cigarettes" | "Same list as *cigarettes*? Most people hear that and think: just as deadly." | The highest stakes and the sharpest reframe ("not the same size of harm, but the same certainty"), so it ends the season. |
 
 ## The tease chain
 
 | From | Tease (voice) | End card |
 |---|---|---|
-| 001 → 002 | "Next: skin lit from within. Where does that *glow* come from?" | "Next layer: where does a glow come from?" |
+| 001 → 002 | "Next: the light on your face, and where it really *goes*." | "Next layer: where the light on your face goes" |
 | 002 → 003 | "Next: skin closes almost any cut. But is a scar still *skin*?" | "Next layer: is a scar still skin?" |
-| 003 → 004 | "Next: a poison that smooths a frown. What does it *silence*?" | "Next layer: a poison that smooths a frown. What does it silence?" |
-| 004 → 005 | "Next: two neighbours under one sun for ten years. Which hand *aged*?" | "Next layer: one sun, ten years. Which hand aged?" |
+| 003 → 004 | "Next: a deadly poison, in a frown. How much goes *in*?" | "Next layer: a deadly poison, in a frown. How much goes in?" |
+| 004 → 005 | "Next: two neighbours under the same sun, one experiment. Which hand *aged*?" | "Next layer: same sun, one experiment. Which hand aged?" |
 | 005 → 006 | "Next: tanning beds share a list with cigarettes. What does it *mean*?" | "Next layer: tanning beds, on a list with cigarettes" |
 | 006 → season 2 | "Next season: why do bath fingers wrinkle, but never your *arm*?" | "Next season: why do bath fingers wrinkle?" |
 
@@ -52,3 +52,17 @@ question its viewer was just left with.
     mass.
   - **glow:** no measured number ties hydration directly to gloss, so the script describes it without one.
   - **pimples:** "weeks before you see it" was dropped as poorly sourced; the script says "long before".
+
+## Jaw-drop pass (coordinator, 2 Nov)
+
+| Topic | The fact a viewer repeats | Where it sits |
+|---|---|---|
+| pimples | More than a quarter of new spots rose from skin that looked perfectly clear | hook + normal |
+| glow | Almost all the light on your face goes inside you; the glow is the part that comes back out through your blood | hook + why/whoa |
+| scar | Until about the sixth month of pregnancy, a cut heals with no scar at all | whoa |
+| botox | One of the most poisonous substances known; a frown takes well under 1% of an estimated lethal dose | hook + whoa |
+| sunscreen | After 4.5 years, the daily group showed no detectable increase in skin ageing | change (title no longer promises ten years) |
+| tanning beds | Group 1 beside tobacco means the evidence is as sure, not that the harm is as big | hook + takeaway |
+
+Lab trivia left the voice: the refractive index (glow, now off screen too) and the white cell's size in µm (pimples:
+"ten in a row would barely span this paper").
