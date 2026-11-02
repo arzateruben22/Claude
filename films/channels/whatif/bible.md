@@ -1,5 +1,7 @@
 # Series bible: Back of the Envelope
 
+> **Channel name: Possibility Lab** (the owner's rename, 2 Nov 2026; was Back of the Envelope). On screen from then on: the title series line "Possibility Lab · No. …" and the end card. Older notes below keep the old name.
+
 Prism Studio slug `whatif`. Owner decision, 27 Oct 2026: the name is **Back of the Envelope**.
 TODO before launch: handle and trademark checks (USPTO, EUIPO, TikTok, YouTube, Instagram); only the
 open web has been searched for any channel so far.

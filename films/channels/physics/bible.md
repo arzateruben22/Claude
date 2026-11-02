@@ -1,5 +1,7 @@
 # Series bible: the everyday physics channel
 
+> **Channel name: Reality Rulebook** (the owner's rename, 2 Nov 2026; was Rest Frame). On screen from then on: the title series line "Reality Rulebook · No. …" and the end card. Older notes below keep the old name.
+
 The proxy blocked direct page fetches, so I checked every source from its search-result excerpt. Each link needs opening once before anything posts (TODO). Scratch files are in `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/series/physics/`: the preset `restframe-bench.json` and the scripts `contrast.py`, `drag.py` and `test_preset.py`. Nothing in the repo was changed.
 
 ## 1. Channel name

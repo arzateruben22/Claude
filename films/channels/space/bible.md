@@ -1,5 +1,7 @@
 # Series bible: space channel
 
+> **Channel name: One More Orbit** (the owner's rename, 2 Nov 2026; was Light Minute). On screen from then on: the title series line "One More Orbit · No. …" and the end card. Older notes below keep the old name.
+
 ## 1. Channel name
 
 | Option | Web search, 2026-10-22 |
