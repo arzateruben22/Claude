@@ -74,7 +74,7 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
-endEl.style.transform = "translateY(-9.5vmin)";
+endEl.style.transform = "translateY(-14vmin)";
 const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
 
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
