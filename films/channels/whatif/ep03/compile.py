@@ -70,8 +70,8 @@ CARPET = {"density": 4, "side": round(math.sqrt(V["ants_per_person"] / 4))}   # 
 TILT_WILD = tilt_for(1.5)                    # claims c5 says only "exceeds", so a modest lean toward the ants (no ratio is claimed)
 
 # the hook: low behind the ant, the whole balance looming beyond it (the ant walks toward it)
-ANT0, ANT_DIR, ANT_V = [-110, 0.4, 60], [0.878, -0.479], 0.45   # the hook ant walks toward the balance at 4.5 mm/s
-MACRO = {"target": ANT0, "dist": 3, "el": 7, "az": -60, "fov": 50, "fy": 0.74}   # wide and low: the ant big under the captions, the whole balance looming beyond it
+ANT0, ANT_DIR, ANT_V = [-16, 0.4, 230], [0.07, -0.9975], 0.45   # the hook ant walks toward the balance at 4.5 mm/s
+MACRO = {"target": ANT0, "dist": 3, "el": 11, "az": -8, "fov": 50, "fy": 0.76}   # the beam stays under the title's subtitle   # wide and low: the ant big under the captions, the whole balance looming beyond it
 BAL = {"target": [0, 18, 0], "dist": 340, "el": 12, "az": 18, "fov": 30, "fy": 0.36}
 def ant_s(t):
     """How far the hook ant has walked (cm) at t: forward through the hook; on the way home it walks the last
@@ -84,7 +84,7 @@ def ant_at(t):
 CAM = {
     "macro": [
         {"t": 0.0, **MACRO},
-        {"t": B["normal"]["t0"], **MACRO, "target": ant_at(B["normal"]["t0"]), "dist": 2.6, "az": -58, "ease": "lin"},   # following the ant
+        {"t": B["normal"]["t0"], **MACRO, "target": ant_at(B["normal"]["t0"]), "dist": 2.9, "az": -6, "ease": "lin"},   # following the ant
     ],
     "scale": [
         {"t": B["normal"]["t0"], **BAL, "dist": 300, "el": 9, "az": 36},
@@ -111,11 +111,13 @@ CAM = {
         {"t": t_each, "target": [95, 18, 0], "dist": 330, "el": 13, "az": 6, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "each": [
-        # down among your ants at your feet (each speck an ant, 5 mm apart), then up to the whole square: about
-        # 2.5 million ants, 7.8 m a side, with you in the middle
-        {"t": t_each, "target": [YOU[0] + 70, 0, YOU[2] + 80], "dist": 20, "el": 62, "az": 20, "fov": 30, "fy": 0.45},
-        {"t": t_each + 1.0, "target": [YOU[0] + 66, 0, YOU[2] + 75], "dist": 34, "el": 58, "az": 21, "fov": 30, "fy": 0.45, "ease": "sine"},   # a slow drift over the specks first
-        {"t": t_each + 2.6, "target": [YOU[0], 85, YOU[2]], "dist": 700, "el": 30, "az": 24, "fov": 30, "fy": 0.36, "ease": "inout2"},   # then up to the whole person, head in
+        # top-down among your ants beside your feet (each speck an ant, 5 mm apart); straight up until you appear from
+        # above, small, in your square; then down to the side view of the whole square (about 2.5 million ants, 7.8 m a
+        # side). The camera never comes within a few metres of the figure, so it never fills the frame.
+        {"t": t_each, "target": [YOU[0] + 85, 0, YOU[2] + 65], "dist": 20, "el": 88, "az": 20, "fov": 30, "fy": 0.45},
+        {"t": t_each + 1.0, "target": [YOU[0] + 84, 0, YOU[2] + 64], "dist": 34, "el": 88, "az": 22, "fov": 30, "fy": 0.45, "ease": "sine"},
+        {"t": t_each + 2.0, "target": [YOU[0] + 25, 0, YOU[2] + 18], "dist": 750, "el": 86, "az": 24, "fov": 30, "fy": 0.42, "ease": "inout2"},
+        {"t": t_each + 3.4, "target": [YOU[0], 70, YOU[2]], "dist": 900, "el": 34, "az": 24, "fov": 30, "fy": 0.38, "ease": "inout2"},
         {"t": t_work0, "target": [YOU[0], 60, YOU[2]], "dist": 3100, "el": 42, "az": 30, "fov": 30, "fy": 0.4, "ease": "inout2"},
     ],
     "work": [
@@ -162,7 +164,7 @@ LABELS = [
     {"id": "l-mm", "text": "a worker ant, a few mm", "kind": "part", "anchor": "ant2", "t0": t_tiny + 0.4, "t1": t_weigh, "shot": "tiny", "side": -1},
     {"id": "l-tip", "text": "your fingertip", "kind": "anchor", "anchor": "tip", "t0": t_tiny + 0.9, "t1": t_weigh, "shot": "tiny", "side": 1},
     {"id": "l-wild", "text": "every wild bird and mammal", "kind": "part", "anchor": "wild", "t0": t_wild + 0.4, "t1": t_each - 0.3, "shot": "wild", "side": 1, "v": "below"},
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_each + 2.6, "t1": t_work0, "shot": "each", "side": 1, "v": "above"},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_each + 1.8, "t1": t_work0, "shot": "each", "side": 1, "v": "above"},
 ]
 BADGES = [
     {"id": "b-carbon", "text": "∵ weighed as carbon (dry)", "t0": t_weigh, "t1": t_each - 0.3, "slot": "tl"},
