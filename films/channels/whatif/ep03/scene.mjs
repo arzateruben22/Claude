@@ -116,7 +116,8 @@ const box = endBox(endEl, { t0: FILM.endCard, answer: "≈ ⅕ of us", S1 });
 window.seek = function (t) {
   const st = stage(t), shot = st.name;
   const P = rig.place(camera, shot, t);
-  camera.near = Math.max(0.01, P.dist * 0.004); camera.far = Math.max(P.dist * 60, 900);   // the hook sees the balance 2.3 m beyond a 3 cm camera camera.updateProjectionMatrix();
+  camera.near = Math.max(0.01, P.dist * 0.004); camera.far = Math.max(P.dist * 60, 900);   // the hook sees the balance 2.3 m beyond a 3 cm camera
+  camera.updateProjectionMatrix();
   const gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
   const unit = Math.pow(10, Math.floor(Math.log10(Math.max(0.1, P.dist / 12))));
   desk.uniforms.uUnit.value = unit; desk.uniforms.uFar.value = Math.max(70, P.dist * 2.2);

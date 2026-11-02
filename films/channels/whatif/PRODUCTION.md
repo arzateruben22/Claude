@@ -8,10 +8,10 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
 |---|---|---|
 | 001 | Through the Earth | **final** (QA PASS, −14.1 LUFS, −1.6 dBTP), hand-off docs written (2 Nov) |
 | 002 | Everyone, one place | **final** (QA PASS, −14.1 LUFS, −1.5 dBTP) after five review rounds; hand-off docs written (2 Nov) |
-| 003 | All the ants | passed review round 5 (a4 b4 c4 d4 e5 f4 g4); final rendering on the render worker (cdad9d3) |
+| 003 | All the ants | **final** (QA PASS, −14.1 LUFS, −1.8 dBTP) after five review rounds; hand-off docs written (2 Nov) |
 | 004 | Count to a billion | **final** from the second builder (merged at c2568b6) |
 | 005 | Everybody jump | second builder: final rendering |
-| 006 | Every raindrop at once | second builder: rendering |
+| 006 | Every raindrop at once | **final** from the second builder (merged at ccb06e3) |
 
 ## Log
 

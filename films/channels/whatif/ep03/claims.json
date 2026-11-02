@@ -8,7 +8,7 @@
   "accessed": "2026-11-02",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpts: the claim 'was originally made by … Edward O. Wilson and … Bert Hoelldobler in their 1994 book Journey To The Ants'; 'ten thousand trillion (10^16) live ants'. The names and year are on screen (label); the voice says 'two of the world's great ant scientists'. 'Did this sum' is fair: their figure was a back-of-the-envelope estimate (1% of C. B. Williams' insect count)."
+  "note": "Excerpts: the claim 'was originally made by … Edward O. Wilson and … Bert Hoelldobler in their 1994 book Journey To The Ants'; 'ten thousand trillion (10^16) live ants'. The names and year are on screen (label); the voice says 'two of the world's great ant scientists'. 'Sat down with this exact sum' is fair: their figure was a back-of-the-envelope estimate (1% of C. B. Williams' insect count)."
  },
  {
   "id": "c2",
@@ -86,5 +86,16 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "The takeaway restates c4 and c6; 'by a lot' = about five times."
+ },
+ {
+  "id": "c9",
+  "sentence": "And for each one of us, there are about two and a half million ants.",
+  "claim": "The world's population is about 8.2 billion (mid-2024), the divisor in c6's 2e16 ÷ 8.2e9 ≈ 2.44 million ants a person.",
+  "source_url": "https://www.un.org/development/desa/pd/world-population-prospects-2024",
+  "source_title": "World Population Prospects 2024 (UN DESA Population Division); news.un.org/en/story/2024/07/1151971",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The same source and figure as No. 002's c1."
  }
 ]
