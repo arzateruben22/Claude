@@ -100,7 +100,7 @@ export const createJunction = ({ x = 4000, tone = [0.78, 0.56, 0.42], seed = 41,
       // the crease: the skin's top surface folds down at x = 0 as the muscle pulls; the fibres shorten a little
       for (let i = 0; i < sp.count; i++) {
         const x0 = sBase[3 * i], y0 = sBase[3 * i + 1];
-        if (y0 > 4.9) sp.setY(i, y0 - (1.5 + 6 * pull) * Math.exp(-(x0 * x0) / (2 * (7 + 4 * (1 - pull)) ** 2)));
+        if (y0 > 4.9) sp.setY(i, y0 - (1.5 + 8 * pull) * Math.exp(-(x0 * x0) / (2 * (7 + 4 * (1 - pull)) ** 2)));
         sp.setX(i, x0 * (1 - 0.05 * pull * Math.exp(-(x0 * x0) / 9000)));
       }
       sp.needsUpdate = true; skinGeo.computeVertexNormals();
