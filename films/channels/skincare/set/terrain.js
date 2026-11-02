@@ -65,7 +65,7 @@ export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hai
   };
   return {
     group, mesh, pores,
-    // scar: [z0, half-width] a smooth, pale band with no furrows, pores or hairs (No. 003); scarGlow lifts it
+    // scar: [z0, half-width] a smooth, pale band with no furrows, pores or hairs (none leaning in either; No. 003); scarGlow lifts it
     set({ tone = [0.58, 0.38, 0.26], furrows = 0.2, spot = 0, sheen = 0, redden = null, visible = true, scar = null, scarGlow = 0 } = {}) {
       group.visible = visible; if (!visible) return;
       film.material.opacity = 0.2 * sheen; film.visible = sheen > 0.01;
@@ -85,7 +85,7 @@ export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hai
         }
       }
       pos.needsUpdate = true; geo.attributes.color.needsUpdate = true; geo.computeVertexNormals();
-      if (hairs && scar) { const dm = new THREE.Object3D(), mtx = new THREE.Matrix4(); pores.forEach(([px, pz], i) => { hairs.getMatrixAt(i, mtx); if (scarK(px, pz, scar) > 0.3) { mtx.decompose(dm.position, dm.quaternion, dm.scale); dm.scale.set(0.0001, 0.0001, 0.0001); dm.updateMatrix(); hairs.setMatrixAt(i, dm.matrix); } }); hairs.instanceMatrix.needsUpdate = true; }
+      if (hairs && scar) { const dm = new THREE.Object3D(), mtx = new THREE.Matrix4(); pores.forEach(([px, pz], i) => { hairs.getMatrixAt(i, mtx); if (scarK(px, pz, [scar[0], scar[1] * 1.9]) > 0.3) { mtx.decompose(dm.position, dm.quaternion, dm.scale); dm.scale.set(0.0001, 0.0001, 0.0001); dm.updateMatrix(); hairs.setMatrixAt(i, dm.matrix); } }); hairs.instanceMatrix.needsUpdate = true; }
     },
     at: (x, z) => [x, 0.25, z],
   };

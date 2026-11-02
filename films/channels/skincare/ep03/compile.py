@@ -50,7 +50,7 @@ CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:on
 MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
 WK = {"fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "macro": [{"t": 0.0, "target": [TX - 3, 0, 1.2], "el": 30, **MK, "dist": 30, "az": -14},   # frame 0 mid-glide along the scar
+    "macro": [{"t": 0.0, "target": [TX - 9, 0, 1.2], "el": 30, **MK, "dist": 30, "az": -14},   # frame 0 mid-glide along the scar
               {"t": CUE["skin1"] + 0.2, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 21, "az": -9, "ease": "out3"},
               {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -8, "ease": "inout2"},
               {"t": t_weave, "target": [TX, 0, 0], "el": 70, **MK, "dist": 6, "az": -3, "ease": "in2"}],   # down into the scar
@@ -106,7 +106,7 @@ COUNTERS = [
     {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] + 0.15, "t1": CUE["collagen"]},
     {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["patches"]},
     {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": CUE["four"] - 0.3},
-    {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": CUE["sixth"] - 0.2},
+    {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
     {"id": "c-wk", "label": "scarless before", "text": "≈ 22–24 wk", "t0": CUE["sixth"] - 0.2, "t1": CUE["after"] - 0.2},
     {"id": "c-after", "label": "after that", "text": "patched", "t0": CUE["patches5"] - 0.1, "t1": B["toscale"]["t0"]},
     {"id": "c-final", "label": "a scar", "text": "a repair", "t0": CUE["repair"] + 0.2, "t1": t_end - 0.5},

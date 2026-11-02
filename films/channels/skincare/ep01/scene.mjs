@@ -48,6 +48,8 @@ const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
+Object.assign(vf.el.querySelector(".rec").style, { background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1.2vmin" });   // readable over daylight skin too
+vf.el.querySelector(".hl").style.cssText += ";background:var(--hud-plate);padding:.5vmin 1.4vmin;border-radius:1.2vmin;font-size:3vmin";
 const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
 // the photo stack (normal): earlier photos of the same patch pile up behind the viewfinder, each with its date
 const stackRoot = document.createElement("div");
@@ -149,7 +151,8 @@ window.seek = function (t) {
   }
   A.spot = uvAt(SPOT[0], SPOT[1] + 0.05); A.porph = uvAt(0.3, 0.38); A.rings = uvAt(SPOT[0] + 0.09, SPOT[1] - 0.05);
   const vfOp = isUV ? (shot === "uv" ? 1 - fadeIn(t, SH.flight - 0.4, 0.35) : fadeIn(t, SH.uv2, 0.4)) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0;
-  vf.set({ op: vfOp, blink: 1 });
+  vf.set({ op: vfOp, blink: 1, left: (shot === "uv" && t >= FILM.flips[0] - 0.4) ? "" : "a cheek" });   // not over the photo stack (its own badge sits there)
+  vf.el.querySelector(".hl").style.visibility = vf.el.querySelector(".hl").textContent ? "inherit" : "hidden";
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
   dip.style.opacity = Math.max(dz(SH.flight), dz(SH.rise), dz(SH.uv2)).toFixed(3);
   day.set({ op: shot === "uv2" ? fadeIn(t, K.rings[0], 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
@@ -178,7 +181,7 @@ window.seek = function (t) {
     F.set(p);
     Gf.set({ tone, ring: 0, bact: p.bact, ringLit: 0 });
   }
-  A.fWith = [PL.fx, 40, 40]; A.fWo = [PL.gx, 40, 40]; A.bactMid = [(PL.fx + PL.gx) / 2, -540, 40];
+  A.fWith = [PL.fx, 40, 40]; A.fWo = [PL.gx, 40, 40]; A.bactMid = [(PL.fx + PL.gx) / 2, -540, 40]; A.mark = [PL.fx + 60, -520, 30];
   A.ring = F.at.ring(); A.bactG = Gf.at.bact(); A.cell = F.at.cell(); A.spill = F.at.spill(); A.thumb = [PL.fx + 160, 120, 120];
 
   // ── the gauge: a centred card, to scale: white cells (8 µm) beside the paper (100 µm) ──
