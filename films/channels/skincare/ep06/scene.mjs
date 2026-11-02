@@ -91,8 +91,11 @@ window.seek = function (t) {
 
   // ── the patch: bumps up in the hook, flat then rising in "ours", rising again in the close ──
   if (isP) {
-    const raise = shot === "hook" ? 1 - 0.15 * fadeIn(t, CUE.fur, 0.8) : shot === "ours" ? 0.15 : E.inout2(seg(t, CUE.raises - 0.3, CUE.looks + 0.6));
-    patch.set({ raise, tone });
+    // hook: the bumps rise on "goosebumps" (the frame moves in the first second); ours: the same follicles first with a
+    // chimp's thick dark hairs, then ours (fine, pale) on "ours"; close: they rise again on "raises"
+    const raise = shot === "hook" ? 0.2 + 0.8 * E.inout2(seg(t, CUE.goose - 0.6, CUE.goose + 0.6)) : shot === "ours" ? 0.15 : E.inout2(seg(t, CUE.raises - 0.3, CUE.looks + 0.6));
+    const thick = shot === "ours" ? fadeIn(t, CUE.chimp - 0.5, 0.4) * (1 - E.inout2(seg(t, CUE.ours - 0.1, CUE.fine))) : 0;
+    patch.set({ raise, tone, thick });
   }
   A.finehair = patch.at.hair(fine);
 
@@ -100,22 +103,24 @@ window.seek = function (t) {
   if (isF) {
     let pull = 0, fire = 0, wake = 0, grow = 0, frost = 0, dimSkin = 0;
     if (shot === "follicle") { pull = E.inout2(seg(t, CUE.tugs - 0.1, CUE.upright + 0.4)); fire = fadeIn(t, CUE.cold - 0.2, 0.4) * (1 - fadeIn(t, CUE.bump + 0.8, 0.6)); }
-    if (shot === "bulge") { pull = 0.3; fire = fadeIn(t, CUE.reaches - 0.4, 0.5); wake = 0.25 * fadeIn(t, CUE.stem, 0.6); dimSkin = 0.35; }
+    if (shot === "bulge") { pull = 0.3; fire = fadeIn(t, CUE.reaches - 0.4, 0.5); wake = 0.6 * fadeIn(t, CUE.stem - 0.2, 0.6); dimSkin = 0.35; }
     if (shot === "cold" || shot === "nomuscle") {
-      frost = fadeIn(t, SH.cold, 1.0); pull = 0.8; fire = 1;
-      wake = 0.25 + 0.75 * E.inout2(seg(t, CUE.wakes - 0.2, CUE.sooner)); grow = E.inout2(seg(t, CUE.wakes + 0.4, CUE.sooner + 1.2)); dimSkin = 0.3;
+      frost = fadeIn(t, SH.cold + 0.2, 1.0); pull = 0.8; fire = 1;
+      wake = 0.6 + 0.4 * E.inout2(seg(t, CUE.wakes - 0.2, CUE.wakes + 0.6)); grow = E.inout2(seg(t, CUE.wakes, CUE.sooner)); dimSkin = 0.3;   // the new hair reaches the surface on "sooner"
     }
     if (shot === "gauge") { pull = 0.2; dimSkin = 0.55; }
-    F1.set({ tone, pull, fire, t, wake, grow, frost, dimSkin, glow: WATER });
+    F1.set({ tone, pull, fire, t, wake, grow, frost, dimSkin, glow: WATER, pulseK: shot === "follicle" ? 1 : 0.5 });
     // the second follicle (no muscle): the same cold, its branch to the stem cells fading, its stem cells asleep
-    const wire = shot === "nomuscle" ? 1 - E.inout2(seg(t, CUE.take + 0.4, CUE.fades + 0.6)) : 1;
-    F2.set({ tone, pull: 0, fire: shot === "nomuscle" ? 1 : 0, t, wake: 0.25 * wire, grow: 0, frost, dimSkin: 0.3, muscle: 0, wire, glow: WATER });
+    // the muscle is taken away on "Take", then the wiring (branch and pulses) fades on "fades"; its hair waits
+    const mu = shot === "nomuscle" ? 1 - E.inout2(seg(t, CUE.take, CUE.take + 1.1)) : 1;
+    const wire = shot === "nomuscle" ? 1 - 0.85 * E.inout2(seg(t, CUE.fades - 0.6, CUE.fades + 0.7)) : 1;
+    F2.set({ tone, pull: 0.8 * mu, fire: shot === "nomuscle" || shot === "cold" ? wire : 0, t, wake: 0.5 * wire, grow: 0, frost, dimSkin: 0.3, muscle: mu, wire, glow: WATER, pulseK: 0.5 });
   }
   A.muscle = F1.at.muscle(); A.nerve = F1.at.nerve(); A.hair = F1.at.hair(); A.stem = F1.at.stem(); A.bulb = F1.at.bulb();
   A.nomus = F2.at.muscle();
 
   // ── the fur: raised on "fluffs", air thickening ──
-  if (shot === "fur") fur.set({ raise: E.inout2(seg(t, CUE.fluffs - 0.2, CUE.air + 0.3)), glow: WATER });
+  if (shot === "fur") fur.set({ raise: E.inout2(seg(t, CUE.fluffs - 0.1, CUE.fluffs + 0.9)), glow: WATER });   // up on "fluffs"
   A.air = fur.at.air();
 
   // ── the depth gauge: on the follicle section's left cut edge, lifted to centre for the to-scale beat ──
@@ -123,9 +128,9 @@ window.seek = function (t) {
   camera.updateMatrixWorld();
   const p0 = project(camera, [s0[0], 0, 130], W, H), p1 = project(camera, [s0[0], -100, 130], W, H);
   const lift = shot === "gauge" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = (shot === "gauge" || shot === "follicle" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));
-  const sc = 14 + (G.sc_um - 14) * Math.min(1, lift * 4);   // attached: the drawn dead layer (14 µm); lifted: one fine hair
-  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
+  const gOp = (shot === "gauge" ? 1 : 0) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4));   // only the to-scale beat (the attached ruler crowded the follicle)
+  const sc = G.sc_um;
+  gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um, scText: "< 30 µm",
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
   let dip = 0;
