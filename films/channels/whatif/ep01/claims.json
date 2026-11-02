@@ -63,7 +63,7 @@
   "accessed": "2026-10-27",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: Klotz used seismic-based Earth structure instead of assuming uniform density. 'Equally dense all the way down' is the uniform-density assumption in plain words."
+  "note": "Excerpt: Klotz used seismic-based Earth structure instead of assuming uniform density. 'The same stuff all the way down' is the uniform-density assumption in plain words."
  },
  {
   "id": "c7",
@@ -74,7 +74,7 @@
   "accessed": "2026-10-27",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: a McGill University grad student; seismic-based density data. Also KL (the paper). The name is on screen (label 'Alexander Klotz, 2015'); the voice says 'a graduate student'."
+  "note": "Excerpt: a McGill University grad student; seismic-based density data. Also KL (the paper). The name is on screen (label 'Klotz, 2015: the real Earth'); the voice says 'a graduate student'."
  },
  {
   "id": "c8",
@@ -107,7 +107,7 @@
   "accessed": "2026-10-27",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed: 2 × t_prem = 76.4 min, said as seventy-six. 'Forever' holds only in the idealised, frictionless tunnel (badged). The voice says 'forever'; the round-trip counter on screen shows 76 min."
+  "note": "Computed: 2 × t_prem = 76.4 min, shown as 76 min (not spoken). 'Forever' holds only in the idealised, frictionless tunnel (badged). The voice says 'forever'; the round-trip counter on screen shows 76 min."
  },
  {
   "id": "c11",
@@ -140,6 +140,6 @@
   "accessed": "2026-10-27",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed in calc.py (core_mass_frac, core_vol_frac). 'The pull of Earth's heavy core' is the plain-words version: with the mass spread evenly the trip would take the uniform 42 minutes. 'A way of weighing its heart' is the plain-words version: the four minutes come from mass concentrated in the core."
+  "note": "Computed in calc.py (core_mass_frac, core_vol_frac). With the mass spread evenly the trip would take the uniform 42 minutes. 'A way of weighing its heart' is the plain-words version: the four minutes come from mass concentrated in the core."
  }
 ]

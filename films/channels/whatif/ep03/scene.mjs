@@ -56,7 +56,7 @@ tip.rotation.z = Math.PI / 2; tip.position.set(40.85 + 1.55, 0.78, 30); scene.ad
 const you = createFigure({ tokens: TK, height: 170 });          // true height beside ants a few mm long: they are specks
 scene.add(you.group);
 const YOU = FILM.you, CP = FILM.carpet;
-const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24, far: [0.03, 0.12], aniso: true });   // your ants, 5 mm apart: 2.44 million fill this square
+const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24, far: [0.02, 0.08], aniso: true });   // your ants, 5 mm apart: 2.44 million fill this square
 carpet.mesh.material.depthTest = false; carpet.mesh.renderOrder = 1; you.group.traverse((o) => { o.renderOrder = 2; });   // over the paper, under you
 carpet.group.position.set(YOU[0], 0.05, YOU[2]); carpet.set({ side: CP.side, opacity: 1 }); scene.add(carpet.group);
 // the person's ants: a seeded swarm on the paper around them
@@ -116,7 +116,7 @@ const box = endBox(endEl, { t0: FILM.endCard, answer: "≈ ⅕ of us", S1 });
 window.seek = function (t) {
   const st = stage(t), shot = st.name;
   const P = rig.place(camera, shot, t);
-  camera.near = Math.max(0.01, P.dist * 0.004); camera.far = P.dist * 60; camera.updateProjectionMatrix();
+  camera.near = Math.max(0.01, P.dist * 0.004); camera.far = Math.max(P.dist * 60, 900);   // the hook sees the balance 2.3 m beyond a 3 cm camera camera.updateProjectionMatrix();
   const gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
   const unit = Math.pow(10, Math.floor(Math.log10(Math.max(0.1, P.dist / 12))));
   desk.uniforms.uUnit.value = unit; desk.uniforms.uFar.value = Math.max(70, P.dist * 2.2);
@@ -133,7 +133,7 @@ window.seek = function (t) {
 
   // the walking ants: one at the hook (and the loop), one on the millimetre ruling
   const WK = FILM.walk, ws = t <= WK.t1 ? WK.v * t : t >= WK.t2 ? WK.v * (t - WK.dur) : WK.v * WK.t1;
-  ant.set({ at: [WK.p0[0] + WK.dir[0] * ws, 0, WK.p0[2] + WK.dir[1] * ws], heading: 0.5, step: (ws / 0.18) % 1 });   // legs keep pace with the ground
+  ant.set({ at: [WK.p0[0] + WK.dir[0] * ws, 0, WK.p0[2] + WK.dir[1] * ws], heading: Math.atan2(-WK.dir[1], WK.dir[0]), step: (ws / 0.18) % 1 });   // legs keep pace with the ground
   S.ant = [WK.p0[0] + WK.dir[0] * ws, 0.6, WK.p0[2] + WK.dir[1] * ws];   // walking toward the balance
   ant2.set({ at: [40.1 + 0.08 * Math.sin(t), 0, 30], heading: 2.2, step: (t * 2.6) % 1 });
   you.set({ at: [YOU[0], 85, YOU[2]] });
