@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Its fight began under skin that looked perfectly clear.",
+  "claim": "Acne lesions begin as a microcomedone, a subclinical (not visible) change in the follicle that precedes visible comedones and inflammatory lesions; microcomedones can be found in acne patients' skin that looks normal.",
+  "source_url": "https://doi.org/10.1111/jdv.15926",
+  "source_title": "Fontao F et al. Microcomedones in non-lesional acne prone skin: new orientations on comedogenesis and its prevention. J Eur Acad Dermatol Venereol 2020;34(2):357-364",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'In non-lesional skin of acne patients, cyanoacrylate skin surface stripping can harvest a structure called microcomedone (MC) which is the earliest phase of comedogenesis.' Cross-check (review excerpt): 'the formation of microcomedones precedes the development of visible comedonal and inflammatory acne lesions'; the microcomedone is a 'subclinical precursor'. 'Long before' is deliberately unquantified: no measured interval in weeks was found (research.md). Caveat: one study found no microcomedonal features in uninvolved follicles; another found them in 28% of normal-looking biopsies.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "Follow faces photo by photo, and more than a quarter of new red spots rise from skin that looked perfectly clear.",
+  "claim": "In a study tracking facial acne lesions by aligned photographs (25 untreated people, every 2 weeks for 12 weeks), 28% of inflammatory lesions were preceded by normal-appearing skin.",
+  "source_url": "https://doi.org/10.1016/j.jaad.2007.12.024",
+  "source_title": "Do TT, Zarkhin S, Orringer JS, et al. Computer-assisted alignment and tracking of acne lesions indicate that most inflammatory lesions arise from comedones and de novo from normal skin. J Am Acad Dermatol 2008;58(4):603-608",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: inflammatory lesions were preceded by 'comedones (54%), normal-appearing skin (28%), erythematous macules (12%), and scars (6%)'; 25 subjects, photographed every 2 weeks for 12 weeks. Limitations noted by summaries: lesions could appear and resolve between photos; small comedones may not show in images. 'Looked perfectly clear' = normal-appearing in the photo. DOI confirmed in a search excerpt (em-consulte.com/article/804797 carries the same abstract).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "Look beneath that clear skin, and the defence is already there, immune cells crowding the follicle, some as thickly as in a red spot.",
+  "claim": "Biopsies of clinically uninvolved skin of acne patients showed raised perifollicular T cells (not to papule levels), macrophage numbers similar to papules, and upregulated IL-1: inflammation is involved at the earliest stage of lesion development.",
+  "source_url": "https://doi.org/10.1046/j.1523-1747.2003.12321.x",
+  "source_title": "Jeremy AHT, Holland DB, Roberts SG, Thomson KF, Cunliffe WJ. Inflammatory events are involved in acne lesion initiation. J Invest Dermatol 2003;121(1):20-27",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Numbers of CD3+, CD4+ T cells were elevated in the perifollicular and papillary dermis although levels were not equivalent to those in papules. The number of macrophages was also greatly increased and similar to those in papules.' Back skin, 12 involved and 20 uninvolved biopsies, 10 controls. Hence 'some' (macrophages), not all.  The DOI is from the citation and was not shown in a search excerpt; a person confirms it opens J Invest Dermatol 2003;121(1):20-27.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "But this bacterium lives in skin with spots and skin without.",
+  "claim": "Cutibacterium acnes is a commensal of the pilosebaceous follicle, found in both normal and acne skin; reviews report no quantitative difference between acne patients and controls.",
+  "source_url": "https://doi.org/10.12688/f1000research.15659.1",
+  "source_title": "Platsidaki E, Dessinioti C. Recent advances in understanding Propionibacterium acnes (Cutibacterium acnes) in acne. F1000Research 2018;7:F1000 Faculty Rev-1953",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'no quantitative differences in P. acnes of the skin of patients with acne compared with controls'; 'a Gram-positive, non-spore-forming human skin commensal that prefers anaerobic growth conditions'. Cross-check (Huang et al. 2024, Front Immunol): 'Although C. acnes is observed in normal and acne skin, intense colonization likely causes inflammatory reactions.' Phylotype and biofilm differences exist; the line says only where it lives.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "What makes the spot is largely how your body answers it.",
+  "claim": "Current reviews hold that the host immune response to C. acnes, rather than the bacterium itself, plays a key role in acne inflammation; this is debated.",
+  "source_url": "https://www.frontiersin.org/articles/10.3389/fimmu.2024.1275269/full",
+  "source_title": "Huang L et al. Association of different cell types and inflammation in early acne vulgaris. Front Immunol 2024 (PMID 38357543)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'the immune response to C. acnes, but not the bacteria itself, has a key role in the pathogenesis of acne.' Counterpoint (2012 review excerpt): lesions depend on 'an imbalance between the pro-inflammatory and anti-inflammatory pathways rather than the incitement of inflammation by P. acnes'. Both support 'largely the body's answer'; screen badge 'debated'. Other factors (sebum, hormones, keratinisation) are not denied.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "White cells flood in until the follicle's wall can give way, spilling the fight deeper.",
+  "claim": "Neutrophils are recruited into the follicle and ingest C. acnes; the hydrolytic enzymes they release are thought to weaken and rupture the follicular wall.",
+  "source_url": "https://jpad.com.pk/index.php/jpad/article/download/398/373/804",
+  "source_title": "Review of acne pathogenesis, Journal of Pakistan Association of Dermatologists (2010)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'The intrafollicular P. acnes is ingested by neutrophil, with the consequent release of hydrolytic enzymes that are thought to effect follicular wall dyshesion and rupture.' Hedged as the source: 'can give way'; screen badge 'model'. Older histology review excerpt: 'small areas of edema of the follicular wall or partial rupture of the follicular wall' are the first histologic changes of inflammatory acne. TODO: exact title and authors of the JPAD review when a person opens the PDF.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "White cells flood in until the follicle's wall can give way, spilling the fight deeper.",
+  "claim": "Follicles can rupture, releasing bacteria, keratin and proinflammatory lipids into the surrounding dermis, which worsens inflammation.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK459173/",
+  "source_title": "Sutaria AH, Masood S, Saleh HM, Schlessinger J. Acne Vulgaris. StatPearls (NCBI Bookshelf)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Eventually, follicles rupture with the release of bacteria, keratin, and proinflammatory lipids into the surrounding dermis, exacerbating the inflammation with subsequent nodule formation.' A PMC review adds that rupture provokes 'further inflammation that is deeper'. Note: c6 and c7 both tie to this one sentence by design (two sources for one line).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "A squeeze often pushes it further, where a mark is more likely.",
+  "claim": "The AAD says squeezing a pimple often pushes some of its contents deeper into the skin, increasing inflammation.",
+  "source_url": "https://www.aad.org/public/diseases/acne/skin-care/popping",
+  "source_title": "Pimple popping: why only a dermatologist should do it (American Academy of Dermatology)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'If you push some of the contents inside the pimple deeper into the skin, which often happens, you increase inflammation. This can lead to more-noticeable acne.' The line describes what pressure does; it gives no instruction.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "A squeeze often pushes it further, where a mark is more likely.",
+  "claim": "Deeper, more intense inflammation is more likely to leave a scar; picking and squeezing increase inflammation and the risk of scarring and discoloration (post-inflammatory hyperpigmentation).",
+  "source_url": "https://www.aad.org/diseases/acne/acne-scars-causes",
+  "source_title": "Acne scars: who gets and causes (American Academy of Dermatology)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: deep acne such as cysts or nodules is more likely to scar; 'these types of acne cause intense inflammation in the skin, which can cause scarring'; 'when you pick, pop, squeeze, or scratch, you increase inflammation'; risk of 'infection and discoloration'. Acne Support (UK) guide: 'the deeper that inflammation from an acne lesion reaches into the skin the more likely it is to scar upon healing.' 'Mark' covers a scar or a dark spot; 'more likely', not certain.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
+  "claim": "Pus is a collection of dead tissue, dead bacteria and live and dead phagocytes (white cells such as neutrophils).",
+  "source_url": "https://medlineplus.gov/ency/imagepages/9478.htm",
+  "source_title": "Phagocytosis (MedlinePlus Medical Encyclopedia image page, US National Library of Medicine)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Pus is formed from a collection of dead tissue, dead bacteria, and live and dead phagocytes.' Merriam-Webster medical: pus is exudate 'chiefly containing dead white blood cells (such as neutrophils)'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
+  "claim": "A resting human neutrophil is a sphere about 8 µm across (volume ≈ 299 µm³); spread on a blood smear it measures about 12–15 µm. Against ≈ 100 µm paper that is about a twelfth to an eighth: 'about a tenth'.",
+  "source_url": "https://scholars.duke.edu/publication/790236",
+  "source_title": "Ting-Beall HP, Needham D, Hochmuth RM. Volume and osmotic properties of human neutrophils. Blood 1993;81(10):2774-2780",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (Duke record): neutrophil volume 299 ± 32 µm³; sphere diameter ≈ 8.3 µm (computed). Same group, 1991: the undeformed resting neutrophil is 'a sphere about 8 µm in diameter'. Smear size 12–15 µm (University of Aberdeen histology review; Horiba haematology reference). Paper ≈ 100 µm (bible §6). Screen shows '≈ 8 µm round · 12–15 µm spread'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "It's the end of a fight that began out of sight.",
+  "claim": "A visible inflammatory spot is a late stage: microcomedone formation and perifollicular inflammation come before anything shows (summary of c1 and c3).",
+  "source_url": "https://doi.org/10.1046/j.1523-1747.2003.12321.x",
+  "source_title": "Jeremy AHT et al. Inflammatory events are involved in acne lesion initiation. J Invest Dermatol 2003;121(1):20-27",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'vascular endothelial cell activation and the involvement of inflammatory responses are integral to the earliest stages of AV lesion development'. With Fontao 2020 (c1): the microcomedone is 'the earliest phase of comedogenesis', in skin that looks normal. Caveat: Do 2008 found most (54%) inflamed spots were preceded by a visible comedone, so 'out of sight' means the start, not every step. The DOI is from the citation and was not shown in a search excerpt; a person confirms it opens J Invest Dermatol 2003;121(1):20-27.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]

@@ -1,0 +1,145 @@
+[
+ {
+  "id": "c3",
+  "sentence": "Only a few percent bounces off the top as a glint.",
+  "claim": "Only about 4–7% of light striking skin near head-on is reflected at the surface (regular/specular reflection at the air–stratum corneum boundary), across 250–3000 nm.",
+  "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
+  "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (Lister 2012, cut off in the snippet): 'it has been estimated that 4% to 7% of visible light' [is reflected at the surface]. Cross-checks: patents citing Scheuplein, J Soc Cosmet Chem 1964;15:111–122: 'specular reflectance of a nearly perpendicular beam from normal skin is always between 4–7% over the entire spectrum from 250–3000 nm'; S. Jacques (omlc.org): about 5% 'reflected from the surface as glare'. Fresnel with n 1.55 gives ≈ 4.7% (computed). Said 'a few percent'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+  "claim": "Hydrating the stratum corneum makes skin measurably smoother (and the stratum corneum thicker), with the fastest water uptake in the upper few micrometres.",
+  "source_url": "https://doi.org/10.1116/1.4962547",
+  "source_title": "Dąbrowska AK et al. In vivo confirmation of hydration-induced changes in human-skin thickness, roughness and interaction with the environment. Biointerphases 2016;11(3):031015",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Hydrated skin was smoother and exhibited higher real contact area values'; 'highest rates of water uptake were observed for the upper few micrometers of skin'. Caveat: a single-participant pilot study (volar forearm); badged 'one study'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+  "claim": "A smoother surface reflects light more specularly (in one direction, mirror-like); skin's perceived gloss falls as its microscale roughness rises.",
+  "source_url": "https://library.imaging.org/jpi/articles/8/0/000502",
+  "source_title": "Journal of Perceptual Imaging (IS&T): perceived facial gloss vs microscale skin roughness in rendered faces",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'an exponential relationship between microscale skin roughness and perceived facial gloss', consistent across skin tones. Cross-check (IS&T Electronic Imaging 2017): more surface-reflection contrast raised perceived gloss. Physics of specular vs diffuse reflection is textbook; the 'mirror' is the image for specular.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+  "claim": "When skin is dehydrated, its surface (stratum corneum) scatters more light; hydration lowers that scattering and makes skin more translucent.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/20923460/",
+  "source_title": "Jiang Z-X, DeLaCruz J. Appearance benefits of skin moisturization. Skin Res Technol 2011;17(1):51–55",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Both spectral reflectance and scattering coefficient increased when skin was dehydrated and decreased when it was hydrated. Translucency increased as the skin became moisturized.' Authors hypothesised 'the major optical effect of skin moisturization is the decrease of light scattering at the skin surface, i.e., the stratum corneum.' Industry authors; badged 'one study'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "Most light on your face goes inside you.",
+  "claim": "Since only about 4–7% is reflected at the surface, the great majority of light striking skin (about 93–96%) enters it.",
+  "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
+  "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
+  "accessed": "2026-11-02",
+  "note": "Computed from c3's 4–7%: 100 − (4 to 7) = 93–96%. Press cross-check (Bangkok Post): '4% to 7% ... reflected on the skin's surface, and more than 90% penetrates the skin'. Said 'most light slips inside'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
+  "claim": "Light inside skin is scattered many times by cells and fibres; in one worked example about 40% of incident light is backscattered out of the skin after multiple scattering, against about 5% surface glare (the rest, about 53%, absorbed).",
+  "source_url": "https://omlc.org/news/oct99/saratov/page3.htm",
+  "source_title": "Jacques SL. Skin optics / polarized-light imaging notes (Oregon Medical Laser Center, 1999)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: about 5% 'reflected from the surface as glare'; about 2% from superficial layers; 'about 40% penetrates deeply and is backscattered to the surface after multiple scatterings'; about 53% absorbed. One example (a specific wavelength and set-up), badged 'one example (model)'. Said 'a large share'. Lister 2012: collagen fibres dominate dermal scattering.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
+  "claim": "Melanin (in the epidermis) and haemoglobin in blood (in the dermis) are the main absorbers of visible light in skin, and so colour the light that comes back out.",
+  "source_url": "https://doi.org/10.1117/1.JBO.17.9.090901",
+  "source_title": "Lister T, Wright PA, Chappell PH. Optical properties of human skin. J Biomed Opt 2012;17(9):090901",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: haemoglobin and melanin named as the two main visible-light absorbers; 'hemoglobin dominates absorption in the dermis', melanin in the epidermis. Cross-check (Hunter, J Soc Cosmet Chem): 'Haemoglobin, oxyhaemoglobin, melanin and carotene are pigments responsible for the colour of human skin'; pink of light skin from haemoglobin in superficial dermal vessels.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
+  "claim": "Flushing occurs because the blood vessels in the skin dilate; more blood near the surface makes the skin look redder.",
+  "source_url": "https://dermnetnz.org/topics/flushing",
+  "source_title": "Flushing (DermNet, New Zealand dermatology resource)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Flushing occurs because the blood vessels in the skin dilate.' Secondary: 'blood vessels in the skin dilate, increasing blood flow to the surface. This increased blood flow causes the skin to appear red.' Search returned the older URL dermnetnz.org/vascular/flushing.html. Said 'a rush of blood'; no condition named.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin.",
+  "claim": "When people adjusted colour-calibrated face photos to look as healthy as possible, they increased skin blood colour, particularly oxygenated blood colour, above baseline.",
+  "source_url": "https://doi.org/10.1371/journal.pone.0005083",
+  "source_title": "Stephen ID, Coetzee V, Law Smith M, Perrett DI. Skin blood perfusion and oxygenation colour affect perceived human health. PLoS ONE 2009;4(4):e5083",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Participants increased skin blood colour, particularly oxygenated, above basal levels to optimise healthy appearance.' Perceived health only, not actual health; on screen with a model face.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+  "claim": "In skin, blue light barely penetrates about 1 mm, whereas red light is extinguished some 4–5 mm beneath the surface; penetration increases with wavelength.",
+  "source_url": "https://doi.org/10.1007/s10103-017-2317-4",
+  "source_title": "Ash C, Dubec M, Donne K, Bashford T. Effect of wavelength and beam width on penetration in light-tissue interaction using computational methods. Lasers Med Sci 2017;32(8):1909–1918 (PMC5653719)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'red light is extinguished some 4–5 mm beneath the surface of the skin whereas ultraviolet hardly penetrates at all and blue barely 1 mm into tissue'; abstract: penetration depth increases with wavelength. Depths vary with skin, site and beam (iScience review table, after Bashkatov 2005: ≈ 0.3–2 mm across 400–700 nm). 'Several times deeper' = 4–5× (computed).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+  "claim": "A sheet of ordinary 80 gsm copy paper is about 100 µm thick.",
+  "source_url": "https://resource.download.wjec.co.uk/vtc/2016-17/16-17_1-4/website/category/5/1papers_and_boards/category_and_standards/index.html",
+  "source_title": "Papers and boards: category and standards (WJEC, UK education resource)",
+  "accessed": "2026-11-02",
+  "note": "As Outer Layer No. 001's paper claim (its source). Computed: 1 mm ÷ 100 µm = 10 sheets.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+  "claim": "Red light (about 625–700 nm) can reach through the full thickness of the skin, while blue light stays near the surface.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8887026/",
+  "source_title": "PMC review (PMC8887026) on light wavelengths and skin penetration",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: blue light 'is higher energy than red light but has less penetration'; red light 'can penetrate the full skin thickness'. Cross-check: 2020 Monte Carlo study (Spectroscopy and Spectral Analysis 40(4)): blue reaches only the surface layer, red reaches the dermis.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c15",
+  "sentence": "It's light that went inside you, met your blood, and came back.",
+  "claim": "Of the light coming back from skin, much more has travelled inside it and been scattered back out (about 40% of incident light in one example) than is reflected at the surface (about 4–7%); that returning light carries the colour of melanin and blood.",
+  "source_url": "https://omlc.org/news/oct99/saratov/page3.htm",
+  "source_title": "Jacques SL. Skin optics / polarized-light imaging notes (Oregon Medical Laser Center, 1999)",
+  "accessed": "2026-11-02",
+  "note": "As c8 (≈ 40% backscattered after multiple scattering vs ≈ 5% glare) and c9 (melanin, haemoglobin). 'Mostly from within' rests on that one example; the ratio changes with wavelength and skin tone (more melanin absorbs more), so the reviewer should confirm the wording holds for deeply pigmented skin.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
