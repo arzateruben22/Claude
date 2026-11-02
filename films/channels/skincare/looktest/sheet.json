@@ -1,0 +1,4 @@
+{"duration": 12.0, "fps": 30, "preset": "outerlayer-slide",
+ "sections": [{"id": "skin", "t0": 0.0, "t1": 4.0, "energy": 0.5}, {"id": "botox", "t0": 4.0, "t1": 8.0, "energy": 0.7}, {"id": "hands", "t0": 8.0, "t1": 12.0, "energy": 0.45}],
+ "events": [{"t": 0.0, "kind": "signature", "tag": "open"}, {"t": 4.0, "kind": "scale.jump", "tag": "into-junction"}, {"t": 5.4, "kind": "reveal", "tag": "messenger"}, {"t": 8.0, "kind": "scale.jump", "tag": "hands"}, {"t": 8.6, "kind": "diffuse", "tag": "uv-shaft"}, {"t": 10.0, "kind": "cell.land", "tag": "bead"}],
+ "voice": []}
