@@ -67,11 +67,13 @@ FILL = {"left": [[0.0, 0.02], [t_fill, 0.02], [t_balance, 0.6], [t_twice, 0.6], 
         "right": [[0.0, 0.0], [t_fill, 0.0], [t_balance, 1.0]]}
 TILT_WILD = tilt_for(1.5)                    # claims c5 says only "exceeds", so a modest lean toward the ants (no ratio is claimed)
 
+# the hook: low behind the ant, the whole balance looming beyond it (the ant walks toward it)
+MACRO = {"target": [-60, 0.4, 30], "dist": 9, "el": 9, "az": -63, "fov": 30, "fy": 0.38}
 BAL = {"target": [0, 18, 0], "dist": 340, "el": 12, "az": 18, "fov": 30, "fy": 0.36}
 CAM = {
     "macro": [
-        {"t": 0.0, "target": [-17, 0.3, 6], "dist": 5, "el": 26, "az": 30, "fov": 30, "fy": 0.36},
-        {"t": B["normal"]["t0"], "target": [-17, 0.6, 6], "dist": 9, "el": 28, "az": 28, "fov": 30, "fy": 0.36, "ease": "sine"},
+        {"t": 0.0, **MACRO},
+        {"t": B["normal"]["t0"], **MACRO, "dist": 7, "el": 10, "az": -61, "ease": "sine"},
     ],
     "scale": [
         {"t": B["normal"]["t0"], **BAL, "dist": 320, "az": 24},
@@ -79,12 +81,13 @@ CAM = {
     ],
     "sites": [
         {"t": t_sites, **BAL},
-        {"t": t_twice - 0.6, "target": [0, 0, 0], "dist": 560, "el": 72, "az": 18, "fov": 30, "fy": 0.4, "ease": "inout3"},
-        {"t": t_tiny, "target": [0, 18, 0], "dist": 320, "el": 20, "az": 16, "fov": 30, "fy": 0.36, "ease": "inout3"},
+        {"t": t_sites + 2.6, "target": [0, 0, 0], "dist": 560, "el": 72, "az": 18, "fov": 30, "fy": 0.4, "ease": "inout3"},
+        {"t": t_twice - 0.2, "target": [0, 18, 0], "dist": 360, "el": 20, "az": 16, "fov": 30, "fy": 0.36, "ease": "inout3"},   # down in time to see the dip
+        {"t": t_tiny, "target": [0, 18, 0], "dist": 340, "el": 18, "az": 15, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "tiny": [
-        {"t": t_tiny, "target": [40, 0.2, 30], "dist": 3.2, "el": 42, "az": 12, "fov": 30, "fy": 0.4},
-        {"t": t_weigh, "target": [40, 0.2, 30], "dist": 4.2, "el": 46, "az": 14, "fov": 30, "fy": 0.4, "ease": "sine"},
+        {"t": t_tiny, "target": [40.8, 0.3, 30.3], "dist": 5.2, "el": 40, "az": 12, "fov": 30, "fy": 0.42},
+        {"t": t_weigh, "target": [40.8, 0.3, 30.3], "dist": 6, "el": 44, "az": 14, "fov": 30, "fy": 0.42, "ease": "sine"},
     ],
     "scale2": [
         {"t": t_weigh, **BAL, "dist": 360},
@@ -95,21 +98,22 @@ CAM = {
         {"t": t_each, "target": [95, 18, 0], "dist": 330, "el": 13, "az": 6, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "each": [
-        {"t": t_each, "target": [-60, 1.0, 40], "dist": 14, "el": 30, "az": 20, "fov": 30, "fy": 0.4},
-        {"t": t_work0, "target": [-60, 1.0, 40], "dist": 18, "el": 34, "az": 24, "fov": 30, "fy": 0.4, "ease": "sine"},
+        {"t": t_each, "target": [-260, 90, 160], "dist": 520, "el": 18, "az": 20, "fov": 30, "fy": 0.4},
+        {"t": t_work0, "target": [-260, 60, 160], "dist": 760, "el": 26, "az": 28, "fov": 30, "fy": 0.4, "ease": "sine"},
     ],
     "work": [
-        {"t": t_work0, "target": [45, 18, 0], "dist": 900, "el": 10, "az": 14, "fov": 30, "fy": 0.48},
-        {"t": B["takeaway"]["t0"], "target": [45, 18, 0], "dist": 880, "el": 10, "az": 16, "fov": 30, "fy": 0.48, "ease": "sine"},
+        {"t": t_work0, "target": [45, 18, 0], "dist": 430, "el": 10, "az": 14, "fov": 30, "fy": 0.5},
+        {"t": B["takeaway"]["t0"], "target": [45, 18, 0], "dist": 420, "el": 10, "az": 16, "fov": 30, "fy": 0.5, "ease": "sine"},
     ],
     "home": [
         {"t": B["takeaway"]["t0"], **BAL, "dist": 360},
-        {"t": t_count, "target": [-17, 1, 6], "dist": 30, "el": 24, "az": 26, "fov": 30, "fy": 0.36, "ease": "inout3"},
-        {"t": t_end, "target": [-17, 0.6, 6], "dist": 12, "el": 26, "az": 29, "fov": 30, "fy": 0.36, "ease": "inout2"},
+        {"t": t_count - 1.6, "target": [-50, 4, 26], "dist": 150, "el": 40, "az": -50, "fov": 30, "fy": 0.4, "ease": "inout2"},   # up and round the stand, never through it
+        {"t": t_count, **MACRO, "dist": 9, "ease": "inout3"},
+        {"t": t_end, **MACRO, "dist": 8, "ease": "sine"},
     ],
     "end": [
-        {"t": t_end, "target": [-17, 0.6, 6], "dist": 12, "el": 26, "az": 29, "fov": 30, "fy": 0.36},
-        {"t": B["tease"]["t1"], "target": [-17, 0.3, 6], "dist": 5, "el": 26, "az": 30, "fov": 30, "fy": 0.36},   # = frame 0: the loop
+        {"t": t_end, **MACRO, "dist": 8},
+        {"t": B["tease"]["t1"], **MACRO},   # = frame 0: the loop
     ],
 }
 for shot, keys in CAM.items():
@@ -123,6 +127,7 @@ SPINE = [
     {"t": t_fifth, "label": "weighed as carbon", "terms": [["in", "12 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", "20%"]], "box": True},
     {"t": t_wild, "label": "ants vs every wild bird and mammal", "terms": [["in", "12 Mt C"], ["op", ">"], ["in", "wild birds + mammals"]]},
     {"t": t_each, "label": "for each person", "terms": [["ans", f"≈ {RESULTS['ants_per_person_m']} million ants"]]},
+    {"t": t_work0, "label": "the heaviest estimate", "terms": [["in", "50 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", f"{RESULTS['ratio_hi_pct']}%"]]},
     {"t": B["takeaway"]["t0"], "label": "ants' weight, against ours", "terms": [["in", "12 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", "20%"]], "box": True, "keep": True},
 ]
 WORK = {
@@ -132,19 +137,16 @@ WORK = {
         {"t": A("vo06:heaviest", -0.05), "k": "heaviest estimate, 50 Mt C", "v": f"≈ {RESULTS['ratio_hi_pct']}%", "lit": True},
         {"t": A("vo06:scale", -0.5), "k": "lightest estimate, 3.6 Mt C", "v": f"≈ {RESULTS['ratio_lo_pct']}%", "lit": True},
     ],
-    "assume": ["carbon, not wet weight", "ground ants counted", "a conservative count"],
+    "assume": [],                                   # short card: the pans stay in view below it (the carbon note is a badge)
 }
 LABELS = [
-    {"id": "l-ant", "text": "one ant", "kind": "part", "anchor": "ant", "t0": t_title_out, "t1": B["normal"]["t0"] + 1.5, "shot": "macro", "side": 1},
     {"id": "l-ants", "text": "all the ants", "kind": "part", "anchor": "left", "t0": A("vo02:scale"), "t1": t_sites, "shot": "scale", "side": -1},
     {"id": "l-us", "text": "all of us", "kind": "anchor", "anchor": "right", "t0": A("vo02:scale", 0.3), "t1": t_sites, "shot": "scale", "side": 1},
-    {"id": "l-sites", "text": "field counts", "kind": "part", "anchor": "site", "t0": t_sites + 0.8, "t1": t_tiny, "shot": "sites", "side": -1, "v": "above"},
     {"id": "l-mm", "text": "a worker ant, a few mm", "kind": "part", "anchor": "ant2", "t0": t_tiny + 0.4, "t1": t_weigh, "shot": "tiny", "side": 1},
-    {"id": "l-wild", "text": "every wild bird and mammal", "kind": "part", "anchor": "wild", "t0": t_wild + 0.4, "t1": t_each, "shot": "wild", "side": 1},
+    {"id": "l-wild", "text": "every wild bird and mammal", "kind": "part", "anchor": "wild", "t0": t_wild + 0.4, "t1": t_each - 0.3, "shot": "wild", "side": 1, "v": "above"},
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_each + 0.3, "t1": t_work0, "shot": "each", "side": 1},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": t_title_out, "t1": t_title_out + 4.0, "slot": "tr"},
     {"id": "b-carbon", "text": "∵ weighed as carbon (dry)", "t0": t_weigh, "t1": t_work0, "slot": "tl"},
     {"id": "b-nts", "text": "heaps not to scale", "t0": B["normal"]["t0"] + 0.5, "t1": t_end, "slot": "tr"},
 ]
@@ -161,7 +163,7 @@ film = {
     "tilt": TILT, "fill": FILL, "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": t_end, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": [], "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24, balance=True, keep=("two and a half million", "wild bird", "ant scientists")),
+    "captions": f.captions(max_chars=24, balance=True, keep=("two and a half million ants", "there are about", "wild bird", "ant scientists", "a billion")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]

@@ -70,16 +70,6 @@
    "tag": "title"
   },
   {
-   "t": 5.2,
-   "kind": "label",
-   "tag": "l-ant"
-  },
-  {
-   "t": 5.2,
-   "kind": "badge",
-   "tag": "b-thought"
-  },
-  {
    "t": 5.4,
    "kind": "section",
    "id": "normal",
@@ -110,11 +100,6 @@
    "kind": "section",
    "id": "change",
    "t1": 27.0
-  },
-  {
-   "t": 17.5,
-   "kind": "label",
-   "tag": "l-sites"
   },
   {
    "t": 22.866666666666667,
@@ -184,6 +169,11 @@
    "kind": "section",
    "id": "work",
    "t1": 61.2
+  },
+  {
+   "t": 55.2,
+   "kind": "term.write",
+   "tag": "spine-6"
   },
   {
    "t": 55.35,

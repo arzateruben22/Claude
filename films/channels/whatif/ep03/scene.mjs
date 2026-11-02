@@ -13,6 +13,7 @@ import { createHud } from "cinema/sci/hud.js";
 import { createDesk } from "../set/desk.js";
 import { createBalance, createAnt, shaded } from "../set/balance.js";
 import { createFigure } from "../set/anchor.js";
+import { createCrowd } from "../set/crowd.js";
 import { createSpine } from "../set/spine.js";
 import { titleFlap, endBox, workCard, injectCss } from "../set/motif.js";
 import { createRig } from "../set/rig.js";
@@ -50,16 +51,20 @@ scene.add(bal.group, wild.group);
 const WILD_X = 95;
 const ant = createAnt({ length: 0.5 }), ant2 = createAnt({ length: 0.45 });
 scene.add(ant.group, ant2.group);
-const you = createFigure({ tokens: TK, height: 1.7 });
+const tip = new THREE.Mesh(new THREE.CapsuleGeometry(0.75, 1.6, 8, 24), shaded(TK.anchor || "#4DA3FF", 0.6));   // a fingertip, true size beside the ant
+tip.rotation.z = Math.PI / 2 - 0.25; tip.position.set(42.9, 0.75, 31.4); scene.add(tip);
+const you = createFigure({ tokens: TK, height: 170 });          // true height beside ants a few mm long: they are specks
 scene.add(you.group);
+const carpet = createCrowd({ tokens: { ...TK, anchor: "#6E7178" }, density: 0.9, dotR: 0.22 });   // ants, a few mm apart
+carpet.mesh.material.depthTest = false; carpet.group.position.set(-260, 0.05, 160); carpet.set({ side: 640, opacity: 1 }); scene.add(carpet.group);
 // the person's ants: a seeded swarm on the paper around them
 const swarmMat = shaded("#5A5D64", 0.45);
-const swarm = new THREE.InstancedMesh(new THREE.SphereGeometry(0.06, 6, 4), swarmMat, 600);
+const swarm = new THREE.InstancedMesh(new THREE.SphereGeometry(0.18, 6, 4), swarmMat, 2400);
 {
   const R = rng(73), m4 = new THREE.Matrix4();
-  for (let i = 0; i < 600; i++) {
-    const a = R() * Math.PI * 2, r = 1.4 + Math.sqrt(R()) * 6;
-    m4.makeScale(1.6, 0.8, 1); m4.setPosition(-60 + r * Math.cos(a), 0.05, 40 + r * Math.sin(a));
+  for (let i = 0; i < 2400; i++) {
+    const a = R() * Math.PI * 2, r = 30 + Math.sqrt(R()) * 330;
+    m4.makeScale(1.6, 0.8, 1); m4.setPosition(-260 + r * Math.cos(a), 0.1, 160 + r * Math.sin(a));
     swarm.setMatrixAt(i, m4);
   }
   swarm.frustumCulled = false; scene.add(swarm);
@@ -89,7 +94,7 @@ const showSites = (u) => {
 // ── camera and overlay ──────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
-const S = { ant: [-17, 0.6, 6], left: [0, 0, 0], right: [0, 0, 0], site: [SITE[3][0], 0, SITE[3][1]], ant2: [40, 0.4, 30], wild: [0, 0, 0], you: [-60, 1.9, 40] };
+const S = { ant: [-60, 0.6, 30], left: [0, 0, 0], right: [0, 0, 0], site: [SITE[3][0], 0, SITE[3][1]], ant2: [40, 0.4, 30], wild: [0, 0, 0], you: [-260, 175, 160] };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" } };
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
@@ -125,12 +130,15 @@ window.seek = function (t) {
   S.wild = wild.panAt("right");
 
   // the walking ants: one at the hook (and the loop), one on the millimetre ruling
-  ant.set({ at: [-17 + 0.25 * Math.sin(t * 0.7), 0, 6], heading: 0.6, step: (t * 2.2) % 1 });
+  const walk = 0.35 * Math.sin(t * 0.7);
+  ant.set({ at: [-60 + 0.894 * walk, 0, 30 - 0.447 * walk], heading: 0.464, step: (t * 2.2) % 1 });   // walking toward the balance
   ant2.set({ at: [40 + 0.12 * Math.sin(t), 0, 30], heading: 2.2, step: (t * 2.6) % 1 });
-  you.set({ at: [-60, 0.85, 40] });
-  swarm.visible = you.group.visible = shot === "each";
+  you.set({ at: [-260, 85, 160] });
+  swarm.visible = false;
+  carpet.group.visible = you.group.visible = shot === "each";
   showSites(shot === "sites" || shot === "tiny" ? seg(t, CUE.sites, CUE.twice) : 0);
   sites.visible = shot === "sites";
+  tip.visible = shot === "tiny";
 
   hud.update(t);
   tFlap.update(t);
