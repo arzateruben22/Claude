@@ -1,0 +1,183 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep03/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.32,
+ "gap_question": 0.55,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Ants, or us: who weighs more? Every ant on Earth, on one scale.",
+   "stars": [
+    "weighs"
+   ],
+   "phonemes": "ˈænts, ɔːɹ ˌʌs: hˌuː wˈeɪz mˈɔːɹ? ˈɛvɹi ˈænt ˌɔn ˈɜːθ, ˌɔn wˈʌn skˈeɪl.",
+   "speeds": [
+    0.9,
+    0.72
+   ],
+   "gaps": [
+    0.55
+   ],
+   "silences": [
+    [
+     1.5608,
+     2.1108
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.564,
+   "sha256": "03af76a767f350f16f6c6638f8bc60ad915277675e099166008e12cc453f8a6a"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Decades ago, two of the world's great ant scientists sat down with this exact sum, and decided the scale would roughly balance.",
+   "stars": [
+    "balance"
+   ],
+   "phonemes": "dˈɛkeɪdz ɐɡˈoʊ, tˈuː ʌvðə wˈɜːldz ɡɹˈeɪt ˈænt sˈaɪəntɪsts sˈæt dˌaʊn wɪð ðɪs ɛɡzˈækt sˈʌm, ænd dᵻsˈaɪdᵻd ðə skˈeɪl wʊd ɹˈʌfli bˈæləns.",
+   "speeds": [
+    0.8
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "02.wav",
+   "dur": 9.263,
+   "sha256": "768c72c9869f51f6c8fc4b369bd8fd16d995e319b7d8a1320ae69348958be074"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Then a team gathered hundreds of real ant counts, from forests, deserts and cities, and found about twice as many ants as anyone had guessed.",
+   "stars": [
+    "twice"
+   ],
+   "phonemes": "ðˈɛn ɐ tˈiːm ɡˈæðɚd hˈʌndɹɪdz ʌv ɹˈiːəl ˈænt kˈaʊnts, fɹʌm fˈɔːɹɪsts, dˈɛzɚts ænd sˈɪɾiz, ænd fˈaʊnd ɐbˌaʊt twˈaɪs æz mˈɛni ˈænts æz ˈɛnɪwˌʌn hæd ɡˈɛst.",
+   "speeds": [
+    0.8
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 10.114,
+   "sha256": "4ce1a43fdc6624c8fa8dfa2edf1603fe42ea796288bcfbcc3272ab0077d63a92"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "So the ants should win. But a real ant is tinier than the old guess assumed, and once they're weighed properly, all of them together come to only about a fifth of us.",
+   "stars": [
+    "fifth"
+   ],
+   "phonemes": "sˌoʊ ðɪ ˈænts ʃˌʊd wˈɪn. bˌʌt ɐ ɹˈiːəl ˈænt ɪz tˈaɪniɚ ðɐn ðɪ ˈoʊld ɡˈɛs ɐsˈuːmd, ænd wˈʌns ðeɪɚ wˈeɪd pɹˈɑːpɚli, ˈɔːl ʌv ðˌɛm təɡˌɛðɚ kˈʌm tʊ ˈoʊnli ɐbˌaʊt ɐ fˈɪfθ ʌv ˌʌs.",
+   "speeds": [
+    0.72,
+    0.76
+   ],
+   "gaps": [
+    0.32
+   ],
+   "silences": [
+    [
+     1.5085,
+     1.8285
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 12.315,
+   "sha256": "80f6649e5327b8ffaddebce0416224a3873576a4d2fd751ef5d3d70e9fd907a3"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "That's still more than every wild bird and mammal on Earth combined. And for each one of us, there are about two and a half million ants.",
+   "stars": [
+    "combined"
+   ],
+   "phonemes": "ðæts stˈɪl mˈɔːɹ ðɐn ˈɛvɹi wˈaɪld bˈɜːd ænd mˈæməl ˌɔn ˈɜːθ kəmbˈaɪnd. ænd fɔːɹ ˈiːtʃ wˈʌn ʌv ˌʌs, ðɛɹˌɑːɹ ɐbˌaʊt tˈuː ænd ɐ hˈæf mˈɪliən ˈænts.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.32
+   ],
+   "silences": [
+    [
+     4.879,
+     5.199
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 9.606,
+   "sha256": "5b0c8b619d4540c5d534ddb245562be9cf8f2807e9c0ce3875c7eda0a5bdf47e"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Take the heaviest estimate anyone has published, and we still win the scale.",
+   "stars": [
+    "scale"
+   ],
+   "phonemes": "tˈeɪk ðə hˈɛviɪst ˈɛstᵻmət ˈɛnɪwˌʌn hɐz pˈʌblɪʃt, ænd wiː stˈɪl wˈɪn ðə skˈeɪl.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 5.201,
+   "sha256": "7bd0e5809736c4e9af0626f680462ec9f4d9d8c566e1c94939bdae2d4e23ecc5"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So we win on the scale, by a lot. But they win on the count.",
+   "stars": [
+    "count"
+   ],
+   "phonemes": "sˌoʊ wiː wˈɪn ɔnðə skˈeɪl, baɪ ɐ lˈɑːt. bˌʌt ðeɪ wˈɪn ɔnðə kˈaʊnt.",
+   "speeds": [
+    0.6,
+    0.6
+   ],
+   "gaps": [
+    0.32
+   ],
+   "silences": [
+    [
+     2.8494,
+     3.1694
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 5.165,
+   "sha256": "e3f939a3fc15bb94aee4b8daf709817b3e867b719293cf61a1aa128ca003f5e0"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: how long would it take to count to a billion?",
+   "stars": [
+    "billion"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: hˌaʊ lˈɔŋ wʊd ɪt tˈeɪk tə kˈaʊnt tʊ ɐ bˈɪliən?",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 4.155,
+   "sha256": "018748a02f3be522d79faac28409c394bd42219017c1d8687b96bcc3747ddba0"
+  }
+ ]
+}

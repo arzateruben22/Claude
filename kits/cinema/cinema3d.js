@@ -185,7 +185,11 @@ const CINEMA = (window.CINEMA = {
   };
   window.cinemaFrame = function (t) {
     const dur = (window.SCENE && window.SCENE.dur) || 1e9, sh = CINEMA.shutter / CINEMA.fps;
-    const at = (x) => Math.min(Math.max(x, 0), dur - 1e-4);
+    let lo = 0, hi = dur - 1e-4;
+    if (CINEMA.holdCuts && window.FILM && Array.isArray(window.FILM.shots)) {   // opt-in: a frame's shutter never reaches across a cut
+      for (const s of window.FILM.shots) { if (s.at <= t) lo = Math.max(lo, s.at); else { hi = Math.min(hi, s.at - 1e-4); break; } }
+    }
+    const at = (x) => Math.min(Math.max(x, lo), hi);
     CINEMA.mode = "probe"; CINEMA.probe = new Map(); window.seek(at(t - sh / 2)); const a = CINEMA.probe;
     CINEMA.probe = new Map(); window.seek(at(t + sh / 2)); const b = CINEMA.probe;
     const px = dist2(a, b);

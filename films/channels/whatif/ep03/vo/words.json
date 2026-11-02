@@ -1,0 +1,1030 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Ants, or us: who weighs more? Every ant on Earth, on one scale.",
+   "heard": "Ants are us who weighs more. Every ant on earth on one scale.",
+   "words": [
+    {
+     "w": "Ants,",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 0.205,
+     "end": 0.48,
+     "heard": false
+    },
+    {
+     "w": "us:",
+     "start": 0.565,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 0.705,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "weighs",
+     "start": 0.825,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "more?",
+     "start": 1.345,
+     "end": 1.561,
+     "heard": true,
+     "end_asr": 2.16
+    },
+    {
+     "w": "Every",
+     "start": 2.13,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "ant",
+     "start": 2.575,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.835,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 3.045,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.42,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.58,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "scale.",
+     "start": 4.005,
+     "end": 4.48,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "Decades ago, two of the world's great ant scientists sat down with this exact sum, and decided the scale would roughly balance.",
+   "heard": "Decades ago, two of the world's great ant scientists sat down with this exact sum and decided the scale would roughly balance.",
+   "words": [
+    {
+     "w": "Decades",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "ago,",
+     "start": 0.52,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 1.145,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.435,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.475,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "world's",
+     "start": 1.6,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "great",
+     "start": 2.06,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "ant",
+     "start": 2.395,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "scientists",
+     "start": 2.89,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "sat",
+     "start": 3.815,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 4.14,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 4.575,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 4.775,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "exact",
+     "start": 4.965,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "sum,",
+     "start": 5.715,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.315,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "decided",
+     "start": 6.365,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.045,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "scale",
+     "start": 7.31,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 7.745,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "roughly",
+     "start": 7.87,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "balance.",
+     "start": 8.53,
+     "end": 9.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Then a team gathered hundreds of real ant counts, from forests, deserts and cities, and found about twice as many ants as anyone had guessed.",
+   "heard": "Then a team gathered hundreds of real ant counts from forests, deserts, and cities and found about twice as many ants as anyone had guessed.",
+   "words": [
+    {
+     "w": "Then",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.455,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "team",
+     "start": 0.485,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "gathered",
+     "start": 0.91,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "hundreds",
+     "start": 1.41,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.875,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 2.065,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "ant",
+     "start": 2.575,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "counts,",
+     "start": 2.915,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.52,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "forests,",
+     "start": 3.72,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "deserts",
+     "start": 4.605,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.225,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "cities,",
+     "start": 5.49,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.18,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 6.345,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.74,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 7.06,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.595,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "many",
+     "start": 7.76,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "ants",
+     "start": 8.04,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 8.525,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "anyone",
+     "start": 8.77,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 9.365,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "guessed.",
+     "start": 9.435,
+     "end": 10.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "So the ants should win. But a real ant is tinier than the old guess assumed, and once they're weighed properly, all of them together come to only about a fifth of us.",
+   "heard": "so the ants should win. But a real ant is tinier than the old guess assumed, and once they are weighed properly, all of them together come to only about a fifth of us.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.12,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "ants",
+     "start": 0.365,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "should",
+     "start": 0.775,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "win.",
+     "start": 0.92,
+     "end": 1.508,
+     "heard": true,
+     "end_asr": 1.84
+    },
+    {
+     "w": "But",
+     "start": 1.855,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.175,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 2.26,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "ant",
+     "start": 2.73,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.1,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "tinier",
+     "start": 3.395,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 4.155,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.415,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "old",
+     "start": 4.49,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "guess",
+     "start": 4.86,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "assumed,",
+     "start": 5.255,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.275,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 6.305,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "they're",
+     "start": 6.79,
+     "end": 7.04,
+     "heard": false
+    },
+    {
+     "w": "weighed",
+     "start": 7.11,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "properly,",
+     "start": 7.49,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 8.45,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.81,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 8.855,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "together",
+     "start": 9.145,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "come",
+     "start": 9.635,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 10.02,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 10.325,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 10.815,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.93,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "fifth",
+     "start": 11.335,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 11.655,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 11.81,
+     "end": 12.24,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "That's still more than every wild bird and mammal on Earth combined. And for each one of us, there are about two and a half million ants.",
+   "heard": "That's still more than every wild bird and mammal on earth combined. And for each one of us there are about two and a half million ants.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 0.415,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.805,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.005,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 1.265,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "wild",
+     "start": 1.77,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "bird",
+     "start": 2.25,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.8,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "mammal",
+     "start": 2.97,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.47,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.715,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "combined.",
+     "start": 4.07,
+     "end": 4.879,
+     "heard": true,
+     "end_asr": 5.2
+    },
+    {
+     "w": "And",
+     "start": 5.22,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 5.43,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 5.655,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 5.855,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.97,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "us,",
+     "start": 6.415,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 6.605,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 6.855,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.075,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 7.39,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.495,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.835,
+     "end": 7.885,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 7.865,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 8.14,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "ants.",
+     "start": 8.7,
+     "end": 9.44,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Take the heaviest estimate anyone has published, and we still win the scale.",
+   "heard": "Take the heaviest estimate anyone has published and we still win the scale.",
+   "words": [
+    {
+     "w": "Take",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.42,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "heaviest",
+     "start": 0.59,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "estimate",
+     "start": 1.29,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "anyone",
+     "start": 1.94,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 2.49,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "published,",
+     "start": 2.57,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.38,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 3.565,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 3.845,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "win",
+     "start": 4.165,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.475,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "scale.",
+     "start": 4.675,
+     "end": 5.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So we win on the scale, by a lot. But they win on the count.",
+   "heard": "So we win on the scale by a lot. But they win on the count.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.055,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 0.355,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "win",
+     "start": 0.61,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.87,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.125,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "scale,",
+     "start": 1.305,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 1.81,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.09,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "lot.",
+     "start": 2.415,
+     "end": 2.849,
+     "heard": true,
+     "end_asr": 3.28
+    },
+    {
+     "w": "But",
+     "start": 3.195,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 3.535,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "win",
+     "start": 3.75,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 4.04,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.325,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "count.",
+     "start": 4.355,
+     "end": 5.12,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: how long would it take to count to a billion?",
+   "heard": "Next envelope how long would it take to count to a billion?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.48,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 1.41,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 1.81,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 2.135,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.4,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 2.47,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.73,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 2.825,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.21,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.29,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "billion?",
+     "start": 3.54,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep03/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

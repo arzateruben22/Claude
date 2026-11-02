@@ -1,0 +1,209 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/whatif/ep01/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How long to fall through the Earth? Step in, and let go.",
+   "stars": [
+    "through the Earth"
+   ],
+   "phonemes": "hˌaʊ lˈɔŋ tə fˈɔːl θɹuː ðɪ ˈɜːθ? stˈɛp ˈɪn, ænd lˈɛt ɡˈoʊ.",
+   "speeds": [
+    0.86,
+    0.6
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.586,
+     2.186
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.261,
+   "sha256": "f152b28377052e4403eb0d6e51fdcd18d1e1d2e0b75e72d7f8ecabf5374cde2d"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The tunnel runs straight through the middle of the planet, so long that driving it would take days. But you'll be falling.",
+   "stars": [
+    "days",
+    "falling"
+   ],
+   "phonemes": "ðə tˈʌnəl ɹˈʌnz stɹˈeɪt θɹuː ðə mˈɪdəl ʌvðə plˈænɪt, sˌoʊ lˈɔŋ ðæt dɹˈaɪvɪŋ ɪt wʊd tˈeɪk dˈeɪz. bˌʌt juːl biː fˈɔːlɪŋ.",
+   "speeds": [
+    0.8,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.2044,
+     6.5844
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 7.922,
+   "sha256": "6b2292e90e2a165f9cbe8657399edd718a0fa051065e0449ed29cb74b1db058e"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way out, and you arrive just as you stop.",
+   "stars": [
+    "ten kilometers a second",
+    "stop"
+   ],
+   "phonemes": "ænd ɡɹˈævᵻɾi kˈiːps pˈʊlɪŋ, ʌntˈɪl æt ðə sˈɛntɚ jʊɹ mˈuːvɪŋ ɐbˌaʊt tˈɛn kˈɪləmˌiːɾɚz ɐ sˈɛkənd. ðˈɛn ðæt pˈʊl slˈoʊz juː ɔnðə wˈeɪ ˈaʊt, ænd juː ɚɹˈaɪv dʒˈʌst æz juː stˈɑːp.",
+   "speeds": [
+    0.8,
+    0.78
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.1534,
+     6.5334
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 11.681,
+   "sha256": "0cdd3b93b42c090954cec707b02af99a401887ac6651f4ba765d3c1ccc94851c"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That whole trip, the textbooks said, takes forty-two minutes. But they pictured the same stuff all the way down. A graduate student redid the sum with the real Earth, and its heavy core makes gravity grow stronger as you fall.",
+   "stars": [
+    "forty-two minutes",
+    "stronger"
+   ],
+   "phonemes": "ðæt hˈoʊl tɹˈɪp, ðə tˈɛkstbʊks sˈɛd, tˈeɪks fˈɔːɹɾitˈuː mˈɪnɪts. bˌʌt ðeɪ pˈɪktʃɚd ðə sˈeɪm stˈʌf ˈɔːl ðə wˈeɪ dˈaʊn. ɐ ɡɹˈædʒuːət stˈuːdənt ɹᵻdˈɪd ðə sˈʌm wɪððə ɹˈiːəl ˈɜːθ, ænd ɪts hˈɛvi kˈɔːɹ mˌeɪks ɡɹˈævᵻɾi ɡɹˈoʊ stɹˈɔŋɡɚɹ æz juː fˈɔːl.",
+   "speeds": [
+    0.84,
+    0.82,
+    0.86
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     3.2445,
+     3.6245
+    ],
+    [
+     6.2901,
+     6.6701
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 13.676,
+   "sha256": "cd86d38abce8b68c22df6fa520c1501a60fd5d543252cc96d89c0cf8ac53a3ec"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "So you fall faster, sooner, and come out the other side in about thirty-eight minutes. With nobody to catch you, you'd swing back through, forever.",
+   "stars": [
+    "thirty-eight minutes",
+    "forever"
+   ],
+   "phonemes": "sˌoʊ juː fˈɔːl fˈæstɚ, sˈuːnɚ, ænd kˈʌm ˈaʊt ðɪ ˈʌðɚ sˈaɪd ɪn ɐbˌaʊt θˈɜːɾiˈeɪt mˈɪnɪts. wɪð nˈoʊbɑːdi tə kˈætʃ juː, juːd swˈɪŋ bˈæk θɹˈuː, fɚɹˈɛvɚ.",
+   "speeds": [
+    0.84,
+    0.8
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.7887,
+     5.1687
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 8.767,
+   "sha256": "5bce5a37ce95690e8db34f4f971bd8d2414811c3a76cac6219d54c55a666ba3d"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Lighten that core in the sum, and the answer drifts back toward the textbook's.",
+   "stars": [
+    "textbook's"
+   ],
+   "phonemes": "lˈaɪʔn ðæt kˈɔːɹ ɪnðə sˈʌm, ænd ðɪ ˈænsɚ dɹˈɪfts bˈæk təwˈɔːɹd ðə tˈɛkstbʊks.",
+   "speeds": [
+    0.8
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 4.757,
+   "sha256": "10e8d2c5d54f296a8c99ab6c2f0d4c28fabf21ee0268b36d94b8b57a1736a90a"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So a fall through the Earth is more than a ride. It's a way of weighing its heart.",
+   "stars": [
+    "heart"
+   ],
+   "phonemes": "sˌoʊ ɐ fˈɔːl θɹuː ðɪ ˈɜːθ ɪz mˈɔːɹ ðˌænɚ ɹˈaɪd. ɪts ɐ wˈeɪ ʌv wˈeɪɪŋ ɪts hˈɑːɹt.",
+   "speeds": [
+    0.66,
+    0.62
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.6023,
+     3.9823
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 6.354,
+   "sha256": "5ca55cfe1485415ca3e137d562c00d2bd172abe30189e79a04962fc9d6150623"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: could everyone alive stand in one city?",
+   "stars": [
+    "city"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: kʊd ˈɛvɹɪwˌʌn ɐlˈaɪv stˈænd ɪn wˈʌn sˈɪɾi?",
+   "speeds": [
+    0.8
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.721,
+   "sha256": "f07a7568578b765c695dc1eb7c7722119503b80846b3b44764adf8b67fc5877e"
+  }
+ ]
+}

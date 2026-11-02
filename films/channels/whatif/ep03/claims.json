@@ -1,0 +1,90 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Decades ago, two of the world's great ant scientists sat down with this exact sum, and decided the scale would roughly balance.",
+  "claim": "In 1994, Bert Hölldobler and E. O. Wilson estimated about 10^16 ants alive at once and that all ants together weigh about as much as all humans.",
+  "source_url": "https://serendipstudio.org/~pgrobste/panama/SwarmIntel_files/slide0003.htm",
+  "source_title": "B. Hölldobler & E. O. Wilson, Journey to the Ants (1994), as quoted: 'all ants in the world weigh about as much as all humans'; BBC More or Less analysis of the claim",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: the claim 'was originally made by … Edward O. Wilson and … Bert Hoelldobler in their 1994 book Journey To The Ants'; 'ten thousand trillion (10^16) live ants'. The names and year are on screen (label); the voice says 'two of the world's great ant scientists'. 'Did this sum' is fair: their figure was a back-of-the-envelope estimate (1% of C. B. Williams' insect count)."
+ },
+ {
+  "id": "c2",
+  "sentence": "Then a team gathered hundreds of real ant counts, from forests, deserts and cities, and found about twice as many ants as anyone had guessed.",
+  "claim": "Schultheiss et al. (2022) compiled 489 field studies of ground-dwelling ant counts across biomes and estimated about 20 × 10^15 ants: about twice the 1994 figure.",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.2201550119",
+  "source_title": "P. Schultheiss et al., 'The abundance, biomass, and distribution of ants on Earth', PNAS 119, e2201550119 (2022) (DOI from memory: a person confirms it when opening the link)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpts: 'estimates came from 465 studies' (Phys.org) / 489 studies (the paper's abstract, to be confirmed by a person); 'the total number of ants on Earth is estimated to be 2 to 20 times' earlier estimates. Computed: 2e16 / 1e16 = 2×. 'Hundreds of real ant counts' covers both numbers."
+ },
+ {
+  "id": "c3",
+  "sentence": "But a real ant is tinier than the old guess assumed, and once they're weighed properly, all of them together come to only about a fifth of us.",
+  "claim": "Ants' total biomass is about 12 megatonnes of carbon (dry carbon), using measured mean worker weights.",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.2201550119",
+  "source_title": "P. Schultheiss et al., 'The abundance, biomass, and distribution of ants on Earth', PNAS 119, e2201550119 (2022) (DOI from memory: a person confirms it when opening the link)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'a dry carbon biomass of 12 megatonnes'; 'mean worker weight measured from a selection of species'. 'A real ant is tinier than the old guess assumed': the 1994 balance needed an average ant of roughly 60 mg (BBC's back-calculation); real common workers weigh 1–2 mg fresh (Ratnieks, quoted by the BBC)."
+ },
+ {
+  "id": "c4",
+  "sentence": "But a real ant is tinier than the old guess assumed, and once they're weighed properly, all of them together come to only about a fifth of us.",
+  "claim": "12 Mt of ant carbon is about 20% of humanity's 60 Mt (0.06 Gt C).",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.1711842115",
+  "source_title": "Y. M. Bar-On, R. Phillips & R. Milo, 'The biomass distribution on Earth', PNAS 115, 6506 (2018)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 12 / 60 = 0.20. Schultheiss et al. state the same: 'about 20% of the global human biomass'. Said as 'about a fifth'."
+ },
+ {
+  "id": "c5",
+  "sentence": "That's still more than every wild bird and mammal on Earth combined.",
+  "claim": "Ants' biomass exceeds the combined biomass of all wild birds and wild mammals.",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.2201550119",
+  "source_title": "P. Schultheiss et al., 'The abundance, biomass, and distribution of ants on Earth', PNAS 119, e2201550119 (2022) (DOI from memory: a person confirms it when opening the link)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: 'actually exceeds the combined biomass of all wild birds and wild mammals'. 'Wild' is on screen (the third pan's label)."
+ },
+ {
+  "id": "c6",
+  "sentence": "And for each one of us, there are about two and a half million ants.",
+  "claim": "About 2 × 10^16 ants for 8.2 billion people is about 2.4 million ants per person; said and shown as 'about two and a half million' (to the nearest half million).",
+  "source_url": "https://phys.org/news/2022-09-ants-earth-quadrillion.html",
+  "source_title": "How many ants are on Earth? 20 quadrillion, study says (Phys.org, 2022)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Computed: 2e16 / 8.2e9 = 2.44e+06. Said as 'about two and a half million'."
+ },
+ {
+  "id": "c7",
+  "sentence": "Take the heaviest estimate anyone has published, and we still win the scale.",
+  "claim": "Published estimates of global ant biomass span about 3.6–50 Mt of carbon; even the highest is about 83% of humanity's 60 Mt.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9586285/",
+  "source_title": "T. M. Fayle & P. Klimeš, 'Improving estimates of global ant biomass and abundance', PNAS commentary (2022), PMC9586285",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt (the PNAS commentary): the full range of published ant biomass estimates is roughly 3.6 to 50 Mt. Computed: 50 / 60 = 0.83. The sensitivity line."
+ },
+ {
+  "id": "c8",
+  "sentence": "But they win on the count.",
+  "claim": "By weight humans outweigh ants about five to one; by number ants outnumber humans about 2.4 million to one.",
+  "source_url": "https://www.pnas.org/doi/10.1073/pnas.2201550119",
+  "source_title": "P. Schultheiss et al., 'The abundance, biomass, and distribution of ants on Earth', PNAS 119, e2201550119 (2022) (DOI from memory: a person confirms it when opening the link)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "The takeaway restates c4 and c6; 'by a lot' = about five times."
+ }
+]

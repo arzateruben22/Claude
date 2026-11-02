@@ -1,0 +1,1101 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How long to fall through the Earth? Step in, and let go.",
+   "heard": "How long to fall through the earths? Step in and let go.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 0.24,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.515,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 0.59,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 0.805,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.0,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Earth?",
+     "start": 1.28,
+     "end": 1.586,
+     "heard": false,
+     "end_asr": 2.4
+    },
+    {
+     "w": "Step",
+     "start": 2.445,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 2.67,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.935,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 3.18,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "go.",
+     "start": 3.475,
+     "end": 4.16,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "The tunnel runs straight through the middle of the planet, so long that driving it would take days. But you'll be falling.",
+   "heard": "The tunnel runs straight through the middle of the planet, so long that driving it would take days. But you'll be falling.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "tunnel",
+     "start": 0.195,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "runs",
+     "start": 0.63,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "straight",
+     "start": 1.155,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 1.47,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.64,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "middle",
+     "start": 1.81,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.33,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.365,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "planet,",
+     "start": 2.49,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 3.16,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 3.605,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.935,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "driving",
+     "start": 4.13,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.895,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 5.15,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 5.375,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "days.",
+     "start": 5.52,
+     "end": 6.204,
+     "heard": true,
+     "end_asr": 6.56
+    },
+    {
+     "w": "But",
+     "start": 6.605,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "you'll",
+     "start": 6.635,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 7.055,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "falling.",
+     "start": 7.2,
+     "end": 7.84,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "And gravity keeps pulling, until at the center you're moving about ten kilometers a second. Then that pull slows you on the way out, and you arrive just as you stop.",
+   "heard": "and gravity keeps pulling until at the center you're moving about 10 kilometers a second. Then that pull slows you on the way out and you arrive just as you stop.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "gravity",
+     "start": 0.245,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 0.83,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "pulling,",
+     "start": 1.235,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 1.965,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.205,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.52,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "center",
+     "start": 2.55,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 3.185,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 3.44,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.98,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 4.315,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 4.705,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.38,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 5.755,
+     "end": 6.153,
+     "heard": true,
+     "end_asr": 6.56
+    },
+    {
+     "w": "Then",
+     "start": 6.555,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.83,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "pull",
+     "start": 7.105,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "slows",
+     "start": 7.605,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 7.99,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 8.15,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.47,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 8.725,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "out,",
+     "start": 8.775,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.355,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 9.48,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "arrive",
+     "start": 9.765,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 10.28,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 10.625,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 10.875,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "stop.",
+     "start": 11.135,
+     "end": 11.6,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "That whole trip, the textbooks said, takes forty-two minutes. But they pictured the same stuff all the way down. A graduate student redid the sum with the real Earth, and its heavy core makes gravity grow stronger as you fall.",
+   "heard": "That whole trip, the textbook said, takes 42 minutes. But they pictured the same stuff all the way down. A graduate student redid the sum with the real earth, and its heavy core makes gravity grow stronger as you fall.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.19,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "trip,",
+     "start": 0.475,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.85,
+     "end": 0.9,
+     "heard": true
+    },
+    {
+     "w": "textbooks",
+     "start": 0.88,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "said,",
+     "start": 1.41,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 1.8,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "forty-two",
+     "start": 2.06,
+     "end": 2.72,
+     "heard": false
+    },
+    {
+     "w": "minutes.",
+     "start": 2.78,
+     "end": 3.244,
+     "heard": true,
+     "end_asr": 3.6
+    },
+    {
+     "w": "But",
+     "start": 3.645,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 3.76,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "pictured",
+     "start": 3.935,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.335,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 4.52,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "stuff",
+     "start": 4.85,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 5.235,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.415,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 5.735,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "down.",
+     "start": 6.0,
+     "end": 6.29,
+     "heard": true,
+     "end_asr": 6.56
+    },
+    {
+     "w": "A",
+     "start": 6.695,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "graduate",
+     "start": 6.85,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "student",
+     "start": 7.495,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "redid",
+     "start": 7.835,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.255,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "sum",
+     "start": 8.505,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.83,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.995,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 9.105,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 9.54,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.1,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 10.19,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 10.355,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "core",
+     "start": 10.71,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 11.135,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "gravity",
+     "start": 11.44,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "grow",
+     "start": 12.0,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "stronger",
+     "start": 12.4,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 12.89,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 13.055,
+     "end": 13.2,
+     "heard": true
+    },
+    {
+     "w": "fall.",
+     "start": 13.295,
+     "end": 13.6,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "So you fall faster, sooner, and come out the other side in about thirty-eight minutes. With nobody to catch you, you'd swing back through, forever.",
+   "heard": "So you fall faster sooner and come out the other side in about 38 minutes. With nobody to catch you, you'd swing back through forever.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.3,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 0.34,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "faster,",
+     "start": 0.625,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sooner,",
+     "start": 1.32,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.805,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "come",
+     "start": 1.935,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 2.245,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.335,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "other",
+     "start": 2.445,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "side",
+     "start": 2.785,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.175,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.34,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "thirty-eight",
+     "start": 3.705,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "minutes.",
+     "start": 4.2,
+     "end": 4.789,
+     "heard": true,
+     "end_asr": 5.12
+    },
+    {
+     "w": "With",
+     "start": 5.19,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "nobody",
+     "start": 5.34,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.855,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "catch",
+     "start": 5.99,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 6.285,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 6.76,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "swing",
+     "start": 6.95,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 7.35,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "through,",
+     "start": 7.61,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "forever.",
+     "start": 8.03,
+     "end": 8.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Lighten that core in the sum, and the answer drifts back toward the textbook's.",
+   "heard": "Lighten that core in the sum and the answer drifts back toward the textbooks.",
+   "words": [
+    {
+     "w": "Lighten",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.645,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "core",
+     "start": 0.775,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.205,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.32,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "sum,",
+     "start": 1.465,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.93,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.175,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "answer",
+     "start": 2.205,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "drifts",
+     "start": 2.72,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.135,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 3.455,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.835,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "textbook's.",
+     "start": 3.865,
+     "end": 4.22,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So a fall through the Earth is more than a ride. It's a way of weighing its heart.",
+   "heard": "So a fall through the earth is more than a ride. It's a way of weighing its heart.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.48,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 0.51,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 0.895,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.215,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 1.44,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.925,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.085,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.495,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.815,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "ride.",
+     "start": 2.845,
+     "end": 3.602,
+     "heard": true,
+     "end_asr": 4.0
+    },
+    {
+     "w": "It's",
+     "start": 4.0,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.235,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 4.48,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.65,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "weighing",
+     "start": 4.95,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.455,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "heart.",
+     "start": 5.685,
+     "end": 6.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: could everyone alive stand in one city?",
+   "heard": "Next envelope, could everyone alive stand in one city?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.38,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 1.215,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 1.425,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "alive",
+     "start": 1.905,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 2.465,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.71,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.98,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "city?",
+     "start": 3.19,
+     "end": 3.68,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep01/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

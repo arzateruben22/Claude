@@ -34,7 +34,9 @@ METHOD = {"bell": "rise", "chime": "rise", "tick": "rise",
           "mallet": "rise", "ping": "rise", "blip": "rise", "boing": "rise", "thump": "rise",
           "knock": "wave", "shutter": "wave", "zap": "wave", "squish": "wave",
           "glide": "peak",
-          "ramp": "shape", "hum": "shape", "drone": "shape"}
+          "ramp": "shape", "hum": "shape", "drone": "shape",
+          # Back of the Envelope: a pluck rings (rise); a pencil scratch matches its own waveform
+          "pluck": "rise", "scratch": "wave"}
 SLOW = {"peak", "shape"}
 
 
