@@ -2,7 +2,7 @@
  "id": "outerlayer-002",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 76.0667,
+ "dur": 77.0,
  "poster": 37.2,
  "shots": [
   {
@@ -83,7 +83,7 @@
   {
    "id": "tease",
    "t0": 69.0667,
-   "t1": 76.0667,
+   "t1": 77.0,
    "line": "vo08",
    "energy": 0.35
   }
@@ -121,6 +121,20 @@
   "flush": [
    44.03333333333334,
    47.2
+  ],
+  "pulse": [
+   48.8,
+   52.4333
+  ],
+  "sheen": [
+   27.333333333333336,
+   28.033333333333335,
+   29.566666666666666,
+   30.166666666666668
+  ],
+  "bloom": [
+   3.4,
+   4.2
   ],
   "blue": [
    52.96666666666667,
@@ -218,28 +232,28 @@
     "t": 8.6,
     "target": [
      1000.0,
-     0,
+     1.6,
      0
     ],
-    "el": 30,
+    "el": 16,
     "fov": 34,
     "fx": 0.5,
-    "fy": 0.48,
-    "dist": 17,
+    "fy": 0.46,
+    "dist": 27,
     "az": 0
    },
    {
     "t": 16.3333,
     "target": [
      1000.0,
-     0,
+     1.4,
      0
     ],
-    "el": 34,
+    "el": 20,
     "fov": 34,
     "fx": 0.5,
-    "fy": 0.48,
-    "dist": 15,
+    "fy": 0.46,
+    "dist": 24,
     "az": 0,
     "ease": "sine"
    },
@@ -285,8 +299,38 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.42,
-    "dist": 360,
+    "dist": 300,
     "az": -1,
+    "ease": "inout2"
+   },
+   {
+    "t": 27.733333333333334,
+    "target": [
+     5000.0,
+     -15,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.46,
+    "dist": 230,
+    "az": 0,
+    "ease": "inout2"
+   },
+   {
+    "t": 32.800000000000004,
+    "target": [
+     4990.0,
+     -75,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 280,
+    "az": 0,
     "ease": "inout2"
    },
    {
@@ -300,7 +344,7 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.42,
-    "dist": 300,
+    "dist": 280,
     "az": 1,
     "ease": "inout2"
    },
@@ -315,7 +359,7 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.42,
-    "dist": 320,
+    "dist": 290,
     "az": 2,
     "ease": "sine"
    }
@@ -398,7 +442,7 @@
     "az": -4
    },
    {
-    "t": 76.0667,
+    "t": 77.0,
     "target": [
      1000.0,
      0,
@@ -442,7 +486,10 @@
   "deeper": 59.233333333333334,
   "isnt2": 61.93333333333333,
   "met": 66.1,
-  "back": 67.7
+  "back": 67.7,
+  "sitting": 27.733333333333334,
+  "but4": 29.666666666666668,
+  "skin5": 48.8
  },
  "labels": [
   {
@@ -465,7 +512,7 @@
    "t0": 9.133333333333333,
    "t1": 17.3,
    "shot": "split",
-   "side": -1,
+   "side": 1,
    "v": "below",
    "fixed": true
   },
@@ -477,8 +524,20 @@
    "t0": 12.933333333333334,
    "t1": 17.3,
    "shot": "split",
-   "side": 1,
+   "side": -1,
    "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-sheen",
+   "text": "a glow on the skin?",
+   "kind": "uv",
+   "anchor": "sheen",
+   "t0": 27.533333333333335,
+   "t1": 29.96666666666667,
+   "shot": "inside",
+   "side": 1,
+   "v": "above",
    "fixed": true
   },
   {
@@ -531,7 +590,7 @@
    "text": "simplified · one example (model)",
    "t0": 18.433333333333334,
    "t1": 39.7833,
-   "slot": "bl"
+   "slot": "tl"
   },
   {
    "id": "b-face",
@@ -558,29 +617,17 @@
    "id": "b-illus2",
    "text": "illustration",
    "t0": 60.6667,
-   "t1": 69.13333333333334,
+   "t1": 69.43333333333334,
    "slot": "tr"
   }
  ],
  "counters": [
   {
-   "id": "c-q",
-   "label": "your glow",
-   "text": "from where?",
-   "t0": 3.0,
-   "t1": 6.1333,
-   "fmt": "text",
-   "at": [
-    0.5,
-    0.215
-   ]
-  },
-  {
    "id": "c-refl",
    "label": "bounces off the top",
-   "text": "4–7 %",
+   "text": "≈ 4–7 %",
    "t0": 6.5333000000000006,
-   "t1": 17.0,
+   "t1": 8.15,
    "fmt": "text",
    "at": [
     0.5,
@@ -604,7 +651,7 @@
    "label": "the light comes back",
    "text": "redder",
    "t0": 36.8,
-   "t1": 52.2833,
+   "t1": 39.7833,
    "fmt": "text",
    "at": [
     0.5,
@@ -616,7 +663,7 @@
    "label": "the glow comes",
    "text": "from within",
    "t0": 62.13333333333333,
-   "t1": 68.63333333333334,
+   "t1": 68.93333333333334,
    "fmt": "text",
    "at": [
     0.5,
@@ -631,9 +678,9 @@
   "t1": 2.8,
   "sig": 1.5333333333333334
  },
- "endCard": 69.13333333333334,
+ "endCard": 69.43333333333334,
  "end": {
-  "title": "Next layer: is a scar still *skin*?",
+  "title": "Next layer: why do you *scar*?",
   "follow": "Outer Layer · No. 003",
   "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."
  },
@@ -1301,57 +1348,51 @@
    ]
   },
   {
-   "t0": 69.387,
-   "t1": 72.252,
+   "t0": 69.697,
+   "t1": 70.887,
    "lines": [
     [
      [
       "Next:",
-      69.387
+      69.697
      ],
      [
-      "skin",
-      69.877
-     ],
-     [
-      "closes",
-      70.297
-     ]
-    ],
-    [
-     [
-      "almost",
-      70.752
-     ],
-     [
-      "any cut.",
-      71.137
+      "before birth,",
+      70.092
      ]
     ]
    ]
   },
   {
-   "t0": 72.252,
-   "t1": 74.067,
+   "t0": 70.887,
+   "t1": 73.272,
    "lines": [
     [
      [
-      "But",
-      72.252
-     ],
-     [
-      "is",
-      72.282
-     ],
-     [
-      "a scar",
-      72.487
+      "a cut healed",
+      70.887
      ]
     ],
     [
      [
-      "still skin?",
-      73.122
+      "without a trace.",
+      71.742
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 73.272,
+   "t1": 74.947,
+   "lines": [
+    [
+     [
+      "So",
+      73.272
+     ],
+     [
+      "why do you scar?",
+      73.352
      ]
     ]
    ]
@@ -1410,9 +1451,9 @@
   {
    "id": "vo08",
    "t": 69.36666666666666,
-   "dur": 4.598,
+   "dur": 5.306,
    "file": "vo/08.wav",
-   "text": "Next: skin closes almost any cut. But is a scar still skin?"
+   "text": "Next: before birth, a cut healed without a trace. So why do you scar?"
   }
  ]
 }

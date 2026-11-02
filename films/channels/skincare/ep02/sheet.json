@@ -1,5 +1,5 @@
 {
- "duration": 76.0667,
+ "duration": 77.0,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -48,7 +48,7 @@
   {
    "id": "tease",
    "t0": 69.0667,
-   "t1": 76.0667,
+   "t1": 77.0,
    "energy": 0.35
   }
  ],
@@ -63,15 +63,6 @@
    "t": 1.5333333333333334,
    "kind": "signature",
    "tag": "title"
-  },
-  {
-   "t": 3.0,
-   "kind": "counter.show",
-   "tag": "c-q",
-   "pos": [
-    0.5,
-    0.215
-   ]
   },
   {
    "t": 5.1333,
@@ -172,6 +163,11 @@
    "t1": 40.1333
   },
   {
+   "t": 27.533333333333335,
+   "kind": "label",
+   "tag": "l-sheen"
+  },
+  {
    "t": 32.9,
    "kind": "label",
    "tag": "l-mel",
@@ -270,10 +266,10 @@
    "t": 69.0667,
    "kind": "section",
    "id": "tease",
-   "t1": 76.0667
+   "t1": 77.0
   },
   {
-   "t": 69.13333333333334,
+   "t": 69.43333333333334,
    "kind": "signature",
    "tag": "end"
   }
