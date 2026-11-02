@@ -186,8 +186,8 @@ records which):
    height · Earth's mass (NASA).
 6. Weak today: world cat counts are rough (600 million to 1 billion; pet surveys about 370 million)
    and no peer-reviewed meow loudness was found (a 2019 *Animals* study measured other cat calls at
-   56–61 dB). If a solid meow-level source isn't found before production, episode 6 becomes the
-   backup: **"Every raindrop at once"** (the world's daily rainfall dropped in one second).
+   56–61 dB). No solid meow-level source was found, so episode 6 is the backup: **"Every raindrop at
+   once"** (the world's daily rainfall dropped in one second), built by the second builder (2 Nov).
 
 Episode 1 builds the set and the kit pieces; 2–5 reuse them. The long video (vol01) is episodes 1–5.
 

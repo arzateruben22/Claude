@@ -87,21 +87,22 @@ CAM = {
     "grow": [
         {"t": t_grow0, **YOU, "dist": 9, "el": 55, "az": 24},
         {"t": t_grow1, "target": [0, 0, 0], "dist": SIDE_ALL * 3.6, "el": 60, "az": 30, "fov": 30, "fy": 0.36, "ease": "inout2"},
-        {"t": t_lon, "target": [0, 0, 0], "dist": SIDE_ALL * 3.8, "el": 62, "az": 32, "fov": 30, "fy": 0.36, "ease": "inout3"},
-        {"t": t_orbit, "target": [0, 0, 0], "dist": SIDE_ALL * 4.2, "el": 63, "az": 33, "fov": 30, "fy": 0.36, "ease": "sine"},
+        {"t": t_lon, "target": [0, 0, 0], "dist": SIDE_ALL * 3.8, "el": 56, "az": 50, "fov": 30, "fy": 0.36, "ease": "sine"},   # a slow orbit while the crowd squeezes and relaxes
+        {"t": t_orbit, "target": [0, 0, 0], "dist": SIDE_ALL * 4.2, "el": 58, "az": 54, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "orbit": [
         {"t": t_orbit, "target": [0, R_EARTH * 0.4, 0], "dist": 3.0e7, "el": 62, "az": 30, "fov": 30, "fy": 0.42},
         {"t": t_water - 0.2, "target": [0, R_EARTH * 0.2, 0], "dist": 4.6e7, "el": 50, "az": 32, "fov": 30, "fy": 0.4, "ease": "inout3"},
     ],
     "cube": [
-        {"t": t_water, "target": [-150, 420, 0], "dist": 7600, "el": 4, "az": 3, "fov": 30, "fy": 0.4},
-        {"t": t_work0, "target": [-150, 420, 0], "dist": 8200, "el": 4, "az": 2, "fov": 30, "fy": 0.46, "ease": "inout2"},
-        {"t": B["takeaway"]["t0"], "target": [-150, 420, 0], "dist": 8000, "el": 4, "az": 1, "fov": 30, "fy": 0.46, "ease": "sine"},
+        {"t": t_water, "target": [-150, 0, 0], "dist": 8000, "el": 4, "az": 3, "fov": 30, "fy": 0.5},
+        {"t": t_work0, "target": [-150, 0, 0], "dist": 9500, "el": 4, "az": 2, "fov": 30, "fy": 0.52, "ease": "inout2"},
+        {"t": B["takeaway"]["t0"], "target": [-150, 0, 0], "dist": 9300, "el": 4, "az": 1, "fov": 30, "fy": 0.52, "ease": "sine"},
     ],
     "home": [
         {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": SIDE_ALL * 6, "el": 55, "az": 30, "fov": 30, "fy": 0.36},
-        {"t": t_city, **YOU, "dist": 11, "el": 44, "az": 22, "ease": "in3"},
+        {"t": t_city - 1.8, "target": [0, 0, 0], "dist": 70, "el": 50, "az": 24, "fov": 30, "fy": 0.4, "ease": "inout2"},   # low enough to see people by "It only feels"
+        {"t": t_city, **YOU, "dist": 11, "el": 44, "az": 22, "ease": "inout2"},
         {"t": t_end, **YOU, "dist": 10, "el": 40, "az": 21, "ease": "sine"},
     ],
     "end": [
@@ -131,7 +132,7 @@ SPINE = [
 WORK = {
     "t0": t_work0, "t1": B["takeaway"]["t0"] - 0.1, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg (adult avg.) ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
+        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
         {"t": A("vo06:either", -0.05), "k": "bodies at 0.97 g/cm³", "v": f"≈ {V['cube_hi_m']:.0f} m", "lit": True},
         {"t": A("vo06:size", -0.6), "k": "bodies at 1.06 g/cm³", "v": f"≈ {V['cube_lo_m']:.0f} m", "lit": True},
     ],
@@ -141,16 +142,15 @@ WORK = {
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_title_out, "t1": t_full - 0.2, "shot": "you", "side": 1},
-    {"id": "l-half", "text": "½ m²", "kind": "assume", "anchor": "half", "t0": t_half + 0.3, "t1": t_grow0, "shot": "you", "side": -1, "v": "above"},
     {"id": "l-lon", "text": "Greater London, 1,572 km²", "kind": "part", "anchor": "london", "t0": t_lon + 0.3, "t1": t_orbit, "shot": "grow", "side": 1},
     {"id": "l-us", "text": "everyone", "kind": "anchor", "anchor": "dot", "t0": t_orbit + 1.0, "t1": t_water, "shot": "orbit", "side": 1},
-    {"id": "l-tower", "text": f"tallest tower, {int(H_BURJ)} m", "kind": "part", "anchor": "tower", "t0": t_tower + 0.2, "t1": t_work0 - 0.1, "shot": "cube", "side": 1},
+    {"id": "l-tower", "text": f"tallest tower, {int(H_BURJ)} m", "kind": "part", "anchor": "tower", "t0": t_tower + 0.2, "t1": t_work0 - 0.1, "shot": "cube", "side": 1, "v": "above", "fixed": True},
     {"id": "l-cube", "text": "every body alive", "kind": "anchor", "anchor": "cube", "t0": A("vo05:cube", 0.1), "t1": t_work0 - 0.1, "shot": "cube", "side": -1, "v": "above"},
 ]
 BADGES = [
     {"id": "b-safe", "text": "∵ 2 people per m² (a calm crowd)", "t0": t_half, "t1": t_orbit, "slot": "tl"},
     {"id": "b-ill", "text": "true sizes · tower drawn wider", "t0": t_orbit, "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-water", "text": "∵ bodies about as dense as water", "t0": t_water, "t1": B["takeaway"]["t0"], "slot": "tl"},
+    {"id": "b-water", "text": "∵ as dense as water · 62 kg adult average", "t0": t_water, "t1": B["takeaway"]["t0"], "slot": "tl"},
 ]
 PILLS = [
     {"id": "p-side", "text": f"{RESULTS['side_safe_km']} km · about {round(V['side_safe_km'] / 100 * 60)} min at 100 km/h", "t0": t_grow1, "t1": t_squeeze, "at": [90 / 1080, 0.205]},
