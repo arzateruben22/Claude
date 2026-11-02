@@ -84,8 +84,8 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.18, 0.33] });   // under the spine readout, clear of it
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}"; document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
-const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.265, w: 0.8, h: 0.25 });
+{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}.ol-vf .rec{top:auto;bottom:1.6vmin}";   /* REC at the bottom: the spine readout owns the top right */ document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
+const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.19 });
 // plates: violet cards in the theme's tokens (text on them ≥ 4.5:1)
 const plate = (html, css) => {
   const el = document.createElement("div");
@@ -108,7 +108,7 @@ const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--
   <div class="r1" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>one frown</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b1" style="display:block;height:3.2vmin;width:0;background:var(--water);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);color:var(--water)">${D.frown_u}</b></span></div>
   <div class="r2" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;margin-top:1.8vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>estimated lethal</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b2" style="display:block;height:3.2vmin;width:0;background:var(--uv);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);white-space:nowrap">≈ 3,000</b></span></div>
   `,
-  { left: "50%", top: `${0.525 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
+  { left: "50%", top: `${0.45 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
 const b1 = dose.querySelector(".b1"), b2 = dose.querySelector(".b2"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
 const BAR = 34;   // vmin: the lethal amount's full bar; the frown's is the same scale (a sliver)
 // a veil in the ground's colour: a three-frame step at the hard scale jumps, and the fade before the end card
@@ -134,13 +134,13 @@ window.seek = function (t) {
   // ── the junction: the message crosses and the muscle pulls; the toxin cuts; the message stays; new endings ──
   if (isJ) {
     JN.set({
-      pull: shot === "below" ? u01(t, J.pull) : 0.5 * u01(t, J.sprout),   // after the cut the muscle stays slack; the new endings bring the crease back
+      pull: shot === "below" ? u01(t, J.pull) : u01(t, J.sprout),   // the new endings work the muscle again: the crease returns   // after the cut the muscle stays slack; the new endings bring the crease back
       puff: shot === "below" && t < J.cut[0] ? seg(t, J.puff[0], J.puff[1]) : shot === "gauge" ? seg(t, J.relight[0], J.relight[1]) : 0,   // the original ending sends its message again (c13)
-      open: shot === "below" ? u01(t, J.open) : 0,
+      open: shot === "below" ? u01(t, J.open) : shot === "below2" ? 1 : 0,   // below2: still open, so the held vesicles show
       toxin: shot === "below" ? u01(t, J.toxin) : 1,
       cut: shot === "below" ? u01(t, J.cut) : 1,
       sprout: shot === "gauge" ? u01(t, J.sprout) : 0,
-      bump: shot === "below" ? Math.abs(Math.sin(Math.PI * 2 * seg(t, J.bump[0], J.bump[1]))) * (t < J.bump[1] ? 1 : 0) : 0,   // the vesicles press at the membrane and fall back: ready, never released
+      bump: shot === "below" ? Math.abs(Math.sin(Math.PI * 2 * seg(t, J.bump[0], J.bump[1]))) * (t < J.bump[1] ? 1 : 0) : shot === "below2" ? Math.abs(Math.sin(Math.PI * 3 * seg(t, J.bump2[0], J.bump2[1]))) * (t < J.bump2[1] ? 1 : 0) : 0,   // the vesicles press at the membrane and fall back: ready, never released
       dim: shot === "gauge" ? 0.5 * (1 - u01(t, J.sprout)) : 0,
     });
   }
@@ -161,7 +161,7 @@ window.seek = function (t) {
 
   // ── Kerner ──
   show(kerner, shot === "rise" || shot === "below2" ? win(t, K.t0, K.t1, 0.4) : 0);
-  k2.style.opacity = fadeIn(t, K.med, 0.5).toFixed(3);
+  k2.style.opacity = fadeIn(t, K.guessed, 0.5).toFixed(3);
   if (sp) sp.style.color = t >= K.sausages ? "var(--water)" : "inherit";   // the turn word lights its words
 
   // ── the gauge: lifted only (the junction is schematic, so no attached ruler): the gap a hairline beside the paper ──
