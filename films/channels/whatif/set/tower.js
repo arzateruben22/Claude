@@ -3,7 +3,7 @@
 // reusable for any "how big would it be" sum. World units are metres; both stand on the desk at y = 0.
 //
 //   import { createTower, createCube } from "../set/tower.js";
-//   const T = createTower({ tokens, height: 828 });   scene.add(T.group);   T.set({ x, z, opacity, grow: 0–1 })
+//   const T = createTower({ tokens, height: 828, widen: 2 });   scene.add(T.group);   T.set({ x, z, opacity, grow: 0–1 })
 //   const K = createCube({ tokens, side: 800 });      scene.add(K.group);   K.set({ x, z, opacity, grow: 0–1 })
 //
 // The tower is a generic stepped spire (stacked, narrowing setbacks and a needle), drawn in chalk plaster like
@@ -36,16 +36,16 @@ const mat = (tk, key, def, lo) => new THREE.ShaderMaterial({
 });
 
 export const createTower = (o = {}) => {
-  const H = o.height ?? 828, tk = o.tokens || {}, m = mat(tk, "model", "#E6E2D8", 0.55);
+  const H = o.height ?? 828, tk = o.tokens || {}, m = mat(tk, "model", "#E6E2D8", 0.55), wk = o.widen ?? 1;   // widen: a schematic, thicker than life so it reads at a distance (height stays true)
   const inner = new THREE.Group();
   // setbacks: [fraction of height at the top of the tier, half-width in m]
   const tiers = [[0.08, 45], [0.22, 38], [0.38, 31], [0.52, 25], [0.64, 19], [0.74, 14], [0.8, 9]];
   let y0 = 0;
   for (const [f, w] of tiers) {
-    const h = f * H - y0, b = new THREE.Mesh(new THREE.CylinderGeometry(w * 0.82, w, h, 6, 1), m);
+    const h = f * H - y0, b = new THREE.Mesh(new THREE.CylinderGeometry(w * wk * 0.82, w * wk, h, 6, 1), m);
     b.position.y = y0 + h / 2; inner.add(b); y0 = f * H;
   }
-  const needle = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 6, H - y0, 8, 1), m);
+  const needle = new THREE.Mesh(new THREE.CylinderGeometry(1.2 * wk, 6 * wk, H - y0, 8, 1), m);
   needle.position.y = y0 + (H - y0) / 2; inner.add(needle);
   const group = new THREE.Group(); group.add(inner);
   const set = (s = {}) => {
