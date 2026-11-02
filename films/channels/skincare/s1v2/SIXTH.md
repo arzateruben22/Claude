@@ -32,7 +32,7 @@ the original No. 004/005. All numbers below were checked through search excerpts
   far more wrinkled than his right; the collagen and elastin under it are what UVA wrecked.
 - **Three numbers:**
   1. A driver exposed through the side window for **about 28 years** (Northwestern says "more than 25") showed
-     one-sided photoageing (Gordon & Brieva, "Unilateral dermatoheliosis", NEJM 2012;366:e25).
+     one-sided photoageing (Gordon & Brieva, "Unilateral dermatoheliosis", NEJM, Images in Clinical Medicine, April 2012).
   2. UV exposure "seems to be responsible for **80%** of visible facial aging signs" in 298 French women aged
      30–78 (Flament et al. 2013, Clin Cosmet Investig Dermatol, https://pmc.ncbi.nlm.nih.gov/articles/PMC3790843/;
      observational, industry-authored).
