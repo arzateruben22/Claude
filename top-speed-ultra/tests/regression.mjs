@@ -1154,23 +1154,33 @@ await group('phone', async (use) => {
         let n = 0; for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - rgb[0]) + Math.abs(d[i + 1] - rgb[1]) + Math.abs(d[i + 2] - rgb[2]) < 40) n++;
         return { accent: n, drawn: g.routeDrawn };
       });
+      // the map and the HUD tick at 0.1 s of game time: each read below waits on the state it reads, not on frames
+      const until = (fn, arg) => page.waitForFunction(fn, arg, { timeout: FRAMES_MS, polling: 50 }).catch(() => {});
       await game(page, () => { const g = window.__game; g.navigateTo(null); });
-      await frames(page, 3);
+      await until(() => window.__game.routeDrawn === 0 && !document.querySelector('.tbtn.auto'));
+      await frames(page, 2);
       const none = await mapLook();
       await game(page, () => {
         const g = window.__game, m = g.findMain('I-405 North');
         g.setPaused(true); g.placeCar(m, m.len * 0.12, 1, 28); g.traffic.reseed(3); g.traffic.fill(g.view()); g.navigateTo('CA-55 North');
         g.fastForward(Math.max(0, (g.route[0].s - g.phys.s - 1500) / 28), {}, 28); g.setPaused(false);   // 1.5 km before the exit
       });
-      await frames(page, 4);
+      await until(() => window.__game.routeDrawn > 20 && !!document.querySelector('.tbtn.auto') && !!document.querySelector('.hud-nav-lanes:not([hidden]) i.on'));
+      await frames(page, 2);
       const withRoute = await mapLook();
       expect(withRoute.drawn > 20 && withRoute.accent > 4 * none.accent + 30, `the map's accent pixels: ${none.accent} without a route, ${withRoute.accent} with one (${withRoute.drawn} route points)`);
       const hint = await game(page, () => ({ lit: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i.on').length, all: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i:not([hidden])').length, act: document.querySelector('.hud-nav-dist span')?.textContent }));
       expect(hint.lit >= 1 && hint.all > hint.lit && /Keep (left|right)/i.test(hint.act ?? ''), `lane hint ${JSON.stringify(hint)}`);
       const auto = page.getByRole('button', { name: 'Auto-drive' });
       expect(await auto.count() === 1 && await auto.getAttribute('aria-pressed') === 'false', 'no Auto-drive button with a route');
+      // the HUD's DOM (the AUTO tag, the button's aria-pressed) is waited on as state, not counted frames: three frames
+      // hold a HUD send only when frames run 33 ms or more, which a quiet machine beats
+      const autoShown = (on) => page.waitForFunction((want) => {
+        const t = document.querySelector('.hud-auto'), b = document.querySelector('.tbtn.auto');
+        return !!t && t.hidden === !want && !!b && b.getAttribute('aria-pressed') === String(want);
+      }, on, { timeout: FRAMES_MS, polling: 50 }).catch(() => {});
       await auto.tap();
-      await frames(page, 3);
+      await autoShown(true);
       const st = await game(page, () => ({ on: window.__game.autoDriving, tag: !document.querySelector('.hud-auto').hidden, pressed: document.querySelector('.tbtn.auto').getAttribute('aria-pressed') }));
       expect(st.on && st.tag && st.pressed === 'true', `after the tap: ${JSON.stringify(st)}`);
       const sizes = [];
@@ -1179,11 +1189,15 @@ await group('phone', async (use) => {
           await page.setViewportSize({ width: w, height: h });
           // the route's HUD as it was: no lanes, no AUTO, no button; then all three
           await game(page, () => { const g = window.__game; g.setAutoDrive(false); document.querySelector('.hud-nav-lanes').hidden = true; });
-          await frames(page, 3);
+          await autoShown(false);
+          await frames(page, 2);                                                     // the new size laid out
           const was = await game(page, hudLayoutInPage);
           await game(page, () => { const g = window.__game; g.setAutoDrive(true); document.querySelector('.hud-nav-lanes').hidden = false; });
-          await frames(page, 3);
+          await autoShown(true);
+          await frames(page, 2);
           const m = await game(page, hudLayoutInPage);
+          const label0 = `${w}x${h}`, stNow = await game(page, () => ({ on: window.__game.autoDriving, tag: !document.querySelector('.hud-auto').hidden }));
+          expect(stNow.on && stNow.tag, `${label0}: AUTO is not up for the measure: ${JSON.stringify(stNow)}`);
           const label = `${w}x${h}`;
           expect(m.area <= was.area + 0.002, `${label}: the HUD covers ${pct(m.area)}, up from ${pct(was.area)}`);
           expect(m.small.length === 0 && m.overlaps.length === 0, `${label}: small ${m.small.join(', ')}; overlapping ${m.overlaps.join(', ')}`);
@@ -1222,7 +1236,7 @@ await group('phone', async (use) => {
       expect(!bySteer && !byBrake, `still driving after a steer drag ${bySteer}, after BRAKE ${byBrake}`);
       // clear the route: the button, the map's line and the lane hint go
       await game(page, () => window.__game.navigateTo(null));
-      await frames(page, 3);
+      await until(() => window.__game.routeDrawn === 0 && !document.querySelector('.tbtn.auto'));
       const gone = { button: await auto.count(), ...(await mapLook()) };
       expect(gone.button === 0 && gone.drawn === 0, `after clearing: ${JSON.stringify(gone)}`);
       await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it

@@ -634,10 +634,13 @@ export class Game {
     if (target === this.path) { this.setRoute(null); this.ev.toast(`You're on ${label}`, 'info'); return true; }
     const r = this.net.route(this.path, Math.max(0, this.phys.s), target);
     if (!r) { this.ev.toast(`No way to ${label} from here`, 'bad'); return false; }
-    this.route = r; this.routeTarget = target;
+    this.route = r; this.routeTarget = target; this.navNow();
     return true;
   }
-  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; if (!target) this.autoDrive = false; }
+  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; if (!target) this.autoDrive = false; this.navNow(); }
+  // a route set or cleared, or Auto-drive switched: the HUD (the guidance, the AUTO tag, the Auto-drive button) and
+  // the corner map hear it on the next frame, not up to one 0.1 s tick of each later
+  private navNow() { this.hudT = 0; this.mapT = 0; }
 
   // ----------------------------------------------------------------------------------------- Auto-drive
   // The route, driven for you (owner, 2026-11-01: "make it where you put navigation on the gps to follow it"): the
@@ -651,15 +654,17 @@ export class Game {
   setAutoDrive(on: boolean, why = '') {
     if (on && !this.autoDriveOffered) return false;
     if (on === this.autoDrive) return true;
-    this.autoDrive = on;
+    this.navNow();                   // the AUTO tag, data-auto and the button's state change with the toggle
     if (on) {
-      // a hand-off already behind the car (or no plan from the last road): plan again from here before driving it
+      // a hand-off already behind the car (or no plan from the last road): plan again from here before driving it.
+      // Planned before switching on, so no plan from here says so once ("No way to X from here"), not twice
       if ((!this.route.length || this.missedHandOff()) && !this.replan()) { this.ev.toast(`No way to ${this.routeTarget!.label} from here`, 'bad'); return false; }
+      this.autoDrive = true;
       // from the lane you're in, so it doesn't swerve to its own
       const p = this.path; this.apLane = p.laneOf(clamp(this.phys.d, p.edgeL, p.edgeR));
       this.autoCruise = Math.min(AUTO_CRUISE, this.carTop() * 0.85);   // the car's tune as it is now (never above its limit)
       this.ev.toast(`Auto-drive to ${this.routeTarget!.label}. Steer or brake to take over`, 'info');
-    } else this.ev.toast(why || 'Auto-drive off. You have control', 'info');
+    } else { this.autoDrive = false; this.ev.toast(why || 'Auto-drive off. You have control', 'info'); }
     return true;
   }
   // A hand-off passed or missed on the road you're still on (traffic in the way, an exit left too late): the next
@@ -884,7 +889,7 @@ export class Game {
       this.route = []; this.routeTarget = null;
       // Auto-drive hands back on arrival, in the same toast
       if (!this.attract) this.ev.toast(`You made it: ${path.label}` + (this.autoDrive ? '. Auto-drive off: you have control' : ''), 'good');
-      this.autoDrive = false;
+      this.autoDrive = false; this.navNow();                                 // the button and the AUTO tag go at once
     }
   }
 
