@@ -2,8 +2,19 @@
 
 ## Measured gates (final)
 
-To be filled from `kits/cinema/film/qa.py` and `scorecard.py` on the delivered file once the render worker reports.
-The draft mix measured −14.1 LUFS / −1.9 dBTP and sync PASS on every kind; the render audit was clean.
+From `kits/cinema/film/qa.py` (PASS) and `scorecard.py` on `out/outerlayer-005-9x16.mp4`, rendered at the final tier (1080×1920, CRF 15).
+
+| Gate | Target | Result |
+|---|---|---|
+| Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2184 frames, H.264 High BT709, AAC 48 kHz stereo 258k, 4.91 Mbps video, 47.1 MB |
+| Length | 60–75 s; picture = sound | 72.800 s / 72.800 s |
+| Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.1 LUFS, −1.9 dBTP**, LRA 3.5 LU |
+| Voice over music | ≥ 10 LU | 15.9 LU (dialogue −13.5, music −29.4 LUFS while speaking) |
+| Phone speaker | mono-safe | Correlation 0.89; mono loss 0.02 dB (dialogue 0.08 dB) |
+| Sound sync | transients within a frame | 11 kinds, 30 events, all PASS: transients worst 11 ms; slow swells (reveal, scale.jump, section, swell) worst 51 ms |
+| Labels vs picture | sound on the first visible frame | 5/5 exact (DOM-measured first visible frame) |
+| Text in the safe box | x 90–900, y 250–1420 | Render audit: 0 warnings over 2184 frames |
+| Flashing | ≤ 3 flashes a second | 5 large-area luminance changes (frames 517, 518, 519, 813, 1134), 2 flash pairs, worst 1/s |
 
 ## Compelling pass (one independent reviewer, every round)
 
