@@ -32,7 +32,7 @@ On the films machine (it needs Chromium, ffmpeg and the cinema kit):
    (`out/<name>-cover.jpg`, `-thumb.jpg`). It skips episodes whose cover is newer than the video; `--force` redoes
    them; pass `films/channels/<ch>/epNN` to do just one.
    Then `python3 -I kits/cinema/film/youtube1440.py films/channels/<ch>/epNN` makes the 1440×2560 YouTube version
-   (`out/<name>-9x16-youtube.mp4`); the import gives it to the YouTube posts. TikTok and Instagram keep the master.
+   (`out/<name>-9x16-youtube.mp4`); the import gives it to the YouTube posts. TikTok and Instagram keep the master. If the automatic pick clips a label or misses the best image, look at `--force --dry --debug` for one episode and redraw it from a chosen frame: `npm run covers -- films/channels/<ch>/epNN --force --at=<seconds>` (Outer Layer 003 uses 34.3 s).
 3. **Queue → Import rendered episodes**, or `npm run import:episodes`. A new render becomes a new version: older
    approvals end and the episode comes back to Review. A cover older than the render is not used (the film's poster
    is, until covers run again). A changed cover withdraws that post's approval.
