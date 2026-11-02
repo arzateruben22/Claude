@@ -1,0 +1,112 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Under the surface, most of your skin's strength is collagen, woven over and under in every direction like a basket, so it gives a little whichever way it's pulled.",
+  "claim": "The dermis's strength comes from collagen fibre bundles arranged in a criss-cross, basket-weave network, which lets normal skin give in many directions.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/18797087/",
+  "source_title": "Anitha B, Ragunatha S, Inamadar AC. Scars in dermatology: clinical significance. Indian J Dermatol Venereol Leprol 2008;74:420–3",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'In normal circumstances, the collagen in the skin is arranged in a basket weave pattern, but in scar tissue, it is arranged in bundles parallel to the skin surface' (IJDVL 2008, via digitallibrary.bldedu.ac.in copy). Flexibility: 'The basketweave pattern allow the flexibility of skin dermis associated with tissue strength' (scar chapter abstract, Taylor & Francis, doi 10.3109/9780203909652-9). 'Most of your skin's strength' = the dermis, not the epidermis: a dermatologist confirms the wording.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "Cut through it, and the body doesn't reweave.",
+  "claim": "When an injury reaches the dermis, adult skin repairs it with scar tissue rather than regenerating the original dermis.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7831008/",
+  "source_title": "Int J Mol Sci 2021;22:897, figure 2 (critical injury depth), PMC7831008",
+  "accessed": "2026-11-02",
+  "note": "Caption excerpt: 'Only the epidermis has the capability to fully regenerate, whereas healing of the injured dermis results in scar formation'. Cross-check (MedicineNet): 'Damage to the deeper layer of the skin, the dermis, is required to produce a cutaneous scar.' 'Cut through it' = through the woven dermis.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat glands.",
+  "claim": "In a scar, the new collagen is laid down in bundles parallel to each other and to the skin surface, instead of the basket weave.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/18797087/",
+  "source_title": "Anitha B, Ragunatha S, Inamadar AC. Scars in dermatology: clinical significance. Indian J Dermatol Venereol Leprol 2008;74:420–3",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'in scar tissue, it is arranged in bundles parallel to the skin surface'; scar collagen has 'high proportions of type III collagen and fibronectin compared to the surrounding normal skin'. Cross-check (Plastic Surgery Key, Scar histopathology): 'The normal basketweave pattern of collagen fiber bundles from lost dermis is replaced with collagen fiber bundles arranged in arrays parallel to the skin surface.' 'All in one direction' = parallel; hedge on screen if the dermatologist asks.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "It patches, laying new threads side by side, all in one direction, and leaves out the hair and the sweat glands.",
+  "claim": "Ordinary scars lack hair follicles and sweat glands (dermal appendages).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6485243/",
+  "source_title": "Review of scarless/regenerative skin healing (2019), PMC6485243",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: healing results in 'a fibrotic and organized scar devoid of sensory, hair, and glandular appendages'. Cross-checks: Plastic Surgery Key, 'Epidermal appendages such as hair follicles and sebaceous glands are usually absent in a scar'; Cytotherapy 2015 review: deep burns are 'repaired by a hypertrophic scar without regeneration of sweat glands'. Disputed detail: a 2005 study (PubMed 15740645) found some residual, disorganised sweat glands in hypertrophic scars. 'Leaves out' is the usual case; dermatologist to confirm.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "But pulled until it tears, even an old scar holds only about four-fifths of the original strength.",
+  "claim": "Healed skin wounds reach only about 80% of the tensile strength of unwounded skin (Levenson et al. 1965, rat skin).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4174176/",
+  "source_title": "Ireton JE, Unger JG, Rohrich RJ. The role of wound healing and its everyday application in plastic surgery. Plast Reconstr Surg Glob Open 2013;1(1):e10–e19",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: 'Levenson et al found that healed skin only reached 80% of the tensile strength of unwounded skin' (citing Levenson SM et al. The healing of rat skin wounds. Ann Surg 1965;161:293–308). Teaching cross-check: 'maximal at the 12th week post injury and represents approximately 80% of the uninjured skin strength'; 'At best, the skin wound reaches only about 80% that of unwounded skin'. Said 'about four-fifths'; screen '≈ 80%' badged 'rat skin · classic study'. Page fetch blocked (pmc.ncbi.nlm.nih.gov does not resolve here).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "Yet until about the sixth month of pregnancy, a cut in a baby's skin regrows the weave, follicles and all.",
+  "claim": "Human fetal skin wounds heal without a scar, regenerating a normal collagen weave and hair follicles, until about 22–24 weeks of gestation.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3362931/",
+  "source_title": "A review of fetal scarless healing (ISRN Dermatology 2012), PMC3362931",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'scarless healing occurs in fetal skin until around 22 to 24 weeks of gestation in the human fetus'; fetal collagen 'is deposited in a fine reticular or basket weave pattern similar to uninjured skin'; 'Scarless healing in early fetal skin is a form of regeneration, with renewal of skin appendages such as hair follicles and sebaceous glands'. Larson, Longaker & Lorenz 2010 (Plast Reconstr Surg 126:1172–80): 'In humans, scarring of wounds begins at approximately 24 weeks of gestation'. Which excerpt sits in which review was read from search summaries: a person checks. 'About the sixth month' = weeks 22–26; screen shows '≈ 22–24 weeks'. Evidence comes from fetal surgery, pathology and animal models.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "After that, it patches.",
+  "claim": "After about 24 weeks of gestation, fetal skin wounds heal with scarring.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3362931/",
+  "source_title": "A review of fetal scarless healing (ISRN Dermatology 2012), PMC3362931",
+  "accessed": "2026-11-02",
+  "note": "As above; Larson 2010: 'scarring of wounds begins at approximately 24 weeks of gestation'; 2024 abstract: 'foetal wounds sustained after 24 weeks gestation have been shown heal with scarring'. Mechanism 'remains largely unknown'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "And on most of your body, only the top layer, about this paper's thickness, grows back without a seam.",
+  "claim": "Only the epidermis fully regenerates; injury that reaches the dermis heals with a scar.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7831008/",
+  "source_title": "Int J Mol Sci 2021;22:897, figure 2 (critical injury depth), PMC7831008",
+  "accessed": "2026-11-02",
+  "note": "Figure caption excerpt: 'Only the epidermis has the capability to fully regenerate, whereas healing of the injured dermis results in scar formation'; 'injury targeting only papillary dermis ends with normotrophic scar formation'. Hedge: MedicineNet, 'damage to only the epidermis will not always produce a scar'; the voice says 'grows back without a seam' for the top layer only and makes no promise about any one wound.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "And on most of your body, only the top layer, about this paper's thickness, grows back without a seam.",
+  "claim": "On most of the body the epidermis is about 0.07–0.12 mm thick (about 0.1 mm on average), similar to a sheet of paper (≈ 0.1 mm); thinner on eyelids, up to about 1.5 mm on palms and soles.",
+  "source_url": "https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml",
+  "source_title": "Atlas of Microscopic Anatomy, Section 7: Integument (Anatomy Atlases)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (search summary): epidermis about 0.07 to 0.12 mm over most of the body, palms and soles 0.8 to 1.4 mm. Cross-check (open human-biology textbook, pressbooks.ccconline.org): 'averages roughly 0.10 mm', eyelid 0.05 mm, palms and soles 1.5 mm. StatPearls (NBK470464) describes regional variation without numbers in the excerpt. Not a top-tier source: replace with a StatPearls or peer-reviewed figure if the dermatologist prefers. Screen badge 'most of the body'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "Skin's quick repair: strong enough to close, never the weave.",
+  "claim": "Scar tissue closes the wound but does not restore the original basket-weave dermis or its full strength.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/18797087/",
+  "source_title": "Anitha B, Ragunatha S, Inamadar AC. Scars in dermatology: clinical significance. Indian J Dermatol Venereol Leprol 2008;74:420–3",
+  "accessed": "2026-11-02",
+  "note": "Restates c3 and c5 (parallel bundles, not the basket weave; about 80% strength, Ireton et al. 2013 citing Levenson 1965). 'Quick repair': collagen is laid down within weeks while remodelling runs a year or more (teaching sources vary on the timing).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
