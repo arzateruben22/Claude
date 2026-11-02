@@ -662,23 +662,33 @@
  "trans": [
   {
    "t": 11.5,
-   "kind": "iris"
+   "kind": "iris",
+   "from": "hcell",
+   "to": "dimer"
   },
   {
    "t": 16.3333,
-   "kind": "iris"
+   "kind": "iris",
+   "from": "dimer",
+   "to": "hcell"
   },
   {
    "t": 26.1333,
-   "kind": "dip"
+   "kind": "iris",
+   "from": "melano",
+   "to": "pair_c"
   },
   {
    "t": 34.0,
-   "kind": "dip"
+   "kind": "iris",
+   "from": "pair_c",
+   "to": "dimer"
   },
   {
    "t": 38.7333,
-   "kind": "dip"
+   "kind": "iris",
+   "from": "dimer",
+   "to": "melano"
   }
  ],
  "labels": [

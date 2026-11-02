@@ -171,10 +171,13 @@ COUNTERS = [
     {"id": "c-spf2", "label": "a whole tan, about", "fmt": "text", "text": "SPF 3–4", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:] if sh["name"] not in ("field", "gauge", "close")]   # those three are camera moves, not cuts
-# how each cut is made: an iris on the two scale jumps (into the nucleus and back out to its cell), a short dip to
-# the slide colour on the others, so no cut jumps the picture's brightness in one frame
-TRANS = [{"t": t_jump, "kind": "iris"}, {"t": B["change"]["t0"], "kind": "iris"}, {"t": B["why"]["t0"], "kind": "dip"},
-         {"t": t_dna2, "kind": "dip"}, {"t": B["whoa"]["t0"], "kind": "dip"}]
+# how each cut is made: an iris from the outgoing subject to the incoming one (a slide-coloured disc grows round the
+# first, then shrinks off the second), so every cut has a point to follow and none jumps the brightness in one frame
+TRANS = [{"t": t_jump, "kind": "iris", "from": "hcell", "to": "dimer"},           # into the nucleus
+         {"t": B["change"]["t0"], "kind": "iris", "from": "dimer", "to": "hcell"},  # back out to its cell
+         {"t": B["why"]["t0"], "kind": "iris", "from": "melano", "to": "pair_c"},  # the pigment cell → the mice
+         {"t": t_dna2, "kind": "iris", "from": "pair_c", "to": "dimer"},           # the damage, already done
+         {"t": B["whoa"]["t0"], "kind": "iris", "from": "dimer", "to": "melano"}]  # back out to the pigment cell, days later
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next

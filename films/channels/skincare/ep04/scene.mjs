@@ -193,7 +193,7 @@ window.seek = function (t) {
     melL.set({ tone: tone + 0.4 * k, fill: Math.min(1, k * 1.6), travel: E.inout2(seg(k, 0.3, 1)), glow: 0.4 });
     melR.set({ tone, fill: 0, travel: 0, glow: 0.4 * (1 - fadeIn(t, CUE.lacked, 0.5)) });
     raysP.set(t, { filmTop: -BIO.sc_um - 4, filmBottom: -BIO.sc_um - 22, pass: 0, gain: fadeIn(t, SH.pair, 0.6) * 0.8, color: UVC, hitColor: HIT });
-    A.pair_l = [PL.group.position.x - 14, 0, 23]; A.pair_r = [PR.group.position.x + 14, 0, 23];
+    A.pair_l = [PL.group.position.x - 14, 0, 23]; A.pair_r = [PR.group.position.x + 14, 0, 23]; A.pair_c = [PL.group.position.x, -50, 23];
   } else raysP.set(t, HIDE);
 
   // ── the DNA ladder: two bases fuse on "fuse"; in dna2 the fused pair is held, lit ──
@@ -204,6 +204,8 @@ window.seek = function (t) {
     raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();
   }
+  if (!A.pair_c) A.pair_c = [PL.group.position.x, -50, 23];
+  if (!isDNA) A.dimer = A.dimer || dna.at.fused();
 
   // ── the depth gauge: attached to the section's left cut edge, lifted to centre for the to-scale beat ──
   const xg = -S.dims.W / 2 + 2, zg = S.dims.D / 2;
@@ -215,22 +217,21 @@ window.seek = function (t) {
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
-  // the transitions. Iris: before the cut a slide-coloured disc grows out of the subject (the followed nucleus, or the
-  // fused bases); after it, a hole opens from the next place's subject, so the eye goes in through one and out of the other
-  let dip = 0, disc = 0, hole = 0;
+  // the transitions (film.json "trans"): an iris from the outgoing subject to the incoming one. Before the cut a
+  // slide-coloured disc grows round the first (to about a third of the frame); after it a disc of the same size sits on
+  // the second and shrinks away, so the frame is never more than about a third covered and the eye has a point to follow
+  let rad = 0, subj = null;
   for (const tr of FILM.trans) {
     const d = t - tr.t;
-    if (tr.kind === "dip") dip = Math.max(dip, 1 - Math.min(1, Math.abs(d) / 0.22));
-    else if (d < 0 && d > -0.35) disc = 0.62 * E.in2(1 + d / 0.35);                 // the disc never quite fills the frame,
-    else if (d >= 0 && d < 0.4) hole = 0.28 + 0.72 * E.out2(d / 0.4);               // and the next place shows at once: no empty frame
+    // on the DNA's side the disc stays small: the ladder sits on the bare slide, and the disc must not hide it
+    if (d < 0 && d > -0.4) { rad = (tr.from === "dimer" ? 16 : 34) * E.in2(1 + d / 0.4); subj = A[tr.from]; }
+    else if (d >= 0 && d < 0.45) { rad = (tr.to === "dimer" ? 16 : 34) * (1 - E.out2(d / 0.45)); subj = A[tr.to]; }
   }
-  if (disc > 0 || hole > 0) {
-    const subj = shot === "section" || shot === "cell" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), p = project(camera, subj, W, H);
-    const at = `${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%`, r = ((disc || hole) * 125).toFixed(2), r2 = (+r + 0.6).toFixed(2);
-    veil.style.background = disc > 0 ? `radial-gradient(circle at ${at}, var(--slide) ${r}vmax, transparent ${r2}vmax)`
-      : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
+  if (subj && rad > 0.05) {
+    const p = project(camera, subj, W, H);
+    veil.style.background = `radial-gradient(circle at ${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%, var(--slide) ${rad.toFixed(2)}vmax, transparent ${(rad + 0.6).toFixed(2)}vmax)`;
     veil.style.opacity = "1";
-  } else { veil.style.background = "var(--slide)"; veil.style.opacity = (0.85 * dip).toFixed(4); }
+  } else veil.style.opacity = "0";
   for (const el of gsvg.querySelectorAll("text")) if (el.textContent === "paper") el.setAttribute("opacity", (lift * E.out3(seg(t, G.stack[0] - 0.2, G.stack[0] + 0.3))).toFixed(3));
   // the parasol stack inside the lifted gauge's paper bar (read from motif.js's own bar, so it follows any change there)
   const pb = gsvg.querySelector('rect[stroke]');
