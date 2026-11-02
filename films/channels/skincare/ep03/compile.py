@@ -49,23 +49,23 @@ CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:on
 MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
 WK = {"fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "macro": [{"t": 0.0, "target": [TX, 0, 2], "el": 26, **MK, "dist": 34, "az": -10},
-              {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 32, **MK, "dist": 22, "az": -6, "ease": "inout2"},
+    "macro": [{"t": 0.0, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -8},   # the scar across the frame from frame 0
+              {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -6, "ease": "inout2"},
               {"t": t_weave, "target": [TX, 0, 0], "el": 70, **MK, "dist": 6, "az": -3, "ease": "in2"}],   # down into the scar
     "weave": [{"t": t_weave, "target": [WX, -60, 0], "el": 55, **WK, "dist": 700, "az": -20},   # from above the surface, through it...
               {"t": CUE["collagen"], "target": [WX, -130, 0], "el": 22, **WK, "dist": 1250, "az": -26, "ease": "inout2"},   # ...to the weave
               {"t": CUE["cut"], "target": [WX, -130, 0], "el": 26, **WK, "dist": 1350, "az": -20, "ease": "sine"},
               {"t": CUE["glands"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1250, "az": -14, "ease": "inout2"},
               {"t": B["why"]["t0"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1300, "az": -12, "ease": "sine"}],
-    "test": [{"t": B["why"]["t0"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1300, "az": -12},
-             {"t": B["whoa"]["t0"], "target": [WX + 40, -130, 0], "el": 22, **WK, "dist": 1500, "az": -6, "ease": "sine"}],
+    "test": [{"t": B["why"]["t0"], "target": [WX, -150, 0], "el": 28, **WK, "fy": 0.5, "dist": 1300, "az": -12},
+             {"t": B["whoa"]["t0"], "target": [WX, -150, 0], "el": 20, **WK, "fy": 0.5, "dist": 1000, "az": -6, "ease": "inout2"}],   # a slow push while it is pulled
     "fetal": [{"t": B["whoa"]["t0"], "target": [FX, -110, 0], "el": 26, **WK, "dist": 1100, "az": -14},
               {"t": CUE["after"], "target": [FX, -110, 0], "el": 24, **WK, "dist": 1000, "az": -6, "ease": "inout2"},
               {"t": B["toscale"]["t0"], "target": [FX, -110, 0], "el": 22, **WK, "dist": 1050, "az": -4, "ease": "sine"}],
-    "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -100, 0], "el": 12, "fov": 30, "fx": 0.68, "fy": 0.46, "dist": 1300, "az": -8},
-              {"t": B["takeaway"]["t0"], "target": [WX, -100, 0], "el": 10, "fov": 30, "fx": 0.7, "fy": 0.46, "dist": 1200, "az": -6, "ease": "sine"}],
-    "uv": [{"t": B["takeaway"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 24, "az": 1},
-           {"t": B["tease"]["t1"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 31, "az": -3, "ease": "sine"}],
+    "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1300, "az": -8},   # the section low in frame, the card above it
+              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1200, "az": -6, "ease": "sine"}],
+    "uv": [{"t": B["takeaway"]["t0"], "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 17, "az": 1},
+           {"t": B["tease"]["t1"], "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -77,8 +77,11 @@ LABELS = [
     {"id": "l-scar", "text": "an old scar", "kind": "cell", "anchor": "scar", "t0": 0.0, "t1": t_weave, "shot": "macro", "side": 1, "v": "above", "fixed": True},
     {"id": "l-col", "text": "collagen", "kind": "cell", "anchor": "weave", "t0": CUE["collagen"], "t1": CUE["cut"] - 0.3, "shot": "weave", "side": -1, "v": "above", "fixed": True},
     {"id": "l-patch", "text": "the patch: all one way", "kind": "water", "anchor": "gap", "t0": CUE["side"], "t1": B["why"]["t0"], "shot": "weave", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-app", "text": "follicles, glands: not inside", "kind": "cell", "anchor": "app", "t0": CUE["leaves"], "t1": B["why"]["t0"], "shot": "weave", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-app", "text": "follicles, glands: none inside", "kind": "cell", "anchor": "app", "t0": CUE["leaves"], "t1": B["why"]["t0"], "shot": "weave", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-fetal", "text": "fetal skin", "kind": "layer", "anchor": "fside", "t0": B["whoa"]["t0"] + 0.3, "t1": B["toscale"]["t0"], "shot": "fetal", "side": -1, "v": "above", "fixed": True},
     {"id": "l-fol", "text": "follicles regrow", "kind": "cell", "anchor": "fgap", "t0": CUE["follicles"] - 0.2, "t1": CUE["after"] - 0.3, "shot": "fetal", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-fpatch", "text": "later: a patch", "kind": "water", "anchor": "fgap", "t0": CUE["patches5"] - 0.2, "t1": B["toscale"]["t0"], "shot": "fetal", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-top", "text": "the top layer", "kind": "water", "anchor": "top", "t0": CUE["top"] - 0.2, "t1": B["takeaway"]["t0"], "shot": "gauge", "side": 1, "v": "below", "fixed": True},
     {"id": "l-seam", "text": "a seam: no pores", "kind": "water", "anchor": "uvscar", "t0": CUE["repair"] - 0.3, "t1": t_end, "shot": "uv", "side": 1, "v": "above", "fixed": True},
 ]
 BADGES = [
@@ -91,11 +94,12 @@ BADGES = [
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
-    {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] - 0.4, "t1": CUE["collagen"] - 0.5},
-    {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["patches"] - 0.4},
+    {"id": "c-q", "label": "before ≈ 24 weeks", "text": "no scar", "t0": CUE["closer"] - 0.4, "t1": t_weave},
+    {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["cut"] - 0.3},
     {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": B["why"]["t0"]},
     {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
-    {"id": "c-wk", "label": "before about", "text": "24 weeks", "t0": CUE["sixth"] - 0.2, "t1": B["toscale"]["t0"]},
+    {"id": "c-wk", "label": "scarless before", "text": "≈ 22–24 wk", "t0": CUE["sixth"] - 0.2, "t1": CUE["after"] - 0.2},
+    {"id": "c-after", "label": "after that", "text": "patched", "t0": CUE["patches5"] - 0.1, "t1": B["toscale"]["t0"]},
     {"id": "c-final", "label": "a scar", "text": "a repair", "t0": CUE["repair"] + 0.2, "t1": t_end - 0.5},
 ]
 for c in COUNTERS:
@@ -115,15 +119,15 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
 
 # the scar story's keys (scene.mjs reads them)
 KEYS = {"tug1": [CUE["gives"] - 0.2, CUE["gives"] + 0.6], "tug2": [CUE["pulled"] - 0.3, CUE["pulled"] + 0.6], "cut": [CUE["cut"] - 0.1, CUE["cut"] + 0.7],
-        "patch": [CUE["laying"] - 0.2, CUE["glands"] - 0.4], "glow": [CUE["side"] - 0.4, CUE["side"] + 0.4], "meter": [CUE["pulled4"] - 0.3, CUE["four"] + 0.4],
+        "patch": [CUE["laying"] - 0.2, CUE["glands"] - 0.4], "glow": [CUE["side"] - 0.4, CUE["side"] + 0.4], "meter": [CUE["healed"] - 0.2, CUE["four"] + 0.4],
         "stretch": [CUE["pulled4"] - 0.3, CUE["tears"] + 0.3], "fcut": [B["whoa"]["t0"] + 0.4, CUE["sixth"]], "regrow": [CUE["regrows"] - 0.3, CUE["follicles"] + 0.6],
-        "fpatch": [CUE["after"] - 0.1, CUE["patches5"] + 0.2], "scar": [CUE["repair"] - 0.6, CUE["repair"] + 0.4]}
+        "fpatch": [CUE["after"] - 0.1, CUE["patches5"] + 1.2], "tear": [CUE["tears"] - 0.2, CUE["tears"] + 0.5], "day": [B["takeaway"]["t0"] + 0.3, CUE["repair"] - 0.2], "scar": [CUE["repair"] - 0.6, CUE["repair"] + 0.4]}
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["top"] - 0.3, "paper": CUE["paper"] - 0.2,
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "epi_um": EPI_UM, "paper_um": PAPER_UM}
 STR = {"pct": STRENGTH}
 
 TITLE = {"series": "Outer Layer · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:now?", 0.35)}
-END = {"title": "Next layer: a deadly poison, in a frown. How much goes *in*?", "follow": "Outer Layer · No. 004",
+END = {"title": "Next layer: a poison in a *frown*", "follow": "Outer Layer · No. 004",
        "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."}
 POSTER = A("vo03:side", 0.4)
 

@@ -204,6 +204,11 @@
    "t1": 52.7333
   },
   {
+   "t": 40.433299999999996,
+   "kind": "label",
+   "tag": "l-fetal"
+  },
+  {
    "t": 41.36666666666667,
    "kind": "counter.show",
    "tag": "c-wk",
@@ -227,6 +232,16 @@
    ]
   },
   {
+   "t": 48.46666666666666,
+   "kind": "label",
+   "tag": "l-fpatch"
+  },
+  {
+   "t": 48.56666666666666,
+   "kind": "counter.show",
+   "tag": "c-after"
+  },
+  {
    "t": 52.7333,
    "kind": "section",
    "id": "toscale",
@@ -241,6 +256,11 @@
    "t": 55.0,
    "kind": "scale",
    "tag": "g-epi"
+  },
+  {
+   "t": 55.099999999999994,
+   "kind": "label",
+   "tag": "l-top"
   },
   {
    "t": 56.3,
