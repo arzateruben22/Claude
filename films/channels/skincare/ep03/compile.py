@@ -26,8 +26,8 @@ B = {b["id"]: b for b in BEATS}
 
 # ── the numbers (claims.json) ──────────────────────────────────────────────
 PALM_UM, CHEEK_UM, PAPER_UM = 173.0, 17.0, 100.0     # c9: palm 173 µm, cheek 16.8 µm (Egawa 2007); paper ≈ 100 µm
-WRINKLE = 6.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
-NARROW = 0.42                                        # the vessels narrow to this fraction of their width (illustration)
+WRINKLE = 4.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
+NARROW = 0.6                                         # the vessels narrow to this fraction of their width (illustration)
 assert 1.6 < PALM_UM / PAPER_UM < 1.9                # "nearly two sheets of paper"
 
 # ── shots: one world of two pads in a bath, one push inside, few cuts, each one matched ──────────────────────────────
@@ -45,7 +45,7 @@ CUE = {"swell": [A("vo02:swelling,", -0.3), A("vo02:sponge.", 0.2)], "wrong": A(
        "shrink": [A("vo04:shrinks"), A("vo04:little,", 0.3)], "buckle": [A("vo04:buckles.", -0.6), A("vo04:buckles.", 0.5)],
        "reflex": A("vo05:reflex,"), "argued": A("vo05:argued:"), "grip": A("vo05:grip,"), "none": A("vo05:none."),
        "hairless": A("vo06:hairless"), "thickest": A("vo06:thickest"), "paper": A("vo06:paper."), "soaked": A("vo07:soaked."),
-       "decide": A("vo07:decide"), "found": A("vo05:found")}
+       "decide": A("vo07:decide"), "found": A("vo05:found"), "test": A("vo05:test")}
 
 # ── the camera (the microscope stage) ──────────────────────────────────────────────────────────────────────────────
 PADS = {"target": [0, -20, 0], "el": 20, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 520, "az": -4}
@@ -71,10 +71,11 @@ CAM = {
     # the reflex: the furrowed pad in its bath, marbles on it; an orbit through the grip study; then the pull-back that
     # lifts the gauge card (the pad lower right, clear of the card and above the captions)
     "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},
-               {"t": CUE["argued"], "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -6, "ease": "inout2"},
+               {"t": CUE["test"] + 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 480, "az": -4, "ease": "inout2"},   # the nerve-cut pad beside it: the test
+               {"t": CUE["argued"] + 0.4, "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -6, "ease": "inout2"},
                {"t": CUE["none"] + 0.4, "target": [-40, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
-               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 520, "az": 8, "ease": "inout2"},
-               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 510, "az": 9, "ease": "sine"}],
+               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.78, "fy": 0.36, "dist": 580, "az": 8, "ease": "inout2"},
+               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.78, "fy": 0.36, "dist": 570, "az": 9, "ease": "sine"}],
     "close": [{"t": B["takeaway"]["t0"], **PADS, "dist": 520, "az": -4},
               {"t": B["tease"]["t1"], **PADS, "dist": 560, "az": -8, "ease": "sine"}],
 }
@@ -90,7 +91,8 @@ LABELS = [
     {"id": "l-sponge", "text": "swelling like a sponge?", "kind": "water", "anchor": "ghost", "t0": A("vo02:swelling,"), "t1": CUE["wrong"], "shot": "pads", "side": 1, "v": "below", "fixed": True},
     {"id": "l-nerve", "text": "nerve", "kind": "cell", "anchor": "nerve_l", "t0": A("vo03:finger"), "t1": B["why"]["t0"] - 1.2, "shot": "nerves", "side": -1, "v": "above", "fixed": True},
     {"id": "l-cutn", "text": "nerve cut", "kind": "cell", "anchor": "nerve_r", "t0": CUE["cut"], "t1": B["why"]["t0"] - 1.2, "shot": "nerves", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-vessel", "text": "tiny vessels", "kind": "cell", "anchor": "vessel", "t0": A("vo04:vessels"), "t1": CUE["shrink"][0] - 0.3, "shot": "inside", "side": -1, "fixed": True},
+    {"id": "l-vessel", "text": "tiny vessels", "kind": "cell", "anchor": "vessel", "t0": A("vo04:vessels"), "t1": CUE["narrow"][1] - 0.3, "shot": "inside", "side": -1, "fixed": True},
+    {"id": "l-cutr", "text": "nerve cut: stays smooth", "kind": "cell", "anchor": "cutpad", "t0": CUE["test"] + 0.2, "t1": CUE["argued"] - 0.2, "shot": "reflex", "side": 1, "v": "above", "fixed": True},
     {"id": "l-tip-c", "text": "fingertip", "kind": "layer", "anchor": "tip", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": -1, "v": "above", "fixed": True},
     {"id": "l-arm-c", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
 ]
@@ -98,13 +100,13 @@ BADGES = [
     {"id": "b-simp-h", "text": "simplified", "t0": B["normal"]["t0"] - 0.6, "t1": t_end, "slot": "tr"},   # the whole film after the title
     {"id": "b-wrong", "text": "not what happens", "t0": CUE["wrong"], "t1": A("vo03:Almost", -0.15), "slot": "tl"},
     {"id": "b-1930", "text": "Lewis & Pickering, 1930s", "t0": A("vo03:doctors"), "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-ws", "text": "Wilder-Smith 2003 · sped up", "t0": A("vo04:narrow"), "t1": B["whoa"]["t0"], "slot": "bl"},   # under the vessels, above the captions
-    {"id": "b-trigger", "text": "the trigger: still studied", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "br"},
+    {"id": "b-ws", "text": "Wilder-Smith 2003 · sped up", "t0": A("vo04:narrow"), "t1": B["whoa"]["t0"], "slot": "tl"},   # under the vessels, above the captions
+    {"id": "b-trigger", "text": "trigger: still studied", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-debated", "text": "debated", "t0": CUE["argued"], "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-studies", "text": "Kareklas 2013 · Haseleu 2014", "t0": CUE["found"] - 0.4, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-palm", "text": "Egawa 2007", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
 ]
-SPINE = [0.34, 0.215]
+SPINE = [0.31, 0.215]
 COUNTERS = [   # one readout through the film (WRITING.md, The picture, rule 2)
     {"id": "c-q", "label": "wet fingertip vs forearm", "fmt": "text", "text": "why?", "t0": B["normal"]["t0"] + 0.1, "t1": A("vo03:Almost", -0.55), "at": SPINE},
     {"id": "c-1930", "label": "a finger with a cut nerve", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.45, "at": SPINE},
@@ -139,7 +141,7 @@ glue(f, {"vo01": ["wet fingers", "the same bath."], "vo02": ["soaking up water",
          "vo03": ["Almost a century ago,", "doctors noticed", "something odd:", "had been cut", "in the bath."],
          "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad shrinks", "a little, and", "the skin", "on top"],
          "vo05": ["a reflex,", "one doctors use", "test a nerve.", "a wet grip,", "found none."],
-         "vo06": ["hairless skin", "of hands and feet,", "the thickest dead layer,", "nearly two sheets", "of paper."],
+         "vo06": ["hairless skin", "of hands and feet,", "the thickest", "dead layer, nearly", "two sheets of paper."],
          "vo07": ["don't wrinkle", "because they're soaked.", "decide to."], "vo08": ["your skin?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 

@@ -284,12 +284,12 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
 
 // vessels (No. 003): a few small blood vessels running along the upper dermis, just behind the cut face; their radius is
 // set per frame (they narrow when the nerves tell them to). A muted brick red: not the body channel's blood pink.
-export const createVessels = ({ x: [xa, xb] = [-80, 80], ys = [-92, -100, -110], z = 20, r = 2.4, ox = 0 } = {}) => {
+export const createVessels = ({ x: [xa, xb] = [-80, 80], ys = [-92, -100, -110], z = 20, r = 2.4, ox = 0, dz = 3 } = {}) => {   // dz: each deeper vessel set back (0 keeps all on the cut face as they narrow; No. 003)
   const mat = new THREE.MeshStandardMaterial({ color: 0xa8584e, roughness: 0.45, metalness: 0 });
   const group = new THREE.Group();
   const curves = ys.map((y, i) => {
     const pts = [];
-    for (let k = 0; k <= 24; k++) { const x = xa + (xb - xa) * k / 24; pts.push(new THREE.Vector3(ox + x, y + 2.5 * Math.sin(x / 13 + i * 1.7), z - i * 3)); }
+    for (let k = 0; k <= 24; k++) { const x = xa + (xb - xa) * k / 24; pts.push(new THREE.Vector3(ox + x, y + 2.5 * Math.sin(x / 13 + i * 1.7), z - i * dz)); }
     return new THREE.CatmullRomCurve3(pts);
   });
   const tubes = curves.map((c) => { const m = new THREE.Mesh(new THREE.TubeGeometry(c, 48, r, 12, false), mat); group.add(m); return m; });
@@ -347,8 +347,8 @@ export const createPad = ({ width = 70, depth = 46, height = 60, x = 0, seed = 1
         const edge = Math.min(1, (width / 2 - Math.abs(bx)) / 10) * Math.min(1, (depth / 2 - Math.abs(bz)) / 10);
         const fold = amp * furrows * (0.5 - 0.5 * Math.cos(2 * Math.PI * bx / period + ph)) * Math.max(0, edge);   // soft, even folds
         const e2 = Math.min(1, (width / 2 - Math.abs(bx)) / 18) * Math.min(1, (depth / 2 - Math.abs(bz)) / 18);
-        const round = 14 * (1 - Math.sqrt(Math.max(0, e2)));          // the pad's rounded shoulders
-        const crown = 7 * (1 - (2 * bx / width) ** 2) * (1 - (2 * bz / depth) ** 2);   // a domed top, like a fingertip's pulp
+        const round = 8 * (1 - Math.sqrt(Math.max(0, e2)));          // the pad's rounded shoulders
+        const crown = 3 * (1 - (2 * bx / width) ** 2) * (1 - (2 * bz / depth) ** 2);   // a domed top, like a fingertip's pulp
         pos.setY(i, by + top * (height * 0.12 * swell - fold - round * top + crown * top * top));
         // rounded vertical edges (radius 12 µm): the corner columns pulled onto a quarter circle
         const rc = 12, dx = Math.abs(bx) - (width / 2 - rc), dz = Math.abs(bz) - (depth / 2 - rc);
