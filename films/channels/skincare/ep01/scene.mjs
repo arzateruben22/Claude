@@ -53,7 +53,7 @@ const climber = createClimber();
 scene.add(climber.group);
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
 // the water is the subject when it's named: large, glowing beads (the review: 3–5 px specks didn't read)
-const beadsS = createBeads({ n: 60, x: [-80, 80], z: [-14, 27], y0: -72, wallY: -BIO.sc_um, seed: 5, size: 6.5 });
+const beadsS = createBeads({ n: 60, x: [-80, 80], z: [-14, 27], y0: -72, wallY: -BIO.sc_um, seed: 5, size: 3.0 });
 beadsS.mesh.renderOrder = 20; beadsS.mesh.material.depthTest = false;   // drawn over the cells: the water is the subject
 // the walls' beads: the same rising water under both; a share passes (left 12%, right 64%: ≈ 5.3×, claims c11); a dense,
 // fast stream from the thin wall against a trickle from the finished one
