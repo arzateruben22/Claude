@@ -191,6 +191,12 @@ records which):
 
 Episode 1 builds the set and the kit pieces; 2–5 reuse them. The long video (vol01) is episodes 1–5.
 
+**Season 2, first idea (the owner's decision, 2 Nov):** **"Walking to the Moon"**, the destination No. 006's end card
+already promises ("Next envelope: walking to the Moon"). Hook: "How long would it take to walk to the Moon?" Answer,
+to be computed in its own calc.py: the Moon's mean distance (about 384,400 km) at a steady walking pace, nonstop and
+then at hours a day like a real hike. Sources it will need: the Moon's mean distance (NASA), a typical walking speed,
+and a human-scale anchor such as the longest walks on record. Nothing is computed yet: no number here is a claim.
+
 ## 9. Risks
 
 - **xkcd's What If?** covered "everybody jump". Our version must be our own: the sum on screen,

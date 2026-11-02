@@ -14,7 +14,7 @@
   (badged). The film never claims what would physically happen to air or ground under such a pour.
 - **The storm column:** the WMO 24-hour record, 1,825 mm at Foc-Foc, Réunion, 7–8 January 1966 (WMO table); drawn to
   scale beside a 1.7 m figure (not to scale with the figure's own body, which is generic).
-- **The tease** ("walking to the Moon") is a next-season idea outside the bible's six; the coordinator and owner may
-  want to change it.
+- **The tease** ("walking to the Moon"): **kept, by the owner's decision (2 Nov).** It is the first season-2 idea in the
+  bible (§8). Nothing to change here.
 - **AI labelling:** "Narration: synthetic voice (AI)" on the post, and the platform's AI-content label.
 - **Pronunciation at T0:** "Amazons", "millimeters".

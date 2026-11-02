@@ -3,7 +3,8 @@
 73.2 s, 9:16. The narrator is synthetic (Kokoro am_puck) and the score is original (studio preset `envelope-working`,
 A lydian at 50 BPM). The bible's backup for idea 6 ("Every cat at once" has no measured meow loudness to stand on).
 It pays off No. 005's tease ("what if a whole day's rain fell in one second?") and ends the season with "Next envelope:
-walking to the Moon".
+walking to the Moon". **Owner's decision (2 Nov): keep the Moon tease**; "Walking to the Moon" is the first season-2
+idea in the bible (§8), so the tease points at a real next episode.
 
 STATUS: delivered. Final in `out/` (qa.py PASS); measured scorecard in `review/scorecard.md`.
 
