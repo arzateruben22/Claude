@@ -1,5 +1,7 @@
 # Project status: four science-video formulas to 100%
 
+> **2 Nov, 00:20 UTC — the owner: "keep going" (after the weekly reset).** All nine sessions were sent CONTINUE. The hourly usage report is re-armed (non-blocking; it pauses only on overage or a live "rejected").
+
 > **30 Oct, 05:27 UTC — the owner: "stop now".** All nine sessions sent PAUSE: commit WIP, kill renders by PID (`--resume` later), cancel check-ins. The hourly usage report is disabled. Resume with CONTINUE to each session in the roster (scratchpad `fleet.json`); the render workers then re-take their jobs.
 
 > **30 Oct, 05:00 UTC — the owner: "full speed on the remaining channels".** Outer Layer and Back of the Envelope run at full speed, eight sessions in all:
