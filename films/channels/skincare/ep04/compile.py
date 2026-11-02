@@ -54,7 +54,7 @@ CUE = {
     "gap": A("vo06:gap"), "thousand": A("vo06:thousand"), "paper": A("vo06:paper."),
     "silence": A("vo07:silence"), "nerve2": A("vo07:nerve"), "endings": A("vo07:endings."),
 }
-SHOTS = [{"at": 0.0, "name": "brow"}, {"at": CUE["nerve"], "name": "below"}, {"at": B["why"]["t0"], "name": "rise"},
+SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["known"], "name": "brow"}, {"at": CUE["nerve"], "name": "below"}, {"at": B["why"]["t0"], "name": "rise"},
          {"at": CUE["guessed"] - 0.1, "name": "below2"}, {"at": B["whoa"]["t0"], "name": "uv"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": CUE["endings"] + 0.5, "name": "close"}]
 
 # ── the camera (orbit keys: target, dist, el, az, fov, fx, fy) ──
@@ -63,8 +63,11 @@ TOPY, BULB, SNAP, CREASE = -18.0, [JX + 4, -10.5, 12], [JX + 4, -16.5, 14.2], [J
 FLY = {"el": 22, "fov": 34, "fx": 0.5, "fy": 0.46}   # high enough that the brow reads: two mounds and the crease between
 CAM = {
     # a low drone pass along the crease (it runs along z at x = 0), dipping toward it before the jump below
-    "brow": [{"t": 0.0, "target": [0, -0.6, 10], "dist": 46, "az": -4, **{**FLY, "el": 34}},
-             {"t": CUE["known"], "target": [0, -0.6, 6], "dist": 38, "az": -2, **{**FLY, "el": 32}, "ease": "sine"},
+    # the hook opens mid-push inside the UV camera: the brow, five cyan points flaring along the crease (a frown dose)
+    "uvhook": [{"t": 0.0, "target": [UX, 0.3, 0], "dist": 30, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.41},
+               {"t": CUE["known"], "target": [UX, 0.4, 0], "dist": 22, "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.41, "ease": "linear"}],
+    # on "known", the signature switch to daylight: the same brow, still pushing
+    "brow": [{"t": CUE["known"], "target": [0, -0.6, 8], "dist": 40, "az": -3, **{**FLY, "el": 33}},
              {"t": CUE["nerve"], "target": [0, -1.2, 0], "dist": 12, "az": 0, "el": 34, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
     # the junction: the crease where the brow left it (match), then down to the nerve ending and its messenger, back out
     # for the pull, then into the bulb for the change
@@ -136,6 +139,7 @@ PLATES = {
     "dose": {"t0": CUE["hundredth"] - 0.5, "t1": B["toscale"]["t0"] - 0.3, "frown": CUE["whole"], "kill": CUE["kill"],
              "frown_u": FROWN_U, "lethal_u": LETHAL_U, "sites": SITES},
     # no daylight strip here: a tone strip under a lethal-dose line would pair tones with a risk (bible §1)
+    "vfhook": {"t0": 0.0, "t1": CUE["known"]},
     "viewfinder": {"t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "sites": CUE["howmuch"] - 0.2},
 }
 CUTS = [sh["at"] for sh in SHOTS[1:]]
@@ -193,6 +197,7 @@ for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
+    {"t": CUE["known"], "kind": "cell.land", "tag": "shutter-0"},
     {"t": CUE["nerve"], "kind": "scale.jump", "tag": "below"},
     {"t": J["puff"][0], "kind": "diffuse", "tag": "messenger"},
     {"t": J["cut"][0], "kind": "zap", "tag": "cut"},

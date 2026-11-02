@@ -103,6 +103,7 @@ endEl.style.transform = "translateY(-22vmin)";                              // t
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.18, 0.33] });   // under the spine readout, clear of it
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 { const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.5vmin 1.2vmin;border-radius:1vmin}.ol-vf .rec{top:auto!important;bottom:1.6vmin!important}";   /* REC at the bottom: the spine readout owns the top right */ document.head.appendChild(st); }   // the viewfinder's words on chips: ≥ 4.5:1 over the glowing skin
+const vfH = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.24, w: 0.8, h: 0.34 });   // the hook's, larger: the brow fills it
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.19 });
 // plates: violet cards in the theme's tokens (text on them ≥ 4.5:1)
 const plate = (html, css) => {
@@ -144,10 +145,10 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const P0 = rig.place(camera, shot, t);
-  const fly = ["brow", "rise", "close"].includes(shot), isJ = ["below", "below2", "gauge"].includes(shot), isU = shot === "uv";
+  const fly = ["brow", "rise", "close"].includes(shot), isJ = ["below", "below2", "gauge"].includes(shot), isU = shot === "uv" || shot === "uvhook";
   T.group.visible = fly; JN.group.visible = isJ; UVS.mesh.visible = isU;
   scene.fog = fly ? FOG : null;
-  T.group.scale.y = shot === "brow" ? 0.55 + 0.45 * E.inout2(seg(t, 0, 1.2)) : shot === "close" ? 0.55 + 0.45 * E.inout2(seg(t, SH.close, SH.close + 1.0)) : 1;   // the frown sets (on "frown"; and again as the message returns)
+  T.group.scale.y = shot === "brow" ? 0.55 + 0.45 * E.inout2(seg(t, SH.brow, SH.brow + 1.0)) : shot === "close" ? 0.55 + 0.45 * E.inout2(seg(t, SH.close, SH.close + 1.0)) : 1;   // the frown sets (on "frown"; and again as the message returns)
   focus = fly ? { point: P0.target, fstop: 0.3 } : { point: P0.target, fstop: 0 };
 
   // ── the junction: the message crosses and the muscle pulls; the toxin cuts; the message stays; new endings ──
@@ -168,10 +169,12 @@ window.seek = function (t) {
 
   // ── the reveal: the brow in UV; the five points of a frown dose light; the daylight strip, then the dose plate ──
   if (isU) {
-    UVS.set({ damage: 0.25, glow: 1, opacity: fadeIn(t, SH.uv, 0.12) });
-    siteMat.opacity = fadeIn(t, P.viewfinder.sites, 0.5) * (0.85 + 0.15 * Math.sin(t * 3));
+    UVS.set({ damage: 0.25, glow: 1, opacity: shot === "uv" ? fadeIn(t, SH.uv, 0.12) : 1 });
+    siteMat.opacity = (shot === "uvhook" ? 0.6 + 0.4 * fadeIn(t, 0.2, 0.6) : fadeIn(t, P.viewfinder.sites, 0.5)) * (0.85 + 0.15 * Math.sin(t * 3));   // the hook: the points already flaring
   }
-  vf.set({ op: isU ? win(t, P.viewfinder.t0, P.viewfinder.t1, 0.25) : 0, left: "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
+  const vw = shot === "uvhook" ? P.vfhook : P.viewfinder;
+  vfH.set({ op: shot === "uvhook" ? 1 - fadeIn(t, vw.t1 - 0.2, 0.2) : 0, left: "model, not a photo", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
+  vf.set({ op: shot === "uv" ? win(t, vw.t0, vw.t1, 0.25) : 0, left: "", right: "", blink: 0.6 + 0.4 * (Math.floor(t * 1.5) % 2) });
   const dOp = isU ? win(t, D.t0, D.t1) : 0;
   show(dose, dOp);
   b1.style.width = `${Math.max(0.35, BAR * frac * fadeIn(t, D.frown, 0.4)).toFixed(3)}vmin`;   // a sliver (drawn ≥ 0.35 vmin so it shows at all)
@@ -191,7 +194,7 @@ window.seek = function (t) {
 
   // ── the veil: three frames of the ground on each scale jump; the scene fades toward the ground before the end card ──
   let step = 0;
-  for (const c of [SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
+  for (const c of [SH.brow, SH.below, SH.rise, SH.below2, SH.uv, SH.gauge]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
   const end = 0.6 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));   // the hook's brow stays readable behind the card (the loop)
   veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
 

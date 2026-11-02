@@ -30,7 +30,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep04 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: a macro flight low over a brow at golden hour (light tone), the skin's fine diamond grid, one deep frown crease running away from the camera · spine: one frown's dose: ? · badge: model, not a photo · title: "The deadliest dose" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+## hook {shot: frame 0, mid-push inside the UV camera: the brow at 365 nm, five cyan points flaring along the crease (a frown dose), "model, not a photo" in the viewfinder; on "known" the signature switch to daylight: the same brow (light tone), eyebrows, one deep frown crease, the frown setting · spine: one frown's dose: ? · badge: model, not a photo · title: "The deadliest dose" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
 vo: Poison, in a *frown*? {-} Among the most poisonous substances known, by the nanogram. {c7}
 
 ## normal {shot: the flight dips toward the crease; on "nerve" a scale jump below the surface (match cut on the crease): the cut face in the same warm light, skin on top, muscle fibres below, one nerve ending on the top fibre; on "messenger" a cyan puff crosses the gap; on "pulls" the fibres shorten and the crease above folds · badge: simplified · picture-only 0.5 s · energy: 0.45} (5–17 s)
