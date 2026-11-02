@@ -102,7 +102,7 @@ LABELS = [
 BADGES = [
     {"id": "b-model-h", "text": "model: one UVB band", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "br"},   # bottom right in the hook: the title owns the top
     {"id": "b-model", "text": "model: one UVB band", "t0": B["normal"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-test", "text": "test layer · 2 mg/cm²", "t0": A("vo04:as"), "t1": B["whoa"]["t0"], "slot": "tr"},
+    {"id": "b-test", "text": "test layer · 2 mg/cm²", "t0": A("vo04:as"), "t1": B["whoa"]["t0"], "slot": "bl"},
     {"id": "b-studies", "text": "Petersen & Wulf, 2014", "t0": A("vo05:studies"), "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-debated", "text": "illustration · debated", "t0": t_fall0, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-model-c", "text": "model: one UVB band", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
