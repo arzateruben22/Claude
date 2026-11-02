@@ -20,7 +20,7 @@ export const createDNA = ({ bp = 28, rise = 3.4, radius = 10, twist = 36, x = 30
   g.position.x = x;
   const L = (bp - 1) * rise, x0 = -L / 2, tw = (twist * Math.PI) / 180;
   // a fixed, readable sequence with the two thymines that fuse at fuseAt, fuseAt + 1 on strand 1
-  const seq = "GATCCAGTACGTTAGCATCGGATCAATGCA".slice(0, bp).split("");
+  const seq = "GATCCAGTACGTTAGCATCGGATCAATGCACTGAAGTCCATGCAAGTGC".slice(0, bp).split("");
   seq[fuseAt] = "T"; seq[fuseAt + 1] = "T";
   const P = (i, s) => { const a = i * tw + (s ? Math.PI * 0.82 : 0); return new THREE.Vector3(x0 + i * rise, radius * Math.cos(a), radius * Math.sin(a)); };
   const backMat = new THREE.MeshStandardMaterial({ color: 0x31434a, roughness: 0.45, metalness: 0 });

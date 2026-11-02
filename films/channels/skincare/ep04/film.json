@@ -224,7 +224,7 @@
     "el": 6,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.44,
+    "fy": 0.38,
     "dist": 260,
     "az": -5,
     "ease": "in2"
@@ -241,7 +241,7 @@
     "el": 8,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
+    "fy": 0.38,
     "dist": 330,
     "az": 18
    },
@@ -356,8 +356,22 @@
    {
     "t": 26.1333,
     "target": [
+     -36,
+     -76,
+     18
+    ],
+    "el": 9,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 300,
+    "az": 3
+   },
+   {
+    "t": 27.8,
+    "target": [
      0,
-     -44,
+     -46,
      0
     ],
     "el": 12,
@@ -365,7 +379,8 @@
     "fx": 0.5,
     "fy": 0.42,
     "dist": 720,
-    "az": 0
+    "az": 2,
+    "ease": "inout2"
    },
    {
     "t": 28.5,
@@ -400,15 +415,15 @@
    {
     "t": 34.0,
     "target": [
-     -18,
-     -58,
-     8
+     -36,
+     -80,
+     20
     ],
-    "el": 10,
+    "el": 9,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 540,
+    "fy": 0.4,
+    "dist": 300,
     "az": 4,
     "ease": "inout2"
    }
@@ -455,7 +470,7 @@
     "el": 9,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.4,
+    "fy": 0.42,
     "dist": 330,
     "az": 2
    },
@@ -659,28 +674,7 @@
   ],
   "n": 12
  },
- "trans": [
-  {
-   "t": 11.5,
-   "kind": "iris"
-  },
-  {
-   "t": 16.3333,
-   "kind": "iris"
-  },
-  {
-   "t": 26.1333,
-   "kind": "dip"
-  },
-  {
-   "t": 34.0,
-   "kind": "dip"
-  },
-  {
-   "t": 38.7333,
-   "kind": "dip"
-  }
- ],
+ "trans": [],
  "labels": [
   {
    "id": "l-cap-h",
@@ -1011,7 +1005,7 @@
  "end": {
   "title": "Next layer: who has more pigment cells, the darkest skin or the *lightest*?",
   "follow": "Outer Layer · No. 005",
-  "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007)."
+  "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007). Narration: synthetic voice (AI)."
  },
  "captions": [
   {

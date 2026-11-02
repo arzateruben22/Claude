@@ -81,10 +81,10 @@ CAM = {
     "section": [
         {"t": B["normal"]["t0"], "target": [0, -36, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 560, "az": -14},
         {"t": CUE["living"], "target": [0, -36, 10], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 300, "az": -8, "ease": "inout2"},
-        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 260, "az": -5, "ease": "in2"},
+        {"t": t_jump, "target": [0, -40, 26], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 260, "az": -5, "ease": "in2"},   # the cell rides up above the caption before the cut
     ],
     "dna": [
-        {"t": t_jump, "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 330, "az": 18},
+        {"t": t_jump, "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 330, "az": 18},   # the fused pair lands where the cell was
         {"t": CUE["fuse"], "target": [DNA_X, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 210, "az": 14, "ease": "out2"},
         {"t": B["change"]["t0"], "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 170, "az": 11, "ease": "sine"},
     ],
@@ -96,17 +96,20 @@ CAM = {
         {"t": B["why"]["t0"], "target": [MEL_X, -70, 16], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 270, "az": 3, "ease": "sine"},
     ],
     "pair": [
-        {"t": B["why"]["t0"], "target": [0, -44, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 720, "az": 0},
+        # a match cut: the mice section's pigment cell lands where the last shot's was, then the camera pulls back to the pair
+        {"t": B["why"]["t0"], "target": [-36, -76, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": 3},
+        {"t": CUE["mice"] + 0.5, "target": [0, -46, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 720, "az": 2, "ease": "inout2"},
         {"t": CUE["lacked"], "target": [24, -50, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 560, "az": 3, "ease": "inout2"},
         {"t": CUE["never"] + 0.6, "target": [-6, -54, 0], "el": 11, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 640, "az": 2, "ease": "inout2"},
-        {"t": t_dna2, "target": [-18, -58, 8], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 540, "az": 4, "ease": "inout2"},
+        # and pushes into one of the tanned cells, whose nucleus the next shot opens (a match cut into the DNA)
+        {"t": t_dna2, "target": [-36, -80, 20], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": 4, "ease": "inout2"},
     ],
     "dna2": [
         {"t": t_dna2, "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 230, "az": 12},
         {"t": B["whoa"]["t0"], "target": [DNA_X, 0, 0], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 150, "az": 8, "ease": "sine"},
     ],
     "tan": [
-        {"t": B["whoa"]["t0"], "target": [MEL_X, -62, 12], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 330, "az": 2},
+        {"t": B["whoa"]["t0"], "target": [MEL_X, -62, 12], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 330, "az": 2},
         {"t": CUE["nucleus"], "target": [MEL_X, -48, 16], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 310, "az": -2, "ease": "inout2"},
         {"t": t_field, "target": [MEL_X, -46, 18], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": -4, "ease": "sine"},
     ],
@@ -171,10 +174,9 @@ COUNTERS = [
     {"id": "c-spf2", "label": "a whole tan, about", "fmt": "text", "text": "SPF 3–4", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:] if sh["name"] not in ("field", "gauge", "close")]   # those three are camera moves, not cuts
-# how each cut is made: an iris on the two scale jumps (into the nucleus and back out to its cell), a short dip to
-# the slide colour on the others, so no cut jumps the picture's brightness in one frame
-TRANS = [{"t": t_jump, "kind": "iris"}, {"t": B["change"]["t0"], "kind": "iris"}, {"t": B["why"]["t0"], "kind": "dip"},
-         {"t": t_dna2, "kind": "dip"}, {"t": B["whoa"]["t0"], "kind": "dip"}]
+# how each cut is made: a match cut on a sound, the outgoing subject and the incoming one on the same spot of the frame
+# (WRITING.md, the picture: "cut on a sound and keep the subject in the same part of the screen"); no overlays
+TRANS = []
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -193,7 +195,7 @@ GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["wide
 
 TITLE = {"series": "Outer Layer · No. 004", "title": "What a *tan* is", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:shield?", 0.35)}
 END = {"title": "Next layer: who has more pigment cells, the darkest skin or the *lightest*?", "follow": "Outer Layer · No. 005",
-       "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007)."}
+       "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007). Narration: synthetic voice (AI)."}
 
 # the tan's state per shot: tan (caps) and fill/travel (the pigment cell), as functions of the cues in scene.mjs
 POSTER = A("vo05:parasol.", 0.4)          # the caps over the nuclei, the melanocyte's branches full
@@ -239,6 +241,7 @@ ev += [
     {"t": CUE["fuse"], "kind": "zap", "tag": "fuse"},
     {"t": t_jump, "kind": "scale.jump", "tag": "dive"},
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "out"},
+    {"t": t_dna2, "kind": "scale.jump", "tag": "into-again"},
     {"t": CUE["message"], "kind": "diffuse", "tag": "message"},
     {"t": CUE["melanin"], "kind": "reveal", "tag": "melanin"},
     {"t": t_dna2, "kind": "cell.land", "tag": "done"},

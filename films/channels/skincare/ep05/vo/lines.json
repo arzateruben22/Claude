@@ -103,15 +103,15 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: why do we still get goosebumps, with almost no fur?",
+   "text": "Next: skin answers the cold, too. Why goosebumps, with almost no fur?",
    "stars": [
     "fur"
    ],
-   "phonemes": "nˈɛkst: wˌaɪ dˈuː wiː stˈɪl ɡɛt ɡˈuːsbʌmps, wɪð ˈɔːlməʊst nˈəʊ fˈɜː?",
+   "phonemes": "nˈɛkst: skˈɪn ˈansəz ðə kˈəʊld, tˈuː. wˌaɪ ɡˈuːsbʌmps, wɪð ˈɔːlməʊst nˈəʊ fˈɜː?",
    "speed": 0.8,
    "file": "08.wav",
-   "dur": 3.754,
-   "sha256": "bf31e287f853e196a400b29cba2bf87e073a780f1dc526e5afbcccce8ad05774"
+   "dur": 5.141,
+   "sha256": "9d6d01edeb94d5d8d76047e0ff1ed54c7ccfe4cdbfed1084a9869a3ffa2ba657"
   }
  ]
 }

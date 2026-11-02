@@ -1,6 +1,6 @@
 // globe05.js — No. 005's world (films/channels/skincare/set): a small globe for the why beat, a model of the
 // published pattern (Jablonski & Chaplin 2000), badged "model". The surface carries ultraviolet as a violet band,
-// strongest at the equator and fading toward the poles (∝ cos² of latitude, simplified); dots of skin colour fill in
+// strongest at the equator and fading toward the poles (∝ cos⁶ of latitude, simplified); dots of skin colour fill in
 // across it, each dot's melanin following the UV where it sits plus a little seeded spread, so the two visibly
 // match. No continents are drawn and no dot stands for a people: it is the shape of the relation, not a map.
 //
@@ -39,10 +39,10 @@ export const createGlobe = ({ x = 5000, r = 60, seed = 51, n = 140, uvHex = "#9C
   while (dots.length < n) {
     const lat = Math.asin(2 * R() - 1), lon = R() * Math.PI * 2;
     if (Math.abs(lat) > 1.15) continue;
-    const I = Math.cos(lat) ** 2, m = Math.min(1, Math.max(0, 0.08 + 0.86 * I + (R() - 0.5) * 0.16));
+    const I = Math.cos(lat) ** 4, m = Math.min(1, Math.max(0, 0.04 + 0.94 * I + (R() - 0.5) * 0.12));
     dots.push({ lat, lon, m, k: R() });
   }
-  const dm = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0 });
+  const dm = new THREE.MeshBasicMaterial({ toneMapped: true });   // unlit, so each dot shows its skin colour as is
   const dMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), dm, n);
   const c = new THREE.Color();
   dots.forEach((d, i) => { c.setRGB(...toneColor("living", d.m)); dMesh.setColorAt(i, c); });
@@ -59,7 +59,7 @@ export const createGlobe = ({ x = 5000, r = 60, seed = 51, n = 140, uvHex = "#9C
     set({ uv: u = 1, dots: show = 1, spin: a = 0, dim = 0 } = {}) {
       spin.rotation.y = a;
       for (let i = 0; i < pos.count; i++) {
-        const lat = Math.asin(Math.max(-1, Math.min(1, pos.getY(i) / r))), I = Math.cos(lat) ** 2 * u;
+        const lat = Math.asin(Math.max(-1, Math.min(1, pos.getY(i) / r))), I = Math.cos(lat) ** 6 * u;   // a band: strong at the equator, gone by the poles
         for (let j = 0; j < 3; j++) col[i * 3 + j] = (base[j] + (uv[j] * 0.9 - base[j]) * I * 0.75) * (1 - 0.4 * dim);
       }
       geo.attributes.color.needsUpdate = true;

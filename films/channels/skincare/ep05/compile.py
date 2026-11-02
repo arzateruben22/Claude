@@ -53,7 +53,7 @@ CUE = {
     "dozen": A("vo02:dozen"), "count": A("vo02:Across"), "same": A("vo02:same."), "work": A("vo03:work"), "deeper": A("vo03:deeper"),
     "larger": A("vo03:larger"), "one": A("vo03:one#2"), "why": A("vo04:why"), "nina": A("vo04:Nina"),
     "colour": A("vo04:colour"), "sunlight": A("vo04:sunlight,"), "matched": A("vo04:matched."),
-    "idea": A("vo05:idea:"), "fierce": A("vo05:fierce"), "folate": A("vo05:folate."), "weak": A("vo05:weak"), "vitd": A("vo05:vitamin"),
+    "idea": A("vo05:idea:"), "fierce": A("vo05:fierce"), "folate": A("vo05:folate."), "weak": A("vo05:weak"), "vitd": A("vo05:vitamin#2"),
     "apart": A("vo06:apart."), "third": A("vo06:third"), "paper": A("vo06:paper's"), "none": A("vo07:None"), "sky": A("vo07:sky."),
 }
 
@@ -67,7 +67,7 @@ CAM = {
         {"t": B["normal"]["t0"], **HOOK, "dist": 620, "az": -7, "ease": "sine"},
         {"t": CUE["feeds"], "target": [0, -66, 12], "el": 9, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 560, "az": -5, "ease": "inout2"},
         {"t": CUE["count"], "target": [0, -76, 14], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 520, "az": -2, "ease": "inout2"},
-        {"t": B["change"]["t0"], "target": [-16, -78, 20], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 300, "az": 0, "ease": "in2"},
+        {"t": B["change"]["t0"], "target": [-16, -78, 20], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 300, "az": 0, "ease": "in2"},
     ],
     "grains": [
         {"t": B["change"]["t0"], "target": [GX, 0, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 560, "az": -4},
@@ -78,15 +78,17 @@ CAM = {
     "globe": [{"t": B["why"]["t0"], "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 560, "az": 0},
               {"t": CUE["matched"], "target": [WX, 0, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": 0, "ease": "inout2"},
               {"t": B["whoa"]["t0"], "target": [WX + 30, -5, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 380, "az": 0, "ease": "in2"}],
-    "skies": [{"t": B["whoa"]["t0"], **WIDE, "dist": 700, "az": -6},
-              {"t": CUE["weak"], **WIDE, "dist": 660, "az": 2, "ease": "inout2"},
-              {"t": B["toscale"]["t0"], **WIDE, "dist": 640, "az": 6, "ease": "sine"}],
+    # skies: the eye walks from the fiercest sky (deep, right) to the weakest (light, left); all three stay in frame
+    "skies": [{"t": B["whoa"]["t0"], **WIDE, "dist": 790, "az": -4},
+              {"t": CUE["folate"], "target": [16, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 720, "az": 2, "ease": "inout2"},
+              {"t": CUE["vitd"], "target": [-12, -50, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 740, "az": -2, "ease": "inout2"},
+              {"t": B["toscale"]["t0"], **WIDE, "dist": 790, "az": 0, "ease": "inout2"}],
     # to scale: the cards lift into the empty upper left; the camera drops the sections lower in frame
-    "gauge": [{"t": B["toscale"]["t0"], **WIDE, "dist": 640, "az": 6},
-              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 780, "az": 3, "ease": "inout2"},
-              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 760, "az": 0, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.64, "fy": 0.34, "dist": 760, "az": 0},
-              {"t": B["takeaway"]["t0"] + 1.6, **HOOK, "dist": 640, "az": -6, "ease": "inout2"},
+    "gauge": [{"t": B["toscale"]["t0"], **WIDE, "dist": 790, "az": 0},
+              {"t": B["toscale"]["t0"] + 1.2, "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 1000, "az": 2, "ease": "inout2"},   # under the lifted card, clear of it
+              {"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 980, "az": 0, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], "target": [0, -56, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.52, "dist": 980, "az": 0},
+              {"t": B["takeaway"]["t0"] + 1.0, **HOOK, "dist": 640, "az": -3, "ease": "inout2"},
               {"t": B["tease"]["t1"], **HOOK, "dist": 680, "az": -10, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
@@ -98,7 +100,7 @@ for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4�
 COUNT_T = [round(CUE["count"] + 0.45 * k, 4) for k in range(2)]   # the two pigment cells per section light in turn
 LABELS = [
     {"id": "l-pig-h", "text": "pigment cells", "kind": "cell", "anchor": "mel1", "t0": CUE["pigment"] + 0.2, "t1": CUE["feeds"], "shot": "trio", "side": 1},
-    {"id": "l-g-light", "text": "small, in clusters", "kind": "cell", "anchor": "g0", "t0": CUE["work"] + 0.3, "t1": CUE["larger"] - 0.6, "shot": "grains", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-g-light", "text": "small, in clusters", "kind": "cell", "anchor": "g0", "t0": CUE["work"] + 0.3, "t1": CUE["deeper"], "shot": "grains", "side": -1, "v": "above", "fixed": True},
     {"id": "l-g-deep", "text": "larger, one by one", "kind": "cell", "anchor": "g2", "t0": CUE["larger"], "t1": B["why"]["t0"], "shot": "grains", "side": 1, "v": "above", "fixed": True},
     {"id": "l-uv", "text": "ultraviolet, strongest here", "kind": "uv", "anchor": "band", "t0": CUE["sunlight"], "t1": B["whoa"]["t0"], "shot": "globe", "side": 1},
     {"id": "l-folate", "text": "folate, kept safe", "kind": "cell", "anchor": "folate", "t0": CUE["folate"] - 0.4, "t1": B["toscale"]["t0"], "shot": "skies", "side": 1},
@@ -113,20 +115,20 @@ BADGES = [
     {"id": "b-jc", "text": "Jablonski & Chaplin, 2000", "t0": CUE["colour"], "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-hyp", "text": "hypothesis", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-est", "text": "estimate", "t0": CUE["third"], "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-simp-z", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
+    {"id": "b-simp-z", "text": "simplified", "t0": B["takeaway"]["t0"] + 0.6, "t1": t_end, "slot": "tr"},
 ]
 SPINE = [0.6, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
 COUNTERS = [
-    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": SPINE},
+    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] + 0.3, "t1": CUE["dozen"] - 0.4, "at": [0.36, 0.19]},
+    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": [0.36, 0.19]},
     {"id": "c-same", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": CUE["same"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
-    {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["matched"] - 0.4, "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-end", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": B["takeaway"]["t0"] + 1.2, "t1": t_end, "at": SPINE},
+    {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["colour"], "t1": B["toscale"]["t0"], "at": SPINE},
+    {"id": "c-end", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": B["takeaway"]["t0"] + 1.2, "t1": t_end - 0.7, "at": SPINE},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 # the three scale jumps are irises (into a pigment cell; out of the grains to the globe; from the globe's band back to
 # the sections); the gauge and close shots are the same place, reached by camera moves, not cuts
-TRANS = [{"t": B["change"]["t0"], "kind": "iris", "from": "mel1"}, {"t": B["why"]["t0"], "kind": "iris", "from": "g1"},
-         {"t": B["whoa"]["t0"], "kind": "iris", "from": "band"}]
+TRANS = []   # match cuts on a sound (scale.jump): the outgoing subject and the incoming one share a spot in the frame
 
 
 def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
@@ -146,13 +148,13 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE
          "sc_um": GAP_UM, "paper_um": PAPER_UM, "bar": "gap"}
 
 TITLE = {"series": "Outer Layer · No. 005", "title": "Same cells, every *colour*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cells?", 0.35)}
-END = {"title": "Next layer: why do we still get goosebumps, with almost no *fur*?", "follow": "Outer Layer · No. 006",
+END = {"title": "Next layer: why goosebumps, with almost no *fur*?", "follow": "Outer Layer · No. 006",
        "next": "Same body site, every skin colour: about the same number of pigment cells (≈ 955 per mm², averaged across sites; JAAD meta-analysis, 2017). Narration: synthetic voice (AI)."}
 POSTER = A("vo07:sky.", 0.3)
 
 glue(f, {"vo01": ["pigment cells?", "row by row."], "vo02": ["the darkest.", "a few dozen neighbours.", "about the same."], "vo03": ["the dark melanin,", "one by one."],
-         "vo04": ["Nina Jablonski", "George Chaplin", "set skin colour", "all around the world,"], "vo05": ["a vitamin called folate.", "less of it", "vitamin D."], "vo06": ["a third of a", "paper's thickness apart."],
-         "vo07": ["every colour,", "its own sky."]})
+         "vo04": ["Nina Jablonski", "George Chaplin", "set skin colour", "all around the world,"], "vo05": ["a vitamin called folate.", "less of it", "vitamin D."], "vo06": ["about a third", "of a paper's"],
+         "vo07": ["every colour,", "its own sky."], "vo08": ["the cold, too."]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
@@ -189,8 +191,6 @@ ev += [
     {"t": B["whoa"]["t0"], "kind": "scale.jump", "tag": "back-to-skin"},
     {"t": CUE["matched"], "kind": "cell.land", "tag": "matched"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
-    {"t": CUE["vitd"], "kind": "diffuse", "tag": "vitd"},
-    {"t": CUE["folate"], "kind": "diffuse", "tag": "folate"},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-gap"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
 ]

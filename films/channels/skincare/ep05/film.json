@@ -2,7 +2,7 @@
  "id": "outerlayer-005",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 71.4,
+ "dur": 72.8,
  "poster": 64.16666666666667,
  "shots": [
   {
@@ -83,7 +83,7 @@
   {
    "id": "tease",
    "t0": 65.3333,
-   "t1": 71.4,
+   "t1": 72.8,
    "line": "vo08",
    "energy": 0.35
   }
@@ -93,23 +93,7 @@
   0.5,
   0.9
  ],
- "trans": [
-  {
-   "t": 17.2667,
-   "kind": "iris",
-   "from": "mel1"
-  },
-  {
-   "t": 27.0667,
-   "kind": "iris",
-   "from": "g1"
-  },
-  {
-   "t": 37.8,
-   "kind": "iris",
-   "from": "band"
-  }
- ],
+ "trans": [],
  "bio": {
   "sc_um": 17.0,
   "rows": 15,
@@ -198,7 +182,7 @@
     "el": 6,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
+    "fy": 0.4,
     "dist": 300,
     "az": 0,
     "ease": "in2"
@@ -323,22 +307,37 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.36,
-    "dist": 700,
-    "az": -6
+    "dist": 790,
+    "az": -4
    },
    {
-    "t": 43.833333333333336,
+    "t": 42.36666666666667,
     "target": [
-     0,
-     -44,
+     16,
+     -50,
      0
     ],
     "el": 12,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.36,
-    "dist": 660,
+    "fy": 0.38,
+    "dist": 720,
     "az": 2,
+    "ease": "inout2"
+   },
+   {
+    "t": 46.3,
+    "target": [
+     -12,
+     -50,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.38,
+    "dist": 740,
+    "az": -2,
     "ease": "inout2"
    },
    {
@@ -352,9 +351,9 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.36,
-    "dist": 640,
-    "az": 6,
-    "ease": "sine"
+    "dist": 790,
+    "az": 0,
+    "ease": "inout2"
    }
   ],
   "gauge": [
@@ -369,8 +368,8 @@
     "fov": 30,
     "fx": 0.5,
     "fy": 0.36,
-    "dist": 640,
-    "az": 6
+    "dist": 790,
+    "az": 0
    },
    {
     "t": 51.6,
@@ -381,10 +380,10 @@
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.64,
-    "fy": 0.34,
-    "dist": 780,
-    "az": 3,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 1000,
+    "az": 2,
     "ease": "inout2"
    },
    {
@@ -396,9 +395,9 @@
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.64,
-    "fy": 0.34,
-    "dist": 760,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 980,
     "az": 0,
     "ease": "sine"
    }
@@ -413,13 +412,13 @@
     ],
     "el": 10,
     "fov": 30,
-    "fx": 0.64,
-    "fy": 0.34,
-    "dist": 760,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 980,
     "az": 0
    },
    {
-    "t": 59.9333,
+    "t": 59.3333,
     "target": [
      0,
      -44,
@@ -430,11 +429,11 @@
     "fx": 0.5,
     "fy": 0.38,
     "dist": 640,
-    "az": -6,
+    "az": -3,
     "ease": "inout2"
    },
    {
-    "t": 71.4,
+    "t": 72.8,
     "target": [
      0,
      -44,
@@ -471,7 +470,7 @@
   "fierce": 39.666666666666664,
   "folate": 42.36666666666667,
   "weak": 43.833333333333336,
-  "vitd": 41.6,
+  "vitd": 46.3,
   "apart": 57.13333333333333,
   "third": 55.266666666666666,
   "paper": 55.86666666666667,
@@ -518,7 +517,7 @@
    "kind": "cell",
    "anchor": "g0",
    "t0": 18.900000000000002,
-   "t1": 22.966666666666665,
+   "t1": 20.566666666666666,
    "shot": "grains",
    "side": -1,
    "v": "above",
@@ -561,7 +560,7 @@
    "text": "vitamin D made",
    "kind": "cell",
    "anchor": "vitd",
-   "t0": 41.6,
+   "t0": 46.3,
    "t1": 50.4,
    "shot": "skies",
    "side": -1
@@ -627,12 +626,24 @@
   {
    "id": "b-simp-z",
    "text": "simplified",
-   "t0": 58.3333,
-   "t1": 65.43333333333334,
+   "t0": 58.9333,
+   "t1": 65.63333333333334,
    "slot": "tr"
   }
  ],
  "counters": [
+  {
+   "id": "c-q",
+   "label": "pigment cells",
+   "fmt": "text",
+   "text": "? · ? · ?",
+   "t0": 4.5,
+   "t1": 11.4,
+   "at": [
+    0.36,
+    0.19
+   ]
+  },
   {
    "id": "c-unit",
    "label": "pigment cell : skin cells",
@@ -641,8 +652,8 @@
    "t0": 11.8,
    "t1": 13.0,
    "at": [
-    0.6,
-    0.215
+    0.36,
+    0.19
    ]
   },
   {
@@ -662,7 +673,7 @@
    "label": "skin colour follows",
    "fmt": "text",
    "text": "UV",
-   "t0": 34.733333333333334,
+   "t0": 31.966666666666665,
    "t1": 50.4,
    "at": [
     0.6,
@@ -675,7 +686,7 @@
    "fmt": "text",
    "text": "≈ 955",
    "t0": 59.533300000000004,
-   "t1": 65.43333333333334,
+   "t1": 64.93333333333334,
    "at": [
     0.6,
     0.215
@@ -689,9 +700,9 @@
   "t1": 3.7,
   "sig": 1.4666666666666666
  },
- "endCard": 65.43333333333334,
+ "endCard": 65.63333333333334,
  "end": {
-  "title": "Next layer: why do we still get goosebumps, with almost no *fur*?",
+  "title": "Next layer: why goosebumps, with almost no *fur*?",
   "follow": "Outer Layer · No. 006",
   "next": "Same body site, every skin colour: about the same number of pigment cells (≈ 955 per mm², averaged across sites; JAAD meta-analysis, 2017). Narration: synthetic voice (AI)."
  },
@@ -1300,7 +1311,7 @@
   },
   {
    "t0": 53.215,
-   "t1": 55.87,
+   "t1": 55.57,
    "lines": [
     [
      [
@@ -1314,32 +1325,38 @@
      [
       "cells",
       53.87
-     ],
-     [
-      "sit",
-      54.555
      ]
     ],
     [
      [
-      "about",
-      54.71
+      "sit",
+      54.555
      ],
      [
-      "a third of a",
-      55.03
+      "about a third",
+      54.71
      ]
     ]
    ]
   },
   {
-   "t0": 55.87,
+   "t0": 55.57,
    "t1": 57.88,
    "lines": [
     [
      [
-      "paper's thickness apart.",
-      55.87
+      "of a paper's",
+      55.57
+     ]
+    ],
+    [
+     [
+      "thickness",
+      56.53
+     ],
+     [
+      "apart.",
+      57.125
      ]
     ]
    ]
@@ -1433,63 +1450,61 @@
    ]
   },
   {
-   "t0": 65.673,
-   "t1": 68.078,
+   "t0": 65.888,
+   "t1": 68.643,
    "lines": [
     [
      [
       "Next:",
-      65.673
+      65.888
      ],
      [
-      "why",
-      66.448
+      "skin",
+      66.383
      ],
      [
-      "do",
-      66.598
-     ],
-     [
-      "we",
-      66.793
+      "answers",
+      66.668
      ]
     ],
     [
      [
-      "still",
-      66.898
-     ],
-     [
-      "get",
-      67.118
-     ],
-     [
-      "goosebumps,",
-      67.378
+      "the cold, too.",
+      67.158
      ]
     ]
    ]
   },
   {
-   "t0": 68.078,
-   "t1": 69.613,
+   "t0": 68.643,
+   "t1": 70.948,
    "lines": [
     [
      [
+      "Why",
+      68.643
+     ],
+     [
+      "goosebumps,",
+      68.673
+     ]
+    ],
+    [
+     [
       "with",
-      68.078
+      69.538
      ],
      [
       "almost",
-      68.153
+      69.603
      ],
      [
       "no",
-      68.528
+      69.973
      ],
      [
       "fur?",
-      68.833
+      70.198
      ]
     ]
    ]
@@ -1548,9 +1563,9 @@
   {
    "id": "vo08",
    "t": 65.63333333333334,
-   "dur": 3.754,
+   "dur": 5.141,
    "file": "vo/08.wav",
-   "text": "Next: why do we still get goosebumps, with almost no fur?"
+   "text": "Next: skin answers the cold, too. Why goosebumps, with almost no fur?"
   }
  ]
 }

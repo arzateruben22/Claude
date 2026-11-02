@@ -1,7 +1,6 @@
 # Outer Layer No. 005: "Same cells, every colour"
 
-71.4 s, 9:16. **Status: draft round 2** (the review's fixes applied: the folate and vitamin D lines rewritten and
-re-voiced, the picture restructured). The final goes to the render worker after the re-score. Narration: synthetic voice
+72.8 s, 9:16. **Status: review passed (draft 5; the compelling-pass scores are in `review/scorecard.md`); final delivered: `out/outerlayer-005-9x16.mp4` (1080×1920, 72.8 s, −14.1 LUFS / −1.9 dBTP, qa.py PASS), `out/outerlayer-005-9x16-youtube.mp4` (1440×2560), poster and contact sheet.** Narration: synthetic voice
 (Kokoro bf_isabella, one speed per line). Score: original (studio preset `outerlayer-slide`). Nothing has been posted.
 
 - Draft preview: `review/outerlayer-005-9x16-draft-preview.mp4` (540×960, 15 fps)

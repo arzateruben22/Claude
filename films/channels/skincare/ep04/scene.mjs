@@ -75,12 +75,24 @@ raysD.group.position.x = BIO.dna_x;
 scene.add(raysS.group, raysP.group, raysD.group);
 const HIDE = { gain: 0 };
 // the DNA ladder (its own place) and the message
-const dna = createDNA({ x: BIO.dna_x, seed: 4 });
+const dna = createDNA({ x: BIO.dna_x, seed: 4, bp: 40, fuseAt: 19 });   // long enough to run past both frame edges
 scene.add(dna.group);
+// a soft halo on the two bases for the first moments of each DNA shot: the point the match cut lands on
+const halo = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: true }));
+halo.renderOrder = 6; scene.add(halo);
 const sig = createSignal({ from: [HC[0], HC[1] - 2, HC[2] + 2], to: mel.at.body(), n: 16 });
 scene.add(sig.mesh);
 
 const rig = createRig(FILM.cam);
+const fusedAt = (tq) => { dna.group.rotation.x = 0.12 * tq; return dna.at.fused(); };
+const SHOT0 = Object.fromEntries(FILM.shots.map((x) => [x.name, x.at]));
+const MATCH = [
+  { t: SHOT0.dna, from: "section", out: () => [HC[0], HC[1], HC[2]], in: fusedAt },
+  { t: SHOT0.cell, from: "dna", out: fusedAt, in: () => [HC[0], HC[1], HC[2]] },
+  { t: SHOT0.pair, from: "cell", out: () => mel.at.body(), in: () => melL.at.body() },
+  { t: SHOT0.dna2, from: "pair", out: () => melL.at.body(), in: fusedAt },
+  { t: SHOT0.tan, from: "dna2", out: fusedAt, in: () => mel.at.body() },
+];
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
@@ -133,6 +145,20 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;   // a frame's motion blur never blends two shots across a cut
   const shot = stage(t).name, tone = FILM.tone[shot];
   rig.place(camera, shot, t);
+  // match cuts: for 0.8 s after a cut the camera turns so the incoming subject sits exactly where the outgoing subject
+  // was on screen in the last frame before the cut, then eases back to its keyed pose (WRITING.md: "cut on a sound and
+  // keep the subject in the same part of the screen"). Both points come from t alone.
+  for (const m of MATCH) {
+    const d = t - m.t;
+    if (d < 0 || d >= 0.8) continue;
+    const t0 = m.t - 1 / FPS, cam0 = rig.frameCamera(camera, m.from, t0);
+    const pOut = project(cam0, m.out(t0), W, H);
+    camera.updateMatrixWorld();
+    const pIn = project(camera, m.in(t), W, H);
+    const w = 1 - E.inout2(d / 0.8), tv = Math.tan((camera.fov * Math.PI / 180) / 2), th = tv * camera.aspect;
+    const yaw = Math.atan(((pIn.x - pOut.x) / W) * 2 * th), pitch = Math.atan(((pIn.y - pOut.y) / H) * 2 * tv);
+    camera.rotateY(-yaw * w); camera.rotateX(-pitch * w); camera.updateMatrixWorld();
+  }
   const inS = ["hook", "section", "cell", "tan", "field", "gauge", "close"].includes(shot);
   const isDNA = shot === "dna" || shot === "dna2", isPair = shot === "pair";
   S.group.visible = mel.group.visible = inS;
@@ -193,17 +219,22 @@ window.seek = function (t) {
     melL.set({ tone: tone + 0.4 * k, fill: Math.min(1, k * 1.6), travel: E.inout2(seg(k, 0.3, 1)), glow: 0.4 });
     melR.set({ tone, fill: 0, travel: 0, glow: 0.4 * (1 - fadeIn(t, CUE.lacked, 0.5)) });
     raysP.set(t, { filmTop: -BIO.sc_um - 4, filmBottom: -BIO.sc_um - 22, pass: 0, gain: fadeIn(t, SH.pair, 0.6) * 0.8, color: UVC, hitColor: HIT });
-    A.pair_l = [PL.group.position.x - 14, 0, 23]; A.pair_r = [PR.group.position.x + 14, 0, 23];
+    A.pair_l = [PL.group.position.x - 14, 0, 23]; A.pair_r = [PR.group.position.x + 14, 0, 23]; A.pair_c = [PL.group.position.x, -50, 23];
   } else raysP.set(t, HIDE);
 
   // ── the DNA ladder: two bases fuse on "fuse"; in dna2 the fused pair is held, lit ──
   if (isDNA) {
     const fuse = shot === "dna" ? E.out3(seg(t, CUE.fuse - 0.1, CUE.fuse + 0.5)) : 1;
-    const glow = shot === "dna" ? Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);
+    const glow = shot === "dna" ? Math.max(0.8 * (1 - fuse), Math.max(0, fuse - 0.6 * fadeIn(t, CUE.dna + 0.6, 0.8)) + 0.4 * fuse) : 0.7 + 0.3 * fadeIn(t, CUE.answering, 0.4);   // a faint glow on the two bases from the cut, so the eye has a target
     dna.set({ fuse, glow, uv: UVC, spin: 0.12 * t, dim: shot === "dna" ? 0.6 * fadeIn(t, CUE.fuse, 0.5) : 0.6 });
     raysD.set(t, { filmTop: 2, filmBottom: -2, pass: 0, gain: shot === "dna" ? 0.9 * (1 - fadeIn(t, CUE.fuse + 0.4, 0.8)) : 0, color: UVC.map((v) => v * 1.4), hitColor: HIT });
     A.dimer = dna.at.fused();
-  }
+    const h0 = shot === "dna" ? SH.dna : SH.dna2, ho = 1 - E.in2(seg(t, h0 + 0.3, h0 + 1.0));
+    halo.position.set(...A.dimer); halo.scale.setScalar(9 + 5 * (1 - ho));
+    halo.material.color.setRGB(...UVC.map((v) => v * 1.8)); halo.material.opacity = 0.55 * ho; halo.visible = ho > 0.01;
+  } else halo.visible = false;
+  if (!A.pair_c) A.pair_c = [PL.group.position.x, -50, 23];
+  if (!isDNA) A.dimer = A.dimer || dna.at.fused();
 
   // ── the depth gauge: attached to the section's left cut edge, lifted to centre for the to-scale beat ──
   const xg = -S.dims.W / 2 + 2, zg = S.dims.D / 2;
@@ -215,22 +246,21 @@ window.seek = function (t) {
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
-  // the transitions. Iris: before the cut a slide-coloured disc grows out of the subject (the followed nucleus, or the
-  // fused bases); after it, a hole opens from the next place's subject, so the eye goes in through one and out of the other
-  let dip = 0, disc = 0, hole = 0;
+  // the transitions (film.json "trans"): an iris from the outgoing subject to the incoming one. Before the cut a
+  // slide-coloured disc grows round the first (to about a third of the frame); after it a disc of the same size sits on
+  // the second and shrinks away, so the frame is never more than about a third covered and the eye has a point to follow
+  let rad = 0, subj = null;
   for (const tr of FILM.trans) {
     const d = t - tr.t;
-    if (tr.kind === "dip") dip = Math.max(dip, 1 - Math.min(1, Math.abs(d) / 0.22));
-    else if (d < 0 && d > -0.35) disc = 0.62 * E.in2(1 + d / 0.35);                 // the disc never quite fills the frame,
-    else if (d >= 0 && d < 0.4) hole = 0.28 + 0.72 * E.out2(d / 0.4);               // and the next place shows at once: no empty frame
+    // on the DNA's side the disc stays small: the ladder sits on the bare slide, and the disc must not hide it
+    if (d < 0 && d > -0.4) { rad = (tr.from === "dimer" ? 16 : 34) * E.in2(1 + d / 0.4); subj = A[tr.from]; }
+    else if (d >= 0 && d < 0.45) { rad = (tr.to === "dimer" ? 16 : 34) * (1 - E.out2(d / 0.45)); subj = A[tr.to]; }
   }
-  if (disc > 0 || hole > 0) {
-    const subj = shot === "section" || shot === "cell" ? [HC[0], HC[1], HC[2]] : dna.at.fused(), p = project(camera, subj, W, H);
-    const at = `${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%`, r = ((disc || hole) * 125).toFixed(2), r2 = (+r + 0.6).toFixed(2);
-    veil.style.background = disc > 0 ? `radial-gradient(circle at ${at}, var(--slide) ${r}vmax, transparent ${r2}vmax)`
-      : `radial-gradient(circle at ${at}, transparent ${r}vmax, var(--slide) ${r2}vmax)`;
+  if (subj && rad > 0.05) {
+    const p = project(camera, subj, W, H);
+    veil.style.background = `radial-gradient(circle at ${(p.x / W * 100).toFixed(2)}% ${(p.y / H * 100).toFixed(2)}%, var(--slide) ${rad.toFixed(2)}vmax, transparent ${(rad + 0.6).toFixed(2)}vmax)`;
     veil.style.opacity = "1";
-  } else { veil.style.background = "var(--slide)"; veil.style.opacity = (0.85 * dip).toFixed(4); }
+  } else veil.style.opacity = "0";
   for (const el of gsvg.querySelectorAll("text")) if (el.textContent === "paper") el.setAttribute("opacity", (lift * E.out3(seg(t, G.stack[0] - 0.2, G.stack[0] + 0.3))).toFixed(3));
   // the parasol stack inside the lifted gauge's paper bar (read from motif.js's own bar, so it follows any change there)
   const pb = gsvg.querySelector('rect[stroke]');

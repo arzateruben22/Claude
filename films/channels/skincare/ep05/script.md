@@ -46,9 +46,9 @@ vo: And on any one part of the body, the pigment cells sit about a third of a pa
 ## takeaway {shot: back to the hook's three sections, their pigment cells lit · picture-only 0.5 s · energy: 0.3} (61–68 s)
 vo: So, which has more? None of them. {c13} Same cells, every colour, each answering its own *sky*. {c14}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74 s)
-vo: Next: why do we still get goosebumps, with almost no *fur*? {-}
-end card: "Next layer: why do we still get goosebumps, with almost no fur?" · "Outer Layer · No. 006"
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74.5 s)
+vo: Next: skin answers the cold, too. Why goosebumps, with almost no *fur*? {-}
+end card: "Next layer: why goosebumps, with almost no fur?" · "Outer Layer · No. 006"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see `claims.json`. A
