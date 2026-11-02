@@ -30,7 +30,7 @@ const bg = tok("graphite");
 renderer.setClearColor(new THREE.Color(bg[0], bg[1], bg[2]), 1);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.05, 1e4);
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 10, threshold: 0.9, bloom: 0.4 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 24, threshold: 0.9, bloom: 0.4, holdCuts: true });   // no frame blurs across a cut
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 
@@ -56,7 +56,7 @@ tip.rotation.z = Math.PI / 2; tip.position.set(40.85 + 1.55, 0.78, 30); scene.ad
 const you = createFigure({ tokens: TK, height: 170 });          // true height beside ants a few mm long: they are specks
 scene.add(you.group);
 const YOU = FILM.you, CP = FILM.carpet;
-const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24 });   // your ants, 5 mm apart: 2.44 million fill this square
+const carpet = createCrowd({ tokens: { ...TK, anchor: "#8C8F96" }, density: CP.density, dotR: 0.24, far: [0.03, 0.12], aniso: true });   // your ants, 5 mm apart: 2.44 million fill this square
 carpet.mesh.material.depthTest = false; carpet.mesh.renderOrder = 1; you.group.traverse((o) => { o.renderOrder = 2; });   // over the paper, under you
 carpet.group.position.set(YOU[0], 0.05, YOU[2]); carpet.set({ side: CP.side, opacity: 1 }); scene.add(carpet.group);
 // the person's ants: a seeded swarm on the paper around them
@@ -129,11 +129,12 @@ window.seek = function (t) {
   const w = E.inout2(seg(t, CUE.wild, CUE.wild + 1.2));
   wild.group.visible = t >= CUE.wild - 0.1 && shot !== "home" && shot !== "end";   // never peeking in at the frame's edge on the way home
   wild.set({ x: WILD_X, tilt: PH.tilt_wild * w, left: 1, right: w });
-  S.wild = wild.panAt("right");
+  { const p = wild.panAt("right"); S.wild = [p[0], p[1] - 20, p[2]]; }   // under the right pan (its label hangs below it, clear of the chains and the beam)
 
   // the walking ants: one at the hook (and the loop), one on the millimetre ruling
-  const walk = 0.35 * Math.sin(t * 0.7);
-  ant.set({ at: [-110 + 0.878 * walk, 0, 60 - 0.479 * walk], heading: 0.5, step: (t * 2.2) % 1 });   // walking toward the balance
+  const WK = FILM.walk, ws = t <= WK.t1 ? WK.v * t : t >= WK.t2 ? WK.v * (t - WK.dur) : WK.v * WK.t1;
+  ant.set({ at: [WK.p0[0] + WK.dir[0] * ws, 0, WK.p0[2] + WK.dir[1] * ws], heading: 0.5, step: (ws / 0.18) % 1 });   // legs keep pace with the ground
+  S.ant = [WK.p0[0] + WK.dir[0] * ws, 0.6, WK.p0[2] + WK.dir[1] * ws];   // walking toward the balance
   ant2.set({ at: [40.1 + 0.08 * Math.sin(t), 0, 30], heading: 2.2, step: (t * 2.6) % 1 });
   you.set({ at: [YOU[0], 85, YOU[2]] });
   swarm.visible = false;

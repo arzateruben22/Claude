@@ -21,3 +21,9 @@ renamed to `graphite`), `set/aces.js` (Rest Frame's). The originals are untouche
 - set/tower.js: optional `tip` (the needle's top radius in m; default unchanged). set/crowd.js: the square is
   centred on its group (`vP` minus the model translation; identical output at the origin, which is where No. 002
   uses it). Both are channel set pieces, not shared kit files.
+- kits/cinema/cinema3d.js (shared, additive): `CINEMA.holdCuts` (opt-in, default off). When true, a frame's
+  motion-blur sub-frames are clamped inside the shot that holds the frame (from `window.FILM.shots`), so no frame
+  blends two shots across a hard cut. Films that don't set it render byte-identically. First used by No. 003.
+- set/crowd.js: optional `far: [lo, hi]` (when the dots give way to their average; default [0.12, 0.7], as
+  before) and `aniso` (measure the footprint along both screen axes, for slanted views; default off). Unset,
+  the output is unchanged.

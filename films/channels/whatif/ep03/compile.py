@@ -70,15 +70,25 @@ CARPET = {"density": 4, "side": round(math.sqrt(V["ants_per_person"] / 4))}   # 
 TILT_WILD = tilt_for(1.5)                    # claims c5 says only "exceeds", so a modest lean toward the ants (no ratio is claimed)
 
 # the hook: low behind the ant, the whole balance looming beyond it (the ant walks toward it)
-MACRO = {"target": [-110, 0.4, 60], "dist": 3, "el": 4, "az": -64, "fov": 50, "fy": 0.74}   # wide and low: the ant big under the captions, the whole balance looming beyond it
+ANT0, ANT_DIR, ANT_V = [-110, 0.4, 60], [0.878, -0.479], 0.45   # the hook ant walks toward the balance at 4.5 mm/s
+MACRO = {"target": ANT0, "dist": 3, "el": 7, "az": -60, "fov": 50, "fy": 0.74}   # wide and low: the ant big under the captions, the whole balance looming beyond it
 BAL = {"target": [0, 18, 0], "dist": 340, "el": 12, "az": 18, "fov": 30, "fy": 0.36}
+def ant_s(t):
+    """How far the hook ant has walked (cm) at t: forward through the hook; on the way home it walks the last
+    stretch into its frame-0 spot, so the loop lands on frame 0."""
+    if t <= B["normal"]["t0"]: return ANT_V * t
+    if t >= t_count - 1.3: return ANT_V * (t - f.duration)
+    return ANT_V * B["normal"]["t0"]
+def ant_at(t):
+    s = ant_s(t); return [round(ANT0[0] + ANT_DIR[0] * s, 4), ANT0[1], round(ANT0[2] + ANT_DIR[1] * s, 4)]
 CAM = {
     "macro": [
         {"t": 0.0, **MACRO},
-        {"t": B["normal"]["t0"], **MACRO, "dist": 2.6, "az": -62, "ease": "sine"},
+        {"t": B["normal"]["t0"], **MACRO, "target": ant_at(B["normal"]["t0"]), "dist": 2.6, "az": -58, "ease": "lin"},   # following the ant
     ],
     "scale": [
-        {"t": B["normal"]["t0"], **BAL, "dist": 320, "az": 24},
+        {"t": B["normal"]["t0"], **BAL, "dist": 300, "el": 9, "az": 36},
+        {"t": t_balance, **BAL, "dist": 325, "el": 12, "az": 22, "ease": "sine"},              # a slow arc round the balance as the heaps fill
         {"t": t_sites, **BAL, "ease": "inout2"},
     ],
     "sites": [
@@ -92,8 +102,9 @@ CAM = {
         {"t": t_weigh, "target": [41.5, 0.5, 30.0], "dist": 12, "el": 33, "az": 10, "fov": 30, "fy": 0.42, "ease": "sine"},
     ],
     "scale2": [
-        {"t": t_weigh, **BAL, "dist": 360},
-        {"t": t_wild, **BAL, "dist": 345, "az": 14, "ease": "sine"},
+        {"t": t_weigh, **BAL, "dist": 360, "az": 30},
+        {"t": t_fifth + 0.8, "target": [18, 16, 0], "dist": 250, "el": 14, "az": 12, "fov": 30, "fy": 0.38, "ease": "inout2"},   # in on our pan as it drops
+        {"t": t_wild, "target": [32, 18, 0], "dist": 330, "el": 12, "az": 4, "fov": 30, "fy": 0.36, "ease": "sine"},              # drifting right, toward the second balance
     ],
     "wild": [
         {"t": t_wild, "target": [95, 18, 0], "dist": 345, "el": 12, "az": 10, "fov": 30, "fy": 0.36},
@@ -102,23 +113,24 @@ CAM = {
     "each": [
         # down among your ants at your feet (each speck an ant, 5 mm apart), then up to the whole square: about
         # 2.5 million ants, 7.8 m a side, with you in the middle
-        {"t": t_each, "target": [YOU[0] + 70, 0, YOU[2] + 80], "dist": 45, "el": 40, "az": 20, "fov": 30, "fy": 0.4},
-        {"t": t_each + 1.6, "target": [YOU[0] + 12, 20, YOU[2] + 15], "dist": 420, "el": 32, "az": 24, "fov": 30, "fy": 0.4, "ease": "inout2"},
+        {"t": t_each, "target": [YOU[0] + 70, 0, YOU[2] + 80], "dist": 20, "el": 62, "az": 20, "fov": 30, "fy": 0.45},
+        {"t": t_each + 1.0, "target": [YOU[0] + 66, 0, YOU[2] + 75], "dist": 34, "el": 58, "az": 21, "fov": 30, "fy": 0.45, "ease": "sine"},   # a slow drift over the specks first
+        {"t": t_each + 2.6, "target": [YOU[0], 85, YOU[2]], "dist": 700, "el": 30, "az": 24, "fov": 30, "fy": 0.36, "ease": "inout2"},   # then up to the whole person, head in
         {"t": t_work0, "target": [YOU[0], 60, YOU[2]], "dist": 3100, "el": 42, "az": 30, "fov": 30, "fy": 0.4, "ease": "inout2"},
     ],
     "work": [
-        {"t": t_work0, "target": [47, 18, 0], "dist": 720, "el": 10, "az": 6, "fov": 30, "fy": 0.56},
-        {"t": B["takeaway"]["t0"], "target": [47, 18, 0], "dist": 700, "el": 10, "az": 8, "fov": 30, "fy": 0.56, "ease": "sine"},
+        {"t": t_work0, "target": [47, 18, 0], "dist": 820, "el": 10, "az": 6, "fov": 30, "fy": 0.54},
+        {"t": B["takeaway"]["t0"], "target": [47, 18, 0], "dist": 800, "el": 10, "az": 8, "fov": 30, "fy": 0.54, "ease": "sine"},
     ],
     "home": [
         {"t": B["takeaway"]["t0"], **BAL, "dist": 360},
         {"t": t_count - 1.3, **BAL, "dist": 350, "az": 16, "ease": "sine"},                  # hold on the tipped scale through "by a lot"
-        {"t": t_count, **MACRO, "dist": 2.8, "ease": "inout3"},                                 # one move down to the ant on "count"
-        {"t": t_end, **MACRO, "dist": 2.9, "ease": "sine"},
+        {"t": t_count, **MACRO, "target": ant_at(t_count), "dist": 2.8, "ease": "inout3"},     # one move down to the ant on "count"
+        {"t": t_end, **MACRO, "target": ant_at(t_end), "dist": 2.9, "ease": "lin"},
     ],
     "end": [
-        {"t": t_end, **MACRO, "dist": 2.9},
-        {"t": B["tease"]["t1"], **MACRO},   # = frame 0: the loop
+        {"t": t_end, **MACRO, "target": ant_at(t_end), "dist": 2.9},
+        {"t": B["tease"]["t1"], **MACRO, "ease": "lin"},   # = frame 0: the loop (the ant walks back into its first step)
     ],
 }
 for shot, keys in CAM.items():
@@ -131,7 +143,7 @@ SPINE = [
     {"t": t_twice, "label": "Schultheiss et al., 2022", "terms": [["in", f"{RESULTS['ants_quadrillion']} quadrillion ants"], ["op", "="], ["ans", "×2"]]},
     {"t": t_fifth, "label": "weighed as carbon", "terms": [["in", "12 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", "20%"]], "box": True},
     {"t": t_wild, "label": "ants vs every wild bird and mammal", "terms": [["in", "12 Mt C"], ["op", ">"], ["in", "wild birds + mammals"]]},
-    {"t": t_each, "label": "for each person", "terms": [["ans", f"≈ {RESULTS['ants_per_person_m']} million ants"]]},
+    {"t": t_each - 0.5, "label": "for each person", "terms": [["ans", f"≈ {RESULTS['ants_per_person_m']} million ants"]]},
     {"t": t_work0, "label": "the heaviest estimate", "terms": [["in", "50 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", f"{RESULTS['ratio_hi_pct']}%"]]},
     {"t": B["takeaway"]["t0"], "label": "ants' weight, against ours", "terms": [["in", "12 Mt C"], ["op", "÷"], ["in", "60 Mt C"], ["op", "≈"], ["ans", "20%"]], "box": True, "keep": True},
 ]
@@ -149,8 +161,8 @@ LABELS = [
     {"id": "l-us", "text": "all of us", "kind": "anchor", "anchor": "right", "t0": A("vo02:scale", 0.3), "t1": t_sites, "shot": "scale", "side": 1},
     {"id": "l-mm", "text": "a worker ant, a few mm", "kind": "part", "anchor": "ant2", "t0": t_tiny + 0.4, "t1": t_weigh, "shot": "tiny", "side": -1},
     {"id": "l-tip", "text": "your fingertip", "kind": "anchor", "anchor": "tip", "t0": t_tiny + 0.9, "t1": t_weigh, "shot": "tiny", "side": 1},
-    {"id": "l-wild", "text": "every wild bird and mammal", "kind": "part", "anchor": "wild", "t0": t_wild + 0.4, "t1": t_each - 0.3, "shot": "wild", "side": 1, "v": "above"},
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_each + 0.3, "t1": t_work0, "shot": "each", "side": 1, "v": "above"},
+    {"id": "l-wild", "text": "every wild bird and mammal", "kind": "part", "anchor": "wild", "t0": t_wild + 0.4, "t1": t_each - 0.3, "shot": "wild", "side": 1, "v": "below"},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_each + 2.6, "t1": t_work0, "shot": "each", "side": 1, "v": "above"},
 ]
 BADGES = [
     {"id": "b-carbon", "text": "∵ weighed as carbon (dry)", "t0": t_weigh, "t1": t_each - 0.3, "slot": "tl"},
@@ -167,7 +179,7 @@ film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_fifth + 1.5, 4),
     "shots": SHOTS, "beats": BEATS,
     "phys": {"ratio": V["ratio"], "ants_per_person": V["ants_per_person"], "tilt_wild": TILT_WILD},
-    "tilt": TILT, "fill": FILL, "cam": CAM, "cue": CUE, "you": YOU, "carpet": CARPET, "spine": SPINE, "spineOut": t_end, "work": WORK,
+    "tilt": TILT, "fill": FILL, "cam": CAM, "cue": CUE, "you": YOU, "carpet": CARPET, "walk": {"p0": ANT0, "dir": ANT_DIR, "v": ANT_V, "t1": B["normal"]["t0"], "t2": t_count - 1.3, "dur": f.duration}, "spine": SPINE, "spineOut": t_end, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": [], "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": f.captions(max_chars=24, balance=True, keep=("two and a half million ants", "there are about", "wild bird", "ant scientists", "a billion")),

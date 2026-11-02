@@ -24,7 +24,7 @@ void main() { vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz - modelMatri
 
 const FS = `
 precision highp float;
-uniform vec3 uDot, uGround, uEdge; uniform float uPitch, uHalf, uOpacity, uHatch, uExposure, uDotR, uFlow;
+uniform vec3 uDot, uGround, uEdge; uniform float uPitch, uHalf, uOpacity, uHatch, uExposure, uDotR, uFlow, uFarLo, uFarHi, uAniso;
 varying vec2 vP;
 ${ACES_INV_GLSL}
 float h21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -34,10 +34,10 @@ void main() {
   vec2 q = vP / uPitch, cell = floor(q), f = fract(q) - 0.5;
   vec2 j = vec2(h21(cell), h21(cell + 17.0)) - 0.5;
   float d = length(f - 0.28 * j);
-  float fw = max(fwidth(q.x), 1e-5);                              // lattice cells per pixel
+  float fw = max(mix(fwidth(q.x), max(length(vec2(dFdx(q.x), dFdy(q.x))), length(vec2(dFdx(q.y), dFdy(q.y)))), uAniso), 1e-5);   // lattice cells per pixel (uAniso: the larger of both axes, for slanted views)
   float dotA = 1.0 - smoothstep(uDotR - fw, uDotR + fw, d);
   float mean = 3.14159 * uDotR * uDotR;                           // a dot's average coverage of its cell
-  float far = smoothstep(0.12, 0.7, fw);                          // toward ~2 px a cell: fade to the average (wide, so the swap never pops)
+  float far = smoothstep(uFarLo, uFarHi, fw);                          // toward ~2 px a cell: fade to the average (wide, so the swap never pops)
   float cov = mix(dotA, max(mean, 0.42), far);                    // (lifted: a crowd seen from far reads as a lit field)
   vec2 blk = floor(vP / 900.0);                                    // seeded ±9% shade per 900 m block, so a crowd seen
   float bf = clamp(1.0 - fwidth(vP.x) / 300.0, 0.0, 1.0);          // from far is a textured field, never a flat slab
@@ -60,6 +60,7 @@ export const createCrowd = (o = {}) => {
     uDot: { value: v3("anchor", "#4DA3FF") }, uGround: { value: v3("graphite", "#171A1E") }, uEdge: { value: v3("chalk", "#F4F2EC") },
     uPitch: { value: 1 / Math.sqrt(o.density ?? 2) }, uHalf: { value: 0.5 }, uOpacity: { value: 1 }, uHatch: { value: 0 },
     uExposure: { value: o.exposure ?? 1 }, uDotR: { value: o.dotR ?? 0.24 }, uFlow: { value: 0 },
+    uFarLo: { value: (o.far || [0.12, 0.7])[0] }, uFarHi: { value: (o.far || [0.12, 0.7])[1] }, uAniso: { value: o.aniso ? 1 : 0 },   // o.far: when dots give way to their average (cells per px); earlier = no moiré in fast moves
   };
   const g = new THREE.PlaneGeometry(2, 2, 1, 1);
   g.rotateX(-Math.PI / 2);
