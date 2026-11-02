@@ -40,7 +40,7 @@ nights are packed (simulated, see below).
 **Identity (ours, distinct from any real venue):**
 - Palette: night teal `#12333A`, lamp cream `#F3E6C4`, signal red `#C8462F`, patina green `#4F7F6A`, brick
   `#8E4A36`. No gold-and-black.
-- The sign: a 6.5 m steel pylon at the Orangewood and Dupont corner with a lit cabinet. "LOT 57" in tall condensed
+- The sign: a steel pylon at the Orangewood and Dupont corner with a lit cabinet (4.2 m × 2.9 m, its top at about 7.2 m). "LOT 57" in tall condensed
   capitals, cream on teal; "TAPROOM · YARD · TRUCKS" below in red. The glyph is three lane lines converging on a
   single bulb. Drawn in canvas at load.
 - The building, "the Shed": brick-red tilt-up walls, a five-tooth sawtooth roof facing north, four roll-up doors
@@ -101,7 +101,7 @@ North is up (toward Orangewood). World coordinates; all sizes are our design.
 
 | Part | Extent (x, z) | Contents |
 | --- | --- | --- |
-| Frontage | z ≈ -8398, x -5148 to -5048 | Low brick planter wall, 8 m front gate at x -5104 to -5096, the sign at (-5149, -8397). |
+| Frontage | z ≈ -8398, x -5148 to -5048 | Low brick planter wall, 8 m front gate at x -5104 to -5096, the sign at (-5151, -8398), its cabinet turned 45° to face the corner and Orangewood. |
 | The Shed (taproom) | x -5148 to -5120, z -8394 to -8342 | 28 m × 52 m. Bar and 20 stools, 6 high-tops, tank wall, chalkboard menu. |
 | The yard | x -5120 to -5078, z -8394 to -8342 | 12 communal tables in three rows of four, 8 seats each (96). 8 light poles, 6 m tall, about 300 bulbs on catenaries. 4 patio heaters. |
 | Lawn | x -5078 to -5048, z -8394 to -8366 | Turf. Three bag-toss lanes, a giant stacking-block table, two clusters of lawn chairs. |
