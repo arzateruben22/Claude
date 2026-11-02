@@ -43,7 +43,7 @@ vo: It's easy to picture an infection. {-} But this bacterium lives in skin with
 ## whoa {shot: push into the ringed follicle: white cells pour in, the wall thins and gives way, the contents spill into the dermis; then a thumb's pressure from above drives the spill deeper and the red spreads · badge: model, not a photo · picture-only 3.2 s · energy: 0.8} (38–51.5 s)
 vo: White cells flood in until the follicle's wall can give way, spilling the fight *deeper*. {c6,c7} A squeeze often pushes it further, where a *mark* is more likely. {c8,c9}
 
-## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one white cell from the spill fills in, round then spread, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51.5–60 s)
+## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one white cell rises out of the spill (≈ 8 µm), ten stack (≈ 80 µm), then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (51.5–60 s)
 vo: And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's *thickness*. {c10,c11}
 
 ## takeaway {shot: back to the hook's UV cheek, the one spot lit, the clear skin around it now showing its own ringed follicles in faint cyan · picture-only 0.5 s · energy: 0.3} (60–67 s)

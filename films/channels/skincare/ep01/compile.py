@@ -31,7 +31,7 @@ NEW_FROM_CLEAR = 28          # c2: 28% of inflammatory lesions preceded by norma
 CELL_UM, CELL_SPREAD_UM, PAPER_UM = 8.0, 15.0, 100.0   # c11: resting neutrophil ≈ 8 µm, spread 12–15 µm; paper ≈ 100 µm
 assert 6 <= PAPER_UM / CELL_SPREAD_UM and PAPER_UM / CELL_UM <= 13, "ten in a row would barely span the paper"
 TONE = 0.18                  # bible §1: one tone per episode, rotating (001 light)
-FX, GX, TX = 5000.0, 6000.0, 1000.0   # the two follicle blocks (1000 µm wide each) touch: one strip of skin
+FX, GX, TX = 5000.0, 5700.0, 1000.0   # the two follicle blocks (1000 µm wide each) touch: one strip of skin
 
 # ── shots ─────────────────────────────────────────────────────────────────
 t_flight, t_fol = B["change"]["t0"], A("vo03:defence", -0.35)
@@ -46,7 +46,7 @@ CUE = {"new": A("vo01:new?"), "clear1": A("vo01:clear."), "photo": A("vo02:photo
        "bacterium": A("vo04:bacterium"), "without": A("vo04:without."), "answers": A("vo04:answers"), "flood": A("vo05:flood"),
        "wall": A("vo05:wall"), "give": A("vo05:give"), "deeper": A("vo05:deeper."), "squeeze": A("vo05:squeeze"), "further": A("vo05:further,"),
        "mark": A("vo05:mark"), "pus": A("vo06:pus"), "small": A("vo06:small"), "ten": A("vo06:ten"), "paper": A("vo06:paper's"),
-       "no": A("vo07:No."), "end": A("vo07:end"), "sight": A("vo07:sight.")}
+       "no": A("vo07:No."), "end": A("vo07:end"), "sight": A("vo07:sight."), "spots4": A("vo04:spots"), "likely": A("vo05:likely.")}
 # the photo stack: one flip back every ~0.9 s from "photo" to "clear", six photos (−2 … −12 weeks)
 FLIPS = [round(CUE["photo"] + k * (CUE["clear2"] - CUE["photo"]) / 6, 3) for k in range(1, 7)]
 
@@ -62,11 +62,14 @@ CAM = {
                {"t": t_fol, "target": [TX + 1.5, -0.3, 0.4], "el": 58, "fov": 34, "fx": 0.5, "fy": 0.5, "dist": 7, "az": -1, "ease": "in2"}],   # down into one pore
     "follicle": [{"t": t_fol, "target": [FX, -120, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1500, "az": -2},   # out of the pore's mouth...
                  {"t": CUE["immune"], "target": [FX, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2000, "az": -4, "ease": "inout2"},   # ...down the canal, the ring around it
-                 {"t": B["why"]["t0"], "target": [FX, -270, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2300, "az": -2, "ease": "sine"}],
-    "pair": [{"t": B["why"]["t0"], "target": [(FX + GX) / 2, -330, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.45, "dist": 5000, "az": -2},   # both follicles, side by side
-             {"t": CUE["answers"], "target": [(FX + GX) / 2, -320, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.45, "dist": 4700, "az": 0, "ease": "inout2"},
+                 {"t": CUE["thickly"], "target": [FX + 90, -280, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1500, "az": -3, "ease": "inout2"},   # in on one cluster: "as thickly"
+                 {"t": B["why"]["t0"], "target": [FX, -270, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2200, "az": -2, "ease": "inout2"}],
+    "pair": [{"t": B["why"]["t0"], "target": [FX, -270, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2200, "az": -2},   # the pull-back: one follicle...
+             {"t": CUE["bacterium"], "target": [(FX + GX) / 2, -300, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 4900, "az": -1, "ease": "inout2"},   # ...to both, side by side
+             {"t": CUE["answers"], "target": [(FX + GX) / 2 - 40, -300, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 4500, "az": 1, "ease": "inout2"},
              {"t": B["whoa"]["t0"], "target": [FX, -300, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2250, "az": 1, "ease": "in2"}],   # the push into the ringed one
     "rupture": [{"t": B["whoa"]["t0"], "target": [FX, -300, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2250, "az": 1},
+                {"t": CUE["flood"], "target": [FX, -320, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.33, "dist": 2250, "az": 1, "ease": "inout2"},
                 {"t": CUE["give"], "target": [FX, -380, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1900, "az": 0, "ease": "inout2"},
                 {"t": CUE["squeeze"], "target": [FX, -260, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2400, "az": -1, "ease": "inout2"},   # back out to see the thumb
                 {"t": B["toscale"]["t0"], "target": [FX, -380, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2600, "az": -2, "ease": "sine"}],
@@ -82,20 +85,22 @@ for shot, keys in CAM.items():
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-spot", "text": "the spot", "kind": "cell", "anchor": "spot", "t0": 0.0, "t1": CUE["photo"], "shot": "uv", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-porph", "text": "bacteria glow under UV", "kind": "uv", "anchor": "porph", "t0": CUE["clear1"] - 0.6, "t1": B["normal"]["t0"] + 1.2, "shot": "uv", "side": -1, "v": "below", "fixed": True},
     {"id": "l-ring", "text": "white cells (immune)", "kind": "water", "anchor": "ring", "t0": CUE["already"], "t1": B["why"]["t0"], "shot": "follicle", "side": 1, "fixed": True},
-    {"id": "l-bact", "text": "the same bacterium", "kind": "uv", "anchor": "bactG", "t0": CUE["bacterium"], "t1": CUE["answers"] - 0.3, "shot": "pair", "side": 1, "fixed": True},
+    {"id": "l-bact", "text": "the same bacterium", "kind": "uv", "anchor": "bactG", "t0": CUE["bacterium"], "t1": CUE["spots4"] - 0.1, "shot": "pair", "side": 1, "fixed": True},
+    {"id": "l-with", "text": "skin with a spot", "kind": "cell", "anchor": "fWith", "t0": CUE["spots4"], "t1": CUE["without"] + 0.9, "shot": "pair", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-wo", "text": "skin without", "kind": "cell", "anchor": "fWo", "t0": CUE["without"] - 0.3, "t1": CUE["without"] + 0.9, "shot": "pair", "side": 1, "v": "above", "fixed": True},
     {"id": "l-white", "text": "more white cells", "kind": "cell", "anchor": "cell", "t0": CUE["flood"], "t1": CUE["give"], "shot": "rupture", "side": -1, "fixed": True},
     {"id": "l-spill", "text": "the spill", "kind": "cell", "anchor": "spill", "t0": CUE["deeper"] - 0.5, "t1": CUE["squeeze"] - 0.2, "shot": "rupture", "side": -1, "fixed": True},
-    {"id": "l-thumb", "text": "a squeeze", "kind": "layer", "anchor": "thumb", "t0": CUE["squeeze"] + 0.2, "t1": B["toscale"]["t0"], "shot": "rupture", "side": 1, "fixed": True},
+    {"id": "l-thumb", "text": "a squeeze", "kind": "layer", "anchor": "thumb", "t0": CUE["squeeze"] + 0.2, "t1": CUE["likely"] + 0.2, "shot": "rupture", "side": 1, "fixed": True},
     {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["end"] - 0.4, "t1": t_end, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": t_flight, "slot": "br"},
+    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": t_fol, "slot": "br"},
     {"id": "b-uv", "text": "UV: bacteria's porphyrins glow orange-red", "t0": CUE["clear1"] - 0.6, "t1": B["normal"]["t0"] + 1.2, "slot": "bl"},
     {"id": "b-do", "text": "Do et al., 2008 · 25 people", "t0": CUE["quarter"] - 0.3, "t1": t_flight, "slot": "tr"},
-    {"id": "b-illus", "text": "illustration", "t0": max(FLIPS[0] - 0.1, B["normal"]["t0"] + 1.5), "t1": t_fol, "slot": "bl"},
+    {"id": "b-illus", "text": "illustration", "t0": max(FLIPS[0] - 0.1, B["normal"]["t0"] + 1.5), "t1": t_flight, "slot": "bl"},
     {"id": "b-jer", "text": "biopsy study · Jeremy et al., 2003", "t0": CUE["immune"], "t1": B["why"]["t0"], "slot": "tl"},
+    {"id": "b-back", "text": "acne patients' back skin", "t0": CUE["immune"], "t1": B["why"]["t0"], "slot": "tr"},
     {"id": "b-simp", "text": "simplified", "t0": t_fol, "t1": B["toscale"]["t0"], "slot": "br"},
     {"id": "b-deb", "text": "debated", "t0": CUE["answers"] - 0.2, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-model2", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
@@ -105,8 +110,7 @@ BADGES = [
 SPINE = [0.5, 0.215]
 COUNTERS = [
     {"id": "c-28", "label": "of new red spots, from clear skin", "text": f"{NEW_FROM_CLEAR}%", "t0": CUE["quarter"], "t1": t_flight},
-    {"id": "c-def", "label": "under clear skin", "text": "a defence", "t0": CUE["defence"] + 0.2, "t1": B["why"]["t0"]},
-    {"id": "c-both", "label": "the bacterium lives in", "text": "both", "t0": CUE["without"] - 0.3, "t1": CUE["answers"] - 0.4},
+    {"id": "c-both", "label": "the bacterium lives in", "text": "both", "t0": CUE["without"] + 1.3, "t1": CUE["answers"] - 0.4},
     {"id": "c-ans", "label": "the spot is largely", "text": "the body's answer", "t0": CUE["answers"] + 0.3, "t1": B["whoa"]["t0"]},   # debated: ends with its badge
     {"id": "c-final", "label": "the spot", "text": "not new", "t0": CUE["no"] + 0.2, "t1": t_end - 0.5},
 ]
@@ -129,11 +133,11 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
 KEYS = {"porph": [-1.0, 0.0], "spotGone": [FLIPS[3], FLIPS[5]], "ring": [CUE["crowding"] - 0.3, CUE["thickly"] + 0.4],
         "ringLit": [CUE["already"] - 0.2, CUE["already"] + 0.5], "bact": [CUE["bacterium"] - 0.4, CUE["bacterium"] + 0.4],
         "answer": [CUE["answers"] - 0.2, CUE["answers"] + 0.6], "flood": [CUE["flood"] - 0.3, CUE["wall"] + 0.3], "rupt": [CUE["give"] - 0.2, CUE["deeper"] + 0.5],
-        "press": [CUE["squeeze"], CUE["further"] + 0.9], "lift": [A("vo05:likely.") + 0.3, B["toscale"]["t0"] - 0.3], "rings": [CUE["end"] - 0.6, CUE["end"] + 0.6]}
+        "press": [CUE["squeeze"], CUE["further"] + 0.9], "rings": [CUE["end"] - 0.6, CUE["end"] + 0.6], "lift": [CUE["likely"] + 0.3, B["toscale"]["t0"] - 0.3], "mark": [CUE["mark"] - 0.2, CUE["mark"] + 0.8]}
 # the gauge (scene.mjs): a centred card; one white cell drops in on "pus", is named on "small", ten stack on "ten" (10 × 8 = 80 µm),
 # the paper's 100 µm draws beside them on "paper's"
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 0.7], "pus": CUE["pus"] - 0.1, "sc": CUE["small"] - 0.2, "ten": [CUE["ten"] - 0.1, CUE["ten"] + 1.3],
-         "paper": CUE["paper"] - 0.2, "back": [B["takeaway"]["t0"] - 0.7, B["takeaway"]["t0"] - 0.15], "cell_um": CELL_UM, "paper_um": PAPER_UM, "n": 10}
+         "paper": CUE["paper"] - 0.2, "back": [B["takeaway"]["t0"] - 0.3, B["takeaway"]["t0"] - 0.02], "cell_um": CELL_UM, "paper_um": PAPER_UM, "n": 10}
 assert GAUGE["n"] * CELL_UM <= PAPER_UM
 
 TITLE = {"series": "Outer Layer · No. 001", "title": "The fight you *never saw*", "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}

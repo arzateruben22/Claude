@@ -7,6 +7,7 @@
 //     flood 0 … 1  white cells pour in from the dermis into the canal
 //     rupt 0 … 1   the canal's lower wall gives way; the contents spill into the dermis
 //     press 0 … 1  a thumb's pressure from above: the surface dents, the spill is driven deeper, the red spreads
+//     mark 0 … 1   a darker patch left deep in the dermis (where a mark is more likely)
 //     thumb 0 … 1  the thumb present (1) or lifted away (0) while the press holds
 //     red 0 … 1    inflammation: a red haze around the follicle (grows with rupt and press)
 //   at.{canal, ring, bact, spill, surface, gland, cell}() → world points for labels and the gauge
@@ -50,11 +51,15 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const thumb = new THREE.Mesh(new THREE.SphereGeometry(330, 40, 28), thumbMat); thumb.scale.set(1, 0.5, 0.8); g.add(thumb);
   // its nail, on top toward the back: the pad reads as a fingertip
   const nailMat = new THREE.MeshStandardMaterial({ color: 0xf3d6cf, roughness: 0.18, transparent: true, opacity: 0 });
-  const nail = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), nailMat); nail.scale.set(190, 34, 150); g.add(nail);
+  const nail = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), nailMat); nail.scale.set(150, 110, 30); g.add(nail);
+  // the mark: a darker, flattened patch left in the dermis where the spill went deep (a scar is more likely there)
+  const markMat = new THREE.MeshBasicMaterial({ color: 0x5a1e1a, transparent: true, opacity: 0, depthWrite: false });
+  const markM = new THREE.Mesh(new THREE.CircleGeometry(1, 40), markMat); markM.scale.set(260, 120, 1); markM.position.set(0, -520, 1); g.add(markM);
   const breachY = -400;
   return {
     group: g, dims: { width, depth, epi, breachY },
-    set({ tone = 0.18, bact: bk = 0, ring = 0, ringLit = 0, flood = 0, rupt = 0, press = 0, red = 0, dim = 0, thumb: thumbK = 1 } = {}) {
+    set({ tone = 0.18, bact: bk = 0, ring = 0, ringLit = 0, flood = 0, rupt = 0, press = 0, red = 0, dim = 0, thumb: thumbK = 1, mark = 0 } = {}) {
+      markMat.opacity = 0.55 * mark; markM.visible = mark > 0.01;
       const k = 1 - 0.45 * dim;
       M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.9));
       M.epi.color.setRGB(...toneColor("living", tone).map((v) => v * k));
@@ -68,17 +73,17 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
       floodC.forEach((m) => { const u = Math.min(1, Math.max(0, flood * 1.4 - m.userData.k * 0.4)); const { from, to } = m.userData; m.position.set(from[0] + (to[0] - from[0]) * u, from[1] + (to[1] - from[1]) * u, -20); m.visible = flood > 0.01 && u > 0.001; });
       // the breach: the lower wall and plug open (scaled thin) as the wall gives way
       wall.scale.set(1, 1 - 0.0 * rupt, 1); plug.visible = rupt < 0.98; plug.material.opacity = 1;
-      spill.forEach((m) => { const { a, d, k: kk, z } = m.userData; const u = Math.min(1, Math.max(0, rupt * 1.3 - kk * 0.3)); const dd = d * u + 150 * press * u; m.position.set(Math.cos(a) * dd * 1.2, breachY + Math.sin(a) * dd - 60 * press * u, z); m.visible = u > 0.01; });
+      spill.forEach((m) => { const { a, d, k: kk, z } = m.userData; const u = Math.min(1, Math.max(0, rupt * 1.3 - kk * 0.3)); const dd = Math.min(250, d * u + 150 * press * u); m.position.set(Math.cos(a) * dd * 1.2, breachY + Math.sin(a) * dd - 60 * press * u, z); m.visible = u > 0.01; });
       redMat.opacity = 0.32 * red; redHaze.visible = red > 0.01; const rs = 160 + 160 * rupt + 240 * press; redHaze.scale.set(rs * 1.3, rs, rs * 0.5); redHaze.position.y = -340 - 160 * press; redHaze.position.z = -60;
       // the thumb from above, denting the surface
       thumbMat.color.setRGB(...toneColor("living", tone)); thumbMat.opacity = Math.min(1, press * 3) * 0.95 * thumbK; thumb.visible = press > 0.01 && thumbK > 0.01; thumb.position.y += 0;
       thumb.position.set(0, 165 - 90 * press + 260 * (1 - thumbK), 120);
-      nail.position.set(40, thumb.position.y + 150, 40); nail.rotation.z = -0.12; nailMat.opacity = thumbMat.opacity; nail.visible = thumb.visible;
+      nail.position.set(0, thumb.position.y + 70, 250); nail.rotation.set(-0.7, 0, 0);   // on the pad's front-top, facing the camera nailMat.opacity = thumbMat.opacity; nail.visible = thumb.visible;
       for (let i = 0; i < ep.count; i++) { const by = epY[3 * i + 1], bx = epY[3 * i]; if (by > 0) ep.setY(i, by - 70 * press * Math.exp(-(bx * bx) / 60000)); }
       ep.needsUpdate = true; epiGeo.computeVertexNormals();
     },
     at: {
-      canal: () => [x, -150, 40], bact: () => [x + 20, -330, 40], ring: () => [x + 120, -250, 50], gland: () => [x - 110, -300, 60],
+      canal: () => [x, -150, 40], bact: () => [x + 20, -330, 40], ring: () => [x + 200, -200, 50], gland: () => [x - 110, -300, 60],
       spill: () => [x - 150, breachY - 90, 40], surface: () => [x - width / 2 + 20, 0, 0], cell: () => [x - 150, -260, 40],
     },
   };

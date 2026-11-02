@@ -18,7 +18,7 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
   for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), y = pos.getY(i); pos.setZ(i, dome * Math.exp(-(x * x) / (width * 1.4) - (y * y) / (height * 1.2))); }
   geo.computeVertexNormals();
   const U = { uDamage: { value: 0 }, uDamageR: { value: 0 }, uScreen: { value: 0 }, uScreenR: { value: 0 }, uSplit: { value: 0 },
-    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed }, uPorph: { value: 0 }, uRings: { value: 0 }, uSpot: { value: 0 }, uDay: { value: 0 }, uSkin: { value: new THREE.Vector3(0.62, 0.42, 0.3) }, uRed: { value: 0 }, uScar: { value: 0 }, uBump: { value: 0 }, uSpotRed: { value: 0 } };
+    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed }, uPorph: { value: 0 }, uRings: { value: 0 }, uSpot: { value: 0 }, uDay: { value: 0 }, uSkin: { value: new THREE.Vector3(0.62, 0.42, 0.3) }, uRed: { value: 0 }, uScar: { value: 0 }, uBump: { value: 0 }, uSpotRed: { value: 0 }, uRingR: { value: 0 } };
   const mat = new THREE.ShaderMaterial({
     uniforms: U, transparent: true, depthWrite: false,
     // uBump (default 0): the spot raised as a bump at the focus point (No. 001); the normal is tilted to match
@@ -28,7 +28,7 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
           q.z += b; nn = normalize(nn + vec3(-d.x, -d.y, 0.0) * b * 6.0 / (r * r)); }
         vN = normalize(normalMatrix * nn); vec4 p = modelViewMatrix * vec4(q,1.); vP = p.xyz; gl_Position = projectionMatrix * p; }`,
     fragmentShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vP;
-      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed, uPorph, uRings, uSpot, uDay, uRed, uScar, uSpotRed; uniform vec4 uFocus; uniform vec3 uSkin;
+      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed, uPorph, uRings, uSpot, uDay, uRed, uScar, uSpotRed, uRingR; uniform vec4 uFocus; uniform vec3 uSkin;
       float h(vec2 p){ return fract(sin(dot(p + uSeed, vec2(127.1,311.7))) * 43758.5453); }
       float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
         return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
@@ -57,7 +57,9 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
         vec2 fc = uv*vec2(26.,18.); vec2 fi = floor(fc); float fsel = step(0.62, h(fi + 3.3));
         float fdist = length(fract(fc) - 0.5 - (vec2(h(fi+1.1), h(fi+2.2)) - 0.5) * 0.5);
         col = mix(col, vec3(1.0,0.38,0.2) * 1.25, uPorph * fsel * smoothstep(0.16, 0.05, fdist));
-        col = mix(col, vec3(0.37,0.95,0.91), clamp(uRings * fsel * 0.55 * smoothstep(0.03, 0.0, abs(fdist - 0.19)), 0.0, 1.0));
+        // uRingR (default 0 = everywhere): only the follicles within that radius of the focus point ring
+        float near = uRingR > 0.0 ? smoothstep(uRingR, uRingR * 0.55, length((uv - uFocus.xy) * vec2(1.44, 1.0))) : 1.0;
+        col = mix(col, vec3(0.37,0.95,0.91), clamp(uRings * near * fsel * 0.55 * smoothstep(0.03, 0.0, abs(fdist - 0.19)), 0.0, 1.0));
         // the spot: a raised inflamed blob at the focus point, dark under UV (blood absorbs it)
         float sd = length((uv - uFocus.xy) * vec2(1.44, 1.0));
         col *= 1.0 - uSpot * 0.75 * smoothstep(uFocus.z * 0.7, 0.0, sd);
@@ -83,8 +85,8 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
     mesh, uniforms: U,
     // porph: follicle bacteria glowing orange-red; rings: faint cyan immune rings at the same follicles; spot: the focus point as an inflamed blob
     // day: 0 UV … 1 daylight; skin: the daylight tone (rgb); red: more blood colour (a flush)
-    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1, porph = 0, rings = 0, spot = 0, day = 0, skin = null, red = 0, scar = 0, bump = 0, spotRed = 0 } = {}) {
-      U.uScar.value = scar; U.uBump.value = bump; U.uSpotRed.value = spotRed;
+    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1, porph = 0, rings = 0, spot = 0, day = 0, skin = null, red = 0, scar = 0, bump = 0, spotRed = 0, ringR = 0 } = {}) {
+      U.uScar.value = scar; U.uBump.value = bump; U.uSpotRed.value = spotRed; U.uRingR.value = ringR;
       U.uPorph.value = porph; U.uRings.value = rings; U.uSpot.value = spot; U.uDay.value = day; U.uRed.value = red; if (skin) U.uSkin.value.set(...skin);
       U.uDamage.value = damage; U.uDamageR.value = damageR ?? damage; U.uScreen.value = screen; U.uScreenR.value = screenR ?? screen;
       U.uSplit.value = split; U.uGlow.value = glow; U.uOpacity.value = opacity; mesh.visible = opacity > 0.002;
