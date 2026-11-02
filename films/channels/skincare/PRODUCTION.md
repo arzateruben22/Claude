@@ -7,7 +7,7 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 |---|---|---|---|
 | 001 | The dead layer | §7 #1 | **Final** (render worker A, 00a50fc): 73.73 s, −14.1 LUFS / −1.8 dBTP, 1 flash, QA PASS; master 62.6 MB, YouTube 1440 84 MB. Compelling 3 rounds → all 4s. First final (57f42c4) withdrawn: gauge headings ran together |
 | 002 | Does SPF 100 beat SPF 50? | §7 #2 | Compelling 4 rounds → all 4s; final rendering on render worker B (3a511d1) |
-| 003 | Bath fingers | §7 #3 | Compelling 4 rounds → all 4s; first final failed the delivery text audit (spine labels past the safe box), fixed at b02282b, re-rendering on Back of the Envelope worker A |
+| 003 | Bath fingers | §7 #3 | **Final** (Back of the Envelope worker A, ba052e4 from b02282b): 70.0 s, −14.1 LUFS / −2.0 dBTP, 0 flashes, QA PASS (text audit clean); master 19.7 MB, YouTube 1440 30.9 MB. Compelling 4 rounds → all 4s |
 | 004 | What a tan is | §7 #4 | second builder (`claude/outer-layer-s1-b`): drafts in review |
 | 005 | Same cells, every colour | §7 #5 | second builder: voiced, built |
 | 006 | Goosebumps | §7 #6 | Taken over from the second builder; compelling 4 rounds → all 4s; final queued on render worker A (00e7cd8) |
