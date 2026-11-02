@@ -24,7 +24,7 @@ each link, and a board-certified dermatologist signs off every episode, before a
 | 002 → 003 | "Next: skin closes almost any cut. But is a scar still *skin*?" | "Next layer: is a scar still skin?" |
 | 003 → 004 | "Next: a deadly poison, in a frown. How much goes *in*?" | "Next layer: a deadly poison, in a frown. How much goes in?" |
 | 004 → 005 | "Next: two neighbours under the same sun, one experiment. Which hand *aged*?" | "Next layer: same sun, one experiment. Which hand aged?" |
-| 005 → 006 | "Next: tanning beds share a list with cigarettes. What does it *mean*?" | "Next layer: tanning beds, on a list with cigarettes" |
+| 005 → 006 | "Next: tanning beds share a list with cigarettes. Same list, same *risk*?" | "Next layer: tanning beds and cigarettes. Same list, same risk?" |
 | 006 → season 2 | "Next season: why do bath fingers wrinkle, but never your *arm*?" | "Next season: why do bath fingers wrinkle?" |
 
 The finale's tease points at **bath fingers**, a real season-2 topic. It was #3 in the original bible (§7), and it

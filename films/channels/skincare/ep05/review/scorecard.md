@@ -10,15 +10,15 @@ Draft 1, measured at 15 fps:
 
 ## Compelling pass (one independent reviewer, every round)
 
-| Point | Draft 1 |
-|---|---|
-| (a) First 2 s | 2 |
-| (b) One thread | 4 |
-| (c) Picture moves with the sentence | 3 |
-| (d) Motivated cuts | 2 |
-| (e) Voice meaning, screen figures | 4 |
-| (f) Rhythm | 3 |
-| (g) Ending and tease | 3 |
+| Point | Draft 1 | Draft 2 |
+|---|---|---|
+| (a) First 2 s | 2 | 3 |
+| (b) One thread | 4 | 4 |
+| (c) Picture moves with the sentence | 3 | 2 |
+| (d) Motivated cuts | 2 | 2 |
+| (e) Voice meaning, screen figures | 4 | 4 |
+| (f) Rhythm | 3 | 3 |
+| (g) Ending and tease | 3 | 3 |
 
 ## Review rounds, in short
 
@@ -53,3 +53,23 @@ Each finding below was checked against the frames and `claims.json` before actin
 **Not changed**
 - **The follow chip** (No. 006) is the next episode, as on every end card.
 - **End-card viewfinder brackets:** No. 001's end card has none either, so 004–006 match it.
+
+### Draft 2
+
+A second reviewer, scoring independently.
+
+**Honesty**
+- **Hidden behind the spine:** the significance badge and the Hughes note were partly covered. Both were already fixed in the layout pass: the badge moved to the left corner and the source onto the odds plate.
+- **Spine over the UV illustration:** the spine read "ageing measured after 4.5 years" there, so the illustration looked like the trial's result. The spine now names the casts ("the casts were graded after", "the casts' record, after").
+
+**Picture and cuts**
+- **Spine:** made continuous, with no gaps at 17–22, 41–43 or 61 s.
+- **UV view:** three moves inside its 13 s hold ("camera", "misses", "surface").
+- **No cut at 61 s:** the to-scale hand now moves on to the hook's framing in one shot.
+
+**Tease**
+- Now asks "Same list, same risk?" (re-voiced, lint clean).
+
+**Not changed**
+- **The takeaway's answer:** "the eye can't say, but the skin was keeping its own record" stays. The trial measured groups, so naming one neighbour's hand as the one that aged would overclaim.
+- **The caption that repeats the end-card title:** this is the channel's tease convention.
