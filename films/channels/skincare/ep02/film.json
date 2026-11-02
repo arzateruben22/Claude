@@ -1,0 +1,1418 @@
+{
+ "id": "outerlayer-002",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 76.0667,
+ "poster": 37.2,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "macro"
+  },
+  {
+   "at": 8.6,
+   "name": "split"
+  },
+  {
+   "at": 18.433333333333334,
+   "name": "inside"
+  },
+  {
+   "at": 40.233333333333334,
+   "name": "face"
+  },
+  {
+   "at": 52.7333,
+   "name": "depth"
+  },
+  {
+   "at": 60.6667,
+   "name": "macro2"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.1333,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.1333,
+   "t1": 16.3333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.3333,
+   "t1": 25.6667,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.6667,
+   "t1": 40.1333,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 40.1333,
+   "t1": 52.7333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 60.6667,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.6667,
+   "t1": 69.0667,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 69.0667,
+   "t1": 76.0667,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": 0.5,
+ "keys": {
+  "beam": [
+   0.0,
+   0.6
+  ],
+  "glint": [
+   7.466666666666667,
+   8.166666666666666
+  ],
+  "spread": [
+   12.633333333333333,
+   15.233333333333334
+  ],
+  "paths": [
+   18.633333333333333,
+   21.0
+  ],
+  "out": [
+   23.366666666666667,
+   24.76666666666667
+  ],
+  "warm": [
+   32.800000000000004,
+   36.5
+  ],
+  "widen": [
+   35.13333333333333,
+   37.3
+  ],
+  "flush": [
+   44.03333333333334,
+   47.2
+  ],
+  "blue": [
+   52.96666666666667,
+   54.766666666666666
+  ],
+  "sheets": [
+   55.56666666666666,
+   56.766666666666666
+  ],
+  "redbar": [
+   57.43333333333333,
+   59.63333333333333
+  ],
+  "glowout": [
+   65.5,
+   68.10000000000001
+  ]
+ },
+ "depth": {
+  "blue_mm": 1.0,
+  "red_mm": [
+   4,
+   5
+  ],
+  "paper_um": 100.0
+ },
+ "place": {
+  "tx": 1000.0,
+  "sx": 5000.0
+ },
+ "cam": {
+  "macro": [
+   {
+    "t": 0.0,
+    "target": [
+     1000.0,
+     0,
+     4
+    ],
+    "el": 24,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 34,
+    "az": -10
+   },
+   {
+    "t": 5.1333,
+    "target": [
+     1000.0,
+     0,
+     2
+    ],
+    "el": 30,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 26,
+    "az": -6,
+    "ease": "sine"
+   },
+   {
+    "t": 7.966666666666667,
+    "target": [
+     1000.0,
+     0.2,
+     0
+    ],
+    "el": 34,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 13,
+    "az": -3,
+    "ease": "inout2"
+   },
+   {
+    "t": 8.6,
+    "target": [
+     1000.0,
+     0.2,
+     0
+    ],
+    "el": 30,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 15,
+    "az": -2,
+    "ease": "sine"
+   }
+  ],
+  "split": [
+   {
+    "t": 8.6,
+    "target": [
+     1000.0,
+     0,
+     0
+    ],
+    "el": 30,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 17,
+    "az": 0
+   },
+   {
+    "t": 16.3333,
+    "target": [
+     1000.0,
+     0,
+     0
+    ],
+    "el": 34,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 15,
+    "az": 0,
+    "ease": "sine"
+   },
+   {
+    "t": 18.833333333333332,
+    "target": [
+     1000.0,
+     -0.4,
+     0
+    ],
+    "el": 50,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 9,
+    "az": 0,
+    "ease": "in2"
+   }
+  ],
+  "inside": [
+   {
+    "t": 18.433333333333334,
+    "target": [
+     5000.0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 260,
+    "az": -3
+   },
+   {
+    "t": 24.166666666666668,
+    "target": [
+     5000.0,
+     -70,
+     0
+    ],
+    "el": 8,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 360,
+    "az": -1,
+    "ease": "inout2"
+   },
+   {
+    "t": 35.233333333333334,
+    "target": [
+     5010.0,
+     -100,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 300,
+    "az": 1,
+    "ease": "inout2"
+   },
+   {
+    "t": 40.233333333333334,
+    "target": [
+     5010.0,
+     -90,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 320,
+    "az": 2,
+    "ease": "sine"
+   }
+  ],
+  "face": [
+   {
+    "t": 40.233333333333334,
+    "target": [
+     0,
+     -1.35,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 28,
+    "az": -2
+   },
+   {
+    "t": 52.7333,
+    "target": [
+     0,
+     -1.35,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 25,
+    "az": 0,
+    "ease": "sine"
+   }
+  ],
+  "depth": [
+   {
+    "t": 52.7333,
+    "target": [
+     5000.0,
+     -90,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 420,
+    "az": 2
+   },
+   {
+    "t": 60.6667,
+    "target": [
+     5000.0,
+     -90,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 380,
+    "az": 3,
+    "ease": "sine"
+   }
+  ],
+  "macro2": [
+   {
+    "t": 60.6667,
+    "target": [
+     1000.0,
+     0,
+     2
+    ],
+    "el": 28,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 22,
+    "az": -4
+   },
+   {
+    "t": 76.0667,
+    "target": [
+     1000.0,
+     0,
+     4
+    ],
+    "el": 24,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 34,
+    "az": -10,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "glow": 0.7666666666666667,
+  "inside": 3.6,
+  "glint": 7.966666666666667,
+  "smooth": 8.933333333333334,
+  "direction": 11.8,
+  "dry": 12.933333333333334,
+  "haze": 14.933333333333334,
+  "isnt": 17.3,
+  "slips": 19.133333333333333,
+  "bounces": 20.0,
+  "out": 24.166666666666668,
+  "picture": 26.6,
+  "travelled": 30.8,
+  "melanin": 33.1,
+  "rush": 35.233333333333334,
+  "redder": 37.0,
+  "healthy": 42.53333333333333,
+  "turned": 44.333333333333336,
+  "colour": 46.6,
+  "shining": 47.56666666666667,
+  "blue": 53.06666666666667,
+  "millimetre": 54.266666666666666,
+  "ten": 55.766666666666666,
+  "red": 57.53333333333333,
+  "deeper": 59.233333333333334,
+  "isnt2": 61.93333333333333,
+  "met": 66.1,
+  "back": 67.7
+ },
+ "labels": [
+  {
+   "id": "l-glint",
+   "text": "the glint",
+   "kind": "cell",
+   "anchor": "glint",
+   "t0": 7.366666666666667,
+   "t1": 8.15,
+   "shot": "macro",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-hyd",
+   "text": "hydrated: one ray",
+   "kind": "water",
+   "anchor": "glintL",
+   "t0": 9.133333333333333,
+   "t1": 17.3,
+   "shot": "split",
+   "side": -1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-dry",
+   "text": "dry: a haze",
+   "kind": "cell",
+   "anchor": "glintR",
+   "t0": 12.933333333333334,
+   "t1": 17.3,
+   "shot": "split",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-mel",
+   "text": "melanin",
+   "kind": "uv",
+   "anchor": "melanin",
+   "t0": 32.9,
+   "t1": 35.233333333333334,
+   "shot": "inside",
+   "side": -1,
+   "fixed": true
+  },
+  {
+   "id": "l-cap",
+   "text": "a capillary",
+   "kind": "cell",
+   "anchor": "cap",
+   "t0": 35.03333333333333,
+   "t1": 39.7833,
+   "shot": "inside",
+   "side": 1,
+   "fixed": true
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 0.0,
+   "t1": 5.1333,
+   "slot": "br"
+  },
+  {
+   "id": "b-head",
+   "text": "near head-on light",
+   "t0": 5.4333,
+   "t1": 8.15,
+   "slot": "tr"
+  },
+  {
+   "id": "b-one",
+   "text": "one study · illustration",
+   "t0": 8.6,
+   "t1": 17.9833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified · one example (model)",
+   "t0": 18.433333333333334,
+   "t1": 39.7833,
+   "slot": "bl"
+  },
+  {
+   "id": "b-face",
+   "text": "model face, not a photo",
+   "t0": 40.233333333333334,
+   "t1": 52.2833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-step",
+   "text": "Stephen et al., 2009",
+   "t0": 40.233333333333334,
+   "t1": 52.2833,
+   "slot": "tr"
+  },
+  {
+   "id": "b-est",
+   "text": "estimate · varies by skin and site",
+   "t0": 52.7333,
+   "t1": 60.2167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-illus2",
+   "text": "illustration",
+   "t0": 60.6667,
+   "t1": 69.13333333333334,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-q",
+   "label": "your glow",
+   "text": "from where?",
+   "t0": 3.0,
+   "t1": 6.1333,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-refl",
+   "label": "bounces off the top",
+   "text": "4–7 %",
+   "t0": 6.5333000000000006,
+   "t1": 17.0,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-back",
+   "label": "comes back out",
+   "text": "≈ 40 %",
+   "t0": 23.76666666666667,
+   "t1": 34.833333333333336,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-red",
+   "label": "the light comes back",
+   "text": "redder",
+   "t0": 36.8,
+   "t1": 52.2833,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-final",
+   "label": "the glow comes",
+   "text": "from within",
+   "t0": 62.13333333333333,
+   "t1": 68.63333333333334,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Outer Layer · No. 002",
+  "title": "Where a glow *comes from*",
+  "t1": 2.8,
+  "sig": 1.5333333333333334
+ },
+ "endCard": 69.13333333333334,
+ "end": {
+  "title": "Next layer: is a scar still *skin*?",
+  "follow": "Outer Layer · No. 003",
+  "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."
+ },
+ "captions": [
+  {
+   "t0": 0.087,
+   "t1": 1.832,
+   "lines": [
+    [
+     [
+      "Where's",
+      0.087
+     ],
+     [
+      "your glow",
+      0.517
+     ],
+     [
+      "from?",
+      1.177
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.832,
+   "t1": 4.687,
+   "lines": [
+    [
+     [
+      "Most",
+      1.832
+     ],
+     [
+      "light",
+      2.142
+     ],
+     [
+      "on your face",
+      2.512
+     ]
+    ],
+    [
+     [
+      "goes",
+      3.342
+     ],
+     [
+      "inside you.",
+      3.617
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.453,
+   "t1": 7.938,
+   "lines": [
+    [
+     [
+      "Only",
+      5.453
+     ],
+     [
+      "a few percent",
+      5.923
+     ]
+    ],
+    [
+     [
+      "bounces",
+      6.598
+     ],
+     [
+      "off",
+      6.923
+     ],
+     [
+      "the",
+      7.268
+     ],
+     [
+      "top",
+      7.383
+     ],
+     [
+      "as",
+      7.693
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.938,
+   "t1": 8.943,
+   "lines": [
+    [
+     [
+      "a glint.",
+      7.938
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.943,
+   "t1": 11.578,
+   "lines": [
+    [
+     [
+      "Smooth, hydrated skin",
+      8.943
+     ]
+    ],
+    [
+     [
+      "sends",
+      10.718
+     ],
+     [
+      "it",
+      11.118
+     ],
+     [
+      "back",
+      11.288
+     ],
+     [
+      "in",
+      11.358
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.578,
+   "t1": 14.443,
+   "lines": [
+    [
+     [
+      "one direction;",
+      11.578
+     ],
+     [
+      "dry skin",
+      12.923
+     ]
+    ],
+    [
+     [
+      "scatters",
+      13.683
+     ],
+     [
+      "it",
+      14.258
+     ],
+     [
+      "into",
+      14.408
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.443,
+   "t1": 15.733,
+   "lines": [
+    [
+     [
+      "a dull haze.",
+      14.443
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.653,
+   "t1": 18.713,
+   "lines": [
+    [
+     [
+      "But",
+      16.653
+     ],
+     [
+      "the glint",
+      16.913
+     ]
+    ],
+    [
+     [
+      "isn't",
+      17.298
+     ],
+     [
+      "the glow.",
+      17.688
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.713,
+   "t1": 20.003,
+   "lines": [
+    [
+     [
+      "The",
+      18.713
+     ],
+     [
+      "rest",
+      18.743
+     ],
+     [
+      "slips in,",
+      19.123
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.003,
+   "t1": 22.253,
+   "lines": [
+    [
+     [
+      "bounces",
+      20.003
+     ],
+     [
+      "among",
+      20.513
+     ]
+    ],
+    [
+     [
+      "cells and fibres,",
+      20.938
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.253,
+   "t1": 24.933,
+   "lines": [
+    [
+     [
+      "and",
+      22.253
+     ],
+     [
+      "a large share",
+      22.318
+     ]
+    ],
+    [
+     [
+      "finds",
+      23.313
+     ],
+     [
+      "its",
+      23.653
+     ],
+     [
+      "way",
+      23.763
+     ],
+     [
+      "back out.",
+      23.993
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.007,
+   "t1": 29.387,
+   "lines": [
+    [
+     [
+      "You",
+      26.007
+     ],
+     [
+      "might",
+      26.287
+     ],
+     [
+      "picture",
+      26.617
+     ],
+     [
+      "a glow",
+      26.967
+     ]
+    ],
+    [
+     [
+      "sitting",
+      27.737
+     ],
+     [
+      "on",
+      28.102
+     ],
+     [
+      "the skin.",
+      28.347
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.682,
+   "t1": 32.267,
+   "lines": [
+    [
+     [
+      "But",
+      29.682
+     ],
+     [
+      "it's",
+      29.757
+     ],
+     [
+      "light",
+      30.047
+     ],
+     [
+      "that",
+      30.612
+     ]
+    ],
+    [
+     [
+      "travelled through you,",
+      30.787
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.327,
+   "t1": 34.827,
+   "lines": [
+    [
+     [
+      "tinted",
+      32.327
+     ],
+     [
+      "by",
+      32.872
+     ]
+    ],
+    [
+     [
+      "melanin and blood,",
+      33.087
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.962,
+   "t1": 37.707,
+   "lines": [
+    [
+     [
+      "and",
+      34.962
+     ],
+     [
+      "a rush of blood",
+      34.992
+     ]
+    ],
+    [
+     [
+      "sends",
+      36.137
+     ],
+     [
+      "it",
+      36.622
+     ],
+     [
+      "back redder.",
+      36.752
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.473,
+   "t1": 42.423,
+   "lines": [
+    [
+     [
+      "Asked",
+      40.473
+     ],
+     [
+      "to",
+      40.803
+     ],
+     [
+      "make",
+      41.098
+     ]
+    ],
+    [
+     [
+      "strangers' faces",
+      41.238
+     ],
+     [
+      "look",
+      42.393
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.423,
+   "t1": 44.143,
+   "lines": [
+    [
+     [
+      "as healthy",
+      42.423
+     ],
+     [
+      "as",
+      43.088
+     ]
+    ],
+    [
+     [
+      "they could,",
+      43.328
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.143,
+   "t1": 46.488,
+   "lines": [
+    [
+     [
+      "people",
+      44.143
+     ],
+     [
+      "turned up",
+      44.328
+     ]
+    ],
+    [
+     [
+      "exactly that:",
+      45.043
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.488,
+   "t1": 48.393,
+   "lines": [
+    [
+     [
+      "the colour of blood,",
+      46.488
+     ]
+    ],
+    [
+     [
+      "shining",
+      47.568
+     ],
+     [
+      "back",
+      48.143
+     ],
+     [
+      "through",
+      48.338
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.393,
+   "t1": 49.453,
+   "lines": [
+    [
+     [
+      "the skin.",
+      48.393
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.053,
+   "t1": 55.383,
+   "lines": [
+    [
+     [
+      "Blue light",
+      53.053
+     ],
+     [
+      "gets",
+      53.603
+     ],
+     [
+      "barely",
+      53.898
+     ]
+    ],
+    [
+     [
+      "a millimetre in,",
+      54.228
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.383,
+   "t1": 57.518,
+   "lines": [
+    [
+     [
+      "about",
+      55.383
+     ]
+    ],
+    [
+     [
+      "10 sheets of paper;",
+      55.768
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.518,
+   "t1": 59.973,
+   "lines": [
+    [
+     [
+      "red light",
+      57.518
+     ],
+     [
+      "goes",
+      58.108
+     ]
+    ],
+    [
+     [
+      "several times deeper.",
+      58.438
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.202,
+   "t1": 64.027,
+   "lines": [
+    [
+     [
+      "So",
+      61.202
+     ],
+     [
+      "the",
+      61.482
+     ],
+     [
+      "glow",
+      61.512
+     ],
+     [
+      "isn't",
+      61.922
+     ]
+    ],
+    [
+     [
+      "on",
+      62.387
+     ],
+     [
+      "your face.",
+      62.647
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.027,
+   "t1": 66.112,
+   "lines": [
+    [
+     [
+      "It's",
+      64.027
+     ],
+     [
+      "light",
+      64.272
+     ],
+     [
+      "that",
+      64.657
+     ]
+    ],
+    [
+     [
+      "went",
+      64.847
+     ],
+     [
+      "inside you,",
+      65.212
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 66.112,
+   "t1": 68.227,
+   "lines": [
+    [
+     [
+      "met",
+      66.112
+     ],
+     [
+      "your blood,",
+      66.427
+     ]
+    ],
+    [
+     [
+      "and",
+      67.087
+     ],
+     [
+      "came back.",
+      67.292
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.387,
+   "t1": 72.252,
+   "lines": [
+    [
+     [
+      "Next:",
+      69.387
+     ],
+     [
+      "skin",
+      69.877
+     ],
+     [
+      "closes",
+      70.297
+     ]
+    ],
+    [
+     [
+      "almost",
+      70.752
+     ],
+     [
+      "any cut.",
+      71.137
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 72.252,
+   "t1": 74.067,
+   "lines": [
+    [
+     [
+      "But",
+      72.252
+     ],
+     [
+      "is",
+      72.282
+     ],
+     [
+      "a scar",
+      72.487
+     ]
+    ],
+    [
+     [
+      "still skin?",
+      73.122
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.587,
+   "file": "vo/01.wav",
+   "text": "Where's your glow from? Most light on your face goes inside you."
+  },
+  {
+   "id": "vo02",
+   "t": 5.433333333333334,
+   "dur": 10.045,
+   "file": "vo/02.wav",
+   "text": "Only a few percent bounces off the top as a glint. Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze."
+  },
+  {
+   "id": "vo03",
+   "t": 16.633333333333333,
+   "dur": 8.03,
+   "file": "vo/03.wav",
+   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and a large share finds its way back out."
+  },
+  {
+   "id": "vo04",
+   "t": 25.966666666666665,
+   "dur": 11.736,
+   "file": "vo/04.wav",
+   "text": "You might picture a glow sitting on the skin. But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder."
+  },
+  {
+   "id": "vo05",
+   "t": 40.43333333333333,
+   "dur": 8.73,
+   "file": "vo/05.wav",
+   "text": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin."
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "dur": 6.71,
+   "file": "vo/06.wav",
+   "text": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper."
+  },
+  {
+   "id": "vo07",
+   "t": 60.96666666666667,
+   "dur": 7.36,
+   "file": "vo/07.wav",
+   "text": "So the glow isn't on your face. It's light that went inside you, met your blood, and came back."
+  },
+  {
+   "id": "vo08",
+   "t": 69.36666666666666,
+   "dur": 4.598,
+   "file": "vo/08.wav",
+   "text": "Next: skin closes almost any cut. But is a scar still skin?"
+  }
+ ]
+}
