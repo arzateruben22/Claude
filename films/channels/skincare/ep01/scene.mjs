@@ -12,6 +12,8 @@ import { createRig } from "../set/rig.js";
 import { titleBars, endBars, injectCss } from "../set/motif.js";
 import { createUVSkin, createViewfinder, createDaylight } from "../set/uvcam.js";
 import { createTerrain, goldenHour } from "../set/terrain.js";
+import { createStudio, skinMaterial, strandMaterial, createShaft, createGrain } from "../set/studio.js";
+import { DERMIS } from "../set/ref/textures.js";
 import { createAcneFollicle } from "../set/acne01.js";
 import { toneColor } from "../set/section.js";
 
@@ -22,12 +24,14 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
 renderer.localClippingEnabled = true;
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.88, bloom: 0.32, exposure: 1.05 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, threshold: 0.9, bloom: 0.3, exposure: 1.0 });
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.5, 30000);
 injectCss();
 const lights = goldenHour(scene);
+const studio = createStudio(renderer, scene, {});   // the studio look: a softbox environment and a three-point rig on top of the warm sun
 const FOG = scene.fog; scene.fog = null;
+const FOGS = new THREE.Fog(0x2c1660, 14, 46);   // the stream's haze between depth layers
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
 const SH = Object.fromEntries(FILM.shots.map((s) => [s.name, s.at]));
 let focusPt = [0, 0, 0], fstop = 0;
@@ -36,10 +40,20 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 // ── the set ─────────────────────────────────────────────────────────────────
 const uv = createUVSkin({ seed: 3.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 const SPOT = [0.6, 0.45, 0.055];
-const terrain = createTerrain({ seed: 9, spots: 0 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 9, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+{ const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
+  terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 4000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, block: false });   // one wide strip of skin holds both follicles
 Gf.group.position.z = -2;   // set back a hair: where the blocks overlap, the near one's face wins (no seam)
 scene.add(F.group, Gf.group);
+// the marrow stream (whoa): a river of new white cells, translucent, each with a glowing nucleus, flowing past
+const SX = PL.sx || 9000, stream = new THREE.Group(); stream.position.x = SX; scene.add(stream);
+const sCell = new THREE.MeshPhysicalMaterial({ color: 0xe9e2ff, roughness: 0.22, clearcoat: 0.9, clearcoatRoughness: 0.1, sheen: 0.5, sheenColor: new THREE.Color(0.85, 0.95, 1), transparent: true, opacity: 0.6, depthWrite: false });
+const sNuc = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color("#9F83FF").multiplyScalar(0.8) });
+const SR = (() => { let a = 99; return () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; })();
+const sCells = Array.from({ length: 120 }, () => { const g = new THREE.Group(); const r = 0.32 + SR() * 0.18; const m = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 20), sCell); const n = new THREE.Mesh(new THREE.SphereGeometry(r * 0.42, 14, 10), sNuc); n.position.set(r * 0.15, 0, 0); g.add(m, n);
+  g.userData = { u: SR(), y: (SR() - 0.5) * 9, z: (SR() - 0.5) * 7, s: 0.8 + SR() * 0.5 }; stream.add(g); return g; });
+const shaftS = createShaft({ from: [SX - 10, 18, -8], to: [SX + 4, -6, 2], radius: 4, color: "#B79BFF" }); scene.add(shaftS.group);
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
 
@@ -50,7 +64,7 @@ const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 Object.assign(vf.el.querySelector(".rec").style, { background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1.2vmin" });   // readable over daylight skin too
 vf.el.querySelector(".hl").style.cssText += ";background:var(--hud-plate);padding:.5vmin 1.4vmin;border-radius:1.2vmin;font-size:3vmin";
-const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
+const day = createDaylight({ root: hudRoot, W, H, y: 0.705, label: "daylight" }); day.el.style.fontSize = "2.7vmin";
 // the photo stack (normal): earlier photos of the same patch pile up behind the viewfinder, each with its date
 const stackRoot = document.createElement("div");
 Object.assign(stackRoot.style, { position: "absolute", left: `${(VF.x + 0.03) * W}px`, top: `${(VF.y + 0.05) * H}px`, width: `${(VF.w - 0.06) * W}px`, height: `${(VF.h - 0.07) * H}px`, zIndex: 1, pointerEvents: "none" });
@@ -124,6 +138,16 @@ function createCellGauge() {
   };
 }
 
+// atmosphere: dust that the depth of field turns to bokeh (one field moved to each place)
+const dotTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const k = c.getContext("2d"); const g = k.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.4, "rgba(255,255,255,.45)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+const dustN = 300, dustPos = new Float32Array(dustN * 3), dustBase = Array.from({ length: dustN }, () => [SR() - 0.5, SR() - 0.5, SR() - 0.5, SR() * 6.28]);
+const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
+const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * t % size[1]; dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
+const grain = createGrain(hudRoot, { amount: 0.007 });
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(2.4, 3); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
+
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
@@ -131,9 +155,10 @@ window.seek = function (t) {
   rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
   const isFl = shot === "flight" || shot === "rise";
-  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair";
-  scene.fog = isFl ? FOG : null;
-  lights.sun.intensity = isFl ? 4.2 : 2.2; lights.key.intensity = isFl ? 0.9 : 1.6;
+  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream"; shaftS.set({ op: shot === "stream" ? 1 : 0 });
+  scene.fog = isFl ? FOG : shot === "stream" ? FOGS : null;
+  lights.sun.intensity = isFl ? 2.6 : 1.2; lights.key.intensity = isFl ? 0.3 : 0.8;
+  studio.set({ key: isFl ? 0.45 : 1.4, rim: isFl ? 1.6 : 2.6, fill: 0.35, env: isUV ? 0 : 0.5, warm: isFl ? 0.5 : 0.2 });
   fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
@@ -174,9 +199,9 @@ window.seek = function (t) {
     if (shot === "follicle") p = { ...p, ring: 0.6 + 0.4 * E.inout2(seg(t, K.ring[0], K.ring[1])), ringLit: 0.7 * E.inout2(seg(t, K.ringLit[0], K.ringLit[1])), bact: 0 };
     if (shot === "pair") p = { ...p, ring: 1, ringLit: 0.25 + 0.75 * E.inout2(seg(t, K.answer[0], K.answer[1])), bact: E.inout2(seg(t, K.bact[0], K.bact[1])) };
     if (shot === "rupture" || shot === "gauge") {
-      const rupt = E.inout2(seg(t, K.rupt[0], K.rupt[1])), press = E.inout2(seg(t, K.press[0], K.press[1]));
+      const rupt = E.inout2(seg(t, K.rupt[0], K.rupt[1])), press = 0;
       p = { ...p, ring: 1, ringLit: 1, bact: 0.6, flood: E.inout2(seg(t, K.flood[0], K.flood[1])), rupt, press, red: Math.min(1, 0.35 * rupt + 0.8 * press), dim: shot === "gauge" ? 0.5 * fadeIn(t, SH.gauge, 0.8) : 0,
-        thumb: shot === "gauge" ? 0 : 1 - E.inout2(seg(t, K.lift[0], K.lift[1])), mark: E.inout2(seg(t, K.mark[0], K.mark[1])) };
+        thumb: 0, mark: 0 };
     }
     F.set(p);
     Gf.set({ tone, ring: 0, bact: p.bact, ringLit: 0 });
@@ -190,6 +215,16 @@ window.seek = function (t) {
   gauge.update(t, gOp, lift);
   F.group.visible = F.group.visible && !(shot === "gauge" && lift > 0.98);   // the follicle stays behind the card only while it rises and goes
 
+  // ── the marrow stream: cells drift past in a slow river, the near ones soft in the haze ──
+  if (shot === "stream") {
+    const u = seg(t, K.stream[0], K.stream[1]);
+    sCells.forEach((g, i) => { const d = g.userData, x = ((d.u + 0.06 * (t - K.stream[0])) % 1) * 60 - 30; g.position.set(x, d.y + 0.6 * Math.sin(x * 0.12 + i), d.z); g.scale.setScalar(d.s); g.rotation.set(t * 0.2 + i, t * 0.15, 0); });
+    focusPt = [SX + 2, 0, 0]; fstop = 0.35;
+    placeDust(t, [SX, 0, 4], [44, 22, 16], 0.12);
+  } else if (isF) placeDust(t, [PL.fx, -350, 260], [1600, 1400, 500], 7);
+  else if (isFl) placeDust(t, [PL.tx, 3, 0], [30, 8, 24], 0.1);
+  else dust.visible = false;
+  grain.set(t);
   hud.update(t);
   tBars.update(t);
   eBars.update(t);

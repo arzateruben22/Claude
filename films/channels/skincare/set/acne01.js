@@ -56,12 +56,32 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const markMat = new THREE.MeshBasicMaterial({ color: 0x5a1e1a, transparent: true, opacity: 0, depthWrite: false });
   const markM = new THREE.Mesh(new THREE.CircleGeometry(1, 40), markMat); markM.scale.set(260, 120, 1); markM.position.set(0, -520, 1); g.add(markM);
   const breachY = -400;
+  const nucMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color("#9F83FF").multiplyScalar(0.7), roughness: 0.5 });
+  let looked = false;
+  // look({ dermisMap }): the studio look (opt-in; No. 001's reboot): the cut face shows a real stained micrograph, the
+  // cells are translucent with a glowing nucleus, the walls glossy
+  const look = ({ dermisMap = null } = {}) => {
+    looked = true;
+    const phys = (old, o) => { const m = new THREE.MeshPhysicalMaterial({ side: THREE.DoubleSide, clippingPlanes: old.clippingPlanes, ...o }); return m; };
+    M.dermis = phys(M.dermis, { roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.4, sheen: 0.2, sheenColor: new THREE.Color(1, 0.86, 0.92), map: dermisMap });
+    dermis.material = M.dermis;
+    M.wall = phys(M.wall, { roughness: 0.28, clearcoat: 0.8, clearcoatRoughness: 0.15, sheen: 0.3 }); wall.material = M.wall;
+    M.plug = phys(M.plug, { roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08 }); plug.material = M.plug;
+    glands.forEach((m) => { m.material = phys(m.material, { roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0.4, sheenColor: new THREE.Color(1, 0.95, 0.8) }); });
+    const cellPhys = (old) => { const m = new THREE.MeshPhysicalMaterial({ color: 0xe9e2ff, roughness: 0.22, clearcoat: 0.9, clearcoatRoughness: 0.1, sheen: 0.5, sheenColor: new THREE.Color(0.85, 0.95, 1), transparent: true, opacity: 0.82, emissive: old.emissive }); return m; };
+    const rm = cellPhys(ringMat), fm = cellPhys(floodMat);
+    ringC.forEach((c) => { c.material = rm; const n = new THREE.Mesh(new THREE.SphereGeometry(8, 12, 8), nucMat); c.add(n); });
+    floodC.forEach((c) => { c.material = fm; const n = new THREE.Mesh(new THREE.SphereGeometry(8, 12, 8), nucMat); c.add(n); });
+    ringMatL = rm; floodMatL = fm;
+    spill.forEach((m) => { m.material = new THREE.MeshPhysicalMaterial({ color: 0xf0d79a, roughness: 0.25, clearcoat: 1, emissive: 0x1a1206 }); });
+  };
+  let ringMatL = null, floodMatL = null;
   return {
-    group: g, dims: { width, depth, epi, breachY },
+    group: g, dims: { width, depth, epi, breachY }, look,
     set({ tone = 0.18, bact: bk = 0, ring = 0, ringLit = 0, flood = 0, rupt = 0, press = 0, red = 0, dim = 0, thumb: thumbK = 1, mark = 0 } = {}) {
       markMat.opacity = 0.55 * mark; markM.visible = mark > 0.01;
       const k = 1 - 0.45 * dim;
-      M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.9));
+      if (looked && M.dermis.map) M.dermis.color.setRGB(1.05 * k, 0.95 * k, 1.0 * k); else M.dermis.color.setRGB(...toneColor("dermis", tone).map((v) => v * k * 0.9));
       M.epi.color.setRGB(...toneColor("living", tone).map((v) => v * k));
       M.wall.color.setRGB(...toneColor("basal", tone).map((v) => v * k * 0.85));
       M.plug.color.setRGB(0.93 * k, 0.86 * k, 0.6 * k);
@@ -69,6 +89,7 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
       bactMat.emissive.setRGB(1.0 * bk, 0.32 * bk, 0.16 * bk);
       bact.forEach((m) => { m.visible = bk > 0.01; });
       ringMat.emissive.setRGB(0.15 * ringLit, 0.75 * ringLit, 0.72 * ringLit); floodMat.emissive.copy(ringMat.emissive);
+      if (ringMatL) { ringMatL.emissive.setRGB(0.06 * ringLit, 0.36 * ringLit, 0.36 * ringLit); floodMatL.emissive.copy(ringMatL.emissive); }
       ringC.forEach((m) => { m.visible = m.userData.k < ring; });
       floodC.forEach((m) => { const u = Math.min(1, Math.max(0, flood * 1.4 - m.userData.k * 0.4)); const { from, to } = m.userData; m.position.set(from[0] + (to[0] - from[0]) * u, from[1] + (to[1] - from[1]) * u, -20); m.visible = flood > 0.01 && u > 0.001; });
       // the breach: the lower wall and plug open (scaled thin) as the wall gives way
