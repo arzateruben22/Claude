@@ -138,14 +138,14 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       if (filmBar) {
         filmBar.setAttribute("x", bx); filmBar.setAttribute("width", bw); filmBar.setAttribute("y", y0); filmBar.setAttribute("height", Math.max(0, filmUm * px * fillFilm)); filmBar.setAttribute("opacity", (0.85 * u).toFixed(3));
         scIn.setAttribute("x", bx + 12 * S1); scIn.setAttribute("y", yS + sc * px * 0.5); scIn.setAttribute("opacity", "0");
-        filmVal.textContent = `≈${Math.round(filmUm)} µm`; filmVal.setAttribute("fill", "var(--card)"); filmVal.setAttribute("font-size", 26 * S1); filmVal.setAttribute("x", bx + 10 * S1); filmVal.setAttribute("y", y0 + filmUm * px * fillFilm * 0.5); filmVal.setAttribute("opacity", (u * fillFilm).toFixed(3));
+        filmVal.textContent = `≈${Math.round(filmUm)} µm`; filmVal.style.fill = "var(--card)"; filmVal.setAttribute("font-size", 26 * S1);   // white on violet (6.4:1); a style, so the sheet's ink rule doesn't win filmVal.setAttribute("x", bx + 10 * S1); filmVal.setAttribute("y", y0 + filmUm * px * fillFilm * 0.5); filmVal.setAttribute("opacity", (u * fillFilm).toFixed(3));
       }
       paperBar.setAttribute("x", bx + bw + gap); paperBar.setAttribute("width", bw); paperBar.setAttribute("y", y0); paperBar.setAttribute("height", Math.max(0, paperUm * px * fillPaper)); paperBar.setAttribute("opacity", u.toFixed(3));
       scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * (filmBar ? fillFilm : fillSc)).toFixed(3));
       paperTxt2.setAttribute("text-anchor", "end"); paperTxt2.setAttribute("x", bx + 2 * bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1);   // right-aligned over its bar: the two headings never run together paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
       card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", span * px + 150 * S1);
       card.setAttribute("opacity", (0.94 * u).toFixed(3));
-      scVal.textContent = `${Math.round(sc)} µm`; paperVal.textContent = `${Math.round(paperUm)} µm`;
+      scVal.textContent = filmBar ? `${Math.round(sc)} µm dead layer` : `${Math.round(sc)} µm`;   // with a film above it, the teal bar is named by its value line paperVal.textContent = `${Math.round(paperUm)} µm`;
       scVal.setAttribute("dominant-baseline", "hanging"); scVal.setAttribute("x", bx); scVal.setAttribute("y", yS + sc * px + 8 * S1); scVal.setAttribute("opacity", (u * fillSc).toFixed(3));
       paperVal.setAttribute("x", bx + bw + gap); paperVal.setAttribute("y", y0 + paperUm * px + 8 * S1); paperVal.setAttribute("opacity", (u * fillPaper).toFixed(3));
     },

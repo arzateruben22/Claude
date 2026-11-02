@@ -15,7 +15,7 @@ import * as THREE from "three";
 import { stage, seg, E } from "cinema/film/runtime.js";
 import { createHud, project } from "cinema/sci/hud.js";
 import { createSection } from "../set/section.js";
-import { createRays, createFilm } from "../set/rays.js";
+import { createRays, createFilm, createTrails } from "../set/rays.js";
 import { createRig } from "../set/rig.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { lin } from "../set/look.js";
@@ -50,6 +50,9 @@ scene.add(FL.mesh, FR.mesh, FH.mesh, FS.mesh, FC.mesh);
 // rays start a short way above the films (not up through the title band) and are drawn thin and crisp
 const RL = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 70, seed: 31, width: 0.4, len: 7 }), RR = createRays({ n: 100, x: [-28, 28], z: [-18, 21], top: 70, seed: 32, width: 0.4, len: 7 });
 const RB = createRays({ n: 40, x: [-58, -4], z: [-20, 23], top: 70, seed: 33, width: 0.4, len: 7 }), RH = createRays({ n: 40, x: [4, 58], z: [-20, 23], top: 70, seed: 34, width: 0.4, len: 7 });
+// the countable two against one: steady trails under each film (two under SPF 50, one under SPF 100)
+const TL = createTrails({ xs: [-12, 14], z: 22, depth: 64 }), TR = createTrails({ xs: [2], z: 22, depth: 64 });
+scene.add(TL.group, TR.group);
 const RS = createRays({ n: 100, x: [-56, 56], z: [-20, 23], top: 70, seed: 35, width: 0.4, len: 7 }), RC = createRays({ n: 100, x: [-46, 46], z: [-46, 46], top: 90, seed: 36, width: 0.5, len: 8 });
 [RL, RR, RB, RH, RS, RC].forEach((r) => scene.add(r.group));
 // the rays and their glows draw over the cut face, so what gets in is seen inside the skin (the review)
@@ -107,10 +110,16 @@ window.seek = function (t) {
   WL.set({ tone, dimLiving: 0.35 + 0.3 * inLit }); WR.set({ tone, dimLiving: 0.35 + 0.3 * inLit });
   const fo = 0.42 - 0.2 * inLit;
   FL.set({ top: 0, thick: pair ? F : 0, opacity: fo, tint: [0.88, 0.96, 0.97] }); FR.set({ top: 0, thick: pair ? F : 0, opacity: fo, tint: [0.88, 0.96, 0.97] });
-  const R = { filmTop: F, filmBottom: 0, color: UVC, hitColor: HIT, stopGain: 1 - 0.67 * inLit, passGain: 1 + 1.6 * inLit, depth: 14 + 56 * inLit };
+  // the falling rays are texture: they fade toward the ground (not darker) while the trails carry the count
+  const R = { filmTop: F, filmBottom: 0, color: UVC, hitColor: HIT, gain: 1 - 0.7 * inLit, passGain: 1, depth: 14 };
   RL.set(t, pair ? { ...R, pass: UV.pass50, x0: -36 } : HIDE);
   RR.set(t, pair ? { ...R, pass: UV.pass100, x0: 36 } : HIDE);
   A.film_l = [-36, F + 1, 23]; A.film_r = [36, F + 1, 23];
+  // the trails: on from frame 0 in the hook, drawn in on "sliver" (2, then 1), lit on "gets in" and on the takeaway's "half"
+  const trail = shot === "hook" ? 1 : shot === "pair" ? E.inout2(seg(t, CUE.sliver - 0.2, CUE.sliver + 0.8)) : shot === "close" ? E.inout2(seg(t, CUE.half2 - 0.3, CUE.half2 + 0.6)) : 0;
+  const trailOp = pair ? (0.55 + 0.45 * Math.max(inLit, shot === "hook" ? 1 : 0)) : 0;
+  TL.set({ top: 0, grow: trail, op: trailOp, color: HIT.map((v) => v * 0.55), glow: HIT, x0: -36 });
+  TR.set({ top: 0, grow: trail, op: trailOp, color: HIT.map((v) => v * 0.55), glow: HIT, x0: 36 });
 
   // ── one block: the ratio (half bare, half filmed; the bare half reddens), then the thin film and the gauge ──
   const ratio = shot === "ratio", thin = shot === "thin";
@@ -126,7 +135,7 @@ window.seek = function (t) {
   const fThick = thin ? F + (UV.thin_um - F) * E.inout2(seg(t, CUE.thin[0], CUE.thin[1])) : F;
   const pThin = UV.pass50 + (UV.pass_thin - UV.pass50) * E.inout2(seg(t, CUE.fall[0], CUE.fall[1]));
   FS.set({ top: 0, thick: thin ? fThick : 0, opacity: 0.42, tint: [0.88, 0.96, 0.97] });
-  RS.set(t, thin ? { filmTop: fThick, filmBottom: 0, pass: pThin, color: UVC, hitColor: HIT, x0: 0, passGain: 2.2, depth: 50, gain: 1 - back } : HIDE);
+  RS.set(t, thin ? { filmTop: fThick, filmBottom: 0, pass: pThin, color: UVC, hitColor: HIT.map((v) => v * 0.7), x0: 0, passGain: 1.5, depth: 50, gain: 1 - back } : HIDE);   // under the bloom knee: no haze
   if (thin) A.film = [36, fThick + 1, 25];
 
   // ── the gauge: lifted out of the thin shot, the film on the dead layer beside the paper ──

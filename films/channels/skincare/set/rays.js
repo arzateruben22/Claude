@@ -75,3 +75,32 @@ export const createFilm = ({ width = 160, depth = 50, x = 0, clip = null } = {})
     },
   };
 };
+
+// trails: a few steady, countable rays that got in (No. 002: "two against one"), drawn as bright streaks from the film's
+// underside down into the skin with a glow where they stop. They hold still, so the count can be read; the falling rays
+// around them are the texture, these are the subject.
+export const createTrails = ({ xs = [0], z = 26, depth = 70, width = 0.9 } = {}) => {
+  const group = new THREE.Group();
+  const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthTest: false, depthWrite: false });
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthTest: false, depthWrite: false });
+  const items = xs.map((x) => {
+    const l = new THREE.Mesh(new THREE.CylinderGeometry(width, width, 1, 8), lineMat);
+    const g = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), glowMat);
+    l.renderOrder = g.renderOrder = 30;
+    group.add(l, g);
+    return { x, l, g };
+  });
+  return {
+    group,
+    // grow: 0 … 1, how far down the streak has run (it draws in once, then holds); op: overall strength
+    set({ top = 0, grow = 1, op = 1, color = [1.2, 0.6, 1.6], glow = [1.6, 0.9, 2.0], x0 = 0 } = {}) {
+      group.visible = op > 0.002 && grow > 0.002;
+      lineMat.color.setRGB(...color); glowMat.color.setRGB(...glow); lineMat.opacity = op; glowMat.opacity = op;
+      const len = Math.max(0.01, depth * grow);
+      items.forEach(({ x, l, g }) => {
+        l.position.set(x0 + x, top - len / 2, z); l.scale.set(1, len, 1);
+        g.position.set(x0 + x, top - len, z); g.scale.setScalar(3.2);
+      });
+    },
+  };
+};

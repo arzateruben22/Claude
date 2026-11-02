@@ -52,7 +52,7 @@ t_thin0, t_thin1 = A("vo05:spread", -0.2), A("vo05:much,", 0.2)
 t_fall0, t_fall1 = A("vo05:protection"), A("vo05:label.", 0.3)
 CUE = {"ratio": A("vo02:ratio:"), "under": A("vo02:under"), "reddens": A("vo02:reddens."), "both": A("vo03:both"), "barely": A("vo03:barely"),
        "look": A("vo04:look"), "in": A("vo04:in."), "half": A("vo04:Half"), "thin": [t_thin0, t_thin1], "fall": [t_fall0, t_fall1],
-       "argued": A("vo05:argued."), "paper": A("vo06:paper."), "in2": A("vo07:in,")}
+       "argued": A("vo05:argued."), "paper": A("vo06:paper."), "in2": A("vo07:in,"), "half2": A("vo07:half"), "sliver": A("vo03:sliver")}
 
 # ── the camera (the microscope stage) ──────────────────────────────────────────────────────────────────────────────
 HOOK = {"target": [0, -4, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46}
@@ -62,23 +62,25 @@ CAM = {
     "ratio": [{"t": B["normal"]["t0"], "target": [0, 4, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 470, "az": -12},
               {"t": CUE["ratio"], "target": [0, 4, 0], "el": 16, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 420, "az": -9, "ease": "inout2"},
               {"t": CUE["reddens"], "target": [-24, 2, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 360, "az": -5, "ease": "inout2"},
-              {"t": A("vo03:Flip", -0.2), "target": [-24, 2, 0], "el": 15, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 350, "az": -4, "ease": "sine"}],
+              {"t": A("vo03:Flip", -0.2), "target": [24, 10, 0], "el": 30, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2, "ease": "inout2"}],   # ends on the filmed half
     # the pair: from above (the count), a step on "both" and on "barely", then the tilt down into the skin on "look", a
     # push on "Half", and a slow drift to the thin film
-    "pair": [{"t": A("vo03:Flip", -0.2), "target": [0, 0, 0], "el": 46, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 600, "az": 0},
-             {"t": CUE["both"], "target": [0, 0, 0], "el": 44, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 540, "az": 3, "ease": "inout2"},
+    "pair": [{"t": A("vo03:Flip", -0.2), "target": [-36, 10, 0], "el": 34, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},   # opens on the SPF 50 film at the same size (a match), then pulls out
+             {"t": A("vo03:Flip", 0.9), "target": [0, 0, 0], "el": 46, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 600, "az": 0, "ease": "inout2"},
              {"t": CUE["barely"], "target": [0, 0, 0], "el": 40, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 500, "az": 6, "ease": "inout2"},
              {"t": CUE["in"], "target": [0, -30, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 540, "az": 4, "ease": "inout2"},
              {"t": CUE["half"] + 0.6, "target": [0, -34, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": 2, "ease": "inout2"},
-             {"t": B["whoa"]["t0"], "target": [0, -34, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 450, "az": 0, "ease": "sine"}],
+             {"t": A("vo04:That's"), "target": [0, -34, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 450, "az": 0, "ease": "sine"},
+             {"t": B["whoa"]["t0"], "target": [-36, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": -6, "ease": "inout2"}],   # into the SPF 50 film
     # thin: an orbit while the film thins, a push as the rays pour through, then the pull-back into the gauge card
-    "thin": [{"t": B["whoa"]["t0"], "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 400, "az": -22},
+    "thin": [{"t": B["whoa"]["t0"], "target": [0, 4, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": -6},   # the same framing the pair ended on: the film thins there
+             {"t": B["whoa"]["t0"] + 1.4, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 400, "az": -11, "ease": "inout2"},
              {"t": t_thin1, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 350, "az": -8, "ease": "inout2"},
              {"t": B["toscale"]["t0"], "target": [0, -2, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": 0, "ease": "sine"},
-             {"t": B["toscale"]["t0"] + 2.6, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.58, "fy": 0.62, "dist": 470, "az": 4, "ease": "inout2"},
-             {"t": B["takeaway"]["t0"], "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.58, "fy": 0.62, "dist": 455, "az": 5, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "target": [0, -30, 0], "el": 8, "fy": 0.40, "dist": 540, "az": 2},
-              {"t": CUE["in2"], **HOOK, "target": [0, -30, 0], "el": 10, "fy": 0.40, "dist": 490, "az": -2, "ease": "inout2"},
+             {"t": B["toscale"]["t0"] + 2.6, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 620, "az": 4, "ease": "inout2"},   # the film and the dead layer above the caption plate, right of the card
+             {"t": B["takeaway"]["t0"], "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 600, "az": 5, "ease": "sine"}],
+    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 640, "az": -6},
+              {"t": CUE["in2"], **HOOK, "dist": 560, "az": -4, "ease": "inout2"},
               {"t": B["tease"]["t1"], **HOOK, "dist": 640, "az": -6, "ease": "sine"}],
 }
 for shot, keys in CAM.items():           # slow arcs (≤ 4° a second)
@@ -92,22 +94,22 @@ LABELS = [
     {"id": "l-100-h", "text": "SPF 100", "kind": "uv", "anchor": "film_r", "t0": 0.0, "t1": A("vo01:On"), "shot": "hook", "side": 1, "v": "above", "fixed": True},
     {"id": "l-bare", "text": "no film", "kind": "layer", "anchor": "bare", "t0": CUE["ratio"], "t1": A("vo03:Flip", -0.2), "shot": "ratio", "side": -1, "v": "above", "fixed": True},
     {"id": "l-film", "text": "sunscreen film", "kind": "water", "anchor": "film", "t0": CUE["under"], "t1": A("vo03:Flip", -0.2), "shot": "ratio", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-50-p", "text": "SPF 50", "kind": "uv", "anchor": "film_l", "t0": A("vo03:Flip"), "t1": CUE["in"] - 0.6, "shot": "pair", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-100-p", "text": "SPF 100", "kind": "uv", "anchor": "film_r", "t0": A("vo03:Flip"), "t1": CUE["in"] - 0.6, "shot": "pair", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-50-p", "text": "SPF 50", "kind": "uv", "anchor": "film_l", "t0": A("vo03:Flip", 0.9), "t1": A("vo04:But", -0.2), "shot": "pair", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-100-p", "text": "SPF 100", "kind": "uv", "anchor": "film_r", "t0": A("vo03:Flip", 0.9), "t1": A("vo04:But", -0.2), "shot": "pair", "side": 1, "v": "above", "fixed": True},
     {"id": "l-thin", "text": "a thin film", "kind": "water", "anchor": "film", "t0": t_thin1, "t1": B["toscale"]["t0"], "shot": "thin", "side": 1, "v": "above", "fixed": True},
     # (low and close the labels would sit on the spine: from "in" on, the spine names the two)
 ]
 BADGES = [
-    {"id": "b-model-h", "text": "model: one UVB band", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "bl"},   # bottom left in the hook: the title owns the top
+    {"id": "b-model-h", "text": "model: one UVB band", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "br"},   # bottom right in the hook: the title owns the top
     {"id": "b-model", "text": "model: one UVB band", "t0": B["normal"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-test", "text": "at the test layer, 2 mg/cm²", "t0": A("vo04:as"), "t1": B["whoa"]["t0"], "slot": "tr"},
+    {"id": "b-test", "text": "test layer · 2 mg/cm²", "t0": A("vo04:as"), "t1": B["whoa"]["t0"], "slot": "tr"},
     {"id": "b-studies", "text": "Petersen & Wulf, 2014", "t0": A("vo05:studies"), "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-debated", "text": "illustration · debated", "t0": t_fall0, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-model-c", "text": "model: one UVB band", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
 ]
 SPINE = [0.34, 0.215]
 COUNTERS = [   # the spine readout, on screen from frame 0 to the end (WRITING.md, The picture, rule 2)
-    {"id": "c-q", "label": "SPF 100 vs SPF 50", "fmt": "text", "text": "2× ?", "t0": B["normal"]["t0"] - 0.4,   # after the title (it asks the same question)
+    {"id": "c-q", "label": "SPF 100 vs SPF 50", "fmt": "text", "text": "2× ?", "t0": B["normal"]["t0"] + 0.1,   # after the title (it asks the same question)
      "t1": CUE["ratio"] - 0.4, "at": SPINE},
     {"id": "c-ratio", "label": "burn dose: with ÷ without", "fmt": "text", "text": "ratio", "t0": CUE["ratio"], "t1": A("vo03:sliver") - 0.4, "at": SPINE},
     {"id": "c-blk", "label": "blocked % · SPF 50 · 100", "fmt": "text", "text": "98 · 99", "t0": A("vo03:sliver"), "t1": CUE["in"] - 0.4, "at": SPINE},
