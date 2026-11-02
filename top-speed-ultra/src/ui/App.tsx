@@ -81,6 +81,9 @@ export function App() {
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoadState] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
   const [radioOpen, setRadioOpen] = useState(false);                  // the radio card beside the controls while driving
+  // Auto-drive (Game.setAutoDrive): offered with a route in Free Drive, and whether it drives; from the HUD's readouts,
+  // set only when one of them changes
+  const [autoDrive, setAutoDrive] = useState({ offer: false, on: false });
   const [setSec, setSetSec] = useState('graphics');                  // the Settings rail's current section
   // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
   const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
@@ -127,7 +130,7 @@ export function App() {
     let g: Game;
     try {
       g = new Game(host.current, settings, {
-        hud: (h) => { lastHud.current = h; hud.current?.set(h); },
+        hud: (h) => { lastHud.current = h; hud.current?.set(h); setAutoDrive((a) => (a.offer === h.autoOffer && a.on === h.autoOn ? a : { offer: h.autoOffer, on: h.autoOn })); },
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
@@ -539,6 +542,17 @@ export function App() {
           <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
           {settings.corner === 'off' && <button type="button" className="tbtn mapbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" /><span className="tlabel">Map</span></button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
+          {/* with a route in Free Drive: Auto-drive drives it; steering or braking hands the car back (Game.setAutoDrive) */}
+          {autoDrive.offer && (
+            <button type="button" className={'tbtn auto' + (autoDrive.on ? ' on' : '')} aria-pressed={autoDrive.on} title="Auto-drive the route. Steer or brake to take over."
+              onClick={(e) => {
+                const g = game.current; if (!g) return;
+                g.setAutoDrive(!g.autoDriving); setAutoDrive({ offer: g.autoDriveOffered, on: g.autoDriving });
+                if (e.detail > 0) e.currentTarget.blur();   // a tap or click: Space (the handbrake) mustn't press it again
+              }}>
+              <Ico name="auto" /><span className="tlabel">Auto-drive</span><b className="tcap" aria-hidden="true">Auto</b>
+            </button>
+          )}
           <button type="button" className={'tbtn radio' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" /><span className="tlabel">Radio</span></button>
           {/* Pause never tucks away. Its name stays "Pause". Tap to pause; hold for the radial quick menu (U3). */}
           <button type="button" className="tbtn menu" aria-haspopup="menu" title="Tap to pause; hold for the quick menu"
@@ -550,8 +564,9 @@ export function App() {
         </div>
       )}
       {playing && radial && (
-        <RadialMenu at={radial} onCancel={() => setRadial(null)} onPick={(p: RadialPick) => {
+        <RadialMenu at={radial} auto={autoDrive.offer ? autoDrive.on : null} onCancel={() => setRadial(null)} onPick={(p: RadialPick) => {
           setRadial(null); const g = game.current; if (!g) return;
+          if (p === 'auto') { g.setAutoDrive(!g.autoDriving); setAutoDrive({ offer: g.autoDriveOffered, on: g.autoDriving }); return; }
           if (p === 'camera') { g.cycleCam(); return; }
           if (p === 'radio') { setRadioOpen(true); return; }
           if (p === 'nav') { setPanel('nav'); return; }

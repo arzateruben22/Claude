@@ -5,14 +5,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Ico } from './Icons';
 
-export type RadialPick = 'map' | 'nav' | 'garage' | 'radio' | 'camera' | 'settings';
-const WEDGES: { id: RadialPick; name: string; icon: Parameters<typeof Ico>[0]['name'] }[] = [
+export type RadialPick = 'map' | 'nav' | 'garage' | 'radio' | 'camera' | 'settings' | 'auto';
+type Wedge = { id: RadialPick; name: string; icon: Parameters<typeof Ico>[0]['name'] };
+const SIX: Wedge[] = [
   { id: 'map', name: 'Map', icon: 'map' }, { id: 'nav', name: 'Go to', icon: 'nav' }, { id: 'garage', name: 'Garage', icon: 'garage' },
   { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'camera', name: 'Camera', icon: 'camera' }, { id: 'radio', name: 'Radio', icon: 'radio' },
 ];
+// with a route in Free Drive, a seventh wedge turns Auto-drive on or off (App passes `auto`: null when not offered)
+const WITH_AUTO = (on: boolean): Wedge[] => [...SIX.slice(0, 2), { id: 'auto', name: on ? 'Auto-drive off' : 'Auto-drive', icon: 'auto' }, ...SIX.slice(2)];
 const R = 132;   // the wedges' radius, CSS px
 
-export function RadialMenu({ at, onPick, onCancel }: { at: { x: number; y: number }; onPick: (p: RadialPick) => void; onCancel: () => void }) {
+export function RadialMenu({ at, auto = null, onPick, onCancel }: { at: { x: number; y: number }; auto?: boolean | null; onPick: (p: RadialPick) => void; onCancel: () => void }) {
+  const WEDGES = auto === null ? SIX : WITH_AUTO(auto);
   const [hot, setHot] = useState<number>(-1);
   const hotRef = useRef(-1); hotRef.current = hot;
   // which wedge a point is over: by its angle from the centre, none within 40 px of it

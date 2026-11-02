@@ -456,6 +456,21 @@ await group('race', async (use) => {
     expect(res.reason === 'Too far behind' && res.race.position === 4, `${res.reason}, P${res.race.position}`);
     return `"${res.reason}" at P${res.race.position} after ${r.t} s`;
   });
+  // Auto-drive is a driving aid, never a score cheat (owner, 2026-11-01): a Race doesn't offer it, even with a route
+  await check('Auto-drive: not offered in a Race, even with a route set', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game;
+      await g.start('race'); g.setPaused(true);
+      while (g.countdown > 0) g.fastForward(0.5, { throttle: 0, brake: 0, steer: 0 }, 0);
+      const routed = g.navigateTo('CA-55 North');
+      const offered = g.autoDriveOffered, took = g.setAutoDrive(true);
+      g.fastForward(2, { throttle: 0.5, steer: 0, brake: 0 });
+      let seen = null; const o = g.ev.hud; g.ev.hud = (h) => { seen = h; o(h); }; g.sendHud(); g.ev.hud = o;
+      return { mode: g.mode, routed, offered, took, on: g.autoDriving, hudOffer: seen.autoOffer, button: !!document.querySelector('.tbtn.auto') };
+    });
+    expect(r.mode === 'race' && !r.offered && !r.took && !r.on && !r.hudOffer && !r.button, JSON.stringify(r));
+    return `race with a route (${r.routed ? 'set' : 'none'}): offered ${r.offered}, setAutoDrive ${r.took}, HUD offer ${r.hudOffer}, button ${r.button}`;
+  });
 });
 
 await group('abilities', async (use) => {
@@ -513,6 +528,71 @@ await group('progression', async (use) => {
     expect(r.xp > 0 && r.credits > 0 && r.ach.includes('ton'), JSON.stringify(r));
     expect(r.v === 1 && Math.abs(r.savedXp - r.xp) < 1e-6, `saved v${r.v} xp ${r.savedXp}`);
     return `${Math.round(r.xp)} XP, ${Math.round(r.credits)} credits, achievements ${r.ach.join(', ')}, saved as v${r.v}`;
+  });
+  // following the route (owner, 2026-11-01): Auto-drive drives the route's hand-offs to a destination a few km away,
+  // Free Drive's distance still counts, it stops on arrival; then the keyboard's steer, and its brake, each take the car
+  // back at once, while gas alone doesn't
+  await check('Auto-drive: takes the hand-offs to CA-55 North; steer and brake keys each take over, gas does not', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North');
+      g.setPaused(true);
+      g.placeCar(m, m.len * 0.12, 1, 25); g.traffic.reseed(3); g.traffic.fill(g.view());
+      if (!g.navigateTo('CA-55 North')) return { why: 'no route' };
+      const hand = g.route.length, d0 = g.distance, s0 = g.phys.s, x0 = g.phys.x, z0 = g.phys.z, on = g.setAutoDrive(true);
+      let t = 0, top = 0;
+      while (t < 400 && g.routeTarget) { g.fastForward(1, {}); t++; top = Math.max(top, g.phys.vx); }
+      return { hand, on, t, at: g.path.label, auto: g.autoDriving, target: g.routeTarget?.label ?? null, km: (g.distance - d0) / 1000, crow: Math.hypot(g.phys.x - x0, g.phys.z - z0) / 1000, top: top * 2.236936, coll: g.collisions, s0 };
+    });
+    expect(!r.why, r.why);
+    expect(r.on && r.hand >= 1 && r.at === 'CA-55 North' && !r.target && !r.auto, `after ${r.t} s: on ${r.at}, auto ${r.auto}, target ${r.target}, ${r.hand} hand-offs`);
+    expect(r.km > 2 && r.top <= 72, `${fmt(r.km)} km counted, top ${fmt(r.top)} mph`);
+    // the take-over, by real keys on rendered frames
+    await game(page, () => { const g = window.__game; g.navigateTo('CA-91 East') || g.navigateTo('I-5 North'); g.setAutoDrive(true); g.setPaused(false); });
+    const keyTakeOver = async (key) => {
+      await game(page, () => window.__game.setAutoDrive(true));
+      await frames(page, 2);
+      const before = await game(page, () => window.__game.autoDriving);
+      await page.keyboard.down(key); await frames(page, 2); await page.keyboard.up(key);
+      return { before, after: await game(page, () => window.__game.autoDriving) };
+    };
+    const gas = await (async () => { await game(page, () => window.__game.setAutoDrive(true)); await page.keyboard.down('KeyW'); await frames(page, 3); await page.keyboard.up('KeyW'); return game(page, () => window.__game.autoDriving); })();
+    const steer = await keyTakeOver('KeyD'), brake = await keyTakeOver('ArrowDown');
+    await game(page, () => { const g = window.__game; g.setAutoDrive(false); g.navigateTo(null); g.setPaused(true); });
+    expect(gas, 'gas alone handed the car back');
+    expect(steer.before && !steer.after && brake.before && !brake.after, `steer key ${JSON.stringify(steer)}, brake key ${JSON.stringify(brake)}`);
+    return `${r.hand} hand-offs, arrived on ${r.at} in ${r.t} s sim, ${fmt(r.km)} km counted (${fmt(r.crow)} km as the crow flies), top ${fmt(r.top)} mph, ${r.coll} collisions, handed back on arrival; D and Down each took over, W didn't`;
+  });
+  // a missed exit (owner, 2026-11-01, review): with the next hand-off behind the car on the road it is still on, the
+  // guidance plans again (it froze at "0 ft KEEP RIGHT" and Auto-drive drove on up I-405 North for 14 km), and Auto-drive,
+  // engaged 300 m past the 55's junction, reroutes and still gets there
+  await check('Auto-drive: a missed exit reroutes (guidance within 10 s, Auto-drive at once) and still arrives on CA-55 North', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North');
+      g.setPaused(true);
+      g.placeCar(m, m.len * 0.12, 1, 25); g.traffic.reseed(3); g.traffic.fill(g.view());
+      if (!g.navigateTo('CA-55 North')) return { why: 'no route' };
+      const j0 = g.route[0];
+      // the guidance alone: put the car 300 m past the junction in a left lane, and drive straight on
+      g.placeCar(m, j0.s + 300, 1, 25);
+      const rr0 = g.reroutes; let t1 = 0;
+      while (t1 < 10 && g.reroutes === rr0) { g.fastForward(0.25, { throttle: 0.4, steer: 0 }); t1 += 0.25; }
+      const guide = { t: t1, rerouted: g.reroutes > rr0, ahead: !!g.route[0] && g.route[0] !== j0 && (g.route[0].s >= g.phys.s - 60 || g.route[0].to === g.path) };
+      // Auto-drive: the stale plan again, engaged 300 m past the junction
+      g.navigateTo(null); g.placeCar(m, m.len * 0.12, 1, 25); g.navigateTo('CA-55 North');
+      const j1 = g.route[0]; g.placeCar(m, j1.s + 300, 1, 25);
+      const on = g.setAutoDrive(true), replanned = g.route[0] !== j1;
+      let t = 0, rr = g.reroutes;
+      // no U-turns on a freeway: the way back is the long way round (I-405 North to CA-22 East to CA-55 North, about
+      // 39 km and 1270 s sim from 770 m past)
+      while (t < 1600 && g.routeTarget) { g.fastForward(1, {}); t++; }
+      return { guide, on, replanned, t, at: g.path.label, target: g.routeTarget?.label ?? null, auto: g.autoDriving, later: g.reroutes - rr, coll: g.collisions };
+    });
+    await game(page, () => { const g = window.__game; g.setAutoDrive(false); g.navigateTo(null); });
+    expect(!r.why, r.why);
+    expect(r.guide.rerouted && r.guide.ahead && r.guide.t <= 10, `guidance after the missed exit: ${JSON.stringify(r.guide)}`);
+    expect(r.on && r.replanned, `Auto-drive engaged ${r.on}, replanned at once ${r.replanned}`);
+    expect(r.at === 'CA-55 North' && !r.target && !r.auto, `after ${r.t} s: on ${r.at}, target ${r.target}, auto ${r.auto}`);
+    return `guidance rerouted ${r.guide.t} s after the miss; Auto-drive replanned on engaging and arrived on ${r.at} in ${r.t} s sim (${r.later} more reroutes, ${r.coll} collisions), handed back`;
   });
   await check('showroom: refusals, then buy the Brio and drive its numbers', async () => {
     const r = await game(page, () => {
@@ -884,7 +964,8 @@ await group('render', async (use) => {
 function hudLayoutInPage() {
   const g = window.__game, cam = g.camera, W = innerWidth, H = innerHeight;
   const HUD_SEL = ['.hud-plate', '.hud-speed', '.hud-stats', '.hud-race', '.hud-road', '.hud-compass', '.hud-clock', '.corner', '.tbar .tbtn', '.livechip', '.hud-nav', '.hud-dest', '.hud-next', '.hud-fps'];
-  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.tbtn.honk'];
+  // Auto-drive's button sits with the driving controls on a phone (with a route in Free Drive)
+  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.tbtn.honk', '.tbtn.auto'];
   const shown = (e) => {
     const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     if (cs.display === 'none' || cs.visibility === 'hidden' || r.width <= 0 || r.height <= 0) return false;
@@ -893,7 +974,7 @@ function hudLayoutInPage() {
   };
   const rects = (sels, skip) => sels.flatMap((q) => [...document.querySelectorAll(q)]).filter((e) => !(skip && e.matches(skip)) && shown(e))
     .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className.baseVal ?? e.className).split(' ')[0] }; });
-  const hud = rects(HUD_SEL, '.tbtn.honk'), ctl = rects(CONTROL_SEL);
+  const hud = rects(HUD_SEL, '.tbtn.honk, .tbtn.auto'), ctl = rects(CONTROL_SEL);
   let n = 0; for (let y = 1; y < H; y += 2) for (let x = 1; x < W; x += 2) if (hud.some((q) => x >= q.l && x < q.r && y >= q.t && y < q.b)) n++;
   const hit = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
   const cv = document.querySelector('.stage canvas'), R = cv.getBoundingClientRect();
@@ -910,7 +991,7 @@ function hudLayoutInPage() {
   const view = document.querySelector('.hud')?.dataset.view, seat = view === 'cockpit';
   const cluster = seat ? box(g.car.interior.group.getObjectByName('cluster')) : null, glass = seat ? box(g.car.interior.group.getObjectByName('windscreen')) : null;
   const car = seat ? null : box(g.car.exterior), band = { l: 0, r: W, t: 0.22 * H, b: 0.7 * H };
-  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .tbtn.honk, .touch-steer, .pedal, .touch-shift .tbtn')].filter(shown)
+  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .tbtn.honk, .tbtn.auto, .touch-steer, .pedal, .touch-shift .tbtn')].filter(shown)
     .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className).split(' ').slice(0, 2).join('.') }; });
   const overlaps = []; for (let i = 0; i < taps.length; i++) for (let j = i + 1; j < taps.length; j++) if (hit(taps[i], taps[j])) overlaps.push(taps[i].sel + ' / ' + taps[j].sel);
   const sp = document.querySelector('.hud-speed');
@@ -1054,6 +1135,104 @@ await group('phone', async (use) => {
     expect(!c.nav && !c.dest && !c.shown && c.count === 0, `after Clear route: ${JSON.stringify({ nav: !!c.nav, dest: !!c.dest, chevrons: c.count })}`);
     await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it
     return `"${r.navText}" / "${r.destText}"; ${r.count} chevrons; cleared`;
+  });
+  // following the route (owner, 2026-11-01): the corner map draws what's left of the route in the car's accent with the
+  // next manoeuvre's arrow, the guidance carries the lane hint before an exit, and Auto-drive is a 44 px button with the
+  // driving controls that drives it, AUTO on the plate. None of it adds to the HUD's cover: with a route the plate
+  // already carries the guidance and destination lines (13.6% of 390 x 844 before this, over the 12.5% no-route budget),
+  // and the lanes and AUTO sit inside it, the button with the controls (below 70%, 44 px, overlapping nothing). A drag on
+  // the steering pad or a press of BRAKE hands the car back
+  await check('follow the route: route on the corner map, lane hint, an Auto-drive button that adds nothing to the HUD cover; touch steer and brake take over', async () => {
+    try {
+      await page.keyboard.press('Escape');                                         // close Go to
+      await page.waitForTimeout(300);
+      if (await page.locator('.panel.paused').count()) await page.getByRole('button', { name: 'Resume', exact: true }).click();
+      // the map's own pixels in the accent, and how many route points it drew
+      const mapLook = () => game(page, () => {
+        const g = window.__game, cv = document.querySelector('.corner.map canvas'), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+        const ac = getComputedStyle(document.documentElement).getPropertyValue('--ice').trim(), m = /^#(..)(..)(..)$/.exec(ac), rgb = m.slice(1).map((h) => parseInt(h, 16));
+        let n = 0; for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - rgb[0]) + Math.abs(d[i + 1] - rgb[1]) + Math.abs(d[i + 2] - rgb[2]) < 40) n++;
+        return { accent: n, drawn: g.routeDrawn };
+      });
+      await game(page, () => { const g = window.__game; g.navigateTo(null); });
+      await frames(page, 3);
+      const none = await mapLook();
+      await game(page, () => {
+        const g = window.__game, m = g.findMain('I-405 North');
+        g.setPaused(true); g.placeCar(m, m.len * 0.12, 1, 28); g.traffic.reseed(3); g.traffic.fill(g.view()); g.navigateTo('CA-55 North');
+        g.fastForward(Math.max(0, (g.route[0].s - g.phys.s - 1500) / 28), {}, 28); g.setPaused(false);   // 1.5 km before the exit
+      });
+      await frames(page, 4);
+      const withRoute = await mapLook();
+      expect(withRoute.drawn > 20 && withRoute.accent > 4 * none.accent + 30, `the map's accent pixels: ${none.accent} without a route, ${withRoute.accent} with one (${withRoute.drawn} route points)`);
+      const hint = await game(page, () => ({ lit: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i.on').length, all: document.querySelectorAll('.hud-nav-lanes:not([hidden]) i:not([hidden])').length, act: document.querySelector('.hud-nav-dist span')?.textContent }));
+      expect(hint.lit >= 1 && hint.all > hint.lit && /Keep (left|right)/i.test(hint.act ?? ''), `lane hint ${JSON.stringify(hint)}`);
+      const auto = page.getByRole('button', { name: 'Auto-drive' });
+      expect(await auto.count() === 1 && await auto.getAttribute('aria-pressed') === 'false', 'no Auto-drive button with a route');
+      await auto.tap();
+      await frames(page, 3);
+      const st = await game(page, () => ({ on: window.__game.autoDriving, tag: !document.querySelector('.hud-auto').hidden, pressed: document.querySelector('.tbtn.auto').getAttribute('aria-pressed') }));
+      expect(st.on && st.tag && st.pressed === 'true', `after the tap: ${JSON.stringify(st)}`);
+      const sizes = [];
+      try {
+        for (const [w, h] of [[390, 844], [390, 760], [844, 390]]) {
+          await page.setViewportSize({ width: w, height: h });
+          // the route's HUD as it was: no lanes, no AUTO, no button; then all three
+          await game(page, () => { const g = window.__game; g.setAutoDrive(false); document.querySelector('.hud-nav-lanes').hidden = true; });
+          await frames(page, 3);
+          const was = await game(page, hudLayoutInPage);
+          await game(page, () => { const g = window.__game; g.setAutoDrive(true); document.querySelector('.hud-nav-lanes').hidden = false; });
+          await frames(page, 3);
+          const m = await game(page, hudLayoutInPage);
+          const label = `${w}x${h}`;
+          expect(m.area <= was.area + 0.002, `${label}: the HUD covers ${pct(m.area)}, up from ${pct(was.area)}`);
+          expect(m.small.length === 0 && m.overlaps.length === 0, `${label}: small ${m.small.join(', ')}; overlapping ${m.overlaps.join(', ')}`);
+          // the sign whole with the hint up (on its side the lanes beside it cut it to "CA-55 NO..."), and the lanes
+          // inside the plate, clear of the sign and the destination's text
+          const fit = await game(page, () => {
+            const q = (s) => document.querySelector(s), sign = q('.hud-nav-sign'), ln = q('.hud-nav-lanes'), plate = q('.hud-plate').getBoundingClientRect();
+            const b = ln.getBoundingClientRect(), sb = sign.getBoundingClientRect(), hit = (a) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+            const words = [...q('.hud-dest').querySelectorAll('b, em')].filter((e) => e.getClientRects().length).flatMap((e) => [...e.getClientRects()]);
+            return { lanes: !ln.hidden && b.width > 0, sw: sign.scrollWidth, cw: sign.clientWidth, text: sign.textContent, inPlate: b.left >= plate.left && b.right <= plate.right && b.top >= plate.top && b.bottom <= plate.bottom + 0.5, overSign: hit(sb), overDest: words.filter(hit).length };
+          });
+          expect(fit.lanes && fit.sw <= fit.cw + 1, `${label}: the sign "${fit.text}" is cut (${fit.cw} of ${fit.sw} px) with the lane hint ${fit.lanes ? 'up' : 'missing'}`);
+          expect(fit.inPlate && !fit.overSign && fit.overDest === 0, `${label}: the lanes ${JSON.stringify(fit)}`);
+          if (h > w) expect(m.band.length === 0 && m.ctlTop >= 0.7, `${label}: in the open view: ${m.band.join(', ')}; controls from ${pct(m.ctlTop)}`);
+          // on its side the route's plate already runs past the no-route 26% (28.5% at 844 x 390): no further
+          else expect(m.top <= Math.max(0.26, was.top + 0.005), `${label}: the top cluster runs to ${pct(m.top)}, from ${pct(was.top)}`);
+          sizes.push(`${label} ${pct(was.area)} → ${pct(m.area)}${h > w ? `, controls from ${pct(m.ctlTop)}` : `, cluster to ${pct(was.top)} → ${pct(m.top)}`}`);
+        }
+      } finally {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await game(page, () => { document.querySelector('.hud-nav-lanes').style.display = ''; });
+      }
+      await frames(page, 2);
+      // take over: a drag on the steering pad, then (Auto-drive on again) a press of BRAKE
+      const touchOn = async (sel, move) => {
+        await game(page, () => window.__game.setAutoDrive(true));
+        const b = await page.locator(sel).boundingBox(), x = b.x + b.width / 2, y = b.y + b.height / 2, o = { pointerId: 9, pointerType: 'touch', isPrimary: true, bubbles: true };
+        await page.locator(sel).dispatchEvent('pointerdown', { ...o, clientX: x, clientY: y });
+        if (move) await page.locator(sel).dispatchEvent('pointermove', { ...o, clientX: x + 45, clientY: y });
+        await frames(page, 2);
+        const on = await game(page, () => window.__game.autoDriving);
+        await page.locator(sel).dispatchEvent('pointerup', { ...o, clientX: x, clientY: y });
+        return on;
+      };
+      const bySteer = await touchOn('.touch-steer', true), byBrake = await touchOn('.pedal.brake', false);
+      expect(!bySteer && !byBrake, `still driving after a steer drag ${bySteer}, after BRAKE ${byBrake}`);
+      // clear the route: the button, the map's line and the lane hint go
+      await game(page, () => window.__game.navigateTo(null));
+      await frames(page, 3);
+      const gone = { button: await auto.count(), ...(await mapLook()) };
+      expect(gone.button === 0 && gone.drawn === 0, `after clearing: ${JSON.stringify(gone)}`);
+      await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it
+      return `map accent pixels ${none.accent} → ${withRoute.accent} (${withRoute.drawn} route points); lanes ${hint.lit} of ${hint.all} lit, "${hint.act}"; AUTO on; ${sizes.join('; ')}; steer drag and BRAKE each took over; cleared`;
+    } finally {
+      // whatever happened, no route, no Auto-drive and the phone's size for the checks after this one
+      await page.setViewportSize({ width: 390, height: 844 }).catch(() => {});
+      await game(page, () => { const g = window.__game; g.setAutoDrive(false); g.navigateTo(null); g.input.touch.steer = 0; g.input.touch.brake = false; }).catch(() => {});
+      await frames(page, 3).catch(() => {});                                      // the HUD (and the quick menu) hear it
+    }
   });
   // what left the driving HUD stays a tap or two away (HUD_POV_SPEC 5.5): hold Pause for the quick menu's six wedges,
   // Pause > Radio for the radio card

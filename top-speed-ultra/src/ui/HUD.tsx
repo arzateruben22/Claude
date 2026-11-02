@@ -69,6 +69,8 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   // the navigation line and the destination line (U2)
   const nav = useRef<HTMLDivElement>(null), navDist = useRef<HTMLElement>(null), navAct = useRef<HTMLSpanElement>(null), navTo = useRef<HTMLDivElement>(null);
   const exitKey = useRef<HTMLElement>(null), exitText = useRef<HTMLSpanElement>(null);
+  // following the route: the lane hint's lanes beside the sign, and the AUTO tag beside the gear while Auto-drive drives
+  const lanes = useRef<HTMLSpanElement>(null), autoTag = useRef<HTMLSpanElement>(null);
   const dest = useRef<HTMLDivElement>(null), destRoad = useRef<HTMLElement>(null), destDist = useRef<HTMLElement>(null), destEta = useRef<HTMLElement>(null), traffic = useRef<HTMLElement>(null);
   // what the wake rules remember between calls (kept across re-renders)
   const st = useRef({ t: 0, road: '', roadAt: -1e9, wakeUntil: 0, brakeS: 0, racePos: 0, cool: 0 });
@@ -161,7 +163,16 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         // the next exit's sign, or (on a ramp, with no exits along it) the sign it was taken from, or the road you're on
         put(exitKey.current, 'exitKey', h.exitText ? (h.exitMine ? 'Your exit' : 'Next exit') : 'Now on');
         put(exitText.current, 'exitText', h.exitText || h.onSign || h.road);
+        // the lane hint before a hand-off: one mark per lane, lit for the ones the route leaves from
+        if (lanes.current && last.lanes !== h.lanes) {
+          last.lanes = h.lanes; lanes.current.hidden = !h.lanes;
+          const kids = lanes.current.children;
+          for (let i = 0; i < kids.length; i++) { const k = kids[i] as HTMLElement; k.hidden = i >= h.lanes.length; k.classList.toggle('on', h.lanes[i] === '1'); }
+        }
       }
+      // Auto-drive: the tag beside the gear, and data-auto on the root for the plate's accent
+      if (autoTag.current) autoTag.current.hidden = !h.autoOn;
+      attr(R, 'data-auto', h.autoOn);
       const destOn = !!h.dest && !racing;
       if (dest.current) dest.current.hidden = !destOn;
       if (destOn) {
@@ -219,7 +230,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
             <div className="hud-rpm"><div ref={bar} /></div>
             <div className="hud-main">
               <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
-              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
+              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear}>1</span></div>
               <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : ''}>{c}</i>)}</div>
               <span className="hud-cam" ref={cam} />
             </div>
@@ -244,6 +255,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
               <TurnArrow size={40} className="hud-nav-arrow" />
               <div className="hud-nav-dist"><b ref={navDist as El} /><span ref={navAct} /></div>
               <div className="hud-nav-sign" ref={navTo} />
+              <span className="hud-nav-lanes" ref={lanes} hidden>{[0, 1, 2, 3, 4, 5, 6].map((k) => <i key={k} hidden />)}</span>
               <div className="hud-nav-exit"><i ref={exitKey as El} /><span ref={exitText} /></div>
             </div>
             <div className="hud-dest" ref={dest} hidden>

@@ -42,6 +42,10 @@ export class Input {
   // when the pad last asked for something other than driving (a menu, camera or d-pad button, or a look with the right
   // stick): the adaptive HUD (U1) comes back on it. The triggers, the stick's steering, handbrake and shifts don't count.
   padAt = 0;
+  // whether the last update had the driver asking to steer or to brake (keys, touch or a pad; gas alone doesn't count):
+  // either one takes the car back from Auto-drive (Game)
+  steerAsked = false;
+  brakeAsked = false;
   private keyBound = false;
 
   constructor(private el: HTMLElement) {}
@@ -136,6 +140,8 @@ export class Input {
       if (this.touch.brake) brkT = 1;
     }
 
+    this.steerAsked = steerT !== 0 || (analogSteer !== null && analogSteer !== 0);
+    this.brakeAsked = brkT > 0 || (analogBrk ?? 0) > 0.05 || hb;
     // ease toward the targets
     const sp = clamp(speed / 70, 0, 1);
     if (analogThr !== null) c.throttle = Math.max(analogThr, thrT);

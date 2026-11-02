@@ -4,6 +4,46 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-02: GPS "follow it": route on the corner map, lane hints, Auto-drive (claude/gps-follow, WIP, not accepted)
+
+- **The owner (2026-11-01, about 7:20 PM PT): "Also make it where you put navigation on the gps to follow it"**, and
+  chose both: the route drawn to follow by hand, and an Auto-drive button that drives it, with steer or brake handing
+  the car back.
+- **What it does:**
+  - The corner map draws what is left of the route with an arrow at the next hand-off and the distance on a pill. It
+    zooms in as the hand-off nears. With no route it still shows the road you are on in yellow, as before.
+  - From 2 mi out, the guidance card shows a lane hint, with the lanes the hand-off leaves from lit.
+  - The Auto-drive button appears only with a route in Free Drive. Steering or braking (keys, touch or pad) hands
+    the car back; gas alone does not.
+- **Review fixes (r2):**
+  - **Desktop guidance card:** every item now has its own grid cell, so the hint no longer pushes the sign into the
+    arrow column.
+  - **Phone on its side (844 x 390):** the lanes moved to the right end of the destination line, so the sign is
+    whole again. It had been cut to "CA-55 NO...".
+  - **Missed hand-off:** a hand-off missed on the road you are still on now triggers a new plan. This applies to the
+    guidance at 4 Hz and to Auto-drive when it is switched on. With no way from here, the destination is kept and
+    Auto-drive hands back.
+- **Verified** (headless Chromium, SwiftShader, viewport-meta copy of dist/artifact.html):
+
+  | Check | Result |
+  | --- | --- |
+  | Desktop 1440 x 900 at 1.7 mi | Sign whole on its own row; card identical with and without the hint |
+  | Phone on its side 844 x 390 | Sign 97/97 px |
+  | HUD cover with lanes and AUTO | Unchanged: 15.1 % at 390 x 760, 11.8 % at 844 x 390 |
+  | Auto-drive switched on 770 m past the CA-55 exit | Replanned at once and arrived on CA-55 North by I-405 N, CA-22 E and CA-55 N: 39 km, 1273 s sim, 0 collisions |
+
+- **`npm test -- --only=boot,race,phone,progression`** at load 16-19 on 4 cores: 33/35. Every check this branch adds
+  or touches passed. The two failures are load timeouts in untouched checks:
+  - "owner test build": a 300 s click;
+  - "sky camera": a 240 s frame wait.
+
+  The reviewer saw the same failures. **A clean run on a quiet machine is still owed before merging.**
+- **Frames:** tests/out/gps/ (p1-route-map, p2-lane-hint, p3-auto-on, p4-arrived, p5-auto-mid, p6-takeover,
+  d1-1440x900, l1-844x390); not committed.
+- **Not accepted yet.** Code review passed every listed criterion, but the branch's own new suite check fails on a
+  quiet machine, so its proof does not hold and the phone group goes from 12/12 to 12/13. Committed as work in
+  progress; that check must pass before this is kept.
+
 ## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
 
 - **The owner (13:38 UTC): "Take a pause once tasks are complete."** The work in flight finishes and lands if judged

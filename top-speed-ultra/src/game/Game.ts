@@ -12,7 +12,7 @@ import { Settings, QUALITY, DENSITY, Mode, STARTS, TimeOfDay, Weather, loadBest,
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
-import { Path, Junction, ORIGIN } from './world/Path';
+import { Path, Junction, ORIGIN, STEP } from './world/Path';
 import { Roads } from './world/Roads';
 import { Terrain } from './world/Terrain';
 import { CarPhysics, SPEC } from './vehicle/Physics';
@@ -53,6 +53,11 @@ const SHOTS: Shot[] = [
   { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
 ];
 const DT = 1 / 120;
+// Auto-drive's cruise: the attract drive's own (31 m/s, about 69 mph, a posted-limit pace), well under every car's top
+// speed in either tune; the autopilot slows from it for traffic and curves
+const AUTO_CRUISE = 31;
+const MISS_PR = { s: 0, d: 0 };   // missedHandOff's projection, reused
+const LANE_HINT_M = 3200;          // the lane hint shows this far before a hand-off (about 2 mi)
 const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
@@ -84,6 +89,9 @@ export interface Hud {
   // the condensed HUD: the brake pedal (0..1; a hard stop wakes the tucked map), the time the sky shows ('12:30 PM') and
   // where the temperature comes from ('simulated'), for the pause screen, the phone and the desktop map caption
   brake: number; clock: string; tempNote: string;
+  // following the route (owner, 2026-11-01): Auto-drive offered (a route in Free Drive) and on; and the lane hint
+  // before a hand-off: the current road's lanes left to right, '1' for each one the route leaves from ('' with none)
+  autoOffer: boolean; autoOn: boolean; lanes: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -629,7 +637,59 @@ export class Game {
     this.route = r; this.routeTarget = target;
     return true;
   }
-  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; }
+  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; if (!target) this.autoDrive = false; }
+
+  // ----------------------------------------------------------------------------------------- Auto-drive
+  // The route, driven for you (owner, 2026-11-01: "make it where you put navigation on the gps to follow it"): the
+  // autopilot (the attract drive's driver) follows the route's hand-offs at AUTO_CRUISE. Steering or braking, by keys,
+  // touch or a pad, hands the car back at once; gas alone doesn't. A driving aid only: Free Drive with a route, never
+  // a scored mode, and Free Drive's numbers count as usual.
+  private autoDrive = false;
+  private autoCruise = AUTO_CRUISE;
+  get autoDriving() { return this.autoDrive; }
+  get autoDriveOffered() { return !this.attract && !this.over && this.mode === 'free' && !this.race && !!this.routeTarget; }
+  setAutoDrive(on: boolean, why = '') {
+    if (on && !this.autoDriveOffered) return false;
+    if (on === this.autoDrive) return true;
+    this.autoDrive = on;
+    if (on) {
+      // a hand-off already behind the car (or no plan from the last road): plan again from here before driving it
+      if ((!this.route.length || this.missedHandOff()) && !this.replan()) { this.ev.toast(`No way to ${this.routeTarget!.label} from here`, 'bad'); return false; }
+      // from the lane you're in, so it doesn't swerve to its own
+      const p = this.path; this.apLane = p.laneOf(clamp(this.phys.d, p.edgeL, p.edgeR));
+      this.autoCruise = Math.min(AUTO_CRUISE, this.carTop() * 0.85);   // the car's tune as it is now (never above its limit)
+      this.ev.toast(`Auto-drive to ${this.routeTarget!.label}. Steer or brake to take over`, 'info');
+    } else this.ev.toast(why || 'Auto-drive off. You have control', 'info');
+    return true;
+  }
+  // A hand-off passed or missed on the road you're still on (traffic in the way, an exit left too late): the next
+  // hand-off is more than 60 m behind the car and the car is not on the road it leads to (clear of that road's lanes by
+  // 3 m; OSM ramps leave from inside the carriageway, so the car stays on this road for a while as it takes one, and a
+  // ramp can run on past its merge), or 700 m behind whatever. followRoute only replans on a road change, so without
+  // this the guidance froze at "0 ft" and Auto-drive drove on up the freeway for good.
+  private missedHandOff() {
+    const j = this.route[0], p = this.phys, path = this.path;
+    if (!this.routeTarget || !j || j.to === path) return false;
+    if (!path.out.includes(j)) return true;                                   // not a hand-off from this road at all
+    if (j.s >= p.s - 60) return false;
+    if (j.s < p.s - 700) return true;
+    const q = j.to, pr = q.project(p.x, p.z, clamp(j.toS + (p.s - j.s), 0, q.len), MISS_PR);
+    return pr.s >= q.len - 1 || pr.d < q.edgeL - 3 || pr.d > q.edgeR + 3;
+  }
+  // plan again from where the car is (Rerouting); with no way from here keep the destination, as followRoute does,
+  // and hand Auto-drive back
+  private replan() {
+    const r = this.net.route(this.path, Math.max(0, this.phys.s), this.routeTarget!);
+    if (r && r.length) { this.route = r; if (!this.attract) this.ev.toast('Rerouting', 'info'); return true; }
+    this.route = [];
+    if (this.autoDrive) this.setAutoDrive(false, 'No way from here: Auto-drive off. You have control');
+    return false;
+  }
+  reroutes = 0;                      // replans for a missed hand-off (for tests)
+  // the player asked to steer or brake (Input.steerAsked, brakeAsked, or a fastForward's controls): hand back
+  private takeOver(steer: boolean, brake: boolean) {
+    if (this.autoDrive && (steer || brake)) this.setAutoDrive(false, `${steer ? 'Steering' : 'Braking'}: Auto-drive off. You have control`);
+  }
   get mainsLabels() { return this.net.mains.map((m) => m.label); }
 
   // ----------------------------------------------------------------------------------------- graphics quality
@@ -820,7 +880,12 @@ export class Game {
       this.route = r ?? [];
       if (r && !this.attract) this.ev.toast('Rerouting', 'info');
     }
-    if (this.routeTarget === path) { this.route = []; this.routeTarget = null; if (!this.attract) this.ev.toast(`You made it: ${path.label}`, 'good'); }
+    if (this.routeTarget === path) {
+      this.route = []; this.routeTarget = null;
+      // Auto-drive hands back on arrival, in the same toast
+      if (!this.attract) this.ev.toast(`You made it: ${path.label}` + (this.autoDrive ? '. Auto-drive off: you have control' : ''), 'good');
+      this.autoDrive = false;
+    }
   }
 
   // the end of the road: turn around (a freeway that just stops) or rejoin from the street (an off-ramp)
@@ -963,9 +1028,11 @@ export class Game {
     if (!this.paused) {
       this.input.update(dt, Math.abs(this.phys.vx));
       if (this.attract) this.autopilot(this.input.c);
+      else this.takeOver(this.input.steerAsked, this.input.brakeAsked);
       this.acc += dt;
       let steps = 0;
-      while (this.acc >= DT && steps < 12) { this.simulate(DT); this.acc -= DT; steps++; }
+      // Auto-drive steers every step, as fastForward's autopilot does, so a slow frame doesn't leave it unsteered
+      while (this.acc >= DT && steps < 12) { if (this.autoDrive) this.autopilot(this.input.c, this.autoCruise); this.simulate(DT); this.acc -= DT; steps++; }
       if (steps === 12) this.acc = 0;
       this.time += dt;
     }
@@ -1055,6 +1122,8 @@ export class Game {
     if (!p.airborne) this.trackPath();                            // a hop always lands on the road it left
     // the end of the road: turned around or put back on, and the route planned again from there
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
+    // a missed hand-off on this road: plan again from here (four times a second)
+    if (!this.attract && !this.over && this.steps % 30 === 0 && this.missedHandOff()) { this.reroutes++; this.replan(); }
     this.car.snapshot(p);
     const playing = !this.attract && !this.over;
     // walls
@@ -1178,7 +1247,7 @@ export class Game {
   }
 
   private endRun(reason: string) {
-    this.over = true;
+    this.over = true; this.autoDrive = false;
     this.profile.endRun();
     const score = this.mode === 'time' ? Math.round(this.distance) : Math.round(this.score);
     const best = loadBest(this.mode), newBest = score > best;
@@ -1434,7 +1503,7 @@ export class Game {
     const dpr = Math.min(2, window.devicePixelRatio || 1), size = this.cornerRect().size;
     if (cv.width !== Math.round(size * dpr)) { cv.width = cv.height = Math.round(size * dpr); }
     const g = cv.getContext('2d'); if (!g) return;
-    const W = cv.width, R = 2600, k = (W / 2) / R;
+    const W = cv.width, R = this.mapRange(), k = (W / 2) / R;
     const p = this.phys, ch = Math.cos(p.psi), sh = Math.sin(p.psi);
     const tx = (x: number, z: number): [number, number] => {
       const dx = x - p.x, dz = z - p.z;
@@ -1444,7 +1513,6 @@ export class Game {
     g.clearRect(0, 0, W, W);
     g.fillStyle = 'rgba(14,16,20,0.78)'; g.fillRect(0, 0, W, W);
     g.lineCap = 'round'; g.lineJoin = 'round';
-    const routePaths = new Set<Path>([this.path, ...this.route.map((j) => j.to)]);
     const draw = (path: Path, color: string, width: number, step: number) => {
       if (path.maxX < p.x - R || path.minX > p.x + R || path.maxZ < p.z - R || path.minZ > p.z + R) return;
       g.strokeStyle = color; g.lineWidth = width * dpr; g.beginPath();
@@ -1459,7 +1527,12 @@ export class Game {
     };
     for (const q of this.net.paths) if (!q.main && Math.abs(q.xs[0] - p.x) < 900 && Math.abs(q.zs[0] - p.z) < 900) draw(q, 'rgba(160,170,180,0.45)', 1, 3);
     for (const q of this.net.mains) draw(q, 'rgba(225,228,232,0.85)', 2.2, 10);
-    for (const q of routePaths) draw(q, '#f5c518', 3, q.main ? 6 : 2);
+    // with a route, what's left of it; without one, the road you're on in yellow, as the map always drew it
+    if (this.routeTarget) this.drawRoute(g, W, k, dpr);
+    else { this.routeDrawn = 0; draw(this.path, '#f5c518', 3, this.path.main ? 6 : 2); }
+    // where the next manoeuvre's arrow goes: no road shield is set down on it
+    const jn = this.routeTarget ? this.route[0] : undefined, ji = jn ? clamp(Math.round(jn.s / STEP), 0, this.path.n - 1) : 0;
+    const jx = jn ? this.mapX(this.path.xs[ji], this.path.zs[ji], W, k) : -1e9, jy = jn ? this.mapY(this.path.xs[ji], this.path.zs[ji], W, k) : -1e9;
     g.font = `${Math.round(9 * dpr)}px "Saira Semi Condensed", Arial, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
     const done = new Set<string>();
     for (const q of this.net.mains) {
@@ -1469,7 +1542,7 @@ export class Game {
       for (let i = 0; i < q.n; i += 25) { const dd = (q.xs[i] - p.x) ** 2 + (q.zs[i] - p.z) ** 2; if (dd < bd) { bd = dd; bi = i; } }
       if (bi < 0 || bd > (R * 0.8) ** 2) continue;
       const i2 = Math.min(q.n - 1, bi + 250), [mx, my] = tx(q.xs[i2], q.zs[i2]);
-      if (mx < 12 || my < 10 || mx > W - 12 || my > W - 10) continue;
+      if (mx < 12 || my < 10 || mx > W - 12 || my > W - 10 || (Math.abs(mx - jx) < 24 * dpr && Math.abs(my - jy) < 20 * dpr)) continue;
       done.add(key);
       const inter = q.route!.startsWith('I-');
       g.fillStyle = inter ? '#1d4f9c' : '#f4f4ee';
@@ -1477,9 +1550,106 @@ export class Game {
       g.fillStyle = inter ? '#fff' : '#111';
       g.fillText(q.route!.replace(/^(I|SR)-/, ''), mx, my + 0.5);
     }
+    if (this.routeTarget) this.drawManoeuvre(g, W, k, dpr);
     g.fillStyle = '#d0141e'; g.strokeStyle = '#fff'; g.lineWidth = 1.5 * dpr;
     const cy = W * 0.62;
     g.beginPath(); g.moveTo(W / 2, cy - 7 * dpr); g.lineTo(W / 2 + 5 * dpr, cy + 5 * dpr); g.lineTo(W / 2, cy + 2 * dpr); g.lineTo(W / 2 - 5 * dpr, cy + 5 * dpr); g.closePath(); g.fill(); g.stroke();
+  }
+
+  // The route on the round map (owner, 2026-11-01): what is left of it, as a bright line in the car's accent over a
+  // dark casing: this road from the car to the next hand-off, then each hand-off's road from where it is joined to the
+  // next hand-off (the last one, the destination, for a couple of kilometres). Heading-up like the map: a point is
+  // turned into the car's frame here, with no allocation per point.
+  routeDrawn = 0;                    // points of route drawn on the map last time (for tests)
+  // the map's reach (metres from the middle to the rim): 2.6 km, closing in to about 1.7 times the distance to the next
+  // hand-off from 1.5 km out (never under 1.1 km), so the manoeuvre and the road to it fill the dial; eased per draw
+  private mapR = 2600;
+  private mapRange() {
+    const j = this.routeTarget ? this.route[0] : undefined;
+    const want = j ? clamp((j.s - this.phys.s) * 1.7, 1100, 2600) : 2600;
+    this.mapR += (want - this.mapR) * 0.3;
+    return this.mapR;
+  }
+  private accentKey = ''; private accentCol = '#408cff';
+  private accent() {
+    // the --ice token the car's atmosphere and the look set (styles.css), read again only when they change
+    const de = document.documentElement, key = (de.dataset.car ?? '') + '/' + (de.dataset.look ?? '');
+    if (key !== this.accentKey) { this.accentKey = key; this.accentCol = getComputedStyle(de).getPropertyValue('--ice').trim() || '#408cff'; }
+    return this.accentCol;
+  }
+  private mapX(x: number, z: number, W: number, k: number) {
+    const p = this.phys, dx = x - p.x, dz = z - p.z;
+    return W / 2 + (dx * -Math.cos(p.psi) + dz * Math.sin(p.psi)) * k;
+  }
+  private mapY(x: number, z: number, W: number, k: number) {
+    const p = this.phys, dx = x - p.x, dz = z - p.z;
+    return W * 0.62 - (dx * Math.sin(p.psi) + dz * Math.cos(p.psi)) * k;
+  }
+  // one stretch of a road, s0 to s1, onto the current canvas path (a point every 8 m; pen up where it leaves the map)
+  private traceRoad(g: CanvasRenderingContext2D, q: Path, s0: number, s1: number, W: number, k: number) {
+    const p = this.phys, far = this.mapR * 1.5, i0 = clamp(Math.floor(s0 / STEP), 0, q.n - 1), i1 = clamp(Math.ceil(s1 / STEP), 0, q.n - 1);
+    let pen = false, n = 0;
+    for (let i = i0; ; i = Math.min(i1, i + 4)) {
+      const x = q.xs[i], z = q.zs[i];
+      if (Math.abs(x - p.x) > far || Math.abs(z - p.z) > far) pen = false;
+      else {
+        const a = this.mapX(x, z, W, k), b = this.mapY(x, z, W, k);
+        if (pen) g.lineTo(a, b); else { g.moveTo(a, b); pen = true; }
+        n++;
+      }
+      if (i >= i1) break;
+    }
+    return n;
+  }
+  private drawRoute(g: CanvasRenderingContext2D, W: number, k: number, dpr: number) {
+    let n = 0;
+    for (let pass = 0; pass < 2; pass++) {
+      g.beginPath();
+      n = this.traceRoad(g, this.path, Math.max(0, this.phys.s), this.route.length ? this.route[0].s : Math.min(this.path.len, this.phys.s + 2500), W, k);
+      for (let i = 0; i < this.route.length; i++) {
+        const j = this.route[i], nx = this.route[i + 1];
+        n += this.traceRoad(g, j.to, j.toS, nx ? nx.s : Math.min(j.to.len, j.toS + 2500), W, k);
+      }
+      g.strokeStyle = pass === 0 ? 'rgba(0,0,0,0.6)' : this.accent();
+      g.lineWidth = (pass === 0 ? 6.5 : 3.6) * dpr;
+      g.stroke();
+    }
+    this.routeDrawn = n;
+  }
+  // the next manoeuvre: an arrow at its junction, pointing the way the route goes on (once the junction is on the dial),
+  // and the distance to it on a pill at the dial's foot
+  private drawManoeuvre(g: CanvasRenderingContext2D, W: number, k: number, dpr: number) {
+    const j = this.route[0];
+    if (!j) return;
+    const q = this.path, i = clamp(Math.round(j.s / STEP), 0, q.n - 1), i0 = clamp(i - 15, 0, q.n - 1);
+    const ax = this.mapX(q.xs[i], q.zs[i], W, k), ay = this.mapY(q.xs[i], q.zs[i], W, k);
+    const r = W / 2, inside = Math.hypot(ax - r, ay - r) < r - 14 * dpr;
+    if (inside) {
+      // a guidance arrow at the junction: along this road, then bent 45 degrees to the side the hand-off leaves from
+      // (exitSide, the network's data for the ramp), or straight on for a merge or a plain carry-on
+      const fork = j.kind === 'diverge' || (j.kind === 'continue' && q.out.filter((o) => o.s >= q.len - 1).length > 1);
+      const bend = fork ? (this.exitSide(q, j) === 'R' ? 1 : -1) * Math.PI / 4 : 0;
+      const a0 = Math.atan2(ay - this.mapY(q.xs[i0], q.zs[i0], W, k), ax - this.mapX(q.xs[i0], q.zs[i0], W, k)), a1 = a0 + bend;
+      const L0 = 9 * dpr, L1 = 7 * dpr;
+      const sx = ax - Math.cos(a0) * L0, sy = ay - Math.sin(a0) * L0, hx = ax + Math.cos(a1) * L1, hy = ay + Math.sin(a1) * L1;
+      g.lineCap = 'round'; g.lineJoin = 'round';
+      for (let pass = 0; pass < 2; pass++) {
+        g.strokeStyle = pass === 0 ? 'rgba(0,0,0,0.75)' : '#fff'; g.lineWidth = (pass === 0 ? 5.5 : 2.6) * dpr;
+        g.beginPath(); g.moveTo(sx, sy); g.lineTo(ax, ay); g.lineTo(hx, hy); g.stroke();
+      }
+      g.fillStyle = '#fff'; g.strokeStyle = 'rgba(0,0,0,0.75)'; g.lineWidth = 1.5 * dpr;
+      const w = 6.5 * dpr, c = Math.cos(a1), sn = Math.sin(a1);
+      g.beginPath(); g.moveTo(hx + c * w * 1.3, hy + sn * w * 1.3); g.lineTo(hx - sn * w, hy + c * w); g.lineTo(hx + sn * w, hy - c * w); g.closePath(); g.stroke(); g.fill();
+    }
+    const ac = this.accent();
+    // the distance, on a pill in the accent at the foot of the dial, under the car's marker (clear of the shields)
+    const m = Math.max(0, j.s - this.phys.s), text = m > 1609 ? (m / 1609.344).toFixed(1) + ' mi' : Math.round(m * 3.281 / 10) * 10 + ' ft';
+    g.font = `700 ${Math.round(10 * dpr)}px "Saira Semi Condensed", Arial, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    const tw = g.measureText(text).width + 8 * dpr, th = 13 * dpr;
+    const px = W / 2, py = W * 0.84;
+    g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillRect(px - tw / 2 - dpr, py - th / 2 - dpr, tw + 2 * dpr, th + 2 * dpr);
+    g.fillStyle = ac; g.fillRect(px - tw / 2, py - th / 2, tw, th);
+    g.fillStyle = '#0b0b10'; g.fillText(text, px, py + 0.5 * dpr);
   }
 
   // ----------------------------------------------------------------------------------------- resolution that follows the frame rate
@@ -1504,11 +1674,28 @@ export class Game {
     if (!j) return ['', 0, '', '', ''];
     // a diverge, or the end of a ramp that forks (for both directions of a freeway): keep to one side
     const fork = j.kind === 'diverge' || (j.kind === 'continue' && this.path.out.filter((o) => o.s >= this.path.len - 1).length > 1);
-    const turn: Turn = fork ? (this.sideOf(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
+    const turn: Turn = fork ? (this.exitSide(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
     const side = turn === 'right' ? 'Keep right' : turn === 'left' ? 'Keep left' : 'Continue';
     const main = this.route.find((r) => r.to.main);
     const to = main ? main.to.label : this.net.leadsTo(j.to) || 'the ramp';
-    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s), turn, side, to];
+    return [`${side} for ${to}`, Math.max(0, j.s - this.phys.s), turn, side, to];
+  }
+  // which side a hand-off leaves from: the network's own data for that ramp (the side its guide sign stands for, from
+  // the map data) where it has a sign, else judged from the roads' shapes (sideOf)
+  private signSide: Map<Path, 'L' | 'R'> | null = null;
+  private exitSide(path: Path, j: Junction): 'L' | 'R' {
+    if (!this.signSide) { this.signSide = new Map(); for (const g of this.net.signs) this.signSide.set(g.ramp, g.side); }
+    return (j.kind === 'diverge' && this.signSide.get(j.to)) || this.sideOf(path, j);
+  }
+  // the lane hint: the road's lanes, left to right, '1' for those the route leaves from (as many as the ramp has, short
+  // of all of them), within LANE_HINT_M of a hand-off to one side; '' otherwise
+  private laneHint(turn: Turn, dist: number) {
+    const j = this.route[0], n = this.path.lanes;
+    if (!j || (turn !== 'left' && turn !== 'right') || dist > LANE_HINT_M || n < 2) return '';
+    const m = clamp(j.to.lanes, 1, n - 1);
+    let out = '';
+    for (let i = 0; i < n; i++) out += (turn === 'right' ? i >= n - m : i < m) ? '1' : '0';
+    return out;
   }
   // the exits along a road, from the guide signs in the map data: where each ramp leaves (or where its sign stands) and
   // what the sign says, one per ramp, in order along the road. Worked out once per road.
@@ -1566,6 +1753,7 @@ export class Game {
       traffic: DENSITY[this.settings.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
       brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
+      autoOffer: this.autoDriveOffered, autoOn: this.autoDrive, lanes: this.laneHint(turn, nextDist),
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
@@ -1592,8 +1780,10 @@ export class Game {
   // testing aids: run the simulation ahead with fixed controls (or the autopilot), without waiting for frames
   fastForward(seconds: number, c: Partial<Controls> = {}, cruise = 0) {
     Object.assign(this.input.c, c);
+    this.takeOver(Math.abs(c.steer ?? 0) > 0.02 || !!c.handbrake, (c.brake ?? 0) > 0.05 || !!c.handbrake);
     for (let t = 0; t < seconds; t += DT) {
       if (cruise > 0) this.autopilot(this.input.c, cruise);
+      else if (this.autoDrive) this.autopilot(this.input.c, this.autoCruise);
       this.simulate(DT);
       if (this.steps % 24 === 0) this.stream(1);
     }

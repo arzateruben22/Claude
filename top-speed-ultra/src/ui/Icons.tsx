@@ -13,6 +13,7 @@ const P: Record<string, JSX.Element> = {
   radio: <><rect x="3" y="8" width="18" height="12" rx="2" /><circle cx="8.5" cy="14" r="2.5" /><path d="M14 12h4M14 16h4M7 8l10-4.5" /></>,
   nav: <><path d="m12 2.5 9.5 9.5-9.5 9.5L2.5 12z" /><path d="m9 13 3-3 3 3M12 10v6" /></>,
   pause: <><path d="M8 5v14M16 5v14" /></>,
+  auto: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.2" /><path d="M3.6 10.4c2.6.9 5 1.3 6.3 1.3M20.4 10.4c-2.6.9-5 1.3-6.3 1.3M12 14.2v6.2" /><path d="M17.5 2.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="currentColor" stroke="none" /></>,
   phone: <><rect x="7" y="2.5" width="10" height="19" rx="2" /><path d="M10.5 18.5h3" /></>,
   go: <><path d="M5 12h14M13 6l6 6-6 6" /></>,
   chat: <><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9.5h8M8 12.5h5" /></>,

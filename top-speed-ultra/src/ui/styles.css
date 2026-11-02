@@ -898,6 +898,23 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-nav-exit span { min-width: 0; font: 500 13px/1.22 var(--f-ui); color: var(--ink); overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }   /* long signs take two lines */
 .hud-nav:not([data-turn="ahead"]) .ahead, .hud-nav[data-turn="ahead"] .thru, .hud-nav[data-turn="ahead"] .fork { display: none; }
 .hud-nav[data-turn="left"] .hud-nav-arrow { transform: scaleX(-1); }
+/* the lane hint (owner, 2026-11-01: follow the route): the road's lanes, left to right, the ones the hand-off leaves
+   from lit in the route's blue; at the right of the distance line on a desktop, beside the sign on a phone */
+/* every item in its own cell, so the hint at the distance line's right end displaces nothing (auto-placed, the
+   distance dropped a row and the sign fell into the arrow's 40 px column) */
+.hud-nav-arrow { grid-column: 1; }
+.hud-nav-dist { grid-column: 2; grid-row: 1; }
+.hud-nav-sign { grid-column: 2; grid-row: 2; }
+.hud-nav-exit { grid-row: 3; }
+.hud-nav-lanes { grid-column: 2; grid-row: 1; justify-self: end; align-self: center; display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+.app[data-hud="desk"] .hud-nav:has(.hud-nav-lanes:not([hidden])) .hud-nav-dist { padding-right: 64px; }   /* the lane word stops short of the lanes */
+.hud-nav-lanes[hidden], .hud-nav-lanes i[hidden] { display: none; }
+.hud-nav-lanes i { width: 5px; height: 9px; border-radius: 1px; background: var(--line-2); }
+.hud-nav-lanes i.on { height: 14px; background: var(--nav); box-shadow: 0 0 6px var(--nav); }
+/* Auto-drive: AUTO beside the gear while it drives, and the plate's edge in the accent */
+.hud-auto { align-self: center; padding: 3px 5px 2px; font: 700 10px/1 var(--f-mono); letter-spacing: 0.14em; color: #0b0b10; background: var(--ice); border-radius: 3px; }
+.hud-auto[hidden] { display: none; }
+.tbtn.auto.on::before { box-shadow: inset 0 0 0 1.5px var(--ice), 0 0 12px var(--ice-glow); }
 .app[data-hud="desk"] .hud:has(.hud-nav:not([hidden])) .hud-stats { top: calc(var(--sa-t) + 140px); }
 .hud-dest { position: absolute; top: calc(var(--sa-t) + 14px); right: calc(var(--sa-r) + 14px); width: 240px; display: grid; gap: 5px; padding: 8px 12px 9px;
   background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--nav);
@@ -991,6 +1008,29 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app[data-hud="pp"] .hud-nav-dist { display: contents; }
 .app[data-hud="pp"] .hud-nav-dist span { display: block; min-width: 0; font-size: 10px; letter-spacing: 0.12em; }
 .app[data-hud="pp"] .hud-nav-sign { grid-column: 1 / -1; grid-row: 2; }
+/* with the lane hint: the sign leaves the line's right end to the lanes; the lane word keeps the whole first line */
+.app[data-hud="pp"] .hud-nav { grid-template-columns: 20px auto minmax(0, 1fr) auto; }
+.app[data-hud="pp"] .hud-nav-dist span { grid-column: 3 / -1; }
+.app[data-hud="pp"] .hud-nav-sign { grid-column: 1 / 4; }
+.app[data-hud="pp"] .hud-nav-lanes { grid-column: 4; grid-row: 2; }
+/* a phone on its side: the guidance line has no room to spare (beside the lanes the sign was cut to "CA-55 NO..."), so
+   the lanes go to the right end of the destination line under it, which keeps clear of them */
+.app[data-hud="pl"] .hud-nav-lanes { position: absolute; right: 10px; bottom: 6px; }
+.app[data-hud="pl"] .hud-plate:has(.hud-nav-lanes:not([hidden])) .hud-dest { padding-right: 52px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-auto { margin-left: auto; padding: 3px 4px 2px; font-size: 9px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-auto:not([hidden]) + .hud-gear { margin-left: 0; }
+/* the Auto-drive button sits with the driving controls on a phone: over the steering pad's left end upright, beside
+   the pad on its side; a 44 px icon named by its hidden label */
+.app[data-hud="pp"] .tbar .tbtn.auto { position: fixed; left: calc(var(--sa-l) + 14px); bottom: calc(var(--ctl-b) + 96px + 8px); }
+.app[data-hud="pl"] .tbar .tbtn.auto { position: fixed; left: calc(var(--sa-l) + 14px + 230px + 12px); bottom: calc(var(--ctl-b) + 26px); }
+/* a phone shows a small AUTO caption under its icon (the hidden label names it for a screen reader) */
+.tbtn .tcap { display: none; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { flex-direction: column; gap: 1px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto .ico { width: 18px; height: 18px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto .tcap { display: block; font: 700 8.5px/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.app:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto.on .tcap { color: var(--ice-text); }
+/* it stays with the controls when the Minimal HUD tucks the icons away */
+.app:is([data-hud="pp"], [data-hud="pl"]).hud-idle .tbar .tbtn.auto { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest { display: block; font: 500 11px/14px var(--f-ui); color: var(--dim); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest :is(small, svg, .dest-road em) { display: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-dest div { display: inline; }
