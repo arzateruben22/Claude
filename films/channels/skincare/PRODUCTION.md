@@ -6,10 +6,10 @@ scripted → voiced → built → draft reviewed → final → delivered (+ QA n
 | No. | Title | Bible | State |
 |---|---|---|---|
 | 001 | The dead layer | §7 #1 | **Final** (render worker A, 00a50fc): 73.73 s, −14.1 LUFS / −1.8 dBTP, 1 flash, QA PASS; master 62.6 MB, YouTube 1440 84 MB. Compelling 3 rounds → all 4s. First final (57f42c4) withdrawn: gauge headings ran together |
-| 002 | Does SPF 100 beat SPF 50? | §7 #2 | Compelling 4 rounds → all 4s; final rendering on render worker B (3a511d1) |
+| 002 | Does SPF 100 beat SPF 50? | §7 #2 | **Final** (render worker B, 8f65176): 70.0 s, −14.1 LUFS / −1.9 dBTP, 0 flashes, QA PASS; master 53.6 MB, YouTube 1440 79 MB. Compelling 4 rounds → all 4s |
 | 003 | Bath fingers | §7 #3 | **Final** (Back of the Envelope worker A, ba052e4 from b02282b): 70.0 s, −14.1 LUFS / −2.0 dBTP, 0 flashes, QA PASS (text audit clean); master 19.7 MB, YouTube 1440 30.9 MB. Compelling 4 rounds → all 4s |
 | 004 | What a tan is | §7 #4 | second builder (`claude/outer-layer-s1-b`): drafts in review |
-| 005 | Same cells, every colour | §7 #5 | second builder: voiced, built |
+| 005 | Same cells, every colour | §7 #5 | **Final** (second builder, de90651): 72.8 s, −14.1 LUFS / −1.9 dBTP, 2 flashes, QA PASS; master 47.1 MB, YouTube 1440 63 MB |
 | 006 | Goosebumps | §7 #6 | **Final** (render worker A, f039cde): 74.20 s, −14.1 LUFS / −2.4 dBTP, 4 flashes (QA PASS; under the per-second limit, listed for the flash-analyzer check), master 27.6 MB, YouTube 1440 42 MB. Taken over from the second builder; compelling 4 rounds → all 4s; tease placeholder (season 2 topic) |
 | vol01 | Long video (episodes 1–5) | | planned |
 
