@@ -196,7 +196,7 @@ GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["wide
 
 TITLE = {"series": "Outer Layer · No. 004", "title": "What a *tan* is", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:shield?", 0.35)}
 END = {"title": "Next layer: who has more pigment cells, the darkest skin or the *lightest*?", "follow": "Outer Layer · No. 005",
-       "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007)."}
+       "next": "A tan starts when UV damages DNA: the p53 protein switches on the pigment signal (Cui et al., Cell, 2007). Narration: synthetic voice (AI)."}
 
 # the tan's state per shot: tan (caps) and fill/travel (the pigment cell), as functions of the cues in scene.mjs
 POSTER = A("vo05:parasol.", 0.4)          # the caps over the nuclei, the melanocyte's branches full
