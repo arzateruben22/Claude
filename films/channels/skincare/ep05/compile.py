@@ -99,8 +99,8 @@ for shot, keys in CAM.items():
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-a", "text": "one neighbour's skin", "kind": "cell", "anchor": "halfL", "t0": CUE["both"] + 0.2, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-b", "text": "the other's", "kind": "cell", "anchor": "halfR", "t0": CUE["both"] + 0.2, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-a", "text": "one neighbour's skin", "kind": "cell", "anchor": "halfL", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-b", "text": "the other's", "kind": "cell", "anchor": "halfR", "t0": CUE["both"] + 0.6, "t1": B["normal"]["t0"] - 0.6, "shot": "hand", "side": 1, "v": "above", "fixed": True},
     {"id": "l-daily", "text": "daily sunscreen", "kind": "water", "anchor": "daily", "t0": CUE["morning"] - 0.3, "t1": B["change"]["t0"], "shot": "town", "side": -1, "v": "above"},
     {"id": "l-dis", "text": "as they pleased", "kind": "uv", "anchor": "dis", "t0": CUE["pleased"] - 0.5, "t1": B["change"]["t0"], "shot": "town", "side": 1, "v": "below"},
     {"id": "l-cr", "text": "as they pleased: deeper lines", "kind": "uv", "anchor": "castR", "t0": CUE["increase"], "t1": B["why"]["t0"], "shot": "cast", "side": 1, "v": "above"},
