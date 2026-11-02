@@ -40,7 +40,7 @@ const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(800, 600
 // ── the set ─────────────────────────────────────────────────────────────────
 const patch = createPatch({ size: 3000, spacing: 280, seed: 61 });
 const F1 = createFollicle({ x: BIO.fx, seed: 63 });
-const F2 = createFollicle({ x: BIO.fx + 1300, seed: 64 });
+const F2 = createFollicle({ x: BIO.fx + 1100, seed: 64 });   // touching F1: one continuous block
 const fur = createFur({ x: BIO.px });
 scene.add(patch.group, F1.group, F2.group, fur.group);
 const WATER = lin(window.THEME.tokens["water-glow"]).map((v) => v * 1.6);
@@ -60,6 +60,7 @@ const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
+  if (c.text.length > 9) el.style.setProperty("--hud-counter-size", `${(10 * 9 / c.text.length).toFixed(2)}vmin`);   // long words fit the safe box
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
 }
 for (const L of FILM.labels) {
@@ -68,10 +69,10 @@ for (const L of FILM.labels) {
 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.3vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card (a four-line question) sits above the tease's caption plate
-const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe });
+const gauge = createGauge({ root: document.getElementById("hud"), W, H, S1, safe: hud.safe, liftK: 1.6, liftAt: [0.16, 0.24] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 
 const veil = document.createElement("div");                                // the cuts' dip to the slide colour (film.json "trans")
@@ -94,7 +95,7 @@ window.seek = function (t) {
     // hook: the bumps rise on "goosebumps" (the frame moves in the first second); ours: the same follicles first with a
     // chimp's thick dark hairs, then ours (fine, pale) on "ours"; close: they rise again on "raises"
     const raise = shot === "hook" ? 0.2 + 0.8 * E.inout2(seg(t, CUE.goose - 0.6, CUE.goose + 0.6)) : shot === "ours" ? 0.15 : E.inout2(seg(t, CUE.raises - 0.3, CUE.looks + 0.6));
-    const thick = shot === "ours" ? fadeIn(t, CUE.chimp - 0.5, 0.4) * (1 - E.inout2(seg(t, CUE.ours - 0.1, CUE.fine))) : 0;
+    const thick = shot === "ours" ? E.inout2(seg(t, CUE.chimp - 0.4, CUE.chimp + 0.3)) * (1 - E.inout2(seg(t, CUE.ours - 0.1, CUE.ours + 0.6))) : 0;   // grown and thinned over ~0.7 s, never swapped
     patch.set({ raise, tone, thick });
   }
   A.finehair = patch.at.hair(fine);
@@ -112,11 +113,11 @@ window.seek = function (t) {
     F1.set({ tone, pull, fire, t, wake, grow, frost, dimSkin, glow: WATER, pulseK: shot === "follicle" ? 1 : 0.5 });
     // the second follicle (no muscle): the same cold, its branch to the stem cells fading, its stem cells asleep
     // the muscle is taken away on "Take", then the wiring (branch and pulses) fades on "fades"; its hair waits
-    const mu = shot === "nomuscle" ? 1 - E.inout2(seg(t, CUE.take, CUE.take + 1.1)) : 1;
+    const mu = shot === "nomuscle" ? 1 - E.inout2(seg(t, CUE.take, CUE.take + 0.8)) : 1;
     const wire = shot === "nomuscle" ? 1 - 0.85 * E.inout2(seg(t, CUE.fades - 0.6, CUE.fades + 0.7)) : 1;
     F2.set({ tone, pull: 0.8 * mu, fire: shot === "nomuscle" || shot === "cold" ? wire : 0, t, wake: 0.5 * wire, grow: 0, frost, dimSkin: 0.3, muscle: mu, wire, glow: WATER, pulseK: 0.5 });
   }
-  A.muscle = F1.at.muscle(); A.nerve = F1.at.nerve(); A.hair = F1.at.hair(); A.stem = F1.at.stem(); A.bulb = F1.at.bulb();
+  A.muscle = F1.at.muscle(); A.nerve = F1.at.nerve(); A.hair = F1.at.hair(); A.stem = F1.at.stemC(); A.bulb = F1.at.newTip(); A.insertion = F1.at.insertion();
   A.nomus = F2.at.muscle();
 
   // ── the fur: raised on "fluffs", air thickening ──

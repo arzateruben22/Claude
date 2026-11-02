@@ -78,7 +78,7 @@ export const endBars = (el, { t0, d = 0.8 } = {}) => {
 // the centre-left, 100 µm = `liftPx`, with two bars beside it: the dead layer's thickness and a sheet of paper's.
 const NS = "http://www.w3.org/2000/svg";
 const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
-export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film = false, cheek = false }) => {   // cheek: an opt-in middle bar (No. 003: the cheek's 17 µm beside the palm)   // film: a third, opt-in bar (a layer on top of the dead layer; No. 002)
+export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film = false, cheek = false, liftK = 1, liftAt = null }) => {   // liftK, liftAt [x, y] (fractions): an opt-in bigger, more central lifted card (No. 006)   // cheek: an opt-in middle bar (No. 003: the cheek's 17 µm beside the palm)   // film: a third, opt-in bar (a layer on top of the dead layer; No. 002)
   injectCss();
   const svg = mk("svg", { class: "ol-gauge", width: W, height: H, viewBox: `0 0 ${W} ${H}`, "aria-hidden": "true" });
   root.appendChild(svg);
@@ -120,7 +120,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       if (op <= 0.001 || top == null) { svg.style.visibility = "hidden"; return; }
       svg.style.visibility = "visible";
       // attached geometry (px per µm from the projection) blended to the lifted geometry
-      const pxA = (bottom - top) / um, liftPx = 0.15 * H / 100, yA = top, yL = 0.19 * H, xLift = 0.13 * W;   // the card's top inside the safe box, clear of the top-right notes   // lifted: the empty upper left (the spine counter steps aside), clear of the section
+      const pxA = (bottom - top) / um, liftPx = 0.15 * H / 100 * liftK, yA = top, yL = (liftAt ? liftAt[1] : 0.19) * H, xLift = (liftAt ? liftAt[0] : 0.13) * W;   // the card's top inside the safe box, clear of the top-right notes   // lifted: the empty upper left (the spine counter steps aside), clear of the section
       const u = E.inout2(Math.min(1, Math.max(0, lift)));
       const px = pxA + (liftPx - pxA) * u, y0 = yA + (yL - yA) * u, x = xL + (xLift - xL) * u;
       const span = Math.max(110, Math.ceil((Math.max(sc, paperUm) + 10) / 10) * 10);   // 110 µm unless a layer is thicker (No. 003's palm)
