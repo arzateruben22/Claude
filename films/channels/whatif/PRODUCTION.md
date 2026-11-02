@@ -75,3 +75,12 @@ scripted → voiced → built → stills OK → draft → reviewed → final →
   turned "two and a half million" into "2.5" (fixed additively, see KIT-CHANGES.md).
 - New shared set pieces (additive; ep01 renders identically): `crowd.js`, `tower.js`, `balance.js`; `desk.js`
   takes an optional `span` (the floor and dome grow for shots far above the paper).
+- 2 Nov, later: No. 002 round 3 scored a4 b4 c3 d4 e5 f4 g4. A slow orbit over the crowd (21–43 s) is aimed at
+  lens c, and round 4 is in review. No. 003 round 1 scored a2 b4 c2 d3 e5 f4 g3. Its round 2 fixed the flicker
+  and six other findings, but the reviewer found the new hook and the "each" shot unreadable. Round 3 changes:
+  - a wide, low lens behind a larger ant, with the whole balance beyond; the loop lands on the same framing;
+  - the fingertip side-on and labelled;
+  - a to-scale carpet of your 2.44 million ants (5 mm apart, a 7.8 m square), from your feet up to the whole
+    square.
+  `crowd.js` now centres its square on its group. The output is unchanged at the origin, which is where No. 002
+  uses it.
