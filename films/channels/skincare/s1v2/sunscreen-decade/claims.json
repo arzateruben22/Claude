@@ -1,0 +1,112 @@
+[
+ {
+  "id": "c1",
+  "sentence": "In the early nineties, in a Queensland town called Nambour, chance decided who would wear sunscreen every morning.",
+  "claim": "The Nambour Skin Cancer Prevention Trial (Queensland, Australia) randomly assigned 1,621 randomly selected adult residents of Nambour to daily or discretionary sunscreen use; the trial ran from 1992 to 1996 (February 1992 to August 1996 in one report).",
+  "source_url": "https://ascopubs.org/doi/10.1200/JCO.2010.28.7078",
+  "source_title": "Green AC, Williams GM, Logan V, Strutton GM. Reduced melanoma after regular sunscreen use: randomized trial follow-up. J Clin Oncol 2011;29(3):257-263 (PMID 21135266)",
+  "accessed": "2026-11-02",
+  "note": "Abstract excerpt (via search): 'In 1992, 1,621 randomly selected residents of Nambour, a township in Queensland, Australia, age 25 to 75 years, were randomly assigned to daily or discretionary sunscreen application.' Dates 'February 1992 and August 1996' from the solar keratoses follow-up abstract (PubMed 12707092). Ages differ by source (25–74 / 25–75 at entry; 20–69 at selection from the electoral roll); a Cochrane review notes the protocol reported 1,626. Screen shows 'Nambour, Queensland · 1992'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "They put it on head, neck, arms and hands; neighbours used it as they pleased.",
+  "claim": "The daily group applied SPF 15+ sunscreen to the head, neck, arms and hands every morning; the control group used sunscreen at their usual, discretionary rate (a 2x2 factorial design that also tested beta-carotene tablets).",
+  "source_url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(98)12168-2/fulltext",
+  "source_title": "Green A, Williams G, Neale R, et al. Daily sunscreen application and betacarotene supplementation in prevention of basal-cell and squamous-cell carcinomas of the skin: a randomised controlled trial. Lancet 1999;354:723-729",
+  "accessed": "2026-11-02",
+  "note": "Excerpts (via search): a 2x2 factorial community trial of 1621 Nambour residents, testing daily SPF 15+ sunscreen on the head, neck, arms, and hands against beta-carotene; 'randomized to daily use of sunscreen or to sunscreen use at their usual discretionary rate' (PubMed 12707092). 'Neighbours' is the film's word for the discretionary group from the same town.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "Then, rather than trust their eyes, researchers read the fine lines in silicone casts of hands.",
+  "claim": "Skin ageing was measured by skin microtopography: silicone impressions of the backs of participants' hands taken at baseline (1992) and 4.5 years later (1996), graded by assessors blinded to treatment group; 903 participants younger than 55.",
+  "source_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-158-11-201306040-00002",
+  "source_title": "Hughes MCB, Williams GM, Baker P, Green AC. Sunscreen and prevention of skin aging: a randomized trial. Ann Intern Med 2013;158(11):781-790 (PMID 23732711)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts (via search, ACP press release and MDedge coverage): 'Skin aging was assessed by comparing skin microtopography based on impressions taken of the backs of participants' hands at baseline in 1992 and 4.5 years later in 1996. Assessors were blinded to the treatment groups.' '903 adults younger than 55.' 'Silicone' is the usual replica material for microtopography; a dermatologist should confirm the material named in the paper's methods.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "The daily group was about a quarter less likely to show increased ageing.",
+  "claim": "After 4.5 years, the daily sunscreen group showed no detectable increase in skin ageing; the relative odds of increased ageing in the daily vs discretionary group were 0.76 (95% CI 0.59 to 0.98), i.e. 24% less likely.",
+  "source_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-158-11-201306040-00002",
+  "source_title": "Hughes MCB, Williams GM, Baker P, Green AC. Sunscreen and prevention of skin aging: a randomized trial. Ann Intern Med 2013;158(11):781-790 (PMID 23732711)",
+  "accessed": "2026-11-02",
+  "note": "Abstract excerpt (via search): 'The daily sunscreen group showed no detectable increase in skin aging after 4.5 years' ; relative odds 0.76 (95% CI 0.59 to 0.98). ACP press release: 'daily sunscreen users were 24% less likely to show signs of skin aging than were discretionary users, a statistically significant difference.' Authors' caveat: some outcome data missing; power to detect moderate effects modest. Said 'about a quarter'; screen shows '0.76 relative odds (0.59–0.98)'. Measured on the backs of the hands only.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "But an ultraviolet camera picks up damage the naked eye misses, building long before anything shows on the surface.",
+  "claim": "UV photography shows sun damage that cannot be seen with the naked eye; extensive damage beneath the surface can build up long before signs show on the skin.",
+  "source_url": "https://www.aad.org/public/everyday-care/sun-protection/sun-damage-skin/hidden-sun-damage",
+  "source_title": "See how the sun damages your skin (American Academy of Dermatology)",
+  "accessed": "2026-11-02",
+  "note": "AAD excerpts (via search): 'UV photography allows us to see sun damage that you cannot see with the naked eye'; AAD skin cancer page: 'long before you see signs on your skin, you can have extensive damage beneath the surface.' Cross-check: Gamble RG et al., J Am Acad Dermatol 2012;67(4):587-97, UV photographs of 585 children aged 11–12; UV-photo sun damage was greatest in those with melanoma risk traits (all P < .001). Caveat from coverage: UV images show pigment changes, not cancer itself. The film's UV view is badged 'model'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "Then the town was watched for ten more years.",
+  "claim": "After the trial ended in 1996, participants were followed for about 10 more years (to 2006) for melanoma.",
+  "source_url": "https://ascopubs.org/doi/10.1200/JCO.2010.28.7078",
+  "source_title": "Green AC, Williams GM, Logan V, Strutton GM. Reduced melanoma after regular sunscreen use: randomized trial follow-up. J Clin Oncol 2011;29(3):257-263 (PMID 21135266)",
+  "accessed": "2026-11-02",
+  "note": "Abstract excerpt (via search): 'Ten years after trial cessation, 11 primary melanomas occurred in the daily sunscreen group versus 22 in the discretionary group.' Other summary: 'participants were further followed-up for a decade, until 2006.' 'The town' means the trial participants, not all of Nambour.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
+  "claim": "During the trial (1992–96), squamous cell carcinoma tumour incidence was significantly lower in the daily sunscreen group: 1115 vs 1832 per 100,000, rate ratio 0.61 (95% CI 0.46–0.81). Per person (first new SCC) the difference was not significant: rate ratio 0.88 (0.50–1.56). No effect on basal cell carcinoma.",
+  "source_url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(98)12168-2/fulltext",
+  "source_title": "Green A, Williams G, Neale R, et al. Daily sunscreen application and betacarotene supplementation in prevention of basal-cell and squamous-cell carcinomas of the skin: a randomised controlled trial. Lancet 1999;354:723-729",
+  "accessed": "2026-11-02",
+  "note": "Excerpts (via search, clinician.com summary and a National Academies slide reproducing the table): 'Counting tumours, squamous-cell carcinoma incidence was significantly lower in the sunscreen group ... 1115 versus 1832 per 100,000 (rate ratio 0.61, 95% CI 0.46–0.81)'; first new cancers per person 876 vs 996 per 100,000, 0.88 (0.50–1.56). Authors: SCC 'but not basal-cell carcinoma, seems to be amenable to prevention through the routine use of sunscreen.' Post-trial follow-up (van der Pols et al., Cancer Epidemiol Biomarkers Prev 2006): SCC tumour rates 'decreased by almost 40%', rate ratio 0.62 (0.38–0.99); secondary sources give 0.65 (0.43–0.98). Said with no figure ('come out lower'); screen 'counted by tumours'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "Squamous cell cancers had already come out lower, and melanoma came out at about half, in small numbers.",
+  "claim": "Ten years after the trial ended, there were 11 primary melanomas in the daily group vs 22 in the discretionary group: hazard ratio 0.50 (95% CI 0.24 to 1.02; P = .051). Invasive melanoma: 3 vs 11, HR 0.27 (95% CI 0.08 to 0.97). Preinvasive: HR 0.73 (0.29 to 1.81).",
+  "source_url": "https://ascopubs.org/doi/10.1200/JCO.2010.28.7078",
+  "source_title": "Green AC, Williams GM, Logan V, Strutton GM. Reduced melanoma after regular sunscreen use: randomized trial follow-up. J Clin Oncol 2011;29(3):257-263 (PMID 21135266)",
+  "accessed": "2026-11-02",
+  "note": "Abstract excerpt (via search): '11 primary melanomas occurred in the daily sunscreen group versus 22 in the discretionary group (hazard ratio [HR], 0.50; 95% CI, 0.24 to 1.02; P = .051)'; 'invasive melanomas ... 3 in the active group versus 11 in the control group, HR, 0.27; 95% CI, 0.08 to 0.97'. Authors: 'Melanoma may be preventable by regular sunscreen use in adults.' The overall result is not quite significant at 0.05 and rests on 33 cases, hence 'in small numbers' and the 'not quite significant' badge. Melanoma was a secondary endpoint.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "At a lab's test dose, that morning layer is about a fifth of a paper's thickness.",
+  "claim": "SPF testing applies sunscreen at 2 mg/cm²; at a density of about 1 g/cm³ that is a film about 20 µm thick (16–17 µm for denser products), about a fifth of a ~100 µm sheet of paper (computed).",
+  "source_url": "https://www.tga.gov.au/sites/default/files/consult-otc-argom-sunscreens-100505-submission-antaria.pdf",
+  "source_title": "Submission to the TGA consultation on sunscreens (Antaria Ltd, hosted by the Therapeutic Goods Administration, Australia)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (via search): 'if the application rate is 2 mg/cm2 and the density is 1 g/cm3, the film thickness is 0.0002 cm or 20 microns'; a 1.26 g/cm3 product gives about 16 microns. Another source puts 2 mg/cm² at 16.7 µm. 20 ÷ 100 = a fifth (computed); badged 'estimate'. This is the test dose, not what the trial measured; real-world layers are often thinner. Paper ≈ 100 µm: bible §6.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "The eye can't say, but the skin was keeping its own record.",
+  "claim": "Sun damage accumulates over time, much of it beneath the surface before it can be seen, and the more of it builds up, the greater the risk of skin cancer and prematurely aged skin.",
+  "source_url": "https://www.aad.org/public/everyday-care/sun-protection/sun-damage-skin/hidden-sun-damage",
+  "source_title": "See how the sun damages your skin (American Academy of Dermatology)",
+  "accessed": "2026-11-02",
+  "note": "AAD excerpts (via search): 'the more sun damage we accumulate, the greater our risk of skin cancer and prematurely aged skin'; 'UV photography allows us to see sun damage that you cannot see with the naked eye.' 'Record' is a metaphor for that accumulation; the dermatologist checks it reads that way.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]
