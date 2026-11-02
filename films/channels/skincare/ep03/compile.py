@@ -94,7 +94,7 @@ LABELS = [
     {"id": "l-vessel", "text": "tiny vessels", "kind": "cell", "anchor": "vessel", "t0": A("vo04:vessels"), "t1": CUE["narrow"][1] - 0.3, "shot": "inside", "side": -1, "fixed": True},
     {"id": "l-cutr", "text": "nerve cut: stays smooth", "kind": "cell", "anchor": "cutpad", "t0": CUE["test"] + 0.2, "t1": CUE["argued"] - 0.2, "shot": "reflex", "side": 1, "v": "above", "fixed": True},
     {"id": "l-tip-c", "text": "fingertip", "kind": "layer", "anchor": "tip", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-arm-c", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-arm-c", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo07:So", 0.25), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
 ]
 BADGES = [
     {"id": "b-simp-h", "text": "simplified", "t0": B["normal"]["t0"] - 0.6, "t1": t_end, "slot": "tr"},   # the whole film after the title
