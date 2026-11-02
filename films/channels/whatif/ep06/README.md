@@ -5,7 +5,7 @@ A lydian at 50 BPM). The bible's backup for idea 6 ("Every cat at once" has no m
 It pays off No. 005's tease ("what if a whole day's rain fell in one second?") and ends the season with "Next envelope:
 walking to the Moon".
 
-STATUS: draft under review (round 2). The measured scorecard follows the final.
+STATUS: delivered. Final in `out/` (qa.py PASS); measured scorecard in `review/scorecard.md`.
 
 ## The story
 On an ordinary day the sky lets go of nearly a Great Lake (about 1,400 km³: rain, snow and hail, NASA's water-cycle
