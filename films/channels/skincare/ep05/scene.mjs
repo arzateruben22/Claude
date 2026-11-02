@@ -26,7 +26,6 @@ if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.9, bloom
 let focus = { point: [0, 0, 0], fstop: 0 };
 window.CINEMA_FOCUS = () => focus;
 injectCss();
-{ const st = document.createElement("style"); st.textContent = ".ol-band{background:linear-gradient(180deg,rgba(44,22,96,0) 0%,rgba(44,22,96,.82) 24%,rgba(44,22,96,.82) 76%,rgba(44,22,96,0) 100%)!important}"; document.head.appendChild(st); }   // the title's band in the reboot's ground
 
 scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));
 const sun = new THREE.DirectionalLight(0xffb870, 4.0); sun.position.set(30, 6, -30); scene.add(sun);
@@ -71,7 +70,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.5, liftAt: [0.2, 0.22] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.2, w: 0.8, h: 0.34 });
+const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.265 });
 const day = createDaylight({ root: hudRoot, W, H, y: 0.565 });
 const plate = (html, css) => {
   const el = document.createElement("div");
@@ -83,14 +82,14 @@ const plate = (html, css) => {
 const show = (el, op) => { el.style.opacity = op.toFixed(3); el.style.visibility = op > 0.002 ? "visible" : "hidden"; };
 const O = P.odds, M = P.mel;
 const odds = plate(`<div style="font:600 3.4vmin/1.3 var(--font-body, inherit)">${O.text}</div><div style="font:500 2.5vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
-  { left: "50%", top: `${0.565 * H}px`, transform: "translateX(-50%)", width: "80vmin", padding: "2.2vmin 3vmin" });
+  { left: "50%", top: `${0.44 * H}px`, transform: "translateX(-50%)", width: "78vmin", padding: "2.2vmin 3vmin" });
 const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline-block;width:2.6vmin;height:2.6vmin;border-radius:50%;margin:.35vmin;background:${c};opacity:0"></i>`).join("");
 const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body, inherit);opacity:0">squamous cell cancers, during the trial: <span style="color:var(--water)">lower</span></div>
   <div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin:2vmin 0 1.2vmin">melanomas, ten years on</div>
   <div style="display:grid;grid-template-columns:24vmin 1fr;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
   <div class="sub" style="font:500 2.4vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
-  { left: "50%", top: `${0.46 * H}px`, transform: "translateX(-50%)", width: "82vmin", padding: "2.4vmin 3vmin" });
+  { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "2.4vmin 3vmin" });
 const scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });

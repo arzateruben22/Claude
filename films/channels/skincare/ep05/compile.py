@@ -56,7 +56,7 @@ SHOTS = [{"at": 0.0, "name": "hand"}, {"at": B["normal"]["t0"], "name": "town"},
 # ── the camera ──
 TX, UX = -4000.0, 4000.0
 FLY = {"el": 13, "fov": 34, "fx": 0.5, "fy": 0.46}
-UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.4}
+UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.43}
 CAM = {
     "hand": [{"t": 0.0, "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY},
              {"t": B["normal"]["t0"], "target": [0, -0.4, 9], "dist": 22, "az": -1, **FLY, "ease": "sine"}],
@@ -99,7 +99,7 @@ BADGES = [
     {"id": "b-est", "text": "estimate", "t0": CUE["fifth"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-uv2", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tl"},
 ]
-SPINE = [0.62, 0.2]
+SPINE = [0.5, 0.225]   # centred: the viewfinder's REC owns the top right in the UV shots
 COUNTERS = [
     {"id": "c-start", "label": "Nambour trial begins", "fmt": "text", "text": f"{START}", "t0": CUE["nambour"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-age", "label": "ageing measured after", "fmt": "text", "text": "4.5 years", "t0": CUE["four"] - 0.2, "t1": B["whoa"]["t0"], "at": SPINE},
@@ -169,7 +169,7 @@ ev += [
     {"t": B["normal"]["t0"], "kind": "scale.jump", "tag": "up-to-town"},
     {"t": TOWN["split"][0], "kind": "diffuse", "tag": "split"},
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "down-to-cast"},
-    {"t": B["why"]["t0"], "kind": "knock", "tag": "shutter-1"},
+    {"t": B["why"]["t0"], "kind": "cell.land", "tag": "shutter-1"},
     {"t": B["why"]["t0"], "kind": "scale.jump", "tag": "uv-1"},
     {"t": B["whoa"]["t0"], "kind": "scale.jump", "tag": "up-to-town-2"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
@@ -177,7 +177,7 @@ ev += [
     {"t": B["toscale"]["t0"], "kind": "scale.jump", "tag": "down-to-hand"},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-film"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
-    {"t": B["takeaway"]["t0"], "kind": "knock", "tag": "shutter-2"},
+    {"t": B["takeaway"]["t0"], "kind": "cell.land", "tag": "shutter-2"},
 ]
 cues_file = HERE / "build" / f"cues-{ID}-9x16.json"
 shown = {}

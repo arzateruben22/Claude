@@ -156,7 +156,7 @@ ev += [
     {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "into-bed"},
     {"t": BED["on"][0], "kind": "zap", "tag": "tubes-on"},
     {"t": PLATES["rr"]["before"], "kind": "reveal", "tag": "rr"},
-    {"t": B["whoa"]["t0"], "kind": "knock", "tag": "shutter"},
+    {"t": B["whoa"]["t0"], "kind": "cell.land", "tag": "shutter"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": UVD["brazil"][0], "kind": "cell.land", "tag": "brazil"},
     {"t": UVD["off"][1] - 0.4, "kind": "cell.land", "tag": "australia-off"},

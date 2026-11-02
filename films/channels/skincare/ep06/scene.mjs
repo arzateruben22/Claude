@@ -29,7 +29,6 @@ if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.9, bloom
 let focus = { point: [0, 0, 0], fstop: 0 };
 window.CINEMA_FOCUS = () => focus;
 injectCss();
-{ const st = document.createElement("style"); st.textContent = ".ol-band{background:linear-gradient(180deg,rgba(44,22,96,0) 0%,rgba(44,22,96,.82) 24%,rgba(44,22,96,.82) 76%,rgba(44,22,96,0) 100%)!important}"; document.head.appendChild(st); }
 
 scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));
 const sun = new THREE.DirectionalLight(0xffb870, 4.0); sun.position.set(30, 6, -30); scene.add(sun);

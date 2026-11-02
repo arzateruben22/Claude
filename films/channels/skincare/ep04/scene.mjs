@@ -28,7 +28,6 @@ if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 8, threshold: 0.9, bloom
 let focus = { point: [0, 0, 0], fstop: 0 };
 window.CINEMA_FOCUS = () => focus;
 injectCss();
-{ const st = document.createElement("style"); st.textContent = ".ol-band{background:linear-gradient(180deg,rgba(44,22,96,0) 0%,rgba(44,22,96,.82) 24%,rgba(44,22,96,.82) 76%,rgba(44,22,96,0) 100%)!important}"; document.head.appendChild(st); }   // the title's band in the reboot's ground (motif.js still paints season 1's pale one)
 
 // ── light: the golden hour (a low warm sun behind and right for the rim, a cool sky fill, a soft key) ──
 scene.add(new THREE.HemisphereLight(0xbcd2ff, 0x3a2418, 0.6));

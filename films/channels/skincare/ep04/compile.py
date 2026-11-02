@@ -186,7 +186,7 @@ ev += [
     {"t": J["cut"][0], "kind": "zap", "tag": "cut"},
     {"t": B["why"]["t0"], "kind": "scale.jump", "tag": "rise"},
     {"t": PLATES["kerner"]["t0"], "kind": "reveal", "tag": "kerner"},
-    {"t": B["whoa"]["t0"], "kind": "knock", "tag": "shutter"},
+    {"t": B["whoa"]["t0"], "kind": "cell.land", "tag": "shutter"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
     {"t": PLATES["dose"]["kill"], "kind": "reveal", "tag": "dose"},
     {"t": B["toscale"]["t0"], "kind": "scale.jump", "tag": "back-below"},
