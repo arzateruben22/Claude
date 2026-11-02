@@ -110,12 +110,30 @@ export const createSection = (o = {}) => {
   for (let i = 0; i < Math.round(W / 4); i++) fib.push({ pos: [x0 + R() * W, yDJ - 8 - R() * 58, z1 - 1.6 - R() * 2], scl: [1.5, 10 + R() * 22, 1.5], rot: 0, tilt: (R() - 0.5) * 2.6 });
   const fibMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 6), M.fibre, fib.length);
   fib.forEach((p, i) => { dummy.position.set(...p.pos); dummy.scale.set(...p.scl); dummy.rotation.set(0, 0, Math.PI / 2 + p.tilt * 0.4); dummy.updateMatrix(); fibMesh.setMatrixAt(i, dummy.matrix); });
+  fibMesh.visible = false;   // single fibres read as stray white lines (the No. 001 review)
   group.add(fibMesh);
 
   const meshes = { corneoMesh, granMesh, spinMesh, basalMesh, nucMesh, capMesh, dermis, fibMesh };
+  // wrinkling (No. 003): every cell near the surface rides a fold y += amp · sin(2πx/period) · e^(y/decay); the fold dies
+  // away with depth, so the dead rows buckle and the dermis barely moves. Matrices are rebuilt only when amp changes.
+  const LISTS = [[corneoMesh, corneo], [granMesh, gran], [spinMesh, spin], [basalMesh, basal], [nucMesh, nuclei], [capMesh, caps]];
+  const dTop = Float32Array.from({ length: pa.count }, (_, i) => pa.getY(i));
+  let wrinkled = 0;
+  const wrinkle = (amp = 0, period = 26, decay = 28, phase = 0.4) => {
+    if (Math.abs(amp - wrinkled) < 1e-4) return;
+    wrinkled = amp;
+    const f = (x, y) => amp * Math.sin(2 * Math.PI * x / period + phase) * Math.exp(Math.min(0, y) / decay);
+    for (const [m, list] of LISTS) {
+      list.forEach((p, i) => { dummy.position.set(p.pos[0], p.pos[1] + f(p.pos[0], p.pos[1]), p.pos[2]); dummy.scale.set(...p.scl); dummy.rotation.set(0, p.rot || 0, 0); dummy.updateMatrix(); m.setMatrixAt(i, dummy.matrix); });
+      m.instanceMatrix.needsUpdate = true;
+    }
+    for (let i = 0; i < pa.count; i++) pa.setY(i, dTop[i] + (dTop[i] > -1 ? f(pa.getX(i), yDJ) : 0));
+    pa.needsUpdate = true; dGeo.computeVertexNormals();
+    mortarGroup.visible = amp < 0.05;              // flat sheets can't follow a fold
+  };
   const base = (m, c, k = 1) => m.color.setRGB(c[0] * k, c[1] * k, c[2] * k);
   return {
-    group, meshes, mortarGroup, junction, dims: { W, D, ROWS, SC, GR, SP, BA, yG, yS, yB, yDJ, rowH },
+    group, meshes, mortarGroup, junction, wrinkle, dims: { W, D, ROWS, SC, GR, SP, BA, yG, yS, yB, yDJ, rowH },
     // tone (melanin 0–1); dimDead / dimLiving: 0 … 1 (rule 8: whatever isn't the subject steps back to ~1/3);
     // mortar: 0 … 1, the lipid sheets lit in the theme's water colour (lin, as [r, g, b] linear)
     set({ tone = 0.5, dimDead = 0, dimLiving = 0, mortar = 0, mortarColor = [0.3, 0.7, 0.75], glowDead = 0 } = {}) {
@@ -132,7 +150,7 @@ export const createSection = (o = {}) => {
       capMesh.visible = tone > 0.05;
       mortarMat.color.setRGB(...mortarColor);
       mortarMat.opacity = 0.15 + 0.85 * mortar;
-      mortarGroup.visible = true;
+      mortarGroup.visible = wrinkled < 0.05;
     },
     at: {
       scTop: (u = 0.5, zf = 1) => [x0 + W * u, -0.2, z1 * zf],
@@ -166,7 +184,7 @@ export const createClimber = ({ clip } = {}) => {
   g.add(nuc, fil, line, cell);
   g.renderOrder = 10;   // drawn after the section and over it, so the followed cell never cuts through its neighbours
   // painted in order with no depth test: outline, then the nucleus and filaments, then the translucent body over them
-  line.renderOrder = 10; nuc.renderOrder = 11; cell.renderOrder = 12;
+  line.renderOrder = 10; cell.renderOrder = 12; nuc.renderOrder = 13;   // the nucleus over the body, so its going is seen
   [cell, nuc, line].forEach((m) => { m.material.depthTest = false; });
   fil.children.forEach((m) => { m.renderOrder = 11; }); fm.depthTest = false;
   return {
@@ -233,7 +251,7 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
       mesh.visible = gain > 0.002 && t > t0;
       F.forEach((f, i) => {
         const u = Math.max(0, Math.min(1, (t - t0 - f.d) / 2.4)), e = u * u * (3 - 2 * u);
-        d.position.set(f.x + f.drift * e, 0.6 + 46 * e, f.z);
+        d.position.set(f.x + f.drift * e, 0.6 + 22 * e, f.z);   // a short lift: clear of the counters
         d.rotation.set(f.spin * e * 1.4, f.spin * e * 2, f.spin * e * 0.9);
         const s = (u > 0 ? 1 : 0) * (1 - Math.max(0, (u - 0.7) / 0.3));
         d.scale.set(13 * s + 1e-4, 0.8, 13 * s + 1e-4); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
@@ -242,4 +260,34 @@ export const createFlakes = ({ n = 7, x: [xa, xb] = [-60, 60], z = 24, seed = 9 
       mat.opacity = gain;
     },
   };
+};
+
+// vessels (No. 003): a few small blood vessels running along the upper dermis, just behind the cut face; their radius is
+// set per frame (they narrow when the nerves tell them to). A muted brick red: not the body channel's blood pink.
+export const createVessels = ({ x: [xa, xb] = [-80, 80], ys = [-92, -100, -110], z = 20, r = 2.4, ox = 0 } = {}) => {
+  const mat = new THREE.MeshStandardMaterial({ color: 0xa8584e, roughness: 0.45, metalness: 0 });
+  const group = new THREE.Group();
+  const tubes = ys.map((y, i) => {
+    const pts = [];
+    for (let k = 0; k <= 24; k++) { const x = xa + (xb - xa) * k / 24; pts.push(new THREE.Vector3(ox + x, y + 2.5 * Math.sin(x / 13 + i * 1.7), z - i * 3)); }
+    const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, r, 10, false), mat);
+    group.add(m);
+    return { m, y, z: z - i * 3 };
+  });
+  return {
+    group,
+    // k: 1 open … about 0.4 narrowed; each tube is scaled about its own axis (they run along x)
+    set({ k = 1, opacity = 1 } = {}) {
+      group.visible = opacity > 0.002;
+      tubes.forEach(({ m, y, z: zz }) => { m.position.set(0, y * (1 - k), zz * (1 - k)); m.scale.set(1, k, k); });
+    },
+  };
+};
+
+// water (No. 003): a clear slab of bath water over a block, tinted with the theme's water colour
+export const createWater = ({ width = 180, depth = 60, top = 40, x = 0 } = {}) => {
+  const mat = new THREE.MeshStandardMaterial({ color: 0xbfe3e6, roughness: 0.08, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false });
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, top, depth), mat);
+  mesh.position.set(x, top / 2, 0);
+  return { mesh, set({ opacity = 0.22 } = {}) { mat.opacity = opacity; mesh.visible = opacity > 0.002; } };
 };

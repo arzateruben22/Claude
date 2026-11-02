@@ -331,19 +331,14 @@
    "t1": 59.7333
   },
   {
-   "t": 53.2,
-   "kind": "badge",
-   "tag": "b-illus-g"
+   "t": 54.2,
+   "kind": "scale",
+   "tag": "g-sc"
   },
   {
    "t": 55.333333333333336,
    "kind": "badge",
    "tag": "b-cheek"
-  },
-  {
-   "t": 56.5,
-   "kind": "scale",
-   "tag": "g-sc"
   },
   {
    "t": 57.766666666666666,
@@ -369,6 +364,11 @@
    "t": 59.7333,
    "kind": "badge",
    "tag": "b-simp-c"
+  },
+  {
+   "t": 65.1,
+   "kind": "cell.land",
+   "tag": "died"
   },
   {
    "t": 66.7333,

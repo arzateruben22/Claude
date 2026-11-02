@@ -86,9 +86,9 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
   const rcard = mk("rect", { fill: "var(--card)", rx: 12 * S1 }, g);   // a white backing for the attached ruler: its text stays ≥ 4.5:1 over any skin
   const spine = mk("line", { stroke: "var(--text)", "stroke-width": 3 * S1, "stroke-linecap": "round" }, g);
   const band = mk("rect", { fill: "var(--water)", opacity: 0.9, rx: 2 * S1 }, g);
-  const ticks = Array.from({ length: 12 }, (_, i) => mk("line", { stroke: "var(--text)", "stroke-width": (i % 5 === 0 ? 3 : 2) * S1 }, g));
-  const lab = [0, 50, 100].map((v) => mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g));
-  lab.forEach((e, i) => (e.textContent = `${[0, 50, 100][i]}`));
+  const ticks = Array.from({ length: 21 }, (_, i) => mk("line", { stroke: "var(--text)", "stroke-width": (i % 5 === 0 ? 3 : 2) * S1 }, g));   // 0–200 µm; those past the span are hidden
+  const lab = [0, 50, 100, 150, 200].map((v) => mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g));
+  lab.forEach((e, i) => (e.textContent = `${[0, 50, 100, 150, 200][i]}`));
   const unit = mk("text", { "font-size": 24 * S1, class: "sub" }, g); unit.textContent = "µm";
   const paperMark = mk("line", { stroke: "var(--text-2)", "stroke-width": 2 * S1, "stroke-dasharray": `${6 * S1} ${5 * S1}` }, g);
   const paperTxt = mk("text", { "font-size": 24 * S1, class: "sub", "dominant-baseline": "middle" }, g); paperTxt.textContent = "paper ≈ 100 µm";
@@ -112,15 +112,16 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       if (op <= 0.001 || top == null) { svg.style.visibility = "hidden"; return; }
       svg.style.visibility = "visible";
       // attached geometry (px per µm from the projection) blended to the lifted geometry
-      const pxA = (bottom - top) / um, liftPx = 0.15 * H / 100, yA = top, yL = 0.17 * H, xLift = 0.145 * W;   // lifted: the empty upper left (the spine counter steps aside), clear of the section
+      const pxA = (bottom - top) / um, liftPx = 0.15 * H / 100, yA = top, yL = 0.19 * H, xLift = 0.13 * W;   // the card's top inside the safe box, clear of the top-right notes   // lifted: the empty upper left (the spine counter steps aside), clear of the section
       const u = E.inout2(Math.min(1, Math.max(0, lift)));
       const px = pxA + (liftPx - pxA) * u, y0 = yA + (yL - yA) * u, x = xL + (xLift - xL) * u;
-      const len = 110 * px;
+      const span = Math.max(110, Math.ceil((Math.max(sc, paperUm) + 10) / 10) * 10);   // 110 µm unless a layer is thicker (No. 003's palm)
+      const len = span * px;
       spine.setAttribute("x1", x); spine.setAttribute("x2", x); spine.setAttribute("y1", y0); spine.setAttribute("y2", y0 + len);
       band.setAttribute("x", x - 7 * S1); band.setAttribute("width", 7 * S1); band.setAttribute("y", y0); band.setAttribute("height", Math.max(0, sc * px));
       band.setAttribute("opacity", (0.9 * (1 - u)).toFixed(3));
-      ticks.forEach((e, i) => { const y = y0 + i * 10 * px, w = (i % 5 === 0 ? 22 : 12) * S1; e.setAttribute("x1", x); e.setAttribute("x2", x + w); e.setAttribute("y1", y); e.setAttribute("y2", y); });
-      lab.forEach((e, i) => { const yy = y0 + i * 50 * px, ok = yy + 20 * S1 < (safe ? safe.b : H) ? 1 : 0; e.setAttribute("x", x + 30 * S1); e.setAttribute("y", yy); e.setAttribute("opacity", (ok * Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1)))).toFixed(3)); });
+      ticks.forEach((e, i) => { const y = y0 + i * 10 * px, w = (i % 5 === 0 ? 22 : 12) * S1; e.setAttribute("x1", x); e.setAttribute("x2", x + w); e.setAttribute("y1", y); e.setAttribute("y2", y); e.setAttribute("opacity", i * 10 <= span ? "1" : "0"); });
+      lab.forEach((e, i) => { const yy = y0 + i * 50 * px, ok = (yy + 20 * S1 < (safe ? safe.b : H) && i * 50 <= span) ? 1 : 0; e.setAttribute("x", x + 30 * S1); e.setAttribute("y", yy); e.setAttribute("opacity", (ok * Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1)))).toFixed(3)); });
       unit.setAttribute("x", x - 8 * S1); unit.setAttribute("y", y0 - 18 * S1);
       const yP = y0 + paperUm * px;
       paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
@@ -139,7 +140,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       paperBar.setAttribute("x", bx + bw + gap); paperBar.setAttribute("width", bw); paperBar.setAttribute("y", y0); paperBar.setAttribute("height", Math.max(0, paperUm * px * fillPaper)); paperBar.setAttribute("opacity", u.toFixed(3));
       scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * (filmBar ? fillFilm : fillSc)).toFixed(3));
       paperTxt2.setAttribute("x", bx + bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1); paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
-      card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", 110 * px + 150 * S1);
+      card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", span * px + 150 * S1);
       card.setAttribute("opacity", (0.94 * u).toFixed(3));
       scVal.textContent = `${Math.round(sc)} µm`; paperVal.textContent = `${Math.round(paperUm)} µm`;
       scVal.setAttribute("dominant-baseline", "hanging"); scVal.setAttribute("x", bx); scVal.setAttribute("y", yS + sc * px + 8 * S1); scVal.setAttribute("opacity", (u * fillSc).toFixed(3));
