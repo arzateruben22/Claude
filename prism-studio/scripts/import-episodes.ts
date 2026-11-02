@@ -21,6 +21,7 @@ export const SLATES: Record<string, { series: string; objective: string; titles:
   physics: { series: "Season 1: Forces you can see", objective: "See the laws of motion at work in everyday objects, measured on screen.", titles: ["Thrown or dropped?", "The swing's secret", "Where does the bounce go?", "The hammer and the feather", "The spinning chair", "The ten-metre straw"] },
   space: { series: "Season 1: How far, how fast", objective: "Feel the scale of our cosmic neighbourhood through light-travel time and motion.", titles: ["If the Sun vanished", "Nearest star", "Venus day", "Falling Moon", "Sun size", "Your speed"] },
   body: { series: "Season 1: The traffic inside you", objective: "Follow how your body moves cells, oxygen and signals to where they're needed.", titles: ["Single file", "A billion passengers", "The jump", "The gap", "Where breath goes", "The exit"] },
+  skincare: { series: "Season 1: The organ you live inside", objective: "See what your skin is doing, layer by layer, with the evidence on the screen.", titles: ["The dead layer", "Does SPF 100 beat SPF 50?", "Bath fingers", "What a tan is", "Same cells, every colour", "Goosebumps"] },
   whatif: { series: "Season 1: Impossible, worked out", objective: "Take an impossible question, state every assumption, and land on a real number you can feel.", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
 };
 

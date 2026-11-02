@@ -33,7 +33,7 @@ export const CHANNELS: {
       examples: ["Why does a pore clog?", "Does SPF 100 beat SPF 50?"],
       avoid: ["inferring behaviour from appearance", "promised results", "brand endorsements without disclosure", "Lumevina's look (black, rose and gold; glass bells)"],
     },
-    filmsPath: null, creation: { key: "glass_garden", name: "The Glass Garden" },
+    filmsPath: "films/channels/skincare", creation: { key: "glass_garden", name: "The Glass Garden" },
   },
   {
     topic: "physics", slug: "physics", name: "Rest Frame", provisional: true,
