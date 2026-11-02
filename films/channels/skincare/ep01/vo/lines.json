@@ -25,81 +25,81 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Follow faces photo by photo, and more than a quarter of new red spots rise from skin that looked perfectly clear. So what was happening underneath?",
+   "text": "Follow faces photo by photo, and more than one new red spot in four rises from skin that looked clear. So what was happening underneath?",
    "stars": [
     "clear"
    ],
-   "phonemes": "fˈɒləʊ fˈeɪsɪz fˈəʊtəʊ baɪ fˈəʊtəʊ, and mˈɔː ðˌanə kwˈɔːtəɹ ɒv njˈuː ɹˈɛd spˈɒts ɹˈaɪz fɹɒm skˈɪn ðat lˈʊkt pˈɜːfɛktlˌɪ klˈiə. sˌəʊ wɒt wɒz hˈapənɪŋ ˌʌndənˈiːθ?",
+   "phonemes": "fˈɒləʊ fˈeɪsɪz fˈəʊtəʊ baɪ fˈəʊtəʊ, and mˈɔː ðɐn wˈɒn njˈuː ɹˈɛd spˈɒt ɪn fˈɔː ɹˈaɪzɪz fɹɒm skˈɪn ðat lˈʊkt klˈiə. sˌəʊ wɒt wɒz hˈapənɪŋ ˌʌndənˈiːθ?",
    "speed": 0.82,
    "file": "02.wav",
-   "dur": 9.767,
-   "sha256": "f2051208dc96a29844d767297ff4af62d01ae093c912f02a79f255e94646af26"
+   "dur": 9.116,
+   "sha256": "6905d078ba225aea2bd50382a995fd3cbba9f58ae44d11683cf7152a1c287b12"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Look beneath that clear skin, and the defence is already there, immune cells crowding the follicle, some as thickly as in a red spot.",
+   "text": "Beneath that clear skin, the defence has already gathered, immune cells crowding the follicle, some as thickly as in a red spot.",
    "stars": [
     "spot"
    ],
-   "phonemes": "lˈʊk bɪnˌiːθ ðat klˈiə skˈɪn, and ðə dɪfˈɛns ɪz ɔːlɹˌɛdi ðˈeə, ɪmjˈuːn sˈɛlz kɹˈaʊdɪŋ ðə fˈɒlɪkəl , sˌʌm az θˈɪkli az ɪn ɐ ɹˈɛd spˈɒt.",
+   "phonemes": "bɪnˌiːθ ðat klˈiə skˈɪn, ðə dɪfˈɛns hɐz ɔːlɹˌɛdi ɡˈaðəd, ɪmjˈuːn sˈɛlz kɹˈaʊdɪŋ ðə fˈɒlɪkəl , sˌʌm az θˈɪkli az ɪn ɐ ɹˈɛd spˈɒt.",
    "speed": 0.82,
    "file": "03.wav",
-   "dur": 8.546,
-   "sha256": "b051ea5574e7b7e0f67e6e5e8dccb23b319337669edb24b13ebb15b9772faf2b"
+   "dur": 8.318,
+   "sha256": "102b75c4033ba6166bbfb31afd8180c980802f1d3340d3194decab9002970e6e"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It's easy to picture an infection. But this bacterium lives in skin with spots and skin without. What makes the spot is largely how your body answers it.",
+   "text": "It's easy to picture an infection. But it's the most common bacterium in clear, oily skin, and skin with acne carries no more. What makes the spot is largely your body's answer.",
    "stars": [
-    "answers"
+    "answer"
    ],
-   "phonemes": "ɪts ˈiːzi tə pˈɪktʃəɹ ɐn ɪnfˈɛkʃən. bˌʌt ðˈɪs bæktˈɪəriəm lˈaɪvz ɪn skˈɪn wɪð spˈɒts and skˈɪn wɪðˈaʊt. wˌɒt mˌeɪks ðə spˈɒt ɪz lˈɑːdʒli hˌaʊ jɔː bˈɒdi ˈansəz ɪt.",
+   "phonemes": "ɪts ˈiːzi tə pˈɪktʃəɹ ɐn ɪnfˈɛkʃən. bˌʌt ɪts ðə mˈəʊst kˈɒmən bæktˈɪəriəm ɪn klˈiə, ˈɔɪli skˈɪn, and skˈɪn wɪð ˈaknɪ kˈaɹiz nˈəʊmˌɔː. wˌɒt mˌeɪks ðə spˈɒt ɪz lˈɑːdʒli jɔː bˈɒdiz ˈansə.",
    "speed": 0.82,
    "file": "04.wav",
-   "dur": 10.171,
-   "sha256": "0fb94899f84ea08e4346dfe00d621927d2a2de23c9d438c3ec0c6f70584028d2"
+   "dur": 11.866,
+   "sha256": "abb5061427528356de89d0c90837236041f44e907f24cf64251558098d54c10f"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "White cells flood in until the follicle's wall can give way, spilling the fight deeper. A squeeze often pushes it further, where a mark is more likely.",
+   "text": "White cells flood in until the follicle's wall can give way, spilling the fight deeper. Each day, your marrow makes several for every person on Earth.",
    "stars": [
     "deeper",
-    "mark"
+    "Earth"
    ],
-   "phonemes": "wˈaɪt sˈɛlz flˈʌd ɪn ʌntˈɪl ðə fˈɒlɪkəl ˈɛs wˈɔːl kan ɡˈɪv wˈeɪ, spˈɪlɪŋ ðə fˈaɪt dˈiːpə. ɐ skwˈiːz ˈɒfən pˈʊʃɪz ɪt fˈɜːðə, wˌeəɹ ɐ mˈɑːk ɪz mˈɔː lˈaɪkli.",
+   "phonemes": "wˈaɪt sˈɛlz flˈʌd ɪn ʌntˈɪl ðə fˈɒlɪkəl ˈɛs wˈɔːl kan ɡˈɪv wˈeɪ, spˈɪlɪŋ ðə fˈaɪt dˈiːpə. ˈiːtʃ dˈeɪ, jɔː mˈaɹəʊ mˌeɪks sˈɛvɹəl fɔːɹ ˈɛvɹɪ pˈɜːsən ˌɒn ˈɜːθ.",
    "speed": 0.82,
    "file": "05.wav",
-   "dur": 9.687,
-   "sha256": "64bb944654e6fe0bd0b7b765bf14c0a3705552de3fa41ae7f39e800f01c33c22"
+   "dur": 9.302,
+   "sha256": "effa2afe68cf7267dd94ae640da1ef78568518c6f858095a3764e9e8d015d34f"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
+   "text": "And pus is the fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
    "stars": [
     "thickness"
    ],
-   "phonemes": "and ðə pˈʌs ɪz ðat fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ stˈɪl wˈʊdənt spˈan ðɪs pˈeɪpəz θˈɪknəs.",
-   "speed": 0.72,
+   "phonemes": "and pˈʌs ɪz ðə fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ stˈɪl wˈʊdənt spˈan ðɪs pˈeɪpəz θˈɪknəs.",
+   "speed": 0.79,
    "file": "06.wav",
-   "dur": 8.633,
-   "sha256": "fbce7791d270d1f55c61c087e56c5a56519d7c81bdcf10080274a2d92fbbdcfd"
+   "dur": 7.85,
+   "sha256": "ccddd1ab9c32f59fdb7baad5b7d24a466fe0bd48bc9eda42c7a19123fec4ffbf"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, is it new? No. It's the end of a fight that began out of sight.",
+   "text": "Is it new? No: a fight begun out of sight, against a germ that even helps build your skin's barrier.",
    "stars": [
-    "sight"
+    "barrier"
    ],
-   "phonemes": "sˈəʊ, ɪz ɪt njˈuː? nˈəʊ. ɪts ðɪ ˈɛnd əvə fˈaɪt ðat bɪɡˈan ˌaʊtəv sˈaɪt.",
-   "speed": 0.67,
+   "phonemes": "ɪz ɪt njˈuː? nˈəʊ: ɐ fˈaɪt bɪɡˈʌn ˌaʊtəv sˈaɪt, ɐɡˈɛnst ɐ dʒˈɜːm ðat ˈiːvən hˈɛlps bˈɪld jɔː skˈɪnz bˈaɹiə.",
+   "speed": 0.79,
    "file": "07.wav",
-   "dur": 6.298,
-   "sha256": "799fa5b41f92f0169bec98f9afb017b42d58de409fd90068ffa08848120f94c5"
+   "dur": 7.399,
+   "sha256": "ff61b3ad98b6e2d5eb3b517ab647859a5feed29d453c67e1cb580ced87767f85"
   },
   {
    "id": "vo08",
@@ -109,10 +109,10 @@
     "goes"
    ],
    "phonemes": "nˈɛkst: ðə lˈaɪt ˌɒn jɔː fˈeɪs, and wˌeəɹ ɪt ɹˈiəlɪ ɡˈəʊz.",
-   "speed": 0.7,
+   "speed": 0.75,
    "file": "08.wav",
-   "dur": 4.377,
-   "sha256": "a1767621dd63f9a32509ebf097236130a04869a075b635f0d3e1c689e08434ca"
+   "dur": 4.047,
+   "sha256": "cfe8ed30506c73553f8c3d223c050fdbd502a0d8f5c0aeb9ccd8126cfebc9a4d"
   }
  ]
 }

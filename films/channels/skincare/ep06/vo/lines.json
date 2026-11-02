@@ -12,93 +12,93 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Same list as cigarettes? Most people hear: just as deadly.",
+   "text": "Same list as cigarettes? Processed meat is on it too.",
    "stars": [
-    "cigarettes"
+    "meat"
    ],
-   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? mˈəʊst pˈiːpəl hˈiə: dʒˈʌst az dˈɛdli.",
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? pɹˈəʊsɛst mˈiːt ɪz ˌɒn ɪt tˈuː.",
    "speed": 0.84,
    "file": "01.wav",
-   "dur": 3.825,
-   "sha256": "0e508c3a7f74f5fb5195f4cb8e3d433d905ca421015771ecfa46b0444466a25e"
+   "dur": 3.734,
+   "sha256": "e99c2fc6e7acaa9db4161d90fa52bf27f9289d12a2449b503f39af316148fc96"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm.",
+   "text": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
    "stars": [
     "sure"
    ],
-   "phonemes": "ɪts ðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi: tˈanɪŋ bˈɛdz sˈɪt ɪn ɪts tˈɒp ɡɹˈuːp, bɪsˌaɪd təbˈakəʊ smˈəʊk. ðat ɡɹˈuːp ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz, nˌɒt hˌaʊ bˈɪɡ ðə hˈɑːm.",
+   "phonemes": "ˈɔːl θɹˈiː ʃˈeə ðə tˈɒp ɡɹˈuːp ɒvðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi, wˌɪtʃ sˈɛz ðat dˈʌzənt mˌeɪk ðˌɛm ˈiːkwəli dˈeɪndʒəɹəs: ɪt ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz.",
    "speed": 0.84,
    "file": "02.wav",
-   "dur": 11.304,
-   "sha256": "6c2f335c647b60782024284ebce50b828d61cf32039b96d1f4ce3d4425cfc76d"
+   "dur": 10.406,
+   "sha256": "3bd793d2fdaeebd44a93425f5441a0d8ac7e86f76eb760025a881f5f6c864ce4"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Follow the evidence into the bed: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "text": "Into the bed, then: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
    "stars": [
     "sun"
    ],
-   "phonemes": "fˈɒləʊ ðɪ ˈɛvɪdəns ˌɪntʊ ðə bˈɛd: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
+   "phonemes": "ˌɪntʊ ðə bˈɛd, ðˈɛn: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
    "speed": 0.84,
    "file": "03.wav",
-   "dur": 10.896,
-   "sha256": "7d751e870673c00292a343984f256cec128a24ec624533546c249d7176039043"
+   "dur": 10.061,
+   "sha256": "72ff754f3d221d2027b0f1ecfb2ae5017acad5da73353c4b9e7fd92fa960178e"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Weighing the studies, the agency's experts found the sharpest signal in people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half.",
+   "text": "When the beds joined that group, the sharpest signal came from people who started young. In pooled studies, first use before thirty-five went with melanoma risk raised by more than half.",
    "stars": [
     "half"
    ],
-   "phonemes": "wˈeɪɪŋ ðə stˈʌdiz, ðɪ ˈeɪdʒənsiz ˈɛkspɜːts fˈaʊnd ðə ʃˈɑːpɪst sˈɪɡnəl ɪn pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, stˈɑːtɪŋ bɪfˌɔː θˈɜːtifˈaɪv wɛnt wɪð ˈeɪ mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
+   "phonemes": "wˌɛn ðə bˈɛdz dʒˈɔɪnd ðat ɡɹˈuːp, ðə ʃˈɑːpɪst sˈɪɡnəl kˈeɪm fɹɒm pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, fˈɜːst jˈuːs bɪfˌɔː θˈɜːtifˈaɪv wˈɛnt wɪð mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
    "speed": 0.92,
    "file": "04.wav",
-   "dur": 11.632,
-   "sha256": "4e58e520d168a177227b680a408e117133773e6e009717c2b7c7971da265d07d"
+   "dur": 10.784,
+   "sha256": "e226bd44549141821f44b80ae8a8d2fcdb5e10a20cc5be9b34c3732af87094a2"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own off.",
+   "text": "Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own off.",
    "stars": [
     "off"
    ],
-   "phonemes": "ðˈɛn hˈəʊl kˈʌntɹiz ˈaktɪd: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz ðat sˈeɪm jˈiə; lˈeɪtə, ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
+   "phonemes": "wɪðˌɪn mˈʌnθs, hˈəʊl kˈʌntɹiz ˈaktɪd: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz, and lˈeɪtəɹ ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
    "speed": 0.96,
    "file": "05.wav",
-   "dur": 7.087,
-   "sha256": "437bb838925a5ec7765f642bcdd8ee37318737c0b017d45a8eebc20e4e6c8cda"
+   "dur": 6.768,
+   "sha256": "fde32e4021697bf693e5d9131ce1183f0a6acdc58dbbbbed1021f65677ec1d82"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And the long rays reach right through the top layer, on most skin about as thin as paper.",
+   "text": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "and ðə lˈɒŋ ɹˈeɪz ɹˈiːtʃ ɹˈaɪt θɹuː ðə tˈɒp lˈeɪə, ˌɒn mˈəʊst skˈɪn ɐbˌaʊt az θˈɪn az pˈeɪpə.",
+   "phonemes": "and ðəʊz lˈɒŋ ɹˈeɪz ɹˈiːtʃ ɹˈaɪt θɹuː ðə tˈɒp lˈeɪə, ˌɒn mˈəʊst skˈɪn ɐbˌaʊt az θˈɪn az pˈeɪpə.",
    "speed": 0.76,
    "file": "06.wav",
-   "dur": 6.31,
-   "sha256": "f7065ef867ce5ee220746689deebfae45db5345d4c35f6649ffe52bb1d1f1fab"
+   "dur": 6.391,
+   "sha256": "6046566843164ae68214be1a99911c82082bd7a5622bea0298940c9dcc7a8095"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Same list as cigarettes, then: not the same size of harm, but the same certainty.",
+   "text": "The sun made that list years before the beds. Same list as cigarettes: not the same harm, the same certainty.",
    "stars": [
     "certainty"
    ],
-   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts, ðˈɛn: nˌɒt ðə sˈeɪm sˈaɪz ɒv hˈɑːm, bˌʌt ðə sˈeɪm sˈɜːtənti.",
+   "phonemes": "ðə sˈʌn mˌeɪd ðat lˈɪst jˈiəz bɪfˌɔː ðə bˈɛdz. sˈeɪm lˈɪst az sˌɪɡəɹˈɛts: nˌɒt ðə sˈeɪm hˈɑːm, ðə sˈeɪm sˈɜːtənti.",
    "speed": 0.84,
    "file": "07.wav",
-   "dur": 5.346,
-   "sha256": "441795f98623910d0573b25dfd0ed9a1eb6831d3a1ea84951a259502a5d16cbf"
+   "dur": 6.807,
+   "sha256": "d34255c650ef92bf125a32d0dacea7e7f247a0b360f41ec29f48a7b79cacc84b"
   },
   {
    "id": "vo08",

@@ -12,67 +12,67 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Poison, in a frown? Among the most poisonous substances known, by the nanogram.",
+   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million people.",
    "stars": [
     "frown"
    ],
-   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɐmˌʌŋ ðə mˈəʊst pˈɔɪzənəs sˈʌbstənsɪz nˈəʊn, baɪ ðə nˌanəʊɡɹˈam.",
-   "speed": 0.92,
+   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɪn θˈiəɹi, ɐ bˈaŋknəʊtz wˈeɪt kʊd kˈɪl ɐ mˈɪliən pˈiːpəl.",
+   "speed": 0.83,
    "file": "01.wav",
-   "dur": 4.727,
-   "sha256": "57a2ea04de666cc681ab64c437283e18ae67c7a5afe88979b1b8728ff3a465d0"
+   "dur": 5.155,
+   "sha256": "bb4a32cc3d9ee2f1ff1c44aee1f527be7e945e4e02f3de0205a06a61167e3e2d"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Every frown starts at a nerve ending, which lets out a chemical messenger onto the muscle below. The muscle pulls, and the skin above it folds into a crease.",
+   "text": "Every frown starts at a nerve ending, letting out a chemical messenger onto the muscle below. The muscle pulls, and the skin above folds into a crease.",
    "stars": [
     "crease"
    ],
-   "phonemes": "ˈɛvɹɪ fɹˈaʊn stˈɑːts atə nˈɜːv ˈɛndɪŋ, wˌɪtʃ lˈɛts ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒəɹ ˌɒntʊ ðə mˈʌsəl bɪlˈəʊ. ðə mˈʌsəl pˈʊlz, and ðə skˈɪn əbˌʌv ɪt fˈəʊldz ˌɪntʊ ɐ kɹˈiːs.",
+   "phonemes": "ˈɛvɹɪ fɹˈaʊn stˈɑːts atə nˈɜːv ˈɛndɪŋ, lˈɛtɪŋ ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒəɹ ˌɒntʊ ðə mˈʌsəl bɪlˈəʊ. ðə mˈʌsəl pˈʊlz, and ðə skˈɪn əbˌʌv fˈəʊldz ˌɪntʊ ɐ kɹˈiːs.",
    "speed": 0.82,
    "file": "02.wav",
-   "dur": 10.054,
-   "sha256": "20e123e6c454991ef7f0b00eb34b16b5754e8df8c753bb9c194ffe9aa51b22cb"
+   "dur": 9.823,
+   "sha256": "28bc33bf229c1ec9d9956360ad737580978ba15caba9b397ec69201f9245e591"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one small protein the message needs, so the message is ready, and never leaves.",
+   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one protein the message needs, so the message waits, and never leaves.",
    "stars": [
     "leaves"
    ],
-   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn nˈɛvə tˈʌtʃɪz ðə skˈɪn. ɪt slˈɪps ɪnsˈaɪd ðə nˈɜːv ˈɛndɪŋ and kˈʌts wˈɒn smˈɔːl pɹˈəʊtiːn ðə mˈɛsɪdʒ nˈiːdz, sˌəʊ ðə mˈɛsɪdʒ ɪz ɹˈɛdi, and nˈɛvə lˈiːvz.",
+   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn nˈɛvə tˈʌtʃɪz ðə skˈɪn. ɪt slˈɪps ɪnsˈaɪd ðə nˈɜːv ˈɛndɪŋ and kˈʌts wˈɒn pɹˈəʊtiːn ðə mˈɛsɪdʒ nˈiːdz, sˌəʊ ðə mˈɛsɪdʒ wˈeɪts, and nˈɛvə lˈiːvz.",
    "speed": 0.84,
    "file": "03.wav",
-   "dur": 10.528,
-   "sha256": "bab5b31f0f006e13ffb6090d5af6410be5367d67cf75629e69775c47958c7365"
+   "dur": 9.782,
+   "sha256": "fe1e62d641e8263253787e75cf391f16b031e95f09fb3122509eff2eb10a1d49"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Two centuries ago, a German doctor named Justinus Kerner traced a deadly paralysis to spoiled sausages. And he guessed that the same poison might one day become a medicine.",
+   "text": "Two centuries ago a German doctor, Justinus Kerner, traced a deadly paralysis to spoiled sausages, and guessed the same poison might one day become a medicine.",
    "stars": [
     "medicine"
    ],
-   "phonemes": "tˈuː sˈɛntʃəɹiz ɐɡˈəʊ, ɐ dʒˈɜːmən dˈɒktə nˈeɪmd jʊstˈiːnʊs kˈɛɐnɐ tɹˈeɪst ɐ dˈɛdli pəɹˈaləsˌɪs tə spˈɔɪld sˈɒsɪdʒɪz. and hiː ɡˈɛst ðatðə sˈeɪm pˈɔɪzən mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
-   "speed": 0.88,
+   "phonemes": "tˈuː sˈɛntʃəɹiz ɐɡˈəʊ ɐ dʒˈɜːmən dˈɒktə, jʊstˈiːnʊs kˈɛɐnɐ , tɹˈeɪst ɐ dˈɛdli pəɹˈaləsˌɪs tə spˈɔɪld sˈɒsɪdʒɪz, and ɡˈɛst ðə sˈeɪm pˈɔɪzən mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
+   "speed": 0.93,
    "file": "04.wav",
-   "dur": 10.555,
-   "sha256": "945519768cdf4c885e235a59c723c34704a31902595b412148b9f7db533b130f"
+   "dur": 9.973,
+   "sha256": "3d584c2fefda797a275e56facaa47b023c393c6517f85a38bd2c9499b23f3351"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "So how much goes in? The whole frown takes well under a hundredth of the amount estimated to kill a person.",
+   "text": "A dose of this medicine isn't weighed; it's counted in mouse deaths. One frown takes twenty of those, still under a hundredth of what could kill a person.",
    "stars": [
     "person"
    ],
-   "phonemes": "sˌəʊ hˌaʊ mˈʌtʃ ɡəʊz ˈɪn? ðə hˈəʊl fɹˈaʊn tˈeɪks wˈɛl ˌʌndəɹ ɐ hˈʌndɹədθ ɒvðɪ ɐmˈaʊnt ˈɛstɪmˌeɪtɪd tə kˈɪl ɐ pˈɜːsən.",
-   "speed": 0.8,
+   "phonemes": "ɐ dˈəʊs ɒv ðɪs mˈɛdsən ˌɪzənt wˈeɪd; ɪts kˈaʊntɪd ɪn mˈaʊs dˈɛθs. wˈɒn fɹˈaʊn tˈeɪks twˈɛnti ɒv ðˈəʊz, stˈɪl ˌʌndəɹ ɐ hˈʌndɹədθ ɒv wɒt kʊd kˈɪl ɐ pˈɜːsən.",
+   "speed": 0.82,
    "file": "05.wav",
-   "dur": 7.294,
-   "sha256": "7fcab79a6b05f1cd610e84434452a663d7038249830d9f6663ef16fc579be602"
+   "dur": 9.585,
+   "sha256": "f6c167f76f25d00a4e1c0d3b541503308f4c0c8b92ec4463b3249761c188f894"
   },
   {
    "id": "vo06",
@@ -90,15 +90,15 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Poison in a frown: just enough to silence one message, until the nerve grows new endings.",
+   "text": "Poison in a frown: one message silenced, and months later the nerve grows spare endings, then prunes them away.",
    "stars": [
-    "endings"
+    "away"
    ],
-   "phonemes": "pˈɔɪzən ɪn ɐ fɹˈaʊn: dʒˈʌst ɪnˈʌf tə sˈaɪləns wˈɒn mˈɛsɪdʒ, ʌntˈɪl ðə nˈɜːv ɡɹˈəʊz njˈuː ˈɛndɪŋz.",
+   "phonemes": "pˈɔɪzən ɪn ɐ fɹˈaʊn: wˈɒn mˈɛsɪdʒ sˈaɪlənst, and mˈʌnθs lˈeɪtə ðə nˈɜːv ɡɹˈəʊz spˈeəɹ ˈɛndɪŋz, ðˈɛn pɹˈuːnz ðˌɛm ɐwˈeɪ.",
    "speed": 0.84,
    "file": "07.wav",
-   "dur": 5.815,
-   "sha256": "4bddc7ecc2b05026d33c6a88010e85d9ea6151b3688e5ccd9fa1eb3ec07abde6"
+   "dur": 7.257,
+   "sha256": "be67b1b255ab97071464cd1da00e07b7bc527fe1a4b97fee1e4759a4689e0be6"
   },
   {
    "id": "vo08",

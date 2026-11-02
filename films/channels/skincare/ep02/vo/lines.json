@@ -25,80 +25,81 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Only a few percent bounces off the top as a glint. Smooth, hydrated skin sends it back in one direction; dry skin scatters it into a dull haze.",
+   "text": "Only about one ray in twenty bounces off as a glint. Smooth, hydrated skin sends it back one way; dry skin scatters it into a haze.",
    "stars": [
     "haze"
    ],
-   "phonemes": "ˈəʊnli ɐ fjˈuː pəsˈɛnt bˈaʊnsɪz ˈɒf ðə tˈɒp az ɐ ɡlˈɪnt. smˈuːð, haɪdɹˈeɪtɪd skˈɪn sˈɛndz ɪt bˈak ɪn wˈɒn daɪɹˈɛkʃən; dɹˈaɪ skˈɪn skˈatəz ɪt ˌɪntʊ ɐ dˈʌl hˈeɪz.",
+   "phonemes": "ˈəʊnli ɐbˌaʊt wˈɒn ɹˈeɪ ɪn twˈɛnti bˈaʊnsɪz ˈɒf az ɐ ɡlˈɪnt. smˈuːð, haɪdɹˈeɪtɪd skˈɪn sˈɛndz ɪt bˈak wˈɒn wˈeɪ; dɹˈaɪ skˈɪn skˈatəz ɪt ˌɪntʊ ɐ hˈeɪz.",
    "speed": 0.82,
    "file": "02.wav",
-   "dur": 10.045,
-   "sha256": "13e882a1c581299b6ccf6d4547991a592494e815ad88b798c151812252d67b88"
+   "dur": 9.497,
+   "sha256": "90a446f5c4075b34f49a6e7c35dfd126c0afe5a799883fa581b57f099c5d80c8"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and a large share finds its way back out.",
+   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and several times more finds its way back out.",
    "stars": [
     "out"
    ],
-   "phonemes": "bˌʌt ðə ɡlˈɪnt ˌɪzənt ðə ɡlˈəʊ. ðə ɹˈɛst slˈɪps ˈɪn, bˈaʊnsɪz ɐmˌʌŋ sˈɛlz and fˈaɪbəz, and ɐ lˈɑːdʒ ʃˈeə fˈaɪndz ɪts wˈeɪ bˈak ˈaʊt.",
-   "speed": 0.82,
+   "phonemes": "bˌʌt ðə ɡlˈɪnt ˌɪzənt ðə ɡlˈəʊ. ðə ɹˈɛst slˈɪps ˈɪn, bˈaʊnsɪz ɐmˌʌŋ sˈɛlz and fˈaɪbəz, and sˈɛvɹəl tˈaɪmz mˈɔː fˈaɪndz ɪts wˈeɪ bˈak ˈaʊt.",
+   "speed": 0.76,
    "file": "03.wav",
-   "dur": 8.03,
-   "sha256": "28ffc6f03d6c071d998d9994f7bbd04820b8d642f551679a2fb43f3c1c45a66f"
+   "dur": 9.685,
+   "sha256": "1429306daa66f83bd92afb1ad9d5543149022367a0dade8bf116350c3cb3e7c1"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "You might picture a glow sitting on the skin. But it's light that travelled through you, tinted by melanin and blood, and a rush of blood sends it back redder.",
+   "text": "You'd picture a glow as shine sitting on the skin. But it's light that has travelled through you, past your melanin and your blood.",
    "stars": [
-    "redder"
+    "blood"
    ],
-   "phonemes": "juː mˌaɪt pˈɪktʃəɹ ɐ ɡlˈəʊ sˈɪtɪŋ ɒnðə skˈɪn. bˌʌt ɪts lˈaɪt ðat tɹˈavəld θɹˈuː juː, tˈɪntɪd bˈaɪ mˈɛlənɪn and blˈʌd, and ɐ ɹˈʌʃ ɒv blˈʌd sˈɛndz ɪt bˈak ɹˈɛdə.",
-   "speed": 0.7,
+   "phonemes": "juːd pˈɪktʃəɹ ɐ ɡlˈəʊ az ʃˈaɪn sˈɪtɪŋ ɒnðə skˈɪn. bˌʌt ɪts lˈaɪt ðat hɐz tɹˈavəld θɹˈuː juː, pˈast jɔː mˈɛlənɪn and jɔː blˈʌd.",
+   "speed": 0.74,
    "file": "04.wav",
-   "dur": 11.736,
-   "sha256": "2c380fccaf840c7fd69dbcd3814d207dd6cf61ce48a0289d17892e145800ad9f"
+   "dur": 8.813,
+   "sha256": "095775c2500fe2a68fac2aff97ebc821ab5ec982df86fff6045a44734e3a45fc"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Asked to make strangers' faces look as healthy as they could, people turned up exactly that: the colour of blood, shining back through the skin.",
+   "text": "Blood moves with your heart, so your face changes colour with every beat: too faint to see, but an ordinary camera can count your pulse in it.",
    "stars": [
-    "skin"
+    "pulse"
    ],
-   "phonemes": "ˈaskt tə mˌeɪk stɹˈeɪndʒəz fˈeɪsɪz lˈʊk az hˈɛlθi az ðeɪ kˈʊd, pˈiːpəl tˈɜːnd ˌʌp ɛɡzˈaktli ðˈat: ðə kˈʌləɹ ɒv blˈʌd, ʃˈaɪnɪŋ bˈak θɹuː ðə skˈɪn.",
-   "speed": 0.82,
+   "phonemes": "blˈʌd mˈuːvz wɪð jɔː hˈɑːt, sˌəʊ jɔː fˈeɪs tʃˈeɪndʒɪz kˈʌlə wɪð ˈɛvɹɪ bˈiːt: tˈuː fˈeɪnt tə sˈiː, bˌʌt ɐn ˈɔːdɪnəɹi kˈamɹə kan kˈaʊnt jɔː pˈʌls ɪn ɪt.",
+   "speed": 0.74,
    "file": "05.wav",
-   "dur": 8.73,
-   "sha256": "9b0132a42757d56ca31e9501da2d37ef5881f2e0b62e7cf948a9819bfe1f597e"
+   "dur": 10.434,
+   "sha256": "ff700e1366dde1c8a9df755a67759216c81d9bca53ee083371e7df66eb4ecad8"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "Blue light gets barely a millimetre in, about ten sheets of paper; red light goes several times deeper.",
+   "text": "And it goes deep: blue light barely a millimetre, about ten sheets of paper; red several times further, through the skin.",
    "stars": [
-    "deeper"
+    "skin"
    ],
-   "phonemes": "blˈuː lˈaɪt ɡˈɛts bˈeəli ɐ mˈɪlɪmˌiːtəɹ ˈɪn, ɐbˌaʊt tˈɛn ʃˈiːts ɒv pˈeɪpə; ɹˈɛd lˈaɪt ɡəʊz sˈɛvɹəl tˈaɪmz dˈiːpə.",
+   "phonemes": "and ɪt ɡəʊz dˈiːp: blˈuː lˈaɪt bˈeəli ɐ mˈɪlɪmˌiːtə, ɐbˌaʊt tˈɛn ʃˈiːts ɒv pˈeɪpə; ɹˈɛd sˈɛvɹəl tˈaɪmz fˈɜːðə, θɹuː ðə skˈɪn.",
    "speed": 0.82,
    "file": "06.wav",
-   "dur": 6.71,
-   "sha256": "c568289e2218c8c02664ed7d7110ce68a8f38181f8e9a310760aa38b9950504d"
+   "dur": 7.505,
+   "sha256": "bcb068e77b51c1018802e6055adc2feabf4d94a53fd9cebe274edfbe0a0c364f"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So the glow isn't on your face. It's light that went inside you, met your blood, and came back.",
+   "text": "Film faces made by computer once looked like plastic: their light never went inside. Yours does; that's your glow.",
    "stars": [
-    "back"
+    "inside",
+    "glow"
    ],
-   "phonemes": "sˌəʊ ðə ɡlˈəʊ ˌɪzənt ˌɒn jɔː fˈeɪs. ɪts lˈaɪt ðat wɛnt ɪnsˈaɪd juː, mˈɛt jɔː blˈʌd, and kˈeɪm bˈak.",
-   "speed": 0.68,
+   "phonemes": "fˈɪlm fˈeɪsɪz mˌeɪd baɪ kəmpjˈuːtə wˈʌns lˈʊkt lˈaɪk plˈastɪk: ðeə lˈaɪt nˈɛvə wɛnt ɪnsˈaɪd. jˈɔːz dˈʌz; ðats jɔː ɡlˈəʊ.",
+   "speed": 0.96,
    "file": "07.wav",
-   "dur": 7.36,
-   "sha256": "a74c13d9dffb84b6ad284595fe9ce1b9caadf2a56dd497146611f6bcab803a9a"
+   "dur": 6.799,
+   "sha256": "18433690b8119ed8d9df362ba56f352f7b4d7f37aa97f41d0625235cf44b1ac5"
   },
   {
    "id": "vo08",
