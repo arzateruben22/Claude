@@ -100,7 +100,7 @@
  },
  {
   "id": "c10",
-  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
+  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
   "claim": "Pus is a collection of dead tissue, dead bacteria and live and dead phagocytes (white cells such as neutrophils).",
   "source_url": "https://medlineplus.gov/ency/imagepages/9478.htm",
   "source_title": "Phagocytosis (MedlinePlus Medical Encyclopedia image page, US National Library of Medicine)",
@@ -111,8 +111,8 @@
  },
  {
   "id": "c11",
-  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
-  "claim": "A resting human neutrophil is a sphere about 8 µm across (volume ≈ 299 µm³); spread on a blood smear it measures about 12–15 µm. Against ≈ 100 µm paper that is about a twelfth to an eighth: 'about a tenth'.",
+  "sentence": "And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
+  "claim": "A resting human neutrophil is a sphere about 8 µm across (volume ≈ 299 µm³); spread on a blood smear it measures about 12–15 µm. Against ≈ 100 µm paper that is about a twelfth to an eighth: ten cells ≈ 80 µm, short of 100 µm: 'ten in a row still wouldn't span'.",
   "source_url": "https://scholars.duke.edu/publication/790236",
   "source_title": "Ting-Beall HP, Needham D, Hochmuth RM. Volume and osmotic properties of human neutrophils. Blood 1993;81(10):2774-2780",
   "accessed": "2026-11-02",

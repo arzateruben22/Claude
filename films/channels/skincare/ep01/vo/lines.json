@@ -78,15 +78,15 @@
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
+   "text": "And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
    "stars": [
     "thickness"
    ],
-   "phonemes": "and ðə pˈʌs ɪz ðat fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ wʊd bˈeəli spˈan ðɪs pˈeɪpəz θˈɪknəs.",
+   "phonemes": "and ðə pˈʌs ɪz ðat fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ stˈɪl wˈʊdənt spˈan ðɪs pˈeɪpəz θˈɪknəs.",
    "speed": 0.72,
    "file": "06.wav",
-   "dur": 8.691,
-   "sha256": "5ce87a16d6aac39721f91fda5dc41c22dd6e83879a87f2a3bcac891979c56322"
+   "dur": 8.633,
+   "sha256": "fbce7791d270d1f55c61c087e56c5a56519d7c81bdcf10080274a2d92fbbdcfd"
   },
   {
    "id": "vo07",

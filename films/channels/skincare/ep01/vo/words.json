@@ -746,44 +746,44 @@
   },
   {
    "id": "vo06",
-   "text": "And the pus is that fight's fallen: white cells so small that ten in a row would barely span this paper's thickness.",
-   "heard": "And the pus is that fights fallen. White cells so small that ten in a row would barely span this paper's thickness.",
+   "text": "And the pus is that fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
+   "heard": "And the pus is that fight's fallen. White cells so small that ten in a row still wouldn't span this paper's thickness.",
    "words": [
     {
      "w": "And",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.335,
-     "end": 0.4,
+     "start": 0.37,
+     "end": 0.42,
      "heard": true
     },
     {
      "w": "pus",
-     "start": 0.375,
+     "start": 0.4,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.81,
+     "start": 0.805,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "that",
-     "start": 1.055,
+     "start": 1.05,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "fight's",
-     "start": 1.245,
+     "start": 1.24,
      "end": 1.92,
-     "heard": false
+     "heard": true
     },
     {
      "w": "fallen:",
@@ -793,92 +793,92 @@
     },
     {
      "w": "white",
-     "start": 3.06,
+     "start": 3.055,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 3.43,
+     "start": 3.42,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "so",
-     "start": 3.995,
+     "start": 3.965,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "small",
-     "start": 4.165,
+     "start": 4.325,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "that",
-     "start": 4.83,
+     "start": 4.8,
      "end": 4.96,
      "heard": true
     },
     {
      "w": "ten",
-     "start": 5.055,
-     "end": 5.36,
+     "start": 5.025,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "in",
-     "start": 5.36,
+     "start": 5.28,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.61,
-     "end": 5.66,
+     "start": 5.605,
+     "end": 5.655,
      "heard": true
     },
     {
      "w": "row",
-     "start": 5.64,
+     "start": 5.635,
      "end": 6.0,
      "heard": true
     },
     {
-     "w": "would",
-     "start": 6.015,
-     "end": 6.24,
+     "w": "still",
+     "start": 6.105,
+     "end": 6.32,
      "heard": true
     },
     {
-     "w": "barely",
-     "start": 6.25,
+     "w": "wouldn't",
+     "start": 6.365,
      "end": 6.72,
      "heard": true
     },
     {
      "w": "span",
-     "start": 6.87,
+     "start": 6.83,
      "end": 7.12,
      "heard": true
     },
     {
      "w": "this",
-     "start": 7.18,
+     "start": 7.145,
      "end": 7.36,
      "heard": true
     },
     {
      "w": "paper's",
-     "start": 7.455,
-     "end": 8.08,
+     "start": 7.42,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "thickness.",
-     "start": 8.095,
-     "end": 8.48,
+     "start": 8.035,
+     "end": 8.56,
      "heard": true
     }
    ]

@@ -15,7 +15,7 @@ import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
 import { toneColor } from "./section.js";
 
-export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900, thick = 340, epi = 100 } = {}) => {
+export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900, thick = 340, epi = 100, block = true } = {}) => {   // block: false = the follicle only (it sits in another block's skin)
   const R = rng(seed), g = new THREE.Group(); g.position.x = x;
   const clip = [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.5)];
   const mat = (o = {}) => new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0, side: THREE.DoubleSide, clippingPlanes: clip, ...o });
@@ -24,7 +24,7 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const dermis = new THREE.Mesh(new THREE.BoxGeometry(width, depth, thick), M.dermis); dermis.position.y = -epi - depth / 2;
   const epiGeo = new THREE.BoxGeometry(width, epi, thick, 120, 1, 30), ep = epiGeo.attributes.position, epY = Float32Array.from(ep.array);
   const epiM = new THREE.Mesh(epiGeo, M.epi); epiM.position.y = -epi / 2;
-  g.add(dermis, epiM);
+  g.add(dermis, epiM); dermis.visible = epiM.visible = block;
   // the canal: a flask opening at the surface, widest in the middle, closing at the bulb (a lathe, cut open by the clip)
   const prof = [[22, 2], [30, -40], [70, -160], [80, -260], [58, -380], [30, -470], [10, -520]].map(([r, y]) => new THREE.Vector2(r, y));
   const wall = new THREE.Mesh(new THREE.LatheGeometry(prof, 48), M.wall); g.add(wall);
@@ -83,7 +83,7 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
       ep.needsUpdate = true; epiGeo.computeVertexNormals();
     },
     at: {
-      canal: () => [x, -150, 40], bact: () => [x + 20, -330, 40], ring: () => [x + 200, -200, 50], gland: () => [x - 110, -300, 60],
+      canal: () => [x, -150, 40], bact: () => [x + 20, -330, 40], ring: () => [x + 140, -260, 30], gland: () => [x - 110, -300, 60],
       spill: () => [x - 150, breachY - 90, 40], surface: () => [x - width / 2 + 20, 0, 0], cell: () => [x - 150, -260, 40],
     },
   };
