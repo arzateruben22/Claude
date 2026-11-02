@@ -93,7 +93,7 @@ export const CHANNELS: {
       examples: ["What if every cat meowed at the same time?"],
       avoid: ["presenting a scenario as a prediction", "hidden assumptions", "fake precision"],
     },
-    filmsPath: null, creation: { key: "rift_dragon", name: "The Rift Dragon" },
+    filmsPath: "films/channels/whatif", creation: { key: "rift_dragon", name: "The Rift Dragon" },
   },
 ];
 
@@ -101,7 +101,7 @@ export const CHANNELS: {
  *  titles until its series is in the database (the import's slate then takes over). Titles only, never counts. */
 export const PLANNED_SEASONS: Record<string, { label: string; titles: string[] }> = {
   skincare: { label: "Season 1", titles: ["The dead layer", "Does SPF 100 beat SPF 50?", "Bath fingers", "What a tan is", "Same cells, every colour", "Goosebumps"] },
-  whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every cat at once"] },
+  whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
 };
 
 export const CHALLENGES: Record<Topic, { tier: "intro" | "series" | "advanced" | "masterwork"; key: string; title: string; description: string; check: string }[]> = {
