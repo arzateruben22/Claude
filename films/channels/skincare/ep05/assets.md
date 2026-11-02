@@ -1,4 +1,4 @@
-# Assets: Outer Layer No. 005, "The sunscreen experiment" (look 2 rebuild)
+# Assets: Skin Sense No. 005, "The sunscreen experiment" (look 2 rebuild)
 
 | Asset | Source | Licence |
 |---|---|---|

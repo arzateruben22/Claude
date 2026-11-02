@@ -1,5 +1,5 @@
 {
- "id": "outerlayer-005",
+ "id": "skin-sense-005",
  "fps": 30,
  "bpm": 64.2857,
  "dur": 77.4667,
@@ -410,15 +410,15 @@
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 005",
+  "series": "Skin Sense · No. 005",
   "title": "The sunscreen *experiment*",
   "t1": 5.6667,
   "sig": 1.1
  },
  "endCard": 70.53333333333333,
  "end": {
-  "title": "Next layer: tanning beds and cigarettes. Same list, same *risk*?",
-  "follow": "Outer Layer · No. 006",
+  "title": "Next: tanning beds and cigarettes. Same list, same *risk*?",
+  "follow": "Skin Sense · No. 006",
   "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."
  },
  "captions": [

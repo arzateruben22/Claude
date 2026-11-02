@@ -11,6 +11,7 @@ python3 -I $E/compile.py | head -1
 flock $L node $R --film $E --tier draft || exit 1
 flock $L node $R --film $E --tier draft --assemble --audio $E/build/audio/mix.m4a || exit 1
 mkdir -p $E/review
-ffmpeg -loglevel error -y -i $E/out/outerlayer-0$n-9x16-draft.mp4 -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k $E/review/outerlayer-0$n-9x16-draft-preview.mp4
+src=$(ls -t $E/out/*-0$n-9x16-draft.mp4 | head -1); base=$(basename $src -draft.mp4)
+ffmpeg -loglevel error -y -i $src -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k $E/review/$base-draft-preview.mp4
 cp $E/build/draft/9x16/contact-sheet.jpg $E/review/draft-contact-sheet.jpg
 echo "DRAFT$n DONE"

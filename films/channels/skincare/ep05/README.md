@@ -1,4 +1,4 @@
-# Outer Layer No. 005: "The sunscreen experiment" (look 2 rebuild, 2 Nov)
+# Skin Sense No. 005: "The sunscreen experiment" (look 2 rebuild, 2 Nov)
 
 About 77 s, 9:16 (1080×1920, 30 fps), narrated by a synthetic voice (bf_isabella, labelled "Narration: synthetic
 voice (AI)"), with an original score (`outerlayer-slide`). The approved look (look test 2; `../s1v2/BUILD-LOOK2.md`).

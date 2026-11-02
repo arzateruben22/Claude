@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 005, "The sunscreen experiment" (films/channels/skincare/ep05), in the approved look (look test 2,
+// Skin Sense No. 005, "The sunscreen experiment" (films/channels/skincare/ep05), in the approved look (look test 2,
 // 2 Nov; s1v2/BUILD-LOOK2.md). The picture as a pure function of t: window.seek(t) sets the shot, the camera, every
 // object and the overlay from t alone, then makes exactly one renderer.render(). Everything timed comes from
 // film.json, which compile.py hangs on the voice. One tone (medium) for the whole film.

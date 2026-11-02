@@ -1,4 +1,4 @@
-# Outer Layer No. 005: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
+# Skin Sense No. 005: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
 
 About 70–74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
 topic "sunscreen vs no sunscreen", told through one trial. Facts pass 2 (2 Nov, `../s1v2/FACTS-PASS-2.md`). This
@@ -23,7 +23,7 @@ none" (the control arm was discretionary use).
 Flow (WRITING.md, 29 Oct): one thread from the hook's "Which hand aged?" to the takeaway's "So, which hand aged?",
 answered by "the skin kept count". The voice carries the meaning ("four and a half years", "ten more years", "about
 half", "a fifth of a paper") and the screen carries the specifics (Nambour 1992–96, 1,621 adults, SPF 15+,
-relative odds 0.76 [0.59–0.98], HR 0.50 [0.24–1.02], 11 vs 22, 77% vs 33%, Hughes et al. 2013, Green et al. 2011,
+relative odds 0.76 [0.59–0.98], HR 0.50 [0.24–1.02], 11 vs 22, Hughes et al. 2013, Green et al. 2011,
 2 mg/cm², 20 µm, 100 µm paper). The picture (look test 2, 2 Nov) holds three hero places: one patch of skin, half under sunscreen and half bare
 (the macro; the UV switch shows what the eye misses) → the silicone cast of the skin's lines → the stained micrograph
 under the ten-year tally → the macro's film beside the gauge → the hook's macro again.
@@ -62,7 +62,7 @@ vo: So, which hand aged? Both groups missed mornings; one missed far fewer, and 
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
 vo: Next: tanning beds share a list with cigarettes. Same list, same *risk*? {-}
-end card: "Next layer: tanning beds and cigarettes. Same list, same risk?" · "Outer Layer · No. 006" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
+end card: "Next: tanning beds and cigarettes. Same list, same risk?" · "Skin Sense · No. 006" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
 
 ## Notes
 - Every claim was checked through search excerpts only (page fetches are blocked in this session); see

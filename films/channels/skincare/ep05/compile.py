@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 005, "The sunscreen experiment", in the approved look (look test 2, 2 Nov): script +
+"""Compile Skin Sense No. 005, "The sunscreen experiment", in the approved look (look test 2, 2 Nov): script +
 voice timings + this direction → film.json and sheet.json. Every moment hangs on a beat or a spoken word; every
 number on screen comes from claims.json. The ageing trial is 4.5 years and the screen says so (bible §1).
 
@@ -24,7 +24,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-005"
+ID = "skin-sense-005"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -127,8 +127,8 @@ for k in PLATES.values():
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["fifth"] - 0.3, "paper": CUE["paper"],
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.1], "sc_um": FILM_UM, "paper_um": PAPER_UM, "bar": "film", "sc_text": "≈ 20 µm"}
 
-TITLE = {"series": "Outer Layer · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - 0.4, "sig": A("vo01:aged?", 0.35)}
-END = {"title": "Next layer: tanning beds and cigarettes. Same list, same *risk*?", "follow": "Outer Layer · No. 006",
+TITLE = {"series": "Skin Sense · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - 0.4, "sig": A("vo01:aged?", 0.35)}
+END = {"title": "Next: tanning beds and cigarettes. Same list, same *risk*?", "follow": "Skin Sense · No. 006",
        "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:count.", 0.3)
 
