@@ -36,7 +36,7 @@ const key = new THREE.DirectionalLight(0xfff6ec, 2.1); key.position.set(-120, 22
 const rim = new THREE.DirectionalLight(0xe8f2ff, 0.7); rim.position.set(80, 60, -200); scene.add(rim);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const LAY = { rows: 15, sc: 17, gran: 10, spin: 48, basal: 10 };
+const LAY = { rows: 15, sc: 17, gran: 10, spin: 48, basal: 10, mortarFloor: 0 };   // no resting lipid sheets: close-ups stripe otherwise
 const TL = createSection({ width: 70, depth: 46, ...LAY, seed: 31, x: -40 }), TR = createSection({ width: 70, depth: 46, ...LAY, seed: 32, x: 40 });
 const S = createSection({ width: 130, depth: 56, ...LAY, seed: 33 });
 scene.add(TL.group, TR.group, S.group);
