@@ -18,13 +18,13 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
   for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), y = pos.getY(i); pos.setZ(i, dome * Math.exp(-(x * x) / (width * 1.4) - (y * y) / (height * 1.2))); }
   geo.computeVertexNormals();
   const U = { uDamage: { value: 0 }, uDamageR: { value: 0 }, uScreen: { value: 0 }, uScreenR: { value: 0 }, uSplit: { value: 0 },
-    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed }, uPorph: { value: 0 }, uRings: { value: 0 }, uSpot: { value: 0 }, uDay: { value: 0 }, uSkin: { value: new THREE.Vector3(0.62, 0.42, 0.3) }, uRed: { value: 0 } };
+    uFocus: { value: new THREE.Vector4(0.5, 0.5, 0.0, 0.0) }, uGlow: { value: 1 }, uOpacity: { value: 1 }, uSeed: { value: seed }, uPorph: { value: 0 }, uRings: { value: 0 }, uSpot: { value: 0 }, uDay: { value: 0 }, uSkin: { value: new THREE.Vector3(0.62, 0.42, 0.3) }, uRed: { value: 0 }, uScar: { value: 0 } };
   const mat = new THREE.ShaderMaterial({
     uniforms: U, transparent: true, depthWrite: false,
     vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vP;
       void main(){ vUv = uv; vN = normalize(normalMatrix * normal); vec4 p = modelViewMatrix * vec4(position,1.); vP = p.xyz; gl_Position = projectionMatrix * p; }`,
     fragmentShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vP;
-      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed, uPorph, uRings, uSpot, uDay, uRed; uniform vec4 uFocus; uniform vec3 uSkin;
+      uniform float uDamage, uDamageR, uScreen, uScreenR, uSplit, uGlow, uOpacity, uSeed, uPorph, uRings, uSpot, uDay, uRed, uScar; uniform vec4 uFocus; uniform vec3 uSkin;
       float h(vec2 p){ return fract(sin(dot(p + uSeed, vec2(127.1,311.7))) * 43758.5453); }
       float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
         return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
@@ -38,7 +38,10 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
         float grain = fbm(uv*vec2(18.,13.));
         float f1 = smoothstep(0.55, 0.72, fbm(uv*vec2(9.,6.5)+3.1)) * smoothstep(0.38,0.10,cells(uv*vec2(36.,25.)+1.7));
         float f2 = smoothstep(0.30,0.08,cells(uv*vec2(64.,44.)+9.2)) * step(0.62, h(floor(uv*vec2(64.,44.)+9.2)));
-        float spots = dmg * (0.95*f1 + 0.75*f2);
+        // a scar band across the middle (No. 003): no pores, no pigment pattern, a smooth seam that glows evenly
+        float scar = uScar * smoothstep(0.075, 0.045, abs(uv.y - 0.5 - 0.03 * sin(uv.x * 9.0)));
+        pores = mix(pores, 1.0, scar); grain = mix(grain, 0.55, scar);
+        float spots = dmg * (0.95*f1 + 0.75*f2) * (1.0 - scar);
         float lum = (0.48 + 0.22*grain) * uGlow;
         lum *= mix(1.0, 0.32, scr);
         lum *= mix(0.72, 1.0, pores);
@@ -73,7 +76,8 @@ export const createUVSkin = ({ width = 7.2, height = 5.0, dome = 1.7, seed = 1.0
     mesh, uniforms: U,
     // porph: follicle bacteria glowing orange-red; rings: faint cyan immune rings at the same follicles; spot: the focus point as an inflamed blob
     // day: 0 UV … 1 daylight; skin: the daylight tone (rgb); red: more blood colour (a flush)
-    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1, porph = 0, rings = 0, spot = 0, day = 0, skin = null, red = 0 } = {}) {
+    set({ damage = 0, damageR = null, screen = 0, screenR = null, split = 0, focus = null, glow = 1, opacity = 1, porph = 0, rings = 0, spot = 0, day = 0, skin = null, red = 0, scar = 0 } = {}) {
+      U.uScar.value = scar;
       U.uPorph.value = porph; U.uRings.value = rings; U.uSpot.value = spot; U.uDay.value = day; U.uRed.value = red; if (skin) U.uSkin.value.set(...skin);
       U.uDamage.value = damage; U.uDamageR.value = damageR ?? damage; U.uScreen.value = screen; U.uScreenR.value = screenR ?? screen;
       U.uSplit.value = split; U.uGlow.value = glow; U.uOpacity.value = opacity; mesh.visible = opacity > 0.002;

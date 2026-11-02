@@ -55,32 +55,37 @@ export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hai
     group.add(hairs);
   }
   let last = "";
-  const surfY = (i, furrows, rd) => {
+  const scarK = (x, z, sc) => (sc ? Math.exp(-(((z - sc[0] - 0.35 * Math.sin(x * 0.12)) / sc[1]) ** 6)) : 0);   // a wavy band across the terrain
+  const surfY = (i, furrows, rd, sc) => {
     const x = base[3 * i], z = base[3 * i + 2];
-    const right = 1 / (1 + Math.exp(-x * 1.4));
-    let y = Y0[i] - F[i] * (0.2 + furrows * right) - P[i];
+    const right = 1 / (1 + Math.exp(-x * 1.4)), sk = scarK(x, z, sc);
+    let y = (Y0[i] - F[i] * (0.2 + furrows * right) - P[i]) * (1 - sk) + sk * 0.35;
     if (rd) { const d2 = ((x - rd[0]) ** 2 + (z - rd[1]) ** 2) / (rd[2] * rd[2]); y += rd[3] * 1.6 * Math.exp(-d2); }
     return y;
   };
   return {
     group, mesh, pores,
-    set({ tone = [0.58, 0.38, 0.26], furrows = 0.2, spot = 0, sheen = 0, redden = null, visible = true } = {}) {
+    // scar: [z0, half-width] a smooth, pale band with no furrows, pores or hairs (No. 003); scarGlow lifts it
+    set({ tone = [0.58, 0.38, 0.26], furrows = 0.2, spot = 0, sheen = 0, redden = null, visible = true, scar = null, scarGlow = 0 } = {}) {
       group.visible = visible; if (!visible) return;
       film.material.opacity = 0.2 * sheen; film.visible = sheen > 0.01;
-      const key = [tone, furrows, spot, redden].map((v) => JSON.stringify(v)).join("|");
+      const key = [tone, furrows, spot, redden, scar, scarGlow].map((v) => JSON.stringify(v)).join("|");
       if (key === last) return; last = key;
       const dark = tone.map((v) => v * 0.23), red = [0.72, 0.16, 0.14];
       for (let i = 0; i < pos.count; i++) {
         const x = base[3 * i], z = base[3 * i + 2], right = 1 / (1 + Math.exp(-x * 1.4));
-        pos.setY(i, surfY(i, furrows, redden));
+        pos.setY(i, surfY(i, furrows, redden, scar)); const sk = scarK(x, z, scar);
         let rk = 0; if (redden) { const d2 = ((x - redden[0]) ** 2 + (z - redden[1]) ** 2) / (redden[2] * redden[2]); rk = redden[3] * Math.exp(-d2 * 0.6); }
         const k = K[i] * spot;
         for (let c = 0; c < 3; c++) {
           let v = (tone[c] + (dark[c] - tone[c]) * k) * (0.92 + 0.12 * N[i]) * (1 - 0.45 * F[i] * (0.4 + 0.6 * right * Math.min(1, furrows)));
-          cols[3 * i + c] = v + (red[c] - v) * Math.min(1, rk);
+          v = v + (red[c] - v) * Math.min(1, rk);
+          const pale = [0.86, 0.72, 0.66][c] * (0.9 + 0.1 * tone[c] / 0.6) + 0.12 * scarGlow;   // scar tissue: paler, no pigment pattern
+          cols[3 * i + c] = v + (pale - v) * sk;
         }
       }
       pos.needsUpdate = true; geo.attributes.color.needsUpdate = true; geo.computeVertexNormals();
+      if (hairs && scar) { const dm = new THREE.Object3D(), mtx = new THREE.Matrix4(); pores.forEach(([px, pz], i) => { hairs.getMatrixAt(i, mtx); if (scarK(px, pz, scar) > 0.3) { mtx.decompose(dm.position, dm.quaternion, dm.scale); dm.scale.set(0.0001, 0.0001, 0.0001); dm.updateMatrix(); hairs.setMatrixAt(i, dm.matrix); } }); hairs.instanceMatrix.needsUpdate = true; }
     },
     at: (x, z) => [x, 0.25, z],
   };
