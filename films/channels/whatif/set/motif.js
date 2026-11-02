@@ -106,7 +106,7 @@ export const workCard = (W0, o = {}) => {
   const el = document.createElement("div");
   el.className = "bv-work"; el.id = "bv-work";
   const rows = W0.rows.map((r) => `<div class="rw"><span class="k"></span><span class="v"></span></div>`).join("");
-  el.innerHTML = `<div class="hd"></div>${rows}<div class="as">${W0.assume.map(() => "<span></span>").join("")}</div>`;
+  el.innerHTML = `<div class="hd"></div>${rows}` + (W0.assume.length ? `<div class="as">${W0.assume.map(() => "<span></span>").join("")}</div>` : "");
   el.querySelector(".hd").textContent = W0.title;
   const R = [...el.querySelectorAll(".rw")];
   R.forEach((rw, i) => { rw.querySelector(".k").textContent = W0.rows[i].k; rw.querySelector(".v").textContent = W0.rows[i].v; });

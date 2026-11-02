@@ -39,6 +39,9 @@ void main() {
   float mean = 3.14159 * uDotR * uDotR;                           // a dot's average coverage of its cell
   float far = smoothstep(0.12, 0.7, fw);                          // toward ~2 px a cell: fade to the average (wide, so the swap never pops)
   float cov = mix(dotA, max(mean, 0.42), far);                    // (lifted: a crowd seen from far reads as a lit field)
+  vec2 blk = floor(vP / 900.0);                                    // seeded ±9% shade per 900 m block, so a crowd seen
+  float bf = clamp(1.0 - fwidth(vP.x) / 300.0, 0.0, 1.0);          // from far is a textured field, never a flat slab
+  cov *= 1.0 + 0.18 * (h21(blk + 3.0) - 0.5) * bf * far;
   vec3 col = mix(uGround, uDot, cov);
   float e = (uHalf - max(a.x, a.y)) / max(fwidth(vP.x), 1e-5);   // px from the square's edge
   col = mix(col, uEdge, (1.0 - smoothstep(0.8, 2.2, e)) * 0.85);

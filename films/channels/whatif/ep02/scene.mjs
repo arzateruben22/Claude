@@ -79,7 +79,7 @@ const CUBE_X = -PH.cube / 2 - 160, TOWER_X = 260;
 const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
 const S = { you: [0, 1.9, 0], half: [PH.side_one / 2, 0, 0], london: [PH.side_lon / 2, 0, -PH.side_lon / 2], dot: [0, PH.r_earth, 0],
-  tower: [TOWER_X, PH.tower * 0.8, 0], cube: [CUBE_X - PH.cube / 2, PH.cube * 0.75, 0] };
+  tower: [TOWER_X, PH.tower * 0.8, 0], cube: [CUBE_X - PH.cube * 0.3, PH.cube, 0] };   // the cube's front face stands at z = 0, beside the tower: equal depth, true heights
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
 hud.captions(FILM.captions);
@@ -139,7 +139,7 @@ window.seek = function (t) {
   if (shot === "cube") {
     const rows = FILM.work.rows, k = t < rows[1].t ? 1 : t < rows[2].t ? PH.cube_hi / PH.cube : PH.cube_lo / PH.cube;
     const kk = t < rows[1].t ? 1 : 1 + (k - 1) * E.inout2(seg(t, t < rows[2].t ? rows[1].t : rows[2].t, (t < rows[2].t ? rows[1].t : rows[2].t) + 0.6));
-    cube.set({ x: CUBE_X, z: 0, grow: E.inout2(seg(t, CUE.water, CUE.water + 1.4)) * kk, opacity: 1 });
+    cube.set({ x: CUBE_X, z: -PH.cube / 2, grow: E.inout2(seg(t, CUE.water, CUE.water + 1.4)) * kk, opacity: 1 });
     cube.group.scale.set(kk, 1, kk);
     tower.set({ x: TOWER_X, z: 0, grow: E.inout2(seg(t, CUE.tower - 0.3, CUE.tower + 1.0)), opacity: 1 });
   }

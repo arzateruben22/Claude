@@ -66,7 +66,8 @@ SHOTS = [
 
 # ── the crowd's side over time (m), and the density (per m²) ───────────────
 # grows log-linearly from your own square to everyone between "bring" and "hour"; the squeeze halves the area
-CROWD = {"keys": [[0.0, SIDE_ONE], [t_half, SIDE_ONE], [t_half + 1.2, 3.2], [t_grow0, 3.2], [t_grow1, SIDE_ALL],
+CROWD = {"keys": [[0.0, SIDE_ONE], [1.8, 6.0], [t_half - 0.8, 6.0], [t_half, SIDE_ONE],   # people gather round you as the question is asked (motion from frame 0)
+                   [t_half + 1.2, 3.2], [t_grow0, 3.2], [t_grow1, SIDE_ALL],
                   [t_squeeze, SIDE_ALL], [t_squeeze + 1.2, SIDE_TIGHT], [t_room, SIDE_TIGHT], [t_room + 1.0, SIDE_ALL],
                   [t_end + 0.6, SIDE_ALL], [B["tease"]["t1"] - 0.3, SIDE_ONE]],      # under the end card the crowd folds back to you: the loop
          "density": [[0.0, 2.0], [t_squeeze, 2.0], [t_squeeze + 1.2, 4.0], [t_room, 4.0], [t_room + 1.0, 2.0]],
@@ -94,9 +95,9 @@ CAM = {
         {"t": t_water - 0.2, "target": [0, R_EARTH * 0.2, 0], "dist": 4.6e7, "el": 50, "az": 32, "fov": 30, "fy": 0.4, "ease": "inout3"},
     ],
     "cube": [
-        {"t": t_water, "target": [-150, 420, 0], "dist": 10000, "el": 4, "az": 3, "fov": 30, "fy": 0.3},
-        {"t": t_work0, "target": [-150, 420, 0], "dist": 19000, "el": 4, "az": 2, "fov": 30, "fy": 0.47, "ease": "inout2"},
-        {"t": B["takeaway"]["t0"], "target": [-150, 420, 0], "dist": 18500, "el": 4, "az": 1, "fov": 30, "fy": 0.47, "ease": "sine"},
+        {"t": t_water, "target": [-150, 420, 0], "dist": 7600, "el": 4, "az": 3, "fov": 30, "fy": 0.4},
+        {"t": t_work0, "target": [-150, 420, 0], "dist": 8200, "el": 4, "az": 2, "fov": 30, "fy": 0.46, "ease": "inout2"},
+        {"t": B["takeaway"]["t0"], "target": [-150, 420, 0], "dist": 8000, "el": 4, "az": 1, "fov": 30, "fy": 0.46, "ease": "sine"},
     ],
     "home": [
         {"t": B["takeaway"]["t0"], "target": [0, 0, 0], "dist": SIDE_ALL * 6, "el": 55, "az": 30, "fov": 30, "fy": 0.36},
@@ -130,21 +131,21 @@ SPINE = [
 WORK = {
     "t0": t_work0, "t1": B["takeaway"]["t0"] - 0.1, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
+        {"t": t_work0 + 0.15, "k": "8.2 bn × 62 kg (adult avg.) ÷ water", "v": f"≈ {RESULTS['cube_m']:.0f} m cube", "lit": False},
         {"t": A("vo06:either", -0.05), "k": "bodies at 0.97 g/cm³", "v": f"≈ {V['cube_hi_m']:.0f} m", "lit": True},
         {"t": A("vo06:size", -0.6), "k": "bodies at 1.06 g/cm³", "v": f"≈ {V['cube_lo_m']:.0f} m", "lit": True},
     ],
-    "assume": ["62 kg is the adult average", "children weigh less", "packed with no gaps"],
+    "assume": [],                                   # the assumptions are notes (badges) here, so the card stays short and clear of the cube
 }
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": t_title_out, "t1": t_full - 0.2, "shot": "you", "side": 1},
-    {"id": "l-half", "text": "½ m²", "kind": "assume", "anchor": "half", "t0": t_half + 0.3, "t1": t_grow0, "shot": "you", "side": -1},
+    {"id": "l-half", "text": "½ m²", "kind": "assume", "anchor": "half", "t0": t_half + 0.3, "t1": t_grow0, "shot": "you", "side": -1, "v": "above"},
     {"id": "l-lon", "text": "Greater London, 1,572 km²", "kind": "part", "anchor": "london", "t0": t_lon + 0.3, "t1": t_orbit, "shot": "grow", "side": 1},
     {"id": "l-us", "text": "everyone", "kind": "anchor", "anchor": "dot", "t0": t_orbit + 1.0, "t1": t_water, "shot": "orbit", "side": 1},
     {"id": "l-tower", "text": f"tallest tower, {int(H_BURJ)} m", "kind": "part", "anchor": "tower", "t0": t_tower + 0.2, "t1": t_work0 - 0.1, "shot": "cube", "side": 1},
-    {"id": "l-cube", "text": "every body alive", "kind": "anchor", "anchor": "cube", "t0": A("vo05:cube", 0.1), "t1": t_work0 - 0.1, "shot": "cube", "side": -1},
+    {"id": "l-cube", "text": "every body alive", "kind": "anchor", "anchor": "cube", "t0": A("vo05:cube", 0.1), "t1": t_work0 - 0.1, "shot": "cube", "side": -1, "v": "above"},
 ]
 BADGES = [
     {"id": "b-safe", "text": "∵ 2 people per m² (a calm crowd)", "t0": t_half, "t1": t_orbit, "slot": "tl"},

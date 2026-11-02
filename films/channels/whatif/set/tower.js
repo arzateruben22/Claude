@@ -45,7 +45,7 @@ export const createTower = (o = {}) => {
     const h = f * H - y0, b = new THREE.Mesh(new THREE.CylinderGeometry(w * wk * 0.82, w * wk, h, 6, 1), m);
     b.position.y = y0 + h / 2; inner.add(b); y0 = f * H;
   }
-  const needle = new THREE.Mesh(new THREE.CylinderGeometry(1.2 * wk, 6 * wk, H - y0, 8, 1), m);
+  const needle = new THREE.Mesh(new THREE.CylinderGeometry(1.2 * wk * wk, 6 * wk * wk, H - y0, 8, 1), m);   // the spire widens twice over, so the full height reads from far off
   needle.position.y = y0 + (H - y0) / 2; inner.add(needle);
   const group = new THREE.Group(); group.add(inner);
   const set = (s = {}) => {
