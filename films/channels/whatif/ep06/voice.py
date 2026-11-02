@@ -50,12 +50,12 @@ LANG = "en-us"
 SPEEDS = {
     "vo01": [0.84, 0.7],
     "vo02": [0.82, 0.76],
-    "vo03": [0.78],
-    "vo04": [0.78, 0.76],
-    "vo05": [0.76, 0.66],
+    "vo03": [0.84],
+    "vo04": [0.74, 0.7],
+    "vo05": [0.78, 0.72],
     "vo06": [0.74],
-    "vo07": [0.72, 0.64],
-    "vo08": [0.76],
+    "vo07": [0.74, 0.66],
+    "vo08": [0.66],
 }
 GAP, GAP_Q = 0.38, 0.60          # real pauses at the turns (WRITING.md, Flow 7)          # seconds of silence after a sentence, after a question
 

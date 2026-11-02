@@ -1,0 +1,1020 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A day's rain, all at once? Every drop, in one second.",
+   "heard": "A day's rain all at once. Every drop in one second.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "day's",
+     "start": 0.16,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "rain,",
+     "start": 0.395,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 0.89,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.92,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "once?",
+     "start": 1.165,
+     "end": 1.454,
+     "heard": true,
+     "end_asr": 2.08
+    },
+    {
+     "w": "Every",
+     "start": 2.085,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "drop,",
+     "start": 2.49,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.945,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.09,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 3.5,
+     "end": 4.08,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "On an ordinary day, the sky lets go of nearly a Great Lake, spread so thin across the hours you barely notice. It falls like eighty Amazons pouring from the clouds.",
+   "heard": "On an ordinary day the sky lets go of nearly a great lake, spread so thin across the hours you barely notice. It falls like eighty Amazons pouring from the clouds.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.025,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.3,
+     "end": 0.35,
+     "heard": true
+    },
+    {
+     "w": "ordinary",
+     "start": 0.33,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.87,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.245,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 1.455,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 1.82,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "go",
+     "start": 2.1,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.41,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 2.44,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.895,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Great",
+     "start": 2.935,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "Lake,",
+     "start": 3.25,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 3.675,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 4.12,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 4.55,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 5.06,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.4,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 5.545,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 6.05,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 6.27,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "notice.",
+     "start": 6.695,
+     "end": 7.302,
+     "heard": true,
+     "end_asr": 7.6
+    },
+    {
+     "w": "It",
+     "start": 7.7,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "falls",
+     "start": 7.85,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 8.34,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "eighty",
+     "start": 8.6,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "Amazons",
+     "start": 8.955,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "pouring",
+     "start": 9.715,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 10.18,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.515,
+     "end": 10.565,
+     "heard": true
+    },
+    {
+     "w": "clouds.",
+     "start": 10.545,
+     "end": 11.2,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Now squeeze that whole day into a single second, and the sky pours like seven million Amazon rivers, all at once.",
+   "heard": "Now squeeze that whole day into a single second and the sky pours like seven million Amazon rivers all at once.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "squeeze",
+     "start": 0.485,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.84,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 1.08,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 1.365,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 1.685,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.835,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 2.145,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "second,",
+     "start": 2.575,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.075,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.175,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 3.415,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "pours",
+     "start": 3.75,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 4.22,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 4.385,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 4.91,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "Amazon",
+     "start": 5.42,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "rivers,",
+     "start": 6.25,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 6.785,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 7.12,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 7.15,
+     "end": 7.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "It sounds like the end of the world, a flood with nowhere to run. But that rain lands where it always lands, and most of it on the open ocean.",
+   "heard": "It sounds like the end of the world, a flood with nowhere to run. But that rain lands where it always lands, and most of it on the open ocean.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "sounds",
+     "start": 0.205,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.675,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.865,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "end",
+     "start": 1.035,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.365,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.395,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "world,",
+     "start": 1.53,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.175,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "flood",
+     "start": 2.42,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.96,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "nowhere",
+     "start": 3.04,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.565,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "run.",
+     "start": 4.045,
+     "end": 4.316,
+     "heard": true,
+     "end_asr": 4.72
+    },
+    {
+     "w": "But",
+     "start": 4.715,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.955,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "rain",
+     "start": 5.18,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "lands",
+     "start": 5.77,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 6.285,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.695,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "always",
+     "start": 6.955,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "lands,",
+     "start": 7.26,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.14,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 8.285,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.675,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.89,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 9.275,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.535,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "open",
+     "start": 9.595,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "ocean.",
+     "start": 10.145,
+     "end": 10.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "Spread over the whole planet, a day of the world's weather comes down as a layer about three millimeters deep. About two coins, stacked.",
+   "heard": "Spread over the whole planet, a day of the world's weather comes down as a layer about three millimeters deep. About two coins stacked.",
+   "words": [
+    {
+     "w": "Spread",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 0.63,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.895,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.935,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "planet,",
+     "start": 1.21,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.02,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 2.165,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.57,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.6,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "world's",
+     "start": 2.74,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "weather",
+     "start": 3.31,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "comes",
+     "start": 3.675,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 4.14,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.565,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.6,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 4.94,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.59,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 5.935,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "millimeters",
+     "start": 6.255,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "deep.",
+     "start": 7.29,
+     "end": 7.77,
+     "heard": true,
+     "end_asr": 8.16
+    },
+    {
+     "w": "About",
+     "start": 8.17,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 8.545,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "coins,",
+     "start": 8.795,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "stacked.",
+     "start": 9.38,
+     "end": 9.92,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Use a wetter estimate of the world's rain, and it barely changes the depth.",
+   "heard": "Use a wetter estimate of the world's rain and it barely changes the depth.",
+   "words": [
+    {
+     "w": "Use",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.395,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "wetter",
+     "start": 0.575,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "estimate",
+     "start": 1.085,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.72,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.86,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "world's",
+     "start": 1.975,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "rain,",
+     "start": 2.465,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.215,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.51,
+     "end": 3.56,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 3.54,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 3.96,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.745,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "depth.",
+     "start": 4.895,
+     "end": 5.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So the whole sky's rain is a thin film, spread wide. A storm is where it piles up.",
+   "heard": "So the whole sky's rain is a thin film spread wide. A storm is where it piles up.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.3,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.33,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sky's",
+     "start": 0.725,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "rain",
+     "start": 1.14,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.6,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.85,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 1.995,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "film,",
+     "start": 2.275,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 2.94,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "wide.",
+     "start": 3.255,
+     "end": 3.878,
+     "heard": true,
+     "end_asr": 4.24
+    },
+    {
+     "w": "A",
+     "start": 4.275,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "storm",
+     "start": 4.63,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.035,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 5.065,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.45,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "piles",
+     "start": 5.555,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 6.1,
+     "end": 6.56,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: how long to walk to the Moon?",
+   "heard": "Next envelope How long to walk to the moon?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.045,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.525,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 1.42,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 1.805,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.125,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "walk",
+     "start": 2.315,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.645,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.82,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Moon?",
+     "start": 3.0,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep06/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

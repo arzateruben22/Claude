@@ -12,7 +12,7 @@ it to `claims.json`; `{-}` marks a sentence that states nothing outside the film
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep06 --segment work`.
 
 ## hook {shot: one blue figure under a single falling drop on the graph paper; above, a sky of drops frozen mid-fall · badge: thought experiment · title: "Every raindrop at once" · pre: 0.1 · picture-only 0.3 s · energy: 0.6} (0–5 s)
-vo: A day's rain, in one *second*? Every drop on Earth, all together. {-}
+vo: A day's rain, all at *once*? Every drop, in one second. {-}
 
 ## normal {shot: the drops start falling at their own pace; a day clock spins; a lake-sized block of water fills on the paper · spine "520,000 km³ a year ÷ 365" · picture-only 0.3 s · energy: 0.45} (5–17 s)
 vo: On an ordinary day, the sky lets go of nearly a Great Lake, spread so thin across the hours you barely notice. {c1,c2} It falls like eighty Amazons pouring from the *clouds*. {c3}
@@ -32,8 +32,8 @@ vo: Use a wetter estimate of the world's rain, and it barely changes the *depth*
 ## takeaway {shot: back to the one blue figure, a puddle at its feet · picture-only 0.3 s · energy: 0.45} (58–66 s)
 vo: So the whole sky's rain is a thin film, spread wide. {c10} A storm is where it piles *up*. {c11}
 
-## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66–72 s)
-vo: Next envelope: how long would it take to walk to the *Moon*? {-}
+## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66–71.5 s)
+vo: Next envelope: how long to walk to the *Moon*? {-}
 end card: "Next envelope: *a walk to the Moon*" · "Back of the Envelope · No. 006" · footnote: "Rodell et al., J. Climate 28, 8289 (2015): about 520,000 km³ of rain, snow and hail a year." (c1)
 
 ## Notes
