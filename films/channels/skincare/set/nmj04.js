@@ -42,8 +42,8 @@ export const createNMJ = ({ x = 500, seed = 41, cyan = "#5FF2E8", lilac = "#B79B
 
   // ── the muscle fibre and its neighbours ──
   const bands = bandTex(R);
-  const fibMat = strandMaterial({ tint: [0.86, 0.42, 0.5], gloss: 0.45 }); fibMat.transmission = 0; fibMat.map = bands; fibMat.bumpMap = bands; fibMat.bumpScale = 1.2;
-  fibMat.map.repeat.set(3, 9); fibMat.sheenColor = new THREE.Color(1, 0.8, 0.85);
+  const fibMat = strandMaterial({ tint: [0.78, 0.3, 0.4], gloss: 0.55 }); fibMat.transmission = 0; fibMat.map = bands; fibMat.bumpMap = bands; fibMat.bumpScale = 1.2;
+  fibMat.map.repeat.set(3, 15); fibMat.sheenColor = new THREE.Color(1, 0.8, 0.85);
   const fibre = new THREE.Mesh(new THREE.CylinderGeometry(FR, FR, FL, 128, 1, false), fibMat); fibre.rotation.z = Math.PI / 2; fibre.position.set(0, -FR, 0); g.add(fibre);
   const backMat = fibMat.clone(); backMat.color = new THREE.Color(0.42, 0.2, 0.32);   // the neighbours, darker, so the one fibre leads
   for (const [y, z, r] of [[-7, -15, 5.5], [-15, -9, 5], [-3, -30, 6], [-17, 5, 4.5]]) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, FL, 64), backMat); m.rotation.z = Math.PI / 2; m.position.set(0, y, z); g.add(m); }
@@ -106,8 +106,8 @@ export const createNMJ = ({ x = 500, seed = 41, cyan = "#5FF2E8", lilac = "#B79B
     group: g, BC,
     set({ t = 0, pull = 0, puff = 0, toxin = 0, cut = 0, bump = 0, sprout = 0, prune = 0, dim = 0 } = {}) {
       // the fibre contracts: shorter, its bands closer
-      fibre.scale.set(1 + 0.04 * pull, 1 - 0.05 * pull, 1 + 0.04 * pull); fibMat.map.repeat.set(3, 9 * (1 + 0.14 * pull));
-      const k = 1 - 0.5 * dim; fibMat.color.setRGB(0.86 * k, 0.42 * k, 0.5 * k);
+      fibre.scale.set(1 + 0.04 * pull, 1 - 0.05 * pull, 1 + 0.04 * pull); fibMat.map.repeat.set(3, 15 * (1 + 0.14 * pull));
+      const k = 1 - 0.5 * dim; fibMat.color.setRGB(0.78 * k, 0.3 * k, 0.4 * k);
       // the vesicles idle (a slow drift inside the ending)
       VES.forEach((v, i) => { d.position.set(v.p[0] + 0.08 * Math.sin(t * 0.6 + v.ph), v.p[1] + 0.06 * Math.sin(t * 0.5 + v.ph * 2), v.p[2] + 0.07 * Math.cos(t * 0.55 + v.ph)); d.scale.setScalar(v.r); d.updateMatrix(); ves.setMatrixAt(i, d.matrix); });
       ves.instanceMatrix.needsUpdate = true;

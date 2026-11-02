@@ -1,4 +1,4 @@
-# Scorecard: Outer Layer No. 005, "The sunscreen experiment" (the reboot's look)
+# Scorecard: Skin Sense No. 005, "The sunscreen experiment" (the reboot's look)
 
 ## Measured gates (final)
 
