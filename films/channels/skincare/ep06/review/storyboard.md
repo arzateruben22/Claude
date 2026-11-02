@@ -1,18 +1,51 @@
-# No. 006, "Same list as cigarettes": one line per sentence
+# No. 006, "Same list as cigarettes": storyboard (look 2 rebuild, 2 Nov)
 
-For each sentence: the new image, and how the camera gets there. The terrain flight carries the travel between ideas. The switch between daylight and UV is the signature cut, made on the key fact.
+Look test 2 is the standard: four bold hero shots, one subject filling the frame, one slow move each; dust in a
+light shaft, haze cards, shallow depth of field, a rack focus where it helps. At most two small labels at once;
+captions carry the words; honesty notes are small and in a corner. One skin tone: **deep**. The UV switch (the cyan
+scan line) lands on the key fact: whole countries switching the beds off.
 
-| # | Sentence | New image | How the camera gets there |
+## Hero 1: the list (hook + normal, 0–16 s; returns for the takeaway)
+An engraved pale plate, "IARC Group 1 · carcinogenic to humans", standing in violet haze under a studio key, with a
+dust shaft across it and the bed's violet tubes soft far behind. Cyan inlays light row by row. One slow push.
+
+| # | Sentence | Image | Camera |
 |---|---|---|---|
-| 1 | "Same list as cigarettes?" | **In UV**, skin glowing under a bed's light. Over it, the typeset IARC Group 1 excerpt, its two lines lighting | Opens mid-push inside the viewfinder |
-| 2 | "Most people hear: just as deadly." | On "Most", the signature switch **UV → daylight**: the same skin, dim, at golden hour | The flight begins |
-| 3 | "It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke." | The two lines, held lit | The flight banks on "top" |
-| 4 | "That group ranks how sure the evidence is, not how big the harm." | The ranking line lands under the list | Rises on "sure", then dives toward the skin |
-| 5 | "Follow the evidence into the bed: its light is mostly UVA, the long rays." | Under a canopy of tubes that light violet; "UVA, the long rays" | Scale jump into the bed |
-| 6 | "In large, powerful units, it may be ten to fifteen times as intense as the midday sun." | The tubes flare; spine "×10–15 (may be)" | Pushes in on "ten" |
-| 7 | "Weighing the studies, … people who started young." | The plate: first use before 35 | Drifts under the tubes |
-| 8 | "In pooled studies, … raised by more than half." | ×1.75 (2007) and ×1.59 (2012, corrected); spine "×1.6–1.75" | Holds |
-| 9 | "Then whole countries acted: Brazil banned … later, Australia switched its own off." | The signature switch to **UV**: the skin glowing under the bed light dims on "Brazil" and goes nearly dark on "off"; the bans plate | Shutter cut |
-| 10 | "And the long rays reach right through the top layer, on most skin about as thin as paper." | A cut-face section: violet dashes fall past the top layer; the gauge (≈ 100 µm beside the paper) | Scale jump into the section |
-| 11 | "Same list as cigarettes, then: not the same size of harm, but the same certainty." | The hook's list over the flight, both lines and the ranking line lit; spine "certainty" | Cuts back to the hook's framing |
-| 12 | Tease | End card | Holds |
+| 1 | "Same list as cigarettes?" | The plate, soft, then sharp; on "cigarettes" two rows light: Tobacco smoking, UV-emitting tanning devices | Rack focus from the dust to the plate; the push begins |
+| 2 | "Processed meat is on it too." | On "meat" a third row lights: Processed meat · 2015 | The push continues |
+| 3 | "All three share the top group … equally dangerous: it ranks how sure the evidence is." | The three rows held lit; on "sure" the engraved line under them lights: "strength of evidence, not size of risk" | The push settles low on that line |
+
+## Hero 2: the canopy (change + why, 16–43 s)
+Deep-tone skin (microrelief, pores, fine hairs) under a canopy of UVA tubes glowing violet; a violet shaft with dust
+falls from the tubes onto the skin. One slow move under the tubes.
+
+| # | Sentence | Image | Camera |
+|---|---|---|---|
+| 4 | "Into the bed, then: its light is mostly UVA, the long rays." | Cut on "Into": the tubes come up violet over the skin | A slow glide along the skin under the tubes |
+| 5 | "In large, powerful units, it may be ten to fifteen times as intense as the midday sun." | On "ten" the tubes flare; spine "×10–15" ("UVA vs midday sun · may be"), note "large, powerful units" | The glide continues |
+| 6 | "When the beds joined that group, the sharpest signal came from people who started young." | The tubes back to a third; the light pools on the skin | Lowers to a grazing angle; rack focus from the tubes to the skin |
+| 7 | "In pooled studies, first use before thirty-five went with melanoma risk raised by more than half." | Spine "1.59 · 1.75" (melanoma RR, first use < 35 · 2012 corrected · 2007); note "pooled studies · relative risk" | Holds on the skin |
+
+## Hero 3: the switch-off (whoa, 43–54 s): the UV switch
+The same skin seen by the UV camera: the cyan scan line sweeps down on "Whole countries acted" and the skin glows
+lilac in the bed's UV. The left half is lit by one bank of tubes, the right by the other.
+
+| # | Sentence | Image | Camera |
+|---|---|---|---|
+| 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); note "model, not a photo" | One slow push over the seam |
+
+## Hero 4: the cut face (toscale, 54–62 s)
+A block of skin cut open: the top is deep-tone skin, the face the real stained micrograph. Violet UVA dashes fall
+from above, pass the thin top layer and carry on into the dermis. A dust shaft. The gauge lifts: the top layer ≈ 100
+µm beside the paper.
+
+| # | Sentence | Image | Camera |
+|---|---|---|---|
+| 9 | "And those long rays reach right through the top layer, on most skin about as thin as paper." | The dashes pass the top layer; the gauge fills "≈ 100 µm" on "layer", the paper on "paper"; note "micrograph · stained skin · rays simplified" | A slow push and drift, kept above the skin's surface |
+
+## Back to Hero 1 (takeaway, 62–68 s)
+| # | Sentence | Image | Camera |
+|---|---|---|---|
+| 10 | "The sun made that list years before the beds." | The plate again, the three rows lit; on "sun" the Solar radiation row lights, dated 1992, the beds' row dated 2009 | The hook's framing, a slow push |
+| 11 | "Same list as cigarettes: not the same harm, the same certainty." | The evidence line lit again; spine "certainty" ("Group 1 ranks") | The push holds |
+| 12 | Tease | End card over the plate | Holds |

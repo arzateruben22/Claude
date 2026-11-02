@@ -1,12 +1,14 @@
-"""Compile Outer Layer No. 006, "Same list as cigarettes" (the reboot's look: UV camera + macro flight): script +
-voice timings + this direction → film.json and sheet.json. Every moment hangs on a beat or a spoken word; every
-number on screen comes from claims.json, hedged as the sources are.
+"""Compile Outer Layer No. 006, "Same list as cigarettes" (look 2 rebuild, 2 Nov): script + voice timings + this
+direction → film.json and sheet.json. Every moment hangs on a beat or a spoken word; every number on screen comes
+from claims.json, hedged as the sources are.
 
   python3 -I films/channels/skincare/ep06/compile.py
 
-Places (one scene, far apart): the skin under the bed (the macro terrain at x = 0, deep tone, with a canopy of UVA
-tubes above it), the same skin through the 365 nm camera (x = +4000), and a cut-face section for the long rays
-(../set/section.js, x = −4000, units µm). The list (IARC Group 1) is an overlay plate, typeset, never a photo.
+Four hero shots in one scene, far apart (review/storyboard.md):
+  list     the IARC Group 1 excerpt as an engraved plate in violet haze (x = 0); it returns for the takeaway
+  bed      deep-tone skin under a canopy of UVA tubes (x = 500)
+  uv       the same skin through the UV camera; its two banks of tubes go dark (x = 500, the UV switch)
+  section  a block of skin cut open, its face the stained micrograph; UVA dashes pass the top layer (x = 1000)
 """
 import json
 import sys
@@ -27,120 +29,116 @@ A = f.at
 B = {b["id"]: b for b in BEATS}
 
 # ── the numbers (claims.json) ───────────────────────────────────────────────
-GROUP_YEAR = 2009                       # c1
-UVA_X = (10, 15)                        # c4: "may be 10 to 15 times" the midday sun, large powerful units (AAP 2011)
-RR = (1.59, 1.75)                       # c6: first use before 35 (Boniol 2012, corrected; IARC 2007)
-BANS = [("Brazil", 2009), ("Australia", 2015)]   # c7, c8 (commercial beds; WA from 2016)
-EPI_UM, PAPER_UM = 100.0, 100.0         # c10: the epidermis ≈ 0.1 mm (0.07–0.12) on most skin; paper ≈ 100 µm
-assert min(RR) > 1.5, "raised by more than half"
-SC_UM, ROWS, GRAN_UM, SPIN_UM, BASAL_UM = 17.0, 15, 10.0, 63.0, 10.0   # the section's epidermis drawn ≈ 100 µm (simplified)
-assert abs(SC_UM + GRAN_UM + SPIN_UM + BASAL_UM - EPI_UM) < 1e-9
-TONE = "deep"           # bible §1: 006 is drawn in the deep tone
+YEARS = {"meat": 2015, "beds": 2009, "sun": 1992}          # c1, c2, c12
+UVA_X = (10, 15)                                          # c5: "may be 10 to 15 times" the midday sun (AAP 2011)
+RR = {"2012": 1.59, "2007": 1.75}                         # c7: first use before 35 (Boniol 2012 corrected; IARC 2007)
+BANS = {"Australia": 2015, "Brazil": 2009}                # c8, c9 (commercial beds; WA from 2016)
+EPI_UM, PAPER_UM = 100.0, 100.0                           # c11: the epidermis ≈ 0.1 mm on most skin; paper ≈ 100 µm
+assert min(RR.values()) > 1.5, "raised by more than half"
+assert YEARS["sun"] < YEARS["beds"], "the sun made the list years before the beds"
+TONE = "deep"           # bible: 006 is drawn in the deep tone, and only that tone
 
-# ── shots ─────────────────────────────────────────────────────────────────
+# ── cues (spoken words) ──────────────────────────────────────────────────────
 t_end = A("vo08:Next", -0.25)
 CUE = {
-    "list": A("vo01:list"), "most": A("vo01:Most"), "cigs": A("vo01:cigarettes?"), "deadly": A("vo01:deadly."),
-    "who": A("vo02:World"), "top": A("vo02:top"), "tobacco": A("vo02:tobacco"), "ranks": A("vo02:ranks"), "sure": A("vo02:sure"), "harm": A("vo02:harm."),
-    "follow": A("vo03:Follow"), "bed": A("vo03:bed:"), "uva": A("vo03:UVA,"), "long": A("vo03:long"), "large": A("vo03:large,"), "ten": A("vo03:ten"), "midday": A("vo03:midday"),
-    "weighed": A("vo04:Weighing"), "young": A("vo04:young."), "pooled": A("vo04:pooled"), "before": A("vo04:before"), "melanoma": A("vo04:melanoma"), "half": A("vo04:half."),
-    "countries": A("vo05:countries"), "brazil": A("vo05:Brazil"), "same": A("vo05:same"), "australia": A("vo05:Australia"), "off": A("vo05:off."),
-    "rays": A("vo06:rays"), "layer": A("vo06:layer,"), "paper": A("vo06:paper."),
-    "same2": A("vo07:Same"), "harm2": A("vo07:harm,"), "certainty": A("vo07:certainty."),
+    "list": A("vo01:list"), "cigs": A("vo01:cigarettes?"), "meat": A("vo01:meat"),
+    "three": A("vo02:three"), "top": A("vo02:top"), "dangerous": A("vo02:dangerous:"), "ranks": A("vo02:ranks"), "sure": A("vo02:sure"),
+    "into": A("vo03:Into"), "uva": A("vo03:UVA,"), "long": A("vo03:long"), "large": A("vo03:large,"), "ten": A("vo03:ten"), "sun": A("vo03:sun."),
+    "when": A("vo04:When"), "young": A("vo04:young."), "pooled": A("vo04:pooled"), "before": A("vo04:before"), "half": A("vo04:half."),
+    "whole": A("vo05:Whole"), "acted": A("vo05:acted:"), "australia": A("vo05:Australia"), "off": A("vo05:off"), "brazil": A("vo05:Brazil"), "too": A("vo05:too."),
+    "and": A("vo06:And"), "rays": A("vo06:rays"), "through": A("vo06:through"), "layer": A("vo06:layer,"), "paper": A("vo06:paper."),
+    "the7": A("vo07:The"), "sun2": A("vo07:sun"), "beds2": A("vo07:beds."), "same2": A("vo07:Same"), "harm2": A("vo07:harm,"), "certainty": A("vo07:certainty."),
 }
-SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["most"], "name": "list"}, {"at": B["change"]["t0"], "name": "bed"}, {"at": B["whoa"]["t0"], "name": "uv"},
-         {"at": B["toscale"]["t0"], "name": "section"}, {"at": B["takeaway"]["t0"], "name": "list2"}]
-
-UX, SX = 4000.0, -4000.0
-FLY = {"el": 14, "fov": 34, "fx": 0.5, "fy": 0.5}
-UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.4}
-CAM = {
-    # the list is an overlay: behind it, a slow, dim flight over the skin (the tubes off)
-    # the hook opens mid-push inside the UV camera: skin glowing under a bed's light; the list lights its two lines over it.
-    # On "Most", the signature switch to daylight: the same skin, the flight
-    "uvhook": [{"t": 0.0, **UVK, "dist": 30}, {"t": CUE["most"], **UVK, "dist": 23, "ease": "linear"}],
-    "list": [{"t": CUE["most"], "target": [0, -0.4, 14], "dist": 26, "az": -6, **FLY},
-             {"t": CUE["top"], "target": [-3, -0.4, 10], "dist": 22, "az": -10, **FLY, "ease": "inout2"},
-             {"t": CUE["sure"], "target": [3, -0.4, 6], "dist": 20, "az": -2, **{**FLY, "el": 24}, "ease": "inout2"},
-             {"t": B["change"]["t0"], "target": [0, -0.6, 2], "dist": 12, "az": 0, **{**FLY, "el": 34}, "ease": "in2"}],   # dives toward the skin: into the bed
-    # into the bed: the tubes light; the flight runs under them; the camera holds through the why
-    "bed": [{"t": B["change"]["t0"], "target": [0, -0.4, 6], "dist": 18, "el": 18, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.56},
-            {"t": CUE["ten"], "target": [0, -0.4, 2], "dist": 16, "el": 14, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.56, "ease": "inout2"},
-            {"t": B["whoa"]["t0"], "target": [0, -0.4, -4], "dist": 20, "el": 22, "az": 10, "fov": 34, "fx": 0.5, "fy": 0.56, "ease": "sine"}],
-    "uv": [{"t": B["whoa"]["t0"], **UVK, "dist": 25}, {"t": B["toscale"]["t0"], **UVK, "dist": 23, "ease": "sine"}],
-    "section": [{"t": B["toscale"]["t0"], "target": [SX, -70, 0], "dist": 520, "el": 8, "az": -6, "fov": 30, "fx": 0.5, "fy": 0.62},
-                {"t": B["takeaway"]["t0"], "target": [SX, -70, 0], "dist": 480, "el": 8, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.62, "ease": "sine"}],
-    "list2": [{"t": B["takeaway"]["t0"], "target": [0, -0.4, 16], "dist": 26, "az": -8, **FLY},
-              {"t": B["tease"]["t1"], "target": [0, -0.4, 10], "dist": 24, "az": -4, **FLY, "ease": "sine"}],
-}
-for shot, keys in CAM.items():
-    for a, b in zip(keys, keys[1:]):
-        rate = abs(b["az"] - a["az"]) / max(1e-6, b["t"] - a["t"])
-        assert rate <= 6.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
-
-LABELS = [
-    {"id": "l-uva", "text": "UVA, the long rays", "kind": "uv", "anchor": "tube", "t0": CUE["uva"] - 0.2, "t1": CUE["weighed"], "shot": "bed", "side": 1, "v": "below", "fixed": True},
-    {"id": "l-epi", "text": "the top layer", "kind": "cell", "anchor": "epi", "t0": CUE["layer"] - 0.6, "t1": B["takeaway"]["t0"], "shot": "section", "side": -1},
-    {"id": "l-deep", "text": "UVA reaches past it", "kind": "uv", "anchor": "derm", "t0": CUE["rays"], "t1": B["takeaway"]["t0"], "shot": "section", "side": 1, "v": "below"},
-]
-BADGES = [
-    {"id": "b-iarc", "text": "IARC Monographs, Group 1", "t0": CUE["deadly"], "t1": B["change"]["t0"], "slot": "tr"},
-    {"id": "b-units", "text": "model · large, powerful units", "t0": B["change"]["t0"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-pooled", "text": "pooled studies (meta-analyses)", "t0": CUE["pooled"], "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-simp", "text": "simplified", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
-]
-SPINE = [0.62, 0.2]
-COUNTERS = [
-    {"id": "c-uva", "label": "UVA vs midday sun (may be)", "fmt": "text", "text": "×10–15", "t0": CUE["ten"] - 0.2, "t1": B["why"]["t0"], "at": SPINE},
-    {"id": "c-rr", "label": "melanoma risk, first use < 35", "fmt": "text", "text": "×1.6–1.75", "t0": CUE["half"] - 0.3, "t1": B["whoa"]["t0"], "at": SPINE},
-    {"id": "c-end", "label": "Group 1 ranks", "fmt": "text", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.7, "at": SPINE},
-]
-PLATES = {
-    "vfhook": {"t0": 0.0, "t1": CUE["most"]},
-    "list": {"t0": 0.2, "t1": B["change"]["t0"] - 0.3, "lit": CUE["cigs"] - 0.6, "lit2": CUE["tobacco"] - 0.2, "rank": CUE["sure"] - 0.2},
-    "list2": {"t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.3, "rank": CUE["harm2"] - 0.2},
-    "rr": {"t0": CUE["pooled"] - 0.3, "t1": B["whoa"]["t0"] - 0.3, "before": CUE["before"], "rr": list(RR)},
-    "bans": {"t0": CUE["countries"] - 0.2, "t1": B["toscale"]["t0"] - 0.3, "brazil": CUE["brazil"], "australia": CUE["australia"], "off": CUE["off"], "bans": BANS},
-    "viewfinder": {"t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"]},
-    # no daylight strip: tones under a tanning-bed risk story would pair tones with a risk (bible §1)
-}
-BED = {"on": [B["change"]["t0"] + 0.2, CUE["bed"] + 0.3], "glow": [CUE["ten"] - 0.3, CUE["ten"] + 0.9]}
-UVD = {"brazil": [CUE["brazil"], CUE["brazil"] + 1.0], "off": [CUE["australia"], CUE["off"] + 0.5]}
-CUTS = [sh["at"] for sh in SHOTS[1:]]
+# shot cuts land on the first word of their beat (a hair before it, so the cut and the word arrive together)
+CUT = {"bed": A("vo03:Into", -0.1), "uv": A("vo05:Whole", -0.1), "section": A("vo06:And", -0.1), "list2": A("vo07:The", -0.1)}
+SHOTS = [{"at": 0.0, "name": "list"}, {"at": CUT["bed"], "name": "bed"}, {"at": CUT["uv"], "name": "uv"},
+         {"at": CUT["section"], "name": "section"}, {"at": CUT["list2"], "name": "list2"}]
+CUTS = [s["at"] for s in SHOTS[1:]]
+SHOT_END = {s["name"]: (SHOTS[i + 1]["at"] if i + 1 < len(SHOTS) else f.duration) for i, s in enumerate(SHOTS)}
 
 
 def before_cut(t1, lead=0.35):
     return round(t1 - lead, 4) if any(abs(t1 - c) < 1e-6 for c in CUTS) else t1
 
 
-for row in BADGES + COUNTERS + LABELS:
-    row["t1"] = before_cut(row["t1"])
-for a, b in zip(COUNTERS, COUNTERS[1:]):
-    if b["t0"] - a["t1"] < 0.4:
-        a["t1"] = round(b["t0"] - 0.4, 4)
+# ── the plate (hero 1): which rows light, when ──────────────────────────────
+PLATE = {
+    "lit": {"Tobacco smoking": CUE["cigs"] - 0.1, "UV-emitting tanning devices": CUE["cigs"] + 0.25, "Processed meat": CUE["meat"] - 0.1},
+    "rank": CUE["sure"] - 0.15,
+    "sun": CUE["sun2"] - 0.1, "rank2": CUE["harm2"] - 0.1,
+    "years": YEARS,
+}
+# ── the canopy (hero 2) and the switch-off (hero 3) ─────────────────────────
+BED = {"on": [CUT["bed"], CUE["uva"]], "flare": [CUE["ten"] - 0.2, CUE["ten"] + 0.6], "fall": [CUE["sun"] + 0.2, CUE["when"] + 0.8],
+       "low": [CUE["when"], CUE["pooled"]]}
+UVD = {"scan": [CUT["uv"] + 0.05, CUT["uv"] + 0.85], "australia": [CUE["off"], CUE["off"] + 0.9], "brazil": [CUE["brazil"], CUE["brazil"] + 0.9]}
+# ── the cut face (hero 4) and the gauge ─────────────────────────────────────
+RAYS = {"on": [CUT["section"] + 0.2, CUE["rays"]], "pass": CUE["through"]}
+GAUGE = {"rise": [CUT["section"] + 0.4, CUT["section"] + 1.3], "sc": CUE["layer"] - 0.2, "paper": CUE["paper"],
+         "back": [CUT["list2"] - 0.5, CUT["list2"]], "sc_um": EPI_UM, "paper_um": PAPER_UM, "bar": "top layer", "sc_text": "≈ 100 µm"}
 
-GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["layer"] - 0.2, "paper": CUE["paper"],
-         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": EPI_UM, "paper_um": PAPER_UM, "bar": "top layer", "sc_text": "≈ 100 µm"}
-RAYS = {"on": [B["toscale"]["t0"] + 0.2, CUE["rays"]]}
+# ── small labels: at most two at once (a spine counter and a corner note, or two tags) ─────────────
+BADGES = [
+    {"id": "b-iarc", "text": "IARC Group 1 · excerpt", "t0": B["normal"]["t0"] - 0.2, "t1": SHOT_END["list"], "slot": "tl"},
+    {"id": "b-units", "text": "large, powerful units", "t0": CUE["large"] - 0.2, "t1": CUE["when"] - 0.2, "slot": "tl"},
+    {"id": "b-pooled", "text": "pooled studies · 2012 (corr.) · 2007", "t0": CUE["pooled"] - 0.1, "t1": SHOT_END["bed"], "slot": "tl"},
+    {"id": "b-model", "text": "model, not a photo", "t0": CUT["uv"] + 0.9, "t1": SHOT_END["uv"], "slot": "tl"},
+    {"id": "b-micro", "text": "micrograph · rays simplified", "t0": CUT["section"] + 0.3, "t1": SHOT_END["section"], "slot": "tr"},
+    {"id": "b-iarc2", "text": "IARC Group 1 · excerpt", "t0": CUT["list2"] + 0.2, "t1": t_end - 0.4, "slot": "tl"},
+]
+SPINE = [0.62, 0.2]
+COUNTERS = [
+    {"id": "c-uva", "label": "UVA vs midday sun · may be", "text": f"×{UVA_X[0]}–{UVA_X[1]}", "t0": CUE["ten"] - 0.2, "t1": CUE["when"] - 0.2, "at": SPINE},
+    {"id": "c-rr", "label": "relative risk · first use < 35", "text": f"{RR['2012']:.2f} · {RR['2007']:.2f}", "t0": CUE["half"] - 0.4, "t1": SHOT_END["bed"], "at": [0.56, 0.22], "small": "7.4vmin"},
+    {"id": "c-end", "label": "Group 1 ranks", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.5, "at": SPINE},
+]
+TAGS = [   # the switch-off's two halves, named once each
+    {"id": "t-au", "text": f"Australia · {BANS['Australia']}", "t0": CUE["off"] + 0.1, "t1": SHOT_END["uv"], "side": "left"},
+    {"id": "t-br", "text": f"Brazil · {BANS['Brazil']}", "t0": CUE["brazil"] + 0.1, "t1": SHOT_END["uv"], "side": "right"},
+]
+for row in BADGES + COUNTERS + TAGS:
+    row["t1"] = before_cut(row["t1"])
+
+
+def live(rows, t):
+    return sum(1 for r in rows if r["t0"] <= t < r["t1"])
+
+
+for i in range(int(f.duration * FPS)):   # at most two small labels at once; honesty notes one at a time, in a corner
+    assert live(COUNTERS + TAGS, i / FPS) <= 2 and live(BADGES, i / FPS) <= 1, f"too many labels at {i / FPS:.2f} s"
+
+# ── cameras (scene units; each shot one slow move) ──────────────────────────
+CAM = {
+    "list": {"from": [0.5, 0.5, 21.8], "to": [0.0, 0.1, 17.8], "look0": [0.2, -0.6, 0], "look1": [0.0, -0.8, 0], "t": [0.0, CUT["bed"]],
+             "rack": [0.0, CUE["cigs"] - 0.2]},
+    "bed": {"from": [-2.0, 3.4, 15.0], "to": [1.2, 2.2, 8.0], "look0": [0.0, 2.0, -6.0], "look1": [0.6, 0.0, -4.0], "t": [CUT["bed"], CUT["uv"]],
+            "rack": [CUE["when"], CUE["young"]]},
+    "uv": {"from": [0.4, 5.6, 14.0], "to": [0.2, 4.2, 10.0], "look0": [0, 0, 0], "look1": [0.2, -0.2, -2.0], "t": [CUT["uv"], CUT["section"]]},
+    "section": {"from": [-2.5, 1.2, 19.5], "to": [0.4, 0.7, 15.5], "look0": [-0.6, -2.7, 0], "look1": [0.6, -3.0, 0], "t": [CUT["section"], CUT["list2"]]},
+    "list2": {"from": [-0.4, 0.4, 20.5], "to": [0.0, 0.1, 18.4], "look0": [-0.1, -0.7, 0], "look1": [0.0, -0.8, 0], "t": [CUT["list2"], f.duration]},
+}
+for name, c in CAM.items():
+    assert c["t"][1] > c["t"][0], name
+for name in ("bed", "uv", "section"):
+    assert min(CAM[name]["from"][1], CAM[name]["to"][1]) > 0.3, f"{name}: the camera stays above the skin"
 
 TITLE = {"series": "Outer Layer · No. 006", "title": "Same list as *cigarettes*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cigarettes?", 0.35)}
 END = {"title": "Next season: why do bath fingers *wrinkle*?", "follow": "Outer Layer · season 2",
        "next": "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:certainty.", 0.3)
 
-glue(f, {"vo01": ["Same list", "as cigarettes?", "just as deadly."], "vo02": ["cancer agency,", "top group,", "tobacco smoke.", "how sure", "how big the harm."],
-         "vo03": ["into the bed:", "mostly UVA,", "the long rays.", "ten to fifteen times", "the midday sun."], "vo04": ["started young.", "before thirty-five", "more than half."],
-         "vo05": ["whole countries", "commercial tanning beds", "that same year,", "switched its own off."], "vo06": ["the long rays", "the top layer,", "as thin as paper."],
-         "vo07": ["Same list", "as cigarettes,", "size of harm,", "same certainty."], "vo08": ["Next season:", "bath fingers", "your arm?"]})
+glue(f, {"vo01": ["Same list", "as cigarettes?", "Processed meat"], "vo02": ["top group", "cancer agency,", "equally dangerous:", "how sure"],
+         "vo03": ["mostly UVA,", "the long rays.", "ten to fifteen times", "the midday sun."], "vo04": ["started young.", "before thirty-five", "more than half."],
+         "vo05": ["Whole countries", "every commercial bed", "Brazil banned"], "vo06": ["those long rays", "the top layer,", "as thin as paper."],
+         "vo07": ["years before", "Same list", "as cigarettes:", "same harm,", "same certainty."], "vo08": ["Next season:", "bath fingers", "your arm?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "tone": TONE, "trans": [],
-    "bio": {"ux": UX, "sx": SX, "paper_um": PAPER_UM, "epi_um": EPI_UM, "sc_um": SC_UM, "rows": ROWS, "gran_um": GRAN_UM, "spin_um": SPIN_UM, "basal_um": BASAL_UM},
-    "cam": CAM, "cue": CUE, "gauge": GAUGE, "plates": PLATES, "bed": BED, "uvd": UVD, "rays": RAYS,
-    "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
+    "bio": {"paper_um": PAPER_UM, "epi_um": EPI_UM},
+    "cam": CAM, "cue": CUE, "cut": CUT, "gauge": GAUGE, "plate": PLATE, "bed": BED, "uvd": UVD, "rays": RAYS,
+    "badges": BADGES, "counters": COUNTERS, "tags": TAGS, "labels": [], "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": CAPS,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
@@ -149,31 +147,27 @@ film = {
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title"})
 ev.append({"t": t_end, "kind": "signature", "tag": "end"})
-for L in LABELS:
-    ev.append({"t": L["t0"], "kind": "label", "tag": L["id"]})
 for c in COUNTERS:
     ev.append({"t": c["t0"], "kind": "counter.show", "tag": c["id"]})
 for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
-    {"t": CUE["most"], "kind": "cell.land", "tag": "shutter-0"},
-    {"t": PLATES["list"]["lit"], "kind": "reveal", "tag": "list-lit"},
-    {"t": PLATES["list"]["rank"], "kind": "cell.land", "tag": "rank"},
-    {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "into-bed"},
-    {"t": BED["on"][0], "kind": "zap", "tag": "tubes-on"},
-    {"t": PLATES["rr"]["before"], "kind": "reveal", "tag": "rr"},
-    {"t": B["whoa"]["t0"], "kind": "cell.land", "tag": "shutter"},
-    {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
-    {"t": UVD["brazil"][0], "kind": "cell.land", "tag": "brazil"},
-    {"t": UVD["off"][1] - 0.4, "kind": "cell.land", "tag": "australia-off"},
-    {"t": B["toscale"]["t0"], "kind": "scale.jump", "tag": "into-section"},
+    {"t": PLATE["lit"]["Processed meat"], "kind": "reveal", "tag": "list-meat"},
+    {"t": PLATE["rank"], "kind": "cell.land", "tag": "rank"},
+    {"t": CUT["bed"], "kind": "scale.jump", "tag": "into-bed"},
+    {"t": BED["flare"][0], "kind": "zap", "tag": "tubes-flare"},
+    {"t": CUT["uv"], "kind": "cell.land", "tag": "shutter"},
+    {"t": CUT["uv"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
+    {"t": UVD["australia"][0], "kind": "cell.land", "tag": "australia-off"},
+    {"t": UVD["brazil"][0] + 0.2, "kind": "cell.land", "tag": "brazil-off"},
+    {"t": CUT["section"], "kind": "scale.jump", "tag": "into-section"},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-epi"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
-    {"t": B["takeaway"]["t0"], "kind": "scale.jump", "tag": "back-to-list"},
+    {"t": CUT["list2"], "kind": "scale.jump", "tag": "back-to-list"},
+    {"t": PLATE["sun"], "kind": "reveal", "tag": "list-sun"},
 ]
 cues_file = HERE / "build" / f"cues-{ID}-9x16.json"
-shown = {}
 if cues_file.exists():
     cj = json.loads(cues_file.read_text())
     pic = {e.get("tag"): e for e in cj.get("events", [])}
@@ -181,17 +175,14 @@ if cues_file.exists():
         p = pic.get(e.get("tag"))
         if p and p.get("pos") and e["kind"] in ("label", "counter.show"):
             e["pos"] = p["pos"]
-    shown = {k: v for k, v in (cj.get("shown") or {}).items() if k.startswith("l-") and v > 0}
 sheet = {"duration": f.duration, "fps": FPS, "preset": "outerlayer-slide",
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),
          "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}
-if shown:
-    sheet["shown"] = shown
 
 (HERE / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False))
 (HERE / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
-print(f"film.json: {f.duration:.2f} s, {len(SHOTS)} shots, {sum(len(k) for k in CAM.values())} camera keys, {len(LABELS)} labels, "
-      f"{len(BADGES)} badges, {len(COUNTERS)} counters, {len(CAPS)} caption pages, end card {t_end:.2f} s")
+print(f"film.json: {f.duration:.2f} s, {len(SHOTS)} shots, {len(BADGES)} notes, {len(COUNTERS)} counters, {len(TAGS)} tags, "
+      f"{len(CAPS)} caption pages, end card {t_end:.2f} s")
 print("  shots " + " · ".join(f"{s['name']} {s['at']:.2f}" for s in SHOTS))
-print(f"sheet.json: {len(sheet['events'])} events" + (f", {len(shown)} shown times from the picture" if shown else ""))
+print(f"sheet.json: {len(sheet['events'])} events")

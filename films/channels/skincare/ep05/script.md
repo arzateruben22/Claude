@@ -24,13 +24,13 @@ Flow (WRITING.md, 29 Oct): one thread from the hook's "Which hand aged?" to the 
 answered by "the skin kept count". The voice carries the meaning ("four and a half years", "ten more years", "about
 half", "a fifth of a paper") and the screen carries the specifics (Nambour 1992–96, 1,621 adults, SPF 15+,
 relative odds 0.76 [0.59–0.98], HR 0.50 [0.24–1.02], 11 vs 22, 77% vs 33%, Hughes et al. 2013, Green et al. 2011,
-2 mg/cm², 20 µm, 100 µm paper). The picture changes scale with the ideas: two hands → a town map that splits by
-chance → a silicone cast's fine lines → the same skin under an ultraviolet camera → a ten-year tally → the gauge →
-the two hands again.
+2 mg/cm², 20 µm, 100 µm paper). The picture (look test 2, 2 Nov) holds three hero places: one patch of skin, half under sunscreen and half bare
+(the macro; the UV switch shows what the eye misses) → the silicone cast of the skin's lines → the stained micrograph
+under the ten-year tally → the macro's film beside the gauge → the hook's macro again.
 
 Labels: at most two on screen at a time; captions carry the words. Each beat header lists the labels that stay.
 
-Honesty, on screen: the hands are a "model, not a photo", never a before/after of a real person; the UV view is an
+Honesty, on screen: the macro and the cast are a "model, not a photo", never a before/after of a real person; the UV view is an
 "illustration · not trial data"; the ageing trial is "4.5 years"; the melanoma tally is badged "small numbers · not
 quite significant"; the film thickness is an "estimate" (lab test dose). The film describes the evidence and never
 tells the viewer what to do or what to buy. No product or brand.
@@ -39,25 +39,25 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep05 --segment toscale`.
 
-## hook {shot: the two model hands, side by side, the same to the eye · labels: badge "model, not a photo" · title "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5.5 s)
+## hook {shot: the sunscreen macro, one patch of skin, left half under sunscreen, right bare, the same to the eye · labels: badge "model, not a photo" · title "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5.5 s)
 vo: Which hand *aged*? In four and a half years, one showed no detectable ageing. {c5}
 
-## normal {shot: a scale jump out to a model town that splits by chance · labels: spine "Nambour · 1992" · badge "model, not a map" · picture-only 0.5 s · energy: 0.45} (5.5–17.5 s)
+## normal {shot: a long crane along the macro's seam, dust in a light shaft; "daily" on the screened half · labels: spine "Nambour · 1992" · badge "model, not a photo" · picture-only 0.5 s · energy: 0.45} (5.5–17.5 s)
 vo: They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every *morning*. {c1} Head, neck, arms and hands, before the day began. {c2}
 
-## change {shot: the reveal on the other half of the town, then down to a hand's silicone cast · labels: spine "ageing trial: 4.5 years" · plate "relative odds 0.76 (0.59–0.98) · Hughes et al., 2013" · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
+## change {shot: close on the bare half, patches of sunscreen coming and going, then the silicone cast of the skin's lines · labels: spine "ageing trial: 4.5 years" · plate "relative odds 0.76 (0.59–0.98) · Hughes et al., 2013" · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
 vo: It was never sunscreen against *none*: the others could use it whenever they pleased, or not at all. {c3} Researchers read the fine lines in silicone casts of hands. {c4}
 
-## why {shot: the reveal on the same hand under an ultraviolet camera · labels: badge "illustration · not trial data" · spine holds · picture-only 2.2 s · energy: 0.5} (29–42 s)
+## why {shot: the macro, a warm flush, then the UV switch (a cyan scan line) on "But" · labels: badge "illustration · not trial data" · spine holds · picture-only 2.2 s · energy: 0.5} (29–42 s)
 vo: It's easy to think sun damage is the burn you feel. {-} But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the *surface*. {c6}
 
-## whoa {shot: the reveal on a ten-year tally over the town, 11 against 22 · labels: spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3.2 s · energy: 0.8} (42–55 s)
+## whoa {shot: the micrograph cut face of the dermis, the ten-year tally over it, 11 against 22 · labels: badge "micrograph · healthy stained skin" · spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3.2 s · energy: 0.8} (42–55 s)
 vo: And they were followed for ten more years. {c7} Melanoma, the most serious skin cancer, came out at about *half*, in numbers too small to be sure. {c9,c13}
 
-## toscale {segment: toscale · the reveal on a thin film beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (55–62 s)
+## toscale {segment: toscale · the macro grazing over the screened half's satin film, the gauge beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (55–62 s)
 vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thickness*. {c10}
 
-## takeaway {shot: back to the hook's two hands (the loop) · labels: none beyond the badge (the adherence figures stay off screen until confirmed from the paper itself) · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
+## takeaway {shot: back to the hook's macro (the loop), the UV switch on "skin" · labels: none beyond the badge (the adherence figures stay off screen until confirmed from the paper itself) · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
 vo: So, which hand aged? Both groups missed mornings; one missed far fewer, and the skin kept *count*. {c12,c11}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
