@@ -67,7 +67,7 @@ CAM = {
     # push on "Half", and a slow drift to the thin film
     "pair": [{"t": A("vo03:Flip", -0.2), "target": [-36, 10, 0], "el": 34, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},   # opens on the SPF 50 film at the same size (a match), then pulls out
              {"t": A("vo03:Flip", 0.9), "target": [0, 0, 0], "el": 46, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 600, "az": 0, "ease": "inout2"},
-             {"t": CUE["barely"], "target": [0, 0, 0], "el": 40, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 500, "az": 6, "ease": "inout2"},
+             {"t": CUE["barely"], "target": [0, 0, 0], "el": 40, "fov": 30, "fx": 0.5, "fy": 0.38, "dist": 500, "az": 6, "ease": "inout2"},   # the glows above the caption
              {"t": CUE["in"], "target": [0, -30, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 540, "az": 4, "ease": "inout2"},
              {"t": CUE["half"] + 0.6, "target": [0, -34, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 470, "az": 2, "ease": "inout2"},
              {"t": A("vo04:That's"), "target": [0, -34, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 450, "az": 0, "ease": "sine"},
@@ -78,8 +78,8 @@ CAM = {
              {"t": B["whoa"]["t0"] + 1.4, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 400, "az": -11, "ease": "inout2"},
              {"t": t_thin1, "target": [0, 0, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 350, "az": -8, "ease": "inout2"},
              {"t": B["toscale"]["t0"], "target": [0, -2, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": 0, "ease": "sine"},
-             {"t": B["toscale"]["t0"] + 2.6, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 620, "az": 4, "ease": "inout2"},   # the film and the dead layer above the caption plate, right of the card
-             {"t": B["takeaway"]["t0"] - 0.7, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.72, "fy": 0.36, "dist": 610, "az": 5, "ease": "sine"},
+             {"t": B["toscale"]["t0"] + 2.6, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 620, "az": 4, "ease": "inout2"},   # the film and the dead layer above the caption plate, right of the card
+             {"t": B["takeaway"]["t0"] - 0.7, "target": [0, -10, 0], "el": 12, "fov": 30, "fx": 0.76, "fy": 0.36, "dist": 610, "az": 5, "ease": "sine"},
              {"t": B["takeaway"]["t0"], **HOOK, "dist": 680, "az": 4, "ease": "inout2"}],   # the card gone, a pull-back to the pair's framing: the cut is a match
     "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 660, "az": 4},
               {"t": CUE["in2"], **HOOK, "fy": 0.28, "dist": 560, "az": -4, "ease": "inout2"},   # the glows above the caption plate on "half the light"

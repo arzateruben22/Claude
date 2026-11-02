@@ -116,7 +116,7 @@ window.seek = function (t) {
   RR.set(t, pair ? { ...R, pass: UV.pass100, x0: 36 } : HIDE);
   A.film_l = [-36, F + 1, 23]; A.film_r = [36, F + 1, 23];
   // the trails: on from frame 0 in the hook, drawn in on "sliver" (2, then 1), lit on "gets in" and on the takeaway's "half"
-  const trail = shot === "hook" ? 1 : shot === "pair" ? E.inout2(seg(t, CUE.sliver - 0.2, CUE.sliver + 0.8)) : shot === "close" ? E.inout2(seg(t, CUE.half2 - 0.3, CUE.half2 + 0.6)) : 0;
+  const trail = shot === "hook" ? 1 : shot === "pair" ? E.inout2(seg(t, CUE.both - 0.1, CUE.both + 0.4)) : shot === "close" ? E.inout2(seg(t, CUE.half2 - 0.3, CUE.half2 + 0.6)) : 0;
   const trailOp = pair ? (0.55 + 0.45 * Math.max(inLit, shot === "hook" ? 1 : 0, shot === "pair" ? fadeIn(t, CUE.both - 0.2, 0.5) : 0)) : 0;   // full strength from "both"
   // across the pair→thin cut one SPF 50 trail stays alive (same place on the block), fading as the film thins
   const carry = shot === "thin" ? 1 - fadeIn(t, B0.whoa + 0.4, 0.8) : 0;
