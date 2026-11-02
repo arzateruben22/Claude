@@ -2,12 +2,11 @@
 
 Back of the Envelope No. 002, "Everyone, one place": `out/envelope-002-9x16.mp4` (74.4 s, QA PASS; `scorecard.md`).
 
-1. **Claims.** A demographer or physicist works through `CLAIMS-REVIEW.md`. All 9 claims were checked from a search
+1. **Claims.** A demographer or physicist works through `CLAIMS-REVIEW.md`. All 10 claims were checked from a search
    excerpt only, so a person opens each source (UN World Population Prospects 2024, ScienceAlert on crowd density,
    Britannica on Greater London, Nations Online on Earth's land, Walpole et al. 2012, Biology Insights on body
    density) and ticks each row. The episode does not post until every row is ticked. While there:
-   - The 828 m tower height (Burj Khalifa, Guinness World Records) is cited only in claim c7's note; it has no source
-     link of its own. Add one, or confirm the note is enough.
+   - The 828 m tower height is claim c10 (the CTBUH's 2010 ratification, reported by KHL Group; search excerpt only).
    - Body density (c8) rests on popular-science pages (0.97–1.06 g/cm³); the ledger asks for a physiology text.
    - The spine's "≈ 2,100 km²" at 4 per m² (`calc.py`: 2,050, rounded half up) has no claim row; it follows from c1
      and c4.
@@ -48,6 +47,5 @@ Back of the Envelope No. 002, "Everyone, one place": `out/envelope-002-9x16.mp4`
 
 Nothing has been posted.
 
-TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a source link for the 828 m
-tower height, a disclaimer line if wanted ("standing room only: not a claim about resources"), the reviewer's name
+TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted ("standing room only: not a claim about resources"), the reviewer's name
 and sign-off date.

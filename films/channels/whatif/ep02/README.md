@@ -22,7 +22,7 @@ posts.
 | File | What it is |
 |---|---|
 | `calc.py` | The numbers: the area at 2 and 4 per m², the square's side, Greater Londons, the share of Earth's land, the bodies' volume and cube side, and the cube at the two density bounds. `python3 calc.py` prints them; `compile.py` reads its `V` and `RESULTS` |
-| `script.md`, `claims.json` | The words (Flow standard) and the claims ledger (9 claims, 6 sources) |
+| `script.md`, `claims.json` | The words (Flow standard) and the claims ledger (10 claims, 7 sources) |
 | `voice.py`, `vo/` | The voice: one call and speed per sentence, measured pauses (0.32 s; 0.55 s after a question). 8 WAVs, `lines.json` (speeds, gaps, model hashes), `words.json` (word timings). No `pron.json`: no special pronunciations |
 | `compile.py` → `film.json`, `sheet.json` | The direction (shots, beats, camera, crowd keys, spine, labels, badges, pill, captions, end card) and the studio's cue sheet (preset `envelope-working`) |
 | `scene.mjs` | The picture, a pure function of t, on the channel set `../set/` (desk, crowd, globe, anchor, tower, spine, motif) |
@@ -79,12 +79,11 @@ The grid is 50 BPM (A lydian). Captions: 25 pages, burned in.
 
 ## Claims and TODOs
 
-- 9 claims in `claims.json`, all status `ok`, **all checked from a search excerpt only**. A demographer or physicist
+- 10 claims in `claims.json`, all status `ok`, **all checked from a search excerpt only**. A demographer or physicist
   opens each of the 6 sources (UN World Population Prospects 2024, ScienceAlert on crowd density, Britannica on
   Greater London, Nations Online on land area, Walpole et al. 2012, Biology Insights on body density) and ticks
   `review/CLAIMS-REVIEW.md`. `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep02 --sources` prints
-  the post's source list. The tower's 828 m (Burj Khalifa, Guinness World Records) is cited in claim c7's note only,
-  not as a source row.
+  the post's source list. The tower's 828 m is claim c10 (the CTBUH's 2010 ratification, as reported by KHL Group).
 - TODO: channel handle and trademark checks (bible); the posting accounts; a pinned sources page; the AI-voice label
   and "Voice: synthetic" in the post. No phone numbers, emails, prices or hours appear in this episode.
 

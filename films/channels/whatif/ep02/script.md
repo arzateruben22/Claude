@@ -19,7 +19,7 @@ vo: Now bring everyone in, and the crowd keeps spreading, street after street, u
 vo: You could squeeze us tighter, but packed twice as close, a crowd starts to move like a fluid, and that's when it turns *dangerous*. {c4} So we keep the room, and all of humanity still covers just two or three *Londons*. {c5}
 
 ## whoa {shot: pull back to the whole planet's land, the square a single marker dot; then the crowd folds into a cube beside a tower · picture-only 3 s · energy: 0.75} (46–58 s)
-vo: From orbit, you'd struggle to find us. {c6} And packed like water, every body would fit in a cube a little shorter than the world's *tallest tower*. {c7}
+vo: From orbit, you'd struggle to find us. {c6} And packed like water, every body would fit in a cube a little shorter than the world's *tallest tower*. {c7,c10}
 
 ## work {segment: work · the cube's sum on the card: bodies × mass ÷ density, the density range below · energy: 0.5} (58–63.5 s)
 vo: Nudge how dense we are either way, and that cube barely changes *size*. {c8}

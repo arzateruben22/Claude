@@ -74,7 +74,7 @@
   "accessed": "2026-10-30",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed in calc.py: vol_m3 = 5.08e+08, cube_m = 798 (Burj Khalifa 828 m: Guinness World Records). 62 kg is the world's average ADULT mass (Walpole 2012); children weigh less, so this is an upper bound."
+  "note": "Computed in calc.py: vol_m3 = 5.08e+08, cube_m = 798 (the 828 m tower height is c10). 62 kg is the world's average ADULT mass (Walpole 2012); children weigh less, so this is an upper bound."
  },
  {
   "id": "c8",
@@ -97,5 +97,16 @@
   "verified_via": "search excerpt",
   "status": "ok",
   "note": "The takeaway concerns standing room only: it makes no claim about resources, food or housing (a person should check the wording reads that way)."
+ },
+ {
+  "id": "c10",
+  "sentence": "And packed like water, every body would fit in a cube a little shorter than the world's tallest tower.",
+  "claim": "The world's tallest building (the Burj Khalifa, Dubai) is 828 m tall, the height ratified by the Council on Tall Buildings and Urban Habitat (CTBUH) in 2010. The film shows a generic, unnamed stepped tower at that height, drawn wider than true (badged).",
+  "source_url": "https://www.khl.com/news/ctbuh-ratifies-height-of-burj-khalifa/55351.article",
+  "source_title": "'CTBUH ratifies height of Burj Khalifa' (KHL Group, 2010)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "ok",
+  "note": "Excerpt: CTBUH confirmed the official building height of the Burj Khalifa at 828 m (2,716.54 ft) after examining drawings submitted by the developer. CTBUH's own Skyscraper Center entry also lists 828 m (seen in search results only)."
  }
 ]
