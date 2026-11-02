@@ -119,8 +119,8 @@ BADGES = [
 ]
 SPINE = [0.6, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
 COUNTERS = [
-    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] + 0.3, "t1": CUE["dozen"] - 0.4, "at": [0.36, 0.135]},
-    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": [0.36, 0.135]},
+    {"id": "c-q", "label": "pigment cells", "fmt": "text", "text": "? · ? · ?", "t0": B["normal"]["t0"] + 0.3, "t1": CUE["dozen"] - 0.4, "at": [0.36, 0.19]},
+    {"id": "c-unit", "label": "pigment cell : skin cells", "fmt": "text", "text": "≈ 1 : 36", "t0": CUE["dozen"], "t1": CUE["count"] - 0.4, "at": [0.36, 0.19]},
     {"id": "c-same", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": CUE["same"] - 0.3, "t1": B["change"]["t0"], "at": SPINE},
     {"id": "c-uv", "label": "skin colour follows", "fmt": "text", "text": "UV", "t0": CUE["colour"], "t1": B["toscale"]["t0"], "at": SPINE},
     {"id": "c-end", "label": "per mm², average", "fmt": "text", "text": "≈ 955", "t0": B["takeaway"]["t0"] + 1.2, "t1": t_end - 0.7, "at": SPINE},
@@ -148,7 +148,7 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE
          "sc_um": GAP_UM, "paper_um": PAPER_UM, "bar": "gap"}
 
 TITLE = {"series": "Outer Layer · No. 005", "title": "Same cells, every *colour*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cells?", 0.35)}
-END = {"title": "Next layer: skin answers the cold, too. Why goosebumps, with almost no *fur*?", "follow": "Outer Layer · No. 006",
+END = {"title": "Next layer: why goosebumps, with almost no *fur*?", "follow": "Outer Layer · No. 006",
        "next": "Same body site, every skin colour: about the same number of pigment cells (≈ 955 per mm², averaged across sites; JAAD meta-analysis, 2017). Narration: synthetic voice (AI)."}
 POSTER = A("vo07:sky.", 0.3)
 

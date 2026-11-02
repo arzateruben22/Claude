@@ -168,7 +168,7 @@ window.seek = function (t) {
     const p = project(camera, [s.x, -112, 23], W, H);   // just under the basal row
     const el = tally[i];
     el.textContent = `${["light", "medium", "deep"][i]}: ${n}`;
-    el.style.left = `${Math.min(0.84 * W, Math.max(0.16 * W, p.x)).toFixed(1)}px`;   // inside the safe box
+    el.style.left = `${Math.min(0.76 * W, Math.max(0.17 * W, p.x)).toFixed(1)}px`;   // inside the safe box
     el.style.top = `${(0.5 * H).toFixed(1)}px`; el.style.transform = "translate(-50%, 0)";   // a fixed band under the basal rows in the count shot
     el.style.opacity = (shot === "trio" ? fadeIn(t, CT[0] - 0.1, 0.3) * (1 - fadeIn(t, SH.grains - 0.5, 0.4)) : 0).toFixed(3);
   });

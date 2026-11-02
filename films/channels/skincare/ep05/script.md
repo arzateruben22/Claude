@@ -48,7 +48,7 @@ vo: So, which has more? None of them. {c13} Same cells, every colour, each answe
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68–74.5 s)
 vo: Next: skin answers the cold, too. Why goosebumps, with almost no *fur*? {-}
-end card: "Next layer: why do we still get goosebumps, with almost no fur?" · "Outer Layer · No. 006"
+end card: "Next layer: why goosebumps, with almost no fur?" · "Outer Layer · No. 006"
 
 ## Notes
 - Every claim was checked through search excerpts only (the proxy blocks page fetches); see `claims.json`. A
