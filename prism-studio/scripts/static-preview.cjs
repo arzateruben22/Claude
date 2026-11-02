@@ -108,7 +108,7 @@ document.addEventListener("click", function (e) {
   if (x) { e.preventDefault(); x.setAttribute("title", "Off in the read-only preview"); }
 }, true);
 </script>`;
-  const css = `<style>.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}</style>`;
+  const css = `<style>.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}@media (max-width:719px){.static-banner{position:static;padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px;font-size:11px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body:has(.static-banner) .reel{height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px))}body:has(.static-banner) .slide{--screen-h:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px));--top-h:60px}body:has(.static-banner) .slide-top{padding-top:0}}</style>`;
 
   const written = [];
   for (const [p, html0] of pages) {
