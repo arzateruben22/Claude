@@ -481,7 +481,13 @@ Each phase ends with its checks passing in Playwright (headless Chromium, SwiftS
 - **Progress.**
   - [x] P1a (2026-11-02): Lot 57 on foot: the venue, the avatar, controls, collisions and test hooks
     (35 of 35 checks; see `PROJECT_OC_PROGRESS.md`).
-  - [ ] NPCs in talking groups, staff and the crowd curve at full scale.
+  - [x] P1b (2026-11-02): things to do: tap to go (seats, people, counters), Sit and Stand, Order at the bar and both
+    trucks with a pick-up beat and the item held afterwards, Join a group and Leave, nothing through a wall. Two
+    groups of three regulars, the bartender and two cooks as the first people (see `PROJECT_OC_PROGRESS.md`;
+    repaired after review the same day: the cooks drawn on Low, a tap on another group from inside a circle, the
+    bar's ends, the regulars' clothes).
+  - [ ] NPCs in talking groups, staff and the crowd curve at full scale (P1b's two groups and three staff are the
+    seed: `src/onfoot/lot57/npcs.ts`).
 
 - **Deliverables.**
   - Lot 57 built in code: the Shed, the yard, string lights, the lawn, trucks, the lot and the sign. The rest of the

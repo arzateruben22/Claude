@@ -91,7 +91,7 @@ export class WalkGrid {
   }
 
   /** work out the free cells: the region eroded by the body's radius, less everything within it of a collider */
-  computeFree(set: ColliderSet, dynamicOnly = false) {
+  computeFree(set: ColliderSet, dynamicOnly = false, people: { x: number; z: number; r: number }[] = []) {
     const n = this.nx * this.nz;
     if (!dynamicOnly || !this.staticFree) {
       const f = new Uint8Array(n);
@@ -105,6 +105,13 @@ export class WalkGrid {
     }
     this.free = this.staticFree.slice();
     for (const o of set.all) if (o.on && o.dyn) this.carve(this.free, o);
+    // people standing in groups: tap to go plans round them (they're soft to the body: player.ts)
+    for (const p of people) {
+      const R = RADIUS + p.r + 0.02;
+      for (let j = Math.max(0, this.iz(p.z - R)); j <= Math.min(this.nz - 1, this.iz(p.z + R)); j++)
+        for (let i = Math.max(0, this.ix(p.x - R)); i <= Math.min(this.nx - 1, this.ix(p.x + R)); i++)
+          if ((this.cx(i) - p.x) ** 2 + (this.cz(j) - p.z) ** 2 < R * R) this.free[j * this.nx + i] = 0;
+    }
   }
   private carve(f: Uint8Array, o: Collider) {
     const R = RADIUS + 0.02, h = { d: 0, nx: 0, nz: 0 };

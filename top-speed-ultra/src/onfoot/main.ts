@@ -1,9 +1,11 @@
-// Lot 57 on foot: Phase 1a of PROJECT_OC_ON_FOOT.md, a standalone page (not yet the game). Our own fictional taproom
+// Lot 57 on foot: Phase 1 of PROJECT_OC_ON_FOOT.md, a standalone page (not yet the game). Our own fictional taproom
 // and yard at the real spot on East Orangewood Avenue in Anaheim, built in code; the rest of the block and the
 // Orangewood frontage from OpenStreetMap through Overture (ODbL, credited on screen). You walk it as your driver from
 // the game, in first or third person, by touch, keyboard or gamepad, with collisions against every wall, fence,
 // table and truck. The sky is the game's (the real sun for the chosen hour); the crowd level is simulated from the
-// time and day and labelled so. Test hooks: window.__onfoot (see the bottom of this file).
+// time and day and labelled so. P1b adds the things to do: tap to go to a seat, a group or a counter; Sit and
+// Stand; Order at the bar or a truck window and Pick up what's made (held in your hand afterwards); Join a group of
+// regulars and Leave (lot57/doings.ts, lot57/npcs.ts). Test hooks: window.__onfoot (see the bottom of this file).
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -24,12 +26,15 @@ import { buildTrees } from './lot57/trees';
 import { ColliderSet, Collider, exportColliders, rayHit } from './lot57/collide';
 import { truckWheel } from './lot57/wheels';
 import { WalkGrid, RADIUS } from './lot57/walkgrid';
-import { Player, STEP, View } from './lot57/player';
+import { Player, STEP, View, Goal } from './lot57/player';
 import { Input, Action } from './lot57/input';
 import { Hud, loading, doneLoading } from './lot57/hud';
 import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
 import * as C from './lot57/clock';
 import { ORIGIN, EDGE, PLAN, inVenue, inShed, toLocal, toGame } from './lot57/coords';
+import { Items, ItemId, MENUS, formOf } from './lot57/items';
+import { Crowd, StaffPost } from './lot57/npcs';
+import { Doings, ActLabel } from './lot57/doings';
 
 type Quality = 'low' | 'high' | 'ultra';
 const PRESET: Record<Quality, { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number }> = {
@@ -88,7 +93,7 @@ async function main() {
   env.sun.shadow.camera.layers.enable(1);            // your own body casts a shadow in first person (layer 1)
 
   // ------------------------------------------------------------------------------------------ build the world
-  const steps: [string, number][] = [['Painting the textures', 0.08], ['Laying out Orangewood and the block', 0.2], ['Building the Shed and the yard', 0.38], ['Striping the lot', 0.46], ['Baking the night lights', 0.6], ['Mapping where you can walk', 0.72], ['Your driver', 0.8], ['Your driver, up close', 0.88], ['Parking cars', 0.95]];
+  const steps: [string, number][] = [['Painting the textures', 0.08], ['Laying out Orangewood and the block', 0.2], ['Building the Shed and the yard', 0.38], ['Striping the lot', 0.46], ['Baking the night lights', 0.6], ['Mapping where you can walk', 0.72], ['Your driver', 0.78], ['Your driver, up close', 0.84], ['The regulars and the staff', 0.9], ['Parking cars', 0.96]];
   let si = 0; const stage = async () => { loading(steps[si][1], steps[si][0] + '…'); si++; await nextFrame(); await nextFrame(); };
   const t0 = performance.now();
   await stage();
@@ -177,7 +182,9 @@ async function main() {
   // a crosswalk is walkable even where a road ribbon crosses it; a sidewalk on top of a road edge is walkable too
   for (let k = 0; k < grid.road.length; k++) if (grid.region[k] && grid.road[k]) grid.road[k] = 0;
   let dynamic = [...venue.closedOnly, ...venue.openOnly];
-  const refreshDynamic = () => { set.all = set.all.filter((o) => !o.dyn || dynamic.includes(o)); for (const c of parked.colliders) set.all.push(c); set.rebuild(); grid.computeFree(set, true); };
+  // (the people standing in groups are planned round, not collided with: refreshPeople, below)
+  let peopleNow: () => { x: number; z: number; r: number }[] = () => [];
+  const refreshDynamic = () => { set.all = set.all.filter((o) => !o.dyn || dynamic.includes(o)); for (const c of parked.colliders) set.all.push(c); set.rebuild(); grid.computeFree(set, true, peopleNow()); };
   set.rebuild(); grid.computeFree(set);
   await stage();
 
@@ -220,6 +227,19 @@ async function main() {
   player.view = q.get('view') === 'third' ? 'third' : 'first';
   await stage();
 
+  // ------------------------------------------------------------------------------------------ the regulars and staff
+  // A few groups of regulars talking in circles and the staff at the bar and the trucks (lot57/npcs.ts), built by
+  // the people builder at load (about a second each on a desktop CPU), so nothing is built mid-play.
+  const items = new Items(quality);
+  const posts: StaffPost[] = venue.counters.map((c) => ({ role: c.id === 'bar' ? 'bartender' : 'cook', counter: c.id, x: c.staff.x, y: c.staff.y, z: c.staff.z, face: c.staff.face, z0: c.staff.z0, z1: c.staff.z1, workFace: c.staff.workFace, workX: c.staff.workX, seeX: c.x + c.side * 0.3 }));
+  // (captions and reply chips go to the HUD, which is made below: wireCrowd)
+  let wireCrowd: (c: Crowd) => void = () => {};
+  const makeCrowd = (qq: Quality) => { const c = new Crowd(items, PRESET[qq].people, qq === 'ultra'); c.build(posts); c.car = choice.car; scene.add(c.root); wireCrowd(c); return c; };
+  let crowd = makeCrowd(quality);
+  scene.add(camera);                                   // the first-person held item rides on the camera
+  const peopleBlock: { x: number; z: number; r: number }[] = [];
+  await stage();
+
   // ------------------------------------------------------------------------------------------ the clock and crowd
   let live = !(q.has('day') || q.has('hour'));
   let clock: C.ClockState = live ? C.liveClock() : { day: C.parseDay(q.get('day') ?? 'Sat'), hour: clamp(Number(q.get('hour') ?? 21), 0, 23.99) };
@@ -233,6 +253,30 @@ async function main() {
     bloom.threshold = lerp(4.5, 0.88, night); bloom.strength = lerp(0.12, 0.32, night);
   };
   const hud = new Hud();
+  let inputRef: Input | null = null;
+  const rnd = rand(4242);
+  const doings = new Doings({
+    player, venue, set, items, hud, scene, camera, crowd: () => crowd, door: lot.door,
+    refreshPeople: () => { grid.computeFree(set, true, peopleNow()); },
+    inputEnabled: (on) => { if (inputRef) inputRef.enabled = on && !hud.paused; },
+    focusView: () => canvas.focus(), rand: rnd,
+  });
+  peopleNow = () => crowd.blockers(peopleBlock);
+  // what hides a person from you on Low: something full height (a wall, a building, a truck's body, a tank, a door),
+  // but not glass (the tank room's window), a wall's stretch with a window in it (the storefront, the tank-room window
+  // in the east wall), or the low planter walls, fences and gates you see over. (Acting on something is stricter:
+  // doings.ts blocksSight.)
+  const blocksView = (o: Collider) => o.tall && o.tag !== 'glass' && !o.see && !(o.k === 'circ' && o.r < 0.5);
+  wireCrowd = (c) => { c.onCaption = (who, text, sec) => hud.caption(who, text, sec); c.onReplies = (r) => hud.replies(r); c.occluded = (ax, az, bx, bz) => set.ray(ax, az, bx, bz, blocksView) < 1; };
+  wireCrowd(crowd);
+  // Ultra: the first of each group up close (lot57/npcs.ts buildCloseUps), built now rather than mid-play
+  let closeUpsPending = false;
+  const wantCloseUps = (qq: Quality) => {
+    if (qq !== 'ultra' || crowd.groups.every((g) => g.members[0]?.closeUp) || closeUpsPending) return;
+    closeUpsPending = true; hud.toast('Building the regulars up close…', 3);
+    requestAnimationFrame(() => requestAnimationFrame(() => { crowd.buildCloseUps(); closeUpsPending = false; }));
+  };
+  if (quality === 'ultra') crowd.buildCloseUps();
   const stateMeshes = (prefix: string) => world.children.filter((o) => o.name.startsWith(prefix));
   const applyClock = (firstTime = false) => {
     simDate = live ? new Date() : C.anaheimDate(clock.day, clock.hour);
@@ -246,6 +290,9 @@ async function main() {
     for (const o of stateMeshes('when-closed')) o.visible = !open;
     for (const c of venue.closedOnly) c.on = !open;
     for (const c of venue.openOnly) c.on = open;
+    // the regulars and the staff are here while Lot 57 is open (one group when it's quiet)
+    if (!open) doings.cancelAll();
+    crowd.setOpen(open, level === 'Quiet'); crowd.night = night > 0.5;
     mats.readerTex.draw(open ? `OPEN TILL ${C.closesAt(clock.day, clock.hour)}` : 'CLOSED', open ? 'Taproom · Yard · Trucks' : `Opens ${C.opensAt(clock.day, clock.hour)}`, open);
     // parked cars: a few overnight, more as the simulated crowd grows (seeded by the day and hour)
     parkedFill = [open ? clamp(0.12 + share * 0.92, 0, 0.96) : 0.05, clock.day * 100 + Math.floor(clock.hour)];
@@ -264,7 +311,9 @@ async function main() {
 
   // ------------------------------------------------------------------------------------------ rendering
   const pointLights: THREE.PointLight[] = [];
+  // (and a light under each truck's awning, so the cook at the window is lit for you, as the baked light lights the truck)
   const lightCandidates = [...venue.lightSpots.map((s) => ({ ...s, c: 0xffb56a, k: 0.9, inside: false })), ...venue.heaters.map((h) => ({ x: h.x, y: h.y, z: h.z, i: 6, c: 0xff8a40, k: 0.6, inside: false })),
+    ...venue.counters.filter((c) => c.id !== 'bar').map((c) => ({ x: c.x - 0.25, y: 2.7, z: (c.z0 + c.z1) / 2, i: 8, c: 0xffd2a0, k: 1.0, inside: false })),
     ...venue.insideLights.map((s) => ({ ...s, c: 0xffc58a, k: 0.8, inside: true }))];
   const applyQuality = (qq: Quality, rebuildPeople: boolean) => {
     const P = PRESET[qq];
@@ -290,12 +339,17 @@ async function main() {
     // a few real lights near you on High and Ultra (the yard's strings and heaters), so your driver is lit by them
     while (pointLights.length > P.lights) { const l = pointLights.pop()!; scene.remove(l); l.dispose(); }
     while (pointLights.length < P.lights) { const l = new THREE.PointLight(0xffb56a, 0, 15, 2); l.castShadow = false; scene.add(l); pointLights.push(l); }
+    crowd.ultra = qq === 'ultra'; items.setQuality(qq);
     if (rebuildPeople) {
+      // the regulars and staff from the other set of people (a few seconds: say so first)
+      doings.cancelAll();
+      scene.remove(crowd.root); crowd.dispose(); crowd = makeCrowd(qq); crowd.setOpen(open, level === 'Quiet'); refreshDynamic();
       buildAvatar(qq); player.person = person;
       for (const o of [...world.children]) if (o.name === 'trees') world.remove(o);
       plantTrees(world, trees, qq);
     }
     avatarKey = -1;
+    wantCloseUps(qq);
     if (wantsLod0(qq) && !lod0Ready && !lod0Pending) {
       // the close-up body isn't built yet (you came from Low): say so, let the toast paint, then build it
       lod0Pending = true; hud.toast('Building your driver up close…', 3);
@@ -319,7 +373,7 @@ async function main() {
       parked = new ParkedCars(lot.stalls, carQuality(qq), nearCars(qq), qq === 'ultra'); world.add(parked.group);
       parked.fill(...parkedFill); refreshDynamic();
     }
-    parked.near = nearCars(qq); parked.update(player.x, player.z, true);
+    parked.near = nearCars(qq); parked.nearDist = qq === 'low' ? 45 : Infinity; parked.update(player.x, player.z, true);
     hud.setQuality(qq);
     renderer.compile(scene, camera);
   };
@@ -361,27 +415,9 @@ async function main() {
     }
     dots.instanceMatrix.needsUpdate = true;
   };
-  const seatTaken = (s: Seat) => player.seat === s;
-  const nearSeat = () => {
-    let best: Seat | null = null, bd = 1.4;
-    for (const s of venue.seats) { if (seatTaken(s)) continue; const d = Math.min(Math.hypot(s.ax - player.x, s.az - player.z), Math.hypot(s.x - player.x, s.z - player.z) + 0.2); if (d < bd) { bd = d; best = s; } }
-    return best;
-  };
-  const nearCar = () => Math.hypot(lot.door.x - player.x, lot.door.z - player.z) < 1.8;
-  const avail: [string | null, string | null] = [null, null];
-  /** what the action buttons offer here (one shared pair, rewritten each call: no array per frame) */
-  const available = (): [string | null, string | null] => {
-    avail[0] = player.seat ? 'Stand' : nearCar() ? 'Drive' : nearSeat() ? 'Sit' : null; avail[1] = null;
-    return avail;
-  };
-  const doAction = (which: 1 | 2): string | null => {
-    const [a] = available();
-    if (which !== 1 || !a) return null;
-    if (a === 'Stand') { player.stand(); return 'stand'; }
-    if (a === 'Sit') { const s = nearSeat(); if (s) { player.sit(s); hud.fadeHint(); return 'sit'; } return null; }
-    if (a === 'Drive') { hud.toast('Lot 57 is on its own page for now. Driving out comes when it joins the game.', 4.5); return 'drive'; }
-    return null;
-  };
+  /** what the action buttons offer here (lot57/doings.ts: Pick up, Leave, Stand, Drive, Order, Join, Sit) */
+  const available = () => doings.available();
+  const doAction = (which: 1 | 2): string | null => { const a = available()[which - 1]; return doings.act(a); };
   const walkToCar = (skip: boolean) => {
     if (skip) { player.place(lot.door.x, lot.door.z); player.yaw = Math.PI; showPath(null); return true; }
     const p = player.goTo(lot.door.x, lot.door.z); showPath(p);
@@ -395,34 +431,66 @@ async function main() {
   hud.onQuality = (qq) => { if (qq !== quality) { const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); } };
   hud.onClock = (c) => { live = c.live; if (!c.live) clock = { day: c.day, hour: c.hour }; applyClock(); };
   hud.onMotion = (rm) => { reduced = rm; player.reducedMotion = rm; hud.setMotion(rm); };
-  hud.onPause = (on) => { input.enabled = !on; };
+  hud.onPause = (on) => { input.enabled = !on && !hud.orderOpen; };
+  inputRef = input;
   const ray = new THREE.Raycaster();
   // what a tap's ray can land on: the visible, opaque world, but not the trees' crowns and limbs (a tap through the
   // leaves goes to the ground beyond them)
   const tapMeshes = () => worldMeshes.filter((m) => m.visible && !(m.material as THREE.Material).transparent && !/-(leaves|bark)$/.test(m.name));
-  /** a tap on the screen: a seat sits you down, anywhere else on the ground walks you there */
+  /**
+   * A tap on the screen: a seat walks you there and sits you down; a person walks you up to their group (or, staff,
+   * to their counter); the bar or a truck's window walks you there and opens the order sheet; anywhere else on the
+   * ground walks you there. Only what you can see counts: a seat or a person behind a wall is farther along the ray
+   * than the wall it hits first, so the tap goes to the wall's foot instead (nothing is done through a wall).
+   */
+  let lastTap: { kind: 'seat' | 'group' | 'counter' | 'ground' | 'none'; id: string | number | null } = { kind: 'none', id: null };
+  const counterAt = (p: THREE.Vector3) => venue.counters.find((cs) => Math.abs(p.x - cs.x) < 0.9 && p.z > cs.z0 - 0.2 && p.z < cs.z1 + (cs.id === 'bar' ? 0.2 : 1.3) && p.y > 0.6 && p.y < 3.2) ?? null;
+  const walkToCounter = (cs: (typeof venue.counters)[number]) => {
+    lastTap = { kind: 'counter', id: cs.id };
+    if (doings.inRange(cs)) { doings.startOrder(cs); return [[player.x, player.z]] as P2[]; }
+    const z = clamp(player.z, cs.z0 + 0.3, cs.z1 - 0.3);
+    return tapGo(cs.x + cs.side * 1.1, z, { counter: cs.id });
+  };
   const tapScreen = (sx: number, sy: number) => {
     const ndc = new THREE.Vector2((sx / canvas.clientWidth) * 2 - 1, -(sy / canvas.clientHeight) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    // a seat close to the ray
-    let seat: Seat | null = null, sd = 0.45;
     const o = ray.ray.origin, d = ray.ray.direction, v = new THREE.Vector3();
+    const hits = ray.intersectObjects(tapMeshes(), false), h = hits[0], tWorld = h ? h.distance : Infinity;
+    // a seat the tap lands on (the ray's first hit is on or right by it) or passes very close to, no farther than
+    // what the ray hits first (its own stool or bench, at most)
+    let seat: Seat | null = null, sd = 0.45, st = Infinity;
     for (const s of venue.seats) {
-      v.set(s.x - o.x, s.y + 0.15 - o.y, s.z - o.z); const t = v.dot(d); if (t < 0.3 || t > 40) continue;
-      const dist = v.addScaledVector(d, -t).length(); if (dist < sd * (1 + t * 0.02)) { sd = dist; seat = s; }
+      v.set(s.x - o.x, s.y + 0.15 - o.y, s.z - o.z); const t = v.dot(d); if (t < 0.3 || t > 40 || t > tWorld + 0.45) continue;
+      const dist = v.addScaledVector(d, -t).length(), k = 1 + t * 0.02;
+      const onIt = h ? Math.hypot(h.point.x - s.x, h.point.y - s.y - 0.15, h.point.z - s.z) < 0.7 : false;
+      if (dist < sd * k && (onIt || dist < 0.3 * k)) { sd = dist; seat = s; st = t; }
     }
-    if (seat) return tapGo(seat.ax, seat.az, seat);
+    // a person, also in front of the first hit
+    const who = crowd.hit(ray.ray, Math.min(tWorld + 0.2, 60));
+    if (who && (!seat || who.t < st)) {
+      const g = who.npc.group;
+      if (g) {
+        lastTap = { kind: 'group', id: g.id };
+        const a = Math.atan2(player.x - g.cx, player.z - g.cz), r = g.r + 0.8;
+        return tapGo(g.cx + Math.sin(a) * r, g.cz + Math.cos(a) * r, null, true);
+      }
+      const cs = venue.counters[crowd.staff.indexOf(who.npc)];
+      if (cs) return walkToCounter(cs);
+    }
+    if (seat) { lastTap = { kind: 'seat', id: seat.id }; return tapGo(seat.ax, seat.az, { seat }); }
+    // the bar or a truck's window
+    if (h) { const cs = counterAt(h.point); if (cs && open) return walkToCounter(cs); }
     // the ground, or the foot of whatever wall the ray hits first
-    const hits = ray.intersectObjects(tapMeshes(), false);
     let gx: number, gz: number;
-    const h = hits[0];
     if (h && h.face && h.face.normal.y < 0.6) { const back = h.point.clone().addScaledVector(d, -0.5); gx = back.x; gz = back.z; }
     else if (h) { gx = h.point.x; gz = h.point.z; }
     else { if (d.y >= -1e-3) return null; const t = (0.0 - o.y) / d.y; gx = o.x + d.x * t; gz = o.z + d.z * t; }
+    lastTap = { kind: 'ground', id: null };
     return tapGo(gx, gz, null);
   };
-  const tapGo = (x: number, z: number, seat: Seat | null) => {
-    const p = player.goTo(x, z, seat ? { seat } : null);
+  const tapGo = (x: number, z: number, goal: Goal | null, keep = false) => {
+    if (!keep && (doings.joined || doings.pending)) doings.leave();
+    const p = player.goTo(x, z, goal);
     showPath(p);
     if (!p) hud.toast("Can't get there from here.", 2);
     hud.fadeHint();
@@ -462,6 +530,13 @@ async function main() {
   if (camQ && camQ.length === 6) { const [a, b] = [toLocal(camQ[0], camQ[2]), toLocal(camQ[3], camQ[5])]; fixedCam = { p: new THREE.Vector3(a[0], camQ[1], a[1]), t: new THREE.Vector3(b[0], camQ[4], b[1]) }; }
 
   const simStep = (stick: { x: number; y: number; run: boolean }) => { player.step(stick); };
+  /** the world's own time: the regulars, the staff, the order and the conversation (rendered or not) */
+  const worldStep = (dt: number, cam: THREE.Camera | null) => {
+    player.eyePos(crowd.you);
+    crowd.update(dt, cam, player);
+    doings.tick(dt);
+    player.soft = crowd.soft(player.soft);
+  };
   /** which level of detail shows, on which layer, and what casts the shadow: only when the view or preset changes */
   const applyAvatar = (third: boolean) => {
     const p = person; if (!p) return;
@@ -480,6 +555,8 @@ async function main() {
     // the walk cycle's cadence matched to the speed (the builder's walk is tuned for 1.25 m/s)
     const k = sp > 0.15 && !player.seat ? clamp(sp / 1.25, 0.6, 2.2) : 1;
     p.update(dt * k);
+    // holding something: the right hand comes up with it (the shadow shows it in first person too)
+    doings.poseAvatar(p, player.heading, player.view === 'third' || !!fixedCam);
     const third = player.view === 'third', key = (third ? 1 : 0) + (lod0Ready ? 2 : 0) + (quality === 'low' ? 0 : quality === 'high' ? 4 : 8);
     if (key !== avatarKey) { avatarKey = key; applyAvatar(third); }
   };
@@ -519,6 +596,7 @@ async function main() {
     }
     if (hintT > 0) { hintT -= dt; if (hintT <= 0 && hud.hintVisible) hud.fadeHint(); }
     if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(); } }
+    if (!hud.paused) worldStep(dt, camera);
     updateAvatar(dt);
     parked.update(player.x, player.z);
     // the camera
@@ -530,6 +608,14 @@ async function main() {
     else { const c = player.camera(camera); hideAvatar = c.hide; }
     if (person) person.group.visible = true;
     if (person && hideAvatar && player.view === 'third') person.group.visible = false;
+    // what you hold, in the corner of the first-person view; and the light on it (the string lights after dark,
+    // the Shed's pendants inside), as the venue's baked night light does
+    doings.placeFirst(player.view === 'first' && !fixedCam, reduced, dt);
+    {
+      const inside = inShed(player.x, player.z), yard = inVenue(player.x, player.z);
+      const k = (open ? (inside ? 0.16 + 0.22 * night : yard ? 0.34 * night : 0.08 * night) : 0.04 * night) * (pointLights.length ? 0.55 : 1);
+      items.lamp.value.setRGB(1.0 * k, 0.72 * k, 0.45 * k);
+    }
     // the sky, the sun's shadow box round you, the flare
     env.update(dt, live ? (liveDate.setTime(Date.now()), liveDate) : simDate);
     env.follow(_follow.set(player.x, player.y, player.z), camera, now / 1000, dt);
@@ -560,7 +646,7 @@ async function main() {
     if (a === 'act') doAction(1); else if (a === 'act2') doAction(2);
     else if (a === 'view') setView();
     else if (a === 'car') walkToCar(false); else if (a === 'carSkip') walkToCar(true);
-    else if (a === 'stand') { if (player.seat) player.stand(); }
+    else if (a === 'stand') { if (hud.orderOpen) doings.closeSheet(); else if (doings.joined || doings.pending) doings.leave(); else if (player.seat) player.stand(); }
   };
 
   // ------------------------------------------------------------------------------------------ test hooks
@@ -577,9 +663,12 @@ async function main() {
     clock() { return { day: clock.day, hour: clock.hour, label: C.fmtClock(clock), open, level, share: +share.toFixed(3), night: +night.toFixed(3) }; },
     setQuality(qq: Quality) { if (!PRESET[qq]) throw new Error('quality: low, high or ultra'); const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); return quality; },
     stats() {
+      const cs = crowd.stats();
       return {
-        // the crowd is phase 1b: no NPCs are built yet, and the page says so by showing none
-        npcs: 0, groups: 0, seated: 0, walkers: 0,
+        // the regulars in their groups and the staff (P1b); nobody sits or walks the sidewalks yet (the full crowd is
+        // the next milestone), so those are 0 by design
+        npcs: cs.npcs, groups: cs.groups, seated: 0, walkers: 0, staff: cs.staff, npcsDrawn: cs.drawn, npcTris: cs.tris, npcCalls: cs.calls, crowdBuildMs: cs.buildMs,
+        holding: doings.held ? doings.held.id : null,
         drawCalls: stats.calls, calls: stats.calls, triangles: stats.tris, simMs: +simMs.toFixed(3), frameMs: +frameMs.toFixed(1),
         quality, view: player.view, frames, open, crowd: level, share: +share.toFixed(3),
         parkedCars: parked.count, seats: venue.seats.length, colliders: set.all.filter((o) => o.on).length,
@@ -594,18 +683,60 @@ async function main() {
     /** tap to go to a ground point (game coordinates): the path's waypoints, or null */
     tap(x: number, z: number) { const [lx, lz] = L(x, z); const p = tapGo(lx, lz, null); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((s, c, i) => (i ? s + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     /** tap a seat (by id), through the same code as a finger on it: walks there by a path and sits you down */
-    tapSeat(id: number) { const st = venue.seats[id]; if (!st) return null; const p = tapGo(st.ax, st.az, st); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((sum, c, i) => (i ? sum + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
+    tapSeat(id: number) { const st = venue.seats[id]; if (!st) return null; const p = tapGo(st.ax, st.az, { seat: st }); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((sum, c, i) => (i ? sum + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     /** a tap on the screen at pixel (x, y), through the same code as a finger */
     tapScreen(x: number, y: number) { const p = tapScreen(x, y); return p ? { waypoints: p.length, goal: player.pathGoal?.seat ? `seat ${player.pathGoal.seat.id}` : 'ground' } : null; },
     /** the action button: returns what it did */
-    act() { const did = doAction(1); return { did, now: [...available()] }; },
+    act(which: 1 | 2 = 1) { const did = doAction(which); return { did, now: [...available()] }; },
+    // ---------------------------------------------------------------- P1b: things to do
+    /** the buttons now and what they'd act on (a seat id, a counter, a group) */
+    target() { available(); const t = doings.target; return { actions: [...doings.avail], seat: t.seat?.id ?? null, counter: t.counter?.id ?? null, group: t.group?.id ?? null }; },
+    /** press whichever button says `label`, if one does: what was done, or null */
+    press(label: ActLabel) { const a = available(), w = a[0] === label ? 1 : a[1] === label ? 2 : 0; return w ? { did: doAction(w as 1 | 2), now: [...available()] } : { did: null, now: [...a] }; },
+    /** the order sheet: open or not, its title and its items */
+    sheet() { return { open: hud.orderOpen, title: document.getElementById('orderTitle')?.textContent ?? '', items: Array.from(document.querySelectorAll<HTMLButtonElement>('#menuItems button')).map((b) => ({ id: b.dataset.item, text: b.textContent })), menus: Object.fromEntries(Object.entries(MENUS).map(([k, v]) => [k, v.items.map((i) => i.id)])) }; },
+    /** choose an item on the open sheet (through the same code as a finger on its button) */
+    pick(id: ItemId) { const b = document.querySelector<HTMLButtonElement>(`#menuItems button[data-item="${id}"]`); if (!b) return false; b.click(); return doings.order?.item === id; },
+    closeSheet() { doings.closeSheet(); return hud.orderOpen; },
+    /** a reply chip (0 or 1), through the chip's own click */
+    reply(i: 0 | 1) { const b = document.getElementById('reply' + i) as HTMLButtonElement | null; if (!b || !hud.repliesShown) return false; b.click(); return true; },
+    /** the order, what you hold, the circle you're in, what's on screen */
+    state() { return { ...doings.state(), caption: hud.captionText, replies: hud.repliesShown, status: hud.statusText, actions: [...available()], log: doings.log.slice(-12) }; },
+    talk() { const g = doings.joined; const t = g?.talk; return t ? { group: g!.id, stage: t.stage, n: t.n, caption: t.caption, replies: t.replies, log: t.log } : null; },
+    groups() {
+      return crowd.groups.map((g) => ({
+        id: g.id, label: g.label, active: g.active, ...G(g.cx, g.cz), r: g.r, you: g.you, speaker: g.speaker,
+        members: g.members.map((m, i) => ({ name: m.name, ...G(m.x, m.z), speaking: m.speaking, anim: m.anim, lod: m.lod, drawn: m.p.group.visible, holds: m.hold, facesSpeaker: g.speaker >= 0 && g.speaker !== i ? faces(m, g.members[g.speaker]) : null })),
+      }));
+    },
+    npcs() { return crowd.npcs.map((n) => ({ id: n.id, name: n.name, role: n.role, ...G(n.x, n.z), y: n.y, shown: n.shown, drawn: n.p.group.visible, lod: n.lod, anim: n.anim, holds: n.hold, group: n.group?.id ?? null })); },
+    counters() { return venue.counters.map((c) => ({ id: c.id, label: c.label, from: G(c.x, c.z0), to: G(c.x, c.z1), side: c.side, stand: G(c.x + c.side * 1.1, (c.z0 + c.z1) / 2), set: { ...G(c.setX, (c.z0 + c.z1) / 2), y: c.setY } })); },
+    /** stretch every action's range by k (1 is normal): for showing that the line test, not only distance, holds */
+    reach(k: number) { doings.reach = k; return k; },
+    /** what would be offered standing at a game point (the player doesn't move): counter, group, seat; and the line of sight */
+    offerAt(x: number, z: number) { const [lx, lz] = L(x, z), at = { x: lx, z: lz }; return { counter: doings.nearCounter(at)?.id ?? null, group: doings.nearGroup(at)?.id ?? null, seat: doings.nearSeat(at)?.id ?? null, free: grid.isFree(lx, lz) }; },
+    /** a clear line between two game points (nothing you can't act through in between) */
+    sight(ax: number, az: number, bx: number, bz: number) { const [a, b] = L(ax, az), [c, d] = L(bx, bz); return doings.canSee(c, d, { x: a, z: b }); },
+    /** where a world point (game x, z; height y) is on the screen, in CSS pixels; null if behind the camera */
+    project(x: number, y: number, z: number) { const [lx, lz] = L(x, z), v = new THREE.Vector3(lx, y, lz).project(camera); return v.z > 1 ? null : { x: +((v.x + 1) / 2 * canvas.clientWidth).toFixed(1), y: +((1 - v.y) / 2 * canvas.clientHeight).toFixed(1) }; },
+    lastTap() { return { ...lastTap, goal: player.pathGoal ? { seat: player.pathGoal.seat?.id ?? null, join: player.pathGoal.join ?? null, counter: player.pathGoal.counter ?? null } : null, moving: !!player.path }; },
+    /** how far the held item (third-person copy) is from your avatar's right hand, and the regulars' cups from theirs */
+    inHand() {
+      const v = new THREE.Vector3(), w = new THREE.Vector3(), out: { who: string; d: number }[] = [];
+      const near = (p: Person, item: THREE.Object3D, who: string) => { const hand = p.group.getObjectByName('handR'); if (!hand) return; p.group.updateMatrixWorld(true); hand.getWorldPosition(v); item.getWorldPosition(w); out.push({ who, d: +Math.hypot(v.x - w.x, v.z - w.z, v.y - (w.y + (formOf(item.userData.item) === 'cup' ? 0.07 : 0.035))).toFixed(3) }); };
+      if (doings.held && person) near(person, doings.held.tp, 'you');
+      for (const n of crowd.npcs) if (n.held && n.shown) near(n.p, n.held, n.name);
+      return out;
+    },
+    /** hold an item directly (for the screenshots of holding without the wait) */
+    hold(id: ItemId | null) { doings.hold(id); return doings.held?.id ?? null; },
     actions() { return [...available()]; },
     view(v?: View) { return setView(v); },
     look(yawDeg: number, pitchDeg: number) { player.yaw = (yawDeg * Math.PI) / 180; player.pitch = (pitchDeg * Math.PI) / 180; if (!player.seat) player.heading = player.yaw; return true; },
     /** walk with the stick (x right, y forward, -1..1) for some seconds of simulation, unrendered; the trajectory in game coordinates */
     walk(sx: number, sy: number, seconds: number, run = false) { return simulate(Math.round(seconds / STEP), { x: sx, y: sy, run }); },
     /** let the simulation run (a tap-to-go path plays out), unrendered; untilStop ends it once the walk is over */
-    sim(seconds: number, untilStop = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop); },
+    sim(seconds: number, untilStop = false, world = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop, world); },
     pos() { const gu = player.lastGaveUp; return { ...G(player.x, player.z), lx: +player.x.toFixed(3), lz: +player.z.toFixed(3), y: +player.y.toFixed(3), heading: +player.heading.toFixed(3), yaw: +player.yaw.toFixed(3), sitting: player.seat ? player.seat.id : null, view: player.view, moving: !!player.path, speed: +player.speed.toFixed(3), gaveUp: gu ? { by: gu.by, ...G(gu.x, gu.z), left: +gu.left.toFixed(2) } : null }; },
     colliders() { return exportColliders(set).map((c) => shiftCollider(c as Record<string, unknown>)); },
     region() { const r = grid.exportRegion(); return { ...r, x0: r.x0 + ORIGIN.x, z0: r.z0 + ORIGIN.z }; },
@@ -648,6 +779,15 @@ async function main() {
       return out.sort((a, b) => b.tris - a.tris).slice(0, n);
     },
   };
+  /** does a listener's head face the speaker (within 25 degrees across the ground)? */
+  const _hq = new THREE.Quaternion(), _hf = new THREE.Vector3(), _he = new THREE.Vector3(), _hs = new THREE.Vector3();
+  const faces = (m: { p: Person }, s: { p: Person }) => {
+    const head = m.p.group.getObjectByName('head'); if (!head) return false;
+    m.p.group.updateMatrixWorld(true); head.getWorldQuaternion(_hq); _hf.set(0, 0, 1).applyQuaternion(_hq);
+    m.p.eyes(_he); s.p.eyes(_hs); _hs.sub(_he);
+    const a = Math.atan2(_hf.x, _hf.z), b = Math.atan2(_hs.x, _hs.z), d = Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b)));
+    return d < (25 * Math.PI) / 180;
+  };
   const shiftCollider = (c: Record<string, unknown>) => {
     const out: Record<string, unknown> = { ...c };
     if (c.k === 'circ') { out.x = (c.x as number) + ORIGIN.x; out.z = (c.z as number) + ORIGIN.z; }
@@ -655,12 +795,14 @@ async function main() {
     else out.pts = (c.pts as number[]).map((v, i) => v + (i % 2 ? ORIGIN.z : ORIGIN.x));
     return out;
   };
-  const simulate = (n: number, stick: { x: number; y: number; run: boolean }, untilStop = false) => {
+  const simulate = (n: number, stick: { x: number; y: number; run: boolean }, untilStop = false, world = false) => {
     const path: number[] = [], blocks: Record<string, number> = {};
     player.lastGaveUp = null;
     for (let i = 0; i < n; i++) {
       if (untilStop && !player.path) break;
       simStep(stick);
+      // the regulars, the staff, the order and the talk run too when asked (at 30 Hz, unculled)
+      if (world && i % 2 === 1) worldStep(STEP * 2, null);
       const g = toGame(player.x, player.z);
       path.push(+g[0].toFixed(4), +g[1].toFixed(4));
       if (player.lastBlock) blocks[player.lastBlock] = (blocks[player.lastBlock] ?? 0) + 1;

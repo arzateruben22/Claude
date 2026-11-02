@@ -16,6 +16,8 @@ export const WALK = 1.4, JOG = 3.0, ACCEL = JOG / 0.25, DECEL = JOG / 0.15;
 const STEP = 1 / 60;
 
 export interface Stick { x: number; y: number; run: boolean }      // y forward, x right; |stick| <= 1
+/** where a tap-to-go walk is headed: a seat to sit in, a group to join, a counter to order at */
+export interface Goal { seat?: Seat; spot?: string; join?: number; counter?: string }
 export type View = 'first' | 'third';
 
 export class Player {
@@ -25,7 +27,12 @@ export class Player {
   yaw = 0; pitch = -0.05;            // the look
   view: View = 'first';
   seat: Seat | null = null;
-  path: P2[] | null = null; pathI = 0; pathGoal: { seat?: Seat; spot?: string } | null = null;
+  path: P2[] | null = null; pathI = 0; pathGoal: Goal | null = null;
+  /** a tap-to-go walk that ends somewhere to do something (join a group, order at a counter): told on arrival */
+  onArrive: (g: Goal) => void = () => {};
+  /** people you ease past (NPCs are soft: they never block you, they slow and nudge you; PROJECT_OC_ON_FOOT.md,
+   *  "Movement and collisions"). The page refreshes the list each frame. */
+  soft: { x: number; z: number; r: number }[] = [];
   private stuckT = 0; private lastProgress = 0;
   /** the last thing that pushed you while following a tap-to-go path (cleared whenever the walk makes progress) */
   private pathBlock = '';
@@ -123,6 +130,12 @@ export class Player {
     // move, then push out of everything, three passes, sliding along walls
     const ox = this.x, oz = this.z;
     let nx = ox + this.vx * dt, nz = oz + this.vz * dt;
+    // people first, softly (a third of the overlap a step): you slide round them and can ease through a crowd; the
+    // hard passes below always have the last word, so nobody can push you into a wall
+    for (let i = 0; i < this.soft.length; i++) {
+      const o = this.soft[i], dx = nx - o.x, dz = nz - o.z, d = Math.hypot(dx, dz), min = o.r + RADIUS;
+      if (d < min && d > 1e-6) { const k = ((min - d) / d) * 0.34; nx += dx * k; nz += dz * k; }
+    }
     this.lastBlock = '';
     for (let pass = 0; pass < 3; pass++) {
       const q = this.set.query(nx - 1, nz - 1, nx + 1, nz + 1, this.near);
@@ -172,7 +185,7 @@ export class Player {
   }
 
   /** walk to (x, z) by a path round obstacles; returns the path or null when there's no way */
-  goTo(x: number, z: number, goal: { seat?: Seat; spot?: string } | null = null): P2[] | null {
+  goTo(x: number, z: number, goal: Goal | null = null): P2[] | null {
     if (this.seat) this.stand();
     const p = this.grid.path(this.x, this.z, x, z);
     this.gaveUp = null; this.pathBlock = '';
@@ -186,6 +199,7 @@ export class Player {
     const g = this.pathGoal;
     this.path = null; this.pathGoal = null; this.vx = this.vz = 0;
     if (g?.seat) this.sit(g.seat);
+    else if (g) this.onArrive(g);
   }
   sit(s: Seat) {
     this.seat = s; this.path = null; this.vx = this.vz = 0;
