@@ -30,13 +30,13 @@ const makeHand = (side, dayMat, uvMat, spotMat) => {
       const mesh = new THREE.Mesh(geo, m); mesh.position.set(...pos); mesh.rotation.set(...rot); mesh.scale.set(...sc); h.add(mesh); parts.push(mesh);
     }
   };
-  add(new THREE.SphereGeometry(1, 40, 28), [0, 0, 0], [0, 0, 0], [2.0, 2.3, 0.55]);                    // the back of the hand
-  [[-1.35, 2.3, 2.7, 0.12], [-0.45, 2.55, 3.1, 0.03], [0.45, 2.5, 3.0, -0.04], [1.3, 2.2, 2.5, -0.12]].forEach(([fx, fy, len, a]) => {
-    add(new THREE.CapsuleGeometry(0.36, len, 8, 16), [fx, fy + len / 2, 0.05], [0, 0, a]);              // fingers
-    add(new THREE.SphereGeometry(0.42, 20, 14), [fx, fy - 0.15, 0.32], [0, 0, 0], [1, 0.8, 0.6]);         // knuckles
+  add(new THREE.SphereGeometry(1, 40, 28), [0, 0.2, 0], [0, 0, 0], [2.15, 2.5, 0.6]);                    // the back of the hand
+  [[-1.45, 2.1, 1.7, 0.1], [-0.5, 2.4, 2.1, 0.03], [0.5, 2.35, 2.0, -0.03], [1.4, 2.0, 1.5, -0.1]].forEach(([fx, fy, len, a]) => {
+    add(new THREE.CapsuleGeometry(0.47, len, 8, 16), [fx - Math.sin(a) * len / 2, fy + len / 2 + 0.3, 0.05], [0, 0, a]);   // fingers
+    add(new THREE.SphereGeometry(0.5, 20, 14), [fx, fy, 0.34], [0, 0, 0], [1, 0.75, 0.6]);               // knuckles
   });
-  add(new THREE.CapsuleGeometry(0.42, 2.0, 8, 16), [side * 2.2, -0.6, 0.1], [0, 0, side * 0.9]);         // the thumb
-  add(new THREE.CapsuleGeometry(1.3, 2.2, 8, 20), [0, -3.0, -0.1], [0, 0, 0], [1, 1, 0.45]);             // the wrist
+  add(new THREE.CapsuleGeometry(0.52, 1.5, 8, 16), [side * 2.25, -0.2, 0.15], [0, 0, side * 0.75]);       // the thumb
+  add(new THREE.CapsuleGeometry(1.35, 0.5, 8, 20), [0, -2.6, -0.1], [0, 0, 0], [1, 1, 0.45]);            // the wrist
   return { group: h, parts };
 };
 

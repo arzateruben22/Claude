@@ -57,12 +57,12 @@ SHOTS = [{"at": 0.0, "name": "hands"}, {"at": B["normal"]["t0"], "name": "town"}
 TX, UX, HX = -4000.0, 4000.0, 8000.0   # HX: the two hands (../set/hands05.js)
 FLY = {"el": 13, "fov": 34, "fx": 0.5, "fy": 0.46}
 UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.43}
-HK = {"target": [HX, 1.6, 0], "el": 3, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.46}   # the hands, frontal
+HK = {"target": [HX, 1.2, 0], "el": 3, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.44}   # the hands, frontal
 CAM = {
     # the hook opens mid-push inside the UV camera on the two halves (more and less damage: an illustration); on "Both" the
     # signature switch to daylight: the same to the eye
-    "hands": [{"t": 0.0, **HK, "dist": 40}, {"t": CUE["both"], **HK, "dist": 34, "ease": "linear"},
-              {"t": B["normal"]["t0"], **{**HK, "target": [HX, 1.6, 0]}, "dist": 30, "ease": "sine"}],
+    "hands": [{"t": 0.0, **HK, "dist": 52}, {"t": CUE["both"], **HK, "dist": 46, "ease": "linear"},
+              {"t": B["normal"]["t0"], **{**HK, "target": [HX, 1.6, 0]}, "dist": 42, "ease": "sine"}],
     "hand": [{"t": CUE["both"], "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY},
              {"t": CUE["sun"], "target": [0, -0.4, 10], "dist": 22, "az": -2, **FLY, "ease": "sine"},
              {"t": B["normal"]["t0"], "target": [0, -0.4, 8], "dist": 40, "el": 40, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "in2"}],
@@ -81,10 +81,10 @@ CAM = {
     # the burn you feel: the visible hand, a warm flush rising (the eye's view), then the shutter to UV on "But"
     "burn": [{"t": B["why"]["t0"], "target": [3, -0.4, 6], "dist": 22, "el": 24, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.46},
              {"t": CUE["but4"] - 0.1, "target": [3, -0.4, 4], "dist": 18, "el": 26, "az": 2, "fov": 34, "fx": 0.5, "fy": 0.46, "ease": "sine"}],
-    "uv1": [{"t": CUE["but4"] - 0.1, **HK, "dist": 36}, {"t": CUE["camera"], **HK, "dist": 32, "ease": "inout2"},
-            {"t": CUE["misses"], **{**HK, "target": [HX + 3.1, 2.2, 0]}, "dist": 20, "ease": "inout2"},
-            {"t": CUE["surface"], **{**HK, "target": [HX + 3.1, 1.2, 0]}, "dist": 16, "ease": "inout2"},
-            {"t": B["whoa"]["t0"], **HK, "dist": 30, "ease": "inout2"}],
+    "uv1": [{"t": CUE["but4"] - 0.1, **HK, "dist": 48}, {"t": CUE["camera"], **HK, "dist": 42, "ease": "inout2"},
+            {"t": CUE["misses"], **{**HK, "target": [HX + 3.1, 1.8, 0]}, "dist": 30, "ease": "inout2"},
+            {"t": CUE["surface"], **{**HK, "target": [HX + 3.1, 1.2, 0]}, "dist": 26, "ease": "inout2"},
+            {"t": B["whoa"]["t0"], **HK, "dist": 40, "ease": "inout2"}],
     "town2": [{"t": B["whoa"]["t0"], "target": [TX, 0, 0], "dist": 240, "el": 52, "az": 8, "fov": 34, "fx": 0.5, "fy": 0.3},
               {"t": CUE["ten"], "target": [TX, 0, 0], "dist": 225, "el": 52, "az": 11, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
               {"t": CUE["squamous"], "target": [TX - 12, 0, 6], "dist": 180, "el": 50, "az": 12, "fov": 34, "fx": 0.5, "fy": 0.3, "ease": "inout2"},
@@ -94,7 +94,7 @@ CAM = {
               {"t": B["takeaway"]["t0"] - 0.4, "target": [-3, -0.4, 4], "dist": 19, "el": 26, "az": -4, "fov": 34, "fx": 0.5, "fy": 0.7, "ease": "sine"},
               {"t": B["takeaway"]["t0"] + 1.2, "target": [0, -0.4, 16], "dist": 24, "az": -4, **FLY, "ease": "inout2"},   # no cut: on to the hook's framing for "which hand aged?"
               {"t": CUE["but"] - 0.1, "target": [0, -0.4, 13], "dist": 23, "az": -3, **FLY, "ease": "sine"}],
-    "hands2": [{"t": B["takeaway"]["t0"], **HK, "dist": 38}, {"t": CUE["but"], **HK, "dist": 33, "ease": "sine"}, {"t": B["tease"]["t0"], **HK, "dist": 30, "ease": "sine"}],
+    "hands2": [{"t": B["takeaway"]["t0"], **HK, "dist": 50}, {"t": CUE["but"], **HK, "dist": 45, "ease": "sine"}, {"t": B["tease"]["t0"], **HK, "dist": 42, "ease": "sine"}],
     "close": [{"t": B["tease"]["t0"], "target": [0, -0.4, 18], "dist": 25, "az": -6, **FLY},
               {"t": B["tease"]["t1"], "target": [0, -0.4, 14], "dist": 24, "az": -4, **FLY, "ease": "sine"}],
 }

@@ -94,7 +94,7 @@ const mel = plate(`<div class="scc" style="font:600 3.1vmin/1.3 var(--font-body,
   <div class="rows" style="display:grid;grid-template-columns:20vmin 1fr;white-space:nowrap;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
   <div class="sub" style="font:500 2.8vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1.6vmin;opacity:0">${M.n[0]} vs ${M.n[1]} · ${M.sub}</div>`,
-  { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "80vmin", padding: "2.4vmin 3vmin" });
+  { left: "50%", top: `${0.32 * H}px`, transform: "translateX(-50%)", width: "76vmin", padding: "2.4vmin 2.6vmin" });
 const rows = mel.querySelector(".rows"), mhead = rows.previousElementSibling, mfoot = mel.querySelector(".sub"), scc = mel.querySelector(".scc"), msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
