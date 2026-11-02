@@ -87,8 +87,8 @@ CAM = {
     "grow": [
         {"t": t_grow0, **YOU, "dist": 9, "el": 55, "az": 24},
         {"t": t_grow1, "target": [0, 0, 0], "dist": SIDE_ALL * 3.6, "el": 60, "az": 30, "fov": 30, "fy": 0.36, "ease": "inout2"},
-        {"t": t_lon, "target": [0, 0, 0], "dist": SIDE_ALL * 3.8, "el": 62, "az": 32, "fov": 30, "fy": 0.36, "ease": "inout3"},
-        {"t": t_orbit, "target": [0, 0, 0], "dist": SIDE_ALL * 4.2, "el": 63, "az": 33, "fov": 30, "fy": 0.36, "ease": "sine"},
+        {"t": t_lon, "target": [0, 0, 0], "dist": SIDE_ALL * 3.8, "el": 56, "az": 50, "fov": 30, "fy": 0.36, "ease": "sine"},   # a slow orbit while the crowd squeezes and relaxes
+        {"t": t_orbit, "target": [0, 0, 0], "dist": SIDE_ALL * 4.2, "el": 58, "az": 54, "fov": 30, "fy": 0.36, "ease": "sine"},
     ],
     "orbit": [
         {"t": t_orbit, "target": [0, R_EARTH * 0.4, 0], "dist": 3.0e7, "el": 62, "az": 30, "fov": 30, "fy": 0.42},
