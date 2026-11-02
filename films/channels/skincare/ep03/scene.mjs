@@ -68,7 +68,7 @@ Object.assign(meter.style, { position: "absolute", left: "50%", top: `${0.3 * H}
 const css = document.createElement("style");
 css.textContent = `.mr{display:flex;align-items:center;gap:2vmin}.mr .k{width:16vmin;color:var(--text-2)}.mr .tk{position:relative;flex:1;height:2.4vmin;border-radius:1vmin;background:rgba(247,243,255,.14)}
 .mr .tk b{position:absolute;left:0;top:0;bottom:0;border-radius:1vmin;background:var(--text-2)}.mr .tk b.s{background:var(--water)}.mr .tk i{position:absolute;left:80%;top:-.8vmin;bottom:-.8vmin;border-left:.4vmin dashed var(--text)}
-.mr .v{width:10vmin;text-align:right}.when{font-size:3vmin;color:var(--text);text-align:center}.mr .k{color:var(--text);width:20vmin}.mr .v{width:11vmin}`;
+.mr .v{width:10vmin;text-align:right}.when{font-size:3.1vmin;color:var(--text);text-align:center}.mr .k{color:var(--text);width:20vmin}.mr .v{width:11vmin}`;
 document.head.appendChild(css);
 hudRoot.appendChild(meter);
 const sBar = meter.querySelector("b.s"), sVal = meter.querySelector(".sv");
@@ -133,7 +133,7 @@ window.seek = function (t) {
   terrain.group.visible = isM; adult.g.visible = isA; fetal.g.visible = shot === "fetal"; uv.mesh.visible = shot === "uv";
   scene.fog = isM ? FOG : null;
   lights.sun.intensity = isM ? 4.2 : 2.4; lights.key.intensity = isM ? 0.9 : 1.7;
-  fstop = shot === "macro" ? 0.45 : shot === "macro2" ? 0.2 : 0; focusPt = [PL.tx, 0, 0];
+  fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
 
   // ── the macro flight: the scar across the knee ──
   if (isM) terrain.set({ tone: SKIN.map((v) => v * 1.25), furrows: 0.35, scar: SCAR, scarGlow: 0 });
