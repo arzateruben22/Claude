@@ -125,13 +125,13 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       lab.forEach((e, i) => { const yy = y0 + i * 50 * px, ok = (yy + 20 * S1 < (safe ? safe.b : H) && i * 50 <= span) ? 1 : 0; e.setAttribute("x", x + 30 * S1); e.setAttribute("y", yy); e.setAttribute("opacity", (ok * Math.min(1, Math.max(0, (50 * px - 34 * S1) / (20 * S1)))).toFixed(3)); });
       unit.setAttribute("x", x - 8 * S1); unit.setAttribute("y", y0 - 18 * S1);
       const yP = y0 + paperUm * px;
-      paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
+      paperMark.setAttribute("opacity", Math.pow(1 - u, 3).toFixed(3)); paperMark.setAttribute("x1", x - 10 * S1); paperMark.setAttribute("x2", x + 120 * S1 * (1 - u)); paperMark.setAttribute("y1", yP); paperMark.setAttribute("y2", yP);
       const inSafe = yP + 40 * S1 < (safe ? safe.b : 0.74 * H) ? 1 : 0;   // never below the safe box
       paperTxt.setAttribute("x", x + 76 * S1); paperTxt.setAttribute("y", yP + 22 * S1); paperTxt.setAttribute("opacity", (inSafe * (1 - u) * Math.min(1, Math.max(0, (yP - y0 - 120 * S1) / (40 * S1)))).toFixed(3));
       const yEnd = Math.min(y0 + len, safe ? safe.b - 10 * S1 : y0 + len);
       rcard.setAttribute("x", x - 22 * S1); rcard.setAttribute("y", y0 - 40 * S1); rcard.setAttribute("width", 82 * S1); rcard.setAttribute("height", Math.max(0, yEnd - y0 + 52 * S1)); rcard.setAttribute("opacity", (0.88 * (1 - u)).toFixed(3));
       // lifted: two bars to the right of the ruler, filled from the top, each named above itself (two short lines)
-      const bx = x + 80 * S1, bw = 120 * S1, gap = 56 * S1;
+      const bx = x + 80 * S1, bw = 120 * S1, gap = 46 * S1;
       const yS = filmBar ? y0 + filmUm * px * fillFilm : y0;   // with a film, the dead layer hangs under it
       scBar.setAttribute("x", bx); scBar.setAttribute("width", bw); scBar.setAttribute("y", yS); scBar.setAttribute("height", Math.max(0, sc * px * fillSc)); scBar.setAttribute("opacity", u.toFixed(3));
       if (filmBar) {
@@ -141,7 +141,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
       }
       paperBar.setAttribute("x", bx + bw + gap); paperBar.setAttribute("width", bw); paperBar.setAttribute("y", y0); paperBar.setAttribute("height", Math.max(0, paperUm * px * fillPaper)); paperBar.setAttribute("opacity", u.toFixed(3));
       scTxt.setAttribute("x", bx); scTxt.setAttribute("y", y0 - 30 * S1); scTxt.setAttribute("opacity", (u * (filmBar ? fillFilm : fillSc)).toFixed(3));
-      paperTxt2.setAttribute("x", bx + bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1); paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
+      paperTxt2.setAttribute("text-anchor", "end"); paperTxt2.setAttribute("x", bx + 2 * bw + gap); paperTxt2.setAttribute("y", y0 - 30 * S1);   // right-aligned over its bar: the two headings never run together paperTxt2.setAttribute("opacity", (u * fillPaper).toFixed(3));
       card.setAttribute("x", x - 50 * S1); card.setAttribute("y", y0 - 90 * S1); card.setAttribute("width", (bx + 2 * bw + gap + 22 * S1) - (x - 50 * S1)); card.setAttribute("height", span * px + 150 * S1);
       card.setAttribute("opacity", (0.94 * u).toFixed(3));
       scVal.textContent = `${Math.round(sc)} µm`; paperVal.textContent = `${Math.round(paperUm)} µm`;

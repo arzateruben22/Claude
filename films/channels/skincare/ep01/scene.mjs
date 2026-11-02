@@ -140,10 +140,10 @@ window.seek = function (t) {
   }
   S.set({ tone, dimDead, dimLiving, mortar, glowDead, mortarColor: WATER });
   A.sc_top = add(S.at.scTop(0.66), [0, 0, 0]);
-  A.sc_mid = S.at.scMid(0.7);
+  A.sc_mid = S.at.scMid(0.45);   // leaders end inside the safe box
   A.corneo = S.at.corneo(4, 0.62);
   A.living = S.at.living(0.74);
-  A.brick = S.at.corneo(9, 0.7);
+  A.brick = S.at.corneo(9, 0.5);
   A.mortar = S.at.corneo(6, 0.42);
 
   // the named dead cell, lifted out of its row toward the camera
@@ -155,7 +155,7 @@ window.seek = function (t) {
     one.material.color.setRGB(...toneColor("corneo", tone).map((v) => v * 1.15)); one.material.emissive.setRGB(...toneColor("corneo", tone).map((v) => v * 0.35 * oneOp));
     A.corneo = one.position.toArray();
   }
-  flakes.set(t, { t0: CUE.flake - 0.3, color: toneColor("corneo", tone), gain: shot === "section" ? 1 - fadeIn(t, CUE.flake + 2.4, 0.4) : 0 });
+  flakes.set(t, { t0: CUE.flake, color: toneColor("corneo", tone), gain: shot === "section" ? 1 - fadeIn(t, CUE.flake + 2.4, 0.4) : 0 });
   rays.set(t, shot === "close" ? { filmTop: 0, filmBottom: 0, pass: 0, gain: fadeIn(t, CUE.rays - 0.3, 0.6), color: UVC } : { gain: 0 });
 
   // ── the climbing cell ──
@@ -172,7 +172,7 @@ window.seek = function (t) {
 
   // ── water: kept inside by the wall (why), and leaving through the thin wall (whoa) ──
   beadsS.set(t, { gain: shot === "section" ? fadeIn(t, CUE.water - 0.4, 0.6) : 0, color: WATER });
-  const wb = shot === "walls" ? fadeIn(t, B0.whoa + 0.3, 0.8) * (1 - 0.7 * fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;
+  const wb = shot === "walls" ? fadeIn(t, CUE.babies ?? B0.whoa, 0.15) * (1 - 0.7 * fadeIn(t, B0.toscale + 0.3, 0.8)) : 0;   // the water carries across the match cut
   const back = shot === "walls" ? fadeIn(t, B0.toscale + 0.3, 0.8) : 0;      // the card is the subject in the to-scale beat
   WL.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55 + 0.3 * back, glowDead: 0.6 * (1 - back), dimDead: 0.6 * back });
   WR.set({ tone, mortar: 1, mortarColor: WATER, dimLiving: 0.55 + 0.3 * back, glowDead: 0.6 * (1 - back), dimDead: 0.6 * back });
@@ -189,7 +189,7 @@ window.seek = function (t) {
   const p0 = project(camera, [xg, 0, zg], W, H), p1 = project(camera, [xg, -100, zg], W, H);
   // the ruler: attached while the layers are being named (hook, normal), then away; lifted out of the walls shot
   const lift = shot === "walls" ? Math.min(E.inout2(seg(t, G.rise[0], G.rise[1])), 1 - E.inout2(seg(t, G.back[0], G.back[1]))) : 0;
-  const gOp = shot === "walls" ? Math.min(1, Math.max(0, (lift - 0.35) / 0.4)) : (shot === "hook" || shot === "section") ? 1 - fadeIn(t, CUE.dead - 1.0, 0.6) : 0;   // gone before the wide captions; no flash over the left wall
+  const gOp = shot === "walls" ? Math.min(1, Math.max(0, (lift - 0.6) / 0.3)) : (shot === "hook" || shot === "section") ? 1 - fadeIn(t, B0.normal - 0.5, 0.4) : 0;   // the ruler only in the hook: gone before the wide captions   // gone before the wide captions; no flash over the left wall
   gauge.update(t, { top: p0.y, bottom: p1.y, um: 100, op: gOp, lift, sc: BIO.sc_um, paperUm: BIO.paper_um,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 

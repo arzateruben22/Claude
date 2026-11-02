@@ -129,7 +129,7 @@ COUNTERS = [
     {"id": "c-wall", "label": "rows in the wall", "fmt": "text", "text": "≈15", "t0": A("vo04:But"), "t1": A("vo05:Babies", -0.2), "at": SPINE},
     {"id": "c-1979", "label": "newborns measured", "fmt": "text", "text": "1979", "t0": A("vo05:Babies"), "t1": A("vo05:five", -0.4), "at": SPINE},
     {"id": "c-loss", "label": "water lost · 32 vs 6 g/m²·h", "fmt": "text", "text": "≈5×", "t0": A("vo05:five"), "t1": B["toscale"]["t0"], "at": SPINE},
-    {"id": "c-sc", "label": "dead layer · cheek", "fmt": "text", "text": "17 µm", "t0": B["takeaway"]["t0"], "t1": t_end, "at": SPINE},
+    {"id": "c-sc", "label": "dead layer · cheek", "fmt": "text", "text": "17 µm", "t0": B["takeaway"]["t0"], "t1": t_end - 0.5, "at": SPINE},   # gone before the end card arrives
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
@@ -155,7 +155,7 @@ END = {"title": "Next layer: does SPF 100 block twice as much as *50*?", "foll
 
 CUE = {"born": t_born, "rise": [t_rise0, t_rise1], "apart": [t_apart0, t_apart1], "lipid": A("vo04:sealed"), "bricks": A("vo04:brick"),
        "water": A("vo04:water"), "inside": A("vo04:inside."), "early": A("vo05:Babies"), "loss": A("vo05:losing"), "five": A("vo05:five"),
-       "dead_lit": A("vo01:not"), "rows": A("vo02:dozen"), "dead": A("vo02:empty"), "living": A("vo02:living"), "died": A("vo07:died"), "flake": A("vo04:flake"), "under": A("vo07:Underneath,"), "rays": A("vo08:SPF")}
+       "dead_lit": A("vo01:not"), "rows": A("vo02:dozen"), "dead": A("vo02:empty"), "living": A("vo02:living"), "died": A("vo07:died"), "flake": A("vo04:flake"), "babies": A("vo05:Babies", -0.2), "under": A("vo07:Underneath,"), "rays": A("vo08:SPF")}
 POSTER = A("vo04:fats,", 0.6)           # the wall, its mortar lit
 
 # captions: number phrases and fixed phrases stay on one line
