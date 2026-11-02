@@ -4,8 +4,9 @@
 A lydian at 50 BPM). It pays off No. 003's tease and sets up No. 005 ("Next envelope: if everyone jumped at once, would
 the Earth move?").
 
-STATUS: **final with the render worker** (commit 5a8e05e, 2 Nov). The draft passed two review rounds (`review/`); the
-measured scorecard is filled in from the worker's QA when it reports.
+STATUS: **delivered 2 Nov** (`out/envelope-004-9x16.mp4`): 73.8 s, −14.1 LUFS / −1.8 dBTP, voice 13.4 LU over music,
+sync PASS, 0 flashes, qa.py PASS; YouTube 1440 version alongside. Details in `review/scorecard.md`; a person still checks
+`review/HUMAN-REVIEW.md` before posting.
 
 ## The story
 Can you count to a billion, out loud, every number? One a second sounds fair, and even that is about 32 years nonstop.
