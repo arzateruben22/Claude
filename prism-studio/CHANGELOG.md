@@ -18,7 +18,8 @@
   a ballpoint envelope with "≈ ?". The rest of the studio keeps the night look. Fonts as woff2 with their OFL licences
   (public/fonts/SOURCES.md).
 - Their colours are final (Outer Layer #00685F, Back of the Envelope #EB63FF), and so are their names: migration 0005
-  updates both channels where the colour is still the old default and drops "working name".
+  updates both channels where the colour is still the old default and drops "working name". On a local database run
+  `npm run db:migrate` (`npm start` doesn't migrate); the Docker server applies it on start.
 - Season progress on every monitor and channel screen, from the database: "Season 1 · 6 of 6 ready" (and "· n posted"
   once published) with one segment per episode. A channel with nothing imported reads "Season 1 in production" with
   its six planned titles (catalog PLANNED_SEASONS), never numbers (src/domain/season.ts, tested).
