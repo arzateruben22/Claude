@@ -108,12 +108,12 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four hundred years. That's about five whole lifetimes of nothing but numbers.",
+   "text": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four centuries. That's about five whole lifetimes of nothing but numbers.",
    "stars": [
-    "four hundred years",
+    "four centuries",
     "numbers"
    ],
-   "phonemes": "kˈiːp ɡˌoʊɪŋ æt hɪz pˈeɪs, slˈiːpɪŋ wɛn hiː slˈɛpt, ænd ðə hˈoʊl kˈaʊnt tˈeɪks nˌɪɹli fˈɔːɹ hˈʌndɹɪd jˈɪɹz. ðæts ɐbˌaʊt fˈaɪv hˈoʊl lˈaɪftaɪmz ʌv nˈʌθɪŋ bˌʌt nˈʌmbɚz.",
+   "phonemes": "kˈiːp ɡˌoʊɪŋ æt hɪz pˈeɪs, slˈiːpɪŋ wɛn hiː slˈɛpt, ænd ðə hˈoʊl kˈaʊnt tˈeɪks nˌɪɹli fˈɔːɹ sˈɛntʃɚɹiz. ðæts ɐbˌaʊt fˈaɪv hˈoʊl lˈaɪftaɪmz ʌv nˈʌθɪŋ bˌʌt nˈʌmbɚz.",
    "speeds": [
     0.8,
     0.76
@@ -123,13 +123,13 @@
    ],
    "silences": [
     [
-     6.2548,
-     6.6348
+     6.0589,
+     6.4389
     ]
    ],
    "file": "05.wav",
-   "dur": 10.606,
-   "sha256": "f12029047c6d9a319cbde849050da803bdb73e41aa78e597d0c37ddffeb59d39"
+   "dur": 10.41,
+   "sha256": "f13f1f4358da8569a55737ed47e3ca7d32ec75f1a8d4d4df2e2bdda1b455b888"
   },
   {
    "id": "vo06",

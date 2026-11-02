@@ -21,11 +21,11 @@ vo: A number a second sounds fair, and even at that pace you'd be counting for a
 ## change {shot: push down the tape: each number's strip grows with its syllables, from "one" to "seven hundred seventy-seven million…" · events: term.write · energy: 0.6} (15–25 s)
 vo: Up in the hundreds of millions, every number is a sentence of its own, and you have to say *all* of it. {c3}
 
-## why {shot: a second, shorter tape beside it: one million, a webcam light, a calendar strip of days filling · badge: ∵ his pace, his hours · picture-only 2 s · energy: 0.55} (25–40 s)
+## why {shot: Harper beside his calendar, one square a day filling as his count climbs to a million · badge: ∵ his pace, his hours · picture-only 2 s · energy: 0.55} (25–40 s)
 vo: We know how fast a person really counts, because a man did it, live on the internet, through most of his waking hours, all the way to a *million*. {c4} It took him most of a *summer*. {c5}
 
 ## whoa {shot: pull back along the billion tape until it runs off the desk; the spine resolves and the box closes round "≈ 380 yr"; five blue lifetime bars stack beside it · events: answer.box · picture-only 3 s · energy: 0.75} (40–53 s)
-vo: Keep going at his pace, sleeping when he slept, and the whole count takes nearly *four hundred years*. {c6} That's about five whole lifetimes of nothing but *numbers*. {c7}
+vo: Keep going at his pace, sleeping when he slept, and the whole count takes nearly *four centuries*. {c6} That's about five whole lifetimes of nothing but *numbers*. {c7}
 
 ## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (53–59 s)
 vo: Never sleep, or talk twice as fast, and you'd still need *centuries*. {c8}
@@ -40,4 +40,4 @@ end card: "Next envelope: *everybody jump*" · "Back of the Envelope · No. 004"
 ## Notes
 - Every number is `calc.py`'s; answers are shown to two significant figures ("≈ 380 yr").
 - Thought experiment: nobody should try it. Harper's count is the record we calibrate to, not a challenge.
-- Listen at T0: "billion", "thirty-two", "centuries".
+- Listen at T0: "billion", "thirty-two", "centuries" (said twice on purpose: the answer, then the segment).

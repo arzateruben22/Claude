@@ -14,6 +14,7 @@ calendar of Harper's summer (one square a day, filled as he counts); then the ru
 unit a year), drawn in marker as the billion is counted, five blue lifetimes beside it. 1 unit ≈ 1 m of desk.
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -50,7 +51,7 @@ for gi, grp in enumerate(GROUPS):
 TAPE_END = z
 SL = {s["n"]: s for s in SLIPS}
 zc = lambda n: (SL[n]["z0"] + SL[n]["z1"]) / 2                    # a slip's centre
-FIG_X = -SLIP_W / 2 - 0.9                                         # "you" stand left of the tape's foot
+FIG_X = -SLIP_W / 2 - 0.6                                         # "you" stand left of the tape's foot
 
 # the calendar of Harper's summer: 7 columns (Mon–Sun) × 13 rows (weeks) up the desk; 18 June 2007 was a Monday
 CELL = 0.62
@@ -91,17 +92,17 @@ t_short = A("vo02:short", -0.1)                                    # the camera 
 # Harper: the calendar fills from "man" to "million"; the months light on "summer"
 t_cal0, t_cal1, t_summer = A("vo04:man"), A("vo04:million", 0.2), A("vo04:summer", -0.05)
 # the ruler draws from "Keep" to "years"; the lifetimes stack from "five" to "lifetimes"
-t_rul0, t_rul1 = A("vo05:Keep"), A("vo05:years", 0.1)
+t_rul0, t_rul1 = A("vo05:Keep"), A("vo05:centuries", 0.1)
 t_box = A("vo05:four", -0.05)
 t_life0, t_life1 = A("vo05:five", -0.05), A("vo05:lifetimes", 0.5)
 t_once = A("vo07:once", -0.1)                                      # the "one billion" slip lands beside "1"
 
 # ── the camera (rig.js keys: target, dist, el, az, fov, fx, fy); az 0 = the camera on +z, the line runs up ──
-EL, AZ = 52, -8
-FRONT = {"target": [-0.6, 0, -1.6], "dist": 30, "el": EL, "az": AZ, "fov": 24, "fy": 0.40}
-RUL_T, RUL_D = 230, 380                      # the ruler shot: target at year 95, the far end climbing into the distance
-k_cal = lambda zz, dist, el, az: {"target": [-1.6, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.40}
-k_ruler = lambda zz, dist, el, az: {"target": [-3.0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.27}
+EL, AZ = 48, -8
+FRONT = {"target": [-0.55, 0, -1.6], "dist": 36, "el": EL, "az": AZ, "fov": 24, "fy": 0.40}
+RUL_T, RUL_D = 230, 430                      # the ruler shot: target at year 95, the far end climbing into the distance
+k_cal = lambda zz, dist, el, az: {"target": [-2.0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.40}
+k_ruler = lambda zz, dist, el, az: {"target": [-3.0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": 0.30}
 k_count = lambda zz, dist=30, el=EL, az=AZ, fy=0.42: {"target": [0, 0, round(zz, 3)], "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 z_tick_end = zc(12)
 CAM = {
@@ -120,23 +121,25 @@ CAM = {
     "summer": [
         {"t": B["why"]["t0"], **k_count(zc(LONG) - 0.3, 28, 54, -4, 0.40)},
         {"t": t_cal0 - 0.2, **k_cal(CAL_C[2] + 0.4, 36, 58, -6), "ease": "inout3"},
-        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] + 0.2, 37, 60, -7), "ease": "sine"},
+        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] - 0.6, 41, 62, -7), "ease": "sine"},       # a slow drift up the calendar through the hold
     ],
     "ruler": [
-        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] + 0.2, 37, 60, -7)},
-        {"t": t_box + 0.6, **k_ruler(ZY(RUL_T), RUL_D, 44, -6), "ease": "inout3"},   # the scale jump: the centuries recede up the desk
-        {"t": t_work0, **k_ruler(ZY(RUL_T), RUL_D + 4, 42, -5), "ease": "sine"},
+        {"t": B["whoa"]["t0"], **k_cal(CAL_C[2] - 0.6, 41, 62, -7)},
+        {"t": t_box + 0.6, **k_ruler(ZY(RUL_T), RUL_D, 46, -6), "ease": "inout3"},   # the scale jump: the centuries recede up the desk
+        {"t": t_work0, **k_ruler(ZY(RUL_T + 12), RUL_D + 30, 44, -5), "ease": "sine"},
     ],
     "work": [
-        {"t": t_work0, **k_ruler(ZY(RUL_T), RUL_D + 4, 42, -5)},
-        {"t": t_home, **k_ruler(ZY(RUL_T), RUL_D + 8, 41, -5), "ease": "sine"},
+        {"t": t_work0, **k_ruler(ZY(RUL_T + 12), RUL_D + 30, 44, -5)},
+        {"t": t_home, **k_ruler(ZY(RUL_T + 20), RUL_D + 50, 44, -5), "ease": "sine"},
     ],
     "home": [
-        {"t": t_home, **FRONT, "dist": 33},
-        {"t": t_end, **FRONT, "dist": 34, "ease": "sine"},
+        {"t": t_home, **k_ruler(ZY(RUL_T + 20), RUL_D + 50, 44, -5)},
+        {"t": t_home + 1.8, **FRONT, "ease": "inout3"},                                 # back down the whole line to its foot
+        {"t": A("vo07:reach", -0.3), **FRONT, "target": [-0.55, 0, -3.2], "dist": 38, "ease": "sine"},
+        {"t": t_end, **FRONT, "target": [-0.55, 0, -2.6], "dist": 37, "ease": "sine"},
     ],
     "end": [
-        {"t": t_end, **FRONT, "dist": 34},
+        {"t": t_end, **FRONT, "target": [-0.55, 0, -2.6], "dist": 37},
         {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"},          # the last frame is frame 0's composition: the loop
     ],
 }
@@ -146,7 +149,7 @@ for shot, keys in CAM.items():           # slow turns: ≤ 3° a second in azimu
         assert dt > 0, (shot, a["t"], b["t"])
         for kk in ("az", "el"):
             assert abs(b[kk] - a[kk]) / dt <= 3.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
-for x, y in zip(SHOTS[1:6], SHOTS[2:6]):  # inside the one continuous move, each shot starts where the last ended
+for x, y in zip(SHOTS[1:7], SHOTS[2:7]):  # inside the one continuous move, each shot starts where the last ended
     assert CAM[x["name"]][-1]["target"] == CAM[y["name"]][0]["target"] and CAM[x["name"]][-1]["dist"] == CAM[y["name"]][0]["dist"], (x, y)
 
 # ── the spine readout: the running sum (set/spine.js) ──
@@ -160,6 +163,7 @@ SPINE = [
     {"t": t_rul0, "label": "a billion at his pace", "terms": [["assume", "his pace"], ["op", "→"], ["ans", "? yr"]]},
     {"t": t_box, "label": "to a billion, out loud", "terms": [["assume", "his pace"], ["op", "→"], ["ans", f"≈ {R['real_yr']} yr"]], "box": True},
     {"t": A("vo05:lifetimes", -0.05), "label": f"about {round(V['lifetimes'])} lifetimes of {R['life_yr']} years", "terms": [["assume", "his pace"], ["op", "→"], ["ans", f"≈ {R['real_yr']} yr"]], "box": True, "keep": True},
+    {"t": t_once, "label": "\u201cone billion\u201d: 3 syllables to say", "terms": [["assume", "his pace"], ["op", "→"], ["ans", f"≈ {R['real_yr']} yr"]], "box": True, "keep": True},
 ]
 SPINE_OUT = t_end
 
@@ -168,7 +172,7 @@ WORK = {
     "t0": t_work0, "t1": t_home - 0.3,
     "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "his pace, 16 h a day", "v": f"≈ {R['real_yr']} yr", "lit": False},
+        {"t": t_work0 + 0.15, "k": f"10⁹ numbers × ≈ {R['syl_mean_billion']} syllables ÷ {R['rate_syl_s']} a second, {R['harper_h']} h a day", "v": f"≈ {R['real_yr']} yr", "lit": False},
         {"t": A("vo06:Never", -0.05), "k": "never sleep", "v": f"≈ {R['sens_nonstop_yr']} yr", "lit": True},
         {"t": A("vo06:twice", -0.05), "k": "count twice as fast", "v": f"≈ {R['sens_double_yr']} yr", "lit": True},
         {"t": A("vo06:centuries", -0.05), "k": "British “hundred and”", "v": f"≈ {R['sens_british_yr']} yr", "lit": False},
@@ -178,14 +182,13 @@ WORK = {
 
 # ── the overlay: labels, badges, counters ──
 LABELS = [
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": -1},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": -1, "v": "below"},
     {"id": "l-slip", "text": "one slip a number", "kind": "part", "anchor": "slip4", "t0": TICKS[0] + 0.5, "t1": TICKS[0] + 3.6, "shot": "count", "side": 1},
     {"id": "l-dots", "text": "a dot a syllable", "kind": "calc", "anchor": "dots", "t0": A("vo03:sentence", 0.3), "t1": B["why"]["t0"] - 0.2, "shot": "fly", "side": 1},
     {"id": "l-harper", "text": "Jeremy Harper", "kind": "anchor", "anchor": "harper", "t0": A("vo04:man"), "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": -1},
     {"id": "l-summer", "text": "his summer: 89 days", "kind": "part", "anchor": "cal", "t0": t_summer, "t1": B["whoa"]["t0"] - 0.2, "shot": "summer", "side": 1},
-    {"id": "l-naive", "text": "a number a second: 32 yr", "kind": "part", "anchor": "naive", "t0": A("vo05:takes"), "t1": t_work0 - 0.3, "shot": "ruler", "side": 1},
+    {"id": "l-naive", "text": "a number a second: 32 yr", "kind": "part", "anchor": "naive", "t0": t_box + 0.6, "t1": t_work0 - 0.3, "shot": "ruler", "side": 1},
     {"id": "l-life", "text": "a lifetime: 73 yr", "kind": "anchor", "anchor": "life1", "t0": t_life0, "t1": t_work0 - 0.3, "shot": "ruler", "side": -1},
-    {"id": "l-one", "text": "one billion: 3 syllables", "kind": "calc", "anchor": "billion", "t0": t_once + 0.3, "t1": t_end, "shot": "home", "side": 1},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
@@ -224,9 +227,13 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24, balance=True, keep=("waking hours", "a sentence", "five whole lifetimes", "every number", "hundreds of millions", "out of reach")),
+    "captions": f.captions(max_chars=24, balance=True, keep=("waking hours", "a sentence of its own", "five whole lifetimes", "every number", "in the hundreds", "hundreds of millions", "out of reach", "at that pace", "if everyone", "the whole count")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
+for pg in film["captions"]:                      # numerals.py writes "a billion" as "1 billion"; the voice says "a"
+    for ln in pg["lines"]:
+        for w in ln:
+            w[0] = re.sub(r"^1 (billion|million)", r"a \1", w[0])
 
 # ── the studio's cue sheet ──
 # the tease opens on the end card's signature; the normal beat's section scratch would land 0.5 s into the title's
@@ -252,7 +259,6 @@ for k in range(5):                                               # each lifetime
 ev += [
     {"t": t_fly0, "kind": "swell", "tag": "fly", "t1": t_fly1},
     {"t": t_fly1, "kind": "arrive", "tag": "long-slip"},
-    {"t": t_once, "kind": "term.write", "tag": "one-billion"},
 ]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],

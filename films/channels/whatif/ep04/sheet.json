@@ -1,5 +1,5 @@
 {
- "duration": 74.4,
+ "duration": 73.8,
  "fps": 30,
  "preset": "envelope-working",
  "sections": [
@@ -30,25 +30,25 @@
   {
    "id": "whoa",
    "t0": 39.6,
-   "t1": 54.0,
+   "t1": 53.4,
    "energy": 0.75
   },
   {
    "id": "work",
-   "t0": 54.0,
-   "t1": 60.0,
+   "t0": 53.4,
+   "t1": 59.4,
    "energy": 0.5
   },
   {
    "id": "takeaway",
-   "t0": 60.0,
-   "t1": 67.2,
+   "t0": 59.4,
+   "t1": 66.6,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 67.2,
-   "t1": 74.4,
+   "t0": 66.6,
+   "t1": 73.8,
    "energy": 0.4
   }
  ],
@@ -266,7 +266,7 @@
    "t": 39.6,
    "kind": "section",
    "id": "whoa",
-   "t1": 54.0
+   "t1": 53.4
   },
   {
    "t": 39.96666666666667,
@@ -279,95 +279,90 @@
    "tag": "c-years"
   },
   {
-   "t": 43.93333333333333,
+   "t": 44.766666666666666,
+   "kind": "answer.box",
+   "tag": "spine-7",
+   "t1": 45.2667
+  },
+  {
+   "t": 45.36666666666667,
    "kind": "label",
    "tag": "l-naive"
   },
   {
-   "t": 44.733333333333334,
-   "kind": "answer.box",
-   "tag": "spine-7",
-   "t1": 45.2333
-  },
-  {
-   "t": 47.06666666666667,
+   "t": 46.86666666666667,
    "kind": "label",
    "tag": "l-life"
   },
   {
-   "t": 47.0667,
+   "t": 46.8667,
    "kind": "label",
    "tag": "life-1"
   },
   {
-   "t": 47.4167,
+   "t": 47.2167,
    "kind": "label",
    "tag": "life-2"
   },
   {
-   "t": 47.7667,
+   "t": 47.5667,
    "kind": "label",
    "tag": "life-3"
   },
   {
-   "t": 47.93333333333333,
+   "t": 47.7,
    "kind": "term.write",
    "tag": "spine-8"
   },
   {
-   "t": 48.1167,
+   "t": 47.9167,
    "kind": "label",
    "tag": "life-4"
   },
   {
-   "t": 48.4667,
+   "t": 48.2667,
    "kind": "label",
    "tag": "life-5"
   },
   {
-   "t": 54.0,
+   "t": 53.4,
    "kind": "section",
    "id": "work",
-   "t1": 60.0
+   "t1": 59.4
   },
   {
-   "t": 54.15,
+   "t": 53.55,
    "kind": "term.write",
-   "tag": "work-his pace, 16 h a day"
+   "tag": "work-10⁹ numbers × ≈ 21 syllables ÷ 2.6 a second, 16 h a day"
   },
   {
-   "t": 54.266666666666666,
+   "t": 53.666666666666664,
    "kind": "term.write",
    "tag": "work-never sleep"
   },
   {
-   "t": 55.8,
+   "t": 55.2,
    "kind": "term.write",
    "tag": "work-count twice as fast"
   },
   {
-   "t": 58.03333333333333,
+   "t": 57.43333333333333,
    "kind": "term.write",
    "tag": "work-British “hundred and”"
   },
   {
-   "t": 60.0,
+   "t": 59.4,
    "kind": "section",
    "id": "takeaway",
-   "t1": 67.2
+   "t1": 66.6
   },
   {
-   "t": 62.5,
+   "t": 61.9,
    "kind": "term.write",
-   "tag": "one-billion"
+   "tag": "spine-9"
   },
   {
-   "t": 62.8,
-   "kind": "label",
-   "tag": "l-one"
-  },
-  {
-   "t": 67.26666666666667,
+   "t": 66.66666666666667,
    "kind": "signature",
    "tag": "end"
   }
@@ -400,17 +395,17 @@
   },
   {
    "id": "vo06",
-   "t": 54.3,
+   "t": 53.7,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 60.3,
+   "t": 59.7,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 67.5,
+   "t": 66.9,
    "file": "vo/08.wav"
   }
  ]

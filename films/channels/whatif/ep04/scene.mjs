@@ -182,7 +182,7 @@ const SL = Object.fromEntries(slips.map((s) => [s.n, s]));
 const S = {
   you: [WD.figX, 1.5, -0.6], slip4: [SW / 2, 0, (SL[4].z0 + SL[4].z1) / 2], dots: [SW / 2 - 0.4, 0, SL[WD.long].z1 + 0.35],
   harper: [WD.harper[0], 1.6, WD.harper[2]], cal: [CAL_X + CW / 2, 0, (CAL.z0 + CAL.z1) / 2],
-  naive: [rx(RX.xR + 2.0), 0, ZY(RU.naive * 0.6)], life1: [rx(RX.life), 0, ZY(RU.life * 2.5)], billion: [SW / 2, 0, BIL_Z],
+  naive: [rx(RX.xR + 2.0), 0, ZY(RU.naive)], life1: [rx(RX.life), 0, ZY(RU.life * 2.5)], billion: [SW / 2, 0, BIL_Z],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -193,7 +193,7 @@ for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1,
 const mmss = (v) => { const s = Math.max(0, Math.floor(v + 1e-6)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
 for (const c of FILM.counters) {
   const o = { label: c.label, t0: c.t0, t1: c.t1, at: c.at };
-  if (c.fmt === "secs") Object.assign(o, { value: (t) => Math.min(c.keys[1][0] - c.keys[0][0] + 0.999, Math.max(0, t - c.keys[0][0])), fmt: mmss, minCh: 4 });
+  if (c.fmt === "secs") Object.assign(o, { value: (t) => c.keys[0][1] + Math.min(c.keys[1][1] - c.keys[0][1] - 0.001, Math.max(0, t - c.keys[0][0])), fmt: mmss, minCh: 4 });   // the number on the top slip, minus one: seconds since "1"
   else Object.assign(o, { keys: c.keys, ease: "linear", fmt: (v) => commas(Math.round(v)), unit: c.id === "c-years" ? "yr" : "", minCh: c.id === "c-years" ? 3 : 9, lit: (v) => v >= c.end - 1e-6 });
   hud.counter(c.id, o);
 }
@@ -213,7 +213,8 @@ const beat = (id) => FILM.beats.find((b) => b.id === id);
 const fadeIn = (t, t0, d = 0.3) => E.out3(seg(t, t0, t0 + d));
 
 window.seek = function (t) {
-  const st = stage(t), shot = st.name, home = shot === "home" || shot === "end" || shot === "front";
+  const st = stage(t), shot = st.name, home = shot === "end" || shot === "front" || (shot === "home" && t >= CUE.home + 1.2);
+  const away = shot === "home" ? 1 - E.inout2(seg(t, CUE.home, CUE.home + 1.2)) : home ? 0 : 1;   // the far line, fading on the push home
   const pose = rig.place(camera, shot, t);
   const gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
 
@@ -224,33 +225,36 @@ window.seek = function (t) {
     if (s.n <= 3) o = 1;
     else if (s.n <= 12) o = home ? 0 : fadeIn(t, CUE.ticks[s.n - 4], 0.25);
     else o = home ? 0 : fadeIn(t, CUE.short + 0.06 * (i - 12), 0.4);
-    if (shot === "ruler" || shot === "work") o *= 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 2.0) * 0.6;
+    if (shot === "ruler" || shot === "work" || (shot === "home" && !home)) o *= 1 - seg(t, beat("whoa").t0, beat("whoa").t0 + 2.0) * 0.6;
+    if (shot === "home" && s.n > 3) o *= away;
     const say = s.n === WD.long ? E.inout2(seg(t, CUE.say[0], CUE.say[1])) : 0;
     s.sh.set({ opacity: o, state: { say: Math.round(say * 60) / 60, lit: s.n === WD.long && t >= CUE.fly[1] && !home ? 1 : 0 } });
   });
-  skips.forEach(({ sk, after }) => sk.set({ opacity: home ? 0 : fadeIn(t, CUE.short + 0.06 * (after - 11), 0.4) }));
+  skips.forEach(({ sk, after }) => sk.set({ opacity: home ? 0 : away * fadeIn(t, CUE.short + 0.06 * (after - 11), 0.4) }));
   const bo = shot === "home" ? fadeIn(t, CUE.once, 0.35) : shot === "end" ? 1 - seg(t, FILM.endCard + 0.6, beat("tease").t1 - 0.3) : 0;
   billion.set({ opacity: bo, state: { say: 0, lit: 1 } });
   bilSkip.set({ opacity: bo });
 
   // the calendar fills a square a day from "man" to "million"; the months light on "summer"
   const k = Math.floor(FILM.world.cal.days * clamp01((t - CUE.cal[0]) / (CUE.cal[1] - CUE.cal[0])) + 1e-6);
-  calendar.set({ opacity: home ? 0 : 1, state: { k, m: t >= CUE.summer ? 1 : 0 } });
+  calendar.set({ opacity: away, state: { k, m: t >= CUE.summer ? 1 : 0 } });
 
   // the ruler: in with the whoa, drawn to 380 years by "years"; the naive 32 years from "takes"; the lifetimes
-  const ro = home ? 0 : fadeIn(t, beat("whoa").t0 - 0.2, 0.8);
+  const ro = away * fadeIn(t, beat("whoa").t0 - 0.2, 0.8);
   const yrs = RU.real * E.inout2(clamp01((t - CUE.ruler[0]) / (CUE.ruler[1] - CUE.ruler[0])));
   const lives = 5 * clamp01((t - CUE.life[0]) / (CUE.life[1] - CUE.life[0]));
   ruler.set({ opacity: ro, state: { y: Math.round(yrs), n: t >= FILM.labels.find((l) => l.id === "l-naive").t0 ? 1 : 0, l: Math.round(lives * 8) / 8 } });
 
-  harper.group.visible = !home;
-  you.group.visible = home || shot === "count";
+  harper.group.visible = away > 0.5;
+  you.group.visible = home || shot === "home" || shot === "count";
   you.set({ at: [WD.figX, 0.75, -0.6] });
 
   // the desk's lamp pool follows the camera's target; soft shadows under the figures
   desk.update({ grid: 1, pool: [pose.target[0], pose.target[2]], casters: [home || shot === "count" ? [WD.figX, 1.5, -0.6, 0.5] : null, !home ? [WD.harper[0], 1.5, WD.harper[2], 0.5] : null].filter(Boolean) });
 
   hud.update(t);
+  const tail = E.inout2(seg(t, beat("tease").t1 - 0.6, beat("tease").t1));   // the loop: the card lifts, the strips come back up
+  if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   spine.update(t, gate);
   work.update(t, gate);

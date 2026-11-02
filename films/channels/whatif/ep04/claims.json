@@ -19,7 +19,7 @@
   "accessed": "2026-11-02",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Computed exactly in calc.py over every number from 1 to 10^9 (no sampling), with American number names (no 'and': 'one hundred one', as the Wikipedia article describes standard American usage). The tape on screen and the spine ('≈ 21 syllables each') carry the figures."
+  "note": "Computed exactly in calc.py over every number from 1 to 10^9 (no sampling), with American number names (no 'and': 'one hundred one', as the Wikipedia article describes standard American usage). The tape on screen carries the syllables (a marker dot each); the show-your-work card's first row carries the average ('≈ 21 syllables each')."
  },
  {
   "id": "c3",
@@ -56,8 +56,8 @@
  },
  {
   "id": "c6",
-  "sentence": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four hundred years.",
-  "claim": "All 2.08e+10 syllables from 1 to 10^9 at Harper's 2.57 syllables a second take 8.08e+09 s of speaking; at 16 hours a day that is 384 years, said as nearly 400 (shown '≈ 380 yr').",
+  "sentence": "Keep going at his pace, sleeping when he slept, and the whole count takes nearly four centuries.",
+  "claim": "All 2.08e+10 syllables from 1 to 10^9 at Harper's 2.57 syllables a second take 8.08e+09 s of speaking; at 16 hours a day that is 384 years, said as nearly four centuries (shown '≈ 380 yr').",
   "source_url": "https://en.wikipedia.org/wiki/Jeremy_Harper_(record_holder)",
   "source_title": "Jeremy Harper (record holder), Wikipedia",
   "accessed": "2026-11-02",
