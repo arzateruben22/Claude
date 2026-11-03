@@ -130,7 +130,26 @@ export const look = (THREE, o) => {
   // slices; blood (p.hot) runs hot red. Colours are display-space, applied after the tone map and fog.
   const scanU = { uScanY: { value: 2 }, uScanOn: { value: 0 } };
   const SCAN = { set(y, on = 1) { scanU.uScanY.value = y; scanU.uScanOn.value = on; } };
+  // live scan (3 Nov review): any physically based material that comes through here is made wet unless it opts out
+  // (p.dry): a clearcoat film, a warm sheen at grazing angles and a cellular micro-normal (no untextured primitives)
+  const micro = (() => { const N = 256, c = document.createElement("canvas"); c.width = c.height = N; const k = c.getContext("2d"), img = k.createImageData(N, N);
+    let x = 88172645; const rnd = () => { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; };
+    const pts = Array.from({ length: 40 }, () => [rnd() * N, rnd() * N]), h = new Float32Array(N * N);
+    for (let yy = 0; yy < N; yy++) for (let xx = 0; xx < N; xx++) { let d1 = 1e9, d2 = 1e9; for (const [px, py] of pts) for (let oy = -1; oy <= 1; oy++) for (let ox = -1; ox <= 1; ox++) { const dx = xx - px - ox * N, dy = yy - py - oy * N, d = dx * dx + dy * dy; if (d < d1) { d2 = d1; d1 = d; } else if (d < d2) d2 = d; }
+      h[yy * N + xx] = Math.min(1, (Math.sqrt(d2) - Math.sqrt(d1)) / 9); }
+    for (let yy = 0; yy < N; yy++) for (let xx = 0; xx < N; xx++) { const at = (a, b) => h[((b + N) % N) * N + ((a + N) % N)], dx = (at(xx + 1, yy) - at(xx - 1, yy)) * 2.2, dy = (at(xx, yy + 1) - at(xx, yy - 1)) * 2.2, l = Math.hypot(dx, dy, 1), i = (yy * N + xx) * 4;
+      img.data[i] = 128 - (dx / l) * 127; img.data[i + 1] = 128 + (dy / l) * 127; img.data[i + 2] = 128 + 127 / l; img.data[i + 3] = 255; }
+    k.putImageData(img, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 4); return t; })();
+  const wetten = (m, p) => {
+    if (!m.isMeshPhysicalMaterial || p.dry || m.userData.wet) return;
+    m.userData.wet = true;
+    if (!m.clearcoat) { m.clearcoat = 0.6; m.clearcoatRoughness = 0.18; }
+    if (!m.sheen) { m.sheen = 0.4; m.sheenRoughness = 0.5; m.sheenColor = new THREE.Color(1, 0.6, 0.52); }
+    m.roughness = Math.min(m.roughness ?? 0.5, 0.55);
+    if (!m.normalMap && !m.transparent && p.micro !== 0) { m.normalMap = micro; m.normalScale = new THREE.Vector2(0.3, 0.3); }
+  };
   const patch = (m, p = {}) => {
+    wetten(m, p);
     const fres = p.fresnel ?? 0, fresPow = p.fresnelPower ?? 3, prev = m.onBeforeCompile;
     const sEdge = new THREE.Color(p.scanEdge || (p.hot ? "#FF5A6E" : "#BFF8E4")), sCore = new THREE.Color(p.scanCore || (p.hot ? "#2A0208" : "#021416"));
     m.onBeforeCompile = (sh, r) => {

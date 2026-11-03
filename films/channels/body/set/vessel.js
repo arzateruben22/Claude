@@ -65,7 +65,7 @@ export const vessel = (THREE, L, P, o = {}) => {
     { fresnel: o.fresnel ?? 0.3, contour: o.contour ?? 0.5, key: "vessel" });
   const inner = new THREE.Mesh(tube(P, { radius: R, s0, s1, segments: segs, radial, arc: [Math.PI / 2, (3 * Math.PI) / 2], inside: true }), mat);
   // the two cut edges: strips from the inner radius out through the wall, facing the cut (+n)
-  const rimMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.rimColor || "#B98479"), roughness: 0.6, metalness: 0, side: THREE.DoubleSide }), { fresnel: 0.1, key: "vrim" });
+  const rimMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.rimColor || "#B98479"), roughness: 0.6, metalness: 0, side: THREE.DoubleSide }), { fresnel: 0.1, key: "vrim" });
   // live scan: the cut faces are where the scan sliced the wall, so they glow the instrument's chartreuse
   const cutMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#D6F25F").multiplyScalar(o.cutGlow ?? 1.3), toneMapped: false, side: THREE.DoubleSide });
   // a strip on each cut, from radius a to b (fractions of the wall: 0 = the lumen, 1 = the outer face)

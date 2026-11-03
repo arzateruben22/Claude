@@ -49,7 +49,7 @@ L.studio(renderer, scene, 0.6);                          // live scan: reflectio
 if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const lin = (h) => L.lin(h);
 const G = Object.fromEntries(Object.keys(PLACE).map((k) => { const g = new THREE.Group(); g.position.set(...PLACE[k]); scene.add(g); return [k, g]; }));
-const mat = (hex, key, o = {}) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04,
+const mat = (hex, key, o = {}) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04,
   side: o.side ?? THREE.FrontSide, transparent: !!o.transparent, opacity: o.opacity ?? 1 }), { fresnel: o.fres ?? 0.3, fresnelPower: o.fp ?? 2.2, key });
 const SIG = "#D6F25F";
 
@@ -77,7 +77,7 @@ const seamDeform = (s, open) => {
   f.key = Math.round(open * 500); return f;
 };
 // the seam itself: a thin line along z at x = 0 that glows when it is named
-const seamMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, fog: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+const seamMat = new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, fog: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
 const seamLine = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 36), seamMat); seamLine.position.set(0, 0.12, 0); G.vein.add(seamLine);
 // the far wall of the vessel: a half pipe behind (radius 32, its axis at y = 30), lined
 const pipe = (() => {
@@ -89,7 +89,7 @@ const pipe = (() => {
   for (let i = 0; i < NX; i++) for (let j = 0; j < NP; j++) { const a = i * (NP + 1) + j, b = a + NP + 1; idx.push(a, b, a + 1, a + 1, b, b + 1); }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2)); g.setIndex(idx); g.computeVertexNormals();
   const tex = lining(THREE, { seed: 9 }); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  return new THREE.Mesh(g, L.patch(new THREE.MeshStandardMaterial({ color: lin("#D9A39A"), map: tex, roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.15, key: "pipe" }));
+  return new THREE.Mesh(g, L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D9A39A"), map: tex, roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.15, key: "pipe" }));
 })();
 G.vein.add(pipe);
 // the stream: red cells over the floor, faster in the middle of the vessel, wrapping along x
@@ -114,7 +114,7 @@ const PILED = [[22, -9, 2, 0.6, 2], [36, -12, -6, 0.3, 3], [12, -15, -10, 0.5, 4
   N.set({ pass: 1, settle: st }); G.vein.add(N.group); return N;
 });
 // the selectins: fine threads on the lining along the hero's path, lighting on "sticky"
-const THN = 160, thMat = new THREE.MeshStandardMaterial({ color: lin("#A8D89A"), emissive: lin("#A8D89A"), emissiveIntensity: 0, roughness: 0.6 });
+const THN = 160, thMat = new THREE.MeshPhysicalMaterial({ color: lin("#A8D89A"), emissive: lin("#A8D89A"), emissiveIntensity: 0, roughness: 0.6 });
 const threads = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.08, 1, 5), thMat, THN); threads.frustumCulled = false; G.vein.add(threads);
 { const r = rng(51), m = new THREE.Matrix4(), q = new THREE.Quaternion(); for (let i = 0; i < THN; i++) { const x = -72 + 74 * r(), z = -7 + 14 * r(), h = 0.7 + 0.8 * r(); q.setFromEuler(new THREE.Euler((r() - 0.5) * 0.8, 0, (r() - 0.5) * 0.8)); threads.setMatrixAt(i, m.compose(new THREE.Vector3(x, h / 2, z), q, new THREE.Vector3(1, h, 1))); } }
 // the hero and the faulty cell
@@ -193,7 +193,7 @@ const finger = new THREE.Group(); G.finger.add(finger);
 }
 // the sore spot by the nail fold: a swelling with a soft warm glow (never a wound, never blood or pus drawn)
 const SPOT = [4.2, 7.6, 3.4];
-const spotMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#C99079"), roughness: 0.5, emissive: lin("#FFB37A"), emissiveIntensity: 0.3 }), { fresnel: 0.2, key: "spot" });
+const spotMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C99079"), roughness: 0.5, emissive: lin("#FFB37A"), emissiveIntensity: 0.3 }), { fresnel: 0.2, key: "spot" });
 const spot = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), spotMat); spot.scale.set(3.6, 1.6, 3.0); spot.position.set(...SPOT); spot.lookAt(SPOT[0], SPOT[1] + 5, SPOT[2] + 3); finger.add(spot);
 // the white cells beneath it, ghosted through the skin
 const ghostMat = new THREE.MeshBasicMaterial({ color: lin("#F3EEE4"), transparent: true, opacity: 0, depthTest: false, depthWrite: false });

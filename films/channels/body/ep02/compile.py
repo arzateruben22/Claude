@@ -88,7 +88,7 @@ SKIN = {
     "red": [A("vo04:red#2", 0.0), A("vo04:swallows", 0.15)],   # the ray over the vein: down to the vein, swallowed
     "swallow": A("vo04:swallows", 0.15),
     "back": [A("vo04:so#2", 0.0), A("vo04:back", 0.3)],        # the ray beside the vein: down and back up
-    "section": [A("vo04:It", -0.2), A("vo04:Blood", -0.1)],   # the crane from the surface to the cut face
+    "section": [A("vo04:It", -0.2), A("vo04:Blood#2", -0.1)],   # the crane from the surface to the cut face
 }
 
 # ── the lung, shown 12× slower: the hero's seats fill over 0.25 s of lung time (3 s of film), ending on "second" ──
@@ -178,7 +178,7 @@ LABELS = [
     {"id": "iron", "text": "iron", "color": "bone", "mark": "dot", "at": "iron0", "t0": A("vo02:iron"), "t1": A("vo03:Watch", 0.2), "shot": "hb", "side": 1},
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2first", "t0": A("vo02:oxygen"), "t1": BOARD[0] + 0.4, "shot": "hb", "side": -1},
     {"id": "vein", "text": "vein, seen through skin", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:Veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
-    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Blood"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
+    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Blood#2"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
     {"id": "redlight", "text": "red light", "color": "#FF6A3D", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
     {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1, "fixed": True},
     {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:blood"), "t1": A("vo05:lungs", 0.4), "shot": "lung", "side": 1},   # gone before the push-in carries its anchor off the top (under the badge)
@@ -195,15 +195,17 @@ BADGES = [
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number on screen in one place from the title's exit to the
 # tally, its label naming the beat. Each is its own counter, handing over to the next in the same spot.
+TITLE_T1 = round(A("vo01:Room") + 0.35, 4)
 SPINE = [
-    {"id": "seats", "t0": round(A("vo01:Room") + 0.35, 4), "t1": A("vo02:quarter", -0.2), "value": 1_000_000_000, "label": "O₂ seats in this one cell, about"},   # c2: 1.0–1.2 billion, "about a billion"
+    {"id": "seats", "t0": round(max(A("vo01:Room") + 0.35, TITLE_T1 + 0.7), 4),   # after the title has fully gone (owner, 3 Nov)
+     "t1": A("vo02:quarter", -0.2), "value": 1_000_000_000, "label": "O₂ seats in this one cell, about"},   # c2: 1.0–1.2 billion, "about a billion"
     {"id": "copies", "t0": A("vo02:quarter"), "t1": CUT["hb"] - 0.3, "value": 270_000_000, "label": "hemoglobins in this one cell, about"},   # c1: the spoken number, on screen as it is said
     {"id": "aboard", "t0": CUT["hb"] + 0.4, "t1": CUT["skin"] - 0.3, "steps": BOARD, "unit": "of 4", "label": "O₂ aboard this hemoglobin"},
-    {"id": "venous", "t0": A("vo04:Blood"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
-    {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
+    {"id": "venous", "t0": A("vo04:darker"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
+    {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] - 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
-TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
-SCAN = {"up": [CUT["skin"] + 1.0, CUT["skin"] + 2.5], "park": 0.55, "off": CUT["lung"], "tag": "▼ scan view · under the skin"}   # live scan: the line rises from the bottom and parks; below it, scan view
+TALLY = {"t0": B["meanwhile"]["t0"] + 0.6, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
+SCAN = {"up": [999.0, 999.5], "park": 0.5, "off": 999.0, "tag": ""}   # no scan moment in No. 02 (review r1: the voice never asks for one)   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 02", "title": "A billion *passengers*", "t1": round(A("vo01:Room") + 0.35, 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Body Backstage · No. 03", "follow": "Follow Body Backstage",
        "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."}   # c1, c2
@@ -215,7 +217,7 @@ def fix_caps(pages):
     for pg in pages:
         ws = [w for ln in pg["lines"] for w in ln]
         for k, w in enumerate(ws):
-            if w[0] == "1 billion" and k > 0 and ws[k - 1][0] == "of":
+            if w[0] == "1 billion" and k > 0 and ws[k - 1][0] in ("of", "about"):
                 w[0] = "a billion"
     return pages
 

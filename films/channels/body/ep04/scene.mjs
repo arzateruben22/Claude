@@ -62,7 +62,7 @@ const lumpyGeo = (g, amt, f, seed) => { const p = g.attributes.position, v = new
 const AX = fibre(THREE, L, { length: 228.2, axonR: 2.0 });   // ends at the terminal's wall (x −8.8)
 AX.group.position.set(-237, 0, 0); world.add(AX.group);
 const tipMat = cellMat("#C9A9B6", "tip");
-const capMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8E7480"), roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.05, key: "tipcap" });
+const capMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8E7480"), roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.05, key: "tipcap" });
 {
   const prev = capMat.onBeforeCompile, mem = lin("#E7D3DA");
   capMat.onBeforeCompile = (sh, r) => {
@@ -93,8 +93,8 @@ const NV = VH.length;   // as many as fit (the rejection loop stops early on a c
 const ves = new THREE.InstancedMesh(lumpyGeo(new THREE.SphereGeometry(1, 48, 32), 0.07, 1.4, 3), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
 // calcium, outside the terminal's face, moving in; messengers, from the docked vesicles across the gap
 const CAN = 26, MSN = 192;
-const caMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
-const msMat = L.patch(new THREE.MeshStandardMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0.6, roughness: 0.4 }), { fresnel: 0, key: "msg" });
+const caMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
+const msMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0.6, roughness: 0.4 }), { fresnel: 0, key: "msg" });
 const caM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.42, 1), caMat, CAN); caM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); caM.frustumCulled = false; world.add(caM);
 const msM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.2, 1), msMat, MSN);   // a fine mist of molecules
 msM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); msM.frustumCulled = false; world.add(msM);
@@ -116,7 +116,7 @@ const RH = [];
     instance(rec, i, [x, y, z], q, 0.62 + 0.18 * hash(i + 62));
   } }
 // a haze of far particles behind the junction (teal, never mistaken for calcium): depth for the bokeh
-const HZN = 140, haze = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.22, 1), L.patch(new THREE.MeshStandardMaterial({ color: lin("#5E8A7E"), emissive: lin("#5E8A7E"), emissiveIntensity: 0.05, roughness: 0.7 }), { fresnel: 0, key: "haze" }), HZN);
+const HZN = 140, haze = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.22, 1), L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#5E8A7E"), emissive: lin("#5E8A7E"), emissiveIntensity: 0.05, roughness: 0.7 }), { fresnel: 0, key: "haze" }), HZN);
 haze.instanceMatrix.setUsage(THREE.DynamicDrawUsage); haze.frustumCulled = false; world.add(haze);
 const HZ = []; { const r = rng(55); while (HZ.length < HZN) { const q = [-30 + 100 * r(), -45 + 90 * r(), -90 + 115 * r()]; if (q[0] > 8 && q[0] < 13 && Math.abs(q[1]) < 8) continue; if (Math.hypot(q[0], q[1], q[2]) < 10 || Math.hypot(q[0] - 50.5, q[1], q[2]) < 40) continue; HZ.push(q); } }
 
@@ -234,7 +234,7 @@ let USED = null;
 }
 
 // ════ the air sac (the tease) ════════════════════════════════════════════════════════════════════
-const sacMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B98580"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.03, roughness: 0.5, side: THREE.DoubleSide }), { fresnel: 0.85, fresnelPower: 1.8, key: "sac" });
+const sacMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B98580"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.03, roughness: 0.5, side: THREE.DoubleSide }), { fresnel: 0.85, fresnelPower: 1.8, key: "sac" });
 const SAC = cutaway({ radius: 50, noise: { amp: 0.06, freq: 1.4, seed: 8 }, segments: [80, 60], material: sacMat });
 SAC.group.position.set(3000, 0, 0); sacG.add(SAC.group);
 SAC.set({ cut: { n: [0, 0, 1], d: 0 } }); sacG.updateMatrixWorld(true); SAC.update(); SAC.cap.visible = false;   // cut open: hollow, an air space (no cap disc)

@@ -25,7 +25,7 @@ const SIGNAL = "#D6F25F";
 
 export const fibre = (THREE, L, o = {}) => {
   const len = o.length ?? 400, ar = o.axonR ?? 1.0, M = o.myelin || null, group = new THREE.Group();
-  const axonMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.axonColor || "#C9A9B6"), roughness: 0.5, emissive: L.lin(SIGNAL), emissiveIntensity: 0 }), { fresnel: 0.3, key: "axon" });
+  const axonMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.axonColor || "#C9A9B6"), roughness: 0.5, emissive: L.lin(SIGNAL), emissiveIntensity: 0 }), { fresnel: 0.3, key: "axon" });
   // the axon carries the glow in its own shader: a band [x0, x1] along local x, brightness by distance to
   // the head (flow), or a list of lit node windows (jump)
   const U = { uHead: { value: -1e6 }, uTail: { value: 30 }, uMode: { value: 0 }, uNodes: { value: new Float32Array(64) }, uLit: { value: new Float32Array(64) }, uNodeW: { value: (M?.node ?? 2) * 0.5 + 0.6 }, uSig: { value: L.lin(SIGNAL) }, uGlow: { value: 1 } };
@@ -46,7 +46,7 @@ export const fibre = (THREE, L, o = {}) => {
   axon.geometry.rotateZ(-Math.PI / 2); axon.geometry.translate(len / 2, 0, 0);
   group.add(axon);
   const sheaths = [], nodes = [];
-  const sheathMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.myelinColor || "#F1E6D2"), roughness: 0.62, emissive: L.lin("#F6EEDC"), emissiveIntensity: 0.05 }), { fresnel: 0.35, fresnelPower: 2.2, key: "myelin" });
+  const sheathMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.myelinColor || "#F1E6D2"), roughness: 0.62, emissive: L.lin("#F6EEDC"), emissiveIntensity: 0.05 }), { fresnel: 0.35, fresnelPower: 2.2, key: "myelin" });
   if (M) {
     const g = M.node ?? 2, il = M.internode ?? 60, start = M.start ?? g;
     // one sheath: a lathe that tapers into the axon at both ends (the paranode), so the gap reads as a waist
@@ -58,6 +58,17 @@ export const fibre = (THREE, L, o = {}) => {
     for (let i = 24; i >= 0; i--) xs.push(il - (i / 24) * il * 0.12);
     for (const x of xs) { const e = Math.min(1, Math.min(x, il - x) / (il * 0.12)), s = Math.sin((e * Math.PI) / 2); prof.push(new THREE.Vector2(ar + (M.r - ar) * Math.pow(s, 0.7), x)); }
     const sg = new THREE.LatheGeometry(prof, 64); sg.rotateZ(-Math.PI / 2);
+    // live scan (review r1): myelin is a sheath wrapped round and round the axon, so it carries fine spiral lamellae
+    // (a bump map along the sheath) and a pearly sheen, never a smooth pill
+    if (!sheathMat.bumpMap) {
+      const c = document.createElement("canvas"); c.width = 64; c.height = 512; const k = c.getContext("2d");
+      k.fillStyle = "#808080"; k.fillRect(0, 0, 64, 512);
+      for (let y = 0; y < 512; y += 16) { k.strokeStyle = (y / 16) % 2 ? "rgba(255,255,255,.7)" : "rgba(0,0,0,.7)"; k.lineWidth = 5; k.beginPath(); k.moveTo(0, y); k.lineTo(64, y + 6); k.stroke(); }
+      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, Math.max(2, il / 4));
+      sheathMat.bumpMap = t; sheathMat.bumpScale = 3.0; sheathMat.normalMap = null;
+      sheathMat.sheen = 0.7; sheathMat.sheenRoughness = 0.35; sheathMat.sheenColor = new THREE.Color(1.0, 0.92, 0.75);
+      sheathMat.clearcoat = 0.7; sheathMat.clearcoatRoughness = 0.15; sheathMat.roughness = 0.38; sheathMat.needsUpdate = true;
+    }
     for (let x = start; x + il <= len; x += il + g) {
       const m = new THREE.Mesh(sg, sheathMat); m.position.x = x; group.add(m); sheaths.push([x, x + il]);
       if (sheaths.length > 1) nodes.push(x - g / 2);
@@ -68,9 +79,13 @@ export const fibre = (THREE, L, o = {}) => {
   // the spark at each node: a short glowing band around the bare axon, shown only while that node is lit (it reads
   // at any distance, where the axon's own glow is a few pixels wide)
   const bandG = new THREE.CylinderGeometry(ar * 1.75, ar * 1.75, (M?.node ?? 2) * 1.25, 28, 1, false); bandG.rotateZ(-Math.PI / 2);
+  // live scan (review r1): the spark is light, not a painted band: a soft additive glow that always faces the lens
+  const glowTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const k = c.getContext("2d"), g = k.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.18, "rgba(240,255,170,.85)"); g.addColorStop(0.5, "rgba(214,242,95,.25)"); g.addColorStop(1, "rgba(214,242,95,0)"); k.fillStyle = g; k.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(c); })();
   const bands = nodes.map((x) => {
-    const m = new THREE.Mesh(bandG, L.patch(new THREE.MeshStandardMaterial({ color: L.lin(SIGNAL), emissive: L.lin(SIGNAL), emissiveIntensity: 0, roughness: 0.3, transparent: true }), { fresnel: 0, key: "spark" }));
-    m.position.x = x; m.visible = false; group.add(m); return m;
+    const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: new THREE.Color(1, 1, 1), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0 }));
+    m.scale.setScalar(ar * 9); m.position.x = x; m.visible = false; group.add(m); return m;
   });
   for (let k = 0; k < 64; k++) U.uNodes.value[k] = nodes[k] ?? -1e6;
   const set = (s = {}) => {

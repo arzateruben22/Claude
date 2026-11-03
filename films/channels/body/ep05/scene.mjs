@@ -47,7 +47,7 @@ L.studio(renderer, scene, 0.6);                          // live scan: reflectio
 if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.026 });
 const lin = (h) => L.lin(h);
 const G = Object.fromEntries(["lung", "wall", "room", "exit"].map((k) => { const g = new THREE.Group(); g.position.set(...PLACE[k]); scene.add(g); return [k, g]; }));
-const mat = (hex, key, o = {}) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04, side: o.side ?? THREE.FrontSide, transparent: !!o.transparent }), { fresnel: o.fres ?? 0.4, fresnelPower: 2.2, key });
+const mat = (hex, key, o = {}) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04, side: o.side ?? THREE.FrontSide, transparent: !!o.transparent }), { fresnel: o.fres ?? 0.4, fresnelPower: 2.2, key });
 
 // ════ the lung: an airway tree, clusters of sacs, the hero cluster at the origin ═══════════════════
 const airwayMat = mat("#D99E90", "airway", { fres: 0.18, r: 0.5 });
@@ -123,7 +123,7 @@ HERO.forEach((C, k) => { const r = rng(300 + k); for (let n = 0; n < 30; n++) {
 // gently lumpy, no pores: not foam, so the pale bubbles under it are the break), opaque while held, so "bubbles" is a
 // reveal; it fades by alpha hashing (no sorting: depth and focus stay right). 26 Oct audit: was pale #D9AFA6, matte
 // (roughness 0.9) and finely pitted (noise amp 0.08, freq 5), which read as airy foam
-const fleshMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8A3A34"), roughness: 0.45, alphaHash: true, opacity: 0, emissive: lin("#3A1512"), emissiveIntensity: 0.06 }), { fresnel: 0.3, key: "flesh" });
+const fleshMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8A3A34"), roughness: 0.45, alphaHash: true, opacity: 0, emissive: lin("#3A1512"), emissiveIntensity: 0.06 }), { fresnel: 0.3, key: "flesh" });
 const FLESHM = cutaway({ radius: HS.r * 2.9, noise: { amp: 0.035, freq: 1.3, seed: 7 }, segments: [128, 96], material: fleshMat });
 FLESHM.group.position.copy(HC.reduce((a, s) => a.add(s.c), new THREE.Vector3()).multiplyScalar(1 / HC.length)); G.lung.add(FLESHM.group);
 const writeLung = (t) => {
@@ -150,7 +150,7 @@ const endo = new THREE.Mesh(new THREE.BoxGeometry(WS.endo, 30, 8), lumenMat); en
 const plasma = new THREE.Mesh(new THREE.PlaneGeometry(14, 30), mat("#3A2427", "plasma", { fres: 0, ei: 0, r: 0.9 })); plasma.position.set(WS.wall + WS.endo + 7, 0, -4); G.wall.add(plasma);
 const rbcM = new THREE.Mesh(rbcGeometry(THREE, { around: 48, along: 32 }), cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: "#B8445A", instanced: false, roughness: 0.55, fresnel: 0.18 }));
 rbcM.rotation.set(0, -0.55, Math.PI / 2); rbcM.position.set(3.8, -1, 0); G.wall.add(rbcM);   // turned a little: the dimple shows
-const o2Mat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.4, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
+const o2Mat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.4, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
 const WO = swarm({ n: 70, seed: 9, home: { box: [[-12, -12, -2], [-1.5, 12, 2]] }, waves: [{ amp: [0.9, 0.9, 0.3], omega: 1.2 }] });
 const woM = WO.mesh(new THREE.IcosahedronGeometry(0.12, 1), o2Mat); G.wall.add(woM);
 const thickAt = (t) => 1 + 5 * E.inout2(seg(t, FILM.wall.thick[0], FILM.wall.thick[1]));   // ×1 → ×6
@@ -201,7 +201,7 @@ COURT.position.set(1.6, 0, 0); COURT.rotation.y = 0;
 // the person: a simple standing figure, 1.75 m
 const skinMat = mat("#D9B8A8", "person", { fres: 0.2 });
 // the torso has its own material: it marks the chest on "chest" and turns see-through for the sponge inside
-const torsoMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#D9B8A8"), roughness: 0.6, emissive: lin("#D6F25F"), emissiveIntensity: 0, transparent: true, opacity: 1, depthWrite: true }), { fresnel: 0.2, fresnelPower: 2.2, key: "torso" });
+const torsoMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D9B8A8"), roughness: 0.6, emissive: lin("#D6F25F"), emissiveIntensity: 0, transparent: true, opacity: 1, depthWrite: true }), { fresnel: 0.2, fresnelPower: 2.2, key: "torso" });
 const PERSON = new THREE.Group(); G.room.add(PERSON);
 const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.46, 8, 24), torsoMat); torso.position.y = 1.17; torso.scale.set(1, 1, 0.62); PERSON.add(torso);
 const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.055, 0.12, 16), skinMat); neck.position.y = 1.5; PERSON.add(neck);
@@ -215,7 +215,7 @@ for (const s of [-1, 1]) {
 const SPN = 150, sponge = new THREE.InstancedMesh(SACG, sacMat, SPN); sponge.instanceMatrix.setUsage(THREE.DynamicDrawUsage); sponge.frustumCulled = false; PERSON.add(sponge);
 const SPG = []; { const r = rng(71); while (SPG.length < SPN) { const v = [2 * r() - 1, 2 * r() - 1, 2 * r() - 1]; if (v[0] * v[0] + v[1] * v[1] + v[2] * v[2] > 1) continue; const s = SPG.length % 2 ? 1 : -1; SPG.push([0.08 * s + 0.07 * v[0], 1.27 + 0.15 * v[1], 0.05 * v[2]]); } }
 // air in and out of the mouth on each breath
-const AIRN = 24, airM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.012, 1), L.patch(new THREE.MeshStandardMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.3, roughness: 0.4 }), { fresnel: 0, key: "air" }), AIRN);
+const AIRN = 24, airM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.012, 1), L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: 0.3, roughness: 0.4 }), { fresnel: 0, key: "air" }), AIRN);
 airM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); airM.frustumCulled = false; PERSON.add(airM);
 const writeRoom = (t) => {
   const R = FILM.room, unf = (i) => { const d = TILE[i].d * 0.55; return E.inout2(seg(t, R.unfold[0] + (R.unfold[1] - R.unfold[0]) * d, R.unfold[0] + (R.unfold[1] - R.unfold[0]) * (d + 0.45))); };

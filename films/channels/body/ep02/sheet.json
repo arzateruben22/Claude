@@ -86,19 +86,19 @@
    "gain": -3.0
   },
   {
-   "t": 2.3167,
+   "t": 2.9,
+   "kind": "dissolve",
+   "tag": "billion",
+   "t1": 4.3
+  },
+  {
+   "t": 3.0167,
    "kind": "counter.show",
    "tag": "seats",
    "pos": [
     0.5,
     0.262
    ]
-  },
-  {
-   "t": 2.9,
-   "kind": "dissolve",
-   "tag": "billion",
-   "t1": 4.3
   },
   {
    "t": 4.8,
@@ -225,8 +225,8 @@
    ]
   },
   {
-   "t": 27.466666666666665,
-   "kind": "counter.show",
+   "t": 30.566666666666666,
+   "kind": "label",
    "tag": "venous",
    "pos": [
     0.573,
@@ -234,8 +234,8 @@
    ]
   },
   {
-   "t": 27.466666666666665,
-   "kind": "label",
+   "t": 31.833333333333332,
+   "kind": "counter.show",
    "tag": "venous",
    "pos": [
     0.573,
@@ -373,18 +373,18 @@
    "t1": 65.2
   },
   {
-   "t": 59.9,
+   "t": 60.0,
+   "kind": "beat",
+   "tag": "beat1"
+  },
+  {
+   "t": 60.2,
    "kind": "counter.show",
    "tag": "tally",
    "pos": [
     0.458,
     0.29
    ]
-  },
-  {
-   "t": 60.0,
-   "kind": "beat",
-   "tag": "beat1"
   },
   {
    "t": 60.8,
