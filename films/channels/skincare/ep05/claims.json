@@ -111,23 +111,34 @@
  },
  {
   "id": "c12",
-  "sentence": "Both groups missed mornings; one missed far fewer, and the skin kept count.",
-  "claim": "In the Nambour trial, the daily group applied sunscreen far more often than the discretionary group, though neither group used it every day.",
+  "sentence": "Both groups missed mornings; one missed fewer, and the skin kept count.",
+  "claim": "In the Nambour trial, the daily group applied sunscreen more often than the discretionary group, though neither group used it every day.",
   "source_url": "https://mdedge.com/familymedicine/article/59024/dermatology/daily-sunscreen-slowed-skin-aging-middle-aged-adults",
   "source_title": "Daily sunscreen slowed skin aging in middle-aged adults (MDedge Family Medicine, 2013, on Hughes et al., Ann Intern Med 2013;158:781-790)",
   "accessed": "2026-11-02",
-  "note": "Excerpts (via search): 'By the end of the study, 77% of the daily sunscreen users applied sunscreen at least 3-4 days per week, vs. 33% of the discretionary users.' WBUR (4 Jun 2013) gives the same figures. 'Both' = the two model hands, standing for the two groups; 'missed mornings' follows from fewer than all of the daily group applying it even 3–4 days a week; 'one had more' = 77% vs 33%. The figures go on screen; confirm them in the paper's results. | Coordinator ruling (2 Nov): the 77% vs 33% figures came from coverage of Hughes 2013, not the paper itself; dropped from voice and screen until confirmed from the paper.",
+  "note": "Excerpts (via search): 'By the end of the study, 77% of the daily sunscreen users applied sunscreen at least 3-4 days per week, vs. 33% of the discretionary users.' WBUR (4 Jun 2013) gives the same figures. 'Both' = the two model hands, standing for the two groups; 'missed mornings' follows from fewer than all of the daily group applying it even 3–4 days a week; 'one had more' = 77% vs 33%. The figures go on screen; confirm them in the paper's results. | Coordinator ruling (2 Nov): the 77% vs 33% figures came from coverage of Hughes 2013, not the paper itself; dropped from voice and screen until confirmed from the paper. | 3 Nov: the voice softened from 'far fewer' to 'fewer' (reviewer: 'far' quantified the unconfirmed 77% vs 33%). The design itself (daily application vs use at discretion) and the coverage support 'more often'; the figures stay off voice and screen until confirmed in the paper's results.",
   "verified_via": "search excerpt",
   "status": "ok"
  },
  {
   "id": "c11",
-  "sentence": "Both groups missed mornings; one missed far fewer, and the skin kept count.",
-  "claim": "The daily group had more sunscreen mornings than the discretionary group (adherence 77% vs 33% at least 3–4 days a week), and sun damage accumulates in skin over time, much of it before it can be seen.",
+  "sentence": "Both groups missed mornings; one missed fewer, and the skin kept count.",
+  "claim": "The daily group had more sunscreen mornings than the discretionary group, and sun damage accumulates in skin over time, much of it before it can be seen.",
   "source_url": "https://www.aad.org/public/everyday-care/sun-protection/sun-damage-skin/hidden-sun-damage",
   "source_title": "See how the sun damages your skin (American Academy of Dermatology)",
   "accessed": "2026-11-02",
   "note": "AAD excerpts (via search): 'the more sun damage we accumulate, the greater our risk of skin cancer and prematurely aged skin'; 'UV photography allows us to see sun damage that you cannot see with the naked eye.' 'Record' is a metaphor for that accumulation; the dermatologist checks it reads that way. 'Had more' = more mornings with sunscreen than the other group (Hughes 2013 adherence, see c12). 'Kept count' is a metaphor for accumulation; the dermatologist checks it reads that way and not as advice.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c14",
+  "sentence": "Next: tanning beds share a list with cigarettes.",
+  "claim": "IARC (the WHO's cancer agency) classifies UV-emitting tanning devices in Group 1, 'carcinogenic to humans', the same group as tobacco smoking (2009).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/19655431/",
+  "source_title": "El Ghissassi F, et al. (WHO IARC Monograph Working Group). A review of human carcinogens, Part D: radiation. Lancet Oncol 2009;10:751–752",
+  "accessed": "2026-11-03",
+  "note": "The tease names No. 006's subject; the same source as No. 006's claim c2.",
   "verified_via": "search excerpt",
   "status": "ok"
  }
