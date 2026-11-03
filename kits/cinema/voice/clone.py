@@ -1,16 +1,16 @@
 """Voice a film's script in the owner's cloned voice (Chatterbox, MIT, CPU): tts.py-compatible output.
 
-  $CINEMA_VOICE/clone-venv/bin/python -I kits/cinema/voice/clone.py SCRIPT.md OUTDIR --takes TAKES_DIR [--takes DIR2] \
+  $CINEMA_VOICE/clone-venv/bin/python -I kits/cinema/voice/clone.py SCRIPT.md OUTDIR --speaker female --takes TAKES_DIR [--takes DIR2] \
       [--whisper-takes WDIR] [--whisper-beats id,id] [--refresh-ref]
 
 TAKES_DIR holds the owner's polished takes (polish.py output: NN.wav + lines.json). The reference set is
-picked automatically, once, and cached PRIVATELY in ~/.cache/cinema-voice/owner/ (refused if that
+picked automatically, once, and cached PRIVATELY in ~/.cache/cinema-voice/<speaker>/ (refused if that
 folder is inside a git work tree): the cleanest 30-90 s of narration-style speech (ref_narration.wav) and
 the cleanest whisper take (ref_whisper.wav). Nothing of the owner's voice is ever written into the repo
 except the synthetic output lines, which are model output, not recordings.
 
 Writes OUTDIR/NN.wav (24 kHz mono, -21 LUFS, trimmed) + OUTDIR/lines.json with tts.py's fields
-("voice": "clone-owner", "phonemes": null), so align.py, lint.py and the compilers work unchanged.
+("voice": f"clone-{a.speaker}", "phonemes": null), so align.py, lint.py and the compilers work unchanged.
 `--pick-only` selects and caches the reference without loading the model (use it to check the pick).
 """
 import argparse, hashlib, json, os, subprocess, sys, time
@@ -24,7 +24,8 @@ from scriptfile import script_lines   # noqa: E402
 SR = 24000
 HERE = Path(__file__).resolve().parent
 CACHE = Path(os.environ.get("CINEMA_VOICE", Path.home() / ".cache/cinema-voice"))
-OWNER = Path.home() / ".cache/cinema-voice/owner"
+ROOT = Path.home() / ".cache/cinema-voice"   # one private folder per speaker: ROOT/<speaker>/
+OWNER = ROOT / "owner"                     # set per run by main() from --speaker
 LOCK = HERE / "clone.lock.json"
 COND_S = 10.0                      # seconds of reference the model conditions on
 
@@ -76,6 +77,8 @@ def candidates(dirs):
         meta = json.loads((d / "lines.json").read_text()) if (d / "lines.json").exists() else {"lines": []}
         info = {l["file"]: l for l in meta["lines"]}
         for f in sorted(d.glob("*.wav")):
+            if "consent" in f.name.lower():
+                continue
             x = load(f)
             dur = len(x) / SR
             l = info.get(f.name)
@@ -134,6 +137,13 @@ def pick_reference(takes, whisper_takes):
     return pick
 
 
+def require_consent(dirs):
+    """A speaker is cloned only if their takes include the consent line (a file with "consent" in its name).
+    This checks the take exists; a person must still listen that it says the consent sentence."""
+    if not any("consent" in f.name.lower() for d in dirs for f in Path(d).glob("*.wav")):
+        sys.exit("NO CONSENT TAKE found in --takes (a WAV with 'consent' in its name): not cloning this voice")
+
+
 def trim(a, db=-45.0, pad=0.02):
     e = np.abs(a) > np.abs(a).max() * 10 ** (db / 20)
     i, j = int(np.argmax(e)), len(a) - int(np.argmax(e[::-1]))
@@ -170,6 +180,10 @@ def main():
     ap.add_argument("--takes", action="append", required=True, help="polished takes dir (polish.py output); repeatable")
     ap.add_argument("--whisper-takes", action="append", default=[])
     ap.add_argument("--whisper-beats", default="", help="comma list of beat ids to voice with the whisper reference")
+    ap.add_argument("--speaker", required=True, help="speaker id, e.g. female or male; refs go in ~/.cache/cinema-voice/<id>/")
+    ap.add_argument("--theme", help="theme.json: narrator.voice 'clone-<id>' must match --speaker (guards a wrong-voice render)")
+    ap.add_argument("--line-voice", action="append", default=[], metavar="BEAT=SPEAKER",
+                    help="voice this beat with another already-prepared speaker (two-host formats later)")
     ap.add_argument("--refresh-ref", action="store_true")
     ap.add_argument("--pick-only", action="store_true")
     ap.add_argument("--exaggeration", type=float, default=0.4, help="calm narrator ~0.35-0.5")
@@ -177,9 +191,16 @@ def main():
     ap.add_argument("--temperature", type=float, default=0.7)
     ap.add_argument("--seed", type=int, default=1234)
     a = ap.parse_args()
+    global OWNER
+    OWNER = ROOT / a.speaker
+    if a.theme:
+        want = json.loads(Path(a.theme).read_text()).get("narrator", {}).get("voice")
+        if want != f"clone-{a.speaker}":
+            sys.exit(f"{a.theme} narrator.voice is {want!r}, but --speaker {a.speaker} would make 'clone-{a.speaker}'")
     if in_git(OWNER.parent if OWNER.parent.exists() else Path.home()):
         sys.exit(f"{OWNER} is inside a git work tree; refusing (owner voice data stays out of git)")
     if a.refresh_ref or not (OWNER / "cond_narration.wav").exists():
+        require_consent(a.takes)
         pick = pick_reference(a.takes, a.whisper_takes)
         print("reference:", json.dumps(pick))
     if a.pick_only:
@@ -190,16 +211,22 @@ def main():
     from chatterbox.tts import ChatterboxTTS
     torch.set_num_threads(os.cpu_count() or 4)
     model = ChatterboxTTS.from_local(mdir, "cpu")
+    over = dict(x.split("=", 1) for x in a.line_voice)
     whisper_ids = {b for b in a.whisper_beats.split(",") if b}
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    meta = {"voice": "clone-owner", "speed": 1.0, "lang": "en-us",
+    meta = {"voice": f"clone-{a.speaker}", "speed": 1.0, "lang": "en-us",
             "model_sha256": hashlib.sha256(json.dumps(shas, sort_keys=True).encode()).hexdigest(),
             "model_files_sha256": shas, "voices_sha256": sha256(OWNER / "cond_narration.wav"),
             "chatterbox_tts": md.version("chatterbox-tts"), "torch": torch.__version__, "python": sys.version.split()[0],
             "watermark": "resemble-perth (imperceptible, survives re-encoding; do not strip)", "lines": []}
     for i, (beat, text, stars) in enumerate(script_lines(a.script), 1):
-        whisper = beat in whisper_ids and (OWNER / "cond_whisper.wav").exists()
-        ref = OWNER / ("cond_whisper.wav" if whisper else "cond_narration.wav")
+        whisper = beat in whisper_ids and (ROOT / over.get(beat, a.speaker) / "cond_whisper.wav").exists()
+        spk = over.get(beat, a.speaker)
+        ref = ROOT / spk / ("cond_whisper.wav" if whisper else "cond_narration.wav")
+        if not ref.exists():
+            ref = ROOT / spk / "cond_narration.wav"
+        if not ref.exists():
+            sys.exit(f"no prepared reference for speaker {spk!r}: run clone.py --pick-only --speaker {spk} first")
         torch.manual_seed(a.seed + i)
         t0 = time.time()
         wav = model.generate(text, audio_prompt_path=str(ref), exaggeration=a.exaggeration * (0.6 if whisper else 1),
@@ -210,7 +237,7 @@ def main():
         f = out / f"{i:02d}.wav"
         sf.write(f, audio, SR, subtype="PCM_24")
         meta["lines"].append({"id": f"vo{i:02d}", "beat": beat, "text": text, "stars": stars, "phonemes": None,
-                              "file": f.name, "dur": round(len(audio) / SR, 3), "sha256": sha256(f)})
+                              "file": f.name, **({"voice": f"clone-{spk}"} if spk != a.speaker else {}), "dur": round(len(audio) / SR, 3), "sha256": sha256(f)})
         print(f"vo{i:02d} {beat:<8} {len(audio) / SR:5.2f} s  ({time.time() - t0:4.0f} s to make{', whisper' if whisper else ''})  {text[:50]}")
     (out / "lines.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False))
 

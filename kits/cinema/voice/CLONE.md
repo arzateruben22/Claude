@@ -29,7 +29,7 @@ not yet verified from the source.** What was verified, and what is still open:
   lives in its own venv (`clone-venv`, Python 3.11 preferred), apart from the Kokoro one. Torch comes
   from PyPI, so download.pytorch.org isn't needed. `clone.lock.json` pins the weights revision and the
   SHA256 of every file; they are filled on the first download, then reviewed and committed.
-- **Privacy.** References and conditioning clips live only in `~/.cache/cinema-voice/owner/`
+- **Privacy.** References and conditioning clips live only in `~/.cache/cinema-voice/<speaker>/ (one folder per person)`
   (chmod 700). clone.py refuses to run if that path is in a git work tree; `.gitignore` also blocks
   `owner/`, `*.pt`, `*.safetensors`, `voice-ab/`.
 
@@ -43,7 +43,7 @@ needed after the allow-list changes.
 
 ```
 kits/cinema/voice/setup_clone.sh
-$CINEMA_VOICE/clone-venv/bin/python -I kits/cinema/voice/clone.py films/channels/physics/ep01/script.md films/channels/physics/ep01/vo-clone \
+$CINEMA_VOICE/clone-venv/bin/python -I kits/cinema/voice/clone.py --speaker female --theme <channel>/theme.json films/channels/physics/ep01/script.md films/channels/physics/ep01/vo-clone \
     --takes <polished takes> [--whisper-takes <dir> --whisper-beats id]
 $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/channels/physics/ep01/vo-clone
 ```
@@ -51,3 +51,12 @@ $CINEMA_VOICE/venv/bin/python -I kits/cinema/voice/align.py films/channels/physi
 Reference pick (tested on Kokoro stand-ins; no real voice yet): the takes of 3 s or more at 2.0-3.3 words/s,
 ranked by voice-over-room level, the cleanest concatenated to about 60 s (30-90 s). A 10 s window
 of the single cleanest take is the conditioning clip. Output is level-matched to -21 LUFS, peaks -2 dBFS.
+
+## Two voices
+
+One reference set per speaker (`--speaker female|male`, folder `~/.cache/cinema-voice/<id>/`). `lines.json`
+says `"voice": "clone-<id>"`. A channel names its narrator in `theme.json`, `{"narrator": {"voice": "clone-female"}}`;
+`--theme` makes clone.py refuse a mismatched `--speaker`. A beat can use the other speaker with
+`--line-voice BEAT=male` (that line then carries its own `"voice"`); no duet format is built. **Consent gate:**
+a speaker's takes must include a WAV with "consent" in its name or clone.py refuses; it only checks the
+take exists, so a person still has to listen that it says the consent line.
