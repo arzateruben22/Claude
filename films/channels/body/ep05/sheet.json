@@ -73,6 +73,11 @@
    "gain": -3.0
   },
   {
+   "t": 2.9667,
+   "kind": "counter.show",
+   "tag": "q"
+  },
+  {
    "t": 5.2,
    "kind": "section",
    "id": "normal",

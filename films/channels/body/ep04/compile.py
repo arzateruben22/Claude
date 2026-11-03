@@ -123,7 +123,8 @@ LABELS = [
 # the handoff readout counts from the signal's arrival at the terminal to the receptors lighting, in the replay's time
 _k = (REPLAY[1] - REPLAY[0]) / (REL["post"] + 0.4 - REL["sig"][0])
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": B["normal"]["t0"], "text": "?", "unit": "", "label": "touching"},
+    {"id": "q", "t0": round(A("vo01:For", 0.3) + 0.7, 4),   # after the title has fully gone (owner, 3 Nov: nothing in the title zone)
+     "t1": B["normal"]["t0"], "text": "?", "unit": "", "label": "touching"},
     {"id": "count", "t0": A("vo02:hundred", -0.1), "t1": A("vo02:Through", 0.0), "text": "100+ trillion", "unit": "", "label": "brain junctions, estimated"},   # c3
     {"id": "width", "t0": A("vo04:gap", 0.15), "t1": A("vo04:jump", 0.2), "text": "20–50", "unit": "nm", "label": "the gap, about"},   # c10
     {"id": "hand", "t0": REPLAY[0], "t1": B["meanwhile"]["t0"] - 0.1, "keys": [[round(REPLAY[0] + (REL["sig"][1] - REL["sig"][0]) * _k, 4), 0.0], [round(REPLAY[0] + (REL["post"] - REL["sig"][0]) * _k, 4), 0.001]],
