@@ -288,7 +288,7 @@
    "text": "acetylcholine",
    "kind": "water",
    "anchor": "gap",
-   "t0": 9.65,
+   "t0": 10.25,
    "t1": 13.4667,
    "shot": "nmj",
    "side": 1,
@@ -344,7 +344,7 @@
   },
   {
    "id": "b-micro",
-   "text": "micrograph · stained skin",
+   "text": "tissue photo · stained skin",
    "t0": 16.916666666666668,
    "t1": 19.6667,
    "slot": "tl"

@@ -89,7 +89,7 @@ const shaftC = createShaft({ from: [XC - 6, 18, -4], to: [XC + 1, -6, 1], radius
 const dustC = particles(300, [[XC - 9, -11, 0.5], [XC + 9, 6, 9]], 0.07, "#FFF2F8");
 
 window.SCENE_READY = Promise.all([load(SECTION), load(DERMIS)]).then(([sec, der]) => {
-  faceMat.map = sec; faceMat.needsUpdate = true;
+  sec.repeat.set(1, 1); sec.wrapS = sec.wrapT = THREE.ClampToEdgeWrapping; faceMat.map = sec; faceMat.needsUpdate = true;   // one copy, no tile seams
   backC.material.map = der; backC.material.needsUpdate = true;
 });
 

@@ -89,7 +89,7 @@ SCAN = {"sweep": [CUE["twenty"] - 0.05, CUE["twenty"] + 0.75]}   # the signature
 TITLE = {"series": "Skin Sense · No. 004", "title": "The deadliest *dose*", "t1": A("vo01:theory,", -0.2), "sig": A("vo01:frown?", 0.35)}
 LABELS = [
     {"id": "l-nerve", "text": "nerve ending", "kind": "cell", "anchor": "bulb", "t0": CUE["nerve"] + 0.4, "t1": CUE["muscle"], "shot": "nmj", "side": -1, "v": "above"},
-    {"id": "l-ach", "text": "acetylcholine", "kind": "water", "anchor": "gap", "t0": CUE["messenger"] + 0.15, "t1": CUE["skin"], "shot": "nmj", "side": 1, "v": "below"},
+    {"id": "l-ach", "text": "acetylcholine", "kind": "water", "anchor": "gap", "t0": CUE["messenger"] + 0.75, "t1": CUE["skin"], "shot": "nmj", "side": 1, "v": "below"},
     {"id": "l-snap", "text": "SNAP-25", "kind": "water", "anchor": "snap", "t0": CUE["cuts"] + 0.3, "t1": B["why"]["t0"], "shot": "nmj2", "side": 1, "v": "below"},
 ]
 BADGES = [
@@ -98,7 +98,7 @@ BADGES = [
     {"id": "b-jama", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"] + 0.15, "t1": CUE["nerve"], "slot": "tl"},
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-model2", "text": "model, not a photo", "t0": CUE["skin"] + 0.2, "t1": CUE["botulinum"], "slot": "tl"},
-    {"id": "b-micro", "text": "micrograph · stained skin", "t0": CUE["botulinum"] + 0.25, "t1": CUE["slips"], "slot": "tl"},
+    {"id": "b-micro", "text": "tissue photo · stained skin", "t0": CUE["botulinum"] + 0.25, "t1": CUE["slips"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": CUE["slips"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model3", "text": "model, not a photo", "t0": B["why"]["t0"] + 0.3, "t1": CUE["guessed"], "slot": "tl"},
     {"id": "b-illus2", "text": "illustration", "t0": CUE["guessed"] + 0.3, "t1": B["whoa"]["t0"], "slot": "tl"},
