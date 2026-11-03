@@ -17,6 +17,7 @@ import { DERMIS } from "../set/ref/textures.js";
 import { createAcneFollicle } from "../set/acne01.js";
 import { toneColor } from "../set/section.js";
 import { lookV2, richen, hazeVolume, bokeh } from "../set/prod.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -71,6 +72,7 @@ const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
 // the channel look (v2): skin, hairs, fog, graded backdrop, one grade; follicles and stream cells given surfaces and variety
 const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });
+unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
 // the graded backdrop drawn by WebGL too (an opaque canvas): additive light (the stream's shaft, haze) would otherwise
 // write alpha and read darker than the CSS gradient behind it
 scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
