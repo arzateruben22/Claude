@@ -126,7 +126,7 @@ const drawPlate = () => {
 const T = createTerrain({ seed: 31, spots: 0, segs: 400 });
 T.group.position.x = XB; scene.add(T.group);
 const skinM = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 14, seed: 6, micro: 0.45 });
-skinM.roughness = 0.56; skinM.sheen = 0.3; skinM.sheenRoughness = 0.5; skinM.sheenColor.setRGB(0.62, 0.36, 0.24); skinM.clearcoat = 0.08; skinM.clearcoatRoughness = 0.55; skinM.specularIntensity = 0.3;
+// skin sheen, roughness and speculars come from the shared skinMaterial (the channel-wide production pass)
 const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.34, 0.24, 0.66) }, uGlow: { value: new THREE.Color(0.06, 0.035, 0.15) } };
 skinM.onBeforeCompile = (sh) => {   // the UV camera: one material, a soft seam between the two banks' halves
   Object.assign(sh.uniforms, UV);
@@ -143,8 +143,7 @@ skinM.customProgramCacheKey = () => "ep06-uvskin";
 T.mesh.material = skinM;
 let hairs = null;
 T.group.traverse((o) => { if (o.isInstancedMesh) hairs = o; else if (o.isMesh && o !== T.mesh) o.visible = false; });
-hairs.geometry = hairs.geometry.clone().scale(0.75, 1, 0.75);
-hairs.material = new THREE.MeshPhysicalMaterial({ color: 0x0e0806, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.3, sheen: 0.3, sheenColor: new THREE.Color(0.5, 0.4, 0.6) });
+// hair thickness and material come from the shared terrain (the production pass); this episode only adds a slow drift
 const hairBase = Array.from({ length: hairs.count }, (_, i) => { const m = new THREE.Matrix4(); hairs.getMatrixAt(i, m); return m; });
 const hairPh = hairBase.map(() => R() * 6.28), hm = new THREE.Matrix4(), hr = new THREE.Matrix4();
 const driftHairs = (t) => { hairBase.forEach((m, i) => { hr.makeRotationFromEuler(new THREE.Euler(0.05 * Math.sin(t * 0.5 + hairPh[i]), 0, 0.05 * Math.cos(t * 0.37 + hairPh[i]))); hm.multiplyMatrices(m, hr); hairs.setMatrixAt(i, hm); }); hairs.instanceMatrix.needsUpdate = true; };
@@ -209,7 +208,7 @@ const dm = new THREE.Object3D();
 
 // ── the overlay: one HUD system (the theme's plate fill, radius, mono and sans) ─────────
 const hudRoot = document.getElementById("hud");
-const grain = createGrain(hudRoot, { amount: 0.009 });
+const grain = createGrain(hudRoot, { amount: 0.02 });
 const hud = createHud({ camera, shots: FILM.shots });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
