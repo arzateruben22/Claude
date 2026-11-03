@@ -1,5 +1,5 @@
 """Compile Body Backstage No. 05, "Where breath goes": script + voice timings + this direction → film.json, sheet.json.
-Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo05:metres")).
+Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo05:quarter")).
 
   python3 -I films/channels/body/ep05/compile.py
 
@@ -45,13 +45,13 @@ def cut(t):
 
 
 # the hook holds on the cluster through "Into these."; the iris then cuts (on the section's sound) to the windpipe
-CUT = {"lung": cut(B["normal"]["t0"]), "wall": cut(A("vo04:Over", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
+CUT = {"lung": cut(B["normal"]["t0"]), "wall": cut(A("vo04:In", -0.2)), "room": cut(B["whoa"]["t0"]), "exit": cut(B["tease"]["t0"]), "loop": cut(EC)}
 SHOTS = [{"at": 0.0, "name": "hook"}] + [{"at": t, "name": n} for n, t in CUT.items()]
 IRIS = [{"t": t, "cx": 0.5, "cy": 0.42} for t in CUT.values()]
 
 FLESH = [A("vo03:clotted", -0.2), A("vo03:bubbles", -0.15), A("vo03:bubbles", 0.45)]    # the old idea drawn over the cluster; dissolves on "bubbles"
 WALL = {"slip": [A("vo04:Oxygen", -0.1), A("vo04:needed", 0.3)], "thick": [A("vo04:Thicken", -0.05), A("vo04:wall#2", 0.3)], "slow": A("vo04:harder")}
-ROOM = {"unfold": [A("vo05:Unfold"), A("vo05:seventy", 0.3)], "court": A("vo05:tennis", -0.1), "chest": A("vo05:chest"),
+ROOM = {"unfold": [A("vo05:Spread"), A("vo05:quarter", 0.3)], "court": A("vo05:tennis", -0.1), "chest": A("vo05:chest"),
         "fold": [A("vo06:So", 0.0), A("vo06:bag", 0.3)], "sponge": A("vo06:sponge", -0.1), "breath0": B["meanwhile"]["t0"] - 3.2}
 EXIT = {"t0": B["tease"]["t0"], "push": [A("vo08:squeezes", -0.3), A("vo08:wall", 0.4)]}
 
@@ -85,7 +85,7 @@ CAM = {
     ],
     "room": [
         {"t": CUT["room"], "pos": [3.0, 2.35, 5.0], "look": [0.0, 1.35, 0.0], "fov": 34},                # the person, close (the head below the readout)
-        {"t": A("vo05:metres", -0.4), "pos": [7.0, 9.0, 16.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2"},   # the floor spreads
+        {"t": A("vo05:quarter", -0.4), "pos": [7.0, 9.0, 16.0], "look": [0.0, 0.0, 0.0], "fov": 34, "ease": "p2"},   # the floor spreads
         # the whole doubles court around it, inside the 9:16 safe box (x 90–900, y 250–1420): 26 Oct audit, these two keys
         # pulled back 1.2× about their look point (were [6, 46, 34] and [5, 44, 32]; the near baseline sat in the bottom UI band)
         {"t": A("vo05:tennis", 0.2), "pos": [6.88, 55.2, 40.3], "look": [1.6, 0.0, 2.5], "fov": 34, "ease": "p2"},
@@ -105,30 +105,29 @@ FOC = {
     "hook": [{"t": 0.0, "at": "sac", "f": 0.55}],
     "lung": [{"t": CUT["lung"], "at": "tree", "f": 0.15}, {"t": A("vo02:tips", -0.2), "at": "sac", "f": 0.45}],
     "wall": [{"t": CUT["wall"], "at": "wall", "f": 0.4}],
-    "room": [{"t": CUT["room"], "at": "chest", "f": 0.4}, {"t": A("vo05:metres", -0.6), "at": "floor", "f": 0.15}, {"t": A("vo06:They're", -0.3), "at": "chest", "f": 0.4}],
+    "room": [{"t": CUT["room"], "at": "chest", "f": 0.4}, {"t": A("vo05:quarter", -0.6), "at": "floor", "f": 0.15}, {"t": A("vo06:They're", -0.3), "at": "chest", "f": 0.4}],
     "exit": [{"t": CUT["exit"], "at": "wbc", "f": 0.45}],
     "loop": [{"t": CUT["loop"], "at": "sac", "f": 0.55}],
 }
 
 LABELS = [
-    {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo02:sacs", -0.25), "t1": A("vo02:Each", -0.2), "shot": "lung", "side": 1, "fixed": True},
+    {"id": "sac", "text": "air pocket", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo02:pockets", -0.25), "t1": A("vo02:each", -0.2), "shot": "lung", "side": 1, "fixed": True},
     {"id": "flesh", "text": "the old idea: clotted blood", "color": "text", "mark": "bar", "at": "flesh", "t0": A("vo03:blood", -0.1), "t1": A("vo03:sixteen", -0.55), "shot": "lung", "side": 1},
-    {"id": "cap", "text": "capillaries", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:Each", -0.1), "t1": CUT["wall"] - 0.25, "shot": "lung", "side": -1},
+    {"id": "cap", "text": "tiny blood vessels", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:Each", -0.1), "t1": CUT["wall"] - 0.25, "shot": "lung", "side": -1},
     {"id": "air", "text": "oxygen", "color": "o2", "mark": "ring", "glyph": "O₂", "at": "air", "t0": WALL["slip"][0], "t1": WALL["thick"][0] - 0.1, "shot": "wall", "side": -1},
     {"id": "wall", "text": "the wall", "color": "text", "mark": "bar", "at": "wallf", "t0": A("vo04:wall"), "t1": A("vo04:red", -0.3), "shot": "wall", "side": -1},
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "rbc", "t0": A("vo04:red", 0.0), "t1": CUT["room"] - 0.3, "shot": "wall", "side": 1},
-    {"id": "person", "text": "you, to scale", "color": "text", "mark": "dot", "at": "head", "t0": A("vo05:metres", 0.1), "t1": A("vo05:tennis", -0.2), "shot": "room", "side": -1, "v": "middle"},   # hands over to the court on "tennis"
+    {"id": "person", "text": "you, to scale", "color": "text", "mark": "dot", "at": "head", "t0": A("vo05:quarter", 0.1), "t1": A("vo05:tennis", -0.2), "shot": "room", "side": -1, "v": "middle"},   # hands over to the court on "tennis"
     {"id": "court", "text": "a doubles tennis court", "color": "lining", "mark": "bar", "at": "court", "t0": A("vo05:tennis"), "t1": B["takeaway"]["t0"] - 0.4, "shot": "room", "side": -1, "fixed": True},
     {"id": "wbc", "text": "white blood cell", "color": "immune", "mark": "dashed", "at": "wbc", "t0": A("vo08:cell", 0.0), "t1": EC, "shot": "exit", "side": -1, "v": "middle"},
 ]
 SPINE = [
     {"id": "q", "t0": 0.0, "t1": A("vo02:Below", -0.3), "text": "?", "unit": "", "label": "air sacs in your lungs", "at": [0.5, 0.36]},   # below the title's line
     {"id": "forks", "t0": A("vo02:fork", -0.2), "t1": A("vo02:At", -0.2), "keys": [[A("vo02:fork"), 1], [A("vo02:twenty-three", 0.3), 23]], "unit": "", "label": [[0.0, "counting the forks"], [A("vo02:twenty-three", 0.3), "forks, up to about"]]},   # c2
-    {"id": "sacs", "t0": A("vo02:half", -0.2), "t1": A("vo02:Each", -0.2), "text": "480", "unit": "million", "label": "air sacs, about", "at": [0.5, 0.26]},   # c1 (a mean: 274–790 million)
-    {"id": "size", "t0": A("vo02:Each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each, about", "at": [0.5, 0.26]},   # c3
+    {"id": "size", "t0": A("vo02:each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each pocket, about", "at": [0.5, 0.26]},   # c3
     {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": A("vo03:bubbles", 0.7), "text": "1661", "unit": "", "label": "Malpighi's microscope"},   # c5
-    {"id": "wallt", "t0": A("vo04:half", -0.2), "t1": A("vo04:red", -0.55), "text": "0.5", "unit": "µm", "label": "air–blood wall, under", "at": [0.5, 0.24]},   # c7 (the thin half; as thin as about 0.2 µm)
-    {"id": "area", "t0": A("vo05:Unfold"), "t1": B["takeaway"]["t1"] - 0.3, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": [[A("vo05:Unfold"), "unfolded, about"], [ROOM["fold"][1], "folded in your chest, about"]]},   # held through the takeaway   # c9 (estimates 50–140 m²: the whoa's badge)
+    {"id": "wallt", "t0": A("vo04:thinner", -0.2), "t1": A("vo04:red", -0.55), "text": "0.5", "unit": "µm", "label": "the wall, under", "at": [0.5, 0.24]},   # c7 (the thin half; as thin as about 0.2 µm)
+    {"id": "area", "t0": A("vo05:Spread"), "t1": B["takeaway"]["t1"] - 0.3, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": [[A("vo05:Spread"), "unfolded, about"], [ROOM["fold"][1], "folded in your chest, about"]]},   # held through the takeaway   # c9 (estimates 50–140 m²: the whoa's badge)
 ]
 # 5.5 L a minute (c13: 5–8 at rest): the tally reads 6.0 L as "six" is said
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["exit"] - 0.25, "rate": 5.5 / 60.0, "unit": "L", "label": "air while you watched, about", "fmt": 1}   # c13 (26 Oct: was 39 characters, over the 30 a centred counter's label fits)
@@ -186,7 +185,7 @@ CAPTION_KEEP = [
 ]
 
 film = {
-    "id": "meanwhile-inside-005", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-005", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "flesh": FLESH, "wall": WALL, "room": ROOM, "exit": EXIT, "breaths": BREATHS, "loc": LOC,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,

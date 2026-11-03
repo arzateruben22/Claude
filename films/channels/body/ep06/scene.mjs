@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 06, "The exit": the picture, a pure function of t.
+// Body Backstage No. 06 (season 1 reboot, live scan), "The exit": the picture, a pure function of t.
 //
 // Places (each its own spot in one scene, joined by the iris):
 //   vein    (µm) a venule under a fingertip's skin: a floor of wall cells (cutaway pancakes) meeting at seams, the
@@ -45,7 +45,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 0.2, 12000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 9000 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const lin = (h) => L.lin(h);
 const G = Object.fromEntries(Object.keys(PLACE).map((k) => { const g = new THREE.Group(); g.position.set(...PLACE[k]); scene.add(g); return [k, g]; }));
 const mat = (hex, key, o = {}) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04,
@@ -250,6 +251,8 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 612 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 const NS = "http://www.w3.org/2000/svg";
 
@@ -371,6 +374,7 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, presence(t, FILM.loc.t0, FILM.loc.t1, { d: 0.45, out: 0.35 }).o, beatAmp(t, FILM.segBeats));
   IR.update(t);
+  FIN.set(t); MOT.set(t);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

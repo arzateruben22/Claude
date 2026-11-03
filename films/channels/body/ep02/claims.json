@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies.",
+  "sentence": "It's stuffed with one protein, hemoglobin: about a quarter of a billion copies.",
   "claim": "A red blood cell holds about 270 million hemoglobin molecules; hemoglobin is the protein that fills it.",
   "source_url": "https://www.merckmillipore.com/BD/en/technical-documents/technical-article/clinical-testing-and-diagnostics-manufacturing/hematology/hemoglobin-heme-products",
   "source_title": "Hemoglobin and heme products (Merck technical article)",
@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Each one has four iron atoms, and each can hold an oxygen.",
+  "sentence": "Each one has four iron seats, and each seat holds one oxygen.",
   "claim": "Hemoglobin has four subunits, each with a heme group whose iron can bind one O₂.",
   "source_url": "https://chem.libretexts.org/Courses/Saint_Marys_College_Notre_Dame_IN/CHEM_342%3A_Bio-inorganic_Chemistry/Readings/Metals_in_Biological_Systems_(Saint_Mary%27s_College)/Oxygen_transport_and_Storage/Red_Blood_(Mammals)/Hemoglobin%3A_Oxygen_transport_in_mammals",
   "source_title": "Hemoglobin: Oxygen transport in mammals (LibreTexts Chemistry, Saint Mary's College CHEM 342)",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c5",
-  "sentence": "The first oxygen struggles to board, but each one makes the next one easier.",
+  "sentence": "The first oxygen struggles to get on, but each one makes the next one easier.",
   "claim": "Hemoglobin binds O₂ cooperatively: binding of the first O₂ changes the protein's shape so the remaining sites bind more readily (a sigmoidal binding curve).",
   "source_url": "https://biosci.mcdb.ucsb.edu/biochemistry/tw-hbn/hba-overview.htm",
   "source_title": "Overview of Hemoglobin's Structure/Function Relationships (UC Santa Barbara, MCDB biochemistry)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Dark red at the start; full, it's bright red.",
+  "sentence": "Empty, it's dark red; full, it's bright red.",
   "claim": "Oxygenated hemoglobin (blood) is bright red; deoxygenated is darker red, because the two absorb light differently.",
   "source_url": "https://chem.libretexts.org/Courses/Saint_Marys_College_Notre_Dame_IN/CHEM_342%3A_Bio-inorganic_Chemistry/Readings/Metals_in_Biological_Systems_(Saint_Mary%27s_College)/Oxygen_transport_and_Storage/Red_Blood_(Mammals)/Hemoglobin%3A_Oxygen_transport_in_mammals",
   "source_title": "Hemoglobin: Oxygen transport in mammals (LibreTexts Chemistry, Saint Mary's College CHEM 342)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Veins often look blue, so it's easy to guess the blood inside them is.",
+  "sentence": "Veins often look blue, so it's easy to guess the blood inside is too.",
   "claim": "Veins under the skin often look blue, and a common belief is that the blood in them is blue.",
   "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
   "source_title": "If blood is red, why do veins look bluish? (Live Science)",
@@ -89,7 +89,7 @@
  },
  {
   "id": "c9",
-  "sentence": "Returning blood is darker red.",
+  "sentence": "Blood heading home is darker red.",
   "claim": "Blood returning in the veins is a darker red than oxygen-rich arterial blood.",
   "source_url": "https://www.livescience.com/32212-if-blood-is-red-why-are-veins-blue.html",
   "source_title": "If blood is red, why do veins look bluish? (Live Science)",
@@ -100,7 +100,7 @@
  },
  {
   "id": "c10",
-  "sentence": "Red light sinks in, and the vein swallows it, so less red comes back.",
+  "sentence": "Red light sinks in, the vein swallows it, so less red bounces back.",
   "claim": "Red light penetrates skin more deeply (to where veins lie) and is absorbed by the blood in the vein, while blue light is scattered back near the surface; so less red light returns from above the vein than from the tissue around it, and the vein looks bluish by contrast.",
   "source_url": "https://uwaterloo.ca/computer-science/news/computer-science-researchers-help-answer-age-old-medical",
   "source_title": "Computer science researchers help answer age-old medical question (University of Waterloo)",
@@ -188,7 +188,7 @@
  },
  {
   "id": "c18",
-  "sentence": "Returning blood is darker red.",
+  "sentence": "Blood heading home is darker red.",
   "claim": "At rest, blood returning in the veins (PO₂ about 40 mmHg) still has about 75% of hemoglobin's O₂ sites filled. Shown on screen: 'seats still full in returning blood: about 75%'.",
   "source_url": "https://cvphysiology.com/microcirculation/m002",
   "source_title": "Oxygen transport and the oxyhemoglobin dissociation curve (R. E. Klabunde, Cardiovascular Physiology Concepts)",

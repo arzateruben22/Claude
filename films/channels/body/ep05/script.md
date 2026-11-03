@@ -37,21 +37,21 @@ sentence that states nothing outside the film.
 vo: Where does your breath *go*? Not into a bag. {c11} Into *these*. {-}
 
 ## normal {shot: up the airway tree from the windpipe, forking again and again; at the tips, clusters of sacs; the readout counts the forks, then the sacs · energy: 0.45} (4.6–16 s)
-vo: Below your windpipe, the airways fork, again and again, up to about *twenty-three* times. {c2} At
-the tips hang about half a billion sacs. {c1} Each is about a fifth of a millimetre. {c3}
+vo: Below your windpipe, the airways fork again and again, about *twenty-three* times. {c2} At the
+tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre. {c1,c3}
 
 ## change {shot: inside the same world, the cluster drawn as the old texts imagined it (clotted blood, an illustration), then sharpened to Malpighi's view: bubbles · energy: 0.55} (16–26.5 s)
 vo: For centuries, physicians taught the lung was clotted blood, there to cool the *heart*. {c4} In
 sixteen sixty-one, Marcello Malpighi put an animal's lung under a microscope: *bubbles*. {c5}
 
 ## why {shot: one sac cut open, a net of capillaries over it; the wall between air and blood, a red cell beside it for scale; O₂ slipping across; then the wall thickens and the O₂ slows · picture-only 2 s · energy: 0.55} (26.5–43 s)
-vo: Each sac is wrapped in capillaries. {c6} Over much of it, the wall between air and blood
-is under half a micrometre: far thinner than a red cell. {c7} Oxygen slips across, no pump needed. {c8}
-Thicken that wall, and breathing gets *harder*. {c15}
+vo: Each pocket is wrapped in tiny blood vessels. {c6} In places, the wall between air and blood is
+far thinner than a red cell. {c7} Oxygen just slips across, no pump needed. {c8} Thicken that wall,
+and breathing gets *harder*. {c15}
 
 ## whoa {shot: the sacs unfold into a floor beside a person drawn to scale, with a full (doubles) tennis court's lines around it; the readout climbs to about 70 m², a note 'estimates: 50–140 m²' · picture-only 3 s · energy: 0.75} (43–55.5 s)
-vo: Unfold every sac flat, and they'd cover about seventy square *metres*. {c9} About a quarter of
-a tennis court, folded inside your *chest*. {c10}
+vo: Spread every pocket out flat, and they'd cover about a quarter of a *tennis court*. {c9} All of
+that, folded up inside your *chest*. {c10}
 
 ## takeaway {shot: the floor folds back into the person's chest; the score drops · energy: 0.3} (55.5–61 s)
 vo: So your lungs aren't a bag. {c16} They're a *sponge* that spreads air thin. {c12}

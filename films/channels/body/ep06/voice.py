@@ -56,17 +56,17 @@ LANG = "en-gb"
 # 0.64-0.72), and the recognizer hears "spark".
 SPEEDS = {
     "vo01": [1.0, 0.8],
-    "vo02": [0.92, 0.9],
+    "vo02": [0.81, 0.79],
     "vo03": [0.95, 0.92, 0.92],
     "vo04": [0.92, 0.92, 0.92, 0.9, 0.86],
     "vo05": [0.9, 0.88, 0.86],
     "vo06": [0.86, 0.84],
-    "vo07": [0.88, 0.82],
+    "vo07": [0.84],
     "vo08": [1.0, 0.86],
 }
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question
 # per-line pauses where a line wants more air (episode 2: the whoa breathes before its number)
-GAPS = {"vo01": [0.5], "vo07": [0.4], "vo08": [0.4]}
+GAPS = {"vo01": [0.5], "vo08": [0.4]}
 
 
 def split(text):

@@ -5,7 +5,7 @@ hand-typed time: every moment hangs on a beat or a spoken word.
 
   python3 -I films/channels/body/ep02/compile.py
 
-Anchors as in episode 1: A("vo03:board") is when "board" starts in line vo03; ":end" its end; B["why"]["t0"] a
+Anchors as in episode 1: A("vo03:get") is when "board" starts in line vo03; ":end" its end; B["why"]["t0"] a
 beat's start. Cuts sit half a frame before a frame and are hidden at the closed moment of the membrane iris.
 
 The slides (each its own place and scale, joined by the iris; scene.mjs builds them):
@@ -15,7 +15,7 @@ The slides (each its own place and scale, joined by the iris; scene.mjs builds t
   lung   an air sac with a capillary on it: dark cells arrive, flush bright, leave (µm; slowed)
   nerve  a myelinated fibre; the signal jumps node to node (the tease)
 
-If build/cues-meanwhile-inside-002-9x16.json exists (render.mjs --cues), its measured positions and first-shown
+If build/cues-body-backstage-002-9x16.json exists (render.mjs --cues), its measured positions and first-shown
 times are merged into the sheet (pan, and the studio's picture-sync check).
 """
 import json
@@ -69,11 +69,11 @@ CELL = {
 
 # ── one hemoglobin: the first O₂ struggles (a failed first docking), then each docks on first contact ──
 # (c5 is affinity, not speed: every O₂ flies at the same speed; the first one slips off its seat once)
-BOARD = [A("vo03:board", 0.15), A("vo03:makes", 0.05), A("vo03:next", 0.05), A("vo03:easier", 0.1)]
+BOARD = [A("vo03:get", 0.15), A("vo03:makes", 0.05), A("vo03:next", 0.05), A("vo03:easier", 0.1)]
 APPROACH = [0.6, 0.6, 0.6, 0.6]                          # seconds from setting off to the seat (the 2nd–4th)
 HB = {
     "board": BOARD, "approach": APPROACH,
-    "glint": [A("vo02:four"), A("vo02:atoms:end", 0.2)],   # the four irons glint on "four … iron atoms"
+    "glint": [A("vo02:four"), A("vo02:seats:end", 0.2)],   # the four irons glint on "four … iron atoms"
     "free": A("vo02:oxygen", -0.4),                        # free O₂ drift in on "oxygen"
     # the first O₂: sets off, nearly docks on "struggles", slips back, docks on "board"
     "struggle": [A("vo03:The", -0.2), A("vo03:struggles", -0.05), A("vo03:struggles", 0.3)],
@@ -88,7 +88,7 @@ SKIN = {
     "red": [A("vo04:red#2", 0.0), A("vo04:swallows", 0.15)],   # the ray over the vein: down to the vein, swallowed
     "swallow": A("vo04:swallows", 0.15),
     "back": [A("vo04:so#2", 0.0), A("vo04:back", 0.3)],        # the ray beside the vein: down and back up
-    "section": [A("vo04:It", -0.2), A("vo04:Returning", -0.1)],   # the crane from the surface to the cut face
+    "section": [A("vo04:It", -0.2), A("vo04:Blood", -0.1)],   # the crane from the surface to the cut face
 }
 
 # ── the lung, shown 12× slower: the hero's seats fill over 0.25 s of lung time (3 s of film), ending on "second" ──
@@ -178,7 +178,7 @@ LABELS = [
     {"id": "iron", "text": "iron", "color": "bone", "mark": "dot", "at": "iron0", "t0": A("vo02:iron"), "t1": A("vo03:Watch", 0.2), "shot": "hb", "side": 1},
     {"id": "o2", "text": "oxygen", "glyph": "O₂", "color": "o2", "mark": "ring", "at": "o2first", "t0": A("vo02:oxygen"), "t1": BOARD[0] + 0.4, "shot": "hb", "side": -1},
     {"id": "vein", "text": "vein, seen through skin", "color": "deoxy", "mark": "dot", "at": "veintop", "t0": A("vo04:Veins"), "t1": SKIN["section"][0], "shot": "skin", "side": 1},
-    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Returning"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
+    {"id": "venous", "text": "returning blood", "color": "deoxy", "mark": "dot", "at": "vein", "t0": A("vo04:Blood"), "t1": SKIN["red"][0] - 0.1, "shot": "skin", "side": 1, "fixed": True},
     {"id": "redlight", "text": "red light", "color": "#FF6A3D", "mark": "bar", "at": "redray", "t0": A("vo04:red#2", 0.15), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1},
     {"id": "bluelight", "text": "blue light", "color": "#8EB8FF", "mark": "bar", "at": "blueray", "t0": A("vo04:light", 0.2), "t1": CUT["lung"] - 1.2, "shot": "skin", "side": -1, "fixed": True},
     {"id": "sac", "text": "air sac", "color": "lining", "mark": "dot", "at": "sac", "t0": A("vo05:blood"), "t1": A("vo05:lungs", 0.4), "shot": "lung", "side": 1},   # gone before the push-in carries its anchor off the top (under the badge)
@@ -196,10 +196,10 @@ BADGES = [
 # the spine readout (WRITING.md, "The picture" 2): one number on screen in one place from the title's exit to the
 # tally, its label naming the beat. Each is its own counter, handing over to the next in the same spot.
 SPINE = [
-    {"id": "seats", "t0": round(A("vo01:Room") + 0.35, 4), "t1": A("vo02:about", -0.2), "value": 1_000_000_000, "label": "O₂ seats in this one cell, about"},   # c2: 1.0–1.2 billion, "about a billion"
-    {"id": "copies", "t0": A("vo02:about"), "t1": CUT["hb"] - 0.3, "value": 270_000_000, "label": "hemoglobins in this one cell, about"},   # c1: the spoken number, on screen as it is said
+    {"id": "seats", "t0": round(A("vo01:Room") + 0.35, 4), "t1": A("vo02:quarter", -0.2), "value": 1_000_000_000, "label": "O₂ seats in this one cell, about"},   # c2: 1.0–1.2 billion, "about a billion"
+    {"id": "copies", "t0": A("vo02:quarter"), "t1": CUT["hb"] - 0.3, "value": 270_000_000, "label": "hemoglobins in this one cell, about"},   # c1: the spoken number, on screen as it is said
     {"id": "aboard", "t0": CUT["hb"] + 0.4, "t1": CUT["skin"] - 0.3, "steps": BOARD, "unit": "of 4", "label": "O₂ aboard this hemoglobin"},
-    {"id": "venous", "t0": A("vo04:Returning"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
+    {"id": "venous", "t0": A("vo04:Blood"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
     {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
@@ -239,7 +239,7 @@ CAPTION_KEEP = [
 ]
 
 film = {
-    "id": "meanwhile-inside-002", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-002", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK,
     "cell": CELL, "hb": HB, "skin": SKIN, "lung": LUNG, "nerve": NERVE, "quarter": QUARTER,

@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "At the tips hang about half a billion sacs.",
+  "sentence": "At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
   "claim": "An adult's two lungs hold on average about 480 million alveoli (range 274–790 million in six lungs studied).",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
   "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
@@ -12,7 +12,7 @@
  },
  {
   "id": "c2",
-  "sentence": "Below your windpipe, the airways fork, again and again, up to about twenty-three times.",
+  "sentence": "Below your windpipe, the airways fork again and again, about twenty-three times.",
   "claim": "In Weibel's classic model the airways branch dichotomously through about 23 generations from the trachea to the alveolar sacs.",
   "source_url": "https://taylorandfrancis.com/knowledge/Medicine_and_healthcare/Anatomy/Respiratory_zone",
   "source_title": "Respiratory zone (Taylor & Francis Knowledge; Weibel's airway model)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "Each is about a fifth of a millimetre.",
+  "sentence": "At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
   "claim": "The mean volume of a single alveolus is about 4.2 million µm³, a diameter of about 0.2 mm.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
   "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
@@ -56,7 +56,7 @@
  },
  {
   "id": "c6",
-  "sentence": "Each sac is wrapped in capillaries.",
+  "sentence": "Each pocket is wrapped in tiny blood vessels.",
   "claim": "The alveoli are surrounded by a dense network of capillaries where gas exchange takes place.",
   "source_url": "https://www.jove.com/science-education/10884/",
   "source_title": "22.4: Gas Exchange and Transport (JoVE Science Education, following OpenStax Anatomy and Physiology 22.4)",
@@ -67,7 +67,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell.",
+  "sentence": "In places, the wall between air and blood is far thinner than a red cell.",
   "claim": "The thin portion of the air–blood barrier, about half of its surface, is under 0.5 µm thick, as thin as about 0.2 µm in places, against a red cell about 7.5 µm across (episode 1).",
   "source_url": "https://www.frontiersin.org/journals/network-physiology/articles/10.3389/fnetp.2023.1142245/full",
   "source_title": "Miserocchi 2023, The impact of heterogeneity of the air-blood barrier on control of lung extravascular water and alveolar gas exchange, Front Netw Physiol (doi 10.3389/fnetp.2023.1142245)",
@@ -78,7 +78,7 @@
  },
  {
   "id": "c8",
-  "sentence": "Oxygen slips across, no pump needed.",
+  "sentence": "Oxygen just slips across, no pump needed.",
   "claim": "Oxygen moves from the alveolar air into the blood by passive diffusion, down its partial-pressure gradient; no active transport is involved.",
   "source_url": "https://www.jove.com/science-education/10884/",
   "source_title": "22.4: Gas Exchange and Transport (JoVE Science Education, following OpenStax Anatomy and Physiology 22.4)",
@@ -100,7 +100,7 @@
  },
  {
   "id": "c9",
-  "sentence": "Unfold every sac flat, and they'd cover about seventy square metres.",
+  "sentence": "Spread every pocket out flat, and they'd cover about a quarter of a tennis court.",
   "claim": "The alveolar (gas-exchange) surface of adult lungs is commonly given as about 70 m²; estimates run from about 50–100 m² (a standard physiology text) to 120–140 m² by morphometry.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
   "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
@@ -111,7 +111,7 @@
  },
  {
   "id": "c10",
-  "sentence": "About a quarter of a tennis court, folded inside your chest.",
+  "sentence": "All of that, folded up inside your chest.",
   "claim": "A full (doubles) tennis court is 23.77 m × 10.97 m = 260.8 m² (ITF); 70 m² is about 27% of it, about a quarter.",
   "source_url": "https://www.itftennis.com/media/7221/2026-rules-of-tennis-english.pdf",
   "source_title": "ITF Rules of Tennis 2026, Rule 1: The Court (International Tennis Federation)",

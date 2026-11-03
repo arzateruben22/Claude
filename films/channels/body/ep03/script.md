@@ -34,7 +34,7 @@ direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.j
 sentence that states nothing outside the film.
 
 ## hook {shot: frame 0 is a chartreuse spark mid-leap between two bare gaps of a myelinated fibre; the spine readout reads "? m/s" · title: "The jump" · pre: 0.1 · energy: 0.7} (0–5.5 s)
-vo: How fast is this *spark*? The leading expert doubted it could ever be *timed*. {c1}
+vo: How fast is this *spark*? A top expert doubted anyone could *time* it. {c1}
 
 ## normal {shot: pull back along the fibre to the whole cell, then the body locator: spine to toe; readout "spine to toe: about 1 m" · energy: 0.45} (5.5–15.3 s)
 vo: It's a nerve signal, racing down one cell's thin fibre. {c2} Some fibres reach from spine
@@ -46,9 +46,9 @@ student Helmholtz timed it. {c5} About thirty metres a second: *cheetah*
 speed. {c6,c17}
 
 ## why {shot: into a bare fibre: the signal re-fired patch by patch, a slow glow; then a wrapped fibre: sheaths with bare gaps, the spark leaps gap to gap; then a fibre in brain and spinal cord with one damaged sheath, where the spark falters · picture-only 2 s · energy: 0.55} (25.8–42 s)
-vo: It isn't current in a wire: the cell re-fires it, step by step. {c18} Many of your fibres wear
-fatty *myelin*, re-firing only at gaps, so the signal *leaps*. {c7,c8} Where myelin is damaged, as in
-multiple sclerosis, signals can slow or stall. {c9}
+vo: It isn't current in a wire: the cell re-fires it, step by step. {c18} Many fibres wear a fatty
+coat, *myelin*, and only re-fire at its gaps, so the signal *leaps*. {c7,c8} Where it's damaged, as in
+multiple sclerosis, signals slow or stall. {c9}
 
 ## whoa {shot: a race on one start line, a thin bare fibre against a thick wrapped one, slowed and badged; the readout 1 → 150 m/s, then a Formula One car's 372 km/h overtaken by 540 km/h · picture-only 3 s · energy: 0.75} (42–54.2 s)
 vo: The thinnest bare fibres crawl at about a metre a second. {c10} Thick wrapped ones, up to a

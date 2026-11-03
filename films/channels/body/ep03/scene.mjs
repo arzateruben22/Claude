@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 03, "The jump": the picture, a pure function of t.
+// Body Backstage No. 03 (season 1 reboot, live scan), "The jump": the picture, a pure function of t.
 //
 // One world (µm, internodes compressed; badged "not to scale"): three nerve fibres along x (set/neuron.js):
 //   hero  y = 0     myelinated, its cell body at x < 0 and its terminal at x = 660 (the tease's "end of the line")
@@ -42,7 +42,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const lin = (h) => L.lin(h);
 const G = { fibres: new THREE.Group(), drum: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
@@ -322,6 +323,8 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 340 * S1, h: 232 * S1, region: [0.42, 0.93], plate: true });   // the toe
 const LOC_T = [FILM.spine.find((s) => s.id === "len").t0, SHOT.drum.at - 0.3];
 
@@ -419,6 +422,7 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, shot === "hook" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, 0.5);
   IR.update(t);
+  FIN.set(t); MOT.set(t);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

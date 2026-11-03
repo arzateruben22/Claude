@@ -46,33 +46,27 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Below your windpipe, the airways fork, again and again, up to about twenty-three times. At the tips hang about half a billion sacs. Each is about a fifth of a millimetre.",
+   "text": "Below your windpipe, the airways fork again and again, about twenty-three times. At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
    "stars": [
     "twenty-three"
    ],
-   "phonemes": "bɪlˌəʊ jɔː wˈɪndpaɪp, ðɪ ˈeəweɪz fˈɔːk, ɐɡˈɛn and ɐɡˈɛn, ˌʌp tʊ ɐbˌaʊt twˈɛntiθɹˈiː tˈaɪmz. at ðə tˈɪps hˈaŋ ɐbˌaʊt hˈɑːf ɐ bˈɪliən sˈaks. ˈiːtʃ ɪz ɐbˌaʊt ɐ fˈɪfθ əvə mˈɪlɪmˌiːtə.",
+   "phonemes": "bɪlˌəʊ jɔː wˈɪndpaɪp, ðɪ ˈeəweɪz fˈɔːk ɐɡˈɛn and ɐɡˈɛn, ɐbˌaʊt twˈɛntiθɹˈiː tˈaɪmz. at ðə tˈɪps hˈaŋ tˈaɪni ˈeə pˈɒkɪts, hˈɑːf ɐ bˈɪliən ɒv ðˌɛm, ˈiːtʃ ɐ fˈɪfθ əvə mˈɪlɪmˌiːtə.",
    "speeds": [
-    0.88,
-    0.88,
-    0.88
+    0.82,
+    0.82
    ],
    "gaps": [
-    0.3,
     0.3
    ],
    "silences": [
     [
-     5.0145,
-     5.3145
-    ],
-    [
-     7.8247,
-     8.1247
+     4.6908,
+     4.9908
     ]
    ],
    "file": "02.wav",
-   "dur": 10.537,
-   "sha256": "9bed13dfaae8f19eddefd0709fc661f78a31f8db9e8cf3a49cb8bc132b415769"
+   "dur": 10.349,
+   "sha256": "744d42230bcf7d2329d6b9b7b12280182d0ad3749835b43ffc52a42f34d6bdd6"
   },
   {
    "id": "vo03",
@@ -103,11 +97,11 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Each sac is wrapped in capillaries. Over much of it, the wall between air and blood is under half a micrometre: far thinner than a red cell. Oxygen slips across, no pump needed. Thicken that wall, and breathing gets harder.",
+   "text": "Each pocket is wrapped in tiny blood vessels. In places, the wall between air and blood is far thinner than a red cell. Oxygen just slips across, no pump needed. Thicken that wall, and breathing gets harder.",
    "stars": [
     "harder"
    ],
-   "phonemes": "ˈiːtʃ sˈak ɪz ɹˈapt ɪn kˈapɪləɹiz. ˌəʊvə mˈʌtʃ ɒv ɪt, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz ˌʌndə hˈɑːf ɐ mˈaɪkɹəʊmˌiːtə: fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
+   "phonemes": "ˈiːtʃ pˈɒkɪt ɪz ɹˈapt ɪn tˈaɪni blˈʌd vˈɛsəlz. ɪn plˈeɪsɪz, ðə wˈɔːl bɪtwˌiːn ˈeə and blˈʌd ɪz fˈɑː θˈɪnə ðˌanə ɹˈɛd sˈɛl. ˈɒksɪdʒən dʒˈʌst slˈɪps əkɹˈɒs, nˈəʊ pˈʌmp nˈiːdɪd. θˈɪkən ðat wˈɔːl, and bɹˈiːðɪŋ ɡˈɛts hˈɑːdə.",
    "speeds": [
     0.92,
     0.96,
@@ -121,47 +115,47 @@
    ],
    "silences": [
     [
-     2.1097,
-     2.4097
+     2.6855,
+     2.9855
     ],
     [
-     8.053,
-     8.353
+     6.994,
+     7.294
     ],
     [
-     10.8718,
-     11.1718
+     9.9659,
+     10.2659
     ]
    ],
    "file": "04.wav",
-   "dur": 13.591,
-   "sha256": "540888bf93d3e71deec9b58c2fbaabd385aa642e5cd255e709fa8544846d633b"
+   "dur": 12.685,
+   "sha256": "e2d2ee769ea6f69bba408f2c4382b7ab88db64c4ce55b716fd763e24a1fdb9df"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Unfold every sac flat, and they'd cover about seventy square metres. About a quarter of a tennis court, folded inside your chest.",
+   "text": "Spread every pocket out flat, and they'd cover about a quarter of a tennis court. All of that, folded up inside your chest.",
    "stars": [
-    "metres",
+    "tennis court",
     "chest"
    ],
-   "phonemes": "ʌnfˈəʊld ˈɛvɹɪ sˈak flˈat, and ðeɪd kˈʌvəɹ ɐbˌaʊt sˈɛvənti skwˈeə mˈiːtəz. ɐbˌaʊt ɐ kwˈɔːtəɹ əvə tˈɛnɪs kˈɔːt, fˈəʊldɪd ɪnsˈaɪd jɔː tʃˈɛst.",
+   "phonemes": "spɹˈɛd ˈɛvɹɪ pˈɒkɪt ˈaʊt flˈat, and ðeɪd kˈʌvəɹ ɐbˌaʊt ɐ kwˈɔːtəɹ əvə tˈɛnɪs kˈɔːt. ˈɔːl ɒv ðˈat, fˈəʊldɪd ˌʌp ɪnsˈaɪd jɔː tʃˈɛst.",
    "speeds": [
-    0.9,
-    0.88
+    0.81,
+    0.79
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.4071,
-     4.7071
+     4.9636,
+     5.2636
     ]
    ],
    "file": "05.wav",
-   "dur": 8.193,
-   "sha256": "c1918b380a2fc895e7613115d721e8953b1f67d77be929f31b7317c321d017eb"
+   "dur": 8.407,
+   "sha256": "9057e1016aeac34c15b5e21b1eba2a61469b45a0a2e77dc0ba8d4586a7556387"
   },
   {
    "id": "vo06",

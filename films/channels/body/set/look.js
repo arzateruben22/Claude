@@ -160,7 +160,7 @@ export const look = (THREE, o) => {
   };
   // atmosphere: motes riding with the camera at fixed depths (the finish's depth of field turns the near ones into bokeh).
   // Positions are a pure function of t; hidden from the finish's probe (they are not what moves in the shot).
-  const motes = (camera, { n = 160, zNear = 3, zFar = 300, size = 5, color = "#FFF1E6", op = 0.45 } = {}) => {
+  const motes = (camera, { n = 160, zNear = camera.far * 0.00075, zFar = camera.far * 0.075, size = 5, color = "#FFF1E6", op = 0.45 } = {}) => {
     const c = document.createElement("canvas"); c.width = c.height = 64; const k = c.getContext("2d"), g = k.createRadialGradient(32, 32, 0, 32, 32, 32);
     g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.35, "rgba(255,255,255,.5)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(0, 0, 64, 64);
     const pos = new Float32Array(n * 3), seed = [];

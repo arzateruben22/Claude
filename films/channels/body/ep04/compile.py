@@ -170,8 +170,8 @@ CAPTION_KEEP = [
     "a thousandth of a second",
     "grow stronger",
     "gaps like these",
-    "your brainstem",
-    "your diaphragm",
+    "your brain",
+    "the base",
     "fifteen breaths",
     "those breaths",
     "that air",
@@ -179,12 +179,12 @@ CAPTION_KEEP = [
     "thousands of others",
     "tiny sacs",
     "reaches thousands",
-    "in your brainstem",
+    "at the base",
     "and crossed",
 ]
 
 film = {
-    "id": "meanwhile-inside-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "sharp": SHARP, "rel": REL, "replay": REPLAY, "use": USE, "breaths": BREATHS, "talk": TALK, "meet": MEET,
     "panels": PANELS, "loc": LOC,

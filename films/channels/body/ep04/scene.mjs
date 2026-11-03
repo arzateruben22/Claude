@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 04, "The gap": the picture, a pure function of t.
+// Body Backstage No. 04 (season 1 reboot, live scan), "The gap": the picture, a pure function of t.
 //
 // One world (arbitrary units; the junction hugely enlarged, badged "not to scale"):
 //   the hero junction at the origin: an axon (set/neuron.js, bare) ending in a terminal (cutaway.js, cut open toward
@@ -46,7 +46,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 6000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 4500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.03 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.03 });
 const lin = (h) => L.lin(h);
 const SIG = "#D6F25F";
 const world = new THREE.Group(), sacG = new THREE.Group(); scene.add(world, sacG);
@@ -270,6 +271,8 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 395 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 
 // the two readings of one stained tissue: the same seeded drawing; Golgi's joins every branch into the next cell,
@@ -348,6 +351,7 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, presence(t, FILM.loc.t0, FILM.loc.t1, { d: 0.45, out: 0.35 }).o, beatAmp(t, FILM.breaths, { decay: 1.2 }));
   IR.update(t);
+  FIN.set(t); MOT.set(t);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

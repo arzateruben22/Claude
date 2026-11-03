@@ -12,7 +12,7 @@
  },
  {
   "id": "c2",
-  "sentence": "It's a neutrophil, your commonest white cell, about eight micrometres across.",
+  "sentence": "It's a neutrophil, your most common white cell, a bit wider than a red one.",
   "claim": "In adults, neutrophils are the most numerous circulating white blood cell: about 60-70% of a normal white count of about 4,000-11,000 cells per microlitre.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK570571/",
   "source_title": "Neutrophilia - StatPearls - NCBI Bookshelf (NBK570571)",
@@ -23,18 +23,18 @@
  },
  {
   "id": "c3",
-  "sentence": "It's a neutrophil, your commonest white cell, about eight micrometres across.",
+  "sentence": "It's a neutrophil, your most common white cell, a bit wider than a red one.",
   "claim": "A neutrophil suspended in fluid (round, roughly as in blood) measures about 8.3-8.4 µm across (range about 7.3-9.7 µm), the largest leukocyte type in that study.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=100510",
   "source_title": "BioNumbers (Harvard Medical School) ID 100510: neutrophil diameter (Downey et al. 1990)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: '8.4 µm (range 7.3 to 9.7 µm) ... Neutrophils were the largest cells with a mean diameter of 8.3µm'. Isolated cells, measured by Coulter counter and flow cytometry; PMC3605679 gives 7-8 µm, consistent. The bible's 12-15 µm (StatPearls 31353) is a cell flattened on a smear, so the scale pill badges 'round, in blood'. Review fix: 'a little wider than a red cell' is cut (8.3 against a red cell's 7.5-8 µm is within scatter, and the old c4 source only gave the smear value), so c4 is gone. Shares its sentence with c2."
+  "note": "Excerpt: '8.4 µm (range 7.3 to 9.7 µm) ... Neutrophils were the largest cells with a mean diameter of 8.3µm'. Isolated cells, measured by Coulter counter and flow cytometry; PMC3605679 gives 7-8 µm, consistent. The bible's 12-15 µm (StatPearls 31353) is a cell flattened on a smear, so the scale pill badges 'round, in blood'. Review fix: 'a little wider than a red cell' is cut (8.3 against a red cell's 7.5-8 µm is within scatter, and the old c4 source only gave the smear value), so c4 is gone. Shares its sentence with c2. Reboot (3 Nov): spoken as 'a bit wider than a red one': about 8 µm against a red cell's 7.5 µm (No. 01, c2); the pill still reads about 8 µm."
  },
  {
   "id": "c5",
-  "sentence": "Yet under a sore fingertip, they pile up outside the wall.",
+  "sentence": "Under a sore fingertip, they pile up outside the wall.",
   "claim": "At a site of tissue damage (inflammation), white blood cells move out of the circulation and collect in the damaged tissue, outside the vessels; in a pus-forming lesion those cells are mostly neutrophils.",
   "source_url": "https://britannica.com/story/how-is-inflammation-involved-in-swelling",
   "source_title": "How Is Inflammation Involved in Swelling? (Encyclopaedia Britannica)",
@@ -111,7 +111,7 @@
  },
  {
   "id": "c27",
-  "sentence": "Where tissue is inflamed, the wall turns sticky, and the cell rolls.",
+  "sentence": "Where you're hurt or infected, the wall turns sticky, and the cell rolls.",
   "claim": "Inflammatory signals (such as IL-1 and TNF) make the vessel lining express E-selectin, which is largely inactive on resting endothelium; P-selectin on the endothelium is needed for leukocyte rolling in mice. These lining molecules are what make an inflamed vessel's wall 'sticky' for passing white cells.",
   "source_url": "https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2024.1401399/full",
   "source_title": "Zhang J, Huang S, Zhu Z, Gatt A, Liu J. E-selectin in vascular pathophysiology. Front Immunol 2024;15:1401399 (mini review; PMC11294169)",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c11",
-  "sentence": "Where tissue is inflamed, the wall turns sticky, and the cell rolls.",
+  "sentence": "Where you're hurt or infected, the wall turns sticky, and the cell rolls.",
   "claim": "Selectins on the endothelium (the vessel's lining) tether passing leukocytes and make them roll.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4592324",
   "source_title": "PMC review on selectin and integrin signalling in leukocyte recruitment (PMC4592324)",
@@ -254,7 +254,7 @@
  },
  {
   "id": "c22",
-  "sentence": "Meanwhile, as you watched, your bone marrow made new neutrophils.",
+  "sentence": "Meanwhile, as you watched, your bones made more than ten million new ones.",
   "claim": "The bone marrow makes neutrophils continuously, at a basal rate of about 5 x 10^10 to 10 x 10^10 a day.",
   "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930213/",
   "source_title": "Summers C et al. Neutrophil kinetics in health and disease. Trends Immunol 2010;31(8):318-324 (PMC2930213)",
@@ -265,7 +265,7 @@
  },
  {
   "id": "c23",
-  "sentence": "More than ten million.",
+  "sentence": "Meanwhile, as you watched, your bones made more than ten million new ones.",
   "claim": "Even at a low estimate of 1.5 x 10^10 new neutrophils a day (below every estimate here, including those that use the newer, longer blood half-life of about 19 h), the marrow makes about 174,000 a second: more than ten million by 57.6 s into the film, and about 10.7-11.6 million while the line is spoken.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4929930",
   "source_title": "Lahoz-Beneytez J et al. Human neutrophil kinetics: modeling of stable isotope labeling data supports short blood neutrophil half-lives. Blood 2016;127(26):3431-3438 (PMC4929930)",

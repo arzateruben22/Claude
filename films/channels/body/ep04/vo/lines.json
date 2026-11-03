@@ -188,27 +188,27 @@
   {
    "id": "vo07",
    "beat": "meanwhile",
-   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each began in your brainstem and crossed gaps like these to your diaphragm.",
+   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each started at the base of your brain and crossed gaps like these.",
    "stars": [
     "Meanwhile"
    ],
-   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, juː tˈʊk ɐbˌaʊt fˈɪftiːn bɹˈɛθs. ˈiːtʃ bɪɡˈan ɪn jɔː bɹˈeɪnstəm and kɹˈɒst ɡˈaps lˈaɪk ðiːz tə jɔː dˈaɪəfɹˌam.",
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, juː tˈʊk ɐbˌaʊt fˈɪftiːn bɹˈɛθs. ˈiːtʃ stˈɑːtɪd at ðə bˈeɪs ɒv jɔː bɹˈeɪn and kɹˈɒst ɡˈaps lˈaɪk ðˈiːz.",
    "speeds": [
-    0.88,
-    0.88
+    0.84,
+    0.82
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     3.1395,
-     3.4395
+     3.2515,
+     3.5515
     ]
    ],
    "file": "07.wav",
-   "dur": 7.411,
-   "sha256": "fbc6652c188977cf2b0bd14d25049164fe3e4be9ca1a29cbd5ee13a02c48cea7"
+   "dur": 7.335,
+   "sha256": "60a0a9d419ada83b310b7a9f7785b82b7013b0a0efd4fe313950ef63059f076b"
   },
   {
    "id": "vo08",

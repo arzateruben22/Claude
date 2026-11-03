@@ -15,7 +15,7 @@ vessel it must be at a given word (it reaches the first branch on "branches", th
 vessel's widths are then laid out so that the flow (v ∝ 1/r² in one tube, slowed ×100, ×10 for the ride)
 brings it there; camera keys are offsets from the hero, so a tracking shot can't lose it.
 
-If build/cues-meanwhile-inside-001-9x16.json exists (node kits/cinema/film/render.mjs --film . --cues), its
+If build/cues-body-backstage-001-9x16.json exists (node kits/cinema/film/render.mjs --film . --cues), its
 measured positions and first-shown times are merged into the sheet (pan, and the studio's picture-sync check).
 """
 import json
@@ -253,7 +253,7 @@ CAPTION_KEEP = [
 ]
 
 film = {
-    "id": "meanwhile-inside-001", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-001", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK, "ride": [RIDE0, RIDE1 + RIDE_BACK],
     "hero": HERO, "cam": CAM, "foc": FOC,

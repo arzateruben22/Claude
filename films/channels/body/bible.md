@@ -2,6 +2,37 @@
 
 > **Channel name: Body Backstage** (the owner's rename, 2 Nov 2026; was Meanwhile, Inside). On screen from then on: the title series line "Body Backstage · No. …" and the end card. Older notes below keep the old name.
 
+## 0. Season 1 reboot: "live scan" (owner approved 3 Nov 2026; this section overrides §2 and §5 where they differ)
+
+The owner asked for high-tech science visuals, facts that sound like a friend rather than a textbook, and a
+multi-million-dollar production finish. The approved look test is in `looktest/` (README, stills, before/after).
+
+**Look.** The body is filmed like a premium medical-visualisation title.
+- Ground: abyss teal-black (`bg #040E10`, `bg-hi #0B2A2B`), the old surgical green taken darker and filmic.
+- Tissue: photoreal and wet (clearcoat, sheen, a fresnel glow at thin edges, cellular micro-detail) under a warm key, a
+  mint-white rim and a soft fill, with an HDR studio for reflections (`set/look.js` `studio`), motes in the haze
+  (`motes`), film grain and a vignette (`finish`).
+- The instrument: the channel's chartreuse `#D6F25F` is the scanner. It draws the scan line, the hairline where the
+  scan has sliced tissue open (`set/vessel.js` cut edges; `set/scan.js` slices), reticles that lock on to moving
+  things, and the readouts. Scale changes go through a scan sweep (`set/motif.js` `iris`, same API as the old iris).
+- Scan view (`set/scan.js` `scanPatch`): on a beat, the scan turns what it passes into dark glass cores, glowing
+  edges and iso-depth slices, with blood running hot. Use it where seeing inside is the point.
+- Red cells are true biconcave discs that fold as they squeeze (`set/rbc.js`, Evans–Fung), never glossy spheres.
+- Production value is gate (h) in every review: no frame may read as a default 3D render, a template or a stock preset.
+
+**Type.** Atkinson Hyperlegible Next (titles 800, captions 700, labels 600) and Atkinson Hyperlegible Mono (series
+line, badges, readouts, units; tracked uppercase). Fraunces retires.
+
+**Keep-out.** The series line "BODY BACKSTAGE · NO. 0N" and the title sit on a scrim (theme.json `.hud-title::before`),
+and nothing (label, badge, counter, reticle, card) is placed over them while they show. Badges live top right.
+
+**Words.** Say it the way a friend would. Plain words first; a technical term only when it earns its place, and
+then explained in the same breath. Comparisons beat counts. Every episode opens on a "wait, what?" by 2 s and pays
+it off. Tie it to the viewer's body, now. Claims unchanged in rigour (`claims.json`, hedged as the source is).
+
+**Masters** `body-backstage-00N`; the end card reads "Follow Body Backstage". The motifs that stay: the pulse line
+(an ECG readout) under the title, on the end card and in the "Meanwhile" tally.
+
 Files are in `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/series/body/`: `BIBLE.md`, `meanwhile-pulse.json`, `ep01-script.md` and `contrast.py`. Nothing in `/home/user/Claude` was changed.
 
 **Sourcing:** the proxy blocked page fetches. Every source below was checked only through search-result excerpts from the publisher's own pages (NCBI/StatPearls, PubMed, BioNumbers, university pages). TODO: a person opens each link and confirms the wording before a script is locked.

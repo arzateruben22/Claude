@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 02, "A billion passengers": the picture, a pure function of t.
+// Body Backstage No. 02 (season 1 reboot, live scan), "A billion passengers": the picture, a pure function of t.
 //
 // The channel's set (films/channels/body/set) plus this episode's staging. Everything timed comes from
 // film.json (compile.py hangs it on the spoken words); the look comes from theme.json.
@@ -47,7 +47,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 0.5, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-quarter .v { color: var(--text); }
 #hud-quarter, #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
@@ -367,7 +368,7 @@ const ANCH = {
   node: (t) => NF.at(NERVE_NODES[nerveK0 + 3], 1.5),
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
-hud.badge("warp", { from: clk, slot: "tl" });
+hud.badge("warp", { from: clk, slot: "tr" });   // the title owns the top-left keep-out (owner, 3 Nov)
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
 const Q = FILM.quarter, SPINE_Y = 0.262;
@@ -386,6 +387,8 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 // the lung: the blood's round trip drawn on over "sends … once a minute" (larger, on a plate, to read on a phone)
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 330 * S1, region: [0.42, 0.26], plate: true, loop: true });
 const LOCARM = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 232 * S1, region: [0.83, 0.5], plate: true });   // the skin: a forearm
@@ -452,6 +455,7 @@ window.seek = function (t) {
   LOC.update(t, sh === "lung" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, LOC_BEATS), E.inout2(seg(t, ...FILM.lung.loop)));
   LOCARM.update(t, sh === "skin" ? presence(t, ARM_T[0], ARM_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, lubs(ARM_T[0], ARM_T[1])));
   IR.update(t);
+  FIN.set(t); MOT.set(t);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

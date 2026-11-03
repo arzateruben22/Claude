@@ -67,7 +67,7 @@ DRUM = {"spin0": B["change"]["t0"], "traces": [A("vo03:timed", -0.1), A("vo03:me
 CAM = {
     "hook": [
         {"t": 0.0, "pos": [116.0, 26.0, 170.0], "look": [110.0, -6.0, 0.0], "fov": 34},   # frame 0: the framed internode (nodes 2–3) inside the safe box
-        {"t": A("vo01:timed"), "pos": [112.0, 22.0, 150.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo01:time"), "pos": [112.0, 22.0, 150.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:racing"), "pos": [120.0, 40.0, 380.0], "look": [110.0, -6.0, 0.0], "fov": 34, "ease": "p2"},   # pull back along the fibre
         {"t": A("vo02:cell's"), "pos": [20.0, 36.0, 220.0], "look": [16.0, -6.0, 0.0], "fov": 34, "ease": "p2"},      # the cell body: one cell
         {"t": A("vo02:Some", -0.1), "pos": [22.0, 36.0, 226.0], "look": [18.0, -6.0, 0.0], "fov": 34, "ease": "sine"},  # held while it is named
@@ -114,7 +114,7 @@ LABELS = [
     {"id": "nerve", "text": "its nerve", "color": "nerve", "mark": "dot", "at": "frognerve", "t0": A("vo03:fifty", 0.2), "t1": A("vo03:Helmholtz"), "shot": "drum", "side": -1},
     {"id": "trace", "text": "far stimulus: its twitch starts later", "color": "text", "mark": "dot", "at": "traces", "t0": A("vo03:metres", 0.15) + 0.7, "t1": CUT["fibres"] - 0.3, "shot": "drum", "side": 1},
     {"id": "bare", "text": "bare fibre", "color": "nerve", "mark": "dot", "at": "bare", "t0": B["why"]["t0"] + 0.5, "t1": A("vo04:re-fires", -0.4), "shot": "fibres", "side": 1},   # hands its name to the readout
-    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin", 0.25), "t1": A("vo04:re-firing", 0.0), "shot": "fibres", "side": 1},   # after the N3→N4 arc has landed
+    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin", 0.25), "t1": A("vo04:re-fire", 0.0), "shot": "fibres", "side": 1},   # after the N3→N4 arc has landed
     {"id": "gap", "text": "bare gap", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo04:gaps"), "t1": A("vo04:leaps", -0.2), "shot": "fibres", "side": -1},
     {"id": "ms", "text": "damaged myelin ·\nbrain and spinal cord", "color": "bone", "mark": "dashed", "at": "damaged", "t0": round(MS["t0"] + 2 * MS["hop"] - 0.2, 4), "t1": A("vo04:signals", 0.0), "shot": "fibres", "side": 1},   # gone before "slow or stall": the falter and the stall play clear
     {"id": "racebare", "text": "thinnest bare fibre", "color": "nerve", "mark": "dot", "at": "barefront", "t0": A("vo05:thinnest"), "t1": B["takeaway"]["t0"] - 0.3, "shot": "fibres", "side": -1},
@@ -154,7 +154,7 @@ BADGES = [
     {"id": "nts-tease", "text": "not to scale", "t0": FIG["t1"] - 0.3, "t1": EC},
     {"id": "slow-tease", "text": "slowed", "slot": "tl", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
 ]
-TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:The", 0.3), 4), "sig": 0.0, "y": 0.17}
+TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:A", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Body Backstage · No. 04", "follow": "Follow Body Backstage",
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
@@ -189,7 +189,7 @@ CAPTION_KEEP = [
 ]
 
 film = {
-    "id": "meanwhile-inside-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "hop": HOP, "hookSig": HOOK, "hookRun": HOOK_RUN, "whyJump": WHY_JUMP, "ms": MS, "bare": BARE, "race": RACE,
     "tease": TEASE, "toe": TOE, "drum": DRUM, "fig": FIG,

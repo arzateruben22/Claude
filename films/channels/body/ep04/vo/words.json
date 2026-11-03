@@ -864,8 +864,8 @@
   },
   {
    "id": "vo07",
-   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each began in your brainstem and crossed gaps like these to your diaphragm.",
-   "heard": "Meanwhile as you watched you took about 15 breaths. Each began in your brainstem and crossed gaps like these to your diaphragm.",
+   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each started at the base of your brain and crossed gaps like these.",
+   "heard": "Meanwhile as you watched you took about 15 breaths. Each started at the base of your brain and crossed gaps like these.",
    "words": [
     {
      "w": "Meanwhile,",
@@ -875,129 +875,129 @@
     },
     {
      "w": "as",
-     "start": 0.75,
-     "end": 0.88,
+     "start": 0.775,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "you",
-     "start": 0.78,
-     "end": 1.04,
+     "start": 1.055,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "watched,",
-     "start": 1.03,
+     "start": 1.085,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "you",
-     "start": 1.525,
-     "end": 1.68,
+     "start": 1.485,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "took",
-     "start": 1.66,
-     "end": 1.92,
+     "start": 1.715,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.865,
-     "end": 2.08,
+     "start": 1.96,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "fifteen",
-     "start": 2.075,
-     "end": 2.56,
+     "start": 2.175,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "breaths.",
-     "start": 2.58,
-     "end": 3.139,
+     "start": 2.68,
+     "end": 3.252,
      "heard": true,
-     "end_asr": 3.44
+     "end_asr": 3.6
     },
     {
      "w": "Each",
-     "start": 3.455,
-     "end": 3.68,
+     "start": 3.57,
+     "end": 3.92,
      "heard": true
     },
     {
-     "w": "began",
-     "start": 3.77,
-     "end": 4.08,
+     "w": "started",
+     "start": 3.98,
+     "end": 4.24,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 4.04,
-     "end": 4.16,
+     "w": "at",
+     "start": 4.19,
+     "end": 4.4,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 4.255,
-     "end": 4.32,
+     "w": "the",
+     "start": 4.39,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "brainstem",
-     "start": 4.325,
+     "w": "base",
+     "start": 4.535,
      "end": 4.8,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 5.085,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "crossed",
-     "start": 5.23,
-     "end": 5.52,
-     "heard": true
-    },
-    {
-     "w": "gaps",
-     "start": 5.585,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 6.095,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "these",
-     "start": 6.205,
-     "end": 6.4,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 6.515,
-     "end": 6.565,
+     "w": "of",
+     "start": 4.865,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "your",
-     "start": 6.565,
-     "end": 6.72,
+     "start": 4.895,
+     "end": 5.12,
      "heard": true
     },
     {
-     "w": "diaphragm.",
-     "start": 6.76,
-     "end": 7.36,
+     "w": "brain",
+     "start": 5.11,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.625,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "crossed",
+     "start": 5.775,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "gaps",
+     "start": 6.15,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 6.52,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "these.",
+     "start": 6.705,
+     "end": 7.28,
      "heard": true
     }
    ],
