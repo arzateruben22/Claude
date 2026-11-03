@@ -752,7 +752,7 @@
   },
   {
    "id": "l-with",
-   "text": "with these cells: a scar",
+   "text": "mice with these cells: a scar",
    "kind": "cell",
    "anchor": "miceL",
    "t0": 61.96666666666667,
@@ -764,7 +764,7 @@
   },
   {
    "id": "l-without",
-   "text": "without them (mice): no scar",
+   "text": "mice without them: no scar",
    "kind": "water",
    "anchor": "miceR",
    "t0": 62.56666666666667,
@@ -776,7 +776,7 @@
   },
   {
    "id": "l-defence",
-   "text": "germ-fighting cells at the seam",
+   "text": "while it healed: cells at the seam",
    "kind": "cell",
    "anchor": "uvscar",
    "t0": 65.80000000000001,
@@ -865,12 +865,19 @@
    "id": "b-model",
    "text": "model, not a photo",
    "t0": 60.6,
+   "t1": 61.1167,
+   "slot": "br"
+  },
+  {
+   "id": "b-modelb",
+   "text": "model, not a photo",
+   "t0": 65.4,
    "t1": 68.5,
    "slot": "br"
   },
   {
    "id": "b-mouse",
-   "text": "mouse study · Martin et al., 2003",
+   "text": "mouse study · Martin et al., 2003 · model",
    "t0": 61.56666666666667,
    "t1": 64.95,
    "slot": "tr"

@@ -351,6 +351,11 @@
    ]
   },
   {
+   "t": 65.4,
+   "kind": "badge",
+   "tag": "b-modelb"
+  },
+  {
    "t": 65.7,
    "kind": "counter.show",
    "tag": "c-final",
