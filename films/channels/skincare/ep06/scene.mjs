@@ -17,6 +17,7 @@ import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
 import { SECTION } from "../set/ref/textures.js";
+import { lookV2, hazeVolume, bokeh } from "../set/prod.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, CUT = FILM.cut, G = FILM.gauge, PL = FILM.plate;
 const S1 = Math.min(W, H) / 1080;
@@ -128,7 +129,7 @@ T.group.position.x = XB; scene.add(T.group);
 const skinM = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 14, seed: 6, micro: 0.45 });
 // skin sheen, roughness and speculars come from the shared skinMaterial (the channel-wide production pass)
 const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.34, 0.24, 0.66) }, uGlow: { value: new THREE.Color(0.06, 0.035, 0.15) } };
-skinM.onBeforeCompile = (sh) => {   // the UV camera: one material, a soft seam between the two banks' halves
+const uvShader = (sh) => {   // the UV camera: one material, a soft seam between the two banks' halves
   Object.assign(sh.uniforms, UV);
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vWX;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWX = (modelMatrix * vec4(transformed, 1.0)).x;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vWX;\nuniform float uUV, uL, uR, uSeam;\nuniform vec3 uLilac, uGlow;")
@@ -139,7 +140,6 @@ skinM.onBeforeCompile = (sh) => {   // the UV camera: one material, a soft seam 
       diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * (0.1 + 0.9 * kk) * lum, uUV);`)
     .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\ntotalEmissiveRadiance += uGlow * kk * uUV;");
 };
-skinM.customProgramCacheKey = () => "ep06-uvskin";
 T.mesh.material = skinM;
 let hairs = null;
 T.group.traverse((o) => { if (o.isInstancedMesh) hairs = o; else if (o.isMesh && o !== T.mesh) o.visible = false; });
@@ -174,7 +174,7 @@ const coolFill = new THREE.HemisphereLight(0x8fa8ff, 0x140c24, 0);
 scene.add(coolFill);
 const rays = [[-3.5, -6, 2.2], [1.2, -3, 2.6], [3.8, -9, 2.0]].map(([x, z, r]) => { const s = createShaft({ from: [XB + x - 1.2, TUBE_Y - 0.3, z - 2], to: [XB + x + 0.6, -0.4, z + 2.5], radius: r, color: "#B79BFF" }); scene.add(s.group); return s; });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
-const FOGB = new THREE.FogExp2(0x2c1660, 0.034), BGB = new THREE.Color(0x2c1660);
+const FOGB = new THREE.FogExp2(0x2c1660, 0.034);
 
 // ── 4: the cut face: a block of deep-tone skin seen three-quarters, its face the stained tissue photo ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
@@ -208,7 +208,12 @@ const dm = new THREE.Object3D();
 
 // ── the overlay: one HUD system (the theme's plate fill, radius, mono and sans) ─────────
 const hudRoot = document.getElementById("hud");
-const grain = createGrain(hudRoot, { amount: 0.02 });
+const look = lookV2({ canvas, hudRoot, fog: FOGB, terrain: T, skin: skinM });   // the channel look (set/prod.js): skin, hairs, fog, grade
+{ const v2 = skinM.onBeforeCompile; skinM.onBeforeCompile = (sh) => { v2(sh); uvShader(sh); }; skinM.customProgramCacheKey = () => "skinV2-ep06uv"; skinM.needsUpdate = true; }
+const hazeL = hazeVolume(scene, { at: [0, 0, -7], size: [40, 28, 16], color: "#b9a6ff", n: 5, op: 0.07 });
+const hazeB = hazeVolume(scene, { at: [XB, 3, -10], size: [40, 20, 30], color: "#b9a6ff", n: 5, op: 0.06 });
+const bokehL = bokeh(scene, { n: 60, box: [[-14, 14], [-8, 8], [-26, -14]], size: 0.5, color: "#c9b4ff", op: 0.35 });
+const grain = createGrain(hudRoot, { amount: 0.007 });
 const hud = createHud({ camera, shots: FILM.shots });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
@@ -267,10 +272,11 @@ window.seek = function (t) {
   plate.visible = farTubes.visible = hzL1.visible = hzL2.visible = isList;
   T.group.visible = canopy.visible = isBed;
   C.visible = dashes.visible = flashes.visible = shot === "section";
+  hazeL.group.visible = bokehL.points.visible = isList; hazeB.group.visible = isBed; hazeL.set({ t }); hazeB.set({ t }); bokehL.set({ t });
   shaftL.set({ op: isList ? 0.8 : 0 }); dustL.set(t, isList ? 1 : 0); dustNear.set(t, isList ? 1 : 0);
   dustBed.set(t, isBed ? 1 : 0);
   shaftC.set({ op: shot === "section" ? 1 : 0 }); dustC.set(t, shot === "section" ? 1 : 0);
-  scene.fog = isBed ? FOGB : null; scene.background = isBed ? BGB : null;
+  scene.fog = isBed ? FOGB : null;
   rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
   let endDefocus = E.inout2(seg(t, FILM.endCard - 0.8, FILM.endCard + 0.4));
 
@@ -324,7 +330,7 @@ window.seek = function (t) {
   // ── the cut face: the long rays fall, cross the marked top layer and carry on into the dermis ──
   if (shot === "section") {
     studio.aim([XC, -3, 0], [-0.5, 0.8, 0.45], [0.7, 0.3, -0.7]); studio.set({ key: 1.7, rim: 2.2, fill: 0.3, env: 0.45, warm: 0.3 });
-    focusPt = mix3([XC + 0.4, -2.0, 0], [XC + 0.2, -2.4, 0], E.inout2(seg(t, CUT.section, CUT.list2))); fstop = 0.14;
+    focusPt = mix3([XC + 0.4, -2.0, 0], [XC + 0.2, -2.4, 0], E.inout2(seg(t, CUT.section, CUT.list2))); fstop = 0.1;
     const gain = fadeIn(t, FILM.rays.on[0], FILM.rays.on[1] - FILM.rays.on[0]);
     jMat.opacity = 0.75 * fadeIn(t, CUE.through - 0.3, 0.6);
     DASH.forEach((d, i) => {
