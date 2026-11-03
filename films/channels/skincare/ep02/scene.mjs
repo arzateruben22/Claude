@@ -218,7 +218,7 @@ const paperMat = new THREE.MeshStandardMaterial({ color: 0xf2ebe1, roughness: 0.
 const paper = new THREE.Group(); scene.add(paper);
 const sheet3 = Array.from({ length: 10 }, (_, i) => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 88, 1), paperMat.clone()); m.position.y = -6 - 100 * i - 44; paper.add(m); return m; });
 const tagCss = document.createElement("style"); tagCss.textContent = `.dtag{position:absolute;font-family:var(--font-mono);font-size:3.1vmin;color:var(--text);background:var(--hud-plate);box-shadow:var(--hud-shadow);padding:.6vmin 1.6vmin;border-radius:var(--ol-r,1.4vmin);border-left:.7vmin solid var(--c);white-space:nowrap;opacity:0;pointer-events:none;z-index:3}
-.dtag b{font-weight:600;color:var(--c)}.dtick{position:absolute;left:${0.06 * W}px;font-family:var(--font-mono);font-size:2.9vmin;color:var(--text);opacity:0;white-space:nowrap;transform:translateY(-50%);background:var(--hud-plate);padding:.3vmin 1.1vmin;border-radius:1vmin}
+.dtag b{font-weight:600;color:var(--c)}.dtick{position:absolute;left:${0.085 * W}px;font-family:var(--font-mono);font-size:2.9vmin;color:var(--text);opacity:0;white-space:nowrap;transform:translateY(-50%);background:var(--hud-plate);padding:.3vmin 1.1vmin;border-radius:1vmin}
 .dtick:after{content:"";position:absolute;left:100%;top:50%;width:${0.05 * W}px;margin-left:1vmin;border-top:.3vmin solid rgba(247,243,255,.6)}`;
 document.head.appendChild(tagCss);
 const mkTag = (html, c) => { const d = document.createElement("div"); d.className = "dtag"; d.innerHTML = html; d.style.setProperty("--c", c); hudRoot.appendChild(d); return d; };
@@ -240,7 +240,7 @@ const depthFigure = (t, shot, dist) => {
   place(tagP, scr(xP, -1000, Z), E.out3(seg(t, K.sheets[1] - 0.2, K.sheets[1] + 0.2)), 1);
   place(tagR, scr(xR, -1000 * D.red_mm[1] * r, Z), E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)), 0);
   const tk = on ? E.out3(seg(t, K.blue[0], K.blue[0] + 0.5)) * fade : 0;
-  ticks.forEach((d, m) => { const y = scr(PL.sx, -1000 * m, Z)[1], vis = y > 0.12 * H && y < 0.88 * H ? 1 : 0; d.style.top = `${y}px`; d.style.opacity = (tk * vis).toFixed(3); });
+  ticks.forEach((d, m) => { const y = scr(PL.sx, -1000 * m, Z)[1], vis = y > 0.235 * H && y < 0.86 * H ? 1 : 0; d.style.top = `${y}px`; d.style.opacity = (tk * vis).toFixed(3); });   // ticks below the badge and the note
 };
 const hud = createHud({ camera, shots: FILM.shots });
 const KIND = { layer: { color: "ink", glyph: "▬" }, cell: { color: "text", glyph: "●" }, water: { color: "water", glyph: "◇" }, uv: { color: "uv", glyph: "◆" } };
@@ -368,7 +368,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
-  photoNote.style.opacity = shot === "depth" ? "1" : "0"; photoNote.style.top = `${0.885 * H}px`;   // below the figure and the caption (round 9)   // on every frame the photo is
+  photoNote.style.opacity = shot === "depth" ? "1" : "0"; photoNote.style.top = `${0.184 * H}px`; photoNote.textContent = "behind: a tissue photo, not to scale";   // under the badge, in the safe box; the figure is true scale, the photo is not (round 10)   // on every frame the photo is
   grain.set(t);
   hud.update(t);
   tBars.update(t);

@@ -83,7 +83,7 @@ CAM = {
                {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
                {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
     "uvb": [{"t": t_uvb, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 18, "az": 0},
-            {"t": CAM_END, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
+            {"t": CAM_END, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 21, "az": -4, "ease": "lin"}],   # a steady drift under the end card
     "uv": [{"t": t_uv, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 17, "az": 1},
            {"t": CAM_END, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
 }

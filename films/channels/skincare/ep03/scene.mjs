@@ -168,6 +168,7 @@ const hudRoot = document.getElementById("hud");
 const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material }); unifyHud(hudRoot);   // the channel look: skin, hairs, fog, grade
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.3 });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
+{ const st = document.createElement("style"); st.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.6vmin 1.4vmin;border-radius:1.4vmin;color:var(--text)}.ol-vf .rec{color:var(--water)}.ol-vf .hl:empty,.ol-vf .hr:empty{display:none}"; document.head.appendChild(st); }   // the readout on the HUD plate: readable over the gathering cells (as No. 002)
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.6vmin";
 const grain = look.grain;
 // atmosphere: dust the depth of field turns to bokeh
