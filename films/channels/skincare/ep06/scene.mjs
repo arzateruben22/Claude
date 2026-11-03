@@ -127,7 +127,7 @@ const drawPlate = () => {
 };
 
 // ── 2 + 3: the canopy: deep-tone skin under the tubes; two banks (Australia left, Brazil right) ──
-const T = createTerrain({ seed: 31, spots: 0, segs: 400 });
+const T = createTerrain({ seed: 31, spots: 0, segs: 400, organic: true });
 T.group.position.x = XB; scene.add(T.group);
 const skinM = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 14, seed: 6, micro: 0.45 });
 // skin sheen, roughness and speculars come from the shared skinMaterial (the channel-wide production pass)
@@ -141,7 +141,7 @@ const uvShader = (sh) => {   // the UV camera: one material, a soft seam between
       float kk = mix(uL, uR, sideK);
       float lum = clamp(dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)) / 0.1, 0.35, 1.5);
       diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * lum, uUV);`)
-    .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb *= mix(1.0, 0.2 + 0.8 * kk, uUV);\n#include <tonemapping_fragment>")
+    .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb *= mix(1.0, 0.11 + 0.89 * kk, uUV);\n#include <tonemapping_fragment>")
     .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\ntotalEmissiveRadiance += uGlow * kk * uUV;");
 };
 T.mesh.material = skinM;
@@ -188,7 +188,7 @@ const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [0.8, -1.5], [4.8, -5]].map((
   return { bank: x < 0 ? 0 : 1, group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.24 * op; } };
 });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
-const FOGB = new THREE.FogExp2(0x2c1660, 0.045), FOGU = new THREE.FogExp2(0x1a0d36, 0.018);   // the UV shot looks down from above the tubes: thinner fog
+const FOGB = new THREE.FogExp2(0x2c1660, 0.045), FOGU = new THREE.FogExp2(0x1a0d36, 0.01);   // the UV shot looks down from above the tubes: thinner fog
 
 // ── 4: the cut face: a block of deep-tone skin seen three-quarters, its face the stained tissue photo ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
@@ -201,7 +201,7 @@ const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.32, 0.
 const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.05; topMat.roughness = 0.7; topMat.clearcoat = 0.03; topMat.specularIntensity = 0.2;
 const BD = 4.2, block = new THREE.Mesh(new THREE.BoxGeometry(BW, FH, BD), [sideTex, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -BD / 2 - 0.005); C.add(block);
 // the top surface in relief: the same microrelief as the canopy's skin (furrows, pores), deep tone, scaled onto the block's top
-const TT = createTerrain({ size: 9, segs: 200, pore: 0.6, seed: 12, spots: 0, hair: false });
+const TT = createTerrain({ size: 9, segs: 200, pore: 0.6, seed: 12, spots: 0, hair: false, organic: true });
 TT.mesh.material = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 6, seed: 9, micro: 0.6 });
 TT.group.scale.set(BW / 9, 0.45, BD / 9); TT.group.position.set(0, 0.02, -BD / 2); C.add(TT.group);
 const bevelMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.5, 0.36, 0.48), roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15 });

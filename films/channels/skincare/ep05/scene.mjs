@@ -292,13 +292,13 @@ const plate = (html, css) => {
 };
 const show = (el, op) => { el.style.opacity = op.toFixed(3); el.style.visibility = op > 0.002 ? "visible" : "hidden"; };
 const O = P.odds, M = P.mel;
-const odds = plate(`<div style="font:600 4.6vmin/1.25 var(--font-body, inherit)">${O.text}</div><div style="font:500 2.9vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
+const odds = plate(`<div style="font:600 4.6vmin/1.25 var(--font-text, sans-serif)">${O.text}</div><div style="font:500 2.9vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:1vmin">${O.sub}</div>`,
   { left: "45.8%", top: `${0.36 * H}px`, transform: "translateX(-50%)", width: "64vmin", padding: "2.2vmin 3vmin" });
 const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline-block;width:1.3vmin;height:1.3vmin;border-radius:50%;margin:.15vmin;background:${c};opacity:0"></i>`).join("");
 const mel = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin:0 0 1.4vmin">melanomas, ten years on</div>
-  <div style="display:grid;grid-template-columns:21vmin 1fr;white-space:nowrap;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
+  <div style="display:grid;grid-template-columns:21vmin 1fr;white-space:nowrap;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-text, sans-serif)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
-  <div class="sub" style="opacity:0"><div style="font:650 5vmin/1.2 var(--font-body, inherit);color:var(--text);margin-top:1.8vmin">${M.note}</div>
+  <div class="sub" style="opacity:0"><div style="font:650 5vmin/1.2 var(--font-text, sans-serif);color:var(--text);margin-top:1.8vmin">${M.note}</div>
   <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-top:0.8vmin">${M.sub}</div></div>`,
   { left: "45.8%", top: `${0.3 * H}px`, transform: "translateX(-50%)", width: "64vmin", padding: "2.4vmin 3vmin" });
 const cards = [stackAsCard(CTR["c-age"], odds), stackAsCard(CTR["c-follow"], mel)];   // the spines as the plates' header rows

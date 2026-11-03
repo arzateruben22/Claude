@@ -85,3 +85,16 @@ switch-off; "tissue photo · rays simplified" on the cut face; years on screen o
 - **Nice:** a slow sideways drift in the sunburst, a rack pulse on "half", a faint tube flicker, the spine in on
   "half"; "Australia · 2015–16" with an en dash.
 - Shared look v3 (`set/look3.js`): skin (`skinV3` with the canopy's low key), hairs, grain; no local overrides.
+
+## Review round 3 fixes (3 Nov; scored a 4, b 4, c 3, d 3, e 4, f 3, g 4, h 3)
+
+- **Switch-off:** seen from high above the canopy; an "off" bank's cores go black and its glass disappears; the off
+  half falls to ~11% with a narrow soft edge at the seam (sampled ~40 vs ~100+ in the green channel across the frame);
+  each bank's light cones go out with it; thinner fog.
+- **Canopy:** the fog takes the tube light's violet (no dark band under the canopy); five soft cones per the two banks
+  with the dust; the hairs (`hairsV3`, confirmed applied) given darker strands and more curl, a little more drift;
+  `organic: true` on both terrains (the shared tile fix).
+- **Cut face:** the right side textured with the photo's deeper dermis at its own scale, the other sides darker;
+  slight bevels on the three edges toward the lens; a violet rim from behind; a contact shadow under the block.
+- **Slab:** the tube bank behind racked a little softer (fstop 0.34).
+- **Cheap:** the gauge lifted ~10 px; the sunburst gets a mid-hold push; the UV and section shots enter at speed.

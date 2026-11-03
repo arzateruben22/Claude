@@ -166,7 +166,7 @@ for L in LABELS:
     ev.append({"t": L["t0"], "kind": "label", "tag": L["id"]})
 for c in COUNTERS:
     ev.append({"t": c["t0"], "kind": "counter.show", "tag": c["id"]})
-ev.append({"t": SPINE["t0"], "kind": "counter.show", "tag": SPINE["id"]})   # the spine readout (bible §8)
+# the spine readout (bible §8) arrives silently as the title leaves: a cue 0.9 s after the title's signature is masked by its tail (sync)
 for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
@@ -194,7 +194,7 @@ if cues_file.exists():
         p = pic.get(e.get("tag"))
         if p and p.get("pos") and e["kind"] in ("label", "counter.show"):
             e["pos"] = p["pos"]
-    shown = {k: v for k, v in (cj.get("shown") or {}).items() if k.startswith("l-") and v > 0}
+    shown = {k: v for k, v in (cj.get("shown") or {}).items() if k.startswith(("l-", "c-")) and v > 0}   # labels and the spine readout: their sounds land on the frame they appear
 sheet = {"duration": f.duration, "fps": FPS, "preset": "outerlayer-slide",
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),
